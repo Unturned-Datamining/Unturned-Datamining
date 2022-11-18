@@ -63,15 +63,13 @@ jobs:
     - name: Run tool
       run: dotnet run --project ./tools/UnturnedDatamining/UnturnedDatamining/UnturnedDatamining.csproj -c Release --no-restore -- $GITHUB_WORKSPACE --nosteam
 
-    - name: Commit changes
+    - name: Generate Commit Message
       run: |
-        commitid=`cat .commit`
-        echo $commitid
-        git config --global user.name 'DiFFoZ'
-        git config --global user.email 'diffoz@users.noreply.github.com'
-        git add .
-        git status
-        git commit -m $commitid
-        git status
-        git push
-        git status
+        echo "##[set-output name=message;]$(cat .commit)"
+      id: generate_commit_message
+
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: ${{ steps.generate_commit_message.outputs.message) }}
+        commit_user_name: DiFFoZ
+        commit_user_email: diffoz@users.noreply.github.com
