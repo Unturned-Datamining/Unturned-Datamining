@@ -10,19 +10,17 @@ jobs:
     name: "[Linux] Setup Steam and Unturned and decompile"
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout linux branch
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-        ref: linux
-
-    - run: ls ${{ github.workspace }}
-
     - name: Checkout tools branch
       uses: actions/checkout@v3
       with:
         repository: Unturned-Datamining/datamining-tool
         path: tools
+
+    - name: Checkout linux branch
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        ref: linux
 
     - run: |
         ls ${{ github.workspace }}
@@ -32,6 +30,7 @@ jobs:
         ls ${{ github.workspace }}/tools/UnturnedDatamining/
         echo ---
         ls ${{ github.workspace }}/tools/UnturnedDatamining/UnturnedDatamining
+
     - name: Cache Unturned Dedicated Server
       uses: actions/cache@v3
       with:
