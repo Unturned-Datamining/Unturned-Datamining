@@ -21,9 +21,8 @@ jobs:
     - name: Checkout tools branch
       uses: actions/checkout@v3
       with:
-        repo: Unturned-Datamining/datamining-tool
+        repository: Unturned-Datamining/datamining-tool
         path: tools
-        clean: false
 
     - run: |
         ls ${{ github.workspace }}
