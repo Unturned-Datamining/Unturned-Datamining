@@ -19,8 +19,8 @@ jobs:
     - name: Checkout linux branch
       uses: actions/checkout@v3
       with:
-        fetch-depth: 0
         ref: linux
+        clean: false
 
     - run: |
         ls ${{ github.workspace }}
