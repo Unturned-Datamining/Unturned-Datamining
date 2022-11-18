@@ -69,8 +69,9 @@ jobs:
         echo $commitid
         git config --global user.name 'DiFFoZ'
         git config --global user.email 'diffoz@users.noreply.github.com'
+        git add .
         git status
-        git commit -am $commitid
+        git commit -m $commitid
         git status
         git push
         git status
