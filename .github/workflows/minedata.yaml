@@ -65,72 +65,12 @@ jobs:
 
     - name: Commit changes
       run: |
-        commit=\"`cat .commit`\"
+        commitid=`cat .commit`
+        echo $commitid
         git config --global user.name 'DiFFoZ'
         git config --global user.email 'diffoz@users.noreply.github.com'
         git status
-        git add .
+        git commit -am $commitid
         git status
-        echo $commit
-        git commit -m $commit
         git push
-  windows:
-    name: "[Windows] Setup Steam and Unturned and decompile"
-    runs-on: windows-latest
-    if: ${{ false }}
-    steps:
-    - name: Checkout windows branch
-      uses: actions/checkout@v3
-      with:
-        ref: windows
-
-    - name: Checkout tools branch
-      uses: actions/checkout@v3
-      with:
-        path: tools
-
-    - name: Cache Unturned Dedicated Server
-      uses: actions/cache@v3
-      with:
-        path: |
-          *.blob
-          *.hierarchy
-          *.png
-          *.jpg
-          *.masterbundle
-          Unturned_Data
-        key: windows-u3ds
-
-    - name: Setup SteamCMD
-      id: setup-steamcmd
-      uses: CyberAndrii/setup-steamcmd@v1
-
-    - name: Cache SteamCMD
-      uses: actions/cache@v3
-      with:
-        path: ${{ steps.setup-steamcmd.outputs.directory }}
-        key: windows-steamcmd
-
-    - name: Update app
-      run: steamcmd +force_install_dir $GITHUB_WORKSPACE +login anonymous +app_update 1110390 -beta preview +quit
-
-    - uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '6.0.x'
-
-    - name: Install dependencies
-      run: dotnet restore tools/UnturnedDatamining/
-
-    - name: Run tool
-      run: dotnet run --project tools/UnturnedDatamining/UnturnedDatamining/UnturnedDatamining.csproj -c Release --no-restore -- $GITHUB_WORKSPACE --nosteam
-
-    - name: Commit changes
-      shell: pwsh
-      run: |
-        commit=\'`cat .commit`\'
-        git config --global user.name 'DiFFoZ'
-        git config --global user.email 'diffoz@users.noreply.github.com'
-        git add .
-        git reset -- tools/*
-        git commit -m $commit
-        git push
+        git status
