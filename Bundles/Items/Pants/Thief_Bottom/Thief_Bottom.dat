@@ -1,0 +1,26 @@
+GUID 4df14ace84a34e18810cb3918341db1c
+Type Pants
+Rarity Uncommon
+Useable Clothing
+ID 1157
+
+Size_X 2
+Size_Y 2
+Size_Z 0.65
+
+Width 6
+Height 3
+
+Armor 0.95
+
+Blueprints 2
+Blueprint_0_Type Apparel
+Blueprint_0_Supply_0_ID 1157
+Blueprint_0_Product 66
+Blueprint_0_Products 2
+Blueprint_0_Build 32
+Blueprint_1_Type Repair
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 66
+Blueprint_1_Supply_0_Amount 2
+Blueprint_1_Build 32

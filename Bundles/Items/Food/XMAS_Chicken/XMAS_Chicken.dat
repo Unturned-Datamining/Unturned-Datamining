@@ -1,0 +1,16 @@
+GUID aaab7d20db81407b8440e76991cfb538
+
+Type Food
+Rarity Rare
+Useable Consumeable
+ID 1708
+
+Size_X 1
+Size_Y 1
+Size_Z 0.3
+Use_Auto_Icon_Measurements False
+
+Food 40
+Water 5
+
+ConsumeAudioClip Sounds/EatCrunchy.mp3

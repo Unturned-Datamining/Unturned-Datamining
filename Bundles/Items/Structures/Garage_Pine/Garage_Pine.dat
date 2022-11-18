@@ -1,0 +1,25 @@
+GUID 057e0861b33f49848c1639193a9b8083
+Type Structure
+Rarity Rare
+Useable Structure
+Construct Wall
+ID 453
+
+Size_X 2
+Size_Y 1
+Size_Z 0.3
+
+Health 450
+Range 8
+
+Explosion 29
+
+Blueprints 1
+Blueprint_0_Type Structure
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 41
+Blueprint_0_Supply_0_Amount 3
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+
+Has_Clip_Prefab false

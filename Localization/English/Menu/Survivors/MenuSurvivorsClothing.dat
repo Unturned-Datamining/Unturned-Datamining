@@ -1,0 +1,63 @@
+Page {0} of {1}
+
+Search_Field_Hint Item Name Filter
+Search Search
+Search_Tooltip Search
+Advanced_Options_Tooltip Advanced Options
+Search_Descriptions_Label Search Descriptions
+Filter_Item_Target Picking target for: {0}
+Cancel_Filter Cancel
+Cancel_Filter_Tooltip Stop item operation.
+Left_Tooltip Left
+Right_Tooltip Right
+Swap_Tooltip Swap
+Refresh_Tooltip Refresh
+
+Sort_Mode_Date Date
+Sort_Mode_Rarity Rarity
+Sort_Mode_Name Name A-Z
+Sort_Mode_Type Type A-Z
+Sort_Mode_Label Sort Mode
+Sort_Mode_Tooltip Method to organize inventory.
+Reverse_Sort_Order_Label Reverse Order
+Filter_Equipped_Label Only Equipped
+
+Origin_Drop You found an item!
+
+Mystery_-1_Text Super Rare Mythical Item
+Mystery_-2_Text Insanely Rare Haunted Item
+Mystery_-3_Text Insanely Rare Holiday Spirit Item
+Mystery_-4_Text Super Rare Confetti Item
+Mystery_-5_Text Super Rare Blood Sucker Item
+Mystery_Tooltip ???
+
+Itemstore Stockpile
+Itemstore_Tooltip Click here to view the stockpile.
+Itemstore_Sale SALE
+Itemstore_Region_Box_Disabled Note: boxes and keys are unavailable in {0} region.
+Crafting Crafting
+Crafting_Tooltip Click here to view available blueprints.
+Backpack Backpack
+Backpack_Tooltip Click here to return to your backpack.
+Featured_Tooltip Click here to view this item.
+
+Craft_Available Available <color=gold>Crafting Materials</color>: {0}
+Alert_Crafting Crafting...
+Craft_Entry Craft {0} - <color=gold>Crafting Materials</color> x{1}
+Craft_Common_Cosmetic <color=common>Low Tier Drop Cosmetic</color>
+Craft_Common_Skin <color=common>Low Tier Drop Skin</color>
+Craft_Uncommon_Cosmetic <color=common>High Tier Drop Cosmetic</color>
+Craft_Uncommon_Skin <color=common>High Tier Drop Skin</color>
+Craft_Stat_Tracker_Total_Kills <color=#ff7f00>Total Kills Counter</color>
+Craft_Stat_Tracker_Player_Kills <color=#ff0000>Player Kills Counter</color>
+Craft_Ragdoll_Effect_Zero_Kelvin <color=#00ffff>Zero Kelvin Weapon Kit</color>
+Craft_Mythical_Skin <color=mythical>Random Mythical Skin</color>
+Craft_Stat_Tracker_Removal_Tool <color=#909090>Kill Counter Removal Tool</color>
+Craft_Ragdoll_Effect_Removal_Tool <color=#909090>Ragdoll Modifier Removal Tool</color>
+
+Origin_Craft You crafted an item!
+Origin_Purchase Purchase successful!
+
+No_Items Waiting for Steam inventory response...
+
+Overlay Steam overlay needs to be enabled.

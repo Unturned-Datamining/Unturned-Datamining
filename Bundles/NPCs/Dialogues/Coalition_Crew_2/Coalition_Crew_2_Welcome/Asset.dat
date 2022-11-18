@@ -1,0 +1,22 @@
+GUID 02f0362eecd3412e9541f873f5859ec7
+Type Dialogue
+ID 96
+
+Messages 1
+Message_0_Pages 1
+
+Responses 2
+
+// Evidence?
+// Coalition_Crew_2_Evidence
+Response_0_Dialogue 189
+Response_0_Conditions 1
+Response_0_Condition_0_Type Flag_Bool
+Response_0_Condition_0_Logic Equal
+Response_0_Condition_0_ID 182
+Response_0_Condition_0_Value False
+Response_0_Rewards 1
+Response_0_Reward_0_Type Flag_Bool
+Response_0_Reward_0_ID 182
+Response_0_Reward_0_Value True
+Response_0_Reward_0_Modification Assign

@@ -1,0 +1,67 @@
+Play_Button Play Offline
+Play_Button_Tooltip Travel to this map.
+Browse_Servers_Label Browse Servers
+Browse_Servers_Tooltip Find internet servers running this map.
+
+Any_Button Any Mode
+Easy_Button Easy
+Normal_Button Normal
+Hard_Button Hard
+
+Config_Button Advanced
+Config_Button_Tooltip Modify gameplay configuration.
+
+Reset_Button Reset World
+Reset_Button_Tooltip Reset singleplayer savedata on this map.
+Reset_Button_Confirm Reset
+Reset_Button_Confirm_Tooltip Cannot be reversed!
+Reset_Button_Deny Cancel
+Reset_Button_Deny_Tooltip Keep singleplayer savedata on this map.
+
+Maps_Official Official
+Maps_Official_Tooltip Created by Nelson
+Maps_Curated Curated
+Maps_Curated_Tooltip Hand-picked community-created updates
+Maps_Workshop Workshop
+Maps_Workshop_Tooltip Downloaded from the workshop
+Maps_Misc Misc
+Maps_Misc_Tooltip From events and tests
+
+Retired_View_Label View on Workshop
+Retired_View_Tooltip Browse to map on Steam Workshop.
+Retired_Manage_Sub Subscribe
+Retired_Manage_Unsub Unsubscribe
+Retired_Manage_Tooltip Auto install or uninstall this map.
+
+Manage_Workshop_Label Manage Subscriptions
+Manage_Workshop_Tooltip Manage Subscribed Files
+
+Tiny Tiny
+Small Small
+Medium Medium
+Large Large
+Insane Insane
+
+Curated_Map_Timed LIMITED
+Curated_Map_Timestamp {0}
+Curated_Map_Timestamp_Format MMM/dd/yy
+
+Cheats_Label Allow Cheatcodes
+
+Survival Survival
+Horde Horde [Alpha]
+Arena Arena
+
+Info_WithVersion {0} - {1} - v{2}
+
+Creators Created by:
+Collaborators Created in collaboration with:
+Thanks Special thanks to:
+Credits_Text If you are enjoying the {0} map considering supporting its creators by checking out the {1}! Further details available on the stockpile page.
+Credits_Tooltip Click here to view the stockpile page.
+Timed_Text This map has been officially featured from the Workshop until: <color=#00FF00>{0}</color> Afterwards it will remain available on the Steam Workshop.
+
+Feedback_Button Feedback & Bug Reports
+Feedback_Button_Tooltip Click here to view discussions.
+
+Overlay Steam overlay needs to be enabled.

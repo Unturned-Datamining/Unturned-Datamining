@@ -1,0 +1,8 @@
+GUID 5f145fd6be0d49a69d5b3d968f559036
+Type Effect
+ID 150
+
+CameraShake_Radius 16
+CameraShake_MagnitudeDegrees 30
+
+Blast 137

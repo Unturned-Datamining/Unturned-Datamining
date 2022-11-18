@@ -1,0 +1,27 @@
+GUID ed7e8310ad754a8d9ebe152a0ef6f437
+Type Structure
+Rarity Epic
+Useable Structure
+Construct Pillar
+ID 374
+
+Size_X 1
+Size_Y 2
+Size_Z 0.475
+
+Health 1100
+Range 8
+
+Explosion 36
+
+Blueprints 1
+Blueprint_0_Type Structure
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 68
+Blueprint_0_Supply_0_Amount 3
+Blueprint_0_Level 2
+Blueprint_0_Skill Craft
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/MetalPlacement.mp3
+
+Has_Clip_Prefab false

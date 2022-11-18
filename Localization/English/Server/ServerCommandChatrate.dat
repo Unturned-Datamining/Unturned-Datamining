@@ -1,0 +1,9 @@
+InvalidNumberErrorText Failed to convert {0} into a number.
+MinNumberErrorText Failed to make timeout less than {0}.
+MaxNumberErrorText Failed to make timeout greater than {0}.
+
+ChatrateCommandText Chatrate
+ChatrateInfoText Chatrate [Number]
+ChatrateHelpText This assigns a minimum time between chat messages.
+
+ChatrateText Successfully set chatrate to {0}!

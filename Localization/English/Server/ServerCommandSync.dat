@@ -1,0 +1,7 @@
+RunningErrorText Failed to enable sync while running.
+
+SyncCommandText Sync
+SyncInfoText Sync
+SyncHelpText This allows players to share savedata between your servers.
+
+SyncText Successfully enabled sync.

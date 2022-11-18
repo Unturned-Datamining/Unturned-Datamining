@@ -1,0 +1,14 @@
+GUID 4eb2a43ed6144aedb491c2d9bdae69e1
+Type Supply
+ID 1452
+
+Size_X 1
+Size_Y 1
+Size_Z 0.25
+
+Blueprints 1
+Blueprint_0_Type Supply
+Blueprint_0_Supply_0_ID 1452
+Blueprint_0_Product 1453
+Blueprint_0_Products 2
+Blueprint_0_Build 27

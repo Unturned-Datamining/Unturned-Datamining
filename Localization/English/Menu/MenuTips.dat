@@ -1,0 +1,33 @@
+Tip Tip: {0}
+Hotkey You can hotkey an item in your hands slot by right-clicking it and then pressing a number key [3-9].
+Equip You can quickly equip an item by holding [{0}] while right-clicking it.
+Drop You can quickly drop an item by holding [{0}] while left-clicking it.
+Sirens You can turn the sirens in a police vehicle on/off by pressing [{0}] as the driver.
+Transform You can copy transforms in the editor by pressing Ctrl+B and paste them by pressing Ctrl+N.
+Quality Your ranger weapons and attachments are more durable than their military counterparts.
+Umbrella You can use umbrellas to lower your falling speed and prevent fall damage.
+Heal You can heal other players by right-clicking on them while holding a medical item.
+Rotate You can rotate objects while building by holding right-click while dragging the mouse.
+Base Your crafting materials impacts stats and from best to worst are: <color=epic>Metal</color> -> <color=rare>Brick</color> -> <color=rare>Pine</color> -> <color=uncommon>Maple</color> -> <color=common>Birch</color>
+Dequip You can quickly dequip an item by pressing [{0}].
+Nightvision You can turn nightvision and headlamps on/off by pressing [{0}].
+Transfer You can quickly transfer an item in/out of storage by holding [{0}] while right-clicking it.
+Surface You can quickly surface while swimming by holding [{0}].
+Arrest You can eventually wiggle your way out of restraints by repeatedly tapping [{0}] and [{1}].
+Safezone You can protect an area from zombie spawns by placing a <color=legendary>Safezone Radiator</color>, but it also blocks item spawns.
+Claim You can prevent players from building in an area by placing a <color=legendary>Claim Flag</color>.
+Group You can join a group with your friends to disable friendlyfire, share buildables, see eachother on the map and win arena as a team.
+Map You can view a map of the area if you have a <color=uncommon>Chart</color> or <color=epic>GPS</color> by pressing [{0}].
+Beacon You can summon a wave of zombies for great loot drops by placing a <color=legendary>Horde Beacon</color>.
+Horn You can use the horn of a vehicle by pressing [{0}] as the driver.
+Lights You can turn the headlights in a vehicle on/off by pressing [{0}] as the driver.
+Snap You can snap an object's position and rotation by holding [{0}].
+Upgrade You can quickly craft all of an item or fully upgrade a skill by holding [{0}] while clicking it.
+Grab You can quickly grab an item from a rifle rack by holding [{0}] while interacting with it.
+Skycrane You can activate the <color=epic>Skycrane</color>'s electromagnet by pressing [{0}] while hovering over a vehicle.
+Seat You can swap seats in a vehicle by pressing the function keys [F1-F12].
+Rarity Your loot's rarity from best to worst is: <color=mythical>Mythical</color> -> <color=legendary>Legendary</color> -> <color=epic>Epic</color> -> <color=rare>Rare</color> -> <color=uncommon>Uncommon</color> -> <color=common>Common</color>
+Orientation You can rotate items in your inventory by pressing [{0}].
+Red Your critical hitmarker color setting also affects the color of glowing sights.
+Steady You can steady your scope by holding [{0}] while aiming. Remember to account for bullet drop and travel time!
+Streamer You can customize the names used in streamer mode by modifying StreamerNames.json, maybe with viewer/subscriber names!

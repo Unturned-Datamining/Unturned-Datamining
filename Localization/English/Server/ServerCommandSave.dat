@@ -1,0 +1,4 @@
+SaveCommandText Save
+SaveInfoText Save
+SaveHelpText This forces a proper save of the server state.
+SaveText Successfully saved the game.

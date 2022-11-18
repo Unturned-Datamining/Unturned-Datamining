@@ -1,0 +1,22 @@
+GUID 8eb14db352664975b6d4b3c1db833b8e
+Type Medium
+ID 828
+
+Conditions 1
+Condition_0_Type Flag_Bool
+Condition_0_ID 181
+Condition_0_Value False
+Condition_0_Logic Equal
+
+Interactability Note
+Interactability_Hint Use
+Interactability_Text_Lines 1
+Interactability_Rewards 1
+Interactability_Reward_0_Type Flag_Bool
+Interactability_Reward_0_ID 181
+Interactability_Reward_0_Value True
+
+Asset_Bundle_Version 2
+Bypass_ID_Limit
+Bundle_Override_Path /Objects/Medium/Furniture/Note
+Has_Clip_Prefab false

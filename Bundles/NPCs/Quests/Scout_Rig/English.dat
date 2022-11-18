@@ -1,0 +1,4 @@
+Name First Contact
+Description This isn't the first time the <color=legendary>Coalition</color>'s been to Russia. Back in the organization's infancy a primarily Russian task force seized an offshore oil rig in the South-West as a proxy pending backup to reclaim the mainland, but something went wrong. <color=rare>Lieutenant Oswald</color> needs you to find out what.
+
+Condition_0 Clear Oil Rig <color=legendary>Horde Beacon</color> {0}/{1}

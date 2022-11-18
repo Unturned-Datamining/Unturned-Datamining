@@ -1,0 +1,20 @@
+GUID 5f609a8593504f2c88402cf2c45b49d3
+Type Supply
+Rarity Rare
+ID 119
+
+Size_X 2
+Size_Y 2
+Size_Z 0.45
+
+Amount 40
+Count_Min 10
+Count_Max 30
+
+Blueprints 1
+Blueprint_0_Type Ammo
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 119
+Blueprint_0_Build 30
+
+InventoryAudio Sounds/Inventory/SmallGunAttachment.asset

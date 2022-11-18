@@ -1,0 +1,28 @@
+"Metadata"
+{
+	"GUID" "5020515a0b9a4b1eb610c006d81f806c"
+	"Type" "SDG.Unturned.LandscapeMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"ID" "0"
+	"Texture"
+	{
+		"Name" "core.masterbundle"
+		"Path" "Terrain/Materials/Washington/Grass_00.png"
+	}
+	"Mask"
+	{
+		"Name" ""
+		"Path" ""
+	}
+	"Physics_Material" "FOLIAGE_STATIC"
+	"Foliage"
+	{
+		"GUID" "8962cb5728a54024bc0bef1e4c82c88d"
+	}
+	"Christmas_Redirect"
+	{
+		"GUID" "e25f0351181f4ad1a9c0dc31d2fedade"
+	}
+}

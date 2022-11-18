@@ -1,0 +1,14 @@
+"Metadata"
+{
+	"GUID" "68f4c2961e224acab4d3b70ebba55149"
+	"Type" "SDG.Unturned.WeatherAssetBase, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"Has_Lightning" "true"
+	"Min_Lightning_Interval" "5.0"
+	"Max_Lightning_Interval" "7.5"
+	"Lightning_Target_Radius" "50.0"
+	"Fade_In_Duration" "1.0"
+	"Fade_Out_Duration" "1.0"
+}

@@ -1,0 +1,38 @@
+GUID 06a78e7fdace45bcab785e1913a4c624
+Type Storage
+Rarity Rare
+Useable Barricade
+Build Storage
+ID 1248
+
+Size_X 2
+Size_Y 2
+Size_Z 0.5
+
+Health 500
+Range 4
+Radius 0.5
+Offset 0.75
+
+Storage_X 7
+Storage_Y 4
+
+Locked
+
+Explosion 36
+
+Blueprints 1
+Blueprint_0_Type Furniture
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 68
+Blueprint_0_Supply_0_Amount 2
+Blueprint_0_Supply_1_ID 285
+Blueprint_0_Supply_1_Amount 2
+Blueprint_0_Tool 76
+Blueprint_0_Level 3
+Blueprint_0_Skill Craft
+Blueprint_0_Build 27
+
+Should_Close_When_Outside_Range true
+PlacementAudioClip Sounds/MetalPlacement.mp3
+Has_Clip_Prefab false

@@ -1,0 +1,28 @@
+"Metadata"
+{
+	"GUID" "b4ffe0d7b8ed4ff2b4c302c489108b02"
+	"Type" "SDG.Unturned.LandscapeMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"ID" "0"
+	"Texture"
+	{
+		"Name" "core.masterbundle"
+		"Path" "Terrain/Materials/Russia/Leaves_00.png"
+	}
+	"Mask"
+	{
+		"Name" ""
+		"Path" ""
+	}
+	"Physics_Material" "FOLIAGE_STATIC"
+	"Foliage"
+	{
+		"GUID" "7378d43d58b84e5885867b52f4dbd9ae"
+	}
+	"Christmas_Redirect"
+	{
+		"GUID" "e25f0351181f4ad1a9c0dc31d2fedade"
+	}
+}

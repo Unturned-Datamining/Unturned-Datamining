@@ -1,0 +1,28 @@
+GUID 870a1bdb38a644ef94b3606650550e9e
+Type Barricade
+Rarity Rare
+Useable Barricade
+Build Sign
+ID 1233
+
+Size_X 2
+Size_Y 2
+Size_Z 0.7
+
+Health 350
+Range 4
+Radius 1
+Offset 5
+
+Explosion 29
+
+Blueprints 1
+Blueprint_0_Type Furniture
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 66
+Blueprint_0_Supply_0_Amount 5
+Blueprint_0_Supply_1_ID 42
+Blueprint_0_Supply_1_Amount 7
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

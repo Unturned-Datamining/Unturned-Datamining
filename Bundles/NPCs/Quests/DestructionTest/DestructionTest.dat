@@ -1,0 +1,11 @@
+GUID 89feb196a8934f469cbe1f2a73ff6f36
+Type Quest
+ID 250
+
+Conditions 1
+Condition_0_Type Kills_Object
+Condition_0_ID 251
+Condition_0_Value 5
+Condition_0_Nav 255
+Condition_0_Object 40921a1a3cd742f69cc25cc25b856572
+Condition_0_Logic Greater_Than_Or_Equal_To

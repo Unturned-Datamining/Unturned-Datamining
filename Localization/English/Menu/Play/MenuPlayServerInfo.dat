@@ -1,0 +1,72 @@
+Password_Field_Label Password
+Password_Field_Replace #
+
+Join_Button Join
+Join_Button_Tooltip Connect
+Refresh_Button Refresh
+Refresh_Button_Tooltip Refresh
+Cancel_Button Cancel
+Cancel_Button_Tooltip Back
+
+Favorite_On_Button Favorite
+Favorite_Off_Button Unfavorite
+Favorite_Button_Tooltip Favorite/Unfavorite
+
+Players Players: {0}/{1}
+Details Details
+Map Map: {0}
+
+Workshop Workshop: {0}
+Combat Combat: {0}
+Perspective Perspective: {0}
+Security Security: {0}
+Mode Mode: {0}
+Cheats Cheats: {0}
+GameMode Game: {0}
+
+Monetization_None Monetization: None
+Monetization_NonGameplay Monetization: Non-Gameplay
+HostBan_MonetizationWarning Warning: this server is breaking the monetization rules which took effect on June 11th 2021. Click here for more information.
+HostBan_WorkshopWarning Warning: the workshop files used by this server have been banned.
+HostBan_Apology Message from the game developers: our apologies for mistakenly flagging your server! We are sorry for the trouble and will do our best to prevent it from happening again in the future.
+
+Yes Enabled
+No Disabled
+
+PvP Player vs Player
+PvE Player vs Environment
+
+First First Person
+Third Third Person
+Both First and Third Person
+Vehicle Vehicle Third Person
+
+VAC_Secure VAC Enabled
+VAC_Insecure VAC Disabled
+
+BattlEye_Secure BattlEye Required
+BattlEye_Insecure BattlEye Disabled
+
+Subscribe +
+Subscribe_Tooltip Subscribe to {0}
+Unsubscribe -
+Unsubscribe_Tooltip Unsubscribe from {0}
+
+Easy Easy
+Normal Normal
+Hard Hard
+
+Server Server:
+UGC Workshop:
+Config Configuration:
+Rule {0}: {1}
+Plugins_Rocket Rocket Plugins:
+Plugins_OpenMod OpenMod Plugins:
+Plugins_Unknown Plugins:
+
+ServerNewerVersion_Label Server running a newer version: {0}
+ServerNewerVersion_Tooltip Cannot join because this server is running a newer version of the game. Restart your client to update.
+ServerOlderVersion_Label Server running an older version: {0}
+ServerOlderVersion_Tooltip Cannot join because this server is running an older version of the game. Host needs to update.
+ServerBlacklisted_Label This server is banned.
+ServerBlacklisted_Tooltip Cannot join because the server has been banned.

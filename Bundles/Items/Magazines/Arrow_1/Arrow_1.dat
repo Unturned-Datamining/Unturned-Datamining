@@ -1,0 +1,24 @@
+GUID b5c948f84f7e44ba882fc8cecf8ae731
+Type Magazine
+Rarity Uncommon
+ID 347
+
+Size_X 2
+Size_Y 1
+Size_Z 0.2
+
+Amount 1
+
+Calibers 1
+Caliber_0 15
+
+Tracer 48
+
+Stuck 5
+
+Blueprints 1
+Blueprint_0_Type Repair
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 67
+Blueprint_0_Supply_0_Amount 1
+Blueprint_0_Build 27

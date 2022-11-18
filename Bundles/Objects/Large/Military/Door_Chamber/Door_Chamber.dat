@@ -1,0 +1,12 @@
+GUID 9f9a147fa3354585b461aea7597c738b
+Type Large
+ID 739
+
+Interactability Binary_State
+Interactability_Delay 3.5
+Interactability_Reset 60
+
+// Disables player interacting with F key.
+Interactability_Remote
+
+Has_Clip_Prefab false

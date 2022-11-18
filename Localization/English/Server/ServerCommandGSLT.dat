@@ -1,0 +1,7 @@
+RunningErrorText Cannot change login token while server running.
+
+GSLTCommandText GSLT
+GSLTInfoText GSLT [Login Token]
+GSLTHelpText This sets the game server login token.
+
+SetText Successfully set game server login token.

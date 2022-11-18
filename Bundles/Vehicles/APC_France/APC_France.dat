@@ -1,0 +1,44 @@
+GUID 4b0f7567f172492ab4b270449d3957c8
+Type Vehicle
+Rarity Legendary
+ID 172
+
+Speed_Min -6
+Speed_Max 13
+Wheel_Collider_Mass_Override 5
+
+Num_Steering_Tires 4
+Steering_Tire_2 4
+Steering_Tire_3 5
+
+Steer_Min 16
+Steer_Max 32
+
+Brake 32
+
+Fuel_Min 200
+Fuel_Max 400
+Fuel 2500
+
+Health_Min 800
+Health_Max 900
+Health 1000
+
+Exit 3.5
+
+Passenger_Explosion_Armor 0.2
+
+Traction
+
+Trunk_Storage_X 7
+Trunk_Storage_Y 5
+
+Explosion 20
+Invulnerable
+Tires_Invulnerable
+
+Shared_Skin_Lookup_ID 53
+
+IgnitionAudioClip Sounds/CarIgnition.mp3
+HornAudioClip Sounds/CarHorn_03.mp3
+Has_Clip_Prefab false

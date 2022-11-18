@@ -1,0 +1,43 @@
+GUID f810038d5c1342e0aba502ff97b367c5
+Type Dialogue
+ID 6
+
+Messages 1
+// Angry grumble
+Message_0_Pages 1
+
+Responses 3
+
+// Evidence?
+// Traitor_Len_Evidence
+Response_0_Dialogue 191
+Response_0_Conditions 1
+Response_0_Condition_0_Type Flag_Bool
+Response_0_Condition_0_Logic Equal
+Response_0_Condition_0_ID 190
+Response_0_Condition_0_Value False
+Response_0_Rewards 1
+Response_0_Reward_0_Type Flag_Bool
+Response_0_Reward_0_ID 190
+Response_0_Reward_0_Value True
+Response_0_Reward_0_Modification Assign
+
+// Major Len is smuggling supplies!
+// Traitor_Find_Relay_Evidence_Accepted
+Response_1_Dialogue 196
+Response_1_Quest 194
+Response_1_Conditions 2
+Response_1_Condition_0_Type Quest
+Response_1_Condition_0_Logic Equal
+Response_1_Condition_0_ID 194
+Response_1_Condition_0_Status None
+Response_1_Condition_1_Type Flag_Bool
+Response_1_Condition_1_Logic Equal
+Response_1_Condition_1_ID 192
+Response_1_Condition_1_Value True
+Response_1_Rewards 2
+Response_1_Reward_0_Type Quest
+Response_1_Reward_0_ID 194
+Response_1_Reward_1_Type Flag_Bool
+Response_1_Reward_1_ID 195
+Response_1_Reward_1_Value False

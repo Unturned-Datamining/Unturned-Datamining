@@ -1,0 +1,122 @@
+GUID cabc10976a504be68ab08a2f4e03c39f
+Type Dialogue
+ID 44
+
+Messages 4
+
+Message_0_Pages 1
+Message_0_Responses 2
+Message_0_Response_0 0
+Message_0_Response_1 1
+// Show when we've talked to the captain don't have the radio tower quest
+Message_0_Conditions 2
+Message_0_Condition_0_Type Flag_Bool
+Message_0_Condition_0_Logic Equal
+Message_0_Condition_0_ID 2
+Message_0_Condition_0_Value True
+Message_0_Condition_1_Type Quest
+Message_0_Condition_1_Logic Equal
+Message_0_Condition_1_ID 47
+Message_0_Condition_1_Status None
+
+Message_1_Pages 1
+Message_1_Responses 2
+Message_1_Response_0 3
+Message_1_Response_1 4
+// Show when we finished the radio tower quest and don't have the poster quest
+Message_1_Conditions 2
+Message_1_Condition_0_Type Quest
+Message_1_Condition_0_Logic Equal
+Message_1_Condition_0_ID 47
+Message_1_Condition_0_Status Completed
+Message_1_Condition_1_Type Quest
+Message_1_Condition_1_Logic Equal
+Message_1_Condition_1_ID 56
+Message_1_Condition_1_Status None
+
+Message_2_Pages 1
+Message_2_Responses 2
+Message_2_Response_0 6
+Message_2_Response_1 7
+// Show when we finished the poster quest and don't have the valentines
+Message_2_Conditions 2
+Message_2_Condition_0_Type Quest
+Message_2_Condition_0_Logic Equal
+Message_2_Condition_0_ID 56
+Message_2_Condition_0_Status Completed
+Message_2_Condition_1_Type Quest
+Message_2_Condition_1_Logic Equal
+Message_2_Condition_1_ID 230
+Message_2_Condition_1_Status None
+
+Message_3_Pages 1
+
+Responses 9
+
+// I'll take a look 
+// Commander_Broadcast_Repair_Accepted
+Response_0_Dialogue 45
+Response_0_Quest 47
+Response_0_Messages 1
+Response_0_Message_0 0
+Response_0_Rewards 1
+Response_0_Reward_0_Type Quest
+Response_0_Reward_0_ID 47
+
+Response_1_Messages 1
+Response_1_Message_0 0
+
+// I repaired those radio towers
+// Commander_Broadcast_Repair_Completed
+Response_2_Dialogue 46
+Response_2_Quest 47
+Response_2_Conditions 1
+Response_2_Condition_0_Type Quest
+Response_2_Condition_0_Logic Equal
+Response_2_Condition_0_ID 47
+Response_2_Condition_0_Status Ready
+Response_2_Condition_0_Reset
+
+// I'll take a look 
+// Commander_Coalition_Propaganda_Accepted
+Response_3_Dialogue 57
+Response_3_Quest 56
+Response_3_Messages 1
+Response_3_Message_0 1
+Response_3_Rewards 2
+Response_3_Reward_0_Type Quest
+Response_3_Reward_0_ID 56
+Response_3_Reward_1_Type Flag_Bool
+Response_3_Reward_1_ID 50
+Response_3_Reward_1_Value True
+
+Response_4_Messages 1
+Response_4_Message_0 1
+
+// I put up those posters
+// Commander_Coalition_Propaganda_Completed
+Response_5_Dialogue 58
+Response_5_Quest 56
+Response_5_Conditions 1
+Response_5_Condition_0_Type Quest
+Response_5_Condition_0_Logic Equal
+Response_5_Condition_0_ID 56
+Response_5_Condition_0_Status Ready
+Response_5_Condition_0_Reset
+
+// Right away
+// Commander_Valentines_Note_Accepted
+Response_6_Dialogue 232
+Response_6_Quest 230
+Response_6_Messages 1
+Response_6_Message_0 2
+Response_6_Rewards 2
+Response_6_Reward_0_Type Quest
+Response_6_Reward_0_ID 230
+Response_6_Reward_1_Type Flag_Short
+Response_6_Reward_1_ID 231
+Response_6_Reward_1_Value 0
+Response_6_Reward_1_Modification Assign
+
+Response_7_Messages 1
+Response_7_Message_0 1

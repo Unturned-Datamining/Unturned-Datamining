@@ -1,0 +1,12 @@
+GUID a8cedea61f3748b286056d4813717d49
+Type Food
+Useable Consumeable
+ID 1453
+
+Size_X 1
+Size_Y 1
+Size_Z 0.225
+
+Food 7
+Water 3
+ConsumeAudioClip Sounds/EatSquishy.mp3

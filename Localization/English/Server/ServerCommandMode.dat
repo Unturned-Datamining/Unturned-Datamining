@@ -1,0 +1,12 @@
+NoModeErrorText Failed to find gamemode called {0}.
+RunningErrorText Failed to change gamemode while running.
+
+ModeCommandText Mode
+ModeInfoText Mode [Easy | Normal | Hard]
+ModeHelpText This assigns the difficulty of the server.
+
+ModeText Successfully set gamemode to {0}!
+
+ModeEasy Easy
+ModeNormal Normal
+ModeHard Hard

@@ -1,0 +1,19 @@
+GUID b1db3548447c4cde9f92d274e22f57a2
+Type Animal
+ID 5
+
+Speed_Run 12
+Speed_Walk 4
+
+Behaviour Offense
+
+Health 100
+Regen 0.2
+Damage 20
+
+Reward_ID 523
+Reward_XP 30
+Reward_Min 3
+Reward_Max 4
+
+Roars 3

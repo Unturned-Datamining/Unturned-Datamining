@@ -1,0 +1,17 @@
+"Metadata"
+{
+	"GUID" "aaa9f4f45b844a7b965ce892eb476ee3"
+	"Type" "SDG.Unturned.PhysicsMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"UnityNames"
+	[
+		"Metal_Slip"
+	]
+	"Fallback" "30eecfddde4d4192859dc7c49fc4c0db" // Metal_High
+	"Character_Friction_Mode" "Custom"
+	"Character_Acceleration_Multiplier" "2"
+	"Character_Deceleration_Multiplier" "0.5"
+	"Character_Max_Speed_Multiplier" "3"
+}

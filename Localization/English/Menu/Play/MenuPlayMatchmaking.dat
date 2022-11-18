@@ -1,0 +1,15 @@
+Search_Button Search
+Search_Button_Tooltip Find Server
+Info_Button More Info
+Info_Button_Tooltip Preview Server
+Lucky_Button I'm Feeling Lucky
+Lucky_Button_Tooltip Join Server
+
+Progress_Matches Found and comparing {0} ideal servers...
+Progress_Best Best match - {0}
+Match_No Unknown
+Match_Yes Players: {0}/{1} Ping: {2} 
+
+Easy_Button Easy
+Normal_Button Normal
+Hard_Button Hard

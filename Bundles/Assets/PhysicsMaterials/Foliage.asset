@@ -1,0 +1,27 @@
+"Metadata"
+{
+	"GUID" "1c3a3c6664f14aa486d73528a5d9f92c"
+	"Type" "SDG.Unturned.PhysicsMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"UnityNames"
+	[
+		"Foliage"
+		"Foliage_Static"
+	]
+	"AudioDefs"
+	{
+		"BipedLand" "Effects/Physics/BipedLand/Grass/BipedLand_Grass.asset"
+		"FootstepWalk" "Effects/Physics/Footstep/Grass_Walk/Footstep_Grass_Walk.asset"
+		"FootstepRun" "Effects/Physics/Footstep/Grass_Run/Footstep_Grass_Run.asset"
+		"BulletCasingBounce" "Effects/Physics/BulletCasingBounce/Grass/BulletCasingBounce_Grass.asset"
+		"ShotgunShellBounce" "Effects/Physics/ShotgunShellBounce/Grass/ShotgunShellBounce_Grass.asset"
+		"BulletImpact" "Effects/Physics/BulletImpact/Grass/BulletImpact_Grass.asset"
+		"LegacyImpact" "Effects/Physics/LegacyImpact/LegacyImpact_Foliage.asset"
+		"MeleeImpact" "Effects/Physics/MeleeImpact/Grass/MeleeImpact_Grass.asset"
+	}
+	"WipDoNotUseTemp_BulletImpactEffect" "104b07a643734f599848911f3e3fe3b8" // Foliage_NoAudio
+	"IsArable" "true"
+	"HasOil" "true"
+}

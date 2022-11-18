@@ -1,0 +1,95 @@
+"Metadata"
+{
+	"GUID" "f68432cce6264d4d91bb404689945ffd"
+	"Type" "SDG.Framework.Foliage.FoliageInfoCollectionAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"ID" "0"
+	"Foliage"
+	[
+		{
+			"Asset"
+			{
+				"GUID" "c928fb99bae9434795563319a64f6461"
+			}
+			"Weight" "1"
+		}
+		{
+			"Asset"
+			{
+				"GUID" "8d1cfde8b23d48ad95b49b3cbf5e18d2"
+			}
+			"Weight" "1"
+		}
+		{
+			"Asset"
+			{
+				"GUID" "703378589e9f404db3bf2d539b740593"
+			}
+			"Weight" "1"
+		}
+		{
+			"Asset"
+			{
+				"GUID" "75a0a1c332b5498baa7c7c1d59dc5122"
+			}
+			"Weight" "1"
+		}
+		{
+			"Asset"
+			{
+				"GUID" "d00e2b1ff7b84935be1ba5c85ef3b716"
+			}
+			"Weight" "1"
+		}
+		{
+			"Asset"
+			{
+				// Birch_0
+				"GUID" "f97784e46fd7455ea3ea01dc579056d7"
+			}
+			"Weight" "1"
+		}
+		{
+			"Asset"
+			{
+				// Birch_1
+				"GUID" "08368bee9a364595b5639e8e42edcc64"
+			}
+			"Weight" "1"
+		}
+		{
+			"Asset"
+			{
+				// Maple_0
+				"GUID" "6c4d91b697d34c168dd68ac17c7e7df0"
+			}
+			"Weight" "1"
+		}
+		{
+			"Asset"
+			{
+				// Maple_1
+				"GUID" "c7b1e1ac4e2143299a860f4d5a1a3496"
+			}
+			"Weight" "1"
+		}
+		{
+			"Asset"
+			{
+				// Bush_0
+				"GUID" "2f629d32da454ae5987663fe9162f0d2"
+			}
+			"Weight" "1"
+		}
+		{
+			"Asset"
+			{
+				// Bush_1
+				"GUID" "86716ff0cd9348ed8b9e35929d8401a5"
+			}
+			"Weight" "1"
+		}
+	]
+}

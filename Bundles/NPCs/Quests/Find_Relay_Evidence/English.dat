@@ -1,0 +1,4 @@
+Name The Conspiracy's Conclusion
+Description <color=epic>Major Len</color> just received a transmission from the smugglers that seems to have originated from Silo 22 in the far North, but he suspects they actually used it as a relay station. If that's correct there should be a log in the command center which might reveal who sent it, and from where.
+
+Condition_0 Find Relay Log {0}/1

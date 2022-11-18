@@ -1,0 +1,7 @@
+GUID 4f4a605c7bd24a3ab80bbd8924ddcbdc
+Type Effect
+ID 53
+
+// This is the effect used by explosive bullets and HMG.
+CameraShake_Radius 6
+CameraShake_MagnitudeDegrees 2

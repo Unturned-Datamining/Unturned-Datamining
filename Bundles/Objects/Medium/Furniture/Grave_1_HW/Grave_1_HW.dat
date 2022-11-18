@@ -1,0 +1,8 @@
+GUID 7ce113ae9f3345c5b30be33a602d4980
+Type Medium
+ID 860
+
+Holiday_Restriction HALLOWEEN
+Bundle_Override_Path /Objects/Medium/Furniture/Grave_1
+
+Has_Clip_Prefab false

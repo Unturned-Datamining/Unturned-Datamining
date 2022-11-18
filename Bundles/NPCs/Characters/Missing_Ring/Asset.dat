@@ -1,0 +1,20 @@
+GUID 517da5b6274c4391878388d9b814b75c
+Type NPC
+ID 808
+
+Shirt 164
+Pants 213
+
+Has_Christmas_Outfit True
+Christmas_Shirt 164
+Christmas_Pants 213
+Christmas_Hat 278
+
+Face 20
+Hair 8
+Color_Skin #BEA582
+Color_Hair #665037
+
+Dialogue 137
+
+Has_Clip_Prefab false

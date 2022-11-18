@@ -1,0 +1,43 @@
+GUID 14901f32cd3240179fd6124324cc27e5
+Type Supply
+ID 66
+
+Size_X 1
+Size_Y 1
+Size_Z 0.45
+
+Blueprints 6
+Blueprint_0_Type Gear
+Blueprint_0_Supply_0_ID 516
+Blueprint_0_Supply_0_Amount 2
+Blueprint_0_Build 27
+Blueprint_1_Type Gear
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 1051
+Blueprint_1_Supply_0_Amount 3
+Blueprint_1_Build 27
+Blueprint_2_Type Gear
+Blueprint_2_Supply_0_ID 1052
+Blueprint_2_Supply_0_Amount 3
+Blueprint_2_Build 27
+Blueprint_3_Type Gear
+Blueprint_3_Supply_0_ID 1053
+Blueprint_3_Supply_0_Amount 3
+Blueprint_3_Build 27
+Blueprint_4_Type Gear
+Blueprint_4_Supply_0_ID 1054
+Blueprint_4_Supply_0_Amount 3
+Blueprint_4_Build 27
+Blueprint_5_Type Gear
+Blueprint_5_Supply_0_ID 1055
+Blueprint_5_Supply_0_Amount 3
+Blueprint_5_Build 27
+
+Actions 1
+Action_0_Type Blueprint
+Action_0_Source 393
+Action_0_Blueprints 1
+Action_0_Blueprint_0_Index 0
+Action_0_Key Craft_Rag
+
+InventoryAudio Sounds/Inventory/LightCloth.asset

@@ -1,0 +1,7 @@
+RunningErrorText Failed to enable filter while running.
+
+FilterCommandText Filter
+FilterInfoText Filter
+FilterHelpText This filters out players with non-English-alphanumeric names.
+
+FilterText Successfully enabled name filter.

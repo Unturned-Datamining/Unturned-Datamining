@@ -1,0 +1,52 @@
+"Metadata"
+{
+	"GUID" "87aba6cecf1c40788e98ab17a1c38783"
+	"Type" "SDG.Unturned.MaterialPaletteAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"ID" "0"
+	"Materials"
+	[
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/House/House_00.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/House/House_01.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/House/House_02.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/House/House_03.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/House/House_04.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/House/House_05.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/House/House_06.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/House/House_07.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/House/House_08.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/House/House_09.mat"
+		}
+	]
+}

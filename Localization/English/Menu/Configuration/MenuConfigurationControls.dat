@@ -1,0 +1,111 @@
+Sensitivity_Field_Label Mouse Aim Sensitivity (Degrees per Pixel)
+Invert_Toggle_Label Invert Look
+Invert_Flight_Toggle_Label Invert Flight
+Aiming_Label Aiming
+Crouching_Label Crouching
+Proning_Label Proning
+Sprinting_Label Sprinting
+Leaning_Label Leaning
+
+SensitivityScalingMode_Label Sensitivity Scaling Mode
+SensitivityScalingMode_ProjectionRatio Focal Length
+SensitivityScalingMode_ProjectionRatio_Tooltip Scale by ratio between active FOV projected onto screen and configured FOV projected onto screen.
+SensitivityScalingMode_ZoomFactor Zoom Factor
+SensitivityScalingMode_ZoomFactor_Tooltip Multiply sensitivity according to scope/optic zoom. For example an 8x zoom has 1/8th sensitivity.
+SensitivityScalingMode_Legacy Legacy
+SensitivityScalingMode_Legacy_Tooltip Preserve how sensitivity felt prior to 3.22.8.0 update.
+SensitivityScalingMode_None Disabled
+SensitivityScalingMode_None_Tooltip Sensitivity is unmodified while aiming. Not recommended.
+
+ProjectionRatioCoefficient_Label Projection Ratio Coefficient
+ProjectionRatioCoefficient_Tooltip Multiplier for "Focal Length" sensitivity scaling.
+
+Hold Hold
+Toggle Toggle
+
+Layout_0 Movement
+Layout_1 Stance
+Layout_2 Use
+Layout_3 Items
+Layout_4 Communication
+Layout_5 Interface
+Layout_6 Vehicle
+Layout_7 Editor
+Layout_8 Mods/Plugins
+Layout_9 Hotbar
+
+Key_0_Button Left [{0}]
+Key_1_Button Right [{0}]
+Key_2_Button Up [{0}]
+Key_3_Button Down [{0}]
+Key_4_Button Jump [{0}]
+Key_5_Button Lean Left [{0}]
+Key_6_Button Lean Right [{0}]
+Key_7_Button Primary [{0}]
+Key_8_Button Secondary [{0}]
+Key_9_Button Interact [{0}]
+Key_10_Button Crouch [{0}]
+Key_11_Button Prone [{0}]
+Key_12_Button Sprint [{0}]
+Key_13_Button Reload Gun [{0}]
+Key_14_Button Gun Attachments [{0}]
+Key_15_Button Firemode [{0}]
+Key_16_Button Dashboard [{0}]
+Key_17_Button Inventory [{0}]
+Key_18_Button Crafting [{0}]
+Key_19_Button Skills [{0}]
+Key_20_Button Map [{0}]
+Key_21_Button Player List [{0}]
+Key_22_Button Voice Chat [{0}]
+Key_23_Button Quick Action [{0}]
+Key_24_Button Snap Measurement [{0}]
+Key_25_Button Focus View [{0}]
+Key_26_Button Tool #1 [{0}]
+Key_27_Button Tool #2 [{0}]
+Key_28_Button Tool #3 [{0}]
+Key_29_Button Toggle HUD [{0}]
+Key_30_Button Quick Action [{0}]
+Key_31_Button World Chat [{0}]
+Key_32_Button Area Chat [{0}]
+Key_33_Button Group Chat [{0}]
+Key_34_Button Gesture [{0}]
+Key_35_Button Toggle Vision [{0}]
+Key_36_Button Toggle Tactical [{0}]
+Key_37_Button Swap Perspective [{0}]
+Key_38_Button Dequip Item [{0}]
+Key_39_Button Quick Stance [{0}]
+Key_40_Button Roll Left [{0}]
+Key_41_Button Roll Right [{0}]
+Key_42_Button Pitch Up [{0}]
+Key_43_Button Pitch Down [{0}]
+Key_44_Button Yaw Left [{0}]
+Key_45_Button Yaw Right [{0}]
+Key_46_Button Thrust Increase [{0}]
+Key_47_Button Thrust Decrease [{0}]
+Key_48_Button Inspect Weapon [{0}]
+Key_49_Button Rotate Item [{0}]
+Key_50_Button Tool #4 [{0}]
+Key_51_Button Ascend [{0}]
+Key_52_Button Descend [{0}]
+Key_53_Button Lock [{0}]
+Key_54_Button Quest List [{0}]
+Key_55_Button Reserved for future debug menu [{0}]
+Key_56_Button Screenshot [{0}]
+Key_57_Button Refresh Assets [{0}]
+Key_58_Button Clipboard Debug [{0}]
+Key_59_Button Code Hotkey #1 [{0}]
+Key_60_Button Code Hotkey #2 [{0}]
+Key_61_Button Code Hotkey #3 [{0}]
+Key_62_Button Code Hotkey #4 [{0}]
+Key_63_Button Code Hotkey #5 [{0}]
+Key_64_Button Item #1 [{0}]
+Key_65_Button Item #2 [{0}]
+Key_66_Button Item #3 [{0}]
+Key_67_Button Item #4 [{0}]
+Key_68_Button Item #5 [{0}]
+Key_69_Button Item #6 [{0}]
+Key_70_Button Item #7 [{0}]
+Key_71_Button Item #8 [{0}]
+Key_72_Button Item #9 [{0}]
+Key_73_Button Item #10 [{0}]
+Key_74_Button Release Cursor [{0}]

@@ -1,0 +1,26 @@
+namespace SDG.Unturned;
+
+public enum EZombieSpeciality
+{
+    NONE,
+    NORMAL,
+    MEGA,
+    CRAWLER,
+    SPRINTER,
+    FLANKER_FRIENDLY,
+    FLANKER_STALK,
+    BURNER,
+    ACID,
+    BOSS_ELECTRIC,
+    BOSS_WIND,
+    BOSS_FIRE,
+    BOSS_ALL,
+    BOSS_MAGMA,
+    SPIRIT,
+    BOSS_SPIRIT,
+    BOSS_NUCLEAR,
+    DL_RED_VOLATILE,
+    DL_BLUE_VOLATILE,
+    BOSS_ELVER_STOMPER,
+    BOSS_KUWAIT
+}

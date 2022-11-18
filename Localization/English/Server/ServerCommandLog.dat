@@ -1,0 +1,8 @@
+InvalidParameterErrorText Failed to find parameters in format [Chat]/[Join/Leave]/[Death]/[Anticheat].
+InvalidBooleanErrorText Failed to convert {0} into a boolean.
+
+LogCommandText Log
+LogInfoText Log [Chat Y/N]/[Join/Leave Y/N]/[Death Y/N]/[Anticheat Y/N]
+LogHelpText This assigns the console log options.
+
+LogText Successfully set log!

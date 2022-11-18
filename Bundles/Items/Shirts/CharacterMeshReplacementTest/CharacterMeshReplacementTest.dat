@@ -1,0 +1,15 @@
+GUID 32b38f9795a64f5883631a2c393964b1
+Type Shirt
+Rarity Epic
+Useable Clothing
+ID 1522
+
+Size_X 2
+Size_Y 2
+Size_Z 0.35
+
+Has_1P_Character_Mesh_Override True
+Character_Mesh_3P_Override_LODs 1
+Has_Character_Material_Override True
+
+Beard_Visible False

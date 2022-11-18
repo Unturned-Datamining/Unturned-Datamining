@@ -1,0 +1,17 @@
+GUID 46218740c256475b87dbc6a2e9a1fb19
+Type Supply
+Rarity Uncommon
+ID 40
+
+Size_X 1
+Size_Y 1
+Size_Z 0.4
+
+Blueprints 1
+Blueprint_0_Type Gear
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 61
+Blueprint_0_Supply_0_Amount 1
+Blueprint_0_Tool 141
+Blueprint_0_Products 4
+Blueprint_0_Build 27

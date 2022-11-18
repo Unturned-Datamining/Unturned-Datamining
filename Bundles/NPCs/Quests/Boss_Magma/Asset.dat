@@ -1,0 +1,17 @@
+GUID f9a226f7c4634b0bb1734a084c3ff48a
+Type Quest
+ID 241
+
+Conditions 1
+Condition_0_Type Kills_Zombie
+Condition_0_ID 242
+Condition_0_Value 1
+Condition_0_Zombie Boss_Magma
+Condition_0_Spawn
+Condition_0_Nav 50
+
+Rewards 2
+Reward_0_Type Experience
+Reward_0_Value 200
+Reward_1_Type Reputation
+Reward_1_Value 20

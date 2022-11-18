@@ -1,0 +1,20 @@
+"Metadata"
+{
+	"GUID" "9889a0b5aad04ddd8c4c463f3e1b79f6"
+	"Type" "SDG.Unturned.LandscapeMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"ID" "0"
+	"Texture"
+	{
+		"Name" "core.masterbundle"
+		"Path" "Terrain/Materials/Fallback/Black.png"
+	}
+	"Mask"
+	{
+		"Name" ""
+		"Path" ""
+	}
+	"Physics_Material" "Concrete_Static"
+}

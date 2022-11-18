@@ -1,0 +1,23 @@
+GUID 661deb313d2b4316928ceb0ff6f778a7
+Type NPC
+ID 754
+
+Shirt 303
+Pants 304
+
+Has_Christmas_Outfit True
+Christmas_Shirt 303
+Christmas_Pants 304
+Christmas_Hat 278
+Christmas_Backpack 827
+
+Face 15
+Hair 10
+Color_Skin #D9CAB4
+Color_Hair #191919
+
+Primary 1036
+
+Dialogue 14
+
+Has_Clip_Prefab false

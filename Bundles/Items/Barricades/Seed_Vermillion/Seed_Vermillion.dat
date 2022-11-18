@@ -1,0 +1,27 @@
+GUID 6582d36942ac40b88f0081fea872d2d2
+Type Farm
+Useable Barricade
+Build Farm
+ID 1110
+
+Size_X 1
+Size_Y 1
+Size_Z 0.2
+
+Health 1
+Range 4
+Radius 0.25
+Offset 0.375
+
+Growth 10800
+Grow 275
+
+Explosion 43
+Vulnerable
+
+Blueprints 1
+Blueprint_0_Type Utilities
+Blueprint_0_Supply_0_ID 275
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/FoliagePlacement.mp3
+Has_Clip_Prefab false

@@ -1,0 +1,33 @@
+GUID d97ef489133e47b5ba7e87590904f298
+Type Box
+ID 959
+
+Size_X 1
+Size_Y 1
+Size_Z 0.65
+
+Generate 21042
+
+Probability_Model Equalized
+Contains_Bonus_Items True
+
+Drops 16
+Drop_0 -1
+
+Drop_1 87201
+Drop_2 87301
+Drop_3 87401
+Drop_4 87501
+Drop_5 87601
+Drop_6 87701
+Drop_7 87801
+Drop_8 87901
+Drop_9 88001
+Drop_10 88101
+Drop_11 88201
+Drop_12 88301
+Drop_13 88401
+Drop_14 88501
+Drop_15 88601
+
+Pro

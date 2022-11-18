@@ -1,0 +1,29 @@
+GUID 89a2f3ba54e44a75949223e16c393e6d
+Type Barricade
+Rarity Epic
+Useable Barricade
+Build Shutter
+ID 1226
+
+Size_X 1
+Size_Y 2
+Size_Z 0.65
+
+Health 900
+Range 4
+Radius 0.5
+
+Locked
+
+Explosion 36
+
+Blueprints 1
+Blueprint_0_Type Barricade
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 68
+Blueprint_0_Supply_0_Amount 3
+Blueprint_0_Supply_1_ID 67
+Blueprint_0_Supply_1_Amount 1
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/MetalPlacement.mp3
+Has_Clip_Prefab false

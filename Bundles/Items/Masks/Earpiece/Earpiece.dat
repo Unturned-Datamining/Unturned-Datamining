@@ -1,0 +1,21 @@
+GUID 2ecf1b15a59f4125a2d55c88479529c2
+Type Mask
+Rarity Rare
+Useable Clothing
+ID 1446
+
+Size_X 1
+Size_Y 1
+Size_Z 0.15
+
+Hair
+Beard
+
+Earpiece
+
+Blueprints 1
+Blueprint_0_Type Tool
+Blueprint_0_Supply_0_ID 1446
+Blueprint_0_Product 67
+Blueprint_0_Products 1
+Blueprint_0_Build 27

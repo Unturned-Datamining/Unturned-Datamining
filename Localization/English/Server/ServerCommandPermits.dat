@@ -1,0 +1,9 @@
+NoPermitsErrorText Failed to find any permits.
+
+PermitsCommandText Permits
+PermitsInfoText Permits
+PermitsHelpText This shows a list of the current players allowed to join the server.
+
+PermitsText Permits:
+PermitNameText PlayerID: {0} Tag: {1}
+PermitJudgeText JudgeID: {0}

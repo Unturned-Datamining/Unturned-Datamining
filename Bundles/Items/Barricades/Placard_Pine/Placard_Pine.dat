@@ -1,0 +1,29 @@
+GUID c1b74e7d95eb46789439123d47ca6627
+Type Barricade
+Rarity Rare
+Useable Barricade
+Build Sign_Wall
+ID 1469
+
+Size_X 2
+Size_Y 2
+Size_Z 0.65
+
+Health 350
+Range 4
+Offset 0.125
+
+Explosion 29
+
+Blueprints 1
+Blueprint_0_Type Furniture
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 63
+Blueprint_0_Supply_0_Amount 5
+Blueprint_0_Supply_1_ID 42
+Blueprint_0_Supply_1_Amount 1
+Blueprint_0_Build 27
+
+Should_Close_When_Outside_Range true
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

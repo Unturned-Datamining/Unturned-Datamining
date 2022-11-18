@@ -1,0 +1,21 @@
+GUID 9388fac2eac8464bab80d73ff35d30f7
+
+Type Medium
+ID 1
+
+Interactability Note
+Interactability_Hint Use
+Interactability_Text_Lines 6
+
+Master_Bundle_Override core.masterbundle
+Bundle_Override_Path /Objects/Medium/Furniture/Note
+
+Holiday_Restriction CHRISTMAS
+
+Conditions 1
+Condition_0_Type Flag_Short
+Condition_0_ID 297
+Condition_0_Value 4
+Condition_0_Logic Less_Than
+Condition_0_Allow_Unset
+Has_Clip_Prefab false

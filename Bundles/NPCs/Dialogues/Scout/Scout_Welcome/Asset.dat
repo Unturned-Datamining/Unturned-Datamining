@@ -1,0 +1,204 @@
+GUID 1834ee3e3afc44578582da2f8c6c7c5e
+Type Dialogue
+ID 97
+
+Messages 6
+
+// Airport to scout
+Message_0_Pages 1
+Message_0_Responses 2
+Message_0_Response_0 0
+Message_0_Response_1 1
+// Show when we've talked to the captain don't have the airport quest
+Message_0_Conditions 2
+Message_0_Condition_0_Type Flag_Bool
+Message_0_Condition_0_Logic Equal
+Message_0_Condition_0_ID 2
+Message_0_Condition_0_Value True
+Message_0_Condition_1_Type Quest
+Message_0_Condition_1_Logic Equal
+Message_0_Condition_1_ID 98
+Message_0_Condition_1_Status None
+
+Message_1_Pages 1
+Message_1_Responses 2
+Message_1_Response_0 3
+Message_1_Response_1 4
+// Show when we finished the airport quest and don't have the factory quest
+Message_1_Conditions 2
+Message_1_Condition_0_Type Quest
+Message_1_Condition_0_Logic Equal
+Message_1_Condition_0_ID 98
+Message_1_Condition_0_Status Completed
+Message_1_Condition_1_Type Quest
+Message_1_Condition_1_Logic Equal
+Message_1_Condition_1_ID 100
+Message_1_Condition_1_Status None
+
+Message_2_Pages 1
+Message_2_Responses 2
+Message_2_Response_0 6
+Message_2_Response_1 7
+// Show when we finished the factory quest and don't have the military quest
+Message_2_Conditions 2
+Message_2_Condition_0_Type Quest
+Message_2_Condition_0_Logic Equal
+Message_2_Condition_0_ID 100
+Message_2_Condition_0_Status Completed
+Message_2_Condition_1_Type Quest
+Message_2_Condition_1_Logic Equal
+Message_2_Condition_1_ID 102
+Message_2_Condition_1_Status None
+
+Message_3_Pages 1
+Message_3_Responses 2
+Message_3_Response_0 9
+Message_3_Response_1 10
+// Show when we finished the military quest and don't have the silo quest
+Message_3_Conditions 2
+Message_3_Condition_0_Type Quest
+Message_3_Condition_0_Logic Equal
+Message_3_Condition_0_ID 102
+Message_3_Condition_0_Status Completed
+Message_3_Condition_1_Type Quest
+Message_3_Condition_1_Logic Equal
+Message_3_Condition_1_ID 104
+Message_3_Condition_1_Status None
+
+Message_4_Pages 1
+Message_4_Responses 2
+Message_4_Response_0 12
+Message_4_Response_1 13
+// Show when we finished the silo quest and don't have the rig quest
+Message_4_Conditions 2
+Message_4_Condition_0_Type Quest
+Message_4_Condition_0_Logic Equal
+Message_4_Condition_0_ID 104
+Message_4_Condition_0_Status Completed
+Message_4_Condition_1_Type Quest
+Message_4_Condition_1_Logic Equal
+Message_4_Condition_1_ID 106
+Message_4_Condition_1_Status None
+
+Message_5_Pages 1
+
+Responses 17
+
+// Scout_Airport_Accepted
+Response_0_Dialogue 108
+Response_0_Quest 98
+Response_0_Messages 1
+Response_0_Message_0 0
+Response_0_Rewards 1
+Response_0_Reward_0_Type Quest
+Response_0_Reward_0_ID 98
+
+Response_1_Messages 1
+Response_1_Message_0 0
+
+// I scouted airport
+// Scout_Airport_Completed
+Response_2_Dialogue 109
+Response_2_Quest 98
+Response_2_Conditions 1
+Response_2_Condition_0_Type Quest
+Response_2_Condition_0_Logic Equal
+Response_2_Condition_0_ID 98
+Response_2_Condition_0_Status Ready
+Response_2_Condition_0_Reset
+
+// Scout_Factory_Accepted
+Response_3_Dialogue 110
+Response_3_Quest 100
+Response_3_Messages 1
+Response_3_Message_0 1
+Response_3_Rewards 1
+Response_3_Reward_0_Type Quest
+Response_3_Reward_0_ID 100
+
+Response_4_Messages 1
+Response_4_Message_0 1
+
+// I scouted factory
+// Scout_Factory_Completed
+Response_5_Dialogue 111
+Response_5_Quest 100
+Response_5_Conditions 1
+Response_5_Condition_0_Type Quest
+Response_5_Condition_0_Logic Equal
+Response_5_Condition_0_ID 100
+Response_5_Condition_0_Status Ready
+Response_5_Condition_0_Reset
+
+// Scout_Military_Accepted
+Response_6_Dialogue 112
+Response_6_Quest 102
+Response_6_Messages 1
+Response_6_Message_0 2
+Response_6_Rewards 1
+Response_6_Reward_0_Type Quest
+Response_6_Reward_0_ID 102
+
+Response_7_Messages 1
+Response_7_Message_0 2
+
+// I scouted military
+// Scout_Military_Completed
+Response_8_Dialogue 113
+Response_8_Quest 102
+Response_8_Conditions 1
+Response_8_Condition_0_Type Quest
+Response_8_Condition_0_Logic Equal
+Response_8_Condition_0_ID 102
+Response_8_Condition_0_Status Ready
+Response_8_Condition_0_Reset
+
+// Scout_Silo_Accepted
+Response_9_Dialogue 114
+Response_9_Quest 104
+Response_9_Messages 1
+Response_9_Message_0 3
+Response_9_Rewards 1
+Response_9_Reward_0_Type Quest
+Response_9_Reward_0_ID 104
+
+Response_10_Messages 1
+Response_10_Message_0 3
+
+// I scouted silo
+// Scout_Silo_Completed
+Response_11_Dialogue 115
+Response_11_Quest 104
+Response_11_Conditions 1
+Response_11_Condition_0_Type Quest
+Response_11_Condition_0_Logic Equal
+Response_11_Condition_0_ID 104
+Response_11_Condition_0_Status Ready
+Response_11_Condition_0_Reset
+
+// Scout_Rig_Accepted
+Response_12_Dialogue 116
+Response_12_Quest 106
+Response_12_Messages 1
+Response_12_Message_0 4
+Response_12_Rewards 1
+Response_12_Reward_0_Type Quest
+Response_12_Reward_0_ID 106
+
+Response_13_Messages 1
+Response_13_Message_0 4
+
+// I scouted rig
+// Scout_Rig_Completed
+Response_14_Dialogue 117
+Response_14_Quest 106
+Response_14_Conditions 1
+Response_14_Condition_0_Type Quest
+Response_14_Condition_0_Logic Equal
+Response_14_Condition_0_ID 106
+Response_14_Condition_0_Status Ready
+Response_14_Condition_0_Reset
+
+// Working on?
+// Scout_Work
+Response_15_Dialogue 118

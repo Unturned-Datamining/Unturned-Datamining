@@ -1,0 +1,69 @@
+GUID a6808af5335f4c60b92793f20247002d
+Type Box
+ID 781
+
+Size_X 1
+Size_Y 1
+Size_Z 0.35
+
+Generate 21029
+Destroy 20002
+
+Drops 17
+Drop_0 -1
+
+// Legendary:
+
+// Elemental Zubeknakov
+Drop_1 500400
+
+// Steampunk Hell's Fury
+Drop_2 81800
+
+// Tigrus Eaglefire
+Drop_3 500700
+
+// Epic:
+
+// Lavalamp Baseball Bat
+Drop_4 81400
+
+// Nueva Era Bulldog
+Drop_5 500500
+
+// Armor Nykorev
+Drop_6 82100
+
+// Native Snayperskya
+Drop_7 81900
+
+// Rare:
+
+// Blood Dragon Katana
+Drop_8 82000
+
+// Equalizer Maplestrike
+Drop_9 500600
+
+// Bandana Nightraider
+Drop_10 81600
+
+// Prototype Scalar
+Drop_11 81500
+
+// Alien Hunter Fusilaut
+Drop_12 81300
+
+// Redforce Ace
+Drop_13 500300
+
+// Powertool Teklowvka
+Drop_14 500200
+
+// Killcount Peacemaker
+Drop_15 500100
+
+// Lunar Cargo Yuri
+Drop_16 500000
+
+Pro

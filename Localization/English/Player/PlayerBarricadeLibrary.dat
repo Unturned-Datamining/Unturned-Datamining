@@ -1,0 +1,17 @@
+Capacity_Text {0}/{1}
+Capacity_Label Capacity
+Wallet_Label Available
+Amount_Label Amount
+Transaction_Label Transaction
+Tax_Label Tax
+Net_Label Net
+
+Deposit Deposit
+Deposit_Label Transfer To
+Withdraw Withdraw
+Withdraw_Label Withdraw From
+
+Yes_Button Transfer
+Yes_Button_Tooltip Save Changes
+No_Button Cancel
+No_Button_Tooltip Erase Changes

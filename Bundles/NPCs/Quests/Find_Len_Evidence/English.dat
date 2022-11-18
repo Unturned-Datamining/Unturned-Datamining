@@ -1,0 +1,8 @@
+Name Coldcase
+Description <color=epic>Chief Brian</color> suggests starting with Darren, Harry's bunkmate, on the bridge. It might also be worth searching through Harry's stuff, and Natalie might have seen something, and Roman might have overheard something... Suffice it to say he has a lot of suggestions.
+
+Condition_0 Search <color=rare>Lieutenant Harry's</color> Quarters {0}/1
+Condition_1 Question <color=uncommon>Ensign Darren</color> {0}/1
+Condition_2 Talk to Natalie {0}/1
+Condition_3 Talk to Sous-Chef Roman {0}/1
+Condition_4 Talk to <color=epic>Major Len</color> {0}/1

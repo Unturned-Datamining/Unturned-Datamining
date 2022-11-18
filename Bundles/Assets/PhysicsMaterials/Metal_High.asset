@@ -1,0 +1,18 @@
+"Metadata"
+{
+	"GUID" "30eecfddde4d4192859dc7c49fc4c0db"
+	"Type" "SDG.Unturned.PhysicsMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"UnityNames"
+	[
+		"Metal_Dynamic"
+	]
+	"Fallback" "51de25840d4f4b778051a5c266ca1b4e" // MetalBase
+	"AudioDefs"
+	{
+		"FootstepWalk" "Effects/Physics/Footstep/MetalHigh_Walk/Footstep_MetalHigh_Walk.asset"
+		"FootstepRun" "Effects/Physics/Footstep/MetalHigh_Run/Footstep_MetalHigh_Run.asset"
+	}
+}

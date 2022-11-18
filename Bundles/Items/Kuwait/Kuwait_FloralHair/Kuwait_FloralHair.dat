@@ -1,0 +1,15 @@
+GUID 25abe7c0f2c04b2480e903465b8eb35f
+Type Hat
+ID 1683
+
+Size_X 1
+Size_Y 1
+Size_Z 0.5
+
+Beard
+
+Hair_Override Model_0_Hair
+
+Use_Auto_Icon_Measurements False
+
+Pro

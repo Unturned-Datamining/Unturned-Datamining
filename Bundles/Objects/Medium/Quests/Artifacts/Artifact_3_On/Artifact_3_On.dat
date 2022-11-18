@@ -1,0 +1,10 @@
+GUID 240bba789d6142c4bf39cad54982358a
+Type Medium
+ID 855
+
+Conditions 1
+Condition_0_Type Flag_Short
+Condition_0_ID 220
+Condition_0_Value 1
+Condition_0_Logic Equal
+Has_Clip_Prefab false

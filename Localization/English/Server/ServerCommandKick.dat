@@ -1,0 +1,11 @@
+InvalidParameterErrorText Failed to find parameters in format [SteamID | Player]/[Reason].
+
+NoPlayerErrorText Failed to find anyone called {0}.
+NotRunningErrorText Failed to kick player while not running.
+
+KickCommandText Kick
+KickInfoText Kick [SteamID | Player]/[Reason]
+KickHelpText This disconnects the specified player from the server.
+
+KickText Successfully kicked {0}!
+KickTextReason unspecified

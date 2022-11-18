@@ -1,0 +1,207 @@
+Items Items
+Vehicles Vehicles
+Zombies Zombies
+Animals Animals
+Barricades Barricades
+Structures Structures
+Players Players
+Objects Objects
+Events Events
+Gameplay Gameplay
+
+Spawn_Chance Spawn Chance [0-1]
+Respawn_Time Respawn Time
+Unlocked_After_Seconds_In_Safezone Unlocked After Seconds in Safezone
+Decay_Time Decay Time
+Damage_Multiplier Damage Multiplier
+Armor_Multiplier Armor Multiplier
+NonHeadshot_Armor_Multiplier Non-Headshot Armor Multiplier
+Child_Explosion_Armor_Multiplier Child Explosion Armor Multiplier
+Backstab_Multiplier Backstab Multiplier
+Armor_Lowtier_Multiplier Armor Low-Tier Multiplier
+Armor_Hightier_Multiplier Armor High-Tier Multiplier
+Gun_Lowcal_Damage_Multiplier Gun Lowcal Damage Multiplier
+Gun_Highcal_Damage_Multiplier Gun Highcal Damage Multiplier
+Melee_Damage_Multiplier Melee Damage Multiplier
+
+Max_Instances_Tiny Max Instances Tiny
+Max_Instances_Small Max Instances Small
+Max_Instances_Medium Max Instances Medium
+Max_Instances_Large Max Instances Large
+Max_Instances_Insane Max Instances Insane
+
+Despawn_Dropped_Time Despawn Dropped Time
+Despawn_Natural_Time Despawn Natural Time
+Has_Durability Has Durability
+
+Quality_Full_Chance Quality Full Chance [0-1]
+Quality_Multiplier Quality Multiplier
+
+Gun_Bullets_Full_Chance Gun Bullets Full Chance [0-1]
+Gun_Bullets_Multiplier Gun Bullets Multiplier
+Magazine_Bullets_Full_Chance Magazine Bullets Full Chance [0-1]
+Magazine_Bullets_Multiplier Magazine Bullets Multiplier
+Crate_Bullets_Full_Chance Crate Bullets Full Chance [0-1]
+Crate_Bullets_Multiplier Crate Bullets Multiplier
+
+Loot_Chance Loot Chance [0-1]
+Crawler_Chance Crawler Chance [0-0.5]
+Sprinter_Chance Sprinter Chance [0-0.5]
+Flanker_Chance Flanker Chance [0-0.5]
+Burner_Chance Burner Chance [0-0.5]
+Acid_Chance Acid Chance [0-0.5]
+Boss_Electric_Chance Electric Boss Chance [0-0.5]
+Boss_Wind_Chance Wind Boss Chance [0-0.5]
+Boss_Fire_Chance Fire Boss Chance [0-0.5]
+Spirit_Chance Spirit Chance [0-0.5]
+DL_Red_Volatile_Chance Dying Light Red Volatile Chance
+DL_Blue_Volatile_Chance Dying Light Blue Volatile Chance
+Boss_Elver_Stomper_Chance Elver Stomper Boss Chance
+Respawn_Day_Time Respawn Day Time
+Respawn_Night_Time Respawn Night Time
+Respawn_Beacon_Time Respawn Beacon Time
+Quest_Boss_Respawn_Interval Quest Boss Respawn Interval
+Beacon_Experience_Multiplier Beacon Experience Multiplier
+Full_Moon_Experience_Multiplier Full Moon Experience Multiplier
+Min_Drops Min Drops
+Max_Drops Max Drops
+Min_Mega_Drops Min Mega Drops
+Max_Mega_Drops Max Mega Drops
+Min_Boss_Drops Min Boss Drops
+Max_Boss_Drops Max Boss Drops
+Slow_Movement Slow Movement
+Can_Stun Can Stun
+Weapons_Use_Player_Damage Weapons Use Player Damage
+Only_Critical_Stuns Only Critical Stuns
+
+Can_Target_Barricades Can Target Barricades
+Can_Target_Structures Can Target Structures
+Can_Target_Vehicles Can Target Vehicles
+
+Beacon_Max_Rewards Beacon Max Reward Item Drops
+Beacon_Max_Participants Beacon Max Reward Participants
+Beacon_Rewards_Multiplier Beacon Rewards Multiplier
+
+Has_Battery_Chance Has Battery Chance
+Min_Battery_Charge Min Battery Charge
+Max_Battery_Charge Max Battery Charge
+Has_Tire_Chance Has Tire Chance
+
+Experience_Multiplier Experience Multiplier
+Detect_Radius_Multiplier NPC Detection Radius Multiplier
+Ray_Aggressor_Distance Bullet/Damage Ray Aggressor Distance
+
+Health_Regen_Min_Food Health Regeneration Min Food
+Health_Regen_Min_Water Health Regeneration Min Water
+Health_Regen_Ticks Health Regeneration Ticks
+
+Food_Use_Ticks Food Use Ticks
+Food_Damage_Ticks Food Damage Ticks
+
+Water_Use_Ticks Water Use Ticks
+Water_Damage_Ticks Water Damage Ticks
+
+Virus_Infect Virus Infect Threshold
+Virus_Use_Ticks Virus Use Ticks
+Virus_Damage_Ticks Virus Damage Ticks
+
+Leg_Regen_Ticks Broken Leg Regeneration Ticks
+Bleed_Damage_Ticks Bleeding Damage Ticks
+Bleed_Regen_Ticks Bleeding Regeneration Ticks
+
+Lose_Skills_PvP Lose Skills On Combat Death
+Lose_Skills_PvE Lose Skills On Environment Death
+Lose_Items_PvP Lose Items On Combat Death
+Lose_Items_PvE Lose Items On Environment Death
+Lose_Clothes_PvP Lose Clothes On Combat Death
+Lose_Clothes_PvE Lose Clothes On Environment Death
+Lose_Weapons_PvP Lose Weapons On Combat Death
+Lose_Weapons_PvE Lose Weapons On Environment Death
+
+Can_Hurt_Legs Can Hurt Legs
+Can_Break_Legs Can Break Legs
+Can_Fix_Legs Can Fix Legs
+Can_Start_Bleeding Can Start Bleeding
+Can_Stop_Bleeding Can Stop Bleeding
+
+Spawn_With_Max_Skills Spawn With Max Skills
+Spawn_With_Stamina_Skills Spawn With Stamina Skills
+Allow_Instakill_Headshots Allow Instakill Headshots
+Allow_Per_Character_Saves Allow Per-Character Saves
+
+Rain_Frequency_Min Min Rain Frequency
+Rain_Frequency_Max Max Rain Frequency
+Rain_Duration_Min Min Rain Duration
+Rain_Duration_Max Max Rain Duration
+
+Snow_Frequency_Min Min Snow Frequency
+Snow_Frequency_Max Max Snow Frequency
+Snow_Duration_Min Min Snow Duration
+Snow_Duration_Max Max Snow Duration
+
+Weather_Frequency_Multiplier Weather Frequency Multiplier
+Weather_Duration_Multiplier Weather Duration Multiplier
+
+Binary_State_Reset_Multiplier Binary State Reset Time Multiplier
+Fuel_Reset_Multiplier Fuel Respawn Time Multiplier
+Water_Reset_Multiplier Water Respawn Time Multiplier
+Resource_Reset_Multiplier Resource Respawn Time Multiplier
+Resource_Drops_Multiplier Resource Drops Multiplier
+Rubble_Reset_Multiplier Rubble Respawn Time Multiplier
+Allow_Holiday_Drops Allow Holiday Drops
+
+Airdrop_Frequency_Min Min Airdrop Frequency
+Airdrop_Frequency_Max Max Airdrop Frequency
+Airdrop_Speed Airdrop Speed
+Airdrop_Force Airdrop Force
+
+Arena_Min_Players Arena Min Players
+Arena_Compactor_Damage Arena Compactor Damage
+
+Arena_Clear_Timer Arena Clear Timer
+Arena_Finale_Timer Arena Finale Timer
+Arena_Restart_Timer Arena Restart Timer
+
+Use_Airdrops Use Airdrops
+Arena_Use_Compactor_Pause Arena Use Compactor Pause
+
+Arena_Compactor_Delay_Timer Arena Compactor Delay Timer
+Arena_Compactor_Pause_Timer Arena Compactor Pause Timer
+
+Arena_Compactor_Speed_Tiny Arena Compactor Speed Tiny
+Arena_Compactor_Speed_Small Arena Compactor Speed Small
+Arena_Compactor_Speed_Medium Arena Compactor Speed Medium
+Arena_Compactor_Speed_Large Arena Compactor Speed Large
+Arena_Compactor_Speed_Insane Arena Compactor Speed Insane
+Arena_Compactor_Shrink_Factor Arena Compactor Shrink Factor
+
+Repair_Level_Max Max Repair Level
+Hitmarkers Hitmarkers
+Crosshair Crosshair
+Ballistics Ballistics
+Chart Chart Available
+Satellite Satellite Available
+Compass Compass Available
+Group_Map Show Group On Map
+Group_HUD Show Group On HUD
+Group_Player_List Show Groups In Player List
+Allow_Static_Groups Allow Static Groups
+Allow_Dynamic_Groups Allow Dynamic Groups
+Allow_Shoulder_Camera Allow Shoulder Camera
+Can_Suicide Can Suicide
+Friendly_Fire Friendly Fire
+Bypass_Buildable_Mobility Sentry Guns & Beds On Vehicles
+
+Timer_Exit Exit Timer
+Timer_Respawn Respawn Timer
+Timer_Home Home Timer
+Timer_Leave_Group Leave Group Timer
+Max_Group_Members Max Group Members
+
+Default Restore Defaults
+Default_Tooltip Use factory configuration.
+
+Allow_Item_Placement_On_Vehicle Allow Item Placement On Vehicle
+Allow_Trap_Placement_On_Vehicle Allow Trap Placement On Vehicle
+Max_Item_Distance_From_Hull Max Item Distance From Hull
+Max_Trap_Distance_From_Hull Max Trap Distance From Hull

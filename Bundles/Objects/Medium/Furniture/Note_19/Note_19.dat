@@ -1,0 +1,11 @@
+GUID 7ddafed3531146a8b98df60d9890ad00
+Type Medium
+ID 2020
+
+Interactability Note
+Interactability_Hint Use
+Interactability_Text_Lines 3
+
+Asset_Bundle_Version 2
+Bundle_Override_Path /Objects/Medium/Furniture/Note
+Has_Clip_Prefab false

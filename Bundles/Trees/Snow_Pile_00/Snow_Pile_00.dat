@@ -1,0 +1,22 @@
+GUID 00ca63d659c14c1eba1a8daf990ade6b
+
+Type Resource
+ID 51
+
+Health 100
+Radius 4
+Scale 0.3
+
+Explosion 163
+Reward_ID 960
+Reward_XP 2
+Reward_Min 1
+Reward_Max 1
+
+BladeID 4
+
+No_Debris
+Reset 120
+
+Holiday_Restriction CHRISTMAS
+Has_Clip_Prefab false

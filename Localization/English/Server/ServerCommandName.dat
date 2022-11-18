@@ -1,0 +1,8 @@
+MinLengthErrorText Failed to make name length less than {0}.
+MaxLengthErrorText Failed to make name length greater than {0}.
+
+NameCommandText Name
+NameInfoText Name [Text]
+NameHelpText This assigns the name of the server on the server list.
+
+NameText Successfully set name to {0}!

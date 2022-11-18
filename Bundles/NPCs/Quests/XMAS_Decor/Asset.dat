@@ -1,0 +1,29 @@
+GUID a7531d33e70442c2be4a3573ae60248e
+
+Type Quest
+ID 327
+
+Conditions 2
+Condition_0_Type Kills_Tree
+Condition_0_ID 330
+Condition_0_Tree 57c15ead4dce46b1ae5503fed72fbc8d
+Condition_0_Value 1
+Condition_0_Logic Greater_Than_Or_Equal_To
+Condition_0_Reset
+
+Condition_1_Type Flag_Short
+Condition_1_ID 329
+Condition_1_Value 5
+Condition_1_Logic Greater_Than_Or_Equal_To
+Condition_1_Reset
+
+Rewards 3
+Reward_0_Type Item
+Reward_0_ID 1519
+Reward_0_Amount 1
+Reward_1_Type Item
+Reward_1_ID 1518
+Reward_1_Amount 1
+Reward_2_Type Flag_Bool
+Reward_2_ID 328
+Reward_2_Value True

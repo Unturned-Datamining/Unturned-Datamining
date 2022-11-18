@@ -1,0 +1,12 @@
+GUID ab17cf24c2694dcbbe0934da6076ecc3
+Type Medium
+ID 201
+
+Soft
+Snowshoe
+Chart Ground
+
+// References landscape texture.
+Ignore_TexRW
+
+Has_Clip_Prefab false

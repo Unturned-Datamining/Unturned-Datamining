@@ -1,0 +1,21 @@
+GUID 7535986abb304f29b6bb55d40d9967de
+Type Vendor
+ID 17
+
+Buying 1
+Buying_0_ID 1353
+Buying_0_Cost 25
+
+Selling 5
+Selling_0_ID 1046
+Selling_0_Cost 60
+Selling_1_ID 1048
+Selling_1_Cost 50
+Selling_2_ID 1130
+Selling_2_Cost 30
+Selling_3_ID 105
+Selling_3_Cost 90
+Selling_4_ID 1132
+Selling_4_Cost 160
+
+Currency 5150ca8f765d4a68bfe54912146da410

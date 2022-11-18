@@ -1,0 +1,29 @@
+GUID 306adf871cff47b48d09a3a5414def59
+Type Barricade
+Rarity Rare
+Useable Barricade
+Build Glass
+ID 1298
+
+Size_X 2
+Size_Y 2
+Size_Z 0.45
+
+Health 900
+Range 4
+Radius 0.5
+
+Explosion 97
+
+Blueprints 1
+Blueprint_0_Type Barricade
+Blueprint_0_Supply_0_ID 1297
+Blueprint_0_Supply_0_Amount 2
+Blueprint_0_Level 1
+Blueprint_0_Skill Cook
+Blueprint_0_Build 27
+
+Use_Water_Height_Transparent_Sort
+
+PlacementAudioClip Sounds/MetalPlacement.mp3
+Has_Clip_Prefab false

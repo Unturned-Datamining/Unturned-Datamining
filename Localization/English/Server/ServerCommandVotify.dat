@@ -1,0 +1,9 @@
+InvalidParameterErrorText Failed to find parameters in format [Vote Allowed Y/N]/[Pass Cooldown]/[Fail Cooldown]/[Vote Duration]/[Vote Percentage]/[Players].
+InvalidBooleanErrorText Failed to convert {0} into a boolean.
+InvalidNumberErrorText Failed to convert {0} into a number.
+
+VotifyCommandText Votify
+VotifyInfoText Votify [Vote Allowed Y/N]/[Pass Cooldown]/[Fail Cooldown]/[Vote Duration]/[Vote Percentage]/[Players]
+VotifyHelpText This configures voting for the server.
+
+VotifyText Successfully set voting configuration!

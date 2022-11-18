@@ -1,0 +1,10 @@
+GUID c5248a3eae7a44fbb1624955e17bfef1
+
+Type Medium
+ID 1
+
+Master_Bundle_Override core.masterbundle
+Bundle_Override_Path /Objects/Medium/Rubble/Debris_0
+
+Holiday_Restriction CHRISTMAS
+Has_Clip_Prefab false

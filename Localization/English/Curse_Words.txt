@@ -1,0 +1,65 @@
+# Lines starting with # are treated as comments, and empty lines are skipped.
+# Curse words are matched regardless of case.
+
+fuck
+fucking
+fuckd
+fuck'd
+fucked
+
+shit
+shiting
+shitting
+shat
+
+damn
+damnn
+damnnn
+damnnnn
+damned
+
+# There is the "Hell's Fury" in-game, but usage of Hell in a message is probably angry.
+hell
+
+# Common Russian slurs.
+suka
+cuka
+cyka
+сука
+blyat
+блят
+блять
+
+tit
+tits
+titty
+titties
+tiddy
+tiddies
+
+# Nothing against other genders, but usage in chat is usually rude.
+gay
+gayy
+gayyy
+lesbian
+lesbo
+
+ass
+asshole
+cock
+whore
+fag
+faggot
+fagot
+nigger
+niger
+bitch
+clit
+cunt
+dick
+pussy
+penis
+vag
+vagina
+hentai
+porn

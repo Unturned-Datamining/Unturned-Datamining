@@ -1,0 +1,34 @@
+GUID 14ee4724a1554c4f865e35f7cd393980
+
+Type Barricade
+Rarity Rare
+Useable Barricade
+Build Barricade
+ID 1692
+
+Size_X 2
+Size_Y 2
+Size_Z 0.75
+
+Health 500
+Range 4
+Radius 0.2
+Offset 1
+
+Explosion 29
+
+Blueprints 1
+Blueprint_0_Type Furniture
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 1694
+Blueprint_0_Supply_0_Amount 5
+Blueprint_0_Build 27
+
+Blueprint_0_Rewards 1
+Blueprint_0_Reward_0_Type Flag_Short
+Blueprint_0_Reward_0_ID 329
+Blueprint_0_Reward_0_Value 1
+Blueprint_0_Reward_0_Modification Increment
+
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

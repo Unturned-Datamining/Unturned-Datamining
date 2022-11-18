@@ -1,0 +1,17 @@
+Cosmetics_Button Apply Cosmetics
+Cosmetics_Button_Tooltip Display Cosmetics
+Add_Button Put Equipped [{0}]
+Add_Button_Tooltip Add From Hands
+Remove_Button Take Clothes [{0}]
+Remove_Button_Tooltip Remove From Mannequin
+Swap_Button Swap Clothes
+Swap_Button_Tooltip Exchange With Mannequin
+Pose_Button_Tooltip Adjust Stance
+Mirror_Button Mirror
+Mirror_Button_Tooltip Flip Stance
+Cancel_Button Cancel
+Cancel_Button_Tooltip No Changes
+
+T T-Pose
+Classic Classic Pose
+Lie Relaxed Pose

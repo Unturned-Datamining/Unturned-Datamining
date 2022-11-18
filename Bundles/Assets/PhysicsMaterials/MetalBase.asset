@@ -1,0 +1,22 @@
+"Metadata"
+{
+	"GUID" "51de25840d4f4b778051a5c266ca1b4e"
+	"Type" "SDG.Unturned.PhysicsMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"UnityNames"
+	[
+		"Metal"
+	]
+	"AudioDefs"
+	{
+		"BipedLand" "Effects/Physics/BipedLand/Metal/BipedLand_Metal.asset"
+		"BulletCasingBounce" "Effects/Physics/BulletCasingBounce/Metal/BulletCasingBounce_Metal.asset"
+		"ShotgunShellBounce" "Effects/Physics/ShotgunShellBounce/Metal/ShotgunShellBounce_Metal.asset"
+		"BulletImpact" "Effects/Physics/BulletImpact/MetalLight/BulletImpact_MetalLight.asset"
+		"LegacyImpact" "Effects/Physics/LegacyImpact/LegacyImpact_Metal.asset"
+		"MeleeImpact" "Effects/Physics/MeleeImpact/MetalLight/MeleeImpact_MetalLight.asset"
+	}
+	"WipDoNotUseTemp_BulletImpactEffect" "2d6ee0d84d3e4fbf9ade05bee41c34c6" // Metal_WithDecal_NoAudio
+}

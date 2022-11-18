@@ -1,0 +1,27 @@
+GUID c1badafcdc29470680f35267ef069f0d
+Type Pants
+Rarity Rare
+Useable Clothing
+ID 1180
+
+Size_X 2
+Size_Y 2
+Size_Z 0.65
+
+Width 5
+Height 2
+
+Armor 0.95
+Proof_Water
+
+Blueprints 2
+Blueprint_0_Type Apparel
+Blueprint_0_Supply_0_ID 1180
+Blueprint_0_Product 67
+Blueprint_0_Products 2
+Blueprint_0_Build 27
+Blueprint_1_Type Repair
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 67
+Blueprint_1_Supply_0_Amount 3
+Blueprint_1_Build 27

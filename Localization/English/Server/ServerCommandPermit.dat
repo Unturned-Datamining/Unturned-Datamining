@@ -1,0 +1,10 @@
+InvalidParameterErrorText Failed to find parameters in format [SteamID]/[Tag].
+InvalidSteamIDErrorText Failed to convert {0} into a Steam ID.
+
+NotRunningErrorText Failed to permit player while not running. 
+
+PermitCommandText Permit
+PermitInfoText Permit [SteamID]/[Tag]
+PermitHelpText This adds the specified player to the list of users allowed to join the server.
+
+PermitText Successfully permitted {0} {1}!

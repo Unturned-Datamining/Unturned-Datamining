@@ -1,0 +1,21 @@
+"Metadata"
+{
+	"GUID" "a774706cb88d411a90fe9f0f8f575eec"
+	"Type" "SDG.Unturned.PhysicsMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"UnityNames"
+	[
+		"Tile"
+		"Tile_Static"
+		"Tile_Dynamic"
+	]
+	"Fallback" "e3d2040c86584044a5189397bfa9b2c3" // Concrete
+	"AudioDefs"
+	{
+		"ShotgunShellBounce" "Effects/Physics/ShotgunShellBounce/Lino/ShotgunShellBounce_Lino.asset"
+		"BulletImpact" "Effects/Physics/BulletImpact/Rock/BulletImpact_Rock.asset"
+	}
+	"WipDoNotUseTemp_BulletImpactEffect" "1651d4873c7b4a65a42e511cf07425a2" // Concrete_WithDecal_NoAudio
+}

@@ -1,0 +1,18 @@
+GUID 094b14fe2ed143aba6819236d681ffa8
+
+Type Quest
+ID 316
+
+Conditions 1
+Condition_0_Type Item
+Condition_0_ID 1132 
+Condition_0_Amount 1
+Condition_0_Reset
+
+Rewards 2
+Reward_0_Type Item
+Reward_0_ID 1704
+Reward_0_Amount 1
+Reward_1_Type Flag_Bool
+Reward_1_ID 317
+Reward_1_Value True

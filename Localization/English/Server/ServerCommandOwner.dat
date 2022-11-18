@@ -1,0 +1,8 @@
+InvalidSteamIDErrorText Failed to convert {0} into a Steam ID.
+RunningErrorText Failed to set owner while running.
+
+OwnerCommandText Owner
+OwnerInfoText Owner [SteamID]
+OwnerHelpText This sets the owner of the server.
+
+OwnerText Successfully set owner to {0}!

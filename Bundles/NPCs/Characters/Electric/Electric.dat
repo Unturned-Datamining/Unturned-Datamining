@@ -1,0 +1,21 @@
+GUID 41376643e3f247faa201362eeaab9f36
+Type NPC
+ID 826
+
+Shirt 1420
+Pants 1419
+Hat 1426
+
+Has_Christmas_Outfit True
+Christmas_Shirt 1420
+Christmas_Pants 1419
+Christmas_Hat 278
+
+Face 0
+Color_Skin #706049
+
+Secondary 99
+
+Dialogue 166
+
+Has_Clip_Prefab false

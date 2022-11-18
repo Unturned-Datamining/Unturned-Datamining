@@ -1,0 +1,29 @@
+GUID 042a65fd920d48d1839d54d8ec038bd1
+Type Magazine
+Rarity Legendary
+ID 1384
+
+Size_X 1
+Size_Y 1
+Size_Z 0.15
+
+Amount 7
+Count_Min 2
+Count_Max 6
+
+Calibers 1
+Caliber_0 36
+
+Tracer 51
+
+Blueprints 2
+Blueprint_0_Type Ammo
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 1193
+Blueprint_0_Build 30
+Blueprint_1_Type Ammo
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 1384
+Blueprint_1_Build 30
+
+Paintable

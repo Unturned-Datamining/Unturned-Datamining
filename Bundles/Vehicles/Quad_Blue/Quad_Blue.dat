@@ -1,0 +1,35 @@
+GUID bc608731b6d042f4b151b215362accfe
+Type Vehicle
+ID 68
+
+Speed_Min -5
+Speed_Max 13.5
+
+Steer_Min 16
+Steer_Max 32
+
+Brake 24
+
+Fuel_Min 200
+Fuel_Max 400
+Fuel 1000
+
+Health_Min 250
+Health_Max 350
+Health 450
+
+Exit 1.5
+
+Zip
+Traction
+
+Trunk_Storage_X 3
+Trunk_Storage_Y 2
+
+Explosion 20
+
+Should_Spawn_Seat_Capsules true
+
+IgnitionAudioClip Sounds/CarIgnition.mp3
+HornAudioClip Sounds/CarHorn_01.mp3
+Has_Clip_Prefab false

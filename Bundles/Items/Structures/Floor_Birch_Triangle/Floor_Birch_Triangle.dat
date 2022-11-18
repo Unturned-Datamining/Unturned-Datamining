@@ -1,0 +1,24 @@
+GUID 372da92bbe9d49fb88e2146d9202ac8b
+Type Structure
+Useable Structure
+Construct Floor_Poly
+ID 1263
+
+Size_X 2
+Size_Y 2
+Size_Z 0.325
+
+Health 450
+Range 8
+
+Explosion 28
+
+Blueprints 1
+Blueprint_0_Type Structure
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 37
+Blueprint_0_Supply_0_Amount 2
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+
+Has_Clip_Prefab false

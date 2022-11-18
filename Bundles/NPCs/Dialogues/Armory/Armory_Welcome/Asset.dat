@@ -1,0 +1,27 @@
+GUID 0ed245aba5a0459ca70169f719ca7786
+Type Dialogue
+ID 143
+
+Messages 1
+Message_0_Pages 1
+
+Responses 3
+
+// I'd like to trade
+// Armory_Vendor_Completed
+Response_0_Dialogue 145
+Response_0_Vendor 142
+Response_0_Conditions 1
+Response_0_Condition_0_Type Flag_Bool
+Response_0_Condition_0_ID 146
+Response_0_Condition_0_Value True
+Response_0_Condition_0_Logic Equal
+
+// Need any help?
+// Armory_Help
+Response_1_Dialogue 144
+Response_1_Rewards 1
+// Can_Sell_To_Armory
+Response_1_Reward_0_Type Flag_Bool
+Response_1_Reward_0_ID 146
+Response_1_Reward_0_Value True

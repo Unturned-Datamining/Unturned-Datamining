@@ -1,0 +1,10 @@
+GUID 8ec17a62162d448da8f6d076cb11852f
+Type Large
+ID 232
+
+LOD Mesh
+LOD_Center_Z -0.5
+LOD_Size_Z -1
+
+Collision_Important
+Has_Clip_Prefab false

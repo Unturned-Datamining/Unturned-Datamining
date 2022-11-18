@@ -1,0 +1,82 @@
+Zoom_In_Button Zoom In
+Zoom_In_Button_Tooltip Scale Up
+
+Zoom_Out_Button Zoom Out
+Zoom_Out_Button_Tooltip Scale Down
+
+Center_Button Center
+Center_Button_Tooltip Focus Player
+
+Chart Chart
+Satellite Satellite
+
+Quests Quests: {0}
+Quests_Tooltip View Quest List
+Groups Groups
+Groups_Tooltip View Groups List
+Players Players: {0}/{1}
+Players_Tooltip View Player List
+
+Group_Members Members: {0}/{1}
+Group_Rename Rename
+Group_Rename_Tooltip Submit New Name
+Group_Leave Leave
+Group_Leave_Tooltip Quit Group
+Group_Delete Delete
+Group_Delete_Tooltip Destroy Group, Kick All Members
+Group_Delete_Confirm Destroy
+Group_Delete_Confirm_Tooltip Abandon Group, Kick All Members
+Group_Delete_Deny Cancel
+Group_Delete_Deny_Tooltip Keep Group
+Group_Join Join
+Group_Join_Tooltip Accept Invite
+Group_Ignore Ignore
+Group_Ignore_Tooltip Cancel Invite
+Group_Create Create New Group
+Group_Create_Tooltip Become Group Owner
+Group_Promote Promote
+Group_Promote_Tooltip Rank++
+Group_Demote Demote
+Group_Demote_Tooltip Rank--
+
+Radio_Frequency_Label Radio Frequency:
+Radio_Frequency_Tune Tune
+Radio_Frequency_Tune_Tooltip Adjust Frequency
+Radio_Frequency_Reset Reset
+Radio_Frequency_Reset_Tooltip Default Frequency
+
+Group_Rank_Member Member
+Group_Rank_Admin Admin
+Group_Rank_Owner Owner
+
+Streamer Streamer Mode
+Mute_On Mute
+Mute_Off Unmute
+Mute_Tooltip Mute/Unmute
+Vote_Kick Kick
+Vote_Kick_Tooltip Call Kick Vote
+Group_Kick Kick
+Group_Kick_Tooltip Remove Member
+Group_Invite Invite
+Group_Invite_Tooltip Send Group Invite
+Spy Spy
+Spy_Tooltip Screenshot
+
+SortPlayers_Name Sorting by Name A-Z
+SortPlayers_Group Sorting by Group
+
+No_Chart No Chart Found
+No_GPS No GPS Found
+
+Rep {0} [{1}]
+Rep_Neutral Neutral
+Rep_Vigilante Vigilante
+Rep_Constable Constable
+Rep_Deputy Deputy
+Rep_Sheriff Sheriff
+Rep_Paragon Paragon
+Rep_Thug Thug
+Rep_Outlaw Outlaw
+Rep_Gangster Gangster
+Rep_Bandit Bandit
+Rep_Villain Villain

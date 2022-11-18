@@ -1,0 +1,35 @@
+GUID 8bd5f403d2b14f3ab77f7ccfce0ee9a2
+Type Tank
+Rarity Epic
+Useable Barricade
+Build Tank
+ID 1228
+
+Size_X 3
+Size_Y 3
+Size_Z 0.4
+
+Health 500
+Range 4
+Radius 0.75
+Offset 1
+
+Source Water
+Resource 5
+
+Explosion 36
+
+Blueprints 1
+Blueprint_0_Type Utilities
+Blueprint_0_Supplies 3
+Blueprint_0_Supply_0_ID 68
+Blueprint_0_Supply_0_Amount 4
+Blueprint_0_Supply_1_ID 72
+Blueprint_0_Supply_1_Amount 3
+Blueprint_0_Supply_2_ID 69
+Blueprint_0_Supply_2_Amount 2
+Blueprint_0_Level 2
+Blueprint_0_Skill Craft
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

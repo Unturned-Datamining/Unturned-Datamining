@@ -1,0 +1,20 @@
+GUID bec3fa681ddf4e4fbb196a73f7dec31f
+
+Type Food
+Rarity Rare
+Useable Consumeable
+ID 1706
+
+Size_X 1
+Size_Y 1
+Size_Z 0.3
+
+Food 35
+Energy 30
+
+ConsumeAudioClip Sounds/EatCrunchy.mp3
+
+Quest_Rewards 1
+Quest_Reward_0_Type Flag_Bool
+Quest_Reward_0_ID 341
+Quest_Reward_0_Value True

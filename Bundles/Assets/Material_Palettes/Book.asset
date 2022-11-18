@@ -1,0 +1,44 @@
+"Metadata"
+{
+	"GUID" "3ae4d6d0b5884ba8867c05dcbb02d3df"
+	"Type" "SDG.Unturned.MaterialPaletteAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"ID" "0"
+	"Materials"
+	[
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/Book/Book_0.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/Book/Book_1.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/Book/Book_2.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/Book/Book_3.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/Book/Book_4.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/Book/Book_5.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/Book/Book_6.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/Book/Book_7.mat"
+		}
+	]
+}

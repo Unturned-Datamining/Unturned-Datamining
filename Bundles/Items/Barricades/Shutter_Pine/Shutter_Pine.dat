@@ -1,0 +1,27 @@
+GUID 87d990da55864df6af8340d30d372a0c
+Type Barricade
+Rarity Rare
+Useable Barricade
+Build Shutter
+ID 1225
+
+Size_X 1
+Size_Y 2
+Size_Z 0.65
+
+Health 400
+Range 4
+Radius 0.5
+
+Explosion 29
+
+Blueprints 1
+Blueprint_0_Type Barricade
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 63
+Blueprint_0_Supply_0_Amount 6
+Blueprint_0_Supply_1_ID 67
+Blueprint_0_Supply_1_Amount 1
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

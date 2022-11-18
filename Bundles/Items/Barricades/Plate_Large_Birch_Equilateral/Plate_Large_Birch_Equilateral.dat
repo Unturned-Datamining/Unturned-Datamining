@@ -1,0 +1,31 @@
+GUID e5d5716beec14a58af4bbcb2ead73bd3
+Type Barricade
+Useable Barricade
+Build Freeform
+ID 1144
+
+Size_X 2
+Size_Y 2
+Size_Z 0.325
+
+Health 300
+Range 8
+Radius 0.5
+Offset 1.875
+
+Explosion 28
+Vulnerable
+
+Blueprints 2
+Blueprint_0_Type Barricade
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 37
+Blueprint_0_Supply_0_Amount 4
+Blueprint_0_Build 27
+Blueprint_1_Type Barricade
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 1150
+Blueprint_1_Supply_0_Amount 4
+Blueprint_1_Build 27
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

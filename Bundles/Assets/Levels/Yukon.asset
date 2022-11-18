@@ -1,0 +1,28 @@
+"Metadata"
+{
+	"GUID" "537278c5f6eb45198994ff2915d3107b"
+	"Type" "SDG.Unturned.LevelAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"Weather_Types"
+	[
+		{
+			// Gentle Snow
+			"Asset" "22a2d4cf2d0341e08bee3d9557b78d23"
+			"Min_Frequency" "0.0"
+			"Max_Frequency" "0.0"
+			"Min_Duration" "0.4"
+			"Max_Duration" "1.0"
+		}
+		{
+			// Blizzard
+			"Asset" "903577da2ecd4f5784b2f7aed8c300c1"
+			"Min_Frequency" "0.0"
+			"Max_Frequency" "0.0"
+			"Min_Duration" "0.4"
+			"Max_Duration" "1.0"
+		}
+	]
+	"Should_Animate_Background_Image" "true"
+}

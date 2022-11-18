@@ -1,0 +1,38 @@
+GUID 59786a19acd140c9841ec0e03e5aa6e6
+Type Barrel
+Rarity Epic
+ID 144
+
+Size_X 2
+Size_Y 1
+Size_Z 0.125
+
+Calibers 7
+Caliber_0 9
+Caliber_1 10
+Caliber_2 11
+Caliber_3 26
+Caliber_4 27
+Caliber_5 31
+Caliber_6 34
+
+Silenced 
+Volume 0.3
+Durability 2
+
+Quality_Min 90
+Quality_Max 100
+
+Ballistic_Drop 1.1
+
+Paintable
+
+Blueprints 1
+Blueprint_0_Type Repair
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 67
+Blueprint_0_Supply_0_Amount 3
+Blueprint_0_Tool 76
+Blueprint_0_Level 1
+Blueprint_0_Skill Repair
+Blueprint_0_Build 27

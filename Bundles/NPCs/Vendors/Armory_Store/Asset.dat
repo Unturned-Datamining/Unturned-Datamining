@@ -1,0 +1,51 @@
+GUID 0def46bca95a4609a57186ccc1cb83b6
+Type Vendor
+ID 142
+
+Buying 8
+// Highcal military
+Buying_0_ID 1192
+Buying_0_Amount 20
+Buying_0_Cost 40
+// Lowcal military
+Buying_1_ID 43
+Buying_1_Amount 20
+Buying_1_Cost 30
+// Highcal ranger
+Buying_2_ID 1193
+Buying_2_Amount 20
+Buying_2_Cost 40
+// Lowcal ranger
+Buying_3_ID 119
+Buying_3_Amount 20
+Buying_3_Cost 30
+// Military magazine
+Buying_4_ID 6
+Buying_4_Amount 20
+Buying_4_Cost 30
+// Military drum
+Buying_5_ID 17
+Buying_5_Amount 20
+Buying_5_Cost 30
+// Ranger magazine
+Buying_6_ID 123
+Buying_6_Amount 20
+Buying_6_Cost 30
+// Ranger drum
+Buying_7_ID 125
+Buying_7_Amount 20
+Buying_7_Cost 30
+
+Selling 3
+// Military knife
+Selling_0_ID 121
+Selling_0_Amount 1
+Selling_0_Cost 50
+// Binocs
+Selling_1_ID 333
+Selling_1_Amount 1
+Selling_1_Cost 40
+// Rangefinder
+Selling_2_ID 1008
+Selling_2_Amount 1
+Selling_2_Cost 600

@@ -1,0 +1,35 @@
+GUID dc8e6ec1b81e448490ffd32a4ac6b286
+Type Food
+Rarity Epic
+Useable Consumeable
+ID 1431
+
+Size_X 2
+Size_Y 2
+Size_Z 0.45
+
+Food 100
+Water 25
+Virus 10
+
+Blueprints 2
+Blueprint_0_Type Supply
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 471
+Blueprint_0_Supply_0_Amount 1
+Blueprint_0_Supply_1_ID 1353
+Blueprint_0_Supply_1_Amount 1
+Blueprint_0_Tool 1430
+Blueprint_0_Tool_Critical
+Blueprint_0_Build 27
+Blueprint_1_Type Supply
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 1431
+Blueprint_1_Supply_0_Amount 1
+Blueprint_1_Outputs 2
+Blueprint_1_Output_0_ID 471
+Blueprint_1_Output_0_Amount 1
+Blueprint_1_Output_1_ID 1353
+Blueprint_1_Output_1_Amount 1
+Blueprint_1_Build 27
+ConsumeAudioClip Sounds/EatCrunchy.mp3

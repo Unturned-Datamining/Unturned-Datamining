@@ -1,0 +1,27 @@
+GUID 80dac90952304fb797bdbf707c5d1caf
+Type NPC
+ID 761
+
+Shirt 211
+Pants 213
+
+Has_Halloween_Outfit True
+Halloween_Shirt 211
+Halloween_Pants 213
+Halloween_Hat 579
+
+Has_Christmas_Outfit True
+Christmas_Shirt 211
+Christmas_Pants 213
+Christmas_Hat 824
+
+Face 16
+Hair 3
+Beard 4
+Color_Skin #D9CAB4
+Color_Hair #473928
+Backward
+
+Dialogue 131
+
+Has_Clip_Prefab false

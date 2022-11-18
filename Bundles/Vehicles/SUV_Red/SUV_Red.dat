@@ -1,0 +1,31 @@
+GUID f5026f802edb4243a3958863eeb193c8
+Type Vehicle
+ID 130
+
+Speed_Min -7
+Speed_Max 12.5
+
+Steer_Min 12
+Steer_Max 24
+
+Brake 32
+
+Fuel_Min 200
+Fuel_Max 400
+Fuel 2000
+
+Health_Min 400
+Health_Max 500
+Health 600
+
+Traction
+
+Trunk_Storage_X 5
+Trunk_Storage_Y 4
+
+Explosion 20
+SqrDelta 1.6
+
+IgnitionAudioClip Sounds/CarIgnition.mp3
+HornAudioClip Sounds/CarHorn_04.mp3
+Has_Clip_Prefab false

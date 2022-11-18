@@ -1,0 +1,7 @@
+RunningErrorText Failed to enable PvE while running.
+
+PvECommandText PvE
+PvEInfoText PvE
+PvEHelpText This disables player-versus-player combat, in favor of player-versus-environment combat.
+
+PvEText Successfully enabled PvE.

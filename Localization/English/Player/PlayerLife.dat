@@ -1,0 +1,158 @@
+Space Missing Space
+Item Pickup {0} [{1}]
+Vehicle_Enter_Locked Enter {0} [{1}] [Locked]
+Vehicle_Enter_Unlocked Enter {0} [{1}] [Not Locked]
+Vehicle_Exit Exit [{0}]
+Vehicle_Swap Swap Seats [F1-F{0}]
+Reload Reload [{0}]
+Safety Safety [{0}]
+Light Toggle Light [{0}]
+Laser Toggle Laser [{0}]
+Rangefinder Toggle Rangefinder [{0}]
+Enemy {0}
+Door_Open Open [{0}]
+Door_Close Close [{0}]
+Locked Locked
+Blocked Blocked
+Pillar Missing Pillar
+Post Missing Post
+Roof Missing Floor
+Wall Missing Wall
+Corner Missing Corner
+Ground Missing Ground
+Doorway Missing Doorway
+Garage Missing Garage
+Window Missing Window
+Bed_On Claim [{0}]
+Bed_Off Unclaim [{0}]
+Bed_Claimed Claimed
+Bounds Out Of Bounds
+Experience +{0} Experience
+Storage Storage [{0}]
+Farm Harvest [{0}]
+Grow Growing
+Soil Missing Soil
+Fire_On Light [{0}]
+Fire_Off Extinguish [{0}]
+Forage Forage [{0}]
+Generator_On Start [{0}]
+Generator_Off Stop [{0}]
+Spot_On On [{0}]
+Spot_Off Off [{0}]
+Empty Empty
+Full Full
+Moon_On The full moon emerges!
+Moon_Off The full moon falls!
+Safezone_On Entering safezone!
+Safezone_Off Exiting safezone!
+Deadzone_On Entering deadzone!
+Deadzone_Off Exiting deadzone!
+Purchase {0} - {1} [{2}]
+Wave_On The horde returns, stronger!
+Wave_Off The horde retreats... for now.
+Power Missing Power Source
+Use Use [{0}]
+Salvage Salvage [Hold {0}]
+Tutorial_Move Hey there! Are you alive? Move [{0}, {1}, {2}, {3}] around a bit, get your blood flowing!
+Tutorial_Look Okay phew! Can you View [Drag Mouse] my camera in the corner?
+Tutorial_Jump Looking good! Jump [{0}] over this ledge. This can save your life when you're being chased!
+Tutorial_Perspective Looking so good that you might want a peek for yourself! Get a different Perspective [{0}] on life.
+Tutorial_Run Wait, nevermind jumping, sometimes it's best to just Run [{0}] away from danger!
+Tutorial_Inventory Here's some nice clothes for you! Interact [{0}] to get a bit of space for storing your gear.
+Tutorial_Survival The basic necessities of life! You can equip or drop them from your Inventory [{0}] with [{1}] after picking them up.
+Tutorial_Gun Finally a chance for some action! Aim [{0}] and Shoot [{1}] your gun at those zombies.
+Tutorial_Ladder Nice shooting! Next time maybe climb down the ladder by walking backwards onto it rather than jumping in...
+Tutorial_Craft View your Attachments [{0}] and select the magazine to remove it, then Craft [{1}] it with these bullets in the ammo category to restock it.
+Tutorial_Skills Use some of those experience points you got from the zombies to level up your Skills [{0}] in each category!
+Tutorial_Swim Navigate through that cave and Surface [{0}] on the other side.
+Tutorial_Medical Use [{0}] these medical supplies if you're feeling wounded! Note: I have no liability for any injuries sustained.
+Tutorial_Vehicle Siphon [{0}] the fuel tank into the gas can, then Fuel [{1}] this vehicle to Drive [{2}] to the other end.
+Tutorial_Crouch Sneaking with Crouch [{0}] is vital to avoid zombie detection, and allows you through small spaces.
+Tutorial_Prone At the cost of speed you can also go Prone [{0}] which is far sneakier than crouching!
+Tutorial_Educated You've completed your basic training! Pause [{0}] to leave, or stay and see a few advanced activities.
+Tutorial_Harvest Scavenge [{0}] for berries, chop down trees and hunt animals to survive in the wilderness!
+Tutorial_Fish Fishing requires patience and deep water. Cast [{0}] your line and Reel [{0}] it in when you see the bob go under.
+Tutorial_Build Building a base is key to your survival, and spans from tiny traps to giant walls. You can even build vehicles!
+Tutorial_Horn Gather attention with your Horn [{0}]!
+Tutorial_Lights Use your Headlights [{0}] to see further in the dark.
+Tutorial_Sirens Show the bandits you mean business with your Sirens [{0}]!
+Tutorial_Farm Farming provides a sustainable source of food.
+Tutorial_Power Generators can power electrical objects such as anti-zombie radiators and traffic lights.
+Tutorial_Fire Fires keep you warm in freezing environments and give you an easy place to Cook [{0}] food.
+Claim Area Claimed
+Underwater Too Wet
+Nav Too Far From Town
+Spawn Too Near To Spawn
+Mobile Not Mobile
+Oil Missing Fuel Reserve
+Volume_Water Water Reserve: {0}
+Volume_Fuel Fuel Reserve:
+Busy Busy
+Trapdoor Missing Trapdoor
+Fuel Fuel: {0}%
+Clean Clean
+Salty Salty
+Dirty Dirty
+Talk Talk to {1} [{0}]
+Reputation {0} Reputation
+Safezone Too Near To Safezone
+Bayonet Bayonet [{0}]
+Vehicle_Locked Locked [{0}]
+Vehicle_Unlocked Unlocked [{0}]
+Build_On_Occupied_Vehicle Vehicle Occupied
+Not_Allowed_Here Not Allowed Here
+Cannot_Build_On_Vehicle Cannot Build On Vehicles
+Too_Far_From_Hull Too Far From Hull
+Cannot_Build_While_Seated Cannot Build While Seated
+Climb Climb [{0}]
+HousingPlannerTutorial Select Item [{0}]
+PlacementObstructedBy Blocked by: {0}
+
+Chat_Global [World] {0}: {1}
+Chat_Local [Area] {0}: {1}
+Chat_Group [Group] {0}: {1}
+Chat_Welcome [Welcome] {0}: {1}
+Chat_Say [Alert] {0}: {1}
+SendChat_Tooltip Send Message [{0}]
+
+Vote_Kick {0} [{1}] is calling a vote to kick {2} [{3}]
+Votes_Needed Yes votes needed to pass: {0}
+Vote_Yes Yes [{0}] votes: {1}
+Vote_No No [{0}] votes: {1}
+Vote_Off Voting is disabled on this server.
+Vote_Delay You need to wait before calling another vote.
+Vote_Players Not enough players to call a vote.
+Vote_Pass Vote passed!
+Vote_Fail Vote failed!
+
+List_Joint_0 ,
+List_Joint_1  and
+
+Arena_Lobby Waiting for players...
+Arena_Warm_Up Get ready...
+Arena_Play Let the battle begin!
+Arena_Died {0} died!
+Arena_Abandoned {0} abandoned!
+Arena_Win {0} won!
+Arena_Lose Game over!
+Arena_Intermission Intermission...
+
+Mode_Global [World]
+Mode_Global_Tooltip Send to all players [{0}]
+Mode_Local [Area]
+Mode_Local_Tooltip Send to nearby players [{0}]
+Mode_Group [Group]
+Mode_Group_Tooltip Send to members of your group [{0}]
+
+Surrender Surrender
+Point Point
+Wave Wave
+Salute Salute
+Rest Rest
+Facepalm Facepalm
+
+Round Wave: {0}
+Score Score: {0}
+
+Stat_Tracker_Total_Kills Total Kills [{0}]
+Stat_Tracker_Player_Kills Player Kills [{0}]

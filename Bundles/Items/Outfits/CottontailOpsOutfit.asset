@@ -1,0 +1,30 @@
+"Metadata"
+{
+	"GUID" "a827f4473d3b4e3594f369f030853350"
+	"Type" "SDG.Unturned.OutfitAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"Items"
+	[
+		// Vest
+		"0aaf42db8da542c6b9e5d9bf75b0bcd4"
+
+		// Top
+		"ea8be95131cc445aad5645ba7328b430"
+
+		// Bottom
+		"563eacbe31524febb7608bec0c1ccab7"
+
+		// Bandana (Mask)
+		"94946c4a55e34fa4bbcc428d5eceb5a4"
+
+		// Ears (Hat)
+		"43e832a15511461da94e7a43191b79eb"
+
+		// Helmet also hat: f647d9b170ad452f8fda3847f6ffe674
+
+		// Tail (Backpack)
+		"518ac1c0469c4cc8bdfc9c947cce89d7"
+	]
+}

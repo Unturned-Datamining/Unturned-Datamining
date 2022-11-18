@@ -1,0 +1,18 @@
+GUID f752728754da4f1c842819cb22f38638
+Type Tire
+Rarity Uncommon
+Useable Tire
+ID 1507
+
+Size_X 2
+Size_Y 1
+Size_Z 0.3
+
+Mode Remove
+
+Blueprints 1
+Blueprint_0_Type Tool
+Blueprint_0_Supply_0_ID 1507
+Blueprint_0_Product 67
+Blueprint_0_Products 2
+Blueprint_0_Build 27

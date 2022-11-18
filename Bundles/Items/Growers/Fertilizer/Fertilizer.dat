@@ -1,0 +1,16 @@
+GUID 54ebe428a6e34922b8764ca40a95d165
+Type Grower
+Rarity Uncommon
+Useable Grower
+ID 332
+
+Size_X 1
+Size_Y 2
+Size_Z 0.45
+
+Blueprints 1
+Blueprint_0_Type Barricade
+Blueprint_0_Supply_0_ID 64
+Blueprint_0_Build 27
+
+InventoryAudio Sounds/Inventory/Seeds.asset

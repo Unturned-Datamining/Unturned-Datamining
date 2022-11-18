@@ -1,0 +1,31 @@
+GUID e2850722c85c4871afbb94c670f56c20
+Type Vehicle
+Rarity Legendary
+ID 107
+
+Speed_Min -2
+Speed_Max 18
+
+Steer_Min 16
+Steer_Max 8
+
+Fuel 1750
+
+Health_Min 700
+Health_Max 800
+Health 875
+
+Exit 3
+
+Cam_Follow_Distance 7.5
+
+LockMouse
+Engine Helicopter
+
+Trunk_Storage_X 5
+Trunk_Storage_Y 5
+
+Explosion 20
+
+IgnitionAudioClip Sounds/HelicopterIgnition.mp3
+Has_Clip_Prefab false

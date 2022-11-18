@@ -1,0 +1,4 @@
+Name <color=mythical>Scorched Earth</color>
+Description Recently Norbert was helping out on a scavenging mission to Novobirsk when they ran into a gigantic "firebreathing" zombie. Unfortunately this means they can't clear it out for supplies until the zombie is slain.
+
+Condition_0 Defeat {0}/{1} <color=mythical>Flamethrower Boss</color>

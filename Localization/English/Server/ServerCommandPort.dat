@@ -1,0 +1,8 @@
+InvalidNumberErrorText Failed to convert {0} into a number.
+RunningErrorText Failed to change port while running.
+
+PortCommandText Port
+PortInfoText Port [Number]
+PortHelpText This assigns the port of the server. Servers use two consecutive ports: the first for server list queries, and the second for in-game traffic. The first should be configured here, but both should be opened on the router.
+
+PortText Successfully set port to {0}!

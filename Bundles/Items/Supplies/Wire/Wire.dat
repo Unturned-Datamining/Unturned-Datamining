@@ -1,0 +1,15 @@
+GUID ebb61f2e64f24351a6ab905b5516060b
+Type Supply
+ID 65
+
+Size_X 1
+Size_Y 1
+Size_Z 0.45
+
+Blueprints 1
+Blueprint_0_Type Gear
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 285
+Blueprint_0_Supply_0_Amount 3
+Blueprint_0_Tool 76
+Blueprint_0_Build 27

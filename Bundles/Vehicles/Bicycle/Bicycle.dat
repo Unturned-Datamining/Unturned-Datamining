@@ -1,0 +1,42 @@
+GUID ffe53c6ac046419fa0969c4002934c16
+Type Vehicle
+ID 185
+
+Speed_Min -4
+Speed_Max 10
+
+Steer_Min 20
+Steer_Max 40
+
+Brake 24
+
+Fuel_Min 5000
+Fuel_Max 5000
+Fuel 5000
+
+Health_Min 150
+Health_Max 175
+Health 200
+
+Exit 1.5
+
+Explosion_Min_Force_X -16
+Explosion_Min_Force_Y 128
+Explosion_Min_Force_Z -16
+Explosion_Max_Force_X 16
+Explosion_Max_Force_Y 128
+Explosion_Max_Force_Z 16
+
+Bicycle
+Bicycle_Anim_Speed 0.25
+Stamina_Boost 0.6
+Stamina_Powered
+
+Traction
+Crawler
+Tires_Invulnerable
+Bumper_Multiplier 0.25
+
+Should_Spawn_Seat_Capsules true
+
+Has_Clip_Prefab false

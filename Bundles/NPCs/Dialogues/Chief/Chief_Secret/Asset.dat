@@ -1,0 +1,25 @@
+GUID da16d15bf3fb474bb6d2c6d1aef4c4cf
+Type Dialogue
+ID 66
+
+Messages 1
+Message_0_Pages 1
+
+Responses 2
+
+// Need any help?
+// Police_Doughnuts_Accepted
+Response_0_Dialogue 67
+Response_0_Quest 64
+Response_0_Conditions 1
+Response_0_Condition_0_Type Quest
+Response_0_Condition_0_Logic Equal
+Response_0_Condition_0_ID 64
+Response_0_Condition_0_Status None
+Response_0_Rewards 1
+Response_0_Reward_0_Type Quest
+Response_0_Reward_0_ID 64
+
+// I took care of the paint
+// Police_Welcome
+Response_1_Dialogue 65

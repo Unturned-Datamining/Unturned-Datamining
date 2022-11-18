@@ -1,0 +1,17 @@
+GUID 671f18476a674007a0f066c463be3b74
+Type Quest
+ID 248
+
+Conditions 1
+Condition_0_Type Kills_Zombie
+Condition_0_ID 249
+Condition_0_Value 1
+Condition_0_Zombie Boss_All
+Condition_0_Spawn
+Condition_0_Nav 25
+
+Rewards 2
+Reward_0_Type Experience
+Reward_0_Value 200
+Reward_1_Type Reputation
+Reward_1_Value 20

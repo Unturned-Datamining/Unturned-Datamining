@@ -1,0 +1,23 @@
+GUID 63cb368c94b14000aabc5325b048cfa3
+Type Resource
+ID 1
+
+Health 1000
+Radius 5
+Scale 0.3
+
+Explosion 22
+Reward_ID 516
+Reward_XP 5
+Reward_Min 6
+Reward_Max 9
+
+Reset 600
+
+Auto_Skybox
+SpeedTree
+SpeedTree_Default_LOD_Weights
+
+Christmas_Redirect 99848480a28f41ebb3d752a47fd5b023
+
+Has_Clip_Prefab false

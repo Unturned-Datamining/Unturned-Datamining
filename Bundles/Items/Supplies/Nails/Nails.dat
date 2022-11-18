@@ -1,0 +1,16 @@
+GUID 4b68587f5cad45eaab5e07ed0e6fd3b3
+Type Supply
+ID 71
+
+Size_X 1
+Size_Y 1
+Size_Z 0.35
+
+Blueprints 1
+Blueprint_0_Type Gear
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 67
+Blueprint_0_Supply_0_Amount 2
+Blueprint_0_Build 27
+
+InventoryAudio Sounds/Inventory/Keys.asset

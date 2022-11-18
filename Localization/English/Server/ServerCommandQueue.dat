@@ -1,0 +1,8 @@
+InvalidNumberErrorText Failed to convert {0} into a number.
+MaxNumberErrorText Failed to make max queue size greater than {0}.
+
+QueueCommandText Queue_Size
+QueueInfoText Queue_Size [Number]
+QueueHelpText This sets the maximum number of queued connections the server is willing to hold on to.
+
+QueueText Successfully set queue size to {0}!

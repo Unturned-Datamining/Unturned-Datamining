@@ -1,0 +1,36 @@
+GUID 019a8e4bfada44bcb2783e64dca11f1a
+Type Vehicle
+Rarity Rare
+ID 141
+
+Speed_Min -6
+Speed_Max 12
+
+Steer_Min 16
+Steer_Max 32
+
+Brake 32
+
+Fuel_Min 500
+Fuel_Max 800
+Fuel 2500
+
+Health_Min 800
+Health_Max 900
+Health 1200
+
+Traction
+
+Exit 6
+Cam_Follow_Distance 16
+
+Trunk_Storage_X 5
+Trunk_Storage_Y 4
+
+Explosion 20
+Invulnerable
+Tires_Invulnerable
+
+IgnitionAudioClip Sounds/CarIgnition.mp3
+HornAudioClip Sounds/CarHorn_03.mp3
+Has_Clip_Prefab false

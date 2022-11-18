@@ -1,0 +1,16 @@
+GUID cdaf67e77a5a45c5b099fa2f844e967d
+Type Tool
+Rarity Rare
+Useable Walkie_Talkie
+ID 1445
+
+Size_X 1
+Size_Y 2
+Size_Z 0.45
+
+Blueprints 1
+Blueprint_0_Type Tool
+Blueprint_0_Supply_0_ID 1445
+Blueprint_0_Product 67
+Blueprint_0_Products 2
+Blueprint_0_Build 27

@@ -1,0 +1,11 @@
+InvalidParameterErrorText Failed to find parameters in format [SteamID | Player]/[Reason].
+
+NoPlayerErrorText Failed to find anyone called {0}.
+NotRunningErrorText Failed to slay player while not running.
+
+SlayCommandText Slay
+SlayInfoText Slay [SteamID | Player]/[Reason]
+SlayHelpText This kills the specified player in-game and permanently bans them.
+
+SlayText Successfully slayed {0}!
+SlayTextReason unspecified

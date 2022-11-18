@@ -1,0 +1,30 @@
+GUID d3dd98a5b4544bf39fc93dd98010e83c
+Type Storage
+Useable Barricade
+Build Storage
+ID 1252
+
+Size_X 2
+Size_Y 2
+Size_Z 0.55
+
+Health 150
+Range 4
+Radius 0.5
+Offset 0.75
+
+Storage_X 4
+Storage_Y 4
+
+Explosion 28
+
+Blueprints 1
+Blueprint_0_Type Furniture
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 1246
+Blueprint_0_Supply_0_Amount 1
+Blueprint_0_Build 27
+
+Should_Close_When_Outside_Range true
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

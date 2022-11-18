@@ -1,0 +1,12 @@
+GUID ca0a29a25d0c4c0aadd6cd4c23e37511
+Type Backpack
+ID 908
+
+Size_X 2
+Size_Y 2
+Size_Z 0.625
+
+Pro
+
+// Future curated assets should be power of 2, but we ignore warnings for a few pre-warning items.
+Ignore_NPOT

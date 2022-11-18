@@ -1,0 +1,21 @@
+GUID 098b13be34a7411db7736b7f866ada69
+Type Vehicle_Repair_Tool
+Rarity Uncommon
+Useable Battery_Vehicle
+ID 1450
+
+Size_X 2
+Size_Y 2
+Size_Z 0.35
+
+Quality_Min 50
+Quality_Max 75
+
+Override_Show_Quality
+
+Blueprints 1
+Blueprint_0_Type Tool
+Blueprint_0_Supply_0_ID 1450
+Blueprint_0_Product 67
+Blueprint_0_Products 2
+Blueprint_0_Build 27

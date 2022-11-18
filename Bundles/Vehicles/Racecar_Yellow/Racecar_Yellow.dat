@@ -1,0 +1,27 @@
+GUID c3a3f95293484094816b8294c6805752
+Type Vehicle
+Rarity Epic
+ID 84
+
+Speed_Min -6
+Speed_Max 24
+
+Steer_Min 14
+Steer_Max 28
+
+Brake 24
+
+Fuel_Min 200
+Fuel_Max 400
+Fuel 800
+
+Health_Min 250
+Health_Max 300
+Health 350
+
+Wheel_Collider_Mass_Override 5
+
+Explosion 20
+
+IgnitionAudioClip Sounds/CarIgnition.mp3
+Has_Clip_Prefab false

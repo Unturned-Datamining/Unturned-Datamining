@@ -1,0 +1,35 @@
+GUID 94f1adb5787a453fab456916276f50d7
+
+Type Barricade
+Useable Barricade
+Build Torch
+Rarity Rare
+ID 1700
+
+Size_X 1
+Size_Y 1
+Size_Z 0.4
+
+Health 50
+Range 4
+Offset 0.125
+Vulnerable
+
+Explosion 36
+
+Blueprints 1
+Blueprint_0_Type Furniture
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 1694
+Blueprint_0_Supply_0_Amount 1
+Blueprint_0_Build 27
+
+Blueprint_0_Rewards 1
+Blueprint_0_Reward_0_Type Flag_Short
+Blueprint_0_Reward_0_ID 329
+Blueprint_0_Reward_0_Value 1
+Blueprint_0_Reward_0_Modification Increment
+
+Should_Close_When_Outside_Range true
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

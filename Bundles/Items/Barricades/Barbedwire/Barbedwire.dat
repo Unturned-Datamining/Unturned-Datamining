@@ -1,0 +1,30 @@
+GUID e2432d5d18e74a6cbc207746468b19bf
+Type Trap
+Rarity Uncommon
+Useable Barricade
+Build Wire
+ID 386
+
+Size_X 2
+Size_Y 1
+Size_Z 0.2
+
+Health 70
+Range 4
+Radius 0.15
+Offset 0.2
+
+Player_Damage 40
+Zombie_Damage 80
+Animal_Damage 80
+
+Explosion 36
+Vulnerable
+Unrepairable
+
+Blueprints 1
+Blueprint_0_Type Barricade
+Blueprint_0_Supply_0_ID 65
+Blueprint_0_Supply_0_Amount 2
+Blueprint_0_Build 27
+Has_Clip_Prefab false

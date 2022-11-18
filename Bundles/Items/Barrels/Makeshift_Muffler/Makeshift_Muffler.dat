@@ -1,0 +1,37 @@
+GUID 6eb5c705c58c472d9ed366708ac90750
+Type Barrel
+ID 477
+
+Size_X 2
+Size_Y 1
+Size_Z 0.125
+
+Silenced 
+Volume 0.8
+Durability 10
+
+Ballistic_Drop 1.2
+
+Ballistic_Damage_Multiplier 0.8
+
+Blueprints 2
+Blueprint_0_Type Tool
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 72
+Blueprint_0_Supply_0_Amount 2
+Blueprint_0_Supply_1_ID 69
+Blueprint_0_Supply_1_Amount 1
+Blueprint_0_Tool 76
+Blueprint_0_Level 1
+Blueprint_0_Skill Craft
+Blueprint_0_Build 27
+Blueprint_1_Type Repair
+Blueprint_1_Supplies 2
+Blueprint_1_Supply_0_ID 72
+Blueprint_1_Supply_0_Amount 1
+Blueprint_1_Supply_1_ID 69
+Blueprint_1_Supply_1_Amount 1
+Blueprint_1_Tool 76
+Blueprint_1_Level 1
+Blueprint_1_Skill Repair
+Blueprint_1_Build 27

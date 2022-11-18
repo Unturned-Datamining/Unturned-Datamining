@@ -1,0 +1,90 @@
+InsecureWarningText WARNING: VALVE ANTI-CHEAT IS DISABLED
+
+PlayerConnectedText Connecting: PlayerID: {0} Name: {1} Character: {2}
+PlayerDisconnectedText Disconnecting: PlayerID: {0} Name: {1} Character: {2}
+
+Dismiss_RPC_Credits Kicking for packet spam: PlayerID: {0} Name: {1} Character: {2}
+Dismiss_Timeout Kicking for inactivity: PlayerID: {0} Name: {1} Character: {2}
+Dismiss_Ping Kicking because ping ({0}) exceeds limit ({1}): PlayerID: {2} Name: {3} Character: {4}
+
+Global [World] {0} [{1}]: "{2}"
+Local [Area] {0} [{1}]: "{2}"
+Group [Group] {0} [{1}]: "{2}"
+
+Leg leg
+Arm arm
+Spine torso
+Skull head
+
+Bleeding {0} [{1}] bled to death!
+Bones {0} [{1}] fractured to death!
+Freezing {0} [{1}] froze to death!
+Burning {0} [{1}] burned to death!
+Food {0} [{1}] starved to death!
+Water {0} [{1}] dehydrated to death!
+Gun {0} [{1}] was shot in the {2} by {3} [{4}]!
+Melee {0} [{1}] was chopped in the {2} by {3} [{4}]!
+Zombie {0} [{1}] was mauled by a zombie!
+Animal {0} [{1}] was mauled by an animal!
+Suicide {0} [{1}] killed themself.
+Infection {0} [{1}] was infected to death!
+Punch {0} [{1}] was punched in the {2} by {3} [{4}]!
+Breath {0} [{1}] suffocated to death!
+Roadkill {0} [{1}] was roadkilled by {2} [{3}]!
+Vehicle {0} [{1}] was blown up by a vehicle!
+Grenade {0} [{1}] was blown up by {2} [{3}] with a grenade!
+Shred {0} [{1}] was shredded to bits!
+Landmine {0} [{1}] was blown up by a landmine!
+Arena {0} [{1}] was eliminated by the arena!
+Missile {0} [{1}] was blown up by {2} [{3}] with a missile!
+Charge {0} [{1}] was blown up by {2} [{3}] with a remote detonator!
+Splash {0} [{1}] was blown up by {2} [{3}] with an explosive bullet!
+Sentry {0} [{1}] was shot by a sentry gun!
+Acid {0} [{1}] was blown up by a zombie!
+Boulder {0} [{1}] was crushed by a zombie!
+Burner {0} [{1}] was burned by a zombie!
+Spit {0} [{1}] was dissolved by a zombie!
+Spark {0} [{1}] was electrocuted by a zombie!
+
+Vote_Kick {0} [{1}] is calling a vote to kick {2} [{3}]
+Vote_Pass Vote passed!
+Vote_Fail Vote failed!
+
+Player_Group_Queue_Leave {0} is leaving your group in {1} seconds!
+Player_Group_Left {0} has left your group!
+
+New NEW
+Updated UPDATED
+Rich_Presence_Editing Editing: {0}
+Rich_Presence_Playing Playing: {0}
+Rich_Presence_Menu In Menu
+Rich_Presence_Lobby In Lobby
+
+Say Server
+Console Console
+
+UGC_Fail Failed to submit.
+UGC_Success Succesfully submitted!
+
+Map_Missing Failed to find map {0}, defaulting to {1}!
+
+Overlay Steam overlay needs to be enabled.
+
+Shutdown Shutdown in: {0}
+
+ScheduledMaintenance_KickExplanation Scheduled Maintenance
+ScheduledMaintenance_Timer Shutting down for scheduled maintenance in: {0}
+
+UpdateShutdown_KickExplanation Updating to version {0}
+UpdateShutdown_Timer Shutting down for update to version {0} in: {1}
+
+HUD_FPS {0}/s
+HUD_Ping {0}ms
+HUD_DC Server not responded in: {0}s Automatically disconnecting in: {1}s
+HUD_Freecam_Orbiting Orbiting
+HUD_Freecam_Tracking Tracking
+HUD_Freecam_Locking Locking
+HUD_Freecam_Focusing Focusing
+HUD_Freecam_Smoothing Smoothing
+HUD_Freecam_Building Building
+HUD_Freecam_Spectating Spectating

@@ -1,0 +1,10 @@
+GUID c4f8b8cf9a5f4601ac856df7f0a02edf
+Type Medium
+ID 1036
+
+Conditions 1
+Condition_0_Type Flag_Short
+Condition_0_ID 246
+Condition_0_Value 2
+Condition_0_Logic Equal
+Has_Clip_Prefab false

@@ -1,0 +1,15 @@
+"Metadata"
+{
+	"GUID" "0308984e8257465187dde707cac0fbe1"
+	"Type" "SDG.Unturned.StereoSongAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"Song"
+	{
+		"MasterBundle" "core.masterbundle"
+		"AssetPath" "Music/Washington_Loop.ogg"
+	}
+	"Link_URL" "https://www.youtube.com/watch?v=Dahxcuufnn8"
+	"Is_Loop" "true"
+}

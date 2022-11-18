@@ -1,0 +1,30 @@
+GUID ecab4bc8633f4505a9ec51e5148c878d
+Type Vehicle
+ID 98
+
+Speed_Min -4
+Speed_Max 14
+
+Steer_Min 8
+Steer_Max 4
+
+Fuel_Min 200
+Fuel_Max 400
+Fuel 1000
+
+Health_Min 250
+Health_Max 350
+Health 450
+
+Zip
+Engine Boat
+
+Trunk_Storage_X 3
+Trunk_Storage_Y 2
+
+Explosion 20
+
+Should_Spawn_Seat_Capsules true
+
+IgnitionAudioClip Sounds/CarIgnition.mp3
+Has_Clip_Prefab false

@@ -1,0 +1,23 @@
+GUID fe71781c60314468b22c6b0642a51cd9
+Type Storage
+Rarity Epic
+Build Storage
+ID 1374
+
+Size_X 1
+Size_Y 1
+Size_Z 1
+
+Health 600
+
+Storage_X 7
+Storage_Y 7
+
+Explosion 19
+Vulnerable
+Unrepairable
+Unpickupable
+Unsaveable
+
+Should_Close_When_Outside_Range true
+Has_Clip_Prefab false

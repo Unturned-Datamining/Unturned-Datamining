@@ -1,0 +1,31 @@
+Return_Button Return
+Return_Button_Tooltip Return
+
+Exit_Button Quit
+Exit_Button_Tooltip Exit to desktop.
+
+Report_Button Report Bug
+Report_Button_Tooltip Report Bug
+
+Trello_Button Trello Roadmap
+Trello_Button_Tooltip Take a look into the future!
+
+Twitter_Button  Twitter News
+Twitter_Button_Tooltip Development info and update alerts.
+
+Steam_Button Steam News
+Steam_Button_Tooltip Full announcement posts and comments.
+
+Credits_Button Credits
+Credits_Button_Tooltip Everyone involved with Unturned.
+
+Forum_Button Forum
+Forum_Button_Tooltip Mature discussion boards.
+
+Blog_Button Blog
+Blog_Button_Tooltip Development and personal posts.
+
+Wiki_Button Wiki
+Wiki_Button_Tooltip Community-run library. 
+
+Overlay Steam overlay needs to be enabled.

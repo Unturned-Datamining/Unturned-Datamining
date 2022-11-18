@@ -1,0 +1,14 @@
+GUID c0b0f4a9f46c49a59f4558210bf36da5
+Type Supply
+ID 72
+
+Size_X 1
+Size_Y 1
+Size_Z 0.35
+
+Blueprints 1
+Blueprint_0_Type Gear
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 67
+Blueprint_0_Supply_0_Amount 4
+Blueprint_0_Build 27

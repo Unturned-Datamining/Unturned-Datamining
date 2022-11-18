@@ -1,0 +1,7 @@
+NoCommandErrorText Failed to find a command called {0}.
+
+HelpCommandText Help
+HelpInfoText Help [Command]
+HelpHelpText This provides information on commands.
+
+HelpText Commands:

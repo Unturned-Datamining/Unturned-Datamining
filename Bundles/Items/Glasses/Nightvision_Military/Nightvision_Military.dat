@@ -1,0 +1,26 @@
+GUID cca8301927e049149fcee2b157a59da1
+Type Glasses
+Rarity Epic
+Useable Clothing
+ID 334
+
+Size_X 2
+Size_Y 1
+Size_Z 0.175
+
+Hair
+Beard
+
+Vision Military
+
+Blueprints 2
+Blueprint_0_Type Apparel
+Blueprint_0_Supply_0_ID 334
+Blueprint_0_Product 67
+Blueprint_0_Products 2
+Blueprint_0_Build 32
+Blueprint_1_Type Repair
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 67
+Blueprint_1_Supply_0_Amount 2
+Blueprint_1_Build 32

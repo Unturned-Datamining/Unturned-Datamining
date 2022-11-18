@@ -1,0 +1,24 @@
+GUID c135cc7900f647d2b3e5ffdf45f9d449
+Type Backpack
+Rarity Epic
+Useable Clothing
+ID 253
+
+Size_X 2
+Size_Y 2
+Size_Z 0.6
+
+Width 8
+Height 7
+
+Blueprints 2
+Blueprint_0_Type Apparel
+Blueprint_0_Supply_0_ID 253
+Blueprint_0_Product 66
+Blueprint_0_Products 5
+Blueprint_0_Build 32
+Blueprint_1_Type Repair
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 66
+Blueprint_1_Supply_0_Amount 5
+Blueprint_1_Build 32

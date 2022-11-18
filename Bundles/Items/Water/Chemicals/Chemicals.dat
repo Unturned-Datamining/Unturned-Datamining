@@ -1,0 +1,11 @@
+GUID 7aee55ea2abf4f3fb70c4b2677da0e14
+Type Water
+Useable Consumeable
+ID 75
+
+Size_X 1
+Size_Y 1
+Size_Z 0.4
+
+Virus 100
+ConsumeAudioClip Sounds/DrinkSwallow.mp3

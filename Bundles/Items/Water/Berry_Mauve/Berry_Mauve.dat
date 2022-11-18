@@ -1,0 +1,21 @@
+GUID 77c2168e6fb5405aadb5f41b074a96e0
+Type Water
+Useable Consumeable
+ID 115
+
+Size_X 1
+Size_Y 1
+Size_Z 0.3
+
+Food 10
+Water 10
+Disinfectant 5
+Vision 20
+
+Actions 1
+Action_0_Type Blueprint
+Action_0_Source 1107
+Action_0_Blueprints 1
+Action_0_Blueprint_0_Index 0
+Action_0_Key Craft_Seed
+ConsumeAudioClip Sounds/EatSquishy.mp3

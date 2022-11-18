@@ -1,0 +1,19 @@
+"Metadata"
+{
+	"GUID" "d89bee43c77e48db8c810abe841cb26d"
+	"Type" "SDG.Unturned.StereoSongAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"ID" "0"
+	"Title"
+	{
+		"Namespace" "SDG"
+		"Token" "Stereo_Songs.Unturned_Theme.Title"
+	}
+	"Song"
+	{
+		"MasterBundle" "core.masterbundle"
+		"AssetPath" "Sounds/Unturned_Theme.mp3"
+	}
+}

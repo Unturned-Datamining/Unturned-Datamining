@@ -1,0 +1,52 @@
+"Metadata"
+{
+	"GUID" "8a86f496a8664800bf05a9adc5615f25"
+	"Type" "SDG.Unturned.MaterialPaletteAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"ID" "0"
+	"Materials"
+	[
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/House_Burned/House_00_Burned.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/House_Burned/House_01_Burned.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/House_Burned/House_02_Burned.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/House_Burned/House_03_Burned.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/House_Burned/House_04_Burned.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/House_Burned/House_05_Burned.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/House_Burned/House_06_Burned.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/House_Burned/House_07_Burned.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/House_Burned/House_08_Burned.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/House_Burned/House_09_Burned.mat"
+		}
+	]
+}

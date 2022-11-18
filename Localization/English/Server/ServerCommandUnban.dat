@@ -1,0 +1,9 @@
+InvalidSteamIDErrorText Failed to convert {0} into a Steam ID.
+NoPlayerErrorText Failed to find anyone called {0}.
+NotRunningErrorText Failed to unban player while not running.
+
+UnbanCommandText Unban
+UnbanInfoText Unban [SteamID]
+UnbanHelpText This removes the specified player from the list of users not allowed to join the server.
+
+UnbanText Successfully unbanned {0}!

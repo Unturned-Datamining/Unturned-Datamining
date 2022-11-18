@@ -1,0 +1,19 @@
+GUID 36ef53857cb749899c015b8f4e44341c
+Type Medium
+ID 1031
+
+Conditions 1
+Condition_0_Type Flag_Short
+Condition_0_ID 247
+Condition_0_Value 0
+Condition_0_Logic Equal
+Condition_0_Allow_Unset
+
+Interactability Quest
+Interactability_Effect 6
+Interactability_Rewards 1
+Interactability_Reward_0_Type Flag_Short
+Interactability_Reward_0_ID 247
+Interactability_Reward_0_Value 1
+Interactability_Reward_0_Modification Increment
+Has_Clip_Prefab false

@@ -1,0 +1,38 @@
+GUID cdd5bf025c8d4eedb5fb04005c741b94
+Type Dialogue
+ID 88
+
+Messages 2
+
+Message_0_Pages 1
+Message_0_Conditions 1
+Message_0_Condition_0_Type Flag_Short
+Message_0_Condition_0_Logic Less_Than
+Message_0_Condition_0_ID 29
+Message_0_Condition_0_Value 3
+Message_0_Condition_0_Allow_Unset
+
+Message_1_Pages 1
+
+Responses 2
+
+// I'll help
+// Pilot_Jet_Accepted
+Response_0_Messages 1
+Response_0_Message_0 1
+Response_0_Dialogue 238
+Response_0_Quest 240
+Response_0_Conditions 1
+Response_0_Condition_0_Type Quest
+Response_0_Condition_0_Logic Equal
+Response_0_Condition_0_ID 240
+Response_0_Condition_0_Status None
+Response_0_Rewards 2
+Response_0_Reward_0_Type Quest
+Response_0_Reward_0_ID 240
+Response_0_Reward_1_Type Flag_Bool
+Response_0_Reward_1_ID 237
+Response_0_Reward_1_Value False
+
+Response_1_Messages 1
+Response_1_Message_0 1

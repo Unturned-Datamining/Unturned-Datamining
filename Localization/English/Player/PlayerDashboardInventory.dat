@@ -1,0 +1,143 @@
+Rarity_0 Common
+Rarity_1 Uncommon
+Rarity_2 Rare
+Rarity_3 Epic
+Rarity_4 Legendary
+Rarity_5 Mythical
+
+Type_0 Hat
+Type_1 Pants
+Type_2 Shirt
+Type_3 Mask
+Type_4 Backpack
+Type_5 Vest
+Type_6 Glasses
+Type_7 Ranged Weapon
+Type_8 Sight Attachment
+Type_9 Tactical Attachment
+Type_10 Grip Attachment
+Type_11 Barrel Attachment
+Type_12 Magazine Attachment
+Type_13 Food
+Type_14 Drink
+Type_15 Medicine
+Type_16 Melee Weapon
+Type_17 Fuel Canister
+Type_18 Tool
+Type_19 Barricade
+Type_20 Item Storage
+Type_21 Beacon
+Type_22 Plant
+Type_23 Trap
+Type_24 Structure
+Type_25 Crafting Supply
+Type_26 Projectile
+Type_27 Growth Supplement
+Type_28 Optic
+Type_29 Water Canister
+Type_30 Fishing Pole
+Type_31 Parachute
+Type_32 Map
+Type_33 Key
+Type_34 Box
+Type_35 Catcher
+Type_36 Releaser
+Type_37 Liquid Storage
+Type_38 Generator
+Type_39 Remote Trigger
+Type_40 Remote Explosive
+Type_41 Experience Storage
+Type_42 Radiation Filter
+Type_43 Robotic Turret
+Type_44 Tool
+Type_45 Tool
+Type_46 Compass
+Type_47 Oil Pump
+
+Hotkey_Set Hotkey: {0}
+Hotkey_Unset Hotkey: [3-9]
+
+Rarity_Type_Label {0} {1}
+Quality Quality: {0}%
+Amount Amount: {0}
+
+Fuel Fuel: {0}%
+Refill Water: {0}
+Empty Empty
+Full Full
+Clean Clean
+Salty Salty
+Dirty Dirty
+
+Ammo Ammo: {0} {1}/{2}
+None Empty
+
+Equip_Button Equip
+Equip_Button_Tooltip Equip in your hands.
+Dequip_Button Dequip
+Dequip_Button_Tooltip Dequip from your hands.
+Drop_Button Drop
+Drop_Button_Tooltip Drop on the ground.
+Pickup_Button Pickup
+Pickup_Button_Tooltip Pickup from the ground.
+
+Take_Button Take
+Take_Button_Tooltip Take from storage.
+Store_Button Store
+Store_Button_Tooltip Store in storage.
+
+Repair_Button Repair
+Repair_Button_Tooltip Repair to 100% quality.
+Salvage_Button Salvage
+Salvage_Button_Tooltip Salvage into component materials.
+Refill_Button Refill
+Refill_Button_Tooltip Refill with bullets.
+
+Attachments_Button Strip
+Attachments_Button_Tooltip Dismantle attachments.
+
+Craft_Rag_Button Craft Rag
+Craft_Rag_Button_Tooltip Upgrade to rags.
+Craft_Bandage_Button Craft Bandage
+Craft_Bandage_Button_Tooltip Upgrade to bandage.
+Craft_Dressing_Button Craft Dressing
+Craft_Dressing_Button_Tooltip Upgrade to dressing.
+Craft_Seed_Button Craft Seed
+Craft_Seed_Button_Tooltip Salvage seed.
+
+Swap_Cosmetics_Tooltip Toggle Cosmetics
+Swap_Skins_Tooltip Toggle Skins
+Swap_Mythics_Tooltip Toggle Mythics
+
+Vehicle_Lock_On Lock [{0}]
+Vehicle_Lock_Off Unlock [{0}]
+Vehicle_Lock_Tooltip Keep out vehicle thieves.
+Vehicle_Horn Horn [{0}]
+Vehicle_Horn_Tooltip Warning audio.
+Vehicle_Headlights_On Headlights On [{0}]
+Vehicle_Headlights_Off Headlights Off [{0}]
+Vehicle_Headlights_Tooltip Bright for nighttime travel.
+Vehicle_Sirens_On Sirens On [{0}]
+Vehicle_Sirens_Off Sirens Off [{0}]
+Vehicle_Sirens_Tooltip Emergency audio.
+Vehicle_Blimp_On Ascend [{0}]
+Vehicle_Blimp_Off Descend [{0}]
+Vehicle_Blimp_Tooltip Adjust baloon ballast.
+Vehicle_Hook Towing Cable [{0}]
+Vehicle_Hook_Tooltip Carry nearby vehicles.
+Vehicle_Seat_Empty Empty
+Vehicle_Seat_Slot {0} [{1}]
+Vehicle_Steal_Battery Steal Battery
+Vehicle_Steal_Battery_Tooltip Remove battery from engine.
+Vehicle_Skin_On Apply Paintjob
+Vehicle_Skin_Off Clear Paintjob
+Vehicle_Skin_Tooltip Use your active vehicle skin.
+
+Hands Hands
+Storage Storage
+Storage_Trunk {0} Trunk Storage
+Area Nearby
+
+Rot_X X++
+Rot_Y Y++
+Rot_Z Z++

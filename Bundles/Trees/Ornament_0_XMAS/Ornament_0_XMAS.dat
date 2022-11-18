@@ -1,0 +1,22 @@
+GUID f0707c1712804e6fbe1a7d925cb33ca4
+Type Resource
+ID 49
+
+Health 1200
+Radius 5
+Scale 0.3
+
+Explosion 23
+Reward_ID 517
+Reward_XP 6
+
+Reset 750
+
+Auto_Skybox
+SpeedTree
+SpeedTree_Default_LOD_Weights
+
+Holiday_Restriction CHRISTMAS
+Bundle_Override_Path /Trees/Ornament_0
+
+Has_Clip_Prefab false

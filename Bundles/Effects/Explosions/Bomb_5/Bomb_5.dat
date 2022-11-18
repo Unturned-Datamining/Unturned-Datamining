@@ -1,0 +1,9 @@
+GUID 473f4b597ec64a099a930ad77dcf14a2
+Type Effect
+ID 123
+
+// This is the effect used by precision demolition charges.
+CameraShake_Radius 8
+CameraShake_MagnitudeDegrees 30
+
+Blast 137

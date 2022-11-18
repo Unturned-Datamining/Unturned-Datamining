@@ -1,0 +1,12 @@
+GUID cd9f2ca610a3475eb0cc47b7793d1688
+Type Medium
+ID 515
+
+Snowshoe
+Chart Ignore
+
+Interactability Rubble
+Interactability_Reset 300
+Interactability_Health 200
+Interactability_Effect 82
+Has_Clip_Prefab false

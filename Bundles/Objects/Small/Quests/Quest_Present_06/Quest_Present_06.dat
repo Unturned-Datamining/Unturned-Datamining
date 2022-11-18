@@ -1,0 +1,24 @@
+GUID 59065b71fbab4de7b0250b80f891091f
+
+Type Small
+ID 1
+
+Conditions 1
+Condition_0_Type Flag_Bool
+Condition_0_ID 294
+Condition_0_Value True
+Condition_0_Logic Equal
+Condition_0_Allow_Unset
+
+Interactability Quest
+Interactability_Effect 7
+Interactability_Rewards 2
+Interactability_Reward_0_Type Flag_Bool
+Interactability_Reward_0_ID 294
+Interactability_Reward_0_Value False
+Interactability_Reward_1_Type Flag_Bool
+Interactability_Reward_1_ID 295
+Interactability_Reward_1_Value True
+
+Holiday_Restriction CHRISTMAS
+Has_Clip_Prefab false

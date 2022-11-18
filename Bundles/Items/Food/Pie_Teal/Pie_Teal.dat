@@ -1,0 +1,26 @@
+GUID a52e2dc882614357a5296bfc6ddf5bc6
+Type Food
+Rarity Epic
+Useable Consumeable
+ID 1081
+
+Size_X 2
+Size_Y 2
+Size_Z 0.45
+
+Food 75
+Water 50
+
+Blueprints 1
+Blueprint_0_Type Supply
+Blueprint_0_Supplies 3
+Blueprint_0_Supply_0_ID 401
+Blueprint_0_Supply_0_Amount 4
+Blueprint_0_Supply_1_ID 462
+Blueprint_0_Supply_1_Amount 1
+Blueprint_0_Supply_2_ID 470
+Blueprint_0_Supply_2_Amount 1
+Blueprint_0_Level 3
+Blueprint_0_Skill Cook
+Blueprint_0_Build 27
+ConsumeAudioClip Sounds/EatCrunchy.mp3

@@ -1,0 +1,33 @@
+GUID e4698d4dbe044bf8afdcac7b73748d9a
+Type Magazine
+ID 478
+
+Size_X 1
+Size_Y 1
+Size_Z 0.2
+
+Amount 5
+Count_Min 2
+Count_Max 4
+
+Calibers 1
+Caliber_0 17
+
+Tracer 48
+
+Blueprints 3
+Blueprint_0_Type Ammo
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 44
+Blueprint_0_Build 30
+Blueprint_1_Type Ammo
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 478
+Blueprint_1_Build 30
+Blueprint_2_Type Tool
+Blueprint_2_Supplies 1
+Blueprint_2_Supply_0_ID 67
+Blueprint_2_Supply_0_Amount 6
+Blueprint_2_Level 1
+Blueprint_2_Skill Craft
+Blueprint_2_Build 27

@@ -1,0 +1,23 @@
+GUID 932f20635e6142c69648ea2840d11d59
+Type Barrel
+Rarity Rare
+ID 149
+
+Size_X 2
+Size_Y 1
+Size_Z 0.15
+
+Calibers 9
+Caliber_0 1
+Caliber_1 4
+Caliber_2 12
+Caliber_3 22
+Caliber_4 23
+Caliber_5 24
+Caliber_6 25
+Caliber_7 39
+Caliber_8 41
+
+Spread 0.6
+
+Paintable

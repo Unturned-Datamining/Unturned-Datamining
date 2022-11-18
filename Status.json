@@ -1,0 +1,214 @@
+{
+	"Achievements":
+	{
+		"NPC_Achievement_IDs":
+		[
+			"Soulcrystal",
+			"Mk2",
+			"Boss_Magma",
+			"Zweihander",
+			"Kuwait_Squeek",
+			"Kuwait_FelineFriends",
+			"Kuwait_DinosaurJuice",
+			"Kuwait_HomeDecor",
+			"Kuwait_AlwaysWatching",
+			"Kuwait_FamiliarFaces",
+			"Kuwait_EscapingOutlands",
+			"Kuwait_DunemansPromise",
+			"Elver_FinalBoss",
+			"Festive2021_Power",
+			"Festive2021_Snowman",
+			"Festive2021_Delivery",
+			"Festive2021_Cook",
+			"Arid_Finale",
+			"Arid_RPG"
+		]
+	},
+	"Game":
+	{
+		"Major_Version": 22,
+		"Minor_Version": 19,
+		"Patch_Version": 4,
+		"GrantPackageIDs":
+		[
+			487
+		],
+		"GrantPackageURL": "https://api.smartlydressedgames.com/u4/shipping/package-grant?steamid={0}"
+	},
+	"Holidays":
+	{
+		"HalloweenStart": "2022-10-20T00:12:01Z",
+		"HalloweenEnd": "2022-11-01T23:59:59Z",
+		"ChristmasStart": "2022-12-07T00:00:01Z",
+		"ChristmasEnd": "2023-01-02T18:05:00Z",
+		"AprilFools_Start": "2023-04-01T00:00:00Z",
+		"AprilFools_End": "2023-04-02T00:00:00Z"
+	},
+	"Menu":
+	{
+		"PromoStart": "2021-05-09T12:00:00Z",
+		"PromoEnd": "2021-05-28T12:00:00Z",
+		"PromoLevel": "KuwaitMenu"
+	},
+	"News":
+	{
+		"Featured_Workshop_Start": "2022-08-30T00:12:00Z",
+		"Featured_Workshop_End": "2022-09-09T00:12:00Z",
+		"Featured_Workshop_File_Ids":
+		[
+			2854261943,
+			2853736464,
+			2854309725
+		],
+		"Featured_Workshop_Status": "None",
+		"Featured_Workshop_Type": "Highlighted",
+		"Featured_Workshop_Auto_Expand_Description": false,
+		"Featured_Workshop_Override_Description": "",
+		"Featured_Workshop_Link_Text": "",
+		"Featured_Workshop_Link_URL": "",
+		"Featured_Workshop_Associated_Stockpile_Items":
+		[],
+		"Popular_Workshop_Trend_Days": 30,
+		"Popular_Workshop_Carousel_Items": 3,
+		"Announcements_Count": 3
+	},
+	"Maps":
+	{
+		"Auto_Subscribe":
+		[
+			{
+				"Workshop_File_Id": 2483365750,
+				"Start": "2022-05-30T00:12:00Z",
+				"End": "2022-07-07T00:12:00Z"
+			},
+			{
+				"Workshop_File_Id": 2683620106,
+				"Start": "2021-12-13T00:12:00Z",
+				"End": "2031-12-13T00:12:00Z"
+			}
+		],
+		"Curated_Map_Links":
+		[
+			{
+				"Name": "Arid",
+				"Workshop_File_Id": 2683620106,
+				"Visible_In_Singleplayer_Recommendations_List": true
+			},
+			{
+				"Name": "Kuwait",
+				"Workshop_File_Id": 2483365750,
+				"Visible_In_Singleplayer_Recommendations_List": true
+			},
+			{
+				"Name": "Elver",
+				"Workshop_File_Id": 2136497468,
+				"Visible_In_Singleplayer_Recommendations_List": true
+			},
+			{
+				"Name": "Easter Island",
+				"Workshop_File_Id": 1983200271,
+				"Visible_In_Singleplayer_Recommendations_List": true
+			},
+			{
+				"Name": "France",
+				"Workshop_File_Id": 1975500516,
+				"Visible_In_Singleplayer_Recommendations_List": false
+			},
+			{
+				"Name": "California",
+				"Workshop_File_Id": 1905768396,
+				"Visible_In_Singleplayer_Recommendations_List": true
+			},
+			{
+				"Name": "Rio de Janeiro",
+				"Workshop_File_Id": 1821848824,
+				"Visible_In_Singleplayer_Recommendations_List": true
+			},
+			{
+				"Name": "Dango",
+				"Workshop_File_Id": 1850228333,
+				"Visible_In_Singleplayer_Recommendations_List": false
+			},
+			{
+				"Name": "Canyon Arena",
+				"Workshop_File_Id": 1850209768,
+				"Visible_In_Singleplayer_Recommendations_List": false
+			},
+			{
+				"Name": "Bunker Arena",
+				"Workshop_File_Id": 1257784170,
+				"Visible_In_Singleplayer_Recommendations_List": false
+			},
+			{
+				"Name": "Athens Arena",
+				"Workshop_File_Id": 1454125991,
+				"Visible_In_Singleplayer_Recommendations_List": false
+			},
+			{
+				"Name": "Carpat",
+				"Workshop_File_Id": 1497352180,
+				"Required_Workshop_File_Ids":
+				[
+					1702240229,
+					1753131903
+				],
+				"Visible_In_Singleplayer_Recommendations_List": false
+			},
+			{
+				"Name": "Greece",
+				"Workshop_File_Id": 1702240229,
+				"Required_Workshop_File_Ids":
+				[
+					1753131903
+				],
+				"Visible_In_Singleplayer_Recommendations_List": true
+			},
+			{
+				"Name": "Hawaii",
+				"Workshop_File_Id": 1753134636,
+				"Required_Workshop_File_Ids":
+				[
+					1753131903
+				],
+				"Visible_In_Singleplayer_Recommendations_List": true
+			},
+			{
+				"Name": "Belgium",
+				"Workshop_File_Id": 1727125581,
+				"Required_Workshop_File_Ids":
+				[
+					1767554683
+				],
+				"Visible_In_Singleplayer_Recommendations_List": false
+			},
+			{
+				"Name": "Ireland",
+				"Workshop_File_Id": 1411633953,
+				"Visible_In_Singleplayer_Recommendations_List": true
+			}
+		]
+	},
+	"Stockpile":
+	{
+		"New_Items_Start": "2022-10-19T00:12:00Z",
+		"New_Items_End": "2022-10-24T00:12:00Z",
+		"New_Items":
+		[
+			1263,
+			1264,
+			1266,
+			1265,
+			1272,
+			1279,
+			1286
+		],
+		"Exclude_Items_From_Highlight":
+		[
+			1263,
+			1264,
+			1266,
+			1265
+		],
+		"Playtime_Generator": 0
+	}
+}

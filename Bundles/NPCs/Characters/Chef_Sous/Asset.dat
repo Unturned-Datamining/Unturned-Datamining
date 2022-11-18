@@ -1,0 +1,20 @@
+GUID f478bd82310b4986b3af3f666e2774ea
+Type NPC
+ID 756
+
+Shirt 230
+Pants 231
+Hat 239
+
+Has_Christmas_Outfit True
+Christmas_Shirt 230
+Christmas_Pants 231
+Christmas_Hat 239
+Christmas_Vest 829
+
+Face 13
+Color_Skin #C8AF8C
+
+Dialogue 92
+
+Has_Clip_Prefab false

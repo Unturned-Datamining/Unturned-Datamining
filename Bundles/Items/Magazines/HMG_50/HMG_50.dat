@@ -1,0 +1,39 @@
+GUID 5de40f42976d4e148d62eb86d170e1cc
+Type Magazine
+Rarity Epic
+ID 1395
+
+Size_X 2
+Size_Y 2
+Size_Z 0.25
+
+Amount 50
+Count_Min 40
+Count_Max 50
+
+Calibers 1
+Caliber_0 37
+
+Tracer 55
+
+Range 5
+Player_Damage 20
+Zombie_Damage 40
+Animal_Damage 40
+Barricade_Damage 20
+Structure_Damage 20
+Vehicle_Damage 20
+Resource_Damage 50
+Object_Damage 20
+Explosion 53
+Explosive
+
+Blueprints 2
+Blueprint_0_Type Ammo
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 43
+Blueprint_0_Build 30
+Blueprint_1_Type Ammo
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 1395
+Blueprint_1_Build 30

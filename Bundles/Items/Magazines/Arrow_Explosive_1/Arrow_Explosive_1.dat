@@ -1,0 +1,42 @@
+GUID c4ddc94171524da294cd5c4daea98ddd
+Type Magazine
+Rarity Epic
+ID 1209
+
+Size_X 2
+Size_Y 1
+Size_Z 0.2
+
+Amount 1
+
+Calibers 1
+Caliber_0 15
+
+Tracer 55
+
+Stuck 100
+
+Range 8
+Player_Damage 15
+Zombie_Damage 125
+Animal_Damage 125
+Barricade_Damage 50
+Structure_Damage 50
+Vehicle_Damage 200
+Resource_Damage 2000
+Object_Damage 200
+Explosion 34
+Explosive
+
+Blueprints 1
+Blueprint_0_Type Gear
+Blueprint_0_Supplies 3
+Blueprint_0_Supply_0_ID 347
+Blueprint_0_Supply_0_Amount 1
+Blueprint_0_Supply_1_ID 69
+Blueprint_0_Supply_1_Amount 1
+Blueprint_0_Supply_2_ID 73
+Blueprint_0_Supply_2_Amount 2
+Blueprint_0_Level 2
+Blueprint_0_Skill Craft
+Blueprint_0_Build 27

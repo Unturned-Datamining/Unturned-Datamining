@@ -1,0 +1,92 @@
+GUID c4b6a5dcf4d4498e85bb7b50135770e2
+Type Gun
+Rarity Rare
+Useable Gun
+Slot Primary
+ID 1018
+
+Size_X 5
+Size_Y 2
+Size_Z 0.4
+Size2_Z 0.75
+
+Sight 1019
+Magazine 1020
+
+Hook_Sight
+Hook_Tactical
+Hook_Grip
+Hook_Barrel
+
+Ammo_Min 2
+Ammo_Max 10
+
+Safety
+Semi
+
+Caliber 22
+
+Range 250
+Firerate 10
+Action Trigger
+
+Player_Damage 60
+Player_Leg_Multiplier 0.6
+Player_Arm_Multiplier 0.6
+Player_Spine_Multiplier 0.8
+Player_Skull_Multiplier 1.1
+
+Zombie_Damage 99
+Zombie_Leg_Multiplier 0.3
+Zombie_Arm_Multiplier 0.3
+Zombie_Spine_Multiplier 0.6
+Zombie_Skull_Multiplier 1.1
+
+Animal_Damage 60
+Animal_Leg_Multiplier 0.6
+Animal_Spine_Multiplier 0.8
+Animal_Skull_Multiplier 1.1
+
+Barricade_Damage 40
+Structure_Damage 30
+Vehicle_Damage 40
+Resource_Damage 30
+Object_Damage 35
+
+Durability 0.9
+
+Spread_Aim 0.005
+Spread_Hip 0.35
+
+Recoil_Aim 0.75
+Recoil_Min_X -5
+Recoil_Min_Y 7
+Recoil_Max_X -10
+Recoil_Max_Y 13
+
+Recover_X 0.5
+Recover_Y 0.75
+
+Shake_Min_X -0.005
+Shake_Min_Y 0.005
+Shake_Min_Z -0.05
+Shake_Max_X 0.005
+Shake_Max_Y -0.005
+Shake_Max_Z -0.1
+
+Muzzle 4
+
+Blueprints 2
+Blueprint_0_Type Repair
+Blueprint_0_Supply_0_ID 67
+Blueprint_0_Supply_0_Amount 5
+Blueprint_0_Tool 76
+Blueprint_0_Level 1
+Blueprint_0_Skill Repair
+Blueprint_0_Build 27
+Blueprint_1_Type Tool
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 1018
+Blueprint_1_Product 67
+Blueprint_1_Products 3
+Blueprint_1_Build 27

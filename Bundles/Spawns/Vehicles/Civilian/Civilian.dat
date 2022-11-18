@@ -1,0 +1,21 @@
+GUID 7e642d28677240ea8147841dbaeb0704
+Type Spawn
+ID 296
+
+Tables 8
+Table_0_Spawn_ID 40
+Table_0_Weight 34
+Table_1_Spawn_ID 297
+Table_1_Weight 32
+Table_2_Spawn_ID 298
+Table_2_Weight 31
+Table_3_Spawn_ID 299
+Table_3_Weight 28
+Table_4_Spawn_ID 300
+Table_4_Weight 30
+Table_5_Spawn_ID 301
+Table_5_Weight 10
+Table_6_Asset_ID 185
+Table_6_Weight 50
+Table_7_Asset_ID 950
+Table_7_Weight 10

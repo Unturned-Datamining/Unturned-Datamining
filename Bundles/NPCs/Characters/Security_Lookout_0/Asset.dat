@@ -1,0 +1,24 @@
+GUID 9665fd59120c4800b5a43507eecd06da
+Type NPC
+ID 796
+
+Shirt 223
+Pants 224
+
+Has_Christmas_Outfit True
+Christmas_Shirt 223
+Christmas_Pants 224
+Christmas_Hat 278
+
+Face 22
+Hair 11
+Beard 12
+Color_Skin #917346
+Color_Hair #282828
+
+Tertiary 333
+Equipped Tertiary
+
+Dialogue 86
+
+Has_Clip_Prefab false

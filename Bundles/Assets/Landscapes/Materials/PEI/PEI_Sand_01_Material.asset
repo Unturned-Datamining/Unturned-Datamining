@@ -1,0 +1,25 @@
+"Metadata"
+{
+	"GUID" "a9f5c606fe0d433ab167fbe8e3273055"
+	"Type" "SDG.Unturned.LandscapeMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"ID" "0"
+	"Texture"
+	{
+		"Name" "core.masterbundle"
+		"Path" "Terrain/Materials/PEI/Sand_01.png"
+	}
+	"Mask"
+	{
+		"Name" ""
+		"Path" ""
+	}
+	"Physics_Material" "SAND_STATIC"
+	"Foliage"
+	{
+		"GUID" "f5dd551c560e4f7f9bf870214f500ccf"
+	}
+	"AprilFools_Redirect" "00ddd72266914141b39e33227942a7df" // Orange
+}

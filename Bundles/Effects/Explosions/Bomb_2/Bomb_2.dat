@@ -1,0 +1,9 @@
+GUID 0070b5b82417411da6bfcae04f6192af
+Type Effect
+ID 45
+
+// This is the effect used by demolition charges, rocket launchers, and tank cannons.
+CameraShake_Radius 32
+CameraShake_MagnitudeDegrees 45
+
+Blast 137

@@ -1,0 +1,207 @@
+"Available_Instance_ID" "7"
+"Items"
+[
+	{
+		"Type" "SDG.Framework.Devkit.DeadzoneVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "1"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "40.89876"
+				"Y" "72.98102"
+				"Z" "74.7542"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "5.319909"
+				"Y" "5.319909"
+				"Z" "5.319909"
+			}
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.AmbianceVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "2"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "42.27725"
+				"Y" "75.8345"
+				"Z" "64.52219"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "6.077234"
+				"Y" "6.077234"
+				"Z" "6.077234"
+			}
+			"Ambiance_ID" "0"
+			"No_Water" "false"
+			"No_Lighting" "false"
+			"Can_Rain" "true"
+			"Can_Snow" "true"
+			"Override_Fog" "false"
+			"Fog_Color"
+			{
+				"R" "255"
+				"G" "255"
+				"B" "255"
+				"A" "255"
+			}
+			"Fog_Intensity" "0"
+			"Override_Atmospheric_Fog" "false"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.AmbianceVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "3"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "34.00877"
+				"Y" "75.8345"
+				"Z" "64.52219"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "6.077234"
+				"Y" "6.077234"
+				"Z" "6.077234"
+			}
+			"Ambiance_ID" "0"
+			"No_Water" "false"
+			"No_Lighting" "false"
+			"Can_Rain" "true"
+			"Can_Snow" "false"
+			"Override_Fog" "false"
+			"Fog_Color"
+			{
+				"R" "255"
+				"G" "255"
+				"B" "255"
+				"A" "255"
+			}
+			"Fog_Intensity" "0"
+			"Override_Atmospheric_Fog" "false"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.AmbianceVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "4"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "50.08117"
+				"Y" "75.8345"
+				"Z" "64.52219"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "6.077234"
+				"Y" "6.077234"
+				"Z" "6.077234"
+			}
+			"Ambiance_ID" "0"
+			"No_Water" "false"
+			"No_Lighting" "false"
+			"Can_Rain" "false"
+			"Can_Snow" "true"
+			"Override_Fog" "false"
+			"Fog_Color"
+			{
+				"R" "255"
+				"G" "255"
+				"B" "255"
+				"A" "255"
+			}
+			"Fog_Intensity" "0"
+			"Override_Atmospheric_Fog" "false"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.TeleporterEntranceVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "5"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "38.44409"
+				"Y" "74"
+				"Z" "41"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "5"
+				"Y" "2"
+				"Z" "1"
+			}
+			"Pair_Id" "Test"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.TeleporterExitVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "6"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "43.8266"
+				"Y" "74"
+				"Z" "41"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "5"
+				"Y" "2"
+				"Z" "1"
+			}
+			"Id" "Test"
+		}
+	}
+]

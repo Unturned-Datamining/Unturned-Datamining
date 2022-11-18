@@ -1,0 +1,23 @@
+GUID a83256038f6240a28cd4b532cca7d961
+Type Large
+ID 774
+
+Conditions 1
+Condition_0_Type Flag_Bool
+Condition_0_ID 41
+Condition_0_Value False
+Condition_0_Logic Equal
+Condition_0_Allow_Unset
+
+Interactability Quest
+Interactability_Effect 27
+Interactability_Conditions 1
+Interactability_Condition_0_Type Flag_Bool
+Interactability_Condition_0_ID 40
+Interactability_Condition_0_Value True
+Interactability_Condition_0_Logic Equal
+Interactability_Rewards 1
+Interactability_Reward_0_Type Flag_Bool
+Interactability_Reward_0_ID 41
+Interactability_Reward_0_Value True
+Has_Clip_Prefab false

@@ -1,0 +1,10 @@
+GUID e427d3577eea4a4fad6bacb7d09b16c4
+Type Medium
+ID 785
+
+Conditions 1
+Condition_0_Type Flag_Bool
+Condition_0_ID 53
+Condition_0_Value True
+Condition_0_Logic Equal
+Has_Clip_Prefab false

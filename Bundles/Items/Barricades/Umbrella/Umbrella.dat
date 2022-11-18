@@ -1,0 +1,28 @@
+GUID 6d184c53fdeb4056a66ea949a67f01ed
+Type Barricade
+Useable Barricade
+Build Freeform
+ID 1282
+
+Size_X 1
+Size_Y 2
+Size_Z 0.6
+
+Health 100
+Range 4
+Radius 0.45
+Offset 1
+
+Explosion 37
+Vulnerable
+
+Blueprints 1
+Blueprint_0_Type Furniture
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 66
+Blueprint_0_Supply_0_Amount 7
+Blueprint_0_Supply_1_ID 285
+Blueprint_0_Supply_1_Amount 2
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

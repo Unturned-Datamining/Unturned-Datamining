@@ -1,0 +1,18 @@
+GUID 5a59fbb525e6414e8b05be253e461ed5
+Type Tire
+Rarity Uncommon
+Useable Tire
+ID 1451
+
+Size_X 2
+Size_Y 2
+Size_Z 0.4
+
+Mode Add
+
+Blueprints 1
+Blueprint_0_Type Tool
+Blueprint_0_Supply_0_ID 1451
+Blueprint_0_Product 67
+Blueprint_0_Products 2
+Blueprint_0_Build 27

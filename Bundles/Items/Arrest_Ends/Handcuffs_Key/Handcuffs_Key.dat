@@ -1,0 +1,19 @@
+GUID cb4352c6fcb044c2b58e6edfa5644904
+Type Arrest_End
+Rarity Uncommon
+Useable Arrest_End
+ID 1196
+
+Size_X 1
+Size_Y 1
+Size_Z 0.3
+
+Recover 1195
+
+Blueprints 1
+Blueprint_0_Type Tool
+Blueprint_0_Supply_0_ID 1196
+Blueprint_0_Product 67
+Blueprint_0_Build 27
+
+InventoryAudio Sounds/Inventory/Keys.asset

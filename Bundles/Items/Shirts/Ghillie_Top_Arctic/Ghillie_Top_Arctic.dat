@@ -1,0 +1,26 @@
+GUID 5559d5fdd73545799173578c0be0d3ab
+Type Shirt
+Rarity Epic
+Useable Clothing
+ID 1512
+
+Size_X 3
+Size_Y 2
+Size_Z 0.6
+
+Width 4
+Height 2
+
+Armor 0.95
+
+Blueprints 2
+Blueprint_0_Type Apparel
+Blueprint_0_Supply_0_ID 1512
+Blueprint_0_Product 67
+Blueprint_0_Products 2
+Blueprint_0_Build 27
+Blueprint_1_Type Repair
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 67
+Blueprint_1_Supply_0_Amount 3
+Blueprint_1_Build 27

@@ -1,0 +1,8 @@
+GUID e683abf817c34a0e8f8a2e657f75dcbe
+Type Large
+ID 570
+
+// References landscape texture.
+Ignore_TexRW
+
+Has_Clip_Prefab false

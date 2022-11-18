@@ -1,0 +1,32 @@
+GUID d472ed1ca67943a8abdde8cd176099b8
+Type Barricade
+Rarity Epic
+Useable Barricade
+Build Gate
+ID 1238
+
+Size_X 1
+Size_Y 2
+Size_Z 0.65
+
+Health 900
+Range 4
+Radius 1.5
+Offset 1.25
+
+Locked
+
+Explosion 36
+
+Blueprints 1
+Blueprint_0_Type Barricade
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 68
+Blueprint_0_Supply_0_Amount 4
+Blueprint_0_Supply_1_ID 67
+Blueprint_0_Supply_1_Amount 1
+Blueprint_0_Level 3
+Blueprint_0_Skill Craft
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/MetalPlacement.mp3
+Has_Clip_Prefab false

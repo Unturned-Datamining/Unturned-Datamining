@@ -1,0 +1,26 @@
+GUID 81419c5ae34e4f449bfddc9075709ff2
+Type Medical
+Rarity Rare
+Useable Consumeable
+ID 269
+
+Size_X 1
+Size_Y 2
+Size_Z 0.5
+
+Aid
+Health 15
+Disinfectant 45
+
+Blueprints 1
+Blueprint_0_Type Supply
+Blueprint_0_Supplies 4
+Blueprint_0_Supply_0_ID 75
+Blueprint_0_Supply_0_Amount 1
+Blueprint_0_Supply_1_ID 70
+Blueprint_0_Supply_1_Amount 1
+Blueprint_0_Supply_2_ID 74
+Blueprint_0_Supply_2_Amount 1
+Blueprint_0_Supply_3_ID 72
+Blueprint_0_Supply_3_Amount 1
+Blueprint_0_Build 32

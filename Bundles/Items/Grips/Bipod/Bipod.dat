@@ -1,0 +1,18 @@
+GUID 4a1ac4b1fda34805b22ce0aa582ead08
+Type Grip
+Rarity Epic
+ID 143
+
+Size_X 1
+Size_Y 2
+Size_Z 0.3
+
+Recoil_X 0.4
+Recoil_Y 0.4
+
+Spread 0.4
+Sway 0.5
+Shake 0.4
+
+Bipod
+Paintable

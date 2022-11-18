@@ -1,0 +1,7 @@
+Name Teleporter Control A
+
+Interact Use Teleporter [{0}]
+
+Interactability_Condition_0 Missing Teleporter Coil
+Interactability_Condition_1 Missing Teleporter Coil
+Interactability_Condition_2 Missing Teleporter Coil

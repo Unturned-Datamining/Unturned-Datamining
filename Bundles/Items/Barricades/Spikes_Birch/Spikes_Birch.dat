@@ -1,0 +1,30 @@
+GUID 6e5bf0b6b23e4dca866f513f7b0e12ff
+Type Trap
+Useable Barricade
+Build Spike
+ID 384
+
+Size_X 1
+Size_Y 2
+Size_Z 0.35
+
+Health 30
+Range 4
+Radius 0.2
+Offset 0.25
+
+Player_Damage 30
+Zombie_Damage 60
+Animal_Damage 60
+
+Explosion 28
+Vulnerable
+Unrepairable
+
+Blueprints 1
+Blueprint_0_Type Barricade
+Blueprint_0_Supply_0_ID 38
+Blueprint_0_Supply_0_Amount 6
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

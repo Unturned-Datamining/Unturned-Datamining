@@ -1,0 +1,37 @@
+GUID e41b10018a1e4a219b9e132b603b11a3
+Type Vehicle
+Rarity Uncommon
+ID 58
+
+Speed_Min -6
+Speed_Max 13
+
+Steer_Min 24
+Steer_Max 48
+
+Brake 32
+
+Fuel_Min 200
+Fuel_Max 400
+Fuel 2000
+
+Health_Min 400
+Health_Max 600
+Health 800
+
+Exit 3.5
+
+Cam_Follow_Distance 6.5
+
+Crawler
+Traction
+Tires_Invulnerable
+
+Trunk_Storage_X 6
+Trunk_Storage_Y 4
+
+Explosion 20
+
+IgnitionAudioClip Sounds/CarIgnition.mp3
+HornAudioClip Sounds/CarHorn_03.mp3
+Has_Clip_Prefab false

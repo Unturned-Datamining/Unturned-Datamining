@@ -1,0 +1,30 @@
+GUID cce39bd61f9b4536a5ea670a61c012a7
+Type Fisher
+Rarity Epic
+Useable Fisher
+ID 1432
+
+Size_X 3
+Size_Y 1
+Size_Z 0.25
+
+Backward
+
+Reward_ID 675
+
+Blueprints 1
+Blueprint_0_Type Tool
+Blueprint_0_Supplies 4
+Blueprint_0_Supply_0_ID 503
+Blueprint_0_Supply_0_Amount 1
+Blueprint_0_Supply_1_ID 73
+Blueprint_0_Supply_1_Amount 1
+Blueprint_0_Supply_2_ID 71
+Blueprint_0_Supply_2_Amount 1
+Blueprint_0_Supply_3_ID 65
+Blueprint_0_Supply_3_Amount 2
+Blueprint_0_Tool 1433
+Blueprint_0_Tool_Critical
+Blueprint_0_Level 2
+Blueprint_0_Skill Craft
+Blueprint_0_Build 27

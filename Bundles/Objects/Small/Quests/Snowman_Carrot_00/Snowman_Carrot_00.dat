@@ -1,0 +1,17 @@
+GUID 5866079591c340cdbb728283d73fe2a0
+
+Type Small
+ID 1
+
+Holiday_Restriction CHRISTMAS
+
+// Phase 1?
+Conditions 1
+Condition_0_Type Flag_Bool
+Condition_0_ID 252
+Condition_0_Value True
+Condition_0_Logic Equal
+Condition_0_Allow_Unset
+
+Bundle_Override_Path /Objects/Small/Quests/Snowman_Carrot_01
+Has_Clip_Prefab false

@@ -1,0 +1,8 @@
+InvalidIPErrorText Failed to convert {0} into an IP.
+RunningErrorText Failed to bind IP while running.
+
+BindCommandText Bind
+BindInfoText Bind [IP]
+BindHelpText This binds a specific internal IP to the socket.
+
+BindText Successfully bound IP to {0}!

@@ -1,0 +1,61 @@
+GUID 555f180070ad45b1b51300dac0675d9a
+Type Box
+ID 767
+
+Size_X 1
+Size_Y 1
+Size_Z 0.35
+
+Generate 21027
+
+Drops 23
+Drop_0 -1
+
+// Honeybadger
+Drop_1 83400
+// Peacemaker
+Drop_2 83500
+// Grizzly
+Drop_3 78800
+// Heartbreaker
+Drop_4 78700
+
+// Compound Bow
+Drop_5 83300
+// Lei
+Drop_6 77900
+// Ear Flower
+Drop_7 78300
+// Garland
+Drop_8 78400
+
+// Machete
+Drop_9 83200
+// Kryzkarek
+Drop_10 83100
+// Shark Fin
+Drop_11 83000
+// Ducky
+Drop_12 82900
+// Kukui Nuts
+Drop_13 77400
+// Grass Skirt
+Drop_14 77500
+// Summershades
+Drop_15 77600
+// Angry Tiki
+Drop_16 77700
+// Happy Tiki
+Drop_17 77800
+// Rose Tinted
+Drop_18 78000
+// Camo Tourist Hat
+Drop_19 78100
+// Pineapple
+Drop_20 78200
+// Hawaii Tee #1
+Drop_21 78500
+// Hawaii Tee #2
+Drop_22 78600
+
+Pro

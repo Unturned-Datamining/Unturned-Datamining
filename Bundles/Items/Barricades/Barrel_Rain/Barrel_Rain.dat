@@ -1,0 +1,30 @@
+GUID c8c459e27d724d02a00bca4f4a7a6971
+Type Barricade
+Rarity Uncommon
+Useable Barricade
+Build Barrel_Rain
+ID 1208
+
+Size_X 2
+Size_Y 2
+Size_Z 0.4
+
+Health 235
+Range 4
+Radius 0.5
+Offset 0.75
+
+Explosion 36
+
+Blueprints 1
+Blueprint_0_Type Utilities
+Blueprint_0_Supplies 3
+Blueprint_0_Supply_0_ID 68
+Blueprint_0_Supply_0_Amount 2
+Blueprint_0_Supply_1_ID 72
+Blueprint_0_Supply_1_Amount 1
+Blueprint_0_Supply_2_ID 69
+Blueprint_0_Supply_2_Amount 1
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

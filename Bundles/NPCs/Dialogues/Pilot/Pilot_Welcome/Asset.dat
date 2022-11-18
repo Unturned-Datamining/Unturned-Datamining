@@ -1,0 +1,43 @@
+GUID 875fb786a74e45209ec5883ad8856a1c
+Type Dialogue
+ID 87
+
+Messages 1
+Message_0_Pages 1
+
+Responses 4
+
+Response_0_Dialogue 88
+Response_0_Conditions 1
+Response_0_Condition_0_Type Quest
+Response_0_Condition_0_Logic Equal
+Response_0_Condition_0_ID 240
+Response_0_Condition_0_Status None
+
+// Pilot_Valentines_Note
+Response_1_Dialogue 235
+Response_1_Conditions 2
+Response_1_Condition_0_Type Quest
+Response_1_Condition_0_Logic Not_Equal
+Response_1_Condition_0_ID 230
+Response_1_Condition_0_Status None
+Response_1_Condition_1_Type Flag_Short
+Response_1_Condition_1_Logic Equal
+Response_1_Condition_1_ID 231
+Response_1_Condition_1_Value 2
+Response_1_Rewards 1
+Response_1_Reward_0_Type Flag_Short
+Response_1_Reward_0_ID 231
+Response_1_Reward_0_Value 3
+Response_1_Reward_0_Modification Assign
+
+// I found the jet stuff
+// Pilot_Jet_Completed
+Response_2_Dialogue 239
+Response_2_Quest 240
+Response_2_Conditions 1
+Response_2_Condition_0_Type Quest
+Response_2_Condition_0_Logic Equal
+Response_2_Condition_0_ID 240
+Response_2_Condition_0_Status Ready
+Response_2_Condition_0_Reset

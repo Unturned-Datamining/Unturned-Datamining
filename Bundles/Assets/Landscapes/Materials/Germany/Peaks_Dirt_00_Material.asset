@@ -1,0 +1,33 @@
+"Metadata"
+{
+	"GUID" "4226c8b16a9d4f468e1d80c4e08c5838"
+	"Type" "SDG.Unturned.LandscapeMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"ID" "0"
+	"Texture"
+	{
+		"Name" "core.masterbundle"
+		"Path" "Terrain/Materials/Peaks/Dirt_00.png"
+	}
+	"Mask"
+	{
+		"Name" ""
+		"Path" ""
+	}
+	"Physics_Material" "GRAVEL_STATIC"
+	"Foliage"
+	{
+		"GUID" "f03f4210890847f49cc7e981924e60ae"
+	}
+	"Use_Auto_Slope" "false"
+	"Auto_Min_Angle_Begin" "0"
+	"Auto_Min_Angle_End" "0"
+	"Auto_Max_Angle_Begin" "0"
+	"Auto_Max_Angle_End" "0"
+	"Use_Auto_Foundation" "true"
+	"Auto_Ray_Radius" "5"
+	"Auto_Ray_Length" "256"
+	"Auto_Ray_Mask" "LARGE, ENVIRONMENT"
+}

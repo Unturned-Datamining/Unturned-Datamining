@@ -1,0 +1,12 @@
+GUID 4b5f234546504c2288d92c9e67656dbc
+Type Spawn
+ID 397
+Tables 4
+Table_0_Asset_ID 97
+Table_0_Weight 10
+Table_1_Asset_ID 107
+Table_1_Weight 10
+Table_2_Asset_ID 4
+Table_2_Weight 10
+Table_3_Asset_ID 1337
+Table_3_Weight 30

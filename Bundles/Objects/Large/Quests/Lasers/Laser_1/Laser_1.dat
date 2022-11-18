@@ -1,0 +1,12 @@
+GUID 4316d55d157d470d95baa9f426c016d6
+Type Large
+ID 857
+
+Conditions 1
+Condition_0_Type Flag_Short
+Condition_0_ID 219
+Condition_0_Value 3
+Condition_0_Logic Equal
+
+Chart Ignore
+Has_Clip_Prefab false

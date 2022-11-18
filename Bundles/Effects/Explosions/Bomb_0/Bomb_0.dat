@@ -1,0 +1,9 @@
+GUID 61d63a016a6448ffb6e4432a4c6a6ee1
+Type Effect
+ID 20
+
+// This is the effect used by default vehicle explosions.
+CameraShake_Radius 32
+CameraShake_MagnitudeDegrees 45
+
+Blast 137

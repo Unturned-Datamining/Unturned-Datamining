@@ -1,0 +1,8 @@
+InvalidParameterErrorText Failed to find parameters in format [Delay]/[Explanation].
+InvalidNumberErrorText Failed to convert {0} into a number.
+
+ShutdownCommandText Shutdown
+ShutdownInfoText Shutdown [Delay]/[Explanation]
+ShutdownHelpText This properly saves the server state, disconnects the clients and closes the program.
+
+ShutdownText Succesfully set shutdown delay!

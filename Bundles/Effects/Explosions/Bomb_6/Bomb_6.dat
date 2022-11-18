@@ -1,0 +1,7 @@
+GUID e6f688ca3d874f659e273776de9c36a9
+Type Effect
+ID 136
+
+// This is the effect used by the Shadowstalker Mk2.
+CameraShake_Radius 16
+CameraShake_MagnitudeDegrees 20

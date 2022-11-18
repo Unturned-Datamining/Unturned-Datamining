@@ -1,0 +1,13 @@
+NoCameraErrorText Failed to find perspective called {0}.
+RunningErrorText Failed to change perspective while running.
+
+CameraCommandText Perspective
+CameraInfoText Perspective [First | Third | Both | Vehicle]
+CameraHelpText This assigns the perspective of the server.
+
+CameraText Successfully set perspective to {0}!
+
+CameraFirst First
+CameraThird Third
+CameraBoth Both
+CameraVehicle Vehicle

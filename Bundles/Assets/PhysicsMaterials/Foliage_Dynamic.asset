@@ -1,0 +1,17 @@
+"Metadata"
+{
+	"GUID" "5112e77472b643f7af1e2bb9c6c1d9d4"
+	"Type" "SDG.Unturned.PhysicsMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"UnityNames"
+	[
+		"Foliage_Dynamic"
+	]
+	// This asset is a bit of a hack because prior to the physics material asset rewrite
+	// seeds could only be planted on the non-"dynamic" foliage material (e.g. planters),
+	// and we do not want seeds (with "dynamic" material) to be planted on top of each other.
+	"Fallback" "1c3a3c6664f14aa486d73528a5d9f92c" // Foliage
+	"IsArable" "false"
+}

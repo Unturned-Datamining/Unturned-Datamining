@@ -1,0 +1,26 @@
+GUID df9be6c70bae459db8d00ca7a2c5ad5a
+Type Barricade
+Rarity Rare
+Useable Barricade
+Build Barricade
+ID 1087
+
+Size_X 2
+Size_Y 1
+Size_Z 0.3
+
+Health 450
+Range 8
+Radius 0.5
+Offset 2
+
+Explosion 29
+
+Blueprints 1
+Blueprint_0_Type Barricade
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 41
+Blueprint_0_Supply_0_Amount 2
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

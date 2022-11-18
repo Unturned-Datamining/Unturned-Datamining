@@ -1,0 +1,11 @@
+GUID b5e77461d892475694ae7109ce421706
+Type Medium
+ID 767
+
+Conditions 1
+Condition_0_Type Flag_Bool
+Condition_0_ID 127
+Condition_0_Value False
+Condition_0_Logic Equal
+Condition_0_Allow_Unset
+Has_Clip_Prefab false

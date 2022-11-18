@@ -1,0 +1,8 @@
+DayCommandText Day
+DayInfoText Day
+DayHelpText This assigns the current time to day.
+NotRunningErrorText Failed to set day while not running.
+HordeErrorText Failed to set time on a horde map.
+ArenaErrorText Failed to set time on an arena map.
+
+DayText Successfully set time to day!

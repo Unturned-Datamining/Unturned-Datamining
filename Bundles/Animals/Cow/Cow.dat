@@ -1,0 +1,17 @@
+GUID b5da36615ef8412698cbd6db41ea383b
+Type Animal
+ID 6
+
+Speed_Run 12
+Speed_Walk 4
+
+Behaviour Ignore
+
+Health 100
+
+Reward_ID 524
+Reward_XP 5
+Reward_Min 2
+Reward_Max 3
+
+Panics 3

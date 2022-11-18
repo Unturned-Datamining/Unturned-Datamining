@@ -1,0 +1,26 @@
+GUID c2b88ff6b9a44bc2a221f0adc54b0a19
+Type Pants
+Rarity Uncommon
+Useable Clothing
+ID 231
+
+Size_X 2
+Size_Y 2
+Size_Z 0.65
+
+Width 5
+Height 2
+
+Armor 0.95
+
+Blueprints 2
+Blueprint_0_Type Apparel
+Blueprint_0_Supply_0_ID 231
+Blueprint_0_Product 66
+Blueprint_0_Products 2
+Blueprint_0_Build 32
+Blueprint_1_Type Repair
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 66
+Blueprint_1_Supply_0_Amount 2
+Blueprint_1_Build 32

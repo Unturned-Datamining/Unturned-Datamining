@@ -1,0 +1,12 @@
+Message_0_Page_0 Welcome aboard! You should probably go talk to <color=legendary>Captain Sydney</color> on the bridge for orientation.
+Message_1_Page_0 Good to see you <color=uncommon>Ensign <name_char></color>!
+Message_2_Page_0 Good to see you <color=rare>Lieutenant <name_char></color>!
+Message_3_Page_0 Good to see you <color=epic>Major <name_char></color>!
+Message_4_Page_0 Move along, bandit scum.
+Message_5_Page_0 Stay where I can see you.
+Message_6_Page_0 Good to see you <name_char>!
+
+Response_0 Thanks
+Response_1 You too <name_npc>! 
+Response_2 Okay okay
+Response_3 I'm not here to cause trouble

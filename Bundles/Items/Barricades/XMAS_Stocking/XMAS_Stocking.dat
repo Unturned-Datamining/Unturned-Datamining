@@ -1,0 +1,38 @@
+GUID 97e8cbbbb0a04bad9687237926fb89aa
+
+Type Storage
+Rarity Rare
+Useable Barricade
+Build Storage_Wall
+ID 1705
+
+Size_X 1
+Size_Y 1
+Size_Z 0.5
+
+Health 50
+Range 4
+Offset 0.125
+
+Storage_X 4
+Storage_Y 4
+
+Explosion 37
+Vulnerable
+
+Blueprints 1
+Blueprint_0_Type Furniture
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 1694
+Blueprint_0_Supply_0_Amount 4
+Blueprint_0_Build 27
+
+Blueprint_0_Rewards 1
+Blueprint_0_Reward_0_Type Flag_Short
+Blueprint_0_Reward_0_ID 329
+Blueprint_0_Reward_0_Value 1
+Blueprint_0_Reward_0_Modification Increment
+
+Should_Close_When_Outside_Range true
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

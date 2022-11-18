@@ -1,0 +1,29 @@
+GUID 7eee02c2883141a7b4d6f99a6ed0ab18
+Type NPC
+ID 830
+
+Shirt 1422
+Pants 1419
+Hat 1428
+
+Has_Christmas_Outfit True
+Christmas_Shirt 1422
+Christmas_Pants 1419
+Christmas_Hat 278
+
+Face 5
+Beard 7
+Color_Skin #9D886B
+Color_Hair #1A5C26
+
+Secondary 97
+
+Dialogue 90
+
+Conditions 1
+Condition_0_Type Flag_Bool
+Condition_0_ID 197
+Condition_0_Value True
+Condition_0_Logic Equal
+
+Has_Clip_Prefab false

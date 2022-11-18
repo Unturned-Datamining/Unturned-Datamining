@@ -1,0 +1,32 @@
+GUID 78d9035383ba4cd6b5efdfa127f2054b
+
+Type Small
+ID 1
+
+Holiday_Restriction CHRISTMAS
+
+Conditions 1
+Condition_0_Type Flag_Bool
+Condition_0_ID 278
+Condition_0_Value True
+Condition_0_Logic Equal
+Condition_0_Allow_Unset
+
+Interactability_Conditions 1
+Interactability_Condition_0_Type Item
+Interactability_Condition_0_ID 75
+Interactability_Condition_0_Amount 2
+Interactability_Condition_0_Reset
+
+Interactability Quest
+Interactability_Effect 7
+Interactability_Rewards 2
+Interactability_Reward_0_Type Flag_Bool
+Interactability_Reward_0_ID 278
+Interactability_Reward_0_Value False
+
+Interactability_Reward_1_Type Flag_Short
+Interactability_Reward_1_ID 277
+Interactability_Reward_1_Value 1
+Interactability_Reward_1_Modification Increment
+Has_Clip_Prefab false

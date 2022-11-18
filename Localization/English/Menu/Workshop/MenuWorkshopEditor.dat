@@ -1,0 +1,28 @@
+Name_Field_Label Map
+
+Add_Button Create
+Add_Button_Tooltip Create new map
+
+Remove_Button Delete
+Remove_Button_Tooltip Permanently delete map
+Remove_Button_Confirm Yes
+Remove_Button_Confirm_Tooltip Are you sure? Map files will be deleted
+Remove_Button_Deny No
+Remove_Button_Deny_Tooltip Keep map files
+
+Edit_Button Edit
+Edit_Button_Tooltip Edit
+Edit2_Button Edit (Devkit)
+Edit2_Button_Tooltip Use WIP Devkit
+
+BrowseFiles_Label Browse Files
+
+Tiny Tiny
+Small Small
+Medium Medium
+Large Large
+Insane Insane
+
+VR_Label Roomscale VR
+VR_Hint_0 Launch with -VR for VR menu
+VR_Hint_1 Disable desktop theater!

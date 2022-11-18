@@ -1,0 +1,4 @@
+Name <color=mythical>Sparks</color>
+Description While flying South over Jhavesk <color=uncommon>Ensign Cliff's</color> squad's helicopter took several electric shocks from a giant sparking zombie. If you're brave enough he's sure it'd be appreciated to kill it before it can cause more trouble.
+
+Condition_0 Defeat {0}/{1} <color=mythical>Lightningstrike Boss</color>

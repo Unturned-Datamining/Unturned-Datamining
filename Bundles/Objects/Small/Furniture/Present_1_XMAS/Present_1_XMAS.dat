@@ -1,0 +1,14 @@
+GUID b5e4a1bbcf854ad59dc1dde9b86a6f07
+Type Small
+ID 483
+
+Rubble Destroy
+Rubble_Reset 900
+Rubble_Health 1
+Rubble_Effect 85
+Rubble_Reward_ID 961
+
+Holiday_Restriction CHRISTMAS
+Bundle_Override_Path /Objects/Small/Furniture/Present_1
+
+Has_Clip_Prefab false

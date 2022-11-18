@@ -1,0 +1,27 @@
+GUID 9ca5b01e1e2d404fbed35f2645da707c
+Type Magazine
+Rarity Uncommon
+ID 381
+
+Size_X 1
+Size_Y 1
+Size_Z 0.25
+
+Amount 2
+Count_Min 2
+Count_Max 2
+
+Calibers 1
+Caliber_0 16
+
+Pellets 8
+
+Tracer 48
+
+Blueprints 1
+Blueprint_0_Type Ammo
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 381
+Blueprint_0_Build 30
+
+Delete_Empty

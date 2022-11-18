@@ -1,0 +1,12 @@
+InvalidParameterErrorText Failed to find parameters in format [SteamID | Player]/[Reputation].
+InvalidNumberErrorText Failed to convert {0} into a number.
+
+NoPlayerErrorText Failed to find anyone called {0}.
+NotRunningErrorText Failed to give player reputation while not running.
+CheatsErrorText Failed to give reputation with cheats disabled.
+
+ReputationCommandText Reputation
+ReputationInfoText Reputation [SteamID | Player]/[Reputation]
+ReputationHelpText This gives a player some reputation.
+
+ReputationText Successfully gave {0} {1} reputation!

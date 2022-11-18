@@ -1,0 +1,107 @@
+Server_Button {0} on {1}
+Server_Players {0}/{1}
+
+Name_Field_Hint Server Name Filter
+Password_Field_Hint Server Password
+Password_Field_Replace #
+Map_Field_Hint Map Filter
+
+Refresh_Label Search Category:
+
+Refresh_Gold_Button Gold
+Refresh_Gold_Button_Tooltip Find servers that only allow gold members.
+
+Refresh_Internet_Button Internet
+Refresh_Internet_Button_Tooltip Find servers on the internet.
+
+Refresh_LAN_Button LAN
+Refresh_LAN_Button_Tooltip Find servers on local network.
+
+Refresh_History_Button History
+Refresh_History_Button_Tooltip Find previously played on servers.
+
+Refresh_Favorites_Button Favorites
+Refresh_Favorites_Button_Tooltip Find favorited servers.
+
+Refresh_Friends_Button Friends
+Refresh_Friends_Button_Tooltip Find servers friends are playing on.
+
+HostingButtonText Hosting
+HostingButtonTooltip Read server hosting documentation.
+
+Any_Password_Button Any Password
+Yes_Password_Button Has Password
+No_Password_Button No Password
+
+Any_Workshop_Button Any Workshop
+Yes_Workshop_Button Has Workshop
+No_Workshop_Button No Workshop
+
+Any_Plugins_Button Any Plugins
+Yes_Plugins_Button Has Plugins
+No_Plugins_Button No Plugins
+
+Attendance_Toggle Playing
+Security_Toggle Secure
+PvP_Toggle PvP
+
+Any_Attendance_Button Any Attendance
+Empty_Button Empty
+HasPlayers_Button Has Players
+
+Any_Space_Button Include Full
+Space_Button Has Available Slots
+
+VAC_Any_Button Any VAC
+VAC_Secure_Button VAC Secure
+VAC_Insecure_Button VAC Insecure
+
+BattlEye_Any_Button Any BattlEye
+BattlEye_Secure_Button BattlEye Required
+BattlEye_Insecure_Button BattlEye Disabled
+
+Any_Combat_Button Any Combat
+PvP_Button PvP
+PvE_Button PvE
+
+Any_Cheats_Button Any Cheats
+Yes_Cheats_Button Cheats On
+No_Cheats_Button Cheats Off
+
+Any_Mode_Button Any Mode
+Easy_Button Easy
+Normal_Button Normal
+Hard_Button Hard
+Pro_Button Gold
+
+Any_Camera_Button Any Perspective
+First_Button First Person
+Third_Button Third Person
+Both_Button Both Perspectives
+Vehicle_Button Vehicle Third Person
+
+Monetization_Any_Button Any Monetization
+Monetization_None_Button Not Monetized
+Monetization_NonGameplay_Button Non-Gameplay Monetization
+
+Any_Map Any Map
+
+No_Servers No version {0} servers found on the master server.
+No_Servers_Hint Perhaps your filters are too specific?
+Reset_Filters Reset Filters
+Reset_Filters_Tooltip Changes filtering settings to their default values.
+
+Sort_Name Name
+Sort_Name_Tooltip Sort by name.
+
+Sort_Map Map
+Sort_Map_Tooltip Sort by map.
+
+Sort_Players Players
+Sort_Players_Tooltip Sort by players.
+
+Sort_Ping Ping
+Sort_Ping_Tooltip Sort by ping.
+
+Favorite_On_Button_Tooltip Favorite
+Favorite_Off_Button_Tooltip Unfavorite

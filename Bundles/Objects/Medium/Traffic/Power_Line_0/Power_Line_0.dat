@@ -1,0 +1,11 @@
+GUID bc4b9a034fe04c669285becc489d01a0
+Type Medium
+ID 27
+
+Chart Ignore
+
+Rubble Destroy
+Rubble_Reset 300
+Rubble_Health 275
+Rubble_Effect 19
+Has_Clip_Prefab false

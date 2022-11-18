@@ -1,0 +1,30 @@
+GUID 549d5009500f4eab89c513a71334d319
+Type Vehicle
+Rarity Epic
+ID 108
+
+Speed_Min -4
+Speed_Max 15
+
+Steer_Min 32
+Steer_Max 16
+
+Fuel_Min 250
+Fuel_Max 500
+Fuel 1750
+
+Health_Min 600
+Health_Max 700
+Health 800
+
+Exit 3
+
+Engine Boat
+
+Trunk_Storage_X 5
+Trunk_Storage_Y 3
+
+Explosion 20
+
+IgnitionAudioClip Sounds/CarIgnition.mp3
+Has_Clip_Prefab false

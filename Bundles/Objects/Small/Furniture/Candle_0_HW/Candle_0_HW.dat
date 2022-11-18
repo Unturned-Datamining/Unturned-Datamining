@@ -1,0 +1,8 @@
+GUID 1938738b6f8d44bab2c6af105451d26c
+Type Small
+ID 736
+
+Holiday_Restriction HALLOWEEN
+Bundle_Override_Path /Objects/Small/Furniture/Candle_0
+
+Has_Clip_Prefab false

@@ -1,0 +1,13 @@
+GUID bca40f315fe14be7bee29fc6d1b3c267
+
+Type Small
+ID 1
+
+Holiday_Restriction CHRISTMAS
+
+Conditions 1
+Condition_0_Type Flag_Bool
+Condition_0_ID 263
+Condition_0_Value True
+Condition_0_Logic Equal
+Has_Clip_Prefab false

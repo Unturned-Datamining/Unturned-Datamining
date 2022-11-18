@@ -1,0 +1,11 @@
+GUID 54ce5b19a2564000bd0227e9a51410a0
+Type Small
+ID 58
+
+Rubble Destroy
+Rubble_Reset 60
+Rubble_Health 1
+Rubble_Effect 58
+
+Material_Palette 3fcc42609bfb4154abb9dd39e7542ed8
+Has_Clip_Prefab false

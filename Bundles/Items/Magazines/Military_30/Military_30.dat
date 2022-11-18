@@ -1,0 +1,37 @@
+GUID dbfb1d0d11ca438e9dffb95f76e61274
+Type Magazine
+Rarity Rare
+ID 6
+
+Size_X 1
+Size_Y 2
+Size_Z 0.3
+
+Amount 30
+Count_Min 5
+Count_Max 25
+
+Calibers 1
+Caliber_0 1
+
+Tracer 48
+
+Blueprints 4
+Blueprint_0_Type Ammo
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 43
+Blueprint_0_Build 30
+Blueprint_1_Type Ammo
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 6
+Blueprint_1_Build 30
+Blueprint_2_Type Ammo
+Blueprint_2_Supplies 1
+Blueprint_2_Supply_0_ID 17
+Blueprint_2_Build 30
+Blueprint_3_Type Ammo
+Blueprint_3_Supplies 1
+Blueprint_3_Supply_0_ID 1490
+Blueprint_3_Build 30
+
+Paintable

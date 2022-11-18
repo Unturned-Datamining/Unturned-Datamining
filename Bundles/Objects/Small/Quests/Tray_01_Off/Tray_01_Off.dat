@@ -1,0 +1,25 @@
+GUID 292ff03d344141a1acb1d7a23691ceed
+
+Type Small
+ID 1
+
+Conditions 1
+Condition_0_Type Flag_Bool
+Condition_0_ID 312
+Condition_0_Value True
+Condition_0_Logic Equal
+
+Interactability Quest
+Interactability_Effect 7
+Interactability_Rewards 2
+Interactability_Reward_0_Type Flag_Bool
+Interactability_Reward_0_ID 312
+Interactability_Reward_0_Value False
+Interactability_Reward_1_Type Flag_Bool
+Interactability_Reward_1_ID 313
+Interactability_Reward_1_Value True
+
+Holiday_Restriction CHRISTMAS
+
+Bundle_Override_Path /Objects/Small/Quests/Tray_00_Off
+Has_Clip_Prefab false

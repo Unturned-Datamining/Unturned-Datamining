@@ -1,0 +1,20 @@
+"Metadata"
+{
+	"GUID" "ee7e619a95124d34b0d6ece913203d4d"
+	"Type" "SDG.Unturned.MaterialPaletteAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"ID" "0"
+	"Materials"
+	[
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/Bed/Bed_0.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/Bed/Bed_1.mat"
+		}
+	]
+}

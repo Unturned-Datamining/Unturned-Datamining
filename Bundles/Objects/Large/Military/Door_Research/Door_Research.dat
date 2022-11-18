@@ -1,0 +1,18 @@
+GUID cf75621b692844ea84f68eccb2a4fa2d
+Type Large
+ID 833
+
+Interactability Binary_State
+Interactability_Delay 1
+Interactability_Reset 10
+
+Interactability_Conditions 1
+Interactability_Condition_0_Type Flag_Bool
+Interactability_Condition_0_ID 201
+Interactability_Condition_0_Value True
+Interactability_Condition_0_Logic Equal
+Interactability_Rewards 1
+Interactability_Reward_0_Type Flag_Bool
+Interactability_Reward_0_ID 202
+Interactability_Reward_0_Value True
+Has_Clip_Prefab false

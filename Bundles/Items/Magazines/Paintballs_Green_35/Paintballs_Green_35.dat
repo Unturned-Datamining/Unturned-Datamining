@@ -1,0 +1,26 @@
+GUID 296eb7939e6d40438066fe40a000e707
+Type Magazine
+Rarity Uncommon
+ID 1340
+
+Size_X 2
+Size_Y 1
+Size_Z 0.175
+
+Amount 35
+Count_Min 30
+Count_Max 35
+
+Calibers 1
+Caliber_0 30
+
+Tracer 108
+Impact 109
+
+Blueprints 1
+Blueprint_0_Type Ammo
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 1340
+Blueprint_0_Build 30
+
+Delete_Empty

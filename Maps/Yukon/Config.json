@@ -1,0 +1,22 @@
+{
+	"Terrain_Snow_Sparkle": true,
+	"Use_Legacy_Ground": false,
+	"Is_Aurora_Borealis_Visible": true,
+	"Has_Discord_Rich_Presence": true,
+	"Category": "Official",
+	"Visible_In_Matchmaking": true,
+	"Should_Verify_Objects_Hash": true,
+	"Trains":
+	[
+		{
+			"VehicleID": 187,
+			"RoadIndex": 0
+		}
+	],
+	"Version": "3.22.1.0",
+	"Use_Underground_Whitelist": true,
+	"Asset":
+	{
+		"GUID": "537278c5f6eb45198994ff2915d3107b"
+	}
+}

@@ -1,0 +1,10 @@
+GUID 383b6c539e1b4916b1229d3d2414941b
+Type Medium
+ID 345
+
+Interactability Binary_State
+Interactability_Delay 2.25
+Interactability_Hint Door
+Interactability_Power Toggle
+Interactability_Nav Off
+Has_Clip_Prefab false

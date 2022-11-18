@@ -1,0 +1,24 @@
+"Metadata"
+{
+	"GUID" "96af7303b18f4491a9f0dd75a67fee91"
+	"Type" "SDG.Unturned.PhysicsMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"UnityNames"
+	[
+		"Water"
+		"Water_Static"
+	]
+	"AudioDefs"
+	{
+		"BipedLand" "Effects/Physics/BipedLand/Water/BipedLand_Water.asset"
+		"FootstepWalk" "Effects/Physics/Footstep/Water_Walk/Footstep_Water_Walk.asset"
+		"FootstepRun" "Effects/Physics/Footstep/Water_Run/Footstep_Water_Run.asset"
+		"BulletCasingBounce" "Effects/Physics/BulletCasingBounce/Water/BulletCasingBounce_Water.asset"
+		"ShotgunShellBounce" "Effects/Physics/ShotgunShellBounce/Water/ShotgunShellBounce_Water.asset"
+		"BulletImpact" "Effects/Physics/BulletImpact/Water/BulletImpact_Water.asset"
+		"MeleeImpact" "Effects/Physics/LegacyImpact/LegacyImpact_Water.asset"
+	}
+	"WipDoNotUseTemp_BulletImpactEffect" "04516eaffa03406e8ad870dfd56b8d3c" // Water_NoAudio
+}

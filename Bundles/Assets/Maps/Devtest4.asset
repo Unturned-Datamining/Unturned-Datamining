@@ -1,0 +1,19 @@
+"Metadata"
+{
+	"GUID" "a972560ffa3645dfb4f748f8929d653c"
+	"Type" "SDG.Unturned.LevelAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"ID" "0"
+	"Default_Game_Mode"
+	{
+		"Type" "SDG.Unturned.SurvivalGameMode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+	}
+	"Supported_Game_Modes"
+	[
+		{
+			"Type" "SDG.Unturned.SurvivalGameMode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		}
+	]
+}

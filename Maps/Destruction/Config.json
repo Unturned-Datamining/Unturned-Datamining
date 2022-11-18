@@ -1,0 +1,30 @@
+{
+	"Use_Rain_Volumes": true,
+	"Use_Snow_Volumes": true,
+	"Use_Legacy_Snow_Height": false,
+	"Allow_Crafting": false,
+	"Allow_Skills": false,
+	"Allow_Information": false,
+	"Mode_Config_Overrides":
+	{
+		"Zombies.Min_Drops": 5,
+		"Zombies.Max_Drops": 10,
+		"Vehicles.Armor_Multiplier": 0.1,
+		"Gameplay.Allow_Shoulder_Camera": false
+	},
+	"Trains":
+	[
+		{
+			"VehicleID": 186,
+			"RoadIndex": 0
+		}
+	],
+	"PlayerUI_HealthVisible": false,
+	"PlayerUI_FoodVisible": false,
+	"PlayerUI_WaterVisible": false,
+	"PlayerUI_VirusVisible": false,
+	"PlayerUI_StaminaVisible": false,
+	"PlayerUI_OxygenVisible": false,
+	"PlayerUI_GunVisible": false,
+	"Tips": 2
+}

@@ -1,0 +1,33 @@
+GUID d8811bc349b14d808b713b6e87dcdd70
+Type Vehicle
+Rarity Epic
+ID 133
+
+Speed_Min -4
+Speed_Max 24
+
+Steer_Min 8
+Steer_Max 32
+
+Brake 32
+Lift 5
+
+Fuel 1750
+
+Health_Min 700
+Health_Max 800
+Health 900
+
+LockMouse
+Engine Plane
+Sleds
+Traction
+
+Trunk_Storage_X 7
+Trunk_Storage_Y 5
+
+Explosion 20
+Invulnerable
+Tires_Invulnerable
+
+Has_Clip_Prefab false

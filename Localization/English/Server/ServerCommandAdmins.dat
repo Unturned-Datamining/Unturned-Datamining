@@ -1,0 +1,9 @@
+NoAdminsErrorText Failed to find any admins.
+
+AdminsCommandText Admins
+AdminsInfoText Admins
+AdminsHelpText This shows a list of the current admins.
+
+AdminsText Admins:
+AdminNameText PlayerID: {0}
+AdminJudgeText JudgeID: {0}

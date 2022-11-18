@@ -1,0 +1,33 @@
+GUID 54b5aa09ef0640e7994dce0ddcc60012
+Type Storage
+Rarity Rare
+Useable Barricade
+Build Storage
+ID 1247
+
+Size_X 2
+Size_Y 2
+Size_Z 0.5
+
+Health 250
+Range 4
+Radius 0.5
+Offset 0.75
+
+Storage_X 6
+Storage_Y 4
+
+Explosion 29
+
+Blueprints 1
+Blueprint_0_Type Furniture
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 63
+Blueprint_0_Supply_0_Amount 6
+Blueprint_0_Supply_1_ID 42
+Blueprint_0_Supply_1_Amount 2
+Blueprint_0_Build 27
+
+Should_Close_When_Outside_Range true
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

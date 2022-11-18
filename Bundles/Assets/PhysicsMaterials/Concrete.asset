@@ -1,0 +1,25 @@
+"Metadata"
+{
+	"GUID" "e3d2040c86584044a5189397bfa9b2c3"
+	"Type" "SDG.Unturned.PhysicsMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"UnityNames"
+	[
+		"Concrete"
+		"Concrete_Static"
+		"Concrete_Dynamic"
+	]
+	"AudioDefs"
+	{
+		"BipedLand" "Effects/Physics/BipedLand/Concrete/BipedLand_Concrete.asset"
+		"FootstepWalk" "Effects/Physics/Footstep/Concrete_Walk/Footstep_Concrete_Walk.asset"
+		"FootstepRun" "Effects/Physics/Footstep/Concrete_Run/Footstep_Concrete_Run.asset"
+		"BulletCasingBounce" "Effects/Physics/BulletCasingBounce/General/BulletCasingBounce_General.asset"
+		"ShotgunShellBounce" "Effects/Physics/ShotgunShellBounce/Concrete/ShotgunShellBounce_Concrete.asset"
+		"BulletImpact" "Effects/Physics/BulletImpact/Concrete/BulletImpact_Concrete.asset"
+		"MeleeImpact" "Effects/Physics/LegacyImpact/LegacyImpact_Concrete.asset"
+	}
+	"WipDoNotUseTemp_BulletImpactEffect" "1651d4873c7b4a65a42e511cf07425a2" // Concrete_WithDecal_NoAudio
+}

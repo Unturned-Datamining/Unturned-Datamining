@@ -1,0 +1,18 @@
+Message_0_Page_0 Ah hello! I heard there was someone new on-board. I'm <name_npc>, in charge of this vessel and aiding any survivors we come across. You're one of the first we've met, what's your name?
+Message_1_Page_0 By all accounts you've shown yourself to be the embodiment of what we look for in an <color=uncommon>Ensign</color>. The rank is yours if you want it!
+Message_2_Page_0 You've been an exemplary <color=uncommon>Ensign</color>, and it's about time you were promoted! If you're ready I'm prepared to make you a <color=rare>Lieutenant</color>!
+Message_3_Page_0 I'm very proud of you <name_char>... <pause>You've done a stellar job and I think you're ready to lead a squad of your own as a <color=epic>Major</color>. What do you say?
+Message_4_Page_0 Anything to report?
+
+Response_0 My name is <name_char>
+Response_1 I'm ready to serve
+Response_2 Thank you, I won't let you down
+Response_3 I'm honored, I'll stand by your side <color=legendary>Captain</color>
+Response_4 I need some time to think about it
+Response_5 Can I join the Coalition?
+Response_6 What ranks are there?
+Response_7 Can I get a replacement uniform?
+Response_8 <color=epic>Major Len</color> is a traitor!
+Response_9 <color=uncommon>Ensign Darren</color> is the real traitor!
+Response_10 I've got this note for you
+Response_11 Nothing to report

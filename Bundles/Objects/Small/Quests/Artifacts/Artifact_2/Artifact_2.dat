@@ -1,0 +1,22 @@
+GUID fbd7c176d19b4e6b9a2ea5101bd138aa
+Type Small
+ID 848
+
+Conditions 2
+Condition_0_Type Flag_Bool
+Condition_0_ID 214
+Condition_0_Value True
+Condition_0_Logic Equal
+Condition_1_Type Flag_Bool
+Condition_1_ID 216
+Condition_1_Value False
+Condition_1_Logic Equal
+Condition_1_Allow_Unset
+
+Interactability Quest
+Interactability_Effect 7
+Interactability_Rewards 1
+Interactability_Reward_0_Type Flag_Bool
+Interactability_Reward_0_ID 216
+Interactability_Reward_0_Value True
+Has_Clip_Prefab false

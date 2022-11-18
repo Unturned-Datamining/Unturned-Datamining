@@ -1,0 +1,28 @@
+GUID 21ede8ebffb14c5580e8c7ad149e335e
+Type Supply
+ID 67
+
+Size_X 1
+Size_Y 1
+Size_Z 0.45
+
+Blueprints 4
+Blueprint_0_Type Gear
+Blueprint_0_Supply_0_ID 68
+Blueprint_0_Products 2
+Blueprint_0_Build 27
+Blueprint_1_Type Gear
+Blueprint_1_Supply_0_ID 285
+Blueprint_1_Supply_0_Amount 2
+Blueprint_1_Tool 76
+Blueprint_1_Build 27
+Blueprint_2_Type Gear
+Blueprint_2_Supply_0_ID 1056
+Blueprint_2_Supply_0_Amount 3
+Blueprint_2_Build 27
+Blueprint_3_Type Gear
+Blueprint_3_Supply_0_ID 1057
+Blueprint_3_Supply_0_Amount 3
+Blueprint_3_Build 27
+
+InventoryAudio Sounds/Inventory/SmallMetal.asset

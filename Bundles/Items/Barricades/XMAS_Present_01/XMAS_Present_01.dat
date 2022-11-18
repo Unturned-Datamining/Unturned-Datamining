@@ -1,0 +1,39 @@
+GUID 2c2b6a8ccfff4e44a1d309eeb3a2129a
+
+Type Storage
+Rarity Rare
+Useable Barricade
+Build Storage
+ID 1696
+
+Size_X 2
+Size_Y 1
+Size_Z 0.5
+
+Health 200
+Range 4
+Radius 0.35
+Offset 0.5
+
+Storage_X 4
+Storage_Y 2
+
+Explosion 85
+Vulnerable
+
+Blueprints 1
+Blueprint_0_Type Furniture
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 1694
+Blueprint_0_Supply_0_Amount 3
+Blueprint_0_Build 27
+
+Blueprint_0_Rewards 1
+Blueprint_0_Reward_0_Type Flag_Short
+Blueprint_0_Reward_0_ID 329
+Blueprint_0_Reward_0_Value 1
+Blueprint_0_Reward_0_Modification Increment
+
+Should_Close_When_Outside_Range true
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

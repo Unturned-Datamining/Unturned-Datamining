@@ -1,0 +1,13 @@
+InvalidParameterErrorText Failed to find parameters in format [SteamID | Player]/[Reason]/[Duration].
+InvalidNumberErrorText Failed to convert {0} into a number.
+
+NoPlayerErrorText Failed to find anyone called {0}.
+NotRunningErrorText Failed to ban player while not running.
+
+BanCommandText Ban
+BanInfoText Ban [SteamID | Player]/[Reason]/[Duration]
+BanHelpText This adds the specified player to the list of users not allowed to join the server.
+
+BanText Successfully banned {0} for {1} seconds!
+BanTextPermanent Successfully permabanned {0}!
+BanTextReason unspecified

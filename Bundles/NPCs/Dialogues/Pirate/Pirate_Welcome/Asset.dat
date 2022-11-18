@@ -1,0 +1,66 @@
+GUID 3986573941ad45d8952179c8eadd3bae
+Type Dialogue
+ID 33
+
+Messages 1
+Message_0_Pages 1
+
+Responses 5
+
+Response_0_Dialogue 34
+
+// Need any help?
+// Pirate_Rod_Accepted
+Response_1_Dialogue 35
+Response_1_Quest 37
+Response_1_Conditions 1
+Response_1_Condition_0_Type Quest
+Response_1_Condition_0_Logic Equal
+Response_1_Condition_0_ID 37
+Response_1_Condition_0_Status None
+Response_1_Rewards 2
+Response_1_Reward_0_Type Quest
+Response_1_Reward_0_ID 37
+// Fishing rod blueprint
+Response_1_Reward_1_Type Item
+Response_1_Reward_1_ID 1433
+Response_1_Reward_1_Amount 1
+
+// I crafted the rod
+// Pirate_Rod_Completed
+Response_2_Dialogue 36
+Response_2_Quest 37
+Response_2_Conditions 1
+Response_2_Condition_0_Type Quest
+Response_2_Condition_0_Logic Equal
+Response_2_Condition_0_ID 37
+Response_2_Condition_0_Status Ready
+Response_2_Condition_0_Reset
+
+// I caught the fish
+// Pirate_Catch_Completed
+Response_3_Dialogue 39
+Response_3_Quest 38
+Response_3_Conditions 1
+Response_3_Condition_0_Type Quest
+Response_3_Condition_0_Logic Equal
+Response_3_Condition_0_ID 38
+Response_3_Condition_0_Status Ready
+Response_3_Condition_0_Reset
+
+// Abandoned the Catch_Squid quest
+// Pirate_Rod_Completed
+Response_4_Dialogue 36
+Response_4_Quest 38
+Response_4_Conditions 2
+Response_4_Condition_0_Type Quest
+Response_4_Condition_0_Logic Equal
+Response_4_Condition_0_ID 37
+Response_4_Condition_0_Status Completed
+Response_4_Condition_1_Type Quest
+Response_4_Condition_1_Logic Equal
+Response_4_Condition_1_ID 38
+Response_4_Condition_1_Status None
+Response_4_Rewards 1
+Response_4_Reward_0_Type Quest
+Response_4_Reward_0_ID 38

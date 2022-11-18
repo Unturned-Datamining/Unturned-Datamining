@@ -1,0 +1,39 @@
+GUID b98e6dcc04284219a279a95a09b98c6a
+Type Barricade
+Rarity Epic
+Useable Barricade
+Build Mannequin
+ID 1409
+
+Size_X 2
+Size_Y 2
+Size_Z 0.65
+
+Health 600
+Range 4
+Radius 0.8
+Offset 1
+
+Locked
+
+Explosion 36
+
+Blueprints 1
+Blueprint_0_Type Furniture
+Blueprint_0_Supplies 3
+Blueprint_0_Supply_0_ID 67
+Blueprint_0_Supply_0_Amount 4
+Blueprint_0_Supply_1_ID 285
+Blueprint_0_Supply_1_Amount 7
+Blueprint_0_Supply_2_ID 66
+Blueprint_0_Supply_2_Amount 5
+Blueprint_0_Tool 76
+Blueprint_0_Level 3
+Blueprint_0_Skill Craft
+Blueprint_0_Build 27
+
+// References human read/writeable texture.
+Ignore_TexRW
+
+PlacementAudioClip Sounds/MetalPlacement.mp3
+Has_Clip_Prefab false

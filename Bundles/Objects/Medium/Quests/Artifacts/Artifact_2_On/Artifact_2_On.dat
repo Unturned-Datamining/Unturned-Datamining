@@ -1,0 +1,10 @@
+GUID 8f6adaf0a18043c2b0e455377c70f446
+Type Medium
+ID 853
+
+Conditions 1
+Condition_0_Type Flag_Short
+Condition_0_ID 219
+Condition_0_Value 1
+Condition_0_Logic Equal
+Has_Clip_Prefab false

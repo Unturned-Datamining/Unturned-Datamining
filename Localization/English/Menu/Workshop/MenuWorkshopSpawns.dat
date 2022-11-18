@@ -1,0 +1,34 @@
+Type_Tooltip Target Asset Type
+Type_Item Items
+Type_Vehicle Vehicles
+Type_Animal Animals
+
+View_Button View
+View_Button_Tooltip Search Spawn ID
+Raw_Button Raw
+Raw_Button_Tooltip Export to clipboard
+New_Button New
+New_Button_Tooltip Create spawn asset
+Write_Button Write
+Write_Button_Tooltip Write changes to asset file
+Add_Root_Spawn_Button Add Spawn
+Add_Root_Spawn_Button_Tooltip New root
+Remove_Root_Button Remove
+Remove_Root_Button_Tooltip Remove root
+Add_Table_Asset_Button Add Asset
+Add_Table_Asset_Button_Tooltip New table
+Add_Table_Spawn_Button Add Spawn
+Add_Table_Spawn_Button_Tooltip New table
+Remove_Table_Button Remove
+Remove_Table_Button_Tooltip Remove table
+Apply_Weights_Button Apply Weights
+Apply_Weights_Button_Tooltip Calculate chance percentages
+
+Roots_Box {0} - Roots
+Roots_Box_Tooltip Parent Spawns
+
+Tables_Box {0} - Tables
+Tables_Box_Tooltip Child Spawns
+
+Weight_Tooltip Weight
+Chance_Tooltip Chance

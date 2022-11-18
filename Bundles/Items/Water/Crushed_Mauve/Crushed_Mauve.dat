@@ -1,0 +1,19 @@
+GUID b7248144b8684177a3a6e7ed1eeb42de
+Type Water
+Useable Consumeable
+ID 396
+
+Size_X 1
+Size_Y 1
+Size_Z 0.3
+
+Food 10
+Water 10
+Disinfectant 5
+
+Blueprints 1
+Blueprint_0_Type Supply
+Blueprint_0_Supply_0_ID 115
+Blueprint_0_Supply_0_Amount 2
+Blueprint_0_Build 27
+ConsumeAudioClip Sounds/EatSquishy.mp3

@@ -1,0 +1,21 @@
+GUID 823b14aaec694080b9d37e2834ba440f
+Type NPC
+ID 801
+
+Shirt 1420
+Pants 1419
+
+Has_Christmas_Outfit True
+Christmas_Shirt 1420
+Christmas_Pants 1419
+Christmas_Hat 278
+
+Face 5
+Hair 14
+Beard 10
+Color_Skin #BEA582
+Color_Hair #AC6A39
+
+Dialogue 95
+
+Has_Clip_Prefab false

@@ -1,0 +1,28 @@
+"Metadata"
+{
+	"GUID" "341a12e4ec1d424ca56876b4e9a722ac"
+	"Type" "SDG.Unturned.LevelAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"Weather_Types"
+	[
+		{
+			// Default Rain
+			"Asset" "d73923f4416c43dfa5bc8b6234cf0257"
+			"Min_Frequency" "2.3"
+			"Max_Frequency" "5.6"
+			"Min_Duration" "0.05"
+			"Max_Duration" "0.15"
+		}
+		{
+			// Heavy Rain
+			"Asset" "6c850687bdb947a689fa8de8a8d99afb"
+			"Min_Frequency" "2.3"
+			"Max_Frequency" "5.6"
+			"Min_Duration" "0.05"
+			"Max_Duration" "0.15"
+		}
+	]
+	"Should_Animate_Background_Image" "true"
+}

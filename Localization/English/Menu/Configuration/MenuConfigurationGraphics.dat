@@ -1,0 +1,121 @@
+Ambient_Occlusion_Label Ambient Occlusion
+Ambient_Occlusion_Tooltip Soft shading near corners and contacts.
+Bloom_Toggle_Label Bloom
+Bloom_Tooltip Blur glowing halo around bright lights.
+Chromatic_Aberration_Toggle_Label Chromatic Aberration
+Chromatic_Aberration_Tooltip Lens imperfection maybe useful for screenshots.
+Film_Grain_Toggle_Label Film Grain
+Film_Grain_Tooltip Add subtle visual noise to reduce color banding.
+Terrain_Toggle_Label Terrain Backdrop
+Blend_Toggle_Label Terrain Transition
+Blend_Tooltip Blend terrain textures according to per-material heightmaps rather than a basic linear blend.
+Fog_Toggle_Label Height Fog
+Nice_Foliage_Toggle_Label Windy Foliage
+Grass_Displacement_Toggle_Label Grass Displacement
+Grass_Displacement_Tooltip Basic vertex displacement around player feet.
+Foliage_Focus_Toggle_Label Scope Focus Foliage
+Foliage_Focus_Tooltip While zoomed-in stream foliage around the focal point.
+Ragdolls_Toggle_Label Ragdolls
+Ragdolls_Tooltip Simulate physics for entity corpses.
+Debris_Toggle_Label Debris
+Debris_Tooltip Simulate physics for debris when an object is destroyed.
+Blast_Toggle_Label Blast Marks
+Blast_Toggle_Tooltip Spawn 3D decals at explosions. Performance is affected by number of overlapping pixels on screen.
+Puddle_Toggle_Label Rain Puddles
+Puddle_Tooltip Puddle and ripple effects for raindrops.
+Glitter_Toggle_Label Snow Glitter
+Glitter_Tooltip Shimmering sparkles on snow surface.
+Triplanar_Toggle_Label Triplanar Mapping
+Triplanar_Tooltip Aligns boulder textures with the terrain by sampling three textures per pixel rather than one.
+Skybox_Reflection_Label Skybox Reflection
+Skybox_Reflection_Tooltip Render dynamic skybox into a cubemap for ambient lighting and reflections.
+Item_Icon_Anti_Aliasing_Label Item Icon Anti-Aliasing
+Item_Icon_Anti_Aliasing_Tooltip Prevents jagged pixel edges on inventory item icons.
+
+Far_Clip_Slider_Label Max Draw Distance [{0}%]
+Distance_Slider_Label Nearby Draw Distance [{0}%]
+Landmark_Slider_Label Landmark Draw Distance [{0}%]
+
+Anti_Aliasing_Button_Label Anti-Aliasing
+Anti_Aliasing_Button_Tooltip Reduces jagged pixel edges
+Anisotropic_Filtering_Button_Label Anisotropic Filtering
+Anisotropic_Filtering_Button_Tooltip Reduce texture blur at oblique angles
+Effect_Button_Label Effect Duration
+Effect_Button_Tooltip Time before effects despawn
+Foliage_Button_Label Grass Density
+Foliage_Button_Tooltip Amount of visible grass
+Sun_Shafts_Button_Label Sun Shafts Quality
+Sun_Shafts_Button_Tooltip Resolution of light rays
+Lighting_Button_Label Lighting Quality
+Lighting_Button_Tooltip Shadow resolution and light count
+Reflection_Button_Label Screen Space Reflection Quality
+Reflection_Button_Tooltip Puddle reflection detail
+Planar_Reflection_Button_Label Planar Reflection Quality
+Planar_Reflection_Button_Tooltip Water reflection detail
+Water_Button_Label Water Quality
+Water_Button_Tooltip Water transparency, foam, waves and reflections
+Scope_Button_Label Scope Quality
+Scope_Button_Tooltip Dual-render scope resolution
+Outline_Button_Label Outline Quality
+Outline_Button_Tooltip Highlight resolution and blur
+Bone_Button_Label Animation Quality
+Bone_Button_Tooltip Bone Influences Per Vertex
+Terrain_Button_Label Terrain Quality
+Terrain_Button_Tooltip Landscape geometry resolution
+Wind_Button_Label Wind Quality
+Wind_Button_Tooltip Detail of Wind Animation
+Tree_Mode_Button_Label Tree Quality [Restart Required]
+Tree_Mode_Button_Tooltip Which tree models to use, requires restart
+Render_Mode_Button_Label Render Mode
+Render_Mode_Button_Tooltip Forward might run better on older graphics cards, Deferred allows decals and screen space reflections
+Landmark_Button_Label Landmarks
+Landmark_Button_Tooltip Extremely low detail models for extended view distance
+
+Effect_Off {0}: Blood Only
+Effect_Tier {0}: {1} seconds
+
+Planar_Reflection_Low {0}: Landscape Only
+Planar_Reflection_Medium {0}: Sky, Trees, Structures, Large Objects
+Planar_Reflection_High {0}: Vehicles, Barricades, Medium Objects
+Planar_Reflection_Ultra {0}: Players, AI, Effects
+
+Bone_Influences_Medium {0}: One
+Bone_Influences_High {0}: Two
+Bone_Influences_Ultra {0}: Four
+
+Wind_Low {0}: Basic Wind
+Wind_Medium {0}+: SpeedTree Layered Wind
+
+Landmark_Low {0}: Large Objects Only
+Landmark_Medium {0}: Trees
+Landmark_High {0}: Opt-in Objects
+Landmark_Ultra {0}: Roads
+
+FXAA FXAA
+TAA TAA
+MSAA2 2xMSAA
+MSAA4 4xMSAA
+MSAA8 8xMSAA
+AA_Hint Deferred rendering and MSAA are incompatible
+
+AF_Disabled Disabled
+AF_Per_Texture Per Texture
+AF_Forced_On Forced On
+
+TM_Legacy Basic Models
+TM_SpeedTree_Fade_None SpeedTrees
+TM_SpeedTree_Fade_SpeedTree Ultra SpeedTrees
+
+Forward Forward [Legacy]
+Deferred Deferred [Recommended]
+
+Off Off
+Low Low
+Medium Medium
+High High
+Ultra Ultra
+
+Perf_Foliage_Instancing_Not_Supported Your GPU does not support foliage instancing. This will significantly affect performance.
+Perf_Water_Reflections Ultra enables planar reflections. These require drawing the scene again upside-down, halving performance.
+Perf_Dual_Render_Scope Dual-render scopes require drawing the scene again zoomed-in, halving performance.
+Perf_SpeedTrees SpeedTrees will significantly affect performance. Basic models are recommended for most hardware.

@@ -1,0 +1,15 @@
+GUID 33baa4bf14de4a0a955a273d975d067d
+Type Animal
+ID 2
+
+Speed_Run 12
+Speed_Walk 4
+
+Behaviour Defense
+
+Health 100
+
+Reward_ID 523
+Reward_XP 10
+Reward_Min 2
+Reward_Max 3

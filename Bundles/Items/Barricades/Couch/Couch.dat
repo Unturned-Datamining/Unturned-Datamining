@@ -1,0 +1,24 @@
+GUID 37dcda8892bc43f29c2538f8e26c3a90
+Type Barricade
+Useable Barricade
+Build Barricade
+ID 1256
+
+Size_X 2
+Size_Y 1
+Size_Z 0.3
+
+Health 250
+Range 4
+Radius 0.5
+Offset 0.75
+
+Explosion 37
+
+Blueprints 1
+Blueprint_0_Type Furniture
+Blueprint_0_Supply_0_ID 66
+Blueprint_0_Supply_0_Amount 11
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

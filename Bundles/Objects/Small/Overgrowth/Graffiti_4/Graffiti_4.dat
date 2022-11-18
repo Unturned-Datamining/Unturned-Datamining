@@ -1,0 +1,10 @@
+GUID a048044108914737914ffe2e69ee9389
+Type Decal
+ID 730
+
+Decal_X 3
+Decal_Y 3
+
+Is_Gore true
+
+Has_Clip_Prefab false

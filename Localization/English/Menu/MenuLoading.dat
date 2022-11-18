@@ -1,0 +1,45 @@
+VAC_Secure VAC Secure
+VAC_Insecure VAC Insecure
+BattlEye_Secure BattlEye Required
+BattlEye_Insecure BattlEye Disabled
+Streamer Streamer Mode
+Offline Offline
+
+Loading_Level_Play Loading {0} v{1} on {2} [{3}]...
+Loading_Level_Edit Loading {0}...
+
+Loading Loading...
+Loading_Clean Cleaning up...
+Loading_Blueprints Linking blueprints...
+Loading_Spawns Linking spawns...
+Loading_Misc Loading miscellaneous...
+Assets_Scan Found {0} assets: {1}
+Assets_Load Preloading {0} assets: {1}/{2}
+Master_Bundle_Progress Mounting {0}: {1}%
+Master_Bundle_Progress_Hash Hashing {0}: {1}%
+Download_Progress Downloading {0}...
+Level_Load Loading level: {0}%
+Queue_Position Queue Position: #{0}
+Queue_Cancel Cancel
+Queue_Cancel_Tooltip Leave queue
+
+Asset general
+Item item
+Effect effect
+Object object
+Resource resource
+Vehicle vehicle
+Animal animal
+Mythic mythic
+Skin skin
+Spawn spawn table
+Map map
+Workshop_Shared shared workshop
+Workshop_Server server workshop
+Workshop_Client client workshop
+Bundles_Server server
+NPC NPC
+
+Creators Created by:
+Collaborators Created in collaboration with:
+Thanks Special thanks to:

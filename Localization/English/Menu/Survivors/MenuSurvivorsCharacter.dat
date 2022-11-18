@@ -1,0 +1,20 @@
+Name_Label {0}
+Nick_Label [{0}]
+
+Name_Field_Label Public Name
+Nick_Field_Label Private Name
+
+Skillset_0 Civilian
+Skillset_1 Fire Fighter
+Skillset_2 Police Officer
+Skillset_3 Spec Ops
+Skillset_4 Farmer
+Skillset_5 Fisher
+Skillset_6 Lumberjack
+Skillset_7 Worker
+Skillset_8 Chef
+Skillset_9 Thief
+Skillset_10 Doctor
+Skillset_Box_Label Skillset:
+
+Overlay Steam overlay needs to be enabled.

@@ -1,0 +1,42 @@
+Home_Button Home
+Home_Button_Timer Home [{0}]
+Home_Button_Tooltip Respawn at a claimed bed.
+Respawn_Button Respawn
+Respawn_Button_Timer Respawn [{0}]
+Respawn_Button_Tooltip Respawn at a spawn point.
+
+Leg leg
+Arm arm
+Spine torso
+Skull head
+
+Bleeding You bled to death!
+Bones You fractured to death!
+Freezing You froze to death!
+Burning You burned to death!
+Food You starved to death!
+Water You dehydrated to death!
+Gun You were shot in the {0} by {1} [{2}]!
+Melee You were chopped in the {0} by {1} [{2}]!
+Zombie You were mauled by a zombie!
+Animal You were mauled by an animal!
+Suicide You died at your own hand. Everyone is disappointed.
+Kill You were killed by a server admin.
+Infection You were infected to death!
+Punch You were punched in the {0} by {1} [{2}]!
+Breath You suffocated to death!
+Roadkill You were roadkilled by {0} [{1}]!
+Vehicle You were blown up by a vehicle!
+Grenade You were blown up by {0} [{1}] with a grenade!
+Shred You were shredded to bits!
+Landmine You were blown up by a landmine!
+Arena You were eliminated by the arena!
+Missile You were blown up by {0} [{1}] with a missile!
+Charge You were blown up by {0} [{1}] with a remote detonator!
+Splash You were blown up by {0} [{1}] with an explosive bullet!
+Sentry You were shot by a sentry gun!
+Acid You were blown up a zombie!
+Boulder You were crushed by a zombie!
+Burner You were burned by a zombie!
+Spit You were dissolved by a zombie!
+Spark You were electrocuted by a zombie!

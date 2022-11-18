@@ -1,0 +1,75 @@
+GUID 51e562e136ec4973927276962c5491d7
+Type Dialogue
+ID 90
+
+Messages 7
+
+// Welcome aboard
+Message_0_Pages 1
+Message_0_Responses 1
+Message_0_Response_0 0
+Message_0_Conditions 1
+// Met_Captain
+Message_0_Condition_0_Type Flag_Bool
+Message_0_Condition_0_ID 2
+Message_0_Condition_0_Value False
+Message_0_Condition_0_Logic Equal
+Message_0_Condition_0_Allow_Unset
+
+// Ensign
+Message_1_Pages 1
+Message_1_Responses 1
+Message_1_Response_0 1
+Message_1_Conditions 1
+// Ensign Rank
+Message_1_Condition_0_Type Flag_Short
+Message_1_Condition_0_ID 29
+Message_1_Condition_0_Value 1
+Message_1_Condition_0_Logic Equal
+
+// Lieutenant
+Message_2_Pages 1
+Message_2_Responses 1
+Message_2_Response_0 1
+Message_2_Conditions 1
+// Lieutenant Rank
+Message_2_Condition_0_Type Flag_Short
+Message_2_Condition_0_ID 29
+Message_2_Condition_0_Value 2
+Message_2_Condition_0_Logic Equal
+
+// Major
+Message_3_Pages 1
+Message_3_Responses 1
+Message_3_Response_0 1
+Message_3_Conditions 1
+// Major Rank
+Message_3_Condition_0_Type Flag_Short
+Message_3_Condition_0_ID 29
+Message_3_Condition_0_Value 3
+Message_3_Condition_0_Logic Equal
+
+// Bandit scum
+Message_4_Pages 1
+Message_4_Responses 1
+Message_4_Response_0 2
+Message_4_Conditions 1
+Message_4_Condition_0_Type Reputation
+Message_4_Condition_0_Value -5
+Message_4_Condition_0_Logic Less_Than
+
+// Questionable
+Message_5_Pages 1
+Message_5_Responses 1
+Message_5_Response_0 3
+Message_5_Conditions 1
+Message_5_Condition_0_Type Reputation
+Message_5_Condition_0_Value 5
+Message_5_Condition_0_Logic Less_Than_Or_Equal_To
+
+// Hero
+Message_6_Pages 1
+Message_6_Responses 1
+Message_6_Response_0 1
+
+Responses 4

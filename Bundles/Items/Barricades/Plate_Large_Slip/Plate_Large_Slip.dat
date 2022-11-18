@@ -1,0 +1,31 @@
+GUID 4eb2f8a5af6a44b1940bf56ce5b97b26
+Type Barricade
+Rarity Epic
+Useable Barricade
+Build Freeform
+ID 1239
+
+Size_X 2
+Size_Y 2
+Size_Z 0.325
+
+Health 500
+Range 8
+Radius 0.5
+Offset 1.875
+
+Explosion 36
+
+Blueprints 1
+Blueprint_0_Type Barricade
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 1091
+Blueprint_0_Supply_0_Amount 1
+Blueprint_0_Supply_1_ID 1159
+Blueprint_0_Supply_1_Amount 1
+Blueprint_0_Build 27
+
+Armor_Tier High
+PlacementAudioClip Sounds/MetalPlacement.mp3
+
+Has_Clip_Prefab false

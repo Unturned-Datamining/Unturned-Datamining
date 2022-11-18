@@ -1,0 +1,23 @@
+GUID f0edc2d4bd054b3ea74924096590d992
+
+Type Quest
+ID 318
+
+Conditions 2
+Condition_0_Type Flag_Bool
+Condition_0_ID 342
+Condition_0_Value True
+Condition_0_Logic Equal
+
+Condition_1_Type Flag_Bool
+Condition_1_ID 341
+Condition_1_Value True
+Condition_1_Logic Equal
+
+Rewards 2
+Reward_0_Type Item
+Reward_0_ID 1511 
+Reward_0_Amount 1
+Reward_1_Type Flag_Bool
+Reward_1_ID 319
+Reward_1_Value True

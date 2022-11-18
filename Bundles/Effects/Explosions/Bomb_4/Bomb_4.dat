@@ -1,0 +1,7 @@
+GUID 928a21bde2e748c796c4aff5fe38201a
+Type Effect
+ID 54
+
+// This is the effect used by the Shadowstalker.
+CameraShake_Radius 16
+CameraShake_MagnitudeDegrees 10

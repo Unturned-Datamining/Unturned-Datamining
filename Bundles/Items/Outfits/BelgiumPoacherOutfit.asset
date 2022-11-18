@@ -1,0 +1,25 @@
+"Metadata"
+{
+	"GUID" "543f6e923f62479abff43efbf24d3f94"
+	"Type" "SDG.Unturned.OutfitAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"Items"
+	[
+		// Ascot (Vest)
+		"89cc0903c9754e7b9ef5df0245d45d27"
+
+		// Top
+		"4477000625614eb7a77520dbf5072f89"
+
+		// Bottom
+		"1ab72c93b9404692819f18da3ba82e20"
+
+		// Hat
+		"c9ce356297b14da98ccda5e420c69def"
+
+		// Backpack
+		"dae1359488f441529aba05e4de4ee220"
+	]
+}

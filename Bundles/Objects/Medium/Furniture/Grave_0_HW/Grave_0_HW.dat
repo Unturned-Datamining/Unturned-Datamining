@@ -1,0 +1,13 @@
+GUID 38a6b83fc88542f0bdef58d75bb674b3
+Type Medium
+ID 131
+
+Rubble Destroy
+Rubble_Reset 300
+Rubble_Health 200
+Rubble_Effect 71
+
+Holiday_Restriction HALLOWEEN
+Bundle_Override_Path /Objects/Medium/Furniture/Grave_0
+
+Has_Clip_Prefab false

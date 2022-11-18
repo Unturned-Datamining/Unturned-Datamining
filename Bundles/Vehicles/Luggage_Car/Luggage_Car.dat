@@ -1,0 +1,29 @@
+GUID 655fdb8128c743f586c92bbc65f99d9c
+Type Vehicle
+ID 122
+
+Speed_Min -6
+Speed_Max 10
+
+Steer_Min 24
+Steer_Max 48
+
+Brake 32
+
+Fuel_Min 100
+Fuel_Max 200
+Fuel 400
+
+Health_Min 200
+Health_Max 300
+Health 400
+
+Exit 2.5
+
+Trunk_Storage_X 4
+Trunk_Storage_Y 2
+
+Explosion 20
+
+IgnitionAudioClip Sounds/CarIgnition.mp3
+Has_Clip_Prefab false

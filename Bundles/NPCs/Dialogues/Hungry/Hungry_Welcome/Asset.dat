@@ -1,0 +1,34 @@
+GUID dc071c14f92b4f29abd54475bf71254f
+Type Dialogue
+ID 89
+
+Messages 1
+Message_0_Pages 1
+
+Responses 3
+
+//XMAS Present Quest
+Response_0_Quest 320
+Response_0_Rewards 1
+Response_0_Reward_0_Type Quest
+Response_0_Reward_0_ID 320
+Response_0_Conditions 2
+Response_0_Condition_0_Type Quest
+Response_0_Condition_0_ID 320
+Response_0_Condition_0_Status None
+Response_0_Condition_0_Logic Equal
+Response_0_Condition_1_Type Holiday
+Response_0_Condition_1_Value Christmas
+Response_0_Dialogue 340
+
+//XMAS Present Quest Complete
+Response_1_Dialogue 339
+Response_1_Quest 320
+Response_1_Conditions 2
+Response_1_Condition_0_Type Quest
+Response_1_Condition_0_ID 320
+Response_1_Condition_0_Status Ready
+Response_1_Condition_0_Logic Equal
+Response_1_Condition_0_Reset
+Response_1_Condition_1_Type Holiday
+Response_1_Condition_1_Value Christmas

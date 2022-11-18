@@ -1,0 +1,37 @@
+GUID eaa0ccbc561d4a68a58c2dadad3d51f7
+Type Vehicle
+Rarity Epic
+ID 189
+
+Speed_Min -12
+Speed_Max 12
+
+Steer_Min 8
+Steer_Max 32
+
+Brake 32
+
+Fuel 2000
+
+Health_Min 1500
+Health_Max 1700
+Health 2000
+
+LockMouse
+Engine Blimp
+
+Trunk_Storage_X 7
+Trunk_Storage_Y 5
+
+Explosion 20
+Tires_Invulnerable
+Invulnerable
+
+// Note that center of mass can also be overriden with a child transform named "Cog",
+// but I didn't want to re-export the masterbundle again. :)
+Override_Center_Of_Mass True
+Center_Of_Mass_Y -50
+
+Cam_Follow_Distance 30
+
+Has_Clip_Prefab false

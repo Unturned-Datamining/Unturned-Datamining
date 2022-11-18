@@ -1,0 +1,19 @@
+GUID da1c0b012d2947c78b06e4c6e032635d
+Type Resource
+ID 21
+
+Health 1200
+Radius 4
+Scale 0.3
+
+Explosion 52
+Reward_ID 518
+Reward_XP 6
+Reward_Min 3
+Reward_Max 7
+
+BladeID 2
+
+No_Debris
+Reset 1000
+Has_Clip_Prefab false

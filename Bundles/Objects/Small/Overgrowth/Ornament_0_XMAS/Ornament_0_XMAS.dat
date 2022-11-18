@@ -1,0 +1,8 @@
+GUID 7a7212d2746742fa8141682e965f84cc
+Type Small
+ID 487
+
+Holiday_Restriction CHRISTMAS
+Bundle_Override_Path /Objects/Small/Overgrowth/Ornament_0
+
+Has_Clip_Prefab false

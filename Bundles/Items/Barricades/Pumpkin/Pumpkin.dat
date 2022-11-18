@@ -1,0 +1,30 @@
+GUID 7ed43ff2e65440c6992a556b61e6ed63
+Type Barricade
+Rarity Rare
+Useable Barricade
+Build Campfire
+ID 1049
+
+Size_X 1
+Size_Y 1
+Size_Z 0.45
+
+Health 200
+Range 4
+Offset 0.3
+
+Explosion 19
+
+Blueprints 1
+Blueprint_0_Type Utilities
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 1046
+Blueprint_0_Supply_1_ID 67
+Blueprint_0_Supply_1_Amount 2
+Blueprint_0_Build 27
+Blueprint_0_Conditions 1
+Blueprint_0_Condition_0_Type Holiday
+Blueprint_0_Condition_0_Value Halloween
+
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

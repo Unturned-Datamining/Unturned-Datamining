@@ -1,0 +1,8 @@
+NightCommandText Night
+NightInfoText Night
+NightHelpText This assigns the current time to night.
+NotRunningErrorText Failed to set night while not running.
+HordeErrorText Failed to set time on a horde map.
+ArenaErrorText Failed to set time on an arena map.
+
+NightText Successfully set time to night!

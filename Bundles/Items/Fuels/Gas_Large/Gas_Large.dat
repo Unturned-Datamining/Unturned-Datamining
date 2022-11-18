@@ -1,0 +1,22 @@
+GUID 6c0962c45f874fec9373765cf8c29976
+Type Fuel
+Rarity Rare
+Useable Fuel
+ID 1440
+
+Size_X 3
+Size_Y 3
+Size_Z 0.5
+
+Fuel 2500
+
+Blueprints 1
+Blueprint_0_Type Tool
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 28
+Blueprint_0_Supply_0_Amount 5
+Blueprint_0_State_Transfer
+Blueprint_0_Tool 76
+Blueprint_0_Level 2
+Blueprint_0_Skill Craft
+Blueprint_0_Build 27

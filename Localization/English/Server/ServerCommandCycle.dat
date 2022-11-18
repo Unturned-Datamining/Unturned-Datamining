@@ -1,0 +1,8 @@
+InvalidNumberErrorText Failed to convert {0} into a number.
+HordeErrorText Failed to set cycle on a horde map.
+ArenaErrorText Failed to set cycle on an arena map.
+
+CycleCommandText Cycle
+CycleInfoText Cycle [Number]
+CycleText Successfully set cycle to {0}!
+CycleHelpText This assigns the length of the day/night cycle in seconds.

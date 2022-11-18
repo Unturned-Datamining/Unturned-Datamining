@@ -1,0 +1,30 @@
+GUID 6c31b8c6e175442589dd85270b7812c3
+Type NPC
+ID 797
+
+Shirt 223
+Pants 224
+
+// Magic
+Has_Halloween_Outfit True
+Halloween_Shirt 563
+Halloween_Pants 564
+Halloween_Backpack 562
+Halloween_Hat 561
+
+Has_Christmas_Outfit True
+Christmas_Shirt 223
+Christmas_Pants 224
+Christmas_Hat 278
+
+Face 0
+Hair 4
+Color_Skin #D9CAB4
+Color_Hair #CDC08C
+
+Tertiary 333
+Equipped Tertiary
+
+Dialogue 86
+
+Has_Clip_Prefab false

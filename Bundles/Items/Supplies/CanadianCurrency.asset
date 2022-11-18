@@ -1,0 +1,63 @@
+"Metadata"
+{
+	"GUID" "5150ca8f765d4a68bfe54912146da410"
+	"Type" "SDG.Unturned.ItemCurrencyAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"ValueFormat" "${0:N0} CAD"
+	"DefaultConditionFormat" "${0:N0}/{1:N0} CAD"
+	"Entries"
+	[
+		{
+			"Item"
+			{
+				"GUID" "a89067f6a8694f02b2fd04989561b30c"
+			}
+			"Value" "1"
+		}
+		{
+			"Item"
+			{
+				"GUID" "1c7d632c79f4454fb1fba211cb5ab49b"
+			}
+			"Value" "2"
+		}
+		{
+			"Tag" "This one is out of order to double-check sorting works properly."
+			"Item"
+			{
+				"GUID" "b7241ce2ae664ab5b4d6b6daa113b8b7"
+			}
+			"Value" "50"
+		}
+		{
+			"Item"
+			{
+				"GUID" "7f95ba19bd344803889bbabb76f633ae"
+			}
+			"Value" "5"
+		}
+		{
+			"Item"
+			{
+				"GUID" "b6b87dfad5f342dc91bbb2de950f56ee"
+			}
+			"Value" "10"
+		}
+		{
+			"Item"
+			{
+				"GUID" "3b9847bb328d445495b64be9e5ea9400"
+			}
+			"Value" "20"
+		}
+		{
+			"Item"
+			{
+				"GUID" "d7f3d6e4c05f4ec9abd9c0f87f9f0788"
+			}
+			"Value" "100"
+		}
+	]
+}

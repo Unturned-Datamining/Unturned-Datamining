@@ -1,0 +1,13 @@
+GUID 09139b9660624f4d96084dd6f23d7f1a
+Type Spawn
+ID 729
+
+Tables 4
+Table_0_Spawn_ID 727
+Table_0_Weight 60
+Table_1_Asset_ID 143
+Table_1_Weight 15
+Table_2_Asset_ID 157
+Table_2_Weight 15
+Table_3_Asset_ID 148
+Table_3_Weight 10

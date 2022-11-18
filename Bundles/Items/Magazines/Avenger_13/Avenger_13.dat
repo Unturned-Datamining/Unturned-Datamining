@@ -1,0 +1,27 @@
+GUID b5814c8f02c5419a8f4a7434efee72df
+Type Magazine
+Rarity Rare
+ID 1022
+
+Size_X 1
+Size_Y 1
+Size_Z 0.2
+
+Amount 13
+Count_Min 3
+Count_Max 10
+
+Calibers 1
+Caliber_0 23
+
+Tracer 48
+
+Blueprints 2
+Blueprint_0_Type Ammo
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 43
+Blueprint_0_Build 30
+Blueprint_1_Type Ammo
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 1022
+Blueprint_1_Build 30

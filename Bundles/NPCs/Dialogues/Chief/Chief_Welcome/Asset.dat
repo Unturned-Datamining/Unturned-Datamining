@@ -1,0 +1,118 @@
+GUID 537b11b67c6c457991493e8957885fec
+Type Dialogue
+ID 65
+
+Messages 1
+Message_0_Pages 1
+
+Responses 8
+
+// Need any help?
+Response_0_Dialogue 66
+Response_0_Conditions 1
+Response_0_Condition_0_Type Quest
+Response_0_Condition_0_Logic Equal
+Response_0_Condition_0_ID 64
+Response_0_Condition_0_Status None
+
+// I took care of the donuts
+// Police_Doughnuts_Completed
+Response_1_Dialogue 68
+Response_1_Quest 64
+Response_1_Conditions 1
+Response_1_Condition_0_Type Quest
+Response_1_Condition_0_Logic Equal
+Response_1_Condition_0_ID 64
+Response_1_Condition_0_Status Ready
+Response_1_Condition_0_Reset
+
+// Major Len is smuggling supplies!
+// Chief_Untrusted
+Response_2_Dialogue 175
+Response_2_Conditions 2
+Response_2_Condition_0_Type Flag_Bool
+Response_2_Condition_0_Logic Equal
+Response_2_Condition_0_ID 134
+Response_2_Condition_0_Value True
+Response_2_Condition_1_Type Quest
+Response_2_Condition_1_Logic Not_Equal
+Response_2_Condition_1_ID 64
+Response_2_Condition_1_Status Completed
+
+// Major Len is smuggling supplies!
+// Chief_Find_Cargo_Evidence_Accepted
+Response_3_Dialogue 178
+Response_3_Quest 176
+Response_3_Conditions 3
+Response_3_Condition_0_Type Quest
+Response_3_Condition_0_Logic Equal
+Response_3_Condition_0_ID 176
+Response_3_Condition_0_Status None
+Response_3_Condition_1_Type Flag_Bool
+Response_3_Condition_1_Logic Equal
+Response_3_Condition_1_ID 134
+Response_3_Condition_1_Value True
+Response_3_Condition_2_Type Quest
+Response_3_Condition_2_Logic Equal
+Response_3_Condition_2_ID 64
+Response_3_Condition_2_Status Completed
+Response_3_Rewards 2
+Response_3_Reward_0_Type Quest
+Response_3_Reward_0_ID 176
+Response_3_Reward_1_Type Flag_Bool
+Response_3_Reward_1_ID 177
+Response_3_Reward_1_Value False
+
+// I found the evidence
+// Chief_Find_Cargo_Evidence_Completed
+Response_4_Dialogue 179
+Response_4_Quest 176
+Response_4_Conditions 1
+Response_4_Condition_0_Type Quest
+Response_4_Condition_0_Logic Equal
+Response_4_Condition_0_ID 176
+Response_4_Condition_0_Status Ready
+Response_4_Condition_0_Reset
+
+// I'd like to continue the investigation
+// Chief_Find_Len_Evidence_Accepted
+Response_5_Dialogue 185
+Response_5_Quest 180
+Response_5_Conditions 2
+Response_5_Condition_0_Type Quest
+Response_5_Condition_0_Logic Equal
+Response_5_Condition_0_ID 180
+Response_5_Condition_0_Status None
+Response_5_Condition_1_Type Quest
+Response_5_Condition_1_Logic Equal
+Response_5_Condition_1_ID 176
+Response_5_Condition_1_Status Completed
+Response_5_Rewards 6
+Response_5_Reward_0_Type Quest
+Response_5_Reward_0_ID 180
+Response_5_Reward_1_Type Flag_Bool
+Response_5_Reward_1_ID 181
+Response_5_Reward_1_Value False
+Response_5_Reward_2_Type Flag_Bool
+Response_5_Reward_2_ID 182
+Response_5_Reward_2_Value False
+Response_5_Reward_3_Type Flag_Bool
+Response_5_Reward_3_ID 183
+Response_5_Reward_3_Value False
+Response_5_Reward_4_Type Flag_Bool
+Response_5_Reward_4_ID 184
+Response_5_Reward_4_Value False
+Response_5_Reward_5_Type Flag_Bool
+Response_5_Reward_5_ID 190
+Response_5_Reward_5_Value False
+
+// I found the evidence
+// Chief_Find_Len_Evidence_Completed
+Response_6_Dialogue 186
+Response_6_Quest 180
+Response_6_Conditions 1
+Response_6_Condition_0_Type Quest
+Response_6_Condition_0_Logic Equal
+Response_6_Condition_0_ID 180
+Response_6_Condition_0_Status Ready
+Response_6_Condition_0_Reset

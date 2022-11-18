@@ -1,0 +1,12 @@
+GUID 52bb8b031c1540539231837c6e3639f0
+Type Large
+ID 856
+
+Conditions 1
+Condition_0_Type Flag_Short
+Condition_0_ID 218
+Condition_0_Value 3
+Condition_0_Logic Equal
+
+Chart Ignore
+Has_Clip_Prefab false

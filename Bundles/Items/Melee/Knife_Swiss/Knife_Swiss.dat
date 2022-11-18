@@ -1,0 +1,55 @@
+GUID 38dbb3ce060d47998371064f5ac26aa8
+Type Melee
+Rarity Uncommon
+Useable Melee
+Slot Secondary
+ID 139
+
+Size_X 1
+Size_Y 2
+Size_Z 0.55
+Size2_Z 0.45
+
+Range 1.75
+Strength 1.5
+Weak 0.44
+Strong 0.5
+Stamina 12
+
+Player_Damage 40
+Player_Leg_Multiplier 0.6
+Player_Arm_Multiplier 0.6
+Player_Spine_Multiplier 0.8
+Player_Skull_Multiplier 1.1
+
+Zombie_Damage 40
+Zombie_Leg_Multiplier 0.3
+Zombie_Arm_Multiplier 0.3
+Zombie_Spine_Multiplier 0.6
+Zombie_Skull_Multiplier 1.1
+
+Animal_Damage 40
+Animal_Leg_Multiplier 0.3
+Animal_Spine_Multiplier 0.6
+Animal_Skull_Multiplier 1.1
+
+Barricade_Damage 2
+Structure_Damage 2
+Vehicle_Damage 15
+Resource_Damage 25
+Object_Damage 15
+
+Durability 0.15
+
+Blueprints 2
+Blueprint_0_Type Repair
+Blueprint_0_Supply_0_ID 67
+Blueprint_0_Supply_0_Amount 3
+Blueprint_0_Build 27
+Blueprint_1_Type Tool
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 139
+Blueprint_1_Product 67
+Blueprint_1_Products 2
+Blueprint_1_Build 27
+AttackAudioClip Sounds/MeleeAttack_02.mp3

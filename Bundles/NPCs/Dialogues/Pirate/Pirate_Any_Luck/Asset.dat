@@ -1,0 +1,15 @@
+GUID e6fef7df129a4f99918e4e1fe5f94b6a
+Type Dialogue
+ID 34
+
+Messages 2
+
+Message_0_Pages 1
+Message_0_Conditions 1
+// Catch_Squid
+Message_0_Condition_0_Type Quest
+Message_0_Condition_0_Logic Equal
+Message_0_Condition_0_ID 38
+Message_0_Condition_0_Status Completed
+
+Message_1_Pages 1

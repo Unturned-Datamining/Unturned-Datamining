@@ -1,0 +1,11 @@
+GUID 3899b4643a064b8daeb4af1f6bcc2ebf
+Type Medium
+ID 1037
+
+Conditions 1
+Condition_0_Type Flag_Short
+Condition_0_ID 247
+Condition_0_Value 2
+Condition_0_Logic Not_Equal
+Condition_0_Allow_Unset
+Has_Clip_Prefab false

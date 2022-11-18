@@ -1,0 +1,22 @@
+GUID 56f0da8b90fa415d92401fb03c58f151
+Type NPC
+ID 795
+
+Shirt 669
+Pants 214
+
+Has_Christmas_Outfit True
+Christmas_Shirt 669
+Christmas_Pants 214
+Christmas_Hat 278
+
+Face 17
+Hair 21
+Color_Skin #332C25
+Color_Hair #191919
+
+Pose Sit
+
+Dialogue 89
+
+Has_Clip_Prefab false

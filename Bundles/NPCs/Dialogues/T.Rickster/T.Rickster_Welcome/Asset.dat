@@ -1,0 +1,79 @@
+GUID 7e25e21322d246ef822ac9781073621e
+Type Dialogue
+ID 21
+
+Messages 2
+
+Message_0_Pages 1
+Message_0_Responses 2
+Message_0_Response_0 0
+Message_0_Response_1 1
+Message_0_Conditions 1
+// Met_T.Rickster
+Message_0_Condition_0_Type Flag_Bool
+Message_0_Condition_0_ID 23
+Message_0_Condition_0_Value False
+Message_0_Condition_0_Logic Equal
+Message_0_Condition_0_Allow_Unset
+
+Message_1_Pages 1
+
+Responses 6
+
+// P.Riso sent me
+// T.Rickster_Referred
+Response_0_Dialogue 22
+Response_0_Messages 1
+Response_0_Message_0 0
+Response_0_Conditions 1
+// Met_P.Riso
+Response_0_Condition_0_Type Flag_Bool
+Response_0_Condition_0_ID 15
+Response_0_Condition_0_Value True
+Response_0_Condition_0_Logic Equal
+Response_0_Rewards 1
+// Met_T.Rickster
+Response_0_Reward_0_Type Flag_Bool
+Response_0_Reward_0_ID 23
+Response_0_Reward_0_Value True
+
+Response_1_Messages 1
+Response_1_Message_0 0
+
+// Need any help?
+// T.Rickster_Cake_Accepted
+Response_2_Dialogue 25
+Response_2_Quest 24
+Response_2_Conditions 1
+Response_2_Condition_0_Type Quest
+Response_2_Condition_0_Logic Equal
+Response_2_Condition_0_ID 24
+Response_2_Condition_0_Status None
+Response_2_Rewards 2
+Response_2_Reward_0_Type Quest
+Response_2_Reward_0_ID 24
+// Cake blueprint
+Response_2_Reward_1_Type Item
+Response_2_Reward_1_ID 1430
+Response_2_Reward_1_Amount 1
+
+// I brought the cake
+// T.Rickster_Cake_Completed
+Response_3_Dialogue 26
+Response_3_Quest 24
+Response_3_Conditions 1
+Response_3_Condition_0_Type Quest
+Response_3_Condition_0_Logic Equal
+Response_3_Condition_0_ID 24
+Response_3_Condition_0_Status Ready
+Response_3_Condition_0_Reset
+
+// Password
+// T.Rickster_Blackmarket
+Response_4_Dialogue 28
+Response_4_Vendor 27
+Response_4_Conditions 1
+Response_4_Condition_0_Type Quest
+Response_4_Condition_0_Logic Equal
+Response_4_Condition_0_ID 24
+Response_4_Condition_0_Status Completed

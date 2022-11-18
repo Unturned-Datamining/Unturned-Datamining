@@ -1,0 +1,35 @@
+GUID bf209638392f4d64bc6f33b865caea85
+
+Type Barricade
+Rarity Rare
+Useable Barricade
+Build Barricade
+ID 1702
+
+Size_X 1
+Size_Y 1
+Size_Z 0.75
+
+Health 100
+Range 4
+Radius 0.2
+Offset 0.25
+
+Explosion 63
+Vulnerable
+
+Blueprints 1
+Blueprint_0_Type Furniture
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 1694
+Blueprint_0_Supply_0_Amount 1
+Blueprint_0_Build 27
+
+Blueprint_0_Rewards 1
+Blueprint_0_Reward_0_Type Flag_Short
+Blueprint_0_Reward_0_ID 329
+Blueprint_0_Reward_0_Value 1
+Blueprint_0_Reward_0_Modification Increment
+
+PlacementAudioClip Sounds/MetalPlacement.mp3
+Has_Clip_Prefab false

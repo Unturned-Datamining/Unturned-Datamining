@@ -1,0 +1,30 @@
+GUID c80bc727c29a4f0c930ec4d8af2860f3
+Type Box
+ID 527
+
+Size_X 1
+Size_Y 1
+Size_Z 0.35
+
+Generate 21003
+Destroy 20000
+
+Drops 13
+Drop_0 -1
+
+Drop_1 49800
+Drop_2 53500
+
+Drop_3 56900
+Drop_4 50000
+Drop_5 52400
+
+Drop_6 41800
+Drop_7 53000
+Drop_8 56200
+Drop_9 50100
+Drop_10 56800
+Drop_11 49700
+Drop_12 49600
+
+Pro

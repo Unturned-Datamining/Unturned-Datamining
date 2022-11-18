@@ -1,0 +1,55 @@
+"Metadata"
+{
+	"GUID" "aefaa04d7d3d4a7a85d2b1419a6a2ff4"
+	"Type" "SDG.Framework.Foliage.FoliageInstancedMeshInfoAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"ID" "0"
+	"Density" "64"
+	"Min_Angle" "0"
+	"Max_Angle" "90"
+	"Mesh"
+	{
+		"Name" "core.masterbundle"
+		"Path" "Terrain/Foliage/Pebbles/Pebble_00_Mesh.fbx"
+	}
+	"Material"
+	{
+		"Name" "core.masterbundle"
+		"Path" "Terrain/Foliage/Pebbles/Pebble_Shore_00_Material.mat"
+	}
+	"Normal_Position_Offset" "0"
+	"Normal_Rotation_Offset"
+	{
+		"X" "0"
+		"Y" "0"
+		"Z" "0"
+	}
+	"Min_Weight" "0.325"
+	"Max_Weight" "1"
+	"Min_Rotation"
+	{
+		"X" "-15"
+		"Y" "0"
+		"Z" "-15"
+	}
+	"Max_Rotation"
+	{
+		"X" "15"
+		"Y" "360"
+		"Z" "15"
+	}
+	"Min_Scale"
+	{
+		"X" "3"
+		"Y" "1"
+		"Z" "3"
+	}
+	"Max_Scale"
+	{
+		"X" "6"
+		"Y" "3"
+		"Z" "6"
+	}
+}

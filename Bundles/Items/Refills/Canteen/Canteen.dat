@@ -1,0 +1,18 @@
+GUID 9fac086e1b194a3e97fb77f8940208de
+Type Refill
+Rarity Uncommon
+Useable Refill
+ID 337
+
+Size_X 2
+Size_Y 2
+Size_Z 0.35
+
+Clean_Water 35
+
+Blueprints 1
+Blueprint_0_Type Repair
+Blueprint_0_Supply_0_ID 392
+Blueprint_0_Supply_0_Amount 1
+Blueprint_0_Build 27
+ConsumeAudioClip Sounds/DrinkSwallow.mp3

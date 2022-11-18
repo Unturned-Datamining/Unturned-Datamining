@@ -1,0 +1,26 @@
+GUID 6526d3e0324945618b2eea4ad433cafd
+Type Refill
+Useable Refill
+ID 481
+
+Size_X 2
+Size_Y 2
+Size_Z 0.35
+
+Clean_Water 20
+
+Blueprints 2
+Blueprint_0_Type Tool
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 61
+Blueprint_0_Supply_0_Amount 5
+Blueprint_0_Supply_1_ID 69
+Blueprint_0_Supply_1_Amount 1
+Blueprint_0_Level 1
+Blueprint_0_Skill Craft
+Blueprint_0_Build 27
+Blueprint_1_Type Repair
+Blueprint_1_Supply_0_ID 392
+Blueprint_1_Supply_0_Amount 1
+Blueprint_1_Build 27
+ConsumeAudioClip Sounds/DrinkSwallow.mp3

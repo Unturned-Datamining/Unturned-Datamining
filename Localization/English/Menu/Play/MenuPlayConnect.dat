@@ -1,0 +1,16 @@
+IP_Field_Label IP
+Port_Field_Label Port
+Password_Field_Label Password
+Password_Field_Replace #
+
+Connect_Button Connect
+Connect_Button_Tooltip Connect
+
+Cancel_Attempt_Label Cancel
+Cancel_Attempt_Tooltip Stop connection attempts.
+
+Connecting Attempting connection... [Try #{0}]
+Pro_Server You require Gold to join this server.
+Password This server requires a password.
+Full This server is now full.
+Timed_Out Failed to find a server.

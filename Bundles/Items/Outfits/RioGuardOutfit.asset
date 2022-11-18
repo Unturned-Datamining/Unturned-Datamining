@@ -1,0 +1,22 @@
+"Metadata"
+{
+	"GUID" "1eb83da5209b453dbb35fa463e2fec86"
+	"Type" "SDG.Unturned.OutfitAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"Items"
+	[
+		// Sash (Backpack)
+		"2641e3b25f424e67bbad45b64ee99e9d"
+
+		// Top
+		"fd2ff92da5164daa815724076f600572"
+
+		// Bottom
+		"e91e7b6377244f379595276fa3f51956"
+
+		// Hat
+		"250fd0595e004cadb3da0f253f68aeec"
+	]
+}

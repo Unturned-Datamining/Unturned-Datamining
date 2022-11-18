@@ -1,0 +1,17 @@
+GUID 6400e6b9b1e64ac8ad3cfd600003492c
+Type Quest
+ID 213
+
+Conditions 1
+Condition_0_Type Kills_Zombie
+Condition_0_ID 214
+Condition_0_Value 1
+Condition_0_Zombie Boss_All
+Condition_0_Spawn
+Condition_0_Nav 35
+
+Rewards 2
+Reward_0_Type Experience
+Reward_0_Value 200
+Reward_1_Type Reputation
+Reward_1_Value 20

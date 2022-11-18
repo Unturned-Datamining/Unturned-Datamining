@@ -1,0 +1,8 @@
+NoModeErrorText Failed to find gamemode called {0}.
+RunningErrorText Failed to change gamemode while running.
+
+GameModeCommandText GameMode
+GameModeInfoText GameMode [Class Name]
+GameModeHelpText This assigns the game mode of the server.
+
+GameModeText Successfully set gamemode to {0}!

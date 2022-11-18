@@ -1,0 +1,36 @@
+"Metadata"
+{
+	"GUID" "bb4625d972b342f382b2074aa5dc56e5"
+	"Type" "SDG.Unturned.VehiclePhysicsProfileAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"Root_Mass" "1.5"
+	"Wheel_Mass" "7"
+	"Wheel_Damping_Rate" "0.05"
+	"Wheel_Suspension_Force" "25"
+	"Wheel_Suspension_Damper" "2"
+	"Wheel_Stiffness_Traction_Multiplier" "0.25"
+	"Wheel_Friction_Sideways"
+	{
+		"Extremum_Slip" "0.4"
+		"Extremum_Value" "1"
+		"Asymptote_Slip" "0.8"
+		"Asymptote_Value" "0.5"
+		"Stiffness" "0.9"
+	}
+	"Wheel_Friction_Forward"
+	{
+		"Extremum_Slip" "0.4"
+		"Extremum_Value" "1"
+		"Asymptote_Slip" "0.8"
+		"Asymptote_Value" "0.5"
+		"Stiffness" "1.5"
+	}
+	"Motor_Torque_Multiplier" "1"
+	"Motor_Torque_Clamp_Multiplier" "0.5"
+	"Brake_Torque_Multiplier" "0.65"
+	"Brake_Torque_Traction_Multiplier" "0.5"
+	"Wheel_Drive_Model" "Front"
+	"Wheel_Brake_Model" "All"
+}

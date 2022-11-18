@@ -1,0 +1,32 @@
+GUID 8ea274eb707d43bb82fff12061cf77b7
+Type Dialogue
+ID 172
+
+Messages 1
+Message_0_Pages 1
+
+Responses 3
+
+// Seen anything?
+// Boss_Fire_Accepted
+Response_0_Dialogue 173
+Response_0_Quest 164
+Response_0_Conditions 1
+Response_0_Condition_0_Type Quest
+Response_0_Condition_0_Logic Equal
+Response_0_Condition_0_ID 164
+Response_0_Condition_0_Status None
+Response_0_Rewards 1
+Response_0_Reward_0_Type Quest
+Response_0_Reward_0_ID 164
+
+// I took care of the zombie
+// Boss_Fire_Completed
+Response_1_Dialogue 174
+Response_1_Quest 164
+Response_1_Conditions 1
+Response_1_Condition_0_Type Quest
+Response_1_Condition_0_Logic Equal
+Response_1_Condition_0_ID 164
+Response_1_Condition_0_Status Ready
+Response_1_Condition_0_Reset

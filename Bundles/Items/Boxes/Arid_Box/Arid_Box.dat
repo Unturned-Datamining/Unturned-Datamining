@@ -1,0 +1,61 @@
+GUID c0708f47e1ba4ee0ab25b7cdadbfa7f7
+Type Box
+ID 1715
+
+Size_X 1
+Size_Y 1
+
+Generate 21054
+
+Probability_Model Equalized
+Contains_Bonus_Items True
+
+Drops 16
+Drop_0 -1
+
+// Arrowhead
+Drop_1 92101
+
+// Baseball Cap
+Drop_2 92201
+
+// Fancy Glasses
+Drop_3 92301
+
+// Golf Bag
+Drop_4 92401
+
+// Black Hockey Mask
+Drop_5 92501
+
+// Monocular
+Drop_6 92601
+
+// Ponyhair
+Drop_7 92701
+
+// Privateer Top
+Drop_8 92801
+
+// Responder Rig
+Drop_9 92901
+
+// Skull Bandana
+Drop_10 93001
+
+// Surplus Jacket
+Drop_11 93101
+
+// Tracksuit
+Drop_12 93201
+
+// Vintage Helmet
+Drop_13 93301
+
+// Welding Goggles
+Drop_14 93401
+
+// Dissipator Maplestrike
+Drop_15 93501
+
+Pro

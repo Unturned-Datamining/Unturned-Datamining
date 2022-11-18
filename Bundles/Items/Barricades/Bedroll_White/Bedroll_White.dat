@@ -1,0 +1,25 @@
+GUID cbc5d88aa8524d37b4bde233fa21f030
+Type Barricade
+Useable Barricade
+Build Bed
+ID 294
+
+Size_X 2
+Size_Y 1
+Size_Z 0.4
+
+Health 50
+Range 4
+Radius 0.2
+Offset 0.2
+
+Explosion 37
+Vulnerable
+
+Blueprints 1
+Blueprint_0_Type Furniture
+Blueprint_0_Supply_0_ID 66
+Blueprint_0_Supply_0_Amount 9
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

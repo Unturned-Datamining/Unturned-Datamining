@@ -1,0 +1,13 @@
+GUID 7c09233d7e2c4ccfa59cf24f602d6ee9
+Type Food
+Rarity Uncommon
+Useable Consumeable
+ID 505
+
+Size_X 2
+Size_Y 1
+Size_Z 0.225
+
+Food 25
+Virus 25
+ConsumeAudioClip Sounds/EatCrunchy.mp3

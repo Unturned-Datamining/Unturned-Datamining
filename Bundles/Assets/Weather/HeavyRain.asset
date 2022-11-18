@@ -1,0 +1,133 @@
+"Metadata"
+{
+	"GUID" "6c850687bdb947a689fa8de8a8d99afb"
+	"Type" "SDG.Unturned.WeatherAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"Component_Type" "SDG.Unturned.LegacyRainComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+	"Volume_Mask" "1"
+	"Has_Lightning" "true"
+	"Min_Lightning_Interval" "15.0"
+	"Max_Lightning_Interval" "60.0"
+	"Fade_In_Duration" "20"
+	"Fade_Out_Duration" "20"
+	"Override_Fog" "true"
+	"Override_Atmospheric_Fog" "true"
+	"Override_Cloud_Colors" "true"
+	"Shadow_Strength_Multiplier" "0.15"
+	"Fog_Blend_Exponent" "1.25"
+	"Cloud_Blend_Exponent" "0.5"
+	"Wind_Main" "0.5"
+	"Dawn"
+	{
+		"Fog_Color"
+		{
+			"Level_Enum" "SKY_SKY"
+			"R" "100"
+			"G" "100"
+			"B" "100"
+		}
+		"Fog_Density" "1"
+		"Cloud_Color"
+		{
+			"R" "15"
+			"G" "15"
+			"B" "15"
+		}
+		"Cloud_Rim_Color"
+		{
+			"Level_Enum" "Clouds"
+			"R" "30"
+			"G" "30"
+			"B" "30"
+		}
+		"Brightness_Multiplier" "0.6"
+	}
+	"Midday"
+	{
+		"Fog_Color"
+		{
+			"Level_Enum" "SKY_SKY"
+			"R" "100"
+			"G" "100"
+			"B" "100"
+		}
+		"Fog_Density" "1"
+		"Cloud_Color"
+		{
+			"R" "15"
+			"G" "15"
+			"B" "15"
+		}
+		"Cloud_Rim_Color"
+		{
+			"Level_Enum" "Clouds"
+			"R" "30"
+			"G" "30"
+			"B" "30"
+		}
+		"Brightness_Multiplier" "0.6"
+	}
+	"Dusk"
+	{
+		"Fog_Color"
+		{
+			"Level_Enum" "SKY_SKY"
+			"R" "100"
+			"G" "100"
+			"B" "100"
+		}
+		"Fog_Density" "1"
+		"Cloud_Color"
+		{
+			"R" "15"
+			"G" "15"
+			"B" "15"
+		}
+		"Cloud_Rim_Color"
+		{
+			"Level_Enum" "Clouds"
+			"R" "30"
+			"G" "30"
+			"B" "30"
+		}
+		"Brightness_Multiplier" "0.6"
+	}
+	"Midnight"
+	{
+		"Fog_Color"
+		{
+			"Level_Enum" "SKY_SKY"
+			"R" "100"
+			"G" "100"
+			"B" "100"
+		}
+		"Fog_Density" "1"
+		"Cloud_Color"
+		{
+			"R" "15"
+			"G" "15"
+			"B" "15"
+		}
+		"Cloud_Rim_Color"
+		{
+			"Level_Enum" "Clouds"
+			"R" "30"
+			"G" "30"
+			"B" "30"
+		}
+		"Brightness_Multiplier" "0.8"
+	}
+	"Effects"
+	[
+		{
+			"Prefab" "Effects/Weather/DefaultRainParticles.prefab"
+			"Emission_Exponent" "2.0"
+			"Pitch" "75.0"
+			"Translate_With_View" "true"
+			"Rotate_Yaw_With_Wind" "true"
+		}
+	]
+	"Ambient_Audio_Clip" "Effects/Weather/DefaultRainAmbience.ogg"
+}

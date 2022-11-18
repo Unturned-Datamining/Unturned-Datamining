@@ -1,0 +1,17 @@
+GUID 7f06b16642724683bd61584a52fde981
+Type Supply
+Rarity Uncommon
+ID 68
+
+Size_X 2
+Size_Y 2
+Size_Z 0.5
+
+Blueprints 1
+Blueprint_0_Type Gear
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 67
+Blueprint_0_Supply_0_Amount 2
+Blueprint_0_Build 27
+
+InventoryAudio Sounds/Inventory/SmallMetal.asset

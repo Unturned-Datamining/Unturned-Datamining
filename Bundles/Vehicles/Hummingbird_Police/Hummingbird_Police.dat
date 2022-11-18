@@ -1,0 +1,31 @@
+GUID b6d9a1bf763747e6888b77a7070e1f10
+Type Vehicle
+Rarity Epic
+ID 106
+
+Speed_Min -2
+Speed_Max 18
+
+Steer_Min 16
+Steer_Max 8
+
+Fuel 1750
+
+Health_Min 550
+Health_Max 650
+Health 750
+
+Exit 3
+
+Cam_Follow_Distance 7.5
+
+LockMouse
+Engine Helicopter
+
+Trunk_Storage_X 5
+Trunk_Storage_Y 5
+
+Explosion 20
+
+IgnitionAudioClip Sounds/HelicopterIgnition.mp3
+Has_Clip_Prefab false

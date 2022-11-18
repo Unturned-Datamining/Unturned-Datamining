@@ -1,0 +1,8 @@
+GUID 76f257bfc3d54f74b939e303ec0ff113
+Type Resource
+ID 47
+
+Health 1000
+Radius 3
+Scale 0.1
+Has_Clip_Prefab false

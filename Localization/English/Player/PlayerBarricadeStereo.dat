@@ -1,0 +1,6 @@
+Stop_Button Stop
+Stop_Button_Tooltip Pause Playback
+Close_Button Close
+Close_Button_Tooltip Hide
+
+Volume_Slider_Label Volume: {0}%

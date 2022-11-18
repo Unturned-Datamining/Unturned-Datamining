@@ -1,0 +1,41 @@
+GUID 07b2c09895a64dc0bb8bea1b4aaee44d
+Type Quest
+ID 56
+
+Conditions 5
+// Placed_Propaganda_0
+Condition_0_Type Flag_Bool
+Condition_0_ID 51
+Condition_0_Value True
+Condition_0_Logic Equal
+// Placed_Propaganda_1
+Condition_1_Type Flag_Bool
+Condition_1_ID 52
+Condition_1_Value True
+Condition_1_Logic Equal
+// Placed_Propaganda_2
+Condition_2_Type Flag_Bool
+Condition_2_ID 53
+Condition_2_Value True
+Condition_2_Logic Equal
+// Placed_Propaganda_3
+Condition_3_Type Flag_Bool
+Condition_3_ID 54
+Condition_3_Value True
+Condition_3_Logic Equal
+// Placed_Propaganda_4
+Condition_4_Type Flag_Bool
+Condition_4_ID 55
+Condition_4_Value True
+Condition_4_Logic Equal
+
+Rewards 3
+Reward_0_Type Experience
+Reward_0_Value 75
+Reward_1_Type Reputation
+Reward_1_Value 5
+// Coalition quests completed
+Reward_2_Type Flag_Short
+Reward_2_ID 13
+Reward_2_Value 1
+Reward_2_Modification Increment

@@ -1,0 +1,18 @@
+GUID 9397449608a046f28fd48bd5d62adebb
+Type Dialogue
+ID 69
+
+Messages 1
+Message_0_Pages 1
+
+Responses 2
+
+// Replacement uniform
+// Uniform_Store_Completed
+Response_0_Dialogue 70
+Response_0_Vendor 71
+Response_0_Conditions 1
+Response_0_Condition_0_Type Flag_Short
+Response_0_Condition_0_ID 29
+Response_0_Condition_0_Value 0
+Response_0_Condition_0_Logic Greater_Than

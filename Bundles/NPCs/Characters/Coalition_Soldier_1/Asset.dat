@@ -1,0 +1,32 @@
+GUID 04fb660ed912438a91b6dab3401b4768
+Type NPC
+ID 810
+
+Shirt 1420
+Pants 1419
+Vest 1425
+
+// Blueknight
+Has_Halloween_Outfit True
+Halloween_Pants 771
+Halloween_Shirt 772
+Halloween_Hat 773
+Halloween_Vest 774
+Halloween_Backpack 775
+
+Has_Christmas_Outfit True
+Christmas_Shirt 1420
+Christmas_Pants 1419
+Christmas_Hat 278
+
+Face 20
+Hair 15
+Color_Skin #4B3D31
+Color_Hair #191919
+
+Primary 1447
+Equipped Primary
+
+Dialogue 90
+
+Has_Clip_Prefab false

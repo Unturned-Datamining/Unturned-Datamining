@@ -1,0 +1,10 @@
+GUID 55d302e6361e46888679c3e40507882a
+Type Large
+ID 631
+
+LOD Mesh
+LOD_Center_Z -3
+LOD_Size_Z -6
+
+Material_Palette f7132e632eca40b5b8f6044d8b133d37
+Has_Clip_Prefab false

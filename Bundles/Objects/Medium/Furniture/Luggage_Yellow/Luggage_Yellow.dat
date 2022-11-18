@@ -1,0 +1,10 @@
+GUID 7d46dc31f1ec422cb48e5cfae0426c99
+Type Medium
+ID 677
+
+Rubble Destroy
+Rubble_Reset 60
+Rubble_Health 1
+Rubble_Effect 58
+Rubble_Editor Dead
+Has_Clip_Prefab false

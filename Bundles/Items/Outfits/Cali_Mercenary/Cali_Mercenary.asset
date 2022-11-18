@@ -1,0 +1,25 @@
+"Metadata"
+{
+	"GUID" "9a93d40c63c94249947bc12d846716e0"
+	"Type" "SDG.Unturned.OutfitAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"Items"
+	[
+		// Bottom
+		"3cd9fafd4a724c90968a5d6e7789f3d2"
+
+		// Heavy Helmet
+		"5455d43b6ad64ef685d1793df189461f"
+
+		// Heavy Mask
+		"1f01be4d414a4a50bbb62fdc2c236971"
+
+		// Heavy Rig
+		"9277d776cde24abb971195004ad0e4fa"
+
+		// Top
+		"a54fe4fc172b4c70810854865e7e88b2"
+	]
+}

@@ -1,0 +1,15 @@
+GUID c07e4c1951514cfc842e3f8626f938f2
+Type Barrel
+ID 117
+
+Size_X 2
+Size_Y 1
+Size_Z 1
+
+Silenced
+Volume 0.9
+
+Ballistic_Drop 1.2
+
+Calibers 1
+Caliber_0 1

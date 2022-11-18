@@ -1,0 +1,72 @@
+GUID d30e7917f90047268aca52822c98f416
+Type Box
+ID 783
+
+Size_X 1
+Size_Y 1
+Size_Z 0.35
+
+Generate 21031
+Destroy 20003
+
+Drops 18
+Drop_0 -1
+
+// Legendary:
+
+// Digital Dynasty Nightraider
+Drop_1 500800
+
+// Imperial Might Sledgehammer
+Drop_2 501800
+
+// Howling Wolf Ekho
+Drop_3 501000
+
+// Epic:
+
+// Miami Afterburner Scalar
+Drop_4 500900
+
+// Black Panther Augewehr
+Drop_5 501200
+
+// Kawaii Peacemaker
+Drop_6 501300
+
+// Aeon Grizzly
+Drop_7 501100
+
+// Rare:
+
+// Icepick Pickaxe
+Drop_8 501400
+
+// Spitfire Devil's Bane
+Drop_9 501500
+
+// Isotope Fusilaut
+Drop_10 501600
+
+// Nibbler Zubeknakov
+Drop_11 501700
+
+// Bouquet Bluntforce
+Drop_12 501900
+
+// RACE MOTORSPORTS Swissgewehr
+Drop_13 502000
+
+// Half Fry Frying Pan
+Drop_14 502100
+
+// Swordfish Jackhammer
+Drop_15 502200
+
+// Infected Masterkey
+Drop_16 502300
+
+// Sector Strike Empire
+Drop_17 502400
+
+Pro

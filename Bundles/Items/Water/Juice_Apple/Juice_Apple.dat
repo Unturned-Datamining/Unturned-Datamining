@@ -1,0 +1,17 @@
+GUID 4714142193e64af2ae6b5f3f69e3c0ae
+Type Water
+Useable Consumeable
+ID 91
+
+Size_X 1
+Size_Y 1
+Size_Z 0.25
+
+Water 20
+
+Blueprints 1
+Blueprint_0_Type Repair
+Blueprint_0_Supply_0_ID 392
+Blueprint_0_Supply_0_Amount 1
+Blueprint_0_Build 27
+ConsumeAudioClip Sounds/DrinkSwallow.mp3

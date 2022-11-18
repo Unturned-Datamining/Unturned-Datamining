@@ -1,0 +1,18 @@
+GUID e8ea14796d90435fa1e7e465f9dc56bd
+Type Resource
+ID 19
+
+Health 1000
+Radius 5
+Scale 0.3
+
+Explosion 46
+Reward_ID 516
+Reward_XP 5
+Reward_Min 6
+Reward_Max 9
+
+Reset 600
+
+Auto_Skybox
+Has_Clip_Prefab false

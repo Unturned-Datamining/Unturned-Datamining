@@ -1,0 +1,30 @@
+GUID cd5e4300f6994424848392cecf72936d
+Type Trap
+Rarity Uncommon
+Useable Barricade
+Build Spike
+ID 382
+
+Size_X 1
+Size_Y 1
+Size_Z 0.25
+
+Health 15
+Range 4
+Radius 0.1
+Offset 0.125
+
+Player_Damage 20
+Zombie_Damage 40
+Damage_Tires
+
+Explosion 36
+Vulnerable
+Unrepairable
+
+Blueprints 1
+Blueprint_0_Type Barricade
+Blueprint_0_Supply_0_ID 71
+Blueprint_0_Supply_0_Amount 2
+Blueprint_0_Build 27
+Has_Clip_Prefab false

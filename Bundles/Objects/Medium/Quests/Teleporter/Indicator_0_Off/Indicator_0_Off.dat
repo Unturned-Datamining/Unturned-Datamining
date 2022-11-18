@@ -1,0 +1,11 @@
+GUID 0c001e4a510f45b290c50bbf96e208d6
+Type Medium
+ID 1033
+
+Conditions 1
+Condition_0_Type Flag_Short
+Condition_0_ID 245
+Condition_0_Value 2
+Condition_0_Logic Not_Equal
+Condition_0_Allow_Unset
+Has_Clip_Prefab false

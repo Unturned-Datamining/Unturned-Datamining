@@ -1,0 +1,10 @@
+InvalidNumberErrorText Failed to convert {0} into a number.
+NotRunningErrorText Failed to set time while not running.
+HordeErrorText Failed to set time on a horde map.
+ArenaErrorText Failed to set time on an arena map.
+
+TimeCommandText Time
+TimeInfoText Time [Number]
+TimeHelpText This assigns the current time in seconds of the day-night cycle.
+
+TimeText Successfully set time to {0}!

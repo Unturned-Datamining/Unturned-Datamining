@@ -1,0 +1,26 @@
+GUID 8fddc66b47854364a6acce3fac068eb3
+Type Vest
+Rarity Epic
+Useable Clothing
+ID 238
+
+Size_X 2
+Size_Y 2
+Size_Z 0.5
+
+Width 4
+Height 3
+
+Armor 0.9
+
+Blueprints 2
+Blueprint_0_Type Apparel
+Blueprint_0_Supply_0_ID 238
+Blueprint_0_Product 67
+Blueprint_0_Products 2
+Blueprint_0_Build 27
+Blueprint_1_Type Repair
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 67
+Blueprint_1_Supply_0_Amount 3
+Blueprint_1_Build 27

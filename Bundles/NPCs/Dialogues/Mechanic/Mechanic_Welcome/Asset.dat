@@ -1,0 +1,65 @@
+GUID 11c876f85d394f0ab33db4fee4c0ca0a
+Type Dialogue
+ID 48
+
+Messages 1
+Message_0_Pages 1
+
+Responses 5
+
+// I need repair tools
+// Mechanic_Broadcast_Repair
+Response_0_Dialogue 49
+Response_0_Conditions 2
+Response_0_Condition_0_Type Quest
+Response_0_Condition_0_Logic Equal
+Response_0_Condition_0_ID 47
+Response_0_Condition_0_Status Active
+Response_0_Condition_1_Type Flag_Bool
+Response_0_Condition_1_ID 40
+Response_0_Condition_1_Value False
+Response_0_Condition_1_Logic Equal
+Response_0_Condition_1_Allow_Unset
+Response_0_Rewards 1
+// Has_Broadcast_Repair_Kit
+Response_0_Reward_0_Type Flag_Bool
+Response_0_Reward_0_ID 40
+Response_0_Reward_0_Value True
+
+// Need any help?
+// Mechanic_Engine_Accepted
+Response_1_Dialogue 129
+Response_1_Quest 128
+Response_1_Conditions 1
+Response_1_Condition_0_Type Quest
+Response_1_Condition_0_Logic Equal
+Response_1_Condition_0_ID 128
+Response_1_Condition_0_Status None
+Response_1_Rewards 1
+Response_1_Reward_0_Type Quest
+Response_1_Reward_0_ID 128
+
+// I found the engine parts
+// Mechanic_Engine_Completed
+Response_2_Dialogue 130
+Response_2_Quest 128
+Response_2_Conditions 1
+Response_2_Condition_0_Type Quest
+Response_2_Condition_0_Logic Equal
+Response_2_Condition_0_ID 128
+Response_2_Condition_0_Status Ready
+Response_2_Condition_0_Reset
+
+// Evidence?
+// Mechanic_Len_Evidence
+Response_3_Dialogue 187
+Response_3_Conditions 1
+Response_3_Condition_0_Type Flag_Bool
+Response_3_Condition_0_Logic Equal
+Response_3_Condition_0_ID 183
+Response_3_Condition_0_Value False
+Response_3_Rewards 1
+Response_3_Reward_0_Type Flag_Bool
+Response_3_Reward_0_ID 183
+Response_3_Reward_0_Value True
+Response_3_Reward_0_Modification Assign

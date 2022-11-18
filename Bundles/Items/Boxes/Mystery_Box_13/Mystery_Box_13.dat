@@ -1,0 +1,57 @@
+GUID 4cfbb5669a8c4be9b4e19a77b339bcf1
+Type Box
+ID 831
+
+Size_X 1
+Size_Y 1
+Size_Z 0.35
+
+Generate 21035
+
+Drops 21
+Drop_0 -1
+
+// Graced_Swissgewehr
+Drop_1 85400
+// Pitchfork_Poseidon
+Drop_2 84100
+// Artemis_Bow_Compound
+Drop_3 85100
+
+// Cue_Asclepius_Staff
+Drop_4 85500
+// Graced_Nightraider
+Drop_5 85200
+// Bane_Graced
+Drop_6 85300
+// Zeus_Hair
+Drop_7 85000
+// Fleece_Cape
+Drop_8 84600
+// Wings
+Drop_9 84400
+
+// Corinthian_Helmet
+Drop_10 85600
+// Sledgehammer_Warhammer
+Drop_11 85700
+// Minotaur_Horns
+Drop_12 83800
+// Medusa
+Drop_13 83900
+// Olive_Leaf_Crown
+Drop_14 84000
+// Toga_Top
+Drop_15 84200
+// Hermes_Helmet
+Drop_16 84300
+// Pegasus_Horn
+Drop_17 84500
+// Kratos_Shoulder
+Drop_18 84700
+// Artemis_Shield
+Drop_19 84800
+// Harp
+Drop_20 84900
+
+Pro

@@ -1,0 +1,7 @@
+Name On Air
+Description <color=legendary>Commander Laurence</color> wants to get the Russian radio towers working again to broadcast to any survivors still out there. You'll need a toolkit which he says Natalie down in engineering can provide.
+
+Condition_0 Get broadcast repair kit {0}/1
+Condition_1 Fix Southern broadcast tower {0}/1
+Condition_2 Fix North-Western broadcast tower {0}/1
+Condition_3 Fix North-Eastern broadcast tower {0}/1

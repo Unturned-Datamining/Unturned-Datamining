@@ -1,0 +1,30 @@
+GUID 000ff5a98946400c8c93c5f936754395
+Type NPC
+ID 752
+
+// Coalition_Top_Captain
+Shirt f71ab61dd213490c81aa4e006130b9b4
+// Coalition_Bottom
+Pants 73aa210e4d054db0bae430e071dc74db
+// Coalition_Captain_Hat
+Hat def7794c2e4d426992083c6c538a2a2b
+
+Has_Halloween_Outfit True
+Halloween_Backpack 732
+Halloween_Vest 733
+Halloween_Shirt 734
+Halloween_Pants 23
+Halloween_Hat 1429
+
+Has_Christmas_Outfit True
+Christmas_Shirt 279
+Christmas_Pants 280
+Christmas_Hat 1429
+
+Face 24
+Color_Skin #9D886B
+
+// Captain_Welcome
+Dialogue 1
+
+Has_Clip_Prefab false

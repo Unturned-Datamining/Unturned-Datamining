@@ -1,0 +1,27 @@
+GUID b376e31635eb476b95d85f2e57fc4263
+Type Tool
+Rarity Uncommon
+Useable Housing_Planner
+ID 1764
+
+Size_X 1
+Size_Y 1
+Size_Z 0.3
+
+Blueprints 2
+
+// Salvaging
+Blueprint_0_Type Tool
+Blueprint_0_Supply_0_ID 1764
+Blueprint_0_Product 67
+Blueprint_0_Products 2
+Blueprint_0_Build 27
+
+// Craft from GPS and Rangefinder
+Blueprint_1_Type Tool
+Blueprint_1_Supplies 2
+// GPS
+Blueprint_1_Supply_0_ID 1176
+// Rangefinder
+Blueprint_1_Supply_1_ID 1008
+Blueprint_1_Build 27

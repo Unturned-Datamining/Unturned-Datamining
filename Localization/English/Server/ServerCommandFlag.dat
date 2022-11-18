@@ -1,0 +1,12 @@
+InvalidParameterErrorText Failed to find parameters in format [SteamID | Player]/[Flag]/[Value].
+InvalidNumberErrorText Failed to convert {0} into a number.
+
+NoPlayerErrorText Failed to find anyone called {0}.
+NotRunningErrorText Failed to set player flag while not running.
+CheatsErrorText Failed to set flag with cheats disabled.
+
+FlagCommandText Flag
+FlagInfoText Flag [SteamID | Player]/[Flag]/[Value]
+FlagHelpText This sets a player's flag.
+
+FlagText Successfully set {0} flag {1} to {2}!

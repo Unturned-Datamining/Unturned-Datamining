@@ -1,0 +1,17 @@
+"Metadata"
+{
+	"GUID" "229440c249dc490ba26ce71e8a59d5c6"
+	"Type" "SDG.Unturned.AirdropAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"Landed_Barricade"
+	{
+		"GUID" "fe71781c60314468b22c6b0642a51cd9"
+	}
+	"Carepackage_Prefab"
+	{
+		"MasterBundle" "core.masterbundle"
+		"AssetPath" "Level/Carepackage.prefab"
+	}
+}

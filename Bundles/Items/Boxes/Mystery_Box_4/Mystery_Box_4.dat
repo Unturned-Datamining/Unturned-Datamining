@@ -1,0 +1,52 @@
+GUID 5471a6910d234c8c9ada8a6d44d550ef
+Type Box
+ID 583
+
+Size_X 1
+Size_Y 1
+Size_Z 0.35
+
+Item_Origin Unwrap
+Generate 21009
+
+Drops 24
+
+Drop_0 -5
+
+Drop_1 62400
+Drop_2 62800
+// Goggles
+Drop_3 74800
+// Bolt
+Drop_4 74700
+
+// Cowl
+Drop_5 75100
+// Cape
+Drop_6 75000
+Drop_7 62500
+Drop_8 40500
+Drop_9 40800
+// Katana 
+Drop_10 74400
+
+// Vampire top
+Drop_11 75200
+// Mad scientist top
+Drop_12 74900
+Drop_13 62600
+Drop_14 62700
+Drop_15 62900
+Drop_16 63000
+Drop_17 63100
+Drop_18 63200
+Drop_19 40200
+Drop_20 40300
+// Butterfly knife
+Drop_21 74300
+// Card
+Drop_22 74500
+// Bluntforce
+Drop_23 74600
+
+Pro

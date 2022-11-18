@@ -1,0 +1,14 @@
+{
+	"Use_Legacy_Ground": false,
+	"Has_Discord_Rich_Presence": true,
+	"Category": "Official",
+	"Visible_In_Matchmaking": true,
+	"Should_Verify_Objects_Hash": true,
+	"Version": "3.22.1.2",
+	"Allow_Holiday_Redirects": true,
+	"Use_Underground_Whitelist": true,
+	"Asset":
+	{
+		"GUID": "9334e9cd34334029800e655f57a08f54"
+	}
+}

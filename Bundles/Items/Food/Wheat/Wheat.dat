@@ -1,0 +1,20 @@
+GUID 375ee1fb16a848ff8bc5be5d4fafb4fc
+Type Food
+Useable Consumeable
+ID 344
+
+Size_X 1
+Size_Y 2
+Size_Z 0.35
+
+Quality_Max 50
+
+Food 20
+
+Actions 1
+Action_0_Type Blueprint
+Action_0_Source 345
+Action_0_Blueprints 1
+Action_0_Blueprint_0_Index 0
+Action_0_Key Craft_Seed
+ConsumeAudioClip Sounds/EatCrunchy.mp3

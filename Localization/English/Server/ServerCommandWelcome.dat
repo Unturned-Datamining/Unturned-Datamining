@@ -1,0 +1,8 @@
+InvalidParameterErrorText Failed to find parameters in format [Text]/[R]/[G]/[B].
+InvalidNumberErrorText Failed to convert {0} into a number.
+
+WelcomeCommandText Welcome
+WelcomeInfoText Welcome [Text]/[R]/[G]/[B]
+WelcomeHelpText This sets a welcome message shown to clients once they connect.
+
+WelcomeText Successfully set welcome message to {0}!

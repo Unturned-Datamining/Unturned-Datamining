@@ -1,0 +1,35 @@
+GUID a47074331985476ba66abdacb80049f3
+Type Vehicle
+Rarity Legendary
+ID 109
+
+Speed_Min -4
+Speed_Max 24
+
+Steer_Min 8
+Steer_Max 32
+
+Brake 32
+Lift 5
+
+Fuel_Min 200
+Fuel_Max 400
+Fuel 1500
+
+Health_Min 350
+Health_Max 450
+Health 650
+
+LockMouse
+Engine Plane
+Sleds
+Traction
+
+Trunk_Storage_X 5
+Trunk_Storage_Y 3
+
+Explosion 20
+
+IgnitionAudioClip Sounds/CarIgnition.mp3
+HornAudioClip Sounds/CarHorn_01.mp3
+Has_Clip_Prefab false

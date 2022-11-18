@@ -1,0 +1,33 @@
+GUID 9e80c4e3366349e89716943757fd1210
+Type Barricade
+Useable Barricade
+Build Bed
+ID 1314
+
+Size_X 2
+Size_Y 1
+Size_Z 0.35
+
+Health 350
+Range 4
+Radius 0.4
+Offset 0.5
+
+Explosion 37
+Vulnerable
+
+Blueprints 1
+Blueprint_0_Type Furniture
+Blueprint_0_Supplies 3
+Blueprint_0_Supply_0_ID 66
+Blueprint_0_Supply_0_Amount 9
+Blueprint_0_Supply_1_ID 67
+Blueprint_0_Supply_1_Amount 6
+Blueprint_0_Supply_2_ID 260
+Blueprint_0_Supply_2_Amount 1
+Blueprint_0_Supply_2_Critical
+Blueprint_0_Level 2
+Blueprint_0_Skill Craft
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

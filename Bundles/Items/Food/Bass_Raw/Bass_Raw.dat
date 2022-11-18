@@ -1,0 +1,13 @@
+GUID 00f066e5a3a24ae5b9a07d184266f78c
+Type Food
+Rarity Rare
+Useable Consumeable
+ID 1351
+
+Size_X 3
+Size_Y 1
+Size_Z 0.225
+
+Food 30
+Virus 30
+ConsumeAudioClip Sounds/EatCrunchy.mp3

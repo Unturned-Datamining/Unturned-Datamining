@@ -1,0 +1,25 @@
+GUID 556421320a874be1b32dc4ea3b423954
+Type Shirt
+Useable Clothing
+ID 172
+
+Size_X 3
+Size_Y 2
+Size_Z 0.6
+
+Width 4
+Height 2
+
+Armor 0.95
+
+Blueprints 2
+Blueprint_0_Type Apparel
+Blueprint_0_Supply_0_ID 172
+Blueprint_0_Product 66
+Blueprint_0_Products 1
+Blueprint_0_Build 32
+Blueprint_1_Type Repair
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 66
+Blueprint_1_Supply_0_Amount 1
+Blueprint_1_Build 32

@@ -1,0 +1,100 @@
+GUID a5f36c8e14c04c0bb886ef2af1b523d7
+Type Gun
+Rarity Rare
+Useable Gun
+Slot Secondary
+ID 1521
+
+// Flags which control jamming:
+Can_Ever_Jam
+Jam_Quality_Threshold 0.9
+Jam_Max_Chance 0.5
+// Cobra doesn't have an UnjamChamber animation clip, so we fallback to Reload: 
+Unjam_Chamber_Anim Reload
+
+// Master_Bundle_Override isn't required in this case, but just as an example:
+Master_Bundle_Override core.masterbundle
+// Path relative to core.masterbundle:
+Bundle_Override_Path /Items/Guns/Cobra
+
+Size_X 2
+Size_Y 2
+Size_Z 0.3
+Size2_Z 0.35
+
+Magazine 100
+
+Hook_Barrel
+Hook_Tactical
+
+Ammo_Min 5
+Ammo_Max 20
+
+Safety
+Semi
+Auto
+
+Caliber 4
+
+Range 80
+Firerate 4
+Action Trigger
+
+Player_Damage 25
+Player_Leg_Multiplier 0.6
+Player_Arm_Multiplier 0.6
+Player_Spine_Multiplier 0.8
+Player_Skull_Multiplier 1.1
+
+Zombie_Damage 99
+Zombie_Leg_Multiplier 0.3
+Zombie_Arm_Multiplier 0.3
+Zombie_Spine_Multiplier 0.6
+Zombie_Skull_Multiplier 1.1
+
+Animal_Damage 25
+Animal_Leg_Multiplier 0.6
+Animal_Spine_Multiplier 0.8
+Animal_Skull_Multiplier 1.1
+
+Barricade_Damage 12
+Structure_Damage 12
+Vehicle_Damage 25
+Resource_Damage 15
+Object_Damage 15
+
+Durability 0.2
+
+Spread_Aim 0.1
+Spread_Hip 0.3
+
+Recoil_Min_X -6
+Recoil_Min_Y 3
+Recoil_Max_X 2
+Recoil_Max_Y 4.5
+
+Recover_X 0.2
+Recover_Y 0.4
+
+Shake_Min_X -0.005
+Shake_Min_Y 0.005
+Shake_Min_Z -0.05
+Shake_Max_X 0.005
+Shake_Max_Y -0.005
+Shake_Max_Z -0.075
+
+Muzzle 3
+
+Blueprints 2
+Blueprint_0_Type Repair
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 67
+Blueprint_0_Supply_0_Amount 3
+Blueprint_0_Tool 76
+Blueprint_0_Build 27
+Blueprint_1_Type Tool
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 1521
+Blueprint_1_Product 67
+Blueprint_1_Products 2
+Blueprint_1_Build 27

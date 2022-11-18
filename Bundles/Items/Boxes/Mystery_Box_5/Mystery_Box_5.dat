@@ -1,0 +1,40 @@
+GUID 69eb9a167abc4b8b8e95ee8ec80d8999
+Type Box
+ID 590
+
+Size_X 1
+Size_Y 1
+Size_Z 0.35
+
+Item_Origin Unwrap
+Generate 21011
+
+Drops 22
+
+Drop_0 -3
+
+Drop_1 83700
+Drop_2 63500
+Drop_3 75600
+Drop_4 64200
+
+Drop_5 64800
+Drop_6 64600
+Drop_7 64500
+
+Drop_8 64700
+Drop_9 63600
+Drop_10 63700
+Drop_11 805
+Drop_12 64300
+Drop_13 64400
+Drop_14 63900
+Drop_15 63800
+Drop_16 64100
+Drop_17 64000
+Drop_18 804
+Drop_19 803
+Drop_20 802
+Drop_21 801
+
+Pro

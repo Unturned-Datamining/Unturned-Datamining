@@ -1,0 +1,37 @@
+"Metadata"
+{
+	"GUID" "9334e9cd34334029800e655f57a08f54"
+	"Type" "SDG.Unturned.LevelAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"Weather_Types"
+	[
+		{
+			// Default Rain
+			"Asset" "d73923f4416c43dfa5bc8b6234cf0257"
+			"Min_Frequency" "1.15"
+			"Max_Frequency" "2.8"
+			"Min_Duration" "0.1"
+			"Max_Duration" "0.3"
+		}
+		{
+			// Heavy Rain
+			"Asset" "6c850687bdb947a689fa8de8a8d99afb"
+			"Min_Frequency" "1.15"
+			"Max_Frequency" "2.8"
+			"Min_Duration" "0.1"
+			"Max_Duration" "0.3"
+		}
+	]
+	"Loading_Screen_Music"
+	[
+		{
+			"Loop" "Music/Washington_Loop.ogg"
+			"Loop_Volume" "0.75"
+			"Outro" "Music/Washington_Outro.wav"
+			"Outro_Volume" "0.75"
+		}
+	]
+	"Should_Animate_Background_Image" "true"
+}

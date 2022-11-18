@@ -1,0 +1,20 @@
+GUID af56020244224794937ff1dc0459d1c1
+Type Resource
+ID 40
+
+Health 1000
+Radius 5
+Scale 0.3
+
+Explosion 104
+Reward_ID 516
+Reward_XP 5
+Reward_Min 6
+Reward_Max 9
+
+Reset 600
+
+Auto_Skybox
+SpeedTree
+SpeedTree_Default_LOD_Weights
+Has_Clip_Prefab false

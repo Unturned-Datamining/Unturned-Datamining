@@ -1,0 +1,21 @@
+GUID 7d11aa2b07e641cb8362e207327937ec
+Type Fuel
+Useable Fuel
+ID 1114
+
+Size_X 2
+Size_Y 2
+Size_Z 0.6
+
+Fuel 300
+
+Blueprints 1
+Blueprint_0_Type Tool
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 61
+Blueprint_0_Supply_0_Amount 7
+Blueprint_0_Supply_1_ID 69
+Blueprint_0_Supply_1_Amount 2
+Blueprint_0_Level 1
+Blueprint_0_Skill Craft
+Blueprint_0_Build 27

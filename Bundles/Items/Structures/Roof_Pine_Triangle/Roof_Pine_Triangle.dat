@@ -1,0 +1,25 @@
+GUID e56bb0231db34929bcd2a4ba2aa925e3
+Type Structure
+Rarity Rare
+Useable Structure
+Construct Roof_Poly
+ID 1268
+
+Size_X 2
+Size_Y 2
+Size_Z 0.325
+
+Health 550
+Range 8
+
+Explosion 29
+
+Blueprints 1
+Blueprint_0_Type Structure
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 41
+Blueprint_0_Supply_0_Amount 2
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+
+Has_Clip_Prefab false

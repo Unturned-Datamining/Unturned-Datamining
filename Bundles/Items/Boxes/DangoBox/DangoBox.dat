@@ -1,0 +1,60 @@
+GUID 5e25b5cce6a847598f73eaef390a8889
+Type Box
+ID 918
+
+Size_X 1
+Size_Y 1
+Size_Z 0.35
+
+Generate 21037
+
+Probability_Model Equalized
+Contains_Bonus_Items True
+
+Drops 15
+Drop_0 -1
+
+// Dango_CargoSalamander
+Drop_1 85801
+
+// Dango_DJ
+Drop_2 85901
+
+// Dango_DragonHorns
+Drop_3 86001
+
+// Dango_DualKatanas
+Drop_4 86101
+
+// Dango_Glasses
+Drop_5 86201
+
+// Dango_HannyaMask
+Drop_6 86301
+
+// Dango_Headband
+Drop_7 86401
+
+// Dango_NinjaVest
+Drop_8 86501
+
+// Dango_Pants
+Drop_9 86601
+
+// Dango_ScrollCloak
+Drop_10 86701
+
+// Dango_Shirt
+Drop_11 86801
+
+// Dango_SushiChefHat
+Drop_12 86901
+
+// Dango_TV
+Drop_13 87001
+
+// Dango_HB
+Drop_14 87101
+
+
+Pro

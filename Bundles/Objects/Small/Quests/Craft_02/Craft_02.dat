@@ -1,0 +1,14 @@
+GUID aa8dc1f70c754e71a2b11271b6a2ad2d
+
+Type Medium
+ID 1
+
+Holiday_Restriction CHRISTMAS
+
+Conditions 1
+Condition_0_Type Flag_Short
+Condition_0_ID 277
+Condition_0_Value 3
+Condition_0_Logic Less_Than
+Condition_0_Allow_Unset
+Has_Clip_Prefab false

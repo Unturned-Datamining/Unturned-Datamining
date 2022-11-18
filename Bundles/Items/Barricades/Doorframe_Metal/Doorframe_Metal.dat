@@ -1,0 +1,28 @@
+GUID db560a92c67c44f488acb3ce2db10f8f
+Type Barricade
+Rarity Epic
+Useable Barricade
+Build Barricade
+ID 1089
+
+Size_X 2
+Size_Y 1
+Size_Z 0.3
+
+Health 1100
+Range 8
+Radius 0.5
+Offset 2
+
+Explosion 36
+
+Blueprints 1
+Blueprint_0_Type Barricade
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 68
+Blueprint_0_Supply_0_Amount 3
+Blueprint_0_Level 2
+Blueprint_0_Skill Craft
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/MetalPlacement.mp3
+Has_Clip_Prefab false

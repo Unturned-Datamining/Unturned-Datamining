@@ -1,0 +1,9 @@
+GUID b093b3297ee743c2a971ab32751f69c2
+Type Effect
+ID 34
+
+// This is the effect used by grenades and traps.
+CameraShake_Radius 16
+CameraShake_MagnitudeDegrees 30
+
+Blast 137

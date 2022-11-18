@@ -1,0 +1,114 @@
+"Metadata"
+{
+	"GUID" "d73923f4416c43dfa5bc8b6234cf0257"
+	"Type" "SDG.Unturned.WeatherAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"Component_Type" "SDG.Unturned.LegacyRainComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+	"Volume_Mask" "1"
+	"Fade_In_Duration" "20"
+	"Fade_Out_Duration" "20"
+	"Override_Fog" "true"
+	"Override_Atmospheric_Fog" "true"
+	"Override_Cloud_Colors" "true"
+	"Shadow_Strength_Multiplier" "0.2"
+	"Fog_Blend_Exponent" "1.25"
+	"Cloud_Blend_Exponent" "0.5"
+	"Wind_Main" "0.3"
+	"Dawn"
+	{
+		"Fog_Color"
+		{
+			"Level_Enum" "SKY_SKY"
+		}
+		"Fog_Density" "0.7"
+		"Cloud_Color"
+		{
+			"R" "30"
+			"G" "30"
+			"B" "30"
+		}
+		"Cloud_Rim_Color"
+		{
+			"Level_Enum" "Clouds"
+			"R" "45"
+			"G" "45"
+			"B" "45"
+		}
+	}
+	"Midday"
+	{
+		"Fog_Color"
+		{
+			"Level_Enum" "SKY_SKY"
+		}
+		"Fog_Density" "0.7"
+		"Cloud_Color"
+		{
+			"R" "30"
+			"G" "30"
+			"B" "30"
+		}
+		"Cloud_Rim_Color"
+		{
+			"Level_Enum" "Clouds"
+			"R" "45"
+			"G" "45"
+			"B" "45"
+		}
+	}
+	"Dusk"
+	{
+		"Fog_Color"
+		{
+			"Level_Enum" "SKY_SKY"
+		}
+		"Fog_Density" "0.7"
+		"Cloud_Color"
+		{
+			"R" "30"
+			"G" "30"
+			"B" "30"
+		}
+		"Cloud_Rim_Color"
+		{
+			"Level_Enum" "Clouds"
+			"R" "45"
+			"G" "45"
+			"B" "45"
+		}
+	}
+	"Midnight"
+	{
+		"Fog_Color"
+		{
+			"Level_Enum" "SKY_SKY"
+		}
+		"Fog_Density" "0.7"
+		"Cloud_Color"
+		{
+			"R" "30"
+			"G" "30"
+			"B" "30"
+		}
+		"Cloud_Rim_Color"
+		{
+			"Level_Enum" "Clouds"
+			"R" "45"
+			"G" "45"
+			"B" "45"
+		}
+	}
+	"Effects"
+	[
+		{
+			"Prefab" "Effects/Weather/DefaultRainParticles.prefab"
+			"Emission_Exponent" "2.0"
+			"Pitch" "75.0"
+			"Translate_With_View" "true"
+			"Rotate_Yaw_With_Wind" "true"
+		}
+	]
+	"Ambient_Audio_Clip" "Effects/Weather/DefaultRainAmbience.ogg"
+}

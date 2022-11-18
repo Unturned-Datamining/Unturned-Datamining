@@ -1,0 +1,12 @@
+GUID 306effe98c694ead8eab42802d1838b1
+Type Food
+Useable Consumeable
+ID 1162
+
+Size_X 1
+Size_Y 1
+Size_Z 0.25
+
+Food 10
+Virus 5
+ConsumeAudioClip Sounds/EatSquishy.mp3

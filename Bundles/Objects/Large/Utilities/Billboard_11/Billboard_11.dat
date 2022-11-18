@@ -1,0 +1,9 @@
+GUID b6f9ed46e7a04072834094ba45bf7bc2
+Type Large
+ID 726
+
+Rubble Destroy
+Rubble_Reset 300
+Rubble_Health 275
+Rubble_Effect 72
+Has_Clip_Prefab false

@@ -1,0 +1,32 @@
+GUID 676b8bdaaab74fd4aa3d3c36265c6ea2
+Type Barricade
+Rarity Uncommon
+Useable Barricade
+Build Freeform
+ID 894
+
+Size_X 1
+Size_Y 1
+Size_Z 0.35
+
+Health 200
+Range 8
+Radius 0.25
+Offset 0.875
+
+Explosion 96
+Vulnerable
+
+Blueprints 1
+Blueprint_0_Type Barricade
+Blueprint_0_Supply_0_ID 1297
+Blueprint_0_Supply_0_Amount 1
+Blueprint_0_Products 2
+Blueprint_0_Build 27
+
+Unsalvageable
+
+Use_Water_Height_Transparent_Sort
+
+PlacementAudioClip Sounds/MetalPlacement.mp3
+Has_Clip_Prefab false

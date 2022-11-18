@@ -1,0 +1,27 @@
+GUID 3e78a9db8cf74f4e830df4c06f2e9273
+Type Medical
+Useable Consumeable
+ID 393
+
+Size_X 1
+Size_Y 1
+Size_Z 0.3
+
+Aid
+Bleeding
+Health 5
+
+Blueprints 1
+Blueprint_0_Type Supply
+Blueprint_0_Supply_0_ID 66
+Blueprint_0_Supply_0_Amount 2
+Blueprint_0_Build 32
+
+Actions 1
+Action_0_Type Blueprint
+Action_0_Source 95
+Action_0_Blueprints 1
+Action_0_Blueprint_0_Index 0
+Action_0_Key Craft_Bandage
+
+InventoryAudio Sounds/Inventory/LightCloth.asset

@@ -1,0 +1,17 @@
+GUID c6502e4e01f34db9958ac3f4218ee63c
+Type Spawn
+ID 584
+
+Tables 6
+Table_0_Spawn_ID 169
+Table_0_Weight 7000
+Table_1_Asset_ID 1198
+Table_1_Weight 750
+Table_2_Asset_ID 1199
+Table_2_Weight 150
+Table_3_Asset_ID 73
+Table_3_Weight 75
+Table_4_Asset_ID 1240
+Table_4_Weight 25
+Table_5_Asset_ID 1475
+Table_5_Weight 125

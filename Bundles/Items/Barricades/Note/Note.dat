@@ -1,0 +1,26 @@
+GUID 62a748bf40be48719fe79b8c3e065a79
+Type Barricade
+Useable Barricade
+Build Note
+ID 1328
+
+Size_X 1
+Size_Y 1
+Size_Z 0.45
+
+Health 50
+Range 4
+Offset 0.025
+
+Explosion 58
+Vulnerable
+
+Blueprints 1
+Blueprint_0_Type Furniture
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 66
+Blueprint_0_Supply_0_Amount 5
+Blueprint_0_Supply_1_ID 69
+Blueprint_0_Supply_1_Amount 1
+Blueprint_0_Build 27
+Has_Clip_Prefab false

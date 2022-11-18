@@ -1,0 +1,22 @@
+GUID 11337747fc844ab18e32e05e669a7228
+Type Medium
+ID 784
+
+Conditions 2
+Condition_0_Type Flag_Bool
+Condition_0_ID 50
+Condition_0_Value True
+Condition_0_Logic Equal
+Condition_1_Type Flag_Bool
+Condition_1_ID 53
+Condition_1_Value False
+Condition_1_Logic Equal
+Condition_1_Allow_Unset
+
+Interactability Quest
+Interactability_Effect 126
+Interactability_Rewards 1
+Interactability_Reward_0_Type Flag_Bool
+Interactability_Reward_0_ID 53
+Interactability_Reward_0_Value True
+Has_Clip_Prefab false

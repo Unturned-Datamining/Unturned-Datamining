@@ -1,0 +1,24 @@
+ViewCart_Label View Cart
+ViewCart_Tooltip View items in your shopping cart.
+AddToCart_Label Add to Cart
+AddToCart_Tooltip Put item in your shopping cart.
+RemoveFromCart_Label Remove from Cart
+RemoveFromCart_Tooltip Take item out of your shopping cart.
+TotalPrice_Label Estimated total:
+StartPurchase_Label Proceed to Checkout
+StartPurchase_Tooltip Start the purchase in Steam overlay.
+
+PurchaseResult_UnableToInitialize Unable to start purchase.
+PurchaseResult_Denied Purchase denied.
+PurchaseResult_Authorized Purchase authorized!
+
+FilterAllButton_Label All
+FilterAllButton_Tooltip View every item.
+FilterBundlesButton_Label Bundles
+FilterBundlesButton_Tooltip View item packs.
+FilterSpecialsButton_Label Specials
+FilterSpecialsButton_Tooltip View discounted items.
+FilterNewButton_Label New
+FilterNewButton_Tooltip View newly released items.
+FilterFeaturedButton_Label Featured
+FilterFeaturedButton_Tooltip View popular items.

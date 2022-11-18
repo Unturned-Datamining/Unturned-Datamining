@@ -1,0 +1,92 @@
+GUID c9e5a852b9c14206b483e629ee33ade0
+Type Gun
+Rarity Uncommon
+Useable Gun
+Slot Primary
+ID 101
+
+Size_X 5
+Size_Y 2
+Size_Z 0.4
+Size2_Z 0.8
+
+Sight 102
+Magazine 103
+
+Hook_Sight
+Hook_Tactical
+Hook_Grip
+Hook_Barrel
+
+Ammo_Min 1
+Ammo_Max 5
+
+Safety
+Semi
+
+Caliber 5
+
+Range 200
+Firerate 50
+Action Bolt
+
+Player_Damage 80
+Player_Leg_Multiplier 0.6
+Player_Arm_Multiplier 0.6
+Player_Spine_Multiplier 0.8
+Player_Skull_Multiplier 1.1
+
+Zombie_Damage 99
+Zombie_Leg_Multiplier 0.3
+Zombie_Arm_Multiplier 0.3
+Zombie_Spine_Multiplier 0.6
+Zombie_Skull_Multiplier 1.1
+
+Animal_Damage 99
+Animal_Leg_Multiplier 0.6
+Animal_Spine_Multiplier 0.8
+Animal_Skull_Multiplier 1.1
+
+Barricade_Damage 25
+Structure_Damage 20
+Vehicle_Damage 30
+Resource_Damage 20
+Object_Damage 20
+
+Durability 0.5
+
+Spread_Aim 0.01
+Spread_Hip 0.2
+
+Recoil_Aim 0.5
+Recoil_Min_X -8
+Recoil_Min_Y 20
+Recoil_Max_X 8
+Recoil_Max_Y 25
+
+Recover_X 0.3
+Recover_Y 0.3
+
+Shake_Min_X -0.005
+Shake_Min_Y 0.005
+Shake_Min_Z -0.05
+Shake_Max_X 0.005
+Shake_Max_Y -0.005
+Shake_Max_Z -0.1
+
+Muzzle 4
+
+Blueprints 2
+Blueprint_0_Type Repair
+Blueprint_0_Supply_0_ID 67
+Blueprint_0_Supply_0_Amount 3
+Blueprint_0_Build 27
+Blueprint_1_Type Tool
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 101
+Blueprint_1_Outputs 2
+Blueprint_1_Output_0_ID 67
+Blueprint_1_Output_0_Amount 1
+Blueprint_1_Output_1_ID 61
+Blueprint_1_Output_1_Amount 1
+Blueprint_1_Build 27

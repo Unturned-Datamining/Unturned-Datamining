@@ -1,0 +1,44 @@
+GUID 835e3e9279cf4663b696d09a80d16e82
+Type Dialogue
+ID 132
+
+Messages 5
+
+Message_0_Pages 1
+Message_0_Conditions 1
+Message_0_Condition_0_Type Flag_Short
+Message_0_Condition_0_ID 133
+Message_0_Condition_0_Value 1
+Message_0_Condition_0_Logic Equal
+Message_0_Rewards 1
+Message_0_Reward_0_Type Flag_Bool
+Message_0_Reward_0_ID 134
+Message_0_Reward_0_Value True
+
+Message_1_Pages 1
+Message_1_Conditions 1
+Message_1_Condition_0_Type Flag_Short
+Message_1_Condition_0_ID 133
+Message_1_Condition_0_Value 2
+Message_1_Condition_0_Logic Equal
+
+Message_2_Pages 1
+Message_2_Conditions 1
+Message_2_Condition_0_Type Flag_Short
+Message_2_Condition_0_ID 133
+Message_2_Condition_0_Value 3
+Message_2_Condition_0_Logic Equal
+
+Message_3_Pages 1
+Message_3_Conditions 1
+Message_3_Condition_0_Type Flag_Short
+Message_3_Condition_0_ID 133
+Message_3_Condition_0_Value 4
+Message_3_Condition_0_Logic Equal
+
+Message_4_Pages 1
+Message_4_Conditions 1
+Message_4_Condition_0_Type Flag_Short
+Message_4_Condition_0_ID 133
+Message_4_Condition_0_Value 5
+Message_4_Condition_0_Logic Equal

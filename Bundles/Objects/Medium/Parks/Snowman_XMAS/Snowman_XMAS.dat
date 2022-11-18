@@ -1,0 +1,8 @@
+GUID 48806e1f7aa048628d6f7f43e2387602
+Type Medium
+ID 488
+
+Holiday_Restriction CHRISTMAS
+Bundle_Override_Path /Objects/Medium/Parks/Snowman
+
+Has_Clip_Prefab false

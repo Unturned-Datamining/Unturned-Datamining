@@ -1,0 +1,11 @@
+GUID 72c01d8385f04c7aafa844e41cae0fea
+Type Medium
+ID 301
+
+Snowshoe
+
+Rubble Destroy
+Rubble_Reset 300
+Rubble_Health 50
+Rubble_Effect 19
+Has_Clip_Prefab false

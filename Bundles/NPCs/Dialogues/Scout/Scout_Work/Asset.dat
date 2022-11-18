@@ -1,0 +1,15 @@
+GUID eb51e663b9874d3985f6433efab3dd45
+Type Dialogue
+ID 118
+
+Messages 2
+
+Message_0_Pages 1
+// Show when we finished the radio tower quest
+Message_0_Conditions 1
+Message_0_Condition_0_Type Quest
+Message_0_Condition_0_Logic Equal
+Message_0_Condition_0_ID 47
+Message_0_Condition_0_Status Completed
+
+Message_1_Pages 1

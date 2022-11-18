@@ -1,0 +1,21 @@
+GUID 1df452d8b5224667870bcfde0c6aac5b
+Type Medium
+ID 817
+
+Conditions 1
+Condition_0_Type Flag_Bool
+Condition_0_ID 147
+Condition_0_Value False
+Condition_0_Logic Equal
+Condition_0_Allow_Unset
+
+Interactability Quest
+Interactability_Rewards 2
+Interactability_Reward_0_Type Flag_Bool
+Interactability_Reward_0_ID 147
+Interactability_Reward_0_Value True
+Interactability_Reward_1_Type Flag_Short
+Interactability_Reward_1_ID 156
+Interactability_Reward_1_Value 1
+Interactability_Reward_1_Modification Increment
+Has_Clip_Prefab false

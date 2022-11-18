@@ -1,0 +1,10 @@
+GUID 6896cb9ddd2d411592b9a93ca6671c3f
+Type Medium
+ID 99
+
+Interactability Dropper
+Interactability_Delay 10
+Interactability_Hint Use
+Interactability_Power Toggle
+Interactability_Reward_ID 520
+Has_Clip_Prefab false

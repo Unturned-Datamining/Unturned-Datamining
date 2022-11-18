@@ -1,0 +1,22 @@
+GUID b3735d7946bb4f3c9a76f67a366712a3
+Type Small
+ID 1019
+
+Conditions 1
+Condition_0_Type Flag_Bool
+Condition_0_ID 244
+Condition_0_Value True
+Condition_0_Logic Equal
+
+Interactability Quest
+Interactability_Effect 7
+Interactability_Conditions 1
+Interactability_Condition_0_Type Item
+Interactability_Condition_0_ID 1503
+Interactability_Condition_0_Amount 1
+Interactability_Condition_0_Reset
+Interactability_Rewards 1
+Interactability_Reward_0_Type Flag_Bool
+Interactability_Reward_0_ID 244
+Interactability_Reward_0_Value False
+Has_Clip_Prefab false

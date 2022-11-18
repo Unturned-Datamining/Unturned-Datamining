@@ -1,0 +1,56 @@
+FOV_Slider_LabelV2_Name Field of View
+FOV_Slider_LabelV2_Value Horizontal [{0}°] Vertical [{1}°]
+Volume_Slider_Label Master Volume [{0}%]
+Voice_Slider_Label Voice Chat Volume [{0}%]
+Loading_Screen_Music_Volume_Slider_Label Loading Screen Music Volume [{0}%]
+Debug_Toggle_Label Show FPS/Ping
+Music_Toggle_Label Play Menu/Death Music
+Splashscreen_Toggle_Label Splashscreen
+Timer_Toggle_Label Arena Timer Warning
+Physics_Toggle_Label Item Physics
+Gore_Toggle_Label Show Blood Splatters
+Filter_Toggle_Label Censor Text Profanity
+Chat_Text_Toggle_Label Show Inbound Text Chat
+Chat_Voice_In_Toggle_Label Enable Inbound Voice Chat
+Chat_Voice_Out_Toggle_Label Enable Outbound Voice Chat
+Hints_Toggle_Label Show Hints
+Ambience_Toggle_Label Play Day/Night Ambience
+Streamer_Toggle_Label Streamer Mode
+Featured_Workshop_Toggle_Label Featured Workshop
+Show_Hotbar_Toggle_Label Show Hotbar
+Pause_When_Unfocused_Label Pause While Alt-Tabbing
+ScreenshotSizeMultiplier_Label Screenshot Resolution Multiplier
+ScreenshotSizeMultiplier_Tooltip Higher values take significantly longer to render.
+ScreenshotSupersampling_Label Enable Screenshot Supersampling
+ScreenshotSupersampling_Tooltip Render screenshots with 2x supersampling to reduce aliasing.
+ScreenshotsWhileLoading_Label Show Screenshots on Loading Screen
+ScreenshotsWhileLoading_Tooltip Enable your own screenshots on the startup loading screen.
+Matchmaking_Show_All_Maps_Toggle_Label Matchmaking Show All Maps
+Min_Matchmaking_Players_Field_Label Matchmaking Min Players
+Max_Matchmaking_Ping_Field_Label Matchmaking Max Ping
+
+Metric_On Metric
+Metric_Off Imperial
+Metric_Tooltip Measurement System
+
+Talk_On Instant Talking
+Talk_Off Animated Talking
+Talk_Tooltip NPC Text Animation
+
+UI_Free White Interface
+UI_Pro Black Interface
+UI_Tooltip Interface Skin
+
+Hitmarker_Static Static Hitmarkers
+Hitmarker_Dynamic Dynamic Hitmarkers
+Hitmarker_Tooltip Hitmarker Locking
+
+Crosshair_Box Crosshair Color
+Hitmarker_Box Hitmarker Color
+Critical_Hitmarker_Box Critical Hitmarker Color
+Cursor_Box Cursor Color
+Background_Box Interface Background Color
+Foreground_Box Interface Foreground Color
+Font_Box Font Color
+Shadow_Box Shadow Color
+Bad_Color_Box Negative Color

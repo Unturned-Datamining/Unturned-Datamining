@@ -1,0 +1,102 @@
+GUID 5fdd8480f0f24f3a97b852df1017c3a5
+Type Gun
+Rarity Epic
+Useable Gun
+Slot Primary
+ID 1377
+
+Size_X 4
+Size_Y 2
+Size_Z 0.35
+Size2_Z 0.55
+
+Sight 1378
+Magazine 123
+Magazine_Replacements 1
+Magazine_Replacement_0_Map Germany
+Magazine_Replacement_0_ID 6
+
+Hook_Sight
+Hook_Tactical
+Hook_Grip
+Hook_Barrel
+
+Ammo_Min 10
+Ammo_Max 30
+
+Safety
+Semi
+Auto
+
+Attachment_Calibers 2
+Attachment_Caliber_0 9
+Attachment_Caliber_1 1
+
+Magazine_Calibers 2
+Magazine_Caliber_0 9
+Magazine_Caliber_1 1
+
+Range 200
+Firerate 5
+Action Trigger
+
+Player_Damage 43
+Player_Leg_Multiplier 0.6
+Player_Arm_Multiplier 0.6
+Player_Spine_Multiplier 0.8
+Player_Skull_Multiplier 1.1
+
+Zombie_Damage 99
+Zombie_Leg_Multiplier 0.3
+Zombie_Arm_Multiplier 0.3
+Zombie_Spine_Multiplier 0.6
+Zombie_Skull_Multiplier 1.1
+
+Animal_Damage 43
+Animal_Leg_Multiplier 0.6
+Animal_Spine_Multiplier 0.8
+Animal_Skull_Multiplier 1.1
+
+Barricade_Damage 20
+Structure_Damage 15
+Vehicle_Damage 35
+Resource_Damage 15
+Object_Damage 25
+
+Durability 0.175
+
+Spread_Aim 0.0375
+Spread_Hip 0.15
+
+Recoil_Min_X -1
+Recoil_Min_Y 2
+Recoil_Max_X 3
+Recoil_Max_Y 3
+
+Recover_X 0.5
+Recover_Y 0.5
+
+Shake_Min_X -0.0025
+Shake_Min_Y 0.0025
+Shake_Min_Z -0.01
+Shake_Max_X 0.0025
+Shake_Max_Y -0.0025
+Shake_Max_Z -0.02
+
+Muzzle 3
+
+Blueprints 2
+Blueprint_0_Type Repair
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 67
+Blueprint_0_Supply_0_Amount 3
+Blueprint_0_Tool 76
+Blueprint_0_Level 1
+Blueprint_0_Skill Repair
+Blueprint_0_Build 27
+Blueprint_1_Type Tool
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 1377
+Blueprint_1_Product 67
+Blueprint_1_Products 2
+Blueprint_1_Build 27

@@ -1,0 +1,35 @@
+GUID fa0ce6a84d5147518f6ee2c44e43b1b0
+Type Vest
+Useable Clothing
+ID 1173
+
+Size_X 2
+Size_Y 2
+Size_Z 0.5
+
+Width 3
+Height 2
+
+Armor 0.75
+
+Blueprints 3
+Blueprint_0_Type Apparel
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 516
+Blueprint_0_Supply_0_Amount 3
+Blueprint_0_Supply_1_ID 67
+Blueprint_0_Supply_1_Amount 5
+Blueprint_0_Build 32
+Blueprint_1_Type Repair
+Blueprint_1_Supplies 2
+Blueprint_1_Supply_0_ID 516
+Blueprint_1_Supply_0_Amount 3
+Blueprint_1_Supply_1_ID 67
+Blueprint_1_Supply_1_Amount 4
+Blueprint_1_Build 32
+Blueprint_2_Type Apparel
+Blueprint_2_Supplies 1
+Blueprint_2_Supply_0_ID 1173
+Blueprint_2_Product 67
+Blueprint_2_Products 3
+Blueprint_2_Build 27

@@ -1,0 +1,7 @@
+RunningErrorText Failed to enable whitelist while running.
+
+WhitelistedCommandText Whitelisted
+WhitelistedInfoText Whitelisted
+WhitelistedHelpText This makes only permitted players allowed to join the server.
+
+WhitelistedText Successfully enabled whitelist.

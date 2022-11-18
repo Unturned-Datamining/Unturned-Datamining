@@ -1,0 +1,29 @@
+GUID 4201dc61ec7c4a7dad1695d278c4ba77
+Type Magazine
+Rarity Uncommon
+ID 111
+
+Size_X 1
+Size_Y 1
+Size_Z 0.2
+
+Amount 8
+Count_Min 2
+Count_Max 7
+
+Calibers 1
+Caliber_0 7
+
+Tracer 48
+
+Blueprints 2
+Blueprint_0_Type Ammo
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 44
+Blueprint_0_Build 30
+Blueprint_1_Type Ammo
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 111
+Blueprint_1_Build 30
+
+Paintable

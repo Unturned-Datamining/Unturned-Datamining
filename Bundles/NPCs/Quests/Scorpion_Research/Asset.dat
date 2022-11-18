@@ -1,0 +1,20 @@
+GUID 2df4fd7156af4b26824e29ca4ad8ec92
+Type Quest
+ID 124
+
+Conditions 1
+Condition_0_Type Flag_Short
+Condition_0_ID 123
+Condition_0_Value 4
+Condition_0_Logic Greater_Than_Or_Equal_To
+
+Rewards 3
+Reward_0_Type Experience
+Reward_0_Value 75
+Reward_1_Type Reputation
+Reward_1_Value 5
+// Coalition quests completed
+Reward_2_Type Flag_Short
+Reward_2_ID 13
+Reward_2_Value 1
+Reward_2_Modification Increment

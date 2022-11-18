@@ -1,0 +1,13 @@
+GUID c3d97ba7e3964b798b739b5632ef009a
+Type Medical
+Useable Consumeable
+ID 404
+
+Size_X 1
+Size_Y 1
+Size_Z 0.25
+
+Aid
+Health 5
+Disinfectant 20
+ConsumeAudioClip Sounds/DrinkSwallow.mp3

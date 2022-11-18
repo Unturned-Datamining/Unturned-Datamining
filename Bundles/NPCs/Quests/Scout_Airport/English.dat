@@ -1,0 +1,4 @@
+Name The Hunt for Jet Fuel
+Description <color=rare>Lieutenant Oswald</color> is willing to give you a try scouting out a location, in this case an airport North-East of Moscow. This usually involves clearing out quite a few zombies, and then analyzing the environment to prepare a report determining which areas are worth securing.
+
+Condition_0 Clear Airport <color=legendary>Horde Beacon</color> {0}/{1}

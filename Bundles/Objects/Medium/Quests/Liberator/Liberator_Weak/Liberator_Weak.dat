@@ -1,0 +1,22 @@
+GUID 32fbb89af4bc4bb8b20bdcdb4b177caf
+Type Medium
+ID 770
+
+Conditions 1
+Condition_0_Type Flag_Bool
+Condition_0_ID 7
+Condition_0_Value False
+Condition_0_Logic Equal
+Condition_0_Allow_Unset
+
+Interactability Quest
+Interactability_Conditions 1
+Interactability_Condition_0_Type Flag_Bool
+Interactability_Condition_0_ID 8
+Interactability_Condition_0_Value True
+Interactability_Condition_0_Logic Equal
+Interactability_Rewards 1
+Interactability_Reward_0_Type Flag_Bool
+Interactability_Reward_0_ID 7
+Interactability_Reward_0_Value True
+Has_Clip_Prefab false

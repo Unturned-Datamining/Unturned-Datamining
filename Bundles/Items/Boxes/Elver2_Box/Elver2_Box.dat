@@ -1,0 +1,64 @@
+GUID 1b2afad6251e4f60af9235c2525f59dc
+Type Box
+ID 1639
+
+Size_X 1
+Size_Y 1
+
+Generate 21050
+
+Probability_Model Equalized
+Contains_Bonus_Items True
+
+Drops 17
+Drop_0 -1
+
+// Duffle Bag
+Drop_1 90501
+
+// Clown Hair
+Drop_2 90601
+
+// Feather Hat
+Drop_3 90701
+
+// Feline Hair
+Drop_4 90801
+
+// Headset
+Drop_5 90901
+
+// Medal
+Drop_6 91001
+
+// Nerdy Glasses
+Drop_7 91101
+
+// Octi Pack
+Drop_8 91201
+
+// Operator Cap
+Drop_9 91301
+
+// Pilot
+Drop_10 91401
+
+// Radio Backpack
+Drop_11 91501
+
+// Runic Cape
+Drop_12 91601
+
+// Shoulder Falcon
+Drop_13 91701
+
+// Tank Hat
+Drop_14 91801
+
+// Obsidian Nightraider
+Drop_15 91901
+
+// Rainbow PDW
+Drop_16 92001
+
+Pro

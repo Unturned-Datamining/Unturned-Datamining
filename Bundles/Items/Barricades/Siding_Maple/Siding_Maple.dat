@@ -1,0 +1,27 @@
+GUID fa10a6f6cb914f8980dfd808d58755e3
+Type Barricade
+Rarity Uncommon
+Useable Barricade
+Build Freeform
+ID 1062
+
+Size_X 1
+Size_Y 1
+Size_Z 0.35
+
+Health 100
+Range 8
+Radius 0.125
+Offset 0.375
+
+Explosion 19
+Vulnerable
+
+Blueprints 1
+Blueprint_0_Type Barricade
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 61
+Blueprint_0_Supply_0_Amount 2
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

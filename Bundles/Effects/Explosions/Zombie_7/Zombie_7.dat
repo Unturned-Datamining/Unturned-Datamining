@@ -1,0 +1,13 @@
+GUID 36b272f5be8c4427b0fdd0625f361c15
+Type Effect
+ID 149
+
+Lifetime 14
+Lifetime_Spread 0
+
+Splatter 4
+Splatters 32
+Splatter_Liquid
+Splatter_Temperature Acid
+Splatter_Lifetime 13
+Splatter_Lifetime_Spread 1

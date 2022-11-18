@@ -1,0 +1,33 @@
+GUID c523518d8a104a7c98a505a49eca3226
+Type NPC
+ID 813
+
+Shirt 1420
+Pants 1419
+Vest 1425
+
+// Squid
+Has_Halloween_Outfit True
+Halloween_Backpack 787
+Halloween_Hat 788
+Halloween_Mask 789
+Halloween_Pants 790
+Halloween_Shirt 791
+Halloween_Vest 792
+
+Has_Christmas_Outfit True
+Christmas_Shirt 1420
+Christmas_Pants 1419
+Christmas_Hat 278
+
+Face 1
+Hair 9
+Color_Skin #BEA582
+Color_Hair #353A5C
+
+Primary 1447
+Equipped Primary
+
+Dialogue 90
+
+Has_Clip_Prefab false

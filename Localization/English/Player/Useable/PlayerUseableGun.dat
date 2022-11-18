@@ -1,0 +1,16 @@
+Sight_Hook_Tooltip Sight
+Tactical_Hook_Tooltip Tactical
+Grip_Hook_Tooltip Grip
+Barrel_Hook_Tooltip Barrel
+Magazine_Hook_Tooltip Magazine
+
+Ammo {0}/{1}
+Firemode {0} [{1}]
+Attach {0} [{1}]
+
+None Empty
+
+Safety Safety
+Semi Semi
+Auto Auto
+Burst Burst

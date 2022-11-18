@@ -1,0 +1,49 @@
+GUID f19bc396c0c44c799963e862aca41f45
+Type Dialogue
+ID 92
+
+Messages 1
+Message_0_Pages 1
+
+Responses 5
+Response_0_Dialogue 93
+
+// Evidence?
+// Chef_Sous_Len_Evidence
+Response_1_Dialogue 188
+Response_1_Conditions 1
+Response_1_Condition_0_Type Flag_Bool
+Response_1_Condition_0_Logic Equal
+Response_1_Condition_0_ID 184
+Response_1_Condition_0_Value False
+Response_1_Rewards 1
+Response_1_Reward_0_Type Flag_Bool
+Response_1_Reward_0_ID 184
+Response_1_Reward_0_Value True
+Response_1_Reward_0_Modification Assign
+
+//XMAS Cooking Quest
+Response_2_Quest 318
+Response_2_Rewards 1
+Response_2_Reward_0_Type Quest
+Response_2_Reward_0_ID 318
+Response_2_Conditions 2
+Response_2_Condition_0_Type Quest
+Response_2_Condition_0_ID 318
+Response_2_Condition_0_Status None
+Response_2_Condition_0_Logic Equal
+Response_2_Condition_1_Type Holiday
+Response_2_Condition_1_Value Christmas
+Response_2_Dialogue 332
+
+//XMAS Cooking Quest Complete
+Response_3_Dialogue 331
+Response_3_Quest 318
+Response_3_Conditions 2
+Response_3_Condition_0_Type Quest
+Response_3_Condition_0_ID 318
+Response_3_Condition_0_Status Ready
+Response_3_Condition_0_Logic Equal
+Response_3_Condition_0_Reset
+Response_3_Condition_1_Type Holiday
+Response_3_Condition_1_Value Christmas

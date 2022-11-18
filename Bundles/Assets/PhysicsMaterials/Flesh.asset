@@ -1,0 +1,19 @@
+"Metadata"
+{
+	"GUID" "4cb9baff8283425fb6198a06a926a128"
+	"Type" "SDG.Unturned.PhysicsMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"UnityNames"
+	[
+		"Flesh"
+		"Flesh_Dynamic"
+	]
+	"AudioDefs"
+	{
+		"BulletImpact" "Effects/Physics/LegacyImpact/LegacyImpact_Flesh.asset"
+		"MeleeImpact" "Effects/Physics/LegacyImpact/LegacyImpact_Flesh.asset"
+	}
+	"WipDoNotUseTemp_BulletImpactEffect" "cea791255ba74b43a20e511a52ebcbec" // Flesh_Dynamic
+}

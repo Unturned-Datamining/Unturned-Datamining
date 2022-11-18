@@ -1,0 +1,25 @@
+"Metadata"
+{
+	"GUID" "31e8c91bfedd4f2fbebca6f5ca466e0f"
+	"Type" "SDG.Unturned.PhysicsMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"UnityNames"
+	[
+		"Wood"
+		"Wood_Dynamic"
+		"Wood_Static"
+	]
+	"AudioDefs"
+	{
+		"BipedLand" "Effects/Physics/BipedLand/Wood/BipedLand_Wood.asset"
+		"FootstepWalk" "Effects/Physics/Footstep/Wood_Walk/Footstep_Wood_Walk.asset"
+		"FootstepRun" "Effects/Physics/Footstep/Wood_Run/Footstep_Wood_Run.asset"
+		"BulletCasingBounce" "Effects/Physics/BulletCasingBounce/Wood/BulletCasingBounce_Wood.asset"
+		"ShotgunShellBounce" "Effects/Physics/ShotgunShellBounce/Wood/ShotgunShellBounce_Wood.asset"
+		"BulletImpact" "Effects/Physics/BulletImpact/WoodLight/BulletImpact_WoodLight.asset"
+		"MeleeImpact" "Effects/Physics/LegacyImpact/LegacyImpact_Wood.asset"
+	}
+	"WipDoNotUseTemp_BulletImpactEffect" "b2bbae34370e493fb03f9042dd6a6acf" // Wood_WithDecal_NoAudio
+}

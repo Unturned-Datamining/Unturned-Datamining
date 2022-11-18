@@ -1,0 +1,17 @@
+GUID 611cf9ab9d0f4002a1345638ef89f2c8
+
+Type Resource
+ID 53
+
+Health 1
+Radius 3
+Scale 0.1
+
+Reward_ID 974
+Forage
+
+Reset 300
+
+Holiday_Restriction CHRISTMAS
+
+Has_Clip_Prefab false

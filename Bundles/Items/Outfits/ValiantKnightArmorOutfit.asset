@@ -1,0 +1,25 @@
+"Metadata"
+{
+	"GUID" "f3fa940e42ba4519973e029043175676"
+	"Type" "SDG.Unturned.OutfitAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"Items"
+	[
+		// Shoulders (Vest)
+		"5c4f7fbbd6534a2d98ab9a8b68179330"
+
+		// Top
+		"d8923de326ca42c68feda7d0dd535782"
+
+		// Bottom
+		"ea9bb302a9d44d2580b37fd0a9d1a4f5"
+
+		// Helmet
+		"8037eded87614f119ca017c3dd1efc2c"
+
+		// Cape
+		"3b50d306121d4f41a197c6594e4538d8"
+	]
+}

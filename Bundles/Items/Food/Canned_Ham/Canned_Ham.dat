@@ -1,0 +1,12 @@
+GUID d365576c6d0a43cbb4550bfb4fc99ba4
+Type Food
+Useable Consumeable
+ID 469
+
+Size_X 1
+Size_Y 1
+Size_Z 0.3
+
+Health 10
+Food 40
+ConsumeAudioClip Sounds/EatCrunchy.mp3

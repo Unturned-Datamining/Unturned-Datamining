@@ -1,0 +1,30 @@
+GUID df8728a330714254bf7b30f1705ba9d5
+Type NPC
+ID 816
+
+Shirt 1421
+Pants 1419
+
+// Samurai
+Has_Halloween_Outfit True
+Halloween_Shirt 717
+Halloween_Pants 718
+Halloween_Hat 719
+Halloween_Vest 720
+Halloween_Mask 721
+
+Has_Christmas_Outfit True
+Christmas_Shirt 1421
+Christmas_Pants 1419
+Christmas_Hat 278
+
+Face 5
+Hair 1
+Color_Skin #AA916E
+Color_Hair #464646
+
+Secondary 99
+
+Dialogue 143
+
+Has_Clip_Prefab false

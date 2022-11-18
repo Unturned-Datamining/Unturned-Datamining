@@ -1,0 +1,69 @@
+"Metadata"
+{
+	"GUID" "819982d7a2b6453488a8c4c5d9efe67f"
+	"Type" "SDG.Unturned.WeatherAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"Fade_In_Duration" "2.0"
+	"Fade_Out_Duration" "4.0"
+	"Ambient_Audio_Clip" "Effects/Ambience/Cave_0/Cave_0.ogg"
+	"Override_Fog" "true"
+	"Override_Atmospheric_Fog" "true"
+	"Dawn"
+	{
+		"Fog_Color"
+		{
+			"R" "255"
+			"G" "127"
+			"B" "0"
+		}
+		"Fog_Density" "1.0"
+	}
+	"Midday"
+	{
+		"Fog_Color"
+		{
+			"R" "127"
+			"G" "127"
+			"B" "127"
+		}
+		"Fog_Density" "1.0"
+	}
+	"Dusk"
+	{
+		"Fog_Color"
+		{
+			"R" "127"
+			"G" "0"
+			"B" "255"
+		}
+		"Fog_Density" "1.0"
+	}
+	"Midnight"
+	{
+		"Fog_Color"
+		{
+			"R" "0"
+			"G" "0"
+			"B" "0"
+		}
+		"Fog_Density" "1.0"
+	}
+	"Effects"
+	[
+		{
+			"Prefab" "Effects/Volumes/Volume_Fire_0/Effect.prefab"
+			"Emission_Exponent" "2"
+			"Pitch" "45"
+			"Translate_With_View" "true"
+			"Rotate_Yaw_With_Wind" "false"
+		}
+		{
+			"Prefab" "Effects/Volumes/Volume_Fire_0/Effect.prefab"
+			"Emission_Exponent" "2"
+		}
+	]
+	"Health_Per_Second" "-1"
+	"Stamina_Per_Second" "5"
+}

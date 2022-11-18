@@ -1,0 +1,10 @@
+NoBansErrorText Failed to find any bans.
+
+BansCommandText Bans
+BansInfoText Bans
+BansHelpText This shows a list of the current bans.
+
+BansText Bans:
+BanNameText PlayerID: {0}
+BanJudgeText JudgeID: {0}
+BanStatusText Reason: {0} Duration: {1} Remaining: {2}

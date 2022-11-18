@@ -1,0 +1,31 @@
+GUID a946437b6a3845ec836b5b8e68d8f329
+Type NPC
+ID 763
+
+Shirt 1422
+Pants 1419
+Hat 1428
+
+// Necromancer
+Has_Halloween_Outfit True
+Halloween_Shirt 735
+Halloween_Pants 736
+Halloween_Mask 737
+
+Face 11
+Beard 7
+Color_Skin #9D886B
+Color_Hair #1A5C26
+
+Secondary 97
+
+Dialogue 6
+
+Conditions 1
+Condition_0_Type Flag_Bool
+Condition_0_ID 197
+Condition_0_Value False
+Condition_0_Logic Equal
+Condition_0_Allow_Unset
+
+Has_Clip_Prefab false

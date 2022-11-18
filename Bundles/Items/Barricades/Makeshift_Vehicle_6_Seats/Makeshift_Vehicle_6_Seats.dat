@@ -1,0 +1,38 @@
+GUID 93726a585cda40a0ae4cc1f42f481caf
+Type Barricade
+Rarity Epic
+Useable Barricade
+Build Vehicle
+ID 1111
+
+Size_X 5
+Size_Y 2
+Size_Z 0.35
+
+Range 8
+Radius 3.5
+Offset 3.75
+
+Explosion 90
+
+Blueprints 1
+Blueprint_0_Type Barricade
+Blueprint_0_Supplies 6
+Blueprint_0_Supply_0_ID 68
+Blueprint_0_Supply_0_Amount 4
+Blueprint_0_Supply_1_ID 69
+Blueprint_0_Supply_1_Amount 4
+Blueprint_0_Supply_2_ID 285
+Blueprint_0_Supply_2_Amount 6
+Blueprint_0_Supply_3_ID 458
+Blueprint_0_Supply_3_Amount 1
+Blueprint_0_Supply_4_ID 1450
+Blueprint_0_Supply_4_Amount 1
+Blueprint_0_Supply_5_ID 1451
+Blueprint_0_Supply_5_Amount 6
+Blueprint_0_Tool 76
+Blueprint_0_Level 3
+Blueprint_0_Skill Craft
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

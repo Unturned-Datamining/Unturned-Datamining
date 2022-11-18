@@ -1,0 +1,28 @@
+GUID 6f1db95a321747bab4fc844a428e2489
+Type Barricade
+Useable Barricade
+Build Sign_Wall
+ID 1468
+
+Size_X 2
+Size_Y 2
+Size_Z 0.65
+
+Health 250
+Range 4
+Offset 0.125
+
+Explosion 28
+
+Blueprints 1
+Blueprint_0_Type Furniture
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 62
+Blueprint_0_Supply_0_Amount 5
+Blueprint_0_Supply_1_ID 38
+Blueprint_0_Supply_1_Amount 1
+Blueprint_0_Build 27
+
+Should_Close_When_Outside_Range true
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

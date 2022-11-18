@@ -1,0 +1,24 @@
+GUID 34c726fe3bcf48c4add440627e3d6507
+Type Food
+Rarity Rare
+Useable Consumeable
+ID 1404
+
+Size_X 1
+Size_Y 1
+Size_Z 0.3
+
+Health 5
+Food 75
+
+Blueprints 1
+Blueprint_0_Type Supply
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 460
+Blueprint_0_Supply_0_Amount 2
+Blueprint_0_Supply_1_ID 1121
+Blueprint_0_Supply_1_Amount 1
+Blueprint_0_Level 2
+Blueprint_0_Skill Cook
+Blueprint_0_Build 27
+ConsumeAudioClip Sounds/EatCrunchy.mp3

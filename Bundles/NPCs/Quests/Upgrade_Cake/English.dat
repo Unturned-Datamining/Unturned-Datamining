@@ -1,0 +1,4 @@
+Name The Great Escape
+Description T.Rickster is supposedly wrongly imprisoned, but insists you don't ask the security team about him. He's given you a blueprint for his favourite kind of cake and would really appreciate if you can bake it for him. He can't give you much now, but says he'll pay you back later.
+
+Condition_0 Bake {0}/{1} {2}

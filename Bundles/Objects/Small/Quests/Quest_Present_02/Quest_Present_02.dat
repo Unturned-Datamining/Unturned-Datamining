@@ -1,0 +1,21 @@
+GUID 200c4c900eb4416bbc415da89268382c
+
+Type Small
+ID 1
+
+Rubble Destroy
+Rubble_Reset 120
+Rubble_Health 1
+Rubble_Effect 164
+Rubble_Reward_ID 972
+
+Conditions 1
+Condition_0_Type Flag_Short
+Condition_0_ID 284
+Condition_0_Value 1
+Condition_0_Logic Equal
+
+Bundle_Override_Path /Objects/Small/Quests/Quest_Present_00
+
+Holiday_Restriction CHRISTMAS
+Has_Clip_Prefab false

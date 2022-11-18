@@ -1,0 +1,12 @@
+GUID eaa7af6f8a874b2e9eb9c6e53498528d
+Type Medical
+Useable Consumeable
+ID 391
+
+Size_X 1
+Size_Y 1
+Size_Z 0.25
+
+Aid
+Health 10
+Disinfectant 10

@@ -1,0 +1,28 @@
+GUID 9f91cecc843e4b0baf448e2949c7df3b
+Type NPC
+ID 798
+
+Shirt 1420
+Pants 1419
+Hat 1426
+
+// Kaiser
+Has_Halloween_Outfit True
+Halloween_Shirt 1505
+Halloween_Pants 1506
+Halloween_Hat 1504
+
+Has_Christmas_Outfit True
+Christmas_Shirt 1420
+Christmas_Pants 1419
+Christmas_Hat 278
+
+Face 8
+Color_Skin #BEA582
+
+Primary 1447
+Equipped Primary
+
+Dialogue 90
+
+Has_Clip_Prefab false

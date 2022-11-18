@@ -1,0 +1,33 @@
+GUID 1e3f610da1244ccaacfe493f3e1f1f9e
+Type Box
+ID 598
+
+Size_X 1
+Size_Y 1
+Size_Z 0.35
+
+Generate 21013
+Destroy 20000
+
+Drops 16
+Drop_0 -1
+
+Drop_1 65600
+Drop_2 66000
+
+Drop_3 65200
+Drop_4 65700
+Drop_5 65900
+
+Drop_6 65800
+Drop_7 65500
+Drop_8 65300
+Drop_9 65000
+Drop_10 66300
+Drop_11 65100
+Drop_12 65400
+Drop_13 66200
+Drop_14 64900
+Drop_15 66100
+
+Pro

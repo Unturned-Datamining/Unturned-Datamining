@@ -1,0 +1,29 @@
+GUID 857729912ade480db7771d77f47d9f0c
+Type Vehicle
+Rarity Uncommon
+ID 91
+
+Speed_Min -5
+Speed_Max 15
+
+Steer_Min 12
+Steer_Max 24
+
+Brake 24
+
+Fuel_Min 200
+Fuel_Max 400
+Fuel 1000
+
+Health_Min 150
+Health_Max 250
+Health 350
+
+Traction
+
+Explosion 20
+
+Should_Spawn_Seat_Capsules true
+
+IgnitionAudioClip Sounds/CarIgnition.mp3
+Has_Clip_Prefab false

@@ -1,0 +1,24 @@
+GUID db2e01aaf099465d97c0e6dc4c8c749d
+Type Structure
+Useable Structure
+Construct Pillar
+ID 53
+
+Size_X 1
+Size_Y 2
+Size_Z 0.475
+
+Health 350
+Range 8
+
+Explosion 28
+
+Blueprints 1
+Blueprint_0_Type Structure
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 37
+Blueprint_0_Supply_0_Amount 2
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+
+Has_Clip_Prefab false

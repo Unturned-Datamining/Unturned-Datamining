@@ -1,0 +1,22 @@
+"Metadata"
+{
+	"GUID" "cfb691d917ce43799184094940ee67bb"
+	"Type" "SDG.Unturned.PhysicsMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"UnityNames"
+	[
+		"Cloth"
+		"Cloth_Dynamic"
+		"Cloth_Static"
+	]
+	"Fallback" "50bac8b8bf8648fc88fd012ccd176f17" // Sand
+	"AudioDefs"
+	{
+		"ShotgunShellBounce" "Effects/Physics/ShotgunShellBounce/Carpet/ShotgunShellBounce_Carpet.asset"
+		"BulletImpact" "Effects/Physics/BulletImpact/Dirt/BulletImpact_Dirt.asset"
+		"MeleeImpact" "Effects/Physics/LegacyImpact/LegacyImpact_Concrete.asset"
+	}
+	"WipDoNotUseTemp_BulletImpactEffect" "1651d4873c7b4a65a42e511cf07425a2" // Concrete_WithDecal_NoAudio
+}

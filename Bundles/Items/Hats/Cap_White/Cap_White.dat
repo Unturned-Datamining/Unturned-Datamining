@@ -1,0 +1,24 @@
+GUID 758d924a72f24e198ff0dfcbadae0b66
+Type Hat
+Useable Clothing
+ID 431
+
+Size_X 2
+Size_Y 2
+Size_Z 0.3
+
+Beard
+
+Armor 0.95
+
+Blueprints 2
+Blueprint_0_Type Apparel
+Blueprint_0_Supply_0_ID 431
+Blueprint_0_Product 66
+Blueprint_0_Products 2
+Blueprint_0_Build 32
+Blueprint_1_Type Repair
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 66
+Blueprint_1_Supply_0_Amount 2
+Blueprint_1_Build 32

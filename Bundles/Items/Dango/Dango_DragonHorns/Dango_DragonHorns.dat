@@ -1,0 +1,15 @@
+GUID 095c9ad9a08440f9839401f25d9fc29e
+Type Glasses
+ID 907
+
+Size_X 2
+Size_Y 1
+Size_Z 0.25
+
+Hair
+Beard
+
+Pro
+
+// Future curated assets should be power of 2, but we ignore warnings for a few pre-warning items.
+Ignore_NPOT

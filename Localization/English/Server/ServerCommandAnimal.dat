@@ -1,0 +1,14 @@
+InvalidParameterErrorText Failed to find parameters in format [SteamID | Player]/[AnimalID].
+InvalidNumberErrorText Failed to convert {0} into a number.
+InvalidAnimalIDErrorText Failed to convert {0} into an AnimalID.
+
+NoAnimalIDErrorText Failed to find any animal called {0}.
+NoPlayerErrorText Failed to find anyone called {0}.
+NotRunningErrorText Failed to give player animal while not running.
+CheatsErrorText Failed to give animal with cheats disabled.
+
+AnimalCommandText Animal
+AnimalInfoText Animal [SteamID | Player]/[AnimalID]
+AnimalHelpText This gives a player an animal.
+
+AnimalText Successfully gave {0} {1}!

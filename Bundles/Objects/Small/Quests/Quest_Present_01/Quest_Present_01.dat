@@ -1,0 +1,19 @@
+GUID 7083821c8aa64afa83553433c7c88c5a
+
+Type Small
+ID 1
+
+Rubble Destroy
+Rubble_Reset 120
+Rubble_Health 1
+Rubble_Effect 164
+Rubble_Reward_ID 973
+
+Conditions 1
+Condition_0_Type Flag_Bool
+Condition_0_ID 344
+Condition_0_Value True
+Condition_0_Logic Equal
+
+Holiday_Restriction CHRISTMAS
+Has_Clip_Prefab false

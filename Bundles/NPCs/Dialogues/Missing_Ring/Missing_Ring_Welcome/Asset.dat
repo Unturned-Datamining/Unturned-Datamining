@@ -1,0 +1,35 @@
+GUID 76aba40d7af24c3680716166f4e4db05
+Type Dialogue
+ID 137
+
+Messages 1
+Message_0_Pages 1
+
+Responses 3
+
+// Need any help?
+// Find_Wedding_Ring_Accepted
+Response_0_Dialogue 138
+Response_0_Quest 136
+Response_0_Conditions 1
+Response_0_Condition_0_Type Quest
+Response_0_Condition_0_Logic Equal
+Response_0_Condition_0_ID 136
+Response_0_Condition_0_Status None
+Response_0_Rewards 2
+Response_0_Reward_0_Type Quest
+Response_0_Reward_0_ID 136
+Response_0_Reward_1_Type Flag_Bool
+Response_0_Reward_1_ID 135
+Response_0_Reward_1_Value False
+
+// I found the ring
+// Find_Wedding_Ring_Completed
+Response_1_Dialogue 139
+Response_1_Quest 136
+Response_1_Conditions 1
+Response_1_Condition_0_Type Quest
+Response_1_Condition_0_Logic Equal
+Response_1_Condition_0_ID 136
+Response_1_Condition_0_Status Ready
+Response_1_Condition_0_Reset

@@ -1,0 +1,19 @@
+"Metadata"
+{
+	"GUID" "d8bb1a883aee4a6bbd6a30ba9bf4aebe"
+	"Type" "SDG.Unturned.OutfitAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"Items"
+	[
+		// Fox (Vest)
+		"823d96f7471842cea757b0580eaf35fb"
+
+		// Fishing Hat
+		"66373568f5da488fb8da9961e0bc6bb5"
+
+		// Fishing Backpack
+		"a6b3995c299f40e9baa3d157000aeabe"
+	]
+}

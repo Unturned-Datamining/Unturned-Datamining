@@ -1,0 +1,24 @@
+"Metadata"
+{
+	"GUID" "1ec784ef96fa433e8fcb82fb5fe41c43"
+	"Type" "SDG.Unturned.PhysicsMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"UnityNames"
+	[
+		"Snow"
+		"Snow_Static"
+	]
+	"Fallback" "33650ff924b34f8d9c5a0fd97418cd3e" // Gravel
+	"AudioDefs"
+	{
+		"BipedLand" "Effects/Physics/BipedLand/Snow/BipedLand_Snow.asset"
+		"FootstepWalk" "Effects/Physics/Footstep/Snow_Walk/Footstep_Snow_Walk.asset"
+		"FootstepRun" "Effects/Physics/Footstep/Snow_Run/Footstep_Snow_Run.asset"
+		"BulletImpact" "Effects/Physics/BulletImpact/Snow/BulletImpact_Snow.asset"
+		"MeleeImpact" "Effects/Physics/MeleeImpact/Snow/MeleeImpact_Snow.asset"
+	}
+	"WipDoNotUseTemp_BulletImpactEffect" "2fd1193c7b2e4e08aba6a9e3b5207432" // Snow_NoAudio
+	"HasOil" "true"
+}

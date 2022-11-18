@@ -1,0 +1,37 @@
+GUID 72fae83175f34bde94bd52d40c7a9ebc
+Type Generator
+Rarity Rare
+Useable Barricade
+Build Generator
+ID 458
+
+Size_X 2
+Size_Y 2
+Size_Z 0.5
+
+Health 450
+Range 4
+Radius 0.5
+Offset 0.75
+
+Capacity 2000
+Wirerange 16.0
+Burn 20.0
+
+Explosion 36
+
+Blueprints 1
+Blueprint_0_Type Utilities
+Blueprint_0_Supplies 3
+Blueprint_0_Supply_0_ID 68
+Blueprint_0_Supply_0_Amount 4
+Blueprint_0_Supply_1_ID 285
+Blueprint_0_Supply_1_Amount 4
+Blueprint_0_Supply_2_ID 28
+Blueprint_0_Supply_2_Amount 1
+Blueprint_0_Tool 76
+Blueprint_0_Level 2
+Blueprint_0_Skill Craft
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/MetalPlacement.mp3
+Has_Clip_Prefab false

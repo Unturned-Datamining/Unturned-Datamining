@@ -1,0 +1,4 @@
+Name Smuggler's Cove
+Description If you think it's worth checking out <color=epic>Chief Brian</color> has given you permission to investigate the smuggling. He thinks if there is any base to it there'd be traces of a shipment somewhere along the coastline.
+
+Condition_0 Find Evidence {0}/1

@@ -1,0 +1,16 @@
+GUID ae907de0d5c14c1086a22c2b95c58a47
+Type Map
+Rarity Uncommon
+ID 1175
+
+Size_X 1
+Size_Y 1
+Size_Z 0.475
+
+Enables_Chart
+
+Blueprints 1
+Blueprint_0_Type Tool
+Blueprint_0_Supply_0_ID 1175
+Blueprint_0_Product 66
+Blueprint_0_Build 32

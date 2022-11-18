@@ -1,0 +1,4 @@
+Name The Ultimate Fishing Rod
+Description Wallace needs a reinforced fishing rod to catch the illusive giant squid. He's given you a blueprint to craft it from a normal fishing rod.
+
+Condition_0 Craft {0}/{1} {2}

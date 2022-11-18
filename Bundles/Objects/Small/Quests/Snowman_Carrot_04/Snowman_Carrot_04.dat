@@ -1,0 +1,31 @@
+GUID 1f8f4e236a2b4e659962d9058891b585
+
+Type Small
+ID 1
+
+Holiday_Restriction CHRISTMAS
+
+// Phase 3?
+Conditions 1
+Condition_0_Type Flag_Bool
+Condition_0_ID 254
+Condition_0_Value True
+Condition_0_Logic Equal
+Condition_1_Type Flag_Bool
+Condition_1_ID 253
+Condition_1_Value False
+Condition_1_Logic Equal
+
+// Reset
+Interactability Quest
+Interactability_Effect 7
+Interactability_Rewards 2
+Interactability_Reward_0_Type Flag_Bool
+Interactability_Reward_0_ID 252
+Interactability_Reward_0_Value True
+Interactability_Reward_1_Type Flag_Bool
+Interactability_Reward_1_ID 254
+Interactability_Reward_1_Value False
+
+Bundle_Override_Path /Objects/Small/Quests/Snowman_Carrot_00
+Has_Clip_Prefab false

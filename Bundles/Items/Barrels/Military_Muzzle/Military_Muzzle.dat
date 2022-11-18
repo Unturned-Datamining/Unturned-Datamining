@@ -1,0 +1,38 @@
+GUID 94c0b1981bcc4a2c87219b3be9903597
+Type Barrel
+Rarity Rare
+ID 150
+
+Size_X 1
+Size_Y 1
+Size_Z 0.15
+
+Calibers 9
+Caliber_0 1
+Caliber_1 4
+Caliber_2 12
+Caliber_3 22
+Caliber_4 23
+Caliber_5 24
+Caliber_6 25
+Caliber_7 39
+Caliber_8 41
+
+Braked
+Durability 2
+
+Recoil_X 0.8
+Recoil_Y 0.6
+Ballistic_Drop 0.9
+
+Paintable
+
+Blueprints 1
+Blueprint_0_Type Repair
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 67
+Blueprint_0_Supply_0_Amount 4
+Blueprint_0_Tool 76
+Blueprint_0_Level 2
+Blueprint_0_Skill Repair
+Blueprint_0_Build 27

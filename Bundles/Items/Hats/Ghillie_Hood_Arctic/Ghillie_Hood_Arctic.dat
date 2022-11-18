@@ -1,0 +1,23 @@
+GUID bd0bd4337bf84589a825c077d497c69a
+Type Hat
+Rarity Epic
+Useable Clothing
+ID 1515
+
+Size_X 2
+Size_Y 2
+Size_Z 0.35
+
+Armor 0.95
+
+Blueprints 2
+Blueprint_0_Type Apparel
+Blueprint_0_Supply_0_ID 1515
+Blueprint_0_Product 67
+Blueprint_0_Products 2
+Blueprint_0_Build 27
+Blueprint_1_Type Repair
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 67
+Blueprint_1_Supply_0_Amount 3
+Blueprint_1_Build 27

@@ -1,0 +1,18 @@
+GUID fcd5617475194fc8916bac87b21e74ce
+Type Small
+ID 841
+
+Conditions 1
+Condition_0_Type Flag_Bool
+Condition_0_ID 210
+Condition_0_Value False
+Condition_0_Logic Equal
+Condition_0_Allow_Unset
+
+Interactability Quest
+Interactability_Effect 7
+Interactability_Rewards 1
+Interactability_Reward_0_Type Flag_Bool
+Interactability_Reward_0_ID 210
+Interactability_Reward_0_Value True
+Has_Clip_Prefab false

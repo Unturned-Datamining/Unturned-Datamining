@@ -1,0 +1,8 @@
+NoMapErrorText Failed to find map called {0}.
+RunningErrorText Failed to change map while running.
+
+MapCommandText Map
+MapInfoText Map [Level]
+MapHelpText This sets the map that the server loads on startup.
+
+MapText Successfully set map to {0}!

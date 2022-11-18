@@ -1,0 +1,60 @@
+"Metadata"
+{
+	"GUID" "4df85e3d764b45fbbd65f0acb5b4b935"
+	"Type" "SDG.Framework.Foliage.FoliageInstancedMeshInfoAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"ID" "0"
+	"Density" "24"
+	"Min_Normal_Position_Offset" "0"
+	"Max_Normal_Position_Offset" "0"
+	"Normal_Rotation_Offset"
+	{
+		"X" "0"
+		"Y" "0"
+		"Z" "0"
+	}
+	"Normal_Rotation_Alignment" "1"
+	"Min_Weight" "0.325"
+	"Max_Weight" "1"
+	"Min_Angle" "0"
+	"Max_Angle" "90"
+	"Min_Rotation"
+	{
+		"X" "0"
+		"Y" "0"
+		"Z" "0"
+	}
+	"Max_Rotation"
+	{
+		"X" "360"
+		"Y" "360"
+		"Z" "360"
+	}
+	"Min_Scale"
+	{
+		"X" "2"
+		"Y" "2"
+		"Z" "2"
+	}
+	"Max_Scale"
+	{
+		"X" "3"
+		"Y" "3"
+		"Z" "3"
+	}
+	"Mesh"
+	{
+		"Name" "core.masterbundle"
+		"Path" "Terrain/Foliage/Pebbles/Pebble_01_Mesh.fbx"
+	}
+	"Material"
+	{
+		"Name" "core.masterbundle"
+		"Path" "Terrain/Foliage/Pebbles/Pebble_River_00_Material.mat"
+	}
+	"Cast_Shadows" "true"
+	"Tile_Dither" "false"
+	"Draw_Distance" "-1"
+}

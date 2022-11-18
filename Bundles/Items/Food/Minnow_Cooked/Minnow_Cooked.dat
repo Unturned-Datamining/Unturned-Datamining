@@ -1,0 +1,19 @@
+GUID 0cb79578847f4d26a17b55d31f44402c
+Type Food
+Useable Consumeable
+ID 1348
+
+Size_X 1
+Size_Y 1
+Size_Z 0.25
+
+Food 15
+
+Blueprints 1
+Blueprint_0_Type Supply
+Blueprint_0_Supply_0_ID 1347
+Blueprint_0_Supply_0_Amount 1
+Blueprint_0_Level 1
+Blueprint_0_Skill Cook
+Blueprint_0_Build 27
+ConsumeAudioClip Sounds/EatCrunchy.mp3

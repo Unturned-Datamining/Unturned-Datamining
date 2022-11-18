@@ -1,0 +1,24 @@
+Header Subscribed Files:
+Enable_Warning Note enabling and disabling files takes effect after restarting game.
+No_Subscriptions Not subscribed to any files.
+
+Manage_Label View in Steam Overlay
+Manage_Tooltip Browse to Steam Workshop management page.
+
+BrowseFiles_Label Browse Files
+BrowseFiles_Tooltip Open {0} install folder.
+NotInstalledLabel Not Installed
+
+ItemState_NeedsUpdate Needs Update
+
+LocalTimestampLabel Local Timestamp
+RemoteTimestampLabel Remote Timestamp
+
+View_Label View Details
+View_Tooltip View {0} on Steam Workshop
+
+Subscribe_Label Resubscribe
+Subscribe_Tooltip Resubscribe to {0}
+
+Unsubscribe_Label Unsubscribe
+Unsubscribe_Tooltip Unsubscribe from {0}

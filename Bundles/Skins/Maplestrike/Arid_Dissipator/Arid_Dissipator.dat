@@ -1,0 +1,22 @@
+GUID 03b2c544ec1d4bc3b6f8c4482ce73bc0
+Type Skin
+ID 295
+
+Sight
+Tactical
+Grip
+Barrel
+Magazine
+
+Secondary_Skins 9
+Secondary_0 6
+Secondary_1 8
+Secondary_2 17
+Secondary_3 21
+Secondary_4 22
+Secondary_5 145
+Secondary_6 364
+Secondary_7 1177
+Secondary_8 1200
+
+Override_Meshes 2

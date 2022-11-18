@@ -1,0 +1,26 @@
+GUID 40b1cd5fa5ce47efbc210360beac8b92
+Type Shirt
+Rarity Uncommon
+Useable Clothing
+ID 1156
+
+Size_X 3
+Size_Y 2
+Size_Z 0.6
+
+Width 7
+Height 3
+
+Armor 0.95
+
+Blueprints 2
+Blueprint_0_Type Apparel
+Blueprint_0_Supply_0_ID 1156
+Blueprint_0_Product 66
+Blueprint_0_Products 2
+Blueprint_0_Build 32
+Blueprint_1_Type Repair
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 66
+Blueprint_1_Supply_0_Amount 2
+Blueprint_1_Build 32

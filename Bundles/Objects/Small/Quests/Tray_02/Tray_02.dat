@@ -1,0 +1,34 @@
+GUID 2e13ccbd246d4e9d9cf6b3501ccf18cb
+
+Type Small
+ID 1
+
+Conditions 1
+Condition_0_Type Flag_Bool
+Condition_0_ID 313
+Condition_0_Value True
+Condition_0_Logic Equal
+
+Interactability Quest
+Interactability_Effect 7
+Interactability_Rewards 6
+Interactability_Reward_0_Type Flag_Bool
+Interactability_Reward_0_ID 313
+Interactability_Reward_0_Value False
+Interactability_Reward_1_Type Flag_Bool
+Interactability_Reward_1_ID 299
+Interactability_Reward_1_Value True
+Interactability_Reward_2_Type Flag_Bool
+Interactability_Reward_2_ID 314
+Interactability_Reward_2_Value True
+Interactability_Reward_3_Type Item
+Interactability_Reward_3_ID 1706
+Interactability_Reward_3_Amount 4
+Interactability_Reward_4_Type Flag_Bool
+Interactability_Reward_4_ID 342
+Interactability_Reward_4_Value True
+Interactability_Reward_5_Type Achievement 
+Interactability_Reward_5_ID Festive2021_Cook
+
+Holiday_Restriction CHRISTMAS
+Has_Clip_Prefab false

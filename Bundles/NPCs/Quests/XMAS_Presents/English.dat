@@ -1,0 +1,8 @@
+Name Christmas Eve
+Description Apparently there have been presents scattered somewhere in Moscow, go and check it out!
+
+Condition_0 Open {0}/{1} Blue Present
+Condition_1 Open {0}/{1} Orange Present
+Condition_2 Open {0}/{1} Green Present
+Condition_3 Open {0}/{1} Purple Present
+Condition_4 Open {0}/{1} Red Present

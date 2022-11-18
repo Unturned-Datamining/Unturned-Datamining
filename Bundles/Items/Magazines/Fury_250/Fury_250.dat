@@ -1,0 +1,33 @@
+GUID ce21da9e0870488abb18d9d6ab8d06c8
+Type Magazine
+Rarity Legendary
+ID 1365
+
+Size_X 2
+Size_Y 2
+Size_Z 0.15
+
+Amount 250
+Count_Min 200
+Count_Max 250
+
+Calibers 1
+Caliber_0 32
+
+Tracer 48
+
+Blueprints 3
+Blueprint_0_Type Ammo
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 43
+Blueprint_0_Build 30
+Blueprint_1_Type Ammo
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 1365
+Blueprint_1_Build 30
+Blueprint_2_Type Ammo
+Blueprint_2_Supplies 1
+Blueprint_2_Supply_0_ID 119
+Blueprint_2_Build 30
+
+Paintable

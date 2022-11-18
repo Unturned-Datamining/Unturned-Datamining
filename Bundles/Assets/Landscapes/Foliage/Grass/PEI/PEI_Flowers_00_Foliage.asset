@@ -1,0 +1,61 @@
+"Metadata"
+{
+	"GUID" "8d1cfde8b23d48ad95b49b3cbf5e18d2"
+	"Type" "SDG.Framework.Foliage.FoliageInstancedMeshInfoAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"ID" "0"
+	"Density" "1024"
+	"Min_Angle" "0"
+	"Max_Angle" "60"
+	"Mesh"
+	{
+		"Name" "core.masterbundle"
+		"Path" "Terrain/Foliage/Grass/Flowers_00_Mesh.fbx"
+	}
+	"Material"
+	{
+		"Name" "core.masterbundle"
+		"Path" "Terrain/Foliage/Grass/PEI/Flowers_00_Material.mat"
+	}
+	"Normal_Position_Offset" "0"
+	"Normal_Rotation_Offset"
+	{
+		"X" "0"
+		"Y" "0"
+		"Z" "0"
+	}
+	"Min_Weight" "0.5"
+	"Max_Weight" "1"
+	"Min_Rotation"
+	{
+		"X" "0"
+		"Y" "0"
+		"Z" "0"
+	}
+	"Max_Rotation"
+	{
+		"X" "0"
+		"Y" "360"
+		"Z" "0"
+	}
+	"Min_Scale"
+	{
+		"X" "0.8"
+		"Y" "0.8"
+		"Z" "0.8"
+	}
+	"Max_Scale"
+	{
+		"X" "1.2"
+		"Y" "1.2"
+		"Z" "1.2"
+	}
+	"Cast_Shadows" "false"
+	"Tile_Dither" "false"
+	"Christmas_Redirect"
+	{
+		"GUID" "e145629762c3442782d40a2fcd15e306"
+	}
+}

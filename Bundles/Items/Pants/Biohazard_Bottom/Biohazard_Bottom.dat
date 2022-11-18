@@ -1,0 +1,28 @@
+GUID a324de3359244989ae10fdb13b425302
+Type Pants
+Rarity Rare
+Useable Clothing
+ID 1016
+
+Size_X 2
+Size_Y 2
+Size_Z 0.65
+
+Width 5
+Height 2
+
+Proof_Radiation
+
+Armor 0.95
+
+Blueprints 2
+Blueprint_0_Type Apparel
+Blueprint_0_Supply_0_ID 1016
+Blueprint_0_Product 67
+Blueprint_0_Products 2
+Blueprint_0_Build 27
+Blueprint_1_Type Repair
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 67
+Blueprint_1_Supply_0_Amount 3
+Blueprint_1_Build 27

@@ -1,0 +1,46 @@
+GUID 326f223881304e13a539e557f55e927e
+
+Type Small
+ID 1
+
+Conditions 2
+Condition_0_Type Flag_Bool
+Condition_0_ID 298
+Condition_0_Value True
+Condition_0_Logic Equal
+Condition_0_Allow_Unset
+
+Condition_1_Type Flag_Short
+Condition_1_ID 297
+Condition_1_Value 4
+Condition_1_Logic Equal
+
+Interactability Quest
+Interactability_Effect 7
+Interactability_Rewards 7
+Interactability_Reward_0_Type Flag_Bool
+Interactability_Reward_0_ID 298
+Interactability_Reward_0_Value False
+
+Interactability_Reward_1_Type Item
+Interactability_Reward_1_ID 1512 
+Interactability_Reward_1_Amount 1
+Interactability_Reward_2_Type Item
+Interactability_Reward_2_ID 1513  
+Interactability_Reward_2_Amount 1
+Interactability_Reward_3_Type Item
+Interactability_Reward_3_ID 1514 
+Interactability_Reward_3_Amount 1
+Interactability_Reward_4_Type Item
+Interactability_Reward_4_ID 1515 
+Interactability_Reward_4_Amount 1
+
+Interactability_Reward_5_Type Flag_Bool
+Interactability_Reward_5_ID 343
+Interactability_Reward_5_Value False
+
+Interactability_Reward_6_Type Achievement 
+Interactability_Reward_6_ID Festive2021_Delivery
+
+Holiday_Restriction CHRISTMAS
+Has_Clip_Prefab false

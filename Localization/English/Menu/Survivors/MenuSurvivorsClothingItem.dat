@@ -1,0 +1,27 @@
+Equip_Text Equip
+Equip_Tooltip Equip on your character.
+
+Dequip_Text Dequip
+Dequip_Tooltip Dequip from your character.
+
+Target_Item_Text Use
+Target_Item_Tooltip Pick an item to apply to.
+
+Contents_Text Contents
+Contents_Tooltip Click here to see what might be inside.
+
+Inspect_Text Inspect
+Inspect_Tooltip Click here to see what it looks like.
+
+Market_Text Market
+Market_Tooltip Click here to view the market page.
+
+Delete_Text Delete
+Delete_Tooltip Permanently delete from inventory.
+
+Scrap_Text Scrap x{0}
+Scrap_Tooltip Salvage x{0} basic crafting materials.
+
+Overlay Steam overlay needs to be enabled.
+
+Unknown Either your game is out of date (download the update) or something went horribly wrong!

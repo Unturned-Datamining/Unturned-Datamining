@@ -1,0 +1,20 @@
+NotRunningErrorText Failed to check debug info while not running.
+
+DebugCommandText Debug
+DebugInfoText Debug
+DebugHelpText This provides information on the state of the server.
+
+DebugText Server State
+DebugIPPortText {0} {1}:{2}
+DebugBytesSentText Bytes sent: {0}
+DebugBytesReceivedText Bytes received: {0}
+DebugAverageBytesSentText Average bytes sent: {0}
+DebugAverageBytesReceivedText Average bytes received {0}
+DebugPacketsSentText Packets sent: {0}
+DebugPacketsReceivedText Packets received: {0}
+DebugAveragePacketsSentText Average packets sent: {0}
+DebugAveragePacketsReceivedText Average packets received: {0}
+DebugUPSText Updates per second: {0}%
+DebugTPSText Ticks per second: {0}%
+DebugZombiesText Active zombies: {0}
+DebugAnimalsText Active animals: {0}

@@ -1,0 +1,16 @@
+GUID acf7e825832f4499bb3b7cbec4f634ca
+Type Food
+Rarity Rare
+Useable Consumeable
+ID 81
+
+Size_X 1
+Size_Y 2
+Size_Z 0.5
+
+Quality_Min 50
+Quality_Max 100
+
+Food 75
+Water 75
+ConsumeAudioClip Sounds/EatCrunchy.mp3

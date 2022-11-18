@@ -1,0 +1,19 @@
+GUID 343b36df35c94338a2f1e4a4a1b75440
+Type Barricade
+Useable Barricade
+Build Bed
+ID 288
+
+Size_X 2
+Size_Y 1
+Size_Z 0.4
+
+Health 50
+Range 4
+Radius 0.2
+Offset 0.2
+
+Explosion 37
+Vulnerable
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

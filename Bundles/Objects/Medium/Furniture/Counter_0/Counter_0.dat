@@ -1,0 +1,10 @@
+GUID 050dbe869b1c4fd5b215c552d145effd
+Type Medium
+ID 101
+
+Interactability Binary_State
+Interactability_Delay 0.25
+Interactability_Reset 60
+Interactability_Hint Door
+Interactability_Editor Toggle
+Has_Clip_Prefab false

@@ -1,0 +1,230 @@
+GUID 7fe493727bdc4b11bdfbf8da0b88e64f
+Type Dialogue
+ID 77
+
+Messages 5
+
+// Bluntforce
+Message_0_Pages 1
+Message_0_Responses 2
+Message_0_Response_0 0
+Message_0_Response_1 4
+Message_0_Conditions 2
+// Coalition_Quests_Completed
+Message_0_Condition_0_Type Flag_Short
+Message_0_Condition_0_ID 13
+Message_0_Condition_0_Value 4
+Message_0_Condition_0_Logic Greater_Than_Or_Equal_To
+// Coalition_Inventions
+Message_0_Condition_1_Type Flag_Bool
+Message_0_Condition_1_ID 226
+Message_0_Condition_1_Value False
+Message_0_Condition_1_Logic Equal
+Message_0_Condition_1_Allow_Unset
+
+// Bayonet
+Message_1_Pages 1
+Message_1_Responses 2
+Message_1_Response_0 1
+Message_1_Response_1 4
+Message_1_Conditions 2
+// Coalition_Quests_Completed
+Message_1_Condition_0_Type Flag_Short
+Message_1_Condition_0_ID 13
+Message_1_Condition_0_Value 7
+Message_1_Condition_0_Logic Greater_Than_Or_Equal_To
+// Coalition_Inventions
+Message_1_Condition_1_Type Flag_Bool
+Message_1_Condition_1_ID 227
+Message_1_Condition_1_Value False
+Message_1_Condition_1_Logic Equal
+Message_1_Condition_1_Allow_Unset
+
+// Ace
+Message_2_Pages 1
+Message_2_Responses 2
+Message_2_Response_0 2
+Message_2_Response_1 4
+Message_2_Conditions 2
+// Coalition_Quests_Completed
+Message_2_Condition_0_Type Flag_Short
+Message_2_Condition_0_ID 13
+Message_2_Condition_0_Value 11
+Message_2_Condition_0_Logic Greater_Than_Or_Equal_To
+// Coalition_Inventions
+Message_2_Condition_1_Type Flag_Bool
+Message_2_Condition_1_ID 228
+Message_2_Condition_1_Value False 
+Message_2_Condition_1_Logic Equal
+Message_2_Condition_1_Allow_Unset
+
+// Quadbarrel
+Message_3_Pages 1
+Message_3_Responses 2
+Message_3_Response_0 3
+Message_3_Response_1 4
+Message_3_Conditions 2
+// Coalition_Quests_Completed
+Message_3_Condition_0_Type Flag_Short
+Message_3_Condition_0_ID 13
+Message_3_Condition_0_Value 16
+Message_3_Condition_0_Logic Greater_Than_Or_Equal_To
+// Coalition_Inventions
+Message_3_Condition_1_Type Flag_Bool
+Message_3_Condition_1_ID 229
+Message_3_Condition_1_Value False
+Message_3_Condition_1_Logic Equal
+Message_3_Condition_1_Allow_Unset
+
+// mumble
+Message_4_Pages 1
+
+Responses 13
+
+// Bluntforce accept
+// Scientist_Bluntforce
+Response_0_Dialogue 225
+Response_0_Messages 1
+Response_0_Message_0 0
+Response_0_Rewards 2
+// Scientist_Inventions
+Response_0_Reward_0_Type Flag_Bool
+Response_0_Reward_0_ID 226
+Response_0_Reward_0_Value True
+// Modded bluntforce
+Response_0_Reward_1_Type Item
+Response_0_Reward_1_ID 112
+Response_0_Reward_1_Amount 1
+Response_0_Reward_1_Barrel 1444
+
+// Bayonet accept
+// Scientist_Bayonet
+Response_1_Dialogue 78
+Response_1_Messages 1
+Response_1_Message_0 1
+Response_1_Rewards 2
+// Scientist_Inventions
+Response_1_Reward_0_Type Flag_Bool
+Response_1_Reward_0_ID 227
+Response_1_Reward_0_Value True
+// Bayonet blueprint
+Response_1_Reward_1_Type Item
+Response_1_Reward_1_ID 1439
+Response_1_Reward_1_Amount 1
+
+// Ace accept
+// Scientist_Ace
+Response_2_Dialogue 224
+Response_2_Messages 1
+Response_2_Message_0 2
+Response_2_Rewards 2
+// Scientist_Inventions
+Response_2_Reward_0_Type Flag_Bool
+Response_2_Reward_0_ID 228
+Response_2_Reward_0_Value True
+// Modded ace
+Response_2_Reward_1_Type Item
+Response_2_Reward_1_ID 107
+Response_2_Reward_1_Amount 1
+Response_2_Reward_1_Sight 21
+
+// Quadbarrel accept
+// Scientist_Quadbarrel
+Response_3_Dialogue 79
+Response_3_Messages 1
+Response_3_Message_0 3
+Response_3_Rewards 2
+// Scientist_Inventions
+Response_3_Reward_0_Type Flag_Bool
+Response_3_Reward_0_ID 229
+Response_3_Reward_0_Value True
+// Quadbarrel blueprint
+Response_3_Reward_1_Type Item
+Response_3_Reward_1_ID 1437
+Response_3_Reward_1_Amount 1
+
+Response_4_Messages 4
+Response_4_Message_0 0
+Response_4_Message_1 1
+Response_4_Message_2 2
+Response_4_Message_3 3
+
+// Lost invention
+// Captain_Replacement_Invention
+Response_5_Dialogue 81
+Response_5_Conditions 1
+Response_5_Condition_0_Type Flag_Bool
+Response_5_Condition_0_ID 226
+Response_5_Condition_0_Value True
+Response_5_Condition_0_Logic Equal
+
+// What's up?
+// Scientist_Work
+Response_6_Dialogue 80
+
+//XMAS Snow Quest
+Response_7_Quest 316
+Response_7_Rewards 1
+Response_7_Reward_0_Type Quest
+Response_7_Reward_0_ID 316
+Response_7_Conditions 2
+Response_7_Condition_0_Type Quest
+Response_7_Condition_0_ID 316
+Response_7_Condition_0_Status None
+Response_7_Condition_0_Logic Equal
+Response_7_Condition_1_Type Holiday
+Response_7_Condition_1_Value Christmas
+Response_7_Dialogue 334
+
+//XMAS Snow Quest Complete
+Response_8_Dialogue 333
+Response_8_Quest 316
+Response_8_Conditions 2
+Response_8_Condition_0_Type Quest
+Response_8_Condition_0_ID 316
+Response_8_Condition_0_Status Ready
+Response_8_Condition_0_Logic Equal
+Response_8_Condition_0_Reset
+Response_8_Condition_1_Type Holiday
+Response_8_Condition_1_Value Christmas
+
+//XMAS Craft Quest
+Response_9_Quest 327
+Response_9_Rewards 1
+Response_9_Reward_0_Type Quest
+Response_9_Reward_0_ID 327
+Response_9_Conditions 3
+Response_9_Condition_0_Type Quest
+Response_9_Condition_0_ID 327
+Response_9_Condition_0_Status None
+Response_9_Condition_0_Logic Equal
+Response_9_Condition_1_Type Holiday
+Response_9_Condition_1_Value Christmas
+Response_9_Condition_2_Type Quest
+Response_9_Condition_2_ID 316
+Response_9_Condition_2_Status Completed
+Response_9_Condition_2_Logic Equal
+Response_9_Dialogue 337
+
+//XMAS Craft Quest Complete
+Response_10_Dialogue 338
+Response_10_Quest 327
+Response_10_Conditions 2
+Response_10_Condition_0_Type Quest
+Response_10_Condition_0_ID 327
+Response_10_Condition_0_Status Ready
+Response_10_Condition_0_Logic Equal
+Response_10_Condition_0_Reset
+Response_10_Condition_1_Type Holiday
+Response_10_Condition_1_Value Christmas
+
+//XMAS Vendor
+Response_11_Dialogue 335
+Response_11_Vendor 336
+Response_11_Conditions 2
+Response_11_Condition_0_Type Flag_Bool
+Response_11_Condition_0_ID 317
+Response_11_Condition_0_Value True
+Response_11_Condition_0_Logic Equal
+Response_11_Condition_1_Type Holiday
+Response_11_Condition_1_Value Christmas

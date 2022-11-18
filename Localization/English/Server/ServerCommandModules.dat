@@ -1,0 +1,9 @@
+NoModulesErrorText Failed to find any loaded modules.
+
+ModulesCommandText Modules
+ModulesInfoText Modules
+ModulesHelpText This shows a list of the loaded modules.
+
+ModulesText Loaded Modules:
+Version Version: {0}
+SeparatorText ------------------------------

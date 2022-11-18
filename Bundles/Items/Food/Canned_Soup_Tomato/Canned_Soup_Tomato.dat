@@ -1,0 +1,12 @@
+GUID ce28bcc951c645eebae98a881e329316
+Type Food
+Useable Consumeable
+ID 77
+
+Size_X 1
+Size_Y 1
+Size_Z 0.3
+
+Food 40
+Water 15
+ConsumeAudioClip Sounds/DrinkSwallow.mp3

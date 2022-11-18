@@ -1,0 +1,26 @@
+GUID e6bdf199722e48aea02afe3f5a87013b
+Type NPC
+ID 760
+
+Shirt 303
+Pants 304
+
+// Literal halloween outfit
+Has_Halloween_Outfit True
+Halloween_Shirt 581
+Halloween_Pants 582
+Halloween_Backpack 580
+
+Has_Christmas_Outfit True
+Christmas_Shirt 303
+Christmas_Pants 304
+Christmas_Hat 826
+
+Face 7
+Hair 9
+Color_Skin #BEA582
+Color_Hair #B93100
+
+Dialogue 21
+
+Has_Clip_Prefab false

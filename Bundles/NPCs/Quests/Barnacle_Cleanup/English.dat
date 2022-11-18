@@ -1,0 +1,4 @@
+Name Nautical Nuisance
+Description Barnacles are starting to form on the Liberator's hull, but Rusty's joints are acting up too much to dive down and scrape them off. He'd appreciate if you can help out because given time they can cause quite a bit of trouble.
+
+Condition_0 Cleanup {0}/{1} Barnacles

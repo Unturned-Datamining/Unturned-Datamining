@@ -1,0 +1,10 @@
+GUID 25c5fa27c3a44fef8d390d40a71bceaa
+Type Large
+ID 643
+
+LOD Mesh
+LOD_Center_Z -3.375
+LOD_Size_Z -6.75
+
+Collision_Important
+Has_Clip_Prefab false

@@ -1,0 +1,16 @@
+GUID 9c563bf14d4641a18873f338beaed128
+Type Supply
+ID 38
+
+Size_X 1
+Size_Y 1
+Size_Z 0.4
+
+Blueprints 1
+Blueprint_0_Type Gear
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 62
+Blueprint_0_Supply_0_Amount 1
+Blueprint_0_Tool 141
+Blueprint_0_Products 4
+Blueprint_0_Build 27

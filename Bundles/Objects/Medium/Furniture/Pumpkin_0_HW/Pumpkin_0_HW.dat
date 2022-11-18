@@ -1,0 +1,8 @@
+GUID ef0f7002a7624ffcbca5cea957da6605
+Type Medium
+ID 130
+
+Holiday_Restriction HALLOWEEN
+Bundle_Override_Path /Objects/Medium/Furniture/Pumpkin_0
+
+Has_Clip_Prefab false

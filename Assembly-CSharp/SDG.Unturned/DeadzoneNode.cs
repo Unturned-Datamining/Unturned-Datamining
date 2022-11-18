@@ -1,0 +1,65 @@
+using UnityEngine;
+
+namespace SDG.Unturned;
+
+public class DeadzoneNode : Node, IDeadzoneNode
+{
+    public static readonly float MIN_SIZE = 32f;
+
+    public static readonly float MAX_SIZE = 1024f;
+
+    internal float _normalizedRadius;
+
+    private EDeadzoneType _deadzoneType;
+
+    public float radius
+    {
+        get
+        {
+            if (Level.isEditor)
+            {
+                return _normalizedRadius;
+            }
+            return MathfEx.Square(CalculateRadiusFromNormalizedRadius(_normalizedRadius));
+        }
+        set
+        {
+            _normalizedRadius = value;
+        }
+    }
+
+    public EDeadzoneType DeadzoneType
+    {
+        get
+        {
+            return _deadzoneType;
+        }
+        set
+        {
+            _deadzoneType = value;
+        }
+    }
+
+    public static float CalculateRadiusFromNormalizedRadius(float normalizedRadius)
+    {
+        return Mathf.Lerp(MIN_SIZE, MAX_SIZE, normalizedRadius) * 0.5f;
+    }
+
+    public static float CalculateNormalizedRadiusFromRadius(float radius)
+    {
+        return Mathf.InverseLerp(MIN_SIZE, MAX_SIZE, radius * 2f);
+    }
+
+    public DeadzoneNode(Vector3 newPoint)
+        : this(newPoint, 0f, EDeadzoneType.DefaultRadiation)
+    {
+    }
+
+    public DeadzoneNode(Vector3 newPoint, float newRadius, EDeadzoneType newDeadzoneType)
+    {
+        _point = newPoint;
+        _deadzoneType = newDeadzoneType;
+        _normalizedRadius = newRadius;
+        _type = ENodeType.DEADZONE;
+    }
+}

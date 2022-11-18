@@ -1,0 +1,11 @@
+GUID c6ea0e0c72da44c3874e95e8f867e330
+Type Resource
+ID 8
+
+Health 1000
+Radius 3
+Scale 0.1
+
+Christmas_Redirect 0
+
+Has_Clip_Prefab false

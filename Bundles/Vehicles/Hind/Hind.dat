@@ -1,0 +1,41 @@
+GUID db884e7ccdff4e5cb6e2e54324a27c1d
+Type Vehicle
+Rarity Legendary
+ID 135
+
+Speed_Min -2
+Speed_Max 16
+
+Steer_Min 16
+Steer_Max 8
+
+Fuel 1750
+
+Health_Min 1100
+Health_Max 1200
+Health 1250
+
+Exit 3
+
+Cam_Follow_Distance 7.5
+
+LockMouse
+Engine Helicopter
+
+Trunk_Storage_X 5
+Trunk_Storage_Y 5
+
+Explosion 20
+Invulnerable
+Tires_Invulnerable
+
+Turrets 1
+Turret_0_Seat_Index 1
+Turret_0_Item_ID 1394
+Turret_0_Yaw_Min -135
+Turret_0_Yaw_Max 135
+Turret_0_Pitch_Min 85
+Turret_0_Pitch_Max 180
+
+IgnitionAudioClip Sounds/HelicopterIgnition.mp3
+Has_Clip_Prefab false

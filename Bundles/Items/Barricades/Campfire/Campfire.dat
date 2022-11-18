@@ -1,0 +1,34 @@
+GUID fdac7ad3db9c46109fa6a4e137969ad6
+Type Barricade
+Rarity Uncommon
+Useable Barricade
+Build Campfire
+ID 362
+
+Size_X 2
+Size_Y 1
+Size_Z 0.4
+
+Health 200
+Range 4
+Radius 0.6
+Offset 0.7
+
+Explosion 19
+Vulnerable
+
+Blueprints 3
+Blueprint_0_Type Utilities
+Blueprint_0_Supply_0_ID 37
+Blueprint_0_Supply_0_Amount 5
+Blueprint_0_Build 27
+Blueprint_1_Type Utilities
+Blueprint_1_Supply_0_ID 39
+Blueprint_1_Supply_0_Amount 5
+Blueprint_1_Build 27
+Blueprint_2_Type Utilities
+Blueprint_2_Supply_0_ID 41
+Blueprint_2_Supply_0_Amount 5
+Blueprint_2_Build 27
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

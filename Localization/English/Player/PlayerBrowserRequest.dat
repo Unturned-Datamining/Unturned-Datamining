@@ -1,0 +1,6 @@
+Request The server asks you to open this link in the Steam overlay:
+
+Yes_Button Accept
+Yes_Button_Tooltip View Page
+No_Button Reject
+No_Button_Tooltip Ignore Request

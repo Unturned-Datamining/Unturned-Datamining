@@ -1,0 +1,23 @@
+GUID 974696bc2f5d410ab71ac9ea75866768
+Type Spawn
+ID 597
+
+Tables 9
+Table_0_Spawn_ID 40
+Table_0_Weight 30
+Table_1_Spawn_ID 297
+Table_1_Weight 30
+Table_2_Spawn_ID 298
+Table_2_Weight 30
+Table_3_Spawn_ID 299
+Table_3_Weight 30
+Table_4_Spawn_ID 300
+Table_4_Weight 20
+Table_5_Spawn_ID 301
+Table_5_Weight 10
+Table_6_Spawn_ID 616
+Table_6_Weight 40
+Table_7_Spawn_ID 617
+Table_7_Weight 30
+Table_8_Asset_ID 185
+Table_8_Weight 50

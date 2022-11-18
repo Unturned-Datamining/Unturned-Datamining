@@ -1,0 +1,24 @@
+"Metadata"
+{
+	"GUID" "50acf0bddd844f93addd0097f7d95d95"
+	"Type" "SDG.Unturned.LandscapeMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"ID" "0"
+	"Texture"
+	{
+		"Name" "core.masterbundle"
+		"Path" "Terrain/Materials/PEI/Stone_00.png"
+	}
+	"Mask"
+	{
+		"Name" ""
+		"Path" ""
+	}
+	"Physics_Material" "CONCRETE_STATIC"
+	"Foliage"
+	{
+		"GUID" "f03f4210890847f49cc7e981924e60ae"
+	}
+}

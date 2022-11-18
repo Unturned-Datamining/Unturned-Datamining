@@ -1,0 +1,8 @@
+GUID 2cd2abd1bef0401a97b88d8da4dad839
+Type Medium
+ID 608
+
+Interactability Fuel
+Interactability_Reset 1500
+Interactability_Resource 2500
+Has_Clip_Prefab false

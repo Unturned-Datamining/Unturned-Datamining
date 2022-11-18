@@ -1,0 +1,27 @@
+GUID 8d684713a6da469eb23815d68afacf10
+Type Structure
+Rarity Epic
+Useable Structure
+Construct Roof_Poly
+ID 1269
+
+Size_X 2
+Size_Y 2
+Size_Z 0.325
+
+Health 1300
+Range 8
+
+Explosion 36
+
+Blueprints 1
+Blueprint_0_Type Structure
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 68
+Blueprint_0_Supply_0_Amount 3
+Blueprint_0_Level 2
+Blueprint_0_Skill Craft
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/MetalPlacement.mp3
+
+Has_Clip_Prefab false

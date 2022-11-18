@@ -1,0 +1,29 @@
+"Metadata"
+{
+	"GUID" "3d7717c2bc074401853b2fdacd9db1ba"
+	"Type" "SDG.Unturned.LandscapeMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"ID" "0"
+	"Texture"
+	{
+		"Name" "core.masterbundle"
+		"Path" "Terrain/Materials/PEI/Grass_00.png"
+	}
+	"Mask"
+	{
+		"Name" ""
+		"Path" ""
+	}
+	"Physics_Material" "FOLIAGE_STATIC"
+	"Foliage"
+	{
+		"GUID" "f68432cce6264d4d91bb404689945ffd"
+	}
+	"Christmas_Redirect"
+	{
+		"GUID" "e25f0351181f4ad1a9c0dc31d2fedade"
+	}
+	"AprilFools_Redirect" "498ca625072d443a876b2a4f11896018" // Green
+}

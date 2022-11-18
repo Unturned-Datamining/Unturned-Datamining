@@ -1,0 +1,22 @@
+"Metadata"
+{
+	"GUID" "de7c771ad7c043d6ad9d3d0910608775"
+	"Type" "SDG.Unturned.OutfitAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"Items"
+	[
+		// Harness (Vest)
+		"ae6a6e650cf747e29144f6d734c79f85"
+
+		// Top
+		"22aba377484045178273d4b9a81700e2"
+
+		// Pants
+		"3f4d7f12ae0a47398489cdcbcd3d2929"
+
+		// Helmet
+		"0d89605bd0e543148b097c35bb42f519"
+	]
+}

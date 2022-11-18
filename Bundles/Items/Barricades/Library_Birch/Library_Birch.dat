@@ -1,0 +1,32 @@
+GUID 36b951b6123247b3b0f5a8e33f95ba6f
+Type Library
+Useable Barricade
+Build Library
+ID 1258
+
+Size_X 2
+Size_Y 2
+Size_Z 0.4
+
+Health 150
+Range 4
+Radius 0.25
+Offset 1.3
+
+Capacity 800
+Tax 10
+
+Explosion 28
+
+Blueprints 1
+Blueprint_0_Type Furniture
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 62
+Blueprint_0_Supply_0_Amount 9
+Blueprint_0_Supply_1_ID 64
+Blueprint_0_Supply_1_Amount 5
+Blueprint_0_Level 2
+Blueprint_0_Skill Craft
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

@@ -1,0 +1,27 @@
+GUID c40426849b294778aeca0d74d4c0d5da
+Type Magazine
+Rarity Legendary
+ID 301
+
+Size_X 1
+Size_Y 1
+Size_Z 0.3
+
+Amount 1
+
+Calibers 1
+Caliber_0 14
+
+Range 6
+Player_Damage 5
+Zombie_Damage 25
+Animal_Damage 25
+Barricade_Damage 50
+Structure_Damage 50
+Vehicle_Damage 250
+Resource_Damage 250
+Object_Damage 75
+Explosion 54
+Explosive
+
+Tracer 50

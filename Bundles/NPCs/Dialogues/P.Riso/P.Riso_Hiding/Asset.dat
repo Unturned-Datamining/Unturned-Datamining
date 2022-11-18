@@ -1,0 +1,10 @@
+GUID 566a48ae224546159d63358861332916
+Type Dialogue
+ID 19
+
+Messages 1
+Message_0_Pages 2
+Message_0_Rewards 1
+Message_0_Reward_0_Type Flag_Bool
+Message_0_Reward_0_ID 20
+Message_0_Reward_0_Value True

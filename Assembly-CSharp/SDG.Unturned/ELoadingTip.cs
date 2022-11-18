@@ -1,0 +1,37 @@
+namespace SDG.Unturned;
+
+public enum ELoadingTip
+{
+    NONE,
+    HOTKEY,
+    EQUIP,
+    DROP,
+    SIRENS,
+    TRANSFORM,
+    QUALITY,
+    UMBRELLA,
+    HEAL,
+    ROTATE,
+    BASE,
+    DEQUIP,
+    NIGHTVISION,
+    TRANSFER,
+    SURFACE,
+    ARREST,
+    SAFEZONE,
+    CLAIM,
+    GROUP,
+    MAP,
+    BEACON,
+    HORN,
+    LIGHTS,
+    SNAP,
+    UPGRADE,
+    GRAB,
+    SKYCRANE,
+    SEAT,
+    RARITY,
+    ORIENTATION,
+    RED,
+    STEADY
+}

@@ -1,0 +1,13 @@
+GUID 957ffae468de4e609a114e9761ac5e11
+Type Large
+ID 479
+
+Soft
+Snowshoe
+Chart Ground
+Allow_Structures
+
+// References landscape texture.
+Ignore_TexRW
+
+Has_Clip_Prefab false

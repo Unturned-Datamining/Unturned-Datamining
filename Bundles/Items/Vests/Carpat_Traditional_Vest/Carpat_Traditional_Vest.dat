@@ -1,0 +1,12 @@
+GUID 667f40a541494b9284e3765b1ac453e8
+Type Vest
+ID 875
+
+Size_X 2
+Size_Y 2
+Size_Z 0.35
+
+Pro
+
+// Future curated assets should be power of 2, but we ignore warnings for a few pre-warning items.
+Ignore_NPOT

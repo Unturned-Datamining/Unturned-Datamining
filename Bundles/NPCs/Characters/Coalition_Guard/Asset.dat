@@ -1,0 +1,28 @@
+GUID 4bba5603eaf64d32b59ebe4da83e7111
+Type NPC
+ID 799
+
+Shirt 1420
+Pants 1419
+Hat 1426
+
+// Royal Guard
+Has_Halloween_Outfit True
+Halloween_Shirt 622
+Halloween_Pants 623
+Halloween_Hat 621
+
+Has_Christmas_Outfit True
+Christmas_Shirt 1420
+Christmas_Pants 1419
+Christmas_Hat 278
+
+Face 9
+Color_Skin #BEA582
+
+Primary 1447
+Equipped Primary
+
+Dialogue 91
+
+Has_Clip_Prefab false

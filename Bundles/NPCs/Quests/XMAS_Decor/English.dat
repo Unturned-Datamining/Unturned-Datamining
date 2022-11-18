@@ -1,0 +1,5 @@
+Name Festive Cheer
+Description Use the Saw to harvest Candycane Fragments and create some decorations.
+
+Condition_0 {0}/{1} Candycanes Harvested
+Condition_1 {0}/{1} Decorations Crafted

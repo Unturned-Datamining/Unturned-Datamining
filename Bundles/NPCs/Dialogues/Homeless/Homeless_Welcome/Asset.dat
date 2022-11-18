@@ -1,0 +1,25 @@
+GUID 7d6f1e4dbd9b4a7796e6c1b9b6ea14e6
+Type Dialogue
+ID 131
+
+Messages 1
+Message_0_Pages 1
+
+Responses 2
+
+Response_0_Dialogue 132
+Response_0_Conditions 2
+Response_0_Condition_0_Type Experience
+Response_0_Condition_0_Value 1
+Response_0_Condition_0_Logic Greater_Than_Or_Equal_To
+Response_0_Condition_0_Reset
+Response_0_Condition_1_Type Flag_Short
+Response_0_Condition_1_ID 133
+Response_0_Condition_1_Value 5
+Response_0_Condition_1_Allow_Unset
+Response_0_Condition_1_Logic Less_Than
+Response_0_Rewards 1
+Response_0_Reward_0_Type Flag_Short
+Response_0_Reward_0_ID 133
+Response_0_Reward_0_Value 1
+Response_0_Reward_0_Modification Increment

@@ -1,0 +1,25 @@
+Key_Text Key
+Key_Tooltip Click here to view the store page.
+
+Unbox_Text Unbox
+Unbox_Tooltip Discover which random item is inside!
+
+Unwrap_Text Unwrap
+Unwrap_Tooltip Discover which random gift is inside!
+
+Origin_Unbox You unboxed an item!
+Origin_Unwrap You unwrapped an item!
+
+Region_Disabled Unboxing is disabled in {0} region.
+
+Overlay Steam overlay needs to be enabled.
+Exchange_Timed_Out The Steam item servers are not responding. Your items will be in your inventory when refreshed.
+Exchange_Missing_Assets Unknown asset. Your items will be in your inventory after updating. Sorry for this unusual scenario!
+Exchange_Not_In_Drops Item was not in box item list, but will be in your inventory when refreshed. Sorry for this unusual scenario!
+
+Rarity_Rare Rare Chance: {0}%
+Rarity_Epic Epic Chance: {0}%
+Rarity_Legendary Legendary Chance: {0}%
+Rarity_Mythical Mythical Chance: {0}%
+Rarity_Equalized Item Chances: Equalized
+Rarity_Bonus_Items Bonus Item Chance: {0}%

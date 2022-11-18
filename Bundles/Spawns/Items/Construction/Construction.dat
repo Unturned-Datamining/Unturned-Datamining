@@ -1,0 +1,29 @@
+GUID a5aa8f1a2fbb41f68aaae223659b4fdd
+Type Spawn
+ID 169
+
+Tables 11
+Table_0_Spawn_ID 170
+Table_0_Weight 265
+Table_1_Spawn_ID 171
+Table_1_Weight 155
+Table_2_Spawn_ID 172
+Table_2_Weight 47
+Table_3_Spawn_ID 173
+Table_3_Weight 73
+Table_4_Spawn_ID 174
+Table_4_Weight 16
+Table_5_Spawn_ID 175
+Table_5_Weight 21
+Table_6_Spawn_ID 176
+Table_6_Weight 19
+Table_7_Spawn_ID 177
+Table_7_Weight 10
+Table_8_Spawn_ID 178
+Table_8_Weight 22
+Table_9_Spawn_ID 514
+Table_9_Weight 10
+
+// Housing Planner
+Table_10_Asset_ID 1764
+Table_10_Weight 10

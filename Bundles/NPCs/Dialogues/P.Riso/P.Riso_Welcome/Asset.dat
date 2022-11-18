@@ -1,0 +1,42 @@
+GUID 50336dd8f31f47168423d7b7d9482c33
+Type Dialogue
+ID 14
+
+Messages 2
+
+// Hey buddy it's me P.Riso
+Message_0_Pages 1
+Message_0_Responses 1
+Message_0_Response_0 0
+Message_0_Conditions 1
+// Met_P.Riso
+Message_0_Condition_0_Type Flag_Bool
+Message_0_Condition_0_ID 15
+Message_0_Condition_0_Value False
+Message_0_Condition_0_Logic Equal
+Message_0_Condition_0_Allow_Unset
+
+// Greeting
+Message_1_Pages 1
+
+Responses 4
+
+// Is that a prison outfit?
+// P.Riso_Outfit
+Response_0_Dialogue 16
+Response_0_Messages 1
+Response_0_Message_0 0
+Response_0_Rewards 1
+// Met_P.Riso
+Response_0_Reward_0_Type Flag_Bool
+Response_0_Reward_0_ID 15
+Response_0_Reward_0_Value True
+
+// Show me what you've got
+// P.Riso_Hot_Stuff
+Response_1_Dialogue 18
+Response_1_Vendor 17
+
+// Why are you down here?
+// P.Riso_Hiding
+Response_2_Dialogue 19

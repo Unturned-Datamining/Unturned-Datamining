@@ -1,0 +1,8 @@
+GUID 887f4fef352d4792bf5364d61da68ec1
+Type Large
+ID 219
+
+Interactability Water
+Interactability_Reset 1500
+Interactability_Resource 10
+Has_Clip_Prefab false

@@ -1,0 +1,42 @@
+Return_Button_Text Return
+Return_Button_Tooltip Return
+Options_Button_Text Options
+Options_Button_Tooltip Options
+Graphics_Button_Text Graphics
+Graphics_Button_Tooltip Graphics
+Display_Button_Text Display
+Display_Button_Tooltip Display
+Controls_Button_Text Controls
+Controls_Button_Tooltip Controls
+Exit_Button_Text Exit
+Exit_Button_Timer Exit [{0}]
+Exit_Button_Tooltip Return to main menu.
+Quit_Button Quit
+Quit_Button_Timer Quit [{0}]
+Quit_Button_Tooltip Exit to desktop.
+Suicide_Button_Text Suicide
+Suicide_Button_Tooltip Respawn somewhere else.
+Suicide_Button_Confirm Yes
+Suicide_Button_Confirm_Tooltip Die
+Suicide_Button_Deny No
+Suicide_Button_Deny_Tooltip Live
+Suicide_Disabled DISABLED
+
+Spy_Refresh_Button_Text Spy
+Spy_Refresh_Button_Tooltip Refresh
+Spy_Slay_Button_Text Slay
+Spy_Slay_Button_Tooltip Kill + Permanent Ban
+
+Server_WithVersion {0} v{1} on {2} [{3}]
+VAC_Secure VAC Secure
+VAC_Insecure VAC Insecure
+BattlEye_Secure BattlEye Required
+BattlEye_Insecure BattlEye Disabled
+Streamer Streamer Mode
+
+Favorite_On_Button_Text Favorite
+Favorite_Off_Button_Text Unfavorite
+Favorite_Button_Tooltip Favorite/Unfavorite
+
+Quicksave_Button Quicksave
+Quicksave_Button_Tooltip Manually Save (Note that the game does autosave during exit.)

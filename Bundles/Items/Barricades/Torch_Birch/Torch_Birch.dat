@@ -1,0 +1,26 @@
+GUID 59d94c3978fc42d582a9a1e84278070b
+Type Barricade
+Useable Barricade
+Build Torch
+ID 360
+
+Size_X 1
+Size_Y 2
+Size_Z 0.6
+
+Health 150
+Range 4
+Offset 0.2
+
+Explosion 28
+
+Blueprints 1
+Blueprint_0_Type Utilities
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 38
+Blueprint_0_Supply_0_Amount 4
+Blueprint_0_Supply_1_ID 67
+Blueprint_0_Supply_1_Amount 2
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

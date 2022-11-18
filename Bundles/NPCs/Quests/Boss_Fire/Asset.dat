@@ -1,0 +1,22 @@
+GUID 32c36cd312ac40b9bb24ba22520503df
+Type Quest
+ID 164
+
+Conditions 1
+Condition_0_Type Kills_Zombie
+Condition_0_ID 165
+Condition_0_Value 1
+Condition_0_Zombie Boss_Fire
+Condition_0_Spawn
+Condition_0_Nav 7
+
+Rewards 3
+Reward_0_Type Experience
+Reward_0_Value 200
+Reward_1_Type Reputation
+Reward_1_Value 20
+// Coalition quests completed
+Reward_2_Type Flag_Short
+Reward_2_ID 13
+Reward_2_Value 1
+Reward_2_Modification Increment

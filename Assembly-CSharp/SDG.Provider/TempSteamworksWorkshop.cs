@@ -1,0 +1,966 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using SDG.SteamworksProvider;
+using SDG.Unturned;
+using Steamworks;
+
+namespace SDG.Provider;
+
+public class TempSteamworksWorkshop
+{
+    public delegate void PublishedAdded();
+
+    public delegate void PublishedRemoved();
+
+    [Obsolete]
+    public static readonly byte COMPATIBILITY_VERSION = 3;
+
+    public static readonly string COMPATIBILITY_VERSION_KVTAG = "compatibility_version";
+
+    private SteamworksAppInfo appInfo;
+
+    public PublishedAdded onPublishedAdded;
+
+    public PublishedRemoved onPublishedRemoved;
+
+    private PublishedFileId_t publishedFileID;
+
+    private UGCQueryHandle_t ugcRequest;
+
+    private uint ugcRequestPage;
+
+    private bool shouldRequestAnotherPage;
+
+    private string ugcName;
+
+    private string ugcDescription;
+
+    private string ugcPath;
+
+    private string ugcPreview;
+
+    private string ugcChange;
+
+    private ESteamUGCType ugcType;
+
+    private string ugcTag;
+
+    private string ugcAllowedIPs;
+
+    private ESteamUGCVisibility ugcVisibility;
+
+    private bool ugcVerified;
+
+    public int installed;
+
+    public List<PublishedFileId_t> downloaded;
+
+    public List<PublishedFileId_t> installing;
+
+    private List<SteamContent> _ugc;
+
+    private List<SteamPublished> _published;
+
+    private static Dictionary<ulong, CachedUGCDetails> cachedUGCDetails = new Dictionary<ulong, CachedUGCDetails>();
+
+    private static readonly PublishedFileId_t FRANCE = new PublishedFileId_t(1975500516uL);
+
+    private CallResult<CreateItemResult_t> createItemResult;
+
+    private CallResult<SubmitItemUpdateResult_t> submitItemUpdateResult;
+
+    private CallResult<SteamUGCQueryCompleted_t> queryCompleted;
+
+    private UGCQueryHandle_t serverItemsQueryHandle;
+
+    private CallResult<SteamUGCQueryCompleted_t> serverItemsQueryCompleted;
+
+    internal List<PublishedFileId_t> serverPendingIDs;
+
+    protected uint serverDownloadIP;
+
+    private Callback<DownloadItemResult_t> itemDownloaded;
+
+    private Callback<ItemInstalled_t> itemInstalled;
+
+    private PublishedFileId_t[] locallySubscribedFileIds;
+
+    private UGCQueryHandle_t subscribedQueryHandle;
+
+    private CallResult<SteamUGCQueryCompleted_t> subscribedQueryCompleted;
+
+    private static CommandLineFlag shouldIgnoreSubscribedItems = new CommandLineFlag(defaultValue: false, "-NoWorkshopSubscriptions");
+
+    private Dictionary<PublishedFileId_t, bool> ingameSubscriptions = new Dictionary<PublishedFileId_t, bool>();
+
+    public bool canOpenWorkshop => true;
+
+    public List<SteamContent> ugc => _ugc;
+
+    public List<SteamPublished> published => _published;
+
+    public int serverInvalidItemsCount { get; protected set; }
+
+    public void open(PublishedFileId_t id)
+    {
+        SteamFriends.ActivateGameOverlayToWebPage("http://steamcommunity.com/sharedfiles/filedetails/?id=" + id.m_PublishedFileId);
+    }
+
+    public static byte getCompatibilityVersion(UGCQueryHandle_t queryHandle, uint index)
+    {
+        uint queryUGCNumKeyValueTags = SteamGameServerUGC.GetQueryUGCNumKeyValueTags(queryHandle, index);
+        for (uint num = 0u; num < queryUGCNumKeyValueTags; num++)
+        {
+            if (SteamGameServerUGC.GetQueryUGCKeyValueTag(queryHandle, index, num, out var pchKey, 255u, out var pchValue, 255u) && pchKey.Equals(COMPATIBILITY_VERSION_KVTAG, StringComparison.InvariantCultureIgnoreCase))
+            {
+                if (byte.TryParse(pchValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var result))
+                {
+                    return result;
+                }
+                UnturnedLog.warn("Unable to parse workshop item compatibility version from '{0}'", pchValue);
+                return 0;
+            }
+        }
+        return 0;
+    }
+
+    private static void DumpDetails(in SteamUGCDetails_t details)
+    {
+        UnturnedLog.info("{0} \"{1}\"", details.m_nPublishedFileId, details.m_rgchTitle);
+        UnturnedLog.info("\tBanned: {0}", details.m_bBanned);
+        UnturnedLog.info("\tResult: {0}", details.m_eResult);
+        UnturnedLog.info("\tVisibility: {0}", details.m_eVisibility);
+    }
+
+    public static bool cacheDetails(UGCQueryHandle_t queryHandle, uint index, out CachedUGCDetails cachedDetails)
+    {
+        cachedDetails = default(CachedUGCDetails);
+        SteamUGCDetails_t pDetails;
+        bool queryUGCResult = SteamGameServerUGC.GetQueryUGCResult(queryHandle, index, out pDetails);
+        if (queryUGCResult)
+        {
+            PublishedFileId_t nPublishedFileId = pDetails.m_nPublishedFileId;
+            byte compatibilityVersion = getCompatibilityVersion(queryHandle, index);
+            cachedDetails.fileId = nPublishedFileId;
+            cachedDetails.name = pDetails.m_rgchTitle;
+            cachedDetails.compatibilityVersion = compatibilityVersion;
+            cachedDetails.isBannedOrPrivate = pDetails.m_bBanned || pDetails.m_eVisibility == ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityPrivate || pDetails.m_eResult == EResult.k_EResultAccessDenied;
+            cachedDetails.updateTimestamp = MathfEx.Max(pDetails.m_rtimeCreated, pDetails.m_rtimeUpdated);
+            cachedUGCDetails[nPublishedFileId.m_PublishedFileId] = cachedDetails;
+            return queryUGCResult;
+        }
+        UnturnedLog.warn("Unable to get query UGC result for caching");
+        return queryUGCResult;
+    }
+
+    public static bool getCachedDetails(PublishedFileId_t fileId, out CachedUGCDetails cachedDetails)
+    {
+        return cachedUGCDetails.TryGetValue(fileId.m_PublishedFileId, out cachedDetails);
+    }
+
+    public static AssetOrigin FindOrAddOrigin(ulong fileId)
+    {
+        AssetOrigin assetOrigin = Assets.FindOrAddWorkshopFileOrigin(fileId);
+        if (cachedUGCDetails.TryGetValue(fileId, out var value) && !string.IsNullOrEmpty(value.name))
+        {
+            assetOrigin.name = $"Workshop File \"{value.name}\" ({value.fileId})";
+        }
+        return assetOrigin;
+    }
+
+    public static bool isCompatible(PublishedFileId_t fileId, ESteamUGCType type, string dir, out string explanation)
+    {
+        if (!getCachedDetails(fileId, out var cachedDetails))
+        {
+            explanation = null;
+            return true;
+        }
+        if (type switch
+        {
+            ESteamUGCType.MAP => Directory.Exists(dir + "/Bundles"), 
+            ESteamUGCType.LOCALIZATION => false, 
+            _ => true, 
+        })
+        {
+            if (cachedDetails.compatibilityVersion < 2)
+            {
+                explanation = $"Workshop version of \"{cachedDetails.GetTitle()}\" has not yet been updated from Unity 5.5 and cannot be loaded.";
+                return false;
+            }
+            if (cachedDetails.compatibilityVersion > 4)
+            {
+                explanation = $"Workshop version of \"{cachedDetails.GetTitle()}\" has been updated to an unknown future version of Unity and cannot be loaded.";
+                return false;
+            }
+        }
+        explanation = null;
+        return true;
+    }
+
+    public static bool shouldIgnoreFile(PublishedFileId_t fileId, out string explanation)
+    {
+        if (fileId == FRANCE && ReadWrite.fileExists("/Maps/France/Config.json", useCloud: false, usePath: true))
+        {
+            explanation = "non-Workshop version of France is still installed";
+            return true;
+        }
+        explanation = null;
+        return false;
+    }
+
+    private void onCreateItemResult(CreateItemResult_t callback, bool io)
+    {
+        if (callback.m_bUserNeedsToAcceptWorkshopLegalAgreement || callback.m_eResult != EResult.k_EResultOK || io)
+        {
+            if (callback.m_bUserNeedsToAcceptWorkshopLegalAgreement)
+            {
+                Assets.reportError("Failed to create item because you need to accept the workshop legal agreement.");
+            }
+            if (callback.m_eResult != EResult.k_EResultOK)
+            {
+                Assets.reportError("Failed to create item because: " + callback.m_eResult);
+            }
+            if (io)
+            {
+                Assets.reportError("Failed to create item because of an IO issue.");
+            }
+            MenuUI.alert(SDG.Unturned.Provider.localization.format("UGC_Fail"));
+        }
+        else
+        {
+            publishedFileID = callback.m_nPublishedFileId;
+            updateUGC();
+        }
+    }
+
+    private void onSubmitItemUpdateResult(SubmitItemUpdateResult_t callback, bool io)
+    {
+        if (callback.m_bUserNeedsToAcceptWorkshopLegalAgreement || callback.m_eResult != EResult.k_EResultOK || io)
+        {
+            if (callback.m_bUserNeedsToAcceptWorkshopLegalAgreement)
+            {
+                Assets.reportError("Failed to submit update because you need to accept the workshop legal agreement.");
+            }
+            if (callback.m_eResult != EResult.k_EResultOK)
+            {
+                Assets.reportError("Failed to submit update because: " + callback.m_eResult);
+            }
+            if (io)
+            {
+                Assets.reportError("Failed to submit update because of an IO issue.");
+            }
+            MenuUI.alert(SDG.Unturned.Provider.localization.format("UGC_Fail"));
+        }
+        else
+        {
+            MenuUI.alert(SDG.Unturned.Provider.localization.format("UGC_Success"));
+            SDG.Unturned.Provider.provider.workshopService.open(publishedFileID);
+            refreshPublished();
+        }
+    }
+
+    private void onQueryCompleted(SteamUGCQueryCompleted_t callback, bool io)
+    {
+        if (!(callback.m_eResult != EResult.k_EResultOK || io) && callback.m_unNumResultsReturned >= 1)
+        {
+            for (uint num = 0u; num < callback.m_unNumResultsReturned; num++)
+            {
+                SteamUGC.GetQueryUGCResult(ugcRequest, num, out var pDetails);
+                SteamPublished item = new SteamPublished(pDetails.m_rgchTitle, pDetails.m_nPublishedFileId);
+                published.Add(item);
+            }
+            if (onPublishedAdded != null)
+            {
+                onPublishedAdded();
+            }
+            cleanupUGCRequest();
+            shouldRequestAnotherPage = true;
+        }
+    }
+
+    public void update()
+    {
+        if (shouldRequestAnotherPage)
+        {
+            shouldRequestAnotherPage = false;
+            ugcRequestPage++;
+            ugcRequest = SteamUGC.CreateQueryUserUGCRequest(SDG.Unturned.Provider.client.GetAccountID(), EUserUGCList.k_EUserUGCList_Published, EUGCMatchingUGCType.k_EUGCMatchingUGCType_Items, EUserUGCListSortOrder.k_EUserUGCListSortOrder_CreationOrderAsc, SteamUtils.GetAppID(), SteamUtils.GetAppID(), ugcRequestPage);
+            SteamAPICall_t hAPICall = SteamUGC.SendQueryUGCRequest(ugcRequest);
+            queryCompleted.Set(hAPICall);
+        }
+    }
+
+    public void downloadNextItem()
+    {
+        if (installing.Count == 0)
+        {
+            SDG.Unturned.Provider.launch();
+            return;
+        }
+        PublishedFileId_t publishedFileId_t = installing[0];
+        string name;
+        if (getCachedDetails(publishedFileId_t, out var cachedDetails))
+        {
+            name = cachedDetails.GetTitle();
+        }
+        else
+        {
+            PublishedFileId_t publishedFileId_t2 = publishedFileId_t;
+            name = "Unknown ID " + publishedFileId_t2.ToString();
+        }
+        LoadingUI.notifyDownloadProgress(name);
+        SteamUGC.DownloadItem(publishedFileId_t, bHighPriority: true);
+    }
+
+    private void enqueueServerItemDownloadOrInstallFromCache(PublishedFileId_t fileId)
+    {
+        bool flag = isInstalledItemAlreadyRegistered(fileId);
+        ulong punSizeOnDisk;
+        string pchFolder;
+        uint punTimeStamp;
+        if (shouldIgnoreFile(fileId, out var explanation))
+        {
+            UnturnedLog.info("Ignoring server download {0} because '{1}'", fileId, explanation);
+        }
+        else if (SteamUGC.GetItemInstallInfo(fileId, out punSizeOnDisk, out pchFolder, 1024u, out punTimeStamp) && ReadWrite.folderExists(pchFolder, usePath: false))
+        {
+            CachedUGCDetails cachedDetails;
+            if ((SteamUGC.GetItemState(fileId) & 8) == 8)
+            {
+                if (flag)
+                {
+                    UnturnedLog.info($"Server workshop file {fileId} is already loaded, but was flagged as needing update");
+                    return;
+                }
+                UnturnedLog.info("Server workshop item {0} found in cache, but was flagged as needing update", fileId);
+                installing.Add(fileId);
+            }
+            else if (getCachedDetails(fileId, out cachedDetails) && cachedDetails.updateTimestamp > punTimeStamp)
+            {
+                if (flag)
+                {
+                    UnturnedLog.info("Server workshop file {0} is already loaded, but remote ({1}) is newer than local ({2})", fileId, DateTimeEx.FromUtcUnixTimeSeconds(cachedDetails.updateTimestamp).ToLocalTime(), DateTimeEx.FromUtcUnixTimeSeconds(punTimeStamp).ToLocalTime());
+                }
+                else
+                {
+                    UnturnedLog.info("Server workshop item {0} found in cache, but remote ({1}) is newer than local ({2})", fileId, DateTimeEx.FromUtcUnixTimeSeconds(cachedDetails.updateTimestamp).ToLocalTime(), DateTimeEx.FromUtcUnixTimeSeconds(punTimeStamp).ToLocalTime());
+                    installing.Add(fileId);
+                }
+            }
+            else if (!flag)
+            {
+                PublishedFileId_t publishedFileId_t = fileId;
+                UnturnedLog.info("Installing cached server workshop item: " + publishedFileId_t.ToString());
+                installItemDownloadedFromServer(fileId, pchFolder);
+            }
+        }
+        else
+        {
+            installing.Add(fileId);
+        }
+    }
+
+    private void downloadServerItems(List<PublishedFileId_t> itemIDs)
+    {
+        installing = new List<PublishedFileId_t>();
+        foreach (PublishedFileId_t itemID in itemIDs)
+        {
+            enqueueServerItemDownloadOrInstallFromCache(itemID);
+        }
+        if (installing.Count < 1)
+        {
+            UnturnedLog.info("Server has {0} valid workshop item(s), but we already have them installed, launching", itemIDs.Count);
+            SDG.Unturned.Provider.launch();
+        }
+        else
+        {
+            UnturnedLog.info("Server has {0} valid workshop item(s), of which {1} need to be downloaded", itemIDs.Count, installing.Count);
+            installed = installing.Count;
+            downloadNextItem();
+        }
+    }
+
+    private bool testDownloadRestrictions(UGCQueryHandle_t queryHandle, uint resultIndex, uint ip, string itemDisplayText)
+    {
+        if (ip == 0)
+        {
+            return true;
+        }
+        EWorkshopDownloadRestrictionResult restrictionResult = WorkshopDownloadRestrictions.getRestrictionResult(queryHandle, resultIndex, ip);
+        switch (restrictionResult)
+        {
+        case EWorkshopDownloadRestrictionResult.NoRestrictions:
+            return true;
+        case EWorkshopDownloadRestrictionResult.NotWhitelisted:
+            UnturnedLog.warn("Server is not authorized in the IP whitelist for " + itemDisplayText);
+            return false;
+        case EWorkshopDownloadRestrictionResult.Blacklisted:
+            UnturnedLog.warn("Server is blocked in IP blacklist from downloading " + itemDisplayText);
+            return false;
+        case EWorkshopDownloadRestrictionResult.Allowed:
+            UnturnedLog.info("Server is authorized to download " + itemDisplayText);
+            return true;
+        case EWorkshopDownloadRestrictionResult.Banned:
+            UnturnedLog.warn("Workshop file is banned " + itemDisplayText);
+            return false;
+        case EWorkshopDownloadRestrictionResult.PrivateVisibility:
+            UnturnedLog.warn("Workshop file is private " + itemDisplayText);
+            return false;
+        default:
+            UnturnedLog.warn("Unknown restriction result '{0}' for '{1}'", restrictionResult, itemDisplayText);
+            return true;
+        }
+    }
+
+    private void handleServerItemsQuerySuccess(SteamUGCQueryCompleted_t callback)
+    {
+        string iPFromUInt = Parser.getIPFromUInt32(serverDownloadIP);
+        UnturnedLog.info("Server's allowed IP for Workshop downloads: " + iPFromUInt);
+        serverPendingIDs = new List<PublishedFileId_t>((int)callback.m_unNumResultsReturned);
+        for (uint num = 0u; num < callback.m_unNumResultsReturned; num++)
+        {
+            cacheDetails(callback.m_handle, num, out var cachedDetails);
+            if (testDownloadRestrictions(callback.m_handle, num, serverDownloadIP, cachedDetails.GetTitle()))
+            {
+                serverPendingIDs.Add(cachedDetails.fileId);
+            }
+            else
+            {
+                serverInvalidItemsCount++;
+            }
+        }
+        downloadServerItems(serverPendingIDs);
+    }
+
+    private void handleServerItemsQueryFailed()
+    {
+        downloadServerItems(serverPendingIDs);
+    }
+
+    private void onServerItemsQueryCompleted(SteamUGCQueryCompleted_t callback, bool ioFailure)
+    {
+        if (!(callback.m_handle != serverItemsQueryHandle))
+        {
+            if (ioFailure)
+            {
+                UnturnedLog.error("IO error querying workshop for server items!");
+                handleServerItemsQueryFailed();
+            }
+            else if (callback.m_eResult == EResult.k_EResultOK)
+            {
+                handleServerItemsQuerySuccess(callback);
+            }
+            else
+            {
+                UnturnedLog.error("Error querying workshop for server items: " + callback.m_eResult);
+                handleServerItemsQueryFailed();
+            }
+            SteamUGC.ReleaseQueryUGCRequest(serverItemsQueryHandle);
+            serverItemsQueryHandle = UGCQueryHandle_t.Invalid;
+        }
+    }
+
+    public void resetServerInvalidItems()
+    {
+        serverPendingIDs = null;
+        serverInvalidItemsCount = 0;
+    }
+
+    public void queryServerWorkshopItems(List<PublishedFileId_t> fileIDs, uint serverIP)
+    {
+        serverPendingIDs = fileIDs;
+        serverDownloadIP = serverIP;
+        serverItemsQueryHandle = SteamUGC.CreateQueryUGCDetailsRequest(fileIDs.ToArray(), (uint)fileIDs.Count);
+        SteamUGC.SetReturnKeyValueTags(serverItemsQueryHandle, bReturnKeyValueTags: true);
+        SteamUGC.SetAllowCachedResponse(serverItemsQueryHandle, 60u);
+        SteamAPICall_t hAPICall = SteamUGC.SendQueryUGCRequest(serverItemsQueryHandle);
+        serverItemsQueryCompleted.Set(hAPICall);
+    }
+
+    private void installItemDownloadedFromServer(PublishedFileId_t fileId, string path)
+    {
+        if (WorkshopTool.detectUGCMetaType(path, usePath: false, out var outType))
+        {
+            ugc.Add(new SteamContent(fileId, path, outType));
+            switch (outType)
+            {
+            case ESteamUGCType.MAP:
+                WorkshopTool.loadMapBundlesAndContent(path, fileId.m_PublishedFileId);
+                break;
+            default:
+                Assets.load(path, FindOrAddOrigin(fileId.m_PublishedFileId), overrideExistingIDs: true);
+                break;
+            case ESteamUGCType.LOCALIZATION:
+                break;
+            }
+            Assets.linkSpawnsIfDirty();
+        }
+        else
+        {
+            PublishedFileId_t publishedFileId_t = fileId;
+            UnturnedLog.warn("Unable to determine UGC type for downloaded item: " + publishedFileId_t.ToString());
+        }
+    }
+
+    private void onItemDownloaded(DownloadItemResult_t callback)
+    {
+        if (installing == null || installing.Count == 0 || callback.m_unAppID.m_AppId != appInfo.id)
+        {
+            return;
+        }
+        PublishedFileId_t nPublishedFileId = callback.m_nPublishedFileId;
+        UnturnedLog.info("Workshop item downloaded: " + nPublishedFileId.ToString());
+        installing.Remove(callback.m_nPublishedFileId);
+        LoadingUI.updateProgress((float)(installed - installing.Count) / (float)installed);
+        if (callback.m_eResult == EResult.k_EResultOK)
+        {
+            string explanation;
+            ulong punSizeOnDisk;
+            string pchFolder;
+            uint punTimeStamp;
+            if (isInstalledItemAlreadyRegistered(callback.m_nPublishedFileId))
+            {
+                UnturnedLog.warn("Already registered newly downloaded workshop item '{0}', so ignoring this callback", callback.m_nPublishedFileId);
+            }
+            else if (shouldIgnoreFile(callback.m_nPublishedFileId, out explanation))
+            {
+                UnturnedLog.info("Ignoring newly downloaded workshop item {0} because '{1}'", callback.m_nPublishedFileId, explanation);
+            }
+            else if (SteamUGC.GetItemInstallInfo(callback.m_nPublishedFileId, out punSizeOnDisk, out pchFolder, 1024u, out punTimeStamp))
+            {
+                if (ReadWrite.folderExists(pchFolder, usePath: false))
+                {
+                    installItemDownloadedFromServer(callback.m_nPublishedFileId, pchFolder);
+                }
+                else
+                {
+                    UnturnedLog.warn("Finished downloading workshop item {0}, but unable to find the files on disk ({1})", callback.m_nPublishedFileId, pchFolder);
+                }
+            }
+            else
+            {
+                UnturnedLog.warn("Finished downloading workshop item {0}, but unable get install info", callback.m_nPublishedFileId);
+            }
+        }
+        else
+        {
+            UnturnedLog.warn("Download workshop item {0} failed, result: {1}", callback.m_nPublishedFileId, callback.m_eResult);
+        }
+        downloadNextItem();
+    }
+
+    private void onItemInstalled(ItemInstalled_t callback)
+    {
+        if (callback.m_unAppID.m_AppId != appInfo.id)
+        {
+            return;
+        }
+        PublishedFileId_t nPublishedFileId = callback.m_nPublishedFileId;
+        UnturnedLog.info("Workshop item installed: " + nPublishedFileId.ToString());
+        if (isInstalledItemAlreadyRegistered(callback.m_nPublishedFileId))
+        {
+            UnturnedLog.warn("Already registered newly installed workshop item '{0}', so ignoring this callback", callback.m_nPublishedFileId);
+            return;
+        }
+        if (shouldIgnoreFile(callback.m_nPublishedFileId, out var explanation))
+        {
+            UnturnedLog.info("Ignoring newly installed workshop item because '{0}'", explanation);
+            return;
+        }
+        if (!getInstalledItemPath(callback.m_nPublishedFileId, out var path))
+        {
+            UnturnedLog.warn("Unable to determine newly installed workshop item '{0}' file path", callback.m_nPublishedFileId);
+            return;
+        }
+        if (!WorkshopTool.detectUGCMetaType(path, usePath: false, out var outType))
+        {
+            UnturnedLog.warn("Unable to determine newly installed workshop item '{0}' type", callback.m_nPublishedFileId);
+            return;
+        }
+        ugc.Add(new SteamContent(callback.m_nPublishedFileId, path, outType));
+        if (!((outType == ESteamUGCType.MAP) ? Assets.hasLoadedMaps : Assets.hasLoadedUgc))
+        {
+            UnturnedLog.info("Deferring loading of {0}'s assets", callback.m_nPublishedFileId);
+            return;
+        }
+        switch (outType)
+        {
+        case ESteamUGCType.MAP:
+            WorkshopTool.loadMapBundlesAndContent(path, callback.m_nPublishedFileId.m_PublishedFileId);
+            Level.broadcastLevelsRefreshed();
+            break;
+        default:
+            Assets.load(path, FindOrAddOrigin(callback.m_nPublishedFileId.m_PublishedFileId), overrideExistingIDs: true);
+            break;
+        case ESteamUGCType.LOCALIZATION:
+            break;
+        }
+        Assets.linkSpawnsIfDirty();
+    }
+
+    private void cleanupUGCRequest()
+    {
+        if (!(ugcRequest == UGCQueryHandle_t.Invalid))
+        {
+            SteamUGC.ReleaseQueryUGCRequest(ugcRequest);
+            ugcRequest = UGCQueryHandle_t.Invalid;
+        }
+    }
+
+    public void prepareUGC(string name, string description, string path, string preview, string change, ESteamUGCType type, string tag, string allowedIPs, ESteamUGCVisibility visibility)
+    {
+        bool verified = File.Exists(path + "/Skin.kvt");
+        prepareUGC(name, description, path, preview, change, type, tag, allowedIPs, visibility, verified);
+    }
+
+    public void prepareUGC(string name, string description, string path, string preview, string change, ESteamUGCType type, string tag, string allowedIPs, ESteamUGCVisibility visibility, bool verified)
+    {
+        ugcName = name;
+        ugcDescription = description;
+        ugcPath = path;
+        ugcPreview = preview;
+        ugcChange = change;
+        ugcType = type;
+        ugcTag = tag;
+        ugcAllowedIPs = allowedIPs;
+        ugcVisibility = visibility;
+        ugcVerified = verified;
+    }
+
+    public void prepareUGC(PublishedFileId_t id)
+    {
+        publishedFileID = id;
+    }
+
+    public void createUGC(bool ugcFor)
+    {
+        SteamAPICall_t hAPICall = SteamUGC.CreateItem(SteamUtils.GetAppID(), ugcFor ? EWorkshopFileType.k_EWorkshopFileTypeMicrotransaction : EWorkshopFileType.k_EWorkshopFileTypeFirst);
+        createItemResult.Set(hAPICall);
+    }
+
+    public void updateUGC()
+    {
+        UGCUpdateHandle_t uGCUpdateHandle_t = SteamUGC.StartItemUpdate(SteamUtils.GetAppID(), publishedFileID);
+        if (ugcType == ESteamUGCType.MAP)
+        {
+            ReadWrite.writeBytes(ugcPath + "/Map.meta", useCloud: false, usePath: false, new byte[1]);
+        }
+        else if (ugcType == ESteamUGCType.LOCALIZATION)
+        {
+            ReadWrite.writeBytes(ugcPath + "/Localization.meta", useCloud: false, usePath: false, new byte[1]);
+        }
+        else if (ugcType == ESteamUGCType.OBJECT)
+        {
+            ReadWrite.writeBytes(ugcPath + "/Object.meta", useCloud: false, usePath: false, new byte[1]);
+        }
+        else if (ugcType == ESteamUGCType.ITEM)
+        {
+            ReadWrite.writeBytes(ugcPath + "/Item.meta", useCloud: false, usePath: false, new byte[1]);
+        }
+        else if (ugcType == ESteamUGCType.VEHICLE)
+        {
+            ReadWrite.writeBytes(ugcPath + "/Vehicle.meta", useCloud: false, usePath: false, new byte[1]);
+        }
+        else if (ugcType == ESteamUGCType.SKIN)
+        {
+            ReadWrite.writeBytes(ugcPath + "/Skin.meta", useCloud: false, usePath: false, new byte[1]);
+        }
+        SteamUGC.SetItemContent(uGCUpdateHandle_t, ugcPath);
+        if (ugcDescription.Length > 0)
+        {
+            SteamUGC.SetItemDescription(uGCUpdateHandle_t, ugcDescription);
+        }
+        if (ugcPreview.Length > 0)
+        {
+            SteamUGC.SetItemPreview(uGCUpdateHandle_t, ugcPreview);
+        }
+        List<string> list = new List<string>();
+        if (ugcType == ESteamUGCType.MAP)
+        {
+            list.Add("Map");
+        }
+        else if (ugcType == ESteamUGCType.LOCALIZATION)
+        {
+            list.Add("Localization");
+        }
+        else if (ugcType == ESteamUGCType.OBJECT)
+        {
+            list.Add("Object");
+        }
+        else if (ugcType == ESteamUGCType.ITEM)
+        {
+            list.Add("Item");
+        }
+        else if (ugcType == ESteamUGCType.VEHICLE)
+        {
+            list.Add("Vehicle");
+        }
+        else if (ugcType == ESteamUGCType.SKIN)
+        {
+            list.Add("Skin");
+        }
+        if (ugcTag != null && ugcTag.Length > 0)
+        {
+            list.Add(ugcTag);
+        }
+        if (ugcVerified)
+        {
+            list.Add("Verified");
+        }
+        SteamUGC.SetItemTags(uGCUpdateHandle_t, list.ToArray());
+        if (ugcName.Length > 0)
+        {
+            SteamUGC.SetItemTitle(uGCUpdateHandle_t, ugcName);
+        }
+        SteamUGC.RemoveItemKeyValueTags(uGCUpdateHandle_t, WorkshopDownloadRestrictions.IP_RESTRICTIONS_KVTAG);
+        if (!string.IsNullOrEmpty(ugcAllowedIPs))
+        {
+            SteamUGC.AddItemKeyValueTag(uGCUpdateHandle_t, WorkshopDownloadRestrictions.IP_RESTRICTIONS_KVTAG, ugcAllowedIPs);
+        }
+        SteamUGC.RemoveItemKeyValueTags(uGCUpdateHandle_t, COMPATIBILITY_VERSION_KVTAG);
+        SteamUGC.AddItemKeyValueTag(uGCUpdateHandle_t, COMPATIBILITY_VERSION_KVTAG, 4.ToString());
+        if (ugcVisibility == ESteamUGCVisibility.PUBLIC)
+        {
+            SteamUGC.SetItemVisibility(uGCUpdateHandle_t, ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityPublic);
+        }
+        else if (ugcVisibility == ESteamUGCVisibility.FRIENDS_ONLY)
+        {
+            SteamUGC.SetItemVisibility(uGCUpdateHandle_t, ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityFriendsOnly);
+        }
+        else if (ugcVisibility == ESteamUGCVisibility.PRIVATE)
+        {
+            SteamUGC.SetItemVisibility(uGCUpdateHandle_t, ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityPrivate);
+        }
+        else if (ugcVisibility == ESteamUGCVisibility.UNLISTED)
+        {
+            SteamUGC.SetItemVisibility(uGCUpdateHandle_t, ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityUnlisted);
+        }
+        SteamAPICall_t hAPICall = SteamUGC.SubmitItemUpdate(uGCUpdateHandle_t, ugcChange);
+        submitItemUpdateResult.Set(hAPICall);
+    }
+
+    private bool isInstalledItemAlreadyRegistered(PublishedFileId_t fileId)
+    {
+        foreach (SteamContent item in ugc)
+        {
+            if (item.publishedFileID == fileId)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private bool getInstalledItemPath(PublishedFileId_t fileId, out string path)
+    {
+        EItemState itemState = (EItemState)SteamUGC.GetItemState(fileId);
+        if ((itemState & EItemState.k_EItemStateInstalled) != EItemState.k_EItemStateInstalled)
+        {
+            UnturnedLog.warn("Installed item {0} state flags missing k_EItemStateInstalled: {1}", fileId, itemState);
+        }
+        if (SteamUGC.GetItemInstallInfo(fileId, out var _, out path, 1024u, out var _))
+        {
+            return ReadWrite.folderExists(path, usePath: false);
+        }
+        return false;
+    }
+
+    private void registerInstalledItem(PublishedFileId_t fileId)
+    {
+        if (!isInstalledItemAlreadyRegistered(fileId))
+        {
+            string path;
+            ESteamUGCType outType;
+            string explanation2;
+            if (shouldIgnoreFile(fileId, out var explanation))
+            {
+                UnturnedLog.info("Ignoring subscribed item {0} because '{1}'", fileId, explanation);
+            }
+            else if (!getInstalledItemPath(fileId, out path))
+            {
+                UnturnedLog.warn("Unable to register installed item during startup: {0}\nPath:{1}", fileId, path);
+            }
+            else if (!WorkshopTool.detectUGCMetaType(path, usePath: false, out outType))
+            {
+                PublishedFileId_t publishedFileId_t = fileId;
+                UnturnedLog.warn("Unable to determine UGC type for installed item: " + publishedFileId_t.ToString());
+            }
+            else if (isCompatible(fileId, outType, path, out explanation2))
+            {
+                ugc.Add(new SteamContent(fileId, path, outType));
+            }
+            else
+            {
+                Assets.reportError(explanation2);
+            }
+        }
+    }
+
+    private void handleSubscribedItemsCallbackSuccess(SteamUGCQueryCompleted_t callback)
+    {
+        for (uint num = 0u; num < callback.m_unNumResultsReturned; num++)
+        {
+            if (cacheDetails(callback.m_handle, num, out var cachedDetails))
+            {
+                registerInstalledItem(cachedDetails.fileId);
+            }
+        }
+    }
+
+    private void handleSubscribedItemsCallbackFailed()
+    {
+        UnturnedLog.info("Registering {0} locally subscribed item(s)", locallySubscribedFileIds.Length);
+        PublishedFileId_t[] array = locallySubscribedFileIds;
+        foreach (PublishedFileId_t fileId in array)
+        {
+            registerInstalledItem(fileId);
+        }
+    }
+
+    private void registerLocalizations()
+    {
+        PublishedFileId_t[] array = locallySubscribedFileIds;
+        foreach (PublishedFileId_t fileId in array)
+        {
+            if (getInstalledItemPath(fileId, out var path) && WorkshopTool.detectUGCMetaType(path, usePath: false, out var outType) && outType == ESteamUGCType.LOCALIZATION)
+            {
+                registerInstalledItem(fileId);
+            }
+        }
+    }
+
+    private void onSubscribedQueryCompleted(SteamUGCQueryCompleted_t callback, bool ioFailure)
+    {
+        if (callback.m_handle != subscribedQueryHandle)
+        {
+            return;
+        }
+        if (!ioFailure)
+        {
+            if (callback.m_eResult == EResult.k_EResultOK)
+            {
+                handleSubscribedItemsCallbackSuccess(callback);
+            }
+            else
+            {
+                UnturnedLog.error("Encountered an error when querying workshop for subscribed items: " + callback.m_eResult);
+                handleSubscribedItemsCallbackFailed();
+            }
+        }
+        else
+        {
+            UnturnedLog.error("Encountered an IO error when querying workshop for subscribed items!");
+            handleSubscribedItemsCallbackFailed();
+        }
+        SteamUGC.ReleaseQueryUGCRequest(subscribedQueryHandle);
+        subscribedQueryHandle = UGCQueryHandle_t.Invalid;
+    }
+
+    public void refreshUGC()
+    {
+        _ugc = new List<SteamContent>();
+        uint numSubscribedItems = SteamUGC.GetNumSubscribedItems();
+        if (numSubscribedItems >= 1)
+        {
+            if ((bool)shouldIgnoreSubscribedItems)
+            {
+                UnturnedLog.info("Ignoring all workshop file subscriptions");
+                return;
+            }
+            locallySubscribedFileIds = new PublishedFileId_t[numSubscribedItems];
+            SteamUGC.GetSubscribedItems(locallySubscribedFileIds, numSubscribedItems);
+            registerLocalizations();
+            subscribedQueryHandle = SteamUGC.CreateQueryUGCDetailsRequest(locallySubscribedFileIds, numSubscribedItems);
+            SteamUGC.SetReturnKeyValueTags(subscribedQueryHandle, bReturnKeyValueTags: true);
+            SteamAPICall_t hAPICall = SteamUGC.SendQueryUGCRequest(subscribedQueryHandle);
+            subscribedQueryCompleted.Set(hAPICall);
+        }
+    }
+
+    public void refreshPublished()
+    {
+        if (onPublishedRemoved != null)
+        {
+            onPublishedRemoved();
+        }
+        cleanupUGCRequest();
+        _published = new List<SteamPublished>();
+        ugcRequestPage = 1u;
+        shouldRequestAnotherPage = false;
+        ugcRequest = SteamUGC.CreateQueryUserUGCRequest(SDG.Unturned.Provider.client.GetAccountID(), EUserUGCList.k_EUserUGCList_Published, EUGCMatchingUGCType.k_EUGCMatchingUGCType_Items, EUserUGCListSortOrder.k_EUserUGCListSortOrder_CreationOrderAsc, SteamUtils.GetAppID(), SteamUtils.GetAppID(), ugcRequestPage);
+        SteamAPICall_t hAPICall = SteamUGC.SendQueryUGCRequest(ugcRequest);
+        queryCompleted.Set(hAPICall);
+    }
+
+    public bool getSubscribed(ulong fileId)
+    {
+        if (ugc == null)
+        {
+            return false;
+        }
+        PublishedFileId_t publishedFileId_t = new PublishedFileId_t(fileId);
+        if (ingameSubscriptions.TryGetValue(publishedFileId_t, out var value))
+        {
+            return value;
+        }
+        foreach (SteamContent item in ugc)
+        {
+            if (item.publishedFileID == publishedFileId_t)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void gameSubscribed(PublishedFileId_t fileId)
+    {
+        if (!isInstalledItemAlreadyRegistered(fileId))
+        {
+            EItemState itemState = (EItemState)SteamUGC.GetItemState(fileId);
+            if ((itemState & EItemState.k_EItemStateInstalled) == EItemState.k_EItemStateInstalled && (itemState & EItemState.k_EItemStateDownloading) != EItemState.k_EItemStateDownloading && (itemState & EItemState.k_EItemStateDownloadPending) != EItemState.k_EItemStateDownloading)
+            {
+                UnturnedLog.info("Triggering a fake onItemInstalled callback for {0} because game subscribed to a pre-installed item", fileId);
+                ItemInstalled_t callback = default(ItemInstalled_t);
+                callback.m_unAppID.m_AppId = appInfo.id;
+                callback.m_nPublishedFileId = fileId;
+                onItemInstalled(callback);
+            }
+        }
+    }
+
+    public void setSubscribed(ulong fileId, bool subscribe)
+    {
+        PublishedFileId_t publishedFileId_t = new PublishedFileId_t(fileId);
+        if (subscribe)
+        {
+            SteamUGC.SubscribeItem(publishedFileId_t);
+            UnturnedLog.info("Game subscribed to " + fileId);
+            gameSubscribed(publishedFileId_t);
+        }
+        else
+        {
+            SteamUGC.UnsubscribeItem(publishedFileId_t);
+            UnturnedLog.info("Game un-subscribed from " + fileId);
+        }
+        ingameSubscriptions[publishedFileId_t] = subscribe;
+    }
+
+    public TempSteamworksWorkshop(SteamworksAppInfo newAppInfo)
+    {
+        appInfo = newAppInfo;
+        downloaded = new List<PublishedFileId_t>();
+        if (!appInfo.isDedicated)
+        {
+            createItemResult = CallResult<CreateItemResult_t>.Create(onCreateItemResult);
+            submitItemUpdateResult = CallResult<SubmitItemUpdateResult_t>.Create(onSubmitItemUpdateResult);
+            queryCompleted = CallResult<SteamUGCQueryCompleted_t>.Create(onQueryCompleted);
+            itemDownloaded = Callback<DownloadItemResult_t>.Create(onItemDownloaded);
+            itemInstalled = Callback<ItemInstalled_t>.Create(onItemInstalled);
+            subscribedQueryCompleted = CallResult<SteamUGCQueryCompleted_t>.Create(onSubscribedQueryCompleted);
+            serverItemsQueryCompleted = CallResult<SteamUGCQueryCompleted_t>.Create(onServerItemsQueryCompleted);
+        }
+    }
+}

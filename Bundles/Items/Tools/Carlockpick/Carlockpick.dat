@@ -1,0 +1,16 @@
+GUID 1f315672d98f4ebbb9f76255faa43721
+Type Tool
+Rarity Uncommon
+Useable Carlockpick
+ID 1353
+
+Size_X 2
+Size_Y 1
+Size_Z 0.3
+
+Blueprints 1
+Blueprint_0_Type Tool
+Blueprint_0_Supply_0_ID 1353
+Blueprint_0_Product 67
+Blueprint_0_Products 2
+Blueprint_0_Build 27

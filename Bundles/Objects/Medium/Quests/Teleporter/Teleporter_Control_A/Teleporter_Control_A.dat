@@ -1,0 +1,23 @@
+GUID a2bab21f1b5945f98b1aca809bcafd13
+Type Medium
+ID 1039
+
+Interactability Quest
+Interactability_Effect 8
+Interactability_Conditions 3
+Interactability_Condition_0_Type Flag_Short
+Interactability_Condition_0_ID 245
+Interactability_Condition_0_Value 2
+Interactability_Condition_0_Logic Equal
+Interactability_Condition_1_Type Flag_Short
+Interactability_Condition_1_ID 246
+Interactability_Condition_1_Value 2
+Interactability_Condition_1_Logic Equal
+Interactability_Condition_2_Type Flag_Short
+Interactability_Condition_2_ID 247
+Interactability_Condition_2_Value 2
+Interactability_Condition_2_Logic Equal
+Interactability_Rewards 1
+Interactability_Reward_0_Type Event
+Interactability_Reward_0_ID Teleporter_A
+Has_Clip_Prefab false

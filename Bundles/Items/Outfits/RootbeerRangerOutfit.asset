@@ -1,0 +1,28 @@
+"Metadata"
+{
+	"GUID" "46959e86485e400784c0621117feb3c0"
+	"Type" "SDG.Unturned.OutfitAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"Items"
+	[
+		// Holsters (Vest)
+		"f57cd4ba8e444ebbb1322edbef202873"
+
+		// Top
+		"708469b82b4e4273823f0c6fb9b0c687"
+
+		// Bottom
+		"cac0042b349b4d8498e9a6cb2477a197"
+
+		// Breather (Mask)
+		"418bc47da8fa4c64a1651cf4e2d48663"
+
+		// Hat
+		"c34eeed69c6f45a89e0bdba9189aa828"
+
+		// Rocket (Backpack)
+		"9296305154654b8099db43c226a70553"
+	]
+}

@@ -1,0 +1,30 @@
+GUID 0ae33482890d41b0b6af10e628f296ca
+Type Medium
+ID 852
+
+Conditions 3
+Condition_0_Type Flag_Bool
+Condition_0_ID 202
+Condition_0_Value True
+Condition_0_Logic Equal
+Condition_1_Type Flag_Bool
+Condition_1_ID 216
+Condition_1_Value True
+Condition_1_Logic Equal
+Condition_2_Type Flag_Short
+Condition_2_ID 219
+Condition_2_Value 0
+Condition_2_Logic Equal
+Condition_2_Allow_Unset
+
+Interactability Quest
+Interactability_Effect 6
+Interactability_Rewards 2
+Interactability_Reward_0_Type Flag_Bool
+Interactability_Reward_0_ID 216
+Interactability_Reward_0_Value False
+Interactability_Reward_1_Type Flag_Short
+Interactability_Reward_1_ID 219
+Interactability_Reward_1_Value 1
+Interactability_Reward_1_Modification Increment
+Has_Clip_Prefab false

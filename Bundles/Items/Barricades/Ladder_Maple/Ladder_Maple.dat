@@ -1,0 +1,26 @@
+GUID da3509f76b8242f881fc0f5ce6925350
+Type Barricade
+Rarity Uncommon
+Useable Barricade
+Build Ladder
+ID 325
+
+Size_X 1
+Size_Y 2
+Size_Z 0.65
+
+Health 300
+Range 4
+Offset 0.125
+
+Explosion 19
+
+Blueprints 1
+Blueprint_0_Type Barricade
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 40
+Blueprint_0_Supply_0_Amount 6
+Blueprint_0_Supply_1_ID 69
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

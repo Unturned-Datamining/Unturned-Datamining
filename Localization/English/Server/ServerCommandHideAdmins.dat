@@ -1,0 +1,7 @@
+RunningErrorText Failed to hide admins while running.
+
+HideAdminsCommandText Hide_Admins
+HideAdminsInfoText Hide_Admins
+HideAdminsHelpText This hides the visibility of admin labels from players.
+
+HideAdminsText Successfully hid admins.

@@ -1,0 +1,17 @@
+GUID e6e993409f2449649bdef8f306b01ad1
+Type Small
+ID 933
+
+Conditions 1
+Condition_0_Type Flag_Bool
+Condition_0_ID 237
+Condition_0_Value False
+Condition_0_Logic Equal
+
+Interactability Quest
+Interactability_Effect 7
+Interactability_Rewards 1
+Interactability_Reward_0_Type Flag_Bool
+Interactability_Reward_0_ID 237
+Interactability_Reward_0_Value True
+Has_Clip_Prefab false

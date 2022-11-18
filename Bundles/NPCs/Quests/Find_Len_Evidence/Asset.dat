@@ -1,0 +1,36 @@
+GUID af84cde97a8f4b6ebd278b2bba14636c
+Type Quest
+ID 180
+
+Conditions 5
+Condition_0_Type Flag_Bool
+Condition_0_ID 181
+Condition_0_Value True
+Condition_0_Logic Equal
+Condition_1_Type Flag_Bool
+Condition_1_ID 182
+Condition_1_Value True
+Condition_1_Logic Equal
+Condition_2_Type Flag_Bool
+Condition_2_ID 183
+Condition_2_Value True
+Condition_2_Logic Equal
+Condition_3_Type Flag_Bool
+Condition_3_ID 184
+Condition_3_Value True
+Condition_3_Logic Equal
+Condition_4_Type Flag_Bool
+Condition_4_ID 190
+Condition_4_Value True
+Condition_4_Logic Equal
+
+Rewards 3
+Reward_0_Type Experience
+Reward_0_Value 50
+Reward_1_Type Reputation
+Reward_1_Value 10
+// Coalition quests completed
+Reward_2_Type Flag_Short
+Reward_2_ID 13
+Reward_2_Value 1
+Reward_2_Modification Increment

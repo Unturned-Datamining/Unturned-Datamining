@@ -1,0 +1,32 @@
+GUID 97b6fb7f9cfa4837a0a49c4efc7d8e8f
+Type Trap
+Rarity Epic
+Useable Barricade
+Build Spike
+ID 1119
+
+Size_X 2
+Size_Y 1
+Size_Z 0.2
+
+Health 325
+Range 4
+Radius 1.5
+Offset 1.65
+
+Player_Damage 50
+Zombie_Damage 100
+Animal_Damage 100
+
+Explosion 36
+Unrepairable
+
+Blueprints 1
+Blueprint_0_Type Barricade
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 67
+Blueprint_0_Supply_0_Amount 2
+Blueprint_0_Supply_1_ID 386
+Blueprint_0_Supply_1_Amount 5
+Blueprint_0_Build 27
+Has_Clip_Prefab false

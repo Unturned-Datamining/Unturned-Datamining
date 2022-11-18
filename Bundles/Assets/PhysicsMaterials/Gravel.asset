@@ -1,0 +1,26 @@
+"Metadata"
+{
+	"GUID" "33650ff924b34f8d9c5a0fd97418cd3e"
+	"Type" "SDG.Unturned.PhysicsMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"UnityNames"
+	[
+		"Gravel"
+		"Gravel_Static"
+		"Gravel_Dynamic"
+	]
+	"AudioDefs"
+	{
+		"BipedLand" "Effects/Physics/BipedLand/Gravel/BipedLand_Gravel.asset"
+		"FootstepWalk" "Effects/Physics/Footstep/Gravel_Walk/Footstep_Gravel_Walk.asset"
+		"FootstepRun" "Effects/Physics/Footstep/Gravel_Run/Footstep_Gravel_Run.asset"
+		"BulletCasingBounce" "Effects/Physics/BulletCasingBounce/Gravel/BulletCasingBounce_Gravel.asset"
+		"ShotgunShellBounce" "Effects/Physics/ShotgunShellBounce/Gravel/ShotgunShellBounce_Gravel.asset"
+		"BulletImpact" "Effects/Physics/BulletImpact/Gravel/BulletImpact_Gravel.asset"
+		"MeleeImpact" "Effects/Physics/LegacyImpact/LegacyImpact_Rock.asset"
+	}
+	"WipDoNotUseTemp_BulletImpactEffect" "6609639542ab477399023170ae5c60e1" // Gravel_WithDecal_NoAudio
+	"HasOil" "true"
+}

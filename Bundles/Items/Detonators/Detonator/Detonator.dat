@@ -1,0 +1,18 @@
+GUID 8d80a12a6f564850ab2478927648dd7a
+Type Detonator
+Rarity Rare
+Useable Detonator
+ID 1240
+
+Size_X 2
+Size_Y 2
+Size_Z 0.45
+
+Backward
+
+Blueprints 1
+Blueprint_0_Type Tool
+Blueprint_0_Supply_0_ID 1240
+Blueprint_0_Product 67
+Blueprint_0_Products 2
+Blueprint_0_Build 27

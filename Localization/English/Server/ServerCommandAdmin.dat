@@ -1,0 +1,8 @@
+NoPlayerErrorText Failed to find anyone called {0}.
+NotRunningErrorText Failed to admin player while not running.
+
+AdminCommandText Admin
+AdminInfoText Admin [SteamID | Player]
+AdminHelpText This adds the specified player to the list of users allowed to use admin commands in the chat.
+
+AdminText Successfully admined {0}!

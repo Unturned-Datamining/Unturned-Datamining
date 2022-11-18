@@ -1,0 +1,21 @@
+GUID 57c15ead4dce46b1ae5503fed72fbc8d
+
+Type Resource
+ID 50
+
+Health 400
+Radius 4
+Scale 0.3
+
+Explosion 165
+Reward_ID 970
+Reward_XP 2
+Reward_Min 6
+Reward_Max 8
+
+BladeID 3
+
+Reset 450
+
+Holiday_Restriction CHRISTMAS
+Has_Clip_Prefab false

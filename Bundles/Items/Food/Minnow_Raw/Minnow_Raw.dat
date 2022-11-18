@@ -1,0 +1,12 @@
+GUID 1b7034184634492c9f78e11b42c651db
+Type Food
+Useable Consumeable
+ID 1347
+
+Size_X 1
+Size_Y 1
+Size_Z 0.25
+
+Food 15
+Virus 15
+ConsumeAudioClip Sounds/EatCrunchy.mp3

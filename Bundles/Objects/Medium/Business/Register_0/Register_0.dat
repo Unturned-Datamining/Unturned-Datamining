@@ -1,0 +1,14 @@
+GUID 84b3a672bc0643d1b12b2b345a88ba46
+Type Medium
+ID 95
+
+Interactability Dropper
+Interactability_Delay 60
+Interactability_Hint Use
+Interactability_Reward_ID 519
+
+Rubble Destroy
+Rubble_Reset 60
+Rubble_Health 1
+Rubble_Effect 81
+Has_Clip_Prefab false

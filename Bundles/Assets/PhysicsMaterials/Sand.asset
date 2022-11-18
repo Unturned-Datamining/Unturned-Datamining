@@ -1,0 +1,22 @@
+"Metadata"
+{
+	"GUID" "50bac8b8bf8648fc88fd012ccd176f17"
+	"Type" "SDG.Unturned.PhysicsMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"UnityNames"
+	[
+		"Sand"
+		"Sand_Static"
+	]
+	"Fallback" "33650ff924b34f8d9c5a0fd97418cd3e" // Gravel
+	"AudioDefs"
+	{
+		"BipedLand" "Effects/Physics/BipedLand/Sand/BipedLand_Sand.asset"
+		"FootstepWalk" "Effects/Physics/Footstep/Sand_Walk/Footstep_Sand_Walk.asset"
+		"FootstepRun" "Effects/Physics/Footstep/Sand_Run/Footstep_Sand_Run.asset"
+		"ShotgunShellBounce" "Effects/Physics/ShotgunShellBounce/Sand/ShotgunShellBounce_Sand.asset"
+	}
+	"HasOil" "true"
+}

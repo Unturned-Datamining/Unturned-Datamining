@@ -1,0 +1,17 @@
+GUID 2c66de826a964b189e34c8e2a56ccb04
+Type Water
+Useable Consumeable
+ID 465
+
+Size_X 1
+Size_Y 1
+Size_Z 0.25
+
+Water 30
+Energy 25
+
+Blueprints 1
+Blueprint_0_Type Repair
+Blueprint_0_Supply_0_ID 392
+Blueprint_0_Supply_0_Amount 1
+Blueprint_0_Build 27

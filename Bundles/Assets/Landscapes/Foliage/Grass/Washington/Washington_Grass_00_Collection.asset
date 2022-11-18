@@ -1,0 +1,58 @@
+"Metadata"
+{
+	"GUID" "8962cb5728a54024bc0bef1e4c82c88d"
+	"Type" "SDG.Framework.Foliage.FoliageInfoCollectionAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"ID" "0"
+	"Foliage"
+	[
+		{
+			"Asset"
+			{
+				"GUID" "8b2753a13459412db99f0ab78de50745"
+			}
+			"Weight" "1"
+		}
+		{
+			"Asset"
+			{
+				"GUID" "e145629762c3442782d40a2fcd15e306"
+			}
+			"Weight" "1"
+		}
+		{
+			"Asset"
+			{
+				// Pine_0
+				"GUID" "8aa687f808e44da4ae4be8ffb5896acc"
+			}
+			"Weight" "1"
+		}
+		{
+			"Asset"
+			{
+				// Pine_1
+				"GUID" "f54ff43a6cc441ce8bf61128b6839327"
+			}
+			"Weight" "1"
+		}
+		{
+			"Asset"
+			{
+				// PEI_Bush_0
+				"GUID" "2f629d32da454ae5987663fe9162f0d2"
+			}
+			"Weight" "1"
+		}
+		{
+			"Asset"
+			{
+				// PEI_Bush_1
+				"GUID" "86716ff0cd9348ed8b9e35929d8401a5"
+			}
+			"Weight" "1"
+		}
+	]
+}

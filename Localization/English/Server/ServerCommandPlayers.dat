@@ -1,0 +1,8 @@
+NoPlayersErrorText Failed to find any players.
+
+PlayersCommandText Players
+PlayersInfoText Players
+PlayersHelpText This shows a list of the current players on the server.
+
+PlayersText Players:
+PlayerIDText PlayerID: {0} Name: {1} Character: {2} Ping: {3}

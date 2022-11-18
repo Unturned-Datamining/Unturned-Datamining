@@ -1,0 +1,16 @@
+GUID 58a47bfe40574416bfb40d013928f9cd
+Type Compass
+Rarity Epic
+ID 1508
+
+Size_X 1
+Size_Y 1
+Size_Z 0.3
+
+Enables_Compass
+
+Blueprints 1
+Blueprint_0_Type Tool
+Blueprint_0_Supply_0_ID 1508
+Blueprint_0_Product 67
+Blueprint_0_Build 27

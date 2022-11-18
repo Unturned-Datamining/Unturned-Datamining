@@ -1,0 +1,35 @@
+GUID fa9b283859034fdbbd71078bb5a0d375
+Type Trap
+Rarity Rare
+Useable Barricade
+Build Spike
+ID 1113
+
+Size_X 2
+Size_Y 1
+Size_Z 0.275
+
+Health 1
+Range 4
+Radius 0.05
+Offset 0.075
+
+Player_Damage 10
+Zombie_Damage 175
+Animal_Damage 175
+
+Broken
+
+Explosion 36
+Vulnerable
+Unrepairable
+
+Blueprints 1
+Blueprint_0_Type Barricade
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 67
+Blueprint_0_Supply_0_Amount 5
+Blueprint_0_Supply_1_ID 65
+Blueprint_0_Supply_1_Amount 2
+Blueprint_0_Build 27
+Has_Clip_Prefab false

@@ -1,0 +1,20 @@
+GUID 7b5cb886f6064f95afdee2fd11615042
+Type Medium
+ID 200
+
+Soft
+Snowshoe
+Chart Ground
+
+Holiday_Restriction CHRISTMAS
+Bundle_Override_Path /Objects/Medium/Overgrowth/Snow_0
+
+Interactability Dropper
+Interactability_Delay 333
+Interactability_Hint Use
+Interactability_Reward_ID 960
+
+// References landscape texture.
+Ignore_TexRW
+
+Has_Clip_Prefab false

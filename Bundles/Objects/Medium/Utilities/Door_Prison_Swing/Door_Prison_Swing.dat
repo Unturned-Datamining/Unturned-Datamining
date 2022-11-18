@@ -1,0 +1,15 @@
+GUID 91fc8b78e13144498eb20b024efe5390
+Type Medium
+ID 1016
+
+Interactability_Conditions 1
+Interactability_Condition_0_Type Flag_Bool
+Interactability_Condition_0_ID 243
+Interactability_Condition_0_Value True
+Interactability_Condition_0_Logic Equal
+
+Interactability Binary_State
+Interactability_Delay 1
+Interactability_Hint Door
+Interactability_Nav Off
+Has_Clip_Prefab false

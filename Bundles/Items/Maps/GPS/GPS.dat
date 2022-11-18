@@ -1,0 +1,16 @@
+GUID 52bc64a1c32b4b45a0c66e98c25dcbf7
+Type Map
+Rarity Epic
+ID 1176
+
+Size_X 1
+Size_Y 1
+Size_Z 0.475
+
+Enables_Map
+
+Blueprints 1
+Blueprint_0_Type Tool
+Blueprint_0_Supply_0_ID 1176
+Blueprint_0_Product 67
+Blueprint_0_Build 27

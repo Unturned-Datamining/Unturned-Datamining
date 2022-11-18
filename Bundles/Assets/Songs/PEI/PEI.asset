@@ -1,0 +1,15 @@
+"Metadata"
+{
+	"GUID" "d7dbfca63ee246ddbd23b0525b904001"
+	"Type" "SDG.Unturned.StereoSongAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"Song"
+	{
+		"MasterBundle" "core.masterbundle"
+		"AssetPath" "Music/PEI_Loop.ogg"
+	}
+	"Link_URL" "https://www.youtube.com/watch?v=Rxki2vxbAEA"
+	"Is_Loop" "true"
+}

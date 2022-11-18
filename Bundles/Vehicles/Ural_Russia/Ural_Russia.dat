@@ -1,0 +1,32 @@
+GUID 49a10ef544d147bea665c2bf412d86d8
+Type Vehicle
+Rarity Rare
+ID 136
+
+Speed_Min -6
+Speed_Max 14.5
+
+Steer_Min 24
+Steer_Max 48
+
+Brake 32
+
+Fuel_Min 200
+Fuel_Max 400
+Fuel 2500
+
+Health_Min 500
+Health_Max 600
+Health 700
+
+Traction
+
+Trunk_Storage_X 6
+Trunk_Storage_Y 5
+
+Explosion 20
+Tires_Invulnerable
+
+IgnitionAudioClip Sounds/CarIgnition.mp3
+HornAudioClip Sounds/CarHorn_03.mp3
+Has_Clip_Prefab false

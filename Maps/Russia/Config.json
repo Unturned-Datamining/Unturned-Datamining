@@ -1,0 +1,36 @@
+{
+	"Creators":
+	[
+
+	],
+	"Collaborators":
+	[
+		"Justin \"Gamez2much\" Morton",
+		"Mitch \"Sketches\" Wheaton"
+	],
+	"Thanks":
+	[
+		"Alex \"Rainz2much\" Stoyanov",
+		"Amanda \"Mooki2much\" Hubler"
+	],
+	"Item": 21022,
+	"Use_Legacy_Ground": false,
+	"Has_Discord_Rich_Presence": true,
+	"Allow_Holiday_Redirects": true,
+	"Category": "Official",
+	"Visible_In_Matchmaking": true,
+	"Should_Verify_Objects_Hash": true,
+	"Trains":
+	[
+		{
+			"VehicleID": 186,
+			"RoadIndex": 3
+		}
+	],
+	"Version": "3.22.1.2",
+	"Use_Underground_Whitelist": true,
+	"Asset":
+	{
+		"GUID": "341a12e4ec1d424ca56876b4e9a722ac"
+	}
+}

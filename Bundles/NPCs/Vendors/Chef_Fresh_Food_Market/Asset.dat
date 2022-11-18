@@ -1,0 +1,79 @@
+GUID 438b0afe75ff4a94822a9ff02e7cdc6f
+Type Vendor
+ID 63
+
+Buying 15
+// MRE
+Buying_0_ID 81
+Buying_0_Cost 50
+// Raw bass
+Buying_1_ID 1351
+Buying_1_Cost 40
+// Raw beef
+Buying_2_ID 1120
+Buying_2_Cost 30
+// Canned bacon
+Buying_3_ID 88
+Buying_3_Cost 30
+// Canned beans
+Buying_4_ID 13
+Buying_4_Cost 30
+// Canned beef
+Buying_5_ID 89
+Buying_5_Cost 30
+// Canned ham
+Buying_6_ID 469
+Buying_6_Cost 30
+// Canned pasta
+Buying_7_ID 87
+Buying_7_Cost 30
+// Canned sardines
+Buying_8_ID 90
+Buying_8_Cost 10
+// Canned chicken
+Buying_9_ID 78
+Buying_9_Cost 30
+// Canned tomato soup
+Buying_10_ID 77
+Buying_10_Cost 30
+// Canned tuna
+Buying_11_ID 79
+Buying_11_Cost 30
+// Raw pork
+Buying_12_ID 1117
+Buying_12_Cost 30
+// Raw salmon
+Buying_13_ID 505
+Buying_13_Cost 30
+// Raw vension
+Buying_14_ID 514
+Buying_14_Cost 40
+
+Selling 9
+// Maple syrup
+Selling_0_ID 1159
+Selling_0_Cost 85
+// Dough
+Selling_1_ID 1162
+Selling_1_Cost 65
+// Apple juice
+Selling_2_ID 91
+Selling_2_Cost 50
+// Grape juice
+Selling_3_ID 92
+Selling_3_Cost 50
+// Chips
+Selling_4_ID 82
+Selling_4_Cost 65
+// Chocolate bar
+Selling_5_ID 83
+Selling_5_Cost 50
+// Candy bar
+Selling_6_ID 84
+Selling_6_Cost 50
+// Granola bar
+Selling_7_ID 85
+Selling_7_Cost 65
+// Energy bar
+Selling_8_ID 86
+Selling_8_Cost 65

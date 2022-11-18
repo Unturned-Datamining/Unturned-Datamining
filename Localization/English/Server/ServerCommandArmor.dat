@@ -1,0 +1,8 @@
+InvalidParameterErrorText Failed to find parameters in format [Barricade Multiplier]/[Structure Multiplier].
+InvalidNumberErrorText Failed to convert {0} into a number.
+
+ArmorCommandText Armor
+ArmorInfoText Armor [Barricade Multiplier]/[Structure Multiplier]
+ArmorHelpText This assigns the barricade and structure damage multiplier where 0 is no damage, 0.5 is 50% damage and 1 is 100%. 
+
+ArmorText Successfully set armor!

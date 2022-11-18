@@ -1,0 +1,29 @@
+GUID ba3d3b4781144a93a7cf061ccda3d7c7
+Type Barricade
+Rarity Rare
+Useable Barricade
+Build Barricade
+ID 1227
+
+Size_X 1
+Size_Y 1
+Size_Z 0.25
+
+Health 250
+Range 4
+Radius 0.4
+Offset 0.5
+
+Explosion 35
+
+Blueprints 1
+Blueprint_0_Type Barricade
+Blueprint_0_Supply_0_ID 285
+Blueprint_0_Supply_0_Amount 7
+Blueprint_0_Tool 76
+Blueprint_0_Build 27
+
+Armor_Tier High
+
+PlacementAudioClip Sounds/MetalPlacement.mp3
+Has_Clip_Prefab false

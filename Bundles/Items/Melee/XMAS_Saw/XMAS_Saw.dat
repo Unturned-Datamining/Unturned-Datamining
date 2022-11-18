@@ -1,0 +1,58 @@
+GUID 36c6f16c5d4e4890bcaa8f7b8b253e47
+
+Type Melee
+Rarity Epic
+Useable Melee
+Slot Secondary
+ID 1704
+
+Size_X 3
+Size_Y 2
+Size_Z 0.5
+
+Range 1.75
+Alert_Radius 24
+
+Player_Damage 11
+Player_Leg_Multiplier 0.6
+Player_Arm_Multiplier 0.6
+Player_Spine_Multiplier 0.8
+Player_Skull_Multiplier 1.1
+
+Zombie_Damage 11
+Zombie_Leg_Multiplier 0.3
+Zombie_Arm_Multiplier 0.3
+Zombie_Spine_Multiplier 0.6
+Zombie_Skull_Multiplier 1.1
+
+Animal_Damage 11
+Animal_Leg_Multiplier 0.6
+Animal_Spine_Multiplier 0.8
+Animal_Skull_Multiplier 1.1
+
+Barricade_Damage 3
+Structure_Damage 3
+Vehicle_Damage 10
+Resource_Damage 50
+Object_Damage 10
+
+Durability 0.4
+
+Blueprints 2
+Blueprint_0_Type Repair
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 67
+Blueprint_0_Supply_0_Amount 3
+Blueprint_0_Build 27
+Blueprint_1_Type Tool
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 1704
+Blueprint_1_Product 67
+Blueprint_1_Products 2
+Blueprint_1_Build 27
+
+Repeated
+
+BladeIDs 2
+BladeID_0 0
+BladeID_1 3

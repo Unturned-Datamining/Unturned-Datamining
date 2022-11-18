@@ -1,0 +1,5 @@
+AirdropCommandText Airdrop
+AirdropInfoText Airdrop
+AirdropHelpText This forces a dropship to fly over and perform an airdrop.
+
+AirdropText Successfully set airdrop!

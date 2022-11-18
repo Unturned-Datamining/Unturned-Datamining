@@ -1,0 +1,31 @@
+GUID d3c40816534e48c3af0e26fb4d5f1b1a
+Type Barricade
+Rarity Rare
+Useable Barricade
+Build Clock
+ID 1509
+
+Size_X 2
+Size_Y 2
+Size_Z 0.4
+
+Health 75
+Range 4
+Offset 0.05
+
+Explosion 60
+
+Blueprints 1
+Blueprint_0_Type Utilities
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 1297
+Blueprint_0_Supply_0_Amount 1
+Blueprint_0_Supply_1_ID 67
+Blueprint_0_Supply_1_Amount 2
+Blueprint_0_Tool 76
+Blueprint_0_Level 3
+Blueprint_0_Skill Craft
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+
+Has_Clip_Prefab false

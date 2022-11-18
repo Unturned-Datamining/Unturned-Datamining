@@ -1,0 +1,71 @@
+GUID 6669ec24e6974054be16606af7fa796b
+Type Box
+ID 964
+
+Size_X 1
+Size_Y 1
+Size_Z 1
+
+Generate 21046
+
+Probability_Model Equalized
+Contains_Bonus_Items True
+
+Drops 19
+Drop_0 -1
+
+// Beanie
+Drop_1 88701
+
+// Biker Hat
+Drop_2 88801
+
+// Fishing
+Drop_3 88901
+
+// Fur
+Drop_4 89001
+
+// Piston
+Drop_5 89101
+
+// Prop
+Drop_6 89201
+
+// Raccoon
+Drop_7 89301
+
+// Racing Bottom
+Drop_8 89401
+
+// Racing Top
+Drop_9 89501
+
+// Resp
+Drop_10 89601
+
+// RZZ
+Drop_11 89701
+
+// Tank Hat
+Drop_12 89801
+
+// Wings
+Drop_13 89901
+
+// Wolf
+Drop_14 90001
+
+// Sedan
+Drop_15 90101
+
+// Laser Dragon
+Drop_16 90201
+
+// Machete
+Drop_17 90301
+
+// Beans
+Drop_18 90401
+
+Pro

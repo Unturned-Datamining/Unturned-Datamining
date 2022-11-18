@@ -1,0 +1,25 @@
+GUID ff7e1755f5114fc99f20cd4df88a760b
+Type Structure
+Rarity Rare
+Useable Structure
+Construct Floor_Poly
+ID 1264
+
+Size_X 2
+Size_Y 2
+Size_Z 0.325
+
+Health 550
+Range 8
+
+Explosion 29
+
+Blueprints 1
+Blueprint_0_Type Structure
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 41
+Blueprint_0_Supply_0_Amount 2
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+
+Has_Clip_Prefab false

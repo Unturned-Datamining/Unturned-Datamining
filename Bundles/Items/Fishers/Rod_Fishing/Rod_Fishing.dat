@@ -1,0 +1,21 @@
+GUID 04e1a631fc0848a68b02022d8b1c2141
+Type Fisher
+Rarity Uncommon
+Useable Fisher
+ID 503
+
+Size_X 3
+Size_Y 1
+Size_Z 0.25
+
+Backward
+
+Reward_ID 2
+
+Blueprints 1
+Blueprint_0_Type Tool
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 503
+Blueprint_0_Product 67
+Blueprint_0_Products 2
+Blueprint_0_Build 27

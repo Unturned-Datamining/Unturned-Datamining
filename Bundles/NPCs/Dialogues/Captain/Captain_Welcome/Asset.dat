@@ -1,0 +1,225 @@
+GUID 3e3c0c6acf26448b81d68da505d95765
+Type Dialogue
+ID 1
+
+Messages 5
+
+// Welcome aboard
+Message_0_Pages 1
+Message_0_Responses 1
+Message_0_Response_0 0
+Message_0_Conditions 1
+// Met_Captain
+Message_0_Condition_0_Type Flag_Bool
+Message_0_Condition_0_ID 2
+Message_0_Condition_0_Value False
+Message_0_Condition_0_Logic Equal
+Message_0_Condition_0_Allow_Unset
+
+// Ensign rank
+Message_1_Pages 1
+Message_1_Responses 2
+Message_1_Response_0 1
+Message_1_Response_1 4
+Message_1_Conditions 2
+// Coalition_Quests_Completed
+Message_1_Condition_0_Type Flag_Short
+Message_1_Condition_0_ID 13
+Message_1_Condition_0_Value 3
+Message_1_Condition_0_Logic Greater_Than_Or_Equal_To
+// Coalition_Rank
+Message_1_Condition_1_Type Flag_Short
+Message_1_Condition_1_ID 29
+Message_1_Condition_1_Value 0 
+Message_1_Condition_1_Logic Equal
+Message_1_Condition_1_Allow_Unset
+
+// Lieutenant rank
+Message_2_Pages 1
+Message_2_Responses 2
+Message_2_Response_0 2
+Message_2_Response_1 4
+Message_2_Conditions 2
+// Coalition_Quests_Completed
+Message_2_Condition_0_Type Flag_Short
+Message_2_Condition_0_ID 13
+Message_2_Condition_0_Value 9
+Message_2_Condition_0_Logic Greater_Than_Or_Equal_To
+// Coalition_Rank
+Message_2_Condition_1_Type Flag_Short
+Message_2_Condition_1_ID 29
+Message_2_Condition_1_Value 1 
+Message_2_Condition_1_Logic Equal
+
+// Major rank
+Message_3_Pages 1
+Message_3_Responses 2
+Message_3_Response_0 3
+Message_3_Response_1 4
+Message_3_Conditions 2
+// Coalition_Quests_Completed
+Message_3_Condition_0_Type Flag_Short
+Message_3_Condition_0_ID 13
+Message_3_Condition_0_Value 21
+Message_3_Condition_0_Logic Greater_Than_Or_Equal_To
+// Coalition_Rank
+Message_3_Condition_1_Type Flag_Short
+Message_3_Condition_1_ID 29
+Message_3_Condition_1_Value 2 
+Message_3_Condition_1_Logic Equal
+
+// Anything to report?
+Message_4_Pages 1
+
+Responses 12
+
+// Hello I'm X
+// Captain_Introduce
+Response_0_Dialogue 3
+Response_0_Messages 1
+Response_0_Message_0 0
+Response_0_Rewards 1
+// Met_Captain
+Response_0_Reward_0_Type Flag_Bool
+Response_0_Reward_0_ID 2
+Response_0_Reward_0_Value True
+
+// Ensign accept
+// Captain_Ensign
+Response_1_Dialogue 30
+Response_1_Messages 1
+Response_1_Message_0 1
+Response_1_Rewards 4
+// Coalition_Rank
+Response_1_Reward_0_Type Flag_Short
+Response_1_Reward_0_ID 29
+Response_1_Reward_0_Value 1
+Response_1_Reward_0_Modification Increment
+// Bottom
+Response_1_Reward_1_Type Item
+Response_1_Reward_1_ID 1419
+Response_1_Reward_1_Amount 1
+// Top
+Response_1_Reward_2_Type Item
+Response_1_Reward_2_ID 1420
+Response_1_Reward_2_Amount 1
+// Cap
+Response_1_Reward_3_Type Item
+Response_1_Reward_3_ID 1426
+Response_1_Reward_3_Amount 1
+
+// Lieutenant accept
+// Captain_Lieutenant
+Response_2_Dialogue 31
+Response_2_Messages 1
+Response_2_Message_0 2
+Response_2_Rewards 4
+// Coalition_Rank
+Response_2_Reward_0_Type Flag_Short
+Response_2_Reward_0_ID 29
+Response_2_Reward_0_Value 1
+Response_2_Reward_0_Modification Increment
+// Top
+Response_2_Reward_1_Type Item
+Response_2_Reward_1_ID 1421
+Response_2_Reward_1_Amount 1
+// Vest
+Response_2_Reward_2_Type Item
+Response_2_Reward_2_ID 1425
+Response_2_Reward_2_Amount 1
+// Helmet
+Response_2_Reward_3_Type Item
+Response_2_Reward_3_ID 1427
+Response_2_Reward_3_Amount 1
+
+// Major accept
+// Captain_Major
+Response_3_Dialogue 32
+Response_3_Messages 1
+Response_3_Message_0 3
+Response_3_Rewards 3
+// Coalition_Rank
+Response_3_Reward_0_Type Flag_Short
+Response_3_Reward_0_ID 29
+Response_3_Reward_0_Value 1
+Response_3_Reward_0_Modification Increment
+// Top
+Response_3_Reward_1_Type Item
+Response_3_Reward_1_ID 1422
+Response_3_Reward_1_Amount 1
+// Beret
+Response_3_Reward_2_Type Item
+Response_3_Reward_2_ID 1428
+Response_3_Reward_2_Amount 1
+
+Response_4_Messages 3
+Response_4_Message_0 3
+Response_4_Message_1 3
+Response_4_Message_2 3
+
+// Ask to join coalition
+// Captain_Join_Request
+Response_5_Dialogue 4
+Response_5_Conditions 1
+Response_5_Condition_0_Type Flag_Short
+Response_5_Condition_0_ID 29
+Response_5_Condition_0_Value 0 
+Response_5_Condition_0_Logic Equal
+Response_5_Condition_0_Allow_Unset
+
+// Ask about ranks
+// Captain_Ranks_Query
+Response_6_Dialogue 5
+
+// Lost uniform
+// Captain_Uniform_Replacement
+Response_7_Dialogue 72
+Response_7_Conditions 1
+Response_7_Condition_0_Type Flag_Short
+Response_7_Condition_0_ID 29
+Response_7_Condition_0_Value 0
+Response_7_Condition_0_Logic Greater_Than
+
+// Report len
+// Captain_Traitor
+Response_8_Dialogue 193
+Response_8_Conditions 2
+Response_8_Condition_0_Type Flag_Bool
+Response_8_Condition_0_ID 192
+Response_8_Condition_0_Value False
+Response_8_Condition_0_Logic Equal
+Response_8_Condition_0_Allow_Unset
+Response_8_Condition_1_Type Quest
+Response_8_Condition_1_Logic Equal
+Response_8_Condition_1_ID 180
+Response_8_Condition_1_Status Completed
+Response_8_Rewards 1
+Response_8_Reward_0_Type Flag_Bool
+Response_8_Reward_0_ID 192
+Response_8_Reward_0_Value True
+
+// I know who the real traitor is
+// Captain_Find_Relay_Evidence_Completed
+Response_9_Dialogue 200
+Response_9_Quest 194
+Response_9_Conditions 1
+Response_9_Condition_0_Type Quest
+Response_9_Condition_0_Logic Equal
+Response_9_Condition_0_ID 194
+Response_9_Condition_0_Status Ready
+Response_9_Condition_0_Reset
+Response_9_Rewards 1
+Response_9_Reward_0_Type Flag_Bool
+Response_9_Reward_0_ID 197
+Response_9_Reward_0_Value True
+
+// I've got a note for you
+// Captain_Valentines_Note_Completed
+Response_10_Dialogue 236
+Response_10_Quest 230
+Response_10_Conditions 1
+Response_10_Condition_0_Type Quest
+Response_10_Condition_0_Logic Equal
+Response_10_Condition_0_ID 230
+Response_10_Condition_0_Status Ready
+Response_10_Condition_0_Reset

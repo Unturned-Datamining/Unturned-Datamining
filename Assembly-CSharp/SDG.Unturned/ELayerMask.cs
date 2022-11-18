@@ -1,0 +1,37 @@
+namespace SDG.Unturned;
+
+public enum ELayerMask
+{
+    DEFAULT,
+    TRANSPARENT_FX,
+    IGNORE_RAYCAST,
+    BUILTIN_3,
+    WATER,
+    UI,
+    BUILTIN_6,
+    BUILTIN_7,
+    LOGIC,
+    PLAYER,
+    ENEMY,
+    VIEWMODEL,
+    DEBRIS,
+    ITEM,
+    RESOURCE,
+    LARGE,
+    MEDIUM,
+    SMALL,
+    SKY,
+    ENVIRONMENT,
+    GROUND,
+    CLIP,
+    NAVMESH,
+    ENTITY,
+    AGENT,
+    LADDER,
+    VEHICLE,
+    BARRICADE,
+    STRUCTURE,
+    TIRE,
+    TRAP,
+    GROUND2
+}

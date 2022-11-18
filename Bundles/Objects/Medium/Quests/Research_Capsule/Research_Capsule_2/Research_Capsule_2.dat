@@ -1,0 +1,21 @@
+GUID 3fd28d9e0f7f4793894589121c7b5cc8
+Type Medium
+ID 804
+
+Conditions 1
+Condition_0_Type Flag_Bool
+Condition_0_ID 121
+Condition_0_Value False
+Condition_0_Logic Equal
+
+Interactability Quest
+Interactability_Effect 7
+Interactability_Rewards 2
+Interactability_Reward_0_Type Flag_Bool
+Interactability_Reward_0_ID 121
+Interactability_Reward_0_Value True
+Interactability_Reward_1_Type Flag_Short
+Interactability_Reward_1_ID 123
+Interactability_Reward_1_Value 1
+Interactability_Reward_1_Modification Increment
+Has_Clip_Prefab false

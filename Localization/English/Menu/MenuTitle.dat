@@ -1,0 +1,20 @@
+Author_Label by {1}    //    Version {0}
+
+Stat_Kills_Zombies_Normal You have killed {0} normal zombies! Players worldwide have killed {1}!
+Stat_Kills_Players You have killed {0} players! Players worldwide have killed {1}!
+Stat_Deaths_Players You have died {0} times! Players worldwide have died {1}!
+Stat_Found_Items You have found {0} items! Players worldwide have found {1}!
+Stat_Found_Resources You have harvested {0} resources! Players worldwide have harvested {1}!
+Stat_Found_Experience You have gained {0} experience! Players worldwide have gained {1}!
+Stat_Kills_Zombies_Mega You have killed {0} mega zombies! Players worldwide have killed {1}!
+Stat_Kills_Animals You have killed {0} animals! Players worldwide have killed {1}!
+Stat_Found_Crafts You have crafted {0} items! Players worldwide have crafted {1}!
+Stat_Found_Fishes You have caught {0} fish! Players worldwide have caught {1}!
+Stat_Found_Plants You have grown {0} plants! Players worldwide have grown {1}!
+Stat_Accuracy You have fired {0} shots with {1}% accuracy! Players worldwide have fired {2} with {3}%!
+Stat_Headshots You have hit {0} headshots! Players worldwide have hit {1}!
+Stat_Travel_Foot You have travelled {0} on foot! Players worldwide have travelled {1}!
+Stat_Travel_Vehicle You have travelled {0} in vehicles! Players worldwide have travelled {1}!
+Stat_Arena_Wins You have won {0} arena matches! Players worldwide have won {1}!
+Stat_Found_Buildables You have built {0} objects! Players worldwide have built {1}!
+Stat_Found_Throwables You have thrown {0} projectiles! Players worldwide have thrown {1}!

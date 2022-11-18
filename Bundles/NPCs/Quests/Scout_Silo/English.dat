@@ -1,0 +1,4 @@
+Name W.M.D.
+Description In the far North is a secret underground nuclear missile silo which has supposedly detonated, but aside from the radiation there's no evidence of explosive damage. <color=rare>Lieutenant Oswald</color> needs you to verify that the warhead is completely spent and can't be used again.
+
+Condition_0 Clear Missile Silo <color=legendary>Horde Beacon</color> {0}/{1}

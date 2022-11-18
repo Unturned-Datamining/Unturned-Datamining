@@ -1,0 +1,13 @@
+GUID 89e78645c13c4d7795148c485f70d909
+Type Quest
+ID 24
+
+Conditions 1
+Condition_0_Type Item
+Condition_0_ID 1431
+Condition_0_Amount 1
+Condition_0_Reset
+
+Rewards 1
+Reward_0_Type Experience
+Reward_0_Value 10

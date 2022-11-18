@@ -1,0 +1,26 @@
+GUID ca1eebc926724edaac61dc6067e2b7d4
+Type Magazine
+Rarity Legendary
+ID 520
+
+Size_X 2
+Size_Y 1
+Size_Z 0.225
+
+Amount 1
+
+Calibers 1
+Caliber_0 20
+
+Blueprints 1
+Blueprint_0_Type Tool
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 73
+Blueprint_0_Supply_0_Amount 1
+Blueprint_0_Supply_1_ID 1241
+Blueprint_0_Supply_1_Amount 1
+Blueprint_0_Level 2
+Blueprint_0_Skill Craft
+Blueprint_0_Build 32
+
+Paintable

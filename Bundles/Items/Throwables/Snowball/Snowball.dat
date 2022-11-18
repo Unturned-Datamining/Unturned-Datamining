@@ -1,0 +1,19 @@
+GUID f4fc9636ef8a4b508d87ddb2ebb2b16b
+Type Throwable
+Rarity Rare
+Useable Throwable
+ID 1132
+
+Size_X 1
+Size_Y 1
+Size_Z 0.325
+
+Player_Damage 65
+Zombie_Damage 125
+Animal_Damage 125
+
+Range 8
+Explosion 150
+Explode_On_Impact
+
+Explosive

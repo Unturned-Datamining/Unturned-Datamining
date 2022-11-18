@@ -1,0 +1,20 @@
+"Metadata"
+{
+	"GUID" "3fcc42609bfb4154abb9dd39e7542ed8"
+	"Type" "SDG.Unturned.MaterialPaletteAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"ID" "0"
+	"Materials"
+	[
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/Cardboard/Cardboard_0.mat"
+		}
+		{
+			"Name" "core.masterbundle"
+			"Path" "Objects/Material_Palettes/Cardboard/Cardboard_1.mat"
+		}
+	]
+}

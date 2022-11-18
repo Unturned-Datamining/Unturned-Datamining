@@ -1,0 +1,32 @@
+GUID 789a9de892c649cd98559d023447401b
+Type NPC
+ID 759
+
+Shirt 546
+Pants 547
+Hat 545
+
+// Swashbuckler
+Has_Halloween_Outfit True
+Halloween_Shirt 613
+Halloween_Pants 612
+Halloween_Hat 611
+
+Has_Christmas_Outfit True
+Christmas_Shirt 819
+Christmas_Pants 817
+Christmas_Hat 818
+Christmas_Backpack 820
+
+Face 25
+Beard 11
+Color_Skin #94764B
+Color_Hair #473928
+
+Tertiary 503
+Equipped Tertiary
+Backward
+
+Dialogue 33
+
+Has_Clip_Prefab false

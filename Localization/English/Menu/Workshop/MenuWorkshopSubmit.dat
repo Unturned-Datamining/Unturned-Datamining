@@ -1,0 +1,141 @@
+Name_Field_Label Name
+Description_Field_Label Description
+Path_Field_Label Collection Path
+Preview_Field_Label Preview Image
+Change_Field_Label Change Note
+Allowed_IPs_Label Allowed IPs
+Allowed_IPs_Hint comma-separated e.g. 127.0.0.1,192.168.0.0 whitelist-blacklist
+Allowed_IPs_Tooltip If set, only these server IPs will be allowed to auto-download this item. Requested by server networks with custom content.
+
+Create_Button Create
+Create_Button_Tooltip Create
+
+Legal_Button By submitting this content, you agree to the workshop terms of service!
+Legal_Button_Tooltip View Terms of Service
+
+Map Map
+Localization Localization
+Object Object
+Item Item
+Vehicle Vehicle
+Skin Skin
+
+Map_Type_Survival Survival
+Map_Type_Horde Horde
+Map_Type_Arena Arena
+Map_Type_Custom Custom Game
+
+Item_Type_Backpack Backpack
+Item_Type_Barrel Barrel
+Item_Type_Barricade Barricade
+Item_Type_Fisher Fisher
+Item_Type_Food Food
+Item_Type_Fuel Fuel
+Item_Type_Glasses Glasses
+Item_Type_Grip Grip
+Item_Type_Grower Grower
+Item_Type_Gun Gun
+Item_Type_Hat Hat
+Item_Type_Magazine Magazine
+Item_Type_Mask Mask
+Item_Type_Medical Medical
+Item_Type_Melee Melee
+Item_Type_Optic Optic
+Item_Type_Shirt Shirt
+Item_Type_Sight Sight
+Item_Type_Structure Structure
+Item_Type_Supply Supply
+Item_Type_Tactical Tactical
+Item_Type_Throwable Throwable
+Item_Type_Tool Tool
+Item_Type_Vest Vest
+Item_Type_Water Water
+
+Vehicle_Type_Wheels_2 2 Wheels
+Vehicle_Type_Wheels_4 4 Wheels
+Vehicle_Type_Plane Airplane
+Vehicle_Type_Helicopter Helicopter
+Vehicle_Type_Boat Boat
+Vehicle_Type_Train Train
+
+Skin_Type_Generic_Pattern Generic Pattern
+Skin_Type_Ace Ace
+Skin_Type_Augewehr Augewehr
+Skin_Type_Avenger Avenger
+Skin_Type_Bluntforce Bluntforce
+Skin_Type_Bulldog Bulldog
+Skin_Type_Butterfly_Knife Butterfly Knife
+Skin_Type_Calling_Card Calling Card
+Skin_Type_Cobra Cobra
+Skin_Type_Colt Colt
+Skin_Type_Compound_Bow Compound Bow
+Skin_Type_Crossbow Crossbow
+Skin_Type_Desert_Falcon Desert Falcon
+Skin_Type_Dragonfang Dragonfang
+Skin_Type_Eaglefire Eaglefire
+Skin_Type_Ekho Ekho
+Skin_Type_Fusilaut Fusilaut
+Skin_Type_Grizzly Grizzly
+Skin_Type_Hawkhound Hawkhound
+Skin_Type_Heartbreaker Heartbreaker
+Skin_Type_Hell_Fury Hell's Fury
+Skin_Type_Honeybadger Honeybadger
+Skin_Type_Katana Katana
+Skin_Type_Kryzkarek Kryzkarek
+Skin_Type_Machete Machete
+Skin_Type_Maplestrike Maplestrike
+Skin_Type_Maschinengewehr Maschinengewehr
+Skin_Type_Masterkey Masterkey
+Skin_Type_Matamorez Matamorez
+Skin_Type_Military_Knife Military Knife
+Skin_Type_Nightraider Nightraider
+Skin_Type_Nykorev Nykorev
+Skin_Type_Peacemaker Peacemaker
+Skin_Type_Rocket_Launcher Rocket Launcher
+Skin_Type_Sabertooth Sabertooth
+Skin_Type_Scalar Scalar
+Skin_Type_Schofield Schofield
+Skin_Type_Shadowstalker Shadowstalker
+Skin_Type_Snayperskya Snayperskya
+Skin_Type_Sportshot Sportshot
+Skin_Type_Timberwolf Timberwolf
+Skin_Type_Teklowvka Teklowvka
+Skin_Type_Viper Viper
+Skin_Type_Vonya Vonya
+Skin_Type_Yuri Yuri
+Skin_Type_Zubeknakov Zubeknakov
+
+Object_Type_Model Model
+Object_Type_Resource Resource
+Object_Type_Effect Effect
+Object_Type_Animal Animal
+
+Public Public
+Friends_Only Friends Only
+Private Private
+Unlisted Unlisted
+
+Community Ready-To-Use
+Review Curated
+
+Overlay Steam overlay needs to be enabled.
+
+Alert_Name Please specify a name shown on the workshop item.
+Alert_Preview Please specify a smaller than 1MB preview image [.png or .jpg] shown on the workshop item.
+Alert_Path Please specify a file path containing the folder of your workshop item.
+Alert_Map Please specify a valid map.
+Alert_Localization Please specify a valid localization.
+Alert_Object Please specify a valid object/item/vehicle/skin.
+Alert_Curated Please only submit cosmetic items and skins to the curated workshop.
+
+PathFieldNotification_Empty Cannot be empty.
+PathFieldNotification_MissingFolder Specified directory does not exist.
+PathFieldNotification_Map Directory should only contain your map's folder.
+PathFieldNotification_Localization Directory should contain Editor, Menu, Player, etc folders.
+PathFieldNotification_Bundle Directory should contain at least one subfolder.
+PathFieldNotification_NoWritePermission Access permission denied.
+
+PreviewFieldNotification_Empty Cannot be empty.
+PreviewFieldNotification_MissingFile Specified file does not exist.
+PreviewFieldNotification_Extension Image must be a .png or a .jpg.
+PreviewFieldNotification_FileSize Image file size is too large.

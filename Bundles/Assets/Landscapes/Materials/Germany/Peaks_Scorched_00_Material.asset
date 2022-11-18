@@ -1,0 +1,24 @@
+"Metadata"
+{
+	"GUID" "a5e48ab58c9848bb9064cf82c0f2c9bf"
+	"Type" "SDG.Unturned.LandscapeMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"ID" "0"
+	"Texture"
+	{
+		"Name" "core.masterbundle"
+		"Path" "Terrain/Materials/Peaks/Scorched_00.png"
+	}
+	"Mask"
+	{
+		"Name" ""
+		"Path" ""
+	}
+	"Physics_Material" "GRAVEL_STATIC"
+	"Foliage"
+	{
+		"GUID" "18c6790d16f9498982e289ba39e038db"
+	}
+}

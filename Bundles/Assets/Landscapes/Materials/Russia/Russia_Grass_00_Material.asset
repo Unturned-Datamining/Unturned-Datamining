@@ -1,0 +1,28 @@
+"Metadata"
+{
+	"GUID" "db482f0f23d1414096114aee61195058"
+	"Type" "SDG.Unturned.LandscapeMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"ID" "0"
+	"Texture"
+	{
+		"Name" "core.masterbundle"
+		"Path" "Terrain/Materials/Russia/Grass_00.png"
+	}
+	"Mask"
+	{
+		"Name" ""
+		"Path" ""
+	}
+	"Physics_Material" "FOLIAGE_STATIC"
+	"Foliage"
+	{
+		"GUID" "8ffddb76b71d4ac7a9459a845051e58c"
+	}
+	"Christmas_Redirect"
+	{
+		"GUID" "e25f0351181f4ad1a9c0dc31d2fedade"
+	}
+}

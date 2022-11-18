@@ -1,0 +1,28 @@
+GUID d6cf408007e848ffa7af31e0b9851c12
+Type Vehicle
+ID 11
+
+Speed_Min -5
+Speed_Max 15
+
+Steer_Min 12
+Steer_Max 24
+
+Brake 24
+
+Fuel_Min 200
+Fuel_Max 400
+Fuel 1500
+
+Health_Min 350
+Health_Max 450
+Health 650
+
+Trunk_Storage_X 5
+Trunk_Storage_Y 3
+
+Explosion 20
+
+IgnitionAudioClip Sounds/CarIgnition.mp3
+HornAudioClip Sounds/CarHorn_01.mp3
+Has_Clip_Prefab false

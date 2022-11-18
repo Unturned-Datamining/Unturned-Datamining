@@ -1,0 +1,4 @@
+Name The Secret Snack
+Description <color=epic>Chief Brian</color> is craving for a few doughnuts, but doesn't want to be seen to fit the police stereotype. He wants this kept on the down-low, you know hush hush.
+
+Condition_0 Bake {0}/{1} {2}

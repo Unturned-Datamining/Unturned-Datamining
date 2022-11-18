@@ -1,0 +1,31 @@
+GUID a810019c7eff491dad554b05902f928f
+Type Vehicle
+ID 150
+
+Speed_Min -6
+Speed_Max 16.5
+Wheel_Collider_Mass_Override 5
+
+Steer_Min 14
+Steer_Max 28
+
+Brake 32
+
+Fuel_Min 200
+Fuel_Max 400
+Fuel 1500
+
+Health_Min 350
+Health_Max 450
+Health 600
+
+Trunk_Storage_X 5
+Trunk_Storage_Y 3
+
+Explosion 20
+
+Shared_Skin_Lookup_ID 149
+
+IgnitionAudioClip Sounds/CarIgnition.mp3
+HornAudioClip Sounds/CarHorn_02.mp3
+Has_Clip_Prefab false

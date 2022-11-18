@@ -1,0 +1,33 @@
+GUID 1f8856edf5964774aa2457b37e45603b
+Type Barricade
+Rarity Legendary
+Useable Barricade
+Build Safezone
+ID 1050
+
+Size_X 2
+Size_Y 2
+Size_Z 0.5
+
+Health 450
+Range 4
+Radius 0.5
+Offset 0.75
+
+Explosion 36
+
+Blueprints 1
+Blueprint_0_Type Utilities
+Blueprint_0_Supplies 3
+Blueprint_0_Supply_0_ID 68
+Blueprint_0_Supply_0_Amount 6
+Blueprint_0_Supply_1_ID 285
+Blueprint_0_Supply_1_Amount 6
+Blueprint_0_Supply_2_ID 269
+Blueprint_0_Supply_2_Amount 1
+Blueprint_0_Tool 76
+Blueprint_0_Level 3
+Blueprint_0_Skill Craft
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/MetalPlacement.mp3
+Has_Clip_Prefab false

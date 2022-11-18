@@ -1,0 +1,25 @@
+"Metadata"
+{
+	"GUID" "0fccaaad36a9490ea99fe0f6eed6030e"
+	"Type" "SDG.Unturned.OutfitAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"Items"
+	[
+		// Vest
+		"20cc2e29ed84459d894942e2d74a7094"
+
+		// Bird (Vest)
+		"50b654984fdf4b26ab4c8a5712ed79c3"
+
+		// Top
+		"ed503a17007440bfa0c6bb09e7e2ed0e"
+
+		// Bottom
+		"72e0c07123e5437f8cdf21b98cef53cb"
+
+		// Cage (Backpack)
+		"274e6f59cbd84f12ba55a327dc8749a2"
+	]
+}

@@ -1,0 +1,21 @@
+GUID 43ed9a9cc6824383bd1fdfad4034bb45
+Type Vendor
+ID 84
+
+Selling 2
+// Bayonet_Blueprint
+Selling_0_ID 1439
+Selling_0_Cost 170
+Selling_0_Conditions 1
+Selling_0_Condition_0_Type Flag_Bool
+Selling_0_Condition_0_ID 227
+Selling_0_Condition_0_Value True
+Selling_0_Condition_0_Logic Equal
+// Quadbarrel_Blueprint
+Selling_1_ID 1437
+Selling_1_Cost 190
+Selling_1_Conditions 1
+Selling_1_Condition_0_Type Flag_Bool
+Selling_1_Condition_0_ID 229
+Selling_1_Condition_0_Value True
+Selling_1_Condition_0_Logic Equal

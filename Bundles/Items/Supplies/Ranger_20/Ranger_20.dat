@@ -1,0 +1,20 @@
+GUID b5c9e7c3e3a94807b18aa86f47d8651c
+Type Supply
+Rarity Epic
+ID 1193
+
+Size_X 2
+Size_Y 2
+Size_Z 0.45
+
+Amount 20
+Count_Min 13
+Count_Max 18
+
+Blueprints 1
+Blueprint_0_Type Ammo
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID 1193
+Blueprint_0_Build 30
+
+InventoryAudio Sounds/Inventory/SmallGunAttachment.asset

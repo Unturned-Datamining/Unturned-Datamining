@@ -1,0 +1,42 @@
+GUID b328e1e5fc8e4d8888568f209ab2089a
+Type Medium
+ID 844
+
+Conditions 7
+Condition_0_Type Flag_Bool
+Condition_0_ID 212
+Condition_0_Value False
+Condition_0_Logic Equal
+Condition_0_Allow_Unset
+Condition_1_Type Flag_Bool
+Condition_1_ID 205
+Condition_1_Value True
+Condition_1_Logic Equal
+Condition_2_Type Flag_Bool
+Condition_2_ID 206
+Condition_2_Value True
+Condition_2_Logic Equal
+Condition_3_Type Flag_Bool
+Condition_3_ID 207
+Condition_3_Value True
+Condition_3_Logic Equal
+Condition_4_Type Flag_Bool
+Condition_4_ID 208
+Condition_4_Value True
+Condition_4_Logic Equal
+Condition_5_Type Flag_Bool
+Condition_5_ID 209
+Condition_5_Value True
+Condition_5_Logic Equal
+Condition_6_Type Flag_Bool
+Condition_6_ID 210
+Condition_6_Value True
+Condition_6_Logic Equal
+
+Interactability Quest
+Interactability_Effect 6
+Interactability_Rewards 1
+Interactability_Reward_0_Type Flag_Bool
+Interactability_Reward_0_ID 212
+Interactability_Reward_0_Value True
+Has_Clip_Prefab false

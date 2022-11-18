@@ -1,0 +1,22 @@
+"Metadata"
+{
+	"GUID" "553b46596e31475e8b750d0768532516"
+	"Type" "SDG.Unturned.OutfitAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"Items"
+	[
+		// Top
+		"5558f6404bf64ea581e5bdda9b23d30d"
+
+		// Bottom
+		"bbf8a9b995d24e00bfd84e60f1aa1cb4"
+
+		// Hat
+		"0e41576480534b5c866e89f5608bd3c0"
+
+		// SnowShoes (Backpack)
+		"fadd3052777c404082879f634c7aeb04"
+	]
+}

@@ -1,0 +1,18 @@
+GUID 49db6d891f1a4af2acd6c7190f072e51
+Type Barrel
+ID 1444
+
+Size_X 2
+Size_Y 1
+Size_Z 0.125
+
+Silenced
+Volume 0.8
+Durability 3
+
+Ballistic_Drop 1.2
+
+Ballistic_Damage_Multiplier 0.8
+
+Calibers 1
+Caliber_0 8

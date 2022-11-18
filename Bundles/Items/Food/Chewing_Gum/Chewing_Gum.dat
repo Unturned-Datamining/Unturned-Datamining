@@ -1,0 +1,33 @@
+GUID 10e009f1778f492d99570925141c3c34
+Type Food
+Useable Consumeable
+ID 1510
+
+Size_X 1
+Size_Y 1
+Size_Z 0.3
+
+Player_Damage 100
+Zombie_Damage 200
+Animal_Damage 200
+Barricade_Damage 100
+Structure_Damage 100
+Vehicle_Damage 100
+Resource_Damage 2000
+Object_Damage 1000
+
+Range 8
+Explosion 45
+
+Blueprints 1
+Blueprint_0_Type Tool
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 1241
+Blueprint_0_Supply_0_Amount 1
+Blueprint_0_Supply_1_ID 84
+Blueprint_0_Supply_1_Amount 1
+Blueprint_0_Level 2
+Blueprint_0_Skill Craft
+Blueprint_0_Build 32
+
+ConsumeAudioClip Sounds/EatSquishy.mp3

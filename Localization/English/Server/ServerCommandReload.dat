@@ -1,0 +1,3 @@
+ReloadCommandText Reload
+ReloadInfoText Reload [GUID]
+ReloadHelpText This reloads an asset by GUID.

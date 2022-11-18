@@ -1,0 +1,14 @@
+GUID 2df0bc3fafe548fa9eb5a71a1d9c53a2
+Type Hat
+ID 876
+
+Size_X 2
+Size_Y 2
+Size_Z 0.5
+
+Beard
+
+Pro
+
+// Future curated assets should be power of 2, but we ignore warnings for a few pre-warning items.
+Ignore_NPOT

@@ -1,0 +1,37 @@
+GUID cba173169b314a16be5a1ab44f25fcf2
+Type Barricade
+Rarity Legendary
+Useable Barricade
+Build Claim
+ID 1158
+
+Size_X 2
+Size_Y 2
+Size_Z 0.7
+
+Health 50
+Range 4
+Radius 0.5
+Offset 1.12
+
+Explosion 36
+Vulnerable
+Proof_Explosion
+
+Blueprints 1
+Blueprint_0_Type Utilities
+Blueprint_0_Supplies 4
+Blueprint_0_Supply_0_ID 65
+Blueprint_0_Supply_0_Amount 2
+Blueprint_0_Supply_1_ID 66
+Blueprint_0_Supply_1_Amount 2
+Blueprint_0_Supply_2_ID 70
+Blueprint_0_Supply_2_Amount 1
+Blueprint_0_Supply_3_ID 75
+Blueprint_0_Supply_3_Amount 1
+Blueprint_0_Tool 76
+Blueprint_0_Level 3
+Blueprint_0_Skill Craft
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/MetalPlacement.mp3
+Has_Clip_Prefab false

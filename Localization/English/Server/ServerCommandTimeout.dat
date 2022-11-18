@@ -1,0 +1,9 @@
+InvalidNumberErrorText Failed to convert {0} into a number.
+MinNumberErrorText Failed to make timeout less than {0}.
+MaxNumberErrorText Failed to make timeout greater than {0}.
+
+TimeoutCommandText Timeout
+TimeoutInfoText Timeout [Number]
+TimeoutHelpText This assigns a maximum ping threshold to the server before a client is kicked.
+
+TimeoutText Successfully set timeout to {0}!

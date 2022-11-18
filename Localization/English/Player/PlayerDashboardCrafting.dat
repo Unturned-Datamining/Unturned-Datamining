@@ -1,0 +1,23 @@
+Type_0_Tooltip Tools
+Type_1_Tooltip Apparel
+Type_2_Tooltip Supplies
+Type_3_Tooltip Gear
+Type_4_Tooltip Ammunition
+Type_5_Tooltip Barricades
+Type_6_Tooltip Structures
+Type_7_Tooltip Utilities
+Type_8_Tooltip Furniture
+Type_9_Tooltip Repair
+
+Skill_1 Requires Crafting {0}
+Skill_2 Requires Cooking {0} + Heat
+Skill_3 Requires Engineer {0}
+
+Search_Field_Hint Blueprint Name Filter
+Search Search
+Search_Tooltip Search
+Hide_Uncraftable_Toggle_Label Hide Uncraftable Blueprints
+No_Blueprints No blueprints available matching these filters.
+
+Craft Craft
+Craft_All Craft All

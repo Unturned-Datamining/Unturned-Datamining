@@ -1,0 +1,21 @@
+GUID cb6930eba2d2497b96784707b8be9040
+
+Type Small
+ID 1
+
+Conditions 2
+Condition_0_Type Flag_Bool
+Condition_0_ID 293
+Condition_0_Value False
+Condition_0_Logic Equal
+
+Condition_1_Type Flag_Bool
+Condition_1_ID 343
+Condition_1_Value True
+Condition_1_Logic Equal
+Condition_1_Allow_Unset
+
+Bundle_Override_Path /Objects/Small/Quests/Quest_Present_05
+
+Holiday_Restriction CHRISTMAS
+Has_Clip_Prefab false

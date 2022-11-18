@@ -1,0 +1,7 @@
+RunningErrorText Failed to change gold status while running.
+
+GoldCommandText Gold
+GoldInfoText Gold
+GoldHelpText This marks the server as joinable only by Gold members.
+
+GoldText Successfully set gold status!

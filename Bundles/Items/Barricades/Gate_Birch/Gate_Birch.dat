@@ -1,0 +1,27 @@
+GUID ec5013e9761a4e30b16dc5a115fa3a29
+Type Barricade
+Useable Barricade
+Build Gate
+ID 455
+
+Size_X 2
+Size_Y 1
+Size_Z 0.35
+
+Health 300
+Range 4
+Radius 1.5
+Offset 1.25
+
+Explosion 28
+
+Blueprints 1
+Blueprint_0_Type Barricade
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 62
+Blueprint_0_Supply_0_Amount 8
+Blueprint_0_Supply_1_ID 67
+Blueprint_0_Supply_1_Amount 2
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

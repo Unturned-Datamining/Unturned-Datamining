@@ -1,0 +1,23 @@
+GUID 39323c87b2af4f88adca6d00355ed0cc
+Type NPC
+ID 791
+
+Hat 686
+
+// Mummy
+Has_Halloween_Outfit True
+Halloween_Hat 584
+Halloween_Shirt 585
+Halloween_Pants 586
+
+Has_Christmas_Outfit True
+Christmas_Hat 830
+
+Face 5
+Color_Skin #4B3D31
+
+Dialogue 73
+
+Pose Asleep
+
+Has_Clip_Prefab false

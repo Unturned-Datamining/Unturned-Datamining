@@ -1,0 +1,15 @@
+GUID 2938859620194772a1ce84022b336cb0
+
+Type Small
+ID 1
+
+Holiday_Restriction CHRISTMAS
+
+Conditions 1
+Condition_0_Type Flag_Bool
+Condition_0_ID 282
+Condition_0_Value False
+Condition_0_Logic Equal
+
+Bundle_Override_Path /Objects/Small/Quests/Battery_00
+Has_Clip_Prefab false

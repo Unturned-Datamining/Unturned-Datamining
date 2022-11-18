@@ -1,0 +1,21 @@
+GUID fc32f1577f094c8f88f18a10c101edfc
+Type Food
+Useable Consumeable
+ID 340
+
+Size_X 1
+Size_Y 1
+Size_Z 0.2
+
+Quality_Max 50
+
+Food 20
+Water 15
+
+Actions 1
+Action_0_Type Blueprint
+Action_0_Source 341
+Action_0_Blueprints 1
+Action_0_Blueprint_0_Index 0
+Action_0_Key Craft_Seed
+ConsumeAudioClip Sounds/EatSquishy.mp3

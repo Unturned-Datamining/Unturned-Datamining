@@ -1,0 +1,28 @@
+GUID db4346abc6a040d2ae51987dac2a4dc5
+Type Barricade
+Useable Barricade
+Build Stereo
+ID 1466
+
+Size_X 2
+Size_Y 2
+Size_Z 0.45
+
+Health 50
+Range 4
+Radius 0.2
+Offset 0.25
+
+Explosion 36
+Vulnerable
+
+Blueprints 1
+Blueprint_0_Type Furniture
+Blueprint_0_Supplies 2
+Blueprint_0_Supply_0_ID 1176
+Blueprint_0_Supply_0_Amount 1
+Blueprint_0_Supply_1_ID 67
+Blueprint_0_Supply_1_Amount 3
+Blueprint_0_Build 27
+PlacementAudioClip Sounds/MetalPlacement.mp3
+Has_Clip_Prefab false

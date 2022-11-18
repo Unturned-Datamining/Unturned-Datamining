@@ -1,0 +1,23 @@
+GUID 34896bbf40564e8e8e0021d8e3ec0a2d
+Type Backpack
+Useable Clothing
+ID 1186
+
+Size_X 2
+Size_Y 2
+Size_Z 0.55
+
+Width 7
+Height 4
+
+Blueprints 2
+Blueprint_0_Type Apparel
+Blueprint_0_Supply_0_ID 1186
+Blueprint_0_Product 66
+Blueprint_0_Products 3
+Blueprint_0_Build 32
+Blueprint_1_Type Repair
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID 66
+Blueprint_1_Supply_0_Amount 3
+Blueprint_1_Build 32

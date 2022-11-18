@@ -1,0 +1,5 @@
+ResetConfigCommandText ResetConfig
+ResetConfigInfoText ResetConfig
+ResetConfigHelpText This resets the config file to the default values.
+
+ResetConfigText Successfully reset config!

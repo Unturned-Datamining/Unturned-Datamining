@@ -1,0 +1,22 @@
+"Metadata"
+{
+	"GUID" "c175970e60cf42419afb4f17d68871a7"
+	"Type" "SDG.Unturned.OutfitAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"Items"
+	[
+		// Vest
+		"667f40a541494b9284e3765b1ac453e8"
+
+		// Shirt
+		"7d9635aa7a2740799b49dc3b9edf563c"
+
+		// Pants
+		"4bbb81a243174630a1fd3ac1743b7ffc"
+
+		// Hat
+		"2df0bc3fafe548fa9eb5a71a1d9c53a2"
+	]
+}

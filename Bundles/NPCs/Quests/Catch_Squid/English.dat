@@ -1,0 +1,4 @@
+Name The One That Got Away
+Description If you happen to catch Wallace's nemesis the giant squid he'd love to see it! Keep in mind the chances are quite slim, it's very rare.
+
+Condition_0 Catch {0}/{1} {2}

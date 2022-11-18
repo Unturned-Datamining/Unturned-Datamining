@@ -1,0 +1,29 @@
+GUID e94f489825dd46e791e95e27035c3521
+Type NPC
+ID 753
+
+Shirt 1423
+Pants 1419
+
+Has_Halloween_Outfit True
+Halloween_Backpack 859
+Halloween_Hat 861
+Halloween_Pants 864
+Halloween_Shirt 866
+Halloween_Vest 868
+
+Has_Christmas_Outfit True
+Christmas_Shirt 1423
+Christmas_Pants 1419
+Christmas_Hat 741
+
+Face 4
+Hair 12
+Color_Skin #D9CAB4
+Color_Hair #473928
+
+Secondary 488
+
+Dialogue 44
+
+Has_Clip_Prefab false

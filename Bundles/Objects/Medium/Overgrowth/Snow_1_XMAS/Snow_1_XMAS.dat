@@ -1,0 +1,15 @@
+GUID 6a46e4054c5846cc9eb3bdaa765cd0fd
+Type Medium
+ID 201
+
+Soft
+Snowshoe
+Chart Ground
+
+Holiday_Restriction CHRISTMAS
+Bundle_Override_Path /Objects/Medium/Overgrowth/Snow_1
+
+// References landscape texture.
+Ignore_TexRW
+
+Has_Clip_Prefab false

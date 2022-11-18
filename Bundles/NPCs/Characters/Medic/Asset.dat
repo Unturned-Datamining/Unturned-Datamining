@@ -1,0 +1,25 @@
+GUID 60ac42d556ba4c389ce59252d6b70ac7
+Type NPC
+ID 758
+
+Shirt 311
+Pants 312
+
+// Skeleton
+Has_Halloween_Outfit True
+Halloween_Shirt 587
+Halloween_Pants 588
+
+Has_Christmas_Outfit True
+Christmas_Shirt 311
+Christmas_Pants 312
+Christmas_Hat 278
+Chirstmas_Vest 828
+
+Hair 15
+Color_Skin #BEA582
+Color_Hair #8A4A90
+
+Dialogue 74
+
+Has_Clip_Prefab false

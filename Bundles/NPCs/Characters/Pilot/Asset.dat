@@ -1,0 +1,29 @@
+GUID f46c056af309413dbfef2fbf7d261dc5
+Type NPC
+ID 794
+
+Shirt 419
+Pants 548
+Glasses 409
+
+Has_Halloween_Outfit True
+Halloween_Backpack 797
+Halloween_Hat 798
+Halloween_Pants 799
+Halloween_Shirt 800
+Halloween_Vest 801
+
+Has_Christmas_Outfit True
+Christmas_Shirt 419
+Christmas_Pants 548
+Christmas_Glasses 409
+Christmas_Hat 278
+
+Face 5
+Hair 20
+Color_Skin #706049
+Color_Hair #191919
+
+Dialogue 87
+
+Has_Clip_Prefab false

@@ -1,0 +1,7 @@
+InvalidParameterErrorText Failed to find parameters in format [Text]/[R]/[G]/[B].
+InvalidNumberErrorText Failed to convert {0} into a number.
+NotRunningErrorText Failed to say while not running.
+
+SayCommandText Say
+SayInfoText Say [Text]/[R]/[G]/[B]
+SayHelpText This broadcasts a message to all of the connected clients.

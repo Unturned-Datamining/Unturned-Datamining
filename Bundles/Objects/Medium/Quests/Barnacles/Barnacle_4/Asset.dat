@@ -1,0 +1,21 @@
+GUID 103a2fbc83a447aeb030ae89137d1916
+Type Medium
+ID 821
+
+Conditions 1
+Condition_0_Type Flag_Bool
+Condition_0_ID 151
+Condition_0_Value False
+Condition_0_Logic Equal
+Condition_0_Allow_Unset
+
+Interactability Quest
+Interactability_Rewards 2
+Interactability_Reward_0_Type Flag_Bool
+Interactability_Reward_0_ID 151
+Interactability_Reward_0_Value True
+Interactability_Reward_1_Type Flag_Short
+Interactability_Reward_1_ID 156
+Interactability_Reward_1_Value 1
+Interactability_Reward_1_Modification Increment
+Has_Clip_Prefab false

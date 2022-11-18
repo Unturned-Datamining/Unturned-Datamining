@@ -1,0 +1,12 @@
+GUID c9ee4a99468f45049f2f1dd5692ce740
+Type Medium
+ID 1004
+
+Rubble Destroy
+Rubble_Reset 60
+Rubble_Health 1
+Rubble_Effect 58
+Rubble_Editor Dead
+
+Material_Palette 3ae4d6d0b5884ba8867c05dcbb02d3df
+Has_Clip_Prefab false
