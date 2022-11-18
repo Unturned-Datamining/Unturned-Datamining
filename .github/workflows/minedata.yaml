@@ -69,11 +69,10 @@ jobs:
 
     - name: Commit changes
       run: |
-        commit=\'`cat .commit`\'
+        commit=\"`cat .commit`\"
         git config --global user.name 'DiFFoZ'
         git config --global user.email 'diffoz@users.noreply.github.com'
-        rm -r tools
-        git add -u
+        git add .
         git commit -m $commit
         git push
   windows:
