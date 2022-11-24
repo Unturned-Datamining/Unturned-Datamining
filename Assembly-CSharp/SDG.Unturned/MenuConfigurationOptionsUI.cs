@@ -292,13 +292,9 @@ public class MenuConfigurationOptionsUI
     private static void onCrosshairColorPicked(SleekColorPicker picker, Color color)
     {
         OptionsSettings.crosshairColor = color;
-        if (PlayerLifeUI.dotImage != null)
+        if (PlayerLifeUI.crosshair != null)
         {
-            PlayerLifeUI.crosshairLeftImage.color = color;
-            PlayerLifeUI.crosshairRightImage.color = color;
-            PlayerLifeUI.crosshairDownImage.color = color;
-            PlayerLifeUI.crosshairUpImage.color = color;
-            PlayerLifeUI.dotImage.color = color;
+            PlayerLifeUI.crosshair.SynchronizeCustomColors();
         }
     }
 

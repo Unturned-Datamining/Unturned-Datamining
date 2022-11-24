@@ -213,6 +213,7 @@ public class MenuPlayServerInfoUI
         stringBuilder.AppendLine("Thumbnail: " + serverInfo.thumbnailURL);
         stringBuilder.AppendLine($"Address: {Parser.getIPFromUInt32(serverInfo.ip)}:{serverInfo.queryPort}");
         stringBuilder.AppendLine($"SteamId: {serverInfo.steamID} ({serverInfo.steamID.GetEAccountType()})");
+        stringBuilder.AppendLine($"Ping: {serverInfo.ping}ms");
         if (expectedWorkshopItems == null)
         {
             stringBuilder.AppendLine("Workshop files unknown");
