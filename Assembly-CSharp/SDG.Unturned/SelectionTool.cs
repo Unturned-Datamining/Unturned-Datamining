@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-public class SelectionToolV2 : IDevkitTool
+public class SelectionTool : IDevkitTool
 {
     public enum ESelectionMode
     {
@@ -42,7 +42,7 @@ public class SelectionToolV2 : IDevkitTool
 
     protected bool hasReferenceScale;
 
-    private TransformHandlesV3 handlesV3;
+    private TransformHandles handles;
 
     protected Vector3 beginAreaSelect;
 
@@ -158,7 +158,7 @@ public class SelectionToolV2 : IDevkitTool
                 DevkitTransactionUtility.recordObjectDelta(item.transform);
             }
         }
-        handlesV3.ExternallyTransformPivot(position, rotation, doRotation);
+        handles.ExternallyTransformPivot(position, rotation, doRotation);
         transformSelection();
         DevkitTransactionManager.endTransaction();
     }
@@ -234,10 +234,10 @@ public class SelectionToolV2 : IDevkitTool
                 }
             }
             Ray ray = EditorInteract.ray;
-            bool flag = DevkitSelectionManager.selection.Count > 0 && handlesV3.Raycast(ray);
+            bool flag = DevkitSelectionManager.selection.Count > 0 && handles.Raycast(ray);
             if (DevkitSelectionManager.selection.Count > 0)
             {
-                handlesV3.Render(ray);
+                handles.Render(ray);
             }
             if (InputEx.GetKeyDown(KeyCode.Mouse0))
             {
@@ -254,7 +254,7 @@ public class SelectionToolV2 : IDevkitTool
                 isDragging = flag;
                 if (isDragging)
                 {
-                    handlesV3.MouseDown(ray);
+                    handles.MouseDown(ray);
                     DevkitTransactionManager.beginTransaction("Transform");
                     foreach (DevkitSelection item2 in DevkitSelectionManager.selection)
                     {
@@ -278,10 +278,10 @@ public class SelectionToolV2 : IDevkitTool
             }
             if (isDragging)
             {
-                handlesV3.snapPositionInterval = DevkitSelectionToolOptions.instance?.snapPosition ?? 1f;
-                handlesV3.snapRotationIntervalDegrees = DevkitSelectionToolOptions.instance?.snapRotation ?? 1f;
-                handlesV3.wantsToSnap = InputEx.GetKey(ControlsSettings.snap);
-                handlesV3.MouseMove(ray);
+                handles.snapPositionInterval = DevkitSelectionToolOptions.instance?.snapPosition ?? 1f;
+                handles.snapRotationIntervalDegrees = DevkitSelectionToolOptions.instance?.snapRotation ?? 1f;
+                handles.wantsToSnap = InputEx.GetKey(ControlsSettings.snap);
+                handles.MouseMove(ray);
             }
             else if (InputEx.GetKeyDown(KeyCode.E))
             {
@@ -350,7 +350,7 @@ public class SelectionToolV2 : IDevkitTool
             {
                 if (isDragging)
                 {
-                    handlesV3.MouseUp();
+                    handles.MouseUp();
                     pendingClickSelection = DevkitSelection.invalid;
                     isDragging = false;
                     transformSelection();
@@ -372,15 +372,15 @@ public class SelectionToolV2 : IDevkitTool
         }
         if (mode == ESelectionMode.POSITION)
         {
-            handlesV3.SetPreferredMode(wantsBoundsEditor ? TransformHandlesV3.EMode.PositionBounds : TransformHandlesV3.EMode.Position);
+            handles.SetPreferredMode(wantsBoundsEditor ? TransformHandles.EMode.PositionBounds : TransformHandles.EMode.Position);
         }
         else if (mode == ESelectionMode.SCALE)
         {
-            handlesV3.SetPreferredMode(wantsBoundsEditor ? TransformHandlesV3.EMode.ScaleBounds : TransformHandlesV3.EMode.Scale);
+            handles.SetPreferredMode(wantsBoundsEditor ? TransformHandles.EMode.ScaleBounds : TransformHandles.EMode.Scale);
         }
         else
         {
-            handlesV3.SetPreferredMode(TransformHandlesV3.EMode.Rotation);
+            handles.SetPreferredMode(TransformHandles.EMode.Rotation);
         }
         bool num = mode == ESelectionMode.SCALE || wantsBoundsEditor;
         handlePosition = Vector3.zero;
@@ -399,10 +399,10 @@ public class SelectionToolV2 : IDevkitTool
             }
         }
         handlePosition /= (float)DevkitSelectionManager.selection.Count;
-        handlesV3.SetPreferredPivot(handlePosition, handleRotation);
+        handles.SetPreferredPivot(handlePosition, handleRotation);
         if (wantsBoundsEditor)
         {
-            handlesV3.UpdateBoundsFromSelection(EnumerateSelectedGameObjects());
+            handles.UpdateBoundsFromSelection(EnumerateSelectedGameObjects());
         }
         if (InputEx.GetKeyDown(KeyCode.C))
         {
@@ -471,15 +471,17 @@ public class SelectionToolV2 : IDevkitTool
     {
         GLRenderer.render += handleGLRender;
         mode = ESelectionMode.POSITION;
-        handlesV3 = new TransformHandlesV3();
-        handlesV3.OnPreTransform += OnHandlePreTransform;
-        handlesV3.OnTranslatedAndRotated += OnHandleTranslatedAndRotated;
-        handlesV3.OnTransformed += OnHandleTransformed;
+        handles = new TransformHandles();
+        handles.OnPreTransform += OnHandlePreTransform;
+        handles.OnTranslatedAndRotated += OnHandleTranslatedAndRotated;
+        handles.OnTransformed += OnHandleTransformed;
+        DevkitSelectionManager.clear();
     }
 
     public virtual void dequip()
     {
         GLRenderer.render -= handleGLRender;
+        DevkitSelectionManager.clear();
     }
 
     protected void handleGLRender()

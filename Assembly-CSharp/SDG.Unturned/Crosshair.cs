@@ -5,6 +5,10 @@ namespace SDG.Unturned;
 
 public class Crosshair : SleekWrapper
 {
+    private bool gameWantsCenterDotVisible;
+
+    private bool pluginAllowsCenterDotVisible;
+
     private bool isGunCrosshairVisible;
 
     private ISleekImage crosshairLeftImage;
@@ -15,11 +19,18 @@ public class Crosshair : SleekWrapper
 
     private ISleekImage crosshairUpImage;
 
-    private ISleekImage dotImage;
+    private ISleekImage centerDotImage;
 
-    public void SetDotVisible(bool isVisible)
+    public void SetGameWantsCenterDotVisible(bool isVisible)
     {
-        dotImage.isVisible = isVisible;
+        gameWantsCenterDotVisible = isVisible;
+        centerDotImage.isVisible = gameWantsCenterDotVisible && pluginAllowsCenterDotVisible;
+    }
+
+    public void SetPluginAllowsCenterDotVisible(bool isVisible)
+    {
+        pluginAllowsCenterDotVisible = isVisible;
+        centerDotImage.isVisible = gameWantsCenterDotVisible && pluginAllowsCenterDotVisible;
     }
 
     public void SetDirectionalArrowsVisible(bool isVisible)
@@ -35,7 +46,7 @@ public class Crosshair : SleekWrapper
     {
         Color crosshairColor = OptionsSettings.crosshairColor;
         crosshairColor.a = 0.5f;
-        dotImage.color = crosshairColor;
+        centerDotImage.color = crosshairColor;
         crosshairLeftImage.color = crosshairColor;
         crosshairRightImage.color = crosshairColor;
         crosshairDownImage.color = crosshairColor;
@@ -94,15 +105,16 @@ public class Crosshair : SleekWrapper
 
     public Crosshair(Bundle icons)
     {
-        dotImage = Glazier.Get().CreateImage();
-        dotImage.positionOffset_X = -4;
-        dotImage.positionOffset_Y = -4;
-        dotImage.positionScale_X = 0.5f;
-        dotImage.positionScale_Y = 0.5f;
-        dotImage.sizeOffset_X = 8;
-        dotImage.sizeOffset_Y = 8;
-        dotImage.texture = icons.load<Texture>("Dot");
-        AddChild(dotImage);
+        centerDotImage = Glazier.Get().CreateImage();
+        centerDotImage.positionOffset_X = -4;
+        centerDotImage.positionOffset_Y = -4;
+        centerDotImage.positionScale_X = 0.5f;
+        centerDotImage.positionScale_Y = 0.5f;
+        centerDotImage.sizeOffset_X = 8;
+        centerDotImage.sizeOffset_Y = 8;
+        centerDotImage.texture = icons.load<Texture>("Dot");
+        AddChild(centerDotImage);
+        gameWantsCenterDotVisible = true;
         crosshairLeftImage = Glazier.Get().CreateImage();
         crosshairLeftImage.positionOffset_X = -16;
         crosshairLeftImage.positionOffset_Y = -4;

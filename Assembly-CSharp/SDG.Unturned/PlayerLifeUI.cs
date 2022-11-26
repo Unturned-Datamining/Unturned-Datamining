@@ -381,6 +381,10 @@ public class PlayerLifeUI
         {
             UpdateVehicleBoxVisibility();
         }
+        if (crosshair != null)
+        {
+            crosshair.SetPluginAllowsCenterDotVisible(pluginWidgetFlags.HasFlag(EPluginWidgetFlags.ShowCenterDot));
+        }
     }
 
     private static void onDamaged(byte damage)
@@ -1052,21 +1056,22 @@ public class PlayerLifeUI
 
     internal static void UpdateTrackedQuest()
     {
-        if (!(Assets.find(EAssetType.NPC, Player.player.quests.TrackedQuestID) is QuestAsset questAsset))
+        QuestAsset trackedQuest = Player.player.quests.GetTrackedQuest();
+        if (trackedQuest == null)
         {
             trackedQuestTitle.isVisible = false;
             trackedQuestBar.isVisible = false;
             return;
         }
-        trackedQuestTitle.text = questAsset.questName;
+        trackedQuestTitle.text = trackedQuest.questName;
         bool flag = true;
-        if (questAsset.conditions != null)
+        if (trackedQuest.conditions != null)
         {
             trackedQuestBar.RemoveAllChildren();
             int num = 0;
-            for (int i = 0; i < questAsset.conditions.Length; i++)
+            for (int i = 0; i < trackedQuest.conditions.Length; i++)
             {
-                INPCCondition iNPCCondition = questAsset.conditions[i];
+                INPCCondition iNPCCondition = trackedQuest.conditions[i];
                 if (iNPCCondition != null && !iNPCCondition.isConditionMet(Player.player))
                 {
                     string text = iNPCCondition.formatCondition(Player.player);
@@ -1794,6 +1799,7 @@ public class PlayerLifeUI
         crosshair.sizeScale_X = 1f;
         crosshair.sizeScale_Y = 1f;
         container.AddChild(crosshair);
+        crosshair.SetPluginAllowsCenterDotVisible(Player.player.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowCenterDot));
         lifeBox = Glazier.Get().CreateBox();
         lifeBox.positionScale_Y = 1f;
         lifeBox.sizeScale_X = 0.2f;

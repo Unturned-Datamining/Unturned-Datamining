@@ -20,6 +20,8 @@ internal class BuiltinAutoShutdown : MonoBehaviour
 
     private bool isShuttingDownForUpdate;
 
+    private bool isUpdateRollback;
+
     private double updateShutdownRealtime;
 
     private string updateVersionString;
@@ -128,12 +130,14 @@ internal class BuiltinAutoShutdown : MonoBehaviour
             if (num < 0.0)
             {
                 isShuttingDownForUpdate = false;
-                Provider.shutdown(0, Provider.localization.format("UpdateShutdown_KickExplanation", updateVersionString));
+                string key = (isUpdateRollback ? "RollbackShutdown_KickExplanation" : "UpdateShutdown_KickExplanation");
+                Provider.shutdown(0, Provider.localization.format(key, updateVersionString));
             }
             else if (updateShutdownWarnings.Count > 0 && updateShutdownWarningIndex >= 0 && num < updateShutdownWarnings[updateShutdownWarningIndex])
             {
                 TimeSpan timeSpan = new TimeSpan(0, 0, (int)updateShutdownWarnings[updateShutdownWarningIndex]);
-                string text = Provider.localization.format("UpdateShutdown_Timer", updateVersionString, timeSpan.ToString("g"));
+                string key2 = (isUpdateRollback ? "RollbackShutdown_Timer" : "UpdateShutdown_Timer");
+                string text = Provider.localization.format(key2, updateVersionString, timeSpan.ToString("g"));
                 CommandWindow.Log(text);
                 ChatManager.say(text, ChatManager.welcomeColor);
                 updateShutdownWarningIndex--;
@@ -162,6 +166,7 @@ internal class BuiltinAutoShutdown : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(300f);
         string text;
+        uint value;
         while (true)
         {
             UnturnedLog.info("Checking for game updates...");
@@ -171,9 +176,9 @@ internal class BuiltinAutoShutdown : MonoBehaviour
             if (request.result == UnityWebRequest.Result.Success)
             {
                 text = request.downloadHandler.text;
-                if (Parser.TryGetUInt32FromIP(text, out var value))
+                if (Parser.TryGetUInt32FromIP(text, out value))
                 {
-                    if (value > Provider.APP_VERSION_PACKED)
+                    if (value != Provider.APP_VERSION_PACKED)
                     {
                         break;
                     }
@@ -190,12 +195,20 @@ internal class BuiltinAutoShutdown : MonoBehaviour
             }
             yield return new WaitForSecondsRealtime(600f);
         }
-        CommandWindow.Log("Detected newer game version: " + text);
+        if (value > Provider.APP_VERSION_PACKED)
+        {
+            CommandWindow.Log("Detected newer game version: " + text);
+        }
+        else
+        {
+            CommandWindow.Log("Detected rollback to older game version: " + text);
+        }
         bool shouldShutdown = true;
         GameUpdateMonitor.NotifyGameUpdateDetected(text, ref shouldShutdown);
         if (shouldShutdown)
         {
             isShuttingDownForUpdate = true;
+            isUpdateRollback = value < Provider.APP_VERSION_PACKED;
             updateVersionString = text;
             updateShutdownWarningIndex = updateShutdownWarnings.Count - 1;
             updateShutdownRealtime = Time.realtimeSinceStartupAsDouble + ((updateShutdownWarningIndex >= 0) ? updateShutdownWarnings[updateShutdownWarningIndex] : 0.0);

@@ -48,8 +48,9 @@ public class NPCTool
             }
             string desc = localization.read(prefix + i);
             desc = ItemTool.filterRarityRichText(desc);
-            bool newShouldReset = data.has(prefix + i + "_Reset");
-            ENPCLogicType newLogicType = data.readEnum(prefix + i + "_Logic", ENPCLogicType.NONE);
+            bool flag = data.has(prefix + i + "_Reset");
+            ENPCLogicType defaultValue = ((eNPCConditionType == ENPCConditionType.ITEM) ? ENPCLogicType.GREATER_THAN_OR_EQUAL_TO : ENPCLogicType.NONE);
+            ENPCLogicType eNPCLogicType = data.readEnum(prefix + i + "_Logic", defaultValue);
             switch (eNPCConditionType)
             {
             case ENPCConditionType.EXPERIENCE:
@@ -57,14 +58,14 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Experience condition " + prefix + i + " missing _Value");
                 }
-                conditions[i] = new NPCExperienceCondition(data.readUInt32(prefix + i + "_Value"), newLogicType, desc, newShouldReset);
+                conditions[i] = new NPCExperienceCondition(data.readUInt32(prefix + i + "_Value"), eNPCLogicType, desc, flag);
                 break;
             case ENPCConditionType.REPUTATION:
                 if (!data.has(prefix + i + "_Value"))
                 {
                     Assets.reportError(assetContext, "Reputation condition " + prefix + i + " missing _Value");
                 }
-                conditions[i] = new NPCReputationCondition(data.readInt32(prefix + i + "_Value"), newLogicType, desc);
+                conditions[i] = new NPCReputationCondition(data.readInt32(prefix + i + "_Value"), eNPCLogicType, desc);
                 break;
             case ENPCConditionType.FLAG_BOOL:
                 if (!data.has(prefix + i + "_ID"))
@@ -75,7 +76,7 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Bool flag condition " + prefix + i + " missing _Value");
                 }
-                conditions[i] = new NPCBoolFlagCondition(data.readUInt16(prefix + i + "_ID", 0), data.readBoolean(prefix + i + "_Value"), data.has(prefix + i + "_Allow_Unset"), newLogicType, desc, newShouldReset);
+                conditions[i] = new NPCBoolFlagCondition(data.readUInt16(prefix + i + "_ID", 0), data.readBoolean(prefix + i + "_Value"), data.has(prefix + i + "_Allow_Unset"), eNPCLogicType, desc, flag);
                 break;
             case ENPCConditionType.FLAG_SHORT:
                 if (!data.has(prefix + i + "_ID"))
@@ -86,9 +87,10 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Short flag condition " + prefix + i + " missing _Value");
                 }
-                conditions[i] = new NPCShortFlagCondition(data.readUInt16(prefix + i + "_ID", 0), data.readInt16(prefix + i + "_Value", 0), data.has(prefix + i + "_Allow_Unset"), newLogicType, desc, newShouldReset);
+                conditions[i] = new NPCShortFlagCondition(data.readUInt16(prefix + i + "_ID", 0), data.readInt16(prefix + i + "_Value", 0), data.has(prefix + i + "_Allow_Unset"), eNPCLogicType, desc, flag);
                 break;
             case ENPCConditionType.QUEST:
+            {
                 if (!data.has(prefix + i + "_ID"))
                 {
                     Assets.reportError(assetContext, "Quest condition " + prefix + i + " missing _ID");
@@ -97,14 +99,16 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Quest condition " + prefix + i + " missing _Status");
                 }
-                conditions[i] = new NPCQuestCondition(data.readUInt16(prefix + i + "_ID", 0), data.readEnum(prefix + i + "_Status", ENPCQuestStatus.NONE), data.has(prefix + i + "_Ignore_NPC"), newLogicType, desc, newShouldReset);
+                data.ReadGuidOrLegacyId(prefix + i + "_ID", out var guid2, out var legacyId2);
+                conditions[i] = new NPCQuestCondition(guid2, legacyId2, data.readEnum(prefix + i + "_Status", ENPCQuestStatus.NONE), data.has(prefix + i + "_Ignore_NPC"), eNPCLogicType, desc, flag);
                 break;
+            }
             case ENPCConditionType.SKILLSET:
                 if (!data.has(prefix + i + "_Value"))
                 {
                     Assets.reportError(assetContext, "Skillset condition " + prefix + i + " missing _Value");
                 }
-                conditions[i] = new NPCSkillsetCondition(data.readEnum(prefix + i + "_Value", EPlayerSkillset.NONE), newLogicType, desc);
+                conditions[i] = new NPCSkillsetCondition(data.readEnum(prefix + i + "_Value", EPlayerSkillset.NONE), eNPCLogicType, desc);
                 break;
             case ENPCConditionType.ITEM:
             {
@@ -117,8 +121,13 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Item condition " + prefix + i + " missing _Amount");
                 }
+                if (flag && eNPCLogicType != ENPCLogicType.GREATER_THAN_OR_EQUAL_TO)
+                {
+                    eNPCLogicType = ENPCLogicType.GREATER_THAN_OR_EQUAL_TO;
+                    Assets.reportError(assetContext, "Resetting item condition only compatible with >= comparison. If you have a use in mind feel free to email Nelson.");
+                }
                 data.ReadGuidOrLegacyId(key6, out var guid, out var legacyId);
-                conditions[i] = new NPCItemCondition(guid, legacyId, data.readUInt16(prefix + i + "_Amount", 0), desc, newShouldReset);
+                conditions[i] = new NPCItemCondition(guid, legacyId, data.readUInt16(prefix + i + "_Amount", 0), eNPCLogicType, desc, flag);
                 break;
             }
             case ENPCConditionType.KILLS_ZOMBIE:
@@ -148,7 +157,7 @@ public class NPCTool
                 byte newNav2 = data.readByte(prefix + i + "_Nav", byte.MaxValue);
                 float newRadius = data.readSingle(prefix + i + "_Radius", 512f);
                 float newMinRadius = data.readSingle(prefix + i + "_MinRadius");
-                conditions[i] = new NPCZombieKillsCondition(data.readUInt16(prefix + i + "_ID", 0), data.readInt16(prefix + i + "_Value", 0), newZombie, data.has(prefix + i + "_Spawn"), newSpawnQuantity, newNav2, newRadius, newMinRadius, desc, newShouldReset);
+                conditions[i] = new NPCZombieKillsCondition(data.readUInt16(prefix + i + "_ID", 0), data.readInt16(prefix + i + "_Value", 0), newZombie, data.has(prefix + i + "_Spawn"), newSpawnQuantity, newNav2, newRadius, newMinRadius, desc, flag);
                 break;
             }
             case ENPCConditionType.KILLS_HORDE:
@@ -164,7 +173,7 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Horde kills condition " + prefix + i + " missing _Nav");
                 }
-                conditions[i] = new NPCHordeKillsCondition(data.readUInt16(prefix + i + "_ID", 0), data.readInt16(prefix + i + "_Value", 0), data.readByte(prefix + i + "_Nav", 0), desc, newShouldReset);
+                conditions[i] = new NPCHordeKillsCondition(data.readUInt16(prefix + i + "_ID", 0), data.readInt16(prefix + i + "_Value", 0), data.readByte(prefix + i + "_Nav", 0), desc, flag);
                 break;
             case ENPCConditionType.KILLS_ANIMAL:
                 if (!data.has(prefix + i + "_ID"))
@@ -179,7 +188,7 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Animal kills condition " + prefix + i + " missing _Animal");
                 }
-                conditions[i] = new NPCAnimalKillsCondition(data.readUInt16(prefix + i + "_ID", 0), data.readInt16(prefix + i + "_Value", 0), data.readUInt16(prefix + i + "_Animal", 0), desc, newShouldReset);
+                conditions[i] = new NPCAnimalKillsCondition(data.readUInt16(prefix + i + "_ID", 0), data.readInt16(prefix + i + "_Value", 0), data.readUInt16(prefix + i + "_Animal", 0), desc, flag);
                 break;
             case ENPCConditionType.COMPARE_FLAGS:
                 if (!data.has(prefix + i + "_A_ID"))
@@ -190,42 +199,42 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Compare flags condition " + prefix + i + " missing _B_ID");
                 }
-                conditions[i] = new NPCCompareFlagsCondition(data.readUInt16(prefix + i + "_A_ID", 0), data.readUInt16(prefix + i + "_B_ID", 0), data.has(prefix + i + "_Allow_A_Unset"), data.has(prefix + i + "_Allow_B_Unset"), newLogicType, desc, newShouldReset);
+                conditions[i] = new NPCCompareFlagsCondition(data.readUInt16(prefix + i + "_A_ID", 0), data.readUInt16(prefix + i + "_B_ID", 0), data.has(prefix + i + "_Allow_A_Unset"), data.has(prefix + i + "_Allow_B_Unset"), eNPCLogicType, desc, flag);
                 break;
             case ENPCConditionType.TIME_OF_DAY:
                 if (!data.has(prefix + i + "_Second"))
                 {
                     Assets.reportError(assetContext, "Time of day condition " + prefix + i + " missing _Second");
                 }
-                conditions[i] = new NPCTimeOfDayCondition(data.readInt32(prefix + i + "_Second"), newLogicType, desc, newShouldReset);
+                conditions[i] = new NPCTimeOfDayCondition(data.readInt32(prefix + i + "_Second"), eNPCLogicType, desc, flag);
                 break;
             case ENPCConditionType.PLAYER_LIFE_HEALTH:
                 if (!data.has(prefix + i + "_Value"))
                 {
                     Assets.reportError(assetContext, "Player life health condition " + prefix + i + " missing _Value");
                 }
-                conditions[i] = new NPCPlayerLifeHealthCondition(data.readInt32(prefix + i + "_Value"), newLogicType, desc);
+                conditions[i] = new NPCPlayerLifeHealthCondition(data.readInt32(prefix + i + "_Value"), eNPCLogicType, desc);
                 break;
             case ENPCConditionType.PLAYER_LIFE_FOOD:
                 if (!data.has(prefix + i + "_Value"))
                 {
                     Assets.reportError(assetContext, "Player life food condition " + prefix + i + " missing _Value");
                 }
-                conditions[i] = new NPCPlayerLifeFoodCondition(data.readInt32(prefix + i + "_Value"), newLogicType, desc);
+                conditions[i] = new NPCPlayerLifeFoodCondition(data.readInt32(prefix + i + "_Value"), eNPCLogicType, desc);
                 break;
             case ENPCConditionType.PLAYER_LIFE_WATER:
                 if (!data.has(prefix + i + "_Value"))
                 {
                     Assets.reportError(assetContext, "Player life water condition " + prefix + i + " missing _Value");
                 }
-                conditions[i] = new NPCPlayerLifeWaterCondition(data.readInt32(prefix + i + "_Value"), newLogicType, desc);
+                conditions[i] = new NPCPlayerLifeWaterCondition(data.readInt32(prefix + i + "_Value"), eNPCLogicType, desc);
                 break;
             case ENPCConditionType.PLAYER_LIFE_VIRUS:
                 if (!data.has(prefix + i + "_Value"))
                 {
                     Assets.reportError(assetContext, "Player life virus condition " + prefix + i + " missing _Value");
                 }
-                conditions[i] = new NPCPlayerLifeVirusCondition(data.readInt32(prefix + i + "_Value"), newLogicType, desc);
+                conditions[i] = new NPCPlayerLifeVirusCondition(data.readInt32(prefix + i + "_Value"), eNPCLogicType, desc);
                 break;
             case ENPCConditionType.HOLIDAY:
             {
@@ -254,7 +263,7 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Player kills condition " + prefix + i + " missing _Value");
                 }
-                conditions[i] = new NPCPlayerKillsCondition(data.readUInt16(prefix + i + "_ID", 0), data.readInt16(prefix + i + "_Value", 0), desc, newShouldReset);
+                conditions[i] = new NPCPlayerKillsCondition(data.readUInt16(prefix + i + "_ID", 0), data.readInt16(prefix + i + "_Value", 0), desc, flag);
                 break;
             case ENPCConditionType.KILLS_OBJECT:
             {
@@ -275,7 +284,7 @@ public class NPCTool
                     Assets.reportError(assetContext, "Object kills condition " + prefix + i + " missing _Object (GUID)");
                 }
                 byte newNav = data.readByte(prefix + i + "_Nav", byte.MaxValue);
-                conditions[i] = new NPCObjectKillsCondition(data.readUInt16(prefix + i + "_ID", 0), data.readInt16(prefix + i + "_Value", 0), newObjectGuid, newNav, desc, newShouldReset);
+                conditions[i] = new NPCObjectKillsCondition(data.readUInt16(prefix + i + "_ID", 0), data.readInt16(prefix + i + "_Value", 0), newObjectGuid, newNav, desc, flag);
                 break;
             }
             case ENPCConditionType.CURRENCY:
@@ -292,7 +301,7 @@ public class NPCTool
                 }
                 AssetReference<ItemCurrencyAsset> newCurrency = data.readAssetReference<ItemCurrencyAsset>(key7);
                 uint newValue = data.readUInt32(key8);
-                conditions[i] = new NPCCurrencyCondition(newCurrency, newValue, newLogicType, desc, newShouldReset);
+                conditions[i] = new NPCCurrencyCondition(newCurrency, newValue, eNPCLogicType, desc, flag);
                 break;
             }
             case ENPCConditionType.KILLS_TREE:
@@ -312,7 +321,7 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Tree kills condition " + prefix + i + " missing _Tree (GUID)");
                 }
-                conditions[i] = new NPCTreeKillsCondition(data.readUInt16(prefix + i + "_ID", 0), data.readInt16(prefix + i + "_Value", 0), newTreeGuid, desc, newShouldReset);
+                conditions[i] = new NPCTreeKillsCondition(data.readUInt16(prefix + i + "_ID", 0), data.readInt16(prefix + i + "_Value", 0), newTreeGuid, desc, flag);
                 break;
             case ENPCConditionType.WEATHER_STATUS:
             {
@@ -327,7 +336,7 @@ public class NPCTool
                     Assets.reportError(assetContext, "Weather condition " + prefix + i + " missing _Value");
                 }
                 AssetReference<WeatherAssetBase> newWeather2 = data.readAssetReference<WeatherAssetBase>(key4);
-                conditions[i] = new NPCWeatherStatusCondition(newWeather2, data.readEnum(key5, ENPCWeatherStatus.Active), newLogicType, desc);
+                conditions[i] = new NPCWeatherStatusCondition(newWeather2, data.readEnum(key5, ENPCWeatherStatus.Active), eNPCLogicType, desc);
                 break;
             }
             case ENPCConditionType.WEATHER_BLEND_ALPHA:
@@ -343,7 +352,7 @@ public class NPCTool
                     Assets.reportError(assetContext, "Weather condition " + prefix + i + " missing _Value");
                 }
                 AssetReference<WeatherAssetBase> newWeather = data.readAssetReference<WeatherAssetBase>(key2);
-                conditions[i] = new NPCWeatherBlendAlphaCondition(newWeather, data.readSingle(key3), newLogicType, desc);
+                conditions[i] = new NPCWeatherBlendAlphaCondition(newWeather, data.readSingle(key3), eNPCLogicType, desc);
                 break;
             }
             case ENPCConditionType.IS_FULL_MOON:
@@ -445,12 +454,15 @@ public class NPCTool
                 break;
             }
             case ENPCRewardType.QUEST:
+            {
                 if (!data.has(prefix + i + "_ID"))
                 {
                     Assets.reportError(assetContext, "Quest reward " + prefix + i + " missing _ID");
                 }
-                rewards[i] = new NPCQuestReward(data.readUInt16(prefix + i + "_ID", 0), desc);
+                data.ReadGuidOrLegacyId(prefix + i + "_ID", out var guid2, out var legacyId2);
+                rewards[i] = new NPCQuestReward(guid2, legacyId2, desc);
                 break;
+            }
             case ENPCRewardType.ITEM:
             {
                 string key3 = prefix + i + "_ID";

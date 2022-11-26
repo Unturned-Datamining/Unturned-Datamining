@@ -426,7 +426,7 @@ public class MenuDashboardUI
         }
     }
 
-    private static void OnUpdateDetected(string versionString)
+    private static void OnUpdateDetected(string versionString, bool isRollback)
     {
         ISleekBox sleekBox = Glazier.Get().CreateBox();
         sleekBox.positionOffset_X = 210;
@@ -435,8 +435,11 @@ public class MenuDashboardUI
         sleekBox.sizeOffset_X = -210;
         sleekBox.sizeScale_X = 1f;
         sleekBox.fontSize = ESleekFontSize.Medium;
-        sleekBox.text = localization.format("UpdateAvailable", versionString);
         container.AddChild(sleekBox);
+        string key = (isRollback ? "RollbackAvailable" : "UpdateAvailable");
+        string s = localization.format(key, versionString);
+        RichTextUtil.replaceNewlineMarkup(ref s);
+        sleekBox.text = s;
         mainHeaderOffset += sleekBox.sizeOffset_Y + 10;
         canvas.transform.Find("View").GetComponent<RectTransform>().offsetMax -= new Vector2(0f, 50f);
         canvas.transform.Find("Scrollbar").GetComponent<RectTransform>().offsetMax -= new Vector2(0f, 50f);

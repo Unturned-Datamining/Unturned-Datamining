@@ -22,7 +22,7 @@ internal class EditorInteract : MonoBehaviour
 
     private IDevkitTool activeTool;
 
-    public TerrainEditorV2 terrainTool;
+    public TerrainEditor terrainTool;
 
     public static bool isFlying => _isFlying;
 
@@ -137,7 +137,7 @@ internal class EditorInteract : MonoBehaviour
     {
         load();
         instance = this;
-        terrainTool = new TerrainEditorV2();
+        terrainTool = new TerrainEditor();
     }
 
     public static void load()

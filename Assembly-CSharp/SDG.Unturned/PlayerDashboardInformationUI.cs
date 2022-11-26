@@ -151,6 +151,8 @@ public class PlayerDashboardInformationUI
 
     private static Texture2D staticTexture;
 
+    private static List<PlayerQuest> displayedQuests = new List<PlayerQuest>();
+
     private const string playerListSortKey = "PlayerListSortMode";
 
     private static void synchronizeMapVisibility(int view)
@@ -466,14 +468,16 @@ public class PlayerDashboardInformationUI
     {
         tab = EInfoTab.QUESTS;
         questsBox.RemoveAllChildren();
+        displayedQuests.Clear();
         int num = 0;
         foreach (PlayerQuest quests in Player.player.quests.questsList)
         {
             if (quests != null && quests.asset != null)
             {
+                displayedQuests.Add(quests);
                 bool flag = quests.asset.areConditionsMet(Player.player);
                 ISleekButton sleekButton = Glazier.Get().CreateButton();
-                sleekButton.positionOffset_Y = num * 60;
+                sleekButton.positionOffset_Y = num;
                 sleekButton.sizeOffset_Y = 50;
                 sleekButton.sizeScale_X = 1f;
                 sleekButton.onClickedButton += onClickedQuestButton;
@@ -496,10 +500,10 @@ public class PlayerDashboardInformationUI
                 sleekLabel.fontSize = ESleekFontSize.Medium;
                 sleekLabel.text = quests.asset.questName;
                 sleekButton.AddChild(sleekLabel);
-                num++;
+                num += sleekButton.sizeOffset_Y + 10;
             }
         }
-        questsBox.contentSizeOffset = new Vector2(0f, num * 60 - 10);
+        questsBox.contentSizeOffset = new Vector2(0f, num - 10);
         updateTabs();
     }
 
@@ -873,8 +877,13 @@ public class PlayerDashboardInformationUI
 
     private static void onClickedQuestButton(ISleekElement button)
     {
-        int index = questsBox.FindIndexOfChild(button);
-        PlayerQuest playerQuest = Player.player.quests.questsList[index];
+        int num = questsBox.FindIndexOfChild(button);
+        if (num < 0 || num >= displayedQuests.Count)
+        {
+            UnturnedLog.warn("Cannot find clicked quest");
+            return;
+        }
+        PlayerQuest playerQuest = displayedQuests[num];
         PlayerDashboardUI.close();
         PlayerNPCQuestUI.open(playerQuest.asset, null, null, null, EQuestViewMode.DETAILS);
     }

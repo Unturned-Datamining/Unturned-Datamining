@@ -203,12 +203,12 @@ public class PlayerUI : MonoBehaviour
 
     public static void enableDot()
     {
-        PlayerLifeUI.crosshair.SetDotVisible(isVisible: true);
+        PlayerLifeUI.crosshair.SetGameWantsCenterDotVisible(isVisible: true);
     }
 
     public static void disableDot()
     {
-        PlayerLifeUI.crosshair.SetDotVisible(isVisible: false);
+        PlayerLifeUI.crosshair.SetGameWantsCenterDotVisible(isVisible: false);
     }
 
     public static void updateScope(bool isScoped)

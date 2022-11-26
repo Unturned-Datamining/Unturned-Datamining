@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-internal class FoliageEditorV2 : IDevkitTool
+internal class FoliageEditor : IDevkitTool
 {
     public enum EFoliageMode
     {
@@ -160,11 +160,8 @@ internal class FoliageEditorV2 : IDevkitTool
                         continue;
                     }
                 }
-                if (InputEx.GetKey(KeyCode.Mouse0))
-                {
-                    foliageAsset.addFoliageToSurface(hitInfo.point, hitInfo.normal, clearWhenBaked: false, followRules: true);
-                    flag = true;
-                }
+                foliageAsset.addFoliageToSurface(hitInfo.point, hitInfo.normal, clearWhenBaked: false, followRules: true);
+                flag = true;
             }
         }
         addWeights[foliageAsset] = value;
@@ -455,19 +452,26 @@ internal class FoliageEditorV2 : IDevkitTool
                     }
                 }
             }
-            else if (selectedInstanceAsset != null)
-            {
-                addFoliage(selectedInstanceAsset, 1f);
-            }
             else
             {
-                if (selectedCollectionAsset == null)
+                if (!InputEx.GetKey(KeyCode.Mouse0))
                 {
                     return;
                 }
-                foreach (FoliageInfoCollectionAsset.FoliageInfoCollectionElement element4 in selectedCollectionAsset.elements)
+                if (selectedInstanceAsset != null)
                 {
-                    addFoliage(Assets.find(element4.asset), element4.weight);
+                    addFoliage(selectedInstanceAsset, 1f);
+                }
+                else
+                {
+                    if (selectedCollectionAsset == null)
+                    {
+                        return;
+                    }
+                    foreach (FoliageInfoCollectionAsset.FoliageInfoCollectionElement element4 in selectedCollectionAsset.elements)
+                    {
+                        addFoliage(Assets.find(element4.asset), element4.weight);
+                    }
                 }
             }
         }

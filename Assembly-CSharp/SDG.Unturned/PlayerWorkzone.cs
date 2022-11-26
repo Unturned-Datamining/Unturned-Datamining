@@ -41,7 +41,7 @@ public class PlayerWorkzone : PlayerCaller
 
     private Quaternion copyRotation;
 
-    private TransformHandlesV3 handlesV3;
+    private TransformHandles handles;
 
     private EDragMode _dragMode;
 
@@ -190,14 +190,14 @@ public class PlayerWorkzone : PlayerCaller
                 }
             }
             zero /= (float)selection.Count;
-            handlesV3.SetPreferredPivot(zero, Quaternion.identity);
+            handles.SetPreferredPivot(zero, Quaternion.identity);
             return;
         }
         for (int j = 0; j < selection.Count; j++)
         {
             if (!(selection[j].transform == null))
             {
-                handlesV3.SetPreferredPivot(selection[j].transform.position, selection[j].transform.rotation);
+                handles.SetPreferredPivot(selection[j].transform.position, selection[j].transform.rotation);
                 break;
             }
         }
@@ -243,29 +243,29 @@ public class PlayerWorkzone : PlayerCaller
         ray = MainCamera.instance.ScreenPointToRay(Input.mousePosition);
         Physics.Raycast(ray, out worldHit, 256f, RayMasks.EDITOR_WORLD);
         Physics.Raycast(ray, out buildableHit, 256f, RayMasks.EDITOR_BUILDABLE);
-        handlesV3.snapPositionInterval = snapTransform;
-        handlesV3.snapRotationIntervalDegrees = snapRotation;
+        handles.snapPositionInterval = snapTransform;
+        handles.snapRotationIntervalDegrees = snapRotation;
         if (dragMode == EDragMode.TRANSFORM)
         {
             if (wantsBoundsEditor)
             {
-                handlesV3.SetPreferredMode(TransformHandlesV3.EMode.PositionBounds);
-                handlesV3.UpdateBoundsFromSelection(EnumerateSelectedGameObjects());
+                handles.SetPreferredMode(TransformHandles.EMode.PositionBounds);
+                handles.UpdateBoundsFromSelection(EnumerateSelectedGameObjects());
             }
             else
             {
-                handlesV3.SetPreferredMode(TransformHandlesV3.EMode.Position);
+                handles.SetPreferredMode(TransformHandles.EMode.Position);
             }
         }
         else
         {
-            handlesV3.SetPreferredMode(TransformHandlesV3.EMode.Rotation);
+            handles.SetPreferredMode(TransformHandles.EMode.Rotation);
         }
         if (selection.Count > 0)
         {
-            handlesV3.Render(ray);
+            handles.Render(ray);
         }
-        bool flag = selection.Count > 0 && handlesV3.Raycast(ray);
+        bool flag = selection.Count > 0 && handles.Raycast(ray);
         if (Glazier.Get().ShouldGameProcessInput)
         {
             if (InputEx.GetKey(ControlsSettings.secondary))
@@ -285,12 +285,12 @@ public class PlayerWorkzone : PlayerCaller
                 {
                     applySelection();
                     isUsingHandle = false;
-                    handlesV3.MouseUp();
+                    handles.MouseUp();
                 }
                 else
                 {
-                    handlesV3.wantsToSnap = InputEx.GetKey(ControlsSettings.snap);
-                    handlesV3.MouseMove(ray);
+                    handles.wantsToSnap = InputEx.GetKey(ControlsSettings.snap);
+                    handles.MouseMove(ray);
                 }
             }
             if (InputEx.GetKeyDown(ControlsSettings.tool_0))
@@ -310,8 +310,8 @@ public class PlayerWorkzone : PlayerCaller
             }
             if (InputEx.GetKeyDown(KeyCode.B) && selection.Count > 0 && InputEx.GetKey(KeyCode.LeftControl))
             {
-                copyPosition = handlesV3.GetPivotPosition();
-                copyRotation = handlesV3.GetPivotRotation();
+                copyPosition = handles.GetPivotPosition();
+                copyRotation = handles.GetPivotRotation();
             }
             if (InputEx.GetKeyDown(KeyCode.N) && selection.Count > 0 && copyPosition != Vector3.zero && InputEx.GetKey(KeyCode.LeftControl))
             {
@@ -324,7 +324,7 @@ public class PlayerWorkzone : PlayerCaller
                 }
                 else
                 {
-                    handlesV3.ExternallyTransformPivot(copyPosition, copyRotation, modifyRotation: true);
+                    handles.ExternallyTransformPivot(copyPosition, copyRotation, modifyRotation: true);
                 }
                 applySelection();
             }
@@ -336,7 +336,7 @@ public class PlayerWorkzone : PlayerCaller
                     {
                         pointSelection();
                         isUsingHandle = true;
-                        handlesV3.MouseDown(ray);
+                        handles.MouseDown(ray);
                     }
                     else
                     {
@@ -497,8 +497,8 @@ public class PlayerWorkzone : PlayerCaller
                     {
                         point += worldHit.normal * snapTransform;
                     }
-                    Quaternion pivotRotation = handlesV3.GetPivotRotation();
-                    handlesV3.ExternallyTransformPivot(point, pivotRotation, modifyRotation: false);
+                    Quaternion pivotRotation = handles.GetPivotRotation();
+                    handles.ExternallyTransformPivot(point, pivotRotation, modifyRotation: false);
                     applySelection();
                 }
             }
@@ -517,9 +517,9 @@ public class PlayerWorkzone : PlayerCaller
     {
         _isBuilding = false;
         selection = new List<WorkzoneSelection>();
-        handlesV3 = new TransformHandlesV3();
-        handlesV3.OnPreTransform += OnHandlePreTransform;
-        handlesV3.OnTranslatedAndRotated += OnHandleTranslatedAndRotated;
+        handles = new TransformHandles();
+        handles.OnPreTransform += OnHandlePreTransform;
+        handles.OnTranslatedAndRotated += OnHandleTranslatedAndRotated;
         dragMode = EDragMode.TRANSFORM;
         dragCoordinate = EDragCoordinate.GLOBAL;
         dragable = new List<EditorDrag>();

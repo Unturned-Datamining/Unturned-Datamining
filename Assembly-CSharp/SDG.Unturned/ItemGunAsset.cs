@@ -138,6 +138,8 @@ public class ItemGunAsset : ItemWeaponAsset
 
     public float damageFalloffRange;
 
+    public float damageFalloffMaxRange;
+
     public float damageFalloffMultiplier;
 
     public float projectileLifespan;
@@ -746,6 +748,7 @@ public class ItemGunAsset : ItemWeaponAsset
             ballisticForce = 0.002f;
         }
         damageFalloffRange = data.readSingle("Damage_Falloff_Range", 1f);
+        damageFalloffMaxRange = data.readSingle("Damage_Falloff_Max_Range", 1f);
         damageFalloffMultiplier = data.readSingle("Damage_Falloff_Multiplier", 1f);
         projectileLifespan = data.readSingle("Projectile_Lifespan", 30f);
         projectilePenetrateBuildables = data.has("Projectile_Penetrate_Buildables");

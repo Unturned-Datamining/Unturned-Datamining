@@ -742,7 +742,7 @@ public class UseableGun : Useable
                     Quaternion quaternion = Quaternion.Euler(base.player.animator.recoilViewmodelCameraRotation.currentPosition);
                     rotation *= quaternion;
                 }
-                float halfAngleRadians = CalculateSpreadAngleRadians(num);
+                float halfAngleRadians = CalculateSpreadAngleRadians(num, GetSimulationAimAlpha());
                 byte pellets = thirdAttachments.magazineAsset.pellets;
                 for (byte b = 0; b < pellets; b = (byte)(b + 1))
                 {
@@ -796,8 +796,8 @@ public class UseableGun : Useable
             {
                 if (isAiming && equippedGunAsset.useRecoilAim && thirdAttachments.sightAsset.zoom > 2f)
                 {
-                    num2 *= Mathf.Lerp(1f, 1f / thirdAttachments.sightAsset.zoom * equippedGunAsset.recoilAim, (float)(int)aimAccuracy / 10f * ((base.player.look.perspective == EPlayerPerspective.FIRST) ? 1f : 0.5f));
-                    num3 *= Mathf.Lerp(1f, 1f / thirdAttachments.sightAsset.zoom * equippedGunAsset.recoilAim, (float)(int)aimAccuracy / 10f * ((base.player.look.perspective == EPlayerPerspective.FIRST) ? 1f : 0.5f));
+                    num2 *= Mathf.Lerp(1f, 1f / thirdAttachments.sightAsset.zoom * equippedGunAsset.recoilAim, GetSimulationAimAlpha() * ((base.player.look.perspective == EPlayerPerspective.FIRST) ? 1f : 0.5f));
+                    num3 *= Mathf.Lerp(1f, 1f / thirdAttachments.sightAsset.zoom * equippedGunAsset.recoilAim, GetSimulationAimAlpha() * ((base.player.look.perspective == EPlayerPerspective.FIRST) ? 1f : 0.5f));
                 }
                 if (isAiming)
                 {
@@ -1448,7 +1448,9 @@ public class UseableGun : Useable
                 uint xp = 0u;
                 float bulletDamageMultiplier = getBulletDamageMultiplier(ref bullet);
                 float value = Vector3.Distance(bullet.origin, input.point);
-                float t = Mathf.InverseLerp(equippedGunAsset.range * equippedGunAsset.damageFalloffRange, equippedGunAsset.range, value);
+                float a = equippedGunAsset.range * equippedGunAsset.damageFalloffRange;
+                float b = equippedGunAsset.range * equippedGunAsset.damageFalloffMaxRange;
+                float t = Mathf.InverseLerp(a, b, value);
                 bulletDamageMultiplier *= Mathf.Lerp(1f, equippedGunAsset.damageFalloffMultiplier, t);
                 ERagdollEffect useableRagdollEffect = base.player.equipment.getUseableRagdollEffect();
                 if (input.type == ERaycastInfoType.PLAYER)
@@ -3618,21 +3620,19 @@ public class UseableGun : Useable
     internal float CalculateSpreadAngleRadians()
     {
         float quality = (float)(int)base.player.equipment.quality / 100f;
-        return CalculateSpreadAngleRadians(quality);
+        float interpolatedAimAlpha = GetInterpolatedAimAlpha();
+        return CalculateSpreadAngleRadians(quality, interpolatedAimAlpha);
     }
 
-    internal float CalculateSpreadAngleRadians(float quality)
+    internal float CalculateSpreadAngleRadians(float quality, float aimAlpha)
     {
         float baseSpreadAngleRadians = equippedGunAsset.baseSpreadAngleRadians;
         baseSpreadAngleRadians *= ((quality < 0.5f) ? (1f + (1f - quality * 2f)) : 1f);
-        if (isAiming)
-        {
-            baseSpreadAngleRadians *= Mathf.Lerp(1f, equippedGunAsset.spreadAim, (float)(int)aimAccuracy / 10f);
-        }
+        baseSpreadAngleRadians *= Mathf.Lerp(1f, equippedGunAsset.spreadAim, aimAlpha);
         baseSpreadAngleRadians *= 1f - base.player.skills.mastery(0, 1) * 0.5f;
-        if (thirdAttachments.sightAsset != null && isAiming && (!thirdAttachments.sightAsset.ShouldOnlyAffectAimWhileProne || base.player.stance.stance == EPlayerStance.PRONE))
+        if (thirdAttachments.sightAsset != null && (!thirdAttachments.sightAsset.ShouldOnlyAffectAimWhileProne || base.player.stance.stance == EPlayerStance.PRONE))
         {
-            baseSpreadAngleRadians *= Mathf.Lerp(1f, thirdAttachments.sightAsset.spread, (float)(int)aimAccuracy / 10f);
+            baseSpreadAngleRadians *= Mathf.Lerp(1f, thirdAttachments.sightAsset.spread, aimAlpha);
         }
         if (thirdAttachments.tacticalAsset != null && shouldEnableTacticalStats && (!thirdAttachments.tacticalAsset.ShouldOnlyAffectAimWhileProne || base.player.stance.stance == EPlayerStance.PRONE))
         {
@@ -4396,6 +4396,29 @@ public class UseableGun : Useable
         }
     }
 
+    private float GetInterpolatedAimAlpha()
+    {
+        float num = (float)((Time.timeAsDouble - Time.fixedTimeAsDouble) / (double)Time.fixedDeltaTime);
+        if (isAiming)
+        {
+            if (aimAccuracy < 10)
+            {
+                return (float)(int)aimAccuracy * 0.1f + num * 0.1f;
+            }
+            return 1f;
+        }
+        if (aimAccuracy > 0)
+        {
+            return (float)(int)aimAccuracy * 0.1f - num * 0.1f;
+        }
+        return 0f;
+    }
+
+    private float GetSimulationAimAlpha()
+    {
+        return (float)(int)aimAccuracy * 0.1f;
+    }
+
     private void UpdateInfoBoxVisibility()
     {
         bool flag = base.player.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowUseableGunStatus);
@@ -4442,7 +4465,7 @@ public class UseableGun : Useable
         {
             Vector3 position2 = position + vector * enter;
             Vector3 b = firstAttachments.reticuleHook.parent.InverseTransformPoint(position2);
-            firstAttachments.reticuleHook.localPosition = Vector3.Lerp(originalReticuleHookLocalPosition, b, (float)(int)aimAccuracy * 0.1f);
+            firstAttachments.reticuleHook.localPosition = Vector3.Lerp(originalReticuleHookLocalPosition, b, GetInterpolatedAimAlpha());
         }
     }
 

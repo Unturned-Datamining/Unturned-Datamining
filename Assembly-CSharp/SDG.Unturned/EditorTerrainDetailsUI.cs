@@ -7,11 +7,11 @@ using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
-internal class EditorTerrainDetailsUIV2 : SleekFullscreenBox
+internal class EditorTerrainDetailsUI : SleekFullscreenBox
 {
     private Local localization;
 
-    private FoliageEditorV2 tool;
+    private FoliageEditor tool;
 
     private List<FoliageInfoAsset> searchInfoAssets;
 
@@ -92,7 +92,7 @@ internal class EditorTerrainDetailsUIV2 : SleekFullscreenBox
             bakeProgressLabel.isVisible = true;
             bakeProgressLabel.text = bakeQueueProgress + "/" + bakeQueueTotal + " [" + num.ToString("P") + "]";
         }
-        if (tool.mode == FoliageEditorV2.EFoliageMode.PAINT)
+        if (tool.mode == FoliageEditor.EFoliageMode.PAINT)
         {
             hintLabel.text = localization.format("Hint_Paint", "Shift", "Ctrl", "Alt");
             hintLabel.isVisible = true;
@@ -104,11 +104,11 @@ internal class EditorTerrainDetailsUIV2 : SleekFullscreenBox
         UpdateOffsets();
     }
 
-    public EditorTerrainDetailsUIV2()
+    public EditorTerrainDetailsUI()
     {
         localization = Localization.read("/Editor/EditorTerrainDetails.dat");
         DevkitFoliageToolOptions.load();
-        tool = new FoliageEditorV2();
+        tool = new FoliageEditor();
         searchInfoAssets = new List<FoliageInfoAsset>();
         searchCollectionAssets = new List<FoliageInfoCollectionAsset>();
         maxPreviewSamplesField = Glazier.Get().CreateUInt32Field();
@@ -326,11 +326,11 @@ internal class EditorTerrainDetailsUIV2 : SleekFullscreenBox
 
     private void UpdateOffsets()
     {
-        selectedAssetBox.isVisible = tool.mode != FoliageEditorV2.EFoliageMode.BAKE;
+        selectedAssetBox.isVisible = tool.mode != FoliageEditor.EFoliageMode.BAKE;
         searchTypeButton.isVisible = selectedAssetBox.isVisible;
         searchField.isVisible = selectedAssetBox.isVisible;
         assetScrollView.isVisible = selectedAssetBox.isVisible;
-        bakeInstancedMeshesToggle.isVisible = tool.mode == FoliageEditorV2.EFoliageMode.BAKE;
+        bakeInstancedMeshesToggle.isVisible = tool.mode == FoliageEditor.EFoliageMode.BAKE;
         bakeResourcesToggle.isVisible = bakeInstancedMeshesToggle.isVisible;
         bakeObjectsToggle.isVisible = bakeInstancedMeshesToggle.isVisible;
         bakeApplyScaleToggle.isVisible = bakeInstancedMeshesToggle.isVisible;
@@ -342,21 +342,21 @@ internal class EditorTerrainDetailsUIV2 : SleekFullscreenBox
         num -= modeButton.sizeOffset_Y;
         modeButton.positionOffset_Y = num;
         num -= 10;
-        maxPreviewSamplesField.isVisible = tool.mode == FoliageEditorV2.EFoliageMode.PAINT;
+        maxPreviewSamplesField.isVisible = tool.mode == FoliageEditor.EFoliageMode.PAINT;
         if (maxPreviewSamplesField.isVisible)
         {
             num -= maxPreviewSamplesField.sizeOffset_Y;
             maxPreviewSamplesField.positionOffset_Y = num;
             num -= 10;
         }
-        surfaceMaskField.isVisible = tool.mode != FoliageEditorV2.EFoliageMode.BAKE;
+        surfaceMaskField.isVisible = tool.mode != FoliageEditor.EFoliageMode.BAKE;
         if (surfaceMaskField.isVisible)
         {
             num -= surfaceMaskField.sizeOffset_Y;
             surfaceMaskField.positionOffset_Y = num;
             num -= 10;
         }
-        densityTargetField.isVisible = tool.mode == FoliageEditorV2.EFoliageMode.PAINT;
+        densityTargetField.isVisible = tool.mode == FoliageEditor.EFoliageMode.PAINT;
         brushStrengthField.isVisible = densityTargetField.isVisible;
         brushFalloffField.isVisible = densityTargetField.isVisible;
         brushRadiusField.isVisible = densityTargetField.isVisible;
@@ -378,7 +378,7 @@ internal class EditorTerrainDetailsUIV2 : SleekFullscreenBox
 
     private void OnSwappedMode(SleekButtonState element, int index)
     {
-        tool.mode = (FoliageEditorV2.EFoliageMode)index;
+        tool.mode = (FoliageEditor.EFoliageMode)index;
     }
 
     private void OnMaxPreviewSamplesTyped(ISleekUInt32Field field, uint state)
