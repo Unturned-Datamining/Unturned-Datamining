@@ -204,6 +204,8 @@ public class ItemGunAsset : ItemWeaponAsset
 
     public bool canAimDuringSprint { get; protected set; }
 
+    public float aimInDuration { get; protected set; }
+
     public ushort sightID
     {
         get
@@ -806,6 +808,7 @@ public class ItemGunAsset : ItemWeaponAsset
             shootQuestRewards = new INPCReward[num6];
             NPCTool.readRewards(data, localization, "Shoot_Quest_Reward_", shootQuestRewards, this);
         }
+        aimInDuration = data.readSingle("Aim_In_Duration", 0.2f);
     }
 
     protected override AudioReference GetDefaultInventoryAudio()

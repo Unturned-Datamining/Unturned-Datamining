@@ -476,7 +476,8 @@ public class NPCTool
                 }
                 data.ReadGuidOrLegacyId(key3, out var guid, out var legacyId);
                 bool newShouldAutoEquip = data.readBoolean(prefix + i + "_Auto_Equip");
-                rewards[i] = new NPCItemReward(guid, legacyId, data.readByte(prefix + i + "_Amount", 0), newShouldAutoEquip, data.readUInt16(prefix + i + "_Sight", 0), data.readUInt16(prefix + i + "_Tactical", 0), data.readUInt16(prefix + i + "_Grip", 0), data.readUInt16(prefix + i + "_Barrel", 0), data.readUInt16(prefix + i + "_Magazine", 0), data.readByte(prefix + i + "_Ammo", 0), desc);
+                EItemOrigin origin = data.readEnum(prefix + i + "_Origin", EItemOrigin.CRAFT);
+                rewards[i] = new NPCItemReward(guid, legacyId, data.readByte(prefix + i + "_Amount", 0), newShouldAutoEquip, data.readUInt16(prefix + i + "_Sight", 0), data.readUInt16(prefix + i + "_Tactical", 0), data.readUInt16(prefix + i + "_Grip", 0), data.readUInt16(prefix + i + "_Barrel", 0), data.readUInt16(prefix + i + "_Magazine", 0), data.readByte(prefix + i + "_Ammo", 0), origin, desc);
                 break;
             }
             case ENPCRewardType.ITEM_RANDOM:
@@ -490,7 +491,8 @@ public class NPCTool
                     Assets.reportError(assetContext, "Random item reward " + prefix + i + " missing _Amount");
                 }
                 bool newShouldAutoEquip2 = data.readBoolean(prefix + i + "_Auto_Equip");
-                rewards[i] = new NPCRandomItemReward(data.readUInt16(prefix + i + "_ID", 0), data.readByte(prefix + i + "_Amount", 0), newShouldAutoEquip2, desc);
+                EItemOrigin origin2 = data.readEnum(prefix + i + "_Origin", EItemOrigin.CRAFT);
+                rewards[i] = new NPCRandomItemReward(data.readUInt16(prefix + i + "_ID", 0), data.readByte(prefix + i + "_Amount", 0), newShouldAutoEquip2, origin2, desc);
                 break;
             }
             case ENPCRewardType.ACHIEVEMENT:

@@ -115,15 +115,7 @@ public class UseableGun : Useable
 
     private AudioSource whir;
 
-    private Vector3 sightOffset;
-
-    private Vector3 viewOffset;
-
-    private Vector3 scopeOffset;
-
     private Vector3 originalReticuleHookLocalPosition;
-
-    private bool aimIsUsingScopeOffset;
 
     private bool isShooting;
 
@@ -155,7 +147,7 @@ public class UseableGun : Useable
 
     private int fireDelayCounter;
 
-    private byte aimAccuracy;
+    private int aimAccuracy;
 
     private uint steadyAccuracy;
 
@@ -258,6 +250,10 @@ public class UseableGun : Useable
     private static readonly ClientInstanceMethod SendPlayAimStart = ClientInstanceMethod.Get(typeof(UseableGun), "ReceivePlayAimStart");
 
     private static readonly ClientInstanceMethod SendPlayAimStop = ClientInstanceMethod.Get(typeof(UseableGun), "ReceivePlayAimStop");
+
+    private int maxAimingAccuracy;
+
+    private float maxAimingAccuracyReciprocal;
 
     public bool isAiming { get; protected set; }
 
@@ -2469,25 +2465,6 @@ public class UseableGun : Useable
             {
                 PlayerUI.message(EPlayerMessage.RELOAD, "");
             }
-            base.player.animator.TemporarilyClampViewmodelCameraTransform();
-            base.player.animator.getAnimationSample("Aim_Start", 1f);
-            if (firstAttachments.sightHook != null)
-            {
-                sightOffset = base.player.animator.viewmodelCameraTransform.InverseTransformPoint(firstAttachments.sightHook.position);
-            }
-            else
-            {
-                sightOffset = Vector3.zero;
-            }
-            if (firstAttachments.viewHook != null)
-            {
-                viewOffset = base.player.animator.viewmodelCameraTransform.InverseTransformPoint(firstAttachments.viewHook.position);
-            }
-            else
-            {
-                viewOffset = Vector3.zero;
-            }
-            updateScopeOffset();
             if (firstAttachments.reticuleHook != null)
             {
                 originalReticuleHookLocalPosition = firstAttachments.reticuleHook.localPosition;
@@ -2496,7 +2473,6 @@ public class UseableGun : Useable
             {
                 originalReticuleHookLocalPosition = Vector3.zero;
             }
-            base.player.animator.RestoreViewmodelCameraTransform();
             localization = Localization.read("/Player/Useable/PlayerUseableGun.dat");
             if (icons != null)
             {
@@ -3284,7 +3260,7 @@ public class UseableGun : Useable
         ballistics();
         if (isAiming)
         {
-            if (aimAccuracy < 10)
+            if (aimAccuracy < maxAimingAccuracy)
             {
                 aimAccuracy++;
             }
@@ -3309,7 +3285,6 @@ public class UseableGun : Useable
         updateAttachments(wasMagazineModelVisible);
         if (base.channel.isOwner)
         {
-            updateScopeOffset();
             if (firstAttachments.reticuleHook != null)
             {
                 originalReticuleHookLocalPosition = firstAttachments.reticuleHook.localPosition;
@@ -3339,27 +3314,6 @@ public class UseableGun : Useable
         base.player.animator.setAnimationSpeed("Scope", speed);
         hammerTime = Mathf.Max(hammerTime, equippedGunAsset.hammerTime / speed);
         unjamChamberDuration = base.player.animator.getAnimationLength(equippedGunAsset.unjamChamberAnimName);
-    }
-
-    private void updateScopeOffset()
-    {
-        if (firstAttachments.aimHook != null)
-        {
-            Vector3 vector = firstAttachments.aimHook.localPosition + firstAttachments.aimHook.parent.localPosition;
-            scopeOffset = new Vector3(vector.x, vector.z, vector.y);
-        }
-        else if (equippedGunAsset.hasSight)
-        {
-            scopeOffset = new Vector3(0f, 0.01f, -0.04f);
-        }
-        else
-        {
-            scopeOffset = Vector3.zero;
-        }
-        if (aimIsUsingScopeOffset)
-        {
-            base.player.animator.viewmodelCameraLocalPositionOffset = sightOffset + scopeOffset;
-        }
     }
 
     private void updateAttachments(bool wasMagazineModelVisible)
@@ -3599,6 +3553,7 @@ public class UseableGun : Useable
             UpdateCrosshairEnabled();
         }
         UpdateMovementSpeedMultiplier();
+        UpdateAimInDuration();
     }
 
     private void applyRecoilMagnitudeModifiers(ref float value)
@@ -3665,6 +3620,10 @@ public class UseableGun : Useable
         if (base.player.look.perspective == EPlayerPerspective.THIRD && Provider.cameraMode != ECameraMode.THIRD)
         {
             baseSpreadAngleRadians *= 2f;
+        }
+        if (!base.player.movement.isGrounded)
+        {
+            baseSpreadAngleRadians *= 1.5f;
         }
         return baseSpreadAngleRadians;
     }
@@ -4075,15 +4034,7 @@ public class UseableGun : Useable
                 else
                 {
                     PlayerLifeUI.scopeImage.texture = null;
-                    if (firstAttachments.aimHook != null || firstAttachments.viewHook == null)
-                    {
-                        base.player.animator.viewmodelCameraLocalPositionOffset = sightOffset + scopeOffset;
-                        aimIsUsingScopeOffset = true;
-                    }
-                    else
-                    {
-                        base.player.animator.viewmodelCameraLocalPositionOffset = viewOffset;
-                    }
+                    base.player.animator.viewmodelCameraLocalPositionOffset = Vector3.zero;
                 }
             }
             else
@@ -4135,7 +4086,6 @@ public class UseableGun : Useable
         UpdateMovementSpeedMultiplier();
         if (base.channel.isOwner)
         {
-            aimIsUsingScopeOffset = false;
             if (!equippedGunAsset.isTurret)
             {
                 base.player.animator.viewmodelCameraLocalPositionOffset = Vector3.zero;
@@ -4396,27 +4346,53 @@ public class UseableGun : Useable
         }
     }
 
+    internal void GetAimingViewmodelAlignment(out Transform alignmentTransform, out Vector3 alignmentOffset, out float alpha)
+    {
+        alignmentTransform = null;
+        alignmentOffset = Vector3.zero;
+        alpha = GetInterpolatedAimAlpha();
+        if (equippedGunAsset.isTurret || equippedGunAsset.action == EAction.Minigun || !(firstAttachments != null))
+        {
+            return;
+        }
+        if (firstAttachments.aimHook != null)
+        {
+            alignmentTransform = firstAttachments.aimHook;
+            return;
+        }
+        if (firstAttachments.viewHook != null)
+        {
+            alignmentTransform = firstAttachments.viewHook;
+            return;
+        }
+        alignmentTransform = firstAttachments.sightHook;
+        if (equippedGunAsset.hasSight)
+        {
+            alignmentOffset = new Vector3(0f, -0.04f, 0.01f);
+        }
+    }
+
     private float GetInterpolatedAimAlpha()
     {
         float num = (float)((Time.timeAsDouble - Time.fixedTimeAsDouble) / (double)Time.fixedDeltaTime);
         if (isAiming)
         {
-            if (aimAccuracy < 10)
+            if (aimAccuracy < maxAimingAccuracy)
             {
-                return (float)(int)aimAccuracy * 0.1f + num * 0.1f;
+                return MathfEx.SmootherStep01((float)aimAccuracy * maxAimingAccuracyReciprocal + num * maxAimingAccuracyReciprocal);
             }
             return 1f;
         }
         if (aimAccuracy > 0)
         {
-            return (float)(int)aimAccuracy * 0.1f - num * 0.1f;
+            return MathfEx.SmootherStep01((float)aimAccuracy * maxAimingAccuracyReciprocal - num * maxAimingAccuracyReciprocal);
         }
         return 0f;
     }
 
     private float GetSimulationAimAlpha()
     {
-        return (float)(int)aimAccuracy * 0.1f;
+        return (float)aimAccuracy * maxAimingAccuracyReciprocal;
     }
 
     private void UpdateInfoBoxVisibility()
@@ -4515,6 +4491,37 @@ public class UseableGun : Useable
             {
                 movementSpeedMultiplier *= thirdAttachments.gripAsset.aimingMovementSpeedMultiplier;
             }
+        }
+    }
+
+    private void UpdateAimInDuration()
+    {
+        float num = equippedGunAsset.aimInDuration;
+        if (thirdAttachments.barrelAsset != null)
+        {
+            num *= thirdAttachments.barrelAsset.aimDurationMultiplier;
+        }
+        if (thirdAttachments.tacticalAsset != null)
+        {
+            num *= thirdAttachments.tacticalAsset.aimDurationMultiplier;
+        }
+        if (thirdAttachments.sightAsset != null)
+        {
+            num *= thirdAttachments.sightAsset.aimDurationMultiplier;
+        }
+        if (thirdAttachments.magazineAsset != null)
+        {
+            num *= thirdAttachments.magazineAsset.aimDurationMultiplier;
+        }
+        if (thirdAttachments.gripAsset != null)
+        {
+            num *= thirdAttachments.gripAsset.aimDurationMultiplier;
+        }
+        maxAimingAccuracy = Mathf.Clamp(Mathf.RoundToInt(num * 50f), 1, 200);
+        maxAimingAccuracyReciprocal = 1f / (float)maxAimingAccuracy;
+        if (aimAccuracy > maxAimingAccuracy)
+        {
+            aimAccuracy = maxAimingAccuracy;
         }
     }
 }

@@ -53,6 +53,7 @@ Object_Damage 20
 
 Durability 0.1
 
+Aim_In_Duration 0.15
 Spread_Aim 0.1
 Spread_Hip 0.2
 

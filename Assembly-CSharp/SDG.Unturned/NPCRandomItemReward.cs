@@ -8,6 +8,8 @@ public class NPCRandomItemReward : INPCReward
 
     public bool shouldAutoEquip { get; protected set; }
 
+    public EItemOrigin origin { get; protected set; }
+
     public override void grantReward(Player player, bool shouldSend)
     {
         if (!Provider.isServer)
@@ -19,7 +21,7 @@ public class NPCRandomItemReward : INPCReward
             ushort num = SpawnTableTool.resolve(id);
             if (num != 0)
             {
-                player.inventory.forceAddItem(new Item(num, EItemOrigin.CRAFT), shouldAutoEquip, playEffect: false);
+                player.inventory.forceAddItem(new Item(num, origin), shouldAutoEquip, playEffect: false);
             }
         }
     }
@@ -33,11 +35,12 @@ public class NPCRandomItemReward : INPCReward
         return string.Format(text, amount);
     }
 
-    public NPCRandomItemReward(ushort newID, byte newAmount, bool newShouldAutoEquip, string newText)
+    public NPCRandomItemReward(ushort newID, byte newAmount, bool newShouldAutoEquip, EItemOrigin origin, string newText)
         : base(newText)
     {
         id = newID;
         amount = newAmount;
         shouldAutoEquip = newShouldAutoEquip;
+        this.origin = origin;
     }
 }
