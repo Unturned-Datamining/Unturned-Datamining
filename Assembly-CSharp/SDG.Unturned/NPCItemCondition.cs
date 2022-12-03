@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-public class NPCItemCondition : NPCLogicCondition
+public class NPCItemCondition : INPCCondition
 {
     private static InventorySearchQualityAscendingComparator qualityAscendingComparator = new InventorySearchQualityAscendingComparator();
 
@@ -38,7 +38,7 @@ public class NPCItemCondition : NPCLogicCondition
         {
             num = (ushort)(num + item.jar.item.amount);
         }
-        return doesLogicPass(num, amount);
+        return num >= amount;
     }
 
     public override void applyCondition(Player player, bool shouldSend)
@@ -160,8 +160,8 @@ public class NPCItemCondition : NPCLogicCondition
         return sleekBox;
     }
 
-    public NPCItemCondition(Guid newItemGuid, ushort newID, ushort newAmount, ENPCLogicType newLogicType, string newText, bool newShouldReset)
-        : base(newLogicType, newText, newShouldReset)
+    public NPCItemCondition(Guid newItemGuid, ushort newID, ushort newAmount, string newText, bool newShouldReset)
+        : base(newText, newShouldReset)
     {
         itemGuid = newItemGuid;
         id = newID;

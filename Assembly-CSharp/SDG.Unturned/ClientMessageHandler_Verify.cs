@@ -40,27 +40,42 @@ internal static class ClientMessageHandler_Verify
 
     private static void WriteEconomyDetails(NetPakWriter writer)
     {
-        uint punOutBufferSize;
         if (Provider.provider.economyService.wearingResult == SteamInventoryResult_t.Invalid)
         {
             writer.WriteUInt16(0);
+            return;
         }
-        else if (SteamInventory.SerializeResult(Provider.provider.economyService.wearingResult, null, out punOutBufferSize))
+        uint punOutItemsArraySize = 0u;
+        SteamItemDetails_t[] array;
+        if (SteamInventory.GetResultItems(Provider.provider.economyService.wearingResult, null, ref punOutItemsArraySize) && punOutItemsArraySize != 0)
         {
-            byte[] pOutBuffer = new byte[punOutBufferSize];
-            if (!SteamInventory.SerializeResult(Provider.provider.economyService.wearingResult, pOutBuffer, out punOutBufferSize))
-            {
-                UnturnedLog.warn("SteamInventory.SerializeResult returned false the second time");
-            }
-            SteamInventory.DestroyResult(Provider.provider.economyService.wearingResult);
-            Provider.provider.economyService.wearingResult = SteamInventoryResult_t.Invalid;
+            array = new SteamItemDetails_t[punOutItemsArraySize];
+            SteamInventory.GetResultItems(Provider.provider.economyService.wearingResult, array, ref punOutItemsArraySize);
         }
         else
         {
-            SteamInventory.DestroyResult(Provider.provider.economyService.wearingResult);
-            Provider.provider.economyService.wearingResult = SteamInventoryResult_t.Invalid;
-            Provider._connectionFailureInfo = ESteamConnectionFailureInfo.AUTH_ECON_SERIALIZE;
-            Provider.RequestDisconnect("SteamInventory.SerializeResult failed");
+            array = new SteamItemDetails_t[punOutItemsArraySize];
         }
+        writer.WriteUInt16((ushort)array.Length);
+        for (uint num = 0u; num < array.Length; num++)
+        {
+            SteamItemDetails_t steamItemDetails_t = array[num];
+            writer.WriteSteamItemDefID(steamItemDetails_t.m_iDefinition);
+            writer.WriteSteamItemInstanceID(steamItemDetails_t.m_itemId);
+            uint punValueBufferSizeOut = 1024u;
+            if (!SteamInventory.GetResultItemProperty(Provider.provider.economyService.wearingResult, num, "tags", out var pchValueBuffer, ref punValueBufferSizeOut) || punValueBufferSizeOut == 0)
+            {
+                pchValueBuffer = string.Empty;
+            }
+            writer.WriteString(pchValueBuffer);
+            uint punValueBufferSizeOut2 = 1024u;
+            if (!SteamInventory.GetResultItemProperty(Provider.provider.economyService.wearingResult, num, "dynamic_props", out var pchValueBuffer2, ref punValueBufferSizeOut2) || punValueBufferSizeOut2 == 0)
+            {
+                pchValueBuffer2 = string.Empty;
+            }
+            writer.WriteString(pchValueBuffer2);
+        }
+        SteamInventory.DestroyResult(Provider.provider.economyService.wearingResult);
+        Provider.provider.economyService.wearingResult = SteamInventoryResult_t.Invalid;
     }
 }

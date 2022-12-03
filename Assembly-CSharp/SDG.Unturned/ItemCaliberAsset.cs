@@ -10,8 +10,6 @@ public class ItemCaliberAsset : ItemAsset
 
     public float aimingRecoilMultiplier;
 
-    public float aimDurationMultiplier;
-
     private float _spread;
 
     private float _sway;
@@ -61,7 +59,6 @@ public class ItemCaliberAsset : ItemAsset
         _recoil_x = data.readSingle("Recoil_X", 1f);
         _recoil_y = data.readSingle("Recoil_Y", 1f);
         aimingRecoilMultiplier = data.readSingle("Aiming_Recoil_Multiplier", 1f);
-        aimDurationMultiplier = data.readSingle("Aim_Duration_Multiplier", 1f);
         _spread = data.readSingle("Spread", 1f);
         _sway = data.readSingle("Sway", 1f);
         _shake = data.readSingle("Shake", 1f);

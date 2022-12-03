@@ -47,19 +47,29 @@ public class DevkitSelection : IEquatable<DevkitSelection>
         }
     }
 
+    public static bool operator ==(DevkitSelection a, DevkitSelection b)
+    {
+        return a.gameObject == b.gameObject;
+    }
+
+    public static bool operator !=(DevkitSelection a, DevkitSelection b)
+    {
+        return !(a == b);
+    }
+
     public bool Equals(DevkitSelection other)
     {
-        if (other == null)
-        {
-            return false;
-        }
         return gameObject == other.gameObject;
     }
 
     public override bool Equals(object obj)
     {
-        DevkitSelection other = obj as DevkitSelection;
-        return Equals(other);
+        if (obj == null)
+        {
+            return false;
+        }
+        DevkitSelection devkitSelection = (DevkitSelection)obj;
+        return gameObject == devkitSelection.gameObject;
     }
 
     public override int GetHashCode()

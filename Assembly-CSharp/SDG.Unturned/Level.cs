@@ -1081,14 +1081,6 @@ public class Level : MonoBehaviour
         {
             chart = asset.chart;
         }
-        else
-        {
-            ResourceAsset resourceAsset = LevelGround.FindResourceSpawnpointByTransform(hit.transform)?.asset;
-            if (resourceAsset != null)
-            {
-                chart = resourceAsset.chart;
-            }
-        }
         if (chart == EObjectChart.IGNORE)
         {
             FindChartHit(hit.point + Vector3.down * 0.1f, out chart, out hit);

@@ -149,7 +149,7 @@ public class PlayerNPCDialogueUI
             Texture2D newIcon = null;
             if (questAsset != null)
             {
-                newIcon = ((Player.player.quests.GetQuestStatus(questAsset) != ENPCQuestStatus.READY) ? icons.load<Texture2D>("Quest_Begin") : icons.load<Texture2D>("Quest_End"));
+                newIcon = ((Player.player.quests.getQuestStatus(questAsset.id) != ENPCQuestStatus.READY) ? icons.load<Texture2D>("Quest_Begin") : icons.load<Texture2D>("Quest_End"));
             }
             else if (!dialogueResponse.IsVendorRefNull())
             {
@@ -398,7 +398,7 @@ public class PlayerNPCDialogueUI
         if (questAsset != null)
         {
             close();
-            PlayerNPCQuestUI.open(questAsset, dialogueResponse, dialogueAsset, dialogue, (Player.player.quests.GetQuestStatus(questAsset) == ENPCQuestStatus.READY) ? EQuestViewMode.END : EQuestViewMode.BEGIN);
+            PlayerNPCQuestUI.open(questAsset, dialogueResponse, dialogueAsset, dialogue, (Player.player.quests.getQuestStatus(questAsset.id) == ENPCQuestStatus.READY) ? EQuestViewMode.END : EQuestViewMode.BEGIN);
             return;
         }
         registerResponse(dialogue, dialogueResponse);

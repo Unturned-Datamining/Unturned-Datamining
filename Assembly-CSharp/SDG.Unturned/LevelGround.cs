@@ -182,25 +182,6 @@ public class LevelGround : MonoBehaviour
 
     public static TerrainData data2 => _data2;
 
-    internal static ResourceSpawnpoint FindResourceSpawnpointByTransform(Transform transform)
-    {
-        if (transform != null)
-        {
-            transform = transform.root;
-        }
-        if (transform != null && Regions.tryGetCoordinate(transform.position, out var x, out var y))
-        {
-            foreach (ResourceSpawnpoint item in _trees[x, y])
-            {
-                if (item.model == transform)
-                {
-                    return item;
-                }
-            }
-        }
-        return null;
-    }
-
     [Obsolete]
     public static Vector3 checkSafe(Vector3 point)
     {

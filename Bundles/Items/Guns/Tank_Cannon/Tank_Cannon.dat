@@ -30,7 +30,6 @@ Object_Damage 1000
 Range 14
 Explosion 45
 
-Aim_In_Duration 0.3
 Spread_Aim 0.2
 Spread_Hip 0.05
 

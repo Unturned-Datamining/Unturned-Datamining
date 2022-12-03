@@ -116,7 +116,7 @@ public class PlayerNPCQuestUI
         detailsContainer.isVisible = mode == EQuestViewMode.DETAILS;
         if (mode == EQuestViewMode.DETAILS)
         {
-            if (Player.player.quests.GetTrackedQuest() == quest)
+            if (Player.player.quests.TrackedQuestID == quest.id)
             {
                 trackButton.text = localization.format("Track_Off");
             }
@@ -234,20 +234,20 @@ public class PlayerNPCQuestUI
 
     private static void onClickedTrackButton(ISleekElement button)
     {
-        Player.player.quests.ClientTrackQuest(quest);
+        Player.player.quests.sendTrackQuest(quest.id);
         if (!Provider.isServer)
         {
-            Player.player.quests.TrackQuest(quest);
+            Player.player.quests.trackQuest(quest.id);
         }
         closeNicely();
     }
 
     private static void onClickedAbandonButton(ISleekElement button)
     {
-        Player.player.quests.ClientAbandonQuest(quest);
+        Player.player.quests.sendAbandonQuest(quest.id);
         if (!Provider.isServer)
         {
-            Player.player.quests.AbandonQuest(quest);
+            Player.player.quests.abandonQuest(quest.id);
         }
         closeNicely();
     }

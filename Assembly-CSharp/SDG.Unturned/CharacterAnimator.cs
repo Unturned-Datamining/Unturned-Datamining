@@ -94,6 +94,15 @@ public class CharacterAnimator : MonoBehaviour
         return 0f;
     }
 
+    public void getAnimationSample(string name, float point)
+    {
+        AnimationState animationState = anim[name];
+        if (animationState != null)
+        {
+            animationState.clip.SampleAnimation(base.gameObject, point);
+        }
+    }
+
     public bool getAnimationPlaying()
     {
         if (!string.IsNullOrEmpty(clip))

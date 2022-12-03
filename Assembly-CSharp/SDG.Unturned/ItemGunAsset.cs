@@ -83,7 +83,6 @@ public class ItemGunAsset : ItemWeaponAsset
 
     public float spreadAim;
 
-    [Obsolete("Replaced by baseSpreadAngleRadians")]
     public float spreadHip;
 
     public float spreadSprint;
@@ -137,8 +136,6 @@ public class ItemGunAsset : ItemWeaponAsset
     public float ballisticForce;
 
     public float damageFalloffRange;
-
-    public float damageFalloffMaxRange;
 
     public float damageFalloffMultiplier;
 
@@ -204,8 +201,6 @@ public class ItemGunAsset : ItemWeaponAsset
 
     public bool canAimDuringSprint { get; protected set; }
 
-    public float aimInDuration { get; protected set; }
-
     public ushort sightID
     {
         get
@@ -261,8 +256,6 @@ public class ItemGunAsset : ItemWeaponAsset
     public ushort[] attachmentCalibers { get; private set; }
 
     public ushort[] magazineCalibers { get; private set; }
-
-    public float baseSpreadAngleRadians { get; private set; }
 
     public override bool showQuality => true;
 
@@ -452,6 +445,7 @@ public class ItemGunAsset : ItemWeaponAsset
             firemode = EFiremode.SAFETY;
         }
         spreadAim = reader.readValue<float>("Spread_Aim");
+        spreadHip = reader.readValue<float>("Spread_Hip");
         recoilAim = reader.readValue<float>("Recoil_Aim");
         useRecoilAim = reader.readValue<bool>("Use_Recoil_Aim");
         recoilMin_x = reader.readValue<float>("Recoil_Min_X");
@@ -522,6 +516,7 @@ public class ItemGunAsset : ItemWeaponAsset
         writer.writeValue("Auto", hasAuto);
         writer.writeValue("Turret", isTurret);
         writer.writeValue("Spread_Aim", spreadAim);
+        writer.writeValue("Spread_Hip", spreadHip);
         writer.writeValue("Recoil_Aim", recoilAim);
         writer.writeValue("Use_Recoil_Aim", useRecoilAim);
         writer.writeValue("Recoil_Min_X", recoilMin_x);
@@ -665,20 +660,7 @@ public class ItemGunAsset : ItemWeaponAsset
             firemode = EFiremode.SAFETY;
         }
         spreadAim = data.readSingle("Spread_Aim");
-        if (data.has("Spread_Angle_Degrees"))
-        {
-            baseSpreadAngleRadians = (float)Math.PI / 180f * data.readSingle("Spread_Angle_Degrees");
-            spreadHip = Mathf.Tan(baseSpreadAngleRadians);
-        }
-        else
-        {
-            spreadHip = data.readSingle("Spread_Hip");
-            baseSpreadAngleRadians = Mathf.Atan(spreadHip);
-            if ((bool)Assets.shouldValidateAssets)
-            {
-                UnturnedLog.info($"Converted \"{FriendlyName}\" Spread_Hip {spreadHip} to {baseSpreadAngleRadians * 57.29578f} degrees");
-            }
-        }
+        spreadHip = data.readSingle("Spread_Hip");
         spreadSprint = data.readSingle("Spread_Sprint", 1.25f);
         spreadCrouch = data.readSingle("Spread_Crouch", 0.85f);
         spreadProne = data.readSingle("Spread_Prone", 0.7f);
@@ -750,7 +732,6 @@ public class ItemGunAsset : ItemWeaponAsset
             ballisticForce = 0.002f;
         }
         damageFalloffRange = data.readSingle("Damage_Falloff_Range", 1f);
-        damageFalloffMaxRange = data.readSingle("Damage_Falloff_Max_Range", 1f);
         damageFalloffMultiplier = data.readSingle("Damage_Falloff_Multiplier", 1f);
         projectileLifespan = data.readSingle("Projectile_Lifespan", 30f);
         projectilePenetrateBuildables = data.has("Projectile_Penetrate_Buildables");
@@ -808,7 +789,6 @@ public class ItemGunAsset : ItemWeaponAsset
             shootQuestRewards = new INPCReward[num6];
             NPCTool.readRewards(data, localization, "Shoot_Quest_Reward_", shootQuestRewards, this);
         }
-        aimInDuration = data.readSingle("Aim_In_Duration", 0.2f);
     }
 
     protected override AudioReference GetDefaultInventoryAudio()

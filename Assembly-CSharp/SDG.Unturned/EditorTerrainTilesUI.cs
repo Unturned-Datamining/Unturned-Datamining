@@ -37,26 +37,26 @@ internal class EditorTerrainTilesUI : SleekFullscreenBox
     public void Open()
     {
         AnimateIntoView();
-        TerrainEditor.toolMode = TerrainEditor.EDevkitLandscapeToolMode.TILE;
+        TerrainEditorV2.toolMode = TerrainEditorV2.EDevkitLandscapeToolMode.TILE;
         EditorInteract.instance.SetActiveTool(EditorInteract.instance.terrainTool);
     }
 
     public void Close()
     {
         AnimateOutOfView(1f, 0f);
-        TerrainEditor.selectedTile = null;
+        TerrainEditorV2.selectedTile = null;
         EditorInteract.instance.SetActiveTool(null);
     }
 
     public override void OnDestroy()
     {
-        TerrainEditor.selectedTileChanged -= OnSelectedTileChanged;
+        TerrainEditorV2.selectedTileChanged -= OnSelectedTileChanged;
     }
 
     public EditorTerrainTilesUI()
     {
         localization = Localization.read("/Editor/EditorTerrainTiles.dat");
-        TerrainEditor.selectedTileChanged += OnSelectedTileChanged;
+        TerrainEditorV2.selectedTileChanged += OnSelectedTileChanged;
         hintLabel = Glazier.Get().CreateLabel();
         hintLabel.positionScale_Y = 1f;
         hintLabel.positionOffset_Y = -30;
@@ -191,7 +191,7 @@ internal class EditorTerrainTilesUI : SleekFullscreenBox
     public void SetSelectedLayerIndex(int layerIndex)
     {
         selectedLayerIndex = layerIndex;
-        LandscapeTile selectedTile = TerrainEditor.selectedTile;
+        LandscapeTile selectedTile = TerrainEditorV2.selectedTile;
         if (selectedTile != null && layerIndex >= 0)
         {
             AssetReference<LandscapeMaterialAsset> assetReference = selectedTile.materials[layerIndex];
@@ -223,7 +223,7 @@ internal class EditorTerrainTilesUI : SleekFullscreenBox
 
     private void OnLayerGuidEntered(ISleekField field)
     {
-        LandscapeTile selectedTile = TerrainEditor.selectedTile;
+        LandscapeTile selectedTile = TerrainEditorV2.selectedTile;
         if (selectedTile != null && selectedLayerIndex >= 0)
         {
             AssetReference<LandscapeMaterialAsset>.TryParse(field.text, out var result);
@@ -237,7 +237,7 @@ internal class EditorTerrainTilesUI : SleekFullscreenBox
 
     private void OnClickedResetAsset(ISleekElement button)
     {
-        LandscapeTile selectedTile = TerrainEditor.selectedTile;
+        LandscapeTile selectedTile = TerrainEditorV2.selectedTile;
         if (selectedTile != null && selectedLayerIndex >= 0)
         {
             selectedTile.materials[selectedLayerIndex] = AssetReference<LandscapeMaterialAsset>.invalid;
@@ -250,7 +250,7 @@ internal class EditorTerrainTilesUI : SleekFullscreenBox
 
     private void OnAssetClicked(ISleekElement button)
     {
-        LandscapeTile selectedTile = TerrainEditor.selectedTile;
+        LandscapeTile selectedTile = TerrainEditorV2.selectedTile;
         if (selectedTile != null && selectedLayerIndex >= 0)
         {
             int index = assetScrollView.FindIndexOfChild(button);
@@ -285,7 +285,7 @@ internal class EditorTerrainTilesUI : SleekFullscreenBox
 
     private void OnResetHeightmap(SleekButtonIconConfirm button)
     {
-        LandscapeTile selectedTile = TerrainEditor.selectedTile;
+        LandscapeTile selectedTile = TerrainEditorV2.selectedTile;
         if (selectedTile != null)
         {
             selectedTile.resetHeightmap();
@@ -295,7 +295,7 @@ internal class EditorTerrainTilesUI : SleekFullscreenBox
 
     private void OnResetSplatmap(SleekButtonIconConfirm button)
     {
-        LandscapeTile selectedTile = TerrainEditor.selectedTile;
+        LandscapeTile selectedTile = TerrainEditorV2.selectedTile;
         if (selectedTile != null)
         {
             selectedTile.resetSplatmap();
@@ -305,7 +305,7 @@ internal class EditorTerrainTilesUI : SleekFullscreenBox
 
     private void OnApplyToAllTiles(SleekButtonIconConfirm button)
     {
-        LandscapeTile selectedTile = TerrainEditor.selectedTile;
+        LandscapeTile selectedTile = TerrainEditorV2.selectedTile;
         if (selectedTile != null)
         {
             Landscape.CopyLayersToAllTiles(selectedTile);
@@ -315,7 +315,7 @@ internal class EditorTerrainTilesUI : SleekFullscreenBox
 
     private void OnClickedRepairEdges(ISleekElement button)
     {
-        LandscapeTile selectedTile = TerrainEditor.selectedTile;
+        LandscapeTile selectedTile = TerrainEditorV2.selectedTile;
         if (selectedTile != null)
         {
             Landscape.reconcileNeighbors(selectedTile);

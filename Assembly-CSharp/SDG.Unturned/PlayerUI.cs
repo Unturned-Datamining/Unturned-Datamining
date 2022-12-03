@@ -203,12 +203,12 @@ public class PlayerUI : MonoBehaviour
 
     public static void enableDot()
     {
-        PlayerLifeUI.crosshair.SetGameWantsCenterDotVisible(isVisible: true);
+        PlayerLifeUI.dotImage.isVisible = true;
     }
 
     public static void disableDot()
     {
-        PlayerLifeUI.crosshair.SetGameWantsCenterDotVisible(isVisible: false);
+        PlayerLifeUI.dotImage.isVisible = false;
     }
 
     public static void updateScope(bool isScoped)
@@ -230,11 +230,40 @@ public class PlayerUI : MonoBehaviour
         window.isEnabled = wantsWindowEnabled || PlayerLifeUI.scopeOverlay.isVisible || PlayerLifeUI.binocularsOverlay.isVisible || isBlindfolded || isFlashbanged;
     }
 
+    public static void resetCrosshair()
+    {
+        if (Provider.modeConfigData.Gameplay.Crosshair)
+        {
+            PlayerLifeUI.crosshairLeftImage.positionOffset_X = -4;
+            PlayerLifeUI.crosshairLeftImage.positionOffset_Y = -4;
+            PlayerLifeUI.crosshairRightImage.positionOffset_X = -4;
+            PlayerLifeUI.crosshairRightImage.positionOffset_Y = -4;
+            PlayerLifeUI.crosshairDownImage.positionOffset_X = -4;
+            PlayerLifeUI.crosshairDownImage.positionOffset_Y = -4;
+            PlayerLifeUI.crosshairUpImage.positionOffset_X = -4;
+            PlayerLifeUI.crosshairUpImage.positionOffset_Y = -4;
+        }
+    }
+
+    public static void updateCrosshair(float spread)
+    {
+        if (Provider.modeConfigData.Gameplay.Crosshair)
+        {
+            PlayerLifeUI.crosshairLeftImage.lerpPositionOffset((int)((0f - spread) * 400f) - 4, -4, ESleekLerp.EXPONENTIAL, 10f);
+            PlayerLifeUI.crosshairRightImage.lerpPositionOffset((int)(spread * 400f) - 4, -4, ESleekLerp.EXPONENTIAL, 10f);
+            PlayerLifeUI.crosshairDownImage.lerpPositionOffset(-4, (int)(spread * 400f) - 4, ESleekLerp.EXPONENTIAL, 10f);
+            PlayerLifeUI.crosshairUpImage.lerpPositionOffset(-4, (int)((0f - spread) * 400f) - 4, ESleekLerp.EXPONENTIAL, 10f);
+        }
+    }
+
     public static void enableCrosshair()
     {
         if (Provider.modeConfigData.Gameplay.Crosshair)
         {
-            PlayerLifeUI.crosshair.SetDirectionalArrowsVisible(isVisible: true);
+            PlayerLifeUI.crosshairLeftImage.isVisible = true;
+            PlayerLifeUI.crosshairRightImage.isVisible = true;
+            PlayerLifeUI.crosshairDownImage.isVisible = true;
+            PlayerLifeUI.crosshairUpImage.isVisible = true;
         }
     }
 
@@ -242,7 +271,10 @@ public class PlayerUI : MonoBehaviour
     {
         if (Provider.modeConfigData.Gameplay.Crosshair)
         {
-            PlayerLifeUI.crosshair.SetDirectionalArrowsVisible(isVisible: false);
+            PlayerLifeUI.crosshairLeftImage.isVisible = false;
+            PlayerLifeUI.crosshairRightImage.isVisible = false;
+            PlayerLifeUI.crosshairDownImage.isVisible = false;
+            PlayerLifeUI.crosshairUpImage.isVisible = false;
         }
     }
 

@@ -116,7 +116,15 @@ public class PlayerLifeUI
 
     public static HitmarkerInfo[] hitmarkers;
 
-    public static Crosshair crosshair;
+    public static ISleekImage crosshairLeftImage;
+
+    public static ISleekImage crosshairRightImage;
+
+    public static ISleekImage crosshairDownImage;
+
+    public static ISleekImage crosshairUpImage;
+
+    public static ISleekImage dotImage;
 
     private static ISleekBox lifeBox;
 
@@ -380,10 +388,6 @@ public class PlayerLifeUI
         if ((oldFlags & EPluginWidgetFlags.ShowVehicleStatus) != (pluginWidgetFlags & EPluginWidgetFlags.ShowVehicleStatus))
         {
             UpdateVehicleBoxVisibility();
-        }
-        if (crosshair != null)
-        {
-            crosshair.SetPluginAllowsCenterDotVisible(pluginWidgetFlags.HasFlag(EPluginWidgetFlags.ShowCenterDot));
         }
     }
 
@@ -1056,22 +1060,21 @@ public class PlayerLifeUI
 
     internal static void UpdateTrackedQuest()
     {
-        QuestAsset trackedQuest = Player.player.quests.GetTrackedQuest();
-        if (trackedQuest == null)
+        if (!(Assets.find(EAssetType.NPC, Player.player.quests.TrackedQuestID) is QuestAsset questAsset))
         {
             trackedQuestTitle.isVisible = false;
             trackedQuestBar.isVisible = false;
             return;
         }
-        trackedQuestTitle.text = trackedQuest.questName;
+        trackedQuestTitle.text = questAsset.questName;
         bool flag = true;
-        if (trackedQuest.conditions != null)
+        if (questAsset.conditions != null)
         {
             trackedQuestBar.RemoveAllChildren();
             int num = 0;
-            for (int i = 0; i < trackedQuest.conditions.Length; i++)
+            for (int i = 0; i < questAsset.conditions.Length; i++)
             {
-                INPCCondition iNPCCondition = trackedQuest.conditions[i];
+                INPCCondition iNPCCondition = questAsset.conditions[i];
                 if (iNPCCondition != null && !iNPCCondition.isConditionMet(Player.player))
                 {
                     string text = iNPCCondition.formatCondition(Player.player);
@@ -1795,11 +1798,60 @@ public class PlayerLifeUI
             };
             hitmarkers[num3] = hitmarkerInfo;
         }
-        crosshair = new Crosshair(icons);
-        crosshair.sizeScale_X = 1f;
-        crosshair.sizeScale_Y = 1f;
-        container.AddChild(crosshair);
-        crosshair.SetPluginAllowsCenterDotVisible(Player.player.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowCenterDot));
+        dotImage = Glazier.Get().CreateImage();
+        dotImage.positionOffset_X = -4;
+        dotImage.positionOffset_Y = -4;
+        dotImage.positionScale_X = 0.5f;
+        dotImage.positionScale_Y = 0.5f;
+        dotImage.sizeOffset_X = 8;
+        dotImage.sizeOffset_Y = 8;
+        dotImage.texture = icons.load<Texture>("Dot");
+        dotImage.color = OptionsSettings.crosshairColor;
+        container.AddChild(dotImage);
+        crosshairLeftImage = Glazier.Get().CreateImage();
+        crosshairLeftImage.positionOffset_X = -4;
+        crosshairLeftImage.positionOffset_Y = -4;
+        crosshairLeftImage.positionScale_X = 0.5f;
+        crosshairLeftImage.positionScale_Y = 0.5f;
+        crosshairLeftImage.sizeOffset_X = 8;
+        crosshairLeftImage.sizeOffset_Y = 8;
+        crosshairLeftImage.texture = icons.load<Texture>("Crosshair_Right");
+        crosshairLeftImage.color = OptionsSettings.crosshairColor;
+        container.AddChild(crosshairLeftImage);
+        crosshairLeftImage.isVisible = false;
+        crosshairRightImage = Glazier.Get().CreateImage();
+        crosshairRightImage.positionOffset_X = -4;
+        crosshairRightImage.positionOffset_Y = -4;
+        crosshairRightImage.positionScale_X = 0.5f;
+        crosshairRightImage.positionScale_Y = 0.5f;
+        crosshairRightImage.sizeOffset_X = 8;
+        crosshairRightImage.sizeOffset_Y = 8;
+        crosshairRightImage.texture = icons.load<Texture>("Crosshair_Left");
+        crosshairRightImage.color = OptionsSettings.crosshairColor;
+        container.AddChild(crosshairRightImage);
+        crosshairRightImage.isVisible = false;
+        crosshairDownImage = Glazier.Get().CreateImage();
+        crosshairDownImage.positionOffset_X = -4;
+        crosshairDownImage.positionOffset_Y = -4;
+        crosshairDownImage.positionScale_X = 0.5f;
+        crosshairDownImage.positionScale_Y = 0.5f;
+        crosshairDownImage.sizeOffset_X = 8;
+        crosshairDownImage.sizeOffset_Y = 8;
+        crosshairDownImage.texture = icons.load<Texture>("Crosshair_Up");
+        crosshairDownImage.color = OptionsSettings.crosshairColor;
+        container.AddChild(crosshairDownImage);
+        crosshairDownImage.isVisible = false;
+        crosshairUpImage = Glazier.Get().CreateImage();
+        crosshairUpImage.positionOffset_X = -4;
+        crosshairUpImage.positionOffset_Y = -4;
+        crosshairUpImage.positionScale_X = 0.5f;
+        crosshairUpImage.positionScale_Y = 0.5f;
+        crosshairUpImage.sizeOffset_X = 8;
+        crosshairUpImage.sizeOffset_Y = 8;
+        crosshairUpImage.texture = icons.load<Texture>("Crosshair_Down");
+        crosshairUpImage.color = OptionsSettings.crosshairColor;
+        container.AddChild(crosshairUpImage);
+        crosshairUpImage.isVisible = false;
         lifeBox = Glazier.Get().CreateBox();
         lifeBox.positionScale_Y = 1f;
         lifeBox.sizeScale_X = 0.2f;

@@ -667,16 +667,16 @@ public static class PlayerQuests_NetMethods
             PlayerQuests playerQuests = obj as PlayerQuests;
             if (!(playerQuests == null))
             {
-                reader.ReadGuid(out var value2);
+                reader.ReadUInt16(out var value2);
                 playerQuests.ReceiveAddQuest(value2);
             }
         }
     }
 
     [NetInvokableGeneratedMethod("ReceiveAddQuest", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveAddQuest_Write(NetPakWriter writer, Guid assetGuid)
+    public static void ReceiveAddQuest_Write(NetPakWriter writer, ushort id)
     {
-        writer.WriteGuid(assetGuid);
+        writer.WriteUInt16(id);
     }
 
     [NetInvokableGeneratedMethod("ReceiveRemoveQuest", ENetInvokableGeneratedMethodPurpose.Read)]
@@ -693,16 +693,16 @@ public static class PlayerQuests_NetMethods
             PlayerQuests playerQuests = obj as PlayerQuests;
             if (!(playerQuests == null))
             {
-                reader.ReadGuid(out var value2);
+                reader.ReadUInt16(out var value2);
                 playerQuests.ReceiveRemoveQuest(value2);
             }
         }
     }
 
     [NetInvokableGeneratedMethod("ReceiveRemoveQuest", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveRemoveQuest_Write(NetPakWriter writer, Guid assetGuid)
+    public static void ReceiveRemoveQuest_Write(NetPakWriter writer, ushort id)
     {
-        writer.WriteGuid(assetGuid);
+        writer.WriteUInt16(id);
     }
 
     [NetInvokableGeneratedMethod("ReceiveTrackQuest", ENetInvokableGeneratedMethodPurpose.Read)]
@@ -726,15 +726,15 @@ public static class PlayerQuests_NetMethods
                 context.Kick($"not owner of {playerQuests}");
                 return;
             }
-            reader.ReadGuid(out var value2);
+            reader.ReadUInt16(out var value2);
             playerQuests.ReceiveTrackQuest(value2);
         }
     }
 
     [NetInvokableGeneratedMethod("ReceiveTrackQuest", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveTrackQuest_Write(NetPakWriter writer, Guid assetGuid)
+    public static void ReceiveTrackQuest_Write(NetPakWriter writer, ushort id)
     {
-        writer.WriteGuid(assetGuid);
+        writer.WriteUInt16(id);
     }
 
     [NetInvokableGeneratedMethod("ReceiveAbandonQuest", ENetInvokableGeneratedMethodPurpose.Read)]
@@ -758,15 +758,15 @@ public static class PlayerQuests_NetMethods
                 context.Kick($"not owner of {playerQuests}");
                 return;
             }
-            reader.ReadGuid(out var value2);
+            reader.ReadUInt16(out var value2);
             playerQuests.ReceiveAbandonQuest(value2);
         }
     }
 
     [NetInvokableGeneratedMethod("ReceiveAbandonQuest", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveAbandonQuest_Write(NetPakWriter writer, Guid assetGuid)
+    public static void ReceiveAbandonQuest_Write(NetPakWriter writer, ushort id)
     {
-        writer.WriteGuid(assetGuid);
+        writer.WriteUInt16(id);
     }
 
     [NetInvokableGeneratedMethod("ReceiveRegisterMessage", ENetInvokableGeneratedMethodPurpose.Read)]

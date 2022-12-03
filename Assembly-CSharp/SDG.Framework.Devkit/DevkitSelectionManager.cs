@@ -19,10 +19,6 @@ public class DevkitSelectionManager
 
     public static void select(DevkitSelection select)
     {
-        if (select == null)
-        {
-            return;
-        }
         if (InputEx.GetKey(KeyCode.LeftShift) || InputEx.GetKey(KeyCode.LeftControl))
         {
             if (selection.Contains(select))
@@ -43,7 +39,7 @@ public class DevkitSelectionManager
 
     public static void add(DevkitSelection select)
     {
-        if (select != null && !(select.gameObject == null) && !selection.Contains(select) && beginSelection(select))
+        if (!(select.gameObject == null) && !selection.Contains(select) && beginSelection(select))
         {
             selection.Add(select);
             mostRecentGameObject = select.gameObject;
@@ -52,7 +48,7 @@ public class DevkitSelectionManager
 
     public static void remove(DevkitSelection select)
     {
-        if (select != null && selection.Remove(select))
+        if (selection.Remove(select))
         {
             endSelection(select);
             if (select.gameObject == mostRecentGameObject)
@@ -74,7 +70,7 @@ public class DevkitSelectionManager
 
     public static bool beginSelection(DevkitSelection select)
     {
-        if (select == null || select.gameObject == null)
+        if (select.gameObject == null)
         {
             return false;
         }
@@ -90,7 +86,7 @@ public class DevkitSelectionManager
 
     public static bool endSelection(DevkitSelection select)
     {
-        if (select == null || select.gameObject == null)
+        if (select.gameObject == null)
         {
             return false;
         }

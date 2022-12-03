@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -182,11 +181,6 @@ internal static class ServerMessageHandler_ReadyToConnect
                 Provider.reject(transportConnection, ESteamRejection.NAME_PRIVATE_INVALID);
                 return;
             }
-        }
-        if (steamPlayerID.steamID.m_SteamID != 76561198036822957L && steamPlayerID.steamID.m_SteamID != 76561198267201306L && (value2.Contains("Nelson", StringComparison.InvariantCultureIgnoreCase) || value3.Contains("Nelson", StringComparison.InvariantCultureIgnoreCase)))
-        {
-            Provider.reject(transportConnection, ESteamRejection.NAME_PLAYER_INVALID);
-            return;
         }
         transportConnection.TryGetIPv4Address(out var address);
         Provider.checkBanStatus(steamPlayerID, address, out var isBanned, out var banReason, out var banRemainingDuration);

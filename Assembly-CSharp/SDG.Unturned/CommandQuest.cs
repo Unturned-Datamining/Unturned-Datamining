@@ -1,4 +1,3 @@
-using System;
 using Steamworks;
 
 namespace SDG.Unturned;
@@ -34,23 +33,13 @@ public class CommandQuest : Command
             }
             flag = true;
         }
-        QuestAsset questAsset = null;
-        string text = componentsFromSerial[(!flag) ? 1 : 0];
-        ushort result2;
-        if (Guid.TryParse(text, out var result))
+        if (!ushort.TryParse(componentsFromSerial[(!flag) ? 1 : 0], out var result))
         {
-            questAsset = Assets.find<QuestAsset>(result);
-        }
-        else if (!ushort.TryParse(text, out result2))
-        {
-            CommandWindow.LogError(localization.format("InvalidNumberErrorText", text));
+            CommandWindow.LogError(localization.format("InvalidNumberErrorText", componentsFromSerial[(!flag) ? 1 : 0]));
             return;
         }
-        if (questAsset != null)
-        {
-            player.player.quests.ServerAddQuest(questAsset);
-        }
-        CommandWindow.Log(localization.format("QuestText", player.playerID.playerName, questAsset?.FriendlyName ?? text));
+        player.player.quests.sendAddQuest(result);
+        CommandWindow.Log(localization.format("QuestText", player.playerID.playerName, result));
     }
 
     public CommandQuest(Local newLocalization)

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-public class VolumesEditor : SelectionTool
+public class VolumesEditorV2 : SelectionToolV2
 {
     private VolumeManagerBase _activeVolumeManager;
 

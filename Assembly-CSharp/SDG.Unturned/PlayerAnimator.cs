@@ -100,6 +100,10 @@ public class PlayerAnimator : PlayerCaller
 
     public float viewmodelExplosionSmoothingSpeed;
 
+    private Vector3 restoreViewmodelCameraLocalPosition;
+
+    private Quaternion restoreViewmodelCameraLocalRotation;
+
     private bool isHiddenWaitingForClothing;
 
     private Vector3 desiredViewmodelCameraLocalPosition;
@@ -355,6 +359,14 @@ public class PlayerAnimator : PlayerCaller
         return 0f;
     }
 
+    public void getAnimationSample(string name, float point)
+    {
+        if (firstAnimator != null)
+        {
+            firstAnimator.getAnimationSample(name, point);
+        }
+    }
+
     public bool checkExists(string name)
     {
         if (firstAnimator != null)
@@ -465,6 +477,20 @@ public class PlayerAnimator : PlayerCaller
         bayonetViewmodelCameraOffset.x += fling_x;
         bayonetViewmodelCameraOffset.y += fling_y;
         bayonetViewmodelCameraOffset.z += fling_z;
+    }
+
+    public void TemporarilyClampViewmodelCameraTransform()
+    {
+        restoreViewmodelCameraLocalPosition = viewmodelCameraTransform.localPosition;
+        restoreViewmodelCameraLocalRotation = viewmodelCameraTransform.localRotation;
+        viewmodelCameraTransform.localPosition = new Vector3(-0.45f, 0f, 0f);
+        viewmodelCameraTransform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+    }
+
+    public void RestoreViewmodelCameraTransform()
+    {
+        viewmodelCameraTransform.localPosition = restoreViewmodelCameraLocalPosition;
+        viewmodelCameraTransform.localRotation = restoreViewmodelCameraLocalRotation;
     }
 
     internal void FlinchFromExplosion(Vector3 worldRotationAxis, float adjustedMagnitudeDegrees)
@@ -937,7 +963,6 @@ public class PlayerAnimator : PlayerCaller
 
     private void Update()
     {
-        float num;
         if (base.channel.isOwner)
         {
             if (!PlayerUI.window.showCursor)
@@ -1069,20 +1094,6 @@ public class PlayerAnimator : PlayerCaller
                 viewmodelMovementOffset.targetPosition = Vector2.zero;
             }
             viewmodelMovementOffset.Update(Time.deltaTime);
-            Vector3 vector = Vector3.zero;
-            num = 1f;
-            if (base.player.equipment.useable is UseableGun useableGun)
-            {
-                useableGun.GetAimingViewmodelAlignment(out var alignmentTransform, out var alignmentOffset, out var alpha);
-                if (alignmentTransform != null && alpha > 0f)
-                {
-                    Vector3 position = alignmentTransform.TransformPoint(alignmentOffset);
-                    vector = viewmodelCameraTransform.parent.InverseTransformPoint(position);
-                    vector.x += 0.45f;
-                    vector *= alpha;
-                    num -= alpha;
-                }
-            }
             blendedViewmodelCameraLocalPositionOffset = Vector3.Lerp(blendedViewmodelCameraLocalPositionOffset, viewmodelCameraLocalPositionOffset - recoilViewmodelCameraOffset.currentPosition - bayonetViewmodelCameraOffset, 16f * Time.deltaTime);
             recoilViewmodelCameraOffset.Update(Time.deltaTime);
             bayonetViewmodelCameraOffset = Vector3.Lerp(bayonetViewmodelCameraOffset, Vector3.zero, 16f * Time.deltaTime);
@@ -1092,7 +1103,6 @@ public class PlayerAnimator : PlayerCaller
             desiredViewmodelCameraLocalPosition.x += Provider.preferenceData.Viewmodel.Offset_Vertical * blendedViewmodelOffsetPreferenceMultiplier;
             desiredViewmodelCameraLocalPosition.y += Provider.preferenceData.Viewmodel.Offset_Horizontal * blendedViewmodelOffsetPreferenceMultiplier;
             desiredViewmodelCameraLocalPosition.z -= Provider.preferenceData.Viewmodel.Offset_Depth * blendedViewmodelOffsetPreferenceMultiplier;
-            desiredViewmodelCameraLocalPosition += vector;
             if (base.player.stance.stance == EPlayerStance.DRIVING)
             {
                 viewmodelCameraLocalPosition.x = Mathf.Lerp(viewmodelCameraLocalPosition.x, 0f - turretViewmodelCameraLocalPositionOffset.y - 0.65f - Mathf.Abs(base.player.look.yaw) / 90f * 0.25f, 8f * Time.deltaTime);
@@ -1107,10 +1117,10 @@ public class PlayerAnimator : PlayerCaller
             }
             if (base.player.life.health < 25)
             {
-                Vector3 vector2 = new Vector3(UnityEngine.Random.Range(-0.005f, 0.005f), UnityEngine.Random.Range(-0.005f, 0.005f), UnityEngine.Random.Range(-0.005f, 0.005f));
-                float num2 = 1f - (float)(int)Player.player.life.health / 25f;
-                float num3 = 1f - base.player.skills.mastery(1, 3) * 0.75f;
-                viewmodelCameraLocalPosition += vector2 * num2 * num3;
+                Vector3 vector = new Vector3(UnityEngine.Random.Range(-0.005f, 0.005f), UnityEngine.Random.Range(-0.005f, 0.005f), UnityEngine.Random.Range(-0.005f, 0.005f));
+                float num = 1f - (float)(int)Player.player.life.health / 25f;
+                float num2 = 1f - base.player.skills.mastery(1, 3) * 0.75f;
+                viewmodelCameraLocalPosition += vector * num * num2;
             }
             viewmodelCameraTransform.transform.localPosition = viewmodelCameraLocalPosition;
             if (base.player.movement.isMoving)
@@ -1132,14 +1142,14 @@ public class PlayerAnimator : PlayerCaller
             viewmodelCameraLocalRotation.z = viewmodelCameraMovementLocalRotation.currentPosition.y;
             viewmodelCameraLocalRotation += recoilViewmodelCameraRotation.currentPosition;
             recoilViewmodelCameraRotation.Update(Time.deltaTime);
-            float num4 = Mathf.DeltaAngle(base.player.look.pitch, lastFramePitchInput);
+            float num3 = Mathf.DeltaAngle(base.player.look.pitch, lastFramePitchInput);
             lastFramePitchInput = base.player.look.pitch;
-            float num5 = Mathf.DeltaAngle(base.player.look.yaw, lastFrameYawInput);
+            float num4 = Mathf.DeltaAngle(base.player.look.yaw, lastFrameYawInput);
             lastFrameYawInput = base.player.look.yaw;
             rotationInputViewmodelRoll.Update(Time.deltaTime);
-            rotationInputViewmodelRoll.currentPosition.x += num4 * -0.03f * viewmodelSwayMultiplier;
-            rotationInputViewmodelRoll.currentPosition.y += num5 * -0.015f * viewmodelSwayMultiplier;
-            rotationInputViewmodelRoll.currentPosition.z += num5 * -0.05f;
+            rotationInputViewmodelRoll.currentPosition.x += num3 * -0.03f * viewmodelSwayMultiplier;
+            rotationInputViewmodelRoll.currentPosition.y += num4 * -0.015f * viewmodelSwayMultiplier;
+            rotationInputViewmodelRoll.currentPosition.z += num4 * -0.05f;
             rotationInputViewmodelRoll.currentPosition = MathfEx.Clamp(rotationInputViewmodelRoll.currentPosition, -10f, 10f);
             viewmodelCameraLocalRotation += rotationInputViewmodelRoll.currentPosition;
             viewmodelItemInertiaRotation.Update(Time.deltaTime);
@@ -1148,31 +1158,31 @@ public class PlayerAnimator : PlayerCaller
                 ItemAsset asset = base.player.equipment.asset;
                 if (asset != null && asset.shouldProcedurallyAnimateInertia)
                 {
-                    Vector3 vector3 = viewmodelParentTransform.transform.InverseTransformPoint(base.player.equipment.firstModel.position);
+                    Vector3 vector2 = viewmodelParentTransform.transform.InverseTransformPoint(base.player.equipment.firstModel.position);
                     if (lastFrameHadItemPosition)
                     {
-                        Vector3 vector4 = vector3 - lastFrameItemPosition;
-                        viewmodelItemInertiaRotation.currentPosition.x += vector4.y * viewmodelItemInertiaMask.x;
-                        viewmodelItemInertiaRotation.currentPosition.y += vector4.x * viewmodelItemInertiaMask.y;
-                        viewmodelItemInertiaRotation.currentPosition.z += vector4.x * viewmodelItemInertiaMask.z;
+                        Vector3 vector3 = vector2 - lastFrameItemPosition;
+                        viewmodelItemInertiaRotation.currentPosition.x += vector3.y * viewmodelItemInertiaMask.x;
+                        viewmodelItemInertiaRotation.currentPosition.y += vector3.x * viewmodelItemInertiaMask.y;
+                        viewmodelItemInertiaRotation.currentPosition.z += vector3.x * viewmodelItemInertiaMask.z;
                     }
-                    lastFrameItemPosition = vector3;
+                    lastFrameItemPosition = vector2;
                     lastFrameHadItemPosition = true;
-                    goto IL_0aae;
+                    goto IL_0a16;
                 }
             }
             lastFrameHadItemPosition = false;
-            goto IL_0aae;
+            goto IL_0a16;
         }
         if (thirdAnimator != null)
         {
             updateState(thirdAnimator);
             updateHuman((HumanAnimator)thirdAnimator);
         }
-        goto IL_0e1d;
-        IL_0aae:
+        goto IL_0d7f;
+        IL_0a16:
         viewmodelItemInertiaRotation.currentPosition = MathfEx.Clamp(viewmodelItemInertiaRotation.currentPosition, -5f, 5f);
-        viewmodelCameraLocalRotation += viewmodelItemInertiaRotation.currentPosition * num;
+        viewmodelCameraLocalRotation += viewmodelItemInertiaRotation.currentPosition;
         viewmodelSmoothedExplosionLocalRotation = Quaternion.Lerp(viewmodelSmoothedExplosionLocalRotation, viewmodelTargetExplosionLocalRotation.currentRotation, viewmodelExplosionSmoothingSpeed * Time.deltaTime);
         viewmodelTargetExplosionLocalRotation.Update(Time.deltaTime);
         if (base.player.stance.stance == EPlayerStance.DRIVING)
@@ -1205,8 +1215,8 @@ public class PlayerAnimator : PlayerCaller
             _shoulder = 0f;
         }
         _shoulder2 = Mathf.Lerp(shoulder2, -lean, 8f * Time.deltaTime);
-        goto IL_0e1d;
-        IL_0e1d:
+        goto IL_0d7f;
+        IL_0d7f:
         if (characterAnimator != null)
         {
             updateState(characterAnimator);

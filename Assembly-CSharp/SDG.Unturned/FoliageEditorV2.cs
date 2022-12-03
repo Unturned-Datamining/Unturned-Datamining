@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-internal class FoliageEditor : IDevkitTool
+internal class FoliageEditorV2 : IDevkitTool
 {
     public enum EFoliageMode
     {
@@ -160,8 +160,11 @@ internal class FoliageEditor : IDevkitTool
                         continue;
                     }
                 }
-                foliageAsset.addFoliageToSurface(hitInfo.point, hitInfo.normal, clearWhenBaked: false, followRules: true);
-                flag = true;
+                if (InputEx.GetKey(KeyCode.Mouse0))
+                {
+                    foliageAsset.addFoliageToSurface(hitInfo.point, hitInfo.normal, clearWhenBaked: false, followRules: true);
+                    flag = true;
+                }
             }
         }
         addWeights[foliageAsset] = value;
@@ -452,26 +455,19 @@ internal class FoliageEditor : IDevkitTool
                     }
                 }
             }
+            else if (selectedInstanceAsset != null)
+            {
+                addFoliage(selectedInstanceAsset, 1f);
+            }
             else
             {
-                if (!InputEx.GetKey(KeyCode.Mouse0))
+                if (selectedCollectionAsset == null)
                 {
                     return;
                 }
-                if (selectedInstanceAsset != null)
+                foreach (FoliageInfoCollectionAsset.FoliageInfoCollectionElement element4 in selectedCollectionAsset.elements)
                 {
-                    addFoliage(selectedInstanceAsset, 1f);
-                }
-                else
-                {
-                    if (selectedCollectionAsset == null)
-                    {
-                        return;
-                    }
-                    foreach (FoliageInfoCollectionAsset.FoliageInfoCollectionElement element4 in selectedCollectionAsset.elements)
-                    {
-                        addFoliage(Assets.find(element4.asset), element4.weight);
-                    }
+                    addFoliage(Assets.find(element4.asset), element4.weight);
                 }
             }
         }

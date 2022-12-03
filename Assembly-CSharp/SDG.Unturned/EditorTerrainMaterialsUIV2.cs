@@ -8,7 +8,7 @@ using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
-internal class EditorTerrainMaterialsUI : SleekFullscreenBox
+internal class EditorTerrainMaterialsUIV2 : SleekFullscreenBox
 {
     private Local localization;
 
@@ -67,7 +67,7 @@ internal class EditorTerrainMaterialsUI : SleekFullscreenBox
     public void Open()
     {
         AnimateIntoView();
-        TerrainEditor.toolMode = TerrainEditor.EDevkitLandscapeToolMode.SPLATMAP;
+        TerrainEditorV2.toolMode = TerrainEditorV2.EDevkitLandscapeToolMode.SPLATMAP;
         EditorInteract.instance.SetActiveTool(EditorInteract.instance.terrainTool);
         if (FoliageSystem.instance != null)
         {
@@ -90,12 +90,12 @@ internal class EditorTerrainMaterialsUI : SleekFullscreenBox
     public override void OnUpdate()
     {
         base.OnUpdate();
-        modeButton.state = (int)TerrainEditor.splatmapMode;
+        modeButton.state = (int)TerrainEditorV2.splatmapMode;
         brushRadiusField.state = DevkitLandscapeToolSplatmapOptions.instance.brushRadius;
         brushFalloffField.state = DevkitLandscapeToolSplatmapOptions.instance.brushFalloff;
         brushStrengthField.state = EditorInteract.instance.terrainTool.splatmapBrushStrength;
         weightTargetField.state = DevkitLandscapeToolSplatmapOptions.instance.weightTarget;
-        LandscapeMaterialAsset landscapeMaterialAsset = TerrainEditor.splatmapMaterialTarget.Find();
+        LandscapeMaterialAsset landscapeMaterialAsset = TerrainEditorV2.splatmapMaterialTarget.Find();
         if (selectedMaterialAsset != landscapeMaterialAsset)
         {
             selectedMaterialAsset = landscapeMaterialAsset;
@@ -110,12 +110,12 @@ internal class EditorTerrainMaterialsUI : SleekFullscreenBox
                 selectedAssetBox.text = string.Empty;
             }
         }
-        if (TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.PAINT)
+        if (TerrainEditorV2.splatmapMode == TerrainEditorV2.EDevkitLandscapeToolSplatmapMode.PAINT)
         {
             hintLabel.text = localization.format("Hint_Paint", "Shift", "Ctrl", "Alt");
             hintLabel.isVisible = true;
         }
-        else if (TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.CUT)
+        else if (TerrainEditorV2.splatmapMode == TerrainEditorV2.EDevkitLandscapeToolSplatmapMode.CUT)
         {
             hintLabel.text = localization.format("Hint_Cut", "Shift");
             hintLabel.isVisible = true;
@@ -127,7 +127,7 @@ internal class EditorTerrainMaterialsUI : SleekFullscreenBox
         UpdateLowerLeftOffset();
     }
 
-    public EditorTerrainMaterialsUI()
+    public EditorTerrainMaterialsUIV2()
     {
         localization = Localization.read("/Editor/EditorTerrainMaterials.dat");
         DevkitLandscapeToolSplatmapOptions.load();
@@ -145,7 +145,7 @@ internal class EditorTerrainMaterialsUI : SleekFullscreenBox
         modeButton.sizeOffset_X = 200;
         modeButton.sizeOffset_Y = 30;
         modeButton.addLabel(localization.format("Mode_Label"), ESleekSide.RIGHT);
-        modeButton.state = (int)TerrainEditor.splatmapMode;
+        modeButton.state = (int)TerrainEditorV2.splatmapMode;
         SleekButtonState sleekButtonState = modeButton;
         sleekButtonState.onSwappedState = (SwappedState)Delegate.Combine(sleekButtonState.onSwappedState, new SwappedState(OnSwappedMode));
         AddChild(modeButton);
@@ -339,7 +339,7 @@ internal class EditorTerrainMaterialsUI : SleekFullscreenBox
 
     private void OnSwappedMode(SleekButtonState element, int index)
     {
-        TerrainEditor.splatmapMode = (TerrainEditor.EDevkitLandscapeToolSplatmapMode)index;
+        TerrainEditorV2.splatmapMode = (TerrainEditorV2.EDevkitLandscapeToolSplatmapMode)index;
     }
 
     private void OnBrushStrengthTyped(ISleekFloat32Field field, float state)
@@ -445,7 +445,7 @@ internal class EditorTerrainMaterialsUI : SleekFullscreenBox
     private void OnAssetClicked(ISleekElement button)
     {
         int index = assetScrollView.FindIndexOfChild(button);
-        TerrainEditor.splatmapMaterialTarget = new AssetReference<LandscapeMaterialAsset>(searchAssets[index].GUID);
+        TerrainEditorV2.splatmapMaterialTarget = new AssetReference<LandscapeMaterialAsset>(searchAssets[index].GUID);
     }
 
     private void RefreshAssets()
@@ -493,14 +493,14 @@ internal class EditorTerrainMaterialsUI : SleekFullscreenBox
         num -= maxPreviewSamplesField.sizeOffset_Y;
         maxPreviewSamplesField.positionOffset_Y = num;
         num -= 10;
-        smoothMethodButton.isVisible = TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.SMOOTH;
+        smoothMethodButton.isVisible = TerrainEditorV2.splatmapMode == TerrainEditorV2.EDevkitLandscapeToolSplatmapMode.SMOOTH;
         if (smoothMethodButton.isVisible)
         {
             num -= smoothMethodButton.sizeOffset_Y;
             smoothMethodButton.positionOffset_Y = num;
             num -= 10;
         }
-        autoRayRadiusField.isVisible = TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.PAINT && DevkitLandscapeToolSplatmapOptions.instance.useAutoFoundation;
+        autoRayRadiusField.isVisible = TerrainEditorV2.splatmapMode == TerrainEditorV2.EDevkitLandscapeToolSplatmapMode.PAINT && DevkitLandscapeToolSplatmapOptions.instance.useAutoFoundation;
         autoRayLengthField.isVisible = autoRayRadiusField.isVisible;
         autoRayMaskField.isVisible = autoRayRadiusField.isVisible;
         if (autoRayRadiusField.isVisible)
@@ -512,14 +512,14 @@ internal class EditorTerrainMaterialsUI : SleekFullscreenBox
             num -= autoRayRadiusField.sizeOffset_Y;
             autoRayRadiusField.positionOffset_Y = num;
         }
-        useAutoFoundationToggle.isVisible = TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.PAINT;
+        useAutoFoundationToggle.isVisible = TerrainEditorV2.splatmapMode == TerrainEditorV2.EDevkitLandscapeToolSplatmapMode.PAINT;
         if (useAutoFoundationToggle.isVisible)
         {
             num -= useAutoFoundationToggle.sizeOffset_Y;
             useAutoFoundationToggle.positionOffset_Y = num;
             num -= 10;
         }
-        autoMinAngleBeginField.isVisible = TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.PAINT && DevkitLandscapeToolSplatmapOptions.instance.useAutoSlope;
+        autoMinAngleBeginField.isVisible = TerrainEditorV2.splatmapMode == TerrainEditorV2.EDevkitLandscapeToolSplatmapMode.PAINT && DevkitLandscapeToolSplatmapOptions.instance.useAutoSlope;
         autoMinAngleEndField.isVisible = autoMinAngleBeginField.isVisible;
         autoMaxAngleBeginField.isVisible = autoMinAngleBeginField.isVisible;
         autoMaxAngleEndField.isVisible = autoMinAngleBeginField.isVisible;
@@ -532,14 +532,14 @@ internal class EditorTerrainMaterialsUI : SleekFullscreenBox
             autoMinAngleBeginField.positionOffset_Y = num;
             autoMinAngleEndField.positionOffset_Y = num;
         }
-        useAutoSlopeToggle.isVisible = TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.PAINT;
+        useAutoSlopeToggle.isVisible = TerrainEditorV2.splatmapMode == TerrainEditorV2.EDevkitLandscapeToolSplatmapMode.PAINT;
         if (useAutoSlopeToggle.isVisible)
         {
             num -= useAutoSlopeToggle.sizeOffset_Y;
             useAutoSlopeToggle.positionOffset_Y = num;
             num -= 10;
         }
-        useWeightTargetToggle.isVisible = TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.PAINT;
+        useWeightTargetToggle.isVisible = TerrainEditorV2.splatmapMode == TerrainEditorV2.EDevkitLandscapeToolSplatmapMode.PAINT;
         weightTargetField.isVisible = useWeightTargetToggle.isVisible;
         if (useWeightTargetToggle.isVisible)
         {
@@ -548,7 +548,7 @@ internal class EditorTerrainMaterialsUI : SleekFullscreenBox
             weightTargetField.positionOffset_Y = num + 5;
             num -= 10;
         }
-        brushStrengthField.isVisible = TerrainEditor.splatmapMode != TerrainEditor.EDevkitLandscapeToolSplatmapMode.CUT;
+        brushStrengthField.isVisible = TerrainEditorV2.splatmapMode != TerrainEditorV2.EDevkitLandscapeToolSplatmapMode.CUT;
         brushFalloffField.isVisible = brushStrengthField.isVisible;
         if (brushStrengthField.isVisible)
         {
@@ -562,7 +562,7 @@ internal class EditorTerrainMaterialsUI : SleekFullscreenBox
         num -= brushRadiusField.sizeOffset_Y;
         brushRadiusField.positionOffset_Y = num;
         num -= 10;
-        highlightHolesToggle.isVisible = TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.CUT;
+        highlightHolesToggle.isVisible = TerrainEditorV2.splatmapMode == TerrainEditorV2.EDevkitLandscapeToolSplatmapMode.CUT;
         if (highlightHolesToggle.isVisible)
         {
             num -= highlightHolesToggle.sizeOffset_Y;

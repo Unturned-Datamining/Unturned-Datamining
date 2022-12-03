@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-public class TerrainEditor : IDevkitTool
+internal class TerrainEditorV2 : IDevkitTool
 {
     public enum EDevkitLandscapeToolMode
     {
@@ -116,9 +116,9 @@ public class TerrainEditor : IDevkitTool
             {
                 EDevkitLandscapeToolMode oldMode = toolMode;
                 _toolMode = value;
-                if (TerrainEditor.toolModeChanged != null)
+                if (TerrainEditorV2.toolModeChanged != null)
                 {
-                    TerrainEditor.toolModeChanged(oldMode, toolMode);
+                    TerrainEditorV2.toolModeChanged(oldMode, toolMode);
                 }
             }
         }
@@ -136,9 +136,9 @@ public class TerrainEditor : IDevkitTool
             {
                 LandscapeTile oldSelectedTile = selectedTile;
                 _selectedTile = value;
-                if (TerrainEditor.selectedTileChanged != null)
+                if (TerrainEditorV2.selectedTileChanged != null)
                 {
-                    TerrainEditor.selectedTileChanged(oldSelectedTile, selectedTile);
+                    TerrainEditorV2.selectedTileChanged(oldSelectedTile, selectedTile);
                 }
             }
         }

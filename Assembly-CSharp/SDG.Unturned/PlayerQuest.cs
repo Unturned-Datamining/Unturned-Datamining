@@ -11,10 +11,4 @@ public class PlayerQuest
         id = newID;
         asset = Assets.find(EAssetType.NPC, id) as QuestAsset;
     }
-
-    internal PlayerQuest(QuestAsset asset)
-    {
-        this.asset = asset;
-        id = asset?.id ?? 0;
-    }
 }

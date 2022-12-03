@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using SDG.NetPak;
 using SDG.NetTransport;
+using SDG.Provider;
 using Steamworks;
 
 namespace SDG.Unturned;
@@ -61,40 +63,25 @@ internal static class ServerMessageHandler_Authenticate
     private static bool ReadEconomyDetails(SteamPending player, NetPakReader reader)
     {
         reader.ReadUInt16(out var value);
-        if (value > 0)
+        SteamItemDetails_t[] array = new SteamItemDetails_t[value];
+        Dictionary<ulong, DynamicEconDetails> dictionary = new Dictionary<ulong, DynamicEconDetails>();
+        for (uint num = 0u; num < value; num++)
         {
-            byte[] array = new byte[value];
-            reader.ReadBytes(array);
-            if (!SteamGameServerInventory.DeserializeResult(out player.inventoryResult, array, value))
+            SteamItemDetails_t steamItemDetails_t = default(SteamItemDetails_t);
+            bool num2 = reader.ReadSteamItemDefID(out steamItemDetails_t.m_iDefinition) & reader.ReadSteamItemInstanceID(out steamItemDetails_t.m_itemId);
+            DynamicEconDetails value2 = default(DynamicEconDetails);
+            if (!(num2 & reader.ReadString(out value2.tags) & reader.ReadString(out value2.dynamic_props) & !dictionary.ContainsKey(steamItemDetails_t.m_itemId.m_SteamItemInstanceID)))
             {
-                Provider.reject(player.transportConnection, ESteamRejection.AUTH_ECON_DESERIALIZE);
+                Provider.reject(player.playerID.steamID, ESteamRejection.AUTH_ECON_DESERIALIZE);
                 return false;
             }
+            array[num] = steamItemDetails_t;
+            dictionary.Add(steamItemDetails_t.m_itemId.m_SteamItemInstanceID, value2);
         }
-        else
-        {
-            player.shirtItem = 0;
-            player.pantsItem = 0;
-            player.hatItem = 0;
-            player.backpackItem = 0;
-            player.vestItem = 0;
-            player.maskItem = 0;
-            player.glassesItem = 0;
-            player.skinItems = new int[0];
-            player.skinTags = new string[0];
-            player.skinDynamicProps = new string[0];
-            player.packageShirt = 0uL;
-            player.packagePants = 0uL;
-            player.packageHat = 0uL;
-            player.packageBackpack = 0uL;
-            player.packageVest = 0uL;
-            player.packageMask = 0uL;
-            player.packageGlasses = 0uL;
-            player.packageSkins = new ulong[0];
-            player.inventoryResult = SteamInventoryResult_t.Invalid;
-            player.inventoryDetails = new SteamItemDetails_t[0];
-            player.hasProof = true;
-        }
+        player.inventoryResult = SteamInventoryResult_t.Invalid;
+        player.inventoryDetails = array;
+        player.dynamicInventoryDetails = dictionary;
+        player.inventoryDetailsReady();
         return true;
     }
 }

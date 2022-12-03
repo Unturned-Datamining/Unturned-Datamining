@@ -585,7 +585,7 @@ public class MenuUI : MonoBehaviour
         }
     }
 
-    internal IEnumerator CheckForUpdates(Action<string, bool> callback)
+    internal IEnumerator CheckForUpdates(Action<string> callback)
     {
         if (Application.isEditor)
         {
@@ -611,18 +611,10 @@ public class MenuUI : MonoBehaviour
             string text = request.downloadHandler.text;
             if (Parser.TryGetUInt32FromIP(text, out var value))
             {
-                if (value != Provider.APP_VERSION_PACKED)
+                if (value > Provider.APP_VERSION_PACKED)
                 {
-                    if (value > Provider.APP_VERSION_PACKED)
-                    {
-                        UnturnedLog.info("Detected newer game version: " + text);
-                    }
-                    else
-                    {
-                        UnturnedLog.info("Detected rollback to older game version: " + text);
-                    }
-                    bool arg = value < Provider.APP_VERSION_PACKED;
-                    callback(text, arg);
+                    UnturnedLog.info("Detected newer game version: " + text);
+                    callback(text);
                 }
                 else
                 {

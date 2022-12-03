@@ -49,7 +49,7 @@ public class EditorObjects : MonoBehaviour
 
     private static bool hasCopyScale;
 
-    private static TransformHandles handles;
+    private static TransformHandlesV3 handlesV3;
 
     private static EDragMode _dragMode;
 
@@ -222,11 +222,11 @@ public class EditorObjects : MonoBehaviour
                 zero += selection[i].transform.position;
             }
             zero /= (float)selection.Count;
-            handles.SetPreferredPivot(zero, Quaternion.identity);
+            handlesV3.SetPreferredPivot(zero, Quaternion.identity);
         }
         else
         {
-            handles.SetPreferredPivot(selection[0].transform.position, selection[0].transform.rotation);
+            handlesV3.SetPreferredPivot(selection[0].transform.position, selection[0].transform.rotation);
         }
     }
 
@@ -278,7 +278,7 @@ public class EditorObjects : MonoBehaviour
     {
         applySelection();
         isUsingHandle = false;
-        handles.MouseUp();
+        handlesV3.MouseUp();
     }
 
     private void stopDragging()
@@ -327,40 +327,40 @@ public class EditorObjects : MonoBehaviour
                 }
                 return;
             }
-            handles.snapPositionInterval = snapTransform;
-            handles.snapRotationIntervalDegrees = snapRotation;
+            handlesV3.snapPositionInterval = snapTransform;
+            handlesV3.snapRotationIntervalDegrees = snapRotation;
             if (dragMode == EDragMode.TRANSFORM)
             {
                 if (wantsBoundsEditor)
                 {
-                    handles.SetPreferredMode(TransformHandles.EMode.PositionBounds);
-                    handles.UpdateBoundsFromSelection(EnumerateSelectedGameObjects());
+                    handlesV3.SetPreferredMode(TransformHandlesV3.EMode.PositionBounds);
+                    handlesV3.UpdateBoundsFromSelection(EnumerateSelectedGameObjects());
                 }
                 else
                 {
-                    handles.SetPreferredMode(TransformHandles.EMode.Position);
+                    handlesV3.SetPreferredMode(TransformHandlesV3.EMode.Position);
                 }
             }
             else if (dragMode == EDragMode.SCALE)
             {
                 if (wantsBoundsEditor)
                 {
-                    handles.SetPreferredMode(TransformHandles.EMode.ScaleBounds);
-                    handles.UpdateBoundsFromSelection(EnumerateSelectedGameObjects());
+                    handlesV3.SetPreferredMode(TransformHandlesV3.EMode.ScaleBounds);
+                    handlesV3.UpdateBoundsFromSelection(EnumerateSelectedGameObjects());
                 }
                 else
                 {
-                    handles.SetPreferredMode(TransformHandles.EMode.Scale);
+                    handlesV3.SetPreferredMode(TransformHandlesV3.EMode.Scale);
                 }
             }
             else
             {
-                handles.SetPreferredMode(TransformHandles.EMode.Rotation);
+                handlesV3.SetPreferredMode(TransformHandlesV3.EMode.Rotation);
             }
-            bool flag = selection.Count > 0 && handles.Raycast(EditorInteract.ray);
+            bool flag = selection.Count > 0 && handlesV3.Raycast(EditorInteract.ray);
             if (selection.Count > 0)
             {
-                handles.Render(EditorInteract.ray);
+                handlesV3.Render(EditorInteract.ray);
             }
             if (isUsingHandle)
             {
@@ -369,8 +369,8 @@ public class EditorObjects : MonoBehaviour
                     releaseHandle();
                     return;
                 }
-                handles.wantsToSnap = InputEx.GetKey(ControlsSettings.snap);
-                handles.MouseMove(EditorInteract.ray);
+                handlesV3.wantsToSnap = InputEx.GetKey(ControlsSettings.snap);
+                handlesV3.MouseMove(EditorInteract.ray);
                 return;
             }
             if (InputEx.GetKeyDown(ControlsSettings.tool_0))
@@ -421,8 +421,8 @@ public class EditorObjects : MonoBehaviour
             }
             if (InputEx.GetKeyDown(KeyCode.B) && selection.Count > 0 && InputEx.GetKey(KeyCode.LeftControl))
             {
-                copyPosition = handles.GetPivotPosition();
-                copyRotation = handles.GetPivotRotation();
+                copyPosition = handlesV3.GetPivotPosition();
+                copyRotation = handlesV3.GetPivotRotation();
                 if (selection.Count == 1)
                 {
                     copyScale = selection[0].transform.localScale;
@@ -449,7 +449,7 @@ public class EditorObjects : MonoBehaviour
                 }
                 else
                 {
-                    handles.ExternallyTransformPivot(copyPosition, copyRotation, modifyRotation: true);
+                    handlesV3.ExternallyTransformPivot(copyPosition, copyRotation, modifyRotation: true);
                 }
                 applySelection();
             }
@@ -485,7 +485,7 @@ public class EditorObjects : MonoBehaviour
                     if (flag)
                     {
                         pointSelection();
-                        handles.MouseDown(EditorInteract.ray);
+                        handlesV3.MouseDown(EditorInteract.ray);
                         isUsingHandle = true;
                     }
                     else if (EditorInteract.objectHit.transform != null)
@@ -628,13 +628,13 @@ public class EditorObjects : MonoBehaviour
                         {
                             point += EditorInteract.worldHit.normal * snapTransform;
                         }
-                        Quaternion pivotRotation = handles.GetPivotRotation();
-                        handles.ExternallyTransformPivot(point, pivotRotation, modifyRotation: false);
+                        Quaternion pivotRotation = handlesV3.GetPivotRotation();
+                        handlesV3.ExternallyTransformPivot(point, pivotRotation, modifyRotation: false);
                         applySelection();
                     }
                     if (InputEx.GetKeyDown(ControlsSettings.focus))
                     {
-                        MainCamera.instance.transform.parent.position = handles.GetPivotPosition() - 15f * MainCamera.instance.transform.forward;
+                        MainCamera.instance.transform.parent.position = handlesV3.GetPivotPosition() - 15f * MainCamera.instance.transform.forward;
                     }
                 }
                 else if (EditorInteract.worldHit.transform != null)
@@ -659,7 +659,7 @@ public class EditorObjects : MonoBehaviour
                             point2 += EditorInteract.worldHit.normal * snapTransform;
                         }
                         Quaternion rotation = Quaternion.Euler(-90f, 0f, 0f);
-                        handles.SetPreferredPivot(point2, rotation);
+                        handlesV3.SetPreferredPivot(point2, rotation);
                         if (selectedObjectAsset != null || selectedItemAsset != null)
                         {
                             LevelObjects.step++;
@@ -687,10 +687,10 @@ public class EditorObjects : MonoBehaviour
     {
         _isBuilding = false;
         selection = new List<EditorSelection>();
-        handles = new TransformHandles();
-        handles.OnPreTransform += OnHandlePreTransform;
-        handles.OnTranslatedAndRotated += OnHandleTranslatedAndRotated;
-        handles.OnTransformed += OnHandleTransformed;
+        handlesV3 = new TransformHandlesV3();
+        handlesV3.OnPreTransform += OnHandlePreTransform;
+        handlesV3.OnTranslatedAndRotated += OnHandleTranslatedAndRotated;
+        handlesV3.OnTransformed += OnHandleTransformed;
         dragMode = EDragMode.TRANSFORM;
         dragCoordinate = EDragCoordinate.GLOBAL;
         dragable = new List<EditorDrag>();

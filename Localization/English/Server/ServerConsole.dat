@@ -75,10 +75,8 @@ Shutdown Shutdown in: {0}
 ScheduledMaintenance_KickExplanation Scheduled Maintenance
 ScheduledMaintenance_Timer Shutting down for scheduled maintenance in: {0}
 
-UpdateShutdown_KickExplanation Updating game to newer version {0}
-RollbackShutdown_KickExplanation Rolling back game to older version {0}
-UpdateShutdown_Timer Shutting down for update to newer version {0} in: {1}
-RollbackShutdown_Timer Shutting down for rollback to older version {0} in: {1}
+UpdateShutdown_KickExplanation Updating to version {0}
+UpdateShutdown_Timer Shutting down for update to version {0} in: {1}
 
 HUD_FPS {0}/s
 HUD_Ping {0}ms

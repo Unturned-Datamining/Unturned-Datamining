@@ -8,7 +8,7 @@ internal class EditorEnvironmentNodesUI : SleekFullscreenBox
 {
     internal Local localization;
 
-    private NodesEditor tool;
+    private NodesEditorV2 tool;
 
     private GameObject focusedGameObject;
 
@@ -72,7 +72,7 @@ internal class EditorEnvironmentNodesUI : SleekFullscreenBox
     public EditorEnvironmentNodesUI()
     {
         DevkitSelectionToolOptions.load();
-        tool = new NodesEditor();
+        tool = new NodesEditorV2();
         localization = Localization.read("/Editor/EditorLevelNodes.dat");
         Local local = Localization.read("/Editor/EditorLevelObjects.dat");
         Bundle bundle = Bundles.getBundle("/Bundles/Textures/Edit/Icons/EditorLevelObjects/EditorLevelObjects.unity3d");
@@ -217,17 +217,17 @@ internal class EditorEnvironmentNodesUI : SleekFullscreenBox
 
     private void OnTransformClicked(ISleekElement button)
     {
-        tool.mode = SelectionTool.ESelectionMode.POSITION;
+        tool.mode = SelectionToolV2.ESelectionMode.POSITION;
     }
 
     private void OnRotateClicked(ISleekElement button)
     {
-        tool.mode = SelectionTool.ESelectionMode.ROTATION;
+        tool.mode = SelectionToolV2.ESelectionMode.ROTATION;
     }
 
     private void OnScaleClicked(ISleekElement button)
     {
-        tool.mode = SelectionTool.ESelectionMode.SCALE;
+        tool.mode = SelectionToolV2.ESelectionMode.SCALE;
     }
 
     private void OnSwappedStateCoordinate(SleekButtonState button, int index)

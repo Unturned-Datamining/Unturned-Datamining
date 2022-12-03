@@ -398,23 +398,7 @@ public class PlayerVoice : PlayerCaller
         }
         wasRecording = inputWantsToRecord;
         pollRecordingTimer = 0f;
-        uint pcbCompressed;
-        EVoiceResult availableVoice = SteamUser.GetAvailableVoice(out pcbCompressed);
-        if (availableVoice != 0 && availableVoice != EVoiceResult.k_EVoiceResultNoData)
-        {
-            UnturnedLog.error("GetAvailableVoice result: " + availableVoice);
-        }
-        if (availableVoice != 0 || pcbCompressed < 1)
-        {
-            return;
-        }
-        uint compressedSize;
-        EVoiceResult voice = SteamUser.GetVoice(bWantCompressed: true, COMPRESSED_VOICE_BUFFER, pcbCompressed, out compressedSize);
-        if (voice != 0 && voice != EVoiceResult.k_EVoiceResultNoData)
-        {
-            UnturnedLog.error("GetVoice result: " + voice);
-        }
-        if (voice != 0 || compressedSize < 1)
+        if (SteamUser.GetAvailableVoice(out var pcbCompressed) != 0 || pcbCompressed < 1 || SteamUser.GetVoice(bWantCompressed: true, COMPRESSED_VOICE_BUFFER, pcbCompressed, out var compressedSize) != 0 || compressedSize < 1)
         {
             return;
         }

@@ -15,13 +15,9 @@ public class PlayerQuests : PlayerCaller
 
     private const byte SAVEDATA_VERSION_ADDED_NPC_SPAWN_ID = 8;
 
-    private const byte SAVEDATA_VERSION_ADDED_TRACKED_QUEST_GUID = 9;
+    private const byte SAVEDATA_VERSION_NEWEST = 8;
 
-    private const byte SAVEDATA_VERSION_ADDED_QUEST_LIST_GUIDS = 10;
-
-    private const byte SAVEDATA_VERSION_NEWEST = 10;
-
-    public static readonly byte SAVEDATA_VERSION = 10;
+    public static readonly byte SAVEDATA_VERSION = 8;
 
     public static readonly uint DEFAULT_RADIO_FREQUENCY = 460327u;
 
@@ -41,7 +37,9 @@ public class PlayerQuests : PlayerCaller
 
     public static GroupUpdatedHandler groupUpdated;
 
-    private QuestAsset _trackedQuest;
+    private Dictionary<ushort, PlayerQuest> questsMap;
+
+    private ushort _TrackedQuestID;
 
     private bool _isMarkerPlaced;
 
@@ -103,13 +101,13 @@ public class PlayerQuests : PlayerCaller
 
     private static readonly ClientInstanceMethod<ushort> SendRemoveFlag = ClientInstanceMethod<ushort>.Get(typeof(PlayerQuests), "ReceiveRemoveFlag");
 
-    private static readonly ClientInstanceMethod<Guid> SendAddQuest = ClientInstanceMethod<Guid>.Get(typeof(PlayerQuests), "ReceiveAddQuest");
+    private static readonly ClientInstanceMethod<ushort> SendAddQuest = ClientInstanceMethod<ushort>.Get(typeof(PlayerQuests), "ReceiveAddQuest");
 
-    private static readonly ClientInstanceMethod<Guid> SendRemoveQuest = ClientInstanceMethod<Guid>.Get(typeof(PlayerQuests), "ReceiveRemoveQuest");
+    private static readonly ClientInstanceMethod<ushort> SendRemoveQuest = ClientInstanceMethod<ushort>.Get(typeof(PlayerQuests), "ReceiveRemoveQuest");
 
-    private static readonly ServerInstanceMethod<Guid> SendTrackQuest = ServerInstanceMethod<Guid>.Get(typeof(PlayerQuests), "ReceiveTrackQuest");
+    private static readonly ServerInstanceMethod<ushort> SendTrackQuest = ServerInstanceMethod<ushort>.Get(typeof(PlayerQuests), "ReceiveTrackQuest");
 
-    private static readonly ServerInstanceMethod<Guid> SendAbandonQuest = ServerInstanceMethod<Guid>.Get(typeof(PlayerQuests), "ReceiveAbandonQuest");
+    private static readonly ServerInstanceMethod<ushort> SendAbandonQuest = ServerInstanceMethod<ushort>.Get(typeof(PlayerQuests), "ReceiveAbandonQuest");
 
     private static readonly ServerInstanceMethod<Guid> SendRegisterMessage = ServerInstanceMethod<Guid>.Get(typeof(PlayerQuests), "ReceiveRegisterMessage");
 
@@ -123,8 +121,17 @@ public class PlayerQuests : PlayerCaller
 
     public List<PlayerQuestFlag> flagsList { get; private set; }
 
-    [Obsolete("Replaced by GetTrackedQuest")]
-    public ushort TrackedQuestID => _trackedQuest?.id ?? 0;
+    public ushort TrackedQuestID
+    {
+        get
+        {
+            return _TrackedQuestID;
+        }
+        private set
+        {
+            _TrackedQuestID = value;
+        }
+    }
 
     public List<PlayerQuest> questsList { get; private set; }
 
@@ -356,11 +363,6 @@ public class PlayerQuests : PlayerCaller
     private void triggerQuestCompleted(QuestAsset asset)
     {
         this.questCompleted?.Invoke(this, asset);
-    }
-
-    public QuestAsset GetTrackedQuest()
-    {
-        return _trackedQuest;
     }
 
     public bool isMemberOfGroup(CSteamID groupID)
@@ -929,111 +931,78 @@ public class PlayerQuests : PlayerCaller
         return num;
     }
 
-    public void AddQuest(QuestAsset questAsset)
-    {
-        if (questAsset != null)
-        {
-            if (FindIndexOfQuest(questAsset) < 0)
-            {
-                PlayerQuest item = new PlayerQuest(questAsset);
-                questsList.Add(item);
-            }
-            TrackQuest(questAsset);
-            if (base.channel.isOwner && this.OnLocalPlayerQuestsChanged != null)
-            {
-                this.OnLocalPlayerQuestsChanged(questAsset.id);
-            }
-        }
-    }
-
-    [Obsolete]
     public void addQuest(ushort id)
     {
-        if (Assets.find(EAssetType.NPC, id) is QuestAsset questAsset)
+        if (!questsMap.ContainsKey(id))
         {
-            AddQuest(questAsset);
+            PlayerQuest playerQuest = new PlayerQuest(id);
+            int num = questsList.BinarySearch(playerQuest, questComparator);
+            if (num < 0)
+            {
+                questsMap.Add(id, playerQuest);
+                num = ~num;
+                questsList.Insert(num, playerQuest);
+            }
+        }
+        trackQuest(id);
+        if (base.channel.isOwner && this.OnLocalPlayerQuestsChanged != null)
+        {
+            this.OnLocalPlayerQuestsChanged(id);
         }
     }
 
-    [Obsolete]
     public bool getQuest(ushort id, out PlayerQuest quest)
     {
-        if (Assets.find(EAssetType.NPC, id) is QuestAsset asset)
+        if (questsMap.TryGetValue(id, out quest))
         {
-            int num = FindIndexOfQuest(asset);
-            if (num >= 0)
-            {
-                quest = questsList[num];
-                return true;
-            }
-            quest = null;
-            return false;
+            return true;
         }
         quest = null;
         return false;
     }
 
-    public ENPCQuestStatus GetQuestStatus(QuestAsset questAsset)
+    public ENPCQuestStatus getQuestStatus(ushort id)
     {
-        if (questAsset == null)
+        if (getQuest(id, out var quest))
         {
-            return ENPCQuestStatus.NONE;
-        }
-        if (FindIndexOfQuest(questAsset) >= 0)
-        {
-            if (questAsset.areConditionsMet(base.player))
+            if (quest.asset.areConditionsMet(base.player))
             {
                 return ENPCQuestStatus.READY;
             }
             return ENPCQuestStatus.ACTIVE;
         }
-        if (getFlag(questAsset.id, out var _))
+        if (getFlag(id, out var _))
         {
             return ENPCQuestStatus.COMPLETED;
         }
         return ENPCQuestStatus.NONE;
     }
 
-    [Obsolete]
-    public ENPCQuestStatus getQuestStatus(ushort id)
+    public void removeQuest(ushort id)
     {
-        if (Assets.find(EAssetType.NPC, id) is QuestAsset questAsset)
+        if (questsMap.TryGetValue(id, out var value))
         {
-            return GetQuestStatus(questAsset);
+            int num = questsList.BinarySearch(value, questComparator);
+            if (num >= 0)
+            {
+                questsMap.Remove(id);
+                questsList.RemoveAt(num);
+            }
         }
-        return ENPCQuestStatus.NONE;
-    }
-
-    public void RemoveQuest(QuestAsset questAsset)
-    {
-        int num = FindIndexOfQuest(questAsset);
-        if (num >= 0)
-        {
-            questsList.RemoveAt(num);
-        }
-        if (_trackedQuest != null && _trackedQuest == questAsset)
+        if (TrackedQuestID == id)
         {
             if (questsList.Count > 0)
             {
-                TrackQuest(questsList[0].asset);
+                trackQuest(questsList[0].id);
             }
             else
             {
-                TrackQuest(null);
+                trackQuest(0);
             }
         }
-        if (base.channel.isOwner && questAsset != null && this.OnLocalPlayerQuestsChanged != null)
+        if (base.channel.isOwner && this.OnLocalPlayerQuestsChanged != null)
         {
-            this.OnLocalPlayerQuestsChanged(questAsset.id);
-        }
-    }
-
-    [Obsolete]
-    public void removeQuest(ushort id)
-    {
-        if (Assets.find(EAssetType.NPC, id) is QuestAsset questAsset)
-        {
-            RemoveQuest(questAsset);
+            this.OnLocalPlayerQuestsChanged(id);
         }
     }
 
@@ -1176,28 +1145,19 @@ public class PlayerQuests : PlayerCaller
         }
     }
 
-    public void CompleteQuest(QuestAsset questAsset, bool ignoreNPC = false)
+    public void completeQuest(ushort id, bool ignoreNPC = false)
     {
-        if (questAsset != null && (ignoreNPC || (!(checkNPC == null) && !((checkNPC.transform.position - base.transform.position).sqrMagnitude > 400f))) && GetQuestStatus(questAsset) == ENPCQuestStatus.READY)
+        if ((ignoreNPC || (!(checkNPC == null) && !((checkNPC.transform.position - base.transform.position).sqrMagnitude > 400f))) && getQuest(id, out var quest) && quest.asset.areConditionsMet(base.player))
         {
-            RemoveQuest(questAsset);
-            setFlag(questAsset.id, 1);
-            questAsset.applyConditions(base.player, shouldSend: false);
-            questAsset.grantRewards(base.player, shouldSend: false);
+            removeQuest(id);
+            setFlag(id, 1);
+            quest.asset.applyConditions(base.player, shouldSend: false);
+            quest.asset.grantRewards(base.player, shouldSend: false);
             if (base.channel.isOwner && Provider.provider.achievementsService.getAchievement("Quest", out var has) && !has)
             {
                 Provider.provider.achievementsService.setAchievement("Quest");
             }
-            triggerQuestCompleted(questAsset);
-        }
-    }
-
-    [Obsolete]
-    public void completeQuest(ushort id, bool ignoreNPC = false)
-    {
-        if (Assets.find(EAssetType.NPC, id) is QuestAsset questAsset)
-        {
-            CompleteQuest(questAsset);
+            triggerQuestCompleted(quest.asset);
         }
     }
 
@@ -1351,82 +1311,54 @@ public class PlayerQuests : PlayerCaller
     [Obsolete]
     public void tellAddQuest(CSteamID steamID, ushort id)
     {
+        ReceiveAddQuest(id);
     }
 
-    [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
-    public void ReceiveAddQuest(Guid assetGuid)
+    [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellAddQuest")]
+    public void ReceiveAddQuest(ushort id)
     {
-        QuestAsset questAsset = Assets.find<QuestAsset>(assetGuid);
-        if (questAsset != null)
-        {
-            AddQuest(questAsset);
-        }
+        addQuest(id);
     }
 
-    public void ServerAddQuest(QuestAsset questAsset)
-    {
-        if (questAsset != null)
-        {
-            AddQuest(questAsset);
-            if (!base.channel.isOwner)
-            {
-                SendAddQuest.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), questAsset.GUID);
-            }
-        }
-    }
-
-    [Obsolete]
     public void sendAddQuest(ushort id)
     {
-        if (Assets.find(EAssetType.NPC, id) is QuestAsset questAsset)
+        addQuest(id);
+        if (!base.channel.isOwner)
         {
-            ServerAddQuest(questAsset);
+            SendAddQuest.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), id);
         }
     }
 
     [Obsolete]
     public void tellRemoveQuest(CSteamID steamID, ushort id)
     {
+        ReceiveRemoveQuest(id);
     }
 
-    [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
-    public void ReceiveRemoveQuest(Guid assetGuid)
+    [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellRemoveQuest")]
+    public void ReceiveRemoveQuest(ushort id)
     {
-        QuestAsset questAsset = Assets.find<QuestAsset>(assetGuid);
-        if (questAsset != null)
-        {
-            RemoveQuest(questAsset);
-        }
+        removeQuest(id);
     }
 
-    public void ServerRemoveQuest(QuestAsset questAsset)
-    {
-        if (questAsset != null)
-        {
-            RemoveQuest(questAsset);
-            if (!base.channel.isOwner)
-            {
-                SendRemoveQuest.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), questAsset.GUID);
-            }
-        }
-    }
-
-    [Obsolete]
     public void sendRemoveQuest(ushort id)
     {
-        QuestAsset questAsset = Assets.find(EAssetType.NPC, id) as QuestAsset;
-        ServerRemoveQuest(questAsset);
+        removeQuest(id);
+        if (!base.channel.isOwner)
+        {
+            SendRemoveQuest.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), id);
+        }
     }
 
-    public void TrackQuest(QuestAsset questAsset)
+    public void trackQuest(ushort id)
     {
-        if (_trackedQuest != null && _trackedQuest == questAsset)
+        if (TrackedQuestID == id)
         {
-            _trackedQuest = null;
+            TrackedQuestID = 0;
         }
         else
         {
-            _trackedQuest = questAsset;
+            TrackedQuestID = id;
         }
         if (base.channel.isOwner)
         {
@@ -1435,80 +1367,42 @@ public class PlayerQuests : PlayerCaller
     }
 
     [Obsolete]
-    public void trackQuest(ushort id)
-    {
-        QuestAsset questAsset = Assets.find(EAssetType.NPC, id) as QuestAsset;
-        TrackQuest(questAsset);
-    }
-
-    [Obsolete]
     public void askTrackQuest(CSteamID steamID, ushort id)
     {
+        ReceiveTrackQuest(id);
     }
 
-    [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 5)]
-    public void ReceiveTrackQuest(Guid assetGuid)
+    [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 5, legacyName = "askTrackQuest")]
+    public void ReceiveTrackQuest(ushort id)
     {
-        QuestAsset questAsset = Assets.find<QuestAsset>(assetGuid);
-        TrackQuest(questAsset);
+        trackQuest(id);
     }
 
-    public void ClientTrackQuest(QuestAsset questAsset)
-    {
-        SendTrackQuest.Invoke(GetNetId(), ENetReliability.Reliable, questAsset?.GUID ?? Guid.Empty);
-    }
-
-    [Obsolete]
     public void sendTrackQuest(ushort id)
     {
-        QuestAsset questAsset = Assets.find(EAssetType.NPC, id) as QuestAsset;
-        ClientTrackQuest(questAsset);
+        SendTrackQuest.Invoke(GetNetId(), ENetReliability.Reliable, id);
     }
 
-    public void AbandonQuest(QuestAsset questAsset)
-    {
-        RemoveQuest(questAsset);
-    }
-
-    [Obsolete]
     public void abandonQuest(ushort id)
     {
-        if (Assets.find(EAssetType.NPC, id) is QuestAsset questAsset)
-        {
-            AbandonQuest(questAsset);
-        }
+        removeQuest(id);
     }
 
     [Obsolete]
     public void askAbandonQuest(CSteamID steamID, ushort id)
     {
+        ReceiveAbandonQuest(id);
     }
 
-    [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 5)]
-    public void ReceiveAbandonQuest(Guid assetGuid)
+    [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 5, legacyName = "askAbandonQuest")]
+    public void ReceiveAbandonQuest(ushort id)
     {
-        QuestAsset questAsset = Assets.find<QuestAsset>(assetGuid);
-        if (questAsset != null)
-        {
-            AbandonQuest(questAsset);
-        }
+        abandonQuest(id);
     }
 
-    public void ClientAbandonQuest(QuestAsset questAsset)
-    {
-        if (questAsset != null)
-        {
-            SendAbandonQuest.Invoke(GetNetId(), ENetReliability.Reliable, questAsset.GUID);
-        }
-    }
-
-    [Obsolete]
     public void sendAbandonQuest(ushort id)
     {
-        if (Assets.find(EAssetType.NPC, id) is QuestAsset questAsset)
-        {
-            ClientAbandonQuest(questAsset);
-        }
+        SendAbandonQuest.Invoke(GetNetId(), ENetReliability.Reliable, id);
     }
 
     public void registerMessage(Guid assetGuid)
@@ -1644,37 +1538,32 @@ public class PlayerQuests : PlayerCaller
         reader.ReadUInt32(out _radioFrequency);
         reader.ReadSteamID(out _groupID);
         reader.ReadEnum(out _groupRank);
-        if (!base.channel.isOwner)
+        if (base.channel.isOwner)
         {
-            return;
-        }
-        reader.ReadUInt16(out var value);
-        for (ushort num = 0; num < value; num = (ushort)(num + 1))
-        {
-            reader.ReadUInt16(out var value2);
-            reader.ReadInt16(out var value3);
-            PlayerQuestFlag playerQuestFlag = new PlayerQuestFlag(value2, value3);
-            flagsMap.Add(value2, playerQuestFlag);
-            flagsList.Add(playerQuestFlag);
-        }
-        reader.ReadInt32(out var value4);
-        for (int i = 0; i < value4; i++)
-        {
-            reader.ReadGuid(out var value5);
-            QuestAsset questAsset = Assets.find<QuestAsset>(value5);
-            if (questAsset != null)
+            reader.ReadUInt16(out var value);
+            for (ushort num = 0; num < value; num = (ushort)(num + 1))
             {
-                PlayerQuest item = new PlayerQuest(questAsset);
-                questsList.Add(item);
+                reader.ReadUInt16(out var value2);
+                reader.ReadInt16(out var value3);
+                PlayerQuestFlag playerQuestFlag = new PlayerQuestFlag(value2, value3);
+                flagsMap.Add(value2, playerQuestFlag);
+                flagsList.Add(playerQuestFlag);
             }
+            reader.ReadUInt16(out var value4);
+            for (ushort num2 = 0; num2 < value4; num2 = (ushort)(num2 + 1))
+            {
+                reader.ReadUInt16(out var value5);
+                PlayerQuest playerQuest = new PlayerQuest(value5);
+                questsMap.Add(value5, playerQuest);
+                questsList.Add(playerQuest);
+            }
+            reader.ReadUInt16(out _TrackedQuestID);
+            if (onFlagsUpdated != null)
+            {
+                onFlagsUpdated();
+            }
+            TriggerTrackedQuestUpdated();
         }
-        reader.ReadGuid(out var value6);
-        _trackedQuest = Assets.find<QuestAsset>(value6);
-        if (onFlagsUpdated != null)
-        {
-            onFlagsUpdated();
-        }
-        TriggerTrackedQuestUpdated();
     }
 
     [Obsolete]
@@ -1701,12 +1590,13 @@ public class PlayerQuests : PlayerCaller
             writer.WriteUInt16(playerQuestFlag.id);
             writer.WriteInt16(playerQuestFlag.value);
         }
-        writer.WriteInt32(questsList.Count);
-        foreach (PlayerQuest quests in questsList)
+        writer.WriteUInt16((ushort)questsList.Count);
+        for (ushort num2 = 0; num2 < questsList.Count; num2 = (ushort)(num2 + 1))
         {
-            writer.WriteGuid(quests?.asset?.GUID ?? Guid.Empty);
+            PlayerQuest playerQuest = questsList[num2];
+            writer.WriteUInt16(playerQuest.id);
         }
-        writer.WriteGuid(_trackedQuest?.GUID ?? Guid.Empty);
+        writer.WriteUInt16(TrackedQuestID);
     }
 
     internal void SendInitialPlayerState(SteamPlayer client)
@@ -1785,6 +1675,7 @@ public class PlayerQuests : PlayerCaller
     {
         flagsMap = new Dictionary<ushort, PlayerQuestFlag>();
         flagsList = new List<PlayerQuestFlag>();
+        questsMap = new Dictionary<ushort, PlayerQuest>();
         questsList = new List<PlayerQuest>();
         groupInvites = new HashSet<CSteamID>();
         if (Provider.isServer)
@@ -1887,39 +1778,21 @@ public class PlayerQuests : PlayerCaller
                     flagsMap.Add(num3, playerQuestFlag);
                     flagsList.Add(playerQuestFlag);
                 }
-                if (b >= 10)
+                ushort num4 = river.readUInt16();
+                for (ushort num5 = 0; num5 < num4; num5 = (ushort)(num5 + 1))
                 {
-                    int num4 = river.readInt32();
-                    for (int i = 0; i < num4; i++)
-                    {
-                        QuestAsset questAsset = Assets.find<QuestAsset>(river.readGUID());
-                        if (questAsset != null)
-                        {
-                            PlayerQuest item = new PlayerQuest(questAsset);
-                            questsList.Add(item);
-                        }
-                    }
+                    ushort num6 = river.readUInt16();
+                    PlayerQuest playerQuest = new PlayerQuest(num6);
+                    questsMap.Add(num6, playerQuest);
+                    questsList.Add(playerQuest);
+                }
+                if (b > 1)
+                {
+                    TrackedQuestID = river.readUInt16();
                 }
                 else
                 {
-                    ushort num5 = river.readUInt16();
-                    for (ushort num6 = 0; num6 < num5; num6 = (ushort)(num6 + 1))
-                    {
-                        PlayerQuest item2 = new PlayerQuest(river.readUInt16());
-                        questsList.Add(item2);
-                    }
-                }
-                if (b >= 9)
-                {
-                    _trackedQuest = Assets.find<QuestAsset>(river.readGUID());
-                }
-                else if (b > 1)
-                {
-                    _trackedQuest = Assets.find(EAssetType.NPC, river.readUInt16()) as QuestAsset;
-                }
-                else
-                {
-                    _trackedQuest = null;
+                    TrackedQuestID = 0;
                 }
                 if (b < 8)
                 {
@@ -1991,49 +1864,34 @@ public class PlayerQuests : PlayerCaller
         groupRank = EPlayerGroupRank.MEMBER;
     }
 
-    private int FindIndexOfQuest(QuestAsset asset)
-    {
-        if (asset != null)
-        {
-            for (int i = 0; i < questsList.Count; i++)
-            {
-                if (questsList[i].asset == asset)
-                {
-                    return i;
-                }
-            }
-        }
-        return -1;
-    }
-
     public void save()
     {
-        if (!wasLoadCalled)
+        if (wasLoadCalled)
         {
-            return;
+            River river = PlayerSavedata.openRiver(base.channel.owner.playerID, "/Player/Quests.dat", isReading: false);
+            river.writeByte(8);
+            river.writeBoolean(isMarkerPlaced);
+            river.writeSingleVector3(markerPosition);
+            river.writeUInt32(radioFrequency);
+            river.writeSteamID(groupID);
+            river.writeByte((byte)groupRank);
+            river.writeBoolean(inMainGroup);
+            river.writeUInt16((ushort)flagsList.Count);
+            for (ushort num = 0; num < flagsList.Count; num = (ushort)(num + 1))
+            {
+                PlayerQuestFlag playerQuestFlag = flagsList[num];
+                river.writeUInt16(playerQuestFlag.id);
+                river.writeInt16(playerQuestFlag.value);
+            }
+            river.writeUInt16((ushort)questsList.Count);
+            for (ushort num2 = 0; num2 < questsList.Count; num2 = (ushort)(num2 + 1))
+            {
+                PlayerQuest playerQuest = questsList[num2];
+                river.writeUInt16(playerQuest.id);
+            }
+            river.writeUInt16(TrackedQuestID);
+            river.writeString(string.IsNullOrEmpty(npcSpawnId) ? string.Empty : npcSpawnId);
+            river.closeRiver();
         }
-        River river = PlayerSavedata.openRiver(base.channel.owner.playerID, "/Player/Quests.dat", isReading: false);
-        river.writeByte(10);
-        river.writeBoolean(isMarkerPlaced);
-        river.writeSingleVector3(markerPosition);
-        river.writeUInt32(radioFrequency);
-        river.writeSteamID(groupID);
-        river.writeByte((byte)groupRank);
-        river.writeBoolean(inMainGroup);
-        river.writeUInt16((ushort)flagsList.Count);
-        for (ushort num = 0; num < flagsList.Count; num = (ushort)(num + 1))
-        {
-            PlayerQuestFlag playerQuestFlag = flagsList[num];
-            river.writeUInt16(playerQuestFlag.id);
-            river.writeInt16(playerQuestFlag.value);
-        }
-        river.writeInt32(questsList.Count);
-        foreach (PlayerQuest quests in questsList)
-        {
-            river.writeGUID(quests.asset?.GUID ?? Guid.Empty);
-        }
-        river.writeGUID(_trackedQuest?.GUID ?? Guid.Empty);
-        river.writeString(string.IsNullOrEmpty(npcSpawnId) ? string.Empty : npcSpawnId);
-        river.closeRiver();
     }
 }

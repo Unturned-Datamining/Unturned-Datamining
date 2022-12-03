@@ -64,8 +64,6 @@ public class ResourceAsset : Asset
 
     public AssetReference<ResourceAsset> halloweenRedirect;
 
-    public EObjectChart chart;
-
     public string resourceName => holidayRestriction switch
     {
         ENPCHoliday.HALLOWEEN => _resourceName + " [HW]", 
@@ -238,6 +236,5 @@ public class ResourceAsset : Asset
         }
         christmasRedirect = data.readAssetReference<ResourceAsset>("Christmas_Redirect");
         halloweenRedirect = data.readAssetReference<ResourceAsset>("Halloween_Redirect");
-        chart = data.readEnum("Chart", EObjectChart.NONE);
     }
 }
