@@ -8,11 +8,11 @@ public class EditorTerrainUI
 
     public static bool active;
 
-    private EditorTerrainHeightUIV2 heightV2;
+    private EditorTerrainHeightUI heightV2;
 
-    private EditorTerrainMaterialsUIV2 materialsV2;
+    private EditorTerrainMaterialsUI materialsV2;
 
-    private EditorTerrainDetailsUIV2 detailsV2;
+    private EditorTerrainDetailsUI detailsV2;
 
     private EditorTerrainTilesUI tiles;
 
@@ -146,7 +146,7 @@ public class EditorTerrainUI
         sleekButton.tooltipText = local.format("TilesButton_Tooltip");
         sleekButton.onClickedButton += OnClickedTilesButton;
         container.AddChild(sleekButton);
-        heightV2 = new EditorTerrainHeightUIV2();
+        heightV2 = new EditorTerrainHeightUI();
         heightV2.positionOffset_X = 10;
         heightV2.positionOffset_Y = 90;
         heightV2.positionScale_X = 1f;
@@ -155,7 +155,7 @@ public class EditorTerrainUI
         heightV2.sizeScale_X = 1f;
         heightV2.sizeScale_Y = 1f;
         EditorUI.window.AddChild(heightV2);
-        materialsV2 = new EditorTerrainMaterialsUIV2();
+        materialsV2 = new EditorTerrainMaterialsUI();
         materialsV2.positionOffset_X = 10;
         materialsV2.positionOffset_Y = 90;
         materialsV2.positionScale_X = 1f;
@@ -164,7 +164,7 @@ public class EditorTerrainUI
         materialsV2.sizeScale_X = 1f;
         materialsV2.sizeScale_Y = 1f;
         EditorUI.window.AddChild(materialsV2);
-        detailsV2 = new EditorTerrainDetailsUIV2();
+        detailsV2 = new EditorTerrainDetailsUI();
         detailsV2.positionOffset_X = 10;
         detailsV2.positionOffset_Y = 90;
         detailsV2.positionScale_X = 1f;

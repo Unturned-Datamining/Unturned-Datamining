@@ -85,6 +85,8 @@ public class MenuPlayServerInfoUI
 
     private static ISleekButton hostBanWarningButton;
 
+    private static ISleekButton notLoggedInWarningButton;
+
     private static ISleekElement linksFrame;
 
     private static ISleekBox serverTitle;
@@ -213,6 +215,7 @@ public class MenuPlayServerInfoUI
         stringBuilder.AppendLine("Thumbnail: " + serverInfo.thumbnailURL);
         stringBuilder.AppendLine($"Address: {Parser.getIPFromUInt32(serverInfo.ip)}:{serverInfo.queryPort}");
         stringBuilder.AppendLine($"SteamId: {serverInfo.steamID} ({serverInfo.steamID.GetEAccountType()})");
+        stringBuilder.AppendLine($"Ping: {serverInfo.ping}ms");
         if (expectedWorkshopItems == null)
         {
             stringBuilder.AppendLine("Workshop files unknown");
@@ -247,17 +250,32 @@ public class MenuPlayServerInfoUI
             serverPassword = newServerPassword;
             expectedWorkshopItems = null;
             linkUrls = null;
-            if (0 == 0)
+            bool flag = false;
+            new IPv4Address(serverInfo.ip);
+            bool flag2 = !serverInfo.steamID.BPersistentGameServerAccount() && new IPv4Address(serverInfo.ip).IsWideAreaNetwork;
+            if (flag2)
             {
-                joinButton.isVisible = true;
-                joinDisabledBox.isVisible = false;
+                UnturnedLog.info($"{serverInfo.name} is not logged in ({serverInfo.steamID}) and IP ({new IPv4Address(serverInfo.ip)}) is WAN");
             }
-            else
+            notLoggedInWarningButton.isVisible = flag2;
+            if (flag2)
+            {
+                joinButton.isVisible = false;
+                joinDisabledBox.isVisible = true;
+                joinDisabledBox.text = localization.format("NotLoggedInBlock_Label");
+                joinDisabledBox.tooltipText = localization.format("NotLoggedInBlock_Tooltip");
+            }
+            else if (flag)
             {
                 joinButton.isVisible = false;
                 joinDisabledBox.isVisible = true;
                 joinDisabledBox.text = localization.format("ServerBlacklisted_Label");
                 joinDisabledBox.tooltipText = localization.format("ServerBlacklisted_Tooltip");
+            }
+            else
+            {
+                joinButton.isVisible = true;
+                joinDisabledBox.isVisible = false;
             }
             reset();
             serverFavorited = Provider.GetServerIsFavorited(serverInfo.ip, serverInfo.queryPort);
@@ -790,6 +808,11 @@ public class MenuPlayServerInfoUI
             hostBanWarningButton.positionOffset_X = num;
             num += hostBanWarningButton.sizeOffset_Y + 10;
         }
+        if (notLoggedInWarningButton.isVisible)
+        {
+            notLoggedInWarningButton.positionOffset_X = num;
+            num += notLoggedInWarningButton.sizeOffset_Y + 10;
+        }
         if (linksFrame.isVisible)
         {
             linksFrame.positionOffset_Y = num;
@@ -847,6 +870,11 @@ public class MenuPlayServerInfoUI
     private static void OnClickedHostBanWarning(ISleekElement button)
     {
         Provider.openURL("https://github.com/SmartlyDressedGames/U3-Docs/blob/master/ServerHostingRules.md");
+    }
+
+    private static void OnClickedNotLoggedInWarning(ISleekElement button)
+    {
+        Provider.openURL("https://github.com/SmartlyDressedGames/U3-Docs/blob/master/GameServerLoginTokens.md");
     }
 
     public void OnDestroy()
@@ -956,6 +984,15 @@ public class MenuPlayServerInfoUI
         hostBanWarningButton.isVisible = false;
         hostBanWarningButton.onClickedButton += OnClickedHostBanWarning;
         detailsScrollBox.AddChild(hostBanWarningButton);
+        notLoggedInWarningButton = Glazier.Get().CreateButton();
+        notLoggedInWarningButton.sizeOffset_Y = 60;
+        notLoggedInWarningButton.sizeScale_X = 1f;
+        notLoggedInWarningButton.isVisible = false;
+        notLoggedInWarningButton.onClickedButton += OnClickedNotLoggedInWarning;
+        notLoggedInWarningButton.text += localization.format("NotLoggedInMessage");
+        notLoggedInWarningButton.textColor = ESleekTint.BAD;
+        detailsScrollBox.AddChild(notLoggedInWarningButton);
+        notLoggedInWarningButton.isVisible = false;
         linksFrame = Glazier.Get().CreateFrame();
         linksFrame.positionOffset_Y = 40;
         linksFrame.sizeScale_X = 1f;

@@ -63,6 +63,7 @@ Name_Character_Long Your character name is too long.
 Name_Character_Invalid Your character name contains invalid letters.
 Name_Character_Number Your character name cannot be just a number.
 Timed_Out This server lost your connection.
+Timed_Out_Login This server did not respond after accepting you from the queue. Probably either a server/plugin bug or a network issue.
 Map This server is running a map you don't have.
 Shutdown This server has been shutdown.
 Shutdown_Reason This server has been shutdown because: {0}
@@ -123,6 +124,7 @@ BattlEye_Header Warning: BattlEye Disabled
 BattlEye_Body BattlEye anti-cheat is not running so you cannot join BattlEye protected servers. If you uninstalled BattlEye or skipped the installation step then you can reinstall it by running the Install_BattlEye.bat script from your Unturned/BattlEye folder.
 
 UpdateAvailable An update to version {0} is available! If you have automatic updates enabled it will download and install after you close the game.
+RollbackAvailable Sorry for the hassle, but a rollback to version {0} has been detected. Usually this means a game-breaking bug has been found and some time is needed to properly fix it.<br>If you have automatic updates enabled it will download and install after you close the game. Apologies again - precautions will be taken to avoid the same problem in the future!
 
 Overlay Steam overlay needs to be enabled.
 Dismiss_Notification_Label Confirm

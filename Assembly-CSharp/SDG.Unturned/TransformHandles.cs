@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-public class TransformHandlesV3
+public class TransformHandles
 {
     public enum EMode
     {

@@ -564,22 +564,24 @@ public class InteractableSentry : InteractableStorage
                         displayItem.quality = 0;
                     }
                 }
-                float num9 = ((ItemGunAsset)displayAsset).spreadAim * ((num8 < 0.5f) ? (1f + (1f - num8 * 2f)) : 1f);
+                float baseSpreadAngleRadians = ((ItemGunAsset)displayAsset).baseSpreadAngleRadians;
+                baseSpreadAngleRadians *= ((ItemGunAsset)displayAsset).spreadAim;
+                baseSpreadAngleRadians *= ((num8 < 0.5f) ? (1f + (1f - num8 * 2f)) : 1f);
                 if (attachments.tacticalAsset != null && interact)
                 {
-                    num9 *= attachments.tacticalAsset.spread;
+                    baseSpreadAngleRadians *= attachments.tacticalAsset.spread;
                 }
                 if (attachments.gripAsset != null)
                 {
-                    num9 *= attachments.gripAsset.spread;
+                    baseSpreadAngleRadians *= attachments.gripAsset.spread;
                 }
                 if (attachments.barrelAsset != null)
                 {
-                    num9 *= attachments.barrelAsset.spread;
+                    baseSpreadAngleRadians *= attachments.barrelAsset.spread;
                 }
                 if (attachments.magazineAsset != null)
                 {
-                    num9 *= attachments.magazineAsset.spread;
+                    baseSpreadAngleRadians *= attachments.magazineAsset.spread;
                 }
                 if (((ItemGunAsset)displayAsset).projectile == null)
                 {
@@ -589,10 +591,10 @@ public class InteractableSentry : InteractableStorage
                     {
                         EPlayerKill kill = EPlayerKill.NONE;
                         uint xp = 0u;
-                        float num10 = 1f;
-                        num10 *= ((num8 < 0.5f) ? (0.5f + num8) : 1f);
+                        float num9 = 1f;
+                        num9 *= ((num8 < 0.5f) ? (0.5f + num8) : 1f);
                         Transform transform2 = null;
-                        float num11 = 0f;
+                        float num10 = 0f;
                         if (targetPlayer != null)
                         {
                             transform2 = targetPlayer.transform;
@@ -607,25 +609,22 @@ public class InteractableSentry : InteractableStorage
                         }
                         if (transform2 != null)
                         {
-                            num11 = (transform2.position - base.transform.position).magnitude;
+                            num10 = (transform2.position - base.transform.position).magnitude;
                         }
-                        float num12 = num11 / ((ItemWeaponAsset)displayAsset).range;
-                        num12 = 1f - num12;
-                        num12 *= 1f - ((ItemGunAsset)displayAsset).spreadHip;
-                        num12 *= 0.75f;
-                        if (transform2 == null || Random.value > num12)
+                        float num11 = num10 / ((ItemWeaponAsset)displayAsset).range;
+                        num11 = 1f - num11;
+                        num11 *= 1f - ((ItemGunAsset)displayAsset).spreadHip;
+                        num11 *= 0.75f;
+                        if (transform2 == null || Random.value > num11)
                         {
-                            Vector3 forward = aimTransform.forward;
-                            forward += aimTransform.right * Random.Range(0f - ((ItemGunAsset)displayAsset).spreadHip, ((ItemGunAsset)displayAsset).spreadHip) * num9;
-                            forward += aimTransform.up * Random.Range(0f - ((ItemGunAsset)displayAsset).spreadHip, ((ItemGunAsset)displayAsset).spreadHip) * num9;
-                            forward.Normalize();
-                            RaycastInfo raycastInfo = DamageTool.raycast(new Ray(aimTransform.position, forward), ((ItemWeaponAsset)displayAsset).range, RayMasks.DAMAGE_SERVER);
+                            Vector3 randomForwardVectorInCone = RandomEx.GetRandomForwardVectorInCone(baseSpreadAngleRadians);
+                            RaycastInfo raycastInfo = DamageTool.raycast(new Ray(aimTransform.position, randomForwardVectorInCone), ((ItemWeaponAsset)displayAsset).range, RayMasks.DAMAGE_SERVER);
                             if (!(raycastInfo.transform == null))
                             {
                                 DamageTool.ServerSpawnBulletImpact(raycastInfo.point, raycastInfo.normal, raycastInfo.materialName, raycastInfo.collider?.transform, Provider.EnumerateClients_WithinSphere(raycastInfo.point, EffectManager.SMALL));
                                 if (raycastInfo.vehicle != null)
                                 {
-                                    DamageTool.damage(raycastInfo.vehicle, damageTires: false, Vector3.zero, isRepairing: false, ((ItemGunAsset)displayAsset).vehicleDamage, num10, canRepair: true, out kill, default(CSteamID), EDamageOrigin.Sentry);
+                                    DamageTool.damage(raycastInfo.vehicle, damageTires: false, Vector3.zero, isRepairing: false, ((ItemGunAsset)displayAsset).vehicleDamage, num9, canRepair: true, out kill, default(CSteamID), EDamageOrigin.Sentry);
                                 }
                                 else if (raycastInfo.transform != null)
                                 {
@@ -637,7 +636,7 @@ public class InteractableSentry : InteractableStorage
                                             ItemBarricadeAsset asset = barricadeDrop.asset;
                                             if (asset != null && asset.canBeDamaged && (asset.isVulnerable || ((ItemWeaponAsset)displayAsset).isInvulnerable))
                                             {
-                                                DamageTool.damage(raycastInfo.transform, isRepairing: false, ((ItemGunAsset)displayAsset).barricadeDamage, num10, out kill, default(CSteamID), EDamageOrigin.Sentry);
+                                                DamageTool.damage(raycastInfo.transform, isRepairing: false, ((ItemGunAsset)displayAsset).barricadeDamage, num9, out kill, default(CSteamID), EDamageOrigin.Sentry);
                                             }
                                         }
                                     }
@@ -649,7 +648,7 @@ public class InteractableSentry : InteractableStorage
                                             ItemStructureAsset asset2 = structureDrop.asset;
                                             if (asset2 != null && asset2.canBeDamaged && (asset2.isVulnerable || ((ItemWeaponAsset)displayAsset).isInvulnerable))
                                             {
-                                                DamageTool.damage(raycastInfo.transform, isRepairing: false, raycastInfo.direction * Mathf.Ceil((float)(int)attachments.magazineAsset.pellets / 2f), ((ItemGunAsset)displayAsset).structureDamage, num10, out kill, default(CSteamID), EDamageOrigin.Sentry);
+                                                DamageTool.damage(raycastInfo.transform, isRepairing: false, raycastInfo.direction * Mathf.Ceil((float)(int)attachments.magazineAsset.pellets / 2f), ((ItemGunAsset)displayAsset).structureDamage, num9, out kill, default(CSteamID), EDamageOrigin.Sentry);
                                             }
                                         }
                                     }
@@ -660,7 +659,7 @@ public class InteractableSentry : InteractableStorage
                                             ResourceSpawnpoint resourceSpawnpoint = ResourceManager.getResourceSpawnpoint(x, y, index);
                                             if (resourceSpawnpoint != null && !resourceSpawnpoint.isDead && ((ItemWeaponAsset)displayAsset).hasBladeID(resourceSpawnpoint.asset.bladeID))
                                             {
-                                                DamageTool.damage(raycastInfo.transform, raycastInfo.direction * Mathf.Ceil((float)(int)attachments.magazineAsset.pellets / 2f), ((ItemGunAsset)displayAsset).resourceDamage, num10, 1f, out kill, out xp, default(CSteamID), EDamageOrigin.Sentry);
+                                                DamageTool.damage(raycastInfo.transform, raycastInfo.direction * Mathf.Ceil((float)(int)attachments.magazineAsset.pellets / 2f), ((ItemGunAsset)displayAsset).resourceDamage, num9, 1f, out kill, out xp, default(CSteamID), EDamageOrigin.Sentry);
                                             }
                                         }
                                     }
@@ -669,7 +668,7 @@ public class InteractableSentry : InteractableStorage
                                         InteractableObjectRubble componentInParent = raycastInfo.transform.GetComponentInParent<InteractableObjectRubble>();
                                         if (componentInParent != null && !componentInParent.isSectionDead(raycastInfo.section) && ((ItemWeaponAsset)displayAsset).hasBladeID(componentInParent.asset.rubbleBladeID) && (componentInParent.asset.rubbleIsVulnerable || ((ItemWeaponAsset)displayAsset).isInvulnerable))
                                         {
-                                            DamageTool.damage(componentInParent.transform, raycastInfo.direction, raycastInfo.section, ((ItemGunAsset)displayAsset).objectDamage, num10, out kill, out xp, default(CSteamID), EDamageOrigin.Sentry);
+                                            DamageTool.damage(componentInParent.transform, raycastInfo.direction, raycastInfo.section, ((ItemGunAsset)displayAsset).objectDamage, num9, out kill, out xp, default(CSteamID), EDamageOrigin.Sentry);
                                         }
                                     }
                                 }
@@ -709,13 +708,13 @@ public class InteractableSentry : InteractableStorage
                             Vector3 direction = aimTransform.forward * Mathf.Ceil((float)(int)attachments.magazineAsset.pellets / 2f);
                             if (targetPlayer != null)
                             {
-                                DamageTool.damage(targetPlayer, EDeathCause.SENTRY, ELimb.SPINE, base.owner, direction, ((ItemGunAsset)displayAsset).playerDamageMultiplier, num10, armor: true, out kill, trackKill: true);
+                                DamageTool.damage(targetPlayer, EDeathCause.SENTRY, ELimb.SPINE, base.owner, direction, ((ItemGunAsset)displayAsset).playerDamageMultiplier, num9, armor: true, out kill, trackKill: true);
                             }
                             else if (targetZombie != null)
                             {
                                 IDamageMultiplier zombieOrPlayerDamageMultiplier = ((ItemGunAsset)displayAsset).zombieOrPlayerDamageMultiplier;
                                 DamageZombieParameters parameters = DamageZombieParameters.make(targetZombie, direction, zombieOrPlayerDamageMultiplier, ELimb.SPINE);
-                                parameters.times = num10;
+                                parameters.times = num9;
                                 parameters.allowBackstab = false;
                                 parameters.respectArmor = true;
                                 parameters.instigator = this;
@@ -725,7 +724,7 @@ public class InteractableSentry : InteractableStorage
                             {
                                 IDamageMultiplier animalOrPlayerDamageMultiplier = ((ItemGunAsset)displayAsset).animalOrPlayerDamageMultiplier;
                                 DamageAnimalParameters parameters2 = DamageAnimalParameters.make(targetAnimal, direction, animalOrPlayerDamageMultiplier, ELimb.SPINE);
-                                parameters2.times = num10;
+                                parameters2.times = num9;
                                 parameters2.instigator = this;
                                 DamageTool.damageAnimal(parameters2, out kill, out xp);
                             }

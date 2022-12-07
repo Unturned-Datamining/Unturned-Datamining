@@ -591,13 +591,10 @@ public class ItemAsset : Asset, ISkinableAsset
         {
             throw new NotSupportedException("ID < 2000");
         }
-        if (!isPro)
-        {
-            _itemName = localization.format("Name");
-            _itemDescription = localization.format("Description");
-            _itemDescription = ItemTool.filterRarityRichText(itemDescription);
-            RichTextUtil.replaceNewlineMarkup(ref _itemDescription);
-        }
+        _itemName = localization.format("Name");
+        _itemDescription = localization.format("Description");
+        _itemDescription = ItemTool.filterRarityRichText(itemDescription);
+        RichTextUtil.replaceNewlineMarkup(ref _itemDescription);
         type = (EItemType)Enum.Parse(typeof(EItemType), data.readString("Type"), ignoreCase: true);
         if (data.has("Rarity"))
         {

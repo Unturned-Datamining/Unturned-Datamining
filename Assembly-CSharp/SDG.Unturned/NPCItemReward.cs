@@ -26,6 +26,8 @@ public class NPCItemReward : INPCReward
 
     public byte ammo { get; protected set; }
 
+    public EItemOrigin origin { get; protected set; }
+
     public ItemAsset GetItemAsset()
     {
         return Assets.FindItemByGuidOrLegacyId<ItemAsset>(itemGuid, id);
@@ -53,7 +55,7 @@ public class NPCItemReward : INPCReward
             }
             else
             {
-                item = new Item(itemAsset.id, EItemOrigin.CRAFT);
+                item = new Item(itemAsset.id, origin);
             }
             player.inventory.forceAddItem(item, shouldAutoEquip, playEffect: false);
         }
@@ -120,7 +122,7 @@ public class NPCItemReward : INPCReward
         return sleekBox;
     }
 
-    public NPCItemReward(Guid newItemGuid, ushort newID, byte newAmount, bool newShouldAutoEquip, ushort newSight, ushort newTactical, ushort newGrip, ushort newBarrel, ushort newMagazine, byte newAmmo, string newText)
+    public NPCItemReward(Guid newItemGuid, ushort newID, byte newAmount, bool newShouldAutoEquip, ushort newSight, ushort newTactical, ushort newGrip, ushort newBarrel, ushort newMagazine, byte newAmmo, EItemOrigin origin, string newText)
         : base(newText)
     {
         itemGuid = newItemGuid;
@@ -133,5 +135,6 @@ public class NPCItemReward : INPCReward
         barrel = newBarrel;
         magazine = newMagazine;
         ammo = newAmmo;
+        this.origin = origin;
     }
 }

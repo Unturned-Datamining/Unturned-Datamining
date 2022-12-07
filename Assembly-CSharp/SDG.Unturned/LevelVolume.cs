@@ -464,7 +464,7 @@ public class LevelVolume<TVolume, TManager> : VolumeBase, IDevkitInteractableBeg
         {
             editorGameObject = new GameObject("EditorPreview");
             editorGameObject.transform.SetParent(base.transform, worldPositionStays: false);
-            editorGameObject.layer = 20;
+            editorGameObject.layer = 18;
             editorMeshFilter = editorGameObject.AddComponent<MeshFilter>();
             SyncEditorMeshToShape();
             editorMeshRenderer = editorGameObject.AddComponent<MeshRenderer>();

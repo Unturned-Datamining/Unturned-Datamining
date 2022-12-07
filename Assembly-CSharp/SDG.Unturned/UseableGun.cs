@@ -115,15 +115,7 @@ public class UseableGun : Useable
 
     private AudioSource whir;
 
-    private Vector3 sightOffset;
-
-    private Vector3 viewOffset;
-
-    private Vector3 scopeOffset;
-
     private Vector3 originalReticuleHookLocalPosition;
-
-    private bool aimIsUsingScopeOffset;
 
     private bool isShooting;
 
@@ -155,7 +147,7 @@ public class UseableGun : Useable
 
     private int fireDelayCounter;
 
-    private byte aimAccuracy;
+    private int aimAccuracy;
 
     private uint steadyAccuracy;
 
@@ -258,6 +250,10 @@ public class UseableGun : Useable
     private static readonly ClientInstanceMethod SendPlayAimStart = ClientInstanceMethod.Get(typeof(UseableGun), "ReceivePlayAimStart");
 
     private static readonly ClientInstanceMethod SendPlayAimStop = ClientInstanceMethod.Get(typeof(UseableGun), "ReceivePlayAimStop");
+
+    private int maxAimingAccuracy;
+
+    private float maxAimingAccuracyReciprocal;
 
     public bool isAiming { get; protected set; }
 
@@ -719,37 +715,6 @@ public class UseableGun : Useable
         }
         if (base.channel.isOwner)
         {
-            float num2 = ((num < 0.5f) ? (1f + (1f - num * 2f)) : 1f);
-            if (isAiming)
-            {
-                num2 *= Mathf.Lerp(1f, equippedGunAsset.spreadAim, (float)(int)aimAccuracy / 10f);
-            }
-            num2 *= 1f - base.player.skills.mastery(0, 1) * 0.5f;
-            if (thirdAttachments.sightAsset != null && isAiming && (!thirdAttachments.sightAsset.ShouldOnlyAffectAimWhileProne || base.player.stance.stance == EPlayerStance.PRONE))
-            {
-                num2 *= Mathf.Lerp(1f, thirdAttachments.sightAsset.spread, (float)(int)aimAccuracy / 10f);
-            }
-            if (thirdAttachments.tacticalAsset != null && shouldEnableTacticalStats && (!thirdAttachments.tacticalAsset.ShouldOnlyAffectAimWhileProne || base.player.stance.stance == EPlayerStance.PRONE))
-            {
-                num2 *= thirdAttachments.tacticalAsset.spread;
-            }
-            if (thirdAttachments.gripAsset != null && (!thirdAttachments.gripAsset.ShouldOnlyAffectAimWhileProne || base.player.stance.stance == EPlayerStance.PRONE))
-            {
-                num2 *= thirdAttachments.gripAsset.spread;
-            }
-            if (thirdAttachments.barrelAsset != null && (!thirdAttachments.barrelAsset.ShouldOnlyAffectAimWhileProne || base.player.stance.stance == EPlayerStance.PRONE))
-            {
-                num2 *= thirdAttachments.barrelAsset.spread;
-            }
-            if (thirdAttachments.magazineAsset != null && (!thirdAttachments.magazineAsset.ShouldOnlyAffectAimWhileProne || base.player.stance.stance == EPlayerStance.PRONE))
-            {
-                num2 *= thirdAttachments.magazineAsset.spread;
-            }
-            applySpreadModifiers(ref num2);
-            if (base.player.look.perspective == EPlayerPerspective.THIRD && Provider.cameraMode != ECameraMode.THIRD)
-            {
-                num2 *= 2f;
-            }
             if (!base.player.look.isCam && base.player.look.perspective == EPlayerPerspective.THIRD)
             {
                 Physics.Raycast(new Ray(MainCamera.instance.transform.position, MainCamera.instance.transform.forward), out var hitInfo, 512f, RayMasks.DAMAGE_CLIENT);
@@ -773,17 +738,14 @@ public class UseableGun : Useable
                     Quaternion quaternion = Quaternion.Euler(base.player.animator.recoilViewmodelCameraRotation.currentPosition);
                     rotation *= quaternion;
                 }
+                float halfAngleRadians = CalculateSpreadAngleRadians(num, GetSimulationAimAlpha());
                 byte pellets = thirdAttachments.magazineAsset.pellets;
                 for (byte b = 0; b < pellets; b = (byte)(b + 1))
                 {
-                    Vector3 forward = Vector3.forward;
-                    forward += Vector3.right * UnityEngine.Random.Range(0f - equippedGunAsset.spreadHip, equippedGunAsset.spreadHip) * num2;
-                    forward += Vector3.up * UnityEngine.Random.Range(0f - equippedGunAsset.spreadHip, equippedGunAsset.spreadHip) * num2;
-                    forward.Normalize();
                     BulletInfo bulletInfo = new BulletInfo();
                     bulletInfo.origin = base.player.look.aim.position;
                     bulletInfo.pos = bulletInfo.origin;
-                    bulletInfo.dir = rotation * forward;
+                    bulletInfo.dir = rotation * RandomEx.GetRandomForwardVectorInCone(halfAngleRadians);
                     bulletInfo.pellet = b;
                     bulletInfo.quality = num;
                     bulletInfo.barrelAsset = thirdAttachments.barrelAsset;
@@ -797,127 +759,127 @@ public class UseableGun : Useable
             }
             else
             {
-                Vector3 forward2 = base.player.look.aim.forward;
-                RaycastInfo raycastInfo = DamageTool.raycast(new Ray(base.player.look.aim.position, forward2), 512f, RayMasks.DAMAGE_CLIENT, base.player);
+                Vector3 forward = base.player.look.aim.forward;
+                RaycastInfo raycastInfo = DamageTool.raycast(new Ray(base.player.look.aim.position, forward), 512f, RayMasks.DAMAGE_CLIENT, base.player);
                 if (raycastInfo.transform != null)
                 {
                     base.player.input.sendRaycast(raycastInfo, ERaycastInfoUsage.Gun);
                 }
                 Vector3 position = base.player.look.aim.position;
-                if (!Physics.Raycast(new Ray(position, forward2), out var _, 1f, RayMasks.DAMAGE_SERVER))
+                if (!Physics.Raycast(new Ray(position, forward), out var _, 1f, RayMasks.DAMAGE_SERVER))
                 {
-                    position += forward2;
+                    position += forward;
                 }
-                project(position, forward2, thirdAttachments.barrelAsset, thirdAttachments.magazineAsset);
+                project(position, forward, thirdAttachments.barrelAsset, thirdAttachments.magazineAsset);
                 if (Provider.provider.statisticsService.userStatisticsService.getStatistic("Accuracy_Shot", out int data2))
                 {
                     Provider.provider.statisticsService.userStatisticsService.setStatistic("Accuracy_Shot", data2 + 1);
                 }
             }
-            float num3 = UnityEngine.Random.Range(equippedGunAsset.recoilMin_x, equippedGunAsset.recoilMax_x) * ((num < 0.5f) ? (1f + (1f - num * 2f)) : 1f);
-            float num4 = UnityEngine.Random.Range(equippedGunAsset.recoilMin_y, equippedGunAsset.recoilMax_y) * ((num < 0.5f) ? (1f + (1f - num * 2f)) : 1f);
-            float num5 = UnityEngine.Random.Range(equippedGunAsset.shakeMin_x, equippedGunAsset.shakeMax_x);
-            float num6 = UnityEngine.Random.Range(equippedGunAsset.shakeMin_y, equippedGunAsset.shakeMax_y);
-            float num7 = UnityEngine.Random.Range(equippedGunAsset.shakeMin_z, equippedGunAsset.shakeMax_z);
+            float num2 = UnityEngine.Random.Range(equippedGunAsset.recoilMin_x, equippedGunAsset.recoilMax_x) * ((num < 0.5f) ? (1f + (1f - num * 2f)) : 1f);
+            float num3 = UnityEngine.Random.Range(equippedGunAsset.recoilMin_y, equippedGunAsset.recoilMax_y) * ((num < 0.5f) ? (1f + (1f - num * 2f)) : 1f);
+            float num4 = UnityEngine.Random.Range(equippedGunAsset.shakeMin_x, equippedGunAsset.shakeMax_x);
+            float num5 = UnityEngine.Random.Range(equippedGunAsset.shakeMin_y, equippedGunAsset.shakeMax_y);
+            float num6 = UnityEngine.Random.Range(equippedGunAsset.shakeMin_z, equippedGunAsset.shakeMax_z);
+            num2 *= 1f - base.player.skills.mastery(0, 1) * 0.5f;
             num3 *= 1f - base.player.skills.mastery(0, 1) * 0.5f;
-            num4 *= 1f - base.player.skills.mastery(0, 1) * 0.5f;
             if (isAiming)
             {
+                num2 *= equippedGunAsset.aimingRecoilMultiplier;
                 num3 *= equippedGunAsset.aimingRecoilMultiplier;
-                num4 *= equippedGunAsset.aimingRecoilMultiplier;
             }
             if (thirdAttachments.sightAsset != null)
             {
                 if (isAiming && equippedGunAsset.useRecoilAim && thirdAttachments.sightAsset.zoom > 2f)
                 {
-                    num3 *= Mathf.Lerp(1f, 1f / thirdAttachments.sightAsset.zoom * equippedGunAsset.recoilAim, (float)(int)aimAccuracy / 10f * ((base.player.look.perspective == EPlayerPerspective.FIRST) ? 1f : 0.5f));
-                    num4 *= Mathf.Lerp(1f, 1f / thirdAttachments.sightAsset.zoom * equippedGunAsset.recoilAim, (float)(int)aimAccuracy / 10f * ((base.player.look.perspective == EPlayerPerspective.FIRST) ? 1f : 0.5f));
+                    num2 *= Mathf.Lerp(1f, 1f / thirdAttachments.sightAsset.zoom * equippedGunAsset.recoilAim, GetSimulationAimAlpha() * ((base.player.look.perspective == EPlayerPerspective.FIRST) ? 1f : 0.5f));
+                    num3 *= Mathf.Lerp(1f, 1f / thirdAttachments.sightAsset.zoom * equippedGunAsset.recoilAim, GetSimulationAimAlpha() * ((base.player.look.perspective == EPlayerPerspective.FIRST) ? 1f : 0.5f));
                 }
                 if (isAiming)
                 {
+                    num2 *= thirdAttachments.sightAsset.aimingRecoilMultiplier;
                     num3 *= thirdAttachments.sightAsset.aimingRecoilMultiplier;
-                    num4 *= thirdAttachments.sightAsset.aimingRecoilMultiplier;
                 }
-                num3 *= thirdAttachments.sightAsset.recoil_x;
-                num4 *= thirdAttachments.sightAsset.recoil_y;
+                num2 *= thirdAttachments.sightAsset.recoil_x;
+                num3 *= thirdAttachments.sightAsset.recoil_y;
+                num4 *= thirdAttachments.sightAsset.shake;
                 num5 *= thirdAttachments.sightAsset.shake;
                 num6 *= thirdAttachments.sightAsset.shake;
-                num7 *= thirdAttachments.sightAsset.shake;
             }
             if (thirdAttachments.tacticalAsset != null && shouldEnableTacticalStats)
             {
                 if (isAiming)
                 {
+                    num2 *= thirdAttachments.tacticalAsset.aimingRecoilMultiplier;
                     num3 *= thirdAttachments.tacticalAsset.aimingRecoilMultiplier;
-                    num4 *= thirdAttachments.tacticalAsset.aimingRecoilMultiplier;
                 }
-                num3 *= thirdAttachments.tacticalAsset.recoil_x;
-                num4 *= thirdAttachments.tacticalAsset.recoil_y;
+                num2 *= thirdAttachments.tacticalAsset.recoil_x;
+                num3 *= thirdAttachments.tacticalAsset.recoil_y;
+                num4 *= thirdAttachments.tacticalAsset.shake;
                 num5 *= thirdAttachments.tacticalAsset.shake;
                 num6 *= thirdAttachments.tacticalAsset.shake;
-                num7 *= thirdAttachments.tacticalAsset.shake;
             }
             if (thirdAttachments.gripAsset != null && (!thirdAttachments.gripAsset.ShouldOnlyAffectAimWhileProne || base.player.stance.stance == EPlayerStance.PRONE))
             {
                 if (isAiming)
                 {
+                    num2 *= thirdAttachments.gripAsset.aimingRecoilMultiplier;
                     num3 *= thirdAttachments.gripAsset.aimingRecoilMultiplier;
-                    num4 *= thirdAttachments.gripAsset.aimingRecoilMultiplier;
                 }
-                num3 *= thirdAttachments.gripAsset.recoil_x;
-                num4 *= thirdAttachments.gripAsset.recoil_y;
+                num2 *= thirdAttachments.gripAsset.recoil_x;
+                num3 *= thirdAttachments.gripAsset.recoil_y;
+                num4 *= thirdAttachments.gripAsset.shake;
                 num5 *= thirdAttachments.gripAsset.shake;
                 num6 *= thirdAttachments.gripAsset.shake;
-                num7 *= thirdAttachments.gripAsset.shake;
             }
             if (thirdAttachments.barrelAsset != null)
             {
                 if (isAiming)
                 {
+                    num2 *= thirdAttachments.barrelAsset.aimingRecoilMultiplier;
                     num3 *= thirdAttachments.barrelAsset.aimingRecoilMultiplier;
-                    num4 *= thirdAttachments.barrelAsset.aimingRecoilMultiplier;
                 }
-                num3 *= thirdAttachments.barrelAsset.recoil_x;
-                num4 *= thirdAttachments.barrelAsset.recoil_y;
+                num2 *= thirdAttachments.barrelAsset.recoil_x;
+                num3 *= thirdAttachments.barrelAsset.recoil_y;
+                num4 *= thirdAttachments.barrelAsset.shake;
                 num5 *= thirdAttachments.barrelAsset.shake;
                 num6 *= thirdAttachments.barrelAsset.shake;
-                num7 *= thirdAttachments.barrelAsset.shake;
             }
             if (thirdAttachments.magazineAsset != null)
             {
                 if (isAiming)
                 {
+                    num2 *= thirdAttachments.magazineAsset.aimingRecoilMultiplier;
                     num3 *= thirdAttachments.magazineAsset.aimingRecoilMultiplier;
-                    num4 *= thirdAttachments.magazineAsset.aimingRecoilMultiplier;
                 }
-                num3 *= thirdAttachments.magazineAsset.recoil_x;
-                num4 *= thirdAttachments.magazineAsset.recoil_y;
+                num2 *= thirdAttachments.magazineAsset.recoil_x;
+                num3 *= thirdAttachments.magazineAsset.recoil_y;
+                num4 *= thirdAttachments.magazineAsset.shake;
                 num5 *= thirdAttachments.magazineAsset.shake;
                 num6 *= thirdAttachments.magazineAsset.shake;
-                num7 *= thirdAttachments.magazineAsset.shake;
             }
+            applyRecoilMagnitudeModifiers(ref num2);
             applyRecoilMagnitudeModifiers(ref num3);
-            applyRecoilMagnitudeModifiers(ref num4);
             if (base.player.stance.stance == EPlayerStance.CROUCH)
             {
+                num4 *= SHAKE_CROUCH;
                 num5 *= SHAKE_CROUCH;
                 num6 *= SHAKE_CROUCH;
-                num7 *= SHAKE_CROUCH;
             }
             else if (base.player.stance.stance == EPlayerStance.PRONE)
             {
+                num4 *= SHAKE_PRONE;
                 num5 *= SHAKE_PRONE;
                 num6 *= SHAKE_PRONE;
-                num7 *= SHAKE_PRONE;
             }
             if (base.player.look.perspective == EPlayerPerspective.THIRD && Provider.cameraMode != ECameraMode.THIRD)
             {
+                num2 *= 2f;
                 num3 *= 2f;
-                num4 *= 2f;
             }
-            base.player.look.recoil(num3, num4, equippedGunAsset.recover_x, equippedGunAsset.recover_y);
-            base.player.animator.AddRecoilViewmodelCameraOffset(num5, num6, num7);
-            base.player.animator.AddRecoilViewmodelCameraRotation(num3, num4);
+            base.player.look.recoil(num2, num3, equippedGunAsset.recover_x, equippedGunAsset.recover_y);
+            base.player.animator.AddRecoilViewmodelCameraOffset(num4, num5, num6);
+            base.player.animator.AddRecoilViewmodelCameraRotation(num2, num3);
             updateInfo();
             if (equippedGunAsset.projectile == null)
             {
@@ -1020,13 +982,13 @@ public class UseableGun : Useable
                 if (!base.channel.isOwner)
                 {
                     Vector3 position2 = base.player.look.aim.position;
-                    Vector3 forward3 = base.player.look.aim.forward;
-                    if (!Physics.Raycast(new Ray(position2, forward3), out var _, 1f, RayMasks.DAMAGE_SERVER))
+                    Vector3 forward2 = base.player.look.aim.forward;
+                    if (!Physics.Raycast(new Ray(position2, forward2), out var _, 1f, RayMasks.DAMAGE_SERVER))
                     {
-                        position2 += forward3;
+                        position2 += forward2;
                     }
-                    project(position2, forward3, itemBarrelAsset, magazineAsset);
-                    SendPlayProject.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner(), position2, forward3, itemBarrelAsset?.id ?? 0, magazineAsset?.id ?? 0);
+                    project(position2, forward2, itemBarrelAsset, magazineAsset);
+                    SendPlayProject.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner(), position2, forward2, itemBarrelAsset?.id ?? 0, magazineAsset?.id ?? 0);
                 }
                 base.player.life.markAggressive(force: false);
             }
@@ -1034,8 +996,8 @@ public class UseableGun : Useable
         if (equippedGunAsset.canEverJam && Provider.isServer && num < equippedGunAsset.jamQualityThreshold)
         {
             float t = 1f - num / equippedGunAsset.jamQualityThreshold;
-            float num8 = Mathf.Lerp(0f, equippedGunAsset.jamMaxChance, t);
-            if (UnityEngine.Random.value < num8)
+            float num7 = Mathf.Lerp(0f, equippedGunAsset.jamMaxChance, t);
+            if (UnityEngine.Random.value < num7)
             {
                 SendPlayChamberJammed.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), ammo);
             }
@@ -1482,7 +1444,9 @@ public class UseableGun : Useable
                 uint xp = 0u;
                 float bulletDamageMultiplier = getBulletDamageMultiplier(ref bullet);
                 float value = Vector3.Distance(bullet.origin, input.point);
-                float t = Mathf.InverseLerp(equippedGunAsset.range * equippedGunAsset.damageFalloffRange, equippedGunAsset.range, value);
+                float a = equippedGunAsset.range * equippedGunAsset.damageFalloffRange;
+                float b = equippedGunAsset.range * equippedGunAsset.damageFalloffMaxRange;
+                float t = Mathf.InverseLerp(a, b, value);
                 bulletDamageMultiplier *= Mathf.Lerp(1f, equippedGunAsset.damageFalloffMultiplier, t);
                 ERagdollEffect useableRagdollEffect = base.player.equipment.getUseableRagdollEffect();
                 if (input.type == ERaycastInfoType.PLAYER)
@@ -2501,25 +2465,6 @@ public class UseableGun : Useable
             {
                 PlayerUI.message(EPlayerMessage.RELOAD, "");
             }
-            base.player.animator.TemporarilyClampViewmodelCameraTransform();
-            base.player.animator.getAnimationSample("Aim_Start", 1f);
-            if (firstAttachments.sightHook != null)
-            {
-                sightOffset = base.player.animator.viewmodelCameraTransform.InverseTransformPoint(firstAttachments.sightHook.position);
-            }
-            else
-            {
-                sightOffset = Vector3.zero;
-            }
-            if (firstAttachments.viewHook != null)
-            {
-                viewOffset = base.player.animator.viewmodelCameraTransform.InverseTransformPoint(firstAttachments.viewHook.position);
-            }
-            else
-            {
-                viewOffset = Vector3.zero;
-            }
-            updateScopeOffset();
             if (firstAttachments.reticuleHook != null)
             {
                 originalReticuleHookLocalPosition = firstAttachments.reticuleHook.localPosition;
@@ -2528,7 +2473,6 @@ public class UseableGun : Useable
             {
                 originalReticuleHookLocalPosition = Vector3.zero;
             }
-            base.player.animator.RestoreViewmodelCameraTransform();
             localization = Localization.read("/Player/Useable/PlayerUseableGun.dat");
             if (icons != null)
             {
@@ -2665,7 +2609,7 @@ public class UseableGun : Useable
         {
             PlayerUI.disableDot();
             PlayerStance stance = base.player.stance;
-            stance.onStanceUpdated = (StanceUpdated)Delegate.Combine(stance.onStanceUpdated, new StanceUpdated(updateCrosshair));
+            stance.onStanceUpdated = (StanceUpdated)Delegate.Combine(stance.onStanceUpdated, new StanceUpdated(UpdateCrosshairEnabled));
             PlayerLook look = base.player.look;
             look.onPerspectiveUpdated = (PerspectiveUpdated)Delegate.Combine(look.onPerspectiveUpdated, new PerspectiveUpdated(onPerspectiveUpdated));
         }
@@ -2750,7 +2694,7 @@ public class UseableGun : Useable
             PlayerUI.disableCrosshair();
             base.player.look.disableScope();
             PlayerStance stance = base.player.stance;
-            stance.onStanceUpdated = (StanceUpdated)Delegate.Remove(stance.onStanceUpdated, new StanceUpdated(updateCrosshair));
+            stance.onStanceUpdated = (StanceUpdated)Delegate.Remove(stance.onStanceUpdated, new StanceUpdated(UpdateCrosshairEnabled));
             PlayerLook look = base.player.look;
             look.onPerspectiveUpdated = (PerspectiveUpdated)Delegate.Remove(look.onPerspectiveUpdated, new PerspectiveUpdated(onPerspectiveUpdated));
             if (firstFakeLight != null)
@@ -3316,7 +3260,7 @@ public class UseableGun : Useable
         ballistics();
         if (isAiming)
         {
-            if (aimAccuracy < 10)
+            if (aimAccuracy < maxAimingAccuracy)
             {
                 aimAccuracy++;
             }
@@ -3341,7 +3285,6 @@ public class UseableGun : Useable
         updateAttachments(wasMagazineModelVisible);
         if (base.channel.isOwner)
         {
-            updateScopeOffset();
             if (firstAttachments.reticuleHook != null)
             {
                 originalReticuleHookLocalPosition = firstAttachments.reticuleHook.localPosition;
@@ -3371,27 +3314,6 @@ public class UseableGun : Useable
         base.player.animator.setAnimationSpeed("Scope", speed);
         hammerTime = Mathf.Max(hammerTime, equippedGunAsset.hammerTime / speed);
         unjamChamberDuration = base.player.animator.getAnimationLength(equippedGunAsset.unjamChamberAnimName);
-    }
-
-    private void updateScopeOffset()
-    {
-        if (firstAttachments.aimHook != null)
-        {
-            Vector3 vector = firstAttachments.aimHook.localPosition + firstAttachments.aimHook.parent.localPosition;
-            scopeOffset = new Vector3(vector.x, vector.z, vector.y);
-        }
-        else if (equippedGunAsset.hasSight)
-        {
-            scopeOffset = new Vector3(0f, 0.01f, -0.04f);
-        }
-        else
-        {
-            scopeOffset = Vector3.zero;
-        }
-        if (aimIsUsingScopeOffset)
-        {
-            base.player.animator.viewmodelCameraLocalPositionOffset = sightOffset + scopeOffset;
-        }
     }
 
     private void updateAttachments(bool wasMagazineModelVisible)
@@ -3628,25 +3550,10 @@ public class UseableGun : Useable
                 shouldZoomUsingEyes = false;
                 base.player.look.disableScope();
             }
-            updateCrosshair();
+            UpdateCrosshairEnabled();
         }
         UpdateMovementSpeedMultiplier();
-    }
-
-    private void applySpreadModifiers(ref float value)
-    {
-        if (base.player.stance.stance == EPlayerStance.SPRINT)
-        {
-            value *= equippedGunAsset.spreadSprint;
-        }
-        else if (base.player.stance.stance == EPlayerStance.CROUCH)
-        {
-            value *= equippedGunAsset.spreadCrouch;
-        }
-        else if (base.player.stance.stance == EPlayerStance.PRONE)
-        {
-            value *= equippedGunAsset.spreadProne;
-        }
+        UpdateAimInDuration();
     }
 
     private void applyRecoilMagnitudeModifiers(ref float value)
@@ -3665,39 +3572,64 @@ public class UseableGun : Useable
         }
     }
 
-    private void updateCrosshair()
+    internal float CalculateSpreadAngleRadians()
     {
-        crosshair = equippedGunAsset.spreadHip;
-        crosshair *= 1f - base.player.skills.mastery(0, 1) * 0.5f;
+        float quality = (float)(int)base.player.equipment.quality / 100f;
+        float interpolatedAimAlpha = GetInterpolatedAimAlpha();
+        return CalculateSpreadAngleRadians(quality, interpolatedAimAlpha);
+    }
+
+    internal float CalculateSpreadAngleRadians(float quality, float aimAlpha)
+    {
+        float baseSpreadAngleRadians = equippedGunAsset.baseSpreadAngleRadians;
+        baseSpreadAngleRadians *= ((quality < 0.5f) ? (1f + (1f - quality * 2f)) : 1f);
+        baseSpreadAngleRadians *= Mathf.Lerp(1f, equippedGunAsset.spreadAim, aimAlpha);
+        baseSpreadAngleRadians *= 1f - base.player.skills.mastery(0, 1) * 0.5f;
+        if (thirdAttachments.sightAsset != null && (!thirdAttachments.sightAsset.ShouldOnlyAffectAimWhileProne || base.player.stance.stance == EPlayerStance.PRONE))
+        {
+            baseSpreadAngleRadians *= Mathf.Lerp(1f, thirdAttachments.sightAsset.spread, aimAlpha);
+        }
         if (thirdAttachments.tacticalAsset != null && shouldEnableTacticalStats && (!thirdAttachments.tacticalAsset.ShouldOnlyAffectAimWhileProne || base.player.stance.stance == EPlayerStance.PRONE))
         {
-            crosshair *= thirdAttachments.tacticalAsset.spread;
+            baseSpreadAngleRadians *= thirdAttachments.tacticalAsset.spread;
         }
         if (thirdAttachments.gripAsset != null && (!thirdAttachments.gripAsset.ShouldOnlyAffectAimWhileProne || base.player.stance.stance == EPlayerStance.PRONE))
         {
-            crosshair *= thirdAttachments.gripAsset.spread;
+            baseSpreadAngleRadians *= thirdAttachments.gripAsset.spread;
         }
         if (thirdAttachments.barrelAsset != null && (!thirdAttachments.barrelAsset.ShouldOnlyAffectAimWhileProne || base.player.stance.stance == EPlayerStance.PRONE))
         {
-            crosshair *= thirdAttachments.barrelAsset.spread;
+            baseSpreadAngleRadians *= thirdAttachments.barrelAsset.spread;
         }
         if (thirdAttachments.magazineAsset != null && (!thirdAttachments.magazineAsset.ShouldOnlyAffectAimWhileProne || base.player.stance.stance == EPlayerStance.PRONE))
         {
-            crosshair *= thirdAttachments.magazineAsset.spread;
+            baseSpreadAngleRadians *= thirdAttachments.magazineAsset.spread;
         }
-        applySpreadModifiers(ref crosshair);
-        if (isAiming)
+        if (base.player.stance.stance == EPlayerStance.SPRINT)
         {
-            if (base.player.look.perspective == EPlayerPerspective.FIRST)
-            {
-                crosshair *= equippedGunAsset.spreadAim;
-            }
-            else
-            {
-                crosshair *= 0.5f;
-            }
+            baseSpreadAngleRadians *= equippedGunAsset.spreadSprint;
         }
-        PlayerUI.updateCrosshair(crosshair);
+        else if (base.player.stance.stance == EPlayerStance.CROUCH)
+        {
+            baseSpreadAngleRadians *= equippedGunAsset.spreadCrouch;
+        }
+        else if (base.player.stance.stance == EPlayerStance.PRONE)
+        {
+            baseSpreadAngleRadians *= equippedGunAsset.spreadProne;
+        }
+        if (base.player.look.perspective == EPlayerPerspective.THIRD && Provider.cameraMode != ECameraMode.THIRD)
+        {
+            baseSpreadAngleRadians *= 2f;
+        }
+        if (!base.player.movement.isGrounded)
+        {
+            baseSpreadAngleRadians *= 1.5f;
+        }
+        return baseSpreadAngleRadians;
+    }
+
+    private void UpdateCrosshairEnabled()
+    {
         if ((!equippedGunAsset.isTurret && equippedGunAsset.action != EAction.Minigun && ((isAiming && base.player.look.perspective == EPlayerPerspective.FIRST && (equippedGunAsset.action != EAction.String || thirdAttachments.sightHook != null)) || isAttaching)) || (base.player.movement.getVehicle() != null && base.player.look.perspective != 0))
         {
             PlayerUI.disableCrosshair();
@@ -3924,7 +3856,7 @@ public class UseableGun : Useable
 
     private void onPerspectiveUpdated(EPlayerPerspective newPerspective)
     {
-        updateCrosshair();
+        UpdateCrosshairEnabled();
         if (newPerspective == EPlayerPerspective.THIRD)
         {
             if (isAiming)
@@ -4102,15 +4034,7 @@ public class UseableGun : Useable
                 else
                 {
                     PlayerLifeUI.scopeImage.texture = null;
-                    if (firstAttachments.aimHook != null || firstAttachments.viewHook == null)
-                    {
-                        base.player.animator.viewmodelCameraLocalPositionOffset = sightOffset + scopeOffset;
-                        aimIsUsingScopeOffset = true;
-                    }
-                    else
-                    {
-                        base.player.animator.viewmodelCameraLocalPositionOffset = viewOffset;
-                    }
+                    base.player.animator.viewmodelCameraLocalPositionOffset = Vector3.zero;
                 }
             }
             else
@@ -4139,7 +4063,7 @@ public class UseableGun : Useable
             {
                 base.player.look.enableZoom(1.25f);
             }
-            updateCrosshair();
+            UpdateCrosshairEnabled();
             PlayerUI.instance.groupUI.isVisible = false;
         }
         base.player.playSound(equippedGunAsset.aim);
@@ -4162,7 +4086,6 @@ public class UseableGun : Useable
         UpdateMovementSpeedMultiplier();
         if (base.channel.isOwner)
         {
-            aimIsUsingScopeOffset = false;
             if (!equippedGunAsset.isTurret)
             {
                 base.player.animator.viewmodelCameraLocalPositionOffset = Vector3.zero;
@@ -4175,7 +4098,7 @@ public class UseableGun : Useable
             base.player.look.shouldUseZoomFactorForSensitivity = false;
             base.player.look.disableZoom();
             base.player.look.disableOverlay();
-            updateCrosshair();
+            UpdateCrosshairEnabled();
             PlayerUI.instance.groupUI.isVisible = true;
         }
         isMinigunSpinning = false;
@@ -4216,7 +4139,7 @@ public class UseableGun : Useable
         {
             magazineButton.isVisible = true;
         }
-        updateCrosshair();
+        UpdateCrosshairEnabled();
         if (base.channel.isOwner)
         {
             GetVehicleTurretEventHook()?.OnInspectingAttachmentsStarted_Local?.TryInvoke(this);
@@ -4247,7 +4170,7 @@ public class UseableGun : Useable
         {
             magazineButton.isVisible = false;
         }
-        updateCrosshair();
+        UpdateCrosshairEnabled();
         if (base.channel.isOwner)
         {
             GetVehicleTurretEventHook()?.OnInspectingAttachmentsStopped_Local?.TryInvoke(this);
@@ -4423,6 +4346,55 @@ public class UseableGun : Useable
         }
     }
 
+    internal void GetAimingViewmodelAlignment(out Transform alignmentTransform, out Vector3 alignmentOffset, out float alpha)
+    {
+        alignmentTransform = null;
+        alignmentOffset = Vector3.zero;
+        alpha = GetInterpolatedAimAlpha();
+        if (equippedGunAsset.isTurret || equippedGunAsset.action == EAction.Minigun || !(firstAttachments != null))
+        {
+            return;
+        }
+        if (firstAttachments.aimHook != null)
+        {
+            alignmentTransform = firstAttachments.aimHook;
+            return;
+        }
+        if (firstAttachments.viewHook != null)
+        {
+            alignmentTransform = firstAttachments.viewHook;
+            return;
+        }
+        alignmentTransform = firstAttachments.sightHook;
+        if (equippedGunAsset.hasSight)
+        {
+            alignmentOffset = new Vector3(0f, -0.04f, 0.01f);
+        }
+    }
+
+    private float GetInterpolatedAimAlpha()
+    {
+        float num = (float)((Time.timeAsDouble - Time.fixedTimeAsDouble) / (double)Time.fixedDeltaTime);
+        if (isAiming)
+        {
+            if (aimAccuracy < maxAimingAccuracy)
+            {
+                return MathfEx.SmootherStep01((float)aimAccuracy * maxAimingAccuracyReciprocal + num * maxAimingAccuracyReciprocal);
+            }
+            return 1f;
+        }
+        if (aimAccuracy > 0)
+        {
+            return MathfEx.SmootherStep01((float)aimAccuracy * maxAimingAccuracyReciprocal - num * maxAimingAccuracyReciprocal);
+        }
+        return 0f;
+    }
+
+    private float GetSimulationAimAlpha()
+    {
+        return (float)aimAccuracy * maxAimingAccuracyReciprocal;
+    }
+
     private void UpdateInfoBoxVisibility()
     {
         bool flag = base.player.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowUseableGunStatus);
@@ -4469,7 +4441,7 @@ public class UseableGun : Useable
         {
             Vector3 position2 = position + vector * enter;
             Vector3 b = firstAttachments.reticuleHook.parent.InverseTransformPoint(position2);
-            firstAttachments.reticuleHook.localPosition = Vector3.Lerp(originalReticuleHookLocalPosition, b, (float)(int)aimAccuracy * 0.1f);
+            firstAttachments.reticuleHook.localPosition = Vector3.Lerp(originalReticuleHookLocalPosition, b, GetInterpolatedAimAlpha());
         }
     }
 
@@ -4519,6 +4491,37 @@ public class UseableGun : Useable
             {
                 movementSpeedMultiplier *= thirdAttachments.gripAsset.aimingMovementSpeedMultiplier;
             }
+        }
+    }
+
+    private void UpdateAimInDuration()
+    {
+        float num = equippedGunAsset.aimInDuration;
+        if (thirdAttachments.barrelAsset != null)
+        {
+            num *= thirdAttachments.barrelAsset.aimDurationMultiplier;
+        }
+        if (thirdAttachments.tacticalAsset != null)
+        {
+            num *= thirdAttachments.tacticalAsset.aimDurationMultiplier;
+        }
+        if (thirdAttachments.sightAsset != null)
+        {
+            num *= thirdAttachments.sightAsset.aimDurationMultiplier;
+        }
+        if (thirdAttachments.magazineAsset != null)
+        {
+            num *= thirdAttachments.magazineAsset.aimDurationMultiplier;
+        }
+        if (thirdAttachments.gripAsset != null)
+        {
+            num *= thirdAttachments.gripAsset.aimDurationMultiplier;
+        }
+        maxAimingAccuracy = Mathf.Clamp(Mathf.RoundToInt(num * 50f), 1, 200);
+        maxAimingAccuracyReciprocal = 1f / (float)maxAimingAccuracy;
+        if (aimAccuracy > maxAimingAccuracy)
+        {
+            aimAccuracy = maxAimingAccuracy;
         }
     }
 }

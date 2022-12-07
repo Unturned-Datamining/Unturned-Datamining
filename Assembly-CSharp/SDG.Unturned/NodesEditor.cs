@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-public class NodesEditorV2 : SelectionToolV2
+public class NodesEditor : SelectionTool
 {
     private TempNodeSystemBase _activeNodeSystem;
 

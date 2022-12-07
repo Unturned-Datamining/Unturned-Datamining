@@ -212,12 +212,15 @@ public class PlayerSkills : PlayerCaller
             {
                 Provider.provider.achievementsService.setAchievement("Paragon");
             }
-            string text = (newReputation - reputation).ToString();
-            if (newReputation > reputation)
+            if (base.player.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowReputationChangeNotification))
             {
-                text = "+" + text;
+                string text = (newReputation - reputation).ToString();
+                if (newReputation > reputation)
+                {
+                    text = "+" + text;
+                }
+                PlayerUI.message(EPlayerMessage.REPUTATION, text);
             }
-            PlayerUI.message(EPlayerMessage.REPUTATION, text);
         }
         _reputation = newReputation;
         if (onReputationUpdated != null)

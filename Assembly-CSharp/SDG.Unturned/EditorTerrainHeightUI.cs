@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-internal class EditorTerrainHeightUIV2 : SleekFullscreenBox
+internal class EditorTerrainHeightUI : SleekFullscreenBox
 {
     private Local localization;
 
@@ -30,7 +30,7 @@ internal class EditorTerrainHeightUIV2 : SleekFullscreenBox
     public void Open()
     {
         AnimateIntoView();
-        TerrainEditorV2.toolMode = TerrainEditorV2.EDevkitLandscapeToolMode.HEIGHTMAP;
+        TerrainEditor.toolMode = TerrainEditor.EDevkitLandscapeToolMode.HEIGHTMAP;
         EditorInteract.instance.SetActiveTool(EditorInteract.instance.terrainTool);
         if (FoliageSystem.instance != null)
         {
@@ -52,22 +52,22 @@ internal class EditorTerrainHeightUIV2 : SleekFullscreenBox
     public override void OnUpdate()
     {
         base.OnUpdate();
-        modeButton.state = (int)TerrainEditorV2.heightmapMode;
+        modeButton.state = (int)TerrainEditor.heightmapMode;
         brushRadiusField.state = DevkitLandscapeToolHeightmapOptions.instance.brushRadius;
         brushFalloffField.state = DevkitLandscapeToolHeightmapOptions.instance.brushFalloff;
         brushStrengthField.state = EditorInteract.instance.terrainTool.heightmapBrushStrength;
         flattenTargetField.state = DevkitLandscapeToolHeightmapOptions.instance.flattenTarget;
-        if (TerrainEditorV2.heightmapMode == TerrainEditorV2.EDevkitLandscapeToolHeightmapMode.ADJUST)
+        if (TerrainEditor.heightmapMode == TerrainEditor.EDevkitLandscapeToolHeightmapMode.ADJUST)
         {
             hintLabel.text = localization.format("Hint_Adjust", "Shift");
             hintLabel.isVisible = true;
         }
-        else if (TerrainEditorV2.heightmapMode == TerrainEditorV2.EDevkitLandscapeToolHeightmapMode.FLATTEN)
+        else if (TerrainEditor.heightmapMode == TerrainEditor.EDevkitLandscapeToolHeightmapMode.FLATTEN)
         {
             hintLabel.text = localization.format("Hint_Flatten", "Alt");
             hintLabel.isVisible = true;
         }
-        else if (TerrainEditorV2.heightmapMode == TerrainEditorV2.EDevkitLandscapeToolHeightmapMode.RAMP)
+        else if (TerrainEditor.heightmapMode == TerrainEditor.EDevkitLandscapeToolHeightmapMode.RAMP)
         {
             hintLabel.text = localization.format("Hint_Ramp", "R");
             hintLabel.isVisible = true;
@@ -79,7 +79,7 @@ internal class EditorTerrainHeightUIV2 : SleekFullscreenBox
         UpdateLowerLeftOffset();
     }
 
-    public EditorTerrainHeightUIV2()
+    public EditorTerrainHeightUI()
     {
         localization = Localization.read("/Editor/EditorTerrainHeight.dat");
         DevkitLandscapeToolHeightmapOptions.load();
@@ -96,7 +96,7 @@ internal class EditorTerrainHeightUIV2 : SleekFullscreenBox
         modeButton.sizeOffset_X = 200;
         modeButton.sizeOffset_Y = 30;
         modeButton.addLabel(localization.format("Mode_Label"), ESleekSide.RIGHT);
-        modeButton.state = (int)TerrainEditorV2.heightmapMode;
+        modeButton.state = (int)TerrainEditor.heightmapMode;
         SleekButtonState sleekButtonState = modeButton;
         sleekButtonState.onSwappedState = (SwappedState)Delegate.Combine(sleekButtonState.onSwappedState, new SwappedState(OnSwappedMode));
         AddChild(modeButton);
@@ -163,7 +163,7 @@ internal class EditorTerrainHeightUIV2 : SleekFullscreenBox
 
     private void OnSwappedMode(SleekButtonState element, int index)
     {
-        TerrainEditorV2.heightmapMode = (TerrainEditorV2.EDevkitLandscapeToolHeightmapMode)index;
+        TerrainEditor.heightmapMode = (TerrainEditor.EDevkitLandscapeToolHeightmapMode)index;
     }
 
     private void OnBrushStrengthTyped(ISleekFloat32Field field, float state)
@@ -210,14 +210,14 @@ internal class EditorTerrainHeightUIV2 : SleekFullscreenBox
         num -= maxPreviewSamplesField.sizeOffset_Y;
         maxPreviewSamplesField.positionOffset_Y = num;
         num -= 10;
-        smoothMethodButton.isVisible = TerrainEditorV2.heightmapMode == TerrainEditorV2.EDevkitLandscapeToolHeightmapMode.SMOOTH;
+        smoothMethodButton.isVisible = TerrainEditor.heightmapMode == TerrainEditor.EDevkitLandscapeToolHeightmapMode.SMOOTH;
         if (smoothMethodButton.isVisible)
         {
             num -= smoothMethodButton.sizeOffset_Y;
             smoothMethodButton.positionOffset_Y = num;
             num -= 10;
         }
-        flattenMethodButton.isVisible = TerrainEditorV2.heightmapMode == TerrainEditorV2.EDevkitLandscapeToolHeightmapMode.FLATTEN;
+        flattenMethodButton.isVisible = TerrainEditor.heightmapMode == TerrainEditor.EDevkitLandscapeToolHeightmapMode.FLATTEN;
         flattenTargetField.isVisible = flattenMethodButton.isVisible;
         if (flattenMethodButton.isVisible)
         {

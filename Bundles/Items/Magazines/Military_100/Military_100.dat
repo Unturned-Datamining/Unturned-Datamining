@@ -16,6 +16,7 @@ Caliber_0 1
 
 Tracer 48
 Speed 0.85
+Aim_Duration_Multiplier 1.25
 
 Blueprints 4
 Blueprint_0_Type Ammo

@@ -14,7 +14,7 @@ internal class TerrainTileLayer : SleekWrapper
 
     public void UpdateSelectedTile()
     {
-        LandscapeTile selectedTile = TerrainEditorV2.selectedTile;
+        LandscapeTile selectedTile = TerrainEditor.selectedTile;
         if (selectedTile != null)
         {
             AssetReference<LandscapeMaterialAsset> assetReference = selectedTile.materials[layerIndex];

@@ -11,6 +11,8 @@ Amount 40
 Count_Min 10
 Count_Max 30
 
+Aim_Duration_Multiplier 1.25
+
 Calibers 1
 Caliber_0 4
 

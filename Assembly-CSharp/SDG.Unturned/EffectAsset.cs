@@ -63,6 +63,8 @@ public class EffectAsset : Asset
 
     public bool isStatic => _isStatic;
 
+    public bool isMusic { get; private set; }
+
     public byte preload => _preload;
 
     public ushort blast
@@ -138,6 +140,7 @@ public class EffectAsset : Asset
             _lifetimeSpread = 4f;
         }
         _isStatic = data.has("Static");
+        isMusic = data.readBoolean("Is_Music");
         if (data.has("Preload"))
         {
             _preload = data.readByte("Preload", 0);

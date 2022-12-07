@@ -14,6 +14,8 @@ Count_Max 65
 Calibers 1
 Caliber_0 9
 
+Aim_Duration_Multiplier 1.25
+
 Tracer 48
 Speed 0.9
 

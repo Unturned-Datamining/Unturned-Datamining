@@ -312,7 +312,6 @@ public class EditorLevelObjectsUI : SleekFullscreenBox
         assets = new List<Asset>();
         selectedBox = Glazier.Get().CreateBox();
         selectedBox.positionOffset_X = -230;
-        selectedBox.positionOffset_Y = 80;
         selectedBox.positionScale_X = 1f;
         selectedBox.sizeOffset_X = 230;
         selectedBox.sizeOffset_Y = 30;
@@ -320,7 +319,7 @@ public class EditorLevelObjectsUI : SleekFullscreenBox
         AddChild(selectedBox);
         searchField = Glazier.Get().CreateStringField();
         searchField.positionOffset_X = -230;
-        searchField.positionOffset_Y = 120;
+        searchField.positionOffset_Y = 40;
         searchField.positionScale_X = 1f;
         searchField.sizeOffset_X = 160;
         searchField.sizeOffset_Y = 30;
@@ -329,7 +328,7 @@ public class EditorLevelObjectsUI : SleekFullscreenBox
         AddChild(searchField);
         searchButton = Glazier.Get().CreateButton();
         searchButton.positionOffset_X = -60;
-        searchButton.positionOffset_Y = 120;
+        searchButton.positionOffset_Y = 40;
         searchButton.positionScale_X = 1f;
         searchButton.sizeOffset_X = 60;
         searchButton.sizeOffset_Y = 30;
@@ -339,7 +338,7 @@ public class EditorLevelObjectsUI : SleekFullscreenBox
         AddChild(searchButton);
         largeToggle = Glazier.Get().CreateToggle();
         largeToggle.positionOffset_X = -230;
-        largeToggle.positionOffset_Y = 160;
+        largeToggle.positionOffset_Y = 80;
         largeToggle.positionScale_X = 1f;
         largeToggle.sizeOffset_X = 40;
         largeToggle.sizeOffset_Y = 40;
@@ -349,7 +348,7 @@ public class EditorLevelObjectsUI : SleekFullscreenBox
         AddChild(largeToggle);
         mediumToggle = Glazier.Get().CreateToggle();
         mediumToggle.positionOffset_X = -230;
-        mediumToggle.positionOffset_Y = 210;
+        mediumToggle.positionOffset_Y = 130;
         mediumToggle.positionScale_X = 1f;
         mediumToggle.sizeOffset_X = 40;
         mediumToggle.sizeOffset_Y = 40;
@@ -359,7 +358,7 @@ public class EditorLevelObjectsUI : SleekFullscreenBox
         AddChild(mediumToggle);
         smallToggle = Glazier.Get().CreateToggle();
         smallToggle.positionOffset_X = -230;
-        smallToggle.positionOffset_Y = 260;
+        smallToggle.positionOffset_Y = 180;
         smallToggle.positionScale_X = 1f;
         smallToggle.sizeOffset_X = 40;
         smallToggle.sizeOffset_Y = 40;
@@ -369,7 +368,7 @@ public class EditorLevelObjectsUI : SleekFullscreenBox
         AddChild(smallToggle);
         barricadesToggle = Glazier.Get().CreateToggle();
         barricadesToggle.positionOffset_X = -130;
-        barricadesToggle.positionOffset_Y = 160;
+        barricadesToggle.positionOffset_Y = 80;
         barricadesToggle.positionScale_X = 1f;
         barricadesToggle.sizeOffset_X = 40;
         barricadesToggle.sizeOffset_Y = 40;
@@ -379,7 +378,7 @@ public class EditorLevelObjectsUI : SleekFullscreenBox
         AddChild(barricadesToggle);
         structuresToggle = Glazier.Get().CreateToggle();
         structuresToggle.positionOffset_X = -130;
-        structuresToggle.positionOffset_Y = 210;
+        structuresToggle.positionOffset_Y = 130;
         structuresToggle.positionScale_X = 1f;
         structuresToggle.sizeOffset_X = 40;
         structuresToggle.sizeOffset_Y = 40;
@@ -389,7 +388,7 @@ public class EditorLevelObjectsUI : SleekFullscreenBox
         AddChild(structuresToggle);
         npcsToggle = Glazier.Get().CreateToggle();
         npcsToggle.positionOffset_X = -130;
-        npcsToggle.positionOffset_Y = 260;
+        npcsToggle.positionOffset_Y = 180;
         npcsToggle.positionScale_X = 1f;
         npcsToggle.sizeOffset_X = 40;
         npcsToggle.sizeOffset_Y = 40;
@@ -399,10 +398,10 @@ public class EditorLevelObjectsUI : SleekFullscreenBox
         AddChild(npcsToggle);
         assetsScrollBox = new SleekList<Asset>();
         assetsScrollBox.positionOffset_X = -230;
-        assetsScrollBox.positionOffset_Y = 310;
+        assetsScrollBox.positionOffset_Y = 230;
         assetsScrollBox.positionScale_X = 1f;
         assetsScrollBox.sizeOffset_X = 230;
-        assetsScrollBox.sizeOffset_Y = -310;
+        assetsScrollBox.sizeOffset_Y = -230;
         assetsScrollBox.sizeScale_Y = 1f;
         assetsScrollBox.itemHeight = 30;
         assetsScrollBox.itemPadding = 10;

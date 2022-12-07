@@ -20,6 +20,8 @@ public enum EPluginWidgetFlags
     ShowStatusIcons = 0x800,
     ShowUseableGunStatus = 0x1000,
     ShowVehicleStatus = 0x2000,
+    ShowCenterDot = 0x4000,
+    ShowReputationChangeNotification = 0x8000,
     ShowLifeMeters = 0x7E0,
-    Default = 0x3FF8
+    Default = 0xFFF8
 }

@@ -74,6 +74,15 @@ public class SteamworksServerMultiplayerService : Service, IServerMultiplayerSer
             if (string.IsNullOrEmpty(text))
             {
                 UnturnedLog.info("Not using login token");
+                if (security != 0)
+                {
+                    CommandWindow.LogWarning("Steam Game Server Login Token (GSLT) not set");
+                    CommandWindow.LogWarning("Without a login token the server:");
+                    CommandWindow.LogWarning("- Is not visible in Internet server list");
+                    CommandWindow.LogWarning("- Cannot be joined over the Internet");
+                    CommandWindow.LogWarning("See this link for guide and more information:");
+                    CommandWindow.LogWarning("https://github.com/SmartlyDressedGames/U3-Docs/blob/master/GameServerLoginTokens.md");
+                }
                 SteamGameServer.LogOnAnonymous();
             }
             else

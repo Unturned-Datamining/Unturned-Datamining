@@ -23,6 +23,41 @@ public class DialogueAsset : Asset
         return -1;
     }
 
+    internal void GetAllResponsesForMessage(int messageIndex, List<DialogueResponse> messageResponses)
+    {
+        DialogueMessage dialogueMessage = messages[messageIndex];
+        if (dialogueMessage.responses != null && dialogueMessage.responses.Length != 0)
+        {
+            for (int i = 0; i < dialogueMessage.responses.Length; i++)
+            {
+                DialogueResponse item = responses[dialogueMessage.responses[i]];
+                messageResponses.Add(item);
+            }
+            return;
+        }
+        for (int j = 0; j < responses.Length; j++)
+        {
+            DialogueResponse dialogueResponse = responses[j];
+            if (dialogueResponse.messages != null && dialogueResponse.messages.Length != 0)
+            {
+                bool flag = false;
+                for (int k = 0; k < dialogueResponse.messages.Length; k++)
+                {
+                    if (dialogueResponse.messages[k] == messageIndex)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag)
+                {
+                    continue;
+                }
+            }
+            messageResponses.Add(dialogueResponse);
+        }
+    }
+
     public void getAvailableResponses(Player player, int messageIndex, List<DialogueResponse> availableResponses)
     {
         DialogueMessage dialogueMessage = messages[messageIndex];

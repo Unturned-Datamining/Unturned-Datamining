@@ -11,7 +11,7 @@ internal class EditorVolumesUI : SleekFullscreenBox
 {
     internal Local localization;
 
-    private VolumesEditorV2 tool;
+    private VolumesEditor tool;
 
     private GameObject focusedGameObject;
 
@@ -87,7 +87,7 @@ internal class EditorVolumesUI : SleekFullscreenBox
     public EditorVolumesUI()
     {
         DevkitSelectionToolOptions.load();
-        tool = new VolumesEditorV2();
+        tool = new VolumesEditor();
         localization = Localization.read("/Editor/EditorLevelVolumes.dat");
         Local local = Localization.read("/Editor/EditorLevelObjects.dat");
         Bundle bundle = Bundles.getBundle("/Bundles/Textures/Edit/Icons/EditorLevelObjects/EditorLevelObjects.unity3d");
@@ -269,17 +269,17 @@ internal class EditorVolumesUI : SleekFullscreenBox
 
     private void OnTransformClicked(ISleekElement button)
     {
-        tool.mode = SelectionToolV2.ESelectionMode.POSITION;
+        tool.mode = SelectionTool.ESelectionMode.POSITION;
     }
 
     private void OnRotateClicked(ISleekElement button)
     {
-        tool.mode = SelectionToolV2.ESelectionMode.ROTATION;
+        tool.mode = SelectionTool.ESelectionMode.ROTATION;
     }
 
     private void OnScaleClicked(ISleekElement button)
     {
-        tool.mode = SelectionToolV2.ESelectionMode.SCALE;
+        tool.mode = SelectionTool.ESelectionMode.SCALE;
     }
 
     private void OnSwappedStateCoordinate(SleekButtonState button, int index)

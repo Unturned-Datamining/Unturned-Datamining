@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using Steamworks;
 using UnityEngine;
+using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
@@ -32,6 +33,8 @@ public class MenuPlayConnectUI
     private static ISleekField passwordField;
 
     private static SleekButtonIcon connectButton;
+
+    private static ISleekBox addressInfoBox;
 
     private static bool isLaunched;
 
@@ -102,6 +105,26 @@ public class MenuPlayConnectUI
     private static void onTypedIPField(ISleekField field, string text)
     {
         PlaySettings.connectIP = text;
+        addressInfoBox.isVisible = false;
+    }
+
+    private static void TryParseIpPort()
+    {
+        string text = ipField.text;
+        int num = text.LastIndexOf(':');
+        if (num >= 0 && ushort.TryParse(text.Substring(num + 1), out var result))
+        {
+            PlaySettings.connectIP = text.Substring(0, num);
+            PlaySettings.connectPort = result;
+            ipField.text = PlaySettings.connectIP;
+            portField.state = PlaySettings.connectPort;
+        }
+    }
+
+    private static void OnIpFieldCommitted(ISleekField field)
+    {
+        TryParseIpPort();
+        RefreshAddressInfo();
     }
 
     private static void onTypedPortField(ISleekUInt16Field field, ushort state)
@@ -143,6 +166,42 @@ public class MenuPlayConnectUI
         }
     }
 
+    private static void RefreshAddressInfo()
+    {
+        addressInfoBox.isVisible = false;
+        string text = ipField.text.ToLower();
+        text = text.Trim();
+        if (string.IsNullOrEmpty(text))
+        {
+            return;
+        }
+        string text2;
+        if (text == "localhost")
+        {
+            text2 = "127.0.0.1";
+        }
+        else
+        {
+            IPAddress[] hostAddresses = Dns.GetHostAddresses(text);
+            text2 = ((hostAddresses.Length == 0 || hostAddresses[0] == null) ? null : hostAddresses[0].ToString());
+        }
+        if (!string.IsNullOrEmpty(text2) && IPv4Address.TryParse(text2, out IPv4Address address))
+        {
+            if (address.IsLoopback)
+            {
+                addressInfoBox.text = localization.format("Address_Loopback_Label");
+                addressInfoBox.tooltipText = localization.format("Address_Loopback_Tooltip");
+                addressInfoBox.isVisible = true;
+            }
+            else if (address.IsLocalPrivate)
+            {
+                addressInfoBox.text = localization.format("Address_LocalPrivate_Label");
+                addressInfoBox.tooltipText = localization.format("Address_LocalPrivate_Tooltip");
+                addressInfoBox.isVisible = true;
+            }
+        }
+    }
+
     private static void onClickedBackButton(ISleekElement button)
     {
         MenuPlayUI.open();
@@ -180,7 +239,18 @@ public class MenuPlayConnectUI
         ipField.addLabel(localization.format("IP_Field_Label"), ESleekSide.RIGHT);
         ipField.text = PlaySettings.connectIP;
         ipField.onTyped += onTypedIPField;
+        ipField.onEntered += OnIpFieldCommitted;
         container.AddChild(ipField);
+        addressInfoBox = Glazier.Get().CreateBox();
+        addressInfoBox.positionOffset_X = -210;
+        addressInfoBox.positionOffset_Y = -75;
+        addressInfoBox.positionScale_X = 0.5f;
+        addressInfoBox.positionScale_Y = 0.5f;
+        addressInfoBox.sizeOffset_X = 100;
+        addressInfoBox.sizeOffset_Y = 30;
+        addressInfoBox.isVisible = false;
+        container.AddChild(addressInfoBox);
+        RefreshAddressInfo();
         portField = Glazier.Get().CreateUInt16Field();
         portField.positionOffset_X = -100;
         portField.positionOffset_Y = -35;

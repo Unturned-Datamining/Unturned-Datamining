@@ -129,7 +129,7 @@ public class EditorLevelUI
         volumesButton.positionOffset_Y = 40;
         volumesButton.positionOffset_X = 5;
         volumesButton.positionScale_X = 0.75f;
-        volumesButton.sizeOffset_X = -10;
+        volumesButton.sizeOffset_X = -5;
         volumesButton.sizeOffset_Y = 30;
         volumesButton.sizeScale_X = 0.25f;
         volumesButton.text = local.format("VolumesButtonText");

@@ -1491,9 +1491,16 @@ public class LevelLighting
                         AudioSource component = effectAsset.effect.GetComponent<AudioSource>();
                         if (component != null)
                         {
-                            effectAudio.clip = component.clip;
-                            effectAudio.Play();
-                            localPlayingEffect = true;
+                            if (!effectAsset.isMusic || OptionsSettings.music)
+                            {
+                                effectAudio.clip = component.clip;
+                                effectAudio.Play();
+                                localPlayingEffect = true;
+                            }
+                            else
+                            {
+                                localPlayingEffect = false;
+                            }
                         }
                         else
                         {

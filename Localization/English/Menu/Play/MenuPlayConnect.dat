@@ -14,3 +14,8 @@ Pro_Server You require Gold to join this server.
 Password This server requires a password.
 Full This server is now full.
 Timed_Out Failed to find a server.
+
+Address_Loopback_Label This Machine
+Address_Loopback_Tooltip This address refers to a server on your computer.
+Address_LocalPrivate_Label LAN
+Address_LocalPrivate_Tooltip This address refers to a server on your local network.
