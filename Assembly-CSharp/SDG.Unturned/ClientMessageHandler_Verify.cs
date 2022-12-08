@@ -40,18 +40,22 @@ internal static class ClientMessageHandler_Verify
 
     private static void WriteEconomyDetails(NetPakWriter writer)
     {
-        uint punOutBufferSize;
         if (Provider.provider.economyService.wearingResult == SteamInventoryResult_t.Invalid)
         {
             writer.WriteUInt16(0);
+            return;
         }
-        else if (SteamInventory.SerializeResult(Provider.provider.economyService.wearingResult, null, out punOutBufferSize))
+        uint punOutBufferSize;
+        bool flag = SteamInventory.SerializeResult(Provider.provider.economyService.wearingResult, null, out punOutBufferSize);
+        if (flag && punOutBufferSize <= 65535)
         {
-            byte[] pOutBuffer = new byte[punOutBufferSize];
-            if (!SteamInventory.SerializeResult(Provider.provider.economyService.wearingResult, pOutBuffer, out punOutBufferSize))
+            byte[] array = new byte[punOutBufferSize];
+            if (!SteamInventory.SerializeResult(Provider.provider.economyService.wearingResult, array, out punOutBufferSize))
             {
                 UnturnedLog.warn("SteamInventory.SerializeResult returned false the second time");
             }
+            writer.WriteUInt16((ushort)punOutBufferSize);
+            writer.WriteBytes(array);
             SteamInventory.DestroyResult(Provider.provider.economyService.wearingResult);
             Provider.provider.economyService.wearingResult = SteamInventoryResult_t.Invalid;
         }
@@ -60,7 +64,7 @@ internal static class ClientMessageHandler_Verify
             SteamInventory.DestroyResult(Provider.provider.economyService.wearingResult);
             Provider.provider.economyService.wearingResult = SteamInventoryResult_t.Invalid;
             Provider._connectionFailureInfo = ESteamConnectionFailureInfo.AUTH_ECON_SERIALIZE;
-            Provider.RequestDisconnect("SteamInventory.SerializeResult failed");
+            Provider.RequestDisconnect(flag ? "SteamInventory.SerializeResult length too large!" : "SteamInventory.SerializeResult failed");
         }
     }
 }

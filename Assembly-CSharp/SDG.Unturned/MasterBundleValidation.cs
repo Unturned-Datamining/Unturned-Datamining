@@ -50,6 +50,7 @@ internal static class MasterBundleValidation
             {
                 eligibleBundleNames.Add(masterBundleConfig.assetBundleNameWithoutExtension);
                 eligibleBundleHashes.Add(masterBundleConfig.serverHashes);
+                UnturnedLog.info("Include master bundle for hash validation: {0}", masterBundleConfig.assetBundleNameWithoutExtension);
             }
         }
     }
@@ -65,9 +66,12 @@ internal static class MasterBundleValidation
                 if (masterBundleConfig.hash != null)
                 {
                     list.AddRange(masterBundleConfig.hash);
-                    continue;
+                    UnturnedLog.info("Include master bundle for hash validation: {0}", requestedName);
                 }
-                UnturnedLog.warn("Missing hash for bundle \"{0}\" request", requestedName);
+                else
+                {
+                    UnturnedLog.warn("Missing hash for bundle \"{0}\" request", requestedName);
+                }
             }
             else
             {
