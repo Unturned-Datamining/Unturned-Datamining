@@ -91,7 +91,10 @@ public static class AssetValidation
         {
             if (meshRenderer.GetComponent<MeshFilter>() == null)
             {
-                Assets.reportError(owningAsset, "{0} missing MeshFilter for MeshRenderer '{1}'", gameObject.name, meshRenderer.name);
+                if (meshRenderer.GetComponent<TextMeshPro>() == null)
+                {
+                    Assets.reportError(owningAsset, "{0} missing MeshFilter or TextMesh for MeshRenderer '{1}'", gameObject.name, meshRenderer.name);
+                }
             }
             else if (meshRenderer.name != "DepthMask")
             {

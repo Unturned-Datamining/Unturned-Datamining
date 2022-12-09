@@ -28,7 +28,7 @@
 	{
 		"Major_Version": 22,
 		"Minor_Version": 20,
-		"Patch_Version": 104,
+		"Patch_Version": 105,
 		"GrantPackageIDs":
 		[
 			487
@@ -194,20 +194,15 @@
 		"New_Items_End": "2022-10-24T00:12:00Z",
 		"New_Items":
 		[
-			1263,
-			1264,
-			1266,
-			1265,
-			1272,
-			1279,
-			1286
+			21057,
+			1287,
+			1316,
+			1317
 		],
 		"Exclude_Items_From_Highlight":
 		[
-			1263,
-			1264,
-			1266,
-			1265
+			1316,
+			1317
 		],
 		"Playtime_Generator": 0
 	}

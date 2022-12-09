@@ -1,0 +1,64 @@
+GUID 6522c4d1aa88439fa5c438f9b76bcfea
+Type Box
+ID 1817
+
+Size_X 1
+Size_Y 1
+
+Generate 21058
+
+Probability_Model Equalized
+Contains_Bonus_Items True
+
+Drops 17
+Drop_0 -1
+
+// Detonator
+Drop_1 93600
+
+// Cobra
+Drop_2 93700
+
+// Heartbreaker
+Drop_3 93800
+
+// Blindfold
+Drop_4 93900
+
+// Facemask
+Drop_5 94000
+
+// Fanny
+Drop_6 94100
+
+// Fox
+Drop_7 94200
+
+// Guitar
+Drop_8 94300
+
+// Biker Vest
+Drop_9 94400
+
+// Kitsune
+Drop_10 94500
+
+// Knot
+Drop_11 94600
+
+// Miner
+Drop_12 94700
+
+// Pixel Glases
+Drop_13 94800
+
+// Puffy Vest
+Drop_14 94900
+
+// Scarf
+Drop_15 95000
+
+// Welder Mask
+Drop_16 95100
+
+Pro
