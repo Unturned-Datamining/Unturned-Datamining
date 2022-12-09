@@ -8,6 +8,8 @@ public class MenuMapVisibility : MonoBehaviour
 {
     private static class HelperClass
     {
+        public static CommandLineString clAdditiveMenuOverride = new CommandLineString("-AdditiveMenuOverride");
+
         public static CommandLineFlag clNoAdditiveMenu = new CommandLineFlag(defaultValue: false, "-NoAdditiveMenu");
     }
 
@@ -19,16 +21,26 @@ public class MenuMapVisibility : MonoBehaviour
             return;
         }
         bool flag = true;
-        if (Provider.statusData != null && Provider.statusData.Menu != null && !string.IsNullOrEmpty(Provider.statusData.Menu.PromoLevel))
+        string text = null;
+        if (HelperClass.clAdditiveMenuOverride.hasValue)
+        {
+            flag = false;
+            text = HelperClass.clAdditiveMenuOverride.value;
+        }
+        else if (Provider.statusData != null && Provider.statusData.Menu != null && !string.IsNullOrEmpty(Provider.statusData.Menu.PromoLevel))
         {
             DateTime promoStart = Provider.statusData.Menu.PromoStart;
             DateTime promoEnd = Provider.statusData.Menu.PromoEnd;
             if (new DateTimeRange(promoStart, promoEnd).isNowWithinRange())
             {
                 flag = false;
-                UnturnedLog.info("Loading additive promo scene {0}", Provider.statusData.Menu.PromoLevel);
-                SceneManager.LoadSceneAsync(Provider.statusData.Menu.PromoLevel, LoadSceneMode.Additive);
+                text = Provider.statusData.Menu.PromoLevel;
             }
+        }
+        if (!string.IsNullOrEmpty(text))
+        {
+            UnturnedLog.info("Loading additive promo scene {0}", text);
+            SceneManager.LoadSceneAsync(text, LoadSceneMode.Additive);
         }
         if (flag)
         {

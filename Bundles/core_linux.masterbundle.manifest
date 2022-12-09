@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3855525192
+CRC: 1448329035
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: c8eff99f0bace6a2b429578a6c141132
+    Hash: 80b8749e5822f3b013f616f1572038d7
   TypeTreeHash:
     serializedVersion: 2
     Hash: feb97dbf77ef8cec3212470924f33ba4
@@ -4558,7 +4558,6 @@ Assets:
 - Assets/CoreMasterBundle/Items/Vests/Scarf_Red/Item.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Traffic/Block_Road_0/Nav.prefab
 - Assets/CoreMasterBundle/Items/Shirts/VolcanoKnightTop/Shirt.png
-- Assets/CoreMasterBundle/Mythics/Frost_Snowflake/System_Hook.prefab
 - Assets/CoreMasterBundle/Skins/Machete/Ice_Crystal/Skin_Primary.mat
 - Assets/CoreMasterBundle/Effects/Impacts/Paintball_Purple_Dynamic/Particle.mat
 - Assets/CoreMasterBundle/Vehicles/VW_Kafer_Black/Vehicle.prefab
@@ -11312,6 +11311,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Pants/Mummy_Bottom/Pants.png
 - Assets/CoreMasterBundle/Skins/Snayperskya/Era/Skin_Secondary_302.mat
 - Assets/CoreMasterBundle/Vehicles/Sedan_Red/Vehicle.prefab
+- Assets/CoreMasterBundle/Mythics/Frost_Snowflake/System_Hook.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Birch_2/Material.mat
 - Assets/CoreMasterBundle/Items/Magazines/Matamorez_36/Magazine.prefab
 - Assets/CoreMasterBundle/Items/Outfits/ZhugeLiang/ZhugeLiangTop/Shirt.png

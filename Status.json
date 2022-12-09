@@ -28,7 +28,7 @@
 	{
 		"Major_Version": 22,
 		"Minor_Version": 20,
-		"Patch_Version": 105,
+		"Patch_Version": 106,
 		"GrantPackageIDs":
 		[
 			487
@@ -46,9 +46,9 @@
 	},
 	"Menu":
 	{
-		"PromoStart": "2021-05-09T12:00:00Z",
-		"PromoEnd": "2021-05-28T12:00:00Z",
-		"PromoLevel": "KuwaitMenu"
+		"PromoStart": "2022-05-09T12:00:00Z",
+		"PromoEnd": "2022-05-28T12:00:00Z",
+		"PromoLevel": "FrostMenu"
 	},
 	"News":
 	{

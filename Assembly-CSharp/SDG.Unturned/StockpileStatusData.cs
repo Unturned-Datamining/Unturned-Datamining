@@ -14,8 +14,6 @@ public class StockpileStatusData
 
     public int[] Exclude_Items_From_Highlight;
 
-    public int Playtime_Generator;
-
     public StockpileStatusData()
     {
         New_Items = new int[0];
