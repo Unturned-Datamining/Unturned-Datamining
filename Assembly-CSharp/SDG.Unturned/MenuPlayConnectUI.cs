@@ -83,8 +83,16 @@ public class MenuPlayConnectUI
         }
         else
         {
-            IPAddress[] hostAddresses = Dns.GetHostAddresses(text);
-            text2 = ((hostAddresses.Length == 0 || hostAddresses[0] == null) ? null : hostAddresses[0].ToString());
+            try
+            {
+                IPAddress[] hostAddresses = Dns.GetHostAddresses(text);
+                text2 = ((hostAddresses.Length == 0 || hostAddresses[0] == null) ? null : hostAddresses[0].ToString());
+            }
+            catch (Exception e)
+            {
+                text2 = text;
+                UnturnedLog.exception(e, "Caught exception while resolving \"" + text + "\" for connect:");
+            }
         }
         if (string.IsNullOrEmpty(text2))
         {
@@ -182,8 +190,16 @@ public class MenuPlayConnectUI
         }
         else
         {
-            IPAddress[] hostAddresses = Dns.GetHostAddresses(text);
-            text2 = ((hostAddresses.Length == 0 || hostAddresses[0] == null) ? null : hostAddresses[0].ToString());
+            try
+            {
+                IPAddress[] hostAddresses = Dns.GetHostAddresses(text);
+                text2 = ((hostAddresses.Length == 0 || hostAddresses[0] == null) ? null : hostAddresses[0].ToString());
+            }
+            catch (Exception e)
+            {
+                UnturnedLog.exception(e, "Caught exception while resolving \"" + text + "\" for address info box:");
+                text2 = text;
+            }
         }
         if (!string.IsNullOrEmpty(text2) && IPv4Address.TryParse(text2, out IPv4Address address))
         {

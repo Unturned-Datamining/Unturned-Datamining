@@ -81,6 +81,8 @@ public class Crosshair : SleekWrapper
                 Vector3 vector = rotation * quaternion * Vector3.forward;
                 Vector2 viewportPosition = instance.WorldToViewportPoint(instance.transform.position + vector);
                 vector2 = ViewportToNormalizedPosition(viewportPosition);
+                vector2.x += base.parent.positionScale_X;
+                vector2.y += base.parent.positionScale_Y;
             }
             else
             {

@@ -16,16 +16,10 @@ public static class UnturnedPlayerLoop
             typeof(EarlyUpdate.DeliverIosPlatformEvents),
             typeof(EarlyUpdate.UpdateKinect),
             typeof(EarlyUpdate.XRUpdate),
-            typeof(FixedUpdate.DirectorFixedSampleTime),
-            typeof(FixedUpdate.DirectorFixedUpdate),
-            typeof(FixedUpdate.DirectorFixedUpdatePostPhysics),
             typeof(FixedUpdate.NewInputFixedUpdate),
             typeof(FixedUpdate.Physics2DFixedUpdate),
             typeof(FixedUpdate.XRFixedUpdate),
-            typeof(Initialization.DirectorSampleTime),
             typeof(Initialization.XREarlyUpdate),
-            typeof(PostLateUpdate.DirectorLateUpdate),
-            typeof(PostLateUpdate.DirectorRenderImage),
             typeof(PostLateUpdate.EnlightenRuntimeUpdate),
             typeof(PostLateUpdate.ExecuteGameCenterCallbacks),
             typeof(PostLateUpdate.UpdateLightProbeProxyVolumes),
@@ -34,9 +28,6 @@ public static class UnturnedPlayerLoop
             typeof(PostLateUpdate.XRPostPresent),
             typeof(PostLateUpdate.XRPreEndFrame),
             typeof(PreLateUpdate.AIUpdatePostScript),
-            typeof(PreLateUpdate.DirectorDeferredEvaluate),
-            typeof(PreLateUpdate.DirectorUpdateAnimationBegin),
-            typeof(PreLateUpdate.DirectorUpdateAnimationEnd),
             typeof(PreLateUpdate.Physics2DLateUpdate),
             typeof(PreLateUpdate.UNetUpdate),
             typeof(PreLateUpdate.UpdateMasterServerInterface),
@@ -44,8 +35,7 @@ public static class UnturnedPlayerLoop
             typeof(PreUpdate.AIUpdate),
             typeof(PreUpdate.NewInputUpdate),
             typeof(PreUpdate.Physics2DUpdate),
-            typeof(PreUpdate.SendMouseEvents),
-            typeof(Update.DirectorUpdate)
+            typeof(PreUpdate.SendMouseEvents)
         };
         PlayerLoopSystem system = PlayerLoop.GetDefaultPlayerLoop();
         recursiveTidyPlayerLoop(disabledSystems, ref system);
