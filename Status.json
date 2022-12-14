@@ -21,14 +21,15 @@
 			"Festive2021_Delivery",
 			"Festive2021_Cook",
 			"Arid_Finale",
-			"Arid_RPG"
+			"Arid_RPG",
+			"Frost_Expedition"
 		]
 	},
 	"Game":
 	{
 		"Major_Version": 22,
-		"Minor_Version": 20,
-		"Patch_Version": 1,
+		"Minor_Version": 21,
+		"Patch_Version": 100,
 		"GrantPackageIDs":
 		[
 			487
@@ -89,6 +90,11 @@
 		],
 		"Curated_Map_Links":
 		[
+			{
+				"Name": "A6 Polaris",
+				"Workshop_File_Id": 2898548949,
+				"Visible_In_Singleplayer_Recommendations_List": true
+			},
 			{
 				"Name": "Arid",
 				"Workshop_File_Id": 2683620106,
