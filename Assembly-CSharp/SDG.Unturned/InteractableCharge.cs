@@ -69,6 +69,12 @@ public class InteractableCharge : Interactable
 
     public void detonate(CSteamID killer)
     {
+        Player player = PlayerTool.getPlayer(killer);
+        Detonate(player);
+    }
+
+    public void Detonate(Player instigatingPlayer)
+    {
         EffectAsset effectAsset = Assets.FindEffectAssetByGuidOrLegacyId(detonationEffectGuid, explosion2);
         if (effectAsset != null)
         {
@@ -77,7 +83,7 @@ public class InteractableCharge : Interactable
             parameters.position = base.transform.position;
             EffectManager.triggerEffect(parameters);
         }
-        ExplosionParameters parameters2 = new ExplosionParameters(base.transform.position, range2, EDeathCause.CHARGE, killer);
+        ExplosionParameters parameters2 = new ExplosionParameters(base.transform.position, range2, EDeathCause.CHARGE);
         parameters2.playerDamage = playerDamage;
         parameters2.zombieDamage = zombieDamage;
         parameters2.animalDamage = animalDamage;
@@ -88,8 +94,20 @@ public class InteractableCharge : Interactable
         parameters2.objectDamage = objectDamage;
         parameters2.damageOrigin = EDamageOrigin.Charge_Explosion;
         parameters2.launchSpeed = explosionLaunchSpeed;
-        DamageTool.explode(parameters2, out var _);
-        BarricadeManager.damage(base.transform, 5f, 1f, armor: false, killer, EDamageOrigin.Charge_Self_Destruct);
+        if (instigatingPlayer != null)
+        {
+            parameters2.killer = instigatingPlayer.channel.owner.playerID.steamID;
+            parameters2.ragdollEffect = instigatingPlayer.equipment.getUseableRagdollEffect();
+        }
+        DamageTool.explode(parameters2, out var kills);
+        if (instigatingPlayer != null)
+        {
+            foreach (EPlayerKill item in kills)
+            {
+                instigatingPlayer.sendStat(item);
+            }
+        }
+        BarricadeManager.damage(base.transform, 5f, 1f, armor: false, parameters2.killer, EDamageOrigin.Charge_Self_Destruct);
     }
 
     public void select()
