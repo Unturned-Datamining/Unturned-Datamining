@@ -172,7 +172,7 @@ public class UseableDetonator : Useable
                     charges.RemoveAt(0);
                     if (interactableCharge != null)
                     {
-                        interactableCharge.detonate(base.channel.owner.playerID.steamID);
+                        interactableCharge.Detonate(base.player);
                     }
                 }
             }
