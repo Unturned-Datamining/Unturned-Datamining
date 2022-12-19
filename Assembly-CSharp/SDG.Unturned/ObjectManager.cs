@@ -81,9 +81,19 @@ public class ObjectManager : SteamCaller
             return;
         }
         ObjectRegion objectRegion = regions[x, y];
-        if ((Provider.isServer || objectRegion.isNetworked) && index < LevelObjects.objects[x, y].Count)
+        if (objectRegion == null || (!Provider.isServer && !objectRegion.isNetworked) || LevelObjects.objects == null)
         {
-            InteractableObjectRubble rubble = LevelObjects.objects[x, y][index].rubble;
+            return;
+        }
+        List<LevelObject> list = LevelObjects.objects[x, y];
+        if (list == null || index >= list.Count)
+        {
+            return;
+        }
+        LevelObject levelObject = list[index];
+        if (levelObject != null)
+        {
+            InteractableObjectRubble rubble = levelObject.rubble;
             if (rubble != null)
             {
                 rubble.updateRubble(section, isAlive, playEffect: true, ragdoll);

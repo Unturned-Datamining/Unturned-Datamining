@@ -6,6 +6,6 @@ public class SteamServerInfoPingDescendingComparator : IComparer<SteamServerInfo
 {
     public int Compare(SteamServerInfo a, SteamServerInfo b)
     {
-        return b.ping - a.ping;
+        return b.sortingPing - a.sortingPing;
     }
 }

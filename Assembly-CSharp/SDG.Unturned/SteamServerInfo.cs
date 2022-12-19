@@ -38,6 +38,8 @@ public class SteamServerInfo
 
     private int _ping;
 
+    internal int sortingPing;
+
     private int _players;
 
     private int _maxPlayers;
@@ -244,6 +246,7 @@ public class SteamServerInfo
             descText = null;
         }
         _ping = data.m_nPing;
+        sortingPing = _ping;
         _maxPlayers = data.m_nMaxPlayers;
         if (data.m_nPlayers < 0 || data.m_nBotPlayers < 0 || data.m_nPlayers > 255 || data.m_nBotPlayers > 255)
         {

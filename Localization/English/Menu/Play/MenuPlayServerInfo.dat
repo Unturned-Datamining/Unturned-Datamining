@@ -28,7 +28,7 @@ Monetization_None Monetization: None
 Monetization_NonGameplay Monetization: Non-Gameplay
 HostBan_MonetizationWarning Warning: this server is breaking the monetization rules which took effect on June 11th 2021. Click here for more information.
 HostBan_WorkshopWarning Warning: the workshop files used by this server have been banned.
-HostBan_QueryPingWarning Warning: there is a large discrepancy between the server listing ping and actual in-game ping timing.
+HostBan_QueryPingWarning Warning: this server has much higher actual in-game ping than shown on the server list. Likely using a proxy for the server list.
 HostBan_IncorrectMonetizationTagWarning Warning: this server has the monetization tag incorrectly set. "None" is for unmonetized or donation-only servers, and "NonGameplay" is for servers with purchases that do not provide a gameplay advantage.
 HostBan_Apology Message from the game developers: our apologies for mistakenly flagging your server! We are sorry for the trouble and will do our best to prevent it from happening again in the future.
 NotLoggedInMessage This server cannot be joined over the internet because it is not logged in with a Game Server Login Token. Click here for more information.
