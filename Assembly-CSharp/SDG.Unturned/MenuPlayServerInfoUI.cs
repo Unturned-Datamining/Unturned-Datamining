@@ -51,7 +51,7 @@ public class MenuPlayServerInfoUI
         }
     }
 
-    private static Local localization;
+    internal static Local localization;
 
     private static SleekFullscreenBox container;
 

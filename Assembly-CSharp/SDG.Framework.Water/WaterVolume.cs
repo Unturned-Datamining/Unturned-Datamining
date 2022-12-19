@@ -35,7 +35,7 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
             sleekToggle3.positionOffset_Y = 80;
             sleekToggle3.sizeOffset_X = 40;
             sleekToggle3.sizeOffset_Y = 40;
-            sleekToggle3.state = volume.isReflectionVisible;
+            sleekToggle3.state = volume.isSeaLevel;
             sleekToggle3.addLabel("Sea Level", ESleekSide.RIGHT);
             sleekToggle3.onToggled += OnIsSeaLevelToggled;
             AddChild(sleekToggle3);

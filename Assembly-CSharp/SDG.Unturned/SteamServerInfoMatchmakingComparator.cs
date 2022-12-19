@@ -11,6 +11,6 @@ public class SteamServerInfoMatchmakingComparator : IComparer<SteamServerInfo>
         {
             return num;
         }
-        return a.ping - b.ping;
+        return a.sortingPing - b.sortingPing;
     }
 }

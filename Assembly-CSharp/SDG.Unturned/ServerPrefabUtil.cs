@@ -46,6 +46,7 @@ internal static class ServerPrefabUtil
         typesToRemove = new HashSet<Type>
         {
             typeof(LODGroup),
+            typeof(LODGroupAdditionalData),
             typeof(MeshFilter),
             typeof(Cloth),
             typeof(TextMesh),

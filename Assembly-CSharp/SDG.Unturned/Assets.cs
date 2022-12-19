@@ -699,7 +699,9 @@ public class Assets : MonoBehaviour
     {
         if ((bool)shouldLoadMasterBundlesAsync)
         {
-            foreach (MasterBundleConfig config in newMasterBundles)
+            List<MasterBundleConfig> list = new List<MasterBundleConfig>(newMasterBundles);
+            newMasterBundles.Clear();
+            foreach (MasterBundleConfig config in list)
             {
                 yield return config.loadAsync();
                 if (config.assetBundle != null)
@@ -712,7 +714,6 @@ public class Assets : MonoBehaviour
                     UnturnedLog.warn("Failed to load pending master bundle async: " + config.getAssetBundlePath());
                 }
             }
-            newMasterBundles.Clear();
         }
         else
         {

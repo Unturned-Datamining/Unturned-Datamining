@@ -102,6 +102,10 @@ public class InteractableObjectRubble : MonoBehaviour
 
     public void updateRubble(byte section, bool isAlive, bool playEffect, Vector3 ragdoll)
     {
+        if (rubbleInfos == null || section >= rubbleInfos.Length)
+        {
+            return;
+        }
         RubbleInfo rubbleInfo = rubbleInfos[section];
         if (isAlive)
         {
