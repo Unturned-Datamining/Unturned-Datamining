@@ -242,4 +242,17 @@ public class SteamPending : SteamConnectedClientBase
         lastReceivedPingRequestRealtime = Time.realtimeSinceStartup;
         sentVerifyPacketRealtime = -1f;
     }
+
+    internal string GetQueueStateDebugString()
+    {
+        if (hasSentVerifyPacket)
+        {
+            if (canAcceptYet)
+            {
+                return "ready to accept from queue";
+            }
+            return $"hasAuthentication: {hasAuthentication} hasProof: {hasProof} hasGroup: {hasGroup}";
+        }
+        return "normal waiting in queue";
+    }
 }

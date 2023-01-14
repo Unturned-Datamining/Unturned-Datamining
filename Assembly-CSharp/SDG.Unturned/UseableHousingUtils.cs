@@ -53,7 +53,7 @@ internal static class UseableHousingUtils
             switch (asset.construct)
             {
             case EConstruct.FLOOR:
-                return StructureManager.housingConnections.ValidateSquareFloorPlacement(ref position, yaw, ref obstructionHint);
+                return StructureManager.housingConnections.ValidateSquareFloorPlacement(asset.terrainTestHeight, ref position, yaw, ref obstructionHint);
             case EConstruct.WALL:
                 return StructureManager.housingConnections.ValidateWallPlacement(ref position, 2.125f, asset.requiresPillars, requiresFullHeightPillars: true, ref obstructionHint);
             case EConstruct.RAMPART:
@@ -65,7 +65,7 @@ internal static class UseableHousingUtils
             case EConstruct.POST:
                 return StructureManager.housingConnections.ValidatePillarPlacement(ref position, 0.9f, ref obstructionHint);
             case EConstruct.FLOOR_POLY:
-                return StructureManager.housingConnections.ValidateTriangleFloorPlacement(ref position, yaw, ref obstructionHint);
+                return StructureManager.housingConnections.ValidateTriangleFloorPlacement(asset.terrainTestHeight, ref position, yaw, ref obstructionHint);
             case EConstruct.ROOF_POLY:
                 return StructureManager.housingConnections.ValidateTriangleRoofPlacement(ref position, yaw, ref obstructionHint);
             default:

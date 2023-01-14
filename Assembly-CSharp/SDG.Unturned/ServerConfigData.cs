@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace SDG.Unturned;
 
@@ -48,6 +49,10 @@ public class ServerConfigData
 
     public bool Validate_MasterBundle_Hashes;
 
+    internal const float MAX_TIMEOUT_QUEUE_SECONDS = 25f;
+
+    internal const float CLIENT_TIMEOUT_QUEUE_SECONDS = 30f;
+
     public ServerConfigData()
     {
         VAC_Secure = true;
@@ -63,5 +68,10 @@ public class ServerConfigData
         Enable_Kick_Input_Timeout = false;
         Validate_EconInfo_Hash = true;
         Validate_MasterBundle_Hashes = true;
+    }
+
+    internal float GetClampedTimeoutQueueSeconds()
+    {
+        return Mathf.Clamp(Timeout_Queue_Seconds, 1f, 25f);
     }
 }

@@ -121,13 +121,14 @@ public class Module
                 }
                 catch (Exception e)
                 {
-                    UnturnedLog.error("Failed to initialize nexus!");
+                    UnturnedLog.error("Caught exception while initializing module \"" + config.Name + "\" entry point \"" + type.Name + "\":");
                     UnturnedLog.exception(e);
                 }
                 nexii.Add(moduleNexus);
             }
         }
         status = EModuleStatus.Initialized;
+        UnturnedLog.info("Initialized module \"" + config.Name + "\"");
         if (this.onModuleInitialized != null)
         {
             this.onModuleInitialized(this);
@@ -148,12 +149,13 @@ public class Module
             }
             catch (Exception e)
             {
-                UnturnedLog.error("Failed to shutdown nexus!");
+                UnturnedLog.error("Caught exception while shutting down module \"" + config.Name + "\":");
                 UnturnedLog.exception(e);
             }
         }
         nexii.Clear();
         status = EModuleStatus.Shutdown;
+        UnturnedLog.info("Shutdown module \"" + config.Name + "\"");
         if (this.onModuleShutdown != null)
         {
             this.onModuleShutdown(this);

@@ -170,7 +170,7 @@ public class LevelVolume<TVolume, TManager> : VolumeBase, IDevkitInteractableBeg
         isSelected = false;
     }
 
-    public void OnTranslatedAndRotated(Vector3 oldPosition, Quaternion oldRotation, Vector3 newPosition, Quaternion newRotation, bool modifyRotation)
+    public void OnTransformed(Vector3 oldPosition, Quaternion oldRotation, Vector3 oldLocalScale, Vector3 newPosition, Quaternion newRotation, Vector3 newLocalScale, bool modifyRotation, bool modifyScale)
     {
         if (!newPosition.IsNearlyEqual(base.transform.position))
         {
@@ -180,28 +180,24 @@ public class LevelVolume<TVolume, TManager> : VolumeBase, IDevkitInteractableBeg
         {
             base.transform.SetRotation_RoundIfNearlyAxisAligned(newRotation);
         }
-    }
-
-    public void OnTransformed(Matrix4x4 oldLocalToWorldMatrix, Matrix4x4 newLocalToWorldMatrix)
-    {
-        base.transform.position = newLocalToWorldMatrix.GetPosition();
-        base.transform.SetRotation_RoundIfNearlyAxisAligned(newLocalToWorldMatrix.GetRotation());
-        Vector3 vector = newLocalToWorldMatrix.lossyScale;
+        if (!modifyScale)
+        {
+            return;
+        }
         if (Shape == ELevelVolumeShape.Sphere)
         {
-            Vector3 lossyScale = oldLocalToWorldMatrix.lossyScale;
-            if (vector.sqrMagnitude > lossyScale.sqrMagnitude)
+            if (newLocalScale.sqrMagnitude > oldLocalScale.sqrMagnitude)
             {
-                float max = vector.GetAbs().GetMax();
-                vector = new Vector3(max, max, max);
+                float max = newLocalScale.GetAbs().GetMax();
+                newLocalScale = new Vector3(max, max, max);
             }
             else
             {
-                float min = vector.GetAbs().GetMin();
-                vector = new Vector3(min, min, min);
+                float min = newLocalScale.GetAbs().GetMin();
+                newLocalScale = new Vector3(min, min, min);
             }
         }
-        base.transform.SetLocalScale_RoundIfNearlyEqualToOne(vector);
+        base.transform.SetLocalScale_RoundIfNearlyEqualToOne(newLocalScale);
     }
 
     public bool IsPositionInsideVolume(Vector3 position)

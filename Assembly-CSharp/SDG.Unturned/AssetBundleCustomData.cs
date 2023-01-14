@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -6,4 +7,6 @@ namespace SDG.Unturned;
 public class AssetBundleCustomData : ScriptableObject
 {
     public ulong ownerWorkshopFileId;
+
+    public List<ulong> ownerWorkshopFileIds;
 }

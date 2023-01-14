@@ -76,9 +76,9 @@ public static class UnturnedLog
         }
     }
 
-    public static void exception(Exception e, string format, params object[] args)
+    public static void exception(Exception e, string message)
     {
-        error(format, args);
+        error(message);
         exception(e);
     }
 
@@ -148,5 +148,17 @@ public static class UnturnedLog
     public static void error(string format, params object[] args)
     {
         error(string.Format(format, args));
+    }
+
+    public static void exception(Exception e, string format, params object[] args)
+    {
+        try
+        {
+            error(string.Format(format, args));
+        }
+        catch
+        {
+        }
+        exception(e);
     }
 }

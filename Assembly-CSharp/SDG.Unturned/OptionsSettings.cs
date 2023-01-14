@@ -14,9 +14,11 @@ public class OptionsSettings
 
     private const byte SAVEDATA_VERSION_ADDED_LOADING_SCREEN_SCREENSHOTS = 40;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 40;
+    private const byte SAVEDATA_VERSION_ADDED_STATIC_CROSSHAIR = 41;
 
-    public static readonly byte SAVEDATA_VERSION = 40;
+    private const byte SAVEDATA_VERSION_NEWEST = 41;
+
+    public static readonly byte SAVEDATA_VERSION = 41;
 
     public static readonly byte MIN_FOV = 60;
 
@@ -79,6 +81,10 @@ public class OptionsSettings
     public static bool enableScreenshotSupersampling;
 
     public static bool enableScreenshotsOnLoadingScreen;
+
+    public static bool useStaticCrosshair;
+
+    public static float staticCrosshairSize;
 
     public static Color crosshairColor;
 
@@ -285,6 +291,8 @@ public class OptionsSettings
         screenshotSizeMultiplier = 1;
         enableScreenshotSupersampling = true;
         enableScreenshotsOnLoadingScreen = true;
+        useStaticCrosshair = false;
+        staticCrosshairSize = 0.1f;
         crosshairColor = Color.white;
         hitmarkerColor = Color.white;
         criticalHitmarkerColor = Color.red;
@@ -555,6 +563,16 @@ public class OptionsSettings
         {
             enableScreenshotsOnLoadingScreen = block.readBoolean();
         }
+        if (b < 41)
+        {
+            useStaticCrosshair = false;
+            staticCrosshairSize = 0.25f;
+        }
+        else
+        {
+            useStaticCrosshair = block.readBoolean();
+            staticCrosshairSize = block.readSingle();
+        }
         if (!Provider.isPro)
         {
             backgroundColor = new Color(0.9f, 0.9f, 0.9f);
@@ -568,7 +586,7 @@ public class OptionsSettings
     public static void save()
     {
         Block block = new Block();
-        block.writeByte(40);
+        block.writeByte(41);
         block.writeBoolean(music);
         block.writeBoolean(splashscreen);
         block.writeBoolean(timer);
@@ -607,6 +625,8 @@ public class OptionsSettings
         block.writeInt32(screenshotSizeMultiplier);
         block.writeBoolean(enableScreenshotSupersampling);
         block.writeBoolean(enableScreenshotsOnLoadingScreen);
+        block.writeBoolean(useStaticCrosshair);
+        block.writeSingle(staticCrosshairSize);
         ReadWrite.writeBlock("/Options.dat", useCloud: true, block);
     }
 }

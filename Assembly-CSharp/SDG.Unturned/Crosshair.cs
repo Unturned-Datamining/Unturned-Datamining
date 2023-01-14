@@ -21,6 +21,10 @@ public class Crosshair : SleekWrapper
 
     private ISleekImage centerDotImage;
 
+    private float interpolatedSpread;
+
+    private bool isInterpolatedSpreadValid;
+
     public void SetGameWantsCenterDotVisible(bool isVisible)
     {
         gameWantsCenterDotVisible = isVisible;
@@ -40,6 +44,7 @@ public class Crosshair : SleekWrapper
         crosshairRightImage.isVisible = isVisible;
         crosshairDownImage.isVisible = isVisible;
         crosshairUpImage.isVisible = isVisible;
+        isInterpolatedSpreadValid &= isGunCrosshairVisible;
     }
 
     public void SynchronizeCustomColors()
@@ -57,52 +62,71 @@ public class Crosshair : SleekWrapper
     {
         if (!isGunCrosshairVisible)
         {
+            isInterpolatedSpreadValid = false;
             return;
         }
         UseableGun useableGun = Player.player.equipment.useable as UseableGun;
         if (useableGun == null)
         {
+            isInterpolatedSpreadValid = false;
             return;
         }
         Camera instance = MainCamera.instance;
         if (instance == null)
         {
+            isInterpolatedSpreadValid = false;
             return;
         }
         float fieldOfView = instance.fieldOfView;
         float num = (float)Math.PI / 180f * fieldOfView * 0.5f;
-        if (!(num < 0.001f))
+        if (num < 0.001f)
         {
-            Vector2 vector2;
-            if (Player.player.look.perspective == EPlayerPerspective.FIRST)
-            {
-                Quaternion rotation = Player.player.look.aim.rotation;
-                Quaternion quaternion = Quaternion.Euler(Player.player.animator.recoilViewmodelCameraRotation.currentPosition);
-                Vector3 vector = rotation * quaternion * Vector3.forward;
-                Vector2 viewportPosition = instance.WorldToViewportPoint(instance.transform.position + vector);
-                vector2 = ViewportToNormalizedPosition(viewportPosition);
-                vector2.x += base.parent.positionScale_X;
-                vector2.y += base.parent.positionScale_Y;
-            }
-            else
-            {
-                vector2 = new Vector2(0.5f, 0.5f);
-            }
-            float f = useableGun.CalculateSpreadAngleRadians();
-            float num2 = Mathf.Tan(num);
-            float num3 = num2 * instance.aspect;
-            float num4 = Mathf.Tan(f);
-            float num5 = num4 / num3 * 0.5f;
-            float num6 = num4 / num2 * 0.5f;
-            crosshairLeftImage.positionScale_X = vector2.x - num5;
-            crosshairLeftImage.positionScale_Y = vector2.y;
-            crosshairRightImage.positionScale_X = vector2.x + num5;
-            crosshairRightImage.positionScale_Y = vector2.y;
-            crosshairUpImage.positionScale_X = vector2.x;
-            crosshairUpImage.positionScale_Y = vector2.y - num6;
-            crosshairDownImage.positionScale_X = vector2.x;
-            crosshairDownImage.positionScale_Y = vector2.y + num6;
+            isInterpolatedSpreadValid = false;
+            return;
         }
+        Vector2 vector2;
+        if (Player.player.look.perspective == EPlayerPerspective.FIRST)
+        {
+            Quaternion rotation = Player.player.look.aim.rotation;
+            Quaternion quaternion = Quaternion.Euler(Player.player.animator.recoilViewmodelCameraRotation.currentPosition);
+            Vector3 vector = rotation * quaternion * Vector3.forward;
+            Vector2 viewportPosition = instance.WorldToViewportPoint(instance.transform.position + vector);
+            vector2 = ViewportToNormalizedPosition(viewportPosition);
+            vector2.x += base.parent.positionScale_X;
+            vector2.y += base.parent.positionScale_Y;
+        }
+        else
+        {
+            vector2 = new Vector2(0.5f, 0.5f);
+        }
+        float b = useableGun.CalculateSpreadAngleRadians();
+        if (isInterpolatedSpreadValid)
+        {
+            interpolatedSpread = Mathf.Lerp(interpolatedSpread, b, Time.deltaTime * 16f);
+        }
+        else
+        {
+            interpolatedSpread = b;
+            isInterpolatedSpreadValid = true;
+        }
+        float num2 = Mathf.Tan(num);
+        float num3 = num2 * instance.aspect;
+        float num4 = Mathf.Tan(interpolatedSpread);
+        float num5 = num4 / num3 * 0.5f;
+        float num6 = num4 / num2 * 0.5f;
+        if (OptionsSettings.useStaticCrosshair)
+        {
+            num5 = Mathf.Lerp(0.0025f, 0.05f, OptionsSettings.staticCrosshairSize);
+            num6 = num5 * instance.aspect;
+        }
+        crosshairLeftImage.positionScale_X = vector2.x - num5;
+        crosshairLeftImage.positionScale_Y = vector2.y;
+        crosshairRightImage.positionScale_X = vector2.x + num5;
+        crosshairRightImage.positionScale_Y = vector2.y;
+        crosshairUpImage.positionScale_X = vector2.x;
+        crosshairUpImage.positionScale_Y = vector2.y - num6;
+        crosshairDownImage.positionScale_X = vector2.x;
+        crosshairDownImage.positionScale_Y = vector2.y + num6;
     }
 
     public Crosshair(Bundle icons)

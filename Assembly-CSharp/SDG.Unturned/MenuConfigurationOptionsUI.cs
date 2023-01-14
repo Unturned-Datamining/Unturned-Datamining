@@ -66,6 +66,10 @@ public class MenuConfigurationOptionsUI
 
     private static ISleekToggle screenshotsWhileLoadingToggle;
 
+    private static ISleekToggle staticCrosshairToggle;
+
+    private static ISleekSlider staticCrosshairSizeSlider;
+
     private static SleekButtonState metricButton;
 
     private static SleekButtonState talkButton;
@@ -269,6 +273,16 @@ public class MenuConfigurationOptionsUI
         OptionsSettings.enableScreenshotsOnLoadingScreen = state;
     }
 
+    private static void OnUseStaticCrosshairChanged(ISleekToggle toggle, bool state)
+    {
+        OptionsSettings.useStaticCrosshair = state;
+    }
+
+    private static void OnStaticCrosshairSizeChanged(ISleekSlider slider, float state)
+    {
+        OptionsSettings.staticCrosshairSize = state;
+    }
+
     private static void onSwappedMetricState(SleekButtonState button, int index)
     {
         OptionsSettings.metric = index == 1;
@@ -391,6 +405,8 @@ public class MenuConfigurationOptionsUI
         screenshotSizeMultiplierField.state = OptionsSettings.screenshotSizeMultiplier;
         screenshotSupersamplingToggle.state = OptionsSettings.enableScreenshotSupersampling;
         screenshotsWhileLoadingToggle.state = OptionsSettings.enableScreenshotsOnLoadingScreen;
+        staticCrosshairToggle.state = OptionsSettings.useStaticCrosshair;
+        staticCrosshairSizeSlider.state = OptionsSettings.staticCrosshairSize;
         metricButton.state = (OptionsSettings.metric ? 1 : 0);
         talkButton.state = (OptionsSettings.talk ? 1 : 0);
         uiButton.state = (OptionsSettings.proUI ? 1 : 0);
@@ -649,6 +665,24 @@ public class MenuConfigurationOptionsUI
         screenshotsWhileLoadingToggle.onToggled += OnScreenshotsWhileLoadingChanged;
         optionsBox.AddChild(screenshotsWhileLoadingToggle);
         num += 50;
+        staticCrosshairToggle = Glazier.Get().CreateToggle();
+        staticCrosshairToggle.positionOffset_Y = num;
+        staticCrosshairToggle.sizeOffset_X = 40;
+        staticCrosshairToggle.sizeOffset_Y = 40;
+        staticCrosshairToggle.addLabel(localization.format("UseStaticCrosshair_Label"), ESleekSide.RIGHT);
+        staticCrosshairToggle.tooltipText = localization.format("UseStaticCrosshair_Tooltip");
+        staticCrosshairToggle.onToggled += OnUseStaticCrosshairChanged;
+        optionsBox.AddChild(staticCrosshairToggle);
+        num += 50;
+        staticCrosshairSizeSlider = Glazier.Get().CreateSlider();
+        staticCrosshairSizeSlider.positionOffset_Y = num;
+        staticCrosshairSizeSlider.sizeOffset_X = 200;
+        staticCrosshairSizeSlider.sizeOffset_Y = 20;
+        staticCrosshairSizeSlider.orientation = ESleekOrientation.HORIZONTAL;
+        staticCrosshairSizeSlider.addLabel(localization.format("StaticCrosshairSize_Label"), ESleekSide.RIGHT);
+        staticCrosshairSizeSlider.onDragged += OnStaticCrosshairSizeChanged;
+        optionsBox.AddChild(staticCrosshairSizeSlider);
+        num += 30;
         talkButton = new SleekButtonState(new GUIContent(localization.format("Talk_Off")), new GUIContent(localization.format("Talk_On")));
         talkButton.positionOffset_Y = num;
         talkButton.sizeOffset_X = 200;

@@ -22,6 +22,8 @@ public struct Rk4Spring
 
     private float currentVelocity;
 
+    internal const float MAX_TIMESTEP = 0.05f;
+
     public Rk4Spring(float stiffness, float damping)
     {
         currentPosition = 0f;
@@ -32,6 +34,19 @@ public struct Rk4Spring
     }
 
     public void Update(float deltaTime)
+    {
+        while (deltaTime > 0.05f)
+        {
+            PrivateUpdate(0.05f);
+            deltaTime -= 0.05f;
+        }
+        if (deltaTime > 0f)
+        {
+            PrivateUpdate(deltaTime);
+        }
+    }
+
+    private void PrivateUpdate(float deltaTime)
     {
         Rk4Derivative initialDerivative = Evaluate(0f, default(Rk4Derivative));
         Rk4Derivative initialDerivative2 = Evaluate(deltaTime * 0.5f, initialDerivative);

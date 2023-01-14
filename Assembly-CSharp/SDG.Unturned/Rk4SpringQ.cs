@@ -34,6 +34,19 @@ public struct Rk4SpringQ
 
     public void Update(float deltaTime)
     {
+        while (deltaTime > 0.05f)
+        {
+            PrivateUpdate(0.05f);
+            deltaTime -= 0.05f;
+        }
+        if (deltaTime > 0f)
+        {
+            PrivateUpdate(deltaTime);
+        }
+    }
+
+    private void PrivateUpdate(float deltaTime)
+    {
         Rk4DerivativeQ initialDerivative = Evaluate(0f, default(Rk4DerivativeQ));
         Rk4DerivativeQ initialDerivative2 = Evaluate(deltaTime * 0.5f, initialDerivative);
         Rk4DerivativeQ initialDerivative3 = Evaluate(deltaTime * 0.5f, initialDerivative2);

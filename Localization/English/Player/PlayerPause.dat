@@ -14,7 +14,7 @@ Exit_Button_Tooltip Return to main menu.
 Quit_Button Quit
 Quit_Button_Timer Quit [{0}]
 Quit_Button_Tooltip Exit to desktop.
-Suicide_Button_Text Suicide
+Suicide_Button_Text Reset
 Suicide_Button_Tooltip Respawn somewhere else.
 Suicide_Button_Confirm Yes
 Suicide_Button_Confirm_Tooltip Die

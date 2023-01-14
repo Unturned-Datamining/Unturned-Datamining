@@ -248,6 +248,7 @@ public class ModuleHook : MonoBehaviour
             ModuleConfig moduleConfig = IOUtility.jsonDeserializer.deserialize<ModuleConfig>(text);
             if (moduleConfig == null)
             {
+                UnturnedLog.warn("Unable to parse module config file: " + text);
                 continue;
             }
             moduleConfig.DirectoryPath = path;
@@ -306,9 +307,11 @@ public class ModuleHook : MonoBehaviour
                         flag = false;
                         break;
                     }
-                    if (!File.Exists(moduleConfig.DirectoryPath + moduleAssembly.Path))
+                    string text = moduleConfig.DirectoryPath + moduleAssembly.Path;
+                    if (!File.Exists(text))
                     {
                         flag = false;
+                        UnturnedLog.warn("Module \"" + moduleConfig.Name + "\" missing assembly: " + text);
                         break;
                     }
                 }
@@ -317,6 +320,7 @@ public class ModuleHook : MonoBehaviour
             {
                 configs.RemoveAt(i);
                 i--;
+                UnturnedLog.info("Discard module \"" + moduleConfig.Name + "\" because it has no assemblies");
                 continue;
             }
             for (int k = 0; k < moduleConfig.Dependencies.Count; k++)
@@ -338,6 +342,7 @@ public class ModuleHook : MonoBehaviour
                 {
                     configs.RemoveAtFast(i);
                     i--;
+                    UnturnedLog.warn("Discard module \"" + moduleConfig.Name + "\" because dependency \"" + moduleDependency.Name + "\" wasn't met");
                     break;
                 }
             }
@@ -349,20 +354,28 @@ public class ModuleHook : MonoBehaviour
         modules = new List<Module>();
         nameToPath = new Dictionary<string, AssemblyFileSettings>();
         nameToAssembly = new Dictionary<string, Assembly>();
-        if (!shouldLoadModules)
+        if (shouldLoadModules)
         {
-            return;
-        }
-        List<ModuleConfig> list = findModules();
-        sortModules(list);
-        for (int i = 0; i < list.Count; i++)
-        {
-            ModuleConfig moduleConfig = list[i];
-            if (moduleConfig != null)
+            List<ModuleConfig> list = findModules();
+            sortModules(list);
+            if (list.Count > 0)
             {
-                Module item = new Module(moduleConfig);
-                modules.Add(item);
+                UnturnedLog.info($"Found {list.Count} module(s):");
             }
+            for (int i = 0; i < list.Count; i++)
+            {
+                ModuleConfig moduleConfig = list[i];
+                if (moduleConfig != null)
+                {
+                    UnturnedLog.info($"{i}: \"{moduleConfig.Name}\"");
+                    Module item = new Module(moduleConfig);
+                    modules.Add(item);
+                }
+            }
+        }
+        else
+        {
+            UnturnedLog.info("Disabling module loading because BattlEye is enabled");
         }
     }
 
@@ -389,18 +402,39 @@ public class ModuleHook : MonoBehaviour
 
     private void initializeModules()
     {
-        if (modules != null)
+        if (modules == null)
         {
-            for (int i = 0; i < modules.Count; i++)
+            return;
+        }
+        for (int i = 0; i < modules.Count; i++)
+        {
+            Module module = modules[i];
+            ModuleConfig config = module.config;
+            bool isEnabled;
+            if (!config.IsEnabled)
             {
-                Module module = modules[i];
-                ModuleConfig config = module.config;
-                module.isEnabled = config.IsEnabled && areModuleDependenciesEnabled(i) && !isModuleDisabledByCommandLine(config.Name);
+                isEnabled = false;
+                UnturnedLog.info("Disabling module \"" + config.Name + "\" as requested by config");
             }
-            if (ModuleHook.onModulesInitialized != null)
+            else if (!areModuleDependenciesEnabled(i))
             {
-                ModuleHook.onModulesInitialized();
+                isEnabled = false;
+                UnturnedLog.info("Disabling module \"" + config.Name + "\" because dependencies are disabled");
             }
+            else if (isModuleDisabledByCommandLine(config.Name))
+            {
+                isEnabled = false;
+                UnturnedLog.info("Disabling module \"" + config.Name + "\" as requested by command-line");
+            }
+            else
+            {
+                isEnabled = true;
+            }
+            module.isEnabled = isEnabled;
+        }
+        if (ModuleHook.onModulesInitialized != null)
+        {
+            ModuleHook.onModulesInitialized();
         }
     }
 

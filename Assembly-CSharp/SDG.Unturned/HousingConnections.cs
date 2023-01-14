@@ -814,9 +814,9 @@ public class HousingConnections
         return true;
     }
 
-    private bool IsFloorAboveGround(Vector3 center)
+    private bool IsFloorAboveGround(Vector3 center, float testHeight)
     {
-        if (Physics.Raycast(center + Vector3.up, Vector3.down, out var hitInfo, 10f, 1146880))
+        if (Physics.Raycast(center + Vector3.up, Vector3.down, out var hitInfo, testHeight + 1f, 1146880))
         {
             return DoesHitCountAsTerrain(hitInfo);
         }
@@ -861,10 +861,10 @@ public class HousingConnections
         }
     }
 
-    internal EHousingPlacementResult ValidateSquareFloorPlacement(ref Vector3 placementPosition, float placementRotation, ref string obstructionHint)
+    internal EHousingPlacementResult ValidateSquareFloorPlacement(float terrainTestHeight, ref Vector3 placementPosition, float placementRotation, ref string obstructionHint)
     {
         SnapFloorPlacementToEdge(ref placementPosition);
-        if (!IsFloorAboveGround(placementPosition))
+        if (!IsFloorAboveGround(placementPosition, terrainTestHeight))
         {
             return EHousingPlacementResult.MissingGround;
         }
@@ -909,10 +909,10 @@ public class HousingConnections
         return EHousingPlacementResult.Success;
     }
 
-    internal EHousingPlacementResult ValidateTriangleFloorPlacement(ref Vector3 placementPosition, float placementRotation, ref string obstructionHint)
+    internal EHousingPlacementResult ValidateTriangleFloorPlacement(float terrainTestHeight, ref Vector3 placementPosition, float placementRotation, ref string obstructionHint)
     {
         SnapFloorPlacementToEdge(ref placementPosition);
-        if (!IsFloorAboveGround(placementPosition))
+        if (!IsFloorAboveGround(placementPosition, terrainTestHeight))
         {
             return EHousingPlacementResult.MissingGround;
         }

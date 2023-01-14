@@ -30,26 +30,46 @@ Kicked You were kicked from this server because: {0}
 Whitelisted You are not whitelisted on this server.
 Password Your password was incorrect.
 Full This server's player list and queue are now full.
+
+# https://support.smartlydressedgames.com/hc/en-us/articles/12230991951124
 Hash_Level This server is using a modified version of the map.
+
+# https://support.smartlydressedgames.com/hc/en-us/articles/12233096287124
 Hash_Assembly This server is using modified code.
+
 Version This server is running version {0} of the game, whereas you are running version {1}.
 Pro_Server You require Gold to join this server.
 Pro_Character Please select a valid character.
+
+# https://support.smartlydressedgames.com/hc/en-us/articles/12112937823764
 Pro_Desync Your client and the server disagree about whether you have Gold.
+
 Pro_Appearance Please select a valid face, hair, beard, skin color and hair color.
 Auth_Verification Your authentication ticket verification failed.
 Auth_No_Steam You are not connected to Steam.
 Auth_License_Expired Your authentication ticket has expired.
+
+# https://support.smartlydressedgames.com/hc/en-us/articles/12237672383892
 Auth_VAC_Ban You are banned from playing on VAC secure servers.
+
 Auth_Elsewhere You are already playing on another server.
+
+# https://support.smartlydressedgames.com/hc/en-us/articles/12233657269140
 Auth_Timed_Out The Steam anticheat servers are not responding.
+
 Auth_Used Your authentication ticket has already been used.
 Auth_No_User You are not connected to an account.
+
+# https://support.smartlydressedgames.com/hc/en-us/articles/12233962470548
 Auth_Pub_Ban You are banned from playing multiplayer.
+
 Auth_Econ_Serialize Your econ ticket failed to serialize.
 Auth_Econ_Deserialize Your econ ticket failed to deserialize.
 Auth_Econ_Verify Your econ ticket failed verification.
+
+# https://support.smartlydressedgames.com/hc/en-us/articles/12238777357716
 Auth_Empty The Steam authentication servers are not responding.
+
 Already_Connected You are already connected to this server.
 Already_Pending You are already queued in this server.
 Late_Pending You lost your place in the queue.
@@ -62,9 +82,16 @@ Name_Character_Short Your character name is too short.
 Name_Character_Long Your character name is too long.
 Name_Character_Invalid Your character name contains invalid letters.
 Name_Character_Number Your character name cannot be just a number.
+
+# https://support.smartlydressedgames.com/hc/en-us/articles/12236562526228
 Timed_Out This server lost your connection.
+
+# https://support.smartlydressedgames.com/hc/en-us/articles/12236323445396
 Timed_Out_Login This server did not respond after accepting you from the queue. Probably either a server/plugin bug or a network issue.
+
+# https://support.smartlydressedgames.com/hc/en-us/articles/12230327880980
 Map This server is running a map you don't have.
+
 Shutdown This server has been shutdown.
 Shutdown_Reason This server has been shutdown because: {0}
 PingV2 Rejected because your calculated ping ({0}ms) exceeded the server maximum of {1}ms.
@@ -75,19 +102,36 @@ Structure Your files are missing a custom structure asset ({0}) this server is u
 Vehicle Your files are missing a custom vehicle asset ({0}) this server is using.
 Client_Module_Desync This server is missing a custom module your files are using.
 Server_Module_Desync Your files are missing a custom module this server is using.
+
+# https://support.smartlydressedgames.com/hc/en-us/articles/12113364891796
 BattlEye_Broken BattlEye: Service is not installed or not running properly, please restart from the launcher. If you uninstalled BattlEye or skipped the installation step then you can reinstall it by running the Install_BattlEye.bat script from your Unturned/BattlEye folder.
+# https://support.smartlydressedgames.com/hc/en-us/articles/12113364891796
 BattlEye_Update BattlEye: Service requires an update, please restart from the launcher.
+# https://support.smartlydressedgames.com/hc/en-us/articles/12113364891796
 BattlEye_Unknown BattlEye: Unknown request, please restart from the launcher.
+
 Level_Version This server has {1} version {0} installed, whereas you have version {2}.
+
+# https://support.smartlydressedgames.com/hc/en-us/articles/12235019853844
 Econ_Hash This server is running a different inventory version.
+
+# https://support.smartlydressedgames.com/hc/en-us/articles/12235744541588
 Master_Bundle_Hash Asset bundle error: {0}
+
 Failure_Unknown Unknown failure: {0} Reason: {1}
 Reject_Unknown Rejected for unknown reason: {0}
 Workshop_Download_Restriction Server was not authorized by the creators of {0} workshop item(s) to use their content.
 Workshop_Advertisement_Mismatch Server was listed without workshop items, but requested workshop downloads.
+
+# https://support.smartlydressedgames.com/hc/en-us/articles/12234373472660
 Late_Pending_Steam_Auth The game server did not receive a response from the Steam authentication servers.
+
+# https://support.smartlydressedgames.com/hc/en-us/articles/12234695640596
 Late_Pending_Steam_Econ The game server did not receive a response from the Steam economy servers.
+
+# https://support.smartlydressedgames.com/hc/en-us/articles/12233488033172
 Late_Pending_Steam_Groups The game server did not receive a response from the Steam groups servers.
+
 Name_Private_Long Your friends-only private nickname is too long.
 Name_Private_Invalid Your friends-only private nickname contains invalid letters.
 Name_Private_Number Your friends-only private nickname cannot be just a number.
@@ -111,7 +155,10 @@ SteamNetworkingSockets_EndReason_Remote_BadCert Unable to trust host encryption 
 SteamNetworkingSockets_EndReason_Remote_BadProtocolVersion Host is running a different Steam network protocol.
 SteamNetworkingSockets_EndReason_Remote_Unknown Unknown remote connection error: {0}
 SteamNetworkingSockets_EndReason_Misc_InternalError Steam network internal error.
+
+# https://support.smartlydressedgames.com/hc/en-us/articles/12174787513236
 SteamNetworkingSockets_EndReason_Misc_Timeout Lost connection to host or Steam network.
+
 SteamNetworkingSockets_EndReason_Misc_SteamConnectivity Steam is experiencing connectivity issues.
 SteamNetworkingSockets_EndReason_Misc_Unknown Unknown miscellaneous connection error: {0}
 SteamNetworkingSockets_EndReason_Unknown Connected ended for unknown reason: {0}

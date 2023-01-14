@@ -436,10 +436,19 @@ public class Assets : MonoBehaviour
 
     public static void find<T>(List<T> results) where T : Asset
     {
-        for (int i = 0; i < currentAssetMapping.assetList.Count; i++)
+        FindAssetsInListByType(currentAssetMapping.assetList, results);
+    }
+
+    internal static void FindAssetsByType_UseDefaultAssetMapping<T>(List<T> results) where T : Asset
+    {
+        FindAssetsInListByType(defaultAssetMapping.assetList, results);
+    }
+
+    private static void FindAssetsInListByType<T>(List<Asset> assetList, List<T> results) where T : Asset
+    {
+        foreach (Asset asset in assetList)
         {
-            Asset asset = currentAssetMapping.assetList[i];
-            if (asset != null && typeof(Asset).IsAssignableFrom(asset.GetType()) && asset is T item)
+            if (asset is T item)
             {
                 results.Add(item);
             }

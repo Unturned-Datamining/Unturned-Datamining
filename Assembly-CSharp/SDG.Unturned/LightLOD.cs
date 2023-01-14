@@ -4,6 +4,11 @@ namespace SDG.Unturned;
 
 public class LightLOD : MonoBehaviour
 {
+    private static class HelperClass
+    {
+        public static CommandLineFlag disableLightLods = new CommandLineFlag(defaultValue: false, "-DisableLightLODs");
+    }
+
     public Light targetLight;
 
     private float intensityStart;
@@ -61,7 +66,7 @@ public class LightLOD : MonoBehaviour
 
     private void Start()
     {
-        if (targetLight == null || targetLight.type == LightType.Area || targetLight.type == LightType.Directional)
+        if (targetLight == null || targetLight.type == LightType.Area || targetLight.type == LightType.Directional || (bool)HelperClass.disableLightLods)
         {
             base.enabled = false;
             return;

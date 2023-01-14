@@ -87,6 +87,8 @@ public class ItemStructureAsset : ItemAsset
 
     public float foliageCutRadius { get; protected set; }
 
+    public float terrainTestHeight { get; protected set; }
+
     public override bool shouldFriendlySentryTargetUser => true;
 
     public EffectAsset FindExplosionEffectAsset()
@@ -164,6 +166,7 @@ public class ItemStructureAsset : ItemAsset
             armorTier = EArmorTier.LOW;
         }
         foliageCutRadius = data.readSingle("Foliage_Cut_Radius", 6f);
+        terrainTestHeight = data.readSingle("Terrain_Test_Height", 10f);
     }
 
     protected override AudioReference GetDefaultInventoryAudio()

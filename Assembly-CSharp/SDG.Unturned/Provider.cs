@@ -2577,30 +2577,31 @@ public class Provider : MonoBehaviour
         {
             return;
         }
+        float clampedTimeoutQueueSeconds = configData.Server.GetClampedTimeoutQueueSeconds();
         SteamPending steamPending = pending[0];
-        if (steamPending.hasSentVerifyPacket && steamPending.realtimeSinceSentVerifyPacket > configData.Server.Timeout_Queue_Seconds)
+        if (steamPending.hasSentVerifyPacket && steamPending.realtimeSinceSentVerifyPacket > clampedTimeoutQueueSeconds)
         {
-            UnturnedLog.info("Front of queue player timed out: {0} Ready: {1} Auth: {2} Econ: {3} Group: {4}", steamPending.playerID.steamID, steamPending.canAcceptYet, steamPending.hasAuthentication, steamPending.hasProof, steamPending.hasGroup);
+            UnturnedLog.info("Front of queue player timed out: {0} ({1})", steamPending.playerID.steamID, steamPending.GetQueueStateDebugString());
             ESteamRejection rejection;
             if (!steamPending.hasAuthentication && steamPending.hasProof && steamPending.hasGroup)
             {
                 rejection = ESteamRejection.LATE_PENDING_STEAM_AUTH;
-                UnturnedLog.info($"Server was only waiting for Steam authentication response for front of queue player, but {configData.Server.Timeout_Queue_Seconds}s passed so we will give the next player a chance instead.");
+                UnturnedLog.info($"Server was only waiting for Steam authentication response for front of queue player, but {steamPending.realtimeSinceSentVerifyPacket}s passed so we will give the next player a chance instead.");
             }
             else if (steamPending.hasAuthentication && !steamPending.hasProof && steamPending.hasGroup)
             {
                 rejection = ESteamRejection.LATE_PENDING_STEAM_ECON;
-                UnturnedLog.info($"Server was only waiting for Steam economy/inventory details response for front of queue player, but {configData.Server.Timeout_Queue_Seconds}s passed so we will give the next player a chance instead.");
+                UnturnedLog.info($"Server was only waiting for Steam economy/inventory details response for front of queue player, but {steamPending.realtimeSinceSentVerifyPacket}s passed so we will give the next player a chance instead.");
             }
             else if (steamPending.hasAuthentication && steamPending.hasProof && !steamPending.hasGroup)
             {
                 rejection = ESteamRejection.LATE_PENDING_STEAM_GROUPS;
-                UnturnedLog.info($"Server was only waiting for Steam group/clan details response for front of queue player, but {configData.Server.Timeout_Queue_Seconds}s passed so we will give the next player a chance instead.");
+                UnturnedLog.info($"Server was only waiting for Steam group/clan details response for front of queue player, but {steamPending.realtimeSinceSentVerifyPacket}s passed so we will give the next player a chance instead.");
             }
             else
             {
                 rejection = ESteamRejection.LATE_PENDING;
-                UnturnedLog.info($"Server was waiting for multiple responses about front of queue player, but {configData.Server.Timeout_Queue_Seconds}s passed so we will give the next player a chance instead.");
+                UnturnedLog.info($"Server was waiting for multiple responses about front of queue player, but {steamPending.realtimeSinceSentVerifyPacket}s passed so we will give the next player a chance instead.");
             }
             reject(steamPending.playerID.steamID, rejection);
         }
@@ -3557,16 +3558,17 @@ public class Provider : MonoBehaviour
 
     private static void OnServerTransportConnectionFailure(ITransportConnection transportConnection, string debugString, bool isError)
     {
-        if (findPendingPlayer(transportConnection) != null)
+        SteamPending steamPending = findPendingPlayer(transportConnection);
+        if (steamPending != null)
         {
             if (isError)
             {
                 steam.clientsKickedForTransportConnectionFailureCount++;
-                UnturnedLog.info($"Removing player in queue {transportConnection} due to transport failure ({debugString})");
+                UnturnedLog.info($"Removing player in queue {transportConnection} due to transport failure ({debugString}) queue state: \"{steamPending.GetQueueStateDebugString()}\"");
             }
             else
             {
-                UnturnedLog.info($"Removing player in queue {transportConnection} because they disconnected ({debugString})");
+                UnturnedLog.info($"Removing player in queue {transportConnection} because they disconnected ({debugString}) queue state: \"{steamPending.GetQueueStateDebugString()}\"");
             }
             reject(transportConnection, ESteamRejection.LATE_PENDING);
             return;

@@ -72,6 +72,8 @@ public class SteamPlayer : SteamConnectedClientBase
 
     public HashSet<ushort> modifiedItems;
 
+    private bool submittedModifiedItems;
+
     private EPlayerSkillset _skillset;
 
     private string _language;
@@ -301,11 +303,13 @@ public class SteamPlayer : SteamConnectedClientBase
 
     public void commitModifiedDynamicProps()
     {
-        if (modifiedItems.Count < 1)
+        if (modifiedItems.Count < 1 || submittedModifiedItems)
         {
             return;
         }
+        submittedModifiedItems = true;
         SteamInventoryUpdateHandle_t handle = SteamInventory.StartUpdateProperties();
+        int num = 0;
         foreach (ushort modifiedItem in modifiedItems)
         {
             if (Characters.getPackageForItemID(modifiedItem, out var package) && getStatTrackerValue(modifiedItem, out var type, out var kills))
@@ -314,10 +318,12 @@ public class SteamPlayer : SteamConnectedClientBase
                 if (!string.IsNullOrEmpty(statTrackerPropertyName))
                 {
                     SteamInventory.SetProperty(handle, new SteamItemInstanceID_t(package), statTrackerPropertyName, kills);
+                    num++;
                 }
             }
         }
         SteamInventory.SubmitUpdateProperties(handle, out Provider.provider.economyService.commitResult);
+        UnturnedLog.info($"Submitted {num} item property update(s)");
     }
 
     public void lag(float value)

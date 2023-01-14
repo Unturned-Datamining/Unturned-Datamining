@@ -15,6 +15,8 @@ public class ItemFuelAsset : ItemAsset
 
     public ushort fuel => _fuel;
 
+    public bool shouldDeleteAfterFillingTarget { get; protected set; }
+
     public override byte[] getState(EItemOrigin origin)
     {
         byte[] array = new byte[2];
@@ -40,5 +42,6 @@ public class ItemFuelAsset : ItemAsset
         _use = bundle.load<AudioClip>("Use");
         _fuel = data.readUInt16("Fuel", 0);
         fuelState = BitConverter.GetBytes(fuel);
+        shouldDeleteAfterFillingTarget = data.readBoolean("Delete_After_Filling_Target");
     }
 }

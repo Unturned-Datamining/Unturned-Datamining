@@ -142,19 +142,33 @@ public class MasterBundleConfig
         }
         string text = formatAssetPath("AssetBundleCustomData.asset");
         AssetBundleCustomData assetBundleCustomData = assetBundle.LoadAsset<AssetBundleCustomData>(text);
-        if (assetBundleCustomData != null)
+        if (assetBundleCustomData == null)
         {
-            UnturnedLog.info("Loaded \"" + assetBundleName + "\" custom data from \"" + text + "\"");
-            if (workshopFileId != 0 && assetBundleCustomData.ownerWorkshopFileId != 0 && workshopFileId != assetBundleCustomData.ownerWorkshopFileId)
+            UnturnedLog.info("Tried loading \"" + assetBundleName + "\" optional custom data from \"" + text + "\"");
+            return;
+        }
+        UnturnedLog.info("Loaded \"" + assetBundleName + "\" custom data from \"" + text + "\"");
+        bool flag = assetBundleCustomData.ownerWorkshopFileIds != null && assetBundleCustomData.ownerWorkshopFileIds.Count > 0;
+        if (workshopFileId == 0 || !(assetBundleCustomData.ownerWorkshopFileId != 0 || flag) || workshopFileId == assetBundleCustomData.ownerWorkshopFileId || (flag && assetBundleCustomData.ownerWorkshopFileIds.Contains(workshopFileId)))
+        {
+            return;
+        }
+        string text2;
+        if (flag)
+        {
+            text2 = string.Join(", ", assetBundleCustomData.ownerWorkshopFileIds);
+            if (assetBundleCustomData.ownerWorkshopFileId != 0)
             {
-                UnturnedLog.warn($"Unloading \"{assetBundle}\" because source workshop file ID ({workshopFileId}) does not match owner workshop file ID ({assetBundleCustomData.ownerWorkshopFileId})");
-                unload();
+                text2 += ", ";
+                text2 += assetBundleCustomData.ownerWorkshopFileId;
             }
         }
         else
         {
-            UnturnedLog.info("Tried loading \"" + assetBundleName + "\" optional custom data from \"" + text + "\"");
+            text2 = assetBundleCustomData.ownerWorkshopFileId.ToString();
         }
+        UnturnedLog.warn($"Unloading \"{assetBundle}\" because source workshop file ID ({workshopFileId}) does not match owner workshop file ID(s) ({text2})");
+        unload();
     }
 
     public AssetBundleRequest LoadAssetAsync<T>(string name) where T : UnityEngine.Object

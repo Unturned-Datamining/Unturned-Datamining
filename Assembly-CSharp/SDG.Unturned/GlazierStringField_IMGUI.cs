@@ -88,11 +88,11 @@ internal class GlazierStringField_IMGUI : GlazierElementBase_IMGUI, ISleekField,
         GUI.SetNextControlName(controlName);
         if (replace != ' ')
         {
-            text = GlazierUtils_IMGUI.drawField(drawRect, fontStyle, fontAlignment, fontSizeInt, backgroundColor, textColor, text, maxLength, hint, replace, shadowStyle);
+            text = GlazierUtils_IMGUI.DrawPasswordField(drawRect, fontStyle, fontAlignment, fontSizeInt, backgroundColor, textColor, text, maxLength, hint, replace, shadowStyle);
         }
         else
         {
-            text = GlazierUtils_IMGUI.drawField(drawRect, fontStyle, fontAlignment, fontSizeInt, backgroundColor, textColor, text, maxLength, hint, multiline, shadowStyle);
+            text = GlazierUtils_IMGUI.DrawTextInputField(drawRect, fontStyle, fontAlignment, fontSizeInt, backgroundColor, textColor, text, maxLength, hint, multiline, shadowStyle);
         }
         if (GUI.changed)
         {

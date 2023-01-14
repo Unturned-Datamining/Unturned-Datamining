@@ -49,8 +49,12 @@ public class NPCTool
             string desc = localization.read(prefix + i);
             desc = ItemTool.filterRarityRichText(desc);
             bool flag = data.has(prefix + i + "_Reset");
-            ENPCLogicType defaultValue = ((eNPCConditionType == ENPCConditionType.ITEM) ? ENPCLogicType.GREATER_THAN_OR_EQUAL_TO : ENPCLogicType.NONE);
-            ENPCLogicType eNPCLogicType = data.readEnum(prefix + i + "_Logic", defaultValue);
+            ENPCLogicType eNPCLogicType = data.readEnum(prefix + i + "_Logic", eNPCConditionType switch
+            {
+                ENPCConditionType.ITEM => ENPCLogicType.GREATER_THAN_OR_EQUAL_TO, 
+                ENPCConditionType.HOLIDAY => ENPCLogicType.EQUAL, 
+                _ => ENPCLogicType.NONE, 
+            });
             switch (eNPCConditionType)
             {
             case ENPCConditionType.EXPERIENCE:
@@ -251,7 +255,7 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Holiday condition " + prefix + i + " missing _Value");
                 }
-                conditions[i] = new NPCHolidayCondition(eNPCHoliday);
+                conditions[i] = new NPCHolidayCondition(eNPCHoliday, eNPCLogicType);
                 break;
             }
             case ENPCConditionType.KILLS_PLAYER:

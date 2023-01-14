@@ -6,6 +6,7 @@ using SDG.Framework.Devkit.Transactions;
 using SDG.Framework.Rendering;
 using SDG.Framework.Utilities;
 using UnityEngine;
+using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
@@ -21,8 +22,6 @@ public class SelectionTool : IDevkitTool
     protected List<GameObject> copyBuffer = new List<GameObject>();
 
     protected List<GameObject> copySelectionDelay = new List<GameObject>();
-
-    protected List<MeshFilter> meshFilters = new List<MeshFilter>();
 
     private ESelectionMode _mode;
 
@@ -86,6 +85,7 @@ public class SelectionTool : IDevkitTool
             {
                 item.preTransformPosition = item.transform.position;
                 item.preTransformRotation = item.transform.rotation;
+                item.preTransformLocalScale = item.transform.localScale;
                 item.localToWorld = item.transform.localToWorldMatrix;
                 item.relativeToPivot = worldToPivot * item.localToWorld;
             }
@@ -114,7 +114,7 @@ public class SelectionTool : IDevkitTool
             ITransformedHandler component = item.gameObject.GetComponent<ITransformedHandler>();
             if (component != null)
             {
-                component.OnTranslatedAndRotated(item.preTransformPosition, item.preTransformRotation, vector2, quaternion, modifyRotation);
+                component.OnTransformed(item.preTransformPosition, item.preTransformRotation, Vector3.zero, vector2, quaternion, Vector3.zero, modifyRotation, modifyScale: false);
                 continue;
             }
             if (!vector2.IsNearlyEqual(item.transform.position))
@@ -134,21 +134,21 @@ public class SelectionTool : IDevkitTool
         {
             if (!(item.gameObject == null))
             {
-                Matrix4x4 matrix4x = pivotToWorld * item.relativeToPivot;
+                Matrix4x4 matrix = pivotToWorld * item.relativeToPivot;
                 ITransformedHandler component = item.gameObject.GetComponent<ITransformedHandler>();
                 if (component != null)
                 {
-                    component.OnTransformed(item.localToWorld, matrix4x);
+                    component.OnTransformed(item.preTransformPosition, item.preTransformRotation, item.preTransformLocalScale, matrix.GetPosition(), matrix.GetRotation(), matrix.lossyScale, modifyRotation: true, modifyScale: true);
                     continue;
                 }
-                item.transform.position = matrix4x.GetPosition();
-                item.transform.SetRotation_RoundIfNearlyAxisAligned(matrix4x.GetRotation());
-                item.transform.SetLocalScale_RoundIfNearlyEqualToOne(matrix4x.lossyScale);
+                item.transform.position = matrix.GetPosition();
+                item.transform.SetRotation_RoundIfNearlyAxisAligned(matrix.GetRotation());
+                item.transform.SetLocalScale_RoundIfNearlyEqualToOne(matrix.lossyScale);
             }
         }
     }
 
-    protected void moveHandle(Vector3 position, Quaternion rotation, bool doRotation)
+    protected void moveHandle(Vector3 position, Quaternion rotation, Vector3 scale, bool doRotation, bool hasScale)
     {
         DevkitTransactionManager.beginTransaction("Transform");
         foreach (DevkitSelection item in DevkitSelectionManager.selection)
@@ -158,7 +158,34 @@ public class SelectionTool : IDevkitTool
                 DevkitTransactionUtility.recordObjectDelta(item.transform);
             }
         }
-        handles.ExternallyTransformPivot(position, rotation, doRotation);
+        if (DevkitSelectionManager.selection.Count == 1)
+        {
+            DevkitSelection devkitSelection = DevkitSelectionManager.selection.EnumerateFirst();
+            if (devkitSelection != null && devkitSelection.transform != null)
+            {
+                ITransformedHandler component = devkitSelection.gameObject.GetComponent<ITransformedHandler>();
+                if (component != null)
+                {
+                    component.OnTransformed(devkitSelection.preTransformPosition, devkitSelection.preTransformRotation, devkitSelection.preTransformLocalScale, position, rotation, scale, doRotation, hasScale);
+                }
+                else
+                {
+                    devkitSelection.transform.position = position;
+                    if (doRotation)
+                    {
+                        devkitSelection.transform.rotation = rotation;
+                    }
+                    if (hasScale)
+                    {
+                        devkitSelection.transform.localScale = scale;
+                    }
+                }
+            }
+        }
+        else
+        {
+            handles.ExternallyTransformPivot(position, rotation, doRotation);
+        }
         transformSelection();
         DevkitTransactionManager.endTransaction();
     }
@@ -290,7 +317,7 @@ public class SelectionTool : IDevkitTool
                 {
                     if (DevkitSelectionManager.selection.Count > 0)
                     {
-                        moveHandle(hitInfo2.point, Quaternion.identity, doRotation: false);
+                        moveHandle(hitInfo2.point, Quaternion.identity, Vector3.one, doRotation: false, hasScale: false);
                     }
                     else
                     {
@@ -459,7 +486,7 @@ public class SelectionTool : IDevkitTool
         }
         if (InputEx.GetKeyDown(KeyCode.N))
         {
-            moveHandle(referencePosition, referenceRotation, doRotation: true);
+            moveHandle(referencePosition, referenceRotation, referenceScale, doRotation: true, hasReferenceScale);
         }
         if (InputEx.GetKeyDown(ControlsSettings.focus))
         {

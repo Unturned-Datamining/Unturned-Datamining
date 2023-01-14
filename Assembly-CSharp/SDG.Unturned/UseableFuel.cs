@@ -7,11 +7,19 @@ namespace SDG.Unturned;
 
 public class UseableFuel : Useable
 {
+    private enum EUseMode
+    {
+        Deposit,
+        Withdraw
+    }
+
     private float startedUse;
 
     private float useTime;
 
     private bool isUsing;
+
+    private bool shouldDeleteAfterUse;
 
     private ushort fuel;
 
@@ -45,7 +53,7 @@ public class UseableFuel : Useable
         }
     }
 
-    private bool fire(bool mode)
+    private bool fire(EUseMode mode)
     {
         if (base.channel.isOwner)
         {
@@ -56,7 +64,7 @@ public class UseableFuel : Useable
                 {
                     return false;
                 }
-                if (mode)
+                if (mode == EUseMode.Deposit)
                 {
                     if (fuel == 0)
                     {
@@ -91,7 +99,7 @@ public class UseableFuel : Useable
                 InteractableObjectResource component4 = raycastInfo.transform.GetComponent<InteractableObjectResource>();
                 if (component != null)
                 {
-                    if (mode)
+                    if (mode == EUseMode.Deposit)
                     {
                         if (fuel == 0)
                         {
@@ -122,7 +130,7 @@ public class UseableFuel : Useable
                         {
                             return false;
                         }
-                        if (mode)
+                        if (mode == EUseMode.Deposit)
                         {
                             if (fuel == 0)
                             {
@@ -155,7 +163,7 @@ public class UseableFuel : Useable
                         {
                             return false;
                         }
-                        if (mode)
+                        if (mode == EUseMode.Deposit)
                         {
                             if (fuel == 0)
                             {
@@ -207,7 +215,7 @@ public class UseableFuel : Useable
                 {
                     return false;
                 }
-                if (mode)
+                if (mode == EUseMode.Deposit)
                 {
                     if (fuel == 0)
                     {
@@ -246,7 +254,7 @@ public class UseableFuel : Useable
                 InteractableTank component7 = input.transform.GetComponent<InteractableTank>();
                 if (component5 != null)
                 {
-                    if (mode)
+                    if (mode == EUseMode.Deposit)
                     {
                         if (fuel == 0)
                         {
@@ -279,7 +287,7 @@ public class UseableFuel : Useable
                 }
                 else if (component6 != null)
                 {
-                    if (mode)
+                    if (mode == EUseMode.Deposit)
                     {
                         if (fuel == 0)
                         {
@@ -320,7 +328,7 @@ public class UseableFuel : Useable
                     {
                         return false;
                     }
-                    if (mode)
+                    if (mode == EUseMode.Deposit)
                     {
                         if (fuel == 0)
                         {
@@ -361,7 +369,7 @@ public class UseableFuel : Useable
                 {
                     return false;
                 }
-                if (mode)
+                if (mode == EUseMode.Deposit)
                 {
                     if (fuel == 0)
                     {
@@ -394,36 +402,42 @@ public class UseableFuel : Useable
         return true;
     }
 
-    private void start(bool mode)
+    private void start(EUseMode mode)
     {
-        if (!base.player.equipment.isBusy && isUseable && fire(mode))
+        if (base.player.equipment.isBusy || !isUseable || !fire(mode))
         {
-            if (Provider.isServer)
+            return;
+        }
+        if (Provider.isServer)
+        {
+            byte[] bytes = BitConverter.GetBytes(fuel);
+            base.player.equipment.state[0] = bytes[0];
+            base.player.equipment.state[1] = bytes[1];
+            base.player.equipment.sendUpdateState();
+        }
+        base.player.equipment.isBusy = true;
+        startedUse = Time.realtimeSinceStartup;
+        isUsing = true;
+        glug();
+        if (Provider.isServer)
+        {
+            SendPlayGlug.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner());
+            ItemFuelAsset itemFuelAsset = base.player.equipment.asset as ItemFuelAsset;
+            if (mode == EUseMode.Deposit && itemFuelAsset != null && itemFuelAsset.shouldDeleteAfterFillingTarget)
             {
-                byte[] bytes = BitConverter.GetBytes(fuel);
-                base.player.equipment.state[0] = bytes[0];
-                base.player.equipment.state[1] = bytes[1];
-                base.player.equipment.sendUpdateState();
-            }
-            base.player.equipment.isBusy = true;
-            startedUse = Time.realtimeSinceStartup;
-            isUsing = true;
-            glug();
-            if (Provider.isServer)
-            {
-                SendPlayGlug.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner());
+                shouldDeleteAfterUse = true;
             }
         }
     }
 
     public override void startPrimary()
     {
-        start(mode: true);
+        start(EUseMode.Deposit);
     }
 
     public override void startSecondary()
     {
-        start(mode: false);
+        start(EUseMode.Withdraw);
     }
 
     public override void updateState(byte[] newState)
@@ -460,6 +474,10 @@ public class UseableFuel : Useable
         {
             base.player.equipment.isBusy = false;
             isUsing = false;
+            if (Provider.isServer && shouldDeleteAfterUse)
+            {
+                base.player.equipment.use();
+            }
         }
     }
 }

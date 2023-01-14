@@ -30,7 +30,9 @@ public class UseableFisher : Useable
 
     private bool isCatch;
 
-    private Transform bob;
+    private Transform bobberTransform;
+
+    private Rigidbody bobberRigidbody;
 
     private Transform firstHook;
 
@@ -192,7 +194,7 @@ public class UseableFisher : Useable
             if (base.channel.isOwner)
             {
                 isBobbing = true;
-                if (bob != null && !isLuring && Time.realtimeSinceStartup - lastLuck > luckTime - 1.4f && Time.realtimeSinceStartup - lastLuck < luckTime)
+                if (bobberTransform != null && !isLuring && Time.realtimeSinceStartup - lastLuck > luckTime - 1.4f && Time.realtimeSinceStartup - lastLuck < luckTime)
                 {
                     SendCatch.Invoke(GetNetId(), ENetReliability.Reliable);
                 }
@@ -300,9 +302,9 @@ public class UseableFisher : Useable
     {
         if (base.channel.isOwner)
         {
-            if (bob != null)
+            if (bobberTransform != null)
             {
-                UnityEngine.Object.Destroy(bob.gameObject);
+                UnityEngine.Object.Destroy(bobberTransform.gameObject);
             }
             if (castStrengthBox != null)
             {
@@ -352,28 +354,28 @@ public class UseableFisher : Useable
                 {
                     position += forward;
                 }
-                bob = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Fishers/Bob")).transform;
-                bob.name = "Bob";
-                bob.position = position;
-                Rigidbody component = bob.GetComponent<Rigidbody>();
-                if (component != null)
+                bobberTransform = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Fishers/Bob")).transform;
+                bobberTransform.name = "Bob";
+                bobberTransform.position = position;
+                bobberRigidbody = bobberTransform.GetComponent<Rigidbody>();
+                if (bobberRigidbody != null)
                 {
-                    component.AddForce(forward * Mathf.Lerp(500f, 1000f, strengthMultiplier));
-                    component.collisionDetectionMode = CollisionDetectionMode.Continuous;
+                    bobberRigidbody.AddForce(forward * Mathf.Lerp(500f, 1000f, strengthMultiplier));
+                    bobberRigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
                 }
                 isBobbing = false;
                 isLuring = true;
             }
-            else if (isReeling && bob != null)
+            else if (isReeling && bobberTransform != null)
             {
-                UnityEngine.Object.Destroy(bob.gameObject);
+                UnityEngine.Object.Destroy(bobberTransform.gameObject);
             }
         }
-        if (bob != null)
+        if (bobberTransform != null)
         {
             if (base.player.look.perspective == EPlayerPerspective.FIRST)
             {
-                Vector3 position2 = MainCamera.instance.WorldToViewportPoint(bob.position);
+                Vector3 position2 = MainCamera.instance.WorldToViewportPoint(bobberTransform.position);
                 Vector3 position3 = base.player.animator.viewmodelCamera.ViewportToWorldPoint(position2);
                 firstLine.SetPosition(0, firstHook.position);
                 firstLine.SetPosition(1, position3);
@@ -381,7 +383,7 @@ public class UseableFisher : Useable
             else
             {
                 thirdLine.SetPosition(0, thirdHook.position);
-                thirdLine.SetPosition(1, bob.position);
+                thirdLine.SetPosition(1, bobberTransform.position);
             }
         }
         else if (base.player.look.perspective == EPlayerPerspective.FIRST)
@@ -429,18 +431,19 @@ public class UseableFisher : Useable
 
     private void Update()
     {
-        if (!(bob != null))
+        if (!(bobberTransform != null) || !(bobberRigidbody != null))
         {
             return;
         }
         if (isLuring)
         {
-            WaterUtility.getUnderwaterInfo(bob.position, out var isUnderwater, out var surfaceElevation);
-            if (isUnderwater && bob.position.y < surfaceElevation - 4f)
+            WaterUtility.getUnderwaterInfo(bobberTransform.position, out var isUnderwater, out var surfaceElevation);
+            if (isUnderwater && bobberTransform.position.y < surfaceElevation - 4f)
             {
-                bob.GetComponent<Rigidbody>().useGravity = false;
-                bob.GetComponent<Rigidbody>().isKinematic = true;
-                water = bob.position;
+                bobberRigidbody.collisionDetectionMode = CollisionDetectionMode.Discrete;
+                bobberRigidbody.useGravity = false;
+                bobberRigidbody.isKinematic = true;
+                water = bobberTransform.position;
                 water.y = surfaceElevation;
                 isLuring = false;
             }
@@ -475,11 +478,11 @@ public class UseableFisher : Useable
         }
         if (Time.realtimeSinceStartup - lastLuck > luckTime - 1.4f)
         {
-            bob.GetComponent<Rigidbody>().MovePosition(Vector3.Lerp(bob.position, water + Vector3.down * 4f + Vector3.left * UnityEngine.Random.Range(-4f, 4f) + Vector3.forward * UnityEngine.Random.Range(-4f, 4f), 4f * Time.deltaTime));
+            bobberRigidbody.MovePosition(Vector3.Lerp(bobberTransform.position, water + Vector3.down * 4f + Vector3.left * UnityEngine.Random.Range(-4f, 4f) + Vector3.forward * UnityEngine.Random.Range(-4f, 4f), 4f * Time.deltaTime));
         }
         else
         {
-            bob.GetComponent<Rigidbody>().MovePosition(Vector3.Lerp(bob.position, water + Vector3.up * Mathf.Sin(Time.time) * 0.25f, 4f * Time.deltaTime));
+            bobberRigidbody.MovePosition(Vector3.Lerp(bobberTransform.position, water + Vector3.up * Mathf.Sin(Time.time) * 0.25f, 4f * Time.deltaTime));
         }
     }
 }

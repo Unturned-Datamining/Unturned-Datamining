@@ -15,6 +15,8 @@ public class DevkitSelection : IEquatable<DevkitSelection>
 
     public Quaternion preTransformRotation;
 
+    public Vector3 preTransformLocalScale;
+
     public Matrix4x4 localToWorld;
 
     public Matrix4x4 relativeToPivot;

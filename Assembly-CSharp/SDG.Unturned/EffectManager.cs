@@ -1270,6 +1270,10 @@ public class EffectManager : SteamCaller
         {
             rotation *= Quaternion.Euler(0f, 0f, UnityEngine.Random.Range(0, 360));
         }
+        if (pool == null)
+        {
+            return null;
+        }
         Transform transform = pool.Instantiate(asset.effect, point, rotation).transform;
         transform.localScale = scaleMultiplier;
         transform.parent = parent;

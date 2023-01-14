@@ -29,6 +29,10 @@ Matchmaking_Show_All_Maps_Toggle_Label Matchmaking Show All Maps
 Min_Matchmaking_Players_Field_Label Matchmaking Min Players
 Max_Matchmaking_Ping_Field_Label Matchmaking Max Ping
 
+UseStaticCrosshair_Label Enable Custom Sized Crosshair
+UseStaticCrosshair_Tooltip Use custom crosshair size rather than size calculated from spread.
+StaticCrosshairSize_Label Custom Crosshair Size
+
 Metric_On Metric
 Metric_Off Imperial
 Metric_Tooltip Measurement System

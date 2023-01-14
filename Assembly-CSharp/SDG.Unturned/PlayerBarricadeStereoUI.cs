@@ -63,7 +63,7 @@ public class PlayerBarricadeStereoUI : SleekFullscreenBox
     private void refreshSongs()
     {
         songs.Clear();
-        Assets.find(songs);
+        Assets.FindAssetsByType_UseDefaultAssetMapping(songs);
         songsBox.RemoveAllChildren();
         songsBox.contentSizeOffset = new Vector2(0f, songs.Count * 30);
         for (int i = 0; i < songs.Count; i++)

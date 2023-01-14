@@ -159,10 +159,10 @@ internal static class GlazierUtils_IMGUI
 
     public static string drawField(Rect area, FontStyle fontStyle, TextAnchor fontAlignment, int fontSize, Color color_0, Color color_1, string text, int maxLength, bool multiline, ETextContrastContext shadowStyle)
     {
-        return drawField(area, fontStyle, fontAlignment, fontSize, color_0, color_1, text, maxLength, string.Empty, multiline, shadowStyle);
+        return DrawTextInputField(area, fontStyle, fontAlignment, fontSize, color_0, color_1, text, maxLength, string.Empty, multiline, shadowStyle);
     }
 
-    public static string drawField(Rect area, FontStyle fontStyle, TextAnchor fontAlignment, int fontSize, Color color_0, Color color_1, string text, int maxLength, string hint, bool multiline, ETextContrastContext shadowStyle)
+    public static string DrawTextInputField(Rect area, FontStyle fontStyle, TextAnchor fontAlignment, int fontSize, Color color_0, Color color_1, string text, int maxLength, string hint, bool multiline, ETextContrastContext shadowStyle)
     {
         GUI.skin.textArea.fontStyle = fontStyle;
         GUI.skin.textArea.alignment = fontAlignment;
@@ -174,11 +174,11 @@ internal static class GlazierUtils_IMGUI
         GUI.contentColor = color_1;
         if (allowInput)
         {
-            text = ((maxLength > 0) ? ((!multiline) ? GUI.TextField(area, text, maxLength) : GUI.TextArea(area, text, maxLength)) : ((!multiline) ? GUI.TextField(area, text) : GUI.TextArea(area, text)));
             if (text == null)
             {
-                text = "";
+                text = string.Empty;
             }
+            text = ((maxLength > 0) ? ((!multiline) ? GUI.TextField(area, text, maxLength) : GUI.TextArea(area, text, maxLength)) : ((!multiline) ? GUI.TextField(area, text) : GUI.TextArea(area, text)));
             if (text.Length < 1)
             {
                 drawLabel(area, fontStyle, fontAlignment, fontSize, isRich: false, color_1 * 0.5f, hint, shadowStyle);
@@ -190,7 +190,7 @@ internal static class GlazierUtils_IMGUI
         return text;
     }
 
-    public static string drawField(Rect area, FontStyle fontStyle, TextAnchor fontAlignment, int fontSize, Color color_0, Color color_1, string text, int maxLength, string hint, char replace, ETextContrastContext shadowStyle)
+    public static string DrawPasswordField(Rect area, FontStyle fontStyle, TextAnchor fontAlignment, int fontSize, Color color_0, Color color_1, string text, int maxLength, string hint, char replace, ETextContrastContext shadowStyle)
     {
         GUI.skin.textField.fontStyle = fontStyle;
         GUI.skin.textField.alignment = fontAlignment;
@@ -199,11 +199,11 @@ internal static class GlazierUtils_IMGUI
         GUI.contentColor = color_1;
         if (allowInput)
         {
-            text = ((maxLength <= 0) ? GUI.PasswordField(area, text, replace) : GUI.PasswordField(area, text, replace, maxLength));
             if (text == null)
             {
-                text = "";
+                text = string.Empty;
             }
+            text = ((maxLength <= 0) ? GUI.PasswordField(area, text, replace) : GUI.PasswordField(area, text, replace, maxLength));
             if (text.Length < 1)
             {
                 drawLabel(area, fontStyle, fontAlignment, fontSize, isRich: false, color_1 * 0.5f, hint, shadowStyle);
@@ -211,10 +211,13 @@ internal static class GlazierUtils_IMGUI
             return text;
         }
         drawBox(area, color_0);
-        string text2 = "";
-        for (int i = 0; i < text.Length; i++)
+        string text2 = string.Empty;
+        if (text != null)
         {
-            text2 += replace;
+            for (int i = 0; i < text.Length; i++)
+            {
+                text2 += replace;
+            }
         }
         drawLabel(area, fontStyle, fontAlignment, fontSize, isRich: false, color_1, text2, shadowStyle);
         return text;
