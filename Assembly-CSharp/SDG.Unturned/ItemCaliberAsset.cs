@@ -50,6 +50,8 @@ public class ItemCaliberAsset : ItemAsset
 
     public bool ShouldOnlyAffectAimWhileProne => _isBipod;
 
+    public bool shouldDestroyAttachmentColliders { get; protected set; }
+
     public ItemCaliberAsset(Bundle bundle, Data data, Local localization, ushort id)
         : base(bundle, data, localization, id)
     {
@@ -72,6 +74,7 @@ public class ItemCaliberAsset : ItemAsset
         aimingMovementSpeedMultiplier = data.readSingle("Aiming_Movement_Speed_Multiplier", 1f);
         _isPaintable = data.has("Paintable");
         _isBipod = data.has("Bipod");
+        shouldDestroyAttachmentColliders = data.readBoolean("Destroy_Attachment_Colliders", defaultValue: true);
     }
 
     protected override AudioReference GetDefaultInventoryAudio()

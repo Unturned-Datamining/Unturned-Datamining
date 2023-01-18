@@ -1173,6 +1173,7 @@ public class BarricadeManager : SteamCaller
                 parameters.relevantDistance = EffectManager.MEDIUM;
                 EffectManager.triggerEffect(parameters);
             }
+            asset.SpawnItemDropsOnDestroy(transform.position);
             destroyBarricade(barricadeDrop, x, y, plant);
         }
         else

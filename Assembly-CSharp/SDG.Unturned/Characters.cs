@@ -436,7 +436,7 @@ public class Characters : MonoBehaviour
             statTrackerCallback = getSlot1StatTrackerValue;
             break;
         }
-        Transform item = ItemTool.getItem(num, skin, 100, state, viewmodel: false, statTrackerCallback);
+        Transform item = ItemTool.getItem(num, skin, 100, state, viewmodel: false, itemAsset, statTrackerCallback);
         switch (slot)
         {
         case 0:

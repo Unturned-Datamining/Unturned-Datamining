@@ -5,7 +5,6 @@
 	"Has_Discord_Rich_Presence": true,
 	"Category": "Official",
 	"Visible_In_Matchmaking": true,
-	"Should_Verify_Objects_Hash": true,
 	"Trains":
 	[
 		{
@@ -13,7 +12,7 @@
 			"RoadIndex": 0
 		}
 	],
-	"Version": "3.22.1.0",
+	"Version": "3.23.1.0",
 	"Use_Underground_Whitelist": true,
 	"Asset":
 	{

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace SDG.Unturned;
 
 public class NPCCompareFlagsCondition : NPCLogicCondition
@@ -56,6 +58,12 @@ public class NPCCompareFlagsCondition : NPCLogicCondition
             return flagID == flag_B_ID;
         }
         return true;
+    }
+
+    internal override void GatherAssociatedFlags(HashSet<ushort> associatedFlags)
+    {
+        associatedFlags.Add(flag_A_ID);
+        associatedFlags.Add(flag_B_ID);
     }
 
     public NPCCompareFlagsCondition(ushort newFlag_A_ID, ushort newFlag_B_ID, bool newAllowFlag_A_Unset, bool newAllowFlag_B_Unset, ENPCLogicType newLogicType, string newText, bool newShouldReset)

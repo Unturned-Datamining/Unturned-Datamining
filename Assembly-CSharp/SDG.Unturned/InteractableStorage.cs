@@ -227,7 +227,7 @@ public class InteractableStorage : Interactable, IManualOnDestroy
             {
                 return;
             }
-            displayModel = ItemTool.getItem(displayItem.id, displaySkin, displayItem.quality, displayItem.state, viewmodel: false, getDisplayStatTrackerValue);
+            displayModel = ItemTool.getItem(displayItem.id, displaySkin, displayItem.quality, displayItem.state, viewmodel: false, displayAsset, shouldDestroyColliders: true, getDisplayStatTrackerValue);
             if (displayMythic != 0)
             {
                 ItemTool.applyEffect(displayModel, displayMythic, EEffectType.THIRD);
@@ -235,7 +235,7 @@ public class InteractableStorage : Interactable, IManualOnDestroy
         }
         else
         {
-            displayModel = ItemTool.getItem(displayItem.id, 0, displayItem.quality, displayItem.state, viewmodel: false, getDisplayStatTrackerValue);
+            displayModel = ItemTool.getItem(displayItem.id, 0, displayItem.quality, displayItem.state, viewmodel: false, displayAsset, shouldDestroyColliders: true, getDisplayStatTrackerValue);
             if (displayMythic != 0)
             {
                 ItemTool.applyEffect(displayModel, displayMythic, EEffectType.HOOK);
@@ -267,7 +267,7 @@ public class InteractableStorage : Interactable, IManualOnDestroy
         displayModel.localPosition = Vector3.zero;
         displayModel.localRotation = displayRotation;
         displayModel.localScale = Vector3.one;
-        Object.Destroy(displayModel.GetComponent<Collider>());
+        displayModel.DestroyRigidbody();
     }
 
     public bool checkRot(CSteamID enemyPlayer, CSteamID enemyGroup)

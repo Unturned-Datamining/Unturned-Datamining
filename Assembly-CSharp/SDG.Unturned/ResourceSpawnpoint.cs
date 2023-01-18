@@ -39,6 +39,8 @@ public class ResourceSpawnpoint
 
     public ushort health;
 
+    public Guid guid { get; protected set; }
+
     public float lastDead => _lastDead;
 
     public bool isDead => health == 0;
@@ -338,13 +340,26 @@ public class ResourceSpawnpoint
         }
     }
 
-    public ResourceSpawnpoint(byte newType, ushort newID, Vector3 newPoint, bool newGenerated, NetId netId)
+    public ResourceSpawnpoint(byte newType, ushort newID, Guid newGuid, Vector3 newPoint, bool newGenerated, NetId netId)
     {
         type = newType;
         id = newID;
+        guid = newGuid;
         _point = newPoint;
         _isGenerated = newGenerated;
-        _asset = Assets.find(EAssetType.RESOURCE, id) as ResourceAsset;
+        if (guid == Guid.Empty)
+        {
+            _asset = Assets.find(EAssetType.RESOURCE, id) as ResourceAsset;
+            if (asset != null)
+            {
+                UnturnedLog.info("Tree without GUID loaded by legacy ID {0}, updating to {1} \"{2}\"", asset.id, asset.GUID, asset.name);
+                guid = asset.GUID;
+            }
+        }
+        else
+        {
+            _asset = Assets.find(guid) as ResourceAsset;
+        }
         if (asset == null)
         {
             return;
@@ -396,8 +411,18 @@ public class ResourceSpawnpoint
         }
     }
 
+    public ResourceSpawnpoint(byte newType, ushort newID, Vector3 newPoint, bool newGenerated, NetId netId)
+        : this(newType, newID, Guid.Empty, newPoint, newGenerated, netId)
+    {
+    }
+
     public ResourceSpawnpoint(ushort newID, Vector3 newPoint, bool newGenerated, NetId netId)
-        : this(0, newID, newPoint, newGenerated, netId)
+        : this(0, newID, Guid.Empty, newPoint, newGenerated, netId)
+    {
+    }
+
+    public ResourceSpawnpoint(ushort newID, Guid guid, Vector3 newPoint, bool newGenerated, NetId netId)
+        : this(0, newID, guid, newPoint, newGenerated, netId)
     {
     }
 }

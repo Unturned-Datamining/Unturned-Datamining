@@ -202,15 +202,10 @@ public class StructureDrop
             }
             else if (asset.isSalvageable)
             {
-                for (int i = 0; i < asset.blueprints.Count; i++)
+                ItemAsset itemAsset = asset.FindSalvageItemAsset();
+                if (itemAsset != null)
                 {
-                    Blueprint blueprint = asset.blueprints[i];
-                    if (blueprint.outputs.Length == 1 && blueprint.outputs[0].id == asset.id)
-                    {
-                        ushort id = blueprint.supplies[UnityEngine.Random.Range(0, blueprint.supplies.Length)].id;
-                        player.inventory.forceAddItem(new Item(id, EItemOrigin.NATURE), auto: true);
-                        break;
-                    }
+                    player.inventory.forceAddItem(new Item(itemAsset, EItemOrigin.NATURE), auto: true);
                 }
             }
         }

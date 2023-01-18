@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace SDG.Unturned;
 
@@ -51,6 +52,11 @@ public class NPCTreeKillsCondition : INPCCondition
     public override bool isAssociatedWithFlag(ushort flagID)
     {
         return flagID == id;
+    }
+
+    internal override void GatherAssociatedFlags(HashSet<ushort> associatedFlags)
+    {
+        associatedFlags.Add(id);
     }
 
     public NPCTreeKillsCondition(ushort newID, short newValue, Guid newTreeGuid, string newText, bool newShouldReset)

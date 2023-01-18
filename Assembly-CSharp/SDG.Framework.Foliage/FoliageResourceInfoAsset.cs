@@ -47,7 +47,7 @@ public class FoliageResourceInfoAsset : FoliageInfoAsset
         ResourceAsset resourceAsset = Assets.find(resource);
         if (resourceAsset != null)
         {
-            LevelGround.addSpawn(position, resourceAsset.id, clearWhenBaked);
+            LevelGround.addSpawn(position, resourceAsset.GUID, clearWhenBaked);
         }
     }
 

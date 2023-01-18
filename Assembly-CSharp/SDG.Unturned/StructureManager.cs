@@ -228,6 +228,7 @@ public class StructureManager : SteamCaller
                 parameters.relevantDistance = EffectManager.MEDIUM;
                 EffectManager.triggerEffect(parameters);
             }
+            asset.SpawnItemDropsOnDestroy(transform.position);
             destroyStructure(structureDrop, x, y, direction * (int)pendingTotalDamage, wasPickedUp: false);
         }
         else

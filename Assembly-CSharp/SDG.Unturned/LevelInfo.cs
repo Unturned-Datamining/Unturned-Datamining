@@ -14,6 +14,8 @@ public class LevelInfo
 
     private LevelAsset cachedAsset;
 
+    private bool didResolveAsset;
+
     private Local cachedLocalization;
 
     public string path { get; protected set; }
@@ -87,8 +89,9 @@ public class LevelInfo
 
     public LevelAsset resolveAsset()
     {
-        if (cachedAsset == null)
+        if (cachedAsset == null && !didResolveAsset)
         {
+            didResolveAsset = true;
             if (configData != null && configData.Asset.isValid)
             {
                 cachedAsset = Assets.find(configData.Asset);

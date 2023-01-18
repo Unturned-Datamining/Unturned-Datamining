@@ -1,43 +1,35 @@
+using System;
 using System.Collections.Generic;
 
 namespace SDG.Unturned;
 
 internal class TreeRedirectorMap
 {
-    public bool hasAllAssets;
-
-    private Dictionary<ushort, ushort> redirectedIds;
+    private Dictionary<Guid, ResourceAsset> redirectedIds;
 
     public TreeRedirectorMap()
     {
-        hasAllAssets = true;
-        redirectedIds = new Dictionary<ushort, ushort>();
+        redirectedIds = new Dictionary<Guid, ResourceAsset>();
     }
 
-    public ushort redirect(ushort originalId)
+    public ResourceAsset redirect(Guid originalId)
     {
-        ushort value = 0;
-        if (!redirectedIds.TryGetValue(originalId, out value))
+        if (!redirectedIds.TryGetValue(originalId, out var value))
         {
-            if (Assets.find(EAssetType.RESOURCE, originalId) is ResourceAsset resourceAsset)
+            if (Assets.find(originalId) is ResourceAsset resourceAsset)
             {
                 AssetReference<ResourceAsset> holidayRedirect = resourceAsset.getHolidayRedirect();
                 if (holidayRedirect.isValid)
                 {
-                    ResourceAsset resourceAsset2 = holidayRedirect.Find();
-                    if (resourceAsset2 != null)
-                    {
-                        value = resourceAsset2.id;
-                    }
-                    else if (!Assets.shouldLoadAnyAssets)
+                    value = holidayRedirect.Find();
+                    if (value == null && (bool)Assets.shouldLoadAnyAssets)
                     {
                         UnturnedLog.error("Missing holiday redirect for tree {0}", resourceAsset);
-                        hasAllAssets = false;
                     }
                 }
                 else
                 {
-                    value = originalId;
+                    value = resourceAsset;
                 }
             }
             redirectedIds.Add(originalId, value);

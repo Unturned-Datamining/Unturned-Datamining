@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace SDG.Unturned;
 
 public class NPCHordeKillsCondition : INPCCondition
@@ -48,6 +50,11 @@ public class NPCHordeKillsCondition : INPCCondition
     public override bool isAssociatedWithFlag(ushort flagID)
     {
         return flagID == id;
+    }
+
+    internal override void GatherAssociatedFlags(HashSet<ushort> associatedFlags)
+    {
+        associatedFlags.Add(id);
     }
 
     public NPCHordeKillsCondition(ushort newID, short newValue, byte newNav, string newText, bool newShouldReset)

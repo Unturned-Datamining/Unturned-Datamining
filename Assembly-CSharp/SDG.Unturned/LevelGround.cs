@@ -36,6 +36,10 @@ public class LevelGround : MonoBehaviour
 
     private static Collider[] obstructionColliders;
 
+    private const byte SAVEDATA_TREES_VERSION_ADDED_GUID = 6;
+
+    private const byte SAVEDATA_TREES_VERSION_NEWEST = 6;
+
     public static readonly byte SAVEDATA_TREES_VERSION;
 
     public static readonly byte RESOURCE_REGIONS;
@@ -340,11 +344,11 @@ public class LevelGround : MonoBehaviour
         onRegionUpdated(byte.MaxValue, byte.MaxValue, EditorArea.instance.region_x, EditorArea.instance.region_y);
     }
 
-    public static void addSpawn(Vector3 point, ushort id, bool isGenerated = false)
+    public static void addSpawn(Vector3 point, Guid guid, bool isGenerated = false)
     {
         if (Regions.tryGetCoordinate(point, out var x, out var y))
         {
-            ResourceSpawnpoint resourceSpawnpoint = new ResourceSpawnpoint(id, point, isGenerated, NetId.INVALID);
+            ResourceSpawnpoint resourceSpawnpoint = new ResourceSpawnpoint(0, guid, point, isGenerated, NetId.INVALID);
             resourceSpawnpoint.enable();
             resourceSpawnpoint.disableSkybox();
             trees[x, y].Add(resourceSpawnpoint);
@@ -352,7 +356,16 @@ public class LevelGround : MonoBehaviour
         }
     }
 
-    [Obsolete("Replaced by version which takes ID rather than index.")]
+    [Obsolete("Replaced by overload which takes GUID rather than legacy ID")]
+    public static void addSpawn(Vector3 point, ushort id, bool isGenerated = false)
+    {
+        if (Assets.find(EAssetType.RESOURCE, id) is ResourceAsset resourceAsset)
+        {
+            addSpawn(point, resourceAsset.GUID, isGenerated);
+        }
+    }
+
+    [Obsolete("Replaced by overload which takes ID rather than index.")]
     public static void addSpawn(Vector3 point, byte index, bool isGenerated = false)
     {
     }
@@ -605,7 +618,6 @@ public class LevelGround : MonoBehaviour
         }
         River river = new River(Level.info.path + "/Terrain/Trees.dat", usePath: false);
         byte b5 = river.readByte();
-        bool flag = true;
         if (b5 > 3)
         {
             TreeRedirectorMap treeRedirectorMap = null;
@@ -623,22 +635,36 @@ public class LevelGround : MonoBehaviour
                         if (b5 > 4)
                         {
                             ushort num3 = river.readUInt16();
+                            Guid guid = ((b5 >= 6) ? river.readGUID() : Guid.Empty);
                             Vector3 newPoint = river.readSingleVector3();
                             bool newGenerated = river.readBoolean();
-                            if (num3 != 0)
+                            if (num3 != 0 || guid != Guid.Empty)
                             {
                                 if (treeRedirectorMap != null)
                                 {
-                                    num3 = treeRedirectorMap.redirect(num3);
+                                    ResourceAsset resourceAsset = treeRedirectorMap.redirect(guid);
+                                    if (resourceAsset == null)
+                                    {
+                                        num3 = 0;
+                                        guid = Guid.Empty;
+                                    }
+                                    else
+                                    {
+                                        num3 = resourceAsset.id;
+                                        guid = resourceAsset.GUID;
+                                    }
                                 }
-                                if (num3 != 0)
+                                if (num3 != 0 || guid != Guid.Empty)
                                 {
                                     NetId treeNetId = LevelNetIdRegistry.GetTreeNetId(b6, b7, num2);
-                                    ResourceSpawnpoint resourceSpawnpoint = new ResourceSpawnpoint(num3, newPoint, newGenerated, treeNetId);
-                                    if (resourceSpawnpoint.asset == null && (bool)Assets.shouldLoadAnyAssets)
+                                    ResourceSpawnpoint resourceSpawnpoint = new ResourceSpawnpoint(num3, guid, newPoint, newGenerated, treeNetId);
+                                    if (resourceSpawnpoint.asset == null)
                                     {
-                                        UnturnedLog.error("Tree with no asset in region {0}, {1}: {2}", b6, b7, num3);
-                                        flag = false;
+                                        ClientAssetIntegrity.ServerAddKnownMissingAsset(guid, $"Tree (x: {b6} y: {b7})");
+                                        if ((bool)Assets.shouldLoadAnyAssets)
+                                        {
+                                            UnturnedLog.error("Tree with no asset in region {0}, {1}: {2}", b6, b7, num3);
+                                        }
                                     }
                                     trees[b6, b7].Add(resourceSpawnpoint);
                                     _total++;
@@ -656,7 +682,6 @@ public class LevelGround : MonoBehaviour
                             if (resourceSpawnpoint2.asset == null && (bool)Assets.shouldLoadAnyAssets)
                             {
                                 UnturnedLog.error("Tree with no asset in region {0}, {1}: {2} {3}", b6, b7, num4, b8);
-                                flag = false;
                             }
                             trees[b6, b7].Add(resourceSpawnpoint2);
                             _total++;
@@ -664,16 +689,8 @@ public class LevelGround : MonoBehaviour
                     }
                 }
             }
-            if (treeRedirectorMap != null && !treeRedirectorMap.hasAllAssets && (bool)Assets.shouldLoadAnyAssets)
-            {
-                flag = false;
-                UnturnedLog.error("Zeroing trees hash because redirected asset(s) missing");
-            }
         }
-        if (flag)
-        {
-            treesHash = river.getHash();
-        }
+        treesHash = river.getHash();
         river.closeRiver();
     }
 
@@ -947,7 +964,7 @@ public class LevelGround : MonoBehaviour
     protected static void saveTrees()
     {
         River river = new River(Level.info.path + "/Terrain/Trees.dat", usePath: false);
-        river.writeByte(SAVEDATA_TREES_VERSION);
+        river.writeByte(6);
         for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
         {
             for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
@@ -957,15 +974,17 @@ public class LevelGround : MonoBehaviour
                 for (ushort num = 0; num < list.Count; num = (ushort)(num + 1))
                 {
                     ResourceSpawnpoint resourceSpawnpoint = list[num];
-                    if (resourceSpawnpoint != null && resourceSpawnpoint.model != null && resourceSpawnpoint.id != 0)
+                    if (resourceSpawnpoint != null && resourceSpawnpoint.model != null && (resourceSpawnpoint.id != 0 || resourceSpawnpoint.guid != Guid.Empty))
                     {
                         river.writeUInt16(resourceSpawnpoint.id);
+                        river.writeGUID(resourceSpawnpoint.guid);
                         river.writeSingleVector3(resourceSpawnpoint.point);
                         river.writeBoolean(resourceSpawnpoint.isGenerated);
                     }
                     else
                     {
                         river.writeUInt16(0);
+                        river.writeGUID(Guid.Empty);
                         river.writeSingleVector3(Vector3.zero);
                         river.writeBoolean(value: true);
                     }
@@ -1190,7 +1209,7 @@ public class LevelGround : MonoBehaviour
         _Triplanar_Tertiary_Weight = -1;
         _triplanarTertiaryWeight = 0.2f;
         obstructionColliders = new Collider[16];
-        SAVEDATA_TREES_VERSION = 5;
+        SAVEDATA_TREES_VERSION = 6;
         RESOURCE_REGIONS = 3;
         ALPHAMAPS = 2;
         isRegionalVisibilityDirty = true;

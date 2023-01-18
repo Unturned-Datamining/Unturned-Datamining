@@ -1308,11 +1308,8 @@ public class Level : MonoBehaviour
         }
         includeHash("Lighting.dat", LevelLighting.hash);
         includeHash("Nodes.dat", LevelNodes.hash);
-        if (info.configData.Should_Verify_Objects_Hash)
-        {
-            includeHash("Objects.dat", LevelObjects.hash);
-            includeHash("Resources.dat", LevelGround.treesHash);
-        }
+        includeHash("Objects.dat", LevelObjects.hash);
+        includeHash("Resources.dat", LevelGround.treesHash);
         combineHashes();
         Physics.gravity = new Vector3(0f, info.configData.Gravity, 0f);
         yield return null;

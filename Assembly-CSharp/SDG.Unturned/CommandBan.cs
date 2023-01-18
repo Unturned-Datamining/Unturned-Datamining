@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using SDG.NetTransport;
 using Steamworks;
 
 namespace SDG.Unturned;
@@ -23,17 +24,19 @@ public class CommandBan : Command
             CommandWindow.LogError(localization.format("NoPlayerErrorText", componentsFromSerial[0]));
             return;
         }
-        uint iPv4AddressOrZero = SteamGameServerNetworkingUtils.getIPv4AddressOrZero(steamID);
+        ITransportConnection transportConnection = Provider.findTransportConnection(executorID);
+        uint address = 0u;
+        transportConnection?.TryGetIPv4Address(out address);
         IEnumerable<byte[]> hwidsToBan = PlayerTool.getSteamPlayer(steamID)?.playerID.GetHwids();
         uint result;
         if (componentsFromSerial.Length == 1)
         {
-            Provider.requestBanPlayer(executorID, steamID, iPv4AddressOrZero, hwidsToBan, localization.format("BanTextReason"), SteamBlacklist.PERMANENT);
+            Provider.requestBanPlayer(executorID, steamID, address, hwidsToBan, localization.format("BanTextReason"), SteamBlacklist.PERMANENT);
             CommandWindow.Log(localization.format("BanTextPermanent", steamID));
         }
         else if (componentsFromSerial.Length == 2)
         {
-            Provider.requestBanPlayer(executorID, steamID, iPv4AddressOrZero, hwidsToBan, componentsFromSerial[1], SteamBlacklist.PERMANENT);
+            Provider.requestBanPlayer(executorID, steamID, address, hwidsToBan, componentsFromSerial[1], SteamBlacklist.PERMANENT);
             CommandWindow.Log(localization.format("BanTextPermanent", steamID));
         }
         else if (!uint.TryParse(componentsFromSerial[2], out result))
@@ -42,7 +45,7 @@ public class CommandBan : Command
         }
         else
         {
-            Provider.requestBanPlayer(executorID, steamID, iPv4AddressOrZero, hwidsToBan, componentsFromSerial[1], result);
+            Provider.requestBanPlayer(executorID, steamID, address, hwidsToBan, componentsFromSerial[1], result);
             CommandWindow.Log(localization.format("BanText", steamID, result));
         }
     }

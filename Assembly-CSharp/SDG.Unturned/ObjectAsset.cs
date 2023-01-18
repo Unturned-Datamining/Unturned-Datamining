@@ -146,6 +146,8 @@ public class ObjectAsset : Asset
 
     public AssetReference<ObjectAsset> halloweenRedirect;
 
+    private static HashSet<ushort> tempAssociatedFlags = new HashSet<ushort>();
+
     private static List<MeshCollider> navMCs = new List<MeshCollider>();
 
     public string objectName => holidayRestriction switch
@@ -358,6 +360,26 @@ public class ObjectAsset : Asset
             }
         }
         return true;
+    }
+
+    internal HashSet<ushort> GetConditionAssociatedFlags()
+    {
+        if (conditions == null)
+        {
+            return null;
+        }
+        INPCCondition[] array = conditions;
+        for (int i = 0; i < array.Length; i++)
+        {
+            array[i].GatherAssociatedFlags(tempAssociatedFlags);
+        }
+        if (tempAssociatedFlags.Count > 0)
+        {
+            HashSet<ushort> result = tempAssociatedFlags;
+            tempAssociatedFlags = new HashSet<ushort>();
+            return result;
+        }
+        return null;
     }
 
     public bool areInteractabilityConditionsMet(Player player)

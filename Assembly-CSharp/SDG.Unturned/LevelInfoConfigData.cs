@@ -55,8 +55,6 @@ public class LevelInfoConfigData
 
     public bool Has_Atmosphere;
 
-    public bool Should_Verify_Objects_Hash;
-
     public bool Allow_Crafting;
 
     public bool Allow_Skills;
@@ -133,7 +131,6 @@ public class LevelInfoConfigData
         Is_Aurora_Borealis_Visible = false;
         Snow_Affects_Temperature = true;
         Has_Atmosphere = true;
-        Should_Verify_Objects_Hash = false;
         Allow_Crafting = true;
         Allow_Skills = true;
         Allow_Information = true;

@@ -36,6 +36,8 @@ public class ItemClothingAsset : ItemAsset
 
     public bool beardVisible { get; protected set; }
 
+    public bool shouldDestroyClothingColliders { get; protected set; }
+
     public bool shouldBeVisible(bool isRagdoll)
     {
         if (isRagdoll)
@@ -93,6 +95,7 @@ public class ItemClothingAsset : ItemAsset
         {
             wearAudio = new AudioReference("core.masterbundle", "Sounds/Sleeve.mp3");
         }
+        shouldDestroyClothingColliders = data.readBoolean("Destroy_Clothing_Colliders", defaultValue: true);
     }
 
     protected override AudioReference GetDefaultInventoryAudio()

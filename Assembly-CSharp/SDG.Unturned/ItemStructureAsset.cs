@@ -5,7 +5,7 @@ using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
-public class ItemStructureAsset : ItemAsset
+public class ItemStructureAsset : ItemPlaceableAsset
 {
     protected GameObject _structure;
 

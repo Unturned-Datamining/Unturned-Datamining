@@ -75,6 +75,8 @@ public class Attachments : MonoBehaviour
 
     public bool isSkinned;
 
+    public bool shouldDestroyColliders;
+
     private bool wasSkinned;
 
     private Material tempSightMaterial;
@@ -252,6 +254,11 @@ public class Attachments : MonoBehaviour
             sightModel.transform.localPosition = Vector3.zero;
             sightModel.transform.localRotation = Quaternion.identity;
             sightModel.localScale = Vector3.one;
+            if (shouldDestroyColliders && sightAsset.shouldDestroyAttachmentColliders)
+            {
+                PrefabUtil.DestroyCollidersInChildren(sightModel.gameObject, includeInactive: true);
+            }
+            sightModel.DestroyRigidbody();
             if (viewmodel)
             {
                 Layerer.viewmodel(sightModel);
@@ -303,6 +310,11 @@ public class Attachments : MonoBehaviour
             tacticalModel.transform.localPosition = Vector3.zero;
             tacticalModel.transform.localRotation = Quaternion.identity;
             tacticalModel.localScale = Vector3.one;
+            if (shouldDestroyColliders && tacticalAsset.shouldDestroyAttachmentColliders)
+            {
+                PrefabUtil.DestroyCollidersInChildren(tacticalModel.gameObject, includeInactive: true);
+            }
+            tacticalModel.DestroyRigidbody();
             if (viewmodel)
             {
                 Layerer.viewmodel(tacticalModel);
@@ -354,6 +366,11 @@ public class Attachments : MonoBehaviour
             gripModel.transform.localPosition = Vector3.zero;
             gripModel.transform.localRotation = Quaternion.identity;
             gripModel.localScale = Vector3.one;
+            if (shouldDestroyColliders && gripAsset.shouldDestroyAttachmentColliders)
+            {
+                PrefabUtil.DestroyCollidersInChildren(gripModel.gameObject, includeInactive: true);
+            }
+            gripModel.DestroyRigidbody();
             if (viewmodel)
             {
                 Layerer.viewmodel(gripModel);
@@ -405,6 +422,11 @@ public class Attachments : MonoBehaviour
             barrelModel.transform.localPosition = Vector3.zero;
             barrelModel.transform.localRotation = Quaternion.identity;
             barrelModel.localScale = Vector3.one;
+            if (shouldDestroyColliders && barrelAsset.shouldDestroyAttachmentColliders)
+            {
+                PrefabUtil.DestroyCollidersInChildren(barrelModel.gameObject, includeInactive: true);
+            }
+            barrelModel.DestroyRigidbody();
             if (viewmodel)
             {
                 Layerer.viewmodel(barrelModel);
@@ -465,6 +487,11 @@ public class Attachments : MonoBehaviour
             magazineModel.transform.localPosition = Vector3.zero;
             magazineModel.transform.localRotation = Quaternion.identity;
             magazineModel.localScale = Vector3.one;
+            if (shouldDestroyColliders && magazineAsset.shouldDestroyAttachmentColliders)
+            {
+                PrefabUtil.DestroyCollidersInChildren(magazineModel.gameObject, includeInactive: true);
+            }
+            magazineModel.DestroyRigidbody();
             if (viewmodel)
             {
                 Layerer.viewmodel(magazineModel);

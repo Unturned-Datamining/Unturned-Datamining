@@ -1,20 +1,25 @@
+using System;
+using SDG.NetTransport;
 using Steamworks;
 
 namespace SDG.Unturned;
 
+[Obsolete("Should not be specific to SteamGameServerNetworking after NetTransport rewrite")]
 public static class SteamGameServerNetworkingUtils
 {
+    [Obsolete("Should not be specific to SteamGameServerNetworking")]
     public static bool getIPv4Address(CSteamID steamIDRemote, out uint address)
     {
-        if (SteamGameServerNetworking.GetP2PSessionState(steamIDRemote, out var pConnectionState) && pConnectionState.m_bUsingRelay == 0)
+        ITransportConnection transportConnection = Provider.findTransportConnection(steamIDRemote);
+        if (transportConnection != null)
         {
-            address = pConnectionState.m_nRemoteIP;
-            return true;
+            return transportConnection.TryGetIPv4Address(out address);
         }
         address = 0u;
         return false;
     }
 
+    [Obsolete("Should not be specific to SteamGameServerNetworking")]
     public static uint getIPv4AddressOrZero(CSteamID steamIDRemote)
     {
         getIPv4Address(steamIDRemote, out var address);

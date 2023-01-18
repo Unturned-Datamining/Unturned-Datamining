@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace SDG.Unturned;
 
 public class NPCFlagCondition : NPCLogicCondition
@@ -9,6 +11,11 @@ public class NPCFlagCondition : NPCLogicCondition
     public override bool isAssociatedWithFlag(ushort flagID)
     {
         return flagID == id;
+    }
+
+    internal override void GatherAssociatedFlags(HashSet<ushort> associatedFlags)
+    {
+        associatedFlags.Add(id);
     }
 
     public NPCFlagCondition(ushort newID, bool newAllowUnset, ENPCLogicType newLogicType, string newText, bool newShouldReset)

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace SDG.Unturned;
 
 public class NPCAnimalKillsCondition : INPCCondition
@@ -48,6 +50,11 @@ public class NPCAnimalKillsCondition : INPCCondition
     public override bool isAssociatedWithFlag(ushort flagID)
     {
         return flagID == id;
+    }
+
+    internal override void GatherAssociatedFlags(HashSet<ushort> associatedFlags)
+    {
+        associatedFlags.Add(id);
     }
 
     public NPCAnimalKillsCondition(ushort newID, short newValue, ushort newAnimal, string newText, bool newShouldReset)

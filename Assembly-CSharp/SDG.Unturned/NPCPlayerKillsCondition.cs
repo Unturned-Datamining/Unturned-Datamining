@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace SDG.Unturned;
 
 public class NPCPlayerKillsCondition : INPCCondition
@@ -46,6 +48,11 @@ public class NPCPlayerKillsCondition : INPCCondition
     public override bool isAssociatedWithFlag(ushort flagID)
     {
         return flagID == id;
+    }
+
+    internal override void GatherAssociatedFlags(HashSet<ushort> associatedFlags)
+    {
+        associatedFlags.Add(id);
     }
 
     public NPCPlayerKillsCondition(ushort newID, short newValue, string newText, bool newShouldReset)

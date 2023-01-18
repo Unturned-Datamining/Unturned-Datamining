@@ -185,6 +185,8 @@ public class ItemAsset : Asset, ISkinableAsset
 
     public bool shouldDeleteAtZeroQuality { get; protected set; }
 
+    public bool shouldDestroyItemColliders { get; protected set; }
+
     public override EAssetType assetCategory => EAssetType.ITEM;
 
     protected virtual bool doesItemTypeHaveSkins => false;
@@ -914,6 +916,7 @@ public class ItemAsset : Asset, ISkinableAsset
         shouldDropOnDeath = data.readBoolean("Should_Drop_On_Death", defaultValue: true);
         allowManualDrop = data.readBoolean("Allow_Manual_Drop", defaultValue: true);
         shouldDeleteAtZeroQuality = data.readBoolean("Should_Delete_At_Zero_Quality");
+        shouldDestroyItemColliders = data.readBoolean("Destroy_Item_Colliders", defaultValue: true);
     }
 
     protected virtual AudioReference GetDefaultInventoryAudio()

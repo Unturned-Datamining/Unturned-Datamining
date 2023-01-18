@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -70,6 +71,10 @@ public class INPCCondition
     public virtual bool isAssociatedWithFlag(ushort flagID)
     {
         return false;
+    }
+
+    internal virtual void GatherAssociatedFlags(HashSet<ushort> associatedFlags)
+    {
     }
 
     public INPCCondition(string newText, bool newShouldReset)

@@ -4,7 +4,7 @@ using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
-public class ItemBarricadeAsset : ItemAsset
+public class ItemBarricadeAsset : ItemPlaceableAsset
 {
     protected GameObject _barricade;
 

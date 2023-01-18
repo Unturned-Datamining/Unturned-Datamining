@@ -51,6 +51,11 @@ public class Item
     {
     }
 
+    public Item(ItemAsset asset, EItemOrigin origin)
+        : this(asset?.id ?? 0, origin)
+    {
+    }
+
     public Item(ushort newID, EItemOrigin origin)
     {
         _id = newID;

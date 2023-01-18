@@ -5,13 +5,10 @@ namespace SDG.Unturned;
 
 internal class LegacyObjectRedirectorMap
 {
-    public bool hasAllAssets;
-
     private Dictionary<Guid, ObjectAsset> redirectedIds;
 
     public LegacyObjectRedirectorMap()
     {
-        hasAllAssets = true;
         redirectedIds = new Dictionary<Guid, ObjectAsset>();
     }
 
@@ -29,7 +26,6 @@ internal class LegacyObjectRedirectorMap
                     if (value == null && (bool)Assets.shouldLoadAnyAssets)
                     {
                         UnturnedLog.error("Missing holiday redirect for object {0}", objectAsset);
-                        hasAllAssets = false;
                     }
                 }
                 else

@@ -42,6 +42,8 @@ public class LevelObject
 
     private bool haveConditionsBeenChecked;
 
+    private HashSet<ushort> associatedFlags;
+
     public Transform transform => _transform;
 
     public Transform placeholderTransform { get; protected set; }
@@ -247,18 +249,9 @@ public class LevelObject
 
     private void onFlagUpdated(ushort id)
     {
-        if (asset == null || asset.conditions == null)
+        if (associatedFlags != null && associatedFlags.Contains(id))
         {
-            return;
-        }
-        INPCCondition[] conditions = asset.conditions;
-        for (int i = 0; i < conditions.Length; i++)
-        {
-            if (conditions[i].isAssociatedWithFlag(id))
-            {
-                updateConditions();
-                break;
-            }
+            updateConditions();
         }
     }
 
@@ -302,8 +295,12 @@ public class LevelObject
         }
         PlayerQuests quests2 = Player.player.quests;
         quests2.onFlagsUpdated = (FlagsUpdated)Delegate.Combine(quests2.onFlagsUpdated, new FlagsUpdated(onFlagsUpdated));
-        PlayerQuests quests3 = Player.player.quests;
-        quests3.onFlagUpdated = (FlagUpdated)Delegate.Combine(quests3.onFlagUpdated, new FlagUpdated(onFlagUpdated));
+        associatedFlags = asset.GetConditionAssociatedFlags();
+        if (associatedFlags != null)
+        {
+            PlayerQuests quests3 = Player.player.quests;
+            quests3.onFlagUpdated = (FlagUpdated)Delegate.Combine(quests3.onFlagUpdated, new FlagUpdated(onFlagUpdated));
+        }
         if (flag2)
         {
             Player.player.quests.OnLocalPlayerQuestsChanged += OnLocalPlayerQuestsChanged;
@@ -417,12 +414,9 @@ public class LevelObject
         }
         if (Level.isEditor)
         {
-            if (this.transform.GetComponent<Rigidbody>() == null)
-            {
-                Rigidbody rigidbody = this.transform.gameObject.AddComponent<Rigidbody>();
-                rigidbody.useGravity = false;
-                rigidbody.isKinematic = true;
-            }
+            Rigidbody orAddComponent = this.transform.GetOrAddComponent<Rigidbody>();
+            orAddComponent.useGravity = false;
+            orAddComponent.isKinematic = true;
         }
         else
         {
@@ -453,12 +447,9 @@ public class LevelObject
                 transform.localScale = Vector3.one;
                 if (Level.isEditor)
                 {
-                    if (transform.GetComponent<Rigidbody>() == null)
-                    {
-                        Rigidbody rigidbody2 = transform.gameObject.AddComponent<Rigidbody>();
-                        rigidbody2.useGravity = false;
-                        rigidbody2.isKinematic = true;
-                    }
+                    Rigidbody orAddComponent2 = transform.GetOrAddComponent<Rigidbody>();
+                    orAddComponent2.useGravity = false;
+                    orAddComponent2.isKinematic = true;
                 }
                 else
                 {

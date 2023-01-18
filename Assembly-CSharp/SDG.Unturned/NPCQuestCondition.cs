@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace SDG.Unturned;
 
@@ -59,6 +60,20 @@ public class NPCQuestCondition : NPCLogicCondition
     public override bool isAssociatedWithFlag(ushort flagID)
     {
         return flagID == id;
+    }
+
+    internal override void GatherAssociatedFlags(HashSet<ushort> associatedFlags)
+    {
+        if (id > 0)
+        {
+            associatedFlags.Add(id);
+            return;
+        }
+        QuestAsset questAsset = GetQuestAsset();
+        if (questAsset != null)
+        {
+            associatedFlags.Add(questAsset.id);
+        }
     }
 
     public NPCQuestCondition(Guid newQuestGuid, ushort newID, ENPCQuestStatus newStatus, bool newIgnoreNPC, ENPCLogicType newLogicType, string newText, bool newShouldReset)

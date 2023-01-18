@@ -494,13 +494,12 @@ public class LevelObjects : MonoBehaviour
         {
             River river = new River(Level.info.path + "/Level/Objects.dat", usePath: false);
             byte b5 = river.readByte();
-            bool flag = true;
             LegacyObjectRedirectorMap legacyObjectRedirectorMap = null;
             if (Level.shouldUseHolidayRedirects)
             {
                 legacyObjectRedirectorMap = new LegacyObjectRedirectorMap();
             }
-            bool flag2 = Level.isEditor && EditorAssetRedirector.HasRedirects;
+            bool flag = Level.isEditor && EditorAssetRedirector.HasRedirects;
             if (b5 > 0)
             {
                 if (b5 > 1 && b5 < 3)
@@ -551,6 +550,7 @@ public class LevelObjects : MonoBehaviour
                                 if (objectAsset == null)
                                 {
                                     num3 = 0;
+                                    guid = Guid.Empty;
                                 }
                                 else
                                 {
@@ -558,7 +558,7 @@ public class LevelObjects : MonoBehaviour
                                     guid = objectAsset.GUID;
                                 }
                             }
-                            else if (flag2)
+                            else if (flag)
                             {
                                 ObjectAsset objectAsset2 = EditorAssetRedirector.RedirectObject(guid);
                                 if (objectAsset2 != null)
@@ -583,10 +583,13 @@ public class LevelObjects : MonoBehaviour
                             {
                                 NetId regularObjectNetId = LevelNetIdRegistry.GetRegularObjectNetId(b6, b7, num2);
                                 LevelObject levelObject = new LevelObject(vector, roundedIfNearlyAxisAligned, newScale, num3, guid, newPlacementOrigin, newInstanceID, customMaterialOverride, materialIndexOverride, regularObjectNetId);
-                                if (levelObject.asset == null && (bool)Assets.shouldLoadAnyAssets)
+                                if (levelObject.asset == null)
                                 {
-                                    UnturnedLog.error("Object with no asset in region {0}, {1}: {2} {3}", b6, b7, num3, guid);
-                                    flag = false;
+                                    ClientAssetIntegrity.ServerAddKnownMissingAsset(guid, $"Object (x: {b6} y: {b7})");
+                                    if ((bool)Assets.shouldLoadAnyAssets)
+                                    {
+                                        UnturnedLog.error("Object with no asset in region {0}, {1}: {2} {3}", b6, b7, num3, guid);
+                                    }
                                 }
                                 byte b8 = b6;
                                 byte b9 = b7;
@@ -613,15 +616,7 @@ public class LevelObjects : MonoBehaviour
                     }
                 }
             }
-            if (legacyObjectRedirectorMap != null && !legacyObjectRedirectorMap.hasAllAssets && (bool)Assets.shouldLoadAnyAssets)
-            {
-                flag = false;
-                UnturnedLog.error("Zeroing objects hash because redirected asset(s) missing");
-            }
-            if (flag)
-            {
-                hash = river.getHash();
-            }
+            hash = river.getHash();
             river.closeRiver();
         }
         else

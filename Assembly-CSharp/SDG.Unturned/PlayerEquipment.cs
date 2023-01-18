@@ -980,7 +980,7 @@ public class PlayerEquipment : PlayerCaller
         if (base.channel.isOwner)
         {
             ClientAssetIntegrity.QueueRequest(_asset);
-            _firstModel = ItemTool.getItem(asset.id, num, quality, state, viewmodel: true, asset, skinAsset, tempFirstMesh, out tempFirstMaterial, getUseableStatTrackerValue, prefabOverride);
+            _firstModel = ItemTool.InstantiateItem(asset.id, num, quality, state, viewmodel: true, asset, skinAsset, shouldDestroyColliders: true, tempFirstMesh, out tempFirstMaterial, getUseableStatTrackerValue, prefabOverride);
             fixStatTrackerHookScale(_firstModel);
             syncStatTrackTrackerVisibility(_firstModel);
             if (asset.isBackward)
@@ -996,15 +996,7 @@ public class PlayerEquipment : PlayerCaller
             firstModel.localScale = Vector3.one;
             firstModel.gameObject.SetActive(value: false);
             firstModel.gameObject.SetActive(value: true);
-            firstModel.gameObject.AddComponent<Rigidbody>();
-            firstModel.GetComponent<Rigidbody>().useGravity = false;
-            firstModel.GetComponent<Rigidbody>().isKinematic = true;
-            Collider component = firstModel.GetComponent<Collider>();
-            if (component != null)
-            {
-                UnityEngine.Object.Destroy(component);
-            }
-            Layerer.viewmodel(firstModel);
+            firstModel.DestroyRigidbody();
             if (num2 != 0)
             {
                 Transform transform = ItemTool.applyEffect(firstModel, num2, EEffectType.FIRST);
@@ -1051,7 +1043,7 @@ public class PlayerEquipment : PlayerCaller
                 characterMythic.isMythic = base.player.clothing.isSkinned && base.player.clothing.isMythic;
             }
         }
-        _thirdModel = ItemTool.getItem(asset.id, num, quality, state, viewmodel: false, asset, skinAsset, tempThirdMesh, out tempThirdMaterial, getUseableStatTrackerValue, prefabOverride);
+        _thirdModel = ItemTool.InstantiateItem(asset.id, num, quality, state, viewmodel: false, asset, skinAsset, shouldDestroyColliders: true, tempThirdMesh, out tempThirdMaterial, getUseableStatTrackerValue, prefabOverride);
         fixStatTrackerHookScale(_thirdModel);
         syncStatTrackTrackerVisibility(_thirdModel);
         if (asset.isBackward)
@@ -1067,14 +1059,9 @@ public class PlayerEquipment : PlayerCaller
         thirdModel.localScale = Vector3.one;
         thirdModel.gameObject.SetActive(value: false);
         thirdModel.gameObject.SetActive(value: true);
-        Rigidbody orAddComponent2 = thirdModel.gameObject.GetOrAddComponent<Rigidbody>();
+        Rigidbody orAddComponent2 = thirdModel.GetOrAddComponent<Rigidbody>();
         orAddComponent2.useGravity = false;
         orAddComponent2.isKinematic = true;
-        Collider component2 = thirdModel.GetComponent<Collider>();
-        if (component2 != null)
-        {
-            UnityEngine.Object.Destroy(component2);
-        }
         Layerer.enemy(thirdModel);
         if (num2 != 0)
         {

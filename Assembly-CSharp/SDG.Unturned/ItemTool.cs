@@ -224,36 +224,47 @@ public class ItemTool : MonoBehaviour
 
     public static Transform getItem(ushort id, ushort skin, byte quality, byte[] state, bool viewmodel, ItemAsset itemAsset, List<Mesh> outTempMeshes, out Material tempMaterial, GetStatTrackerValueHandler statTrackerCallback)
     {
-        SkinAsset skinAsset = null;
-        if (skin != 0)
-        {
-            skinAsset = Assets.find(EAssetType.SKIN, skin) as SkinAsset;
-        }
-        return getItem(id, skin, quality, state, viewmodel, itemAsset, skinAsset, outTempMeshes, out tempMaterial, statTrackerCallback);
+        SkinAsset skinAsset = Assets.find(EAssetType.SKIN, skin) as SkinAsset;
+        return InstantiateItem(id, skin, quality, state, viewmodel, itemAsset, skinAsset, shouldDestroyColliders: false, outTempMeshes, out tempMaterial, statTrackerCallback);
+    }
+
+    public static Transform getItem(ushort id, ushort skin, byte quality, byte[] state, bool viewmodel, ItemAsset itemAsset, bool shouldDestroyColliders, List<Mesh> outTempMeshes, out Material tempMaterial, GetStatTrackerValueHandler statTrackerCallback)
+    {
+        SkinAsset skinAsset = Assets.find(EAssetType.SKIN, skin) as SkinAsset;
+        return InstantiateItem(id, skin, quality, state, viewmodel, itemAsset, skinAsset, shouldDestroyColliders, outTempMeshes, out tempMaterial, statTrackerCallback);
     }
 
     public static Transform getItem(ushort id, ushort skin, byte quality, byte[] state, bool viewmodel, ItemAsset itemAsset, GetStatTrackerValueHandler statTrackerCallback)
     {
-        SkinAsset skinAsset = null;
-        if (skin != 0)
-        {
-            skinAsset = Assets.find(EAssetType.SKIN, skin) as SkinAsset;
-        }
-        return getItem(id, skin, quality, state, viewmodel, itemAsset, skinAsset, statTrackerCallback);
+        SkinAsset skinAsset = Assets.find(EAssetType.SKIN, skin) as SkinAsset;
+        Material tempMaterial;
+        return InstantiateItem(id, skin, quality, state, viewmodel, itemAsset, skinAsset, shouldDestroyColliders: false, null, out tempMaterial, statTrackerCallback);
+    }
+
+    public static Transform getItem(ushort id, ushort skin, byte quality, byte[] state, bool viewmodel, ItemAsset itemAsset, bool shouldDestroyColliders, GetStatTrackerValueHandler statTrackerCallback)
+    {
+        SkinAsset skinAsset = Assets.find(EAssetType.SKIN, skin) as SkinAsset;
+        Material tempMaterial;
+        return InstantiateItem(id, skin, quality, state, viewmodel, itemAsset, skinAsset, shouldDestroyColliders, null, out tempMaterial, statTrackerCallback);
     }
 
     public static Transform getItem(ushort id, ushort skin, byte quality, byte[] state, bool viewmodel, ItemAsset itemAsset, SkinAsset skinAsset, GetStatTrackerValueHandler statTrackerCallback)
     {
         Material tempMaterial;
-        return getItem(id, skin, quality, state, viewmodel, itemAsset, skinAsset, null, out tempMaterial, statTrackerCallback);
+        return InstantiateItem(id, skin, quality, state, viewmodel, itemAsset, skinAsset, shouldDestroyColliders: false, null, out tempMaterial, statTrackerCallback);
     }
 
     public static Transform getItem(ushort id, ushort skin, byte quality, byte[] state, bool viewmodel, ItemAsset itemAsset, SkinAsset skinAsset, List<Mesh> outTempMeshes, out Material tempMaterial, GetStatTrackerValueHandler statTrackerCallback)
     {
-        return getItem(id, skin, quality, state, viewmodel, itemAsset, skinAsset, outTempMeshes, out tempMaterial, statTrackerCallback, null);
+        return InstantiateItem(id, skin, quality, state, viewmodel, itemAsset, skinAsset, shouldDestroyColliders: false, outTempMeshes, out tempMaterial, statTrackerCallback);
     }
 
     internal static Transform getItem(ushort id, ushort skin, byte quality, byte[] state, bool viewmodel, ItemAsset itemAsset, SkinAsset skinAsset, List<Mesh> outTempMeshes, out Material tempMaterial, GetStatTrackerValueHandler statTrackerCallback, GameObject prefabOverride = null)
+    {
+        return InstantiateItem(id, skin, quality, state, viewmodel, itemAsset, skinAsset, shouldDestroyColliders: false, outTempMeshes, out tempMaterial, statTrackerCallback, prefabOverride);
+    }
+
+    internal static Transform InstantiateItem(ushort id, ushort skin, byte quality, byte[] state, bool viewmodel, ItemAsset itemAsset, SkinAsset skinAsset, bool shouldDestroyColliders, List<Mesh> outTempMeshes, out Material tempMaterial, GetStatTrackerValueHandler statTrackerCallback, GameObject prefabOverride = null)
     {
         tempMaterial = null;
         GameObject gameObject = prefabOverride;
@@ -283,6 +294,10 @@ public class ItemTool : MonoBehaviour
         }
         Transform transform2 = Object.Instantiate(gameObject).transform;
         transform2.name = id.ToString();
+        if (shouldDestroyColliders && itemAsset.shouldDestroyItemColliders)
+        {
+            PrefabUtil.DestroyCollidersInChildren(transform2.gameObject, includeInactive: true);
+        }
         if (viewmodel)
         {
             Layerer.viewmodel(transform2);
@@ -321,6 +336,7 @@ public class ItemTool : MonoBehaviour
         {
             Attachments attachments = transform2.gameObject.AddComponent<Attachments>();
             attachments.isSkinned = true;
+            attachments.shouldDestroyColliders = shouldDestroyColliders;
             attachments.updateGun((ItemGunAsset)itemAsset, skinAsset);
             attachments.updateAttachments(state, viewmodel);
         }
