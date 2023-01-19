@@ -4,8 +4,8 @@ Return_Button_Tooltip Return
 Exit_Button Quit
 Exit_Button_Tooltip Exit to desktop.
 
-Report_Button Report Bug
-Report_Button_Tooltip Report Bug
+Support_Label Support
+Support_Tooltip Troubleshooting, FAQs, reports, and more.
 
 Trello_Button Trello Roadmap
 Trello_Button_Tooltip Take a look into the future!

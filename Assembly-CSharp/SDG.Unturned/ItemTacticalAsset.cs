@@ -26,6 +26,8 @@ public class ItemTacticalAsset : ItemCaliberAsset
 
     public bool isMelee => _isMelee;
 
+    public Color laserColor { get; protected set; }
+
     public ItemTacticalAsset(Bundle bundle, Data data, Local localization, ushort id)
         : base(bundle, data, localization, id)
     {
@@ -38,5 +40,9 @@ public class ItemTacticalAsset : ItemCaliberAsset
         }
         _isRangefinder = data.has("Rangefinder");
         _isMelee = data.has("Melee");
+        Color value = data.readColor("Laser_Color", Color.red);
+        value = MathfEx.Clamp01(value);
+        value.a = 1f;
+        laserColor = value;
     }
 }

@@ -203,8 +203,6 @@ public class UseableGun : Useable
 
     private float crosshair;
 
-    private Transform laser;
-
     private bool wasLaser;
 
     private bool wasLight;
@@ -2670,10 +2668,7 @@ public class UseableGun : Useable
             {
                 UnityEngine.Object.Destroy(whir);
             }
-            if (laser != null)
-            {
-                UnityEngine.Object.Destroy(laser.gameObject);
-            }
+            DestroyLaser();
             if (isAiming)
             {
                 stopAim();
@@ -3382,21 +3377,6 @@ public class UseableGun : Useable
                 wasLight = false;
                 wasRange = false;
                 wasBayonet = false;
-            }
-            if (firstAttachments.tacticalAsset != null && firstAttachments.tacticalAsset.isLaser && interact)
-            {
-                if (laser == null)
-                {
-                    laser = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load("Guns/Laser"))).transform;
-                    laser.name = "Laser";
-                    laser.position = Vector3.zero;
-                    laser.rotation = Quaternion.identity;
-                }
-            }
-            else if (laser != null)
-            {
-                UnityEngine.Object.Destroy(laser.gameObject);
-                laser = null;
             }
             if (firstAttachments.tacticalAsset != null && firstAttachments.tacticalAsset.isRangefinder && interact)
             {
@@ -4206,85 +4186,6 @@ public class UseableGun : Useable
         {
             return;
         }
-        if (laser != null)
-        {
-            if (base.player.look.perspective == EPlayerPerspective.FIRST)
-            {
-                Quaternion quaternion = Quaternion.Euler(base.player.animator.recoilViewmodelCameraRotation.currentPosition);
-                Vector3 vector = base.player.look.aim.rotation * quaternion * Vector3.forward;
-                if (!base.player.look.isCam && Physics.Raycast(new Ray(base.player.look.aim.position, vector), out contact, 2048f, RayMasks.BLOCK_LASER))
-                {
-                    laser.position = contact.point + vector * -0.05f;
-                    laser.gameObject.SetActive(value: true);
-                }
-                else
-                {
-                    laser.gameObject.SetActive(value: false);
-                }
-            }
-            else if (base.player.look.perspective == EPlayerPerspective.THIRD)
-            {
-                if (!base.player.look.isCam && Physics.Raycast(new Ray(MainCamera.instance.transform.position, MainCamera.instance.transform.forward), out var hitInfo, 512f, RayMasks.DAMAGE_CLIENT))
-                {
-                    if (Physics.Raycast(new Ray(base.player.look.aim.position, (hitInfo.point - base.player.look.aim.position).normalized), out contact, 2048f, RayMasks.BLOCK_LASER))
-                    {
-                        laser.position = contact.point + base.player.look.aim.forward * -0.05f;
-                        laser.gameObject.SetActive(value: true);
-                    }
-                    else
-                    {
-                        laser.gameObject.SetActive(value: false);
-                    }
-                }
-                else
-                {
-                    laser.gameObject.SetActive(value: false);
-                }
-            }
-        }
-        else if (firstAttachments != null && firstAttachments.tacticalAsset != null && firstAttachments.tacticalAsset.isRangefinder)
-        {
-            bool flag = false;
-            if (base.player.look.perspective == EPlayerPerspective.FIRST)
-            {
-                flag = Physics.Raycast(new Ray(base.player.look.aim.position, base.player.look.aim.forward), out contact, equippedGunAsset.rangeRangefinder, RayMasks.BLOCK_LASER);
-            }
-            else if (base.player.look.perspective == EPlayerPerspective.THIRD)
-            {
-                flag = Physics.Raycast(new Ray(MainCamera.instance.transform.position, MainCamera.instance.transform.forward), out var hitInfo2, 512f, RayMasks.DAMAGE_CLIENT) && Physics.Raycast(new Ray(base.player.look.aim.position, (hitInfo2.point - base.player.look.aim.position).normalized), out contact, equippedGunAsset.rangeRangefinder, RayMasks.BLOCK_LASER);
-            }
-            if (rangeLabel != null)
-            {
-                if (inRange)
-                {
-                    if (OptionsSettings.metric)
-                    {
-                        rangeLabel.text = (int)contact.distance + " m";
-                    }
-                    else
-                    {
-                        rangeLabel.text = (int)MeasurementTool.MtoYd(contact.distance) + " yd";
-                    }
-                }
-                else if (OptionsSettings.metric)
-                {
-                    rangeLabel.text = "? m";
-                }
-                else
-                {
-                    rangeLabel.text = "? yd";
-                }
-                rangeLabel.textColor = (inRange ? Palette.COLOR_G : Palette.COLOR_R);
-            }
-            if (flag != inRange)
-            {
-                inRange = flag;
-                firstAttachments.lightHook.gameObject.SetActive(inRange && interact);
-                firstAttachments.light2Hook.gameObject.SetActive(!inRange && interact);
-                thirdAttachments.lightHook.gameObject.SetActive(inRange && interact);
-                thirdAttachments.light2Hook.gameObject.SetActive(!inRange && interact);
-            }
-        }
         if (firstFakeLight != null && thirdMuzzleEmitter != null)
         {
             firstFakeLight.position = thirdMuzzleEmitter.transform.position;
@@ -4523,5 +4424,17 @@ public class UseableGun : Useable
         {
             aimAccuracy = maxAimingAccuracy;
         }
+        if (equippedGunAsset.shouldScaleAimAnimations)
+        {
+            float num2 = (float)maxAimingAccuracy / 50f;
+            float animationLength = base.player.animator.getAnimationLength("Aim_Start");
+            base.player.animator.setAnimationSpeed("Aim_Start", animationLength / num2);
+            float animationLength2 = base.player.animator.getAnimationLength("Aim_Stop");
+            base.player.animator.setAnimationSpeed("Aim_Stop", animationLength2 / num2);
+        }
+    }
+
+    private void DestroyLaser()
+    {
     }
 }

@@ -18,7 +18,7 @@ public class MenuPauseUI
 
     private static SleekButtonIconConfirm quitButton;
 
-    private static SleekButtonIcon reportButton;
+    private static SleekButtonIcon supportButton;
 
     private static SleekButtonIcon twitterButton;
 
@@ -62,7 +62,7 @@ public class MenuPauseUI
         Provider.QuitGame("clicked quit in main menu");
     }
 
-    private static void onClickedReportButton(ISleekElement button)
+    private static void onClickedSupportButton(ISleekElement button)
     {
         if (!Provider.provider.browserService.canOpenBrowser)
         {
@@ -71,18 +71,6 @@ public class MenuPauseUI
         else
         {
             Provider.provider.browserService.open("http://steamcommunity.com/app/" + SteamUtils.GetAppID().ToString() + "/discussions/9/613936673439628788/");
-        }
-    }
-
-    private static void onClickedTrelloButton(ISleekElement button)
-    {
-        if (!Provider.provider.browserService.canOpenBrowser)
-        {
-            MenuUI.alert(localization.format("Overlay"));
-        }
-        else
-        {
-            Provider.provider.browserService.open("https://trello.com/b/ezUtMJif");
         }
     }
 
@@ -198,19 +186,19 @@ public class MenuPauseUI
         returnButton.fontSize = ESleekFontSize.Medium;
         returnButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(returnButton);
-        reportButton = new SleekButtonIcon(icons.load<Texture2D>("Report"));
-        reportButton.positionOffset_X = -100;
-        reportButton.positionOffset_Y = -145;
-        reportButton.positionScale_X = 0.5f;
-        reportButton.positionScale_Y = 0.5f;
-        reportButton.sizeOffset_X = 200;
-        reportButton.sizeOffset_Y = 50;
-        reportButton.text = localization.format("Report_Button");
-        reportButton.tooltip = localization.format("Report_Button_Tooltip");
-        reportButton.onClickedButton += onClickedReportButton;
-        reportButton.fontSize = ESleekFontSize.Medium;
-        reportButton.iconColor = ESleekTint.FOREGROUND;
-        container.AddChild(reportButton);
+        supportButton = new SleekButtonIcon(icons.load<Texture2D>("Support"));
+        supportButton.positionOffset_X = -100;
+        supportButton.positionOffset_Y = -145;
+        supportButton.positionScale_X = 0.5f;
+        supportButton.positionScale_Y = 0.5f;
+        supportButton.sizeOffset_X = 200;
+        supportButton.sizeOffset_Y = 50;
+        supportButton.text = localization.format("Support_Label");
+        supportButton.tooltip = localization.format("Support_Tooltip");
+        supportButton.onClickedButton += onClickedSupportButton;
+        supportButton.fontSize = ESleekFontSize.Medium;
+        supportButton.iconColor = ESleekTint.FOREGROUND;
+        container.AddChild(supportButton);
         twitterButton = new SleekButtonIcon(icons.load<Texture2D>("Twitter"));
         twitterButton.positionOffset_X = -100;
         twitterButton.positionOffset_Y = -85;

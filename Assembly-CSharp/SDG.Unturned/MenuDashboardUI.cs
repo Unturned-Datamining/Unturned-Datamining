@@ -1048,6 +1048,10 @@ public class MenuDashboardUI
         }
         mainHeaderOffset = 170;
         alertBox = null;
+        if (SteamApps.GetCurrentBetaName(out var pchName, 64) && string.Equals(pchName, "preview", StringComparison.InvariantCultureIgnoreCase))
+        {
+            CreatePreviewBranchChangelogButton();
+        }
         ItemStore.Get().OnPricesReceived += OnPricesReceived;
         pauseUI = new MenuPauseUI();
         creditsUI = new MenuCreditsUI();
@@ -1144,5 +1148,26 @@ public class MenuDashboardUI
             MenuUI.alert(text);
             UnturnedLog.info(text);
         }
+    }
+
+    private void OnClickedPreviewBranchChangelog(ISleekElement button)
+    {
+        Provider.provider.browserService.open("https://support.smartlydressedgames.com/hc/en-us/articles/12462494977172");
+    }
+
+    private void CreatePreviewBranchChangelogButton()
+    {
+        ISleekButton sleekButton = Glazier.Get().CreateButton();
+        sleekButton.positionOffset_X = 210;
+        sleekButton.positionOffset_Y = mainHeaderOffset;
+        sleekButton.sizeOffset_Y = 60;
+        sleekButton.sizeOffset_X = -210;
+        sleekButton.sizeScale_X = 1f;
+        sleekButton.text = "Click here to open preview branch changelog.";
+        sleekButton.onClickedButton += OnClickedPreviewBranchChangelog;
+        container.AddChild(sleekButton);
+        mainHeaderOffset += sleekButton.sizeOffset_Y + 10;
+        canvas.transform.Find("View").GetComponent<RectTransform>().offsetMax -= new Vector2(0f, 70f);
+        canvas.transform.Find("Scrollbar").GetComponent<RectTransform>().offsetMax -= new Vector2(0f, 70f);
     }
 }

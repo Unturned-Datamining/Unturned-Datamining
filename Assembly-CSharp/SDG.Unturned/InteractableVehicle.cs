@@ -88,7 +88,11 @@ public class InteractableVehicle : Interactable
 
     private Rotor[] rotors;
 
-    private ParticleSystem[] exhausts;
+    private GameObject exhaustGameObject;
+
+    private bool isExhaustGameObjectActive;
+
+    private ParticleSystem[] exhaustParticleSystems;
 
     private Transform wheel;
 

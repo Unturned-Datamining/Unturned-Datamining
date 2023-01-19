@@ -206,6 +206,8 @@ public class ItemGunAsset : ItemWeaponAsset
 
     public float aimInDuration { get; protected set; }
 
+    public bool shouldScaleAimAnimations { get; protected set; }
+
     public ushort sightID
     {
         get
@@ -809,6 +811,7 @@ public class ItemGunAsset : ItemWeaponAsset
             NPCTool.readRewards(data, localization, "Shoot_Quest_Reward_", shootQuestRewards, this);
         }
         aimInDuration = data.readSingle("Aim_In_Duration", 0.2f);
+        shouldScaleAimAnimations = data.readBoolean("Scale_Aim_Animation_Speed", defaultValue: true);
     }
 
     protected override AudioReference GetDefaultInventoryAudio()
