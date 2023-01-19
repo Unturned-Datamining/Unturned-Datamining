@@ -15,6 +15,7 @@ Servers/
 userdata/
 Unturned_Data/
 Unturned_Headless_Data/
+Bundles/Sources/
 
 install.vdf
 Licenses.txt
@@ -25,7 +26,7 @@ StreamerNames.json
 tier0_s.*
 tier0_s64.*
 UnityPlayer.*
-Unturned.exe
+Unturned.*
 UnityCrashHandler64.*
 Unturned_Headless.*
 vstdlib_s.*
@@ -47,6 +48,7 @@ ExampleServer.*
 *.jpg
 *.png
 *.lnk
+*.unitypackage
 
 *.blob
 *.commit
