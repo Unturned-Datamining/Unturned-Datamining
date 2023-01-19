@@ -106,7 +106,10 @@ public class InteractableMannequin : Interactable, IManualOnDestroy
 
     public bool checkUpdate(CSteamID enemyPlayer, CSteamID enemyGroup)
     {
-        _ = Provider.isServer;
+        if (Provider.isServer && !Dedicator.IsDedicatedServer)
+        {
+            return true;
+        }
         if (isLocked && !(enemyPlayer == owner))
         {
             if (group != CSteamID.Nil)

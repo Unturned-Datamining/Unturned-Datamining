@@ -1214,37 +1214,32 @@ public class PlayerLook : PlayerCaller
                     instance.transform.rotation = passenger.turretAim.rotation;
                 }
             }
-            if (!FoliageSettings.drawFocus)
+            if (FoliageSettings.drawFocus)
             {
-                return;
-            }
-            if (isZoomed || (isScopeActive && scopeCamera.targetTexture != null))
-            {
-                FoliageSystem.isFocused = true;
-                if (Physics.Raycast(MainCamera.instance.transform.position, MainCamera.instance.transform.forward, out var hitInfo2, FoliageSettings.focusDistance, RayMasks.FOLIAGE_FOCUS))
+                if (isZoomed || (isScopeActive && scopeCamera.targetTexture != null))
                 {
-                    FoliageSystem.focusPosition = hitInfo2.point;
-                    if (isScopeActive && scopeCamera.targetTexture != null)
+                    FoliageSystem.isFocused = true;
+                    if (Physics.Raycast(MainCamera.instance.transform.position, MainCamera.instance.transform.forward, out var hitInfo2, FoliageSettings.focusDistance, RayMasks.FOLIAGE_FOCUS))
                     {
-                        FoliageSystem.focusCamera = scopeCamera;
-                    }
-                    else
-                    {
-                        FoliageSystem.focusCamera = MainCamera.instance;
+                        FoliageSystem.focusPosition = hitInfo2.point;
+                        if (isScopeActive && scopeCamera.targetTexture != null)
+                        {
+                            FoliageSystem.focusCamera = scopeCamera;
+                        }
+                        else
+                        {
+                            FoliageSystem.focusCamera = MainCamera.instance;
+                        }
                     }
                 }
-            }
-            else
-            {
-                FoliageSystem.isFocused = false;
+                else
+                {
+                    FoliageSystem.isFocused = false;
+                }
             }
         }
-        else
+        else if (!Provider.isServer)
         {
-            if (Provider.isServer)
-            {
-                return;
-            }
             if (base.player.stance.stance == EPlayerStance.DRIVING || base.player.stance.stance == EPlayerStance.SITTING)
             {
                 base.transform.localRotation = Quaternion.identity;
@@ -1267,6 +1262,10 @@ public class PlayerLook : PlayerCaller
                     passenger2.turretPitch.localRotation = passenger2.rotationPitch * Quaternion.Euler(base.player.movement.snapshot.pitch - 90f, 0f, 0f);
                 }
             }
+        }
+        if (!Dedicator.IsDedicatedServer)
+        {
+            updateAim(Time.deltaTime);
         }
     }
 

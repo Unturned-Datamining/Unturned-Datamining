@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using SDG.NetPak;
 using SDG.NetTransport;
 using Steamworks;
@@ -52,6 +53,12 @@ public class ItemManager : SteamCaller
     private static readonly ClientStaticMethod<byte, byte, ushort, byte, byte, byte[], Vector3, uint, bool> SendItem = ClientStaticMethod<byte, byte, ushort, byte, byte, byte[], Vector3, uint, bool>.Get(ReceiveItem);
 
     private static readonly ClientStaticMethod SendItems = ClientStaticMethod.Get(ReceiveItems);
+
+    private Stopwatch instantiationTimer = new Stopwatch();
+
+    private const int MIN_INSTANTIATIONS_PER_FRAME = 5;
+
+    private const int MIN_DESTROY_PER_FRAME = 10;
 
     public static ItemManager instance => manager;
 
@@ -166,6 +173,21 @@ public class ItemManager : SteamCaller
 
     private static void PlayInventoryAudio(ItemAsset item, Vector3 position)
     {
+        if (item != null && !item.inventoryAudio.IsNullOrEmpty)
+        {
+            float pitchMultiplier;
+            float volumeMultiplier;
+            AudioClip audioClip = item.inventoryAudio.LoadAudioClip(out volumeMultiplier, out pitchMultiplier);
+            if (!(audioClip == null))
+            {
+                volumeMultiplier *= 0.25f;
+                OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(position, audioClip);
+                oneShotAudioParameters.volume = volumeMultiplier;
+                oneShotAudioParameters.pitch = pitchMultiplier;
+                oneShotAudioParameters.SetLinearRolloff(0.5f, 8f);
+                oneShotAudioParameters.Play();
+            }
+        }
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
@@ -221,7 +243,7 @@ public class ItemManager : SteamCaller
             ItemData itemData = itemRegion.items[num];
             if (itemData.instanceID == instanceID)
             {
-                if ((itemData.point - player.transform.position).sqrMagnitude > 400f)
+                if (Dedicator.IsDedicatedServer && (itemData.point - player.transform.position).sqrMagnitude > 400f)
                 {
                     break;
                 }
@@ -675,6 +697,10 @@ public class ItemManager : SteamCaller
         despawnItems_Y = 0;
         respawnItems_X = 0;
         respawnItems_Y = 0;
+        if (!Dedicator.IsDedicatedServer)
+        {
+            return;
+        }
         for (byte b3 = 0; b3 < Regions.WORLD_SIZE; b3 = (byte)(b3 + 1))
         {
             for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4 = (byte)(b4 + 1))
@@ -739,16 +765,44 @@ public class ItemManager : SteamCaller
         {
             for (int j = new_y - ITEM_REGIONS; j <= new_y + ITEM_REGIONS; j++)
             {
-                if (Regions.checkSafe((byte)i, (byte)j) && !player.movement.loadedRegions[i, j].isItemsLoaded)
+                if (!Regions.checkSafe((byte)i, (byte)j) || player.movement.loadedRegions[i, j].isItemsLoaded)
                 {
-                    if (player.channel.isOwner)
-                    {
-                        generateItems((byte)i, (byte)j);
-                    }
-                    player.movement.loadedRegions[i, j].isItemsLoaded = true;
-                    float sortOrder = Regions.HorizontalDistanceFromCenterSquared(i, j, position);
-                    askItems(player.channel.owner.transportConnection, (byte)i, (byte)j, sortOrder);
+                    continue;
                 }
+                if (player.channel.isOwner)
+                {
+                    generateItems((byte)i, (byte)j);
+                }
+                player.movement.loadedRegions[i, j].isItemsLoaded = true;
+                float sortOrder = Regions.HorizontalDistanceFromCenterSquared(i, j, position);
+                if (Dedicator.IsDedicatedServer)
+                {
+                    askItems(player.channel.owner.transportConnection, (byte)i, (byte)j, sortOrder);
+                    continue;
+                }
+                DestroyAllInRegion(regions[i, j]);
+                regions[i, j].isNetworked = true;
+                if (regions[i, j].items.Count <= 0)
+                {
+                    continue;
+                }
+                instantiationsToInsert.Clear();
+                foreach (ItemData item2 in regions[i, j].items)
+                {
+                    ItemInstantiationParameters item = default(ItemInstantiationParameters);
+                    item.region_x = (byte)i;
+                    item.region_y = (byte)j;
+                    item.sortOrder = sortOrder;
+                    item.assetId = item2.item.id;
+                    item.amount = item2.item.amount;
+                    item.quality = item2.item.quality;
+                    item.state = item2.item.state;
+                    item.point = item2.point;
+                    item.instanceID = item2.instanceID;
+                    item.sortOrder = sortOrder;
+                    instantiationsToInsert.Add(item);
+                }
+                pendingInstantiations.InsertRange(pendingInstantiations.FindInsertionIndex(instantiationsToInsert[0]), instantiationsToInsert);
             }
         }
     }
@@ -814,7 +868,50 @@ public class ItemManager : SteamCaller
                 clampedItems.RemoveAtFast(clampItemIndex);
             }
         }
-        if (!Level.isLoaded)
+        if (Provider.isConnected)
+        {
+            if (pendingInstantiations != null && pendingInstantiations.Count > 0)
+            {
+                instantiationTimer.Restart();
+                int num = 0;
+                do
+                {
+                    ItemInstantiationParameters itemInstantiationParameters = pendingInstantiations[num];
+                    spawnItem(itemInstantiationParameters.region_x, itemInstantiationParameters.region_y, itemInstantiationParameters.assetId, itemInstantiationParameters.amount, itemInstantiationParameters.quality, itemInstantiationParameters.state, itemInstantiationParameters.point, itemInstantiationParameters.instanceID, itemInstantiationParameters.shouldPlayEffect);
+                    num++;
+                }
+                while (num < pendingInstantiations.Count && (instantiationTimer.ElapsedMilliseconds < 1 || num < 5));
+                pendingInstantiations.RemoveRange(0, num);
+                instantiationTimer.Stop();
+            }
+            if (regionsPendingDestroy != null && regionsPendingDestroy.Count > 0)
+            {
+                instantiationTimer.Restart();
+                int num2 = 0;
+                do
+                {
+                    ItemRegion tail = regionsPendingDestroy.GetTail();
+                    if (tail.drops.Count > 0)
+                    {
+                        tail.DestroyTail();
+                        num2++;
+                        if (tail.drops.Count < 1)
+                        {
+                            tail.isPendingDestroy = false;
+                            regionsPendingDestroy.RemoveTail();
+                        }
+                    }
+                    else
+                    {
+                        tail.isPendingDestroy = false;
+                        regionsPendingDestroy.RemoveTail();
+                    }
+                }
+                while (regionsPendingDestroy.Count > 0 && (instantiationTimer.ElapsedMilliseconds < 1 || num2 < 10));
+                instantiationTimer.Stop();
+            }
+        }
+        if (!Dedicator.IsDedicatedServer || !Level.isLoaded)
         {
             return;
         }

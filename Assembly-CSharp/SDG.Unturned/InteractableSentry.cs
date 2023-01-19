@@ -123,6 +123,55 @@ public class InteractableSentry : InteractableStorage
     public void shoot()
     {
         lastAlert = Time.timeAsDouble;
+        if (!Dedicator.IsDedicatedServer)
+        {
+            if (gunshotAudioSource != null)
+            {
+                AudioClip clip = ((ItemGunAsset)displayAsset).shoot;
+                float num = 1f;
+                float num2 = ((ItemGunAsset)displayAsset).gunshotRolloffDistance;
+                if (attachments.barrelAsset != null && displayItem.state[16] > 0)
+                {
+                    if (attachments.barrelAsset.shoot != null)
+                    {
+                        clip = attachments.barrelAsset.shoot;
+                    }
+                    num *= attachments.barrelAsset.volume;
+                    num2 *= attachments.barrelAsset.gunshotRolloffDistanceMultiplier;
+                }
+                gunshotAudioSource.clip = clip;
+                gunshotAudioSource.volume = num;
+                gunshotAudioSource.maxDistance = num2;
+                gunshotAudioSource.pitch = Random.Range(0.975f, 1.025f);
+                gunshotAudioSource.PlayOneShot(gunshotAudioSource.clip);
+            }
+            if (((ItemGunAsset)displayAsset).action == EAction.Trigger && shellEmitter != null)
+            {
+                shellEmitter.Emit(1);
+            }
+            if (attachments.barrelModel == null || !attachments.barrelAsset.isBraked || displayItem.state[16] == 0)
+            {
+                if (muzzleEmitter != null)
+                {
+                    muzzleEmitter.Emit(1);
+                }
+                if (muzzleLight != null)
+                {
+                    muzzleLight.enabled = true;
+                }
+            }
+            if (aimTransform != null)
+            {
+                if (((ItemGunAsset)displayAsset).range < 32f)
+                {
+                    trace(aimTransform.position + aimTransform.forward * 32f, aimTransform.forward);
+                }
+                else
+                {
+                    trace(aimTransform.position + aimTransform.forward * Random.Range(32f, Mathf.Min(64f, ((ItemGunAsset)displayAsset).range)), aimTransform.forward);
+                }
+            }
+        }
         lastShot = Time.timeAsDouble;
         if (attachments.barrelAsset != null && attachments.barrelAsset.durability > 0)
         {
@@ -217,6 +266,17 @@ public class InteractableSentry : InteractableStorage
         hasWeapon = true;
         attachments = displayModel.gameObject.GetComponent<Attachments>();
         interact = displayItem.state[12] == 1;
+        if (!Dedicator.IsDedicatedServer)
+        {
+            gunshotAudioSource = displayModel.gameObject.AddComponent<AudioSource>();
+            gunshotAudioSource.clip = null;
+            gunshotAudioSource.spatialBlend = 1f;
+            gunshotAudioSource.rolloffMode = AudioRolloffMode.Linear;
+            gunshotAudioSource.volume = 1f;
+            gunshotAudioSource.minDistance = 8f;
+            gunshotAudioSource.maxDistance = 256f;
+            gunshotAudioSource.playOnAwake = false;
+        }
         if (attachments.ejectHook != null && ((ItemGunAsset)displayAsset).action != EAction.String && ((ItemGunAsset)displayAsset).action != EAction.Rocket)
         {
             EffectAsset effectAsset = ((ItemGunAsset)displayAsset).FindShellEffectAsset();
@@ -270,6 +330,17 @@ public class InteractableSentry : InteractableStorage
                 transform3.localPosition = Vector3.zero;
                 transform3.localRotation = Quaternion.identity;
                 tracerEmitter = transform3.GetComponent<ParticleSystem>();
+            }
+        }
+        if (!Dedicator.IsDedicatedServer)
+        {
+            if (attachments.tacticalAsset != null && (attachments.tacticalAsset.isLight || attachments.tacticalAsset.isLaser) && attachments.lightHook != null)
+            {
+                attachments.lightHook.gameObject.SetActive(interact);
+            }
+            if (spotGameObject != null)
+            {
+                spotGameObject.SetActive(attachments.tacticalAsset != null && attachments.tacticalAsset.isLight && interact);
             }
         }
         int num = ((ItemGunAsset)displayAsset).firerate;
@@ -738,6 +809,17 @@ public class InteractableSentry : InteractableStorage
         if (flag2 != isAlert)
         {
             isAlert = flag2;
+            if (!Dedicator.IsDedicatedServer)
+            {
+                if (isAlert)
+                {
+                    EffectManager.effect(sentryAsset.targetAcquiredEffect, base.transform.position);
+                }
+                else
+                {
+                    EffectManager.effect(sentryAsset.targetLostEffect, base.transform.position);
+                }
+            }
             if (!isAlert)
             {
                 targetYaw = base.transform.localRotation.eulerAngles.y;
@@ -783,6 +865,21 @@ public class InteractableSentry : InteractableStorage
         if (offModelGameObject != null)
         {
             offModelGameObject.SetActive(!isAlert);
+        }
+        if (!Dedicator.IsDedicatedServer)
+        {
+            if (onMaterial != null)
+            {
+                onMaterial.SetColor("_EmissionColor", (isAlert && isPowered) ? (onMaterial.color * 2f) : Color.black);
+            }
+            if (offMaterial != null)
+            {
+                offMaterial.SetColor("_EmissionColor", (!isAlert && isPowered) ? (offMaterial.color * 2f) : Color.black);
+            }
+            if (Time.timeAsDouble - lastShot > 0.05 && muzzleLight != null)
+            {
+                muzzleLight.GetComponent<Light>().enabled = false;
+            }
         }
     }
 

@@ -71,7 +71,14 @@ public class UseableThrowable : Useable
         }
         else if (equippedThrowableAsset.isFlash)
         {
-            UnityEngine.Object.Destroy(transform.gameObject, equippedThrowableAsset.fuseLength);
+            if (!Dedicator.IsDedicatedServer)
+            {
+                transform.gameObject.AddComponent<Flashbang>().fuseLength = equippedThrowableAsset.fuseLength;
+            }
+            else
+            {
+                UnityEngine.Object.Destroy(transform.gameObject, equippedThrowableAsset.fuseLength);
+            }
         }
         else
         {
@@ -89,10 +96,13 @@ public class UseableThrowable : Useable
             impactGrenade.explodable = transform.GetComponent<IExplodableThrowable>();
             impactGrenade.ignoreTransform = base.transform;
         }
-        Transform transform2 = transform.Find("Smoke");
-        if (transform2 != null)
+        if (Dedicator.IsDedicatedServer)
         {
-            UnityEngine.Object.Destroy(transform2.gameObject);
+            Transform transform2 = transform.Find("Smoke");
+            if (transform2 != null)
+            {
+                UnityEngine.Object.Destroy(transform2.gameObject);
+            }
         }
         if (UseableThrowable.onThrowableSpawned != null)
         {
@@ -104,6 +114,10 @@ public class UseableThrowable : Useable
     {
         isSwinging = true;
         base.player.animator.play("Use", smooth: false);
+        if (!Dedicator.IsDedicatedServer)
+        {
+            base.player.playSound(((ItemThrowableAsset)base.player.equipment.asset).use);
+        }
         if (Provider.isServer)
         {
             AlertTool.alert(base.transform.position, 8f);

@@ -6,6 +6,10 @@ public class CommandPermits : Command
 {
     protected override void execute(CSteamID executorID, string parameter)
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            return;
+        }
         if (SteamWhitelist.list.Count == 0)
         {
             CommandWindow.LogError(localization.format("NoPermitsErrorText"));

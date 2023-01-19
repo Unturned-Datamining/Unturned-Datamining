@@ -44,15 +44,32 @@ public abstract class ClientMethodHandle
     protected void SendAndLoopbackIfLocal(ENetReliability reliability, ITransportConnection transportConnection, NetPakWriter writer)
     {
         writer.Flush();
-        transportConnection.Send(writer.buffer, writer.writeByteIndex, reliability);
+        if (!Dedicator.IsDedicatedServer)
+        {
+            InvokeLoopback(writer);
+        }
+        else
+        {
+            transportConnection.Send(writer.buffer, writer.writeByteIndex, reliability);
+        }
     }
 
     protected void SendAndLoopbackIfAnyAreLocal(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, NetPakWriter writer)
     {
         writer.Flush();
+        bool flag = false;
         foreach (ITransportConnection transportConnection in transportConnections)
         {
+            if (!Dedicator.IsDedicatedServer)
+            {
+                flag = true;
+                break;
+            }
             transportConnection.Send(writer.buffer, writer.writeByteIndex, reliability);
+        }
+        if (flag)
+        {
+            InvokeLoopback(writer);
         }
     }
 
@@ -61,6 +78,11 @@ public abstract class ClientMethodHandle
         writer.Flush();
         foreach (ITransportConnection transportConnection in transportConnections)
         {
+            if (!Dedicator.IsDedicatedServer)
+            {
+                UnturnedLog.error("Local connection {0} passed to SendAndLoopback {1}", transportConnection, this);
+                break;
+            }
             transportConnection.Send(writer.buffer, writer.writeByteIndex, reliability);
         }
         InvokeLoopback(writer);

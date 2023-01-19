@@ -87,7 +87,10 @@ public class InteractableStorage : Interactable, IManualOnDestroy
         if (isDisplay)
         {
             updateDisplay();
-            BarricadeManager.sendStorageDisplay(base.transform, displayItem, displaySkin, displayMythic, displayTags, displayDynamicProps);
+            if (Dedicator.IsDedicatedServer)
+            {
+                BarricadeManager.sendStorageDisplay(base.transform, displayItem, displaySkin, displayMythic, displayTags, displayDynamicProps);
+            }
             refreshDisplay();
         }
         rebuildState();
@@ -272,7 +275,10 @@ public class InteractableStorage : Interactable, IManualOnDestroy
 
     public bool checkRot(CSteamID enemyPlayer, CSteamID enemyGroup)
     {
-        _ = Provider.isServer;
+        if (Provider.isServer && !Dedicator.IsDedicatedServer)
+        {
+            return true;
+        }
         if (isLocked && !(enemyPlayer == owner))
         {
             if (group != CSteamID.Nil)
@@ -286,7 +292,10 @@ public class InteractableStorage : Interactable, IManualOnDestroy
 
     public bool checkStore(CSteamID enemyPlayer, CSteamID enemyGroup)
     {
-        _ = Provider.isServer;
+        if (Provider.isServer && !Dedicator.IsDedicatedServer)
+        {
+            return true;
+        }
         if (!isLocked || enemyPlayer == owner || (group != CSteamID.Nil && enemyGroup == group))
         {
             return !isOpen;

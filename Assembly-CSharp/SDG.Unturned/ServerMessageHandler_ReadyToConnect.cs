@@ -311,11 +311,6 @@ internal static class ServerMessageHandler_ReadyToConnect
             Provider.reject(transportConnection, ESteamRejection.WRONG_HASH_LEVEL);
             return;
         }
-        if (!ReadWrite.IsAssemblyHashValid(array3, value4) && !steamPlayerID.BypassIntegrityChecks)
-        {
-            Provider.reject(transportConnection, ESteamRejection.WRONG_HASH_ASSEMBLY);
-            return;
-        }
         if (value7 > Provider.configData.Server.Max_Ping_Milliseconds)
         {
             Provider.reject(transportConnection, ESteamRejection.PING, Provider.configData.Server.Max_Ping_Milliseconds.ToString());

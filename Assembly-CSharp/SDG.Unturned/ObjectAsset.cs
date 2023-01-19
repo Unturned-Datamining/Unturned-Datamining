@@ -262,7 +262,10 @@ public class ObjectAsset : Asset
             return;
         }
         validateModel(asset);
-        ServerPrefabUtil.RemoveClientComponents(asset);
+        if (Dedicator.IsDedicatedServer)
+        {
+            ServerPrefabUtil.RemoveClientComponents(asset);
+        }
     }
 
     protected void onNavGameObjectLoaded(GameObject asset)
@@ -501,7 +504,14 @@ public class ObjectAsset : Asset
         type = (EObjectType)Enum.Parse(typeof(EObjectType), data.readString("Type"), ignoreCase: true);
         if (type == EObjectType.NPC)
         {
-            loadedModel = Resources.Load<GameObject>("Characters/NPC_Server");
+            if (Dedicator.IsDedicatedServer)
+            {
+                loadedModel = Resources.Load<GameObject>("Characters/NPC_Server");
+            }
+            else
+            {
+                loadedModel = Resources.Load<GameObject>("Characters/NPC_Client");
+            }
             hasLoadedModel = true;
             useScale = true;
             interactability = EObjectInteractability.NPC;
@@ -546,11 +556,15 @@ public class ObjectAsset : Asset
         }
         else
         {
-            if (data.readBoolean("Has_Clip_Prefab", defaultValue: true))
+            if (Dedicator.IsDedicatedServer && data.readBoolean("Has_Clip_Prefab", defaultValue: true))
             {
                 bundle.loadDeferred("Clip", out legacyServerModel, (LoadedAssetDeferredCallback<GameObject>)OnServerModelLoaded);
             }
             bundle.loadDeferred("Object", out clientModel, (LoadedAssetDeferredCallback<GameObject>)OnClientModelLoaded);
+            if (!Dedicator.IsDedicatedServer)
+            {
+                bundle.loadDeferred("Skybox", out skyboxGameObject, (LoadedAssetDeferredCallback<GameObject>)null);
+            }
             bundle.loadDeferred("Nav", out navGameObject, (LoadedAssetDeferredCallback<GameObject>)onNavGameObjectLoaded);
             bundle.loadDeferred("Slots", out slotsGameObject, (LoadedAssetDeferredCallback<GameObject>)onSlotsGameObjectLoaded);
             bundle.loadDeferred("Triggers", out triggersGameObject, (LoadedAssetDeferredCallback<GameObject>)null);

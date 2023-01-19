@@ -33,6 +33,16 @@ public class ItemGlassesAsset : ItemGearAsset
     public ItemGlassesAsset(Bundle bundle, Data data, Local localization, ushort id)
         : base(bundle, data, localization, id)
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            _glasses = loadRequiredAsset<GameObject>(bundle, "Glasses");
+            if ((bool)Assets.shouldValidateAssets)
+            {
+                AssetValidation.ValidateLayersEqual(this, _glasses, 10);
+                AssetValidation.ValidateClothComponents(this, _glasses);
+                AssetValidation.searchGameObjectForErrors(this, _glasses);
+            }
+        }
         if (data.has("Vision"))
         {
             _vision = (ELightingVision)Enum.Parse(typeof(ELightingVision), data.readString("Vision"), ignoreCase: true);

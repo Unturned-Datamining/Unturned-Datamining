@@ -52,7 +52,7 @@ public class ItemPlaceableAsset : ItemAsset
             ushort num = SpawnTableTool.resolve(spawnAsset.id);
             if (num > 0)
             {
-                ItemManager.dropItem(new Item(num, EItemOrigin.NATURE), position + new Vector3(Random.Range(-2f, 2f), 2f, Random.Range(-2f, 2f)), playEffect: false, isDropped: true, wideSpread: true);
+                ItemManager.dropItem(new Item(num, EItemOrigin.NATURE), position + new Vector3(Random.Range(-2f, 2f), 2f, Random.Range(-2f, 2f)), playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
             }
         }
     }

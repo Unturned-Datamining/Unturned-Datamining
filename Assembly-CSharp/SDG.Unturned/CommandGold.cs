@@ -6,13 +6,16 @@ public class CommandGold : Command
 {
     protected override void execute(CSteamID executorID, string parameter)
     {
-        if (Provider.isServer)
+        if (Dedicator.IsDedicatedServer)
         {
-            CommandWindow.LogError(localization.format("RunningErrorText"));
-            return;
+            if (Provider.isServer)
+            {
+                CommandWindow.LogError(localization.format("RunningErrorText"));
+                return;
+            }
+            Provider.isGold = true;
+            CommandWindow.Log(localization.format("GoldText"));
         }
-        Provider.isGold = true;
-        CommandWindow.Log(localization.format("GoldText"));
     }
 
     public CommandGold(Local newLocalization)

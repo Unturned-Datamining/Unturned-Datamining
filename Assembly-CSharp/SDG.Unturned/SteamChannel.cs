@@ -81,7 +81,7 @@ public class SteamChannel : MonoBehaviour
     {
         foreach (SteamPlayer client in Provider.clients)
         {
-            if (client != owner)
+            if (!client.IsLocalPlayer && client != owner)
             {
                 yield return client.transportConnection;
             }
@@ -93,7 +93,7 @@ public class SteamChannel : MonoBehaviour
         float sqrRadius = radius * radius;
         foreach (SteamPlayer client in Provider.clients)
         {
-            if (client != owner && client.player != null && (client.player.transform.position - position).sqrMagnitude < sqrRadius)
+            if (!client.IsLocalPlayer && client != owner && client.player != null && (client.player.transform.position - position).sqrMagnitude < sqrRadius)
             {
                 yield return client.transportConnection;
             }

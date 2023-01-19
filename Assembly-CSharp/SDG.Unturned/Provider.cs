@@ -9,8 +9,10 @@ using System.Runtime.InteropServices;
 using System.Text;
 using BattlEye;
 using SDG.Framework.Modules;
+using SDG.HostBans;
 using SDG.NetPak;
 using SDG.NetTransport;
+using SDG.NetTransport.Loopback;
 using SDG.Provider;
 using SDG.Provider.Services.Multiplayer;
 using SDG.SteamworksProvider;
@@ -205,6 +207,10 @@ public class Provider : MonoBehaviour
     private static bool _isConnected;
 
     internal static bool isWaitingForWorkshopResponse;
+
+    internal static bool isWaitingForAuthenticationResponse;
+
+    internal static double sentAuthenticationRequestTime;
 
     private static List<PublishedFileId_t> waitingForExpectedWorkshopItems;
 
@@ -924,6 +930,10 @@ public class Provider : MonoBehaviour
 
     public static void updateRichPresence()
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            updateSteamRichPresence();
+        }
     }
 
     private static void updateSteamRichPresence()
@@ -1002,7 +1012,7 @@ public class Provider : MonoBehaviour
         float sqrRadius = radius * radius;
         foreach (SteamPlayer client in _clients)
         {
-            if (client.player != null && (client.player.transform.position - position).sqrMagnitude < sqrRadius)
+            if (!client.IsLocalPlayer && client.player != null && (client.player.transform.position - position).sqrMagnitude < sqrRadius)
             {
                 yield return client.transportConnection;
             }
@@ -1013,7 +1023,10 @@ public class Provider : MonoBehaviour
     {
         foreach (SteamPlayer client in _clients)
         {
-            yield return client.transportConnection;
+            if (!client.IsLocalPlayer)
+            {
+                yield return client.transportConnection;
+            }
         }
     }
 
@@ -1021,7 +1034,7 @@ public class Provider : MonoBehaviour
     {
         foreach (SteamPlayer client in _clients)
         {
-            if (predicate(client))
+            if (!client.IsLocalPlayer && predicate(client))
             {
                 yield return client.transportConnection;
             }
@@ -1233,6 +1246,10 @@ public class Provider : MonoBehaviour
 
     internal static SteamPlayer addPlayer(ITransportConnection transportConnection, NetId netId, SteamPlayerID playerID, Vector3 point, byte angle, bool isPro, bool isAdmin, int channel, byte face, byte hair, byte beard, Color skin, Color color, Color markerColor, bool hand, int shirtItem, int pantsItem, int hatItem, int backpackItem, int vestItem, int maskItem, int glassesItem, int[] skinItems, string[] skinTags, string[] skinDynamicProps, EPlayerSkillset skillset, string language, CSteamID lobbyID, EClientPlatform clientPlatform)
     {
+        if (!Dedicator.IsDedicatedServer && playerID.steamID != client)
+        {
+            SteamFriends.SetPlayedWith(playerID.steamID);
+        }
         if (playerID.steamID == client)
         {
             if (Level.placeholderAudioListener != null)
@@ -1355,7 +1372,10 @@ public class Provider : MonoBehaviour
         {
             battlEyeServerRunData.pfnChangePlayerStatus(steamPlayer.battlEyeId, -1);
         }
-        steamPlayer.transportConnection.CloseConnection();
+        if (Dedicator.IsDedicatedServer)
+        {
+            steamPlayer.transportConnection.CloseConnection();
+        }
         broadcastEnemyDisconnected(steamPlayer);
         steamPlayer.player.ReleaseNetIdBlock();
         if (steamPlayer.model != null)
@@ -1528,8 +1548,8 @@ public class Provider : MonoBehaviour
             {
                 array3[k] = provider.economyService.getInventoryDynamicProps(Characters.packageSkins[k]);
             }
-            NetId netId = ClaimNetIdBlockForNewPlayer();
-            SteamPlayer steamPlayer = addPlayer(null, netId, steamPlayerID, point, angle, isPro, isAdmin: true, allocPlayerChannelId(), Characters.active.face, Characters.active.hair, Characters.active.beard, Characters.active.skin, Characters.active.color, Characters.active.markerColor, Characters.active.hand, inventoryItem, inventoryItem2, inventoryItem3, inventoryItem4, inventoryItem5, inventoryItem6, inventoryItem7, array, array2, array3, Characters.active.skillset, language, Lobbies.currentLobby, EClientPlatform.Windows);
+            TransportConnection_Loopback transportConnection_Loopback = TransportConnection_Loopback.Create();
+            SteamPlayer steamPlayer = addPlayer(netId: ClaimNetIdBlockForNewPlayer(), transportConnection: transportConnection_Loopback, playerID: steamPlayerID, point: point, angle: angle, isPro: isPro, isAdmin: true, channel: allocPlayerChannelId(), face: Characters.active.face, hair: Characters.active.hair, beard: Characters.active.beard, skin: Characters.active.skin, color: Characters.active.color, markerColor: Characters.active.markerColor, hand: Characters.active.hand, shirtItem: inventoryItem, pantsItem: inventoryItem2, hatItem: inventoryItem3, backpackItem: inventoryItem4, vestItem: inventoryItem5, maskItem: inventoryItem6, glassesItem: inventoryItem7, skinItems: array, skinTags: array2, skinDynamicProps: array3, skillset: Characters.active.skillset, language: language, lobbyID: Lobbies.currentLobby, clientPlatform: EClientPlatform.Windows);
             steamPlayer.player.stance.initialStance = initialStance;
             steamPlayer.player.InitializePlayer();
             steamPlayer.player.SendInitialPlayerState(steamPlayer);
@@ -1642,6 +1662,7 @@ public class Provider : MonoBehaviour
         isWaitingForConnectResponse = false;
         isWaitingForWorkshopResponse = true;
         waitingForExpectedWorkshopItems = expectedWorkshopItems;
+        isWaitingForAuthenticationResponse = false;
         List<SteamItemInstanceID_t> list = new List<SteamItemInstanceID_t>();
         if (Characters.active.packageShirt != 0L)
         {
@@ -1876,6 +1897,10 @@ public class Provider : MonoBehaviour
 
     public static void disconnect()
     {
+        if (!Dedicator.IsDedicatedServer && Player.player != null && Player.player.channel != null && Player.player.channel.owner != null)
+        {
+            Player.player.channel.owner.commitModifiedDynamicProps();
+        }
         if (isServer)
         {
             if (IsBattlEyeEnabled && battlEyeServerHandle != IntPtr.Zero)
@@ -1893,7 +1918,14 @@ public class Provider : MonoBehaviour
             {
                 serverTransport.TearDown();
             }
-            closeGameServer();
+            if (Dedicator.IsDedicatedServer)
+            {
+                closeGameServer();
+            }
+            else
+            {
+                broadcastServerShutdown();
+            }
             if (isClient)
             {
                 _client = user;
@@ -1941,6 +1973,7 @@ public class Provider : MonoBehaviour
         isWaitingForConnectResponse = false;
         isWaitingForWorkshopResponse = false;
         isLoadingUGC = false;
+        isWaitingForAuthenticationResponse = false;
         isLoadingInventory = true;
         UnturnedLog.info("Disconnected");
     }
@@ -2107,136 +2140,142 @@ public class Provider : MonoBehaviour
         SteamGameServer.SetServerName(serverName);
         SteamGameServer.SetPasswordProtected(serverPassword != "");
         SteamGameServer.SetMapName(map);
-        if (!ReadWrite.folderExists("/Bundles/Workshop/Content", usePath: true))
+        if (Dedicator.IsDedicatedServer)
         {
-            ReadWrite.createFolder("/Bundles/Workshop/Content", usePath: true);
-        }
-        string text2 = "/Bundles/Workshop/Content";
-        string[] folders = ReadWrite.getFolders(text2);
-        for (int i = 0; i < folders.Length; i++)
-        {
-            string text3 = ReadWrite.folderName(folders[i]);
-            if (ulong.TryParse(text3, NumberStyles.Any, CultureInfo.InvariantCulture, out var result))
+            if (!ReadWrite.folderExists("/Bundles/Workshop/Content", usePath: true))
             {
-                registerServerUsingWorkshopFileId(result);
-                CommandWindow.Log("Recommended to add workshop item " + result + " to WorkshopDownloadConfig.json and remove it from " + text2);
+                ReadWrite.createFolder("/Bundles/Workshop/Content", usePath: true);
             }
-            else
+            string text2 = "/Bundles/Workshop/Content";
+            string[] folders = ReadWrite.getFolders(text2);
+            for (int i = 0; i < folders.Length; i++)
             {
-                CommandWindow.LogWarning("Invalid workshop item '" + text3 + "' in " + text2);
-            }
-        }
-        string text4 = ServerSavedata.directory + "/" + serverID + "/Workshop/Content";
-        if (!ReadWrite.folderExists(text4, usePath: true))
-        {
-            ReadWrite.createFolder(text4, usePath: true);
-        }
-        string[] folders2 = ReadWrite.getFolders(text4);
-        for (int j = 0; j < folders2.Length; j++)
-        {
-            string text5 = ReadWrite.folderName(folders2[j]);
-            if (ulong.TryParse(text5, NumberStyles.Any, CultureInfo.InvariantCulture, out var result2))
-            {
-                registerServerUsingWorkshopFileId(result2);
-                CommandWindow.Log("Recommended to add workshop item " + result2 + " to WorkshopDownloadConfig.json and remove it from " + text4);
-            }
-            else
-            {
-                CommandWindow.LogWarning("Invalid workshop item '" + text5 + "' in " + text4);
-            }
-        }
-        if (ulong.TryParse(new DirectoryInfo(Level.info.path).Parent.Name, NumberStyles.Any, CultureInfo.InvariantCulture, out var result3))
-        {
-            registerServerUsingWorkshopFileId(result3);
-        }
-        SteamGameServer.SetGameData(string.Concat(string.Concat(string.Concat(string.Concat(string.Concat(((serverPassword != "") ? "PASS" : "SSAP") + ",", configData.Server.VAC_Secure ? "VAC_ON" : "VAC_OFF"), ",GAME_VERSION_"), VersionUtils.binaryToHexadecimal(APP_VERSION_PACKED)), ",MAP_VERSION_"), VersionUtils.binaryToHexadecimal(Level.packedVersion)));
-        SteamGameServer.SetKeyValue("GameVersion", APP_VERSION);
-        int num = 128;
-        string text6 = (isPvP ? "PVP" : "PVE") + "," + (hasCheats ? "CHy" : "CHn") + "," + getModeTagAbbreviation(mode) + "," + getCameraModeTagAbbreviation(cameraMode) + "," + ((getServerWorkshopFileIDs().Count > 0) ? "WSy" : "WSn") + "," + (isGold ? "GLD" : "F2P");
-        text6 = text6 + "," + (IsBattlEyeEnabled ? "BEy" : "BEn");
-        string monetizationTagAbbreviation = GetMonetizationTagAbbreviation(configData.Browser.Monetization);
-        if (!string.IsNullOrEmpty(monetizationTagAbbreviation))
-        {
-            text6 = text6 + "," + monetizationTagAbbreviation;
-        }
-        if (!string.IsNullOrEmpty(configData.Browser.Thumbnail))
-        {
-            text6 = text6 + ",<tn>" + configData.Browser.Thumbnail + "</tn>";
-        }
-        text6 += $",<net>{NetTransportFactory.GetTag(serverTransport)}</net>";
-        string pluginFrameworkTag = SteamPluginAdvertising.Get().PluginFrameworkTag;
-        if (!string.IsNullOrEmpty(pluginFrameworkTag))
-        {
-            text6 += $",<pf>{pluginFrameworkTag}</pf>";
-        }
-        if (text6.Length > num)
-        {
-            CommandWindow.LogWarning("Server browser thumbnail URL is " + (text6.Length - num) + " characters over budget!");
-            CommandWindow.LogWarning("Server will not list properly until this URL is adjusted!");
-        }
-        SteamGameServer.SetGameTags(text6);
-        int num2 = 64;
-        if (configData.Browser.Desc_Server_List.Length > num2)
-        {
-            CommandWindow.LogWarning("Server browser description is " + (configData.Browser.Desc_Server_List.Length - num2) + " characters over budget!");
-        }
-        SteamGameServer.SetGameDescription(configData.Browser.Desc_Server_List);
-        SteamGameServer.SetKeyValue("Browser_Icon", configData.Browser.Icon);
-        SteamGameServer.SetKeyValue("Browser_Desc_Hint", configData.Browser.Desc_Hint);
-        AdvertiseFullDescription(configData.Browser.Desc_Full);
-        if (getServerWorkshopFileIDs().Count > 0)
-        {
-            string text7 = string.Empty;
-            for (int k = 0; k < getServerWorkshopFileIDs().Count; k++)
-            {
-                if (text7.Length > 0)
+                string text3 = ReadWrite.folderName(folders[i]);
+                if (ulong.TryParse(text3, NumberStyles.Any, CultureInfo.InvariantCulture, out var result))
                 {
-                    text7 += ",";
+                    registerServerUsingWorkshopFileId(result);
+                    CommandWindow.Log("Recommended to add workshop item " + result + " to WorkshopDownloadConfig.json and remove it from " + text2);
                 }
-                text7 += getServerWorkshopFileIDs()[k];
+                else
+                {
+                    CommandWindow.LogWarning("Invalid workshop item '" + text3 + "' in " + text2);
+                }
             }
-            int num3 = (text7.Length - 1) / 127 + 1;
-            int num4 = 0;
-            SteamGameServer.SetKeyValue("Mod_Count", num3.ToString());
-            for (int l = 0; l < text7.Length; l += 127)
+            string text4 = ServerSavedata.directory + "/" + serverID + "/Workshop/Content";
+            if (!ReadWrite.folderExists(text4, usePath: true))
             {
-                int num5 = 127;
-                if (l + num5 > text7.Length)
-                {
-                    num5 = text7.Length - l;
-                }
-                string pValue = text7.Substring(l, num5);
-                SteamGameServer.SetKeyValue("Mod_" + num4, pValue);
-                num4++;
+                ReadWrite.createFolder(text4, usePath: true);
             }
-        }
-        if (configData.Browser.Links != null && configData.Browser.Links.Length != 0)
-        {
-            SteamGameServer.SetKeyValue("Custom_Links_Count", configData.Browser.Links.Length.ToString());
-            for (int m = 0; m < configData.Browser.Links.Length; m++)
+            string[] folders2 = ReadWrite.getFolders(text4);
+            for (int j = 0; j < folders2.Length; j++)
             {
-                BrowserConfigData.Link link = configData.Browser.Links[m];
-                if (!ConvertEx.TryEncodeUtf8StringAsBase64(link.Message, out var output))
+                string text5 = ReadWrite.folderName(folders2[j]);
+                if (ulong.TryParse(text5, NumberStyles.Any, CultureInfo.InvariantCulture, out var result2))
                 {
-                    UnturnedLog.error("Unable to encode lobby link message as Base64: \"" + link.Message + "\"");
-                    continue;
+                    registerServerUsingWorkshopFileId(result2);
+                    CommandWindow.Log("Recommended to add workshop item " + result2 + " to WorkshopDownloadConfig.json and remove it from " + text4);
                 }
-                if (!ConvertEx.TryEncodeUtf8StringAsBase64(link.Url, out var output2))
+                else
                 {
-                    UnturnedLog.error("Unable to encode lobby link url as Base64: \"" + link.Url + "\"");
-                    continue;
+                    CommandWindow.LogWarning("Invalid workshop item '" + text5 + "' in " + text4);
                 }
-                SteamGameServer.SetKeyValue("Custom_Link_Message_" + m, output);
-                SteamGameServer.SetKeyValue("Custom_Link_Url_" + m, output2);
             }
+            if (ulong.TryParse(new DirectoryInfo(Level.info.path).Parent.Name, NumberStyles.Any, CultureInfo.InvariantCulture, out var result3))
+            {
+                registerServerUsingWorkshopFileId(result3);
+            }
+            SteamGameServer.SetGameData(string.Concat(string.Concat(string.Concat(string.Concat(string.Concat(((serverPassword != "") ? "PASS" : "SSAP") + ",", configData.Server.VAC_Secure ? "VAC_ON" : "VAC_OFF"), ",GAME_VERSION_"), VersionUtils.binaryToHexadecimal(APP_VERSION_PACKED)), ",MAP_VERSION_"), VersionUtils.binaryToHexadecimal(Level.packedVersion)));
+            SteamGameServer.SetKeyValue("GameVersion", APP_VERSION);
+            int num = 128;
+            string text6 = (isPvP ? "PVP" : "PVE") + "," + (hasCheats ? "CHy" : "CHn") + "," + getModeTagAbbreviation(mode) + "," + getCameraModeTagAbbreviation(cameraMode) + "," + ((getServerWorkshopFileIDs().Count > 0) ? "WSy" : "WSn") + "," + (isGold ? "GLD" : "F2P");
+            text6 = text6 + "," + (IsBattlEyeEnabled ? "BEy" : "BEn");
+            string monetizationTagAbbreviation = GetMonetizationTagAbbreviation(configData.Browser.Monetization);
+            if (!string.IsNullOrEmpty(monetizationTagAbbreviation))
+            {
+                text6 = text6 + "," + monetizationTagAbbreviation;
+            }
+            if (!string.IsNullOrEmpty(configData.Browser.Thumbnail))
+            {
+                text6 = text6 + ",<tn>" + configData.Browser.Thumbnail + "</tn>";
+            }
+            text6 += $",<net>{NetTransportFactory.GetTag(serverTransport)}</net>";
+            string pluginFrameworkTag = SteamPluginAdvertising.Get().PluginFrameworkTag;
+            if (!string.IsNullOrEmpty(pluginFrameworkTag))
+            {
+                text6 += $",<pf>{pluginFrameworkTag}</pf>";
+            }
+            if (text6.Length > num)
+            {
+                CommandWindow.LogWarning("Server browser thumbnail URL is " + (text6.Length - num) + " characters over budget!");
+                CommandWindow.LogWarning("Server will not list properly until this URL is adjusted!");
+            }
+            SteamGameServer.SetGameTags(text6);
+            int num2 = 64;
+            if (configData.Browser.Desc_Server_List.Length > num2)
+            {
+                CommandWindow.LogWarning("Server browser description is " + (configData.Browser.Desc_Server_List.Length - num2) + " characters over budget!");
+            }
+            SteamGameServer.SetGameDescription(configData.Browser.Desc_Server_List);
+            SteamGameServer.SetKeyValue("Browser_Icon", configData.Browser.Icon);
+            SteamGameServer.SetKeyValue("Browser_Desc_Hint", configData.Browser.Desc_Hint);
+            AdvertiseFullDescription(configData.Browser.Desc_Full);
+            if (getServerWorkshopFileIDs().Count > 0)
+            {
+                string text7 = string.Empty;
+                for (int k = 0; k < getServerWorkshopFileIDs().Count; k++)
+                {
+                    if (text7.Length > 0)
+                    {
+                        text7 += ",";
+                    }
+                    text7 += getServerWorkshopFileIDs()[k];
+                }
+                int num3 = (text7.Length - 1) / 127 + 1;
+                int num4 = 0;
+                SteamGameServer.SetKeyValue("Mod_Count", num3.ToString());
+                for (int l = 0; l < text7.Length; l += 127)
+                {
+                    int num5 = 127;
+                    if (l + num5 > text7.Length)
+                    {
+                        num5 = text7.Length - l;
+                    }
+                    string pValue = text7.Substring(l, num5);
+                    SteamGameServer.SetKeyValue("Mod_" + num4, pValue);
+                    num4++;
+                }
+            }
+            if (configData.Browser.Links != null && configData.Browser.Links.Length != 0)
+            {
+                SteamGameServer.SetKeyValue("Custom_Links_Count", configData.Browser.Links.Length.ToString());
+                for (int m = 0; m < configData.Browser.Links.Length; m++)
+                {
+                    BrowserConfigData.Link link = configData.Browser.Links[m];
+                    if (!ConvertEx.TryEncodeUtf8StringAsBase64(link.Message, out var output))
+                    {
+                        UnturnedLog.error("Unable to encode lobby link message as Base64: \"" + link.Message + "\"");
+                        continue;
+                    }
+                    if (!ConvertEx.TryEncodeUtf8StringAsBase64(link.Url, out var output2))
+                    {
+                        UnturnedLog.error("Unable to encode lobby link url as Base64: \"" + link.Url + "\"");
+                        continue;
+                    }
+                    SteamGameServer.SetKeyValue("Custom_Link_Message_" + m, output);
+                    SteamGameServer.SetKeyValue("Custom_Link_Url_" + m, output2);
+                }
+            }
+            AdvertiseConfig();
+            SteamPluginAdvertising.Get().NotifyGameServerReady();
         }
-        AdvertiseConfig();
-        SteamPluginAdvertising.Get().NotifyGameServerReady();
         _server = SteamGameServer.GetSteamID();
         _client = _server;
         _clientHash = Hash.SHA1(client);
-        _clientName = localization.format("Console");
-        autoShutdownManager = steam.gameObject.AddComponent<BuiltinAutoShutdown>();
+        if (Dedicator.IsDedicatedServer)
+        {
+            _clientName = localization.format("Console");
+            autoShutdownManager = steam.gameObject.AddComponent<BuiltinAutoShutdown>();
+        }
         timeLastPacketWasReceivedFromServer = Time.realtimeSinceStartup;
     }
 
@@ -2372,7 +2411,6 @@ public class Provider : MonoBehaviour
         {
             throw new ArgumentNullException("transportConnection");
         }
-        ThreadUtil.assertIsGameThread();
         if (isConnected)
         {
             if (!isServer)
@@ -2634,9 +2672,13 @@ public class Provider : MonoBehaviour
         }
         if (isServer)
         {
-            if (Level.isLoaded)
+            if (!Dedicator.IsDedicatedServer || !Level.isLoaded)
             {
-                listenServer();
+                return;
+            }
+            listenServer();
+            if (Dedicator.IsDedicatedServer)
+            {
                 if (Time.realtimeSinceStartup - lastPingRequestTime > PING_REQUEST_INTERVAL)
                 {
                     lastPingRequestTime = Time.realtimeSinceStartup;
@@ -2654,10 +2696,10 @@ public class Provider : MonoBehaviour
                     UnturnedLog.info($"Removed {steam.clientsKickedForTransportConnectionFailureCount} clients due to transport failure this frame");
                 }
                 steam.clientsKickedForTransportConnectionFailureCount = 0;
-                if (dswUpdateMonitor != null)
-                {
-                    dswUpdateMonitor.tick(Time.deltaTime);
-                }
+            }
+            if (dswUpdateMonitor != null)
+            {
+                dswUpdateMonitor.tick(Time.deltaTime);
             }
             return;
         }
@@ -2689,36 +2731,45 @@ public class Provider : MonoBehaviour
             {
                 timeLastPacketWasReceivedFromServer = Time.realtimeSinceStartup;
             }
-            return;
         }
-        if (Level.isLoading)
+        else if (Level.isLoading)
         {
             float num2 = Time.realtimeSinceStartup - timeLastPacketWasReceivedFromServer;
             if (isWaitingForConnectResponse && num2 > 10f)
             {
                 _connectionFailureInfo = ESteamConnectionFailureInfo.TIMED_OUT;
                 RequestDisconnect($"Server did not reply to connection request ({num2}s elapsed)");
+                return;
             }
-            else
+            if (isWaitingForAuthenticationResponse)
             {
-                timeLastPacketWasReceivedFromServer = Time.realtimeSinceStartup;
+                double num3 = Time.realtimeSinceStartupAsDouble - sentAuthenticationRequestTime;
+                if (num3 > 30.0)
+                {
+                    _connectionFailureInfo = ESteamConnectionFailureInfo.TIMED_OUT_LOGIN;
+                    RequestDisconnect($"Server did not reply to authentication request ({num3}s elapsed)");
+                    return;
+                }
             }
-            return;
-        }
-        float num3 = Time.realtimeSinceStartup - timeLastPacketWasReceivedFromServer;
-        if (num3 > (float)CLIENT_TIMEOUT)
-        {
-            _connectionFailureInfo = ESteamConnectionFailureInfo.TIMED_OUT;
-            RequestDisconnect($"it has been {num3}s without a message from the server");
-        }
-        else if (battlEyeHasRequiredRestart)
-        {
-            battlEyeHasRequiredRestart = false;
-            RequestDisconnect("BattlEye required restart");
+            timeLastPacketWasReceivedFromServer = Time.realtimeSinceStartup;
         }
         else
         {
-            ClientAssetIntegrity.SendRequests();
+            float num4 = Time.realtimeSinceStartup - timeLastPacketWasReceivedFromServer;
+            if (num4 > (float)CLIENT_TIMEOUT)
+            {
+                _connectionFailureInfo = ESteamConnectionFailureInfo.TIMED_OUT;
+                RequestDisconnect($"it has been {num4}s without a message from the server");
+            }
+            else if (battlEyeHasRequiredRestart)
+            {
+                battlEyeHasRequiredRestart = false;
+                RequestDisconnect("BattlEye required restart");
+            }
+            else
+            {
+                ClientAssetIntegrity.SendRequests();
+            }
         }
     }
 
@@ -3125,7 +3176,7 @@ public class Provider : MonoBehaviour
         {
             return;
         }
-        ModeConfigData modeConfig = ConfigData.CreateDefault(singleplayer: false).getModeConfig(mode);
+        ModeConfigData modeConfig = ConfigData.CreateDefault(!Dedicator.IsDedicatedServer).getModeConfig(mode);
         if (modeConfig == null)
         {
             CommandWindow.LogError("Unable to compare default for level mode config overrides");
@@ -3422,7 +3473,6 @@ public class Provider : MonoBehaviour
         {
             throw new ArgumentNullException("transportConnection");
         }
-        ThreadUtil.assertIsGameThread();
         CSteamID cSteamID = findTransportConnectionSteamId(transportConnection);
         if (cSteamID != CSteamID.Nil)
         {
@@ -3502,7 +3552,6 @@ public class Provider : MonoBehaviour
 
     public static void kick(CSteamID steamID, string reason)
     {
-        ThreadUtil.assertIsGameThread();
         if (findClientForKickBanDismiss(steamID, out var foundClient, out var foundIndex))
         {
             UnturnedLog.info($"Kicking player {steamID} because \"{reason}\"");
@@ -3526,7 +3575,6 @@ public class Provider : MonoBehaviour
 
     public static void ban(CSteamID steamID, string reason, uint duration)
     {
-        ThreadUtil.assertIsGameThread();
         if (findClientForKickBanDismiss(steamID, out var foundClient, out var foundIndex))
         {
             UnturnedLog.info($"Banning player {steamID} for {TimeSpan.FromSeconds(duration)} because \"{reason}\"");
@@ -3541,7 +3589,6 @@ public class Provider : MonoBehaviour
 
     public static void dismiss(CSteamID steamID)
     {
-        ThreadUtil.assertIsGameThread();
         if (findClientForKickBanDismiss(steamID, out var foundClient, out var foundIndex))
         {
             broadcastServerDisconnected(steamID);
@@ -4083,6 +4130,43 @@ public class Provider : MonoBehaviour
         return null;
     }
 
+    private void LoadPreferences()
+    {
+        string text = PathEx.Join(UnturnedPaths.RootDirectory, "Preferences.json");
+        if (ReadWrite.fileExists(text, useCloud: false, usePath: false))
+        {
+            try
+            {
+                _preferenceData = ReadWrite.deserializeJSON<PreferenceData>(text, useCloud: false, usePath: false);
+            }
+            catch (Exception e)
+            {
+                UnturnedLog.exception(e, "Unable to parse Preferences.json! consider validating with a JSON linter");
+                _preferenceData = null;
+            }
+            if (preferenceData == null)
+            {
+                _preferenceData = new PreferenceData();
+            }
+        }
+        else
+        {
+            _preferenceData = new PreferenceData();
+        }
+        _preferenceData.Viewmodel.Clamp();
+        SleekCustomization.defaultTextContrast = _preferenceData.Graphics.Default_Text_Contrast;
+        SleekCustomization.inconspicuousTextContrast = _preferenceData.Graphics.Inconspicuous_Text_Contrast;
+        SleekCustomization.colorfulTextContrast = _preferenceData.Graphics.Colorful_Text_Contrast;
+        try
+        {
+            ReadWrite.serializeJSON(text, useCloud: false, usePath: false, preferenceData);
+        }
+        catch (Exception e2)
+        {
+            UnturnedLog.exception(e2, "Caught exception re-serializing Preferences.json:");
+        }
+    }
+
     public void awake()
     {
         _statusData = LoadStatusData();
@@ -4104,121 +4188,254 @@ public class Provider : MonoBehaviour
         Level.onLevelLoaded = (LevelLoaded)Delegate.Combine(Level.onLevelLoaded, new LevelLoaded(onLevelLoaded));
         Application.quitting += onApplicationQuitting;
         Application.wantsToQuit += onApplicationWantsToQuit;
+        if (Dedicator.IsDedicatedServer)
+        {
+            try
+            {
+                WriteSteamAppIdFileAndEnvironmentVariables();
+                provider = new SDG.SteamworksProvider.SteamworksProvider(new SteamworksAppInfo(APP_ID.m_AppId, APP_NAME, APP_VERSION, newIsDedicated: true));
+                provider.intialize();
+            }
+            catch (Exception ex)
+            {
+                QuitGame("Steam init exception (" + ex.Message + ")");
+                return;
+            }
+            if (!CommandLine.tryGetLanguage(out var local, out _path))
+            {
+                _path = ReadWrite.PATH + "/Localization/";
+                local = "English";
+            }
+            language = local;
+            localizationRoot = path + language;
+            localization = Localization.read("/Server/ServerConsole.dat");
+            p2pSessionConnectFail = Callback<P2PSessionConnectFail_t>.CreateGameServer(onP2PSessionConnectFail);
+            validateAuthTicketResponse = Callback<ValidateAuthTicketResponse_t>.CreateGameServer(onValidateAuthTicketResponse);
+            clientGroupStatus = Callback<GSClientGroupStatus_t>.CreateGameServer(onClientGroupStatus);
+            _isPro = true;
+            CommandWindow.Log("Game version: " + APP_VERSION + " Engine version: " + Application.unityVersion);
+            maxPlayers = 8;
+            queueSize = 8;
+            serverName = "Unturned";
+            serverPassword = "";
+            ip = 0u;
+            port = 27015;
+            map = "PEI";
+            isPvP = true;
+            isWhitelisted = false;
+            hideAdmins = false;
+            hasCheats = false;
+            filterName = false;
+            mode = EGameMode.NORMAL;
+            isGold = false;
+            gameMode = null;
+            cameraMode = ECameraMode.FIRST;
+            Commander.init();
+            SteamWhitelist.load();
+            SteamBlacklist.load();
+            SteamAdminlist.load();
+            string[] commands = CommandLine.getCommands();
+            UnturnedLog.info($"Executing {commands.Length} potential game command(s) from the command-line:");
+            for (int i = 0; i < commands.Length; i++)
+            {
+                if (!Commander.execute(CSteamID.Nil, commands[i]))
+                {
+                    UnturnedLog.info("Did not match \"" + commands[i] + "\" with any commands");
+                }
+            }
+            if (ServerSavedata.fileExists("/Server/Commands.dat"))
+            {
+                FileStream fileStream = null;
+                StreamReader streamReader = null;
+                try
+                {
+                    fileStream = new FileStream(ReadWrite.PATH + "/Servers/" + serverID + "/Server/Commands.dat", FileMode.Open, FileAccess.Read, FileShare.Read);
+                    streamReader = new StreamReader(fileStream);
+                    string text;
+                    while ((text = streamReader.ReadLine()) != null)
+                    {
+                        if (!string.IsNullOrWhiteSpace(text) && !Commander.execute(CSteamID.Nil, text))
+                        {
+                            UnturnedLog.error("Unknown entry in Commands.dat: '{0}'", text);
+                        }
+                    }
+                }
+                finally
+                {
+                    fileStream?.Close();
+                    streamReader?.Close();
+                }
+            }
+            else
+            {
+                Data data = new Data();
+                ServerSavedata.writeData("/Server/Commands.dat", data);
+            }
+            if (!ServerSavedata.folderExists("/Bundles"))
+            {
+                ServerSavedata.createFolder("/Bundles");
+            }
+            if (!ServerSavedata.folderExists("/Maps"))
+            {
+                ServerSavedata.createFolder("/Maps");
+            }
+            if (!ServerSavedata.folderExists("/Workshop/Content"))
+            {
+                ServerSavedata.createFolder("/Workshop/Content");
+            }
+            if (!ServerSavedata.folderExists("/Workshop/Maps"))
+            {
+                ServerSavedata.createFolder("/Workshop/Maps");
+            }
+            _configData = ConfigData.CreateDefault(singleplayer: false);
+            if (ServerSavedata.fileExists("/Config.json"))
+            {
+                try
+                {
+                    ServerSavedata.populateJSON("/Config.json", _configData);
+                }
+                catch (Exception e)
+                {
+                    UnturnedLog.error("Exception while parsing server config:");
+                    UnturnedLog.exception(e);
+                }
+            }
+            ServerSavedata.serializeJSON("/Config.json", configData);
+            _modeConfigData = _configData.getModeConfig(mode);
+            if (_modeConfigData == null)
+            {
+                _modeConfigData = new ModeConfigData(mode);
+            }
+            LogSystemInfo();
+            return;
+        }
         try
         {
             WriteSteamAppIdFileAndEnvironmentVariables();
-            provider = new SDG.SteamworksProvider.SteamworksProvider(new SteamworksAppInfo(APP_ID.m_AppId, APP_NAME, APP_VERSION, newIsDedicated: true));
+            provider = new SDG.SteamworksProvider.SteamworksProvider(new SteamworksAppInfo(APP_ID.m_AppId, APP_NAME, APP_VERSION, newIsDedicated: false));
             provider.intialize();
         }
-        catch (Exception ex)
+        catch (Exception ex2)
         {
-            QuitGame("Steam init exception (" + ex.Message + ")");
+            QuitGame("Steam init exception (" + ex2.Message + ")");
             return;
         }
-        if (!CommandLine.tryGetLanguage(out var local, out _path))
+        backendRealtimeSeconds = SteamUtils.GetServerRealTime();
+        apiWarningMessageHook = onAPIWarningMessage;
+        SteamUtils.SetWarningMessageHook(apiWarningMessageHook);
+        screenshotRequestedCallback = Callback<ScreenshotRequested_t>.Create(OnSteamScreenshotRequested);
+        SteamScreenshots.HookScreenshots(bHook: true);
+        time = SteamUtils.GetServerRealTime();
+        personaStateChange = Callback<PersonaStateChange_t>.Create(onPersonaStateChange);
+        gameServerChangeRequested = Callback<GameServerChangeRequested_t>.Create(onGameServerChangeRequested);
+        gameRichPresenceJoinRequested = Callback<GameRichPresenceJoinRequested_t>.Create(onGameRichPresenceJoinRequested);
+        _user = SteamUser.GetSteamID();
+        _client = user;
+        _clientHash = Hash.SHA1(client);
+        _clientName = SteamFriends.GetPersonaName();
+        provider.statisticsService.userStatisticsService.requestStatistics();
+        provider.statisticsService.globalStatisticsService.requestStatistics();
+        provider.workshopService.refreshUGC();
+        provider.workshopService.refreshPublished();
+        if ((bool)shouldCheckForGoldUpgrade)
         {
-            _path = ReadWrite.PATH + "/Localization/";
-            local = "English";
+            _isPro = SteamApps.BIsSubscribedApp(PRO_ID);
         }
-        language = local;
-        localizationRoot = path + language;
-        localization = Localization.read("/Server/ServerConsole.dat");
-        p2pSessionConnectFail = Callback<P2PSessionConnectFail_t>.CreateGameServer(onP2PSessionConnectFail);
-        validateAuthTicketResponse = Callback<ValidateAuthTicketResponse_t>.CreateGameServer(onValidateAuthTicketResponse);
-        clientGroupStatus = Callback<GSClientGroupStatus_t>.CreateGameServer(onClientGroupStatus);
-        _isPro = true;
-        CommandWindow.Log("Game version: " + APP_VERSION + " Engine version: " + Application.unityVersion);
-        maxPlayers = 8;
-        queueSize = 8;
-        serverName = "Unturned";
-        serverPassword = "";
-        ip = 0u;
-        port = 27015;
-        map = "PEI";
-        isPvP = true;
-        isWhitelisted = false;
-        hideAdmins = false;
-        hasCheats = false;
-        filterName = false;
-        mode = EGameMode.NORMAL;
-        isGold = false;
-        gameMode = null;
-        cameraMode = ECameraMode.FIRST;
-        Commander.init();
-        SteamWhitelist.load();
-        SteamBlacklist.load();
-        SteamAdminlist.load();
-        string[] commands = CommandLine.getCommands();
-        UnturnedLog.info($"Executing {commands.Length} potential game command(s) from the command-line:");
-        for (int i = 0; i < commands.Length; i++)
+        UnturnedLog.info("Game version: " + APP_VERSION + " Engine version: " + Application.unityVersion);
+        isLoadingInventory = true;
+        provider.economyService.GrantPromoItems();
+        SteamNetworkingSockets.InitAuthentication();
+        if (SteamUser.BLoggedOn() && (bool)allowWebRequests)
         {
-            if (!Commander.execute(CSteamID.Nil, commands[i]))
-            {
-                UnturnedLog.info("Did not match \"" + commands[i] + "\" with any commands");
-            }
+            HostBansManager.Get().Refresh();
         }
-        if (ServerSavedata.fileExists("/Server/Commands.dat"))
+        LiveConfig.Refresh();
+        ProfanityFilter.InitSteam();
+        if (CommandLine.tryGetLanguage(out var local2, out _path))
         {
-            FileStream fileStream = null;
-            StreamReader streamReader = null;
-            try
+            language = local2;
+            localizationRoot = path + language;
+        }
+        else
+        {
+            string steamUILanguage = SteamUtils.GetSteamUILanguage();
+            language = steamUILanguage.Substring(0, 1).ToUpper() + steamUILanguage.Substring(1, steamUILanguage.Length - 1).ToLower();
+            bool flag = false;
+            foreach (SteamContent item in provider.workshopService.ugc)
             {
-                fileStream = new FileStream(ReadWrite.PATH + "/Servers/" + serverID + "/Server/Commands.dat", FileMode.Open, FileAccess.Read, FileShare.Read);
-                streamReader = new StreamReader(fileStream);
-                string text;
-                while ((text = streamReader.ReadLine()) != null)
+                if (item.type == ESteamUGCType.LOCALIZATION && ReadWrite.folderExists(item.path + "/" + language, usePath: false))
                 {
-                    if (!string.IsNullOrWhiteSpace(text) && !Commander.execute(CSteamID.Nil, text))
+                    _path = item.path + "/";
+                    localizationRoot = path + language;
+                    flag = true;
+                    UnturnedLog.info("Found Steam language '{0}' in workshop item {1}", steamUILanguage, item.publishedFileID);
+                    break;
+                }
+            }
+            if (!flag && ReadWrite.folderExists("/Localization/" + language))
+            {
+                _path = ReadWrite.PATH + "/Localization/";
+                localizationRoot = path + language;
+                flag = true;
+                UnturnedLog.info("Found Steam language '{0}' in root Localization directory", steamUILanguage);
+            }
+            if (!flag && ReadWrite.folderExists("/Sandbox/" + language))
+            {
+                _path = ReadWrite.PATH + "/Sandbox/";
+                localizationRoot = path + language;
+                flag = true;
+                UnturnedLog.info("Found Steam language '{0}' in Sandbox directory", steamUILanguage);
+            }
+            if (!flag)
+            {
+                foreach (SteamContent item2 in provider.workshopService.ugc)
+                {
+                    bool num = ReadWrite.folderExists(item2.path + "/Editor", usePath: false);
+                    bool flag2 = ReadWrite.folderExists(item2.path + "/Menu", usePath: false);
+                    bool flag3 = ReadWrite.folderExists(item2.path + "/Player", usePath: false);
+                    bool flag4 = ReadWrite.folderExists(item2.path + "/Server", usePath: false);
+                    bool flag5 = ReadWrite.folderExists(item2.path + "/Shared", usePath: false);
+                    if (num && flag2 && flag3 && flag4 && flag5)
                     {
-                        UnturnedLog.error("Unknown entry in Commands.dat: '{0}'", text);
+                        _path = null;
+                        localizationRoot = item2.path;
+                        flag = true;
+                        UnturnedLog.info("Found language files for unknown language in workshop item {0}", item2.publishedFileID);
                     }
                 }
             }
-            finally
+            if (!flag)
             {
-                fileStream?.Close();
-                streamReader?.Close();
+                _path = ReadWrite.PATH + "/Localization/";
+                language = "English";
+                localizationRoot = path + language;
+            }
+        }
+        provider.economyService.loadTranslationEconInfo();
+        localization = Localization.read("/Server/ServerConsole.dat");
+        updateRichPresence();
+        _configData = ConfigData.CreateDefault(singleplayer: true);
+        _modeConfigData = configData.Normal;
+        LoadPreferences();
+        if (ReadWrite.fileExists("/StreamerNames.json", useCloud: false, usePath: true))
+        {
+            try
+            {
+                streamerNames = ReadWrite.deserializeJSON<List<string>>("/StreamerNames.json", useCloud: false, usePath: true);
+            }
+            catch (Exception e2)
+            {
+                UnturnedLog.exception(e2, "Unable to parse StreamerNames.json! consider validating with a JSON linter");
+                streamerNames = null;
+            }
+            if (streamerNames == null)
+            {
+                streamerNames = new List<string>();
             }
         }
         else
         {
-            Data data = new Data();
-            ServerSavedata.writeData("/Server/Commands.dat", data);
-        }
-        if (!ServerSavedata.folderExists("/Bundles"))
-        {
-            ServerSavedata.createFolder("/Bundles");
-        }
-        if (!ServerSavedata.folderExists("/Maps"))
-        {
-            ServerSavedata.createFolder("/Maps");
-        }
-        if (!ServerSavedata.folderExists("/Workshop/Content"))
-        {
-            ServerSavedata.createFolder("/Workshop/Content");
-        }
-        if (!ServerSavedata.folderExists("/Workshop/Maps"))
-        {
-            ServerSavedata.createFolder("/Workshop/Maps");
-        }
-        _configData = ConfigData.CreateDefault(singleplayer: false);
-        if (ServerSavedata.fileExists("/Config.json"))
-        {
-            try
-            {
-                ServerSavedata.populateJSON("/Config.json", _configData);
-            }
-            catch (Exception e)
-            {
-                UnturnedLog.error("Exception while parsing server config:");
-                UnturnedLog.exception(e);
-            }
-        }
-        ServerSavedata.serializeJSON("/Config.json", configData);
-        _modeConfigData = _configData.getModeConfig(mode);
-        if (_modeConfigData == null)
-        {
-            _modeConfigData = new ModeConfigData(mode);
+            streamerNames = new List<string>();
         }
         LogSystemInfo();
     }
@@ -4229,6 +4446,7 @@ public class Provider : MonoBehaviour
 
     public void unityStart()
     {
+        _ = Dedicator.IsDedicatedServer;
     }
 
     private void LogSystemInfo()
@@ -4238,6 +4456,15 @@ public class Provider : MonoBehaviour
             UnturnedLog.info("Platform: {0}", Application.platform);
             UnturnedLog.info("Operating System: " + SystemInfo.operatingSystem);
             UnturnedLog.info("System Memory: " + SystemInfo.systemMemorySize + "MB");
+            UnturnedLog.info("Graphics Device Name: " + SystemInfo.graphicsDeviceName);
+            UnturnedLog.info("Graphics Device Type: " + SystemInfo.graphicsDeviceType);
+            UnturnedLog.info("Graphics Memory: " + SystemInfo.graphicsMemorySize + "MB");
+            UnturnedLog.info("Graphics Multi-Threaded: " + SystemInfo.graphicsMultiThreaded);
+            UnturnedLog.info("Render Threading Mode: " + SystemInfo.renderingThreadingMode);
+            UnturnedLog.info("Supports Audio: " + SystemInfo.supportsAudio);
+            UnturnedLog.info("Supports Instancing: " + SystemInfo.supportsInstancing);
+            UnturnedLog.info("Supports Motion Vectors: " + SystemInfo.supportsMotionVectors);
+            UnturnedLog.info("Supports Ray Tracing: " + SystemInfo.supportsRayTracing);
         }
         catch (Exception e)
         {
@@ -4249,6 +4476,10 @@ public class Provider : MonoBehaviour
     {
         UnturnedLog.info("Application quitting");
         isApplicationQuitting = true;
+        if (!Dedicator.IsDedicatedServer)
+        {
+            ConvenientSavedata.save();
+        }
         if (isInitialized)
         {
             RequestDisconnect("application quitting");
@@ -4266,7 +4497,18 @@ public class Provider : MonoBehaviour
 
     private bool onApplicationWantsToQuit()
     {
-        _ = wasQuitGameCalled;
+        if (wasQuitGameCalled)
+        {
+            return true;
+        }
+        if (Dedicator.IsDedicatedServer)
+        {
+            return true;
+        }
+        if (!isServer && isPvP && clients.Count > 1 && Player.player != null && !Player.player.movement.isSafe && !Player.player.life.isDead)
+        {
+            return false;
+        }
         return true;
     }
 }

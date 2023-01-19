@@ -6,6 +6,10 @@ public class CommandCamera : Command
 {
     protected override void execute(CSteamID executorID, string parameter)
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            return;
+        }
         string text = parameter.ToLower();
         ECameraMode cameraMode;
         if (text == localization.format("CameraFirst").ToLower())

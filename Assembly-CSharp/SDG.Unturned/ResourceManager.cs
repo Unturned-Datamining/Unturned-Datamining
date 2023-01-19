@@ -155,11 +155,11 @@ public class ResourceManager : SteamCaller
                                 {
                                     if (asset.hasDebris)
                                     {
-                                        ItemManager.dropItem(new Item(num2, EItemOrigin.NATURE), resource.position + direction * (2 + i) + new Vector3(0f, 2f, 0f), playEffect: false, isDropped: true, wideSpread: true);
+                                        ItemManager.dropItem(new Item(num2, EItemOrigin.NATURE), resource.position + direction * (2 + i) + new Vector3(0f, 2f, 0f), playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
                                     }
                                     else
                                     {
-                                        ItemManager.dropItem(new Item(num2, EItemOrigin.NATURE), resource.position + new Vector3(UnityEngine.Random.Range(-2f, 2f), 2f, UnityEngine.Random.Range(-2f, 2f)), playEffect: false, isDropped: true, wideSpread: true);
+                                        ItemManager.dropItem(new Item(num2, EItemOrigin.NATURE), resource.position + new Vector3(UnityEngine.Random.Range(-2f, 2f), 2f, UnityEngine.Random.Range(-2f, 2f)), playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
                                     }
                                 }
                             }
@@ -172,7 +172,7 @@ public class ResourceManager : SteamCaller
                                 value2 = Mathf.Clamp(value2, 0, 100);
                                 for (int j = 0; j < value2; j++)
                                 {
-                                    ItemManager.dropItem(new Item(asset.log, EItemOrigin.NATURE), resource.position + direction * (2 + j * 2) + Vector3.up, playEffect: false, isDropped: true, wideSpread: true);
+                                    ItemManager.dropItem(new Item(asset.log, EItemOrigin.NATURE), resource.position + direction * (2 + j * 2) + Vector3.up, playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
                                 }
                             }
                             if (asset.stick != 0)
@@ -182,7 +182,7 @@ public class ResourceManager : SteamCaller
                                 for (int k = 0; k < value3; k++)
                                 {
                                     float f = UnityEngine.Random.Range(0f, (float)Math.PI * 2f);
-                                    ItemManager.dropItem(new Item(asset.stick, EItemOrigin.NATURE), resource.position + new Vector3(Mathf.Sin(f) * 3f, 1f, Mathf.Cos(f) * 3f), playEffect: false, isDropped: true, wideSpread: true);
+                                    ItemManager.dropItem(new Item(asset.stick, EItemOrigin.NATURE), resource.position + new Vector3(Mathf.Sin(f) * 3f, 1f, Mathf.Cos(f) * 3f), playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
                                 }
                             }
                         }
@@ -510,7 +510,7 @@ public class ResourceManager : SteamCaller
                 }
             }
         }
-        if (step != 3 || !Regions.checkSafe(new_x, new_y))
+        if (step != 3 || !Dedicator.IsDedicatedServer || !Regions.checkSafe(new_x, new_y))
         {
             return;
         }

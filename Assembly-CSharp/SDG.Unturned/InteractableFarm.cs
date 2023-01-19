@@ -120,6 +120,20 @@ public class InteractableFarm : Interactable
 
     private void Update()
     {
+        if (!Dedicator.IsDedicatedServer && !isGrown && checkFarm())
+        {
+            isGrown = true;
+            Transform transform = base.transform.Find("Foliage_0");
+            if (transform != null)
+            {
+                transform.gameObject.SetActive(value: false);
+            }
+            Transform transform2 = base.transform.Find("Foliage_1");
+            if (transform2 != null)
+            {
+                transform2.gameObject.SetActive(value: true);
+            }
+        }
     }
 
     private void OnEnable()

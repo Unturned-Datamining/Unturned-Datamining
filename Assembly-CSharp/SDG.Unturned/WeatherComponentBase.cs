@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -45,6 +46,8 @@ public class WeatherComponentBase : MonoBehaviour
 
     public float windMain;
 
+    public AudioSource ambientAudioSource;
+
     internal NetId netId;
 
     public float EffectBlendAlpha => Mathf.Min(globalBlendAlpha, localVolumeBlendAlpha);
@@ -56,6 +59,10 @@ public class WeatherComponentBase : MonoBehaviour
 
     public virtual void InitializeWeather()
     {
+        if (!Dedicator.IsDedicatedServer && asset.ambientAudio.isValid)
+        {
+            StartCoroutine(AsyncLoadAmbientAudio());
+        }
     }
 
     public virtual void UpdateWeather()
@@ -93,6 +100,26 @@ public class WeatherComponentBase : MonoBehaviour
             if ((item.movement.WeatherMask & asset.volumeMask) != 0)
             {
                 yield return item;
+            }
+        }
+    }
+
+    private IEnumerator AsyncLoadAmbientAudio()
+    {
+        AssetBundleRequest request = asset.ambientAudio.LoadAssetAsync();
+        if (request != null)
+        {
+            yield return request;
+            AudioClip audioClip = request.asset as AudioClip;
+            if (audioClip != null)
+            {
+                ambientAudioSource = base.gameObject.AddComponent<AudioSource>();
+                ambientAudioSource.loop = true;
+                ambientAudioSource.playOnAwake = false;
+                ambientAudioSource.volume = 0f;
+                ambientAudioSource.spatialBlend = 0f;
+                ambientAudioSource.clip = audioClip;
+                ambientAudioSource.Play();
             }
         }
     }

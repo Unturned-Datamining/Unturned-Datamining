@@ -7,13 +7,16 @@ public class CommandAllowP2PRelay : Command
 {
     protected override void execute(CSteamID executorID, string parameter)
     {
-        bool flag = true;
-        if (parameter == "0" || parameter.Equals("no", StringComparison.InvariantCultureIgnoreCase) || parameter.Equals("off", StringComparison.InvariantCultureIgnoreCase) || parameter.Equals("false", StringComparison.InvariantCultureIgnoreCase))
+        if (Dedicator.IsDedicatedServer)
         {
-            flag = false;
+            bool flag = true;
+            if (parameter == "0" || parameter.Equals("no", StringComparison.InvariantCultureIgnoreCase) || parameter.Equals("off", StringComparison.InvariantCultureIgnoreCase) || parameter.Equals("false", StringComparison.InvariantCultureIgnoreCase))
+            {
+                flag = false;
+            }
+            SteamGameServerNetworking.AllowP2PPacketRelay(flag);
+            CommandWindow.Log(localization.format(flag ? "On" : "Off"));
         }
-        SteamGameServerNetworking.AllowP2PPacketRelay(flag);
-        CommandWindow.Log(localization.format(flag ? "On" : "Off"));
     }
 
     public CommandAllowP2PRelay(Local newLocalization)

@@ -43,7 +43,6 @@ public class SaveManager : SteamCaller
 
     public static void save()
     {
-        ThreadUtil.assertIsGameThread();
         if (!Level.isLoaded)
         {
             UnturnedLog.warn("Ignoring request to save before level finished loading");
@@ -66,9 +65,12 @@ public class SaveManager : SteamCaller
             LightingManager.save();
             GroupManager.save();
         }
-        SteamWhitelist.save();
-        SteamBlacklist.save();
-        SteamAdminlist.save();
+        if (Dedicator.IsDedicatedServer)
+        {
+            SteamWhitelist.save();
+            SteamBlacklist.save();
+            SteamAdminlist.save();
+        }
         broadcastPostSave();
     }
 

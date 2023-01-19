@@ -9,6 +9,10 @@ public class CommandQueue : Command
 
     protected override void execute(CSteamID executorID, string parameter)
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            return;
+        }
         switch (parameter)
         {
         case "a":

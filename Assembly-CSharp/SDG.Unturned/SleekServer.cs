@@ -1,3 +1,4 @@
+using SDG.HostBans;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -113,6 +114,14 @@ public class SleekServer : SleekWrapper
         pingBox.sizeOffset_X = 50;
         pingBox.sizeScale_Y = 1f;
         pingBox.text = info.ping.ToString();
+        if (info.hostBanFlags.HasFlag(EHostBanFlags.QueryPingWarning))
+        {
+            pingBox.textColor = ESleekTint.BAD;
+            if (MenuPlayServerInfoUI.localization != null)
+            {
+                pingBox.tooltipText = MenuPlayServerInfoUI.localization.format("HostBan_QueryPingWarning");
+            }
+        }
         button.AddChild(pingBox);
         if (!string.IsNullOrEmpty(info.thumbnailURL))
         {

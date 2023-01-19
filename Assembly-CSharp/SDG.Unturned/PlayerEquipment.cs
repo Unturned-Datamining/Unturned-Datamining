@@ -511,6 +511,10 @@ public class PlayerEquipment : PlayerCaller
         lastInspect = Time.realtimeSinceStartup;
         inspectTime = base.player.animator.getAnimationLength("Inspect");
         base.player.animator.play("Inspect", smooth: false);
+        if (asset != null)
+        {
+            base.player.PlayAudioReference(asset.inspectAudio);
+        }
     }
 
     internal void InvokeOnInspectingUseable()
@@ -671,6 +675,174 @@ public class PlayerEquipment : PlayerCaller
 
     private void updateSlot(byte slot, ushort id, byte[] state)
     {
+        if (Dedicator.IsDedicatedServer || slot >= PlayerInventory.SLOTS || thirdSlots == null)
+        {
+            return;
+        }
+        if (thirdSlots[slot] != null)
+        {
+            UnityEngine.Object.Destroy(thirdSlots[slot].gameObject);
+            thirdSkinneds[slot] = false;
+            tempThirdMaterials[slot] = null;
+            thirdMythics[slot] = null;
+        }
+        if (characterSlots != null && characterSlots[slot] != null)
+        {
+            UnityEngine.Object.Destroy(characterSlots[slot].gameObject);
+            characterSkinneds[slot] = false;
+            tempCharacterMaterials[slot] = null;
+            characterMythics[slot] = null;
+        }
+        if (base.channel.isOwner)
+        {
+            switch (slot)
+            {
+            case 0:
+                Characters.active.primaryItem = id;
+                Characters.active.primaryState = state;
+                break;
+            case 1:
+                Characters.active.secondaryItem = id;
+                Characters.active.secondaryState = state;
+                break;
+            }
+        }
+        if (id == 0 || !(Assets.find(EAssetType.ITEM, id) is ItemAsset itemAsset))
+        {
+            return;
+        }
+        int value = 0;
+        ushort num = 0;
+        ushort num2 = 0;
+        if (base.channel.owner.skinItems != null && base.channel.owner.itemSkins != null && base.channel.owner.itemSkins.TryGetValue(itemAsset.sharedSkinLookupID, out value))
+        {
+            num = Provider.provider.economyService.getInventorySkinID(value);
+            num2 = Provider.provider.economyService.getInventoryMythicID(value);
+            if (num2 == 0)
+            {
+                num2 = base.channel.owner.getParticleEffectForItemDef(value);
+            }
+        }
+        SkinAsset skinAsset = Assets.find(EAssetType.SKIN, num) as SkinAsset;
+        GetStatTrackerValueHandler statTrackerCallback = null;
+        switch (slot)
+        {
+        case 0:
+            statTrackerCallback = getSlot0StatTrackerValue;
+            break;
+        case 1:
+            statTrackerCallback = getSlot1StatTrackerValue;
+            break;
+        }
+        Transform transform = ItemTool.InstantiateItem(id, num, 100, state, viewmodel: false, itemAsset, skinAsset, shouldDestroyColliders: true, tempThirdMeshes[slot], out tempThirdMaterials[slot], statTrackerCallback);
+        Rigidbody orAddComponent = transform.GetOrAddComponent<Rigidbody>();
+        orAddComponent.useGravity = false;
+        orAddComponent.isKinematic = true;
+        fixStatTrackerHookScale(transform);
+        syncStatTrackTrackerVisibility(transform);
+        switch (slot)
+        {
+        case 0:
+            if (itemAsset.type == EItemType.MELEE)
+            {
+                transform.transform.parent = thirdPrimaryMeleeSlot;
+            }
+            else if (itemAsset.slot == ESlotType.PRIMARY)
+            {
+                transform.transform.parent = thirdPrimaryLargeGunSlot;
+            }
+            else
+            {
+                transform.transform.parent = thirdPrimarySmallGunSlot;
+            }
+            break;
+        case 1:
+            if (itemAsset.type == EItemType.MELEE)
+            {
+                transform.transform.parent = thirdSecondaryMeleeSlot;
+            }
+            else
+            {
+                transform.transform.parent = thirdSecondaryGunSlot;
+            }
+            break;
+        }
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+        transform.localScale = Vector3.one;
+        transform.gameObject.SetActive(value: false);
+        transform.gameObject.SetActive(value: true);
+        Layerer.enemy(transform);
+        if (num2 != 0)
+        {
+            Transform transform2 = ItemTool.applyEffect(transform, num2, EEffectType.THIRD);
+            if (transform2 != null)
+            {
+                thirdMythics[slot] = transform2.GetComponent<MythicLockee>();
+            }
+        }
+        thirdSlots[slot] = transform;
+        thirdSkinneds[slot] = true;
+        applySkinVisual();
+        if (thirdMythics[slot] != null)
+        {
+            thirdMythics[slot].isMythic = base.player.clothing.isSkinned && base.player.clothing.isMythic;
+        }
+        if (characterSlots == null)
+        {
+            return;
+        }
+        transform = ItemTool.getItem(id, num, 100, state, viewmodel: false, itemAsset, skinAsset, tempCharacterMeshes[slot], out tempCharacterMaterials[slot], statTrackerCallback);
+        fixStatTrackerHookScale(transform);
+        syncStatTrackTrackerVisibility(transform);
+        switch (slot)
+        {
+        case 0:
+            if (itemAsset.type == EItemType.MELEE)
+            {
+                transform.transform.parent = characterPrimaryMeleeSlot;
+            }
+            else if (itemAsset.slot == ESlotType.PRIMARY)
+            {
+                transform.transform.parent = characterPrimaryLargeGunSlot;
+            }
+            else
+            {
+                transform.transform.parent = characterPrimarySmallGunSlot;
+            }
+            break;
+        case 1:
+            if (itemAsset.type == EItemType.MELEE)
+            {
+                transform.transform.parent = characterSecondaryMeleeSlot;
+            }
+            else
+            {
+                transform.transform.parent = characterSecondaryGunSlot;
+            }
+            break;
+        }
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+        transform.localScale = Vector3.one;
+        transform.gameObject.SetActive(value: false);
+        transform.gameObject.SetActive(value: true);
+        Layerer.enemy(transform);
+        if (num2 != 0)
+        {
+            Transform transform3 = ItemTool.applyEffect(transform, num2, EEffectType.THIRD);
+            if (transform3 != null)
+            {
+                characterMythics[slot] = transform3.GetComponent<MythicLockee>();
+            }
+        }
+        characterSlots[slot] = transform;
+        characterSkinneds[slot] = true;
+        applySkinVisual();
+        if (characterMythics[slot] != null)
+        {
+            characterMythics[slot].isMythic = base.player.clothing.isSkinned && base.player.clothing.isMythic;
+        }
     }
 
     [Obsolete]
@@ -1098,6 +1270,10 @@ public class PlayerEquipment : PlayerCaller
         }
         lastEquipped = Time.realtimeSinceStartup;
         equippedTime = base.player.animator.getAnimationLength("Equip");
+        if (!Dedicator.IsDedicatedServer && asset.equip != null)
+        {
+            base.player.playSound(asset.equip, 1f, 0.05f);
+        }
         PlayerEquipment.OnUseableChanged_Global.TryInvoke("OnUseableChanged_Global", this);
     }
 

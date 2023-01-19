@@ -11,6 +11,7 @@ internal static class ClientMessageHandler_Accepted
 {
     internal static void ReadMessage(NetPakReader reader)
     {
+        Provider.isWaitingForAuthenticationResponse = false;
         reader.ReadUInt32(out var value);
         reader.ReadUInt16(out var value2);
         UnturnedLog.info("Accepted by server");

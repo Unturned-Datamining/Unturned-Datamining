@@ -6,13 +6,16 @@ public class CommandCheats : Command
 {
     protected override void execute(CSteamID executorID, string parameter)
     {
-        if (Provider.isServer)
+        if (Dedicator.IsDedicatedServer)
         {
-            CommandWindow.LogError(localization.format("RunningErrorText"));
-            return;
+            if (Provider.isServer)
+            {
+                CommandWindow.LogError(localization.format("RunningErrorText"));
+                return;
+            }
+            Provider.hasCheats = true;
+            CommandWindow.Log(localization.format("CheatsText"));
         }
-        Provider.hasCheats = true;
-        CommandWindow.Log(localization.format("CheatsText"));
     }
 
     public CommandCheats(Local newLocalization)

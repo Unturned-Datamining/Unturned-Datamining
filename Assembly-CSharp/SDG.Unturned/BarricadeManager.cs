@@ -1,6 +1,6 @@
-#define WITH_GAME_THREAD_ASSERTIONS
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using SDG.NetPak;
 using SDG.NetTransport;
@@ -65,6 +65,12 @@ public class BarricadeManager : SteamCaller
     private static readonly ClientStaticMethod SendMultipleBarricades = ClientStaticMethod.Get(ReceiveMultipleBarricades);
 
     private Dictionary<int, Stack<GameObject>> pool;
+
+    private Stopwatch instantiationTimer = new Stopwatch();
+
+    private const int MIN_INSTANTIATIONS_PER_FRAME = 5;
+
+    private const int MIN_DESTROY_PER_FRAME = 10;
 
     internal const int POSITION_FRAC_BIT_COUNT = 11;
 
@@ -181,7 +187,6 @@ public class BarricadeManager : SteamCaller
 
     public static void changeOwnerAndGroup(Transform transform, ulong newOwner, ulong newGroup)
     {
-        ThreadUtil.assertIsGameThread();
         if (tryGetRegion(transform, out var x, out var y, out var plant, out var region))
         {
             BarricadeDrop barricadeDrop = region.FindBarricadeByRootTransform(transform);
@@ -218,7 +223,6 @@ public class BarricadeManager : SteamCaller
 
     public static bool ServerSetBarricadeTransform(Transform transform, Vector3 position, Quaternion rotation)
     {
-        ThreadUtil.assertIsGameThread();
         if (!tryGetRegion(transform, out var x, out var y, out var plant, out var region))
         {
             return false;
@@ -1133,7 +1137,6 @@ public class BarricadeManager : SteamCaller
 
     public static void damage(Transform transform, float damage, float times, bool armor, CSteamID instigatorSteamID = default(CSteamID), EDamageOrigin damageOrigin = EDamageOrigin.Unknown)
     {
-        ThreadUtil.assertIsGameThread();
         if (!tryGetRegion(transform, out var x, out var y, out var plant, out var region))
         {
             return;
@@ -1190,7 +1193,6 @@ public class BarricadeManager : SteamCaller
 
     public static void destroyBarricade(BarricadeDrop barricade, byte x, byte y, ushort plant)
     {
-        ThreadUtil.assertIsGameThread();
         if (tryGetRegion(x, y, plant, out var region))
         {
             region.barricades.Remove(barricade.serversideData);
@@ -1217,7 +1219,6 @@ public class BarricadeManager : SteamCaller
 
     public static void repair(Transform transform, float damage, float times, CSteamID instigatorSteamID = default(CSteamID))
     {
-        ThreadUtil.assertIsGameThread();
         if (!tryGetRegion(transform, out var x, out var y, out var plant, out var region))
         {
             return;
@@ -1240,7 +1241,6 @@ public class BarricadeManager : SteamCaller
 
     public static Transform dropBarricade(Barricade barricade, Transform hit, Vector3 point, float angle_x, float angle_y, float angle_z, ulong owner, ulong group)
     {
-        ThreadUtil.assertIsGameThread();
         if (barricade.asset == null)
         {
             return null;
@@ -1282,7 +1282,6 @@ public class BarricadeManager : SteamCaller
 
     public static Transform dropPlantedBarricade(Transform parent, Barricade barricade, Vector3 point, Quaternion rotation, ulong owner, ulong group)
     {
-        ThreadUtil.assertIsGameThread();
         VehicleBarricadeRegion vehicleBarricadeRegion = FindVehicleRegionByTransform(parent);
         if (vehicleBarricadeRegion == null)
         {
@@ -1304,7 +1303,6 @@ public class BarricadeManager : SteamCaller
 
     public static Transform dropNonPlantedBarricade(Barricade barricade, Vector3 point, Quaternion rotation, ulong owner, ulong group)
     {
-        ThreadUtil.assertIsGameThread();
         if (!Regions.tryGetCoordinate(point, out var x, out var y))
         {
             return null;
@@ -1404,7 +1402,6 @@ public class BarricadeManager : SteamCaller
 
     private Transform spawnBarricade(BarricadeRegion region, Guid assetGuid, byte[] state, Vector3 point, byte angle_x, byte angle_y, byte angle_z, byte hp, ulong owner, ulong group, NetId netId)
     {
-        ThreadUtil.ConditionalAssertIsGameThread();
         ItemBarricadeAsset itemBarricadeAsset = Assets.find(assetGuid) as ItemBarricadeAsset;
         if (!Provider.isServer)
         {
@@ -1439,21 +1436,25 @@ public class BarricadeManager : SteamCaller
             }
             if (transform == null)
             {
+                GameObject gameObject2;
                 if (region.parent == null)
                 {
-                    GameObject gameObject2 = UnityEngine.Object.Instantiate(itemBarricadeAsset.barricade, point, quaternion);
+                    gameObject2 = UnityEngine.Object.Instantiate(itemBarricadeAsset.barricade, point, quaternion);
                     transform = gameObject2.transform;
                 }
                 else
                 {
-                    GameObject gameObject2 = UnityEngine.Object.Instantiate(itemBarricadeAsset.barricade, region.parent);
+                    gameObject2 = UnityEngine.Object.Instantiate(itemBarricadeAsset.barricade, region.parent);
                     transform = gameObject2.transform;
                     transform.localPosition = point;
                     transform.localRotation = quaternion;
                 }
                 transform.localScale = Vector3.one;
                 transform.name = itemBarricadeAsset.id.ToString();
-                _ = itemBarricadeAsset.useWaterHeightTransparentSort;
+                if (itemBarricadeAsset.useWaterHeightTransparentSort && !Dedicator.IsDedicatedServer)
+                {
+                    gameObject2.AddComponent<WaterHeightTransparentSort>();
+                }
                 if (Provider.isServer && itemBarricadeAsset.nav != null)
                 {
                     Transform transform2 = UnityEngine.Object.Instantiate(itemBarricadeAsset.nav).transform;
@@ -1488,9 +1489,9 @@ public class BarricadeManager : SteamCaller
                     transform5.gameObject.AddComponent<TemperatureTrigger>().temperature = EPlayerTemperature.WARM;
                 }
             }
-            else
+            else if (itemBarricadeAsset.useWaterHeightTransparentSort && !Dedicator.IsDedicatedServer)
             {
-                _ = itemBarricadeAsset.useWaterHeightTransparentSort;
+                transform.GetOrAddComponent<WaterHeightTransparentSort>().updateRenderQueue();
             }
             if (itemBarricadeAsset.build == EBuild.DOOR || itemBarricadeAsset.build == EBuild.GATE || itemBarricadeAsset.build == EBuild.SHUTTER || itemBarricadeAsset.build == EBuild.HATCH)
             {
@@ -1605,9 +1606,9 @@ public class BarricadeManager : SteamCaller
             {
                 transform.GetOrAddComponent<InteractableStereo>().updateState(itemBarricadeAsset, state);
             }
-            else
+            else if (itemBarricadeAsset.build == EBuild.CLOCK && !Dedicator.IsDedicatedServer)
             {
-                _ = itemBarricadeAsset.build;
+                transform.GetOrAddComponent<InteractableClock>().updateState(itemBarricadeAsset, state);
             }
             if (!itemBarricadeAsset.isUnpickupable)
             {
@@ -2212,7 +2213,6 @@ public class BarricadeManager : SteamCaller
 
     private static void updateStateInternal(Transform transform, byte[] state, int size, bool shouldReplicate = false)
     {
-        ThreadUtil.assertIsGameThread();
         if (tryGetRegion(transform, out var x, out var y, out var plant, out var region))
         {
             BarricadeDrop barricadeDrop = region.FindBarricadeByRootTransform(transform);
@@ -2314,7 +2314,7 @@ public class BarricadeManager : SteamCaller
                 }
             }
         }
-        if (step != 2 || !Regions.checkSafe(new_x, new_y))
+        if (step != 2 || !Dedicator.IsDedicatedServer || !Regions.checkSafe(new_x, new_y))
         {
             return;
         }
@@ -2586,7 +2586,7 @@ public class BarricadeManager : SteamCaller
         foreach (BarricadeDrop drop in region.drops)
         {
             BarricadeData serversideData = drop.serversideData;
-            if ((Provider.modeConfigData.Barricades.Decay_Time == 0 || time < serversideData.objActiveDate || time - serversideData.objActiveDate < Provider.modeConfigData.Barricades.Decay_Time) && serversideData.barricade.asset.isSaveable)
+            if ((!Dedicator.IsDedicatedServer || Provider.modeConfigData.Barricades.Decay_Time == 0 || time < serversideData.objActiveDate || time - serversideData.objActiveDate < Provider.modeConfigData.Barricades.Decay_Time) && serversideData.barricade.asset.isSaveable)
             {
                 num = (ushort)(num + 1);
             }
@@ -2595,7 +2595,7 @@ public class BarricadeManager : SteamCaller
         foreach (BarricadeDrop drop2 in region.drops)
         {
             BarricadeData serversideData2 = drop2.serversideData;
-            if ((Provider.modeConfigData.Barricades.Decay_Time == 0 || time < serversideData2.objActiveDate || time - serversideData2.objActiveDate < Provider.modeConfigData.Barricades.Decay_Time) && serversideData2.barricade.asset.isSaveable)
+            if ((!Dedicator.IsDedicatedServer || Provider.modeConfigData.Barricades.Decay_Time == 0 || time < serversideData2.objActiveDate || time - serversideData2.objActiveDate < Provider.modeConfigData.Barricades.Decay_Time) && serversideData2.barricade.asset.isSaveable)
             {
                 river.writeGUID(drop2.asset.GUID);
                 river.writeUInt32(serversideData2.instanceID);
@@ -2682,5 +2682,61 @@ public class BarricadeManager : SteamCaller
         {
             UnityEngine.Object.Destroy(instance);
         }
+    }
+
+    private void Update()
+    {
+        if (!Provider.isConnected)
+        {
+            return;
+        }
+        if (pendingInstantiations != null && pendingInstantiations.Count > 0)
+        {
+            instantiationTimer.Restart();
+            int num = 0;
+            do
+            {
+                BarricadeInstantiationParameters barricadeInstantiationParameters = pendingInstantiations[num];
+                if (spawnBarricade(barricadeInstantiationParameters.region, barricadeInstantiationParameters.assetId, barricadeInstantiationParameters.state, barricadeInstantiationParameters.position, barricadeInstantiationParameters.angle_x, barricadeInstantiationParameters.angle_y, barricadeInstantiationParameters.angle_z, barricadeInstantiationParameters.hp, barricadeInstantiationParameters.owner, barricadeInstantiationParameters.group, barricadeInstantiationParameters.netId) != null)
+                {
+                    NetInvocationDeferralRegistry.Invoke(barricadeInstantiationParameters.netId, 3u);
+                }
+                else
+                {
+                    NetInvocationDeferralRegistry.Cancel(barricadeInstantiationParameters.netId, 3u);
+                }
+                num++;
+            }
+            while (num < pendingInstantiations.Count && (instantiationTimer.ElapsedMilliseconds < 1 || num < 5));
+            pendingInstantiations.RemoveRange(0, num);
+            instantiationTimer.Stop();
+        }
+        if (regionsPendingDestroy == null || regionsPendingDestroy.Count <= 0)
+        {
+            return;
+        }
+        instantiationTimer.Restart();
+        int num2 = 0;
+        do
+        {
+            BarricadeRegion tail = regionsPendingDestroy.GetTail();
+            if (tail.drops.Count > 0)
+            {
+                tail.DestroyTail();
+                num2++;
+                if (tail.drops.Count < 1)
+                {
+                    tail.isPendingDestroy = false;
+                    regionsPendingDestroy.RemoveTail();
+                }
+            }
+            else
+            {
+                tail.isPendingDestroy = false;
+                regionsPendingDestroy.RemoveTail();
+            }
+        }
+        while (regionsPendingDestroy.Count > 0 && (instantiationTimer.ElapsedMilliseconds < 1 || num2 < 10));
+        instantiationTimer.Stop();
     }
 }

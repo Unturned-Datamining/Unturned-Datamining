@@ -666,6 +666,10 @@ public class LevelGround : MonoBehaviour
                                             UnturnedLog.error("Tree with no asset in region {0}, {1}: {2}", b6, b7, num3);
                                         }
                                     }
+                                    if (!Dedicator.IsDedicatedServer)
+                                    {
+                                        ClientAssetIntegrity.QueueRequest(guid, resourceSpawnpoint.asset, $"Tree (x: {b6} y: {b7})");
+                                    }
                                     trees[b6, b7].Add(resourceSpawnpoint);
                                     _total++;
                                 }
@@ -1155,7 +1159,10 @@ public class LevelGround : MonoBehaviour
 
     private void Update()
     {
-        _ = Level.isLoaded;
+        if (Level.isLoaded && !Dedicator.IsDedicatedServer && loads != null && regions != null && trees != null && isRegionalVisibilityDirty)
+        {
+            tickRegionalVisibility();
+        }
     }
 
     private void Start()

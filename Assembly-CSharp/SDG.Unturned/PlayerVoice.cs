@@ -434,6 +434,11 @@ public class PlayerVoice : PlayerCaller
 
     private void playWalkieTalkieSound()
     {
+        OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform.position, radioClip);
+        oneShotAudioParameters.RandomizeVolume(0.74f, 0.76f);
+        oneShotAudioParameters.RandomizePitch(0.99f, 1.01f);
+        oneShotAudioParameters.SetSpatialBlend2D();
+        oneShotAudioParameters.Play();
     }
 
     private void updatePlayback()
@@ -489,10 +494,37 @@ public class PlayerVoice : PlayerCaller
 
     private void Update()
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            if (canEverRecord)
+            {
+                updateInput();
+                updateRecording();
+            }
+            if (canEverPlayback)
+            {
+                updatePlayback();
+            }
+        }
     }
 
     internal void InitializePlayer()
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            audioSource = GetComponent<AudioSource>();
+            if (canEverPlayback)
+            {
+                steamOptimalSampleRate = SteamUser.GetVoiceOptimalSampleRate();
+                int num = (int)steamOptimalSampleRate;
+                secondsPerSample = 1f / (float)num;
+                int num2 = num * 2;
+                audioData = new float[num2];
+                zeroSamples = Mathf.CeilToInt(SILENCE_DURATION * 1.5f * (float)num);
+                audioClip = AudioClip.Create("Voice", num2, 1, num, stream: false);
+                audioSource.clip = audioClip;
+            }
+        }
     }
 
     private void OnDestroy()

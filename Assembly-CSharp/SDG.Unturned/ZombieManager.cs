@@ -668,7 +668,7 @@ public class ZombieManager : SteamCaller
                 ushort num = SpawnTableTool.resolve(LevelZombies.tables[zombie.type].lootID);
                 if (num != 0)
                 {
-                    ItemManager.dropItem(new Item(num, EItemOrigin.WORLD), zombie.transform.position, playEffect: false, isDropped: true, wideSpread: true);
+                    ItemManager.dropItem(new Item(num, EItemOrigin.WORLD), zombie.transform.position, playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
                 }
             }
         }
@@ -683,7 +683,7 @@ public class ZombieManager : SteamCaller
                 ushort item = LevelItems.getItem(LevelZombies.tables[zombie.type].lootIndex);
                 if (item != 0)
                 {
-                    ItemManager.dropItem(new Item(item, EItemOrigin.WORLD), zombie.transform.position, playEffect: false, isDropped: true, wideSpread: true);
+                    ItemManager.dropItem(new Item(item, EItemOrigin.WORLD), zombie.transform.position, playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
                 }
             }
         }
@@ -692,7 +692,7 @@ public class ZombieManager : SteamCaller
     public void addZombie(byte bound, byte type, byte speciality, byte shirt, byte pants, byte hat, byte gear, byte move, byte idle, Vector3 position, float angle, bool isDead)
     {
         Quaternion rotation = Quaternion.Euler(0f, angle, 0f);
-        GameObject original = dedicatedZombiePrefab;
+        GameObject original = (Dedicator.IsDedicatedServer ? ((GameObject)dedicatedZombiePrefab) : ((!Provider.isServer) ? ((GameObject)clientZombiePrefab) : ((GameObject)serverZombiePrefab)));
         GameObject obj = UnityEngine.Object.Instantiate(original, position, rotation);
         obj.name = "Zombie";
         Zombie component = obj.GetComponent<Zombie>();
@@ -966,7 +966,7 @@ public class ZombieManager : SteamCaller
                 }
             }
         }
-        if (!LevelNavigation.flagData[respawnZombiesBound].spawnZombies || zombieRegion.zombies.Count <= 0 || (zombieRegion.hasBeacon && BeaconManager.checkBeacon(respawnZombiesBound).getRemaining() == 0))
+        if (!LevelNavigation.flagData[respawnZombiesBound].spawnZombies || zombieRegion.zombies.Count <= 0 || (!Dedicator.IsDedicatedServer && !zombieRegion.hasBeacon && Level.info.type != ELevelType.HORDE) || (zombieRegion.hasBeacon && BeaconManager.checkBeacon(respawnZombiesBound).getRemaining() == 0))
         {
             return;
         }
@@ -1136,16 +1136,22 @@ public class ZombieManager : SteamCaller
             _waveIndex = 0;
             _waveRemaining = 0;
             onWaveUpdated = null;
-            if (LevelNavigation.bounds.Count == 0 || LevelZombies.zombies.Length == 0 || LevelNavigation.bounds.Count != LevelZombies.zombies.Length)
+            if (Dedicator.IsDedicatedServer)
             {
-                return;
-            }
-            for (byte b2 = 0; b2 < LevelNavigation.bounds.Count; b2 = (byte)(b2 + 1))
-            {
-                generateZombies(b2);
+                if (LevelNavigation.bounds.Count == 0 || LevelZombies.zombies.Length == 0 || LevelNavigation.bounds.Count != LevelZombies.zombies.Length)
+                {
+                    return;
+                }
+                for (byte b2 = 0; b2 < LevelNavigation.bounds.Count; b2 = (byte)(b2 + 1))
+                {
+                    generateZombies(b2);
+                }
             }
         }
-        _ = Level.BUILD_INDEX_SETUP;
+        if (level > Level.BUILD_INDEX_SETUP && !Dedicator.IsDedicatedServer)
+        {
+            ZombieClothing.build();
+        }
     }
 
     private void onDayNightUpdated(bool isDaytime)
@@ -1211,23 +1217,35 @@ public class ZombieManager : SteamCaller
             {
                 continue;
             }
-            seq++;
-            SendZombieStates.Invoke(ENetReliability.Unreliable, EnumerateClients_Remote(regionIndex), delegate(NetPakWriter writer)
+            if (Dedicator.IsDedicatedServer)
             {
-                writer.WriteUInt8(regionIndex);
-                writer.WriteUInt32(seq);
-                writer.WriteUInt16(region.updates);
-                foreach (Zombie zombie in region.zombies)
+                seq++;
+                SendZombieStates.Invoke(ENetReliability.Unreliable, EnumerateClients_Remote(regionIndex), delegate(NetPakWriter writer)
                 {
-                    if (zombie.isUpdated)
+                    writer.WriteUInt8(regionIndex);
+                    writer.WriteUInt32(seq);
+                    writer.WriteUInt16(region.updates);
+                    foreach (Zombie zombie in region.zombies)
                     {
-                        zombie.isUpdated = false;
-                        writer.WriteUInt16(zombie.id);
-                        writer.WriteClampedVector3(zombie.transform.position);
-                        writer.WriteDegrees(zombie.transform.eulerAngles.y);
+                        if (zombie.isUpdated)
+                        {
+                            zombie.isUpdated = false;
+                            writer.WriteUInt16(zombie.id);
+                            writer.WriteClampedVector3(zombie.transform.position);
+                            writer.WriteDegrees(zombie.transform.eulerAngles.y);
+                        }
                     }
+                });
+                region.updates = 0;
+                continue;
+            }
+            foreach (Zombie zombie2 in region.zombies)
+            {
+                if (zombie2.isUpdated)
+                {
+                    zombie2.isUpdated = false;
                 }
-            });
+            }
             region.updates = 0;
         }
     }
@@ -1238,17 +1256,27 @@ public class ZombieManager : SteamCaller
         {
             return;
         }
-        if (tickIndex >= tickingZombies.Count)
+        int num;
+        int num2;
+        if (Dedicator.IsDedicatedServer)
         {
-            tickIndex = 0;
+            if (tickIndex >= tickingZombies.Count)
+            {
+                tickIndex = 0;
+            }
+            num = tickIndex;
+            num2 = num + 50;
+            if (num2 >= tickingZombies.Count)
+            {
+                num2 = tickingZombies.Count;
+            }
+            tickIndex = num2;
         }
-        int num = tickIndex;
-        int num2 = num + 50;
-        if (num2 >= tickingZombies.Count)
+        else
         {
+            num = 0;
             num2 = tickingZombies.Count;
         }
-        tickIndex = num2;
         for (int num3 = num2 - 1; num3 >= num; num3--)
         {
             Zombie zombie = tickingZombies[num3];
@@ -1285,6 +1313,44 @@ public class ZombieManager : SteamCaller
         Level.onPostLevelLoaded = (PostLevelLoaded)Delegate.Combine(Level.onPostLevelLoaded, new PostLevelLoaded(onPostLevelLoaded));
         Player.onPlayerCreated = (PlayerCreated)Delegate.Combine(Player.onPlayerCreated, new PlayerCreated(onPlayerCreated));
         BeaconManager.onBeaconUpdated = (BeaconUpdated)Delegate.Combine(BeaconManager.onBeaconUpdated, new BeaconUpdated(onBeaconUpdated));
+        if (!Dedicator.IsDedicatedServer)
+        {
+            roars = new AudioClip[16];
+            for (int i = 0; i < roars.Length; i++)
+            {
+                roars[i] = (AudioClip)Resources.Load("Sounds/Zombies/Roars/Roar_" + i);
+            }
+            groans = new AudioClip[5];
+            for (int j = 0; j < groans.Length; j++)
+            {
+                groans[j] = (AudioClip)Resources.Load("Sounds/Zombies/Groans/Groan_" + j);
+            }
+            spits = new AudioClip[4];
+            for (int k = 0; k < spits.Length; k++)
+            {
+                spits[k] = (AudioClip)Resources.Load("Sounds/Zombies/Spits/Spit_" + k);
+            }
+            dl_attacks = new AudioClip[6];
+            for (int l = 0; l < dl_attacks.Length; l++)
+            {
+                dl_attacks[l] = Resources.Load<AudioClip>("Sounds/Zombies/DL_Volatile/volatile00_attack_0" + l);
+            }
+            dl_deaths = new AudioClip[4];
+            for (int m = 0; m < dl_deaths.Length; m++)
+            {
+                dl_deaths[m] = Resources.Load<AudioClip>("Sounds/Zombies/DL_Volatile/volatile00_death_0" + m);
+            }
+            dl_enemy_spotted = new AudioClip[4];
+            for (int n = 0; n < dl_enemy_spotted.Length; n++)
+            {
+                dl_enemy_spotted[n] = Resources.Load<AudioClip>("Sounds/Zombies/DL_Volatile/volatile00_enemy_spotted_0" + n);
+            }
+            dl_taunt = new AudioClip[4];
+            for (int num = 0; num < dl_taunt.Length; num++)
+            {
+                dl_taunt[num] = Resources.Load<AudioClip>("Sounds/Zombies/DL_Volatile/volatile_taunt_0" + num);
+            }
+        }
     }
 
     public static IEnumerable<ITransportConnection> EnumerateClients(byte bound)
@@ -1302,7 +1368,7 @@ public class ZombieManager : SteamCaller
     {
         foreach (SteamPlayer client in Provider.clients)
         {
-            if (client.player != null && client.player.movement.bound == bound)
+            if (!client.IsLocalPlayer && client.player != null && client.player.movement.bound == bound)
             {
                 yield return client.transportConnection;
             }

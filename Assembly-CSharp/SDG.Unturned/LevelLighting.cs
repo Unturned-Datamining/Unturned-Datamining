@@ -1086,6 +1086,75 @@ public class LevelLighting
         activeCustomWeather = null;
         legacyWater = null;
         legacyWaterTransform = null;
+        if (!Dedicator.IsDedicatedServer)
+        {
+            skybox = (Material)UnityEngine.Object.Instantiate(Resources.Load("Level/Skybox"));
+            RenderSettings.skybox = skybox;
+            if (Level.info.configData.Is_Aurora_Borealis_Visible)
+            {
+                skybox.EnableKeyword("WITH_AURORA_BOREALIS");
+            }
+            LevelAsset asset = Level.getAsset();
+            if (asset != null && !asset.hasClouds)
+            {
+                skybox.DisableKeyword("WITH_CLOUDS");
+            }
+            lighting = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load("Level/Lighting"))).transform;
+            lighting.name = "Lighting";
+            lighting.position = Vector3.zero;
+            lighting.rotation = Quaternion.identity;
+            lighting.parent = Level.level;
+            sun = lighting.Find("Sun");
+            sunLight = sun.GetComponent<Light>();
+            sunFlare = sun.Find("Flare_Sun");
+            _bubbles = lighting.Find("Bubbles");
+            UpdateBubblesActive();
+            _windZone = lighting.Find("WindZone").GetComponent<WindZone>();
+            reflectionCamera = lighting.Find("Reflection").GetComponent<Camera>();
+            reflectionMap = new Cubemap(16, TextureFormat.ARGB32, mipChain: false);
+            reflectionMap.name = "Skybox_Reflection";
+            reflectionMapVision = new Cubemap(16, TextureFormat.ARGB32, mipChain: false);
+            reflectionMapVision.name = "Skybox_Reflection_Vision";
+            RenderSettings.defaultReflectionMode = DefaultReflectionMode.Custom;
+            reflectionIndex = 0;
+            reflectionIndexVision = 0;
+            isReflectionBuilding = false;
+            isReflectionBuildingVision = false;
+            puddles = lighting.GetComponent<Rain>();
+            moons = new Transform[MOON_CYCLES];
+            for (int i = 0; i < moons.Length; i++)
+            {
+                moons[i] = sun.Find("MoonLightDirection_" + i);
+            }
+            _effectAudio = lighting.Find("Effect").GetComponent<AudioSource>();
+            _dayAudio = lighting.Find("Day").GetComponent<AudioSource>();
+            _nightAudio = lighting.Find("Night").GetComponent<AudioSource>();
+            _waterAudio = lighting.Find("Water").GetComponent<AudioSource>();
+            _windAudio = lighting.Find("Wind").GetComponent<AudioSource>();
+            _belowAudio = lighting.Find("Below").GetComponent<AudioSource>();
+            if (ReadWrite.fileExists(Level.info.path + "/Environment/Ambience.unity3d", useCloud: false, usePath: false))
+            {
+                try
+                {
+                    Bundle bundle = Bundles.getBundle(Level.info.path + "/Environment/Ambience.unity3d", prependRoot: false);
+                    dayAudio.clip = bundle.load<AudioClip>("Day");
+                    dayAudio.Play();
+                    nightAudio.clip = bundle.load<AudioClip>("Night");
+                    nightAudio.Play();
+                    waterAudio.clip = bundle.load<AudioClip>("Water");
+                    waterAudio.Play();
+                    windAudio.clip = bundle.load<AudioClip>("Wind");
+                    windAudio.Play();
+                    belowAudio.clip = bundle.load<AudioClip>("Below");
+                    belowAudio.Play();
+                    bundle.unload();
+                }
+                catch (Exception e)
+                {
+                    UnturnedLog.exception(e, "Exception loading ambient audio:");
+                }
+            }
+        }
         if (ReadWrite.fileExists(Level.info.path + "/Environment/Lighting.dat", useCloud: false, usePath: false))
         {
             Block block = ReadWrite.readBlock(Level.info.path + "/Environment/Lighting.dat", useCloud: false, usePath: false, 0);
@@ -1136,55 +1205,55 @@ public class LevelLighting
                     snowDur = block.readSingle();
                 }
                 _times = new LightingInfo[4];
-                for (int i = 0; i < times.Length; i++)
+                for (int j = 0; j < times.Length; j++)
                 {
                     Color[] array = new Color[12];
                     float[] array2 = new float[5];
                     if (b > 9)
                     {
-                        for (int j = 0; j < array.Length; j++)
+                        for (int k = 0; k < array.Length; k++)
                         {
-                            array[j] = block.readColor();
+                            array[k] = block.readColor();
                         }
-                        for (int k = 0; k < array2.Length; k++)
+                        for (int l = 0; l < array2.Length; l++)
                         {
-                            array2[k] = block.readSingle();
+                            array2[l] = block.readSingle();
                         }
                     }
                     else if (b > 8)
                     {
-                        for (int l = 0; l < array.Length - 1; l++)
+                        for (int m = 0; m < array.Length - 1; m++)
                         {
-                            array[l] = block.readColor();
+                            array[m] = block.readColor();
                         }
                         array[11] = array[3];
-                        for (int m = 0; m < array2.Length; m++)
+                        for (int n = 0; n < array2.Length; n++)
                         {
-                            array2[m] = block.readSingle();
+                            array2[n] = block.readSingle();
                         }
                     }
                     else
                     {
                         if (b >= 6)
                         {
-                            for (int n = 0; n < array.Length - 2; n++)
+                            for (int num = 0; num < array.Length - 2; num++)
                             {
-                                array[n] = block.readColor();
+                                array[num] = block.readColor();
                             }
                         }
                         else
                         {
-                            for (int num = 0; num < array.Length - 3; num++)
+                            for (int num2 = 0; num2 < array.Length - 3; num2++)
                             {
-                                array[num] = block.readColor();
+                                array[num2] = block.readColor();
                             }
                             array[9] = array[2];
                         }
                         array[10] = array[0];
                         array[11] = array[3];
-                        for (int num2 = 0; num2 < array2.Length - 1; num2++)
+                        for (int num3 = 0; num3 < array2.Length - 1; num3++)
                         {
-                            array2[num2] = block.readSingle();
+                            array2[num3] = block.readSingle();
                         }
                         array2[4] = 0.25f;
                     }
@@ -1193,18 +1262,18 @@ public class LevelLighting
                         array2[1] = Mathf.Min(array2[1], 0.33f);
                     }
                     LightingInfo lightingInfo = new LightingInfo(array, array2);
-                    times[i] = lightingInfo;
+                    times[j] = lightingInfo;
                 }
             }
             else
             {
                 _times = new LightingInfo[4];
-                for (int num3 = 0; num3 < times.Length; num3++)
+                for (int num4 = 0; num4 < times.Length; num4++)
                 {
                     Color[] newColors = new Color[12];
                     float[] newSingles = new float[5];
                     LightingInfo lightingInfo2 = new LightingInfo(newColors, newSingles);
-                    times[num3] = lightingInfo2;
+                    times[num4] = lightingInfo2;
                 }
                 times[0].colors[3] = block.readColor();
                 times[1].colors[3] = block.readColor();
@@ -1295,12 +1364,12 @@ public class LevelLighting
             snowFreq = 1f;
             snowDur = 1f;
             _times = new LightingInfo[4];
-            for (int num4 = 0; num4 < times.Length; num4++)
+            for (int num5 = 0; num5 < times.Length; num5++)
             {
                 Color[] newColors2 = new Color[12];
                 float[] newSingles2 = new float[5];
                 LightingInfo lightingInfo3 = new LightingInfo(newColors2, newSingles2);
-                times[num4] = lightingInfo3;
+                times[num5] = lightingInfo3;
             }
             hash = new byte[20];
         }
@@ -1652,19 +1721,27 @@ public class LevelLighting
         }
         currentAudioVolume = Mathf.Lerp(currentAudioVolume, targetAudioVolume, 0.1f * Time.deltaTime);
         effectAudio.volume = Mathf.Lerp(effectAudio.volume, localPlayingEffect ? 1 : 0, Level.isEditor ? 1f : (0.5f * Time.deltaTime));
-        _ = effectAudio.volume;
-        float num5 = 0f;
-        float b = 0.15f;
+        float num5 = 1f - effectAudio.volume;
+        float num6 = 0f;
+        float num7 = 0.15f;
         foreach (CustomWeatherInstance customWeatherInstance2 in customWeatherInstances)
         {
+            if (customWeatherInstance2.component.ambientAudioSource != null)
+            {
+                float b = num5 * customWeatherInstance2.component.EffectBlendAlpha;
+                customWeatherInstance2.component.ambientAudioSource.volume = Mathf.Lerp(customWeatherInstance2.component.ambientAudioSource.volume, b, 0.5f * Time.deltaTime);
+                num6 = Mathf.Max(num6, customWeatherInstance2.component.ambientAudioSource.volume);
+            }
+            float b2 = customWeatherInstance2.component.windMain * customWeatherInstance2.component.EffectBlendAlpha;
+            num7 = Mathf.Max(num7, b2);
             customWeatherInstance2.component.UpdateWeather();
         }
-        float num6 = 1f - num5;
+        float num8 = 1f - num6;
         windAudio.volume = windOverride;
-        dayAudio.volume = Mathf.Lerp(dayAudio.volume, dayVolume * currentAudioVolume * (1f - waterAudio.volume * 4f) * (1f - belowAudio.volume) * (1f - windAudio.volume) * (1f - effectAudio.volume) * num6, 0.5f * Time.deltaTime);
-        nightAudio.volume = Mathf.Lerp(nightAudio.volume, nightVolume * currentAudioVolume * (1f - waterAudio.volume * 4f) * (1f - belowAudio.volume) * (1f - windAudio.volume) * (1f - effectAudio.volume) * num6, 0.5f * Time.deltaTime);
+        dayAudio.volume = Mathf.Lerp(dayAudio.volume, dayVolume * currentAudioVolume * (1f - waterAudio.volume * 4f) * (1f - belowAudio.volume) * (1f - windAudio.volume) * (1f - effectAudio.volume) * num8, 0.5f * Time.deltaTime);
+        nightAudio.volume = Mathf.Lerp(nightAudio.volume, nightVolume * currentAudioVolume * (1f - waterAudio.volume * 4f) * (1f - belowAudio.volume) * (1f - windAudio.volume) * (1f - effectAudio.volume) * num8, 0.5f * Time.deltaTime);
         windZone.transform.rotation = Quaternion.Slerp(windZone.transform.rotation, Quaternion.Euler(0f, wind, 0f), 0.5f * Time.deltaTime);
-        windZone.windMain = Mathf.Lerp(windZone.windMain, b, 0.5f * Time.deltaTime);
+        windZone.windMain = Mathf.Lerp(windZone.windMain, num7, 0.5f * Time.deltaTime);
         point.y = Mathf.Min(point.y - 16f, num2 - 32f);
         bubbles.position = point;
         if (skyboxNeedsColorUpdate)

@@ -6,6 +6,10 @@ public class CommandShutdown : Command
 {
     protected override void execute(CSteamID executorID, string parameter)
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            return;
+        }
         string[] componentsFromSerial = Parser.getComponentsFromSerial(parameter, '/');
         if (componentsFromSerial.Length > 2)
         {

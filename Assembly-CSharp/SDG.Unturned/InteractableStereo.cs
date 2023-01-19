@@ -82,6 +82,10 @@ public class InteractableStereo : Interactable
 
     public override void updateState(Asset asset, byte[] state)
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            audioSource = base.transform.Find("Audio").GetComponent<AudioSource>();
+        }
         GuidBuffer guidBuffer = default(GuidBuffer);
         guidBuffer.Read(state, 0);
         updateTrack(guidBuffer.GUID);

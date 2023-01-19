@@ -458,6 +458,10 @@ public class LightingManager : SteamCaller
             isFullMoon = false;
             broadcastDayNightUpdated(isDaytime: true);
         }
+        if (!Dedicator.IsDedicatedServer)
+        {
+            LevelLighting.time = day;
+        }
         if (onTimeOfDayChanged != null)
         {
             onTimeOfDayChanged();
@@ -717,6 +721,11 @@ public class LightingManager : SteamCaller
             LevelLighting.wind = UnityEngine.Random.Range(0, 360);
             InitPerpetualWeather();
             Level.isLoadingLighting = false;
+            if (!Dedicator.IsDedicatedServer)
+            {
+                LevelLighting.time = day;
+                LevelLighting.moon = 2;
+            }
             return;
         }
         _cycle = 3600u;
@@ -755,7 +764,10 @@ public class LightingManager : SteamCaller
             {
                 updateLighting();
             }
-            LevelLighting.tickCustomWeatherBlending(uint.MaxValue);
+            if (Dedicator.IsDedicatedServer)
+            {
+                LevelLighting.tickCustomWeatherBlending(uint.MaxValue);
+            }
             if (Provider.isServer && shouldTickScheduledWeather)
             {
                 TickScheduledWeather();

@@ -22,6 +22,10 @@ public class UseableArrestEnd : Useable
     private void arrest()
     {
         base.player.animator.play("Use", smooth: false);
+        if (!Dedicator.IsDedicatedServer)
+        {
+            base.player.playSound(((ItemArrestEndAsset)base.player.equipment.asset).use);
+        }
     }
 
     [Obsolete]

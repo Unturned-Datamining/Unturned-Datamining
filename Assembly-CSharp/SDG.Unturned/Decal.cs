@@ -66,7 +66,7 @@ public class Decal : MonoBehaviour, IDevkitInteractableBeginSelectionHandler, ID
             }
             else
             {
-                box.enabled = false;
+                box.enabled = !Dedicator.IsDedicatedServer;
             }
         }
     }
@@ -79,14 +79,35 @@ public class Decal : MonoBehaviour, IDevkitInteractableBeginSelectionHandler, ID
 
     private void Start()
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            MeshRenderer mesh = getMesh();
+            if (mesh != null)
+            {
+                mesh.enabled = GraphicsSettings.renderMode == ERenderMode.FORWARD;
+            }
+        }
     }
 
     private void OnEnable()
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            if (GraphicsSettings.renderMode == ERenderMode.DEFERRED)
+            {
+                DecalSystem.add(this);
+            }
+            GraphicsSettings.graphicsSettingsApplied += onGraphicsSettingsApplied;
+        }
     }
 
     private void OnDisable()
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            GraphicsSettings.graphicsSettingsApplied -= onGraphicsSettingsApplied;
+            DecalSystem.remove(this);
+        }
     }
 
     private void DrawGizmo(bool selected)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using SDG.Framework.Utilities;
@@ -385,6 +386,10 @@ public static class DedicatedUGC
 
     public static void initialize()
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            throw new NotSupportedException("DedicatedUGC should only be used on dedicated server!");
+        }
         ugc = new List<SteamContent>();
         itemsQueried = new HashSet<ulong>();
         itemsToQuery = new Queue<PublishedFileId_t>();

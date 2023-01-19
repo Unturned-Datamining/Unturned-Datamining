@@ -48,6 +48,18 @@ public class InteractableSpot : InteractablePower
     {
         base.updateState(asset, state);
         _isPowered = state[0] == 1;
+        if (!Dedicator.IsDedicatedServer)
+        {
+            if (material == null)
+            {
+                material = HighlighterTool.getMaterialInstance(base.transform);
+            }
+            if (spot == null)
+            {
+                spot = base.transform.Find("Spots");
+                LightLODTool.applyLightLOD(spot);
+            }
+        }
         RefreshIsConnectedToPowerWithoutNotify();
         updateLights();
     }

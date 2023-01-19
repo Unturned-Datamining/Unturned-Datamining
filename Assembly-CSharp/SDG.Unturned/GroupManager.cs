@@ -1,4 +1,3 @@
-#define WITH_GAME_THREAD_ASSERTIONS
 using System;
 using System.Collections.Generic;
 using SDG.NetTransport;
@@ -27,7 +26,6 @@ public class GroupManager : SteamCaller
 
     public static CSteamID generateUniqueGroupID()
     {
-        ThreadUtil.ConditionalAssertIsGameThread();
         CSteamID result = availableGroupID;
         availableGroupID.SetAccountID(new AccountID_t(availableGroupID.GetAccountID().m_AccountID + 1));
         return result;
@@ -35,7 +33,6 @@ public class GroupManager : SteamCaller
 
     public static GroupInfo addGroup(CSteamID groupID, string name)
     {
-        ThreadUtil.ConditionalAssertIsGameThread();
         GroupInfo groupInfo = new GroupInfo(groupID, name, 0u);
         knownGroups.Add(groupID, groupInfo);
         return groupInfo;
@@ -62,7 +59,6 @@ public class GroupManager : SteamCaller
 
     public static void deleteGroup(CSteamID groupID)
     {
-        ThreadUtil.ConditionalAssertIsGameThread();
         knownGroups.Remove(groupID);
         foreach (SteamPlayer client in Provider.clients)
         {

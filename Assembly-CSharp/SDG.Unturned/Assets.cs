@@ -8,6 +8,7 @@ using SDG.Framework.IO.FormattedFiles.KeyValueTables;
 using SDG.Framework.Modules;
 using Steamworks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Unturned.SystemEx;
 using Unturned.UnityEx;
 
@@ -1441,6 +1442,10 @@ public class Assets : MonoBehaviour
         {
             coreMasterBundle = findMasterBundle("/Bundles", usePath: true, 0uL);
             yield return loadNewMasterBundlesAsync();
+            if (!Dedicator.IsDedicatedServer)
+            {
+                Provider.initAutoSubscribeMaps();
+            }
             yield return loadingStep("/Bundles/Assets", "Asset", 0, "/Assets");
             yield return loadingStep("/Bundles/Items", "Item", 1, "/Items");
             yield return loadingStep("/Bundles/Effects", "Effect", 2, "/Effects");
@@ -1452,7 +1457,14 @@ public class Assets : MonoBehaviour
             yield return loadingStep("/Bundles/Skins", "Skin", 8, "/Skins");
             yield return loadingStep("/Bundles/Spawns", "Spawn", 9, "/Spawns");
             yield return loadingStep("/Bundles/NPCs", "NPC", 10, "/NPCs");
-            yield return dedicatedServerUgcLoadingStep();
+            if (Dedicator.IsDedicatedServer)
+            {
+                yield return dedicatedServerUgcLoadingStep();
+            }
+            else
+            {
+                yield return clientUgcLoadingStep();
+            }
             yield return sandboxLoadingStep();
             yield return mapLoadingStep();
         }
@@ -1467,6 +1479,10 @@ public class Assets : MonoBehaviour
         }
         LoadingUI.updateKey("Loading_Spawns");
         yield return null;
+        if (!Dedicator.IsDedicatedServer)
+        {
+            linkSpawns();
+        }
         if ((bool)shouldValidateAssets)
         {
             checkForNpcErrors();
@@ -1483,7 +1499,13 @@ public class Assets : MonoBehaviour
         if (!hasLoaded)
         {
             hasLoaded = true;
-            Provider.host();
+            if (Dedicator.IsDedicatedServer)
+            {
+                Provider.host();
+                yield break;
+            }
+            UnturnedLog.info("Launching main menu");
+            SceneManager.LoadScene("Menu");
         }
     }
 
@@ -1515,35 +1537,42 @@ public class Assets : MonoBehaviour
 
     private void Start()
     {
-        Module moduleByName = ModuleHook.getModuleByName("Rocket.Unturned");
-        if (moduleByName != null)
+        if (Dedicator.IsDedicatedServer)
         {
-            uint uInt32FromIP = Parser.getUInt32FromIP("4.9.3.1");
-            if (moduleByName.config.Version_Internal < uInt32FromIP)
+            Module moduleByName = ModuleHook.getModuleByName("Rocket.Unturned");
+            if (moduleByName != null)
             {
-                CommandWindow.LogError("Upgrading to the officially maintained version of Rocket, or a custom fork of it, is required.");
-                CommandWindow.LogErrorFormat("Installed version: {0} Maintained version: 4.9.3.3+", moduleByName.config.Version);
-                CommandWindow.Log(string.Empty);
-                CommandWindow.Log("--- Overview ---");
-                CommandWindow.Log(string.Empty);
-                CommandWindow.Log("SDG maintains a fork of Rocket called the Legally Distinct Missile (or LDM) after the resignation of its original community team. Using this fork is important because it preserves compatibility, and has fixes for important legacy Rocket issues like multithreading exceptions and teleportation exploits.");
-                CommandWindow.Log(string.Empty);
-                CommandWindow.Log("--- Installation ---");
-                CommandWindow.Log(string.Empty);
-                CommandWindow.Log("The dedicated server includes the latest version, so an external download is not necessary:");
-                CommandWindow.Log("1. Copy the Rocket.Unturned module from the game's Extras directory.");
-                CommandWindow.Log("2. Paste it into the game's Modules directory.");
-                CommandWindow.Log(string.Empty);
-                CommandWindow.Log("--- Resources ---");
-                CommandWindow.Log(string.Empty);
-                CommandWindow.Log("https://github.com/SmartlyDressedGames/Legally-Distinct-Missile");
-                CommandWindow.Log("https://www.reddit.com/r/UnturnedLDM/");
-                CommandWindow.Log("https://forum.smartlydressedgames.com/c/modding/ldm");
-                CommandWindow.Log("https://steamcommunity.com/app/304930/discussions/17/");
-                return;
+                uint uInt32FromIP = Parser.getUInt32FromIP("4.9.3.1");
+                if (moduleByName.config.Version_Internal < uInt32FromIP)
+                {
+                    CommandWindow.LogError("Upgrading to the officially maintained version of Rocket, or a custom fork of it, is required.");
+                    CommandWindow.LogErrorFormat("Installed version: {0} Maintained version: 4.9.3.3+", moduleByName.config.Version);
+                    CommandWindow.Log(string.Empty);
+                    CommandWindow.Log("--- Overview ---");
+                    CommandWindow.Log(string.Empty);
+                    CommandWindow.Log("SDG maintains a fork of Rocket called the Legally Distinct Missile (or LDM) after the resignation of its original community team. Using this fork is important because it preserves compatibility, and has fixes for important legacy Rocket issues like multithreading exceptions and teleportation exploits.");
+                    CommandWindow.Log(string.Empty);
+                    CommandWindow.Log("--- Installation ---");
+                    CommandWindow.Log(string.Empty);
+                    CommandWindow.Log("The dedicated server includes the latest version, so an external download is not necessary:");
+                    CommandWindow.Log("1. Copy the Rocket.Unturned module from the game's Extras directory.");
+                    CommandWindow.Log("2. Paste it into the game's Modules directory.");
+                    CommandWindow.Log(string.Empty);
+                    CommandWindow.Log("--- Resources ---");
+                    CommandWindow.Log(string.Empty);
+                    CommandWindow.Log("https://github.com/SmartlyDressedGames/Legally-Distinct-Missile");
+                    CommandWindow.Log("https://www.reddit.com/r/UnturnedLDM/");
+                    CommandWindow.Log("https://forum.smartlydressedgames.com/c/modding/ldm");
+                    CommandWindow.Log("https://steamcommunity.com/app/304930/discussions/17/");
+                    return;
+                }
             }
+            CommandWindow.LogError("Hosting dedicated servers using client files has been deprecated since June 2019.");
+            CommandWindow.Log("Please use the standalone dedicated server app ID 1110390 available through SteamCMD instead.");
+            CommandWindow.Log("For more information and an installation guide read more at:");
+            CommandWindow.Log("https://github.com/SmartlyDressedGames/U3-Docs/blob/master/ServerHosting.md");
         }
-        if (TestDedicatedServerSteamRedist())
+        else
         {
             refresh();
         }

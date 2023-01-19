@@ -41,6 +41,8 @@ public class ItemStructureAsset : ItemPlaceableAsset
 
     protected bool _isSaveable;
 
+    public MasterBundleReference<GameObject> placementPreviewRef;
+
     private static List<Transform> transformsToDestroy = new List<Transform>();
 
     public GameObject structure => _structure;
@@ -105,7 +107,7 @@ public class ItemStructureAsset : ItemPlaceableAsset
         : base(bundle, data, localization, id)
     {
         bool flag;
-        if (data.readBoolean("Has_Clip_Prefab", defaultValue: true))
+        if (Dedicator.IsDedicatedServer && data.readBoolean("Has_Clip_Prefab", defaultValue: true))
         {
             _structure = bundle.load<GameObject>("Clip");
             if (structure == null)
@@ -133,10 +135,22 @@ public class ItemStructureAsset : ItemPlaceableAsset
             else
             {
                 AssetValidation.searchGameObjectForErrors(this, structure);
-                ServerPrefabUtil.RemoveClientComponents(_structure);
-                RemoveClientComponents(_structure);
+                if (Dedicator.IsDedicatedServer)
+                {
+                    ServerPrefabUtil.RemoveClientComponents(_structure);
+                    RemoveClientComponents(_structure);
+                }
+                else
+                {
+                    LODGroup component = structure.GetComponent<LODGroup>();
+                    if (component != null)
+                    {
+                        component.DisableCulling();
+                    }
+                }
             }
         }
+        placementPreviewRef = data.readMasterBundleReference<GameObject>("PlacementPreviewPrefab");
         _nav = bundle.load<GameObject>("Nav");
         _use = LoadRedirectableAsset<AudioClip>(bundle, "Use", data, "PlacementAudioClip");
         _construct = (EConstruct)Enum.Parse(typeof(EConstruct), data.readString("Construct"), ignoreCase: true);

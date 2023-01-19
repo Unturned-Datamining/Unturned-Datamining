@@ -14,23 +14,26 @@ public class CommandMaxPlayers : Command
 
     protected override void execute(CSteamID executorID, string parameter)
     {
-        if (!byte.TryParse(parameter, out var result))
+        if (Dedicator.IsDedicatedServer)
         {
-            CommandWindow.LogError(localization.format("InvalidNumberErrorText", parameter));
-            return;
+            if (!byte.TryParse(parameter, out var result))
+            {
+                CommandWindow.LogError(localization.format("InvalidNumberErrorText", parameter));
+                return;
+            }
+            if (result < MIN_NUMBER)
+            {
+                CommandWindow.LogError(localization.format("MinNumberErrorText", MIN_NUMBER));
+                return;
+            }
+            if (result > MAX_NUMBER)
+            {
+                CommandWindow.LogError(localization.format("MaxNumberErrorText", MAX_NUMBER));
+                return;
+            }
+            Provider.maxPlayers = result;
+            CommandWindow.Log(localization.format("MaxPlayersText", result));
         }
-        if (result < MIN_NUMBER)
-        {
-            CommandWindow.LogError(localization.format("MinNumberErrorText", MIN_NUMBER));
-            return;
-        }
-        if (result > MAX_NUMBER)
-        {
-            CommandWindow.LogError(localization.format("MaxNumberErrorText", MAX_NUMBER));
-            return;
-        }
-        Provider.maxPlayers = result;
-        CommandWindow.Log(localization.format("MaxPlayersText", result));
     }
 
     public CommandMaxPlayers(Local newLocalization)

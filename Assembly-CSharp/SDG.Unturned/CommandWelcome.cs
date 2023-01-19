@@ -7,6 +7,10 @@ public class CommandWelcome : Command
 {
     protected override void execute(CSteamID executorID, string parameter)
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            return;
+        }
         string[] componentsFromSerial = Parser.getComponentsFromSerial(parameter, '/');
         if (componentsFromSerial.Length != 1 && componentsFromSerial.Length != 4)
         {

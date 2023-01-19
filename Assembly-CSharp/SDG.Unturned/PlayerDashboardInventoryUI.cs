@@ -2058,6 +2058,20 @@ public class PlayerDashboardInventoryUI
 
     private static void PlayInventoryAudio(ItemAsset item)
     {
+        if (item != null && !item.inventoryAudio.IsNullOrEmpty)
+        {
+            float pitchMultiplier;
+            float volumeMultiplier;
+            AudioClip audioClip = item.inventoryAudio.LoadAudioClip(out volumeMultiplier, out pitchMultiplier);
+            if (!(audioClip == null))
+            {
+                volumeMultiplier *= 0.2f;
+                OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(audioClip);
+                oneShotAudioParameters.volume = volumeMultiplier;
+                oneShotAudioParameters.pitch = pitchMultiplier;
+                oneShotAudioParameters.Play();
+            }
+        }
     }
 
     public PlayerDashboardInventoryUI()

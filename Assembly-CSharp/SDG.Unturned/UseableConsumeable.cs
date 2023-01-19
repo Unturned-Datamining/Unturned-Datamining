@@ -81,6 +81,10 @@ public class UseableConsumeable : Useable
         {
             base.player.animator.play("Aid", smooth: false);
         }
+        if (!Dedicator.IsDedicatedServer)
+        {
+            base.player.playSound(((ItemConsumeableAsset)base.player.equipment.asset).use, 0.5f);
+        }
         if (Provider.isServer)
         {
             AlertTool.alert(base.transform.position, 8f);

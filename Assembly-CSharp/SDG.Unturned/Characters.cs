@@ -666,12 +666,18 @@ public class Characters : MonoBehaviour
             if (hasPlayed)
             {
                 Provider.provider.economyService.dropInventory();
+                LiveConfig.Refresh();
             }
         }
     }
 
     private void Update()
     {
+        if (!Dedicator.IsDedicatedServer && !(character == null))
+        {
+            _characterYaw = Mathf.Lerp(_characterYaw, characterOffset + characterYaw, 4f * Time.deltaTime);
+            character.transform.rotation = Quaternion.Euler(90f, _characterYaw, 0f);
+        }
     }
 
     internal void customStart()

@@ -39,6 +39,10 @@ public class UseableDetonator : Useable
         startedUse = Time.realtimeSinceStartup;
         isUsing = true;
         base.player.animator.play("Use", smooth: false);
+        if (!Dedicator.IsDedicatedServer)
+        {
+            base.player.playSound(((ItemDetonatorAsset)base.player.equipment.asset).use);
+        }
         if (Provider.isServer)
         {
             AlertTool.alert(base.transform.position, 8f);
@@ -91,7 +95,7 @@ public class UseableDetonator : Useable
                     if (input != null && input.type == ERaycastInfoType.BARRICADE && !(input.transform == null) && input.transform.CompareTag("Barricade"))
                     {
                         InteractableCharge component = input.transform.GetComponent<InteractableCharge>();
-                        if (!(component == null) && OwnershipTool.checkToggle(base.channel.owner.playerID.steamID, component.owner, base.player.quests.groupID, component.group))
+                        if (!(component == null) && !(Dedicator.IsDedicatedServer ? (!OwnershipTool.checkToggle(base.channel.owner.playerID.steamID, component.owner, base.player.quests.groupID, component.group)) : (!component.hasOwnership)))
                         {
                             charges.Add(component);
                         }

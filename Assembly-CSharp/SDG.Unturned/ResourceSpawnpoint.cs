@@ -193,6 +193,42 @@ public class ResourceSpawnpoint
                 {
                     stumpCollider.enabled = true;
                 }
+                if (!Dedicator.IsDedicatedServer && asset.hasDebris && GraphicsSettings.debris)
+                {
+                    ragdoll.y += 8f;
+                    ragdoll.x += UnityEngine.Random.Range(-16f, 16f);
+                    ragdoll.z += UnityEngine.Random.Range(-16f, 16f);
+                    ragdoll *= (float)((Player.player != null && Player.player.skills.boost == EPlayerBoost.FLIGHT) ? 4 : 2);
+                    if (model != null && asset.modelGameObject != null)
+                    {
+                        Vector3 position = ((!asset.isSpeedTree) ? (model.position + Vector3.up) : model.position);
+                        GameObject original = ((!(asset.debrisGameObject == null)) ? asset.debrisGameObject : asset.modelGameObject);
+                        Transform transform = UnityEngine.Object.Instantiate(original, position, model.rotation).transform;
+                        transform.name = id.ToString();
+                        transform.localScale = model.localScale;
+                        transform.tag = "Debris";
+                        transform.gameObject.layer = 12;
+                        transform.gameObject.AddComponent<Rigidbody>();
+                        transform.GetComponent<Rigidbody>().interpolation = RigidbodyInterpolation.Interpolate;
+                        transform.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Discrete;
+                        transform.GetComponent<Rigidbody>().AddForce(ragdoll);
+                        transform.GetComponent<Rigidbody>().drag = 1f;
+                        transform.GetComponent<Rigidbody>().angularDrag = 1f;
+                        UnityEngine.Object.Destroy(transform.gameObject, 8f);
+                        if (stump != null && isEnabled && stumpCollider == null)
+                        {
+                            Collider component = transform.GetComponent<Collider>();
+                            if (component != null)
+                            {
+                                stump.GetComponents(colliders);
+                                for (int i = 0; i < colliders.Count; i++)
+                                {
+                                    Physics.IgnoreCollision(component, colliders[i]);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
         if ((bool)skybox)
@@ -382,20 +418,51 @@ public class ResourceSpawnpoint
             _model = gameObject2.transform;
             model.name = id.ToString();
             model.localScale = scale;
-            isEnabled = true;
+            if (Dedicator.IsDedicatedServer)
+            {
+                isEnabled = true;
+            }
+            else
+            {
+                model.gameObject.SetActive(value: false);
+                if (!Level.isEditor && asset.isForage)
+                {
+                    model.Find("Forage").gameObject.AddComponent<InteractableForage>().asset = asset;
+                }
+                if (asset.skyboxGameObject != null)
+                {
+                    Quaternion rotation = angle * Quaternion.Euler(-90f, 0f, 0f);
+                    GameObject gameObject3 = UnityEngine.Object.Instantiate(asset.skyboxGameObject, position, rotation);
+                    _skybox = gameObject3.transform;
+                    skybox.name = id + "_Skybox";
+                    skybox.localScale = new Vector3(skybox.localScale.x * scale.x, skybox.localScale.z * scale.z, skybox.localScale.z * scale.z);
+                    if (asset.skyboxMaterial != null)
+                    {
+                        skybox.GetComponent<MeshRenderer>().sharedMaterial = asset.skyboxMaterial;
+                    }
+                    if (GraphicsSettings.landmarkQuality >= EGraphicQuality.MEDIUM)
+                    {
+                        enableSkybox();
+                    }
+                    else
+                    {
+                        disableSkybox();
+                    }
+                }
+            }
             if (!netId.IsNull())
             {
                 NetIdRegistry.AssignTransform(netId, model.transform);
             }
         }
-        GameObject gameObject3 = null;
+        GameObject gameObject4 = null;
         if (asset.stumpGameObject != null)
         {
-            gameObject3 = asset.stumpGameObject;
+            gameObject4 = asset.stumpGameObject;
         }
-        if (gameObject3 != null)
+        if (gameObject4 != null)
         {
-            _stump = UnityEngine.Object.Instantiate(gameObject3, position, angle).transform;
+            _stump = UnityEngine.Object.Instantiate(gameObject4, position, angle).transform;
             stump.name = id.ToString();
             stump.localScale = scale;
             stump.gameObject.SetActive(value: false);

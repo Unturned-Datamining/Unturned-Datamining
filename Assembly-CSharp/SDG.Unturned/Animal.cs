@@ -157,7 +157,7 @@ public class Animal : MonoBehaviour
         lastEat = Time.time;
         eatDelay = UnityEngine.Random.Range(4f, 8f);
         isPlayingEat = true;
-        if (asset.shouldPlayAnimsOnDedicatedServer)
+        if (!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer)
         {
             string text = ((asset.eatAnimVariantsCount != 1) ? ("Eat_" + UnityEngine.Random.Range(0, asset.eatAnimVariantsCount)) : "Eat");
             AnimationClip clip = animator.GetClip(text);
@@ -182,7 +182,7 @@ public class Animal : MonoBehaviour
         lastGlance = Time.time;
         glanceDelay = UnityEngine.Random.Range(4f, 8f);
         isPlayingGlance = true;
-        if (asset.shouldPlayAnimsOnDedicatedServer)
+        if (!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer)
         {
             string text = "Glance_" + UnityEngine.Random.Range(0, asset.glanceAnimVariantsCount);
             AnimationClip clip = animator.GetClip(text);
@@ -206,7 +206,7 @@ public class Animal : MonoBehaviour
         }
         lastStartle = Time.time;
         isPlayingStartle = true;
-        if (asset.shouldPlayAnimsOnDedicatedServer)
+        if (!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer)
         {
             string text = ((asset.startleAnimVariantsCount != 1) ? ("Startle_" + UnityEngine.Random.Range(0, asset.startleAnimVariantsCount)) : "Startle");
             AnimationClip clip = animator.GetClip(text);
@@ -230,7 +230,7 @@ public class Animal : MonoBehaviour
         }
         lastAttack = Time.time;
         isPlayingAttack = true;
-        if (asset.shouldPlayAnimsOnDedicatedServer)
+        if (!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer)
         {
             string text = ((asset.attackAnimVariantsCount != 1) ? ("Attack_" + UnityEngine.Random.Range(0, asset.attackAnimVariantsCount)) : "Attack");
             AnimationClip clip = animator.GetClip(text);
@@ -247,15 +247,27 @@ public class Animal : MonoBehaviour
             if (asset != null && asset.roars != null && asset.roars.Length != 0 && Time.time - startedRoar > 1f)
             {
                 startedRoar = Time.time;
+                AudioClip clip2 = asset.roars[UnityEngine.Random.Range(0, asset.roars.Length)];
+                OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform, clip2);
+                oneShotAudioParameters.volume = 0.5f;
+                oneShotAudioParameters.RandomizePitch(0.9f, 1.1f);
+                oneShotAudioParameters.SetLinearRolloff(1f, 32f);
+                oneShotAudioParameters.Play();
             }
         }
     }
 
     public void askPanic()
     {
-        if (!isDead && asset.shouldPlayAnimsOnDedicatedServer && asset != null && asset.panics != null && asset.panics.Length != 0 && Time.time - startedPanic > 1f)
+        if (!isDead && (!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer) && asset != null && asset.panics != null && asset.panics.Length != 0 && Time.time - startedPanic > 1f)
         {
             startedPanic = Time.time;
+            AudioClip clip = asset.panics[UnityEngine.Random.Range(0, asset.panics.Length)];
+            OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform, clip);
+            oneShotAudioParameters.volume = 0.5f;
+            oneShotAudioParameters.RandomizePitch(0.9f, 1.1f);
+            oneShotAudioParameters.SetLinearRolloff(1f, 32f);
+            oneShotAudioParameters.Play();
         }
     }
 
@@ -527,6 +539,11 @@ public class Animal : MonoBehaviour
         isDead = true;
         _lastDead = Time.realtimeSinceStartup;
         updateLife();
+        if (!Dedicator.IsDedicatedServer)
+        {
+            ragdoll = newRagdoll;
+            RagdollTool.ragdollAnimal(base.transform.position, base.transform.rotation, skeleton, ragdoll, id, ragdollEffect);
+        }
         if (Provider.isServer)
         {
             stop();
@@ -561,7 +578,7 @@ public class Animal : MonoBehaviour
         {
             controller.SetDetectCollisionsDeferred(!isDead);
         }
-        if (asset.shouldPlayAnimsOnDedicatedServer)
+        if (!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer)
         {
             if (renderer_0 != null)
             {
@@ -612,7 +629,7 @@ public class Animal : MonoBehaviour
         Vector3 forward = vector;
         float magnitude = vector.magnitude;
         bool flag = magnitude > 0.75f;
-        if (asset.shouldPlayAnimsOnDedicatedServer && flag && !isMoving)
+        if ((!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer) && flag && !isMoving)
         {
             if (isPlayingEat)
             {
@@ -729,7 +746,7 @@ public class Animal : MonoBehaviour
                 base.transform.rotation = Quaternion.Euler(0f, yawSnapshotInfo.yaw, 0f);
             }
         }
-        if (asset.shouldPlayAnimsOnDedicatedServer && !isMoving && !isPlayingEat && !isPlayingGlance && !isPlayingAttack)
+        if ((!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer) && !isMoving && !isPlayingEat && !isPlayingGlance && !isPlayingAttack)
         {
             if (Time.time - lastEat > eatDelay)
             {
@@ -792,7 +809,7 @@ public class Animal : MonoBehaviour
                 isPlayingAttack = false;
             }
         }
-        else if (asset.shouldPlayAnimsOnDedicatedServer)
+        else if (!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer)
         {
             if (isRunning && hasRunAnimation)
             {
@@ -827,7 +844,7 @@ public class Animal : MonoBehaviour
                 float num2 = Mathf.Abs(target.y - base.transform.position.y);
                 if (num < ((player.movement.getVehicle() != null) ? asset.horizontalVehicleAttackRangeSquared : asset.horizontalAttackRangeSquared) && num2 < asset.verticalAttackRange)
                 {
-                    if (Time.time - lastTarget > 0.3f)
+                    if (Time.time - lastTarget > (Dedicator.IsDedicatedServer ? 0.3f : 0.1f))
                     {
                         if (isAttacking)
                         {
@@ -893,7 +910,7 @@ public class Animal : MonoBehaviour
         eatTime = 0.5f;
         glanceTime = 0.5f;
         startleTime = 0.5f;
-        if (asset.shouldPlayAnimsOnDedicatedServer)
+        if (!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer)
         {
             animator = base.transform.Find("Character").GetComponent<Animation>();
             skeleton = animator.transform.Find("Skeleton");

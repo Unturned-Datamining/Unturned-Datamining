@@ -644,6 +644,66 @@ public class MenuUI : MonoBehaviour
     {
         Time.timeScale = 1f;
         AudioListener.pause = false;
+        if (!Dedicator.IsDedicatedServer)
+        {
+            title = base.transform.parent.Find("Title");
+            play = base.transform.parent.Find("Play");
+            survivors = base.transform.parent.Find("Survivors");
+            configuration = base.transform.parent.Find("Configuration");
+            workshop = base.transform.parent.Find("Workshop");
+            window = new SleekWindow();
+            container = new SleekFullscreenBox();
+            container.sizeScale_X = 1f;
+            container.sizeScale_Y = 1f;
+            window.AddChild(container);
+            alertBox = Glazier.Get().CreateBox();
+            alertBox.positionOffset_X = 10;
+            alertBox.positionOffset_Y = -25;
+            alertBox.positionScale_X = 1f;
+            alertBox.positionScale_Y = 0.5f;
+            alertBox.sizeScale_X = 1f;
+            alertBox.sizeOffset_X = -20;
+            alertBox.sizeOffset_Y = 50;
+            alertBox.fontSize = ESleekFontSize.Medium;
+            window.AddChild(alertBox);
+            originLabel = Glazier.Get().CreateLabel();
+            originLabel.sizeOffset_Y = 50;
+            originLabel.sizeScale_X = 1f;
+            originLabel.fontSize = ESleekFontSize.Large;
+            alertBox.AddChild(originLabel);
+            originLabel.isVisible = false;
+            dismissNotificationButton = Glazier.Get().CreateButton();
+            dismissNotificationButton.positionOffset_X = -100;
+            dismissNotificationButton.positionOffset_Y = 10;
+            dismissNotificationButton.positionScale_X = 0.5f;
+            dismissNotificationButton.positionScale_Y = 1f;
+            dismissNotificationButton.sizeOffset_X = 200;
+            dismissNotificationButton.sizeOffset_Y = 30;
+            dismissNotificationButton.onClickedButton += onClickedDismissNotification;
+            dismissNotificationButton.fontSize = ESleekFontSize.Medium;
+            alertBox.AddChild(dismissNotificationButton);
+            copyNotificationButton = new SleekButtonIcon(null, 20);
+            copyNotificationButton.positionOffset_X = -100;
+            copyNotificationButton.positionOffset_Y = 50;
+            copyNotificationButton.positionScale_X = 0.5f;
+            copyNotificationButton.positionScale_Y = 1f;
+            copyNotificationButton.sizeOffset_X = 200;
+            copyNotificationButton.sizeOffset_Y = 30;
+            copyNotificationButton.onClickedButton += OnClickedCopyNotification;
+            copyNotificationButton.fontSize = ESleekFontSize.Medium;
+            alertBox.AddChild(copyNotificationButton);
+            itemAlerts = null;
+            OptionsSettings.apply();
+            GraphicsSettings.apply("loaded menu");
+            dashboard = new MenuDashboardUI();
+            if (hasPanned && title != null)
+            {
+                base.transform.position = title.position;
+                base.transform.rotation = title.rotation;
+            }
+            hasPanned = true;
+            UnturnedLog.info("Menu UI ready");
+        }
     }
 
     private void OnDestroy()

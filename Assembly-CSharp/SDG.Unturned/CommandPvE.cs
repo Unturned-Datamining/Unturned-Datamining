@@ -6,13 +6,16 @@ public class CommandPvE : Command
 {
     protected override void execute(CSteamID executorID, string parameter)
     {
-        if (Provider.isServer)
+        if (Dedicator.IsDedicatedServer)
         {
-            CommandWindow.LogError(localization.format("RunningErrorText"));
-            return;
+            if (Provider.isServer)
+            {
+                CommandWindow.LogError(localization.format("RunningErrorText"));
+                return;
+            }
+            Provider.isPvP = false;
+            CommandWindow.Log(localization.format("PvEText"));
         }
-        Provider.isPvP = false;
-        CommandWindow.Log(localization.format("PvEText"));
     }
 
     public CommandPvE(Local newLocalization)

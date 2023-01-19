@@ -1,4 +1,3 @@
-#define WITH_GAME_THREAD_ASSERTIONS
 using System;
 using System.Collections.Generic;
 using SDG.NetPak;
@@ -340,7 +339,7 @@ public class AnimalManager : SteamCaller
                 ushort num = SpawnTableTool.resolve(animal.asset.rewardID);
                 if (num != 0)
                 {
-                    ItemManager.dropItem(new Item(num, EItemOrigin.NATURE), animal.transform.position, playEffect: false, isDropped: true, wideSpread: true);
+                    ItemManager.dropItem(new Item(num, EItemOrigin.NATURE), animal.transform.position, playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
                 }
             }
             return;
@@ -350,7 +349,7 @@ public class AnimalManager : SteamCaller
             int num2 = UnityEngine.Random.Range(2, 5);
             for (int j = 0; j < num2; j++)
             {
-                ItemManager.dropItem(new Item(animal.asset.meat, EItemOrigin.NATURE), animal.transform.position, playEffect: false, isDropped: true, wideSpread: true);
+                ItemManager.dropItem(new Item(animal.asset.meat, EItemOrigin.NATURE), animal.transform.position, playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
             }
         }
         if (animal.asset.pelt != 0)
@@ -358,19 +357,18 @@ public class AnimalManager : SteamCaller
             int num3 = UnityEngine.Random.Range(2, 5);
             for (int k = 0; k < num3; k++)
             {
-                ItemManager.dropItem(new Item(animal.asset.pelt, EItemOrigin.NATURE), animal.transform.position, playEffect: false, isDropped: true, wideSpread: true);
+                ItemManager.dropItem(new Item(animal.asset.pelt, EItemOrigin.NATURE), animal.transform.position, playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
             }
         }
     }
 
     private Animal addAnimal(ushort id, Vector3 point, float angle, bool isDead)
     {
-        ThreadUtil.ConditionalAssertIsGameThread();
         if (Assets.find(EAssetType.ANIMAL, id) is AnimalAsset animalAsset)
         {
-            GameObject dedicated = animalAsset.dedicated;
+            GameObject original = (Dedicator.IsDedicatedServer ? animalAsset.dedicated : ((!Provider.isServer) ? animalAsset.client : animalAsset.server));
             Quaternion rotation = Quaternion.Euler(0f, angle, 0f);
-            GameObject obj = UnityEngine.Object.Instantiate(dedicated, point, rotation);
+            GameObject obj = UnityEngine.Object.Instantiate(original, point, rotation);
             obj.name = id.ToString();
             Animal animal = obj.AddComponent<Animal>();
             animal.index = (ushort)animals.Count;
@@ -649,17 +647,27 @@ public class AnimalManager : SteamCaller
         {
             return;
         }
-        if (tickIndex >= tickingAnimals.Count)
+        int num;
+        int num2;
+        if (Dedicator.IsDedicatedServer)
         {
-            tickIndex = 0;
+            if (tickIndex >= tickingAnimals.Count)
+            {
+                tickIndex = 0;
+            }
+            num = tickIndex;
+            num2 = num + 25;
+            if (num2 >= tickingAnimals.Count)
+            {
+                num2 = tickingAnimals.Count;
+            }
+            tickIndex = num2;
         }
-        int num = tickIndex;
-        int num2 = num + 25;
-        if (num2 >= tickingAnimals.Count)
+        else
         {
+            num = 0;
             num2 = tickingAnimals.Count;
         }
-        tickIndex = num2;
         for (int num3 = num2 - 1; num3 >= num; num3--)
         {
             Animal animal = tickingAnimals[num3];
@@ -672,7 +680,7 @@ public class AnimalManager : SteamCaller
                 animal.tick();
             }
         }
-        if (Time.realtimeSinceStartup - lastTick > Provider.UPDATE_TIME)
+        if (Dedicator.IsDedicatedServer && Time.realtimeSinceStartup - lastTick > Provider.UPDATE_TIME)
         {
             lastTick += Provider.UPDATE_TIME;
             if (Time.realtimeSinceStartup - lastTick > Provider.UPDATE_TIME)

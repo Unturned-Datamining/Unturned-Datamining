@@ -20,6 +20,10 @@ public class UseableFilter : Useable
     private void filter()
     {
         base.player.animator.play("Use", smooth: false);
+        if (!Dedicator.IsDedicatedServer)
+        {
+            base.player.playSound(((ItemFilterAsset)base.player.equipment.asset).use);
+        }
         if (Provider.isServer)
         {
             AlertTool.alert(base.transform.position, 8f);

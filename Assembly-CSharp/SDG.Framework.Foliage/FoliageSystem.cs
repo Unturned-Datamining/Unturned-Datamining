@@ -6,6 +6,7 @@ using SDG.Framework.Landscapes;
 using SDG.Framework.Utilities;
 using SDG.Unturned;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace SDG.Framework.Foliage;
 
@@ -44,6 +45,8 @@ public class FoliageSystem : DevkitHierarchyItemBase
     public bool hiddenByHeightEditor;
 
     public bool hiddenByMaterialEditor;
+
+    private static readonly FoliageCoord[][] DRAW_OFFSETS;
 
     protected uint version;
 
@@ -324,6 +327,92 @@ public class FoliageSystem : DevkitHierarchyItemBase
         tiles.Clear();
     }
 
+    private static void drawTiles(Vector3 position, int drawDistance, Camera camera, Plane[] frustumPlanes)
+    {
+        FoliageCoord foliageCoord = new FoliageCoord(position);
+        FoliageCoord[] array = DRAW_OFFSETS[drawDistance];
+        for (int i = 0; i < array.Length; i++)
+        {
+            FoliageCoord foliageCoord2 = array[i];
+            FoliageCoord foliageCoord3 = new FoliageCoord(foliageCoord.x + foliageCoord2.x, foliageCoord.y + foliageCoord2.y);
+            if (!activeTiles.ContainsKey(foliageCoord3))
+            {
+                FoliageTile tile = getTile(foliageCoord3);
+                if (tile != null)
+                {
+                    int sqrDistance = foliageCoord2.x * foliageCoord2.x + foliageCoord2.y * foliageCoord2.y;
+                    float density = 1f;
+                    drawTileCullingChecks(tile, sqrDistance, density, camera, frustumPlanes);
+                    activeTiles.Add(foliageCoord3, tile);
+                }
+            }
+        }
+    }
+
+    private static void drawTileCullingChecks(FoliageTile tile, int sqrDistance, float density, Camera camera, Plane[] frustumPlanes)
+    {
+        if (tile != null && GeometryUtility.TestPlanesAABB(frustumPlanes, tile.worldBounds))
+        {
+            drawTile(tile, sqrDistance, density, camera);
+        }
+    }
+
+    private static void drawTile(FoliageTile tile, int sqrDistance, float density, Camera camera)
+    {
+        if (tile == null)
+        {
+            return;
+        }
+        if (!tile.isRelevantToViewer)
+        {
+            tile.isRelevantToViewer = true;
+            storage?.TileBecameRelevantToViewer(tile);
+        }
+        foreach (KeyValuePair<AssetReference<FoliageInstancedMeshInfoAsset>, FoliageInstanceList> instance in tile.instances)
+        {
+            FoliageInstanceList value = instance.Value;
+            value.loadAsset();
+            Mesh mesh = value.mesh;
+            if (mesh == null)
+            {
+                continue;
+            }
+            Material material = value.material;
+            if (material == null)
+            {
+                continue;
+            }
+            bool castShadows = value.castShadows;
+            if (!value.tileDither)
+            {
+                density = 1f;
+            }
+            density *= FoliageSettings.instanceDensity;
+            if (value.sqrDrawDistance != -1 && sqrDistance > value.sqrDrawDistance)
+            {
+                continue;
+            }
+            if (FoliageSettings.forceInstancingOff || !SystemInfo.supportsInstancing)
+            {
+                foreach (List<Matrix4x4> matrix in value.matrices)
+                {
+                    int num = Mathf.RoundToInt((float)matrix.Count * density);
+                    for (int i = 0; i < num; i++)
+                    {
+                        Graphics.DrawMesh(mesh, matrix[i], material, 18, camera, 0, null, castShadows, receiveShadows: true);
+                    }
+                }
+                continue;
+            }
+            ShadowCastingMode castShadows2 = (castShadows ? ShadowCastingMode.On : ShadowCastingMode.Off);
+            foreach (List<Matrix4x4> matrix2 in value.matrices)
+            {
+                int count = Mathf.RoundToInt((float)matrix2.Count * density);
+                Graphics.DrawMeshInstanced(mesh, 0, material, matrix2.GetInternalArray(), count, null, castShadows2, receiveShadows: true, 18, camera);
+            }
+        }
+    }
+
     public static FoliageTile getOrAddTile(Vector3 worldPosition)
     {
         return getOrAddTile(new FoliageCoord(worldPosition));
@@ -376,7 +465,26 @@ public class FoliageSystem : DevkitHierarchyItemBase
             storage = new FoliageStorageV1();
         }
         storage.Initialize();
-        shutdownStorage();
+        if (Dedicator.IsDedicatedServer)
+        {
+            shutdownStorage();
+            return;
+        }
+        for (int i = 0; i < num; i++)
+        {
+            reader.readArrayIndex(i);
+            FoliageTile foliageTile = new FoliageTile(FoliageCoord.ZERO);
+            foliageTile.read(reader);
+            tiles.Add(foliageTile.coord, foliageTile);
+        }
+        if (Level.isEditor)
+        {
+            storage.EditorLoadAllTiles(tiles.Values);
+            if (version < 2)
+            {
+                LevelHierarchy.instance.isDirty = true;
+            }
+        }
     }
 
     public override void write(IFormattedFileWriter writer)
@@ -409,6 +517,55 @@ public class FoliageSystem : DevkitHierarchyItemBase
         if (bakeQueue.Count == 0)
         {
             bakeEnd();
+        }
+    }
+
+    protected void Update()
+    {
+        if (MainCamera.instance == null || this != instance)
+        {
+            return;
+        }
+        activeTiles.Clear();
+        if (FoliageSettings.enabled && !(hiddenByHeightEditor | hiddenByMaterialEditor))
+        {
+            GeometryUtility.CalculateFrustumPlanes(MainCamera.instance, mainCameraFrustumPlanes);
+            drawTiles(MainCamera.instance.transform.position, FoliageSettings.drawDistance, null, mainCameraFrustumPlanes);
+            if (FoliageSettings.drawFocus && isFocused && focusCamera != null)
+            {
+                Plane[] frustumPlanes;
+                if (MainCamera.instance == focusCamera)
+                {
+                    frustumPlanes = mainCameraFrustumPlanes;
+                }
+                else
+                {
+                    GeometryUtility.CalculateFrustumPlanes(focusCamera, focusCameraFrustumPlanes);
+                    frustumPlanes = focusCameraFrustumPlanes;
+                }
+                drawTiles(focusPosition, FoliageSettings.drawFocusDistance, focusCamera, frustumPlanes);
+            }
+        }
+        foreach (KeyValuePair<FoliageCoord, FoliageTile> prevTile in prevTiles)
+        {
+            if (!activeTiles.ContainsKey(prevTile.Key) && prevTile.Value != null && prevTile.Value.isRelevantToViewer)
+            {
+                prevTile.Value.isRelevantToViewer = false;
+                storage?.TileNoLongerRelevantToViewer(prevTile.Value);
+            }
+        }
+        prevTiles.Clear();
+        foreach (KeyValuePair<FoliageCoord, FoliageTile> activeTile in activeTiles)
+        {
+            prevTiles.Add(activeTile.Key, activeTile.Value);
+        }
+        if (Level.isEditor && bakeQueue.Count > 0)
+        {
+            tickBakeQueue();
+        }
+        if (storage != null)
+        {
+            storage.Update();
         }
     }
 
@@ -462,6 +619,258 @@ public class FoliageSystem : DevkitHierarchyItemBase
         bakeQueue = new Queue<KeyValuePair<FoliageTile, List<IFoliageSurface>>>();
         mainCameraFrustumPlanes = new Plane[6];
         focusCameraFrustumPlanes = new Plane[6];
+        DRAW_OFFSETS = new FoliageCoord[6][]
+        {
+            new FoliageCoord[0],
+            new FoliageCoord[9]
+            {
+                new FoliageCoord(0, 0),
+                new FoliageCoord(1, 0),
+                new FoliageCoord(1, 1),
+                new FoliageCoord(0, 1),
+                new FoliageCoord(-1, 1),
+                new FoliageCoord(-1, 0),
+                new FoliageCoord(-1, -1),
+                new FoliageCoord(0, -1),
+                new FoliageCoord(1, -1)
+            },
+            new FoliageCoord[21]
+            {
+                new FoliageCoord(0, 0),
+                new FoliageCoord(1, 0),
+                new FoliageCoord(1, 1),
+                new FoliageCoord(0, 1),
+                new FoliageCoord(-1, 1),
+                new FoliageCoord(-1, 0),
+                new FoliageCoord(-1, -1),
+                new FoliageCoord(0, -1),
+                new FoliageCoord(1, -1),
+                new FoliageCoord(2, -1),
+                new FoliageCoord(2, 0),
+                new FoliageCoord(2, 1),
+                new FoliageCoord(1, 2),
+                new FoliageCoord(0, 2),
+                new FoliageCoord(-1, 2),
+                new FoliageCoord(-2, 1),
+                new FoliageCoord(-2, 0),
+                new FoliageCoord(-2, -1),
+                new FoliageCoord(-1, -2),
+                new FoliageCoord(0, -2),
+                new FoliageCoord(1, -2)
+            },
+            new FoliageCoord[45]
+            {
+                new FoliageCoord(0, 0),
+                new FoliageCoord(1, 0),
+                new FoliageCoord(1, 1),
+                new FoliageCoord(0, 1),
+                new FoliageCoord(-1, 1),
+                new FoliageCoord(-1, 0),
+                new FoliageCoord(-1, -1),
+                new FoliageCoord(0, -1),
+                new FoliageCoord(1, -1),
+                new FoliageCoord(2, -1),
+                new FoliageCoord(2, 0),
+                new FoliageCoord(2, 1),
+                new FoliageCoord(2, 2),
+                new FoliageCoord(1, 2),
+                new FoliageCoord(0, 2),
+                new FoliageCoord(-1, 2),
+                new FoliageCoord(-2, 2),
+                new FoliageCoord(-2, 1),
+                new FoliageCoord(-2, 0),
+                new FoliageCoord(-2, -1),
+                new FoliageCoord(-2, -2),
+                new FoliageCoord(-1, -2),
+                new FoliageCoord(0, -2),
+                new FoliageCoord(1, -2),
+                new FoliageCoord(2, -2),
+                new FoliageCoord(3, -2),
+                new FoliageCoord(3, -1),
+                new FoliageCoord(3, 0),
+                new FoliageCoord(3, 1),
+                new FoliageCoord(3, 2),
+                new FoliageCoord(2, 3),
+                new FoliageCoord(1, 3),
+                new FoliageCoord(0, 3),
+                new FoliageCoord(-1, 3),
+                new FoliageCoord(-2, 3),
+                new FoliageCoord(-3, 2),
+                new FoliageCoord(-3, 1),
+                new FoliageCoord(-3, 0),
+                new FoliageCoord(-3, -1),
+                new FoliageCoord(-3, -2),
+                new FoliageCoord(-2, -3),
+                new FoliageCoord(-1, -3),
+                new FoliageCoord(0, -3),
+                new FoliageCoord(1, -3),
+                new FoliageCoord(2, -3)
+            },
+            new FoliageCoord[69]
+            {
+                new FoliageCoord(0, 0),
+                new FoliageCoord(1, 0),
+                new FoliageCoord(1, 1),
+                new FoliageCoord(0, 1),
+                new FoliageCoord(-1, 1),
+                new FoliageCoord(-1, 0),
+                new FoliageCoord(-1, -1),
+                new FoliageCoord(0, -1),
+                new FoliageCoord(1, -1),
+                new FoliageCoord(2, -1),
+                new FoliageCoord(2, 0),
+                new FoliageCoord(2, 1),
+                new FoliageCoord(2, 2),
+                new FoliageCoord(1, 2),
+                new FoliageCoord(0, 2),
+                new FoliageCoord(-1, 2),
+                new FoliageCoord(-2, 2),
+                new FoliageCoord(-2, 1),
+                new FoliageCoord(-2, 0),
+                new FoliageCoord(-2, -1),
+                new FoliageCoord(-2, -2),
+                new FoliageCoord(-1, -2),
+                new FoliageCoord(0, -2),
+                new FoliageCoord(1, -2),
+                new FoliageCoord(2, -2),
+                new FoliageCoord(3, -2),
+                new FoliageCoord(3, -1),
+                new FoliageCoord(3, 0),
+                new FoliageCoord(3, 1),
+                new FoliageCoord(3, 2),
+                new FoliageCoord(3, 3),
+                new FoliageCoord(2, 3),
+                new FoliageCoord(1, 3),
+                new FoliageCoord(0, 3),
+                new FoliageCoord(-1, 3),
+                new FoliageCoord(-2, 3),
+                new FoliageCoord(-3, 3),
+                new FoliageCoord(-3, 2),
+                new FoliageCoord(-3, 1),
+                new FoliageCoord(-3, 0),
+                new FoliageCoord(-3, -1),
+                new FoliageCoord(-3, -2),
+                new FoliageCoord(-3, -3),
+                new FoliageCoord(-2, -3),
+                new FoliageCoord(-1, -3),
+                new FoliageCoord(0, -3),
+                new FoliageCoord(1, -3),
+                new FoliageCoord(2, -3),
+                new FoliageCoord(3, -3),
+                new FoliageCoord(4, -2),
+                new FoliageCoord(4, -1),
+                new FoliageCoord(4, 0),
+                new FoliageCoord(4, 1),
+                new FoliageCoord(4, 2),
+                new FoliageCoord(2, 4),
+                new FoliageCoord(1, 4),
+                new FoliageCoord(0, 4),
+                new FoliageCoord(-1, 4),
+                new FoliageCoord(-2, 4),
+                new FoliageCoord(-4, 2),
+                new FoliageCoord(-4, 1),
+                new FoliageCoord(-4, 0),
+                new FoliageCoord(-4, -1),
+                new FoliageCoord(-4, -2),
+                new FoliageCoord(-2, -4),
+                new FoliageCoord(-1, -4),
+                new FoliageCoord(0, -4),
+                new FoliageCoord(1, -4),
+                new FoliageCoord(2, -4)
+            },
+            new FoliageCoord[89]
+            {
+                new FoliageCoord(0, 0),
+                new FoliageCoord(1, 0),
+                new FoliageCoord(1, 1),
+                new FoliageCoord(0, 1),
+                new FoliageCoord(-1, 1),
+                new FoliageCoord(-1, 0),
+                new FoliageCoord(-1, -1),
+                new FoliageCoord(0, -1),
+                new FoliageCoord(1, -1),
+                new FoliageCoord(2, -1),
+                new FoliageCoord(2, 0),
+                new FoliageCoord(2, 1),
+                new FoliageCoord(2, 2),
+                new FoliageCoord(1, 2),
+                new FoliageCoord(0, 2),
+                new FoliageCoord(-1, 2),
+                new FoliageCoord(-2, 2),
+                new FoliageCoord(-2, 1),
+                new FoliageCoord(-2, 0),
+                new FoliageCoord(-2, -1),
+                new FoliageCoord(-2, -2),
+                new FoliageCoord(-1, -2),
+                new FoliageCoord(0, -2),
+                new FoliageCoord(1, -2),
+                new FoliageCoord(2, -2),
+                new FoliageCoord(3, -2),
+                new FoliageCoord(3, -1),
+                new FoliageCoord(3, 0),
+                new FoliageCoord(3, 1),
+                new FoliageCoord(3, 2),
+                new FoliageCoord(3, 3),
+                new FoliageCoord(2, 3),
+                new FoliageCoord(1, 3),
+                new FoliageCoord(0, 3),
+                new FoliageCoord(-1, 3),
+                new FoliageCoord(-2, 3),
+                new FoliageCoord(-3, 3),
+                new FoliageCoord(-3, 2),
+                new FoliageCoord(-3, 1),
+                new FoliageCoord(-3, 0),
+                new FoliageCoord(-3, -1),
+                new FoliageCoord(-3, -2),
+                new FoliageCoord(-3, -3),
+                new FoliageCoord(-2, -3),
+                new FoliageCoord(-1, -3),
+                new FoliageCoord(0, -3),
+                new FoliageCoord(1, -3),
+                new FoliageCoord(2, -3),
+                new FoliageCoord(3, -3),
+                new FoliageCoord(4, -3),
+                new FoliageCoord(4, -2),
+                new FoliageCoord(4, -1),
+                new FoliageCoord(4, 0),
+                new FoliageCoord(4, 1),
+                new FoliageCoord(4, 2),
+                new FoliageCoord(4, 3),
+                new FoliageCoord(3, 4),
+                new FoliageCoord(2, 4),
+                new FoliageCoord(1, 4),
+                new FoliageCoord(0, 4),
+                new FoliageCoord(-1, 4),
+                new FoliageCoord(-2, 4),
+                new FoliageCoord(-3, 4),
+                new FoliageCoord(-4, 3),
+                new FoliageCoord(-4, 2),
+                new FoliageCoord(-4, 1),
+                new FoliageCoord(-4, 0),
+                new FoliageCoord(-4, -1),
+                new FoliageCoord(-4, -2),
+                new FoliageCoord(-4, -3),
+                new FoliageCoord(-3, -4),
+                new FoliageCoord(-2, -4),
+                new FoliageCoord(-1, -4),
+                new FoliageCoord(0, -4),
+                new FoliageCoord(1, -4),
+                new FoliageCoord(2, -4),
+                new FoliageCoord(3, -4),
+                new FoliageCoord(5, -1),
+                new FoliageCoord(5, 0),
+                new FoliageCoord(5, 1),
+                new FoliageCoord(1, 5),
+                new FoliageCoord(0, 5),
+                new FoliageCoord(-1, 5),
+                new FoliageCoord(5, 1),
+                new FoliageCoord(5, 0),
+                new FoliageCoord(5, -1),
+                new FoliageCoord(-1, -5),
+                new FoliageCoord(0, -5),
+                new FoliageCoord(1, -5)
+            }
+        };
         surfaces = new List<IFoliageSurface>();
     }
 }

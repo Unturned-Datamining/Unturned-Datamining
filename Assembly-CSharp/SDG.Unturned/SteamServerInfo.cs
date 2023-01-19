@@ -1,3 +1,4 @@
+using SDG.HostBans;
 using Steamworks;
 using UnityEngine;
 using Unturned.SystemEx;
@@ -47,6 +48,8 @@ public class SteamServerInfo
     private bool _isPassworded;
 
     private bool _isPro;
+
+    internal EHostBanFlags hostBanFlags;
 
     public CSteamID steamID => _steamID;
 
@@ -122,6 +125,15 @@ public class SteamServerInfo
             return true;
         }
         return num < thumbnailIndex;
+    }
+
+    internal void SetServerListHostBanFlags(EHostBanFlags hostBanFlags)
+    {
+        this.hostBanFlags = hostBanFlags;
+        if (hostBanFlags.HasFlag(EHostBanFlags.QueryPingWarning))
+        {
+            sortingPing += 200;
+        }
     }
 
     public SteamServerInfo(gameserveritem_t data)

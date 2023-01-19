@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using SDG.Framework.Foliage;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -27,6 +28,8 @@ public class StructureDrop
     internal StructureData serversideData;
 
     internal HousingConnectionData housingConnectionData;
+
+    internal FoliageCut foliageCut;
 
     public Transform model => _model;
 
@@ -95,6 +98,11 @@ public class StructureDrop
         {
             UnturnedLog.exception(e, "Caught exception while unlinking housing connections:");
         }
+        bool flag = foliageCut != null;
+        if (flag)
+        {
+            RemoveFoliageCut();
+        }
         model.position = point;
         model.rotation = Quaternion.Euler(angle_x * 2, angle_y * 2, angle_z * 2);
         try
@@ -104,6 +112,10 @@ public class StructureDrop
         catch (Exception e2)
         {
             UnturnedLog.exception(e2, "Caught exception while linking housing connections:");
+        }
+        if (flag)
+        {
+            AddFoliageCut();
         }
         if (Regions.tryGetCoordinate(point, out var x, out var y) && (old_x != x || old_y != y))
         {
@@ -232,5 +244,23 @@ public class StructureDrop
     public StructureDrop(Transform newModel, uint newInstanceID)
         : this(newModel, null)
     {
+    }
+
+    internal void AddFoliageCut()
+    {
+        if (!Dedicator.IsDedicatedServer && foliageCut == null && asset != null && (asset.construct == EConstruct.FLOOR || asset.construct == EConstruct.FLOOR_POLY) && asset.foliageCutRadius > 0.01f)
+        {
+            foliageCut = new FoliageCut(model.position, asset.foliageCutRadius, 8f);
+            FoliageSystem.AddCut(foliageCut);
+        }
+    }
+
+    internal void RemoveFoliageCut()
+    {
+        if (foliageCut != null)
+        {
+            FoliageSystem.RemoveCut(foliageCut);
+            foliageCut = null;
+        }
     }
 }

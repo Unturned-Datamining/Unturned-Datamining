@@ -6,6 +6,10 @@ public class CommandAdmins : Command
 {
     protected override void execute(CSteamID executorID, string parameter)
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            return;
+        }
         if (SteamAdminlist.list.Count == 0)
         {
             CommandWindow.LogError(localization.format("NoAdminsErrorText"));

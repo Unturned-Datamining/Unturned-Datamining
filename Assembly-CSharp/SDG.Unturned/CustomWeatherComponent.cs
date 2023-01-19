@@ -1,9 +1,20 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SDG.Unturned;
 
 public class CustomWeatherComponent : WeatherComponentBase
 {
+    private class EffectInstance
+    {
+        public ParticleSystem particleSystem;
+
+        public WeatherAsset.Effect asset;
+
+        public float rateOverTime;
+    }
+
     public WeatherAsset customAsset;
 
     private float staminaBuffer;
@@ -16,6 +27,8 @@ public class CustomWeatherComponent : WeatherComponentBase
 
     private float virusBuffer;
 
+    private List<EffectInstance> effects;
+
     public override void InitializeWeather()
     {
         base.InitializeWeather();
@@ -27,10 +40,39 @@ public class CustomWeatherComponent : WeatherComponentBase
         fogBlendExponent = customAsset.fogBlendExponent;
         cloudBlendExponent = customAsset.cloudBlendExponent;
         windMain = customAsset.windMain;
+        if (Dedicator.IsDedicatedServer || customAsset.effects == null)
+        {
+            return;
+        }
+        effects = new List<EffectInstance>(customAsset.effects.Length);
+        WeatherAsset.Effect[] array = customAsset.effects;
+        foreach (WeatherAsset.Effect effect in array)
+        {
+            if (effect.prefab.isValid)
+            {
+                StartCoroutine(AsyncLoadEffect(effect));
+            }
+        }
     }
 
     public override void UpdateWeather()
     {
+        if (effects == null)
+        {
+            return;
+        }
+        foreach (EffectInstance effect in effects)
+        {
+            if (effect != null)
+            {
+                ParticleSystem.EmissionModule emission = effect.particleSystem.emission;
+                emission.rateOverTimeMultiplier = effect.rateOverTime * Mathf.Pow(base.EffectBlendAlpha, effect.asset.emissionExponent);
+                if (effect.asset.rotateYawWithWind)
+                {
+                    effect.particleSystem.transform.rotation = Quaternion.Slerp(effect.particleSystem.transform.rotation, Quaternion.Euler(effect.asset.pitch, LevelLighting.wind, 0f), 0.5f * Time.deltaTime);
+                }
+            }
+        }
     }
 
     public override void UpdateLightingTime(int blendKey, int currentKey, float timeAlpha)
@@ -54,6 +96,15 @@ public class CustomWeatherComponent : WeatherComponentBase
     public override void PreDestroyWeather()
     {
         base.PreDestroyWeather();
+        if (effects == null)
+        {
+            return;
+        }
+        foreach (EffectInstance effect in effects)
+        {
+            Object.Destroy(effect.particleSystem.gameObject);
+        }
+        effects = null;
     }
 
     private void Update()
@@ -114,5 +165,43 @@ public class CustomWeatherComponent : WeatherComponentBase
         {
             item5.life.serverModifyVirus(num6);
         }
+    }
+
+    private IEnumerator AsyncLoadEffect(WeatherAsset.Effect effectSettings)
+    {
+        AssetBundleRequest request = effectSettings.prefab.LoadAssetAsync();
+        if (request == null)
+        {
+            yield break;
+        }
+        yield return request;
+        GameObject gameObject = request.asset as GameObject;
+        if (gameObject == null)
+        {
+            yield break;
+        }
+        GameObject gameObject2 = Object.Instantiate(gameObject, Vector3.zero, Quaternion.identity);
+        gameObject2.name = $"{asset.name}_Effect_{gameObject.name}";
+        ParticleSystem componentInChildren = gameObject2.GetComponentInChildren<ParticleSystem>();
+        if (componentInChildren == null)
+        {
+            Assets.reportError(asset, "effect {0} missing particle system", gameObject.name);
+            Object.Destroy(gameObject2);
+            yield break;
+        }
+        if (effectSettings.translateWithView)
+        {
+            Transform obj = gameObject2.transform;
+            obj.parent = base.transform;
+            obj.localPosition = Vector3.zero;
+            obj.localRotation = Quaternion.identity;
+        }
+        EffectInstance effectInstance = effects.AddDefaulted();
+        effectInstance.asset = effectSettings;
+        effectInstance.particleSystem = componentInChildren;
+        ParticleSystem.EmissionModule emission = componentInChildren.emission;
+        effectInstance.rateOverTime = emission.rateOverTimeMultiplier;
+        emission.rateOverTimeMultiplier = 0f;
+        componentInChildren.Play();
     }
 }

@@ -21,6 +21,10 @@ public class UseableArrestStart : Useable
     private void arrest()
     {
         base.player.animator.play("Use", smooth: false);
+        if (!Dedicator.IsDedicatedServer)
+        {
+            base.player.playSound(((ItemArrestStartAsset)base.player.equipment.asset).use);
+        }
     }
 
     public void askArrest(CSteamID steamID)

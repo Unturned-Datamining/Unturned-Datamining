@@ -6,13 +6,16 @@ public class CommandSync : Command
 {
     protected override void execute(CSteamID executorID, string parameter)
     {
-        if (Provider.isServer)
+        if (Dedicator.IsDedicatedServer)
         {
-            CommandWindow.LogError(localization.format("RunningErrorText"));
-            return;
+            if (Provider.isServer)
+            {
+                CommandWindow.LogError(localization.format("RunningErrorText"));
+                return;
+            }
+            PlayerSavedata.hasSync = true;
+            CommandWindow.Log(localization.format("SyncText"));
         }
-        PlayerSavedata.hasSync = true;
-        CommandWindow.Log(localization.format("SyncText"));
     }
 
     public CommandSync(Local newLocalization)

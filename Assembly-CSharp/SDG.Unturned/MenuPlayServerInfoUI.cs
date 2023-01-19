@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using SDG.HostBans;
 using SDG.Provider;
 using Steamworks;
 using UnityEngine;
@@ -242,52 +243,122 @@ public class MenuPlayServerInfoUI
 
     public static void open(SteamServerInfo newServerInfo, string newServerPassword, EServerInfoOpenContext newOpenContext)
     {
-        if (!active)
+        if (active)
         {
-            active = true;
-            openContext = newOpenContext;
-            serverInfo = newServerInfo;
-            serverPassword = newServerPassword;
-            expectedWorkshopItems = null;
-            linkUrls = null;
-            bool flag = false;
-            new IPv4Address(serverInfo.ip);
-            bool flag2 = !serverInfo.steamID.BPersistentGameServerAccount() && new IPv4Address(serverInfo.ip).IsWideAreaNetwork;
-            if (flag2)
+            return;
+        }
+        active = true;
+        openContext = newOpenContext;
+        serverInfo = newServerInfo;
+        serverPassword = newServerPassword;
+        expectedWorkshopItems = null;
+        linkUrls = null;
+        new IPv4Address(serverInfo.ip);
+        bool flag = !serverInfo.steamID.BPersistentGameServerAccount() && new IPv4Address(serverInfo.ip).IsWideAreaNetwork;
+        flag &= !LiveConfig.Get().ShouldAllowJoiningInternetServersWithoutGslt;
+        if (flag)
+        {
+            UnturnedLog.info($"{serverInfo.name} is not logged in ({serverInfo.steamID}) and IP ({new IPv4Address(serverInfo.ip)}) is WAN");
+        }
+        notLoggedInWarningButton.isVisible = flag;
+        EHostBanFlags eHostBanFlags = HostBansManager.Get().MatchBasicDetails(serverInfo.ip, serverInfo.queryPort, serverInfo.name, serverInfo.steamID.m_SteamID);
+        if (eHostBanFlags == EHostBanFlags.None)
+        {
+            eHostBanFlags = HostBansManager.Get().MatchExtendedDetails(serverInfo.descText, serverInfo.thumbnailURL);
+        }
+        UnturnedLog.info($"{serverInfo.name} host ban flags: {eHostBanFlags}");
+        bool flag2 = eHostBanFlags.HasFlag(EHostBanFlags.Blocked);
+        hostBanWarningButton.isVisible = false;
+        hostBanWarningButton.text = string.Empty;
+        if (eHostBanFlags.HasFlag(EHostBanFlags.MonetizationWarning))
+        {
+            hostBanWarningButton.isVisible = true;
+            hostBanWarningButton.text += localization.format("HostBan_MonetizationWarning");
+        }
+        if (eHostBanFlags.HasFlag(EHostBanFlags.WorkshopWarning))
+        {
+            if (hostBanWarningButton.isVisible)
             {
-                UnturnedLog.info($"{serverInfo.name} is not logged in ({serverInfo.steamID}) and IP ({new IPv4Address(serverInfo.ip)}) is WAN");
-            }
-            notLoggedInWarningButton.isVisible = flag2;
-            if (flag2)
-            {
-                joinButton.isVisible = false;
-                joinDisabledBox.isVisible = true;
-                joinDisabledBox.text = localization.format("NotLoggedInBlock_Label");
-                joinDisabledBox.tooltipText = localization.format("NotLoggedInBlock_Tooltip");
-            }
-            else if (flag)
-            {
-                joinButton.isVisible = false;
-                joinDisabledBox.isVisible = true;
-                joinDisabledBox.text = localization.format("ServerBlacklisted_Label");
-                joinDisabledBox.tooltipText = localization.format("ServerBlacklisted_Tooltip");
+                hostBanWarningButton.text += "\n";
             }
             else
             {
-                joinButton.isVisible = true;
-                joinDisabledBox.isVisible = false;
+                hostBanWarningButton.isVisible = true;
             }
-            reset();
-            serverFavorited = Provider.GetServerIsFavorited(serverInfo.ip, serverInfo.queryPort);
-            updateFavorite();
-            updatePlayers();
-            Provider.provider.matchmakingService.refreshPlayers(serverInfo.ip, serverInfo.queryPort);
-            Provider.provider.matchmakingService.refreshPlayers(serverInfo.ip, serverInfo.queryPort);
-            updateRules();
-            Provider.provider.matchmakingService.refreshRules(serverInfo.ip, serverInfo.queryPort);
-            updateServerInfo();
-            container.AnimateIntoView();
+            hostBanWarningButton.text += localization.format("HostBan_WorkshopWarning");
         }
+        if (eHostBanFlags.HasFlag(EHostBanFlags.QueryPingWarning))
+        {
+            if (hostBanWarningButton.isVisible)
+            {
+                hostBanWarningButton.text += "\n";
+            }
+            else
+            {
+                hostBanWarningButton.isVisible = true;
+            }
+            hostBanWarningButton.text += localization.format("HostBan_QueryPingWarning");
+        }
+        if (eHostBanFlags.HasFlag(EHostBanFlags.IncorrectMonetizationTagWarning))
+        {
+            if (hostBanWarningButton.isVisible)
+            {
+                hostBanWarningButton.text += "\n";
+            }
+            else
+            {
+                hostBanWarningButton.isVisible = true;
+            }
+            hostBanWarningButton.text += localization.format("HostBan_IncorrectMonetizationTagWarning");
+        }
+        if (eHostBanFlags.HasFlag(EHostBanFlags.Apology))
+        {
+            if (hostBanWarningButton.isVisible)
+            {
+                hostBanWarningButton.text += "\n";
+            }
+            else
+            {
+                hostBanWarningButton.isVisible = true;
+            }
+            hostBanWarningButton.text += localization.format("HostBan_Apology");
+            hostBanWarningButton.textColor = ESleekTint.FONT;
+            hostBanWarningButton.isRaycastTarget = false;
+        }
+        else
+        {
+            hostBanWarningButton.textColor = ESleekTint.BAD;
+            hostBanWarningButton.isRaycastTarget = true;
+        }
+        if (flag)
+        {
+            joinButton.isVisible = false;
+            joinDisabledBox.isVisible = true;
+            joinDisabledBox.text = localization.format("NotLoggedInBlock_Label");
+            joinDisabledBox.tooltipText = localization.format("NotLoggedInBlock_Tooltip");
+        }
+        else if (flag2)
+        {
+            joinButton.isVisible = false;
+            joinDisabledBox.isVisible = true;
+            joinDisabledBox.text = localization.format("ServerBlacklisted_Label");
+            joinDisabledBox.tooltipText = localization.format("ServerBlacklisted_Tooltip");
+        }
+        else
+        {
+            joinButton.isVisible = true;
+            joinDisabledBox.isVisible = false;
+        }
+        reset();
+        serverFavorited = Provider.GetServerIsFavorited(serverInfo.ip, serverInfo.queryPort);
+        updateFavorite();
+        updatePlayers();
+        Provider.provider.matchmakingService.refreshPlayers(serverInfo.ip, serverInfo.queryPort);
+        Provider.provider.matchmakingService.refreshPlayers(serverInfo.ip, serverInfo.queryPort);
+        updateRules();
+        Provider.provider.matchmakingService.refreshRules(serverInfo.ip, serverInfo.queryPort);
+        updateServerInfo();
+        container.AnimateIntoView();
     }
 
     public static void close()

@@ -516,17 +516,37 @@ public class PlayerAnimator : PlayerCaller
                 thirdRenderer_1.enabled = !isDead && base.player.look.perspective == EPlayerPerspective.THIRD;
             }
             thirdSkeleton.gameObject.SetActive(!isDead && base.player.look.perspective == EPlayerPerspective.THIRD);
+            return;
         }
-        else
+        if (!Dedicator.IsDedicatedServer && !isHiddenWaitingForClothing)
         {
-            thirdSkeleton.gameObject.SetActive(!isDead);
+            if (thirdRenderer_0 != null)
+            {
+                thirdRenderer_0.enabled = !isDead;
+            }
+            if (thirdRenderer_1 != null)
+            {
+                thirdRenderer_1.enabled = !isDead;
+            }
         }
+        thirdSkeleton.gameObject.SetActive(!isDead);
     }
 
     public void NotifyClothingIsVisible()
     {
         isHiddenWaitingForClothing = false;
-        _ = base.channel.isOwner;
+        if (!base.channel.isOwner && !Dedicator.IsDedicatedServer && !base.player.life.isDead)
+        {
+            if (thirdRenderer_0 != null)
+            {
+                thirdRenderer_0.enabled = true;
+            }
+            if (thirdRenderer_1 != null)
+            {
+                thirdRenderer_1.enabled = true;
+            }
+            thirdSkeleton.gameObject.SetActive(value: true);
+        }
     }
 
     [Obsolete]
@@ -569,11 +589,19 @@ public class PlayerAnimator : PlayerCaller
         {
             play("Punch_Left", smooth: false);
             _gesture = EPlayerGesture.NONE;
+            if (!Dedicator.IsDedicatedServer)
+            {
+                base.player.playSound((AudioClip)Resources.Load("Sounds/General/Punch"));
+            }
         }
         else if (newGesture == EPlayerGesture.PUNCH_RIGHT)
         {
             play("Punch_Right", smooth: false);
             _gesture = EPlayerGesture.NONE;
+            if (!Dedicator.IsDedicatedServer)
+            {
+                base.player.playSound((AudioClip)Resources.Load("Sounds/General/Punch"));
+            }
         }
         else if (newGesture == EPlayerGesture.SURRENDER_START && gesture == EPlayerGesture.NONE)
         {
@@ -657,6 +685,10 @@ public class PlayerAnimator : PlayerCaller
 
     public void sendGesture(EPlayerGesture gesture, bool all)
     {
+        if (!Dedicator.IsDedicatedServer && gesture == EPlayerGesture.INVENTORY_STOP && base.player.inventory.isStoring && base.player.inventory.shouldInventoryStopGestureCloseStorage)
+        {
+            base.player.inventory.closeStorage();
+        }
         if (Provider.isServer)
         {
             if (gesture == EPlayerGesture.REST_START && base.player.stance.stance != EPlayerStance.CROUCH)
@@ -1194,6 +1226,15 @@ public class PlayerAnimator : PlayerCaller
         }
     }
 
+    private void LateUpdate()
+    {
+        if (base.channel.isOwner)
+        {
+            GetAimingViewmodelAlignment(out var aimingAlignmentOffset, out var _);
+            viewmodelCameraTransform.localPosition = viewmodelCameraLocalPosition + aimingAlignmentOffset;
+        }
+    }
+
     internal void InitializePlayer()
     {
         isHiddenWaitingForClothing = true;
@@ -1275,9 +1316,17 @@ public class PlayerAnimator : PlayerCaller
         {
             thirdAnimator = base.player.third.GetComponent<CharacterAnimator>();
             thirdAnimator.transform.localScale = new Vector3((!base.channel.owner.hand) ? 1 : (-1), 1f, 1f);
+            if (!Dedicator.IsDedicatedServer)
+            {
+                thirdRenderer_0 = (SkinnedMeshRenderer)thirdAnimator.transform.Find("Model_0").GetComponent<Renderer>();
+                thirdRenderer_1 = (SkinnedMeshRenderer)thirdAnimator.transform.Find("Model_1").GetComponent<Renderer>();
+            }
             _thirdSkeleton = thirdAnimator.transform.Find("Skeleton");
         }
-        thirdSkeleton.gameObject.SetActive(value: true);
+        if (Dedicator.IsDedicatedServer)
+        {
+            thirdSkeleton.gameObject.SetActive(value: true);
+        }
         mixAnimation("Gesture_Inventory", mixLeftShoulder: true, mixRightShoulder: true, mixSkull: true);
         mixAnimation("Gesture_Pickup", mixLeftShoulder: false, mixRightShoulder: true);
         mixAnimation("Punch_Left", mixLeftShoulder: true, mixRightShoulder: false);

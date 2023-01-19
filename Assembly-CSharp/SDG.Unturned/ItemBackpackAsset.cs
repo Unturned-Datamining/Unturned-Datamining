@@ -11,6 +11,16 @@ public class ItemBackpackAsset : ItemBagAsset
     public ItemBackpackAsset(Bundle bundle, Data data, Local localization, ushort id)
         : base(bundle, data, localization, id)
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            _backpack = loadRequiredAsset<GameObject>(bundle, "Backpack");
+            if ((bool)Assets.shouldValidateAssets)
+            {
+                AssetValidation.ValidateLayersEqual(this, _backpack, 10);
+                AssetValidation.ValidateClothComponents(this, _backpack);
+                AssetValidation.searchGameObjectForErrors(this, _backpack);
+            }
+        }
     }
 
     protected override AudioReference GetDefaultInventoryAudio()

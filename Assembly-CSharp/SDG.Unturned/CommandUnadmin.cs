@@ -6,18 +6,21 @@ public class CommandUnadmin : Command
 {
     protected override void execute(CSteamID executorID, string parameter)
     {
-        if (!Provider.isServer)
+        if (Dedicator.IsDedicatedServer)
         {
-            CommandWindow.LogError(localization.format("NotRunningErrorText"));
-            return;
+            if (!Provider.isServer)
+            {
+                CommandWindow.LogError(localization.format("NotRunningErrorText"));
+                return;
+            }
+            if (!PlayerTool.tryGetSteamID(parameter, out var steamID))
+            {
+                CommandWindow.LogError(localization.format("NoPlayerErrorText", parameter));
+                return;
+            }
+            SteamAdminlist.unadmin(steamID);
+            CommandWindow.Log(localization.format("UnadminText", steamID));
         }
-        if (!PlayerTool.tryGetSteamID(parameter, out var steamID))
-        {
-            CommandWindow.LogError(localization.format("NoPlayerErrorText", parameter));
-            return;
-        }
-        SteamAdminlist.unadmin(steamID);
-        CommandWindow.Log(localization.format("UnadminText", steamID));
     }
 
     public CommandUnadmin(Local newLocalization)

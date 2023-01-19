@@ -1,3 +1,4 @@
+using SDG.Framework.Water;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -25,4 +26,94 @@ public class Rain : MonoBehaviour
     private bool isRaining;
 
     private bool needsIsRainingUpdate;
+
+    private void onGraphicsSettingsApplied()
+    {
+        needsIsRainingUpdate = true;
+    }
+
+    private void Update()
+    {
+        if (Dedicator.IsDedicatedServer)
+        {
+            return;
+        }
+        if (_Rain_Water_Level != -1)
+        {
+            Shader.SetGlobalFloat(_Rain_Water_Level, Water_Level);
+        }
+        if (_Rain_Intensity != -1)
+        {
+            Shader.SetGlobalFloat(_Rain_Intensity, Intensity);
+        }
+        if (_Rain_Min_Height != -1)
+        {
+            Shader.SetGlobalFloat(_Rain_Min_Height, WaterVolumeManager.worldSeaLevel);
+        }
+        if (Water_Level > 0.01f)
+        {
+            if (!isRaining)
+            {
+                isRaining = true;
+                needsIsRainingUpdate = true;
+            }
+        }
+        else if (isRaining)
+        {
+            isRaining = false;
+            needsIsRainingUpdate = true;
+        }
+        if (needsIsRainingUpdate)
+        {
+            if (isRaining && GraphicsSettings.puddle)
+            {
+                Shader.EnableKeyword("IS_RAINING");
+            }
+            else
+            {
+                Shader.DisableKeyword("IS_RAINING");
+            }
+            needsIsRainingUpdate = false;
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            GraphicsSettings.graphicsSettingsApplied += onGraphicsSettingsApplied;
+            if (_Rain_Puddle_Map == -1)
+            {
+                _Rain_Puddle_Map = Shader.PropertyToID("_Rain_Puddle_Map");
+                Shader.SetGlobalTexture(_Rain_Puddle_Map, Puddle_Map);
+            }
+            if (_Rain_Ripple_Map == -1)
+            {
+                _Rain_Ripple_Map = Shader.PropertyToID("_Rain_Ripple_Map");
+                Shader.SetGlobalTexture(_Rain_Ripple_Map, Ripple_Map);
+            }
+            if (_Rain_Water_Level == -1)
+            {
+                _Rain_Water_Level = Shader.PropertyToID("_Rain_Water_Level");
+            }
+            if (_Rain_Intensity == -1)
+            {
+                _Rain_Intensity = Shader.PropertyToID("_Rain_Intensity");
+            }
+            if (_Rain_Min_Height == -1)
+            {
+                _Rain_Min_Height = Shader.PropertyToID("_Rain_Min_Height");
+            }
+            isRaining = false;
+            needsIsRainingUpdate = true;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            GraphicsSettings.graphicsSettingsApplied -= onGraphicsSettingsApplied;
+        }
+    }
 }

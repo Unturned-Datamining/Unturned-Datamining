@@ -11,6 +11,16 @@ public class LightningWeatherComponent : MonoBehaviour
 
     private static ClientInstanceMethod<Vector3> SendLightningStrike = ClientInstanceMethod<Vector3>.Get(typeof(LightningWeatherComponent), "ReceiveLightningStrike");
 
+    private GameObject effectInstance;
+
+    private LineRenderer lineRenderer;
+
+    private AudioClip nearClip;
+
+    private AudioClip mediumClip;
+
+    private AudioClip farClip;
+
     private List<Vector3> playerPositions = new List<Vector3>();
 
     internal NetId netId;
@@ -29,6 +39,27 @@ public class LightningWeatherComponent : MonoBehaviour
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
     public void ReceiveLightningStrike(Vector3 hitPosition)
     {
+        StartCoroutine(PlayEffect(hitPosition));
+        AudioClip audioClip = farClip;
+        if (MainCamera.instance != null)
+        {
+            float num = MathfEx.HorizontalDistanceSquared(MainCamera.instance.transform.position, hitPosition);
+            if (num < 10000f)
+            {
+                audioClip = nearClip;
+            }
+            else if (num < 90000f)
+            {
+                audioClip = mediumClip;
+            }
+        }
+        if (audioClip != null)
+        {
+            OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(hitPosition, audioClip);
+            oneShotAudioParameters.RandomizePitch(0.95f, 1.05f);
+            oneShotAudioParameters.SetLinearRolloff(0f, 2048f);
+            oneShotAudioParameters.Play();
+        }
     }
 
     private void Update()
@@ -70,6 +101,62 @@ public class LightningWeatherComponent : MonoBehaviour
         }
     }
 
+    private IEnumerator AsyncLoadEffects()
+    {
+        AssetBundleRequest request4 = Assets.coreMasterBundle.LoadAssetAsync<GameObject>("Effects/Weather/Lightning/LightningEffect.prefab");
+        if (request4 != null)
+        {
+            yield return request4;
+            GameObject gameObject = request4.asset as GameObject;
+            if (gameObject != null)
+            {
+                effectInstance = Object.Instantiate(gameObject);
+                effectInstance.SetActive(value: false);
+                lineRenderer = effectInstance.GetComponent<LineRenderer>();
+            }
+        }
+        request4 = Assets.coreMasterBundle.LoadAssetAsync<AudioClip>("Effects/Weather/Lightning/thunder_lightning_strike_rumble_01.wav");
+        yield return request4;
+        nearClip = request4.asset as AudioClip;
+        request4 = Assets.coreMasterBundle.LoadAssetAsync<AudioClip>("Effects/Weather/Lightning/thunder_lightning_strike_rumble_02.wav");
+        yield return request4;
+        mediumClip = request4.asset as AudioClip;
+        request4 = Assets.coreMasterBundle.LoadAssetAsync<AudioClip>("Effects/Weather/Lightning/thunder_lightning_strike_rumble_04.wav");
+        yield return request4;
+        farClip = request4.asset as AudioClip;
+    }
+
+    private IEnumerator PlayEffect(Vector3 hitPosition)
+    {
+        if (!(effectInstance == null))
+        {
+            yield return new WaitForSeconds(1f);
+            Vector3 position = hitPosition;
+            position.y = Level.HEIGHT;
+            effectInstance.transform.position = position;
+            float num = Level.HEIGHT - hitPosition.y;
+            int num2 = Mathf.CeilToInt(num / 25f);
+            Vector3[] array = new Vector3[num2 + 1];
+            array[0] = hitPosition;
+            for (int i = 1; i <= num2; i++)
+            {
+                float num3 = (float)i / (float)num2;
+                Vector2 vector = MathfEx.RandomPositionInCircle(50f * num3);
+                array[i] = hitPosition + new Vector3(vector.x, num3 * num, vector.y);
+            }
+            lineRenderer.positionCount = array.Length;
+            lineRenderer.SetPositions(array);
+            EffectAsset effectAsset = Assets.find(LightningHitRef);
+            if (effectAsset != null)
+            {
+                EffectManager.effect(effectAsset, hitPosition, Vector3.up);
+            }
+            effectInstance.SetActive(value: true);
+            yield return new WaitForSeconds(0.1f);
+            effectInstance.SetActive(value: false);
+        }
+    }
+
     private IEnumerator DoExplosionDamage(Vector3 hitPosition)
     {
         yield return new WaitForSeconds(1f);
@@ -90,10 +177,16 @@ public class LightningWeatherComponent : MonoBehaviour
 
     private void Start()
     {
+        StartCoroutine(AsyncLoadEffects());
     }
 
     private void OnDestroy()
     {
+        if (effectInstance != null)
+        {
+            Object.Destroy(effectInstance);
+            effectInstance = null;
+        }
         if (!netId.IsNull())
         {
             NetIdRegistry.Release(netId);

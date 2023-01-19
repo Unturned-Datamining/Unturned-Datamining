@@ -10,23 +10,26 @@ public class CommandChatrate : Command
 
     protected override void execute(CSteamID executorID, string parameter)
     {
-        if (!float.TryParse(parameter, out var result))
+        if (Dedicator.IsDedicatedServer)
         {
-            CommandWindow.LogError(localization.format("InvalidNumberErrorText", parameter));
-            return;
+            if (!float.TryParse(parameter, out var result))
+            {
+                CommandWindow.LogError(localization.format("InvalidNumberErrorText", parameter));
+                return;
+            }
+            if (result < MIN_NUMBER)
+            {
+                CommandWindow.LogError(localization.format("MinNumberErrorText", MIN_NUMBER));
+                return;
+            }
+            if (result > MAX_NUMBER)
+            {
+                CommandWindow.LogError(localization.format("MaxNumberErrorText", MAX_NUMBER));
+                return;
+            }
+            ChatManager.chatrate = result;
+            CommandWindow.Log(localization.format("ChatrateText", result));
         }
-        if (result < MIN_NUMBER)
-        {
-            CommandWindow.LogError(localization.format("MinNumberErrorText", MIN_NUMBER));
-            return;
-        }
-        if (result > MAX_NUMBER)
-        {
-            CommandWindow.LogError(localization.format("MaxNumberErrorText", MAX_NUMBER));
-            return;
-        }
-        ChatManager.chatrate = result;
-        CommandWindow.Log(localization.format("ChatrateText", result));
     }
 
     public CommandChatrate(Local newLocalization)

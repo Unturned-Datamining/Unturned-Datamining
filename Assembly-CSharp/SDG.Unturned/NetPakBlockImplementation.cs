@@ -553,7 +553,6 @@ internal class NetPakBlockImplementation
 
     public byte[] getBytes(out int size)
     {
-        ThreadUtil.assertIsGameThread();
         writer.Flush();
         size = writer.writeByteIndex;
         return writer.buffer;

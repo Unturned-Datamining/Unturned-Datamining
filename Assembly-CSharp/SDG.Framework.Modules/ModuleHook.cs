@@ -33,7 +33,17 @@ public class ModuleHook : MonoBehaviour
 
     public static Type[] coreTypes { get; protected set; }
 
-    private static bool shouldLoadModules => true;
+    private static bool shouldLoadModules
+    {
+        get
+        {
+            if (Dedicator.IsDedicatedServer)
+            {
+                return true;
+            }
+            return !Dedicator.hasBattlEye;
+        }
+    }
 
     public static event ModulesInitializedHandler onModulesInitialized;
 
@@ -286,13 +296,16 @@ public class ModuleHook : MonoBehaviour
             for (int num = moduleConfig.Assemblies.Count - 1; num >= 0; num--)
             {
                 ModuleAssembly moduleAssembly = moduleConfig.Assemblies[num];
-                if (moduleAssembly.Role == EModuleRole.Client)
+                if (moduleAssembly.Role == EModuleRole.Client && Dedicator.IsDedicatedServer)
+                {
+                    moduleConfig.Assemblies.RemoveAt(num);
+                }
+                else if (moduleAssembly.Role == EModuleRole.Server && !Dedicator.IsDedicatedServer)
                 {
                     moduleConfig.Assemblies.RemoveAt(num);
                 }
                 else
                 {
-                    _ = moduleAssembly.Role;
                     bool flag2 = false;
                     for (int j = 1; j < moduleAssembly.Path.Length; j++)
                     {

@@ -141,7 +141,7 @@ public class PlayerManager : SteamCaller
 
     private void Update()
     {
-        if (Provider.isServer && Level.isLoaded && Time.realtimeSinceStartup - lastTick > Provider.UPDATE_TIME)
+        if (Provider.isServer && Level.isLoaded && Dedicator.IsDedicatedServer && Time.realtimeSinceStartup - lastTick > Provider.UPDATE_TIME)
         {
             lastTick += Provider.UPDATE_TIME;
             if (Time.realtimeSinceStartup - lastTick > Provider.UPDATE_TIME)

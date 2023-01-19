@@ -159,6 +159,8 @@ public class SteamPlayer : SteamConnectedClientBase
 
     public CSteamID lobbyID { get; private set; }
 
+    public bool IsLocalPlayer { get; private set; }
+
     public NetId GetNetId()
     {
         return _netId;
@@ -427,6 +429,7 @@ public class SteamPlayer : SteamConnectedClientBase
         base.transportConnection = transportConnection;
         _netId = netId;
         NetIdRegistry.Assign(_netId, this);
+        IsLocalPlayer = transportConnection != null && !Dedicator.IsDedicatedServer;
         _playerID = newPlayerID;
         _model = newModel;
         model.name = playerID.characterName + " [" + playerID.playerName + "]";

@@ -42,10 +42,17 @@ public class Buoyancy : MonoBehaviour
                 isUnderwater = vector.y < overrideSurfaceElevation;
                 surfaceElevation = overrideSurfaceElevation;
             }
-            if (isUnderwater && vector.y - voxelHalfHeight < surfaceElevation)
+            if (isUnderwater)
             {
-                Vector3 force = -rootRigidbody.GetPointVelocity(vector) * DAMPER * rootRigidbody.mass + Mathf.Sqrt(Mathf.Clamp01((surfaceElevation - vector.y) / (2f * voxelHalfHeight) + 0.5f)) * localArchimedesForce;
-                rootRigidbody.AddForceAtPosition(force, vector);
+                if (!Dedicator.IsDedicatedServer)
+                {
+                    surfaceElevation += Mathf.Sin((vector.x + vector.z) * 8f + Time.time) * 0.1f;
+                }
+                if (vector.y - voxelHalfHeight < surfaceElevation)
+                {
+                    Vector3 force = -rootRigidbody.GetPointVelocity(vector) * DAMPER * rootRigidbody.mass + Mathf.Sqrt(Mathf.Clamp01((surfaceElevation - vector.y) / (2f * voxelHalfHeight) + 0.5f)) * localArchimedesForce;
+                    rootRigidbody.AddForceAtPosition(force, vector);
+                }
             }
         }
     }

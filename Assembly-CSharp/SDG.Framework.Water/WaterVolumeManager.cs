@@ -27,6 +27,12 @@ public class WaterVolumeManager : VolumeManager<WaterVolume, WaterVolumeManager>
     {
         base.FriendlyName = "Water";
         SetDebugColor(new Color32(50, 200, 200, byte.MaxValue));
+        if (!Dedicator.IsDedicatedServer)
+        {
+            oldWaterQuality = GraphicsSettings.waterQuality;
+            wasPlanarReflectionEnabled = oldWaterQuality == EGraphicQuality.ULTRA;
+            GraphicsSettings.graphicsSettingsApplied += OnGraphicsSettingsApplied;
+        }
     }
 
     private void OnGraphicsSettingsApplied()

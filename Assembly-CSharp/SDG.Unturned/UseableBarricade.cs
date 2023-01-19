@@ -414,7 +414,14 @@ public class UseableBarricade : Useable
             }
             return false;
         }
-        boundsRotation = BarricadeManager.getRotation((ItemBarricadeAsset)base.player.equipment.asset, angle_x + rotate_x, angle_y + rotate_y, angle_z + rotate_z);
+        if (Dedicator.IsDedicatedServer)
+        {
+            boundsRotation = BarricadeManager.getRotation((ItemBarricadeAsset)base.player.equipment.asset, angle_x + rotate_x, angle_y + rotate_y, angle_z + rotate_z);
+        }
+        else
+        {
+            boundsRotation = help.rotation;
+        }
         if (Physics.OverlapBoxNonAlloc(mask: (!(parent != null)) ? RayMasks.BLOCK_CHAR_BUILDABLE_OVERLAP_NOT_ON_VEHICLE : RayMasks.BLOCK_CHAR_BUILDABLE_OVERLAP, center: pointInWorldSpace + boundsRotation * boundsCenter, halfExtents: boundsOverlap, results: checkColliders, orientation: boundsRotation, queryTriggerInteraction: QueryTriggerInteraction.Collide) > 0)
         {
             if (base.channel.isOwner)
@@ -1076,7 +1083,7 @@ public class UseableBarricade : Useable
         {
             return;
         }
-        if (isValid)
+        if (Dedicator.IsDedicatedServer ? isValid : check())
         {
             if (base.channel.isOwner)
             {
@@ -1100,7 +1107,7 @@ public class UseableBarricade : Useable
                 SendPlayBuild.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner());
             }
         }
-        else if (wasAsked)
+        else if (Dedicator.IsDedicatedServer && wasAsked)
         {
             base.player.equipment.dequip();
         }
@@ -1125,38 +1132,46 @@ public class UseableBarricade : Useable
     {
         base.player.animator.play("Equip", smooth: true);
         useTime = base.player.animator.getAnimationLength("Use");
-        if (equippedBarricadeAsset.build == EBuild.MANNEQUIN)
+        if (Dedicator.IsDedicatedServer)
         {
-            boundsUse = true;
-            boundsCenter = new Vector3(0f, 0f, -0.05f);
-            boundsExtents = new Vector3(1.175f, 0.2f, 1.05f);
-        }
-        else if (equippedBarricadeAsset.barricade != null)
-        {
-            GameObject gameObject = UnityEngine.Object.Instantiate(equippedBarricadeAsset.barricade, Vector3.zero, Quaternion.identity);
-            gameObject.name = "Helper";
-            Collider collider;
-            if (equippedBarricadeAsset.build == EBuild.DOOR || equippedBarricadeAsset.build == EBuild.GATE || equippedBarricadeAsset.build == EBuild.SHUTTER)
-            {
-                collider = gameObject.transform.Find("Placeholder").GetComponent<Collider>();
-                boundsDoubleDoor = gameObject.transform.Find("Skeleton").Find("Hinge") == null;
-            }
-            else
-            {
-                collider = gameObject.GetComponentInChildren<Collider>();
-            }
-            if (collider != null)
+            if (equippedBarricadeAsset.build == EBuild.MANNEQUIN)
             {
                 boundsUse = true;
-                boundsCenter = gameObject.transform.InverseTransformPoint(collider.bounds.center);
-                boundsExtents = collider.bounds.extents;
+                boundsCenter = new Vector3(0f, 0f, -0.05f);
+                boundsExtents = new Vector3(1.175f, 0.2f, 1.05f);
             }
-            UnityEngine.Object.Destroy(gameObject);
+            else if (equippedBarricadeAsset.barricade != null)
+            {
+                GameObject gameObject = UnityEngine.Object.Instantiate(equippedBarricadeAsset.barricade, Vector3.zero, Quaternion.identity);
+                gameObject.name = "Helper";
+                Collider collider;
+                if (equippedBarricadeAsset.build == EBuild.DOOR || equippedBarricadeAsset.build == EBuild.GATE || equippedBarricadeAsset.build == EBuild.SHUTTER)
+                {
+                    collider = gameObject.transform.Find("Placeholder").GetComponent<Collider>();
+                    boundsDoubleDoor = gameObject.transform.Find("Skeleton").Find("Hinge") == null;
+                }
+                else
+                {
+                    collider = gameObject.GetComponentInChildren<Collider>();
+                }
+                if (collider != null)
+                {
+                    boundsUse = true;
+                    boundsCenter = gameObject.transform.InverseTransformPoint(collider.bounds.center);
+                    boundsExtents = collider.bounds.extents;
+                }
+                UnityEngine.Object.Destroy(gameObject);
+            }
+            boundsOverlap = boundsExtents + new Vector3(0.5f, 0.5f, 0.5f);
         }
-        boundsOverlap = boundsExtents + new Vector3(0.5f, 0.5f, 0.5f);
         if (!base.channel.isOwner)
         {
             return;
+        }
+        GameObject gameObject2 = equippedBarricadeAsset.placementPreviewRef.loadAsset();
+        if (gameObject2 != null)
+        {
+            help = UnityEngine.Object.Instantiate(gameObject2).transform;
         }
         if (help == null)
         {
@@ -1477,6 +1492,10 @@ public class UseableBarricade : Useable
         if (isBuilding && isBuildable)
         {
             isBuilding = false;
+            if (!Dedicator.IsDedicatedServer)
+            {
+                base.player.playSound(equippedBarricadeAsset.use);
+            }
             if (Provider.isServer)
             {
                 AlertTool.alert(base.transform.position, 8f);

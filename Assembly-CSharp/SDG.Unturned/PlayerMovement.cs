@@ -639,6 +639,98 @@ public class PlayerMovement : PlayerCaller
         }
     }
 
+    private bool PlayLandAudioClip()
+    {
+        if (base.player.stance.stance == EPlayerStance.PRONE || string.IsNullOrEmpty(materialName))
+        {
+            return false;
+        }
+        OneShotAudioDefinition audioDef = PhysicMaterialCustomData.GetAudioDef(materialName, "BipedLand");
+        if (audioDef == null)
+        {
+            return false;
+        }
+        AudioClip randomClip = audioDef.GetRandomClip();
+        if (randomClip == null)
+        {
+            return false;
+        }
+        float num = 1f - base.player.skills.mastery(1, 0) * 0.75f;
+        if (base.player.stance.stance == EPlayerStance.CROUCH)
+        {
+            num *= 0.5f;
+        }
+        num *= 0.15f;
+        OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform, randomClip);
+        oneShotAudioParameters.volume = num * audioDef.volumeMultiplier;
+        oneShotAudioParameters.RandomizePitch(audioDef.minPitch, audioDef.maxPitch);
+        oneShotAudioParameters.SetLinearRolloff(1f, 24f);
+        oneShotAudioParameters.Play();
+        lastFootstep = Time.time;
+        return true;
+    }
+
+    private void PlayFootstepAudioClip()
+    {
+        string propertyName = ((base.player.stance.stance == EPlayerStance.SPRINT) ? "FootstepRun" : "FootstepWalk");
+        OneShotAudioDefinition audioDef = PhysicMaterialCustomData.GetAudioDef(materialName, propertyName);
+        if (audioDef == null)
+        {
+            return;
+        }
+        AudioClip randomClip = audioDef.GetRandomClip();
+        if (!(randomClip == null))
+        {
+            float num = 1f - base.player.skills.mastery(1, 0) * 0.75f;
+            if (base.player.stance.stance == EPlayerStance.CROUCH)
+            {
+                num *= 0.5f;
+            }
+            num *= 0.125f;
+            OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform, randomClip);
+            oneShotAudioParameters.volume = num * audioDef.volumeMultiplier;
+            oneShotAudioParameters.RandomizePitch(audioDef.minPitch, audioDef.maxPitch);
+            oneShotAudioParameters.SetLinearRolloff(1f, 32f);
+            oneShotAudioParameters.Play();
+        }
+    }
+
+    internal void PlaySwimAudioClip()
+    {
+        OneShotAudioDefinition oneShotAudioDefinition;
+        if (base.player.stance.stance == EPlayerStance.SWIM)
+        {
+            oneShotAudioDefinition = ((!base.player.stance.areEyesUnderwater) ? Assets.coreMasterBundle.assetBundle.LoadAsset<OneShotAudioDefinition>("Assets/CoreMasterBundle/Effects/Physics/Swim/HeavyWading/Swim_HeavyWading.asset") : Assets.coreMasterBundle.assetBundle.LoadAsset<OneShotAudioDefinition>("Assets/CoreMasterBundle/Effects/Physics/Swim/MediumWading/Swim_MediumWading.asset"));
+        }
+        else if (WaterUtility.isPointUnderwater(base.transform.position + new Vector3(0f, 0.5f, 0f)))
+        {
+            oneShotAudioDefinition = Assets.coreMasterBundle.assetBundle.LoadAsset<OneShotAudioDefinition>("Assets/CoreMasterBundle/Effects/Physics/Swim/LightWading/Swim_LightWading.asset");
+        }
+        else
+        {
+            string propertyName = ((base.player.stance.stance == EPlayerStance.SPRINT) ? "FootstepRun" : "FootstepWalk");
+            oneShotAudioDefinition = PhysicMaterialCustomData.GetAudioDef("Water", propertyName);
+        }
+        if (oneShotAudioDefinition == null)
+        {
+            return;
+        }
+        AudioClip randomClip = oneShotAudioDefinition.GetRandomClip();
+        if (!(randomClip == null))
+        {
+            float num = 0.15f;
+            if (base.player.stance.stance == EPlayerStance.CROUCH)
+            {
+                num *= 0.5f;
+            }
+            OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform, randomClip);
+            oneShotAudioParameters.volume = num * oneShotAudioDefinition.volumeMultiplier;
+            oneShotAudioParameters.RandomizePitch(oneShotAudioDefinition.minPitch, oneShotAudioDefinition.maxPitch);
+            oneShotAudioParameters.SetLinearRolloff(1f, 32f);
+            oneShotAudioParameters.Play();
+        }
+    }
+
     private void onVisionUpdated(bool isViewing)
     {
         if (isViewing)
@@ -883,9 +975,16 @@ public class PlayerMovement : PlayerCaller
                 if (!flag)
                 {
                     checkGround(base.transform.position);
-                    if (isGrounded && onLanded != null)
+                    if (isGrounded)
                     {
-                        onLanded(velocity.y);
+                        if (onLanded != null)
+                        {
+                            onLanded(velocity.y);
+                        }
+                        if (!base.player.input.isResimulating && Mathf.Abs(velocity.y) > 1f)
+                        {
+                            PlayLandAudioClip();
+                        }
                     }
                 }
                 if (flag2)
@@ -927,7 +1026,7 @@ public class PlayerMovement : PlayerCaller
             position2.y = Mathf.Clamp(position2.y, 0f, Level.HEIGHT);
             base.transform.position = position2;
         }
-        if (Provider.isServer && !bypassUndergroundWhitelist && !base.channel.owner.isAdmin)
+        if (Provider.isServer && !bypassUndergroundWhitelist && (!Dedicator.IsDedicatedServer || !base.channel.owner.isAdmin))
         {
             Vector3 worldspacePosition = base.transform.position;
             if (UndergroundWhitelist.adjustPosition(ref worldspacePosition, 0.5f))
@@ -1076,6 +1175,31 @@ public class PlayerMovement : PlayerCaller
                 _vertical = (byte)(input_y + 1);
             }
         }
+        if (!Dedicator.IsDedicatedServer && Time.time - lastFootstep > 2.1f / speed)
+        {
+            lastFootstep = Time.time;
+            bool flag = false;
+            if (!base.channel.isOwner)
+            {
+                bool num = isGrounded;
+                checkGround(base.transform.position);
+                if (!num && isGrounded)
+                {
+                    flag = PlayLandAudioClip();
+                }
+            }
+            if (isGrounded && !flag && isMoving && base.player.stance.stance != EPlayerStance.PRONE)
+            {
+                if (materialIsWater || base.player.stance.stance == EPlayerStance.SWIM)
+                {
+                    PlaySwimAudioClip();
+                }
+                else if (!string.IsNullOrEmpty(materialName))
+                {
+                    PlayFootstepAudioClip();
+                }
+            }
+        }
         if (base.channel.isOwner)
         {
             if (base.player.look.isOrbiting && (!base.player.workzone.isBuilding || InputEx.GetKey(ControlsSettings.secondary)))
@@ -1083,8 +1207,8 @@ public class PlayerMovement : PlayerCaller
                 base.player.look.orbitSpeed = Mathf.Clamp(base.player.look.orbitSpeed + Input.GetAxis("mouse_z") * 0.2f * base.player.look.orbitSpeed, 0.5f, 2048f);
                 base.player.look.orbitPosition += MainCamera.instance.transform.right * input_x * Time.deltaTime * base.player.look.orbitSpeed;
                 base.player.look.orbitPosition += MainCamera.instance.transform.forward * input_y * Time.deltaTime * base.player.look.orbitSpeed;
-                float num = (InputEx.GetKey(ControlsSettings.ascend) ? 1f : ((!InputEx.GetKey(ControlsSettings.descend)) ? 0f : (-1f)));
-                base.player.look.orbitPosition += Vector3.up * num * Time.deltaTime * base.player.look.orbitSpeed;
+                float num2 = (InputEx.GetKey(ControlsSettings.ascend) ? 1f : ((!InputEx.GetKey(ControlsSettings.descend)) ? 0f : (-1f)));
+                base.player.look.orbitPosition += Vector3.up * num2 * Time.deltaTime * base.player.look.orbitSpeed;
             }
             if (base.player.stance.stance == EPlayerStance.DRIVING || base.player.stance.stance == EPlayerStance.SITTING)
             {
@@ -1315,9 +1439,12 @@ public class PlayerMovement : PlayerCaller
             nsb = new NetworkSnapshotBuffer(Provider.UPDATE_TIME, Provider.UPDATE_DELAY);
         }
         applySize();
-        base.gameObject.AddComponent<Rigidbody>();
-        GetComponent<Rigidbody>().useGravity = false;
-        GetComponent<Rigidbody>().isKinematic = true;
+        if (Dedicator.IsDedicatedServer)
+        {
+            base.gameObject.AddComponent<Rigidbody>();
+            GetComponent<Rigidbody>().useGravity = false;
+            GetComponent<Rigidbody>().isKinematic = true;
+        }
         updateMovement();
         updates = new List<PlayerStateUpdate>();
         canAddSimulationResultsToUpdates = true;

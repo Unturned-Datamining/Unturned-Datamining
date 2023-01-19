@@ -6,13 +6,16 @@ public class CommandWhitelisted : Command
 {
     protected override void execute(CSteamID executorID, string parameter)
     {
-        if (Provider.isServer)
+        if (Dedicator.IsDedicatedServer)
         {
-            CommandWindow.LogError(localization.format("RunningErrorText"));
-            return;
+            if (Provider.isServer)
+            {
+                CommandWindow.LogError(localization.format("RunningErrorText"));
+                return;
+            }
+            Provider.isWhitelisted = true;
+            CommandWindow.Log(localization.format("WhitelistedText"));
         }
-        Provider.isWhitelisted = true;
-        CommandWindow.Log(localization.format("WhitelistedText"));
     }
 
     public CommandWhitelisted(Local newLocalization)

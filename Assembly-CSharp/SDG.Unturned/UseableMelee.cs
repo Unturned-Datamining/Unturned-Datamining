@@ -125,6 +125,22 @@ public class UseableMelee : Useable
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
     public void ReceiveSpawnMeleeImpact(Vector3 position, Vector3 normal, string materialName, Transform colliderTransform)
     {
+        DamageTool.LocalSpawnBulletImpactEffect(position, normal, materialName, colliderTransform);
+        DamageTool.PlayMeleeImpactAudio(position, materialName);
+        if (equippedMeleeAsset != null)
+        {
+            float volumeMultiplier;
+            float pitchMultiplier;
+            AudioClip audioClip = equippedMeleeAsset.impactAudio.LoadAudioClip(out volumeMultiplier, out pitchMultiplier);
+            if (!(audioClip == null))
+            {
+                OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(position, audioClip);
+                oneShotAudioParameters.volume = volumeMultiplier;
+                oneShotAudioParameters.pitch = pitchMultiplier;
+                oneShotAudioParameters.SetLinearRolloff(1f, 16f);
+                oneShotAudioParameters.Play();
+            }
+        }
     }
 
     internal void ServerSpawnMeleeImpact(Vector3 position, Vector3 normal, string materialName, Transform colliderTransform, IEnumerable<ITransportConnection> transportConnections)
@@ -749,7 +765,49 @@ public class UseableMelee : Useable
 
     public override void tick()
     {
-        if (!base.player.equipment.isEquipped || !base.channel.isOwner)
+        if (!base.player.equipment.isEquipped)
+        {
+            return;
+        }
+        if (!Dedicator.IsDedicatedServer && isSwinging)
+        {
+            if (equippedMeleeAsset.isRepeated)
+            {
+                if ((double)(Time.realtimeSinceStartup - startedSwing) > 0.1)
+                {
+                    startedSwing = Time.realtimeSinceStartup;
+                    if (firstEmitter != null && base.player.look.perspective == EPlayerPerspective.FIRST)
+                    {
+                        firstEmitter.Emit(4);
+                    }
+                    if (thirdEmitter != null && (!base.channel.isOwner || base.player.look.perspective == EPlayerPerspective.THIRD))
+                    {
+                        thirdEmitter.Emit(4);
+                    }
+                    if (equippedMeleeAsset.isRepair)
+                    {
+                        base.player.playSound(((ItemMeleeAsset)base.player.equipment.asset).use, 0.1f);
+                    }
+                    else
+                    {
+                        base.player.playSound(((ItemMeleeAsset)base.player.equipment.asset).use, 0.5f);
+                    }
+                }
+            }
+            else if (isDamageable)
+            {
+                if (swingMode == ESwingMode.WEAK)
+                {
+                    base.player.playSound(((ItemMeleeAsset)base.player.equipment.asset).use, 0.5f);
+                }
+                else if (swingMode == ESwingMode.STRONG)
+                {
+                    base.player.playSound(((ItemMeleeAsset)base.player.equipment.asset).use, 0.5f, 0.7f, 0.1f);
+                }
+                isSwinging = false;
+            }
+        }
+        if (!base.channel.isOwner)
         {
             return;
         }
@@ -789,16 +847,28 @@ public class UseableMelee : Useable
 
     private void updateAttachments()
     {
-        if (equippedMeleeAsset.isLight)
+        if (!equippedMeleeAsset.isLight)
         {
-            if (interact && equippedMeleeAsset != null)
+            return;
+        }
+        if (!Dedicator.IsDedicatedServer)
+        {
+            if (base.channel.isOwner && firstLightHook != null)
             {
-                base.player.enableItemSpotLight(equippedMeleeAsset.lightConfig);
+                firstLightHook.gameObject.SetActive(interact);
             }
-            else
+            if (thirdLightHook != null)
             {
-                base.player.disableItemSpotLight();
+                thirdLightHook.gameObject.SetActive(interact);
             }
+        }
+        if (interact && equippedMeleeAsset != null)
+        {
+            base.player.enableItemSpotLight(equippedMeleeAsset.lightConfig);
+        }
+        else
+        {
+            base.player.disableItemSpotLight();
         }
     }
 

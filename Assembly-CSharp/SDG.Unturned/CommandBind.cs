@@ -6,19 +6,22 @@ public class CommandBind : Command
 {
     protected override void execute(CSteamID executorID, string parameter)
     {
-        if (!Parser.checkIP(parameter))
+        if (Dedicator.IsDedicatedServer)
         {
-            CommandWindow.LogError(localization.format("InvalidIPErrorText", parameter));
-            return;
+            if (!Parser.checkIP(parameter))
+            {
+                CommandWindow.LogError(localization.format("InvalidIPErrorText", parameter));
+                return;
+            }
+            if (Provider.isServer)
+            {
+                CommandWindow.LogError(localization.format("RunningErrorText"));
+                return;
+            }
+            Provider.ip = Parser.getUInt32FromIP(parameter);
+            Provider.bindAddress = parameter;
+            CommandWindow.Log(localization.format("BindText", parameter));
         }
-        if (Provider.isServer)
-        {
-            CommandWindow.LogError(localization.format("RunningErrorText"));
-            return;
-        }
-        Provider.ip = Parser.getUInt32FromIP(parameter);
-        Provider.bindAddress = parameter;
-        CommandWindow.Log(localization.format("BindText", parameter));
     }
 
     public CommandBind(Local newLocalization)

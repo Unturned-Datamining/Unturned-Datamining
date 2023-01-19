@@ -6,13 +6,16 @@ public class CommandGameMode : Command
 {
     protected override void execute(CSteamID executorID, string parameter)
     {
-        if (Provider.isServer)
+        if (Dedicator.IsDedicatedServer)
         {
-            CommandWindow.LogError(localization.format("RunningErrorText"));
-        }
-        else
-        {
-            CommandWindow.Log(localization.format("GameModeText", parameter));
+            if (Provider.isServer)
+            {
+                CommandWindow.LogError(localization.format("RunningErrorText"));
+            }
+            else
+            {
+                CommandWindow.Log(localization.format("GameModeText", parameter));
+            }
         }
     }
 

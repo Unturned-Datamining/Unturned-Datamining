@@ -6,6 +6,10 @@ public class CommandMode : Command
 {
     protected override void execute(CSteamID executorID, string parameter)
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            return;
+        }
         string text = parameter.ToLower();
         EGameMode mode;
         if (text == localization.format("ModeEasy").ToLower())

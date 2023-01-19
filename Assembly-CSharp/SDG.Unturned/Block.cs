@@ -921,7 +921,6 @@ public class Block
 
     public byte[] getBytes(out int size)
     {
-        ThreadUtil.assertIsGameThread();
         if (block == null)
         {
             size = step;

@@ -18,6 +18,10 @@ internal static class MasterBundleValidation
         {
             throw new NotSupportedException();
         }
+        if (!Dedicator.IsDedicatedServer)
+        {
+            throw new NotSupportedException("MasterBundleValidation should only be used on dedicated server!");
+        }
         foreach (MasterBundleConfig allMasterBundle in allMasterBundles)
         {
             if (!allMasterBundle.doesHashFileExist)

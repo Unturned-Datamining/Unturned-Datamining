@@ -334,6 +334,10 @@ public class PlayerLife : PlayerCaller
         _lastDeath = Time.realtimeSinceStartup;
         ragdoll = newRagdoll;
         ragdollEffect = newRagdollEffect;
+        if (!Dedicator.IsDedicatedServer)
+        {
+            RagdollTool.ragdollPlayer(base.transform.position, base.transform.rotation, base.player.animator.thirdSkeleton, ragdoll, base.player.clothing, ragdollEffect);
+        }
         if (base.player.movement.controller != null)
         {
             base.player.movement.controller.DisableDetectCollisions();
@@ -1405,7 +1409,7 @@ public class PlayerLife : PlayerCaller
         }
         if (atHome)
         {
-            if (Provider.isPvP)
+            if (Dedicator.IsDedicatedServer && Provider.isPvP)
             {
                 if (Time.realtimeSinceStartup - lastDeath < (float)Provider.modeConfigData.Gameplay.Timer_Home)
                 {

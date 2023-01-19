@@ -105,7 +105,17 @@ public class LevelManager : SteamCaller
 
     public static float arenaCompactorSpeed => _arenaCompactorSpeed;
 
-    private static uint minPlayers => Provider.modeConfigData.Events.Arena_Min_Players;
+    private static uint minPlayers
+    {
+        get
+        {
+            if (Dedicator.IsDedicatedServer)
+            {
+                return Provider.modeConfigData.Events.Arena_Min_Players;
+            }
+            return 1u;
+        }
+    }
 
     public static float compactorSpeed => Level.info.size switch
     {
@@ -528,6 +538,19 @@ public class LevelManager : SteamCaller
             float t = Mathf.InverseLerp(arenaTargetRadius, arenaOriginRadius, arenaCurrentRadius);
             _arenaCurrentCenter = Vector3.Lerp(arenaTargetCenter, arenaOriginCenter, t);
         }
+        if (!Dedicator.IsDedicatedServer)
+        {
+            if (arenaCurrentArea != null)
+            {
+                arenaCurrentArea.position = arenaCurrentCenter;
+                arenaCurrentArea.localScale = new Vector3(arenaCurrentRadius, 300f, arenaCurrentRadius);
+            }
+            if (arenaTargetArea != null)
+            {
+                arenaTargetArea.position = arenaTargetCenter;
+                arenaTargetArea.localScale = new Vector3(arenaTargetRadius, 300f, arenaTargetRadius);
+            }
+        }
         if (countTimerMessages >= 0 && Time.realtimeSinceStartup - lastTimerMessage > 1f)
         {
             if (onLevelNumberUpdated != null)
@@ -536,7 +559,10 @@ public class LevelManager : SteamCaller
             }
             lastTimerMessage = Time.realtimeSinceStartup;
             countTimerMessages--;
-            _ = arenaMessage;
+            if (arenaMessage == EArenaMessage.WARMUP && !Dedicator.IsDedicatedServer && MainCamera.instance != null && OptionsSettings.timer)
+            {
+                MainCamera.instance.GetComponent<AudioSource>().PlayOneShot(timer, 1f);
+            }
         }
         if (Provider.isServer)
         {
@@ -577,6 +603,15 @@ public class LevelManager : SteamCaller
         _arenaCurrentRadius = 16384f;
         _arenaTargetRadius = 16384f;
         _arenaCompactorSpeed = 0f;
+        if (!Dedicator.IsDedicatedServer && !Level.isEditor)
+        {
+            arenaCurrentArea = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load("Level/Arena_Area_Current"))).transform;
+            arenaCurrentArea.name = "Arena_Area_Current";
+            arenaCurrentArea.parent = Level.clips;
+            arenaTargetArea = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load("Level/Arena_Area_Target"))).transform;
+            arenaTargetArea.name = "Arena_Area_Target";
+            arenaTargetArea.parent = Level.clips;
+        }
         if (Provider.isServer)
         {
             arenaState = EArenaState.LOBBY;
@@ -776,7 +811,10 @@ public class LevelManager : SteamCaller
                 {
                     component.force = new Vector3(0f, airdropInfo.force, 0f);
                 }
-                airdrops.RemoveAt(num);
+                if (Dedicator.IsDedicatedServer)
+                {
+                    airdrops.RemoveAt(num);
+                }
             }
         }
         if (!Provider.isServer || levelType != 0 || !Provider.modeConfigData.Events.Use_Airdrops || airdropNodes.Count <= 0)
@@ -835,6 +873,19 @@ public class LevelManager : SteamCaller
         airdropInfo.delay = delay;
         airdropInfo.dropped = false;
         airdropInfo.dropPosition = state + direction * speed * delay;
+        if (!Dedicator.IsDedicatedServer)
+        {
+            MasterBundleReference<GameObject> masterBundleReference = Level.getAsset()?.dropshipPrefab ?? default(MasterBundleReference<GameObject>);
+            if (masterBundleReference.isNull)
+            {
+                masterBundleReference = new MasterBundleReference<GameObject>("core.masterbundle", "Level/Dropship.prefab");
+            }
+            Transform transform = UnityEngine.Object.Instantiate(masterBundleReference.loadAsset()).transform;
+            transform.name = "Dropship";
+            transform.position = state;
+            transform.rotation = Quaternion.LookRotation(direction) * Quaternion.Euler(-90f, 180f, 0f);
+            airdropInfo.model = transform;
+        }
         airdrops.Add(airdropInfo);
     }
 
@@ -913,6 +964,10 @@ public class LevelManager : SteamCaller
     private void Start()
     {
         manager = this;
+        if (!Dedicator.IsDedicatedServer)
+        {
+            timer = (AudioClip)Resources.Load("Sounds/General/Timer");
+        }
         Level.onLevelLoaded = (LevelLoaded)Delegate.Combine(Level.onLevelLoaded, new LevelLoaded(onLevelLoaded));
     }
 

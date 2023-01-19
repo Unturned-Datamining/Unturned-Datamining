@@ -272,6 +272,24 @@ public class UnturnedPostProcess : MonoBehaviour
 
     public void initialize()
     {
-        Object.Destroy(base.gameObject);
+        if (Dedicator.IsDedicatedServer)
+        {
+            Object.Destroy(base.gameObject);
+            return;
+        }
+        instance = this;
+        Object.DontDestroyOnLoad(this);
+        baseProfile = createGlobalProfile("Base", 8);
+        viewmodelProfile = createGlobalProfile("Viewmodel", 11);
+        viewmodelProfile.ambientOcclusion.intensity.Override(1f);
+        if (Provider.preferenceData.Graphics.Use_Lens_Dirt)
+        {
+            baseProfile.bloom.dirtTexture.Override(dirtTexture);
+            baseProfile.bloom.dirtIntensity.Override(1f);
+            viewmodelProfile.bloom.dirtTexture.Override(dirtTexture);
+            viewmodelProfile.bloom.dirtIntensity.Override(1f);
+        }
+        baseProfile.chromaticAberration.intensity.Override(Provider.preferenceData.Graphics.Chromatic_Aberration_Intensity);
+        viewmodelProfile.chromaticAberration.intensity.Override(Provider.preferenceData.Graphics.Chromatic_Aberration_Intensity);
     }
 }

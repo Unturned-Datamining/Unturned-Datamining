@@ -105,6 +105,12 @@ public class Level : MonoBehaviour
 
     internal static AudioListener placeholderAudioListener;
 
+    private static AudioSource musicAudioSource;
+
+    private static AudioClip musicOutroClip;
+
+    private static float musicOutroVolume;
+
     private static bool _isInitialized;
 
     private static bool _isEditor;
@@ -166,6 +172,8 @@ public class Level : MonoBehaviour
     private static LocationDevkitNodeSystem locationNodeSystem;
 
     private static SpawnpointSystemV2 spawnpointSystem;
+
+    private static bool _loadingScreenWantsMusic;
 
     public static ushort border
     {
@@ -345,6 +353,21 @@ public class Level : MonoBehaviour
         }
     }
 
+    internal static bool LoadingScreenWantsMusic
+    {
+        set
+        {
+            if (_loadingScreenWantsMusic != value)
+            {
+                _loadingScreenWantsMusic = value;
+                if (!_loadingScreenWantsMusic)
+                {
+                    PlayLoadingOutroMusic();
+                }
+            }
+        }
+    }
+
     public static event LevelLoadingStepHandler loadingSteps;
 
     public static event SatelliteCaptureDelegate onSatellitePreCapture;
@@ -485,6 +508,7 @@ public class Level : MonoBehaviour
         _info = newInfo;
         LoadingUI.updateScene();
         SceneManager.LoadScene("Game");
+        PlayLevelLoadingScreenMusic();
         Provider.resetChannels();
         Provider.updateRichPresence();
         DevkitTransactionManager.resetTransactions();
@@ -498,13 +522,66 @@ public class Level : MonoBehaviour
         _info = newInfo;
         LoadingUI.updateScene();
         SceneManager.LoadScene("Game");
+        PlayLevelLoadingScreenMusic();
+        if (!Dedicator.IsDedicatedServer)
+        {
+            string text = null;
+            if (string.Equals(info.name, "A6 Polaris", StringComparison.InvariantCultureIgnoreCase))
+            {
+                text = "Frost_Visited";
+            }
+            else if (string.Equals(info.name, "arid", StringComparison.InvariantCultureIgnoreCase))
+            {
+                text = "Arid_Visited";
+            }
+            else if (string.Equals(info.name, "elver", StringComparison.InvariantCultureIgnoreCase))
+            {
+                text = "Elver_Visited";
+            }
+            else if (string.Equals(info.name, "germany", StringComparison.InvariantCultureIgnoreCase))
+            {
+                text = "Peaks";
+            }
+            else if (string.Equals(info.name, "hawaii", StringComparison.InvariantCultureIgnoreCase))
+            {
+                text = "Hawaii";
+            }
+            else if (string.Equals(info.name, "ireland", StringComparison.InvariantCultureIgnoreCase))
+            {
+                text = "Ireland_Visited";
+            }
+            else if (string.Equals(info.name, "kuwait", StringComparison.InvariantCultureIgnoreCase))
+            {
+                text = "Kuwait_Visited";
+            }
+            else if (string.Equals(info.name, "pei", StringComparison.InvariantCultureIgnoreCase))
+            {
+                text = "PEI";
+            }
+            else if (string.Equals(info.name, "russia", StringComparison.InvariantCultureIgnoreCase))
+            {
+                text = "Russia";
+            }
+            else if (string.Equals(info.name, "washington", StringComparison.InvariantCultureIgnoreCase))
+            {
+                text = "Washington";
+            }
+            else if (string.Equals(info.name, "yukon", StringComparison.InvariantCultureIgnoreCase))
+            {
+                text = "Yukon";
+            }
+            if (!string.IsNullOrEmpty(text))
+            {
+                Provider.provider.achievementsService.setAchievement(text);
+            }
+        }
         if (hasAuthority)
         {
-            string text = LevelSavedata.transformName("Cyrpus Survival");
-            string text2 = LevelSavedata.transformName("Cyprus Survival");
-            if (ReadWrite.folderExists(text) && !ReadWrite.folderExists(text2))
+            string text2 = LevelSavedata.transformName("Cyrpus Survival");
+            string text3 = LevelSavedata.transformName("Cyprus Survival");
+            if (ReadWrite.folderExists(text2) && !ReadWrite.folderExists(text3))
             {
-                ReadWrite.moveFolder(text, text2);
+                ReadWrite.moveFolder(text2, text3);
                 UnturnedLog.info("Moved Cyprus save folder");
             }
         }
@@ -528,6 +605,16 @@ public class Level : MonoBehaviour
         isExiting = true;
         _info = null;
         LoadingUI.updateScene();
+        if (!Dedicator.IsDedicatedServer)
+        {
+            UnturnedLog.info("Returning to main menu");
+            SceneManager.LoadScene("Menu");
+            if (placeholderAudioListener != null)
+            {
+                UnityEngine.Object.Destroy(placeholderAudioListener);
+                placeholderAudioListener = null;
+            }
+        }
         Provider.updateRichPresence();
         DevkitTransactionManager.resetTransactions();
         updateCachedHolidayRedirects();
@@ -1534,5 +1621,80 @@ public class Level : MonoBehaviour
         _ = BUILD_INDEX_MENU;
         Resources.UnloadUnusedAssets();
         GC.Collect();
+    }
+
+    private static void PlayLevelLoadingScreenMusic()
+    {
+        musicOutroClip = null;
+        LevelAsset asset = getAsset();
+        if (asset == null || asset.loadingScreenMusic == null || asset.loadingScreenMusic.Length == 0 || !(GetOrCreateMusicAudioSource() != null))
+        {
+            return;
+        }
+        LevelAsset.LoadingScreenMusic loadingScreenMusic = asset.loadingScreenMusic.RandomOrDefault();
+        AudioClip audioClip = loadingScreenMusic.loopRef.loadAsset();
+        if (audioClip != null)
+        {
+            musicAudioSource.clip = audioClip;
+            musicAudioSource.volume *= loadingScreenMusic.loopVolume;
+            musicAudioSource.loop = true;
+            musicAudioSource.Play();
+            musicOutroClip = loadingScreenMusic.outroRef.loadAsset();
+            musicOutroVolume = loadingScreenMusic.outroVolume;
+            if (musicOutroClip == null && loadingScreenMusic.outroRef.isValid)
+            {
+                UnturnedLog.warn($"Unable to find loading screen music outro \"{loadingScreenMusic.outroRef}\" for level \"{info?.getLocalizedName()}\"");
+            }
+        }
+        else
+        {
+            UnturnedLog.warn($"Unable to find loading screen music loop \"{loadingScreenMusic.loopRef}\" for level \"{info?.getLocalizedName()}\"");
+        }
+    }
+
+    private static void PlayLoadingOutroMusic()
+    {
+        AudioSource orCreateMusicAudioSource = GetOrCreateMusicAudioSource();
+        if (orCreateMusicAudioSource != null)
+        {
+            if (musicOutroClip != null)
+            {
+                orCreateMusicAudioSource.clip = musicOutroClip;
+                orCreateMusicAudioSource.volume *= musicOutroVolume;
+                orCreateMusicAudioSource.loop = false;
+                orCreateMusicAudioSource.Play();
+                musicOutroClip = null;
+            }
+            else
+            {
+                orCreateMusicAudioSource.Stop();
+            }
+        }
+    }
+
+    private static AudioSource GetOrCreateMusicAudioSource()
+    {
+        if (Dedicator.IsDedicatedServer)
+        {
+            return null;
+        }
+        if (musicAudioSource == null)
+        {
+            musicAudioSource = singletonGameObject.AddComponent<AudioSource>();
+            musicAudioSource.playOnAwake = false;
+            musicAudioSource.spatialBlend = 0f;
+            musicAudioSource.ignoreListenerPause = true;
+            musicAudioSource.ignoreListenerVolume = true;
+            musicAudioSource.bypassEffects = true;
+            musicAudioSource.bypassListenerEffects = true;
+            musicAudioSource.bypassReverbZones = true;
+            musicAudioSource.spatialize = false;
+        }
+        musicAudioSource.volume = OptionsSettings.volume * OptionsSettings.loadingScreenMusicVolume;
+        if (musicAudioSource.volume > 0f)
+        {
+            return musicAudioSource;
+        }
+        return null;
     }
 }

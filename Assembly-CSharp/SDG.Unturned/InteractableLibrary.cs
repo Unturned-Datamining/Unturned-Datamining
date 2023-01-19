@@ -35,7 +35,10 @@ public class InteractableLibrary : Interactable
 
     public bool checkTransfer(CSteamID enemyPlayer, CSteamID enemyGroup)
     {
-        _ = Provider.isServer;
+        if (Provider.isServer && !Dedicator.IsDedicatedServer)
+        {
+            return true;
+        }
         if (isLocked && !(enemyPlayer == owner))
         {
             if (group != CSteamID.Nil)

@@ -7,12 +7,20 @@ public class WorkshopUtils
 {
     public static uint getQueryUGCNumKeyValueTags(UGCQueryHandle_t queryHandle, uint resultIndex)
     {
-        return SteamGameServerUGC.GetQueryUGCNumKeyValueTags(queryHandle, resultIndex);
+        if (Dedicator.IsDedicatedServer)
+        {
+            return SteamGameServerUGC.GetQueryUGCNumKeyValueTags(queryHandle, resultIndex);
+        }
+        return SteamUGC.GetQueryUGCNumKeyValueTags(queryHandle, resultIndex);
     }
 
     public static bool getQueryUGCKeyValueTag(UGCQueryHandle_t queryHandle, uint resultIndex, uint tagIndex, out string key, out string value)
     {
-        return SteamGameServerUGC.GetQueryUGCKeyValueTag(queryHandle, resultIndex, tagIndex, out key, 255u, out value, 255u);
+        if (Dedicator.IsDedicatedServer)
+        {
+            return SteamGameServerUGC.GetQueryUGCKeyValueTag(queryHandle, resultIndex, tagIndex, out key, 255u, out value, 255u);
+        }
+        return SteamUGC.GetQueryUGCKeyValueTag(queryHandle, resultIndex, tagIndex, out key, 255u, out value, 255u);
     }
 
     public static bool findQueryUGCKeyValue(UGCQueryHandle_t queryHandle, uint resultIndex, string key, out string value)
@@ -32,7 +40,11 @@ public class WorkshopUtils
 
     public static bool getQueryUGCResult(UGCQueryHandle_t queryHandle, uint resultIndex, out SteamUGCDetails_t details)
     {
-        return SteamGameServerUGC.GetQueryUGCResult(queryHandle, resultIndex, out details);
+        if (Dedicator.IsDedicatedServer)
+        {
+            return SteamGameServerUGC.GetQueryUGCResult(queryHandle, resultIndex, out details);
+        }
+        return SteamUGC.GetQueryUGCResult(queryHandle, resultIndex, out details);
     }
 
     public static bool getQueryUGCBanned(UGCQueryHandle_t queryHandle, uint resultIndex)

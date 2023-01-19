@@ -31,61 +31,68 @@ public class Boulder : MonoBehaviour
         }
         isExploded = true;
         Vector3 normalized = (base.transform.position - lastPos).normalized;
-        if (!Provider.isServer)
+        if (Provider.isServer)
         {
-            return;
-        }
-        float num = Mathf.Clamp(base.transform.parent.GetComponent<Rigidbody>().velocity.magnitude, 0f, 20f);
-        if (num < 3f)
-        {
-            return;
-        }
-        if (other.transform.CompareTag("Player"))
-        {
-            Player player = DamageTool.getPlayer(other.transform);
-            if (player != null)
+            float num = Mathf.Clamp(base.transform.parent.GetComponent<Rigidbody>().velocity.magnitude, 0f, 20f);
+            if (num < 3f)
             {
-                DamageTool.damage(player, EDeathCause.BOULDER, ELimb.SPINE, CSteamID.Nil, normalized, DAMAGE_PLAYER, num, out var _);
+                return;
+            }
+            if (other.transform.CompareTag("Player"))
+            {
+                Player player = DamageTool.getPlayer(other.transform);
+                if (player != null)
+                {
+                    DamageTool.damage(player, EDeathCause.BOULDER, ELimb.SPINE, CSteamID.Nil, normalized, DAMAGE_PLAYER, num, out var _);
+                }
+            }
+            else if (other.transform.CompareTag("Vehicle"))
+            {
+                InteractableVehicle component = other.transform.GetComponent<InteractableVehicle>();
+                if (component != null && component.asset != null && component.asset.isVulnerableToEnvironment)
+                {
+                    VehicleManager.damage(component, DAMAGE_VEHICLE, num, canRepair: true, default(CSteamID), EDamageOrigin.Mega_Zombie_Boulder);
+                }
+            }
+            else if (other.transform.CompareTag("Barricade"))
+            {
+                Transform barricadeRootTransform = DamageTool.getBarricadeRootTransform(other.transform);
+                if (barricadeRootTransform != null)
+                {
+                    BarricadeManager.damage(barricadeRootTransform, DAMAGE_BARRICADE, num, armor: true, default(CSteamID), EDamageOrigin.Mega_Zombie_Boulder);
+                }
+            }
+            else if (other.transform.CompareTag("Structure"))
+            {
+                Transform structureRootTransform = DamageTool.getStructureRootTransform(other.transform);
+                if (structureRootTransform != null)
+                {
+                    StructureManager.damage(structureRootTransform, normalized, DAMAGE_STRUCTURE, num, armor: true, default(CSteamID), EDamageOrigin.Mega_Zombie_Boulder);
+                }
+            }
+            else if (other.transform.CompareTag("Resource"))
+            {
+                Transform resourceRootTransform = DamageTool.getResourceRootTransform(other.transform);
+                if (resourceRootTransform != null)
+                {
+                    ResourceManager.damage(resourceRootTransform, normalized, DAMAGE_RESOURCE, num, 1f, out var _, out var _, default(CSteamID), EDamageOrigin.Mega_Zombie_Boulder);
+                }
+            }
+            else
+            {
+                InteractableObjectRubble componentInParent = other.transform.GetComponentInParent<InteractableObjectRubble>();
+                if (componentInParent != null)
+                {
+                    DamageTool.damage(componentInParent.transform, normalized, componentInParent.getSection(other.transform), DAMAGE_OBJECT, num, out var _, out var _, default(CSteamID), EDamageOrigin.Mega_Zombie_Boulder);
+                }
             }
         }
-        else if (other.transform.CompareTag("Vehicle"))
+        if (!Dedicator.IsDedicatedServer)
         {
-            InteractableVehicle component = other.transform.GetComponent<InteractableVehicle>();
-            if (component != null && component.asset != null && component.asset.isVulnerableToEnvironment)
+            EffectAsset effectAsset = Assets.find(Metal_2_Ref);
+            if (effectAsset != null)
             {
-                VehicleManager.damage(component, DAMAGE_VEHICLE, num, canRepair: true, default(CSteamID), EDamageOrigin.Mega_Zombie_Boulder);
-            }
-        }
-        else if (other.transform.CompareTag("Barricade"))
-        {
-            Transform barricadeRootTransform = DamageTool.getBarricadeRootTransform(other.transform);
-            if (barricadeRootTransform != null)
-            {
-                BarricadeManager.damage(barricadeRootTransform, DAMAGE_BARRICADE, num, armor: true, default(CSteamID), EDamageOrigin.Mega_Zombie_Boulder);
-            }
-        }
-        else if (other.transform.CompareTag("Structure"))
-        {
-            Transform structureRootTransform = DamageTool.getStructureRootTransform(other.transform);
-            if (structureRootTransform != null)
-            {
-                StructureManager.damage(structureRootTransform, normalized, DAMAGE_STRUCTURE, num, armor: true, default(CSteamID), EDamageOrigin.Mega_Zombie_Boulder);
-            }
-        }
-        else if (other.transform.CompareTag("Resource"))
-        {
-            Transform resourceRootTransform = DamageTool.getResourceRootTransform(other.transform);
-            if (resourceRootTransform != null)
-            {
-                ResourceManager.damage(resourceRootTransform, normalized, DAMAGE_RESOURCE, num, 1f, out var _, out var _, default(CSteamID), EDamageOrigin.Mega_Zombie_Boulder);
-            }
-        }
-        else
-        {
-            InteractableObjectRubble componentInParent = other.transform.GetComponentInParent<InteractableObjectRubble>();
-            if (componentInParent != null)
-            {
-                DamageTool.damage(componentInParent.transform, normalized, componentInParent.getSection(other.transform), DAMAGE_OBJECT, num, out var _, out var _, default(CSteamID), EDamageOrigin.Mega_Zombie_Boulder);
+                EffectManager.effect(effectAsset, base.transform.position, -normalized);
             }
         }
     }

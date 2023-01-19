@@ -1175,9 +1175,81 @@ public class DamageTool
         }
     }
 
+    internal static void LocalSpawnBulletImpactEffect(Vector3 position, Vector3 normal, string materialName, Transform parent)
+    {
+        EffectAsset effectAsset = PhysicMaterialCustomData.WipDoNotUseTemp_GetBulletImpactEffect(materialName).Find();
+        if (effectAsset != null)
+        {
+            EffectManager.internalSpawnEffect(effectAsset, position, normal, Vector3.one, wasInstigatedByPlayer: false, parent);
+        }
+    }
+
+    private static void PlayBulletImpactAudio(Vector3 position, string materialName)
+    {
+        OneShotAudioDefinition audioDef = PhysicMaterialCustomData.GetAudioDef(materialName, "BulletImpact");
+        if (!(audioDef == null))
+        {
+            AudioClip randomClip = audioDef.GetRandomClip();
+            if (!(randomClip == null))
+            {
+                OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(position, randomClip);
+                oneShotAudioParameters.volume = 0.6f * audioDef.volumeMultiplier;
+                oneShotAudioParameters.RandomizePitch(audioDef.minPitch, audioDef.maxPitch);
+                oneShotAudioParameters.SetLinearRolloff(1f, 16f);
+                oneShotAudioParameters.Play();
+            }
+        }
+    }
+
+    internal static void PlayMeleeImpactAudio(Vector3 position, string materialName)
+    {
+        OneShotAudioDefinition audioDef = PhysicMaterialCustomData.GetAudioDef(materialName, "MeleeImpact");
+        if (audioDef == null)
+        {
+            audioDef = PhysicMaterialCustomData.GetAudioDef(materialName, "LegacyImpact");
+            if (audioDef == null)
+            {
+                return;
+            }
+        }
+        AudioClip randomClip = audioDef.GetRandomClip();
+        if (!(randomClip == null))
+        {
+            OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(position, randomClip);
+            oneShotAudioParameters.volume = 0.6f * audioDef.volumeMultiplier;
+            oneShotAudioParameters.RandomizePitch(audioDef.minPitch, audioDef.maxPitch);
+            oneShotAudioParameters.SetLinearRolloff(1f, 16f);
+            oneShotAudioParameters.Play();
+        }
+    }
+
+    private static void PlayLegacyImpactAudio(Vector3 position, string materialName)
+    {
+        OneShotAudioDefinition audioDef = PhysicMaterialCustomData.GetAudioDef(materialName, "LegacyImpact");
+        if (audioDef == null)
+        {
+            audioDef = PhysicMaterialCustomData.GetAudioDef(materialName, "MeleeImpact");
+            if (audioDef == null)
+            {
+                return;
+            }
+        }
+        AudioClip randomClip = audioDef.GetRandomClip();
+        if (!(randomClip == null))
+        {
+            OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(position, randomClip);
+            oneShotAudioParameters.volume = 0.6f * audioDef.volumeMultiplier;
+            oneShotAudioParameters.RandomizePitch(audioDef.minPitch, audioDef.maxPitch);
+            oneShotAudioParameters.SetLinearRolloff(1f, 16f);
+            oneShotAudioParameters.Play();
+        }
+    }
+
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
     public static void ReceiveSpawnBulletImpact(Vector3 position, Vector3 normal, string materialName, Transform colliderTransform)
     {
+        LocalSpawnBulletImpactEffect(position, normal, materialName, colliderTransform);
+        PlayBulletImpactAudio(position, materialName);
     }
 
     internal static void ServerSpawnBulletImpact(Vector3 position, Vector3 normal, string materialName, Transform colliderTransform, IEnumerable<ITransportConnection> transportConnections)
@@ -1189,6 +1261,8 @@ public class DamageTool
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
     public static void ReceiveSpawnLegacyImpact(Vector3 position, Vector3 normal, string materialName, Transform colliderTransform)
     {
+        LocalSpawnBulletImpactEffect(position, normal, materialName, colliderTransform);
+        PlayLegacyImpactAudio(position, materialName);
     }
 
     internal static void ServerSpawnLegacyImpact(Vector3 position, Vector3 normal, string materialName, Transform colliderTransform, IEnumerable<ITransportConnection> transportConnections)

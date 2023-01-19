@@ -26,7 +26,11 @@ public static class ShaderConsolidator
         {
             return null;
         }
-        throw new Exception($"Dedicated server trying to consolidate '{name}' shader");
+        if (Dedicator.IsDedicatedServer)
+        {
+            throw new Exception($"Dedicated server trying to consolidate '{name}' shader");
+        }
+        return Shader.Find(redirectShaderName(name));
     }
 
     public static string redirectShaderName(string shaderName)

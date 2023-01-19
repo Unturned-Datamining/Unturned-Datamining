@@ -60,7 +60,7 @@ public class Commander
         {
             throw new ArgumentNullException("messenger");
         }
-        if (Provider.configData.UnityEvents.Allow_Server_Commands)
+        if (!Dedicator.IsDedicatedServer || Provider.configData.UnityEvents.Allow_Server_Commands)
         {
             bool shouldAllow = true;
             Commander.onCheckUnityEventPermissions?.Invoke(messenger, command, ref shouldAllow);

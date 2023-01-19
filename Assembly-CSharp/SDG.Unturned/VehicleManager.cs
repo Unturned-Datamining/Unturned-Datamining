@@ -1,4 +1,3 @@
-#define WITH_GAME_THREAD_ASSERTIONS
 using System;
 using System.Collections.Generic;
 using SDG.NetPak;
@@ -1375,7 +1374,7 @@ public class VehicleManager : SteamCaller
             }
         }
         sendExitVehicle(vehicle, seat, pendingLocation, angle, forceUpdate: false);
-        if (seat == 0)
+        if (seat == 0 && Dedicator.IsDedicatedServer)
         {
             vehicle.GetComponent<Rigidbody>().velocity = velocity;
         }
@@ -1500,7 +1499,6 @@ public class VehicleManager : SteamCaller
 
     private InteractableVehicle addVehicle(Guid assetGuid, ushort skinID, ushort mythicID, float roadPosition, Vector3 point, Quaternion angle, bool sirens, bool blimp, bool headlights, bool taillights, ushort fuel, bool isExploded, ushort health, ushort batteryCharge, CSteamID owner, CSteamID group, bool locked, CSteamID[] passengers, byte[][] turrets, uint instanceID, byte tireAliveMask, NetId netId)
     {
-        ThreadUtil.ConditionalAssertIsGameThread();
         VehicleAsset vehicleAsset = Assets.find(assetGuid) as VehicleAsset;
         if (!Provider.isServer)
         {
@@ -1898,7 +1896,7 @@ public class VehicleManager : SteamCaller
         {
             return;
         }
-        if (vehicles.Count > 0 && Time.realtimeSinceStartup - lastTick > Provider.UPDATE_TIME)
+        if (vehicles.Count > 0 && Dedicator.IsDedicatedServer && Time.realtimeSinceStartup - lastTick > Provider.UPDATE_TIME)
         {
             lastTick += Provider.UPDATE_TIME;
             if (Time.realtimeSinceStartup - lastTick > Provider.UPDATE_TIME)

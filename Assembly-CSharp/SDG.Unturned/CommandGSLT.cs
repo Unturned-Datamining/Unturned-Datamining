@@ -8,13 +8,16 @@ public class CommandGSLT : Command
 
     protected override void execute(CSteamID executorID, string parameter)
     {
-        if (Provider.isServer)
+        if (Dedicator.IsDedicatedServer)
         {
-            CommandWindow.LogError(localization.format("RunningErrorText"));
-            return;
+            if (Provider.isServer)
+            {
+                CommandWindow.LogError(localization.format("RunningErrorText"));
+                return;
+            }
+            loginToken = parameter;
+            CommandWindow.Log(localization.format("SetText"));
         }
-        loginToken = parameter;
-        CommandWindow.Log(localization.format("SetText"));
     }
 
     public CommandGSLT(Local newLocalization)

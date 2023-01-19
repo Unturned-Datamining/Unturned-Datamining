@@ -155,7 +155,7 @@ public class Regions
     {
         foreach (SteamPlayer client in Provider.clients)
         {
-            if (!(client.player == null) && checkArea(x, y, client.player.movement.region_x, client.player.movement.region_y, distance))
+            if (!(client.player == null) && !client.IsLocalPlayer && checkArea(x, y, client.player.movement.region_x, client.player.movement.region_y, distance))
             {
                 yield return client.transportConnection;
             }

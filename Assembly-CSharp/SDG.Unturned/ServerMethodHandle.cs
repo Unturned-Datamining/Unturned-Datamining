@@ -43,7 +43,14 @@ public abstract class ServerMethodHandle
     protected void SendAndLoopbackIfLocal(ENetReliability reliability, NetPakWriter writer)
     {
         writer.Flush();
-        InvokeLoopback(writer);
+        if (!Provider.isServer)
+        {
+            Provider.clientTransport.Send(writer.buffer, writer.writeByteIndex, reliability);
+        }
+        else
+        {
+            InvokeLoopback(writer);
+        }
     }
 
     protected ServerMethodHandle(ServerMethodInfo serverMethodInfo)
@@ -58,7 +65,7 @@ public abstract class ServerMethodHandle
         invokableReader.Reset();
         invokableReader.ReadEnum(out var _);
         invokableReader.ReadBits(NetReflection.serverMethodsBitCount, out var _);
-        SteamPlayer callingPlayer = null;
+        SteamPlayer callingPlayer = Provider.clients[0];
         ServerInvocationContext context = new ServerInvocationContext(ServerInvocationContext.EOrigin.Loopback, callingPlayer, invokableReader, serverMethodInfo);
         try
         {

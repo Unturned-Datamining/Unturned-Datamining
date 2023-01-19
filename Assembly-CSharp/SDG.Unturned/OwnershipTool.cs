@@ -6,12 +6,19 @@ internal class OwnershipTool
 {
     public static bool checkToggle(ulong player, ulong group)
     {
-        return false;
+        if (Dedicator.IsDedicatedServer)
+        {
+            return false;
+        }
+        return checkToggle(Provider.client, player, Player.player.quests.groupID, group);
     }
 
     public static bool checkToggle(CSteamID player_0, ulong player_1, CSteamID group_0, ulong group_1)
     {
-        _ = Provider.isServer;
+        if (Provider.isServer && !Dedicator.IsDedicatedServer)
+        {
+            return true;
+        }
         if (player_0.m_SteamID != player_1)
         {
             if (group_0 != CSteamID.Nil)

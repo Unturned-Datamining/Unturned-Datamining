@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace SDG.Unturned;
 
@@ -127,44 +128,222 @@ public class ResourceAsset : Asset
         {
             throw new NotSupportedException("ID < 50");
         }
-        isSpeedTree = false;
+        if (Dedicator.IsDedicatedServer || GraphicsSettings.treeMode == ETreeGraphicMode.LEGACY)
+        {
+            isSpeedTree = false;
+        }
+        else
+        {
+            isSpeedTree = data.has("SpeedTree");
+        }
         defaultLODWeights = data.has("SpeedTree_Default_LOD_Weights");
         _resourceName = localization.format("Name");
-        if (data.readBoolean("Has_Clip_Prefab", defaultValue: true))
+        if (Dedicator.IsDedicatedServer)
         {
-            _modelGameObject = bundle.load<GameObject>("Resource_Clip");
+            if (data.readBoolean("Has_Clip_Prefab", defaultValue: true))
+            {
+                _modelGameObject = bundle.load<GameObject>("Resource_Clip");
+                if (_modelGameObject == null)
+                {
+                    Assets.reportError(this, "missing \"Resource_Clip\" GameObject, loading \"Resource\" GameObject instead");
+                }
+                _stumpGameObject = bundle.load<GameObject>("Stump_Clip");
+                if (_stumpGameObject == null)
+                {
+                    Assets.reportError(this, "missing \"Stump_Clip\" GameObject, loading \"Stump\" GameObject instead");
+                }
+            }
             if (_modelGameObject == null)
             {
-                Assets.reportError(this, "missing \"Resource_Clip\" GameObject, loading \"Resource\" GameObject instead");
+                _modelGameObject = bundle.load<GameObject>("Resource");
+                if (_modelGameObject == null)
+                {
+                    Assets.reportError(this, "missing \"Resource\" GameObject");
+                }
+                else
+                {
+                    ServerPrefabUtil.RemoveClientComponents(_modelGameObject);
+                }
             }
-            _stumpGameObject = bundle.load<GameObject>("Stump_Clip");
             if (_stumpGameObject == null)
             {
-                Assets.reportError(this, "missing \"Stump_Clip\" GameObject, loading \"Stump\" GameObject instead");
+                _stumpGameObject = bundle.load<GameObject>("Stump");
+                if (_stumpGameObject == null)
+                {
+                    Assets.reportError(this, "missing \"Stump\" GameObject");
+                }
+                else
+                {
+                    ServerPrefabUtil.RemoveClientComponents(_stumpGameObject);
+                }
             }
         }
-        if (_modelGameObject == null)
+        else
         {
-            _modelGameObject = bundle.load<GameObject>("Resource");
+            _modelGameObject = null;
+            _stumpGameObject = null;
+            _skyboxGameObject = null;
+            _debrisGameObject = null;
+            if (GraphicsSettings.treeMode == ETreeGraphicMode.LEGACY)
+            {
+                _modelGameObject = bundle.load<GameObject>("Resource_Old");
+            }
             if (_modelGameObject == null)
             {
-                Assets.reportError(this, "missing \"Resource\" GameObject");
+                _modelGameObject = bundle.load<GameObject>("Resource");
             }
-            else
+            if (defaultLODWeights)
             {
-                ServerPrefabUtil.RemoveClientComponents(_modelGameObject);
+                Transform transform = modelGameObject.transform.Find("Billboard");
+                if (transform != null)
+                {
+                    BillboardRenderer component = transform.GetComponent<BillboardRenderer>();
+                    if (component != null)
+                    {
+                        component.shadowCastingMode = ShadowCastingMode.Off;
+                    }
+                }
             }
-        }
-        if (_stumpGameObject == null)
-        {
-            _stumpGameObject = bundle.load<GameObject>("Stump");
+            if (GraphicsSettings.treeMode == ETreeGraphicMode.LEGACY)
+            {
+                _stumpGameObject = bundle.load<GameObject>("Stump_Old");
+            }
             if (_stumpGameObject == null)
             {
-                Assets.reportError(this, "missing \"Stump\" GameObject");
+                _stumpGameObject = bundle.load<GameObject>("Stump");
             }
-            else
+            if (GraphicsSettings.treeMode == ETreeGraphicMode.LEGACY)
             {
-                ServerPrefabUtil.RemoveClientComponents(_stumpGameObject);
+                _skyboxGameObject = bundle.load<GameObject>("Skybox_Old");
+            }
+            if (_skyboxGameObject == null)
+            {
+                _skyboxGameObject = bundle.load<GameObject>("Skybox");
+            }
+            if (defaultLODWeights)
+            {
+                Transform transform2 = skyboxGameObject.transform.Find("Model_0");
+                if (transform2 != null)
+                {
+                    BillboardRenderer component2 = transform2.GetComponent<BillboardRenderer>();
+                    if (component2 != null)
+                    {
+                        component2.shadowCastingMode = ShadowCastingMode.Off;
+                    }
+                }
+            }
+            if (GraphicsSettings.treeMode == ETreeGraphicMode.LEGACY)
+            {
+                _debrisGameObject = bundle.load<GameObject>("Debris_Old");
+            }
+            if (isSpeedTree)
+            {
+                if (_debrisGameObject == null)
+                {
+                    _debrisGameObject = bundle.load<GameObject>("Debris");
+                }
+                if (modelGameObject != null)
+                {
+                    LODGroup component3 = modelGameObject.GetComponent<LODGroup>();
+                    if (component3 != null)
+                    {
+                        if (GraphicsSettings.treeMode == ETreeGraphicMode.SPEEDTREE_FADE_SPEEDTREE)
+                        {
+                            component3.fadeMode = LODFadeMode.SpeedTree;
+                            if (defaultLODWeights && GraphicsSettings.treeMode != 0)
+                            {
+                                applyDefaultLODs(component3, fade: true);
+                            }
+                        }
+                        else
+                        {
+                            component3.fadeMode = LODFadeMode.None;
+                            if (defaultLODWeights && GraphicsSettings.treeMode != 0)
+                            {
+                                applyDefaultLODs(component3, fade: false);
+                            }
+                        }
+                    }
+                }
+                if (stumpGameObject != null)
+                {
+                    LODGroup component4 = stumpGameObject.GetComponent<LODGroup>();
+                    if (component4 != null)
+                    {
+                        component4.fadeMode = LODFadeMode.None;
+                    }
+                }
+                if (debrisGameObject != null)
+                {
+                    LODGroup component5 = debrisGameObject.GetComponent<LODGroup>();
+                    if (component5 != null)
+                    {
+                        if (GraphicsSettings.treeMode == ETreeGraphicMode.SPEEDTREE_FADE_SPEEDTREE)
+                        {
+                            component5.fadeMode = LODFadeMode.SpeedTree;
+                            if (defaultLODWeights && GraphicsSettings.treeMode != 0)
+                            {
+                                applyDefaultLODs(component5, fade: true);
+                            }
+                        }
+                        else
+                        {
+                            component5.fadeMode = LODFadeMode.None;
+                            if (defaultLODWeights && GraphicsSettings.treeMode != 0)
+                            {
+                                applyDefaultLODs(component5, fade: false);
+                            }
+                        }
+                    }
+                }
+            }
+            if (data.has("Auto_Skybox") && !isSpeedTree && (bool)skyboxGameObject)
+            {
+                Transform transform3 = modelGameObject.transform.Find("Model_0");
+                if ((bool)transform3)
+                {
+                    meshes.Clear();
+                    transform3.GetComponentsInChildren(includeInactive: true, meshes);
+                    if (meshes.Count > 0)
+                    {
+                        Bounds bounds = default(Bounds);
+                        for (int i = 0; i < meshes.Count; i++)
+                        {
+                            Mesh sharedMesh = meshes[i].sharedMesh;
+                            if (!(sharedMesh == null))
+                            {
+                                Bounds bounds2 = sharedMesh.bounds;
+                                bounds.Encapsulate(bounds2.min);
+                                bounds.Encapsulate(bounds2.max);
+                            }
+                        }
+                        if (bounds.min.y < 0f)
+                        {
+                            float num = Mathf.Abs(bounds.min.z);
+                            bounds.center += new Vector3(0f, 0f, num / 2f);
+                            bounds.size -= new Vector3(0f, 0f, num);
+                        }
+                        float num2 = Mathf.Max(bounds.size.x, bounds.size.y);
+                        float z = bounds.size.z;
+                        skyboxGameObject.transform.localScale = new Vector3(z, z, z);
+                        Transform transform4 = UnityEngine.Object.Instantiate(modelGameObject).transform;
+                        Transform transform5 = new GameObject().transform;
+                        transform5.parent = transform4;
+                        transform5.localPosition = new Vector3(0f, z / 2f, (0f - num2) / 2f);
+                        transform5.localRotation = Quaternion.identity;
+                        Transform transform6 = new GameObject().transform;
+                        transform6.parent = transform4;
+                        transform6.localPosition = new Vector3((0f - num2) / 2f, z / 2f, 0f);
+                        transform6.localRotation = Quaternion.Euler(0f, 90f, 0f);
+                        if (!shader)
+                        {
+                            shader = Shader.Find("Custom/Card");
+                        }
+                        Texture2D card = ItemTool.getCard(transform4, transform5, transform6, 64, 64, z / 2f, num2);
+                        skyboxMaterial = new Material(shader);
+                        skyboxMaterial.mainTexture = card;
+                    }
+                }
             }
         }
         if (_modelGameObject != null)
@@ -211,10 +390,10 @@ public class ResourceAsset : Asset
         isForage = data.has("Forage");
         if (isForage && _modelGameObject != null)
         {
-            Transform transform = _modelGameObject.transform.Find("Forage");
-            if (transform != null)
+            Transform transform7 = _modelGameObject.transform.Find("Forage");
+            if (transform7 != null)
             {
-                transform.gameObject.layer = 14;
+                transform7.gameObject.layer = 14;
             }
         }
         forageRewardExperience = data.readUInt32("Forage_Reward_Experience", 1u);

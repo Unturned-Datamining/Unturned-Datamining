@@ -15,6 +15,11 @@ internal static class UseableHousingUtils
     public static Transform InstantiatePlacementPreview(ItemStructureAsset asset)
     {
         Transform transform = null;
+        GameObject gameObject = asset.placementPreviewRef.loadAsset();
+        if (gameObject != null)
+        {
+            transform = UnityEngine.Object.Instantiate(gameObject).transform;
+        }
         if (transform == null)
         {
             transform = StructureTool.getStructure(asset.id, 0);

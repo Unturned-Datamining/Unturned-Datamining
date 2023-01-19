@@ -1,4 +1,3 @@
-#define WITH_GAME_THREAD_ASSERTIONS
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -227,8 +226,35 @@ public class Player : MonoBehaviour
 
     public event PluginWidgetFlagsChanged onLocalPluginWidgetFlagsChanged;
 
+    public void PlayAudioReference(AudioReference audioReference)
+    {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            float volumeMultiplier;
+            float pitchMultiplier;
+            AudioClip audioClip = audioReference.LoadAudioClip(out volumeMultiplier, out pitchMultiplier);
+            if (!(audioClip == null))
+            {
+                OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform, audioClip);
+                oneShotAudioParameters.volume = volumeMultiplier;
+                oneShotAudioParameters.pitch = pitchMultiplier;
+                oneShotAudioParameters.SetLinearRolloff(1f, 32f);
+                oneShotAudioParameters.Play();
+            }
+        }
+    }
+
     public void playSound(AudioClip clip, float volume, float pitch, float deviation)
     {
+        if (!(clip == null) && !Dedicator.IsDedicatedServer)
+        {
+            deviation = Mathf.Clamp01(deviation);
+            OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform, clip);
+            oneShotAudioParameters.volume = volume;
+            oneShotAudioParameters.RandomizePitch(pitch * (1f - deviation), pitch * (1f + deviation));
+            oneShotAudioParameters.SetLinearRolloff(1f, 32f);
+            oneShotAudioParameters.Play();
+        }
     }
 
     public void playSound(AudioClip clip, float pitch, float deviation)
@@ -263,13 +289,24 @@ public class Player : MonoBehaviour
 
     private void HandleScreenshotData(byte[] data)
     {
-        ReadWrite.writeBytes(ReadWrite.PATH + ServerSavedata.directory + "/" + Provider.serverID + "/Spy.jpg", useCloud: false, usePath: false, data);
-        ReadWrite.writeBytes(ReadWrite.PATH + ServerSavedata.directory + "/" + Provider.serverID + "/Spy/" + channel.owner.playerID.steamID.m_SteamID + ".jpg", useCloud: false, usePath: false, data);
-        if (onPlayerSpyReady != null)
+        if (Dedicator.IsDedicatedServer)
         {
-            onPlayerSpyReady(channel.owner.playerID.steamID, data);
+            ReadWrite.writeBytes(ReadWrite.PATH + ServerSavedata.directory + "/" + Provider.serverID + "/Spy.jpg", useCloud: false, usePath: false, data);
+            ReadWrite.writeBytes(ReadWrite.PATH + ServerSavedata.directory + "/" + Provider.serverID + "/Spy/" + channel.owner.playerID.steamID.m_SteamID + ".jpg", useCloud: false, usePath: false, data);
+            if (onPlayerSpyReady != null)
+            {
+                onPlayerSpyReady(channel.owner.playerID.steamID, data);
+            }
+            screenshotsCallbacks.Dequeue()?.Invoke(channel.owner.playerID.steamID, data);
         }
-        screenshotsCallbacks.Dequeue()?.Invoke(channel.owner.playerID.steamID, data);
+        else
+        {
+            ReadWrite.writeBytes("/Spy.jpg", useCloud: false, usePath: true, data);
+            if (onSpyReady != null)
+            {
+                onSpyReady(channel.owner.playerID.steamID, data);
+            }
+        }
     }
 
     [Obsolete]
@@ -356,7 +393,6 @@ public class Player : MonoBehaviour
 
     public void sendScreenshot(CSteamID destination, PlayerSpyReady callback = null)
     {
-        ThreadUtil.ConditionalAssertIsGameThread();
         screenshotsExpected++;
         screenshotsDestination = destination;
         screenshotsCallbacks.Enqueue(callback);
@@ -385,7 +421,6 @@ public class Player : MonoBehaviour
 
     public void sendBrowserRequest(string msg, string url)
     {
-        ThreadUtil.ConditionalAssertIsGameThread();
         SendBrowserRequest.Invoke(GetNetId(), ENetReliability.Reliable, channel.GetOwnerTransportConnection(), msg, url);
     }
 
@@ -415,7 +450,6 @@ public class Player : MonoBehaviour
 
     public void sendRelayToServer(uint ip, ushort port, string password, bool shouldShowMenu = true)
     {
-        ThreadUtil.ConditionalAssertIsGameThread();
         SendRelayToServer.Invoke(GetNetId(), ENetReliability.Reliable, channel.GetOwnerTransportConnection(), ip, port, password, shouldShowMenu);
     }
 
@@ -445,7 +479,6 @@ public class Player : MonoBehaviour
 
     public void setAllPluginWidgetFlags(EPluginWidgetFlags newFlags)
     {
-        ThreadUtil.ConditionalAssertIsGameThread();
         if (pluginWidgetFlags != newFlags)
         {
             SendSetPluginWidgetFlags.Invoke(GetNetId(), ENetReliability.Reliable, channel.GetOwnerTransportConnection(), (uint)newFlags);
@@ -616,7 +649,6 @@ public class Player : MonoBehaviour
 
     public void teleportToLocationUnsafe(Vector3 position, float yaw)
     {
-        ThreadUtil.ConditionalAssertIsGameThread();
         InteractableVehicle vehicle = movement.getVehicle();
         if (vehicle == null)
         {
@@ -796,7 +828,6 @@ public class Player : MonoBehaviour
 
     public void sendStat(EPlayerStat stat)
     {
-        ThreadUtil.ConditionalAssertIsGameThread();
         if (!channel.isOwner)
         {
             trackStat(stat);
@@ -807,7 +838,6 @@ public class Player : MonoBehaviour
 
     public void sendAchievementUnlocked(string id)
     {
-        ThreadUtil.ConditionalAssertIsGameThread();
         SendAchievementUnlocked.Invoke(GetNetId(), ENetReliability.Reliable, channel.GetOwnerTransportConnection(), id);
     }
 
@@ -897,6 +927,31 @@ public class Player : MonoBehaviour
 
     private void updateLights()
     {
+        if (Dedicator.IsDedicatedServer)
+        {
+            return;
+        }
+        if (channel.isOwner)
+        {
+            firstSpot.gameObject.SetActive(isSpotOn && look.perspective == EPlayerPerspective.FIRST);
+            thirdSpot.gameObject.SetActive(isSpotOn && look.perspective == EPlayerPerspective.THIRD);
+        }
+        else
+        {
+            thirdSpot.gameObject.SetActive(isSpotOn);
+        }
+        if (isSpotOn)
+        {
+            PlayerSpotLightConfig playerSpotLightConfig = lightConfig;
+            if (firstSpot != null)
+            {
+                playerSpotLightConfig.applyToLight(firstSpot.GetComponent<Light>());
+            }
+            if (thirdSpot != null)
+            {
+                playerSpotLightConfig.applyToLight(thirdSpot.GetComponent<Light>());
+            }
+        }
     }
 
     private void onPerspectiveUpdated(EPlayerPerspective newPerspective)

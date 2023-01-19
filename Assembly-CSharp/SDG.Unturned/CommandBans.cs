@@ -6,6 +6,10 @@ public class CommandBans : Command
 {
     protected override void execute(CSteamID executorID, string parameter)
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            return;
+        }
         if (SteamBlacklist.list.Count == 0)
         {
             CommandWindow.LogError(localization.format("NoBansErrorText"));

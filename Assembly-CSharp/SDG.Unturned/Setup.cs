@@ -47,6 +47,10 @@ public class Setup : MonoBehaviour
         {
             GetComponent<Provider>().start();
         }
+        if (!Dedicator.IsDedicatedServer)
+        {
+            GlazierFactory.Create();
+        }
     }
 
     private void Start()
@@ -56,5 +60,11 @@ public class Setup : MonoBehaviour
             GetComponent<Provider>().unityStart();
         }
         postProcess.initialize();
+        if (!Dedicator.IsDedicatedServer)
+        {
+            MenuSettings.load();
+            GraphicsSettings.applyResolution();
+            LoadingUI.updateScene();
+        }
     }
 }

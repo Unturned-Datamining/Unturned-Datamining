@@ -1,6 +1,6 @@
-#define WITH_GAME_THREAD_ASSERTIONS
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using SDG.NetPak;
 using SDG.NetTransport;
 using Steamworks;
@@ -59,6 +59,12 @@ public class StructureManager : SteamCaller
     private static ClientStaticMethod SendMultipleStructures = ClientStaticMethod.Get(ReceiveMultipleStructures);
 
     private Dictionary<int, Stack<GameObject>> pool;
+
+    private Stopwatch instantiationTimer = new Stopwatch();
+
+    private const int MIN_INSTANTIATIONS_PER_FRAME = 5;
+
+    private const int MIN_DESTROY_PER_FRAME = 10;
 
     internal const int POSITION_FRAC_BIT_COUNT = 11;
 
@@ -427,17 +433,66 @@ public class StructureManager : SteamCaller
     public static void ReceiveDestroyStructure(in ClientInvocationContext context, NetId netId, Vector3 ragdoll, bool wasPickedUp)
     {
         StructureDrop structureDrop = NetIdRegistry.Get<StructureDrop>(netId);
-        byte x;
-        byte y;
-        StructureRegion region;
         if (structureDrop == null)
         {
             CancelInstantiationByNetId(netId);
         }
-        else if (tryGetRegion(structureDrop.model, out x, out y, out region))
+        else
         {
-            instance.DestroyOrReleaseStructure(structureDrop);
-            structureDrop.model.position = Vector3.zero;
+            if (!tryGetRegion(structureDrop.model, out var _, out var _, out var region))
+            {
+                return;
+            }
+            if (Dedicator.IsDedicatedServer || !GraphicsSettings.debris || wasPickedUp)
+            {
+                instance.DestroyOrReleaseStructure(structureDrop);
+                structureDrop.model.position = Vector3.zero;
+            }
+            else
+            {
+                ItemStructureAsset asset = structureDrop.asset;
+                if (asset != null && asset.construct != 0 && asset.construct != EConstruct.ROOF && asset.construct != EConstruct.FLOOR_POLY && asset.construct != EConstruct.ROOF_POLY)
+                {
+                    Vector3 position = structureDrop.model.position;
+                    Quaternion rotation = structureDrop.model.rotation;
+                    instance.DestroyOrReleaseStructure(structureDrop);
+                    structureDrop.model.position = Vector3.zero;
+                    GameObject gameObject = UnityEngine.Object.Instantiate(asset.structure, position, rotation);
+                    Transform transform = gameObject.transform;
+                    ragdoll.y += 8f;
+                    ragdoll.x += UnityEngine.Random.Range(-16f, 16f);
+                    ragdoll.z += UnityEngine.Random.Range(-16f, 16f);
+                    ragdoll *= 2f;
+                    EffectManager.RegisterDebris(gameObject);
+                    MeshCollider component = gameObject.GetComponent<MeshCollider>();
+                    if (component != null)
+                    {
+                        component.convex = true;
+                    }
+                    foreach (Transform item in transform)
+                    {
+                        if (item.CompareTag("Logic"))
+                        {
+                            UnityEngine.Object.Destroy(item.gameObject);
+                        }
+                    }
+                    gameObject.tag = "Debris";
+                    gameObject.SetLayerRecursively(12);
+                    Rigidbody orAddComponent = gameObject.GetOrAddComponent<Rigidbody>();
+                    orAddComponent.useGravity = true;
+                    orAddComponent.isKinematic = false;
+                    orAddComponent.AddForce(ragdoll);
+                    orAddComponent.drag = 0.5f;
+                    orAddComponent.angularDrag = 0.1f;
+                    transform.localScale *= 0.75f;
+                    UnityEngine.Object.Destroy(gameObject, 8f);
+                }
+                else
+                {
+                    instance.DestroyOrReleaseStructure(structureDrop);
+                    structureDrop.model.position = Vector3.zero;
+                }
+            }
             structureDrop.ReleaseNetId();
             region.drops.Remove(structureDrop);
         }
@@ -490,7 +545,6 @@ public class StructureManager : SteamCaller
 
     private Transform spawnStructure(StructureRegion region, Guid assetId, Vector3 point, byte angle_x, byte angle_y, byte angle_z, byte hp, ulong owner, ulong group, NetId netId)
     {
-        ThreadUtil.ConditionalAssertIsGameThread();
         ItemStructureAsset itemStructureAsset = Assets.find(assetId) as ItemStructureAsset;
         if (!Provider.isServer)
         {
@@ -550,6 +604,7 @@ public class StructureManager : SteamCaller
             region.drops.Add(structureDrop);
             if (transform != null)
             {
+                structureDrop.AddFoliageCut();
                 try
                 {
                     housingConnections.LinkConnections(structureDrop);
@@ -810,7 +865,7 @@ public class StructureManager : SteamCaller
                 }
             }
         }
-        if (step != 1 || !Regions.checkSafe(new_x, new_y))
+        if (step != 1 || !Dedicator.IsDedicatedServer || !Regions.checkSafe(new_x, new_y))
         {
             return;
         }
@@ -1025,7 +1080,7 @@ public class StructureManager : SteamCaller
         foreach (StructureDrop drop in region.drops)
         {
             StructureData serversideData = drop.serversideData;
-            if ((Provider.modeConfigData.Structures.Decay_Time == 0 || time < serversideData.objActiveDate || time - serversideData.objActiveDate < Provider.modeConfigData.Structures.Decay_Time) && serversideData.structure.asset.isSaveable)
+            if ((!Dedicator.IsDedicatedServer || Provider.modeConfigData.Structures.Decay_Time == 0 || time < serversideData.objActiveDate || time - serversideData.objActiveDate < Provider.modeConfigData.Structures.Decay_Time) && serversideData.structure.asset.isSaveable)
             {
                 num = (ushort)(num + 1);
             }
@@ -1034,7 +1089,7 @@ public class StructureManager : SteamCaller
         foreach (StructureDrop drop2 in region.drops)
         {
             StructureData serversideData2 = drop2.serversideData;
-            if ((Provider.modeConfigData.Structures.Decay_Time == 0 || time < serversideData2.objActiveDate || time - serversideData2.objActiveDate < Provider.modeConfigData.Structures.Decay_Time) && serversideData2.structure.asset.isSaveable)
+            if ((!Dedicator.IsDedicatedServer || Provider.modeConfigData.Structures.Decay_Time == 0 || time < serversideData2.objActiveDate || time - serversideData2.objActiveDate < Provider.modeConfigData.Structures.Decay_Time) && serversideData2.structure.asset.isSaveable)
             {
                 river.writeGUID(drop2.asset.GUID);
                 river.writeUInt32(serversideData2.instanceID);
@@ -1103,6 +1158,7 @@ public class StructureManager : SteamCaller
         {
             UnturnedLog.exception(e, "Caught exception while unlinking housing connections:");
         }
+        drop.RemoveFoliageCut();
         EffectManager.ClearAttachments(drop.model);
         if (drop.asset.eligibleForPooling)
         {
@@ -1114,5 +1170,65 @@ public class StructureManager : SteamCaller
         {
             UnityEngine.Object.Destroy(drop.model.gameObject);
         }
+    }
+
+    private void Update()
+    {
+        if (MainCamera.instance != null)
+        {
+            housingConnections.DrawGizmos();
+        }
+        if (!Provider.isConnected)
+        {
+            return;
+        }
+        if (pendingInstantiations != null && pendingInstantiations.Count > 0)
+        {
+            instantiationTimer.Restart();
+            int num = 0;
+            do
+            {
+                StructureInstantiationParameters structureInstantiationParameters = pendingInstantiations[num];
+                if (spawnStructure(structureInstantiationParameters.region, structureInstantiationParameters.assetId, structureInstantiationParameters.position, structureInstantiationParameters.angle_x, structureInstantiationParameters.angle_y, structureInstantiationParameters.angle_z, structureInstantiationParameters.hp, structureInstantiationParameters.owner, structureInstantiationParameters.group, structureInstantiationParameters.netId) != null)
+                {
+                    NetInvocationDeferralRegistry.Invoke(structureInstantiationParameters.netId, 2u);
+                }
+                else
+                {
+                    NetInvocationDeferralRegistry.Cancel(structureInstantiationParameters.netId, 2u);
+                }
+                num++;
+            }
+            while (num < pendingInstantiations.Count && (instantiationTimer.ElapsedMilliseconds < 1 || num < 5));
+            pendingInstantiations.RemoveRange(0, num);
+            instantiationTimer.Stop();
+        }
+        if (regionsPendingDestroy == null || regionsPendingDestroy.Count <= 0)
+        {
+            return;
+        }
+        instantiationTimer.Restart();
+        int num2 = 0;
+        do
+        {
+            StructureRegion tail = regionsPendingDestroy.GetTail();
+            if (tail.drops.Count > 0)
+            {
+                tail.DestroyTail();
+                num2++;
+                if (tail.drops.Count < 1)
+                {
+                    tail.isPendingDestroy = false;
+                    regionsPendingDestroy.RemoveTail();
+                }
+            }
+            else
+            {
+                tail.isPendingDestroy = false;
+                regionsPendingDestroy.RemoveTail();
+            }
+        }
+        while (regionsPendingDestroy.Count > 0 && (instantiationTimer.ElapsedMilliseconds < 1 || num2 < 10));
+        instantiationTimer.Stop();
     }
 }

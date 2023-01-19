@@ -626,7 +626,7 @@ public class ObjectManager : SteamCaller
                 }
             }
         }
-        if (step != 4 || !Regions.checkSafe(new_x, new_y))
+        if (step != 4 || !Dedicator.IsDedicatedServer || !Regions.checkSafe(new_x, new_y))
         {
             return;
         }

@@ -439,7 +439,7 @@ public class Zombie : MonoBehaviour
         {
             return ATTACK_VEHICLE * (float)((!isMega) ? 1 : 2);
         }
-        return ATTACK_PLAYER * ((speciality == EZombieSpeciality.NORMAL) ? 0.5f : 1f) * (float)((!isMega) ? 1 : 2);
+        return ATTACK_PLAYER * ((Dedicator.IsDedicatedServer && speciality == EZombieSpeciality.NORMAL) ? 0.5f : 1f) * (float)((!isMega) ? 1 : 2);
     }
 
     public void tellAlive(byte newType, byte newSpeciality, byte newShirt, byte newPants, byte newHat, byte newGear, Vector3 newPosition, byte newAngle)
@@ -478,6 +478,46 @@ public class Zombie : MonoBehaviour
         }
         _lastDead = Time.realtimeSinceStartup;
         updateLife();
+        if (!Dedicator.IsDedicatedServer)
+        {
+            ragdoll = newRagdoll;
+            Transform transform = RagdollTool.ragdollZombie(base.transform.position, base.transform.rotation, skeleton, ragdoll, type, shirt, pants, hat, gear, hatID, gearID, isMega, ragdollEffect);
+            if (transform != null && speciality.IsDLVolatile())
+            {
+                SkinnedMeshRenderer component = transform.Find("Model_1").GetComponent<SkinnedMeshRenderer>();
+                if (component != null)
+                {
+                    if (speciality == EZombieSpeciality.DL_RED_VOLATILE)
+                    {
+                        component.sharedMaterial = Resources.Load<Material>("Characters/M_Volatile_Red");
+                    }
+                    else if (speciality == EZombieSpeciality.DL_BLUE_VOLATILE)
+                    {
+                        component.sharedMaterial = Resources.Load<Material>("Characters/M_Volatile_Blue");
+                    }
+                }
+            }
+            if (radiation != null && isRadioactive)
+            {
+                EffectAsset effectAsset = Assets.find(Zombie_0_Ref);
+                if (effectAsset != null)
+                {
+                    EffectManager.effect(effectAsset, radiation.position, Vector3.up);
+                }
+            }
+            if (burner != null && (speciality == EZombieSpeciality.BURNER || speciality == EZombieSpeciality.BOSS_FIRE || speciality == EZombieSpeciality.BOSS_MAGMA))
+            {
+                EffectAsset effectAsset2 = Assets.find(Zombie_2_Ref);
+                if (effectAsset2 != null)
+                {
+                    EffectManager.effect(effectAsset2, burner.position, Vector3.up);
+                }
+            }
+            if (speciality.IsDLVolatile())
+            {
+                PlayOneShot(ZombieManager.dl_deaths);
+            }
+        }
         if (Provider.isServer)
         {
             stop();
@@ -513,6 +553,16 @@ public class Zombie : MonoBehaviour
             lastSpecial = Time.time;
             isThrowingBoulder = true;
             isPlayingBoulder = true;
+            if (!Dedicator.IsDedicatedServer)
+            {
+                animator.Play("Boulder_0");
+                AudioClip clip = ZombieManager.roars[UnityEngine.Random.Range(0, 16)];
+                OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform, clip);
+                oneShotAudioParameters.volume = 0.5f;
+                oneShotAudioParameters.pitch = GetRandomPitch();
+                oneShotAudioParameters.SetLinearRolloff(1f, 32f);
+                oneShotAudioParameters.Play();
+            }
             boulderItem = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load("Characters/Mega_Boulder_Item"))).transform;
             boulderItem.name = "Boulder";
             boulderItem.parent = rightHook;
@@ -527,7 +577,7 @@ public class Zombie : MonoBehaviour
     {
         if (!isDead)
         {
-            Transform obj = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load("Characters/Mega_Boulder_Projectile_Server"))).transform;
+            Transform obj = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load(Dedicator.IsDedicatedServer ? "Characters/Mega_Boulder_Projectile_Server" : "Characters/Mega_Boulder_Projectile_Client"))).transform;
             obj.name = "Boulder";
             EffectManager.RegisterDebris(obj.gameObject);
             obj.position = origin;
@@ -547,6 +597,10 @@ public class Zombie : MonoBehaviour
             lastSpecial = Time.time;
             isSpittingAcid = true;
             isPlayingSpit = true;
+            if (!Dedicator.IsDedicatedServer)
+            {
+                animator.Play("Acid_0");
+            }
         }
     }
 
@@ -554,7 +608,11 @@ public class Zombie : MonoBehaviour
     {
         if (!isDead)
         {
-            Transform obj = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load("Characters/Acid_Projectile_Server"))).transform;
+            if (!Dedicator.IsDedicatedServer)
+            {
+                PlayOneShot(ZombieManager.spits);
+            }
+            Transform obj = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load(Dedicator.IsDedicatedServer ? "Characters/Acid_Projectile_Server" : ((speciality == EZombieSpeciality.BOSS_NUCLEAR) ? "Characters/Acid_Projectile_Client_Nuclear" : "Characters/Acid_Projectile_Client")))).transform;
             obj.name = "Acid";
             EffectManager.RegisterDebris(obj.gameObject);
             obj.position = origin;
@@ -567,11 +625,20 @@ public class Zombie : MonoBehaviour
 
     public void askCharge()
     {
-        if (!isDead)
+        if (isDead)
         {
-            lastSpecial = Time.time;
-            isChargingSpark = true;
-            isPlayingCharge = true;
+            return;
+        }
+        lastSpecial = Time.time;
+        isChargingSpark = true;
+        isPlayingCharge = true;
+        if (!Dedicator.IsDedicatedServer)
+        {
+            animator.Play("Electric_0");
+            if (sparkSystem != null)
+            {
+                sparkSystem.Play();
+            }
         }
     }
 
@@ -602,22 +669,48 @@ public class Zombie : MonoBehaviour
 
     public void askStomp()
     {
-        if (!isDead)
+        if (isDead)
         {
-            lastSpecial = Time.time;
-            isStompingWind = true;
-            isPlayingWind = true;
+            return;
+        }
+        lastSpecial = Time.time;
+        isStompingWind = true;
+        isPlayingWind = true;
+        if (!Dedicator.IsDedicatedServer)
+        {
+            animator.Play("Wind_0");
+            EffectAsset effectAsset = Assets.find(Zombie_5_Ref);
+            if (effectAsset != null)
+            {
+                EffectManager.effect(effectAsset, base.transform.position, Vector3.up);
+            }
         }
     }
 
     public void askBreath()
     {
-        if (!isDead)
+        if (isDead)
         {
-            lastSpecial = Time.time;
-            isBreathingFire = true;
-            isPlayingFire = true;
-            fireDamage = 0f;
+            return;
+        }
+        lastSpecial = Time.time;
+        isBreathingFire = true;
+        isPlayingFire = true;
+        fireDamage = 0f;
+        if (!Dedicator.IsDedicatedServer)
+        {
+            animator.Play("Fire_0");
+            if (fireSystem != null)
+            {
+                ParticleSystem.EmissionModule emission = fireSystem.emission;
+                emission.enabled = true;
+                fireSystem.Play();
+            }
+            if (fireAudio != null)
+            {
+                fireAudio.pitch = UnityEngine.Random.Range(0.95f, 1.05f);
+                fireAudio.Play();
+            }
         }
     }
 
@@ -628,6 +721,12 @@ public class Zombie : MonoBehaviour
             lastAttack = Time.time;
             specialAttackDelay = UnityEngine.Random.Range(2f, 4f);
             isPlayingAttack = true;
+            if (!Dedicator.IsDedicatedServer)
+            {
+                animator.Play("Attack_" + id);
+                AudioClip[] clips = (speciality.IsDLVolatile() ? ZombieManager.dl_attacks : ZombieManager.roars);
+                PlayOneShot(clips);
+            }
             if (speciality == EZombieSpeciality.FLANKER_FRIENDLY || speciality == EZombieSpeciality.FLANKER_STALK)
             {
                 updateVisibility(newVisible: true, playEffect: true);
@@ -642,6 +741,12 @@ public class Zombie : MonoBehaviour
             lastStartle = Time.time;
             specialStartleDelay = UnityEngine.Random.Range(1f, 2f);
             isPlayingStartle = true;
+            if (!Dedicator.IsDedicatedServer)
+            {
+                animator.Play("Startle_" + id);
+                AudioClip[] clips = (speciality.IsDLVolatile() ? ZombieManager.dl_enemy_spotted : ZombieManager.roars);
+                PlayOneShot(clips);
+            }
         }
     }
 
@@ -651,6 +756,10 @@ public class Zombie : MonoBehaviour
         {
             lastStun = Time.time;
             isPlayingStun = true;
+            if (!Dedicator.IsDedicatedServer)
+            {
+                animator.Play("Stun_" + id);
+            }
         }
     }
 
@@ -1059,6 +1168,35 @@ public class Zombie : MonoBehaviour
 
     private void updateEffects()
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            if (burner != null)
+            {
+                burner.gameObject.SetActive(speciality == EZombieSpeciality.BURNER || speciality == EZombieSpeciality.BOSS_FIRE || speciality == EZombieSpeciality.BOSS_MAGMA);
+            }
+            if (acid != null)
+            {
+                acid.gameObject.SetActive(speciality == EZombieSpeciality.ACID);
+            }
+            if (acidNuclear != null)
+            {
+                acidNuclear.gameObject.SetActive(speciality == EZombieSpeciality.BOSS_NUCLEAR);
+            }
+            if (electric != null)
+            {
+                electric.gameObject.SetActive(speciality == EZombieSpeciality.BOSS_ELECTRIC);
+            }
+            if (fireSystem != null)
+            {
+                ParticleSystem.EmissionModule emission = fireSystem.emission;
+                emission.enabled = false;
+                fireSystem.gameObject.SetActive(speciality == EZombieSpeciality.BOSS_FIRE || speciality == EZombieSpeciality.BOSS_MAGMA || speciality == EZombieSpeciality.BOSS_ALL);
+            }
+            if (sparkSystem != null)
+            {
+                sparkSystem.gameObject.SetActive(speciality == EZombieSpeciality.BOSS_ELECTRIC || speciality == EZombieSpeciality.BOSS_ALL);
+            }
+        }
     }
 
     public float getBulletResistance()
@@ -1073,66 +1211,164 @@ public class Zombie : MonoBehaviour
 
     private void updateVisibility(bool newVisible, bool playEffect)
     {
+        if (Dedicator.IsDedicatedServer || (hasUpdateVisibilityBeenCalledYet && newVisible == isVisible))
+        {
+            return;
+        }
+        hasUpdateVisibilityBeenCalledYet = true;
+        isVisible = newVisible;
+        if (isVisible)
+        {
+            if (attachmentModel_0 != null && attachmentMaterial_0 != null)
+            {
+                HighlighterTool.rematerialize(attachmentModel_0, attachmentMaterial_0, out var _);
+            }
+            if (attachmentModel_1 != null && attachmentMaterial_1 != null)
+            {
+                HighlighterTool.rematerialize(attachmentModel_1, attachmentMaterial_1, out var _);
+            }
+            if (renderer_0 != null && skinMaterial != null)
+            {
+                renderer_0.sharedMaterial = skinMaterial;
+            }
+            if (renderer_1 != null && skinMaterial != null)
+            {
+                renderer_1.sharedMaterial = skinMaterial;
+            }
+            attachmentMaterial_0 = null;
+            attachmentMaterial_1 = null;
+            skinMaterial = null;
+        }
+        else
+        {
+            Material material = ((speciality == EZombieSpeciality.SPIRIT || speciality == EZombieSpeciality.BOSS_SPIRIT) ? ZombieClothing.ghostSpiritMaterial : ZombieClothing.ghostMaterial);
+            if (attachmentModel_0 != null)
+            {
+                HighlighterTool.rematerialize(attachmentModel_0, material, out attachmentMaterial_0);
+            }
+            if (attachmentModel_1 != null)
+            {
+                HighlighterTool.rematerialize(attachmentModel_1, material, out attachmentMaterial_1);
+            }
+            if (renderer_0 != null)
+            {
+                skinMaterial = renderer_0.sharedMaterial;
+                renderer_0.sharedMaterial = material;
+            }
+            if (renderer_1 != null)
+            {
+                if (skinMaterial == null)
+                {
+                    skinMaterial = renderer_1.sharedMaterial;
+                }
+                renderer_1.sharedMaterial = material;
+            }
+        }
+        if (playEffect)
+        {
+            EffectAsset effectAsset = Assets.find(Zombie_1_Ref);
+            if (effectAsset != null)
+            {
+                EffectManager.effect(effectAsset, radiation.position, Vector3.up);
+            }
+        }
     }
 
     private void apply()
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            ZombieClothing.EApplyFlags flags = ((!isMega) ? ZombieClothing.EApplyFlags.None : ZombieClothing.EApplyFlags.Mega);
+            ZombieClothing.apply(animator.transform, flags, renderer_0, renderer_1, type, shirt, pants, hat, gear, hatID, gearID, out attachmentModel_0, out attachmentModel_1);
+            Material material = null;
+            switch (speciality)
+            {
+            case EZombieSpeciality.BOSS_MAGMA:
+                material = Resources.Load<Material>("Characters/Magma_Material");
+                break;
+            case EZombieSpeciality.DL_RED_VOLATILE:
+                material = Resources.Load<Material>("Characters/M_Volatile_Red");
+                break;
+            case EZombieSpeciality.DL_BLUE_VOLATILE:
+                material = Resources.Load<Material>("Characters/M_Volatile_Blue");
+                break;
+            }
+            if (material != null)
+            {
+                if (renderer_0 != null)
+                {
+                    renderer_0.sharedMaterial = material;
+                }
+                if (renderer_1 != null)
+                {
+                    renderer_1.sharedMaterial = material;
+                }
+            }
+        }
         if (isMega)
         {
+            if (!Dedicator.IsDedicatedServer)
+            {
+                rootAudioSource.maxDistance = 64f;
+                animator.transform.localScale = Vector3.one * UnityEngine.Random.Range(1.45f, 1.55f);
+            }
             if (Provider.isServer)
             {
                 ((CharacterController)GetComponent<Collider>()).radius = 0.75f;
                 seeker.speed = 6f;
             }
+            return;
         }
-        else
+        if (!Dedicator.IsDedicatedServer)
         {
-            if (!Provider.isServer)
+            rootAudioSource.maxDistance = 32f;
+            animator.transform.localScale = Vector3.one * UnityEngine.Random.Range(0.95f, 1.05f);
+        }
+        if (!Provider.isServer)
+        {
+            return;
+        }
+        ((CharacterController)GetComponent<Collider>()).radius = 0.4f;
+        if (speciality == EZombieSpeciality.CRAWLER)
+        {
+            if (Provider.modeConfigData.Zombies.Slow_Movement)
             {
-                return;
-            }
-            ((CharacterController)GetComponent<Collider>()).radius = 0.4f;
-            if (speciality == EZombieSpeciality.CRAWLER)
-            {
-                if (Provider.modeConfigData.Zombies.Slow_Movement)
-                {
-                    seeker.speed = 2.5f;
-                }
-                else
-                {
-                    seeker.speed = 3f;
-                }
-            }
-            else if (speciality == EZombieSpeciality.SPRINTER || speciality.IsDLVolatile())
-            {
-                if (Provider.modeConfigData.Zombies.Slow_Movement)
-                {
-                    seeker.speed = 6f;
-                }
-                else
-                {
-                    seeker.speed = 6.5f;
-                }
-            }
-            else if (speciality == EZombieSpeciality.FLANKER_FRIENDLY || speciality == EZombieSpeciality.FLANKER_STALK)
-            {
-                if (Provider.modeConfigData.Zombies.Slow_Movement)
-                {
-                    seeker.speed = 5.5f;
-                }
-                else
-                {
-                    seeker.speed = 6f;
-                }
-            }
-            else if (Provider.modeConfigData.Zombies.Slow_Movement)
-            {
-                seeker.speed = 4.5f;
+                seeker.speed = 2.5f;
             }
             else
             {
+                seeker.speed = 3f;
+            }
+        }
+        else if (speciality == EZombieSpeciality.SPRINTER || speciality.IsDLVolatile())
+        {
+            if (Provider.modeConfigData.Zombies.Slow_Movement)
+            {
+                seeker.speed = 6f;
+            }
+            else
+            {
+                seeker.speed = 6.5f;
+            }
+        }
+        else if (speciality == EZombieSpeciality.FLANKER_FRIENDLY || speciality == EZombieSpeciality.FLANKER_STALK)
+        {
+            if (Provider.modeConfigData.Zombies.Slow_Movement)
+            {
                 seeker.speed = 5.5f;
             }
+            else
+            {
+                seeker.speed = 6f;
+            }
+        }
+        else if (Provider.modeConfigData.Zombies.Slow_Movement)
+        {
+            seeker.speed = 4.5f;
+        }
+        else
+        {
+            seeker.speed = 5.5f;
         }
     }
 
@@ -1150,6 +1386,26 @@ public class Zombie : MonoBehaviour
 
     private void updateLife()
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            if (renderer_0 != null)
+            {
+                renderer_0.enabled = !isDead;
+            }
+            if (renderer_1 != null)
+            {
+                renderer_1.enabled = !isDead;
+            }
+            skeleton.gameObject.SetActive(!isDead);
+            if (eyes != null)
+            {
+                eyes.gameObject.SetActive(isHyper);
+            }
+            if (radiation != null)
+            {
+                radiation.gameObject.SetActive(isRadioactive);
+            }
+        }
         CharacterController component = GetComponent<CharacterController>();
         if (component != null)
         {
@@ -1504,6 +1760,10 @@ public class Zombie : MonoBehaviour
                             seeker.targetDirection = player.transform.position - base.transform.position;
                         }
                     }
+                    if (!Dedicator.IsDedicatedServer && speciality == EZombieSpeciality.SPRINTER)
+                    {
+                        target.position -= base.transform.forward * 0.15f;
+                    }
                 }
             }
         }
@@ -1596,7 +1856,7 @@ public class Zombie : MonoBehaviour
             }
             if ((structure != null || num2 < GetHorizontalAttackRangeSquared()) && num3 < (isHyper ? 3.5f : 2f) * (isMega ? 1.5f : 1f))
             {
-                if (speciality == EZombieSpeciality.SPRINTER || Time.time - lastTarget > 0.5f)
+                if (speciality == EZombieSpeciality.SPRINTER || Time.time - lastTarget > (Dedicator.IsDedicatedServer ? 0.5f : 0.1f))
                 {
                     if (isAttacking)
                     {
@@ -1850,8 +2110,15 @@ public class Zombie : MonoBehaviour
         {
             Vector3 normalized = (player.transform.position - base.transform.position).normalized;
             normalized.y = 0f;
-            Quaternion rotation = Quaternion.LookRotation(normalized);
-            base.transform.rotation = rotation;
+            Quaternion quaternion = Quaternion.LookRotation(normalized);
+            if (Dedicator.IsDedicatedServer)
+            {
+                base.transform.rotation = quaternion;
+            }
+            else
+            {
+                base.transform.rotation = Quaternion.Lerp(base.transform.rotation, quaternion, 4f * Time.deltaTime);
+            }
         }
         if (isThrowingBoulder && Time.time - lastSpecial > throwTime)
         {
@@ -2021,14 +2288,74 @@ public class Zombie : MonoBehaviour
                 isPlayingStartle = false;
             }
         }
-        else if (isPlayingStun && Time.time - lastStun > stunTime)
+        else if (isPlayingStun)
         {
-            isPlayingStun = false;
+            if (Time.time - lastStun > stunTime)
+            {
+                isPlayingStun = false;
+            }
+        }
+        else if (!Dedicator.IsDedicatedServer)
+        {
+            if (isMoving && (!Provider.isServer || !isStuck))
+            {
+                if (speciality == EZombieSpeciality.CRAWLER)
+                {
+                    animator.CrossFade("Move_4", CharacterAnimator.BLEND);
+                }
+                else if (speciality == EZombieSpeciality.SPRINTER)
+                {
+                    animator.CrossFade("Move_5", CharacterAnimator.BLEND);
+                }
+                else
+                {
+                    animator.CrossFade(moveAnim, CharacterAnimator.BLEND);
+                }
+            }
+            else if (speciality == EZombieSpeciality.CRAWLER)
+            {
+                animator.CrossFade("Idle_3", CharacterAnimator.BLEND);
+            }
+            else if (speciality == EZombieSpeciality.SPRINTER)
+            {
+                animator.CrossFade("Idle_4", CharacterAnimator.BLEND);
+            }
+            else
+            {
+                animator.CrossFade(idleAnim, CharacterAnimator.BLEND);
+            }
         }
         if (Provider.isServer && health < maxHealth && Time.time - lastRegen > LevelZombies.tables[type].regen)
         {
             lastRegen = Time.time;
             health++;
+        }
+        if (!Dedicator.IsDedicatedServer && Time.time - lastGroan > groanDelay)
+        {
+            lastGroan = Time.time;
+            if (isVisible)
+            {
+                if (isMega)
+                {
+                    groanDelay = UnityEngine.Random.Range(2f, 4f);
+                }
+                else
+                {
+                    groanDelay = UnityEngine.Random.Range(4f, 8f);
+                }
+                if (!isMoving)
+                {
+                    if ((double)UnityEngine.Random.value > 0.8)
+                    {
+                        PlayOneShot(ZombieManager.groans);
+                    }
+                }
+                else
+                {
+                    AudioClip[] clips = (speciality.IsDLVolatile() ? ZombieManager.dl_taunt : ZombieManager.roars);
+                    PlayOneShot(clips);
+                }
+            }
         }
         if (!Provider.isServer)
         {
@@ -2077,7 +2404,7 @@ public class Zombie : MonoBehaviour
             target = base.transform.Find("Target");
             target.parent = null;
             seeker.target = target;
-            seeker.canSmooth = false;
+            seeker.canSmooth = !Dedicator.IsDedicatedServer;
             reset();
         }
         else
@@ -2102,6 +2429,11 @@ public class Zombie : MonoBehaviour
         updateEffects();
         updateVisibility(speciality != EZombieSpeciality.FLANKER_STALK && speciality != EZombieSpeciality.SPIRIT && speciality != EZombieSpeciality.BOSS_SPIRIT, playEffect: false);
         updateStates();
+        if (!Dedicator.IsDedicatedServer)
+        {
+            ZombieRegion obj = zombieRegion;
+            obj.onHyperUpdated = (HyperUpdated)Delegate.Combine(obj.onHyperUpdated, new HyperUpdated(onHyperUpdated));
+        }
     }
 
     private void awake()
@@ -2112,11 +2444,39 @@ public class Zombie : MonoBehaviour
         fireTime = 2.75f;
         chargeTime = 1.8f;
         sparkTime = 1.2f;
-        boulderTime = 1f;
-        spitTime = 1f;
-        attackTime = 0.5f;
-        startleTime = 0.5f;
-        stunTime = 0.5f;
+        if (Dedicator.IsDedicatedServer)
+        {
+            boulderTime = 1f;
+            spitTime = 1f;
+            attackTime = 0.5f;
+            startleTime = 0.5f;
+            stunTime = 0.5f;
+            return;
+        }
+        animator = base.transform.Find("Character").GetComponent<Animation>();
+        skeleton = animator.transform.Find("Skeleton");
+        rightHook = skeleton.Find("Spine").Find("Right_Shoulder").Find("Right_Arm")
+            .Find("Right_Hand")
+            .Find("Right_Hook");
+        renderer_0 = animator.transform.Find("Model_0").GetComponent<SkinnedMeshRenderer>();
+        renderer_1 = animator.transform.Find("Model_1").GetComponent<SkinnedMeshRenderer>();
+        eyes = skeleton.Find("Spine").Find("Skull").Find("Eyes");
+        radiation = skeleton.Find("Spine").Find("Radiation");
+        burner = skeleton.Find("Spine").Find("Burner");
+        acid = skeleton.Find("Spine").Find("Skull").Find("Acid");
+        acidNuclear = skeleton.Find("Spine").Find("Skull").Find("Acid_Nuclear");
+        electric = skeleton.Find("Spine").Find("Electric");
+        sparkSystem = rightHook.Find("Spark").GetComponent<ParticleSystem>();
+        fireSystem = skeleton.Find("Spine").Find("Skull").Find("Fire")
+            .GetComponent<ParticleSystem>();
+        fireAudio = skeleton.Find("Spine").Find("Skull").Find("Fire")
+            .GetComponent<AudioSource>();
+        rootAudioSource = GetComponent<AudioSource>();
+        boulderTime = animator["Boulder_0"].clip.length;
+        spitTime = animator["Acid_0"].clip.length;
+        attackTime = animator["Attack_0"].clip.length;
+        startleTime = animator["Startle_0"].clip.length;
+        stunTime = animator["Stun_0"].clip.length;
     }
 
     private void OnDestroy()
@@ -2124,6 +2484,11 @@ public class Zombie : MonoBehaviour
         if (Provider.isServer)
         {
             isHunting = false;
+        }
+        if (!Dedicator.IsDedicatedServer)
+        {
+            ZombieRegion obj = zombieRegion;
+            obj.onHyperUpdated = (HyperUpdated)Delegate.Remove(obj.onHyperUpdated, new HyperUpdated(onHyperUpdated));
         }
         if (target != null && target.parent != this)
         {
@@ -2133,6 +2498,12 @@ public class Zombie : MonoBehaviour
 
     private void PlayOneShot(AudioClip[] clips)
     {
+        AudioClip clip = clips[UnityEngine.Random.Range(0, clips.Length)];
+        OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform, clip);
+        oneShotAudioParameters.volume = 0.5f;
+        oneShotAudioParameters.pitch = GetRandomPitch();
+        oneShotAudioParameters.SetLinearRolloff(1f, 32f);
+        oneShotAudioParameters.Play();
     }
 
     private float GetRandomPitch()

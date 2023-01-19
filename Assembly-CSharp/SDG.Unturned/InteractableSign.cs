@@ -56,7 +56,10 @@ public class InteractableSign : Interactable
 
     public bool checkUpdate(CSteamID enemyPlayer, CSteamID enemyGroup)
     {
-        _ = Provider.isServer;
+        if (Provider.isServer && !Dedicator.IsDedicatedServer)
+        {
+            return true;
+        }
         if (isLocked && !(enemyPlayer == owner))
         {
             if (group != CSteamID.Nil)
@@ -96,11 +99,67 @@ public class InteractableSign : Interactable
     public void updateText(string newText)
     {
         text = newText;
+        if (Dedicator.IsDedicatedServer)
+        {
+            return;
+        }
+        if (OptionsSettings.filter)
+        {
+            ProfanityFilter.filter(ref newText);
+        }
+        DisplayText = newText;
+        if (label_0 != null)
+        {
+            label_0.text = DisplayText;
+        }
+        if (label_1 != null)
+        {
+            label_1.text = DisplayText;
+        }
+        if (tmpComponents == null || tmpComponents.Count <= 0)
+        {
+            return;
+        }
+        foreach (TextMeshPro tmpComponent in tmpComponents)
+        {
+            tmpComponent.SetText(DisplayText);
+        }
     }
 
     public override void updateState(Asset asset, byte[] state)
     {
         isLocked = ((ItemBarricadeAsset)asset).isLocked;
+        if (!Dedicator.IsDedicatedServer && !hasInitializedTextComponents)
+        {
+            hasInitializedTextComponents = true;
+            Transform transform = base.transform.Find("Canvas");
+            if (transform != null)
+            {
+                Transform transform2 = transform.Find("Label");
+                if (transform2 != null)
+                {
+                    label_0 = transform2.GetComponent<Text>();
+                    label_1 = null;
+                }
+                else
+                {
+                    label_0 = transform.Find("Label_0").GetComponent<Text>();
+                    label_1 = transform.Find("Label_1").GetComponent<Text>();
+                }
+            }
+            if (label_0 == null && label_1 == null)
+            {
+                tmpComponents = new List<TextMeshPro>(1);
+                base.transform.GetComponentsInChildren(includeInactive: true, tmpComponents);
+                if (tmpComponents.Count != 0)
+                {
+                    foreach (TextMeshPro tmpComponent in tmpComponents)
+                    {
+                        TextMeshProUtils.FixupFont(tmpComponent);
+                    }
+                }
+            }
+        }
         _owner = new CSteamID(BitConverter.ToUInt64(state, 0));
         _group = new CSteamID(BitConverter.ToUInt64(state, 8));
         byte b = state[16];

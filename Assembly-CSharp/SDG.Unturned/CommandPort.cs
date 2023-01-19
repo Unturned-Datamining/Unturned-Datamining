@@ -6,18 +6,21 @@ public class CommandPort : Command
 {
     protected override void execute(CSteamID executorID, string parameter)
     {
-        if (!ushort.TryParse(parameter, out var result))
+        if (Dedicator.IsDedicatedServer)
         {
-            CommandWindow.LogError(localization.format("InvalidNumberErrorText", parameter));
-            return;
+            if (!ushort.TryParse(parameter, out var result))
+            {
+                CommandWindow.LogError(localization.format("InvalidNumberErrorText", parameter));
+                return;
+            }
+            if (Provider.isServer)
+            {
+                CommandWindow.LogError(localization.format("RunningErrorText"));
+                return;
+            }
+            Provider.port = result;
+            CommandWindow.Log(localization.format("PortText", result));
         }
-        if (Provider.isServer)
-        {
-            CommandWindow.LogError(localization.format("RunningErrorText"));
-            return;
-        }
-        Provider.port = result;
-        CommandWindow.Log(localization.format("PortText", result));
     }
 
     public CommandPort(Local newLocalization)

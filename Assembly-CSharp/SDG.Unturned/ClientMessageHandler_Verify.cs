@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using SDG.NetPak;
 using SDG.NetTransport;
 using Steamworks;
+using UnityEngine;
 
 namespace SDG.Unturned;
 
@@ -28,6 +29,8 @@ internal static class ClientMessageHandler_Verify
         }
         byte[] mbHashes = MasterBundleValidation.clientHandleRequest(requiredBundleNames);
         UnturnedLog.info("Authenticating with server");
+        Provider.isWaitingForAuthenticationResponse = true;
+        Provider.sentAuthenticationRequestTime = Time.realtimeSinceStartupAsDouble;
         NetMessages.SendMessageToServer(EServerMessage.Authenticate, ENetReliability.Reliable, delegate(NetPakWriter writer)
         {
             writer.WriteUInt16((ushort)ticket.Length);

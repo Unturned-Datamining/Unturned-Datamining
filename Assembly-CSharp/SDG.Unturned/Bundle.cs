@@ -57,9 +57,22 @@ public class Bundle
 
     protected virtual void processLoadedGameObject(GameObject gameObject)
     {
-        if (!convertShadersToStandard)
+        if ((!convertShadersToStandard && !consolidateShaders) || Dedicator.IsDedicatedServer)
         {
-            _ = consolidateShaders;
+            return;
+        }
+        renderers.Clear();
+        gameObject.GetComponentsInChildren(includeInactive: true, renderers);
+        foreach (Renderer renderer in renderers)
+        {
+            Material[] sharedMaterials = renderer.sharedMaterials;
+            foreach (Material material in sharedMaterials)
+            {
+                if (!(material == null))
+                {
+                    fixupMaterialForRenderer(gameObject.transform, renderer, material);
+                }
+            }
         }
     }
 
@@ -97,11 +110,18 @@ public class Bundle
         }
         else if (typeof(T) == typeof(AudioClip))
         {
-            _ = willBeUnloadedDuringUse;
+            if (willBeUnloadedDuringUse && !Dedicator.IsDedicatedServer)
+            {
+                AudioClip audioClip = loadedObject as AudioClip;
+                if ((bool)audioClip && !audioClip.preloadAudioData)
+                {
+                    audioClip.LoadAudioData();
+                }
+            }
         }
-        else
+        else if (typeof(T) == typeof(Material) && !Dedicator.IsDedicatedServer)
         {
-            _ = typeof(T) == typeof(Material);
+            processLoadedMaterial(loadedObject as Material);
         }
     }
 

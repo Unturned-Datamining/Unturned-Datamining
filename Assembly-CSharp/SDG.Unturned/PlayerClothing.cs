@@ -380,6 +380,10 @@ public class PlayerClothing : PlayerCaller
             {
                 ClientAssetIntegrity.QueueRequest(thirdClothes.shirtAsset);
             }
+            if (playEffect && thirdClothes.shirtAsset != null)
+            {
+                base.player.PlayAudioReference(thirdClothes.shirtAsset.wearAudio);
+            }
         }
     }
 
@@ -477,6 +481,10 @@ public class PlayerClothing : PlayerCaller
             if (base.channel.isOwner && !Provider.isServer)
             {
                 ClientAssetIntegrity.QueueRequest(thirdClothes.pantsAsset);
+            }
+            if (playEffect && thirdClothes.pantsAsset != null)
+            {
+                base.player.PlayAudioReference(thirdClothes.pantsAsset.wearAudio);
             }
         }
     }
@@ -576,6 +584,10 @@ public class PlayerClothing : PlayerCaller
             {
                 ClientAssetIntegrity.QueueRequest(thirdClothes.hatAsset);
             }
+            if (playEffect && thirdClothes.hatAsset != null)
+            {
+                base.player.PlayAudioReference(thirdClothes.hatAsset.wearAudio);
+            }
         }
     }
 
@@ -672,6 +684,10 @@ public class PlayerClothing : PlayerCaller
             if (base.channel.isOwner && !Provider.isServer)
             {
                 ClientAssetIntegrity.QueueRequest(thirdClothes.backpackAsset);
+            }
+            if (playEffect && thirdClothes.backpackAsset != null)
+            {
+                base.player.PlayAudioReference(thirdClothes.backpackAsset.wearAudio);
             }
         }
     }
@@ -871,6 +887,10 @@ public class PlayerClothing : PlayerCaller
             {
                 ClientAssetIntegrity.QueueRequest(thirdClothes.vestAsset);
             }
+            if (playEffect && thirdClothes.vestAsset != null)
+            {
+                base.player.PlayAudioReference(thirdClothes.vestAsset.wearAudio);
+            }
         }
     }
 
@@ -969,6 +989,10 @@ public class PlayerClothing : PlayerCaller
             {
                 ClientAssetIntegrity.QueueRequest(thirdClothes.maskAsset);
             }
+            if (playEffect && thirdClothes.maskAsset != null)
+            {
+                base.player.PlayAudioReference(thirdClothes.maskAsset.wearAudio);
+            }
         }
     }
 
@@ -1058,6 +1082,10 @@ public class PlayerClothing : PlayerCaller
             if (base.channel.isOwner && !Provider.isServer)
             {
                 ClientAssetIntegrity.QueueRequest(thirdClothes.glassesAsset);
+            }
+            if (playEffect && thirdClothes.glassesAsset != null)
+            {
+                base.player.PlayAudioReference(thirdClothes.glassesAsset.wearAudio);
             }
         }
     }
@@ -1481,6 +1509,11 @@ public class PlayerClothing : PlayerCaller
 
     internal void InitializePlayer()
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            PlayerStance stance = base.player.stance;
+            stance.onStanceUpdated = (StanceUpdated)Delegate.Combine(stance.onStanceUpdated, new StanceUpdated(onStanceUpdated));
+        }
         if (base.channel.isOwner)
         {
             if (base.player.first != null)

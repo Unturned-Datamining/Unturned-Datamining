@@ -220,25 +220,21 @@ public class EffectManager : SteamCaller
 
     public static void askEffectClearByID(ushort id, ITransportConnection transportConnection)
     {
-        ThreadUtil.assertIsGameThread();
         SendEffectClearById.Invoke(ENetReliability.Reliable, transportConnection, id);
     }
 
     public static void ClearEffectByID_AllPlayers(ushort id)
     {
-        ThreadUtil.assertIsGameThread();
         SendEffectClearById.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), id);
     }
 
     public static void ClearEffectByGuid(Guid assetGuid, ITransportConnection transportConnection)
     {
-        ThreadUtil.assertIsGameThread();
         SendEffectClearByGuid.Invoke(ENetReliability.Reliable, transportConnection, assetGuid);
     }
 
     public static void ClearEffectByGuid_AllPlayers(Guid assetGuid)
     {
-        ThreadUtil.assertIsGameThread();
         SendEffectClearByGuid.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), assetGuid);
     }
 
@@ -578,35 +574,30 @@ public class EffectManager : SteamCaller
 
     public static void sendUIEffect(ushort id, short key, bool reliable)
     {
-        ThreadUtil.assertIsGameThread();
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
         SendUIEffect.Invoke(reliability, Provider.EnumerateClients(), id, key);
     }
 
     public static void sendUIEffect(ushort id, short key, bool reliable, string arg0)
     {
-        ThreadUtil.assertIsGameThread();
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
         SendUIEffect1Arg.Invoke(reliability, Provider.EnumerateClients(), id, key, arg0);
     }
 
     public static void sendUIEffect(ushort id, short key, bool reliable, string arg0, string arg1)
     {
-        ThreadUtil.assertIsGameThread();
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
         SendUIEffect2Args.Invoke(reliability, Provider.EnumerateClients(), id, key, arg0, arg1);
     }
 
     public static void sendUIEffect(ushort id, short key, bool reliable, string arg0, string arg1, string arg2)
     {
-        ThreadUtil.assertIsGameThread();
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
         SendUIEffect3Args.Invoke(reliability, Provider.EnumerateClients(), id, key, arg0, arg1, arg2);
     }
 
     public static void sendUIEffect(ushort id, short key, bool reliable, string arg0, string arg1, string arg2, string arg3)
     {
-        ThreadUtil.assertIsGameThread();
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
         SendUIEffect4Args.Invoke(reliability, Provider.EnumerateClients(), id, key, arg0, arg1, arg2, arg3);
     }
@@ -623,7 +614,6 @@ public class EffectManager : SteamCaller
 
     public static void sendUIEffect(ushort id, short key, ITransportConnection transportConnection, bool reliable)
     {
-        ThreadUtil.assertIsGameThread();
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
         SendUIEffect.Invoke(reliability, transportConnection, id, key);
     }
@@ -640,7 +630,6 @@ public class EffectManager : SteamCaller
 
     public static void sendUIEffect(ushort id, short key, ITransportConnection transportConnection, bool reliable, string arg0)
     {
-        ThreadUtil.assertIsGameThread();
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
         SendUIEffect1Arg.Invoke(reliability, transportConnection, id, key, arg0);
     }
@@ -657,7 +646,6 @@ public class EffectManager : SteamCaller
 
     public static void sendUIEffect(ushort id, short key, ITransportConnection transportConnection, bool reliable, string arg0, string arg1)
     {
-        ThreadUtil.assertIsGameThread();
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
         SendUIEffect2Args.Invoke(reliability, transportConnection, id, key, arg0, arg1);
     }
@@ -674,7 +662,6 @@ public class EffectManager : SteamCaller
 
     public static void sendUIEffect(ushort id, short key, ITransportConnection transportConnection, bool reliable, string arg0, string arg1, string arg2)
     {
-        ThreadUtil.assertIsGameThread();
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
         SendUIEffect3Args.Invoke(reliability, transportConnection, id, key, arg0, arg1, arg2);
     }
@@ -691,7 +678,6 @@ public class EffectManager : SteamCaller
 
     public static void sendUIEffect(ushort id, short key, ITransportConnection transportConnection, bool reliable, string arg0, string arg1, string arg2, string arg3)
     {
-        ThreadUtil.assertIsGameThread();
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
         SendUIEffect4Args.Invoke(reliability, transportConnection, id, key, arg0, arg1, arg2, arg3);
     }
@@ -708,7 +694,6 @@ public class EffectManager : SteamCaller
 
     public static void sendUIEffectVisibility(short key, ITransportConnection transportConnection, bool reliable, string childName, bool visible)
     {
-        ThreadUtil.assertIsGameThread();
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
         SendUIEffectVisibility.Invoke(reliability, transportConnection, key, childName, visible);
     }
@@ -725,7 +710,6 @@ public class EffectManager : SteamCaller
 
     public static void sendUIEffectText(short key, ITransportConnection transportConnection, bool reliable, string childName, string text)
     {
-        ThreadUtil.assertIsGameThread();
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
         SendUIEffectText.Invoke(reliability, transportConnection, key, childName, text);
     }
@@ -750,7 +734,6 @@ public class EffectManager : SteamCaller
 
     public static void sendUIEffectImageURL(short key, ITransportConnection transportConnection, bool reliable, string childName, string url, bool shouldCache = true, bool forceRefresh = false)
     {
-        ThreadUtil.assertIsGameThread();
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
         SendUIEffectImageURL.Invoke(reliability, transportConnection, key, childName, url, shouldCache, forceRefresh);
     }
@@ -1257,7 +1240,14 @@ public class EffectManager : SteamCaller
             obj.gameObject.SetActive(value: true);
             UnityEngine.Object.Destroy(obj.gameObject, asset.splatterLifetime - asset.splatterLifetimeSpread);
         }
-        if (!asset.spawnOnDedicatedServer)
+        if (Dedicator.IsDedicatedServer)
+        {
+            if (!asset.spawnOnDedicatedServer)
+            {
+                return null;
+            }
+        }
+        else if (GraphicsSettings.effectQuality == EGraphicQuality.OFF && !asset.splatterLiquid)
         {
             return null;
         }
@@ -1379,7 +1369,7 @@ public class EffectManager : SteamCaller
         bool flag = parameters.asset.splatterTemperature != EPlayerTemperature.NONE || parameters.asset.spawnOnDedicatedServer;
         if (!parameters.shouldReplicate)
         {
-            if (flag)
+            if (!Dedicator.IsDedicatedServer || flag)
             {
                 internalSpawnEffect(parameters.asset, parameters.position, parameters.direction, parameters.scale, parameters.wasInstigatedByPlayer, null);
             }
@@ -1394,7 +1384,7 @@ public class EffectManager : SteamCaller
         }
         if (transportConnection == null)
         {
-            if (flag)
+            if (Dedicator.IsDedicatedServer && flag)
             {
                 internalSpawnEffect(parameters.asset, parameters.position, parameters.direction, parameters.scale, parameters.wasInstigatedByPlayer, null);
             }
@@ -1514,6 +1504,30 @@ public class EffectManager : SteamCaller
         attachedEffectsListPool = new Stack<List<GameObject>>();
         debrisGameObjects.Clear();
         uiEffectInstances.Clear();
+        if (Dedicator.IsDedicatedServer)
+        {
+            return;
+        }
+        Asset[] array = Assets.find(EAssetType.EFFECT);
+        for (int i = 0; i < array.Length; i++)
+        {
+            if (!(array[i] is EffectAsset effectAsset) || effectAsset.effect == null || effectAsset.preload == 0)
+            {
+                continue;
+            }
+            pool.Instantiate(effectAsset.effect, effectAsset.id.ToString(), effectAsset.preload);
+            if (effectAsset.splatter <= 0 || effectAsset.splatterPreload <= 0)
+            {
+                continue;
+            }
+            for (int j = 0; j < effectAsset.splatters.Length; j++)
+            {
+                if (!(effectAsset.splatters[j] == null))
+                {
+                    pool.Instantiate(effectAsset.splatters[j], "Splatter", effectAsset.splatterPreload);
+                }
+            }
+        }
     }
 
     private void Start()

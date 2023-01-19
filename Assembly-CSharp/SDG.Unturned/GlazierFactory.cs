@@ -1,5 +1,3 @@
-using System;
-
 namespace SDG.Unturned;
 
 public static class GlazierFactory
@@ -8,6 +6,21 @@ public static class GlazierFactory
 
     public static void Create()
     {
-        throw new NotSupportedException("Glazier should not be used by dedicated server");
+        if (clImpl.hasValue)
+        {
+            string value = clImpl.value;
+            if (string.Equals(value, "IMGUI"))
+            {
+                Glazier.instance = Glazier_IMGUI.CreateGlazier();
+                return;
+            }
+            if (string.Equals(value, "uGUI"))
+            {
+                Glazier.instance = Glazier_uGUI.CreateGlazier();
+                return;
+            }
+            UnturnedLog.warn("Unknown glazier implementation \"{0}\"", value);
+        }
+        Glazier.instance = Glazier_uGUI.CreateGlazier();
     }
 }

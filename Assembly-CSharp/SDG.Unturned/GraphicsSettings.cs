@@ -754,6 +754,25 @@ public class GraphicsSettings
         }
         QualitySettings.SetQualityLevel((byte)lightingQuality + 1, applyExpensiveChanges: true);
         QualitySettings.vSyncCount = (buffer ? 1 : 0);
+        if (clTargetFrameRate.hasValue)
+        {
+            if (clTargetFrameRate.value <= 0)
+            {
+                Application.targetFrameRate = -1;
+            }
+            else
+            {
+                Application.targetFrameRate = Mathf.Max(clTargetFrameRate.value, 15);
+            }
+        }
+        else if (UseTargetFrameRate)
+        {
+            Application.targetFrameRate = Mathf.Max(TargetFrameRate, 15);
+        }
+        else
+        {
+            Application.targetFrameRate = -1;
+        }
         switch (anisotropicFilteringMode)
         {
         case EAnisotropicFilteringMode.DISABLED:

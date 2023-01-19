@@ -583,6 +583,12 @@ public class ItemAsset : Asset, ISkinableAsset
             throw new NotSupportedException("'Icon' has a camera attached!");
         }
         AssetValidation.searchGameObjectForErrors(this, item);
+        if (!Dedicator.IsDedicatedServer)
+        {
+            _albedoBase = bundle.load<Texture2D>("Albedo_Base");
+            _metallicBase = bundle.load<Texture2D>("Metallic_Base");
+            _emissionBase = bundle.load<Texture2D>("Emission_Base");
+        }
     }
 
     public ItemAsset(Bundle bundle, Data data, Local localization, ushort id)
@@ -732,7 +738,7 @@ public class ItemAsset : Asset, ISkinableAsset
         slot = data.readEnum("Slot", ESlotType.NONE);
         bool defaultValue2 = slot != ESlotType.PRIMARY;
         canUseUnderwater = data.readBoolean("Can_Use_Underwater", defaultValue2);
-        if (type == EItemType.GUN || type == EItemType.MELEE || (bool)shouldAlwaysLoadItemPrefab)
+        if (!Dedicator.IsDedicatedServer || type == EItemType.GUN || type == EItemType.MELEE || (bool)shouldAlwaysLoadItemPrefab)
         {
             _item = bundle.load<GameObject>("Item");
             if (item == null)
@@ -917,6 +923,12 @@ public class ItemAsset : Asset, ISkinableAsset
         allowManualDrop = data.readBoolean("Allow_Manual_Drop", defaultValue: true);
         shouldDeleteAtZeroQuality = data.readBoolean("Should_Delete_At_Zero_Quality");
         shouldDestroyItemColliders = data.readBoolean("Destroy_Item_Colliders", defaultValue: true);
+        if (!Dedicator.IsDedicatedServer && id < 2000 && doesItemTypeHaveSkins)
+        {
+            _albedoBase = bundle.load<Texture2D>("Albedo_Base");
+            _metallicBase = bundle.load<Texture2D>("Metallic_Base");
+            _emissionBase = bundle.load<Texture2D>("Emission_Base");
+        }
     }
 
     protected virtual AudioReference GetDefaultInventoryAudio()

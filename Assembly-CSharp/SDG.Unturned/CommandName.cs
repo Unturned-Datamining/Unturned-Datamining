@@ -10,18 +10,21 @@ public class CommandName : Command
 
     protected override void execute(CSteamID executorID, string parameter)
     {
-        if (parameter.Length < MIN_LENGTH)
+        if (Dedicator.IsDedicatedServer)
         {
-            CommandWindow.LogError(localization.format("MinLengthErrorText", MIN_LENGTH));
-            return;
+            if (parameter.Length < MIN_LENGTH)
+            {
+                CommandWindow.LogError(localization.format("MinLengthErrorText", MIN_LENGTH));
+                return;
+            }
+            if (parameter.Length > MAX_LENGTH)
+            {
+                CommandWindow.LogError(localization.format("MaxLengthErrorText", MAX_LENGTH));
+                return;
+            }
+            Provider.serverName = parameter;
+            CommandWindow.Log(localization.format("NameText", parameter));
         }
-        if (parameter.Length > MAX_LENGTH)
-        {
-            CommandWindow.LogError(localization.format("MaxLengthErrorText", MAX_LENGTH));
-            return;
-        }
-        Provider.serverName = parameter;
-        CommandWindow.Log(localization.format("NameText", parameter));
     }
 
     public CommandName(Local newLocalization)

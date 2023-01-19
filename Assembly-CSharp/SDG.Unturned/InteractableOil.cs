@@ -102,6 +102,11 @@ public class InteractableOil : InteractablePower
         base.updateState(asset, state);
         capacity = ((ItemOilPumpAsset)asset).fuelCapacity;
         _fuel = BitConverter.ToUInt16(state, 0);
+        if (!Dedicator.IsDedicatedServer)
+        {
+            engine = base.transform.Find("Engine");
+            root = base.transform.Find("Root").GetComponent<Animation>();
+        }
         if (Provider.isServer)
         {
             metadata = state;

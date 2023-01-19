@@ -240,10 +240,36 @@ public class HumanClothes : MonoBehaviour
         }
         set
         {
-            if (visualShirt != value)
+            if (visualShirt == value)
             {
-                _visualShirt = value;
+                return;
             }
+            _visualShirt = value;
+            if (Dedicator.IsDedicatedServer)
+            {
+                return;
+            }
+            if (visualShirt != 0)
+            {
+                try
+                {
+                    visualShirtAsset = Assets.find(EAssetType.ITEM, Provider.provider.economyService.getInventoryItemID(visualShirt)) as ItemShirtAsset;
+                }
+                catch
+                {
+                    visualShirtAsset = null;
+                }
+                if (visualShirtAsset != null && !visualShirtAsset.isPro)
+                {
+                    _visualShirt = 0;
+                    visualShirtAsset = null;
+                }
+            }
+            else
+            {
+                visualShirtAsset = null;
+            }
+            shirtDirty = true;
         }
     }
 
@@ -255,10 +281,36 @@ public class HumanClothes : MonoBehaviour
         }
         set
         {
-            if (visualPants != value)
+            if (visualPants == value)
             {
-                _visualPants = value;
+                return;
             }
+            _visualPants = value;
+            if (Dedicator.IsDedicatedServer)
+            {
+                return;
+            }
+            if (visualPants != 0)
+            {
+                try
+                {
+                    visualPantsAsset = Assets.find(EAssetType.ITEM, Provider.provider.economyService.getInventoryItemID(visualPants)) as ItemPantsAsset;
+                }
+                catch
+                {
+                    visualPantsAsset = null;
+                }
+                if (visualPantsAsset != null && !visualPantsAsset.isPro)
+                {
+                    _visualPants = 0;
+                    visualPantsAsset = null;
+                }
+            }
+            else
+            {
+                visualPantsAsset = null;
+            }
+            pantsDirty = true;
         }
     }
 
@@ -270,10 +322,36 @@ public class HumanClothes : MonoBehaviour
         }
         set
         {
-            if (visualHat != value)
+            if (visualHat == value)
             {
-                _visualHat = value;
+                return;
             }
+            _visualHat = value;
+            if (Dedicator.IsDedicatedServer)
+            {
+                return;
+            }
+            if (visualHat != 0)
+            {
+                try
+                {
+                    visualHatAsset = Assets.find(EAssetType.ITEM, Provider.provider.economyService.getInventoryItemID(visualHat)) as ItemHatAsset;
+                }
+                catch
+                {
+                    visualHatAsset = null;
+                }
+                if (visualHatAsset != null && !visualHatAsset.isPro)
+                {
+                    _visualHat = 0;
+                    visualHatAsset = null;
+                }
+            }
+            else
+            {
+                visualHatAsset = null;
+            }
+            hatDirty = true;
         }
     }
 
@@ -285,10 +363,36 @@ public class HumanClothes : MonoBehaviour
         }
         set
         {
-            if (visualBackpack != value)
+            if (visualBackpack == value)
             {
-                _visualBackpack = value;
+                return;
             }
+            _visualBackpack = value;
+            if (Dedicator.IsDedicatedServer)
+            {
+                return;
+            }
+            if (visualBackpack != 0)
+            {
+                try
+                {
+                    visualBackpackAsset = Assets.find(EAssetType.ITEM, Provider.provider.economyService.getInventoryItemID(visualBackpack)) as ItemBackpackAsset;
+                }
+                catch
+                {
+                    visualBackpackAsset = null;
+                }
+                if (visualBackpackAsset != null && !visualBackpackAsset.isPro)
+                {
+                    _visualBackpack = 0;
+                    visualBackpackAsset = null;
+                }
+            }
+            else
+            {
+                visualBackpackAsset = null;
+            }
+            backpackDirty = true;
         }
     }
 
@@ -300,10 +404,36 @@ public class HumanClothes : MonoBehaviour
         }
         set
         {
-            if (visualVest != value)
+            if (visualVest == value)
             {
-                _visualVest = value;
+                return;
             }
+            _visualVest = value;
+            if (Dedicator.IsDedicatedServer)
+            {
+                return;
+            }
+            if (visualVest != 0)
+            {
+                try
+                {
+                    visualVestAsset = Assets.find(EAssetType.ITEM, Provider.provider.economyService.getInventoryItemID(visualVest)) as ItemVestAsset;
+                }
+                catch
+                {
+                    visualVestAsset = null;
+                }
+                if (visualVestAsset != null && !visualVestAsset.isPro)
+                {
+                    _visualVest = 0;
+                    visualVestAsset = null;
+                }
+            }
+            else
+            {
+                visualVestAsset = null;
+            }
+            vestDirty = true;
         }
     }
 
@@ -315,10 +445,36 @@ public class HumanClothes : MonoBehaviour
         }
         set
         {
-            if (visualMask != value)
+            if (visualMask == value)
             {
-                _visualMask = value;
+                return;
             }
+            _visualMask = value;
+            if (Dedicator.IsDedicatedServer)
+            {
+                return;
+            }
+            if (visualMask != 0)
+            {
+                try
+                {
+                    visualMaskAsset = Assets.find(EAssetType.ITEM, Provider.provider.economyService.getInventoryItemID(visualMask)) as ItemMaskAsset;
+                }
+                catch
+                {
+                    visualMaskAsset = null;
+                }
+                if (visualMaskAsset != null && !visualMaskAsset.isPro)
+                {
+                    _visualMask = 0;
+                    visualMaskAsset = null;
+                }
+            }
+            else
+            {
+                visualMaskAsset = null;
+            }
+            maskDirty = true;
         }
     }
 
@@ -330,10 +486,36 @@ public class HumanClothes : MonoBehaviour
         }
         set
         {
-            if (visualGlasses != value)
+            if (visualGlasses == value)
             {
-                _visualGlasses = value;
+                return;
             }
+            _visualGlasses = value;
+            if (Dedicator.IsDedicatedServer)
+            {
+                return;
+            }
+            if (visualGlasses != 0)
+            {
+                try
+                {
+                    visualGlassesAsset = Assets.find(EAssetType.ITEM, Provider.provider.economyService.getInventoryItemID(visualGlasses)) as ItemGlassesAsset;
+                }
+                catch
+                {
+                    visualGlassesAsset = null;
+                }
+                if (visualGlassesAsset != null && !visualGlassesAsset.isPro)
+                {
+                    _visualGlasses = 0;
+                    visualGlassesAsset = null;
+                }
+            }
+            else
+            {
+                visualGlassesAsset = null;
+            }
+            glassesDirty = true;
         }
     }
 
@@ -719,6 +901,426 @@ public class HumanClothes : MonoBehaviour
 
     public void apply()
     {
+        if (Dedicator.IsDedicatedServer)
+        {
+            return;
+        }
+        if (_shirtAsset != null && _shirtAsset.isPro && !canWearPro)
+        {
+            _shirtAsset = null;
+            shirtDirty = true;
+        }
+        if (_pantsAsset != null && _pantsAsset.isPro && !canWearPro)
+        {
+            _pantsAsset = null;
+            pantsDirty = true;
+        }
+        if (_hatAsset != null && _hatAsset.isPro && !canWearPro)
+        {
+            _hatAsset = null;
+            hatDirty = true;
+        }
+        if (_backpackAsset != null && _backpackAsset.isPro && !canWearPro)
+        {
+            _backpackAsset = null;
+            backpackDirty = true;
+        }
+        if (_vestAsset != null && _vestAsset.isPro && !canWearPro)
+        {
+            _vestAsset = null;
+            vestDirty = true;
+        }
+        if (_maskAsset != null && _maskAsset.isPro && !canWearPro)
+        {
+            _maskAsset = null;
+            maskDirty = true;
+        }
+        if (_glassesAsset != null && _glassesAsset.isPro && !canWearPro)
+        {
+            _glassesAsset = null;
+            glassesDirty = true;
+        }
+        ItemShirtAsset itemShirtAsset = ((visualShirtAsset != null && isVisual) ? visualShirtAsset : shirtAsset);
+        ItemPantsAsset itemPantsAsset = ((visualPantsAsset != null && isVisual) ? visualPantsAsset : pantsAsset);
+        if (skinColorDirty)
+        {
+            materialClothing.SetColor(skinColorPropertyID, _skinColor);
+        }
+        if (faceDirty)
+        {
+            materialClothing.SetTexture(faceAlbedoTexturePropertyID, Resources.Load<Texture2D>("Faces/" + face + "/Texture"));
+            materialClothing.SetTexture(faceEmissionTexturePropertyID, Resources.Load<Texture2D>("Faces/" + face + "/Emission"));
+        }
+        if (shirtDirty)
+        {
+            bool flag = true;
+            bool flag2 = true;
+            if (itemShirtAsset != null && itemShirtAsset.shouldBeVisible(isRagdoll))
+            {
+                materialClothing.SetTexture(shirtAlbedoTexturePropertyID, itemShirtAsset.shirt);
+                materialClothing.SetTexture(shirtEmissionTexturePropertyID, itemShirtAsset.emission);
+                materialClothing.SetTexture(shirtMetallicTexturePropertyID, itemShirtAsset.metallic);
+                materialClothing.SetFloat(flipShirtPropertyID, (_isLeftHanded && itemShirtAsset.ignoreHand) ? 1f : 0f);
+                Mesh[] array = (isMine ? itemShirtAsset.characterMeshOverride1pLODs : itemShirtAsset.characterMeshOverride3pLODs);
+                if (array != null)
+                {
+                    flag = false;
+                    setCharacterMeshes(array);
+                }
+                if (itemShirtAsset.characterMaterialOverride != null)
+                {
+                    flag2 = false;
+                    setCharacterMaterial(itemShirtAsset.characterMaterialOverride);
+                }
+            }
+            else
+            {
+                materialClothing.SetTexture(shirtAlbedoTexturePropertyID, null);
+                materialClothing.SetTexture(shirtEmissionTexturePropertyID, null);
+                materialClothing.SetTexture(shirtMetallicTexturePropertyID, null);
+            }
+            if (flag != usingHumanMeshes)
+            {
+                usingHumanMeshes = flag;
+                if (usingHumanMeshes)
+                {
+                    setCharacterMeshes(humanMeshes);
+                }
+            }
+            if (flag2 != usingHumanMaterials)
+            {
+                usingHumanMaterials = flag2;
+                if (usingHumanMaterials)
+                {
+                    setCharacterMaterial(materialClothing);
+                }
+            }
+        }
+        if (pantsDirty)
+        {
+            if (itemPantsAsset != null && itemPantsAsset.shouldBeVisible(isRagdoll))
+            {
+                materialClothing.SetTexture(pantsAlbedoTexturePropertyID, itemPantsAsset.pants);
+                materialClothing.SetTexture(pantsEmissionTexturePropertyID, itemPantsAsset.emission);
+                materialClothing.SetTexture(pantsMetallicTexturePropertyID, itemPantsAsset.metallic);
+            }
+            else
+            {
+                materialClothing.SetTexture(pantsAlbedoTexturePropertyID, null);
+                materialClothing.SetTexture(pantsEmissionTexturePropertyID, null);
+                materialClothing.SetTexture(pantsMetallicTexturePropertyID, null);
+            }
+        }
+        if (!isMine)
+        {
+            bool flag3 = true;
+            bool flag4 = true;
+            if (shirtDirty)
+            {
+                if (isUpper && upperSystems != null)
+                {
+                    for (int i = 0; i < upperSystems.Length; i++)
+                    {
+                        Transform transform = upperSystems[i];
+                        if (transform != null)
+                        {
+                            UnityEngine.Object.Destroy(transform.gameObject);
+                        }
+                    }
+                    isUpper = false;
+                }
+                if (isVisual && isMythic && visualShirt != 0)
+                {
+                    ushort inventoryMythicID = Provider.provider.economyService.getInventoryMythicID(visualShirt);
+                    if (inventoryMythicID != 0)
+                    {
+                        ItemTool.applyEffect(upperBones, upperSystems, inventoryMythicID, EEffectType.AREA);
+                        isUpper = true;
+                    }
+                }
+            }
+            if (itemShirtAsset != null)
+            {
+                flag3 &= itemShirtAsset.hairVisible;
+                flag4 &= itemShirtAsset.beardVisible;
+            }
+            if (pantsDirty)
+            {
+                if (isLower && lowerSystems != null)
+                {
+                    for (int j = 0; j < lowerSystems.Length; j++)
+                    {
+                        Transform transform2 = lowerSystems[j];
+                        if (transform2 != null)
+                        {
+                            UnityEngine.Object.Destroy(transform2.gameObject);
+                        }
+                    }
+                    isLower = false;
+                }
+                if (isVisual && isMythic && visualPants != 0)
+                {
+                    ushort inventoryMythicID2 = Provider.provider.economyService.getInventoryMythicID(visualPants);
+                    if (inventoryMythicID2 != 0)
+                    {
+                        ItemTool.applyEffect(lowerBones, lowerSystems, inventoryMythicID2, EEffectType.AREA);
+                        isLower = true;
+                    }
+                }
+            }
+            if (itemPantsAsset != null)
+            {
+                flag3 &= itemPantsAsset.hairVisible;
+                flag4 &= itemPantsAsset.beardVisible;
+            }
+            ItemHatAsset itemHatAsset = ((visualHatAsset != null && isVisual) ? visualHatAsset : hatAsset);
+            ItemBackpackAsset itemBackpackAsset = ((visualBackpackAsset != null && isVisual) ? visualBackpackAsset : backpackAsset);
+            ItemVestAsset itemVestAsset = ((visualVestAsset != null && isVisual) ? visualVestAsset : vestAsset);
+            ItemMaskAsset itemMaskAsset = ((visualMaskAsset != null && isVisual) ? visualMaskAsset : maskAsset);
+            ItemGlassesAsset itemGlassesAsset = ((visualGlassesAsset != null && isVisual && (glassesAsset == null || (glassesAsset.vision == ELightingVision.NONE && !glassesAsset.isBlindfold))) ? visualGlassesAsset : glassesAsset);
+            if (hatDirty)
+            {
+                if (hatModel != null)
+                {
+                    UnityEngine.Object.Destroy(hatModel.gameObject);
+                }
+                if (itemHatAsset != null && itemHatAsset.hat != null && itemHatAsset.shouldBeVisible(isRagdoll))
+                {
+                    hatModel = UnityEngine.Object.Instantiate(itemHatAsset.hat).transform;
+                    hatModel.name = "Hat";
+                    hatModel.transform.parent = skull;
+                    hatModel.transform.localPosition = Vector3.zero;
+                    hatModel.transform.localRotation = Quaternion.identity;
+                    hatModel.transform.localScale = new Vector3(1f, (_isLeftHanded && itemHatAsset.shouldMirrorLeftHandedModel) ? (-1f) : 1f, 1f);
+                    if (!isView && itemHatAsset.shouldDestroyClothingColliders)
+                    {
+                        PrefabUtil.DestroyCollidersInChildren(hatModel.gameObject, includeInactive: true);
+                    }
+                    hatModel.DestroyRigidbody();
+                    if (isVisual && isMythic && visualHat != 0)
+                    {
+                        ushort inventoryMythicID3 = Provider.provider.economyService.getInventoryMythicID(visualHat);
+                        if (inventoryMythicID3 != 0)
+                        {
+                            centerHeadEffect(skull, hatModel);
+                            ItemTool.applyEffect(hatModel, inventoryMythicID3, EEffectType.HOOK);
+                        }
+                    }
+                    applyHairOverride(itemHatAsset, hatModel);
+                }
+            }
+            if (itemHatAsset != null && itemHatAsset.hat != null)
+            {
+                flag3 &= itemHatAsset.hairVisible;
+                flag4 &= itemHatAsset.beardVisible;
+            }
+            if (backpackDirty)
+            {
+                if (backpackModel != null)
+                {
+                    UnityEngine.Object.Destroy(backpackModel.gameObject);
+                }
+                if (itemBackpackAsset != null && itemBackpackAsset.backpack != null && itemBackpackAsset.shouldBeVisible(isRagdoll))
+                {
+                    backpackModel = UnityEngine.Object.Instantiate(itemBackpackAsset.backpack).transform;
+                    backpackModel.name = "Backpack";
+                    backpackModel.transform.parent = spine;
+                    backpackModel.transform.localPosition = Vector3.zero;
+                    backpackModel.transform.localRotation = Quaternion.identity;
+                    backpackModel.transform.localScale = new Vector3(1f, (_isLeftHanded && itemBackpackAsset.shouldMirrorLeftHandedModel) ? (-1f) : 1f, 1f);
+                    if (!isView && itemBackpackAsset.shouldDestroyClothingColliders)
+                    {
+                        PrefabUtil.DestroyCollidersInChildren(backpackModel.gameObject, includeInactive: true);
+                    }
+                    backpackModel.DestroyRigidbody();
+                    if (isVisual && isMythic && visualBackpack != 0)
+                    {
+                        ushort inventoryMythicID4 = Provider.provider.economyService.getInventoryMythicID(visualBackpack);
+                        if (inventoryMythicID4 != 0)
+                        {
+                            ItemTool.applyEffect(backpackModel, inventoryMythicID4, EEffectType.HOOK);
+                        }
+                    }
+                    backpackModel.gameObject.SetActive(hasBackpack);
+                }
+            }
+            if (itemBackpackAsset != null)
+            {
+                flag3 &= itemBackpackAsset.hairVisible;
+                flag4 &= itemBackpackAsset.beardVisible;
+            }
+            if (vestDirty)
+            {
+                if (vestModel != null)
+                {
+                    UnityEngine.Object.Destroy(vestModel.gameObject);
+                }
+                if (itemVestAsset != null && itemVestAsset.vest != null && itemVestAsset.shouldBeVisible(isRagdoll))
+                {
+                    vestModel = UnityEngine.Object.Instantiate(itemVestAsset.vest).transform;
+                    vestModel.name = "Vest";
+                    vestModel.transform.parent = spine;
+                    vestModel.transform.localPosition = Vector3.zero;
+                    vestModel.transform.localRotation = Quaternion.identity;
+                    vestModel.transform.localScale = new Vector3(1f, (_isLeftHanded && itemVestAsset.shouldMirrorLeftHandedModel) ? (-1f) : 1f, 1f);
+                    if (!isView && itemVestAsset.shouldDestroyClothingColliders)
+                    {
+                        PrefabUtil.DestroyCollidersInChildren(vestModel.gameObject, includeInactive: true);
+                    }
+                    vestModel.DestroyRigidbody();
+                    if (isVisual && isMythic && visualVest != 0)
+                    {
+                        ushort inventoryMythicID5 = Provider.provider.economyService.getInventoryMythicID(visualVest);
+                        if (inventoryMythicID5 != 0)
+                        {
+                            ItemTool.applyEffect(vestModel, inventoryMythicID5, EEffectType.HOOK);
+                        }
+                    }
+                }
+            }
+            if (itemVestAsset != null)
+            {
+                flag3 &= itemVestAsset.hairVisible;
+                flag4 &= itemVestAsset.beardVisible;
+            }
+            if (maskDirty)
+            {
+                if (maskModel != null)
+                {
+                    UnityEngine.Object.Destroy(maskModel.gameObject);
+                }
+                if (itemMaskAsset != null && itemMaskAsset.mask != null && itemMaskAsset.shouldBeVisible(isRagdoll))
+                {
+                    maskModel = UnityEngine.Object.Instantiate(itemMaskAsset.mask).transform;
+                    maskModel.name = "Mask";
+                    maskModel.transform.parent = skull;
+                    maskModel.transform.localPosition = Vector3.zero;
+                    maskModel.transform.localRotation = Quaternion.identity;
+                    maskModel.transform.localScale = new Vector3(1f, (_isLeftHanded && itemMaskAsset.shouldMirrorLeftHandedModel) ? (-1f) : 1f, 1f);
+                    if (!isView && itemMaskAsset.shouldDestroyClothingColliders)
+                    {
+                        PrefabUtil.DestroyCollidersInChildren(maskModel.gameObject, includeInactive: true);
+                    }
+                    maskModel.DestroyRigidbody();
+                    if (isVisual && isMythic && visualMask != 0)
+                    {
+                        ushort inventoryMythicID6 = Provider.provider.economyService.getInventoryMythicID(visualMask);
+                        if (inventoryMythicID6 != 0)
+                        {
+                            centerHeadEffect(skull, maskModel);
+                            ItemTool.applyEffect(maskModel, inventoryMythicID6, EEffectType.HOOK);
+                        }
+                    }
+                    applyHairOverride(itemMaskAsset, maskModel);
+                }
+            }
+            if (itemMaskAsset != null && itemMaskAsset.mask != null)
+            {
+                flag3 &= itemMaskAsset.hairVisible;
+                flag4 &= itemMaskAsset.beardVisible;
+            }
+            if (glassesDirty)
+            {
+                if (glassesModel != null)
+                {
+                    UnityEngine.Object.Destroy(glassesModel.gameObject);
+                }
+                if (itemGlassesAsset != null && itemGlassesAsset.glasses != null && itemGlassesAsset.shouldBeVisible(isRagdoll))
+                {
+                    glassesModel = UnityEngine.Object.Instantiate(itemGlassesAsset.glasses).transform;
+                    glassesModel.name = "Glasses";
+                    glassesModel.transform.parent = skull;
+                    glassesModel.transform.localPosition = Vector3.zero;
+                    glassesModel.transform.localRotation = Quaternion.identity;
+                    glassesModel.localScale = new Vector3(1f, (_isLeftHanded && itemGlassesAsset.shouldMirrorLeftHandedModel) ? (-1f) : 1f, 1f);
+                    if (!isView && itemGlassesAsset.shouldDestroyClothingColliders)
+                    {
+                        PrefabUtil.DestroyCollidersInChildren(glassesModel.gameObject, includeInactive: true);
+                    }
+                    glassesModel.DestroyRigidbody();
+                    if (isVisual && isMythic && visualGlasses != 0)
+                    {
+                        ushort inventoryMythicID7 = Provider.provider.economyService.getInventoryMythicID(visualGlasses);
+                        if (inventoryMythicID7 != 0)
+                        {
+                            centerHeadEffect(skull, glassesModel);
+                            ItemTool.applyEffect(glassesModel, inventoryMythicID7, EEffectType.HOOK);
+                        }
+                    }
+                    applyHairOverride(itemGlassesAsset, glassesModel);
+                }
+            }
+            if (itemGlassesAsset != null && itemGlassesAsset.glasses != null)
+            {
+                flag3 &= itemGlassesAsset.hairVisible;
+                flag4 &= itemGlassesAsset.beardVisible;
+            }
+            if (materialHair != null)
+            {
+                materialHair.color = color;
+            }
+            if (hasHair != flag3)
+            {
+                hasHair = flag3;
+                hairDirty = true;
+            }
+            if (hairDirty)
+            {
+                if (hairModel != null)
+                {
+                    UnityEngine.Object.Destroy(hairModel.gameObject);
+                }
+                if (hasHair)
+                {
+                    UnityEngine.Object @object = Resources.Load("Hairs/" + hair + "/Hair");
+                    if (@object != null)
+                    {
+                        hairModel = ((GameObject)UnityEngine.Object.Instantiate(@object)).transform;
+                        hairModel.name = "Hair";
+                        hairModel.transform.parent = skull;
+                        hairModel.transform.localPosition = Vector3.zero;
+                        hairModel.transform.localRotation = Quaternion.identity;
+                        hairModel.transform.localScale = Vector3.one;
+                        if (hairModel.Find("Model_0") != null)
+                        {
+                            hairModel.Find("Model_0").GetComponent<Renderer>().sharedMaterial = materialHair;
+                        }
+                        hairModel.DestroyRigidbody();
+                    }
+                }
+            }
+            if (hasBeard != flag4)
+            {
+                hasBeard = flag4;
+                beardDirty = true;
+            }
+            if (beardDirty)
+            {
+                if (beardModel != null)
+                {
+                    UnityEngine.Object.Destroy(beardModel.gameObject);
+                }
+                if (hasBeard)
+                {
+                    UnityEngine.Object object2 = Resources.Load("Beards/" + beard + "/Beard");
+                    if (object2 != null)
+                    {
+                        beardModel = ((GameObject)UnityEngine.Object.Instantiate(object2)).transform;
+                        beardModel.name = "Beard";
+                        beardModel.transform.parent = skull;
+                        beardModel.transform.localPosition = Vector3.zero;
+                        beardModel.transform.localRotation = Quaternion.identity;
+                        beardModel.localScale = Vector3.one;
+                        if (beardModel.Find("Model_0") != null)
+                        {
+                            beardModel.Find("Model_0").GetComponent<Renderer>().sharedMaterial = materialHair;
+                        }
+                        beardModel.DestroyRigidbody();
+                    }
+                }
+            }
+        }
+        markAllDirty(isDirty: false);
     }
 
     private void centerHeadEffect(Transform skull, Transform model)
@@ -818,6 +1420,31 @@ public class HumanClothes : MonoBehaviour
         if (transform != null)
         {
             characterMeshRenderers[1] = base.transform.Find("Model_1").GetComponent<SkinnedMeshRenderer>();
+        }
+        if (!Dedicator.IsDedicatedServer)
+        {
+            if (shader == null)
+            {
+                shader = Shader.Find("Standard");
+            }
+            if (clothingShader == null)
+            {
+                clothingShader = Shader.Find("Standard/Clothes");
+            }
+            humanMeshes = new Mesh[characterMeshRenderers.Length];
+            for (int i = 0; i < humanMeshes.Length; i++)
+            {
+                if (characterMeshRenderers[i] != null)
+                {
+                    humanMeshes[i] = characterMeshRenderers[i].sharedMesh;
+                }
+            }
+            materialClothing = new Material(clothingShader);
+            materialClothing.hideFlags = HideFlags.HideAndDontSave;
+            materialHair = new Material(shader);
+            materialHair.name = "Hair";
+            materialHair.hideFlags = HideFlags.HideAndDontSave;
+            materialHair.SetFloat("_Glossiness", 0f);
         }
         setCharacterMaterial(materialClothing);
         markAllDirty(isDirty: true);

@@ -27,6 +27,10 @@ public class ClientTextChatMessenger : MonoBehaviour
 
     public void SendTextChatMessage(string text)
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            ChatManager.clientSendMessage_UnityEvent(getChatMode(), text, this);
+        }
     }
 
     public void SendDefaultTextChatMessage()

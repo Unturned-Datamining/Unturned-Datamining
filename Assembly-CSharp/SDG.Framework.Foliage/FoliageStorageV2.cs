@@ -121,7 +121,14 @@ public class FoliageStorageV2 : IFoliageStorage
         {
             LevelHierarchy.MarkDirty();
         }
-        _ = Level.isEditor;
+        if (!Level.isEditor && !Dedicator.IsDedicatedServer)
+        {
+            shouldWorkerThreadContinue = true;
+            lockObject = new object();
+            workerThread = new Thread(WorkerThreadMain);
+            workerThread.Name = "Foliage Storage Thread";
+            workerThread.Start();
+        }
     }
 
     public void Shutdown()

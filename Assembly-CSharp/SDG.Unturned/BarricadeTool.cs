@@ -28,7 +28,10 @@ public class BarricadeTool : MonoBehaviour
             {
                 transform = getEmptyBarricade(id);
             }
-            _ = asset.useWaterHeightTransparentSort;
+            if (asset.useWaterHeightTransparentSort && !Dedicator.IsDedicatedServer)
+            {
+                transform.gameObject.AddComponent<WaterHeightTransparentSort>();
+            }
             transform.name = id.ToString();
             transform.parent = parent;
             transform.localPosition = pos;
@@ -178,9 +181,9 @@ public class BarricadeTool : MonoBehaviour
             {
                 transform.gameObject.AddComponent<InteractableStereo>().updateState(asset, state);
             }
-            else
+            else if (asset.build == EBuild.CLOCK && !Dedicator.IsDedicatedServer)
             {
-                _ = asset.build;
+                transform.gameObject.AddComponent<InteractableClock>().updateState(asset, state);
             }
             if (!asset.isUnpickupable)
             {

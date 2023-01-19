@@ -37,7 +37,10 @@ public class InteractableObjectDropper : InteractableObject
 
     private void updateAudioSourceComponent()
     {
-        _ = audioSourceComponent != null;
+        if (audioSourceComponent != null && !Dedicator.IsDedicatedServer)
+        {
+            audioSourceComponent.Play();
+        }
     }
 
     private void initDropTransform()

@@ -6,13 +6,16 @@ public class CommandFilter : Command
 {
     protected override void execute(CSteamID executorID, string parameter)
     {
-        if (Provider.isServer)
+        if (Dedicator.IsDedicatedServer)
         {
-            CommandWindow.LogError(localization.format("RunningErrorText"));
-            return;
+            if (Provider.isServer)
+            {
+                CommandWindow.LogError(localization.format("RunningErrorText"));
+                return;
+            }
+            Provider.filterName = true;
+            CommandWindow.Log(localization.format("FilterText"));
         }
-        Provider.filterName = true;
-        CommandWindow.Log(localization.format("FilterText"));
     }
 
     public CommandFilter(Local newLocalization)

@@ -102,6 +102,10 @@ public class UseableFisher : Useable
 
     private void reel()
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            base.player.playSound(((ItemFisherAsset)base.player.equipment.asset).reel);
+        }
         base.player.animator.play("Reel", smooth: false);
     }
 
@@ -161,6 +165,10 @@ public class UseableFisher : Useable
 
     private void cast()
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            base.player.playSound(((ItemFisherAsset)base.player.equipment.asset).cast);
+        }
         base.player.animator.play("Cast", smooth: false);
     }
 

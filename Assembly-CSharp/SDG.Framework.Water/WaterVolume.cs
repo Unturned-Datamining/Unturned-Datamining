@@ -208,6 +208,47 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
 
     protected void createWaterPlanes()
     {
+        if (Dedicator.IsDedicatedServer || !(waterPlane == null))
+        {
+            return;
+        }
+        waterPlane = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Level/Water_Plane"));
+        waterPlane.name = "Plane";
+        waterPlane.transform.parent = base.transform;
+        waterPlane.transform.localPosition = new Vector3(0f, 0.5f, 0f);
+        waterPlane.transform.localRotation = Quaternion.identity;
+        waterPlane.transform.localScale = Vector3.one;
+        planarReflection = waterPlane.GetComponent<PlanarReflection>();
+        int num = Mathf.Max(1, Mathf.FloorToInt(base.transform.localScale.x / (float)WATER_SURFACE_TILE_SIZE));
+        int num2 = Mathf.Max(1, Mathf.FloorToInt(base.transform.localScale.z / (float)WATER_SURFACE_TILE_SIZE));
+        float num3 = 1f / (float)num;
+        float num4 = 1f / (float)num2;
+        for (int i = 0; i < num; i++)
+        {
+            for (int j = 0; j < num2; j++)
+            {
+                GameObject gameObject = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Level/Water_Tile"));
+                gameObject.name = "Tile_" + i + "_" + j;
+                gameObject.transform.parent = waterPlane.transform;
+                gameObject.transform.localPosition = new Vector3(-0.5f + num3 / 2f + (float)i * num3, 0f, -0.5f + num4 / 2f + (float)j * num4);
+                gameObject.transform.localRotation = Quaternion.identity;
+                gameObject.transform.localScale = new Vector3(0.01f * num3, 1f, 0.01f * num4);
+                if (sharedMaterial == null)
+                {
+                    sharedMaterial = gameObject.GetComponent<Renderer>().material;
+                }
+                else
+                {
+                    gameObject.GetComponent<Renderer>().material = sharedMaterial;
+                }
+                gameObject.GetComponent<WaterTile>().reflection = planarReflection;
+            }
+        }
+        planarReflection.sharedMaterial = sharedMaterial;
+        SyncWaterQuality();
+        SyncPlanarReflectionEnabled();
+        SyncWaterPlaneActive();
+        LevelLighting.updateLighting();
     }
 
     public void beginCollision(Collider collider)

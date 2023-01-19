@@ -24,6 +24,10 @@ public class UseableGrower : Useable
         startedUse = Time.realtimeSinceStartup;
         isUsing = true;
         base.player.animator.play("Use", smooth: false);
+        if (!Dedicator.IsDedicatedServer)
+        {
+            base.player.playSound(((ItemGrowerAsset)base.player.equipment.asset).use);
+        }
         if (Provider.isServer)
         {
             AlertTool.alert(base.transform.position, 8f);

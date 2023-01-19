@@ -6,6 +6,10 @@ public class CommandPlayers : Command
 {
     protected override void execute(CSteamID executorID, string parameter)
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            return;
+        }
         if (Provider.clients.Count == 0)
         {
             CommandWindow.LogError(localization.format("NoPlayersErrorText"));

@@ -35,6 +35,8 @@ public class PlayerStance : PlayerCaller
 
     private float lastStance;
 
+    private float lastSubmergeSound;
+
     private float lastDetect;
 
     private float lastHold;
@@ -351,7 +353,7 @@ public class PlayerStance : PlayerCaller
         if (getStanceForPosition(base.transform.position, ref newStance))
         {
             internalSetStance(newStance);
-            replicateStance(notifyOwner: true);
+            replicateStance(Dedicator.IsDedicatedServer);
             return true;
         }
         return base.player.teleportToRandomSpawnPoint();
@@ -462,6 +464,11 @@ public class PlayerStance : PlayerCaller
             if (stance != EPlayerStance.SWIM)
             {
                 checkStance(EPlayerStance.SWIM);
+                if (stance == EPlayerStance.SWIM && !base.player.input.isResimulating && !Dedicator.IsDedicatedServer && Time.time - lastSubmergeSound > 0.1f)
+                {
+                    lastSubmergeSound = Time.time;
+                    base.player.movement.PlaySwimAudioClip();
+                }
             }
             return;
         }
@@ -662,6 +669,7 @@ public class PlayerStance : PlayerCaller
         if (base.channel.isOwner || Provider.isServer)
         {
             lastStance = 0f;
+            lastSubmergeSound = 0f;
             PlayerLife life = base.player.life;
             life.onLifeUpdated = (LifeUpdated)Delegate.Combine(life.onLifeUpdated, new LifeUpdated(onLifeUpdated));
         }

@@ -6,6 +6,10 @@ public class CommandPassword : Command
 {
     protected override void execute(CSteamID executorID, string parameter)
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            return;
+        }
         if (Provider.isServer)
         {
             CommandWindow.LogError(localization.format("RunningErrorText"));

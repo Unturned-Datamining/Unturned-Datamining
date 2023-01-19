@@ -10,6 +10,10 @@ public class Messager : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
+        if (!Dedicator.IsDedicatedServer && other.transform.CompareTag("Player"))
+        {
+            lastTrigger = Time.realtimeSinceStartup;
+        }
     }
 
     private void Update()

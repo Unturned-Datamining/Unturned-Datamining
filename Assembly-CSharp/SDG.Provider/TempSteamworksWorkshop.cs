@@ -110,10 +110,10 @@ public class TempSteamworksWorkshop
 
     public static byte getCompatibilityVersion(UGCQueryHandle_t queryHandle, uint index)
     {
-        uint queryUGCNumKeyValueTags = SteamGameServerUGC.GetQueryUGCNumKeyValueTags(queryHandle, index);
-        for (uint num = 0u; num < queryUGCNumKeyValueTags; num++)
+        uint num = (Dedicator.IsDedicatedServer ? SteamGameServerUGC.GetQueryUGCNumKeyValueTags(queryHandle, index) : SteamUGC.GetQueryUGCNumKeyValueTags(queryHandle, index));
+        for (uint num2 = 0u; num2 < num; num2++)
         {
-            if (SteamGameServerUGC.GetQueryUGCKeyValueTag(queryHandle, index, num, out var pchKey, 255u, out var pchValue, 255u) && pchKey.Equals(COMPATIBILITY_VERSION_KVTAG, StringComparison.InvariantCultureIgnoreCase))
+            if ((Dedicator.IsDedicatedServer ? SteamGameServerUGC.GetQueryUGCKeyValueTag(queryHandle, index, num2, out var pchKey, 255u, out var pchValue, 255u) : SteamUGC.GetQueryUGCKeyValueTag(queryHandle, index, num2, out pchKey, 255u, out pchValue, 255u)) && pchKey.Equals(COMPATIBILITY_VERSION_KVTAG, StringComparison.InvariantCultureIgnoreCase))
             {
                 if (byte.TryParse(pchValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var result))
                 {
@@ -138,8 +138,8 @@ public class TempSteamworksWorkshop
     {
         cachedDetails = default(CachedUGCDetails);
         SteamUGCDetails_t pDetails;
-        bool queryUGCResult = SteamGameServerUGC.GetQueryUGCResult(queryHandle, index, out pDetails);
-        if (queryUGCResult)
+        bool num = (Dedicator.IsDedicatedServer ? SteamGameServerUGC.GetQueryUGCResult(queryHandle, index, out pDetails) : SteamUGC.GetQueryUGCResult(queryHandle, index, out pDetails));
+        if (num)
         {
             PublishedFileId_t nPublishedFileId = pDetails.m_nPublishedFileId;
             byte compatibilityVersion = getCompatibilityVersion(queryHandle, index);
@@ -149,10 +149,10 @@ public class TempSteamworksWorkshop
             cachedDetails.isBannedOrPrivate = pDetails.m_bBanned || pDetails.m_eVisibility == ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityPrivate || pDetails.m_eResult == EResult.k_EResultAccessDenied;
             cachedDetails.updateTimestamp = MathfEx.Max(pDetails.m_rtimeCreated, pDetails.m_rtimeUpdated);
             cachedUGCDetails[nPublishedFileId.m_PublishedFileId] = cachedDetails;
-            return queryUGCResult;
+            return num;
         }
         UnturnedLog.warn("Unable to get query UGC result for caching");
-        return queryUGCResult;
+        return num;
     }
 
     public static bool getCachedDetails(PublishedFileId_t fileId, out CachedUGCDetails cachedDetails)

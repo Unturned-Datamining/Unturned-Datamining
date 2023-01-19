@@ -591,6 +591,10 @@ public class LevelObjects : MonoBehaviour
                                         UnturnedLog.error("Object with no asset in region {0}, {1}: {2} {3}", b6, b7, num3, guid);
                                     }
                                 }
+                                if (!Dedicator.IsDedicatedServer)
+                                {
+                                    ClientAssetIntegrity.QueueRequest(guid, levelObject.asset, $"Object (x: {b6} y: {b7})");
+                                }
                                 byte b8 = b6;
                                 byte b9 = b7;
                                 if (Level.isEditor)
@@ -697,6 +701,28 @@ public class LevelObjects : MonoBehaviour
                 }
             }
             river3.closeRiver();
+        }
+        if (!Dedicator.IsDedicatedServer && !Level.isEditor)
+        {
+            for (byte b14 = 0; b14 < Regions.WORLD_SIZE; b14 = (byte)(b14 + 1))
+            {
+                for (byte b15 = 0; b15 < Regions.WORLD_SIZE; b15 = (byte)(b15 + 1))
+                {
+                    for (int i = 0; i < objects[b14, b15].Count; i++)
+                    {
+                        LevelObject levelObject2 = objects[b14, b15][i];
+                        if (levelObject2.asset != null && !(levelObject2.transform == null) && levelObject2.asset.lod != 0)
+                        {
+                            ObjectsLOD objectsLOD = levelObject2.transform.gameObject.AddComponent<ObjectsLOD>();
+                            objectsLOD.lod = levelObject2.asset.lod;
+                            objectsLOD.bias = levelObject2.asset.lodBias;
+                            objectsLOD.center = levelObject2.asset.lodCenter;
+                            objectsLOD.size = levelObject2.asset.lodSize;
+                            objectsLOD.calculateBounds();
+                        }
+                    }
+                }
+            }
         }
         if (Level.isEditor)
         {
@@ -977,7 +1003,10 @@ public class LevelObjects : MonoBehaviour
 
     private void Update()
     {
-        _ = Level.isLoaded;
+        if (Level.isLoaded && !Dedicator.IsDedicatedServer && loads != null && regions != null && objects != null && isHierarchyReady && isRegionalVisibilityDirty)
+        {
+            tickRegionalVisibility();
+        }
     }
 
     public void Start()

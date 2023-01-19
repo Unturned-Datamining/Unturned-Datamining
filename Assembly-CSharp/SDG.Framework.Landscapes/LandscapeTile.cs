@@ -145,6 +145,10 @@ public class LandscapeTile : IFormattedFileReadable, IFormattedFileWritable, IFo
     public virtual void readSplatmaps()
     {
         readSplatmap("_Source", splatmap);
+        if (!Dedicator.IsDedicatedServer)
+        {
+            data.SetAlphamaps(0, 0, splatmap);
+        }
     }
 
     protected virtual void readSplatmap(string suffix, float[,,] splatmap)
@@ -297,6 +301,28 @@ public class LandscapeTile : IFormattedFileReadable, IFormattedFileWritable, IFo
 
     public void updatePrototypes()
     {
+        if (Dedicator.IsDedicatedServer)
+        {
+            return;
+        }
+        for (int i = 0; i < Landscape.SPLATMAP_LAYERS; i++)
+        {
+            AssetReference<LandscapeMaterialAsset> assetReference = materials[i];
+            LandscapeMaterialAsset landscapeMaterialAsset = assetReference.Find();
+            if (assetReference.isValid)
+            {
+                ClientAssetIntegrity.QueueRequest(assetReference.GUID, landscapeMaterialAsset, $"Landscape tile (x: {coord.x} y: {coord.y} layer: {i})");
+            }
+            if (landscapeMaterialAsset == null)
+            {
+                terrainLayers[i] = null;
+            }
+            else
+            {
+                terrainLayers[i] = landscapeMaterialAsset.getOrCreateLayer();
+            }
+        }
+        data.terrainLayers = terrainLayers;
     }
 
     protected void updateTransform()
@@ -336,6 +362,10 @@ public class LandscapeTile : IFormattedFileReadable, IFormattedFileWritable, IFo
                     splatmap[i, j, k] = conversionWeight;
                 }
             }
+        }
+        if (!Dedicator.IsDedicatedServer)
+        {
+            data.SetAlphamaps(0, 0, splatmap);
         }
     }
 
@@ -390,6 +420,36 @@ public class LandscapeTile : IFormattedFileReadable, IFormattedFileWritable, IFo
 
     public void applyGraphicsSettings()
     {
+        if (Dedicator.IsDedicatedServer)
+        {
+            return;
+        }
+        if (SDG.Unturned.GraphicsSettings.blend)
+        {
+            switch (SDG.Unturned.GraphicsSettings.renderMode)
+            {
+            case ERenderMode.FORWARD:
+                terrain.materialTemplate = Resources.Load<Material>("Materials/Landscapes/Landscape_Forward");
+                break;
+            case ERenderMode.DEFERRED:
+                terrain.materialTemplate = Resources.Load<Material>("Materials/Landscapes/Landscape_Deferred");
+                break;
+            default:
+                terrain.materialTemplate = null;
+                UnturnedLog.error("Unknown render mode: " + SDG.Unturned.GraphicsSettings.renderMode);
+                break;
+            }
+        }
+        else
+        {
+            terrain.materialTemplate = Resources.Load<Material>("Materials/Landscapes/Landscape_Classic");
+        }
+        terrain.basemapDistance = SDG.Unturned.GraphicsSettings.terrainBasemapDistance;
+        if (terrain.materialTemplate == null)
+        {
+            UnturnedLog.warn("LandscapeTile unable to load materialTemplate");
+        }
+        terrain.heightmapPixelError = SDG.Unturned.GraphicsSettings.terrainHeightmapPixelError;
     }
 
     public FoliageBounds getFoliageSurfaceBounds()
@@ -493,11 +553,20 @@ public class LandscapeTile : IFormattedFileReadable, IFormattedFileWritable, IFo
         materials.canInspectorRemove = false;
         materials.inspectorChanged += handleMaterialsInspectorChanged;
         data = new TerrainData();
+        if (!Dedicator.IsDedicatedServer)
+        {
+            terrainLayers = new TerrainLayer[Landscape.SPLATMAP_LAYERS];
+            data.terrainLayers = terrainLayers;
+        }
         data.heightmapResolution = Landscape.HEIGHTMAP_RESOLUTION;
         data.alphamapResolution = Landscape.SPLATMAP_RESOLUTION;
         data.baseMapResolution = Landscape.BASEMAP_RESOLUTION;
         data.size = new Vector3(Landscape.TILE_SIZE, Landscape.TILE_HEIGHT, Landscape.TILE_SIZE);
         data.SetHeightsDelayLOD(0, 0, heightmap);
+        if (!Dedicator.IsDedicatedServer)
+        {
+            data.SetAlphamaps(0, 0, splatmap);
+        }
         data.wavingGrassTint = Color.white;
         terrain = gameObject.AddComponent<Terrain>();
         terrain.drawInstanced = SystemInfo.supportsInstancing;
@@ -505,7 +574,7 @@ public class LandscapeTile : IFormattedFileReadable, IFormattedFileWritable, IFo
         terrain.heightmapPixelError = 200f;
         terrain.reflectionProbeUsage = ReflectionProbeUsage.Off;
         terrain.shadowCastingMode = ShadowCastingMode.Off;
-        terrain.drawHeightmap = false;
+        terrain.drawHeightmap = !Dedicator.IsDedicatedServer;
         terrain.drawTreesAndFoliage = false;
         terrain.collectDetailPatches = false;
         terrain.allowAutoConnect = false;

@@ -10,6 +10,10 @@ public class CommandTimeout : Command
 
     protected override void execute(CSteamID executorID, string parameter)
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            return;
+        }
         if (!ushort.TryParse(parameter, out var result))
         {
             CommandWindow.LogError(localization.format("InvalidNumberErrorText", parameter));

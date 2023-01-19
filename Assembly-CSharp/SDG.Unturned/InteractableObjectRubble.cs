@@ -133,18 +133,87 @@ public class InteractableObjectRubble : MonoBehaviour
         {
             deadGameObject.SetActive(flag);
         }
+        if (!Dedicator.IsDedicatedServer && playEffect)
+        {
+            if (rubbleInfo.ragdolls != null && GraphicsSettings.debris && rubbleInfo.isDead)
+            {
+                for (int i = 0; i < rubbleInfo.ragdolls.Length; i++)
+                {
+                    RubbleRagdollInfo rubbleRagdollInfo = rubbleInfo.ragdolls[i];
+                    if (rubbleRagdollInfo != null)
+                    {
+                        Vector3 force = ragdoll;
+                        if (rubbleRagdollInfo.forceTransform != null)
+                        {
+                            force = rubbleRagdollInfo.forceTransform.forward * force.magnitude * rubbleRagdollInfo.forceTransform.localScale.z;
+                            force += rubbleRagdollInfo.forceTransform.right * Random.Range(-16f, 16f) * rubbleRagdollInfo.forceTransform.localScale.x;
+                            force += rubbleRagdollInfo.forceTransform.up * Random.Range(-16f, 16f) * rubbleRagdollInfo.forceTransform.localScale.y;
+                        }
+                        else
+                        {
+                            force.y += 8f;
+                            force.x += Random.Range(-16f, 16f);
+                            force.z += Random.Range(-16f, 16f);
+                        }
+                        force *= (float)((Player.player != null && Player.player.skills.boost == EPlayerBoost.FLIGHT) ? 4 : 2);
+                        GameObject obj = Object.Instantiate(rubbleRagdollInfo.ragdollGameObject, rubbleRagdollInfo.ragdollGameObject.transform.position, rubbleRagdollInfo.ragdollGameObject.transform.rotation);
+                        obj.name = "Ragdoll";
+                        EffectManager.RegisterDebris(obj);
+                        obj.transform.localScale = base.transform.localScale;
+                        obj.SetActive(value: true);
+                        obj.gameObject.AddComponent<Rigidbody>();
+                        obj.GetComponent<Rigidbody>().interpolation = RigidbodyInterpolation.Interpolate;
+                        obj.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Discrete;
+                        obj.GetComponent<Rigidbody>().AddForce(force);
+                        obj.GetComponent<Rigidbody>().drag = 0.5f;
+                        obj.GetComponent<Rigidbody>().angularDrag = 0.1f;
+                        Object.Destroy(obj, 8f);
+                    }
+                }
+            }
+            if (rubbleInfo.isDead)
+            {
+                EffectAsset effectAsset = asset.FindRubbleEffectAsset();
+                if (effectAsset != null)
+                {
+                    if (rubbleInfo.effectTransform != null)
+                    {
+                        EffectManager.effect(effectAsset, rubbleInfo.effectTransform.position, rubbleInfo.effectTransform.forward);
+                    }
+                    else
+                    {
+                        EffectManager.effect(effectAsset, rubbleInfo.section.position, Vector3.up);
+                    }
+                }
+            }
+            if (flag)
+            {
+                EffectAsset effectAsset2 = asset.FindRubbleFinaleEffectAsset();
+                if (effectAsset2 != null)
+                {
+                    if (finaleTransform != null)
+                    {
+                        EffectManager.effect(effectAsset2, finaleTransform.position, finaleTransform.forward);
+                    }
+                    else
+                    {
+                        EffectManager.effect(effectAsset2, base.transform.position, Vector3.up);
+                    }
+                }
+            }
+        }
         if (!(Provider.isServer && dropTransform != null && asset.rubbleRewardID != 0 && playEffect && flag) || (asset.holidayRestriction != 0 && !Provider.modeConfigData.Objects.Allow_Holiday_Drops) || !(Random.value <= asset.rubbleRewardProbability))
         {
             return;
         }
         int value = Random.Range(asset.rubbleRewardsMin, asset.rubbleRewardsMax + 1);
         value = Mathf.Clamp(value, 0, 100);
-        for (int i = 0; i < value; i++)
+        for (int j = 0; j < value; j++)
         {
             ushort num = SpawnTableTool.resolve(asset.rubbleRewardID);
             if (num != 0)
             {
-                ItemManager.dropItem(new Item(num, EItemOrigin.NATURE), dropTransform.position, playEffect: false, isDropped: true, wideSpread: false);
+                ItemManager.dropItem(new Item(num, EItemOrigin.NATURE), dropTransform.position, playEffect: false, Dedicator.IsDedicatedServer, wideSpread: false);
             }
         }
     }

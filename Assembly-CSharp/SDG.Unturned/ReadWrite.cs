@@ -13,14 +13,6 @@ public class ReadWrite
 {
     public static readonly string PATH = UnturnedPaths.RootDirectory.FullName;
 
-    private static bool hasLoadedAssemblyHash = false;
-
-    private static byte[] win64AssemblyHash;
-
-    private static byte[] macAssemblyHash;
-
-    private static byte[] linuxAssemblyHash;
-
     private static CommandLineFlag disableSteamCloudRead = new CommandLineFlag(defaultValue: false, "-DisableSteamCloudRead");
 
     private static readonly XmlSerializerNamespaces XML_SERIALIZER_NAMESPACES = new XmlSerializerNamespaces(new XmlQualifiedName[1] { XmlQualifiedName.Empty });
@@ -33,25 +25,6 @@ public class ReadWrite
     };
 
     public static bool SupportsOpeningFileBrowser => false;
-
-    internal static bool IsAssemblyHashValid(byte[] hash, EClientPlatform clientPlatform)
-    {
-        if (!hasLoadedAssemblyHash)
-        {
-            hasLoadedAssemblyHash = true;
-            Block block = readBlock("/Bundles/Sources/Animation/appout.log", useCloud: false, 0);
-            win64AssemblyHash = block.readByteArray();
-            macAssemblyHash = block.readByteArray();
-            linuxAssemblyHash = block.readByteArray();
-        }
-        return clientPlatform switch
-        {
-            EClientPlatform.Windows => Hash.verifyHash(hash, win64AssemblyHash), 
-            EClientPlatform.Mac => Hash.verifyHash(hash, macAssemblyHash), 
-            EClientPlatform.Linux => Hash.verifyHash(hash, linuxAssemblyHash), 
-            _ => false, 
-        };
-    }
 
     public static bool appIn(byte[] h, byte p)
     {

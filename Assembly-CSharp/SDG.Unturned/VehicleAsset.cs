@@ -463,7 +463,10 @@ public class VehicleAsset : Asset, ISkinableAsset
             }
         }
         onModelLoaded(asset);
-        ServerPrefabUtil.RemoveClientComponents(asset);
+        if (Dedicator.IsDedicatedServer)
+        {
+            ServerPrefabUtil.RemoveClientComponents(asset);
+        }
     }
 
     public bool IsExplosionEffectRefNull()
@@ -492,7 +495,7 @@ public class VehicleAsset : Asset, ISkinableAsset
         _pitchDrive = data.readSingle("Pitch_Drive", -1f);
         _engine = data.readEnum("Engine", EEngine.CAR);
         physicsProfileRef = data.readAssetReference<VehiclePhysicsProfileAsset>("Physics_Profile");
-        if (data.readBoolean("Has_Clip_Prefab", defaultValue: true))
+        if (Dedicator.IsDedicatedServer && data.readBoolean("Has_Clip_Prefab", defaultValue: true))
         {
             bundle.loadDeferred("Clip", out legacyServerModel, (LoadedAssetDeferredCallback<GameObject>)OnServerModelLoaded);
         }
@@ -747,6 +750,12 @@ public class VehicleAsset : Asset, ISkinableAsset
         trainWheelOffset = data.readSingle("Train_Wheel_Offset");
         trainCarLength = data.readSingle("Train_Car_Length");
         _shouldVerifyHash = !data.has("Bypass_Hash_Verification");
+        if (!Dedicator.IsDedicatedServer && id < 2000)
+        {
+            _albedoBase = bundle.load<Texture2D>("Albedo_Base");
+            _metallicBase = bundle.load<Texture2D>("Metallic_Base");
+            _emissionBase = bundle.load<Texture2D>("Emission_Base");
+        }
         CanDecay = engine != EEngine.TRAIN && (isVulnerable | isVulnerableToExplosions | isVulnerableToEnvironment | isVulnerableToBumper);
     }
 }

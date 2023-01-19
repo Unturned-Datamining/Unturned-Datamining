@@ -23,7 +23,10 @@ public class InteractableBed : Interactable
 
     public bool checkClaim(CSteamID enemy)
     {
-        _ = Provider.isServer;
+        if (Provider.isServer && !Dedicator.IsDedicatedServer)
+        {
+            return true;
+        }
         if (isClaimed)
         {
             return enemy == owner;

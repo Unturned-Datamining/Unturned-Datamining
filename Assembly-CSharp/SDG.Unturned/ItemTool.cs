@@ -340,6 +340,12 @@ public class ItemTool : MonoBehaviour
             attachments.updateGun((ItemGunAsset)itemAsset, skinAsset);
             attachments.updateAttachments(state, viewmodel);
         }
+        if (!Dedicator.IsDedicatedServer && statTrackerCallback != null && statTrackerCallback(out var _, out var _))
+        {
+            StatTracker statTracker = transform2.gameObject.AddComponent<StatTracker>();
+            statTracker.statTrackerCallback = statTrackerCallback;
+            statTracker.updateStatTracker(viewmodel);
+        }
         return transform2;
     }
 

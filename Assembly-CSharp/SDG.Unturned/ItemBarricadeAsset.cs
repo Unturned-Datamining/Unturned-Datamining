@@ -48,6 +48,8 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
 
     protected bool _isSaveable;
 
+    public MasterBundleReference<GameObject> placementPreviewRef;
+
     private Guid _vehicleGuid;
 
     private ushort _vehicleId;
@@ -179,7 +181,7 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
         : base(bundle, data, localization, id)
     {
         bool flag;
-        if (data.readBoolean("Has_Clip_Prefab", defaultValue: true))
+        if (Dedicator.IsDedicatedServer && data.readBoolean("Has_Clip_Prefab", defaultValue: true))
         {
             _barricade = bundle.load<GameObject>("Clip");
             if (barricade == null)
@@ -203,7 +205,7 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
             {
                 Assets.reportError(this, "missing \"Barricade\" GameObject");
             }
-            else
+            else if (Dedicator.IsDedicatedServer)
             {
                 ServerPrefabUtil.RemoveClientComponents(_barricade);
             }
@@ -217,6 +219,7 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
             barricade.transform.localPosition = Vector3.zero;
             barricade.transform.localRotation = Quaternion.identity;
         }
+        placementPreviewRef = data.readMasterBundleReference<GameObject>("PlacementPreviewPrefab");
         _nav = bundle.load<GameObject>("Nav");
         _use = LoadRedirectableAsset<AudioClip>(bundle, "Use", data, "PlacementAudioClip");
         _build = (EBuild)Enum.Parse(typeof(EBuild), data.readString("Build"), ignoreCase: true);

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace SDG.Unturned;
 
@@ -397,6 +398,7 @@ public class Road
         }
         Vector3[] array = new Vector3[samples.Count * 4 + ((!isLoop) ? 8 : 0)];
         Vector3[] array2 = new Vector3[samples.Count * 4 + ((!isLoop) ? 8 : 0)];
+        Vector2[] array3 = (Dedicator.IsDedicatedServer ? null : new Vector2[samples.Count * 4 + ((!isLoop) ? 8 : 0)]);
         float num = 0f;
         Vector3 vector = Vector3.zero;
         Vector3 vector2 = Vector3.zero;
@@ -464,13 +466,35 @@ public class Road
                     array2[j * 4 + 1] = vector4;
                     array2[j * 4 + 2] = vector4;
                     array2[j * 4 + 3] = vector4;
+                    if (!Dedicator.IsDedicatedServer)
+                    {
+                        array3[j * 4] = Vector2.zero;
+                        array3[j * 4 + 1] = Vector2.zero;
+                        array3[j * 4 + 2] = Vector2.right;
+                        array3[j * 4 + 3] = Vector2.right;
+                    }
                 }
                 vector = vector2;
+                if (!Dedicator.IsDedicatedServer)
+                {
+                    array3[((!isLoop) ? 4 : 0) + j * 4] = Vector2.zero;
+                    array3[((!isLoop) ? 4 : 0) + j * 4 + 1] = Vector2.zero;
+                    array3[((!isLoop) ? 4 : 0) + j * 4 + 2] = Vector2.right;
+                    array3[((!isLoop) ? 4 : 0) + j * 4 + 3] = Vector2.right;
+                }
             }
             else
             {
                 num += (vector2 - vector).magnitude;
                 vector = vector2;
+                if (!Dedicator.IsDedicatedServer)
+                {
+                    Vector2 vector6 = Vector2.up * num / LevelRoads.materials[material].material.mainTexture.height * LevelRoads.materials[material].height;
+                    array3[((!isLoop) ? 4 : 0) + j * 4] = Vector2.zero + vector6;
+                    array3[((!isLoop) ? 4 : 0) + j * 4 + 1] = Vector2.zero + vector6;
+                    array3[((!isLoop) ? 4 : 0) + j * 4 + 2] = Vector2.right + vector6;
+                    array3[((!isLoop) ? 4 : 0) + j * 4 + 3] = Vector2.right + vector6;
+                }
             }
         }
         if (!isLoop)
@@ -483,6 +507,14 @@ public class Road
             array2[4 + j * 4 + 1] = vector4;
             array2[4 + j * 4 + 2] = vector4;
             array2[4 + j * 4 + 3] = vector4;
+            if (!Dedicator.IsDedicatedServer)
+            {
+                Vector2 vector6 = Vector2.up * num / LevelRoads.materials[material].material.mainTexture.height * LevelRoads.materials[material].height;
+                array3[4 + j * 4] = Vector2.zero + vector6;
+                array3[4 + j * 4 + 1] = Vector2.zero + vector6;
+                array3[4 + j * 4 + 2] = Vector2.right + vector6;
+                array3[4 + j * 4 + 3] = Vector2.right + vector6;
+            }
         }
         int num4 = 0;
         for (int k = 0; k < samples.Count; k += 20)
@@ -500,37 +532,41 @@ public class Road
                     num6++;
                 }
             }
-            Vector3[] array3 = new Vector3[num6 * 4];
             Vector3[] array4 = new Vector3[num6 * 4];
-            Vector2[] uv = null;
-            int[] array5 = new int[num6 * 18];
+            Vector3[] array5 = new Vector3[num6 * 4];
+            Vector2[] array6 = (Dedicator.IsDedicatedServer ? null : new Vector2[num6 * 4]);
+            int[] array7 = new int[num6 * 18];
             int num7 = k;
             if (!isLoop && k > 0)
             {
                 num7++;
             }
-            Array.Copy(array, num7 * 4, array3, 0, array3.Length);
-            Array.Copy(array2, num7 * 4, array4, 0, array3.Length);
+            Array.Copy(array, num7 * 4, array4, 0, array4.Length);
+            Array.Copy(array2, num7 * 4, array5, 0, array4.Length);
+            if (!Dedicator.IsDedicatedServer)
+            {
+                Array.Copy(array3, num7 * 4, array6, 0, array4.Length);
+            }
             for (int l = 0; l < num6 - 1; l++)
             {
-                array5[l * 18] = l * 4 + 5;
-                array5[l * 18 + 1] = l * 4 + 1;
-                array5[l * 18 + 2] = l * 4 + 4;
-                array5[l * 18 + 3] = l * 4;
-                array5[l * 18 + 4] = l * 4 + 4;
-                array5[l * 18 + 5] = l * 4 + 1;
-                array5[l * 18 + 6] = l * 4 + 6;
-                array5[l * 18 + 7] = l * 4 + 2;
-                array5[l * 18 + 8] = l * 4 + 5;
-                array5[l * 18 + 9] = l * 4 + 1;
-                array5[l * 18 + 10] = l * 4 + 5;
-                array5[l * 18 + 11] = l * 4 + 2;
-                array5[l * 18 + 12] = l * 4 + 7;
-                array5[l * 18 + 13] = l * 4 + 3;
-                array5[l * 18 + 14] = l * 4 + 6;
-                array5[l * 18 + 15] = l * 4 + 2;
-                array5[l * 18 + 16] = l * 4 + 6;
-                array5[l * 18 + 17] = l * 4 + 3;
+                array7[l * 18] = l * 4 + 5;
+                array7[l * 18 + 1] = l * 4 + 1;
+                array7[l * 18 + 2] = l * 4 + 4;
+                array7[l * 18 + 3] = l * 4;
+                array7[l * 18 + 4] = l * 4 + 4;
+                array7[l * 18 + 5] = l * 4 + 1;
+                array7[l * 18 + 6] = l * 4 + 6;
+                array7[l * 18 + 7] = l * 4 + 2;
+                array7[l * 18 + 8] = l * 4 + 5;
+                array7[l * 18 + 9] = l * 4 + 1;
+                array7[l * 18 + 10] = l * 4 + 5;
+                array7[l * 18 + 11] = l * 4 + 2;
+                array7[l * 18 + 12] = l * 4 + 7;
+                array7[l * 18 + 13] = l * 4 + 3;
+                array7[l * 18 + 14] = l * 4 + 6;
+                array7[l * 18 + 15] = l * 4 + 2;
+                array7[l * 18 + 16] = l * 4 + 6;
+                array7[l * 18 + 17] = l * 4 + 3;
             }
             Transform transform = new GameObject().transform;
             transform.name = "Segment_" + num4;
@@ -538,6 +574,13 @@ public class Road
             transform.tag = "Environment";
             transform.gameObject.layer = 19;
             transform.gameObject.AddComponent<MeshCollider>();
+            if (!Dedicator.IsDedicatedServer)
+            {
+                transform.gameObject.AddComponent<MeshFilter>();
+                MeshRenderer meshRenderer = transform.gameObject.AddComponent<MeshRenderer>();
+                meshRenderer.reflectionProbeUsage = ReflectionProbeUsage.Simple;
+                meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
+            }
             if (LevelRoads.materials[material].isConcrete)
             {
                 transform.GetComponent<Collider>().sharedMaterial = (PhysicMaterial)Resources.Load("Physics/Concrete_Static");
@@ -548,11 +591,16 @@ public class Road
             }
             Mesh mesh = new Mesh();
             mesh.name = "Road_Segment_" + num4;
-            mesh.vertices = array3;
-            mesh.normals = array4;
-            mesh.uv = uv;
-            mesh.triangles = array5;
+            mesh.vertices = array4;
+            mesh.normals = array5;
+            mesh.uv = array6;
+            mesh.triangles = array7;
             transform.GetComponent<MeshCollider>().sharedMesh = mesh;
+            if (!Dedicator.IsDedicatedServer)
+            {
+                transform.GetComponent<MeshFilter>().sharedMesh = mesh;
+                transform.GetComponent<Renderer>().sharedMaterial = LevelRoads.materials[material].material;
+            }
             num4++;
         }
     }

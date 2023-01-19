@@ -49,7 +49,10 @@ public class InteractableDoor : Interactable
         {
             return false;
         }
-        _ = Provider.isServer;
+        if (Provider.isServer && !Dedicator.IsDedicatedServer)
+        {
+            return true;
+        }
         if (isLocked && !(enemyPlayer == owner))
         {
             if (group != CSteamID.Nil)
@@ -69,6 +72,10 @@ public class InteractableDoor : Interactable
         if (component != null)
         {
             playAnimation(component, applyInstantly: false);
+        }
+        if (!Dedicator.IsDedicatedServer)
+        {
+            GetComponent<AudioSource>().Play();
         }
         if (Provider.isServer)
         {

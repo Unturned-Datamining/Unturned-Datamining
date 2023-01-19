@@ -95,7 +95,10 @@ public class InteractableObjectBinaryState : InteractableObject
 
     private void updateAudioSourceComponent()
     {
-        _ = audioSourceComponent != null;
+        if (audioSourceComponent != null && !Dedicator.IsDedicatedServer)
+        {
+            audioSourceComponent.Play();
+        }
     }
 
     private NavmeshCut initCutComponentFromBox(BoxCollider box)
@@ -235,7 +238,14 @@ public class InteractableObjectBinaryState : InteractableObject
     {
         if (newUsed != isUsed)
         {
-            ObjectManager.forceObjectBinaryState(base.transform, newUsed);
+            if (Dedicator.IsDedicatedServer)
+            {
+                ObjectManager.forceObjectBinaryState(base.transform, newUsed);
+            }
+            else
+            {
+                ObjectManager.toggleObjectBinaryState(base.transform, newUsed);
+            }
         }
     }
 

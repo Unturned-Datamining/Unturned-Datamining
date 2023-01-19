@@ -8,6 +8,10 @@ public class CommandHelp : Command
     {
         if (string.IsNullOrEmpty(parameter))
         {
+            if (!Dedicator.IsDedicatedServer)
+            {
+                return;
+            }
             CommandWindow.Log(localization.format("HelpText"));
             string text = "";
             for (int i = 0; i < Commander.commands.Count; i++)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SDG.Framework.Devkit;
 using SDG.Framework.Foliage;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace SDG.Unturned;
 
@@ -79,39 +80,84 @@ public class LevelObject
     {
         get
         {
-            _ = asset;
-            return false;
+            if (asset == null)
+            {
+                return false;
+            }
+            if (Dedicator.IsDedicatedServer)
+            {
+                return false;
+            }
+            return GraphicsSettings.landmarkQuality >= asset.landmarkQuality;
         }
     }
 
     public void enableCollision()
     {
         isCollisionEnabled = true;
+        if (!Dedicator.IsDedicatedServer && transform != null && areConditionsMet)
+        {
+            transform.gameObject.SetActive(value: true);
+        }
     }
 
     public void enableVisual()
     {
         isVisualEnabled = true;
+        if (Dedicator.IsDedicatedServer || isDecal || renderers == null || renderers.Count <= 0)
+        {
+            return;
+        }
+        for (int i = 0; i < renderers.Count; i++)
+        {
+            if (renderers[i] != null)
+            {
+                renderers[i].enabled = true;
+            }
+        }
     }
 
     public void enableSkybox()
     {
         isSkyboxEnabled = true;
+        if (!Dedicator.IsDedicatedServer && skybox != null && areConditionsMet)
+        {
+            skybox.gameObject.SetActive(value: true);
+        }
     }
 
     public void disableCollision()
     {
         isCollisionEnabled = false;
+        if (!Dedicator.IsDedicatedServer && (asset == null || !asset.isCollisionImportant || !Provider.isServer || Dedicator.IsDedicatedServer) && transform != null)
+        {
+            transform.gameObject.SetActive(value: false);
+        }
     }
 
     public void disableVisual()
     {
         isVisualEnabled = false;
+        if (Dedicator.IsDedicatedServer || isDecal || renderers == null || renderers.Count <= 0)
+        {
+            return;
+        }
+        for (int i = 0; i < renderers.Count; i++)
+        {
+            if (renderers[i] != null)
+            {
+                renderers[i].enabled = false;
+            }
+        }
     }
 
     public void disableSkybox()
     {
         isSkyboxEnabled = false;
+        if (!Dedicator.IsDedicatedServer && skybox != null)
+        {
+            skybox.gameObject.SetActive(value: false);
+        }
     }
 
     public void destroy()
@@ -188,6 +234,11 @@ public class LevelObject
             return;
         }
         bool flag = true;
+        if (!Dedicator.IsDedicatedServer)
+        {
+            flag = asset.areConditionsMet(Player.player);
+            flag &= OptionsSettings.gore || !asset.isGore;
+        }
         if (flag && asset.holidayRestriction != 0)
         {
             flag = HolidayUtil.isHolidayActive(asset.holidayRestriction);
@@ -387,19 +438,98 @@ public class LevelObject
         areConditionsMet = true;
         haveConditionsBeenChecked = false;
         GameObject orLoadModel = asset.GetOrLoadModel();
-        if (orLoadModel != null)
+        if (Dedicator.IsDedicatedServer)
         {
-            GameObject gameObject = UnityEngine.Object.Instantiate(orLoadModel, newPoint, newRotation);
-            _transform = gameObject.transform;
-            gameObject.name = id.ToString();
-            NetIdRegistry.AssignTransform(netId, _transform);
+            if (orLoadModel != null)
+            {
+                GameObject gameObject = UnityEngine.Object.Instantiate(orLoadModel, newPoint, newRotation);
+                _transform = gameObject.transform;
+                gameObject.name = id.ToString();
+                NetIdRegistry.AssignTransform(netId, _transform);
+                isDecal = this.transform.Find("Decal");
+                if (asset.useScale)
+                {
+                    this.transform.localScale = newScale;
+                }
+            }
+            renderers = null;
+        }
+        else if (orLoadModel != null)
+        {
+            GameObject gameObject2 = UnityEngine.Object.Instantiate(orLoadModel, newPoint, newRotation);
+            _transform = gameObject2.transform;
+            gameObject2.name = id.ToString();
+            if (!netId.IsNull())
+            {
+                NetIdRegistry.AssignTransform(netId, _transform);
+            }
             isDecal = this.transform.Find("Decal");
             if (asset.useScale)
             {
                 this.transform.localScale = newScale;
             }
+            if (asset.useWaterHeightTransparentSort)
+            {
+                this.transform.gameObject.AddComponent<WaterHeightTransparentSort>();
+            }
+            if (asset.shouldAddNightLightScript)
+            {
+                NightLight nightLight = this.transform.gameObject.AddComponent<NightLight>();
+                Transform transform = this.transform.Find("Light");
+                if ((bool)transform)
+                {
+                    nightLight.target = transform.GetComponent<Light>();
+                }
+            }
+            renderers = new List<Renderer>();
+            Material materialOverride = GetMaterialOverride();
+            GameObject gameObject3 = asset.skyboxGameObject?.getOrLoad();
+            if (gameObject3 != null)
+            {
+                GameObject gameObject4 = UnityEngine.Object.Instantiate(gameObject3, newPoint, newRotation);
+                _skybox = gameObject4.transform;
+                gameObject4.name = id + "_Skybox";
+                if (asset.useScale)
+                {
+                    skybox.localScale = newScale;
+                }
+                if (isLandmarkQualityMet)
+                {
+                    enableSkybox();
+                }
+                else
+                {
+                    disableSkybox();
+                }
+                skybox.GetComponentsInChildren(includeInactive: true, renderers);
+                for (int i = 0; i < renderers.Count; i++)
+                {
+                    renderers[i].shadowCastingMode = ShadowCastingMode.Off;
+                    if (materialOverride != null)
+                    {
+                        renderers[i].sharedMaterial = materialOverride;
+                    }
+                }
+                renderers.Clear();
+            }
+            this.transform.GetComponentsInChildren(includeInactive: true, renderers);
+            if (materialOverride != null)
+            {
+                for (int j = 0; j < renderers.Count; j++)
+                {
+                    renderers[j].sharedMaterial = materialOverride;
+                }
+            }
+            if (asset.isCollisionImportant && Provider.isServer && !Dedicator.IsDedicatedServer)
+            {
+                enableCollision();
+            }
+            else
+            {
+                disableCollision();
+            }
+            disableVisual();
         }
-        renderers = null;
         if (!(this.transform != null))
         {
             return;
@@ -436,25 +566,25 @@ public class LevelObject
         }
         if ((Level.isEditor || Provider.isServer) && asset.type != EObjectType.SMALL)
         {
-            GameObject gameObject2 = asset.navGameObject?.getOrLoad();
-            if (gameObject2 != null)
+            GameObject gameObject5 = asset.navGameObject?.getOrLoad();
+            if (gameObject5 != null)
             {
-                Transform transform = UnityEngine.Object.Instantiate(gameObject2).transform;
-                transform.name = "Nav";
-                transform.parent = this.transform;
-                transform.localPosition = Vector3.zero;
-                transform.localRotation = Quaternion.identity;
-                transform.localScale = Vector3.one;
+                Transform transform2 = UnityEngine.Object.Instantiate(gameObject5).transform;
+                transform2.name = "Nav";
+                transform2.parent = this.transform;
+                transform2.localPosition = Vector3.zero;
+                transform2.localRotation = Quaternion.identity;
+                transform2.localScale = Vector3.one;
                 if (Level.isEditor)
                 {
-                    Rigidbody orAddComponent2 = transform.GetOrAddComponent<Rigidbody>();
+                    Rigidbody orAddComponent2 = transform2.GetOrAddComponent<Rigidbody>();
                     orAddComponent2.useGravity = false;
                     orAddComponent2.isKinematic = true;
                 }
                 else
                 {
                     reuseableRigidbodyList.Clear();
-                    transform.GetComponentsInChildren(reuseableRigidbodyList);
+                    transform2.GetComponentsInChildren(reuseableRigidbodyList);
                     foreach (Rigidbody reuseableRigidbody in reuseableRigidbodyList)
                     {
                         UnityEngine.Object.Destroy(reuseableRigidbody);
@@ -464,21 +594,21 @@ public class LevelObject
         }
         if (Provider.isServer)
         {
-            GameObject gameObject3 = asset.triggersGameObject?.getOrLoad();
-            if (gameObject3 != null)
+            GameObject gameObject6 = asset.triggersGameObject?.getOrLoad();
+            if (gameObject6 != null)
             {
-                Transform transform2 = UnityEngine.Object.Instantiate(gameObject3).transform;
-                transform2.name = "Triggers";
-                transform2.parent = this.transform;
-                transform2.localPosition = Vector3.zero;
-                transform2.localRotation = Quaternion.identity;
-                transform2.localScale = Vector3.one;
+                Transform transform3 = UnityEngine.Object.Instantiate(gameObject6).transform;
+                transform3.name = "Triggers";
+                transform3.parent = this.transform;
+                transform3.localPosition = Vector3.zero;
+                transform3.localRotation = Quaternion.identity;
+                transform3.localScale = Vector3.one;
                 if (asset.shouldAddKillTriggers)
                 {
-                    int childCount = transform2.childCount;
-                    for (int i = 0; i < childCount; i++)
+                    int childCount = transform3.childCount;
+                    for (int k = 0; k < childCount; k++)
                     {
-                        Transform child = transform2.GetChild(i);
+                        Transform child = transform3.GetChild(k);
                         if (child.name.Equals("Kill", StringComparison.InvariantCultureIgnoreCase))
                         {
                             child.tag = "Trap";
@@ -493,10 +623,10 @@ public class LevelObject
         {
             if (Level.isEditor)
             {
-                Transform transform3 = this.transform.Find("Block");
-                if (transform3 != null && this.transform.GetComponent<Collider>() == null)
+                Transform transform4 = this.transform.Find("Block");
+                if (transform4 != null && this.transform.GetComponent<Collider>() == null)
                 {
-                    BoxCollider component4 = transform3.GetComponent<BoxCollider>();
+                    BoxCollider component4 = transform4.GetComponent<BoxCollider>();
                     if (component4 != null)
                     {
                         BoxCollider boxCollider = this.transform.gameObject.AddComponent<BoxCollider>();
@@ -507,10 +637,10 @@ public class LevelObject
             }
             else if (Provider.isClient)
             {
-                GameObject gameObject4 = asset.slotsGameObject?.getOrLoad();
-                if (gameObject4 != null)
+                GameObject gameObject7 = asset.slotsGameObject?.getOrLoad();
+                if (gameObject7 != null)
                 {
-                    Transform obj = UnityEngine.Object.Instantiate(gameObject4).transform;
+                    Transform obj = UnityEngine.Object.Instantiate(gameObject7).transform;
                     obj.name = "Slots";
                     obj.parent = this.transform;
                     obj.localPosition = Vector3.zero;
@@ -568,17 +698,19 @@ public class LevelObject
             }
             if (asset.rubbleEditor == EObjectRubbleEditor.DEAD && Level.isEditor)
             {
-                Transform transform4 = this.transform.Find("Editor");
-                if (transform4 != null)
+                Transform transform5 = this.transform.Find("Editor");
+                if (transform5 != null)
                 {
-                    transform4.gameObject.SetActive(value: true);
+                    transform5.gameObject.SetActive(value: true);
                 }
             }
         }
         bool flag = false;
-        if (asset.conditions != null && asset.conditions.Length != 0)
+        if (asset.conditions != null && asset.conditions.Length != 0 && !Level.isEditor && !Dedicator.IsDedicatedServer)
         {
-            _ = Level.isEditor;
+            areConditionsMet = false;
+            flag = true;
+            Player.onPlayerCreated = (PlayerCreated)Delegate.Combine(Player.onPlayerCreated, new PlayerCreated(onPlayerCreated));
         }
         if (!flag && (asset.holidayRestriction != 0 || asset.isGore) && !Level.isEditor)
         {

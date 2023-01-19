@@ -6,22 +6,25 @@ public class CommandUnban : Command
 {
     protected override void execute(CSteamID executorID, string parameter)
     {
-        CSteamID steamID;
-        if (!Provider.isServer)
+        if (Dedicator.IsDedicatedServer)
         {
-            CommandWindow.LogError(localization.format("NotRunningErrorText"));
-        }
-        else if (!PlayerTool.tryGetSteamID(parameter, out steamID))
-        {
-            CommandWindow.LogError(localization.format("InvalidSteamIDErrorText", parameter));
-        }
-        else if (!Provider.requestUnbanPlayer(executorID, steamID))
-        {
-            CommandWindow.LogError(localization.format("NoPlayerErrorText", steamID));
-        }
-        else
-        {
-            CommandWindow.Log(localization.format("UnbanText", steamID));
+            CSteamID steamID;
+            if (!Provider.isServer)
+            {
+                CommandWindow.LogError(localization.format("NotRunningErrorText"));
+            }
+            else if (!PlayerTool.tryGetSteamID(parameter, out steamID))
+            {
+                CommandWindow.LogError(localization.format("InvalidSteamIDErrorText", parameter));
+            }
+            else if (!Provider.requestUnbanPlayer(executorID, steamID))
+            {
+                CommandWindow.LogError(localization.format("NoPlayerErrorText", steamID));
+            }
+            else
+            {
+                CommandWindow.Log(localization.format("UnbanText", steamID));
+            }
         }
     }
 

@@ -149,12 +149,12 @@ public class ChatManager : SteamCaller
         string text = cmd.Substring(0, 1);
         if (text == "@" || text == "/")
         {
-            if (player.isAdmin)
+            if (!Dedicator.IsDedicatedServer || player.isAdmin)
             {
                 shouldExecuteCommand = true;
                 shouldList = false;
             }
-            if (fromUnityEvent && !Provider.configData.UnityEvents.Allow_Client_Commands)
+            if (Dedicator.IsDedicatedServer && fromUnityEvent && !Provider.configData.UnityEvents.Allow_Client_Commands)
             {
                 shouldExecuteCommand = false;
                 shouldList = false;
@@ -361,7 +361,7 @@ public class ChatManager : SteamCaller
         callingPlayer.lastChat = Time.realtimeSinceStartup;
         EChatMode eChatMode = (EChatMode)(flags & 0x7F);
         bool flag = (flags & 0x80) > 0;
-        if (text.Length < 2 || (flag && !Provider.configData.UnityEvents.Allow_Client_Messages))
+        if (text.Length < 2 || (Dedicator.IsDedicatedServer && flag && !Provider.configData.UnityEvents.Allow_Client_Messages))
         {
             return;
         }
@@ -506,7 +506,7 @@ public class ChatManager : SteamCaller
         {
             throw new ArgumentNullException("messenger");
         }
-        if (Provider.configData.UnityEvents.Allow_Server_Messages)
+        if (!Dedicator.IsDedicatedServer || Provider.configData.UnityEvents.Allow_Server_Messages)
         {
             UnturnedLog.info("UnityEventMsg {0}: '{1}'", messenger.gameObject.GetSceneHierarchyPath(), text);
             serverSendMessage(text, color, null, null, EChatMode.SAY, iconURL, useRichTextFormatting);
@@ -538,7 +538,6 @@ public class ChatManager : SteamCaller
         {
             throw new Exception("Tried to send server message, but currently a client! Text: " + text);
         }
-        ThreadUtil.assertIsGameThread();
         if (onServerSendingMessage != null)
         {
             onServerSendingMessage(ref text, ref color, fromPlayer, toPlayer, mode, ref iconURL, ref useRichTextFormatting);

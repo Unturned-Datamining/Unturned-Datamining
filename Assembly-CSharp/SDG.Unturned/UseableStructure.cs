@@ -103,7 +103,7 @@ public class UseableStructure : Useable
         {
             return;
         }
-        if (isServerBuildRequestInitiallyApproved)
+        if (Dedicator.IsDedicatedServer ? isServerBuildRequestInitiallyApproved : UpdatePendingPlacement())
         {
             if (base.channel.isOwner)
             {
@@ -116,7 +116,7 @@ public class UseableStructure : Useable
                 SendPlayConstruct.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner());
             }
         }
-        else if (hasServerReceivedBuildRequest)
+        else if (Dedicator.IsDedicatedServer && hasServerReceivedBuildRequest)
         {
             base.player.equipment.dequip();
         }
@@ -198,6 +198,10 @@ public class UseableStructure : Useable
         if (isWaitingForSoundTrigger && HasReachedSoundTrigger)
         {
             isWaitingForSoundTrigger = false;
+            if (!Dedicator.IsDedicatedServer)
+            {
+                base.player.playSound(equippedStructureAsset.use);
+            }
             if (Provider.isServer)
             {
                 AlertTool.alert(base.transform.position, 8f);

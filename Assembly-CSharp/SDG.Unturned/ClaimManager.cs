@@ -16,7 +16,7 @@ public class ClaimManager : MonoBehaviour
         for (int i = 0; i < bubbles.Count; i++)
         {
             ClaimBubble claimBubble = bubbles[i];
-            if ((isClaim ? ((claimBubble.origin - point).sqrMagnitude < 4f * claimBubble.sqrRadius) : ((claimBubble.origin - point).sqrMagnitude < claimBubble.sqrRadius)) && !OwnershipTool.checkToggle(owner, claimBubble.owner, group, claimBubble.group))
+            if ((isClaim ? ((claimBubble.origin - point).sqrMagnitude < 4f * claimBubble.sqrRadius) : ((claimBubble.origin - point).sqrMagnitude < claimBubble.sqrRadius)) && (Dedicator.IsDedicatedServer ? (!OwnershipTool.checkToggle(owner, claimBubble.owner, group, claimBubble.group)) : (!claimBubble.hasOwnership)))
             {
                 return false;
             }
@@ -28,7 +28,18 @@ public class ClaimManager : MonoBehaviour
     {
         foreach (ClaimPlant plant in plants)
         {
-            if (!(plant.parent != vehicle) && !OwnershipTool.checkToggle(owner, plant.owner, group, plant.group))
+            if (plant.parent != vehicle)
+            {
+                continue;
+            }
+            if (Dedicator.IsDedicatedServer)
+            {
+                if (!OwnershipTool.checkToggle(owner, plant.owner, group, plant.group))
+                {
+                    return false;
+                }
+            }
+            else if (!plant.hasOwnership)
             {
                 return false;
             }

@@ -9,7 +9,7 @@ public class Dedicator : MonoBehaviour
 
     public static string serverID;
 
-    public const bool IsDedicatedServer = true;
+    private static bool _isDedicated;
 
     public static CommandLineFlag offlineOnly = new CommandLineFlag(defaultValue: false, "-OfflineOnly");
 
@@ -19,10 +19,12 @@ public class Dedicator : MonoBehaviour
 
     public static CommandWindow commandWindow { get; protected set; }
 
-    [Obsolete("Server plugins do not need to check this because they run on the dedicated-server-only builds.")]
-    public static bool isDedicated => true;
+    public static bool IsDedicatedServer => _isDedicated;
 
-    public static bool isStandaloneDedicatedServer => true;
+    [Obsolete("Server plugins do not need to check this because they run on the dedicated-server-only builds.")]
+    public static bool isDedicated => _isDedicated;
+
+    public static bool isStandaloneDedicatedServer => false;
 
     public static bool hasBattlEye => _hasBattlEye;
 
@@ -30,7 +32,7 @@ public class Dedicator : MonoBehaviour
 
     private void Update()
     {
-        if (commandWindow != null)
+        if (IsDedicatedServer && commandWindow != null)
         {
             commandWindow.update();
         }
@@ -38,30 +40,20 @@ public class Dedicator : MonoBehaviour
 
     public void awake()
     {
-        bool num = CommandLine.tryGetServer(out serverVisibility, out serverID);
+        _isDedicated = CommandLine.tryGetServer(out serverVisibility, out serverID);
         _hasBattlEye = Environment.CommandLine.IndexOf("-BattlEye", StringComparison.OrdinalIgnoreCase) != -1;
         _isVR = false;
-        bool flag = !num;
-        if (flag)
+        UnturnedMasterVolume.mutedByDedicatedServer = IsDedicatedServer;
+        if (IsDedicatedServer)
         {
-            serverVisibility = ESteamServerVisibility.LAN;
-            serverID = "Default";
-        }
-        UnturnedMasterVolume.mutedByDedicatedServer = true;
-        commandWindow = new CommandWindow();
-        Application.targetFrameRate = 50;
-        if (flag)
-        {
-            CommandWindow.Log("Running standalone dedicated server, but launch arguments were not specified on the command-line.");
-            CommandWindow.LogFormat("Defaulting to {0} {1}. Valid command-line dedicated server launch arguments are:", serverID, serverVisibility);
-            CommandWindow.Log("+InternetServer/{ID}");
-            CommandWindow.Log("+LANServer/{ID}");
+            commandWindow = new CommandWindow();
+            Application.targetFrameRate = 50;
         }
     }
 
     private void OnApplicationQuit()
     {
-        if (commandWindow != null)
+        if (IsDedicatedServer && commandWindow != null)
         {
             commandWindow.shutdown();
         }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using SDG.HostBans;
 using SDG.Unturned;
 using Steamworks;
 using UnityEngine;
@@ -330,19 +331,24 @@ public class TempSteamworksMatchmaking
             ref string szValue2 = ref item8.m_szValue;
             szValue2 = szValue2 + "," + SDG.Unturned.Provider.getCameraModeTagAbbreviation(filterCamera);
         }
-        switch (filterMonetization)
-        {
-        case EServerMonetizationTag.None:
+        if (filterMonetization == EServerMonetizationTag.None)
         {
             ref string szValue3 = ref item8.m_szValue;
             szValue3 = szValue3 + "," + SDG.Unturned.Provider.GetMonetizationTagAbbreviation(filterMonetization);
-            break;
         }
-        case EServerMonetizationTag.NonGameplay:
-            filters.Add(new MatchMakingKeyValuePair_t("or", "2"));
-            filters.Add(new MatchMakingKeyValuePair_t("gametagsand", SDG.Unturned.Provider.GetMonetizationTagAbbreviation(EServerMonetizationTag.None)));
-            filters.Add(new MatchMakingKeyValuePair_t("gametagsand", SDG.Unturned.Provider.GetMonetizationTagAbbreviation(EServerMonetizationTag.NonGameplay)));
-            break;
+        else
+        {
+            bool flag = filterMonetization == EServerMonetizationTag.NonGameplay;
+            if (!LiveConfig.Get().ShouldServersWithoutMonetizationTagBeVisibleInInternetServerList)
+            {
+                flag |= string.IsNullOrWhiteSpace(PlaySettings.serversName);
+            }
+            if (flag)
+            {
+                filters.Add(new MatchMakingKeyValuePair_t("or", "2"));
+                filters.Add(new MatchMakingKeyValuePair_t("gametagsand", SDG.Unturned.Provider.GetMonetizationTagAbbreviation(EServerMonetizationTag.None)));
+                filters.Add(new MatchMakingKeyValuePair_t("gametagsand", SDG.Unturned.Provider.GetMonetizationTagAbbreviation(EServerMonetizationTag.NonGameplay)));
+            }
         }
         if (filterPro)
         {
@@ -458,7 +464,18 @@ public class TempSteamworksMatchmaking
             UnturnedLog.info($"Ignoring server \"{serverDetails.GetServerName()}\" because it has a different AppID ({serverDetails.m_nAppID})");
             return;
         }
+        EHostBanFlags eHostBanFlags = HostBansManager.Get().MatchBasicDetails(serverDetails.m_NetAdr.GetIP(), serverDetails.m_NetAdr.GetQueryPort(), serverDetails.GetServerName(), serverDetails.m_steamID.m_SteamID);
+        if (eHostBanFlags.HasFlag(EHostBanFlags.HiddenFromAllServerLists) || eHostBanFlags.HasFlag(EHostBanFlags.Blocked) || (_currentList == ESteamServerList.INTERNET && eHostBanFlags.HasFlag(EHostBanFlags.HiddenFromInternetServerList)))
+        {
+            return;
+        }
         SteamServerInfo steamServerInfo = new SteamServerInfo(serverDetails);
+        eHostBanFlags |= HostBansManager.Get().MatchExtendedDetails(steamServerInfo.descText, steamServerInfo.thumbnailURL);
+        if (eHostBanFlags.HasFlag(EHostBanFlags.HiddenFromAllServerLists) || eHostBanFlags.HasFlag(EHostBanFlags.Blocked) || (_currentList == ESteamServerList.INTERNET && eHostBanFlags.HasFlag(EHostBanFlags.HiddenFromInternetServerList)))
+        {
+            return;
+        }
+        steamServerInfo.SetServerListHostBanFlags(eHostBanFlags);
         if (index == serverListRefreshIndex)
         {
             if (onMasterServerQueryRefreshed != null)

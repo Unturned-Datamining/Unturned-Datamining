@@ -203,6 +203,12 @@ public class UseableGun : Useable
 
     private float crosshair;
 
+    private GameObject laserGameObject;
+
+    private Transform laserTransform;
+
+    private Material laserMaterial;
+
     private bool wasLaser;
 
     private bool wasLight;
@@ -546,6 +552,30 @@ public class UseableGun : Useable
         }
     }
 
+    private void PlayFlybyAudio(Vector3 origin, Vector3 direction, float range)
+    {
+        if (MainCamera.instance == null || (base.channel.isOwner && !base.player.look.isCam))
+        {
+            return;
+        }
+        Vector3 position = MainCamera.instance.transform.position;
+        float num = Vector3.Dot(position - origin, direction);
+        if (num > 0f && num < range)
+        {
+            Vector3 vector = origin + direction * num;
+            if ((vector - position).sqrMagnitude < 25f)
+            {
+                OneShotAudioDefinition oneShotAudioDefinition = Assets.coreMasterBundle.assetBundle.LoadAsset<OneShotAudioDefinition>("Assets/CoreMasterBundle/Effects/Guns/BulletFlyby.asset");
+                AudioClip randomClip = oneShotAudioDefinition.GetRandomClip();
+                OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(vector, randomClip);
+                oneShotAudioParameters.minDistance = 0f;
+                oneShotAudioParameters.maxDistance = 5f;
+                oneShotAudioParameters.RandomizePitch(oneShotAudioDefinition.minPitch, oneShotAudioDefinition.maxPitch);
+                oneShotAudioParameters.Play();
+            }
+        }
+    }
+
     private void playGunshot()
     {
         AudioClip clip = equippedGunAsset.shoot;
@@ -615,6 +645,7 @@ public class UseableGun : Useable
             {
                 trace(base.player.look.aim.position + base.player.look.aim.forward * UnityEngine.Random.Range(32f, Mathf.Min(64f, equippedGunAsset.range)), base.player.look.aim.forward);
             }
+            PlayFlybyAudio(base.player.look.aim.position, base.player.look.aim.forward, equippedGunAsset.range);
         }
         lastShot = Time.realtimeSinceStartup;
         if (equippedGunAsset.action == EAction.Bolt || equippedGunAsset.action == EAction.Pump)
@@ -1350,15 +1381,26 @@ public class UseableGun : Useable
                         {
                             trace(bulletInfo.pos + bulletInfo.dir * UnityEngine.Random.Range(32f, equippedGunAsset.ballisticTravel), bulletInfo.dir);
                         }
+                        if (pellets < 2)
+                        {
+                            PlayFlybyAudio(ray.origin, ray.direction, equippedGunAsset.ballisticTravel);
+                        }
                     }
-                }
-                else if (equippedGunAsset.range < 32f)
-                {
-                    trace(ray.origin + ray.direction * 32f, ray.direction);
                 }
                 else
                 {
-                    trace(ray.origin + ray.direction * UnityEngine.Random.Range(32f, Mathf.Min(64f, equippedGunAsset.range)), ray.direction);
+                    if (equippedGunAsset.range < 32f)
+                    {
+                        trace(ray.origin + ray.direction * 32f, ray.direction);
+                    }
+                    else
+                    {
+                        trace(ray.origin + ray.direction * UnityEngine.Random.Range(32f, Mathf.Min(64f, equippedGunAsset.range)), ray.direction);
+                    }
+                    if (pellets < 2)
+                    {
+                        PlayFlybyAudio(ray.origin, ray.direction, equippedGunAsset.range);
+                    }
                 }
                 if (base.player.input.isRaycastInvalid(raycastInfo))
                 {
@@ -1654,7 +1696,7 @@ public class UseableGun : Useable
                 }
                 if (bullet.dropID != 0)
                 {
-                    ItemManager.dropItem(new Item(bullet.dropID, bullet.dropAmount, bullet.dropQuality), vector3, playEffect: false, isDropped: true, wideSpread: false);
+                    ItemManager.dropItem(new Item(bullet.dropID, bullet.dropAmount, bullet.dropQuality), vector3, playEffect: false, Dedicator.IsDedicatedServer, wideSpread: false);
                 }
                 bullets.RemoveAt(0);
             }
@@ -2312,6 +2354,24 @@ public class UseableGun : Useable
         firstEventComponent = base.player.equipment.firstModel?.GetComponent<UseableGunEventHook>();
         thirdEventComponent = base.player.equipment.thirdModel?.GetComponent<UseableGunEventHook>();
         characterEventComponent = base.player.equipment.characterModel?.GetComponent<UseableGunEventHook>();
+        if (!Dedicator.IsDedicatedServer)
+        {
+            if (base.channel.isOwner)
+            {
+                gunshotAudioSource = base.player.gameObject.AddComponent<AudioSource>();
+                gunshotAudioSource.priority = 63;
+            }
+            else
+            {
+                gunshotAudioSource = base.player.equipment.thirdModel.gameObject.AddComponent<AudioSource>();
+            }
+            gunshotAudioSource.clip = null;
+            gunshotAudioSource.spatialBlend = 1f;
+            gunshotAudioSource.rolloffMode = AudioRolloffMode.Custom;
+            gunshotAudioSource.SetCustomCurve(AudioSourceCurveType.CustomRolloff, (Resources.Load("Guns/Rolloff") as GameObject).GetComponent<AudioSource>().GetCustomCurve(AudioSourceCurveType.CustomRolloff));
+            gunshotAudioSource.volume = 1f;
+            gunshotAudioSource.playOnAwake = false;
+        }
         if (base.channel.isOwner)
         {
             firstAttachments = base.player.equipment.firstModel.gameObject.GetComponent<Attachments>();
@@ -2385,6 +2445,26 @@ public class UseableGun : Useable
             }
         }
         thirdMinigunBarrel = thirdAttachments.transform.Find("Model_1");
+        if (!Dedicator.IsDedicatedServer && thirdMinigunBarrel != null && equippedGunAsset.action == EAction.Minigun)
+        {
+            if (base.channel.isOwner)
+            {
+                whir = base.player.gameObject.AddComponent<AudioSource>();
+            }
+            else
+            {
+                whir = base.player.equipment.thirdModel.gameObject.AddComponent<AudioSource>();
+            }
+            whir.clip = equippedGunAsset.minigun;
+            whir.spatialBlend = 1f;
+            whir.rolloffMode = AudioRolloffMode.Linear;
+            whir.minDistance = 1f;
+            whir.maxDistance = 16f;
+            whir.volume = 0f;
+            whir.playOnAwake = false;
+            whir.loop = true;
+            whir.Play();
+        }
         if (thirdAttachments.ejectHook != null && equippedGunAsset.action != EAction.String && equippedGunAsset.action != EAction.Rocket)
         {
             EffectAsset effectAsset3 = equippedGunAsset.FindShellEffectAsset();
@@ -3378,6 +3458,24 @@ public class UseableGun : Useable
                 wasRange = false;
                 wasBayonet = false;
             }
+            if (firstAttachments.tacticalAsset != null && firstAttachments.tacticalAsset.isLaser && interact)
+            {
+                if (laserGameObject == null)
+                {
+                    laserGameObject = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Guns/Laser"));
+                    laserTransform = laserGameObject.transform;
+                    laserTransform.name = "Laser";
+                    laserTransform.position = Vector3.zero;
+                    laserTransform.rotation = Quaternion.identity;
+                    laserMaterial = laserGameObject.GetComponent<Renderer>().material;
+                }
+                laserMaterial.SetColor("_Color", firstAttachments.tacticalAsset.laserColor);
+                laserMaterial.SetColor("_EmissionColor", firstAttachments.tacticalAsset.laserColor * 2f);
+            }
+            else if (laserGameObject != null)
+            {
+                DestroyLaser();
+            }
             if (firstAttachments.tacticalAsset != null && firstAttachments.tacticalAsset.isRangefinder && interact)
             {
                 if (rangeLabel == null)
@@ -3487,6 +3585,45 @@ public class UseableGun : Useable
         if (thirdAttachments.magazineModel != null)
         {
             thirdAttachments.magazineModel.gameObject.SetActive(wasMagazineModelVisible);
+        }
+        if (!Dedicator.IsDedicatedServer && thirdAttachments.tacticalAsset != null)
+        {
+            if (thirdAttachments.tacticalAsset.isLight || thirdAttachments.tacticalAsset.isLaser)
+            {
+                if (base.channel.isOwner && firstAttachments.lightHook != null)
+                {
+                    firstAttachments.lightHook.gameObject.SetActive(interact);
+                }
+                if (thirdAttachments.lightHook != null)
+                {
+                    thirdAttachments.lightHook.gameObject.SetActive(interact);
+                }
+                if (firstFakeLight_0 != null)
+                {
+                    firstFakeLight_0.gameObject.SetActive(interact);
+                }
+            }
+            else if (thirdAttachments.tacticalAsset.isRangefinder)
+            {
+                if (base.channel.isOwner && firstAttachments.lightHook != null)
+                {
+                    firstAttachments.lightHook.gameObject.SetActive(inRange && interact);
+                    firstAttachments.light2Hook.gameObject.SetActive(!inRange && interact);
+                }
+                if (base.channel.isOwner && thirdAttachments.lightHook != null)
+                {
+                    thirdAttachments.lightHook.gameObject.SetActive(inRange && interact);
+                    thirdAttachments.light2Hook.gameObject.SetActive(!inRange && interact);
+                }
+                if (firstFakeLight_0 != null)
+                {
+                    firstFakeLight_0.gameObject.SetActive(inRange && interact);
+                }
+                if (firstFakeLight_1 != null)
+                {
+                    firstFakeLight_1.gameObject.SetActive(!inRange && interact);
+                }
+            }
         }
         if (thirdAttachments.tacticalAsset != null && thirdAttachments.tacticalAsset.isLight && interact)
         {
@@ -4159,6 +4296,31 @@ public class UseableGun : Useable
 
     private void Update()
     {
+        if (!Dedicator.IsDedicatedServer && base.player.equipment.asset is ItemGunAsset itemGunAsset && itemGunAsset.action == EAction.Minigun)
+        {
+            if (isMinigunSpinning)
+            {
+                minigunSpeed = Mathf.Lerp(minigunSpeed, 1f, 8f * Time.deltaTime);
+            }
+            else
+            {
+                minigunSpeed = Mathf.Lerp(minigunSpeed, 0f, 2f * Time.deltaTime);
+            }
+            minigunDistance += minigunSpeed * 720f * Time.deltaTime;
+            if (firstMinigunBarrel != null)
+            {
+                firstMinigunBarrel.localRotation = Quaternion.Euler(0f, minigunDistance, 0f);
+            }
+            if (thirdMinigunBarrel != null)
+            {
+                thirdMinigunBarrel.localRotation = Quaternion.Euler(0f, minigunDistance, 0f);
+            }
+            if (whir != null)
+            {
+                whir.volume = minigunSpeed;
+                whir.pitch = Mathf.Lerp(0.75f, 1f, minigunSpeed);
+            }
+        }
         if (base.player.movement.getVehicle() != null && base.player.movement.getVehicle().passengers[base.player.movement.getSeat()].turret != null)
         {
             Transform turretAim = base.player.movement.getVehicle().passengers[base.player.movement.getSeat()].turretAim;
@@ -4185,6 +4347,85 @@ public class UseableGun : Useable
         if (!base.channel.isOwner)
         {
             return;
+        }
+        if (laserTransform != null)
+        {
+            if (base.player.look.perspective == EPlayerPerspective.FIRST)
+            {
+                Quaternion quaternion = Quaternion.Euler(base.player.animator.recoilViewmodelCameraRotation.currentPosition);
+                Vector3 vector = base.player.look.aim.rotation * quaternion * Vector3.forward;
+                if (!base.player.look.isCam && Physics.Raycast(new Ray(base.player.look.aim.position, vector), out contact, 2048f, RayMasks.BLOCK_LASER))
+                {
+                    laserTransform.position = contact.point + vector * -0.05f;
+                    laserGameObject.SetActive(value: true);
+                }
+                else
+                {
+                    laserGameObject.SetActive(value: false);
+                }
+            }
+            else if (base.player.look.perspective == EPlayerPerspective.THIRD)
+            {
+                if (!base.player.look.isCam && Physics.Raycast(new Ray(MainCamera.instance.transform.position, MainCamera.instance.transform.forward), out var hitInfo, 512f, RayMasks.DAMAGE_CLIENT))
+                {
+                    if (Physics.Raycast(new Ray(base.player.look.aim.position, (hitInfo.point - base.player.look.aim.position).normalized), out contact, 2048f, RayMasks.BLOCK_LASER))
+                    {
+                        laserTransform.position = contact.point + base.player.look.aim.forward * -0.05f;
+                        laserGameObject.SetActive(value: true);
+                    }
+                    else
+                    {
+                        laserGameObject.SetActive(value: false);
+                    }
+                }
+                else
+                {
+                    laserGameObject.SetActive(value: false);
+                }
+            }
+        }
+        else if (firstAttachments != null && firstAttachments.tacticalAsset != null && firstAttachments.tacticalAsset.isRangefinder)
+        {
+            bool flag = false;
+            if (base.player.look.perspective == EPlayerPerspective.FIRST)
+            {
+                flag = Physics.Raycast(new Ray(base.player.look.aim.position, base.player.look.aim.forward), out contact, equippedGunAsset.rangeRangefinder, RayMasks.BLOCK_LASER);
+            }
+            else if (base.player.look.perspective == EPlayerPerspective.THIRD)
+            {
+                flag = Physics.Raycast(new Ray(MainCamera.instance.transform.position, MainCamera.instance.transform.forward), out var hitInfo2, 512f, RayMasks.DAMAGE_CLIENT) && Physics.Raycast(new Ray(base.player.look.aim.position, (hitInfo2.point - base.player.look.aim.position).normalized), out contact, equippedGunAsset.rangeRangefinder, RayMasks.BLOCK_LASER);
+            }
+            if (rangeLabel != null)
+            {
+                if (inRange)
+                {
+                    if (OptionsSettings.metric)
+                    {
+                        rangeLabel.text = (int)contact.distance + " m";
+                    }
+                    else
+                    {
+                        rangeLabel.text = (int)MeasurementTool.MtoYd(contact.distance) + " yd";
+                    }
+                }
+                else if (OptionsSettings.metric)
+                {
+                    rangeLabel.text = "? m";
+                }
+                else
+                {
+                    rangeLabel.text = "? yd";
+                }
+                rangeLabel.textColor = (inRange ? Palette.COLOR_G : Palette.COLOR_R);
+            }
+            if (flag != inRange)
+            {
+                inRange = flag;
+                firstAttachments.lightHook.gameObject.SetActive(inRange && interact);
+                firstAttachments.light2Hook.gameObject.SetActive(!inRange && interact);
+                thirdAttachments.lightHook.gameObject.SetActive(inRange && interact);
+                thirdAttachments.light2Hook.gameObject.SetActive(!inRange && interact);
+            }
         }
         if (firstFakeLight != null && thirdMuzzleEmitter != null)
         {
@@ -4436,5 +4677,16 @@ public class UseableGun : Useable
 
     private void DestroyLaser()
     {
+        if (laserGameObject != null)
+        {
+            UnityEngine.Object.Destroy(laserGameObject);
+            laserGameObject = null;
+        }
+        laserTransform = null;
+        if (laserMaterial != null)
+        {
+            UnityEngine.Object.Destroy(laserMaterial);
+            laserMaterial = null;
+        }
     }
 }

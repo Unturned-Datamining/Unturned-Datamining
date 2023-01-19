@@ -91,7 +91,7 @@ public class Logs : MonoBehaviour
         if (!noDefaultLog)
         {
             string pATH = ReadWrite.PATH;
-            pATH = pATH + "/Logs/Server_" + Dedicator.serverID.Replace(' ', '_') + ".log";
+            pATH = ((!Dedicator.IsDedicatedServer) ? (pATH + "/Logs/Client.log") : (pATH + "/Logs/Server_" + Dedicator.serverID.Replace(' ', '_') + ".log"));
             double realtimeSinceStartupAsDouble = Time.realtimeSinceStartupAsDouble;
             setLogFilePath(pATH);
             double num = Time.realtimeSinceStartupAsDouble - realtimeSinceStartupAsDouble;

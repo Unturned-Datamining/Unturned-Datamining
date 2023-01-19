@@ -104,5 +104,52 @@ public class SkinAsset : Asset
         _hasBarrel = data.has("Barrel");
         _hasMagazine = data.has("Magazine");
         ragdollEffect = data.readEnum("Ragdoll_Effect", ERagdollEffect.NONE);
+        if (Dedicator.IsDedicatedServer)
+        {
+            return;
+        }
+        _primarySkin = loadRequiredAsset<Material>(bundle, "Skin_Primary");
+        _secondarySkins = new Dictionary<ushort, Material>();
+        ushort num = data.readUInt16("Secondary_Skins", 0);
+        for (ushort num2 = 0; num2 < num; num2 = (ushort)(num2 + 1))
+        {
+            ushort key = data.readUInt16("Secondary_" + num2, 0);
+            if (!secondarySkins.ContainsKey(key))
+            {
+                Material value = loadRequiredAsset<Material>(bundle, "Skin_Secondary_" + key);
+                secondarySkins.Add(key, value);
+            }
+        }
+        _attachmentSkin = bundle.load<Material>("Skin_Attachment");
+        _tertiarySkin = bundle.load<Material>("Skin_Tertiary");
+        ushort num3 = data.readUInt16("Override_Meshes", 0);
+        overrideMeshes = new List<Mesh>(num3);
+        for (ushort num4 = 0; num4 < num3; num4 = (ushort)(num4 + 1))
+        {
+            GameObject gameObject = bundle.load<GameObject>("Override_Mesh_" + num4);
+            if (gameObject != null)
+            {
+                MeshFilter component = gameObject.GetComponent<MeshFilter>();
+                if (component != null)
+                {
+                    if (component.sharedMesh != null)
+                    {
+                        overrideMeshes.Add(component.sharedMesh);
+                    }
+                    else
+                    {
+                        Assets.reportError("missing MeshFilter sharedMesh on " + gameObject.name);
+                    }
+                }
+                else
+                {
+                    Assets.reportError("missing MeshFilter on " + gameObject.name);
+                }
+            }
+            else
+            {
+                Assets.reportError("missing Override_Mesh_" + num4);
+            }
+        }
     }
 }
