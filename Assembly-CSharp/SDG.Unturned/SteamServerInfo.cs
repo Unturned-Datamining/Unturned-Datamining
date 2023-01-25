@@ -15,6 +15,16 @@ public class SteamServerInfo
         Unknown
     }
 
+    public enum EInfoSource
+    {
+        DirectConnect,
+        InternetServerList,
+        FavoriteServerList,
+        FriendServerList,
+        HistoryServerList,
+        LanServerList
+    }
+
     private CSteamID _steamID;
 
     private uint _ip;
@@ -48,6 +58,8 @@ public class SteamServerInfo
     private bool _isPassworded;
 
     private bool _isPro;
+
+    internal EInfoSource infoSource;
 
     internal EHostBanFlags hostBanFlags;
 
@@ -136,7 +148,7 @@ public class SteamServerInfo
         }
     }
 
-    public SteamServerInfo(gameserveritem_t data)
+    public SteamServerInfo(gameserveritem_t data, EInfoSource infoSource)
     {
         _steamID = data.m_steamID;
         _ip = data.m_NetAdr.GetIP();
@@ -270,6 +282,7 @@ public class SteamServerInfo
         }
         _isPassworded = data.m_bPassword;
         IsVACSecure = data.m_bSecure;
+        this.infoSource = infoSource;
     }
 
     public SteamServerInfo(string newName, EGameMode newMode, bool newVACSecure, bool newBattlEyeEnabled, bool newPro)

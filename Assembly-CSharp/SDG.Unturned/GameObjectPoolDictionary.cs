@@ -44,33 +44,45 @@ public class GameObjectPoolDictionary
 
     public void Destroy(GameObject element)
     {
-        if (!(element == null))
+        if (element == null)
         {
-            PoolReference component = element.GetComponent<PoolReference>();
-            if (component == null || component.pool == null)
+            return;
+        }
+        PoolReference component = element.GetComponent<PoolReference>();
+        if (component == null || component.pool == null)
+        {
+            if (element.transform.parent != null)
             {
-                Object.Destroy(element);
+                EffectManager.UnregisterAttachment(element);
+                element.transform.parent = null;
             }
-            else
-            {
-                component.pool.Destroy(component);
-            }
+            Object.Destroy(element);
+        }
+        else
+        {
+            component.pool.Destroy(component);
         }
     }
 
     public void Destroy(GameObject element, float t)
     {
-        if (!(element == null))
+        if (element == null)
         {
-            PoolReference component = element.GetComponent<PoolReference>();
-            if (component == null || component.pool == null)
+            return;
+        }
+        PoolReference component = element.GetComponent<PoolReference>();
+        if (component == null || component.pool == null)
+        {
+            if (element.transform.parent != null)
             {
-                Object.Destroy(element);
+                EffectManager.UnregisterAttachment(element);
+                element.transform.parent = null;
             }
-            else
-            {
-                component.DestroyIntoPool(t);
-            }
+            Object.Destroy(element);
+        }
+        else
+        {
+            component.DestroyIntoPool(t);
         }
     }
 

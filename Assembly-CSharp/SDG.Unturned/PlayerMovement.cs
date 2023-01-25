@@ -891,30 +891,30 @@ public class PlayerMovement : PlayerCaller
                 if (num > num2)
                 {
                     flag3 = true;
-                    Vector3 vector = Vector3.Cross(Vector3.Cross(Vector3.up, ground.normal), ground.normal);
-                    velocity += vector * 16f * deltaTime;
+                    Vector3 normalized = Vector3.Cross(Vector3.Cross(Vector3.up, ground.normal).normalized, ground.normal).normalized;
+                    velocity += normalized * 16f * deltaTime;
                     flag2 = true;
                 }
             }
             if (!flag3)
             {
-                Vector3 vector2 = base.transform.rotation * move.normalized * speed;
+                Vector3 vector = base.transform.rotation * move.normalized * speed;
                 if (isGrounded)
                 {
                     PhysicsMaterialCharacterFrictionProperties characterFrictionProperties = PhysicMaterialCustomData.GetCharacterFrictionProperties(materialName);
                     if (characterFrictionProperties.mode == EPhysicsMaterialCharacterFrictionMode.ImmediatelyResponsive)
                     {
-                        vector2 = Vector3.Cross(Vector3.Cross(Vector3.up, vector2), ground.normal);
-                        vector2.y = Mathf.Min(vector2.y, 0f);
-                        velocity = vector2;
+                        vector = Vector3.Cross(Vector3.Cross(Vector3.up, vector).normalized, ground.normal).normalized * speed;
+                        vector.y = Mathf.Min(vector.y, 0f);
+                        velocity = vector;
                     }
                     else
                     {
-                        Vector3 vector3 = Vector3.ProjectOnPlane(velocity, ground.normal);
-                        float magnitude = vector3.magnitude;
-                        Vector3 vector4 = Vector3.Cross(Vector3.Cross(Vector3.up, vector2), ground.normal);
-                        vector4 *= characterFrictionProperties.maxSpeedMultiplier;
-                        float magnitude2 = vector4.magnitude;
+                        Vector3 vector2 = Vector3.ProjectOnPlane(velocity, ground.normal);
+                        float magnitude = vector2.magnitude;
+                        Vector3 vector3 = Vector3.Cross(Vector3.Cross(Vector3.up, vector).normalized, ground.normal).normalized * speed;
+                        vector3 *= characterFrictionProperties.maxSpeedMultiplier;
+                        float magnitude2 = vector3.magnitude;
                         float maxMagnitude;
                         if (magnitude > magnitude2)
                         {
@@ -925,9 +925,9 @@ public class PlayerMovement : PlayerCaller
                         {
                             maxMagnitude = magnitude2;
                         }
-                        Vector3 vector5 = vector4 * characterFrictionProperties.accelerationMultiplier;
-                        Vector3 vector6 = vector3 + vector5 * deltaTime;
-                        velocity = vector6.ClampMagnitude(maxMagnitude);
+                        Vector3 vector4 = vector3 * characterFrictionProperties.accelerationMultiplier;
+                        Vector3 vector5 = vector2 + vector4 * deltaTime;
+                        velocity = vector5.ClampMagnitude(maxMagnitude);
                         flag2 = true;
                     }
                 }
@@ -936,8 +936,8 @@ public class PlayerMovement : PlayerCaller
                     velocity.y += Physics.gravity.y * ((fall <= 0f) ? totalGravityMultiplier : 1f) * deltaTime * 3f;
                     float a = ((totalGravityMultiplier < 0.99f) ? (Physics.gravity.y * 2f * totalGravityMultiplier) : (-100f));
                     velocity.y = Mathf.Max(a, velocity.y);
-                    float horizontalMagnitude = vector2.GetHorizontalMagnitude();
-                    Vector3 vector7 = velocity.GetHorizontal();
+                    float horizontalMagnitude = vector.GetHorizontalMagnitude();
+                    Vector3 vector6 = velocity.GetHorizontal();
                     float horizontalMagnitude2 = velocity.GetHorizontalMagnitude();
                     float maxMagnitude2;
                     if (horizontalMagnitude2 > horizontalMagnitude)
@@ -949,11 +949,11 @@ public class PlayerMovement : PlayerCaller
                     {
                         maxMagnitude2 = horizontalMagnitude;
                     }
-                    Vector3 vector8 = vector2 * (4f * Provider.modeConfigData.Gameplay.AirStrafing_Acceleration_Multiplier);
-                    Vector3 vector9 = vector7 + vector8 * deltaTime;
-                    vector9 = vector9.ClampHorizontalMagnitude(maxMagnitude2);
-                    velocity.x = vector9.x;
-                    velocity.z = vector9.z;
+                    Vector3 vector7 = vector * (4f * Provider.modeConfigData.Gameplay.AirStrafing_Acceleration_Multiplier);
+                    Vector3 vector8 = vector6 + vector7 * deltaTime;
+                    vector8 = vector8.ClampHorizontalMagnitude(maxMagnitude2);
+                    velocity.x = vector8.x;
+                    velocity.z = vector8.z;
                     flag2 = true;
                 }
             }

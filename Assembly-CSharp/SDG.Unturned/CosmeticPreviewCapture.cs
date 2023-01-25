@@ -66,6 +66,7 @@ public class CosmeticPreviewCapture : MonoBehaviour
 
     private IEnumerator CaptureAllCosmeticsCoroutine()
     {
+        yield return RenderDefaultCharacter();
         string dirPath201 = PathEx.Join(UnturnedPaths.RootDirectory, "Extras", "CosmeticPreviews_2048x2048");
         string dirPath202 = PathEx.Join(UnturnedPaths.RootDirectory, "Extras", "CosmeticPreviews_400x400");
         string dirPath200 = PathEx.Join(UnturnedPaths.RootDirectory, "Extras", "CosmeticPreviews_200x200");
@@ -97,6 +98,7 @@ public class CosmeticPreviewCapture : MonoBehaviour
 
     private IEnumerator CaptureOutfitsCoroutine(List<OutfitAsset> outfitAssets)
     {
+        yield return RenderDefaultCharacter();
         string dirPath201 = PathEx.Join(UnturnedPaths.RootDirectory, "Extras", "OutfitPreviews_2048x2048");
         string dirPath202 = PathEx.Join(UnturnedPaths.RootDirectory, "Extras", "OutfitPreviews_400x400");
         string dirPath200 = PathEx.Join(UnturnedPaths.RootDirectory, "Extras", "OutfitPreviews_200x200");
@@ -210,6 +212,17 @@ public class CosmeticPreviewCapture : MonoBehaviour
             EItemType.MASK => hatCamera, 
             _ => null, 
         };
+    }
+
+    private IEnumerator RenderDefaultCharacter()
+    {
+        yield return new WaitForEndOfFrame();
+        clothes.hair = 1;
+        clothes.apply();
+        outfitCamera.targetTexture = targetTexture400;
+        outfitCamera.Render();
+        outfitCamera.targetTexture = null;
+        clothes.hair = 0;
     }
 
     private IEnumerator Render(Camera cameraComponent, RenderTexture targetTexture, RenderTexture downsampleTexture, Texture2D exportTexture, string exportFilePath)

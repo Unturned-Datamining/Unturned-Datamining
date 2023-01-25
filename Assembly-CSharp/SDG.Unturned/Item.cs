@@ -70,13 +70,13 @@ public class Item
         }
         if (origin != 0)
         {
-            amount = itemAsset.amount;
+            amount = MathfEx.Max(itemAsset.amount, 1);
             quality = 100;
         }
         else
         {
-            amount = itemAsset.count;
-            quality = itemAsset.quality;
+            amount = MathfEx.Max(itemAsset.count, 1);
+            quality = MathfEx.Clamp(itemAsset.quality, 0, 100);
         }
         state = itemAsset.getState(origin);
     }
@@ -101,11 +101,11 @@ public class Item
         }
         if (origin != 0)
         {
-            amount = itemAsset.amount;
+            amount = MathfEx.Max(itemAsset.amount, 1);
         }
         else
         {
-            amount = itemAsset.count;
+            amount = MathfEx.Max(itemAsset.count, 1);
         }
         state = itemAsset.getState(origin);
     }

@@ -398,7 +398,7 @@ public class TempSteamworksMatchmaking
         cleanupServerQuery();
         if (data.m_nAppID == SDG.Unturned.Provider.APP_ID.m_AppId)
         {
-            SteamServerInfo steamServerInfo = new SteamServerInfo(data);
+            SteamServerInfo steamServerInfo = new SteamServerInfo(data, SteamServerInfo.EInfoSource.DirectConnect);
             if (!steamServerInfo.isPro || SDG.Unturned.Provider.isPro)
             {
                 if (autoJoinServerQuery && (!steamServerInfo.isPassworded || !string.IsNullOrEmpty(connectionInfo.password)))
@@ -469,7 +469,14 @@ public class TempSteamworksMatchmaking
         {
             return;
         }
-        SteamServerInfo steamServerInfo = new SteamServerInfo(serverDetails);
+        SteamServerInfo steamServerInfo = new SteamServerInfo(serverDetails, _currentList switch
+        {
+            ESteamServerList.FRIENDS => SteamServerInfo.EInfoSource.FriendServerList, 
+            ESteamServerList.FAVORITES => SteamServerInfo.EInfoSource.FavoriteServerList, 
+            ESteamServerList.HISTORY => SteamServerInfo.EInfoSource.HistoryServerList, 
+            ESteamServerList.LAN => SteamServerInfo.EInfoSource.LanServerList, 
+            _ => SteamServerInfo.EInfoSource.InternetServerList, 
+        });
         eHostBanFlags |= HostBansManager.Get().MatchExtendedDetails(steamServerInfo.descText, steamServerInfo.thumbnailURL);
         if (eHostBanFlags.HasFlag(EHostBanFlags.HiddenFromAllServerLists) || eHostBanFlags.HasFlag(EHostBanFlags.Blocked) || (_currentList == ESteamServerList.INTERNET && eHostBanFlags.HasFlag(EHostBanFlags.HiddenFromInternetServerList)))
         {

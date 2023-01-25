@@ -40,4 +40,36 @@ internal class HousingEdge
             return false;
         }
     }
+
+    public bool CanAttachRoof
+    {
+        get
+        {
+            if (forwardFloors.Count + backwardFloors.Count + walls.Count > 0)
+            {
+                return true;
+            }
+            if (lowerEdge != null && lowerEdge.HasFullHeightWall())
+            {
+                return true;
+            }
+            if (vertex0 != null && vertex1 != null && vertex0.lowerVertex != null && vertex1.lowerVertex != null && vertex0.lowerVertex.HasFullHeightPillar() && vertex1.lowerVertex.HasFullHeightPillar())
+            {
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public bool HasFullHeightWall()
+    {
+        foreach (StructureDrop wall in walls)
+        {
+            if (wall.asset.construct == EConstruct.WALL)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

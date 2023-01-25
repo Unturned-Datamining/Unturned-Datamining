@@ -255,6 +255,7 @@ public class MenuPlayServerInfoUI
         linkUrls = null;
         new IPv4Address(serverInfo.ip);
         bool flag = !serverInfo.steamID.BPersistentGameServerAccount() && new IPv4Address(serverInfo.ip).IsWideAreaNetwork;
+        flag &= serverInfo.infoSource != SteamServerInfo.EInfoSource.LanServerList;
         flag &= !LiveConfig.Get().ShouldAllowJoiningInternetServersWithoutGslt;
         if (flag)
         {

@@ -49,7 +49,11 @@ public class GameObjectPool
         {
             GameObject gameObject = reference.gameObject;
             gameObject.SetActive(value: false);
-            gameObject.transform.parent = null;
+            if (gameObject.transform.parent != null)
+            {
+                EffectManager.UnregisterAttachment(gameObject);
+                gameObject.transform.parent = null;
+            }
             pool.Push(gameObject);
             active.RemoveFast(reference);
             reference.inPool = true;
@@ -70,7 +74,11 @@ public class GameObjectPool
             {
                 GameObject gameObject = poolReference.gameObject;
                 gameObject.SetActive(value: false);
-                gameObject.transform.parent = null;
+                if (gameObject.transform.parent != null)
+                {
+                    EffectManager.UnregisterAttachment(gameObject);
+                    gameObject.transform.parent = null;
+                }
                 pool.Push(gameObject);
                 active.RemoveAtFast(num);
                 poolReference.inPool = true;

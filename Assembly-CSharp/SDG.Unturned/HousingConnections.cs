@@ -587,7 +587,7 @@ public class HousingConnections
         return (1f - num) * sqrMagnitude;
     }
 
-    internal bool FindEmptyFloorSlot(Ray ray, out Vector3 position, out float rotation)
+    internal bool FindEmptyFloorSlot(Ray ray, bool isRoof, out Vector3 position, out float rotation)
     {
         position = default(Vector3);
         rotation = 0f;
@@ -595,6 +595,10 @@ public class HousingConnections
         bool result = false;
         foreach (HousingEdge item in edgesGrid.EnumerateItemsInSquare(ray.origin, 8f))
         {
+            if (isRoof && !item.CanAttachRoof)
+            {
+                continue;
+            }
             if (item.forwardFloors.IsEmpty())
             {
                 Vector3 testPosition = item.position + item.direction * 3f * 0.5f;
@@ -695,11 +699,11 @@ public class HousingConnections
         return result;
     }
 
-    private bool SnapFloorPlacementToEdge(ref Vector3 placementPosition)
+    private bool SnapFloorPlacementToEdge(bool isRoof, ref Vector3 placementPosition)
     {
         foreach (HousingEdge item in edgesGrid.EnumerateItemsInSquare(placementPosition, 3.02f))
         {
-            if (item.backwardFloors.IsEmpty() || item.forwardFloors.IsEmpty())
+            if ((item.backwardFloors.IsEmpty() || item.forwardFloors.IsEmpty()) && (!isRoof || item.CanAttachRoof))
             {
                 Vector3 vector = item.position + item.direction * 3f;
                 if (vector.IsNearlyEqual(placementPosition, 0.02f))
@@ -863,7 +867,7 @@ public class HousingConnections
 
     internal EHousingPlacementResult ValidateSquareFloorPlacement(float terrainTestHeight, ref Vector3 placementPosition, float placementRotation, ref string obstructionHint)
     {
-        SnapFloorPlacementToEdge(ref placementPosition);
+        SnapFloorPlacementToEdge(isRoof: false, ref placementPosition);
         if (!IsFloorAboveGround(placementPosition, terrainTestHeight))
         {
             return EHousingPlacementResult.MissingGround;
@@ -911,7 +915,7 @@ public class HousingConnections
 
     internal EHousingPlacementResult ValidateTriangleFloorPlacement(float terrainTestHeight, ref Vector3 placementPosition, float placementRotation, ref string obstructionHint)
     {
-        SnapFloorPlacementToEdge(ref placementPosition);
+        SnapFloorPlacementToEdge(isRoof: false, ref placementPosition);
         if (!IsFloorAboveGround(placementPosition, terrainTestHeight))
         {
             return EHousingPlacementResult.MissingGround;
@@ -946,7 +950,7 @@ public class HousingConnections
 
     internal EHousingPlacementResult ValidateSquareRoofPlacement(ref Vector3 placementPosition, float placementRotation, ref string obstructionHint)
     {
-        if (!SnapFloorPlacementToEdge(ref placementPosition))
+        if (!SnapFloorPlacementToEdge(isRoof: true, ref placementPosition))
         {
             return EHousingPlacementResult.MissingSlot;
         }
@@ -1001,7 +1005,7 @@ public class HousingConnections
 
     internal EHousingPlacementResult ValidateTriangleRoofPlacement(ref Vector3 placementPosition, float placementRotation, ref string obstructionHint)
     {
-        if (!SnapFloorPlacementToEdge(ref placementPosition))
+        if (!SnapFloorPlacementToEdge(isRoof: true, ref placementPosition))
         {
             return EHousingPlacementResult.MissingSlot;
         }

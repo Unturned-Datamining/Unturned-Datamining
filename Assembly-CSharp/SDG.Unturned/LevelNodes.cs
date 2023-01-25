@@ -41,6 +41,7 @@ public class LevelNodes
         }
     }
 
+    [Obsolete("All legacy node types have been converted to subclasses of IDevkitHierarchyItem")]
     public static List<Node> nodes => _nodes;
 
     public static byte[] hash { get; private set; }
@@ -48,7 +49,7 @@ public class LevelNodes
     internal static void AutoConvertLegacyVolumes()
     {
         UnturnedLog.info("Auto converting legacy volumes");
-        foreach (Node node in nodes)
+        foreach (Node node in _nodes)
         {
             if (node is ArenaNode arenaNode)
             {
@@ -129,7 +130,7 @@ public class LevelNodes
     internal static void AutoConvertLegacyNodes()
     {
         UnturnedLog.info("Auto converting legacy nodes");
-        foreach (Node node in nodes)
+        foreach (Node node in _nodes)
         {
             if (node is AirdropNode airdropNode)
             {
@@ -152,7 +153,7 @@ public class LevelNodes
 
     internal static Node FindLocationNode(string id)
     {
-        foreach (Node node in nodes)
+        foreach (Node node in _nodes)
         {
             if (node.type == ENodeType.LOCATION && string.Equals(((LocationNode)node).name, id, StringComparison.InvariantCultureIgnoreCase))
             {
@@ -167,28 +168,28 @@ public class LevelNodes
         switch (type)
         {
         case ENodeType.LOCATION:
-            nodes.Add(new LocationNode(point));
+            _nodes.Add(new LocationNode(point));
             break;
         case ENodeType.SAFEZONE:
-            nodes.Add(new SafezoneNode(point));
+            _nodes.Add(new SafezoneNode(point));
             break;
         case ENodeType.PURCHASE:
-            nodes.Add(new PurchaseNode(point));
+            _nodes.Add(new PurchaseNode(point));
             break;
         case ENodeType.ARENA:
-            nodes.Add(new ArenaNode(point));
+            _nodes.Add(new ArenaNode(point));
             break;
         case ENodeType.DEADZONE:
-            nodes.Add(new DeadzoneNode(point));
+            _nodes.Add(new DeadzoneNode(point));
             break;
         case ENodeType.AIRDROP:
-            nodes.Add(new AirdropNode(point));
+            _nodes.Add(new AirdropNode(point));
             break;
         case ENodeType.EFFECT:
-            nodes.Add(new EffectNode(point));
+            _nodes.Add(new EffectNode(point));
             break;
         }
-        return nodes[nodes.Count - 1].model;
+        return _nodes[_nodes.Count - 1].model;
     }
 
     public static bool isPointInsideSafezone(Vector3 point, out SafezoneNode outSafezoneNode)
@@ -200,12 +201,12 @@ public class LevelNodes
 
     public static void removeNode(Transform select)
     {
-        for (int i = 0; i < nodes.Count; i++)
+        for (int i = 0; i < _nodes.Count; i++)
         {
-            if (nodes[i].model == select)
+            if (_nodes[i].model == select)
             {
-                nodes[i].remove();
-                nodes.RemoveAt(i);
+                _nodes[i].remove();
+                _nodes.RemoveAt(i);
                 break;
             }
         }
@@ -213,11 +214,11 @@ public class LevelNodes
 
     public static Node getNode(Transform select)
     {
-        for (int i = 0; i < nodes.Count; i++)
+        for (int i = 0; i < _nodes.Count; i++)
         {
-            if (nodes[i].model == select)
+            if (_nodes[i].model == select)
             {
-                return nodes[i];
+                return _nodes[i];
             }
         }
         return null;
@@ -246,7 +247,7 @@ public class LevelNodes
                     {
                         flag2 = true;
                         string newName = river.readString();
-                        nodes.Add(new LocationNode(vector, newName));
+                        _nodes.Add(new LocationNode(vector, newName));
                         break;
                     }
                     case 1:
@@ -268,7 +269,7 @@ public class LevelNodes
                         {
                             newNoBuildables = river.readBoolean();
                         }
-                        nodes.Add(new SafezoneNode(vector, newRadius2, newHeight, newNoWeapons, newNoBuildables));
+                        _nodes.Add(new SafezoneNode(vector, newRadius2, newHeight, newNoWeapons, newNoBuildables));
                         break;
                     }
                     case 2:
@@ -277,7 +278,7 @@ public class LevelNodes
                         float newRadius4 = river.readSingle();
                         ushort newID2 = river.readUInt16();
                         uint newCost = river.readUInt32();
-                        nodes.Add(new PurchaseNode(vector, newRadius4, newID2, newCost));
+                        _nodes.Add(new PurchaseNode(vector, newRadius4, newID2, newCost));
                         break;
                     }
                     case 3:
@@ -288,7 +289,7 @@ public class LevelNodes
                         {
                             num4 *= 0.5f;
                         }
-                        nodes.Add(new ArenaNode(vector, num4));
+                        _nodes.Add(new ArenaNode(vector, num4));
                         break;
                     }
                     case 4:
@@ -300,7 +301,7 @@ public class LevelNodes
                         {
                             newDeadzoneType = (EDeadzoneType)river.readByte();
                         }
-                        nodes.Add(new DeadzoneNode(vector, newRadius3, newDeadzoneType));
+                        _nodes.Add(new DeadzoneNode(vector, newRadius3, newDeadzoneType));
                         break;
                     }
                     case 5:
@@ -311,7 +312,7 @@ public class LevelNodes
                         {
                             Assets.reportError(Level.info.name + " airdrop references invalid spawn table " + num3 + " at (" + x + ", " + y + ")!");
                         }
-                        nodes.Add(new AirdropNode(vector, num3));
+                        _nodes.Add(new AirdropNode(vector, num3));
                         break;
                     }
                     case 6:
@@ -335,7 +336,7 @@ public class LevelNodes
                         {
                             newNoLighting = river.readBoolean();
                         }
-                        nodes.Add(new EffectNode(vector, (ENodeShape)newShape, newRadius, newBounds, newID, newNoWater, newNoLighting));
+                        _nodes.Add(new EffectNode(vector, (ENodeShape)newShape, newRadius, newBounds, newID, newNoWater, newNoLighting));
                         break;
                     }
                     }
@@ -357,58 +358,58 @@ public class LevelNodes
         River river = new River(Level.info.path + "/Environment/Nodes.dat", usePath: false);
         river.writeByte(9);
         byte b = 0;
-        for (ushort num = 0; num < nodes.Count; num = (ushort)(num + 1))
+        for (ushort num = 0; num < _nodes.Count; num = (ushort)(num + 1))
         {
-            if (nodes[num].type != 0 || ((LocationNode)nodes[num]).name.Length > 0)
+            if (_nodes[num].type != 0 || ((LocationNode)_nodes[num]).name.Length > 0)
             {
                 b = (byte)(b + 1);
             }
         }
         river.writeByte(b);
-        for (byte b2 = 0; b2 < nodes.Count; b2 = (byte)(b2 + 1))
+        for (byte b2 = 0; b2 < _nodes.Count; b2 = (byte)(b2 + 1))
         {
-            if (nodes[b2].type != 0 || ((LocationNode)nodes[b2]).name.Length > 0)
+            if (_nodes[b2].type != 0 || ((LocationNode)_nodes[b2]).name.Length > 0)
             {
-                river.writeSingleVector3(nodes[b2].point);
-                river.writeByte((byte)nodes[b2].type);
-                if (nodes[b2].type == ENodeType.LOCATION)
+                river.writeSingleVector3(_nodes[b2].point);
+                river.writeByte((byte)_nodes[b2].type);
+                if (_nodes[b2].type == ENodeType.LOCATION)
                 {
-                    river.writeString(((LocationNode)nodes[b2]).name);
+                    river.writeString(((LocationNode)_nodes[b2]).name);
                 }
-                else if (nodes[b2].type == ENodeType.SAFEZONE)
+                else if (_nodes[b2].type == ENodeType.SAFEZONE)
                 {
-                    river.writeSingle(((SafezoneNode)nodes[b2]).radius);
-                    river.writeBoolean(((SafezoneNode)nodes[b2]).isHeight);
-                    river.writeBoolean(((SafezoneNode)nodes[b2]).noWeapons);
-                    river.writeBoolean(((SafezoneNode)nodes[b2]).noBuildables);
+                    river.writeSingle(((SafezoneNode)_nodes[b2]).radius);
+                    river.writeBoolean(((SafezoneNode)_nodes[b2]).isHeight);
+                    river.writeBoolean(((SafezoneNode)_nodes[b2]).noWeapons);
+                    river.writeBoolean(((SafezoneNode)_nodes[b2]).noBuildables);
                 }
-                else if (nodes[b2].type == ENodeType.PURCHASE)
+                else if (_nodes[b2].type == ENodeType.PURCHASE)
                 {
-                    river.writeSingle(((PurchaseNode)nodes[b2]).radius);
-                    river.writeUInt16(((PurchaseNode)nodes[b2]).id);
-                    river.writeUInt32(((PurchaseNode)nodes[b2]).cost);
+                    river.writeSingle(((PurchaseNode)_nodes[b2]).radius);
+                    river.writeUInt16(((PurchaseNode)_nodes[b2]).id);
+                    river.writeUInt32(((PurchaseNode)_nodes[b2]).cost);
                 }
-                else if (nodes[b2].type == ENodeType.ARENA)
+                else if (_nodes[b2].type == ENodeType.ARENA)
                 {
-                    river.writeSingle(((ArenaNode)nodes[b2]).radius);
+                    river.writeSingle(((ArenaNode)_nodes[b2]).radius);
                 }
-                else if (nodes[b2].type == ENodeType.DEADZONE)
+                else if (_nodes[b2].type == ENodeType.DEADZONE)
                 {
-                    river.writeSingle(((DeadzoneNode)nodes[b2]).radius);
-                    river.writeByte((byte)((DeadzoneNode)nodes[b2]).DeadzoneType);
+                    river.writeSingle(((DeadzoneNode)_nodes[b2]).radius);
+                    river.writeByte((byte)((DeadzoneNode)_nodes[b2]).DeadzoneType);
                 }
-                else if (nodes[b2].type == ENodeType.AIRDROP)
+                else if (_nodes[b2].type == ENodeType.AIRDROP)
                 {
-                    river.writeUInt16(((AirdropNode)nodes[b2]).id);
+                    river.writeUInt16(((AirdropNode)_nodes[b2]).id);
                 }
-                else if (nodes[b2].type == ENodeType.EFFECT)
+                else if (_nodes[b2].type == ENodeType.EFFECT)
                 {
-                    river.writeByte((byte)((EffectNode)nodes[b2]).shape);
-                    river.writeSingle(((EffectNode)nodes[b2]).radius);
-                    river.writeSingleVector3(((EffectNode)nodes[b2]).bounds);
-                    river.writeUInt16(((EffectNode)nodes[b2]).id);
-                    river.writeBoolean(((EffectNode)nodes[b2]).noWater);
-                    river.writeBoolean(((EffectNode)nodes[b2]).noLighting);
+                    river.writeByte((byte)((EffectNode)_nodes[b2]).shape);
+                    river.writeSingle(((EffectNode)_nodes[b2]).radius);
+                    river.writeSingleVector3(((EffectNode)_nodes[b2]).bounds);
+                    river.writeUInt16(((EffectNode)_nodes[b2]).id);
+                    river.writeBoolean(((EffectNode)_nodes[b2]).noWater);
+                    river.writeBoolean(((EffectNode)_nodes[b2]).noLighting);
                 }
             }
         }

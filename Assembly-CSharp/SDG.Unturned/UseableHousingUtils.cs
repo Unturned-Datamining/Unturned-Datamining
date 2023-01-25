@@ -95,7 +95,7 @@ internal static class UseableHousingUtils
         Ray ray = new Ray(player.look.aim.position, player.look.aim.forward);
         if (asset.construct == EConstruct.FLOOR || asset.construct == EConstruct.FLOOR_POLY)
         {
-            if (!StructureManager.housingConnections.FindEmptyFloorSlot(ray, out pendingPlacementPosition, out pendingPlacementYaw))
+            if (!StructureManager.housingConnections.FindEmptyFloorSlot(ray, isRoof: false, out pendingPlacementPosition, out pendingPlacementYaw))
             {
                 if (!Physics.SphereCast(ray, 0.1f, out var hitInfo, asset.range, RayMasks.STRUCTURE_INTERACT))
                 {
@@ -131,7 +131,7 @@ internal static class UseableHousingUtils
         }
         else if (asset.construct == EConstruct.ROOF || asset.construct == EConstruct.ROOF_POLY)
         {
-            if (!StructureManager.housingConnections.FindEmptyFloorSlot(ray, out pendingPlacementPosition, out pendingPlacementYaw))
+            if (!StructureManager.housingConnections.FindEmptyFloorSlot(ray, isRoof: true, out pendingPlacementPosition, out pendingPlacementYaw))
             {
                 eHousingPlacementResult = EHousingPlacementResult.MissingSlot;
             }

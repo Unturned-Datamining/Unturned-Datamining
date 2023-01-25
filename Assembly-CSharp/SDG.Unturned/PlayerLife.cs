@@ -586,10 +586,23 @@ public class PlayerLife : PlayerCaller
     public void askDamage(byte amount, Vector3 newRagdoll, EDeathCause newCause, ELimb newLimb, CSteamID newKiller, out EPlayerKill kill, bool trackKill = false, ERagdollEffect newRagdollEffect = ERagdollEffect.NONE, bool canCauseBleeding = true, bool bypassSafezone = false)
     {
         kill = EPlayerKill.NONE;
-        if ((!base.player.movement.isSafe || !base.player.movement.isSafeInfo.noWeapons || bypassSafezone) && (!(lastRespawn > 0f) || !(Time.realtimeSinceStartup - lastRespawn < 0.5f) || bypassSafezone))
+        if (bypassSafezone || InternalCanDamage())
         {
             doDamage(amount, newRagdoll, newCause, newLimb, newKiller, out kill, trackKill, newRagdollEffect, canCauseBleeding);
         }
+    }
+
+    internal bool InternalCanDamage()
+    {
+        if (base.player.movement.isSafe && base.player.movement.isSafeInfo.noWeapons)
+        {
+            return false;
+        }
+        if (lastRespawn > 0f && Time.realtimeSinceStartup - lastRespawn < 0.5f)
+        {
+            return false;
+        }
+        return true;
     }
 
     private void doDamage(byte amount, Vector3 newRagdoll, EDeathCause newCause, ELimb newLimb, CSteamID newKiller, out EPlayerKill kill, bool trackKill = false, ERagdollEffect newRagdollEffect = ERagdollEffect.NONE, bool canCauseBleeding = true)

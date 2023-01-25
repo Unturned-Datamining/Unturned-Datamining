@@ -328,7 +328,7 @@ public class PlayerInput : PlayerCaller
     private void ClientResimulate()
     {
         ClientRemoveInputHistory(clientResimulationFrameNumber);
-        if (base.player.stance.stance == EPlayerStance.SITTING || base.player.stance.stance == EPlayerStance.DRIVING || base.player.movement.hasPendingVehicleChange)
+        if (base.player.movement.getVehicle() != null || base.player.movement.hasPendingVehicleChange)
         {
             return;
         }

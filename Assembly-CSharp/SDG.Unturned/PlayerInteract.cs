@@ -21,7 +21,7 @@ public class PlayerInteract : PlayerCaller
 
     private static float lastInteract;
 
-    private static float salvageBeginTime;
+    private static float salvageHeldTime;
 
     private static bool isHoldingKey;
 
@@ -155,97 +155,39 @@ public class PlayerInteract : PlayerCaller
         }
     }
 
+    private void OnLifeUpdated(bool isDead)
+    {
+        salvageHeldTime = 0f;
+    }
+
     private void Update()
     {
-        if (base.channel.isOwner)
+        if (!base.channel.isOwner)
         {
-            if (base.player.stance.stance != EPlayerStance.DRIVING && base.player.stance.stance != EPlayerStance.SITTING && !base.player.life.isDead && !base.player.workzone.isBuilding)
+            return;
+        }
+        if (base.player.stance.stance != EPlayerStance.DRIVING && base.player.stance.stance != EPlayerStance.SITTING && !base.player.life.isDead && !base.player.workzone.isBuilding)
+        {
+            if (Time.realtimeSinceStartup - lastInteract > 0.1f)
             {
-                if (Time.realtimeSinceStartup - lastInteract > 0.1f)
+                lastInteract = Time.realtimeSinceStartup;
+                int num = RayMasks.PLAYER_INTERACT;
+                if (base.player.stance.stance == EPlayerStance.CLIMB)
                 {
-                    lastInteract = Time.realtimeSinceStartup;
-                    int num = RayMasks.PLAYER_INTERACT;
-                    if (base.player.stance.stance == EPlayerStance.CLIMB)
-                    {
-                        num &= -33554433;
-                    }
-                    if (base.player.look.isCam)
-                    {
-                        Physics.Raycast(new Ray(base.player.look.aim.position, base.player.look.aim.forward), out hit, 4f, num);
-                    }
-                    else
-                    {
-                        Physics.Raycast(new Ray(MainCamera.instance.transform.position, MainCamera.instance.transform.forward), out hit, (base.player.look.perspective == EPlayerPerspective.THIRD) ? 6 : 4, num);
-                    }
+                    num &= -33554433;
                 }
-                Transform transform = ((hit.collider != null) ? hit.collider.transform : null);
-                bool flag = transform != null;
-                if (transform != focus || flag != didHaveFocus)
+                if (base.player.look.isCam)
                 {
-                    clearHighlight();
-                    focus = null;
-                    didHaveFocus = false;
-                    target = null;
-                    _interactable = null;
-                    _interactable2 = null;
-                    if (transform != null)
-                    {
-                        focus = transform;
-                        didHaveFocus = true;
-                        _interactable = focus.GetComponentInParent<Interactable>();
-                        _interactable2 = focus.GetComponentInParent<Interactable2>();
-                        if (_interactable == null && focus.CompareTag("Ladder"))
-                        {
-                            _interactable = focus.gameObject.AddComponent<InteractableLadder>();
-                        }
-                        if (interactable != null)
-                        {
-                            target = interactable.transform.FindChildRecursive("Target");
-                            if (interactable.checkInteractable())
-                            {
-                                if (PlayerUI.window.isEnabled)
-                                {
-                                    if (interactable.checkUseable())
-                                    {
-                                        if (!interactable.checkHighlight(out var color))
-                                        {
-                                            color = Color.green;
-                                        }
-                                        InteractableDoorHinge componentInParent = focus.GetComponentInParent<InteractableDoorHinge>();
-                                        if (componentInParent != null)
-                                        {
-                                            setHighlight(componentInParent.door.transform, color);
-                                        }
-                                        else
-                                        {
-                                            setHighlight(interactable.transform, color);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        Color color = Color.red;
-                                        InteractableDoorHinge componentInParent2 = focus.GetComponentInParent<InteractableDoorHinge>();
-                                        if (componentInParent2 != null)
-                                        {
-                                            setHighlight(componentInParent2.door.transform, color);
-                                        }
-                                        else
-                                        {
-                                            setHighlight(interactable.transform, color);
-                                        }
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                target = null;
-                                _interactable = null;
-                            }
-                        }
-                    }
+                    Physics.Raycast(new Ray(base.player.look.aim.position, base.player.look.aim.forward), out hit, 4f, num);
+                }
+                else
+                {
+                    Physics.Raycast(new Ray(MainCamera.instance.transform.position, MainCamera.instance.transform.forward), out hit, (base.player.look.perspective == EPlayerPerspective.THIRD) ? 6 : 4, num);
                 }
             }
-            else
+            Transform transform = ((hit.collider != null) ? hit.collider.transform : null);
+            bool flag = transform != null;
+            if (transform != focus || flag != didHaveFocus)
             {
                 clearHighlight();
                 focus = null;
@@ -253,9 +195,73 @@ public class PlayerInteract : PlayerCaller
                 target = null;
                 _interactable = null;
                 _interactable2 = null;
+                if (transform != null)
+                {
+                    focus = transform;
+                    didHaveFocus = true;
+                    _interactable = focus.GetComponentInParent<Interactable>();
+                    _interactable2 = focus.GetComponentInParent<Interactable2>();
+                    if (_interactable == null && focus.CompareTag("Ladder"))
+                    {
+                        _interactable = focus.gameObject.AddComponent<InteractableLadder>();
+                    }
+                    if (interactable != null)
+                    {
+                        target = interactable.transform.FindChildRecursive("Target");
+                        if (interactable.checkInteractable())
+                        {
+                            if (PlayerUI.window.isEnabled)
+                            {
+                                if (interactable.checkUseable())
+                                {
+                                    if (!interactable.checkHighlight(out var color))
+                                    {
+                                        color = Color.green;
+                                    }
+                                    InteractableDoorHinge componentInParent = focus.GetComponentInParent<InteractableDoorHinge>();
+                                    if (componentInParent != null)
+                                    {
+                                        setHighlight(componentInParent.door.transform, color);
+                                    }
+                                    else
+                                    {
+                                        setHighlight(interactable.transform, color);
+                                    }
+                                }
+                                else
+                                {
+                                    Color color = Color.red;
+                                    InteractableDoorHinge componentInParent2 = focus.GetComponentInParent<InteractableDoorHinge>();
+                                    if (componentInParent2 != null)
+                                    {
+                                        setHighlight(componentInParent2.door.transform, color);
+                                    }
+                                    else
+                                    {
+                                        setHighlight(interactable.transform, color);
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            target = null;
+                            _interactable = null;
+                        }
+                    }
+                }
             }
         }
-        if (!base.channel.isOwner || base.player.life.isDead)
+        else
+        {
+            clearHighlight();
+            focus = null;
+            didHaveFocus = false;
+            target = null;
+            _interactable = null;
+            _interactable2 = null;
+        }
+        if (base.player.life.isDead)
         {
             return;
         }
@@ -294,12 +300,12 @@ public class PlayerInteract : PlayerCaller
         {
             if (interactable2.checkHint(out var message2, out var data) && !PlayerUI.window.showCursor)
             {
-                PlayerUI.hint2(message2, isHoldingKey ? ((Time.realtimeSinceStartup - salvageBeginTime) / interactableSalvageTime) : 0f, data);
+                PlayerUI.hint2(message2, isHoldingKey ? (salvageHeldTime / interactableSalvageTime) : 0f, data);
             }
         }
         else
         {
-            salvageBeginTime = Time.realtimeSinceStartup;
+            salvageHeldTime = 0f;
         }
         if ((base.player.stance.stance == EPlayerStance.DRIVING || base.player.stance.stance == EPlayerStance.SITTING) && !InputEx.GetKey(KeyCode.LeftShift))
         {
@@ -346,7 +352,7 @@ public class PlayerInteract : PlayerCaller
         }
         if (InputEx.GetKeyDown(ControlsSettings.interact))
         {
-            salvageBeginTime = Time.realtimeSinceStartup;
+            salvageHeldTime = 0f;
             isHoldingKey = true;
         }
         if (InputEx.GetKeyDown(ControlsSettings.inspect) && ControlsSettings.inspect != ControlsSettings.interact)
@@ -357,6 +363,7 @@ public class PlayerInteract : PlayerCaller
         {
             return;
         }
+        salvageHeldTime += Time.deltaTime;
         if (InputEx.GetKeyUp(ControlsSettings.interact))
         {
             isHoldingKey = false;
@@ -434,7 +441,7 @@ public class PlayerInteract : PlayerCaller
                 localInspect();
             }
         }
-        else if (Time.realtimeSinceStartup - salvageBeginTime > interactableSalvageTime)
+        else if (salvageHeldTime > interactableSalvageTime)
         {
             isHoldingKey = false;
             if (!PlayerUI.window.showCursor && interactable2 != null)
@@ -450,6 +457,8 @@ public class PlayerInteract : PlayerCaller
         {
             PlayerMovement movement = base.player.movement;
             movement.onPurchaseUpdated = (PurchaseUpdated)Delegate.Combine(movement.onPurchaseUpdated, new PurchaseUpdated(onPurchaseUpdated));
+            PlayerLife life = base.player.life;
+            life.onLifeUpdated = (LifeUpdated)Delegate.Combine(life.onLifeUpdated, new LifeUpdated(OnLifeUpdated));
         }
     }
 

@@ -1553,6 +1553,20 @@ public class EffectManager : SteamCaller
         }
     }
 
+    internal static void UnregisterAttachment(GameObject effect)
+    {
+        Transform root = effect.transform.root;
+        if (attachedEffects.TryGetValue(root, out var value))
+        {
+            value.RemoveFast(effect);
+            if (value.Count < 1)
+            {
+                attachedEffects.Remove(root);
+                attachedEffectsListPool.Push(value);
+            }
+        }
+    }
+
     private static void RegisterAttachment(GameObject effect)
     {
         Transform root = effect.transform.root;

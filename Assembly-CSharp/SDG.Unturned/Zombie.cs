@@ -1312,9 +1312,9 @@ public class Zombie : MonoBehaviour
                 rootAudioSource.maxDistance = 64f;
                 animator.transform.localScale = Vector3.one * UnityEngine.Random.Range(1.45f, 1.55f);
             }
+            SetCapsuleRadiusAndHeight(0.75f, 3f);
             if (Provider.isServer)
             {
-                ((CharacterController)GetComponent<Collider>()).radius = 0.75f;
                 seeker.speed = 6f;
             }
             return;
@@ -1324,11 +1324,16 @@ public class Zombie : MonoBehaviour
             rootAudioSource.maxDistance = 32f;
             animator.transform.localScale = Vector3.one * UnityEngine.Random.Range(0.95f, 1.05f);
         }
+        SetCapsuleRadiusAndHeight(0.4f, speciality switch
+        {
+            EZombieSpeciality.CRAWLER => 0.5f, 
+            EZombieSpeciality.SPRINTER => 1f, 
+            _ => 2f, 
+        });
         if (!Provider.isServer)
         {
             return;
         }
-        ((CharacterController)GetComponent<Collider>()).radius = 0.4f;
         if (speciality == EZombieSpeciality.CRAWLER)
         {
             if (Provider.modeConfigData.Zombies.Slow_Movement)
@@ -2544,6 +2549,30 @@ public class Zombie : MonoBehaviour
             else
             {
                 zombieRegion.aliveBossZombieCount--;
+            }
+        }
+    }
+
+    private void SetCapsuleRadiusAndHeight(float radius, float height)
+    {
+        if (Provider.isServer)
+        {
+            CharacterController component = GetComponent<CharacterController>();
+            if (component != null)
+            {
+                component.radius = radius;
+                component.center = new Vector3(0f, height * 0.5f, 0f);
+                component.height = height;
+            }
+        }
+        else
+        {
+            CapsuleCollider component2 = GetComponent<CapsuleCollider>();
+            if (component2 != null)
+            {
+                component2.radius = radius;
+                component2.center = new Vector3(0f, height * 0.5f, 0f);
+                component2.height = height;
             }
         }
     }

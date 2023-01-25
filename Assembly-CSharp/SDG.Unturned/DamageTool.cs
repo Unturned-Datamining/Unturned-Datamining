@@ -217,6 +217,7 @@ public class DamageTool
             return;
         }
         byte b = (byte)Mathf.Min(255, num);
+        bool flag = parameters.player.life.InternalCanDamage();
         bool canCauseBleeding;
         switch (parameters.bleedingModifier)
         {
@@ -225,7 +226,10 @@ public class DamageTool
             break;
         case DamagePlayerParameters.Bleeding.Always:
             canCauseBleeding = false;
-            parameters.player.life.serverSetBleeding(newBleeding: true);
+            if (flag)
+            {
+                parameters.player.life.serverSetBleeding(newBleeding: true);
+            }
             break;
         case DamagePlayerParameters.Bleeding.Never:
             canCauseBleeding = false;
@@ -239,16 +243,31 @@ public class DamageTool
         switch (parameters.bonesModifier)
         {
         case DamagePlayerParameters.Bones.Always:
-            parameters.player.life.serverSetLegsBroken(newLegsBroken: true);
+            if (flag)
+            {
+                parameters.player.life.serverSetLegsBroken(newLegsBroken: true);
+            }
             break;
         case DamagePlayerParameters.Bones.Heal:
             parameters.player.life.serverSetLegsBroken(newLegsBroken: false);
             break;
         }
-        parameters.player.life.serverModifyFood(parameters.foodModifier);
-        parameters.player.life.serverModifyWater(parameters.waterModifier);
-        parameters.player.life.serverModifyVirus(parameters.virusModifier);
-        parameters.player.life.serverModifyHallucination(parameters.hallucinationModifier);
+        if (parameters.foodModifier > 0f || flag)
+        {
+            parameters.player.life.serverModifyFood(parameters.foodModifier);
+        }
+        if (parameters.waterModifier > 0f || flag)
+        {
+            parameters.player.life.serverModifyWater(parameters.waterModifier);
+        }
+        if (parameters.virusModifier > 0f || flag)
+        {
+            parameters.player.life.serverModifyVirus(parameters.virusModifier);
+        }
+        if (parameters.hallucinationModifier < 0f || flag)
+        {
+            parameters.player.life.serverModifyHallucination(parameters.hallucinationModifier);
+        }
     }
 
     public static void damage(Player player, EDeathCause cause, ELimb limb, CSteamID killer, Vector3 direction, float damage, float times, out EPlayerKill kill, bool applyGlobalArmorMultiplier = true, bool trackKill = false, ERagdollEffect ragdollEffect = ERagdollEffect.NONE)
