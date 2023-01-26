@@ -29,7 +29,7 @@
 	{
 		"Major_Version": 23,
 		"Minor_Version": 1,
-		"Patch_Version": 103,
+		"Patch_Version": 104,
 		"GrantPackageIDs":
 		[
 			487
@@ -53,25 +53,6 @@
 	},
 	"News":
 	{
-		"Featured_Workshop_Start": "2022-12-14T00:12:00Z",
-		"Featured_Workshop_End": "2022-12-30T00:12:00Z",
-		"Featured_Workshop_File_Ids":
-		[
-			2898548949
-		],
-		"Featured_Workshop_Status": "New",
-		"Featured_Workshop_Type": "Curated",
-		"Featured_Workshop_Auto_Expand_Description": false,
-		"Featured_Workshop_Override_Description": "",
-		"Featured_Workshop_Link_Text": "",
-		"Featured_Workshop_Link_URL": "",
-		"Featured_Workshop_Associated_Stockpile_Items":
-		[
-			21057,
-			1287
-		],
-		"Popular_Workshop_Trend_Days": 30,
-		"Popular_Workshop_Carousel_Items": 3,
 		"Announcements_Count": 3
 	},
 	"Maps":

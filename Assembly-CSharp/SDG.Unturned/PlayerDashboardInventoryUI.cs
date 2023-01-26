@@ -1343,7 +1343,7 @@ public class PlayerDashboardInventoryUI
             {
                 vehicleLockButton.isVisible = false;
             }
-            if (asset.horn != null)
+            if (asset.hasHorn)
             {
                 vehicleHornButton.text = localization.format("Vehicle_Horn", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.primary));
                 vehicleHornButton.tooltipText = localization.format("Vehicle_Horn_Tooltip");

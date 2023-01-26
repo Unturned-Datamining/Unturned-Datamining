@@ -91,6 +91,8 @@ public class MenuDashboardUI
 
     private static CallResult<SteamUGCQueryCompleted_t> steamUGCQueryCompletedFeatured;
 
+    private static bool hasBegunQueryingLiveConfigWorkshop;
+
     private MenuPauseUI pauseUI;
 
     private MenuCreditsUI creditsUI;
@@ -522,8 +524,9 @@ public class MenuDashboardUI
         {
             gameObject.transform.SetAsFirstSibling();
         }
-        bool flag = Provider.statusData.News.isFeatured(pDetails.m_nPublishedFileId.m_PublishedFileId);
-        string key = ((!flag) ? "Featured_Workshop_Title" : (Provider.statusData.News.Featured_Workshop_Type switch
+        MainMenuWorkshopFeaturedLiveConfig featured = LiveConfig.Get().MainMenuWorkshop.Featured;
+        bool flag = featured.IsFeatured(pDetails.m_nPublishedFileId.m_PublishedFileId);
+        string key = ((!flag) ? "Featured_Workshop_Title" : (featured.Type switch
         {
             EFeaturedWorkshopType.Curated => "Curated_Workshop_Title", 
             _ => "Highlighted_Workshop_Title", 
@@ -532,9 +535,9 @@ public class MenuDashboardUI
         Transform transform = gameObject.transform.Find("TitleLayout");
         transform.Find("Title").GetComponent<Text>().text = text;
         Transform transform2 = transform.Find("Status");
-        if (flag && Provider.statusData.News.Featured_Workshop_Status != 0)
+        if (flag && featured.Status != 0)
         {
-            string text2 = Provider.localization.format((Provider.statusData.News.Featured_Workshop_Status == EMapStatus.UPDATED) ? "Updated" : "New");
+            string text2 = Provider.localization.format((featured.Status == EMapStatus.Updated) ? "Updated" : "New");
             transform2.GetComponent<Text>().text = text2;
             transform2.gameObject.SetActive(value: true);
         }
@@ -563,7 +566,7 @@ public class MenuDashboardUI
         GameObject gameObject4 = UnityEngine.Object.Instantiate(templateReadMoreContent);
         gameObject4.name = "ReadMore_Content";
         gameObject4.GetComponent<RectTransform>().SetParent(gameObject.transform, worldPositionStays: true);
-        if (flag && Provider.statusData.News.Featured_Workshop_Auto_Expand_Description)
+        if (flag && featured.AutoExpandDescription)
         {
             gameObject4.SetActive(value: true);
         }
@@ -571,9 +574,9 @@ public class MenuDashboardUI
         try
         {
             string contents = pDetails.m_rgchDescription;
-            if (flag && !string.IsNullOrEmpty(Provider.statusData.News.Featured_Workshop_Override_Description))
+            if (flag && !string.IsNullOrEmpty(featured.OverrideDescription))
             {
-                contents = Provider.statusData.News.Featured_Workshop_Override_Description;
+                contents = featured.OverrideDescription;
             }
             insertContent(gameObject4, contents);
         }
@@ -601,11 +604,11 @@ public class MenuDashboardUI
         nPublishedFileId = pDetails.m_nPublishedFileId;
         component2.url = "http://steamcommunity.com/sharedfiles/filedetails/?id=" + nPublishedFileId.ToString();
         Transform transform5 = gameObject5.transform.Find("StockpileButton");
-        int[] featured_Workshop_Associated_Stockpile_Items = Provider.statusData.News.Featured_Workshop_Associated_Stockpile_Items;
-        if (flag && featured_Workshop_Associated_Stockpile_Items.Length != 0)
+        int[] associatedStockpileItems = featured.AssociatedStockpileItems;
+        if (flag && associatedStockpileItems != null && associatedStockpileItems.Length != 0)
         {
-            List<int> list = new List<int>(featured_Workshop_Associated_Stockpile_Items.Length);
-            int[] array = featured_Workshop_Associated_Stockpile_Items;
+            List<int> list = new List<int>(associatedStockpileItems.Length);
+            int[] array = associatedStockpileItems;
             foreach (int num in array)
             {
                 if (num > 0 && !Provider.provider.economyService.isItemHiddenByCountryRestrictions(num))
@@ -642,11 +645,11 @@ public class MenuDashboardUI
         }
         Transform transform7 = gameObject5.transform.Find("NewsButton");
         Transform transform8 = transform7.Find("NewsLabel");
-        if (flag && !string.IsNullOrEmpty(Provider.statusData.News.Featured_Workshop_Link_URL))
+        if (flag && !string.IsNullOrEmpty(featured.LinkURL))
         {
             transform7.gameObject.SetActive(value: true);
-            transform8.GetComponent<Text>().text = Provider.statusData.News.Featured_Workshop_Link_Text;
-            transform7.GetComponent<WebLink>().url = Provider.statusData.News.Featured_Workshop_Link_URL;
+            transform8.GetComponent<Text>().text = featured.LinkText;
+            transform7.GetComponent<WebLink>().url = featured.LinkURL;
         }
         else
         {
@@ -700,7 +703,8 @@ public class MenuDashboardUI
             UnturnedLog.warn("Popular workshop items response was empty");
             return;
         }
-        int num = Mathf.Min((int)unNumResultsReturned, Provider.statusData.News.Popular_Workshop_Carousel_Items);
+        MainMenuWorkshopPopularLiveConfig popular = LiveConfig.Get().MainMenuWorkshop.Popular;
+        int num = Mathf.Min((int)unNumResultsReturned, popular.CarouselItems);
         if (num > 0)
         {
             List<uint> list = new List<uint>(num);
@@ -802,8 +806,9 @@ public class MenuDashboardUI
 
     private static void queryPopularWorkshopItems()
     {
-        uint num = Provider.statusData.News.Popular_Workshop_Trend_Days;
-        if (num < 1 || Provider.statusData.News.Popular_Workshop_Carousel_Items < 1)
+        MainMenuWorkshopPopularLiveConfig popular = LiveConfig.Get().MainMenuWorkshop.Popular;
+        uint num = popular.TrendDays;
+        if (num < 1 || popular.CarouselItems < 1)
         {
             UnturnedLog.warn("Not requesting popular workshop files for news feed");
             return;
@@ -819,26 +824,6 @@ public class MenuDashboardUI
         SteamUGC.SetReturnOnlyIDs(popularWorkshopHandle, bReturnOnlyIDs: true);
         SteamAPICall_t hAPICall = SteamUGC.SendQueryUGCRequest(popularWorkshopHandle);
         steamUGCQueryCompletedPopular.Set(hAPICall);
-    }
-
-    private static void queryFeaturedOrPopularWorkshopItems()
-    {
-        if (Provider.statusData.News.Allow_Workshop_News)
-        {
-            ulong num = 0uL;
-            if (Provider.statusData.News.Featured_Workshop_File_Ids != null && Provider.statusData.News.Featured_Workshop_File_Ids.Length != 0)
-            {
-                num = Provider.statusData.News.Featured_Workshop_File_Ids[UnityEngine.Random.Range(0, Provider.statusData.News.Featured_Workshop_File_Ids.Length)];
-            }
-            if (num != 0 && LocalNews.isNowWithinFeaturedWorkshopWindow() && !LocalNews.wasWorkshopItemDismissed(num))
-            {
-                queryFeaturedItem((PublishedFileId_t)num);
-            }
-            else if (OptionsSettings.featuredWorkshop)
-            {
-                queryPopularWorkshopItems();
-            }
-        }
     }
 
     private static void OnPricesReceived()
@@ -908,7 +893,7 @@ public class MenuDashboardUI
         container.AddChild(sleekItemStoreMainMenuButton);
     }
 
-    private static void OnLiveConfigRefreshed()
+    private static void PopulateAlertFromLiveConfig()
     {
         global::Unturned.LiveConfig.LiveConfig liveConfig = LiveConfig.Get();
         if (!string.IsNullOrEmpty(liveConfig.MainMenuAlert.Header) && !string.IsNullOrEmpty(liveConfig.MainMenuAlert.Body) && (!ConvenientSavedata.get().read("MainMenuAlertSeenId", out long value) || value < liveConfig.MainMenuAlert.Id))
@@ -1007,6 +992,34 @@ public class MenuDashboardUI
         }
     }
 
+    private static void UpdateWorkshopFromLiveConfig()
+    {
+        MainMenuWorkshopLiveConfig mainMenuWorkshop = LiveConfig.Get().MainMenuWorkshop;
+        if (mainMenuWorkshop.AllowNews && SteamUser.BLoggedOn() && !hasBegunQueryingLiveConfigWorkshop)
+        {
+            hasBegunQueryingLiveConfigWorkshop = true;
+            ulong num = 0uL;
+            if (mainMenuWorkshop.Featured.FileIds != null && mainMenuWorkshop.Featured.FileIds.Length != 0)
+            {
+                num = mainMenuWorkshop.Featured.FileIds.RandomOrDefault();
+            }
+            if (num != 0 && !LocalNews.wasWorkshopItemDismissed(num))
+            {
+                queryFeaturedItem((PublishedFileId_t)num);
+            }
+            else if (OptionsSettings.featuredWorkshop)
+            {
+                queryPopularWorkshopItems();
+            }
+        }
+    }
+
+    private static void OnLiveConfigRefreshed()
+    {
+        PopulateAlertFromLiveConfig();
+        UpdateWorkshopFromLiveConfig();
+    }
+
     public void OnDestroy()
     {
         ItemStore.Get().OnPricesReceived -= OnPricesReceived;
@@ -1060,7 +1073,6 @@ public class MenuDashboardUI
                 SteamUGC.ReleaseQueryUGCRequest(popularWorkshopHandle);
                 popularWorkshopHandle = UGCQueryHandle_t.Invalid;
             }
-            queryFeaturedOrPopularWorkshopItems();
         }
         container = new SleekFullscreenBox();
         container.positionOffset_X = 10;
@@ -1161,6 +1173,7 @@ public class MenuDashboardUI
             CreatePreviewBranchChangelogButton();
         }
         ItemStore.Get().OnPricesReceived += OnPricesReceived;
+        hasBegunQueryingLiveConfigWorkshop = false;
         LiveConfig.OnRefreshed += OnLiveConfigRefreshed;
         OnLiveConfigRefreshed();
         pauseUI = new MenuPauseUI();

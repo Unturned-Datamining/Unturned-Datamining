@@ -34,6 +34,8 @@ internal static class PhysicMaterialCustomData
 
     private static Dictionary<Guid, PhysicsMaterialExtensionAsset> extensionAssets = new Dictionary<Guid, PhysicsMaterialExtensionAsset>();
 
+    private static List<CombinedPhysicMaterialInfo> enumerableInfos = new List<CombinedPhysicMaterialInfo>();
+
     private static bool needsRebuild = false;
 
     public static OneShotAudioDefinition GetAudioDef(string materialName, string propertyName)
@@ -143,24 +145,26 @@ internal static class PhysicMaterialCustomData
 
     private static IEnumerable<CombinedPhysicMaterialInfo> EnumerateInfo(string materialName)
     {
+        enumerableInfos.Clear();
         if (string.IsNullOrEmpty(materialName))
         {
-            yield break;
+            return enumerableInfos;
         }
         if (needsRebuild)
         {
             needsRebuild = false;
             Rebuild();
         }
-        if (nameInfos.TryGetValue(materialName, out var info))
+        if (nameInfos.TryGetValue(materialName, out var value))
         {
             do
             {
-                yield return info;
-                info = info.fallback;
+                enumerableInfos.Add(value);
+                value = value.fallback;
             }
-            while (info != null);
+            while (value != null);
         }
+        return enumerableInfos;
     }
 
     private static void PopulateInfo(CombinedPhysicMaterialInfo info, PhysicsMaterialAssetBase asset)

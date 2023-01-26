@@ -1,6 +1,6 @@
 namespace SDG.Unturned;
 
-public interface ISnapshotInfo
+public interface ISnapshotInfo<T>
 {
-    ISnapshotInfo lerp(ISnapshotInfo target, float delta);
+    void lerp(T target, float delta, out T result);
 }

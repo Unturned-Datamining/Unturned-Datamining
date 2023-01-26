@@ -2,19 +2,17 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-public struct TransformSnapshotInfo : ISnapshotInfo
+public struct TransformSnapshotInfo : ISnapshotInfo<TransformSnapshotInfo>
 {
     public Vector3 pos;
 
     public Quaternion rot;
 
-    public ISnapshotInfo lerp(ISnapshotInfo targetTemp, float delta)
+    public void lerp(TransformSnapshotInfo target, float delta, out TransformSnapshotInfo result)
     {
-        TransformSnapshotInfo transformSnapshotInfo = (TransformSnapshotInfo)(object)targetTemp;
-        TransformSnapshotInfo transformSnapshotInfo2 = default(TransformSnapshotInfo);
-        transformSnapshotInfo2.pos = Vector3.Lerp(pos, transformSnapshotInfo.pos, delta);
-        transformSnapshotInfo2.rot = Quaternion.Slerp(rot, transformSnapshotInfo.rot, delta);
-        return transformSnapshotInfo2;
+        result = default(TransformSnapshotInfo);
+        result.pos = Vector3.Lerp(pos, target.pos, delta);
+        result.rot = Quaternion.Slerp(rot, target.rot, delta);
     }
 
     public TransformSnapshotInfo(Vector3 pos, Quaternion rot)

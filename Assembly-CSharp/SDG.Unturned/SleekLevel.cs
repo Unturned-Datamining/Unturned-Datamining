@@ -1,10 +1,15 @@
 using UnityEngine;
+using Unturned.LiveConfig;
 
 namespace SDG.Unturned;
 
 public class SleekLevel : SleekWrapper
 {
     public ClickedLevel onClickedLevel;
+
+    private bool hasCreatedStatusLabel;
+
+    private LevelInfo level;
 
     private ISleekButton button;
 
@@ -22,8 +27,37 @@ public class SleekLevel : SleekWrapper
         }
     }
 
+    private void OnLiveConfigRefreshed()
+    {
+        if (hasCreatedStatusLabel)
+        {
+            return;
+        }
+        MainMenuWorkshopFeaturedLiveConfig featured = LiveConfig.Get().MainMenuWorkshop.Featured;
+        if (featured.Status != 0 && featured.IsFeatured(level.publishedFileId))
+        {
+            SleekNew sleekNew = new SleekNew(featured.Status == EMapStatus.Updated);
+            if (icon != null)
+            {
+                icon.AddChild(sleekNew);
+            }
+            else
+            {
+                AddChild(sleekNew);
+            }
+            hasCreatedStatusLabel = true;
+        }
+    }
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        LiveConfig.OnRefreshed -= OnLiveConfigRefreshed;
+    }
+
     public SleekLevel(LevelInfo level, bool isEditor)
     {
+        this.level = level;
         base.sizeOffset_X = 400;
         base.sizeOffset_Y = 100;
         button = Glazier.Get().CreateButton();
@@ -128,22 +162,8 @@ public class SleekLevel : SleekWrapper
             button.AddChild(sleekImage);
             bundle.unload();
         }
-        if (!Provider.statusData.News.isFeatured(level.publishedFileId) || !LocalNews.isNowWithinFeaturedWorkshopWindow())
-        {
-            return;
-        }
-        EMapStatus featured_Workshop_Status = Provider.statusData.News.Featured_Workshop_Status;
-        if (featured_Workshop_Status != 0)
-        {
-            SleekNew sleekNew = new SleekNew(featured_Workshop_Status == EMapStatus.UPDATED);
-            if (icon != null)
-            {
-                icon.AddChild(sleekNew);
-            }
-            else
-            {
-                AddChild(sleekNew);
-            }
-        }
+        hasCreatedStatusLabel = false;
+        LiveConfig.OnRefreshed -= OnLiveConfigRefreshed;
+        OnLiveConfigRefreshed();
     }
 }

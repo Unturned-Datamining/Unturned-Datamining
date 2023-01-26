@@ -130,6 +130,15 @@ public class Provider : MonoBehaviour
         }
     }
 
+    private class PendingIconRequest
+    {
+        public string url;
+
+        public IconQueryCallback callback;
+
+        public bool shouldCache;
+    }
+
     public static readonly string STEAM_IC = "Steam";
 
     public static readonly string STEAM_DC = "<color=#2784c6>Steam</color>";
@@ -446,6 +455,8 @@ public class Provider : MonoBehaviour
     private static float debugLastTick;
 
     private static Dictionary<string, Texture2D> downloadedIconCache = new Dictionary<string, Texture2D>();
+
+    private static Dictionary<string, PendingIconRequest> pendingCachableIconRequests = new Dictionary<string, PendingIconRequest>();
 
     internal static CommandLineFlag allowWebRequests = new CommandLineFlag(defaultValue: true, "-NoWebRequests");
 
@@ -2089,6 +2100,7 @@ public class Provider : MonoBehaviour
         {
             EServerMonetizationTag.None => "MTXn", 
             EServerMonetizationTag.NonGameplay => "MTXy", 
+            EServerMonetizationTag.Monetized => "MTXg", 
             _ => null, 
         };
     }
@@ -3925,64 +3937,62 @@ public class Provider : MonoBehaviour
         }
     }
 
-    private IEnumerator downloadIcon(IconQueryParams iconQueryParams)
+    private IEnumerator downloadIcon(PendingIconRequest iconQueryParams)
     {
-        Texture2D resultTexture = null;
-        bool responsibleForDestroy = false;
-        if (!string.IsNullOrEmpty(iconQueryParams.url))
+        UnityWebRequest request = UnityWebRequestTexture.GetTexture(iconQueryParams.url, nonReadable: true);
+        request.timeout = 15;
+        yield return request.SendWebRequest();
+        Texture2D value = null;
+        bool flag = false;
+        if (request.result != UnityWebRequest.Result.Success)
         {
-            bool flag = true;
-            if (iconQueryParams.shouldCache && downloadedIconCache.TryGetValue(iconQueryParams.url, out var value))
+            UnturnedLog.warn($"{request.result} downloading \"{iconQueryParams.url}\" for icon query: \"{request.error}\"");
+        }
+        else
+        {
+            Texture2D content = DownloadHandlerTexture.GetContent(request);
+            content.hideFlags = HideFlags.HideAndDontSave;
+            content.filterMode = FilterMode.Trilinear;
+            if (iconQueryParams.shouldCache)
             {
-                resultTexture = value;
-                responsibleForDestroy = false;
-                flag = false;
-            }
-            if (flag && (bool)allowWebRequests)
-            {
-                UnityWebRequest request = UnityWebRequestTexture.GetTexture(iconQueryParams.url, nonReadable: true);
-                request.timeout = 15;
-                yield return request.SendWebRequest();
-                if (request.result != UnityWebRequest.Result.Success)
+                if (downloadedIconCache.TryGetValue(iconQueryParams.url, out value))
                 {
-                    UnturnedLog.warn("Error downloading {0} for icon query: {1}", iconQueryParams.url, request.error);
+                    UnityEngine.Object.Destroy(content);
                 }
                 else
                 {
-                    Texture2D content = DownloadHandlerTexture.GetContent(request);
-                    content.hideFlags = HideFlags.HideAndDontSave;
-                    content.filterMode = FilterMode.Trilinear;
-                    if (iconQueryParams.shouldCache)
-                    {
-                        if (downloadedIconCache.TryGetValue(iconQueryParams.url, out resultTexture))
-                        {
-                            UnityEngine.Object.Destroy(content);
-                        }
-                        else
-                        {
-                            downloadedIconCache.Add(iconQueryParams.url, content);
-                            resultTexture = content;
-                        }
-                        responsibleForDestroy = false;
-                    }
-                    else
-                    {
-                        resultTexture = content;
-                        responsibleForDestroy = true;
-                    }
+                    downloadedIconCache.Add(iconQueryParams.url, content);
+                    value = content;
                 }
+                flag = false;
+            }
+            else
+            {
+                value = content;
+                flag = true;
             }
         }
         if (iconQueryParams.callback == null)
         {
-            if (responsibleForDestroy && resultTexture != null)
+            if (flag && value != null)
             {
-                UnityEngine.Object.Destroy(resultTexture);
+                UnityEngine.Object.Destroy(value);
             }
         }
         else
         {
-            iconQueryParams.callback(resultTexture, responsibleForDestroy);
+            try
+            {
+                iconQueryParams.callback(value, flag);
+            }
+            catch (Exception e)
+            {
+                UnturnedLog.exception(e, "Caught exception during texture downloaded callback:");
+            }
+        }
+        if (iconQueryParams.shouldCache)
+        {
+            pendingCachableIconRequests.Remove(iconQueryParams.url);
         }
     }
 
@@ -3997,7 +4007,44 @@ public class Provider : MonoBehaviour
 
     public static void refreshIcon(IconQueryParams iconQueryParams)
     {
-        steam.StartCoroutine("downloadIcon", iconQueryParams);
+        if (iconQueryParams.callback == null)
+        {
+            return;
+        }
+        if (string.IsNullOrEmpty(iconQueryParams.url) || !allowWebRequests)
+        {
+            iconQueryParams.callback(null, responsibleForDestroy: false);
+            return;
+        }
+        iconQueryParams.url = iconQueryParams.url.Trim();
+        if (string.IsNullOrEmpty(iconQueryParams.url))
+        {
+            iconQueryParams.callback(null, responsibleForDestroy: false);
+            return;
+        }
+        if (iconQueryParams.shouldCache)
+        {
+            if (downloadedIconCache.TryGetValue(iconQueryParams.url, out var value))
+            {
+                iconQueryParams.callback(value, responsibleForDestroy: false);
+                return;
+            }
+            if (pendingCachableIconRequests.TryGetValue(iconQueryParams.url, out var value2))
+            {
+                PendingIconRequest pendingIconRequest = value2;
+                pendingIconRequest.callback = (IconQueryCallback)Delegate.Combine(pendingIconRequest.callback, iconQueryParams.callback);
+                return;
+            }
+        }
+        PendingIconRequest pendingIconRequest2 = new PendingIconRequest();
+        pendingIconRequest2.url = iconQueryParams.url;
+        pendingIconRequest2.callback = iconQueryParams.callback;
+        pendingIconRequest2.shouldCache = iconQueryParams.shouldCache;
+        if (iconQueryParams.shouldCache)
+        {
+            pendingCachableIconRequests.Add(iconQueryParams.url, pendingIconRequest2);
+        }
+        steam.StartCoroutine(steam.downloadIcon(pendingIconRequest2));
     }
 
     private void Update()

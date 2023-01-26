@@ -353,7 +353,7 @@ public class InteractableMannequin : Interactable, IManualOnDestroy
         }
         else
         {
-            PlayerBarricadeMannequinUI.open(this);
+            PlayerUI.instance.mannequinUI.open(this);
             PlayerLifeUI.close();
         }
     }

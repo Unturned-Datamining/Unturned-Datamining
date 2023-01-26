@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Unturned.LiveConfig;
 
 namespace SDG.Unturned;
 
@@ -59,6 +60,8 @@ public class MenuPlaySingleplayerUI
     private static SleekNew curatedStatusLabel;
 
     private static int featuredItemDefId;
+
+    private bool hasCreatedFeaturedMapLabel;
 
     public static void open()
     {
@@ -221,9 +224,10 @@ public class MenuPlaySingleplayerUI
             feedbackButton.isVisible = true;
             num += feedbackButton.sizeOffset_Y + 10;
         }
-        if (Provider.statusData.News.isFeatured(levelInfo.publishedFileId) && LocalNews.isNowWithinFeaturedWorkshopWindow() && !string.IsNullOrEmpty(Provider.statusData.News.Featured_Workshop_Link_Text))
+        MainMenuWorkshopFeaturedLiveConfig featured = LiveConfig.Get().MainMenuWorkshop.Featured;
+        if (featured.IsFeatured(levelInfo.publishedFileId) && !string.IsNullOrEmpty(featured.LinkURL))
         {
-            newsButton.text = Provider.statusData.News.Featured_Workshop_Link_Text;
+            newsButton.text = featured.LinkText;
             newsButton.positionOffset_Y = num;
             newsButton.isVisible = true;
             _ = num + (newsButton.sizeOffset_Y + 10);
@@ -265,8 +269,9 @@ public class MenuPlaySingleplayerUI
         {
             curatedMapsButton.RemoveChild(curatedStatusLabel);
             curatedStatusLabel = null;
+            MainMenuWorkshopFeaturedLiveConfig featured = LiveConfig.Get().MainMenuWorkshop.Featured;
+            ConvenientSavedata.get().write("SingleplayerCuratedSeenId", featured.Id);
         }
-        LocalNews.dismissFeaturedWorkshopStatus();
         PlaySettings.singleplayerCategory = ESingleplayerMapCategory.CURATED;
         refreshLevels();
     }
@@ -429,8 +434,8 @@ public class MenuPlaySingleplayerUI
 
     private static void onClickedNewsButton(ISleekElement button)
     {
-        string featured_Workshop_Link_URL = Provider.statusData.News.Featured_Workshop_Link_URL;
-        Provider.provider.browserService.open(featured_Workshop_Link_URL);
+        MainMenuWorkshopFeaturedLiveConfig featured = LiveConfig.Get().MainMenuWorkshop.Featured;
+        Provider.provider.browserService.open(featured.LinkURL);
     }
 
     private static void onClickedBackButton(ISleekElement button)
@@ -439,9 +444,24 @@ public class MenuPlaySingleplayerUI
         close();
     }
 
+    private void OnLiveConfigRefreshed()
+    {
+        if (!hasCreatedFeaturedMapLabel)
+        {
+            MainMenuWorkshopFeaturedLiveConfig featured = LiveConfig.Get().MainMenuWorkshop.Featured;
+            if (featured.Status != 0 && featured.Type == EFeaturedWorkshopType.Curated && (!ConvenientSavedata.get().read("SingleplayerCuratedSeenId", out long value) || value < featured.Id))
+            {
+                curatedStatusLabel = new SleekNew(featured.Status == EMapStatus.Updated);
+                curatedMapsButton.AddChild(curatedStatusLabel);
+                hasCreatedFeaturedMapLabel = true;
+            }
+        }
+    }
+
     public void OnDestroy()
     {
         Level.onLevelsRefreshed = (LevelsRefreshed)Delegate.Remove(Level.onLevelsRefreshed, new LevelsRefreshed(onLevelsRefreshed));
+        LiveConfig.OnRefreshed -= OnLiveConfigRefreshed;
     }
 
     public MenuPlaySingleplayerUI()
@@ -505,12 +525,9 @@ public class MenuPlaySingleplayerUI
         curatedMapsButton.onClickedButton += onClickedCuratedMapsButton;
         curatedMapsButton.fontSize = ESleekFontSize.Medium;
         container.AddChild(curatedMapsButton);
-        EMapStatus featured_Workshop_Status = Provider.statusData.News.Featured_Workshop_Status;
-        if (featured_Workshop_Status != 0 && Provider.statusData.News.Featured_Workshop_Type == EFeaturedWorkshopType.Curated && LocalNews.isFeaturedWorkshopStatusRelevant())
-        {
-            curatedStatusLabel = new SleekNew(featured_Workshop_Status == EMapStatus.UPDATED);
-            curatedMapsButton.AddChild(curatedStatusLabel);
-        }
+        hasCreatedFeaturedMapLabel = false;
+        LiveConfig.OnRefreshed -= OnLiveConfigRefreshed;
+        OnLiveConfigRefreshed();
         workshopMapsButton = Glazier.Get().CreateButton();
         workshopMapsButton.positionOffset_X = 105;
         workshopMapsButton.positionOffset_Y = 290;

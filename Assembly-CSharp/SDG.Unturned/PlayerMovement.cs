@@ -124,7 +124,7 @@ public class PlayerMovement : PlayerCaller
 
     public PitchYawSnapshotInfo snapshot;
 
-    private NetworkSnapshotBuffer nsb;
+    private NetworkSnapshotBuffer<PitchYawSnapshotInfo> nsb;
 
     private byte _horizontal;
 
@@ -1074,7 +1074,7 @@ public class PlayerMovement : PlayerCaller
     {
         if (nsb != null)
         {
-            snapshot = (PitchYawSnapshotInfo)(object)nsb.getCurrentSnapshot();
+            snapshot = nsb.getCurrentSnapshot();
         }
         if (base.channel.isOwner)
         {
@@ -1436,7 +1436,7 @@ public class PlayerMovement : PlayerCaller
         }
         else
         {
-            nsb = new NetworkSnapshotBuffer(Provider.UPDATE_TIME, Provider.UPDATE_DELAY);
+            nsb = new NetworkSnapshotBuffer<PitchYawSnapshotInfo>(Provider.UPDATE_TIME, Provider.UPDATE_DELAY);
         }
         applySize();
         if (Dedicator.IsDedicatedServer)
@@ -1457,8 +1457,8 @@ public class PlayerMovement : PlayerCaller
         {
             for (int i = 0; i < nsb.snapshots.Length && !(nsb.snapshots[i].timestamp <= 0.01f); i++)
             {
-                PitchYawSnapshotInfo pitchYawSnapshotInfo = (PitchYawSnapshotInfo)(object)nsb.snapshots[i].info;
-                Gizmos.DrawLine(pitchYawSnapshotInfo.pos, pitchYawSnapshotInfo.pos + Vector3.up * 2f);
+                PitchYawSnapshotInfo info = nsb.snapshots[i].info;
+                Gizmos.DrawLine(info.pos, info.pos + Vector3.up * 2f);
             }
         }
     }

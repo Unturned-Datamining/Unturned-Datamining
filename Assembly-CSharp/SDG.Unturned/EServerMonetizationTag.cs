@@ -5,5 +5,6 @@ public enum EServerMonetizationTag
     Unspecified,
     Any,
     None,
-    NonGameplay
+    NonGameplay,
+    Monetized
 }

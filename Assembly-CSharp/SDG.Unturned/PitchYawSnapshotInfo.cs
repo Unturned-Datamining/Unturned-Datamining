@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-public struct PitchYawSnapshotInfo : ISnapshotInfo
+public struct PitchYawSnapshotInfo : ISnapshotInfo<PitchYawSnapshotInfo>
 {
     public Vector3 pos;
 
@@ -10,14 +10,12 @@ public struct PitchYawSnapshotInfo : ISnapshotInfo
 
     public float yaw;
 
-    public ISnapshotInfo lerp(ISnapshotInfo targetTemp, float delta)
+    public void lerp(PitchYawSnapshotInfo target, float delta, out PitchYawSnapshotInfo result)
     {
-        PitchYawSnapshotInfo pitchYawSnapshotInfo = (PitchYawSnapshotInfo)(object)targetTemp;
-        PitchYawSnapshotInfo pitchYawSnapshotInfo2 = default(PitchYawSnapshotInfo);
-        pitchYawSnapshotInfo2.pos = Vector3.Lerp(pos, pitchYawSnapshotInfo.pos, delta);
-        pitchYawSnapshotInfo2.pitch = Mathf.LerpAngle(pitch, pitchYawSnapshotInfo.pitch, delta);
-        pitchYawSnapshotInfo2.yaw = Mathf.LerpAngle(yaw, pitchYawSnapshotInfo.yaw, delta);
-        return pitchYawSnapshotInfo2;
+        result = default(PitchYawSnapshotInfo);
+        result.pos = Vector3.Lerp(pos, target.pos, delta);
+        result.pitch = Mathf.LerpAngle(pitch, target.pitch, delta);
+        result.yaw = Mathf.LerpAngle(yaw, target.yaw, delta);
     }
 
     public PitchYawSnapshotInfo(Vector3 pos, float pitch, float yaw)

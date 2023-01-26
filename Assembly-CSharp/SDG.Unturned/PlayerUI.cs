@@ -104,6 +104,8 @@ public class PlayerUI : MonoBehaviour
 
     internal PlayerBarricadeStereoUI boomboxUI;
 
+    internal PlayerBarricadeMannequinUI mannequinUI;
+
     internal PlayerBrowserRequestUI browserRequestUI;
 
     public static bool isBlindfolded
@@ -1032,7 +1034,7 @@ public class PlayerUI : MonoBehaviour
         PlayerBarricadeSignUI.close();
         boomboxUI.close();
         PlayerBarricadeLibraryUI.close();
-        PlayerBarricadeMannequinUI.close();
+        mannequinUI.close();
         browserRequestUI.close();
         PlayerNPCDialogueUI.close();
         PlayerNPCQuestUI.close();
@@ -1204,9 +1206,9 @@ public class PlayerUI : MonoBehaviour
         {
             PlayerBarricadeLibraryUI.close();
         }
-        else if (PlayerBarricadeMannequinUI.active)
+        else if (mannequinUI.active)
         {
-            PlayerBarricadeMannequinUI.close();
+            mannequinUI.close();
         }
         else if (browserRequestUI.isActive)
         {
@@ -1540,9 +1542,9 @@ public class PlayerUI : MonoBehaviour
                     PlayerBarricadeLibraryUI.close();
                     PlayerLifeUI.open();
                 }
-                else if (PlayerBarricadeMannequinUI.active)
+                else if (mannequinUI.active)
                 {
-                    PlayerBarricadeMannequinUI.close();
+                    mannequinUI.close();
                     PlayerLifeUI.open();
                 }
                 else if (PlayerNPCDialogueUI.active)
@@ -1789,7 +1791,7 @@ public class PlayerUI : MonoBehaviour
                 PlayerDashboardInformationUI.updateDynamicMap();
             }
             tickInput();
-            bool flag = Player.player.inPluginModal || PlayerPauseUI.active || MenuConfigurationOptionsUI.active || MenuConfigurationDisplayUI.active || MenuConfigurationGraphicsUI.active || MenuConfigurationControlsUI.active || PlayerDashboardUI.active || PlayerDeathUI.active || PlayerLifeUI.chatting || PlayerLifeUI.gesturing || PlayerBarricadeSignUI.active || boomboxUI.active || PlayerBarricadeLibraryUI.active || PlayerBarricadeMannequinUI.active || browserRequestUI.isActive || PlayerNPCDialogueUI.active || PlayerNPCQuestUI.active || PlayerNPCVendorUI.active || (PlayerWorkzoneUI.active && !InputEx.GetKey(ControlsSettings.secondary)) || isLocked;
+            bool flag = Player.player.inPluginModal || PlayerPauseUI.active || MenuConfigurationOptionsUI.active || MenuConfigurationDisplayUI.active || MenuConfigurationGraphicsUI.active || MenuConfigurationControlsUI.active || PlayerDashboardUI.active || PlayerDeathUI.active || PlayerLifeUI.chatting || PlayerLifeUI.gesturing || PlayerBarricadeSignUI.active || boomboxUI.active || PlayerBarricadeLibraryUI.active || mannequinUI.active || browserRequestUI.isActive || PlayerNPCDialogueUI.active || PlayerNPCQuestUI.active || PlayerNPCVendorUI.active || (PlayerWorkzoneUI.active && !InputEx.GetKey(ControlsSettings.secondary)) || isLocked;
             usingCustomModal = !flag & inputWantsCustomModal;
             flag |= inputWantsCustomModal;
             window.showCursor = flag;
@@ -1848,7 +1850,8 @@ public class PlayerUI : MonoBehaviour
         boomboxUI = new PlayerBarricadeStereoUI();
         container.AddChild(boomboxUI);
         new PlayerBarricadeLibraryUI();
-        new PlayerBarricadeMannequinUI();
+        mannequinUI = new PlayerBarricadeMannequinUI();
+        container.AddChild(mannequinUI);
         browserRequestUI = new PlayerBrowserRequestUI();
         container.AddChild(browserRequestUI);
         new PlayerNPCDialogueUI();

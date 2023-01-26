@@ -2,31 +2,29 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-public class PlayerBarricadeMannequinUI
+public class PlayerBarricadeMannequinUI : SleekFullscreenBox
 {
-    private static SleekFullscreenBox container;
+    private Local localization;
 
-    private static Local localization;
+    public bool active;
 
-    public static bool active;
+    private InteractableMannequin mannequin;
 
-    private static InteractableMannequin mannequin;
+    private ISleekButton cosmeticsButton;
 
-    private static ISleekButton cosmeticsButton;
+    private ISleekButton addButton;
 
-    private static ISleekButton addButton;
+    private ISleekButton removeButton;
 
-    private static ISleekButton removeButton;
+    private ISleekButton swapButton;
 
-    private static ISleekButton swapButton;
+    private SleekButtonState poseButton;
 
-    private static SleekButtonState poseButton;
+    private ISleekButton mirrorButton;
 
-    private static ISleekButton mirrorButton;
+    private ISleekButton cancelButton;
 
-    private static ISleekButton cancelButton;
-
-    public static void open(InteractableMannequin newMannequin)
+    public void open(InteractableMannequin newMannequin)
     {
         if (!active)
         {
@@ -38,21 +36,21 @@ public class PlayerBarricadeMannequinUI
             {
                 poseButton.state = mannequin.pose;
             }
-            container.AnimateIntoView();
+            AnimateIntoView();
         }
     }
 
-    public static void close()
+    public void close()
     {
         if (active)
         {
             active = false;
             mannequin = null;
-            container.AnimateOutOfView(0f, 1f);
+            AnimateOutOfView(0f, 1f);
         }
     }
 
-    private static void onClickedCosmeticsButton(ISleekElement button)
+    private void onClickedCosmeticsButton(ISleekElement button)
     {
         if (mannequin != null)
         {
@@ -62,7 +60,7 @@ public class PlayerBarricadeMannequinUI
         close();
     }
 
-    private static void onClickedAddButton(ISleekElement button)
+    private void onClickedAddButton(ISleekElement button)
     {
         if (mannequin != null)
         {
@@ -72,7 +70,7 @@ public class PlayerBarricadeMannequinUI
         close();
     }
 
-    private static void onClickedRemoveButton(ISleekElement button)
+    private void onClickedRemoveButton(ISleekElement button)
     {
         if (mannequin != null)
         {
@@ -82,7 +80,7 @@ public class PlayerBarricadeMannequinUI
         close();
     }
 
-    private static void onClickedSwapButton(ISleekElement button)
+    private void onClickedSwapButton(ISleekElement button)
     {
         if (mannequin != null)
         {
@@ -92,16 +90,17 @@ public class PlayerBarricadeMannequinUI
         close();
     }
 
-    private static void onSwappedPoseState(SleekButtonState button, int index)
+    private void onSwappedPoseState(SleekButtonState button, int index)
     {
         if (mannequin != null)
         {
+            poseButton.state = mannequin.pose;
             byte comp = mannequin.getComp(mannequin.mirror, (byte)index);
             mannequin.ClientSetPose(comp);
         }
     }
 
-    private static void onClickedMirrorButton(ISleekElement button)
+    private void onClickedMirrorButton(ISleekElement button)
     {
         if (mannequin != null)
         {
@@ -112,24 +111,31 @@ public class PlayerBarricadeMannequinUI
         }
     }
 
-    private static void onClickedCancelButton(ISleekElement button)
+    private void onClickedCancelButton(ISleekElement button)
     {
         PlayerLifeUI.open();
         close();
     }
 
+    public override void OnUpdate()
+    {
+        base.OnUpdate();
+        if (mannequin != null)
+        {
+            poseButton.state = mannequin.pose;
+        }
+    }
+
     public PlayerBarricadeMannequinUI()
     {
         localization = Localization.read("/Player/PlayerBarricadeMannequin.dat");
-        container = new SleekFullscreenBox();
-        container.positionScale_Y = 1f;
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
-        PlayerUI.container.AddChild(container);
+        base.positionScale_Y = 1f;
+        base.positionOffset_X = 10;
+        base.positionOffset_Y = 10;
+        base.sizeOffset_X = -20;
+        base.sizeOffset_Y = -20;
+        base.sizeScale_X = 1f;
+        base.sizeScale_Y = 1f;
         active = false;
         mannequin = null;
         cosmeticsButton = Glazier.Get().CreateButton();
@@ -142,7 +148,7 @@ public class PlayerBarricadeMannequinUI
         cosmeticsButton.text = localization.format("Cosmetics_Button");
         cosmeticsButton.tooltipText = localization.format("Cosmetics_Button_Tooltip");
         cosmeticsButton.onClickedButton += onClickedCosmeticsButton;
-        container.AddChild(cosmeticsButton);
+        AddChild(cosmeticsButton);
         addButton = Glazier.Get().CreateButton();
         addButton.positionOffset_X = -100;
         addButton.positionOffset_Y = -95;
@@ -153,7 +159,7 @@ public class PlayerBarricadeMannequinUI
         addButton.text = localization.format("Add_Button");
         addButton.tooltipText = localization.format("Add_Button_Tooltip");
         addButton.onClickedButton += onClickedAddButton;
-        container.AddChild(addButton);
+        AddChild(addButton);
         removeButton = Glazier.Get().CreateButton();
         removeButton.positionOffset_X = -100;
         removeButton.positionOffset_Y = -55;
@@ -163,7 +169,7 @@ public class PlayerBarricadeMannequinUI
         removeButton.sizeOffset_Y = 30;
         removeButton.tooltipText = localization.format("Remove_Button_Tooltip");
         removeButton.onClickedButton += onClickedRemoveButton;
-        container.AddChild(removeButton);
+        AddChild(removeButton);
         swapButton = Glazier.Get().CreateButton();
         swapButton.positionOffset_X = -100;
         swapButton.positionOffset_Y = -15;
@@ -174,7 +180,7 @@ public class PlayerBarricadeMannequinUI
         swapButton.text = localization.format("Swap_Button");
         swapButton.tooltipText = localization.format("Swap_Button_Tooltip");
         swapButton.onClickedButton += onClickedSwapButton;
-        container.AddChild(swapButton);
+        AddChild(swapButton);
         poseButton = new SleekButtonState(new GUIContent(localization.format("T")), new GUIContent(localization.format("Classic")), new GUIContent(localization.format("Lie")));
         poseButton.positionOffset_X = -100;
         poseButton.positionOffset_Y = 25;
@@ -184,7 +190,7 @@ public class PlayerBarricadeMannequinUI
         poseButton.sizeOffset_Y = 30;
         poseButton.tooltip = localization.format("Pose_Button_Tooltip");
         poseButton.onSwappedState = onSwappedPoseState;
-        container.AddChild(poseButton);
+        AddChild(poseButton);
         mirrorButton = Glazier.Get().CreateButton();
         mirrorButton.positionOffset_X = -100;
         mirrorButton.positionOffset_Y = 65;
@@ -195,7 +201,7 @@ public class PlayerBarricadeMannequinUI
         mirrorButton.text = localization.format("Mirror_Button");
         mirrorButton.tooltipText = localization.format("Mirror_Button_Tooltip");
         mirrorButton.onClickedButton += onClickedMirrorButton;
-        container.AddChild(mirrorButton);
+        AddChild(mirrorButton);
         cancelButton = Glazier.Get().CreateButton();
         cancelButton.positionOffset_X = -100;
         cancelButton.positionOffset_Y = 105;
@@ -206,6 +212,6 @@ public class PlayerBarricadeMannequinUI
         cancelButton.text = localization.format("Cancel_Button");
         cancelButton.tooltipText = localization.format("Cancel_Button_Tooltip");
         cancelButton.onClickedButton += onClickedCancelButton;
-        container.AddChild(cancelButton);
+        AddChild(cancelButton);
     }
 }

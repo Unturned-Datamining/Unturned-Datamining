@@ -734,7 +734,7 @@ public class PlayerEquipment : PlayerCaller
             statTrackerCallback = getSlot1StatTrackerValue;
             break;
         }
-        Transform transform = ItemTool.InstantiateItem(id, num, 100, state, viewmodel: false, itemAsset, skinAsset, shouldDestroyColliders: true, tempThirdMeshes[slot], out tempThirdMaterials[slot], statTrackerCallback);
+        Transform transform = ItemTool.InstantiateItem(100, state, viewmodel: false, itemAsset, skinAsset, shouldDestroyColliders: true, tempThirdMeshes[slot], out tempThirdMaterials[slot], statTrackerCallback);
         Rigidbody orAddComponent = transform.GetOrAddComponent<Rigidbody>();
         orAddComponent.useGravity = false;
         orAddComponent.isKinematic = true;
@@ -1131,18 +1131,18 @@ public class PlayerEquipment : PlayerCaller
         quality = newQuality;
         _state = newState;
         int value = 0;
+        ushort id = 0;
         ushort num = 0;
-        ushort num2 = 0;
         if (base.channel.owner.skinItems != null && base.channel.owner.itemSkins != null && base.channel.owner.itemSkins.TryGetValue(asset.sharedSkinLookupID, out value))
         {
-            num = Provider.provider.economyService.getInventorySkinID(value);
-            num2 = Provider.provider.economyService.getInventoryMythicID(value);
-            if (num2 == 0)
+            id = Provider.provider.economyService.getInventorySkinID(value);
+            num = Provider.provider.economyService.getInventoryMythicID(value);
+            if (num == 0)
             {
-                num2 = base.channel.owner.getParticleEffectForItemDef(value);
+                num = base.channel.owner.getParticleEffectForItemDef(value);
             }
         }
-        SkinAsset skinAsset = Assets.find(EAssetType.SKIN, num) as SkinAsset;
+        SkinAsset skinAsset = Assets.find(EAssetType.SKIN, id) as SkinAsset;
         skinRagdollEffect = ERagdollEffect.NONE;
         if (!base.channel.owner.getRagdollEffect(itemID, out skinRagdollEffect) && skinAsset != null)
         {
@@ -1152,7 +1152,7 @@ public class PlayerEquipment : PlayerCaller
         if (base.channel.isOwner)
         {
             ClientAssetIntegrity.QueueRequest(_asset);
-            _firstModel = ItemTool.InstantiateItem(asset.id, num, quality, state, viewmodel: true, asset, skinAsset, shouldDestroyColliders: true, tempFirstMesh, out tempFirstMaterial, getUseableStatTrackerValue, prefabOverride);
+            _firstModel = ItemTool.InstantiateItem(quality, state, viewmodel: true, asset, skinAsset, shouldDestroyColliders: true, tempFirstMesh, out tempFirstMaterial, getUseableStatTrackerValue, prefabOverride);
             fixStatTrackerHookScale(_firstModel);
             syncStatTrackTrackerVisibility(_firstModel);
             if (asset.isBackward)
@@ -1169,9 +1169,9 @@ public class PlayerEquipment : PlayerCaller
             firstModel.gameObject.SetActive(value: false);
             firstModel.gameObject.SetActive(value: true);
             firstModel.DestroyRigidbody();
-            if (num2 != 0)
+            if (num != 0)
             {
-                Transform transform = ItemTool.applyEffect(firstModel, num2, EEffectType.FIRST);
+                Transform transform = ItemTool.applyEffect(firstModel, num, EEffectType.FIRST);
                 if (transform != null)
                 {
                     firstMythic = transform.GetComponent<MythicLockee>();
@@ -1183,7 +1183,7 @@ public class PlayerEquipment : PlayerCaller
             {
                 firstMythic.isMythic = base.player.clothing.isSkinned && base.player.clothing.isMythic;
             }
-            _characterModel = ItemTool.getItem(asset.id, num, quality, state, viewmodel: false, asset, skinAsset, tempCharacterMesh, out tempCharacterMaterial, getUseableStatTrackerValue, prefabOverride);
+            _characterModel = ItemTool.getItem(quality, state, viewmodel: false, asset, skinAsset, tempCharacterMesh, out tempCharacterMaterial, getUseableStatTrackerValue, prefabOverride);
             fixStatTrackerHookScale(_characterModel);
             syncStatTrackTrackerVisibility(_characterModel);
             if (asset.isBackward)
@@ -1200,9 +1200,9 @@ public class PlayerEquipment : PlayerCaller
             Rigidbody orAddComponent = characterModel.gameObject.GetOrAddComponent<Rigidbody>();
             orAddComponent.useGravity = false;
             orAddComponent.isKinematic = true;
-            if (num2 != 0)
+            if (num != 0)
             {
-                Transform transform2 = ItemTool.applyEffect(characterModel, num2, EEffectType.THIRD);
+                Transform transform2 = ItemTool.applyEffect(characterModel, num, EEffectType.THIRD);
                 if (transform2 != null)
                 {
                     characterMythic = transform2.GetComponent<MythicLockee>();
@@ -1215,7 +1215,7 @@ public class PlayerEquipment : PlayerCaller
                 characterMythic.isMythic = base.player.clothing.isSkinned && base.player.clothing.isMythic;
             }
         }
-        _thirdModel = ItemTool.InstantiateItem(asset.id, num, quality, state, viewmodel: false, asset, skinAsset, shouldDestroyColliders: true, tempThirdMesh, out tempThirdMaterial, getUseableStatTrackerValue, prefabOverride);
+        _thirdModel = ItemTool.InstantiateItem(quality, state, viewmodel: false, asset, skinAsset, shouldDestroyColliders: true, tempThirdMesh, out tempThirdMaterial, getUseableStatTrackerValue, prefabOverride);
         fixStatTrackerHookScale(_thirdModel);
         syncStatTrackTrackerVisibility(_thirdModel);
         if (asset.isBackward)
@@ -1235,9 +1235,9 @@ public class PlayerEquipment : PlayerCaller
         orAddComponent2.useGravity = false;
         orAddComponent2.isKinematic = true;
         Layerer.enemy(thirdModel);
-        if (num2 != 0)
+        if (num != 0)
         {
-            Transform transform3 = ItemTool.applyEffect(thirdModel, num2, EEffectType.THIRD);
+            Transform transform3 = ItemTool.applyEffect(thirdModel, num, EEffectType.THIRD);
             if (transform3 != null)
             {
                 thirdMythic = transform3.GetComponent<MythicLockee>();

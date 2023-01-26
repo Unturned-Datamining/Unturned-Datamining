@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using SDG.Provider;
 using UnityEngine;
@@ -31,10 +32,6 @@ public class ItemTool : MonoBehaviour
 
     private static readonly Color RARITY_MYTHICAL_UI = new Color(50f / 51f, 10f / 51f, 5f / 51f);
 
-    private static ItemTool tool;
-
-    private static Dictionary<ushort, Texture2D> cache = new Dictionary<ushort, Texture2D>();
-
     private static Queue<ItemIconInfo> icons;
 
     private string currentIconTags;
@@ -50,6 +47,10 @@ public class ItemTool : MonoBehaviour
     private Transform pendingItem;
 
     private ItemIconInfo pendingInfo;
+
+    private static ItemTool tool;
+
+    private static Dictionary<ItemAsset, Texture2D> iconCache = new Dictionary<ItemAsset, Texture2D>();
 
     public static string filterRarityRichText(string desc)
     {
@@ -115,7 +116,7 @@ public class ItemTool : MonoBehaviour
         {
             return null;
         }
-        Object @object;
+        UnityEngine.Object @object;
         switch (type)
         {
         case EEffectType.AREA:
@@ -137,7 +138,7 @@ public class ItemTool : MonoBehaviour
         {
             return null;
         }
-        Transform obj = ((GameObject)Object.Instantiate(@object)).transform;
+        Transform obj = ((GameObject)UnityEngine.Object.Instantiate(@object)).transform;
         obj.name = "System";
         return obj;
     }
@@ -225,46 +226,52 @@ public class ItemTool : MonoBehaviour
     public static Transform getItem(ushort id, ushort skin, byte quality, byte[] state, bool viewmodel, ItemAsset itemAsset, List<Mesh> outTempMeshes, out Material tempMaterial, GetStatTrackerValueHandler statTrackerCallback)
     {
         SkinAsset skinAsset = Assets.find(EAssetType.SKIN, skin) as SkinAsset;
-        return InstantiateItem(id, skin, quality, state, viewmodel, itemAsset, skinAsset, shouldDestroyColliders: false, outTempMeshes, out tempMaterial, statTrackerCallback);
+        return InstantiateItem(quality, state, viewmodel, itemAsset, skinAsset, shouldDestroyColliders: false, outTempMeshes, out tempMaterial, statTrackerCallback);
     }
 
     public static Transform getItem(ushort id, ushort skin, byte quality, byte[] state, bool viewmodel, ItemAsset itemAsset, bool shouldDestroyColliders, List<Mesh> outTempMeshes, out Material tempMaterial, GetStatTrackerValueHandler statTrackerCallback)
     {
         SkinAsset skinAsset = Assets.find(EAssetType.SKIN, skin) as SkinAsset;
-        return InstantiateItem(id, skin, quality, state, viewmodel, itemAsset, skinAsset, shouldDestroyColliders, outTempMeshes, out tempMaterial, statTrackerCallback);
+        return InstantiateItem(quality, state, viewmodel, itemAsset, skinAsset, shouldDestroyColliders, outTempMeshes, out tempMaterial, statTrackerCallback);
     }
 
     public static Transform getItem(ushort id, ushort skin, byte quality, byte[] state, bool viewmodel, ItemAsset itemAsset, GetStatTrackerValueHandler statTrackerCallback)
     {
         SkinAsset skinAsset = Assets.find(EAssetType.SKIN, skin) as SkinAsset;
         Material tempMaterial;
-        return InstantiateItem(id, skin, quality, state, viewmodel, itemAsset, skinAsset, shouldDestroyColliders: false, null, out tempMaterial, statTrackerCallback);
+        return InstantiateItem(quality, state, viewmodel, itemAsset, skinAsset, shouldDestroyColliders: false, null, out tempMaterial, statTrackerCallback);
     }
 
     public static Transform getItem(ushort id, ushort skin, byte quality, byte[] state, bool viewmodel, ItemAsset itemAsset, bool shouldDestroyColliders, GetStatTrackerValueHandler statTrackerCallback)
     {
         SkinAsset skinAsset = Assets.find(EAssetType.SKIN, skin) as SkinAsset;
         Material tempMaterial;
-        return InstantiateItem(id, skin, quality, state, viewmodel, itemAsset, skinAsset, shouldDestroyColliders, null, out tempMaterial, statTrackerCallback);
+        return InstantiateItem(quality, state, viewmodel, itemAsset, skinAsset, shouldDestroyColliders, null, out tempMaterial, statTrackerCallback);
     }
 
     public static Transform getItem(ushort id, ushort skin, byte quality, byte[] state, bool viewmodel, ItemAsset itemAsset, SkinAsset skinAsset, GetStatTrackerValueHandler statTrackerCallback)
     {
         Material tempMaterial;
-        return InstantiateItem(id, skin, quality, state, viewmodel, itemAsset, skinAsset, shouldDestroyColliders: false, null, out tempMaterial, statTrackerCallback);
+        return InstantiateItem(quality, state, viewmodel, itemAsset, skinAsset, shouldDestroyColliders: false, null, out tempMaterial, statTrackerCallback);
     }
 
     public static Transform getItem(ushort id, ushort skin, byte quality, byte[] state, bool viewmodel, ItemAsset itemAsset, SkinAsset skinAsset, List<Mesh> outTempMeshes, out Material tempMaterial, GetStatTrackerValueHandler statTrackerCallback)
     {
-        return InstantiateItem(id, skin, quality, state, viewmodel, itemAsset, skinAsset, shouldDestroyColliders: false, outTempMeshes, out tempMaterial, statTrackerCallback);
+        return InstantiateItem(quality, state, viewmodel, itemAsset, skinAsset, shouldDestroyColliders: false, outTempMeshes, out tempMaterial, statTrackerCallback);
     }
 
-    internal static Transform getItem(ushort id, ushort skin, byte quality, byte[] state, bool viewmodel, ItemAsset itemAsset, SkinAsset skinAsset, List<Mesh> outTempMeshes, out Material tempMaterial, GetStatTrackerValueHandler statTrackerCallback, GameObject prefabOverride = null)
+    internal static Transform getItem(byte quality, byte[] state, bool viewmodel, ItemAsset itemAsset, SkinAsset skinAsset, List<Mesh> outTempMeshes, out Material tempMaterial, GetStatTrackerValueHandler statTrackerCallback, GameObject prefabOverride = null)
     {
-        return InstantiateItem(id, skin, quality, state, viewmodel, itemAsset, skinAsset, shouldDestroyColliders: false, outTempMeshes, out tempMaterial, statTrackerCallback, prefabOverride);
+        return InstantiateItem(quality, state, viewmodel, itemAsset, skinAsset, shouldDestroyColliders: false, outTempMeshes, out tempMaterial, statTrackerCallback, prefabOverride);
     }
 
+    [Obsolete("Removed id and skin parameters because itemAsset and skinAsset are required")]
     internal static Transform InstantiateItem(ushort id, ushort skin, byte quality, byte[] state, bool viewmodel, ItemAsset itemAsset, SkinAsset skinAsset, bool shouldDestroyColliders, List<Mesh> outTempMeshes, out Material tempMaterial, GetStatTrackerValueHandler statTrackerCallback, GameObject prefabOverride = null)
+    {
+        return InstantiateItem(quality, state, viewmodel, itemAsset, skinAsset, shouldDestroyColliders, outTempMeshes, out tempMaterial, statTrackerCallback, prefabOverride);
+    }
+
+    internal static Transform InstantiateItem(byte quality, byte[] state, bool viewmodel, ItemAsset itemAsset, SkinAsset skinAsset, bool shouldDestroyColliders, List<Mesh> outTempMeshes, out Material tempMaterial, GetStatTrackerValueHandler statTrackerCallback, GameObject prefabOverride = null)
     {
         tempMaterial = null;
         GameObject gameObject = prefabOverride;
@@ -275,7 +282,7 @@ public class ItemTool : MonoBehaviour
         if (gameObject == null)
         {
             Transform transform = new GameObject().transform;
-            transform.name = id.ToString();
+            transform.name = itemAsset.id.ToString();
             if (viewmodel)
             {
                 transform.tag = "Viewmodel";
@@ -288,12 +295,8 @@ public class ItemTool : MonoBehaviour
             }
             return transform;
         }
-        if (id != itemAsset.id)
-        {
-            UnturnedLog.error("ID and asset ID are not in sync!");
-        }
-        Transform transform2 = Object.Instantiate(gameObject).transform;
-        transform2.name = id.ToString();
+        Transform transform2 = UnityEngine.Object.Instantiate(gameObject).transform;
+        transform2.name = itemAsset.id.ToString();
         if (shouldDestroyColliders && itemAsset.shouldDestroyItemColliders)
         {
             PrefabUtil.DestroyCollidersInChildren(transform2.gameObject, includeInactive: true);
@@ -316,7 +319,7 @@ public class ItemTool : MonoBehaviour
             {
                 if (skinAsset.isPattern)
                 {
-                    Material material = Object.Instantiate(skinAsset.primarySkin);
+                    Material material = UnityEngine.Object.Instantiate(skinAsset.primarySkin);
                     itemAsset.applySkinBaseTextures(material);
                     skinAsset.SetMaterialProperties(material);
                     HighlighterTool.rematerialize(transform2, material, out tempMaterial);
@@ -400,7 +403,7 @@ public class ItemTool : MonoBehaviour
         RenderSettings.ambientEquatorColor = ambientEquatorColor;
         RenderSettings.ambientGroundColor = ambientGroundColor;
         item.position = new Vector3(0f, -256f, -256f);
-        Object.Destroy(item.gameObject);
+        UnityEngine.Object.Destroy(item.gameObject);
         for (int i = 0; i < texture2D.width; i++)
         {
             for (int j = 0; j < texture2D.height; j++)
@@ -450,26 +453,40 @@ public class ItemTool : MonoBehaviour
 
     public static void getIcon(ushort id, ushort skin, byte quality, byte[] state, ItemAsset itemAsset, SkinAsset skinAsset, string tags, string dynamic_props, int x, int y, bool scale, bool readableOnCPU, ItemIconReady callback)
     {
-        if (itemAsset != null && id != itemAsset.id)
+        if (itemAsset == null)
         {
-            UnturnedLog.error("ID and item asset ID are not in sync!");
-        }
-        if (skinAsset != null && skin != skinAsset.id)
-        {
-            UnturnedLog.error("ID and skin asset ID are not in sync!");
-        }
-        if (state.Length == 0 && skin == 0 && x == itemAsset.size_x * 50 && y == itemAsset.size_y * 50 && cache.TryGetValue(id, out var value))
-        {
-            if (value != null)
+            itemAsset = Assets.find(EAssetType.ITEM, id) as ItemAsset;
+            if (itemAsset == null)
             {
-                callback(value);
+                UnturnedLog.warn($"getIcon called with null item, unable to find by legacy id {id}");
                 return;
             }
-            cache.Remove(id);
+            UnturnedLog.warn($"getIcon called with null item, found \"{itemAsset.name}\" by legacy id {id}");
+        }
+        bool flag = state.Length == 0 && skinAsset == null && x == itemAsset.size_x * 50 && y == itemAsset.size_y * 50 && !readableOnCPU;
+        if (flag)
+        {
+            if (iconCache.TryGetValue(itemAsset, out var value))
+            {
+                if (value != null)
+                {
+                    callback(value);
+                    return;
+                }
+                iconCache.Remove(itemAsset);
+            }
+            foreach (ItemIconInfo icon in icons)
+            {
+                if (icon.isEligibleForCaching && icon.itemAsset == itemAsset)
+                {
+                    icon.callback = (ItemIconReady)Delegate.Combine(icon.callback, callback);
+                    return;
+                }
+            }
         }
         ItemIconInfo itemIconInfo = new ItemIconInfo();
-        itemIconInfo.id = id;
-        itemIconInfo.skin = skin;
+        itemIconInfo.id = itemAsset.id;
+        itemIconInfo.skin = skinAsset?.id ?? 0;
         itemIconInfo.quality = quality;
         itemIconInfo.state = state;
         itemIconInfo.itemAsset = itemAsset;
@@ -480,6 +497,7 @@ public class ItemTool : MonoBehaviour
         itemIconInfo.y = y;
         itemIconInfo.scale = scale;
         itemIconInfo.readableOnCPU = readableOnCPU;
+        itemIconInfo.isEligibleForCaching = flag;
         itemIconInfo.callback = callback;
         icons.Enqueue(itemIconInfo);
     }
@@ -525,7 +543,7 @@ public class ItemTool : MonoBehaviour
         RenderSettings.ambientEquatorColor = ambientEquatorColor;
         RenderSettings.ambientGroundColor = ambientGroundColor;
         model.position = new Vector3(0f, -256f, -256f);
-        Object.Destroy(model.gameObject);
+        UnityEngine.Object.Destroy(model.gameObject);
         Texture2D texture2D = new Texture2D(width, height, TextureFormat.ARGB32, mipChain: false);
         texture2D.name = "Icon_" + id + "_" + skin;
         texture2D.filterMode = FilterMode.Point;
@@ -628,7 +646,7 @@ public class ItemTool : MonoBehaviour
                 {
                     currentIconTags = pendingInfo.tags;
                     currentIconDynamicProps = pendingInfo.dynamic_props;
-                    pendingItem = getItem(pendingInfo.id, pendingInfo.skin, pendingInfo.quality, pendingInfo.state, viewmodel: false, pendingInfo.itemAsset, pendingInfo.skinAsset, getIconStatTrackerValue);
+                    pendingItem = getItem(pendingInfo.itemAsset.id, pendingInfo.skinAsset?.id ?? 0, pendingInfo.quality, pendingInfo.state, viewmodel: false, pendingInfo.itemAsset, pendingInfo.skinAsset, getIconStatTrackerValue);
                     pendingItem.position = new Vector3(-256f, -256f, 0f);
                 }
             }
@@ -639,13 +657,13 @@ public class ItemTool : MonoBehaviour
         pendingInfo = null;
         pendingItem = null;
         Transform transform2;
-        if (itemIconInfo.scale && itemIconInfo.skin != 0)
+        if (itemIconInfo.scale && itemIconInfo.skinAsset != null)
         {
             transform2 = transform.Find("Icon2");
             if (transform2 == null)
             {
                 transform.position = new Vector3(0f, -256f, -256f);
-                Object.Destroy(transform.gameObject);
+                UnityEngine.Object.Destroy(transform.gameObject);
                 Assets.reportError(itemIconInfo.itemAsset, "missing 'Icon2' Transform");
                 return;
             }
@@ -656,19 +674,26 @@ public class ItemTool : MonoBehaviour
             if (transform2 == null)
             {
                 transform.position = new Vector3(0f, -256f, -256f);
-                Object.Destroy(transform.gameObject);
+                UnityEngine.Object.Destroy(transform.gameObject);
                 Assets.reportError(itemIconInfo.itemAsset, "missing 'Icon' Transform");
                 return;
             }
         }
-        Texture2D texture2D = captureIcon(orthoSize: (itemIconInfo.scale && itemIconInfo.skin != 0) ? itemIconInfo.itemAsset.econIconCameraOrthographicSize : ((!itemIconInfo.itemAsset.isEligibleForAutomaticIconMeasurements) ? itemIconInfo.itemAsset.iconCameraOrthographicSize : CalculateOrthographicSize(itemIconInfo.itemAsset, transform.gameObject, transform2, itemIconInfo.x, itemIconInfo.y)), id: itemIconInfo.id, skin: itemIconInfo.skin, model: transform, icon: transform2, width: itemIconInfo.x, height: itemIconInfo.y, readableOnCPU: itemIconInfo.readableOnCPU);
+        Texture2D texture2D = captureIcon(orthoSize: (itemIconInfo.scale && itemIconInfo.skinAsset != null) ? itemIconInfo.itemAsset.econIconCameraOrthographicSize : ((!itemIconInfo.itemAsset.isEligibleForAutomaticIconMeasurements) ? itemIconInfo.itemAsset.iconCameraOrthographicSize : CalculateOrthographicSize(itemIconInfo.itemAsset, transform.gameObject, transform2, itemIconInfo.x, itemIconInfo.y)), id: itemIconInfo.itemAsset.id, skin: itemIconInfo.skinAsset?.id ?? 0, model: transform, icon: transform2, width: itemIconInfo.x, height: itemIconInfo.y, readableOnCPU: itemIconInfo.readableOnCPU);
         if (itemIconInfo.callback != null)
         {
-            itemIconInfo.callback(texture2D);
+            try
+            {
+                itemIconInfo.callback(texture2D);
+            }
+            catch (Exception e)
+            {
+                UnturnedLog.exception(e, "Caught exception during item icon capture callback:");
+            }
         }
-        if (itemIconInfo.state.Length == 0 && itemIconInfo.skin == 0 && itemIconInfo.x == itemIconInfo.itemAsset.size_x * 50 && itemIconInfo.y == itemIconInfo.itemAsset.size_y * 50 && !cache.ContainsKey(itemIconInfo.id))
+        if (itemIconInfo.isEligibleForCaching && !iconCache.ContainsKey(itemIconInfo.itemAsset))
         {
-            cache.Add(itemIconInfo.id, texture2D);
+            iconCache.Add(itemIconInfo.itemAsset, texture2D);
         }
     }
 

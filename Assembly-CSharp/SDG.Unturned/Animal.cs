@@ -66,7 +66,7 @@ public class Animal : MonoBehaviour
 
     private float lastUpdateAngle;
 
-    private NetworkSnapshotBuffer nsb;
+    private NetworkSnapshotBuffer<YawSnapshotInfo> nsb;
 
     private bool isMoving;
 
@@ -741,9 +741,9 @@ public class Animal : MonoBehaviour
             }
             if (nsb != null)
             {
-                YawSnapshotInfo yawSnapshotInfo = (YawSnapshotInfo)(object)nsb.getCurrentSnapshot();
-                base.transform.position = yawSnapshotInfo.pos;
-                base.transform.rotation = Quaternion.Euler(0f, yawSnapshotInfo.yaw, 0f);
+                YawSnapshotInfo currentSnapshot = nsb.getCurrentSnapshot();
+                base.transform.position = currentSnapshot.pos;
+                base.transform.rotation = Quaternion.Euler(0f, currentSnapshot.yaw, 0f);
             }
         }
         if ((!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer) && !isMoving && !isPlayingEat && !isPlayingGlance && !isPlayingAttack)
@@ -943,7 +943,7 @@ public class Animal : MonoBehaviour
         }
         else
         {
-            nsb = new NetworkSnapshotBuffer(Provider.UPDATE_TIME, Provider.UPDATE_DELAY);
+            nsb = new NetworkSnapshotBuffer<YawSnapshotInfo>(Provider.UPDATE_TIME, Provider.UPDATE_DELAY);
         }
         reset();
         lastEat = Time.time + UnityEngine.Random.Range(4f, 16f);

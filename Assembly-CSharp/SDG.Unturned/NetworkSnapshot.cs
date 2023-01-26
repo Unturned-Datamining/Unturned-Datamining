@@ -1,8 +1,8 @@
 namespace SDG.Unturned;
 
-public struct NetworkSnapshot
+public struct NetworkSnapshot<T> where T : ISnapshotInfo<T>
 {
-    public ISnapshotInfo info;
+    public T info;
 
     public float timestamp;
 }

@@ -76,12 +76,7 @@ public class SteamworksServerMultiplayerService : Service, IServerMultiplayerSer
                 UnturnedLog.info("Not using login token");
                 if (security != 0)
                 {
-                    CommandWindow.LogWarning("Steam Game Server Login Token (GSLT) not set");
-                    CommandWindow.LogWarning("Without a login token the server:");
-                    CommandWindow.LogWarning("- Is not visible in Internet server list");
-                    CommandWindow.LogWarning("- Cannot be joined over the Internet");
-                    CommandWindow.LogWarning("See this link for guide and more information:");
-                    CommandWindow.LogWarning("https://github.com/SmartlyDressedGames/U3-Docs/blob/master/GameServerLoginTokens.md");
+                    Level.onPostLevelLoaded = (PostLevelLoaded)Delegate.Combine(Level.onPostLevelLoaded, new PostLevelLoaded(OnPostLevelLoaded));
                 }
                 SteamGameServer.LogOnAnonymous();
             }
@@ -176,5 +171,15 @@ public class SteamworksServerMultiplayerService : Service, IServerMultiplayerSer
         {
             CommandWindow.LogFormat("Lost connection to Steam servers because {0}", callback.m_eResult);
         }
+    }
+
+    private void OnPostLevelLoaded(int id)
+    {
+        CommandWindow.LogWarning("Steam Game Server Login Token (GSLT) not set");
+        CommandWindow.LogWarning("Without a login token the server:");
+        CommandWindow.LogWarning("- Is not visible in Internet server list");
+        CommandWindow.LogWarning("- Cannot be joined over the Internet");
+        CommandWindow.LogWarning("See this link for guide and more information:");
+        CommandWindow.LogWarning("https://github.com/SmartlyDressedGames/U3-Docs/blob/master/GameServerLoginTokens.md");
     }
 }

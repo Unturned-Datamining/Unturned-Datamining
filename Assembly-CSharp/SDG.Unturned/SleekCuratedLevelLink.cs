@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unturned.LiveConfig;
 
 namespace SDG.Unturned;
 
@@ -15,6 +16,8 @@ public class SleekCuratedLevelLink : SleekWrapper
     private ISleekImage icon;
 
     private ISleekLabel nameLabel;
+
+    private bool hasCreatedStatusLabel;
 
     private void onClickedViewButton(ISleekElement button)
     {
@@ -74,6 +77,34 @@ public class SleekCuratedLevelLink : SleekWrapper
         manageButton.text = MenuPlaySingleplayerUI.localization.format(subscribed ? "Retired_Manage_Unsub" : "Retired_Manage_Sub");
     }
 
+    private void OnLiveConfigRefreshed()
+    {
+        if (hasCreatedStatusLabel)
+        {
+            return;
+        }
+        MainMenuWorkshopFeaturedLiveConfig featured = LiveConfig.Get().MainMenuWorkshop.Featured;
+        if (featured.Status != 0 && featured.IsFeatured(curatedMap.Workshop_File_Id))
+        {
+            SleekNew sleekNew = new SleekNew(featured.Status == EMapStatus.Updated);
+            if (icon != null)
+            {
+                icon.AddChild(sleekNew);
+            }
+            else
+            {
+                AddChild(sleekNew);
+            }
+            hasCreatedStatusLabel = true;
+        }
+    }
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        LiveConfig.OnRefreshed -= OnLiveConfigRefreshed;
+    }
+
     public SleekCuratedLevelLink(CuratedMapLink curatedMap)
     {
         this.curatedMap = curatedMap;
@@ -131,22 +162,8 @@ public class SleekCuratedLevelLink : SleekWrapper
         updateManageLabel();
         manageButton.onClickedButton += onClickedManageButton;
         backdrop.AddChild(manageButton);
-        if (!Provider.statusData.News.isFeatured(curatedMap.Workshop_File_Id) || !LocalNews.isNowWithinFeaturedWorkshopWindow())
-        {
-            return;
-        }
-        EMapStatus featured_Workshop_Status = Provider.statusData.News.Featured_Workshop_Status;
-        if (featured_Workshop_Status != 0)
-        {
-            SleekNew sleekNew = new SleekNew(featured_Workshop_Status == EMapStatus.UPDATED);
-            if (icon != null)
-            {
-                icon.AddChild(sleekNew);
-            }
-            else
-            {
-                AddChild(sleekNew);
-            }
-        }
+        hasCreatedStatusLabel = false;
+        LiveConfig.OnRefreshed -= OnLiveConfigRefreshed;
+        OnLiveConfigRefreshed();
     }
 }

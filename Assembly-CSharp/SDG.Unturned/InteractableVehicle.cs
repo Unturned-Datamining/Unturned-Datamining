@@ -173,7 +173,7 @@ public class InteractableVehicle : Interactable
 
     private Vector3 lastUpdatedPos;
 
-    private NetworkSnapshotBuffer nsb;
+    private NetworkSnapshotBuffer<TransformSnapshotInfo> nsb;
 
     private Vector3 real;
 
@@ -2917,9 +2917,9 @@ public class InteractableVehicle : Interactable
         }
         if (!Provider.isServer && !isPhysical && asset.engine != EEngine.TRAIN && nsb != null)
         {
-            TransformSnapshotInfo transformSnapshotInfo = (TransformSnapshotInfo)(object)nsb.getCurrentSnapshot();
-            GetComponent<Rigidbody>().MovePosition(transformSnapshotInfo.pos);
-            GetComponent<Rigidbody>().MoveRotation(transformSnapshotInfo.rot);
+            TransformSnapshotInfo currentSnapshot = nsb.getCurrentSnapshot();
+            GetComponent<Rigidbody>().MovePosition(currentSnapshot.pos);
+            GetComponent<Rigidbody>().MoveRotation(currentSnapshot.rot);
         }
         if (Provider.isServer && isPhysical && asset.engine != EEngine.TRAIN && !isDriven)
         {
@@ -3292,7 +3292,7 @@ public class InteractableVehicle : Interactable
         eventHook = base.gameObject.GetComponent<VehicleEventHook>();
         if (!Provider.isServer)
         {
-            nsb = new NetworkSnapshotBuffer(Provider.UPDATE_TIME, Provider.UPDATE_DELAY);
+            nsb = new NetworkSnapshotBuffer<TransformSnapshotInfo>(Provider.UPDATE_TIME, Provider.UPDATE_DELAY);
         }
         if (Provider.isServer)
         {

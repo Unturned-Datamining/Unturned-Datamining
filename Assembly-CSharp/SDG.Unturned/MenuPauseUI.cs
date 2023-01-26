@@ -1,5 +1,4 @@
 using System;
-using Steamworks;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -70,7 +69,7 @@ public class MenuPauseUI
         }
         else
         {
-            Provider.provider.browserService.open("http://steamcommunity.com/app/" + SteamUtils.GetAppID().ToString() + "/discussions/9/613936673439628788/");
+            Provider.provider.browserService.open("https://support.smartlydressedgames.com/hc/en-us");
         }
     }
 

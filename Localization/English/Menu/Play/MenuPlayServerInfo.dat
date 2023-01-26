@@ -26,6 +26,7 @@ GameMode Game: {0}
 
 Monetization_None Monetization: None
 Monetization_NonGameplay Monetization: Non-Gameplay
+Monetization_Monetized Monetization: Affects Gameplay
 HostBan_MonetizationWarning Warning: this server is breaking the monetization rules which took effect on June 11th 2021. Click here for more information.
 HostBan_WorkshopWarning Warning: the workshop files used by this server have been banned.
 HostBan_QueryPingWarning Warning: this server has much higher actual in-game ping than shown on the server list. Likely using a proxy for the server list.

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-public class NetworkSnapshotBuffer
+public class NetworkSnapshotBuffer<T> where T : ISnapshotInfo<T>
 {
     private int readIndex;
 
@@ -12,7 +12,7 @@ public class NetworkSnapshotBuffer
 
     private int writeCount;
 
-    private ISnapshotInfo lastInfo;
+    private T lastInfo;
 
     private float readLast;
 
@@ -20,9 +20,9 @@ public class NetworkSnapshotBuffer
 
     private float readDelay;
 
-    public NetworkSnapshot[] snapshots { get; private set; }
+    public NetworkSnapshot<T>[] snapshots { get; private set; }
 
-    public ISnapshotInfo getCurrentSnapshot()
+    public T getCurrentSnapshot()
     {
         int num = writeCount - readCount;
         if (num <= 0)
@@ -57,10 +57,11 @@ public class NetworkSnapshotBuffer
             return lastInfo;
         }
         float delta = Mathf.Clamp01((Time.realtimeSinceStartup - readLast) / readDuration);
-        return lastInfo.lerp(snapshots[readIndex].info, delta);
+        lastInfo.lerp(snapshots[readIndex].info, delta, out var result);
+        return result;
     }
 
-    public void updateLastSnapshot(ISnapshotInfo info)
+    public void updateLastSnapshot(T info)
     {
         readIndex = 0;
         readCount = 0;
@@ -70,7 +71,7 @@ public class NetworkSnapshotBuffer
         readLast = Time.realtimeSinceStartup;
     }
 
-    public void addNewSnapshot(ISnapshotInfo info)
+    public void addNewSnapshot(T info)
     {
         snapshots[writeIndex].info = info;
         snapshots[writeIndex].timestamp = Time.realtimeSinceStartup;
@@ -99,7 +100,7 @@ public class NetworkSnapshotBuffer
 
     public NetworkSnapshotBuffer(float newDuration, float newDelay)
     {
-        snapshots = new NetworkSnapshot[8];
+        snapshots = new NetworkSnapshot<T>[8];
         readIndex = 0;
         readCount = 0;
         writeIndex = 0;

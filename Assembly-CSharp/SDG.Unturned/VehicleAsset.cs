@@ -132,6 +132,8 @@ public class VehicleAsset : Asset, ISkinableAsset
 
     public AudioClip horn => _horn;
 
+    public bool hasHorn { get; protected set; }
+
     public float pitchIdle => _pitchIdle;
 
     public float pitchDrive => _pitchDrive;
@@ -558,6 +560,7 @@ public class VehicleAsset : Asset, ISkinableAsset
         fuelBurnRate = data.readSingle("Fuel_Burn_Rate", defaultValue);
         _ignition = LoadRedirectableAsset<AudioClip>(bundle, "Ignition", data, "IgnitionAudioClip");
         _horn = LoadRedirectableAsset<AudioClip>(bundle, "Horn", data, "HornAudioClip");
+        hasHorn = data.readBoolean("Has_Horn", _horn != null);
         _speedMin = data.readSingle("Speed_Min");
         _speedMax = data.readSingle("Speed_Max");
         if (engine != EEngine.TRAIN)

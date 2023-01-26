@@ -389,9 +389,9 @@ public class PlayerInteract : PlayerCaller
                     PlayerBarricadeLibraryUI.close();
                     PlayerLifeUI.open();
                 }
-                else if (PlayerBarricadeMannequinUI.active)
+                else if (PlayerUI.instance.mannequinUI.active)
                 {
-                    PlayerBarricadeMannequinUI.close();
+                    PlayerUI.instance.mannequinUI.close();
                     PlayerLifeUI.open();
                 }
                 else if (PlayerNPCDialogueUI.active)

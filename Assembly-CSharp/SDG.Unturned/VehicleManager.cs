@@ -411,7 +411,8 @@ public class VehicleManager : SteamCaller
 
     public static void sendVehicleHorn()
     {
-        if (Player.player.movement.getVehicle() != null)
+        InteractableVehicle vehicle = Player.player.movement.getVehicle();
+        if (vehicle != null && vehicle.asset.hasHorn)
         {
             SendVehicleHornRequest.Invoke(ENetReliability.Unreliable);
         }
@@ -1223,7 +1224,7 @@ public class VehicleManager : SteamCaller
         if (!(player == null))
         {
             InteractableVehicle vehicle = player.movement.getVehicle();
-            if (!(vehicle == null) && vehicle.canUseHorn && vehicle.checkDriver(player.channel.owner.playerID.steamID))
+            if (!(vehicle == null) && vehicle.asset.hasHorn && vehicle.canUseHorn && vehicle.checkDriver(player.channel.owner.playerID.steamID))
             {
                 SendVehicleHorn.InvokeAndLoopback(ENetReliability.Unreliable, Provider.EnumerateClients_Remote(), vehicle.instanceID);
             }

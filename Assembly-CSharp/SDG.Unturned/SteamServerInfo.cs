@@ -203,6 +203,10 @@ public class SteamServerInfo
             {
                 monetization = EServerMonetizationTag.NonGameplay;
             }
+            else if (hasTagKey(gameTags, Provider.GetMonetizationTagAbbreviation(EServerMonetizationTag.Monetized), thumbnailIndex))
+            {
+                monetization = EServerMonetizationTag.Monetized;
+            }
             else
             {
                 monetization = EServerMonetizationTag.Unspecified;

@@ -1,9 +1,13 @@
+using System;
+
 namespace SDG.Unturned;
 
 public class ItemIconInfo
 {
+    [Obsolete("Removed in favor of itemAsset")]
     public ushort id;
 
+    [Obsolete("Removed in favor of skinAsset")]
     public ushort skin;
 
     public byte quality;
@@ -25,6 +29,8 @@ public class ItemIconInfo
     public bool scale;
 
     public bool readableOnCPU;
+
+    internal bool isEligibleForCaching;
 
     public ItemIconReady callback;
 }

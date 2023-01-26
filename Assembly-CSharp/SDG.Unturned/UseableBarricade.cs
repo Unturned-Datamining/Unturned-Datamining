@@ -366,9 +366,20 @@ public class UseableBarricade : Useable
             }
             return false;
         }
-        if ((Level.info == null || Level.info.type == ELevelType.ARENA) && equippedBarricadeAsset.build == EBuild.BED)
+        if (equippedBarricadeAsset.build == EBuild.BED)
         {
-            return false;
+            if (Level.info == null || Level.info.type == ELevelType.ARENA)
+            {
+                return false;
+            }
+            if (VolumeManager<KillVolume, KillVolumeManager>.Get().IsPositionInsideAnyVolume(pointInWorldSpace))
+            {
+                if (base.channel.isOwner)
+                {
+                    PlayerUI.hint(null, EPlayerMessage.BOUNDS);
+                }
+                return false;
+            }
         }
         if (!equippedBarricadeAsset.allowPlacementOnVehicle && !Provider.modeConfigData.Gameplay.Bypass_Buildable_Mobility && parent != null && parentVehicle != null && parentVehicle.asset != null && !parentVehicle.asset.supportsMobileBuildables)
         {
@@ -1190,6 +1201,11 @@ public class UseableBarricade : Useable
         if (equippedBarricadeAsset.build == EBuild.DOOR || equippedBarricadeAsset.build == EBuild.GATE || equippedBarricadeAsset.build == EBuild.SHUTTER || equippedBarricadeAsset.build == EBuild.HATCH)
         {
             arrow.localRotation = Quaternion.identity;
+        }
+        else if (equippedBarricadeAsset.build == EBuild.MANNEQUIN)
+        {
+            rotate_y = 180f;
+            arrow.localEulerAngles = new Vector3(-90f, 0f, 0f);
         }
         else
         {

@@ -932,7 +932,7 @@ public class DamageTool
                     float playerExplosionArmor = getPlayerExplosionArmor(player);
                     num7 *= playerExplosionArmor;
                     damage(player, parameters.cause, ELimb.SPINE, parameters.killer, vector7, parameters.playerDamage, num7, out kill, applyGlobalArmorMultiplier: true, trackKill: true);
-                    if (kill != 0)
+                    if (kill != 0 && player.channel.owner.playerID.steamID != parameters.killer)
                     {
                         kills.Add(kill);
                     }

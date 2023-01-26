@@ -2,19 +2,17 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-public struct YawSnapshotInfo : ISnapshotInfo
+public struct YawSnapshotInfo : ISnapshotInfo<YawSnapshotInfo>
 {
     public Vector3 pos;
 
     public float yaw;
 
-    public ISnapshotInfo lerp(ISnapshotInfo targetTemp, float delta)
+    public void lerp(YawSnapshotInfo target, float delta, out YawSnapshotInfo result)
     {
-        YawSnapshotInfo yawSnapshotInfo = (YawSnapshotInfo)(object)targetTemp;
-        YawSnapshotInfo yawSnapshotInfo2 = default(YawSnapshotInfo);
-        yawSnapshotInfo2.pos = Vector3.Lerp(pos, yawSnapshotInfo.pos, delta);
-        yawSnapshotInfo2.yaw = Mathf.LerpAngle(yaw, yawSnapshotInfo.yaw, delta);
-        return yawSnapshotInfo2;
+        result = default(YawSnapshotInfo);
+        result.pos = Vector3.Lerp(pos, target.pos, delta);
+        result.yaw = Mathf.LerpAngle(yaw, target.yaw, delta);
     }
 
     public YawSnapshotInfo(Vector3 pos, float yaw)
