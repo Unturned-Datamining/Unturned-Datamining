@@ -583,17 +583,9 @@ public class LevelObjects : MonoBehaviour
                             {
                                 NetId regularObjectNetId = LevelNetIdRegistry.GetRegularObjectNetId(b6, b7, num2);
                                 LevelObject levelObject = new LevelObject(vector, roundedIfNearlyAxisAligned, newScale, num3, guid, newPlacementOrigin, newInstanceID, customMaterialOverride, materialIndexOverride, regularObjectNetId);
-                                if (levelObject.asset == null)
+                                if (levelObject.asset == null && (bool)Assets.shouldLoadAnyAssets)
                                 {
-                                    ClientAssetIntegrity.ServerAddKnownMissingAsset(guid, $"Object (x: {b6} y: {b7})");
-                                    if ((bool)Assets.shouldLoadAnyAssets)
-                                    {
-                                        UnturnedLog.error("Object with no asset in region {0}, {1}: {2} {3}", b6, b7, num3, guid);
-                                    }
-                                }
-                                if (!Dedicator.IsDedicatedServer)
-                                {
-                                    ClientAssetIntegrity.QueueRequest(guid, levelObject.asset, $"Object (x: {b6} y: {b7})");
+                                    UnturnedLog.error("Object with no asset in region {0}, {1}: {2} {3}", b6, b7, num3, guid);
                                 }
                                 byte b8 = b6;
                                 byte b9 = b7;

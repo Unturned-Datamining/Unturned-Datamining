@@ -1,0 +1,9 @@
+# SDG.Provider.Services.Matchmaking
+## Content
+- [EServerList.cs](EServerList.cs)
+- [IMatchmakingFilter.cs](IMatchmakingFilter.cs)
+- [IMatchmakingService.cs](IMatchmakingService.cs)
+- [IServerInfoRequestHandle.cs](IServerInfoRequestHandle.cs)
+- [IServerInfoRequestResult.cs](IServerInfoRequestResult.cs)
+- [MatchmakingFilter.cs](MatchmakingFilter.cs)
+- [ServerInfoRequestReadyCallback.cs](ServerInfoRequestReadyCallback.cs)

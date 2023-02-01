@@ -91,7 +91,7 @@ internal static class ServerMessageHandler_ValidateAssets
                     {
                         text = "Unknown";
                     }
-                    UnturnedLog.info(string.Format("Kicking {0} for asset hash mismatch: \"{1}\" File: \"{2}\" Id: {3} Client: {4} Server: {5}", transportConnection, asset.FriendlyName, asset.name, value3.ToString("N"), Hash.toString(clientHash), Hash.toString(array)));
+                    UnturnedLog.info(string.Format("Kicking {0} for asset hash mismatch: \"{1}\" Type: {2} File: \"{3}\" Id: {4} Client: {5} Server: {6}", transportConnection, asset.FriendlyName, asset.GetTypeNameWithoutSuffix(), asset.name, value3.ToString("N"), Hash.toString(clientHash), Hash.toString(array)));
                     Assets.SendKickForHashMismatch.Invoke(ENetReliability.Reliable, transportConnection, value3, asset.name, asset.FriendlyName, array, asset.originMasterBundle?.assetBundleNameWithoutExtension, text);
                     Provider.dismiss(steamPlayer.playerID.steamID);
                     break;

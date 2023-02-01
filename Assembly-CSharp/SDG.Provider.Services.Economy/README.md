@@ -1,0 +1,11 @@
+# SDG.Provider.Services.Economy
+## Content
+- [EconomyRequestReadyCallback.cs](EconomyRequestReadyCallback.cs)
+- [EconomyRequestResult.cs](EconomyRequestResult.cs)
+- [EEconomyRequestState.cs](EEconomyRequestState.cs)
+- [IEconomyItem.cs](IEconomyItem.cs)
+- [IEconomyItemDefinition.cs](IEconomyItemDefinition.cs)
+- [IEconomyItemInstance.cs](IEconomyItemInstance.cs)
+- [IEconomyRequestHandle.cs](IEconomyRequestHandle.cs)
+- [IEconomyRequestResult.cs](IEconomyRequestResult.cs)
+- [IEconomyService.cs](IEconomyService.cs)

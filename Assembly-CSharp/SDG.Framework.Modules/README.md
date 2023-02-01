@@ -1,0 +1,16 @@
+# SDG.Framework.Modules
+## Content
+- [EModuleRole.cs](EModuleRole.cs)
+- [EModuleStatus.cs](EModuleStatus.cs)
+- [IModuleNexus.cs](IModuleNexus.cs)
+- [Module.cs](Module.cs)
+- [ModuleAssembly.cs](ModuleAssembly.cs)
+- [ModuleComparer.cs](ModuleComparer.cs)
+- [ModuleConfig.cs](ModuleConfig.cs)
+- [ModuleDependency.cs](ModuleDependency.cs)
+- [ModuleHook.cs](ModuleHook.cs)
+- [ModuleInitialized.cs](ModuleInitialized.cs)
+- [ModuleLoaded.cs](ModuleLoaded.cs)
+- [ModuleShutdown.cs](ModuleShutdown.cs)
+- [ModulesInitializedHandler.cs](ModulesInitializedHandler.cs)
+- [ModulesShutdownHandler.cs](ModulesShutdownHandler.cs)

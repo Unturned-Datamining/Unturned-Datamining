@@ -359,7 +359,7 @@ public class LevelObject
         updateConditions();
     }
 
-    private void findAsset()
+    private void LoadAsset()
     {
         if (!Assets.shouldLoadAnyAssets)
         {
@@ -371,7 +371,7 @@ public class LevelObject
             _asset = Assets.find(EAssetType.OBJECT, id) as ObjectAsset;
             if (asset != null)
             {
-                UnturnedLog.info("Object without GUID loaded by legacy ID {0}, updating to {1} \"{2}\"", asset.id, asset.GUID, asset.name);
+                UnturnedLog.info("Object without GUID loaded by legacy ID {0}, updating to {1} \"{2}\"", asset.id, asset.GUID, asset.FriendlyName);
                 _GUID = asset.GUID;
             }
             else
@@ -381,17 +381,22 @@ public class LevelObject
             return;
         }
         _asset = Assets.find(new AssetReference<ObjectAsset>(GUID));
+        if (!Dedicator.IsDedicatedServer)
+        {
+            ClientAssetIntegrity.QueueRequest(GUID, asset, "Object");
+        }
         if (asset == null)
         {
+            ClientAssetIntegrity.ServerAddKnownMissingAsset(GUID, "Object");
             _asset = Assets.find(EAssetType.OBJECT, id) as ObjectAsset;
             if (asset != null)
             {
-                UnturnedLog.info("Unable to find object for GUID {0} found by legacy ID {1}, updating to {2} \"{3}\"", GUID, id, asset.GUID, asset.name);
+                UnturnedLog.info(string.Format("Unable to find object for GUID {0} found by legacy ID {1}, updating to {2} \"{3}\"", GUID.ToString("N"), id, asset.GUID.ToString("N"), asset.FriendlyName));
                 _GUID = asset.GUID;
             }
             else
             {
-                UnturnedLog.warn("Unable to find object for GUID {0}, nor by legacy ID {1}", GUID, id);
+                UnturnedLog.warn(string.Format("Unable to find object for GUID {0}, nor by legacy ID {1}", GUID.ToString("N"), id));
             }
         }
     }
@@ -422,7 +427,7 @@ public class LevelObject
         placementOrigin = newPlacementOrigin;
         this.customMaterialOverride = customMaterialOverride;
         this.materialIndexOverride = materialIndexOverride;
-        findAsset();
+        LoadAsset();
         if (asset == null)
         {
             if ((bool)LevelObjects.preserveMissingAssets)

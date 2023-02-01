@@ -157,6 +157,8 @@ public class Provider : MonoBehaviour
 
     private static bool isCapturingScreenshot;
 
+    private static StaticResourceRef<Material> screenshotBlitMaterial = new StaticResourceRef<Material>("Materials/ScreenshotBlit");
+
     private static Callback<ScreenshotRequested_t> screenshotRequestedCallback;
 
     private static string privateLanguage;
@@ -749,7 +751,7 @@ public class Provider : MonoBehaviour
             yield return null;
             supersampledTexture.filterMode = FilterMode.Bilinear;
             RenderTexture downsampleRenderTexture = RenderTexture.GetTemporary(finalWidth, finalHeight, 0, supersampledTexture.graphicsFormat);
-            Graphics.Blit(supersampledTexture, downsampleRenderTexture);
+            Graphics.Blit(supersampledTexture, downsampleRenderTexture, screenshotBlitMaterial);
             yield return null;
             Texture2D downsampledTexture = new Texture2D(finalWidth, finalHeight, supersampledTexture.format, mipChain: false, linear: false);
             RenderTexture.active = downsampleRenderTexture;

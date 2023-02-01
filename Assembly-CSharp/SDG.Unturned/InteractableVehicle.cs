@@ -2352,7 +2352,7 @@ public class InteractableVehicle : Interactable
         }
         if (asset.engine != EEngine.TRAIN)
         {
-            UndergroundWhitelist.adjustPosition(ref point, 10f, 2f);
+            UndergroundAllowlist.AdjustPosition(ref point, 10f, 2f);
         }
         simulateBurnFuel();
         _speed = newSpeed;
@@ -2422,7 +2422,7 @@ public class InteractableVehicle : Interactable
         if (Provider.isServer && asset.engine != EEngine.TRAIN)
         {
             Vector3 worldspacePosition = base.transform.position;
-            if (UndergroundWhitelist.adjustPosition(ref worldspacePosition, 10f, 2f))
+            if (UndergroundAllowlist.AdjustPosition(ref worldspacePosition, 10f, 2f))
             {
                 GetComponent<Rigidbody>().MovePosition(worldspacePosition);
             }
@@ -2924,7 +2924,7 @@ public class InteractableVehicle : Interactable
         if (Provider.isServer && isPhysical && asset.engine != EEngine.TRAIN && !isDriven)
         {
             Vector3 worldspacePosition = base.transform.position;
-            if (UndergroundWhitelist.adjustPosition(ref worldspacePosition, 10f, 2f))
+            if (UndergroundAllowlist.AdjustPosition(ref worldspacePosition, 10f, 2f))
             {
                 GetComponent<Rigidbody>().MovePosition(worldspacePosition);
             }

@@ -171,7 +171,7 @@ public class ZombieManager : SteamCaller
 
     private static ZombieSpecialityWeightedRandom zombieSpecialityTable = new ZombieSpecialityWeightedRandom();
 
-    private static readonly AssetReference<EffectAsset> Souls_1_Ref = new AssetReference<EffectAsset>("c17b00f2a58646c8a9ea728f6d72e54e");
+    internal static readonly AssetReference<EffectAsset> Souls_1_Ref = new AssetReference<EffectAsset>("c17b00f2a58646c8a9ea728f6d72e54e");
 
     public static ZombieManager instance => manager;
 

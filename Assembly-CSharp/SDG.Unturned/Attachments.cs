@@ -249,7 +249,7 @@ public class Attachments : MonoBehaviour
         if (sightAsset != null && sightHook != null && sightAsset.sight != null)
         {
             _sightModel = UnityEngine.Object.Instantiate(sightAsset.sight).transform;
-            sightModel.name = sightAsset.GUID.ToString("N");
+            sightModel.name = sightAsset.instantiatedAttachmentName;
             sightModel.transform.parent = sightHook;
             sightModel.transform.localPosition = Vector3.zero;
             sightModel.transform.localRotation = Quaternion.identity;
@@ -305,7 +305,7 @@ public class Attachments : MonoBehaviour
         if (tacticalAsset != null && tacticalHook != null && tacticalAsset.tactical != null)
         {
             _tacticalModel = UnityEngine.Object.Instantiate(tacticalAsset.tactical).transform;
-            tacticalModel.name = tacticalAsset.GUID.ToString("N");
+            tacticalModel.name = tacticalAsset.instantiatedAttachmentName;
             tacticalModel.transform.parent = tacticalHook;
             tacticalModel.transform.localPosition = Vector3.zero;
             tacticalModel.transform.localRotation = Quaternion.identity;
@@ -361,7 +361,7 @@ public class Attachments : MonoBehaviour
         if (gripAsset != null && gripHook != null && gripAsset.grip != null)
         {
             _gripModel = UnityEngine.Object.Instantiate(gripAsset.grip).transform;
-            gripModel.name = gripAsset.GUID.ToString("N");
+            gripModel.name = gripAsset.instantiatedAttachmentName;
             gripModel.transform.parent = gripHook;
             gripModel.transform.localPosition = Vector3.zero;
             gripModel.transform.localRotation = Quaternion.identity;
@@ -417,7 +417,7 @@ public class Attachments : MonoBehaviour
         if (barrelAsset != null && barrelHook != null && barrelAsset.barrel != null)
         {
             _barrelModel = UnityEngine.Object.Instantiate(barrelAsset.barrel).transform;
-            barrelModel.name = barrelAsset.GUID.ToString("N");
+            barrelModel.name = barrelAsset.instantiatedAttachmentName;
             barrelModel.transform.parent = barrelHook;
             barrelModel.transform.localPosition = Vector3.zero;
             barrelModel.transform.localRotation = Quaternion.identity;
@@ -482,7 +482,7 @@ public class Attachments : MonoBehaviour
                 transform = magazineHook;
             }
             _magazineModel = UnityEngine.Object.Instantiate(magazineAsset.magazine).transform;
-            magazineModel.name = magazineAsset.GUID.ToString("N");
+            magazineModel.name = magazineAsset.instantiatedAttachmentName;
             magazineModel.transform.parent = transform;
             magazineModel.transform.localPosition = Vector3.zero;
             magazineModel.transform.localRotation = Quaternion.identity;

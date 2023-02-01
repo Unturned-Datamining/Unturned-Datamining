@@ -28,7 +28,7 @@ public class CommandBan : Command
             CommandWindow.LogError(localization.format("NoPlayerErrorText", componentsFromSerial[0]));
             return;
         }
-        ITransportConnection transportConnection = Provider.findTransportConnection(executorID);
+        ITransportConnection transportConnection = Provider.findTransportConnection(steamID);
         uint address = 0u;
         transportConnection?.TryGetIPv4Address(out address);
         IEnumerable<byte[]> hwidsToBan = PlayerTool.getSteamPlayer(steamID)?.playerID.GetHwids();

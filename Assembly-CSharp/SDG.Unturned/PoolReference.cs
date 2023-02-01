@@ -11,11 +11,18 @@ public class PoolReference : MonoBehaviour
 
     public bool excludeFromDestroyAll;
 
-    private void InternalDestroyIntoPool()
+    private Coroutine invokeAfterDelayCoroutine;
+
+    public void DestroyIntoPool(float t)
     {
+        CancelDestroyTimer();
         if (pool == null)
         {
-            Object.Destroy(base.gameObject);
+            Object.Destroy(base.gameObject, t);
+        }
+        else if (base.gameObject.activeInHierarchy)
+        {
+            invokeAfterDelayCoroutine = TimeUtility.InvokeAfterDelay(DestroyIntoPoolCallback, t);
         }
         else
         {
@@ -23,15 +30,21 @@ public class PoolReference : MonoBehaviour
         }
     }
 
-    public void DestroyIntoPool(float t)
+    internal void CancelDestroyTimer()
     {
+        if (invokeAfterDelayCoroutine != null)
+        {
+            TimeUtility.StaticStopCoroutine(invokeAfterDelayCoroutine);
+            invokeAfterDelayCoroutine = null;
+        }
+    }
+
+    private void DestroyIntoPoolCallback()
+    {
+        invokeAfterDelayCoroutine = null;
         if (pool == null)
         {
-            Object.Destroy(base.gameObject, t);
-        }
-        else if (base.gameObject.activeInHierarchy)
-        {
-            TimeUtility.InvokeAfterDelay(InternalDestroyIntoPool, t);
+            Object.Destroy(base.gameObject);
         }
         else
         {

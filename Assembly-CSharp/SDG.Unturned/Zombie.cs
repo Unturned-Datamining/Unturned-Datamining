@@ -248,6 +248,8 @@ public class Zombie : MonoBehaviour
 
     private bool needsTickForPlacement;
 
+    private float undergroundTestTimer = 10f;
+
     private float lastTick;
 
     internal ZombieRegion zombieRegion;
@@ -440,6 +442,11 @@ public class Zombie : MonoBehaviour
             return ATTACK_VEHICLE * (float)((!isMega) ? 1 : 2);
         }
         return ATTACK_PLAYER * ((Dedicator.IsDedicatedServer && speciality == EZombieSpeciality.NORMAL) ? 0.5f : 1f) * (float)((!isMega) ? 1 : 2);
+    }
+
+    private float GetVerticalAttackRange()
+    {
+        return (isHyper ? 3.5f : 2.1f) * (isMega ? 1.5f : 1f);
     }
 
     public void tellAlive(byte newType, byte newSpeciality, byte newShirt, byte newPants, byte newHat, byte newGear, Vector3 newPosition, byte newAngle)
@@ -1312,7 +1319,7 @@ public class Zombie : MonoBehaviour
                 rootAudioSource.maxDistance = 64f;
                 animator.transform.localScale = Vector3.one * UnityEngine.Random.Range(1.45f, 1.55f);
             }
-            SetCapsuleRadiusAndHeight(0.75f, 3f);
+            SetCapsuleRadiusAndHeight(0.75f, 2f);
             if (Provider.isServer)
             {
                 seeker.speed = 6f;
@@ -1324,12 +1331,7 @@ public class Zombie : MonoBehaviour
             rootAudioSource.maxDistance = 32f;
             animator.transform.localScale = Vector3.one * UnityEngine.Random.Range(0.95f, 1.05f);
         }
-        SetCapsuleRadiusAndHeight(0.4f, speciality switch
-        {
-            EZombieSpeciality.CRAWLER => 0.5f, 
-            EZombieSpeciality.SPRINTER => 1f, 
-            _ => 2f, 
-        });
+        SetCapsuleRadiusAndHeight(0.4f, 2f);
         if (!Provider.isServer)
         {
             return;
@@ -1564,17 +1566,22 @@ public class Zombie : MonoBehaviour
             GetComponent<CharacterController>().Move(Vector3.down);
             return;
         }
-        float delta = Time.time - lastTick;
+        float num = Time.time - lastTick;
         lastTick = Time.time;
         lastPull = Time.time;
         if (isStunned)
         {
             return;
         }
-        if (!Level.isPointWithinValidHeight(base.transform.position.y))
+        undergroundTestTimer -= num;
+        if (undergroundTestTimer < 0f)
         {
-            ZombieManager.teleportZombieBackIntoMap(this);
-            return;
+            undergroundTestTimer = UnityEngine.Random.Range(30f, 60f);
+            if (!UndergroundAllowlist.IsPositionWithinValidHeight(base.transform.position))
+            {
+                ZombieManager.teleportZombieBackIntoMap(this);
+                return;
+            }
         }
         if (huntType == EHuntType.PLAYER)
         {
@@ -1612,36 +1619,40 @@ public class Zombie : MonoBehaviour
         }
         if (isStuck)
         {
-            float num = Time.time - lastStuck;
-            if (num > 1f && barricade == null && structure == null && targetObstructionVehicle == null && targetPassengerVehicle == null)
+            float num2 = Time.time - lastStuck;
+            if (num2 > 1f && barricade == null && structure == null && targetObstructionVehicle == null && targetPassengerVehicle == null)
             {
                 findTargetWhileStuck();
             }
-            if (num > 5f && zombieRegion.hasBeacon && Time.time - lastAttack > 10f)
+            if (num2 > 5f && zombieRegion.hasBeacon && Time.time - lastAttack > 10f)
             {
                 lastStuck = Time.time;
                 ZombieManager.teleportZombieBackIntoMap(this);
                 return;
             }
         }
-        float num2;
+        float num3;
+        float num4;
         if (barricade != null)
         {
-            num2 = MathfEx.HorizontalDistanceSquared(barricade.position, base.transform.position);
+            num3 = MathfEx.HorizontalDistanceSquared(barricade.position, base.transform.position);
+            num4 = Mathf.Abs(barricade.position.y - base.transform.position.y);
             target.position = barricade.position;
             seeker.canTurn = false;
             seeker.targetDirection = barricade.position - base.transform.position;
         }
         else if (structure != null)
         {
-            num2 = 0f;
+            num3 = 0f;
+            num4 = 0f;
             target.position = base.transform.position;
             seeker.canTurn = false;
             seeker.targetDirection = structure.position - base.transform.position;
         }
         else if (targetObstructionVehicle != null)
         {
-            num2 = MathfEx.HorizontalDistanceSquared(targetObstructionVehicle.transform.position, base.transform.position);
+            num3 = MathfEx.HorizontalDistanceSquared(targetObstructionVehicle.transform.position, base.transform.position);
+            num4 = Mathf.Abs(targetObstructionVehicle.transform.position.y - base.transform.position.y);
             target.position = targetObstructionVehicle.transform.position;
             seeker.canTurn = false;
             seeker.targetDirection = targetObstructionVehicle.transform.position - base.transform.position;
@@ -1662,14 +1673,16 @@ public class Zombie : MonoBehaviour
             }
             if (targetPassengerVehicle != null)
             {
-                num2 = MathfEx.HorizontalDistanceSquared(targetPassengerVehicle.transform.position, base.transform.position);
+                num3 = MathfEx.HorizontalDistanceSquared(targetPassengerVehicle.transform.position, base.transform.position);
+                num4 = Mathf.Abs(targetPassengerVehicle.transform.position.y - base.transform.position.y);
                 target.position = targetPassengerVehicle.transform.position;
                 seeker.canTurn = false;
                 seeker.targetDirection = targetPassengerVehicle.transform.position - base.transform.position;
             }
             else
             {
-                num2 = MathfEx.HorizontalDistanceSquared(player.transform.position, base.transform.position);
+                num3 = MathfEx.HorizontalDistanceSquared(player.transform.position, base.transform.position);
+                num4 = Mathf.Abs(player.transform.position.y - base.transform.position.y);
                 if (isThrowRelocating)
                 {
                     Vector3 vector = base.transform.position - player.transform.position;
@@ -1682,17 +1695,17 @@ public class Zombie : MonoBehaviour
                     target.position = player.transform.position;
                     if (path == EZombiePath.LEFT_FLANK)
                     {
-                        if (num2 > 100f)
+                        if (num3 > 100f)
                         {
                             seeker.canTurn = true;
                             target.position += player.transform.right * 9f + player.transform.forward * -4f;
                         }
-                        else if (num2 > 20f || Vector3.Dot((base.transform.position - player.transform.position).normalized, player.transform.forward) > 0f)
+                        else if (num3 > 20f || Vector3.Dot((base.transform.position - player.transform.position).normalized, player.transform.forward) > 0f)
                         {
                             seeker.canTurn = true;
                             target.position += player.transform.right * 3f + player.transform.forward * -3f;
                         }
-                        else if (num2 > 4f)
+                        else if (num3 > 4f)
                         {
                             seeker.canTurn = true;
                             target.position -= player.transform.forward;
@@ -1705,17 +1718,17 @@ public class Zombie : MonoBehaviour
                     }
                     else if (path == EZombiePath.RIGHT_FLANK)
                     {
-                        if (num2 > 100f)
+                        if (num3 > 100f)
                         {
                             seeker.canTurn = true;
                             target.position += player.transform.right * -9f + player.transform.forward * -4f;
                         }
-                        else if (num2 > 20f || Vector3.Dot((base.transform.position - player.transform.position).normalized, player.transform.forward) > 0f)
+                        else if (num3 > 20f || Vector3.Dot((base.transform.position - player.transform.position).normalized, player.transform.forward) > 0f)
                         {
                             seeker.canTurn = true;
                             target.position += player.transform.right * -3f + player.transform.forward * -3f;
                         }
-                        else if (num2 > 4f)
+                        else if (num3 > 4f)
                         {
                             seeker.canTurn = true;
                             target.position -= player.transform.forward;
@@ -1728,7 +1741,7 @@ public class Zombie : MonoBehaviour
                     }
                     else if (path == EZombiePath.LEFT)
                     {
-                        if (num2 > 4f)
+                        if (num3 > 4f)
                         {
                             seeker.canTurn = true;
                             target.position -= base.transform.right;
@@ -1741,7 +1754,7 @@ public class Zombie : MonoBehaviour
                     }
                     else if (path == EZombiePath.RIGHT)
                     {
-                        if (num2 > 4f)
+                        if (num3 > 4f)
                         {
                             seeker.canTurn = true;
                             target.position += base.transform.right;
@@ -1754,7 +1767,7 @@ public class Zombie : MonoBehaviour
                     }
                     else if (path == EZombiePath.RUSH)
                     {
-                        if (num2 > 4f)
+                        if (num3 > 4f)
                         {
                             seeker.canTurn = true;
                             target.position -= base.transform.forward;
@@ -1774,12 +1787,12 @@ public class Zombie : MonoBehaviour
         }
         else
         {
-            num2 = MathfEx.HorizontalDistanceSquared(target.position, base.transform.position);
+            num3 = MathfEx.HorizontalDistanceSquared(target.position, base.transform.position);
+            num4 = Mathf.Abs(target.position.y - base.transform.position.y);
             seeker.canTurn = true;
         }
-        float num3 = Mathf.Abs(target.position.y - base.transform.position.y);
-        isMoving = num2 > 3f;
-        if (!isWandering && num2 > 4096f && (player == null || !zombieRegion.HasInfiniteAgroRange))
+        isMoving = num3 > 3f;
+        if (!isWandering && num3 > 4096f && (player == null || !zombieRegion.HasInfiniteAgroRange))
         {
             leave(quick: false);
             return;
@@ -1788,7 +1801,7 @@ public class Zombie : MonoBehaviour
         {
             if (player != null && (speciality == EZombieSpeciality.MEGA || speciality == EZombieSpeciality.BOSS_KUWAIT || (speciality == EZombieSpeciality.BOSS_ALL && UnityEngine.Random.value < 0.2f)) && Time.time - lastStartle > specialStartleDelay && Time.time - lastAttack > specialAttackDelay && Time.time - lastSpecial > boulderThrowDelay)
             {
-                if (num2 < 20f)
+                if (num3 < 20f)
                 {
                     if (isThrowRelocating)
                     {
@@ -1859,7 +1872,7 @@ public class Zombie : MonoBehaviour
                     EffectManager.triggerEffect(parameters);
                 }
             }
-            if ((structure != null || num2 < GetHorizontalAttackRangeSquared()) && num3 < (isHyper ? 3.5f : 2f) * (isMega ? 1.5f : 1f))
+            if ((structure != null || num3 < GetHorizontalAttackRangeSquared()) && num4 < GetVerticalAttackRange())
             {
                 if (speciality == EZombieSpeciality.SPRINTER || Time.time - lastTarget > (Dedicator.IsDedicatedServer ? 0.5f : 0.1f))
                 {
@@ -1916,8 +1929,8 @@ public class Zombie : MonoBehaviour
                                             player.clothing.hatQuality--;
                                             player.clothing.sendUpdateHatQuality();
                                         }
-                                        float num4 = hatAsset.armor + (1f - hatAsset.armor) * (1f - (float)(int)player.clothing.hatQuality / 100f);
-                                        b = (byte)((float)(int)b * num4);
+                                        float num5 = hatAsset.armor + (1f - hatAsset.armor) * (1f - (float)(int)player.clothing.hatQuality / 100f);
+                                        b = (byte)((float)(int)b * num5);
                                     }
                                     else if (player.clothing.vestAsset != null)
                                     {
@@ -1927,8 +1940,8 @@ public class Zombie : MonoBehaviour
                                             player.clothing.vestQuality--;
                                             player.clothing.sendUpdateVestQuality();
                                         }
-                                        float num5 = vestAsset.armor + (1f - vestAsset.armor) * (1f - (float)(int)player.clothing.vestQuality / 100f);
-                                        b = (byte)((float)(int)b * num5);
+                                        float num6 = vestAsset.armor + (1f - vestAsset.armor) * (1f - (float)(int)player.clothing.vestQuality / 100f);
+                                        b = (byte)((float)(int)b * num6);
                                     }
                                     else if (player.clothing.shirtAsset != null)
                                     {
@@ -1938,8 +1951,8 @@ public class Zombie : MonoBehaviour
                                             player.clothing.shirtQuality--;
                                             player.clothing.sendUpdateShirtQuality();
                                         }
-                                        float num6 = shirtAsset.armor + (1f - shirtAsset.armor) * (1f - (float)(int)player.clothing.shirtQuality / 100f);
-                                        b = (byte)((float)(int)b * num6);
+                                        float num7 = shirtAsset.armor + (1f - shirtAsset.armor) * (1f - (float)(int)player.clothing.shirtQuality / 100f);
+                                        b = (byte)((float)(int)b * num7);
                                     }
                                 }
                                 else if (speciality == EZombieSpeciality.NORMAL)
@@ -1952,8 +1965,8 @@ public class Zombie : MonoBehaviour
                                             player.clothing.vestQuality--;
                                             player.clothing.sendUpdateVestQuality();
                                         }
-                                        float num7 = vestAsset2.armor + (1f - vestAsset2.armor) * (1f - (float)(int)player.clothing.vestQuality / 100f);
-                                        b = (byte)((float)(int)b * num7);
+                                        float num8 = vestAsset2.armor + (1f - vestAsset2.armor) * (1f - (float)(int)player.clothing.vestQuality / 100f);
+                                        b = (byte)((float)(int)b * num8);
                                     }
                                     else if (player.clothing.shirtAsset != null)
                                     {
@@ -1963,8 +1976,8 @@ public class Zombie : MonoBehaviour
                                             player.clothing.shirtQuality--;
                                             player.clothing.sendUpdateShirtQuality();
                                         }
-                                        float num8 = shirtAsset2.armor + (1f - shirtAsset2.armor) * (1f - (float)(int)player.clothing.shirtQuality / 100f);
-                                        b = (byte)((float)(int)b * num8);
+                                        float num9 = shirtAsset2.armor + (1f - shirtAsset2.armor) * (1f - (float)(int)player.clothing.shirtQuality / 100f);
+                                        b = (byte)((float)(int)b * num9);
                                     }
                                 }
                                 else if (speciality == EZombieSpeciality.CRAWLER)
@@ -1977,8 +1990,8 @@ public class Zombie : MonoBehaviour
                                             player.clothing.pantsQuality--;
                                             player.clothing.sendUpdatePantsQuality();
                                         }
-                                        float num9 = pantsAsset.armor + (1f - pantsAsset.armor) * (1f - (float)(int)player.clothing.pantsQuality / 100f);
-                                        b = (byte)((float)(int)b * num9);
+                                        float num10 = pantsAsset.armor + (1f - pantsAsset.armor) * (1f - (float)(int)player.clothing.pantsQuality / 100f);
+                                        b = (byte)((float)(int)b * num10);
                                     }
                                 }
                                 else if (speciality == EZombieSpeciality.SPRINTER)
@@ -1991,8 +2004,8 @@ public class Zombie : MonoBehaviour
                                             player.clothing.vestQuality--;
                                             player.clothing.sendUpdateVestQuality();
                                         }
-                                        float num10 = vestAsset3.armor + (1f - vestAsset3.armor) * (1f - (float)(int)player.clothing.vestQuality / 100f);
-                                        b = (byte)((float)(int)b * num10);
+                                        float num11 = vestAsset3.armor + (1f - vestAsset3.armor) * (1f - (float)(int)player.clothing.vestQuality / 100f);
+                                        b = (byte)((float)(int)b * num11);
                                     }
                                     else if (player.clothing.shirtAsset != null)
                                     {
@@ -2002,8 +2015,8 @@ public class Zombie : MonoBehaviour
                                             player.clothing.shirtQuality--;
                                             player.clothing.sendUpdateShirtQuality();
                                         }
-                                        float num11 = shirtAsset3.armor + (1f - shirtAsset3.armor) * (1f - (float)(int)player.clothing.shirtQuality / 100f);
-                                        b = (byte)((float)(int)b * num11);
+                                        float num12 = shirtAsset3.armor + (1f - shirtAsset3.armor) * (1f - (float)(int)player.clothing.shirtQuality / 100f);
+                                        b = (byte)((float)(int)b * num12);
                                     }
                                     else if (player.clothing.pantsAsset != null)
                                     {
@@ -2013,8 +2026,8 @@ public class Zombie : MonoBehaviour
                                             player.clothing.pantsQuality--;
                                             player.clothing.sendUpdatePantsQuality();
                                         }
-                                        float num12 = pantsAsset2.armor + (1f - pantsAsset2.armor) * (1f - (float)(int)player.clothing.pantsQuality / 100f);
-                                        b = (byte)((float)(int)b * num12);
+                                        float num13 = pantsAsset2.armor + (1f - pantsAsset2.armor) * (1f - (float)(int)player.clothing.pantsQuality / 100f);
+                                        b = (byte)((float)(int)b * num13);
                                     }
                                 }
                                 DamageTool.damage(player, EDeathCause.ZOMBIE, ELimb.SKULL, Provider.server, (target.position - base.transform.position).normalized, (int)b, 1f, out var _);
@@ -2048,7 +2061,7 @@ public class Zombie : MonoBehaviour
         }
         if (seeker != null)
         {
-            seeker.move(delta);
+            seeker.move(num);
         }
     }
 

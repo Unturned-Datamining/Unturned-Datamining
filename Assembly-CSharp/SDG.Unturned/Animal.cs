@@ -102,6 +102,8 @@ public class Animal : MonoBehaviour
 
     public bool isUpdated;
 
+    private float undergroundTestTimer = 10f;
+
     private float lastTick;
 
     private bool hasIdleAnimation;
@@ -589,7 +591,11 @@ public class Animal : MonoBehaviour
                 renderer_1.enabled = !isDead;
             }
             skeleton.gameObject.SetActive(!isDead);
-            GetComponent<Collider>().enabled = !isDead;
+        }
+        Collider component = GetComponent<Collider>();
+        if (component != null)
+        {
+            component.enabled = !isDead;
         }
     }
 
@@ -833,16 +839,26 @@ public class Animal : MonoBehaviour
 
     public void tick()
     {
-        float delta = Time.time - lastTick;
+        float num = Time.time - lastTick;
         lastTick = Time.time;
+        undergroundTestTimer -= num;
+        if (undergroundTestTimer < 0f)
+        {
+            undergroundTestTimer = UnityEngine.Random.Range(30f, 60f);
+            if (!UndergroundAllowlist.IsPositionWithinValidHeight(base.transform.position))
+            {
+                AnimalManager.TeleportAnimalBackIntoMap(this);
+                return;
+            }
+        }
         if (isHunting)
         {
             if (player != null && !player.life.isDead && player.stance.stance != EPlayerStance.SWIM)
             {
                 target = player.transform.position;
-                float num = MathfEx.HorizontalDistanceSquared(target, base.transform.position);
-                float num2 = Mathf.Abs(target.y - base.transform.position.y);
-                if (num < ((player.movement.getVehicle() != null) ? asset.horizontalVehicleAttackRangeSquared : asset.horizontalAttackRangeSquared) && num2 < asset.verticalAttackRange)
+                float num2 = MathfEx.HorizontalDistanceSquared(target, base.transform.position);
+                float num3 = Mathf.Abs(target.y - base.transform.position.y);
+                if (num2 < ((player.movement.getVehicle() != null) ? asset.horizontalVehicleAttackRangeSquared : asset.horizontalAttackRangeSquared) && num3 < asset.verticalAttackRange)
                 {
                     if (Time.time - lastTarget > (Dedicator.IsDedicatedServer ? 0.3f : 0.1f))
                     {
@@ -879,7 +895,7 @@ public class Animal : MonoBehaviour
                         }
                     }
                 }
-                else if (num > 4096f)
+                else if (num2 > 4096f)
                 {
                     player = null;
                     isHunting = false;
@@ -899,7 +915,7 @@ public class Animal : MonoBehaviour
             }
             lastWander = Time.time;
         }
-        move(delta);
+        move(num);
     }
 
     public void init()

@@ -1,0 +1,13 @@
+# SDG.Framework.IO.FormattedFiles.KeyValueTables.TypeReaders.CoreTypes
+## Content
+- [KeyValueTableBoolReader.cs](KeyValueTableBoolReader.cs)
+- [KeyValueTableByteReader.cs](KeyValueTableByteReader.cs)
+- [KeyValueTableFloatReader.cs](KeyValueTableFloatReader.cs)
+- [KeyValueTableIntReader.cs](KeyValueTableIntReader.cs)
+- [KeyValueTableLongReader.cs](KeyValueTableLongReader.cs)
+- [KeyValueTableSByteReader.cs](KeyValueTableSByteReader.cs)
+- [KeyValueTableShortReader.cs](KeyValueTableShortReader.cs)
+- [KeyValueTableStringReader.cs](KeyValueTableStringReader.cs)
+- [KeyValueTableUIntReader.cs](KeyValueTableUIntReader.cs)
+- [KeyValueTableULongReader.cs](KeyValueTableULongReader.cs)
+- [KeyValueTableUShortReader.cs](KeyValueTableUShortReader.cs)

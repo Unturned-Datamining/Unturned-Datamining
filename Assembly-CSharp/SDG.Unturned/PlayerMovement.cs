@@ -178,6 +178,8 @@ public class PlayerMovement : PlayerCaller
 
     private static readonly ClientInstanceMethod<float> SendPluginSpeedMultiplier = ClientInstanceMethod<float>.Get(typeof(PlayerMovement), "ReceivePluginSpeedMultiplier");
 
+    private ControllerColliderHit mostRecentControllerColliderHit;
+
     public static bool forceTrustClient
     {
         get
@@ -599,6 +601,7 @@ public class PlayerMovement : PlayerCaller
         }
         pendingLaunchVelocity = Vector3.zero;
         velocity = Vector3.zero;
+        mostRecentControllerColliderHit = null;
     }
 
     private void checkGround(Vector3 position)
@@ -784,6 +787,7 @@ public class PlayerMovement : PlayerCaller
         }
         velocity = Vector3.zero;
         pendingLaunchVelocity = Vector3.zero;
+        mostRecentControllerColliderHit = null;
         if (hasPendingVehicleChange)
         {
             hasPendingVehicleChange = false;
@@ -813,6 +817,7 @@ public class PlayerMovement : PlayerCaller
         {
             _isMoving = false;
             checkGround(base.transform.position);
+            mostRecentControllerColliderHit = null;
             velocity = Vector3.zero;
             pendingLaunchVelocity = Vector3.zero;
             if (getVehicle() != null && getVehicle().passengers[getSeat()].turret != null && (Mathf.Abs(base.player.look.lastAngle - base.player.look.angle) > 1 || Mathf.Abs(base.player.look.lastRot - base.player.look.rot) > 1))
@@ -830,6 +835,7 @@ public class PlayerMovement : PlayerCaller
         {
             _isMoving = false;
             checkGround(base.transform.position);
+            mostRecentControllerColliderHit = null;
             velocity = Vector3.zero;
             pendingLaunchVelocity = Vector3.zero;
             if (base.channel.isOwner)
@@ -849,6 +855,7 @@ public class PlayerMovement : PlayerCaller
             checkGround(base.transform.position);
             pendingLaunchVelocity = Vector3.zero;
             velocity = new Vector3(0f, _move.z * speed * 0.5f, 0f);
+            mostRecentControllerColliderHit = null;
             controller.CheckedMove(velocity * deltaTime);
         }
         else if (base.player.stance.stance == EPlayerStance.SWIM)
@@ -863,6 +870,7 @@ public class PlayerMovement : PlayerCaller
                 {
                     velocity.y = SWIM * pluginJumpMultiplier;
                 }
+                mostRecentControllerColliderHit = null;
                 controller.CheckedMove(velocity * deltaTime);
             }
             else
@@ -870,6 +878,7 @@ public class PlayerMovement : PlayerCaller
                 WaterUtility.getUnderwaterInfo(base.transform.position, out var _, out var surfaceElevation);
                 velocity = base.transform.rotation * move.normalized * speed * 1.5f;
                 velocity.y = (surfaceElevation - 1.275f - base.transform.position.y) / 8f;
+                mostRecentControllerColliderHit = null;
                 controller.CheckedMove(velocity * deltaTime);
             }
         }
@@ -880,6 +889,7 @@ public class PlayerMovement : PlayerCaller
             checkGround(base.transform.position);
             bool flag2 = false;
             bool flag3 = false;
+            Vector3 rhs = Vector3.up;
             if (isGrounded && ground.normal.y > 0f)
             {
                 float num = Vector3.Angle(Vector3.up, ground.normal);
@@ -888,15 +898,21 @@ public class PlayerMovement : PlayerCaller
                 {
                     num2 = Level.info.configData.Max_Walkable_Slope;
                 }
-                if (num > num2)
-                {
-                    flag3 = true;
-                    Vector3 normalized = Vector3.Cross(Vector3.Cross(Vector3.up, ground.normal).normalized, ground.normal).normalized;
-                    velocity += normalized * 16f * deltaTime;
-                    flag2 = true;
-                }
+                flag3 = num > num2;
+                rhs = ground.normal;
             }
-            if (!flag3)
+            if (!flag3 && mostRecentControllerColliderHit != null && mostRecentControllerColliderHit.gameObject != null && mostRecentControllerColliderHit.normal.y > 0f && mostRecentControllerColliderHit.gameObject.CompareTag("Agent"))
+            {
+                flag3 = true;
+                rhs = mostRecentControllerColliderHit.normal;
+            }
+            if (flag3)
+            {
+                Vector3 normalized = Vector3.Cross(Vector3.Cross(Vector3.up, rhs).normalized, rhs).normalized;
+                velocity += normalized * 16f * deltaTime;
+                flag2 = true;
+            }
+            else
             {
                 Vector3 vector = base.transform.rotation * move.normalized * speed;
                 if (isGrounded)
@@ -971,6 +987,7 @@ public class PlayerMovement : PlayerCaller
             else
             {
                 Vector3 position = base.transform.position;
+                mostRecentControllerColliderHit = null;
                 controller.CheckedMove(velocity * deltaTime);
                 if (!flag)
                 {
@@ -1029,7 +1046,7 @@ public class PlayerMovement : PlayerCaller
         if (Provider.isServer && !bypassUndergroundWhitelist && (!Dedicator.IsDedicatedServer || !base.channel.owner.isAdmin))
         {
             Vector3 worldspacePosition = base.transform.position;
-            if (UndergroundWhitelist.adjustPosition(ref worldspacePosition, 0.5f))
+            if (UndergroundAllowlist.AdjustPosition(ref worldspacePosition, 0.5f))
             {
                 base.transform.position = worldspacePosition;
             }
@@ -1449,6 +1466,11 @@ public class PlayerMovement : PlayerCaller
         updates = new List<PlayerStateUpdate>();
         canAddSimulationResultsToUpdates = true;
         lastFootstep = Time.time;
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        mostRecentControllerColliderHit = hit;
     }
 
     private void OnDrawGizmos()

@@ -52,6 +52,8 @@ public class ItemCaliberAsset : ItemAsset
 
     public bool shouldDestroyAttachmentColliders { get; protected set; }
 
+    public string instantiatedAttachmentName { get; protected set; }
+
     public ItemCaliberAsset(Bundle bundle, Data data, Local localization, ushort id)
         : base(bundle, data, localization, id)
     {
@@ -75,6 +77,7 @@ public class ItemCaliberAsset : ItemAsset
         _isPaintable = data.has("Paintable");
         _isBipod = data.has("Bipod");
         shouldDestroyAttachmentColliders = data.readBoolean("Destroy_Attachment_Colliders", defaultValue: true);
+        instantiatedAttachmentName = data.readString("Instantiated_Attachment_Name_Override", GUID.ToString("N"));
     }
 
     protected override AudioReference GetDefaultInventoryAudio()

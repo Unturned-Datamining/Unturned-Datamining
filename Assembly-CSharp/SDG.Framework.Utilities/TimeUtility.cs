@@ -12,9 +12,14 @@ public class TimeUtility : MonoBehaviour
 
     public static event UpdateHandler physicsUpdated;
 
-    public static void InvokeAfterDelay(Action callback, float timeSeconds)
+    public static Coroutine InvokeAfterDelay(Action callback, float timeSeconds)
     {
-        singleton.StartCoroutine(singleton.InternalInvokeAfterDelay(callback, timeSeconds));
+        return singleton.StartCoroutine(singleton.InternalInvokeAfterDelay(callback, timeSeconds));
+    }
+
+    public static void StaticStopCoroutine(Coroutine routine)
+    {
+        singleton.StopCoroutine(routine);
     }
 
     protected virtual void triggerUpdated()

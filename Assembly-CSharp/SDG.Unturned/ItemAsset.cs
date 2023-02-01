@@ -154,6 +154,8 @@ public class ItemAsset : Asset, ISkinableAsset
 
     public GameObject item => _item;
 
+    public string instantiatedItemName { get; protected set; }
+
     public AudioClip equip => _equip;
 
     public AnimationClip[] animations => _animations;
@@ -603,6 +605,7 @@ public class ItemAsset : Asset, ISkinableAsset
         _itemDescription = localization.format("Description");
         _itemDescription = ItemTool.filterRarityRichText(itemDescription);
         RichTextUtil.replaceNewlineMarkup(ref _itemDescription);
+        instantiatedItemName = data.readString("Instantiated_Item_Name_Override", id.ToString());
         type = (EItemType)Enum.Parse(typeof(EItemType), data.readString("Type"), ignoreCase: true);
         if (data.has("Rarity"))
         {

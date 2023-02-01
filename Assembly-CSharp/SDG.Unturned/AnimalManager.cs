@@ -390,6 +390,55 @@ public class AnimalManager : SteamCaller
         return animals[index];
     }
 
+    public static void TeleportAnimalBackIntoMap(Animal animal)
+    {
+        Vector3? vector = null;
+        if (animal.pack != null)
+        {
+            if (animal.pack.animals != null)
+            {
+                foreach (Animal animal2 in animal.pack.animals)
+                {
+                    if (!(animal == animal2) && !animal2.isDead)
+                    {
+                        Vector3 position = animal2.transform.position;
+                        if (UndergroundAllowlist.IsPositionWithinValidHeight(position))
+                        {
+                            vector = position;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (!vector.HasValue && animal.pack.spawns != null && animal.pack.spawns.Count > 0)
+            {
+                vector = animal.pack.spawns[animal.pack.spawns.GetRandomIndex()].point;
+            }
+        }
+        if (!vector.HasValue)
+        {
+            if (LevelAnimals.spawns != null && LevelAnimals.spawns.Count > 0)
+            {
+                vector = LevelAnimals.spawns[LevelAnimals.spawns.GetRandomIndex()].point;
+            }
+            else
+            {
+                Vector3 position2 = animal.transform.position;
+                position2.y = Level.HEIGHT - 10f;
+                vector = position2;
+            }
+        }
+        EffectAsset effectAsset = ZombieManager.Souls_1_Ref.Find();
+        if (effectAsset != null)
+        {
+            TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
+            parameters.relevantDistance = 16f;
+            parameters.position = animal.transform.position + Vector3.up;
+            EffectManager.triggerEffect(parameters);
+        }
+        animal.transform.position = vector.Value + Vector3.up;
+    }
+
     public static void askClearAllAnimals()
     {
         foreach (Animal animal in animals)

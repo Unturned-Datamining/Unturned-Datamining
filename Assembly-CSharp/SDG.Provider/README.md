@@ -1,0 +1,14 @@
+# SDG.Provider
+## Content
+- [CachedUGCDetails.cs](CachedUGCDetails.cs)
+- [DynamicEconDetails.cs](DynamicEconDetails.cs)
+- [EconExchangePair.cs](EconExchangePair.cs)
+- [EStatTrackerType.cs](EStatTrackerType.cs)
+- [IProvider.cs](IProvider.cs)
+- [StatTrackerPlayerKillsJson.cs](StatTrackerPlayerKillsJson.cs)
+- [StatTrackerTotalKillsJson.cs](StatTrackerTotalKillsJson.cs)
+- [SteamGetInventoryResponse.cs](SteamGetInventoryResponse.cs)
+- [TempSteamworksEconomy.cs](TempSteamworksEconomy.cs)
+- [TempSteamworksMatchmaking.cs](TempSteamworksMatchmaking.cs)
+- [TempSteamworksWorkshop.cs](TempSteamworksWorkshop.cs)
+- [UnturnedEconInfo.cs](UnturnedEconInfo.cs)

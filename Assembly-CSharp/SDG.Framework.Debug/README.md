@@ -1,0 +1,10 @@
+# SDG.Framework.Debug
+## Content
+- [IInspectableList.cs](IInspectableList.cs)
+- [IInspectablePath.cs](IInspectablePath.cs)
+- [InspectableDirectoryPath.cs](InspectableDirectoryPath.cs)
+- [InspectableFilePath.cs](InspectableFilePath.cs)
+- [InspectableList.cs](InspectableList.cs)
+- [InspectableListAddedHandler.cs](InspectableListAddedHandler.cs)
+- [InspectableListChangedHandler.cs](InspectableListChangedHandler.cs)
+- [InspectableListRemovedHandler.cs](InspectableListRemovedHandler.cs)

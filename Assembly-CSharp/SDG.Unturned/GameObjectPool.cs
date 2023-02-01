@@ -47,6 +47,7 @@ public class GameObjectPool
     {
         if (!(reference == null) && !reference.inPool && reference.pool == this)
         {
+            reference.CancelDestroyTimer();
             GameObject gameObject = reference.gameObject;
             gameObject.SetActive(value: false);
             if (gameObject.transform.parent != null)
@@ -72,6 +73,7 @@ public class GameObjectPool
             }
             else if (!poolReference.excludeFromDestroyAll)
             {
+                poolReference.CancelDestroyTimer();
                 GameObject gameObject = poolReference.gameObject;
                 gameObject.SetActive(value: false);
                 if (gameObject.transform.parent != null)

@@ -57,7 +57,7 @@ public class InteractableStereo : Interactable
         }
         audioSource.clip = null;
         audioSource.loop = false;
-        StereoSongAsset stereoSongAsset = Assets.find(track);
+        StereoSongAsset stereoSongAsset = Assets.Find_UseDefaultAssetMapping(track);
         if (stereoSongAsset != null)
         {
             if (stereoSongAsset.songMbRef.isValid)

@@ -388,13 +388,21 @@ public class ResourceSpawnpoint
             _asset = Assets.find(EAssetType.RESOURCE, id) as ResourceAsset;
             if (asset != null)
             {
-                UnturnedLog.info("Tree without GUID loaded by legacy ID {0}, updating to {1} \"{2}\"", asset.id, asset.GUID, asset.name);
+                UnturnedLog.info(string.Format("Tree without GUID loaded by legacy ID {0}, updating to {1} \"{2}\"", id, asset.GUID.ToString("N"), asset.FriendlyName));
                 guid = asset.GUID;
             }
         }
         else
         {
             _asset = Assets.find(guid) as ResourceAsset;
+            if (!Dedicator.IsDedicatedServer)
+            {
+                ClientAssetIntegrity.QueueRequest(guid, asset, "Tree");
+            }
+            if (asset == null)
+            {
+                ClientAssetIntegrity.ServerAddKnownMissingAsset(guid, "Tree");
+            }
         }
         if (asset == null)
         {

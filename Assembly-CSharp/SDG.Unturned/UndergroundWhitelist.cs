@@ -1,8 +1,10 @@
+using System;
 using SDG.Framework.Devkit;
 using UnityEngine;
 
 namespace SDG.Unturned;
 
+[Obsolete("Renamed to UndergroundAllowlist")]
 public static class UndergroundWhitelist
 {
     public static bool isPointInsideVolume(Vector3 worldspacePosition)
@@ -10,22 +12,9 @@ public static class UndergroundWhitelist
         return VolumeManager<UndergroundWhitelistVolume, UndergroundWhitelistVolumeManager>.Get().IsPositionInsideAnyVolume(worldspacePosition);
     }
 
+    [Obsolete("Renamed to UndergroundAllowlist.AdjustPosition")]
     public static bool adjustPosition(ref Vector3 worldspacePosition, float offset, float threshold = 0.1f)
     {
-        if (Level.info == null || !Level.info.configData.Use_Underground_Whitelist)
-        {
-            return false;
-        }
-        if (isPointInsideVolume(worldspacePosition))
-        {
-            return false;
-        }
-        float height = LevelGround.getHeight(worldspacePosition);
-        if (worldspacePosition.y < height - threshold)
-        {
-            worldspacePosition.y = height + offset;
-            return true;
-        }
-        return false;
+        return UndergroundAllowlist.AdjustPosition(ref worldspacePosition, offset, threshold);
     }
 }

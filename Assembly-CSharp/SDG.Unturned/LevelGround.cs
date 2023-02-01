@@ -208,7 +208,7 @@ public class LevelGround : MonoBehaviour
     [Obsolete]
     public static Vector3 checkSafe(Vector3 point)
     {
-        UndergroundWhitelist.adjustPosition(ref point, 0.5f, 1f);
+        UndergroundAllowlist.AdjustPosition(ref point, 0.5f, 1f);
         return point;
     }
 
@@ -658,17 +658,9 @@ public class LevelGround : MonoBehaviour
                                 {
                                     NetId treeNetId = LevelNetIdRegistry.GetTreeNetId(b6, b7, num2);
                                     ResourceSpawnpoint resourceSpawnpoint = new ResourceSpawnpoint(num3, guid, newPoint, newGenerated, treeNetId);
-                                    if (resourceSpawnpoint.asset == null)
+                                    if (resourceSpawnpoint.asset == null && (bool)Assets.shouldLoadAnyAssets)
                                     {
-                                        ClientAssetIntegrity.ServerAddKnownMissingAsset(guid, $"Tree (x: {b6} y: {b7})");
-                                        if ((bool)Assets.shouldLoadAnyAssets)
-                                        {
-                                            UnturnedLog.error("Tree with no asset in region {0}, {1}: {2}", b6, b7, num3);
-                                        }
-                                    }
-                                    if (!Dedicator.IsDedicatedServer)
-                                    {
-                                        ClientAssetIntegrity.QueueRequest(guid, resourceSpawnpoint.asset, $"Tree (x: {b6} y: {b7})");
+                                        UnturnedLog.error("Tree with no asset in region {0}, {1}: {2}", b6, b7, num3);
                                     }
                                     trees[b6, b7].Add(resourceSpawnpoint);
                                     _total++;

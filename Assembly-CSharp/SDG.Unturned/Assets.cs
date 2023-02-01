@@ -344,6 +344,16 @@ public class Assets : MonoBehaviour
         return find(reference.GUID) as T;
     }
 
+    public static T Find_UseDefaultAssetMapping<T>(AssetReference<T> reference) where T : Asset
+    {
+        if (reference.isNull)
+        {
+            return null;
+        }
+        defaultAssetMapping.assetDictionary.TryGetValue(reference.GUID, out var value);
+        return value as T;
+    }
+
     public static T load<T>(ContentReference<T> reference) where T : UnityEngine.Object
     {
         if (!reference.isValid)
@@ -553,7 +563,7 @@ public class Assets : MonoBehaviour
             {
                 assetMapping.assetDictionary.TryGetValue(asset.GUID, out var value3);
                 reportError(asset, "long GUID " + asset.GUID.ToString("N") + " is already taken by " + value3.getTypeNameAndIdDisplayString() + "!");
-                asset.GUID = Guid.NewGuid();
+                return;
             }
             assetMapping.assetDictionary.Add(asset.GUID, asset);
             assetMapping.assetList.Add(asset);
@@ -1594,7 +1604,7 @@ public class Assets : MonoBehaviour
         }
         else
         {
-            Provider._connectionFailureReason = string.Concat(string.Concat(string.Concat("Client and server are both missing unknown asset! ID: " + guid.ToString("N"), "\nThis probably means either an invalid ID was sent by the server,"), "\nthe ID got corrupted for example by plugins modifying network traffic,"), "\nor a required level asset like materials/foliage is missing.");
+            Provider._connectionFailureReason = string.Concat(string.Concat(string.Concat("Client and server are both missing unknown asset! ID: " + guid.ToString("N"), "\nThis probably means either an invalid ID was sent by the server,"), "\nthe ID got corrupted for example by plugins modifying network traffic,"), "\nor a required level asset like materials/foliage/trees/objects is missing.");
         }
         Provider.RequestDisconnect("Kicked for sending invalid asset guid: " + guid.ToString("N"));
     }

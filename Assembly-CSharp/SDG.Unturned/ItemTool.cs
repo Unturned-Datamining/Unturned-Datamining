@@ -282,7 +282,7 @@ public class ItemTool : MonoBehaviour
         if (gameObject == null)
         {
             Transform transform = new GameObject().transform;
-            transform.name = itemAsset.id.ToString();
+            transform.name = itemAsset.instantiatedItemName;
             if (viewmodel)
             {
                 transform.tag = "Viewmodel";
@@ -296,7 +296,7 @@ public class ItemTool : MonoBehaviour
             return transform;
         }
         Transform transform2 = UnityEngine.Object.Instantiate(gameObject).transform;
-        transform2.name = itemAsset.id.ToString();
+        transform2.name = itemAsset.instantiatedItemName;
         if (shouldDestroyColliders && itemAsset.shouldDestroyItemColliders)
         {
             PrefabUtil.DestroyCollidersInChildren(transform2.gameObject, includeInactive: true);
