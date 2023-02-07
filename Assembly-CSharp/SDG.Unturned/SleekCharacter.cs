@@ -30,9 +30,9 @@ public class SleekCharacter : SleekWrapper
         {
             Provider.provider.storeService.open(new SteamworksStorePackageID(Provider.PRO_ID.m_AppId));
         }
-        else if (onClickedCharacter != null)
+        else
         {
-            onClickedCharacter(this, index);
+            onClickedCharacter?.Invoke(this, index);
         }
     }
 

@@ -167,10 +167,7 @@ public class FoliageSystem : DevkitHierarchyItemBase
 
     private static void bakePre()
     {
-        if (FoliageSystem.preBake != null)
-        {
-            FoliageSystem.preBake();
-        }
+        FoliageSystem.preBake?.Invoke();
         bakeQueue.Clear();
     }
 
@@ -195,10 +192,7 @@ public class FoliageSystem : DevkitHierarchyItemBase
 
     private static void bakeGlobalEnd()
     {
-        if (FoliageSystem.globalBake != null)
-        {
-            FoliageSystem.globalBake();
-        }
+        FoliageSystem.globalBake?.Invoke();
         bakePost();
     }
 
@@ -239,10 +233,7 @@ public class FoliageSystem : DevkitHierarchyItemBase
 
     private static void bakeLocalEnd()
     {
-        if (FoliageSystem.localBake != null)
-        {
-            FoliageSystem.localBake(bakeLocalPosition);
-        }
+        FoliageSystem.localBake?.Invoke(bakeLocalPosition);
         bakePost();
     }
 
@@ -273,10 +264,7 @@ public class FoliageSystem : DevkitHierarchyItemBase
     private static void bake(FoliageTile tile, List<IFoliageSurface> list)
     {
         bakePreTile(bakeSettings, tile);
-        if (FoliageSystem.preBakeTile != null)
-        {
-            FoliageSystem.preBakeTile(bakeSettings, tile);
-        }
+        FoliageSystem.preBakeTile?.Invoke(bakeSettings, tile);
         if (!bakeSettings.bakeApplyScale)
         {
             foreach (IFoliageSurface item in list)
@@ -284,10 +272,7 @@ public class FoliageSystem : DevkitHierarchyItemBase
                 item.bakeFoliageSurface(bakeSettings, tile);
             }
         }
-        if (FoliageSystem.postBakeTile != null)
-        {
-            FoliageSystem.postBakeTile(bakeSettings, tile);
-        }
+        FoliageSystem.postBakeTile?.Invoke(bakeSettings, tile);
     }
 
     private static void bakePost()
@@ -296,10 +281,7 @@ public class FoliageSystem : DevkitHierarchyItemBase
         {
             LevelHierarchy.instance.isDirty = true;
         }
-        if (FoliageSystem.postBake != null)
-        {
-            FoliageSystem.postBake();
-        }
+        FoliageSystem.postBake?.Invoke();
     }
 
     public static void addInstance(AssetReference<FoliageInstancedMeshInfoAsset> assetReference, Vector3 position, Quaternion rotation, Vector3 scale, bool clearWhenBaked)

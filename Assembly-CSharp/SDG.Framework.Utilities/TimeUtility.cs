@@ -24,10 +24,7 @@ public class TimeUtility : MonoBehaviour
 
     protected virtual void triggerUpdated()
     {
-        if (TimeUtility.updated != null)
-        {
-            TimeUtility.updated();
-        }
+        TimeUtility.updated?.Invoke();
     }
 
     protected virtual void Update()

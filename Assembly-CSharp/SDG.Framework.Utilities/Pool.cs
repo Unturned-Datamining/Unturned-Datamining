@@ -78,18 +78,12 @@ public class Pool<T>
 
     protected void triggerClaimed(T item)
     {
-        if (this.claimed != null)
-        {
-            this.claimed(this, item);
-        }
+        this.claimed?.Invoke(this, item);
     }
 
     protected void triggerReleased(T item)
     {
-        if (this.released != null)
-        {
-            this.released(this, item);
-        }
+        this.released?.Invoke(this, item);
     }
 
     public Pool()

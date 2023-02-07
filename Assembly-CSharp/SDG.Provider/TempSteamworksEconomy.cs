@@ -513,10 +513,7 @@ public class TempSteamworksEconomy
             item.m_unQuantity = item2.quantity;
             inventoryDetails.Add(item);
         }
-        if (onInventoryRefreshed != null)
-        {
-            onInventoryRefreshed();
-        }
+        onInventoryRefreshed?.Invoke();
         isInventoryAvailable = true;
         SDG.Unturned.Provider.isLoadingInventory = false;
     }
@@ -650,18 +647,12 @@ public class TempSteamworksEconomy
         }
         if (list.Count > 0)
         {
-            if (onInventoryExchanged != null)
-            {
-                onInventoryExchanged(list);
-            }
-            if (onInventoryRefreshed != null)
-            {
-                onInventoryRefreshed();
-            }
+            onInventoryExchanged?.Invoke(list);
+            onInventoryRefreshed?.Invoke();
         }
-        else if (onInventoryExchangeFailed != null)
+        else
         {
-            onInventoryExchangeFailed();
+            onInventoryExchangeFailed?.Invoke();
         }
     }
 
@@ -690,10 +681,7 @@ public class TempSteamworksEconomy
         {
             onInventoryPurchased(list);
         }
-        if (onInventoryRefreshed != null)
-        {
-            onInventoryRefreshed();
-        }
+        onInventoryRefreshed?.Invoke();
     }
 
     private void UpdateLocalItemsFromUnknownResult(SteamInventoryResult_t resultHandle)
@@ -710,10 +698,7 @@ public class TempSteamworksEconomy
                 }
             }
         }
-        if (onInventoryRefreshed != null)
-        {
-            onInventoryRefreshed();
-        }
+        onInventoryRefreshed?.Invoke();
     }
 
     private void DumpInventoryResult(SteamInventoryResult_t handle)
@@ -776,14 +761,8 @@ public class TempSteamworksEconomy
             {
                 SteamItemDetails_t item = array[0];
                 addLocalItem(item, pchValueBuffer, pchValueBuffer2);
-                if (onInventoryDropped != null)
-                {
-                    onInventoryDropped(item.m_iDefinition.m_SteamItemDef, item.m_unQuantity, item.m_itemId.m_SteamItemInstanceID);
-                }
-                if (onInventoryRefreshed != null)
-                {
-                    onInventoryRefreshed();
-                }
+                onInventoryDropped?.Invoke(item.m_iDefinition.m_SteamItemDef, item.m_unQuantity, item.m_itemId.m_SteamItemInstanceID);
+                onInventoryRefreshed?.Invoke();
             }
             SteamInventory.DestroyResult(dropResult);
             dropResult = SteamInventoryResult_t.Invalid;
@@ -815,10 +794,7 @@ public class TempSteamworksEconomy
                     }
                     inventoryDetails = new List<SteamItemDetails_t>(array2);
                 }
-                if (onInventoryRefreshed != null)
-                {
-                    onInventoryRefreshed();
-                }
+                onInventoryRefreshed?.Invoke();
                 isInventoryAvailable = true;
                 SDG.Unturned.Provider.isLoadingInventory = false;
                 SteamInventory.DestroyResult(inventoryResult);

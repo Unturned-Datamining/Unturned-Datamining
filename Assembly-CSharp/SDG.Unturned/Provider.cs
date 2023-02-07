@@ -696,10 +696,7 @@ public class Provider : MonoBehaviour
         {
             initialBackendRealtimeSeconds = value;
             initialLocalRealtime = Time.realtimeSinceStartup;
-            if (onBackendRealtimeAvailable != null)
-            {
-                onBackendRealtimeAvailable();
-            }
+            onBackendRealtimeAvailable?.Invoke();
         }
     }
 
@@ -1533,55 +1530,52 @@ public class Provider : MonoBehaviour
         }
         if (isServer)
         {
-            if (!isClient)
+            if (isClient)
             {
-                return;
-            }
-            SteamPlayerID steamPlayerID = new SteamPlayerID(client, Characters.selected, clientName, Characters.active.name, Characters.active.nick, Characters.active.group);
-            loadPlayerSpawn(steamPlayerID, out var point, out var angle, out var initialStance);
-            int inventoryItem = provider.economyService.getInventoryItem(Characters.active.packageShirt);
-            int inventoryItem2 = provider.economyService.getInventoryItem(Characters.active.packagePants);
-            int inventoryItem3 = provider.economyService.getInventoryItem(Characters.active.packageHat);
-            int inventoryItem4 = provider.economyService.getInventoryItem(Characters.active.packageBackpack);
-            int inventoryItem5 = provider.economyService.getInventoryItem(Characters.active.packageVest);
-            int inventoryItem6 = provider.economyService.getInventoryItem(Characters.active.packageMask);
-            int inventoryItem7 = provider.economyService.getInventoryItem(Characters.active.packageGlasses);
-            int[] array = new int[Characters.packageSkins.Count];
-            for (int i = 0; i < array.Length; i++)
-            {
-                array[i] = provider.economyService.getInventoryItem(Characters.packageSkins[i]);
-            }
-            string[] array2 = new string[Characters.packageSkins.Count];
-            for (int j = 0; j < array2.Length; j++)
-            {
-                array2[j] = provider.economyService.getInventoryTags(Characters.packageSkins[j]);
-            }
-            string[] array3 = new string[Characters.packageSkins.Count];
-            for (int k = 0; k < array3.Length; k++)
-            {
-                array3[k] = provider.economyService.getInventoryDynamicProps(Characters.packageSkins[k]);
-            }
-            TransportConnection_Loopback transportConnection_Loopback = TransportConnection_Loopback.Create();
-            SteamPlayer steamPlayer = addPlayer(netId: ClaimNetIdBlockForNewPlayer(), transportConnection: transportConnection_Loopback, playerID: steamPlayerID, point: point, angle: angle, isPro: isPro, isAdmin: true, channel: allocPlayerChannelId(), face: Characters.active.face, hair: Characters.active.hair, beard: Characters.active.beard, skin: Characters.active.skin, color: Characters.active.color, markerColor: Characters.active.markerColor, hand: Characters.active.hand, shirtItem: inventoryItem, pantsItem: inventoryItem2, hatItem: inventoryItem3, backpackItem: inventoryItem4, vestItem: inventoryItem5, maskItem: inventoryItem6, glassesItem: inventoryItem7, skinItems: array, skinTags: array2, skinDynamicProps: array3, skillset: Characters.active.skillset, language: language, lobbyID: Lobbies.currentLobby, clientPlatform: EClientPlatform.Windows);
-            steamPlayer.player.stance.initialStance = initialStance;
-            steamPlayer.player.InitializePlayer();
-            steamPlayer.player.SendInitialPlayerState(steamPlayer);
-            Lobbies.leaveLobby();
-            updateRichPresence();
-            try
-            {
-                if (onServerConnected != null)
+                SteamPlayerID steamPlayerID = new SteamPlayerID(client, Characters.selected, clientName, Characters.active.name, Characters.active.nick, Characters.active.group);
+                loadPlayerSpawn(steamPlayerID, out var point, out var angle, out var initialStance);
+                int inventoryItem = provider.economyService.getInventoryItem(Characters.active.packageShirt);
+                int inventoryItem2 = provider.economyService.getInventoryItem(Characters.active.packagePants);
+                int inventoryItem3 = provider.economyService.getInventoryItem(Characters.active.packageHat);
+                int inventoryItem4 = provider.economyService.getInventoryItem(Characters.active.packageBackpack);
+                int inventoryItem5 = provider.economyService.getInventoryItem(Characters.active.packageVest);
+                int inventoryItem6 = provider.economyService.getInventoryItem(Characters.active.packageMask);
+                int inventoryItem7 = provider.economyService.getInventoryItem(Characters.active.packageGlasses);
+                int[] array = new int[Characters.packageSkins.Count];
+                for (int i = 0; i < array.Length; i++)
                 {
-                    onServerConnected(steamPlayerID.steamID);
+                    array[i] = provider.economyService.getInventoryItem(Characters.packageSkins[i]);
                 }
-                return;
+                string[] array2 = new string[Characters.packageSkins.Count];
+                for (int j = 0; j < array2.Length; j++)
+                {
+                    array2[j] = provider.economyService.getInventoryTags(Characters.packageSkins[j]);
+                }
+                string[] array3 = new string[Characters.packageSkins.Count];
+                for (int k = 0; k < array3.Length; k++)
+                {
+                    array3[k] = provider.economyService.getInventoryDynamicProps(Characters.packageSkins[k]);
+                }
+                TransportConnection_Loopback transportConnection_Loopback = TransportConnection_Loopback.Create();
+                SteamPlayer steamPlayer = addPlayer(netId: ClaimNetIdBlockForNewPlayer(), transportConnection: transportConnection_Loopback, playerID: steamPlayerID, point: point, angle: angle, isPro: isPro, isAdmin: true, channel: allocPlayerChannelId(), face: Characters.active.face, hair: Characters.active.hair, beard: Characters.active.beard, skin: Characters.active.skin, color: Characters.active.color, markerColor: Characters.active.markerColor, hand: Characters.active.hand, shirtItem: inventoryItem, pantsItem: inventoryItem2, hatItem: inventoryItem3, backpackItem: inventoryItem4, vestItem: inventoryItem5, maskItem: inventoryItem6, glassesItem: inventoryItem7, skinItems: array, skinTags: array2, skinDynamicProps: array3, skillset: Characters.active.skillset, language: language, lobbyID: Lobbies.currentLobby, clientPlatform: EClientPlatform.Windows);
+                steamPlayer.player.stance.initialStance = initialStance;
+                steamPlayer.player.InitializePlayer();
+                steamPlayer.player.SendInitialPlayerState(steamPlayer);
+                Lobbies.leaveLobby();
+                updateRichPresence();
+                try
+                {
+                    onServerConnected?.Invoke(steamPlayerID.steamID);
+                    return;
+                }
+                catch (Exception e)
+                {
+                    UnturnedLog.warn("Plugin raised an exception from onServerConnected:");
+                    UnturnedLog.exception(e);
+                    return;
+                }
             }
-            catch (Exception e)
-            {
-                UnturnedLog.warn("Plugin raised an exception from onServerConnected:");
-                UnturnedLog.exception(e);
-                return;
-            }
+            return;
         }
         EClientPlatform clientPlatform = EClientPlatform.Linux;
         critMods.Clear();
@@ -1972,10 +1966,7 @@ public class Provider : MonoBehaviour
             _isServer = false;
             _isClient = false;
         }
-        if (onClientDisconnected != null)
-        {
-            onClientDisconnected();
-        }
+        onClientDisconnected?.Invoke();
         if (!isApplicationQuitting)
         {
             Level.exit();
@@ -2791,10 +2782,7 @@ public class Provider : MonoBehaviour
     {
         try
         {
-            if (onServerDisconnected != null)
-            {
-                onServerDisconnected(steamID);
-            }
+            onServerDisconnected?.Invoke(steamID);
         }
         catch (Exception e)
         {
@@ -2807,10 +2795,7 @@ public class Provider : MonoBehaviour
     {
         try
         {
-            if (onServerHosted != null)
-            {
-                onServerHosted();
-            }
+            onServerHosted?.Invoke();
         }
         catch (Exception e)
         {
@@ -2823,10 +2808,7 @@ public class Provider : MonoBehaviour
     {
         try
         {
-            if (onServerShutdown != null)
-            {
-                onServerShutdown();
-            }
+            onServerShutdown?.Invoke();
         }
         catch (Exception e)
         {
@@ -3429,10 +3411,7 @@ public class Provider : MonoBehaviour
         newClient.player.SendInitialPlayerState(EnumerateClients_RemotePredicate((SteamPlayer potentialRecipient) => potentialRecipient != newClient));
         try
         {
-            if (onServerConnected != null)
-            {
-                onServerConnected(playerID.steamID);
-            }
+            onServerConnected?.Invoke(playerID.steamID);
         }
         catch (Exception e)
         {

@@ -480,10 +480,7 @@ public class InteractableStorage : Interactable, IManualOnDestroy
         if (checkStore(player.channel.owner.playerID.steamID, player.quests.groupID))
         {
             bool shouldAllow = true;
-            if (BarricadeManager.onOpenStorageRequested != null)
-            {
-                BarricadeManager.onOpenStorageRequested(player.channel.owner.playerID.steamID, this, ref shouldAllow);
-            }
+            BarricadeManager.onOpenStorageRequested?.Invoke(player.channel.owner.playerID.steamID, this, ref shouldAllow);
             if (!shouldAllow)
             {
                 return;

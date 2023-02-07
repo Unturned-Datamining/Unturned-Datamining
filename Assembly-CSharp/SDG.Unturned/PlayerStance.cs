@@ -261,10 +261,7 @@ public class PlayerStance : PlayerCaller
             _stance = newStance;
             EPlayerHeight heightForStance = getHeightForStance(newStance);
             base.player.movement.setSize(heightForStance);
-            if (onStanceUpdated != null)
-            {
-                onStanceUpdated();
-            }
+            onStanceUpdated?.Invoke();
         }
     }
 
@@ -362,12 +359,7 @@ public class PlayerStance : PlayerCaller
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 2)]
     public void ReceiveClimbRequest(in ServerInvocationContext context, Vector3 direction)
     {
-        if (!canCurrentStanceTransitionToClimbing || !isAllowedToStartClimbing)
-        {
-            return;
-        }
-        direction = direction.normalized;
-        if (!Physics.SphereCast(new Ray(base.player.look.aim.position, direction), RADIUS, out var hitInfo, 4f, RayMasks.LADDER_INTERACT) || hitInfo.collider == null || !hitInfo.collider.CompareTag("Ladder") || !Physics.Raycast(new Ray(base.player.look.aim.position, direction), out var hitInfo2, 4f, RayMasks.LADDER_INTERACT) || hitInfo2.collider == null || !hitInfo2.collider.CompareTag("Ladder"))
+        if (!canCurrentStanceTransitionToClimbing || !isAllowedToStartClimbing || !Physics.SphereCast(new Ray(base.player.look.aim.position, direction), RADIUS, out var hitInfo, 4f, RayMasks.LADDER_INTERACT) || hitInfo.collider == null || !hitInfo.collider.CompareTag("Ladder") || !Physics.Raycast(new Ray(base.player.look.aim.position, direction), out var hitInfo2, 4f, RayMasks.LADDER_INTERACT) || hitInfo2.collider == null || !hitInfo2.collider.CompareTag("Ladder"))
         {
             return;
         }

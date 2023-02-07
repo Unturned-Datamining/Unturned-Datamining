@@ -51,10 +51,7 @@ public class ZombieRegion
             if (value != _hasBeacon)
             {
                 _hasBeacon = value;
-                if (onHyperUpdated != null)
-                {
-                    onHyperUpdated(isHyper);
-                }
+                onHyperUpdated?.Invoke(isHyper);
             }
         }
     }
@@ -252,10 +249,7 @@ public class ZombieRegion
 
     private void onMoonUpdated(bool isFullMoon)
     {
-        if (onHyperUpdated != null)
-        {
-            onHyperUpdated(isHyper);
-        }
+        onHyperUpdated?.Invoke(isHyper);
     }
 
     public void destroy()

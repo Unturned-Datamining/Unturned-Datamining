@@ -84,19 +84,13 @@ public class SleekButtonIconConfirm : SleekWrapper
     private void onClickedConfirmButton(ISleekElement button)
     {
         reset();
-        if (onConfirmed != null)
-        {
-            onConfirmed(this);
-        }
+        onConfirmed?.Invoke(this);
     }
 
     private void onClickedDenyButton(ISleekElement button)
     {
         reset();
-        if (onDenied != null)
-        {
-            onDenied(this);
-        }
+        onDenied?.Invoke(this);
     }
 
     private void onClickedMainButton(ISleekElement button)

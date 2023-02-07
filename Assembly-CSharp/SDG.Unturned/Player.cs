@@ -293,19 +293,13 @@ public class Player : MonoBehaviour
         {
             ReadWrite.writeBytes(ReadWrite.PATH + ServerSavedata.directory + "/" + Provider.serverID + "/Spy.jpg", useCloud: false, usePath: false, data);
             ReadWrite.writeBytes(ReadWrite.PATH + ServerSavedata.directory + "/" + Provider.serverID + "/Spy/" + channel.owner.playerID.steamID.m_SteamID + ".jpg", useCloud: false, usePath: false, data);
-            if (onPlayerSpyReady != null)
-            {
-                onPlayerSpyReady(channel.owner.playerID.steamID, data);
-            }
+            onPlayerSpyReady?.Invoke(channel.owner.playerID.steamID, data);
             screenshotsCallbacks.Dequeue()?.Invoke(channel.owner.playerID.steamID, data);
         }
         else
         {
             ReadWrite.writeBytes("/Spy.jpg", useCloud: false, usePath: true, data);
-            if (onSpyReady != null)
-            {
-                onSpyReady(channel.owner.playerID.steamID, data);
-            }
+            onSpyReady?.Invoke(channel.owner.playerID.steamID, data);
         }
     }
 
@@ -556,10 +550,7 @@ public class Player : MonoBehaviour
 
     internal void PostTeleport()
     {
-        if (onPlayerTeleported != null)
-        {
-            onPlayerTeleported(this, base.transform.position);
-        }
+        onPlayerTeleported?.Invoke(this, base.transform.position);
     }
 
     [Obsolete]

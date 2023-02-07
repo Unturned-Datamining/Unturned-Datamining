@@ -111,10 +111,7 @@ public class ObjectManager : SteamCaller
         xp = 0u;
         ushort pendingTotalDamage = (ushort)(damage * times);
         bool shouldAllow = true;
-        if (onDamageObjectRequested != null)
-        {
-            onDamageObjectRequested(instigatorSteamID, obj, section, ref pendingTotalDamage, ref shouldAllow, damageOrigin);
-        }
+        onDamageObjectRequested?.Invoke(instigatorSteamID, obj, section, ref pendingTotalDamage, ref shouldAllow, damageOrigin);
         if (!shouldAllow || pendingTotalDamage < 1 || !tryGetRegion(obj, out var x, out var y, out var index))
         {
             return;

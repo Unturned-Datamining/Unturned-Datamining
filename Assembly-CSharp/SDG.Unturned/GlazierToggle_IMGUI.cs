@@ -40,9 +40,9 @@ internal class GlazierToggle_IMGUI : GlazierElementBase_IMGUI, ISleekToggle, ISl
         GUI.enabled = isInteractable;
         bool flag = GlazierUtils_IMGUI.drawToggle(drawRect, backgroundColor, state, content);
         GUI.enabled = enabled;
-        if (flag != state && this.onToggled != null)
+        if (flag != state)
         {
-            this.onToggled(this, flag);
+            this.onToggled?.Invoke(this, flag);
         }
         state = flag;
         ChildrenOnGUI();

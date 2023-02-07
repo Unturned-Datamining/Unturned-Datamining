@@ -94,10 +94,7 @@ public class PlayerVoice : PlayerCaller
             if (_isTalking != value)
             {
                 _isTalking = value;
-                if (this.onTalkingChanged != null)
-                {
-                    this.onTalkingChanged(value);
-                }
+                this.onTalkingChanged?.Invoke(value);
             }
         }
     }
@@ -290,10 +287,7 @@ public class PlayerVoice : PlayerCaller
             shouldBroadcastOverRadio = false;
         }
         RelayVoiceCullingHandler cullingHandler = null;
-        if (PlayerVoice.onRelayVoice != null)
-        {
-            PlayerVoice.onRelayVoice(this, value, ref shouldAllow, ref shouldBroadcastOverRadio, ref cullingHandler);
-        }
+        PlayerVoice.onRelayVoice?.Invoke(this, value, ref shouldAllow, ref shouldBroadcastOverRadio, ref cullingHandler);
         if (!shouldAllow)
         {
             return;

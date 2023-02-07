@@ -55,10 +55,7 @@ public class Characters : MonoBehaviour
         set
         {
             _selected = value;
-            if (onCharacterUpdated != null)
-            {
-                onCharacterUpdated(selected, active);
-            }
+            onCharacterUpdated?.Invoke(selected, active);
             apply();
         }
     }
@@ -72,19 +69,13 @@ public class Characters : MonoBehaviour
     public static void rename(string name)
     {
         active.name = name;
-        if (onCharacterUpdated != null)
-        {
-            onCharacterUpdated(selected, active);
-        }
+        onCharacterUpdated?.Invoke(selected, active);
     }
 
     public static void skillify(EPlayerSkillset skillset)
     {
         active.skillset = skillset;
-        if (onCharacterUpdated != null)
-        {
-            onCharacterUpdated(selected, active);
-        }
+        onCharacterUpdated?.Invoke(selected, active);
         active.applyHero();
         apply();
     }
@@ -122,10 +113,7 @@ public class Characters : MonoBehaviour
     public static void renick(string nick)
     {
         active.nick = nick;
-        if (onCharacterUpdated != null)
-        {
-            onCharacterUpdated(selected, active);
-        }
+        onCharacterUpdated?.Invoke(selected, active);
     }
 
     public static void paintMarkerColor(Color color)
@@ -143,29 +131,20 @@ public class Characters : MonoBehaviour
         {
             active.group = group;
         }
-        if (onCharacterUpdated != null)
-        {
-            onCharacterUpdated(selected, active);
-        }
+        onCharacterUpdated?.Invoke(selected, active);
     }
 
     public static void ungroup()
     {
         active.group = CSteamID.Nil;
-        if (onCharacterUpdated != null)
-        {
-            onCharacterUpdated(selected, active);
-        }
+        onCharacterUpdated?.Invoke(selected, active);
     }
 
     public static void hand(bool state)
     {
         active.hand = state;
         apply(showItems: false, showCosmetics: false);
-        if (onCharacterUpdated != null)
-        {
-            onCharacterUpdated(selected, active);
-        }
+        onCharacterUpdated?.Invoke(selected, active);
     }
 
     public static bool isSkinEquipped(ulong instance)
@@ -322,10 +301,7 @@ public class Characters : MonoBehaviour
             }
         }
         apply(showItems: false, showCosmetics: true);
-        if (onCharacterUpdated != null)
-        {
-            onCharacterUpdated(selected, active);
-        }
+        onCharacterUpdated?.Invoke(selected, active);
     }
 
     public static bool getPackageForItemID(ushort itemID, out ulong package)
@@ -713,9 +689,9 @@ public class Characters : MonoBehaviour
         {
             for (byte b = 0; b < list.Length; b = (byte)(b + 1))
             {
-                if (list[b] != null && onCharacterUpdated != null)
+                if (list[b] != null)
                 {
-                    onCharacterUpdated(b, list[b]);
+                    onCharacterUpdated?.Invoke(b, list[b]);
                 }
             }
             return;
@@ -827,10 +803,7 @@ public class Characters : MonoBehaviour
                             }
                         }
                         list[b3] = new Character(newShirt, newPants, newHat, newBackpack, newVest, newMask, newGlasses, newPackageShirt, newPackagePants, newPackageHat, newPackageBackpack, newPackageVest, newPackageMask, newPackageGlasses, newPrimaryItem, newPrimaryState, newSecondaryItem, newSecondaryState, b4, b5, b6, color, color2, newMarkerColor, newHand, newName, newNick, cSteamID, (EPlayerSkillset)b7);
-                        if (onCharacterUpdated != null)
-                        {
-                            onCharacterUpdated(b3, list[b3]);
-                        }
+                        onCharacterUpdated?.Invoke(b3, list[b3]);
                     }
                 }
                 else
@@ -838,10 +811,7 @@ public class Characters : MonoBehaviour
                     for (byte b8 = 0; b8 < list.Length; b8 = (byte)(b8 + 1))
                     {
                         list[b8] = new Character();
-                        if (onCharacterUpdated != null)
-                        {
-                            onCharacterUpdated(b8, list[b8]);
-                        }
+                        onCharacterUpdated?.Invoke(b8, list[b8]);
                     }
                 }
             }
@@ -855,10 +825,7 @@ public class Characters : MonoBehaviour
             if (list[b9] == null)
             {
                 list[b9] = new Character();
-                if (onCharacterUpdated != null)
-                {
-                    onCharacterUpdated(b9, list[b9]);
-                }
+                onCharacterUpdated?.Invoke(b9, list[b9]);
             }
         }
         apply();

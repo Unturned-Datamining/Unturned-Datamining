@@ -950,10 +950,7 @@ public class UseableGun : Useable
                         bulletInfo2.barrelAsset = thirdAttachments.barrelAsset;
                         bulletInfo2.magazineAsset = thirdAttachments.magazineAsset;
                         bullets.Add(bulletInfo2);
-                        if (UseableGun.onBulletSpawned != null)
-                        {
-                            UseableGun.onBulletSpawned(this, bulletInfo2);
-                        }
+                        UseableGun.onBulletSpawned?.Invoke(this, bulletInfo2);
                     }
                     if (thirdAttachments.magazineAsset != null && thirdAttachments.magazineAsset.isExplosive)
                     {
@@ -3745,7 +3742,7 @@ public class UseableGun : Useable
         return baseSpreadAngleRadians;
     }
 
-    private void UpdateCrosshairEnabled()
+    internal void UpdateCrosshairEnabled()
     {
         if ((!equippedGunAsset.isTurret && equippedGunAsset.action != EAction.Minigun && ((isAiming && base.player.look.perspective == EPlayerPerspective.FIRST && (equippedGunAsset.action != EAction.String || thirdAttachments.sightHook != null)) || isAttaching)) || (base.player.movement.getVehicle() != null && base.player.look.perspective != 0))
         {
@@ -3986,17 +3983,6 @@ public class UseableGun : Useable
             {
                 base.player.look.disableZoom();
             }
-            if (equippedGunAsset.action != EAction.Minigun)
-            {
-                if (base.player.movement.getVehicle() != null)
-                {
-                    PlayerUI.disableCrosshair();
-                }
-                else
-                {
-                    PlayerUI.enableCrosshair();
-                }
-            }
         }
         else if (isAiming)
         {
@@ -4014,18 +4000,10 @@ public class UseableGun : Useable
             {
                 base.player.look.disableZoom();
             }
-            if (equippedGunAsset.action != EAction.Minigun)
-            {
-                PlayerUI.disableCrosshair();
-            }
         }
         else
         {
             base.player.look.disableZoom();
-            if (equippedGunAsset.action != EAction.Minigun)
-            {
-                PlayerUI.enableCrosshair();
-            }
         }
         if (thirdShellRenderer != null)
         {

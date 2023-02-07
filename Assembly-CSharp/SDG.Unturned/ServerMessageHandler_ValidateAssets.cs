@@ -64,7 +64,7 @@ internal static class ServerMessageHandler_ValidateAssets
             Asset asset = Assets.find(value3);
             if (asset == null)
             {
-                UnturnedLog.info(string.Format("Kicking {0} for invalid file integrity request guid: {1}", transportConnection, value3.ToString("N")));
+                UnturnedLog.info($"Kicking {transportConnection} for invalid file integrity request guid: {value3:N}");
                 Assets.SendKickForInvalidGuid.Invoke(ENetReliability.Reliable, transportConnection, value3);
                 Provider.dismiss(steamPlayer.playerID.steamID);
                 break;
@@ -91,7 +91,7 @@ internal static class ServerMessageHandler_ValidateAssets
                     {
                         text = "Unknown";
                     }
-                    UnturnedLog.info(string.Format("Kicking {0} for asset hash mismatch: \"{1}\" Type: {2} File: \"{3}\" Id: {4} Client: {5} Server: {6}", transportConnection, asset.FriendlyName, asset.GetTypeNameWithoutSuffix(), asset.name, value3.ToString("N"), Hash.toString(clientHash), Hash.toString(array)));
+                    UnturnedLog.info($"Kicking {transportConnection} for asset hash mismatch: \"{asset.FriendlyName}\" Type: {asset.GetTypeNameWithoutSuffix()} File: \"{asset.name}\" Id: {value3:N} Client: {Hash.toString(clientHash)} Server: {Hash.toString(array)}");
                     Assets.SendKickForHashMismatch.Invoke(ENetReliability.Reliable, transportConnection, value3, asset.name, asset.FriendlyName, array, asset.originMasterBundle?.assetBundleNameWithoutExtension, text);
                     Provider.dismiss(steamPlayer.playerID.steamID);
                     break;
@@ -99,7 +99,7 @@ internal static class ServerMessageHandler_ValidateAssets
             }
             else if (asset.hash != null && asset.hash.Length == 20)
             {
-                Provider.kick(steamPlayer.playerID.steamID, "missing asset: \"" + asset.FriendlyName + "\" File: \"" + asset.name + "\" Id: " + value3.ToString("N"));
+                Provider.kick(steamPlayer.playerID.steamID, $"missing asset: \"{asset.FriendlyName}\" File: \"{asset.name}\" Id: {value3:N}");
                 break;
             }
         }

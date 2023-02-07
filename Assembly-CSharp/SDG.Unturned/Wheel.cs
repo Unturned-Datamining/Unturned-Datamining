@@ -100,10 +100,7 @@ public class Wheel
 
     protected virtual void triggerAliveChanged()
     {
-        if (this.aliveChanged != null)
-        {
-            this.aliveChanged(this);
-        }
+        this.aliveChanged?.Invoke(this);
     }
 
     public void askRepair()

@@ -882,17 +882,7 @@ public class GraphicsSettings
                         for (int j = 0; j < list.Count; j++)
                         {
                             LevelObject levelObject = list[j];
-                            if (levelObject != null)
-                            {
-                                if (levelObject.isLandmarkQualityMet)
-                                {
-                                    levelObject.enableSkybox();
-                                }
-                                else
-                                {
-                                    levelObject.disableSkybox();
-                                }
-                            }
+                            levelObject?.SetSkyboxActive(levelObject.isLandmarkQualityMet);
                         }
                     }
                     if (LevelGround.regions != null && !LevelGround.regions[b, b2])
@@ -1138,10 +1128,7 @@ public class GraphicsSettings
         }
         planarReflectionUpdateIndex++;
         UnturnedPostProcess.instance.applyUserSettings();
-        if (GraphicsSettings.graphicsSettingsApplied != null)
-        {
-            GraphicsSettings.graphicsSettingsApplied();
-        }
+        GraphicsSettings.graphicsSettingsApplied?.Invoke();
         UnturnedLog.info("Applied graphics settings");
     }
 

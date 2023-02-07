@@ -112,10 +112,7 @@ public class TempSteamworksMatchmaking
     {
         _serverInfoComparer = newServerInfoComparer;
         serverList.Sort(serverInfoComparer);
-        if (onMasterServerResorted != null)
-        {
-            onMasterServerResorted();
-        }
+        onMasterServerResorted?.Invoke();
     }
 
     private void cleanupServerQuery()
@@ -181,20 +178,14 @@ public class TempSteamworksMatchmaking
         cleanupServerQuery();
         serverQuery = SteamMatchmakingServers.PingServer(connectionInfo.ip, connectionInfo.port, serverPingResponse);
         serverQueryAttempts++;
-        if (this.onAttemptUpdated != null)
-        {
-            this.onAttemptUpdated(serverQueryAttempts);
-        }
+        this.onAttemptUpdated?.Invoke(serverQueryAttempts);
     }
 
     public void refreshMasterServer(ESteamServerList list, string filterMap, EPassword filterPassword, EWorkshop filterWorkshop, EPlugins filterPlugins, EAttendance filterAttendance, bool filterNotFull, EVACProtectionFilter filterVACProtection, EBattlEyeProtectionFilter filterBattlEyeProtection, bool filterPro, ECombat filterCombat, ECheats filterCheats, EGameMode filterMode, ECameraMode filterCamera, EServerMonetizationTag filterMonetization)
     {
         _currentList = list;
         _serverList.Clear();
-        if (onMasterServerRemoved != null)
-        {
-            onMasterServerRemoved();
-        }
+        onMasterServerRemoved?.Invoke();
         cleanupServerListRequest();
         switch (list)
         {
@@ -421,10 +412,7 @@ public class TempSteamworksMatchmaking
         {
             SDG.Unturned.Provider._connectionFailureInfo = ESteamConnectionFailureInfo.TIMED_OUT;
         }
-        if (this.onTimedOut != null)
-        {
-            this.onTimedOut();
-        }
+        this.onTimedOut?.Invoke();
     }
 
     private void onPingFailedToRespond()
@@ -437,10 +425,7 @@ public class TempSteamworksMatchmaking
         isAttemptingServerQuery = false;
         cleanupServerQuery();
         SDG.Unturned.Provider._connectionFailureInfo = ESteamConnectionFailureInfo.TIMED_OUT;
-        if (this.onTimedOut != null)
-        {
-            this.onTimedOut();
-        }
+        this.onTimedOut?.Invoke();
     }
 
     private void onServerListResponded(HServerListRequest request, int index)
@@ -485,10 +470,7 @@ public class TempSteamworksMatchmaking
         steamServerInfo.SetServerListHostBanFlags(eHostBanFlags);
         if (index == serverListRefreshIndex)
         {
-            if (onMasterServerQueryRefreshed != null)
-            {
-                onMasterServerQueryRefreshed(steamServerInfo);
-            }
+            onMasterServerQueryRefreshed?.Invoke(steamServerInfo);
             return;
         }
         if (FilterSettings.filterPlugins == EPlugins.NO)
@@ -512,10 +494,7 @@ public class TempSteamworksMatchmaking
             num = ~num;
         }
         serverList.Insert(num, steamServerInfo);
-        if (onMasterServerAdded != null)
-        {
-            onMasterServerAdded(num, steamServerInfo);
-        }
+        onMasterServerAdded?.Invoke(num, steamServerInfo);
         matchmakingBestServer = null;
         int num2 = 25;
         while (matchmakingBestServer == null && num2 <= OptionsSettings.maxMatchmakingPing)
@@ -539,10 +518,7 @@ public class TempSteamworksMatchmaking
             }
             num2 += 25;
         }
-        if (matchmakingProgressed != null)
-        {
-            matchmakingProgressed();
-        }
+        matchmakingProgressed?.Invoke();
     }
 
     private void onServerListFailedToRespond(HServerListRequest request, int index)
@@ -555,14 +531,8 @@ public class TempSteamworksMatchmaking
         {
             return;
         }
-        if (onMasterServerRefreshed != null)
-        {
-            onMasterServerRefreshed(response);
-        }
-        if (matchmakingFinished != null)
-        {
-            matchmakingFinished();
-        }
+        onMasterServerRefreshed?.Invoke(response);
+        matchmakingFinished?.Invoke();
         if (response == EMatchMakingServerResponse.eNoServersListedOnMasterServer || serverList.Count == 0)
         {
             UnturnedLog.info("No servers found on the master server.");
@@ -581,10 +551,7 @@ public class TempSteamworksMatchmaking
 
     private void onAddPlayerToList(string name, int score, float time)
     {
-        if (onPlayersQueryRefreshed != null)
-        {
-            onPlayersQueryRefreshed(name, score, time);
-        }
+        onPlayersQueryRefreshed?.Invoke(name, score, time);
     }
 
     private void onPlayersFailedToRespond()
@@ -611,10 +578,7 @@ public class TempSteamworksMatchmaking
 
     private void onRulesRefreshComplete()
     {
-        if (onRulesQueryRefreshed != null)
-        {
-            onRulesQueryRefreshed(rulesMap);
-        }
+        onRulesQueryRefreshed?.Invoke(rulesMap);
     }
 
     public TempSteamworksMatchmaking()

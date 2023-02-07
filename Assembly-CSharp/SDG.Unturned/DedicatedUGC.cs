@@ -417,9 +417,6 @@ public static class DedicatedUGC
             initializedValidation = true;
             Assets.initializeMasterBundleValidation();
         }
-        if (DedicatedUGC.installed != null)
-        {
-            DedicatedUGC.installed();
-        }
+        DedicatedUGC.installed?.Invoke();
     }
 }

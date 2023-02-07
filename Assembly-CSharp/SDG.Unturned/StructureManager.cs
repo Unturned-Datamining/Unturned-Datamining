@@ -215,10 +215,7 @@ public class StructureManager : SteamCaller
         }
         ushort pendingTotalDamage = (ushort)(damage * times);
         bool shouldAllow = true;
-        if (onDamageStructureRequested != null)
-        {
-            onDamageStructureRequested(instigatorSteamID, transform, ref pendingTotalDamage, ref shouldAllow, damageOrigin);
-        }
+        onDamageStructureRequested?.Invoke(instigatorSteamID, transform, ref pendingTotalDamage, ref shouldAllow, damageOrigin);
         if (!shouldAllow || pendingTotalDamage < 1)
         {
             return;
@@ -381,10 +378,7 @@ public class StructureManager : SteamCaller
             return false;
         }
         bool shouldAllow = true;
-        if (onDeployStructureRequested != null)
-        {
-            onDeployStructureRequested(structure, structure.asset, ref point, ref angle_x, ref angle_y, ref angle_z, ref owner, ref group, ref shouldAllow);
-        }
+        onDeployStructureRequested?.Invoke(structure, structure.asset, ref point, ref angle_x, ref angle_y, ref angle_z, ref owner, ref group, ref shouldAllow);
         if (!shouldAllow)
         {
             return false;
@@ -415,10 +409,7 @@ public class StructureManager : SteamCaller
             tail.serversideData = structureData;
             region.structures.Add(structureData);
             SendSingleStructure.Invoke(ENetReliability.Reliable, EnumerateClients_Remote(x, y), x, y, structure.asset.GUID, structureData.point, structureData.angle_x, structureData.angle_y, structureData.angle_z, structureData.owner, structureData.group, netId);
-            if (onStructureSpawned != null)
-            {
-                onStructureSpawned(region, tail);
-            }
+            onStructureSpawned?.Invoke(region, tail);
         }
         return true;
     }

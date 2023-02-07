@@ -116,10 +116,7 @@ public class TerrainEditor : IDevkitTool
             {
                 EDevkitLandscapeToolMode oldMode = toolMode;
                 _toolMode = value;
-                if (TerrainEditor.toolModeChanged != null)
-                {
-                    TerrainEditor.toolModeChanged(oldMode, toolMode);
-                }
+                TerrainEditor.toolModeChanged?.Invoke(oldMode, toolMode);
             }
         }
     }
@@ -136,10 +133,7 @@ public class TerrainEditor : IDevkitTool
             {
                 LandscapeTile oldSelectedTile = selectedTile;
                 _selectedTile = value;
-                if (TerrainEditor.selectedTileChanged != null)
-                {
-                    TerrainEditor.selectedTileChanged(oldSelectedTile, selectedTile);
-                }
+                TerrainEditor.selectedTileChanged?.Invoke(oldSelectedTile, selectedTile);
             }
         }
     }
@@ -1122,56 +1116,53 @@ public class TerrainEditor : IDevkitTool
         {
             return;
         }
+        bool flag = InputEx.GetKey(KeyCode.LeftControl) || splatmapUseWeightTarget;
         float targetWeight = 0.5f;
-        if (InputEx.GetKey(KeyCode.LeftControl) || splatmapUseWeightTarget)
+        if (!DevkitLandscapeToolSplatmapOptions.instance.useAutoFoundation && !DevkitLandscapeToolSplatmapOptions.instance.useAutoSlope)
         {
-            targetWeight = splatmapWeightTarget;
-        }
-        else if (!DevkitLandscapeToolSplatmapOptions.instance.useAutoFoundation && !DevkitLandscapeToolSplatmapOptions.instance.useAutoSlope)
-        {
-            targetWeight = ((!InputEx.GetKey(KeyCode.LeftShift)) ? 1f : 0f);
+            targetWeight = (flag ? splatmapWeightTarget : ((!InputEx.GetKey(KeyCode.LeftShift)) ? 1f : 0f));
         }
         else
         {
-            bool flag = false;
+            bool flag2 = false;
             if (DevkitLandscapeToolSplatmapOptions.instance.useAutoFoundation)
             {
                 int num2 = Physics.SphereCastNonAlloc(worldPosition + new Vector3(0f, splatmapMaterialTargetAsset.autoRayLength, 0f), DevkitLandscapeToolSplatmapOptions.instance.autoRayRadius, Vector3.down, FOUNDATION_HITS, DevkitLandscapeToolSplatmapOptions.instance.autoRayLength, (int)DevkitLandscapeToolSplatmapOptions.instance.autoRayMask, QueryTriggerInteraction.Ignore);
                 if (num2 > 0)
                 {
-                    bool flag2 = false;
+                    bool flag3 = false;
                     for (int i = 0; i < num2; i++)
                     {
                         RaycastHit raycastHit = FOUNDATION_HITS[i];
                         ObjectAsset asset = LevelObjects.getAsset(raycastHit.transform);
                         if (asset == null)
                         {
-                            flag2 = true;
+                            flag3 = true;
                             break;
                         }
                         if (!asset.isSnowshoe)
                         {
-                            flag2 = true;
+                            flag3 = true;
                             break;
                         }
                     }
-                    if (flag2)
+                    if (flag3)
                     {
-                        targetWeight = 1f;
-                        flag = true;
+                        targetWeight = (flag ? splatmapWeightTarget : 1f);
+                        flag2 = true;
                     }
                 }
             }
-            if (!flag && DevkitLandscapeToolSplatmapOptions.instance.useAutoSlope && Landscape.getNormal(worldPosition, out var normal))
+            if (!flag2 && DevkitLandscapeToolSplatmapOptions.instance.useAutoSlope && Landscape.getNormal(worldPosition, out var normal))
             {
                 float num3 = Vector3.Angle(Vector3.up, normal);
                 if (num3 >= DevkitLandscapeToolSplatmapOptions.instance.autoMinAngleBegin && num3 <= DevkitLandscapeToolSplatmapOptions.instance.autoMaxAngleEnd)
                 {
                     targetWeight = ((num3 < DevkitLandscapeToolSplatmapOptions.instance.autoMinAngleEnd) ? Mathf.InverseLerp(DevkitLandscapeToolSplatmapOptions.instance.autoMinAngleBegin, DevkitLandscapeToolSplatmapOptions.instance.autoMinAngleEnd, num3) : ((!(num3 > DevkitLandscapeToolSplatmapOptions.instance.autoMaxAngleBegin)) ? 1f : (1f - Mathf.InverseLerp(DevkitLandscapeToolSplatmapOptions.instance.autoMaxAngleBegin, DevkitLandscapeToolSplatmapOptions.instance.autoMaxAngleEnd, num3))));
-                    flag = true;
+                    flag2 = true;
                 }
             }
-            if (!flag)
+            if (!flag2)
             {
                 return;
             }

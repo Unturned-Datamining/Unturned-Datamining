@@ -222,10 +222,7 @@ public class VehicleManager : SteamCaller
             times *= Provider.modeConfigData.Vehicles.Armor_Multiplier;
             ushort pendingTotalDamage = (ushort)(damage * times);
             bool shouldAllow = true;
-            if (onDamageVehicleRequested != null)
-            {
-                onDamageVehicleRequested(instigatorSteamID, vehicle, ref pendingTotalDamage, ref canRepair, ref shouldAllow, damageOrigin);
-            }
+            onDamageVehicleRequested?.Invoke(instigatorSteamID, vehicle, ref pendingTotalDamage, ref canRepair, ref shouldAllow, damageOrigin);
             if (shouldAllow && pendingTotalDamage >= 1)
             {
                 vehicle.askDamage(pendingTotalDamage, canRepair);
@@ -238,10 +235,7 @@ public class VehicleManager : SteamCaller
         if (tireIndex >= 0)
         {
             bool shouldAllow = true;
-            if (onDamageTireRequested != null)
-            {
-                onDamageTireRequested(instigatorSteamID, vehicle, tireIndex, ref shouldAllow, damageOrigin);
-            }
+            onDamageTireRequested?.Invoke(instigatorSteamID, vehicle, tireIndex, ref shouldAllow, damageOrigin);
             if (shouldAllow)
             {
                 vehicle.askDamageTire(tireIndex);
@@ -260,10 +254,7 @@ public class VehicleManager : SteamCaller
         {
             ushort pendingTotalHealing = (ushort)(damage * times);
             bool shouldAllow = true;
-            if (onRepairVehicleRequested != null)
-            {
-                onRepairVehicleRequested(instigatorSteamID, vehicle, ref pendingTotalHealing, ref shouldAllow);
-            }
+            onRepairVehicleRequested?.Invoke(instigatorSteamID, vehicle, ref pendingTotalHealing, ref shouldAllow);
             if (shouldAllow && pendingTotalHealing >= 1)
             {
                 vehicle.askRepair(pendingTotalHealing);
@@ -980,10 +971,7 @@ public class VehicleManager : SteamCaller
         if (!(vehicle == null))
         {
             bool allow = true;
-            if (onVehicleLockpicked != null)
-            {
-                onVehicleLockpicked(vehicle, instigatingPlayer, ref allow);
-            }
+            onVehicleLockpicked?.Invoke(vehicle, instigatingPlayer, ref allow);
             if (allow)
             {
                 ServerSetVehicleLock(vehicle, CSteamID.Nil, CSteamID.Nil, isLocked: false);
@@ -1007,10 +995,7 @@ public class VehicleManager : SteamCaller
             }
         }
         bool allow = true;
-        if (onVehicleCarjacked != null)
-        {
-            onVehicleCarjacked(vehicle, instigatingPlayer, ref allow, ref force, ref torque);
-        }
+        onVehicleCarjacked?.Invoke(vehicle, instigatingPlayer, ref allow, ref force, ref torque);
         if (allow)
         {
             Rigidbody component = vehicle.GetComponent<Rigidbody>();
@@ -1025,10 +1010,7 @@ public class VehicleManager : SteamCaller
     public static ushort siphonFromVehicle(InteractableVehicle vehicle, Player instigatingPlayer, ushort desiredAmount)
     {
         bool shouldAllow = true;
-        if (onSiphonVehicleRequested != null)
-        {
-            onSiphonVehicleRequested(vehicle, instigatingPlayer, ref shouldAllow, ref desiredAmount);
-        }
+        onSiphonVehicleRequested?.Invoke(vehicle, instigatingPlayer, ref shouldAllow, ref desiredAmount);
         if (!shouldAllow)
         {
             return 0;

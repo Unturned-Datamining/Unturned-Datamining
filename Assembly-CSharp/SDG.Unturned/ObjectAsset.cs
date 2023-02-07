@@ -31,6 +31,8 @@ public class ObjectAsset : Asset
 
     public bool isSnowshoe;
 
+    public bool shouldExcludeFromCullingVolumes;
+
     public EObjectChart chart;
 
     public bool isFuel;
@@ -49,9 +51,9 @@ public class ObjectAsset : Asset
 
     public float lodBias;
 
-    public Vector3 lodCenter;
+    public Vector3 cullingVolumeLocalPositionOffset;
 
-    public Vector3 lodSize;
+    public Vector3 cullingVolumeSizeOffset;
 
     public INPCCondition[] conditions;
 
@@ -582,6 +584,7 @@ public class ObjectAsset : Asset
             isSoft = data.has("Soft");
             causesFallDamage = data.readBoolean("Causes_Fall_Damage", defaultValue: true);
             isCollisionImportant = data.has("Collision_Important") || type == EObjectType.LARGE;
+            shouldExcludeFromCullingVolumes = data.readBoolean("Exclude_From_Culling_Volumes");
             if (isFuel || isRefill)
             {
                 Assets.reportError(this, "is using the legacy fuel/water system");
@@ -594,8 +597,8 @@ public class ObjectAsset : Asset
                 {
                     lodBias = 1f;
                 }
-                lodCenter = data.readVector3("LOD_Center");
-                lodSize = data.readVector3("LOD_Size");
+                cullingVolumeLocalPositionOffset = data.readVector3("LOD_Center");
+                cullingVolumeSizeOffset = data.readVector3("LOD_Size");
             }
             if (data.has("Interactability"))
             {

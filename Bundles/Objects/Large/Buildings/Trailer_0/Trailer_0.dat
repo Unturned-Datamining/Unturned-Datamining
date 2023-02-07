@@ -3,6 +3,8 @@ Type Large
 ID 889
 
 LOD Mesh
+LOD_Center_Z -1
+LOD_Size_Z 2
 
 Material_Palette 5c18182034ed4d4591a20c87ff1b4a7b
 Has_Clip_Prefab false

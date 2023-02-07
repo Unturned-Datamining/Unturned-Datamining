@@ -92,24 +92,22 @@ public class VehicleTool : MonoBehaviour
             return;
         }
         VehicleIconInfo vehicleIconInfo = icons.Dequeue();
-        if (vehicleIconInfo == null || vehicleIconInfo.vehicleAsset == null)
+        if (vehicleIconInfo != null && vehicleIconInfo.vehicleAsset != null)
         {
-            return;
-        }
-        Transform vehicle = getVehicle(vehicleIconInfo.id, vehicleIconInfo.skin, 0, vehicleIconInfo.vehicleAsset, vehicleIconInfo.skinAsset);
-        vehicle.position = new Vector3(-256f, -256f, 0f);
-        Transform transform = vehicle.Find("Icon2");
-        if (transform == null)
-        {
-            Object.Destroy(vehicle.gameObject);
-            Assets.reportError(vehicleIconInfo.vehicleAsset, "missing 'Icon2' Transform");
-            return;
-        }
-        float size2_z = vehicleIconInfo.vehicleAsset.size2_z;
-        Texture2D texture = ItemTool.captureIcon(vehicleIconInfo.id, vehicleIconInfo.skin, vehicle, transform, vehicleIconInfo.x, vehicleIconInfo.y, size2_z, vehicleIconInfo.readableOnCPU);
-        if (vehicleIconInfo.callback != null)
-        {
-            vehicleIconInfo.callback(texture);
+            Transform vehicle = getVehicle(vehicleIconInfo.id, vehicleIconInfo.skin, 0, vehicleIconInfo.vehicleAsset, vehicleIconInfo.skinAsset);
+            vehicle.position = new Vector3(-256f, -256f, 0f);
+            Transform transform = vehicle.Find("Icon2");
+            if (transform == null)
+            {
+                Object.Destroy(vehicle.gameObject);
+                Assets.reportError(vehicleIconInfo.vehicleAsset, "missing 'Icon2' Transform");
+            }
+            else
+            {
+                float size2_z = vehicleIconInfo.vehicleAsset.size2_z;
+                Texture2D texture = ItemTool.captureIcon(vehicleIconInfo.id, vehicleIconInfo.skin, vehicle, transform, vehicleIconInfo.x, vehicleIconInfo.y, size2_z, vehicleIconInfo.readableOnCPU);
+                vehicleIconInfo.callback?.Invoke(texture);
+            }
         }
     }
 

@@ -1,4 +1,4 @@
-"Available_Instance_ID" "17549"
+"Available_Instance_ID" "17630"
 "Items"
 [
 	{
@@ -1963,7 +1963,7 @@
 				"X" "0"
 				"Y" "-0.03224342"
 				"Z" "0"
-				"W" "0.99948"
+				"W" "0.9994801"
 			}
 			"Scale"
 			{
@@ -1993,7 +1993,7 @@
 				"X" "0"
 				"Y" "-0.03224342"
 				"Z" "0"
-				"W" "0.99948"
+				"W" "0.9994801"
 			}
 			"Scale"
 			{
@@ -262573,7 +262573,7 @@
 	}
 	{
 		"Type" "SDG.Framework.Devkit.DeadzoneVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17549"
 		"Item"
 		{
 			"Position"
@@ -262601,7 +262601,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.LocationDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17550"
 		"Item"
 		{
 			"Position"
@@ -262628,7 +262628,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.LocationDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17551"
 		"Item"
 		{
 			"Position"
@@ -262655,7 +262655,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.LocationDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17552"
 		"Item"
 		{
 			"Position"
@@ -262682,7 +262682,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.LocationDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17553"
 		"Item"
 		{
 			"Position"
@@ -262709,7 +262709,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17554"
 		"Item"
 		{
 			"Position"
@@ -262736,7 +262736,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17555"
 		"Item"
 		{
 			"Position"
@@ -262763,7 +262763,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17556"
 		"Item"
 		{
 			"Position"
@@ -262790,7 +262790,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17557"
 		"Item"
 		{
 			"Position"
@@ -262817,7 +262817,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17558"
 		"Item"
 		{
 			"Position"
@@ -262844,7 +262844,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17559"
 		"Item"
 		{
 			"Position"
@@ -262871,7 +262871,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17560"
 		"Item"
 		{
 			"Position"
@@ -262898,7 +262898,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17561"
 		"Item"
 		{
 			"Position"
@@ -262925,7 +262925,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17562"
 		"Item"
 		{
 			"Position"
@@ -262952,7 +262952,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17563"
 		"Item"
 		{
 			"Position"
@@ -262979,7 +262979,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17564"
 		"Item"
 		{
 			"Position"
@@ -263006,7 +263006,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17565"
 		"Item"
 		{
 			"Position"
@@ -263033,7 +263033,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17566"
 		"Item"
 		{
 			"Position"
@@ -263060,7 +263060,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17567"
 		"Item"
 		{
 			"Position"
@@ -263087,7 +263087,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17568"
 		"Item"
 		{
 			"Position"
@@ -263114,7 +263114,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17569"
 		"Item"
 		{
 			"Position"
@@ -263141,7 +263141,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17570"
 		"Item"
 		{
 			"Position"
@@ -263168,7 +263168,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17571"
 		"Item"
 		{
 			"Position"
@@ -263195,7 +263195,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17572"
 		"Item"
 		{
 			"Position"
@@ -263222,7 +263222,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17573"
 		"Item"
 		{
 			"Position"
@@ -263249,7 +263249,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17574"
 		"Item"
 		{
 			"Position"
@@ -263276,7 +263276,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17575"
 		"Item"
 		{
 			"Position"
@@ -263303,7 +263303,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17576"
 		"Item"
 		{
 			"Position"
@@ -263330,7 +263330,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17577"
 		"Item"
 		{
 			"Position"
@@ -263357,7 +263357,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17578"
 		"Item"
 		{
 			"Position"
@@ -263384,7 +263384,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17579"
 		"Item"
 		{
 			"Position"
@@ -263411,7 +263411,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17580"
 		"Item"
 		{
 			"Position"
@@ -263438,7 +263438,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17581"
 		"Item"
 		{
 			"Position"
@@ -263465,7 +263465,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17582"
 		"Item"
 		{
 			"Position"
@@ -263492,7 +263492,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17583"
 		"Item"
 		{
 			"Position"
@@ -263519,7 +263519,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17584"
 		"Item"
 		{
 			"Position"
@@ -263546,7 +263546,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17585"
 		"Item"
 		{
 			"Position"
@@ -263573,7 +263573,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17586"
 		"Item"
 		{
 			"Position"
@@ -263600,7 +263600,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17587"
 		"Item"
 		{
 			"Position"
@@ -263627,7 +263627,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17588"
 		"Item"
 		{
 			"Position"
@@ -263654,7 +263654,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17589"
 		"Item"
 		{
 			"Position"
@@ -263681,7 +263681,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17590"
 		"Item"
 		{
 			"Position"
@@ -263708,7 +263708,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17591"
 		"Item"
 		{
 			"Position"
@@ -263735,7 +263735,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17592"
 		"Item"
 		{
 			"Position"
@@ -263762,7 +263762,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17593"
 		"Item"
 		{
 			"Position"
@@ -263789,7 +263789,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17594"
 		"Item"
 		{
 			"Position"
@@ -263816,7 +263816,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17595"
 		"Item"
 		{
 			"Position"
@@ -263843,7 +263843,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17596"
 		"Item"
 		{
 			"Position"
@@ -263870,7 +263870,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17597"
 		"Item"
 		{
 			"Position"
@@ -263897,7 +263897,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17598"
 		"Item"
 		{
 			"Position"
@@ -263924,7 +263924,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17599"
 		"Item"
 		{
 			"Position"
@@ -263951,7 +263951,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17600"
 		"Item"
 		{
 			"Position"
@@ -263978,7 +263978,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17601"
 		"Item"
 		{
 			"Position"
@@ -264005,7 +264005,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17602"
 		"Item"
 		{
 			"Position"
@@ -264032,7 +264032,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17603"
 		"Item"
 		{
 			"Position"
@@ -264059,7 +264059,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17604"
 		"Item"
 		{
 			"Position"
@@ -264086,7 +264086,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17605"
 		"Item"
 		{
 			"Position"
@@ -264113,7 +264113,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17606"
 		"Item"
 		{
 			"Position"
@@ -264140,7 +264140,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17607"
 		"Item"
 		{
 			"Position"
@@ -264167,7 +264167,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17608"
 		"Item"
 		{
 			"Position"
@@ -264194,7 +264194,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17609"
 		"Item"
 		{
 			"Position"
@@ -264221,7 +264221,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17610"
 		"Item"
 		{
 			"Position"
@@ -264248,7 +264248,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.AirdropDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17611"
 		"Item"
 		{
 			"Position"
@@ -264275,7 +264275,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.LocationDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17612"
 		"Item"
 		{
 			"Position"
@@ -264302,7 +264302,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.LocationDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17613"
 		"Item"
 		{
 			"Position"
@@ -264329,7 +264329,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.LocationDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17614"
 		"Item"
 		{
 			"Position"
@@ -264356,7 +264356,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.LocationDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17615"
 		"Item"
 		{
 			"Position"
@@ -264383,7 +264383,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.LocationDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17616"
 		"Item"
 		{
 			"Position"
@@ -264410,7 +264410,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.LocationDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17617"
 		"Item"
 		{
 			"Position"
@@ -264437,7 +264437,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.LocationDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17618"
 		"Item"
 		{
 			"Position"
@@ -264464,7 +264464,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.LocationDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17619"
 		"Item"
 		{
 			"Position"
@@ -264491,7 +264491,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.LocationDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17620"
 		"Item"
 		{
 			"Position"
@@ -264518,7 +264518,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.LocationDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17621"
 		"Item"
 		{
 			"Position"
@@ -264545,7 +264545,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.LocationDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17622"
 		"Item"
 		{
 			"Position"
@@ -264572,7 +264572,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.LocationDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17623"
 		"Item"
 		{
 			"Position"
@@ -264599,7 +264599,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.LocationDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17624"
 		"Item"
 		{
 			"Position"
@@ -264626,7 +264626,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.LocationDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17625"
 		"Item"
 		{
 			"Position"
@@ -264653,7 +264653,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.LocationDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17626"
 		"Item"
 		{
 			"Position"
@@ -264680,7 +264680,7 @@
 	}
 	{
 		"Type" "SDG.Unturned.LocationDevkitNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "0"
+		"Instance_ID" "17627"
 		"Item"
 		{
 			"Position"
@@ -264703,6 +264703,64 @@
 				"Z" "1"
 			}
 			"LocationName" "Teleporter"
+		}
+	}
+	{
+		"Type" "SDG.Unturned.CullingVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "17628"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-1439.097"
+				"Y" "216.7267"
+				"Z" "1321.343"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "93.29682"
+				"Y" "33.14276"
+				"Z" "95.00583"
+			}
+			"Shape" "Box"
+			"Cull_Distance" "100"
+			"Include_Large_Objects" "true"
+		}
+	}
+	{
+		"Type" "SDG.Unturned.CullingVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "17629"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-1371.922"
+				"Y" "208.3919"
+				"Z" "1311.642"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "41.20752"
+				"Y" "16.47308"
+				"Z" "79.84816"
+			}
+			"Shape" "Box"
+			"Cull_Distance" "80"
+			"Include_Large_Objects" "true"
 		}
 	}
 ]

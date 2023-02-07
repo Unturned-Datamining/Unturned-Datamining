@@ -11,9 +11,9 @@ public class SleekJars : SleekWrapper
     private void onClickedButton(SleekItem item)
     {
         int num = FindIndexOfChild(item);
-        if (num != -1 && onClickedJar != null)
+        if (num != -1)
         {
-            onClickedJar(this, num);
+            onClickedJar?.Invoke(this, num);
         }
     }
 

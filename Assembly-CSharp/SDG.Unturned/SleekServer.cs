@@ -51,10 +51,7 @@ public class SleekServer : SleekWrapper
 
     private void onClickedButton(ISleekElement button)
     {
-        if (onClickedServer != null)
-        {
-            onClickedServer(this, info);
-        }
+        onClickedServer?.Invoke(this, info);
     }
 
     public SleekServer(ESteamServerList list, SteamServerInfo newInfo)

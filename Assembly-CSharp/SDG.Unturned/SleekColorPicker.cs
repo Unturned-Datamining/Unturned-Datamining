@@ -61,10 +61,7 @@ public class SleekColorPicker : SleekWrapper
         color.r = (float)(int)value / 255f;
         updateColor();
         updateColorSlider();
-        if (onColorPicked != null)
-        {
-            onColorPicked(this, color);
-        }
+        onColorPicked?.Invoke(this, color);
     }
 
     private void onTypedGField(ISleekUInt8Field field, byte value)
@@ -72,10 +69,7 @@ public class SleekColorPicker : SleekWrapper
         color.g = (float)(int)value / 255f;
         updateColor();
         updateColorSlider();
-        if (onColorPicked != null)
-        {
-            onColorPicked(this, color);
-        }
+        onColorPicked?.Invoke(this, color);
     }
 
     private void onTypedBField(ISleekUInt8Field field, byte value)
@@ -83,10 +77,7 @@ public class SleekColorPicker : SleekWrapper
         color.b = (float)(int)value / 255f;
         updateColor();
         updateColorSlider();
-        if (onColorPicked != null)
-        {
-            onColorPicked(this, color);
-        }
+        onColorPicked?.Invoke(this, color);
     }
 
     private void onDraggedRSlider(ISleekSlider slider, float state)
@@ -94,10 +85,7 @@ public class SleekColorPicker : SleekWrapper
         color.r = state;
         updateColor();
         updateColorText();
-        if (onColorPicked != null)
-        {
-            onColorPicked(this, color);
-        }
+        onColorPicked?.Invoke(this, color);
     }
 
     private void onDraggedGSlider(ISleekSlider slider, float state)
@@ -105,10 +93,7 @@ public class SleekColorPicker : SleekWrapper
         color.g = state;
         updateColor();
         updateColorText();
-        if (onColorPicked != null)
-        {
-            onColorPicked(this, color);
-        }
+        onColorPicked?.Invoke(this, color);
     }
 
     private void onDraggedBSlider(ISleekSlider slider, float state)
@@ -116,10 +101,7 @@ public class SleekColorPicker : SleekWrapper
         color.b = state;
         updateColor();
         updateColorText();
-        if (onColorPicked != null)
-        {
-            onColorPicked(this, color);
-        }
+        onColorPicked?.Invoke(this, color);
     }
 
     public SleekColorPicker()

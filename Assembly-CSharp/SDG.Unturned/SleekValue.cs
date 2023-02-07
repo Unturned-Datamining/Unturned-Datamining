@@ -26,20 +26,14 @@ public class SleekValue : SleekWrapper
 
     private void onTypedSingleField(ISleekFloat32Field field, float state)
     {
-        if (onValued != null)
-        {
-            onValued(this, state);
-        }
+        onValued?.Invoke(this, state);
         _state = state;
         slider.state = state;
     }
 
     private void onDraggedSlider(ISleekSlider slider, float state)
     {
-        if (onValued != null)
-        {
-            onValued(this, state);
-        }
+        onValued?.Invoke(this, state);
         _state = state;
         field.state = state;
     }

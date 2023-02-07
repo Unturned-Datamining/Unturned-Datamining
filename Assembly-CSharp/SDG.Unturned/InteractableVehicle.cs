@@ -1185,10 +1185,7 @@ public class InteractableVehicle : Interactable
         _lockedOwner = owner;
         _lockedGroup = group;
         _isLocked = locked;
-        if (this.onLockUpdated != null)
-        {
-            this.onLockUpdated();
-        }
+        this.onLockUpdated?.Invoke();
         if (eventHook != null)
         {
             if (locked)
@@ -1208,10 +1205,7 @@ public class InteractableVehicle : Interactable
         skinID = newSkinID;
         mythicID = newMythicID;
         updateSkin();
-        if (this.skinChanged != null)
-        {
-            this.skinChanged();
-        }
+        this.skinChanged?.Invoke();
     }
 
     public void updateSkin()
@@ -1323,10 +1317,7 @@ public class InteractableVehicle : Interactable
                 }
             }
         }
-        if (this.onSirensUpdated != null)
-        {
-            this.onSirensUpdated();
-        }
+        this.onSirensUpdated?.Invoke();
     }
 
     public void tellBlimp(bool on)
@@ -1339,10 +1330,7 @@ public class InteractableVehicle : Interactable
             {
                 buoyancy.GetChild(i).GetComponent<Buoyancy>().enabled = isBlimpFloating;
             }
-            if (this.onBlimpUpdated != null)
-            {
-                this.onBlimpUpdated();
-            }
+            this.onBlimpUpdated?.Invoke();
         }
     }
 
@@ -1360,10 +1348,7 @@ public class InteractableVehicle : Interactable
                 headlightsMaterial.SetColor("_EmissionColor", headlightsOn ? (headlightsMaterial.color * 2f) : Color.black);
             }
         }
-        if (this.onHeadlightsUpdated != null)
-        {
-            this.onHeadlightsUpdated();
-        }
+        this.onHeadlightsUpdated?.Invoke();
     }
 
     public void tellTaillights(bool on)
@@ -1390,10 +1375,7 @@ public class InteractableVehicle : Interactable
                 }
             }
         }
-        if (this.onTaillightsUpdated != null)
-        {
-            this.onTaillightsUpdated();
-        }
+        this.onTaillightsUpdated?.Invoke();
     }
 
     private void synchronizeTaillights()
@@ -1433,10 +1415,7 @@ public class InteractableVehicle : Interactable
         {
             isEngineOn = false;
         }
-        if (this.batteryChanged != null)
-        {
-            this.batteryChanged();
-        }
+        this.batteryChanged?.Invoke();
         InteractableVehicle.OnBatteryLevelChanged_Global.TryInvoke("OnBatteryLevelChanged_Global", this);
     }
 
@@ -1727,10 +1706,7 @@ public class InteractableVehicle : Interactable
                 engineAdditiveAudioSource.enabled = !isDrowned;
             }
         }
-        if (this.onPassengersUpdated != null)
-        {
-            this.onPassengersUpdated();
-        }
+        this.onPassengersUpdated?.Invoke();
         bool flag = !Dedicator.IsDedicatedServer && steamPlayer != null && Player.player != null && Player.player == steamPlayer.player;
         if (eventHook != null)
         {
@@ -1827,10 +1803,7 @@ public class InteractableVehicle : Interactable
                 }
             }
         }
-        if (this.onPassengersUpdated != null)
-        {
-            this.onPassengersUpdated();
-        }
+        this.onPassengersUpdated?.Invoke();
         bool flag = !Dedicator.IsDedicatedServer && steamPlayer != null && Player.player != null && Player.player == steamPlayer.player;
         if (passengers[seatIndex].turretEventHook != null)
         {
@@ -1960,10 +1933,7 @@ public class InteractableVehicle : Interactable
                 }
             }
         }
-        if (this.onPassengersUpdated != null)
-        {
-            this.onPassengersUpdated();
-        }
+        this.onPassengersUpdated?.Invoke();
         bool flag = !Dedicator.IsDedicatedServer && steamPlayer != null && Player.player != null && Player.player == steamPlayer.player;
         if (passengers[fromSeatIndex].turretEventHook != null)
         {

@@ -13,10 +13,7 @@ public class SteamworksGlobalStatisticsService : Service, IGlobalStatisticsServi
 
     private void triggerGlobalStatisticsRequestReady()
     {
-        if (this.onGlobalStatisticsRequestReady != null)
-        {
-            this.onGlobalStatisticsRequestReady();
-        }
+        this.onGlobalStatisticsRequestReady?.Invoke();
     }
 
     public bool getStatistic(string name, out long data)

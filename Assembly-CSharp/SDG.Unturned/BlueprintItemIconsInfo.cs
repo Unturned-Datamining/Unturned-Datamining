@@ -16,9 +16,9 @@ public class BlueprintItemIconsInfo
         {
             textures[index] = texture;
             index++;
-            if (index == textures.Length && callback != null)
+            if (index == textures.Length)
             {
-                callback();
+                callback?.Invoke();
             }
         }
     }

@@ -384,7 +384,7 @@ public class UseableMelee : Useable
         {
             return;
         }
-        if (!equippedMeleeAsset.isRepair && !string.IsNullOrEmpty(input.materialName))
+        if ((!equippedMeleeAsset.isRepair || !equippedMeleeAsset.isRepeated) && !string.IsNullOrEmpty(input.materialName))
         {
             ServerSpawnMeleeImpact(input.point, input.normal, input.materialName, input.colliderTransform, base.channel.EnumerateClients_WithinSphereOrOwner(input.point, EffectManager.SMALL));
         }

@@ -227,10 +227,7 @@ public class InteractableSign : Interactable
         if (isTextValid(trimmedText))
         {
             bool shouldAllow = true;
-            if (BarricadeManager.onModifySignRequested != null)
-            {
-                BarricadeManager.onModifySignRequested(player.channel.owner.playerID.steamID, this, ref trimmedText, ref shouldAllow);
-            }
+            BarricadeManager.onModifySignRequested?.Invoke(player.channel.owner.playerID.steamID, this, ref trimmedText, ref shouldAllow);
             if (shouldAllow && BarricadeManager.tryGetRegion(base.transform, out var x, out var y, out var plant, out var region))
             {
                 BarricadeManager.ServerSetSignTextInternal(this, region, x, y, plant, trimmedText);

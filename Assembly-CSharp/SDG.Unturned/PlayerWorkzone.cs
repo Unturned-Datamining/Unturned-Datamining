@@ -210,10 +210,7 @@ public class PlayerWorkzone : PlayerCaller
         dragEndViewportPoint = Vector2.zero;
         dragEndScreenPoint = Vector2.zero;
         isDragging = false;
-        if (onDragStopped != null)
-        {
-            onDragStopped();
-        }
+        onDragStopped?.Invoke();
     }
 
     private IEnumerable<GameObject> EnumerateSelectedGameObjects()
@@ -403,10 +400,7 @@ public class PlayerWorkzone : PlayerCaller
                             max.y = min.y;
                             min.y = y;
                         }
-                        if (onDragStarted != null)
-                        {
-                            onDragStarted(min, max);
-                        }
+                        onDragStarted?.Invoke(min, max);
                         if (!isDragging)
                         {
                             isDragging = true;

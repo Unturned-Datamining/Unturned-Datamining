@@ -754,10 +754,7 @@ public class PlayerInventory : PlayerCaller
             return;
         }
         bool shouldAllow = asset.allowManualDrop;
-        if (onDropItemRequested != null)
-        {
-            onDropItemRequested(this, item.item, ref shouldAllow);
-        }
+        onDropItemRequested?.Invoke(this, item.item, ref shouldAllow);
         if (shouldAllow)
         {
             ItemManager.dropItem(item.item, base.transform.position + base.transform.forward * 0.5f, playEffect: true, isDropped: true, wideSpread: false);
@@ -887,9 +884,9 @@ public class PlayerInventory : PlayerCaller
             items[STORAGE].addItem(value4, value5, value6, new Item(value7, value8, value9, array));
         }
         isStoring = items[STORAGE].height > 0;
-        if (isStoring && onInventoryStored != null)
+        if (isStoring)
         {
-            onInventoryStored();
+            onInventoryStored?.Invoke();
         }
     }
 
@@ -977,9 +974,9 @@ public class PlayerInventory : PlayerCaller
         if (base.channel.isOwner)
         {
             onInventoryResized(STORAGE, items[STORAGE].width, items[STORAGE].height);
-            if (items[STORAGE].height > 0 && onInventoryStored != null)
+            if (items[STORAGE].height > 0)
             {
-                onInventoryStored();
+                onInventoryStored?.Invoke();
             }
             for (byte b = 0; b < items[STORAGE].getItemCount(); b = (byte)(b + 1))
             {
@@ -1037,22 +1034,21 @@ public class PlayerInventory : PlayerCaller
             obj9.onItemRemoved = (ItemRemoved)Delegate.Combine(obj9.onItemRemoved, new ItemRemoved(onItemRemoved));
             Items obj10 = items[page];
             obj10.onStateUpdated = (StateUpdated)Delegate.Combine(obj10.onStateUpdated, new StateUpdated(onItemStateUpdated));
-            return;
         }
-        items[page] = new Items(STORAGE);
-        Items obj11 = items[page];
-        obj11.onItemsResized = (ItemsResized)Delegate.Combine(obj11.onItemsResized, new ItemsResized(onItemsResized));
-        Items obj12 = items[page];
-        obj12.onItemUpdated = (ItemUpdated)Delegate.Combine(obj12.onItemUpdated, new ItemUpdated(onItemUpdated));
-        Items obj13 = items[page];
-        obj13.onItemAdded = (ItemAdded)Delegate.Combine(obj13.onItemAdded, new ItemAdded(onItemAdded));
-        Items obj14 = items[page];
-        obj14.onItemRemoved = (ItemRemoved)Delegate.Combine(obj14.onItemRemoved, new ItemRemoved(onItemRemoved));
-        Items obj15 = items[page];
-        obj15.onStateUpdated = (StateUpdated)Delegate.Combine(obj15.onStateUpdated, new StateUpdated(onItemStateUpdated));
-        if (onInventoryResized != null)
+        else
         {
-            onInventoryResized(page, 0, 0);
+            items[page] = new Items(STORAGE);
+            Items obj11 = items[page];
+            obj11.onItemsResized = (ItemsResized)Delegate.Combine(obj11.onItemsResized, new ItemsResized(onItemsResized));
+            Items obj12 = items[page];
+            obj12.onItemUpdated = (ItemUpdated)Delegate.Combine(obj12.onItemUpdated, new ItemUpdated(onItemUpdated));
+            Items obj13 = items[page];
+            obj13.onItemAdded = (ItemAdded)Delegate.Combine(obj13.onItemAdded, new ItemAdded(onItemAdded));
+            Items obj14 = items[page];
+            obj14.onItemRemoved = (ItemRemoved)Delegate.Combine(obj14.onItemRemoved, new ItemRemoved(onItemRemoved));
+            Items obj15 = items[page];
+            obj15.onStateUpdated = (StateUpdated)Delegate.Combine(obj15.onStateUpdated, new StateUpdated(onItemStateUpdated));
+            onInventoryResized?.Invoke(page, 0, 0);
         }
     }
 
@@ -1341,19 +1337,13 @@ public class PlayerInventory : PlayerCaller
         {
             SendSize.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), page, newWidth, newHeight);
         }
-        if (onInventoryResized != null)
-        {
-            onInventoryResized(page, newWidth, newHeight);
-        }
+        onInventoryResized?.Invoke(page, newWidth, newHeight);
         incrementUpdateIndex();
     }
 
     private void onItemUpdated(byte page, byte index, ItemJar jar)
     {
-        if (onInventoryUpdated != null)
-        {
-            onInventoryUpdated(page, index, jar);
-        }
+        onInventoryUpdated?.Invoke(page, index, jar);
         incrementUpdateIndex();
     }
 
@@ -1363,10 +1353,7 @@ public class PlayerInventory : PlayerCaller
         {
             sendItemAdd(page, jar);
         }
-        if (onInventoryAdded != null)
-        {
-            onInventoryAdded(page, index, jar);
-        }
+        onInventoryAdded?.Invoke(page, index, jar);
         incrementUpdateIndex();
     }
 
@@ -1383,10 +1370,7 @@ public class PlayerInventory : PlayerCaller
                 base.player.equipment.dequip();
             }
         }
-        if (onInventoryRemoved != null)
-        {
-            onInventoryRemoved(page, index, jar);
-        }
+        onInventoryRemoved?.Invoke(page, index, jar);
         incrementUpdateIndex();
     }
 
@@ -1411,10 +1395,7 @@ public class PlayerInventory : PlayerCaller
             {
                 base.player.equipment.dequip();
             }
-            if (onInventoryRemoved != null)
-            {
-                onInventoryRemoved(page, index, jar);
-            }
+            onInventoryRemoved?.Invoke(page, index, jar);
             if (flag)
             {
                 ItemManager.dropItem(jar.item, base.transform.position, playEffect: false, isDropped: true, wideSpread: true);
@@ -1425,10 +1406,7 @@ public class PlayerInventory : PlayerCaller
 
     private void onItemStateUpdated()
     {
-        if (onInventoryStateUpdated != null)
-        {
-            onInventoryStateUpdated();
-        }
+        onInventoryStateUpdated?.Invoke();
         incrementUpdateIndex();
     }
 

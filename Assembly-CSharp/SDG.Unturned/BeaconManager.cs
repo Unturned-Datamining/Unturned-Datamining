@@ -38,10 +38,7 @@ public class BeaconManager : MonoBehaviour
         if (LevelNavigation.checkSafe(nav))
         {
             beacons[nav].Add(beacon);
-            if (onBeaconUpdated != null)
-            {
-                onBeaconUpdated(nav, beacons[nav].Count > 0);
-            }
+            onBeaconUpdated?.Invoke(nav, beacons[nav].Count > 0);
         }
     }
 
@@ -50,10 +47,7 @@ public class BeaconManager : MonoBehaviour
         if (LevelNavigation.checkSafe(nav))
         {
             beacons[nav].Remove(beacon);
-            if (onBeaconUpdated != null)
-            {
-                onBeaconUpdated(nav, beacons[nav].Count > 0);
-            }
+            onBeaconUpdated?.Invoke(nav, beacons[nav].Count > 0);
         }
     }
 

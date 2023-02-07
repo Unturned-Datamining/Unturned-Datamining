@@ -52,7 +52,10 @@ public class VolumesEditor : SelectionTool
         }
         foreach (VolumeBase item in activeVolumeManager.EnumerateAllVolumes())
         {
-            yield return item.areaSelectGameObject;
+            if (item.CanBeSelected)
+            {
+                yield return item.areaSelectGameObject;
+            }
         }
     }
 }

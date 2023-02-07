@@ -93,34 +93,25 @@ public class LevelHierarchy : IModuleNexus, IDirtyable
 
     protected static void triggerItemAdded(IDevkitHierarchyItem item)
     {
-        if (LevelHierarchy.itemAdded != null)
-        {
-            LevelHierarchy.itemAdded(item);
-        }
+        LevelHierarchy.itemAdded?.Invoke(item);
     }
 
     protected static void triggerItemRemoved(IDevkitHierarchyItem item)
     {
-        if (!Level.isExiting && LevelHierarchy.itemRemoved != null)
+        if (!Level.isExiting)
         {
-            LevelHierarchy.itemRemoved(item);
+            LevelHierarchy.itemRemoved?.Invoke(item);
         }
     }
 
     protected static void triggerLoaded()
     {
-        if (LevelHierarchy.loaded != null)
-        {
-            LevelHierarchy.loaded();
-        }
+        LevelHierarchy.loaded?.Invoke();
     }
 
     protected static void triggerReady()
     {
-        if (LevelHierarchy.ready != null)
-        {
-            LevelHierarchy.ready();
-        }
+        LevelHierarchy.ready?.Invoke();
     }
 
     public void load()

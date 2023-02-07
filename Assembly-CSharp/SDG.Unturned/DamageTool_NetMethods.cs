@@ -11,7 +11,7 @@ public static class DamageTool_NetMethods
     {
         NetPakReader reader = context.reader;
         reader.ReadClampedVector3(out var value);
-        reader.ReadClampedVector3(out var value2);
+        reader.ReadNormalVector3(out var value2);
         reader.ReadString(out var value3);
         reader.ReadTransform(out var value4);
         DamageTool.ReceiveSpawnBulletImpact(value, value2, value3, value4);
@@ -21,7 +21,7 @@ public static class DamageTool_NetMethods
     public static void ReceiveSpawnBulletImpact_Write(NetPakWriter writer, Vector3 position, Vector3 normal, string materialName, Transform colliderTransform)
     {
         writer.WriteClampedVector3(position);
-        writer.WriteClampedVector3(normal);
+        writer.WriteNormalVector3(normal);
         writer.WriteString(materialName);
         writer.WriteTransform(colliderTransform);
     }
@@ -31,7 +31,7 @@ public static class DamageTool_NetMethods
     {
         NetPakReader reader = context.reader;
         reader.ReadClampedVector3(out var value);
-        reader.ReadClampedVector3(out var value2);
+        reader.ReadNormalVector3(out var value2);
         reader.ReadString(out var value3);
         reader.ReadTransform(out var value4);
         DamageTool.ReceiveSpawnLegacyImpact(value, value2, value3, value4);
@@ -41,7 +41,7 @@ public static class DamageTool_NetMethods
     public static void ReceiveSpawnLegacyImpact_Write(NetPakWriter writer, Vector3 position, Vector3 normal, string materialName, Transform colliderTransform)
     {
         writer.WriteClampedVector3(position);
-        writer.WriteClampedVector3(normal);
+        writer.WriteNormalVector3(normal);
         writer.WriteString(materialName);
         writer.WriteTransform(colliderTransform);
     }

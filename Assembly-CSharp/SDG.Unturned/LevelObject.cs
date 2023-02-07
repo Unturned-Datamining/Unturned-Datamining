@@ -39,11 +39,19 @@ public class LevelObject
 
     private InteractableObjectRubble _rubble;
 
+    internal CullingVolume ownedCullingVolume;
+
     private bool areConditionsMet;
 
     private bool haveConditionsBeenChecked;
 
+    internal bool isVisibleInCullingVolume = true;
+
+    private bool areRenderersEnabled;
+
     private HashSet<ushort> associatedFlags;
+
+    private static CommandLineFlag disableCullingVolumes = new CommandLineFlag(defaultValue: false, "-DisableCullingVolumes");
 
     public Transform transform => _transform;
 
@@ -52,9 +60,6 @@ public class LevelObject
     public Transform skybox => _skybox;
 
     public ushort id => _id;
-
-    [Obsolete]
-    public string name => null;
 
     public Guid GUID => _GUID;
 
@@ -92,71 +97,36 @@ public class LevelObject
         }
     }
 
-    public void enableCollision()
+    [Obsolete]
+    public string name => null;
+
+    internal void SetActive(bool shouldBeActive)
     {
-        isCollisionEnabled = true;
-        if (!Dedicator.IsDedicatedServer && transform != null && areConditionsMet)
+        isCollisionEnabled = shouldBeActive;
+        if (!Dedicator.IsDedicatedServer && (shouldBeActive || asset == null || !asset.isCollisionImportant || !Provider.isServer) && transform != null)
         {
-            transform.gameObject.SetActive(value: true);
+            transform.gameObject.SetActive(isCollisionEnabled && areConditionsMet);
         }
     }
 
-    public void enableVisual()
+    internal void SetIsVisibleInRegion(bool isVisible)
     {
-        isVisualEnabled = true;
-        if (Dedicator.IsDedicatedServer || isDecal || renderers == null || renderers.Count <= 0)
-        {
-            return;
-        }
-        for (int i = 0; i < renderers.Count; i++)
-        {
-            if (renderers[i] != null)
-            {
-                renderers[i].enabled = true;
-            }
-        }
+        isVisualEnabled = isVisible;
+        UpdateRenderersEnabled();
     }
 
-    public void enableSkybox()
+    internal void SetIsVisibleInCullingVolume(bool isVisible)
     {
-        isSkyboxEnabled = true;
-        if (!Dedicator.IsDedicatedServer && skybox != null && areConditionsMet)
-        {
-            skybox.gameObject.SetActive(value: true);
-        }
+        isVisibleInCullingVolume = isVisible;
+        UpdateRenderersEnabled();
     }
 
-    public void disableCollision()
+    internal void SetSkyboxActive(bool shouldBeActive)
     {
-        isCollisionEnabled = false;
-        if (!Dedicator.IsDedicatedServer && (asset == null || !asset.isCollisionImportant || !Provider.isServer || Dedicator.IsDedicatedServer) && transform != null)
-        {
-            transform.gameObject.SetActive(value: false);
-        }
-    }
-
-    public void disableVisual()
-    {
-        isVisualEnabled = false;
-        if (Dedicator.IsDedicatedServer || isDecal || renderers == null || renderers.Count <= 0)
-        {
-            return;
-        }
-        for (int i = 0; i < renderers.Count; i++)
-        {
-            if (renderers[i] != null)
-            {
-                renderers[i].enabled = false;
-            }
-        }
-    }
-
-    public void disableSkybox()
-    {
-        isSkyboxEnabled = false;
+        isSkyboxEnabled = shouldBeActive;
         if (!Dedicator.IsDedicatedServer && skybox != null)
         {
-            skybox.gameObject.SetActive(value: false);
+            skybox.gameObject.SetActive(shouldBeActive && areConditionsMet);
         }
     }
 
@@ -169,6 +139,11 @@ public class LevelObject
         if ((bool)skybox)
         {
             UnityEngine.Object.Destroy(skybox.gameObject);
+        }
+        if (ownedCullingVolume != null)
+        {
+            UnityEngine.Object.Destroy(ownedCullingVolume.gameObject);
+            ownedCullingVolume = null;
         }
     }
 
@@ -391,12 +366,12 @@ public class LevelObject
             _asset = Assets.find(EAssetType.OBJECT, id) as ObjectAsset;
             if (asset != null)
             {
-                UnturnedLog.info(string.Format("Unable to find object for GUID {0} found by legacy ID {1}, updating to {2} \"{3}\"", GUID.ToString("N"), id, asset.GUID.ToString("N"), asset.FriendlyName));
+                UnturnedLog.info($"Unable to find object for GUID {GUID:N} found by legacy ID {id}, updating to {asset.GUID:N} \"{asset.FriendlyName}\"");
                 _GUID = asset.GUID;
             }
             else
             {
-                UnturnedLog.warn(string.Format("Unable to find object for GUID {0}, nor by legacy ID {1}", GUID.ToString("N"), id));
+                UnturnedLog.warn($"Unable to find object for GUID {GUID:N}, nor by legacy ID {id}");
             }
         }
     }
@@ -498,14 +473,7 @@ public class LevelObject
                 {
                     skybox.localScale = newScale;
                 }
-                if (isLandmarkQualityMet)
-                {
-                    enableSkybox();
-                }
-                else
-                {
-                    disableSkybox();
-                }
+                SetSkyboxActive(isLandmarkQualityMet);
                 skybox.GetComponentsInChildren(includeInactive: true, renderers);
                 for (int i = 0; i < renderers.Count; i++)
                 {
@@ -525,15 +493,8 @@ public class LevelObject
                     renderers[j].sharedMaterial = materialOverride;
                 }
             }
-            if (asset.isCollisionImportant && Provider.isServer && !Dedicator.IsDedicatedServer)
-            {
-                enableCollision();
-            }
-            else
-            {
-                disableCollision();
-            }
-            disableVisual();
+            SetActive(asset.isCollisionImportant && Provider.isServer && !Dedicator.IsDedicatedServer);
+            SetRenderersEnabled(isEnabled: false);
         }
         if (!(this.transform != null))
         {
@@ -728,5 +689,72 @@ public class LevelObject
             foliageSurfaceComponent.foliage = asset.foliage;
             foliageSurfaceComponent.surfaceCollider = this.transform.gameObject.GetComponent<Collider>();
         }
+        if (asset.lod != 0)
+        {
+            GameObject gameObject8 = new GameObject();
+            ownedCullingVolume = gameObject8.AddComponent<CullingVolume>();
+            ownedCullingVolume.SetupForLevelObject(this);
+        }
+    }
+
+    private void UpdateRenderersEnabled()
+    {
+        bool flag = isVisualEnabled && (isVisibleInCullingVolume || (bool)disableCullingVolumes);
+        if (areRenderersEnabled != flag)
+        {
+            SetRenderersEnabled(flag);
+        }
+    }
+
+    private void SetRenderersEnabled(bool isEnabled)
+    {
+        areRenderersEnabled = isEnabled;
+        if (Dedicator.IsDedicatedServer || isDecal || renderers == null)
+        {
+            return;
+        }
+        foreach (Renderer renderer in renderers)
+        {
+            if (renderer != null)
+            {
+                renderer.enabled = areRenderersEnabled;
+            }
+        }
+    }
+
+    [Obsolete("Replaced by SetActive(true)")]
+    public void enableCollision()
+    {
+        SetActive(shouldBeActive: true);
+    }
+
+    [Obsolete("Replaced by SetEnableRenderers(true)")]
+    public void enableVisual()
+    {
+        SetIsVisibleInRegion(isVisible: true);
+    }
+
+    [Obsolete("Replaced by SetSkyboxActive(true)")]
+    public void enableSkybox()
+    {
+        SetSkyboxActive(shouldBeActive: true);
+    }
+
+    [Obsolete("Replaced by SetActive(false)")]
+    public void disableCollision()
+    {
+        SetActive(shouldBeActive: false);
+    }
+
+    [Obsolete("Replaced by SetEnableRenderers(false)")]
+    public void disableVisual()
+    {
+        SetIsVisibleInRegion(isVisible: false);
+    }
+
+    [Obsolete("Replaced by SetSkyboxActive(false)")]
+    public void disableSkybox()
+    {
+        SetSkyboxActive(shouldBeActive: false);
     }
 }

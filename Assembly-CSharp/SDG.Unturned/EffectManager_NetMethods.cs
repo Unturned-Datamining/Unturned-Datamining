@@ -50,7 +50,7 @@ public static class EffectManager_NetMethods
         NetPakReader reader = context.reader;
         reader.ReadGuid(out var value);
         reader.ReadClampedVector3(out var value2);
-        reader.ReadClampedVector3(out var value3);
+        reader.ReadNormalVector3(out var value3);
         reader.ReadClampedVector3(out var value4);
         EffectManager.ReceiveEffectPointNormal_NonUniformScale(value, value2, value3, value4);
     }
@@ -60,7 +60,7 @@ public static class EffectManager_NetMethods
     {
         writer.WriteGuid(assetGuid);
         writer.WriteClampedVector3(point);
-        writer.WriteClampedVector3(normal);
+        writer.WriteNormalVector3(normal);
         writer.WriteClampedVector3(scale);
     }
 
@@ -70,7 +70,7 @@ public static class EffectManager_NetMethods
         NetPakReader reader = context.reader;
         reader.ReadGuid(out var value);
         reader.ReadClampedVector3(out var value2);
-        reader.ReadClampedVector3(out var value3);
+        reader.ReadNormalVector3(out var value3);
         reader.ReadFloat(out var value4);
         EffectManager.ReceiveEffectPointNormal_UniformScale(value, value2, value3, value4);
     }
@@ -80,7 +80,7 @@ public static class EffectManager_NetMethods
     {
         writer.WriteGuid(assetGuid);
         writer.WriteClampedVector3(point);
-        writer.WriteClampedVector3(normal);
+        writer.WriteNormalVector3(normal);
         writer.WriteFloat(uniformScale);
     }
 
@@ -90,7 +90,7 @@ public static class EffectManager_NetMethods
         NetPakReader reader = context.reader;
         reader.ReadGuid(out var value);
         reader.ReadClampedVector3(out var value2);
-        reader.ReadClampedVector3(out var value3);
+        reader.ReadNormalVector3(out var value3);
         EffectManager.ReceiveEffectPointNormal(value, value2, value3);
     }
 
@@ -99,7 +99,7 @@ public static class EffectManager_NetMethods
     {
         writer.WriteGuid(assetGuid);
         writer.WriteClampedVector3(point);
-        writer.WriteClampedVector3(normal);
+        writer.WriteNormalVector3(normal);
     }
 
     [NetInvokableGeneratedMethod("ReceiveEffectPoint_NonUniformScale", ENetInvokableGeneratedMethodPurpose.Read)]

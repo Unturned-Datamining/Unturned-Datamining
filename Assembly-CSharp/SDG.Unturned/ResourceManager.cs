@@ -104,10 +104,7 @@ public class ResourceManager : SteamCaller
         kill = EPlayerKill.NONE;
         ushort pendingTotalDamage = (ushort)(damage * times);
         bool shouldAllow = true;
-        if (onDamageResourceRequested != null)
-        {
-            onDamageResourceRequested(instigatorSteamID, resource, ref pendingTotalDamage, ref shouldAllow, damageOrigin);
-        }
+        onDamageResourceRequested?.Invoke(instigatorSteamID, resource, ref pendingTotalDamage, ref shouldAllow, damageOrigin);
         if (!shouldAllow || pendingTotalDamage < 1 || !Regions.tryGetCoordinate(resource.position, out var x, out var y))
         {
             return;

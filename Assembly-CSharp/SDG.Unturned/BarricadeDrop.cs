@@ -146,10 +146,7 @@ public class BarricadeDrop
         if (!(player == null) && !player.life.isDead && player.look.canUseWorkzone && BarricadeManager.tryGetRegion(_model, out var x, out var y, out var plant, out var _))
         {
             bool shouldAllow = true;
-            if (BarricadeManager.onTransformRequested != null)
-            {
-                BarricadeManager.onTransformRequested(player.channel.owner.playerID.steamID, x, y, plant, instanceID, ref point, ref angle_x, ref angle_y, ref angle_z, ref shouldAllow);
-            }
+            BarricadeManager.onTransformRequested?.Invoke(player.channel.owner.playerID.steamID, x, y, plant, instanceID, ref point, ref angle_x, ref angle_y, ref angle_z, ref shouldAllow);
             if (!shouldAllow)
             {
                 point = model.position;

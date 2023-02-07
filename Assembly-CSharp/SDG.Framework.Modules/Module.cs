@@ -95,10 +95,7 @@ public class Module
             }
         }
         types = list.ToArray();
-        if (this.onModuleLoaded != null)
-        {
-            this.onModuleLoaded(this);
-        }
+        this.onModuleLoaded?.Invoke(this);
     }
 
     protected void initialize()
@@ -129,10 +126,7 @@ public class Module
         }
         status = EModuleStatus.Initialized;
         UnturnedLog.info("Initialized module \"" + config.Name + "\"");
-        if (this.onModuleInitialized != null)
-        {
-            this.onModuleInitialized(this);
-        }
+        this.onModuleInitialized?.Invoke(this);
     }
 
     protected void shutdown()
@@ -156,10 +150,7 @@ public class Module
         nexii.Clear();
         status = EModuleStatus.Shutdown;
         UnturnedLog.info("Shutdown module \"" + config.Name + "\"");
-        if (this.onModuleShutdown != null)
-        {
-            this.onModuleShutdown(this);
-        }
+        this.onModuleShutdown?.Invoke(this);
     }
 
     public Module(ModuleConfig newConfig)

@@ -27,7 +27,7 @@ public static class PlayerStance_NetMethods
                 context.Kick($"not owner of {playerStance}");
                 return;
             }
-            reader.ReadClampedVector3(out var value2);
+            reader.ReadNormalVector3(out var value2);
             playerStance.ReceiveClimbRequest(in context, value2);
         }
     }
@@ -35,7 +35,7 @@ public static class PlayerStance_NetMethods
     [NetInvokableGeneratedMethod("ReceiveClimbRequest", ENetInvokableGeneratedMethodPurpose.Write)]
     public static void ReceiveClimbRequest_Write(NetPakWriter writer, Vector3 direction)
     {
-        writer.WriteClampedVector3(direction);
+        writer.WriteNormalVector3(direction);
     }
 
     [NetInvokableGeneratedMethod("ReceiveStance", ENetInvokableGeneratedMethodPurpose.Read)]

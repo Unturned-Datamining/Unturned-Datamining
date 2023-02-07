@@ -154,10 +154,7 @@ public class ItemManager : SteamCaller
             }
         }
         bool shouldAllow = true;
-        if (onServerSpawningItemDrop != null)
-        {
-            onServerSpawningItemDrop(item, ref point, ref shouldAllow);
-        }
+        onServerSpawningItemDrop?.Invoke(item, ref point, ref shouldAllow);
         if (shouldAllow)
         {
             ItemData itemData = new ItemData(item, ++instanceCount, point, isDropped);
@@ -202,10 +199,7 @@ public class ItemManager : SteamCaller
         {
             if (itemRegion.drops[num].instanceID == instanceID)
             {
-                if (onItemDropRemoved != null)
-                {
-                    onItemDropRemoved(itemRegion.drops[num].model, itemRegion.drops[num].interactableItem);
-                }
+                onItemDropRemoved?.Invoke(itemRegion.drops[num].model, itemRegion.drops[num].interactableItem);
                 if (shouldPlayEffect)
                 {
                     PlayInventoryAudio(itemRegion.drops[num].interactableItem.asset, itemRegion.drops[num].model.position);
@@ -373,10 +367,7 @@ public class ItemManager : SteamCaller
             }
             ItemDrop item2 = new ItemDrop(transform, interactableItem, instanceID);
             regions[x, y].drops.Add(item2);
-            if (onItemDropAdded != null)
-            {
-                onItemDropAdded(item, interactableItem);
-            }
+            onItemDropAdded?.Invoke(item, interactableItem);
             if (shouldPlayEffect)
             {
                 PlayInventoryAudio(itemAsset, point);
@@ -588,10 +579,7 @@ public class ItemManager : SteamCaller
                     Item item2 = new Item(item, EItemOrigin.WORLD);
                     Vector3 location = itemSpawnpoint.point;
                     bool shouldAllow = true;
-                    if (onServerSpawningItemDrop != null)
-                    {
-                        onServerSpawningItemDrop(item2, ref location, ref shouldAllow);
-                    }
+                    onServerSpawningItemDrop?.Invoke(item2, ref location, ref shouldAllow);
                     if (!shouldAllow)
                     {
                         continue;
@@ -644,10 +632,7 @@ public class ItemManager : SteamCaller
                     Item item2 = new Item(item, EItemOrigin.WORLD);
                     Vector3 location = itemSpawnpoint2.point;
                     bool shouldAllow = true;
-                    if (onServerSpawningItemDrop != null)
-                    {
-                        onServerSpawningItemDrop(item2, ref location, ref shouldAllow);
-                    }
+                    onServerSpawningItemDrop?.Invoke(item2, ref location, ref shouldAllow);
                     if (shouldAllow)
                     {
                         list.Add(new ItemData(item2, ++instanceCount, location, newDropped: false));

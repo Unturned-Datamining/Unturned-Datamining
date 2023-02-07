@@ -181,10 +181,7 @@ public class PlayerSkills : PlayerCaller
             PlayerUI.message(EPlayerMessage.EXPERIENCE, (newExperience - experience).ToString());
         }
         _experience = newExperience;
-        if (onExperienceUpdated != null)
-        {
-            onExperienceUpdated(experience);
-        }
+        onExperienceUpdated?.Invoke(experience);
         PlayerSkills.OnExperienceChanged_Global?.Invoke(this, arg);
     }
 
@@ -223,10 +220,7 @@ public class PlayerSkills : PlayerCaller
             }
         }
         _reputation = newReputation;
-        if (onReputationUpdated != null)
-        {
-            onReputationUpdated(reputation);
-        }
+        onReputationUpdated?.Invoke(reputation);
         PlayerSkills.OnReputationChanged_Global?.Invoke(this, arg);
     }
 
@@ -240,10 +234,7 @@ public class PlayerSkills : PlayerCaller
     public void ReceiveBoost(EPlayerBoost newBoost)
     {
         _boost = newBoost;
-        if (onBoostUpdated != null)
-        {
-            onBoostUpdated(boost);
-        }
+        onBoostUpdated?.Invoke(boost);
         wasLoaded = true;
     }
 
@@ -307,10 +298,7 @@ public class PlayerSkills : PlayerCaller
                 Provider.provider.achievementsService.setAchievement("Mastermind");
             }
         }
-        if (onSkillsUpdated != null)
-        {
-            onSkillsUpdated();
-        }
+        onSkillsUpdated?.Invoke();
     }
 
     public float mastery(int speciality, int index)
@@ -412,10 +400,7 @@ public class PlayerSkills : PlayerCaller
     {
         int arg = _reputation;
         _reputation += rep;
-        if (onReputationUpdated != null)
-        {
-            onReputationUpdated(reputation);
-        }
+        onReputationUpdated?.Invoke(reputation);
         PlayerSkills.OnReputationChanged_Global?.Invoke(this, arg);
     }
 
@@ -423,10 +408,7 @@ public class PlayerSkills : PlayerCaller
     {
         uint arg = _experience;
         _experience += xp;
-        if (onExperienceUpdated != null)
-        {
-            onExperienceUpdated(experience);
-        }
+        onExperienceUpdated?.Invoke(experience);
         PlayerSkills.OnExperienceChanged_Global?.Invoke(this, arg);
     }
 
@@ -434,10 +416,7 @@ public class PlayerSkills : PlayerCaller
     {
         uint arg = _experience;
         _experience -= xp;
-        if (onExperienceUpdated != null)
-        {
-            onExperienceUpdated(experience);
-        }
+        onExperienceUpdated?.Invoke(experience);
         PlayerSkills.OnExperienceChanged_Global?.Invoke(this, arg);
     }
 
@@ -591,10 +570,7 @@ public class PlayerSkills : PlayerCaller
                 reader.ReadUInt8(out array[j].level);
             }
         }
-        if (onSkillsUpdated != null)
-        {
-            onSkillsUpdated();
-        }
+        onSkillsUpdated?.Invoke();
     }
 
     private void WriteSkillLevels(NetPakWriter writer)
@@ -869,9 +845,6 @@ public class PlayerSkills : PlayerCaller
                 skills[0][6].setLevelToMax();
             }
         }
-        if (PlayerSkills.onApplyingDefaultSkills != null)
-        {
-            PlayerSkills.onApplyingDefaultSkills(base.player, skills);
-        }
+        PlayerSkills.onApplyingDefaultSkills?.Invoke(base.player, skills);
     }
 }

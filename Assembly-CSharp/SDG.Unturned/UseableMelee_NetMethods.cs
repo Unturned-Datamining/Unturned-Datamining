@@ -21,7 +21,7 @@ public static class UseableMelee_NetMethods
             if (!(useableMelee == null))
             {
                 reader.ReadClampedVector3(out var value2);
-                reader.ReadClampedVector3(out var value3);
+                reader.ReadNormalVector3(out var value3);
                 reader.ReadString(out var value4);
                 reader.ReadTransform(out var value5);
                 useableMelee.ReceiveSpawnMeleeImpact(value2, value3, value4, value5);
@@ -33,7 +33,7 @@ public static class UseableMelee_NetMethods
     public static void ReceiveSpawnMeleeImpact_Write(NetPakWriter writer, Vector3 position, Vector3 normal, string materialName, Transform colliderTransform)
     {
         writer.WriteClampedVector3(position);
-        writer.WriteClampedVector3(normal);
+        writer.WriteNormalVector3(normal);
         writer.WriteString(materialName);
         writer.WriteTransform(colliderTransform);
     }

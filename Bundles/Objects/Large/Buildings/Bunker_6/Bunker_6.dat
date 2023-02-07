@@ -2,5 +2,11 @@ GUID fa039ea014984315a4b267e8f4cef405
 Type Large
 ID 1007
 
+LOD Mesh
+LOD_Center_Y -13
+LOD_Size_X 2
+LOD_Size_Y -22
+LOD_Size_Z -6
+
 Collision_Important
 Has_Clip_Prefab false

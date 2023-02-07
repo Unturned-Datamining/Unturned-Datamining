@@ -18,9 +18,6 @@ internal static class ClientMessageHandler_QueuePositionChanged
         {
             UnturnedLog.info("Queue position: {0}", Provider.queuePosition);
         }
-        if (Provider.onQueuePositionUpdated != null)
-        {
-            Provider.onQueuePositionUpdated();
-        }
+        Provider.onQueuePositionUpdated?.Invoke();
     }
 }

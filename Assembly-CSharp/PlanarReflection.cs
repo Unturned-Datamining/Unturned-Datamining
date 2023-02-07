@@ -157,15 +157,9 @@ public class PlanarReflection : MonoBehaviour
         reflectCamera.transform.eulerAngles = new Vector3(0f - eulerAngles2.x, eulerAngles2.y, eulerAngles2.z);
         float lodBias = QualitySettings.lodBias;
         QualitySettings.lodBias = 1f;
-        if (PlanarReflection.preRender != null)
-        {
-            PlanarReflection.preRender();
-        }
+        PlanarReflection.preRender?.Invoke();
         reflectCamera.Render();
-        if (PlanarReflection.postRender != null)
-        {
-            PlanarReflection.postRender();
-        }
+        PlanarReflection.postRender?.Invoke();
         QualitySettings.lodBias = lodBias;
         GL.invertCulling = false;
     }

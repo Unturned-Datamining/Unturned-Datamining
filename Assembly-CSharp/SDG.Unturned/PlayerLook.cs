@@ -396,10 +396,7 @@ public class PlayerLook : PlayerCaller
         {
             MainCamera.instance.transform.parent = base.player.transform;
         }
-        if (onPerspectiveUpdated != null)
-        {
-            onPerspectiveUpdated(perspective);
-        }
+        onPerspectiveUpdated?.Invoke(perspective);
         UnturnedPostProcess.instance.notifyPerspectiveChanged();
     }
 

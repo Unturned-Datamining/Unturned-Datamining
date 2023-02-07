@@ -239,10 +239,7 @@ public class ZombieManager : SteamCaller
     {
         _waveReady = newWaveReady;
         _waveIndex = newWave;
-        if (onWaveUpdated != null)
-        {
-            onWaveUpdated(waveReady, waveIndex);
-        }
+        onWaveUpdated?.Invoke(waveReady, waveIndex);
     }
 
     [Obsolete]
@@ -573,19 +570,13 @@ public class ZombieManager : SteamCaller
     public static void sendZombieAlive(Zombie zombie, byte newType, byte newSpeciality, byte newShirt, byte newPants, byte newHat, byte newGear, Vector3 newPosition, byte newAngle)
     {
         SendZombieAlive.InvokeAndLoopback(ENetReliability.Reliable, EnumerateClients_Remote(zombie.bound), zombie.bound, zombie.id, newType, newSpeciality, newShirt, newPants, newHat, newGear, newPosition, newAngle);
-        if (regions[zombie.bound].onZombieLifeUpdated != null)
-        {
-            regions[zombie.bound].onZombieLifeUpdated(zombie);
-        }
+        regions[zombie.bound].onZombieLifeUpdated?.Invoke(zombie);
     }
 
     public static void sendZombieDead(Zombie zombie, Vector3 newRagdoll, ERagdollEffect newRagdollEffect = ERagdollEffect.NONE)
     {
         SendZombieDead.InvokeAndLoopback(ENetReliability.Reliable, EnumerateClients_Remote(zombie.bound), zombie.bound, zombie.id, newRagdoll, newRagdollEffect);
-        if (regions[zombie.bound].onZombieLifeUpdated != null)
-        {
-            regions[zombie.bound].onZombieLifeUpdated(zombie);
-        }
+        regions[zombie.bound].onZombieLifeUpdated?.Invoke(zombie);
     }
 
     public static void sendZombieSpeciality(Zombie zombie, EZombieSpeciality speciality)

@@ -74,33 +74,21 @@ public class DirtyManager
 
     protected static void triggerMarkedDirty(IDirtyable item)
     {
-        if (DirtyManager.markedDirty != null)
-        {
-            DirtyManager.markedDirty(item);
-        }
+        DirtyManager.markedDirty?.Invoke(item);
     }
 
     protected static void triggerMarkedClean(IDirtyable item)
     {
-        if (DirtyManager.markedClean != null)
-        {
-            DirtyManager.markedClean(item);
-        }
+        DirtyManager.markedClean?.Invoke(item);
     }
 
     protected static void triggerSaveableChanged(IDirtyable item, bool isSaveable)
     {
-        if (DirtyManager.saveableChanged != null)
-        {
-            DirtyManager.saveableChanged(item, isSaveable);
-        }
+        DirtyManager.saveableChanged?.Invoke(item, isSaveable);
     }
 
     protected static void triggerSaved()
     {
-        if (DirtyManager.saved != null)
-        {
-            DirtyManager.saved();
-        }
+        DirtyManager.saved?.Invoke();
     }
 }

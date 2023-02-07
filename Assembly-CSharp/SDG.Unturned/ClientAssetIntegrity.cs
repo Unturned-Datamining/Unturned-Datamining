@@ -28,7 +28,7 @@ internal static class ClientAssetIntegrity
     {
         if (guid != Guid.Empty && serverKnownMissingGuids.Add(guid))
         {
-            UnturnedLog.info("Context \"" + context + "\" known missing asset " + guid.ToString("N") + ", server will not kick clients for this");
+            UnturnedLog.info($"Context \"{context}\" known missing asset {guid:N}, server will not kick clients for this");
         }
     }
 
@@ -38,7 +38,7 @@ internal static class ClientAssetIntegrity
         {
             if (asset == null)
             {
-                UnturnedLog.warn("Context \"" + context + "\" missing asset " + guid.ToString("N"));
+                UnturnedLog.warn($"Context \"{context}\" missing asset {guid:N}");
             }
             pendingValidation.Add(new KeyValuePair<Guid, Asset>(guid, asset));
         }

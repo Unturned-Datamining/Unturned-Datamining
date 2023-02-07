@@ -272,6 +272,14 @@ public class SelectionTool : IDevkitTool
                 if (!flag)
                 {
                     RaycastSelectableObjects(ray, out hitInfo);
+                    if (hitInfo.transform != null)
+                    {
+                        IDevkitHierarchyItem componentInParent = hitInfo.transform.GetComponentInParent<IDevkitHierarchyItem>();
+                        if (componentInParent != null && !componentInParent.CanBeSelected)
+                        {
+                            hitInfo = default(RaycastHit);
+                        }
+                    }
                 }
                 pendingClickSelection = new DevkitSelection((hitInfo.transform != null) ? hitInfo.transform.gameObject : null, hitInfo.collider);
                 if (pendingClickSelection.isValid)

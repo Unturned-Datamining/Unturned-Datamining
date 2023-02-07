@@ -829,10 +829,7 @@ public class Landscape : DevkitHierarchyItemBase
 
     protected void triggerLandscapeLoaded()
     {
-        if (Landscape.loaded != null)
-        {
-            Landscape.loaded();
-        }
+        Landscape.loaded?.Invoke();
     }
 
     protected void handleGraphicsSettingsApplied()

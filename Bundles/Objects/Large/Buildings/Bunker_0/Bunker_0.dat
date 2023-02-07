@@ -3,8 +3,8 @@ Type Large
 ID 232
 
 LOD Mesh
-LOD_Center_Z -0.5
-LOD_Size_Z -1
+LOD_Center_Z -1.5
+LOD_Size_Z 1
 
 Collision_Important
 Has_Clip_Prefab false

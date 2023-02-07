@@ -127,9 +127,6 @@ internal static class ClientMessageHandler_Accepted
         Lobbies.leaveLobby();
         SteamMatchmaking.AddFavoriteGame(Provider.APP_ID, value, (ushort)(value2 + 1), value2, Provider.STEAM_FAVORITE_FLAG_HISTORY, SteamUtils.GetServerRealTime());
         Provider.updateRichPresence();
-        if (Provider.onClientConnected != null)
-        {
-            Provider.onClientConnected();
-        }
+        Provider.onClientConnected?.Invoke();
     }
 }

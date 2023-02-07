@@ -53,7 +53,7 @@ public static class UseableGun_NetMethods
             if (!(useableGun == null))
             {
                 reader.ReadClampedVector3(out var value2);
-                reader.ReadClampedVector3(out var value3);
+                reader.ReadNormalVector3(out var value3);
                 reader.ReadUInt16(out var value4);
                 reader.ReadUInt16(out var value5);
                 useableGun.ReceivePlayProject(value2, value3, value4, value5);
@@ -65,7 +65,7 @@ public static class UseableGun_NetMethods
     public static void ReceivePlayProject_Write(NetPakWriter writer, Vector3 origin, Vector3 direction, ushort barrelId, ushort magazineId)
     {
         writer.WriteClampedVector3(origin);
-        writer.WriteClampedVector3(direction);
+        writer.WriteNormalVector3(direction);
         writer.WriteUInt16(barrelId);
         writer.WriteUInt16(magazineId);
     }

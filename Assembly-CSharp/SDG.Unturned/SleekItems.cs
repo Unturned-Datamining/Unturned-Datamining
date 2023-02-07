@@ -175,18 +175,12 @@ public class SleekItems : SleekWrapper
 
     private void onClickedItem(SleekItem item)
     {
-        if (onSelectedItem != null)
-        {
-            onSelectedItem(page, (byte)(item.positionOffset_X / 50), (byte)(item.positionOffset_Y / 50));
-        }
+        onSelectedItem?.Invoke(page, (byte)(item.positionOffset_X / 50), (byte)(item.positionOffset_Y / 50));
     }
 
     private void onDraggedItem(SleekItem item)
     {
-        if (onGrabbedItem != null)
-        {
-            onGrabbedItem(page, (byte)(item.positionOffset_X / 50), (byte)(item.positionOffset_Y / 50), item);
-        }
+        onGrabbedItem?.Invoke(page, (byte)(item.positionOffset_X / 50), (byte)(item.positionOffset_Y / 50), item);
     }
 
     private void onClickedGrid()
@@ -194,10 +188,7 @@ public class SleekItems : SleekWrapper
         Vector2 normalizedCursorPosition = grid.GetNormalizedCursorPosition();
         byte x = (byte)(normalizedCursorPosition.x * (float)(int)width);
         byte y = (byte)(normalizedCursorPosition.y * (float)(int)height);
-        if (onPlacedItem != null)
-        {
-            onPlacedItem(page, x, y);
-        }
+        onPlacedItem?.Invoke(page, x, y);
     }
 
     public SleekItems(byte newPage)

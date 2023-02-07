@@ -43,6 +43,8 @@ internal class EditorVolumesUI : SleekFullscreenBox
 
     private ISleekToggle enableWaterSurfaceToggle;
 
+    private ISleekButton refreshCullingVolumesButton;
+
     public void Open()
     {
         SyncSettings();
@@ -189,6 +191,17 @@ internal class EditorVolumesUI : SleekFullscreenBox
         enableWaterSurfaceToggle.isVisible = false;
         enableWaterSurfaceToggle.onToggled += OnWaterSurfaceToggled;
         AddChild(enableWaterSurfaceToggle);
+        refreshCullingVolumesButton = Glazier.Get().CreateButton();
+        refreshCullingVolumesButton.positionOffset_X = 400;
+        refreshCullingVolumesButton.positionOffset_Y = -30;
+        refreshCullingVolumesButton.positionScale_Y = 1f;
+        refreshCullingVolumesButton.sizeOffset_X = 200;
+        refreshCullingVolumesButton.sizeOffset_Y = 30;
+        refreshCullingVolumesButton.text = localization.format("RefreshCullingVolumes");
+        refreshCullingVolumesButton.tooltipText = localization.format("RefreshCullingVolumes_Tooltip");
+        refreshCullingVolumesButton.isVisible = false;
+        refreshCullingVolumesButton.onClickedButton += OnRefreshCullingVolumesClicked;
+        AddChild(refreshCullingVolumesButton);
         int num2 = 0;
         selectedTypeBox = Glazier.Get().CreateBox();
         selectedTypeBox.positionScale_X = 1f;
@@ -247,6 +260,7 @@ internal class EditorVolumesUI : SleekFullscreenBox
         activeVisibilityButton.isVisible = true;
         enableUnderwaterEffectsToggle.isVisible = type is WaterVolumeManager;
         enableWaterSurfaceToggle.isVisible = enableUnderwaterEffectsToggle.isVisible;
+        refreshCullingVolumesButton.isVisible = type is CullingVolumeManager;
     }
 
     internal void RefreshSelectedVisibility()
@@ -308,6 +322,12 @@ internal class EditorVolumesUI : SleekFullscreenBox
     private void OnWaterSurfaceToggled(ISleekToggle toggle, bool state)
     {
         LevelLighting.EditorWantsWaterSurface = state;
+    }
+
+    private void OnRefreshCullingVolumesClicked(ISleekElement button)
+    {
+        VolumeManager<CullingVolume, CullingVolumeManager>.Get().ClearOverlappingObjects();
+        VolumeManager<CullingVolume, CullingVolumeManager>.Get().RefreshOverlappingObjects();
     }
 
     private void OnSurfaceMaskTyped(ISleekUInt32Field field, uint state)

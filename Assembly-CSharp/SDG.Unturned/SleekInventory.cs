@@ -210,10 +210,7 @@ public class SleekInventory : SleekWrapper
 
     private void onClickedButton(ISleekElement button)
     {
-        if (onClickedInventory != null)
-        {
-            onClickedInventory(this);
-        }
+        onClickedInventory?.Invoke(this);
     }
 
     public SleekInventory()

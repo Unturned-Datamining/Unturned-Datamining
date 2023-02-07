@@ -483,10 +483,7 @@ public class LevelLighting
             if (isSea != value)
             {
                 _isSea = value;
-                if (LevelLighting.isSeaChanged != null)
-                {
-                    LevelLighting.isSeaChanged(isSea);
-                }
+                LevelLighting.isSeaChanged?.Invoke(isSea);
                 skyboxNeedsReflectionUpdate = true;
             }
         }

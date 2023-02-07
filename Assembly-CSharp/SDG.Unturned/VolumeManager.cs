@@ -11,7 +11,7 @@ public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume 
 
     internal Material solidMaterial;
 
-    internal ELevelVolumeVisibility visibility = ELevelVolumeVisibility.Wireframe;
+    private ELevelVolumeVisibility visibility;
 
     protected bool allowInstantiation = true;
 
@@ -47,6 +47,8 @@ public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume 
             }
         }
     }
+
+    protected virtual ELevelVolumeVisibility DefaultVisibility => ELevelVolumeVisibility.Wireframe;
 
     public static TManager Get()
     {
@@ -148,6 +150,10 @@ public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume 
         if (ConvenientSavedata.get().read("Visibility_" + typeof(TVolume).Name, out long value))
         {
             visibility = (ELevelVolumeVisibility)value;
+        }
+        else
+        {
+            visibility = DefaultVisibility;
         }
         TimeUtility.updated += PrivateOnUpdateGizmos;
     }

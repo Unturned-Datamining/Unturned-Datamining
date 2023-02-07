@@ -131,7 +131,7 @@ public static class ZombieManager_NetMethods
         reader.ReadUInt8(out var value);
         reader.ReadUInt16(out var value2);
         reader.ReadClampedVector3(out var value3);
-        reader.ReadClampedVector3(out var value4);
+        reader.ReadNormalVector3(out var value4);
         ZombieManager.ReceiveZombieBoulder(value, value2, value3, value4);
     }
 
@@ -141,7 +141,7 @@ public static class ZombieManager_NetMethods
         writer.WriteUInt8(reference);
         writer.WriteUInt16(id);
         writer.WriteClampedVector3(origin);
-        writer.WriteClampedVector3(direction);
+        writer.WriteNormalVector3(direction);
     }
 
     [NetInvokableGeneratedMethod("ReceiveZombieSpit", ENetInvokableGeneratedMethodPurpose.Read)]
@@ -215,7 +215,7 @@ public static class ZombieManager_NetMethods
         reader.ReadUInt8(out var value);
         reader.ReadUInt16(out var value2);
         reader.ReadClampedVector3(out var value3);
-        reader.ReadClampedVector3(out var value4);
+        reader.ReadNormalVector3(out var value4);
         ZombieManager.ReceiveZombieAcid(value, value2, value3, value4);
     }
 
@@ -225,7 +225,7 @@ public static class ZombieManager_NetMethods
         writer.WriteUInt8(reference);
         writer.WriteUInt16(id);
         writer.WriteClampedVector3(origin);
-        writer.WriteClampedVector3(direction);
+        writer.WriteNormalVector3(direction);
     }
 
     [NetInvokableGeneratedMethod("ReceiveZombieSpark", ENetInvokableGeneratedMethodPurpose.Read)]

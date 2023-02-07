@@ -364,14 +364,8 @@ public class PlayerLife : PlayerCaller
         _isDead = false;
         _lastRespawn = Time.realtimeSinceStartup;
         base.player.ReceiveTeleport(position, angle);
-        if (onLifeUpdated != null)
-        {
-            onLifeUpdated(isDead);
-        }
-        if (onPlayerLifeUpdated != null)
-        {
-            onPlayerLifeUpdated(base.player);
-        }
+        onLifeUpdated?.Invoke(isDead);
+        onPlayerLifeUpdated?.Invoke(base.player);
         try
         {
             OnRevived_Global?.Invoke(this);
@@ -411,22 +405,10 @@ public class PlayerLife : PlayerCaller
         _temperature = EPlayerTemperature.NONE;
         wasWarm = false;
         wasCovered = false;
-        if (onVisionUpdated != null)
-        {
-            onVisionUpdated(isViewing: false);
-        }
-        if (onStaminaUpdated != null)
-        {
-            onStaminaUpdated(stamina);
-        }
-        if (onOxygenUpdated != null)
-        {
-            onOxygenUpdated(oxygen);
-        }
-        if (onTemperatureUpdated != null)
-        {
-            onTemperatureUpdated(temperature);
-        }
+        onVisionUpdated?.Invoke(isViewing: false);
+        onStaminaUpdated?.Invoke(stamina);
+        onOxygenUpdated?.Invoke(oxygen);
+        onTemperatureUpdated?.Invoke(temperature);
         lastAlive = Time.realtimeSinceStartup;
     }
 
@@ -465,13 +447,10 @@ public class PlayerLife : PlayerCaller
     public void ReceiveHealth(byte newHealth)
     {
         _health = newHealth;
-        if (onHealthUpdated != null)
+        onHealthUpdated?.Invoke(health);
+        if (newHealth < lastHealth - 3)
         {
-            onHealthUpdated(health);
-        }
-        if (newHealth < lastHealth - 3 && onDamaged != null)
-        {
-            onDamaged((byte)(lastHealth - newHealth));
+            onDamaged?.Invoke((byte)(lastHealth - newHealth));
         }
         lastHealth = newHealth;
         OnTellHealth_Global?.Invoke(this);
@@ -493,10 +472,7 @@ public class PlayerLife : PlayerCaller
     public void ReceiveFood(byte newFood)
     {
         _food = newFood;
-        if (onFoodUpdated != null)
-        {
-            onFoodUpdated(food);
-        }
+        onFoodUpdated?.Invoke(food);
         OnTellFood_Global?.Invoke(this);
     }
 
@@ -510,10 +486,7 @@ public class PlayerLife : PlayerCaller
     public void ReceiveWater(byte newWater)
     {
         _water = newWater;
-        if (onWaterUpdated != null)
-        {
-            onWaterUpdated(water);
-        }
+        onWaterUpdated?.Invoke(water);
         OnTellWater_Global?.Invoke(this);
     }
 
@@ -527,10 +500,7 @@ public class PlayerLife : PlayerCaller
     public void ReceiveVirus(byte newVirus)
     {
         _virus = newVirus;
-        if (onVirusUpdated != null)
-        {
-            onVirusUpdated(virus);
-        }
+        onVirusUpdated?.Invoke(virus);
         OnTellVirus_Global?.Invoke(this);
     }
 
@@ -544,10 +514,7 @@ public class PlayerLife : PlayerCaller
     public void ReceiveBleeding(bool newBleeding)
     {
         _isBleeding = newBleeding;
-        if (onBleedingUpdated != null)
-        {
-            onBleedingUpdated(isBleeding);
-        }
+        onBleedingUpdated?.Invoke(isBleeding);
         OnTellBleeding_Global?.Invoke(this);
     }
 
@@ -561,10 +528,7 @@ public class PlayerLife : PlayerCaller
     public void ReceiveBroken(bool newBroken)
     {
         _isBroken = newBroken;
-        if (onBrokenUpdated != null)
-        {
-            onBrokenUpdated(isBroken);
-        }
+        onBrokenUpdated?.Invoke(isBroken);
         OnTellBroken_Global?.Invoke(this);
     }
 
@@ -852,10 +816,7 @@ public class PlayerLife : PlayerCaller
         {
             serverSetBleeding(newBleeding: true);
         }
-        if (this.onHurt != null)
-        {
-            this.onHurt(base.player, amount, newRagdoll, newCause, newLimb, newKiller);
-        }
+        this.onHurt?.Invoke(base.player, amount, newRagdoll, newCause, newLimb, newKiller);
     }
 
     public void askHeal(byte amount, bool healBleeding, bool healBroken)
@@ -1009,10 +970,7 @@ public class PlayerLife : PlayerCaller
             {
                 _virus -= amount;
             }
-            if (onVirusUpdated != null)
-            {
-                onVirusUpdated(virus);
-            }
+            onVirusUpdated?.Invoke(virus);
         }
     }
 
@@ -1036,10 +994,7 @@ public class PlayerLife : PlayerCaller
     internal void internalSetStamina(byte value)
     {
         _stamina = value;
-        if (onStaminaUpdated != null)
-        {
-            onStaminaUpdated(stamina);
-        }
+        onStaminaUpdated?.Invoke(stamina);
     }
 
     public void askTire(byte amount)
@@ -1055,10 +1010,7 @@ public class PlayerLife : PlayerCaller
             {
                 _stamina -= amount;
             }
-            if (onStaminaUpdated != null)
-            {
-                onStaminaUpdated(stamina);
-            }
+            onStaminaUpdated?.Invoke(stamina);
         }
     }
 
@@ -1074,10 +1026,7 @@ public class PlayerLife : PlayerCaller
             {
                 _stamina += amount;
             }
-            if (onStaminaUpdated != null)
-            {
-                onStaminaUpdated(stamina);
-            }
+            onStaminaUpdated?.Invoke(stamina);
         }
     }
 
@@ -1129,10 +1078,7 @@ public class PlayerLife : PlayerCaller
         {
             lastView = base.player.input.simulation;
             _vision = amount;
-            if (onVisionUpdated != null)
-            {
-                onVisionUpdated(isViewing: true);
-            }
+            onVisionUpdated?.Invoke(isViewing: true);
         }
     }
 
@@ -1228,9 +1174,9 @@ public class PlayerLife : PlayerCaller
             {
                 _vision -= amount;
             }
-            if (vision == 0 && onVisionUpdated != null)
+            if (vision == 0)
             {
-                onVisionUpdated(isViewing: false);
+                onVisionUpdated?.Invoke(isViewing: false);
             }
         }
     }
@@ -1248,10 +1194,7 @@ public class PlayerLife : PlayerCaller
             {
                 _oxygen -= amount;
             }
-            if (onOxygenUpdated != null)
-            {
-                onOxygenUpdated(oxygen);
-            }
+            onOxygenUpdated?.Invoke(oxygen);
         }
     }
 
@@ -1267,10 +1210,7 @@ public class PlayerLife : PlayerCaller
             {
                 _oxygen += amount;
             }
-            if (onOxygenUpdated != null)
-            {
-                onOxygenUpdated(oxygen);
-            }
+            onOxygenUpdated?.Invoke(oxygen);
         }
     }
 
@@ -1577,7 +1517,7 @@ public class PlayerLife : PlayerCaller
             {
                 uint num2 = (uint)(1 + base.player.skills.skills[0][5].level);
                 num2 += (uint)Mathf.CeilToInt((num + 1f) * 10f);
-                if (base.player.clothing.backpackAsset != null && base.player.clothing.backpackAsset.proofWater && base.player.clothing.glassesAsset != null && base.player.clothing.glassesAsset.proofWater)
+                if (base.player.clothing.backpackAsset != null && base.player.clothing.backpackAsset.proofWater && ((base.player.clothing.glassesAsset != null && base.player.clothing.glassesAsset.proofWater) || (base.player.clothing.maskAsset != null && base.player.clothing.maskAsset.proofWater)))
                 {
                     num2 *= 10;
                 }
@@ -1846,10 +1786,7 @@ public class PlayerLife : PlayerCaller
         if (ePlayerTemperature2 != temperature)
         {
             _temperature = ePlayerTemperature2;
-            if (onTemperatureUpdated != null)
-            {
-                onTemperatureUpdated(temperature);
-            }
+            onTemperatureUpdated?.Invoke(temperature);
         }
     }
 

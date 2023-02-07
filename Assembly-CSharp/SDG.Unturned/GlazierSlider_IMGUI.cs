@@ -55,10 +55,7 @@ internal class GlazierSlider_IMGUI : GlazierElementBase_IMGUI, ISleekSlider, ISl
             {
                 state = 1f;
             }
-            if (this.onDragged != null)
-            {
-                this.onDragged(this, state);
-            }
+            this.onDragged?.Invoke(this, state);
         }
         scroll = num;
         ChildrenOnGUI();

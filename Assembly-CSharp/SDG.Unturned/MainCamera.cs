@@ -54,18 +54,12 @@ public class MainCamera : MonoBehaviour
 
     protected static void triggerInstanceChanged()
     {
-        if (MainCamera.instanceChanged != null)
-        {
-            MainCamera.instanceChanged();
-        }
+        MainCamera.instanceChanged?.Invoke();
     }
 
     protected static void triggerAvailabilityChanged()
     {
-        if (MainCamera.availabilityChanged != null)
-        {
-            MainCamera.availabilityChanged();
-        }
+        MainCamera.availabilityChanged?.Invoke();
     }
 
     public void Awake()

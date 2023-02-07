@@ -38,14 +38,8 @@ public class Items
         if (index >= 0 && index < items.Count)
         {
             items[index].item.amount = newAmount;
-            if (onItemUpdated != null)
-            {
-                onItemUpdated(page, index, items[index]);
-            }
-            if (onStateUpdated != null)
-            {
-                onStateUpdated();
-            }
+            onItemUpdated?.Invoke(page, index, items[index]);
+            onStateUpdated?.Invoke();
         }
     }
 
@@ -54,14 +48,8 @@ public class Items
         if (index >= 0 && index < items.Count)
         {
             items[index].item.quality = newQuality;
-            if (onItemUpdated != null)
-            {
-                onItemUpdated(page, index, items[index]);
-            }
-            if (onStateUpdated != null)
-            {
-                onStateUpdated();
-            }
+            onItemUpdated?.Invoke(page, index, items[index]);
+            onStateUpdated?.Invoke();
         }
     }
 
@@ -70,14 +58,8 @@ public class Items
         if (index >= 0 && index < items.Count)
         {
             items[index].item.state = newState;
-            if (onItemUpdated != null)
-            {
-                onItemUpdated(page, index, items[index]);
-            }
-            if (onStateUpdated != null)
-            {
-                onStateUpdated();
-            }
+            onItemUpdated?.Invoke(page, index, items[index]);
+            onStateUpdated?.Invoke();
         }
     }
 
@@ -259,19 +241,13 @@ public class Items
         items.Add(itemJar);
         try
         {
-            if (onItemAdded != null)
-            {
-                onItemAdded(page, (byte)(items.Count - 1), itemJar);
-            }
+            onItemAdded?.Invoke(page, (byte)(items.Count - 1), itemJar);
         }
         catch (Exception e)
         {
             UnturnedLog.exception(e, $"Caught exception during addItem (x: {x} y: {y} rot: {rot} item: {item?.id}):");
         }
-        if (onStateUpdated != null)
-        {
-            onStateUpdated();
-        }
+        onStateUpdated?.Invoke();
     }
 
     public bool tryAddItem(Item item)
@@ -297,18 +273,15 @@ public class Items
         items.Add(itemJar);
         try
         {
-            if (onItemAdded != null)
-            {
-                onItemAdded(page, (byte)(items.Count - 1), itemJar);
-            }
+            onItemAdded?.Invoke(page, (byte)(items.Count - 1), itemJar);
         }
         catch (Exception e)
         {
             UnturnedLog.exception(e, $"Caught exception during tryAddItem ({item?.id}):");
         }
-        if (isStateUpdatable && onStateUpdated != null)
+        if (isStateUpdatable)
         {
-            onStateUpdated();
+            onStateUpdated?.Invoke();
         }
         return true;
     }
@@ -318,15 +291,9 @@ public class Items
         if (index >= 0 && index < items.Count)
         {
             fillSlot(items[index], isOccupied: false);
-            if (onItemRemoved != null)
-            {
-                onItemRemoved(page, index, items[index]);
-            }
+            onItemRemoved?.Invoke(page, index, items[index]);
             items.RemoveAt(index);
-            if (onStateUpdated != null)
-            {
-                onStateUpdated();
-            }
+            onStateUpdated?.Invoke();
         }
     }
 
@@ -362,14 +329,8 @@ public class Items
                 }
                 if (width == 0 || height == 0 || (page >= PlayerInventory.SLOTS && (itemJar.x + b4 > width || itemJar.y + b5 > height)))
                 {
-                    if (onItemDiscarded != null)
-                    {
-                        onItemDiscarded(page, b3, itemJar);
-                    }
-                    if (onStateUpdated != null)
-                    {
-                        onStateUpdated();
-                    }
+                    onItemDiscarded?.Invoke(page, b3, itemJar);
+                    onStateUpdated?.Invoke();
                 }
                 else
                 {
@@ -384,14 +345,8 @@ public class Items
     public void resize(byte newWidth, byte newHeight)
     {
         loadSize(newWidth, newHeight);
-        if (onItemsResized != null)
-        {
-            onItemsResized(page, newWidth, newHeight);
-        }
-        if (onStateUpdated != null)
-        {
-            onStateUpdated();
-        }
+        onItemsResized?.Invoke(page, newWidth, newHeight);
+        onStateUpdated?.Invoke();
     }
 
     public bool checkSpaceEmpty(byte pos_x, byte pos_y, byte size_x, byte size_y, byte rot)

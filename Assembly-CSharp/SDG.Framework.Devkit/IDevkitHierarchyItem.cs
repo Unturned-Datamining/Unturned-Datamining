@@ -10,4 +10,6 @@ public interface IDevkitHierarchyItem : IFormattedFileReadable, IFormattedFileWr
     GameObject areaSelectGameObject { get; }
 
     bool ShouldSave { get; }
+
+    bool CanBeSelected { get; }
 }

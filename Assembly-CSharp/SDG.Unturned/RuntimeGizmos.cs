@@ -349,12 +349,18 @@ public class RuntimeGizmos : MonoBehaviour
 
     public void Label(Vector3 position, string content, float lifespan = 0f, EGizmoLayer layer = EGizmoLayer.World)
     {
-        labelsToRender.Add(new LabelData(position, content, Color.white, lifespan));
+        if (!string.IsNullOrEmpty(content))
+        {
+            labelsToRender.Add(new LabelData(position, content, Color.white, lifespan));
+        }
     }
 
     public void Label(Vector3 position, string content, Color color, float lifespan = 0f, EGizmoLayer layer = EGizmoLayer.World)
     {
-        labelsToRender.Add(new LabelData(position, content, color, lifespan));
+        if (!string.IsNullOrEmpty(content))
+        {
+            labelsToRender.Add(new LabelData(position, content, color, lifespan));
+        }
     }
 
     public void GridXZ(Vector3 center, float size, int cells, Color color, float lifespan = 0f, EGizmoLayer layer = EGizmoLayer.World)

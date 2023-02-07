@@ -131,10 +131,7 @@ public class ChatManager : SteamCaller
         {
             receivedChatHistory.RemoveAt(receivedChatHistory.Count - 1);
         }
-        if (onChatMessageReceived != null)
-        {
-            onChatMessageReceived();
-        }
+        onChatMessageReceived?.Invoke();
     }
 
     public static bool process(SteamPlayer player, string cmd)
@@ -160,10 +157,7 @@ public class ChatManager : SteamCaller
                 shouldList = false;
             }
         }
-        if (onCheckPermissions != null)
-        {
-            onCheckPermissions(player, cmd, ref shouldExecuteCommand, ref shouldList);
-        }
+        onCheckPermissions?.Invoke(player, cmd, ref shouldExecuteCommand, ref shouldList);
         if (fromUnityEvent)
         {
             ChatManager.onCheckUnityEventPermissions?.Invoke(player, cmd, ref shouldExecuteCommand, ref shouldList);
@@ -185,18 +179,14 @@ public class ChatManager : SteamCaller
     public static void ReceiveVoteStart(CSteamID origin, CSteamID target, byte votesNeeded)
     {
         SteamPlayer steamPlayer = PlayerTool.getSteamPlayer(origin);
-        if (steamPlayer == null)
+        if (steamPlayer != null)
         {
-            return;
-        }
-        SteamPlayer steamPlayer2 = PlayerTool.getSteamPlayer(target);
-        if (steamPlayer2 != null)
-        {
-            needsVote = true;
-            hasVote = false;
-            if (onVotingStart != null)
+            SteamPlayer steamPlayer2 = PlayerTool.getSteamPlayer(target);
+            if (steamPlayer2 != null)
             {
-                onVotingStart(steamPlayer, steamPlayer2, votesNeeded);
+                needsVote = true;
+                hasVote = false;
+                onVotingStart?.Invoke(steamPlayer, steamPlayer2, votesNeeded);
             }
         }
     }
@@ -210,10 +200,7 @@ public class ChatManager : SteamCaller
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellVoteMessage")]
     public static void ReceiveVoteUpdate(byte voteYes, byte voteNo)
     {
-        if (onVotingUpdate != null)
-        {
-            onVotingUpdate(voteYes, voteNo);
-        }
+        onVotingUpdate?.Invoke(voteYes, voteNo);
     }
 
     [Obsolete]
@@ -226,10 +213,7 @@ public class ChatManager : SteamCaller
     public static void ReceiveVoteStop(EVotingMessage message)
     {
         needsVote = false;
-        if (onVotingStop != null)
-        {
-            onVotingStop(message);
-        }
+        onVotingStop?.Invoke(message);
     }
 
     [Obsolete]
@@ -241,10 +225,7 @@ public class ChatManager : SteamCaller
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellVoteMessage")]
     public static void ReceiveVoteMessage(EVotingMessage message)
     {
-        if (onVotingMessage != null)
-        {
-            onVotingMessage(message);
-        }
+        onVotingMessage?.Invoke(message);
     }
 
     [Obsolete]
@@ -412,10 +393,7 @@ public class ChatManager : SteamCaller
         }
         bool isRich = false;
         bool isVisible = true;
-        if (onChatted != null)
-        {
-            onChatted(callingPlayer, eChatMode, ref chatted, ref isRich, text, ref isVisible);
-        }
+        onChatted?.Invoke(callingPlayer, eChatMode, ref chatted, ref isRich, text, ref isVisible);
         if (!(process(callingPlayer, text, flag) && isVisible))
         {
             return;
@@ -538,10 +516,7 @@ public class ChatManager : SteamCaller
         {
             throw new Exception("Tried to send server message, but currently a client! Text: " + text);
         }
-        if (onServerSendingMessage != null)
-        {
-            onServerSendingMessage(ref text, ref color, fromPlayer, toPlayer, mode, ref iconURL, ref useRichTextFormatting);
-        }
+        onServerSendingMessage?.Invoke(ref text, ref color, fromPlayer, toPlayer, mode, ref iconURL, ref useRichTextFormatting);
         if (fromPlayer != null && toPlayer != null)
         {
             string newValue = ((string.IsNullOrEmpty(fromPlayer.playerID.nickName) || fromPlayer == toPlayer || !(toPlayer.player != null) || !(fromPlayer.player != null) || !fromPlayer.player.quests.isMemberOfSameGroupAs(toPlayer.player)) ? fromPlayer.playerID.characterName : fromPlayer.playerID.nickName);

@@ -189,10 +189,7 @@ public class DamageTool
             return;
         }
         bool shouldAllow = true;
-        if (DamageTool.damagePlayerRequested != null)
-        {
-            DamageTool.damagePlayerRequested(ref parameters, ref shouldAllow);
-        }
+        DamageTool.damagePlayerRequested?.Invoke(ref parameters, ref shouldAllow);
         if (playerDamaged != null)
         {
             playerDamaged(parameters.player, ref parameters.cause, ref parameters.limb, ref parameters.killer, ref parameters.direction, ref parameters.damage, ref parameters.times, ref shouldAllow);
@@ -469,10 +466,7 @@ public class DamageTool
             }
         }
         bool shouldAllow = true;
-        if (DamageTool.damageZombieRequested != null)
-        {
-            DamageTool.damageZombieRequested(ref parameters, ref shouldAllow);
-        }
+        DamageTool.damageZombieRequested?.Invoke(ref parameters, ref shouldAllow);
         if (zombieDamaged != null)
         {
             zombieDamaged(parameters.zombie, ref parameters.direction, ref parameters.damage, ref parameters.times, ref shouldAllow);
@@ -535,10 +529,7 @@ public class DamageTool
             return;
         }
         bool shouldAllow = true;
-        if (DamageTool.damageAnimalRequested != null)
-        {
-            DamageTool.damageAnimalRequested(ref parameters, ref shouldAllow);
-        }
+        DamageTool.damageAnimalRequested?.Invoke(ref parameters, ref shouldAllow);
         if (animalDamaged != null)
         {
             animalDamaged(parameters.animal, ref parameters.direction, ref parameters.damage, ref parameters.times, ref shouldAllow);

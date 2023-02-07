@@ -445,10 +445,7 @@ public class ModuleHook : MonoBehaviour
             }
             module.isEnabled = isEnabled;
         }
-        if (ModuleHook.onModulesInitialized != null)
-        {
-            ModuleHook.onModulesInitialized();
-        }
+        ModuleHook.onModulesInitialized?.Invoke();
     }
 
     private void shutdownModules()
@@ -465,10 +462,7 @@ public class ModuleHook : MonoBehaviour
                 module.isEnabled = false;
             }
         }
-        if (ModuleHook.onModulesShutdown != null)
-        {
-            ModuleHook.onModulesShutdown();
-        }
+        ModuleHook.onModulesShutdown?.Invoke();
     }
 
     public void awake()

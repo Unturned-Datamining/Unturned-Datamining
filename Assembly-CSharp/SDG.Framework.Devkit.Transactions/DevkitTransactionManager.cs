@@ -38,18 +38,12 @@ public class DevkitTransactionManager
 
     protected static void triggerTransactionPerformed(DevkitTransactionGroup group)
     {
-        if (DevkitTransactionManager.transactionPerformed != null)
-        {
-            DevkitTransactionManager.transactionPerformed(group);
-        }
+        DevkitTransactionManager.transactionPerformed?.Invoke(group);
     }
 
     protected static void triggerTransactionsChanged()
     {
-        if (DevkitTransactionManager.transactionsChanged != null)
-        {
-            DevkitTransactionManager.transactionsChanged();
-        }
+        DevkitTransactionManager.transactionsChanged?.Invoke();
     }
 
     public static IEnumerable<DevkitTransactionGroup> getUndoable()

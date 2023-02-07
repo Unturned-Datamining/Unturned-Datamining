@@ -183,7 +183,10 @@ public class RayMasks
 
     public static readonly int DAMAGE_ZOMBIE = 469762048;
 
+    [Obsolete("Replaced by EFFECT_SPLATTER to make const")]
     public static readonly int SPLATTER = 1671168;
+
+    public const int EFFECT_SPLATTER = 471433216;
 
     public const int CHARACTER_CONTROLLER_MOVE = 406437888;
 

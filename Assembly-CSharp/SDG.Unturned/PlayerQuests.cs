@@ -870,10 +870,7 @@ public class PlayerQuests : PlayerCaller
                     Provider.provider.achievementsService.setAchievement("Major");
                 }
             }
-            if (onFlagUpdated != null)
-            {
-                onFlagUpdated(id);
-            }
+            onFlagUpdated?.Invoke(id);
             TriggerTrackedQuestUpdated();
         }
         if (Provider.isServer && PlayerQuests.onAnyFlagChanged != null)
@@ -900,19 +897,15 @@ public class PlayerQuests : PlayerCaller
             return;
         }
         int num = flagsList.BinarySearch(value, flagComparator);
-        if (num < 0)
+        if (num >= 0)
         {
-            return;
-        }
-        flagsMap.Remove(id);
-        flagsList.RemoveAt(num);
-        if (base.channel.isOwner)
-        {
-            if (onFlagUpdated != null)
+            flagsMap.Remove(id);
+            flagsList.RemoveAt(num);
+            if (base.channel.isOwner)
             {
-                onFlagUpdated(id);
+                onFlagUpdated?.Invoke(id);
+                TriggerTrackedQuestUpdated();
             }
-            TriggerTrackedQuestUpdated();
         }
     }
 
@@ -1670,10 +1663,7 @@ public class PlayerQuests : PlayerCaller
         }
         reader.ReadGuid(out var value6);
         _trackedQuest = Assets.find<QuestAsset>(value6);
-        if (onFlagsUpdated != null)
-        {
-            onFlagsUpdated();
-        }
+        onFlagsUpdated?.Invoke();
         TriggerTrackedQuestUpdated();
     }
 
@@ -1775,10 +1765,7 @@ public class PlayerQuests : PlayerCaller
 
     private void onTimeOfDayChanged()
     {
-        if (onExternalConditionsUpdated != null)
-        {
-            onExternalConditionsUpdated();
-        }
+        onExternalConditionsUpdated?.Invoke();
     }
 
     internal void InitializePlayer()
@@ -1791,9 +1778,9 @@ public class PlayerQuests : PlayerCaller
         {
             load();
             base.player.movement.PlayerNavChanged += OnPlayerNavChanged;
-            if (base.channel.isOwner && onFlagsUpdated != null)
+            if (base.channel.isOwner)
             {
-                onFlagsUpdated();
+                onFlagsUpdated?.Invoke();
             }
         }
         if (base.channel.isOwner)

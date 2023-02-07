@@ -423,21 +423,14 @@ public class PlayerMovement : PlayerCaller
             if (vehicle != null)
             {
                 PlayerUI.disableDot();
-                if (base.player.equipment.asset != null && base.player.equipment.asset.type == EItemType.GUN)
+                if (base.player.equipment.useable is UseableGun useableGun)
                 {
-                    if (base.player.look.perspective == EPlayerPerspective.THIRD)
-                    {
-                        PlayerUI.disableCrosshair();
-                    }
-                    else
-                    {
-                        PlayerUI.enableCrosshair();
-                    }
+                    useableGun.UpdateCrosshairEnabled();
                 }
             }
-            else if (base.player.equipment.asset != null && base.player.equipment.asset.type == EItemType.GUN)
+            else if (base.player.equipment.useable is UseableGun useableGun2)
             {
-                PlayerUI.enableCrosshair();
+                useableGun2.UpdateCrosshairEnabled();
             }
             else
             {
@@ -465,10 +458,7 @@ public class PlayerMovement : PlayerCaller
         }
         if (base.channel.isOwner)
         {
-            if (onSeated != null)
-            {
-                onSeated(flag, vehicle != null, interactableVehicle != null, interactableVehicle, vehicle);
-            }
+            onSeated?.Invoke(flag, vehicle != null, interactableVehicle != null, interactableVehicle, vehicle);
             if (flag && onVehicleUpdated != null)
             {
                 vehicle.getDisplayFuel(out var currentFuel, out var maxFuel);
@@ -994,10 +984,7 @@ public class PlayerMovement : PlayerCaller
                     checkGround(base.transform.position);
                     if (isGrounded)
                     {
-                        if (onLanded != null)
-                        {
-                            onLanded(velocity.y);
-                        }
+                        onLanded?.Invoke(velocity.y);
                         if (!base.player.input.isResimulating && Mathf.Abs(velocity.y) > 1f)
                         {
                             PlayLandAudioClip();
@@ -1068,21 +1055,6 @@ public class PlayerMovement : PlayerCaller
             else
             {
                 updates.Add(new PlayerStateUpdate(Vector3.zero, 0, 0));
-            }
-        }
-    }
-
-    private void onPerspectiveUpdated(EPlayerPerspective newPerspective)
-    {
-        if (vehicle != null && base.player.equipment.asset != null && base.player.equipment.asset.type == EItemType.GUN)
-        {
-            if (newPerspective == EPlayerPerspective.THIRD)
-            {
-                PlayerUI.disableCrosshair();
-            }
-            else
-            {
-                PlayerUI.enableCrosshair();
             }
         }
     }
@@ -1328,10 +1300,7 @@ public class PlayerMovement : PlayerCaller
         if (updateRegionIndex < 6)
         {
             bool canIncrementIndex = true;
-            if (onRegionUpdated != null)
-            {
-                onRegionUpdated(base.player, updateRegionOld_X, updateRegionOld_Y, updateRegionNew_X, updateRegionNew_Y, updateRegionIndex, ref canIncrementIndex);
-            }
+            onRegionUpdated?.Invoke(base.player, updateRegionOld_X, updateRegionOld_Y, updateRegionNew_X, updateRegionNew_Y, updateRegionIndex, ref canIncrementIndex);
             if (canIncrementIndex)
             {
                 updateRegionIndex++;
@@ -1342,10 +1311,7 @@ public class PlayerMovement : PlayerCaller
         {
             byte oldBound = bound;
             _bound = b3;
-            if (onBoundUpdated != null)
-            {
-                onBoundUpdated(base.player, oldBound, b3);
-            }
+            onBoundUpdated?.Invoke(base.player, oldBound, b3);
         }
         if (Provider.isServer)
         {
@@ -1387,27 +1353,18 @@ public class PlayerMovement : PlayerCaller
         if (flag != isSafe)
         {
             _isSafe = flag;
-            if (onSafetyUpdated != null)
-            {
-                onSafetyUpdated(isSafe);
-            }
+            onSafetyUpdated?.Invoke(isSafe);
         }
         ActiveDeadzone = activeDeadzone;
         if (flag2 != isRadiated)
         {
             _isRadiated = flag2;
-            if (onRadiationUpdated != null)
-            {
-                onRadiationUpdated(isRadiated);
-            }
+            onRadiationUpdated?.Invoke(isRadiated);
         }
         if (firstOverlappingVolume != purchaseNode)
         {
             _purchaseNode = firstOverlappingVolume;
-            if (onPurchaseUpdated != null)
-            {
-                onPurchaseUpdated(purchaseNode);
-            }
+            onPurchaseUpdated?.Invoke(purchaseNode);
         }
         base.player.inventory.closeDistantStorage();
     }
@@ -1443,8 +1400,6 @@ public class PlayerMovement : PlayerCaller
         {
             controller = GetComponent<CharacterController>();
             controller.enableOverlapRecovery = false;
-            PlayerLook look = base.player.look;
-            look.onPerspectiveUpdated = (PerspectiveUpdated)Delegate.Combine(look.onPerspectiveUpdated, new PerspectiveUpdated(onPerspectiveUpdated));
         }
         if (Provider.isServer)
         {

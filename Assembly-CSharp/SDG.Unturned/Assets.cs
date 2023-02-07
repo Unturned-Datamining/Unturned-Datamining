@@ -1499,10 +1499,7 @@ public class Assets : MonoBehaviour
         }
         LoadingUI.updateKey("Loading_Misc");
         yield return null;
-        if (onAssetsRefreshed != null)
-        {
-            onAssetsRefreshed();
-        }
+        onAssetsRefreshed?.Invoke();
         yield return null;
         UnturnedLog.info($"Loading assets took {Time.realtimeSinceStartupAsDouble - startTime}s");
         _isLoading = false;
@@ -1600,13 +1597,13 @@ public class Assets : MonoBehaviour
         Asset asset = find(guid);
         if (asset != null)
         {
-            Provider._connectionFailureReason = "Server missing asset: \"" + asset.FriendlyName + "\" File: \"" + asset.name + "\" Id: " + guid.ToString("N");
+            Provider._connectionFailureReason = $"Server missing asset: \"{asset.FriendlyName}\" File: \"{asset.name}\" Id: {guid:N}";
         }
         else
         {
             Provider._connectionFailureReason = string.Concat(string.Concat(string.Concat("Client and server are both missing unknown asset! ID: " + guid.ToString("N"), "\nThis probably means either an invalid ID was sent by the server,"), "\nthe ID got corrupted for example by plugins modifying network traffic,"), "\nor a required level asset like materials/foliage/trees/objects is missing.");
         }
-        Provider.RequestDisconnect("Kicked for sending invalid asset guid: " + guid.ToString("N"));
+        Provider.RequestDisconnect($"Kicked for sending invalid asset guid: {guid:N}");
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
@@ -1626,27 +1623,27 @@ public class Assets : MonoBehaviour
             {
                 if (!string.IsNullOrEmpty(serverAssetBundleNameWithoutExtension) && asset.originMasterBundle != null && !string.Equals(asset.originMasterBundle.assetBundleNameWithoutExtension, serverAssetBundleNameWithoutExtension))
                 {
-                    text2 = "Client and server loaded \"" + serverFriendlyName + "\" from different asset bundles! (File: \"" + asset.name + "\" ID: " + guid.ToString("N") + ")";
+                    text2 = $"Client and server loaded \"{serverFriendlyName}\" from different asset bundles! (File: \"{asset.name}\" ID: {guid:N})";
                     text2 = text2 + "\nClient asset bundle is \"" + asset.originMasterBundle.assetBundleNameWithoutExtension + "\", whereas server asset bundle is \"" + serverAssetBundleNameWithoutExtension + "\".";
                 }
                 else if (!string.IsNullOrEmpty(serverAssetBundleNameWithoutExtension) && asset.originMasterBundle == null)
                 {
-                    text2 = "Client loaded \"" + serverFriendlyName + "\" from legacy asset bundle but server did not! (File: \"" + asset.name + "\" ID: " + guid.ToString("N") + ")";
+                    text2 = $"Client loaded \"{serverFriendlyName}\" from legacy asset bundle but server did not! (File: \"{asset.name}\" ID: {guid:N})";
                     text2 = text2 + "\nServer asset bundle name: \"" + serverAssetBundleNameWithoutExtension + "\".";
                 }
                 else if (string.IsNullOrEmpty(serverAssetBundleNameWithoutExtension) && asset.originMasterBundle != null)
                 {
-                    text2 = "Server loaded \"" + serverFriendlyName + "\" from legacy asset bundle but client did not! (File: \"" + asset.name + "\" ID: " + guid.ToString("N") + ")";
+                    text2 = $"Server loaded \"{serverFriendlyName}\" from legacy asset bundle but client did not! (File: \"{asset.name}\" ID: {guid:N})";
                     text2 = text2 + "\nClient asset bundle name: \"" + asset.originMasterBundle.assetBundleNameWithoutExtension + "\"";
                 }
                 else if (Hash.verifyHash(asset.hash, serverHash))
                 {
-                    text2 = "Server asset bundle hash out of date for \"" + serverFriendlyName + "\"! (File: \"" + asset.name + "\" ID: " + guid.ToString("N") + ")";
+                    text2 = $"Server asset bundle hash out of date for \"{serverFriendlyName}\"! (File: \"{asset.name}\" ID: {guid:N})";
                     text2 = text2 + "\nThis probably means the mod creator should re-export the \"" + serverAssetBundleNameWithoutExtension + "\" asset bundle.";
                 }
                 else
                 {
-                    text2 = "Client and server disagree on asset \"" + asset.FriendlyName + "\" configuration. (File: \"" + asset.name + "\" ID: " + guid.ToString("N") + ")";
+                    text2 = $"Client and server disagree on asset \"{asset.FriendlyName}\" configuration. (File: \"{asset.name}\" ID: {guid:N})";
                     text2 += "\nUsually this means the files are different versions in which case updating the client and server might fix it.";
                     text2 += "\nAlternatively the file may have been corrupted, locally modified, or modified on the server.";
                     text2 = text2 + "\nClient hash is " + Hash.toString(asset.hash) + ", whereas server hash is " + Hash.toString(serverHash) + ".";
@@ -1654,7 +1651,7 @@ public class Assets : MonoBehaviour
             }
             else
             {
-                text2 = "Client and server have different assets with the same ID! (" + guid.ToString("N") + ")";
+                text2 = $"Client and server have different assets with the same ID! ({guid:N})";
                 text2 += "\nThis probably means an existing file was copied, but the mod creator can fix it by changing the ID.";
                 text2 = ((!string.Equals(asset.FriendlyName, serverFriendlyName)) ? (text2 + "\nClient display name is \"" + asset.FriendlyName + "\", whereas server display name is \"" + serverFriendlyName + "\".") : (text2 + "\nDisplay name \"" + serverFriendlyName + "\" matches between client and server."));
                 text2 = ((!string.Equals(asset.name, serverName)) ? (text2 + "\nClient file name is \"" + asset.name + "\", whereas server file name is \"" + serverName + "\".") : (text2 + "\nFile name \"" + asset.name + "\" matches between client and server."));
@@ -1663,8 +1660,8 @@ public class Assets : MonoBehaviour
         }
         else
         {
-            Provider._connectionFailureReason = "Unknown asset hash mismatch? (should never happen) Name: \"" + serverFriendlyName + "\" File: \"" + serverName + "\" Id: " + guid.ToString("N");
+            Provider._connectionFailureReason = $"Unknown asset hash mismatch? (should never happen) Name: \"{serverFriendlyName}\" File: \"{serverName}\" Id: {guid:N}";
         }
-        Provider.RequestDisconnect("Kicked for asset hash mismatch guid: " + guid.ToString("N") + " serverName: \"" + serverName + "\" serverFriendlyName: \"" + serverFriendlyName + "\" serverHash: " + Hash.toString(serverHash) + " serverAssetBundleName: \"" + serverAssetBundleNameWithoutExtension + "\" serverAssetOrigin: \"" + serverAssetOrigin + "\"");
+        Provider.RequestDisconnect($"Kicked for asset hash mismatch guid: {guid:N} serverName: \"{serverName}\" serverFriendlyName: \"{serverFriendlyName}\" serverHash: {Hash.toString(serverHash)} serverAssetBundleName: \"{serverAssetBundleNameWithoutExtension}\" serverAssetOrigin: \"{serverAssetOrigin}\"");
     }
 }

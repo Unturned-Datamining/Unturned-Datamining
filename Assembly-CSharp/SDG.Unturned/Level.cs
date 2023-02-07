@@ -26,6 +26,8 @@ public class Level : MonoBehaviour
 
         public bool[,][] wasObjectSkyboxEnabled = new bool[Regions.WORLD_SIZE, Regions.WORLD_SIZE][];
 
+        public bool[,][] wasObjectVisibleInCullingVolume = new bool[Regions.WORLD_SIZE, Regions.WORLD_SIZE][];
+
         public bool[,][] wasTreeEnabled = new bool[Regions.WORLD_SIZE, Regions.WORLD_SIZE][];
 
         public bool[,][] wasTreeSkyboxEnabled = new bool[Regions.WORLD_SIZE, Regions.WORLD_SIZE][];
@@ -166,6 +168,8 @@ public class Level : MonoBehaviour
     private static CartographyVolumeManager cartographyVolumeManager;
 
     private static OxygenVolumeManager oxygenVolumeManager;
+
+    private static CullingVolumeManager cullingVolumeManager;
 
     private static AirdropDevkitNodeSystem airdropNodeSystem;
 
@@ -597,10 +601,7 @@ public class Level : MonoBehaviour
 
     public static void exit()
     {
-        if (onLevelExited != null)
-        {
-            onLevelExited();
-        }
+        onLevelExited?.Invoke();
         _isEditor = false;
         isExiting = true;
         _info = null;
@@ -975,24 +976,27 @@ public class Level : MonoBehaviour
                 preCaptureObjectState.wasObjectCollisionEnabled[b, b2] = new bool[list.Count];
                 preCaptureObjectState.wasObjectVisualEnabled[b, b2] = new bool[list.Count];
                 preCaptureObjectState.wasObjectSkyboxEnabled[b, b2] = new bool[list.Count];
+                preCaptureObjectState.wasObjectVisibleInCullingVolume[b, b2] = new bool[list.Count];
                 for (int i = 0; i < list.Count; i++)
                 {
                     LevelObject levelObject = list[i];
                     preCaptureObjectState.wasObjectCollisionEnabled[b, b2][i] = levelObject.isCollisionEnabled;
                     preCaptureObjectState.wasObjectVisualEnabled[b, b2][i] = levelObject.isVisualEnabled;
                     preCaptureObjectState.wasObjectSkyboxEnabled[b, b2][i] = levelObject.isSkyboxEnabled;
+                    preCaptureObjectState.wasObjectVisibleInCullingVolume[b, b2][i] = levelObject.isVisibleInCullingVolume;
                     ObjectAsset asset = levelObject.asset;
                     if (asset != null && asset.holidayRestriction == ENPCHoliday.NONE)
                     {
-                        levelObject.enableCollision();
-                        levelObject.enableVisual();
+                        levelObject.SetActive(shouldBeActive: true);
+                        levelObject.SetIsVisibleInRegion(isVisible: true);
+                        levelObject.SetIsVisibleInCullingVolume(isVisible: true);
                     }
                     else
                     {
-                        levelObject.disableCollision();
-                        levelObject.disableVisual();
+                        levelObject.SetActive(shouldBeActive: false);
+                        levelObject.SetIsVisibleInRegion(isVisible: false);
                     }
-                    levelObject.disableSkybox();
+                    levelObject.SetSkyboxActive(shouldBeActive: false);
                 }
                 List<ResourceSpawnpoint> list2 = LevelGround.trees[b, b2];
                 preCaptureObjectState.wasTreeEnabled[b, b2] = new bool[list2.Count];
@@ -1027,27 +1031,11 @@ public class Level : MonoBehaviour
                 List<LevelObject> list = LevelObjects.objects[b, b2];
                 for (int i = 0; i < list.Count; i++)
                 {
-                    _ = list[i];
-                    if (state.wasObjectCollisionEnabled[b, b2][i])
-                    {
-                        list[i].enableCollision();
-                    }
-                    else
-                    {
-                        list[i].disableCollision();
-                    }
-                    if (state.wasObjectVisualEnabled[b, b2][i])
-                    {
-                        list[i].enableVisual();
-                    }
-                    else
-                    {
-                        list[i].disableVisual();
-                    }
-                    if (state.wasObjectSkyboxEnabled[b, b2][i])
-                    {
-                        list[i].enableSkybox();
-                    }
+                    LevelObject levelObject = list[i];
+                    levelObject.SetActive(state.wasObjectCollisionEnabled[b, b2][i]);
+                    levelObject.SetIsVisibleInRegion(state.wasObjectVisualEnabled[b, b2][i]);
+                    levelObject.SetSkyboxActive(state.wasObjectSkyboxEnabled[b, b2][i]);
+                    levelObject.SetIsVisibleInCullingVolume(state.wasObjectVisibleInCullingVolume[b, b2][i]);
                 }
                 List<ResourceSpawnpoint> list2 = LevelGround.trees[b, b2];
                 for (int j = 0; j < list2.Count; j++)
@@ -1365,10 +1353,7 @@ public class Level : MonoBehaviour
         LoadingUI.updateProgress(12f / STEPS);
         yield return null;
         pendingHashes = new List<byte[]>();
-        if (Level.loadingSteps != null)
-        {
-            Level.loadingSteps();
-        }
+        Level.loadingSteps?.Invoke();
         yield return null;
         if (LevelGround.hasLegacyDataForConversion)
         {
@@ -1387,6 +1372,7 @@ public class Level : MonoBehaviour
         {
             LevelNodes.AutoConvertLegacyNodes();
         }
+        VolumeManager<CullingVolume, CullingVolumeManager>.Get().RefreshOverlappingObjects();
         yield return null;
         includeHash("Level.dat", getLevelHash(info.path));
         if (info.configData.Hash != null)
@@ -1422,25 +1408,13 @@ public class Level : MonoBehaviour
             obj.gameObject.layer = 8;
         }
         yield return null;
-        if (onPrePreLevelLoaded != null)
-        {
-            onPrePreLevelLoaded(id);
-        }
+        onPrePreLevelLoaded?.Invoke(id);
         yield return null;
-        if (onPreLevelLoaded != null)
-        {
-            onPreLevelLoaded(id);
-        }
+        onPreLevelLoaded?.Invoke(id);
         yield return null;
-        if (onLevelLoaded != null)
-        {
-            onLevelLoaded(id);
-        }
+        onLevelLoaded?.Invoke(id);
         yield return null;
-        if (onPostLevelLoaded != null)
-        {
-            onPostLevelLoaded(id);
-        }
+        onPostLevelLoaded?.Invoke(id);
         yield return null;
         if (!isEditor && info != null)
         {
@@ -1507,6 +1481,7 @@ public class Level : MonoBehaviour
         hordePurchaseVolumeManager = new HordePurchaseVolumeManager();
         cartographyVolumeManager = new CartographyVolumeManager();
         oxygenVolumeManager = new OxygenVolumeManager();
+        cullingVolumeManager = new CullingVolumeManager();
         airdropNodeSystem = new AirdropDevkitNodeSystem();
         locationNodeSystem = new LocationDevkitNodeSystem();
         spawnpointSystem = new SpawnpointSystemV2();
@@ -1611,10 +1586,7 @@ public class Level : MonoBehaviour
             isLoadingContent = true;
             isLoadingArea = true;
             _isLoaded = false;
-            if (onLevelLoaded != null)
-            {
-                onLevelLoaded(scene.buildIndex);
-            }
+            onLevelLoaded?.Invoke(scene.buildIndex);
             LevelLighting.resetForMainMenu();
         }
         _ = scene.buildIndex;

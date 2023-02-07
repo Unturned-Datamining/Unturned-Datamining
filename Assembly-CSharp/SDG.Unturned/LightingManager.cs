@@ -166,50 +166,26 @@ public class LightingManager : SteamCaller
 
     private static void broadcastDayNightUpdated(bool isDaytime)
     {
-        if (onDayNightUpdated != null)
-        {
-            onDayNightUpdated(isDaytime);
-        }
-        if (onDayNightUpdated_ModHook != null)
-        {
-            onDayNightUpdated_ModHook(isDaytime);
-        }
+        onDayNightUpdated?.Invoke(isDaytime);
+        onDayNightUpdated_ModHook?.Invoke(isDaytime);
     }
 
     private static void broadcastMoonUpdated(bool isFullMoon)
     {
-        if (onMoonUpdated != null)
-        {
-            onMoonUpdated(isFullMoon);
-        }
-        if (onMoonUpdated_ModHook != null)
-        {
-            onMoonUpdated_ModHook(isFullMoon);
-        }
+        onMoonUpdated?.Invoke(isFullMoon);
+        onMoonUpdated_ModHook?.Invoke(isFullMoon);
     }
 
     internal static void broadcastRainUpdated(ELightingRain rain)
     {
-        if (onRainUpdated != null)
-        {
-            onRainUpdated(rain);
-        }
-        if (onRainUpdated_ModHook != null)
-        {
-            onRainUpdated_ModHook(rain);
-        }
+        onRainUpdated?.Invoke(rain);
+        onRainUpdated_ModHook?.Invoke(rain);
     }
 
     internal static void broadcastSnowUpdated(ELightingSnow snow)
     {
-        if (onSnowUpdated != null)
-        {
-            onSnowUpdated(snow);
-        }
-        if (onSnowUpdated_ModHook != null)
-        {
-            onSnowUpdated_ModHook(snow);
-        }
+        onSnowUpdated?.Invoke(snow);
+        onSnowUpdated_ModHook?.Invoke(snow);
     }
 
     [Obsolete("Replaced by LevelLighting.GetActiveWeatherAsset")]
@@ -335,10 +311,7 @@ public class LightingManager : SteamCaller
         isCycled = day > LevelLighting.bias;
         isFullMoon = isCycled && LevelLighting.moon == 2;
         broadcastDayNightUpdated(isDaytime);
-        if (onTimeOfDayChanged != null)
-        {
-            onTimeOfDayChanged();
-        }
+        onTimeOfDayChanged?.Invoke();
         LevelLighting.wind = (float)(int)wind * 2f;
         Level.isLoadingLighting = false;
     }
@@ -462,10 +435,7 @@ public class LightingManager : SteamCaller
         {
             LevelLighting.time = day;
         }
-        if (onTimeOfDayChanged != null)
-        {
-            onTimeOfDayChanged();
-        }
+        onTimeOfDayChanged?.Invoke();
     }
 
     private void TickScheduledWeather()
@@ -734,10 +704,7 @@ public class LightingManager : SteamCaller
         _isFullMoon = false;
         isCycled = false;
         broadcastDayNightUpdated(isDaytime: true);
-        if (onTimeOfDayChanged != null)
-        {
-            onTimeOfDayChanged();
-        }
+        onTimeOfDayChanged?.Invoke();
         windDelay = UnityEngine.Random.Range(45, 75);
         LevelLighting.wind = UnityEngine.Random.Range(0, 360);
         if (Provider.isServer)

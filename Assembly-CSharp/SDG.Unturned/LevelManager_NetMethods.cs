@@ -78,7 +78,7 @@ public static class LevelManager_NetMethods
     {
         NetPakReader reader = context.reader;
         reader.ReadClampedVector3(out var value);
-        reader.ReadClampedVector3(out var value2);
+        reader.ReadNormalVector3(out var value2);
         reader.ReadFloat(out var value3);
         reader.ReadFloat(out var value4);
         reader.ReadFloat(out var value5);
@@ -89,7 +89,7 @@ public static class LevelManager_NetMethods
     public static void ReceiveAirdropState_Write(NetPakWriter writer, Vector3 state, Vector3 direction, float speed, float force, float delay)
     {
         writer.WriteClampedVector3(state);
-        writer.WriteClampedVector3(direction);
+        writer.WriteNormalVector3(direction);
         writer.WriteFloat(speed);
         writer.WriteFloat(force);
         writer.WriteFloat(delay);

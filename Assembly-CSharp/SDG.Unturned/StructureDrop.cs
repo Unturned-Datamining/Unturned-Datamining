@@ -152,10 +152,7 @@ public class StructureDrop
         if (!(player == null) && !player.life.isDead && player.look.canUseWorkzone && StructureManager.tryGetRegion(_model, out var x, out var y, out var _))
         {
             bool shouldAllow = true;
-            if (StructureManager.onTransformRequested != null)
-            {
-                StructureManager.onTransformRequested(player.channel.owner.playerID.steamID, x, y, instanceID, ref point, ref angle_x, ref angle_y, ref angle_z, ref shouldAllow);
-            }
+            StructureManager.onTransformRequested?.Invoke(player.channel.owner.playerID.steamID, x, y, instanceID, ref point, ref angle_x, ref angle_y, ref angle_z, ref shouldAllow);
             if (!shouldAllow)
             {
                 point = serversideData.point;

@@ -192,10 +192,7 @@ public class CommandLine
     {
         string[] commandLineArgs = Environment.GetCommandLineArgs();
         List<string> list = new List<string>();
-        if (onGetCommands != null)
-        {
-            onGetCommands(list);
-        }
+        onGetCommands?.Invoke(list);
         bool flag = false;
         for (int i = 0; i < commandLineArgs.Length; i++)
         {

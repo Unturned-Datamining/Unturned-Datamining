@@ -13,10 +13,7 @@ public class SaveManager : SteamCaller
     {
         try
         {
-            if (onPreSave != null)
-            {
-                onPreSave();
-            }
+            onPreSave?.Invoke();
         }
         catch (Exception e)
         {
@@ -29,10 +26,7 @@ public class SaveManager : SteamCaller
     {
         try
         {
-            if (onPostSave != null)
-            {
-                onPostSave();
-            }
+            onPostSave?.Invoke();
         }
         catch (Exception e)
         {

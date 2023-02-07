@@ -18,10 +18,7 @@ public class Editor : MonoBehaviour
     {
         _area = GetComponent<EditorArea>();
         _editor = this;
-        if (onEditorCreated != null)
-        {
-            onEditorCreated();
-        }
+        onEditorCreated?.Invoke();
     }
 
     private void Start()

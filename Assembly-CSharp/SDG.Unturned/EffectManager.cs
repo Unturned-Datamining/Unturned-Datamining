@@ -1003,9 +1003,9 @@ public class EffectManager : SteamCaller
     public static void ReceiveEffectClicked(in ServerInvocationContext context, string buttonName)
     {
         Player player = context.GetPlayer();
-        if (!(player == null) && onEffectButtonClicked != null)
+        if (!(player == null))
         {
-            onEffectButtonClicked(player, buttonName);
+            onEffectButtonClicked?.Invoke(player, buttonName);
         }
     }
 
@@ -1025,9 +1025,9 @@ public class EffectManager : SteamCaller
     public static void ReceiveEffectTextCommitted(in ServerInvocationContext context, string inputFieldName, string text)
     {
         Player player = context.GetPlayer();
-        if (!(player == null) && onEffectTextCommitted != null)
+        if (!(player == null))
         {
-            onEffectTextCommitted(player, inputFieldName, text);
+            onEffectTextCommitted?.Invoke(player, inputFieldName, text);
         }
     }
 
@@ -1281,14 +1281,14 @@ public class EffectManager : SteamCaller
                     float f = UnityEngine.Random.Range(0f, (float)Math.PI * 2f);
                     float num = UnityEngine.Random.Range(1f, 6f);
                     Ray ray = new Ray(point + new Vector3(Mathf.Cos(f) * num, 0f, Mathf.Sin(f) * num), Vector3.down);
-                    int sPLATTER = RayMasks.SPLATTER;
-                    Physics.Raycast(ray, out hitInfo, 8f, sPLATTER);
+                    int layerMask = 471433216;
+                    Physics.Raycast(ray, out hitInfo, 8f, layerMask);
                 }
                 else
                 {
                     Ray ray2 = new Ray(point, -2f * normal + new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f)));
-                    int sPLATTER2 = RayMasks.SPLATTER;
-                    Physics.Raycast(ray2, out hitInfo, 8f, sPLATTER2);
+                    int layerMask2 = 471433216;
+                    Physics.Raycast(ray2, out hitInfo, 8f, layerMask2);
                 }
                 if (hitInfo.transform != null)
                 {
@@ -1297,6 +1297,7 @@ public class EffectManager : SteamCaller
                     float num2 = UnityEngine.Random.Range(1f, 2f);
                     transform2.localScale = new Vector3(num2, num2, num2);
                     transform2.parent = hitInfo.transform;
+                    RegisterAttachment(transform2.gameObject);
                     RegisterDebris(transform2.gameObject);
                     transform2.gameObject.SetActive(value: true);
                     if (asset.splatterLifetime > float.Epsilon)
@@ -1477,7 +1478,7 @@ public class EffectManager : SteamCaller
         {
             if (debrisGameObject != null)
             {
-                UnityEngine.Object.Destroy(debrisGameObject);
+                pool.Destroy(debrisGameObject);
             }
         }
         debrisGameObjects.Clear();

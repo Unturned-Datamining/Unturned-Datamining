@@ -152,10 +152,7 @@ public class PlayerCrafting : PlayerCaller
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellCraft")]
     public void ReceiveRefreshCrafting()
     {
-        if (onCraftingUpdated != null)
-        {
-            onCraftingUpdated();
-        }
+        onCraftingUpdated?.Invoke();
     }
 
     public void ServerRefreshOwnerCrafting()
@@ -181,9 +178,9 @@ public class PlayerCrafting : PlayerCaller
         {
             onCraftBlueprintRequested(this, ref id, ref index, ref shouldAllow);
         }
-        else if (onCraftingRequested != null)
+        else
         {
-            onCraftingRequested(this, ref id, ref index, ref shouldAllow);
+            onCraftingRequested?.Invoke(this, ref id, ref index, ref shouldAllow);
         }
         if (!shouldAllow || !(Assets.find(EAssetType.ITEM, id) is ItemAsset itemAsset) || index >= itemAsset.blueprints.Count)
         {

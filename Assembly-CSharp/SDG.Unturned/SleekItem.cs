@@ -186,18 +186,12 @@ public class SleekItem : SleekWrapper
 
     private void onClickedButton(ISleekElement button)
     {
-        if (onDraggedItem != null)
-        {
-            onDraggedItem(this);
-        }
+        onDraggedItem?.Invoke(this);
     }
 
     private void onRightClickedButton(ISleekElement button)
     {
-        if (onClickedItem != null)
-        {
-            onClickedItem(this);
-        }
+        onClickedItem?.Invoke(this);
     }
 
     public SleekItem(ItemJar jar)

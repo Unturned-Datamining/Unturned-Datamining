@@ -498,10 +498,7 @@ public class PlayerAnimator : PlayerCaller
             captorItem = 0;
             captorStrength = 0;
             _gesture = EPlayerGesture.NONE;
-            if (onGestureUpdated != null)
-            {
-                onGestureUpdated(gesture);
-            }
+            onGestureUpdated?.Invoke(gesture);
         }
         if (base.channel.isOwner)
         {
@@ -653,10 +650,7 @@ public class PlayerAnimator : PlayerCaller
             play("Gesture_Facepalm", smooth: false);
             _gesture = EPlayerGesture.NONE;
         }
-        if (onGestureUpdated != null)
-        {
-            onGestureUpdated(gesture);
-        }
+        onGestureUpdated?.Invoke(gesture);
     }
 
     [Obsolete]

@@ -404,10 +404,7 @@ public class PlayerEquipment : PlayerCaller
         obj.x = x;
         obj.y = y;
         ClearDuplicateHotkeys(hotkeyIndex);
-        if (onHotkeysUpdated != null)
-        {
-            onHotkeysUpdated();
-        }
+        onHotkeysUpdated?.Invoke();
     }
 
     private void ClearDuplicateHotkeys(int newHotkeyIndex)
@@ -1298,10 +1295,7 @@ public class PlayerEquipment : PlayerCaller
         if ((page == equippedPage && x == equipped_x && y == equipped_y) || page == byte.MaxValue)
         {
             bool shouldAllow = true;
-            if (onDequipRequested != null)
-            {
-                onDequipRequested(this, ref shouldAllow);
-            }
+            onDequipRequested?.Invoke(this, ref shouldAllow);
             if (shouldAllow)
             {
                 dequip();
@@ -1329,10 +1323,7 @@ public class PlayerEquipment : PlayerCaller
                 return;
             }
             bool shouldAllow2 = true;
-            if (onEquipRequested != null)
-            {
-                onEquipRequested(this, item, itemAsset, ref shouldAllow2);
-            }
+            onEquipRequested?.Invoke(this, item, itemAsset, ref shouldAllow2);
             if (shouldAllow2)
             {
                 NetId arg = NetIdRegistry.Claim();
@@ -2212,10 +2203,7 @@ public class PlayerEquipment : PlayerCaller
                 obj.y = PlayerDashboardInventoryUI.selected_y;
                 PlayerDashboardInventoryUI.closeSelection();
                 ClearDuplicateHotkeys(b);
-                if (onHotkeysUpdated != null)
-                {
-                    onHotkeysUpdated();
-                }
+                onHotkeysUpdated?.Invoke();
             }
         }
         else if (PlayerDashboardInventoryUI.selectedPage == byte.MaxValue)
@@ -2225,10 +2213,7 @@ public class PlayerEquipment : PlayerCaller
             obj2.page = byte.MaxValue;
             obj2.x = byte.MaxValue;
             obj2.y = byte.MaxValue;
-            if (onHotkeysUpdated != null)
-            {
-                onHotkeysUpdated();
-            }
+            onHotkeysUpdated?.Invoke();
         }
     }
 

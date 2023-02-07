@@ -12,6 +12,8 @@ public abstract class DevkitHierarchyItemBase : MonoBehaviour, IDevkitHierarchyI
 
     public virtual bool ShouldSave => true;
 
+    public virtual bool CanBeSelected => true;
+
     public NetId GetNetIdFromInstanceId()
     {
         if (instanceID != 0)

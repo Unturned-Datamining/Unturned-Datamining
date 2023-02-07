@@ -199,10 +199,7 @@ public class PlayerClothing : PlayerCaller
     public void ReceiveShirtQuality(byte quality)
     {
         shirtQuality = quality;
-        if (onShirtUpdated != null)
-        {
-            onShirtUpdated(shirt, shirtQuality, shirtState);
-        }
+        onShirtUpdated?.Invoke(shirt, shirtQuality, shirtState);
     }
 
     public void sendUpdateShirtQuality()
@@ -220,10 +217,7 @@ public class PlayerClothing : PlayerCaller
     public void ReceivePantsQuality(byte quality)
     {
         pantsQuality = quality;
-        if (onPantsUpdated != null)
-        {
-            onPantsUpdated(pants, pantsQuality, pantsState);
-        }
+        onPantsUpdated?.Invoke(pants, pantsQuality, pantsState);
     }
 
     public void sendUpdatePantsQuality()
@@ -241,10 +235,7 @@ public class PlayerClothing : PlayerCaller
     public void ReceiveHatQuality(byte quality)
     {
         hatQuality = quality;
-        if (onHatUpdated != null)
-        {
-            onHatUpdated(hat, hatQuality, hatState);
-        }
+        onHatUpdated?.Invoke(hat, hatQuality, hatState);
     }
 
     public void sendUpdateHatQuality()
@@ -262,10 +253,7 @@ public class PlayerClothing : PlayerCaller
     public void ReceiveBackpackQuality(byte quality)
     {
         backpackQuality = quality;
-        if (onBackpackUpdated != null)
-        {
-            onBackpackUpdated(backpack, backpackQuality, backpackState);
-        }
+        onBackpackUpdated?.Invoke(backpack, backpackQuality, backpackState);
     }
 
     public void sendUpdateBackpackQuality()
@@ -283,10 +271,7 @@ public class PlayerClothing : PlayerCaller
     public void ReceiveVestQuality(byte quality)
     {
         vestQuality = quality;
-        if (onVestUpdated != null)
-        {
-            onVestUpdated(vest, vestQuality, vestState);
-        }
+        onVestUpdated?.Invoke(vest, vestQuality, vestState);
     }
 
     public void sendUpdateVestQuality()
@@ -304,10 +289,7 @@ public class PlayerClothing : PlayerCaller
     public void ReceiveMaskQuality(byte quality)
     {
         maskQuality = quality;
-        if (onMaskUpdated != null)
-        {
-            onMaskUpdated(mask, maskQuality, maskState);
-        }
+        onMaskUpdated?.Invoke(mask, maskQuality, maskState);
     }
 
     public void sendUpdateMaskQuality()
@@ -317,10 +299,7 @@ public class PlayerClothing : PlayerCaller
 
     public void updateMaskQuality()
     {
-        if (onMaskUpdated != null)
-        {
-            onMaskUpdated(mask, maskQuality, maskState);
-        }
+        onMaskUpdated?.Invoke(mask, maskQuality, maskState);
     }
 
     [Obsolete]
@@ -333,10 +312,7 @@ public class PlayerClothing : PlayerCaller
     public void ReceiveGlassesQuality(byte quality)
     {
         glassesQuality = quality;
-        if (onGlassesUpdated != null)
-        {
-            onGlassesUpdated(glasses, glassesQuality, glassesState);
-        }
+        onGlassesUpdated?.Invoke(glasses, glassesQuality, glassesState);
     }
 
     public void sendUpdateGlassesQuality()
@@ -371,10 +347,7 @@ public class PlayerClothing : PlayerCaller
                 Characters.active.shirt = shirt;
             }
             UpdateSpeedMultiplier();
-            if (onShirtUpdated != null)
-            {
-                onShirtUpdated(shirt, quality, state);
-            }
+            onShirtUpdated?.Invoke(shirt, quality, state);
             PlayerClothing.OnShirtChanged_Global?.Invoke(this);
             if (base.channel.isOwner && !Provider.isServer)
             {
@@ -473,10 +446,7 @@ public class PlayerClothing : PlayerCaller
                 Characters.active.pants = pants;
             }
             UpdateSpeedMultiplier();
-            if (onPantsUpdated != null)
-            {
-                onPantsUpdated(pants, quality, state);
-            }
+            onPantsUpdated?.Invoke(pants, quality, state);
             PlayerClothing.OnPantsChanged_Global?.Invoke(this);
             if (base.channel.isOwner && !Provider.isServer)
             {
@@ -575,10 +545,7 @@ public class PlayerClothing : PlayerCaller
                 Characters.active.hat = hat;
             }
             UpdateSpeedMultiplier();
-            if (onHatUpdated != null)
-            {
-                onHatUpdated(hat, quality, state);
-            }
+            onHatUpdated?.Invoke(hat, quality, state);
             PlayerClothing.OnHatChanged_Global?.Invoke(this);
             if (base.channel.isOwner && !Provider.isServer)
             {
@@ -676,10 +643,7 @@ public class PlayerClothing : PlayerCaller
                 Characters.active.backpack = backpack;
             }
             UpdateSpeedMultiplier();
-            if (onBackpackUpdated != null)
-            {
-                onBackpackUpdated(backpack, quality, state);
-            }
+            onBackpackUpdated?.Invoke(backpack, quality, state);
             PlayerClothing.OnBackpackChanged_Global?.Invoke(this);
             if (base.channel.isOwner && !Provider.isServer)
             {
@@ -814,10 +778,7 @@ public class PlayerClothing : PlayerCaller
             }
             break;
         }
-        if (this.VisualToggleChanged != null)
-        {
-            this.VisualToggleChanged(this);
-        }
+        this.VisualToggleChanged?.Invoke(this);
     }
 
     public void ServerSetVisualToggleState(EVisualToggleType type, bool isVisible)
@@ -878,10 +839,7 @@ public class PlayerClothing : PlayerCaller
                 Characters.active.vest = vest;
             }
             UpdateSpeedMultiplier();
-            if (onVestUpdated != null)
-            {
-                onVestUpdated(vest, quality, state);
-            }
+            onVestUpdated?.Invoke(vest, quality, state);
             PlayerClothing.OnVestChanged_Global?.Invoke(this);
             if (base.channel.isOwner && !Provider.isServer)
             {
@@ -980,10 +938,7 @@ public class PlayerClothing : PlayerCaller
                 Characters.active.mask = mask;
             }
             UpdateSpeedMultiplier();
-            if (onMaskUpdated != null)
-            {
-                onMaskUpdated(mask, quality, state);
-            }
+            onMaskUpdated?.Invoke(mask, quality, state);
             PlayerClothing.OnMaskChanged_Global?.Invoke(this);
             if (base.channel.isOwner && !Provider.isServer)
             {
@@ -1073,10 +1028,7 @@ public class PlayerClothing : PlayerCaller
                 characterClothes.apply();
                 Characters.active.glasses = glasses;
             }
-            if (onGlassesUpdated != null)
-            {
-                onGlassesUpdated(glasses, quality, state);
-            }
+            onGlassesUpdated?.Invoke(glasses, quality, state);
             UpdateSpeedMultiplier();
             PlayerClothing.OnGlassesChanged_Global?.Invoke(this);
             if (base.channel.isOwner && !Provider.isServer)
@@ -1254,40 +1206,19 @@ public class PlayerClothing : PlayerCaller
         base.player.equipment.applySkinVisual();
         base.player.equipment.applyMythicVisual();
         UpdateSpeedMultiplier();
-        if (onShirtUpdated != null)
-        {
-            onShirtUpdated(shirt, value2, value3);
-        }
+        onShirtUpdated?.Invoke(shirt, value2, value3);
         PlayerClothing.OnShirtChanged_Global?.Invoke(this);
-        if (onPantsUpdated != null)
-        {
-            onPantsUpdated(pants, value5, value6);
-        }
+        onPantsUpdated?.Invoke(pants, value5, value6);
         PlayerClothing.OnPantsChanged_Global?.Invoke(this);
-        if (onHatUpdated != null)
-        {
-            onHatUpdated(hat, value8, value9);
-        }
+        onHatUpdated?.Invoke(hat, value8, value9);
         PlayerClothing.OnHatChanged_Global?.Invoke(this);
-        if (onBackpackUpdated != null)
-        {
-            onBackpackUpdated(backpack, value11, value12);
-        }
+        onBackpackUpdated?.Invoke(backpack, value11, value12);
         PlayerClothing.OnBackpackChanged_Global?.Invoke(this);
-        if (onVestUpdated != null)
-        {
-            onVestUpdated(vest, value14, value15);
-        }
+        onVestUpdated?.Invoke(vest, value14, value15);
         PlayerClothing.OnVestChanged_Global?.Invoke(this);
-        if (onMaskUpdated != null)
-        {
-            onMaskUpdated(mask, value17, value18);
-        }
+        onMaskUpdated?.Invoke(mask, value17, value18);
         PlayerClothing.OnMaskChanged_Global?.Invoke(this);
-        if (onGlassesUpdated != null)
-        {
-            onGlassesUpdated(glasses, value20, value21);
-        }
+        onGlassesUpdated?.Invoke(glasses, value20, value21);
         PlayerClothing.OnGlassesChanged_Global?.Invoke(this);
         if (base.channel.isOwner && thirdClothes != null && !Provider.isServer)
         {

@@ -553,10 +553,7 @@ public class LevelManager : SteamCaller
         }
         if (countTimerMessages >= 0 && Time.realtimeSinceStartup - lastTimerMessage > 1f)
         {
-            if (onLevelNumberUpdated != null)
-            {
-                onLevelNumberUpdated(countTimerMessages);
-            }
+            onLevelNumberUpdated?.Invoke(countTimerMessages);
             lastTimerMessage = Time.realtimeSinceStartup;
             countTimerMessages--;
             if (arenaMessage == EArenaMessage.WARMUP && !Dedicator.IsDedicatedServer && MainCamera.instance != null && OptionsSettings.timer)
@@ -657,19 +654,13 @@ public class LevelManager : SteamCaller
     public static void ReceiveArenaMessage(EArenaMessage newArenaMessage)
     {
         arenaMessage = newArenaMessage;
-        if (onArenaMessageUpdated != null)
-        {
-            onArenaMessageUpdated(arenaMessage);
-        }
+        onArenaMessageUpdated?.Invoke(arenaMessage);
     }
 
     [Obsolete]
     public void tellArenaPlayer(CSteamID steamID, ulong[] newPlayerIDs, byte newArenaMessage)
     {
-        if (onArenaPlayerUpdated != null)
-        {
-            onArenaPlayerUpdated(newPlayerIDs, (EArenaMessage)newArenaMessage);
-        }
+        onArenaPlayerUpdated?.Invoke(newPlayerIDs, (EArenaMessage)newArenaMessage);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
@@ -683,10 +674,7 @@ public class LevelManager : SteamCaller
             reader.ReadUInt64(out array[b]);
         }
         reader.ReadEnum(out var value2);
-        if (onArenaPlayerUpdated != null)
-        {
-            onArenaPlayerUpdated(array, value2);
-        }
+        onArenaPlayerUpdated?.Invoke(array, value2);
     }
 
     private static void WriteArenaPlayer(NetPakWriter writer, ulong[] newPlayerIDs, EArenaMessage newArenaMessage)
@@ -710,10 +698,7 @@ public class LevelManager : SteamCaller
     public static void ReceiveLevelNumber(byte newLevelNumber)
     {
         countTimerMessages = -1;
-        if (onLevelNumberUpdated != null)
-        {
-            onLevelNumberUpdated(newLevelNumber);
-        }
+        onLevelNumberUpdated?.Invoke(newLevelNumber);
     }
 
     [Obsolete]

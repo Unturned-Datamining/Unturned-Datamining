@@ -150,6 +150,8 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
 
     public override bool ShouldSave => !isManagedByLighting;
 
+    public override bool CanBeSelected => !isManagedByLighting;
+
     public override ISleekElement CreateMenu()
     {
         ISleekElement sleekElement = new Menu(this);

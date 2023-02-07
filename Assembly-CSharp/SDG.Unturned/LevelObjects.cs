@@ -171,6 +171,10 @@ public class LevelObjects : MonoBehaviour
                         levelObject.transform.rotation = toRotation;
                         levelObject.transform.localScale = toScale;
                     }
+                    if (levelObject.ownedCullingVolume != null)
+                    {
+                        levelObject.ownedCullingVolume.OnLevelObjectMoved();
+                    }
                     if (levelObject.skybox != null)
                     {
                         levelObject.skybox.position = toPosition;
@@ -245,32 +249,23 @@ public class LevelObjects : MonoBehaviour
             objects[x, y].Add(levelObject);
             if (regions[x, y])
             {
-                levelObject.enableCollision();
-                if (!levelObject.isSpeciallyCulled)
-                {
-                    levelObject.enableVisual();
-                }
-                levelObject.disableSkybox();
+                levelObject.SetActive(shouldBeActive: true);
+                levelObject.SetIsVisibleInRegion(isVisible: true);
+                levelObject.SetSkyboxActive(shouldBeActive: false);
                 return;
             }
             levelObject.disableCollision();
-            if (!levelObject.isSpeciallyCulled)
-            {
-                levelObject.disableVisual();
-            }
+            levelObject.SetIsVisibleInRegion(isVisible: false);
             if (levelObject.isLandmarkQualityMet)
             {
-                levelObject.enableSkybox();
+                levelObject.SetSkyboxActive(shouldBeActive: true);
             }
         }
         else
         {
-            levelObject.enableCollision();
-            if (!levelObject.isSpeciallyCulled)
-            {
-                levelObject.enableVisual();
-            }
-            levelObject.disableSkybox();
+            levelObject.SetActive(shouldBeActive: true);
+            levelObject.SetIsVisibleInRegion(isVisible: true);
+            levelObject.SetSkyboxActive(shouldBeActive: false);
         }
     }
 
@@ -304,9 +299,9 @@ public class LevelObjects : MonoBehaviour
         if (Regions.tryGetCoordinate(position, out var x, out var y))
         {
             LevelObject levelObject = new LevelObject(position, rotation, scale, id, GUID, placementOrigin, generateUniqueInstanceID(), AssetReference<MaterialPaletteAsset>.invalid, -1, NetId.INVALID);
-            levelObject.enableCollision();
-            levelObject.enableVisual();
-            levelObject.disableSkybox();
+            levelObject.SetActive(shouldBeActive: true);
+            levelObject.SetIsVisibleInRegion(isVisible: true);
+            levelObject.SetSkyboxActive(shouldBeActive: false);
             objects[x, y].Add(levelObject);
             _total++;
             return levelObject.transform;
@@ -694,28 +689,6 @@ public class LevelObjects : MonoBehaviour
             }
             river3.closeRiver();
         }
-        if (!Dedicator.IsDedicatedServer && !Level.isEditor)
-        {
-            for (byte b14 = 0; b14 < Regions.WORLD_SIZE; b14 = (byte)(b14 + 1))
-            {
-                for (byte b15 = 0; b15 < Regions.WORLD_SIZE; b15 = (byte)(b15 + 1))
-                {
-                    for (int i = 0; i < objects[b14, b15].Count; i++)
-                    {
-                        LevelObject levelObject2 = objects[b14, b15][i];
-                        if (levelObject2.asset != null && !(levelObject2.transform == null) && levelObject2.asset.lod != 0)
-                        {
-                            ObjectsLOD objectsLOD = levelObject2.transform.gameObject.AddComponent<ObjectsLOD>();
-                            objectsLOD.lod = levelObject2.asset.lod;
-                            objectsLOD.bias = levelObject2.asset.lodBias;
-                            objectsLOD.center = levelObject2.asset.lodCenter;
-                            objectsLOD.size = levelObject2.asset.lodSize;
-                            objectsLOD.calculateBounds();
-                        }
-                    }
-                }
-            }
-        }
         if (Level.isEditor)
         {
             reun = new IReun[256];
@@ -836,14 +809,11 @@ public class LevelObjects : MonoBehaviour
                         List<LevelObject> list = objects[b, b2];
                         for (int i = 0; i < list.Count; i++)
                         {
-                            list[i].disableCollision();
-                            if (!list[i].isSpeciallyCulled)
+                            list[i].SetActive(shouldBeActive: false);
+                            list[i].SetIsVisibleInRegion(isVisible: false);
+                            if (list[i].isLandmarkQualityMet)
                             {
-                                list[i].disableVisual();
-                                if (list[i].isLandmarkQualityMet)
-                                {
-                                    list[i].enableSkybox();
-                                }
+                                list[i].SetSkyboxActive(shouldBeActive: true);
                             }
                         }
                     }
@@ -879,12 +849,9 @@ public class LevelObjects : MonoBehaviour
                         List<LevelObject> list3 = objects[k, l];
                         for (int m = 0; m < list3.Count; m++)
                         {
-                            list3[m].enableCollision();
-                            if (!list3[m].isSpeciallyCulled)
-                            {
-                                list3[m].enableVisual();
-                                list3[m].disableSkybox();
-                            }
+                            list3[m].SetActive(shouldBeActive: true);
+                            list3[m].SetIsVisibleInRegion(isVisible: true);
+                            list3[m].SetSkyboxActive(shouldBeActive: false);
                         }
                     }
                     else
@@ -939,47 +906,30 @@ public class LevelObjects : MonoBehaviour
         {
             for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
             {
-                if (loads[b, b2] != -1)
+                int num = loads[b, b2];
+                if (num != -1)
                 {
-                    if (loads[b, b2] >= objects[b, b2].Count)
+                    if (num >= objects[b, b2].Count)
                     {
                         loads[b, b2] = -1;
-                        if (onRegionActivated != null)
-                        {
-                            onRegionActivated(b, b2);
-                        }
+                        onRegionActivated?.Invoke(b, b2);
                     }
                     else
                     {
-                        if (regions[b, b2])
+                        bool flag2 = regions[b, b2];
+                        LevelObject levelObject = objects[b, b2][num];
+                        if (levelObject.isCollisionEnabled != flag2)
                         {
-                            if (!objects[b, b2][loads[b, b2]].isCollisionEnabled)
-                            {
-                                objects[b, b2][loads[b, b2]].enableCollision();
-                            }
-                            if (!objects[b, b2][loads[b, b2]].isVisualEnabled && !objects[b, b2][loads[b, b2]].isSpeciallyCulled)
-                            {
-                                objects[b, b2][loads[b, b2]].enableVisual();
-                            }
-                            if (objects[b, b2][loads[b, b2]].isSkyboxEnabled)
-                            {
-                                objects[b, b2][loads[b, b2]].disableSkybox();
-                            }
+                            levelObject.SetActive(flag2);
                         }
-                        else
+                        if (levelObject.isVisualEnabled != flag2)
                         {
-                            if (objects[b, b2][loads[b, b2]].isCollisionEnabled)
-                            {
-                                objects[b, b2][loads[b, b2]].disableCollision();
-                            }
-                            if (objects[b, b2][loads[b, b2]].isVisualEnabled && !objects[b, b2][loads[b, b2]].isSpeciallyCulled)
-                            {
-                                objects[b, b2][loads[b, b2]].disableVisual();
-                            }
-                            if (!objects[b, b2][loads[b, b2]].isSkyboxEnabled && objects[b, b2][loads[b, b2]].isLandmarkQualityMet)
-                            {
-                                objects[b, b2][loads[b, b2]].enableSkybox();
-                            }
+                            levelObject.SetIsVisibleInRegion(flag2);
+                        }
+                        bool flag3 = !flag2 && levelObject.isLandmarkQualityMet;
+                        if (levelObject.isSkyboxEnabled != flag3)
+                        {
+                            levelObject.SetSkyboxActive(flag3);
                         }
                         loads[b, b2]++;
                         flag = false;

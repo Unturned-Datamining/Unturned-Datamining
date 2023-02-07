@@ -15,10 +15,7 @@ public class SteamworksUserStatisticsService : Service, IUserStatisticsService, 
 
     private void triggerUserStatisticsRequestReady(ICommunityEntity entityID)
     {
-        if (this.onUserStatisticsRequestReady != null)
-        {
-            this.onUserStatisticsRequestReady(entityID);
-        }
+        this.onUserStatisticsRequestReady?.Invoke(entityID);
     }
 
     public bool getStatistic(string name, out int data)

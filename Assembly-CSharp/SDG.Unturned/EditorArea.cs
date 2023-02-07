@@ -29,10 +29,7 @@ public class EditorArea : MonoBehaviour
 
     protected void triggerRegistered()
     {
-        if (EditorArea.registered != null)
-        {
-            EditorArea.registered(this);
-        }
+        EditorArea.registered?.Invoke(this);
     }
 
     private void Update()
@@ -43,20 +40,14 @@ public class EditorArea : MonoBehaviour
             byte old_y = region_y;
             _region_x = x;
             _region_y = y;
-            if (onRegionUpdated != null)
-            {
-                onRegionUpdated(old_x, old_y, x, y);
-            }
+            onRegionUpdated?.Invoke(old_x, old_y, x, y);
         }
         LevelNavigation.tryGetBounds(base.transform.position, out var b);
         if (b != bound)
         {
             byte oldBound = bound;
             _bound = b;
-            if (onBoundUpdated != null)
-            {
-                onBoundUpdated(oldBound, b);
-            }
+            onBoundUpdated?.Invoke(oldBound, b);
         }
         effectNode = VolumeManager<AmbianceVolume, AmbianceVolumeManager>.Get().GetFirstOverlappingVolume(base.transform.position);
         LevelLighting.updateLocal(MainCamera.instance.transform.position, 0f, effectNode);

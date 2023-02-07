@@ -163,10 +163,7 @@ public class SteamworksServerMultiplayerService : Service, IServerMultiplayerSer
 
     private void onSteamServersConnected(SteamServersConnected_t callback)
     {
-        if (this.ready != null)
-        {
-            this.ready();
-        }
+        this.ready?.Invoke();
     }
 
     private void onSteamServersDisconnected(SteamServersDisconnected_t callback)

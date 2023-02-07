@@ -52,10 +52,7 @@ public class SleekSlot : SleekWrapper
 
     public void select()
     {
-        if (onPlacedItem != null)
-        {
-            onPlacedItem(page, 0, 0);
-        }
+        onPlacedItem?.Invoke(page, 0, 0);
     }
 
     public void updateItem(ItemJar jar)
@@ -90,18 +87,12 @@ public class SleekSlot : SleekWrapper
 
     private void onClickedItem(SleekItem item)
     {
-        if (onSelectedItem != null)
-        {
-            onSelectedItem(page, 0, 0);
-        }
+        onSelectedItem?.Invoke(page, 0, 0);
     }
 
     private void onDraggedItem(SleekItem item)
     {
-        if (onGrabbedItem != null)
-        {
-            onGrabbedItem(page, 0, 0, item);
-        }
+        onGrabbedItem?.Invoke(page, 0, 0, item);
     }
 
     public SleekSlot(byte newPage)

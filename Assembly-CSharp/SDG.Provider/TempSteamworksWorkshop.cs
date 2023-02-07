@@ -271,10 +271,7 @@ public class TempSteamworksWorkshop
                 SteamPublished item = new SteamPublished(pDetails.m_rgchTitle, pDetails.m_nPublishedFileId);
                 published.Add(item);
             }
-            if (onPublishedAdded != null)
-            {
-                onPublishedAdded();
-            }
+            onPublishedAdded?.Invoke();
             cleanupUGCRequest();
             shouldRequestAnotherPage = true;
         }
@@ -881,10 +878,7 @@ public class TempSteamworksWorkshop
 
     public void refreshPublished()
     {
-        if (onPublishedRemoved != null)
-        {
-            onPublishedRemoved();
-        }
+        onPublishedRemoved?.Invoke();
         cleanupUGCRequest();
         _published = new List<SteamPublished>();
         ugcRequestPage = 1u;

@@ -21,10 +21,7 @@ public class SleekLevel : SleekWrapper
 
     private void onClickedButton(ISleekElement button)
     {
-        if (onClickedLevel != null)
-        {
-            onClickedLevel(this, (byte)(base.positionOffset_Y / 110));
-        }
+        onClickedLevel?.Invoke(this, (byte)(base.positionOffset_Y / 110));
     }
 
     private void OnLiveConfigRefreshed()

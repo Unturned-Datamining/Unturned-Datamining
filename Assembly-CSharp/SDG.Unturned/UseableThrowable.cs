@@ -104,10 +104,7 @@ public class UseableThrowable : Useable
                 UnityEngine.Object.Destroy(transform2.gameObject);
             }
         }
-        if (UseableThrowable.onThrowableSpawned != null)
-        {
-            UseableThrowable.onThrowableSpawned(this, transform.gameObject);
-        }
+        UseableThrowable.onThrowableSpawned?.Invoke(this, transform.gameObject);
     }
 
     private void swing()
