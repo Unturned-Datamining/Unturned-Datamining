@@ -45,6 +45,10 @@ internal class EditorVolumesUI : SleekFullscreenBox
 
     private ISleekButton refreshCullingVolumesButton;
 
+    private ISleekToggle previewCullingToggle;
+
+    internal static bool EditorWantsToPreviewCulling;
+
     public void Open()
     {
         SyncSettings();
@@ -202,6 +206,17 @@ internal class EditorVolumesUI : SleekFullscreenBox
         refreshCullingVolumesButton.isVisible = false;
         refreshCullingVolumesButton.onClickedButton += OnRefreshCullingVolumesClicked;
         AddChild(refreshCullingVolumesButton);
+        previewCullingToggle = Glazier.Get().CreateToggle();
+        previewCullingToggle.positionOffset_X = 400;
+        previewCullingToggle.positionOffset_Y = -80;
+        previewCullingToggle.positionScale_Y = 1f;
+        previewCullingToggle.sizeOffset_X = 40;
+        previewCullingToggle.sizeOffset_Y = 40;
+        previewCullingToggle.addLabel(localization.format("PreviewCulling"), ESleekSide.RIGHT);
+        previewCullingToggle.state = EditorWantsToPreviewCulling;
+        previewCullingToggle.isVisible = false;
+        previewCullingToggle.onToggled += OnPreviewCullingToggled;
+        AddChild(previewCullingToggle);
         int num2 = 0;
         selectedTypeBox = Glazier.Get().CreateBox();
         selectedTypeBox.positionScale_X = 1f;
@@ -261,6 +276,7 @@ internal class EditorVolumesUI : SleekFullscreenBox
         enableUnderwaterEffectsToggle.isVisible = type is WaterVolumeManager;
         enableWaterSurfaceToggle.isVisible = enableUnderwaterEffectsToggle.isVisible;
         refreshCullingVolumesButton.isVisible = type is CullingVolumeManager;
+        previewCullingToggle.isVisible = refreshCullingVolumesButton.isVisible;
     }
 
     internal void RefreshSelectedVisibility()
@@ -328,6 +344,11 @@ internal class EditorVolumesUI : SleekFullscreenBox
     {
         VolumeManager<CullingVolume, CullingVolumeManager>.Get().ClearOverlappingObjects();
         VolumeManager<CullingVolume, CullingVolumeManager>.Get().RefreshOverlappingObjects();
+    }
+
+    private void OnPreviewCullingToggled(ISleekToggle toggle, bool state)
+    {
+        EditorWantsToPreviewCulling = state;
     }
 
     private void OnSurfaceMaskTyped(ISleekUInt32Field field, uint state)

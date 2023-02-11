@@ -3,11 +3,12 @@
 	"Has_Discord_Rich_Presence": true,
 	"Category": "Official",
 	"Visible_In_Matchmaking": true,
-	"Version": "3.23.1.0",
+	"Version": "3.23.1.1",
 	"Allow_Holiday_Redirects": true,
 	"Use_Underground_Whitelist": true,
 	"Asset":
 	{
 		"GUID": "9334e9cd34334029800e655f57a08f54"
-	}
+	},
+	"Batching_Version": 2
 }

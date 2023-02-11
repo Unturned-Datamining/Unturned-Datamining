@@ -83,7 +83,7 @@ public class LevelInfo
 
     public ELevelType type => _type;
 
-    public bool isEditable => true;
+    public bool isEditable => _isEditable;
 
     public LevelInfoConfigData configData { get; private set; }
 

@@ -26,5 +26,6 @@
 	"PlayerUI_StaminaVisible": false,
 	"PlayerUI_OxygenVisible": false,
 	"PlayerUI_GunVisible": false,
+	"Batching_Version": 2,
 	"Tips": 2
 }

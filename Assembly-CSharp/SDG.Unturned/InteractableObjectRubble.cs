@@ -4,7 +4,7 @@ namespace SDG.Unturned;
 
 public class InteractableObjectRubble : MonoBehaviour
 {
-    private RubbleInfo[] rubbleInfos;
+    internal RubbleInfo[] rubbleInfos;
 
     private GameObject aliveGameObject;
 

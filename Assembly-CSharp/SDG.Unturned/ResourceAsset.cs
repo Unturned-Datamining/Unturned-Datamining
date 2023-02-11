@@ -67,6 +67,8 @@ public class ResourceAsset : Asset
 
     public EObjectChart chart;
 
+    public bool shouldExcludeFromLevelBatching;
+
     public string resourceName => holidayRestriction switch
     {
         ENPCHoliday.HALLOWEEN => _resourceName + " [HW]", 
@@ -418,5 +420,7 @@ public class ResourceAsset : Asset
         christmasRedirect = data.readAssetReference<ResourceAsset>("Christmas_Redirect");
         halloweenRedirect = data.readAssetReference<ResourceAsset>("Halloween_Redirect");
         chart = data.readEnum("Chart", EObjectChart.NONE);
+        shouldExcludeFromLevelBatching = data.readBoolean("Exclude_From_Level_Batching");
+        shouldExcludeFromLevelBatching |= isSpeedTree;
     }
 }

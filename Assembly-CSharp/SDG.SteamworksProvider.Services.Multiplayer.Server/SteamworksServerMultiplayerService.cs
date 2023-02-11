@@ -154,7 +154,7 @@ public class SteamworksServerMultiplayerService : Service, IServerMultiplayerSer
             {
                 CommandWindow.LogFormat("Failed to connect to Steam servers because {0}, no longer retrying", callback.m_eResult);
             }
-            if (callback.m_eResult == EResult.k_EResultInvalidParam)
+            if (callback.m_eResult == EResult.k_EResultInvalidParam || callback.m_eResult == EResult.k_EResultAccountNotFound)
             {
                 CommandWindow.LogWarning($"{callback.m_eResult} probably means Game Server Login Token (GSLT) is invalid");
             }

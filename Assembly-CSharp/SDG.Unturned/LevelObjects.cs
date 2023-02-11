@@ -495,6 +495,7 @@ public class LevelObjects : MonoBehaviour
                 legacyObjectRedirectorMap = new LegacyObjectRedirectorMap();
             }
             bool flag = Level.isEditor && EditorAssetRedirector.HasRedirects;
+            LevelBatching levelBatching = (Level.shouldUseLevelBatching ? LevelBatching.Get() : null);
             if (b5 > 0)
             {
                 if (b5 > 1 && b5 < 3)
@@ -514,10 +515,6 @@ public class LevelObjects : MonoBehaviour
                     for (byte b7 = 0; b7 < Regions.WORLD_SIZE; b7 = (byte)(b7 + 1))
                     {
                         ushort num = river.readUInt16();
-                        if (num > 0)
-                        {
-                            UnturnedLog.info($"Loading {num} objects in region ({b6}, {b7})");
-                        }
                         for (ushort num2 = 0; num2 < num; num2 = (ushort)(num2 + 1))
                         {
                             Vector3 vector = river.readSingleVector3();
@@ -601,6 +598,7 @@ public class LevelObjects : MonoBehaviour
                                     }
                                 }
                                 objects[b8, b9].Add(levelObject);
+                                levelBatching?.AddLevelObject(levelObject);
                                 _total++;
                             }
                         }

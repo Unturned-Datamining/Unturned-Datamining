@@ -62,10 +62,11 @@ public class CullingVolumeManager : VolumeManager<CullingVolume, CullingVolumeMa
         {
             return;
         }
+        bool forceCull = Level.isEditor && EditorVolumesUI.EditorWantsToPreviewCulling;
         Vector3 position = MainCamera.instance.transform.position;
         foreach (CullingVolume volumesWithObject in volumesWithObjects)
         {
-            volumesWithObject.UpdateCulling(position);
+            volumesWithObject.UpdateCulling(position, forceCull);
         }
     }
 }

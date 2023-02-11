@@ -1,5 +1,6 @@
 {
-	"Version": "3.20.0.1",
+	"Version": "3.23.1.0",
 	"Use_Legacy_Ground": false,
-	"Use_Underground_Whitelist": true
+	"Use_Underground_Whitelist": true,
+	"Batching_Version": 2
 }

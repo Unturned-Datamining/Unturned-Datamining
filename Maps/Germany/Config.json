@@ -10,5 +10,6 @@
 	"Visible_In_Matchmaking": true,
 	"Status": "NONE",
 	"Version": "3.23.2.0",
-	"Use_Underground_Whitelist": true
+	"Use_Underground_Whitelist": true,
+	"Batching_Version": 2
 }

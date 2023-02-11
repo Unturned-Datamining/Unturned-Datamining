@@ -53,7 +53,7 @@ Message_3_Pages 1
 
 Responses 9
 
-// I'll take a look 
+// I'll take a look
 // Commander_Broadcast_Repair_Accepted
 Response_0_Dialogue 45
 Response_0_Quest 47
@@ -77,7 +77,7 @@ Response_2_Condition_0_ID 47
 Response_2_Condition_0_Status Ready
 Response_2_Condition_0_Reset
 
-// I'll take a look 
+// I'll take a look
 // Commander_Coalition_Propaganda_Accepted
 Response_3_Dialogue 57
 Response_3_Quest 56
@@ -110,6 +110,9 @@ Response_6_Dialogue 232
 Response_6_Quest 230
 Response_6_Messages 1
 Response_6_Message_0 2
+Response_6_Conditions 1
+Response_6_Condition_0_Type Holiday
+Response_6_Condition_0_Value Valentines
 Response_6_Rewards 2
 Response_6_Reward_0_Type Quest
 Response_6_Reward_0_ID 230

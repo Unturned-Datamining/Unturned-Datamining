@@ -31,6 +31,7 @@ HostBan_MonetizationWarning Warning: this server is breaking the monetization ru
 HostBan_WorkshopWarning Warning: the workshop files used by this server have been banned.
 HostBan_QueryPingWarning Warning: this server has much higher actual in-game ping than shown on the server list. Likely using a proxy for the server list.
 HostBan_IncorrectMonetizationTagWarning Warning: this server has the monetization tag incorrectly set. "None" is for unmonetized or donation-only servers, and "NonGameplay" is for servers with purchases that do not provide a gameplay advantage.
+HostBan_HostingProvider This warning might apply to the hosting provider, not your specific server. For example if the hosting provider has been allowing a server to evade a ban by changing the ports multiple times.
 HostBan_Apology Message from the game developers: our apologies for mistakenly flagging your server! We are sorry for the trouble and will do our best to prevent it from happening again in the future.
 NotLoggedInMessage This server cannot be joined over the internet because it is not logged in with a Game Server Login Token. Click here for more information.
 

@@ -15,4 +15,8 @@ public class HolidayStatusData
     public DateTime AprilFools_Start;
 
     public DateTime AprilFools_End;
+
+    public DateTime ValentinesStart;
+
+    public DateTime ValentinesEnd;
 }

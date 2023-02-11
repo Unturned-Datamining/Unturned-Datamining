@@ -247,6 +247,8 @@ public class Level : MonoBehaviour
 
     public static bool shouldUseHolidayRedirects { get; private set; }
 
+    public static bool shouldUseLevelBatching { get; private set; }
+
     public static Transform level => _level;
 
     public static Transform roots => _roots;
@@ -430,6 +432,11 @@ public class Level : MonoBehaviour
         shouldUseHolidayRedirects = !isEditor && info != null && info.configData != null && info.configData.Allow_Holiday_Redirects && HolidayUtil.getActiveHoliday() != ENPCHoliday.NONE;
     }
 
+    private static void UpdateShouldUseLevelBatching()
+    {
+        shouldUseLevelBatching = !isEditor && !Dedicator.IsDedicatedServer && info != null && info.configData != null && info.configData.Batching_Version > 1;
+    }
+
     public static void includeHash(string id, byte[] pendingHash)
     {
         if ((bool)shouldLogLevelHash)
@@ -517,6 +524,7 @@ public class Level : MonoBehaviour
         Provider.updateRichPresence();
         DevkitTransactionManager.resetTransactions();
         updateCachedHolidayRedirects();
+        UpdateShouldUseLevelBatching();
     }
 
     public static void load(LevelInfo newInfo, bool hasAuthority)
@@ -592,6 +600,7 @@ public class Level : MonoBehaviour
         Provider.updateRichPresence();
         DevkitTransactionManager.resetTransactions();
         updateCachedHolidayRedirects();
+        UpdateShouldUseLevelBatching();
     }
 
     public static void loading()
@@ -617,8 +626,10 @@ public class Level : MonoBehaviour
             }
         }
         Provider.updateRichPresence();
+        LevelBatching.Get()?.Destroy();
         DevkitTransactionManager.resetTransactions();
         updateCachedHolidayRedirects();
+        UpdateShouldUseLevelBatching();
     }
 
     public static bool exists(string name)
@@ -1311,6 +1322,10 @@ public class Level : MonoBehaviour
         {
             LevelNavigation.load();
         }
+        if (shouldUseLevelBatching)
+        {
+            LevelBatching.Get()?.Reset();
+        }
         LoadingUI.updateProgress(1f / STEPS);
         yield return null;
         LevelObjects.load();
@@ -1374,6 +1389,13 @@ public class Level : MonoBehaviour
         }
         VolumeManager<CullingVolume, CullingVolumeManager>.Get().RefreshOverlappingObjects();
         yield return null;
+        if (shouldUseLevelBatching)
+        {
+            LevelBatching.Get()?.ApplyTextureAtlas();
+            yield return null;
+            LevelBatching.Get()?.ApplyStaticBatching();
+            yield return null;
+        }
         includeHash("Level.dat", getLevelHash(info.path));
         if (info.configData.Hash != null)
         {
@@ -1482,6 +1504,7 @@ public class Level : MonoBehaviour
         cartographyVolumeManager = new CartographyVolumeManager();
         oxygenVolumeManager = new OxygenVolumeManager();
         cullingVolumeManager = new CullingVolumeManager();
+        LevelBatching.instance = new LevelBatching();
         airdropNodeSystem = new AirdropDevkitNodeSystem();
         locationNodeSystem = new LocationDevkitNodeSystem();
         spawnpointSystem = new SpawnpointSystemV2();

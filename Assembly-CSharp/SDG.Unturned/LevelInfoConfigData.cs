@@ -98,6 +98,8 @@ public class LevelInfoConfigData
 
     public int Tips;
 
+    public int Batching_Version;
+
     public bool Use_Arena_Compactor;
 
     public List<ArenaLoadout> Arena_Loadouts;

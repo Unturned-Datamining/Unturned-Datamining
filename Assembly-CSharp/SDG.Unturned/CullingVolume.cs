@@ -185,7 +185,7 @@ public class CullingVolume : LevelVolume<CullingVolume, CullingVolumeManager>
             foreach (OcclusionArea occlusionArea in occlusionAreas)
             {
                 Transform transform2 = occlusionArea.transform;
-                Vector3 vector = targetLevelObject.transform.InverseTransformPoint(transform2.position) + occlusionArea.center;
+                Vector3 vector = targetLevelObject.transform.InverseTransformPoint(transform2.TransformPoint(occlusionArea.center));
                 Vector3 vector2 = new Vector3(occlusionArea.size.x * 0.5f, occlusionArea.size.z * 0.5f, occlusionArea.size.y * 0.5f);
                 Vector3 vector3 = vector + vector2;
                 if (flag)
@@ -259,9 +259,10 @@ public class CullingVolume : LevelVolume<CullingVolume, CullingVolumeManager>
         SetShouldUpdate(base.enabled && objects.Count > 0);
     }
 
-    internal void UpdateCulling(Vector3 viewPosition)
+    internal void UpdateCulling(Vector3 viewPosition, bool forceCull)
     {
-        if ((base.transform.position - viewPosition).sqrMagnitude < cullDistance * cullDistance)
+        float sqrMagnitude = (base.transform.position - viewPosition).sqrMagnitude;
+        if (!forceCull && sqrMagnitude < cullDistance * cullDistance)
         {
             if (isCulled)
             {

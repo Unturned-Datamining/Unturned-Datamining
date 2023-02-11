@@ -37,7 +37,7 @@ public static class HolidayUtil
             return ENPCHoliday.NONE;
         }
         DateTime backendRealtimeDate = Provider.backendRealtimeDate;
-        for (int i = 1; i < 4; i++)
+        for (int i = 1; i < 5; i++)
         {
             DateTimeRange dateTimeRange = scheduledHolidays[i];
             if (dateTimeRange != null && dateTimeRange.isWithinRange(backendRealtimeDate))
@@ -57,6 +57,7 @@ public static class HolidayUtil
     {
         scheduleHoliday(ENPCHoliday.CHRISTMAS, data.ChristmasStart, data.ChristmasEnd);
         scheduleHoliday(ENPCHoliday.HALLOWEEN, data.HalloweenStart, data.HalloweenEnd);
+        scheduleHoliday(ENPCHoliday.VALENTINES, data.ValentinesStart, data.ValentinesEnd);
         if (data.AprilFools_Start.Ticks > 0 && data.AprilFools_End.Ticks > 0)
         {
             scheduleHoliday(ENPCHoliday.APRIL_FOOLS, data.AprilFools_Start, data.AprilFools_End);
@@ -66,7 +67,7 @@ public static class HolidayUtil
     static HolidayUtil()
     {
         clHolidayOverride = new CommandLineString("-Holiday");
-        scheduledHolidays = new DateTimeRange[4];
+        scheduledHolidays = new DateTimeRange[5];
         holidayOverride = ENPCHoliday.NONE;
         if (clHolidayOverride.hasValue)
         {
@@ -84,6 +85,11 @@ public static class HolidayUtil
             if (string.Equals(value, "AprilFools", StringComparison.OrdinalIgnoreCase))
             {
                 holidayOverride = ENPCHoliday.APRIL_FOOLS;
+                return;
+            }
+            if (string.Equals(value, "Valentines", StringComparison.OrdinalIgnoreCase))
+            {
+                holidayOverride = ENPCHoliday.VALENTINES;
                 return;
             }
             UnturnedLog.warn("Unknown holiday \"{0}\" requested by command-line override", value);

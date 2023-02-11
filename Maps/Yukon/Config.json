@@ -12,10 +12,11 @@
 			"RoadIndex": 0
 		}
 	],
-	"Version": "3.23.1.0",
+	"Version": "3.23.1.1",
 	"Use_Underground_Whitelist": true,
 	"Asset":
 	{
 		"GUID": "537278c5f6eb45198994ff2915d3107b"
-	}
+	},
+	"Batching_Version": 2
 }

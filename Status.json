@@ -29,7 +29,7 @@
 	{
 		"Major_Version": 23,
 		"Minor_Version": 2,
-		"Patch_Version": 101,
+		"Patch_Version": 102,
 		"GrantPackageIDs":
 		[
 			487
@@ -43,7 +43,9 @@
 		"ChristmasStart": "2022-12-07T00:00:01Z",
 		"ChristmasEnd": "2023-01-02T18:05:00Z",
 		"AprilFools_Start": "2023-04-01T00:00:00Z",
-		"AprilFools_End": "2023-04-02T00:00:00Z"
+		"AprilFools_End": "2023-04-02T00:00:00Z",
+		"ValentinesStart": "2023-02-13T12:00:01Z",
+		"ValentinesEnd": "2023-02-15T12:00:01Z"
 	},
 	"Menu":
 	{

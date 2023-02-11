@@ -8,7 +8,7 @@ public static class ENPCHoliday_NetEnum
     {
         uint value2;
         bool result = reader.ReadBits(3, out value2);
-        if (value2 <= 4)
+        if (value2 <= 5)
         {
             value = (ENPCHoliday)value2;
             return result;

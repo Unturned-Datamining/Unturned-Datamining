@@ -424,7 +424,7 @@ public class LevelObject
             {
                 GameObject gameObject = UnityEngine.Object.Instantiate(orLoadModel, newPoint, newRotation);
                 _transform = gameObject.transform;
-                gameObject.name = id.ToString();
+                gameObject.name = asset.name;
                 NetIdRegistry.AssignTransform(netId, _transform);
                 isDecal = this.transform.Find("Decal");
                 if (asset.useScale)
@@ -438,7 +438,7 @@ public class LevelObject
         {
             GameObject gameObject2 = UnityEngine.Object.Instantiate(orLoadModel, newPoint, newRotation);
             _transform = gameObject2.transform;
-            gameObject2.name = id.ToString();
+            gameObject2.name = asset.name;
             if (!netId.IsNull())
             {
                 NetIdRegistry.AssignTransform(netId, _transform);
@@ -468,7 +468,7 @@ public class LevelObject
             {
                 GameObject gameObject4 = UnityEngine.Object.Instantiate(gameObject3, newPoint, newRotation);
                 _skybox = gameObject4.transform;
-                gameObject4.name = id + "_Skybox";
+                gameObject4.name = asset.name + "_Skybox";
                 if (asset.useScale)
                 {
                     skybox.localScale = newScale;

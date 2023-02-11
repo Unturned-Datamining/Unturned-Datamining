@@ -33,6 +33,8 @@ public class ObjectAsset : Asset
 
     public bool shouldExcludeFromCullingVolumes;
 
+    public bool shouldExcludeFromLevelBatching;
+
     public EObjectChart chart;
 
     public bool isFuel;
@@ -760,6 +762,8 @@ public class ObjectAsset : Asset
         christmasRedirect = data.readAssetReference<ObjectAsset>("Christmas_Redirect");
         halloweenRedirect = data.readAssetReference<ObjectAsset>("Halloween_Redirect");
         isGore = data.readBoolean("Is_Gore");
+        shouldExcludeFromLevelBatching = data.readBoolean("Exclude_From_Level_Batching");
+        shouldExcludeFromLevelBatching |= type == EObjectType.NPC || type == EObjectType.DECAL;
         conditions = new INPCCondition[data.readByte("Conditions", 0)];
         NPCTool.readConditions(data, localization, "Condition_", conditions, this);
     }

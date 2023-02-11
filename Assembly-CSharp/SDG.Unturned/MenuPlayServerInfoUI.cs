@@ -312,6 +312,18 @@ public class MenuPlayServerInfoUI
             }
             hostBanWarningButton.text += localization.format("HostBan_IncorrectMonetizationTagWarning");
         }
+        if (eHostBanFlags.HasFlag(EHostBanFlags.HostingProvider))
+        {
+            if (hostBanWarningButton.isVisible)
+            {
+                hostBanWarningButton.text += "\n";
+            }
+            else
+            {
+                hostBanWarningButton.isVisible = true;
+            }
+            hostBanWarningButton.text += localization.format("HostBan_HostingProvider");
+        }
         if (eHostBanFlags.HasFlag(EHostBanFlags.Apology))
         {
             if (hostBanWarningButton.isVisible)

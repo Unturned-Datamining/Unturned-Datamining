@@ -11,6 +11,7 @@ public class ResourceSpawnpoint
     [Obsolete("Unused index into LevelGround.resources for early versions of the level editor.")]
     public byte type;
 
+    [Obsolete("Trees are now saved by asset GUID. Please use the asset property rather than finding asset by legacy ID.")]
     public ushort id;
 
     private float _lastDead;
@@ -204,7 +205,7 @@ public class ResourceSpawnpoint
                         Vector3 position = ((!asset.isSpeedTree) ? (model.position + Vector3.up) : model.position);
                         GameObject original = ((!(asset.debrisGameObject == null)) ? asset.debrisGameObject : asset.modelGameObject);
                         Transform transform = UnityEngine.Object.Instantiate(original, position, model.rotation).transform;
-                        transform.name = id.ToString();
+                        transform.name = asset.name + "_Debris";
                         transform.localScale = model.localScale;
                         transform.tag = "Debris";
                         transform.gameObject.layer = 12;
@@ -424,7 +425,7 @@ public class ResourceSpawnpoint
         {
             GameObject gameObject2 = UnityEngine.Object.Instantiate(gameObject, position, angle);
             _model = gameObject2.transform;
-            model.name = id.ToString();
+            model.name = asset.name;
             model.localScale = scale;
             if (Dedicator.IsDedicatedServer)
             {
@@ -442,7 +443,7 @@ public class ResourceSpawnpoint
                     Quaternion rotation = angle * Quaternion.Euler(-90f, 0f, 0f);
                     GameObject gameObject3 = UnityEngine.Object.Instantiate(asset.skyboxGameObject, position, rotation);
                     _skybox = gameObject3.transform;
-                    skybox.name = id + "_Skybox";
+                    skybox.name = asset.name + "_Skybox";
                     skybox.localScale = new Vector3(skybox.localScale.x * scale.x, skybox.localScale.z * scale.z, skybox.localScale.z * scale.z);
                     if (asset.skyboxMaterial != null)
                     {
@@ -471,7 +472,7 @@ public class ResourceSpawnpoint
         if (gameObject4 != null)
         {
             _stump = UnityEngine.Object.Instantiate(gameObject4, position, angle).transform;
-            stump.name = id.ToString();
+            stump.name = asset.name + "_Stump";
             stump.localScale = scale;
             stump.gameObject.SetActive(value: false);
             if (asset.isSpeedTree)

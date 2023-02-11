@@ -625,6 +625,7 @@ public class LevelGround : MonoBehaviour
             {
                 treeRedirectorMap = new TreeRedirectorMap();
             }
+            LevelBatching levelBatching = (Level.shouldUseLevelBatching ? LevelBatching.Get() : null);
             for (byte b6 = 0; b6 < Regions.WORLD_SIZE; b6 = (byte)(b6 + 1))
             {
                 for (byte b7 = 0; b7 < Regions.WORLD_SIZE; b7 = (byte)(b7 + 1))
@@ -663,6 +664,7 @@ public class LevelGround : MonoBehaviour
                                         UnturnedLog.error("Tree with no asset in region {0}, {1}: {2}", b6, b7, num3);
                                     }
                                     trees[b6, b7].Add(resourceSpawnpoint);
+                                    levelBatching?.AddResourceSpawnpoint(resourceSpawnpoint);
                                     _total++;
                                 }
                             }
@@ -970,9 +972,10 @@ public class LevelGround : MonoBehaviour
                 for (ushort num = 0; num < list.Count; num = (ushort)(num + 1))
                 {
                     ResourceSpawnpoint resourceSpawnpoint = list[num];
-                    if (resourceSpawnpoint != null && resourceSpawnpoint.model != null && (resourceSpawnpoint.id != 0 || resourceSpawnpoint.guid != Guid.Empty))
+                    ushort id = resourceSpawnpoint.id;
+                    if (resourceSpawnpoint != null && resourceSpawnpoint.model != null && (id != 0 || resourceSpawnpoint.guid != Guid.Empty))
                     {
-                        river.writeUInt16(resourceSpawnpoint.id);
+                        river.writeUInt16(id);
                         river.writeGUID(resourceSpawnpoint.guid);
                         river.writeSingleVector3(resourceSpawnpoint.point);
                         river.writeBoolean(resourceSpawnpoint.isGenerated);
