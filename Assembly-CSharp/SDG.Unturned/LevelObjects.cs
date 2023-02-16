@@ -249,23 +249,16 @@ public class LevelObjects : MonoBehaviour
             objects[x, y].Add(levelObject);
             if (regions[x, y])
             {
-                levelObject.SetActive(shouldBeActive: true);
-                levelObject.SetIsVisibleInRegion(isVisible: true);
-                levelObject.SetSkyboxActive(shouldBeActive: false);
-                return;
+                levelObject.SetIsActiveInRegion(isActive: true);
             }
-            levelObject.disableCollision();
-            levelObject.SetIsVisibleInRegion(isVisible: false);
-            if (levelObject.isLandmarkQualityMet)
+            else
             {
-                levelObject.SetSkyboxActive(shouldBeActive: true);
+                levelObject.SetIsActiveInRegion(isActive: false);
             }
         }
         else
         {
-            levelObject.SetActive(shouldBeActive: true);
-            levelObject.SetIsVisibleInRegion(isVisible: true);
-            levelObject.SetSkyboxActive(shouldBeActive: false);
+            levelObject.SetIsActiveInRegion(isActive: true);
         }
     }
 
@@ -299,9 +292,7 @@ public class LevelObjects : MonoBehaviour
         if (Regions.tryGetCoordinate(position, out var x, out var y))
         {
             LevelObject levelObject = new LevelObject(position, rotation, scale, id, GUID, placementOrigin, generateUniqueInstanceID(), AssetReference<MaterialPaletteAsset>.invalid, -1, NetId.INVALID);
-            levelObject.SetActive(shouldBeActive: true);
-            levelObject.SetIsVisibleInRegion(isVisible: true);
-            levelObject.SetSkyboxActive(shouldBeActive: false);
+            levelObject.SetIsActiveInRegion(isActive: true);
             objects[x, y].Add(levelObject);
             _total++;
             return levelObject.transform;
@@ -807,12 +798,7 @@ public class LevelObjects : MonoBehaviour
                         List<LevelObject> list = objects[b, b2];
                         for (int i = 0; i < list.Count; i++)
                         {
-                            list[i].SetActive(shouldBeActive: false);
-                            list[i].SetIsVisibleInRegion(isVisible: false);
-                            if (list[i].isLandmarkQualityMet)
-                            {
-                                list[i].SetSkyboxActive(shouldBeActive: true);
-                            }
+                            list[i].SetIsActiveInRegion(isActive: false);
                         }
                     }
                     else
@@ -847,9 +833,7 @@ public class LevelObjects : MonoBehaviour
                         List<LevelObject> list3 = objects[k, l];
                         for (int m = 0; m < list3.Count; m++)
                         {
-                            list3[m].SetActive(shouldBeActive: true);
-                            list3[m].SetIsVisibleInRegion(isVisible: true);
-                            list3[m].SetSkyboxActive(shouldBeActive: false);
+                            list3[m].SetIsActiveInRegion(isActive: true);
                         }
                     }
                     else
@@ -914,21 +898,8 @@ public class LevelObjects : MonoBehaviour
                     }
                     else
                     {
-                        bool flag2 = regions[b, b2];
-                        LevelObject levelObject = objects[b, b2][num];
-                        if (levelObject.isCollisionEnabled != flag2)
-                        {
-                            levelObject.SetActive(flag2);
-                        }
-                        if (levelObject.isVisualEnabled != flag2)
-                        {
-                            levelObject.SetIsVisibleInRegion(flag2);
-                        }
-                        bool flag3 = !flag2 && levelObject.isLandmarkQualityMet;
-                        if (levelObject.isSkyboxEnabled != flag3)
-                        {
-                            levelObject.SetSkyboxActive(flag3);
-                        }
+                        bool isActiveInRegion = regions[b, b2];
+                        objects[b, b2][num].SetIsActiveInRegion(isActiveInRegion);
                         loads[b, b2]++;
                         flag = false;
                     }

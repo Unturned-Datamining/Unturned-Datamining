@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SDG.Framework.Devkit;
 using SDG.Framework.Utilities;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace SDG.Unturned;
 
@@ -11,6 +12,8 @@ public class LocationDevkitNodeSystem : TempNodeSystemBase
     private static LocationDevkitNodeSystem instance;
 
     private List<LocationDevkitNode> allNodes;
+
+    private CustomSampler gizmoUpdateSampler;
 
     public static LocationDevkitNodeSystem Get()
     {
@@ -61,6 +64,7 @@ public class LocationDevkitNodeSystem : TempNodeSystemBase
     {
         instance = this;
         allNodes = new List<LocationDevkitNode>();
+        gizmoUpdateSampler = CustomSampler.Create("LocationDevkitNodeSystem.UpdateGizmos");
         TimeUtility.updated += OnUpdateGizmos;
     }
 

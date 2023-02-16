@@ -70,6 +70,8 @@ public class MenuConfigurationOptionsUI
 
     private static ISleekSlider staticCrosshairSizeSlider;
 
+    private static SleekButtonState crosshairShapeButton;
+
     private static SleekButtonState metricButton;
 
     private static SleekButtonState talkButton;
@@ -283,6 +285,15 @@ public class MenuConfigurationOptionsUI
         OptionsSettings.staticCrosshairSize = state;
     }
 
+    private static void OnCrosshairShapeChanged(SleekButtonState button, int index)
+    {
+        OptionsSettings.crosshairShape = (ECrosshairShape)index;
+        if (PlayerLifeUI.crosshair != null)
+        {
+            PlayerLifeUI.crosshair.SynchronizeImages();
+        }
+    }
+
     private static void onSwappedMetricState(SleekButtonState button, int index)
     {
         OptionsSettings.metric = index == 1;
@@ -407,6 +418,7 @@ public class MenuConfigurationOptionsUI
         screenshotsWhileLoadingToggle.state = OptionsSettings.enableScreenshotsOnLoadingScreen;
         staticCrosshairToggle.state = OptionsSettings.useStaticCrosshair;
         staticCrosshairSizeSlider.state = OptionsSettings.staticCrosshairSize;
+        crosshairShapeButton.state = (int)OptionsSettings.crosshairShape;
         metricButton.state = (OptionsSettings.metric ? 1 : 0);
         talkButton.state = (OptionsSettings.talk ? 1 : 0);
         uiButton.state = (OptionsSettings.proUI ? 1 : 0);
@@ -683,6 +695,15 @@ public class MenuConfigurationOptionsUI
         staticCrosshairSizeSlider.onDragged += OnStaticCrosshairSizeChanged;
         optionsBox.AddChild(staticCrosshairSizeSlider);
         num += 30;
+        crosshairShapeButton = new SleekButtonState(new GUIContent(localization.format("CrosshairShape_Line")), new GUIContent(localization.format("CrosshairShape_Classic")));
+        crosshairShapeButton.positionOffset_Y = num;
+        crosshairShapeButton.sizeOffset_X = 200;
+        crosshairShapeButton.sizeOffset_Y = 30;
+        crosshairShapeButton.state = (int)OptionsSettings.crosshairShape;
+        crosshairShapeButton.addLabel(localization.format("CrosshairShape_Label"), ESleekSide.RIGHT);
+        crosshairShapeButton.onSwappedState = OnCrosshairShapeChanged;
+        optionsBox.AddChild(crosshairShapeButton);
+        num += 40;
         talkButton = new SleekButtonState(new GUIContent(localization.format("Talk_Off")), new GUIContent(localization.format("Talk_On")));
         talkButton.positionOffset_Y = num;
         talkButton.sizeOffset_X = 200;

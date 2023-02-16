@@ -20,14 +20,6 @@ public class Level : MonoBehaviour
 
     private class PreCaptureObjectState
     {
-        public bool[,][] wasObjectCollisionEnabled = new bool[Regions.WORLD_SIZE, Regions.WORLD_SIZE][];
-
-        public bool[,][] wasObjectVisualEnabled = new bool[Regions.WORLD_SIZE, Regions.WORLD_SIZE][];
-
-        public bool[,][] wasObjectSkyboxEnabled = new bool[Regions.WORLD_SIZE, Regions.WORLD_SIZE][];
-
-        public bool[,][] wasObjectVisibleInCullingVolume = new bool[Regions.WORLD_SIZE, Regions.WORLD_SIZE][];
-
         public bool[,][] wasTreeEnabled = new bool[Regions.WORLD_SIZE, Regions.WORLD_SIZE][];
 
         public bool[,][] wasTreeSkyboxEnabled = new bool[Regions.WORLD_SIZE, Regions.WORLD_SIZE][];
@@ -103,7 +95,7 @@ public class Level : MonoBehaviour
 
     private static Transform _editing;
 
-    private static GameObject singletonGameObject;
+    private static Level instance;
 
     internal static AudioListener placeholderAudioListener;
 
@@ -617,19 +609,8 @@ public class Level : MonoBehaviour
         LoadingUI.updateScene();
         if (!Dedicator.IsDedicatedServer)
         {
-            UnturnedLog.info("Returning to main menu");
-            SceneManager.LoadScene("Menu");
-            if (placeholderAudioListener != null)
-            {
-                UnityEngine.Object.Destroy(placeholderAudioListener);
-                placeholderAudioListener = null;
-            }
+            instance.StartCoroutine(instance.ReturnToMainMenu());
         }
-        Provider.updateRichPresence();
-        LevelBatching.Get()?.Destroy();
-        DevkitTransactionManager.resetTransactions();
-        updateCachedHolidayRedirects();
-        UpdateShouldUseLevelBatching();
     }
 
     public static bool exists(string name)
@@ -983,40 +964,20 @@ public class Level : MonoBehaviour
         {
             for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
             {
-                List<LevelObject> list = LevelObjects.objects[b, b2];
-                preCaptureObjectState.wasObjectCollisionEnabled[b, b2] = new bool[list.Count];
-                preCaptureObjectState.wasObjectVisualEnabled[b, b2] = new bool[list.Count];
-                preCaptureObjectState.wasObjectSkyboxEnabled[b, b2] = new bool[list.Count];
-                preCaptureObjectState.wasObjectVisibleInCullingVolume[b, b2] = new bool[list.Count];
+                foreach (LevelObject item in LevelObjects.objects[b, b2])
+                {
+                    ObjectAsset asset = item.asset;
+                    bool isActiveOverrideForSatelliteCapture = asset != null && asset.holidayRestriction == ENPCHoliday.NONE;
+                    item.SetIsActiveOverrideForSatelliteCapture(isActiveOverrideForSatelliteCapture);
+                }
+                List<ResourceSpawnpoint> list = LevelGround.trees[b, b2];
+                preCaptureObjectState.wasTreeEnabled[b, b2] = new bool[list.Count];
+                preCaptureObjectState.wasTreeSkyboxEnabled[b, b2] = new bool[list.Count];
                 for (int i = 0; i < list.Count; i++)
                 {
-                    LevelObject levelObject = list[i];
-                    preCaptureObjectState.wasObjectCollisionEnabled[b, b2][i] = levelObject.isCollisionEnabled;
-                    preCaptureObjectState.wasObjectVisualEnabled[b, b2][i] = levelObject.isVisualEnabled;
-                    preCaptureObjectState.wasObjectSkyboxEnabled[b, b2][i] = levelObject.isSkyboxEnabled;
-                    preCaptureObjectState.wasObjectVisibleInCullingVolume[b, b2][i] = levelObject.isVisibleInCullingVolume;
-                    ObjectAsset asset = levelObject.asset;
-                    if (asset != null && asset.holidayRestriction == ENPCHoliday.NONE)
-                    {
-                        levelObject.SetActive(shouldBeActive: true);
-                        levelObject.SetIsVisibleInRegion(isVisible: true);
-                        levelObject.SetIsVisibleInCullingVolume(isVisible: true);
-                    }
-                    else
-                    {
-                        levelObject.SetActive(shouldBeActive: false);
-                        levelObject.SetIsVisibleInRegion(isVisible: false);
-                    }
-                    levelObject.SetSkyboxActive(shouldBeActive: false);
-                }
-                List<ResourceSpawnpoint> list2 = LevelGround.trees[b, b2];
-                preCaptureObjectState.wasTreeEnabled[b, b2] = new bool[list2.Count];
-                preCaptureObjectState.wasTreeSkyboxEnabled[b, b2] = new bool[list2.Count];
-                for (int j = 0; j < list2.Count; j++)
-                {
-                    ResourceSpawnpoint resourceSpawnpoint = list2[j];
-                    preCaptureObjectState.wasTreeEnabled[b, b2][j] = resourceSpawnpoint.isEnabled;
-                    preCaptureObjectState.wasTreeSkyboxEnabled[b, b2][j] = resourceSpawnpoint.isSkyboxEnabled;
+                    ResourceSpawnpoint resourceSpawnpoint = list[i];
+                    preCaptureObjectState.wasTreeEnabled[b, b2][i] = resourceSpawnpoint.isEnabled;
+                    preCaptureObjectState.wasTreeSkyboxEnabled[b, b2][i] = resourceSpawnpoint.isSkyboxEnabled;
                     ResourceAsset asset2 = resourceSpawnpoint.asset;
                     if (asset2 != null && asset2.holidayRestriction == ENPCHoliday.NONE)
                     {
@@ -1039,20 +1000,15 @@ public class Level : MonoBehaviour
         {
             for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
             {
-                List<LevelObject> list = LevelObjects.objects[b, b2];
+                foreach (LevelObject item in LevelObjects.objects[b, b2])
+                {
+                    item.UpdateActiveAndRenderersEnabled();
+                }
+                List<ResourceSpawnpoint> list = LevelGround.trees[b, b2];
                 for (int i = 0; i < list.Count; i++)
                 {
-                    LevelObject levelObject = list[i];
-                    levelObject.SetActive(state.wasObjectCollisionEnabled[b, b2][i]);
-                    levelObject.SetIsVisibleInRegion(state.wasObjectVisualEnabled[b, b2][i]);
-                    levelObject.SetSkyboxActive(state.wasObjectSkyboxEnabled[b, b2][i]);
-                    levelObject.SetIsVisibleInCullingVolume(state.wasObjectVisibleInCullingVolume[b, b2][i]);
-                }
-                List<ResourceSpawnpoint> list2 = LevelGround.trees[b, b2];
-                for (int j = 0; j < list2.Count; j++)
-                {
-                    ResourceSpawnpoint resourceSpawnpoint = list2[j];
-                    if (state.wasTreeEnabled[b, b2][j])
+                    ResourceSpawnpoint resourceSpawnpoint = list[i];
+                    if (state.wasTreeEnabled[b, b2][i])
                     {
                         resourceSpawnpoint.enable();
                     }
@@ -1060,7 +1016,7 @@ public class Level : MonoBehaviour
                     {
                         resourceSpawnpoint.disable();
                     }
-                    if (state.wasTreeSkyboxEnabled[b, b2][j])
+                    if (state.wasTreeSkyboxEnabled[b, b2][i])
                     {
                         resourceSpawnpoint.enableSkybox();
                     }
@@ -1316,6 +1272,24 @@ public class Level : MonoBehaviour
         }
     }
 
+    private IEnumerator ReturnToMainMenu()
+    {
+        yield return null;
+        UnturnedLog.info("Returning to main menu");
+        SceneManager.LoadScene("Menu");
+        if (placeholderAudioListener != null)
+        {
+            UnityEngine.Object.Destroy(placeholderAudioListener);
+            placeholderAudioListener = null;
+        }
+        Provider.updateRichPresence();
+        LevelBatching.Get()?.Destroy();
+        DevkitTransactionManager.resetTransactions();
+        updateCachedHolidayRedirects();
+        UpdateShouldUseLevelBatching();
+        isExiting = false;
+    }
+
     public IEnumerator init(int id)
     {
         if (!isVR)
@@ -1485,7 +1459,7 @@ public class Level : MonoBehaviour
         }
         _isInitialized = true;
         UnityEngine.Object.DontDestroyOnLoad(base.gameObject);
-        singletonGameObject = base.gameObject;
+        instance = this;
         foliageVolumeManager = new FoliageVolumeManager();
         undergroundWhitelistVolumeManager = new UndergroundWhitelistVolumeManager();
         playerClipVolumeManager = new PlayerClipVolumeManager();
@@ -1517,7 +1491,7 @@ public class Level : MonoBehaviour
         {
             if (placeholderAudioListener == null)
             {
-                placeholderAudioListener = singletonGameObject.AddComponent<AudioListener>();
+                placeholderAudioListener = instance.gameObject.AddComponent<AudioListener>();
             }
         }
         else if (scene.buildIndex == BUILD_INDEX_MENU && placeholderAudioListener != null)
@@ -1598,7 +1572,7 @@ public class Level : MonoBehaviour
                     transform.GetComponent<Renderer>().material.mainTextureScale = new Vector2((float)(size - border * 2) / 32f, 4f);
                 }
             }
-            StartCoroutine("init", scene.buildIndex);
+            StartCoroutine(instance.init(scene.buildIndex));
         }
         else
         {
@@ -1675,7 +1649,7 @@ public class Level : MonoBehaviour
         }
         if (musicAudioSource == null)
         {
-            musicAudioSource = singletonGameObject.AddComponent<AudioSource>();
+            musicAudioSource = instance.gameObject.AddComponent<AudioSource>();
             musicAudioSource.playOnAwake = false;
             musicAudioSource.spatialBlend = 0f;
             musicAudioSource.ignoreListenerPause = true;

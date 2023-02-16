@@ -16,9 +16,11 @@ public class OptionsSettings
 
     private const byte SAVEDATA_VERSION_ADDED_STATIC_CROSSHAIR = 41;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 41;
+    private const byte SAVEDATA_VERSION_ADDED_CROSSHAIR_SHAPE = 42;
 
-    public static readonly byte SAVEDATA_VERSION = 41;
+    private const byte SAVEDATA_VERSION_NEWEST = 42;
+
+    public static readonly byte SAVEDATA_VERSION = 42;
 
     public static readonly byte MIN_FOV = 60;
 
@@ -85,6 +87,8 @@ public class OptionsSettings
     public static bool useStaticCrosshair;
 
     public static float staticCrosshairSize;
+
+    public static ECrosshairShape crosshairShape;
 
     public static Color crosshairColor;
 
@@ -293,6 +297,7 @@ public class OptionsSettings
         enableScreenshotsOnLoadingScreen = true;
         useStaticCrosshair = false;
         staticCrosshairSize = 0.1f;
+        crosshairShape = ECrosshairShape.Line;
         crosshairColor = Color.white;
         hitmarkerColor = Color.white;
         criticalHitmarkerColor = Color.red;
@@ -573,6 +578,14 @@ public class OptionsSettings
             useStaticCrosshair = block.readBoolean();
             staticCrosshairSize = block.readSingle();
         }
+        if (b < 42)
+        {
+            crosshairShape = ECrosshairShape.Line;
+        }
+        else
+        {
+            crosshairShape = (ECrosshairShape)block.readByte();
+        }
         if (!Provider.isPro)
         {
             backgroundColor = new Color(0.9f, 0.9f, 0.9f);
@@ -586,7 +599,7 @@ public class OptionsSettings
     public static void save()
     {
         Block block = new Block();
-        block.writeByte(41);
+        block.writeByte(42);
         block.writeBoolean(music);
         block.writeBoolean(splashscreen);
         block.writeBoolean(timer);
@@ -627,6 +640,7 @@ public class OptionsSettings
         block.writeBoolean(enableScreenshotsOnLoadingScreen);
         block.writeBoolean(useStaticCrosshair);
         block.writeSingle(staticCrosshairSize);
+        block.writeByte((byte)crosshairShape);
         ReadWrite.writeBlock("/Options.dat", useCloud: true, block);
     }
 }

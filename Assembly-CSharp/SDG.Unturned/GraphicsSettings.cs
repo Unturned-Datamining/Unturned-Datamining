@@ -881,8 +881,7 @@ public class GraphicsSettings
                         List<LevelObject> list = LevelObjects.objects[b, b2];
                         for (int j = 0; j < list.Count; j++)
                         {
-                            LevelObject levelObject = list[j];
-                            levelObject?.SetSkyboxActive(levelObject.isLandmarkQualityMet);
+                            list[j]?.UpdateSkyboxActive();
                         }
                     }
                     if (LevelGround.regions != null && !LevelGround.regions[b, b2])

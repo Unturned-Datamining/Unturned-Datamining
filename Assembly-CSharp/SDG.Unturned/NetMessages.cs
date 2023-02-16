@@ -45,6 +45,11 @@ internal static class NetMessages
 
     public static void SendMessageToServer(EServerMessage index, ENetReliability reliability, ClientWriteHandler callback)
     {
+        if (!Provider.isConnected)
+        {
+            UnturnedLog.warn($"Ignoring request to send message {index} to server because we are not connected");
+            return;
+        }
         writer.Reset();
         writer.WriteEnum(index);
         callback(writer);

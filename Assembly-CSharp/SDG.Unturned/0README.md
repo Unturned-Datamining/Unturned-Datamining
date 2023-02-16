@@ -332,6 +332,7 @@
 - [EConsumeMode_NetEnum.cs](EConsumeMode_NetEnum.cs)
 - [EConsumeMode.cs](EConsumeMode.cs)
 - [EControlMode.cs](EControlMode.cs)
+- [ECrosshairShape.cs](ECrosshairShape.cs)
 - [EDamageOrigin.cs](EDamageOrigin.cs)
 - [EDeadzoneType.cs](EDeadzoneType.cs)
 - [EDeathCause_NetEnum.cs](EDeathCause_NetEnum.cs)

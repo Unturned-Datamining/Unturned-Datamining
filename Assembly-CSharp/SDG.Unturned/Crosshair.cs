@@ -11,6 +11,8 @@ public class Crosshair : SleekWrapper
 
     private bool isGunCrosshairVisible;
 
+    private Bundle icons;
+
     private ISleekImage crosshairLeftImage;
 
     private ISleekImage crosshairRightImage;
@@ -56,6 +58,34 @@ public class Crosshair : SleekWrapper
         crosshairRightImage.color = crosshairColor;
         crosshairDownImage.color = crosshairColor;
         crosshairUpImage.color = crosshairColor;
+    }
+
+    public void SynchronizeImages()
+    {
+        if (OptionsSettings.crosshairShape == ECrosshairShape.Classic)
+        {
+            crosshairLeftImage.sizeOffset_X = 8;
+            crosshairLeftImage.texture = icons.load<Texture>("Crosshair_Left_Square");
+            crosshairRightImage.sizeOffset_X = 8;
+            crosshairRightImage.texture = icons.load<Texture>("Crosshair_Right_Square");
+            crosshairUpImage.sizeOffset_Y = 8;
+            crosshairUpImage.texture = icons.load<Texture>("Crosshair_Up_Square");
+            crosshairDownImage.sizeOffset_Y = 8;
+            crosshairDownImage.texture = icons.load<Texture>("Crosshair_Down_Square");
+        }
+        else
+        {
+            crosshairLeftImage.sizeOffset_X = 16;
+            crosshairLeftImage.texture = icons.load<Texture>("Crosshair_Left");
+            crosshairRightImage.sizeOffset_X = 16;
+            crosshairRightImage.texture = icons.load<Texture>("Crosshair_Right");
+            crosshairUpImage.sizeOffset_Y = 16;
+            crosshairUpImage.texture = icons.load<Texture>("Crosshair_Up");
+            crosshairDownImage.sizeOffset_Y = 16;
+            crosshairDownImage.texture = icons.load<Texture>("Crosshair_Down");
+        }
+        crosshairLeftImage.positionOffset_X = -crosshairLeftImage.sizeOffset_X;
+        crosshairUpImage.positionOffset_Y = -crosshairUpImage.sizeOffset_Y;
     }
 
     public override void OnUpdate()
@@ -131,6 +161,7 @@ public class Crosshair : SleekWrapper
 
     public Crosshair(Bundle icons)
     {
+        this.icons = icons;
         centerDotImage = Glazier.Get().CreateImage();
         centerDotImage.positionOffset_X = -4;
         centerDotImage.positionOffset_Y = -4;
@@ -142,45 +173,34 @@ public class Crosshair : SleekWrapper
         AddChild(centerDotImage);
         gameWantsCenterDotVisible = true;
         crosshairLeftImage = Glazier.Get().CreateImage();
-        crosshairLeftImage.positionOffset_X = -16;
         crosshairLeftImage.positionOffset_Y = -4;
         crosshairLeftImage.positionScale_X = 0.5f;
         crosshairLeftImage.positionScale_Y = 0.5f;
-        crosshairLeftImage.sizeOffset_X = 16;
         crosshairLeftImage.sizeOffset_Y = 8;
-        crosshairLeftImage.texture = icons.load<Texture>("Crosshair_Left");
         AddChild(crosshairLeftImage);
         crosshairLeftImage.isVisible = false;
         crosshairRightImage = Glazier.Get().CreateImage();
-        crosshairRightImage.positionOffset_X = 0;
         crosshairRightImage.positionOffset_Y = -4;
         crosshairRightImage.positionScale_X = 0.5f;
         crosshairRightImage.positionScale_Y = 0.5f;
-        crosshairRightImage.sizeOffset_X = 16;
         crosshairRightImage.sizeOffset_Y = 8;
-        crosshairRightImage.texture = icons.load<Texture>("Crosshair_Right");
         AddChild(crosshairRightImage);
         crosshairRightImage.isVisible = false;
         crosshairDownImage = Glazier.Get().CreateImage();
         crosshairDownImage.positionOffset_X = -4;
-        crosshairDownImage.positionOffset_Y = 0;
         crosshairDownImage.positionScale_X = 0.5f;
         crosshairDownImage.positionScale_Y = 0.5f;
         crosshairDownImage.sizeOffset_X = 8;
-        crosshairDownImage.sizeOffset_Y = 16;
-        crosshairDownImage.texture = icons.load<Texture>("Crosshair_Down");
         AddChild(crosshairDownImage);
         crosshairDownImage.isVisible = false;
         crosshairUpImage = Glazier.Get().CreateImage();
         crosshairUpImage.positionOffset_X = -4;
-        crosshairUpImage.positionOffset_Y = -16;
         crosshairUpImage.positionScale_X = 0.5f;
         crosshairUpImage.positionScale_Y = 0.5f;
         crosshairUpImage.sizeOffset_X = 8;
-        crosshairUpImage.sizeOffset_Y = 16;
-        crosshairUpImage.texture = icons.load<Texture>("Crosshair_Up");
         AddChild(crosshairUpImage);
         crosshairUpImage.isVisible = false;
         SynchronizeCustomColors();
+        SynchronizeImages();
     }
 }

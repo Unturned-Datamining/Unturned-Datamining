@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SDG.Framework.Devkit;
 using SDG.Framework.Utilities;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace SDG.Unturned;
 
@@ -11,6 +12,8 @@ public class AirdropDevkitNodeSystem : TempNodeSystemBase
     private static AirdropDevkitNodeSystem instance;
 
     private List<AirdropDevkitNode> allNodes;
+
+    private CustomSampler gizmoUpdateSampler;
 
     public static AirdropDevkitNodeSystem Get()
     {
@@ -49,6 +52,7 @@ public class AirdropDevkitNodeSystem : TempNodeSystemBase
     {
         instance = this;
         allNodes = new List<AirdropDevkitNode>();
+        gizmoUpdateSampler = CustomSampler.Create("AirdropDevkitNodeSystem.UpdateGizmos");
         TimeUtility.updated += OnUpdateGizmos;
     }
 

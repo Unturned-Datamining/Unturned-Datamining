@@ -43,7 +43,11 @@ public abstract class ServerMethodHandle
     protected void SendAndLoopbackIfLocal(ENetReliability reliability, NetPakWriter writer)
     {
         writer.Flush();
-        if (!Provider.isServer)
+        if (!Provider.isConnected)
+        {
+            UnturnedLog.warn($"Ignoring request to invoke {this} on server because we are not connected");
+        }
+        else if (!Provider.isServer)
         {
             Provider.clientTransport.Send(writer.buffer, writer.writeByteIndex, reliability);
         }

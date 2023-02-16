@@ -61,7 +61,7 @@ public class CullingVolume : LevelVolume<CullingVolume, CullingVolumeManager>
     [SerializeField]
     private bool includeLargeObjects;
 
-    private int load;
+    private int objectUpdateIndex = -1;
 
     private bool isManagedByLevelObject;
 
@@ -74,6 +74,8 @@ public class CullingVolume : LevelVolume<CullingVolume, CullingVolumeManager>
     public override bool ShouldSave => !isManagedByLevelObject;
 
     public override bool CanBeSelected => !isManagedByLevelObject;
+
+    internal bool HasPendingVisibilityUpdates => objectUpdateIndex >= 0;
 
     public override ISleekElement CreateMenu()
     {
@@ -259,7 +261,7 @@ public class CullingVolume : LevelVolume<CullingVolume, CullingVolumeManager>
         SetShouldUpdate(base.enabled && objects.Count > 0);
     }
 
-    internal void UpdateCulling(Vector3 viewPosition, bool forceCull)
+    internal bool UpdateCulling(Vector3 viewPosition, bool forceCull)
     {
         float sqrMagnitude = (base.transform.position - viewPosition).sqrMagnitude;
         if (!forceCull && sqrMagnitude < cullDistance * cullDistance)
@@ -267,23 +269,31 @@ public class CullingVolume : LevelVolume<CullingVolume, CullingVolumeManager>
             if (isCulled)
             {
                 isCulled = false;
-                load = 0;
+                objectUpdateIndex = 0;
+                return true;
             }
         }
         else if (!isCulled)
         {
             isCulled = true;
-            load = 0;
+            objectUpdateIndex = 0;
+            return true;
         }
-        if (load != -1)
+        return false;
+    }
+
+    internal void UpdateObjectsVisibility()
+    {
+        if (objectUpdateIndex >= objects.Count)
         {
-            if (load >= objects.Count)
-            {
-                load = -1;
-                return;
-            }
-            objects[load].SetIsVisibleInCullingVolume(!isCulled);
-            load++;
+            objectUpdateIndex = -1;
+            return;
+        }
+        objects[objectUpdateIndex].SetIsVisibleInCullingVolume(!isCulled);
+        objectUpdateIndex++;
+        if (objectUpdateIndex >= objects.Count)
+        {
+            objectUpdateIndex = -1;
         }
     }
 

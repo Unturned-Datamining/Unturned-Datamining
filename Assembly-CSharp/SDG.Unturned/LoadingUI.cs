@@ -410,7 +410,7 @@ public class LoadingUI : MonoBehaviour
 
     private void Update()
     {
-        if (!Dedicator.IsDedicatedServer && (Assets.isLoading || Provider.isLoading || Level.isLoading || Player.isLoading))
+        if (!Dedicator.IsDedicatedServer && (Assets.isLoading || Provider.isLoading || Level.isLoading || Player.isLoading || Level.isExiting))
         {
             lastLoading = Time.frameCount + 1;
         }

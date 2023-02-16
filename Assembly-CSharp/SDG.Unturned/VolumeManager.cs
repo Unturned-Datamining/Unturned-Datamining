@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using SDG.Framework.Devkit;
 using SDG.Framework.Utilities;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace SDG.Unturned;
 
@@ -12,6 +13,8 @@ public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume 
     internal Material solidMaterial;
 
     private ELevelVolumeVisibility visibility;
+
+    private CustomSampler gizmoUpdateSampler;
 
     protected bool allowInstantiation = true;
 
@@ -147,6 +150,7 @@ public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume 
         allVolumes = new List<TVolume>();
         solidMaterial = new Material(solidShader);
         solidMaterial.hideFlags = HideFlags.HideAndDontSave;
+        gizmoUpdateSampler = CustomSampler.Create(GetType().Name + ".UpdateGizmos");
         if (ConvenientSavedata.get().read("Visibility_" + typeof(TVolume).Name, out long value))
         {
             visibility = (ELevelVolumeVisibility)value;

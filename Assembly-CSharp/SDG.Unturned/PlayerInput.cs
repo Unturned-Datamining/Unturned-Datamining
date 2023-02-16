@@ -578,18 +578,21 @@ public class PlayerInput : PlayerCaller
                         drivingPlayerInputPacket.turn = (byte)(vehicle.turn + 1);
                     }
                 }
-                SendInputs.Invoke(GetNetId(), ENetReliability.Reliable, delegate(NetPakWriter writer)
+                if (true & Provider.isConnected)
                 {
-                    if (clientPendingInput is DrivingPlayerInputPacket)
+                    SendInputs.Invoke(GetNetId(), ENetReliability.Reliable, delegate(NetPakWriter writer)
                     {
-                        writer.WriteBit(value: true);
-                    }
-                    else
-                    {
-                        writer.WriteBit(value: false);
-                    }
-                    clientPendingInput.write(writer);
-                });
+                        if (clientPendingInput is DrivingPlayerInputPacket)
+                        {
+                            writer.WriteBit(value: true);
+                        }
+                        else
+                        {
+                            writer.WriteBit(value: false);
+                        }
+                        clientPendingInput.write(writer);
+                    });
+                }
             }
             count++;
         }

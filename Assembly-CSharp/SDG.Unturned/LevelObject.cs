@@ -45,9 +45,7 @@ public class LevelObject
 
     private bool haveConditionsBeenChecked;
 
-    internal bool isVisibleInCullingVolume = true;
-
-    private bool areRenderersEnabled;
+    private bool areRenderersEnabled = true;
 
     private HashSet<ushort> associatedFlags;
 
@@ -75,10 +73,13 @@ public class LevelObject
 
     public ELevelObjectPlacementOrigin placementOrigin { get; protected set; }
 
+    [Obsolete]
     public bool isCollisionEnabled { get; private set; }
 
+    [Obsolete]
     public bool isVisualEnabled { get; private set; }
 
+    [Obsolete]
     public bool isSkyboxEnabled { get; private set; }
 
     public bool isLandmarkQualityMet
@@ -97,37 +98,43 @@ public class LevelObject
         }
     }
 
+    internal bool isActiveInRegion { get; private set; }
+
+    internal bool isVisibleInCullingVolume { get; private set; } = true;
+
+
     [Obsolete]
     public string name => null;
 
-    internal void SetActive(bool shouldBeActive)
+    internal void SetIsActiveInRegion(bool isActive)
     {
-        isCollisionEnabled = shouldBeActive;
-        if (!Dedicator.IsDedicatedServer && (shouldBeActive || asset == null || !asset.isCollisionImportant || !Provider.isServer) && transform != null)
+        if (isActiveInRegion != isActive)
         {
-            transform.gameObject.SetActive(isCollisionEnabled && areConditionsMet);
+            isActiveInRegion = isActive;
+            UpdateActiveAndRenderersEnabled();
         }
-    }
-
-    internal void SetIsVisibleInRegion(bool isVisible)
-    {
-        isVisualEnabled = isVisible;
-        UpdateRenderersEnabled();
     }
 
     internal void SetIsVisibleInCullingVolume(bool isVisible)
     {
-        isVisibleInCullingVolume = isVisible;
-        UpdateRenderersEnabled();
+        if (isVisibleInCullingVolume != isVisible)
+        {
+            isVisibleInCullingVolume = isVisible;
+            UpdateActiveAndRenderersEnabled();
+        }
     }
 
-    internal void SetSkyboxActive(bool shouldBeActive)
+    internal void SetIsActiveOverrideForSatelliteCapture(bool isActive)
     {
-        isSkyboxEnabled = shouldBeActive;
-        if (!Dedicator.IsDedicatedServer && skybox != null)
+        if (transform != null)
         {
-            skybox.gameObject.SetActive(shouldBeActive && areConditionsMet);
+            transform.gameObject.SetActive(isActive);
         }
+        if (skybox != null)
+        {
+            skybox.gameObject.SetActive(value: false);
+        }
+        SetRenderersEnabled(isEnabled: true);
     }
 
     public void destroy()
@@ -204,46 +211,23 @@ public class LevelObject
 
     private void updateConditions()
     {
-        if (asset == null)
+        if (asset != null)
         {
-            return;
-        }
-        bool flag = true;
-        if (!Dedicator.IsDedicatedServer)
-        {
-            flag = asset.areConditionsMet(Player.player);
-            flag &= OptionsSettings.gore || !asset.isGore;
-        }
-        if (flag && asset.holidayRestriction != 0)
-        {
-            flag = HolidayUtil.isHolidayActive(asset.holidayRestriction);
-        }
-        if (areConditionsMet == flag && haveConditionsBeenChecked)
-        {
-            return;
-        }
-        areConditionsMet = flag;
-        haveConditionsBeenChecked = true;
-        if (areConditionsMet)
-        {
-            if (isCollisionEnabled && transform != null)
+            bool flag = true;
+            if (!Dedicator.IsDedicatedServer)
             {
-                transform.gameObject.SetActive(value: true);
+                flag = asset.areConditionsMet(Player.player);
+                flag &= OptionsSettings.gore || !asset.isGore;
             }
-            if (skybox != null)
+            if (flag && asset.holidayRestriction != 0)
             {
-                skybox.gameObject.SetActive(isSkyboxEnabled);
+                flag = HolidayUtil.isHolidayActive(asset.holidayRestriction);
             }
-        }
-        else
-        {
-            if (transform != null)
+            if (areConditionsMet != flag || !haveConditionsBeenChecked)
             {
-                transform.gameObject.SetActive(value: false);
-            }
-            if (skybox != null)
-            {
-                skybox.gameObject.SetActive(value: false);
+                areConditionsMet = flag;
+                haveConditionsBeenChecked = true;
+                UpdateActiveAndRenderersEnabled();
             }
         }
     }
@@ -473,7 +457,6 @@ public class LevelObject
                 {
                     skybox.localScale = newScale;
                 }
-                SetSkyboxActive(isLandmarkQualityMet);
                 skybox.GetComponentsInChildren(includeInactive: true, renderers);
                 for (int i = 0; i < renderers.Count; i++)
                 {
@@ -493,8 +476,7 @@ public class LevelObject
                     renderers[j].sharedMaterial = materialOverride;
                 }
             }
-            SetActive(asset.isCollisionImportant && Provider.isServer && !Dedicator.IsDedicatedServer);
-            SetRenderersEnabled(isEnabled: false);
+            UpdateActiveAndRenderersEnabled();
         }
         if (!(this.transform != null))
         {
@@ -697,19 +679,48 @@ public class LevelObject
         }
     }
 
-    private void UpdateRenderersEnabled()
+    internal void UpdateActiveAndRenderersEnabled()
     {
-        bool flag = isVisualEnabled && (isVisibleInCullingVolume || (bool)disableCullingVolumes);
-        if (areRenderersEnabled != flag)
+        isCollisionEnabled = isActiveInRegion;
+        isVisualEnabled = isActiveInRegion;
+        bool active;
+        bool renderersEnabled;
+        if (isDecal || (asset != null && asset.type == EObjectType.NPC))
         {
-            SetRenderersEnabled(flag);
+            active = (isActiveInRegion && isVisibleInCullingVolume && areConditionsMet) || Dedicator.IsDedicatedServer;
+            renderersEnabled = true;
+        }
+        else
+        {
+            bool flag = (asset != null && asset.isCollisionImportant && Provider.isServer) || Dedicator.IsDedicatedServer;
+            active = (isActiveInRegion && areConditionsMet) || flag;
+            renderersEnabled = isActiveInRegion && (isVisibleInCullingVolume || (bool)disableCullingVolumes) && areConditionsMet;
+        }
+        if (transform != null)
+        {
+            transform.gameObject.SetActive(active);
+        }
+        SetRenderersEnabled(renderersEnabled);
+        UpdateSkyboxActive();
+    }
+
+    internal void UpdateSkyboxActive()
+    {
+        isSkyboxEnabled = !isActiveInRegion;
+        if (skybox != null)
+        {
+            skybox.gameObject.SetActive(!isActiveInRegion && isLandmarkQualityMet && areConditionsMet);
         }
     }
 
     private void SetRenderersEnabled(bool isEnabled)
     {
+        if (areRenderersEnabled == isEnabled)
+        {
+            return;
+        }
         areRenderersEnabled = isEnabled;
-        if (Dedicator.IsDedicatedServer || isDecal || renderers == null)
+        if (renderers == null)
         {
             return;
         }
@@ -722,39 +733,39 @@ public class LevelObject
         }
     }
 
-    [Obsolete("Replaced by SetActive(true)")]
+    [Obsolete("Replaced by SetIsActiveInRegion(true)")]
     public void enableCollision()
     {
-        SetActive(shouldBeActive: true);
+        SetIsActiveInRegion(isActive: true);
     }
 
-    [Obsolete("Replaced by SetEnableRenderers(true)")]
+    [Obsolete("Replaced by SetIsActiveInRegion(true)")]
     public void enableVisual()
     {
-        SetIsVisibleInRegion(isVisible: true);
+        SetIsActiveInRegion(isActive: true);
     }
 
-    [Obsolete("Replaced by SetSkyboxActive(true)")]
+    [Obsolete("Replaced by SetIsActiveInRegion(false)")]
     public void enableSkybox()
     {
-        SetSkyboxActive(shouldBeActive: true);
+        SetIsActiveInRegion(isActive: false);
     }
 
-    [Obsolete("Replaced by SetActive(false)")]
+    [Obsolete("Replaced by SetIsActiveInRegion(false)")]
     public void disableCollision()
     {
-        SetActive(shouldBeActive: false);
+        SetIsActiveInRegion(isActive: false);
     }
 
-    [Obsolete("Replaced by SetEnableRenderers(false)")]
+    [Obsolete("Replaced by SetIsActiveInRegion(false)")]
     public void disableVisual()
     {
-        SetIsVisibleInRegion(isVisible: false);
+        SetIsActiveInRegion(isActive: false);
     }
 
-    [Obsolete("Replaced by SetSkyboxActive(false)")]
+    [Obsolete("Replaced by SetIsActiveInRegion(true)")]
     public void disableSkybox()
     {
-        SetSkyboxActive(shouldBeActive: false);
+        SetIsActiveInRegion(isActive: true);
     }
 }
