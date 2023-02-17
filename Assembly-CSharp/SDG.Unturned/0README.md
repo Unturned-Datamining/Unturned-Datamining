@@ -173,6 +173,7 @@
 - [CommandKick.cs](CommandKick.cs)
 - [CommandKill.cs](CommandKill.cs)
 - [CommandLine.cs](CommandLine.cs)
+- [CommandLineBool.cs](CommandLineBool.cs)
 - [CommandLineFlag.cs](CommandLineFlag.cs)
 - [CommandLineFloat.cs](CommandLineFloat.cs)
 - [CommandLineInt.cs](CommandLineInt.cs)

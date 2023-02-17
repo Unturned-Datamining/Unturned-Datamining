@@ -922,32 +922,31 @@ public class PlayerDashboardInformationUI
         Local local = Level.info?.getLocalization();
         foreach (LocationDevkitNode allNode in LocationDevkitNodeSystem.Get().GetAllNodes())
         {
-            string text = allNode.locationName;
-            if (string.IsNullOrWhiteSpace(text))
+            if (!allNode.isVisibleOnMap)
             {
                 continue;
             }
-            string key = text.Replace(' ', '_');
-            if (local != null && local.has(key))
+            string text = allNode.locationName;
+            if (!string.IsNullOrWhiteSpace(text))
             {
-                text = local.format(key);
-                if (string.IsNullOrWhiteSpace(text))
+                string key = text.Replace(' ', '_');
+                if (local != null && local.has(key))
                 {
-                    continue;
+                    text = local.format(key);
                 }
+                Vector2 vector = ProjectWorldPositionToMap(allNode.transform.position);
+                ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
+                sleekLabel.positionOffset_X = -200;
+                sleekLabel.positionOffset_Y = -30;
+                sleekLabel.positionScale_X = vector.x;
+                sleekLabel.positionScale_Y = vector.y;
+                sleekLabel.sizeOffset_X = 400;
+                sleekLabel.sizeOffset_Y = 60;
+                sleekLabel.text = text;
+                sleekLabel.textColor = ESleekTint.FONT;
+                sleekLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+                mapLocationsContainer.AddChild(sleekLabel);
             }
-            Vector2 vector = ProjectWorldPositionToMap(allNode.transform.position);
-            ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-            sleekLabel.positionOffset_X = -200;
-            sleekLabel.positionOffset_Y = -30;
-            sleekLabel.positionScale_X = vector.x;
-            sleekLabel.positionScale_Y = vector.y;
-            sleekLabel.sizeOffset_X = 400;
-            sleekLabel.sizeOffset_Y = 60;
-            sleekLabel.text = text;
-            sleekLabel.textColor = ESleekTint.FONT;
-            sleekLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
-            mapLocationsContainer.AddChild(sleekLabel);
         }
     }
 

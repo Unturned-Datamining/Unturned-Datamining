@@ -24,6 +24,15 @@ public class LocationDevkitNode : TempNodeBase
             sleekField.onTyped += OnIdTyped;
             AddChild(sleekField);
             num += sleekField.sizeOffset_Y + 10;
+            ISleekToggle sleekToggle = Glazier.Get().CreateToggle();
+            sleekToggle.positionOffset_Y = num;
+            sleekToggle.sizeOffset_X = 40;
+            sleekToggle.sizeOffset_Y = 40;
+            sleekToggle.state = node.isVisibleOnMap;
+            sleekToggle.addLabel("Visible on map", ESleekSide.RIGHT);
+            sleekToggle.onToggled += OnVisibleOnMapToggled;
+            AddChild(sleekToggle);
+            num += sleekToggle.sizeOffset_Y + 10;
             base.sizeOffset_Y = num - 10;
         }
 
@@ -31,9 +40,16 @@ public class LocationDevkitNode : TempNodeBase
         {
             node.locationName = state;
         }
+
+        private void OnVisibleOnMapToggled(ISleekToggle toggle, bool state)
+        {
+            node.isVisibleOnMap = state;
+        }
     }
 
     public string locationName;
+
+    public bool isVisibleOnMap = true;
 
     [SerializeField]
     private BoxCollider boxCollider;
@@ -52,12 +68,21 @@ public class LocationDevkitNode : TempNodeBase
     {
         base.readHierarchyItem(reader);
         locationName = reader.readValue<string>("LocationName");
+        if (reader.containsKey("IsVisibleOnMap"))
+        {
+            isVisibleOnMap = reader.readValue<bool>("IsVisibleOnMap");
+        }
+        else
+        {
+            isVisibleOnMap = true;
+        }
     }
 
     protected override void writeHierarchyItem(IFormattedFileWriter writer)
     {
         base.writeHierarchyItem(writer);
         writer.writeValue("LocationName", locationName);
+        writer.writeValue("IsVisibleOnMap", isVisibleOnMap);
     }
 
     private void OnEnable()

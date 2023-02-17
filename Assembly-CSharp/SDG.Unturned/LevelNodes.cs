@@ -138,7 +138,9 @@ public class LevelNodes
                 Transform transform = gameObject.transform;
                 transform.position = airdropNode.point;
                 transform.rotation = Quaternion.identity;
-                gameObject.AddComponent<AirdropDevkitNode>().id = airdropNode.id;
+                AirdropDevkitNode airdropDevkitNode = gameObject.AddComponent<AirdropDevkitNode>();
+                airdropDevkitNode.id = airdropNode.id;
+                LevelHierarchy.initItem(airdropDevkitNode);
             }
             else if (node is LocationNode locationNode)
             {
@@ -146,7 +148,10 @@ public class LevelNodes
                 Transform transform2 = gameObject2.transform;
                 transform2.position = locationNode.point;
                 transform2.rotation = Quaternion.identity;
-                gameObject2.AddComponent<LocationDevkitNode>().locationName = locationNode.name;
+                LocationDevkitNode locationDevkitNode = gameObject2.AddComponent<LocationDevkitNode>();
+                locationDevkitNode.locationName = locationNode.name;
+                locationDevkitNode.isVisibleOnMap = true;
+                LevelHierarchy.initItem(locationDevkitNode);
             }
         }
     }

@@ -171,6 +171,8 @@ public class Level : MonoBehaviour
 
     private static bool _loadingScreenWantsMusic;
 
+    private static CommandLineBool clUseLevelBatching = new CommandLineBool("-UseLevelBatching");
+
     public static ushort border
     {
         get
@@ -426,7 +428,7 @@ public class Level : MonoBehaviour
 
     private static void UpdateShouldUseLevelBatching()
     {
-        shouldUseLevelBatching = !isEditor && !Dedicator.IsDedicatedServer && info != null && info.configData != null && info.configData.Batching_Version > 1;
+        shouldUseLevelBatching = (clUseLevelBatching.hasValue ? clUseLevelBatching.value : LiveConfig.Get().ShouldUseLevelBatchingByDefault) && !isEditor && !Dedicator.IsDedicatedServer && info != null && info.configData != null && info.configData.Batching_Version > 1;
     }
 
     public static void includeHash(string id, byte[] pendingHash)

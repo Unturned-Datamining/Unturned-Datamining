@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
@@ -13,10 +14,29 @@ internal class LevelBatching
         public List<SkinnedMeshRenderer> skinnedMeshRenderers = new List<SkinnedMeshRenderer>();
     }
 
-    private class TextureUsers
+    private struct UniqueTextureConfiguration : IEquatable<UniqueTextureConfiguration>
     {
         public Texture2D texture;
 
+        public Color color;
+
+        public bool Equals(UniqueTextureConfiguration other)
+        {
+            if (texture == other.texture)
+            {
+                return color == other.color;
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return texture.GetHashCode() ^ color.GetHashCode();
+        }
+    }
+
+    private class TextureUsers
+    {
         public bool isGeneratedTexture;
 
         public Dictionary<Mesh, MeshUsers> componentsUsingMesh = new Dictionary<Mesh, MeshUsers>();
@@ -48,16 +68,15 @@ internal class LevelBatching
     {
         public Material materialTemplate;
 
-        public Dictionary<Texture2D, TextureUsers> batchableTextures = new Dictionary<Texture2D, TextureUsers>();
+        public Dictionary<UniqueTextureConfiguration, TextureUsers> batchableTextures = new Dictionary<UniqueTextureConfiguration, TextureUsers>();
 
         public FilterMode filterMode;
 
-        public TextureUsers GetOrAddListForTexture(Texture2D texture)
+        public TextureUsers GetOrAddListForTexture(UniqueTextureConfiguration texture)
         {
             if (!batchableTextures.TryGetValue(texture, out var value))
             {
                 value = new TextureUsers();
-                value.texture = texture;
                 batchableTextures.Add(texture, value);
             }
             return value;
@@ -94,6 +113,8 @@ internal class LevelBatching
 
     private ShaderGroup batchableFoliage;
 
+    private Material blitMaterial;
+
     internal static LevelBatching instance;
 
     private int propertyID_MainTex = Shader.PropertyToID("_MainTex");
@@ -116,7 +137,7 @@ internal class LevelBatching
 
     private List<MeshRenderer> staticBatchingMeshRenderers = new List<MeshRenderer>();
 
-    private List<Object> objectsToDestroy = new List<Object>();
+    private List<UnityEngine.Object> objectsToDestroy = new List<UnityEngine.Object>();
 
     private CommandLineFlag wantsToPreviewTextureAtlas = new CommandLineFlag(defaultValue: false, "-PreviewLevelBatchingTextureAtlas");
 
@@ -170,6 +191,11 @@ internal class LevelBatching
         {
             batchableFoliage.Clear();
         }
+        if (blitMaterial == null)
+        {
+            blitMaterial = UnityEngine.Object.Instantiate(Resources.Load<Material>("Materials/AtlasBlit"));
+            blitMaterial.hideFlags = HideFlags.HideAndDontSave;
+        }
         loggedMeshes.Clear();
         loggedTextures.Clear();
         loggedMaterials.Clear();
@@ -178,9 +204,9 @@ internal class LevelBatching
 
     public void Destroy()
     {
-        foreach (Object item in objectsToDestroy)
+        foreach (UnityEngine.Object item in objectsToDestroy)
         {
-            Object.Destroy(item);
+            UnityEngine.Object.Destroy(item);
         }
         objectsToDestroy.Clear();
     }
@@ -240,10 +266,10 @@ internal class LevelBatching
     {
         Stopwatch stopwatch = Stopwatch.StartNew();
         bool shouldPreview = Provider.isServer && (bool)wantsToPreviewTextureAtlas;
-        batch(standardDecalableOpaque, shouldPreview);
-        batch(standardSpecularSetupDecalableOpaque, shouldPreview);
-        batch(batchableCard, shouldPreview);
-        batch(batchableFoliage, shouldPreview);
+        ApplyTextureAtlas(standardDecalableOpaque, shouldPreview);
+        ApplyTextureAtlas(standardSpecularSetupDecalableOpaque, shouldPreview);
+        ApplyTextureAtlas(batchableCard, shouldPreview);
+        ApplyTextureAtlas(batchableFoliage, shouldPreview);
         DestroyColorTextures();
         stopwatch.Stop();
         UnturnedLog.info($"Level texture atlas generation took: {stopwatch.ElapsedMilliseconds}ms");
@@ -392,21 +418,24 @@ internal class LevelBatching
         }
         ShaderGroup shaderGroup = null;
         Texture2D texture2D = material.mainTexture as Texture2D;
+        UniqueTextureConfiguration texture = default(UniqueTextureConfiguration);
+        texture.texture = texture2D;
+        texture.color = Color.white;
         bool isGeneratedTexture = false;
         if (texture2D == null)
         {
             if (shader.name == "Standard (Decalable)")
             {
-                if (CanAtlasStandardMaterialSimpleOpaque(material, renderer, requireWhiteColor: false, isSpecular: false))
+                if (CanAtlasStandardMaterialSimpleOpaque(material, renderer, isSpecular: false))
                 {
-                    texture2D = GetOrAddColorTexture(material);
+                    texture.texture = GetOrAddColorTexture(material);
                     isGeneratedTexture = true;
                     shaderGroup = standardDecalableOpaque;
                 }
             }
-            else if (shader.name == "Standard (Specular setup) (Decalable)" && CanAtlasStandardMaterialSimpleOpaque(material, renderer, requireWhiteColor: false, isSpecular: true))
+            else if (shader.name == "Standard (Specular setup) (Decalable)" && CanAtlasStandardMaterialSimpleOpaque(material, renderer, isSpecular: true))
             {
-                texture2D = GetOrAddColorTexture(material);
+                texture.texture = GetOrAddColorTexture(material);
                 isGeneratedTexture = true;
                 shaderGroup = standardSpecularSetupDecalableOpaque;
             }
@@ -431,16 +460,18 @@ internal class LevelBatching
             }
             if (shader.name == "Standard (Decalable)")
             {
-                if (CanAtlasStandardMaterialSimpleOpaque(material, renderer, requireWhiteColor: true, isSpecular: false) && CanAtlasTextureFilterMode(texture2D, material, renderer, FilterMode.Point))
+                if (CanAtlasStandardMaterialSimpleOpaque(material, renderer, isSpecular: false) && CanAtlasTextureFilterMode(texture2D, material, renderer, FilterMode.Point))
                 {
                     shaderGroup = standardDecalableOpaque;
+                    texture.color = material.GetColor(propertyID_Color);
                 }
             }
             else if (shader.name == "Standard (Specular setup) (Decalable)")
             {
-                if (CanAtlasStandardMaterialSimpleOpaque(material, renderer, requireWhiteColor: true, isSpecular: true) && CanAtlasTextureFilterMode(texture2D, material, renderer, FilterMode.Point))
+                if (CanAtlasStandardMaterialSimpleOpaque(material, renderer, isSpecular: true) && CanAtlasTextureFilterMode(texture2D, material, renderer, FilterMode.Point))
                 {
                     shaderGroup = standardSpecularSetupDecalableOpaque;
+                    texture.color = material.GetColor(propertyID_Color);
                 }
             }
             else if (shader.name == "Custom/Card")
@@ -454,7 +485,7 @@ internal class LevelBatching
         }
         if (shaderGroup != null)
         {
-            TextureUsers orAddListForTexture = shaderGroup.GetOrAddListForTexture(texture2D);
+            TextureUsers orAddListForTexture = shaderGroup.GetOrAddListForTexture(texture);
             orAddListForTexture.isGeneratedTexture = isGeneratedTexture;
             orAddListForTexture.renderersUsingTexture.Add(renderer);
             return orAddListForTexture;
@@ -498,21 +529,13 @@ internal class LevelBatching
         return false;
     }
 
-    private bool CanAtlasStandardMaterialSimpleOpaque(Material material, Renderer renderer, bool requireWhiteColor, bool isSpecular)
+    private bool CanAtlasStandardMaterialSimpleOpaque(Material material, Renderer renderer, bool isSpecular)
     {
         if (!Mathf.Approximately(material.GetFloat(propertyID_Mode), 0f))
         {
             if ((bool)shouldLogTextureAtlasExclusions && loggedMaterials.Add(material))
             {
                 UnturnedLog.info("Excluding material \"" + material.name + "\" in renderer \"" + renderer.GetSceneHierarchyPath() + "\" from atlas because Mode is not Opaque");
-            }
-            return false;
-        }
-        if (requireWhiteColor && !material.GetColor(propertyID_Color).IsNearlyWhite())
-        {
-            if ((bool)shouldLogTextureAtlasExclusions && loggedMaterials.Add(material))
-            {
-                UnturnedLog.info("Excluding material \"" + material.name + "\" in renderer \"" + renderer.GetSceneHierarchyPath() + "\" from atlas because Color is not white");
             }
             return false;
         }
@@ -607,15 +630,15 @@ internal class LevelBatching
     {
         foreach (KeyValuePair<Material, Texture2D> colorTexture in colorTextures)
         {
-            Object.Destroy(colorTexture.Value);
+            UnityEngine.Object.Destroy(colorTexture.Value);
         }
         colorTextures.Clear();
     }
 
-    private void batch(ShaderGroup group, bool shouldPreview)
+    private void ApplyTextureAtlas(ShaderGroup group, bool shouldPreview)
     {
         Material materialTemplate = group.materialTemplate;
-        Dictionary<Texture2D, TextureUsers> batchableTextures = group.batchableTextures;
+        Dictionary<UniqueTextureConfiguration, TextureUsers> batchableTextures = group.batchableTextures;
         UnturnedLog.info($"{batchableTextures.Count} texture(s) in {group.materialTemplate.shader.name} group");
         if (batchableTextures.Count <= 0)
         {
@@ -624,109 +647,116 @@ internal class LevelBatching
         Texture2D texture2D = new Texture2D(16, 16);
         texture2D.wrapMode = TextureWrapMode.Clamp;
         texture2D.filterMode = group.filterMode;
-        TextureUsers[] array = new TextureUsers[batchableTextures.Count];
-        batchableTextures.Values.CopyTo(array, 0);
-        Texture2D[] array2 = new Texture2D[array.Length];
+        Texture2D[] array = new Texture2D[batchableTextures.Count];
+        TextureUsers[] array2 = new TextureUsers[batchableTextures.Count];
         RenderTexture active = RenderTexture.active;
-        for (int i = 0; i < array.Length; i++)
+        int num = 0;
+        foreach (KeyValuePair<UniqueTextureConfiguration, TextureUsers> item in batchableTextures)
         {
-            Texture2D texture = array[i].texture;
+            UniqueTextureConfiguration key = item.Key;
+            Texture2D texture = key.texture;
             RenderTexture temporary = RenderTexture.GetTemporary(texture.width, texture.height, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
-            Graphics.Blit(texture, temporary);
+            blitMaterial.SetColor(propertyID_Color, key.color);
+            Graphics.Blit(texture, temporary, blitMaterial);
             RenderTexture.active = temporary;
             Texture2D texture2D2 = new Texture2D(texture.width, texture.height, TextureFormat.ARGB32, mipChain: false, linear: true);
             texture2D2.ReadPixels(new Rect(0f, 0f, texture.width, texture.height), 0, 0);
-            array2[i] = texture2D2;
+            array[num] = texture2D2;
+            array2[num] = item.Value;
             RenderTexture.ReleaseTemporary(temporary);
+            num++;
         }
         RenderTexture.active = active;
-        Rect[] array3 = texture2D.PackTextures(array2, 0, 2048, makeNoLongerReadable: true);
+        Rect[] array3 = texture2D.PackTextures(array, 0, 2048, makeNoLongerReadable: true);
         if (array3 != null)
         {
             objectsToDestroy.Add(texture2D);
-            Material material = Object.Instantiate(materialTemplate);
+            Material material = UnityEngine.Object.Instantiate(materialTemplate);
             objectsToDestroy.Add(material);
             if (!shouldPreview)
             {
                 material.mainTexture = texture2D;
             }
-            for (int j = 0; j < array.Length; j++)
+            for (int i = 0; i < array2.Length; i++)
             {
-                TextureUsers textureUsers = array[j];
-                foreach (KeyValuePair<Mesh, MeshUsers> item in textureUsers.componentsUsingMesh)
+                TextureUsers textureUsers = array2[i];
+                foreach (KeyValuePair<Mesh, MeshUsers> item2 in textureUsers.componentsUsingMesh)
                 {
-                    Mesh key = item.Key;
-                    List<MeshFilter> meshFilters = item.Value.meshFilters;
-                    List<SkinnedMeshRenderer> skinnedMeshRenderers = item.Value.skinnedMeshRenderers;
-                    Mesh mesh = Object.Instantiate(key);
+                    Mesh key2 = item2.Key;
+                    Mesh mesh = UnityEngine.Object.Instantiate(key2);
                     objectsToDestroy.Add(mesh);
                     uvs.Clear();
                     mesh.GetUVs(0, uvs);
                     if (textureUsers.isGeneratedTexture)
                     {
-                        Rect rect = array3[j];
+                        Rect rect = array3[i];
                         Vector2 value = new Vector2(rect.x + 0.5f * rect.width, rect.y + 0.5f * rect.height);
-                        for (int k = 0; k < uvs.Count; k++)
+                        for (int j = 0; j < uvs.Count; j++)
                         {
-                            uvs[k] = value;
+                            uvs[j] = value;
                         }
                     }
                     else
                     {
                         if ((bool)shouldValidateUVs)
                         {
-                            bool flag = false;
-                            foreach (Vector2 uv in uvs)
-                            {
-                                if (uv.x < 0f || uv.y < 0f || uv.x > 1f || uv.y > 1f)
-                                {
-                                    flag = true;
-                                    break;
-                                }
-                            }
-                            if (flag && loggedMeshes.Add(key))
-                            {
-                                Component component = meshFilters.HeadOrDefault();
-                                if (component == null)
-                                {
-                                    component = skinnedMeshRenderers.HeadOrDefault();
-                                }
-                                UnturnedLog.error("Mesh \"" + key.name + "\" in renderer \"" + component?.GetSceneHierarchyPath() + "\" has UVs outside [0, 1] range (should be excluded from level batching)");
-                            }
+                            ValidateUVs(key2, item2.Value);
                         }
-                        for (int l = 0; l < uvs.Count; l++)
+                        for (int k = 0; k < uvs.Count; k++)
                         {
-                            Rect rect2 = array3[j];
-                            Vector2 value2 = uvs[l];
+                            Rect rect2 = array3[i];
+                            Vector2 value2 = uvs[k];
                             value2.x = rect2.x + value2.x * rect2.width;
                             value2.y = rect2.y + value2.y * rect2.height;
-                            uvs[l] = value2;
+                            uvs[k] = value2;
                         }
                     }
                     mesh.SetUVs(0, uvs, 0, uvs.Count);
-                    foreach (MeshFilter item2 in meshFilters)
+                    foreach (MeshFilter meshFilter in item2.Value.meshFilters)
                     {
-                        item2.sharedMesh = mesh;
+                        meshFilter.sharedMesh = mesh;
                     }
-                    foreach (SkinnedMeshRenderer item3 in skinnedMeshRenderers)
+                    foreach (SkinnedMeshRenderer skinnedMeshRenderer in item2.Value.skinnedMeshRenderers)
                     {
-                        item3.sharedMesh = mesh;
+                        skinnedMeshRenderer.sharedMesh = mesh;
                     }
                 }
-                foreach (Renderer item4 in textureUsers.renderersUsingTexture)
+                foreach (Renderer item3 in textureUsers.renderersUsingTexture)
                 {
-                    item4.sharedMaterial = material;
+                    item3.sharedMaterial = material;
                 }
             }
         }
         else
         {
-            Object.Destroy(texture2D);
+            UnityEngine.Object.Destroy(texture2D);
         }
-        Texture2D[] array4 = array2;
-        for (int m = 0; m < array4.Length; m++)
+        Texture2D[] array4 = array;
+        for (int l = 0; l < array4.Length; l++)
         {
-            Object.Destroy(array4[m]);
+            UnityEngine.Object.Destroy(array4[l]);
+        }
+    }
+
+    private void ValidateUVs(Mesh originalMesh, MeshUsers meshUsers)
+    {
+        bool flag = false;
+        foreach (Vector2 uv in uvs)
+        {
+            if (uv.x < 0f || uv.y < 0f || uv.x > 1f || uv.y > 1f)
+            {
+                flag = true;
+                break;
+            }
+        }
+        if (flag && loggedMeshes.Add(originalMesh))
+        {
+            Component component = meshUsers.meshFilters.HeadOrDefault();
+            if (component == null)
+            {
+                component = meshUsers.skinnedMeshRenderers.HeadOrDefault();
+            }
+            UnturnedLog.error("Mesh \"" + originalMesh.name + "\" in renderer \"" + component?.GetSceneHierarchyPath() + "\" has UVs outside [0, 1] range (should be excluded from level batching)");
         }
     }
 }
