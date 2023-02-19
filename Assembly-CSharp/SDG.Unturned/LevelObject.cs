@@ -687,13 +687,13 @@ public class LevelObject
         bool renderersEnabled;
         if (isDecal || (asset != null && asset.type == EObjectType.NPC))
         {
-            active = (isActiveInRegion && isVisibleInCullingVolume && areConditionsMet) || Dedicator.IsDedicatedServer;
+            active = ((isActiveInRegion && isVisibleInCullingVolume) || Dedicator.IsDedicatedServer) && areConditionsMet;
             renderersEnabled = true;
         }
         else
         {
             bool flag = (asset != null && asset.isCollisionImportant && Provider.isServer) || Dedicator.IsDedicatedServer;
-            active = (isActiveInRegion && areConditionsMet) || flag;
+            active = (isActiveInRegion || flag) && areConditionsMet;
             renderersEnabled = isActiveInRegion && (isVisibleInCullingVolume || (bool)disableCullingVolumes) && areConditionsMet;
         }
         if (transform != null)
