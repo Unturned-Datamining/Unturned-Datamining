@@ -55,6 +55,15 @@ public class InteractableObjectRubble : MonoBehaviour
         return true;
     }
 
+    public bool IsSectionIndexValid(byte sectionIndex)
+    {
+        if (rubbleInfos == null)
+        {
+            return false;
+        }
+        return sectionIndex < rubbleInfos.Length;
+    }
+
     public bool isSectionDead(byte section)
     {
         return rubbleInfos[section].isDead;
@@ -87,14 +96,17 @@ public class InteractableObjectRubble : MonoBehaviour
         return byte.MaxValue;
     }
 
-    public byte getSection(Transform section)
+    public byte getSection(Transform hitTransform)
     {
-        for (byte b = 0; b < rubbleInfos.Length; b = (byte)(b + 1))
+        if (hitTransform != null)
         {
-            RubbleInfo rubbleInfo = rubbleInfos[b];
-            if (section == rubbleInfo.section || section.parent == rubbleInfo.section || section.parent.parent == rubbleInfo.section)
+            for (byte b = 0; b < rubbleInfos.Length; b = (byte)(b + 1))
             {
-                return b;
+                RubbleInfo rubbleInfo = rubbleInfos[b];
+                if (hitTransform.IsChildOf(rubbleInfo.section))
+                {
+                    return b;
+                }
             }
         }
         return byte.MaxValue;

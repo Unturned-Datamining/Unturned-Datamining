@@ -122,7 +122,7 @@ public class ObjectManager : SteamCaller
             return;
         }
         InteractableObjectRubble rubble = levelObject.rubble;
-        if (rubble.isSectionDead(section))
+        if (!rubble.IsSectionIndexValid(section) || rubble.isSectionDead(section))
         {
             return;
         }

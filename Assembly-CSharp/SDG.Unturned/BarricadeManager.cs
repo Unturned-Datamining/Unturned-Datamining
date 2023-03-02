@@ -14,7 +14,13 @@ public class BarricadeManager : SteamCaller
 {
     private static Collider[] checkColliders = new Collider[2];
 
-    public static readonly byte SAVEDATA_VERSION = 17;
+    public const byte SAVEDATA_VERSION_OLDER = 17;
+
+    public const byte SAVEDATA_VERSION_INCLUDE_BUILD_ENUM = 18;
+
+    private const byte SAVEDATA_VERSION_NEWEST = 18;
+
+    public static readonly byte SAVEDATA_VERSION = 18;
 
     public static readonly byte BARRICADE_REGIONS = 2;
 
@@ -2466,7 +2472,7 @@ public class BarricadeManager : SteamCaller
     public static void save()
     {
         River river = LevelSavedata.openRiver("/Barricades.dat", isReading: false);
-        river.writeByte(SAVEDATA_VERSION);
+        river.writeByte(17);
         river.writeUInt32(Provider.time);
         river.writeUInt32(instanceCount);
         for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
@@ -2550,28 +2556,36 @@ public class BarricadeManager : SteamCaller
             {
                 newObjActiveDate = Provider.time;
             }
+            byte b4 = ((version < 18) ? byte.MaxValue : river.readByte());
             if (itemBarricadeAsset != null)
             {
-                if (itemBarricadeAsset.type == EItemType.TANK && array.Length < 2)
+                if (version >= 18 && b4 != (byte)itemBarricadeAsset.build)
                 {
-                    array = itemBarricadeAsset.getState(EItemOrigin.ADMIN);
+                    UnturnedLog.info("Discarding barricade \"" + itemBarricadeAsset.FriendlyName + "\" because asset Build property changed which might cause bigger problems (public issue #3725)");
                 }
-                if (itemBarricadeAsset.build == EBuild.OIL && array.Length < 2)
+                else
                 {
-                    array = itemBarricadeAsset.getState(EItemOrigin.ADMIN);
-                }
-                if (version < 10)
-                {
-                    Vector3 eulerAngles = getRotation(itemBarricadeAsset, b * 2, b2 * 2, b3 * 2).eulerAngles;
-                    b = MeasurementTool.angleToByte(Mathf.RoundToInt(eulerAngles.x / 2f) * 2);
-                    b2 = MeasurementTool.angleToByte(Mathf.RoundToInt(eulerAngles.y / 2f) * 2);
-                    b3 = MeasurementTool.angleToByte(Mathf.RoundToInt(eulerAngles.z / 2f) * 2);
-                }
-                NetId netId = NetIdRegistry.ClaimBlock(3u);
-                if (manager.spawnBarricade(region, itemBarricadeAsset.GUID, array, vector, b, b2, b3, (byte)Mathf.RoundToInt((float)(int)num3 / (float)(int)itemBarricadeAsset.health * 100f), num4, num5, netId) != null)
-                {
-                    BarricadeData item = (region.drops.GetTail().serversideData = new BarricadeData(new Barricade(itemBarricadeAsset, num3, array), vector, b, b2, b3, num4, num5, newObjActiveDate, newInstanceID));
-                    region.barricades.Add(item);
+                    if (itemBarricadeAsset.type == EItemType.TANK && array.Length < 2)
+                    {
+                        array = itemBarricadeAsset.getState(EItemOrigin.ADMIN);
+                    }
+                    if (itemBarricadeAsset.build == EBuild.OIL && array.Length < 2)
+                    {
+                        array = itemBarricadeAsset.getState(EItemOrigin.ADMIN);
+                    }
+                    if (version < 10)
+                    {
+                        Vector3 eulerAngles = getRotation(itemBarricadeAsset, b * 2, b2 * 2, b3 * 2).eulerAngles;
+                        b = MeasurementTool.angleToByte(Mathf.RoundToInt(eulerAngles.x / 2f) * 2);
+                        b2 = MeasurementTool.angleToByte(Mathf.RoundToInt(eulerAngles.y / 2f) * 2);
+                        b3 = MeasurementTool.angleToByte(Mathf.RoundToInt(eulerAngles.z / 2f) * 2);
+                    }
+                    NetId netId = NetIdRegistry.ClaimBlock(3u);
+                    if (manager.spawnBarricade(region, itemBarricadeAsset.GUID, array, vector, b, b2, b3, (byte)Mathf.RoundToInt((float)(int)num3 / (float)(int)itemBarricadeAsset.health * 100f), num4, num5, netId) != null)
+                    {
+                        BarricadeData item = (region.drops.GetTail().serversideData = new BarricadeData(new Barricade(itemBarricadeAsset, num3, array), vector, b, b2, b3, num4, num5, newObjActiveDate, newInstanceID));
+                        region.barricades.Add(item);
+                    }
                 }
             }
         }

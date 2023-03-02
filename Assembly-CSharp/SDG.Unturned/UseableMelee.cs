@@ -358,7 +358,7 @@ public class UseableMelee : Useable
                 {
                     raycastInfo.transform = componentInParent.transform;
                     raycastInfo.section = componentInParent.getSection(raycastInfo.collider.transform);
-                    if (!componentInParent.isSectionDead(raycastInfo.section) && equippedMeleeAsset.hasBladeID(componentInParent.asset.rubbleBladeID) && (componentInParent.asset.rubbleIsVulnerable || ((ItemWeaponAsset)base.player.equipment.asset).isInvulnerable))
+                    if (componentInParent.IsSectionIndexValid(raycastInfo.section) && !componentInParent.isSectionDead(raycastInfo.section) && equippedMeleeAsset.hasBladeID(componentInParent.asset.rubbleBladeID) && (componentInParent.asset.rubbleIsVulnerable || ((ItemWeaponAsset)base.player.equipment.asset).isInvulnerable))
                     {
                         if (Provider.provider.statisticsService.userStatisticsService.getStatistic("Accuracy_Hit", out data))
                         {
@@ -552,7 +552,7 @@ public class UseableMelee : Useable
         else if (input.type == ERaycastInfoType.OBJECT && input.transform != null && input.section < byte.MaxValue)
         {
             InteractableObjectRubble componentInParent2 = input.transform.GetComponentInParent<InteractableObjectRubble>();
-            if (componentInParent2 != null && !componentInParent2.isSectionDead(input.section) && equippedMeleeAsset.hasBladeID(componentInParent2.asset.rubbleBladeID) && (componentInParent2.asset.rubbleIsVulnerable || ((ItemWeaponAsset)base.player.equipment.asset).isInvulnerable))
+            if (componentInParent2 != null && componentInParent2.IsSectionIndexValid(input.section) && !componentInParent2.isSectionDead(input.section) && equippedMeleeAsset.hasBladeID(componentInParent2.asset.rubbleBladeID) && (componentInParent2.asset.rubbleIsVulnerable || ((ItemWeaponAsset)base.player.equipment.asset).isInvulnerable))
             {
                 DamageTool.damage(componentInParent2.transform, input.direction, input.section, equippedMeleeAsset.objectDamage, num2, out kill, out xp, base.channel.owner.playerID.steamID, EDamageOrigin.Useable_Melee);
             }

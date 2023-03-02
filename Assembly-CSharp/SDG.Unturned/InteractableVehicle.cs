@@ -215,7 +215,7 @@ public class InteractableVehicle : Interactable
 
     public Vector3 defaultCenterOfMass;
 
-    private List<Collider> _vehicleColliders;
+    internal List<Collider> _vehicleColliders;
 
     private Transform center;
 
@@ -3961,7 +3961,7 @@ public class InteractableVehicle : Interactable
 
     private void ignoreCollisionWithVehicle(InteractableVehicle otherVehicle, bool shouldIgnore)
     {
-        ignoreCollisionWith(otherVehicle.vehicleColliders, shouldIgnore);
+        ignoreCollisionWith(otherVehicle._vehicleColliders, shouldIgnore);
     }
 
     public Vector3 getClosestPointOnHull(Vector3 position)
@@ -3991,7 +3991,7 @@ public class InteractableVehicle : Interactable
         center.localRotation = Quaternion.identity;
         center.localScale = Vector3.one;
         float num = 0.001f;
-        foreach (Collider vehicleCollider in vehicleColliders)
+        foreach (Collider vehicleCollider in _vehicleColliders)
         {
             if (vehicleCollider.isTrigger)
             {

@@ -20,6 +20,8 @@ public class ItemFarmAsset : ItemBarricadeAsset
 
     public bool canFertilize { get; protected set; }
 
+    public bool isAffectedByAgricultureSkill { get; protected set; }
+
     public ItemFarmAsset(Bundle bundle, Data data, Local localization, ushort id)
         : base(bundle, data, localization, id)
     {
@@ -29,5 +31,6 @@ public class ItemFarmAsset : ItemBarricadeAsset
         ignoreSoilRestrictions = data.has("Ignore_Soil_Restrictions");
         canFertilize = data.readBoolean("Allow_Fertilizer", defaultValue: true);
         harvestRewardExperience = data.readUInt32("Harvest_Reward_Experience", 1u);
+        isAffectedByAgricultureSkill = data.readBoolean("Affected_By_Agriculture_Skill", defaultValue: true);
     }
 }

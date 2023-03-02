@@ -28,8 +28,8 @@
 	"Game":
 	{
 		"Major_Version": 23,
-		"Minor_Version": 2,
-		"Patch_Version": 1,
+		"Minor_Version": 3,
+		"Patch_Version": 100,
 		"GrantPackageIDs":
 		[
 			487
@@ -175,19 +175,14 @@
 	},
 	"Stockpile":
 	{
-		"New_Items_Start": "2022-12-14T00:12:00Z",
-		"New_Items_End": "2022-12-19T00:12:00Z",
+		"New_Items_Start": "2023-03-01T00:12:00Z",
+		"New_Items_End": "2023-03-07T00:12:00Z",
 		"New_Items":
 		[
-			21057,
-			1287,
-			1316,
-			1317
+			1330,
+			1331
 		],
 		"Exclude_Items_From_Highlight":
-		[
-			1316,
-			1317
-		]
+		[]
 	}
 }

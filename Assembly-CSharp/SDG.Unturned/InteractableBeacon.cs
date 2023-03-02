@@ -165,6 +165,7 @@ public class InteractableBeacon : MonoBehaviour, IManualOnDestroy
         {
             rewards = Mathf.Min(rewards, (int)beacon_Max_Rewards);
         }
+        rewards = Mathf.Min(rewards, 256);
         for (int j = 0; j < rewards; j++)
         {
             ushort num3 = SpawnTableTool.resolve(asset.rewardID);

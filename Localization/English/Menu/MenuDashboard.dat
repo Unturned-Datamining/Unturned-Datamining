@@ -76,11 +76,17 @@ Late_Pending You lost your place in the queue.
 Not_Pending You are not playing on this server.
 Name_Player_Short Your Steam username is too short.
 Name_Player_Long Your Steam username is too long.
+
+# https://support.smartlydressedgames.com/hc/en-us/articles/13452208765716
 Name_Player_Invalid Your Steam username contains invalid letters.
+
 Name_Player_Number Your Steam username cannot be just a number.
 Name_Character_Short Your character name is too short.
 Name_Character_Long Your character name is too long.
+
+# https://support.smartlydressedgames.com/hc/en-us/articles/13452208765716
 Name_Character_Invalid Your character name contains invalid letters.
+
 Name_Character_Number Your character name cannot be just a number.
 
 # https://support.smartlydressedgames.com/hc/en-us/articles/12236562526228
@@ -133,7 +139,10 @@ Late_Pending_Steam_Econ The game server did not receive a response from the Stea
 Late_Pending_Steam_Groups The game server did not receive a response from the Steam groups servers.
 
 Name_Private_Long Your friends-only private nickname is too long.
+
+# https://support.smartlydressedgames.com/hc/en-us/articles/13452208765716
 Name_Private_Invalid Your friends-only private nickname contains invalid letters.
+
 Name_Private_Number Your friends-only private nickname cannot be just a number.
 
 SteamNetworkingSockets_Unavailable_CannotTry Unable to initialize Steam network authentication.

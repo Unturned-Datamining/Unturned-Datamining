@@ -1678,7 +1678,7 @@ public class PlayerEquipment : PlayerCaller
                 {
                     raycastInfo.transform = componentInParent.transform;
                     raycastInfo.section = componentInParent.getSection(raycastInfo.collider.transform);
-                    if (!componentInParent.isSectionDead(raycastInfo.section) && componentInParent.asset.rubbleBladeID == 0 && componentInParent.asset.rubbleIsVulnerable)
+                    if (componentInParent.IsSectionIndexValid(raycastInfo.section) && !componentInParent.isSectionDead(raycastInfo.section) && componentInParent.asset.rubbleBladeID == 0 && componentInParent.asset.rubbleIsVulnerable)
                     {
                         PlayerUI.hitmark(0, raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
                     }
@@ -1823,7 +1823,7 @@ public class PlayerEquipment : PlayerCaller
         else if (input.type == ERaycastInfoType.OBJECT && input.transform != null && input.section < byte.MaxValue)
         {
             InteractableObjectRubble componentInParent2 = input.transform.GetComponentInParent<InteractableObjectRubble>();
-            if (componentInParent2 != null && !componentInParent2.isSectionDead(input.section) && componentInParent2.asset.rubbleBladeID == 0 && componentInParent2.asset.rubbleIsVulnerable)
+            if (componentInParent2 != null && componentInParent2.IsSectionIndexValid(input.section) && !componentInParent2.isSectionDead(input.section) && componentInParent2.asset.rubbleBladeID == 0 && componentInParent2.asset.rubbleIsVulnerable)
             {
                 DamageTool.damage(componentInParent2.transform, input.direction, input.section, DAMAGE_OBJECT, num, out kill, out xp, base.channel.owner.playerID.steamID, EDamageOrigin.Punch);
             }

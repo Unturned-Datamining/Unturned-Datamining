@@ -20,7 +20,7 @@ public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume 
 
     protected bool supportsFalloff;
 
-    internal List<TVolume> allVolumes;
+    protected List<TVolume> allVolumes;
 
     private static TManager instance;
 
@@ -61,6 +61,16 @@ public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume 
     public IReadOnlyList<TVolume> GetAllVolumes()
     {
         return allVolumes;
+    }
+
+    internal List<TVolume> InternalGetAllVolumes()
+    {
+        return allVolumes;
+    }
+
+    public TVolume GetRandomVolumeOrNull()
+    {
+        return allVolumes.RandomOrDefault();
     }
 
     public void ForceUpdateEditorVisibility()

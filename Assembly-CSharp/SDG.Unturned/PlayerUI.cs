@@ -843,6 +843,9 @@ public class PlayerUI : MonoBehaviour
                 messageProgress2_0.isVisible = true;
                 messageProgress2_1.isVisible = true;
                 messageIcon2.texture = PlayerLifeUI.icons.load<Texture2D>("Health");
+                messageLabel2.enableRichText = false;
+                messageLabel2.textColor = ESleekTint.FONT;
+                messageLabel2.shadowStyle = ETextContrastContext.Default;
                 messageLabel2.text = PlayerLifeUI.localization.format("Salvage", ControlsSettings.interact);
                 messageProgress2_0.state = progress;
                 messageProgress2_0.color = Palette.COLOR_P;
@@ -876,6 +879,17 @@ public class PlayerUI : MonoBehaviour
             messageProgress2_1.isVisible = false;
             messageDisappearTime = Time.realtimeSinceStartup + duration;
             isMessaged = true;
+            messageLabel2.enableRichText = message == EPlayerMessage.NPC_CUSTOM;
+            if (messageLabel2.enableRichText)
+            {
+                messageLabel2.textColor = ESleekTint.RICH_TEXT_DEFAULT;
+                messageLabel2.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+            }
+            else
+            {
+                messageLabel2.textColor = ESleekTint.FONT;
+                messageLabel2.shadowStyle = ETextContrastContext.Default;
+            }
             if (message == EPlayerMessage.SPACE)
             {
                 messageLabel2.text = PlayerLifeUI.localization.format("Space");
@@ -969,6 +983,7 @@ public class PlayerUI : MonoBehaviour
             case EPlayerMessage.NPC_CUSTOM:
                 messageBox2.positionOffset_X = -300;
                 messageBox2.sizeOffset_X = 600;
+                RichTextUtil.replaceNewlineMarkup(ref text);
                 messageLabel2.text = text;
                 break;
             }

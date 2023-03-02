@@ -25,7 +25,7 @@ public class NameTool
             {
                 return false;
             }
-            if (c == '/' || c == '\\' || c == '`')
+            if (c == '/' || c == '\\' || c == '`' || c == '\'' || c == '"')
             {
                 return false;
             }

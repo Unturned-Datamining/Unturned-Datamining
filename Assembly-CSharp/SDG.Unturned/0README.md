@@ -145,7 +145,6 @@
 - [CommandAdmin.cs](CommandAdmin.cs)
 - [CommandAdmins.cs](CommandAdmins.cs)
 - [CommandAirdrop.cs](CommandAirdrop.cs)
-- [CommandAllowP2PRelay.cs](CommandAllowP2PRelay.cs)
 - [CommandAnimal.cs](CommandAnimal.cs)
 - [CommandArmor.cs](CommandArmor.cs)
 - [CommandBan.cs](CommandBan.cs)

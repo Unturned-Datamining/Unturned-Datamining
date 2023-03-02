@@ -58,15 +58,15 @@ public sealed class SkyFogRenderer : PostProcessEffectRenderer<SkyFog>
         propertySheet.properties.SetColor(groundColorId, RenderSettings.skybox.GetColor(groundColorId));
         propertySheet.properties.SetMatrix(inverseProjectionMatrixId, context.camera.projectionMatrix.inverse);
         propertySheet.properties.SetMatrix(cameraToWorldMatrixId, context.camera.cameraToWorldMatrix);
-        IReadOnlyList<WaterVolume> allVolumes = VolumeManager<WaterVolume, WaterVolumeManager>.Get().GetAllVolumes();
-        int num = (LevelLighting.enableUnderwaterEffects ? Mathf.Min(allVolumes.Count, 16) : 0);
+        List<WaterVolume> list = VolumeManager<WaterVolume, WaterVolumeManager>.Get().InternalGetAllVolumes();
+        int num = (LevelLighting.enableUnderwaterEffects ? Mathf.Min(list.Count, 16) : 0);
         bool flag = LevelLighting.isSea && num > 0;
         propertySheet.properties.SetColor(waterColorId, LevelLighting.getSeaColor("_BaseColor"));
         propertySheet.properties.SetFloat(isCameraUnderwaterId, flag ? 1f : 0f);
         propertySheet.properties.SetInt(waterCountId, num);
         for (int i = 0; i < num; i++)
         {
-            waterMatrices[i] = allVolumes[i].transform.worldToLocalMatrix;
+            waterMatrices[i] = list[i].transform.worldToLocalMatrix;
         }
         propertySheet.properties.SetMatrixArray(waterMatricesId, waterMatrices);
         context.command.BlitFullscreenTriangle(context.source, context.destination, propertySheet, 0);

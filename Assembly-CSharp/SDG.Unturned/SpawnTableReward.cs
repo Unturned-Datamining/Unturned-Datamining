@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -49,12 +48,12 @@ public struct SpawnTableReward
         }
     }
 
-    public IEnumerable<ushort> spawn()
+    public SpawnTableRewardEnumerator spawn()
     {
         return new SpawnTableRewardEnumerator(tableID, count());
     }
 
-    public IEnumerable<ushort> spawn(float multiplier)
+    public SpawnTableRewardEnumerator spawn(float multiplier)
     {
         return new SpawnTableRewardEnumerator(tableID, count(multiplier));
     }

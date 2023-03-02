@@ -11,7 +11,7 @@ internal static class PhysicMaterialCustomData
 
         public CombinedPhysicMaterialInfo fallback;
 
-        public Dictionary<string, MasterBundleReference<OneShotAudioDefinition>> audioDefs = new Dictionary<string, MasterBundleReference<OneShotAudioDefinition>>(StringComparer.InvariantCultureIgnoreCase);
+        public Dictionary<string, MasterBundleReference<OneShotAudioDefinition>> audioDefs = new Dictionary<string, MasterBundleReference<OneShotAudioDefinition>>(StringComparer.OrdinalIgnoreCase);
 
         public AssetReference<EffectAsset> bulletImpactEffect;
 
@@ -28,7 +28,7 @@ internal static class PhysicMaterialCustomData
         public float? characterMaxSpeedMultiplier;
     }
 
-    private static Dictionary<string, CombinedPhysicMaterialInfo> nameInfos = new Dictionary<string, CombinedPhysicMaterialInfo>(StringComparer.InvariantCultureIgnoreCase);
+    private static Dictionary<string, CombinedPhysicMaterialInfo> nameInfos = new Dictionary<string, CombinedPhysicMaterialInfo>(StringComparer.OrdinalIgnoreCase);
 
     private static Dictionary<Guid, PhysicsMaterialAsset> baseAssets = new Dictionary<Guid, PhysicsMaterialAsset>();
 
@@ -143,7 +143,7 @@ internal static class PhysicMaterialCustomData
         needsRebuild = true;
     }
 
-    private static IEnumerable<CombinedPhysicMaterialInfo> EnumerateInfo(string materialName)
+    private static List<CombinedPhysicMaterialInfo> EnumerateInfo(string materialName)
     {
         enumerableInfos.Clear();
         if (string.IsNullOrEmpty(materialName))

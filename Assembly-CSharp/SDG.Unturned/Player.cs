@@ -100,6 +100,8 @@ public class Player : MonoBehaviour
 
     private static readonly ClientInstanceMethod<string, string> SendBrowserRequest = ClientInstanceMethod<string, string>.Get(typeof(Player), "ReceiveBrowserRequest");
 
+    private static readonly ClientInstanceMethod<string, float> SendHintMessage = ClientInstanceMethod<string, float>.Get(typeof(Player), "ReceiveHintMessage");
+
     private static readonly ClientInstanceMethod<uint, ushort, string, bool> SendRelayToServer = ClientInstanceMethod<uint, ushort, string, bool>.Get(typeof(Player), "ReceiveRelayToServer");
 
     private static readonly ClientInstanceMethod<uint> SendSetPluginWidgetFlags = ClientInstanceMethod<uint>.Get(typeof(Player), "ReceiveSetPluginWidgetFlags");
@@ -418,6 +420,20 @@ public class Player : MonoBehaviour
         SendBrowserRequest.Invoke(GetNetId(), ENetReliability.Reliable, channel.GetOwnerTransportConnection(), msg, url);
     }
 
+    [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
+    public void ReceiveHintMessage(string message, float durationSeconds)
+    {
+        if (PlayerUI.instance != null)
+        {
+            PlayerUI.message(EPlayerMessage.NPC_CUSTOM, message, durationSeconds);
+        }
+    }
+
+    public void ServerShowHint(string message, float durationSeconds)
+    {
+        SendHintMessage.Invoke(GetNetId(), ENetReliability.Reliable, channel.GetOwnerTransportConnection(), message, durationSeconds);
+    }
+
     [Obsolete]
     public void askRelayToServer(CSteamID steamID, uint ip, ushort port, string password, bool shouldShowMenu)
     {
@@ -551,6 +567,7 @@ public class Player : MonoBehaviour
     internal void PostTeleport()
     {
         onPlayerTeleported?.Invoke(this, base.transform.position);
+        VolumeManager<CullingVolume, CullingVolumeManager>.Get().OnPlayerTeleported();
     }
 
     [Obsolete]

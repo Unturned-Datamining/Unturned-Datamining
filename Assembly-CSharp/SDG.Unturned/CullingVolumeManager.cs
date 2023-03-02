@@ -7,6 +7,8 @@ namespace SDG.Unturned;
 
 public class CullingVolumeManager : VolumeManager<CullingVolume, CullingVolumeManager>
 {
+    private bool wasViewTeleported;
+
     private int cullingUpdateIndex;
 
     private List<CullingVolume> volumesWithObjects = new List<CullingVolume>();
@@ -70,11 +72,16 @@ public class CullingVolumeManager : VolumeManager<CullingVolume, CullingVolumeMa
         volumesWithVisibilityUpdates.Remove(volume);
     }
 
+    internal void OnPlayerTeleported()
+    {
+        wasViewTeleported = true;
+    }
+
     private void UpdateRelevantCullingVolumes()
     {
         bool forceCull = Level.isEditor && EditorVolumesUI.EditorWantsToPreviewCulling;
         Vector3 position = MainCamera.instance.transform.position;
-        int num = Mathf.Min(32, volumesWithObjects.Count);
+        int num = (wasViewTeleported ? volumesWithObjects.Count : Mathf.Min(32, volumesWithObjects.Count));
         for (int i = 0; i < num; i++)
         {
             cullingUpdateIndex++;
@@ -88,6 +95,16 @@ public class CullingVolumeManager : VolumeManager<CullingVolume, CullingVolumeMa
                 volumesWithVisibilityUpdates.Add(cullingVolume);
             }
         }
+    }
+
+    private void SyncAllVolumesVisibility()
+    {
+        foreach (CullingVolume volumesWithVisibilityUpdate in volumesWithVisibilityUpdates)
+        {
+            volumesWithVisibilityUpdate.SyncAllObjectsVisibility();
+        }
+        volumesWithVisibilityUpdates.Clear();
+        volumesToRemoveFromUpdatesList.Clear();
     }
 
     private void UpdateObjectsVisibility()
@@ -109,7 +126,15 @@ public class CullingVolumeManager : VolumeManager<CullingVolume, CullingVolumeMa
         if (!(MainCamera.instance == null))
         {
             UpdateRelevantCullingVolumes();
-            UpdateObjectsVisibility();
+            if (wasViewTeleported)
+            {
+                SyncAllVolumesVisibility();
+            }
+            else
+            {
+                UpdateObjectsVisibility();
+            }
+            wasViewTeleported = false;
         }
     }
 }

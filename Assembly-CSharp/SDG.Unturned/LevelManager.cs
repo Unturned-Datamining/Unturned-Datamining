@@ -240,13 +240,12 @@ public class LevelManager : SteamCaller
         float num = (float)(int)Level.size / 2f;
         if (Level.info.configData.Use_Arena_Compactor)
         {
-            IReadOnlyList<ArenaCompactorVolume> allVolumes = VolumeManager<ArenaCompactorVolume, ArenaCompactorVolumeManager>.Get().GetAllVolumes();
-            if (allVolumes.Count > 0)
+            ArenaCompactorVolume randomVolumeOrNull = VolumeManager<ArenaCompactorVolume, ArenaCompactorVolumeManager>.Get().GetRandomVolumeOrNull();
+            if (randomVolumeOrNull != null)
             {
-                ArenaCompactorVolume arenaCompactorVolume = allVolumes[UnityEngine.Random.Range(0, allVolumes.Count)];
-                vector = arenaCompactorVolume.transform.position;
+                vector = randomVolumeOrNull.transform.position;
                 vector.y = 0f;
-                num = arenaCompactorVolume.GetSphereRadius();
+                num = randomVolumeOrNull.GetSphereRadius();
             }
         }
         else

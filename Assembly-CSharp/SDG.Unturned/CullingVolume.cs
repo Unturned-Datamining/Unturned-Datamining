@@ -247,7 +247,7 @@ public class CullingVolume : LevelVolume<CullingVolume, CullingVolumeManager>
                 {
                     continue;
                 }
-                foreach (LevelObject item in (IEnumerable<LevelObject>)LevelObjects.objects[i, j])
+                foreach (LevelObject item in LevelObjects.objects[i, j])
                 {
                     if (item != targetLevelObject && item.asset != null && !(item.transform == null) && (item.asset.type != 0 || includeLargeObjects) && !item.asset.shouldExcludeFromCullingVolumes && !item.isSpeciallyCulled && IsPositionInsideVolume(item.transform.position))
                     {
@@ -294,6 +294,19 @@ public class CullingVolume : LevelVolume<CullingVolume, CullingVolumeManager>
         if (objectUpdateIndex >= objects.Count)
         {
             objectUpdateIndex = -1;
+        }
+    }
+
+    internal void SyncAllObjectsVisibility()
+    {
+        if (objectUpdateIndex < 0)
+        {
+            return;
+        }
+        objectUpdateIndex = -1;
+        foreach (LevelObject @object in objects)
+        {
+            @object.SetIsVisibleInCullingVolume(!isCulled);
         }
     }
 

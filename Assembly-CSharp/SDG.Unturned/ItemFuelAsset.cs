@@ -9,6 +9,8 @@ public class ItemFuelAsset : ItemAsset
 
     protected ushort _fuel;
 
+    private bool shouldAlwaysSpawnFull;
+
     private byte[] fuelState;
 
     public AudioClip use => _use;
@@ -20,7 +22,7 @@ public class ItemFuelAsset : ItemAsset
     public override byte[] getState(EItemOrigin origin)
     {
         byte[] array = new byte[2];
-        if (origin == EItemOrigin.ADMIN)
+        if (origin == EItemOrigin.ADMIN || shouldAlwaysSpawnFull)
         {
             array[0] = fuelState[0];
             array[1] = fuelState[1];
@@ -43,5 +45,6 @@ public class ItemFuelAsset : ItemAsset
         _fuel = data.readUInt16("Fuel", 0);
         fuelState = BitConverter.GetBytes(fuel);
         shouldDeleteAfterFillingTarget = data.readBoolean("Delete_After_Filling_Target");
+        shouldAlwaysSpawnFull = data.readBoolean("Always_Spawn_Full");
     }
 }

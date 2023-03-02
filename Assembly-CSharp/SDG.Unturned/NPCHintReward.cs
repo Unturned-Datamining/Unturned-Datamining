@@ -6,7 +6,14 @@ public class NPCHintReward : INPCReward
 
     public override void grantReward(Player player, bool shouldSend)
     {
-        if (Player.player == player)
+        if (shouldSend)
+        {
+            if (Provider.isServer)
+            {
+                player.ServerShowHint(text, duration);
+            }
+        }
+        else if (Player.player == player)
         {
             PlayerUI.message(EPlayerMessage.NPC_CUSTOM, text, duration);
         }

@@ -737,7 +737,7 @@ public class InteractableSentry : InteractableStorage
                                     else if (raycastInfo.section < byte.MaxValue)
                                     {
                                         InteractableObjectRubble componentInParent = raycastInfo.transform.GetComponentInParent<InteractableObjectRubble>();
-                                        if (componentInParent != null && !componentInParent.isSectionDead(raycastInfo.section) && ((ItemWeaponAsset)displayAsset).hasBladeID(componentInParent.asset.rubbleBladeID) && (componentInParent.asset.rubbleIsVulnerable || ((ItemWeaponAsset)displayAsset).isInvulnerable))
+                                        if (componentInParent != null && componentInParent.IsSectionIndexValid(raycastInfo.section) && !componentInParent.isSectionDead(raycastInfo.section) && ((ItemWeaponAsset)displayAsset).hasBladeID(componentInParent.asset.rubbleBladeID) && (componentInParent.asset.rubbleIsVulnerable || ((ItemWeaponAsset)displayAsset).isInvulnerable))
                                         {
                                             DamageTool.damage(componentInParent.transform, raycastInfo.direction, raycastInfo.section, ((ItemGunAsset)displayAsset).objectDamage, num9, out kill, out xp, default(CSteamID), EDamageOrigin.Sentry);
                                         }

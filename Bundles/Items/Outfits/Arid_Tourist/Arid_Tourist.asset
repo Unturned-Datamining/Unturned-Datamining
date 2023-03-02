@@ -1,0 +1,28 @@
+"Metadata"
+{
+	"GUID" "b90df97a46054113b768d454961af676"
+	"Type" "SDG.Unturned.OutfitAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"Items"
+	[
+		// Goggly Hair
+		"37726b2d2f054d9dbfdd95132c7aed9b"
+
+		// Oversized Spectacles
+		"65e6480f9cd94477919549e7af0c1cdf"
+
+		// Pack
+		"79e9547ecf804657a0155e9a18a865ee"
+
+		// Pockets
+		"fbb2f6c592ed425fb64b51af14a01403"
+	
+		// Shorts
+		"e0e01f1fa7474af78c93aebf6b5e1523"
+
+		// Top
+		"561c726855da4225abc11c68119f19c0"
+	]
+}

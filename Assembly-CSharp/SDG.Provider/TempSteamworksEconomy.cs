@@ -791,6 +791,26 @@ public class TempSteamworksEconomy
                         value.tags = (string.IsNullOrEmpty(pchValueBuffer3) ? string.Empty : pchValueBuffer3);
                         value.dynamic_props = (string.IsNullOrEmpty(pchValueBuffer4) ? string.Empty : pchValueBuffer4);
                         dynamicInventoryDetails.Add(array2[num].m_itemId.m_SteamItemInstanceID, value);
+                        if (array2[num].m_unQuantity >= 1)
+                        {
+                            continue;
+                        }
+                        uint punValueBufferSizeOut5 = 64u;
+                        if (SteamInventory.GetResultItemProperty(inventoryResult, num, "quantity", out var pchValueBuffer5, ref punValueBufferSizeOut5))
+                        {
+                            if (ulong.TryParse(pchValueBuffer5, out var result))
+                            {
+                                UnturnedLog.info(string.Format(arg2: (result <= 65535) ? ((ushort)result) : ushort.MaxValue, format: "Used quantity string fallback for itemdefid {0} (actual: {1} clamped: {2})", arg0: array2[num].m_iDefinition, arg1: result));
+                            }
+                            else
+                            {
+                                UnturnedLog.warn($"Tried using quantity string fallback for itemdefid {array2[num].m_iDefinition} but unable to parse \"{pchValueBuffer5}\"");
+                            }
+                        }
+                        else
+                        {
+                            UnturnedLog.warn($"Tried using quantity string fallback for itemdefid {array2[num].m_iDefinition} but GetResultItemProperty returned false");
+                        }
                     }
                     inventoryDetails = new List<SteamItemDetails_t>(array2);
                 }

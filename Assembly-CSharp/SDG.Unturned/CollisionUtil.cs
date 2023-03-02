@@ -37,7 +37,7 @@ public static class CollisionUtil
         return gameObject.transform.position;
     }
 
-    public static bool ClosestPoint(IEnumerable<Collider> colliders, Vector3 position, out Vector3 result)
+    public static bool ClosestPoint(List<Collider> colliders, Vector3 position, out Vector3 result)
     {
         bool flag = false;
         result = default(Vector3);
@@ -79,7 +79,7 @@ public static class CollisionUtil
         return flag;
     }
 
-    public static Vector3 ClosestPoint(IEnumerable<Collider> colliders, Vector3 position)
+    public static Vector3 ClosestPoint(List<Collider> colliders, Vector3 position)
     {
         if (ClosestPoint(colliders, position, out var result))
         {

@@ -519,6 +519,7 @@ public class ObjectAsset : Asset
             hasLoadedModel = true;
             useScale = true;
             interactability = EObjectInteractability.NPC;
+            chart = EObjectChart.IGNORE;
         }
         else if (type == EObjectType.DECAL)
         {
@@ -557,6 +558,7 @@ public class ObjectAsset : Asset
             component2.sharedMaterial = material2;
             component2.transform.localScale = new Vector3(num2, num, 1f);
             useScale = true;
+            chart = EObjectChart.IGNORE;
         }
         else
         {

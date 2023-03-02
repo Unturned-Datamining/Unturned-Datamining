@@ -428,7 +428,7 @@ public class Level : MonoBehaviour
 
     private static void UpdateShouldUseLevelBatching()
     {
-        shouldUseLevelBatching = (clUseLevelBatching.hasValue ? clUseLevelBatching.value : LiveConfig.Get().ShouldUseLevelBatchingByDefault) && !isEditor && !Dedicator.IsDedicatedServer && info != null && info.configData != null && info.configData.Batching_Version > 1;
+        shouldUseLevelBatching = (!clUseLevelBatching.hasValue || clUseLevelBatching.value) && !isEditor && !Dedicator.IsDedicatedServer && info != null && info.configData != null && info.configData.Batching_Version > 1;
     }
 
     public static void includeHash(string id, byte[] pendingHash)
@@ -1135,7 +1135,7 @@ public class Level : MonoBehaviour
         }
         if (chart == EObjectChart.IGNORE)
         {
-            FindChartHit(hit.point + Vector3.down * 0.1f, out chart, out hit);
+            FindChartHit(hit.point + new Vector3(0f, -0.01f, 0f), out chart, out hit);
         }
     }
 

@@ -41,8 +41,6 @@ internal abstract class GlazierElementBase_uGUI : GlazierElementBase
 
     public RectTransform transform { get; private set; }
 
-    protected override IEnumerable<ISleekElement> children => _children;
-
     public GlazierElementBase_uGUI(Glazier_uGUI glazier)
     {
         this.glazier = glazier;
@@ -92,12 +90,23 @@ internal abstract class GlazierElementBase_uGUI : GlazierElementBase
 
     public override void RemoveAllChildren()
     {
-        foreach (GlazierElementBase_uGUI child in children)
+        foreach (GlazierElementBase_uGUI child in _children)
         {
             child._parent = null;
             child.destroy();
         }
         _children.Clear();
+    }
+
+    protected override void UpdateChildren()
+    {
+        foreach (GlazierElementBase_uGUI child in _children)
+        {
+            if (child.isVisible)
+            {
+                child.Update();
+            }
+        }
     }
 
     public virtual void SynchronizeColors()

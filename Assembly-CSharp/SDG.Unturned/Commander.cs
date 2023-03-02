@@ -87,7 +87,6 @@ public class Commander
         register(new CommandPvE(Localization.read("/Server/ServerCommandPvE.dat")));
         register(new CommandWhitelisted(Localization.read("/Server/ServerCommandWhitelisted.dat")));
         register(new CommandCheats(Localization.read("/Server/ServerCommandCheats.dat")));
-        register(new CommandAllowP2PRelay(Localization.read("/Server/ServerCommandAllowP2PRelay.dat")));
         register(new CommandHideAdmins(Localization.read("/Server/ServerCommandHideAdmins.dat")));
         register(new CommandEffectUI(Localization.read("/Server/ServerCommandEffectUI.dat")));
         register(new CommandSync(Localization.read("/Server/ServerCommandSync.dat")));

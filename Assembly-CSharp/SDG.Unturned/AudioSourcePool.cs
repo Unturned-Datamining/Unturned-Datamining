@@ -32,6 +32,7 @@ internal class AudioSourcePool : MonoBehaviour
                 int index = count - 1;
                 audioSource = availableComponents[index];
                 availableComponents.RemoveAt(index);
+                audioSource.enabled = true;
             }
             else
             {
@@ -66,7 +67,11 @@ internal class AudioSourcePool : MonoBehaviour
         }
         if (component != null)
         {
-            component.transform.parent = null;
+            component.enabled = false;
+            if (component.transform.parent != null)
+            {
+                component.transform.parent = null;
+            }
             availableComponents.Add(component);
         }
     }

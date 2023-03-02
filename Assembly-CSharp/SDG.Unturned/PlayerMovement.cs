@@ -891,7 +891,7 @@ public class PlayerMovement : PlayerCaller
                 flag3 = num > num2;
                 rhs = ground.normal;
             }
-            if (!flag3 && mostRecentControllerColliderHit != null && mostRecentControllerColliderHit.gameObject != null && mostRecentControllerColliderHit.normal.y > 0f && mostRecentControllerColliderHit.gameObject.CompareTag("Agent"))
+            if (!flag3 && mostRecentControllerColliderHit != null && mostRecentControllerColliderHit.collider != null && mostRecentControllerColliderHit.gameObject != null && mostRecentControllerColliderHit.normal.y > 0f && mostRecentControllerColliderHit.gameObject.CompareTag("Agent"))
             {
                 flag3 = true;
                 rhs = mostRecentControllerColliderHit.normal;

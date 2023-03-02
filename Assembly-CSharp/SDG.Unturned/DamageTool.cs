@@ -721,10 +721,10 @@ public class DamageTool
                 }
                 float num2 = Mathf.Sqrt(sqrMagnitude);
                 Vector3 direction = vector / num2;
-                if (num2 > 0.5f)
+                if (num2 > 0.01f)
                 {
                     Ray ray = new Ray(parameters.point, direction);
-                    float maxDistance = num2 - 0.5f;
+                    float maxDistance = num2 - 0.01f;
                     Physics.Raycast(ray, out hitInfo, maxDistance, layerMask, QueryTriggerInteraction.Ignore);
                     if (hitInfo.transform != null && !hitInfo.transform.IsChildOf(transform))
                     {
@@ -756,10 +756,10 @@ public class DamageTool
                 }
                 float num3 = Mathf.Sqrt(sqrMagnitude2);
                 Vector3 direction2 = vector2 / num3;
-                if (num3 > 0.5f)
+                if (num3 > 0.01f)
                 {
                     Ray ray2 = new Ray(parameters.point, direction2);
-                    float maxDistance2 = num3 - 0.5f;
+                    float maxDistance2 = num3 - 0.01f;
                     Physics.Raycast(ray2, out hitInfo, maxDistance2, layerMask, QueryTriggerInteraction.Ignore);
                     if (hitInfo.transform != null && !hitInfo.transform.IsChildOf(transform2))
                     {
@@ -810,10 +810,10 @@ public class DamageTool
                     }
                     float num4 = Mathf.Sqrt(sqrMagnitude3);
                     Vector3 direction3 = vector4 / num4;
-                    if (num4 > 0.5f)
+                    if (num4 > 0.01f)
                     {
                         Ray ray3 = new Ray(parameters.point, direction3);
-                        float maxDistance3 = num4 - 0.5f;
+                        float maxDistance3 = num4 - 0.01f;
                         Physics.Raycast(ray3, out hitInfo, maxDistance3, layerMask, QueryTriggerInteraction.Ignore);
                         if (hitInfo.transform != null && !hitInfo.transform.IsChildOf(componentInParent.transform))
                         {
@@ -849,10 +849,10 @@ public class DamageTool
                 }
                 float num5 = Mathf.Sqrt(sqrMagnitude4);
                 Vector3 direction4 = vector5 / num5;
-                if (num5 > 0.5f)
+                if (num5 > 0.01f)
                 {
                     Ray ray4 = new Ray(parameters.point, direction4);
-                    float maxDistance4 = num5 - 0.5f;
+                    float maxDistance4 = num5 - 0.01f;
                     Physics.Raycast(ray4, out hitInfo, maxDistance4, layerMask, QueryTriggerInteraction.Ignore);
                     if (hitInfo.transform != null && !hitInfo.transform.IsChildOf(transform4))
                     {
@@ -890,10 +890,10 @@ public class DamageTool
                 }
                 float num6 = Mathf.Sqrt(sqrMagnitude5);
                 Vector3 vector7 = vector6 / num6;
-                if (num6 > 0.5f)
+                if (num6 > 0.01f)
                 {
                     Ray ray5 = new Ray(parameters.point, vector7);
-                    float maxDistance5 = num6 - 0.5f;
+                    float maxDistance5 = num6 - 0.01f;
                     Physics.Raycast(ray5, out hitInfo, maxDistance5, layerMask, QueryTriggerInteraction.Ignore);
                     if (hitInfo.transform != null && !hitInfo.transform.IsChildOf(player.transform))
                     {
@@ -964,10 +964,10 @@ public class DamageTool
                 }
                 float num9 = Mathf.Sqrt(sqrMagnitude6);
                 Vector3 vector9 = vector8 / num9;
-                if (num9 > 0.5f)
+                if (num9 > 0.01f)
                 {
                     Ray ray6 = new Ray(parameters.point, vector9);
-                    float maxDistance6 = num9 - 0.5f;
+                    float maxDistance6 = num9 - 0.01f;
                     Physics.Raycast(ray6, out hitInfo, maxDistance6, layerMask, QueryTriggerInteraction.Ignore);
                     if (hitInfo.transform != null && !hitInfo.transform.IsChildOf(zombie.transform))
                     {
@@ -1016,10 +1016,10 @@ public class DamageTool
                 }
                 float num12 = Mathf.Sqrt(sqrMagnitude7);
                 Vector3 vector11 = vector10 / num12;
-                if (num12 > 0.5f)
+                if (num12 > 0.01f)
                 {
                     Ray ray7 = new Ray(parameters.point, vector11);
-                    float maxDistance7 = num12 - 0.5f;
+                    float maxDistance7 = num12 - 0.01f;
                     Physics.Raycast(ray7, out hitInfo, maxDistance7, layerMask, QueryTriggerInteraction.Ignore);
                     if (hitInfo.transform != null && !hitInfo.transform.IsChildOf(animal.transform))
                     {
@@ -1066,10 +1066,10 @@ public class DamageTool
                 float num14 = Mathf.Sqrt(sqrMagnitude8);
                 Vector3 direction5 = vector12 / num14;
                 float num15 = 1f - num14 / parameters.damageRadius;
-                if (num14 > 0.5f)
+                if (num14 > 0.01f)
                 {
                     Ray ray8 = new Ray(parameters.point, direction5);
-                    float maxDistance8 = num14 - 0.5f;
+                    float maxDistance8 = num14 - 0.01f;
                     Physics.Raycast(ray8, out hitInfo, maxDistance8, layerMask, QueryTriggerInteraction.Ignore);
                     if (hitInfo.transform != null)
                     {

@@ -17,10 +17,10 @@ public class LandscapeHoleUtility
     [Obsolete("New code should probably be using Landscape.IsPointInsideHole")]
     public static bool isPointInsideHoleVolume(Vector3 point, out LandscapeHoleVolume volume)
     {
-        List<LandscapeHoleVolume> allVolumes = VolumeManager<LandscapeHoleVolume, LandscapeHoleVolumeManager>.Get().allVolumes;
-        for (int i = 0; i < allVolumes.Count; i++)
+        List<LandscapeHoleVolume> list = VolumeManager<LandscapeHoleVolume, LandscapeHoleVolumeManager>.Get().InternalGetAllVolumes();
+        for (int i = 0; i < list.Count; i++)
         {
-            volume = allVolumes[i];
+            volume = list[i];
             if (isPointInsideHoleVolume(volume, point))
             {
                 return true;

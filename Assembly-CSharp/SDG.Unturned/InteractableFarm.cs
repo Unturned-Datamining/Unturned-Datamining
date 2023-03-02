@@ -21,6 +21,8 @@ public class InteractableFarm : Interactable
 
     public uint harvestRewardExperience;
 
+    private bool isAffectedByAgricultureSkill;
+
     internal static readonly ClientInstanceMethod<uint> SendPlanted = ClientInstanceMethod<uint>.Get(typeof(InteractableFarm), "ReceivePlanted");
 
     private static readonly ServerInstanceMethod SendHarvestRequest = ServerInstanceMethod.Get(typeof(InteractableFarm), "ReceiveHarvestRequest");
@@ -58,6 +60,7 @@ public class InteractableFarm : Interactable
         _growth = itemFarmAsset.growth;
         _grow = itemFarmAsset.grow;
         growSpawnTableGuid = itemFarmAsset.growSpawnTableGuid;
+        isAffectedByAgricultureSkill = itemFarmAsset.isAffectedByAgricultureSkill;
         if (state.Length >= 4)
         {
             _planted = BitConverter.ToUInt32(state, 0);
@@ -180,7 +183,7 @@ public class InteractableFarm : Interactable
                 num = SpawnTableTool.resolve(growSpawnTableGuid);
             }
             player.inventory.forceAddItem(new Item(num, EItemOrigin.NATURE), auto: true);
-            if (UnityEngine.Random.value < player.skills.mastery(2, 5))
+            if (isAffectedByAgricultureSkill && UnityEngine.Random.value < player.skills.mastery(2, 5))
             {
                 player.inventory.forceAddItem(new Item(num, EItemOrigin.NATURE), auto: true);
             }

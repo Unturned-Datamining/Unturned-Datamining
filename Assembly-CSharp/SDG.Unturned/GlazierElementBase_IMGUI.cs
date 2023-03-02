@@ -13,8 +13,6 @@ internal class GlazierElementBase_IMGUI : GlazierElementBase
 
     public override ISleekElement parent => _parent;
 
-    protected override IEnumerable<ISleekElement> children => _children;
-
     public virtual void OnGUI()
     {
         ChildrenOnGUI();
@@ -46,12 +44,23 @@ internal class GlazierElementBase_IMGUI : GlazierElementBase
 
     public override void RemoveAllChildren()
     {
-        foreach (GlazierElementBase_IMGUI child in children)
+        foreach (GlazierElementBase_IMGUI child in _children)
         {
             child._parent = null;
             child.destroy();
         }
         _children.Clear();
+    }
+
+    protected override void UpdateChildren()
+    {
+        foreach (GlazierElementBase_IMGUI child in _children)
+        {
+            if (child.isVisible)
+            {
+                child.Update();
+            }
+        }
     }
 
     public override void AddChild(ISleekElement child)
@@ -171,7 +180,7 @@ internal class GlazierElementBase_IMGUI : GlazierElementBase
     {
         isTransformDirty = false;
         drawRect = CalculateDrawRect();
-        foreach (GlazierElementBase_IMGUI child in children)
+        foreach (GlazierElementBase_IMGUI child in _children)
         {
             child.isTransformDirty = true;
         }

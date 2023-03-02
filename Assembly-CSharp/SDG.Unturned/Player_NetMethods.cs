@@ -101,6 +101,34 @@ public static class Player_NetMethods
         writer.WriteString(url);
     }
 
+    [NetInvokableGeneratedMethod("ReceiveHintMessage", ENetInvokableGeneratedMethodPurpose.Read)]
+    public static void ReceiveHintMessage_Read(in ClientInvocationContext context)
+    {
+        NetPakReader reader = context.reader;
+        if (!reader.ReadNetId(out var value))
+        {
+            return;
+        }
+        object obj = NetIdRegistry.Get(value);
+        if (obj != null)
+        {
+            Player player = obj as Player;
+            if (!(player == null))
+            {
+                reader.ReadString(out var value2);
+                reader.ReadFloat(out var value3);
+                player.ReceiveHintMessage(value2, value3);
+            }
+        }
+    }
+
+    [NetInvokableGeneratedMethod("ReceiveHintMessage", ENetInvokableGeneratedMethodPurpose.Write)]
+    public static void ReceiveHintMessage_Write(NetPakWriter writer, string message, float durationSeconds)
+    {
+        writer.WriteString(message);
+        writer.WriteFloat(durationSeconds);
+    }
+
     [NetInvokableGeneratedMethod("ReceiveRelayToServer", ENetInvokableGeneratedMethodPurpose.Read)]
     public static void ReceiveRelayToServer_Read(in ClientInvocationContext context)
     {

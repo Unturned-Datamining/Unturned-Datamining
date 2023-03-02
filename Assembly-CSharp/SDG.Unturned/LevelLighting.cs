@@ -752,11 +752,11 @@ public class LevelLighting
 
     public static void setSeaVector(string name, Vector4 vector)
     {
-        foreach (WaterVolume allVolume in VolumeManager<WaterVolume, WaterVolumeManager>.Get().GetAllVolumes())
+        foreach (WaterVolume item in VolumeManager<WaterVolume, WaterVolumeManager>.Get().InternalGetAllVolumes())
         {
-            if (!(allVolume.sharedMaterial == null))
+            if (!(item.sharedMaterial == null))
             {
-                allVolume.sharedMaterial.SetVector(name, vector);
+                item.sharedMaterial.SetVector(name, vector);
             }
         }
     }
@@ -768,11 +768,11 @@ public class LevelLighting
 
     public static void setSeaColor(string name, Color color)
     {
-        foreach (WaterVolume allVolume in VolumeManager<WaterVolume, WaterVolumeManager>.Get().GetAllVolumes())
+        foreach (WaterVolume item in VolumeManager<WaterVolume, WaterVolumeManager>.Get().InternalGetAllVolumes())
         {
-            if (!(allVolume.sharedMaterial == null))
+            if (!(item.sharedMaterial == null))
             {
-                allVolume.sharedMaterial.SetColor(name, color);
+                item.sharedMaterial.SetColor(name, color);
             }
         }
     }
@@ -784,23 +784,23 @@ public class LevelLighting
 
     public static void setSeaFloat(string name, float value)
     {
-        foreach (WaterVolume allVolume in VolumeManager<WaterVolume, WaterVolumeManager>.Get().GetAllVolumes())
+        foreach (WaterVolume item in VolumeManager<WaterVolume, WaterVolumeManager>.Get().InternalGetAllVolumes())
         {
-            if (!(allVolume.sharedMaterial == null))
+            if (!(item.sharedMaterial == null))
             {
-                allVolume.sharedMaterial.SetFloat(name, value);
+                item.sharedMaterial.SetFloat(name, value);
             }
         }
     }
 
     private static WaterVolume GetFirstOrDefaultWaterVolume()
     {
-        IReadOnlyList<WaterVolume> allVolumes = VolumeManager<WaterVolume, WaterVolumeManager>.Get().GetAllVolumes();
-        if (allVolumes.Count <= 0)
+        IReadOnlyList<WaterVolume> readOnlyList = VolumeManager<WaterVolume, WaterVolumeManager>.Get().InternalGetAllVolumes();
+        if (readOnlyList.Count <= 0)
         {
             return null;
         }
-        return allVolumes[0];
+        return readOnlyList[0];
     }
 
     public static void updateLighting()

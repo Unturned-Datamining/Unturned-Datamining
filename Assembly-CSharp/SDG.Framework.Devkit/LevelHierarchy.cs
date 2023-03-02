@@ -197,7 +197,7 @@ public class LevelHierarchy : IModuleNexus, IDirtyable
         for (int i = 0; i < items.Count; i++)
         {
             IDevkitHierarchyItem devkitHierarchyItem = items[i];
-            if (devkitHierarchyItem.ShouldSave)
+            if (devkitHierarchyItem.instanceID != 0 && devkitHierarchyItem.ShouldSave)
             {
                 writer.beginObject();
                 writer.writeValue("Type", devkitHierarchyItem.GetType());

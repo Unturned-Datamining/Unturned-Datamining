@@ -64,7 +64,7 @@ Say Server
 Console Console
 
 UGC_Fail Failed to submit.
-UGC_Success Succesfully submitted!
+UGC_Success Successfully submitted!
 
 Map_Missing Failed to find map {0}, defaulting to {1}!
 
