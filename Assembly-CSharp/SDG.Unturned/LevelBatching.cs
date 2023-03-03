@@ -677,6 +677,8 @@ internal class LevelBatching
             {
                 material.mainTexture = texture2D;
             }
+            Vector2 vector = texture2D.texelSize * 1E-05f;
+            Vector2 vector2 = vector * 2f;
             for (int i = 0; i < array2.Length; i++)
             {
                 TextureUsers textureUsers = array2[i];
@@ -706,8 +708,8 @@ internal class LevelBatching
                         {
                             Rect rect2 = array3[i];
                             Vector2 value2 = uvs[k];
-                            value2.x = rect2.x + value2.x * rect2.width;
-                            value2.y = rect2.y + value2.y * rect2.height;
+                            value2.x = rect2.x + vector.x + value2.x * (rect2.width - vector2.x);
+                            value2.y = rect2.y + vector.y + value2.y * (rect2.height - vector2.y);
                             uvs[k] = value2;
                         }
                     }

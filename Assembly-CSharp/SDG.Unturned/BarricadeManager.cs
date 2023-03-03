@@ -14,8 +14,6 @@ public class BarricadeManager : SteamCaller
 {
     private static Collider[] checkColliders = new Collider[2];
 
-    public const byte SAVEDATA_VERSION_OLDER = 17;
-
     public const byte SAVEDATA_VERSION_INCLUDE_BUILD_ENUM = 18;
 
     private const byte SAVEDATA_VERSION_NEWEST = 18;
@@ -2472,7 +2470,7 @@ public class BarricadeManager : SteamCaller
     public static void save()
     {
         River river = LevelSavedata.openRiver("/Barricades.dat", isReading: false);
-        river.writeByte(17);
+        river.writeByte(18);
         river.writeUInt32(Provider.time);
         river.writeUInt32(instanceCount);
         for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
@@ -2620,6 +2618,7 @@ public class BarricadeManager : SteamCaller
                 river.writeUInt64(serversideData2.owner);
                 river.writeUInt64(serversideData2.group);
                 river.writeUInt32(serversideData2.objActiveDate);
+                river.writeByte((byte)drop2.asset.build);
             }
         }
     }
