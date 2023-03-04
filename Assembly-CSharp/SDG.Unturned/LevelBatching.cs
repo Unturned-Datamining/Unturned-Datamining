@@ -677,7 +677,7 @@ internal class LevelBatching
             {
                 material.mainTexture = texture2D;
             }
-            Vector2 vector = texture2D.texelSize * 1E-05f;
+            Vector2 vector = texture2D.texelSize * 0.001f;
             Vector2 vector2 = vector * 2f;
             for (int i = 0; i < array2.Length; i++)
             {
