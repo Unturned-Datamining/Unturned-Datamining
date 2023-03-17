@@ -532,7 +532,7 @@ public class InteractableStorage : Interactable, IManualOnDestroy
         Player player = context.GetPlayer();
         if (!(player == null) && !player.life.isDead && !((base.transform.position - player.transform.position).sqrMagnitude > 400f) && BarricadeManager.tryGetRegion(base.transform, out var x, out var y, out var plant, out var _) && checkRot(player.channel.owner.playerID.steamID, player.quests.groupID) && isDisplay)
         {
-            SendRotDisplay.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, BarricadeManager.EnumerateClients_Remote(x, y, plant), rotComp);
+            SendRotDisplay.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, BarricadeManager.GatherRemoteClientConnections(x, y, plant), rotComp);
             rebuildState();
         }
     }

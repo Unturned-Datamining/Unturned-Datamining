@@ -28,7 +28,7 @@ public class MythicAsset : Asset
     public MythicAsset(Bundle bundle, Data data, Local localization, ushort id)
         : base(bundle, data, localization, id)
     {
-        if (id < 500 && !bundle.hasResource && !data.has("Bypass_ID_Limit"))
+        if (id < 500 && !bundle.isCoreAsset && !data.has("Bypass_ID_Limit"))
         {
             throw new NotSupportedException("ID < 500");
         }

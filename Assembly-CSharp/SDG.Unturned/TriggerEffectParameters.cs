@@ -29,7 +29,7 @@ public struct TriggerEffectParameters
 
     internal ITransportConnection relevantTransportConnection;
 
-    internal IEnumerable<ITransportConnection> relevantTransportConnections;
+    internal PooledTransportConnectionList relevantTransportConnections;
 
     public void SetUniformScale(float scale)
     {
@@ -46,9 +46,19 @@ public struct TriggerEffectParameters
         relevantTransportConnection = transportConnection;
     }
 
-    public void SetRelevantTransportConnections(IEnumerable<ITransportConnection> transportConnections)
+    public void SetRelevantTransportConnections(PooledTransportConnectionList transportConnections)
     {
         relevantTransportConnections = transportConnections;
+    }
+
+    [Obsolete("Replaced by the List overload")]
+    public void SetRelevantTransportConnections(IEnumerable<ITransportConnection> transportConnections)
+    {
+        relevantTransportConnections = TransportConnectionListPool.Get();
+        foreach (ITransportConnection transportConnection in transportConnections)
+        {
+            relevantTransportConnections.Add(transportConnection);
+        }
     }
 
     public TriggerEffectParameters(EffectAsset asset)

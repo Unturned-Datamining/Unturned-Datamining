@@ -986,69 +986,117 @@ public class Provider : MonoBehaviour
         }
     }
 
-    public static IEnumerable<ITransportConnection> EnumerateClients()
+    public static PooledTransportConnectionList GatherClientConnections()
     {
+        PooledTransportConnectionList pooledTransportConnectionList = TransportConnectionListPool.Get();
         foreach (SteamPlayer client in _clients)
         {
-            yield return client.transportConnection;
+            pooledTransportConnectionList.Add(client.transportConnection);
         }
+        return pooledTransportConnectionList;
     }
 
-    public static IEnumerable<ITransportConnection> EnumerateClients_Predicate(Predicate<SteamPlayer> predicate)
+    [Obsolete("Replaced by GatherClientConnections")]
+    public static IEnumerable<ITransportConnection> EnumerateClients()
     {
+        return GatherClientConnections();
+    }
+
+    public static PooledTransportConnectionList GatherClientConnectionsMatchingPredicate(Predicate<SteamPlayer> predicate)
+    {
+        PooledTransportConnectionList pooledTransportConnectionList = TransportConnectionListPool.Get();
         foreach (SteamPlayer client in _clients)
         {
             if (predicate(client))
             {
-                yield return client.transportConnection;
+                pooledTransportConnectionList.Add(client.transportConnection);
             }
         }
+        return pooledTransportConnectionList;
     }
 
+    [Obsolete("Replaced by GatherClientConnectionsMatchingPredicate")]
+    public static IEnumerable<ITransportConnection> EnumerateClients_Predicate(Predicate<SteamPlayer> predicate)
+    {
+        return GatherClientConnectionsMatchingPredicate(predicate);
+    }
+
+    public static PooledTransportConnectionList GatherClientConnectionsWithinSphere(Vector3 position, float radius)
+    {
+        PooledTransportConnectionList pooledTransportConnectionList = TransportConnectionListPool.Get();
+        float num = radius * radius;
+        foreach (SteamPlayer client in _clients)
+        {
+            if (client.player != null && (client.player.transform.position - position).sqrMagnitude < num)
+            {
+                pooledTransportConnectionList.Add(client.transportConnection);
+            }
+        }
+        return pooledTransportConnectionList;
+    }
+
+    [Obsolete("Replaced by GatherClientConnectionsWithinSphere")]
     public static IEnumerable<ITransportConnection> EnumerateClients_WithinSphere(Vector3 position, float radius)
     {
-        float sqrRadius = radius * radius;
-        foreach (SteamPlayer client in _clients)
-        {
-            if (client.player != null && (client.player.transform.position - position).sqrMagnitude < sqrRadius)
-            {
-                yield return client.transportConnection;
-            }
-        }
+        return GatherClientConnectionsWithinSphere(position, radius);
     }
 
+    public static PooledTransportConnectionList GatherRemoteClientConnectionsWithinSphere(Vector3 position, float radius)
+    {
+        PooledTransportConnectionList pooledTransportConnectionList = TransportConnectionListPool.Get();
+        float num = radius * radius;
+        foreach (SteamPlayer client in _clients)
+        {
+            if (!client.IsLocalPlayer && client.player != null && (client.player.transform.position - position).sqrMagnitude < num)
+            {
+                pooledTransportConnectionList.Add(client.transportConnection);
+            }
+        }
+        return pooledTransportConnectionList;
+    }
+
+    [Obsolete("Replaced by GatherRemoteClientConnectionsWithinSphere")]
     public static IEnumerable<ITransportConnection> EnumerateClients_RemoteWithinSphere(Vector3 position, float radius)
     {
-        float sqrRadius = radius * radius;
-        foreach (SteamPlayer client in _clients)
-        {
-            if (!client.IsLocalPlayer && client.player != null && (client.player.transform.position - position).sqrMagnitude < sqrRadius)
-            {
-                yield return client.transportConnection;
-            }
-        }
+        return GatherRemoteClientConnectionsWithinSphere(position, radius);
     }
 
-    public static IEnumerable<ITransportConnection> EnumerateClients_Remote()
+    public static PooledTransportConnectionList GatherRemoteClientConnections()
     {
+        PooledTransportConnectionList pooledTransportConnectionList = TransportConnectionListPool.Get();
         foreach (SteamPlayer client in _clients)
         {
             if (!client.IsLocalPlayer)
             {
-                yield return client.transportConnection;
+                pooledTransportConnectionList.Add(client.transportConnection);
             }
         }
+        return pooledTransportConnectionList;
     }
 
-    public static IEnumerable<ITransportConnection> EnumerateClients_RemotePredicate(Predicate<SteamPlayer> predicate)
+    [Obsolete("Replaced by GatherRemoteClientConnections")]
+    public static IEnumerable<ITransportConnection> EnumerateClients_Remote()
     {
+        return GatherRemoteClientConnections();
+    }
+
+    public static PooledTransportConnectionList GatherRemoteClientConnectionsMatchingPredicate(Predicate<SteamPlayer> predicate)
+    {
+        PooledTransportConnectionList pooledTransportConnectionList = TransportConnectionListPool.Get();
         foreach (SteamPlayer client in _clients)
         {
             if (!client.IsLocalPlayer && predicate(client))
             {
-                yield return client.transportConnection;
+                pooledTransportConnectionList.Add(client.transportConnection);
             }
         }
+        return pooledTransportConnectionList;
+    }
+
+    [Obsolete("Replaced by GatherRemoteClientsMatchingPredicate")]
+    public static IEnumerable<ITransportConnection> EnumerateClients_RemotePredicate(Predicate<SteamPlayer> predicate)
+    {
+        return GatherRemoteClientConnectionsMatchingPredicate(predicate);
     }
 
     private static bool doServerItemsMatchAdvertisement(List<PublishedFileId_t> pendingWorkshopItems)
@@ -1400,7 +1448,7 @@ public class Provider : MonoBehaviour
 
     private static void replicateRemovePlayer(CSteamID skipSteamID, byte removalIndex)
     {
-        NetMessages.SendMessageToClients(EClientMessage.PlayerDisconnected, ENetReliability.Reliable, EnumerateClients_RemotePredicate((SteamPlayer potentialRecipient) => potentialRecipient.playerID.steamID != skipSteamID), delegate(NetPakWriter writer)
+        NetMessages.SendMessageToClients(EClientMessage.PlayerDisconnected, ENetReliability.Reliable, GatherRemoteClientConnectionsMatchingPredicate((SteamPlayer potentialRecipient) => potentialRecipient.playerID.steamID != skipSteamID), delegate(NetPakWriter writer)
         {
             writer.WriteUInt8(removalIndex);
         });
@@ -2681,6 +2729,7 @@ public class Provider : MonoBehaviour
             {
                 return;
             }
+            TransportConnectionListPool.ReleaseAll();
             listenServer();
             if (Dedicator.IsDedicatedServer)
             {
@@ -3385,6 +3434,8 @@ public class Provider : MonoBehaviour
             writer.WriteFloat(modeConfigData.Barricades.Max_Trap_Distance_From_Hull);
             writer.WriteFloat(modeConfigData.Gameplay.AirStrafing_Acceleration_Multiplier);
             writer.WriteFloat(modeConfigData.Gameplay.AirStrafing_Deceleration_Multiplier);
+            writer.WriteFloat(modeConfigData.Gameplay.ThirdPerson_RecoilMultiplier);
+            writer.WriteFloat(modeConfigData.Gameplay.ThirdPerson_SpreadMultiplier);
         });
         if (battlEyeServerHandle != IntPtr.Zero && battlEyeServerRunData != null && battlEyeServerRunData.pfnAddPlayer != null && battlEyeServerRunData.pfnReceivedPlayerGUID != null)
         {
@@ -3398,7 +3449,7 @@ public class Provider : MonoBehaviour
             battlEyeServerRunData.pfnReceivedPlayerGUID(newClient.battlEyeId, pvGUID, 8);
             gCHandle.Free();
         }
-        NetMessages.SendMessageToClients(EClientMessage.PlayerConnected, ENetReliability.Reliable, EnumerateClients_RemotePredicate((SteamPlayer potentialRecipient) => potentialRecipient != newClient), delegate(NetPakWriter writer)
+        NetMessages.SendMessageToClients(EClientMessage.PlayerConnected, ENetReliability.Reliable, GatherRemoteClientConnectionsMatchingPredicate((SteamPlayer potentialRecipient) => potentialRecipient != newClient), delegate(NetPakWriter writer)
         {
             WriteConnectedMessage(writer, newClient, null);
         });
@@ -3408,7 +3459,7 @@ public class Provider : MonoBehaviour
         {
             client.player.SendInitialPlayerState(newClient);
         }
-        newClient.player.SendInitialPlayerState(EnumerateClients_RemotePredicate((SteamPlayer potentialRecipient) => potentialRecipient != newClient));
+        newClient.player.SendInitialPlayerState(GatherRemoteClientConnectionsMatchingPredicate((SteamPlayer potentialRecipient) => potentialRecipient != newClient));
         try
         {
             onServerConnected?.Invoke(playerID.steamID);
@@ -4076,7 +4127,7 @@ public class Provider : MonoBehaviour
             bool flag = _clients.Count > 0;
             if (_clients.Count > 0)
             {
-                NetMessages.SendMessageToClients(EClientMessage.Shutdown, ENetReliability.Reliable, EnumerateClients_Remote(), delegate(NetPakWriter writer)
+                NetMessages.SendMessageToClients(EClientMessage.Shutdown, ENetReliability.Reliable, GatherRemoteClientConnections(), delegate(NetPakWriter writer)
                 {
                     writer.WriteString(shutdownMessage);
                 });

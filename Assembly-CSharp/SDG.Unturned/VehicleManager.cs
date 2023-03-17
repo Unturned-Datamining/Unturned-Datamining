@@ -296,7 +296,7 @@ public class VehicleManager : SteamCaller
         {
             return null;
         }
-        SendSingleVehicle.Invoke(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), delegate(NetPakWriter writer)
+        SendSingleVehicle.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), delegate(NetPakWriter writer)
         {
             sendVehicle(spawnedVehicle, writer);
         });
@@ -795,7 +795,7 @@ public class VehicleManager : SteamCaller
         if (Provider.isServer)
         {
             vehicle.forceRemoveAllPlayers();
-            SendDestroySingleVehicle.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), vehicle.instanceID);
+            SendDestroySingleVehicle.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), vehicle.instanceID);
         }
     }
 
@@ -807,7 +807,7 @@ public class VehicleManager : SteamCaller
             {
                 vehicles[num].forceRemoveAllPlayers();
             }
-            SendDestroyAllVehicles.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote());
+            SendDestroyAllVehicles.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections());
         }
     }
 
@@ -1030,7 +1030,7 @@ public class VehicleManager : SteamCaller
 
     public static void ServerSetVehicleLock(InteractableVehicle vehicle, CSteamID ownerID, CSteamID groupID, bool isLocked)
     {
-        SendVehicleLockState.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), vehicle.instanceID, ownerID, groupID, isLocked);
+        SendVehicleLockState.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), vehicle.instanceID, ownerID, groupID, isLocked);
     }
 
     [Obsolete]
@@ -1108,7 +1108,7 @@ public class VehicleManager : SteamCaller
         {
             return;
         }
-        SendVehicleSkin.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), vehicle.instanceID, num, num2);
+        SendVehicleSkin.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), vehicle.instanceID, num, num2);
     }
 
     [Obsolete]
@@ -1127,7 +1127,7 @@ public class VehicleManager : SteamCaller
             InteractableVehicle vehicle = player.movement.getVehicle();
             if (!(vehicle == null) && wantsHeadlightsOn != vehicle.headlightsOn && vehicle.canTurnOnLights && vehicle.checkDriver(player.channel.owner.playerID.steamID) && vehicle.asset.hasHeadlights)
             {
-                SendVehicleHeadlights.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), vehicle.instanceID, wantsHeadlightsOn);
+                SendVehicleHeadlights.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), vehicle.instanceID, wantsHeadlightsOn);
                 EffectManager.TriggerFiremodeEffect(vehicle.transform.position);
             }
         }
@@ -1158,7 +1158,7 @@ public class VehicleManager : SteamCaller
         case 0:
             if (vehicle.canTurnOnLights)
             {
-                SendVehicleSirens.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), vehicle.instanceID, !vehicle.sirensOn);
+                SendVehicleSirens.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), vehicle.instanceID, !vehicle.sirensOn);
                 EffectManager.TriggerFiremodeEffect(vehicle.transform.position);
             }
             break;
@@ -1166,7 +1166,7 @@ public class VehicleManager : SteamCaller
             vehicle.useHook();
             break;
         case 2:
-            SendVehicleBlimp.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), vehicle.instanceID, !vehicle.isBlimpFloating);
+            SendVehicleBlimp.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), vehicle.instanceID, !vehicle.isBlimpFloating);
             break;
         }
     }
@@ -1208,7 +1208,7 @@ public class VehicleManager : SteamCaller
             InteractableVehicle vehicle = player.movement.getVehicle();
             if (!(vehicle == null) && vehicle.asset.hasHorn && vehicle.canUseHorn && vehicle.checkDriver(player.channel.owner.playerID.steamID))
             {
-                SendVehicleHorn.InvokeAndLoopback(ENetReliability.Unreliable, Provider.EnumerateClients_Remote(), vehicle.instanceID);
+                SendVehicleHorn.InvokeAndLoopback(ENetReliability.Unreliable, Provider.GatherRemoteClientConnections(), vehicle.instanceID);
             }
         }
     }
@@ -1288,7 +1288,7 @@ public class VehicleManager : SteamCaller
                 return;
             }
         }
-        SendEnterVehicle.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), instanceID, seat, player.channel.owner.playerID.steamID);
+        SendEnterVehicle.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), instanceID, seat, player.channel.owner.playerID.steamID);
     }
 
     public static bool ServerForcePassengerIntoVehicle(Player player, InteractableVehicle vehicle)
@@ -1321,7 +1321,7 @@ public class VehicleManager : SteamCaller
         {
             return false;
         }
-        SendEnterVehicle.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), vehicle.instanceID, seat, player.channel.owner.playerID.steamID);
+        SendEnterVehicle.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), vehicle.instanceID, seat, player.channel.owner.playerID.steamID);
         return true;
     }
 
@@ -1438,38 +1438,38 @@ public class VehicleManager : SteamCaller
                 return;
             }
         }
-        SendSwapVehicleSeats.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), vehicle.instanceID, fromSeat, toSeat);
+        SendSwapVehicleSeats.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), vehicle.instanceID, fromSeat, toSeat);
     }
 
     public static void sendExitVehicle(InteractableVehicle vehicle, byte seat, Vector3 point, byte angle, bool forceUpdate)
     {
-        SendExitVehicle.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), vehicle.instanceID, seat, point, angle, forceUpdate);
+        SendExitVehicle.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), vehicle.instanceID, seat, point, angle, forceUpdate);
     }
 
     public static void sendVehicleFuel(InteractableVehicle vehicle, ushort newFuel)
     {
-        SendVehicleFuel.Invoke(ENetReliability.Unreliable, Provider.EnumerateClients(), vehicle.instanceID, newFuel);
+        SendVehicleFuel.Invoke(ENetReliability.Unreliable, Provider.GatherClientConnections(), vehicle.instanceID, newFuel);
     }
 
     public static void sendVehicleBatteryCharge(InteractableVehicle vehicle, ushort newBatteryCharge)
     {
-        SendVehicleBatteryCharge.InvokeAndLoopback(ENetReliability.Unreliable, Provider.EnumerateClients_Remote(), vehicle.instanceID, newBatteryCharge);
+        SendVehicleBatteryCharge.InvokeAndLoopback(ENetReliability.Unreliable, Provider.GatherRemoteClientConnections(), vehicle.instanceID, newBatteryCharge);
     }
 
     public static void sendVehicleTireAliveMask(InteractableVehicle vehicle, byte newTireAliveMask)
     {
-        SendVehicleTireAliveMask.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), vehicle.instanceID, newTireAliveMask);
+        SendVehicleTireAliveMask.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), vehicle.instanceID, newTireAliveMask);
     }
 
     public static void sendVehicleExploded(InteractableVehicle vehicle)
     {
-        SendVehicleExploded.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), vehicle.instanceID);
+        SendVehicleExploded.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), vehicle.instanceID);
         OnVehicleExploded.TryInvoke("OnVehicleExploded", vehicle);
     }
 
     public static void sendVehicleHealth(InteractableVehicle vehicle, ushort newHealth)
     {
-        SendVehicleHealth.InvokeAndLoopback(ENetReliability.Unreliable, Provider.EnumerateClients_Remote(), vehicle.instanceID, newHealth);
+        SendVehicleHealth.InvokeAndLoopback(ENetReliability.Unreliable, Provider.GatherRemoteClientConnections(), vehicle.instanceID, newHealth);
     }
 
     public static void sendVehicleRecov(InteractableVehicle vehicle, Vector3 newPosition, int newRecov)
@@ -1638,7 +1638,7 @@ public class VehicleManager : SteamCaller
         InteractableVehicle character = addVehicleAtSpawn(spawn);
         if (character != null)
         {
-            SendSingleVehicle.Invoke(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), delegate(NetPakWriter writer)
+            SendSingleVehicle.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), delegate(NetPakWriter writer)
             {
                 sendVehicle(character, writer);
             });

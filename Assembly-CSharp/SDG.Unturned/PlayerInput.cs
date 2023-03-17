@@ -31,6 +31,10 @@ public class PlayerInput : PlayerCaller
 
     private uint _clock;
 
+    private EAttackInputFlags pendingPrimaryAttackInput;
+
+    private EAttackInputFlags pendingSecondaryAttackInput;
+
     private ushort[] flags;
 
     private bool hasDoneOcclusionCheck;
@@ -478,8 +482,8 @@ public class PlayerInput : PlayerCaller
                     ClientResimulate();
                 }
                 keys[0] = base.player.movement.jump;
-                keys[1] = base.player.equipment.primary;
-                keys[2] = base.player.equipment.secondary;
+                keys[1] = false;
+                keys[2] = false;
                 keys[3] = base.player.stance.crouch;
                 keys[4] = base.player.stance.prone;
                 keys[5] = base.player.stance.sprint;
@@ -493,6 +497,7 @@ public class PlayerInput : PlayerCaller
                     int num = keys.Length - ControlsSettings.NUM_PLUGIN_KEYS + i;
                     keys[num] = flag && InputEx.GetKey(ControlsSettings.getPluginKeyCode(i));
                 }
+                base.player.equipment.CaptureAttackInputs(out pendingPrimaryAttackInput, out pendingSecondaryAttackInput);
                 base.player.life.simulate(simulation);
                 bool crouch = base.player.stance.crouch;
                 bool prone = base.player.stance.prone;
@@ -535,7 +540,7 @@ public class PlayerInput : PlayerCaller
                     clientPendingInput.clientSimulationFrameNumber = simulation;
                     clientPendingInput.recov = recov;
                 }
-                base.player.equipment.simulate(simulation, base.player.equipment.primary, base.player.equipment.secondary, base.player.stance.localWantsToSteadyAim);
+                base.player.equipment.simulate(simulation, pendingPrimaryAttackInput, pendingSecondaryAttackInput, base.player.stance.localWantsToSteadyAim);
                 base.player.animator.simulate(simulation, base.player.animator.leanLeft, base.player.animator.leanRight);
                 buffer += SAMPLES;
                 _simulation++;
@@ -557,6 +562,8 @@ public class PlayerInput : PlayerCaller
                     }
                 }
                 clientPendingInput.keys = num2;
+                clientPendingInput.primaryAttack = pendingPrimaryAttackInput;
+                clientPendingInput.secondaryAttack = pendingSecondaryAttackInput;
                 if (clientPendingInput is DrivingPlayerInputPacket)
                 {
                     DrivingPlayerInputPacket drivingPlayerInputPacket = clientPendingInput as DrivingPlayerInputPacket;
@@ -622,6 +629,8 @@ public class PlayerInput : PlayerCaller
                     {
                         keys[b2] = (playerInputPacket.keys & flags[b2]) == flags[b2];
                     }
+                    pendingPrimaryAttackInput = playerInputPacket.primaryAttack;
+                    pendingSecondaryAttackInput = playerInputPacket.secondaryAttack;
                     if (playerInputPacket is DrivingPlayerInputPacket)
                     {
                         DrivingPlayerInputPacket drivingPlayerInputPacket2 = playerInputPacket as DrivingPlayerInputPacket;
@@ -631,7 +640,7 @@ public class PlayerInput : PlayerCaller
                             base.player.look.simulate(0f, 0f, RATE);
                             base.player.stance.simulate(simulation, inputCrouch: false, inputProne: false, inputSprint: false);
                             base.player.movement.simulate(simulation, drivingPlayerInputPacket2.recov, keys[0], keys[5], drivingPlayerInputPacket2.position, drivingPlayerInputPacket2.rotation, drivingPlayerInputPacket2.speed - 128, drivingPlayerInputPacket2.physicsSpeed - 128, drivingPlayerInputPacket2.turn - 1, RATE);
-                            base.player.equipment.simulate(simulation, keys[1], keys[2], keys[9]);
+                            base.player.equipment.simulate(simulation, pendingPrimaryAttackInput, pendingSecondaryAttackInput, keys[9]);
                             base.player.animator.simulate(simulation, inputLeanLeft: false, inputLeanRight: false);
                         }
                     }
@@ -649,7 +658,7 @@ public class PlayerInput : PlayerCaller
                             bool inputJump = keys[0];
                             bool inputSprint = keys[5];
                             base.player.movement.simulate(simulation, walkingPlayerInputPacket2.recov, input_x2, input_y2, 0f, 0f, inputJump, inputSprint, RATE);
-                            base.player.equipment.simulate(simulation, keys[1], keys[2], keys[9]);
+                            base.player.equipment.simulate(simulation, pendingPrimaryAttackInput, pendingSecondaryAttackInput, keys[9]);
                             base.player.animator.simulate(simulation, keys[6], keys[7]);
                             if (!base.player.movement.hasPendingVehicleChange && base.player.stance.stance != EPlayerStance.DRIVING && base.player.stance.stance != EPlayerStance.SITTING)
                             {

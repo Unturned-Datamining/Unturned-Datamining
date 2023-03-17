@@ -692,7 +692,7 @@ public class InteractableSentry : InteractableStorage
                             RaycastInfo raycastInfo = DamageTool.raycast(new Ray(aimTransform.position, randomForwardVectorInCone), ((ItemWeaponAsset)displayAsset).range, RayMasks.DAMAGE_SERVER);
                             if (!(raycastInfo.transform == null))
                             {
-                                DamageTool.ServerSpawnBulletImpact(raycastInfo.point, raycastInfo.normal, raycastInfo.materialName, raycastInfo.collider?.transform, Provider.EnumerateClients_WithinSphere(raycastInfo.point, EffectManager.SMALL));
+                                DamageTool.ServerSpawnBulletImpact(raycastInfo.point, raycastInfo.normal, raycastInfo.materialName, raycastInfo.collider?.transform, Provider.GatherClientConnectionsWithinSphere(raycastInfo.point, EffectManager.SMALL));
                                 if (raycastInfo.vehicle != null)
                                 {
                                     DamageTool.damage(raycastInfo.vehicle, damageTires: false, Vector3.zero, isRepairing: false, ((ItemGunAsset)displayAsset).vehicleDamage, num9, canRepair: true, out kill, default(CSteamID), EDamageOrigin.Sentry);
@@ -775,7 +775,7 @@ public class InteractableSentry : InteractableStorage
                             {
                                 position3 = targetAnimal.transform.position + Vector3.up;
                             }
-                            DamageTool.ServerSpawnBulletImpact(position3, -aimTransform.forward, "Flesh_Dynamic", null, Provider.EnumerateClients_WithinSphere(position3, EffectManager.SMALL));
+                            DamageTool.ServerSpawnBulletImpact(position3, -aimTransform.forward, "Flesh_Dynamic", null, Provider.GatherClientConnectionsWithinSphere(position3, EffectManager.SMALL));
                             Vector3 direction = aimTransform.forward * Mathf.Ceil((float)(int)attachments.magazineAsset.pellets / 2f);
                             if (targetPlayer != null)
                             {

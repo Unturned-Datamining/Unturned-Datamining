@@ -67,7 +67,7 @@ public class InteractableTank : Interactable
     {
         if (BarricadeManager.tryGetRegion(base.transform, out var x, out var y, out var plant, out var region))
         {
-            SendAmount.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, BarricadeManager.EnumerateClients_Remote(x, y, plant), newAmount);
+            SendAmount.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, BarricadeManager.GatherRemoteClientConnections(x, y, plant), newAmount);
             BarricadeDrop barricadeDrop = region.FindBarricadeByRootFast(base.transform);
             byte[] bytes = BitConverter.GetBytes(newAmount);
             barricadeDrop.serversideData.barricade.state[0] = bytes[0];

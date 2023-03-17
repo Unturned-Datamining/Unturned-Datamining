@@ -90,7 +90,7 @@ public class LightningWeatherComponent : MonoBehaviour
                 Vector3 vector = MathfEx.RandomPositionInCircleY(playerPositions[index], weatherComponent.asset.lightningTargetRadius);
                 RaycastHit hitInfo;
                 Vector3 vector2 = (Physics.Raycast(new Vector3(vector.x, Level.HEIGHT, vector.z), Vector3.down, out hitInfo, Level.HEIGHT * 2f, 471449600) ? hitInfo.point : vector);
-                SendLightningStrike.Invoke(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_WithinSphere(vector2, 600f), vector2);
+                SendLightningStrike.Invoke(GetNetId(), ENetReliability.Reliable, Provider.GatherClientConnectionsWithinSphere(vector2, 600f), vector2);
                 StartCoroutine(DoExplosionDamage(vector2));
             }
         }

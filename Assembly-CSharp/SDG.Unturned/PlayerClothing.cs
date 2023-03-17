@@ -409,7 +409,7 @@ public class PlayerClothing : PlayerCaller
         ushort num = shirt;
         byte newQuality = shirtQuality;
         byte[] newState = shirtState;
-        SendWearShirt.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), asset?.GUID ?? Guid.Empty, quality, state, playEffect);
+        SendWearShirt.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), asset?.GUID ?? Guid.Empty, quality, state, playEffect);
         if (num != 0)
         {
             base.player.inventory.forceAddItem(new Item(num, 1, newQuality, newState), auto: false);
@@ -508,7 +508,7 @@ public class PlayerClothing : PlayerCaller
         ushort num = pants;
         byte newQuality = pantsQuality;
         byte[] newState = pantsState;
-        SendWearPants.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), asset?.GUID ?? Guid.Empty, quality, state, playEffect);
+        SendWearPants.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), asset?.GUID ?? Guid.Empty, quality, state, playEffect);
         if (num != 0)
         {
             base.player.inventory.forceAddItem(new Item(num, 1, newQuality, newState), auto: false);
@@ -599,7 +599,7 @@ public class PlayerClothing : PlayerCaller
         ushort num = hat;
         byte newQuality = hatQuality;
         byte[] newState = hatState;
-        SendWearHat.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), asset?.GUID ?? Guid.Empty, quality, state, playEffect);
+        SendWearHat.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), asset?.GUID ?? Guid.Empty, quality, state, playEffect);
         if (num != 0)
         {
             base.player.inventory.forceAddItem(new Item(num, 1, newQuality, newState), auto: false);
@@ -705,7 +705,7 @@ public class PlayerClothing : PlayerCaller
         ushort num = backpack;
         byte newQuality = backpackQuality;
         byte[] newState = backpackState;
-        SendWearBackpack.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), asset?.GUID ?? Guid.Empty, quality, state, playEffect);
+        SendWearBackpack.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), asset?.GUID ?? Guid.Empty, quality, state, playEffect);
         if (num != 0)
         {
             base.player.inventory.forceAddItem(new Item(num, 1, newQuality, newState), auto: false);
@@ -783,7 +783,7 @@ public class PlayerClothing : PlayerCaller
 
     public void ServerSetVisualToggleState(EVisualToggleType type, bool isVisible)
     {
-        SendVisualToggleState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), type, isVisible);
+        SendVisualToggleState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), type, isVisible);
     }
 
     [Obsolete]
@@ -801,13 +801,13 @@ public class PlayerClothing : PlayerCaller
         switch (type)
         {
         case EVisualToggleType.COSMETIC:
-            SendVisualToggleState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), type, !isVisual);
+            SendVisualToggleState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), type, !isVisual);
             break;
         case EVisualToggleType.SKIN:
-            SendVisualToggleState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), type, !isSkinned);
+            SendVisualToggleState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), type, !isSkinned);
             break;
         case EVisualToggleType.MYTHIC:
-            SendVisualToggleState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), type, !isMythic);
+            SendVisualToggleState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), type, !isMythic);
             break;
         }
     }
@@ -901,7 +901,7 @@ public class PlayerClothing : PlayerCaller
         ushort num = vest;
         byte newQuality = vestQuality;
         byte[] newState = vestState;
-        SendWearVest.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), asset?.GUID ?? Guid.Empty, quality, state, playEffect);
+        SendWearVest.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), asset?.GUID ?? Guid.Empty, quality, state, playEffect);
         if (num != 0)
         {
             base.player.inventory.forceAddItem(new Item(num, 1, newQuality, newState), auto: false);
@@ -992,7 +992,7 @@ public class PlayerClothing : PlayerCaller
         ushort num = mask;
         byte newQuality = maskQuality;
         byte[] newState = maskState;
-        SendWearMask.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), asset?.GUID ?? Guid.Empty, quality, state, playEffect);
+        SendWearMask.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), asset?.GUID ?? Guid.Empty, quality, state, playEffect);
         if (num != 0)
         {
             base.player.inventory.forceAddItem(new Item(num, 1, newQuality, newState), auto: false);
@@ -1083,7 +1083,7 @@ public class PlayerClothing : PlayerCaller
         ushort num = glasses;
         byte newQuality = glassesQuality;
         byte[] newState = glassesState;
-        SendWearGlasses.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), asset?.GUID ?? Guid.Empty, quality, state, playEffect);
+        SendWearGlasses.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), asset?.GUID ?? Guid.Empty, quality, state, playEffect);
         if (num != 0)
         {
             base.player.inventory.forceAddItem(new Item(num, 1, newQuality, newState), auto: false);
@@ -1241,7 +1241,7 @@ public class PlayerClothing : PlayerCaller
         Asset newVestAsset = Assets.find(EAssetType.ITEM, newVest);
         Asset newMaskAsset = Assets.find(EAssetType.ITEM, newMask);
         Asset newGlassesAsset = Assets.find(EAssetType.ITEM, newGlasses);
-        SendClothingState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), delegate(NetPakWriter writer)
+        SendClothingState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), delegate(NetPakWriter writer)
         {
             writer.WriteGuid(newShirtAsset?.GUID ?? Guid.Empty);
             writer.WriteUInt8(newShirtQuality);
@@ -1308,7 +1308,7 @@ public class PlayerClothing : PlayerCaller
         SendClothingState.Invoke(GetNetId(), ENetReliability.Reliable, client.transportConnection, WriteClothingState);
     }
 
-    internal void SendInitialPlayerState(IEnumerable<ITransportConnection> transportConnections)
+    internal void SendInitialPlayerState(List<ITransportConnection> transportConnections)
     {
         SendClothingState.Invoke(GetNetId(), ENetReliability.Reliable, transportConnections, WriteClothingState);
     }
@@ -1345,7 +1345,7 @@ public class PlayerClothing : PlayerCaller
         {
             return false;
         }
-        SendFaceState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), index);
+        SendFaceState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), index);
         return true;
     }
 
@@ -1434,7 +1434,7 @@ public class PlayerClothing : PlayerCaller
             vestState = new byte[0];
             maskState = new byte[0];
             glassesState = new byte[0];
-            SendClothingState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), WriteClothingState);
+            SendClothingState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), WriteClothingState);
         }
     }
 

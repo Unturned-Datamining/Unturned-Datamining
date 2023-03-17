@@ -296,7 +296,7 @@ public class PlayerVoice : PlayerCaller
         {
             cullingHandler = (shouldBroadcastOverRadio ? new RelayVoiceCullingHandler(handleRelayVoiceCulling_RadioFrequency) : new RelayVoiceCullingHandler(handleRelayVoiceCulling_Proximity));
         }
-        SendPlayVoiceChat.Invoke(GetNetId(), ENetReliability.Unreliable, Provider.EnumerateClients_RemotePredicate(delegate(SteamPlayer potentialRecipient)
+        SendPlayVoiceChat.Invoke(GetNetId(), ENetReliability.Unreliable, Provider.GatherRemoteClientConnectionsMatchingPredicate(delegate(SteamPlayer potentialRecipient)
         {
             if (potentialRecipient == null || potentialRecipient.player == null || potentialRecipient.player.voice == null)
             {

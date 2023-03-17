@@ -151,11 +151,11 @@ public class UseableThrowable : Useable
         }
     }
 
-    protected void startAttack(ESwingMode newSwingMode)
+    protected bool startAttack(ESwingMode newSwingMode)
     {
         if (base.player.equipment.isBusy)
         {
-            return;
+            return false;
         }
         base.player.equipment.isBusy = true;
         startedUse = Time.realtimeSinceStartup;
@@ -168,18 +168,19 @@ public class UseableThrowable : Useable
             {
                 base.player.life.markAggressive(force: false);
             }
-            SendPlaySwing.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner());
+            SendPlaySwing.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner());
         }
+        return true;
     }
 
-    public override void startPrimary()
+    public override bool startPrimary()
     {
-        startAttack(ESwingMode.STRONG);
+        return startAttack(ESwingMode.STRONG);
     }
 
-    public override void startSecondary()
+    public override bool startSecondary()
     {
-        startAttack(ESwingMode.WEAK);
+        return startAttack(ESwingMode.WEAK);
     }
 
     public override void equip()
@@ -221,7 +222,7 @@ public class UseableThrowable : Useable
         }
         else
         {
-            SendToss.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner(), position, vector);
+            SendToss.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner(), position, vector);
         }
         if (Provider.isServer)
         {

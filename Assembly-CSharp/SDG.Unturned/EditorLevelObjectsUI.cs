@@ -252,19 +252,28 @@ public class EditorLevelObjectsUI : SleekFullscreenBox
 
     private static void OnTypedMaterialPaletteOverride(ISleekField field, string value)
     {
-        if (focusedLevelObject != null)
+        AssetReference<MaterialPaletteAsset> customMaterialOverride = new AssetReference<MaterialPaletteAsset>(value);
+        foreach (GameObject item in EditorObjects.EnumerateSelectedGameObjects())
         {
-            focusedLevelObject.customMaterialOverride = new AssetReference<MaterialPaletteAsset>(value);
-            focusedLevelObject.ReapplyMaterialOverrides();
+            LevelObject levelObject = LevelObjects.FindLevelObject(item);
+            if (levelObject != null)
+            {
+                levelObject.customMaterialOverride = customMaterialOverride;
+                levelObject.ReapplyMaterialOverrides();
+            }
         }
     }
 
     private static void OnTypedMaterialIndexOverride(ISleekInt32Field field, int value)
     {
-        if (focusedLevelObject != null)
+        foreach (GameObject item in EditorObjects.EnumerateSelectedGameObjects())
         {
-            focusedLevelObject.materialIndexOverride = value;
-            focusedLevelObject.ReapplyMaterialOverrides();
+            LevelObject levelObject = LevelObjects.FindLevelObject(item);
+            if (levelObject != null)
+            {
+                levelObject.materialIndexOverride = value;
+                levelObject.ReapplyMaterialOverrides();
+            }
         }
     }
 

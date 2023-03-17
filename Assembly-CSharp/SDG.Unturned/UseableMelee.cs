@@ -143,7 +143,7 @@ public class UseableMelee : Useable
         }
     }
 
-    internal void ServerSpawnMeleeImpact(Vector3 position, Vector3 normal, string materialName, Transform colliderTransform, IEnumerable<ITransportConnection> transportConnections)
+    internal void ServerSpawnMeleeImpact(Vector3 position, Vector3 normal, string materialName, Transform colliderTransform, List<ITransportConnection> transportConnections)
     {
         position += normal * UnityEngine.Random.Range(0.04f, 0.06f);
         SendSpawnMeleeImpact.Invoke(GetNetId(), ENetReliability.Unreliable, transportConnections, position, normal, materialName, colliderTransform);
@@ -386,7 +386,7 @@ public class UseableMelee : Useable
         }
         if ((!equippedMeleeAsset.isRepair || !equippedMeleeAsset.isRepeated) && !string.IsNullOrEmpty(input.materialName))
         {
-            ServerSpawnMeleeImpact(input.point, input.normal, input.materialName, input.colliderTransform, base.channel.EnumerateClients_WithinSphereOrOwner(input.point, EffectManager.SMALL));
+            ServerSpawnMeleeImpact(input.point, input.normal, input.materialName, input.colliderTransform, base.channel.GatherOwnerAndClientConnectionsWithinSphere(input.point, EffectManager.SMALL));
         }
         EPlayerKill kill = EPlayerKill.NONE;
         uint xp = 0u;
@@ -621,11 +621,11 @@ public class UseableMelee : Useable
         }
     }
 
-    public override void startPrimary()
+    public override bool startPrimary()
     {
         if (base.player.equipment.isBusy)
         {
-            return;
+            return false;
         }
         if (equippedMeleeAsset.isRepeated)
         {
@@ -635,8 +635,9 @@ public class UseableMelee : Useable
                 startSwing();
                 if (Provider.isServer)
                 {
-                    SendPlaySwingStart.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner());
+                    SendPlaySwingStart.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner());
                 }
+                return true;
             }
         }
         else if (isUseable)
@@ -649,9 +650,11 @@ public class UseableMelee : Useable
             swing();
             if (Provider.isServer)
             {
-                SendPlaySwing.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner(), swingMode);
+                SendPlaySwing.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner(), swingMode);
             }
+            return true;
         }
+        return false;
     }
 
     public override void stopPrimary()
@@ -661,14 +664,18 @@ public class UseableMelee : Useable
             stopSwing();
             if (Provider.isServer)
             {
-                SendPlaySwingStop.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner());
+                SendPlaySwingStop.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner());
             }
         }
     }
 
-    public override void startSecondary()
+    public override bool startSecondary()
     {
-        if (!base.player.equipment.isBusy && !equippedMeleeAsset.isRepeated && isUseable && (float)(int)base.player.life.stamina >= (float)(int)equippedMeleeAsset.stamina * (1f - base.player.skills.mastery(0, 4) * 0.75f))
+        if (base.player.equipment.isBusy)
+        {
+            return false;
+        }
+        if (!equippedMeleeAsset.isRepeated && isUseable && (float)(int)base.player.life.stamina >= (float)(int)equippedMeleeAsset.stamina * (1f - base.player.skills.mastery(0, 4) * 0.75f))
         {
             base.player.life.askTire((byte)((float)(int)equippedMeleeAsset.stamina * (1f - base.player.skills.mastery(0, 4) * 0.5f)));
             base.player.equipment.isBusy = true;
@@ -676,9 +683,11 @@ public class UseableMelee : Useable
             swing();
             if (Provider.isServer)
             {
-                SendPlaySwing.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner(), swingMode);
+                SendPlaySwing.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner(), swingMode);
             }
+            return true;
         }
+        return false;
     }
 
     public override void equip()

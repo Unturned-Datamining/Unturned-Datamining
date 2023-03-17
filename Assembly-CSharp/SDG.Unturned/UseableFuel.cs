@@ -406,42 +406,47 @@ public class UseableFuel : Useable
         return true;
     }
 
-    private void start(EUseMode mode)
+    private bool start(EUseMode mode)
     {
-        if (base.player.equipment.isBusy || !isUseable || !fire(mode))
+        if (base.player.equipment.isBusy)
         {
-            return;
+            return false;
         }
-        if (Provider.isServer)
+        if (isUseable && fire(mode))
         {
-            byte[] bytes = BitConverter.GetBytes(fuel);
-            base.player.equipment.state[0] = bytes[0];
-            base.player.equipment.state[1] = bytes[1];
-            base.player.equipment.sendUpdateState();
-        }
-        base.player.equipment.isBusy = true;
-        startedUse = Time.realtimeSinceStartup;
-        isUsing = true;
-        glug();
-        if (Provider.isServer)
-        {
-            SendPlayGlug.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner());
-            ItemFuelAsset itemFuelAsset = base.player.equipment.asset as ItemFuelAsset;
-            if (mode == EUseMode.Deposit && itemFuelAsset != null && itemFuelAsset.shouldDeleteAfterFillingTarget)
+            if (Provider.isServer)
             {
-                shouldDeleteAfterUse = true;
+                byte[] bytes = BitConverter.GetBytes(fuel);
+                base.player.equipment.state[0] = bytes[0];
+                base.player.equipment.state[1] = bytes[1];
+                base.player.equipment.sendUpdateState();
             }
+            base.player.equipment.isBusy = true;
+            startedUse = Time.realtimeSinceStartup;
+            isUsing = true;
+            glug();
+            if (Provider.isServer)
+            {
+                SendPlayGlug.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner());
+                ItemFuelAsset itemFuelAsset = base.player.equipment.asset as ItemFuelAsset;
+                if (mode == EUseMode.Deposit && itemFuelAsset != null && itemFuelAsset.shouldDeleteAfterFillingTarget)
+                {
+                    shouldDeleteAfterUse = true;
+                }
+            }
+            return true;
         }
+        return false;
     }
 
-    public override void startPrimary()
+    public override bool startPrimary()
     {
-        start(EUseMode.Deposit);
+        return start(EUseMode.Deposit);
     }
 
-    public override void startSecondary()
+    public override bool startSecondary()
     {
-        start(EUseMode.Withdraw);
+        return start(EUseMode.Withdraw);
     }
 
     public override void updateState(byte[] newState)

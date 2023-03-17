@@ -85,7 +85,7 @@ public class SkinAsset : Asset
     public SkinAsset(Bundle bundle, Data data, Local localization, ushort id)
         : base(bundle, data, localization, id)
     {
-        if (id < 2000 && !bundle.hasResource && !data.has("Bypass_ID_Limit"))
+        if (id < 2000 && !bundle.isCoreAsset && !data.has("Bypass_ID_Limit"))
         {
             throw new NotSupportedException("ID < 2000");
         }

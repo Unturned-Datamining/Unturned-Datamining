@@ -97,11 +97,15 @@ public class UseableStructure : Useable
         }
     }
 
-    public override void startPrimary()
+    public override bool startPrimary()
     {
-        if (base.player.equipment.isBusy || base.player.movement.getVehicle() != null)
+        if (base.player.equipment.isBusy)
         {
-            return;
+            return false;
+        }
+        if (base.player.movement.getVehicle() != null)
+        {
+            return false;
         }
         if (Dedicator.IsDedicatedServer ? isServerBuildRequestInitiallyApproved : UpdatePendingPlacement())
         {
@@ -113,19 +117,28 @@ public class UseableStructure : Useable
             PlayUseAnimation();
             if (Provider.isServer)
             {
-                SendPlayConstruct.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner());
+                SendPlayConstruct.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner());
             }
         }
         else if (Dedicator.IsDedicatedServer && hasServerReceivedBuildRequest)
         {
             base.player.equipment.dequip();
         }
+        return true;
     }
 
-    public override void startSecondary()
+    public override bool startSecondary()
     {
-        if (!base.player.equipment.isBusy && base.channel.isOwner && equippedStructureAsset.construct != EConstruct.FLOOR_POLY && equippedStructureAsset.construct != EConstruct.ROOF_POLY)
+        if (base.player.equipment.isBusy)
         {
+            return false;
+        }
+        if (base.channel.isOwner)
+        {
+            if (equippedStructureAsset.construct == EConstruct.FLOOR_POLY || equippedStructureAsset.construct == EConstruct.ROOF_POLY)
+            {
+                return false;
+            }
             float num = ((equippedStructureAsset.construct != 0 && equippedStructureAsset.construct != EConstruct.ROOF) ? ((equippedStructureAsset.construct != EConstruct.RAMPART && equippedStructureAsset.construct != EConstruct.WALL) ? 30f : 180f) : 90f);
             if (InputEx.GetKey(KeyCode.LeftShift))
             {
@@ -133,6 +146,7 @@ public class UseableStructure : Useable
             }
             customRotationOffset += num;
         }
+        return true;
     }
 
     public override void equip()

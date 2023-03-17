@@ -196,7 +196,7 @@ public class BarricadeManager : SteamCaller
             BarricadeDrop barricadeDrop = region.FindBarricadeByRootTransform(transform);
             if (barricadeDrop != null)
             {
-                BarricadeDrop.SendOwnerAndGroup.InvokeAndLoopback(barricadeDrop.GetNetId(), ENetReliability.Reliable, EnumerateClients_Remote(x, y, plant), newOwner, newGroup);
+                BarricadeDrop.SendOwnerAndGroup.InvokeAndLoopback(barricadeDrop.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y, plant), newOwner, newGroup);
                 barricadeDrop.serversideData.owner = newOwner;
                 barricadeDrop.serversideData.group = newGroup;
                 sendHealthChanged(x, y, plant, barricadeDrop);
@@ -249,7 +249,7 @@ public class BarricadeManager : SteamCaller
 
     internal static void InternalSetBarricadeTransform(byte x, byte y, ushort plant, BarricadeDrop barricade, Vector3 point, byte angle_x, byte angle_y, byte angle_z)
     {
-        BarricadeDrop.SendTransform.InvokeAndLoopback(barricade.GetNetId(), ENetReliability.Reliable, EnumerateClients_Remote(x, y, plant), x, y, plant, point, angle_x, angle_y, angle_z);
+        BarricadeDrop.SendTransform.InvokeAndLoopback(barricade.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y, plant), x, y, plant, point, angle_x, angle_y, angle_z);
     }
 
     [Obsolete]
@@ -286,7 +286,7 @@ public class BarricadeManager : SteamCaller
 
     internal static void InternalSetMannequinPose(InteractableMannequin mannequin, byte x, byte y, ushort plant, byte poseComp)
     {
-        InteractableMannequin.SendPose.InvokeAndLoopback(mannequin.GetNetId(), ENetReliability.Reliable, EnumerateClients_Remote(x, y, plant), poseComp);
+        InteractableMannequin.SendPose.InvokeAndLoopback(mannequin.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y, plant), poseComp);
         mannequin.rebuildState();
     }
 
@@ -414,7 +414,7 @@ public class BarricadeManager : SteamCaller
 
     internal static void ServerSetSignTextInternal(InteractableSign sign, BarricadeRegion region, byte x, byte y, ushort plant, string trimmedText)
     {
-        InteractableSign.SendChangeText.InvokeAndLoopback(sign.GetNetId(), ENetReliability.Reliable, EnumerateClients_Remote(x, y, plant), trimmedText);
+        InteractableSign.SendChangeText.InvokeAndLoopback(sign.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y, plant), trimmedText);
         BarricadeDrop barricadeDrop = region.FindBarricadeByRootFast(sign.transform);
         byte[] state = barricadeDrop.serversideData.barricade.state;
         byte[] bytes = Encoding.UTF8.GetBytes(trimmedText);
@@ -460,7 +460,7 @@ public class BarricadeManager : SteamCaller
 
     internal static void ServerSetStereoTrackInternal(InteractableStereo stereo, byte x, byte y, ushort plant, BarricadeRegion region, Guid track)
     {
-        InteractableStereo.SendTrack.InvokeAndLoopback(stereo.GetNetId(), ENetReliability.Reliable, EnumerateClients_Remote(x, y, plant), track);
+        InteractableStereo.SendTrack.InvokeAndLoopback(stereo.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y, plant), track);
         byte[] state = region.FindBarricadeByRootFast(stereo.transform).serversideData.barricade.state;
         new GuidBuffer(track).Write(state, 0);
     }
@@ -547,7 +547,7 @@ public class BarricadeManager : SteamCaller
 
     internal static void ServerSetSafezonePoweredInternal(InteractableSafezone safezone, byte x, byte y, ushort plant, BarricadeRegion region, bool isPowered)
     {
-        InteractableSafezone.SendPowered.InvokeAndLoopback(safezone.GetNetId(), ENetReliability.Reliable, EnumerateClients_Remote(x, y, plant), isPowered);
+        InteractableSafezone.SendPowered.InvokeAndLoopback(safezone.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y, plant), isPowered);
         region.FindBarricadeByRootFast(safezone.transform).serversideData.barricade.state[0] = (byte)(safezone.isPowered ? 1u : 0u);
     }
 
@@ -590,7 +590,7 @@ public class BarricadeManager : SteamCaller
     internal static void ServerSetOxygenatorPoweredInternal(InteractableOxygenator oxygenator, byte x, byte y, ushort plant, BarricadeRegion region, bool isPowered)
     {
         BarricadeDrop barricadeDrop = region.FindBarricadeByRootFast(oxygenator.transform);
-        InteractableOxygenator.SendPowered.InvokeAndLoopback(oxygenator.GetNetId(), ENetReliability.Reliable, EnumerateClients_Remote(x, y, plant), isPowered);
+        InteractableOxygenator.SendPowered.InvokeAndLoopback(oxygenator.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y, plant), isPowered);
         barricadeDrop.serversideData.barricade.state[0] = (byte)(oxygenator.isPowered ? 1u : 0u);
     }
 
@@ -633,7 +633,7 @@ public class BarricadeManager : SteamCaller
     internal static void ServerSetSpotPoweredInternal(InteractableSpot spot, byte x, byte y, ushort plant, BarricadeRegion region, bool isPowered)
     {
         BarricadeDrop barricadeDrop = region.FindBarricadeByRootFast(spot.transform);
-        InteractableSpot.SendPowered.InvokeAndLoopback(spot.GetNetId(), ENetReliability.Reliable, EnumerateClients_Remote(x, y, plant), isPowered);
+        InteractableSpot.SendPowered.InvokeAndLoopback(spot.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y, plant), isPowered);
         barricadeDrop.serversideData.barricade.state[0] = (byte)(spot.isPowered ? 1u : 0u);
     }
 
@@ -654,7 +654,7 @@ public class BarricadeManager : SteamCaller
         InteractableGenerator component = transform.GetComponent<InteractableGenerator>();
         if (component != null && tryGetRegion(transform, out var x, out var y, out var plant, out var _))
         {
-            InteractableGenerator.SendFuel.InvokeAndLoopback(component.GetNetId(), ENetReliability.Reliable, EnumerateClients_Remote(x, y, plant), fuel);
+            InteractableGenerator.SendFuel.InvokeAndLoopback(component.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y, plant), fuel);
         }
     }
 
@@ -691,7 +691,7 @@ public class BarricadeManager : SteamCaller
     internal static void ServerSetGeneratorPoweredInternal(InteractableGenerator generator, byte x, byte y, ushort plant, BarricadeRegion region, bool isPowered)
     {
         BarricadeDrop barricadeDrop = region.FindBarricadeByRootFast(generator.transform);
-        InteractableGenerator.SendPowered.InvokeAndLoopback(generator.GetNetId(), ENetReliability.Reliable, EnumerateClients_Remote(x, y, plant), isPowered);
+        InteractableGenerator.SendPowered.InvokeAndLoopback(generator.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y, plant), isPowered);
         barricadeDrop.serversideData.barricade.state[0] = (byte)(generator.isPowered ? 1u : 0u);
     }
 
@@ -734,7 +734,7 @@ public class BarricadeManager : SteamCaller
     internal static void ServerSetFireLitInternal(InteractableFire fire, byte x, byte y, ushort plant, BarricadeRegion region, bool isLit)
     {
         BarricadeDrop barricadeDrop = region.FindBarricadeByRootFast(fire.transform);
-        InteractableFire.SendLit.InvokeAndLoopback(fire.GetNetId(), ENetReliability.Reliable, EnumerateClients_Remote(x, y, plant), isLit);
+        InteractableFire.SendLit.InvokeAndLoopback(fire.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y, plant), isLit);
         barricadeDrop.serversideData.barricade.state[0] = (byte)(fire.isLit ? 1u : 0u);
     }
 
@@ -777,7 +777,7 @@ public class BarricadeManager : SteamCaller
     internal static void ServerSetOvenLitInternal(InteractableOven oven, byte x, byte y, ushort plant, BarricadeRegion region, bool isLit)
     {
         BarricadeDrop barricadeDrop = region.FindBarricadeByRootFast(oven.transform);
-        InteractableOven.SendLit.InvokeAndLoopback(oven.GetNetId(), ENetReliability.Reliable, EnumerateClients_Remote(x, y, plant), isLit);
+        InteractableOven.SendLit.InvokeAndLoopback(oven.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y, plant), isLit);
         barricadeDrop.serversideData.barricade.state[0] = (byte)(oven.isLit ? 1u : 0u);
     }
 
@@ -822,7 +822,7 @@ public class BarricadeManager : SteamCaller
         {
             if (shouldSend)
             {
-                InteractableFarm.SendPlanted.InvokeAndLoopback(component.GetNetId(), ENetReliability.Reliable, EnumerateClients_Remote(x, y, plant), planted);
+                InteractableFarm.SendPlanted.InvokeAndLoopback(component.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y, plant), planted);
             }
             BarricadeDrop barricadeDrop = region.FindBarricadeByRootFast(transform);
             BitConverter.GetBytes(planted).CopyTo(barricadeDrop.serversideData.barricade.state, 0);
@@ -840,7 +840,7 @@ public class BarricadeManager : SteamCaller
         InteractableOil component = transform.GetComponent<InteractableOil>();
         if (component != null && tryGetRegion(transform, out var x, out var y, out var plant, out var _))
         {
-            InteractableOil.SendFuel.InvokeAndLoopback(component.GetNetId(), ENetReliability.Reliable, EnumerateClients_Remote(x, y, plant), fuel);
+            InteractableOil.SendFuel.InvokeAndLoopback(component.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y, plant), fuel);
         }
     }
 
@@ -857,7 +857,7 @@ public class BarricadeManager : SteamCaller
         {
             if (shouldSend)
             {
-                InteractableRainBarrel.SendFull.InvokeAndLoopback(component.GetNetId(), ENetReliability.Reliable, EnumerateClients_Remote(x, y, plant), isFull);
+                InteractableRainBarrel.SendFull.InvokeAndLoopback(component.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y, plant), isFull);
             }
             region.FindBarricadeByRootFast(transform).serversideData.barricade.state[0] = (byte)(isFull ? 1u : 0u);
         }
@@ -883,7 +883,7 @@ public class BarricadeManager : SteamCaller
                 arg2 = 0;
                 arg3 = new byte[0];
             }
-            InteractableStorage.SendDisplay.Invoke(component.GetNetId(), ENetReliability.Reliable, EnumerateClients(x, y, plant), arg, arg2, arg3, skin, mythic, tags, dynamicProps);
+            InteractableStorage.SendDisplay.Invoke(component.GetNetId(), ENetReliability.Reliable, GatherClientConnections(x, y, plant), arg, arg2, arg3, skin, mythic, tags, dynamicProps);
         }
     }
 
@@ -942,7 +942,7 @@ public class BarricadeManager : SteamCaller
     internal static void ServerSetDoorOpenInternal(InteractableDoor door, byte x, byte y, ushort plant, BarricadeRegion region, bool isOpen)
     {
         BarricadeDrop barricadeDrop = region.FindBarricadeByRootFast(door.transform);
-        InteractableDoor.SendOpen.InvokeAndLoopback(door.GetNetId(), ENetReliability.Reliable, EnumerateClients_Remote(x, y, plant), isOpen);
+        InteractableDoor.SendOpen.InvokeAndLoopback(door.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y, plant), isOpen);
         barricadeDrop.serversideData.barricade.state[16] = (byte)(isOpen ? 1u : 0u);
     }
 
@@ -1015,7 +1015,7 @@ public class BarricadeManager : SteamCaller
                 InteractableBed interactableBed = barricadeDrop.interactable as InteractableBed;
                 if (interactableBed != null && interactableBed.owner == owner)
                 {
-                    InteractableBed.SendClaim.InvokeAndLoopback(interactableBed.GetNetId(), ENetReliability.Reliable, EnumerateClients_Remote(x, y, plant), CSteamID.Nil);
+                    InteractableBed.SendClaim.InvokeAndLoopback(interactableBed.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y, plant), CSteamID.Nil);
                     BitConverter.GetBytes(interactableBed.owner.m_SteamID).CopyTo(barricadeDrop.serversideData.barricade.state, 0);
                     return true;
                 }
@@ -1105,7 +1105,7 @@ public class BarricadeManager : SteamCaller
     internal static void ServerSetBedOwnerInternal(InteractableBed bed, byte x, byte y, ushort plant, BarricadeRegion region, CSteamID steamID)
     {
         BarricadeDrop barricadeDrop = region.FindBarricadeByRootFast(bed.transform);
-        InteractableBed.SendClaim.InvokeAndLoopback(bed.GetNetId(), ENetReliability.Reliable, EnumerateClients_Remote(x, y, plant), steamID);
+        InteractableBed.SendClaim.InvokeAndLoopback(bed.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y, plant), steamID);
         BitConverter.GetBytes(bed.owner.m_SteamID).CopyTo(barricadeDrop.serversideData.barricade.state, 0);
     }
 
@@ -1120,7 +1120,7 @@ public class BarricadeManager : SteamCaller
         InteractableSentry component = transform.GetComponent<InteractableSentry>();
         if (component != null && tryGetRegion(transform, out var x, out var y, out var plant, out var _))
         {
-            InteractableSentry.SendShoot.InvokeAndLoopback(component.GetNetId(), ENetReliability.Unreliable, EnumerateClients_Remote(x, y, plant));
+            InteractableSentry.SendShoot.InvokeAndLoopback(component.GetNetId(), ENetReliability.Unreliable, GatherRemoteClientConnections(x, y, plant));
         }
     }
 
@@ -1135,7 +1135,7 @@ public class BarricadeManager : SteamCaller
         InteractableSentry component = transform.GetComponent<InteractableSentry>();
         if (component != null && tryGetRegion(transform, out var x, out var y, out var plant, out var _))
         {
-            InteractableSentry.SendAlert.InvokeAndLoopback(component.GetNetId(), ENetReliability.Unreliable, EnumerateClients_Remote(x, y, plant), MeasurementTool.angleToByte(yaw), MeasurementTool.angleToByte(pitch));
+            InteractableSentry.SendAlert.InvokeAndLoopback(component.GetNetId(), ENetReliability.Unreliable, GatherRemoteClientConnections(x, y, plant), MeasurementTool.angleToByte(yaw), MeasurementTool.angleToByte(pitch));
         }
     }
 
@@ -1197,7 +1197,7 @@ public class BarricadeManager : SteamCaller
         if (tryGetRegion(x, y, plant, out var region))
         {
             region.barricades.Remove(barricade.serversideData);
-            SendDestroyBarricade.InvokeAndLoopback(ENetReliability.Reliable, EnumerateClients_Remote(x, y, plant), barricade.GetNetId());
+            SendDestroyBarricade.InvokeAndLoopback(ENetReliability.Reliable, GatherRemoteClientConnections(x, y, plant), barricade.GetNetId());
         }
     }
 
@@ -1205,11 +1205,11 @@ public class BarricadeManager : SteamCaller
     {
         if (plant == ushort.MaxValue)
         {
-            BarricadeDrop.SendHealth.Invoke(barricade.GetNetId(), ENetReliability.Unreliable, Provider.EnumerateClients_Predicate((SteamPlayer client) => client.player != null && Regions.checkArea(x, y, client.player.movement.region_x, client.player.movement.region_y, BARRICADE_REGIONS) && OwnershipTool.checkToggle(client.playerID.steamID, barricade.serversideData.owner, client.player.quests.groupID, barricade.serversideData.group)), (byte)((float)(int)barricade.serversideData.barricade.health / (float)(int)barricade.serversideData.barricade.asset.health * 100f));
+            BarricadeDrop.SendHealth.Invoke(barricade.GetNetId(), ENetReliability.Unreliable, Provider.GatherClientConnectionsMatchingPredicate((SteamPlayer client) => client.player != null && Regions.checkArea(x, y, client.player.movement.region_x, client.player.movement.region_y, BARRICADE_REGIONS) && OwnershipTool.checkToggle(client.playerID.steamID, barricade.serversideData.owner, client.player.quests.groupID, barricade.serversideData.group)), (byte)((float)(int)barricade.serversideData.barricade.health / (float)(int)barricade.serversideData.barricade.asset.health * 100f));
         }
         else
         {
-            BarricadeDrop.SendHealth.Invoke(barricade.GetNetId(), ENetReliability.Unreliable, Provider.EnumerateClients_Predicate((SteamPlayer client) => OwnershipTool.checkToggle(client.playerID.steamID, barricade.serversideData.owner, client.player.quests.groupID, barricade.serversideData.group)), (byte)((float)(int)barricade.serversideData.barricade.health / (float)(int)barricade.serversideData.barricade.asset.health * 100f));
+            BarricadeDrop.SendHealth.Invoke(barricade.GetNetId(), ENetReliability.Unreliable, Provider.GatherClientConnectionsMatchingPredicate((SteamPlayer client) => OwnershipTool.checkToggle(client.playerID.steamID, barricade.serversideData.owner, client.player.quests.groupID, barricade.serversideData.group)), (byte)((float)(int)barricade.serversideData.barricade.health / (float)(int)barricade.serversideData.barricade.asset.health * 100f));
         }
     }
 
@@ -1290,7 +1290,7 @@ public class BarricadeManager : SteamCaller
         {
             BarricadeDrop tail = vehicleBarricadeRegion.drops.GetTail();
             BarricadeData serversideData = tail.serversideData;
-            SendSingleBarricade.Invoke(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), vehicleBarricadeRegion._netId, barricade.asset.GUID, barricade.state, serversideData.point, serversideData.angle_x, serversideData.angle_y, serversideData.angle_z, serversideData.owner, serversideData.group, tail.GetNetId());
+            SendSingleBarricade.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), vehicleBarricadeRegion._netId, barricade.asset.GUID, barricade.state, serversideData.point, serversideData.angle_x, serversideData.angle_y, serversideData.angle_z, serversideData.owner, serversideData.group, tail.GetNetId());
             BarricadeSpawnedHandler barricadeSpawnedHandler = onBarricadeSpawned;
             if (barricadeSpawnedHandler == null)
             {
@@ -1316,7 +1316,7 @@ public class BarricadeManager : SteamCaller
         {
             BarricadeDrop tail = region.drops.GetTail();
             BarricadeData serversideData = tail.serversideData;
-            SendSingleBarricade.Invoke(ENetReliability.Reliable, Regions.EnumerateClients_Remote(x, y, BARRICADE_REGIONS), NetId.INVALID, barricade.asset.GUID, barricade.state, serversideData.point, serversideData.angle_x, serversideData.angle_y, serversideData.angle_z, serversideData.owner, serversideData.group, tail.GetNetId());
+            SendSingleBarricade.Invoke(ENetReliability.Reliable, Regions.GatherRemoteClientConnections(x, y, BARRICADE_REGIONS), NetId.INVALID, barricade.asset.GUID, barricade.state, serversideData.point, serversideData.angle_x, serversideData.angle_y, serversideData.angle_z, serversideData.owner, serversideData.group, tail.GetNetId());
             BarricadeSpawnedHandler barricadeSpawnedHandler = onBarricadeSpawned;
             if (barricadeSpawnedHandler == null)
             {
@@ -1377,7 +1377,7 @@ public class BarricadeManager : SteamCaller
             if (barricadeRegion.drops.Count > 0)
             {
                 barricadeRegion.barricades.Clear();
-                SendClearRegionBarricades.InvokeAndLoopback(ENetReliability.Reliable, Regions.EnumerateClients_Remote(x, y, BARRICADE_REGIONS), x, y);
+                SendClearRegionBarricades.InvokeAndLoopback(ENetReliability.Reliable, Regions.GatherRemoteClientConnections(x, y, BARRICADE_REGIONS), x, y);
             }
         }
     }
@@ -2225,7 +2225,7 @@ public class BarricadeManager : SteamCaller
             Array.Copy(state, barricadeDrop.serversideData.barricade.state, size);
             if (shouldReplicate)
             {
-                BarricadeDrop.SendUpdateState.InvokeAndLoopback(barricadeDrop.GetNetId(), ENetReliability.Reliable, EnumerateClients_Remote(x, y, plant), state);
+                BarricadeDrop.SendUpdateState.InvokeAndLoopback(barricadeDrop.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y, plant), state);
             }
         }
     }
@@ -2623,22 +2623,34 @@ public class BarricadeManager : SteamCaller
         }
     }
 
-    public static IEnumerable<ITransportConnection> EnumerateClients(byte x, byte y, ushort plant)
+    public static PooledTransportConnectionList GatherClientConnections(byte x, byte y, ushort plant)
     {
         if (plant == ushort.MaxValue)
         {
-            return Regions.EnumerateClients(x, y, BARRICADE_REGIONS);
+            return Regions.GatherClientConnections(x, y, BARRICADE_REGIONS);
         }
-        return Provider.EnumerateClients();
+        return Provider.GatherClientConnections();
     }
 
-    public static IEnumerable<ITransportConnection> EnumerateClients_Remote(byte x, byte y, ushort plant)
+    [Obsolete("Replaced by GatherClients")]
+    public static IEnumerable<ITransportConnection> EnumerateClients(byte x, byte y, ushort plant)
+    {
+        return GatherClientConnections(x, y, plant);
+    }
+
+    public static PooledTransportConnectionList GatherRemoteClientConnections(byte x, byte y, ushort plant)
     {
         if (plant == ushort.MaxValue)
         {
-            return Regions.EnumerateClients_Remote(x, y, BARRICADE_REGIONS);
+            return Regions.GatherRemoteClientConnections(x, y, BARRICADE_REGIONS);
         }
-        return Provider.EnumerateClients_Remote();
+        return Provider.GatherRemoteClientConnections();
+    }
+
+    [Obsolete("Replaced by GatherRemoteClients")]
+    public static IEnumerable<ITransportConnection> EnumerateClients_Remote(byte x, byte y, ushort plant)
+    {
+        return GatherRemoteClientConnections(x, y, plant);
     }
 
     private static void DestroyAllInRegion(BarricadeRegion region)

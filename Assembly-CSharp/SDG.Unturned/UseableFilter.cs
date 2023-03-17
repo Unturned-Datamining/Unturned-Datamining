@@ -45,19 +45,25 @@ public class UseableFilter : Useable
         }
     }
 
-    public override void startPrimary()
+    public override bool startPrimary()
     {
-        if (!base.player.equipment.isBusy && base.player.clothing.maskAsset != null && base.player.clothing.maskAsset.proofRadiation && base.player.clothing.maskQuality != 100)
+        if (base.player.equipment.isBusy)
         {
-            base.player.equipment.isBusy = true;
-            startedUse = Time.realtimeSinceStartup;
-            isUsing = true;
-            if (Provider.isServer)
-            {
-                SendPlayFilter.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner());
-            }
-            filter();
+            return false;
         }
+        if (base.player.clothing.maskAsset == null || !base.player.clothing.maskAsset.proofRadiation || base.player.clothing.maskQuality == 100)
+        {
+            return false;
+        }
+        base.player.equipment.isBusy = true;
+        startedUse = Time.realtimeSinceStartup;
+        isUsing = true;
+        if (Provider.isServer)
+        {
+            SendPlayFilter.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner());
+        }
+        filter();
+        return true;
     }
 
     public override void equip()

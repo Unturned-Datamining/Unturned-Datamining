@@ -699,11 +699,11 @@ public class PlayerAnimator : PlayerCaller
             }
             if (all)
             {
-                SendGesture.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), gesture);
+                SendGesture.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), gesture);
             }
             else
             {
-                SendGesture.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.EnumerateClients_RemoteNotOwner(), gesture);
+                SendGesture.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GatherRemoteClientConnectionsExcludingOwner(), gesture);
             }
             PlayerAnimator.OnGestureChanged_Global?.TryInvoke("OnGestureChanged_Global", this, gesture);
         }
@@ -927,7 +927,7 @@ public class PlayerAnimator : PlayerCaller
                 }
             }
         }
-        SendLean.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner(), (byte)(lean + 1));
+        SendLean.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner(), (byte)(lean + 1));
         PlayerAnimator.OnLeanChanged_Global.TryInvoke("OnLeanChanged_Global", this);
     }
 
@@ -944,7 +944,7 @@ public class PlayerAnimator : PlayerCaller
         }
     }
 
-    internal void SendInitialPlayerState(IEnumerable<ITransportConnection> transportConnections)
+    internal void SendInitialPlayerState(List<ITransportConnection> transportConnections)
     {
         if (gesture != 0)
         {

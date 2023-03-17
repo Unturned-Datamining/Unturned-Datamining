@@ -122,6 +122,17 @@ public class EditorObjects : MonoBehaviour
         return selection[selection.Count - 1]?.transform?.gameObject;
     }
 
+    public static IEnumerable<GameObject> EnumerateSelectedGameObjects()
+    {
+        foreach (EditorSelection item in selection)
+        {
+            if (item.transform != null)
+            {
+                yield return item.transform.gameObject;
+            }
+        }
+    }
+
     public static void applySelection()
     {
         LevelObjects.step++;
@@ -289,17 +300,6 @@ public class EditorObjects : MonoBehaviour
         dragEndScreenPoint = Vector2.zero;
         isDragging = false;
         onDragStopped?.Invoke();
-    }
-
-    private IEnumerable<GameObject> EnumerateSelectedGameObjects()
-    {
-        foreach (EditorSelection item in selection)
-        {
-            if (item.transform != null)
-            {
-                yield return item.transform.gameObject;
-            }
-        }
     }
 
     private void Update()

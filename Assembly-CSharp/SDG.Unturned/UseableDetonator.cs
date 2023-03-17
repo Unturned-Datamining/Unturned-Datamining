@@ -64,79 +64,91 @@ public class UseableDetonator : Useable
         }
     }
 
-    public override void startPrimary()
+    public override bool startPrimary()
     {
-        if (base.player.equipment.isBusy || !isUseable)
+        if (base.player.equipment.isBusy)
         {
-            return;
+            return false;
         }
-        if (base.channel.isOwner)
+        if (isUseable)
         {
-            for (int i = 0; i < charges.Count; i++)
+            if (base.channel.isOwner)
             {
-                InteractableCharge interactableCharge = charges[i];
-                if (!(interactableCharge == null))
+                for (int i = 0; i < charges.Count; i++)
                 {
-                    RaycastInfo info = new RaycastInfo(interactableCharge.transform);
-                    base.player.input.sendRaycast(info, ERaycastInfoUsage.Detonator);
-                }
-            }
-            charges.Clear();
-        }
-        if (Provider.isServer)
-        {
-            charges.Clear();
-            if (base.player.input.hasInputs())
-            {
-                int inputCount = base.player.input.getInputCount();
-                for (int j = 0; j < inputCount; j++)
-                {
-                    InputInfo input = base.player.input.getInput(doOcclusionCheck: false, ERaycastInfoUsage.Detonator);
-                    if (input != null && input.type == ERaycastInfoType.BARRICADE && !(input.transform == null) && input.transform.CompareTag("Barricade"))
+                    InteractableCharge interactableCharge = charges[i];
+                    if (!(interactableCharge == null))
                     {
-                        InteractableCharge component = input.transform.GetComponent<InteractableCharge>();
-                        if (!(component == null) && !(Dedicator.IsDedicatedServer ? (!OwnershipTool.checkToggle(base.channel.owner.playerID.steamID, component.owner, base.player.quests.groupID, component.group)) : (!component.hasOwnership)))
+                        RaycastInfo info = new RaycastInfo(interactableCharge.transform);
+                        base.player.input.sendRaycast(info, ERaycastInfoUsage.Detonator);
+                    }
+                }
+                charges.Clear();
+            }
+            if (Provider.isServer)
+            {
+                charges.Clear();
+                if (base.player.input.hasInputs())
+                {
+                    int inputCount = base.player.input.getInputCount();
+                    for (int j = 0; j < inputCount; j++)
+                    {
+                        InputInfo input = base.player.input.getInput(doOcclusionCheck: false, ERaycastInfoUsage.Detonator);
+                        if (input != null && input.type == ERaycastInfoType.BARRICADE && !(input.transform == null) && input.transform.CompareTag("Barricade"))
                         {
-                            charges.Add(component);
+                            InteractableCharge component = input.transform.GetComponent<InteractableCharge>();
+                            if (!(component == null) && !(Dedicator.IsDedicatedServer ? (!OwnershipTool.checkToggle(base.channel.owner.playerID.steamID, component.owner, base.player.quests.groupID, component.group)) : (!component.hasOwnership)))
+                            {
+                                charges.Add(component);
+                            }
                         }
                     }
                 }
             }
+            base.player.equipment.isBusy = true;
+            startedUse = Time.realtimeSinceStartup;
+            isUsing = true;
+            isDetonating = true;
+            plunge();
+            if (Provider.isServer)
+            {
+                base.player.life.markAggressive(force: false);
+                SendPlayPlunge.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner());
+            }
+            return true;
         }
-        base.player.equipment.isBusy = true;
-        startedUse = Time.realtimeSinceStartup;
-        isUsing = true;
-        isDetonating = true;
-        plunge();
-        if (Provider.isServer)
-        {
-            base.player.life.markAggressive(force: false);
-            SendPlayPlunge.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner());
-        }
+        return false;
     }
 
-    public override void startSecondary()
+    public override bool startSecondary()
     {
-        if (base.player.equipment.isBusy || !base.channel.isOwner || isUsing || !(target != null))
+        if (base.player.equipment.isBusy)
         {
-            return;
+            return false;
         }
-        if (target.isSelected)
+        if (base.channel.isOwner && !isUsing && target != null)
         {
-            target.deselect();
-            charges.Remove(target);
-            return;
-        }
-        target.select();
-        charges.Add(target);
-        if (charges.Count > 8)
-        {
-            if (charges[0] != null)
+            if (target.isSelected)
             {
-                charges[0].deselect();
+                target.deselect();
+                charges.Remove(target);
             }
-            charges.RemoveAt(0);
+            else
+            {
+                target.select();
+                charges.Add(target);
+                if (charges.Count > 8)
+                {
+                    if (charges[0] != null)
+                    {
+                        charges[0].deselect();
+                    }
+                    charges.RemoveAt(0);
+                }
+            }
+            return true;
         }
+        return false;
     }
 
     public override void equip()

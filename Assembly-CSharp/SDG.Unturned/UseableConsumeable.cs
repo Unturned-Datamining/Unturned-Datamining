@@ -107,27 +107,33 @@ public class UseableConsumeable : Useable
         }
     }
 
-    public override void startPrimary()
+    public override bool startPrimary()
     {
-        if (!base.player.equipment.isBusy)
+        if (base.player.equipment.isBusy)
         {
-            base.player.equipment.isBusy = true;
-            startedUse = Time.realtimeSinceStartup;
-            isUsing = true;
-            consumeMode = EConsumeMode.USE;
-            consume();
-            if (Provider.isServer)
-            {
-                SendPlayConsume.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner(), consumeMode);
-            }
+            return false;
         }
+        base.player.equipment.isBusy = true;
+        startedUse = Time.realtimeSinceStartup;
+        isUsing = true;
+        consumeMode = EConsumeMode.USE;
+        consume();
+        if (Provider.isServer)
+        {
+            SendPlayConsume.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner(), consumeMode);
+        }
+        return true;
     }
 
-    public override void startSecondary()
+    public override bool startSecondary()
     {
-        if (base.player.equipment.isBusy || !hasAid)
+        if (base.player.equipment.isBusy)
         {
-            return;
+            return false;
+        }
+        if (!hasAid)
+        {
+            return false;
         }
         if (base.channel.isOwner)
         {
@@ -142,10 +148,18 @@ public class UseableConsumeable : Useable
                 consume();
             }
         }
-        if (Provider.isServer && base.player.input.hasInputs())
+        if (Provider.isServer)
         {
+            if (!base.player.input.hasInputs())
+            {
+                return false;
+            }
             InputInfo input = base.player.input.getInput(doOcclusionCheck: true, ERaycastInfoUsage.ConsumeableAid);
-            if (input != null && input.type == ERaycastInfoType.PLAYER && input.player != null)
+            if (input == null)
+            {
+                return false;
+            }
+            if (input.type == ERaycastInfoType.PLAYER && input.player != null)
             {
                 enemy = input.player;
                 base.player.equipment.isBusy = true;
@@ -153,9 +167,10 @@ public class UseableConsumeable : Useable
                 isUsing = true;
                 consumeMode = EConsumeMode.AID;
                 consume();
-                SendPlayConsume.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner(), consumeMode);
+                SendPlayConsume.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner(), consumeMode);
             }
         }
+        return true;
     }
 
     public override void equip()

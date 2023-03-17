@@ -145,7 +145,7 @@ public class InteractableStereo : Interactable
         if (!(player == null) && !player.life.isDead && !((base.transform.position - player.transform.position).sqrMagnitude > 400f) && BarricadeManager.tryGetRegion(base.transform, out var x, out var y, out var plant, out var region))
         {
             newVolume = MathfEx.Min(newVolume, 100);
-            SendChangeVolume.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, BarricadeManager.EnumerateClients_Remote(x, y, plant), newVolume);
+            SendChangeVolume.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, BarricadeManager.GatherRemoteClientConnections(x, y, plant), newVolume);
             region.FindBarricadeByRootFast(base.transform).serversideData.barricade.state[16] = newVolume;
         }
     }

@@ -135,7 +135,7 @@ public class InteractableLibrary : Interactable
             num3 = amount - delta;
             player.skills.askAward(delta);
         }
-        SendAmount.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, BarricadeManager.EnumerateClients_Remote(x, y, plant), num3);
+        SendAmount.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, BarricadeManager.GatherRemoteClientConnections(x, y, plant), num3);
         BarricadeDrop barricadeDrop = region.FindBarricadeByRootFast(base.transform);
         Buffer.BlockCopy(BitConverter.GetBytes(num3), 0, barricadeDrop.serversideData.barricade.state, 16, 4);
     }

@@ -110,7 +110,7 @@ public class StructureManager : SteamCaller
             StructureDrop structureDrop = region.FindStructureByRootTransform(transform);
             if (structureDrop != null)
             {
-                StructureDrop.SendOwnerAndGroup.InvokeAndLoopback(structureDrop.GetNetId(), ENetReliability.Reliable, EnumerateClients_Remote(x, y), newOwner, newGroup);
+                StructureDrop.SendOwnerAndGroup.InvokeAndLoopback(structureDrop.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y), newOwner, newGroup);
                 structureDrop.serversideData.owner = newOwner;
                 structureDrop.serversideData.group = newGroup;
                 sendHealthChanged(x, y, structureDrop);
@@ -163,7 +163,7 @@ public class StructureManager : SteamCaller
 
     internal static void InternalSetStructureTransform(byte x, byte y, StructureDrop drop, Vector3 point, byte angle_x, byte angle_y, byte angle_z)
     {
-        StructureDrop.SendTransform.InvokeAndLoopback(drop.GetNetId(), ENetReliability.Reliable, EnumerateClients_Remote(x, y), x, y, point, angle_x, angle_y, angle_z);
+        StructureDrop.SendTransform.InvokeAndLoopback(drop.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y), x, y, point, angle_x, angle_y, angle_z);
     }
 
     [Obsolete]
@@ -256,13 +256,13 @@ public class StructureManager : SteamCaller
         if (tryGetRegion(x, y, out var region))
         {
             region.structures.Remove(structure.serversideData);
-            SendDestroyStructure.InvokeAndLoopback(ENetReliability.Reliable, EnumerateClients_Remote(x, y), structure.GetNetId(), ragdoll, wasPickedUp);
+            SendDestroyStructure.InvokeAndLoopback(ENetReliability.Reliable, GatherRemoteClientConnections(x, y), structure.GetNetId(), ragdoll, wasPickedUp);
         }
     }
 
     private static void sendHealthChanged(byte x, byte y, StructureDrop structure)
     {
-        StructureDrop.SendHealth.Invoke(structure.GetNetId(), ENetReliability.Unreliable, Provider.EnumerateClients_Predicate((SteamPlayer client) => client.player != null && OwnershipTool.checkToggle(client.playerID.steamID, structure.serversideData.owner, client.player.quests.groupID, structure.serversideData.group) && Regions.checkArea(x, y, client.player.movement.region_x, client.player.movement.region_y, STRUCTURE_REGIONS)), (byte)Mathf.RoundToInt((float)(int)structure.serversideData.structure.health / (float)(int)structure.asset.health * 100f));
+        StructureDrop.SendHealth.Invoke(structure.GetNetId(), ENetReliability.Unreliable, Provider.GatherClientConnectionsMatchingPredicate((SteamPlayer client) => client.player != null && OwnershipTool.checkToggle(client.playerID.steamID, structure.serversideData.owner, client.player.quests.groupID, structure.serversideData.group) && Regions.checkArea(x, y, client.player.movement.region_x, client.player.movement.region_y, STRUCTURE_REGIONS)), (byte)Mathf.RoundToInt((float)(int)structure.serversideData.structure.health / (float)(int)structure.asset.health * 100f));
     }
 
     public static void repair(Transform structure, float damage, float times)
@@ -408,7 +408,7 @@ public class StructureManager : SteamCaller
             StructureDrop tail = region.drops.GetTail();
             tail.serversideData = structureData;
             region.structures.Add(structureData);
-            SendSingleStructure.Invoke(ENetReliability.Reliable, EnumerateClients_Remote(x, y), x, y, structure.asset.GUID, structureData.point, structureData.angle_x, structureData.angle_y, structureData.angle_z, structureData.owner, structureData.group, netId);
+            SendSingleStructure.Invoke(ENetReliability.Reliable, GatherRemoteClientConnections(x, y), x, y, structure.asset.GUID, structureData.point, structureData.angle_x, structureData.angle_y, structureData.angle_z, structureData.owner, structureData.group, netId);
             onStructureSpawned?.Invoke(region, tail);
         }
         return true;
@@ -514,7 +514,7 @@ public class StructureManager : SteamCaller
             if (structureRegion.drops.Count > 0)
             {
                 structureRegion.structures.Clear();
-                SendClearRegionStructures.InvokeAndLoopback(ENetReliability.Reliable, EnumerateClients_Remote(x, y), x, y);
+                SendClearRegionStructures.InvokeAndLoopback(ENetReliability.Reliable, GatherRemoteClientConnections(x, y), x, y);
             }
         }
     }
@@ -1096,9 +1096,15 @@ public class StructureManager : SteamCaller
         }
     }
 
+    public static PooledTransportConnectionList GatherRemoteClientConnections(byte x, byte y)
+    {
+        return Regions.GatherRemoteClientConnections(x, y, STRUCTURE_REGIONS);
+    }
+
+    [Obsolete("Replaced by GatherRemoteClientConnections")]
     public static IEnumerable<ITransportConnection> EnumerateClients_Remote(byte x, byte y)
     {
-        return Regions.EnumerateClients_Remote(x, y, STRUCTURE_REGIONS);
+        return GatherRemoteClientConnections(x, y);
     }
 
     private static void DestroyAllInRegion(StructureRegion region)

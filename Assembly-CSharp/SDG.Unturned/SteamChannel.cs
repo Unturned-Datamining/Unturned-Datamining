@@ -77,39 +77,63 @@ public class SteamChannel : MonoBehaviour
         return steamID == owner.playerID.steamID;
     }
 
-    public IEnumerable<ITransportConnection> EnumerateClients_RemoteNotOwner()
+    public PooledTransportConnectionList GatherRemoteClientConnectionsExcludingOwner()
     {
+        PooledTransportConnectionList pooledTransportConnectionList = TransportConnectionListPool.Get();
         foreach (SteamPlayer client in Provider.clients)
         {
             if (!client.IsLocalPlayer && client != owner)
             {
-                yield return client.transportConnection;
+                pooledTransportConnectionList.Add(client.transportConnection);
             }
         }
+        return pooledTransportConnectionList;
     }
 
+    [Obsolete("Replaced by GatherRemoteClientConnectionsExcludingOwner")]
+    public IEnumerable<ITransportConnection> EnumerateClients_RemoteNotOwner()
+    {
+        return GatherRemoteClientConnectionsExcludingOwner();
+    }
+
+    public PooledTransportConnectionList GatherRemoteClientConnectionsWithinSphereExcludingOwner(Vector3 position, float radius)
+    {
+        PooledTransportConnectionList pooledTransportConnectionList = TransportConnectionListPool.Get();
+        float num = radius * radius;
+        foreach (SteamPlayer client in Provider.clients)
+        {
+            if (!client.IsLocalPlayer && client != owner && client.player != null && (client.player.transform.position - position).sqrMagnitude < num)
+            {
+                pooledTransportConnectionList.Add(client.transportConnection);
+            }
+        }
+        return pooledTransportConnectionList;
+    }
+
+    [Obsolete("Replaced by GatherRemoteClientConnectionsWithinSphereExcludingOwner")]
     public IEnumerable<ITransportConnection> EnumerateClients_RemoteNotOwnerWithinSphere(Vector3 position, float radius)
     {
-        float sqrRadius = radius * radius;
-        foreach (SteamPlayer client in Provider.clients)
-        {
-            if (!client.IsLocalPlayer && client != owner && client.player != null && (client.player.transform.position - position).sqrMagnitude < sqrRadius)
-            {
-                yield return client.transportConnection;
-            }
-        }
+        return GatherRemoteClientConnectionsWithinSphereExcludingOwner(position, radius);
     }
 
-    public IEnumerable<ITransportConnection> EnumerateClients_WithinSphereOrOwner(Vector3 position, float radius)
+    public PooledTransportConnectionList GatherOwnerAndClientConnectionsWithinSphere(Vector3 position, float radius)
     {
-        float sqrRadius = radius * radius;
+        PooledTransportConnectionList pooledTransportConnectionList = TransportConnectionListPool.Get();
+        float num = radius * radius;
         foreach (SteamPlayer client in Provider.clients)
         {
-            if (client == owner || (client.player != null && (client.player.transform.position - position).sqrMagnitude < sqrRadius))
+            if (client == owner || (client.player != null && (client.player.transform.position - position).sqrMagnitude < num))
             {
-                yield return client.transportConnection;
+                pooledTransportConnectionList.Add(client.transportConnection);
             }
         }
+        return pooledTransportConnectionList;
+    }
+
+    [Obsolete("Replaced by GatherOwnerAndClientConnectionsWithinSphere")]
+    public IEnumerable<ITransportConnection> EnumerateClients_WithinSphereOrOwner(Vector3 position, float radius)
+    {
+        return GatherOwnerAndClientConnectionsWithinSphere(position, radius);
     }
 
     [Obsolete]

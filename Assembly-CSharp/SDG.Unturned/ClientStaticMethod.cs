@@ -48,30 +48,74 @@ public sealed class ClientStaticMethod : ClientMethodHandle
         SendAndLoopbackIfLocal(reliability, transportConnection, writerWithStaticHeader);
     }
 
+    public void Invoke(ENetReliability reliability, List<ITransportConnection> transportConnections)
+    {
+        NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
+        SendAndLoopbackIfAnyAreLocal(reliability, transportConnections, writerWithStaticHeader);
+    }
+
+    [Obsolete("Replaced by List overload")]
     public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections)
     {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            Invoke(reliability, transportConnections2);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
+    }
+
+    public void Invoke(ENetReliability reliability, List<ITransportConnection> transportConnections, Action<NetPakWriter> callback)
+    {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
+        callback(writerWithStaticHeader);
         SendAndLoopbackIfAnyAreLocal(reliability, transportConnections, writerWithStaticHeader);
     }
 
+    [Obsolete("Replaced by List overload")]
     public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, Action<NetPakWriter> callback)
     {
-        NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
-        callback(writerWithStaticHeader);
-        SendAndLoopbackIfAnyAreLocal(reliability, transportConnections, writerWithStaticHeader);
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            Invoke(reliability, transportConnections2, callback);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
     }
 
+    public void InvokeAndLoopback(ENetReliability reliability, List<ITransportConnection> transportConnections)
+    {
+        NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
+        SendAndLoopback(reliability, transportConnections, writerWithStaticHeader);
+    }
+
+    [Obsolete("Replaced by List overload")]
     public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections)
     {
-        NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
-        SendAndLoopback(reliability, transportConnections, writerWithStaticHeader);
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            InvokeAndLoopback(reliability, transportConnections2);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
     }
 
-    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, Action<NetPakWriter> callback)
+    public void InvokeAndLoopback(ENetReliability reliability, List<ITransportConnection> transportConnections, Action<NetPakWriter> callback)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         callback(writerWithStaticHeader);
         SendAndLoopback(reliability, transportConnections, writerWithStaticHeader);
+    }
+
+    [Obsolete("Replaced by List overload")]
+    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, Action<NetPakWriter> callback)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            InvokeAndLoopback(reliability, transportConnections2, callback);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
     }
 
     private ClientStaticMethod(ClientMethodInfo clientMethodInfo)
@@ -111,18 +155,40 @@ public sealed class ClientStaticMethod<T> : ClientMethodHandle
         SendAndLoopbackIfLocal(reliability, transportConnection, writerWithStaticHeader);
     }
 
-    public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T arg)
+    public void Invoke(ENetReliability reliability, List<ITransportConnection> transportConnections, T arg)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         generatedWrite(writerWithStaticHeader, arg);
         SendAndLoopbackIfAnyAreLocal(reliability, transportConnections, writerWithStaticHeader);
     }
 
-    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T arg)
+    [Obsolete("Replaced by List overload")]
+    public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T arg)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            Invoke(reliability, transportConnections2, arg);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
+    }
+
+    public void InvokeAndLoopback(ENetReliability reliability, List<ITransportConnection> transportConnections, T arg)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         generatedWrite(writerWithStaticHeader, arg);
         SendAndLoopback(reliability, transportConnections, writerWithStaticHeader);
+    }
+
+    [Obsolete("Replaced by List overload")]
+    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T arg)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            InvokeAndLoopback(reliability, transportConnections2, arg);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
     }
 
     private ClientStaticMethod(ClientMethodInfo clientMethodInfo, WriteDelegate generatedWrite)
@@ -163,18 +229,40 @@ public sealed class ClientStaticMethod<T1, T2> : ClientMethodHandle
         SendAndLoopbackIfLocal(reliability, transportConnection, writerWithStaticHeader);
     }
 
-    public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2)
+    public void Invoke(ENetReliability reliability, List<ITransportConnection> transportConnections, T1 arg1, T2 arg2)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         generatedWrite(writerWithStaticHeader, arg1, arg2);
         SendAndLoopbackIfAnyAreLocal(reliability, transportConnections, writerWithStaticHeader);
     }
 
-    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2)
+    [Obsolete("Replaced by List overload")]
+    public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            Invoke(reliability, transportConnections2, arg1, arg2);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
+    }
+
+    public void InvokeAndLoopback(ENetReliability reliability, List<ITransportConnection> transportConnections, T1 arg1, T2 arg2)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         generatedWrite(writerWithStaticHeader, arg1, arg2);
         SendAndLoopback(reliability, transportConnections, writerWithStaticHeader);
+    }
+
+    [Obsolete("Replaced by List overload")]
+    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            InvokeAndLoopback(reliability, transportConnections2, arg1, arg2);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
     }
 
     private ClientStaticMethod(ClientMethodInfo clientMethodInfo, WriteDelegate generatedWrite)
@@ -215,18 +303,40 @@ public sealed class ClientStaticMethod<T1, T2, T3> : ClientMethodHandle
         SendAndLoopbackIfLocal(reliability, transportConnection, writerWithStaticHeader);
     }
 
-    public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3)
+    public void Invoke(ENetReliability reliability, List<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         generatedWrite(writerWithStaticHeader, arg1, arg2, arg3);
         SendAndLoopbackIfAnyAreLocal(reliability, transportConnections, writerWithStaticHeader);
     }
 
-    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3)
+    [Obsolete("Replaced by List overload")]
+    public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            Invoke(reliability, transportConnections2, arg1, arg2, arg3);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
+    }
+
+    public void InvokeAndLoopback(ENetReliability reliability, List<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         generatedWrite(writerWithStaticHeader, arg1, arg2, arg3);
         SendAndLoopback(reliability, transportConnections, writerWithStaticHeader);
+    }
+
+    [Obsolete("Replaced by List overload")]
+    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            InvokeAndLoopback(reliability, transportConnections2, arg1, arg2, arg3);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
     }
 
     private ClientStaticMethod(ClientMethodInfo clientMethodInfo, WriteDelegate generatedWrite)
@@ -267,18 +377,40 @@ public sealed class ClientStaticMethod<T1, T2, T3, T4> : ClientMethodHandle
         SendAndLoopbackIfLocal(reliability, transportConnection, writerWithStaticHeader);
     }
 
-    public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+    public void Invoke(ENetReliability reliability, List<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         generatedWrite(writerWithStaticHeader, arg1, arg2, arg3, arg4);
         SendAndLoopbackIfAnyAreLocal(reliability, transportConnections, writerWithStaticHeader);
     }
 
-    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+    [Obsolete("Replaced by List overload")]
+    public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            Invoke(reliability, transportConnections2, arg1, arg2, arg3, arg4);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
+    }
+
+    public void InvokeAndLoopback(ENetReliability reliability, List<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         generatedWrite(writerWithStaticHeader, arg1, arg2, arg3, arg4);
         SendAndLoopback(reliability, transportConnections, writerWithStaticHeader);
+    }
+
+    [Obsolete("Replaced by List overload")]
+    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            InvokeAndLoopback(reliability, transportConnections2, arg1, arg2, arg3, arg4);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
     }
 
     private ClientStaticMethod(ClientMethodInfo clientMethodInfo, WriteDelegate generatedWrite)
@@ -319,18 +451,40 @@ public sealed class ClientStaticMethod<T1, T2, T3, T4, T5> : ClientMethodHandle
         SendAndLoopbackIfLocal(reliability, transportConnection, writerWithStaticHeader);
     }
 
-    public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+    public void Invoke(ENetReliability reliability, List<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         generatedWrite(writerWithStaticHeader, arg1, arg2, arg3, arg4, arg5);
         SendAndLoopbackIfAnyAreLocal(reliability, transportConnections, writerWithStaticHeader);
     }
 
-    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+    [Obsolete("Replaced by List overload")]
+    public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            Invoke(reliability, transportConnections2, arg1, arg2, arg3, arg4, arg5);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
+    }
+
+    public void InvokeAndLoopback(ENetReliability reliability, List<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         generatedWrite(writerWithStaticHeader, arg1, arg2, arg3, arg4, arg5);
         SendAndLoopback(reliability, transportConnections, writerWithStaticHeader);
+    }
+
+    [Obsolete("Replaced by List overload")]
+    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            InvokeAndLoopback(reliability, transportConnections2, arg1, arg2, arg3, arg4, arg5);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
     }
 
     private ClientStaticMethod(ClientMethodInfo clientMethodInfo, WriteDelegate generatedWrite)
@@ -371,18 +525,40 @@ public sealed class ClientStaticMethod<T1, T2, T3, T4, T5, T6> : ClientMethodHan
         SendAndLoopbackIfLocal(reliability, transportConnection, writerWithStaticHeader);
     }
 
-    public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
+    public void Invoke(ENetReliability reliability, List<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         generatedWrite(writerWithStaticHeader, arg1, arg2, arg3, arg4, arg5, arg6);
         SendAndLoopbackIfAnyAreLocal(reliability, transportConnections, writerWithStaticHeader);
     }
 
-    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
+    [Obsolete("Replaced by List overload")]
+    public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            Invoke(reliability, transportConnections2, arg1, arg2, arg3, arg4, arg5, arg6);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
+    }
+
+    public void InvokeAndLoopback(ENetReliability reliability, List<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         generatedWrite(writerWithStaticHeader, arg1, arg2, arg3, arg4, arg5, arg6);
         SendAndLoopback(reliability, transportConnections, writerWithStaticHeader);
+    }
+
+    [Obsolete("Replaced by List overload")]
+    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            InvokeAndLoopback(reliability, transportConnections2, arg1, arg2, arg3, arg4, arg5, arg6);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
     }
 
     private ClientStaticMethod(ClientMethodInfo clientMethodInfo, WriteDelegate generatedWrite)
@@ -423,18 +599,40 @@ public sealed class ClientStaticMethod<T1, T2, T3, T4, T5, T6, T7> : ClientMetho
         SendAndLoopbackIfLocal(reliability, transportConnection, writerWithStaticHeader);
     }
 
-    public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
+    public void Invoke(ENetReliability reliability, List<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         generatedWrite(writerWithStaticHeader, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
         SendAndLoopbackIfAnyAreLocal(reliability, transportConnections, writerWithStaticHeader);
     }
 
-    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
+    [Obsolete("Replaced by List overload")]
+    public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            Invoke(reliability, transportConnections2, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
+    }
+
+    public void InvokeAndLoopback(ENetReliability reliability, List<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         generatedWrite(writerWithStaticHeader, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
         SendAndLoopback(reliability, transportConnections, writerWithStaticHeader);
+    }
+
+    [Obsolete("Replaced by List overload")]
+    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            InvokeAndLoopback(reliability, transportConnections2, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
     }
 
     private ClientStaticMethod(ClientMethodInfo clientMethodInfo, WriteDelegate generatedWrite)
@@ -475,18 +673,40 @@ public sealed class ClientStaticMethod<T1, T2, T3, T4, T5, T6, T7, T8> : ClientM
         SendAndLoopbackIfLocal(reliability, transportConnection, writerWithStaticHeader);
     }
 
-    public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
+    public void Invoke(ENetReliability reliability, List<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         generatedWrite(writerWithStaticHeader, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
         SendAndLoopbackIfAnyAreLocal(reliability, transportConnections, writerWithStaticHeader);
     }
 
-    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
+    [Obsolete("Replaced by List overload")]
+    public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            Invoke(reliability, transportConnections2, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
+    }
+
+    public void InvokeAndLoopback(ENetReliability reliability, List<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         generatedWrite(writerWithStaticHeader, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
         SendAndLoopback(reliability, transportConnections, writerWithStaticHeader);
+    }
+
+    [Obsolete("Replaced by List overload")]
+    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            InvokeAndLoopback(reliability, transportConnections2, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
     }
 
     private ClientStaticMethod(ClientMethodInfo clientMethodInfo, WriteDelegate generatedWrite)
@@ -527,18 +747,40 @@ public sealed class ClientStaticMethod<T1, T2, T3, T4, T5, T6, T7, T8, T9> : Cli
         SendAndLoopbackIfLocal(reliability, transportConnection, writerWithStaticHeader);
     }
 
-    public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
+    public void Invoke(ENetReliability reliability, List<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         generatedWrite(writerWithStaticHeader, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
         SendAndLoopbackIfAnyAreLocal(reliability, transportConnections, writerWithStaticHeader);
     }
 
-    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
+    [Obsolete("Replaced by List overload")]
+    public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            Invoke(reliability, transportConnections2, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
+    }
+
+    public void InvokeAndLoopback(ENetReliability reliability, List<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         generatedWrite(writerWithStaticHeader, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
         SendAndLoopback(reliability, transportConnections, writerWithStaticHeader);
+    }
+
+    [Obsolete("Replaced by List overload")]
+    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            InvokeAndLoopback(reliability, transportConnections2, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
     }
 
     private ClientStaticMethod(ClientMethodInfo clientMethodInfo, WriteDelegate generatedWrite)
@@ -579,18 +821,40 @@ public sealed class ClientStaticMethod<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> 
         SendAndLoopbackIfLocal(reliability, transportConnection, writerWithStaticHeader);
     }
 
-    public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
+    public void Invoke(ENetReliability reliability, List<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         generatedWrite(writerWithStaticHeader, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
         SendAndLoopbackIfAnyAreLocal(reliability, transportConnections, writerWithStaticHeader);
     }
 
-    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
+    [Obsolete("Replaced by List overload")]
+    public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            Invoke(reliability, transportConnections2, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
+    }
+
+    public void InvokeAndLoopback(ENetReliability reliability, List<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         generatedWrite(writerWithStaticHeader, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
         SendAndLoopback(reliability, transportConnections, writerWithStaticHeader);
+    }
+
+    [Obsolete("Replaced by List overload")]
+    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            InvokeAndLoopback(reliability, transportConnections2, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
     }
 
     private ClientStaticMethod(ClientMethodInfo clientMethodInfo, WriteDelegate generatedWrite)
@@ -631,18 +895,40 @@ public sealed class ClientStaticMethod<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, 
         SendAndLoopbackIfLocal(reliability, transportConnection, writerWithStaticHeader);
     }
 
-    public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11)
+    public void Invoke(ENetReliability reliability, List<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         generatedWrite(writerWithStaticHeader, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11);
         SendAndLoopbackIfAnyAreLocal(reliability, transportConnections, writerWithStaticHeader);
     }
 
-    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11)
+    [Obsolete("Replaced by List overload")]
+    public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            Invoke(reliability, transportConnections2, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
+    }
+
+    public void InvokeAndLoopback(ENetReliability reliability, List<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         generatedWrite(writerWithStaticHeader, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11);
         SendAndLoopback(reliability, transportConnections, writerWithStaticHeader);
+    }
+
+    [Obsolete("Replaced by List overload")]
+    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            InvokeAndLoopback(reliability, transportConnections2, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
     }
 
     private ClientStaticMethod(ClientMethodInfo clientMethodInfo, WriteDelegate generatedWrite)
@@ -683,18 +969,40 @@ public sealed class ClientStaticMethod<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, 
         SendAndLoopbackIfLocal(reliability, transportConnection, writerWithStaticHeader);
     }
 
-    public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12)
+    public void Invoke(ENetReliability reliability, List<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         generatedWrite(writerWithStaticHeader, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
         SendAndLoopbackIfAnyAreLocal(reliability, transportConnections, writerWithStaticHeader);
     }
 
-    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12)
+    [Obsolete("Replaced by List overload")]
+    public void Invoke(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            Invoke(reliability, transportConnections2, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
+    }
+
+    public void InvokeAndLoopback(ENetReliability reliability, List<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12)
     {
         NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
         generatedWrite(writerWithStaticHeader, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
         SendAndLoopback(reliability, transportConnections, writerWithStaticHeader);
+    }
+
+    [Obsolete("Replaced by List overload")]
+    public void InvokeAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            InvokeAndLoopback(reliability, transportConnections2, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
+            return;
+        }
+        throw new ArgumentException("should be list", "transportConnections");
     }
 
     private ClientStaticMethod(ClientMethodInfo clientMethodInfo, WriteDelegate generatedWrite)

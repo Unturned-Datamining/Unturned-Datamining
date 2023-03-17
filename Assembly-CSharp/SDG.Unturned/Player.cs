@@ -663,7 +663,7 @@ public class Player : MonoBehaviour
             byte b = MeasurementTool.angleToByte(yaw);
             if (movement.canAddSimulationResultsToUpdates)
             {
-                SendTeleport.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), position, b);
+                SendTeleport.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), position, b);
                 return;
             }
             SendTeleport.Invoke(GetNetId(), ENetReliability.Reliable, channel.GetOwnerTransportConnection(), position, b);
@@ -1092,7 +1092,7 @@ public class Player : MonoBehaviour
         animator.SendInitialPlayerState(client);
     }
 
-    internal void SendInitialPlayerState(IEnumerable<ITransportConnection> transportConnections)
+    internal void SendInitialPlayerState(List<ITransportConnection> transportConnections)
     {
         clothing.SendInitialPlayerState(transportConnections);
         life.SendInitialPlayerState(transportConnections);

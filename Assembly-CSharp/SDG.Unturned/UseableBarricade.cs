@@ -1088,11 +1088,11 @@ public class UseableBarricade : Useable
         }
     }
 
-    public override void startPrimary()
+    public override bool startPrimary()
     {
         if (base.player.equipment.isBusy)
         {
-            return;
+            return false;
         }
         if (Dedicator.IsDedicatedServer ? isValid : check())
         {
@@ -1115,22 +1115,31 @@ public class UseableBarricade : Useable
             build();
             if (Provider.isServer)
             {
-                SendPlayBuild.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner());
+                SendPlayBuild.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner());
             }
+            return true;
         }
-        else if (Dedicator.IsDedicatedServer && wasAsked)
+        if (Dedicator.IsDedicatedServer && wasAsked)
         {
             base.player.equipment.dequip();
+            return true;
         }
+        return false;
     }
 
-    public override void startSecondary()
+    public override bool startSecondary()
     {
-        if (!base.player.equipment.isBusy && equippedBarricadeAsset.build != EBuild.GLASS && equippedBarricadeAsset.build != EBuild.CHARGE && equippedBarricadeAsset.build != EBuild.CLOCK && equippedBarricadeAsset.build != EBuild.NOTE && equippedBarricadeAsset.build != 0 && equippedBarricadeAsset.build != EBuild.DOOR && equippedBarricadeAsset.build != EBuild.GATE && equippedBarricadeAsset.build != EBuild.SHUTTER && equippedBarricadeAsset.build != EBuild.HATCH && equippedBarricadeAsset.build != EBuild.TORCH && equippedBarricadeAsset.build != EBuild.CAGE && equippedBarricadeAsset.build != EBuild.STORAGE_WALL && equippedBarricadeAsset.build != EBuild.SIGN_WALL)
+        if (base.player.equipment.isBusy)
         {
-            base.player.look.isIgnoringInput = true;
-            inputWantsToRotate = true;
+            return false;
         }
+        if (equippedBarricadeAsset.build == EBuild.GLASS || equippedBarricadeAsset.build == EBuild.CHARGE || equippedBarricadeAsset.build == EBuild.CLOCK || equippedBarricadeAsset.build == EBuild.NOTE || equippedBarricadeAsset.build == EBuild.FORTIFICATION || equippedBarricadeAsset.build == EBuild.DOOR || equippedBarricadeAsset.build == EBuild.GATE || equippedBarricadeAsset.build == EBuild.SHUTTER || equippedBarricadeAsset.build == EBuild.HATCH || equippedBarricadeAsset.build == EBuild.TORCH || equippedBarricadeAsset.build == EBuild.CAGE || equippedBarricadeAsset.build == EBuild.STORAGE_WALL || equippedBarricadeAsset.build == EBuild.SIGN_WALL)
+        {
+            return false;
+        }
+        base.player.look.isIgnoringInput = true;
+        inputWantsToRotate = true;
+        return true;
     }
 
     public override void stopSecondary()

@@ -147,7 +147,7 @@ public class ItemManager : SteamCaller
         }
         if (point.y > 0f)
         {
-            Physics.Raycast(point + Vector3.up, Vector3.down, out var hitInfo, Mathf.Min(point.y + 1f, Level.HEIGHT), RayMasks.BLOCK_ITEM);
+            Physics.SphereCast(new Ray(point + Vector3.up, Vector3.down), 0.1f, out var hitInfo, 16f, RayMasks.BLOCK_ITEM);
             if (hitInfo.collider != null)
             {
                 point.y = hitInfo.point.y;
@@ -159,7 +159,7 @@ public class ItemManager : SteamCaller
         {
             ItemData itemData = new ItemData(item, ++instanceCount, point, isDropped);
             regions[x, y].items.Add(itemData);
-            SendItem.Invoke(ENetReliability.Reliable, Regions.EnumerateClients(x, y, ITEM_REGIONS), x, y, item.id, item.amount, item.quality, item.state, point, itemData.instanceID, playEffect);
+            SendItem.Invoke(ENetReliability.Reliable, Regions.GatherClientConnections(x, y, ITEM_REGIONS), x, y, item.id, item.amount, item.quality, item.state, point, itemData.instanceID, playEffect);
         }
     }
 
@@ -265,7 +265,7 @@ public class ItemManager : SteamCaller
                     }
                     regions[x, y].items.RemoveAt(num);
                     player.sendStat(EPlayerStat.FOUND_ITEMS);
-                    SendDestroyItem.Invoke(ENetReliability.Reliable, Regions.EnumerateClients(x, y, ITEM_REGIONS), x, y, instanceID, arg4: true);
+                    SendDestroyItem.Invoke(ENetReliability.Reliable, Regions.GatherClientConnections(x, y, ITEM_REGIONS), x, y, instanceID, arg4: true);
                 }
                 else
                 {
@@ -300,7 +300,7 @@ public class ItemManager : SteamCaller
             if (itemRegion.items.Count > 0)
             {
                 itemRegion.items.Clear();
-                SendClearRegionItems.Invoke(ENetReliability.Reliable, Regions.EnumerateClients(x, y, ITEM_REGIONS), x, y);
+                SendClearRegionItems.Invoke(ENetReliability.Reliable, Regions.GatherClientConnections(x, y, ITEM_REGIONS), x, y);
             }
         }
     }
@@ -335,7 +335,7 @@ public class ItemManager : SteamCaller
                 {
                     uint instanceID = itemData.instanceID;
                     itemRegion.items.RemoveAt(num2);
-                    SendDestroyItem.Invoke(ENetReliability.Reliable, Regions.EnumerateClients(clearItemRegion.x, clearItemRegion.y, ITEM_REGIONS), clearItemRegion.x, clearItemRegion.y, instanceID, arg4: false);
+                    SendDestroyItem.Invoke(ENetReliability.Reliable, Regions.GatherClientConnections(clearItemRegion.x, clearItemRegion.y, ITEM_REGIONS), clearItemRegion.x, clearItemRegion.y, instanceID, arg4: false);
                 }
             }
         }
@@ -533,7 +533,7 @@ public class ItemManager : SteamCaller
                 {
                     uint instanceID = regions[despawnItems_X, despawnItems_Y].items[i].instanceID;
                     regions[despawnItems_X, despawnItems_Y].items.RemoveAt(i);
-                    SendDestroyItem.Invoke(ENetReliability.Reliable, Regions.EnumerateClients(despawnItems_X, despawnItems_Y, ITEM_REGIONS), despawnItems_X, despawnItems_Y, instanceID, arg4: false);
+                    SendDestroyItem.Invoke(ENetReliability.Reliable, Regions.GatherClientConnections(despawnItems_X, despawnItems_Y, ITEM_REGIONS), despawnItems_X, despawnItems_Y, instanceID, arg4: false);
                     break;
                 }
             }
@@ -586,7 +586,7 @@ public class ItemManager : SteamCaller
                     }
                     ItemData itemData = new ItemData(item2, ++instanceCount, itemSpawnpoint.point, newDropped: false);
                     regions[respawnItems_X, respawnItems_Y].items.Add(itemData);
-                    SendItem.Invoke(ENetReliability.Reliable, Regions.EnumerateClients(respawnItems_X, respawnItems_Y, ITEM_REGIONS), respawnItems_X, respawnItems_Y, item2.id, item2.amount, item2.quality, item2.state, location, itemData.instanceID, arg9: false);
+                    SendItem.Invoke(ENetReliability.Reliable, Regions.GatherClientConnections(respawnItems_X, respawnItems_Y, ITEM_REGIONS), respawnItems_X, respawnItems_Y, item2.id, item2.amount, item2.quality, item2.state, location, itemData.instanceID, arg9: false);
                 }
                 else if ((bool)Assets.shouldLoadAnyAssets)
                 {

@@ -405,7 +405,7 @@ public class PlayerQuests : PlayerCaller
 
     public void replicateSetMarker(bool newIsMarkerPlaced, Vector3 newMarkerPosition, string newMarkerTextOverride = "")
     {
-        SendMarkerState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), newIsMarkerPlaced, newMarkerPosition, newMarkerTextOverride);
+        SendMarkerState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), newIsMarkerPlaced, newMarkerPosition, newMarkerTextOverride);
     }
 
     public void sendSetMarker(bool newIsMarkerPlaced, Vector3 newMarkerPosition)
@@ -434,7 +434,7 @@ public class PlayerQuests : PlayerCaller
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 5, legacyName = "askSetRadioFrequency")]
     public void ReceiveSetRadioFrequencyRequest(uint newRadioFrequency)
     {
-        SendRadioFrequencyState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), newRadioFrequency);
+        SendRadioFrequencyState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), newRadioFrequency);
     }
 
     public void sendSetRadioFrequency(uint newRadioFrequency)
@@ -480,7 +480,7 @@ public class PlayerQuests : PlayerCaller
 
     public void changeRank(EPlayerGroupRank newRank)
     {
-        SendGroupState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), groupID, newRank);
+        SendGroupState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), groupID, newRank);
     }
 
     [Obsolete]
@@ -494,7 +494,7 @@ public class PlayerQuests : PlayerCaller
         CSteamID group = base.channel.owner.playerID.group;
         inMainGroup = group != CSteamID.Nil;
         EPlayerGroupRank arg = EPlayerGroupRank.MEMBER;
-        SendGroupState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), group, arg);
+        SendGroupState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), group, arg);
     }
 
     public bool ServerAssignToGroup(CSteamID newGroupID, EPlayerGroupRank newRank, bool bypassMemberLimit)
@@ -502,7 +502,7 @@ public class PlayerQuests : PlayerCaller
         GroupInfo groupInfo = GroupManager.getGroupInfo(newGroupID);
         if (groupInfo != null && (bypassMemberLimit || groupInfo.hasSpaceForMoreMembersInGroup))
         {
-            SendGroupState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), newGroupID, newRank);
+            SendGroupState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), newGroupID, newRank);
             inMainGroup = false;
             groupInfo.members++;
             GroupManager.sendGroupInfo(groupInfo);
@@ -568,7 +568,7 @@ public class PlayerQuests : PlayerCaller
             }
             GroupManager.sendGroupInfo(groupInfo);
         }
-        SendGroupState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), CSteamID.Nil, EPlayerGroupRank.MEMBER);
+        SendGroupState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), CSteamID.Nil, EPlayerGroupRank.MEMBER);
         inMainGroup = false;
     }
 
@@ -633,7 +633,7 @@ public class PlayerQuests : PlayerCaller
             GroupInfo groupInfo = GroupManager.addGroup(arg, base.channel.owner.playerID.playerName + "'s Group");
             groupInfo.members++;
             GroupManager.sendGroupInfo(base.channel.GetOwnerTransportConnection(), groupInfo);
-            SendGroupState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), arg, EPlayerGroupRank.OWNER);
+            SendGroupState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), arg, EPlayerGroupRank.OWNER);
             inMainGroup = false;
         }
     }
@@ -1724,7 +1724,7 @@ public class PlayerQuests : PlayerCaller
         });
     }
 
-    internal void SendInitialPlayerState(IEnumerable<ITransportConnection> transportConnections)
+    internal void SendInitialPlayerState(List<ITransportConnection> transportConnections)
     {
         if (isMemberOfAGroup)
         {

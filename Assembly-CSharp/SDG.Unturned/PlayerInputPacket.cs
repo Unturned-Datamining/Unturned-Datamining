@@ -32,13 +32,35 @@ public class PlayerInputPacket
 
     public ushort keys;
 
+    public EAttackInputFlags primaryAttack;
+
+    public EAttackInputFlags secondaryAttack;
+
     public virtual void read(SteamChannel channel, NetPakReader reader)
     {
         reader.ReadUInt32(out clientSimulationFrameNumber);
         reader.ReadInt32(out recov);
         reader.ReadUInt16(out keys);
-        reader.ReadUInt8(out var value);
-        int num = value;
+        reader.ReadBits(2, out var value);
+        if ((value & 1) == 1)
+        {
+            primaryAttack |= EAttackInputFlags.Start;
+        }
+        if ((value & 2) == 2)
+        {
+            primaryAttack |= EAttackInputFlags.Stop;
+        }
+        reader.ReadBits(2, out var value2);
+        if ((value2 & 1) == 1)
+        {
+            secondaryAttack |= EAttackInputFlags.Start;
+        }
+        if ((value2 & 2) == 2)
+        {
+            secondaryAttack |= EAttackInputFlags.Stop;
+        }
+        reader.ReadUInt8(out var value3);
+        int num = value3;
         if (num <= 0)
         {
             return;
@@ -68,8 +90,8 @@ public class PlayerInputPacket
                 reader.ReadNormalVector3(out inputInfo.direction);
                 reader.ReadNormalVector3(out inputInfo.normal);
                 reader.ReadEnum(out inputInfo.limb);
-                reader.ReadSteamID(out CSteamID value7);
-                Player player = PlayerTool.getPlayer(value7);
+                reader.ReadSteamID(out CSteamID value9);
+                Player player = PlayerTool.getPlayer(value9);
                 if (player != null)
                 {
                     float num2 = 256f;
@@ -102,8 +124,8 @@ public class PlayerInputPacket
                 reader.ReadNormalVector3(out inputInfo.direction);
                 reader.ReadNormalVector3(out inputInfo.normal);
                 reader.ReadEnum(out inputInfo.limb);
-                reader.ReadUInt16(out var value5);
-                Zombie zombie = ZombieManager.getZombie(inputInfo.point, value5);
+                reader.ReadUInt16(out var value7);
+                Zombie zombie = ZombieManager.getZombie(inputInfo.point, value7);
                 if (zombie != null)
                 {
                     if (new Vector2(inputInfo.point.x - zombie.transform.position.x, inputInfo.point.z - zombie.transform.position.z).sqrMagnitude < 256f)
@@ -139,8 +161,8 @@ public class PlayerInputPacket
                 reader.ReadNormalVector3(out inputInfo.direction);
                 reader.ReadNormalVector3(out inputInfo.normal);
                 reader.ReadEnum(out inputInfo.limb);
-                reader.ReadUInt16(out var value12);
-                Animal animal = AnimalManager.getAnimal(value12);
+                reader.ReadUInt16(out var value14);
+                Animal animal = AnimalManager.getAnimal(value14);
                 if (animal != null && (inputInfo.point - animal.transform.position).sqrMagnitude < 256f)
                 {
                     inputInfo.materialName = "Flesh_Dynamic";
@@ -161,9 +183,9 @@ public class PlayerInputPacket
                 reader.ReadNormalVector3(out inputInfo.normal);
                 reader.ReadString(out inputInfo.materialName, 6);
                 inputInfo.material = PhysicsTool.GetLegacyMaterialByName(inputInfo.materialName);
-                reader.ReadUInt32(out var value6);
+                reader.ReadUInt32(out var value8);
                 reader.ReadTransform(out inputInfo.colliderTransform);
-                InteractableVehicle interactableVehicle = VehicleManager.findVehicleByNetInstanceID(value6);
+                InteractableVehicle interactableVehicle = VehicleManager.findVehicleByNetInstanceID(value8);
                 if (interactableVehicle != null && (interactableVehicle == channel.owner.player.movement.getVehicle() || (inputInfo.point - interactableVehicle.transform.position).sqrMagnitude < 4096f))
                 {
                     inputInfo.vehicle = interactableVehicle;
@@ -182,9 +204,9 @@ public class PlayerInputPacket
                 reader.ReadNormalVector3(out inputInfo.normal);
                 reader.ReadString(out inputInfo.materialName, 6);
                 inputInfo.material = PhysicsTool.GetLegacyMaterialByName(inputInfo.materialName);
-                reader.ReadNetId(out var value11);
+                reader.ReadNetId(out var value13);
                 reader.ReadTransform(out inputInfo.colliderTransform);
-                BarricadeDrop barricadeDrop = NetIdRegistry.Get<BarricadeDrop>(value11);
+                BarricadeDrop barricadeDrop = NetIdRegistry.Get<BarricadeDrop>(value13);
                 if (barricadeDrop != null)
                 {
                     Transform model = barricadeDrop.model;
@@ -211,9 +233,9 @@ public class PlayerInputPacket
                 reader.ReadNormalVector3(out inputInfo.normal);
                 reader.ReadString(out inputInfo.materialName, 6);
                 inputInfo.material = PhysicsTool.GetLegacyMaterialByName(inputInfo.materialName);
-                reader.ReadNetId(out var value13);
+                reader.ReadNetId(out var value15);
                 reader.ReadTransform(out inputInfo.colliderTransform);
-                StructureDrop structureDrop = NetIdRegistry.Get<StructureDrop>(value13);
+                StructureDrop structureDrop = NetIdRegistry.Get<StructureDrop>(value15);
                 if (structureDrop != null)
                 {
                     Transform model2 = structureDrop.model;
@@ -240,11 +262,11 @@ public class PlayerInputPacket
                 reader.ReadNormalVector3(out inputInfo.normal);
                 reader.ReadString(out inputInfo.materialName, 6);
                 inputInfo.material = PhysicsTool.GetLegacyMaterialByName(inputInfo.materialName);
-                reader.ReadUInt8(out var value8);
-                reader.ReadUInt8(out var value9);
-                reader.ReadUInt16(out var value10);
+                reader.ReadUInt8(out var value10);
+                reader.ReadUInt8(out var value11);
+                reader.ReadUInt16(out var value12);
                 reader.ReadTransform(out inputInfo.colliderTransform);
-                Transform resource = ResourceManager.getResource(value8, value9, value10);
+                Transform resource = ResourceManager.getResource(value10, value11, value12);
                 if (resource != null && (inputInfo.point - resource.transform.position).sqrMagnitude < 256f)
                 {
                     inputInfo.transform = resource;
@@ -264,11 +286,11 @@ public class PlayerInputPacket
                 reader.ReadString(out inputInfo.materialName, 6);
                 inputInfo.material = PhysicsTool.GetLegacyMaterialByName(inputInfo.materialName);
                 reader.ReadUInt8(out inputInfo.section);
-                reader.ReadUInt8(out var value2);
-                reader.ReadUInt8(out var value3);
-                reader.ReadUInt16(out var value4);
+                reader.ReadUInt8(out var value4);
+                reader.ReadUInt8(out var value5);
+                reader.ReadUInt16(out var value6);
                 reader.ReadTransform(out inputInfo.colliderTransform);
-                LevelObject @object = ObjectManager.getObject(value2, value3, value4);
+                LevelObject @object = ObjectManager.getObject(value4, value5, value6);
                 if (@object != null && @object.transform != null && (inputInfo.point - @object.transform.position).sqrMagnitude < 256f)
                 {
                     inputInfo.transform = @object.transform;
@@ -292,6 +314,8 @@ public class PlayerInputPacket
         writer.WriteUInt32(clientSimulationFrameNumber);
         writer.WriteInt32(recov);
         writer.WriteUInt16(keys);
+        writer.WriteBits((uint)primaryAttack, 2);
+        writer.WriteBits((uint)secondaryAttack, 2);
         if (clientsideInputs == null)
         {
             writer.WriteUInt8(0);

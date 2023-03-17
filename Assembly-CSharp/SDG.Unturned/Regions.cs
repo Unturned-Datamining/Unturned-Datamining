@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using SDG.NetTransport;
 using UnityEngine;
@@ -140,25 +141,41 @@ public class Regions
         return true;
     }
 
-    public static IEnumerable<ITransportConnection> EnumerateClients(byte x, byte y, byte distance)
+    public static PooledTransportConnectionList GatherClientConnections(byte x, byte y, byte distance)
     {
+        PooledTransportConnectionList pooledTransportConnectionList = TransportConnectionListPool.Get();
         foreach (SteamPlayer client in Provider.clients)
         {
             if (!(client.player == null) && checkArea(x, y, client.player.movement.region_x, client.player.movement.region_y, distance))
             {
-                yield return client.transportConnection;
+                pooledTransportConnectionList.Add(client.transportConnection);
             }
         }
+        return pooledTransportConnectionList;
     }
 
-    public static IEnumerable<ITransportConnection> EnumerateClients_Remote(byte x, byte y, byte distance)
+    [Obsolete("Replaced by GatherClientConnections")]
+    public static IEnumerable<ITransportConnection> EnumerateClients(byte x, byte y, byte distance)
     {
+        return GatherClientConnections(x, y, distance);
+    }
+
+    public static PooledTransportConnectionList GatherRemoteClientConnections(byte x, byte y, byte distance)
+    {
+        PooledTransportConnectionList pooledTransportConnectionList = TransportConnectionListPool.Get();
         foreach (SteamPlayer client in Provider.clients)
         {
             if (!(client.player == null) && !client.IsLocalPlayer && checkArea(x, y, client.player.movement.region_x, client.player.movement.region_y, distance))
             {
-                yield return client.transportConnection;
+                pooledTransportConnectionList.Add(client.transportConnection);
             }
         }
+        return pooledTransportConnectionList;
+    }
+
+    [Obsolete("Replaced by GatherRemoteClientConnections")]
+    public static IEnumerable<ITransportConnection> EnumerateClients_Remote(byte x, byte y, byte distance)
+    {
+        return GatherRemoteClientConnections(x, y, distance);
     }
 }

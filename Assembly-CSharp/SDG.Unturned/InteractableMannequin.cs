@@ -603,7 +603,7 @@ public class InteractableMannequin : Interactable, IManualOnDestroy
         }
         rebuildState();
         byte[] state = region.FindBarricadeByRootFast(base.transform).serversideData.barricade.state;
-        SendUpdate.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, BarricadeManager.EnumerateClients_Remote(x, y, plant), state);
+        SendUpdate.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, BarricadeManager.GatherRemoteClientConnections(x, y, plant), state);
         EffectAsset effectAsset = SleeveRef.Find();
         if (effectAsset != null)
         {

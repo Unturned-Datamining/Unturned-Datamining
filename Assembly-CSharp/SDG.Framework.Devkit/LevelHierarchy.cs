@@ -67,7 +67,13 @@ public class LevelHierarchy : IModuleNexus, IDirtyable
         return availableInstanceID++;
     }
 
+    [Obsolete("Renamed to AssignInstanceIdAndMarkDirty")]
     public static void initItem(IDevkitHierarchyItem item)
+    {
+        AssignInstanceIdAndMarkDirty(item);
+    }
+
+    public static void AssignInstanceIdAndMarkDirty(IDevkitHierarchyItem item)
     {
         if (item.instanceID == 0)
         {

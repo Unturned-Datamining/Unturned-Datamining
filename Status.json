@@ -28,8 +28,8 @@
 	"Game":
 	{
 		"Major_Version": 23,
-		"Minor_Version": 3,
-		"Patch_Version": 1,
+		"Minor_Version": 4,
+		"Patch_Version": 100,
 		"GrantPackageIDs":
 		[
 			487
@@ -169,7 +169,7 @@
 			{
 				"Name": "Ireland",
 				"Workshop_File_Id": 1411633953,
-				"Visible_In_Singleplayer_Recommendations_List": true
+				"Visible_In_Singleplayer_Recommendations_List": false
 			}
 		]
 	},

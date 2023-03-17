@@ -250,7 +250,7 @@ public class ChatManager : SteamCaller
             {
                 voteNo++;
             }
-            SendVoteUpdate.Invoke(ENetReliability.Reliable, Provider.EnumerateClients(), voteYes, voteNo);
+            SendVoteUpdate.Invoke(ENetReliability.Reliable, Provider.GatherClientConnections(), voteYes, voteNo);
         }
     }
 
@@ -298,7 +298,7 @@ public class ChatManager : SteamCaller
             voteTarget = target;
             votes = new List<CSteamID>();
             voteIP = steamPlayer.getIPv4AddressOrZero();
-            SendVoteStart.Invoke(ENetReliability.Reliable, Provider.EnumerateClients(), callingPlayer.playerID.steamID, target, votesNeeded);
+            SendVoteStart.Invoke(ENetReliability.Reliable, Provider.GatherClientConnections(), callingPlayer.playerID.steamID, target, votesNeeded);
         }
     }
 
@@ -570,7 +570,7 @@ public class ChatManager : SteamCaller
                     voteOrigin.nextVote = Time.realtimeSinceStartup + votePassCooldown;
                 }
                 CommandWindow.Log(Provider.localization.format("Vote_Pass"));
-                SendVoteStop.Invoke(ENetReliability.Reliable, Provider.EnumerateClients(), EVotingMessage.PASS);
+                SendVoteStop.Invoke(ENetReliability.Reliable, Provider.GatherClientConnections(), EVotingMessage.PASS);
                 SteamBlacklist.ban(voteTarget, voteIP, null, CSteamID.Nil, "you were vote kicked", SteamBlacklist.TEMPORARY);
             }
             else
@@ -580,7 +580,7 @@ public class ChatManager : SteamCaller
                     voteOrigin.nextVote = Time.realtimeSinceStartup + voteFailCooldown;
                 }
                 CommandWindow.Log(Provider.localization.format("Vote_Fail"));
-                SendVoteStop.Invoke(ENetReliability.Reliable, Provider.EnumerateClients(), EVotingMessage.FAIL);
+                SendVoteStop.Invoke(ENetReliability.Reliable, Provider.GatherClientConnections(), EVotingMessage.FAIL);
             }
         }
         if (needsVote && !hasVote)

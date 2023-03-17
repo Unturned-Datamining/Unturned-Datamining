@@ -126,7 +126,7 @@ public class ResourceAsset : Asset
     public ResourceAsset(Bundle bundle, Data data, Local localization, ushort id)
         : base(bundle, data, localization, id)
     {
-        if (id < 50 && !bundle.hasResource && !data.has("Bypass_ID_Limit"))
+        if (id < 50 && !bundle.isCoreAsset && !data.has("Bypass_ID_Limit"))
         {
             throw new NotSupportedException("ID < 50");
         }

@@ -79,7 +79,7 @@ public class FoliageSystem : DevkitHierarchyItemBase
         if (instance == null)
         {
             UnturnedLog.info("Adding default foliage system to level");
-            LevelHierarchy.initItem(new GameObject().AddComponent<FoliageSystem>());
+            LevelHierarchy.AssignInstanceIdAndMarkDirty(new GameObject().AddComponent<FoliageSystem>());
             if (VolumeManager<FoliageVolume, FoliageVolumeManager>.Get().additiveVolumes.Count < 1)
             {
                 UnturnedLog.info("Adding default additive foliage volume to level");
@@ -88,7 +88,7 @@ public class FoliageSystem : DevkitHierarchyItemBase
                 obj.transform.rotation = Quaternion.identity;
                 obj.transform.localScale = new Vector3((int)Level.size, Landscape.TILE_HEIGHT, (int)Level.size);
                 FoliageVolume foliageVolume = obj.AddComponent<FoliageVolume>();
-                LevelHierarchy.initItem(foliageVolume);
+                LevelHierarchy.AssignInstanceIdAndMarkDirty(foliageVolume);
                 foliageVolume.mode = FoliageVolume.EFoliageVolumeMode.ADDITIVE;
             }
         }

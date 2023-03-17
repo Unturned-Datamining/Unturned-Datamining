@@ -407,7 +407,7 @@ public class UseableRefill : Useable
         base.player.equipment.updateState();
         if (Provider.isServer)
         {
-            SendPlayRefill.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner());
+            SendPlayRefill.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner());
         }
         if (base.channel.isOwner)
         {
@@ -415,45 +415,56 @@ public class UseableRefill : Useable
         }
     }
 
-    public override void startPrimary()
+    public override bool startPrimary()
     {
-        if (base.player.equipment.isBusy || !isUseable)
+        if (base.player.equipment.isBusy)
         {
-            return;
+            return false;
         }
-        if (fire(mode: true, out var newWaterType))
+        if (isUseable)
         {
-            start(newWaterType);
-        }
-        else if (waterType != 0)
-        {
-            base.player.equipment.isBusy = true;
-            startedUse = Time.realtimeSinceStartup;
-            isUsing = true;
-            refillMode = ERefillMode.USE;
-            refillWaterType = waterType;
-            use();
-            base.player.equipment.quality = (byte)((newWaterType != ERefillWaterType.DIRTY) ? 100u : 0u);
-            base.player.equipment.updateQuality();
-            base.player.equipment.state[0] = 0;
-            base.player.equipment.updateState();
-            if (Provider.isServer)
+            if (fire(mode: true, out var newWaterType))
             {
-                SendPlayUse.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner());
+                start(newWaterType);
             }
-            if (base.channel.isOwner)
+            else if (waterType != 0)
             {
-                msg();
+                base.player.equipment.isBusy = true;
+                startedUse = Time.realtimeSinceStartup;
+                isUsing = true;
+                refillMode = ERefillMode.USE;
+                refillWaterType = waterType;
+                use();
+                base.player.equipment.quality = (byte)((newWaterType != ERefillWaterType.DIRTY) ? 100u : 0u);
+                base.player.equipment.updateQuality();
+                base.player.equipment.state[0] = 0;
+                base.player.equipment.updateState();
+                if (Provider.isServer)
+                {
+                    SendPlayUse.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner());
+                }
+                if (base.channel.isOwner)
+                {
+                    msg();
+                }
             }
+            return true;
         }
+        return false;
     }
 
-    public override void startSecondary()
+    public override bool startSecondary()
     {
-        if (!base.player.equipment.isBusy && isUseable && fire(mode: false, out var newWaterType))
+        if (base.player.equipment.isBusy)
+        {
+            return false;
+        }
+        if (isUseable && fire(mode: false, out var newWaterType))
         {
             start(newWaterType);
+            return true;
         }
+        return false;
     }
 
     public override void equip()

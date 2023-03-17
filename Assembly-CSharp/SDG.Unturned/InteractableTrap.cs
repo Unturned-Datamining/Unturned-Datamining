@@ -129,7 +129,7 @@ public class InteractableTrap : Interactable
                 {
                     player.life.breakLegs();
                 }
-                DamageTool.ServerSpawnLegacyImpact(base.transform.position + Vector3.up, Vector3.down, "Flesh", null, Provider.EnumerateClients_WithinSphere(base.transform.position, EffectManager.SMALL));
+                DamageTool.ServerSpawnLegacyImpact(base.transform.position + Vector3.up, Vector3.down, "Flesh", null, Provider.GatherClientConnectionsWithinSphere(base.transform.position, EffectManager.SMALL));
                 BarricadeManager.damage(base.transform.parent, 5f, 1f, armor: false, (player.channel?.owner?.playerID.steamID).GetValueOrDefault(), EDamageOrigin.Trap_Wear_And_Tear);
             }
         }
@@ -145,7 +145,7 @@ public class InteractableTrap : Interactable
                 DamageZombieParameters parameters3 = new DamageZombieParameters(zombie, base.transform.forward, zombieDamage);
                 parameters3.instigator = this;
                 DamageTool.damageZombie(parameters3, out var _, out var _);
-                DamageTool.ServerSpawnLegacyImpact(base.transform.position + Vector3.up, Vector3.down, zombie.isRadioactive ? "Alien" : "Flesh", null, Provider.EnumerateClients_WithinSphere(base.transform.position, EffectManager.SMALL));
+                DamageTool.ServerSpawnLegacyImpact(base.transform.position + Vector3.up, Vector3.down, zombie.isRadioactive ? "Alien" : "Flesh", null, Provider.GatherClientConnectionsWithinSphere(base.transform.position, EffectManager.SMALL));
                 BarricadeManager.damage(base.transform.parent, zombie.isHyper ? 10f : 5f, 1f, armor: false, default(CSteamID), EDamageOrigin.Trap_Wear_And_Tear);
                 return;
             }
@@ -155,7 +155,7 @@ public class InteractableTrap : Interactable
                 DamageAnimalParameters parameters4 = new DamageAnimalParameters(animal, base.transform.forward, animalDamage);
                 parameters4.instigator = this;
                 DamageTool.damageAnimal(parameters4, out var _, out var _);
-                DamageTool.ServerSpawnLegacyImpact(base.transform.position + Vector3.up, Vector3.down, "Flesh", null, Provider.EnumerateClients_WithinSphere(base.transform.position, EffectManager.SMALL));
+                DamageTool.ServerSpawnLegacyImpact(base.transform.position + Vector3.up, Vector3.down, "Flesh", null, Provider.GatherClientConnectionsWithinSphere(base.transform.position, EffectManager.SMALL));
                 BarricadeManager.damage(base.transform.parent, 5f, 1f, armor: false, default(CSteamID), EDamageOrigin.Trap_Wear_And_Tear);
             }
         }

@@ -269,11 +269,11 @@ public class PlayerStance : PlayerCaller
     {
         if (notifyOwner)
         {
-            SendStance.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), stance);
+            SendStance.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), stance);
         }
         else
         {
-            SendStance.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.EnumerateClients_RemoteNotOwner(), stance);
+            SendStance.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GatherRemoteClientConnectionsExcludingOwner(), stance);
         }
     }
 
@@ -418,7 +418,7 @@ public class PlayerStance : PlayerCaller
         SendStance.Invoke(GetNetId(), ENetReliability.Reliable, client.transportConnection, stance);
     }
 
-    internal void SendInitialPlayerState(IEnumerable<ITransportConnection> transportConnections)
+    internal void SendInitialPlayerState(List<ITransportConnection> transportConnections)
     {
         SendStance.Invoke(GetNetId(), ENetReliability.Reliable, transportConnections, stance);
     }

@@ -41,11 +41,11 @@ public class UseableArrestStart : Useable
         }
     }
 
-    public override void startPrimary()
+    public override bool startPrimary()
     {
         if (base.player.equipment.isBusy)
         {
-            return;
+            return false;
         }
         if (base.channel.isOwner)
         {
@@ -62,19 +62,28 @@ public class UseableArrestStart : Useable
                 }
             }
         }
-        if (Provider.isServer && base.player.input.hasInputs())
+        if (Provider.isServer)
         {
+            if (!base.player.input.hasInputs())
+            {
+                return false;
+            }
             InputInfo input = base.player.input.getInput(doOcclusionCheck: true, ERaycastInfoUsage.ArrestStart);
-            if (input != null && input.type == ERaycastInfoType.PLAYER && input.player != null)
+            if (input == null)
+            {
+                return false;
+            }
+            if (input.type == ERaycastInfoType.PLAYER && input.player != null)
             {
                 enemy = input.player;
                 base.player.equipment.isBusy = true;
                 startedUse = Time.realtimeSinceStartup;
                 isUsing = true;
                 arrest();
-                SendPlayArrest.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner());
+                SendPlayArrest.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner());
             }
         }
+        return true;
     }
 
     public override void equip()

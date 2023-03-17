@@ -54,6 +54,10 @@ public class GameplayConfigData
 
     public float AirStrafing_Deceleration_Multiplier = 1f;
 
+    public float ThirdPerson_RecoilMultiplier = 2f;
+
+    public float ThirdPerson_SpreadMultiplier = 2f;
+
     internal static CommandLineFlag _forceTrustClient = new CommandLineFlag(defaultValue: false, "-ForceTrustClient");
 
     public GameplayConfigData(EGameMode mode)

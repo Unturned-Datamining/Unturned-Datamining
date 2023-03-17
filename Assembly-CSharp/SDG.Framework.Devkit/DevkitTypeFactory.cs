@@ -29,7 +29,7 @@ public class DevkitTypeFactory
             }
             if (devkitHierarchyItem != null)
             {
-                LevelHierarchy.initItem(devkitHierarchyItem);
+                LevelHierarchy.AssignInstanceIdAndMarkDirty(devkitHierarchyItem);
             }
             DevkitTransactionManager.endTransaction();
         }

@@ -31,7 +31,7 @@ internal static class NetMessages
         transportConnection.Send(writer.buffer, writer.writeByteIndex, reliability);
     }
 
-    public static void SendMessageToClients(EClientMessage index, ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, ClientWriteHandler callback)
+    public static void SendMessageToClients(EClientMessage index, ENetReliability reliability, List<ITransportConnection> transportConnections, ClientWriteHandler callback)
     {
         writer.Reset();
         writer.WriteEnum(index);
@@ -41,6 +41,17 @@ internal static class NetMessages
         {
             transportConnection.Send(writer.buffer, writer.writeByteIndex, reliability);
         }
+    }
+
+    [Obsolete]
+    public static void SendMessageToClients(EClientMessage index, ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, ClientWriteHandler callback)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            SendMessageToClients(index, reliability, transportConnections2, callback);
+            return;
+        }
+        throw new ArgumentException("should be a list", "transportConnections");
     }
 
     public static void SendMessageToServer(EServerMessage index, ENetReliability reliability, ClientWriteHandler callback)

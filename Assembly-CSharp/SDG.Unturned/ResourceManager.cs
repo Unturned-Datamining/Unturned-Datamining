@@ -55,7 +55,7 @@ public class ResourceManager : SteamCaller
     {
         if (Provider.isServer && Regions.checkSafe(x, y) && LevelGround.trees[x, y].Count > 0)
         {
-            SendClearRegionResources.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), x, y);
+            SendClearRegionResources.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), x, y);
         }
     }
 
@@ -433,12 +433,12 @@ public class ResourceManager : SteamCaller
 
     public static void ServerSetResourceAlive(byte x, byte y, ushort index)
     {
-        SendResourceAlive.InvokeAndLoopback(ENetReliability.Reliable, EnumerateClients_Remote(x, y), x, y, index);
+        SendResourceAlive.InvokeAndLoopback(ENetReliability.Reliable, GatherRemoteClients(x, y), x, y, index);
     }
 
     public static void ServerSetResourceDead(byte x, byte y, ushort index, Vector3 baseForce)
     {
-        SendResourceDead.InvokeAndLoopback(ENetReliability.Reliable, EnumerateClients_Remote(x, y), x, y, index, baseForce);
+        SendResourceDead.InvokeAndLoopback(ENetReliability.Reliable, GatherRemoteClients(x, y), x, y, index, baseForce);
     }
 
     private bool respawnResources()
@@ -566,8 +566,8 @@ public class ResourceManager : SteamCaller
         Player.onPlayerCreated = (PlayerCreated)Delegate.Combine(Player.onPlayerCreated, new PlayerCreated(onPlayerCreated));
     }
 
-    private static IEnumerable<ITransportConnection> EnumerateClients_Remote(byte x, byte y)
+    private static PooledTransportConnectionList GatherRemoteClients(byte x, byte y)
     {
-        return Regions.EnumerateClients_Remote(x, y, RESOURCE_REGIONS);
+        return Regions.GatherRemoteClientConnections(x, y, RESOURCE_REGIONS);
     }
 }

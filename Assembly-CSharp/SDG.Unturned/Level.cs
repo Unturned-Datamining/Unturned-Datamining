@@ -1350,7 +1350,7 @@ public class Level : MonoBehaviour
         {
             if (Landscape.instance == null)
             {
-                LevelHierarchy.initItem(new GameObject().AddComponent<Landscape>());
+                LevelHierarchy.AssignInstanceIdAndMarkDirty(new GameObject().AddComponent<Landscape>());
             }
             yield return Landscape.instance.AutoConvertLegacyTerrain();
         }

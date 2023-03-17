@@ -143,7 +143,7 @@ public class ObjectManager : SteamCaller
             {
                 state[state.Length - 1] = (byte)(state[state.Length - 1] & ~Types.SHIFTS[section]);
             }
-            SendObjectRubble.InvokeAndLoopback(ENetReliability.Reliable, EnumerateClients_Remote(x, y), x, y, index, section, arg5: false, direction * (int)pendingTotalDamage);
+            SendObjectRubble.InvokeAndLoopback(ENetReliability.Reliable, GatherRemoteClientConnections(x, y), x, y, index, section, arg5: false, direction * (int)pendingTotalDamage);
         }
         if (!trackKill || levelObject.asset == null || !rubble.isAllDead())
         {
@@ -300,7 +300,7 @@ public class ObjectManager : SteamCaller
         {
             if (shouldSend)
             {
-                SendObjectResourceState.InvokeAndLoopback(ENetReliability.Reliable, EnumerateClients_Remote(x, y), x, y, index, amount);
+                SendObjectResourceState.InvokeAndLoopback(ENetReliability.Reliable, GatherRemoteClientConnections(x, y), x, y, index, amount);
             }
             byte[] bytes = BitConverter.GetBytes(amount);
             LevelObjects.objects[x, y][index].state[0] = bytes[0];
@@ -315,7 +315,7 @@ public class ObjectManager : SteamCaller
             InteractableObjectBinaryState interactableObjectBinaryState = LevelObjects.objects[x, y][index].interactable as InteractableObjectBinaryState;
             if (interactableObjectBinaryState != null && interactableObjectBinaryState.isUsable)
             {
-                SendObjectBinaryState.InvokeAndLoopback(ENetReliability.Reliable, EnumerateClients_Remote(x, y), x, y, index, isUsed);
+                SendObjectBinaryState.InvokeAndLoopback(ENetReliability.Reliable, GatherRemoteClientConnections(x, y), x, y, index, isUsed);
                 LevelObjects.objects[x, y][index].state[0] = (byte)(interactableObjectBinaryState.isUsed ? 1u : 0u);
             }
         }
@@ -375,7 +375,7 @@ public class ObjectManager : SteamCaller
             {
                 interactableObjectBinaryState.objectAsset.applyInteractabilityConditions(player, shouldSend: true);
                 interactableObjectBinaryState.objectAsset.grantInteractabilityRewards(player, shouldSend: true);
-                SendObjectBinaryState.InvokeAndLoopback(ENetReliability.Reliable, EnumerateClients_Remote(x, y), x, y, index, isUsed);
+                SendObjectBinaryState.InvokeAndLoopback(ENetReliability.Reliable, GatherRemoteClientConnections(x, y), x, y, index, isUsed);
                 LevelObjects.objects[x, y][index].state[0] = (byte)(interactableObjectBinaryState.isUsed ? 1u : 0u);
             }
         }
@@ -416,7 +416,7 @@ public class ObjectManager : SteamCaller
     {
         if (Provider.isServer && Regions.checkSafe(x, y) && LevelObjects.objects[x, y].Count > 0)
         {
-            SendClearRegionObjects.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), x, y);
+            SendClearRegionObjects.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), x, y);
         }
     }
 
@@ -551,14 +551,14 @@ public class ObjectManager : SteamCaller
                 {
                     if (((InteractableObjectBinaryState)levelObject.interactable).checkCanReset(Provider.modeConfigData.Objects.Binary_State_Reset_Multiplier))
                     {
-                        SendObjectBinaryState.InvokeAndLoopback(ENetReliability.Reliable, EnumerateClients_Remote(updateObjects_X, updateObjects_Y), updateObjects_X, updateObjects_Y, regions[updateObjects_X, updateObjects_Y].updateObjectIndex, arg4: false);
+                        SendObjectBinaryState.InvokeAndLoopback(ENetReliability.Reliable, GatherRemoteClientConnections(updateObjects_X, updateObjects_Y), updateObjects_X, updateObjects_Y, regions[updateObjects_X, updateObjects_Y].updateObjectIndex, arg4: false);
                         LevelObjects.objects[updateObjects_X, updateObjects_Y][regions[updateObjects_X, updateObjects_Y].updateObjectIndex].state[0] = 0;
                     }
                 }
                 else if ((levelObject.asset.interactability == EObjectInteractability.WATER || levelObject.asset.interactability == EObjectInteractability.FUEL) && ((InteractableObjectResource)levelObject.interactable).checkCanReset((levelObject.asset.interactability == EObjectInteractability.WATER) ? Provider.modeConfigData.Objects.Water_Reset_Multiplier : Provider.modeConfigData.Objects.Fuel_Reset_Multiplier))
                 {
                     ushort num = (ushort)Mathf.Min(((InteractableObjectResource)levelObject.interactable).amount + ((levelObject.asset.interactability == EObjectInteractability.WATER) ? 1 : 500), ((InteractableObjectResource)levelObject.interactable).capacity);
-                    SendObjectResourceState.InvokeAndLoopback(ENetReliability.Reliable, EnumerateClients_Remote(updateObjects_X, updateObjects_Y), updateObjects_X, updateObjects_Y, regions[updateObjects_X, updateObjects_Y].updateObjectIndex, num);
+                    SendObjectResourceState.InvokeAndLoopback(ENetReliability.Reliable, GatherRemoteClientConnections(updateObjects_X, updateObjects_Y), updateObjects_X, updateObjects_Y, regions[updateObjects_X, updateObjects_Y].updateObjectIndex, num);
                     byte[] bytes = BitConverter.GetBytes(num);
                     LevelObjects.objects[updateObjects_X, updateObjects_Y][regions[updateObjects_X, updateObjects_Y].updateObjectIndex].state[0] = bytes[0];
                     LevelObjects.objects[updateObjects_X, updateObjects_Y][regions[updateObjects_X, updateObjects_Y].updateObjectIndex].state[1] = bytes[1];
@@ -571,7 +571,7 @@ public class ObjectManager : SteamCaller
                 {
                     byte[] state = LevelObjects.objects[updateObjects_X, updateObjects_Y][regions[updateObjects_X, updateObjects_Y].updateObjectIndex].state;
                     state[state.Length - 1] = (byte)(state[state.Length - 1] | Types.SHIFTS[b]);
-                    SendObjectRubble.InvokeAndLoopback(ENetReliability.Reliable, EnumerateClients_Remote(updateObjects_X, updateObjects_Y), updateObjects_X, updateObjects_Y, regions[updateObjects_X, updateObjects_Y].updateObjectIndex, b, arg5: true, Vector3.zero);
+                    SendObjectRubble.InvokeAndLoopback(ENetReliability.Reliable, GatherRemoteClientConnections(updateObjects_X, updateObjects_Y), updateObjects_X, updateObjects_Y, regions[updateObjects_X, updateObjects_Y].updateObjectIndex, b, arg5: true, Vector3.zero);
                 }
             }
             return false;
@@ -787,8 +787,14 @@ public class ObjectManager : SteamCaller
         river.writeUInt16(ushort.MaxValue);
     }
 
+    public static PooledTransportConnectionList GatherRemoteClientConnections(byte x, byte y)
+    {
+        return Regions.GatherRemoteClientConnections(x, y, OBJECT_REGIONS);
+    }
+
+    [Obsolete("Replaced by GatherRemoteClients")]
     public static IEnumerable<ITransportConnection> EnumerateClients_Remote(byte x, byte y)
     {
-        return Regions.EnumerateClients_Remote(x, y, OBJECT_REGIONS);
+        return GatherRemoteClientConnections(x, y);
     }
 }

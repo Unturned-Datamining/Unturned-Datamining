@@ -1135,15 +1135,10 @@ public class LevelLighting
                 {
                     Bundle bundle = Bundles.getBundle(Level.info.path + "/Environment/Ambience.unity3d", prependRoot: false);
                     dayAudio.clip = bundle.load<AudioClip>("Day");
-                    dayAudio.Play();
                     nightAudio.clip = bundle.load<AudioClip>("Night");
-                    nightAudio.Play();
                     waterAudio.clip = bundle.load<AudioClip>("Water");
-                    waterAudio.Play();
                     windAudio.clip = bundle.load<AudioClip>("Wind");
-                    windAudio.Play();
                     belowAudio.clip = bundle.load<AudioClip>("Below");
-                    belowAudio.Play();
                     bundle.unload();
                 }
                 catch (Exception e)
@@ -1640,6 +1635,26 @@ public class LevelLighting
             resetCachedValues();
             updateLighting();
             bubbles.GetComponent<ParticleSystem>().Play();
+            if (dayAudio.clip != null)
+            {
+                dayAudio.Play();
+            }
+            if (nightAudio.clip != null)
+            {
+                nightAudio.Play();
+            }
+            if (waterAudio.clip != null)
+            {
+                waterAudio.Play();
+            }
+            if (windAudio.clip != null)
+            {
+                windAudio.Play();
+            }
+            if (belowAudio.clip != null)
+            {
+                belowAudio.Play();
+            }
         }
         lighting.position = point;
         setSkyColor(skyboxSky);

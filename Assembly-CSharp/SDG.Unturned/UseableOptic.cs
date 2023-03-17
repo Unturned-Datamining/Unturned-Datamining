@@ -7,13 +7,15 @@ public class UseableOptic : Useable
 {
     private bool isZoomed;
 
-    public override void startSecondary()
+    public override bool startSecondary()
     {
         if (base.channel.isOwner && !isZoomed && base.player.look.perspective == EPlayerPerspective.FIRST)
         {
             isZoomed = true;
             startZoom();
+            return true;
         }
+        return false;
     }
 
     public override void stopSecondary()

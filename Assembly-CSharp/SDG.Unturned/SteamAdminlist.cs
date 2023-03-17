@@ -30,7 +30,7 @@ public class SteamAdminlist
         if (client != null)
         {
             client.isAdmin = true;
-            NetMessages.SendMessageToClients(EClientMessage.Admined, ENetReliability.Reliable, Provider.EnumerateClients_RemotePredicate((SteamPlayer potentialRecipient) => potentialRecipient == client || !Provider.hideAdmins), delegate(NetPakWriter writer)
+            NetMessages.SendMessageToClients(EClientMessage.Admined, ENetReliability.Reliable, Provider.GatherRemoteClientConnectionsMatchingPredicate((SteamPlayer potentialRecipient) => potentialRecipient == client || !Provider.hideAdmins), delegate(NetPakWriter writer)
             {
                 writer.WriteUInt8((byte)client.channel);
             });
@@ -43,7 +43,7 @@ public class SteamAdminlist
         if (client != null && client.isAdmin)
         {
             client.isAdmin = false;
-            NetMessages.SendMessageToClients(EClientMessage.Unadmined, ENetReliability.Reliable, Provider.EnumerateClients_RemotePredicate((SteamPlayer potentialRecipient) => potentialRecipient == client || !Provider.hideAdmins), delegate(NetPakWriter writer)
+            NetMessages.SendMessageToClients(EClientMessage.Unadmined, ENetReliability.Reliable, Provider.GatherRemoteClientConnectionsMatchingPredicate((SteamPlayer potentialRecipient) => potentialRecipient == client || !Provider.hideAdmins), delegate(NetPakWriter writer)
             {
                 writer.WriteUInt8((byte)client.channel);
             });

@@ -61,6 +61,7 @@ public class LevelNodes
                 ArenaCompactorVolume arenaCompactorVolume = gameObject.AddComponent<ArenaCompactorVolume>();
                 arenaCompactorVolume.Shape = ELevelVolumeShape.Sphere;
                 arenaCompactorVolume.SetSphereRadius(sphereRadius);
+                LevelHierarchy.AssignInstanceIdAndMarkDirty(arenaCompactorVolume);
             }
             else if (node is DeadzoneNode deadzoneNode)
             {
@@ -73,6 +74,7 @@ public class LevelNodes
                 deadzoneVolume.DeadzoneType = deadzoneNode.DeadzoneType;
                 deadzoneVolume.Shape = ELevelVolumeShape.Sphere;
                 deadzoneVolume.SetSphereRadius(sphereRadius2);
+                LevelHierarchy.AssignInstanceIdAndMarkDirty(deadzoneVolume);
             }
             else if (node is EffectNode effectNode)
             {
@@ -84,6 +86,7 @@ public class LevelNodes
                 ambianceVolume.id = effectNode.id;
                 ambianceVolume.noLighting = effectNode.noLighting;
                 ambianceVolume.noWater = effectNode.noWater;
+                LevelHierarchy.AssignInstanceIdAndMarkDirty(ambianceVolume);
                 if (effectNode.shape == ENodeShape.BOX)
                 {
                     transform3.localScale = effectNode.bounds * 2f;
@@ -103,6 +106,7 @@ public class LevelNodes
                 HordePurchaseVolume hordePurchaseVolume = gameObject4.AddComponent<HordePurchaseVolume>();
                 hordePurchaseVolume.Shape = ELevelVolumeShape.Sphere;
                 hordePurchaseVolume.SetSphereRadius(sphereRadius4);
+                LevelHierarchy.AssignInstanceIdAndMarkDirty(hordePurchaseVolume);
             }
             else if (node is SafezoneNode safezoneNode)
             {
@@ -112,7 +116,7 @@ public class LevelNodes
                 SafezoneVolume safezoneVolume = gameObject5.AddComponent<SafezoneVolume>();
                 safezoneVolume.noWeapons = safezoneNode.noWeapons;
                 safezoneVolume.noBuildables = safezoneNode.noBuildables;
-                LevelHierarchy.initItem(safezoneVolume);
+                LevelHierarchy.AssignInstanceIdAndMarkDirty(safezoneVolume);
                 if (safezoneNode.isHeight)
                 {
                     transform5.position = node.point + new Vector3(0f, 1000f, 0f);
@@ -140,7 +144,7 @@ public class LevelNodes
                 transform.rotation = Quaternion.identity;
                 AirdropDevkitNode airdropDevkitNode = gameObject.AddComponent<AirdropDevkitNode>();
                 airdropDevkitNode.id = airdropNode.id;
-                LevelHierarchy.initItem(airdropDevkitNode);
+                LevelHierarchy.AssignInstanceIdAndMarkDirty(airdropDevkitNode);
             }
             else if (node is LocationNode locationNode)
             {
@@ -151,7 +155,7 @@ public class LevelNodes
                 LocationDevkitNode locationDevkitNode = gameObject2.AddComponent<LocationDevkitNode>();
                 locationDevkitNode.locationName = locationNode.name;
                 locationDevkitNode.isVisibleOnMap = true;
-                LevelHierarchy.initItem(locationDevkitNode);
+                LevelHierarchy.AssignInstanceIdAndMarkDirty(locationDevkitNode);
             }
         }
     }

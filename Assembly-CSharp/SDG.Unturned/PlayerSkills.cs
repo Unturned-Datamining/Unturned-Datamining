@@ -376,7 +376,7 @@ public class PlayerSkills : PlayerCaller
 
     public void askRep(int rep)
     {
-        SendReputation.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), reputation + rep);
+        SendReputation.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), reputation + rep);
     }
 
     public void askPay(uint pay)
@@ -448,7 +448,7 @@ public class PlayerSkills : PlayerCaller
         if (skill.level > level)
         {
             SendExperience.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), experience);
-            SendSingleSkillLevel.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), speciality, index, skill.level);
+            SendSingleSkillLevel.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), speciality, index, skill.level);
             if (_experience != num && PlayerSkills.OnExperienceChanged_Global != null)
             {
                 PlayerSkills.OnExperienceChanged_Global(this, num);
@@ -475,7 +475,7 @@ public class PlayerSkills : PlayerCaller
         if (skill.level != newLevel)
         {
             skill.level = (byte)newLevel;
-            SendSingleSkillLevel.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), (byte)specialityIndex, (byte)skillIndex, skill.level);
+            SendSingleSkillLevel.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), (byte)specialityIndex, (byte)skillIndex, skill.level);
             return true;
         }
         return false;
@@ -502,7 +502,7 @@ public class PlayerSkills : PlayerCaller
             while (b == (byte)boost);
             _boost = (EPlayerBoost)b;
             SendExperience.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), experience);
-            SendBoost.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), boost);
+            SendBoost.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), boost);
             PlayerSkills.OnExperienceChanged_Global?.Invoke(this, arg);
         }
     }
@@ -598,7 +598,7 @@ public class PlayerSkills : PlayerCaller
         SendBoost.Invoke(GetNetId(), ENetReliability.Reliable, client.transportConnection, boost);
     }
 
-    internal void SendInitialPlayerState(IEnumerable<ITransportConnection> transportConnections)
+    internal void SendInitialPlayerState(List<ITransportConnection> transportConnections)
     {
         SendMultipleSkillLevels.Invoke(GetNetId(), ENetReliability.Reliable, transportConnections, WriteSkillLevels);
         SendExperience.Invoke(GetNetId(), ENetReliability.Reliable, transportConnections, experience);
@@ -616,7 +616,7 @@ public class PlayerSkills : PlayerCaller
                 array2[j].setLevelToMax();
             }
         }
-        SendMultipleSkillLevels.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), WriteSkillLevels);
+        SendMultipleSkillLevels.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), WriteSkillLevels);
     }
 
     private void onLifeUpdated(bool isDead)
@@ -649,7 +649,7 @@ public class PlayerSkills : PlayerCaller
                     }
                 }
             }
-            SendMultipleSkillLevels.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), WriteSkillLevels);
+            SendMultipleSkillLevels.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), WriteSkillLevels);
             _experience = (uint)((float)experience * num);
         }
         else
@@ -662,7 +662,7 @@ public class PlayerSkills : PlayerCaller
                 }
             }
             applyDefaultSkills();
-            SendMultipleSkillLevels.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), WriteSkillLevels);
+            SendMultipleSkillLevels.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), WriteSkillLevels);
             if (Level.info.type == ELevelType.ARENA)
             {
                 _experience = 0u;
@@ -673,8 +673,8 @@ public class PlayerSkills : PlayerCaller
             }
         }
         _boost = EPlayerBoost.NONE;
-        SendExperience.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), experience);
-        SendBoost.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), boost);
+        SendExperience.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), experience);
+        SendBoost.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), boost);
     }
 
     internal void InitializePlayer()

@@ -597,7 +597,7 @@ public class ItemAsset : Asset, ISkinableAsset
         : base(bundle, data, localization, id)
     {
         isPro = data.has("Pro");
-        if (id < 2000 && !bundle.hasResource && !isPro && !data.has("Bypass_ID_Limit"))
+        if (id < 2000 && !bundle.isCoreAsset && !data.has("Bypass_ID_Limit"))
         {
             throw new NotSupportedException("ID < 2000");
         }

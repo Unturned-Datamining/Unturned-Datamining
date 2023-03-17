@@ -709,7 +709,7 @@ public class Landscape : DevkitHierarchyItemBase
         if (instance == null)
         {
             UnturnedLog.info("Adding default landscape to level");
-            LevelHierarchy.initItem(new GameObject().AddComponent<Landscape>());
+            LevelHierarchy.AssignInstanceIdAndMarkDirty(new GameObject().AddComponent<Landscape>());
         }
         if (tiles.ContainsKey(coord))
         {

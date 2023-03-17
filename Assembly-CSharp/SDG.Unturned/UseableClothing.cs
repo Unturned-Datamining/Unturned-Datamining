@@ -41,19 +41,21 @@ public class UseableClothing : Useable
         }
     }
 
-    public override void startPrimary()
+    public override bool startPrimary()
     {
-        if (!base.player.equipment.isBusy)
+        if (base.player.equipment.isBusy)
         {
-            base.player.equipment.isBusy = true;
-            startedUse = Time.realtimeSinceStartup;
-            isUsing = true;
-            if (Provider.isServer)
-            {
-                SendPlayWear.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner());
-            }
-            wear();
+            return false;
         }
+        base.player.equipment.isBusy = true;
+        startedUse = Time.realtimeSinceStartup;
+        isUsing = true;
+        if (Provider.isServer)
+        {
+            SendPlayWear.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner());
+        }
+        wear();
+        return true;
     }
 
     public override void equip()

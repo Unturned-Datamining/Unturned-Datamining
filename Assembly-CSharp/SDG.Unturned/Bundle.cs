@@ -8,6 +8,8 @@ public class Bundle
 {
     private static List<Renderer> renderers = new List<Renderer>();
 
+    internal bool isCoreAsset;
+
     public bool convertShadersToStandard;
 
     public bool consolidateShaders = true;
@@ -18,6 +20,7 @@ public class Bundle
 
     public string name { get; protected set; }
 
+    [Obsolete]
     public bool hasResource => asset == null;
 
     protected virtual bool willBeUnloadedDuringUse => true;

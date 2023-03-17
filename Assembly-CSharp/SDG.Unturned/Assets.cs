@@ -826,6 +826,7 @@ public class Assets : MonoBehaviour
                 Type type = formattedFileReader2.readValue<Type>("Type");
                 currentMasterBundle = file.masterBundleCfg;
                 Bundle bundle = ((file.masterBundleCfg == null) ? new Bundle(file.bundlePath + "/" + file.name + ".unity3d", usePath: false) : new MasterBundle(file.masterBundleCfg, file.masterBundleRelativePath, file.name));
+                bundle.isCoreAsset = file.origin == coreOrigin;
                 Local local = Localization.tryRead(file.dataPath, usePath: false);
                 try
                 {
@@ -920,6 +921,7 @@ public class Assets : MonoBehaviour
         {
             bundle2 = new Bundle(file.bundlePath + "/" + file.name + ".unity3d", usePath: false);
         }
+        bundle2.isCoreAsset = file.origin == coreOrigin;
         int num2 = data.readInt32("Asset_Bundle_Version", 1);
         if (num2 < 1)
         {

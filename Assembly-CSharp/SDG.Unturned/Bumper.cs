@@ -71,7 +71,7 @@ public class Bumper : MonoBehaviour
                 if (player != null && player2 != null && player2.movement.getVehicle() == null && DamageTool.isPlayerAllowedToDamagePlayer(player, player2))
                 {
                     DamageTool.damage(player2, EDeathCause.ROADKILL, ELimb.SPINE, vehicle.passengers[0].player.playerID.steamID, base.transform.forward, instakill ? 101f : DAMAGE_PLAYER, num, out var _, applyGlobalArmorMultiplier: true, trackKill: true);
-                    DamageTool.ServerSpawnLegacyImpact(other.transform.position + other.transform.up, -base.transform.forward, "Flesh", null, Provider.EnumerateClients_WithinSphere(other.transform.position, EffectManager.SMALL));
+                    DamageTool.ServerSpawnLegacyImpact(other.transform.position + other.transform.up, -base.transform.forward, "Flesh", null, Provider.GatherClientConnectionsWithinSphere(other.transform.position, EffectManager.SMALL));
                     takeCrashDamage(2f);
                 }
             }
@@ -86,7 +86,7 @@ public class Bumper : MonoBehaviour
                 parameters.times = num;
                 parameters.instigator = this;
                 DamageTool.damageZombie(parameters, out var _, out var _);
-                DamageTool.ServerSpawnLegacyImpact(other.transform.position + other.transform.up, -base.transform.forward, zombie.isRadioactive ? "Alien" : "Flesh", null, Provider.EnumerateClients_WithinSphere(other.transform.position, EffectManager.SMALL));
+                DamageTool.ServerSpawnLegacyImpact(other.transform.position + other.transform.up, -base.transform.forward, zombie.isRadioactive ? "Alien" : "Flesh", null, Provider.GatherClientConnectionsWithinSphere(other.transform.position, EffectManager.SMALL));
                 takeCrashDamage(2f);
                 return;
             }
@@ -97,7 +97,7 @@ public class Bumper : MonoBehaviour
                 parameters2.times = num;
                 parameters2.instigator = this;
                 DamageTool.damageAnimal(parameters2, out var _, out var _);
-                DamageTool.ServerSpawnLegacyImpact(other.transform.position + other.transform.up, -base.transform.forward, "Flesh", null, Provider.EnumerateClients_WithinSphere(other.transform.position, EffectManager.SMALL));
+                DamageTool.ServerSpawnLegacyImpact(other.transform.position + other.transform.up, -base.transform.forward, "Flesh", null, Provider.GatherClientConnectionsWithinSphere(other.transform.position, EffectManager.SMALL));
                 takeCrashDamage(2f);
             }
             return;
@@ -167,7 +167,7 @@ public class Bumper : MonoBehaviour
             string materialName = PhysicsTool.GetMaterialName(position, other.transform, other);
             if (!string.IsNullOrEmpty(materialName))
             {
-                DamageTool.ServerSpawnLegacyImpact(position, -base.transform.forward, materialName, null, Provider.EnumerateClients_WithinSphere(position, EffectManager.SMALL));
+                DamageTool.ServerSpawnLegacyImpact(position, -base.transform.forward, materialName, null, Provider.GatherClientConnectionsWithinSphere(position, EffectManager.SMALL));
             }
         }
         if (!vehicle.isDead && vehicle.asset.isVulnerableToBumper && !other.transform.CompareTag("Border") && ((vehicle.asset.engine == EEngine.PLANE && vehicle.speed > 20f) || (vehicle.asset.engine == EEngine.HELICOPTER && vehicle.speed > 10f)))

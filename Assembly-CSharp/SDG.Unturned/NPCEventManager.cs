@@ -40,7 +40,7 @@ public class NPCEventManager
             }
             if (shouldReplicate)
             {
-                SendBroadcast.Invoke(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), (byte)instigatingPlayer.channel.owner.channel, eventId);
+                SendBroadcast.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), (byte)instigatingPlayer.channel.owner.channel, eventId);
             }
         }
     }

@@ -225,7 +225,7 @@ public class EffectManager : SteamCaller
 
     public static void ClearEffectByID_AllPlayers(ushort id)
     {
-        SendEffectClearById.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), id);
+        SendEffectClearById.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), id);
     }
 
     public static void ClearEffectByGuid(Guid assetGuid, ITransportConnection transportConnection)
@@ -235,7 +235,7 @@ public class EffectManager : SteamCaller
 
     public static void ClearEffectByGuid_AllPlayers(Guid assetGuid)
     {
-        SendEffectClearByGuid.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), assetGuid);
+        SendEffectClearByGuid.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), assetGuid);
     }
 
     [Obsolete]
@@ -256,7 +256,7 @@ public class EffectManager : SteamCaller
     {
         if (Provider.isServer)
         {
-            SendEffectClearAll.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote());
+            SendEffectClearAll.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections());
         }
     }
 
@@ -279,7 +279,7 @@ public class EffectManager : SteamCaller
         {
             TriggerEffectParameters parameters = new TriggerEffectParameters(asset);
             parameters.reliable = false;
-            parameters.SetRelevantTransportConnections(Regions.EnumerateClients(x, y, area));
+            parameters.SetRelevantTransportConnections(Regions.GatherClientConnections(x, y, area));
             parameters.position = point;
             parameters.direction = normal;
             triggerEffect(parameters);
@@ -293,7 +293,7 @@ public class EffectManager : SteamCaller
         {
             TriggerEffectParameters parameters = new TriggerEffectParameters(asset);
             parameters.reliable = false;
-            parameters.SetRelevantTransportConnections(Regions.EnumerateClients(x, y, area));
+            parameters.SetRelevantTransportConnections(Regions.GatherClientConnections(x, y, area));
             parameters.position = point;
             triggerEffect(parameters);
         }
@@ -306,7 +306,7 @@ public class EffectManager : SteamCaller
         {
             TriggerEffectParameters parameters = new TriggerEffectParameters(asset);
             parameters.reliable = true;
-            parameters.SetRelevantTransportConnections(Regions.EnumerateClients(x, y, area));
+            parameters.SetRelevantTransportConnections(Regions.GatherClientConnections(x, y, area));
             parameters.position = point;
             parameters.direction = normal;
             triggerEffect(parameters);
@@ -320,7 +320,7 @@ public class EffectManager : SteamCaller
         {
             TriggerEffectParameters parameters = new TriggerEffectParameters(asset);
             parameters.reliable = true;
-            parameters.SetRelevantTransportConnections(Regions.EnumerateClients(x, y, area));
+            parameters.SetRelevantTransportConnections(Regions.GatherClientConnections(x, y, area));
             parameters.position = point;
             triggerEffect(parameters);
         }
@@ -575,31 +575,31 @@ public class EffectManager : SteamCaller
     public static void sendUIEffect(ushort id, short key, bool reliable)
     {
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
-        SendUIEffect.Invoke(reliability, Provider.EnumerateClients(), id, key);
+        SendUIEffect.Invoke(reliability, Provider.GatherClientConnections(), id, key);
     }
 
     public static void sendUIEffect(ushort id, short key, bool reliable, string arg0)
     {
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
-        SendUIEffect1Arg.Invoke(reliability, Provider.EnumerateClients(), id, key, arg0);
+        SendUIEffect1Arg.Invoke(reliability, Provider.GatherClientConnections(), id, key, arg0);
     }
 
     public static void sendUIEffect(ushort id, short key, bool reliable, string arg0, string arg1)
     {
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
-        SendUIEffect2Args.Invoke(reliability, Provider.EnumerateClients(), id, key, arg0, arg1);
+        SendUIEffect2Args.Invoke(reliability, Provider.GatherClientConnections(), id, key, arg0, arg1);
     }
 
     public static void sendUIEffect(ushort id, short key, bool reliable, string arg0, string arg1, string arg2)
     {
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
-        SendUIEffect3Args.Invoke(reliability, Provider.EnumerateClients(), id, key, arg0, arg1, arg2);
+        SendUIEffect3Args.Invoke(reliability, Provider.GatherClientConnections(), id, key, arg0, arg1, arg2);
     }
 
     public static void sendUIEffect(ushort id, short key, bool reliable, string arg0, string arg1, string arg2, string arg3)
     {
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
-        SendUIEffect4Args.Invoke(reliability, Provider.EnumerateClients(), id, key, arg0, arg1, arg2, arg3);
+        SendUIEffect4Args.Invoke(reliability, Provider.GatherClientConnections(), id, key, arg0, arg1, arg2, arg3);
     }
 
     [Obsolete]
@@ -1389,25 +1389,25 @@ public class EffectManager : SteamCaller
             {
                 internalSpawnEffect(parameters.asset, parameters.position, parameters.direction, parameters.scale, parameters.wasInstigatedByPlayer, null);
             }
-            IEnumerable<ITransportConnection> enumerable = parameters.relevantTransportConnections;
-            if (enumerable == null)
+            PooledTransportConnectionList pooledTransportConnectionList = parameters.relevantTransportConnections;
+            if (pooledTransportConnectionList == null)
             {
                 float relevantDistance = parameters.relevantDistance;
                 if (parameters.asset.relevantDistance > 0f)
                 {
                     relevantDistance = parameters.asset.relevantDistance;
                 }
-                enumerable = Provider.EnumerateClients_WithinSphere(parameters.position, relevantDistance);
+                pooledTransportConnectionList = Provider.GatherClientConnectionsWithinSphere(parameters.position, relevantDistance);
             }
             if (MathfEx.IsNearlyEqual(parameters.scale, Vector3.one))
             {
                 if (flag2)
                 {
-                    SendEffectPoint.Invoke(reliability, enumerable, parameters.asset.GUID, parameters.position);
+                    SendEffectPoint.Invoke(reliability, pooledTransportConnectionList, parameters.asset.GUID, parameters.position);
                 }
                 else
                 {
-                    SendEffectPointNormal.Invoke(reliability, enumerable, parameters.asset.GUID, parameters.position, parameters.direction);
+                    SendEffectPointNormal.Invoke(reliability, pooledTransportConnectionList, parameters.asset.GUID, parameters.position, parameters.direction);
                 }
             }
             else if (parameters.scale.AreComponentsNearlyEqual())
@@ -1415,20 +1415,20 @@ public class EffectManager : SteamCaller
                 float x = parameters.scale.x;
                 if (flag2)
                 {
-                    SendEffectPoint_UniformScale.Invoke(reliability, enumerable, parameters.asset.GUID, parameters.position, x);
+                    SendEffectPoint_UniformScale.Invoke(reliability, pooledTransportConnectionList, parameters.asset.GUID, parameters.position, x);
                 }
                 else
                 {
-                    SendEffectPointNormal_UniformScale.Invoke(reliability, enumerable, parameters.asset.GUID, parameters.position, parameters.direction, x);
+                    SendEffectPointNormal_UniformScale.Invoke(reliability, pooledTransportConnectionList, parameters.asset.GUID, parameters.position, parameters.direction, x);
                 }
             }
             else if (flag2)
             {
-                SendEffectPoint_NonUniformScale.Invoke(reliability, enumerable, parameters.asset.GUID, parameters.position, parameters.scale);
+                SendEffectPoint_NonUniformScale.Invoke(reliability, pooledTransportConnectionList, parameters.asset.GUID, parameters.position, parameters.scale);
             }
             else
             {
-                SendEffectPointNormal_NonUniformScale.Invoke(reliability, enumerable, parameters.asset.GUID, parameters.position, parameters.direction, parameters.scale);
+                SendEffectPointNormal_NonUniformScale.Invoke(reliability, pooledTransportConnectionList, parameters.asset.GUID, parameters.position, parameters.direction, parameters.scale);
             }
         }
         else if (MathfEx.IsNearlyEqual(parameters.scale, Vector3.one))

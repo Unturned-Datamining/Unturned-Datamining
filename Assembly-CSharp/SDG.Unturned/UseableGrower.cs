@@ -113,9 +113,13 @@ public class UseableGrower : Useable
         return true;
     }
 
-    public override void startPrimary()
+    public override bool startPrimary()
     {
-        if (!base.player.equipment.isBusy && isUseable && fire())
+        if (base.player.equipment.isBusy)
+        {
+            return false;
+        }
+        if (isUseable && fire())
         {
             base.player.equipment.isBusy = true;
             startedUse = Time.realtimeSinceStartup;
@@ -123,9 +127,11 @@ public class UseableGrower : Useable
             grow();
             if (Provider.isServer)
             {
-                SendPlayGrow.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner());
+                SendPlayGrow.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner());
             }
+            return true;
         }
+        return false;
     }
 
     public override void equip()

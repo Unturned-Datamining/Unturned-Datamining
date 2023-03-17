@@ -119,6 +119,8 @@ public class UseableGun : Useable
 
     private bool isShooting;
 
+    private bool wasTriggerJustPulled;
+
     private bool isJabbing;
 
     private bool isMinigunSpinning;
@@ -719,7 +721,7 @@ public class UseableGun : Useable
         }
         if (Provider.isServer)
         {
-            SendPlayShoot.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwnerWithinSphere(base.transform.position, EffectManager.INSANE));
+            SendPlayShoot.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsWithinSphereExcludingOwner(base.transform.position, EffectManager.INSANE));
             lastShot = Time.realtimeSinceStartup;
             if (equippedGunAsset.action == EAction.Bolt || equippedGunAsset.action == EAction.Pump)
             {
@@ -901,10 +903,10 @@ public class UseableGun : Useable
                 num5 *= SHAKE_PRONE;
                 num6 *= SHAKE_PRONE;
             }
-            if (base.player.look.perspective == EPlayerPerspective.THIRD && Provider.cameraMode != ECameraMode.THIRD)
+            if (base.player.look.perspective == EPlayerPerspective.THIRD)
             {
-                num2 *= 2f;
-                num3 *= 2f;
+                num2 *= Provider.modeConfigData.Gameplay.ThirdPerson_RecoilMultiplier;
+                num3 *= Provider.modeConfigData.Gameplay.ThirdPerson_RecoilMultiplier;
             }
             base.player.look.recoil(num2, num3, equippedGunAsset.recover_x, equippedGunAsset.recover_y);
             base.player.animator.AddRecoilViewmodelCameraOffset(num4, num5, num6);
@@ -1014,7 +1016,7 @@ public class UseableGun : Useable
                         position2 += forward2;
                     }
                     project(position2, forward2, itemBarrelAsset, magazineAsset);
-                    SendPlayProject.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner(), position2, forward2, itemBarrelAsset?.id ?? 0, magazineAsset?.id ?? 0);
+                    SendPlayProject.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner(), position2, forward2, itemBarrelAsset?.id ?? 0, magazineAsset?.id ?? 0);
                 }
                 base.player.life.markAggressive(force: false);
             }
@@ -1025,7 +1027,7 @@ public class UseableGun : Useable
             float num7 = Mathf.Lerp(0f, equippedGunAsset.jamMaxChance, t);
             if (UnityEngine.Random.value < num7)
             {
-                SendPlayChamberJammed.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), ammo);
+                SendPlayChamberJammed.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), ammo);
             }
         }
     }
@@ -1083,7 +1085,7 @@ public class UseableGun : Useable
         }
         if (!string.IsNullOrEmpty(input.materialName))
         {
-            DamageTool.ServerSpawnLegacyImpact(input.point, input.normal, input.materialName, input.colliderTransform, base.channel.EnumerateClients_WithinSphereOrOwner(input.point, EffectManager.SMALL));
+            DamageTool.ServerSpawnLegacyImpact(input.point, input.normal, input.materialName, input.colliderTransform, base.channel.GatherOwnerAndClientConnectionsWithinSphere(input.point, EffectManager.SMALL));
         }
         EPlayerKill kill = EPlayerKill.NONE;
         uint xp = 0u;
@@ -1474,7 +1476,7 @@ public class UseableGun : Useable
                     }
                     else
                     {
-                        DamageTool.ServerSpawnBulletImpact(input.point, input.normal, input.materialName, input.colliderTransform, base.channel.EnumerateClients_WithinSphereOrOwner(input.point, EffectManager.SMALL));
+                        DamageTool.ServerSpawnBulletImpact(input.point, input.normal, input.materialName, input.colliderTransform, base.channel.GatherOwnerAndClientConnectionsWithinSphere(input.point, EffectManager.SMALL));
                     }
                 }
                 EPlayerKill kill = EPlayerKill.NONE;
@@ -2110,7 +2112,7 @@ public class UseableGun : Useable
                         base.player.inventory.forceAddItem(item, auto: true);
                     }
                     base.player.equipment.sendUpdateState();
-                    SendPlayReload.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), flag2 && equippedGunAsset.hammer != null);
+                    SendPlayReload.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), flag2 && equippedGunAsset.hammer != null);
                     EffectManager.TriggerFiremodeEffect(base.transform.position);
                 }
                 return;
@@ -2126,7 +2128,7 @@ public class UseableGun : Useable
             base.player.equipment.state[9] = 0;
             base.player.equipment.state[10] = 0;
             base.player.equipment.sendUpdateState();
-            SendPlayReload.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), equippedGunAsset.hammer != null);
+            SendPlayReload.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), equippedGunAsset.hammer != null);
             EffectManager.TriggerFiremodeEffect(base.transform.position);
         }
     }
@@ -2207,7 +2209,7 @@ public class UseableGun : Useable
     public void ServerPlayReload(bool shouldHammer)
     {
         shouldHammer &= equippedGunAsset.hammer != null;
-        SendPlayReload.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), shouldHammer);
+        SendPlayReload.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), shouldHammer);
     }
 
     [Obsolete]
@@ -2274,7 +2276,7 @@ public class UseableGun : Useable
         }
     }
 
-    public override void startPrimary()
+    public override bool startPrimary()
     {
         if ((!isShooting && !isReloading && !isHammering && !isUnjamming && !isAttaching && !needsRechamber && firemode != 0 && !base.player.equipment.isBusy) & (!isSprinting || equippedGunAsset.canAimDuringSprint))
         {
@@ -2299,23 +2301,22 @@ public class UseableGun : Useable
         }
         if (isShooting)
         {
+            wasTriggerJustPulled = true;
             fireDelayCounter = equippedGunAsset.fireDelay;
             if (fireDelayCounter > 0 && base.channel.isOwner && equippedGunAsset.fireDelaySound != null)
             {
                 base.player.playSound(equippedGunAsset.fireDelaySound, 1f, 0.05f);
             }
         }
+        return isShooting;
     }
 
     public override void stopPrimary()
     {
-        if (isShooting)
-        {
-            isShooting = false;
-        }
+        isShooting = false;
     }
 
-    public override void startSecondary()
+    public override bool startSecondary()
     {
         if ((!isAiming && !isReloading && !isHammering && !isUnjamming && !isAttaching && !needsRechamber) & (!isSprinting || equippedGunAsset.canAimDuringSprint))
         {
@@ -2323,9 +2324,10 @@ public class UseableGun : Useable
             startAim();
             if (Provider.isServer)
             {
-                SendPlayAimStart.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner());
+                SendPlayAimStart.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner());
             }
         }
+        return isAiming;
     }
 
     public override void stopSecondary()
@@ -2340,7 +2342,7 @@ public class UseableGun : Useable
             stopAim();
             if (Provider.isServer)
             {
-                SendPlayAimStop.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner());
+                SendPlayAimStop.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner());
             }
         }
     }
@@ -3260,9 +3262,11 @@ public class UseableGun : Useable
             bursts = 0;
             fireDelayCounter = 0;
             isShooting = false;
+            wasTriggerJustPulled = false;
             return;
         }
-        bool flag = isShooting;
+        bool flag = isShooting || wasTriggerJustPulled;
+        wasTriggerJustPulled = false;
         if (fireDelayCounter > 1)
         {
             fireDelayCounter--;
@@ -3321,7 +3325,7 @@ public class UseableGun : Useable
 
     public override void tock(uint clock)
     {
-        if (isShooting || bursts > 0 || fireDelayCounter > 0)
+        if (isShooting || wasTriggerJustPulled || bursts > 0 || fireDelayCounter > 0)
         {
             tockShoot(clock);
         }
@@ -3731,9 +3735,9 @@ public class UseableGun : Useable
         {
             baseSpreadAngleRadians *= equippedGunAsset.spreadProne;
         }
-        if (base.player.look.perspective == EPlayerPerspective.THIRD && Provider.cameraMode != ECameraMode.THIRD)
+        if (base.player.look.perspective == EPlayerPerspective.THIRD)
         {
-            baseSpreadAngleRadians *= 2f;
+            baseSpreadAngleRadians *= Provider.modeConfigData.Gameplay.ThirdPerson_SpreadMultiplier;
         }
         if (!base.player.movement.isGrounded)
         {

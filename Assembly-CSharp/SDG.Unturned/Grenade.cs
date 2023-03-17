@@ -38,6 +38,14 @@ public class Grenade : MonoBehaviour, IExplodableThrowable
 
     public void Explode()
     {
+        if (shouldDestroySelf)
+        {
+            UnityEngine.Object.Destroy(base.gameObject);
+        }
+        if (!Provider.isServer)
+        {
+            return;
+        }
         ExplosionParameters parameters = new ExplosionParameters(base.transform.position, range, EDeathCause.GRENADE, killer);
         parameters.playerDamage = playerDamage;
         parameters.zombieDamage = zombieDamage;
@@ -58,10 +66,6 @@ public class Grenade : MonoBehaviour, IExplodableThrowable
             parameters2.relevantDistance = EffectManager.LARGE;
             parameters2.wasInstigatedByPlayer = true;
             EffectManager.triggerEffect(parameters2);
-        }
-        if (shouldDestroySelf)
-        {
-            UnityEngine.Object.Destroy(base.gameObject);
         }
         Player player = PlayerTool.getPlayer(killer);
         if (!(player != null))

@@ -189,7 +189,7 @@ public class LevelManager : SteamCaller
         {
             if (arenaMessage != 0)
             {
-                SendArenaMessage.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), EArenaMessage.LOBBY);
+                SendArenaMessage.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), EArenaMessage.LOBBY);
             }
         }
         else
@@ -272,16 +272,16 @@ public class LevelManager : SteamCaller
             targetCenter = vector;
             targetRadius = num;
         }
-        SendArenaOrigin.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), vector, num, vector, num, targetCenter, targetRadius, arg, (byte)(Provider.modeConfigData.Events.Arena_Clear_Timer + Provider.modeConfigData.Events.Arena_Compactor_Delay_Timer));
+        SendArenaOrigin.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), vector, num, vector, num, targetCenter, targetRadius, arg, (byte)(Provider.modeConfigData.Events.Arena_Clear_Timer + Provider.modeConfigData.Events.Arena_Compactor_Delay_Timer));
         arenaState = EArenaState.WARMUP;
-        SendLevelTimer.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), (byte)Provider.modeConfigData.Events.Arena_Clear_Timer);
+        SendLevelTimer.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), (byte)Provider.modeConfigData.Events.Arena_Clear_Timer);
     }
 
     private void arenaWarmUp()
     {
         if (arenaMessage != EArenaMessage.WARMUP)
         {
-            SendArenaMessage.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), EArenaMessage.WARMUP);
+            SendArenaMessage.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), EArenaMessage.WARMUP);
         }
         if (countTimerMessages < 0)
         {
@@ -377,7 +377,7 @@ public class LevelManager : SteamCaller
         }
         arenaAirdrop();
         arenaState = EArenaState.PLAY;
-        SendLevelNumber.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), (byte)arenaPlayers.Count);
+        SendLevelNumber.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), (byte)arenaPlayers.Count);
     }
 
     private void arenaAirdrop()
@@ -408,7 +408,7 @@ public class LevelManager : SteamCaller
     {
         if (arenaMessage != EArenaMessage.PLAY)
         {
-            SendArenaMessage.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), EArenaMessage.PLAY);
+            SendArenaMessage.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), EArenaMessage.PLAY);
         }
         if (nonGroups + arenaGroups.Count < minPlayers)
         {
@@ -422,14 +422,14 @@ public class LevelManager : SteamCaller
                     playersIDs3[i] = arenaPlayers[i].steamPlayer.playerID.steamID.m_SteamID;
                 }
                 arenaMessage = EArenaMessage.LOSE;
-                SendArenaPlayer.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), delegate(NetPakWriter writer)
+                SendArenaPlayer.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), delegate(NetPakWriter writer)
                 {
                     WriteArenaPlayer(writer, playersIDs3, EArenaMessage.WIN);
                 });
             }
             else
             {
-                SendArenaMessage.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), EArenaMessage.LOSE);
+                SendArenaMessage.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), EArenaMessage.LOSE);
             }
             return;
         }
@@ -442,13 +442,13 @@ public class LevelManager : SteamCaller
             {
                 ulong[] playersIDs2 = new ulong[1];
                 playersIDs2[0] = arenaPlayer.steamPlayer.playerID.steamID.m_SteamID;
-                SendArenaPlayer.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), delegate(NetPakWriter writer)
+                SendArenaPlayer.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), delegate(NetPakWriter writer)
                 {
                     WriteArenaPlayer(writer, playersIDs2, EArenaMessage.ABANDONED);
                 });
                 arenaPlayers.RemoveAt(num);
                 updateGroups(arenaPlayer.steamPlayer);
-                SendLevelNumber.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), (byte)arenaPlayers.Count);
+                SendLevelNumber.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), (byte)arenaPlayers.Count);
             }
             else
             {
@@ -471,13 +471,13 @@ public class LevelManager : SteamCaller
                 {
                     ulong[] playersIDs = new ulong[1];
                     playersIDs[0] = arenaPlayer.steamPlayer.playerID.steamID.m_SteamID;
-                    SendArenaPlayer.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), delegate(NetPakWriter writer)
+                    SendArenaPlayer.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), delegate(NetPakWriter writer)
                     {
                         WriteArenaPlayer(writer, playersIDs, EArenaMessage.DIED);
                     });
                     arenaPlayers.RemoveAt(num);
                     updateGroups(arenaPlayer.steamPlayer);
-                    SendLevelNumber.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), (byte)arenaPlayers.Count);
+                    SendLevelNumber.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), (byte)arenaPlayers.Count);
                 }
             }
         }
@@ -494,7 +494,7 @@ public class LevelManager : SteamCaller
     private void arenaRestart()
     {
         arenaState = EArenaState.INTERMISSION;
-        SendLevelTimer.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), (byte)Provider.modeConfigData.Events.Arena_Restart_Timer);
+        SendLevelTimer.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), (byte)Provider.modeConfigData.Events.Arena_Restart_Timer);
         for (int num = arenaPlayers.Count - 1; num >= 0; num--)
         {
             ArenaPlayer arenaPlayer = arenaPlayers[num];
@@ -510,7 +510,7 @@ public class LevelManager : SteamCaller
     {
         if (arenaMessage != EArenaMessage.INTERMISSION)
         {
-            SendArenaMessage.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), EArenaMessage.INTERMISSION);
+            SendArenaMessage.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), EArenaMessage.INTERMISSION);
         }
         if (countTimerMessages < 0)
         {
@@ -530,7 +530,7 @@ public class LevelManager : SteamCaller
                 {
                     float arg = compactorSpeed;
                     getArenaTarget(arenaTargetCenter, arenaTargetRadius, out var targetCenter, out var targetRadius);
-                    SendArenaOrigin.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), arenaTargetCenter, arenaTargetRadius, arenaTargetCenter, arenaTargetRadius, targetCenter, targetRadius, arg, (byte)Provider.modeConfigData.Events.Arena_Compactor_Pause_Timer);
+                    SendArenaOrigin.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), arenaTargetCenter, arenaTargetRadius, arenaTargetCenter, arenaTargetRadius, targetCenter, targetRadius, arg, (byte)Provider.modeConfigData.Events.Arena_Compactor_Pause_Timer);
                 }
             }
             arenaSqrRadius = arenaCurrentRadius * arenaCurrentRadius;
@@ -740,7 +740,7 @@ public class LevelManager : SteamCaller
             zero.y = y;
             float airdrop_Force = Provider.modeConfigData.Events.Airdrop_Force;
             manager.airdropSpawn(id, zero, normalized, speed, airdrop_Force, num);
-            SendAirdropState.Invoke(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), zero, normalized, speed, airdrop_Force, num);
+            SendAirdropState.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), zero, normalized, speed, airdrop_Force, num);
         }
     }
 

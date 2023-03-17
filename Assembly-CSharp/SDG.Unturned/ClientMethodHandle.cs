@@ -54,7 +54,7 @@ public abstract class ClientMethodHandle
         }
     }
 
-    protected void SendAndLoopbackIfAnyAreLocal(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, NetPakWriter writer)
+    protected void SendAndLoopbackIfAnyAreLocal(ENetReliability reliability, List<ITransportConnection> transportConnections, NetPakWriter writer)
     {
         writer.Flush();
         bool flag = false;
@@ -73,7 +73,7 @@ public abstract class ClientMethodHandle
         }
     }
 
-    protected void SendAndLoopback(ENetReliability reliability, IEnumerable<ITransportConnection> transportConnections, NetPakWriter writer)
+    protected void SendAndLoopback(ENetReliability reliability, List<ITransportConnection> transportConnections, NetPakWriter writer)
     {
         writer.Flush();
         foreach (ITransportConnection transportConnection in transportConnections)

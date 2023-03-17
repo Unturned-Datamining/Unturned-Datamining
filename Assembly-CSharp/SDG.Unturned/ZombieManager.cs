@@ -569,74 +569,74 @@ public class ZombieManager : SteamCaller
 
     public static void sendZombieAlive(Zombie zombie, byte newType, byte newSpeciality, byte newShirt, byte newPants, byte newHat, byte newGear, Vector3 newPosition, byte newAngle)
     {
-        SendZombieAlive.InvokeAndLoopback(ENetReliability.Reliable, EnumerateClients_Remote(zombie.bound), zombie.bound, zombie.id, newType, newSpeciality, newShirt, newPants, newHat, newGear, newPosition, newAngle);
+        SendZombieAlive.InvokeAndLoopback(ENetReliability.Reliable, GatherRemoteClientConnections(zombie.bound), zombie.bound, zombie.id, newType, newSpeciality, newShirt, newPants, newHat, newGear, newPosition, newAngle);
         regions[zombie.bound].onZombieLifeUpdated?.Invoke(zombie);
     }
 
     public static void sendZombieDead(Zombie zombie, Vector3 newRagdoll, ERagdollEffect newRagdollEffect = ERagdollEffect.NONE)
     {
-        SendZombieDead.InvokeAndLoopback(ENetReliability.Reliable, EnumerateClients_Remote(zombie.bound), zombie.bound, zombie.id, newRagdoll, newRagdollEffect);
+        SendZombieDead.InvokeAndLoopback(ENetReliability.Reliable, GatherRemoteClientConnections(zombie.bound), zombie.bound, zombie.id, newRagdoll, newRagdollEffect);
         regions[zombie.bound].onZombieLifeUpdated?.Invoke(zombie);
     }
 
     public static void sendZombieSpeciality(Zombie zombie, EZombieSpeciality speciality)
     {
-        SendZombieSpeciality.InvokeAndLoopback(ENetReliability.Unreliable, EnumerateClients_Remote(zombie.bound), zombie.bound, zombie.id, speciality);
+        SendZombieSpeciality.InvokeAndLoopback(ENetReliability.Unreliable, GatherRemoteClientConnections(zombie.bound), zombie.bound, zombie.id, speciality);
     }
 
     public static void sendZombieThrow(Zombie zombie)
     {
-        SendZombieThrow.InvokeAndLoopback(ENetReliability.Unreliable, EnumerateClients_Remote(zombie.bound), zombie.bound, zombie.id);
+        SendZombieThrow.InvokeAndLoopback(ENetReliability.Unreliable, GatherRemoteClientConnections(zombie.bound), zombie.bound, zombie.id);
     }
 
     public static void sendZombieSpit(Zombie zombie)
     {
-        SendZombieSpit.InvokeAndLoopback(ENetReliability.Unreliable, EnumerateClients_Remote(zombie.bound), zombie.bound, zombie.id);
+        SendZombieSpit.InvokeAndLoopback(ENetReliability.Unreliable, GatherRemoteClientConnections(zombie.bound), zombie.bound, zombie.id);
     }
 
     public static void sendZombieCharge(Zombie zombie)
     {
-        SendZombieCharge.InvokeAndLoopback(ENetReliability.Unreliable, EnumerateClients_Remote(zombie.bound), zombie.bound, zombie.id);
+        SendZombieCharge.InvokeAndLoopback(ENetReliability.Unreliable, GatherRemoteClientConnections(zombie.bound), zombie.bound, zombie.id);
     }
 
     public static void sendZombieStomp(Zombie zombie)
     {
-        SendZombieStomp.InvokeAndLoopback(ENetReliability.Unreliable, EnumerateClients_Remote(zombie.bound), zombie.bound, zombie.id);
+        SendZombieStomp.InvokeAndLoopback(ENetReliability.Unreliable, GatherRemoteClientConnections(zombie.bound), zombie.bound, zombie.id);
     }
 
     public static void sendZombieBreath(Zombie zombie)
     {
-        SendZombieBreath.InvokeAndLoopback(ENetReliability.Unreliable, EnumerateClients_Remote(zombie.bound), zombie.bound, zombie.id);
+        SendZombieBreath.InvokeAndLoopback(ENetReliability.Unreliable, GatherRemoteClientConnections(zombie.bound), zombie.bound, zombie.id);
     }
 
     public static void sendZombieBoulder(Zombie zombie, Vector3 origin, Vector3 direction)
     {
-        SendZombieBoulder.InvokeAndLoopback(ENetReliability.Unreliable, EnumerateClients_Remote(zombie.bound), zombie.bound, zombie.id, origin, direction);
+        SendZombieBoulder.InvokeAndLoopback(ENetReliability.Unreliable, GatherRemoteClientConnections(zombie.bound), zombie.bound, zombie.id, origin, direction);
     }
 
     public static void sendZombieAcid(Zombie zombie, Vector3 origin, Vector3 direction)
     {
-        SendZombieAcid.InvokeAndLoopback(ENetReliability.Unreliable, EnumerateClients_Remote(zombie.bound), zombie.bound, zombie.id, origin, direction);
+        SendZombieAcid.InvokeAndLoopback(ENetReliability.Unreliable, GatherRemoteClientConnections(zombie.bound), zombie.bound, zombie.id, origin, direction);
     }
 
     public static void sendZombieSpark(Zombie zombie, Vector3 target)
     {
-        SendZombieSpark.Invoke(ENetReliability.Unreliable, EnumerateClients(zombie.bound), zombie.bound, zombie.id, target);
+        SendZombieSpark.Invoke(ENetReliability.Unreliable, GatherClientConnections(zombie.bound), zombie.bound, zombie.id, target);
     }
 
     public static void sendZombieAttack(Zombie zombie, byte attack)
     {
-        SendZombieAttack.InvokeAndLoopback(ENetReliability.Unreliable, EnumerateClients_Remote(zombie.bound), zombie.bound, zombie.id, attack);
+        SendZombieAttack.InvokeAndLoopback(ENetReliability.Unreliable, GatherRemoteClientConnections(zombie.bound), zombie.bound, zombie.id, attack);
     }
 
     public static void sendZombieStartle(Zombie zombie, byte startle)
     {
-        SendZombieStartle.InvokeAndLoopback(ENetReliability.Unreliable, EnumerateClients_Remote(zombie.bound), zombie.bound, zombie.id, startle);
+        SendZombieStartle.InvokeAndLoopback(ENetReliability.Unreliable, GatherRemoteClientConnections(zombie.bound), zombie.bound, zombie.id, startle);
     }
 
     public static void sendZombieStun(Zombie zombie, byte stun)
     {
-        SendZombieStun.InvokeAndLoopback(ENetReliability.Unreliable, EnumerateClients_Remote(zombie.bound), zombie.bound, zombie.id, stun);
+        SendZombieStun.InvokeAndLoopback(ENetReliability.Unreliable, GatherRemoteClientConnections(zombie.bound), zombie.bound, zombie.id, stun);
     }
 
     public static void dropLoot(Zombie zombie)
@@ -944,7 +944,7 @@ public class ZombieManager : SteamCaller
                     if (waveReady)
                     {
                         _waveReady = false;
-                        SendWave.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), waveReady, waveIndex);
+                        SendWave.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), waveReady, waveIndex);
                     }
                     return;
                 }
@@ -953,7 +953,7 @@ public class ZombieManager : SteamCaller
                     _waveReady = true;
                     _waveIndex++;
                     _waveRemaining = (int)Mathf.Ceil(Mathf.Pow(waveIndex + 5, 1.5f));
-                    SendWave.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), waveReady, waveIndex);
+                    SendWave.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), waveReady, waveIndex);
                 }
             }
         }
@@ -1194,7 +1194,7 @@ public class ZombieManager : SteamCaller
             {
                 BeaconManager.checkBeacon(nav).init(regions[nav].alive);
             }
-            SendBeacon.InvokeAndLoopback(ENetReliability.Reliable, EnumerateClients_Remote(nav), nav, hasBeacon);
+            SendBeacon.InvokeAndLoopback(ENetReliability.Reliable, GatherRemoteClientConnections(nav), nav, hasBeacon);
         }
     }
 
@@ -1211,7 +1211,7 @@ public class ZombieManager : SteamCaller
             if (Dedicator.IsDedicatedServer)
             {
                 seq++;
-                SendZombieStates.Invoke(ENetReliability.Unreliable, EnumerateClients_Remote(regionIndex), delegate(NetPakWriter writer)
+                SendZombieStates.Invoke(ENetReliability.Unreliable, GatherRemoteClientConnections(regionIndex), delegate(NetPakWriter writer)
                 {
                     writer.WriteUInt8(regionIndex);
                     writer.WriteUInt32(seq);
@@ -1344,25 +1344,41 @@ public class ZombieManager : SteamCaller
         }
     }
 
-    public static IEnumerable<ITransportConnection> EnumerateClients(byte bound)
+    public static PooledTransportConnectionList GatherClientConnections(byte bound)
     {
+        PooledTransportConnectionList pooledTransportConnectionList = TransportConnectionListPool.Get();
         foreach (SteamPlayer client in Provider.clients)
         {
             if (client.player != null && client.player.movement.bound == bound)
             {
-                yield return client.transportConnection;
+                pooledTransportConnectionList.Add(client.transportConnection);
             }
         }
+        return pooledTransportConnectionList;
     }
 
-    public static IEnumerable<ITransportConnection> EnumerateClients_Remote(byte bound)
+    [Obsolete("Replaced by GatherClientConnections")]
+    public static IEnumerable<ITransportConnection> EnumerateClients(byte bound)
     {
+        return GatherClientConnections(bound);
+    }
+
+    public static PooledTransportConnectionList GatherRemoteClientConnections(byte bound)
+    {
+        PooledTransportConnectionList pooledTransportConnectionList = TransportConnectionListPool.Get();
         foreach (SteamPlayer client in Provider.clients)
         {
             if (!client.IsLocalPlayer && client.player != null && client.player.movement.bound == bound)
             {
-                yield return client.transportConnection;
+                pooledTransportConnectionList.Add(client.transportConnection);
             }
         }
+        return pooledTransportConnectionList;
+    }
+
+    [Obsolete("Replaced by GatherRemoteClientConnections")]
+    public static IEnumerable<ITransportConnection> EnumerateClients_Remote(byte bound)
+    {
+        return GatherRemoteClientConnections(bound);
     }
 }

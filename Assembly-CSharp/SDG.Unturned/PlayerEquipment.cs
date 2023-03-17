@@ -136,7 +136,7 @@ public class PlayerEquipment : PlayerCaller
 
     private byte slot = byte.MaxValue;
 
-    private bool warp;
+    internal bool arePrimaryAndSecondaryInputsReversedByHallucination;
 
     private byte _equippedPage;
 
@@ -144,19 +144,11 @@ public class PlayerEquipment : PlayerCaller
 
     private byte _equipped_y;
 
-    private bool prim;
+    private bool wasUsablePrimaryStarted;
 
-    private bool lastPrimary;
+    private bool wasUsableSecondaryStarted;
 
-    private bool _primary;
-
-    private bool sec;
-
-    private bool flipSecondary;
-
-    private bool lastSecondary;
-
-    private bool _secondary;
+    private bool localWantsToAim;
 
     private bool hasVision;
 
@@ -171,6 +163,18 @@ public class PlayerEquipment : PlayerCaller
     private static float lastInspect;
 
     private static float inspectTime;
+
+    private bool localWasPrimaryHeldLastFrame;
+
+    private bool localWasPrimaryPressedBetweenSimulationFrames;
+
+    private bool localWasPrimaryReleasedBetweenSimulationFrames;
+
+    private bool localWasSecondaryHeldLastFrame;
+
+    private bool localWasSecondaryPressedBetweenSimulationFrames;
+
+    private bool localWasSecondaryReleasedBetweenSimulationFrames;
 
     private static readonly ClientInstanceMethod<byte, Guid, byte, byte, byte> SendItemHotkeySuggestion = ClientInstanceMethod<byte, Guid, byte, byte, byte>.Get(typeof(PlayerEquipment), "ReceiveItemHotkeySuggeston");
 
@@ -309,9 +313,11 @@ public class PlayerEquipment : PlayerCaller
 
     public byte equipped_y => _equipped_y;
 
-    public bool primary => _primary;
+    [Obsolete]
+    public bool primary => false;
 
-    public bool secondary => _secondary;
+    [Obsolete]
+    public bool secondary => false;
 
     public float lastPunching { get; private set; }
 
@@ -855,7 +861,7 @@ public class PlayerEquipment : PlayerCaller
         {
             return;
         }
-        SendToggleVision.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote());
+        SendToggleVision.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections());
         if (base.player.clothing.glassesAsset == null)
         {
             return;
@@ -1255,6 +1261,8 @@ public class PlayerEquipment : PlayerCaller
         }
         _useable = base.gameObject.AddComponent(asset.useableType) as Useable;
         _useable.AssignNetId(useableNetId);
+        wasUsablePrimaryStarted = false;
+        wasUsableSecondaryStarted = false;
         base.channel.markDirty();
         try
         {
@@ -1329,11 +1337,11 @@ public class PlayerEquipment : PlayerCaller
                 NetId arg = NetIdRegistry.Claim();
                 if (item.item.state != null)
                 {
-                    SendEquip.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), page, x, y, itemAsset.GUID, item.item.quality, item.item.state, arg);
+                    SendEquip.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), page, x, y, itemAsset.GUID, item.item.quality, item.item.state, arg);
                 }
                 else
                 {
-                    SendEquip.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), page, x, y, itemAsset.GUID, item.item.quality, new byte[0], arg);
+                    SendEquip.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), page, x, y, itemAsset.GUID, item.item.quality, new byte[0], arg);
                 }
             }
         }
@@ -1348,7 +1356,7 @@ public class PlayerEquipment : PlayerCaller
     {
         Guid guid = Assets.find(EAssetType.ITEM, id)?.GUID ?? Guid.Empty;
         NetId netId = NetIdRegistry.Claim();
-        SendEquip.Invoke(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), 254, 254, 254, guid, 100, state, netId);
+        SendEquip.Invoke(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), 254, 254, 254, guid, 100, state, netId);
         ReceiveEquip(254, 254, 254, guid, 100, state, netId);
     }
 
@@ -1359,7 +1367,7 @@ public class PlayerEquipment : PlayerCaller
 
     public void turretDequipServer()
     {
-        SendEquip.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), byte.MaxValue, byte.MaxValue, byte.MaxValue, Guid.Empty, 0, new byte[0], default(NetId));
+        SendEquip.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), byte.MaxValue, byte.MaxValue, byte.MaxValue, Guid.Empty, 0, new byte[0], default(NetId));
     }
 
     [Obsolete]
@@ -1415,7 +1423,7 @@ public class PlayerEquipment : PlayerCaller
         }
     }
 
-    internal void SendInitialPlayerState(IEnumerable<ITransportConnection> transportConnections)
+    internal void SendInitialPlayerState(List<ITransportConnection> transportConnections)
     {
         for (byte b = 0; b < PlayerInventory.SLOTS; b = (byte)(b + 1))
         {
@@ -1479,14 +1487,14 @@ public class PlayerEquipment : PlayerCaller
     {
         if (isTurret)
         {
-            SendUpdateStateTemp.Invoke(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), state);
+            SendUpdateStateTemp.Invoke(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), state);
             ReceiveUpdateStateTemp(state);
             return;
         }
         byte index = base.player.inventory.getIndex(equippedPage, equipped_x, equipped_y);
         if (index != byte.MaxValue)
         {
-            SendUpdateState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), equippedPage, index, state);
+            SendUpdateState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), equippedPage, index, state);
         }
     }
 
@@ -1505,16 +1513,16 @@ public class PlayerEquipment : PlayerCaller
         {
             if (item.item.state != null)
             {
-                SendSlot.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), slot, item.item.id, item.item.state);
+                SendSlot.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), slot, item.item.id, item.item.state);
             }
             else
             {
-                SendSlot.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), slot, item.item.id, new byte[0]);
+                SendSlot.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), slot, item.item.id, new byte[0]);
             }
         }
         else
         {
-            SendSlot.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), slot, 0, new byte[0]);
+            SendSlot.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), slot, 0, new byte[0]);
         }
     }
 
@@ -1552,7 +1560,7 @@ public class PlayerEquipment : PlayerCaller
         {
             if (Provider.isServer)
             {
-                SendEquip.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), byte.MaxValue, byte.MaxValue, byte.MaxValue, Guid.Empty, 0, new byte[0], default(NetId));
+                SendEquip.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), byte.MaxValue, byte.MaxValue, byte.MaxValue, Guid.Empty, 0, new byte[0], default(NetId));
             }
             else if (!isBusy)
             {
@@ -1715,7 +1723,7 @@ public class PlayerEquipment : PlayerCaller
         }
         if (!string.IsNullOrEmpty(input.materialName))
         {
-            DamageTool.ServerSpawnLegacyImpact(input.point, input.normal, input.materialName, input.colliderTransform, base.channel.EnumerateClients_WithinSphereOrOwner(input.point, EffectManager.SMALL));
+            DamageTool.ServerSpawnLegacyImpact(input.point, input.normal, input.materialName, input.colliderTransform, base.channel.GatherOwnerAndClientConnectionsWithinSphere(input.point, EffectManager.SMALL));
         }
         EPlayerKill kill = EPlayerKill.NONE;
         uint xp = 0u;
@@ -1909,69 +1917,83 @@ public class PlayerEquipment : PlayerCaller
         return false;
     }
 
-    private void simulate_UseableInput(uint simulation, bool inputPrimary, bool inputSecondary, bool inputSteady)
+    private bool StartUsablePrimary()
     {
-        if (inputPrimary != lastPrimary)
+        bool result = false;
+        try
         {
-            lastPrimary = inputPrimary;
-            if (isEquipped)
-            {
-                if (inputPrimary)
-                {
-                    try
-                    {
-                        useable.startPrimary();
-                    }
-                    catch (Exception e)
-                    {
-                        UnturnedLog.warn("{0} raised an exception during simulate.startPrimary:", asset);
-                        UnturnedLog.exception(e);
-                    }
-                }
-                else
-                {
-                    try
-                    {
-                        useable.stopPrimary();
-                    }
-                    catch (Exception e2)
-                    {
-                        UnturnedLog.warn("{0} raised an exception during simulate.stopPrimary:", asset);
-                        UnturnedLog.exception(e2);
-                    }
-                }
-            }
+            result = useable.startPrimary();
+            return result;
         }
-        if (inputSecondary != lastSecondary)
+        catch (Exception e)
         {
-            lastSecondary = inputSecondary;
-            if (isSelected && isEquipped)
-            {
-                if (inputSecondary)
-                {
-                    try
-                    {
-                        useable.startSecondary();
-                    }
-                    catch (Exception e3)
-                    {
-                        UnturnedLog.warn("{0} raised an exception during useable.startSecondary:", asset);
-                        UnturnedLog.exception(e3);
-                    }
-                }
-                else
-                {
-                    try
-                    {
-                        useable.stopSecondary();
-                    }
-                    catch (Exception e4)
-                    {
-                        UnturnedLog.warn("{0} raised an exception during useable.stopSecondary:", asset);
-                        UnturnedLog.exception(e4);
-                    }
-                }
-            }
+            UnturnedLog.warn("{0} raised an exception during simulate.startPrimary:", asset);
+            UnturnedLog.exception(e);
+            return result;
+        }
+    }
+
+    private void StopUsablePrimary()
+    {
+        try
+        {
+            useable.stopPrimary();
+        }
+        catch (Exception e)
+        {
+            UnturnedLog.warn("{0} raised an exception during simulate.stopPrimary:", asset);
+            UnturnedLog.exception(e);
+        }
+    }
+
+    private bool StartUsableSecondary()
+    {
+        bool result = false;
+        try
+        {
+            result = useable.startSecondary();
+            return result;
+        }
+        catch (Exception e)
+        {
+            UnturnedLog.warn("{0} raised an exception during useable.startSecondary:", asset);
+            UnturnedLog.exception(e);
+            return result;
+        }
+    }
+
+    private void StopUsableSecondary()
+    {
+        try
+        {
+            useable.stopSecondary();
+        }
+        catch (Exception e)
+        {
+            UnturnedLog.warn("{0} raised an exception during useable.stopSecondary:", asset);
+            UnturnedLog.exception(e);
+        }
+    }
+
+    private void simulate_UseableInput(uint simulation, EAttackInputFlags inputPrimary, EAttackInputFlags inputSecondary, bool inputSteady)
+    {
+        if (inputPrimary.HasFlag(EAttackInputFlags.Start) && isSelected && isEquipped && !wasUsablePrimaryStarted)
+        {
+            wasUsablePrimaryStarted = StartUsablePrimary();
+        }
+        if (inputPrimary.HasFlag(EAttackInputFlags.Stop) && isSelected && isEquipped && wasUsablePrimaryStarted)
+        {
+            wasUsablePrimaryStarted = false;
+            StopUsablePrimary();
+        }
+        if (inputSecondary.HasFlag(EAttackInputFlags.Start) && isSelected && isEquipped && !wasUsableSecondaryStarted)
+        {
+            wasUsableSecondaryStarted = StartUsableSecondary();
+        }
+        if (inputSecondary.HasFlag(EAttackInputFlags.Stop) && isSelected && isEquipped && wasUsableSecondaryStarted)
+        {
+            wasUsableSecondaryStarted = false;
+            StopUsableSecondary();
         }
         if (isSelected && isEquipped)
         {
@@ -1979,10 +2001,10 @@ public class PlayerEquipment : PlayerCaller
             {
                 useable.simulate(simulation, inputSteady);
             }
-            catch (Exception e5)
+            catch (Exception e)
             {
                 UnturnedLog.warn("{0} raised an exception during useable.simulate:", asset);
-                UnturnedLog.exception(e5);
+                UnturnedLog.exception(e);
             }
         }
         if (Provider.isServer && isSelected && isEquipped && asset != null && asset.shouldDeleteAtZeroQuality && quality == 0)
@@ -1991,29 +2013,21 @@ public class PlayerEquipment : PlayerCaller
         }
     }
 
-    private void simulate_PunchInput(uint simulation, bool inputPrimary, bool inputSecondary)
+    private void simulate_PunchInput(uint simulation, EAttackInputFlags inputPrimary, EAttackInputFlags inputSecondary)
     {
-        if (inputPrimary != lastPrimary)
+        if (inputPrimary.HasFlag(EAttackInputFlags.Start) && !isBusy && base.player.stance.stance != EPlayerStance.PRONE && simulation - lastPunch > 5)
         {
-            lastPrimary = inputPrimary;
-            if (!isBusy && base.player.stance.stance != EPlayerStance.PRONE && inputPrimary && simulation - lastPunch > 5)
-            {
-                lastPunch = simulation;
-                punch(EPlayerPunch.LEFT);
-            }
+            lastPunch = simulation;
+            punch(EPlayerPunch.LEFT);
         }
-        if (inputSecondary != lastSecondary)
+        if (inputSecondary.HasFlag(EAttackInputFlags.Start) && !isBusy && base.player.stance.stance != EPlayerStance.PRONE && simulation - lastPunch > 5)
         {
-            lastSecondary = inputSecondary;
-            if (!isBusy && base.player.stance.stance != EPlayerStance.PRONE && inputSecondary && simulation - lastPunch > 5)
-            {
-                lastPunch = simulation;
-                punch(EPlayerPunch.RIGHT);
-            }
+            lastPunch = simulation;
+            punch(EPlayerPunch.RIGHT);
         }
     }
 
-    public void simulate(uint simulation, bool inputPrimary, bool inputSecondary, bool inputSteady)
+    public void simulate(uint simulation, EAttackInputFlags inputPrimary, EAttackInputFlags inputSecondary, bool inputSteady)
     {
         if (simulate_MustDequip())
         {
@@ -2039,8 +2053,8 @@ public class PlayerEquipment : PlayerCaller
                 }
                 else if (base.player.movement.isSafeInfo == null || !asset.canBeUsedInSafezone(base.player.movement.isSafeInfo, base.channel.owner.isAdmin))
                 {
-                    inputPrimary = false;
-                    inputSecondary = false;
+                    inputPrimary = EAttackInputFlags.Stop;
+                    inputSecondary = EAttackInputFlags.Stop;
                 }
             }
             if (Level.info != null && Level.info.type != 0 && asset == null)
@@ -2055,8 +2069,8 @@ public class PlayerEquipment : PlayerCaller
             {
                 if (isTurret && (base.player.movement.getVehicle() == null || !base.player.movement.getVehicle().canUseTurret))
                 {
-                    inputPrimary = false;
-                    inputSecondary = false;
+                    inputPrimary = EAttackInputFlags.Stop;
+                    inputSecondary = EAttackInputFlags.Stop;
                 }
                 if (isSelected)
                 {
@@ -2131,11 +2145,11 @@ public class PlayerEquipment : PlayerCaller
     {
         if (isViewing)
         {
-            warp = UnityEngine.Random.value < 0.25f;
+            arePrimaryAndSecondaryInputsReversedByHallucination = UnityEngine.Random.value < 0.25f;
         }
         else
         {
-            warp = false;
+            arePrimaryAndSecondaryInputsReversedByHallucination = false;
         }
     }
 
@@ -2259,44 +2273,68 @@ public class PlayerEquipment : PlayerCaller
     {
         if (base.channel.isOwner)
         {
+            bool flag;
+            bool flag2;
             if (!PlayerUI.window.showCursor && !PlayerDashboardInventoryUI.WasEventConsumed && !base.player.workzone.isBuilding && (base.player.movement.getVehicle() == null || base.player.look.perspective == EPlayerPerspective.FIRST))
             {
-                _primary = prim || InputEx.GetKey(ControlsSettings.primary);
+                KeyCode keyCode = ControlsSettings.primary;
+                KeyCode keyCode2 = ControlsSettings.secondary;
+                if (arePrimaryAndSecondaryInputsReversedByHallucination)
+                {
+                    KeyCode num = keyCode;
+                    keyCode = keyCode2;
+                    keyCode2 = num;
+                }
+                flag = InputEx.GetKey(keyCode);
                 if (ControlsSettings.aiming == EControlMode.TOGGLE && asset != null && (asset.type == EItemType.GUN || asset.type == EItemType.OPTIC))
                 {
-                    if ((sec || InputEx.GetKey(ControlsSettings.secondary)) != flipSecondary)
+                    if (InputEx.GetKeyDown(keyCode2))
                     {
-                        flipSecondary = sec || InputEx.GetKey(ControlsSettings.secondary);
-                        if (flipSecondary)
-                        {
-                            _secondary = !secondary;
-                        }
+                        localWantsToAim = !localWantsToAim;
                     }
+                    flag2 = localWantsToAim;
                 }
                 else
                 {
-                    _secondary = sec || InputEx.GetKey(ControlsSettings.secondary);
-                    flipSecondary = secondary;
-                }
-                prim = false;
-                sec = false;
-                if (warp)
-                {
-                    bool flag = primary;
-                    _primary = secondary;
-                    _secondary = flag;
+                    flag2 = InputEx.GetKey(keyCode2);
                 }
                 if (PlayerManager.IsClientUnderFakeLagPenalty)
                 {
-                    _primary = false;
-                    _secondary = false;
+                    flag = false;
+                    flag2 = false;
+                    localWantsToAim = false;
                 }
             }
             else
             {
-                _primary = false;
-                _secondary = false;
+                flag = false;
+                flag2 = false;
+                localWantsToAim = false;
             }
+            if (flag != localWasPrimaryHeldLastFrame)
+            {
+                if (flag)
+                {
+                    localWasPrimaryPressedBetweenSimulationFrames = true;
+                }
+                else
+                {
+                    localWasPrimaryReleasedBetweenSimulationFrames = true;
+                }
+            }
+            localWasPrimaryHeldLastFrame = flag;
+            if (flag2 != localWasSecondaryHeldLastFrame)
+            {
+                if (flag2)
+                {
+                    localWasSecondaryPressedBetweenSimulationFrames = true;
+                }
+                else
+                {
+                    localWasSecondaryReleasedBetweenSimulationFrames = true;
+                }
+            }
+            localWasSecondaryHeldLastFrame = flag2;
         }
         wasTryingToSelect = false;
         if (base.channel.isOwner)
@@ -2306,14 +2344,6 @@ public class PlayerEquipment : PlayerCaller
                 if (InputEx.GetKeyDown(ControlsSettings.vision) && hasVision && !PlayerLifeUI.scopeOverlay.isVisible)
                 {
                     SendToggleVisionRequest.Invoke(GetNetId(), ENetReliability.Unreliable);
-                }
-                if (InputEx.GetKey(ControlsSettings.primary))
-                {
-                    prim = true;
-                }
-                if (InputEx.GetKey(ControlsSettings.secondary))
-                {
-                    sec = true;
                 }
                 if (InputEx.GetKeyDown(ControlsSettings.dequip) && isSelected && !isBusy && isEquipped)
                 {
@@ -2370,7 +2400,7 @@ public class PlayerEquipment : PlayerCaller
             tempCharacterMaterials = new Material[PlayerInventory.SLOTS];
             characterMythics = new MythicLockee[PlayerInventory.SLOTS];
         }
-        warp = false;
+        arePrimaryAndSecondaryInputsReversedByHallucination = false;
         _equippedPage = byte.MaxValue;
         _equipped_x = byte.MaxValue;
         _equipped_y = byte.MaxValue;
@@ -2444,6 +2474,32 @@ public class PlayerEquipment : PlayerCaller
         }
         PlayerLife life2 = base.player.life;
         life2.onLifeUpdated = (LifeUpdated)Delegate.Combine(life2.onLifeUpdated, new LifeUpdated(onLifeUpdated));
+    }
+
+    internal void CaptureAttackInputs(out EAttackInputFlags primaryAttack, out EAttackInputFlags secondaryAttack)
+    {
+        primaryAttack = EAttackInputFlags.None;
+        secondaryAttack = EAttackInputFlags.None;
+        if (localWasPrimaryPressedBetweenSimulationFrames || localWasPrimaryHeldLastFrame)
+        {
+            primaryAttack |= EAttackInputFlags.Start;
+        }
+        if (localWasPrimaryReleasedBetweenSimulationFrames)
+        {
+            primaryAttack |= EAttackInputFlags.Stop;
+        }
+        if (localWasSecondaryPressedBetweenSimulationFrames || localWasSecondaryHeldLastFrame)
+        {
+            secondaryAttack |= EAttackInputFlags.Start;
+        }
+        if (localWasSecondaryReleasedBetweenSimulationFrames)
+        {
+            secondaryAttack |= EAttackInputFlags.Stop;
+        }
+        localWasPrimaryPressedBetweenSimulationFrames = false;
+        localWasPrimaryReleasedBetweenSimulationFrames = false;
+        localWasSecondaryPressedBetweenSimulationFrames = false;
+        localWasSecondaryReleasedBetweenSimulationFrames = false;
     }
 
     private void OnDestroy()

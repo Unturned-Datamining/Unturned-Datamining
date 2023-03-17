@@ -114,7 +114,7 @@ public class PlayerInteract : PlayerCaller
     {
         if (base.player.equipment.canInspect)
         {
-            SendPlayInspect.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner());
+            SendPlayInspect.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner());
             base.player.equipment.InvokeOnInspectingUseable();
         }
     }

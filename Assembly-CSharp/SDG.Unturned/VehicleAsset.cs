@@ -488,7 +488,7 @@ public class VehicleAsset : Asset, ISkinableAsset
     public VehicleAsset(Bundle bundle, Data data, Local localization, ushort id)
         : base(bundle, data, localization, id)
     {
-        if (id < 200 && !bundle.hasResource && !data.has("Bypass_ID_Limit"))
+        if (id < 200 && !bundle.isCoreAsset && !data.has("Bypass_ID_Limit"))
         {
             throw new NotSupportedException("ID < 200");
         }

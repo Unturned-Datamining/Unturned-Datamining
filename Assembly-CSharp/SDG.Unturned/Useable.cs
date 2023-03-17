@@ -8,16 +8,18 @@ public class Useable : PlayerCaller
 
     public virtual bool isUseableShowingMenu => false;
 
-    public virtual void startPrimary()
+    public virtual bool startPrimary()
     {
+        return false;
     }
 
     public virtual void stopPrimary()
     {
     }
 
-    public virtual void startSecondary()
+    public virtual bool startSecondary()
     {
+        return false;
     }
 
     public virtual void stopSecondary()

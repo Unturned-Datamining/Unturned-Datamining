@@ -103,7 +103,7 @@ public class LightingManager : SteamCaller
             if (Provider.isServer)
             {
                 manager.updateLighting();
-                SendLightingCycle.Invoke(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), cycle);
+                SendLightingCycle.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), cycle);
             }
         }
     }
@@ -120,7 +120,7 @@ public class LightingManager : SteamCaller
             _offset = Provider.time - value;
             _time = value;
             manager.updateLighting();
-            SendLightingOffset.Invoke(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), offset);
+            SendLightingOffset.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), offset);
         }
     }
 
@@ -199,7 +199,7 @@ public class LightingManager : SteamCaller
         NetId netId = ((asset != null) ? NetIdRegistry.ClaimBlock(2u) : default(NetId));
         LevelLighting.SetActiveWeatherAsset(asset, blendAlpha, netId);
         Guid arg = asset?.GUID ?? Guid.Empty;
-        SendLightingActiveWeather.Invoke(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), arg, blendAlpha, netId);
+        SendLightingActiveWeather.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), arg, blendAlpha, netId);
     }
 
     public static bool IsWeatherActive(WeatherAssetBase weatherAsset)
@@ -405,7 +405,7 @@ public class LightingManager : SteamCaller
             windDelay = UnityEngine.Random.Range(45, 75);
             lastWind = Time.time;
             LevelLighting.wind = UnityEngine.Random.Range(0, 360);
-            SendLightingWind.Invoke(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), MeasurementTool.angleToByte(LevelLighting.wind));
+            SendLightingWind.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), MeasurementTool.angleToByte(LevelLighting.wind));
         }
         if (day > LevelLighting.bias)
         {

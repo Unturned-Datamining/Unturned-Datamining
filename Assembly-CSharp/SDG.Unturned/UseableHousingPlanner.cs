@@ -140,25 +140,37 @@ public class UseableHousingPlanner : Useable
         SendPlaceHousingItemResult.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GetOwnerTransportConnection(), arg);
     }
 
-    public override void startPrimary()
+    public override bool startPrimary()
     {
-        if (!base.player.equipment.isBusy && base.channel.isOwner && selectedAsset != null && UpdatePendingPlacement())
+        if (base.player.equipment.isBusy)
+        {
+            return false;
+        }
+        if (base.channel.isOwner && selectedAsset != null && UpdatePendingPlacement())
         {
             SendPlaceHousingItem.Invoke(GetNetId(), ENetReliability.Reliable, selectedAsset.GUID, pendingPlacementPosition, pendingPlacementYaw + customRotationOffset);
+            return true;
         }
+        return false;
     }
 
-    public override void startSecondary()
+    public override bool startSecondary()
     {
-        if (base.channel.isOwner && selectedAsset != null && selectedAsset.construct != EConstruct.FLOOR_POLY && selectedAsset.construct != EConstruct.ROOF_POLY)
+        if (base.channel.isOwner && selectedAsset != null)
         {
+            if (selectedAsset.construct == EConstruct.FLOOR_POLY || selectedAsset.construct == EConstruct.ROOF_POLY)
+            {
+                return false;
+            }
             float num = ((selectedAsset.construct != 0 && selectedAsset.construct != EConstruct.ROOF) ? ((selectedAsset.construct != EConstruct.RAMPART && selectedAsset.construct != EConstruct.WALL) ? 30f : 180f) : 90f);
             if (InputEx.GetKey(KeyCode.LeftShift))
             {
                 num *= -1f;
             }
             customRotationOffset += num;
+            return true;
         }
+        return false;
     }
 
     public override void equip()

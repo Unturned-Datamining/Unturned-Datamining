@@ -1179,7 +1179,7 @@ public class DamageTool
             parameters.relevantDistance = EffectManager.SMALL;
             if (instigatingClient != null && instigatingClient.player != null && instigatingClient.player.channel != null)
             {
-                parameters.SetRelevantTransportConnections(instigatingClient.player.channel.EnumerateClients_WithinSphereOrOwner(position, EffectManager.SMALL));
+                parameters.SetRelevantTransportConnections(instigatingClient.player.channel.GatherOwnerAndClientConnectionsWithinSphere(position, EffectManager.SMALL));
             }
             EffectManager.triggerEffect(parameters);
         }
@@ -1262,7 +1262,7 @@ public class DamageTool
         PlayBulletImpactAudio(position, materialName);
     }
 
-    internal static void ServerSpawnBulletImpact(Vector3 position, Vector3 normal, string materialName, Transform colliderTransform, IEnumerable<ITransportConnection> transportConnections)
+    internal static void ServerSpawnBulletImpact(Vector3 position, Vector3 normal, string materialName, Transform colliderTransform, List<ITransportConnection> transportConnections)
     {
         position += normal * UnityEngine.Random.Range(0.04f, 0.06f);
         SendSpawnBulletImpact.Invoke(ENetReliability.Unreliable, transportConnections, position, normal, materialName, colliderTransform);
@@ -1275,7 +1275,7 @@ public class DamageTool
         PlayLegacyImpactAudio(position, materialName);
     }
 
-    internal static void ServerSpawnLegacyImpact(Vector3 position, Vector3 normal, string materialName, Transform colliderTransform, IEnumerable<ITransportConnection> transportConnections)
+    internal static void ServerSpawnLegacyImpact(Vector3 position, Vector3 normal, string materialName, Transform colliderTransform, List<ITransportConnection> transportConnections)
     {
         position += normal * UnityEngine.Random.Range(0.04f, 0.06f);
         SendSpawnLegacyImpact.Invoke(ENetReliability.Unreliable, transportConnections, position, normal, materialName, colliderTransform);

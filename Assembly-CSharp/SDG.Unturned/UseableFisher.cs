@@ -187,11 +187,11 @@ public class UseableFisher : Useable
         }
     }
 
-    public override void startPrimary()
+    public override bool startPrimary()
     {
         if (base.player.equipment.isBusy)
         {
-            return;
+            return false;
         }
         if (isFishing)
         {
@@ -208,23 +208,22 @@ public class UseableFisher : Useable
                 }
             }
             reel();
-            if (!Provider.isServer)
+            if (Provider.isServer)
             {
-                return;
-            }
-            if (isCatch)
-            {
-                isCatch = false;
-                ushort num = SpawnTableTool.resolve(((ItemFisherAsset)base.player.equipment.asset).rewardID);
-                if (num != 0)
+                if (isCatch)
                 {
-                    base.player.inventory.forceAddItem(new Item(num, EItemOrigin.NATURE), auto: false);
+                    isCatch = false;
+                    ushort num = SpawnTableTool.resolve(((ItemFisherAsset)base.player.equipment.asset).rewardID);
+                    if (num != 0)
+                    {
+                        base.player.inventory.forceAddItem(new Item(num, EItemOrigin.NATURE), auto: false);
+                    }
+                    base.player.sendStat(EPlayerStat.FOUND_FISHES);
+                    base.player.skills.askPay(3u);
                 }
-                base.player.sendStat(EPlayerStat.FOUND_FISHES);
-                base.player.skills.askPay(3u);
+                SendPlayReel.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner());
+                AlertTool.alert(base.transform.position, 8f);
             }
-            SendPlayReel.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner());
-            AlertTool.alert(base.transform.position, 8f);
         }
         else
         {
@@ -236,6 +235,7 @@ public class UseableFisher : Useable
                 startStrength();
             }
         }
+        return true;
     }
 
     public override void stopPrimary()
@@ -260,7 +260,7 @@ public class UseableFisher : Useable
             cast();
             if (Provider.isServer)
             {
-                SendPlayCast.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.EnumerateClients_RemoteNotOwner());
+                SendPlayCast.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner());
                 AlertTool.alert(base.transform.position, 8f);
             }
         }

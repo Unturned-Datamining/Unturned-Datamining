@@ -39,7 +39,7 @@ Message_2_Responses 2
 Message_2_Response_0 6
 Message_2_Response_1 7
 // Show when we finished the poster quest and don't have the valentines
-Message_2_Conditions 2
+Message_2_Conditions 3
 Message_2_Condition_0_Type Quest
 Message_2_Condition_0_Logic Equal
 Message_2_Condition_0_ID 56
@@ -48,6 +48,8 @@ Message_2_Condition_1_Type Quest
 Message_2_Condition_1_Logic Equal
 Message_2_Condition_1_ID 230
 Message_2_Condition_1_Status None
+Message_2_Condition_2_Type Holiday
+Message_2_Condition_2_Value Valentines
 
 Message_3_Pages 1
 
@@ -110,9 +112,6 @@ Response_6_Dialogue 232
 Response_6_Quest 230
 Response_6_Messages 1
 Response_6_Message_0 2
-Response_6_Conditions 1
-Response_6_Condition_0_Type Holiday
-Response_6_Condition_0_Value Valentines
 Response_6_Rewards 2
 Response_6_Reward_0_Type Quest
 Response_6_Reward_0_ID 230

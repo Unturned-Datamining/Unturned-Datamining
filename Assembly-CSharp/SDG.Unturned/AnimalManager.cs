@@ -103,7 +103,7 @@ public class AnimalManager : SteamCaller
             packInfo.animals.Add(animal);
             packInfo.spawns.Add(item);
             packs.Add(packInfo);
-            SendSingleAnimal.Invoke(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), delegate(NetPakWriter writer)
+            SendSingleAnimal.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), delegate(NetPakWriter writer)
             {
                 WriteSingleAnimal(animal, writer);
             });
@@ -301,27 +301,27 @@ public class AnimalManager : SteamCaller
 
     public static void sendAnimalAlive(Animal animal, Vector3 newPosition, byte newAngle)
     {
-        SendAnimalAlive.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), animal.index, newPosition, newAngle);
+        SendAnimalAlive.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), animal.index, newPosition, newAngle);
     }
 
     public static void sendAnimalDead(Animal animal, Vector3 newRagdoll, ERagdollEffect newRagdollEffect = ERagdollEffect.NONE)
     {
-        SendAnimalDead.InvokeAndLoopback(ENetReliability.Reliable, Provider.EnumerateClients_Remote(), animal.index, newRagdoll, newRagdollEffect);
+        SendAnimalDead.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), animal.index, newRagdoll, newRagdollEffect);
     }
 
     public static void sendAnimalStartle(Animal animal)
     {
-        SendAnimalStartle.InvokeAndLoopback(ENetReliability.Unreliable, Provider.EnumerateClients_Remote(), animal.index);
+        SendAnimalStartle.InvokeAndLoopback(ENetReliability.Unreliable, Provider.GatherRemoteClientConnections(), animal.index);
     }
 
     public static void sendAnimalAttack(Animal animal)
     {
-        SendAnimalAttack.InvokeAndLoopback(ENetReliability.Unreliable, Provider.EnumerateClients_Remote(), animal.index);
+        SendAnimalAttack.InvokeAndLoopback(ENetReliability.Unreliable, Provider.GatherRemoteClientConnections(), animal.index);
     }
 
     public static void sendAnimalPanic(Animal animal)
     {
-        SendAnimalPanic.InvokeAndLoopback(ENetReliability.Unreliable, Provider.EnumerateClients_Remote(), animal.index);
+        SendAnimalPanic.InvokeAndLoopback(ENetReliability.Unreliable, Provider.GatherRemoteClientConnections(), animal.index);
     }
 
     public static void dropLoot(Animal animal)

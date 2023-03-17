@@ -429,7 +429,7 @@ public class PlayerLife : PlayerCaller
         }
     }
 
-    internal void SendInitialPlayerState(IEnumerable<ITransportConnection> transportConnections)
+    internal void SendInitialPlayerState(List<ITransportConnection> transportConnections)
     {
         if (isDead)
         {
@@ -634,7 +634,7 @@ public class PlayerLife : PlayerCaller
             try
             {
                 SendDeath.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), newCause, newLimb, newKiller);
-                SendDead.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), ragdoll, ragdollEffect);
+                SendDead.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), ragdoll, ragdollEffect);
             }
             catch (Exception e)
             {
@@ -1350,7 +1350,7 @@ public class PlayerLife : PlayerCaller
             angle = MeasurementTool.angleToByte(yaw);
         }
         point += new Vector3(0f, 0.5f, 0f);
-        SendRevive.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.EnumerateClients_Remote(), point, angle);
+        SendRevive.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), point, angle);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 2, legacyName = "askRespawn")]

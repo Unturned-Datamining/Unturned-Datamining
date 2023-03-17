@@ -89,14 +89,25 @@ public class GroupManager : SteamCaller
         SendGroupInfo.Invoke(ENetReliability.Reliable, transportConnection, group.groupID, group.name, group.members);
     }
 
-    public static void sendGroupInfo(IEnumerable<ITransportConnection> transportConnections, GroupInfo group)
+    public static void sendGroupInfo(List<ITransportConnection> transportConnections, GroupInfo group)
     {
         SendGroupInfo.Invoke(ENetReliability.Reliable, transportConnections, group.groupID, group.name, group.members);
     }
 
+    [Obsolete]
+    public static void sendGroupInfo(IEnumerable<ITransportConnection> transportConnections, GroupInfo group)
+    {
+        if (transportConnections is List<ITransportConnection> transportConnections2)
+        {
+            sendGroupInfo(transportConnections2, group);
+            return;
+        }
+        throw new ArgumentException("should be a list", "transportConnections");
+    }
+
     public static void sendGroupInfo(GroupInfo group)
     {
-        sendGroupInfo(Provider.EnumerateClients_RemotePredicate((SteamPlayer client) => client.player.quests.isMemberOfGroup(group.groupID)), group);
+        sendGroupInfo(Provider.GatherRemoteClientConnectionsMatchingPredicate((SteamPlayer client) => client.player.quests.isMemberOfGroup(group.groupID)), group);
     }
 
     [Obsolete]
