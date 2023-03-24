@@ -2328,6 +2328,19 @@ public class Provider : MonoBehaviour
         {
             _clientName = localization.format("Console");
             autoShutdownManager = steam.gameObject.AddComponent<BuiltinAutoShutdown>();
+            SteamGameServer.GetPublicIP().TryGetIPv4Address(out var address);
+            EHostBanFlags eHostBanFlags = HostBansManager.Get().MatchBasicDetails(address, port, serverName, _server.m_SteamID);
+            eHostBanFlags |= HostBansManager.Get().MatchExtendedDetails(configData.Browser.Desc_Server_List, configData.Browser.Thumbnail);
+            if ((eHostBanFlags & EHostBanFlags.RecommendHostCheckWarningsList) != 0)
+            {
+                CommandWindow.LogWarning("It appears this server has received a warning.");
+                CommandWindow.LogWarning("Checking the Unturned Server Standing page is recommended:");
+                CommandWindow.LogWarning("https://smartlydressedgames.com/UnturnedHostBans/index.html");
+            }
+            if (eHostBanFlags.HasFlag(EHostBanFlags.Blocked))
+            {
+                shutdown();
+            }
         }
         timeLastPacketWasReceivedFromServer = Time.realtimeSinceStartup;
     }
@@ -4384,6 +4397,10 @@ public class Provider : MonoBehaviour
             if (_modeConfigData == null)
             {
                 _modeConfigData = new ModeConfigData(mode);
+            }
+            if (!Dedicator.offlineOnly)
+            {
+                HostBansManager.Get().Refresh();
             }
             LogSystemInfo();
             return;

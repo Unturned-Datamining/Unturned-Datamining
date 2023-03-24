@@ -184,7 +184,7 @@ public class StructureDrop
             return;
         }
         Player player = context.GetPlayer();
-        if (player == null || player.life.isDead || !OwnershipTool.checkToggle(player.channel.owner.playerID.steamID, serversideData.owner, player.quests.groupID, serversideData.group))
+        if (player == null || player.life.isDead || (_model.position - player.transform.position).sqrMagnitude > 400f || !OwnershipTool.checkToggle(player.channel.owner.playerID.steamID, serversideData.owner, player.quests.groupID, serversideData.group))
         {
             return;
         }

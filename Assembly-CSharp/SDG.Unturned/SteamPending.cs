@@ -249,9 +249,9 @@ public class SteamPending : SteamConnectedClientBase
         {
             if (canAcceptYet)
             {
-                return "ready to accept from queue";
+                return $"ready to accept from queue, elapsed: {realtimeSinceSentVerifyPacket}s";
             }
-            return $"hasAuthentication: {hasAuthentication} hasProof: {hasProof} hasGroup: {hasGroup}";
+            return $"hasAuthentication: {hasAuthentication} hasProof: {hasProof} hasGroup: {hasGroup} elapsed: {realtimeSinceSentVerifyPacket}s";
         }
         return "normal waiting in queue";
     }

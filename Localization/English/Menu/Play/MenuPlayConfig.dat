@@ -205,3 +205,6 @@ Allow_Item_Placement_On_Vehicle Allow Item Placement On Vehicle
 Allow_Trap_Placement_On_Vehicle Allow Trap Placement On Vehicle
 Max_Item_Distance_From_Hull Max Item Distance From Hull
 Max_Trap_Distance_From_Hull Max Trap Distance From Hull
+
+ThirdPerson_RecoilMultiplier Third-Person Recoil Multiplier
+ThirdPerson_SpreadMultiplier Third-Person Spread Multiplier

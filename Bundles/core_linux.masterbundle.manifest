@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 945163159
+CRC: 4166640849
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 25dd3d1c25604d4f73184c4a1c620048
+    Hash: 2e645fb727822d89f8e8554e37b3ed5e
   TypeTreeHash:
     serializedVersion: 2
     Hash: feb97dbf77ef8cec3212470924f33ba4
@@ -296,6 +296,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Physics/ShotgunShellBounce/Water/ShotgunShell_Land_Water_03.wav
 - Assets/CoreMasterBundle/Skins/Grizzly/Zone_Defender/Skin_Secondary_298.mat
 - Assets/CoreMasterBundle/Items/Barricades/Library_Maple/Nav.prefab
+- Assets/CoreMasterBundle/Objects/Small/Overgrowth/IsaacMemorial/Decal.png
 - Assets/CoreMasterBundle/Items/Guns/Luger/Albedo_Base.png
 - Assets/CoreMasterBundle/Trees/Pine_0/Resource_Old.prefab
 - Assets/CoreMasterBundle/Skins/Ekho/Toy/Skin_Secondary_296.mat

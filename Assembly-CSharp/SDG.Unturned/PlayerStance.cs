@@ -23,9 +23,9 @@ public class PlayerStance : PlayerCaller
 
     public static readonly float DETECT_STAND = 12f;
 
-    public static readonly float DETECT_CROUCH = 5f;
+    public static readonly float DETECT_CROUCH = 6f;
 
-    public static readonly float DETECT_PRONE = 2f;
+    public static readonly float DETECT_PRONE = 3f;
 
     public StanceUpdated onStanceUpdated;
 
@@ -77,51 +77,8 @@ public class PlayerStance : PlayerCaller
         }
     }
 
-    public float radius
-    {
-        get
-        {
-            if (base.player.movement.nav != byte.MaxValue && ZombieManager.regions[base.player.movement.nav].isHyper)
-            {
-                return 24f;
-            }
-            if (stance == EPlayerStance.DRIVING)
-            {
-                if (base.player.movement.getVehicle().sirensOn)
-                {
-                    return DETECT_FORWARD;
-                }
-                if (base.player.movement.getVehicle().speed > 0f)
-                {
-                    return DETECT_FORWARD * base.player.movement.getVehicle().speed / base.player.movement.getVehicle().asset.speedMax;
-                }
-                return DETECT_BACKWARD * base.player.movement.getVehicle().speed / base.player.movement.getVehicle().asset.speedMin;
-            }
-            if (stance == EPlayerStance.SITTING)
-            {
-                return 0f;
-            }
-            if (stance == EPlayerStance.SPRINT)
-            {
-                return DETECT_SPRINT * (base.player.movement.isMoving ? DETECT_MOVE : 1f);
-            }
-            if (stance == EPlayerStance.STAND || stance == EPlayerStance.SWIM)
-            {
-                float num = 1f - base.player.skills.mastery(1, 0) * 0.5f;
-                return DETECT_STAND * (base.player.movement.isMoving ? DETECT_MOVE : 1f) * num;
-            }
-            float num2 = 1f - base.player.skills.mastery(1, 0) * 0.75f;
-            if (stance == EPlayerStance.CROUCH || stance == EPlayerStance.CLIMB)
-            {
-                return DETECT_CROUCH * (base.player.movement.isMoving ? DETECT_MOVE : 1f) * num2;
-            }
-            if (stance == EPlayerStance.PRONE)
-            {
-                return DETECT_PRONE * (base.player.movement.isMoving ? DETECT_MOVE : 1f) * num2;
-            }
-            return 0f;
-        }
-    }
+    [Obsolete("Renamed to GetStealthDetectionRadius.")]
+    public float radius => GetStealthDetectionRadius();
 
     public bool crouch => _localWantsToCrouch;
 
@@ -162,6 +119,49 @@ public class PlayerStance : PlayerCaller
     public bool isBodyUnderwater => WaterUtility.isPointUnderwater(base.transform.position + new Vector3(0f, 1.25f, 0f));
 
     public static event Action<PlayerStance> OnStanceChanged_Global;
+
+    public float GetStealthDetectionRadius()
+    {
+        if (base.player.movement.nav != byte.MaxValue && ZombieManager.regions[base.player.movement.nav].isHyper)
+        {
+            return 24f;
+        }
+        if (stance == EPlayerStance.DRIVING)
+        {
+            if (base.player.movement.getVehicle().sirensOn)
+            {
+                return DETECT_FORWARD;
+            }
+            if (base.player.movement.getVehicle().speed > 0f)
+            {
+                return DETECT_FORWARD * base.player.movement.getVehicle().speed / base.player.movement.getVehicle().asset.speedMax;
+            }
+            return DETECT_BACKWARD * base.player.movement.getVehicle().speed / base.player.movement.getVehicle().asset.speedMin;
+        }
+        if (stance == EPlayerStance.SITTING)
+        {
+            return 0f;
+        }
+        if (stance == EPlayerStance.SPRINT)
+        {
+            return DETECT_SPRINT * (base.player.movement.isMoving ? DETECT_MOVE : 1f);
+        }
+        if (stance == EPlayerStance.STAND || stance == EPlayerStance.SWIM)
+        {
+            float num = 1f - base.player.skills.mastery(1, 0) * 0.5f;
+            return DETECT_STAND * (base.player.movement.isMoving ? DETECT_MOVE : 1f) * num;
+        }
+        float num2 = 1f - base.player.skills.mastery(1, 0) * 0.75f;
+        if (stance == EPlayerStance.CROUCH || stance == EPlayerStance.CLIMB)
+        {
+            return DETECT_CROUCH * (base.player.movement.isMoving ? DETECT_MOVE : 1f) * num2;
+        }
+        if (stance == EPlayerStance.PRONE)
+        {
+            return DETECT_PRONE * (base.player.movement.isMoving ? DETECT_MOVE : 1f) * num2;
+        }
+        return 0f;
+    }
 
     public static void drawCapsule(Vector3 position, float height, Color color, float lifespan = 0f)
     {
@@ -650,7 +650,7 @@ public class PlayerStance : PlayerCaller
             lastDetect = Time.realtimeSinceStartup;
             if (!base.player.life.isDead)
             {
-                AlertTool.alert(base.player, base.transform.position, radius, stance != EPlayerStance.SPRINT && stance != EPlayerStance.DRIVING, base.player.look.aim.forward, base.player.isSpotOn);
+                AlertTool.alert(base.player, base.transform.position, GetStealthDetectionRadius(), stance != EPlayerStance.SPRINT && stance != EPlayerStance.DRIVING, base.player.look.aim.forward, base.player.isSpotOn);
             }
         }
     }

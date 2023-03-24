@@ -26,6 +26,8 @@ public class BarricadeDrop
 
     internal static readonly ServerInstanceMethod SendSalvageRequest = ServerInstanceMethod.Get(typeof(BarricadeDrop), "ReceiveSalvageRequest");
 
+    private static List<IManualOnDestroy> destroyEventComponents = new List<IManualOnDestroy>();
+
     private NetId _netId;
 
     internal BarricadeData serversideData;
@@ -188,7 +190,7 @@ public class BarricadeDrop
     public void ReceiveSalvageRequest(in ServerInvocationContext context)
     {
         Player player = context.GetPlayer();
-        if (player == null || player.life.isDead || (!asset.shouldBypassPickupOwnership && !OwnershipTool.checkToggle(player.channel.owner.playerID.steamID, serversideData.owner, player.quests.groupID, serversideData.group)) || !BarricadeManager.tryGetRegion(_model, out var x, out var y, out var plant, out var region))
+        if (player == null || player.life.isDead || (_model.position - player.transform.position).sqrMagnitude > 400f || (!asset.shouldBypassPickupOwnership && !OwnershipTool.checkToggle(player.channel.owner.playerID.steamID, serversideData.owner, player.quests.groupID, serversideData.group)) || !BarricadeManager.tryGetRegion(_model, out var x, out var y, out var plant, out var region))
         {
             return;
         }
@@ -222,7 +224,12 @@ public class BarricadeDrop
     {
         try
         {
-            model.GetComponent<IManualOnDestroy>()?.ManualOnDestroy();
+            destroyEventComponents.Clear();
+            model.GetComponents(destroyEventComponents);
+            foreach (IManualOnDestroy destroyEventComponent in destroyEventComponents)
+            {
+                destroyEventComponent.ManualOnDestroy();
+            }
             ReleaseNetId();
             model.position = Vector3.zero;
             BarricadeManager.instance.DestroyOrReleaseBarricade(asset, model.gameObject);

@@ -29,7 +29,8 @@ public class AlertTool
 
     public static void alert(Player player, Vector3 position, float radius, bool sneak, Vector3 spotDir, bool isSpotOn)
     {
-        float min = Level.getAsset()?.minStealthRadius ?? 0f;
+        _ = Level.getAsset()?.minStealthRadius;
+        float min = Mathf.Max(1f, radius);
         radius *= Provider.modeConfigData.Players.Detect_Radius_Multiplier;
         radius = Mathf.Clamp(radius, min, 64f);
         if (player == null)
