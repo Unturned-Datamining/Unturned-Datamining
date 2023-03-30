@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using SDG.NetPak;
 using SDG.NetTransport;
 using SDG.Provider;
 using Steamworks;
@@ -85,7 +84,9 @@ public class SteamPending : SteamConnectedClientBase
 
     public float lastReceivedPingRequestRealtime;
 
-    private float sentVerifyPacketRealtime;
+    private double sentVerifyPacketRealtime;
+
+    private bool _hasSentVerifyPacket;
 
     internal EClientPlatform clientPlatform;
 
@@ -125,27 +126,25 @@ public class SteamPending : SteamConnectedClientBase
 
     public string language => _language;
 
-    public bool hasSentVerifyPacket => sentVerifyPacketRealtime > -0.5f;
+    public bool hasSentVerifyPacket => _hasSentVerifyPacket;
 
-    public float realtimeSinceSentVerifyPacket => Time.realtimeSinceStartup - sentVerifyPacketRealtime;
+    public float realtimeSinceSentVerifyPacket => (float)(Time.realtimeSinceStartupAsDouble - sentVerifyPacketRealtime);
 
     public CSteamID lobbyID { get; private set; }
 
     public void sendVerifyPacket()
     {
-        if (hasSentVerifyPacket)
+        if (!hasSentVerifyPacket)
         {
-            return;
+            sentVerifyPacketRealtime = Time.realtimeSinceStartupAsDouble;
+            _hasSentVerifyPacket = true;
+            if (playerID.steamID.IsValid())
+            {
+                NetMessages.SendMessageToClient(EClientMessage.Verify, ENetReliability.Reliable, base.transportConnection, delegate
+                {
+                });
+            }
         }
-        sentVerifyPacketRealtime = Time.realtimeSinceStartup;
-        if (!playerID.steamID.IsValid())
-        {
-            return;
-        }
-        NetMessages.SendMessageToClient(EClientMessage.Verify, ENetReliability.Reliable, base.transportConnection, delegate(NetPakWriter writer)
-        {
-            writer.WriteList(MasterBundleValidation.eligibleBundleNames, (string name) => writer.WriteString(name), ClientMessageHandler_Verify.BUNDLE_NAMES_LENGTH);
-        });
     }
 
     public void inventoryDetailsReady()
@@ -231,7 +230,7 @@ public class SteamPending : SteamConnectedClientBase
         packageGlasses = newPackageGlasses;
         packageSkins = newPackageSkins;
         lastReceivedPingRequestRealtime = Time.realtimeSinceStartup;
-        sentVerifyPacketRealtime = -1f;
+        sentVerifyPacketRealtime = -1.0;
         lobbyID = newLobbyID;
         this.clientPlatform = clientPlatform;
     }
@@ -240,7 +239,7 @@ public class SteamPending : SteamConnectedClientBase
     {
         _playerID = new SteamPlayerID(CSteamID.Nil, 0, "Player Name", "Character Name", "Nick Name", CSteamID.Nil);
         lastReceivedPingRequestRealtime = Time.realtimeSinceStartup;
-        sentVerifyPacketRealtime = -1f;
+        sentVerifyPacketRealtime = -1.0;
     }
 
     internal string GetQueueStateDebugString()

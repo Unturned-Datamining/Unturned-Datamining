@@ -1068,7 +1068,7 @@ public class PlayerLifeUI
         if (trackedQuest.conditions != null)
         {
             trackedQuestBar.RemoveAllChildren();
-            int num = 0;
+            int num = 5;
             for (int i = 0; i < trackedQuest.conditions.Length; i++)
             {
                 INPCCondition iNPCCondition = trackedQuest.conditions[i];
@@ -1446,14 +1446,14 @@ public class PlayerLifeUI
         voiceBox.isVisible = false;
         trackedQuestTitle = Glazier.Get().CreateLabel();
         trackedQuestTitle.positionOffset_X = -500;
-        trackedQuestTitle.positionOffset_Y = 215;
+        trackedQuestTitle.positionOffset_Y = 200;
         trackedQuestTitle.positionScale_X = 1f;
         trackedQuestTitle.sizeOffset_X = 500;
-        trackedQuestTitle.sizeOffset_Y = 25;
+        trackedQuestTitle.sizeOffset_Y = 35;
         trackedQuestTitle.enableRichText = true;
         trackedQuestTitle.textColor = ESleekTint.RICH_TEXT_DEFAULT;
         trackedQuestTitle.fontSize = ESleekFontSize.Medium;
-        trackedQuestTitle.fontAlignment = TextAnchor.MiddleRight;
+        trackedQuestTitle.fontAlignment = TextAnchor.LowerRight;
         trackedQuestTitle.shadowStyle = ETextContrastContext.ColorfulBackdrop;
         container.AddChild(trackedQuestTitle);
         trackedQuestBar = Glazier.Get().CreateImage();

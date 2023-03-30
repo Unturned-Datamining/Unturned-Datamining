@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -74,5 +75,20 @@ internal class AudioSourcePool : MonoBehaviour
             }
             availableComponents.Add(component);
         }
+    }
+
+    private void OnEnable()
+    {
+        CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Combine(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
+    }
+
+    private void OnDisable()
+    {
+        CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Remove(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
+    }
+
+    private void OnLogMemoryUsage(List<string> results)
+    {
+        results.Add($"Audio source pool size: {availableComponents.Count}");
     }
 }

@@ -150,7 +150,14 @@ public class GroupManager : SteamCaller
     private void Start()
     {
         manager = this;
+        CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Combine(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
         Level.onLevelLoaded = (LevelLoaded)Delegate.Combine(Level.onLevelLoaded, new LevelLoaded(onLevelLoaded));
+    }
+
+    private void OnLogMemoryUsage(List<string> results)
+    {
+        results.Add($"Groups: {knownGroups.Count}");
+        results.Add($"Queued group exits: {queuedExits.Count}");
     }
 
     public static bool isPlayerInGroupExitQueue(Player player)

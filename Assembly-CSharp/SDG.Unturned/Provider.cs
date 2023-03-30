@@ -28,6 +28,13 @@ public class Provider : MonoBehaviour
 {
     public delegate void BattlEyeKickCallback(SteamPlayer client, string reason);
 
+    internal struct ServerRequiredWorkshopFile
+    {
+        public ulong fileId;
+
+        public DateTime timestamp;
+    }
+
     public delegate void LoginSpawningHandler(SteamPlayerID playerID, ref Vector3 point, ref float yaw, ref EPlayerStance initialStance, ref bool needsNewSpawnpoint);
 
     public delegate void CommenceShutdownHandler();
@@ -50,9 +57,23 @@ public class Provider : MonoBehaviour
 
         public uint ip;
 
-        public List<PublishedFileId_t> publishedFileIds = new List<PublishedFileId_t>();
+        public List<ServerRequiredWorkshopFile> requiredFiles = new List<ServerRequiredWorkshopFile>();
 
         public float realTime;
+
+        internal bool FindRequiredFile(ulong fileId, out ServerRequiredWorkshopFile details)
+        {
+            foreach (ServerRequiredWorkshopFile requiredFile in requiredFiles)
+            {
+                if (requiredFile.fileId == fileId)
+                {
+                    details = requiredFile;
+                    return true;
+                }
+            }
+            details = default(ServerRequiredWorkshopFile);
+            return false;
+        }
     }
 
     public delegate void ServerReadingPacketHandler(CSteamID remoteSteamId, byte[] payload, int offset, int size, int channel);
@@ -227,7 +248,11 @@ public class Provider : MonoBehaviour
 
     internal static ENPCHoliday authorityHoliday;
 
+    private static CachedWorkshopResponse currentServerWorkshopResponse;
+
     private static List<ulong> _serverWorkshopFileIDs = new List<ulong>();
+
+    internal static List<ServerRequiredWorkshopFile> serverRequiredWorkshopFiles = new List<ServerRequiredWorkshopFile>();
 
     public static bool isLoadingUGC;
 
@@ -1122,13 +1147,14 @@ public class Provider : MonoBehaviour
     internal static void receiveWorkshopResponse(CachedWorkshopResponse response)
     {
         authorityHoliday = response.holiday;
+        currentServerWorkshopResponse = response;
         isWaitingForWorkshopResponse = false;
-        List<PublishedFileId_t> list = new List<PublishedFileId_t>(response.publishedFileIds.Count);
-        foreach (PublishedFileId_t publishedFileId in response.publishedFileIds)
+        List<PublishedFileId_t> list = new List<PublishedFileId_t>(response.requiredFiles.Count);
+        foreach (ServerRequiredWorkshopFile requiredFile in response.requiredFiles)
         {
-            if (publishedFileId.m_PublishedFileId != 0L)
+            if (requiredFile.fileId != 0L)
             {
-                list.Add(publishedFileId);
+                list.Add(new PublishedFileId_t(requiredFile.fileId));
             }
         }
         provider.workshopService.resetServerInvalidItems();
@@ -1156,9 +1182,20 @@ public class Provider : MonoBehaviour
 
     public static void registerServerUsingWorkshopFileId(ulong id)
     {
+        registerServerUsingWorkshopFileId(id, 0u);
+    }
+
+    internal static void registerServerUsingWorkshopFileId(ulong id, uint timestamp)
+    {
         if (!_serverWorkshopFileIDs.Contains(id))
         {
             _serverWorkshopFileIDs.Add(id);
+            ServerRequiredWorkshopFile serverRequiredWorkshopFile = default(ServerRequiredWorkshopFile);
+            serverRequiredWorkshopFile.fileId = id;
+            serverRequiredWorkshopFile.timestamp = DateTimeEx.FromUtcUnixTimeSeconds(timestamp);
+            ServerRequiredWorkshopFile item = serverRequiredWorkshopFile;
+            UnturnedLog.info($"Workshop file {id} requiring timestamp {item.timestamp.ToLocalTime()}");
+            serverRequiredWorkshopFiles.Add(item);
         }
     }
 
@@ -1806,6 +1843,60 @@ public class Provider : MonoBehaviour
         {
             _connectionFailureInfo = ESteamConnectionFailureInfo.MAP;
             RequestDisconnect("could not find level \"" + map + "\"");
+            return;
+        }
+        foreach (PublishedFileId_t serverPendingID in provider.workshopService.serverPendingIDs)
+        {
+            if (!currentServerWorkshopResponse.FindRequiredFile(serverPendingID.m_PublishedFileId, out var details))
+            {
+                UnturnedLog.error($"Server workshop files response missing details for file: {serverPendingID}");
+                continue;
+            }
+            if (details.timestamp.Year < 2000)
+            {
+                UnturnedLog.info($"Skipping timestamp comparison for server workshop file {serverPendingID} because timestamp is invalid ({details.timestamp.ToLocalTime()})");
+                continue;
+            }
+            if (!SteamUGC.GetItemInstallInfo(serverPendingID, out var _, out var _, 1024u, out var punTimeStamp))
+            {
+                UnturnedLog.info($"Skipping timestamp comparison for server workshop file {serverPendingID} because item install info is missing");
+                continue;
+            }
+            DateTime dateTime = DateTimeEx.FromUtcUnixTimeSeconds(punTimeStamp);
+            if (dateTime == details.timestamp)
+            {
+                UnturnedLog.info($"Workshop file {serverPendingID} timestamp matches between client and server ({dateTime})");
+                continue;
+            }
+            CachedUGCDetails cachedDetails;
+            bool cachedDetails2 = TempSteamworksWorkshop.getCachedDetails(serverPendingID, out cachedDetails);
+            string text = ((!cachedDetails2) ? $"Unknown File ID {serverPendingID}" : cachedDetails.GetTitle());
+            _connectionFailureInfo = ESteamConnectionFailureInfo.CUSTOM;
+            string text2 = ((!(details.timestamp > dateTime)) ? ("Server is running an older version of the \"" + text + "\" workshop file.") : ("Server is running a newer version of the \"" + text + "\" workshop file."));
+            if (cachedDetails2)
+            {
+                DateTime dateTime2 = DateTimeEx.FromUtcUnixTimeSeconds(cachedDetails.updateTimestamp);
+                if (dateTime == dateTime2)
+                {
+                    text2 += "\nYour installed copy of the file matches the most recent version on Steam.";
+                    text2 += $"\nLocal and Steam timestamp: {dateTime.ToLocalTime()} Server timestamp: {details.timestamp.ToLocalTime()}";
+                }
+                else if (details.timestamp == dateTime2)
+                {
+                    text2 += "\nThe server's installed copy of the file matches the most recent version on Steam.";
+                    text2 += $"\nLocal timestamp: {dateTime.ToLocalTime()} Server and Steam timestamp: {details.timestamp.ToLocalTime()}";
+                }
+                else
+                {
+                    text2 += $"\nLocal timestamp: {dateTime.ToLocalTime()} Server timestamp: {details.timestamp.ToLocalTime()} Steam timestamp: {dateTime2}";
+                }
+            }
+            else
+            {
+                text2 += $"\nLocal timestamp: {dateTime.ToLocalTime()} Server timestamp: {details.timestamp.ToLocalTime()}";
+            }
+            _connectionFailureReason = text2;
+            RequestDisconnect($"Loaded workshop file timestamp mismatch (File ID: {serverPendingID} Local timestamp: {dateTime.ToLocalTime()} Server timestamp: {details.timestamp.ToLocalTime()})");
             return;
         }
         Assets.ApplyServerAssetMapping(level, provider.workshopService.serverPendingIDs);

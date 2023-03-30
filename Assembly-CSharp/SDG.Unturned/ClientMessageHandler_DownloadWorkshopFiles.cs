@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using SDG.NetPak;
-using Steamworks;
 using UnityEngine;
 
 namespace SDG.Unturned;
 
 internal static class ClientMessageHandler_DownloadWorkshopFiles
 {
-    private static List<PublishedFileId_t> fileIds = new List<PublishedFileId_t>();
+    private static List<Provider.ServerRequiredWorkshopFile> requiredFiles = new List<Provider.ServerRequiredWorkshopFile>();
 
     private static readonly NetLength MAX_FILES = new NetLength(255u);
 
@@ -15,8 +14,8 @@ internal static class ClientMessageHandler_DownloadWorkshopFiles
     {
         Provider.isWaitingForWorkshopResponse = false;
         reader.ReadEnum(out var value);
-        fileIds.Clear();
-        reader.ReadList(fileIds, (SystemNetPakReaderEx.ReadListItem<PublishedFileId_t>)reader.ReadSteamID, MAX_FILES);
+        requiredFiles.Clear();
+        reader.ReadList(requiredFiles, ReadRequiredWorkshopFile, MAX_FILES);
         uint ip = Provider.currentServerInfo.ip;
         if (ip == 0)
         {
@@ -39,8 +38,18 @@ internal static class ClientMessageHandler_DownloadWorkshopFiles
         }
         cachedWorkshopResponse.holiday = value;
         cachedWorkshopResponse.ip = ip;
-        cachedWorkshopResponse.publishedFileIds = fileIds;
+        cachedWorkshopResponse.requiredFiles = requiredFiles;
         cachedWorkshopResponse.realTime = Time.realtimeSinceStartup;
         Provider.receiveWorkshopResponse(cachedWorkshopResponse);
+    }
+
+    private static bool ReadRequiredWorkshopFile(NetPakReader reader, out Provider.ServerRequiredWorkshopFile requiredFile)
+    {
+        requiredFile = default(Provider.ServerRequiredWorkshopFile);
+        if (reader.ReadUInt64(out requiredFile.fileId))
+        {
+            return reader.ReadDateTime(out requiredFile.timestamp);
+        }
+        return false;
     }
 }

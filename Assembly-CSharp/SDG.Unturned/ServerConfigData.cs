@@ -47,8 +47,6 @@ public class ServerConfigData
 
     public bool Validate_EconInfo_Hash;
 
-    public bool Validate_MasterBundle_Hashes;
-
     internal const float MAX_TIMEOUT_QUEUE_SECONDS = 25f;
 
     internal const float CLIENT_TIMEOUT_QUEUE_SECONDS = 30f;
@@ -67,7 +65,6 @@ public class ServerConfigData
         Enable_Kick_Input_Spam = false;
         Enable_Kick_Input_Timeout = false;
         Validate_EconInfo_Hash = true;
-        Validate_MasterBundle_Hashes = true;
     }
 
     internal float GetClampedTimeoutQueueSeconds()

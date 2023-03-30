@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using SDG.Framework.Water;
 using UnityEngine;
@@ -72,7 +73,7 @@ public class DynamicWaterTransparentSort : MonoBehaviour
         if (instance == null)
         {
             GameObject obj = new GameObject("DynamicWaterTransparentSort");
-            Object.DontDestroyOnLoad(obj);
+            UnityEngine.Object.DontDestroyOnLoad(obj);
             obj.hideFlags = HideFlags.HideAndDontSave;
             instance = obj.AddComponent<DynamicWaterTransparentSort>();
         }
@@ -127,11 +128,18 @@ public class DynamicWaterTransparentSort : MonoBehaviour
     private void Start()
     {
         LevelLighting.isSeaChanged += HandleIsSeaChanged;
+        CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Combine(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
     }
 
     private void OnDestroy()
     {
         LevelLighting.isSeaChanged -= HandleIsSeaChanged;
+        CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Remove(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
+    }
+
+    private void OnLogMemoryUsage(List<string> results)
+    {
+        results.Add($"Water transparent sort managed objects: {managedObjects.Count}");
     }
 
     private void Update()

@@ -33,6 +33,18 @@ internal class RegionList<T>
         return grid[GetCellIndex(position.x), GetCellIndex(position.z)];
     }
 
+    public IEnumerable<T> EnumerateAllItems()
+    {
+        List<T>[,] array = grid;
+        foreach (List<T> list in array)
+        {
+            foreach (T item in list)
+            {
+                yield return item;
+            }
+        }
+    }
+
     public IEnumerable<List<T>> EnumerateListsInSquare(Vector3 position, float radius)
     {
         int cellIndex = GetCellIndex(position.x - radius);

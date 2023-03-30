@@ -78,6 +78,38 @@ public class HousingConnections
         verticesGrid = new RegionList<HousingVertex>();
     }
 
+    internal void OnLogMemoryUsage(List<string> results)
+    {
+        int num = 0;
+        int num2 = 0;
+        int num3 = 0;
+        foreach (HousingEdge item in edgesGrid.EnumerateAllItems())
+        {
+            num++;
+            num2 += item.walls?.Count ?? 0;
+            num3 += item.forwardFloors?.Count ?? 0;
+            num3 += item.backwardFloors?.Count ?? 0;
+        }
+        results.Add($"Housing connection edges: {num}");
+        results.Add($"Housing connection edge walls: {num2}");
+        results.Add($"Housing connection edge floors: {num3}");
+        int num4 = 0;
+        int num5 = 0;
+        int num6 = 0;
+        int num7 = 0;
+        foreach (HousingVertex item2 in verticesGrid.EnumerateAllItems())
+        {
+            num4++;
+            num5 += item2.pillars?.Count ?? 0;
+            num6 += item2.floors?.Count ?? 0;
+            num7 += item2.edges?.Count ?? 0;
+        }
+        results.Add($"Housing connection vertices: {num4}");
+        results.Add($"Housing connection vertex pillars: {num5}");
+        results.Add($"Housing connection vertex floors: {num6}");
+        results.Add($"Housing connection vertex edges: {num7}");
+    }
+
     internal void LinkConnections(StructureDrop drop)
     {
         switch (drop.asset.construct)

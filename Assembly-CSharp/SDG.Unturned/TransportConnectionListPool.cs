@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,11 +6,11 @@ namespace SDG.Unturned;
 
 internal static class TransportConnectionListPool
 {
-    private static List<PooledTransportConnectionList> available = new List<PooledTransportConnectionList>();
+    private static List<PooledTransportConnectionList> available;
 
-    private static List<PooledTransportConnectionList> claimed = new List<PooledTransportConnectionList>();
+    private static List<PooledTransportConnectionList> claimed;
 
-    private static int lastWarningFrameNumber = -1;
+    private static int lastWarningFrameNumber;
 
     public static PooledTransportConnectionList Get()
     {
@@ -44,5 +45,19 @@ internal static class TransportConnectionListPool
             available.Add(item);
         }
         claimed.Clear();
+    }
+
+    static TransportConnectionListPool()
+    {
+        available = new List<PooledTransportConnectionList>();
+        claimed = new List<PooledTransportConnectionList>();
+        lastWarningFrameNumber = -1;
+        CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Combine(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
+    }
+
+    private static void OnLogMemoryUsage(List<string> results)
+    {
+        results.Add($"Transport connection list pool size: {available.Count}");
+        results.Add($"Transport connection list active count: {claimed.Count}");
     }
 }

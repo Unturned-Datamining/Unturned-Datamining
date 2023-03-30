@@ -835,6 +835,12 @@ public class RuntimeGizmos : MonoBehaviour
     {
         base.useGUILayout = false;
         lineRendererSharedMaterial = new Material(Shader.Find("Sprites/Default"));
+        CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Combine(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
+    }
+
+    private void OnDisable()
+    {
+        CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Remove(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
     }
 
     private void LateUpdate()
@@ -912,5 +918,48 @@ public class RuntimeGizmos : MonoBehaviour
         lineRendererLayers = new int[2];
         lineRendererLayers[0] = 18;
         lineRendererLayers[1] = 2;
+    }
+
+    private void OnLogMemoryUsage(List<string> results)
+    {
+        results.Add($"Runtime gizmos line renderer pool size: {lineRendererPool.Count}");
+        results.Add($"Runtime gizmos animation curve pool size: {animationCurvePool.Count}");
+        results.Add($"Runtime gizmos active line renderers: {activeLineRenderers.Count}");
+        results.Add($"Runtime gizmos pending labels: {labelsToRender.Count}");
+        int num = 0;
+        List<LineData>[] array = lineLayers;
+        foreach (List<LineData> list in array)
+        {
+            num += list.Count;
+        }
+        results.Add($"Runtime gizmos pending lines: {num}");
+        int num2 = 0;
+        List<SphereData>[] array2 = sphereLayers;
+        foreach (List<SphereData> list2 in array2)
+        {
+            num2 += list2.Count;
+        }
+        results.Add($"Runtime gizmos pending spheres: {num2}");
+        int num3 = 0;
+        List<CircleData>[] array3 = circleLayers;
+        foreach (List<CircleData> list3 in array3)
+        {
+            num3 += list3.Count;
+        }
+        results.Add($"Runtime gizmos pending circles: {num3}");
+        int num4 = 0;
+        List<CapsuleData>[] array4 = capsuleLayers;
+        foreach (List<CapsuleData> list4 in array4)
+        {
+            num4 += list4.Count;
+        }
+        results.Add($"Runtime gizmos pending capsules: {num4}");
+        int num5 = 0;
+        List<BoxData>[] array5 = boxLayers;
+        foreach (List<BoxData> list5 in array5)
+        {
+            num5 += list5.Count;
+        }
+        results.Add($"Runtime gizmos pending boxes: {num5}");
     }
 }

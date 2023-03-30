@@ -155,5 +155,11 @@ public class PlayerManager : SteamCaller
     private void Start()
     {
         Level.onLevelLoaded = (LevelLoaded)Delegate.Combine(Level.onLevelLoaded, new LevelLoaded(onLevelLoaded));
+        CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Combine(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
+    }
+
+    private void OnLogMemoryUsage(List<string> results)
+    {
+        results.Add($"Players: {Provider.clients?.Count}");
     }
 }

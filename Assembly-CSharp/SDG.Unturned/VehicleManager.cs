@@ -1898,9 +1898,15 @@ public class VehicleManager : SteamCaller
     private void Start()
     {
         manager = this;
+        CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Combine(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
         Level.onPrePreLevelLoaded = (PrePreLevelLoaded)Delegate.Combine(Level.onPrePreLevelLoaded, new PrePreLevelLoaded(onLevelLoaded));
         Level.onPostLevelLoaded = (PostLevelLoaded)Delegate.Combine(Level.onPostLevelLoaded, new PostLevelLoaded(onPostLevelLoaded));
         Provider.onServerDisconnected = (Provider.ServerDisconnected)Delegate.Combine(Provider.onServerDisconnected, new Provider.ServerDisconnected(onServerDisconnected));
+    }
+
+    private void OnLogMemoryUsage(List<string> results)
+    {
+        results.Add($"Vehicles: {vehicles.Count}");
     }
 
     public static void load()

@@ -888,8 +888,30 @@ public class StructureManager : SteamCaller
     private void Start()
     {
         manager = this;
+        CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Combine(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
         Level.onLevelLoaded = (LevelLoaded)Delegate.Combine(Level.onLevelLoaded, new LevelLoaded(onLevelLoaded));
         Player.onPlayerCreated = (PlayerCreated)Delegate.Combine(Player.onPlayerCreated, new PlayerCreated(onPlayerCreated));
+    }
+
+    private void OnLogMemoryUsage(List<string> results)
+    {
+        int num = 0;
+        int num2 = 0;
+        StructureRegion[,] array = regions;
+        foreach (StructureRegion structureRegion in array)
+        {
+            if (structureRegion.drops.Count > 0)
+            {
+                num++;
+            }
+            num2 += structureRegion.drops.Count;
+        }
+        results.Add($"Structure regions: {num}");
+        results.Add($"Structures placed: {num2}");
+        if (housingConnections != null)
+        {
+            housingConnections.OnLogMemoryUsage(results);
+        }
     }
 
     public static void load()

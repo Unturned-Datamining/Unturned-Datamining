@@ -17,7 +17,7 @@ public class Logs : MonoBehaviour
             string text = message.Trim();
             if (!string.IsNullOrEmpty(text))
             {
-                string arg = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                string arg = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
                 debugLog.writeLine($"[{arg}] {text}");
             }
         }

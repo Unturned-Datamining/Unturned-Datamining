@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 4166640849
+CRC: 3234064420
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 2e645fb727822d89f8e8554e37b3ed5e
+    Hash: dcf57a6f3d639975d99264e8421b2e13
   TypeTreeHash:
     serializedVersion: 2
     Hash: feb97dbf77ef8cec3212470924f33ba4
@@ -2114,6 +2114,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Sentry/Animations.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Fighter_Jet_Top/Shirt.png
 - Assets/CoreMasterBundle/Items/Barricades/Hatch_Maple/Barricade.prefab
+- Assets/CoreMasterBundle/Skins/Empire/Pegasus/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Items/Shirts/Hoodie_Black/Animations.prefab
 - Assets/CoreMasterBundle/Items/Guns/Bluntforce/Metallic_Base.png
 - Assets/CoreMasterBundle/Objects/Medium/Military/Crate_4/Object.prefab

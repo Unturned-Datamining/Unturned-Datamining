@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using SDG.Framework.Utilities;
+using SDG.Unturned;
 
 namespace UnityEngine;
 
@@ -145,5 +147,11 @@ public static class CharacterControllerExtension
         results = new RaycastHit[8];
         pendingChanges = new List<PendingEnableRigidbody>();
         TimeUtility.updated += OnUpdate;
+        CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Combine(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
+    }
+
+    private static void OnLogMemoryUsage(List<string> results)
+    {
+        results.Add($"Character controller pending changes: {pendingChanges.Count}");
     }
 }

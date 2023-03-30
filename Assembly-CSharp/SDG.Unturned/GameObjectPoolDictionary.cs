@@ -5,7 +5,7 @@ namespace SDG.Unturned;
 
 public class GameObjectPoolDictionary
 {
-    private Dictionary<GameObject, GameObjectPool> pools;
+    internal Dictionary<GameObject, GameObjectPool> pools;
 
     public PoolReference Instantiate(GameObject prefab)
     {

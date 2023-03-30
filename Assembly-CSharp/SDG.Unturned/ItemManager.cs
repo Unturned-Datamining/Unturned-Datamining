@@ -939,8 +939,35 @@ public class ItemManager : SteamCaller
     private void Start()
     {
         manager = this;
+        CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Combine(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
         Level.onLevelLoaded = (LevelLoaded)Delegate.Combine(Level.onLevelLoaded, new LevelLoaded(onLevelLoaded));
         LevelObjects.onRegionActivated = (RegionActivated)Delegate.Combine(LevelObjects.onRegionActivated, new RegionActivated(onRegionActivated));
         Player.onPlayerCreated = (PlayerCreated)Delegate.Combine(Player.onPlayerCreated, new PlayerCreated(onPlayerCreated));
+    }
+
+    private void OnLogMemoryUsage(List<string> results)
+    {
+        int num = 0;
+        int num2 = 0;
+        int num3 = 0;
+        int num4 = 0;
+        ItemRegion[,] array = regions;
+        foreach (ItemRegion itemRegion in array)
+        {
+            if (itemRegion.items.Count > 0)
+            {
+                num++;
+            }
+            num2 += itemRegion.items.Count;
+            if (itemRegion.drops.Count > 0)
+            {
+                num3++;
+            }
+            num4 += itemRegion.drops.Count;
+        }
+        results.Add($"Item regions: {num}");
+        results.Add($"Dropped items: {num2}");
+        results.Add($"Item regions with physical items: {num3}");
+        results.Add($"Dropped items with physics: {num4}");
     }
 }

@@ -180,6 +180,7 @@
 - [CommandLineValue.cs](CommandLineValue.cs)
 - [CommandLoadout.cs](CommandLoadout.cs)
 - [CommandLog.cs](CommandLog.cs)
+- [CommandLogMemoryUsage.cs](CommandLogMemoryUsage.cs)
 - [CommandMap.cs](CommandMap.cs)
 - [CommandMaxPlayers.cs](CommandMaxPlayers.cs)
 - [CommandMode.cs](CommandMode.cs)

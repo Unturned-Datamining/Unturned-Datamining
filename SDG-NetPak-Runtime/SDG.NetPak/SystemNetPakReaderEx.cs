@@ -7,6 +7,8 @@ public static class SystemNetPakReaderEx
 {
     public delegate bool ReadListItem<T>(out T item);
 
+    public delegate bool ReadListItemWithReader<T>(NetPakReader reader, out T item);
+
     public static bool ReadSignedInt(this NetPakReader reader, int bitCount, out int value)
     {
         uint value2;
@@ -189,6 +191,14 @@ public static class SystemNetPakReaderEx
         return result;
     }
 
+    public static bool ReadDateTime(this NetPakReader reader, out DateTime value)
+    {
+        long value2;
+        bool result = reader.ReadInt64(out value2);
+        value = DateTime.FromBinary(value2);
+        return result;
+    }
+
     public static bool ReadList<T>(this NetPakReader reader, List<T> list, ReadListItem<T> readFunc, NetLength maxLength)
     {
         uint value;
@@ -197,6 +207,19 @@ public static class SystemNetPakReaderEx
         for (int i = 0; i < value; i++)
         {
             flag &= readFunc(out var item);
+            list.Add(item);
+        }
+        return flag;
+    }
+
+    public static bool ReadList<T>(this NetPakReader reader, List<T> list, ReadListItemWithReader<T> readFunc, NetLength maxLength)
+    {
+        uint value;
+        bool flag = reader.ReadBits(maxLength.bitCount, out value);
+        value = maxLength.Clamp(value);
+        for (int i = 0; i < value; i++)
+        {
+            flag &= readFunc(reader, out var item);
             list.Add(item);
         }
         return flag;

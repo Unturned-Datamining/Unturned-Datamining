@@ -1534,7 +1534,31 @@ public class EffectManager : SteamCaller
     private void Start()
     {
         manager = this;
+        CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Combine(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
         Level.onPrePreLevelLoaded = (PrePreLevelLoaded)Delegate.Combine(Level.onPrePreLevelLoaded, new PrePreLevelLoaded(onLevelLoaded));
+    }
+
+    private void OnLogMemoryUsage(List<string> results)
+    {
+        results.Add($"Effect pool assets: {pool.pools.Count}");
+        int num = 0;
+        int num2 = 0;
+        foreach (KeyValuePair<GameObject, GameObjectPool> pool in pool.pools)
+        {
+            num += pool.Value.pool.Count;
+            num2 += pool.Value.active.Count;
+        }
+        results.Add($"Inactive pooled effects: {num}");
+        results.Add($"Active pooled effects: {num2}");
+        results.Add($"Effect debris: {debrisGameObjects?.Count}");
+        results.Add($"Attached effect parents: {attachedEffects.Count}");
+        int num3 = 0;
+        foreach (KeyValuePair<Transform, List<GameObject>> attachedEffect in attachedEffects)
+        {
+            num3 += attachedEffect.Value?.Count ?? 0;
+        }
+        results.Add($"Attached effect children: {num3}");
+        results.Add($"Attached effect pool size: {attachedEffectsListPool.Count}");
     }
 
     internal static void ClearAttachments(Transform root)

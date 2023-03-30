@@ -7,9 +7,9 @@ public class GameObjectPool
 {
     private GameObject prefab;
 
-    private Stack<GameObject> pool;
+    internal Stack<GameObject> pool;
 
-    private List<PoolReference> active;
+    internal List<PoolReference> active;
 
     public PoolReference Instantiate()
     {

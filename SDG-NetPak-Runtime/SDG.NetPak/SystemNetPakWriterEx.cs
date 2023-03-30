@@ -8,6 +8,8 @@ public static class SystemNetPakWriterEx
 {
     public delegate bool WriteListItem<T>(T item);
 
+    public delegate bool WriteListItemWithWriter<T>(NetPakWriter writer, T item);
+
     public static bool WriteSignedInt(this NetPakWriter writer, int value, int bitCount)
     {
         int num = 1 << bitCount - 1;
@@ -153,6 +155,11 @@ public static class SystemNetPakWriterEx
         return writer.WriteUInt64(value2) & writer.WriteUInt64(value3);
     }
 
+    public static bool WriteDateTime(this NetPakWriter writer, DateTime value)
+    {
+        return writer.WriteInt64(value.ToBinary());
+    }
+
     public static bool WriteList<T>(this NetPakWriter writer, List<T> list, WriteListItem<T> writeFunc, NetLength maxLength)
     {
         uint num = maxLength.Clamp(list.Count);
@@ -160,6 +167,17 @@ public static class SystemNetPakWriterEx
         for (int i = 0; i < num; i++)
         {
             flag &= writeFunc(list[i]);
+        }
+        return flag;
+    }
+
+    public static bool WriteList<T>(this NetPakWriter writer, List<T> list, WriteListItemWithWriter<T> writeFunc, NetLength maxLength)
+    {
+        uint num = maxLength.Clamp(list.Count);
+        bool flag = writer.WriteBits(num, maxLength.bitCount);
+        for (int i = 0; i < num; i++)
+        {
+            flag &= writeFunc(writer, list[i]);
         }
         return flag;
     }

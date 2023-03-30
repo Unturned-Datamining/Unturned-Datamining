@@ -2348,8 +2348,39 @@ public class BarricadeManager : SteamCaller
     private void Start()
     {
         manager = this;
+        CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Combine(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
         Level.onPreLevelLoaded = (PreLevelLoaded)Delegate.Combine(Level.onPreLevelLoaded, new PreLevelLoaded(onLevelLoaded));
         Player.onPlayerCreated = (PlayerCreated)Delegate.Combine(Player.onPlayerCreated, new PlayerCreated(onPlayerCreated));
+    }
+
+    private void OnLogMemoryUsage(List<string> results)
+    {
+        int num = 0;
+        int num2 = 0;
+        BarricadeRegion[,] array = regions;
+        foreach (BarricadeRegion barricadeRegion in array)
+        {
+            if (barricadeRegion.drops.Count > 0)
+            {
+                num++;
+            }
+            num2 += barricadeRegion.drops.Count;
+        }
+        results.Add($"Barricade regions: {num}");
+        results.Add($"Barricades placed on ground: {num2}");
+        int num3 = 0;
+        int num4 = 0;
+        foreach (VehicleBarricadeRegion internalVehicleRegion in internalVehicleRegions)
+        {
+            if (internalVehicleRegion.drops.Count > 0)
+            {
+                num3++;
+            }
+            num4 += internalVehicleRegion.drops.Count;
+        }
+        results.Add($"Barricade vehicle regions: {internalVehicleRegions.Count}");
+        results.Add($"Vehicles with barricades: {num3}");
+        results.Add($"Barricades placed on vehicles: {num4}");
     }
 
     public static void load()

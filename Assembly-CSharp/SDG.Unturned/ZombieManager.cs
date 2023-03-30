@@ -1300,6 +1300,7 @@ public class ZombieManager : SteamCaller
     private void Start()
     {
         manager = this;
+        CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Combine(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
         Level.onLevelLoaded = (LevelLoaded)Delegate.Combine(Level.onLevelLoaded, new LevelLoaded(onLevelLoaded));
         Level.onPostLevelLoaded = (PostLevelLoaded)Delegate.Combine(Level.onPostLevelLoaded, new PostLevelLoaded(onPostLevelLoaded));
         Player.onPlayerCreated = (PlayerCreated)Delegate.Combine(Player.onPlayerCreated, new PlayerCreated(onPlayerCreated));
@@ -1342,6 +1343,25 @@ public class ZombieManager : SteamCaller
                 dl_taunt[num] = Resources.Load<AudioClip>("Sounds/Zombies/DL_Volatile/volatile_taunt_0" + num);
             }
         }
+    }
+
+    private void OnLogMemoryUsage(List<string> results)
+    {
+        results.Add($"Zombie regions: {regions.Length}");
+        int num = 0;
+        int num2 = 0;
+        int num3 = 0;
+        ZombieRegion[] array = regions;
+        foreach (ZombieRegion zombieRegion in array)
+        {
+            num += zombieRegion.zombies?.Count ?? 0;
+            num2 += zombieRegion.alive;
+            num3 += zombieRegion.aliveBossZombieCount;
+        }
+        results.Add($"Zombies: {num}");
+        results.Add($"Alive zombies: {num2}");
+        results.Add($"Alive boss zombies: {num3}");
+        results.Add($"Ticking zombies: {tickingZombies.Count}");
     }
 
     public static PooledTransportConnectionList GatherClientConnections(byte bound)

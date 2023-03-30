@@ -744,6 +744,14 @@ public class AnimalManager : SteamCaller
     private void Start()
     {
         manager = this;
+        CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Combine(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
         Level.onLevelLoaded = (LevelLoaded)Delegate.Combine(Level.onLevelLoaded, new LevelLoaded(onLevelLoaded));
+    }
+
+    private void OnLogMemoryUsage(List<string> results)
+    {
+        results.Add($"Animals: {animals.Count}");
+        results.Add($"Animal packs: {packs.Count}");
+        results.Add($"Ticking animals: {tickingAnimals.Count}");
     }
 }

@@ -33,14 +33,7 @@ internal static class ServerMessageHandler_Authenticate
             Provider.reject(transportConnection, ESteamRejection.AUTH_VERIFICATION);
             return;
         }
-        if (!ReadEconomyDetails(steamPending, reader))
-        {
-            return;
-        }
-        reader.ReadUInt16(out var value2);
-        byte[] array2 = new byte[value2];
-        reader.ReadBytes(array2);
-        if (steamPending.playerID.BypassIntegrityChecks || MasterBundleValidation.serverHandleResponse(steamPending, array2))
+        if (ReadEconomyDetails(steamPending, reader))
         {
             if (steamPending.playerID.group == CSteamID.Nil || (bool)Dedicator.offlineOnly)
             {

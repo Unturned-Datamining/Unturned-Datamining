@@ -343,7 +343,12 @@ public static class DedicatedUGC
                 }
                 CommandWindow.LogFormat("Installed workshop item: {0}", fileId);
             }
-            Provider.registerServerUsingWorkshopFileId(fileId.m_PublishedFileId);
+            uint timestamp = 0u;
+            if (TempSteamworksWorkshop.getCachedDetails(fileId, out var cachedDetails))
+            {
+                timestamp = cachedDetails.updateTimestamp;
+            }
+            Provider.registerServerUsingWorkshopFileId(fileId.m_PublishedFileId, timestamp);
         }
         else
         {

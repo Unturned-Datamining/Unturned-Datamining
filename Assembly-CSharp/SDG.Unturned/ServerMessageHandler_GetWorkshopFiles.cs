@@ -60,7 +60,16 @@ internal static class ServerMessageHandler_GetWorkshopFiles
         NetMessages.SendMessageToClient(EClientMessage.DownloadWorkshopFiles, ENetReliability.Reliable, transportConnection, delegate(NetPakWriter writer)
         {
             writer.WriteEnum(Provider.authorityHoliday);
-            writer.WriteList(Provider.getServerWorkshopFileIDs(), (SystemNetPakWriterEx.WriteListItem<ulong>)writer.WriteUInt64, MAX_FILES);
+            writer.WriteList(Provider.serverRequiredWorkshopFiles, WriteServerRequiredWorkshopFile, MAX_FILES);
         });
+    }
+
+    private static bool WriteServerRequiredWorkshopFile(NetPakWriter writer, Provider.ServerRequiredWorkshopFile item)
+    {
+        if (writer.WriteUInt64(item.fileId))
+        {
+            return writer.WriteDateTime(item.timestamp);
+        }
+        return false;
     }
 }

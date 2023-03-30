@@ -38,6 +38,7 @@ public class ServerTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
             Steamworks.SteamGameServerNetworkingUtils.SetDebugOutputFunction(eSteamNetworkingSocketsDebugOutputType, GetDebugOutputFunction());
         }
         TimeUtility.updated += OnUpdate;
+        CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Combine(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
         SteamNetworkingIPAddr localAddress = default(SteamNetworkingIPAddr);
         if (string.IsNullOrEmpty(SDG.Unturned.Provider.bindAddress))
         {
@@ -62,6 +63,7 @@ public class ServerTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
     public void TearDown()
     {
         TimeUtility.updated -= OnUpdate;
+        CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Remove(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
         steamNetConnectionStatusChanged.Dispose();
         steamNetAuthenticationStatusChanged.Dispose();
         if (!SteamGameServerNetworkingSockets.CloseListenSocket(listenSocket))
@@ -136,6 +138,11 @@ public class ServerTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
     private void OnUpdate()
     {
         LogDebugOutput();
+    }
+
+    private void OnLogMemoryUsage(List<string> results)
+    {
+        results.Add($"Steam networking sockets transport connections: {transportConnections.Count}");
     }
 
     private void OnSteamNetConnectionStatusChanged(SteamNetConnectionStatusChangedCallback_t callback)
