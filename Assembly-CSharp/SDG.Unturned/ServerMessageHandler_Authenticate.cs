@@ -19,6 +19,7 @@ internal static class ServerMessageHandler_Authenticate
             Provider.reject(transportConnection, ESteamRejection.SERVER_FULL);
             return;
         }
+        UnturnedLog.info($"Received authentication request from queued player {steamPending.playerID}");
         reader.ReadUInt16(out var value);
         byte[] array = new byte[value];
         reader.ReadBytes(array);
@@ -27,11 +28,16 @@ internal static class ServerMessageHandler_Authenticate
             steamPending.assignedPro = steamPending.isPro;
             steamPending.assignedAdmin = SteamAdminlist.checkAdmin(steamPending.playerID.steamID);
             steamPending.hasAuthentication = true;
+            UnturnedLog.info($"Skipping Steam authentication for queued player {steamPending.playerID} because we are running offline-only");
         }
-        else if (!Provider.verifyTicket(steamPending.playerID.steamID, array))
+        else
         {
-            Provider.reject(transportConnection, ESteamRejection.AUTH_VERIFICATION);
-            return;
+            if (!Provider.verifyTicket(steamPending.playerID.steamID, array))
+            {
+                Provider.reject(transportConnection, ESteamRejection.AUTH_VERIFICATION);
+                return;
+            }
+            UnturnedLog.info($"Submitted Steam authentication request for queued player {steamPending.playerID}");
         }
         if (ReadEconomyDetails(steamPending, reader))
         {
@@ -43,6 +49,10 @@ internal static class ServerMessageHandler_Authenticate
             {
                 steamPending.playerID.group = CSteamID.Nil;
                 steamPending.hasGroup = true;
+            }
+            else
+            {
+                UnturnedLog.info($"Submitted Steam group request for queued player {steamPending.playerID}");
             }
             if (steamPending.canAcceptYet)
             {

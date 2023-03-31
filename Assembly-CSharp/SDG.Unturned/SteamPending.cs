@@ -140,6 +140,7 @@ public class SteamPending : SteamConnectedClientBase
             _hasSentVerifyPacket = true;
             if (playerID.steamID.IsValid())
             {
+                UnturnedLog.info($"Sending verification request to queued player {playerID}");
                 NetMessages.SendMessageToClient(EClientMessage.Verify, ENetReliability.Reliable, base.transportConnection, delegate
                 {
                 });

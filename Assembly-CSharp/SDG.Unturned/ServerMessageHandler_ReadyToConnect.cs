@@ -340,6 +340,7 @@ internal static class ServerMessageHandler_ReadyToConnect
             Provider.pending.Add(steamPending);
             flag6 = queuePosition == 0;
         }
+        UnturnedLog.info($"Added {steamPlayerID} to queue position {queuePosition} (shouldVerify: {flag6})");
         steamPending.lastNotifiedQueuePosition = queuePosition;
         NetMessages.SendMessageToClient(EClientMessage.QueuePositionChanged, ENetReliability.Reliable, transportConnection, delegate(NetPakWriter writer)
         {

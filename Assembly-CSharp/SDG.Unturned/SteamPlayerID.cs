@@ -121,7 +121,7 @@ public class SteamPlayerID
 
     public override string ToString()
     {
-        return steamID.ToString() + " " + characterID + " " + playerName;
+        return $"{steamID}[{characterID}] \"{playerName}\"";
     }
 
     public static bool operator ==(SteamPlayerID playerID_0, SteamPlayerID playerID_1)

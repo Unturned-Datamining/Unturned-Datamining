@@ -1836,14 +1836,11 @@ public class Provider : MonoBehaviour
         RequestDisconnect("Client transport failure: \"" + message + "\"");
     }
 
-    public static void launch()
+    private static bool CompareClientAndServerWorkshopFileTimestamps()
     {
-        LevelInfo level = Level.getLevel(map);
-        if (level == null)
+        if (provider.workshopService.serverPendingIDs == null)
         {
-            _connectionFailureInfo = ESteamConnectionFailureInfo.MAP;
-            RequestDisconnect("could not find level \"" + map + "\"");
-            return;
+            return true;
         }
         foreach (PublishedFileId_t serverPendingID in provider.workshopService.serverPendingIDs)
         {
@@ -1897,12 +1894,26 @@ public class Provider : MonoBehaviour
             }
             _connectionFailureReason = text2;
             RequestDisconnect($"Loaded workshop file timestamp mismatch (File ID: {serverPendingID} Local timestamp: {dateTime.ToLocalTime()} Server timestamp: {details.timestamp.ToLocalTime()})");
-            return;
+            return false;
         }
-        Assets.ApplyServerAssetMapping(level, provider.workshopService.serverPendingIDs);
-        UnturnedLog.info("Loading server level ({0})", map);
-        Level.load(level, hasAuthority: false);
-        loadGameMode();
+        return true;
+    }
+
+    public static void launch()
+    {
+        LevelInfo level = Level.getLevel(map);
+        if (level == null)
+        {
+            _connectionFailureInfo = ESteamConnectionFailureInfo.MAP;
+            RequestDisconnect("could not find level \"" + map + "\"");
+        }
+        else if (CompareClientAndServerWorkshopFileTimestamps())
+        {
+            Assets.ApplyServerAssetMapping(level, provider.workshopService.serverPendingIDs);
+            UnturnedLog.info("Loading server level ({0})", map);
+            Level.load(level, hasAuthority: false);
+            loadGameMode();
+        }
     }
 
     private static void loadGameMode()
@@ -3183,6 +3194,11 @@ public class Provider : MonoBehaviour
                 CSteamID steamID = callback.m_SteamID;
                 CommandWindow.Log("Player finished session: " + steamID.ToString());
             }
+            else
+            {
+                CSteamID steamID = callback.m_SteamID;
+                UnturnedLog.info("Player finished session: " + steamID.ToString());
+            }
             dismiss(callback.m_SteamID);
         }
         else if (callback.m_eAuthSessionResponse == EAuthSessionResponse.k_EAuthSessionResponseAuthTicketInvalidAlreadyUsed)
@@ -3203,6 +3219,11 @@ public class Provider : MonoBehaviour
             {
                 CSteamID steamID = callback.m_SteamID;
                 CommandWindow.Log("Kicking player " + steamID.ToString() + " for unknown session response " + callback.m_eAuthSessionResponse);
+            }
+            else
+            {
+                CSteamID steamID = callback.m_SteamID;
+                UnturnedLog.info("Kicking player " + steamID.ToString() + " for unknown session response " + callback.m_eAuthSessionResponse);
             }
             dismiss(callback.m_SteamID);
         }
@@ -3481,8 +3502,10 @@ public class Provider : MonoBehaviour
         }
         if (!flag)
         {
+            UnturnedLog.info($"Ignoring call to accept {playerID} because they are not in the queue");
             return;
         }
+        UnturnedLog.info($"Accepting queued player {playerID}");
         string characterName = playerID.characterName;
         uint uScore = (isPro ? 1u : 0u);
         SteamGameServer.BUpdateUserData(playerID.steamID, characterName, uScore);
@@ -3576,6 +3599,10 @@ public class Provider : MonoBehaviour
         if (CommandWindow.shouldLogJoinLeave)
         {
             CommandWindow.Log(localization.format("PlayerConnectedText", playerID.steamID, playerID.playerName, playerID.characterName));
+        }
+        else
+        {
+            UnturnedLog.info(localization.format("PlayerConnectedText", playerID.steamID, playerID.playerName, playerID.characterName));
         }
         if (num == 0)
         {
@@ -3745,6 +3772,10 @@ public class Provider : MonoBehaviour
             if (CommandWindow.shouldLogJoinLeave)
             {
                 CommandWindow.Log(localization.format("PlayerDisconnectedText", steamID, foundClient.playerID.playerName, foundClient.playerID.characterName));
+            }
+            else
+            {
+                UnturnedLog.info(localization.format("PlayerDisconnectedText", steamID, foundClient.playerID.playerName, foundClient.playerID.characterName));
             }
             removePlayer(foundIndex);
             replicateRemovePlayer(steamID, foundIndex);
