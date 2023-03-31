@@ -896,99 +896,109 @@ public class MenuDashboardUI
     private static void PopulateAlertFromLiveConfig()
     {
         global::Unturned.LiveConfig.LiveConfig liveConfig = LiveConfig.Get();
-        if (!string.IsNullOrEmpty(liveConfig.MainMenuAlert.Header) && !string.IsNullOrEmpty(liveConfig.MainMenuAlert.Body) && (!ConvenientSavedata.get().read("MainMenuAlertSeenId", out long value) || value < liveConfig.MainMenuAlert.Id))
+        if (string.IsNullOrEmpty(liveConfig.MainMenuAlert.Header) || string.IsNullOrEmpty(liveConfig.MainMenuAlert.Body) || (ConvenientSavedata.get().read("MainMenuAlertSeenId", out long value) && value >= liveConfig.MainMenuAlert.Id))
         {
-            if (alertBox == null)
+            return;
+        }
+        bool flag = false;
+        if (liveConfig.MainMenuAlert.UseTimeWindow && !flag)
+        {
+            DateTime utcNow = DateTime.UtcNow;
+            if (utcNow < liveConfig.MainMenuAlert.StartTime || utcNow > liveConfig.MainMenuAlert.EndTime)
             {
-                alertBox = Glazier.Get().CreateButton();
-                alertBox.onClickedButton += onClickedAlertButton;
-                alertBox.positionOffset_X = 210;
-                alertBox.positionOffset_Y = mainHeaderOffset;
-                alertBox.sizeOffset_Y = 60;
-                alertBox.sizeOffset_X = -210;
-                alertBox.sizeScale_X = 1f;
-                container.AddChild(alertBox);
-                alertImage = Glazier.Get().CreateImage();
-                alertImage.positionOffset_X = 10;
-                alertImage.positionOffset_Y = 10;
-                alertImage.sizeOffset_X = 40;
-                alertImage.sizeOffset_Y = 40;
-                alertImage.isVisible = false;
-                alertBox.AddChild(alertImage);
-                alertWebImage = new SleekWebImage();
-                alertWebImage.positionOffset_X = 10;
-                alertWebImage.positionOffset_Y = 10;
-                alertWebImage.sizeOffset_X = 40;
-                alertWebImage.sizeOffset_Y = 40;
-                alertWebImage.isVisible = false;
-                alertBox.AddChild(alertWebImage);
-                alertHeaderLabel = Glazier.Get().CreateLabel();
-                alertHeaderLabel.positionOffset_X = 60;
-                alertHeaderLabel.sizeScale_X = 1f;
-                alertHeaderLabel.sizeOffset_X = -70;
-                alertHeaderLabel.sizeOffset_Y = 30;
-                alertHeaderLabel.fontAlignment = TextAnchor.MiddleLeft;
-                alertHeaderLabel.fontSize = ESleekFontSize.Medium;
-                alertHeaderLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
-                alertBox.AddChild(alertHeaderLabel);
-                alertLinkLabel = Glazier.Get().CreateLabel();
-                alertLinkLabel.positionOffset_X = 60;
-                alertLinkLabel.sizeScale_X = 1f;
-                alertLinkLabel.sizeOffset_X = -70;
-                alertLinkLabel.sizeOffset_Y = 30;
-                alertLinkLabel.fontAlignment = TextAnchor.MiddleRight;
-                alertLinkLabel.fontSize = ESleekFontSize.Small;
-                alertLinkLabel.isVisible = false;
-                alertBox.AddChild(alertLinkLabel);
-                alertBodyLabel = Glazier.Get().CreateLabel();
-                alertBodyLabel.positionOffset_X = 60;
-                alertBodyLabel.positionOffset_Y = 20;
-                alertBodyLabel.sizeOffset_X = -70;
-                alertBodyLabel.sizeOffset_Y = -20;
-                alertBodyLabel.sizeScale_X = 1f;
-                alertBodyLabel.sizeScale_Y = 1f;
-                alertBodyLabel.fontAlignment = TextAnchor.UpperLeft;
-                alertBodyLabel.textColor = ESleekTint.RICH_TEXT_DEFAULT;
-                alertBodyLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
-                alertBodyLabel.enableRichText = true;
-                alertBox.AddChild(alertBodyLabel);
-                mainHeaderOffset += alertBox.sizeOffset_Y + 10;
-                canvas.transform.Find("View").GetComponent<RectTransform>().offsetMax -= new Vector2(0f, 70f);
-                canvas.transform.Find("Scrollbar").GetComponent<RectTransform>().offsetMax -= new Vector2(0f, 70f);
+                return;
             }
-            Color color = Palette.hex(liveConfig.MainMenuAlert.Color);
-            alertHeaderLabel.text = liveConfig.MainMenuAlert.Header;
-            alertHeaderLabel.textColor = color;
-            alertBodyLabel.text = liveConfig.MainMenuAlert.Body;
-            if (!string.IsNullOrEmpty(liveConfig.MainMenuAlert.IconName))
-            {
-                alertImage.texture = icons.load<Texture2D>(liveConfig.MainMenuAlert.IconName);
-                alertImage.color = color;
-                alertImage.isVisible = true;
-            }
-            else
-            {
-                alertImage.isVisible = false;
-            }
-            if (!string.IsNullOrEmpty(liveConfig.MainMenuAlert.IconURL))
-            {
-                alertWebImage.Refresh(liveConfig.MainMenuAlert.IconURL);
-                alertWebImage.isVisible = true;
-            }
-            else
-            {
-                alertWebImage.isVisible = false;
-            }
-            if (!string.IsNullOrEmpty(liveConfig.MainMenuAlert.Link))
-            {
-                alertLinkLabel.text = liveConfig.MainMenuAlert.Link;
-                alertLinkLabel.textColor = color * 0.5f;
-                alertLinkLabel.isVisible = true;
-            }
-            else
-            {
-                alertLinkLabel.isVisible = false;
-            }
+        }
+        if (alertBox == null)
+        {
+            alertBox = Glazier.Get().CreateButton();
+            alertBox.onClickedButton += onClickedAlertButton;
+            alertBox.positionOffset_X = 210;
+            alertBox.positionOffset_Y = mainHeaderOffset;
+            alertBox.sizeOffset_Y = 60;
+            alertBox.sizeOffset_X = -210;
+            alertBox.sizeScale_X = 1f;
+            container.AddChild(alertBox);
+            alertImage = Glazier.Get().CreateImage();
+            alertImage.positionOffset_X = 10;
+            alertImage.positionOffset_Y = 10;
+            alertImage.sizeOffset_X = 40;
+            alertImage.sizeOffset_Y = 40;
+            alertImage.isVisible = false;
+            alertBox.AddChild(alertImage);
+            alertWebImage = new SleekWebImage();
+            alertWebImage.positionOffset_X = 10;
+            alertWebImage.positionOffset_Y = 10;
+            alertWebImage.sizeOffset_X = 40;
+            alertWebImage.sizeOffset_Y = 40;
+            alertWebImage.isVisible = false;
+            alertBox.AddChild(alertWebImage);
+            alertHeaderLabel = Glazier.Get().CreateLabel();
+            alertHeaderLabel.positionOffset_X = 60;
+            alertHeaderLabel.sizeScale_X = 1f;
+            alertHeaderLabel.sizeOffset_X = -70;
+            alertHeaderLabel.sizeOffset_Y = 30;
+            alertHeaderLabel.fontAlignment = TextAnchor.MiddleLeft;
+            alertHeaderLabel.fontSize = ESleekFontSize.Medium;
+            alertHeaderLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+            alertBox.AddChild(alertHeaderLabel);
+            alertLinkLabel = Glazier.Get().CreateLabel();
+            alertLinkLabel.positionOffset_X = 60;
+            alertLinkLabel.sizeScale_X = 1f;
+            alertLinkLabel.sizeOffset_X = -70;
+            alertLinkLabel.sizeOffset_Y = 30;
+            alertLinkLabel.fontAlignment = TextAnchor.MiddleRight;
+            alertLinkLabel.fontSize = ESleekFontSize.Small;
+            alertLinkLabel.isVisible = false;
+            alertBox.AddChild(alertLinkLabel);
+            alertBodyLabel = Glazier.Get().CreateLabel();
+            alertBodyLabel.positionOffset_X = 60;
+            alertBodyLabel.positionOffset_Y = 20;
+            alertBodyLabel.sizeOffset_X = -70;
+            alertBodyLabel.sizeOffset_Y = -20;
+            alertBodyLabel.sizeScale_X = 1f;
+            alertBodyLabel.sizeScale_Y = 1f;
+            alertBodyLabel.fontAlignment = TextAnchor.UpperLeft;
+            alertBodyLabel.textColor = ESleekTint.RICH_TEXT_DEFAULT;
+            alertBodyLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+            alertBodyLabel.enableRichText = true;
+            alertBox.AddChild(alertBodyLabel);
+            mainHeaderOffset += alertBox.sizeOffset_Y + 10;
+            canvas.transform.Find("View").GetComponent<RectTransform>().offsetMax -= new Vector2(0f, 70f);
+            canvas.transform.Find("Scrollbar").GetComponent<RectTransform>().offsetMax -= new Vector2(0f, 70f);
+        }
+        Color color = Palette.hex(liveConfig.MainMenuAlert.Color);
+        alertHeaderLabel.text = liveConfig.MainMenuAlert.Header;
+        alertHeaderLabel.textColor = color;
+        alertBodyLabel.text = liveConfig.MainMenuAlert.Body;
+        if (!string.IsNullOrEmpty(liveConfig.MainMenuAlert.IconName))
+        {
+            alertImage.texture = icons.load<Texture2D>(liveConfig.MainMenuAlert.IconName);
+            alertImage.color = color;
+            alertImage.isVisible = true;
+        }
+        else
+        {
+            alertImage.isVisible = false;
+        }
+        if (!string.IsNullOrEmpty(liveConfig.MainMenuAlert.IconURL))
+        {
+            alertWebImage.Refresh(liveConfig.MainMenuAlert.IconURL);
+            alertWebImage.isVisible = true;
+        }
+        else
+        {
+            alertWebImage.isVisible = false;
+        }
+        if (!string.IsNullOrEmpty(liveConfig.MainMenuAlert.Link))
+        {
+            alertLinkLabel.text = liveConfig.MainMenuAlert.Link;
+            alertLinkLabel.textColor = color * 0.5f;
+            alertLinkLabel.isVisible = true;
+        }
+        else
+        {
+            alertLinkLabel.isVisible = false;
         }
     }
 
