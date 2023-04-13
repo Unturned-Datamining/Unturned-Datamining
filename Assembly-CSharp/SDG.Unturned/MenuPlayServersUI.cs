@@ -221,7 +221,7 @@ public class MenuPlayServersUI
 
     private static void onClickedHostingButton(ISleekElement button)
     {
-        Provider.provider.browserService.open("https://github.com/SmartlyDressedGames/U3-Docs/blob/master/ServerHosting.md#Server-Hosting");
+        Provider.provider.browserService.open("https://docs.smartlydressedgames.com/en/stable/servers/server-hosting.html");
     }
 
     private static ISleekElement onCreateServerElement(SteamServerInfo server)

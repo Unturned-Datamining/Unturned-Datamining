@@ -23,11 +23,11 @@ public struct PlayerSpotLightConfig
         }
     }
 
-    public PlayerSpotLightConfig(Data data)
+    public PlayerSpotLightConfig(DatDictionary data)
     {
-        range = data.readSingle("SpotLight_Range", 64f);
-        angle = data.readSingle("SpotLight_Angle", 90f);
-        intensity = data.readSingle("SpotLight_Intensity", 1.3f);
-        color = data.readColor("SpotLight_Color", new Color32(245, 223, 147, byte.MaxValue));
+        range = data.ParseFloat("SpotLight_Range", 64f);
+        angle = data.ParseFloat("SpotLight_Angle", 90f);
+        intensity = data.ParseFloat("SpotLight_Intensity", 1.3f);
+        color = data.LegacyParseColor("SpotLight_Color", new Color32(245, 223, 147, byte.MaxValue));
     }
 }

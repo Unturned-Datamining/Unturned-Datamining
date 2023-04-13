@@ -39,7 +39,7 @@ public class NPCAssetOutfit
     [Obsolete]
     public ushort glasses { get; protected set; }
 
-    public NPCAssetOutfit(Data data, ENPCHoliday holiday)
+    public NPCAssetOutfit(DatDictionary data, ENPCHoliday holiday)
     {
         string text = holiday switch
         {
@@ -47,12 +47,12 @@ public class NPCAssetOutfit
             ENPCHoliday.CHRISTMAS => "Christmas_", 
             _ => "", 
         };
-        shirt = data.ReadGuidOrLegacyId(text + "Shirt", out shirtGuid);
-        pants = data.ReadGuidOrLegacyId(text + "Pants", out pantsGuid);
-        hat = data.ReadGuidOrLegacyId(text + "Hat", out hatGuid);
-        backpack = data.ReadGuidOrLegacyId(text + "Backpack", out backpackGuid);
-        vest = data.ReadGuidOrLegacyId(text + "Vest", out vestGuid);
-        mask = data.ReadGuidOrLegacyId(text + "Mask", out maskGuid);
-        glasses = data.ReadGuidOrLegacyId(text + "Glasses", out glassesGuid);
+        shirt = data.ParseGuidOrLegacyId(text + "Shirt", out shirtGuid);
+        pants = data.ParseGuidOrLegacyId(text + "Pants", out pantsGuid);
+        hat = data.ParseGuidOrLegacyId(text + "Hat", out hatGuid);
+        backpack = data.ParseGuidOrLegacyId(text + "Backpack", out backpackGuid);
+        vest = data.ParseGuidOrLegacyId(text + "Vest", out vestGuid);
+        mask = data.ParseGuidOrLegacyId(text + "Mask", out maskGuid);
+        glasses = data.ParseGuidOrLegacyId(text + "Glasses", out glassesGuid);
     }
 }

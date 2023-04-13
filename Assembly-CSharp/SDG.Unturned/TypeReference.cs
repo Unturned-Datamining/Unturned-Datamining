@@ -4,7 +4,7 @@ using SDG.Framework.IO.FormattedFiles.KeyValueTables;
 
 namespace SDG.Unturned;
 
-public struct TypeReference<T> : ITypeReference, IFormattedFileReadable, IFormattedFileWritable, IEquatable<TypeReference<T>>
+public struct TypeReference<T> : ITypeReference, IFormattedFileReadable, IFormattedFileWritable, IDatParseable, IEquatable<TypeReference<T>>
 {
     public static TypeReference<T> invalid = new TypeReference<T>((string)null);
 
@@ -29,6 +29,21 @@ public struct TypeReference<T> : ITypeReference, IFormattedFileReadable, IFormat
         if (type != null)
         {
             return assemblyQualifiedName == type.FullName;
+        }
+        return false;
+    }
+
+    public bool TryParse(IDatNode node)
+    {
+        if (node is DatValue datValue)
+        {
+            assemblyQualifiedName = datValue.value;
+            return true;
+        }
+        if (node is DatDictionary datDictionary)
+        {
+            assemblyQualifiedName = datDictionary.GetString("Type");
+            return true;
         }
         return false;
     }

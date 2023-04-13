@@ -1,24 +1,19 @@
-using SDG.Framework.IO.FormattedFiles;
-
 namespace SDG.Unturned;
 
 public class OutfitAsset : Asset
 {
     public AssetReference<ItemAsset>[] itemAssets;
 
-    protected override void readAsset(IFormattedFileReader reader)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        base.readAsset(reader);
-        int num = reader.readArrayLength("Items");
-        itemAssets = new AssetReference<ItemAsset>[num];
-        for (int i = 0; i < num; i++)
+        base.PopulateAsset(bundle, data, localization);
+        if (data.TryGetList("Items", out var node))
         {
-            itemAssets[i] = reader.readValue<AssetReference<ItemAsset>>(i);
+            itemAssets = node.ParseArrayOfStructs<AssetReference<ItemAsset>>();
         }
-    }
-
-    public OutfitAsset(Bundle bundle, Local localization, byte[] hash)
-        : base(bundle, localization, hash)
-    {
+        else
+        {
+            itemAssets = new AssetReference<ItemAsset>[0];
+        }
     }
 }

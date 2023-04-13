@@ -36,24 +36,24 @@ public class ItemBarrelAsset : ItemCaliberAsset
 
     public float gunshotRolloffDistanceMultiplier { get; protected set; }
 
-    public ItemBarrelAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         _shoot = bundle.load<AudioClip>("Shoot");
         _barrel = loadRequiredAsset<GameObject>(bundle, "Barrel");
-        _isBraked = data.has("Braked");
-        _isSilenced = data.has("Silenced");
-        _volume = data.readSingle("Volume", 1f);
-        _durability = data.readByte("Durability", 0);
-        if (data.has("Ballistic_Drop"))
+        _isBraked = data.ContainsKey("Braked");
+        _isSilenced = data.ContainsKey("Silenced");
+        _volume = data.ParseFloat("Volume", 1f);
+        _durability = data.ParseUInt8("Durability", 0);
+        if (data.ContainsKey("Ballistic_Drop"))
         {
-            _ballisticDrop = data.readSingle("Ballistic_Drop");
+            _ballisticDrop = data.ParseFloat("Ballistic_Drop");
         }
         else
         {
             _ballisticDrop = 1f;
         }
         float defaultValue = (isSilenced ? 0.5f : 1f);
-        gunshotRolloffDistanceMultiplier = data.readSingle("Gunshot_Rolloff_Distance_Multiplier", defaultValue);
+        gunshotRolloffDistanceMultiplier = data.ParseFloat("Gunshot_Rolloff_Distance_Multiplier", defaultValue);
     }
 }

@@ -25,10 +25,10 @@ public class MythicAsset : Asset
 
     public override EAssetType assetCategory => EAssetType.MYTHIC;
 
-    public MythicAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        if (id < 500 && !bundle.isCoreAsset && !data.has("Bypass_ID_Limit"))
+        base.PopulateAsset(bundle, data, localization);
+        if (id < 500 && !bundle.isCoreAsset && !data.ContainsKey("Bypass_ID_Limit"))
         {
             throw new NotSupportedException("ID < 500");
         }

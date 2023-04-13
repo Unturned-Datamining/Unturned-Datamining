@@ -1433,6 +1433,7 @@
 - [UnityEventConfigData.cs](UnityEventConfigData.cs)
 - [UnturnedAnalytics.cs](UnturnedAnalytics.cs)
 - [UnturnedCanvasSortOrders.cs](UnturnedCanvasSortOrders.cs)
+- [UnturnedDatEx.cs](UnturnedDatEx.cs)
 - [UnturnedLog.cs](UnturnedLog.cs)
 - [UnturnedMasterVolume.cs](UnturnedMasterVolume.cs)
 - [UnturnedNexus.cs](UnturnedNexus.cs)

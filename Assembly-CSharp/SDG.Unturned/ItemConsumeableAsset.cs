@@ -144,46 +144,46 @@ public class ItemConsumeableAsset : ItemWeaponAsset
         }
     }
 
-    public ItemConsumeableAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         _use = LoadRedirectableAsset<AudioClip>(bundle, "Use", data, "ConsumeAudioClip");
-        _health = data.readByte("Health", 0);
-        _food = data.readByte("Food", 0);
-        _water = data.readByte("Water", 0);
-        _virus = data.readByte("Virus", 0);
-        _disinfectant = data.readByte("Disinfectant", 0);
-        _energy = data.readByte("Energy", 0);
-        _vision = data.readByte("Vision", 0);
-        oxygen = data.readSByte("Oxygen", 0);
-        _warmth = data.readUInt32("Warmth");
-        experience = data.readInt32("Experience");
-        if (data.has("Bleeding"))
+        _health = data.ParseUInt8("Health", 0);
+        _food = data.ParseUInt8("Food", 0);
+        _water = data.ParseUInt8("Water", 0);
+        _virus = data.ParseUInt8("Virus", 0);
+        _disinfectant = data.ParseUInt8("Disinfectant", 0);
+        _energy = data.ParseUInt8("Energy", 0);
+        _vision = data.ParseUInt8("Vision", 0);
+        oxygen = data.ParseInt8("Oxygen", 0);
+        _warmth = data.ParseUInt32("Warmth");
+        experience = data.ParseInt32("Experience");
+        if (data.ContainsKey("Bleeding"))
         {
             bleedingModifier = Bleeding.Heal;
         }
         else
         {
-            bleedingModifier = data.readEnum("Bleeding_Modifier", Bleeding.None);
+            bleedingModifier = data.ParseEnum("Bleeding_Modifier", Bleeding.None);
         }
-        if (data.has("Broken"))
+        if (data.ContainsKey("Broken"))
         {
             bonesModifier = Bones.Heal;
         }
         else
         {
-            bonesModifier = data.readEnum("Bones_Modifier", Bones.None);
+            bonesModifier = data.ParseEnum("Bones_Modifier", Bones.None);
         }
-        _hasAid = data.has("Aid");
+        _hasAid = data.ContainsKey("Aid");
         foodConstrainsWater = food >= water;
-        shouldDeleteAfterUse = data.readBoolean("Should_Delete_After_Use", defaultValue: true);
-        questRewards = new INPCReward[data.readByte("Quest_Rewards", 0)];
+        shouldDeleteAfterUse = data.ParseBool("Should_Delete_After_Use", defaultValue: true);
+        questRewards = new INPCReward[data.ParseUInt8("Quest_Rewards", 0)];
         NPCTool.readRewards(data, localization, "Quest_Reward_", questRewards, this);
-        ushort tableID = data.readUInt16("Item_Reward_Spawn_ID", 0);
-        int min = data.readInt32("Min_Item_Rewards");
-        int max = data.readInt32("Max_Item_Rewards");
+        ushort tableID = data.ParseUInt16("Item_Reward_Spawn_ID", 0);
+        int min = data.ParseInt32("Min_Item_Rewards");
+        int max = data.ParseInt32("Max_Item_Rewards");
         itemRewards = new SpawnTableReward(tableID, min, max);
-        _explosion = data.ReadGuidOrLegacyId("Explosion", out _explosionEffectGuid);
+        _explosion = data.ParseGuidOrLegacyId("Explosion", out _explosionEffectGuid);
         IsExplosive = !IsExplosionEffectRefNull();
     }
 }

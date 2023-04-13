@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using SDG.Framework.IO.FormattedFiles;
 using SDG.Unturned;
 using UnityEngine;
 
@@ -7,33 +6,21 @@ namespace SDG.Framework.Foliage;
 
 public class FoliageInfoCollectionAsset : Asset
 {
-    public class FoliageInfoCollectionElement : IFormattedFileReadable, IFormattedFileWritable
+    public struct FoliageInfoCollectionElement : IDatParseable
     {
         public AssetReference<FoliageInfoAsset> asset;
 
         public float weight;
 
-        public virtual void read(IFormattedFileReader reader)
+        public bool TryParse(IDatNode node)
         {
-            reader = reader.readObject();
-            if (reader != null)
+            if (node is DatDictionary datDictionary)
             {
-                asset = reader.readValue<AssetReference<FoliageInfoAsset>>("Asset");
-                weight = reader.readValue<float>("Weight");
+                asset = datDictionary.ParseStruct<AssetReference<FoliageInfoAsset>>("Asset");
+                weight = datDictionary.ParseFloat("Weight", 1f);
+                return true;
             }
-        }
-
-        public virtual void write(IFormattedFileWriter writer)
-        {
-            writer.beginObject();
-            writer.writeValue("Asset", asset);
-            writer.writeValue("Weight", weight);
-            writer.endObject();
-        }
-
-        public FoliageInfoCollectionElement()
-        {
-            weight = 1f;
+            return false;
         }
     }
 
@@ -47,34 +34,16 @@ public class FoliageInfoCollectionAsset : Asset
         }
     }
 
-    protected override void readAsset(IFormattedFileReader reader)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        base.readAsset(reader);
-        int num = reader.readArrayLength("Foliage");
-        for (int i = 0; i < num; i++)
+        base.PopulateAsset(bundle, data, localization);
+        if (data.TryGetList("Foliage", out var node))
         {
-            elements.Add(reader.readValue<FoliageInfoCollectionElement>(i));
+            elements = node.ParseListOfStructs<FoliageInfoCollectionElement>();
         }
-    }
-
-    protected override void writeAsset(IFormattedFileWriter writer)
-    {
-        base.writeAsset(writer);
-        writer.beginArray("Foliage");
-        for (int i = 0; i < elements.Count; i++)
-        {
-            writer.writeValue(elements[i]);
-        }
-        writer.endArray();
     }
 
     public FoliageInfoCollectionAsset()
-    {
-        elements = new List<FoliageInfoCollectionElement>();
-    }
-
-    public FoliageInfoCollectionAsset(Bundle bundle, Local localization, byte[] hash)
-        : base(bundle, localization, hash)
     {
         elements = new List<FoliageInfoCollectionElement>();
     }

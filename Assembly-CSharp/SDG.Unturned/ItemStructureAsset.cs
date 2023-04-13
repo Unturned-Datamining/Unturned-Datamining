@@ -103,11 +103,11 @@ public class ItemStructureAsset : ItemPlaceableAsset
         return !safezone.noBuildables;
     }
 
-    public ItemStructureAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         bool flag;
-        if (Dedicator.IsDedicatedServer && data.readBoolean("Has_Clip_Prefab", defaultValue: true))
+        if (Dedicator.IsDedicatedServer && data.ParseBool("Has_Clip_Prefab", defaultValue: true))
         {
             _structure = bundle.load<GameObject>("Clip");
             if (structure == null)
@@ -153,23 +153,23 @@ public class ItemStructureAsset : ItemPlaceableAsset
         placementPreviewRef = data.readMasterBundleReference<GameObject>("PlacementPreviewPrefab");
         _nav = bundle.load<GameObject>("Nav");
         _use = LoadRedirectableAsset<AudioClip>(bundle, "Use", data, "PlacementAudioClip");
-        _construct = (EConstruct)Enum.Parse(typeof(EConstruct), data.readString("Construct"), ignoreCase: true);
-        _health = data.readUInt16("Health", 0);
-        _range = data.readSingle("Range");
-        _explosion = data.ReadGuidOrLegacyId("Explosion", out _explosionGuid);
-        canBeDamaged = data.readBoolean("Can_Be_Damaged", defaultValue: true);
-        eligibleForPooling = data.readBoolean("Eligible_For_Pooling", defaultValue: true);
-        requiresPillars = data.readBoolean("Requires_Pillars", defaultValue: true);
-        _isVulnerable = data.has("Vulnerable");
-        _isRepairable = !data.has("Unrepairable");
-        _proofExplosion = data.has("Proof_Explosion");
-        _isUnpickupable = data.has("Unpickupable");
-        _isSalvageable = !data.has("Unsalvageable");
-        salvageDurationMultiplier = data.readSingle("Salvage_Duration_Multiplier", 1f);
-        _isSaveable = !data.has("Unsaveable");
-        if (data.has("Armor_Tier"))
+        _construct = (EConstruct)Enum.Parse(typeof(EConstruct), data.GetString("Construct"), ignoreCase: true);
+        _health = data.ParseUInt16("Health", 0);
+        _range = data.ParseFloat("Range");
+        _explosion = data.ParseGuidOrLegacyId("Explosion", out _explosionGuid);
+        canBeDamaged = data.ParseBool("Can_Be_Damaged", defaultValue: true);
+        eligibleForPooling = data.ParseBool("Eligible_For_Pooling", defaultValue: true);
+        requiresPillars = data.ParseBool("Requires_Pillars", defaultValue: true);
+        _isVulnerable = data.ContainsKey("Vulnerable");
+        _isRepairable = !data.ContainsKey("Unrepairable");
+        _proofExplosion = data.ContainsKey("Proof_Explosion");
+        _isUnpickupable = data.ContainsKey("Unpickupable");
+        _isSalvageable = !data.ContainsKey("Unsalvageable");
+        salvageDurationMultiplier = data.ParseFloat("Salvage_Duration_Multiplier", 1f);
+        _isSaveable = !data.ContainsKey("Unsaveable");
+        if (data.ContainsKey("Armor_Tier"))
         {
-            armorTier = (EArmorTier)Enum.Parse(typeof(EArmorTier), data.readString("Armor_Tier"), ignoreCase: true);
+            armorTier = (EArmorTier)Enum.Parse(typeof(EArmorTier), data.GetString("Armor_Tier"), ignoreCase: true);
         }
         else if (name.Contains("Metal") || name.Contains("Brick"))
         {
@@ -179,8 +179,8 @@ public class ItemStructureAsset : ItemPlaceableAsset
         {
             armorTier = EArmorTier.LOW;
         }
-        foliageCutRadius = data.readSingle("Foliage_Cut_Radius", 6f);
-        terrainTestHeight = data.readSingle("Terrain_Test_Height", 10f);
+        foliageCutRadius = data.ParseFloat("Foliage_Cut_Radius", 6f);
+        terrainTestHeight = data.ParseFloat("Terrain_Test_Height", 10f);
     }
 
     protected override AudioReference GetDefaultInventoryAudio()

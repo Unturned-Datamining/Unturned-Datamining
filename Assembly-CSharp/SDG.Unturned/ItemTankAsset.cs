@@ -25,11 +25,11 @@ public class ItemTankAsset : ItemBarricadeAsset
         return array;
     }
 
-    public ItemTankAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        _source = (ETankSource)Enum.Parse(typeof(ETankSource), data.readString("Source"), ignoreCase: true);
-        _resource = data.readUInt16("Resource", 0);
+        base.PopulateAsset(bundle, data, localization);
+        _source = (ETankSource)Enum.Parse(typeof(ETankSource), data.GetString("Source"), ignoreCase: true);
+        _resource = data.ParseUInt16("Resource", 0);
         resourceState = BitConverter.GetBytes(resource);
     }
 }

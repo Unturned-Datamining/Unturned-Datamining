@@ -1,4 +1,3 @@
-using SDG.Framework.IO.FormattedFiles;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -15,23 +14,21 @@ public class StereoSongAsset : Asset
 
     public string linkURL { get; protected set; }
 
-    protected override void readAsset(IFormattedFileReader reader)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        base.readAsset(reader);
+        base.PopulateAsset(bundle, data, localization);
+        if (localization.has("Name"))
+        {
+            titleText = localization.read("Name");
+        }
         if (string.IsNullOrEmpty(titleText))
         {
-            titleText = reader.readValue("Title");
+            titleText = data.GetString("Title");
         }
-        songContentRef = reader.readValue<ContentReference<AudioClip>>("Song");
-        songMbRef = reader.readValue<MasterBundleReference<AudioClip>>("Song");
-        linkURL = reader.readValue("Link_URL");
-        isLoop = reader.readValue<bool>("Is_Loop");
-    }
-
-    protected override void writeAsset(IFormattedFileWriter writer)
-    {
-        base.writeAsset(writer);
-        writer.writeValue("Song", songContentRef);
+        songContentRef = data.ParseStruct<ContentReference<AudioClip>>("Song");
+        songMbRef = data.ParseStruct<MasterBundleReference<AudioClip>>("Song");
+        linkURL = data.GetString("Link_URL");
+        isLoop = data.ParseBool("Is_Loop");
     }
 
     protected virtual void construct()
@@ -44,15 +41,5 @@ public class StereoSongAsset : Asset
     public StereoSongAsset()
     {
         construct();
-    }
-
-    public StereoSongAsset(Bundle bundle, Local localization, byte[] hash)
-        : base(bundle, localization, hash)
-    {
-        construct();
-        if (localization.has("Name"))
-        {
-            titleText = localization.read("Name");
-        }
     }
 }

@@ -23,13 +23,14 @@ Security Security: {0}
 Mode Mode: {0}
 Cheats Cheats: {0}
 GameMode Game: {0}
+QueryPing Ping: {0}ms
 
 Monetization_None Monetization: None
 Monetization_NonGameplay Monetization: Non-Gameplay
 Monetization_Monetized Monetization: Affects Gameplay
 HostBan_MonetizationWarning Warning: this server is breaking the monetization rules which took effect on June 11th 2021. Click here for more information.
 HostBan_WorkshopWarning Warning: the workshop files used by this server have been banned.
-HostBan_QueryPingWarning Warning: this server has much higher actual in-game ping than shown on the server list. Likely using a proxy for the server list.
+HostBan_QueryPingWarning Warning: this server is using an "anycast" proxy and may have much higher in-game ping than shown.
 HostBan_IncorrectMonetizationTagWarning Warning: this server has the monetization tag incorrectly set. "None" is for unmonetized or donation-only servers, and "NonGameplay" is for servers with purchases that do not provide a gameplay advantage.
 HostBan_HostingProvider This warning might apply to the hosting provider, not your specific server. For example if the hosting provider has been allowing a server to evade a ban by changing the ports multiple times.
 HostBan_Apology Message from the game developers: our apologies for mistakenly flagging your server! We are sorry for the trouble and will do our best to prevent it from happening again in the future.

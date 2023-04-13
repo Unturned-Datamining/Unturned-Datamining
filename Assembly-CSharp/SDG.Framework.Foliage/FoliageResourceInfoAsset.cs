@@ -1,4 +1,3 @@
-using SDG.Framework.IO.FormattedFiles;
 using SDG.Framework.Utilities;
 using SDG.Unturned;
 using UnityEngine;
@@ -69,21 +68,14 @@ public class FoliageResourceInfoAsset : FoliageInfoAsset
         return true;
     }
 
-    protected override void readAsset(IFormattedFileReader reader)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        base.readAsset(reader);
-        resource = reader.readValue<AssetReference<ResourceAsset>>("Resource");
-        if (reader.containsKey("Obstruction_Radius"))
+        base.PopulateAsset(bundle, data, localization);
+        resource = data.ParseStruct<AssetReference<ResourceAsset>>("Resource");
+        if (data.ContainsKey("Obstruction_Radius"))
         {
-            obstructionRadius = reader.readValue<float>("Obstruction_Radius");
+            obstructionRadius = data.ParseFloat("Obstruction_Radius");
         }
-    }
-
-    protected override void writeAsset(IFormattedFileWriter writer)
-    {
-        base.writeAsset(writer);
-        writer.writeValue("Resource", resource);
-        writer.writeValue("Obstruction_Radius", obstructionRadius);
     }
 
     protected virtual void resetResource()
@@ -92,12 +84,6 @@ public class FoliageResourceInfoAsset : FoliageInfoAsset
     }
 
     public FoliageResourceInfoAsset()
-    {
-        resetResource();
-    }
-
-    public FoliageResourceInfoAsset(Bundle bundle, Local localization, byte[] hash)
-        : base(bundle, localization, hash)
     {
         resetResource();
     }

@@ -15,9 +15,9 @@ public class ItemTireAsset : ItemVehicleRepairToolAsset
         return mode == EUseableTireMode.ADD;
     }
 
-    public ItemTireAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        _mode = (EUseableTireMode)Enum.Parse(typeof(EUseableTireMode), data.readString("Mode"), ignoreCase: true);
+        base.PopulateAsset(bundle, data, localization);
+        _mode = (EUseableTireMode)Enum.Parse(typeof(EUseableTireMode), data.GetString("Mode"), ignoreCase: true);
     }
 }

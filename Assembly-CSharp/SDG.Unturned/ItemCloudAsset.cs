@@ -6,9 +6,9 @@ public class ItemCloudAsset : ItemAsset
 
     public float gravity => _gravity;
 
-    public ItemCloudAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        _gravity = data.readSingle("Gravity");
+        base.PopulateAsset(bundle, data, localization);
+        _gravity = data.ParseFloat("Gravity");
     }
 }

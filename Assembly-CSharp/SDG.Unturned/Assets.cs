@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using SDG.Framework.Devkit;
-using SDG.Framework.IO.FormattedFiles;
-using SDG.Framework.IO.FormattedFiles.KeyValueTables;
 using SDG.Framework.Modules;
 using Steamworks;
 using UnityEngine;
@@ -138,6 +136,8 @@ public class Assets : MonoBehaviour
     internal static readonly ClientStaticMethod<Guid> SendKickForInvalidGuid = ClientStaticMethod<Guid>.Get(ReceiveKickForInvalidGuid);
 
     internal static readonly ClientStaticMethod<Guid, string, string, byte[], string, string> SendKickForHashMismatch = ClientStaticMethod<Guid, string, string, byte[], string, string>.Get(ReceiveKickForHashMismatch);
+
+    private static DatParser datParser = new DatParser();
 
     public static int assetsToLoadPerStep => ASSETS_PER_STEP;
 
@@ -491,9 +491,9 @@ public class Assets : MonoBehaviour
             {
                 asset.GUID = Guid.NewGuid();
                 addToMapping(asset, overrideExistingID: false, defaultAssetMapping);
-                if (asset != null)
+                if (asset is IDirtyable)
                 {
-                    ((IDirtyable)asset).isDirty = true;
+                    (asset as IDirtyable).isDirty = true;
                 }
             }
         }
@@ -804,94 +804,120 @@ public class Assets : MonoBehaviour
 
     private static void loadFile(ScannedFileInfo file)
     {
+        string assetPath;
         if (!string.IsNullOrEmpty(file.assetPath))
         {
-            using (FileStream underlyingStream = new FileStream(file.assetPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            assetPath = file.assetPath;
+            assetPath = Path.GetFullPath(assetPath);
+        }
+        else
+        {
+            assetPath = file.dataPath + "/" + file.name + ".dat";
+            assetPath = Path.GetFullPath(assetPath);
+            if (!ReadWrite.fileExists(assetPath, useCloud: false, usePath: false))
             {
-                using SHA1Stream sHA1Stream = new SHA1Stream(underlyingStream);
-                using StreamReader input = new StreamReader(sHA1Stream);
-                IFormattedFileReader formattedFileReader;
-                try
-                {
-                    formattedFileReader = new KeyValueTableReader(input);
-                }
-                catch (Exception e)
-                {
-                    reportError("Unable to parse " + file.assetPath + ": " + getExceptionMessage(e));
-                    UnturnedLog.exception(e);
-                    return;
-                }
-                IFormattedFileReader formattedFileReader2 = formattedFileReader.readObject("Metadata");
-                Guid gUID = formattedFileReader2.readValue<Guid>("GUID");
-                Type type = formattedFileReader2.readValue<Type>("Type");
-                currentMasterBundle = file.masterBundleCfg;
-                Bundle bundle = ((file.masterBundleCfg == null) ? new Bundle(file.bundlePath + "/" + file.name + ".unity3d", usePath: false) : new MasterBundle(file.masterBundleCfg, file.masterBundleRelativePath, file.name));
-                bundle.isCoreAsset = file.origin == coreOrigin;
-                Local local = Localization.tryRead(file.dataPath, usePath: false);
-                try
-                {
-                    if (Activator.CreateInstance(type, bundle, local, sHA1Stream.Hash) is Asset asset)
-                    {
-                        asset.GUID = gUID;
-                        asset.absoluteOriginFilePath = Path.GetFullPath(file.assetPath);
-                        asset.origin = file.origin;
-                        asset.origin.assets.Add(asset);
-                        formattedFileReader.readKey("Asset");
-                        asset.read(formattedFileReader);
-                        addToMapping(asset, file.overrideExistingIDs, defaultAssetMapping);
-                    }
-                    else
-                    {
-                        reportError("Unable to instantiate type '" + type?.ToString() + "' in " + file.assetPath);
-                    }
-                    bundle.unload();
-                }
-                catch (Exception e2)
-                {
-                    reportError("Failed to analyze " + file.assetPath + ": " + getExceptionMessage(e2));
-                    UnturnedLog.exception(e2);
-                    bundle.unload();
-                }
-                currentMasterBundle = null;
-                return;
+                assetPath = file.dataPath + "/Asset.dat";
+                assetPath = Path.GetFullPath(assetPath);
             }
         }
-        string text = file.dataPath + "/" + file.name + ".dat";
-        Data data;
+        DatDictionary datDictionary = null;
+        byte[] hash;
         try
         {
-            if (ReadWrite.fileExists(text, useCloud: false, usePath: false))
+            using (FileStream underlyingStream = new FileStream(assetPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                data = ReadWrite.FasterReadDataWithHash(text);
+                using SHA1Stream sHA1Stream = new SHA1Stream(underlyingStream);
+                using StreamReader inputReader = new StreamReader(sHA1Stream);
+                datDictionary = datParser.Parse(inputReader);
+                hash = sHA1Stream.Hash;
             }
-            else
+            if (datParser.HasError)
             {
-                text = file.dataPath + "/Asset.dat";
-                data = ReadWrite.FasterReadDataWithHash(text);
+                reportError("Error parsing \"" + assetPath + "\": \"" + datParser.ErrorMessage + "\"");
             }
-            if (data == null)
+            if (datDictionary == null)
             {
-                reportError("Unable to read " + text);
+                reportError("Unable to read \"" + assetPath + "\"");
                 return;
             }
         }
-        catch (Exception e3)
+        catch (Exception e)
         {
-            reportError("Failed to import " + text + ": " + getExceptionMessage(e3));
-            UnturnedLog.exception(e3);
+            reportError("Caught exception while reading \"" + assetPath + "\": " + getExceptionMessage(e));
+            UnturnedLog.exception(e);
+            return;
+        }
+        Guid value = default(Guid);
+        Type type = null;
+        if (datDictionary.TryGetDictionary("Metadata", out var node))
+        {
+            if (!node.TryParseGuid("GUID", out value))
+            {
+                reportError("Unable to parse Metadata.GUID in \"" + assetPath + "\"");
+                return;
+            }
+            type = node.ParseType("Type");
+            if (type == null)
+            {
+                reportError("Unable to parse Metadata.Type in \"" + assetPath + "\"");
+                return;
+            }
+        }
+        else if (!datDictionary.TryParseGuid("GUID", out value))
+        {
+            value = Guid.NewGuid();
+            try
+            {
+                string text = File.ReadAllText(assetPath);
+                text = "GUID " + value.ToString("N") + "\n" + text;
+                File.WriteAllText(assetPath, text);
+            }
+            catch (Exception e2)
+            {
+                UnturnedLog.exception(e2, "Caught IO exception adding GUID to \"" + assetPath + "\":");
+            }
+        }
+        if (value.IsEmpty())
+        {
+            reportError("Cannot use empty GUID in \"" + assetPath + "\"");
+            return;
+        }
+        DatDictionary datDictionary2 = datDictionary;
+        if (datDictionary.TryGetDictionary("Asset", out var node2))
+        {
+            datDictionary2 = node2;
+        }
+        if (type == null)
+        {
+            string @string = datDictionary2.GetString("Type");
+            if (string.IsNullOrEmpty(@string))
+            {
+                reportError("Missing asset Type in \"" + assetPath + "\"");
+                return;
+            }
+            type = assetTypes.getType(@string);
+            if (type == null)
+            {
+                reportError("Unhandled asset type \"" + @string + "\" in \"" + assetPath + "\"");
+                return;
+            }
+        }
+        if (!typeof(Asset).IsAssignableFrom(type))
+        {
+            reportError($"Type \"{type}\" is not a valid asset type in \"{assetPath}\"");
             return;
         }
         MasterBundleConfig masterBundleConfig = file.masterBundleCfg;
-        string text2 = data.readString("Master_Bundle_Override");
-        if (text2 != null)
+        string string2 = datDictionary2.GetString("Master_Bundle_Override");
+        if (string2 != null)
         {
-            masterBundleConfig = findMasterBundleByName(text2);
+            masterBundleConfig = findMasterBundleByName(string2);
             if (masterBundleConfig == null)
             {
-                UnturnedLog.warn("Unable to find master bundle override '{0}' for '{1}'", text2, file.name);
+                UnturnedLog.warn("Unable to find master bundle override '{0}' for '{1}'", string2, file.name);
             }
         }
-        else if (data.has("Exclude_From_Master_Bundle"))
+        else if (datDictionary2.ContainsKey("Exclude_From_Master_Bundle"))
         {
             masterBundleConfig = null;
         }
@@ -902,27 +928,27 @@ public class Assets : MonoBehaviour
         }
         currentMasterBundle = masterBundleConfig;
         int a = -1;
-        Bundle bundle2;
+        Bundle bundle;
         if (masterBundleConfig != null)
         {
-            string relativePath = data.readString("Bundle_Override_Path", file.masterBundleRelativePath);
-            bundle2 = new MasterBundle(masterBundleConfig, relativePath, file.name);
+            string string3 = datDictionary2.GetString("Bundle_Override_Path", file.masterBundleRelativePath);
+            bundle = new MasterBundle(masterBundleConfig, string3, file.name);
             a = masterBundleConfig.version;
         }
-        else if (data.has("Bundle_Override_Path"))
+        else if (datDictionary2.ContainsKey("Bundle_Override_Path"))
         {
-            string text3 = data.readString("Bundle_Override_Path");
-            int num = text3.LastIndexOf('/');
-            string text4 = ((num != -1) ? text3.Substring(num + 1) : text3);
-            text3 = text3 + "/" + text4 + ".unity3d";
-            bundle2 = new Bundle(text3, usePath: false, file.name);
+            string string4 = datDictionary2.GetString("Bundle_Override_Path");
+            int num = string4.LastIndexOf('/');
+            string text2 = ((num != -1) ? string4.Substring(num + 1) : string4);
+            string4 = string4 + "/" + text2 + ".unity3d";
+            bundle = new Bundle(string4, usePath: false, file.name);
         }
         else
         {
-            bundle2 = new Bundle(file.bundlePath + "/" + file.name + ".unity3d", usePath: false);
+            bundle = new Bundle(file.bundlePath + "/" + file.name + ".unity3d", usePath: false);
         }
-        bundle2.isCoreAsset = file.origin == coreOrigin;
-        int num2 = data.readInt32("Asset_Bundle_Version", 1);
+        bundle.isCoreAsset = file.origin == coreOrigin;
+        int num2 = datDictionary2.ParseInt32("Asset_Bundle_Version", 1);
         if (num2 < 1)
         {
             reportError(file.name + " Lowest individual asset bundle version is 1 (default), associated with 5.5.");
@@ -934,63 +960,48 @@ public class Assets : MonoBehaviour
             num2 = 4;
         }
         int num3 = Mathf.Max(a, num2);
-        bundle2.convertShadersToStandard = num3 < 2;
-        bundle2.consolidateShaders = num3 < 3 || (data.has("Enable_Shader_Consolidation") && !data.has("Disable_Shader_Consolidation"));
-        Local local2 = Localization.tryRead(file.dataPath, usePath: false);
-        string text5 = data.readString("Type");
-        if (!string.IsNullOrEmpty(text5))
+        bundle.convertShadersToStandard = num3 < 2;
+        bundle.consolidateShaders = num3 < 3 || (datDictionary2.ContainsKey("Enable_Shader_Consolidation") && !datDictionary2.ContainsKey("Disable_Shader_Consolidation"));
+        Local localization = Localization.tryRead(file.dataPath, usePath: false);
+        ushort id = datDictionary2.ParseUInt16("ID", 0);
+        Asset asset;
+        try
         {
-            Type type2 = assetTypes.getType(text5);
-            if (type2 != null && typeof(Asset).IsAssignableFrom(type2))
-            {
-                ushort num4 = data.readUInt16("ID", 0);
-                try
-                {
-                    if (Activator.CreateInstance(type2, bundle2, data, local2, num4) is Asset asset2)
-                    {
-                        asset2.requiredShaderUpgrade = bundle2.convertShadersToStandard || bundle2.consolidateShaders;
-                        if (data.has("GUID"))
-                        {
-                            asset2.GUID = new Guid(data.readString("GUID"));
-                        }
-                        else
-                        {
-                            asset2.GUID = Guid.NewGuid();
-                            string text6 = File.ReadAllText(text);
-                            text6 = "GUID " + asset2.GUID.ToString("N") + "\n" + text6;
-                            File.WriteAllText(text, text6);
-                        }
-                        asset2.absoluteOriginFilePath = Path.GetFullPath(text);
-                        asset2.origin = file.origin;
-                        asset2.origin.assets.Add(asset2);
-                        addToMapping(asset2, file.overrideExistingIDs, defaultAssetMapping);
-                        if (data.errors != null && data.errors.Count > 0)
-                        {
-                            foreach (string error in data.errors)
-                            {
-                                reportError(asset2, error);
-                            }
-                        }
-                    }
-                    bundle2.unload();
-                }
-                catch (Exception e4)
-                {
-                    reportError("Failed to analyze " + text + ": " + getExceptionMessage(e4));
-                    UnturnedLog.exception(e4);
-                    bundle2.unload();
-                }
-            }
-            else
-            {
-                reportError("Unhandled asset type '" + text5 + "' in " + text);
-                bundle2.unload();
-            }
+            asset = Activator.CreateInstance(type) as Asset;
         }
-        else
+        catch (Exception e3)
         {
-            reportError("Missing an asset type in " + text);
-            bundle2.unload();
+            reportError($"Caught exception while constructing {type} in \"{assetPath}\": {getExceptionMessage(e3)}");
+            UnturnedLog.exception(e3);
+            bundle.unload();
+            currentMasterBundle = null;
+            return;
+        }
+        if (asset == null)
+        {
+            reportError($"Failed to construct {type} in \"{assetPath}\"");
+            bundle.unload();
+            currentMasterBundle = null;
+            return;
+        }
+        try
+        {
+            asset.id = id;
+            asset.GUID = value;
+            asset.hash = hash;
+            asset.requiredShaderUpgrade = bundle.convertShadersToStandard || bundle.consolidateShaders;
+            asset.absoluteOriginFilePath = assetPath;
+            asset.origin = file.origin;
+            asset.origin.assets.Add(asset);
+            asset.PopulateAsset(bundle, datDictionary2, localization);
+            addToMapping(asset, file.overrideExistingIDs, defaultAssetMapping);
+            bundle.unload();
+        }
+        catch (Exception e4)
+        {
+            reportError("Caught exception while populating \"" + assetPath + "\": " + getExceptionMessage(e4));
+            UnturnedLog.exception(e4);
+            bundle.unload();
         }
         currentMasterBundle = null;
     }
@@ -1579,7 +1590,7 @@ public class Assets : MonoBehaviour
             CommandWindow.LogError("Hosting dedicated servers using client files has been deprecated since June 2019.");
             CommandWindow.Log("Please use the standalone dedicated server app ID 1110390 available through SteamCMD instead.");
             CommandWindow.Log("For more information and an installation guide read more at:");
-            CommandWindow.Log("https://github.com/SmartlyDressedGames/U3-Docs/blob/master/ServerHosting.md");
+            CommandWindow.Log("https://docs.smartlydressedgames.com/en/stable/servers/server-hosting.html");
         }
         else
         {

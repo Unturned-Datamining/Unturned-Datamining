@@ -19,15 +19,15 @@ public class ItemGeneratorAsset : ItemBarricadeAsset
         return new byte[3];
     }
 
-    public ItemGeneratorAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        _capacity = data.readUInt16("Capacity", 0);
-        _wirerange = data.readSingle("Wirerange");
+        base.PopulateAsset(bundle, data, localization);
+        _capacity = data.ParseUInt16("Capacity", 0);
+        _wirerange = data.ParseFloat("Wirerange");
         if (wirerange > PowerTool.MAX_POWER_RANGE + 0.1f)
         {
             Assets.reportError(this, "Wirerange is further than the max supported power range of " + PowerTool.MAX_POWER_RANGE);
         }
-        _burn = data.readSingle("Burn");
+        _burn = data.ParseFloat("Burn");
     }
 }

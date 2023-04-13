@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using SDG.Framework.IO.FormattedFiles;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -81,17 +80,17 @@ public class VehiclePhysicsProfileAsset : Asset
 
     public EDriveModel? wheelBrakeModel { get; protected set; }
 
-    protected Friction? readFriction(IFormattedFileReader assetReader, string key)
+    protected Friction? readFriction(DatDictionary data, string key)
     {
-        if (assetReader.containsKey(key))
+        if (data.ContainsKey(key))
         {
-            IFormattedFileReader formattedFileReader = assetReader.readObject(key);
+            DatDictionary dictionary = data.GetDictionary(key);
             Friction value = default(Friction);
-            value.extremumSlip = formattedFileReader.readValue<float>("Extremum_Slip");
-            value.extremumValue = formattedFileReader.readValue<float>("Extremum_Value");
-            value.asymptoteSlip = formattedFileReader.readValue<float>("Asymptote_Slip");
-            value.asymptoteValue = formattedFileReader.readValue<float>("Asymptote_Value");
-            value.stiffness = formattedFileReader.readValue<float>("Stiffness");
+            value.extremumSlip = dictionary.ParseFloat("Extremum_Slip");
+            value.extremumValue = dictionary.ParseFloat("Extremum_Value");
+            value.asymptoteSlip = dictionary.ParseFloat("Asymptote_Slip");
+            value.asymptoteValue = dictionary.ParseFloat("Asymptote_Value");
+            value.stiffness = dictionary.ParseFloat("Stiffness");
             return value;
         }
         return null;
@@ -216,84 +215,79 @@ public class VehiclePhysicsProfileAsset : Asset
         }
     }
 
-    protected override void readAsset(IFormattedFileReader reader)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        base.readAsset(reader);
-        if (reader.containsKey("Root_Mass"))
+        base.PopulateAsset(bundle, data, localization);
+        if (data.ContainsKey("Root_Mass"))
         {
-            rootMassOverride = reader.readValue<float>("Root_Mass");
+            rootMassOverride = data.ParseFloat("Root_Mass");
         }
-        if (reader.containsKey("Root_Mass_Multiplier"))
+        if (data.ContainsKey("Root_Mass_Multiplier"))
         {
-            rootMassMultiplier = reader.readValue<float>("Root_Mass_Multiplier");
+            rootMassMultiplier = data.ParseFloat("Root_Mass_Multiplier");
         }
-        if (reader.containsKey("Root_Drag_Multiplier"))
+        if (data.ContainsKey("Root_Drag_Multiplier"))
         {
-            rootDragMultiplier = reader.readValue<float>("Root_Drag_Multiplier");
+            rootDragMultiplier = data.ParseFloat("Root_Drag_Multiplier");
         }
-        if (reader.containsKey("Root_Angular_Drag_Multiplier"))
+        if (data.ContainsKey("Root_Angular_Drag_Multiplier"))
         {
-            rootAngularDragMultiplier = reader.readValue<float>("Root_Angular_Drag_Multiplier");
+            rootAngularDragMultiplier = data.ParseFloat("Root_Angular_Drag_Multiplier");
         }
-        if (reader.containsKey("Carjack_Force_Multiplier"))
+        if (data.ContainsKey("Carjack_Force_Multiplier"))
         {
-            carjackForceMultiplier = reader.readValue<float>("Carjack_Force_Multiplier");
+            carjackForceMultiplier = data.ParseFloat("Carjack_Force_Multiplier");
         }
-        if (reader.containsKey("Wheel_Mass"))
+        if (data.ContainsKey("Wheel_Mass"))
         {
-            wheelMassOverride = reader.readValue<float>("Wheel_Mass");
+            wheelMassOverride = data.ParseFloat("Wheel_Mass");
         }
-        if (reader.containsKey("Wheel_Mass_Multiplier"))
+        if (data.ContainsKey("Wheel_Mass_Multiplier"))
         {
-            wheelMassMultiplier = reader.readValue<float>("Wheel_Mass_Multiplier");
+            wheelMassMultiplier = data.ParseFloat("Wheel_Mass_Multiplier");
         }
-        if (reader.containsKey("Wheel_Damping_Rate"))
+        if (data.ContainsKey("Wheel_Damping_Rate"))
         {
-            wheelDampingRate = reader.readValue<float>("Wheel_Damping_Rate");
+            wheelDampingRate = data.ParseFloat("Wheel_Damping_Rate");
         }
-        if (reader.containsKey("Wheel_Stiffness_Traction_Multiplier"))
+        if (data.ContainsKey("Wheel_Stiffness_Traction_Multiplier"))
         {
-            wheelStiffnessTractionMultiplier = reader.readValue<float>("Wheel_Stiffness_Traction_Multiplier");
+            wheelStiffnessTractionMultiplier = data.ParseFloat("Wheel_Stiffness_Traction_Multiplier");
         }
-        if (reader.containsKey("Wheel_Suspension_Force"))
+        if (data.ContainsKey("Wheel_Suspension_Force"))
         {
-            wheelSuspensionForce = reader.readValue<float>("Wheel_Suspension_Force");
+            wheelSuspensionForce = data.ParseFloat("Wheel_Suspension_Force");
         }
-        if (reader.containsKey("Wheel_Suspension_Damper"))
+        if (data.ContainsKey("Wheel_Suspension_Damper"))
         {
-            wheelSuspensionDamper = reader.readValue<float>("Wheel_Suspension_Damper");
+            wheelSuspensionDamper = data.ParseFloat("Wheel_Suspension_Damper");
         }
-        sidewaysFriction = readFriction(reader, "Wheel_Friction_Sideways");
-        forwardFriction = readFriction(reader, "Wheel_Friction_Forward");
-        if (reader.containsKey("Motor_Torque_Multiplier"))
+        sidewaysFriction = readFriction(data, "Wheel_Friction_Sideways");
+        forwardFriction = readFriction(data, "Wheel_Friction_Forward");
+        if (data.ContainsKey("Motor_Torque_Multiplier"))
         {
-            motorTorqueMultiplier = reader.readValue<float>("Motor_Torque_Multiplier");
+            motorTorqueMultiplier = data.ParseFloat("Motor_Torque_Multiplier");
         }
-        if (reader.containsKey("Motor_Torque_Clamp_Multiplier"))
+        if (data.ContainsKey("Motor_Torque_Clamp_Multiplier"))
         {
-            motorTorqueClampMultiplier = reader.readValue<float>("Motor_Torque_Clamp_Multiplier");
+            motorTorqueClampMultiplier = data.ParseFloat("Motor_Torque_Clamp_Multiplier");
         }
-        if (reader.containsKey("Brake_Torque_Multiplier"))
+        if (data.ContainsKey("Brake_Torque_Multiplier"))
         {
-            brakeTorqueMultiplier = reader.readValue<float>("Brake_Torque_Multiplier");
+            brakeTorqueMultiplier = data.ParseFloat("Brake_Torque_Multiplier");
         }
-        if (reader.containsKey("Brake_Torque_Traction_Multiplier"))
+        if (data.ContainsKey("Brake_Torque_Traction_Multiplier"))
         {
-            brakeTorqueTractionMultiplier = reader.readValue<float>("Brake_Torque_Traction_Multiplier");
+            brakeTorqueTractionMultiplier = data.ParseFloat("Brake_Torque_Traction_Multiplier");
         }
-        if (reader.containsKey("Wheel_Drive_Model"))
+        if (data.ContainsKey("Wheel_Drive_Model"))
         {
-            wheelDriveModel = reader.readValue<EDriveModel>("Wheel_Drive_Model");
+            wheelDriveModel = data.ParseEnum("Wheel_Drive_Model", EDriveModel.Front);
         }
-        if (reader.containsKey("Wheel_Brake_Model"))
+        if (data.ContainsKey("Wheel_Brake_Model"))
         {
-            wheelBrakeModel = reader.readValue<EDriveModel>("Wheel_Brake_Model");
+            wheelBrakeModel = data.ParseEnum("Wheel_Brake_Model", EDriveModel.Front);
         }
-    }
-
-    public VehiclePhysicsProfileAsset(Bundle bundle, Local localization, byte[] hash)
-        : base(bundle, localization, hash)
-    {
     }
 
     [Conditional("LOG_VEHICLE_PHYSICS_PROFILE")]

@@ -8,9 +8,9 @@ public class ItemHatAsset : ItemGearAsset
 
     public GameObject hat => _hat;
 
-    public ItemHatAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         if (!Dedicator.IsDedicatedServer)
         {
             _hat = loadRequiredAsset<GameObject>(bundle, "Hat");

@@ -89,10 +89,10 @@ public class EffectAsset : Asset
         return Assets.FindEffectAssetByGuidOrLegacyId(blastmarkEffectGuid, blast);
     }
 
-    public EffectAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        if (id < 200 && !bundle.isCoreAsset && !data.has("Bypass_ID_Limit"))
+        base.PopulateAsset(bundle, data, localization);
+        if (id < 200 && !bundle.isCoreAsset && !data.ContainsKey("Bypass_ID_Limit"))
         {
             throw new NotSupportedException("ID < 200");
         }
@@ -101,8 +101,8 @@ public class EffectAsset : Asset
         {
             throw new NotSupportedException("Missing effect gameobject");
         }
-        _gore = data.has("Gore");
-        _splatters = new GameObject[data.readByte("Splatter", 0)];
+        _gore = data.ContainsKey("Gore");
+        _splatters = new GameObject[data.ParseUInt8("Splatter", 0)];
         for (int i = 0; i < splatters.Length; i++)
         {
             splatters[i] = bundle.load<GameObject>("Splatter_" + i);
@@ -111,64 +111,64 @@ public class EffectAsset : Asset
                 Assets.reportError(this, $"missing 'Splatter_{i}' gameobject");
             }
         }
-        _splatter = data.readByte("Splatters", 0);
-        _splatterLiquid = data.has("Splatter_Liquid");
-        if (data.has("Splatter_Temperature"))
+        _splatter = data.ParseUInt8("Splatters", 0);
+        _splatterLiquid = data.ContainsKey("Splatter_Liquid");
+        if (data.ContainsKey("Splatter_Temperature"))
         {
-            _splatterTemperature = (EPlayerTemperature)Enum.Parse(typeof(EPlayerTemperature), data.readString("Splatter_Temperature"), ignoreCase: true);
+            _splatterTemperature = (EPlayerTemperature)Enum.Parse(typeof(EPlayerTemperature), data.GetString("Splatter_Temperature"), ignoreCase: true);
         }
         else
         {
             _splatterTemperature = EPlayerTemperature.NONE;
         }
-        _splatterLifetime = data.readSingle("Splatter_Lifetime");
-        if (data.has("Splatter_Lifetime_Spread"))
+        _splatterLifetime = data.ParseFloat("Splatter_Lifetime");
+        if (data.ContainsKey("Splatter_Lifetime_Spread"))
         {
-            _splatterLifetimeSpread = data.readSingle("Splatter_Lifetime_Spread");
+            _splatterLifetimeSpread = data.ParseFloat("Splatter_Lifetime_Spread");
         }
         else
         {
             _splatterLifetimeSpread = 1f;
         }
-        _lifetime = data.readSingle("Lifetime");
-        if (data.has("Lifetime_Spread"))
+        _lifetime = data.ParseFloat("Lifetime");
+        if (data.ContainsKey("Lifetime_Spread"))
         {
-            _lifetimeSpread = data.readSingle("Lifetime_Spread");
+            _lifetimeSpread = data.ParseFloat("Lifetime_Spread");
         }
         else
         {
             _lifetimeSpread = 4f;
         }
-        _isStatic = data.has("Static");
-        isMusic = data.readBoolean("Is_Music");
-        if (data.has("Preload"))
+        _isStatic = data.ContainsKey("Static");
+        isMusic = data.ParseBool("Is_Music");
+        if (data.ContainsKey("Preload"))
         {
-            _preload = data.readByte("Preload", 0);
+            _preload = data.ParseUInt8("Preload", 0);
         }
         else
         {
             _preload = 1;
         }
-        if (data.has("Splatter_Preload"))
+        if (data.ContainsKey("Splatter_Preload"))
         {
-            _splatterPreload = data.readByte("Splatter_Preload", 0);
+            _splatterPreload = data.ParseUInt8("Splatter_Preload", 0);
         }
         else
         {
             _splatterPreload = (byte)(Mathf.CeilToInt((float)(int)splatter / (float)splatters.Length) * preload);
         }
-        _blast = data.ReadGuidOrLegacyId("Blast", out blastmarkEffectGuid);
-        relevantDistance = data.readSingle("Relevant_Distance", -1f);
-        spawnOnDedicatedServer = data.has("Spawn_On_Dedicated_Server");
-        if (data.has("Randomize_Rotation"))
+        _blast = data.ParseGuidOrLegacyId("Blast", out blastmarkEffectGuid);
+        relevantDistance = data.ParseFloat("Relevant_Distance", -1f);
+        spawnOnDedicatedServer = data.ContainsKey("Spawn_On_Dedicated_Server");
+        if (data.ContainsKey("Randomize_Rotation"))
         {
-            randomizeRotation = data.readBoolean("Randomize_Rotation");
+            randomizeRotation = data.ParseBool("Randomize_Rotation");
         }
         else
         {
             randomizeRotation = true;
         }
-        cameraShakeRadius = data.readSingle("CameraShake_Radius");
-        cameraShakeMagnitudeDegrees = data.readSingle("CameraShake_MagnitudeDegrees");
+        cameraShakeRadius = data.ParseFloat("CameraShake_Radius");
+        cameraShakeMagnitudeDegrees = data.ParseFloat("CameraShake_MagnitudeDegrees");
     }
 }

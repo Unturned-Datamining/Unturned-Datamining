@@ -15,10 +15,10 @@ public class ItemLibraryAsset : ItemBarricadeAsset
         return new byte[20];
     }
 
-    public ItemLibraryAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        _capacity = data.readUInt32("Capacity");
-        _tax = data.readByte("Tax", 0);
+        base.PopulateAsset(bundle, data, localization);
+        _capacity = data.ParseUInt32("Capacity");
+        _tax = data.ParseUInt8("Tax", 0);
     }
 }

@@ -28,19 +28,19 @@ public class ItemTacticalAsset : ItemCaliberAsset
 
     public Color laserColor { get; protected set; }
 
-    public ItemTacticalAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         _tactical = loadRequiredAsset<GameObject>(bundle, "Tactical");
-        _isLaser = data.has("Laser");
-        _isLight = data.has("Light");
+        _isLaser = data.ContainsKey("Laser");
+        _isLight = data.ContainsKey("Light");
         if (isLight)
         {
             lightConfig = new PlayerSpotLightConfig(data);
         }
-        _isRangefinder = data.has("Rangefinder");
-        _isMelee = data.has("Melee");
-        Color value = data.readColor("Laser_Color", Color.red);
+        _isRangefinder = data.ContainsKey("Rangefinder");
+        _isMelee = data.ContainsKey("Melee");
+        Color value = data.LegacyParseColor("Laser_Color", Color.red);
         value = MathfEx.Clamp01(value);
         value.a = 1f;
         laserColor = value;

@@ -14,10 +14,10 @@ public class ItemArrestStartAsset : ItemAsset
 
     public override bool shouldFriendlySentryTargetUser => true;
 
-    public ItemArrestStartAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         _use = bundle.load<AudioClip>("Use");
-        _strength = data.readUInt16("Strength", 0);
+        _strength = data.ParseUInt16("Strength", 0);
     }
 }

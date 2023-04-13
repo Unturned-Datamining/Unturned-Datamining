@@ -57,12 +57,12 @@ public class ItemPlaceableAsset : ItemAsset
         }
     }
 
-    public ItemPlaceableAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         salvageItemRef = data.readAssetReference<ItemAsset>("SalvageItem");
-        minItemsDroppedOnDestroy = data.readInt32("Min_Items_Dropped_On_Destroy");
-        maxItemsDroppedOnDestroy = data.readInt32("Max_Items_Dropped_On_Destroy");
+        minItemsDroppedOnDestroy = data.ParseInt32("Min_Items_Dropped_On_Destroy");
+        maxItemsDroppedOnDestroy = data.ParseInt32("Max_Items_Dropped_On_Destroy");
         itemDroppedOnDestroy = data.readAssetReference<SpawnAsset>("Item_Dropped_On_Destroy");
     }
 }

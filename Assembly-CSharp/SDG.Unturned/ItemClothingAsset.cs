@@ -47,9 +47,9 @@ public class ItemClothingAsset : ItemAsset
         return true;
     }
 
-    public ItemClothingAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         if (isPro)
         {
             _armor = 1f;
@@ -57,33 +57,33 @@ public class ItemClothingAsset : ItemAsset
         }
         else
         {
-            _armor = data.readSingle("Armor");
-            if (data.has("Armor"))
+            _armor = data.ParseFloat("Armor");
+            if (data.ContainsKey("Armor"))
             {
-                _armor = data.readSingle("Armor");
+                _armor = data.ParseFloat("Armor");
             }
             else
             {
                 _armor = 1f;
             }
-            if (data.has("Armor_Explosion"))
+            if (data.ContainsKey("Armor_Explosion"))
             {
-                _explosionArmor = data.readSingle("Armor_Explosion");
+                _explosionArmor = data.ParseFloat("Armor_Explosion");
             }
             else
             {
                 _explosionArmor = armor;
             }
-            _proofWater = data.has("Proof_Water");
-            _proofFire = data.has("Proof_Fire");
-            _proofRadiation = data.has("Proof_Radiation");
-            movementSpeedMultiplier = data.readSingle("Movement_Speed_Multiplier", 1f);
+            _proofWater = data.ContainsKey("Proof_Water");
+            _proofFire = data.ContainsKey("Proof_Fire");
+            _proofRadiation = data.ContainsKey("Proof_Radiation");
+            movementSpeedMultiplier = data.ParseFloat("Movement_Speed_Multiplier", 1f);
         }
-        visibleOnRagdoll = data.readBoolean("Visible_On_Ragdoll", defaultValue: true);
-        hairVisible = data.readBoolean("Hair_Visible", defaultValue: true);
-        beardVisible = data.readBoolean("Beard_Visible", defaultValue: true);
-        shouldMirrorLeftHandedModel = data.readBoolean("Mirror_Left_Handed_Model", defaultValue: true);
-        if (data.has("WearAudio"))
+        visibleOnRagdoll = data.ParseBool("Visible_On_Ragdoll", defaultValue: true);
+        hairVisible = data.ParseBool("Hair_Visible", defaultValue: true);
+        beardVisible = data.ParseBool("Beard_Visible", defaultValue: true);
+        shouldMirrorLeftHandedModel = data.ParseBool("Mirror_Left_Handed_Model", defaultValue: true);
+        if (data.ContainsKey("WearAudio"))
         {
             wearAudio = data.ReadAudioReference("WearAudio");
         }
@@ -95,7 +95,7 @@ public class ItemClothingAsset : ItemAsset
         {
             wearAudio = new AudioReference("core.masterbundle", "Sounds/Sleeve.mp3");
         }
-        shouldDestroyClothingColliders = data.readBoolean("Destroy_Clothing_Colliders", defaultValue: true);
+        shouldDestroyClothingColliders = data.ParseBool("Destroy_Clothing_Colliders", defaultValue: true);
     }
 
     protected override AudioReference GetDefaultInventoryAudio()

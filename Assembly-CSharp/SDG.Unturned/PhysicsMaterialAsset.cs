@@ -1,5 +1,3 @@
-using SDG.Framework.IO.FormattedFiles;
-
 namespace SDG.Unturned;
 
 public class PhysicsMaterialAsset : PhysicsMaterialAssetBase
@@ -22,56 +20,50 @@ public class PhysicsMaterialAsset : PhysicsMaterialAssetBase
 
     public float? characterMaxSpeedMultiplier;
 
-    protected override void readAsset(IFormattedFileReader reader)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        base.readAsset(reader);
-        int num = reader.readArrayLength("UnityNames");
-        if (num > 0)
+        base.PopulateAsset(bundle, data, localization);
+        if (data.TryGetList("UnityNames", out var node))
         {
-            physicMaterialNames = new string[num];
-            for (int i = 0; i < num; i++)
+            physicMaterialNames = new string[node.Count];
+            for (int i = 0; i < node.Count; i++)
             {
-                physicMaterialNames[i] = reader.readValue(i);
+                physicMaterialNames[i] = node.GetString(i);
             }
         }
         else
         {
-            physicMaterialNames = new string[1] { reader.readValue("UnityName") };
+            physicMaterialNames = new string[1] { data.GetString("UnityName") };
         }
-        fallbackRef = reader.readValue<AssetReference<PhysicsMaterialAsset>>("Fallback");
-        bulletImpactEffect = reader.readValue<AssetReference<EffectAsset>>("WipDoNotUseTemp_BulletImpactEffect");
-        if (reader.containsKey("Character_Friction_Mode"))
+        fallbackRef = data.ParseStruct<AssetReference<PhysicsMaterialAsset>>("Fallback");
+        bulletImpactEffect = data.ParseStruct<AssetReference<EffectAsset>>("WipDoNotUseTemp_BulletImpactEffect");
+        if (data.ContainsKey("Character_Friction_Mode"))
         {
-            characterFrictionMode = reader.readValue<EPhysicsMaterialCharacterFrictionMode>("Character_Friction_Mode");
+            characterFrictionMode = data.ParseEnum("Character_Friction_Mode", EPhysicsMaterialCharacterFrictionMode.ImmediatelyResponsive);
             if (characterFrictionMode != 0)
             {
-                if (reader.containsKey("Character_Acceleration_Multiplier"))
+                if (data.ContainsKey("Character_Acceleration_Multiplier"))
                 {
-                    characterAccelerationMultiplier = reader.readValue<float>("Character_Acceleration_Multiplier");
+                    characterAccelerationMultiplier = data.ParseFloat("Character_Acceleration_Multiplier");
                 }
-                if (reader.containsKey("Character_Deceleration_Multiplier"))
+                if (data.ContainsKey("Character_Deceleration_Multiplier"))
                 {
-                    characterDecelerationMultiplier = reader.readValue<float>("Character_Deceleration_Multiplier");
+                    characterDecelerationMultiplier = data.ParseFloat("Character_Deceleration_Multiplier");
                 }
-                if (reader.containsKey("Character_Max_Speed_Multiplier"))
+                if (data.ContainsKey("Character_Max_Speed_Multiplier"))
                 {
-                    characterMaxSpeedMultiplier = reader.readValue<float>("Character_Max_Speed_Multiplier");
+                    characterMaxSpeedMultiplier = data.ParseFloat("Character_Max_Speed_Multiplier");
                 }
             }
         }
-        if (reader.containsKey("IsArable"))
+        if (data.ContainsKey("IsArable"))
         {
-            isArable = reader.readValue<bool>("IsArable");
+            isArable = data.ParseBool("IsArable");
         }
-        if (reader.containsKey("HasOil"))
+        if (data.ContainsKey("HasOil"))
         {
-            hasOil = reader.readValue<bool>("HasOil");
+            hasOil = data.ParseBool("HasOil");
         }
         PhysicMaterialCustomData.RegisterAsset(this);
-    }
-
-    public PhysicsMaterialAsset(Bundle bundle, Local localization, byte[] hash)
-        : base(bundle, localization, hash)
-    {
     }
 }

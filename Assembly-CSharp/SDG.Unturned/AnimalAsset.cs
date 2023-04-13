@@ -147,10 +147,10 @@ public class AnimalAsset : Asset
         }
     }
 
-    public AnimalAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        if (id < 50 && !bundle.isCoreAsset && !data.has("Bypass_ID_Limit"))
+        base.PopulateAsset(bundle, data, localization);
+        if (id < 50 && !bundle.isCoreAsset && !data.ContainsKey("Bypass_ID_Limit"))
         {
             throw new NotSupportedException("ID < 50");
         }
@@ -183,54 +183,54 @@ public class AnimalAsset : Asset
         {
             Assets.reportError(this, "missing 'Ragdoll' GameObject. Highly recommended to fix.");
         }
-        _speedRun = data.readSingle("Speed_Run");
-        _speedWalk = data.readSingle("Speed_Walk");
-        _behaviour = (EAnimalBehaviour)Enum.Parse(typeof(EAnimalBehaviour), data.readString("Behaviour"), ignoreCase: true);
-        _health = data.readUInt16("Health", 0);
-        _regen = data.readSingle("Regen");
-        if (!data.has("Regen"))
+        _speedRun = data.ParseFloat("Speed_Run");
+        _speedWalk = data.ParseFloat("Speed_Walk");
+        _behaviour = (EAnimalBehaviour)Enum.Parse(typeof(EAnimalBehaviour), data.GetString("Behaviour"), ignoreCase: true);
+        _health = data.ParseUInt16("Health", 0);
+        _regen = data.ParseFloat("Regen");
+        if (!data.ContainsKey("Regen"))
         {
             _regen = 10f;
         }
-        _damage = data.readByte("Damage", 0);
-        _meat = data.readUInt16("Meat", 0);
-        _pelt = data.readUInt16("Pelt", 0);
-        _rewardID = data.readUInt16("Reward_ID", 0);
-        if (data.has("Reward_Min"))
+        _damage = data.ParseUInt8("Damage", 0);
+        _meat = data.ParseUInt16("Meat", 0);
+        _pelt = data.ParseUInt16("Pelt", 0);
+        _rewardID = data.ParseUInt16("Reward_ID", 0);
+        if (data.ContainsKey("Reward_Min"))
         {
-            _rewardMin = data.readByte("Reward_Min", 0);
+            _rewardMin = data.ParseUInt8("Reward_Min", 0);
         }
         else
         {
             _rewardMin = 3;
         }
-        if (data.has("Reward_Max"))
+        if (data.ContainsKey("Reward_Max"))
         {
-            _rewardMax = data.readByte("Reward_Max", 0);
+            _rewardMax = data.ParseUInt8("Reward_Max", 0);
         }
         else
         {
             _rewardMax = 4;
         }
-        _roars = new AudioClip[data.readByte("Roars", 0)];
+        _roars = new AudioClip[data.ParseUInt8("Roars", 0)];
         for (byte b = 0; b < roars.Length; b = (byte)(b + 1))
         {
             roars[b] = bundle.load<AudioClip>("Roar_" + b);
         }
-        _panics = new AudioClip[data.readByte("Panics", 0)];
+        _panics = new AudioClip[data.ParseUInt8("Panics", 0)];
         for (byte b2 = 0; b2 < panics.Length; b2 = (byte)(b2 + 1))
         {
             panics[b2] = bundle.load<AudioClip>("Panic_" + b2);
         }
-        attackAnimVariantsCount = data.readInt32("Attack_Anim_Variants", 1);
-        eatAnimVariantsCount = data.readInt32("Eat_Anim_Variants", 1);
-        glanceAnimVariantsCount = data.readInt32("Glance_Anim_Variants", 2);
-        startleAnimVariantsCount = data.readInt32("Startle_Anim_Variants", 1);
-        horizontalAttackRangeSquared = MathfEx.Square(data.readSingle("Horizontal_Attack_Range", 2.25f));
-        horizontalVehicleAttackRangeSquared = MathfEx.Square(data.readSingle("Horizontal_Vehicle_Attack_Range", 4.4f));
-        verticalAttackRange = data.readSingle("Vertical_Attack_Range", 2f);
-        attackInterval = data.readSingle("Attack_Interval", 1f);
-        shouldPlayAnimsOnDedicatedServer = data.readBoolean("Should_Play_Anims_On_Dedicated_Server");
-        _rewardXP = data.readUInt32("Reward_XP");
+        attackAnimVariantsCount = data.ParseInt32("Attack_Anim_Variants", 1);
+        eatAnimVariantsCount = data.ParseInt32("Eat_Anim_Variants", 1);
+        glanceAnimVariantsCount = data.ParseInt32("Glance_Anim_Variants", 2);
+        startleAnimVariantsCount = data.ParseInt32("Startle_Anim_Variants", 1);
+        horizontalAttackRangeSquared = MathfEx.Square(data.ParseFloat("Horizontal_Attack_Range", 2.25f));
+        horizontalVehicleAttackRangeSquared = MathfEx.Square(data.ParseFloat("Horizontal_Vehicle_Attack_Range", 4.4f));
+        verticalAttackRange = data.ParseFloat("Vertical_Attack_Range", 2f);
+        attackInterval = data.ParseFloat("Attack_Interval", 1f);
+        shouldPlayAnimsOnDedicatedServer = data.ParseBool("Should_Play_Anims_On_Dedicated_Server");
+        _rewardXP = data.ParseUInt32("Reward_XP");
     }
 }

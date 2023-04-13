@@ -51,10 +51,10 @@ public class QuestAsset : Asset
         }
     }
 
-    public QuestAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        if (id < 2000 && !bundle.isCoreAsset && !data.has("Bypass_ID_Limit"))
+        base.PopulateAsset(bundle, data, localization);
+        if (id < 2000 && !bundle.isCoreAsset && !data.ContainsKey("Bypass_ID_Limit"))
         {
             throw new NotSupportedException("ID < 2000");
         }
@@ -64,9 +64,9 @@ public class QuestAsset : Asset
         desc = ItemTool.filterRarityRichText(desc);
         RichTextUtil.replaceNewlineMarkup(ref desc);
         questDescription = desc;
-        conditions = new INPCCondition[data.readByte("Conditions", 0)];
+        conditions = new INPCCondition[data.ParseUInt8("Conditions", 0)];
         NPCTool.readConditions(data, localization, "Condition_", conditions, this);
-        rewards = new INPCReward[data.readByte("Rewards", 0)];
+        rewards = new INPCReward[data.ParseUInt8("Rewards", 0)];
         NPCTool.readRewards(data, localization, "Reward_", rewards, this);
     }
 }

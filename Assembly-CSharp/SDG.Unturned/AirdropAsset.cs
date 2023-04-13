@@ -1,4 +1,3 @@
-using SDG.Framework.IO.FormattedFiles;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -11,15 +10,10 @@ public class AirdropAsset : Asset
 
     public MasterBundleReference<GameObject> model;
 
-    protected override void readAsset(IFormattedFileReader reader)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        base.readAsset(reader);
-        barricadeRef = reader.readValue<AssetReference<ItemBarricadeAsset>>("Landed_Barricade");
-        model = reader.readValue<MasterBundleReference<GameObject>>("Carepackage_Prefab");
-    }
-
-    public AirdropAsset(Bundle bundle, Local localization, byte[] hash)
-        : base(bundle, localization, hash)
-    {
+        base.PopulateAsset(bundle, data, localization);
+        barricadeRef = data.ParseStruct<AssetReference<ItemBarricadeAsset>>("Landed_Barricade");
+        model = data.ParseStruct<MasterBundleReference<GameObject>>("Carepackage_Prefab");
     }
 }

@@ -1,6 +1,5 @@
 using System;
 using SDG.Framework.Foliage;
-using SDG.Framework.IO.FormattedFiles;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -91,58 +90,28 @@ public class LandscapeMaterialAsset : Asset
         return layer;
     }
 
-    protected override void readAsset(IFormattedFileReader reader)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        base.readAsset(reader);
-        texture = reader.readValue<ContentReference<Texture2D>>("Texture");
-        mask = reader.readValue<ContentReference<Texture2D>>("Mask");
-        physicsMaterialName = reader.readValue("Physics_Material");
+        base.PopulateAsset(bundle, data, localization);
+        texture = data.ParseStruct<ContentReference<Texture2D>>("Texture");
+        mask = data.ParseStruct<ContentReference<Texture2D>>("Mask");
+        physicsMaterialName = data.GetString("Physics_Material");
         if (Enum.TryParse<EPhysicsMaterial>(physicsMaterialName, out physicsMaterial))
         {
             physicsMaterialName = PhysicsTool.GetNameOfLegacyMaterial(physicsMaterial);
         }
-        foliage = reader.readValue<AssetReference<FoliageInfoCollectionAsset>>("Foliage");
-        christmasRedirect = reader.readValue<AssetReference<LandscapeMaterialAsset>>("Christmas_Redirect");
-        halloweenRedirect = reader.readValue<AssetReference<LandscapeMaterialAsset>>("Halloween_Redirect");
-        aprilFoolsRedirect = reader.readValue<AssetReference<LandscapeMaterialAsset>>("AprilFools_Redirect");
-        useAutoSlope = reader.readValue<bool>("Use_Auto_Slope");
-        autoMinAngleBegin = reader.readValue<float>("Auto_Min_Angle_Begin");
-        autoMinAngleEnd = reader.readValue<float>("Auto_Min_Angle_End");
-        autoMaxAngleBegin = reader.readValue<float>("Auto_Max_Angle_Begin");
-        autoMaxAngleEnd = reader.readValue<float>("Auto_Max_Angle_End");
-        useAutoFoundation = reader.readValue<bool>("Use_Auto_Foundation");
-        autoRayRadius = reader.readValue<float>("Auto_Ray_Radius");
-        autoRayLength = reader.readValue<float>("Auto_Ray_Length");
-        autoRayMask = reader.readValue<ERayMask>("Auto_Ray_Mask");
-    }
-
-    protected override void writeAsset(IFormattedFileWriter writer)
-    {
-        base.writeAsset(writer);
-        writer.writeValue("Texture", texture);
-        writer.writeValue("Mask", mask);
-        writer.writeValue("Physics_Material", physicsMaterialName);
-        writer.writeValue("Foliage", foliage);
-        writer.writeValue("Christmas_Redirect", christmasRedirect);
-        writer.writeValue("Halloween_Redirect", halloweenRedirect);
-        writer.writeValue("AprilFools_Redirect", aprilFoolsRedirect);
-        writer.writeValue("Use_Auto_Slope", useAutoSlope);
-        writer.writeValue("Auto_Min_Angle_Begin", autoMinAngleBegin);
-        writer.writeValue("Auto_Min_Angle_End", autoMinAngleEnd);
-        writer.writeValue("Auto_Max_Angle_Begin", autoMaxAngleBegin);
-        writer.writeValue("Auto_Max_Angle_End", autoMaxAngleEnd);
-        writer.writeValue("Use_Auto_Foundation", useAutoFoundation);
-        writer.writeValue("Auto_Ray_Radius", autoRayRadius);
-        writer.writeValue("Auto_Ray_Length", autoRayLength);
-        writer.writeValue("Auto_Ray_Mask", autoRayMask);
-    }
-
-    public LandscapeMaterialAsset()
-    {
-    }
-
-    public LandscapeMaterialAsset(Bundle bundle, Local localization, byte[] hash)
-        : base(bundle, localization, hash)
-    {
+        foliage = data.ParseStruct<AssetReference<FoliageInfoCollectionAsset>>("Foliage");
+        christmasRedirect = data.ParseStruct<AssetReference<LandscapeMaterialAsset>>("Christmas_Redirect");
+        halloweenRedirect = data.ParseStruct<AssetReference<LandscapeMaterialAsset>>("Halloween_Redirect");
+        aprilFoolsRedirect = data.ParseStruct<AssetReference<LandscapeMaterialAsset>>("AprilFools_Redirect");
+        useAutoSlope = data.ParseBool("Use_Auto_Slope");
+        autoMinAngleBegin = data.ParseFloat("Auto_Min_Angle_Begin");
+        autoMinAngleEnd = data.ParseFloat("Auto_Min_Angle_End");
+        autoMaxAngleBegin = data.ParseFloat("Auto_Max_Angle_Begin");
+        autoMaxAngleEnd = data.ParseFloat("Auto_Max_Angle_End");
+        useAutoFoundation = data.ParseBool("Use_Auto_Foundation");
+        autoRayRadius = data.ParseFloat("Auto_Ray_Radius");
+        autoRayLength = data.ParseFloat("Auto_Ray_Length");
+        autoRayMask = data.ParseEnum("Auto_Ray_Mask", (ERayMask)0);
     }
 }

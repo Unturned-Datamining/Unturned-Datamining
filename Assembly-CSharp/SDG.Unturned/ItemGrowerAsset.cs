@@ -8,9 +8,9 @@ public class ItemGrowerAsset : ItemAsset
 
     public AudioClip use => _use;
 
-    public ItemGrowerAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         _use = bundle.load<AudioClip>("Use");
     }
 }

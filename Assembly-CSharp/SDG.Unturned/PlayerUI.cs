@@ -100,6 +100,8 @@ public class PlayerUI : MonoBehaviour
 
     private PlayerDashboardUI dashboardUI;
 
+    private PlayerPauseUI pauseUI;
+
     private PlayerLifeUI lifeUI;
 
     internal PlayerBarricadeStereoUI boomboxUI;
@@ -1858,7 +1860,7 @@ public class PlayerUI : MonoBehaviour
         groupUI.sizeScale_Y = 1f;
         container.AddChild(groupUI);
         dashboardUI = new PlayerDashboardUI();
-        new PlayerPauseUI();
+        pauseUI = new PlayerPauseUI();
         lifeUI = new PlayerLifeUI();
         new PlayerDeathUI();
         new PlayerBarricadeSignUI();
@@ -2013,6 +2015,10 @@ public class PlayerUI : MonoBehaviour
             if (dashboardUI != null)
             {
                 dashboardUI.OnDestroy();
+            }
+            if (pauseUI != null)
+            {
+                pauseUI.OnDestroy();
             }
             if (lifeUI != null)
             {

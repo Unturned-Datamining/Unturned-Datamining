@@ -12,10 +12,10 @@ public class ItemArrestEndAsset : ItemAsset
 
     public ushort recover => _recover;
 
-    public ItemArrestEndAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         _use = bundle.load<AudioClip>("Use");
-        _recover = data.readUInt16("Recover", 0);
+        _recover = data.ParseUInt16("Recover", 0);
     }
 }

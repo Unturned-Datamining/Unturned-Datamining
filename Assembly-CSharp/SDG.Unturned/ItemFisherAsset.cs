@@ -20,12 +20,12 @@ public class ItemFisherAsset : ItemAsset
 
     public ushort rewardID => _rewardID;
 
-    public ItemFisherAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         _cast = bundle.load<AudioClip>("Cast");
         _reel = bundle.load<AudioClip>("Reel");
         _tug = bundle.load<AudioClip>("Tug");
-        _rewardID = data.readUInt16("Reward_ID", 0);
+        _rewardID = data.ParseUInt16("Reward_ID", 0);
     }
 }

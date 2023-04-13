@@ -77,28 +77,28 @@ public class ItemRefillAsset : ItemAsset
         return desc;
     }
 
-    public ItemRefillAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         _use = LoadRedirectableAsset<AudioClip>(bundle, "Use", data, "ConsumeAudioClip");
-        float defaultValue = data.readSingle("Water");
-        cleanHealth = data.readSingle("Clean_Health");
-        saltyHealth = data.readSingle("Salty_Health", cleanHealth * 0.25f);
-        dirtyHealth = data.readSingle("Dirty_Health", cleanHealth * 0.6f);
-        cleanFood = data.readSingle("Clean_Food");
-        saltyFood = data.readSingle("Salty_Food", cleanFood * 0.25f);
-        dirtyFood = data.readSingle("Dirty_Food", cleanFood * 0.6f);
-        cleanWater = data.readSingle("Clean_Water", defaultValue);
-        saltyWater = data.readSingle("Salty_Water", cleanWater * 0.25f);
-        dirtyWater = data.readSingle("Dirty_Water", cleanWater * 0.6f);
-        cleanVirus = data.readSingle("Clean_Virus");
-        saltyVirus = data.readSingle("Salty_Virus", cleanWater * -0.75f);
-        dirtyVirus = data.readSingle("Dirty_Virus", cleanWater * -0.39999998f);
-        cleanStamina = data.readSingle("Clean_Stamina");
-        saltyStamina = data.readSingle("Salty_Stamina", cleanStamina * 0.25f);
-        dirtyStamina = data.readSingle("Dirty_Stamina", cleanStamina * 0.6f);
-        cleanOxygen = data.readSingle("Clean_Oxygen");
-        saltyOxygen = data.readSingle("Salty_Oxygen", cleanOxygen * 0.25f);
-        dirtyOxygen = data.readSingle("Dirty_Oxygen", cleanOxygen * 0.6f);
+        float defaultValue = data.ParseFloat("Water");
+        cleanHealth = data.ParseFloat("Clean_Health");
+        saltyHealth = data.ParseFloat("Salty_Health", cleanHealth * 0.25f);
+        dirtyHealth = data.ParseFloat("Dirty_Health", cleanHealth * 0.6f);
+        cleanFood = data.ParseFloat("Clean_Food");
+        saltyFood = data.ParseFloat("Salty_Food", cleanFood * 0.25f);
+        dirtyFood = data.ParseFloat("Dirty_Food", cleanFood * 0.6f);
+        cleanWater = data.ParseFloat("Clean_Water", defaultValue);
+        saltyWater = data.ParseFloat("Salty_Water", cleanWater * 0.25f);
+        dirtyWater = data.ParseFloat("Dirty_Water", cleanWater * 0.6f);
+        cleanVirus = data.ParseFloat("Clean_Virus");
+        saltyVirus = data.ParseFloat("Salty_Virus", cleanWater * -0.75f);
+        dirtyVirus = data.ParseFloat("Dirty_Virus", cleanWater * -0.39999998f);
+        cleanStamina = data.ParseFloat("Clean_Stamina");
+        saltyStamina = data.ParseFloat("Salty_Stamina", cleanStamina * 0.25f);
+        dirtyStamina = data.ParseFloat("Dirty_Stamina", cleanStamina * 0.6f);
+        cleanOxygen = data.ParseFloat("Clean_Oxygen");
+        saltyOxygen = data.ParseFloat("Salty_Oxygen", cleanOxygen * 0.25f);
+        dirtyOxygen = data.ParseFloat("Dirty_Oxygen", cleanOxygen * 0.6f);
     }
 }

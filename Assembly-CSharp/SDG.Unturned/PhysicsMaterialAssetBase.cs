@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using SDG.Framework.IO.FormattedFiles;
 
 namespace SDG.Unturned;
 
@@ -7,23 +6,18 @@ public class PhysicsMaterialAssetBase : Asset
 {
     public Dictionary<string, MasterBundleReference<OneShotAudioDefinition>> audioDefs;
 
-    protected override void readAsset(IFormattedFileReader reader)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        base.readAsset(reader);
-        IFormattedFileReader formattedFileReader = reader.readObject("AudioDefs");
-        if (formattedFileReader == null)
+        base.PopulateAsset(bundle, data, localization);
+        DatDictionary dictionary = data.GetDictionary("AudioDefs");
+        if (dictionary == null)
         {
             return;
         }
         audioDefs = new Dictionary<string, MasterBundleReference<OneShotAudioDefinition>>();
-        foreach (string key in formattedFileReader.getKeys())
+        foreach (KeyValuePair<string, IDatNode> item in dictionary)
         {
-            audioDefs[key] = formattedFileReader.readValue<MasterBundleReference<OneShotAudioDefinition>>(key);
+            audioDefs[item.Key] = item.Value.ParseStruct<MasterBundleReference<OneShotAudioDefinition>>();
         }
-    }
-
-    public PhysicsMaterialAssetBase(Bundle bundle, Local localization, byte[] hash)
-        : base(bundle, localization, hash)
-    {
     }
 }

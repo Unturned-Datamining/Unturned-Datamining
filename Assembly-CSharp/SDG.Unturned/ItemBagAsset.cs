@@ -10,13 +10,13 @@ public class ItemBagAsset : ItemClothingAsset
 
     public byte height => _height;
 
-    public ItemBagAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         if (!isPro)
         {
-            _width = data.readByte("Width", 0);
-            _height = data.readByte("Height", 0);
+            _width = data.ParseUInt8("Width", 0);
+            _height = data.ParseUInt8("Height", 0);
         }
     }
 }

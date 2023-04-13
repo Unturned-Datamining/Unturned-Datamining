@@ -12,9 +12,9 @@ public class ItemMaskAsset : ItemGearAsset
 
     public bool isEarpiece => _isEarpiece;
 
-    public ItemMaskAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         if (!Dedicator.IsDedicatedServer)
         {
             _mask = loadRequiredAsset<GameObject>(bundle, "Mask");
@@ -27,7 +27,7 @@ public class ItemMaskAsset : ItemGearAsset
         }
         if (!isPro)
         {
-            _isEarpiece = data.has("Earpiece");
+            _isEarpiece = data.ContainsKey("Earpiece");
         }
     }
 }

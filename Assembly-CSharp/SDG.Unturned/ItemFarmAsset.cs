@@ -22,15 +22,15 @@ public class ItemFarmAsset : ItemBarricadeAsset
 
     public bool isAffectedByAgricultureSkill { get; protected set; }
 
-    public ItemFarmAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        _growth = data.readUInt32("Growth");
-        _grow = data.readUInt16("Grow", 0);
-        growSpawnTableGuid = data.readGUID("Grow_SpawnTable");
-        ignoreSoilRestrictions = data.has("Ignore_Soil_Restrictions");
-        canFertilize = data.readBoolean("Allow_Fertilizer", defaultValue: true);
-        harvestRewardExperience = data.readUInt32("Harvest_Reward_Experience", 1u);
-        isAffectedByAgricultureSkill = data.readBoolean("Affected_By_Agriculture_Skill", defaultValue: true);
+        base.PopulateAsset(bundle, data, localization);
+        _growth = data.ParseUInt32("Growth");
+        _grow = data.ParseUInt16("Grow", 0);
+        growSpawnTableGuid = data.ParseGuid("Grow_SpawnTable");
+        ignoreSoilRestrictions = data.ContainsKey("Ignore_Soil_Restrictions");
+        canFertilize = data.ParseBool("Allow_Fertilizer", defaultValue: true);
+        harvestRewardExperience = data.ParseUInt32("Harvest_Reward_Experience", 1u);
+        isAffectedByAgricultureSkill = data.ParseBool("Affected_By_Agriculture_Skill", defaultValue: true);
     }
 }

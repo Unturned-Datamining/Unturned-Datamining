@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-public struct MasterBundleReference<T> : IFormattedFileReadable, IFormattedFileWritable where T : Object
+public struct MasterBundleReference<T> : IFormattedFileReadable, IFormattedFileWritable, IDatParseable where T : Object
 {
     public static MasterBundleReference<T> invalid = new MasterBundleReference<T>(null, null);
 
@@ -29,6 +29,26 @@ public struct MasterBundleReference<T> : IFormattedFileReadable, IFormattedFileW
     {
         this.name = name;
         this.path = path;
+    }
+
+    public bool TryParse(IDatNode node)
+    {
+        if (node is DatValue datValue)
+        {
+            if (Assets.currentMasterBundle != null)
+            {
+                name = Assets.currentMasterBundle.assetBundleName;
+            }
+            path = datValue.value;
+            return true;
+        }
+        if (node is DatDictionary datDictionary)
+        {
+            name = datDictionary.GetString("MasterBundle");
+            path = datDictionary.GetString("AssetPath");
+            return true;
+        }
+        return false;
     }
 
     public void read(IFormattedFileReader reader)

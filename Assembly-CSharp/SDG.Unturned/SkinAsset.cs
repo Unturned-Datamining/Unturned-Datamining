@@ -67,6 +67,10 @@ public class SkinAsset : Asset
         }
     }
 
+    public SkinAsset()
+    {
+    }
+
     public SkinAsset(bool isPattern, Material primarySkin, Dictionary<ushort, Material> secondarySkins, Material attachmentSkin, Material tertiarySkin)
     {
         _isPattern = isPattern;
@@ -82,38 +86,38 @@ public class SkinAsset : Asset
         overrideMeshes = new List<Mesh>(0);
     }
 
-    public SkinAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        if (id < 2000 && !bundle.isCoreAsset && !data.has("Bypass_ID_Limit"))
+        base.PopulateAsset(bundle, data, localization);
+        if (id < 2000 && !bundle.isCoreAsset && !data.ContainsKey("Bypass_ID_Limit"))
         {
             throw new NotSupportedException("ID < 2000");
         }
-        _isPattern = data.has("Pattern");
-        if (data.has("LightingTime"))
+        _isPattern = data.ContainsKey("Pattern");
+        if (data.ContainsKey("LightingTime"))
         {
-            lightingTime = data.readEnum("LightingTime", ELightingTime.DAWN);
+            lightingTime = data.ParseEnum("LightingTime", ELightingTime.DAWN);
         }
         else
         {
             lightingTime = null;
         }
-        _hasSight = data.has("Sight");
-        _hasTactical = data.has("Tactical");
-        _hasGrip = data.has("Grip");
-        _hasBarrel = data.has("Barrel");
-        _hasMagazine = data.has("Magazine");
-        ragdollEffect = data.readEnum("Ragdoll_Effect", ERagdollEffect.NONE);
+        _hasSight = data.ContainsKey("Sight");
+        _hasTactical = data.ContainsKey("Tactical");
+        _hasGrip = data.ContainsKey("Grip");
+        _hasBarrel = data.ContainsKey("Barrel");
+        _hasMagazine = data.ContainsKey("Magazine");
+        ragdollEffect = data.ParseEnum("Ragdoll_Effect", ERagdollEffect.NONE);
         if (Dedicator.IsDedicatedServer)
         {
             return;
         }
         _primarySkin = loadRequiredAsset<Material>(bundle, "Skin_Primary");
         _secondarySkins = new Dictionary<ushort, Material>();
-        ushort num = data.readUInt16("Secondary_Skins", 0);
+        ushort num = data.ParseUInt16("Secondary_Skins", 0);
         for (ushort num2 = 0; num2 < num; num2 = (ushort)(num2 + 1))
         {
-            ushort key = data.readUInt16("Secondary_" + num2, 0);
+            ushort key = data.ParseUInt16("Secondary_" + num2, 0);
             if (!secondarySkins.ContainsKey(key))
             {
                 Material value = loadRequiredAsset<Material>(bundle, "Skin_Secondary_" + key);
@@ -122,7 +126,7 @@ public class SkinAsset : Asset
         }
         _attachmentSkin = bundle.load<Material>("Skin_Attachment");
         _tertiarySkin = bundle.load<Material>("Skin_Tertiary");
-        ushort num3 = data.readUInt16("Override_Meshes", 0);
+        ushort num3 = data.ParseUInt16("Override_Meshes", 0);
         overrideMeshes = new List<Mesh>(num3);
         for (ushort num4 = 0; num4 < num3; num4 = (ushort)(num4 + 1))
         {

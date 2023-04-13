@@ -16,9 +16,9 @@ public class ItemPantsAsset : ItemBagAsset
 
     public Texture2D metallic => _metallic;
 
-    public ItemPantsAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         if (Dedicator.IsDedicatedServer)
         {
             return;

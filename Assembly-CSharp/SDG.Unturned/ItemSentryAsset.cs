@@ -26,22 +26,22 @@ public class ItemSentryAsset : ItemStorageAsset
 
     public bool infiniteQuality { get; protected set; }
 
-    public ItemSentryAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        if (data.has("Mode"))
+        base.PopulateAsset(bundle, data, localization);
+        if (data.ContainsKey("Mode"))
         {
-            _sentryMode = (ESentryMode)Enum.Parse(typeof(ESentryMode), data.readString("Mode"), ignoreCase: true);
+            _sentryMode = (ESentryMode)Enum.Parse(typeof(ESentryMode), data.GetString("Mode"), ignoreCase: true);
         }
         else
         {
             _sentryMode = ESentryMode.NEUTRAL;
         }
-        requiresPower = data.readBoolean("Requires_Power", defaultValue: true);
-        infiniteAmmo = data.readBoolean("Infinite_Ammo");
-        infiniteQuality = data.readBoolean("Infinite_Quality");
-        detectionRadius = data.readSingle("Detection_Radius", 48f);
-        targetLossRadius = data.readSingle("Target_Loss_Radius", detectionRadius * 1.2f);
+        requiresPower = data.ParseBool("Requires_Power", defaultValue: true);
+        infiniteAmmo = data.ParseBool("Infinite_Ammo");
+        infiniteQuality = data.ParseBool("Infinite_Quality");
+        detectionRadius = data.ParseFloat("Detection_Radius", 48f);
+        targetLossRadius = data.ParseFloat("Target_Loss_Radius", detectionRadius * 1.2f);
         targetAcquiredEffect = data.readAssetReference("Target_Acquired_Effect", in defaultTargetAcquiredEffect);
         targetLostEffect = data.readAssetReference("Target_Lost_Effect", in defaultTargetLostEffect);
     }

@@ -485,147 +485,147 @@ public class VehicleAsset : Asset, ISkinableAsset
         return Assets.FindEffectAssetByGuidOrLegacyId(_explosionEffectGuid, _explosion);
     }
 
-    public VehicleAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        if (id < 200 && !bundle.isCoreAsset && !data.has("Bypass_ID_Limit"))
+        base.PopulateAsset(bundle, data, localization);
+        if (id < 200 && !bundle.isCoreAsset && !data.ContainsKey("Bypass_ID_Limit"))
         {
             throw new NotSupportedException("ID < 200");
         }
         _vehicleName = localization.format("Name");
-        _pitchIdle = data.readSingle("Pitch_Idle", -1f);
-        _pitchDrive = data.readSingle("Pitch_Drive", -1f);
-        _engine = data.readEnum("Engine", EEngine.CAR);
+        _pitchIdle = data.ParseFloat("Pitch_Idle", -1f);
+        _pitchDrive = data.ParseFloat("Pitch_Drive", -1f);
+        _engine = data.ParseEnum("Engine", EEngine.CAR);
         physicsProfileRef = data.readAssetReference<VehiclePhysicsProfileAsset>("Physics_Profile");
-        if (Dedicator.IsDedicatedServer && data.readBoolean("Has_Clip_Prefab", defaultValue: true))
+        if (Dedicator.IsDedicatedServer && data.ParseBool("Has_Clip_Prefab", defaultValue: true))
         {
             bundle.loadDeferred("Clip", out legacyServerModel, (LoadedAssetDeferredCallback<GameObject>)OnServerModelLoaded);
         }
         bundle.loadDeferred("Vehicle", out clientModel, (LoadedAssetDeferredCallback<GameObject>)OnClientModelLoaded);
-        _size2_z = data.readSingle("Size2_Z");
-        _sharedSkinName = data.readString("Shared_Skin_Name");
-        if (data.has("Shared_Skin_Lookup_ID"))
+        _size2_z = data.ParseFloat("Size2_Z");
+        _sharedSkinName = data.GetString("Shared_Skin_Name");
+        if (data.ContainsKey("Shared_Skin_Lookup_ID"))
         {
-            _sharedSkinLookupID = data.readUInt16("Shared_Skin_Lookup_ID", 0);
+            _sharedSkinLookupID = data.ParseUInt16("Shared_Skin_Lookup_ID", 0);
         }
         else
         {
             _sharedSkinLookupID = id;
         }
-        if (data.has("Rarity"))
+        if (data.ContainsKey("Rarity"))
         {
-            _rarity = (EItemRarity)Enum.Parse(typeof(EItemRarity), data.readString("Rarity"), ignoreCase: true);
+            _rarity = (EItemRarity)Enum.Parse(typeof(EItemRarity), data.GetString("Rarity"), ignoreCase: true);
         }
         else
         {
             _rarity = EItemRarity.COMMON;
         }
-        _hasZip = data.has("Zip");
-        _hasBicycle = data.has("Bicycle");
-        isReclined = data.has("Reclined");
-        _hasCrawler = data.has("Crawler");
-        _hasLockMouse = data.has("LockMouse");
-        _hasTraction = data.has("Traction");
-        _hasSleds = data.has("Sleds");
-        canSpawnWithBattery = !data.has("Cannot_Spawn_With_Battery");
-        if (data.has("Battery_Spawn_Charge_Multiplier"))
+        _hasZip = data.ContainsKey("Zip");
+        _hasBicycle = data.ContainsKey("Bicycle");
+        isReclined = data.ContainsKey("Reclined");
+        _hasCrawler = data.ContainsKey("Crawler");
+        _hasLockMouse = data.ContainsKey("LockMouse");
+        _hasTraction = data.ContainsKey("Traction");
+        _hasSleds = data.ContainsKey("Sleds");
+        canSpawnWithBattery = !data.ContainsKey("Cannot_Spawn_With_Battery");
+        if (data.ContainsKey("Battery_Spawn_Charge_Multiplier"))
         {
-            batterySpawnChargeMultiplier = data.readSingle("Battery_Spawn_Charge_Multiplier");
+            batterySpawnChargeMultiplier = data.ParseFloat("Battery_Spawn_Charge_Multiplier");
         }
         else
         {
             batterySpawnChargeMultiplier = 1f;
         }
-        if (data.has("Battery_Burn_Rate"))
+        if (data.ContainsKey("Battery_Burn_Rate"))
         {
-            batteryBurnRate = data.readSingle("Battery_Burn_Rate");
+            batteryBurnRate = data.ParseFloat("Battery_Burn_Rate");
         }
         else
         {
             batteryBurnRate = 20f;
         }
-        if (data.has("Battery_Charge_Rate"))
+        if (data.ContainsKey("Battery_Charge_Rate"))
         {
-            batteryChargeRate = data.readSingle("Battery_Charge_Rate");
+            batteryChargeRate = data.ParseFloat("Battery_Charge_Rate");
         }
         else
         {
             batteryChargeRate = 20f;
         }
-        batteryDriving = data.readEnum("BatteryMode_Driving", EBatteryMode.Charge);
-        batteryEmpty = data.readEnum("BatteryMode_Empty", EBatteryMode.None);
-        batteryHeadlights = data.readEnum("BatteryMode_Headlights", EBatteryMode.Burn);
-        batterySirens = data.readEnum("BatteryMode_Sirens", EBatteryMode.Burn);
+        batteryDriving = data.ParseEnum("BatteryMode_Driving", EBatteryMode.Charge);
+        batteryEmpty = data.ParseEnum("BatteryMode_Empty", EBatteryMode.None);
+        batteryHeadlights = data.ParseEnum("BatteryMode_Headlights", EBatteryMode.Burn);
+        batterySirens = data.ParseEnum("BatteryMode_Sirens", EBatteryMode.Burn);
         float defaultValue = ((engine == EEngine.CAR) ? 2.05f : 4.2f);
-        fuelBurnRate = data.readSingle("Fuel_Burn_Rate", defaultValue);
+        fuelBurnRate = data.ParseFloat("Fuel_Burn_Rate", defaultValue);
         _ignition = LoadRedirectableAsset<AudioClip>(bundle, "Ignition", data, "IgnitionAudioClip");
         _horn = LoadRedirectableAsset<AudioClip>(bundle, "Horn", data, "HornAudioClip");
-        hasHorn = data.readBoolean("Has_Horn", _horn != null);
-        _speedMin = data.readSingle("Speed_Min");
-        _speedMax = data.readSingle("Speed_Max");
+        hasHorn = data.ParseBool("Has_Horn", _horn != null);
+        _speedMin = data.ParseFloat("Speed_Min");
+        _speedMax = data.ParseFloat("Speed_Max");
         if (engine != EEngine.TRAIN)
         {
             _speedMax *= 1.25f;
         }
-        _steerMin = data.readSingle("Steer_Min");
-        _steerMax = data.readSingle("Steer_Max") * 0.75f;
-        _brake = data.readSingle("Brake");
-        _lift = data.readSingle("Lift");
-        _fuelMin = data.readUInt16("Fuel_Min", 0);
-        _fuelMax = data.readUInt16("Fuel_Max", 0);
-        _fuel = data.readUInt16("Fuel", 0);
-        _healthMin = data.readUInt16("Health_Min", 0);
-        _healthMax = data.readUInt16("Health_Max", 0);
-        _health = data.readUInt16("Health", 0);
-        _explosion = data.ReadGuidOrLegacyId("Explosion", out _explosionEffectGuid);
+        _steerMin = data.ParseFloat("Steer_Min");
+        _steerMax = data.ParseFloat("Steer_Max") * 0.75f;
+        _brake = data.ParseFloat("Brake");
+        _lift = data.ParseFloat("Lift");
+        _fuelMin = data.ParseUInt16("Fuel_Min", 0);
+        _fuelMax = data.ParseUInt16("Fuel_Max", 0);
+        _fuel = data.ParseUInt16("Fuel", 0);
+        _healthMin = data.ParseUInt16("Health_Min", 0);
+        _healthMax = data.ParseUInt16("Health_Max", 0);
+        _health = data.ParseUInt16("Health", 0);
+        _explosion = data.ParseGuidOrLegacyId("Explosion", out _explosionEffectGuid);
         bool defaultValue2 = !IsExplosionEffectRefNull();
-        ShouldExplosionCauseDamage = data.readBoolean("ShouldExplosionCauseDamage", defaultValue2);
-        ShouldExplosionBurnMaterials = data.readBoolean("ShouldExplosionBurnMaterials", defaultValue2);
-        if (data.has("Explosion_Min_Force_Y"))
+        ShouldExplosionCauseDamage = data.ParseBool("ShouldExplosionCauseDamage", defaultValue2);
+        ShouldExplosionBurnMaterials = data.ParseBool("ShouldExplosionBurnMaterials", defaultValue2);
+        if (data.ContainsKey("Explosion_Min_Force_Y"))
         {
-            minExplosionForce = data.readVector3("Explosion_Min_Force");
+            minExplosionForce = data.LegacyParseVector3("Explosion_Min_Force");
         }
         else
         {
             minExplosionForce = new Vector3(0f, 1024f, 0f);
         }
-        if (data.has("Explosion_Max_Force_Y"))
+        if (data.ContainsKey("Explosion_Max_Force_Y"))
         {
-            maxExplosionForce = data.readVector3("Explosion_Max_Force");
+            maxExplosionForce = data.LegacyParseVector3("Explosion_Max_Force");
         }
         else
         {
             maxExplosionForce = new Vector3(0f, 1024f, 0f);
         }
-        if (data.has("Exit"))
+        if (data.ContainsKey("Exit"))
         {
-            _exit = data.readSingle("Exit");
+            _exit = data.ParseFloat("Exit");
         }
         else
         {
             _exit = 2f;
         }
-        if (data.has("Cam_Follow_Distance"))
+        if (data.ContainsKey("Cam_Follow_Distance"))
         {
-            _camFollowDistance = data.readSingle("Cam_Follow_Distance");
+            _camFollowDistance = data.ParseFloat("Cam_Follow_Distance");
         }
         else
         {
             _camFollowDistance = 5.5f;
         }
-        camDriverOffset = data.readSingle("Cam_Driver_Offset");
-        camPassengerOffset = data.readSingle("Cam_Passenger_Offset");
-        if (data.has("Bumper_Multiplier"))
+        camDriverOffset = data.ParseFloat("Cam_Driver_Offset");
+        camPassengerOffset = data.ParseFloat("Cam_Passenger_Offset");
+        if (data.ContainsKey("Bumper_Multiplier"))
         {
-            _bumperMultiplier = data.readSingle("Bumper_Multiplier");
+            _bumperMultiplier = data.ParseFloat("Bumper_Multiplier");
         }
         else
         {
             _bumperMultiplier = 1f;
         }
-        if (data.has("Passenger_Explosion_Armor"))
+        if (data.ContainsKey("Passenger_Explosion_Armor"))
         {
-            _passengerExplosionArmor = data.readSingle("Passenger_Explosion_Armor");
+            _passengerExplosionArmor = data.ParseFloat("Passenger_Explosion_Armor");
         }
         else
         {
@@ -639,9 +639,9 @@ public class VehicleAsset : Asset, ISkinableAsset
         {
             _sqrDelta = MathfEx.Square(speedMax * 0.1f);
         }
-        if (data.has("Valid_Speed_Horizontal"))
+        if (data.ContainsKey("Valid_Speed_Horizontal"))
         {
-            float x = data.readSingle("Valid_Speed_Horizontal") * PlayerInput.RATE;
+            float x = data.ParseFloat("Valid_Speed_Horizontal") * PlayerInput.RATE;
             _sqrDelta = MathfEx.Square(x);
         }
         float defaultValue3;
@@ -661,98 +661,96 @@ public class VehicleAsset : Asset, ISkinableAsset
             defaultValue4 = 100f;
             break;
         }
-        validSpeedUp = data.readSingle("Valid_Speed_Up", defaultValue3);
-        validSpeedDown = data.readSingle("Valid_Speed_Down", defaultValue4);
-        _turrets = new TurretInfo[data.readByte("Turrets", 0)];
+        validSpeedUp = data.ParseFloat("Valid_Speed_Up", defaultValue3);
+        validSpeedDown = data.ParseFloat("Valid_Speed_Down", defaultValue4);
+        _turrets = new TurretInfo[data.ParseUInt8("Turrets", 0)];
         for (byte b = 0; b < turrets.Length; b = (byte)(b + 1))
         {
-            TurretInfo turretInfo = new TurretInfo
-            {
-                seatIndex = data.readByte("Turret_" + b + "_Seat_Index", 0),
-                itemID = data.readUInt16("Turret_" + b + "_Item_ID", 0),
-                yawMin = data.readSingle("Turret_" + b + "_Yaw_Min"),
-                yawMax = data.readSingle("Turret_" + b + "_Yaw_Max"),
-                pitchMin = data.readSingle("Turret_" + b + "_Pitch_Min"),
-                pitchMax = data.readSingle("Turret_" + b + "_Pitch_Max"),
-                useAimCamera = !data.has("Turret_" + b + "_Ignore_Aim_Camera"),
-                aimOffset = data.readSingle("Turret_" + b + "_Aim_Offset")
-            };
+            TurretInfo turretInfo = new TurretInfo();
+            turretInfo.seatIndex = data.ParseUInt8("Turret_" + b + "_Seat_Index", 0);
+            turretInfo.itemID = data.ParseUInt16("Turret_" + b + "_Item_ID", 0);
+            turretInfo.yawMin = data.ParseFloat("Turret_" + b + "_Yaw_Min");
+            turretInfo.yawMax = data.ParseFloat("Turret_" + b + "_Yaw_Max");
+            turretInfo.pitchMin = data.ParseFloat("Turret_" + b + "_Pitch_Min");
+            turretInfo.pitchMax = data.ParseFloat("Turret_" + b + "_Pitch_Max");
+            turretInfo.useAimCamera = !data.ContainsKey("Turret_" + b + "_Ignore_Aim_Camera");
+            turretInfo.aimOffset = data.ParseFloat("Turret_" + b + "_Aim_Offset");
             _turrets[b] = turretInfo;
         }
-        isVulnerable = !data.has("Invulnerable");
-        isVulnerableToExplosions = !data.has("Explosions_Invulnerable");
-        isVulnerableToEnvironment = !data.has("Environment_Invulnerable");
-        isVulnerableToBumper = !data.has("Bumper_Invulnerable");
-        canTiresBeDamaged = !data.has("Tires_Invulnerable");
-        canRepairWhileSeated = data.readBoolean("Can_Repair_While_Seated");
-        childExplosionArmorMultiplier = data.readSingle("Child_Explosion_Armor_Multiplier", 0.2f);
-        if (data.has("Air_Turn_Responsiveness"))
+        isVulnerable = !data.ContainsKey("Invulnerable");
+        isVulnerableToExplosions = !data.ContainsKey("Explosions_Invulnerable");
+        isVulnerableToEnvironment = !data.ContainsKey("Environment_Invulnerable");
+        isVulnerableToBumper = !data.ContainsKey("Bumper_Invulnerable");
+        canTiresBeDamaged = !data.ContainsKey("Tires_Invulnerable");
+        canRepairWhileSeated = data.ParseBool("Can_Repair_While_Seated");
+        childExplosionArmorMultiplier = data.ParseFloat("Child_Explosion_Armor_Multiplier", 0.2f);
+        if (data.ContainsKey("Air_Turn_Responsiveness"))
         {
-            airTurnResponsiveness = data.readSingle("Air_Turn_Responsiveness");
+            airTurnResponsiveness = data.ParseFloat("Air_Turn_Responsiveness");
         }
         else
         {
             airTurnResponsiveness = 2f;
         }
-        if (data.has("Air_Steer_Min"))
+        if (data.ContainsKey("Air_Steer_Min"))
         {
-            airSteerMin = data.readSingle("Air_Steer_Min");
+            airSteerMin = data.ParseFloat("Air_Steer_Min");
         }
         else
         {
             airSteerMin = steerMin;
         }
-        if (data.has("Air_Steer_Max"))
+        if (data.ContainsKey("Air_Steer_Max"))
         {
-            airSteerMax = data.readSingle("Air_Steer_Max");
+            airSteerMax = data.ParseFloat("Air_Steer_Max");
         }
         else
         {
             airSteerMax = steerMax;
         }
-        bicycleAnimSpeed = data.readSingle("Bicycle_Anim_Speed");
-        staminaBoost = data.readSingle("Stamina_Boost");
-        useStaminaBoost = data.has("Stamina_Boost");
-        isStaminaPowered = data.has("Stamina_Powered");
-        isBatteryPowered = data.has("Battery_Powered");
-        supportsMobileBuildables = data.has("Supports_Mobile_Buildables");
-        shouldSpawnSeatCapsules = data.readBoolean("Should_Spawn_Seat_Capsules");
-        canBeLocked = data.readBoolean("Can_Be_Locked", defaultValue: true);
-        canStealBattery = data.readBoolean("Can_Steal_Battery", defaultValue: true);
-        trunkStorage_X = data.readByte("Trunk_Storage_X", 0);
-        trunkStorage_Y = data.readByte("Trunk_Storage_Y", 0);
-        dropsTableId = data.readUInt16("Drops_Table_ID", 962);
-        dropsMin = data.readByte("Drops_Min", 3);
-        dropsMax = data.readByte("Drops_Max", 7);
-        tireID = data.readUInt16("Tire_ID", 1451);
+        bicycleAnimSpeed = data.ParseFloat("Bicycle_Anim_Speed");
+        staminaBoost = data.ParseFloat("Stamina_Boost");
+        useStaminaBoost = data.ContainsKey("Stamina_Boost");
+        isStaminaPowered = data.ContainsKey("Stamina_Powered");
+        isBatteryPowered = data.ContainsKey("Battery_Powered");
+        supportsMobileBuildables = data.ContainsKey("Supports_Mobile_Buildables");
+        shouldSpawnSeatCapsules = data.ParseBool("Should_Spawn_Seat_Capsules");
+        canBeLocked = data.ParseBool("Can_Be_Locked", defaultValue: true);
+        canStealBattery = data.ParseBool("Can_Steal_Battery", defaultValue: true);
+        trunkStorage_X = data.ParseUInt8("Trunk_Storage_X", 0);
+        trunkStorage_Y = data.ParseUInt8("Trunk_Storage_Y", 0);
+        dropsTableId = data.ParseUInt16("Drops_Table_ID", 962);
+        dropsMin = data.ParseUInt8("Drops_Min", 3);
+        dropsMax = data.ParseUInt8("Drops_Max", 7);
+        tireID = data.ParseUInt16("Tire_ID", 1451);
         int defaultValue5 = ((engine != 0) ? 1 : 2);
         if (hasCrawler)
         {
             defaultValue5 = 0;
         }
-        numSteeringTires = data.readInt32("Num_Steering_Tires", defaultValue5);
+        numSteeringTires = data.ParseInt32("Num_Steering_Tires", defaultValue5);
         steeringTireIndices = new int[numSteeringTires];
         for (int i = 0; i < numSteeringTires; i++)
         {
-            steeringTireIndices[i] = data.readInt32("Steering_Tire_" + i, i);
+            steeringTireIndices[i] = data.ParseInt32("Steering_Tire_" + i, i);
         }
-        hasCenterOfMassOverride = data.readBoolean("Override_Center_Of_Mass");
+        hasCenterOfMassOverride = data.ParseBool("Override_Center_Of_Mass");
         if (hasCenterOfMassOverride)
         {
-            centerOfMass = data.readVector3("Center_Of_Mass");
+            centerOfMass = data.LegacyParseVector3("Center_Of_Mass");
         }
-        if (data.has("Wheel_Collider_Mass_Override"))
+        if (data.ContainsKey("Wheel_Collider_Mass_Override"))
         {
-            wheelColliderMassOverride = data.readSingle("Wheel_Collider_Mass_Override", 1f);
+            wheelColliderMassOverride = data.ParseFloat("Wheel_Collider_Mass_Override", 1f);
         }
         else
         {
             wheelColliderMassOverride = null;
         }
-        trainTrackOffset = data.readSingle("Train_Track_Offset");
-        trainWheelOffset = data.readSingle("Train_Wheel_Offset");
-        trainCarLength = data.readSingle("Train_Car_Length");
-        _shouldVerifyHash = !data.has("Bypass_Hash_Verification");
+        trainTrackOffset = data.ParseFloat("Train_Track_Offset");
+        trainWheelOffset = data.ParseFloat("Train_Wheel_Offset");
+        trainCarLength = data.ParseFloat("Train_Car_Length");
+        _shouldVerifyHash = !data.ContainsKey("Bypass_Hash_Verification");
         if (!Dedicator.IsDedicatedServer && id < 2000)
         {
             _albedoBase = bundle.load<Texture2D>("Albedo_Base");

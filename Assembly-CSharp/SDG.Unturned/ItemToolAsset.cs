@@ -23,9 +23,9 @@ public class ItemToolAsset : ItemAsset
         return base.canBeUsedInSafezone(safezone, byAdmin);
     }
 
-    public ItemToolAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         _use = bundle.load<AudioClip>("Use");
     }
 }

@@ -1,4 +1,3 @@
-using SDG.Framework.IO.FormattedFiles;
 using SDG.Framework.Utilities;
 using SDG.Unturned;
 using UnityEngine;
@@ -121,47 +120,29 @@ public abstract class FoliageInfoAsset : Asset
         return false;
     }
 
-    protected override void readAsset(IFormattedFileReader reader)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        base.readAsset(reader);
-        density = reader.readValue<float>("Density");
-        minNormalPositionOffset = reader.readValue<float>("Min_Normal_Position_Offset");
-        maxNormalPositionOffset = reader.readValue<float>("Max_Normal_Position_Offset");
-        normalRotationOffset = reader.readValue<Vector3>("Normal_Rotation_Offset");
-        if (reader.containsKey("Normal_Rotation_Alignment"))
+        base.PopulateAsset(bundle, data, localization);
+        density = data.ParseFloat("Density");
+        minNormalPositionOffset = data.ParseFloat("Min_Normal_Position_Offset");
+        maxNormalPositionOffset = data.ParseFloat("Max_Normal_Position_Offset");
+        normalRotationOffset = data.ParseVector3("Normal_Rotation_Offset");
+        if (data.ContainsKey("Normal_Rotation_Alignment"))
         {
-            normalRotationAlignment = reader.readValue<float>("Normal_Rotation_Alignment");
+            normalRotationAlignment = data.ParseFloat("Normal_Rotation_Alignment");
         }
         else
         {
             normalRotationAlignment = 1f;
         }
-        minSurfaceWeight = reader.readValue<float>("Min_Weight");
-        maxSurfaceWeight = reader.readValue<float>("Max_Weight");
-        minSurfaceAngle = reader.readValue<float>("Min_Angle");
-        maxSurfaceAngle = reader.readValue<float>("Max_Angle");
-        minRotation = reader.readValue<Vector3>("Min_Rotation");
-        maxRotation = reader.readValue<Vector3>("Max_Rotation");
-        minScale = reader.readValue<Vector3>("Min_Scale");
-        maxScale = reader.readValue<Vector3>("Max_Scale");
-    }
-
-    protected override void writeAsset(IFormattedFileWriter writer)
-    {
-        base.writeAsset(writer);
-        writer.writeValue("Density", density);
-        writer.writeValue("Min_Normal_Position_Offset", minNormalPositionOffset);
-        writer.writeValue("Max_Normal_Position_Offset", maxNormalPositionOffset);
-        writer.writeValue("Normal_Rotation_Offset", normalRotationOffset);
-        writer.writeValue("Normal_Rotation_Alignment", normalRotationAlignment);
-        writer.writeValue("Min_Weight", minSurfaceWeight);
-        writer.writeValue("Max_Weight", maxSurfaceWeight);
-        writer.writeValue("Min_Angle", minSurfaceAngle);
-        writer.writeValue("Max_Angle", maxSurfaceAngle);
-        writer.writeValue("Min_Rotation", minRotation);
-        writer.writeValue("Max_Rotation", maxRotation);
-        writer.writeValue("Min_Scale", minScale);
-        writer.writeValue("Max_Scale", maxScale);
+        minSurfaceWeight = data.ParseFloat("Min_Weight");
+        maxSurfaceWeight = data.ParseFloat("Max_Weight");
+        minSurfaceAngle = data.ParseFloat("Min_Angle");
+        maxSurfaceAngle = data.ParseFloat("Max_Angle");
+        minRotation = data.ParseVector3("Min_Rotation");
+        maxRotation = data.ParseVector3("Max_Rotation");
+        minScale = data.ParseVector3("Min_Scale");
+        maxScale = data.ParseVector3("Max_Scale");
     }
 
     protected virtual void resetFoliageInfo()
@@ -173,12 +154,6 @@ public abstract class FoliageInfoAsset : Asset
     }
 
     public FoliageInfoAsset()
-    {
-        resetFoliageInfo();
-    }
-
-    public FoliageInfoAsset(Bundle bundle, Local localization, byte[] hash)
-        : base(bundle, localization, hash)
     {
         resetFoliageInfo();
     }

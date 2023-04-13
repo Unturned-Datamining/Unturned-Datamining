@@ -392,7 +392,10 @@ public class MenuWorkshopSpawnsUI
 
     private static void onClickedNewButton(ISleekElement button)
     {
-        Assets.addToMapping(new SpawnAsset(viewIDField.state), overrideExistingID: false, Assets.defaultAssetMapping);
+        Assets.addToMapping(new SpawnAsset
+        {
+            id = viewIDField.state
+        }, overrideExistingID: false, Assets.defaultAssetMapping);
         refresh();
     }
 

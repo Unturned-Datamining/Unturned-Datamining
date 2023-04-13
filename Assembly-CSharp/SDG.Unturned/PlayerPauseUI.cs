@@ -30,6 +30,8 @@ public class PlayerPauseUI
 
     private static SleekButtonIconConfirm suicideButton;
 
+    private static ISleekLabel suicideDisabledLabel;
+
     private static ISleekBox spyBox;
 
     private static ISleekImage spyImage;
@@ -234,6 +236,23 @@ public class PlayerPauseUI
         spyBox.isVisible = true;
     }
 
+    internal void OnDestroy()
+    {
+        ClientMessageHandler_Accepted.OnGameplayConfigReceived -= OnGameplayConfigReceived;
+    }
+
+    private void OnGameplayConfigReceived()
+    {
+        SyncSuicideButtonAvailable();
+    }
+
+    private void SyncSuicideButtonAvailable()
+    {
+        bool can_Suicide = Provider.modeConfigData.Gameplay.Can_Suicide;
+        suicideButton.isClickable = can_Suicide;
+        suicideDisabledLabel.isVisible = !can_Suicide;
+    }
+
     public PlayerPauseUI()
     {
         localization = Localization.read("/Player/PlayerPause.dat");
@@ -359,22 +378,19 @@ public class PlayerPauseUI
         suicideButton.onConfirmed = onClickedSuicideButton;
         suicideButton.fontSize = ESleekFontSize.Medium;
         container.AddChild(suicideButton);
-        if (!Provider.modeConfigData.Gameplay.Can_Suicide)
-        {
-            suicideButton.isClickable = false;
-            ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-            sleekLabel.positionOffset_X = -100;
-            sleekLabel.positionOffset_Y = 95;
-            sleekLabel.positionScale_X = 0.5f;
-            sleekLabel.positionScale_Y = 0.5f;
-            sleekLabel.sizeOffset_X = 200;
-            sleekLabel.sizeOffset_Y = 50;
-            sleekLabel.text = localization.format("Suicide_Disabled");
-            sleekLabel.textColor = ESleekTint.BAD;
-            sleekLabel.fontSize = ESleekFontSize.Large;
-            sleekLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
-            container.AddChild(sleekLabel);
-        }
+        suicideDisabledLabel = Glazier.Get().CreateLabel();
+        suicideDisabledLabel.positionOffset_X = -100;
+        suicideDisabledLabel.positionOffset_Y = 95;
+        suicideDisabledLabel.positionScale_X = 0.5f;
+        suicideDisabledLabel.positionScale_Y = 0.5f;
+        suicideDisabledLabel.sizeOffset_X = 200;
+        suicideDisabledLabel.sizeOffset_Y = 50;
+        suicideDisabledLabel.text = localization.format("Suicide_Disabled");
+        suicideDisabledLabel.textColor = ESleekTint.BAD;
+        suicideDisabledLabel.fontSize = ESleekFontSize.Large;
+        suicideDisabledLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+        suicideDisabledLabel.isVisible = false;
+        container.AddChild(suicideDisabledLabel);
         spyBox = Glazier.Get().CreateBox();
         spyBox.positionOffset_Y = -310;
         spyBox.positionScale_X = 0.5f;
@@ -454,5 +470,7 @@ public class PlayerPauseUI
         new MenuConfigurationControlsUI();
         updateFavorite();
         Player.onSpyReady = onSpyReady;
+        ClientMessageHandler_Accepted.OnGameplayConfigReceived += OnGameplayConfigReceived;
+        SyncSuicideButtonAvailable();
     }
 }

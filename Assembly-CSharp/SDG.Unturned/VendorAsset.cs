@@ -22,10 +22,10 @@ public class VendorAsset : Asset
 
     public override EAssetType assetCategory => EAssetType.NPC;
 
-    public VendorAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        if (id < 2000 && !bundle.isCoreAsset && !data.has("Bypass_ID_Limit"))
+        base.PopulateAsset(bundle, data, localization);
+        if (id < 2000 && !bundle.isCoreAsset && !data.ContainsKey("Bypass_ID_Limit"))
         {
             throw new NotSupportedException("ID < 2000");
         }
@@ -35,38 +35,38 @@ public class VendorAsset : Asset
         desc = ItemTool.filterRarityRichText(desc);
         RichTextUtil.replaceNewlineMarkup(ref desc);
         vendorDescription = desc;
-        if (data.has("FaceOverride"))
+        if (data.ContainsKey("FaceOverride"))
         {
-            faceOverride = data.readByte("FaceOverride", 0);
+            faceOverride = data.ParseUInt8("FaceOverride", 0);
         }
         else
         {
             faceOverride = null;
         }
-        buying = new VendorBuying[data.readByte("Buying", 0)];
+        buying = new VendorBuying[data.ParseUInt8("Buying", 0)];
         for (byte b = 0; b < buying.Length; b = (byte)(b + 1))
         {
-            ushort newID = data.readUInt16("Buying_" + b + "_ID", 0);
-            uint newCost = data.readUInt32("Buying_" + b + "_Cost");
-            INPCCondition[] array = new INPCCondition[data.readByte("Buying_" + b + "_Conditions", 0)];
+            ushort newID = data.ParseUInt16("Buying_" + b + "_ID", 0);
+            uint newCost = data.ParseUInt32("Buying_" + b + "_Cost");
+            INPCCondition[] array = new INPCCondition[data.ParseUInt8("Buying_" + b + "_Conditions", 0)];
             NPCTool.readConditions(data, localization, "Buying_" + b + "_Condition_", array, this);
-            INPCReward[] array2 = new INPCReward[data.readByte("Buying_" + b + "_Rewards", 0)];
+            INPCReward[] array2 = new INPCReward[data.ParseUInt8("Buying_" + b + "_Rewards", 0)];
             NPCTool.readRewards(data, localization, "Buying_" + b + "_Reward_", array2, this);
             buying[b] = new VendorBuying(this, b, newID, newCost, array, array2);
         }
-        selling = new VendorSellingBase[data.readByte("Selling", 0)];
+        selling = new VendorSellingBase[data.ParseUInt8("Selling", 0)];
         for (byte b2 = 0; b2 < selling.Length; b2 = (byte)(b2 + 1))
         {
             string text = null;
-            if (data.has("Selling_" + b2 + "_Type"))
+            if (data.ContainsKey("Selling_" + b2 + "_Type"))
             {
-                text = data.readString("Selling_" + b2 + "_Type");
+                text = data.GetString("Selling_" + b2 + "_Type");
             }
-            ushort newID2 = data.readUInt16("Selling_" + b2 + "_ID", 0);
-            uint newCost2 = data.readUInt32("Selling_" + b2 + "_Cost");
-            INPCCondition[] array3 = new INPCCondition[data.readByte("Selling_" + b2 + "_Conditions", 0)];
+            ushort newID2 = data.ParseUInt16("Selling_" + b2 + "_ID", 0);
+            uint newCost2 = data.ParseUInt32("Selling_" + b2 + "_Cost");
+            INPCCondition[] array3 = new INPCCondition[data.ParseUInt8("Selling_" + b2 + "_Conditions", 0)];
             NPCTool.readConditions(data, localization, "Selling_" + b2 + "_Condition_", array3, this);
-            INPCReward[] array4 = new INPCReward[data.readByte("Selling_" + b2 + "_Rewards", 0)];
+            INPCReward[] array4 = new INPCReward[data.ParseUInt8("Selling_" + b2 + "_Rewards", 0)];
             NPCTool.readRewards(data, localization, "Selling_" + b2 + "_Reward_", array4, this);
             if (text == null || text.Equals("Item", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -79,15 +79,15 @@ public class VendorAsset : Asset
                     throw new NotSupportedException("unknown selling type: '" + text + "'");
                 }
                 string text2 = "Selling_" + b2 + "_Spawnpoint";
-                string text3 = data.readString(text2);
-                if (string.IsNullOrEmpty(text3))
+                string @string = data.GetString(text2);
+                if (string.IsNullOrEmpty(@string))
                 {
                     Assets.reportError(this, "missing \"" + text2 + "\" for vehicle");
                 }
-                selling[b2] = new VendorSellingVehicle(this, b2, newID2, newCost2, text3, array3, array4);
+                selling[b2] = new VendorSellingVehicle(this, b2, newID2, newCost2, @string, array3, array4);
             }
         }
-        enableSorting = !data.has("Disable_Sorting");
+        enableSorting = !data.ContainsKey("Disable_Sorting");
         currency = data.readAssetReference<ItemCurrencyAsset>("Currency");
     }
 }

@@ -38,13 +38,13 @@ public class ItemFuelAsset : ItemAsset
         return desc;
     }
 
-    public ItemFuelAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         _use = bundle.load<AudioClip>("Use");
-        _fuel = data.readUInt16("Fuel", 0);
+        _fuel = data.ParseUInt16("Fuel", 0);
         fuelState = BitConverter.GetBytes(fuel);
-        shouldDeleteAfterFillingTarget = data.readBoolean("Delete_After_Filling_Target");
-        shouldAlwaysSpawnFull = data.readBoolean("Always_Spawn_Full");
+        shouldDeleteAfterFillingTarget = data.ParseBool("Delete_After_Filling_Target");
+        shouldAlwaysSpawnFull = data.ParseBool("Always_Spawn_Full");
     }
 }

@@ -349,6 +349,11 @@ public class PlayerNPCDialogueUI
                             dialogueAppend = dialogueText.Substring(begin, num2);
                         }
                     }
+                    else
+                    {
+                        dialogueBuilder.Append(c);
+                        dialogueIndex++;
+                    }
                 }
                 else
                 {

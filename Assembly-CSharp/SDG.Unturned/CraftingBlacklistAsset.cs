@@ -1,15 +1,29 @@
 using System.Collections.Generic;
-using SDG.Framework.IO.FormattedFiles;
 
 namespace SDG.Unturned;
 
 public class CraftingBlacklistAsset : Asset
 {
-    protected struct BlacklistedBlueprint
+    protected struct BlacklistedBlueprint : IDatParseable
     {
         public AssetReference<ItemAsset> assetRef;
 
         public int index;
+
+        public bool TryParse(IDatNode node)
+        {
+            if (!(node is DatDictionary datDictionary))
+            {
+                return false;
+            }
+            assetRef = datDictionary.ParseStruct<AssetReference<ItemAsset>>("Item");
+            index = datDictionary.ParseInt32("Blueprint");
+            if (assetRef.isValid)
+            {
+                return index >= 0;
+            }
+            return false;
+        }
 
         public BlacklistedBlueprint(AssetReference<ItemAsset> assetRef, int index)
         {
@@ -90,39 +104,29 @@ public class CraftingBlacklistAsset : Asset
         return false;
     }
 
-    protected void readList(IFormattedFileReader reader, List<AssetReference<ItemAsset>> list, string key)
+    protected void readList(DatDictionary reader, List<AssetReference<ItemAsset>> list, string key)
     {
-        int num = reader.readArrayLength(key);
-        for (int i = 0; i < num; i++)
+        if (!reader.TryGetList(key, out var node))
         {
-            AssetReference<ItemAsset> item = reader.readValue<AssetReference<ItemAsset>>(i);
-            if (item.isValid)
+            return;
+        }
+        foreach (IDatNode item in node)
+        {
+            if (item.TryParseStruct<AssetReference<ItemAsset>>(out var value) && value.isValid)
             {
-                list.Add(item);
+                list.Add(value);
             }
         }
     }
 
-    protected override void readAsset(IFormattedFileReader reader)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        base.readAsset(reader);
-        readList(reader, inputItems, "Input_Items");
-        readList(reader, outputItems, "Output_Items");
-        int num = reader.readArrayLength("Blueprints");
-        for (int i = 0; i < num; i++)
+        base.PopulateAsset(bundle, data, localization);
+        readList(data, inputItems, "Input_Items");
+        readList(data, outputItems, "Output_Items");
+        if (data.TryGetList("Blueprints", out var node))
         {
-            IFormattedFileReader formattedFileReader = reader.readObject(i);
-            AssetReference<ItemAsset> assetRef = formattedFileReader.readValue<AssetReference<ItemAsset>>("Item");
-            int num2 = formattedFileReader.readValue<int>("Blueprint");
-            if (assetRef.isValid && num2 >= 0)
-            {
-                blueprints.Add(new BlacklistedBlueprint(assetRef, num2));
-            }
+            blueprints = node.ParseListOfStructs<BlacklistedBlueprint>();
         }
-    }
-
-    public CraftingBlacklistAsset(Bundle bundle, Local localization, byte[] hash)
-        : base(bundle, localization, hash)
-    {
     }
 }

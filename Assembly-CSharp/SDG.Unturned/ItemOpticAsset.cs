@@ -6,9 +6,9 @@ public class ItemOpticAsset : ItemAsset
 {
     public float zoom { get; private set; }
 
-    public ItemOpticAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        zoom = Mathf.Max(1f, data.readSingle("Zoom"));
+        base.PopulateAsset(bundle, data, localization);
+        zoom = Mathf.Max(1f, data.ParseFloat("Zoom"));
     }
 }

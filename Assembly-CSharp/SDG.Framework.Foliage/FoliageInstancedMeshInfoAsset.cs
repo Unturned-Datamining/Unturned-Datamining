@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using SDG.Framework.IO.FormattedFiles;
 using SDG.Framework.Utilities;
 using SDG.Unturned;
 using UnityEngine;
@@ -83,60 +82,42 @@ public class FoliageInstancedMeshInfoAsset : FoliageInfoAsset
         return true;
     }
 
-    protected override void readAsset(IFormattedFileReader reader)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        base.readAsset(reader);
-        mesh = reader.readValue<ContentReference<Mesh>>("Mesh");
-        material = reader.readValue<ContentReference<Material>>("Material");
-        if (reader.containsKey("Cast_Shadows"))
+        base.PopulateAsset(bundle, data, localization);
+        mesh = data.ParseStruct<ContentReference<Mesh>>("Mesh");
+        material = data.ParseStruct<ContentReference<Material>>("Material");
+        if (data.ContainsKey("Cast_Shadows"))
         {
-            castShadows = reader.readValue<bool>("Cast_Shadows");
+            castShadows = data.ParseBool("Cast_Shadows");
         }
         else
         {
             castShadows = false;
         }
-        if (reader.containsKey("Tile_Dither"))
+        if (data.ContainsKey("Tile_Dither"))
         {
-            tileDither = reader.readValue<bool>("Tile_Dither");
+            tileDither = data.ParseBool("Tile_Dither");
         }
         else
         {
             tileDither = true;
         }
-        if (reader.containsKey("Draw_Distance"))
+        if (data.ContainsKey("Draw_Distance"))
         {
-            drawDistance = reader.readValue<int>("Draw_Distance");
+            drawDistance = data.ParseInt32("Draw_Distance");
         }
         else
         {
             drawDistance = -1;
         }
-        if (reader.containsKey("Christmas_Redirect"))
+        if (data.ContainsKey("Christmas_Redirect"))
         {
-            christmasRedirect = reader.readValue<AssetReference<FoliageInstancedMeshInfoAsset>>("Christmas_Redirect");
+            christmasRedirect = data.ParseStruct<AssetReference<FoliageInstancedMeshInfoAsset>>("Christmas_Redirect");
         }
-        if (reader.containsKey("Halloween_Redirect"))
+        if (data.ContainsKey("Halloween_Redirect"))
         {
-            halloweenRedirect = reader.readValue<AssetReference<FoliageInstancedMeshInfoAsset>>("Halloween_Redirect");
-        }
-    }
-
-    protected override void writeAsset(IFormattedFileWriter writer)
-    {
-        base.writeAsset(writer);
-        writer.writeValue("Mesh", mesh);
-        writer.writeValue("Material", material);
-        writer.writeValue("Cast_Shadows", castShadows);
-        writer.writeValue("Tile_Dither", tileDither);
-        writer.writeValue("Draw_Distance", drawDistance);
-        if (christmasRedirect.HasValue)
-        {
-            writer.writeValue("Christmas_Redirect", christmasRedirect.Value);
-        }
-        if (halloweenRedirect.HasValue)
-        {
-            writer.writeValue("Halloween_Redirect", halloweenRedirect.Value);
+            halloweenRedirect = data.ParseStruct<AssetReference<FoliageInstancedMeshInfoAsset>>("Halloween_Redirect");
         }
     }
 
@@ -147,12 +128,6 @@ public class FoliageInstancedMeshInfoAsset : FoliageInfoAsset
     }
 
     public FoliageInstancedMeshInfoAsset()
-    {
-        resetInstancedMeshInfo();
-    }
-
-    public FoliageInstancedMeshInfoAsset(Bundle bundle, Local localization, byte[] hash)
-        : base(bundle, localization, hash)
     {
         resetInstancedMeshInfo();
     }

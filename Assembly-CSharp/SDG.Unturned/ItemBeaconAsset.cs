@@ -16,12 +16,12 @@ public class ItemBeaconAsset : ItemBarricadeAsset
 
     public bool ShouldScaleWithNumberOfParticipants { get; private set; }
 
-    public ItemBeaconAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        _wave = data.readUInt16("Wave", 0);
-        _rewards = data.readByte("Rewards", 0);
-        _rewardID = data.readUInt16("Reward_ID", 0);
-        ShouldScaleWithNumberOfParticipants = data.readBoolean("Enable_Participant_Scaling", defaultValue: true);
+        base.PopulateAsset(bundle, data, localization);
+        _wave = data.ParseUInt16("Wave", 0);
+        _rewards = data.ParseUInt8("Rewards", 0);
+        _rewardID = data.ParseUInt16("Reward_ID", 0);
+        ShouldScaleWithNumberOfParticipants = data.ParseBool("Enable_Participant_Scaling", defaultValue: true);
     }
 }

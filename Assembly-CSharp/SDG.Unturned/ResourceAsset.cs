@@ -123,10 +123,10 @@ public class ResourceAsset : Asset
         lod.SetLODs(lODs);
     }
 
-    public ResourceAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        if (id < 50 && !bundle.isCoreAsset && !data.has("Bypass_ID_Limit"))
+        base.PopulateAsset(bundle, data, localization);
+        if (id < 50 && !bundle.isCoreAsset && !data.ContainsKey("Bypass_ID_Limit"))
         {
             throw new NotSupportedException("ID < 50");
         }
@@ -136,13 +136,13 @@ public class ResourceAsset : Asset
         }
         else
         {
-            isSpeedTree = data.has("SpeedTree");
+            isSpeedTree = data.ContainsKey("SpeedTree");
         }
-        defaultLODWeights = data.has("SpeedTree_Default_LOD_Weights");
+        defaultLODWeights = data.ContainsKey("SpeedTree_Default_LOD_Weights");
         _resourceName = localization.format("Name");
         if (Dedicator.IsDedicatedServer)
         {
-            if (data.readBoolean("Has_Clip_Prefab", defaultValue: true))
+            if (data.ParseBool("Has_Clip_Prefab", defaultValue: true))
             {
                 _modelGameObject = bundle.load<GameObject>("Resource_Clip");
                 if (_modelGameObject == null)
@@ -299,7 +299,7 @@ public class ResourceAsset : Asset
                     }
                 }
             }
-            if (data.has("Auto_Skybox") && !isSpeedTree && (bool)skyboxGameObject)
+            if (data.ContainsKey("Auto_Skybox") && !isSpeedTree && (bool)skyboxGameObject)
             {
                 Transform transform3 = modelGameObject.transform.Find("Model_0");
                 if ((bool)transform3)
@@ -360,36 +360,36 @@ public class ResourceAsset : Asset
         {
             _skyboxGameObject.SetTagIfUntaggedRecursively("Resource");
         }
-        health = data.readUInt16("Health", 0);
-        radius = data.readSingle("Radius");
-        scale = Mathf.Abs(data.readSingle("Scale"));
-        verticalOffset = data.readSingle("Vertical_Offset", -0.75f);
-        explosion = data.ReadGuidOrLegacyId("Explosion", out _explosionGuid);
-        log = data.readUInt16("Log", 0);
-        stick = data.readUInt16("Stick", 0);
-        rewardID = data.readUInt16("Reward_ID", 0);
-        rewardXP = data.readUInt32("Reward_XP");
-        if (data.has("Reward_Min"))
+        health = data.ParseUInt16("Health", 0);
+        radius = data.ParseFloat("Radius");
+        scale = Mathf.Abs(data.ParseFloat("Scale"));
+        verticalOffset = data.ParseFloat("Vertical_Offset", -0.75f);
+        explosion = data.ParseGuidOrLegacyId("Explosion", out _explosionGuid);
+        log = data.ParseUInt16("Log", 0);
+        stick = data.ParseUInt16("Stick", 0);
+        rewardID = data.ParseUInt16("Reward_ID", 0);
+        rewardXP = data.ParseUInt32("Reward_XP");
+        if (data.ContainsKey("Reward_Min"))
         {
-            rewardMin = data.readByte("Reward_Min", 0);
+            rewardMin = data.ParseUInt8("Reward_Min", 0);
         }
         else
         {
             rewardMin = 6;
         }
-        if (data.has("Reward_Max"))
+        if (data.ContainsKey("Reward_Max"))
         {
-            rewardMax = data.readByte("Reward_Max", 0);
+            rewardMax = data.ParseUInt8("Reward_Max", 0);
         }
         else
         {
             rewardMax = 9;
         }
-        bladeID = data.readByte("BladeID", 0);
-        vulnerableToFists = data.readBoolean("Vulnerable_To_Fists");
-        vulnerableToAllMeleeWeapons = data.readBoolean("Vulnerable_To_All_Melee_Weapons");
-        reset = data.readSingle("Reset");
-        isForage = data.has("Forage");
+        bladeID = data.ParseUInt8("BladeID", 0);
+        vulnerableToFists = data.ParseBool("Vulnerable_To_Fists");
+        vulnerableToAllMeleeWeapons = data.ParseBool("Vulnerable_To_All_Melee_Weapons");
+        reset = data.ParseFloat("Reset");
+        isForage = data.ContainsKey("Forage");
         if (isForage && _modelGameObject != null)
         {
             Transform transform7 = _modelGameObject.transform.Find("Forage");
@@ -398,16 +398,16 @@ public class ResourceAsset : Asset
                 transform7.gameObject.layer = 14;
             }
         }
-        forageRewardExperience = data.readUInt32("Forage_Reward_Experience", 1u);
+        forageRewardExperience = data.ParseUInt32("Forage_Reward_Experience", 1u);
         if (isForage)
         {
             interactabilityText = localization.read("Interact");
             interactabilityText = ItemTool.filterRarityRichText(interactabilityText);
         }
-        hasDebris = !data.has("No_Debris");
-        if (data.has("Holiday_Restriction"))
+        hasDebris = !data.ContainsKey("No_Debris");
+        if (data.ContainsKey("Holiday_Restriction"))
         {
-            holidayRestriction = (ENPCHoliday)Enum.Parse(typeof(ENPCHoliday), data.readString("Holiday_Restriction"), ignoreCase: true);
+            holidayRestriction = (ENPCHoliday)Enum.Parse(typeof(ENPCHoliday), data.GetString("Holiday_Restriction"), ignoreCase: true);
             if (holidayRestriction == ENPCHoliday.NONE)
             {
                 Assets.reportError(this, "has no holiday restriction, so value is ignored");
@@ -419,8 +419,8 @@ public class ResourceAsset : Asset
         }
         christmasRedirect = data.readAssetReference<ResourceAsset>("Christmas_Redirect");
         halloweenRedirect = data.readAssetReference<ResourceAsset>("Halloween_Redirect");
-        chart = data.readEnum("Chart", EObjectChart.NONE);
-        shouldExcludeFromLevelBatching = data.readBoolean("Exclude_From_Level_Batching");
+        chart = data.ParseEnum("Chart", EObjectChart.NONE);
+        shouldExcludeFromLevelBatching = data.ParseBool("Exclude_From_Level_Batching");
         shouldExcludeFromLevelBatching |= isSpeedTree;
     }
 }

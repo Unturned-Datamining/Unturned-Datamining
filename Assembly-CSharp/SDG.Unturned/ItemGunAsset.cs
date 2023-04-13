@@ -1,5 +1,4 @@
 using System;
-using SDG.Framework.IO.FormattedFiles;
 using UnityEngine;
 using Unturned.SystemEx;
 
@@ -380,181 +379,9 @@ public class ItemGunAsset : ItemWeaponAsset
         }
     }
 
-    protected override void readAsset(IFormattedFileReader reader)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        base.readAsset(reader);
-        ammoMin = reader.readValue<byte>("Ammo_Min");
-        ammoMax = reader.readValue<byte>("Ammo_Max");
-        sightID = reader.readValue<ushort>("Sight_ID");
-        tacticalID = reader.readValue<ushort>("Tactical_ID");
-        gripID = reader.readValue<ushort>("Grip_ID");
-        barrelID = reader.readValue<ushort>("Barrel_ID");
-        magazineID = reader.readValue<ushort>("Magazine_ID");
-        unplace = reader.readValue<float>("Unplace");
-        replace = reader.readValue<float>("Replace");
-        if ((double)replace < 0.01)
-        {
-            replace = 1f;
-        }
-        hasSight = reader.readValue<bool>("Hook_Sight");
-        hasTactical = reader.readValue<bool>("Hook_Tactical");
-        hasGrip = reader.readValue<bool>("Hook_Grip");
-        hasBarrel = reader.readValue<bool>("Hook_Barrel");
-        int num = reader.readArrayLength("Magazine_Calibers");
-        if (num > 0)
-        {
-            magazineCalibers = new ushort[num];
-            for (int i = 0; i < num; i++)
-            {
-                magazineCalibers[i] = reader.readValue<ushort>(i);
-            }
-            int num2 = reader.readArrayLength("Attachment_Calibers");
-            if (num2 > 0)
-            {
-                attachmentCalibers = new ushort[num2];
-                for (int j = 0; j < num2; j++)
-                {
-                    attachmentCalibers[j] = reader.readValue<ushort>(j);
-                }
-            }
-            else
-            {
-                attachmentCalibers = magazineCalibers;
-            }
-        }
-        else
-        {
-            magazineCalibers = new ushort[1];
-            magazineCalibers[0] = reader.readValue<ushort>("Caliber");
-            attachmentCalibers = magazineCalibers;
-        }
-        firerate = reader.readValue<byte>("Firerate");
-        action = reader.readValue<EAction>("Action");
-        shouldDeleteEmptyMagazines = reader.readValue<bool>("Delete_Empty_Magazines");
-        bursts = reader.readValue<int>("Bursts");
-        hasSafety = reader.readValue<bool>("Safety");
-        hasSemi = reader.readValue<bool>("Semi");
-        hasAuto = reader.readValue<bool>("Auto");
-        hasBurst = bursts > 0;
-        isTurret = reader.readValue<bool>("Turret");
-        if (hasAuto)
-        {
-            firemode = EFiremode.AUTO;
-        }
-        else if (hasSemi)
-        {
-            firemode = EFiremode.SEMI;
-        }
-        else if (hasBurst)
-        {
-            firemode = EFiremode.BURST;
-        }
-        else if (hasSafety)
-        {
-            firemode = EFiremode.SAFETY;
-        }
-        spreadAim = reader.readValue<float>("Spread_Aim");
-        recoilAim = reader.readValue<float>("Recoil_Aim");
-        useRecoilAim = reader.readValue<bool>("Use_Recoil_Aim");
-        recoilMin_x = reader.readValue<float>("Recoil_Min_X");
-        recoilMin_y = reader.readValue<float>("Recoil_Min_Y");
-        recoilMax_x = reader.readValue<float>("Recoil_Max_X");
-        recoilMax_y = reader.readValue<float>("Recoil_Max_Y");
-        recover_x = reader.readValue<float>("Recover_X");
-        recover_y = reader.readValue<float>("Recover_Y");
-        shakeMin_x = reader.readValue<float>("Shake_Min_X");
-        shakeMin_y = reader.readValue<float>("Shake_Min_Y");
-        shakeMin_z = reader.readValue<float>("Shake_Min_Z");
-        shakeMax_x = reader.readValue<float>("Shake_Max_X");
-        shakeMax_y = reader.readValue<float>("Shake_Max_Y");
-        shakeMax_z = reader.readValue<float>("Shake_Max_Z");
-        ballisticSteps = reader.readValue<byte>("Ballistic_Steps");
-        ballisticTravel = (int)reader.readValue<byte>("Ballistic_Travel");
-        ballisticDrop = reader.readValue<float>("Ballistic_Drop");
-        ballisticForce = reader.readValue<float>("Ballistic_Force");
-        projectilePenetrateBuildables = reader.readValue<bool>("Projectile_Penetrate_Buildables");
-        reloadTime = reader.readValue<float>("Reload_Time");
-        hammerTime = reader.readValue<float>("Hammer_Time");
-        if (reader.containsKey("Alert_Radius"))
-        {
-            alertRadius = reader.readValue<float>("Alert_Radius");
-        }
-        else
-        {
-            alertRadius = 48f;
-        }
-    }
-
-    protected override void writeAsset(IFormattedFileWriter writer)
-    {
-        base.writeAsset(writer);
-        writer.writeValue("Ammo_Min", ammoMin);
-        writer.writeValue("Ammo_Max", ammoMax);
-        writer.writeValue("Sight_ID", sightID);
-        writer.writeValue("Tactical_ID", tacticalID);
-        writer.writeValue("Grip_ID", gripID);
-        writer.writeValue("Barrel_ID", barrelID);
-        writer.writeValue("Magazine_ID", magazineID);
-        writer.writeValue("Unplace", unplace);
-        writer.writeValue("Replace", replace);
-        writer.writeValue("Hook_Sight", hasSight);
-        writer.writeValue("Hook_Tactical", hasTactical);
-        writer.writeValue("Hook_Grip", hasGrip);
-        writer.writeValue("Hook_Barrel", hasBarrel);
-        writer.beginArray("Magazine_Calibers");
-        ushort[] array = magazineCalibers;
-        foreach (ushort value in array)
-        {
-            writer.writeValue(value);
-        }
-        writer.endArray();
-        writer.beginArray("Attachment_Calibers");
-        array = attachmentCalibers;
-        foreach (ushort value2 in array)
-        {
-            writer.writeValue(value2);
-        }
-        writer.endArray();
-        writer.writeValue("Firerate", firerate);
-        writer.writeValue("Action", action);
-        writer.writeValue("Delete_Empty_Magazines", shouldDeleteEmptyMagazines);
-        writer.writeValue("Bursts", bursts);
-        writer.writeValue("Safety", hasSafety);
-        writer.writeValue("Semi", hasSemi);
-        writer.writeValue("Auto", hasAuto);
-        writer.writeValue("Turret", isTurret);
-        writer.writeValue("Spread_Aim", spreadAim);
-        writer.writeValue("Recoil_Aim", recoilAim);
-        writer.writeValue("Use_Recoil_Aim", useRecoilAim);
-        writer.writeValue("Recoil_Min_X", recoilMin_x);
-        writer.writeValue("Recoil_Min_Y", recoilMin_y);
-        writer.writeValue("Recoil_Max_X", recoilMax_x);
-        writer.writeValue("Recoil_Max_Y", recoilMax_y);
-        writer.writeValue("Recover_X", recover_x);
-        writer.writeValue("Recover_Y", recover_y);
-        writer.writeValue("Shake_Min_X", shakeMin_x);
-        writer.writeValue("Shake_Min_Y", shakeMin_y);
-        writer.writeValue("Shake_Min_Z", shakeMin_z);
-        writer.writeValue("Shake_Max_X", shakeMax_x);
-        writer.writeValue("Shake_Max_Y", shakeMax_y);
-        writer.writeValue("Shake_Max_Z", shakeMax_z);
-        writer.writeValue("Ballistic_Steps", ballisticSteps);
-        writer.writeValue("Ballistic_Travel", ballisticTravel);
-        writer.writeValue("Ballistic_Drop", ballisticDrop);
-        writer.writeValue("Ballistic_Force", ballisticForce);
-        writer.writeValue("Projectile_Penetrate_Buildables", projectilePenetrateBuildables);
-        writer.writeValue("Reload_Time", reloadTime);
-        writer.writeValue("Hammer_Time", hammerTime);
-        writer.writeValue("Alert_Radius", alertRadius);
-    }
-
-    public ItemGunAsset()
-    {
-    }
-
-    public ItemGunAsset(Bundle bundle, Local localization, byte[] hash)
-        : base(bundle, localization, hash)
-    {
+        base.PopulateAsset(bundle, data, localization);
         _shoot = bundle.load<AudioClip>("Shoot");
         _reload = bundle.load<AudioClip>("Reload");
         _hammer = bundle.load<AudioClip>("Hammer");
@@ -563,62 +390,45 @@ public class ItemGunAsset : ItemWeaponAsset
         _chamberJammedSound = bundle.load<AudioClip>("ChamberJammed");
         fireDelaySound = bundle.load<AudioClip>("FireDelay");
         _projectile = bundle.load<GameObject>("Projectile");
-        allowMagazineChange = true;
-        canAimDuringSprint = false;
-    }
-
-    public ItemGunAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
-    {
-        _shoot = bundle.load<AudioClip>("Shoot");
-        _reload = bundle.load<AudioClip>("Reload");
-        _hammer = bundle.load<AudioClip>("Hammer");
-        _aim = bundle.load<AudioClip>("Aim");
-        _minigun = bundle.load<AudioClip>("Minigun");
-        _chamberJammedSound = bundle.load<AudioClip>("ChamberJammed");
-        fireDelaySound = bundle.load<AudioClip>("FireDelay");
-        _projectile = bundle.load<GameObject>("Projectile");
-        ammoMin = data.readByte("Ammo_Min", 0);
-        ammoMax = data.readByte("Ammo_Max", 0);
-        sightID = data.readUInt16("Sight", 0);
-        tacticalID = data.readUInt16("Tactical", 0);
-        gripID = data.readUInt16("Grip", 0);
-        barrelID = data.readUInt16("Barrel", 0);
-        magazineID = data.readUInt16("Magazine", 0);
-        int num = data.readInt32("Magazine_Replacements");
+        ammoMin = data.ParseUInt8("Ammo_Min", 0);
+        ammoMax = data.ParseUInt8("Ammo_Max", 0);
+        sightID = data.ParseUInt16("Sight", 0);
+        tacticalID = data.ParseUInt16("Tactical", 0);
+        gripID = data.ParseUInt16("Grip", 0);
+        barrelID = data.ParseUInt16("Barrel", 0);
+        magazineID = data.ParseUInt16("Magazine", 0);
+        int num = data.ParseInt32("Magazine_Replacements");
         magazineReplacements = new MagazineReplacement[num];
         for (int i = 0; i < num; i++)
         {
-            ushort num2 = data.readUInt16("Magazine_Replacement_" + i + "_ID", 0);
-            string map = data.readString("Magazine_Replacement_" + i + "_Map");
-            MagazineReplacement magazineReplacement = new MagazineReplacement
-            {
-                id = num2,
-                map = map
-            };
+            ushort num2 = data.ParseUInt16("Magazine_Replacement_" + i + "_ID", 0);
+            string @string = data.GetString("Magazine_Replacement_" + i + "_Map");
+            MagazineReplacement magazineReplacement = default(MagazineReplacement);
+            magazineReplacement.id = num2;
+            magazineReplacement.map = @string;
             magazineReplacements[i] = magazineReplacement;
         }
-        unplace = data.readSingle("Unplace");
-        replace = data.readSingle("Replace", 1f);
-        hasSight = data.has("Hook_Sight");
-        hasTactical = data.has("Hook_Tactical");
-        hasGrip = data.has("Hook_Grip");
-        hasBarrel = data.has("Hook_Barrel");
-        int num3 = data.readInt32("Magazine_Calibers");
+        unplace = data.ParseFloat("Unplace");
+        replace = data.ParseFloat("Replace", 1f);
+        hasSight = data.ContainsKey("Hook_Sight");
+        hasTactical = data.ContainsKey("Hook_Tactical");
+        hasGrip = data.ContainsKey("Hook_Grip");
+        hasBarrel = data.ContainsKey("Hook_Barrel");
+        int num3 = data.ParseInt32("Magazine_Calibers");
         if (num3 > 0)
         {
             magazineCalibers = new ushort[num3];
             for (int j = 0; j < num3; j++)
             {
-                magazineCalibers[j] = data.readUInt16("Magazine_Caliber_" + j, 0);
+                magazineCalibers[j] = data.ParseUInt16("Magazine_Caliber_" + j, 0);
             }
-            int num4 = data.readInt32("Attachment_Calibers");
+            int num4 = data.ParseInt32("Attachment_Calibers");
             if (num4 > 0)
             {
                 attachmentCalibers = new ushort[num4];
                 for (int k = 0; k < num4; k++)
                 {
-                    attachmentCalibers[k] = data.readUInt16("Attachment_Caliber_" + k, 0);
+                    attachmentCalibers[k] = data.ParseUInt16("Attachment_Caliber_" + k, 0);
                 }
             }
             else
@@ -629,27 +439,27 @@ public class ItemGunAsset : ItemWeaponAsset
         else
         {
             magazineCalibers = new ushort[1];
-            magazineCalibers[0] = data.readUInt16("Caliber", 0);
+            magazineCalibers[0] = data.ParseUInt16("Caliber", 0);
             attachmentCalibers = magazineCalibers;
         }
-        firerate = data.readByte("Firerate", 0);
-        action = (EAction)Enum.Parse(typeof(EAction), data.readString("Action"), ignoreCase: true);
-        if (data.has("Delete_Empty_Magazines"))
+        firerate = data.ParseUInt8("Firerate", 0);
+        action = (EAction)Enum.Parse(typeof(EAction), data.GetString("Action"), ignoreCase: true);
+        if (data.ContainsKey("Delete_Empty_Magazines"))
         {
             shouldDeleteEmptyMagazines = true;
         }
         else
         {
             bool defaultValue = action == EAction.Pump || action == EAction.Rail || action == EAction.String || action == EAction.Rocket || action == EAction.Break;
-            shouldDeleteEmptyMagazines = data.readBoolean("Should_Delete_Empty_Magazines", defaultValue);
+            shouldDeleteEmptyMagazines = data.ParseBool("Should_Delete_Empty_Magazines", defaultValue);
         }
-        requiresNonZeroAttachmentCaliber = data.readBoolean("Requires_NonZero_Attachment_Caliber");
-        bursts = data.readInt32("Bursts");
-        hasSafety = data.has("Safety");
-        hasSemi = data.has("Semi");
-        hasAuto = data.has("Auto");
+        requiresNonZeroAttachmentCaliber = data.ParseBool("Requires_NonZero_Attachment_Caliber");
+        bursts = data.ParseInt32("Bursts");
+        hasSafety = data.ContainsKey("Safety");
+        hasSemi = data.ContainsKey("Semi");
+        hasAuto = data.ContainsKey("Auto");
         hasBurst = bursts > 0;
-        isTurret = data.has("Turret");
+        isTurret = data.ContainsKey("Turret");
         if (hasAuto)
         {
             firemode = EFiremode.AUTO;
@@ -666,27 +476,27 @@ public class ItemGunAsset : ItemWeaponAsset
         {
             firemode = EFiremode.SAFETY;
         }
-        spreadAim = data.readSingle("Spread_Aim");
-        if (data.has("Spread_Angle_Degrees"))
+        spreadAim = data.ParseFloat("Spread_Aim");
+        if (data.ContainsKey("Spread_Angle_Degrees"))
         {
-            baseSpreadAngleRadians = (float)Math.PI / 180f * data.readSingle("Spread_Angle_Degrees");
+            baseSpreadAngleRadians = (float)Math.PI / 180f * data.ParseFloat("Spread_Angle_Degrees");
             spreadHip = Mathf.Tan(baseSpreadAngleRadians);
         }
         else
         {
-            spreadHip = data.readSingle("Spread_Hip");
+            spreadHip = data.ParseFloat("Spread_Hip");
             baseSpreadAngleRadians = Mathf.Atan(spreadHip);
             if ((bool)Assets.shouldValidateAssets)
             {
                 UnturnedLog.info($"Converted \"{FriendlyName}\" Spread_Hip {spreadHip} to {baseSpreadAngleRadians * 57.29578f} degrees");
             }
         }
-        spreadSprint = data.readSingle("Spread_Sprint", 1.25f);
-        spreadCrouch = data.readSingle("Spread_Crouch", 0.85f);
-        spreadProne = data.readSingle("Spread_Prone", 0.7f);
-        if (data.has("Recoil_Aim"))
+        spreadSprint = data.ParseFloat("Spread_Sprint", 1.25f);
+        spreadCrouch = data.ParseFloat("Spread_Crouch", 0.85f);
+        spreadProne = data.ParseFloat("Spread_Prone", 0.7f);
+        if (data.ContainsKey("Recoil_Aim"))
         {
-            recoilAim = data.readSingle("Recoil_Aim");
+            recoilAim = data.ParseFloat("Recoil_Aim");
             useRecoilAim = true;
         }
         else
@@ -694,26 +504,26 @@ public class ItemGunAsset : ItemWeaponAsset
             recoilAim = 1f;
             useRecoilAim = false;
         }
-        recoilMin_x = data.readSingle("Recoil_Min_X");
-        recoilMin_y = data.readSingle("Recoil_Min_Y");
-        recoilMax_x = data.readSingle("Recoil_Max_X");
-        recoilMax_y = data.readSingle("Recoil_Max_Y");
-        aimingRecoilMultiplier = data.readSingle("Aiming_Recoil_Multiplier", 1f);
-        recover_x = data.readSingle("Recover_X");
-        recover_y = data.readSingle("Recover_Y");
-        recoilSprint = data.readSingle("Recoil_Sprint", 1.25f);
-        recoilCrouch = data.readSingle("Recoil_Crouch", 0.85f);
-        recoilProne = data.readSingle("Recoil_Prone", 0.7f);
-        shakeMin_x = data.readSingle("Shake_Min_X");
-        shakeMin_y = data.readSingle("Shake_Min_Y");
-        shakeMin_z = data.readSingle("Shake_Min_Z");
-        shakeMax_x = data.readSingle("Shake_Max_X");
-        shakeMax_y = data.readSingle("Shake_Max_Y");
-        shakeMax_z = data.readSingle("Shake_Max_Z");
-        ballisticSteps = data.readByte("Ballistic_Steps", 0);
-        ballisticTravel = data.readSingle("Ballistic_Travel");
-        bool flag = data.has("Ballistic_Steps") && ballisticSteps > 0;
-        bool flag2 = data.has("Ballistic_Travel") && ballisticTravel > 0.1f;
+        recoilMin_x = data.ParseFloat("Recoil_Min_X");
+        recoilMin_y = data.ParseFloat("Recoil_Min_Y");
+        recoilMax_x = data.ParseFloat("Recoil_Max_X");
+        recoilMax_y = data.ParseFloat("Recoil_Max_Y");
+        aimingRecoilMultiplier = data.ParseFloat("Aiming_Recoil_Multiplier", 1f);
+        recover_x = data.ParseFloat("Recover_X");
+        recover_y = data.ParseFloat("Recover_Y");
+        recoilSprint = data.ParseFloat("Recoil_Sprint", 1.25f);
+        recoilCrouch = data.ParseFloat("Recoil_Crouch", 0.85f);
+        recoilProne = data.ParseFloat("Recoil_Prone", 0.7f);
+        shakeMin_x = data.ParseFloat("Shake_Min_X");
+        shakeMin_y = data.ParseFloat("Shake_Min_Y");
+        shakeMin_z = data.ParseFloat("Shake_Min_Z");
+        shakeMax_x = data.ParseFloat("Shake_Max_X");
+        shakeMax_y = data.ParseFloat("Shake_Max_Y");
+        shakeMax_z = data.ParseFloat("Shake_Max_Z");
+        ballisticSteps = data.ParseUInt8("Ballistic_Steps", 0);
+        ballisticTravel = data.ParseFloat("Ballistic_Travel");
+        bool flag = data.ContainsKey("Ballistic_Steps") && ballisticSteps > 0;
+        bool flag2 = data.ContainsKey("Ballistic_Travel") && ballisticTravel > 0.1f;
         if (flag && flag2)
         {
             float num5 = Mathf.Abs((float)(int)ballisticSteps * ballisticTravel - range);
@@ -735,35 +545,35 @@ public class ItemGunAsset : ItemWeaponAsset
             ballisticTravel = 10f;
             ballisticSteps = (byte)Mathf.CeilToInt(range / ballisticTravel);
         }
-        if (data.has("Ballistic_Drop"))
+        if (data.ContainsKey("Ballistic_Drop"))
         {
-            ballisticDrop = data.readSingle("Ballistic_Drop");
+            ballisticDrop = data.ParseFloat("Ballistic_Drop");
         }
         else
         {
             ballisticDrop = 0.002f;
         }
-        if (data.has("Ballistic_Force"))
+        if (data.ContainsKey("Ballistic_Force"))
         {
-            ballisticForce = data.readSingle("Ballistic_Force");
+            ballisticForce = data.ParseFloat("Ballistic_Force");
         }
         else
         {
             ballisticForce = 0.002f;
         }
-        damageFalloffRange = data.readSingle("Damage_Falloff_Range", 1f);
-        damageFalloffMaxRange = data.readSingle("Damage_Falloff_Max_Range", 1f);
-        damageFalloffMultiplier = data.readSingle("Damage_Falloff_Multiplier", 1f);
-        projectileLifespan = data.readSingle("Projectile_Lifespan", 30f);
-        projectilePenetrateBuildables = data.has("Projectile_Penetrate_Buildables");
-        projectileExplosionLaunchSpeed = data.readSingle("Projectile_Explosion_Launch_Speed", playerDamageMultiplier.damage * 0.1f);
-        reloadTime = data.readSingle("Reload_Time");
-        hammerTime = data.readSingle("Hammer_Time");
-        muzzle = data.ReadGuidOrLegacyId("Muzzle", out muzzleGuid);
-        explosion = data.ReadGuidOrLegacyId("Explosion", out projectileExplosionEffectGuid);
-        if (data.has("Shell"))
+        damageFalloffRange = data.ParseFloat("Damage_Falloff_Range", 1f);
+        damageFalloffMaxRange = data.ParseFloat("Damage_Falloff_Max_Range", 1f);
+        damageFalloffMultiplier = data.ParseFloat("Damage_Falloff_Multiplier", 1f);
+        projectileLifespan = data.ParseFloat("Projectile_Lifespan", 30f);
+        projectilePenetrateBuildables = data.ContainsKey("Projectile_Penetrate_Buildables");
+        projectileExplosionLaunchSpeed = data.ParseFloat("Projectile_Explosion_Launch_Speed", playerDamageMultiplier.damage * 0.1f);
+        reloadTime = data.ParseFloat("Reload_Time");
+        hammerTime = data.ParseFloat("Hammer_Time");
+        muzzle = data.ParseGuidOrLegacyId("Muzzle", out muzzleGuid);
+        explosion = data.ParseGuidOrLegacyId("Explosion", out projectileExplosionEffectGuid);
+        if (data.ContainsKey("Shell"))
         {
-            shell = data.ReadGuidOrLegacyId("Shell", out shellGuid);
+            shell = data.ParseGuidOrLegacyId("Shell", out shellGuid);
         }
         else if (action == EAction.Pump || action == EAction.Break)
         {
@@ -773,45 +583,46 @@ public class ItemGunAsset : ItemWeaponAsset
         {
             shellGuid = new Guid("f380a6a6f41f422c9f5b9ac13e3b13e8");
         }
-        if (data.has("Alert_Radius"))
+        if (data.ContainsKey("Alert_Radius"))
         {
-            alertRadius = data.readSingle("Alert_Radius");
+            alertRadius = data.ParseFloat("Alert_Radius");
         }
         else
         {
             alertRadius = 48f;
         }
-        if (data.has("Range_Rangefinder"))
+        if (data.ContainsKey("Range_Rangefinder"))
         {
-            rangeRangefinder = data.readSingle("Range_Rangefinder");
+            rangeRangefinder = data.ParseFloat("Range_Rangefinder");
         }
         else
         {
-            rangeRangefinder = data.readSingle("Range");
+            rangeRangefinder = data.ParseFloat("Range");
         }
-        instakillHeadshots = data.readBoolean("Instakill_Headshots");
-        infiniteAmmo = data.readBoolean("Infinite_Ammo");
-        ammoPerShot = data.readByte("Ammo_Per_Shot", 1);
-        fireDelay = Mathf.RoundToInt(data.readSingle("Fire_Delay_Seconds") * (float)PlayerInput.TOCK_PER_SECOND);
-        allowMagazineChange = data.readBoolean("Allow_Magazine_Change", defaultValue: true);
-        canAimDuringSprint = data.readBoolean("Can_Aim_During_Sprint");
-        aimingMovementSpeedMultiplier = data.readSingle("Aiming_Movement_Speed_Multiplier", canAimDuringSprint ? 1f : 0.75f);
-        canEverJam = data.has("Can_Ever_Jam");
+        instakillHeadshots = data.ParseBool("Instakill_Headshots");
+        infiniteAmmo = data.ParseBool("Infinite_Ammo");
+        ammoPerShot = data.ParseUInt8("Ammo_Per_Shot", 1);
+        fireDelay = Mathf.RoundToInt(data.ParseFloat("Fire_Delay_Seconds") * (float)PlayerInput.TOCK_PER_SECOND);
+        allowMagazineChange = data.ParseBool("Allow_Magazine_Change", defaultValue: true);
+        canAimDuringSprint = data.ParseBool("Can_Aim_During_Sprint");
+        aimingMovementSpeedMultiplier = data.ParseFloat("Aiming_Movement_Speed_Multiplier", canAimDuringSprint ? 1f : 0.75f);
+        canEverJam = data.ContainsKey("Can_Ever_Jam");
         if (canEverJam)
         {
-            jamQualityThreshold = data.readSingle("Jam_Quality_Threshold", 0.4f);
-            jamMaxChance = data.readSingle("Jam_Max_Chance", 0.1f);
-            unjamChamberAnimName = data.readString("Unjam_Chamber_Anim", "UnjamChamber");
+            jamQualityThreshold = data.ParseFloat("Jam_Quality_Threshold", 0.4f);
+            jamMaxChance = data.ParseFloat("Jam_Max_Chance", 0.1f);
+            unjamChamberAnimName = data.GetString("Unjam_Chamber_Anim", "UnjamChamber");
         }
-        gunshotRolloffDistance = data.readSingle("Gunshot_Rolloff_Distance", (action == EAction.String) ? 16f : ((action != EAction.Rocket) ? 512f : 64f));
-        int num6 = data.readInt32("Shoot_Quest_Rewards");
+        float defaultValue2 = ((action == EAction.String) ? 16f : ((action != EAction.Rocket) ? 512f : 64f));
+        gunshotRolloffDistance = data.ParseFloat("Gunshot_Rolloff_Distance", defaultValue2);
+        int num6 = data.ParseInt32("Shoot_Quest_Rewards");
         if (num6 > 0)
         {
             shootQuestRewards = new INPCReward[num6];
             NPCTool.readRewards(data, localization, "Shoot_Quest_Reward_", shootQuestRewards, this);
         }
-        aimInDuration = data.readSingle("Aim_In_Duration", 0.2f);
-        shouldScaleAimAnimations = data.readBoolean("Scale_Aim_Animation_Speed", defaultValue: true);
+        aimInDuration = data.ParseFloat("Aim_In_Duration", 0.2f);
+        shouldScaleAimAnimations = data.ParseBool("Scale_Aim_Animation_Speed", defaultValue: true);
     }
 
     protected override AudioReference GetDefaultInventoryAudio()

@@ -162,25 +162,17 @@ public class SpawnAsset : Asset
         markTablesDirty();
     }
 
-    public SpawnAsset(ushort id)
-        : base(null, null, null, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        insertRoots = new List<SpawnTable>();
-        _roots = new List<SpawnTable>();
-        _tables = new List<SpawnTable>();
-    }
-
-    public SpawnAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
-    {
-        int num = data.readInt32("Roots");
+        base.PopulateAsset(bundle, data, localization);
+        int num = data.ParseInt32("Roots");
         insertRoots = new List<SpawnTable>(num);
         for (int i = 0; i < num; i++)
         {
             SpawnTable spawnTable = new SpawnTable();
-            spawnTable.spawnID = data.readUInt16("Root_" + i + "_Spawn_ID", 0);
-            spawnTable.isOverride = data.has("Root_" + i + "_Override");
-            spawnTable.weight = data.readInt32("Root_" + i + "_Weight", spawnTable.isOverride ? 1 : 0);
+            spawnTable.spawnID = data.ParseUInt16("Root_" + i + "_Spawn_ID", 0);
+            spawnTable.isOverride = data.ContainsKey("Root_" + i + "_Override");
+            spawnTable.weight = data.ParseInt32("Root_" + i + "_Weight", spawnTable.isOverride ? 1 : 0);
             spawnTable.chance = 0f;
             if (spawnTable.spawnID == 0 && spawnTable.assetID == 0)
             {
@@ -193,17 +185,15 @@ public class SpawnAsset : Asset
             insertRoots.Add(spawnTable);
         }
         _roots = new List<SpawnTable>(num);
-        int num2 = data.readInt32("Tables");
+        int num2 = data.ParseInt32("Tables");
         _tables = new List<SpawnTable>(num2);
         for (int j = 0; j < num2; j++)
         {
-            SpawnTable spawnTable2 = new SpawnTable
-            {
-                assetID = data.readUInt16("Table_" + j + "_Asset_ID", 0),
-                spawnID = data.readUInt16("Table_" + j + "_Spawn_ID", 0),
-                weight = data.readInt32("Table_" + j + "_Weight"),
-                chance = 0f
-            };
+            SpawnTable spawnTable2 = new SpawnTable();
+            spawnTable2.assetID = data.ParseUInt16("Table_" + j + "_Asset_ID", 0);
+            spawnTable2.spawnID = data.ParseUInt16("Table_" + j + "_Spawn_ID", 0);
+            spawnTable2.weight = data.ParseInt32("Table_" + j + "_Weight");
+            spawnTable2.chance = 0f;
             if (spawnTable2.spawnID == 0 && spawnTable2.assetID == 0)
             {
                 Assets.reportError(this, "table " + j + " has neither a spawnID nor an assetID!");

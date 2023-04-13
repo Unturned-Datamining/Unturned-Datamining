@@ -54,30 +54,30 @@ public class ItemCaliberAsset : ItemAsset
 
     public string instantiatedAttachmentName { get; protected set; }
 
-    public ItemCaliberAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        _calibers = new ushort[data.readByte("Calibers", 0)];
+        base.PopulateAsset(bundle, data, localization);
+        _calibers = new ushort[data.ParseUInt8("Calibers", 0)];
         for (byte b = 0; b < calibers.Length; b = (byte)(b + 1))
         {
-            _calibers[b] = data.readUInt16("Caliber_" + b, 0);
+            _calibers[b] = data.ParseUInt16("Caliber_" + b, 0);
         }
-        _recoil_x = data.readSingle("Recoil_X", 1f);
-        _recoil_y = data.readSingle("Recoil_Y", 1f);
-        aimingRecoilMultiplier = data.readSingle("Aiming_Recoil_Multiplier", 1f);
-        aimDurationMultiplier = data.readSingle("Aim_Duration_Multiplier", 1f);
-        _spread = data.readSingle("Spread", 1f);
-        _sway = data.readSingle("Sway", 1f);
-        _shake = data.readSingle("Shake", 1f);
-        _damage = data.readSingle("Damage", 1f);
-        _firerate = data.readByte("Firerate", 0);
-        float defaultValue = data.readSingle("Damage", 1f);
-        ballisticDamageMultiplier = data.readSingle("Ballistic_Damage_Multiplier", defaultValue);
-        aimingMovementSpeedMultiplier = data.readSingle("Aiming_Movement_Speed_Multiplier", 1f);
-        _isPaintable = data.has("Paintable");
-        _isBipod = data.has("Bipod");
-        shouldDestroyAttachmentColliders = data.readBoolean("Destroy_Attachment_Colliders", defaultValue: true);
-        instantiatedAttachmentName = data.readString("Instantiated_Attachment_Name_Override", GUID.ToString("N"));
+        _recoil_x = data.ParseFloat("Recoil_X", 1f);
+        _recoil_y = data.ParseFloat("Recoil_Y", 1f);
+        aimingRecoilMultiplier = data.ParseFloat("Aiming_Recoil_Multiplier", 1f);
+        aimDurationMultiplier = data.ParseFloat("Aim_Duration_Multiplier", 1f);
+        _spread = data.ParseFloat("Spread", 1f);
+        _sway = data.ParseFloat("Sway", 1f);
+        _shake = data.ParseFloat("Shake", 1f);
+        _damage = data.ParseFloat("Damage", 1f);
+        _firerate = data.ParseUInt8("Firerate", 0);
+        float defaultValue = data.ParseFloat("Damage", 1f);
+        ballisticDamageMultiplier = data.ParseFloat("Ballistic_Damage_Multiplier", defaultValue);
+        aimingMovementSpeedMultiplier = data.ParseFloat("Aiming_Movement_Speed_Multiplier", 1f);
+        _isPaintable = data.ContainsKey("Paintable");
+        _isBipod = data.ContainsKey("Bipod");
+        shouldDestroyAttachmentColliders = data.ParseBool("Destroy_Attachment_Colliders", defaultValue: true);
+        instantiatedAttachmentName = data.GetString("Instantiated_Attachment_Name_Override", GUID.ToString("N"));
     }
 
     protected override AudioReference GetDefaultInventoryAudio()

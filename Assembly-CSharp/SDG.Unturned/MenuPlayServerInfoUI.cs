@@ -108,6 +108,8 @@ public class MenuPlayServerInfoUI
 
     private static ISleekLabel serverMonetizationLabel;
 
+    private static ISleekLabel serverPingLabel;
+
     private static ISleekBox ugcTitle;
 
     private static ISleekBox ugcBox;
@@ -153,6 +155,8 @@ public class MenuPlayServerInfoUI
     private static int playersOffset;
 
     private static int playerCount;
+
+    private static EHostBanFlags banFlags;
 
     private static UGCQueryHandle_t detailsHandle;
 
@@ -262,21 +266,21 @@ public class MenuPlayServerInfoUI
             UnturnedLog.info($"{serverInfo.name} is not logged in ({serverInfo.steamID}) and IP ({new IPv4Address(serverInfo.ip)}) is WAN");
         }
         notLoggedInWarningButton.isVisible = flag;
-        EHostBanFlags eHostBanFlags = HostBansManager.Get().MatchBasicDetails(serverInfo.ip, serverInfo.queryPort, serverInfo.name, serverInfo.steamID.m_SteamID);
-        if (eHostBanFlags == EHostBanFlags.None)
+        banFlags = HostBansManager.Get().MatchBasicDetails(serverInfo.ip, serverInfo.queryPort, serverInfo.name, serverInfo.steamID.m_SteamID);
+        if (banFlags == EHostBanFlags.None)
         {
-            eHostBanFlags = HostBansManager.Get().MatchExtendedDetails(serverInfo.descText, serverInfo.thumbnailURL);
+            banFlags = HostBansManager.Get().MatchExtendedDetails(serverInfo.descText, serverInfo.thumbnailURL);
         }
-        UnturnedLog.info($"{serverInfo.name} host ban flags: {eHostBanFlags}");
-        bool flag2 = eHostBanFlags.HasFlag(EHostBanFlags.Blocked);
+        UnturnedLog.info($"{serverInfo.name} host ban flags: {banFlags}");
+        bool flag2 = banFlags.HasFlag(EHostBanFlags.Blocked);
         hostBanWarningButton.isVisible = false;
         hostBanWarningButton.text = string.Empty;
-        if (eHostBanFlags.HasFlag(EHostBanFlags.MonetizationWarning))
+        if (banFlags.HasFlag(EHostBanFlags.MonetizationWarning))
         {
             hostBanWarningButton.isVisible = true;
             hostBanWarningButton.text += localization.format("HostBan_MonetizationWarning");
         }
-        if (eHostBanFlags.HasFlag(EHostBanFlags.WorkshopWarning))
+        if (banFlags.HasFlag(EHostBanFlags.WorkshopWarning))
         {
             if (hostBanWarningButton.isVisible)
             {
@@ -288,19 +292,7 @@ public class MenuPlayServerInfoUI
             }
             hostBanWarningButton.text += localization.format("HostBan_WorkshopWarning");
         }
-        if (eHostBanFlags.HasFlag(EHostBanFlags.QueryPingWarning))
-        {
-            if (hostBanWarningButton.isVisible)
-            {
-                hostBanWarningButton.text += "\n";
-            }
-            else
-            {
-                hostBanWarningButton.isVisible = true;
-            }
-            hostBanWarningButton.text += localization.format("HostBan_QueryPingWarning");
-        }
-        if (eHostBanFlags.HasFlag(EHostBanFlags.IncorrectMonetizationTagWarning))
+        if (banFlags.HasFlag(EHostBanFlags.IncorrectMonetizationTagWarning))
         {
             if (hostBanWarningButton.isVisible)
             {
@@ -312,7 +304,7 @@ public class MenuPlayServerInfoUI
             }
             hostBanWarningButton.text += localization.format("HostBan_IncorrectMonetizationTagWarning");
         }
-        if (eHostBanFlags.HasFlag(EHostBanFlags.HostingProvider))
+        if (banFlags.HasFlag(EHostBanFlags.HostingProvider))
         {
             if (hostBanWarningButton.isVisible)
             {
@@ -324,7 +316,7 @@ public class MenuPlayServerInfoUI
             }
             hostBanWarningButton.text += localization.format("HostBan_HostingProvider");
         }
-        if (eHostBanFlags.HasFlag(EHostBanFlags.Apology))
+        if (banFlags.HasFlag(EHostBanFlags.Apology))
         {
             if (hostBanWarningButton.isVisible)
             {
@@ -501,6 +493,19 @@ public class MenuPlayServerInfoUI
         else
         {
             serverMonetizationLabel.isVisible = false;
+        }
+        serverPingLabel.text = localization.format("QueryPing", serverInfo.ping);
+        serverPingLabel.positionOffset_Y = num;
+        num += 20;
+        if (banFlags.HasFlag(EHostBanFlags.QueryPingWarning))
+        {
+            serverPingLabel.text += " - ";
+            serverPingLabel.text += localization.format("HostBan_QueryPingWarning");
+            serverPingLabel.textColor = ESleekTint.BAD;
+        }
+        else
+        {
+            serverPingLabel.textColor = ESleekTint.FONT;
         }
         serverBox.sizeOffset_Y = num + 10;
         updateDetails();
@@ -956,12 +961,12 @@ public class MenuPlayServerInfoUI
 
     private static void OnClickedHostBanWarning(ISleekElement button)
     {
-        Provider.openURL("https://github.com/SmartlyDressedGames/U3-Docs/blob/master/ServerHostingRules.md");
+        Provider.openURL("https://docs.smartlydressedgames.com/en/stable/servers/server-hosting-rules.html");
     }
 
     private static void OnClickedNotLoggedInWarning(ISleekElement button)
     {
-        Provider.openURL("https://github.com/SmartlyDressedGames/U3-Docs/blob/master/GameServerLoginTokens.md");
+        Provider.openURL("https://docs.smartlydressedgames.com/en/stable/servers/game-server-login-tokens.html");
     }
 
     public void OnDestroy()
@@ -1148,6 +1153,13 @@ public class MenuPlayServerInfoUI
         serverMonetizationLabel.sizeScale_X = 1f;
         serverMonetizationLabel.fontAlignment = TextAnchor.MiddleLeft;
         serverBox.AddChild(serverMonetizationLabel);
+        serverPingLabel = Glazier.Get().CreateLabel();
+        serverPingLabel.positionOffset_X = 5;
+        serverPingLabel.positionOffset_Y = 100;
+        serverPingLabel.sizeOffset_Y = 30;
+        serverPingLabel.sizeScale_X = 1f;
+        serverPingLabel.fontAlignment = TextAnchor.MiddleLeft;
+        serverBox.AddChild(serverPingLabel);
         ugcTitle = Glazier.Get().CreateBox();
         ugcTitle.sizeOffset_Y = 30;
         ugcTitle.sizeScale_X = 1f;

@@ -280,6 +280,8 @@ internal class LevelBatching
         Stopwatch stopwatch = Stopwatch.StartNew();
         GameObject[] array = new GameObject[staticBatchingMeshRenderers.Count];
         StaticBatchingInitialState[] array2 = new StaticBatchingInitialState[array.Length];
+        List<AudioSource> list = new List<AudioSource>(array.Length);
+        List<AudioSource> list2 = new List<AudioSource>(16);
         for (int i = 0; i < array.Length; i++)
         {
             MeshRenderer meshRenderer = staticBatchingMeshRenderers[i];
@@ -300,6 +302,15 @@ internal class LevelBatching
             {
                 gameObject.SetActive(value: true);
             }
+            gameObject.GetComponentsInChildren(includeInactive: true, list2);
+            foreach (AudioSource item in list2)
+            {
+                if (item.enabled)
+                {
+                    item.enabled = false;
+                    list.Add(item);
+                }
+            }
         }
         GameObject staticBatchRoot = new GameObject("Static Batching Root (LevelBatching)");
         StaticBatchingUtility.Combine(array, staticBatchRoot);
@@ -318,6 +329,10 @@ internal class LevelBatching
             {
                 transform2.parent = staticBatchingInitialState2.parent;
             }
+        }
+        foreach (AudioSource item2 in list)
+        {
+            item2.enabled = true;
         }
         stopwatch.Stop();
         UnturnedLog.info($"Level static batching took: {stopwatch.ElapsedMilliseconds}ms");

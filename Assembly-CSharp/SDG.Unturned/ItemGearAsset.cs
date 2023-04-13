@@ -4,11 +4,11 @@ public class ItemGearAsset : ItemClothingAsset
 {
     public string hairOverride { get; protected set; }
 
-    public ItemGearAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        base.hairVisible = data.has("Hair");
-        base.beardVisible = data.has("Beard");
-        hairOverride = data.readString("Hair_Override");
+        base.PopulateAsset(bundle, data, localization);
+        base.hairVisible = data.ContainsKey("Hair");
+        base.beardVisible = data.ContainsKey("Beard");
+        hairOverride = data.GetString("Hair_Override");
     }
 }

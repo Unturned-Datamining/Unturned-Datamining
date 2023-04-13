@@ -352,18 +352,6 @@ public class ReadWrite
         return new Data(text);
     }
 
-    internal static Data FasterReadDataWithHash(string path)
-    {
-        if (!File.Exists(path))
-        {
-            return null;
-        }
-        using FileStream underlyingStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-        using SHA1Stream sHA1Stream = new SHA1Stream(underlyingStream);
-        using StreamReader streamReader = new StreamReader(sHA1Stream);
-        return new Data(streamReader, sHA1Stream);
-    }
-
     internal static Data FasterReadDataWithoutHash(string path)
     {
         if (!File.Exists(path))

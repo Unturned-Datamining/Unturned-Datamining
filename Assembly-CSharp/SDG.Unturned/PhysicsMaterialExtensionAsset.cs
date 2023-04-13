@@ -1,20 +1,13 @@
-using SDG.Framework.IO.FormattedFiles;
-
 namespace SDG.Unturned;
 
 public class PhysicsMaterialExtensionAsset : PhysicsMaterialAssetBase
 {
     public AssetReference<PhysicsMaterialAsset> baseRef;
 
-    protected override void readAsset(IFormattedFileReader reader)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        base.readAsset(reader);
-        baseRef = reader.readValue<AssetReference<PhysicsMaterialAsset>>("Base");
+        base.PopulateAsset(bundle, data, localization);
+        baseRef = data.ParseStruct<AssetReference<PhysicsMaterialAsset>>("Base");
         PhysicMaterialCustomData.RegisterAsset(this);
-    }
-
-    public PhysicsMaterialExtensionAsset(Bundle bundle, Local localization, byte[] hash)
-        : base(bundle, localization, hash)
-    {
     }
 }

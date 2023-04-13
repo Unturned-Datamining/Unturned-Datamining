@@ -25,30 +25,30 @@ public class ItemSightAsset : ItemCaliberAsset
 
     public bool isHolographic => _isHolographic;
 
-    public ItemSightAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         _sight = loadRequiredAsset<GameObject>(bundle, "Sight");
-        if (data.has("Vision"))
+        if (data.ContainsKey("Vision"))
         {
-            _vision = (ELightingVision)Enum.Parse(typeof(ELightingVision), data.readString("Vision"), ignoreCase: true);
+            _vision = (ELightingVision)Enum.Parse(typeof(ELightingVision), data.GetString("Vision"), ignoreCase: true);
             if (vision == ELightingVision.CIVILIAN)
             {
-                nightvisionColor = data.ReadColor32RGB("Nightvision_Color", LevelLighting.NIGHTVISION_CIVILIAN);
-                nightvisionFogIntensity = data.readSingle("Nightvision_Fog_Intensity", 0.5f);
+                nightvisionColor = data.LegacyParseColor32RGB("Nightvision_Color", LevelLighting.NIGHTVISION_CIVILIAN);
+                nightvisionFogIntensity = data.ParseFloat("Nightvision_Fog_Intensity", 0.5f);
             }
             else if (vision == ELightingVision.MILITARY)
             {
-                nightvisionColor = data.ReadColor32RGB("Nightvision_Color", LevelLighting.NIGHTVISION_MILITARY);
-                nightvisionFogIntensity = data.readSingle("Nightvision_Fog_Intensity", 0.25f);
+                nightvisionColor = data.LegacyParseColor32RGB("Nightvision_Color", LevelLighting.NIGHTVISION_MILITARY);
+                nightvisionFogIntensity = data.ParseFloat("Nightvision_Fog_Intensity", 0.25f);
             }
         }
         else
         {
             _vision = ELightingVision.NONE;
         }
-        zoom = Mathf.Max(1f, data.readSingle("Zoom"));
-        shouldZoomUsingEyes = data.readBoolean("Zoom_Using_Eyes");
-        _isHolographic = data.has("Holographic");
+        zoom = Mathf.Max(1f, data.ParseFloat("Zoom"));
+        shouldZoomUsingEyes = data.ParseBool("Zoom_Using_Eyes");
+        _isHolographic = data.ContainsKey("Holographic");
     }
 }

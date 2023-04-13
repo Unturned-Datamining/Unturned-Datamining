@@ -57,32 +57,32 @@ public class ItemMeleeAsset : ItemWeaponAsset
         return new byte[0];
     }
 
-    public ItemMeleeAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         _use = LoadRedirectableAsset<AudioClip>(bundle, "Use", data, "AttackAudioClip");
-        _strength = data.readSingle("Strength");
-        _weak = data.readSingle("Weak");
+        _strength = data.ParseFloat("Strength");
+        _weak = data.ParseFloat("Weak");
         if ((double)weak < 0.01)
         {
             _weak = 0.5f;
         }
-        _strong = data.readSingle("Strong");
+        _strong = data.ParseFloat("Strong");
         if ((double)strong < 0.01)
         {
             _strong = 0.33f;
         }
-        _stamina = data.readByte("Stamina", 0);
-        _isRepair = data.has("Repair");
-        _isRepeated = data.has("Repeated");
-        _isLight = data.has("Light");
+        _stamina = data.ParseUInt8("Stamina", 0);
+        _isRepair = data.ContainsKey("Repair");
+        _isRepeated = data.ContainsKey("Repeated");
+        _isLight = data.ContainsKey("Light");
         if (isLight)
         {
             lightConfig = new PlayerSpotLightConfig(data);
         }
-        if (data.has("Alert_Radius"))
+        if (data.ContainsKey("Alert_Radius"))
         {
-            alertRadius = data.readSingle("Alert_Radius");
+            alertRadius = data.ParseFloat("Alert_Radius");
         }
         else
         {

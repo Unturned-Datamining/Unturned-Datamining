@@ -1,5 +1,4 @@
 using System;
-using SDG.Framework.IO.FormattedFiles;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -28,43 +27,38 @@ public class WeatherAssetBase : Asset
 
     public bool hasLightning { get; protected set; }
 
-    protected override void readAsset(IFormattedFileReader reader)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        base.readAsset(reader);
-        fadeInDuration = reader.readValue<float>("Fade_In_Duration");
-        fadeOutDuration = reader.readValue<float>("Fade_Out_Duration");
-        ambientAudio = reader.readValue<MasterBundleReference<AudioClip>>("Ambient_Audio_Clip");
-        componentType = reader.readValue<Type>("Component_Type");
+        base.PopulateAsset(bundle, data, localization);
+        fadeInDuration = data.ParseFloat("Fade_In_Duration");
+        fadeOutDuration = data.ParseFloat("Fade_Out_Duration");
+        ambientAudio = data.ParseStruct<MasterBundleReference<AudioClip>>("Ambient_Audio_Clip");
+        componentType = data.ParseType("Component_Type");
         if (componentType == null)
         {
             componentType = typeof(WeatherComponentBase);
         }
-        if (reader.containsKey("Volume_Mask"))
+        if (data.ContainsKey("Volume_Mask"))
         {
-            volumeMask = reader.readValue<uint>("Volume_Mask");
+            volumeMask = data.ParseUInt32("Volume_Mask");
         }
         else
         {
             volumeMask = uint.MaxValue;
         }
-        hasLightning = reader.readValue<bool>("Has_Lightning");
+        hasLightning = data.ParseBool("Has_Lightning");
         if (hasLightning)
         {
-            minLightningInterval = Mathf.Max(5f, reader.readValue<float>("Min_Lightning_Interval"));
-            maxLightningInterval = Mathf.Max(5f, reader.readValue<float>("Max_Lightning_Interval"));
-            if (reader.containsKey("Lightning_Target_Radius"))
+            minLightningInterval = Mathf.Max(5f, data.ParseFloat("Min_Lightning_Interval"));
+            maxLightningInterval = Mathf.Max(5f, data.ParseFloat("Max_Lightning_Interval"));
+            if (data.ContainsKey("Lightning_Target_Radius"))
             {
-                lightningTargetRadius = Mathf.Max(0f, reader.readValue<float>("Lightning_Target_Radius"));
+                lightningTargetRadius = Mathf.Max(0f, data.ParseFloat("Lightning_Target_Radius"));
             }
             else
             {
                 lightningTargetRadius = 500f;
             }
         }
-    }
-
-    public WeatherAssetBase(Bundle bundle, Local localization, byte[] hash)
-        : base(bundle, localization, hash)
-    {
     }
 }

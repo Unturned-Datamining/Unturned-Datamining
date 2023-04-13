@@ -497,11 +497,11 @@ public class ObjectAsset : Asset
         }
     }
 
-    public ObjectAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         _objectName = localization.format("Name");
-        type = (EObjectType)Enum.Parse(typeof(EObjectType), data.readString("Type"), ignoreCase: true);
+        type = (EObjectType)Enum.Parse(typeof(EObjectType), data.GetString("Type"), ignoreCase: true);
         if (type == EObjectType.NPC)
         {
             if (Dedicator.IsDedicatedServer)
@@ -519,19 +519,19 @@ public class ObjectAsset : Asset
         }
         else if (type == EObjectType.DECAL)
         {
-            float num = data.readSingle("Decal_X");
-            float num2 = data.readSingle("Decal_Y");
+            float num = data.ParseFloat("Decal_X");
+            float num2 = data.ParseFloat("Decal_Y");
             float num3 = 1f;
-            if (data.has("Decal_LOD_Bias"))
+            if (data.ContainsKey("Decal_LOD_Bias"))
             {
-                num3 = data.readSingle("Decal_LOD_Bias");
+                num3 = data.ParseFloat("Decal_LOD_Bias");
             }
             Texture2D texture2D = bundle.load<Texture2D>("Decal");
             if (texture2D == null)
             {
                 Assets.reportError(this, "missing 'Decal' Texture2D. It will show as pure white without one.");
             }
-            bool flag = data.has("Decal_Alpha");
+            bool flag = data.ContainsKey("Decal_Alpha");
             hasLoadedModel = true;
             loadedModel = UnityEngine.Object.Instantiate(Resources.Load<GameObject>(flag ? "Materials/Decal_Template_Alpha" : "Materials/Decal_Template_Masked"));
             loadedModel.transform.position = new Vector3(-10000f, -10000f, -10000f);
@@ -558,7 +558,7 @@ public class ObjectAsset : Asset
         }
         else
         {
-            if (Dedicator.IsDedicatedServer && data.readBoolean("Has_Clip_Prefab", defaultValue: true))
+            if (Dedicator.IsDedicatedServer && data.ParseBool("Has_Clip_Prefab", defaultValue: true))
             {
                 bundle.loadDeferred("Clip", out legacyServerModel, (LoadedAssetDeferredCallback<GameObject>)OnServerModelLoaded);
             }
@@ -570,50 +570,50 @@ public class ObjectAsset : Asset
             bundle.loadDeferred("Nav", out navGameObject, (LoadedAssetDeferredCallback<GameObject>)onNavGameObjectLoaded);
             bundle.loadDeferred("Slots", out slotsGameObject, (LoadedAssetDeferredCallback<GameObject>)onSlotsGameObjectLoaded);
             bundle.loadDeferred("Triggers", out triggersGameObject, (LoadedAssetDeferredCallback<GameObject>)null);
-            isSnowshoe = data.has("Snowshoe");
-            if (data.has("Chart"))
+            isSnowshoe = data.ContainsKey("Snowshoe");
+            if (data.ContainsKey("Chart"))
             {
-                chart = (EObjectChart)Enum.Parse(typeof(EObjectChart), data.readString("Chart"), ignoreCase: true);
+                chart = (EObjectChart)Enum.Parse(typeof(EObjectChart), data.GetString("Chart"), ignoreCase: true);
             }
             else
             {
                 chart = EObjectChart.NONE;
             }
-            isFuel = data.has("Fuel");
-            isRefill = data.has("Refill");
-            isSoft = data.has("Soft");
-            causesFallDamage = data.readBoolean("Causes_Fall_Damage", defaultValue: true);
-            isCollisionImportant = data.has("Collision_Important") || type == EObjectType.LARGE;
-            shouldExcludeFromCullingVolumes = data.readBoolean("Exclude_From_Culling_Volumes");
+            isFuel = data.ContainsKey("Fuel");
+            isRefill = data.ContainsKey("Refill");
+            isSoft = data.ContainsKey("Soft");
+            causesFallDamage = data.ParseBool("Causes_Fall_Damage", defaultValue: true);
+            isCollisionImportant = data.ContainsKey("Collision_Important") || type == EObjectType.LARGE;
+            shouldExcludeFromCullingVolumes = data.ParseBool("Exclude_From_Culling_Volumes");
             if (isFuel || isRefill)
             {
                 Assets.reportError(this, "is using the legacy fuel/water system");
             }
-            if (data.has("LOD"))
+            if (data.ContainsKey("LOD"))
             {
-                lod = (EObjectLOD)Enum.Parse(typeof(EObjectLOD), data.readString("LOD"), ignoreCase: true);
-                lodBias = data.readSingle("LOD_Bias");
+                lod = (EObjectLOD)Enum.Parse(typeof(EObjectLOD), data.GetString("LOD"), ignoreCase: true);
+                lodBias = data.ParseFloat("LOD_Bias");
                 if (lodBias < 0.01f)
                 {
                     lodBias = 1f;
                 }
-                cullingVolumeLocalPositionOffset = data.readVector3("LOD_Center");
-                cullingVolumeSizeOffset = data.readVector3("LOD_Size");
+                cullingVolumeLocalPositionOffset = data.LegacyParseVector3("LOD_Center");
+                cullingVolumeSizeOffset = data.LegacyParseVector3("LOD_Size");
             }
-            if (data.has("Interactability"))
+            if (data.ContainsKey("Interactability"))
             {
-                interactability = (EObjectInteractability)Enum.Parse(typeof(EObjectInteractability), data.readString("Interactability"), ignoreCase: true);
-                interactabilityRemote = data.has("Interactability_Remote");
-                interactabilityDelay = data.readSingle("Interactability_Delay");
-                interactabilityReset = data.readSingle("Interactability_Reset");
-                if (data.has("Interactability_Hint"))
+                interactability = (EObjectInteractability)Enum.Parse(typeof(EObjectInteractability), data.GetString("Interactability"), ignoreCase: true);
+                interactabilityRemote = data.ContainsKey("Interactability_Remote");
+                interactabilityDelay = data.ParseFloat("Interactability_Delay");
+                interactabilityReset = data.ParseFloat("Interactability_Reset");
+                if (data.ContainsKey("Interactability_Hint"))
                 {
-                    interactabilityHint = (EObjectInteractabilityHint)Enum.Parse(typeof(EObjectInteractabilityHint), data.readString("Interactability_Hint"), ignoreCase: true);
+                    interactabilityHint = (EObjectInteractabilityHint)Enum.Parse(typeof(EObjectInteractabilityHint), data.GetString("Interactability_Hint"), ignoreCase: true);
                 }
-                interactabilityEmission = data.has("Interactability_Emission");
+                interactabilityEmission = data.ContainsKey("Interactability_Emission");
                 if (interactability == EObjectInteractability.NOTE)
                 {
-                    ushort num4 = data.readUInt16("Interactability_Text_Lines", 0);
+                    ushort num4 = data.ParseUInt16("Interactability_Text_Lines", 0);
                     StringBuilder stringBuilder = new StringBuilder();
                     for (ushort num5 = 0; num5 < num4; num5 = (ushort)(num5 + 1))
                     {
@@ -640,42 +640,42 @@ public class ObjectAsset : Asset
                         RichTextUtil.replaceNewlineMarkup(ref interactabilityText);
                     }
                 }
-                if (data.has("Interactability_Power"))
+                if (data.ContainsKey("Interactability_Power"))
                 {
-                    interactabilityPower = (EObjectInteractabilityPower)Enum.Parse(typeof(EObjectInteractabilityPower), data.readString("Interactability_Power"), ignoreCase: true);
+                    interactabilityPower = (EObjectInteractabilityPower)Enum.Parse(typeof(EObjectInteractabilityPower), data.GetString("Interactability_Power"), ignoreCase: true);
                 }
                 else
                 {
                     interactabilityPower = EObjectInteractabilityPower.NONE;
                 }
-                if (data.has("Interactability_Editor"))
+                if (data.ContainsKey("Interactability_Editor"))
                 {
-                    interactabilityEditor = (EObjectInteractabilityEditor)Enum.Parse(typeof(EObjectInteractabilityEditor), data.readString("Interactability_Editor"), ignoreCase: true);
+                    interactabilityEditor = (EObjectInteractabilityEditor)Enum.Parse(typeof(EObjectInteractabilityEditor), data.GetString("Interactability_Editor"), ignoreCase: true);
                 }
                 else
                 {
                     interactabilityEditor = EObjectInteractabilityEditor.NONE;
                 }
-                if (data.has("Interactability_Nav"))
+                if (data.ContainsKey("Interactability_Nav"))
                 {
-                    interactabilityNav = (EObjectInteractabilityNav)Enum.Parse(typeof(EObjectInteractabilityNav), data.readString("Interactability_Nav"), ignoreCase: true);
+                    interactabilityNav = (EObjectInteractabilityNav)Enum.Parse(typeof(EObjectInteractabilityNav), data.GetString("Interactability_Nav"), ignoreCase: true);
                 }
                 else
                 {
                     interactabilityNav = EObjectInteractabilityNav.NONE;
                 }
-                interactabilityDrops = new ushort[data.readByte("Interactability_Drops", 0)];
+                interactabilityDrops = new ushort[data.ParseUInt8("Interactability_Drops", 0)];
                 for (byte b = 0; b < interactabilityDrops.Length; b = (byte)(b + 1))
                 {
-                    interactabilityDrops[b] = data.readUInt16("Interactability_Drop_" + b, 0);
+                    interactabilityDrops[b] = data.ParseUInt16("Interactability_Drop_" + b, 0);
                 }
-                interactabilityRewardID = data.readUInt16("Interactability_Reward_ID", 0);
-                interactabilityEffect = data.ReadGuidOrLegacyId("Interactability_Effect", out interactabilityEffectGuid);
-                interactabilityConditions = new INPCCondition[data.readByte("Interactability_Conditions", 0)];
+                interactabilityRewardID = data.ParseUInt16("Interactability_Reward_ID", 0);
+                interactabilityEffect = data.ParseGuidOrLegacyId("Interactability_Effect", out interactabilityEffectGuid);
+                interactabilityConditions = new INPCCondition[data.ParseUInt8("Interactability_Conditions", 0)];
                 NPCTool.readConditions(data, localization, "Interactability_Condition_", interactabilityConditions, this);
-                interactabilityRewards = new INPCReward[data.readByte("Interactability_Rewards", 0)];
+                interactabilityRewards = new INPCReward[data.ParseUInt8("Interactability_Rewards", 0)];
                 NPCTool.readRewards(data, localization, "Interactability_Reward_", interactabilityRewards, this);
-                interactabilityResource = data.readUInt16("Interactability_Resource", 0);
+                interactabilityResource = data.ParseUInt16("Interactability_Resource", 0);
                 interactabilityResourceState = BitConverter.GetBytes(interactabilityResource);
             }
             else
@@ -687,67 +687,67 @@ public class ObjectAsset : Asset
             if (interactability == EObjectInteractability.RUBBLE)
             {
                 rubble = EObjectRubble.DESTROY;
-                rubbleReset = data.readSingle("Interactability_Reset");
-                rubbleHealth = data.readUInt16("Interactability_Health", 0);
-                rubbleEffect = data.ReadGuidOrLegacyId("Interactability_Effect", out rubbleEffectGuid);
-                rubbleFinale = data.ReadGuidOrLegacyId("Interactability_Finale", out rubbleFinaleGuid);
-                rubbleRewardID = data.readUInt16("Interactability_Reward_ID", 0);
-                rubbleBladeID = data.readByte("Interactability_Blade_ID", 0);
-                rubbleRewardProbability = data.readSingle("Interactability_Reward_Probability", 1f);
-                rubbleRewardsMin = data.readByte("Interactability_Rewards_Min", 1);
-                rubbleRewardsMax = data.readByte("Interactability_Rewards_Max", 1);
-                rubbleRewardXP = data.readUInt32("Interactability_Reward_XP");
-                rubbleIsVulnerable = !data.has("Interactability_Invulnerable");
-                rubbleProofExplosion = data.has("Interactability_Proof_Explosion");
+                rubbleReset = data.ParseFloat("Interactability_Reset");
+                rubbleHealth = data.ParseUInt16("Interactability_Health", 0);
+                rubbleEffect = data.ParseGuidOrLegacyId("Interactability_Effect", out rubbleEffectGuid);
+                rubbleFinale = data.ParseGuidOrLegacyId("Interactability_Finale", out rubbleFinaleGuid);
+                rubbleRewardID = data.ParseUInt16("Interactability_Reward_ID", 0);
+                rubbleBladeID = data.ParseUInt8("Interactability_Blade_ID", 0);
+                rubbleRewardProbability = data.ParseFloat("Interactability_Reward_Probability", 1f);
+                rubbleRewardsMin = data.ParseUInt8("Interactability_Rewards_Min", 1);
+                rubbleRewardsMax = data.ParseUInt8("Interactability_Rewards_Max", 1);
+                rubbleRewardXP = data.ParseUInt32("Interactability_Reward_XP");
+                rubbleIsVulnerable = !data.ContainsKey("Interactability_Invulnerable");
+                rubbleProofExplosion = data.ContainsKey("Interactability_Proof_Explosion");
             }
-            else if (data.has("Rubble"))
+            else if (data.ContainsKey("Rubble"))
             {
-                rubble = (EObjectRubble)Enum.Parse(typeof(EObjectRubble), data.readString("Rubble"), ignoreCase: true);
-                rubbleReset = data.readSingle("Rubble_Reset");
-                rubbleHealth = data.readUInt16("Rubble_Health", 0);
-                rubbleEffect = data.ReadGuidOrLegacyId("Rubble_Effect", out rubbleEffectGuid);
-                rubbleFinale = data.ReadGuidOrLegacyId("Rubble_Finale", out rubbleFinaleGuid);
-                rubbleRewardID = data.readUInt16("Rubble_Reward_ID", 0);
-                rubbleBladeID = data.readByte("Rubble_Blade_ID", 0);
-                rubbleRewardProbability = data.readSingle("Rubble_Reward_Probability", 1f);
-                rubbleRewardsMin = data.readByte("Rubble_Rewards_Min", 1);
-                rubbleRewardsMax = data.readByte("Rubble_Rewards_Max", 1);
-                rubbleRewardXP = data.readUInt32("Rubble_Reward_XP");
-                rubbleIsVulnerable = !data.has("Rubble_Invulnerable");
-                rubbleProofExplosion = data.has("Rubble_Proof_Explosion");
-                if (data.has("Rubble_Editor"))
+                rubble = (EObjectRubble)Enum.Parse(typeof(EObjectRubble), data.GetString("Rubble"), ignoreCase: true);
+                rubbleReset = data.ParseFloat("Rubble_Reset");
+                rubbleHealth = data.ParseUInt16("Rubble_Health", 0);
+                rubbleEffect = data.ParseGuidOrLegacyId("Rubble_Effect", out rubbleEffectGuid);
+                rubbleFinale = data.ParseGuidOrLegacyId("Rubble_Finale", out rubbleFinaleGuid);
+                rubbleRewardID = data.ParseUInt16("Rubble_Reward_ID", 0);
+                rubbleBladeID = data.ParseUInt8("Rubble_Blade_ID", 0);
+                rubbleRewardProbability = data.ParseFloat("Rubble_Reward_Probability", 1f);
+                rubbleRewardsMin = data.ParseUInt8("Rubble_Rewards_Min", 1);
+                rubbleRewardsMax = data.ParseUInt8("Rubble_Rewards_Max", 1);
+                rubbleRewardXP = data.ParseUInt32("Rubble_Reward_XP");
+                rubbleIsVulnerable = !data.ContainsKey("Rubble_Invulnerable");
+                rubbleProofExplosion = data.ContainsKey("Rubble_Proof_Explosion");
+                if (data.ContainsKey("Rubble_Editor"))
                 {
-                    rubbleEditor = (EObjectRubbleEditor)Enum.Parse(typeof(EObjectRubbleEditor), data.readString("Rubble_Editor"), ignoreCase: true);
+                    rubbleEditor = (EObjectRubbleEditor)Enum.Parse(typeof(EObjectRubbleEditor), data.GetString("Rubble_Editor"), ignoreCase: true);
                 }
                 else
                 {
                     rubbleEditor = EObjectRubbleEditor.ALIVE;
                 }
             }
-            if (data.has("Foliage"))
+            if (data.ContainsKey("Foliage"))
             {
-                foliage = new AssetReference<FoliageInfoCollectionAsset>(new Guid(data.readString("Foliage")));
+                foliage = new AssetReference<FoliageInfoCollectionAsset>(new Guid(data.GetString("Foliage")));
             }
-            useWaterHeightTransparentSort = data.has("Use_Water_Height_Transparent_Sort");
-            shouldAddNightLightScript = data.has("Add_Night_Light_Script");
-            shouldAddKillTriggers = data.readBoolean("Add_Kill_Triggers");
-            allowStructures = data.has("Allow_Structures");
-            if (data.has("Material_Palette"))
+            useWaterHeightTransparentSort = data.ContainsKey("Use_Water_Height_Transparent_Sort");
+            shouldAddNightLightScript = data.ContainsKey("Add_Night_Light_Script");
+            shouldAddKillTriggers = data.ParseBool("Add_Kill_Triggers");
+            allowStructures = data.ContainsKey("Allow_Structures");
+            if (data.ContainsKey("Material_Palette"))
             {
-                materialPalette = new AssetReference<MaterialPaletteAsset>(data.readGUID("Material_Palette"));
+                materialPalette = new AssetReference<MaterialPaletteAsset>(data.ParseGuid("Material_Palette"));
             }
-            if (data.has("Landmark_Quality"))
+            if (data.ContainsKey("Landmark_Quality"))
             {
-                landmarkQuality = (EGraphicQuality)Enum.Parse(typeof(EGraphicQuality), data.readString("Landmark_Quality"), ignoreCase: true);
+                landmarkQuality = (EGraphicQuality)Enum.Parse(typeof(EGraphicQuality), data.GetString("Landmark_Quality"), ignoreCase: true);
             }
             else
             {
                 landmarkQuality = EGraphicQuality.LOW;
             }
         }
-        if (data.has("Holiday_Restriction"))
+        if (data.ContainsKey("Holiday_Restriction"))
         {
-            holidayRestriction = (ENPCHoliday)Enum.Parse(typeof(ENPCHoliday), data.readString("Holiday_Restriction"), ignoreCase: true);
+            holidayRestriction = (ENPCHoliday)Enum.Parse(typeof(ENPCHoliday), data.GetString("Holiday_Restriction"), ignoreCase: true);
             if (holidayRestriction == ENPCHoliday.NONE)
             {
                 Assets.reportError(this, "has no holiday restriction, so value is ignored");
@@ -759,10 +759,10 @@ public class ObjectAsset : Asset
         }
         christmasRedirect = data.readAssetReference<ObjectAsset>("Christmas_Redirect");
         halloweenRedirect = data.readAssetReference<ObjectAsset>("Halloween_Redirect");
-        isGore = data.readBoolean("Is_Gore");
-        shouldExcludeFromLevelBatching = data.readBoolean("Exclude_From_Level_Batching");
+        isGore = data.ParseBool("Is_Gore");
+        shouldExcludeFromLevelBatching = data.ParseBool("Exclude_From_Level_Batching");
         shouldExcludeFromLevelBatching |= type == EObjectType.NPC || type == EObjectType.DECAL;
-        conditions = new INPCCondition[data.readByte("Conditions", 0)];
+        conditions = new INPCCondition[data.ParseUInt8("Conditions", 0)];
         NPCTool.readConditions(data, localization, "Condition_", conditions, this);
     }
 }

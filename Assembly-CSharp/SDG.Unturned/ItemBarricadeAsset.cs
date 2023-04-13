@@ -177,11 +177,11 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
         return Assets.FindVehicleAssetByGuidOrLegacyId(_vehicleGuid, _vehicleId);
     }
 
-    public ItemBarricadeAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         bool flag;
-        if (Dedicator.IsDedicatedServer && data.readBoolean("Has_Clip_Prefab", defaultValue: true))
+        if (Dedicator.IsDedicatedServer && data.ParseBool("Has_Clip_Prefab", defaultValue: true))
         {
             _barricade = bundle.load<GameObject>("Clip");
             if (barricade == null)
@@ -222,46 +222,46 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
         placementPreviewRef = data.readMasterBundleReference<GameObject>("PlacementPreviewPrefab");
         _nav = bundle.load<GameObject>("Nav");
         _use = LoadRedirectableAsset<AudioClip>(bundle, "Use", data, "PlacementAudioClip");
-        _build = (EBuild)Enum.Parse(typeof(EBuild), data.readString("Build"), ignoreCase: true);
+        _build = (EBuild)Enum.Parse(typeof(EBuild), data.GetString("Build"), ignoreCase: true);
         if ((build == EBuild.DOOR || build == EBuild.GATE || build == EBuild.SHUTTER) && barricade != null && barricade.transform.Find("Placeholder") == null)
         {
             Assets.reportError(this, "missing 'Placeholder' Collider");
         }
-        _health = data.readUInt16("Health", 0);
-        _range = data.readSingle("Range");
-        _radius = data.readSingle("Radius");
-        _offset = data.readSingle("Offset");
+        _health = data.ParseUInt16("Health", 0);
+        _range = data.ParseFloat("Range");
+        _radius = data.ParseFloat("Radius");
+        _offset = data.ParseFloat("Offset");
         if (radius > 0.05f && Mathf.Abs(radius - offset) < 0.05f)
         {
             _radius -= 0.05f;
         }
-        _explosion = data.ReadGuidOrLegacyId("Explosion", out _explosionGuid);
+        _explosion = data.ParseGuidOrLegacyId("Explosion", out _explosionGuid);
         if (build == EBuild.VEHICLE)
         {
             _vehicleId = _explosion;
             _vehicleGuid = _explosionGuid;
         }
-        canBeDamaged = data.readBoolean("Can_Be_Damaged", defaultValue: true);
+        canBeDamaged = data.ParseBool("Can_Be_Damaged", defaultValue: true);
         bool defaultValue = build != EBuild.BEACON;
-        eligibleForPooling = data.readBoolean("Eligible_For_Pooling", defaultValue);
-        _isLocked = data.has("Locked");
-        _isVulnerable = data.has("Vulnerable");
-        _bypassClaim = data.has("Bypass_Claim");
+        eligibleForPooling = data.ParseBool("Eligible_For_Pooling", defaultValue);
+        _isLocked = data.ContainsKey("Locked");
+        _isVulnerable = data.ContainsKey("Vulnerable");
+        _bypassClaim = data.ContainsKey("Bypass_Claim");
         bool defaultValue2 = build != EBuild.BED && build != EBuild.SENTRY && build != EBuild.SENTRY_FREEFORM;
-        allowPlacementOnVehicle = data.readBoolean("Allow_Placement_On_Vehicle", defaultValue2);
-        _isRepairable = !data.has("Unrepairable");
-        _proofExplosion = data.has("Proof_Explosion");
-        _isUnpickupable = data.has("Unpickupable");
-        shouldBypassPickupOwnership = data.readBoolean("Bypass_Pickup_Ownership", build == EBuild.CHARGE);
-        AllowPlacementInsideClipVolumes = data.readBoolean("Allow_Placement_Inside_Clip_Volumes", build == EBuild.CHARGE);
-        _isSalvageable = !data.has("Unsalvageable");
-        salvageDurationMultiplier = data.readSingle("Salvage_Duration_Multiplier", 1f);
-        _isSaveable = !data.has("Unsaveable");
-        allowCollisionWhileAnimating = data.readBoolean("Allow_Collision_While_Animating");
-        useWaterHeightTransparentSort = data.has("Use_Water_Height_Transparent_Sort");
-        if (data.has("Armor_Tier"))
+        allowPlacementOnVehicle = data.ParseBool("Allow_Placement_On_Vehicle", defaultValue2);
+        _isRepairable = !data.ContainsKey("Unrepairable");
+        _proofExplosion = data.ContainsKey("Proof_Explosion");
+        _isUnpickupable = data.ContainsKey("Unpickupable");
+        shouldBypassPickupOwnership = data.ParseBool("Bypass_Pickup_Ownership", build == EBuild.CHARGE);
+        AllowPlacementInsideClipVolumes = data.ParseBool("Allow_Placement_Inside_Clip_Volumes", build == EBuild.CHARGE);
+        _isSalvageable = !data.ContainsKey("Unsalvageable");
+        salvageDurationMultiplier = data.ParseFloat("Salvage_Duration_Multiplier", 1f);
+        _isSaveable = !data.ContainsKey("Unsaveable");
+        allowCollisionWhileAnimating = data.ParseBool("Allow_Collision_While_Animating");
+        useWaterHeightTransparentSort = data.ContainsKey("Use_Water_Height_Transparent_Sort");
+        if (data.ContainsKey("Armor_Tier"))
         {
-            armorTier = (EArmorTier)Enum.Parse(typeof(EArmorTier), data.readString("Armor_Tier"), ignoreCase: true);
+            armorTier = (EArmorTier)Enum.Parse(typeof(EArmorTier), data.GetString("Armor_Tier"), ignoreCase: true);
         }
         else if (name.Contains("Metal"))
         {

@@ -26,9 +26,9 @@ public class ItemShirtAsset : ItemBagAsset
 
     public Mesh[] characterMeshOverride3pLODs { get; protected set; }
 
-    public ItemShirtAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         if (Dedicator.IsDedicatedServer)
         {
             characterMeshOverride1pLODs = null;
@@ -37,7 +37,7 @@ public class ItemShirtAsset : ItemBagAsset
         }
         else
         {
-            if (data.readBoolean("Has_1P_Character_Mesh_Override"))
+            if (data.ParseBool("Has_1P_Character_Mesh_Override"))
             {
                 characterMeshOverride1pLODs = new Mesh[1];
                 for (int i = 0; i < characterMeshOverride1pLODs.Length; i++)
@@ -69,7 +69,7 @@ public class ItemShirtAsset : ItemBagAsset
             {
                 characterMeshOverride1pLODs = null;
             }
-            ushort num = data.readUInt16("Character_Mesh_3P_Override_LODs", 0);
+            ushort num = data.ParseUInt16("Character_Mesh_3P_Override_LODs", 0);
             if (num > 0)
             {
                 characterMeshOverride3pLODs = new Mesh[num];
@@ -102,7 +102,7 @@ public class ItemShirtAsset : ItemBagAsset
             {
                 characterMeshOverride3pLODs = null;
             }
-            if (data.readBoolean("Has_Character_Material_Override"))
+            if (data.ParseBool("Has_Character_Material_Override"))
             {
                 characterMaterialOverride = bundle.load<Material>("Character_Material_Override");
                 if (characterMaterialOverride == null)
@@ -161,6 +161,6 @@ public class ItemShirtAsset : ItemBagAsset
                 }
             }
         }
-        _ignoreHand = data.has("Ignore_Hand");
+        _ignoreHand = data.ContainsKey("Ignore_Hand");
     }
 }

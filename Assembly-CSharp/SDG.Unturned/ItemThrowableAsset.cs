@@ -68,19 +68,19 @@ public class ItemThrowableAsset : ItemWeaponAsset
         return true;
     }
 
-    public ItemThrowableAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         _use = bundle.load<AudioClip>("Use");
         _throwable = bundle.load<GameObject>("Throwable");
-        _explosion = data.ReadGuidOrLegacyId("Explosion", out explosionEffectGuid);
-        _isExplosive = data.has("Explosive");
-        _isFlash = data.has("Flash");
-        _isSticky = data.has("Sticky");
-        _explodeOnImpact = data.has("Explode_On_Impact");
-        if (data.has("Fuse_Length"))
+        _explosion = data.ParseGuidOrLegacyId("Explosion", out explosionEffectGuid);
+        _isExplosive = data.ContainsKey("Explosive");
+        _isFlash = data.ContainsKey("Flash");
+        _isSticky = data.ContainsKey("Sticky");
+        _explodeOnImpact = data.ContainsKey("Explode_On_Impact");
+        if (data.ContainsKey("Fuse_Length"))
         {
-            _fuseLength = data.readSingle("Fuse_Length");
+            _fuseLength = data.ParseFloat("Fuse_Length");
         }
         else if (isExplosive || isFlash)
         {
@@ -90,9 +90,9 @@ public class ItemThrowableAsset : ItemWeaponAsset
         {
             _fuseLength = 180f;
         }
-        explosionLaunchSpeed = data.readSingle("Explosion_Launch_Speed", playerDamageMultiplier.damage * 0.1f);
-        strongThrowForce = data.readSingle("Strong_Throw_Force", 1100f);
-        weakThrowForce = data.readSingle("Weak_Throw_Force", 600f);
-        boostForceMultiplier = data.readSingle("Boost_Throw_Force_Multiplier", 1.4f);
+        explosionLaunchSpeed = data.ParseFloat("Explosion_Launch_Speed", playerDamageMultiplier.damage * 0.1f);
+        strongThrowForce = data.ParseFloat("Strong_Throw_Force", 1100f);
+        weakThrowForce = data.ParseFloat("Weak_Throw_Force", 600f);
+        boostForceMultiplier = data.ParseFloat("Boost_Throw_Force_Multiplier", 1.4f);
     }
 }

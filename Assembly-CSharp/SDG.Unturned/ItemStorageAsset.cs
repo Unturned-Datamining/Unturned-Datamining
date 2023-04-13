@@ -25,20 +25,20 @@ public class ItemStorageAsset : ItemBarricadeAsset
         return new byte[17];
     }
 
-    public ItemStorageAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        _storage_x = data.readByte("Storage_X", 0);
+        base.PopulateAsset(bundle, data, localization);
+        _storage_x = data.ParseUInt8("Storage_X", 0);
         if (storage_x < 1)
         {
             _storage_x = 1;
         }
-        _storage_y = data.readByte("Storage_Y", 0);
+        _storage_y = data.ParseUInt8("Storage_Y", 0);
         if (storage_y < 1)
         {
             _storage_y = 1;
         }
-        _isDisplay = data.has("Display");
-        shouldCloseWhenOutsideRange = data.readBoolean("Should_Close_When_Outside_Range");
+        _isDisplay = data.ContainsKey("Display");
+        shouldCloseWhenOutsideRange = data.ParseBool("Should_Close_When_Outside_Range");
     }
 }

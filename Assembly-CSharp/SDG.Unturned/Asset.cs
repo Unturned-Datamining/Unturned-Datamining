@@ -1,16 +1,10 @@
 using System;
-using System.IO;
-using SDG.Framework.Devkit;
-using SDG.Framework.IO.FormattedFiles;
-using SDG.Framework.IO.FormattedFiles.KeyValueTables;
 using UnityEngine;
 
 namespace SDG.Unturned;
 
-public abstract class Asset : IDirtyable, IFormattedFileReadable, IFormattedFileWritable
+public abstract class Asset
 {
-    protected bool _isDirty;
-
     public string name;
 
     public ushort id;
@@ -24,29 +18,6 @@ public abstract class Asset : IDirtyable, IFormattedFileReadable, IFormattedFile
     public bool requiredShaderUpgrade;
 
     public bool ignoreNPOT;
-
-    public bool isDirty
-    {
-        get
-        {
-            return _isDirty;
-        }
-        set
-        {
-            if (isDirty != value)
-            {
-                _isDirty = value;
-                if (isDirty)
-                {
-                    DirtyManager.markDirty(this);
-                }
-                else
-                {
-                    DirtyManager.markClean(this);
-                }
-            }
-        }
-    }
 
     [Obsolete("Replaced by AssetOrigin class")]
     public EAssetOrigin assetOrigin
@@ -76,7 +47,7 @@ public abstract class Asset : IDirtyable, IFormattedFileReadable, IFormattedFile
 
     public bool ignoreTextureReadable { get; protected set; }
 
-    public byte[] hash { get; protected set; }
+    public byte[] hash { get; internal set; }
 
     internal virtual bool ShouldVerifyHash => true;
 
@@ -87,49 +58,6 @@ public abstract class Asset : IDirtyable, IFormattedFileReadable, IFormattedFile
     public virtual string getFilePath()
     {
         return absoluteOriginFilePath;
-    }
-
-    public void save()
-    {
-        string filePath = getFilePath();
-        string directoryName = Path.GetDirectoryName(filePath);
-        if (!Directory.Exists(directoryName))
-        {
-            Directory.CreateDirectory(directoryName);
-        }
-        using StreamWriter writer = new StreamWriter(filePath);
-        IFormattedFileWriter writer2 = new KeyValueTableWriter(writer);
-        write(writer2);
-    }
-
-    public virtual void read(IFormattedFileReader reader)
-    {
-        if (reader != null)
-        {
-            reader = reader.readObject();
-            readAsset(reader);
-        }
-    }
-
-    protected virtual void readAsset(IFormattedFileReader reader)
-    {
-        id = reader.readValue<ushort>("ID");
-    }
-
-    public virtual void write(IFormattedFileWriter writer)
-    {
-        writer.beginObject("Metadata");
-        writer.writeValue("GUID", GUID);
-        writer.writeValue("Type", GetType());
-        writer.endObject();
-        writer.beginObject("Asset");
-        writeAsset(writer);
-        writer.endObject();
-    }
-
-    protected virtual void writeAsset(IFormattedFileWriter writer)
-    {
-        writer.writeValue("ID", id);
     }
 
     public AssetReference<T> getReferenceTo<T>() where T : Asset
@@ -167,7 +95,7 @@ public abstract class Asset : IDirtyable, IFormattedFileReadable, IFormattedFile
         name = GetType().Name;
     }
 
-    public Asset(Bundle bundle, Local localization, byte[] hash)
+    public virtual void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
         if (bundle != null)
         {
@@ -181,34 +109,10 @@ public abstract class Asset : IDirtyable, IFormattedFileReadable, IFormattedFile
         {
             originMasterBundle = masterBundle.cfg;
         }
-        id = 0;
-        this.hash = hash;
-    }
-
-    public Asset(Bundle bundle, Data data, Local localization, ushort id)
-    {
-        if (bundle != null)
-        {
-            name = bundle.name;
-        }
-        else
-        {
-            name = "Asset_" + id;
-        }
-        if (bundle is MasterBundle masterBundle)
-        {
-            originMasterBundle = masterBundle.cfg;
-        }
-        this.id = id;
         if (data != null)
         {
-            hash = data.hash;
-            ignoreNPOT = data.has("Ignore_NPOT");
-            ignoreTextureReadable = data.has("Ignore_TexRW");
-        }
-        else
-        {
-            hash = new byte[20];
+            ignoreNPOT = data.ContainsKey("Ignore_NPOT");
+            ignoreTextureReadable = data.ContainsKey("Ignore_TexRW");
         }
     }
 
@@ -217,9 +121,9 @@ public abstract class Asset : IDirtyable, IFormattedFileReadable, IFormattedFile
         return id + " - " + name;
     }
 
-    protected T LoadRedirectableAsset<T>(Bundle fromBundle, string defaultName, Data data, string key) where T : UnityEngine.Object
+    protected T LoadRedirectableAsset<T>(Bundle fromBundle, string defaultName, DatDictionary data, string key) where T : UnityEngine.Object
     {
-        if (data.TryReadString(key, out var value))
+        if (data.TryGetString(key, out var value))
         {
             int num = value.IndexOf(':');
             MasterBundleConfig masterBundleConfig;

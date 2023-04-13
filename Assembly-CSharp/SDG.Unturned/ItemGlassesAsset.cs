@@ -30,9 +30,9 @@ public class ItemGlassesAsset : ItemGearAsset
         return new byte[0];
     }
 
-    public ItemGlassesAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         if (!Dedicator.IsDedicatedServer)
         {
             _glasses = loadRequiredAsset<GameObject>(bundle, "Glasses");
@@ -43,30 +43,30 @@ public class ItemGlassesAsset : ItemGearAsset
                 AssetValidation.searchGameObjectForErrors(this, _glasses);
             }
         }
-        if (data.has("Vision"))
+        if (data.ContainsKey("Vision"))
         {
-            _vision = (ELightingVision)Enum.Parse(typeof(ELightingVision), data.readString("Vision"), ignoreCase: true);
+            _vision = (ELightingVision)Enum.Parse(typeof(ELightingVision), data.GetString("Vision"), ignoreCase: true);
             if (vision == ELightingVision.HEADLAMP)
             {
                 lightConfig = new PlayerSpotLightConfig(data);
             }
             else if (vision == ELightingVision.CIVILIAN)
             {
-                nightvisionColor = data.ReadColor32RGB("Nightvision_Color", LevelLighting.NIGHTVISION_CIVILIAN);
-                nightvisionFogIntensity = data.readSingle("Nightvision_Fog_Intensity", 0.5f);
+                nightvisionColor = data.LegacyParseColor32RGB("Nightvision_Color", LevelLighting.NIGHTVISION_CIVILIAN);
+                nightvisionFogIntensity = data.ParseFloat("Nightvision_Fog_Intensity", 0.5f);
                 nightvisionColor.g = nightvisionColor.r;
                 nightvisionColor.b = nightvisionColor.r;
             }
             else if (vision == ELightingVision.MILITARY)
             {
-                nightvisionColor = data.ReadColor32RGB("Nightvision_Color", LevelLighting.NIGHTVISION_MILITARY);
-                nightvisionFogIntensity = data.readSingle("Nightvision_Fog_Intensity", 0.25f);
+                nightvisionColor = data.LegacyParseColor32RGB("Nightvision_Color", LevelLighting.NIGHTVISION_MILITARY);
+                nightvisionFogIntensity = data.ParseFloat("Nightvision_Fog_Intensity", 0.25f);
             }
         }
         else
         {
             _vision = ELightingVision.NONE;
         }
-        isBlindfold = data.has("Blindfold");
+        isBlindfold = data.ContainsKey("Blindfold");
     }
 }

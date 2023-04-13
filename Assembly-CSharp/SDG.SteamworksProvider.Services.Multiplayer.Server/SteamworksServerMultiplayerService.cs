@@ -181,6 +181,6 @@ public class SteamworksServerMultiplayerService : Service, IServerMultiplayerSer
         CommandWindow.LogWarning("- Is not visible in Internet server list");
         CommandWindow.LogWarning("- Cannot be joined over the Internet");
         CommandWindow.LogWarning("See this link for guide and more information:");
-        CommandWindow.LogWarning("https://github.com/SmartlyDressedGames/U3-Docs/blob/master/GameServerLoginTokens.md");
+        CommandWindow.LogWarning("https://docs.smartlydressedgames.com/en/stable/servers/game-server-login-tokens.html");
     }
 }

@@ -8,11 +8,11 @@ public class ItemMapAsset : ItemAsset
 
     public bool enablesMap { get; protected set; }
 
-    public ItemMapAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        enablesCompass = data.has("Enables_Compass");
-        enablesChart = data.has("Enables_Chart");
-        enablesMap = data.has("Enables_Map");
+        base.PopulateAsset(bundle, data, localization);
+        enablesCompass = data.ContainsKey("Enables_Compass");
+        enablesChart = data.ContainsKey("Enables_Chart");
+        enablesMap = data.ContainsKey("Enables_Map");
     }
 }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using SDG.Framework.IO.FormattedFiles;
 
 namespace SDG.Unturned;
 
@@ -24,11 +23,6 @@ public class ItemCurrencyAsset : Asset
     public string defaultConditionFormat { get; protected set; }
 
     public Entry[] entries { get; protected set; }
-
-    public ItemCurrencyAsset(Bundle bundle, Local localization, byte[] hash)
-        : base(bundle, localization, hash)
-    {
-    }
 
     public uint getInventoryValue(Player player)
     {
@@ -124,32 +118,41 @@ public class ItemCurrencyAsset : Asset
         return true;
     }
 
-    protected override void readAsset(IFormattedFileReader reader)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        base.readAsset(reader);
-        valueFormat = reader.readValue("ValueFormat");
-        defaultConditionFormat = reader.readValue("DefaultConditionFormat");
+        base.PopulateAsset(bundle, data, localization);
+        valueFormat = data.GetString("ValueFormat");
+        defaultConditionFormat = data.GetString("DefaultConditionFormat");
         if (string.IsNullOrEmpty(defaultConditionFormat) && !string.IsNullOrEmpty(valueFormat))
         {
             defaultConditionFormat = valueFormat + " / " + valueFormat.Replace("{0", "{1");
         }
-        int num = reader.readArrayLength("Entries");
-        entries = new Entry[num];
-        for (int i = 0; i < num; i++)
+        if (data.TryGetList("Entries", out var node))
         {
-            IFormattedFileReader formattedFileReader = reader.readObject(i);
-            Entry entry = default(Entry);
-            entry.item = formattedFileReader.readValue<AssetReference<ItemAsset>>("Item");
-            entry.value = formattedFileReader.readValue<uint>("Value");
-            if (formattedFileReader.containsKey("Is_Visible_In_Vendor_Menu"))
+            int count = node.Count;
+            entries = new Entry[count];
+            for (int i = 0; i < count; i++)
             {
-                entry.isVisibleInVendorMenu = formattedFileReader.readValue<bool>("Is_Visible_In_Vendor_Menu");
+                Entry entry = default(Entry);
+                if (node[i] is DatDictionary datDictionary)
+                {
+                    entry.item = datDictionary.ParseStruct<AssetReference<ItemAsset>>("Item");
+                    entry.value = datDictionary.ParseUInt32("Value");
+                    if (datDictionary.ContainsKey("Is_Visible_In_Vendor_Menu"))
+                    {
+                        entry.isVisibleInVendorMenu = datDictionary.ParseBool("Is_Visible_In_Vendor_Menu");
+                    }
+                    else
+                    {
+                        entry.isVisibleInVendorMenu = true;
+                    }
+                }
+                entries[i] = entry;
             }
-            else
-            {
-                entry.isVisibleInVendorMenu = true;
-            }
-            entries[i] = entry;
+        }
+        else
+        {
+            entries = new Entry[0];
         }
         Array.Sort(entries, valueComparer);
     }

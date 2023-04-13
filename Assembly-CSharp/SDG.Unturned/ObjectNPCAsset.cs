@@ -102,61 +102,61 @@ public class ObjectNPCAsset : ObjectAsset
         return FindDialogueAsset()?.doesPlayerHaveAccessToVendor(player, vendorAsset) ?? false;
     }
 
-    public ObjectNPCAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         npcName = localization.format("Character");
         npcName = ItemTool.filterRarityRichText(npcName);
         defaultOutfit = new NPCAssetOutfit(data, ENPCHoliday.NONE);
-        if (data.readBoolean("Has_Halloween_Outfit"))
+        if (data.ParseBool("Has_Halloween_Outfit"))
         {
             halloweenOutfit = new NPCAssetOutfit(data, ENPCHoliday.HALLOWEEN);
         }
-        if (data.readBoolean("Has_Christmas_Outfit"))
+        if (data.ParseBool("Has_Christmas_Outfit"))
         {
             christmasOutfit = new NPCAssetOutfit(data, ENPCHoliday.CHRISTMAS);
         }
-        face = data.readByte("Face", 0);
-        hair = data.readByte("Hair", 0);
-        beard = data.readByte("Beard", 0);
-        skin = Palette.hex(data.readString("Color_Skin"));
-        color = Palette.hex(data.readString("Color_Hair"));
-        isBackward = data.has("Backward");
-        primary = data.ReadGuidOrLegacyId("Primary", out primaryWeaponGuid);
-        secondary = data.ReadGuidOrLegacyId("Secondary", out secondaryWeaponGuid);
-        tertiary = data.ReadGuidOrLegacyId("Tertiary", out tertiaryWeaponGuid);
-        if (data.has("Equipped"))
+        face = data.ParseUInt8("Face", 0);
+        hair = data.ParseUInt8("Hair", 0);
+        beard = data.ParseUInt8("Beard", 0);
+        skin = Palette.hex(data.GetString("Color_Skin"));
+        color = Palette.hex(data.GetString("Color_Hair"));
+        isBackward = data.ContainsKey("Backward");
+        primary = data.ParseGuidOrLegacyId("Primary", out primaryWeaponGuid);
+        secondary = data.ParseGuidOrLegacyId("Secondary", out secondaryWeaponGuid);
+        tertiary = data.ParseGuidOrLegacyId("Tertiary", out tertiaryWeaponGuid);
+        if (data.ContainsKey("Equipped"))
         {
-            equipped = (ESlotType)Enum.Parse(typeof(ESlotType), data.readString("Equipped"), ignoreCase: true);
+            equipped = (ESlotType)Enum.Parse(typeof(ESlotType), data.GetString("Equipped"), ignoreCase: true);
         }
         else
         {
             equipped = ESlotType.NONE;
         }
-        dialogue = data.ReadGuidOrLegacyId("Dialogue", out dialogueGuid);
-        if (data.has("Pose"))
+        dialogue = data.ParseGuidOrLegacyId("Dialogue", out dialogueGuid);
+        if (data.ContainsKey("Pose"))
         {
-            pose = (ENPCPose)Enum.Parse(typeof(ENPCPose), data.readString("Pose"), ignoreCase: true);
+            pose = (ENPCPose)Enum.Parse(typeof(ENPCPose), data.GetString("Pose"), ignoreCase: true);
         }
         else
         {
             pose = ENPCPose.STAND;
         }
-        if (data.has("Pose_Lean"))
+        if (data.ContainsKey("Pose_Lean"))
         {
-            poseLean = data.readSingle("Pose_Lean");
+            poseLean = data.ParseFloat("Pose_Lean");
         }
-        if (data.has("Pose_Pitch"))
+        if (data.ContainsKey("Pose_Pitch"))
         {
-            posePitch = data.readSingle("Pose_Pitch");
+            posePitch = data.ParseFloat("Pose_Pitch");
         }
         else
         {
             posePitch = 90f;
         }
-        if (data.has("Pose_Head_Offset"))
+        if (data.ContainsKey("Pose_Head_Offset"))
         {
-            poseHeadOffset = data.readSingle("Pose_Head_Offset");
+            poseHeadOffset = data.ParseFloat("Pose_Head_Offset");
         }
         else if (pose == ENPCPose.CROUCH)
         {

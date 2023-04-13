@@ -46,31 +46,31 @@ public class ItemTrapAsset : ItemBarricadeAsset
 
     public bool isExplosive => _isExplosive;
 
-    public ItemTrapAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        _range2 = data.readSingle("Range2");
-        playerDamage = data.readSingle("Player_Damage");
-        zombieDamage = data.readSingle("Zombie_Damage");
-        animalDamage = data.readSingle("Animal_Damage");
-        barricadeDamage = data.readSingle("Barricade_Damage");
-        structureDamage = data.readSingle("Structure_Damage");
-        vehicleDamage = data.readSingle("Vehicle_Damage");
-        resourceDamage = data.readSingle("Resource_Damage");
-        if (data.has("Object_Damage"))
+        base.PopulateAsset(bundle, data, localization);
+        _range2 = data.ParseFloat("Range2");
+        playerDamage = data.ParseFloat("Player_Damage");
+        zombieDamage = data.ParseFloat("Zombie_Damage");
+        animalDamage = data.ParseFloat("Animal_Damage");
+        barricadeDamage = data.ParseFloat("Barricade_Damage");
+        structureDamage = data.ParseFloat("Structure_Damage");
+        vehicleDamage = data.ParseFloat("Vehicle_Damage");
+        resourceDamage = data.ParseFloat("Resource_Damage");
+        if (data.ContainsKey("Object_Damage"))
         {
-            objectDamage = data.readSingle("Object_Damage");
+            objectDamage = data.ParseFloat("Object_Damage");
         }
         else
         {
             objectDamage = resourceDamage;
         }
-        trapSetupDelay = data.readSingle("Trap_Setup_Delay", 0.25f);
-        trapCooldown = data.readSingle("Trap_Cooldown");
-        _explosion2 = data.ReadGuidOrLegacyId("Explosion2", out trapDetonationEffectGuid);
-        explosionLaunchSpeed = data.readSingle("Explosion_Launch_Speed", playerDamage * 0.1f);
-        _isBroken = data.has("Broken");
-        _isExplosive = data.has("Explosive");
-        damageTires = data.has("Damage_Tires");
+        trapSetupDelay = data.ParseFloat("Trap_Setup_Delay", 0.25f);
+        trapCooldown = data.ParseFloat("Trap_Cooldown");
+        _explosion2 = data.ParseGuidOrLegacyId("Explosion2", out trapDetonationEffectGuid);
+        explosionLaunchSpeed = data.ParseFloat("Explosion_Launch_Speed", playerDamage * 0.1f);
+        _isBroken = data.ContainsKey("Broken");
+        _isExplosive = data.ContainsKey("Explosive");
+        damageTires = data.ContainsKey("Damage_Tires");
     }
 }

@@ -131,47 +131,47 @@ public class ItemMagazineAsset : ItemCaliberAsset
         return Assets.FindEffectAssetByGuidOrLegacyId(_impactEffectGuid, _impact);
     }
 
-    public ItemMagazineAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
+        base.PopulateAsset(bundle, data, localization);
         _magazine = loadRequiredAsset<GameObject>(bundle, "Magazine");
-        _pellets = data.readByte("Pellets", 0);
+        _pellets = data.ParseUInt8("Pellets", 0);
         if (pellets < 1)
         {
             _pellets = 1;
         }
-        _stuck = data.readByte("Stuck", 0);
-        projectileDamageMultiplier = data.readSingle("Projectile_Damage_Multiplier", 1f);
-        projectileBlastRadiusMultiplier = data.readSingle("Projectile_Blast_Radius_Multiplier", 1f);
-        projectileLaunchForceMultiplier = data.readSingle("Projectile_Launch_Force_Multiplier", 1f);
-        _range = data.readSingle("Range");
-        playerDamage = data.readSingle("Player_Damage");
-        zombieDamage = data.readSingle("Zombie_Damage");
-        animalDamage = data.readSingle("Animal_Damage");
-        barricadeDamage = data.readSingle("Barricade_Damage");
-        structureDamage = data.readSingle("Structure_Damage");
-        vehicleDamage = data.readSingle("Vehicle_Damage");
-        resourceDamage = data.readSingle("Resource_Damage");
-        explosionLaunchSpeed = data.readSingle("Explosion_Launch_Speed", playerDamage * 0.1f);
-        _explosion = data.ReadGuidOrLegacyId("Explosion", out explosionEffectGuid);
-        if (data.has("Object_Damage"))
+        _stuck = data.ParseUInt8("Stuck", 0);
+        projectileDamageMultiplier = data.ParseFloat("Projectile_Damage_Multiplier", 1f);
+        projectileBlastRadiusMultiplier = data.ParseFloat("Projectile_Blast_Radius_Multiplier", 1f);
+        projectileLaunchForceMultiplier = data.ParseFloat("Projectile_Launch_Force_Multiplier", 1f);
+        _range = data.ParseFloat("Range");
+        playerDamage = data.ParseFloat("Player_Damage");
+        zombieDamage = data.ParseFloat("Zombie_Damage");
+        animalDamage = data.ParseFloat("Animal_Damage");
+        barricadeDamage = data.ParseFloat("Barricade_Damage");
+        structureDamage = data.ParseFloat("Structure_Damage");
+        vehicleDamage = data.ParseFloat("Vehicle_Damage");
+        resourceDamage = data.ParseFloat("Resource_Damage");
+        explosionLaunchSpeed = data.ParseFloat("Explosion_Launch_Speed", playerDamage * 0.1f);
+        _explosion = data.ParseGuidOrLegacyId("Explosion", out explosionEffectGuid);
+        if (data.ContainsKey("Object_Damage"))
         {
-            objectDamage = data.readSingle("Object_Damage");
+            objectDamage = data.ParseFloat("Object_Damage");
         }
         else
         {
             objectDamage = resourceDamage;
         }
-        _tracer = data.ReadGuidOrLegacyId("Tracer", out tracerEffectGuid);
-        _impact = data.ReadGuidOrLegacyId("Impact", out _impactEffectGuid);
-        _speed = data.readSingle("Speed");
+        _tracer = data.ParseGuidOrLegacyId("Tracer", out tracerEffectGuid);
+        _impact = data.ParseGuidOrLegacyId("Impact", out _impactEffectGuid);
+        _speed = data.ParseFloat("Speed");
         if (speed < 0.01f)
         {
             _speed = 1f;
         }
-        _isExplosive = data.has("Explosive");
-        spawnExplosionOnDedicatedServer = data.has("Spawn_Explosion_On_Dedicated_Server");
-        _deleteEmpty = data.has("Delete_Empty");
-        shouldFillAfterDetach = data.readBoolean("Should_Fill_After_Detach");
+        _isExplosive = data.ContainsKey("Explosive");
+        spawnExplosionOnDedicatedServer = data.ContainsKey("Spawn_Explosion_On_Dedicated_Server");
+        _deleteEmpty = data.ContainsKey("Delete_Empty");
+        shouldFillAfterDetach = data.ParseBool("Should_Fill_After_Detach");
     }
 }

@@ -46,11 +46,13 @@ public class CustomWeatherComponent : WeatherComponentBase
         }
         effects = new List<EffectInstance>(customAsset.effects.Length);
         WeatherAsset.Effect[] array = customAsset.effects;
-        foreach (WeatherAsset.Effect effect in array)
+        for (int i = 0; i < array.Length; i++)
         {
-            if (effect.prefab.isValid)
+            WeatherAsset.Effect effectSettings = array[i];
+            MasterBundleReference<GameObject> prefab = effectSettings.prefab;
+            if (prefab.isValid)
             {
-                StartCoroutine(AsyncLoadEffect(effect));
+                StartCoroutine(AsyncLoadEffect(effectSettings));
             }
         }
     }

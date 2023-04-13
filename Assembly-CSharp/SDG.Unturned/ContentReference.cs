@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-public struct ContentReference<T> : IContentReference, IFormattedFileReadable, IFormattedFileWritable, IEquatable<ContentReference<T>> where T : UnityEngine.Object
+public struct ContentReference<T> : IContentReference, IFormattedFileReadable, IFormattedFileWritable, IDatParseable, IEquatable<ContentReference<T>> where T : UnityEngine.Object
 {
     public static ContentReference<T> invalid = new ContentReference<T>(null, null);
 
@@ -22,6 +22,26 @@ public struct ContentReference<T> : IContentReference, IFormattedFileReadable, I
             }
             return false;
         }
+    }
+
+    public bool TryParse(IDatNode node)
+    {
+        if (node is DatValue datValue)
+        {
+            if (Assets.currentMasterBundle != null)
+            {
+                name = Assets.currentMasterBundle.assetBundleName;
+            }
+            path = datValue.value;
+            return true;
+        }
+        if (node is DatDictionary datDictionary)
+        {
+            name = datDictionary.GetString("Name");
+            path = datDictionary.GetString("Path");
+            return true;
+        }
+        return false;
     }
 
     public void read(IFormattedFileReader reader)

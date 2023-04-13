@@ -4,9 +4,9 @@ public class ItemOilPumpAsset : ItemBarricadeAsset
 {
     public ushort fuelCapacity { get; protected set; }
 
-    public ItemOilPumpAsset(Bundle bundle, Data data, Local localization, ushort id)
-        : base(bundle, data, localization, id)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        fuelCapacity = data.readUInt16("Fuel_Capacity", 0);
+        base.PopulateAsset(bundle, data, localization);
+        fuelCapacity = data.ParseUInt16("Fuel_Capacity", 0);
     }
 }

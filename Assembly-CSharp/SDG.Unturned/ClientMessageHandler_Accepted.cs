@@ -9,6 +9,8 @@ namespace SDG.Unturned;
 
 internal static class ClientMessageHandler_Accepted
 {
+    internal static event System.Action OnGameplayConfigReceived;
+
     internal static void ReadMessage(NetPakReader reader)
     {
         Provider.isWaitingForAuthenticationResponse = false;
@@ -130,5 +132,6 @@ internal static class ClientMessageHandler_Accepted
         SteamMatchmaking.AddFavoriteGame(Provider.APP_ID, value, (ushort)(value2 + 1), value2, Provider.STEAM_FAVORITE_FLAG_HISTORY, SteamUtils.GetServerRealTime());
         Provider.updateRichPresence();
         Provider.onClientConnected?.Invoke();
+        ClientMessageHandler_Accepted.OnGameplayConfigReceived?.Invoke();
     }
 }

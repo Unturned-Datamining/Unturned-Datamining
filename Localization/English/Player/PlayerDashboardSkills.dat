@@ -46,7 +46,7 @@ Speciality_0_Skill_5_Tooltip Use less oxygen, swim faster and reduce scope sway.
 Speciality_0_Skill_5_Level_1 +5% swim speed, +50% oxygen endurance, +10% scope stability
 Speciality_0_Skill_5_Level_2 +10% swim speed, +100% oxygen endurance, +20% scope stability
 Speciality_0_Skill_5_Level_3 +15% swim speed, +150% oxygen endurance, +30% scope stability
-Speciality_0_Skill_5_Level_4 +20% swim speed, +200% oxygen endurance, +40% scope stability 
+Speciality_0_Skill_5_Level_4 +20% swim speed, +200% oxygen endurance, +40% scope stability
 Speciality_0_Skill_5_Level_5 +25% swim speed, +250% oxygen endurance, +50% scope stability
 Speciality_0_Skill_6 Parkour
 Speciality_0_Skill_6_Tooltip Jump higher with less stamina.
@@ -63,7 +63,7 @@ Speciality_1_Skill_0_Level_2 +21% stealth
 Speciality_1_Skill_0_Level_3 +32% stealth
 Speciality_1_Skill_0_Level_4 +43% stealth
 Speciality_1_Skill_0_Level_5 +54% stealth
-Speciality_1_Skill_0_Level_6 +64% stealth 
+Speciality_1_Skill_0_Level_6 +64% stealth
 Speciality_1_Skill_0_Level_7 +75% stealth
 Speciality_1_Skill_1 Vitality
 Speciality_1_Skill_1_Tooltip Quicker health regeneration with full food and water.
@@ -77,7 +77,7 @@ Speciality_1_Skill_2_Tooltip Immune to bacteria, zombies and hallucinogens.
 Speciality_1_Skill_2_Level_1 +10% virus endurance
 Speciality_1_Skill_2_Level_2 +20% virus endurance
 Speciality_1_Skill_2_Level_3 +30% virus endurance
-Speciality_1_Skill_2_Level_4 +40% virus endurance 
+Speciality_1_Skill_2_Level_4 +40% virus endurance
 Speciality_1_Skill_2_Level_5 +50% virus endurance
 Speciality_1_Skill_3 Toughness
 Speciality_1_Skill_3_Tooltip Less flinching and pain effects.
@@ -88,8 +88,8 @@ Speciality_1_Skill_3_Level_4 +60% flinch/grayscale endurance
 Speciality_1_Skill_3_Level_5 +75% flinch/grayscale endurance
 Speciality_1_Skill_4 Strength
 Speciality_1_Skill_4_Tooltip Quicker bleeding and bone healing, less fall damage.
-Speciality_1_Skill_4_Level_1 +10% bleeding/bone speed, +15% fall damage endurance 
-Speciality_1_Skill_4_Level_2 +20% bleeding/bone speed, +30% fall damage endurance 
+Speciality_1_Skill_4_Level_1 +10% bleeding/bone speed, +15% fall damage endurance
+Speciality_1_Skill_4_Level_2 +20% bleeding/bone speed, +30% fall damage endurance
 Speciality_1_Skill_4_Level_3 +30% bleeding/bone speed, +45% fall damage endurance
 Speciality_1_Skill_4_Level_4 +40% bleeding/bone speed, +60% fall damage endurance
 Speciality_1_Skill_4_Level_5 +50% bleeding/bone speed, +75% fall damage endurance
@@ -103,7 +103,7 @@ Speciality_1_Skill_5_Level_5 +100% freezing endurance
 Speciality_1_Skill_6 Survival
 Speciality_1_Skill_6_Tooltip Use less food and water.
 Speciality_1_Skill_6_Level_1 +5% food/water endurance
-Speciality_1_Skill_6_Level_2 +10% food/water endurance 
+Speciality_1_Skill_6_Level_2 +10% food/water endurance
 Speciality_1_Skill_6_Level_3 +15% food/water endurance
 Speciality_1_Skill_6_Level_4 +20% food/water endurance
 Speciality_1_Skill_6_Level_5 +25% food/water endurance
@@ -123,12 +123,12 @@ Speciality_2_Skill_1_Level_1 Makeshift items
 Speciality_2_Skill_1_Level_2 Makeshift items, basic buildables
 Speciality_2_Skill_1_Level_3 Makeshift items, basic buildables, complex barricades
 Speciality_2_Skill_2 Outdoors
-Speciality_2_Skill_2_Tooltip Chop down trees faster.
-Speciality_2_Skill_2_Level_1 +10% resource damage
-Speciality_2_Skill_2_Level_2 +20% resource damage
-Speciality_2_Skill_2_Level_3 +30% resource damage
-Speciality_2_Skill_2_Level_4 +40% resource damage
-Speciality_2_Skill_2_Level_5 +50% resource damage
+Speciality_2_Skill_2_Tooltip Chop down trees faster and recover more resources.
+Speciality_2_Skill_2_Level_1 +10% resource damage, +10% resource drops
+Speciality_2_Skill_2_Level_2 +20% resource damage, +20% resource drops
+Speciality_2_Skill_2_Level_3 +30% resource damage, +30% resource drops
+Speciality_2_Skill_2_Level_4 +40% resource damage, +40% resource drops
+Speciality_2_Skill_2_Level_5 +50% resource damage, +50% resource drops
 Speciality_2_Skill_3 Cooking
 Speciality_2_Skill_3_Tooltip Prepare high quality food.
 Speciality_2_Skill_3_Level_1 Ingredients
@@ -142,14 +142,14 @@ Speciality_2_Skill_4_Level_3 +60% reaction time
 Speciality_2_Skill_4_Level_4 +80% reaction time
 Speciality_2_Skill_4_Level_5 +100% reaction time
 Speciality_2_Skill_5 Agriculture
-Speciality_2_Skill_5_Tooltip Harvest crops and plants more efficiently. 
+Speciality_2_Skill_5_Tooltip Harvest crops and plants more efficiently.
 Speciality_2_Skill_5_Level_1 14% harvest chance, +3% harvest speed
 Speciality_2_Skill_5_Level_2 29% harvest chance, +7% harvest speed
 Speciality_2_Skill_5_Level_3 43% harvest chance, +10% harvest speed
 Speciality_2_Skill_5_Level_4 57% harvest chance, +14% harvest speed
 Speciality_2_Skill_5_Level_5 71% harvest chance, +18% harvest speed
 Speciality_2_Skill_5_Level_6 86% harvest chance, +21% harvest speed
-Speciality_2_Skill_5_Level_7 100% harvest chance, +25% harvest speed   
+Speciality_2_Skill_5_Level_7 100% harvest chance, +25% harvest speed
 Speciality_2_Skill_6 Mechanic
 Speciality_2_Skill_6_Tooltip Repair bases and vehicles more efficiently.
 Speciality_2_Skill_6_Level_1 +20% repair speed
@@ -179,8 +179,8 @@ Boost_4_Tooltip Throw objects further.
 Boost_4_Bonus +100% thrown velocity
 
 Skill {0} [{1}]
-Bonus_Current Current Level: {0} 
-Bonus_Next Next Level: {0} 
+Bonus_Current Current Level: {0}
+Bonus_Next Next Level: {0}
 Cost Upgrade Cost: {0}
 Full Maximum Level
 Experience Experience: {0}

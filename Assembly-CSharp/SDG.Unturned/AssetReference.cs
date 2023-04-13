@@ -3,7 +3,7 @@ using SDG.Framework.IO.FormattedFiles;
 
 namespace SDG.Unturned;
 
-public struct AssetReference<T> : IAssetReference, IFormattedFileReadable, IFormattedFileWritable, IEquatable<AssetReference<T>> where T : Asset
+public struct AssetReference<T> : IAssetReference, IFormattedFileReadable, IFormattedFileWritable, IDatParseable, IEquatable<AssetReference<T>> where T : Asset
 {
     public static AssetReference<T> invalid = new AssetReference<T>(Guid.Empty);
 
@@ -43,6 +43,25 @@ public struct AssetReference<T> : IAssetReference, IFormattedFileReadable, IForm
     public T get()
     {
         return Assets.find(this);
+    }
+
+    public bool TryParse(IDatNode node)
+    {
+        if (node is DatValue datValue)
+        {
+            Guid value;
+            bool result = datValue.TryParseGuid(out value);
+            GUID = value;
+            return result;
+        }
+        if (node is DatDictionary datDictionary)
+        {
+            Guid value2;
+            bool result2 = datDictionary.TryParseGuid("GUID", out value2);
+            GUID = value2;
+            return result2;
+        }
+        return false;
     }
 
     public void read(IFormattedFileReader reader)

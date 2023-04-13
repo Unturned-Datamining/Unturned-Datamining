@@ -1,4 +1,3 @@
-using SDG.Framework.IO.FormattedFiles;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -11,21 +10,21 @@ public class WeatherAsset : WeatherAssetBase
 
         public ELightingColor levelEnum;
 
-        public WeatherColor(IFormattedFileReader reader)
+        public WeatherColor(DatDictionary data)
         {
-            if (reader == null)
+            if (data == null)
             {
                 customColor = Color.black;
                 levelEnum = ELightingColor.CUSTOM_OVERRIDE;
                 return;
             }
-            byte r = (reader.containsKey("R") ? reader.readValue<byte>("R") : byte.MaxValue);
-            byte g = (reader.containsKey("G") ? reader.readValue<byte>("G") : byte.MaxValue);
-            byte b = (reader.containsKey("B") ? reader.readValue<byte>("B") : byte.MaxValue);
+            byte r = (data.ContainsKey("R") ? data.ParseUInt8("R", 0) : byte.MaxValue);
+            byte g = (data.ContainsKey("G") ? data.ParseUInt8("G", 0) : byte.MaxValue);
+            byte b = (data.ContainsKey("B") ? data.ParseUInt8("B", 0) : byte.MaxValue);
             customColor = new Color32(r, g, b, byte.MaxValue);
-            if (reader.containsKey("Level_Enum"))
+            if (data.ContainsKey("Level_Enum"))
             {
-                levelEnum = reader.readValue<ELightingColor>("Level_Enum");
+                levelEnum = data.ParseEnum("Level_Enum", ELightingColor.SUN);
             }
             else
             {
@@ -55,20 +54,20 @@ public class WeatherAsset : WeatherAssetBase
 
         public float brightnessMultiplier;
 
-        public TimeValues(IFormattedFileReader reader)
+        public TimeValues(DatDictionary data)
         {
-            if (reader == null)
+            if (data == null)
             {
                 brightnessMultiplier = 1f;
                 return;
             }
-            fogColor = new WeatherColor(reader.readObject("Fog_Color"));
-            fogDensity = reader.readValue<float>("Fog_Density");
-            cloudColor = new WeatherColor(reader.readObject("Cloud_Color"));
-            cloudRimColor = new WeatherColor(reader.readObject("Cloud_Rim_Color"));
-            if (reader.containsKey("Brightness_Multiplier"))
+            fogColor = new WeatherColor(data.GetDictionary("Fog_Color"));
+            fogDensity = data.ParseFloat("Fog_Density");
+            cloudColor = new WeatherColor(data.GetDictionary("Cloud_Color"));
+            cloudRimColor = new WeatherColor(data.GetDictionary("Cloud_Rim_Color"));
+            if (data.ContainsKey("Brightness_Multiplier"))
             {
-                brightnessMultiplier = reader.readValue<float>("Brightness_Multiplier");
+                brightnessMultiplier = data.ParseFloat("Brightness_Multiplier");
             }
             else
             {
@@ -77,7 +76,7 @@ public class WeatherAsset : WeatherAssetBase
         }
     }
 
-    public class Effect : IFormattedFileReadable
+    public struct Effect : IDatParseable
     {
         public MasterBundleReference<GameObject> prefab;
 
@@ -89,14 +88,18 @@ public class WeatherAsset : WeatherAssetBase
 
         public bool rotateYawWithWind;
 
-        public void read(IFormattedFileReader reader)
+        public bool TryParse(IDatNode node)
         {
-            reader = reader.readObject();
-            prefab = reader.readValue<MasterBundleReference<GameObject>>("Prefab");
-            emissionExponent = reader.readValue<float>("Emission_Exponent");
-            pitch = reader.readValue<float>("Pitch");
-            translateWithView = reader.readValue<bool>("Translate_With_View");
-            rotateYawWithWind = reader.readValue<bool>("Rotate_Yaw_With_Wind");
+            if (!(node is DatDictionary datDictionary))
+            {
+                return false;
+            }
+            prefab = datDictionary.ParseStruct<MasterBundleReference<GameObject>>("Prefab");
+            emissionExponent = datDictionary.ParseFloat("Emission_Exponent");
+            pitch = datDictionary.ParseFloat("Pitch");
+            translateWithView = datDictionary.ParseBool("Translate_With_View");
+            rotateYawWithWind = datDictionary.ParseBool("Rotate_Yaw_With_Wind");
+            return true;
         }
     }
 
@@ -134,64 +137,58 @@ public class WeatherAsset : WeatherAssetBase
         blendFrom = ((blendKey == -1) ? blendTo : timeValues[blendKey]);
     }
 
-    protected override void readAsset(IFormattedFileReader reader)
+    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
-        base.readAsset(reader);
+        base.PopulateAsset(bundle, data, localization);
         if (base.componentType == typeof(WeatherComponentBase))
         {
             base.componentType = typeof(CustomWeatherComponent);
         }
-        overrideFog = reader.readValue<bool>("Override_Fog");
-        overrideAtmosphericFog = reader.readValue<bool>("Override_Atmospheric_Fog");
-        overrideCloudColors = reader.readValue<bool>("Override_Cloud_Colors");
-        if (reader.containsKey("Shadow_Strength_Multiplier"))
+        overrideFog = data.ParseBool("Override_Fog");
+        overrideAtmosphericFog = data.ParseBool("Override_Atmospheric_Fog");
+        overrideCloudColors = data.ParseBool("Override_Cloud_Colors");
+        if (data.ContainsKey("Shadow_Strength_Multiplier"))
         {
-            shadowStrengthMultiplier = reader.readValue<float>("Shadow_Strength_Multiplier");
+            shadowStrengthMultiplier = data.ParseFloat("Shadow_Strength_Multiplier");
         }
         else
         {
             shadowStrengthMultiplier = 1f;
         }
-        if (reader.containsKey("Fog_Blend_Exponent"))
+        if (data.ContainsKey("Fog_Blend_Exponent"))
         {
-            fogBlendExponent = reader.readValue<float>("Fog_Blend_Exponent");
+            fogBlendExponent = data.ParseFloat("Fog_Blend_Exponent");
         }
         else
         {
             fogBlendExponent = 1f;
         }
-        if (reader.containsKey("Cloud_Blend_Exponent"))
+        if (data.ContainsKey("Cloud_Blend_Exponent"))
         {
-            cloudBlendExponent = reader.readValue<float>("Cloud_Blend_Exponent");
+            cloudBlendExponent = data.ParseFloat("Cloud_Blend_Exponent");
         }
         else
         {
             cloudBlendExponent = 1f;
         }
-        windMain = reader.readValue<float>("Wind_Main");
-        staminaPerSecond = reader.readValue<float>("Stamina_Per_Second");
-        healthPerSecond = reader.readValue<float>("Health_Per_Second");
-        foodPerSecond = reader.readValue<float>("Food_Per_Second");
-        waterPerSecond = reader.readValue<float>("Water_Per_Second");
-        virusPerSecond = reader.readValue<float>("Virus_Per_Second");
+        windMain = data.ParseFloat("Wind_Main");
+        staminaPerSecond = data.ParseFloat("Stamina_Per_Second");
+        healthPerSecond = data.ParseFloat("Health_Per_Second");
+        foodPerSecond = data.ParseFloat("Food_Per_Second");
+        waterPerSecond = data.ParseFloat("Water_Per_Second");
+        virusPerSecond = data.ParseFloat("Virus_Per_Second");
         timeValues = new TimeValues[4];
-        timeValues[0] = new TimeValues(reader.readObject("Dawn"));
-        timeValues[1] = new TimeValues(reader.readObject("Midday"));
-        timeValues[2] = new TimeValues(reader.readObject("Dusk"));
-        timeValues[3] = new TimeValues(reader.readObject("Midnight"));
-        int num = reader.readArrayLength("Effects");
-        if (num > 0)
+        timeValues[0] = new TimeValues(data.GetDictionary("Dawn"));
+        timeValues[1] = new TimeValues(data.GetDictionary("Midday"));
+        timeValues[2] = new TimeValues(data.GetDictionary("Dusk"));
+        timeValues[3] = new TimeValues(data.GetDictionary("Midnight"));
+        if (data.TryGetList("Effects", out var node))
         {
-            effects = new Effect[num];
-            for (int i = 0; i < num; i++)
+            effects = new Effect[node.Count];
+            for (int i = 0; i < node.Count; i++)
             {
-                effects[i] = reader.readValue<Effect>(i);
+                effects[i] = node[i].ParseStruct<Effect>();
             }
         }
-    }
-
-    public WeatherAsset(Bundle bundle, Local localization, byte[] hash)
-        : base(bundle, localization, hash)
-    {
     }
 }
