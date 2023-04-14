@@ -106,6 +106,6 @@ public static class UnityDatEx
         {
             return value;
         }
-        return new Vector3(dict.ParseFloat(key + "_X"), dict.ParseFloat(key + "_Y"), dict.ParseFloat("_Z"));
+        return new Vector3(dict.ParseFloat(key + "_X"), dict.ParseFloat(key + "_Y"), dict.ParseFloat(key + "_Z"));
     }
 }

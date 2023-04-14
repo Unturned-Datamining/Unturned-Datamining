@@ -182,7 +182,7 @@ public static class UnityDatColorEx
             result.a = 1f;
             return result;
         }
-        return new Color(dict.ParseFloat(key + "_R", defaultValue.r), dict.ParseFloat(key + "_G", defaultValue.g), dict.ParseFloat("_B", defaultValue.b));
+        return new Color(dict.ParseFloat(key + "_R", defaultValue.r), dict.ParseFloat(key + "_G", defaultValue.g), dict.ParseFloat(key + "_B", defaultValue.b));
     }
 
     public static Color32 LegacyParseColor32RGB(this DatDictionary dict, string key, Color32 defaultValue)
@@ -191,6 +191,6 @@ public static class UnityDatColorEx
         {
             return value;
         }
-        return new Color32(dict.ParseUInt8(key + "_R", defaultValue.r), dict.ParseUInt8(key + "_G", defaultValue.g), dict.ParseUInt8("_B", defaultValue.b), byte.MaxValue);
+        return new Color32(dict.ParseUInt8(key + "_R", defaultValue.r), dict.ParseUInt8(key + "_G", defaultValue.g), dict.ParseUInt8(key + "_B", defaultValue.b), byte.MaxValue);
     }
 }
