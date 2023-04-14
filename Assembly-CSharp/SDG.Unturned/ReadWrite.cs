@@ -24,6 +24,8 @@ public class ReadWrite
         Encoding = new UTF8Encoding()
     };
 
+    private static DatParser datParser = new DatParser();
+
     public static bool SupportsOpeningFileBrowser => false;
 
     public static bool appIn(byte[] h, byte p)
@@ -352,15 +354,15 @@ public class ReadWrite
         return new Data(text);
     }
 
-    internal static Data FasterReadDataWithoutHash(string path)
+    internal static DatDictionary ReadDataWithoutHash(string path)
     {
         if (!File.Exists(path))
         {
             return null;
         }
         using FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-        using StreamReader streamReader = new StreamReader(stream);
-        return new Data(streamReader, null);
+        using StreamReader inputReader = new StreamReader(stream);
+        return datParser.Parse(inputReader);
     }
 
     public static Block readBlock(string path, bool useCloud, byte prefix)

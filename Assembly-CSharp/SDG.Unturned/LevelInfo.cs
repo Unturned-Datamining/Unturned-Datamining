@@ -119,21 +119,21 @@ public class LevelInfo
             string text = path + "/" + Provider.language + ".dat";
             if (ReadWrite.fileExists(text, useCloud: false, usePath: false))
             {
-                cachedLocalization = new Local(ReadWrite.FasterReadDataWithoutHash(text));
+                cachedLocalization = new Local(ReadWrite.ReadDataWithoutHash(text));
             }
             else
             {
                 string text2 = Provider.localizationRoot + "/Maps/" + name + ".dat";
                 if (ReadWrite.fileExists(text2, useCloud: false, usePath: false))
                 {
-                    cachedLocalization = new Local(ReadWrite.FasterReadDataWithoutHash(text2));
+                    cachedLocalization = new Local(ReadWrite.ReadDataWithoutHash(text2));
                 }
                 else
                 {
                     string text3 = Provider.localizationRoot + "/Maps/" + name.Replace(' ', '_') + ".dat";
                     if (ReadWrite.fileExists(text3, useCloud: false, usePath: false))
                     {
-                        cachedLocalization = new Local(ReadWrite.FasterReadDataWithoutHash(text3));
+                        cachedLocalization = new Local(ReadWrite.ReadDataWithoutHash(text3));
                     }
                 }
             }
@@ -142,7 +142,7 @@ public class LevelInfo
                 string text4 = path + "/English.dat";
                 if (ReadWrite.fileExists(text4, useCloud: false, usePath: false))
                 {
-                    cachedLocalization = new Local(ReadWrite.FasterReadDataWithoutHash(text4));
+                    cachedLocalization = new Local(ReadWrite.ReadDataWithoutHash(text4));
                 }
                 else
                 {

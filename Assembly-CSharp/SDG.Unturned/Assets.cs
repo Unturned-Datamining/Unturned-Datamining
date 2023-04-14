@@ -44,11 +44,7 @@ public class Assets : MonoBehaviour
     {
         public string name;
 
-        public string assetPath;
-
-        public string dataPath;
-
-        public string bundlePath;
+        public string absoluteAssetPath;
 
         public AssetOrigin origin;
 
@@ -58,12 +54,10 @@ public class Assets : MonoBehaviour
 
         public string masterBundleRelativePath;
 
-        public ScannedFileInfo(string name, string assetPath, string dataPath, string bundlePath, AssetOrigin origin, bool overrideExistingIDs, MasterBundleConfig masterBundleCfg, string masterBundleRelativePath)
+        public ScannedFileInfo(string name, string absoluteAssetPath, AssetOrigin origin, bool overrideExistingIDs, MasterBundleConfig masterBundleCfg, string masterBundleRelativePath)
         {
             this.name = name;
-            this.assetPath = assetPath;
-            this.dataPath = dataPath;
-            this.bundlePath = bundlePath;
+            this.absoluteAssetPath = absoluteAssetPath;
             this.origin = origin;
             this.overrideExistingIDs = overrideExistingIDs;
             this.masterBundleCfg = masterBundleCfg;
@@ -762,22 +756,22 @@ public class Assets : MonoBehaviour
         }
         if (ReadWrite.fileExists(path + "/" + fileName + ".asset", useCloud: false, usePath: false))
         {
-            filesScanned.Enqueue(new ScannedFileInfo(fileName, path + "/" + fileName + ".asset", path, path, origin, overrideExistingIDs, parentMasterBundle, relativePath));
+            filesScanned.Enqueue(new ScannedFileInfo(fileName, path + "/" + fileName + ".asset", origin, overrideExistingIDs, parentMasterBundle, relativePath));
         }
         else if (ReadWrite.fileExists(path + "/" + fileName + ".dat", useCloud: false, usePath: false))
         {
-            filesScanned.Enqueue(new ScannedFileInfo(fileName, null, path, path, origin, overrideExistingIDs, parentMasterBundle, relativePath));
+            filesScanned.Enqueue(new ScannedFileInfo(fileName, path + "/" + fileName + ".dat", origin, overrideExistingIDs, parentMasterBundle, relativePath));
         }
         else if (ReadWrite.fileExists(path + "/Asset.dat", useCloud: false, usePath: false))
         {
-            filesScanned.Enqueue(new ScannedFileInfo(fileName, null, path, path, origin, overrideExistingIDs, parentMasterBundle, relativePath));
+            filesScanned.Enqueue(new ScannedFileInfo(fileName, path + "/Asset.dat", origin, overrideExistingIDs, parentMasterBundle, relativePath));
         }
         else
         {
             string[] files = Directory.GetFiles(path, "*.asset");
             for (int i = 0; i < files.Length; i++)
             {
-                filesScanned.Enqueue(new ScannedFileInfo(Path.GetFileNameWithoutExtension(files[i]), files[i], path, path, origin, overrideExistingIDs, parentMasterBundle, relativePath));
+                filesScanned.Enqueue(new ScannedFileInfo(Path.GetFileNameWithoutExtension(files[i]), files[i], origin, overrideExistingIDs, parentMasterBundle, relativePath));
             }
         }
         string[] folders = ReadWrite.getFolders(path, usePath: false);
@@ -804,27 +798,12 @@ public class Assets : MonoBehaviour
 
     private static void loadFile(ScannedFileInfo file)
     {
-        string assetPath;
-        if (!string.IsNullOrEmpty(file.assetPath))
-        {
-            assetPath = file.assetPath;
-            assetPath = Path.GetFullPath(assetPath);
-        }
-        else
-        {
-            assetPath = file.dataPath + "/" + file.name + ".dat";
-            assetPath = Path.GetFullPath(assetPath);
-            if (!ReadWrite.fileExists(assetPath, useCloud: false, usePath: false))
-            {
-                assetPath = file.dataPath + "/Asset.dat";
-                assetPath = Path.GetFullPath(assetPath);
-            }
-        }
+        string fullPath = Path.GetFullPath(file.absoluteAssetPath);
         DatDictionary datDictionary = null;
         byte[] hash;
         try
         {
-            using (FileStream underlyingStream = new FileStream(assetPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (FileStream underlyingStream = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 using SHA1Stream sHA1Stream = new SHA1Stream(underlyingStream);
                 using StreamReader inputReader = new StreamReader(sHA1Stream);
@@ -833,33 +812,34 @@ public class Assets : MonoBehaviour
             }
             if (datParser.HasError)
             {
-                reportError("Error parsing \"" + assetPath + "\": \"" + datParser.ErrorMessage + "\"");
+                reportError("Error parsing \"" + fullPath + "\": \"" + datParser.ErrorMessage + "\"");
             }
             if (datDictionary == null)
             {
-                reportError("Unable to read \"" + assetPath + "\"");
+                reportError("Unable to read \"" + fullPath + "\"");
                 return;
             }
         }
         catch (Exception e)
         {
-            reportError("Caught exception while reading \"" + assetPath + "\": " + getExceptionMessage(e));
+            reportError("Caught exception while reading \"" + fullPath + "\": " + getExceptionMessage(e));
             UnturnedLog.exception(e);
             return;
         }
+        string directoryName = Path.GetDirectoryName(fullPath);
         Guid value = default(Guid);
         Type type = null;
         if (datDictionary.TryGetDictionary("Metadata", out var node))
         {
             if (!node.TryParseGuid("GUID", out value))
             {
-                reportError("Unable to parse Metadata.GUID in \"" + assetPath + "\"");
+                reportError("Unable to parse Metadata.GUID in \"" + fullPath + "\"");
                 return;
             }
             type = node.ParseType("Type");
             if (type == null)
             {
-                reportError("Unable to parse Metadata.Type in \"" + assetPath + "\"");
+                reportError("Unable to parse Metadata.Type in \"" + fullPath + "\"");
                 return;
             }
         }
@@ -868,18 +848,18 @@ public class Assets : MonoBehaviour
             value = Guid.NewGuid();
             try
             {
-                string text = File.ReadAllText(assetPath);
+                string text = File.ReadAllText(fullPath);
                 text = "GUID " + value.ToString("N") + "\n" + text;
-                File.WriteAllText(assetPath, text);
+                File.WriteAllText(fullPath, text);
             }
             catch (Exception e2)
             {
-                UnturnedLog.exception(e2, "Caught IO exception adding GUID to \"" + assetPath + "\":");
+                UnturnedLog.exception(e2, "Caught IO exception adding GUID to \"" + fullPath + "\":");
             }
         }
         if (value.IsEmpty())
         {
-            reportError("Cannot use empty GUID in \"" + assetPath + "\"");
+            reportError("Cannot use empty GUID in \"" + fullPath + "\"");
             return;
         }
         DatDictionary datDictionary2 = datDictionary;
@@ -892,19 +872,23 @@ public class Assets : MonoBehaviour
             string @string = datDictionary2.GetString("Type");
             if (string.IsNullOrEmpty(@string))
             {
-                reportError("Missing asset Type in \"" + assetPath + "\"");
+                reportError("Missing asset Type in \"" + fullPath + "\"");
                 return;
             }
             type = assetTypes.getType(@string);
             if (type == null)
             {
-                reportError("Unhandled asset type \"" + @string + "\" in \"" + assetPath + "\"");
-                return;
+                type = datDictionary2.ParseType("Type");
+                if (type == null)
+                {
+                    reportError("Unhandled asset type \"" + @string + "\" in \"" + fullPath + "\"");
+                    return;
+                }
             }
         }
         if (!typeof(Asset).IsAssignableFrom(type))
         {
-            reportError($"Type \"{type}\" is not a valid asset type in \"{assetPath}\"");
+            reportError($"Type \"{type}\" is not a valid asset type in \"{fullPath}\"");
             return;
         }
         MasterBundleConfig masterBundleConfig = file.masterBundleCfg;
@@ -945,7 +929,7 @@ public class Assets : MonoBehaviour
         }
         else
         {
-            bundle = new Bundle(file.bundlePath + "/" + file.name + ".unity3d", usePath: false);
+            bundle = new Bundle(directoryName + "/" + file.name + ".unity3d", usePath: false);
         }
         bundle.isCoreAsset = file.origin == coreOrigin;
         int num2 = datDictionary2.ParseInt32("Asset_Bundle_Version", 1);
@@ -962,7 +946,7 @@ public class Assets : MonoBehaviour
         int num3 = Mathf.Max(a, num2);
         bundle.convertShadersToStandard = num3 < 2;
         bundle.consolidateShaders = num3 < 3 || (datDictionary2.ContainsKey("Enable_Shader_Consolidation") && !datDictionary2.ContainsKey("Disable_Shader_Consolidation"));
-        Local localization = Localization.tryRead(file.dataPath, usePath: false);
+        Local localization = Localization.tryRead(directoryName, usePath: false);
         ushort id = datDictionary2.ParseUInt16("ID", 0);
         Asset asset;
         try
@@ -971,7 +955,7 @@ public class Assets : MonoBehaviour
         }
         catch (Exception e3)
         {
-            reportError($"Caught exception while constructing {type} in \"{assetPath}\": {getExceptionMessage(e3)}");
+            reportError($"Caught exception while constructing {type} in \"{fullPath}\": {getExceptionMessage(e3)}");
             UnturnedLog.exception(e3);
             bundle.unload();
             currentMasterBundle = null;
@@ -979,7 +963,7 @@ public class Assets : MonoBehaviour
         }
         if (asset == null)
         {
-            reportError($"Failed to construct {type} in \"{assetPath}\"");
+            reportError($"Failed to construct {type} in \"{fullPath}\"");
             bundle.unload();
             currentMasterBundle = null;
             return;
@@ -990,7 +974,7 @@ public class Assets : MonoBehaviour
             asset.GUID = value;
             asset.hash = hash;
             asset.requiredShaderUpgrade = bundle.convertShadersToStandard || bundle.consolidateShaders;
-            asset.absoluteOriginFilePath = assetPath;
+            asset.absoluteOriginFilePath = fullPath;
             asset.origin = file.origin;
             asset.origin.assets.Add(asset);
             asset.PopulateAsset(bundle, datDictionary2, localization);
@@ -999,7 +983,7 @@ public class Assets : MonoBehaviour
         }
         catch (Exception e4)
         {
-            reportError("Caught exception while populating \"" + assetPath + "\": " + getExceptionMessage(e4));
+            reportError("Caught exception while populating \"" + fullPath + "\": " + getExceptionMessage(e4));
             UnturnedLog.exception(e4);
             bundle.unload();
         }

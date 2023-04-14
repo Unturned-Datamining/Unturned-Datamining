@@ -434,7 +434,7 @@ public class PlayerEquipment : PlayerCaller
 
     public bool getUseableStatTrackerValue(out EStatTrackerType type, out int kills)
     {
-        return base.channel.owner.getStatTrackerValue(itemID, out type, out kills);
+        return base.channel.owner.getStatTrackerValue(asset?.sharedSkinLookupID ?? itemID, out type, out kills);
     }
 
     protected bool getSlot0StatTrackerValue(out EStatTrackerType type, out int kills)
@@ -442,7 +442,7 @@ public class PlayerEquipment : PlayerCaller
         ItemJar item = base.player.inventory.getItem(0, 0);
         if (item != null)
         {
-            return base.channel.owner.getStatTrackerValue(item.item.id, out type, out kills);
+            return base.channel.owner.getStatTrackerValue(item.GetAsset()?.sharedSkinLookupID ?? item.item.id, out type, out kills);
         }
         type = EStatTrackerType.NONE;
         kills = -1;
@@ -454,7 +454,7 @@ public class PlayerEquipment : PlayerCaller
         ItemJar item = base.player.inventory.getItem(1, 0);
         if (item != null)
         {
-            return base.channel.owner.getStatTrackerValue(item.item.id, out type, out kills);
+            return base.channel.owner.getStatTrackerValue(item.GetAsset()?.sharedSkinLookupID ?? item.item.id, out type, out kills);
         }
         type = EStatTrackerType.NONE;
         kills = -1;
@@ -1147,7 +1147,7 @@ public class PlayerEquipment : PlayerCaller
         }
         SkinAsset skinAsset = Assets.find(EAssetType.SKIN, id) as SkinAsset;
         skinRagdollEffect = ERagdollEffect.NONE;
-        if (!base.channel.owner.getRagdollEffect(itemID, out skinRagdollEffect) && skinAsset != null)
+        if (!base.channel.owner.getRagdollEffect(asset.sharedSkinLookupID, out skinRagdollEffect) && skinAsset != null)
         {
             skinRagdollEffect = skinAsset.ragdollEffect;
         }

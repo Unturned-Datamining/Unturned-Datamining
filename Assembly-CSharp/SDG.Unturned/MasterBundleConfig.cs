@@ -31,25 +31,25 @@ public class MasterBundleConfig
     {
         directoryPath = absoluteDirectory;
         this.workshopFileId = workshopFileId;
-        Data data = ReadWrite.FasterReadDataWithoutHash(MasterBundleHelper.getConfigPath(absoluteDirectory));
-        assetBundleName = data.readString("Asset_Bundle_Name");
+        DatDictionary datDictionary = ReadWrite.ReadDataWithoutHash(MasterBundleHelper.getConfigPath(absoluteDirectory));
+        assetBundleName = datDictionary.GetString("Asset_Bundle_Name");
         if (string.IsNullOrEmpty(assetBundleName))
         {
             throw new Exception("Unspecified Asset_Bundle_Name! This should be the file name and extension of the master asset bundle exported from Unity.");
         }
         assetBundleNameWithoutExtension = Path.GetFileNameWithoutExtension(assetBundleName);
-        assetPrefix = data.readString("Asset_Prefix");
+        assetPrefix = datDictionary.GetString("Asset_Prefix");
         if (string.IsNullOrEmpty(assetPrefix))
         {
             throw new Exception("Unspecified Asset_Prefix! This should be the portion of the Unity asset path prior to the /Bundles/ path, e.g. Assets/Bundles/");
         }
-        if (data.has("Master_Bundle_Version"))
+        if (datDictionary.ContainsKey("Master_Bundle_Version"))
         {
-            version = data.readInt32("Master_Bundle_Version");
+            version = datDictionary.ParseInt32("Master_Bundle_Version");
         }
         else
         {
-            version = data.readInt32("Asset_Bundle_Version", 2);
+            version = datDictionary.ParseInt32("Asset_Bundle_Version", 2);
         }
         if (version < 2)
         {

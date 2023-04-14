@@ -30,13 +30,13 @@ public class Localization
         string path3 = Path.Combine(path, "English.dat");
         if (ReadWrite.fileExists(path2, useCloud: false, usePath: false))
         {
-            Data data = ReadWrite.FasterReadDataWithoutHash(path2);
-            Data fallbackData = (Provider.languageIsEnglish ? null : ReadWrite.FasterReadDataWithoutHash(path3));
+            DatDictionary data = ReadWrite.ReadDataWithoutHash(path2);
+            DatDictionary fallbackData = (Provider.languageIsEnglish ? null : ReadWrite.ReadDataWithoutHash(path3));
             return new Local(data, fallbackData);
         }
         if (ReadWrite.fileExists(path3, useCloud: false, usePath: false))
         {
-            return new Local(ReadWrite.FasterReadDataWithoutHash(path3));
+            return new Local(ReadWrite.ReadDataWithoutHash(path3));
         }
         return new Local();
     }
@@ -47,31 +47,45 @@ public class Localization
         string path3 = englishLocalizationRoot + path;
         if (ReadWrite.fileExists(path2, useCloud: false, usePath: false))
         {
-            Data data = ReadWrite.FasterReadDataWithoutHash(path2);
-            Data fallbackData = (Provider.languageIsEnglish ? null : ReadWrite.FasterReadDataWithoutHash(path3));
+            DatDictionary data = ReadWrite.ReadDataWithoutHash(path2);
+            DatDictionary fallbackData = (Provider.languageIsEnglish ? null : ReadWrite.ReadDataWithoutHash(path3));
             return new Local(data, fallbackData);
         }
         if (ReadWrite.fileExists(path3, useCloud: false, usePath: false))
         {
-            return new Local(ReadWrite.FasterReadDataWithoutHash(path3));
+            return new Local(ReadWrite.ReadDataWithoutHash(path3));
         }
         return new Local();
     }
 
     private static void scanFile(string path)
     {
-        Data data = ReadWrite.FasterReadDataWithoutHash(ReadWrite.PATH + "/Localization/English/" + path);
-        Data data2 = ReadWrite.FasterReadDataWithoutHash(Provider.localizationRoot + path);
-        KeyValuePair<string, string>[] contents = data.getContents();
-        KeyValuePair<string, string>[] contents2 = data2.getContents();
-        keys.Clear();
-        for (int i = 0; i < contents.Length; i++)
+        DatDictionary datDictionary = ReadWrite.ReadDataWithoutHash(ReadWrite.PATH + "/Localization/English/" + path);
+        DatDictionary datDictionary2 = ReadWrite.ReadDataWithoutHash(Provider.localizationRoot + path);
+        List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>();
+        foreach (KeyValuePair<string, IDatNode> item in datDictionary)
         {
-            string key = contents[i].Key;
-            bool flag = false;
-            for (int j = 0; j < contents2.Length; j++)
+            if (item.Value is DatValue datValue)
             {
-                string key2 = contents2[j].Key;
+                list.Add(new KeyValuePair<string, string>(item.Key, datValue.value));
+            }
+        }
+        List<KeyValuePair<string, string>> list2 = new List<KeyValuePair<string, string>>();
+        foreach (KeyValuePair<string, IDatNode> item2 in datDictionary2)
+        {
+            if (item2.Value is DatValue datValue2)
+            {
+                list2.Add(new KeyValuePair<string, string>(item2.Key, datValue2.value));
+            }
+        }
+        keys.Clear();
+        for (int i = 0; i < list.Count; i++)
+        {
+            string key = list[i].Key;
+            bool flag = false;
+            for (int j = 0; j < list2.Count; j++)
+            {
+                string key2 = list2[j].Key;
                 if (key == key2)
                 {
                     flag = true;

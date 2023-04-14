@@ -942,6 +942,7 @@ public class Provider : MonoBehaviour
                     ChatManager.say(client.playerID.playerName + " got banned by BattlEye", Color.yellow);
                 }
                 kick(client.playerID.steamID, "BattlEye: " + reason);
+                SteamBlacklist.ban(client.playerID.steamID, client.getIPv4AddressOrZero(), client.playerID.GetHwids(), CSteamID.Nil, "(Temporary) BattlEye: " + reason, 60u);
             }
             break;
         }

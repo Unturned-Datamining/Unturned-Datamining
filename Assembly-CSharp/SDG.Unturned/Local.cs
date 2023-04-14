@@ -2,15 +2,15 @@ namespace SDG.Unturned;
 
 public class Local
 {
-    private Data data;
+    private DatDictionary data;
 
-    private Data fallbackData;
+    private DatDictionary fallbackData;
 
     public string read(string key)
     {
         if (data != null)
         {
-            return data.readString(key);
+            return data.GetString(key);
         }
         return null;
     }
@@ -105,17 +105,17 @@ public class Local
     {
         if (data != null)
         {
-            return data.has(key);
+            return data.ContainsKey(key);
         }
         return false;
     }
 
-    public Local(Data newData)
+    public Local(DatDictionary newData)
         : this(newData, null)
     {
     }
 
-    public Local(Data data, Data fallbackData)
+    public Local(DatDictionary data, DatDictionary fallbackData)
     {
         this.data = data;
         this.fallbackData = fallbackData;
@@ -129,9 +129,9 @@ public class Local
     private bool TryReadString(string key, out string text)
     {
         text = null;
-        if (data == null || !data.TryReadString(key, out text) || string.IsNullOrEmpty(text))
+        if (data == null || !data.TryGetString(key, out text) || string.IsNullOrEmpty(text))
         {
-            if (fallbackData != null && fallbackData.TryReadString(key, out text))
+            if (fallbackData != null && fallbackData.TryGetString(key, out text))
             {
                 return !string.IsNullOrEmpty(text);
             }
