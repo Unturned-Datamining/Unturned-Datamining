@@ -112,12 +112,17 @@ public class DatParser
 
     private void AddValueToDictionary(DatDictionary dictionary, string key, IDatNode value)
     {
+        if (hasError)
+        {
+            dictionary[key] = value;
+            return;
+        }
         if (!dictionary.TryGetNode(key, out var node))
         {
             dictionary.Add(key, value);
             return;
         }
-        dictionary.SetNode(key, value);
+        dictionary[key] = value;
         string nodeStringForErrorMessage = GetNodeStringForErrorMessage(node);
         string nodeStringForErrorMessage2 = GetNodeStringForErrorMessage(value);
         ErrorMessage = $"duplicate key \"{key}\" on line {currentLineNumber} replacing existing value {nodeStringForErrorMessage} with {nodeStringForErrorMessage2}";
@@ -191,7 +196,7 @@ public class DatParser
             IDatNode value = ReadDictionaryValue();
             AddValueToDictionary(datDictionary, key, value);
         }
-        if (!flag)
+        if (!flag && !hasError)
         {
             ErrorMessage = $"missing closing curly bracket '}}' for dictionary opened on line {num}";
         }
@@ -233,7 +238,7 @@ public class DatParser
             SkipWhitespaceAndComments();
             datList.Add(new DatValue(value));
         }
-        if (!flag)
+        if (!flag && !hasError)
         {
             ErrorMessage = $"missing closing bracket ']' for list opened on line {num}";
         }
@@ -299,7 +304,7 @@ public class DatParser
             stringBuilder.Append(currentChar);
             ReadChar();
         }
-        if (!flag2)
+        if (!flag2 && !hasError)
         {
             ErrorMessage = $"missing closing quotation mark (\") for string opened on line {num}";
         }

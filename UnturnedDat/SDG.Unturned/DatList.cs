@@ -5,11 +5,6 @@ namespace SDG.Unturned;
 
 public sealed class DatList : List<IDatNode>, IDatNode
 {
-    public void AddString(string value)
-    {
-        Add(new DatValue(value));
-    }
-
     public bool TryGetValue(int index, out DatValue value)
     {
         IDatNode datNode = ((index >= 0 && index < base.Count) ? base[index] : null);

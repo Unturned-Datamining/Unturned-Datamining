@@ -70,11 +70,6 @@ public sealed class DatDictionary : Dictionary<string, IDatNode>, IDatNode
         return node;
     }
 
-    public void SetNode(string key, IDatNode node)
-    {
-        base[key] = node;
-    }
-
     public bool TryGetString(string key, out string value)
     {
         if (TryGetValue(key, out var node))
@@ -93,11 +88,6 @@ public sealed class DatDictionary : Dictionary<string, IDatNode>, IDatNode
             return defaultValue;
         }
         return value;
-    }
-
-    public void SetString(string key, string value)
-    {
-        base[key] = new DatValue(value);
     }
 
     public bool TryParseInt8(string key, out sbyte value)

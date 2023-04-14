@@ -147,7 +147,7 @@ public class ItemManager : SteamCaller
         }
         if (point.y > 0f)
         {
-            Physics.SphereCast(new Ray(point + Vector3.up, Vector3.down), 0.1f, out var hitInfo, 16f, RayMasks.BLOCK_ITEM);
+            Physics.SphereCast(new Ray(point + Vector3.up, Vector3.down), 0.1f, out var hitInfo, 512f, RayMasks.BLOCK_ITEM);
             if (hitInfo.collider != null)
             {
                 point.y = hitInfo.point.y;
