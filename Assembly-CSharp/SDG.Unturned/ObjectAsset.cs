@@ -158,6 +158,9 @@ public class ObjectAsset : Asset
     {
         ENPCHoliday.HALLOWEEN => _objectName + " [HW]", 
         ENPCHoliday.CHRISTMAS => _objectName + " [XMAS]", 
+        ENPCHoliday.APRIL_FOOLS => _objectName + " [AF]", 
+        ENPCHoliday.VALENTINES => _objectName + " [V]", 
+        ENPCHoliday.PRIDE_MONTH => _objectName + " [PM]", 
         _ => _objectName, 
     };
 

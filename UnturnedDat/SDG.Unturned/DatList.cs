@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -5,6 +7,76 @@ namespace SDG.Unturned;
 
 public sealed class DatList : List<IDatNode>, IDatNode
 {
+    public struct ValueEnumerator : IEnumerator<DatValue>, IEnumerator, IDisposable
+    {
+        private DatList list;
+
+        private int index;
+
+        private DatValue current;
+
+        public DatValue Current => current;
+
+        object IEnumerator.Current => current;
+
+        public ValueEnumerator(DatList list)
+        {
+            this.list = list;
+            index = -1;
+            current = null;
+        }
+
+        public bool MoveNext()
+        {
+            while (++index < list.Count)
+            {
+                current = list[index] as DatValue;
+                if (current != null)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void Reset()
+        {
+            index = -1;
+            current = null;
+        }
+
+        public void Dispose()
+        {
+        }
+    }
+
+    public struct ValueEnumerable : IEnumerable<DatValue>, IEnumerable
+    {
+        private DatList list;
+
+        public ValueEnumerable(DatList list)
+        {
+            this.list = list;
+        }
+
+        public ValueEnumerator GetEnumerator()
+        {
+            return new ValueEnumerator(list);
+        }
+
+        IEnumerator<DatValue> IEnumerable<DatValue>.GetEnumerator()
+        {
+            return new ValueEnumerator(list);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return new ValueEnumerator(list);
+        }
+    }
+
+    public EDatNodeType NodeType => EDatNodeType.List;
+
     public bool TryGetValue(int index, out DatValue value)
     {
         IDatNode datNode = ((index >= 0 && index < base.Count) ? base[index] : null);
@@ -95,6 +167,11 @@ public sealed class DatList : List<IDatNode>, IDatNode
             }
         }
         return array;
+    }
+
+    public ValueEnumerable GetValues()
+    {
+        return new ValueEnumerable(this);
     }
 
     public void DebugDumpToStringBuilder(StringBuilder output, int indentationLevel = 0)

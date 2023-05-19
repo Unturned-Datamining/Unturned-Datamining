@@ -856,8 +856,8 @@ public class MenuDashboardUI
         {
             ItemStore.Listing[] listings = itemStore.GetListings();
             listing = listings[UnityEngine.Random.Range(0, listings.Length)];
-            ushort inventoryItemID = Provider.provider.economyService.getInventoryItemID(listing.itemdefid);
-            if (inventoryItemID != 0 && Assets.find(EAssetType.ITEM, inventoryItemID) is ItemKeyAsset)
+            Guid inventoryItemGuid = Provider.provider.economyService.getInventoryItemGuid(listing.itemdefid);
+            if (inventoryItemGuid != default(Guid) && Assets.find<ItemKeyAsset>(inventoryItemGuid) != null)
             {
                 return;
             }

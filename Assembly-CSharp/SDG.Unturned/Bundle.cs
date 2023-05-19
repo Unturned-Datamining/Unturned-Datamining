@@ -151,24 +151,6 @@ public class Bundle
         return null;
     }
 
-    public UnityEngine.Object[] load()
-    {
-        if (asset != null)
-        {
-            return asset.LoadAllAssets();
-        }
-        return null;
-    }
-
-    public UnityEngine.Object[] load(Type type)
-    {
-        if (asset != null)
-        {
-            return asset.LoadAllAssets(type);
-        }
-        return null;
-    }
-
     public T[] loadAll<T>() where T : UnityEngine.Object
     {
         if (!(asset != null))
@@ -218,9 +200,30 @@ public class Bundle
         }
     }
 
+    [Obsolete]
     public Bundle()
     {
         asset = null;
         name = "#NAME";
+    }
+
+    [Obsolete]
+    public UnityEngine.Object[] load()
+    {
+        if (asset != null)
+        {
+            return asset.LoadAllAssets();
+        }
+        return null;
+    }
+
+    [Obsolete]
+    public UnityEngine.Object[] load(Type type)
+    {
+        if (asset != null)
+        {
+            return asset.LoadAllAssets(type);
+        }
+        return null;
     }
 }

@@ -11,3 +11,53 @@ Spread 0.7
 Zoom 7
 
 Paintable
+
+DistanceMarkers
+[
+	{
+		Distance 100
+		LineOffset -0.005
+		LineWidth 0.04
+		Side Left
+	}
+	{
+		Distance 150
+		LineOffset -0.005
+		LineWidth 0.01
+		HasLabel false
+		Side Left
+	}
+	{
+		Distance 200
+		LineOffset -0.005
+		LineWidth 0.03
+		Side Left
+	}
+	{
+		Distance 250
+		LineOffset -0.005
+		LineWidth 0.01
+		HasLabel false
+		Side Left
+	}
+	{
+		Distance 300
+		LineOffset -0.005
+		LineWidth 0.02
+		Side Left
+	}
+	{
+		Distance 350
+		LineOffset -0.005
+		LineWidth 0.01
+		HasLabel false
+		Side Left
+	}
+	{
+		Distance 400
+		LineOffset -0.005
+		LineWidth 0.01
+		HasLabel false
+		Side Left
+	}
+]

@@ -219,7 +219,7 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
             barricade.transform.localPosition = Vector3.zero;
             barricade.transform.localRotation = Quaternion.identity;
         }
-        placementPreviewRef = data.readMasterBundleReference<GameObject>("PlacementPreviewPrefab");
+        placementPreviewRef = data.readMasterBundleReference<GameObject>("PlacementPreviewPrefab", bundle);
         _nav = bundle.load<GameObject>("Nav");
         _use = LoadRedirectableAsset<AudioClip>(bundle, "Use", data, "PlacementAudioClip");
         _build = (EBuild)Enum.Parse(typeof(EBuild), data.GetString("Build"), ignoreCase: true);

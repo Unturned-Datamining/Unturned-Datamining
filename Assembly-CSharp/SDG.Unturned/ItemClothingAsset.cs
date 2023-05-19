@@ -85,7 +85,7 @@ public class ItemClothingAsset : ItemAsset
         shouldMirrorLeftHandedModel = data.ParseBool("Mirror_Left_Handed_Model", defaultValue: true);
         if (data.ContainsKey("WearAudio"))
         {
-            wearAudio = data.ReadAudioReference("WearAudio");
+            wearAudio = data.ReadAudioReference("WearAudio", bundle);
         }
         else if (type == EItemType.BACKPACK || type == EItemType.VEST)
         {

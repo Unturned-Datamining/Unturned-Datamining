@@ -50,7 +50,7 @@ Spread_Hip 0.025
 
 Ballistic_Steps 20
 Ballistic_Travel 25
-Ballistic_Drop 0
+Bullet_Gravity_Multiplier 0
 
 Muzzle 4
 

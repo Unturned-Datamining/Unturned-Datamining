@@ -25,7 +25,7 @@ public class Level : MonoBehaviour
         public bool[,][] wasTreeSkyboxEnabled = new bool[Regions.WORLD_SIZE, Regions.WORLD_SIZE][];
     }
 
-    private static readonly float STEPS = 12f;
+    private const float STEPS = 19f;
 
     public static readonly int BUILD_INDEX_SETUP = 0;
 
@@ -465,16 +465,16 @@ public class Level : MonoBehaviour
             block.writeByte((byte)size);
             block.writeByte((byte)type);
             ReadWrite.writeBlock("/Maps/" + name + "/Level.dat", useCloud: false, block);
-            ReadWrite.copyFile("/Bundles/Level/Charts.unity3d", "/Maps/" + name + "/Charts.unity3d");
-            ReadWrite.copyFile("/Bundles/Level/Details.unity3d", "/Maps/" + name + "/Terrain/Details.unity3d");
-            ReadWrite.copyFile("/Bundles/Level/Details.dat", "/Maps/" + name + "/Terrain/Details.dat");
-            ReadWrite.copyFile("/Bundles/Level/Materials.unity3d", "/Maps/" + name + "/Terrain/Materials.unity3d");
-            ReadWrite.copyFile("/Bundles/Level/Materials.dat", "/Maps/" + name + "/Terrain/Materials.dat");
-            ReadWrite.copyFile("/Bundles/Level/Resources.dat", "/Maps/" + name + "/Terrain/Resources.dat");
-            ReadWrite.copyFile("/Bundles/Level/Lighting.dat", "/Maps/" + name + "/Environment/Lighting.dat");
-            ReadWrite.copyFile("/Bundles/Level/Roads.unity3d", "/Maps/" + name + "/Environment/Roads.unity3d");
-            ReadWrite.copyFile("/Bundles/Level/Roads.dat", "/Maps/" + name + "/Environment/Roads.dat");
-            ReadWrite.copyFile("/Bundles/Level/Ambience.unity3d", "/Maps/" + name + "/Environment/Ambience.unity3d");
+            ReadWrite.copyFile("/Extras/LevelTemplate/Charts.unity3d", "/Maps/" + name + "/Charts.unity3d");
+            ReadWrite.copyFile("/Extras/LevelTemplate/Details.unity3d", "/Maps/" + name + "/Terrain/Details.unity3d");
+            ReadWrite.copyFile("/Extras/LevelTemplate/Details.dat", "/Maps/" + name + "/Terrain/Details.dat");
+            ReadWrite.copyFile("/Extras/LevelTemplate/Materials.unity3d", "/Maps/" + name + "/Terrain/Materials.unity3d");
+            ReadWrite.copyFile("/Extras/LevelTemplate/Materials.dat", "/Maps/" + name + "/Terrain/Materials.dat");
+            ReadWrite.copyFile("/Extras/LevelTemplate/Resources.dat", "/Maps/" + name + "/Terrain/Resources.dat");
+            ReadWrite.copyFile("/Extras/LevelTemplate/Lighting.dat", "/Maps/" + name + "/Environment/Lighting.dat");
+            ReadWrite.copyFile("/Extras/LevelTemplate/Roads.unity3d", "/Maps/" + name + "/Environment/Roads.unity3d");
+            ReadWrite.copyFile("/Extras/LevelTemplate/Roads.dat", "/Maps/" + name + "/Environment/Roads.dat");
+            ReadWrite.copyFile("/Extras/LevelTemplate/Ambience.unity3d", "/Maps/" + name + "/Environment/Ambience.unity3d");
             broadcastLevelsRefreshed();
         }
     }
@@ -611,6 +611,7 @@ public class Level : MonoBehaviour
         LoadingUI.updateScene();
         if (!Dedicator.IsDedicatedServer)
         {
+            LoadingUI.SetLoadingText("Loading_MainMenu");
             instance.StartCoroutine(instance.ReturnToMainMenu());
         }
     }
@@ -1302,49 +1303,50 @@ public class Level : MonoBehaviour
         {
             LevelBatching.Get()?.Reset();
         }
-        LoadingUI.updateProgress(1f / STEPS);
+        LoadingUI.NotifyLevelLoadingProgress(1f / 19f);
         yield return null;
         LevelObjects.load();
-        LoadingUI.updateProgress(2f / STEPS);
+        LoadingUI.NotifyLevelLoadingProgress(0.10526316f);
         yield return null;
         LevelLighting.load(size);
-        LoadingUI.updateProgress(3f / STEPS);
+        LoadingUI.NotifyLevelLoadingProgress(0.15789473f);
         yield return null;
         LevelGround.load(size);
-        LoadingUI.updateProgress(4f / STEPS);
+        LoadingUI.NotifyLevelLoadingProgress(0.21052632f);
         yield return null;
         LevelRoads.load();
-        LoadingUI.updateProgress(5f / STEPS);
+        LoadingUI.NotifyLevelLoadingProgress(0.2631579f);
         yield return null;
         if (!isVR)
         {
             LevelNodes.load();
-            LoadingUI.updateProgress(6f / STEPS);
+            LoadingUI.NotifyLevelLoadingProgress(0.31578946f);
             yield return null;
             LevelItems.load();
-            LoadingUI.updateProgress(7f / STEPS);
+            LoadingUI.NotifyLevelLoadingProgress(0.36842105f);
             yield return null;
         }
         LevelPlayers.load();
-        LoadingUI.updateProgress(8f / STEPS);
+        LoadingUI.NotifyLevelLoadingProgress(0.42105263f);
         yield return null;
         if (!isVR)
         {
             LevelZombies.load();
-            LoadingUI.updateProgress(9f / STEPS);
+            LoadingUI.NotifyLevelLoadingProgress(0.47368422f);
             yield return null;
             LevelVehicles.load();
-            LoadingUI.updateProgress(10f / STEPS);
+            LoadingUI.NotifyLevelLoadingProgress(0.5263158f);
             yield return null;
             LevelAnimals.load();
-            LoadingUI.updateProgress(11f / STEPS);
+            LoadingUI.NotifyLevelLoadingProgress(0.57894737f);
             yield return null;
         }
         LevelVisibility.load();
-        LoadingUI.updateProgress(12f / STEPS);
+        LoadingUI.NotifyLevelLoadingProgress(0.6315789f);
         yield return null;
         pendingHashes = new List<byte[]>();
         Level.loadingSteps?.Invoke();
+        LoadingUI.NotifyLevelLoadingProgress(0.68421054f);
         yield return null;
         if (LevelGround.hasLegacyDataForConversion)
         {
@@ -1364,12 +1366,15 @@ public class Level : MonoBehaviour
             LevelNodes.AutoConvertLegacyNodes();
         }
         VolumeManager<CullingVolume, CullingVolumeManager>.Get().RefreshOverlappingObjects();
+        LoadingUI.NotifyLevelLoadingProgress(0.7368421f);
         yield return null;
         if (shouldUseLevelBatching)
         {
             LevelBatching.Get()?.ApplyTextureAtlas();
+            LoadingUI.NotifyLevelLoadingProgress(0.7894737f);
             yield return null;
             LevelBatching.Get()?.ApplyStaticBatching();
+            LoadingUI.NotifyLevelLoadingProgress(0.84210527f);
             yield return null;
         }
         includeHash("Level.dat", getLevelHash(info.path));
@@ -1383,9 +1388,11 @@ public class Level : MonoBehaviour
         includeHash("Resources.dat", LevelGround.treesHash);
         combineHashes();
         Physics.gravity = new Vector3(0f, info.configData.Gravity, 0f);
+        LoadingUI.NotifyLevelLoadingProgress(0.8947368f);
         yield return null;
         Resources.UnloadUnusedAssets();
         GC.Collect();
+        LoadingUI.NotifyLevelLoadingProgress(0.94736844f);
         yield return null;
         _editing = new GameObject().transform;
         editing.name = "Editing";
@@ -1447,6 +1454,7 @@ public class Level : MonoBehaviour
                 obj2.parent = clips;
             }
         }
+        LoadingUI.NotifyLevelLoadingProgress(1f);
         yield return null;
         _isLoaded = true;
         isLoadingContent = false;

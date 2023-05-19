@@ -40,46 +40,21 @@ public class Assets : MonoBehaviour
         }
     }
 
-    private struct ScannedFileInfo
-    {
-        public string name;
-
-        public string absoluteAssetPath;
-
-        public AssetOrigin origin;
-
-        public bool overrideExistingIDs;
-
-        public MasterBundleConfig masterBundleCfg;
-
-        public string masterBundleRelativePath;
-
-        public ScannedFileInfo(string name, string absoluteAssetPath, AssetOrigin origin, bool overrideExistingIDs, MasterBundleConfig masterBundleCfg, string masterBundleRelativePath)
-        {
-            this.name = name;
-            this.absoluteAssetPath = absoluteAssetPath;
-            this.origin = origin;
-            this.overrideExistingIDs = overrideExistingIDs;
-            this.masterBundleCfg = masterBundleCfg;
-            this.masterBundleRelativePath = masterBundleRelativePath;
-        }
-    }
-
-    private static readonly float STEPS = 16f;
-
-    private static readonly int ASSETS_PER_STEP = 25;
-
     private static TypeRegistryDictionary _assetTypes = new TypeRegistryDictionary(typeof(Asset));
 
     private static TypeRegistryDictionary _useableTypes = new TypeRegistryDictionary(typeof(Useable));
 
     private static Assets instance;
 
-    private static bool hasLoaded;
+    private static bool hasFinishedInitialStartupLoading;
 
-    private static bool _isLoading;
+    private static bool isLoadingAllAssets;
+
+    private static bool isLoadingFromUpdate;
 
     public static AssetsRefreshed onAssetsRefreshed;
+
+    internal static System.Action OnNewAssetsFinishedLoading;
 
     internal static AssetMapping defaultAssetMapping;
 
@@ -93,15 +68,13 @@ public class Assets : MonoBehaviour
 
     public static CommandLineFlag shouldLogWorkshopAssets = new CommandLineFlag(defaultValue: false, "-LogWorkshopAssets");
 
-    public static CommandLineFlag shouldLoadMasterBundlesAsync = new CommandLineFlag(defaultValue: true, "-NoAsyncMB");
-
     private static CommandLineFlag shouldCollectGarbageAggressively = new CommandLineFlag(defaultValue: false, "-AggressiveGC");
 
     private static CommandLineFlag shouldLogSpawnInsertions = new CommandLineFlag(defaultValue: false, "-LogSpawnInsertions");
 
     private static List<MasterBundleConfig> allMasterBundles;
 
-    private static List<MasterBundleConfig> newMasterBundles;
+    private static List<MasterBundleConfig> pendingMasterBundles;
 
     internal static MasterBundleConfig coreMasterBundle;
 
@@ -115,15 +88,7 @@ public class Assets : MonoBehaviour
 
     private static AssetOrigin legacyPerServerOrigin;
 
-    private static Queue<ScannedFileInfo> filesScanned;
-
     private static List<string> errors;
-
-    internal static AssetOrigin legacyOfficialOrigin;
-
-    internal static AssetOrigin legacyMiscOrigin;
-
-    internal static AssetOrigin legacyWorkshopOrigin;
 
     private static bool hasUnlinkedSpawns;
 
@@ -131,9 +96,15 @@ public class Assets : MonoBehaviour
 
     internal static readonly ClientStaticMethod<Guid, string, string, byte[], string, string> SendKickForHashMismatch = ClientStaticMethod<Guid, string, string, byte[], string, string>.Get(ReceiveKickForHashMismatch);
 
-    private static DatParser datParser = new DatParser();
+    internal static AssetLoadingStats loadingStats = new AssetLoadingStats();
 
-    public static int assetsToLoadPerStep => ASSETS_PER_STEP;
+    private AssetsWorker worker;
+
+    internal static AssetOrigin legacyOfficialOrigin;
+
+    internal static AssetOrigin legacyMiscOrigin;
+
+    internal static AssetOrigin legacyWorkshopOrigin;
 
     public static TypeRegistryDictionary assetTypes => _assetTypes;
 
@@ -143,7 +114,29 @@ public class Assets : MonoBehaviour
 
     public static bool hasLoadedMaps { get; protected set; }
 
-    public static bool isLoading => _isLoading;
+    public static bool isLoading
+    {
+        get
+        {
+            if (!isLoadingAllAssets)
+            {
+                return isLoadingFromUpdate;
+            }
+            return true;
+        }
+    }
+
+    internal static bool ShouldWaitForNewAssetsToFinishLoading
+    {
+        get
+        {
+            if (!isLoading)
+            {
+                return instance.worker.IsWorking;
+            }
+            return true;
+        }
+    }
 
     public static bool shouldDeferLoadingAssets
     {
@@ -213,11 +206,6 @@ public class Assets : MonoBehaviour
         return errors;
     }
 
-    [Obsolete]
-    public static void rename(Asset asset, string newName)
-    {
-    }
-
     internal static AssetOrigin FindWorkshopFileOrigin(ulong workshopFileId)
     {
         foreach (AssetOrigin assetOrigin in assetOrigins)
@@ -247,7 +235,7 @@ public class Assets : MonoBehaviour
         return null;
     }
 
-    internal static AssetOrigin FindOrAddWorkshopFileOrigin(ulong workshopFileId)
+    internal static AssetOrigin FindOrAddWorkshopFileOrigin(ulong workshopFileId, bool shouldOverrideIds)
     {
         AssetOrigin assetOrigin = FindWorkshopFileOrigin(workshopFileId);
         if (assetOrigin != null)
@@ -257,6 +245,7 @@ public class Assets : MonoBehaviour
         AssetOrigin assetOrigin2 = new AssetOrigin();
         assetOrigin2.name = $"Workshop File ({workshopFileId})";
         assetOrigin2.workshopFileId = workshopFileId;
+        assetOrigin2.shouldAssetsOverrideExistingIds = shouldOverrideIds;
         assetOrigins.Add(assetOrigin2);
         return assetOrigin2;
     }
@@ -265,7 +254,7 @@ public class Assets : MonoBehaviour
     {
         if (level.publishedFileId != 0L)
         {
-            return FindOrAddWorkshopFileOrigin(level.publishedFileId);
+            return FindOrAddWorkshopFileOrigin(level.publishedFileId, shouldOverrideIds: false);
         }
         string b = "Map \"" + level.name + "\"";
         foreach (AssetOrigin assetOrigin2 in assetOrigins)
@@ -281,38 +270,6 @@ public class Assets : MonoBehaviour
         return assetOrigin;
     }
 
-    [Obsolete]
-    public static AssetOrigin ConvertLegacyOrigin(EAssetOrigin legacyOrigin)
-    {
-        switch (legacyOrigin)
-        {
-        case EAssetOrigin.OFFICIAL:
-            if (legacyOfficialOrigin == null)
-            {
-                legacyOfficialOrigin = new AssetOrigin();
-                legacyOfficialOrigin.name = "Official (Legacy)";
-                assetOrigins.Add(legacyOfficialOrigin);
-            }
-            return legacyOfficialOrigin;
-        case EAssetOrigin.MISC:
-            if (legacyMiscOrigin == null)
-            {
-                legacyMiscOrigin = new AssetOrigin();
-                legacyMiscOrigin.name = "Misc (Legacy)";
-                assetOrigins.Add(legacyMiscOrigin);
-            }
-            return legacyMiscOrigin;
-        default:
-            if (legacyWorkshopOrigin == null)
-            {
-                legacyWorkshopOrigin = new AssetOrigin();
-                legacyWorkshopOrigin.name = "Workshop File (Legacy)";
-                assetOrigins.Add(legacyWorkshopOrigin);
-            }
-            return legacyWorkshopOrigin;
-        }
-    }
-
     public static Asset find(EAssetType type, ushort id)
     {
         if (type == EAssetType.NONE || id == 0)
@@ -321,12 +278,6 @@ public class Assets : MonoBehaviour
         }
         currentAssetMapping.legacyAssetsTable[type].TryGetValue(id, out var value);
         return value;
-    }
-
-    [Obsolete]
-    public static Asset find(EAssetType type, string name)
-    {
-        return null;
     }
 
     public static T find<T>(AssetReference<T> reference) where T : Asset
@@ -415,30 +366,6 @@ public class Assets : MonoBehaviour
         return find<T>(guid);
     }
 
-    public static Asset[] find(EAssetType type)
-    {
-        switch (type)
-        {
-        case EAssetType.NONE:
-            return null;
-        case EAssetType.OBJECT:
-            throw new NotSupportedException();
-        default:
-        {
-            Asset[] array = new Asset[currentAssetMapping.legacyAssetsTable[type].Values.Count];
-            int num = 0;
-            {
-                foreach (KeyValuePair<ushort, Asset> item in currentAssetMapping.legacyAssetsTable[type])
-                {
-                    array[num] = item.Value;
-                    num++;
-                }
-                return array;
-            }
-        }
-        }
-    }
-
     public static void find<T>(List<T> results) where T : Asset
     {
         FindAssetsInListByType(currentAssetMapping.assetList, results);
@@ -484,7 +411,7 @@ public class Assets : MonoBehaviour
             if (Activator.CreateInstance(type) is Asset asset)
             {
                 asset.GUID = Guid.NewGuid();
-                addToMapping(asset, overrideExistingID: false, defaultAssetMapping);
+                AddToMapping(asset, overrideExistingID: false, defaultAssetMapping);
                 if (asset is IDirtyable)
                 {
                     (asset as IDirtyable).isDirty = true;
@@ -497,13 +424,7 @@ public class Assets : MonoBehaviour
         }
     }
 
-    [Obsolete]
-    public static void add(Asset asset, bool overrideExistingID)
-    {
-        addToMapping(asset, overrideExistingID, defaultAssetMapping);
-    }
-
-    internal static void addToMapping(Asset asset, bool overrideExistingID, AssetMapping assetMapping)
+    internal static void AddToMapping(Asset asset, bool overrideExistingID, AssetMapping assetMapping)
     {
         if (asset == null)
         {
@@ -514,9 +435,8 @@ public class Assets : MonoBehaviour
         {
             hasUnlinkedSpawns = true;
         }
-        switch (assetCategory)
+        if (assetCategory == EAssetType.OBJECT)
         {
-        case EAssetType.OBJECT:
             if (overrideExistingID)
             {
                 assetMapping.legacyAssetsTable[assetCategory].Remove(asset.id);
@@ -526,8 +446,9 @@ public class Assets : MonoBehaviour
             {
                 assetMapping.legacyAssetsTable[assetCategory].Add(asset.id, asset);
             }
-            break;
-        default:
+        }
+        else if (assetCategory != 0 && (assetCategory != EAssetType.ITEM || !(asset is ItemAsset itemAsset) || !itemAsset.isPro || itemAsset.id != 0))
+        {
             if (overrideExistingID)
             {
                 assetMapping.legacyAssetsTable[assetCategory].Remove(asset.id);
@@ -539,9 +460,6 @@ public class Assets : MonoBehaviour
                 return;
             }
             assetMapping.legacyAssetsTable[assetCategory].Add(asset.id, asset);
-            break;
-        case EAssetType.NONE:
-            break;
         }
         if (asset.GUID != Guid.Empty)
         {
@@ -573,7 +491,7 @@ public class Assets : MonoBehaviour
         UnturnedLog.info($"Adding {origin.assets.Count} asset(s) from origin \"{origin.name}\" to server mapping");
         foreach (Asset asset in origin.assets)
         {
-            addToMapping(asset, overrideExistingID: true, currentAssetMapping);
+            AddToMapping(asset, overrideExistingID: true, currentAssetMapping);
         }
     }
 
@@ -616,41 +534,37 @@ public class Assets : MonoBehaviour
         currentAssetMapping = defaultAssetMapping;
     }
 
-    public static void refresh()
+    public static void RequestReloadAllAssets()
     {
-        instance.StartCoroutine(instance.init());
+        if (hasFinishedInitialStartupLoading && !isLoading)
+        {
+            instance.StartCoroutine(instance.LoadAllAssets());
+        }
     }
 
-    private static MasterBundleConfig findMasterBundle(string path, bool usePath, ulong workshopFileId)
+    private static MasterBundleConfig LoadMasterBundleConfig(AssetsWorker.MasterBundle mb)
     {
-        string text = path;
-        if (usePath)
+        try
         {
-            text = ReadWrite.PATH + path;
+            MasterBundleConfig masterBundleConfig = findMasterBundleByName(mb.config.assetBundleName);
+            if (masterBundleConfig == null)
+            {
+                masterBundleConfig = findMasterBundleInListByName(pendingMasterBundles, mb.config.assetBundleName);
+            }
+            if (masterBundleConfig != null)
+            {
+                UnturnedLog.info("Found duplicate of master bundle '{0}' originally in '{1}' at '{2}'", mb.config.assetBundleName, masterBundleConfig.directoryPath, mb.config.directoryPath);
+                return null;
+            }
+            if (mb.config.origin == coreOrigin)
+            {
+                coreMasterBundle = mb.config;
+            }
+            return mb.config;
         }
-        if (MasterBundleHelper.containsMasterBundle(text))
+        catch (Exception e)
         {
-            try
-            {
-                text = Path.GetFullPath(text);
-                MasterBundleConfig masterBundleConfig = new MasterBundleConfig(text, workshopFileId);
-                MasterBundleConfig masterBundleConfig2 = findMasterBundleByName(masterBundleConfig.assetBundleName);
-                if (masterBundleConfig2 == null)
-                {
-                    masterBundleConfig2 = findPendingMasterBundleByName(masterBundleConfig.assetBundleName);
-                }
-                if (masterBundleConfig2 != null)
-                {
-                    UnturnedLog.info("Found duplicate of master bundle '{0}' originally in '{1}' at '{2}'", masterBundleConfig.assetBundleName, masterBundleConfig2.directoryPath, masterBundleConfig.directoryPath);
-                    return masterBundleConfig2;
-                }
-                newMasterBundles.Add(masterBundleConfig);
-                return masterBundleConfig;
-            }
-            catch (Exception e)
-            {
-                UnturnedLog.exception(e);
-            }
+            UnturnedLog.exception(e);
         }
         return null;
     }
@@ -687,56 +601,7 @@ public class Assets : MonoBehaviour
         return findMasterBundleInListByName(allMasterBundles, name, matchExtension);
     }
 
-    private static MasterBundleConfig findPendingMasterBundleByName(string name, bool matchExtension = true)
-    {
-        return findMasterBundleInListByName(newMasterBundles, name, matchExtension);
-    }
-
-    private static void loadNewMasterBundles()
-    {
-        foreach (MasterBundleConfig newMasterBundle in newMasterBundles)
-        {
-            if (newMasterBundle.load())
-            {
-                allMasterBundles.Add(newMasterBundle);
-                UnturnedLog.info("Loaded master bundle: " + newMasterBundle.getAssetBundlePath());
-            }
-            else
-            {
-                UnturnedLog.warn("Failed to load pending master bundle: " + newMasterBundle.getAssetBundlePath());
-            }
-        }
-        newMasterBundles.Clear();
-    }
-
-    private static IEnumerator loadNewMasterBundlesAsync()
-    {
-        if ((bool)shouldLoadMasterBundlesAsync)
-        {
-            List<MasterBundleConfig> list = new List<MasterBundleConfig>(newMasterBundles);
-            newMasterBundles.Clear();
-            foreach (MasterBundleConfig config in list)
-            {
-                yield return config.loadAsync();
-                if (config.assetBundle != null)
-                {
-                    allMasterBundles.Add(config);
-                    UnturnedLog.info("Loaded master bundle async: " + config.getAssetBundlePath());
-                }
-                else
-                {
-                    UnturnedLog.warn("Failed to load pending master bundle async: " + config.getAssetBundlePath());
-                }
-            }
-        }
-        else
-        {
-            loadNewMasterBundles();
-            yield return null;
-        }
-    }
-
-    private static void unloadAllMasterBundles()
+    private static void UnloadAllMasterBundles()
     {
         foreach (MasterBundleConfig allMasterBundle in allMasterBundles)
         {
@@ -745,169 +610,112 @@ public class Assets : MonoBehaviour
         allMasterBundles.Clear();
     }
 
-    private static void scanFolder(string path, AssetOrigin origin, bool overrideExistingIDs, MasterBundleConfig parentMasterBundle = null, string relativePath = "")
-    {
-        string fileName = Path.GetFileName(path);
-        MasterBundleConfig masterBundleConfig = findMasterBundle(path, usePath: false, origin.workshopFileId);
-        if (masterBundleConfig != null)
-        {
-            parentMasterBundle = masterBundleConfig;
-            relativePath = string.Empty;
-        }
-        if (ReadWrite.fileExists(path + "/" + fileName + ".asset", useCloud: false, usePath: false))
-        {
-            filesScanned.Enqueue(new ScannedFileInfo(fileName, path + "/" + fileName + ".asset", origin, overrideExistingIDs, parentMasterBundle, relativePath));
-        }
-        else if (ReadWrite.fileExists(path + "/" + fileName + ".dat", useCloud: false, usePath: false))
-        {
-            filesScanned.Enqueue(new ScannedFileInfo(fileName, path + "/" + fileName + ".dat", origin, overrideExistingIDs, parentMasterBundle, relativePath));
-        }
-        else if (ReadWrite.fileExists(path + "/Asset.dat", useCloud: false, usePath: false))
-        {
-            filesScanned.Enqueue(new ScannedFileInfo(fileName, path + "/Asset.dat", origin, overrideExistingIDs, parentMasterBundle, relativePath));
-        }
-        else
-        {
-            string[] files = Directory.GetFiles(path, "*.asset");
-            for (int i = 0; i < files.Length; i++)
-            {
-                filesScanned.Enqueue(new ScannedFileInfo(Path.GetFileNameWithoutExtension(files[i]), files[i], origin, overrideExistingIDs, parentMasterBundle, relativePath));
-            }
-        }
-        string[] folders = ReadWrite.getFolders(path, usePath: false);
-        for (int j = 0; j < folders.Length; j++)
-        {
-            string fileName2 = Path.GetFileName(folders[j]);
-            string text = "/" + fileName2;
-            scanFolder(path + text, origin, overrideExistingIDs, parentMasterBundle, relativePath + text);
-        }
-    }
-
-    private static void tryLoadFile(ScannedFileInfo file)
+    private static void TryLoadFile(AssetsWorker.AssetDefinition file)
     {
         try
         {
-            loadFile(file);
+            loadingStats.totalFilesLoaded++;
+            LoadFile(file);
         }
         catch (Exception e)
         {
-            UnturnedLog.error("Exception loading file {0}:", file.name);
+            UnturnedLog.error("Exception loading file {0}:", file.path);
             UnturnedLog.exception(e);
         }
     }
 
-    private static void loadFile(ScannedFileInfo file)
+    private static void LoadFile(AssetsWorker.AssetDefinition file)
     {
-        string fullPath = Path.GetFullPath(file.absoluteAssetPath);
-        DatDictionary datDictionary = null;
-        byte[] hash;
-        try
+        string path = file.path;
+        DatDictionary assetData = file.assetData;
+        byte[] hash = file.hash;
+        if (!string.IsNullOrEmpty(file.assetError))
         {
-            using (FileStream underlyingStream = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                using SHA1Stream sHA1Stream = new SHA1Stream(underlyingStream);
-                using StreamReader inputReader = new StreamReader(sHA1Stream);
-                datDictionary = datParser.Parse(inputReader);
-                hash = sHA1Stream.Hash;
-            }
-            if (datParser.HasError)
-            {
-                reportError("Error parsing \"" + fullPath + "\": \"" + datParser.ErrorMessage + "\"");
-            }
-            if (datDictionary == null)
-            {
-                reportError("Unable to read \"" + fullPath + "\"");
-                return;
-            }
+            reportError("Error parsing \"" + path + "\": \"" + file.assetError + "\"");
         }
-        catch (Exception e)
-        {
-            reportError("Caught exception while reading \"" + fullPath + "\": " + getExceptionMessage(e));
-            UnturnedLog.exception(e);
-            return;
-        }
-        string directoryName = Path.GetDirectoryName(fullPath);
+        string directoryName = Path.GetDirectoryName(path);
+        string text = (path.EndsWith("Asset.dat", StringComparison.OrdinalIgnoreCase) ? Path.GetFileName(directoryName) : Path.GetFileNameWithoutExtension(path));
         Guid value = default(Guid);
         Type type = null;
-        if (datDictionary.TryGetDictionary("Metadata", out var node))
+        if (assetData.TryGetDictionary("Metadata", out var node))
         {
             if (!node.TryParseGuid("GUID", out value))
             {
-                reportError("Unable to parse Metadata.GUID in \"" + fullPath + "\"");
+                reportError("Unable to parse Metadata.GUID in \"" + path + "\"");
                 return;
             }
             type = node.ParseType("Type");
             if (type == null)
             {
-                reportError("Unable to parse Metadata.Type in \"" + fullPath + "\"");
+                reportError("Unable to parse Metadata.Type in \"" + path + "\"");
                 return;
             }
         }
-        else if (!datDictionary.TryParseGuid("GUID", out value))
+        else if (!assetData.TryParseGuid("GUID", out value))
         {
             value = Guid.NewGuid();
             try
             {
-                string text = File.ReadAllText(fullPath);
-                text = "GUID " + value.ToString("N") + "\n" + text;
-                File.WriteAllText(fullPath, text);
+                string text2 = File.ReadAllText(path);
+                text2 = "GUID " + value.ToString("N") + "\n" + text2;
+                File.WriteAllText(path, text2);
             }
-            catch (Exception e2)
+            catch (Exception e)
             {
-                UnturnedLog.exception(e2, "Caught IO exception adding GUID to \"" + fullPath + "\":");
+                UnturnedLog.exception(e, "Caught IO exception adding GUID to \"" + path + "\":");
             }
         }
         if (value.IsEmpty())
         {
-            reportError("Cannot use empty GUID in \"" + fullPath + "\"");
+            reportError("Cannot use empty GUID in \"" + path + "\"");
             return;
         }
-        DatDictionary datDictionary2 = datDictionary;
-        if (datDictionary.TryGetDictionary("Asset", out var node2))
+        DatDictionary datDictionary = assetData;
+        if (assetData.TryGetDictionary("Asset", out var node2))
         {
-            datDictionary2 = node2;
+            datDictionary = node2;
         }
         if (type == null)
         {
-            string @string = datDictionary2.GetString("Type");
+            string @string = datDictionary.GetString("Type");
             if (string.IsNullOrEmpty(@string))
             {
-                reportError("Missing asset Type in \"" + fullPath + "\"");
+                reportError("Missing asset Type in \"" + path + "\"");
                 return;
             }
             type = assetTypes.getType(@string);
             if (type == null)
             {
-                type = datDictionary2.ParseType("Type");
+                type = datDictionary.ParseType("Type");
                 if (type == null)
                 {
-                    reportError("Unhandled asset type \"" + @string + "\" in \"" + fullPath + "\"");
+                    reportError("Unhandled asset type \"" + @string + "\" in \"" + path + "\"");
                     return;
                 }
             }
         }
         if (!typeof(Asset).IsAssignableFrom(type))
         {
-            reportError($"Type \"{type}\" is not a valid asset type in \"{fullPath}\"");
+            reportError($"Type \"{type}\" is not a valid asset type in \"{path}\"");
             return;
         }
-        MasterBundleConfig masterBundleConfig = file.masterBundleCfg;
-        string string2 = datDictionary2.GetString("Master_Bundle_Override");
+        MasterBundleConfig masterBundleConfig = findMasterBundleByPath(path);
+        string string2 = datDictionary.GetString("Master_Bundle_Override");
         if (string2 != null)
         {
             masterBundleConfig = findMasterBundleByName(string2);
             if (masterBundleConfig == null)
             {
-                UnturnedLog.warn("Unable to find master bundle override '{0}' for '{1}'", string2, file.name);
+                UnturnedLog.warn("Unable to find master bundle override '{0}' for '{1}'", string2, path);
             }
         }
-        else if (datDictionary2.ContainsKey("Exclude_From_Master_Bundle"))
+        else if (datDictionary.ContainsKey("Exclude_From_Master_Bundle"))
         {
             masterBundleConfig = null;
         }
         if (masterBundleConfig != null && masterBundleConfig.assetBundle == null)
         {
-            UnturnedLog.warn("Skipping master bundle '{0}' for '{1}' because asset bundle is null", masterBundleConfig.assetBundleName, file.name);
+            UnturnedLog.warn("Skipping master bundle '{0}' for '{1}' because asset bundle is null", masterBundleConfig.assetBundleName, path);
             masterBundleConfig = null;
         }
         currentMasterBundle = masterBundleConfig;
@@ -915,55 +723,59 @@ public class Assets : MonoBehaviour
         Bundle bundle;
         if (masterBundleConfig != null)
         {
-            string string3 = datDictionary2.GetString("Bundle_Override_Path", file.masterBundleRelativePath);
-            bundle = new MasterBundle(masterBundleConfig, string3, file.name);
+            if (!datDictionary.TryGetString("Bundle_Override_Path", out var value2))
+            {
+                value2 = directoryName.Substring(masterBundleConfig.directoryPath.Length);
+                value2 = value2.Replace('\\', '/');
+            }
+            bundle = new MasterBundle(masterBundleConfig, value2, text);
             a = masterBundleConfig.version;
         }
-        else if (datDictionary2.ContainsKey("Bundle_Override_Path"))
+        else if (datDictionary.ContainsKey("Bundle_Override_Path"))
         {
-            string string4 = datDictionary2.GetString("Bundle_Override_Path");
-            int num = string4.LastIndexOf('/');
-            string text2 = ((num != -1) ? string4.Substring(num + 1) : string4);
-            string4 = string4 + "/" + text2 + ".unity3d";
-            bundle = new Bundle(string4, usePath: false, file.name);
+            string string3 = datDictionary.GetString("Bundle_Override_Path");
+            int num = string3.LastIndexOf('/');
+            string text3 = ((num != -1) ? string3.Substring(num + 1) : string3);
+            string3 = string3 + "/" + text3 + ".unity3d";
+            bundle = new Bundle(string3, usePath: false, text);
         }
         else
         {
-            bundle = new Bundle(directoryName + "/" + file.name + ".unity3d", usePath: false);
+            bundle = new Bundle(directoryName + "/" + text + ".unity3d", usePath: false);
         }
         bundle.isCoreAsset = file.origin == coreOrigin;
-        int num2 = datDictionary2.ParseInt32("Asset_Bundle_Version", 1);
+        int num2 = datDictionary.ParseInt32("Asset_Bundle_Version", 1);
         if (num2 < 1)
         {
-            reportError(file.name + " Lowest individual asset bundle version is 1 (default), associated with 5.5.");
+            reportError(text + " Lowest individual asset bundle version is 1 (default), associated with 5.5.");
             num2 = 1;
         }
         else if (num2 > 4)
         {
-            reportError(file.name + " Highest individual asset bundle version is 4, associated with 2020 LTS.");
+            reportError(text + " Highest individual asset bundle version is 4, associated with 2020 LTS.");
             num2 = 4;
         }
         int num3 = Mathf.Max(a, num2);
         bundle.convertShadersToStandard = num3 < 2;
-        bundle.consolidateShaders = num3 < 3 || (datDictionary2.ContainsKey("Enable_Shader_Consolidation") && !datDictionary2.ContainsKey("Disable_Shader_Consolidation"));
-        Local localization = Localization.tryRead(directoryName, usePath: false);
-        ushort id = datDictionary2.ParseUInt16("ID", 0);
+        bundle.consolidateShaders = num3 < 3 || (datDictionary.ContainsKey("Enable_Shader_Consolidation") && !datDictionary.ContainsKey("Disable_Shader_Consolidation"));
+        Local localization = new Local(file.translationData, file.fallbackTranslationData);
+        ushort id = datDictionary.ParseUInt16("ID", 0);
         Asset asset;
         try
         {
             asset = Activator.CreateInstance(type) as Asset;
         }
-        catch (Exception e3)
+        catch (Exception e2)
         {
-            reportError($"Caught exception while constructing {type} in \"{fullPath}\": {getExceptionMessage(e3)}");
-            UnturnedLog.exception(e3);
+            reportError($"Caught exception while constructing {type} in \"{path}\": {getExceptionMessage(e2)}");
+            UnturnedLog.exception(e2);
             bundle.unload();
             currentMasterBundle = null;
             return;
         }
         if (asset == null)
         {
-            reportError($"Failed to construct {type} in \"{fullPath}\"");
+            reportError($"Failed to construct {type} in \"{path}\"");
             bundle.unload();
             currentMasterBundle = null;
             return;
@@ -974,70 +786,33 @@ public class Assets : MonoBehaviour
             asset.GUID = value;
             asset.hash = hash;
             asset.requiredShaderUpgrade = bundle.convertShadersToStandard || bundle.consolidateShaders;
-            asset.absoluteOriginFilePath = fullPath;
+            asset.absoluteOriginFilePath = path;
             asset.origin = file.origin;
+            asset.PopulateAsset(bundle, datDictionary, localization);
             asset.origin.assets.Add(asset);
-            asset.PopulateAsset(bundle, datDictionary2, localization);
-            addToMapping(asset, file.overrideExistingIDs, defaultAssetMapping);
+            AddToMapping(asset, file.origin.shouldAssetsOverrideExistingIds, defaultAssetMapping);
             bundle.unload();
         }
-        catch (Exception e4)
+        catch (Exception e3)
         {
-            reportError("Caught exception while populating \"" + fullPath + "\": " + getExceptionMessage(e4));
-            UnturnedLog.exception(e4);
+            reportError("Caught exception while populating \"" + path + "\": " + getExceptionMessage(e3));
+            UnturnedLog.exception(e3);
             bundle.unload();
         }
         currentMasterBundle = null;
     }
 
-    [Obsolete]
-    public static void load(string path, bool usePath, bool loadFromResources, bool canUse, EAssetOrigin origin, bool overrideExistingIDs)
+    public static void RequestAddSearchLocation(string absoluteDirectoryPath, AssetOrigin origin)
     {
-        load(path, usePath, loadFromResources, canUse, origin, overrideExistingIDs, 0uL);
-    }
-
-    [Obsolete("Remove unused loadFromResources which was used by vanilla assets before masterbundles, and canUse which was for timed curated maps.")]
-    public static void load(string path, bool usePath, bool loadFromResources, bool canUse, EAssetOrigin origin, bool overrideExistingIDs, ulong workshopFileId)
-    {
-        load(path, usePath, origin, overrideExistingIDs, workshopFileId);
-    }
-
-    [Obsolete("Replaced origin enum with class")]
-    public static void load(string path, bool usePath, EAssetOrigin legacyOrigin, bool overrideExistingIDs, ulong workshopFileId)
-    {
-        if (usePath)
-        {
-            path = ReadWrite.PATH + path;
-        }
-        AssetOrigin origin = ConvertLegacyOrigin(legacyOrigin);
-        load(path, origin, overrideExistingIDs);
-    }
-
-    public static void load(string absoluteDirectoryPath, AssetOrigin origin, bool overrideExistingIDs)
-    {
-        scanFolder(absoluteDirectoryPath, origin, overrideExistingIDs);
-        loadNewMasterBundles();
-        while (filesScanned.Count > 0)
-        {
-            tryLoadFile(filesScanned.Dequeue());
-        }
+        instance.AddSearchLocation(absoluteDirectoryPath, origin);
     }
 
     public static void reload(string absolutePath)
     {
-        UnturnedLog.info("Reloading {0}", absolutePath);
-        MasterBundleConfig masterBundleConfig = findMasterBundleByPath(absolutePath);
-        string text = string.Empty;
-        if (masterBundleConfig != null)
+        if (hasFinishedInitialStartupLoading && !isLoading)
         {
-            text = absolutePath.Substring(masterBundleConfig.directoryPath.Length);
-            text = text.Replace('\\', '/');
-            UnturnedLog.info("Master bundle: {0} Relative path: {1}", masterBundleConfig, text);
-        }
-        scanFolder(absolutePath, reloadOrigin, overrideExistingIDs: true, masterBundleConfig, text);
-        while (filesScanned.Count > 0)
-        {
-            tryLoadFile(filesScanned.Dequeue());
+            loadingStats.Reset();
+            RequestAddSearchLocation(absolutePath, reloadOrigin);
         }
     }
 
@@ -1144,34 +919,7 @@ public class Assets : MonoBehaviour
         MasterBundleValidation.initialize(allMasterBundles);
     }
 
-    private IEnumerator loadAllFilesScanned(string loadingKey, int stepNum, bool formatKey = true)
-    {
-        while (filesScanned.Count > 0)
-        {
-            tryLoadFile(filesScanned.Dequeue());
-            if (filesScanned.Count % assetsToLoadPerStep == 0)
-            {
-                LoadingUI.assetsLoad(loadingKey, filesScanned.Count, (float)stepNum / STEPS, 1f / STEPS, formatKey);
-                if ((bool)shouldCollectGarbageAggressively)
-                {
-                    cleanupMemory();
-                }
-                yield return null;
-            }
-        }
-    }
-
-    private IEnumerator loadingStep(string relativePath, string loadingKey, int stepNum, string masterBundleRelativePath)
-    {
-        scanFolder(ReadWrite.PATH + relativePath, coreOrigin, overrideExistingIDs: false, coreMasterBundle, masterBundleRelativePath);
-        LoadingUI.assetsScan(loadingKey, filesScanned.Count);
-        yield return null;
-        yield return loadNewMasterBundlesAsync();
-        yield return loadAllFilesScanned(loadingKey, stepNum);
-        cleanupMemory();
-    }
-
-    private void checkForBlueprintErrors()
+    private void CheckForBlueprintErrors()
     {
         Func<Blueprint, Blueprint, bool> func = delegate(Blueprint myBlueprint, Blueprint yourBlueprint)
         {
@@ -1229,14 +977,15 @@ public class Assets : MonoBehaviour
             }
             return true;
         };
-        Asset[] array = find(EAssetType.ITEM);
-        if (array == null)
+        List<ItemAsset> list = new List<ItemAsset>();
+        find(list);
+        if (list.Count <= 0)
         {
             return;
         }
-        for (int i = 0; i < array.Length; i++)
+        for (int i = 0; i < list.Count; i++)
         {
-            ItemAsset itemAsset = (ItemAsset)array[i];
+            ItemAsset itemAsset = list[i];
             for (byte b = 0; b < itemAsset.blueprints.Count; b = (byte)(b + 1))
             {
                 Blueprint blueprint = itemAsset.blueprints[b];
@@ -1252,13 +1001,13 @@ public class Assets : MonoBehaviour
                     }
                 }
             }
-            for (int j = 0; j < array.Length; j++)
+            for (int j = 0; j < list.Count; j++)
             {
                 if (j == i)
                 {
                     continue;
                 }
-                ItemAsset itemAsset2 = (ItemAsset)array[j];
+                ItemAsset itemAsset2 = list[j];
                 for (byte b3 = 0; b3 < itemAsset.blueprints.Count; b3 = (byte)(b3 + 1))
                 {
                     Blueprint blueprint2 = itemAsset.blueprints[b3];
@@ -1275,115 +1024,95 @@ public class Assets : MonoBehaviour
         }
     }
 
-    private void checkForNpcErrors()
+    private void CheckForNpcErrors()
     {
-        Asset[] array = find(EAssetType.NPC);
-        for (int i = 0; i < array.Length; i++)
+        List<DialogueAsset> list = new List<DialogueAsset>();
+        find(list);
+        foreach (DialogueAsset item in list)
         {
-            if (!(array[i] is DialogueAsset dialogueAsset))
+            int num = item.responses.Length;
+            for (int i = 0; i < num; i++)
             {
-                continue;
-            }
-            int num = dialogueAsset.responses.Length;
-            for (int j = 0; j < num; j++)
-            {
-                DialogueResponse dialogueResponse = dialogueAsset.responses[j];
+                DialogueResponse dialogueResponse = item.responses[i];
                 if (!dialogueResponse.IsDialogueRefNull() && dialogueResponse.FindDialogueAsset() == null)
                 {
-                    reportError(dialogueAsset, "unable to find dialogue asset for response " + j);
+                    reportError(item, "unable to find dialogue asset for response " + i);
                 }
                 if (!dialogueResponse.IsVendorRefNull() && dialogueResponse.FindVendorAsset() == null)
                 {
-                    reportError(dialogueAsset, "unable to find vendor asset for response " + j);
+                    reportError(item, "unable to find vendor asset for response " + i);
                 }
             }
         }
     }
 
-    private void cleanupMemory()
+    private void CleanupMemory()
     {
         Resources.UnloadUnusedAssets();
         GC.Collect();
     }
 
-    private IEnumerator dedicatedServerUgcLoadingStep()
+    private void AddDedicatedServerUgcSearchLocations()
     {
-        if (!ReadWrite.folderExists("/Bundles/Workshop/Content", usePath: true))
+        string path = Path.Combine(ReadWrite.PATH, "Bundles", "Workshop", "Content");
+        if (ReadWrite.folderExists(path, usePath: false))
         {
-            ReadWrite.createFolder("/Bundles/Workshop/Content", usePath: true);
+            AddSearchLocation(path, legacyServerSharedOrigin);
         }
-        scanFolder(ReadWrite.PATH + "/Bundles/Workshop/Content", legacyServerSharedOrigin, overrideExistingIDs: false);
-        LoadingUI.assetsScan("Workshop_Shared", filesScanned.Count);
-        yield return null;
-        yield return loadNewMasterBundlesAsync();
-        yield return loadAllFilesScanned("Workshop_Shared", 11);
-        cleanupMemory();
-        if (!ReadWrite.folderExists(ServerSavedata.directory + "/" + Provider.serverID + "/Workshop/Content", usePath: true))
+        string path2 = Path.Combine(ReadWrite.PATH, ServerSavedata.directory, Provider.serverID, "Workshop", "Content");
+        if (ReadWrite.folderExists(path2, usePath: false))
         {
-            ReadWrite.createFolder(ServerSavedata.directory + "/" + Provider.serverID + "/Workshop/Content", usePath: true);
+            AddSearchLocation(path2, legacyPerServerOrigin);
         }
-        scanFolder(ReadWrite.PATH + ServerSavedata.directory + "/" + Provider.serverID + "/Workshop/Content", legacyPerServerOrigin, overrideExistingIDs: false);
-        LoadingUI.assetsScan("Workshop_Server", filesScanned.Count);
-        yield return null;
-        yield return loadNewMasterBundlesAsync();
-        yield return loadAllFilesScanned("Workshop_Server", 12);
-        cleanupMemory();
-        scanFolder(ReadWrite.PATH + ServerSavedata.directory + "/" + Provider.serverID + "/Bundles", legacyPerServerOrigin, overrideExistingIDs: false);
-        LoadingUI.assetsScan("Bundles_Server", filesScanned.Count);
-        yield return null;
-        yield return loadNewMasterBundlesAsync();
-        yield return loadAllFilesScanned("Bundles_Server", 13);
-        cleanupMemory();
+        string path3 = Path.Combine(ReadWrite.PATH, ServerSavedata.directory, Provider.serverID, "Bundles");
+        if (ReadWrite.folderExists(path3, usePath: false))
+        {
+            AddSearchLocation(path3, legacyPerServerOrigin);
+        }
     }
 
-    private IEnumerator clientUgcLoadingStep()
+    private void AddClientUgcSearchLocations()
     {
-        if (Provider.provider.workshopService.ugc != null)
+        if (Provider.provider.workshopService.ugc == null)
         {
-            SteamContent[] array = Provider.provider.workshopService.ugc.ToArray();
-            hasLoadedUgc = true;
-            SteamContent[] array2 = array;
-            foreach (SteamContent steamContent in array2)
+            return;
+        }
+        SteamContent[] array = Provider.provider.workshopService.ugc.ToArray();
+        hasLoadedUgc = true;
+        SteamContent[] array2 = array;
+        foreach (SteamContent steamContent in array2)
+        {
+            if (LocalWorkshopSettings.get().getEnabled(steamContent.publishedFileID) && (steamContent.type == ESteamUGCType.OBJECT || steamContent.type == ESteamUGCType.ITEM || steamContent.type == ESteamUGCType.VEHICLE))
             {
-                if (LocalWorkshopSettings.get().getEnabled(steamContent.publishedFileID) && (steamContent.type == ESteamUGCType.OBJECT || steamContent.type == ESteamUGCType.ITEM || steamContent.type == ESteamUGCType.VEHICLE))
-                {
-                    AssetOrigin origin = FindOrAddWorkshopFileOrigin(steamContent.publishedFileID.m_PublishedFileId);
-                    scanFolder(steamContent.path, origin, overrideExistingIDs: false);
-                    LoadingUI.assetsScan("Workshop_Client", filesScanned.Count);
-                    yield return null;
-                }
+                AssetOrigin origin = FindOrAddWorkshopFileOrigin(steamContent.publishedFileID.m_PublishedFileId, shouldOverrideIds: false);
+                AddSearchLocation(steamContent.path, origin);
             }
         }
-        yield return loadNewMasterBundlesAsync();
-        yield return loadAllFilesScanned("Workshop_Client", 14);
-        cleanupMemory();
     }
 
-    private IEnumerator sandboxLoadingStep()
+    private void AddSandboxSearchLocations()
     {
         string path = Path.Combine(ReadWrite.PATH, "Sandbox");
         if (Directory.Exists(path))
         {
             string[] folders = ReadWrite.getFolders(path, usePath: false);
-            string[] array = folders;
-            foreach (string text in array)
+            foreach (string text in folders)
             {
                 UnturnedLog.info("Sandbox: {0}", text);
                 AssetOrigin assetOrigin = new AssetOrigin();
                 assetOrigin.name = "Sandbox Folder \"" + text + "\"";
+                assetOrigin.shouldAssetsOverrideExistingIds = true;
                 assetOrigins.Add(assetOrigin);
-                load(text, assetOrigin, overrideExistingIDs: true);
-                yield return null;
+                AddSearchLocation(text, assetOrigin);
             }
         }
         else
         {
             Directory.CreateDirectory(path);
         }
-        yield return null;
     }
 
-    private IEnumerator mapLoadingStep()
+    private void AddMapSearchLocations()
     {
         LevelInfo[] levels = Level.getLevels(ESingleplayerMapCategory.ALL);
         hasLoadedMaps = true;
@@ -1391,25 +1120,91 @@ public class Assets : MonoBehaviour
         {
             if (levelInfo != null)
             {
-                string levelDisplayName = levelInfo.getLocalizedName();
                 string path = Path.Combine(levelInfo.path, "Bundles");
                 if (ReadWrite.folderExists(path, usePath: false))
                 {
                     AssetOrigin origin = FindOrAddLevelOrigin(levelInfo);
-                    scanFolder(path, origin, overrideExistingIDs: false);
+                    AddSearchLocation(path, origin);
                 }
-                LoadingUI.assetsScan(levelDisplayName, filesScanned.Count, formatKey: false);
-                yield return null;
-                yield return loadNewMasterBundlesAsync();
-                yield return loadAllFilesScanned(levelDisplayName, 15, formatKey: false);
-                cleanupMemory();
             }
         }
     }
 
-    public IEnumerator init()
+    private void AddSearchLocation(string path, AssetOrigin origin)
     {
-        _isLoading = true;
+        path = Path.GetFullPath(path);
+        UnturnedLog.info(origin.name + " added asset search location \"" + path + "\"");
+        worker.RequestSearch(path, origin);
+    }
+
+    private IEnumerator LoadAssetsFromWorkerThread()
+    {
+        double realtimeSinceStartupAsDouble = Time.realtimeSinceStartupAsDouble;
+        while (worker.IsWorking)
+        {
+            if (worker.TryDequeueMasterBundle(out var result))
+            {
+                MasterBundleConfig masterBundleConfig = LoadMasterBundleConfig(result);
+                if (masterBundleConfig != null)
+                {
+                    pendingMasterBundles.Add(masterBundleConfig);
+                    masterBundleConfig.StartLoad(result.assetBundleData, result.hash);
+                    loadingStats.isLoadingAssetBundles = true;
+                }
+                continue;
+            }
+            AssetsWorker.AssetDefinition result2;
+            if (pendingMasterBundles.Count > 0)
+            {
+                for (int num = pendingMasterBundles.Count - 1; num >= 0; num--)
+                {
+                    MasterBundleConfig masterBundleConfig2 = pendingMasterBundles[num];
+                    if (masterBundleConfig2.assetBundleCreateRequest.isDone)
+                    {
+                        pendingMasterBundles.RemoveAtFast(num);
+                        masterBundleConfig2.FinishLoad();
+                        loadingStats.totalMasterBundlesLoaded++;
+                        if (masterBundleConfig2.assetBundle != null)
+                        {
+                            allMasterBundles.Add(masterBundleConfig2);
+                        }
+                    }
+                }
+                if (pendingMasterBundles.Count < 1)
+                {
+                    loadingStats.isLoadingAssetBundles = false;
+                }
+            }
+            else if (coreMasterBundle != null && worker.TryDequeueAssetDefinition(out result2))
+            {
+                TryLoadFile(result2);
+            }
+            if (Time.realtimeSinceStartupAsDouble - realtimeSinceStartupAsDouble > 0.05)
+            {
+                SyncAssetDefinitionLoadingProgress();
+                if ((bool)shouldCollectGarbageAggressively)
+                {
+                    CleanupMemory();
+                }
+                yield return null;
+                realtimeSinceStartupAsDouble = Time.realtimeSinceStartupAsDouble;
+            }
+        }
+    }
+
+    internal static void SyncAssetDefinitionLoadingProgress()
+    {
+        loadingStats.totalRegisteredSearchLocations = instance.worker.totalSearchLocationRequests;
+        loadingStats.totalSearchLocationsFinishedSearching = instance.worker.totalSearchLocationsFinishedSearching;
+        loadingStats.totalMasterBundlesFound = instance.worker.totalMasterBundlesFound;
+        loadingStats.totalFilesFound = instance.worker.totalAssetDefinitionsFound;
+        loadingStats.totalFilesRead = instance.worker.totalAssetDefinitionsRead;
+        LoadingUI.NotifyAssetDefinitionLoadingProgress();
+    }
+
+    private IEnumerator LoadAllAssets()
+    {
+        isLoadingAllAssets = true;
         double startTime = Time.realtimeSinceStartupAsDouble;
         if (errors == null)
         {
@@ -1421,22 +1216,24 @@ public class Assets : MonoBehaviour
         }
         defaultAssetMapping = new AssetMapping();
         currentAssetMapping = defaultAssetMapping;
-        filesScanned = new Queue<ScannedFileInfo>();
-        newMasterBundles = new List<MasterBundleConfig>();
+        coreMasterBundle = null;
         if (allMasterBundles == null)
         {
             allMasterBundles = new List<MasterBundleConfig>();
+            pendingMasterBundles = new List<MasterBundleConfig>();
         }
         else
         {
-            unloadAllMasterBundles();
+            UnloadAllMasterBundles();
         }
         assetOrigins = new List<AssetOrigin>();
+        loadingStats.Reset();
         coreOrigin = new AssetOrigin();
         coreOrigin.name = "Vanilla Built-in Assets";
         assetOrigins.Add(coreOrigin);
         reloadOrigin = new AssetOrigin();
         reloadOrigin.name = "Reloaded Assets (Debug)";
+        reloadOrigin.shouldAssetsOverrideExistingIds = true;
         assetOrigins.Add(reloadOrigin);
         legacyServerSharedOrigin = new AssetOrigin();
         legacyServerSharedOrigin.name = "Server Common (Legacy)";
@@ -1447,44 +1244,31 @@ public class Assets : MonoBehaviour
         yield return null;
         if ((bool)shouldLoadAnyAssets)
         {
-            coreMasterBundle = findMasterBundle("/Bundles", usePath: true, 0uL);
-            yield return loadNewMasterBundlesAsync();
+            AddSearchLocation(Path.Combine(ReadWrite.PATH, "Bundles"), coreOrigin);
+            if (Dedicator.IsDedicatedServer)
+            {
+                AddDedicatedServerUgcSearchLocations();
+            }
+            else
+            {
+                AddClientUgcSearchLocations();
+            }
+            AddSandboxSearchLocations();
+            AddMapSearchLocations();
+            yield return null;
             if (!Dedicator.IsDedicatedServer)
             {
                 Provider.initAutoSubscribeMaps();
             }
-            yield return loadingStep("/Bundles/Assets", "Asset", 0, "/Assets");
-            yield return loadingStep("/Bundles/Items", "Item", 1, "/Items");
-            yield return loadingStep("/Bundles/Effects", "Effect", 2, "/Effects");
-            yield return loadingStep("/Bundles/Objects", "Object", 3, "/Objects");
-            yield return loadingStep("/Bundles/Trees", "Resource", 4, "/Trees");
-            yield return loadingStep("/Bundles/Vehicles", "Vehicle", 5, "/Vehicles");
-            yield return loadingStep("/Bundles/Animals", "Animal", 6, "/Animals");
-            yield return loadingStep("/Bundles/Mythics", "Mythic", 7, "/Mythics");
-            yield return loadingStep("/Bundles/Skins", "Skin", 8, "/Skins");
-            yield return loadingStep("/Bundles/Spawns", "Spawn", 9, "/Spawns");
-            yield return loadingStep("/Bundles/NPCs", "NPC", 10, "/NPCs");
-            if (Dedicator.IsDedicatedServer)
-            {
-                yield return dedicatedServerUgcLoadingStep();
-            }
-            else
-            {
-                yield return clientUgcLoadingStep();
-            }
-            yield return sandboxLoadingStep();
-            yield return mapLoadingStep();
+            yield return LoadAssetsFromWorkerThread();
         }
-        LoadingUI.updateKey("Loading_Clean");
-        yield return null;
-        cleanupMemory();
-        LoadingUI.updateKey("Loading_Blueprints");
+        LoadingUI.SetLoadingText("Loading_Blueprints");
         yield return null;
         if ((bool)shouldValidateAssets)
         {
-            checkForBlueprintErrors();
+            CheckForBlueprintErrors();
         }
-        LoadingUI.updateKey("Loading_Spawns");
+        LoadingUI.SetLoadingText("Loading_Spawns");
         yield return null;
         if (!Dedicator.IsDedicatedServer)
         {
@@ -1492,25 +1276,40 @@ public class Assets : MonoBehaviour
         }
         if ((bool)shouldValidateAssets)
         {
-            checkForNpcErrors();
+            CheckForNpcErrors();
         }
-        LoadingUI.updateKey("Loading_Misc");
+        LoadingUI.SetLoadingText("Loading_Misc");
         yield return null;
         onAssetsRefreshed?.Invoke();
         yield return null;
-        UnturnedLog.info($"Loading assets took {Time.realtimeSinceStartupAsDouble - startTime}s");
-        _isLoading = false;
-        if (!hasLoaded)
+        UnturnedLog.info($"Loading all assets took {Time.realtimeSinceStartupAsDouble - startTime}s");
+        isLoadingAllAssets = false;
+    }
+
+    private IEnumerator StartupAssetLoading()
+    {
+        yield return LoadAllAssets();
+        hasFinishedInitialStartupLoading = true;
+        if (Dedicator.IsDedicatedServer)
         {
-            hasLoaded = true;
-            if (Dedicator.IsDedicatedServer)
-            {
-                Provider.host();
-                yield break;
-            }
-            UnturnedLog.info("Launching main menu");
-            SceneManager.LoadScene("Menu");
+            Provider.host();
+            yield break;
         }
+        LoadingUI.SetLoadingText("Loading_MainMenu");
+        yield return null;
+        UnturnedLog.info("Launching main menu");
+        SceneManager.LoadScene("Menu");
+    }
+
+    private IEnumerator LoadNewAssetsFromUpdate()
+    {
+        isLoadingFromUpdate = true;
+        double startTime = Time.realtimeSinceStartupAsDouble;
+        yield return LoadAssetsFromWorkerThread();
+        linkSpawnsIfDirty();
+        UnturnedLog.info($"Loading new assets took {Time.realtimeSinceStartupAsDouble - startTime}s");
+        isLoadingFromUpdate = false;
+        OnNewAssetsFinishedLoading?.Invoke();
     }
 
     private bool TestDedicatedServerSteamRedist()
@@ -1578,13 +1377,29 @@ public class Assets : MonoBehaviour
         }
         else
         {
-            refresh();
+            worker = new AssetsWorker();
+            worker.Initialize();
+            StartCoroutine(StartupAssetLoading());
         }
     }
 
     private void Awake()
     {
         instance = this;
+    }
+
+    private void Update()
+    {
+        worker.Update();
+        if (!isLoading && worker.IsWorking)
+        {
+            StartCoroutine(LoadNewAssetsFromUpdate());
+        }
+    }
+
+    private void OnDestroy()
+    {
+        worker.Shutdown();
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
@@ -1660,5 +1475,114 @@ public class Assets : MonoBehaviour
             Provider._connectionFailureReason = $"Unknown asset hash mismatch? (should never happen) Name: \"{serverFriendlyName}\" File: \"{serverName}\" Id: {guid:N}";
         }
         Provider.RequestDisconnect($"Kicked for asset hash mismatch guid: {guid:N} serverName: \"{serverName}\" serverFriendlyName: \"{serverFriendlyName}\" serverHash: {Hash.toString(serverHash)} serverAssetBundleName: \"{serverAssetBundleNameWithoutExtension}\" serverAssetOrigin: \"{serverAssetOrigin}\"");
+    }
+
+    [Obsolete("Renamed to RequestAddSearchLocation")]
+    public static void load(string absoluteDirectoryPath, AssetOrigin origin, bool overrideExistingIDs)
+    {
+        RequestAddSearchLocation(absoluteDirectoryPath, origin);
+    }
+
+    [Obsolete("Renamed to RequestReloadAllAssets")]
+    public static void refresh()
+    {
+        RequestReloadAllAssets();
+    }
+
+    [Obsolete]
+    public static void rename(Asset asset, string newName)
+    {
+    }
+
+    [Obsolete]
+    public static AssetOrigin ConvertLegacyOrigin(EAssetOrigin legacyOrigin)
+    {
+        switch (legacyOrigin)
+        {
+        case EAssetOrigin.OFFICIAL:
+            if (legacyOfficialOrigin == null)
+            {
+                legacyOfficialOrigin = new AssetOrigin();
+                legacyOfficialOrigin.name = "Official (Legacy)";
+                assetOrigins.Add(legacyOfficialOrigin);
+            }
+            return legacyOfficialOrigin;
+        case EAssetOrigin.MISC:
+            if (legacyMiscOrigin == null)
+            {
+                legacyMiscOrigin = new AssetOrigin();
+                legacyMiscOrigin.name = "Misc (Legacy)";
+                assetOrigins.Add(legacyMiscOrigin);
+            }
+            return legacyMiscOrigin;
+        default:
+            if (legacyWorkshopOrigin == null)
+            {
+                legacyWorkshopOrigin = new AssetOrigin();
+                legacyWorkshopOrigin.name = "Workshop File (Legacy)";
+                assetOrigins.Add(legacyWorkshopOrigin);
+            }
+            return legacyWorkshopOrigin;
+        }
+    }
+
+    [Obsolete]
+    public static Asset find(EAssetType type, string name)
+    {
+        return null;
+    }
+
+    [Obsolete]
+    public static void add(Asset asset, bool overrideExistingID)
+    {
+        AddToMapping(asset, overrideExistingID, defaultAssetMapping);
+    }
+
+    [Obsolete]
+    public static void load(string path, bool usePath, bool loadFromResources, bool canUse, EAssetOrigin origin, bool overrideExistingIDs)
+    {
+        load(path, usePath, loadFromResources, canUse, origin, overrideExistingIDs, 0uL);
+    }
+
+    [Obsolete("Remove unused loadFromResources which was used by vanilla assets before masterbundles, and canUse which was for timed curated maps.")]
+    public static void load(string path, bool usePath, bool loadFromResources, bool canUse, EAssetOrigin origin, bool overrideExistingIDs, ulong workshopFileId)
+    {
+        load(path, usePath, origin, overrideExistingIDs, workshopFileId);
+    }
+
+    [Obsolete("Replaced origin enum with class")]
+    public static void load(string path, bool usePath, EAssetOrigin legacyOrigin, bool overrideExistingIDs, ulong workshopFileId)
+    {
+        if (usePath)
+        {
+            path = ReadWrite.PATH + path;
+        }
+        AssetOrigin origin = ConvertLegacyOrigin(legacyOrigin);
+        load(path, origin, overrideExistingIDs);
+    }
+
+    [Obsolete("Please use the method which takes a List instead.")]
+    public static Asset[] find(EAssetType type)
+    {
+        switch (type)
+        {
+        case EAssetType.NONE:
+            return null;
+        case EAssetType.OBJECT:
+            throw new NotSupportedException();
+        default:
+        {
+            Asset[] array = new Asset[currentAssetMapping.legacyAssetsTable[type].Values.Count];
+            int num = 0;
+            {
+                foreach (KeyValuePair<ushort, Asset> item in currentAssetMapping.legacyAssetsTable[type])
+                {
+                    array[num] = item.Value;
+                    num++;
+                }
+                return array;
+            }
+        }
+        }
     }
 }

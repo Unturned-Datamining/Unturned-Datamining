@@ -178,26 +178,26 @@ public class Characters : MonoBehaviour
         return true;
     }
 
-    public static void package(ulong package)
+    public static void ToggleEquipItemByInstanceId(ulong itemInstanceId)
     {
-        int inventoryItem = Provider.provider.economyService.getInventoryItem(package);
+        int inventoryItem = Provider.provider.economyService.getInventoryItem(itemInstanceId);
         if (inventoryItem == 0)
         {
             return;
         }
-        Provider.provider.economyService.getInventoryTargetID(inventoryItem, out var item_id, out var vehicle_id);
-        if (item_id == 0 && vehicle_id == 0)
+        Provider.provider.economyService.getInventoryTargetID(inventoryItem, out var item_guid, out var vehicle_guid);
+        if (item_guid == default(Guid) && vehicle_guid == default(Guid))
         {
             return;
         }
-        ItemAsset itemAsset = Assets.find(EAssetType.ITEM, item_id) as ItemAsset;
+        ItemAsset itemAsset = Assets.find<ItemAsset>(item_guid);
         if (itemAsset == null || itemAsset.proPath == null || itemAsset.proPath.Length == 0)
         {
             if (Provider.provider.economyService.getInventorySkinID(inventoryItem) == 0)
             {
                 return;
             }
-            if (!packageSkins.Remove(package))
+            if (!packageSkins.Remove(itemInstanceId))
             {
                 for (int i = 0; i < packageSkins.Count; i++)
                 {
@@ -209,94 +209,94 @@ public class Characters : MonoBehaviour
                     int inventoryItem2 = Provider.provider.economyService.getInventoryItem(num);
                     if (inventoryItem2 != 0)
                     {
-                        Provider.provider.economyService.getInventoryTargetID(inventoryItem2, out var item_id2, out var vehicle_id2);
-                        if ((item_id != 0 && item_id == item_id2) || (vehicle_id != 0 && vehicle_id == vehicle_id2))
+                        Provider.provider.economyService.getInventoryTargetID(inventoryItem2, out var item_guid2, out var vehicle_guid2);
+                        if ((item_guid != default(Guid) && item_guid == item_guid2) || (vehicle_guid != default(Guid) && vehicle_guid == vehicle_guid2))
                         {
                             packageSkins.RemoveAt(i);
                             break;
                         }
                     }
                 }
-                packageSkins.Add(package);
+                packageSkins.Add(itemInstanceId);
             }
         }
         if (itemAsset != null)
         {
             if (itemAsset.type == EItemType.SHIRT)
             {
-                if (active.packageShirt == package)
+                if (active.packageShirt == itemInstanceId)
                 {
                     active.packageShirt = 0uL;
                 }
                 else
                 {
-                    active.packageShirt = package;
+                    active.packageShirt = itemInstanceId;
                 }
             }
             else if (itemAsset.type == EItemType.PANTS)
             {
-                if (active.packagePants == package)
+                if (active.packagePants == itemInstanceId)
                 {
                     active.packagePants = 0uL;
                 }
                 else
                 {
-                    active.packagePants = package;
+                    active.packagePants = itemInstanceId;
                 }
             }
             else if (itemAsset.type == EItemType.HAT)
             {
-                if (active.packageHat == package)
+                if (active.packageHat == itemInstanceId)
                 {
                     active.packageHat = 0uL;
                 }
                 else
                 {
-                    active.packageHat = package;
+                    active.packageHat = itemInstanceId;
                 }
             }
             else if (itemAsset.type == EItemType.BACKPACK)
             {
-                if (active.packageBackpack == package)
+                if (active.packageBackpack == itemInstanceId)
                 {
                     active.packageBackpack = 0uL;
                 }
                 else
                 {
-                    active.packageBackpack = package;
+                    active.packageBackpack = itemInstanceId;
                 }
             }
             else if (itemAsset.type == EItemType.VEST)
             {
-                if (active.packageVest == package)
+                if (active.packageVest == itemInstanceId)
                 {
                     active.packageVest = 0uL;
                 }
                 else
                 {
-                    active.packageVest = package;
+                    active.packageVest = itemInstanceId;
                 }
             }
             else if (itemAsset.type == EItemType.MASK)
             {
-                if (active.packageMask == package)
+                if (active.packageMask == itemInstanceId)
                 {
                     active.packageMask = 0uL;
                 }
                 else
                 {
-                    active.packageMask = package;
+                    active.packageMask = itemInstanceId;
                 }
             }
             else if (itemAsset.type == EItemType.GLASSES)
             {
-                if (active.packageGlasses == package)
+                if (active.packageGlasses == itemInstanceId)
                 {
                     active.packageGlasses = 0uL;
                 }
                 else
                 {
-                    active.packageGlasses = package;
+                    active.packageGlasses = itemInstanceId;
                 }
             }
         }
@@ -304,21 +304,25 @@ public class Characters : MonoBehaviour
         onCharacterUpdated?.Invoke(selected, active);
     }
 
-    public static bool getPackageForItemID(ushort itemID, out ulong package)
+    public static bool getPackageForItemID(ushort itemID, out ulong itemInstanceId)
     {
-        package = 0uL;
+        itemInstanceId = 0uL;
+        if (!(Assets.find(EAssetType.ITEM, itemID) is ItemAsset itemAsset))
+        {
+            return false;
+        }
         for (int i = 0; i < packageSkins.Count; i++)
         {
-            package = packageSkins[i];
-            if (package == 0L)
+            itemInstanceId = packageSkins[i];
+            if (itemInstanceId == 0L)
             {
                 continue;
             }
-            int inventoryItem = Provider.provider.economyService.getInventoryItem(package);
+            int inventoryItem = Provider.provider.economyService.getInventoryItem(itemInstanceId);
             if (inventoryItem != 0)
             {
-                ushort inventoryItemID = Provider.provider.economyService.getInventoryItemID(inventoryItem);
-                if (inventoryItemID != 0 && itemID == inventoryItemID)
+                Guid inventoryItemGuid = Provider.provider.economyService.getInventoryItemGuid(inventoryItem);
+                if (!(inventoryItemGuid == default(Guid)) && itemAsset.GUID == inventoryItemGuid)
                 {
                     return true;
                 }
@@ -331,22 +335,22 @@ public class Characters : MonoBehaviour
     {
         type = EStatTrackerType.NONE;
         kills = -1;
-        if (!getPackageForItemID(active.primaryItem, out var instance))
+        if (!getPackageForItemID(active.primaryItem, out var itemInstanceId))
         {
             return false;
         }
-        return Provider.provider.economyService.getInventoryStatTrackerValue(instance, out type, out kills);
+        return Provider.provider.economyService.getInventoryStatTrackerValue(itemInstanceId, out type, out kills);
     }
 
     private static bool getSlot1StatTrackerValue(out EStatTrackerType type, out int kills)
     {
         type = EStatTrackerType.NONE;
         kills = -1;
-        if (!getPackageForItemID(active.secondaryItem, out var instance))
+        if (!getPackageForItemID(active.secondaryItem, out var itemInstanceId))
         {
             return false;
         }
-        return Provider.provider.economyService.getInventoryStatTrackerValue(instance, out type, out kills);
+        return Provider.provider.economyService.getInventoryStatTrackerValue(itemInstanceId, out type, out kills);
     }
 
     private static void apply(byte slot, bool showItems)
@@ -390,8 +394,8 @@ public class Characters : MonoBehaviour
             {
                 continue;
             }
-            ushort inventoryItemID = Provider.provider.economyService.getInventoryItemID(inventoryItem);
-            if (inventoryItemID != 0 && num == inventoryItemID)
+            Guid inventoryItemGuid = Provider.provider.economyService.getInventoryItemGuid(inventoryItem);
+            if (!(inventoryItemGuid == default(Guid)) && itemAsset.GUID == inventoryItemGuid)
             {
                 skin = Provider.provider.economyService.getInventorySkinID(inventoryItem);
                 num2 = Provider.provider.economyService.getInventoryMythicID(inventoryItem);

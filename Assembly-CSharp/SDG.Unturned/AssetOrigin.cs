@@ -8,6 +8,8 @@ public class AssetOrigin
 
     public ulong workshopFileId;
 
+    internal bool shouldAssetsOverrideExistingIds;
+
     internal List<Asset> assets = new List<Asset>();
 
     public IReadOnlyList<Asset> GetAssets()

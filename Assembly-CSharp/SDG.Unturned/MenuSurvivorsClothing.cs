@@ -22,7 +22,7 @@ public class MenuSurvivorsClothing : MonoBehaviour
             case ELimb.RIGHT_LEG:
                 if (Characters.active.packagePants != 0L)
                 {
-                    Characters.package(Characters.active.packagePants);
+                    Characters.ToggleEquipItemByInstanceId(Characters.active.packagePants);
                 }
                 break;
             case ELimb.LEFT_HAND:
@@ -32,7 +32,7 @@ public class MenuSurvivorsClothing : MonoBehaviour
             case ELimb.SPINE:
                 if (Characters.active.packageShirt != 0L)
                 {
-                    Characters.package(Characters.active.packageShirt);
+                    Characters.ToggleEquipItemByInstanceId(Characters.active.packageShirt);
                 }
                 break;
             }
@@ -43,33 +43,33 @@ public class MenuSurvivorsClothing : MonoBehaviour
             {
                 if (Characters.active.packageHat != 0L)
                 {
-                    Characters.package(Characters.active.packageHat);
+                    Characters.ToggleEquipItemByInstanceId(Characters.active.packageHat);
                 }
             }
             else if (transform.name == "Glasses")
             {
                 if (Characters.active.packageGlasses != 0L)
                 {
-                    Characters.package(Characters.active.packageGlasses);
+                    Characters.ToggleEquipItemByInstanceId(Characters.active.packageGlasses);
                 }
             }
             else if (transform.name == "Mask")
             {
                 if (Characters.active.packageMask != 0L)
                 {
-                    Characters.package(Characters.active.packageMask);
+                    Characters.ToggleEquipItemByInstanceId(Characters.active.packageMask);
                 }
             }
             else if (transform.name == "Vest")
             {
                 if (Characters.active.packageVest != 0L)
                 {
-                    Characters.package(Characters.active.packageVest);
+                    Characters.ToggleEquipItemByInstanceId(Characters.active.packageVest);
                 }
             }
             else if (transform.name == "Backpack" && Characters.active.packageBackpack != 0L)
             {
-                Characters.package(Characters.active.packageBackpack);
+                Characters.ToggleEquipItemByInstanceId(Characters.active.packageBackpack);
             }
         }
         if (MenuSurvivorsClothingItemUI.active)

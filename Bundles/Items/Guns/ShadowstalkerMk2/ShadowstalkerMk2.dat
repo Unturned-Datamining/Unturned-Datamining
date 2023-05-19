@@ -63,7 +63,7 @@ Spread_Hip 0.1
 
 Ballistic_Steps 24
 Ballistic_Travel 12.5
-Ballistic_Drop 0
+Bullet_Gravity_Multiplier 0
 
 Shake_Min_X -0.005
 Shake_Min_Y 0.005

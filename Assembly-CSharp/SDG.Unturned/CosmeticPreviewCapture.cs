@@ -70,26 +70,31 @@ public class CosmeticPreviewCapture : MonoBehaviour
         string dirPath201 = PathEx.Join(UnturnedPaths.RootDirectory, "Extras", "CosmeticPreviews_2048x2048");
         string dirPath202 = PathEx.Join(UnturnedPaths.RootDirectory, "Extras", "CosmeticPreviews_400x400");
         string dirPath200 = PathEx.Join(UnturnedPaths.RootDirectory, "Extras", "CosmeticPreviews_200x200");
-        Asset[] array = Assets.find(EAssetType.ITEM);
-        Asset[] array2 = array;
-        for (int i = 0; i < array2.Length; i++)
+        List<ItemAsset> list = new List<ItemAsset>();
+        Assets.find(list);
+        foreach (ItemAsset item in list)
         {
-            if (array2[i] is ItemAsset itemAsset && itemAsset.isPro && (itemAsset.type == EItemType.SHIRT || itemAsset.type == EItemType.PANTS || itemAsset.type == EItemType.HAT || itemAsset.type == EItemType.BACKPACK || itemAsset.type == EItemType.VEST || itemAsset.type == EItemType.GLASSES || itemAsset.type == EItemType.MASK))
+            if (!item.isPro || (item.type != EItemType.SHIRT && item.type != EItemType.PANTS && item.type != 0 && item.type != EItemType.BACKPACK && item.type != EItemType.VEST && item.type != EItemType.GLASSES && item.type != EItemType.MASK))
+            {
+                continue;
+            }
+            string text = Path.Combine(dirPath201, item.GUID.ToString("N") + ".png");
+            string filePath201 = Path.Combine(dirPath202, item.GUID.ToString("N") + ".png");
+            string filePath200 = Path.Combine(dirPath200, item.GUID.ToString("N") + ".png");
+            if (!File.Exists(text) || !File.Exists(filePath201) || !File.Exists(filePath200))
             {
                 ResetOutfit();
-                ApplyItemToOutfit(itemAsset);
+                ApplyItemToOutfit(item);
                 clothes.apply();
-                Camera itemCamera = GetCamera(itemAsset);
-                GameObject clothingGameObject = GetClothingGameObject(itemAsset);
+                GetCamera(item);
+                Camera itemCamera = GetCamera(item);
+                GameObject clothingGameObject = GetClothingGameObject(item);
                 if (clothingGameObject != null)
                 {
                     Bounds worldBounds = GetWorldBounds(clothingGameObject);
                     FitCameraToBounds(itemCamera, worldBounds);
                 }
-                string exportFilePath = Path.Combine(dirPath201, itemAsset.GUID.ToString("N") + ".png");
-                string filePath201 = Path.Combine(dirPath202, itemAsset.GUID.ToString("N") + ".png");
-                string filePath200 = Path.Combine(dirPath200, itemAsset.GUID.ToString("N") + ".png");
-                yield return Render(itemCamera, targetTexture4096, downsampleTexture2048, exportTexture2048, exportFilePath);
+                yield return Render(itemCamera, targetTexture4096, downsampleTexture2048, exportTexture2048, text);
                 yield return Render(itemCamera, targetTexture800, downsampleTexture400, exportTexture400, filePath201);
                 yield return Render(itemCamera, targetTexture400, downsampleTexture200, exportTexture200, filePath200);
             }
@@ -149,13 +154,13 @@ public class CosmeticPreviewCapture : MonoBehaviour
 
     private void ResetOutfit()
     {
-        clothes.shirt = 0;
-        clothes.pants = 0;
-        clothes.hat = 0;
-        clothes.backpack = 0;
-        clothes.vest = 0;
-        clothes.glasses = 0;
-        clothes.mask = 0;
+        clothes.shirtGuid = Guid.Empty;
+        clothes.pantsGuid = Guid.Empty;
+        clothes.hatGuid = Guid.Empty;
+        clothes.backpackGuid = Guid.Empty;
+        clothes.vestGuid = Guid.Empty;
+        clothes.glassesGuid = Guid.Empty;
+        clothes.maskGuid = Guid.Empty;
     }
 
     private void ApplyItemToOutfit(ItemAsset itemAsset)
@@ -163,25 +168,25 @@ public class CosmeticPreviewCapture : MonoBehaviour
         switch (itemAsset.type)
         {
         case EItemType.SHIRT:
-            clothes.shirt = itemAsset.id;
+            clothes.shirtGuid = itemAsset.GUID;
             break;
         case EItemType.PANTS:
-            clothes.pants = itemAsset.id;
+            clothes.pantsGuid = itemAsset.GUID;
             break;
         case EItemType.HAT:
-            clothes.hat = itemAsset.id;
+            clothes.hatGuid = itemAsset.GUID;
             break;
         case EItemType.BACKPACK:
-            clothes.backpack = itemAsset.id;
+            clothes.backpackGuid = itemAsset.GUID;
             break;
         case EItemType.VEST:
-            clothes.vest = itemAsset.id;
+            clothes.vestGuid = itemAsset.GUID;
             break;
         case EItemType.GLASSES:
-            clothes.glasses = itemAsset.id;
+            clothes.glassesGuid = itemAsset.GUID;
             break;
         case EItemType.MASK:
-            clothes.mask = itemAsset.id;
+            clothes.maskGuid = itemAsset.GUID;
             break;
         }
     }
@@ -277,10 +282,27 @@ public class CosmeticPreviewCapture : MonoBehaviour
     {
         Bounds result = default(Bounds);
         bool flag = false;
+        ParticleSystem.Particle[] array = new ParticleSystem.Particle[1024];
         parent.GetComponentsInChildren(renderers);
         foreach (Renderer renderer in renderers)
         {
-            if (renderer is MeshRenderer || renderer is SkinnedMeshRenderer)
+            if (renderer is ParticleSystemRenderer particleSystemRenderer)
+            {
+                int particles = particleSystemRenderer.GetComponent<ParticleSystem>().GetParticles(array);
+                for (int i = 0; i < particles; i++)
+                {
+                    ParticleSystem.Particle particle = array[i];
+                    Vector3 center = renderer.transform.TransformPoint(particle.position);
+                    if (flag)
+                    {
+                        result.Encapsulate(new Bounds(center, new Vector3(0.1f, 0.1f, 0.1f)));
+                        continue;
+                    }
+                    result = new Bounds(center, Vector3.zero);
+                    flag = true;
+                }
+            }
+            else if (renderer is MeshRenderer || renderer is SkinnedMeshRenderer)
             {
                 if (flag)
                 {

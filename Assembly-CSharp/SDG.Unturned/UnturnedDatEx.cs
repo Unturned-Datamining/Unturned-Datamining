@@ -49,14 +49,14 @@ public static class UnturnedDatEx
         return defaultValue;
     }
 
-    private static void ParseMasterBundleReference(string key, string value, out string name, out string path)
+    private static void ParseMasterBundleReference(string key, string value, out string name, out string path, MasterBundleConfig defaultMasterBundle)
     {
         int num = value.IndexOf(':');
         if (num < 0)
         {
-            if (Assets.currentMasterBundle != null)
+            if (defaultMasterBundle != null)
             {
-                name = Assets.currentMasterBundle.assetBundleName;
+                name = defaultMasterBundle.assetBundleName;
             }
             else
             {
@@ -78,23 +78,33 @@ public static class UnturnedDatEx
         }
     }
 
-    public static MasterBundleReference<T> readMasterBundleReference<T>(this DatDictionary dictionary, string key) where T : UnityEngine.Object
+    public static MasterBundleReference<T> readMasterBundleReference<T>(this DatDictionary dictionary, string key, MasterBundleConfig defaultMasterBundle = null) where T : UnityEngine.Object
     {
         if (dictionary.TryGetString(key, out var value))
         {
-            ParseMasterBundleReference(key, value, out var name, out var path);
+            ParseMasterBundleReference(key, value, out var name, out var path, defaultMasterBundle ?? Assets.currentMasterBundle);
             return new MasterBundleReference<T>(name, path);
         }
         return MasterBundleReference<T>.invalid;
     }
 
-    public static AudioReference ReadAudioReference(this DatDictionary dictionary, string key)
+    public static MasterBundleReference<T> readMasterBundleReference<T>(this DatDictionary dictionary, string key, Bundle defaultBundle = null) where T : UnityEngine.Object
+    {
+        return dictionary.readMasterBundleReference<T>(key, (defaultBundle as MasterBundle)?.cfg);
+    }
+
+    public static AudioReference ReadAudioReference(this DatDictionary dictionary, string key, MasterBundleConfig defaultMasterBundle = null)
     {
         if (dictionary.TryGetString(key, out var value))
         {
-            ParseMasterBundleReference(key, value, out var name, out var path);
+            ParseMasterBundleReference(key, value, out var name, out var path, defaultMasterBundle ?? Assets.currentMasterBundle);
             return new AudioReference(name, path);
         }
         return default(AudioReference);
+    }
+
+    public static AudioReference ReadAudioReference(this DatDictionary dictionary, string key, Bundle defaultBundle = null)
+    {
+        return dictionary.ReadAudioReference(key, (defaultBundle as MasterBundle)?.cfg);
     }
 }

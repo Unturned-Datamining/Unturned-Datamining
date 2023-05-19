@@ -5,6 +5,7 @@ using System.IO;
 using SDG.SteamworksProvider;
 using SDG.Unturned;
 using Steamworks;
+using UnityEngine;
 
 namespace SDG.Provider;
 
@@ -53,7 +54,9 @@ public class TempSteamworksWorkshop
 
     private bool ugcVerified;
 
-    public int installed;
+    public int totalNumberOfFilesToDownload;
+
+    private float progressPerFileDownloaded;
 
     public List<PublishedFileId_t> downloaded;
 
@@ -72,6 +75,12 @@ public class TempSteamworksWorkshop
     private CallResult<SubmitItemUpdateResult_t> submitItemUpdateResult;
 
     private CallResult<SteamUGCQueryCompleted_t> queryCompleted;
+
+    private float currentlyDownloadingFileEstimatedProgress;
+
+    private int previousEstimatedDownloadProgress;
+
+    private PublishedFileId_t currentlyDownloadingFileId;
 
     private UGCQueryHandle_t serverItemsQueryHandle;
 
@@ -149,9 +158,20 @@ public class TempSteamworksWorkshop
             cachedDetails.isBannedOrPrivate = pDetails.m_bBanned || pDetails.m_eVisibility == ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityPrivate || pDetails.m_eResult == EResult.k_EResultAccessDenied;
             cachedDetails.updateTimestamp = MathfEx.Max(pDetails.m_rtimeCreated, pDetails.m_rtimeUpdated);
             cachedUGCDetails[nPublishedFileId.m_PublishedFileId] = cachedDetails;
-            return num;
+            if (!string.IsNullOrEmpty(cachedDetails.name))
+            {
+                AssetOrigin assetOrigin = Assets.FindWorkshopFileOrigin(nPublishedFileId.m_PublishedFileId);
+                if (assetOrigin != null)
+                {
+                    assetOrigin.name = $"Workshop File \"{cachedDetails.name}\" ({cachedDetails.fileId})";
+                    return num;
+                }
+            }
         }
-        UnturnedLog.warn("Unable to get query UGC result for caching");
+        else
+        {
+            UnturnedLog.warn("Unable to get query UGC result for caching");
+        }
         return num;
     }
 
@@ -162,7 +182,7 @@ public class TempSteamworksWorkshop
 
     public static AssetOrigin FindOrAddOrigin(ulong fileId)
     {
-        AssetOrigin assetOrigin = Assets.FindOrAddWorkshopFileOrigin(fileId);
+        AssetOrigin assetOrigin = Assets.FindOrAddWorkshopFileOrigin(fileId, shouldOverrideIds: true);
         if (cachedUGCDetails.TryGetValue(fileId, out var value) && !string.IsNullOrEmpty(value.name))
         {
             assetOrigin.name = $"Workshop File \"{value.name}\" ({value.fileId})";
@@ -287,27 +307,69 @@ public class TempSteamworksWorkshop
             SteamAPICall_t hAPICall = SteamUGC.SendQueryUGCRequest(ugcRequest);
             queryCompleted.Set(hAPICall);
         }
+        if (currentlyDownloadingFileId != PublishedFileId_t.Invalid && SteamUGC.GetItemDownloadInfo(currentlyDownloadingFileId, out var punBytesDownloaded, out var punBytesTotal) && punBytesTotal != 0)
+        {
+            currentlyDownloadingFileEstimatedProgress = (float)((double)punBytesDownloaded / (double)punBytesTotal);
+            if (punBytesDownloaded >= punBytesTotal)
+            {
+                currentlyDownloadingFileId = PublishedFileId_t.Invalid;
+            }
+            UpdateEstimatedDownloadProgress();
+        }
+    }
+
+    private void UpdateEstimatedDownloadProgress()
+    {
+        float num = progressPerFileDownloaded * (float)(totalNumberOfFilesToDownload - installing.Count) + progressPerFileDownloaded * currentlyDownloadingFileEstimatedProgress;
+        int num2 = Mathf.RoundToInt(num * 100f);
+        if (previousEstimatedDownloadProgress != num2)
+        {
+            previousEstimatedDownloadProgress = num2;
+            LoadingUI.NotifyDownloadProgress(num);
+        }
+    }
+
+    private void OnFinishedDownloadingItems()
+    {
+        if (Assets.ShouldWaitForNewAssetsToFinishLoading)
+        {
+            UnturnedLog.info("Client UGC waiting for assets to finish loading...");
+            Assets.OnNewAssetsFinishedLoading = (System.Action)Delegate.Combine(Assets.OnNewAssetsFinishedLoading, new System.Action(OnNewAssetsFinishedLoading));
+        }
+        else
+        {
+            OnNewAssetsFinishedLoading();
+        }
+    }
+
+    private void OnNewAssetsFinishedLoading()
+    {
+        Assets.OnNewAssetsFinishedLoading = (System.Action)Delegate.Remove(Assets.OnNewAssetsFinishedLoading, new System.Action(OnNewAssetsFinishedLoading));
+        SDG.Unturned.Provider.launch();
     }
 
     public void downloadNextItem()
     {
         if (installing.Count == 0)
         {
-            SDG.Unturned.Provider.launch();
+            LoadingUI.SetIsDownloading(isDownloading: false);
+            OnFinishedDownloadingItems();
             return;
         }
         PublishedFileId_t publishedFileId_t = installing[0];
-        string name;
+        string downloadFileName;
         if (getCachedDetails(publishedFileId_t, out var cachedDetails))
         {
-            name = cachedDetails.GetTitle();
+            downloadFileName = cachedDetails.GetTitle();
         }
         else
         {
             PublishedFileId_t publishedFileId_t2 = publishedFileId_t;
-            name = "Unknown ID " + publishedFileId_t2.ToString();
+            downloadFileName = "Unknown ID " + publishedFileId_t2.ToString();
         }
-        LoadingUI.notifyDownloadProgress(name);
+        LoadingUI.SetDownloadFileName(downloadFileName);
+        currentlyDownloadingFileId = publishedFileId_t;
+        currentlyDownloadingFileEstimatedProgress = 0f;
         SteamUGC.DownloadItem(publishedFileId_t, bHighPriority: true);
     }
 
@@ -362,21 +424,24 @@ public class TempSteamworksWorkshop
     private void downloadServerItems(List<PublishedFileId_t> itemIDs)
     {
         installing = new List<PublishedFileId_t>();
+        Assets.loadingStats.Reset();
         foreach (PublishedFileId_t itemID in itemIDs)
         {
             enqueueServerItemDownloadOrInstallFromCache(itemID);
         }
         if (installing.Count < 1)
         {
-            UnturnedLog.info("Server has {0} valid workshop item(s), but we already have them installed, launching", itemIDs.Count);
-            SDG.Unturned.Provider.launch();
+            UnturnedLog.info("Server has {0} valid workshop item(s), but we already have them downloaded", itemIDs.Count);
+            OnFinishedDownloadingItems();
+            return;
         }
-        else
-        {
-            UnturnedLog.info("Server has {0} valid workshop item(s), of which {1} need to be downloaded", itemIDs.Count, installing.Count);
-            installed = installing.Count;
-            downloadNextItem();
-        }
+        UnturnedLog.info("Server has {0} valid workshop item(s), of which {1} need to be downloaded", itemIDs.Count, installing.Count);
+        totalNumberOfFilesToDownload = installing.Count;
+        progressPerFileDownloaded = 1f / (float)totalNumberOfFilesToDownload;
+        previousEstimatedDownloadProgress = 0;
+        LoadingUI.SetIsDownloading(isDownloading: true);
+        LoadingUI.NotifyDownloadProgress(0f);
+        downloadNextItem();
     }
 
     private bool testDownloadRestrictions(UGCQueryHandle_t queryHandle, uint resultIndex, uint ip, string itemDisplayText)
@@ -487,12 +552,11 @@ public class TempSteamworksWorkshop
                 WorkshopTool.loadMapBundlesAndContent(path, fileId.m_PublishedFileId);
                 break;
             default:
-                Assets.load(path, FindOrAddOrigin(fileId.m_PublishedFileId), overrideExistingIDs: true);
+                Assets.RequestAddSearchLocation(path, FindOrAddOrigin(fileId.m_PublishedFileId));
                 break;
             case ESteamUGCType.LOCALIZATION:
                 break;
             }
-            Assets.linkSpawnsIfDirty();
         }
         else
         {
@@ -509,8 +573,13 @@ public class TempSteamworksWorkshop
         }
         PublishedFileId_t nPublishedFileId = callback.m_nPublishedFileId;
         UnturnedLog.info("Workshop item downloaded: " + nPublishedFileId.ToString());
+        if (callback.m_nPublishedFileId == currentlyDownloadingFileId)
+        {
+            currentlyDownloadingFileId = PublishedFileId_t.Invalid;
+            currentlyDownloadingFileEstimatedProgress = 0f;
+        }
         installing.Remove(callback.m_nPublishedFileId);
-        LoadingUI.updateProgress((float)(installed - installing.Count) / (float)installed);
+        UpdateEstimatedDownloadProgress();
         if (callback.m_eResult == EResult.k_EResultOK)
         {
             string explanation;
@@ -589,12 +658,11 @@ public class TempSteamworksWorkshop
             Level.broadcastLevelsRefreshed();
             break;
         default:
-            Assets.load(path, FindOrAddOrigin(callback.m_nPublishedFileId.m_PublishedFileId), overrideExistingIDs: true);
+            Assets.RequestAddSearchLocation(path, FindOrAddOrigin(callback.m_nPublishedFileId.m_PublishedFileId));
             break;
         case ESteamUGCType.LOCALIZATION:
             break;
         }
-        Assets.linkSpawnsIfDirty();
     }
 
     private void cleanupUGCRequest()

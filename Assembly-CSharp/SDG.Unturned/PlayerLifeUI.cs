@@ -100,21 +100,9 @@ public class PlayerLifeUI
 
     private static ISleekButton facepalmButton;
 
-    public static ISleekImage scopeImage;
-
-    public static ISleekImage scopeOverlay;
-
-    public static ISleekImage scopeLeftOverlay;
-
-    public static ISleekImage scopeRightOverlay;
-
-    public static ISleekImage scopeUpOverlay;
-
-    public static ISleekImage scopeDownOverlay;
+    public static SleekScopeOverlay scopeOverlay;
 
     public static ISleekImage binocularsOverlay;
-
-    public static HitmarkerInfo[] hitmarkers;
 
     public static Crosshair crosshair;
 
@@ -209,6 +197,10 @@ public class PlayerLifeUI
     private static int cachedCompassSearch;
 
     private static bool cachedHasCompass;
+
+    internal static List<HitmarkerInfo> activeHitmarkers;
+
+    private static List<SleekHitmarker> hitmarkersPool;
 
     public static SleekFullscreenBox container => _container;
 
@@ -1599,52 +1591,11 @@ public class PlayerLifeUI
         statTrackerLabel.fontSize = ESleekFontSize.Default;
         container.AddChild(statTrackerLabel);
         statTrackerLabel.isVisible = false;
-        ISleekConstraintFrame sleekConstraintFrame = Glazier.Get().CreateConstraintFrame();
-        sleekConstraintFrame.positionScale_X = 0.1f;
-        sleekConstraintFrame.positionScale_Y = 0.1f;
-        sleekConstraintFrame.sizeScale_X = 0.8f;
-        sleekConstraintFrame.sizeScale_Y = 0.8f;
-        sleekConstraintFrame.constraint = ESleekConstraint.FitInParent;
-        PlayerUI.window.AddChild(sleekConstraintFrame);
-        scopeOverlay = Glazier.Get().CreateImage((Texture2D)Resources.Load("Overlay/Scope"));
+        scopeOverlay = new SleekScopeOverlay();
         scopeOverlay.sizeScale_X = 1f;
         scopeOverlay.sizeScale_Y = 1f;
-        sleekConstraintFrame.AddChild(scopeOverlay);
         scopeOverlay.isVisible = false;
-        scopeLeftOverlay = Glazier.Get().CreateImage((Texture2D)GlazierResources.PixelTexture);
-        scopeLeftOverlay.positionOffset_X = 1;
-        scopeLeftOverlay.positionScale_X = -10f;
-        scopeLeftOverlay.sizeScale_X = 10f;
-        scopeLeftOverlay.sizeScale_Y = 1f;
-        scopeLeftOverlay.color = Color.black;
-        scopeOverlay.AddChild(scopeLeftOverlay);
-        scopeRightOverlay = Glazier.Get().CreateImage((Texture2D)GlazierResources.PixelTexture);
-        scopeRightOverlay.positionOffset_X = -1;
-        scopeRightOverlay.positionScale_X = 1f;
-        scopeRightOverlay.sizeScale_X = 10f;
-        scopeRightOverlay.sizeScale_Y = 1f;
-        scopeRightOverlay.color = Color.black;
-        scopeOverlay.AddChild(scopeRightOverlay);
-        scopeUpOverlay = Glazier.Get().CreateImage((Texture2D)GlazierResources.PixelTexture);
-        scopeUpOverlay.positionOffset_Y = 1;
-        scopeUpOverlay.positionScale_X = -10f;
-        scopeUpOverlay.positionScale_Y = -10f;
-        scopeUpOverlay.sizeScale_X = 21f;
-        scopeUpOverlay.sizeScale_Y = 10f;
-        scopeUpOverlay.color = Color.black;
-        scopeOverlay.AddChild(scopeUpOverlay);
-        scopeDownOverlay = Glazier.Get().CreateImage((Texture2D)GlazierResources.PixelTexture);
-        scopeDownOverlay.positionOffset_Y = -1;
-        scopeDownOverlay.positionScale_X = -10f;
-        scopeDownOverlay.positionScale_Y = 1f;
-        scopeDownOverlay.sizeScale_X = 21f;
-        scopeDownOverlay.sizeScale_Y = 10f;
-        scopeDownOverlay.color = Color.black;
-        scopeOverlay.AddChild(scopeDownOverlay);
-        scopeImage = Glazier.Get().CreateImage();
-        scopeImage.sizeScale_X = 1f;
-        scopeImage.sizeScale_Y = 1f;
-        scopeOverlay.AddChild(scopeImage);
+        PlayerUI.window.AddChild(scopeOverlay);
         binocularsOverlay = Glazier.Get().CreateImage((Texture2D)Resources.Load("Overlay/Binoculars"));
         binocularsOverlay.sizeScale_X = 1f;
         binocularsOverlay.sizeScale_Y = 1f;
@@ -1778,22 +1729,11 @@ public class PlayerLifeUI
         facepalmButton.onClickedButton += onClickedFacepalmButton;
         container.AddChild(facepalmButton);
         facepalmButton.isVisible = false;
-        hitmarkers = new HitmarkerInfo[16];
-        for (int num3 = 0; num3 < hitmarkers.Length; num3++)
+        activeHitmarkers = new List<HitmarkerInfo>(16);
+        hitmarkersPool = new List<SleekHitmarker>(16);
+        for (int num3 = 0; num3 < 16; num3++)
         {
-            ISleekImage sleekImage4 = Glazier.Get().CreateImage();
-            sleekImage4.positionOffset_X = -16;
-            sleekImage4.positionOffset_Y = -16;
-            sleekImage4.sizeOffset_X = 32;
-            sleekImage4.sizeOffset_Y = 32;
-            PlayerUI.window.AddChild(sleekImage4);
-            sleekImage4.isVisible = false;
-            HitmarkerInfo hitmarkerInfo = new HitmarkerInfo
-            {
-                hit = EPlayerHit.NONE,
-                image = sleekImage4
-            };
-            hitmarkers[num3] = hitmarkerInfo;
+            ReleaseHitmarker(NewHitmarker());
         }
         crosshair = new Crosshair(icons);
         crosshair.sizeScale_X = 1f;
@@ -2101,5 +2041,31 @@ public class PlayerLifeUI
         LevelManager.onArenaMessageUpdated = (ArenaMessageUpdated)Delegate.Combine(LevelManager.onArenaMessageUpdated, new ArenaMessageUpdated(onArenaMessageUpdated));
         LevelManager.onArenaPlayerUpdated = (ArenaPlayerUpdated)Delegate.Combine(LevelManager.onArenaPlayerUpdated, new ArenaPlayerUpdated(onArenaPlayerUpdated));
         LevelManager.onLevelNumberUpdated = (LevelNumberUpdated)Delegate.Combine(LevelManager.onLevelNumberUpdated, new LevelNumberUpdated(onLevelNumberUpdated));
+    }
+
+    private static SleekHitmarker NewHitmarker()
+    {
+        SleekHitmarker sleekHitmarker = new SleekHitmarker();
+        sleekHitmarker.positionOffset_X = -64;
+        sleekHitmarker.positionOffset_Y = -64;
+        sleekHitmarker.sizeOffset_X = 128;
+        sleekHitmarker.sizeOffset_Y = 128;
+        PlayerUI.window.AddChild(sleekHitmarker);
+        return sleekHitmarker;
+    }
+
+    internal static SleekHitmarker ClaimHitmarker()
+    {
+        if (hitmarkersPool.Count > 0)
+        {
+            return hitmarkersPool.GetAndRemoveTail();
+        }
+        return NewHitmarker();
+    }
+
+    internal static void ReleaseHitmarker(SleekHitmarker hitmarker)
+    {
+        hitmarker.isVisible = false;
+        hitmarkersPool.Add(hitmarker);
     }
 }

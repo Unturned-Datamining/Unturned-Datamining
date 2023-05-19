@@ -103,10 +103,7 @@ public class InteractableSign : Interactable
         {
             return;
         }
-        if (OptionsSettings.filter)
-        {
-            ProfanityFilter.filter(ref newText);
-        }
+        ProfanityFilter.ApplyFilter(OptionsSettings.filter, ref newText);
         DisplayText = newText;
         if (label_0 != null)
         {

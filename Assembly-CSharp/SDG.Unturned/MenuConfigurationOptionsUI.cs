@@ -505,6 +505,7 @@ public class MenuConfigurationOptionsUI
         filterToggle.sizeOffset_X = 40;
         filterToggle.sizeOffset_Y = 40;
         filterToggle.addLabel(localization.format("Filter_Toggle_Label"), ESleekSide.RIGHT);
+        filterToggle.tooltipText = localization.format("Filter_Toggle_Tooltip");
         filterToggle.onToggled += onToggledFilterToggle;
         optionsBox.AddChild(filterToggle);
         num += 50;

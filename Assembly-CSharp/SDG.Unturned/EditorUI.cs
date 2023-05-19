@@ -138,7 +138,7 @@ public class EditorUI : MonoBehaviour
         }
         if (InputEx.GetKeyDown(ControlsSettings.refreshAssets))
         {
-            Assets.refresh();
+            Assets.RequestReloadAllAssets();
         }
         if (EditorTerrainUI.active)
         {

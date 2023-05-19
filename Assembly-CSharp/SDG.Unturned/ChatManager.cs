@@ -104,10 +104,7 @@ public class ChatManager : SteamCaller
     {
         text = text.Trim();
         ControlsSettings.formatPluginHotkeysIntoText(ref text);
-        if (OptionsSettings.filter)
-        {
-            ProfanityFilter.filter(ref text);
-        }
+        ProfanityFilter.ApplyFilter(OptionsSettings.filter, ref text);
         if (OptionsSettings.streamer)
         {
             color = Color.white;
@@ -381,6 +378,10 @@ public class ChatManager : SteamCaller
         if (flag)
         {
             UnturnedLog.info("UnityEventMsg {0}: '{1}'", callingPlayer.playerID.steamID, text);
+        }
+        if (ProfanityFilter.NaiveContainsHardcodedBannedWord(text))
+        {
+            return;
         }
         Color chatted = Color.white;
         if (callingPlayer.isAdmin && !Provider.hideAdmins)

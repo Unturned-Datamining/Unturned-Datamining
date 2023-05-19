@@ -56,7 +56,7 @@ public class WorkshopTool
     {
         if (findMapBundlesPath(workshopItemPath, out var bundlesPath))
         {
-            Assets.load(bundlesPath, TempSteamworksWorkshop.FindOrAddOrigin(workshopFileId), overrideExistingIDs: true);
+            Assets.RequestAddSearchLocation(bundlesPath, TempSteamworksWorkshop.FindOrAddOrigin(workshopFileId));
         }
     }
 

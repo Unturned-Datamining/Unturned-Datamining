@@ -228,50 +228,53 @@ public class Player : MonoBehaviour
 
     public event PluginWidgetFlagsChanged onLocalPluginWidgetFlagsChanged;
 
-    public void PlayAudioReference(AudioReference audioReference)
+    public OneShotAudioHandle PlayAudioReference(AudioReference audioReference)
     {
-        if (!Dedicator.IsDedicatedServer)
+        if (Dedicator.IsDedicatedServer)
         {
-            float volumeMultiplier;
-            float pitchMultiplier;
-            AudioClip audioClip = audioReference.LoadAudioClip(out volumeMultiplier, out pitchMultiplier);
-            if (!(audioClip == null))
-            {
-                OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform, audioClip);
-                oneShotAudioParameters.volume = volumeMultiplier;
-                oneShotAudioParameters.pitch = pitchMultiplier;
-                oneShotAudioParameters.SetLinearRolloff(1f, 32f);
-                oneShotAudioParameters.Play();
-            }
+            return default(OneShotAudioHandle);
         }
-    }
-
-    public void playSound(AudioClip clip, float volume, float pitch, float deviation)
-    {
-        if (!(clip == null) && !Dedicator.IsDedicatedServer)
+        float volumeMultiplier;
+        float pitchMultiplier;
+        AudioClip audioClip = audioReference.LoadAudioClip(out volumeMultiplier, out pitchMultiplier);
+        if (audioClip == null)
         {
-            deviation = Mathf.Clamp01(deviation);
-            OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform, clip);
-            oneShotAudioParameters.volume = volume;
-            oneShotAudioParameters.RandomizePitch(pitch * (1f - deviation), pitch * (1f + deviation));
-            oneShotAudioParameters.SetLinearRolloff(1f, 32f);
-            oneShotAudioParameters.Play();
+            return default(OneShotAudioHandle);
         }
+        OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform, audioClip);
+        oneShotAudioParameters.volume = volumeMultiplier;
+        oneShotAudioParameters.pitch = pitchMultiplier;
+        oneShotAudioParameters.SetLinearRolloff(1f, 32f);
+        return oneShotAudioParameters.Play();
     }
 
-    public void playSound(AudioClip clip, float pitch, float deviation)
+    public OneShotAudioHandle playSound(AudioClip clip, float volume, float pitch, float deviation)
     {
-        playSound(clip, 1f, pitch, deviation);
+        if (clip == null || Dedicator.IsDedicatedServer)
+        {
+            return default(OneShotAudioHandle);
+        }
+        deviation = Mathf.Clamp01(deviation);
+        OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform, clip);
+        oneShotAudioParameters.volume = volume;
+        oneShotAudioParameters.RandomizePitch(pitch * (1f - deviation), pitch * (1f + deviation));
+        oneShotAudioParameters.SetLinearRolloff(1f, 32f);
+        return oneShotAudioParameters.Play();
     }
 
-    public void playSound(AudioClip clip, float volume)
+    public OneShotAudioHandle playSound(AudioClip clip, float pitch, float deviation)
     {
-        playSound(clip, volume, 1f, 0.1f);
+        return playSound(clip, 1f, pitch, deviation);
     }
 
-    public void playSound(AudioClip clip)
+    public OneShotAudioHandle playSound(AudioClip clip, float volume)
     {
-        playSound(clip, 1f, 1f, 0.1f);
+        return playSound(clip, volume, 1f, 0.1f);
+    }
+
+    public OneShotAudioHandle playSound(AudioClip clip)
+    {
+        return playSound(clip, 1f, 1f, 0.1f);
     }
 
     [Obsolete]
@@ -806,9 +809,9 @@ public class Player : MonoBehaviour
 
     protected void trackStat(EPlayerStat stat)
     {
-        if (equipment.isSelected && equipment.isEquipped)
+        if (equipment.isSelected && equipment.isEquipped && equipment.asset != null)
         {
-            channel.owner.incrementStatTrackerValue(equipment.itemID, stat);
+            channel.owner.incrementStatTrackerValue(equipment.asset.sharedSkinLookupID, stat);
         }
     }
 
@@ -868,8 +871,8 @@ public class Player : MonoBehaviour
 
     public void enableItemSpotLight(PlayerSpotLightConfig config)
     {
-        itemOn = true;
         itemLightConfig = config;
+        itemOn = config.isEnabled;
         updateLights();
     }
 
@@ -922,8 +925,8 @@ public class Player : MonoBehaviour
 
     public void enableHeadlamp(PlayerSpotLightConfig config)
     {
-        headlampOn = true;
         headlampLightConfig = config;
+        headlampOn = config.isEnabled;
         updateLights();
     }
 

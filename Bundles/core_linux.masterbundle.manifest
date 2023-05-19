@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1976701860
+CRC: 1922502181
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: e7283f1eb883dd8b7a61e0e614f39d44
+    Hash: 193de849ca5e269ed04494ca036f0ee4
   TypeTreeHash:
     serializedVersion: 2
     Hash: feb97dbf77ef8cec3212470924f33ba4
@@ -848,6 +848,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Physics/Swim/LightWading/footstep_water_splash_light_wading_05.wav
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Barracks_0/Object.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Military/Crate_5/Object.prefab
+- Assets/CoreMasterBundle/Objects/Medium/Parks/Flag_ProgressPride/Nav.prefab
 - Assets/CoreMasterBundle/Items/Magazines/Ranger_35/Item.prefab
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Volga_Red/Object.prefab
 - Assets/CoreMasterBundle/Skins/Cobra/Hot_Rod/Skin_Tertiary.mat
@@ -3032,6 +3033,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/General/KuwaitBossFlashbang/Effect.prefab
 - Assets/CoreMasterBundle/Items/Hats/Lei/Item.prefab
 - Assets/CoreMasterBundle/Objects/Large/Scenery/Boulder_02/Nav.prefab
+- Assets/CoreMasterBundle/Items/Vests/ProgressPridePin/Vest.prefab
 - Assets/CoreMasterBundle/Effects/Physics/BulletCasingBounce/General/bullet_shell_bounce_general_05.wav
 - Assets/CoreMasterBundle/Items/Magazines/Rifle_5/Magazine.prefab
 - Assets/CoreMasterBundle/Items/Hats/Anniversary_0_Green/Hat.prefab
@@ -3473,6 +3475,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Mechanic_1/Slots.prefab
 - Assets/CoreMasterBundle/Vehicles/Quad_Yellow/Vehicle.prefab
 - Assets/CoreMasterBundle/Items/Magazines/Desert_Falcon_7/Magazine.prefab
+- Assets/CoreMasterBundle/Items/Vests/FirefighterZombiePlush/Vest.prefab
 - Assets/CoreMasterBundle/Skins/Teklowvka/Hotrod/Skin_Secondary_1361.mat
 - Assets/CoreMasterBundle/Items/Shirts/Shirt_Wave/Shirt.png
 - Assets/CoreMasterBundle/Items/Kuwait/Kuwait_DunemanNecklace/Vest.prefab
@@ -3837,6 +3840,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Peacemaker/Crimson/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Cooler_1/Nav.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/MetalHigh_Walk/footstep_metal_high_walk_05.wav
+- Assets/CoreMasterBundle/Objects/Large/Buildings/ScopeMarkersTest/Object.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Television_0/Material.mat
 - Assets/CoreMasterBundle/Items/Barricades/Frame_Small_Pine/Barricade.prefab
 - Assets/CoreMasterBundle/Effects/Impacts/Snow_NoAudio/Particle.png
@@ -5042,6 +5046,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Makeshift_Vehicle_6_Seats/Barricade.prefab
 - Assets/CoreMasterBundle/Items/Frost/Frost_Pengy/Vest.prefab
 - Assets/CoreMasterBundle/Skins/Grizzly/Zone_Defender/Model_0.fbx
+- Assets/CoreMasterBundle/Items/Vests/FirefighterZombiePlush/Item.prefab
 - Assets/CoreMasterBundle/Skins/Bulldog/Push/Skin_Secondary_145.mat
 - Assets/CoreMasterBundle/Items/Structures/Floor_Metal_Triangle/Animations.prefab
 - Assets/CoreMasterBundle/Items/Vests/DL_Volatile_Chest/Vest.prefab
@@ -7006,6 +7011,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Guns/Scalar/Albedo_Base.png
 - Assets/CoreMasterBundle/Items/Shirts/Plaid_Blue_Dark_Shirt/Shirt.png
 - Assets/CoreMasterBundle/Objects/Medium/Utilities/Door_Prison_1/Object.prefab
+- Assets/CoreMasterBundle/Objects/Medium/Parks/Flag_ProgressPride/Object.prefab
 - Assets/CoreMasterBundle/Effects/Physics/BulletCasingBounce/Water/Bullet_Drop_Water_04.wav
 - Assets/CoreMasterBundle/Objects/Large/Utilities/Billboard_10/Object.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Shed_0/Nav.prefab
@@ -7618,6 +7624,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Table_Sqr_Maple/Barricade.prefab
 - Assets/CoreMasterBundle/Skins/Launcher_Rocket/Fire_Breather/Skin_Primary.mat
 - Assets/CoreMasterBundle/Skins/Fusilaut/Comic/Skin_Primary.mat
+- Assets/CoreMasterBundle/Objects/Large/Buildings/ScopeMarkersTest/Nav.prefab
 - Assets/CoreMasterBundle/Items/Pants/Trouser_Shorts/Item.prefab
 - Assets/CoreMasterBundle/Items/Water/Bottled_Water/Item.prefab
 - Assets/CoreMasterBundle/Items/Vests/Scarf_Black/Vest.prefab
@@ -10825,6 +10832,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Bane/Nativ/Skin_Primary.mat
 - Assets/CoreMasterBundle/Effects/Physics/BipedLand/Wood/footstep_wood_land_v2_06.wav
 - Assets/CoreMasterBundle/Objects/Medium/Business/Dumpster_6/Nav.prefab
+- Assets/CoreMasterBundle/Items/Vests/ProgressPridePin/Item.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Oxygenator/Nav.prefab
 - Assets/CoreMasterBundle/Skins/Augewehr/Milspec/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Large_Pine/Barricade.prefab

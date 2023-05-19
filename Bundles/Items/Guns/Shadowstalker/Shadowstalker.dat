@@ -63,9 +63,8 @@ Spread_Hip 0.1
 
 Ballistic_Steps 24
 Ballistic_Travel 12.5
-Ballistic_Drop 0
+Bullet_Gravity_Multiplier 0
 
-Recoil_Aim 0.25
 Recoil_Min_X -25
 Recoil_Min_Y 20
 Recoil_Max_X -20

@@ -8,6 +8,8 @@ public sealed class DatValue : IDatNode
 {
     public string value;
 
+    public EDatNodeType NodeType => EDatNodeType.Value;
+
     public DatValue()
     {
         value = null;
@@ -275,6 +277,20 @@ public sealed class DatValue : IDatNode
     public Guid ParseGuid(Guid defaultValue = default(Guid))
     {
         if (!TryParseGuid(out var result))
+        {
+            return defaultValue;
+        }
+        return result;
+    }
+
+    public bool TryParseDateTimeUtc(out DateTime value)
+    {
+        return DateTime.TryParse(this.value, CultureInfo.InvariantCulture, DateTimeStyles.None, out value);
+    }
+
+    public DateTime ParseDateTimeUtc(DateTime defaultValue = default(DateTime))
+    {
+        if (!TryParseDateTimeUtc(out var result))
         {
             return defaultValue;
         }

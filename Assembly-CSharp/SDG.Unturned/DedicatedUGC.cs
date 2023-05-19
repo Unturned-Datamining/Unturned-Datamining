@@ -47,9 +47,11 @@ public static class DedicatedUGC
         CommandWindow.Log(itemsToQuery.Count + " workshop item(s) requested");
         if (itemsToQuery.Count == 0)
         {
-            triggerInstalled();
+            OnFinishedDownloadingItems();
+            return;
         }
-        else if (onlyFromCache)
+        Assets.loadingStats.Reset();
+        if (onlyFromCache)
         {
             installItemsToQueryFromCache();
         }
@@ -109,7 +111,7 @@ public static class DedicatedUGC
     {
         if (itemsToDownload.Count == 0)
         {
-            triggerInstalled();
+            OnFinishedDownloadingItems();
             return;
         }
         PublishedFileId_t fileId = itemsToDownload.Dequeue();
@@ -144,7 +146,7 @@ public static class DedicatedUGC
                 CommandWindow.LogFormat("Unable to find workshop item in cache: {0}", publishedFileId_t);
             }
         }
-        triggerInstalled();
+        OnFinishedDownloadingItems();
     }
 
     private static void submitQuery()
@@ -336,7 +338,7 @@ public static class DedicatedUGC
                     WorkshopTool.loadMapBundlesAndContent(path, fileId.m_PublishedFileId);
                     break;
                 default:
-                    Assets.load(path, TempSteamworksWorkshop.FindOrAddOrigin(fileId.m_PublishedFileId), overrideExistingIDs: true);
+                    Assets.RequestAddSearchLocation(path, TempSteamworksWorkshop.FindOrAddOrigin(fileId.m_PublishedFileId));
                     break;
                 case ESteamUGCType.LOCALIZATION:
                     break;
@@ -410,8 +412,22 @@ public static class DedicatedUGC
         SteamGameServerUGC.BInitWorkshopForGameServer((DepotId_t)Provider.APP_ID.m_AppId, text);
     }
 
-    private static void triggerInstalled()
+    private static void OnFinishedDownloadingItems()
     {
+        if (Assets.ShouldWaitForNewAssetsToFinishLoading)
+        {
+            UnturnedLog.info("Server UGC waiting for assets to finish loading...");
+            Assets.OnNewAssetsFinishedLoading = (System.Action)Delegate.Combine(Assets.OnNewAssetsFinishedLoading, new System.Action(OnNewAssetsFinishedLoading));
+        }
+        else
+        {
+            OnNewAssetsFinishedLoading();
+        }
+    }
+
+    private static void OnNewAssetsFinishedLoading()
+    {
+        Assets.OnNewAssetsFinishedLoading = (System.Action)Delegate.Remove(Assets.OnNewAssetsFinishedLoading, new System.Action(OnNewAssetsFinishedLoading));
         if (!linkedSpawns)
         {
             linkedSpawns = true;

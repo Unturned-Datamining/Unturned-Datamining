@@ -417,8 +417,8 @@ public class ItemAsset : Asset, ISkinableAsset
         if (canPlayerEquip)
         {
             _equip = LoadRedirectableAsset<AudioClip>(bundle, "Equip", data, "EquipAudioClip");
-            inspectAudio = data.ReadAudioReference("InspectAudioDef");
-            MasterBundleReference<GameObject> masterBundleReference = data.readMasterBundleReference<GameObject>("EquipablePrefab");
+            inspectAudio = data.ReadAudioReference("InspectAudioDef", bundle);
+            MasterBundleReference<GameObject> masterBundleReference = data.readMasterBundleReference<GameObject>("EquipablePrefab", bundle);
             if (masterBundleReference.isValid)
             {
                 equipablePrefab = masterBundleReference.loadAsset();
@@ -438,7 +438,7 @@ public class ItemAsset : Asset, ISkinableAsset
         }
         if (data.ContainsKey("InventoryAudio"))
         {
-            inventoryAudio = data.ReadAudioReference("InventoryAudio");
+            inventoryAudio = data.ReadAudioReference("InventoryAudio", bundle);
         }
         else
         {

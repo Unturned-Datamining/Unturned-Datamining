@@ -27,10 +27,7 @@ public class PlayerBarricadeSignUI
             noButton.positionOffset_X = -200;
             noButton.sizeOffset_X = 400;
             string message = newText;
-            if (OptionsSettings.filter)
-            {
-                ProfanityFilter.filter(ref message);
-            }
+            ProfanityFilter.ApplyFilter(OptionsSettings.filter, ref message);
             message = message.Replace("<name_char>", Player.player.channel.owner.playerID.characterName);
             textBox.text = message;
             textField.isVisible = false;

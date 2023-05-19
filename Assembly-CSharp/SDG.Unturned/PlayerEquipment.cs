@@ -178,6 +178,10 @@ public class PlayerEquipment : PlayerCaller
 
     private static readonly ClientInstanceMethod<byte, Guid, byte, byte, byte> SendItemHotkeySuggestion = ClientInstanceMethod<byte, Guid, byte, byte, byte>.Get(typeof(PlayerEquipment), "ReceiveItemHotkeySuggeston");
 
+    private OneShotAudioHandle inspectAudioHandle;
+
+    private OneShotAudioHandle equipAudioHandle;
+
     private static readonly ServerInstanceMethod SendToggleVisionRequest = ServerInstanceMethod.Get(typeof(PlayerEquipment), "ReceiveToggleVisionRequest");
 
     private static readonly AssetReference<EffectAsset> BeepRef = new AssetReference<EffectAsset>("f515fcbe1b5241e39217b52317e68d72");
@@ -463,7 +467,7 @@ public class PlayerEquipment : PlayerCaller
 
     protected void fixStatTrackerHookScale(Transform itemModelTransform)
     {
-        if (base.channel.owner.hand)
+        if (base.channel.owner.IsLeftHanded)
         {
             Transform transform = itemModelTransform.Find("Stat_Tracker");
             if ((bool)transform)
@@ -514,9 +518,10 @@ public class PlayerEquipment : PlayerCaller
         lastInspect = Time.realtimeSinceStartup;
         inspectTime = base.player.animator.getAnimationLength("Inspect");
         base.player.animator.play("Inspect", smooth: false);
+        inspectAudioHandle.Stop();
         if (asset != null)
         {
-            base.player.PlayAudioReference(asset.inspectAudio);
+            inspectAudioHandle = base.player.PlayAudioReference(asset.inspectAudio);
         }
     }
 
@@ -1114,6 +1119,8 @@ public class PlayerEquipment : PlayerCaller
             }
         }
         isBusy = false;
+        inspectAudioHandle.Stop();
+        equipAudioHandle.Stop();
         if (newAssetGuid.IsEmpty())
         {
             _equippedPage = byte.MaxValue;
@@ -1277,7 +1284,7 @@ public class PlayerEquipment : PlayerCaller
         equippedTime = base.player.animator.getAnimationLength("Equip");
         if (!Dedicator.IsDedicatedServer && asset.equip != null)
         {
-            base.player.playSound(asset.equip, 1f, 0.05f);
+            equipAudioHandle = base.player.playSound(asset.equip, 1f, 0.05f);
         }
         PlayerEquipment.OnUseableChanged_Global.TryInvoke("OnUseableChanged_Global", this);
     }

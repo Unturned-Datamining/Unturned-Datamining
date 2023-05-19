@@ -1,3 +1,5 @@
+using System;
+
 namespace SDG.Provider;
 
 public class UnturnedEconInfo
@@ -44,13 +46,13 @@ public class UnturnedEconInfo
 
     public int scraps;
 
-    public int item_id;
+    public Guid item_guid;
 
     public int item_skin;
 
     public int item_effect;
 
-    public int vehicle_id;
+    public Guid vehicle_guid;
 
     public EQuality quality;
 
@@ -62,10 +64,10 @@ public class UnturnedEconInfo
         name_color = "";
         itemdefid = 0;
         scraps = 0;
-        item_id = 0;
+        item_guid = Guid.Empty;
         item_skin = 0;
         item_effect = 0;
-        vehicle_id = 0;
+        vehicle_guid = Guid.Empty;
         quality = EQuality.None;
     }
 }

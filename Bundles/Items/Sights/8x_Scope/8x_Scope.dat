@@ -11,3 +11,43 @@ Spread 0.7
 Zoom 8
 
 Paintable
+
+Offset_Scope_Overlay_By_One_Texel true
+
+DistanceMarkers
+[
+
+	{
+		Distance 100
+		LineOffset -0.01
+		LineWidth 0.04
+	}
+	{
+		Distance 150
+		LineOffset -0.005
+		LineWidth 0.01
+		HasLabel false
+	}
+	{
+		Distance 200
+		LineOffset -0.01
+		LineWidth 0.0375
+	}
+	{
+		Distance 250
+		LineOffset -0.005
+		LineWidth 0.01
+		HasLabel false
+	}
+	{
+		Distance 300
+		LineOffset -0.01
+		LineWidth 0.035
+	}
+	{
+		Distance 350
+		LineOffset -0.005
+		LineWidth 0.01
+		HasLabel false
+	}
+]

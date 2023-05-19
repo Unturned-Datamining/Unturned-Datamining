@@ -130,6 +130,6 @@ public class ConsoleInputOutputBase : ICommandInputOutput
     protected virtual void handleTermination()
     {
         CommandWindow.Log("Handling SIGINT or SIGBREAK by requesting a graceful shutdown");
-        Provider.shutdown(1);
+        Provider.shutdown();
     }
 }

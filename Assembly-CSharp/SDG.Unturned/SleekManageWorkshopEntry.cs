@@ -13,8 +13,9 @@ public class SleekManageWorkshopEntry : SleekWrapper
     public SleekManageWorkshopEntry(PublishedFileId_t fileId)
     {
         this.fileId = fileId;
-        TempSteamworksWorkshop.getCachedDetails(fileId, out var cachedDetails);
-        string title = cachedDetails.GetTitle();
+        CachedUGCDetails cachedDetails;
+        bool cachedDetails2 = TempSteamworksWorkshop.getCachedDetails(fileId, out cachedDetails);
+        string text = (cachedDetails2 ? cachedDetails.GetTitle() : fileId.ToString());
         ISleekBox sleekBox = Glazier.Get().CreateBox();
         sleekBox.sizeScale_X = 1f;
         sleekBox.sizeScale_Y = 1f;
@@ -36,7 +37,7 @@ public class SleekManageWorkshopEntry : SleekWrapper
         sleekLabel.sizeScale_X = 1f;
         sleekLabel.fontSize = ESleekFontSize.Medium;
         sleekLabel.fontAlignment = TextAnchor.MiddleLeft;
-        sleekLabel.text = title;
+        sleekLabel.text = text;
         sleekLabel.textColor = (cachedDetails.isBannedOrPrivate ? ESleekTint.BAD : ESleekTint.FONT);
         AddChild(sleekLabel);
         int num = -5;
@@ -51,8 +52,8 @@ public class SleekManageWorkshopEntry : SleekWrapper
         num = (sleekWorkshopSubscriptionButton.positionOffset_X = num - sleekWorkshopSubscriptionButton.sizeOffset_X);
         sleekWorkshopSubscriptionButton.subscribeText = MenuWorkshopSubscriptionsUI.localization.format("Subscribe_Label");
         sleekWorkshopSubscriptionButton.unsubscribeText = MenuWorkshopSubscriptionsUI.localization.format("Unsubscribe_Label");
-        sleekWorkshopSubscriptionButton.subscribeTooltip = MenuWorkshopSubscriptionsUI.localization.format("Subscribe_Tooltip", title);
-        sleekWorkshopSubscriptionButton.unsubscribeTooltip = MenuWorkshopSubscriptionsUI.localization.format("Unsubscribe_Tooltip", title);
+        sleekWorkshopSubscriptionButton.subscribeTooltip = MenuWorkshopSubscriptionsUI.localization.format("Subscribe_Tooltip", text);
+        sleekWorkshopSubscriptionButton.unsubscribeTooltip = MenuWorkshopSubscriptionsUI.localization.format("Unsubscribe_Tooltip", text);
         sleekWorkshopSubscriptionButton.fileId = fileId;
         sleekWorkshopSubscriptionButton.synchronizeText();
         AddChild(sleekWorkshopSubscriptionButton);
@@ -65,7 +66,7 @@ public class SleekManageWorkshopEntry : SleekWrapper
         sleekButton.sizeOffset_Y = 30;
         num = (sleekButton.positionOffset_X = num - sleekButton.sizeOffset_X);
         sleekButton.text = MenuWorkshopSubscriptionsUI.localization.format("View_Label");
-        sleekButton.tooltipText = MenuWorkshopSubscriptionsUI.localization.format("View_Tooltip", title);
+        sleekButton.tooltipText = MenuWorkshopSubscriptionsUI.localization.format("View_Tooltip", text);
         sleekButton.fontAlignment = TextAnchor.MiddleCenter;
         sleekButton.onClickedButton += onClickedViewButton;
         AddChild(sleekButton);
@@ -82,7 +83,7 @@ public class SleekManageWorkshopEntry : SleekWrapper
                 sleekButton2.sizeOffset_Y = 30;
                 num = (sleekButton2.positionOffset_X = num - sleekButton2.sizeOffset_X);
                 sleekButton2.text = MenuWorkshopSubscriptionsUI.localization.format("BrowseFiles_Label");
-                sleekButton2.tooltipText = MenuWorkshopSubscriptionsUI.localization.format("BrowseFiles_Tooltip", title);
+                sleekButton2.tooltipText = MenuWorkshopSubscriptionsUI.localization.format("BrowseFiles_Tooltip", text);
                 sleekButton2.onClickedButton += OnClickedBrowseFilesButton;
                 AddChild(sleekButton2);
                 num -= 5;
@@ -111,15 +112,18 @@ public class SleekManageWorkshopEntry : SleekWrapper
             AddChild(sleekLabel3);
             num -= 5;
         }
-        ISleekLabel sleekLabel4 = Glazier.Get().CreateLabel();
-        sleekLabel4.positionScale_X = 1f;
-        sleekLabel4.sizeOffset_X = 150;
-        sleekLabel4.sizeScale_Y = 1f;
-        num = (sleekLabel4.positionOffset_X = num - sleekLabel4.sizeOffset_X);
-        sleekLabel4.text = MenuWorkshopSubscriptionsUI.localization.format("RemoteTimestampLabel") + "\n" + DateTimeEx.FromUtcUnixTimeSeconds(cachedDetails.updateTimestamp).ToLocalTime().ToString();
-        sleekLabel4.fontSize = ESleekFontSize.Small;
-        AddChild(sleekLabel4);
-        num -= 5;
+        if (cachedDetails2)
+        {
+            ISleekLabel sleekLabel4 = Glazier.Get().CreateLabel();
+            sleekLabel4.positionScale_X = 1f;
+            sleekLabel4.sizeOffset_X = 150;
+            sleekLabel4.sizeScale_Y = 1f;
+            num = (sleekLabel4.positionOffset_X = num - sleekLabel4.sizeOffset_X);
+            sleekLabel4.text = MenuWorkshopSubscriptionsUI.localization.format("RemoteTimestampLabel") + "\n" + DateTimeEx.FromUtcUnixTimeSeconds(cachedDetails.updateTimestamp).ToLocalTime().ToString();
+            sleekLabel4.fontSize = ESleekFontSize.Small;
+            AddChild(sleekLabel4);
+            num -= 5;
+        }
         if ((SteamUGC.GetItemState(fileId) & 8) == 8)
         {
             ISleekLabel sleekLabel5 = Glazier.Get().CreateLabel();

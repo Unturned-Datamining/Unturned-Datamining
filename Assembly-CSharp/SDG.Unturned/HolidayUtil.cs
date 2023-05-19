@@ -37,7 +37,7 @@ public static class HolidayUtil
             return ENPCHoliday.NONE;
         }
         DateTime backendRealtimeDate = Provider.backendRealtimeDate;
-        for (int i = 1; i < 5; i++)
+        for (int i = 1; i < 6; i++)
         {
             DateTimeRange dateTimeRange = scheduledHolidays[i];
             if (dateTimeRange != null && dateTimeRange.isWithinRange(backendRealtimeDate))
@@ -55,9 +55,11 @@ public static class HolidayUtil
 
     public static void scheduleHolidays(HolidayStatusData data)
     {
+        DateTime utcNow = DateTime.UtcNow;
         scheduleHoliday(ENPCHoliday.CHRISTMAS, data.ChristmasStart, data.ChristmasEnd);
         scheduleHoliday(ENPCHoliday.HALLOWEEN, data.HalloweenStart, data.HalloweenEnd);
         scheduleHoliday(ENPCHoliday.VALENTINES, data.ValentinesStart, data.ValentinesEnd);
+        scheduleHoliday(ENPCHoliday.PRIDE_MONTH, new DateTime(utcNow.Year, 6, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(utcNow.Year, 6, 30, 0, 0, 0, DateTimeKind.Utc));
         if (data.AprilFools_Start.Ticks > 0 && data.AprilFools_End.Ticks > 0)
         {
             scheduleHoliday(ENPCHoliday.APRIL_FOOLS, data.AprilFools_Start, data.AprilFools_End);
@@ -67,7 +69,7 @@ public static class HolidayUtil
     static HolidayUtil()
     {
         clHolidayOverride = new CommandLineString("-Holiday");
-        scheduledHolidays = new DateTimeRange[5];
+        scheduledHolidays = new DateTimeRange[6];
         holidayOverride = ENPCHoliday.NONE;
         if (clHolidayOverride.hasValue)
         {
@@ -90,6 +92,11 @@ public static class HolidayUtil
             if (string.Equals(value, "Valentines", StringComparison.OrdinalIgnoreCase))
             {
                 holidayOverride = ENPCHoliday.VALENTINES;
+                return;
+            }
+            if (string.Equals(value, "PrideMonth", StringComparison.OrdinalIgnoreCase))
+            {
+                holidayOverride = ENPCHoliday.PRIDE_MONTH;
                 return;
             }
             UnturnedLog.warn("Unknown holiday \"{0}\" requested by command-line override", value);

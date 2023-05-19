@@ -56,7 +56,20 @@ public class ObjectNPCAsset : ObjectAsset
 
     public Color color { get; protected set; }
 
-    public bool isBackward { get; protected set; }
+    public bool IsLeftHanded { get; protected set; }
+
+    [Obsolete]
+    public bool isBackward
+    {
+        get
+        {
+            return IsLeftHanded;
+        }
+        protected set
+        {
+            IsLeftHanded = value;
+        }
+    }
 
     [Obsolete]
     public ushort primary { get; protected set; }
@@ -121,7 +134,7 @@ public class ObjectNPCAsset : ObjectAsset
         beard = data.ParseUInt8("Beard", 0);
         skin = Palette.hex(data.GetString("Color_Skin"));
         color = Palette.hex(data.GetString("Color_Hair"));
-        isBackward = data.ContainsKey("Backward");
+        IsLeftHanded = data.ContainsKey("Backward");
         primary = data.ParseGuidOrLegacyId("Primary", out primaryWeaponGuid);
         secondary = data.ParseGuidOrLegacyId("Secondary", out secondaryWeaponGuid);
         tertiary = data.ParseGuidOrLegacyId("Tertiary", out tertiaryWeaponGuid);

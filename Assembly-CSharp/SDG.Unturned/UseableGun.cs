@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using SDG.Framework.Water;
 using SDG.NetTransport;
 using Steamworks;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 using Unturned.UnityEx;
 
@@ -18,6 +20,19 @@ public class UseableGun : Useable
     public delegate void BulletHitHandler(UseableGun gun, BulletInfo bullet, InputInfo hit, ref bool shouldAllow);
 
     public delegate void ProjectileSpawnedHandler(UseableGun sender, GameObject projectile);
+
+    private class DistanceMarker
+    {
+        public bool isActive;
+
+        public float distance;
+
+        public Transform transform;
+
+        public LineRenderer lineComponent;
+
+        public TextMeshPro textComponent;
+    }
 
     private static readonly PlayerDamageMultiplier DAMAGE_PLAYER_MULTIPLIER = new PlayerDamageMultiplier(40f, 0.6f, 0.6f, 0.8f, 1.1f);
 
@@ -75,7 +90,7 @@ public class UseableGun : Useable
 
     private ISleekLabel attachLabel;
 
-    private Attachments firstAttachments;
+    internal Attachments firstAttachments;
 
     private ParticleSystem firstShellEmitter;
 
@@ -260,6 +275,10 @@ public class UseableGun : Useable
     private int maxAimingAccuracy;
 
     private float maxAimingAccuracyReciprocal;
+
+    private List<DistanceMarker> scopeDistanceMarkers;
+
+    private static Material scopeDistanceMarkerMaterial;
 
     public bool isAiming { get; protected set; }
 
@@ -635,7 +654,6 @@ public class UseableGun : Useable
                 thirdMuzzleEmitter.Emit(1);
                 thirdMuzzleEmitter.GetComponent<Light>().enabled = true;
             }
-            _ = base.channel.isOwner;
         }
         if (!base.channel.isOwner)
         {
@@ -775,8 +793,8 @@ public class UseableGun : Useable
                 {
                     BulletInfo bulletInfo = new BulletInfo();
                     bulletInfo.origin = base.player.look.aim.position;
-                    bulletInfo.pos = bulletInfo.origin;
-                    bulletInfo.dir = rotation * RandomEx.GetRandomForwardVectorInCone(halfAngleRadians);
+                    bulletInfo.position = bulletInfo.origin;
+                    bulletInfo.velocity = (bulletInfo.dir = rotation * RandomEx.GetRandomForwardVectorInCone(halfAngleRadians)) * equippedGunAsset.muzzleVelocity;
                     bulletInfo.pellet = b;
                     bulletInfo.quality = num;
                     bulletInfo.barrelAsset = thirdAttachments.barrelAsset;
@@ -821,11 +839,6 @@ public class UseableGun : Useable
             }
             if (thirdAttachments.sightAsset != null)
             {
-                if (isAiming && equippedGunAsset.useRecoilAim && thirdAttachments.sightAsset.zoom > 2f)
-                {
-                    num2 *= Mathf.Lerp(1f, 1f / thirdAttachments.sightAsset.zoom * equippedGunAsset.recoilAim, GetSimulationAimAlpha() * ((base.player.look.perspective == EPlayerPerspective.FIRST) ? 1f : 0.5f));
-                    num3 *= Mathf.Lerp(1f, 1f / thirdAttachments.sightAsset.zoom * equippedGunAsset.recoilAim, GetSimulationAimAlpha() * ((base.player.look.perspective == EPlayerPerspective.FIRST) ? 1f : 0.5f));
-                }
                 if (isAiming)
                 {
                     num2 *= thirdAttachments.sightAsset.aimingRecoilMultiplier;
@@ -946,7 +959,7 @@ public class UseableGun : Useable
                     {
                         bulletInfo2 = new BulletInfo();
                         bulletInfo2.origin = base.player.look.aim.position;
-                        bulletInfo2.pos = bulletInfo2.origin;
+                        bulletInfo2.position = bulletInfo2.origin;
                         bulletInfo2.pellet = b2;
                         bulletInfo2.quality = num;
                         bulletInfo2.barrelAsset = thirdAttachments.barrelAsset;
@@ -1253,7 +1266,7 @@ public class UseableGun : Useable
                 else if (OptionsSettings.hitmarker)
                 {
                     hitmarkerIndex++;
-                    if (hitmarkerIndex >= PlayerLifeUI.hitmarkers.Length)
+                    if (hitmarkerIndex >= PlayerLifeUI.activeHitmarkers.Count)
                     {
                         hitmarkerIndex = 0;
                     }
@@ -1262,8 +1275,9 @@ public class UseableGun : Useable
                 {
                     hitmarkerIndex = 0;
                 }
-                Ray ray = new Ray(bulletInfo.pos, bulletInfo.dir);
-                RaycastInfo raycastInfo = DamageTool.raycast(ray, Provider.modeConfigData.Gameplay.Ballistics ? equippedGunAsset.ballisticTravel : equippedGunAsset.range, RayMasks.DAMAGE_CLIENT, base.player);
+                Ray ray = new Ray(bulletInfo.position, bulletInfo.velocity);
+                float range = (Provider.modeConfigData.Gameplay.Ballistics ? (bulletInfo.velocity.magnitude * 0.02f) : equippedGunAsset.range);
+                RaycastInfo raycastInfo = DamageTool.raycast(ray, range, RayMasks.DAMAGE_CLIENT, base.player);
                 if (raycastInfo.player != null && equippedGunAsset.playerDamageMultiplier.damage > 1f && (DamageTool.isPlayerAllowedToDamagePlayer(base.player, raycastInfo.player) || equippedGunAsset.bypassAllowedToDamagePlayer))
                 {
                     if (ePlayerHit != EPlayerHit.CRITICAL)
@@ -1372,13 +1386,14 @@ public class UseableGun : Useable
                 {
                     if (bulletInfo.steps > 0 || equippedGunAsset.ballisticSteps <= 1)
                     {
+                        Vector3 direction = bulletInfo.GetDirection();
                         if (equippedGunAsset.ballisticTravel < 32f)
                         {
-                            trace(bulletInfo.pos + bulletInfo.dir * 32f, bulletInfo.dir);
+                            trace(bulletInfo.position + direction * 32f, direction);
                         }
                         else
                         {
-                            trace(bulletInfo.pos + bulletInfo.dir * UnityEngine.Random.Range(32f, equippedGunAsset.ballisticTravel), bulletInfo.dir);
+                            trace(bulletInfo.position + direction * UnityEngine.Random.Range(32f, equippedGunAsset.ballisticTravel), direction);
                         }
                         if (pellets < 2)
                         {
@@ -1403,14 +1418,14 @@ public class UseableGun : Useable
                 }
                 if (base.player.input.isRaycastInvalid(raycastInfo))
                 {
-                    float num = equippedGunAsset.ballisticDrop;
+                    float num = Physics.gravity.y;
                     if (bulletInfo.barrelAsset != null)
                     {
                         num *= bulletInfo.barrelAsset.ballisticDrop;
                     }
-                    bulletInfo.pos += bulletInfo.dir * equippedGunAsset.ballisticTravel;
-                    bulletInfo.dir.y -= num;
-                    bulletInfo.dir.Normalize();
+                    num *= equippedGunAsset.bulletGravityMultiplier;
+                    bulletInfo.position += bulletInfo.velocity * 0.02f;
+                    bulletInfo.velocity = new Vector3(bulletInfo.velocity.x, bulletInfo.velocity.y + num * 0.02f, bulletInfo.velocity.z);
                     continue;
                 }
                 if (ePlayerHit != 0)
@@ -1447,7 +1462,7 @@ public class UseableGun : Useable
                 {
                     if (Provider.modeConfigData.Gameplay.Ballistics)
                     {
-                        if ((input.point - bullet.pos).magnitude > equippedGunAsset.ballisticTravel * (float)(bullet.steps + 1 + PlayerInput.SAMPLES) + 4f)
+                        if ((input.point - bullet.position).magnitude > equippedGunAsset.ballisticTravel * (float)(bullet.steps + 1 + PlayerInput.SAMPLES) + 4f)
                         {
                             bullets.RemoveAt(0);
                             continue;
@@ -1513,9 +1528,9 @@ public class UseableGun : Useable
                     if (input.zombie != null)
                     {
                         bool flag2 = input.limb == ELimb.SKULL && equippedGunAsset.instakillHeadshots && Provider.modeConfigData.Zombies.Weapons_Use_Player_Damage && Provider.modeConfigData.Players.Allow_Instakill_Headshots;
-                        Vector3 direction = input.direction * Mathf.Ceil((float)(int)pellets2 / 2f);
+                        Vector3 direction2 = input.direction * Mathf.Ceil((float)(int)pellets2 / 2f);
                         IDamageMultiplier zombieOrPlayerDamageMultiplier = equippedGunAsset.zombieOrPlayerDamageMultiplier;
-                        DamageZombieParameters parameters2 = DamageZombieParameters.make(input.zombie, direction, zombieOrPlayerDamageMultiplier, input.limb);
+                        DamageZombieParameters parameters2 = DamageZombieParameters.make(input.zombie, direction2, zombieOrPlayerDamageMultiplier, input.limb);
                         parameters2.times = bulletDamageMultiplier * input.zombie.getBulletResistance();
                         parameters2.allowBackstab = false;
                         parameters2.respectArmor = !flag2;
@@ -1532,9 +1547,9 @@ public class UseableGun : Useable
                 {
                     if (input.animal != null)
                     {
-                        Vector3 direction2 = input.direction * Mathf.Ceil((float)(int)pellets2 / 2f);
+                        Vector3 direction3 = input.direction * Mathf.Ceil((float)(int)pellets2 / 2f);
                         IDamageMultiplier animalOrPlayerDamageMultiplier = equippedGunAsset.animalOrPlayerDamageMultiplier;
-                        DamageAnimalParameters parameters3 = DamageAnimalParameters.make(input.animal, direction2, animalOrPlayerDamageMultiplier, input.limb);
+                        DamageAnimalParameters parameters3 = DamageAnimalParameters.make(input.animal, direction3, animalOrPlayerDamageMultiplier, input.limb);
                         parameters3.times = bulletDamageMultiplier;
                         parameters3.instigator = base.player;
                         parameters3.ragdollEffect = useableRagdollEffect;
@@ -1607,7 +1622,7 @@ public class UseableGun : Useable
                     num5 *= num5;
                     float ray_Aggressor_Distance = Provider.modeConfigData.Players.Ray_Aggressor_Distance;
                     ray_Aggressor_Distance *= ray_Aggressor_Distance;
-                    Vector3 normalized = (bullet.pos - base.player.look.aim.position).normalized;
+                    Vector3 normalized = (bullet.position - base.player.look.aim.position).normalized;
                     for (int j = 0; j < Provider.clients.Count; j++)
                     {
                         if (Provider.clients[j] == base.channel.owner)
@@ -2302,10 +2317,13 @@ public class UseableGun : Useable
         if (isShooting)
         {
             wasTriggerJustPulled = true;
-            fireDelayCounter = equippedGunAsset.fireDelay;
-            if (fireDelayCounter > 0 && base.channel.isOwner && equippedGunAsset.fireDelaySound != null)
+            if (fireDelayCounter < 1)
             {
-                base.player.playSound(equippedGunAsset.fireDelaySound, 1f, 0.05f);
+                fireDelayCounter = equippedGunAsset.fireDelay;
+                if (fireDelayCounter > 0 && base.channel.isOwner && equippedGunAsset.fireDelaySound != null)
+                {
+                    base.player.playSound(equippedGunAsset.fireDelaySound, 1f, 0.05f);
+                }
             }
         }
         return isShooting;
@@ -2689,6 +2707,7 @@ public class UseableGun : Useable
             stance.onStanceUpdated = (StanceUpdated)Delegate.Combine(stance.onStanceUpdated, new StanceUpdated(UpdateCrosshairEnabled));
             PlayerLook look = base.player.look;
             look.onPerspectiveUpdated = (PerspectiveUpdated)Delegate.Combine(look.onPerspectiveUpdated, new PerspectiveUpdated(onPerspectiveUpdated));
+            OptionsSettings.OnUnitSystemChanged += SyncScopeDistanceMarkerText;
         }
         if ((base.channel.isOwner || Provider.isServer) && equippedGunAsset.projectile == null)
         {
@@ -2771,6 +2790,7 @@ public class UseableGun : Useable
             stance.onStanceUpdated = (StanceUpdated)Delegate.Remove(stance.onStanceUpdated, new StanceUpdated(UpdateCrosshairEnabled));
             PlayerLook look = base.player.look;
             look.onPerspectiveUpdated = (PerspectiveUpdated)Delegate.Remove(look.onPerspectiveUpdated, new PerspectiveUpdated(onPerspectiveUpdated));
+            OptionsSettings.OnUnitSystemChanged -= SyncScopeDistanceMarkerText;
             if (firstFakeLight != null)
             {
                 UnityEngine.Object.Destroy(firstFakeLight.gameObject);
@@ -3459,6 +3479,11 @@ public class UseableGun : Useable
                 wasRange = false;
                 wasBayonet = false;
             }
+            ClearScopeDistanceMarkers();
+            if (equippedGunAsset.projectile == null && firstAttachments.sightAsset != null && firstAttachments.sightAsset.distanceMarkers != null && firstAttachments.sightAsset.distanceMarkers.Count > 0)
+            {
+                InstantiateScopeDistanceMarkers();
+            }
             if (firstAttachments.tacticalAsset != null && firstAttachments.tacticalAsset.isLaser && interact)
             {
                 if (laserGameObject == null)
@@ -3650,7 +3675,7 @@ public class UseableGun : Useable
                         component.sharedMaterial = base.player.look.scopeMaterial;
                     }
                     firstAttachments.scopeHook.gameObject.SetActive(value: true);
-                    if (base.channel.owner.hand)
+                    if (base.channel.owner.IsLeftHanded)
                     {
                         Vector3 localScale = firstAttachments.scopeHook.localScale;
                         localScale.x *= -1f;
@@ -3688,6 +3713,11 @@ public class UseableGun : Useable
         {
             value *= equippedGunAsset.recoilProne;
         }
+    }
+
+    internal float CalculateBulletGravity()
+    {
+        return Physics.gravity.y * equippedGunAsset.bulletGravityMultiplier;
     }
 
     internal float CalculateSpreadAngleRadians()
@@ -3994,7 +4024,7 @@ public class UseableGun : Useable
             {
                 base.player.look.enableZoom(zoom);
             }
-            else if (GraphicsSettings.scopeQuality == EGraphicQuality.OFF && PlayerLifeUI.scopeImage.texture != null)
+            else if (GraphicsSettings.scopeQuality == EGraphicQuality.OFF && PlayerLifeUI.scopeOverlay.scopeImage.texture != null)
             {
                 PlayerUI.updateScope(isScoped: true);
                 base.player.look.enableZoom(zoom);
@@ -4012,6 +4042,24 @@ public class UseableGun : Useable
         if (thirdShellRenderer != null)
         {
             thirdShellRenderer.forceRenderingOff = newPerspective == EPlayerPerspective.FIRST;
+        }
+    }
+
+    private void SyncScopeDistanceMarkerText()
+    {
+        foreach (DistanceMarker scopeDistanceMarker in scopeDistanceMarkers)
+        {
+            if (!(scopeDistanceMarker.textComponent == null))
+            {
+                if (OptionsSettings.metric)
+                {
+                    scopeDistanceMarker.textComponent.text = $"{scopeDistanceMarker.distance} m";
+                }
+                else
+                {
+                    scopeDistanceMarker.textComponent.text = $"{Mathf.RoundToInt(MeasurementTool.MtoYd(scopeDistanceMarker.distance))} yd";
+                }
+            }
         }
     }
 
@@ -4099,46 +4147,54 @@ public class UseableGun : Useable
                     Texture mainTexture = firstAttachments.scopeHook.Find("Reticule").GetComponent<Renderer>().sharedMaterial.mainTexture;
                     if (mainTexture.width <= 64)
                     {
-                        PlayerLifeUI.scopeImage.positionOffset_X = -mainTexture.width / 2;
-                        PlayerLifeUI.scopeImage.positionOffset_Y = -mainTexture.height / 2;
-                        PlayerLifeUI.scopeImage.positionScale_X = 0.5f;
-                        PlayerLifeUI.scopeImage.positionScale_Y = 0.5f;
-                        PlayerLifeUI.scopeImage.sizeOffset_X = mainTexture.width;
-                        PlayerLifeUI.scopeImage.sizeOffset_Y = mainTexture.height;
-                        PlayerLifeUI.scopeImage.sizeScale_X = 0f;
-                        PlayerLifeUI.scopeImage.sizeScale_Y = 0f;
+                        PlayerLifeUI.scopeOverlay.scopeImage.positionOffset_X = -mainTexture.width / 2;
+                        PlayerLifeUI.scopeOverlay.scopeImage.positionOffset_Y = -mainTexture.height / 2;
+                        PlayerLifeUI.scopeOverlay.scopeImage.positionScale_X = 0.5f;
+                        PlayerLifeUI.scopeOverlay.scopeImage.positionScale_Y = 0.5f;
+                        PlayerLifeUI.scopeOverlay.scopeImage.sizeOffset_X = mainTexture.width;
+                        PlayerLifeUI.scopeOverlay.scopeImage.sizeOffset_Y = mainTexture.height;
+                        PlayerLifeUI.scopeOverlay.scopeImage.sizeScale_X = 0f;
+                        PlayerLifeUI.scopeOverlay.scopeImage.sizeScale_Y = 0f;
                     }
                     else
                     {
-                        PlayerLifeUI.scopeImage.positionOffset_X = 0;
-                        PlayerLifeUI.scopeImage.positionOffset_Y = 0;
-                        PlayerLifeUI.scopeImage.positionScale_X = 0f;
-                        PlayerLifeUI.scopeImage.positionScale_Y = 0f;
-                        PlayerLifeUI.scopeImage.sizeOffset_X = 0;
-                        PlayerLifeUI.scopeImage.sizeOffset_Y = 0;
-                        PlayerLifeUI.scopeImage.sizeScale_X = 1f;
-                        PlayerLifeUI.scopeImage.sizeScale_Y = 1f;
+                        PlayerLifeUI.scopeOverlay.scopeImage.positionOffset_X = 0;
+                        PlayerLifeUI.scopeOverlay.scopeImage.positionOffset_Y = 0;
+                        PlayerLifeUI.scopeOverlay.scopeImage.positionScale_X = 0f;
+                        PlayerLifeUI.scopeOverlay.scopeImage.positionScale_Y = 0f;
+                        PlayerLifeUI.scopeOverlay.scopeImage.sizeOffset_X = 0;
+                        PlayerLifeUI.scopeOverlay.scopeImage.sizeOffset_Y = 0;
+                        if (firstAttachments.sightAsset.shouldOffsetScopeOverlayByOneTexel)
+                        {
+                            PlayerLifeUI.scopeOverlay.scopeImage.sizeScale_X = 1f + 1f / (float)mainTexture.width;
+                            PlayerLifeUI.scopeOverlay.scopeImage.sizeScale_Y = 1f + 1f / (float)mainTexture.height;
+                        }
+                        else
+                        {
+                            PlayerLifeUI.scopeOverlay.scopeImage.sizeScale_X = 1f;
+                            PlayerLifeUI.scopeOverlay.scopeImage.sizeScale_Y = 1f;
+                        }
                     }
-                    PlayerLifeUI.scopeImage.texture = mainTexture;
+                    PlayerLifeUI.scopeOverlay.scopeImage.texture = mainTexture;
                     if (firstAttachments.aimHook.parent.Find("Reticule") != null)
                     {
-                        PlayerLifeUI.scopeImage.color = OptionsSettings.criticalHitmarkerColor;
+                        PlayerLifeUI.scopeOverlay.scopeImage.color = OptionsSettings.criticalHitmarkerColor;
                     }
                     else
                     {
-                        PlayerLifeUI.scopeImage.color = ESleekTint.NONE;
+                        PlayerLifeUI.scopeOverlay.scopeImage.color = ESleekTint.NONE;
                     }
                     base.player.animator.viewmodelCameraLocalPositionOffset = Vector3.up;
                 }
                 else
                 {
-                    PlayerLifeUI.scopeImage.texture = null;
+                    PlayerLifeUI.scopeOverlay.scopeImage.texture = null;
                     base.player.animator.viewmodelCameraLocalPositionOffset = Vector3.zero;
                 }
             }
             else
             {
-                PlayerLifeUI.scopeImage.texture = null;
+                PlayerLifeUI.scopeOverlay.scopeImage.texture = null;
             }
             if (equippedGunAsset.isTurret)
             {
@@ -4151,7 +4207,7 @@ public class UseableGun : Useable
             }
             else if (base.player.look.perspective == EPlayerPerspective.FIRST)
             {
-                if (GraphicsSettings.scopeQuality == EGraphicQuality.OFF && PlayerLifeUI.scopeImage.texture != null)
+                if (GraphicsSettings.scopeQuality == EGraphicQuality.OFF && PlayerLifeUI.scopeOverlay.scopeImage.texture != null)
                 {
                     PlayerUI.updateScope(isScoped: true);
                     base.player.look.enableZoom(zoom);
@@ -4468,6 +4524,10 @@ public class UseableGun : Useable
         {
             UpdateHolographicReticulePosition();
         }
+        if (scopeDistanceMarkers != null && scopeDistanceMarkers.Count > 0)
+        {
+            UpdateScopeDistanceMarkers();
+        }
     }
 
     internal void GetAimingViewmodelAlignment(out Transform alignmentTransform, out Vector3 alignmentOffset, out float alpha)
@@ -4551,6 +4611,118 @@ public class UseableGun : Useable
         if ((bool)characterEventComponent)
         {
             yield return characterEventComponent;
+        }
+    }
+
+    private void ClearScopeDistanceMarkers()
+    {
+        if (scopeDistanceMarkers != null)
+        {
+            scopeDistanceMarkers.Clear();
+        }
+    }
+
+    private void InstantiateScopeDistanceMarkers()
+    {
+        if (scopeDistanceMarkers == null)
+        {
+            scopeDistanceMarkers = new List<DistanceMarker>();
+        }
+        if (firstAttachments.scopeHook == null)
+        {
+            return;
+        }
+        Transform transform = firstAttachments.scopeHook.Find("Reticule");
+        if (transform == null)
+        {
+            return;
+        }
+        if (scopeDistanceMarkerMaterial == null)
+        {
+            scopeDistanceMarkerMaterial = new Material(Shader.Find("Sprites/Default"));
+            scopeDistanceMarkerMaterial.hideFlags = HideFlags.HideAndDontSave;
+        }
+        foreach (ItemSightAsset.DistanceMarker distanceMarker2 in firstAttachments.sightAsset.distanceMarkers)
+        {
+            DistanceMarker distanceMarker = new DistanceMarker();
+            distanceMarker.isActive = true;
+            distanceMarker.distance = distanceMarker2.distance;
+            GameObject gameObject = new GameObject($"DistanceMarker_{distanceMarker2.distance}m");
+            gameObject.layer = 11;
+            distanceMarker.transform = gameObject.transform;
+            distanceMarker.transform.SetParent(transform, worldPositionStays: false);
+            distanceMarker.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+            GameObject gameObject2 = new GameObject("Line");
+            gameObject2.layer = 11;
+            gameObject2.transform.SetParent(distanceMarker.transform, worldPositionStays: false);
+            distanceMarker.lineComponent = gameObject2.AddComponent<LineRenderer>();
+            distanceMarker.lineComponent.alignment = LineAlignment.Local;
+            distanceMarker.lineComponent.endColor = distanceMarker2.color;
+            distanceMarker.lineComponent.startColor = distanceMarker2.color;
+            distanceMarker.lineComponent.useWorldSpace = false;
+            distanceMarker.lineComponent.shadowCastingMode = ShadowCastingMode.Off;
+            distanceMarker.lineComponent.widthMultiplier = 0.005f;
+            distanceMarker.lineComponent.sharedMaterial = scopeDistanceMarkerMaterial;
+            if (distanceMarker2.side == ItemSightAsset.DistanceMarker.ESide.Right)
+            {
+                distanceMarker.lineComponent.SetPositions(new Vector3[2]
+                {
+                    new Vector3(distanceMarker2.lineOffset * 2f, 0f, 0f),
+                    new Vector3((distanceMarker2.lineOffset + distanceMarker2.lineWidth) * 2f, 0f, 0f)
+                });
+            }
+            else
+            {
+                distanceMarker.lineComponent.SetPositions(new Vector3[2]
+                {
+                    new Vector3(distanceMarker2.lineOffset * -2f, 0f, 0f),
+                    new Vector3((distanceMarker2.lineOffset + distanceMarker2.lineWidth) * -2f, 0f, 0f)
+                });
+            }
+            if (distanceMarker2.hasLabel)
+            {
+                GameObject gameObject3 = new GameObject("Text");
+                gameObject3.layer = 11;
+                gameObject3.transform.SetParent(distanceMarker.transform, worldPositionStays: false);
+                distanceMarker.textComponent = gameObject3.AddComponent<TextMeshPro>();
+                distanceMarker.textComponent.color = distanceMarker2.color;
+                distanceMarker.textComponent.fontSize = 0.35f;
+                distanceMarker.textComponent.fontStyle = FontStyles.Bold;
+                RectTransform rectTransform = gameObject3.GetRectTransform();
+                if (distanceMarker2.side == ItemSightAsset.DistanceMarker.ESide.Right)
+                {
+                    rectTransform.localPosition = new Vector3((distanceMarker2.lineOffset + distanceMarker2.lineWidth) * 2f + 0.01f, 0f, 0f);
+                    distanceMarker.textComponent.alignment = TextAlignmentOptions.MidlineLeft;
+                    rectTransform.pivot = new Vector3(0f, 0.5f);
+                }
+                else
+                {
+                    rectTransform.localPosition = new Vector3((distanceMarker2.lineOffset + distanceMarker2.lineWidth) * -2f - 0.01f, 0f, 0f);
+                    distanceMarker.textComponent.alignment = TextAlignmentOptions.MidlineRight;
+                    rectTransform.pivot = new Vector3(1f, 0.5f);
+                }
+            }
+            scopeDistanceMarkers.Add(distanceMarker);
+        }
+        SyncScopeDistanceMarkerText();
+    }
+
+    private void UpdateScopeDistanceMarkers()
+    {
+        float fieldOfView = base.player.look.scopeCamera.fieldOfView;
+        float num = (float)Math.PI / 180f * fieldOfView;
+        float muzzleVelocity = equippedGunAsset.muzzleVelocity;
+        float gravity = CalculateBulletGravity();
+        foreach (DistanceMarker scopeDistanceMarker in scopeDistanceMarkers)
+        {
+            float num2 = Mathf.Abs(SleekScopeOverlay.CalcAngle(muzzleVelocity, scopeDistanceMarker.distance, gravity)) / num * -2f;
+            scopeDistanceMarker.transform.localPosition = new Vector3(0f, num2, 0f);
+            bool flag = num2 < -0.01f && num2 > -0.9f;
+            if (scopeDistanceMarker.isActive != flag)
+            {
+                scopeDistanceMarker.isActive = flag;
+                scopeDistanceMarker.transform.gameObject.SetActive(flag);
+            }
         }
     }
 

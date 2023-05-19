@@ -22,7 +22,7 @@ public class PlayerDashboardCraftingUI
 
     private static ISleekButton searchButton;
 
-    private static List<Blueprint> filteredBlueprints;
+    private static List<Blueprint> visibleBlueprints;
 
     private static SleekList<Blueprint> blueprintsScrollBox;
 
@@ -30,20 +30,20 @@ public class PlayerDashboardCraftingUI
 
     private static ISleekToggle hideUncraftableToggle;
 
-    public static Blueprint[] viewBlueprints;
+    public static Blueprint[] filteredBlueprintsOverride;
 
-    private static byte selectedType;
+    private static byte blueprintTypeFilterIndex;
 
     private static bool hideUncraftable;
 
-    private static string searchText;
+    private static string itemNameFilter;
 
     public static void open()
     {
         if (!active)
         {
             active = true;
-            updateSelection(viewBlueprints, selectedType, hideUncraftable, searchText);
+            updateSelection(filteredBlueprintsOverride, blueprintTypeFilterIndex, hideUncraftable, itemNameFilter);
             container.AnimateIntoView();
         }
     }
@@ -53,12 +53,12 @@ public class PlayerDashboardCraftingUI
         if (active)
         {
             active = false;
-            viewBlueprints = null;
+            filteredBlueprintsOverride = null;
             container.AnimateOutOfView(0f, 1f);
         }
     }
 
-    private static bool searchBlueprintText(Blueprint blueprint, string text)
+    private static bool DoesAnyItemNameContainString(Blueprint blueprint, string text)
     {
         for (byte b = 0; b < blueprint.outputs.Length; b = (byte)(b + 1))
         {
@@ -85,28 +85,29 @@ public class PlayerDashboardCraftingUI
 
     public static void updateSelection()
     {
-        updateSelection(viewBlueprints, selectedType, hideUncraftable, searchText);
+        updateSelection(filteredBlueprintsOverride, blueprintTypeFilterIndex, hideUncraftable, itemNameFilter);
     }
 
-    private static void updateSelection(Blueprint[] view, byte typeIndex, bool uncraftable, string search)
+    private static void updateSelection(Blueprint[] newFilteredBlueprintsOverride, byte newBlueprintTypeFilterIndex, bool newHideUncraftable, string newItemNameFilter)
     {
         bool flag = PowerTool.checkFires(Player.player.transform.position, 16f);
+        bool flag2 = !string.IsNullOrEmpty(newItemNameFilter);
         List<Blueprint> list;
-        if (view == null)
+        if (newFilteredBlueprintsOverride == null)
         {
             list = new List<Blueprint>();
-            Asset[] array = Assets.find(EAssetType.ITEM);
-            for (int i = 0; i < array.Length; i++)
+            List<ItemAsset> list2 = new List<ItemAsset>();
+            Assets.find(list2);
+            foreach (ItemAsset item in list2)
             {
-                ItemAsset itemAsset = (ItemAsset)array[i];
-                if (itemAsset == null)
+                if (item == null)
                 {
                     continue;
                 }
-                for (int j = 0; j < itemAsset.blueprints.Count; j++)
+                for (int i = 0; i < item.blueprints.Count; i++)
                 {
-                    Blueprint blueprint = itemAsset.blueprints[j];
-                    if ((search.Length > 0) ? searchBlueprintText(blueprint, search) : (blueprint.type == (EBlueprintType)typeIndex))
+                    Blueprint blueprint = item.blueprints[i];
+                    if (flag2 ? DoesAnyItemNameContainString(blueprint, newItemNameFilter) : (blueprint.type == (EBlueprintType)newBlueprintTypeFilterIndex))
                     {
                         list.Add(blueprint);
                     }
@@ -115,35 +116,35 @@ public class PlayerDashboardCraftingUI
         }
         else
         {
-            list = new List<Blueprint>(view);
+            list = new List<Blueprint>(newFilteredBlueprintsOverride);
         }
         if (Level.info != null && Level.info.configData != null && !Level.info.configData.Allow_Crafting)
         {
-            view = new Blueprint[0];
+            newFilteredBlueprintsOverride = new Blueprint[0];
             list.Clear();
         }
-        filteredBlueprints.Clear();
-        for (int k = 0; k < list.Count; k++)
+        visibleBlueprints.Clear();
+        for (int j = 0; j < list.Count; j++)
         {
-            Blueprint blueprint2 = list[k];
+            Blueprint blueprint2 = list[j];
             if ((blueprint2.skill == EBlueprintSkill.REPAIR && blueprint2.level > Provider.modeConfigData.Gameplay.Repair_Level_Max) || (!string.IsNullOrEmpty(blueprint2.map) && !blueprint2.map.Equals(Level.info.name, StringComparison.InvariantCultureIgnoreCase)) || !blueprint2.areConditionsMet(Player.player) || Player.player.crafting.isBlueprintBlacklisted(blueprint2))
             {
                 continue;
             }
             ItemAsset sourceItem = blueprint2.sourceItem;
             ushort num = 0;
-            bool flag2 = true;
+            bool flag3 = true;
             blueprint2.hasSupplies = true;
             blueprint2.hasSkills = blueprint2.skill == EBlueprintSkill.NONE || (blueprint2.skill == EBlueprintSkill.CRAFT && Player.player.skills.skills[2][1].level >= blueprint2.level) || (blueprint2.skill == EBlueprintSkill.COOK && flag && Player.player.skills.skills[2][3].level >= blueprint2.level) || (blueprint2.skill == EBlueprintSkill.REPAIR && Player.player.skills.skills[2][7].level >= blueprint2.level);
-            List<InventorySearch>[] array2 = new List<InventorySearch>[blueprint2.supplies.Length];
+            List<InventorySearch>[] array = new List<InventorySearch>[blueprint2.supplies.Length];
             for (byte b = 0; b < blueprint2.supplies.Length; b = (byte)(b + 1))
             {
                 BlueprintSupply blueprintSupply = blueprint2.supplies[b];
-                List<InventorySearch> list2 = Player.player.inventory.search(blueprintSupply.id, findEmpty: false, findHealthy: true);
+                List<InventorySearch> list3 = Player.player.inventory.search(blueprintSupply.id, findEmpty: false, findHealthy: true);
                 ushort num2 = 0;
-                foreach (InventorySearch item in list2)
+                foreach (InventorySearch item2 in list3)
                 {
-                    num2 = (ushort)(num2 + item.jar.item.amount);
+                    num2 = (ushort)(num2 + item2.jar.item.amount);
                 }
                 num = (ushort)(num + num2);
                 blueprintSupply.hasAmount = num2;
@@ -152,7 +153,7 @@ public class PlayerDashboardCraftingUI
                     if (blueprintSupply.hasAmount == 0)
                     {
                         blueprint2.hasSupplies = false;
-                        flag2 = false;
+                        flag3 = false;
                     }
                 }
                 else if (blueprintSupply.hasAmount < blueprintSupply.amount)
@@ -160,10 +161,10 @@ public class PlayerDashboardCraftingUI
                     blueprint2.hasSupplies = false;
                     if (blueprintSupply.isCritical)
                     {
-                        flag2 = false;
+                        flag3 = false;
                     }
                 }
-                array2[b] = list2;
+                array[b] = list3;
             }
             if (blueprint2.tool != 0)
             {
@@ -172,7 +173,7 @@ public class PlayerDashboardCraftingUI
                 blueprint2.hasTool = inventorySearch != null;
                 if (inventorySearch == null && blueprint2.toolCritical)
                 {
-                    flag2 = false;
+                    flag3 = false;
                 }
             }
             else
@@ -182,20 +183,20 @@ public class PlayerDashboardCraftingUI
             }
             if (blueprint2.type == EBlueprintType.REPAIR)
             {
-                List<InventorySearch> list3 = Player.player.inventory.search(sourceItem.id, findEmpty: false, findHealthy: false);
+                List<InventorySearch> list4 = Player.player.inventory.search(sourceItem.id, findEmpty: false, findHealthy: false);
                 byte b2 = byte.MaxValue;
                 byte b3 = byte.MaxValue;
-                for (byte b4 = 0; b4 < list3.Count; b4 = (byte)(b4 + 1))
+                for (byte b4 = 0; b4 < list4.Count; b4 = (byte)(b4 + 1))
                 {
-                    if (list3[b4].jar.item.quality < b2)
+                    if (list4[b4].jar.item.quality < b2)
                     {
-                        b2 = list3[b4].jar.item.quality;
+                        b2 = list4[b4].jar.item.quality;
                         b3 = b4;
                     }
                 }
                 if (b3 != byte.MaxValue)
                 {
-                    blueprint2.items = list3[b3].jar.item.quality;
+                    blueprint2.items = list4[b3].jar.item.quality;
                     num = (ushort)(num + 1);
                 }
                 else
@@ -206,25 +207,25 @@ public class PlayerDashboardCraftingUI
             }
             else if (blueprint2.type == EBlueprintType.AMMO)
             {
-                List<InventorySearch> list4 = Player.player.inventory.search(sourceItem.id, findEmpty: true, findHealthy: true);
+                List<InventorySearch> list5 = Player.player.inventory.search(sourceItem.id, findEmpty: true, findHealthy: true);
                 int num3 = -1;
                 byte b5 = byte.MaxValue;
-                for (byte b6 = 0; b6 < list4.Count; b6 = (byte)(b6 + 1))
+                for (byte b6 = 0; b6 < list5.Count; b6 = (byte)(b6 + 1))
                 {
-                    if (list4[b6].jar.item.amount > num3 && list4[b6].jar.item.amount < sourceItem.amount)
+                    if (list5[b6].jar.item.amount > num3 && list5[b6].jar.item.amount < sourceItem.amount)
                     {
-                        num3 = list4[b6].jar.item.amount;
+                        num3 = list5[b6].jar.item.amount;
                         b5 = b6;
                     }
                 }
                 if (b5 != byte.MaxValue)
                 {
-                    if (list4[b5].jar.item.id == blueprint2.supplies[0].id)
+                    if (list5[b5].jar.item.id == blueprint2.supplies[0].id)
                     {
                         blueprint2.supplies[0].hasAmount -= (ushort)num3;
                     }
                     blueprint2.supplies[0].amount = (byte)(sourceItem.amount - num3);
-                    blueprint2.items = list4[b5].jar.item.amount;
+                    blueprint2.items = list5[b5].jar.item.amount;
                     num = (ushort)(num + 1);
                 }
                 else
@@ -250,44 +251,44 @@ public class PlayerDashboardCraftingUI
             {
                 blueprint2.hasItem = true;
             }
-            if (!flag2)
+            if (!(flag2 || flag3))
             {
                 continue;
             }
-            if (uncraftable)
+            if (newHideUncraftable)
             {
                 bool ignoringBlueprint = Player.player.crafting.getIgnoringBlueprint(blueprint2);
                 if (blueprint2.hasSupplies && blueprint2.hasTool && blueprint2.hasItem && blueprint2.hasSkills && !ignoringBlueprint)
                 {
-                    filteredBlueprints.Add(blueprint2);
+                    visibleBlueprints.Add(blueprint2);
                 }
             }
-            else if (view != null)
+            else if (newFilteredBlueprintsOverride != null)
             {
                 if (blueprint2.hasSupplies && blueprint2.hasTool && blueprint2.hasItem && blueprint2.hasSkills)
                 {
-                    filteredBlueprints.Insert(0, blueprint2);
+                    visibleBlueprints.Insert(0, blueprint2);
                 }
                 else
                 {
-                    filteredBlueprints.Add(blueprint2);
+                    visibleBlueprints.Add(blueprint2);
                 }
             }
             else if (blueprint2.hasSupplies && blueprint2.hasTool && blueprint2.hasItem && blueprint2.hasSkills)
             {
-                filteredBlueprints.Insert(0, blueprint2);
+                visibleBlueprints.Insert(0, blueprint2);
             }
-            else if ((blueprint2.type == EBlueprintType.AMMO || blueprint2.type == EBlueprintType.REPAIR || num != 0) && blueprint2.hasItem)
+            else if (flag2 || ((blueprint2.type == EBlueprintType.AMMO || blueprint2.type == EBlueprintType.REPAIR || num != 0) && blueprint2.hasItem))
             {
-                filteredBlueprints.Add(blueprint2);
+                visibleBlueprints.Add(blueprint2);
             }
         }
-        viewBlueprints = view;
-        selectedType = typeIndex;
-        hideUncraftable = uncraftable;
-        searchText = search;
+        filteredBlueprintsOverride = newFilteredBlueprintsOverride;
+        blueprintTypeFilterIndex = newBlueprintTypeFilterIndex;
+        hideUncraftable = newHideUncraftable;
+        itemNameFilter = newItemNameFilter;
         blueprintsScrollBox.ForceRebuildElements();
-        infoBox.isVisible = filteredBlueprints.Count == 0;
+        infoBox.isVisible = visibleBlueprints.Count == 0;
     }
 
     private static void onInventoryResized(byte page, byte newWidth, byte newHeight)
@@ -308,24 +309,24 @@ public class PlayerDashboardCraftingUI
 
     private static void onClickedTypeButton(ISleekElement button)
     {
-        byte typeIndex = (byte)((button.positionOffset_X + -(TYPES * -30 + 5)) / 60);
+        byte newBlueprintTypeFilterIndex = (byte)((button.positionOffset_X + -(TYPES * -30 + 5)) / 60);
         searchField.text = "";
-        updateSelection(null, typeIndex, hideUncraftable, string.Empty);
+        updateSelection(null, newBlueprintTypeFilterIndex, hideUncraftable, string.Empty);
     }
 
     private static void onToggledHideUncraftableToggle(ISleekToggle toggle, bool state)
     {
-        updateSelection(viewBlueprints, selectedType, state, searchText);
+        updateSelection(filteredBlueprintsOverride, blueprintTypeFilterIndex, state, itemNameFilter);
     }
 
     private static void onEnteredSearchField(ISleekField field)
     {
-        updateSelection(null, selectedType, hideUncraftable, searchField.text);
+        updateSelection(null, blueprintTypeFilterIndex, hideUncraftable, searchField.text);
     }
 
     private static void onClickedSearchButton(ISleekElement button)
     {
-        updateSelection(null, selectedType, hideUncraftable, searchField.text);
+        updateSelection(null, blueprintTypeFilterIndex, hideUncraftable, searchField.text);
     }
 
     private static void clickedBlueprint(Blueprint blueprint, bool all)
@@ -372,9 +373,9 @@ public class PlayerDashboardCraftingUI
         container.sizeScale_Y = 1f;
         PlayerUI.container.AddChild(container);
         active = false;
-        selectedType = byte.MaxValue;
+        blueprintTypeFilterIndex = byte.MaxValue;
         hideUncraftable = false;
-        searchText = string.Empty;
+        itemNameFilter = string.Empty;
         backdropBox = Glazier.Get().CreateBox();
         backdropBox.positionOffset_Y = 60;
         backdropBox.sizeOffset_Y = -60;
@@ -382,7 +383,7 @@ public class PlayerDashboardCraftingUI
         backdropBox.sizeScale_Y = 1f;
         backdropBox.backgroundColor = new SleekColor(ESleekTint.BACKGROUND, 0.5f);
         container.AddChild(backdropBox);
-        filteredBlueprints = new List<Blueprint>();
+        visibleBlueprints = new List<Blueprint>();
         blueprintsScrollBox = new SleekList<Blueprint>();
         blueprintsScrollBox.positionOffset_X = 10;
         blueprintsScrollBox.positionOffset_Y = 110;
@@ -393,7 +394,7 @@ public class PlayerDashboardCraftingUI
         blueprintsScrollBox.itemHeight = 195;
         blueprintsScrollBox.itemPadding = 10;
         blueprintsScrollBox.onCreateElement = onCreateBlueprint;
-        blueprintsScrollBox.SetData(filteredBlueprints);
+        blueprintsScrollBox.SetData(visibleBlueprints);
         backdropBox.AddChild(blueprintsScrollBox);
         for (int i = 0; i < TYPES; i++)
         {
@@ -447,10 +448,10 @@ public class PlayerDashboardCraftingUI
         infoBox.fontSize = ESleekFontSize.Medium;
         backdropBox.AddChild(infoBox);
         infoBox.isVisible = false;
-        viewBlueprints = null;
-        selectedType = 0;
+        filteredBlueprintsOverride = null;
+        blueprintTypeFilterIndex = 0;
         hideUncraftable = false;
-        searchText = string.Empty;
+        itemNameFilter = string.Empty;
         PlayerInventory inventory = Player.player.inventory;
         inventory.onInventoryResized = (InventoryResized)Delegate.Combine(inventory.onInventoryResized, new InventoryResized(onInventoryResized));
         PlayerCrafting crafting = Player.player.crafting;

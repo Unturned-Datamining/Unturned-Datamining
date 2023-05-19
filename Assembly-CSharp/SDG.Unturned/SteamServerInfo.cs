@@ -155,10 +155,7 @@ public class SteamServerInfo
         queryPort = data.m_NetAdr.GetQueryPort();
         connectionPort = (ushort)(queryPort + 1);
         _name = data.GetServerName();
-        if (OptionsSettings.filter)
-        {
-            ProfanityFilter.filter(ref _name);
-        }
+        ProfanityFilter.ApplyFilter(OptionsSettings.filter, ref _name);
         _map = data.GetMap();
         string gameTags = data.GetGameTags();
         if (gameTags.Length > 0)
@@ -248,9 +245,9 @@ public class SteamServerInfo
             {
                 message = null;
             }
-            else if (OptionsSettings.filter)
+            else
             {
-                ProfanityFilter.filter(ref message);
+                ProfanityFilter.ApplyFilter(OptionsSettings.filter, ref message);
             }
             if (message.ContainsNewLine() || message.ContainsChar('\t'))
             {
@@ -292,10 +289,7 @@ public class SteamServerInfo
     public SteamServerInfo(string newName, EGameMode newMode, bool newVACSecure, bool newBattlEyeEnabled, bool newPro)
     {
         _name = newName;
-        if (OptionsSettings.filter)
-        {
-            ProfanityFilter.filter(ref _name);
-        }
+        ProfanityFilter.ApplyFilter(OptionsSettings.filter, ref _name);
         _mode = newMode;
         IsVACSecure = newVACSecure;
         IsBattlEyeSecure = newBattlEyeEnabled;

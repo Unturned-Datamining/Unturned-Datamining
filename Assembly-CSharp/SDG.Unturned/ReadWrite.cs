@@ -30,7 +30,7 @@ public class ReadWrite
 
     public static bool appIn(byte[] h, byte p)
     {
-        Block block = readBlock("/Bundles/Sources/Animation/appout.log", useCloud: false, 0);
+        Block block = readBlock("/Extras/Sources/Animation/appout.log", useCloud: false, 0);
         byte[] hash_ = block.readByteArray();
         byte[] hash_2 = block.readByteArray();
         byte[] hash_3 = block.readByteArray();

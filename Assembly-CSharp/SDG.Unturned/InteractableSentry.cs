@@ -689,7 +689,8 @@ public class InteractableSentry : InteractableStorage
                         if (transform2 == null || Random.value > num11)
                         {
                             Vector3 randomForwardVectorInCone = RandomEx.GetRandomForwardVectorInCone(baseSpreadAngleRadians);
-                            RaycastInfo raycastInfo = DamageTool.raycast(new Ray(aimTransform.position, randomForwardVectorInCone), ((ItemWeaponAsset)displayAsset).range, RayMasks.DAMAGE_SERVER);
+                            Vector3 direction = aimTransform.TransformDirection(randomForwardVectorInCone);
+                            RaycastInfo raycastInfo = DamageTool.raycast(new Ray(aimTransform.position, direction), ((ItemWeaponAsset)displayAsset).range, RayMasks.DAMAGE_SERVER);
                             if (!(raycastInfo.transform == null))
                             {
                                 DamageTool.ServerSpawnBulletImpact(raycastInfo.point, raycastInfo.normal, raycastInfo.materialName, raycastInfo.collider?.transform, Provider.GatherClientConnectionsWithinSphere(raycastInfo.point, EffectManager.SMALL));
@@ -776,15 +777,15 @@ public class InteractableSentry : InteractableStorage
                                 position3 = targetAnimal.transform.position + Vector3.up;
                             }
                             DamageTool.ServerSpawnBulletImpact(position3, -aimTransform.forward, "Flesh_Dynamic", null, Provider.GatherClientConnectionsWithinSphere(position3, EffectManager.SMALL));
-                            Vector3 direction = aimTransform.forward * Mathf.Ceil((float)(int)attachments.magazineAsset.pellets / 2f);
+                            Vector3 direction2 = aimTransform.forward * Mathf.Ceil((float)(int)attachments.magazineAsset.pellets / 2f);
                             if (targetPlayer != null)
                             {
-                                DamageTool.damage(targetPlayer, EDeathCause.SENTRY, ELimb.SPINE, base.owner, direction, ((ItemGunAsset)displayAsset).playerDamageMultiplier, num9, armor: true, out kill, trackKill: true);
+                                DamageTool.damage(targetPlayer, EDeathCause.SENTRY, ELimb.SPINE, base.owner, direction2, ((ItemGunAsset)displayAsset).playerDamageMultiplier, num9, armor: true, out kill, trackKill: true);
                             }
                             else if (targetZombie != null)
                             {
                                 IDamageMultiplier zombieOrPlayerDamageMultiplier = ((ItemGunAsset)displayAsset).zombieOrPlayerDamageMultiplier;
-                                DamageZombieParameters parameters = DamageZombieParameters.make(targetZombie, direction, zombieOrPlayerDamageMultiplier, ELimb.SPINE);
+                                DamageZombieParameters parameters = DamageZombieParameters.make(targetZombie, direction2, zombieOrPlayerDamageMultiplier, ELimb.SPINE);
                                 parameters.times = num9;
                                 parameters.allowBackstab = false;
                                 parameters.respectArmor = true;
@@ -794,7 +795,7 @@ public class InteractableSentry : InteractableStorage
                             else if (targetAnimal != null)
                             {
                                 IDamageMultiplier animalOrPlayerDamageMultiplier = ((ItemGunAsset)displayAsset).animalOrPlayerDamageMultiplier;
-                                DamageAnimalParameters parameters2 = DamageAnimalParameters.make(targetAnimal, direction, animalOrPlayerDamageMultiplier, ELimb.SPINE);
+                                DamageAnimalParameters parameters2 = DamageAnimalParameters.make(targetAnimal, direction2, animalOrPlayerDamageMultiplier, ELimb.SPINE);
                                 parameters2.times = num9;
                                 parameters2.instigator = this;
                                 DamageTool.damageAnimal(parameters2, out kill, out xp);

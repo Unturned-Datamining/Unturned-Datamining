@@ -91,10 +91,6 @@ public class ItemGunAsset : ItemWeaponAsset
 
     public float spreadProne;
 
-    public float recoilAim;
-
-    public bool useRecoilAim;
-
     public float recoilMin_x;
 
     public float recoilMin_y;
@@ -130,8 +126,6 @@ public class ItemGunAsset : ItemWeaponAsset
     public byte ballisticSteps;
 
     public float ballisticTravel;
-
-    public float ballisticDrop;
 
     public float ballisticForce;
 
@@ -264,6 +258,10 @@ public class ItemGunAsset : ItemWeaponAsset
     public ushort[] magazineCalibers { get; private set; }
 
     public float baseSpreadAngleRadians { get; private set; }
+
+    public float muzzleVelocity { get; protected set; }
+
+    public float bulletGravityMultiplier { get; protected set; }
 
     public override bool showQuality => true;
 
@@ -494,16 +492,6 @@ public class ItemGunAsset : ItemWeaponAsset
         spreadSprint = data.ParseFloat("Spread_Sprint", 1.25f);
         spreadCrouch = data.ParseFloat("Spread_Crouch", 0.85f);
         spreadProne = data.ParseFloat("Spread_Prone", 0.7f);
-        if (data.ContainsKey("Recoil_Aim"))
-        {
-            recoilAim = data.ParseFloat("Recoil_Aim");
-            useRecoilAim = true;
-        }
-        else
-        {
-            recoilAim = 1f;
-            useRecoilAim = false;
-        }
         recoilMin_x = data.ParseFloat("Recoil_Min_X");
         recoilMin_y = data.ParseFloat("Recoil_Min_Y");
         recoilMax_x = data.ParseFloat("Recoil_Max_X");
@@ -545,13 +533,14 @@ public class ItemGunAsset : ItemWeaponAsset
             ballisticTravel = 10f;
             ballisticSteps = (byte)Mathf.CeilToInt(range / ballisticTravel);
         }
-        if (data.ContainsKey("Ballistic_Drop"))
+        muzzleVelocity = ballisticTravel * (float)PlayerInput.TOCK_PER_SECOND;
+        if (data.TryParseFloat("Ballistic_Drop", out var value) && value < 0.001f)
         {
-            ballisticDrop = data.ParseFloat("Ballistic_Drop");
+            bulletGravityMultiplier = 0f;
         }
         else
         {
-            ballisticDrop = 0.002f;
+            bulletGravityMultiplier = data.ParseFloat("Bullet_Gravity_Multiplier", 4f);
         }
         if (data.ContainsKey("Ballistic_Force"))
         {

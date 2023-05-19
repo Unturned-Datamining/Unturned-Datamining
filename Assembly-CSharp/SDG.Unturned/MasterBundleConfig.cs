@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.IO;
 using UnityEngine;
 
@@ -7,11 +6,15 @@ namespace SDG.Unturned;
 
 public class MasterBundleConfig
 {
-    internal ulong workshopFileId;
+    internal AssetOrigin origin;
 
     internal bool doesHashFileExist;
 
     internal MasterBundleHash serverHashes;
+
+    internal AssetBundleCreateRequest assetBundleCreateRequest;
+
+    private double loadStartTime;
 
     public string directoryPath { get; protected set; }
 
@@ -27,29 +30,28 @@ public class MasterBundleConfig
 
     public byte[] hash { get; protected set; }
 
-    public MasterBundleConfig(string absoluteDirectory, ulong workshopFileId)
+    public MasterBundleConfig(string absoluteDirectory, DatDictionary data, AssetOrigin origin)
     {
         directoryPath = absoluteDirectory;
-        this.workshopFileId = workshopFileId;
-        DatDictionary datDictionary = ReadWrite.ReadDataWithoutHash(MasterBundleHelper.getConfigPath(absoluteDirectory));
-        assetBundleName = datDictionary.GetString("Asset_Bundle_Name");
+        this.origin = origin;
+        assetBundleName = data.GetString("Asset_Bundle_Name");
         if (string.IsNullOrEmpty(assetBundleName))
         {
             throw new Exception("Unspecified Asset_Bundle_Name! This should be the file name and extension of the master asset bundle exported from Unity.");
         }
         assetBundleNameWithoutExtension = Path.GetFileNameWithoutExtension(assetBundleName);
-        assetPrefix = datDictionary.GetString("Asset_Prefix");
+        assetPrefix = data.GetString("Asset_Prefix");
         if (string.IsNullOrEmpty(assetPrefix))
         {
             throw new Exception("Unspecified Asset_Prefix! This should be the portion of the Unity asset path prior to the /Bundles/ path, e.g. Assets/Bundles/");
         }
-        if (datDictionary.ContainsKey("Master_Bundle_Version"))
+        if (data.ContainsKey("Master_Bundle_Version"))
         {
-            version = datDictionary.ParseInt32("Master_Bundle_Version");
+            version = data.ParseInt32("Master_Bundle_Version");
         }
         else
         {
-            version = datDictionary.ParseInt32("Asset_Bundle_Version", 2);
+            version = data.ParseInt32("Asset_Bundle_Version", 2);
         }
         if (version < 2)
         {
@@ -96,33 +98,27 @@ public class MasterBundleConfig
         return assetPrefix + "/" + assetPath;
     }
 
-    public bool load()
+    public void StartLoad(byte[] inputData, byte[] inputHash)
     {
-        using (FileStream underlyingStream = new FileStream(getAssetBundlePath(), FileMode.Open, FileAccess.Read, FileShare.Read))
-        {
-            using SHA1Stream sHA1Stream = new SHA1Stream(underlyingStream);
-            assetBundle = AssetBundle.LoadFromStream(sHA1Stream);
-            hash = sHA1Stream.Hash;
-        }
-        CheckOwnerCustomDataAndMaybeUnload();
-        return assetBundle != null;
+        UnturnedLog.info("Loading asset bundle " + assetBundleName + "...");
+        assetBundleCreateRequest = AssetBundle.LoadFromMemoryAsync(inputData);
+        hash = inputHash;
+        loadStartTime = Time.realtimeSinceStartupAsDouble;
     }
 
-    public IEnumerator loadAsync()
+    public void FinishLoad()
     {
-        using (FileStream fs = new FileStream(getAssetBundlePath(), FileMode.Open, FileAccess.Read, FileShare.Read, 4096, useAsync: true))
-        {
-            using SHA1Stream hashStream = new SHA1Stream(fs);
-            AssetBundleCreateRequest pendingAssetBundle = AssetBundle.LoadFromStreamAsync(hashStream);
-            while (!pendingAssetBundle.isDone)
-            {
-                LoadingUI.notifyMasterBundleProgress("Master_Bundle_Progress", assetBundleNameWithoutExtension, pendingAssetBundle.progress);
-                yield return null;
-            }
-            assetBundle = pendingAssetBundle.assetBundle;
-            hash = hashStream.Hash;
-        }
+        assetBundle = assetBundleCreateRequest.assetBundle;
         CheckOwnerCustomDataAndMaybeUnload();
+        if (assetBundle != null)
+        {
+            double num = Time.realtimeSinceStartupAsDouble - loadStartTime;
+            UnturnedLog.info($"Loading asset bundle {assetBundleName} took {num}s");
+        }
+        else
+        {
+            UnturnedLog.warn("Failed to load asset bundle: " + getAssetBundlePath());
+        }
     }
 
     public void unload()
@@ -149,7 +145,7 @@ public class MasterBundleConfig
         }
         UnturnedLog.info("Loaded \"" + assetBundleName + "\" custom data from \"" + text + "\"");
         bool flag = assetBundleCustomData.ownerWorkshopFileIds != null && assetBundleCustomData.ownerWorkshopFileIds.Count > 0;
-        if (workshopFileId == 0 || !(assetBundleCustomData.ownerWorkshopFileId != 0 || flag) || workshopFileId == assetBundleCustomData.ownerWorkshopFileId || (flag && assetBundleCustomData.ownerWorkshopFileIds.Contains(workshopFileId)))
+        if (origin.workshopFileId == 0 || !(assetBundleCustomData.ownerWorkshopFileId != 0 || flag) || origin.workshopFileId == assetBundleCustomData.ownerWorkshopFileId || (flag && assetBundleCustomData.ownerWorkshopFileIds.Contains(origin.workshopFileId)))
         {
             return;
         }
@@ -167,7 +163,7 @@ public class MasterBundleConfig
         {
             text2 = assetBundleCustomData.ownerWorkshopFileId.ToString();
         }
-        UnturnedLog.warn($"Unloading \"{assetBundle}\" because source workshop file ID ({workshopFileId}) does not match owner workshop file ID(s) ({text2})");
+        UnturnedLog.warn($"Unloading \"{assetBundle}\" because source workshop file ID ({origin.workshopFileId}) does not match owner workshop file ID(s) ({text2})");
         unload();
     }
 

@@ -733,26 +733,8 @@ public class GraphicsSettings
         }
     }
 
-    public static void apply(string reason)
+    internal static void ApplyVSyncAndTargetFrameRate()
     {
-        UnturnedLog.info("Applying graphics settings ({0})", reason);
-        if (changeResolution)
-        {
-            changeResolution = false;
-            applyResolution();
-        }
-        if (LevelLighting.sun != null)
-        {
-            if (lightingQuality == EGraphicQuality.ULTRA || lightingQuality == EGraphicQuality.HIGH)
-            {
-                LevelLighting.sun.GetComponent<Light>().shadowNormalBias = 0f;
-            }
-            else
-            {
-                LevelLighting.sun.GetComponent<Light>().shadowNormalBias = 0.5f;
-            }
-        }
-        QualitySettings.SetQualityLevel((byte)lightingQuality + 1, applyExpensiveChanges: true);
         QualitySettings.vSyncCount = (buffer ? 1 : 0);
         if (clTargetFrameRate.hasValue)
         {
@@ -773,6 +755,29 @@ public class GraphicsSettings
         {
             Application.targetFrameRate = -1;
         }
+    }
+
+    public static void apply(string reason)
+    {
+        UnturnedLog.info("Applying graphics settings ({0})", reason);
+        if (changeResolution)
+        {
+            changeResolution = false;
+            applyResolution();
+        }
+        if (LevelLighting.sun != null)
+        {
+            if (lightingQuality == EGraphicQuality.ULTRA || lightingQuality == EGraphicQuality.HIGH)
+            {
+                LevelLighting.sun.GetComponent<Light>().shadowNormalBias = 0f;
+            }
+            else
+            {
+                LevelLighting.sun.GetComponent<Light>().shadowNormalBias = 0.5f;
+            }
+        }
+        QualitySettings.SetQualityLevel((byte)lightingQuality + 1, applyExpensiveChanges: true);
+        ApplyVSyncAndTargetFrameRate();
         switch (anisotropicFilteringMode)
         {
         case EAnisotropicFilteringMode.DISABLED:

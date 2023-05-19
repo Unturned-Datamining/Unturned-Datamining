@@ -296,28 +296,9 @@ public class PlayerLife : PlayerCaller
         _deathCause = newCause;
         _deathLimb = newLimb;
         _deathKiller = newKiller;
-        if (base.channel.isOwner)
+        if (base.channel.isOwner && Provider.provider.statisticsService.userStatisticsService.getStatistic("Deaths_Players", out int data))
         {
-            if (Provider.provider.statisticsService.userStatisticsService.getStatistic("Deaths_Players", out int data))
-            {
-                Provider.provider.statisticsService.userStatisticsService.setStatistic("Deaths_Players", data + 1);
-            }
-            if (Level.info != null && Time.realtimeSinceStartup - lastAlive > 5f)
-            {
-                string value = deathCause.ToString();
-                float num = Time.realtimeSinceStartup - lastAlive;
-                string value2 = (Level.info.canAnalyticsTrack ? Level.info.name : "Workshop");
-                new Dictionary<string, object>
-                {
-                    { "Cause", value },
-                    { "Lifespan", num },
-                    { "Map", value2 },
-                    {
-                        "Network",
-                        Provider.clients.Count > 1
-                    }
-                };
-            }
+            Provider.provider.statisticsService.userStatisticsService.setStatistic("Deaths_Players", data + 1);
         }
     }
 

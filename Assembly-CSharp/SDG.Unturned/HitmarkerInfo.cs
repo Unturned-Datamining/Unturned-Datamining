@@ -2,15 +2,13 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-public class HitmarkerInfo
+public struct HitmarkerInfo
 {
-    public float lastHit;
+    public float aliveTime;
 
-    public EPlayerHit hit;
+    public Vector3 worldPosition;
 
-    public Vector3 point;
+    public bool shouldFollowWorldPosition;
 
-    public bool worldspace;
-
-    public ISleekImage image;
+    public SleekHitmarker sleekElement;
 }

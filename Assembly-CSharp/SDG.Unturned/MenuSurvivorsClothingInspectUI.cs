@@ -65,15 +65,15 @@ public class MenuSurvivorsClothingInspectUI
         {
             Object.Destroy(model.gameObject);
         }
-        Provider.provider.economyService.getInventoryTargetID(item, out var item_id, out var vehicle_id);
+        Provider.provider.economyService.getInventoryTargetID(item, out var item_guid, out var vehicle_guid);
         ushort inventorySkinID = Provider.provider.economyService.getInventorySkinID(item);
         ushort num = Provider.provider.economyService.getInventoryMythicID(item);
         if (num == 0)
         {
             num = Provider.provider.economyService.getInventoryParticleEffect(instance);
         }
-        ItemAsset itemAsset = Assets.find(EAssetType.ITEM, item_id) as ItemAsset;
-        VehicleAsset vehicleAsset = Assets.find(EAssetType.VEHICLE, vehicle_id) as VehicleAsset;
+        ItemAsset itemAsset = Assets.find<ItemAsset>(item_guid);
+        VehicleAsset vehicleAsset = Assets.find<VehicleAsset>(vehicle_guid);
         if (itemAsset == null && vehicleAsset == null)
         {
             return;

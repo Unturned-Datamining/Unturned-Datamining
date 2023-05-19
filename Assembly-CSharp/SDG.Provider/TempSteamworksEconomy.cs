@@ -345,25 +345,25 @@ public class TempSteamworksEconomy
         return (ushort)unturnedEconInfo.item_effect;
     }
 
-    public void getInventoryTargetID(int item, out ushort item_id, out ushort vehicle_id)
+    public void getInventoryTargetID(int item, out Guid item_guid, out Guid vehicle_guid)
     {
         UnturnedEconInfo unturnedEconInfo = econInfo.Find((UnturnedEconInfo x) => x.itemdefid == item);
         if (unturnedEconInfo == null)
         {
-            item_id = 0;
-            vehicle_id = 0;
+            item_guid = default(Guid);
+            vehicle_guid = default(Guid);
         }
         else
         {
-            item_id = (ushort)unturnedEconInfo.item_id;
-            vehicle_id = (ushort)unturnedEconInfo.vehicle_id;
+            item_guid = unturnedEconInfo.item_guid;
+            vehicle_guid = unturnedEconInfo.vehicle_guid;
         }
     }
 
-    public ushort getInventoryItemID(int item)
+    public Guid getInventoryItemGuid(int item)
     {
-        getInventoryTargetID(item, out var item_id, out var _);
-        return item_id;
+        getInventoryTargetID(item, out var item_guid, out var _);
+        return item_guid;
     }
 
     public ushort getInventorySkinID(int item)
@@ -383,15 +383,20 @@ public class TempSteamworksEconomy
         {
             return null;
         }
-        if (unturnedEconInfo.item_id != 0)
+        if (unturnedEconInfo.item_guid != default(Guid))
         {
-            if (!(Assets.find(EAssetType.ITEM, (ushort)unturnedEconInfo.item_id) is ItemAsset itemAsset))
+            ItemAsset itemAsset = Assets.find<ItemAsset>(unturnedEconInfo.item_guid);
+            if (itemAsset == null)
             {
                 return null;
             }
             if (itemAsset.econIconUseId)
             {
                 return Resources.Load<Texture2D>("Economy/Item/" + itemdefid + (large ? "/Icon_Large" : "/Icon_Small"));
+            }
+            if (itemAsset.type == EItemType.SHIRT || itemAsset.type == EItemType.PANTS || itemAsset.type == EItemType.HAT || itemAsset.type == EItemType.BACKPACK || itemAsset.type == EItemType.VEST || itemAsset.type == EItemType.GLASSES || itemAsset.type == EItemType.MASK)
+            {
+                return Resources.Load<Texture2D>("Economy/CosmeticPreviews/" + itemAsset.GUID.ToString("N"));
             }
             if (itemAsset.proPath == null || itemAsset.proPath.Length == 0)
             {
@@ -404,9 +409,10 @@ public class TempSteamworksEconomy
             }
             return Resources.Load<Texture2D>("Economy" + itemAsset.proPath + (large ? "/Icon_Large" : "/Icon_Small"));
         }
-        if (unturnedEconInfo.vehicle_id != 0)
+        if (unturnedEconInfo.vehicle_guid != default(Guid))
         {
-            if (!(Assets.find(EAssetType.VEHICLE, (ushort)unturnedEconInfo.vehicle_id) is VehicleAsset vehicleAsset))
+            VehicleAsset vehicleAsset = Assets.find<VehicleAsset>(unturnedEconInfo.vehicle_guid);
+            if (vehicleAsset == null)
             {
                 return null;
             }
@@ -891,8 +897,8 @@ public class TempSteamworksEconomy
         {
             return false;
         }
-        ushort inventoryItemID = getInventoryItemID(itemdefid);
-        if (Assets.find(EAssetType.ITEM, inventoryItemID) is ItemAsset itemAsset)
+        ItemAsset itemAsset = Assets.find<ItemAsset>(getInventoryItemGuid(itemdefid));
+        if (itemAsset != null)
         {
             if (itemAsset.type != EItemType.KEY)
             {

@@ -1468,7 +1468,7 @@ public class PlayerClothing : PlayerCaller
         if (firstClothes != null)
         {
             firstClothes.visualShirt = base.channel.owner.shirtItem;
-            firstClothes.hand = base.channel.owner.hand;
+            firstClothes.hand = base.channel.owner.IsLeftHanded;
         }
         if (thirdClothes != null)
         {
@@ -1479,7 +1479,7 @@ public class PlayerClothing : PlayerCaller
             thirdClothes.visualVest = base.channel.owner.vestItem;
             thirdClothes.visualMask = base.channel.owner.maskItem;
             thirdClothes.visualGlasses = base.channel.owner.glassesItem;
-            thirdClothes.hand = base.channel.owner.hand;
+            thirdClothes.hand = base.channel.owner.IsLeftHanded;
         }
         if (characterClothes != null)
         {
@@ -1490,7 +1490,7 @@ public class PlayerClothing : PlayerCaller
             characterClothes.visualVest = base.channel.owner.vestItem;
             characterClothes.visualMask = base.channel.owner.maskItem;
             characterClothes.visualGlasses = base.channel.owner.glassesItem;
-            characterClothes.hand = base.channel.owner.hand;
+            characterClothes.hand = base.channel.owner.IsLeftHanded;
         }
         isSkinned = true;
         if (Provider.isServer)

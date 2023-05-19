@@ -1,3 +1,5 @@
+using System;
+
 namespace Unturned.LiveConfig;
 
 public struct MainMenuAlert
@@ -15,4 +17,10 @@ public struct MainMenuAlert
     public string IconName;
 
     public string IconURL;
+
+    public bool UseTimeWindow;
+
+    public DateTime StartTime;
+
+    public DateTime EndTime;
 }

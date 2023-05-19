@@ -88,6 +88,6 @@ public class ItemMeleeAsset : ItemWeaponAsset
         {
             alertRadius = 8f;
         }
-        impactAudio = data.ReadAudioReference("ImpactAudioDef");
+        impactAudio = data.ReadAudioReference("ImpactAudioDef", bundle);
     }
 }

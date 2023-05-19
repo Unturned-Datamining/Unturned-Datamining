@@ -124,24 +124,24 @@ public class EditorLevelObjectsUI : SleekFullscreenBox
         }
         if (barricades || structures)
         {
-            Asset[] array = Assets.find(EAssetType.ITEM);
-            for (int i = 0; i < array.Length; i++)
+            List<ItemAsset> list = new List<ItemAsset>();
+            Assets.find(list);
+            foreach (ItemAsset item in list)
             {
-                ItemAsset itemAsset = array[i] as ItemAsset;
-                if (itemAsset is ItemBarricadeAsset)
+                if (item is ItemBarricadeAsset)
                 {
                     if (!barricades)
                     {
                         continue;
                     }
                 }
-                else if (!(itemAsset is ItemStructureAsset) || !structures)
+                else if (!(item is ItemStructureAsset) || !structures)
                 {
                     continue;
                 }
-                if (editorObjectSearchFilter == null || !editorObjectSearchFilter.ignores(itemAsset))
+                if (editorObjectSearchFilter == null || !editorObjectSearchFilter.ignores(item))
                 {
-                    assets.Add(itemAsset);
+                    assets.Add(item);
                 }
             }
         }

@@ -4,6 +4,8 @@ namespace SDG.Unturned;
 
 public struct PlayerSpotLightConfig
 {
+    public bool isEnabled;
+
     public float range;
 
     public float angle;
@@ -25,6 +27,7 @@ public struct PlayerSpotLightConfig
 
     public PlayerSpotLightConfig(DatDictionary data)
     {
+        isEnabled = data.ParseBool("SpotLight_Enabled", defaultValue: true);
         range = data.ParseFloat("SpotLight_Range", 64f);
         angle = data.ParseFloat("SpotLight_Angle", 90f);
         intensity = data.ParseFloat("SpotLight_Intensity", 1.3f);

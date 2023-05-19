@@ -78,8 +78,8 @@ public struct OneShotAudioParameters
         maxDistance = max;
     }
 
-    public void Play()
+    public OneShotAudioHandle Play()
     {
-        AudioSourcePool.Get().Play(ref this);
+        return AudioSourcePool.Get().Play(ref this);
     }
 }

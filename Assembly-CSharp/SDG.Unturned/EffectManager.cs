@@ -1509,23 +1509,24 @@ public class EffectManager : SteamCaller
         {
             return;
         }
-        Asset[] array = Assets.find(EAssetType.EFFECT);
-        for (int i = 0; i < array.Length; i++)
+        List<EffectAsset> list = new List<EffectAsset>();
+        Assets.find(list);
+        foreach (EffectAsset item in list)
         {
-            if (!(array[i] is EffectAsset effectAsset) || effectAsset.effect == null || effectAsset.preload == 0)
+            if (item == null || item.effect == null || item.preload == 0)
             {
                 continue;
             }
-            pool.Instantiate(effectAsset.effect, effectAsset.id.ToString(), effectAsset.preload);
-            if (effectAsset.splatter <= 0 || effectAsset.splatterPreload <= 0)
+            pool.Instantiate(item.effect, item.id.ToString(), item.preload);
+            if (item.splatter <= 0 || item.splatterPreload <= 0)
             {
                 continue;
             }
-            for (int j = 0; j < effectAsset.splatters.Length; j++)
+            for (int i = 0; i < item.splatters.Length; i++)
             {
-                if (!(effectAsset.splatters[j] == null))
+                if (!(item.splatters[i] == null))
                 {
-                    pool.Instantiate(effectAsset.splatters[j], "Splatter", effectAsset.splatterPreload);
+                    pool.Instantiate(item.splatters[i], "Splatter", item.splatterPreload);
                 }
             }
         }

@@ -637,10 +637,7 @@ public class MenuPlayServerInfoUI
         }
         if (rulesMap.TryGetValue("Browser_Desc_Hint", out var value2) && !string.IsNullOrEmpty(value2))
         {
-            if (OptionsSettings.filter)
-            {
-                ProfanityFilter.filter(ref value2);
-            }
+            ProfanityFilter.ApplyFilter(OptionsSettings.filter, ref value2);
             titleDescriptionLabel.text = value2;
         }
         if (rulesMap.TryGetValue("Browser_Desc_Full_Count", out var value3) && int.TryParse(value3, NumberStyles.Any, CultureInfo.InvariantCulture, out var result) && result > 0)
@@ -657,10 +654,7 @@ public class MenuPlayServerInfoUI
             {
                 if (!string.IsNullOrEmpty(output))
                 {
-                    if (OptionsSettings.filter)
-                    {
-                        ProfanityFilter.filter(ref output);
-                    }
+                    ProfanityFilter.ApplyFilter(OptionsSettings.filter, ref output);
                     RichTextUtil.replaceNewlineMarkup(ref output);
                     serverDescriptionBox.text = output;
                 }
@@ -711,10 +705,7 @@ public class MenuPlayServerInfoUI
                     UnturnedLog.warn("Ignoring potentially unsafe link index {0} url {1}", j, output3);
                     continue;
                 }
-                if (OptionsSettings.filter)
-                {
-                    ProfanityFilter.filter(ref output2);
-                }
+                ProfanityFilter.ApplyFilter(OptionsSettings.filter, ref output2);
                 linkUrls.Add(result3);
                 ISleekButton sleekButton = Glazier.Get().CreateButton();
                 sleekButton.positionOffset_Y += num;

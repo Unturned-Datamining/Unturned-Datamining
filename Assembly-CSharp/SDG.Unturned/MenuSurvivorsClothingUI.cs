@@ -16,20 +16,6 @@ public class MenuSurvivorsClothingUI
         Type
     }
 
-    public static EconCraftOption[] ECON_CRAFT_OPTIONS = new EconCraftOption[10]
-    {
-        new EconCraftOption("Craft_Common_Cosmetic", 10003, 2),
-        new EconCraftOption("Craft_Common_Skin", 10006, 2),
-        new EconCraftOption("Craft_Uncommon_Cosmetic", 10004, 13),
-        new EconCraftOption("Craft_Uncommon_Skin", 10007, 13),
-        new EconCraftOption("Craft_Stat_Tracker_Total_Kills", 19001, 30),
-        new EconCraftOption("Craft_Stat_Tracker_Player_Kills", 19002, 30),
-        new EconCraftOption("Craft_Ragdoll_Effect_Zero_Kelvin", 19003, 50),
-        new EconCraftOption("Craft_Mythical_Skin", 19043, 1000),
-        new EconCraftOption("Craft_Stat_Tracker_Removal_Tool", 19004, 15),
-        new EconCraftOption("Craft_Ragdoll_Effect_Removal_Tool", 19005, 15)
-    };
-
     public static Local localization;
 
     public static Bundle icons;
@@ -100,13 +86,13 @@ public class MenuSurvivorsClothingUI
 
     private static ulong filterInstigator;
 
-    private static bool searchDescriptions = false;
+    private static bool searchDescriptions;
 
-    private static ESortMode sortMode = ESortMode.Date;
+    private static ESortMode sortMode;
 
-    private static bool reverseSortOrder = false;
+    private static bool reverseSortOrder;
 
-    private static bool filterEquipped = false;
+    private static bool filterEquipped;
 
     private MenuSurvivorsClothingItemUI itemUI;
 
@@ -117,6 +103,8 @@ public class MenuSurvivorsClothingUI
     private MenuSurvivorsClothingBoxUI boxUI;
 
     private ItemStoreMenu itemStoreUI;
+
+    private List<EconCraftOption> econCraftOptions;
 
     private static int numberOfPages => MathfEx.GetPageCount(filteredItems.Count, 25);
 
@@ -215,7 +203,7 @@ public class MenuSurvivorsClothingUI
             }
             else
             {
-                Characters.package(instance);
+                Characters.ToggleEquipItemByInstanceId(instance);
             }
         }
         else
@@ -306,7 +294,7 @@ public class MenuSurvivorsClothingUI
         MenuUI.openAlert(localization.format("Alert_Crafting"), canBeDismissed: false);
     }
 
-    private static void onClickedCraftButton(ISleekElement button)
+    private void onClickedCraftButton(ISleekElement button)
     {
         if (isCrafting)
         {
@@ -315,7 +303,7 @@ public class MenuSurvivorsClothingUI
         int num = craftingScrollBox.FindIndexOfChild(button);
         if (num != -1)
         {
-            EconCraftOption econCraftOption = ECON_CRAFT_OPTIONS[num];
+            EconCraftOption econCraftOption = econCraftOptions[num];
             if (Provider.provider.economyService.getInventoryPackages(19000, econCraftOption.scrapsNeeded, out var pairs))
             {
                 prepareForCraftResult();
@@ -462,9 +450,9 @@ public class MenuSurvivorsClothingUI
             filteredItems = new List<SteamItemDetails_t>();
             foreach (SteamItemDetails_t item in Provider.provider.economyService.inventory)
             {
-                ushort inventoryItemID = Provider.provider.economyService.getInventoryItemID(item.m_iDefinition.m_SteamItemDef);
+                Guid inventoryItemGuid = Provider.provider.economyService.getInventoryItemGuid(item.m_iDefinition.m_SteamItemDef);
                 int inventorySkinID = Provider.provider.economyService.getInventorySkinID(item.m_iDefinition.m_SteamItemDef);
-                if (inventoryItemID != 0 && inventorySkinID != 0)
+                if (inventoryItemGuid != default(Guid) && inventorySkinID != 0)
                 {
                     filteredItems.Add(item);
                 }
@@ -497,9 +485,9 @@ public class MenuSurvivorsClothingUI
             filteredItems = new List<SteamItemDetails_t>();
             foreach (SteamItemDetails_t item4 in Provider.provider.economyService.inventory)
             {
-                ushort inventoryItemID2 = Provider.provider.economyService.getInventoryItemID(item4.m_iDefinition.m_SteamItemDef);
+                Guid inventoryItemGuid2 = Provider.provider.economyService.getInventoryItemGuid(item4.m_iDefinition.m_SteamItemDef);
                 int inventorySkinID2 = Provider.provider.economyService.getInventorySkinID(item4.m_iDefinition.m_SteamItemDef);
-                if (inventoryItemID2 != 0 && inventorySkinID2 != 0)
+                if (inventoryItemGuid2 != default(Guid) && inventorySkinID2 != 0)
                 {
                     Provider.provider.economyService.getInventoryRagdollEffect(item4.m_itemId.m_SteamItemInstanceID, out var effect2);
                     if (effect2 == ERagdollEffect.NONE)
@@ -855,10 +843,27 @@ public class MenuSurvivorsClothingUI
         craftingScrollBox.sizeScale_Y = 1f;
         craftingScrollBox.sizeOffset_Y = -40;
         crafting.AddChild(craftingScrollBox);
-        craftingButtons = new ISleekButton[ECON_CRAFT_OPTIONS.Length];
+        econCraftOptions = new List<EconCraftOption>
+        {
+            new EconCraftOption("Craft_Common_Cosmetic", 10003, 2),
+            new EconCraftOption("Craft_Common_Skin", 10006, 2),
+            new EconCraftOption("Craft_Uncommon_Cosmetic", 10004, 13),
+            new EconCraftOption("Craft_Uncommon_Skin", 10007, 13),
+            new EconCraftOption("Craft_Stat_Tracker_Total_Kills", 19001, 30),
+            new EconCraftOption("Craft_Stat_Tracker_Player_Kills", 19002, 30),
+            new EconCraftOption("Craft_Ragdoll_Effect_Zero_Kelvin", 19003, 50),
+            new EconCraftOption("Craft_Mythical_Skin", 19043, 1000),
+            new EconCraftOption("Craft_Stat_Tracker_Removal_Tool", 19004, 15),
+            new EconCraftOption("Craft_Ragdoll_Effect_Removal_Tool", 19005, 15)
+        };
+        if (HolidayUtil.getActiveHoliday() == ENPCHoliday.PRIDE_MONTH)
+        {
+            econCraftOptions.Add(new EconCraftOption("Craft_ProgressPridePin", 1333, 10));
+        }
+        craftingButtons = new ISleekButton[econCraftOptions.Count];
         for (int j = 0; j < craftingButtons.Length; j++)
         {
-            EconCraftOption econCraftOption = ECON_CRAFT_OPTIONS[j];
+            EconCraftOption econCraftOption = econCraftOptions[j];
             ISleekButton sleekButton = Glazier.Get().CreateButton();
             sleekButton.positionOffset_Y = j * 30;
             sleekButton.sizeScale_X = 1f;
@@ -872,7 +877,7 @@ public class MenuSurvivorsClothingUI
             craftingButtons[j] = sleekButton;
         }
         craftingScrollBox.scaleContentToWidth = true;
-        craftingScrollBox.contentSizeOffset = new Vector2(0f, ECON_CRAFT_OPTIONS.Length * 30);
+        craftingScrollBox.contentSizeOffset = new Vector2(0f, econCraftOptions.Count * 30);
         backButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));
         backButton.positionOffset_Y = -50;
         backButton.positionScale_Y = 1f;

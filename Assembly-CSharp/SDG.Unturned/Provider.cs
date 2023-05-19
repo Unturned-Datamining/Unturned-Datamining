@@ -1346,87 +1346,10 @@ public class Provider : MonoBehaviour
         {
             SteamFriends.SetPlayedWith(playerID.steamID);
         }
-        if (playerID.steamID == client)
+        if (playerID.steamID == client && Level.placeholderAudioListener != null)
         {
-            if (Level.placeholderAudioListener != null)
-            {
-                UnityEngine.Object.Destroy(Level.placeholderAudioListener);
-                Level.placeholderAudioListener = null;
-            }
-            string value = skillset.ToString();
-            int num = 0;
-            int num2 = 0;
-            if (shirtItem != 0)
-            {
-                num++;
-                if (provider.economyService.getInventoryMythicID(shirtItem) != 0)
-                {
-                    num2++;
-                }
-            }
-            if (pantsItem != 0)
-            {
-                num++;
-                if (provider.economyService.getInventoryMythicID(pantsItem) != 0)
-                {
-                    num2++;
-                }
-            }
-            if (hatItem != 0)
-            {
-                num++;
-                if (provider.economyService.getInventoryMythicID(hatItem) != 0)
-                {
-                    num2++;
-                }
-            }
-            if (backpackItem != 0)
-            {
-                num++;
-                if (provider.economyService.getInventoryMythicID(backpackItem) != 0)
-                {
-                    num2++;
-                }
-            }
-            if (vestItem != 0)
-            {
-                num++;
-                if (provider.economyService.getInventoryMythicID(vestItem) != 0)
-                {
-                    num2++;
-                }
-            }
-            if (maskItem != 0)
-            {
-                num++;
-                if (provider.economyService.getInventoryMythicID(maskItem) != 0)
-                {
-                    num2++;
-                }
-            }
-            if (glassesItem != 0)
-            {
-                num++;
-                if (provider.economyService.getInventoryMythicID(glassesItem) != 0)
-                {
-                    num2++;
-                }
-            }
-            int num3 = skinItems.Length;
-            for (int i = 0; i < skinItems.Length; i++)
-            {
-                if (provider.economyService.getInventoryMythicID(skinItems[i]) != 0)
-                {
-                    num2++;
-                }
-            }
-            new Dictionary<string, object>
-            {
-                { "Ability", value },
-                { "Cosmetics", num },
-                { "Mythics", num2 },
-                { "Skins", num3 }
-            };
+            UnityEngine.Object.Destroy(Level.placeholderAudioListener);
+            Level.placeholderAudioListener = null;
         }
         Transform transform = null;
         try
@@ -2120,6 +2043,7 @@ public class Provider : MonoBehaviour
         onClientDisconnected?.Invoke();
         if (!isApplicationQuitting)
         {
+            authorityHoliday = HolidayUtil.BackendGetActiveHoliday();
             Level.exit();
         }
         Assets.ClearServerAssetMapping();
@@ -3432,7 +3356,7 @@ public class Provider : MonoBehaviour
         writer.WriteColor32RGB(aboutPlayer.skin);
         writer.WriteColor32RGB(aboutPlayer.color);
         writer.WriteColor32RGB(aboutPlayer.markerColor);
-        writer.WriteBit(aboutPlayer.hand);
+        writer.WriteBit(aboutPlayer.IsLeftHanded);
         writer.WriteInt32(aboutPlayer.shirtItem);
         writer.WriteInt32(aboutPlayer.pantsItem);
         writer.WriteInt32(aboutPlayer.hatItem);
@@ -4043,22 +3967,18 @@ public class Provider : MonoBehaviour
         pings[0] = value;
     }
 
-    internal static byte[] openTicket(SteamNetworkingIdentity serverIdentity)
+    internal static byte[] openTicket()
     {
         if (ticketHandle != HAuthTicket.Invalid)
         {
             return null;
         }
         byte[] array = new byte[1024];
-        serverIdentity.ToString(out var buf);
-        UnturnedLog.info("Calling GetAuthSessionTicket with identity " + buf);
-        ticketHandle = SteamUser.GetAuthSessionTicket(array, array.Length, out var pcbTicket, ref serverIdentity);
+        ticketHandle = SteamUser.GetAuthSessionTicket(array, array.Length, out var pcbTicket);
         if (pcbTicket == 0)
         {
-            UnturnedLog.info("GetAuthSessionTicket returned size zero");
             return null;
         }
-        UnturnedLog.info($"GetAuthSessionTicket ticket handle is valid: {ticketHandle != HAuthTicket.Invalid} (size: {pcbTicket})");
         byte[] array2 = new byte[pcbTicket];
         Buffer.BlockCopy(array, 0, array2, 0, (int)pcbTicket);
         return array2;
@@ -4544,6 +4464,7 @@ public class Provider : MonoBehaviour
             return;
         }
         backendRealtimeSeconds = SteamUtils.GetServerRealTime();
+        authorityHoliday = HolidayUtil.BackendGetActiveHoliday();
         apiWarningMessageHook = onAPIWarningMessage;
         SteamUtils.SetWarningMessageHook(apiWarningMessageHook);
         screenshotRequestedCallback = Callback<ScreenshotRequested_t>.Create(OnSteamScreenshotRequested);
@@ -4665,11 +4586,6 @@ public class Provider : MonoBehaviour
 
     public void start()
     {
-    }
-
-    public void unityStart()
-    {
-        _ = Dedicator.IsDedicatedServer;
     }
 
     private void LogSystemInfo()

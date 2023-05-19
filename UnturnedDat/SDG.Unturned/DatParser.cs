@@ -267,9 +267,31 @@ public class DatParser
         {
             return ReadQuotedString();
         }
+        bool flag = false;
         stringBuilder.Clear();
-        while (hasChar && currentChar != '\r' && currentChar != '\n')
+        while (hasChar)
         {
+            if (flag)
+            {
+                if (currentChar == 'n')
+                {
+                    currentChar = '\n';
+                }
+            }
+            else
+            {
+                if (currentChar == '\r' || currentChar == '\n')
+                {
+                    break;
+                }
+                if (currentChar == '\\')
+                {
+                    flag = true;
+                    ReadChar();
+                    continue;
+                }
+            }
+            flag = false;
             stringBuilder.Append(currentChar);
             ReadChar();
         }
@@ -285,7 +307,14 @@ public class DatParser
         stringBuilder.Clear();
         while (hasChar)
         {
-            if (!flag)
+            if (flag)
+            {
+                if (currentChar == 'n')
+                {
+                    currentChar = '\n';
+                }
+            }
+            else
             {
                 if (currentChar == '"')
                 {

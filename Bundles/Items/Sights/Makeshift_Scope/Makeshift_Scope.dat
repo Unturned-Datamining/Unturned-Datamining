@@ -19,3 +19,29 @@ Blueprint_0_Supply_1_Amount 1
 Blueprint_0_Level 1
 Blueprint_0_Skill Craft
 Blueprint_0_Build 27
+
+Offset_Scope_Overlay_By_One_Texel true
+
+DistanceMarkers
+[
+	{
+		Distance 100
+		LineWidth 0.04
+		HasLabel false
+	}
+	{
+		Distance 200
+		LineWidth 0.03
+		HasLabel false
+	}
+	{
+		Distance 300
+		LineWidth 0.02
+		HasLabel false
+	}
+	{
+		Distance 400
+		LineWidth 0.01
+		HasLabel false
+	}
+]

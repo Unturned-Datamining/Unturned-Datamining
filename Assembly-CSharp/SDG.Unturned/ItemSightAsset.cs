@@ -1,10 +1,50 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SDG.Unturned;
 
 public class ItemSightAsset : ItemCaliberAsset
 {
+    public struct DistanceMarker : IDatParseable
+    {
+        public enum ESide
+        {
+            Left,
+            Right
+        }
+
+        public float distance;
+
+        public float lineOffset;
+
+        public float lineWidth;
+
+        public ESide side;
+
+        public bool hasLabel;
+
+        public Color32 color;
+
+        public bool TryParse(IDatNode node)
+        {
+            if (node is DatDictionary datDictionary)
+            {
+                if (!datDictionary.TryParseFloat("Distance", out distance))
+                {
+                    return false;
+                }
+                lineOffset = datDictionary.ParseFloat("LineOffset");
+                lineWidth = datDictionary.ParseFloat("LineWidth", 0.05f);
+                side = datDictionary.ParseEnum("Side", ESide.Right);
+                hasLabel = datDictionary.ParseBool("HasLabel", defaultValue: true);
+                color = datDictionary.ParseColor32RGB("Color");
+                return true;
+            }
+            return false;
+        }
+    }
+
     protected GameObject _sight;
 
     private ELightingVision _vision;
@@ -16,6 +56,10 @@ public class ItemSightAsset : ItemCaliberAsset
     private bool _isHolographic;
 
     public bool shouldZoomUsingEyes;
+
+    public bool shouldOffsetScopeOverlayByOneTexel;
+
+    public List<DistanceMarker> distanceMarkers;
 
     public GameObject sight => _sight;
 
@@ -49,6 +93,8 @@ public class ItemSightAsset : ItemCaliberAsset
         }
         zoom = Mathf.Max(1f, data.ParseFloat("Zoom"));
         shouldZoomUsingEyes = data.ParseBool("Zoom_Using_Eyes");
+        shouldOffsetScopeOverlayByOneTexel = data.ParseBool("Offset_Scope_Overlay_By_One_Texel");
         _isHolographic = data.ContainsKey("Holographic");
+        distanceMarkers = data.ParseListOfStructs<DistanceMarker>("DistanceMarkers");
     }
 }

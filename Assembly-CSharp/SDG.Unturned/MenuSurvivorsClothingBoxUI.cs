@@ -183,7 +183,7 @@ public class MenuSurvivorsClothingBoxUI
         keyButton.isVisible = true;
         unboxButton.isVisible = true;
         boxButton.updateInventory(instance, item, newQuantity, isClickable: false, isLarge: true);
-        boxAsset = Assets.find(EAssetType.ITEM, Provider.provider.economyService.getInventoryItemID(item)) as ItemBoxAsset;
+        boxAsset = Assets.find<ItemBoxAsset>(Provider.provider.economyService.getInventoryItemGuid(item));
         if (boxAsset != null)
         {
             organizeBoxEntries();
@@ -239,7 +239,7 @@ public class MenuSurvivorsClothingBoxUI
                 unboxButton.text = localization.format(key);
                 unboxButton.tooltip = localization.format(key2);
                 unboxButton.isVisible = true;
-                keyAsset = Assets.find(EAssetType.ITEM, Provider.provider.economyService.getInventoryItemID(boxAsset.destroy)) as ItemKeyAsset;
+                keyAsset = Assets.find<ItemKeyAsset>(Provider.provider.economyService.getInventoryItemGuid(boxAsset.destroy));
                 if (keyAsset != null)
                 {
                     keyButton.icon = Provider.provider.economyService.LoadItemIcon(boxAsset.destroy, large: false);
@@ -404,18 +404,18 @@ public class MenuSurvivorsClothingBoxUI
     {
         foreach (SteamItemDetails_t grantedItem in grantedItems)
         {
-            Provider.provider.economyService.getInventoryTargetID(grantedItem.m_iDefinition.m_SteamItemDef, out var item_id, out var vehicle_id);
-            if (item_id != 0)
+            Provider.provider.economyService.getInventoryTargetID(grantedItem.m_iDefinition.m_SteamItemDef, out var item_guid, out var vehicle_guid);
+            if (item_guid != default(Guid))
             {
-                if (!(Assets.find(EAssetType.ITEM, item_id) is ItemAsset))
+                if (Assets.find<ItemAsset>(item_guid) == null)
                 {
                     return false;
                 }
                 continue;
             }
-            if (vehicle_id != 0)
+            if (vehicle_guid != default(Guid))
             {
-                if (!(Assets.find(EAssetType.VEHICLE, vehicle_id) is VehicleAsset))
+                if (Assets.find<VehicleAsset>(vehicle_guid) == null)
                 {
                     return false;
                 }

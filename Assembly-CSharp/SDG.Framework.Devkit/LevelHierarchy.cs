@@ -134,6 +134,10 @@ public class LevelHierarchy : IModuleNexus, IDirtyable
             byte[] hash = sHA1Stream.Hash;
             Level.includeHash("Level.hierarchy", hash);
         }
+        else
+        {
+            availableInstanceID = 1u;
+        }
         if (loadedAnyDevkitObjects)
         {
             UnturnedLog.info("Marking level dirty because devkit objects were converted");

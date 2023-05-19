@@ -11,4 +11,6 @@ public class LiveConfig
     public bool ShouldServersWithoutMonetizationTagBeVisibleInInternetServerList;
 
     public int PlaytimeGeneratorItemDefId;
+
+    public int QueryPingWarningOffsetMs = 200;
 }

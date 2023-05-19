@@ -11,7 +11,9 @@ internal class AudioSourcePool : MonoBehaviour
 
     private static AudioSourcePool instance;
 
-    private List<AudioSource> availableComponents = new List<AudioSource>();
+    private List<PooledAudioSource> availableComponents = new List<PooledAudioSource>();
+
+    private int nextPlayId = 1;
 
     public static AudioSourcePool Get()
     {
@@ -22,41 +24,64 @@ internal class AudioSourcePool : MonoBehaviour
         return instance;
     }
 
-    internal void Play(ref OneShotAudioParameters parameters)
+    internal OneShotAudioHandle Play(ref OneShotAudioParameters parameters)
     {
-        if (!(parameters.clip == null) && !Dedicator.IsDedicatedServer && !(MainCamera.instance == null) && (!MathfEx.IsNearlyEqual(parameters.spatialBlend, 1f, 0.001f) || !((MainCamera.instance.transform.position - parameters.position).sqrMagnitude > MathfEx.Square(parameters.maxDistance))))
+        if (parameters.clip == null || Dedicator.IsDedicatedServer || MainCamera.instance == null)
         {
-            int count = availableComponents.Count;
-            AudioSource audioSource;
-            if (count > 0)
+            return default(OneShotAudioHandle);
+        }
+        if (MathfEx.IsNearlyEqual(parameters.spatialBlend, 1f, 0.001f) && (MainCamera.instance.transform.position - parameters.position).sqrMagnitude > MathfEx.Square(parameters.maxDistance))
+        {
+            return default(OneShotAudioHandle);
+        }
+        int count = availableComponents.Count;
+        PooledAudioSource pooledAudioSource;
+        if (count > 0)
+        {
+            int index = count - 1;
+            pooledAudioSource = availableComponents[index];
+            availableComponents.RemoveAt(index);
+            pooledAudioSource.component.enabled = true;
+        }
+        else
+        {
+            pooledAudioSource = new PooledAudioSource();
+            GameObject gameObject = new GameObject("PooledAudioSource");
+            pooledAudioSource.component = gameObject.AddComponent<AudioSource>();
+            pooledAudioSource.component.playOnAwake = false;
+        }
+        Transform obj = pooledAudioSource.component.transform;
+        obj.parent = parameters.parent;
+        obj.localScale = Vector3.one;
+        obj.position = parameters.position;
+        pooledAudioSource.component.clip = parameters.clip;
+        pooledAudioSource.component.volume = parameters.volume;
+        pooledAudioSource.component.pitch = parameters.pitch;
+        pooledAudioSource.component.spatialBlend = parameters.spatialBlend;
+        pooledAudioSource.component.rolloffMode = parameters.rolloffMode;
+        pooledAudioSource.component.minDistance = parameters.minDistance;
+        pooledAudioSource.component.maxDistance = parameters.maxDistance;
+        pooledAudioSource.component.Play();
+        pooledAudioSource.playId = nextPlayId;
+        nextPlayId++;
+        StartCoroutine(PlayCoroutine(pooledAudioSource, parameters.clip.length / parameters.pitch + 0.1f));
+        return new OneShotAudioHandle(pooledAudioSource);
+    }
+
+    internal void StopAndReleaseAudioSource(PooledAudioSource audioSource)
+    {
+        if (audioSource.component != null)
+        {
+            audioSource.component.enabled = false;
+            if (audioSource.component.transform.parent != null)
             {
-                int index = count - 1;
-                audioSource = availableComponents[index];
-                availableComponents.RemoveAt(index);
-                audioSource.enabled = true;
+                audioSource.component.transform.parent = null;
             }
-            else
-            {
-                audioSource = new GameObject("PooledAudioSource").AddComponent<AudioSource>();
-                audioSource.playOnAwake = false;
-            }
-            Transform obj = audioSource.transform;
-            obj.parent = parameters.parent;
-            obj.localScale = Vector3.one;
-            obj.position = parameters.position;
-            audioSource.clip = parameters.clip;
-            audioSource.volume = parameters.volume;
-            audioSource.pitch = parameters.pitch;
-            audioSource.spatialBlend = parameters.spatialBlend;
-            audioSource.rolloffMode = parameters.rolloffMode;
-            audioSource.minDistance = parameters.minDistance;
-            audioSource.maxDistance = parameters.maxDistance;
-            audioSource.Play();
-            StartCoroutine(PlayCoroutine(audioSource, parameters.clip.length / parameters.pitch + 0.1f));
+            availableComponents.Add(audioSource);
         }
     }
 
-    private IEnumerator PlayCoroutine(AudioSource component, float duration)
+    private IEnumerator PlayCoroutine(PooledAudioSource audioSource, float duration)
     {
         if (duration < 1f)
         {
@@ -66,15 +91,7 @@ internal class AudioSourcePool : MonoBehaviour
         {
             yield return new WaitForSeconds(duration);
         }
-        if (component != null)
-        {
-            component.enabled = false;
-            if (component.transform.parent != null)
-            {
-                component.transform.parent = null;
-            }
-            availableComponents.Add(component);
-        }
+        StopAndReleaseAudioSource(audioSource);
     }
 
     private void OnEnable()

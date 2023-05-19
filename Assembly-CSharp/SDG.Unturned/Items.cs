@@ -102,6 +102,18 @@ public class Items
         return byte.MaxValue;
     }
 
+    internal int FindIndexOfJar(ItemJar jar)
+    {
+        for (int i = 0; i < items.Count; i++)
+        {
+            if (items[i] == jar)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public byte findIndex(byte x, byte y, out byte find_x, out byte find_y)
     {
         find_x = byte.MaxValue;

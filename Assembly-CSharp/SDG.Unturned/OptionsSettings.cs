@@ -215,6 +215,15 @@ public class OptionsSettings
 
     public static event System.Action OnThemeChanged;
 
+    public static float GetZoomBaseFieldOfView()
+    {
+        if (ControlsSettings.sensitivityScalingMode != ESensitivityScalingMode.Legacy)
+        {
+            return DesiredVerticalFieldOfView;
+        }
+        return 90f;
+    }
+
     private static void CacheVerticalFOV()
     {
         if (Provider.preferenceData != null && Provider.preferenceData.Graphics != null && Provider.preferenceData.Graphics.Override_Vertical_Field_Of_View > 0.5f)

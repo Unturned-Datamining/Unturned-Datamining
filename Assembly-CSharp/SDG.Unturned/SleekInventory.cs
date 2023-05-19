@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -86,8 +87,8 @@ public class SleekInventory : SleekWrapper
             }
             else
             {
-                Provider.provider.economyService.getInventoryTargetID(item, out var item_id, out var vehicle_id);
-                if (item_id == 0 && vehicle_id == 0)
+                Provider.provider.economyService.getInventoryTargetID(item, out var item_guid, out var vehicle_guid);
+                if (item_guid == default(Guid) && vehicle_guid == default(Guid))
                 {
                     _itemAsset = null;
                     _vehicleAsset = null;
@@ -106,22 +107,8 @@ public class SleekInventory : SleekWrapper
                 }
                 else
                 {
-                    if (item_id != 0)
-                    {
-                        _itemAsset = Assets.find(EAssetType.ITEM, item_id) as ItemAsset;
-                    }
-                    else
-                    {
-                        _itemAsset = null;
-                    }
-                    if (vehicle_id != 0)
-                    {
-                        _vehicleAsset = Assets.find(EAssetType.VEHICLE, vehicle_id) as VehicleAsset;
-                    }
-                    else
-                    {
-                        _vehicleAsset = null;
-                    }
+                    _itemAsset = Assets.find<ItemAsset>(item_guid);
+                    _vehicleAsset = Assets.find<VehicleAsset>(vehicle_guid);
                     Texture2D texture2D = Provider.provider.economyService.LoadItemIcon(item, isLarge);
                     icon.texture = texture2D;
                     icon.isVisible = texture2D != null;

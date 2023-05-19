@@ -151,6 +151,9 @@ public class SteamPlayer : SteamConnectedClientBase
 
     public Color markerColor => _markerColor;
 
+    public bool IsLeftHanded => _hand;
+
+    [Obsolete("Renamed to IsLeftHanded")]
     public bool hand => _hand;
 
     public EPlayerSkillset skillset => _skillset;
@@ -314,12 +317,12 @@ public class SteamPlayer : SteamConnectedClientBase
         int num = 0;
         foreach (ushort modifiedItem in modifiedItems)
         {
-            if (Characters.getPackageForItemID(modifiedItem, out var package) && getStatTrackerValue(modifiedItem, out var type, out var kills))
+            if (Characters.getPackageForItemID(modifiedItem, out var itemInstanceId) && getStatTrackerValue(modifiedItem, out var type, out var kills))
             {
                 string statTrackerPropertyName = Provider.provider.economyService.getStatTrackerPropertyName(type);
                 if (!string.IsNullOrEmpty(statTrackerPropertyName))
                 {
-                    SteamInventory.SetProperty(handle, new SteamItemInstanceID_t(package), statTrackerPropertyName, kills);
+                    SteamInventory.SetProperty(handle, new SteamItemInstanceID_t(itemInstanceId), statTrackerPropertyName, kills);
                     num++;
                 }
             }
@@ -471,17 +474,22 @@ public class SteamPlayer : SteamConnectedClientBase
             {
                 continue;
             }
-            Provider.provider.economyService.getInventoryTargetID(num, out var item_id, out var vehicle_id);
-            if (item_id > 0)
+            Provider.provider.economyService.getInventoryTargetID(num, out var item_guid, out var vehicle_guid);
+            if (item_guid != default(Guid))
             {
-                if (!itemSkins.ContainsKey(item_id))
+                ItemAsset itemAsset = Assets.find<ItemAsset>(item_guid);
+                if (itemAsset != null && !itemSkins.ContainsKey(itemAsset.id))
                 {
-                    itemSkins.Add(item_id, num);
+                    itemSkins.Add(itemAsset.id, num);
                 }
             }
-            else if (vehicle_id > 0 && !vehicleSkins.ContainsKey(item_id))
+            else if (vehicle_guid != default(Guid))
             {
-                vehicleSkins.Add(vehicle_id, num);
+                VehicleAsset vehicleAsset = Assets.find<VehicleAsset>(vehicle_guid);
+                if (vehicleAsset != null && !vehicleSkins.ContainsKey(vehicleAsset.id))
+                {
+                    vehicleSkins.Add(vehicleAsset.id, num);
+                }
             }
         }
         pings = new float[4];

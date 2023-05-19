@@ -19,15 +19,15 @@ public class InteractableObjectNPC : InteractableObject
 
     private Transform skull;
 
-    private bool hasEquip;
+    private bool itemHasEquipAnimation;
 
-    private bool hasSafety;
+    private bool itemHasSafetyAnimation;
 
-    private bool hasInspect;
+    private bool itemHasInspectAnimation;
 
-    private bool isEquipped;
+    private bool hasPlayedEquipAnimation;
 
-    private bool isSafe;
+    private bool isPlayingSafetyAnimation;
 
     private string stanceIdle;
 
@@ -93,7 +93,7 @@ public class InteractableObjectNPC : InteractableObject
         {
             stanceIdle = "Gesture_Surrender";
         }
-        else if (hasEquip || npcAsset.pose == ENPCPose.ASLEEP)
+        else if (itemHasEquipAnimation || npcAsset.pose == ENPCPose.ASLEEP)
         {
             stanceIdle = "Idle_Stand";
         }
@@ -115,7 +115,8 @@ public class InteractableObjectNPC : InteractableObject
 
     private void updateAnimation()
     {
-        isEquipped = false;
+        hasPlayedEquipAnimation = false;
+        isPlayingSafetyAnimation = false;
         updateStance();
         updateIdle();
     }
@@ -138,7 +139,7 @@ public class InteractableObjectNPC : InteractableObject
         skull = transform2.Find("Spine").Find("Skull");
         anim = transform.GetComponent<Animation>();
         humanAnim = transform.GetComponent<HumanAnimator>();
-        transform.localScale = new Vector3((!npcAsset.isBackward) ? 1 : (-1), 1f, 1f);
+        transform.localScale = new Vector3((!npcAsset.IsLeftHanded) ? 1 : (-1), 1f, 1f);
         ItemAsset itemAsset = null;
         Transform parent = transform2.Find("Spine").Find("Primary_Melee");
         Transform parent2 = transform2.Find("Spine").Find("Primary_Large_Gun");
@@ -311,11 +312,11 @@ public class InteractableObjectNPC : InteractableObject
                 AnimationClip animationClip = itemAsset.animations[i];
                 if (animationClip.name == "Equip")
                 {
-                    hasEquip = true;
+                    itemHasEquipAnimation = true;
                 }
                 else if (animationClip.name == "Sprint_Start" || animationClip.name == "Sprint_Stop")
                 {
-                    hasSafety = true;
+                    itemHasSafetyAnimation = true;
                 }
                 else
                 {
@@ -323,7 +324,7 @@ public class InteractableObjectNPC : InteractableObject
                     {
                         continue;
                     }
-                    hasInspect = true;
+                    itemHasInspectAnimation = true;
                 }
                 anim.AddClip(animationClip, animationClip.name);
                 anim[animationClip.name].AddMixingTransform(mix, recursive: true);
@@ -389,28 +390,28 @@ public class InteractableObjectNPC : InteractableObject
             stanceActive = null;
             anim.CrossFade(stanceIdle);
         }
-        if (!isEquipped)
+        if (!hasPlayedEquipAnimation)
         {
-            isEquipped = true;
-            if (hasEquip)
+            hasPlayedEquipAnimation = true;
+            if (itemHasEquipAnimation && (!itemHasSafetyAnimation || npcAsset.pose != ENPCPose.PASSIVE))
             {
                 anim.Play("Equip");
             }
         }
-        if (hasSafety)
+        if (itemHasSafetyAnimation)
         {
             if (isLookingAtPlayer || npcAsset.pose == ENPCPose.PASSIVE)
             {
-                if (!isSafe)
+                if (!isPlayingSafetyAnimation)
                 {
-                    isSafe = true;
+                    isPlayingSafetyAnimation = true;
                     anim.Play("Sprint_Start");
                 }
                 return;
             }
-            if (isSafe)
+            if (isPlayingSafetyAnimation)
             {
-                isSafe = false;
+                isPlayingSafetyAnimation = false;
                 anim.Play("Sprint_Stop");
                 updateIdle();
             }
@@ -420,11 +421,11 @@ public class InteractableObjectNPC : InteractableObject
             return;
         }
         updateIdle();
-        if (hasInspect && Random.value < 0.1f)
+        if (itemHasInspectAnimation && (!itemHasSafetyAnimation || npcAsset.pose != ENPCPose.PASSIVE) && Random.value < 0.1f)
         {
             anim.Play("Inspect");
         }
-        else if (!hasEquip && Random.value < 0.5f)
+        else if (!itemHasEquipAnimation && Random.value < 0.5f)
         {
             if (Random.value < 0.25f)
             {
@@ -469,7 +470,7 @@ public class InteractableObjectNPC : InteractableObject
         if ((isLookingAtPlayer || vector.sqrMagnitude < 4f) && Vector3.Dot(vector, -base.transform.up) > 0.15f)
         {
             headBlend = Mathf.Lerp(headBlend, 1f, 4f * Time.deltaTime);
-            if (npcAsset.isBackward)
+            if (npcAsset.IsLeftHanded)
             {
                 headRotation = Quaternion.Lerp(headRotation, Quaternion.LookRotation(vector, Vector3.up) * Quaternion.Euler(0f, 0f, 90f), 4f * Time.deltaTime);
             }

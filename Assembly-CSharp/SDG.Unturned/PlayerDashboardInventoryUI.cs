@@ -447,7 +447,7 @@ public class PlayerDashboardInventoryUI
                 flag = true;
             }
         }
-        PlayerDashboardCraftingUI.viewBlueprints = array;
+        PlayerDashboardCraftingUI.filteredBlueprintsOverride = array;
         if (!flag)
         {
             PlayerDashboardCraftingUI.updateSelection();
@@ -490,7 +490,7 @@ public class PlayerDashboardInventoryUI
         {
             Player.player.crafting.sendCraft(blueprint2.sourceItem.id, blueprint2.id, InputEx.GetKey(ControlsSettings.other));
         }
-        PlayerDashboardCraftingUI.viewBlueprints = null;
+        PlayerDashboardCraftingUI.filteredBlueprintsOverride = null;
         closeSelection();
     }
 
@@ -1271,13 +1271,13 @@ public class PlayerDashboardInventoryUI
         ItemJar jar = interactableItem.jar;
         if (jar != null)
         {
-            byte index = areaItems.getIndex(jar.x, jar.y);
-            if (index == byte.MaxValue)
+            int num = areaItems.FindIndexOfJar(jar);
+            if (num < 0)
             {
                 pendingItemsInRadius.RemoveFast(interactableItem);
                 return;
             }
-            areaItems.removeItem(index);
+            areaItems.removeItem((byte)num);
             items[PlayerInventory.AREA - PlayerInventory.SLOTS].removeItem(jar);
         }
     }

@@ -175,7 +175,7 @@ public class MenuSurvivorsClothingItemUI
         }
         else
         {
-            Characters.package(instance);
+            Characters.ToggleEquipItemByInstanceId(instance);
             viewItem();
         }
     }

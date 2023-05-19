@@ -6,6 +6,8 @@ namespace SDG.Unturned;
 
 public sealed class DatDictionary : Dictionary<string, IDatNode>, IDatNode
 {
+    public EDatNodeType NodeType => EDatNodeType.Dictionary;
+
     public DatDictionary()
         : base((IEqualityComparer<string>)StringComparer.OrdinalIgnoreCase)
     {
@@ -331,6 +333,25 @@ public sealed class DatDictionary : Dictionary<string, IDatNode>, IDatNode
     public Guid ParseGuid(string key, Guid defaultValue = default(Guid))
     {
         if (!TryParseGuid(key, out var value))
+        {
+            return defaultValue;
+        }
+        return value;
+    }
+
+    public bool TryParseDateTimeUtc(string key, out DateTime value)
+    {
+        value = default(DateTime);
+        if (TryGetValue(key, out var node))
+        {
+            return node.TryParseDateTimeUtc(out value);
+        }
+        return false;
+    }
+
+    public DateTime ParseDateTimeUtc(string key, DateTime defaultValue = default(DateTime))
+    {
+        if (!TryParseDateTimeUtc(key, out var value))
         {
             return defaultValue;
         }

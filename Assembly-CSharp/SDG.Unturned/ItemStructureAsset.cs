@@ -150,7 +150,7 @@ public class ItemStructureAsset : ItemPlaceableAsset
                 }
             }
         }
-        placementPreviewRef = data.readMasterBundleReference<GameObject>("PlacementPreviewPrefab");
+        placementPreviewRef = data.readMasterBundleReference<GameObject>("PlacementPreviewPrefab", bundle);
         _nav = bundle.load<GameObject>("Nav");
         _use = LoadRedirectableAsset<AudioClip>(bundle, "Use", data, "PlacementAudioClip");
         _construct = (EConstruct)Enum.Parse(typeof(EConstruct), data.GetString("Construct"), ignoreCase: true);

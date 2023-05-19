@@ -55,7 +55,6 @@ Wear 5
 Spread_Aim 0.01
 Spread_Hip 0.3
 
-Recoil_Aim 0.5
 Recoil_Min_X 5
 Recoil_Min_Y 15
 Recoil_Max_X 10

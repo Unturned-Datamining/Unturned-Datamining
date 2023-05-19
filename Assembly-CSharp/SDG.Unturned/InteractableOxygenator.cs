@@ -57,10 +57,7 @@ public class InteractableOxygenator : InteractablePower
     {
         base.updateState(asset, state);
         _isPowered = state[0] == 1;
-        if (!Dedicator.IsDedicatedServer)
-        {
-            engine = base.transform.Find("Engine");
-        }
+        engine = base.transform.Find("Engine");
         RefreshIsConnectedToPowerWithoutNotify();
         UpdateEngine();
         updateBubble();

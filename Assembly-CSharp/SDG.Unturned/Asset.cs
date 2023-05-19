@@ -130,7 +130,7 @@ public abstract class Asset
             string text;
             if (num < 0)
             {
-                masterBundleConfig = Assets.currentMasterBundle;
+                masterBundleConfig = ((fromBundle is MasterBundle masterBundle) ? masterBundle.cfg : Assets.currentMasterBundle);
                 text = value;
                 if (masterBundleConfig == null || masterBundleConfig.assetBundle == null)
                 {

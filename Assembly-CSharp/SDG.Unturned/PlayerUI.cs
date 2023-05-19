@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using SDG.Framework.Water;
 using UnityEngine;
 
@@ -80,17 +81,9 @@ public class PlayerUI : MonoBehaviour
 
     private static bool wantsWindowEnabled;
 
-    private static bool isFlashbanged;
+    private static bool isWindowEnabledByColorOverlay;
 
     public static EChatMode chat;
-
-    private static StaticResourceRef<Texture2D> hitEntityTexture = new StaticResourceRef<Texture2D>("Bundles/Textures/Player/Icons/PlayerLife/Hit_Entity");
-
-    private static StaticResourceRef<Texture2D> hitCriticalTexture = new StaticResourceRef<Texture2D>("Bundles/Textures/Player/Icons/PlayerLife/Hit_Critical");
-
-    private static StaticResourceRef<Texture2D> hitBuildTexture = new StaticResourceRef<Texture2D>("Bundles/Textures/Player/Icons/PlayerLife/Hit_Build");
-
-    private static StaticResourceRef<Texture2D> hitGhostTexture = new StaticResourceRef<Texture2D>("Bundles/Textures/Player/Icons/PlayerLife/Hit_Ghost");
 
     private static StaticResourceRef<AudioClip> hitCriticalSound = new StaticResourceRef<AudioClip>("Sounds/General/Hit");
 
@@ -150,9 +143,9 @@ public class PlayerUI : MonoBehaviour
         stunColor = color;
         stunAlpha = amount * 5f;
         MainCamera.instance.GetComponent<AudioSource>().PlayOneShot((AudioClip)Resources.Load("Sounds/General/Stun"), amount);
-        if (!isFlashbanged)
+        if (!isWindowEnabledByColorOverlay)
         {
-            isFlashbanged = true;
+            isWindowEnabledByColorOverlay = true;
             UpdateWindowEnabled();
         }
     }
@@ -160,48 +153,28 @@ public class PlayerUI : MonoBehaviour
     public static void pain(float amount)
     {
         painAlpha = amount * 0.75f;
+        if (!isWindowEnabledByColorOverlay)
+        {
+            isWindowEnabledByColorOverlay = true;
+            UpdateWindowEnabled();
+        }
     }
 
     public static void hitmark(int index, Vector3 point, bool worldspace, EPlayerHit newHit)
     {
-        if (wantsWindowEnabled && index >= 0 && index < PlayerLifeUI.hitmarkers.Length && Provider.modeConfigData.Gameplay.Hitmarkers)
+        if (wantsWindowEnabled && Provider.modeConfigData.Gameplay.Hitmarkers)
         {
-            HitmarkerInfo hitmarkerInfo = PlayerLifeUI.hitmarkers[index];
-            hitmarkerInfo.lastHit = Time.realtimeSinceStartup;
-            hitmarkerInfo.hit = newHit;
-            hitmarkerInfo.point = point;
-            hitmarkerInfo.worldspace = worldspace || OptionsSettings.hitmarker;
+            HitmarkerInfo item = default(HitmarkerInfo);
+            item.worldPosition = point;
+            item.shouldFollowWorldPosition = worldspace || OptionsSettings.hitmarker;
+            item.sleekElement = PlayerLifeUI.ClaimHitmarker();
+            item.sleekElement.SetStyle(newHit);
+            item.sleekElement.PlayAnimation();
+            PlayerLifeUI.activeHitmarkers.Add(item);
             if (newHit == EPlayerHit.CRITICAL)
             {
                 MainCamera.instance.GetComponent<AudioSource>().PlayOneShot(hitCriticalSound, 0.5f);
             }
-            Texture2D texture;
-            Color color;
-            switch (newHit)
-            {
-            default:
-                return;
-            case EPlayerHit.ENTITIY:
-                texture = hitEntityTexture;
-                color = OptionsSettings.hitmarkerColor;
-                break;
-            case EPlayerHit.CRITICAL:
-                texture = hitCriticalTexture;
-                color = OptionsSettings.criticalHitmarkerColor;
-                break;
-            case EPlayerHit.BUILD:
-                texture = hitBuildTexture;
-                color = OptionsSettings.hitmarkerColor;
-                break;
-            case EPlayerHit.GHOST:
-                texture = hitGhostTexture;
-                color = OptionsSettings.hitmarkerColor;
-                break;
-            case EPlayerHit.NONE:
-                return;
-            }
-            hitmarkerInfo.image.texture = texture;
-            hitmarkerInfo.image.color = color;
         }
     }
 
@@ -231,7 +204,7 @@ public class PlayerUI : MonoBehaviour
 
     private static void UpdateWindowEnabled()
     {
-        window.isEnabled = wantsWindowEnabled || PlayerLifeUI.scopeOverlay.isVisible || PlayerLifeUI.binocularsOverlay.isVisible || isBlindfolded || isFlashbanged;
+        window.isEnabled = wantsWindowEnabled || PlayerLifeUI.scopeOverlay.isVisible || PlayerLifeUI.binocularsOverlay.isVisible || isBlindfolded || isWindowEnabledByColorOverlay;
     }
 
     public static void enableCrosshair()
@@ -1336,34 +1309,39 @@ public class PlayerUI : MonoBehaviour
 
     private void updateHitmarkers()
     {
-        if (PlayerLifeUI.hitmarkers == null || MainCamera.instance == null)
+        if (PlayerLifeUI.activeHitmarkers == null || MainCamera.instance == null)
         {
             return;
         }
-        for (int i = 0; i < PlayerLifeUI.hitmarkers.Length; i++)
+        float deltaTime = Time.deltaTime;
+        for (int num = PlayerLifeUI.activeHitmarkers.Count - 1; num >= 0; num--)
         {
-            HitmarkerInfo hitmarkerInfo = PlayerLifeUI.hitmarkers[i];
-            if (hitmarkerInfo != null && hitmarkerInfo.hit != 0)
+            HitmarkerInfo value = PlayerLifeUI.activeHitmarkers[num];
+            if (value.aliveTime > HIT_TIME)
             {
-                bool flag = Time.realtimeSinceStartup - hitmarkerInfo.lastHit < HIT_TIME;
+                PlayerLifeUI.ReleaseHitmarker(value.sleekElement);
+                PlayerLifeUI.activeHitmarkers.RemoveAtFast(num);
+            }
+            else
+            {
+                value.aliveTime += deltaTime;
+                PlayerLifeUI.activeHitmarkers[num] = value;
                 Vector2 vector2;
-                if (hitmarkerInfo.worldspace)
+                bool isVisible;
+                if (value.shouldFollowWorldPosition)
                 {
-                    Vector3 vector = MainCamera.instance.WorldToViewportPoint(hitmarkerInfo.point);
-                    flag &= vector.z > 0f;
+                    Vector3 vector = MainCamera.instance.WorldToViewportPoint(value.worldPosition);
                     vector2 = window.ViewportToNormalizedPosition(vector);
+                    isVisible = vector.z > 0f;
                 }
                 else
                 {
                     vector2 = new Vector3(0.5f, 0.5f);
+                    isVisible = true;
                 }
-                hitmarkerInfo.image.isVisible = flag;
-                hitmarkerInfo.image.positionScale_X = vector2.x;
-                hitmarkerInfo.image.positionScale_Y = vector2.y;
-                if (!flag)
-                {
-                    hitmarkerInfo.hit = EPlayerHit.NONE;
-                }
+                value.sleekElement.positionScale_X = vector2.x;
+                value.sleekElement.positionScale_Y = vector2.y;
+                value.sleekElement.isVisible = isVisible;
             }
         }
     }
@@ -1723,7 +1701,7 @@ public class PlayerUI : MonoBehaviour
         }
         if (InputEx.GetKeyDown(ControlsSettings.refreshAssets) && Provider.isServer)
         {
-            Assets.refresh();
+            Assets.RequestReloadAllAssets();
         }
         if (InputEx.GetKeyDown(ControlsSettings.clipboardDebug))
         {
@@ -1771,9 +1749,9 @@ public class PlayerUI : MonoBehaviour
         black = Color.Lerp(black, Palette.COLOR_R, painAlpha + (1f - num));
         black.a = Mathf.Max(num, painAlpha);
         colorOverlayImage.color = black;
-        if (isFlashbanged && stunAlpha < 0.001f)
+        if (isWindowEnabledByColorOverlay && stunAlpha < 0.001f && painAlpha < 0.001f)
         {
-            isFlashbanged = false;
+            isWindowEnabledByColorOverlay = false;
             UpdateWindowEnabled();
         }
     }
@@ -1791,7 +1769,7 @@ public class PlayerUI : MonoBehaviour
             PlayerLifeUI.updateStatTracker();
             PlayerNPCVendorUI.MaybeRefresh();
             UpdateOverlayColor();
-            painAlpha = Mathf.Lerp(painAlpha, 0f, 2f * Time.deltaTime);
+            painAlpha = Mathf.Max(0f, painAlpha - Time.deltaTime);
             stunAlpha = Mathf.Max(0f, stunAlpha - Time.deltaTime);
             updateHitmarkers();
             updateHintsAndMessages();
@@ -1852,7 +1830,7 @@ public class PlayerUI : MonoBehaviour
         container.sizeScale_Y = 1f;
         window.AddChild(container);
         wantsWindowEnabled = true;
-        isFlashbanged = false;
+        isWindowEnabledByColorOverlay = false;
         OptionsSettings.apply();
         GraphicsSettings.apply("loaded player");
         groupUI = new PlayerGroupUI();

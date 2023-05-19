@@ -55,15 +55,12 @@ public class Setup : MonoBehaviour
 
     private void Start()
     {
-        if (startProvider)
-        {
-            GetComponent<Provider>().unityStart();
-        }
         postProcess.initialize();
         if (!Dedicator.IsDedicatedServer)
         {
             MenuSettings.load();
             GraphicsSettings.applyResolution();
+            GraphicsSettings.ApplyVSyncAndTargetFrameRate();
             LoadingUI.updateScene();
         }
     }

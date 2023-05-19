@@ -102,7 +102,9 @@ public class TerrainEditor : IDevkitTool
 
     protected bool isSamplingLayer;
 
-    private Dictionary<LandscapeCoord, float[,]> pixelSmoothBuffer = new Dictionary<LandscapeCoord, float[,]>();
+    private Dictionary<LandscapeCoord, float[,]> heightmapPixelSmoothBuffer = new Dictionary<LandscapeCoord, float[,]>();
+
+    private Dictionary<LandscapeCoord, float[,,]> splatmapPixelSmoothBuffer = new Dictionary<LandscapeCoord, float[,,]>();
 
     public static EDevkitLandscapeToolMode toolMode
     {
@@ -224,6 +226,10 @@ public class TerrainEditor : IDevkitTool
     {
         get
         {
+            if (splatmapMode == EDevkitLandscapeToolSplatmapMode.CUT)
+            {
+                return Mathf.Min(32f, DevkitLandscapeToolSplatmapOptions.instance.brushRadius);
+            }
             return DevkitLandscapeToolSplatmapOptions.instance.brushRadius;
         }
         set
@@ -698,7 +704,7 @@ public class TerrainEditor : IDevkitTool
                                 Landscape.writeHeightmap(bounds, handleHeightmapWriteSmooth);
                                 if (DevkitLandscapeToolHeightmapOptions.instance.smoothMethod == EDevkitLandscapeToolHeightmapSmoothMethod.PIXEL_AVERAGE)
                                 {
-                                    ReleasePixelSmoothBuffer();
+                                    ReleaseHeightmapPixelSmoothBuffer();
                                 }
                             }
                         }
@@ -743,24 +749,24 @@ public class TerrainEditor : IDevkitTool
                         Landscape.clearSplatmapTransactions();
                         Landscape.clearHoleTransactions();
                     }
-                    Bounds worldBounds2 = new Bounds(brushWorldPosition, new Vector3(splatmapBrushRadius * 2f, 0f, splatmapBrushRadius * 2f));
+                    Bounds bounds2 = new Bounds(brushWorldPosition, new Vector3(splatmapBrushRadius * 2f, 0f, splatmapBrushRadius * 2f));
                     if (DevkitLandscapeToolSplatmapOptions.instance.previewMethod == EDevkitLandscapeToolSplatmapPreviewMethod.BRUSH_ALPHA)
                     {
-                        Landscape.getSplatmapVertices(worldBounds2, handleSplatmapGetVerticesBrush);
+                        Landscape.getSplatmapVertices(bounds2, handleSplatmapGetVerticesBrush);
                     }
                     else if (DevkitLandscapeToolSplatmapOptions.instance.previewMethod == EDevkitLandscapeToolSplatmapPreviewMethod.WEIGHT)
                     {
-                        Landscape.readSplatmap(worldBounds2, handleSplatmapReadWeights);
+                        Landscape.readSplatmap(bounds2, handleSplatmapReadWeights);
                     }
                     if (InputEx.GetKey(KeyCode.Mouse0))
                     {
                         if (splatmapMode == EDevkitLandscapeToolSplatmapMode.PAINT)
                         {
-                            Landscape.writeSplatmap(worldBounds2, handleSplatmapWritePaint);
+                            Landscape.writeSplatmap(bounds2, handleSplatmapWritePaint);
                         }
                         else if (splatmapMode == EDevkitLandscapeToolSplatmapMode.AUTO)
                         {
-                            Landscape.writeSplatmap(worldBounds2, handleSplatmapWriteAuto);
+                            Landscape.writeSplatmap(bounds2, handleSplatmapWriteAuto);
                         }
                         else if (splatmapMode == EDevkitLandscapeToolSplatmapMode.SMOOTH)
                         {
@@ -768,13 +774,23 @@ public class TerrainEditor : IDevkitTool
                             {
                                 splatmapSmoothSampleCount = 0;
                                 splatmapSmoothSampleAverage.Clear();
-                                Landscape.readSplatmap(worldBounds2, handleSplatmapReadSmooth);
+                                Landscape.readSplatmap(bounds2, handleSplatmapReadBrushAverage);
                             }
-                            Landscape.writeSplatmap(worldBounds2, handleSplatmapWriteSmooth);
+                            else if (DevkitLandscapeToolSplatmapOptions.instance.smoothMethod == EDevkitLandscapeToolSplatmapSmoothMethod.PIXEL_AVERAGE)
+                            {
+                                Bounds worldBounds2 = bounds2;
+                                worldBounds2.Expand(Landscape.SPLATMAP_WORLD_UNIT * 2f);
+                                Landscape.readSplatmap(worldBounds2, HandleSplatmapReadPixelSmooth);
+                            }
+                            Landscape.writeSplatmap(bounds2, handleSplatmapWriteSmooth);
+                            if (DevkitLandscapeToolSplatmapOptions.instance.smoothMethod == EDevkitLandscapeToolSplatmapSmoothMethod.PIXEL_AVERAGE)
+                            {
+                                ReleaseSplatmapPixelSmoothBuffer();
+                            }
                         }
                         else if (splatmapMode == EDevkitLandscapeToolSplatmapMode.CUT)
                         {
-                            Landscape.writeHoles(worldBounds2, handleSplatmapWriteCut);
+                            Landscape.writeHoles(bounds2, handleSplatmapWriteCut);
                         }
                     }
                 }
@@ -848,21 +864,43 @@ public class TerrainEditor : IDevkitTool
 
     protected void HandleHeightmapReadPixelSmooth(LandscapeCoord tileCoord, HeightmapCoord heightmapCoord, Vector3 worldPosition, float currentHeight)
     {
-        if (!pixelSmoothBuffer.TryGetValue(tileCoord, out var value))
+        if (!heightmapPixelSmoothBuffer.TryGetValue(tileCoord, out var value))
         {
             value = LandscapeHeightmapCopyPool.claim();
-            pixelSmoothBuffer.Add(tileCoord, value);
+            heightmapPixelSmoothBuffer.Add(tileCoord, value);
         }
         value[heightmapCoord.x, heightmapCoord.y] = currentHeight;
     }
 
-    private void ReleasePixelSmoothBuffer()
+    private void ReleaseHeightmapPixelSmoothBuffer()
     {
-        foreach (KeyValuePair<LandscapeCoord, float[,]> item in pixelSmoothBuffer)
+        foreach (KeyValuePair<LandscapeCoord, float[,]> item in heightmapPixelSmoothBuffer)
         {
             LandscapeHeightmapCopyPool.release(item.Value);
         }
-        pixelSmoothBuffer.Clear();
+        heightmapPixelSmoothBuffer.Clear();
+    }
+
+    protected void HandleSplatmapReadPixelSmooth(LandscapeCoord tileCoord, SplatmapCoord splatmapCoord, Vector3 worldPosition, float[] currentWeights)
+    {
+        if (!splatmapPixelSmoothBuffer.TryGetValue(tileCoord, out var value))
+        {
+            value = LandscapeSplatmapCopyPool.claim();
+            splatmapPixelSmoothBuffer.Add(tileCoord, value);
+        }
+        for (int i = 0; i < Landscape.SPLATMAP_LAYERS; i++)
+        {
+            value[splatmapCoord.x, splatmapCoord.y, i] = currentWeights[i];
+        }
+    }
+
+    private void ReleaseSplatmapPixelSmoothBuffer()
+    {
+        foreach (KeyValuePair<LandscapeCoord, float[,,]> item in splatmapPixelSmoothBuffer)
+        {
+            LandscapeSplatmapCopyPool.release(item.Value);
+        }
+        splatmapPixelSmoothBuffer.Clear();
     }
 
     protected void handleHeightmapGetVerticesBrush(LandscapeCoord tileCoord, HeightmapCoord heightmapCoord, Vector3 worldPosition)
@@ -954,7 +992,7 @@ public class TerrainEditor : IDevkitTool
     private void SampleHeightPixelSmooth(Vector3 worldPosition, ref int sampleCount, ref float sampleAverage)
     {
         LandscapeCoord landscapeCoord = new LandscapeCoord(worldPosition);
-        if (pixelSmoothBuffer.TryGetValue(landscapeCoord, out var value))
+        if (heightmapPixelSmoothBuffer.TryGetValue(landscapeCoord, out var value))
         {
             HeightmapCoord heightmapCoord = new HeightmapCoord(landscapeCoord, worldPosition);
             sampleCount++;
@@ -1023,7 +1061,7 @@ public class TerrainEditor : IDevkitTool
         return Mathf.Clamp01(currentHeight);
     }
 
-    protected void handleSplatmapReadSmooth(LandscapeCoord tileCoord, SplatmapCoord splatmapCoord, Vector3 worldPosition, float[] currentWeights)
+    protected void handleSplatmapReadBrushAverage(LandscapeCoord tileCoord, SplatmapCoord splatmapCoord, Vector3 worldPosition, float[] currentWeights)
     {
         LandscapeTile tile = Landscape.getTile(tileCoord);
         if (tile.materials == null || new Vector2(worldPosition.x - brushWorldPosition.x, worldPosition.z - brushWorldPosition.z).magnitude / splatmapBrushRadius > 1f)
@@ -1247,6 +1285,32 @@ public class TerrainEditor : IDevkitTool
         }
     }
 
+    private void SampleSplatmapPixelSmooth(LandscapeCoord tileCoord, SplatmapCoord splatmapCoord)
+    {
+        if (!splatmapPixelSmoothBuffer.TryGetValue(tileCoord, out var value))
+        {
+            return;
+        }
+        LandscapeTile tile = Landscape.getTile(tileCoord);
+        if (tile == null || tile.materials == null)
+        {
+            return;
+        }
+        for (int i = 0; i < Landscape.SPLATMAP_LAYERS; i++)
+        {
+            AssetReference<LandscapeMaterialAsset> key = tile.materials[i];
+            if (key.isValid)
+            {
+                if (!splatmapSmoothSampleAverage.ContainsKey(key))
+                {
+                    splatmapSmoothSampleAverage.Add(key, 0f);
+                }
+                splatmapSmoothSampleAverage[key] += value[splatmapCoord.x, splatmapCoord.y, i];
+                splatmapSmoothSampleCount++;
+            }
+        }
+    }
+
     protected void handleSplatmapWriteSmooth(LandscapeCoord tileCoord, SplatmapCoord splatmapCoord, Vector3 worldPosition, float[] currentWeights)
     {
         float num = new Vector2(worldPosition.x - brushWorldPosition.x, worldPosition.z - brushWorldPosition.z).magnitude / splatmapBrushRadius;
@@ -1261,110 +1325,46 @@ public class TerrainEditor : IDevkitTool
             LandscapeCoord tileCoord2 = tileCoord;
             SplatmapCoord splatmapCoord2 = new SplatmapCoord(splatmapCoord.x, splatmapCoord.y - 1);
             LandscapeUtility.cleanSplatmapCoord(ref tileCoord2, ref splatmapCoord2);
-            LandscapeTile tile = Landscape.getTile(tileCoord2);
-            if (tile != null && tile.materials != null)
-            {
-                for (int i = 0; i < Landscape.SPLATMAP_LAYERS; i++)
-                {
-                    AssetReference<LandscapeMaterialAsset> key = tile.materials[i];
-                    if (key.isValid)
-                    {
-                        if (!splatmapSmoothSampleAverage.ContainsKey(key))
-                        {
-                            splatmapSmoothSampleAverage.Add(key, 0f);
-                        }
-                        splatmapSmoothSampleAverage[key] += currentWeights[i];
-                        splatmapSmoothSampleCount++;
-                    }
-                }
-            }
+            SampleSplatmapPixelSmooth(tileCoord2, splatmapCoord2);
             tileCoord2 = tileCoord;
             splatmapCoord2 = new SplatmapCoord(splatmapCoord.x + 1, splatmapCoord.y);
             LandscapeUtility.cleanSplatmapCoord(ref tileCoord2, ref splatmapCoord2);
-            tile = Landscape.getTile(tileCoord2);
-            if (tile != null && tile.materials != null)
-            {
-                for (int j = 0; j < Landscape.SPLATMAP_LAYERS; j++)
-                {
-                    AssetReference<LandscapeMaterialAsset> key2 = tile.materials[j];
-                    if (key2.isValid)
-                    {
-                        if (!splatmapSmoothSampleAverage.ContainsKey(key2))
-                        {
-                            splatmapSmoothSampleAverage.Add(key2, 0f);
-                        }
-                        splatmapSmoothSampleAverage[key2] += currentWeights[j];
-                        splatmapSmoothSampleCount++;
-                    }
-                }
-            }
+            SampleSplatmapPixelSmooth(tileCoord2, splatmapCoord2);
             tileCoord2 = tileCoord;
             splatmapCoord2 = new SplatmapCoord(splatmapCoord.x, splatmapCoord.y + 1);
             LandscapeUtility.cleanSplatmapCoord(ref tileCoord2, ref splatmapCoord2);
-            tile = Landscape.getTile(tileCoord2);
-            if (tile != null && tile.materials != null)
-            {
-                for (int k = 0; k < Landscape.SPLATMAP_LAYERS; k++)
-                {
-                    AssetReference<LandscapeMaterialAsset> key3 = tile.materials[k];
-                    if (key3.isValid)
-                    {
-                        if (!splatmapSmoothSampleAverage.ContainsKey(key3))
-                        {
-                            splatmapSmoothSampleAverage.Add(key3, 0f);
-                        }
-                        splatmapSmoothSampleAverage[key3] += currentWeights[k];
-                        splatmapSmoothSampleCount++;
-                    }
-                }
-            }
+            SampleSplatmapPixelSmooth(tileCoord2, splatmapCoord2);
             tileCoord2 = tileCoord;
             splatmapCoord2 = new SplatmapCoord(splatmapCoord.x - 1, splatmapCoord.y);
             LandscapeUtility.cleanSplatmapCoord(ref tileCoord2, ref splatmapCoord2);
-            tile = Landscape.getTile(tileCoord2);
-            if (tile != null && tile.materials != null)
-            {
-                for (int l = 0; l < Landscape.SPLATMAP_LAYERS; l++)
-                {
-                    AssetReference<LandscapeMaterialAsset> key4 = tile.materials[l];
-                    if (key4.isValid)
-                    {
-                        if (!splatmapSmoothSampleAverage.ContainsKey(key4))
-                        {
-                            splatmapSmoothSampleAverage.Add(key4, 0f);
-                        }
-                        splatmapSmoothSampleAverage[key4] += currentWeights[l];
-                        splatmapSmoothSampleCount++;
-                    }
-                }
-            }
+            SampleSplatmapPixelSmooth(tileCoord2, splatmapCoord2);
         }
         if (splatmapSmoothSampleCount <= 0)
         {
             return;
         }
-        LandscapeTile tile2 = Landscape.getTile(tileCoord);
-        if (tile2.materials == null)
+        LandscapeTile tile = Landscape.getTile(tileCoord);
+        if (tile.materials == null)
         {
             return;
         }
         float brushAlpha = getBrushAlpha(num);
         float num2 = Time.deltaTime * splatmapBrushStrength * brushAlpha;
         float num3 = 0f;
-        for (int m = 0; m < Landscape.SPLATMAP_LAYERS; m++)
+        for (int i = 0; i < Landscape.SPLATMAP_LAYERS; i++)
         {
-            if (splatmapSmoothSampleAverage.ContainsKey(tile2.materials[m]))
+            if (splatmapSmoothSampleAverage.ContainsKey(tile.materials[i]))
             {
-                num3 += splatmapSmoothSampleAverage[tile2.materials[m]] / (float)splatmapSmoothSampleCount;
+                num3 += splatmapSmoothSampleAverage[tile.materials[i]] / (float)splatmapSmoothSampleCount;
             }
         }
         num3 = 1f / num3;
-        for (int n = 0; n < Landscape.SPLATMAP_LAYERS; n++)
+        for (int j = 0; j < Landscape.SPLATMAP_LAYERS; j++)
         {
-            float num4 = ((!splatmapSmoothSampleAverage.ContainsKey(tile2.materials[n])) ? 0f : (splatmapSmoothSampleAverage[tile2.materials[n]] / (float)splatmapSmoothSampleCount * num3));
-            float num5 = num4 - currentWeights[n];
+            float num4 = ((!splatmapSmoothSampleAverage.ContainsKey(tile.materials[j])) ? 0f : (splatmapSmoothSampleAverage[tile.materials[j]] / (float)splatmapSmoothSampleCount * num3));
+            float num5 = num4 - currentWeights[j];
             num5 *= num2;
-            currentWeights[n] += num5;
+            currentWeights[j] += num5;
         }
     }
 

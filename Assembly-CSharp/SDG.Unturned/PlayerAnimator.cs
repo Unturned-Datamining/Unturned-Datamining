@@ -797,7 +797,7 @@ public class PlayerAnimator : PlayerCaller
 
     private void updateHuman(HumanAnimator humanAnim)
     {
-        humanAnim.lean = (base.player.channel.owner.hand ? (-lean) : lean);
+        humanAnim.lean = (base.player.channel.owner.IsLeftHanded ? (-lean) : lean);
         if (base.player.stance.stance == EPlayerStance.DRIVING || base.player.stance.stance == EPlayerStance.SITTING)
         {
             humanAnim.pitch = 90f;
@@ -1108,7 +1108,7 @@ public class PlayerAnimator : PlayerCaller
             if (base.player.stance.stance == EPlayerStance.DRIVING)
             {
                 viewmodelCameraLocalPosition.x = Mathf.Lerp(viewmodelCameraLocalPosition.x, 0f - turretViewmodelCameraLocalPositionOffset.y - 0.65f - Mathf.Abs(base.player.look.yaw) / 90f * 0.25f, 8f * Time.deltaTime);
-                viewmodelCameraLocalPosition.y = Mathf.Lerp(viewmodelCameraLocalPosition.y, turretViewmodelCameraLocalPositionOffset.x + (float)((!base.channel.owner.hand) ? 1 : (-1)) * base.player.movement.getVehicle().steer * -0.01f, 8f * Time.deltaTime);
+                viewmodelCameraLocalPosition.y = Mathf.Lerp(viewmodelCameraLocalPosition.y, turretViewmodelCameraLocalPositionOffset.x + (float)((!base.channel.owner.IsLeftHanded) ? 1 : (-1)) * base.player.movement.getVehicle().steer * -0.01f, 8f * Time.deltaTime);
                 viewmodelCameraLocalPosition.z = Mathf.Lerp(viewmodelCameraLocalPosition.z, turretViewmodelCameraLocalPositionOffset.z - 0.25f, 8f * Time.deltaTime);
             }
             else
@@ -1183,7 +1183,7 @@ public class PlayerAnimator : PlayerCaller
         viewmodelTargetExplosionLocalRotation.Update(Time.deltaTime);
         if (base.player.stance.stance == EPlayerStance.DRIVING)
         {
-            viewmodelCameraTransform.localRotation = Quaternion.Lerp(viewmodelCameraTransform.localRotation, Quaternion.Euler(base.player.look.yaw * 60f / MainCamera.instance.fieldOfView * (float)(base.channel.owner.hand ? 1 : (-1)), (base.player.look.pitch - 90f) * 60f / MainCamera.instance.fieldOfView, 90f + base.player.movement.getVehicle().steer * (float)((!base.channel.owner.hand) ? 1 : (-1))), 8f * Time.deltaTime);
+            viewmodelCameraTransform.localRotation = Quaternion.Lerp(viewmodelCameraTransform.localRotation, Quaternion.Euler(base.player.look.yaw * 60f / MainCamera.instance.fieldOfView * (float)(base.channel.owner.IsLeftHanded ? 1 : (-1)), (base.player.look.pitch - 90f) * 60f / MainCamera.instance.fieldOfView, 90f + base.player.movement.getVehicle().steer * (float)((!base.channel.owner.IsLeftHanded) ? 1 : (-1))), 8f * Time.deltaTime);
         }
         else if (base.player.stance.stance == EPlayerStance.CLIMB)
         {
@@ -1245,14 +1245,14 @@ public class PlayerAnimator : PlayerCaller
                 firstAnimator.transform.parent = viewmodelParentTransform;
                 firstAnimator.transform.localPosition = localPosition;
                 firstAnimator.transform.localRotation = localRotation;
-                firstAnimator.transform.localScale = new Vector3((!base.channel.owner.hand) ? 1 : (-1), 1f, 1f);
+                firstAnimator.transform.localScale = new Vector3((!base.channel.owner.IsLeftHanded) ? 1 : (-1), 1f, 1f);
                 firstRenderer_0 = (SkinnedMeshRenderer)firstAnimator.transform.Find("Model_0").GetComponent<Renderer>();
                 _firstSkeleton = firstAnimator.transform.Find("Skeleton");
             }
             if (base.player.third != null)
             {
                 thirdAnimator = base.player.third.GetComponent<CharacterAnimator>();
-                thirdAnimator.transform.localScale = new Vector3((!base.channel.owner.hand) ? 1 : (-1), 1f, 1f);
+                thirdAnimator.transform.localScale = new Vector3((!base.channel.owner.IsLeftHanded) ? 1 : (-1), 1f, 1f);
                 thirdRenderer_0 = (SkinnedMeshRenderer)thirdAnimator.transform.Find("Model_0").GetComponent<Renderer>();
                 thirdRenderer_1 = (SkinnedMeshRenderer)thirdAnimator.transform.Find("Model_1").GetComponent<Renderer>();
                 _thirdSkeleton = thirdAnimator.transform.Find("Skeleton");
@@ -1298,18 +1298,18 @@ public class PlayerAnimator : PlayerCaller
             if (base.player.character != null)
             {
                 characterAnimator = base.player.character.GetComponent<HumanAnimator>();
-                characterAnimator.transform.localScale = new Vector3((!base.channel.owner.hand) ? 1 : (-1), 1f, 1f);
+                characterAnimator.transform.localScale = new Vector3((!base.channel.owner.IsLeftHanded) ? 1 : (-1), 1f, 1f);
             }
             PlayerMovement movement = base.player.movement;
             movement.onLanded = (Landed)Delegate.Combine(movement.onLanded, new Landed(onLanded));
-            inputWantsThirdPersonCameraOnLeftSide = base.player.channel.owner.hand;
+            inputWantsThirdPersonCameraOnLeftSide = base.player.channel.owner.IsLeftHanded;
             PlayerLook look = base.player.look;
             look.onPerspectiveUpdated = (PerspectiveUpdated)Delegate.Combine(look.onPerspectiveUpdated, new PerspectiveUpdated(onPerspectiveUpdated));
         }
         else if (base.player.third != null)
         {
             thirdAnimator = base.player.third.GetComponent<CharacterAnimator>();
-            thirdAnimator.transform.localScale = new Vector3((!base.channel.owner.hand) ? 1 : (-1), 1f, 1f);
+            thirdAnimator.transform.localScale = new Vector3((!base.channel.owner.IsLeftHanded) ? 1 : (-1), 1f, 1f);
             if (!Dedicator.IsDedicatedServer)
             {
                 thirdRenderer_0 = (SkinnedMeshRenderer)thirdAnimator.transform.Find("Model_0").GetComponent<Renderer>();

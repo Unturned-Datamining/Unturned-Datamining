@@ -2831,7 +2831,7 @@ public class InteractableVehicle : Interactable
                     Transform thirdSkeleton = passengers[0].player.player.animator.thirdSkeleton;
                     Transform transform = thirdSkeleton.Find("Left_Hip").Find("Left_Leg").Find("Left_Foot");
                     Transform transform2 = thirdSkeleton.Find("Right_Hip").Find("Right_Leg").Find("Right_Foot");
-                    if (passengers[0].player.hand)
+                    if (passengers[0].player.IsLeftHanded)
                     {
                         pedalLeft.position = transform2.position + transform2.right * 0.325f;
                         pedalRight.position = transform.position + transform.right * 0.325f;

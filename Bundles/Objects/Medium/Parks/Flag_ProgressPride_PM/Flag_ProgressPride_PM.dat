@@ -1,0 +1,15 @@
+GUID 29bca6ddfee4421685c10e6797c717c2
+Type Medium
+ID 1
+
+Snowshoe
+
+Holiday_Restriction PRIDE_MONTH
+Bundle_Override_Path /Objects/Medium/Parks/Flag_ProgressPride
+
+Interactability Rubble
+Interactability_Reset 300
+Interactability_Health 100
+Interactability_Effect 72
+
+Has_Clip_Prefab false

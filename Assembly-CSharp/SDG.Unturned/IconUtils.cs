@@ -89,10 +89,11 @@ public class IconUtils
 
     public static void captureAllItemIcons()
     {
-        Asset[] array = Assets.find(EAssetType.ITEM);
-        for (int i = 0; i < array.Length; i++)
+        List<ItemAsset> list = new List<ItemAsset>();
+        Assets.find(list);
+        foreach (ItemAsset item in list)
         {
-            captureItemIcon(array[i] as ItemAsset);
+            captureItemIcon(item);
         }
     }
 

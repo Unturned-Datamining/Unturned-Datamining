@@ -253,7 +253,7 @@ public class HumanClothes : MonoBehaviour
             {
                 try
                 {
-                    visualShirtAsset = Assets.find(EAssetType.ITEM, Provider.provider.economyService.getInventoryItemID(visualShirt)) as ItemShirtAsset;
+                    visualShirtAsset = Assets.find<ItemShirtAsset>(Provider.provider.economyService.getInventoryItemGuid(visualShirt));
                 }
                 catch
                 {
@@ -294,7 +294,7 @@ public class HumanClothes : MonoBehaviour
             {
                 try
                 {
-                    visualPantsAsset = Assets.find(EAssetType.ITEM, Provider.provider.economyService.getInventoryItemID(visualPants)) as ItemPantsAsset;
+                    visualPantsAsset = Assets.find<ItemPantsAsset>(Provider.provider.economyService.getInventoryItemGuid(visualPants));
                 }
                 catch
                 {
@@ -335,7 +335,7 @@ public class HumanClothes : MonoBehaviour
             {
                 try
                 {
-                    visualHatAsset = Assets.find(EAssetType.ITEM, Provider.provider.economyService.getInventoryItemID(visualHat)) as ItemHatAsset;
+                    visualHatAsset = Assets.find<ItemHatAsset>(Provider.provider.economyService.getInventoryItemGuid(visualHat));
                 }
                 catch
                 {
@@ -376,7 +376,7 @@ public class HumanClothes : MonoBehaviour
             {
                 try
                 {
-                    visualBackpackAsset = Assets.find(EAssetType.ITEM, Provider.provider.economyService.getInventoryItemID(visualBackpack)) as ItemBackpackAsset;
+                    visualBackpackAsset = Assets.find<ItemBackpackAsset>(Provider.provider.economyService.getInventoryItemGuid(visualBackpack));
                 }
                 catch
                 {
@@ -417,7 +417,7 @@ public class HumanClothes : MonoBehaviour
             {
                 try
                 {
-                    visualVestAsset = Assets.find(EAssetType.ITEM, Provider.provider.economyService.getInventoryItemID(visualVest)) as ItemVestAsset;
+                    visualVestAsset = Assets.find<ItemVestAsset>(Provider.provider.economyService.getInventoryItemGuid(visualVest));
                 }
                 catch
                 {
@@ -458,7 +458,7 @@ public class HumanClothes : MonoBehaviour
             {
                 try
                 {
-                    visualMaskAsset = Assets.find(EAssetType.ITEM, Provider.provider.economyService.getInventoryItemID(visualMask)) as ItemMaskAsset;
+                    visualMaskAsset = Assets.find<ItemMaskAsset>(Provider.provider.economyService.getInventoryItemGuid(visualMask));
                 }
                 catch
                 {
@@ -499,7 +499,7 @@ public class HumanClothes : MonoBehaviour
             {
                 try
                 {
-                    visualGlassesAsset = Assets.find(EAssetType.ITEM, Provider.provider.economyService.getInventoryItemID(visualGlasses)) as ItemGlassesAsset;
+                    visualGlassesAsset = Assets.find<ItemGlassesAsset>(Provider.provider.economyService.getInventoryItemGuid(visualGlasses));
                 }
                 catch
                 {
@@ -1202,14 +1202,15 @@ public class HumanClothes : MonoBehaviour
                         PrefabUtil.DestroyCollidersInChildren(maskModel.gameObject, includeInactive: true);
                     }
                     maskModel.DestroyRigidbody();
+                    ushort num = 0;
                     if (isVisual && isMythic && visualMask != 0)
                     {
-                        ushort inventoryMythicID6 = Provider.provider.economyService.getInventoryMythicID(visualMask);
-                        if (inventoryMythicID6 != 0)
-                        {
-                            centerHeadEffect(skull, maskModel);
-                            ItemTool.applyEffect(maskModel, inventoryMythicID6, EEffectType.HOOK);
-                        }
+                        num = Provider.provider.economyService.getInventoryMythicID(visualMask);
+                    }
+                    if (num != 0)
+                    {
+                        centerHeadEffect(skull, maskModel);
+                        ItemTool.applyEffect(maskModel, num, EEffectType.HOOK);
                     }
                     applyHairOverride(itemMaskAsset, maskModel);
                 }
@@ -1240,11 +1241,11 @@ public class HumanClothes : MonoBehaviour
                     glassesModel.DestroyRigidbody();
                     if (isVisual && isMythic && visualGlasses != 0)
                     {
-                        ushort inventoryMythicID7 = Provider.provider.economyService.getInventoryMythicID(visualGlasses);
-                        if (inventoryMythicID7 != 0)
+                        ushort inventoryMythicID6 = Provider.provider.economyService.getInventoryMythicID(visualGlasses);
+                        if (inventoryMythicID6 != 0)
                         {
                             centerHeadEffect(skull, glassesModel);
-                            ItemTool.applyEffect(glassesModel, inventoryMythicID7, EEffectType.HOOK);
+                            ItemTool.applyEffect(glassesModel, inventoryMythicID6, EEffectType.HOOK);
                         }
                     }
                     applyHairOverride(itemGlassesAsset, glassesModel);

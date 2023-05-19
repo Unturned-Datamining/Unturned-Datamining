@@ -14,6 +14,8 @@ public class ProfanityFilter
 
     public static CommandLineFlag shouldInitSteamTextFiltering = new CommandLineFlag(defaultValue: true, "-NoSteamTextFiltering");
 
+    private static readonly string[] hardcodedBannedWords = new string[8] { "nigger", "niger", "jew", "fag", "faggot", "fagot", "faggit", "fagit" };
+
     public static string[] getCurseWords()
     {
         if (curseWords == null)
@@ -55,33 +57,63 @@ public class ProfanityFilter
         filterOutCurseWords(ref message);
     }
 
+    internal static void ApplyFilter(bool enableProfanityFilter, ref string message)
+    {
+        if (NaiveContainsHardcodedBannedWord(message))
+        {
+            message = "<3";
+        }
+        else if (enableProfanityFilter)
+        {
+            filter(ref message);
+        }
+    }
+
     public static bool filterOutCurseWords(ref string text, char replacementChar = '#')
     {
         bool result = false;
-        string text2 = text.ToLower();
         if (text.Length > 0)
         {
             string[] array = getCurseWords();
-            foreach (string text3 in array)
+            foreach (string text2 in array)
             {
-                int num = indexOfCurseWord(text2, text3, 0);
+                int num = indexOfCurseWord(text, text2, 0);
                 while (num != -1)
                 {
-                    if ((num == 0 || !char.IsLetterOrDigit(text2[num - 1])) && (num == text2.Length - text3.Length || !char.IsLetterOrDigit(text2[num + text3.Length])))
+                    if ((num == 0 || !char.IsLetterOrDigit(text[num - 1])) && (num == text.Length - text2.Length || !char.IsLetterOrDigit(text[num + text2.Length])))
                     {
-                        replaceCurseWord(ref text2, num, text3.Length, replacementChar);
-                        replaceCurseWord(ref text, num, text3.Length, replacementChar);
-                        num = indexOfCurseWord(text2, text3, num);
+                        replaceCurseWord(ref text, num, text2.Length, replacementChar);
+                        num = indexOfCurseWord(text, text2, num);
                         result = true;
                     }
                     else
                     {
-                        num = indexOfCurseWord(text2, text3, num + 1);
+                        num = indexOfCurseWord(text, text2, num + 1);
                     }
                 }
             }
         }
         return result;
+    }
+
+    public static bool NaiveContainsHardcodedBannedWord(string message)
+    {
+        if (string.IsNullOrEmpty(message))
+        {
+            return false;
+        }
+        string[] array = hardcodedBannedWords;
+        foreach (string text in array)
+        {
+            for (int num = indexOfCurseWord(message, text, 0); num != -1; num = indexOfCurseWord(message, text, num + 1))
+            {
+                if ((num == 0 || !char.IsLetterOrDigit(message[num - 1])) && (num == message.Length - text.Length || !char.IsLetterOrDigit(message[num + text.Length])))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private static int indexOfCurseWord(string userText, string curseWord, int startIndex)
@@ -92,7 +124,7 @@ public class ProfanityFilter
             bool flag = true;
             for (int j = 0; j < curseWord.Length; j++)
             {
-                char c = userText[i + j];
+                char c = char.ToLower(userText[i + j]);
                 char c2 = curseWord[j];
                 bool flag2 = c == c2;
                 if (!flag2)

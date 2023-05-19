@@ -35,6 +35,14 @@ public struct MasterBundleReference<T> : IFormattedFileReadable, IFormattedFileW
     {
         if (node is DatValue datValue)
         {
+            if (string.IsNullOrEmpty(datValue.value))
+            {
+                return false;
+            }
+            if (datValue.value.Length < 2)
+            {
+                return false;
+            }
             if (Assets.currentMasterBundle != null)
             {
                 name = Assets.currentMasterBundle.assetBundleName;

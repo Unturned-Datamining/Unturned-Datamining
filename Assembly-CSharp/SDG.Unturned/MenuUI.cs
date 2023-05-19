@@ -468,7 +468,7 @@ public class MenuUI : MonoBehaviour
         }
         if (InputEx.GetKeyDown(ControlsSettings.refreshAssets))
         {
-            Assets.refresh();
+            Assets.RequestReloadAllAssets();
         }
         if (!InputEx.GetKeyDown(ControlsSettings.clipboardDebug))
         {

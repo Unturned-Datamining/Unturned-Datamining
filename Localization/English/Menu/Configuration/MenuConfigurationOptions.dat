@@ -9,7 +9,10 @@ Splashscreen_Toggle_Label Splashscreen
 Timer_Toggle_Label Arena Timer Warning
 Physics_Toggle_Label Item Physics
 Gore_Toggle_Label Show Blood Splatters
+
 Filter_Toggle_Label Censor Text Profanity
+Filter_Toggle_Tooltip Note: hate speech is censored regardless of whether profanity filter is enabled.
+
 Chat_Text_Toggle_Label Show Inbound Text Chat
 Chat_Voice_In_Toggle_Label Enable Inbound Voice Chat
 Chat_Voice_Out_Toggle_Label Enable Outbound Voice Chat

@@ -7,5 +7,6 @@ public enum ENPCHoliday
     CHRISTMAS,
     APRIL_FOOLS,
     VALENTINES,
+    PRIDE_MONTH,
     MAX
 }

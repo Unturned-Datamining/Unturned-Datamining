@@ -58,7 +58,6 @@ Ballistic_Steps 40
 Ballistic_Travel 5
 Ballistic_Drop 0.00125
 
-Recoil_Aim 0.25
 Recoil_Min_X -5
 Recoil_Min_Y 5
 Recoil_Max_X 5

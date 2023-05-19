@@ -161,23 +161,23 @@ public class AnimalAsset : Asset
         _ragdoll = bundle.load<GameObject>("Ragdoll");
         if (client == null)
         {
-            Assets.reportError(this, "missing 'Animal_Client' GameObject. Highly recommended to fix.");
+            throw new NotSupportedException("missing \"Animal_Client\" GameObject");
         }
-        else if ((bool)Assets.shouldValidateAssets)
+        if ((bool)Assets.shouldValidateAssets)
         {
             validateAnimations(client);
         }
         if (server == null)
         {
-            Assets.reportError(this?.ToString() + "missing 'Animal_Server' GameObject. Highly recommended to fix.");
+            throw new NotSupportedException("missing \"Animal_Server\" GameObject");
         }
-        else if ((bool)Assets.shouldValidateAssets)
+        if ((bool)Assets.shouldValidateAssets)
         {
             validateAnimations(server);
         }
         if (dedicated == null)
         {
-            Assets.reportError(this, "missing 'Animal_Dedicated' GameObject. Highly recommended to fix.");
+            throw new NotSupportedException("missing \"Animal_Dedicated\" GameObject");
         }
         if (ragdoll == null)
         {

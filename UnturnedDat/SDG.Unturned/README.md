@@ -5,6 +5,8 @@
 - [DatNodeEx.cs](DatNodeEx.cs)
 - [DatParser.cs](DatParser.cs)
 - [DatValue.cs](DatValue.cs)
+- [DatWriter.cs](DatWriter.cs)
+- [EDatNodeType.cs](EDatNodeType.cs)
 - [IDatNode.cs](IDatNode.cs)
 - [IDatParseable.cs](IDatParseable.cs)
 - [UnityDatColorEx.cs](UnityDatColorEx.cs)
