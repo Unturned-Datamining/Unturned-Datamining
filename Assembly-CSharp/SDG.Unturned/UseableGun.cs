@@ -254,6 +254,8 @@ public class UseableGun : Useable
 
     private static readonly ClientInstanceMethod SendPlayShoot = ClientInstanceMethod.Get(typeof(UseableGun), "ReceivePlayShoot");
 
+    internal const float BALLISTICS_DELTA_TIME = 0.02f;
+
     private static readonly ServerInstanceMethod<byte, byte, byte, byte[]> SendAttachSight = ServerInstanceMethod<byte, byte, byte, byte[]>.Get(typeof(UseableGun), "ReceiveAttachSight");
 
     private static readonly ServerInstanceMethod<byte, byte, byte, byte[]> SendAttachTactical = ServerInstanceMethod<byte, byte, byte, byte[]>.Get(typeof(UseableGun), "ReceiveAttachTactical");
@@ -1491,7 +1493,7 @@ public class UseableGun : Useable
                     }
                     else
                     {
-                        DamageTool.ServerSpawnBulletImpact(input.point, input.normal, input.materialName, input.colliderTransform, base.channel.GatherOwnerAndClientConnectionsWithinSphere(input.point, EffectManager.SMALL));
+                        DamageTool.ServerSpawnBulletImpact(input.point, input.normal, input.materialName, input.colliderTransform, base.channel.owner, base.channel.GatherOwnerAndClientConnectionsWithinSphere(input.point, EffectManager.SMALL));
                     }
                 }
                 EPlayerKill kill = EPlayerKill.NONE;

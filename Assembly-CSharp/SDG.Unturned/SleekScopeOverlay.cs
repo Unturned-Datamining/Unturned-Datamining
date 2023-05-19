@@ -25,9 +25,14 @@ public class SleekScopeOverlay : SleekWrapper
             if (this.isVisible != isVisible)
             {
                 this.isVisible = isVisible;
-                horizontalLine.isVisible = this.isVisible;
-                distanceLabel.isVisible = this.isVisible && hasLabel;
+                SyncIsVisible();
             }
+        }
+
+        public void SyncIsVisible()
+        {
+            horizontalLine.isVisible = isVisible;
+            distanceLabel.isVisible = isVisible && hasLabel;
         }
     }
 
@@ -229,6 +234,7 @@ public class SleekScopeOverlay : SleekWrapper
             distanceMarker2.hasLabel = distanceMarker.hasLabel;
             distanceMarker2.horizontalLine.color = distanceMarker.color;
             distanceMarker2.distanceLabel.textColor = distanceMarker.color;
+            distanceMarker2.SyncIsVisible();
         }
         for (int j = currentSightAsset.distanceMarkers.Count; j < distanceMarkers.Count; j++)
         {

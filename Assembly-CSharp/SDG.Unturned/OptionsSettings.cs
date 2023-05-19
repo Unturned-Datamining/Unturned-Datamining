@@ -18,9 +18,11 @@ public class OptionsSettings
 
     private const byte SAVEDATA_VERSION_ADDED_CROSSHAIR_SHAPE = 42;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 42;
+    private const byte SAVEDATA_VERSION_ADDED_CROSSHAIR_AND_HITMARKER_ALPHA = 43;
 
-    public static readonly byte SAVEDATA_VERSION = 42;
+    private const byte SAVEDATA_VERSION_NEWEST = 43;
+
+    public static readonly byte SAVEDATA_VERSION = 43;
 
     public static readonly byte MIN_FOV = 60;
 
@@ -307,9 +309,9 @@ public class OptionsSettings
         useStaticCrosshair = false;
         staticCrosshairSize = 0.1f;
         crosshairShape = ECrosshairShape.Line;
-        crosshairColor = Color.white;
-        hitmarkerColor = Color.white;
-        criticalHitmarkerColor = Color.red;
+        crosshairColor = new Color(1f, 1f, 1f, 0.5f);
+        hitmarkerColor = new Color(1f, 1f, 1f, 0.5f);
+        criticalHitmarkerColor = new Color(1f, 0f, 0f, 0.5f);
         cursorColor = Color.white;
         backgroundColor = new Color(0.9f, 0.9f, 0.9f);
         foregroundColor = new Color(0.9f, 0.9f, 0.9f);
@@ -595,6 +597,18 @@ public class OptionsSettings
         {
             crosshairShape = (ECrosshairShape)block.readByte();
         }
+        if (b < 43)
+        {
+            crosshairColor.a = 0.5f;
+            hitmarkerColor.a = 0.5f;
+            criticalHitmarkerColor.a = 0.5f;
+        }
+        else
+        {
+            crosshairColor.a = (float)(int)block.readByte() / 255f;
+            hitmarkerColor.a = (float)(int)block.readByte() / 255f;
+            criticalHitmarkerColor.a = (float)(int)block.readByte() / 255f;
+        }
         if (!Provider.isPro)
         {
             backgroundColor = new Color(0.9f, 0.9f, 0.9f);
@@ -608,7 +622,7 @@ public class OptionsSettings
     public static void save()
     {
         Block block = new Block();
-        block.writeByte(42);
+        block.writeByte(43);
         block.writeBoolean(music);
         block.writeBoolean(splashscreen);
         block.writeBoolean(timer);
@@ -650,6 +664,9 @@ public class OptionsSettings
         block.writeBoolean(useStaticCrosshair);
         block.writeSingle(staticCrosshairSize);
         block.writeByte((byte)crosshairShape);
+        block.writeByte(MathfEx.RoundAndClampToByte(crosshairColor.a * 255f));
+        block.writeByte(MathfEx.RoundAndClampToByte(hitmarkerColor.a * 255f));
+        block.writeByte(MathfEx.RoundAndClampToByte(criticalHitmarkerColor.a * 255f));
         ReadWrite.writeBlock("/Options.dat", useCloud: true, block);
     }
 }

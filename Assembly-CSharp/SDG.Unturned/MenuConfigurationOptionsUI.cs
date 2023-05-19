@@ -749,8 +749,9 @@ public class MenuConfigurationOptionsUI
         crosshairColorPicker = new SleekColorPicker();
         crosshairColorPicker.positionOffset_Y = num;
         crosshairColorPicker.onColorPicked = onCrosshairColorPicked;
+        crosshairColorPicker.SetAllowAlpha(allowAlpha: true);
         optionsBox.AddChild(crosshairColorPicker);
-        num += 130;
+        num += 160;
         hitmarkerBox = Glazier.Get().CreateBox();
         hitmarkerBox.positionOffset_Y = num;
         hitmarkerBox.sizeOffset_X = 240;
@@ -761,8 +762,9 @@ public class MenuConfigurationOptionsUI
         hitmarkerColorPicker = new SleekColorPicker();
         hitmarkerColorPicker.positionOffset_Y = num;
         hitmarkerColorPicker.onColorPicked = onHitmarkerColorPicked;
+        hitmarkerColorPicker.SetAllowAlpha(allowAlpha: true);
         optionsBox.AddChild(hitmarkerColorPicker);
-        num += 130;
+        num += 160;
         criticalHitmarkerBox = Glazier.Get().CreateBox();
         criticalHitmarkerBox.positionOffset_Y = num;
         criticalHitmarkerBox.sizeOffset_X = 240;
@@ -773,8 +775,9 @@ public class MenuConfigurationOptionsUI
         criticalHitmarkerColorPicker = new SleekColorPicker();
         criticalHitmarkerColorPicker.positionOffset_Y = num;
         criticalHitmarkerColorPicker.onColorPicked = onCriticalHitmarkerColorPicked;
+        criticalHitmarkerColorPicker.SetAllowAlpha(allowAlpha: true);
         optionsBox.AddChild(criticalHitmarkerColorPicker);
-        num += 130;
+        num += 160;
         cursorBox = Glazier.Get().CreateBox();
         cursorBox.positionOffset_Y = num;
         cursorBox.sizeOffset_X = 240;

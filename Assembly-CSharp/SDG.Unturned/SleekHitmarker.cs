@@ -46,7 +46,6 @@ public class SleekHitmarker : SleekWrapper
         case EPlayerHit.NONE:
             return;
         }
-        color.a = 0.5f;
         neImage.texture = texture;
         neImage.color = color;
         seImage.texture = texture;

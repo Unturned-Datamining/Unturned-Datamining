@@ -14,11 +14,15 @@ public class SleekColorPicker : SleekWrapper
 
     private ISleekUInt8Field bField;
 
+    private ISleekUInt8Field aField;
+
     private ISleekSlider rSlider;
 
     private ISleekSlider gSlider;
 
     private ISleekSlider bSlider;
+
+    private ISleekSlider aSlider;
 
     private Color color;
 
@@ -47,6 +51,7 @@ public class SleekColorPicker : SleekWrapper
         rField.state = (byte)(color.r * 255f);
         gField.state = (byte)(color.g * 255f);
         bField.state = (byte)(color.b * 255f);
+        aField.state = (byte)(color.a * 255f);
     }
 
     private void updateColorSlider()
@@ -54,6 +59,7 @@ public class SleekColorPicker : SleekWrapper
         rSlider.state = color.r;
         gSlider.state = color.g;
         bSlider.state = color.b;
+        aSlider.state = color.a;
     }
 
     private void onTypedRField(ISleekUInt8Field field, byte value)
@@ -75,6 +81,14 @@ public class SleekColorPicker : SleekWrapper
     private void onTypedBField(ISleekUInt8Field field, byte value)
     {
         color.b = (float)(int)value / 255f;
+        updateColor();
+        updateColorSlider();
+        onColorPicked?.Invoke(this, color);
+    }
+
+    private void onTypedAField(ISleekUInt8Field field, byte value)
+    {
+        color.a = (float)(int)value / 255f;
         updateColor();
         updateColorSlider();
         onColorPicked?.Invoke(this, color);
@@ -104,11 +118,43 @@ public class SleekColorPicker : SleekWrapper
         onColorPicked?.Invoke(this, color);
     }
 
+    private void onDraggedASlider(ISleekSlider slider, float state)
+    {
+        color.a = state;
+        updateColor();
+        updateColorText();
+        onColorPicked?.Invoke(this, color);
+    }
+
+    public void SetAllowAlpha(bool allowAlpha)
+    {
+        aField.isVisible = allowAlpha;
+        aSlider.isVisible = allowAlpha;
+        if (allowAlpha)
+        {
+            base.sizeOffset_Y = 150;
+            rField.sizeOffset_X = 50;
+            gField.positionOffset_X = rField.positionOffset_X + rField.sizeOffset_X;
+            gField.sizeOffset_X = 50;
+            bField.positionOffset_X = gField.positionOffset_X + gField.sizeOffset_X;
+            bField.sizeOffset_X = 50;
+            aField.positionOffset_X = bField.positionOffset_X + bField.sizeOffset_X;
+        }
+        else
+        {
+            base.sizeOffset_Y = 120;
+            rField.sizeOffset_X = 60;
+            gField.positionOffset_X = rField.positionOffset_X + rField.sizeOffset_X + 10;
+            gField.sizeOffset_X = 60;
+            bField.positionOffset_X = gField.positionOffset_X + gField.sizeOffset_X + 10;
+            bField.sizeOffset_X = 60;
+        }
+    }
+
     public SleekColorPicker()
     {
         color = Color.black;
         base.sizeOffset_X = 240;
-        base.sizeOffset_Y = 120;
         colorImage = Glazier.Get().CreateImage();
         colorImage.sizeOffset_X = 30;
         colorImage.sizeOffset_Y = 30;
@@ -116,25 +162,27 @@ public class SleekColorPicker : SleekWrapper
         AddChild(colorImage);
         rField = Glazier.Get().CreateUInt8Field();
         rField.positionOffset_X = 40;
-        rField.sizeOffset_X = 60;
         rField.sizeOffset_Y = 30;
         rField.textColor = Palette.COLOR_R;
         rField.onTypedByte += onTypedRField;
         AddChild(rField);
         gField = Glazier.Get().CreateUInt8Field();
-        gField.positionOffset_X = 110;
-        gField.sizeOffset_X = 60;
         gField.sizeOffset_Y = 30;
         gField.textColor = Palette.COLOR_G;
         gField.onTypedByte += onTypedGField;
         AddChild(gField);
         bField = Glazier.Get().CreateUInt8Field();
-        bField.positionOffset_X = 180;
-        bField.sizeOffset_X = 60;
         bField.sizeOffset_Y = 30;
         bField.textColor = Palette.COLOR_B;
         bField.onTypedByte += onTypedBField;
         AddChild(bField);
+        aField = Glazier.Get().CreateUInt8Field();
+        aField.sizeOffset_X = 50;
+        aField.sizeOffset_Y = 30;
+        aField.textColor = Palette.COLOR_W;
+        aField.onTypedByte += onTypedAField;
+        aField.isVisible = false;
+        AddChild(aField);
         rSlider = Glazier.Get().CreateSlider();
         rSlider.positionOffset_X = 40;
         rSlider.positionOffset_Y = 40;
@@ -162,5 +210,16 @@ public class SleekColorPicker : SleekWrapper
         bSlider.addLabel("B", Palette.COLOR_B, ESleekSide.LEFT);
         bSlider.onDragged += onDraggedBSlider;
         AddChild(bSlider);
+        aSlider = Glazier.Get().CreateSlider();
+        aSlider.positionOffset_X = 40;
+        aSlider.positionOffset_Y = 130;
+        aSlider.sizeOffset_X = 200;
+        aSlider.sizeOffset_Y = 20;
+        aSlider.orientation = ESleekOrientation.HORIZONTAL;
+        aSlider.addLabel("A", Palette.COLOR_W, ESleekSide.LEFT);
+        aSlider.onDragged += onDraggedASlider;
+        aSlider.isVisible = false;
+        AddChild(aSlider);
+        SetAllowAlpha(allowAlpha: false);
     }
 }

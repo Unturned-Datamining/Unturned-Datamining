@@ -56,7 +56,6 @@ Spread_Hip 0.075
 
 Ballistic_Steps 40
 Ballistic_Travel 2.5
-Ballistic_Drop 0.003
 
 Recoil_Min_X -0.2
 Recoil_Min_Y 2

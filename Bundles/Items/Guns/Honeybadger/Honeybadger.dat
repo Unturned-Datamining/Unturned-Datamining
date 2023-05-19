@@ -31,8 +31,6 @@ Range 125
 Firerate 4
 Action Trigger
 
-Ballistic_Drop 0.003
-
 Player_Damage 40
 Player_Leg_Multiplier 0.6
 Player_Arm_Multiplier 0.6

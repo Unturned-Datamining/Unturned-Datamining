@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1922502181
+CRC: 995860553
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 193de849ca5e269ed04494ca036f0ee4
+    Hash: a46b513dc7e0e60037f2b05c0b11bcdc
   TypeTreeHash:
     serializedVersion: 2
     Hash: feb97dbf77ef8cec3212470924f33ba4
@@ -2931,6 +2931,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Impacts/Metal_WithDecal_NoAudio/Texture.png
 - Assets/CoreMasterBundle/Items/Shirts/Jersey_Finland/Item.prefab
 - Assets/CoreMasterBundle/Effects/Impacts/Gravel_Static/Material_Decal.mat
+- Assets/CoreMasterBundle/Items/Shirts/Jersey_PrideProgress/Material.mat
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Grass_Run/Footstep_Grass_Run.asset
 - Assets/CoreMasterBundle/Items/Medical/Painkillers/Use.mp3
 - Assets/CoreMasterBundle/Items/Shirts/Tee_Hawaii_0/Material.mat
@@ -6940,6 +6941,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Backpacks/Dufflebag_Blue/Item.prefab
 - Assets/CoreMasterBundle/Effects/Physics/BipedLand/Mud/footstep_mud_land_06.wav
 - Assets/CoreMasterBundle/Items/Food/Sandwich_Beef/Animations.prefab
+- Assets/CoreMasterBundle/Items/Shirts/Jersey_PrideProgress/Shirt.png
 - Assets/CoreMasterBundle/Items/Supplies/Money_2/Item.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/House_09_Burned/Skybox.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Boat_3/Object.prefab
@@ -10694,6 +10696,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Gate_Birch/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Large/Scenery/Snow_3/Object.prefab
 - Assets/CoreMasterBundle/Items/Food/Cheese/Item.prefab
+- Assets/CoreMasterBundle/Items/Shirts/Jersey_PrideProgress/Item.prefab
 - Assets/CoreMasterBundle/Items/Boxes/Mystery_Box_10/Item.prefab
 - Assets/CoreMasterBundle/Skins/Peacemaker/Cassette_Player/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Items/Barricades/Makeshift_Vehicle_4_Seats/Animations.prefab

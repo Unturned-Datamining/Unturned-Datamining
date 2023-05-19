@@ -47,7 +47,7 @@ public class DamageTool
 
     private static List<EPlayerKill> explosionKills = new List<EPlayerKill>();
 
-    private static ClientStaticMethod<Vector3, Vector3, string, Transform> SendSpawnBulletImpact = ClientStaticMethod<Vector3, Vector3, string, Transform>.Get(ReceiveSpawnBulletImpact);
+    private static ClientStaticMethod<Vector3, Vector3, string, Transform, NetId> SendSpawnBulletImpact = ClientStaticMethod<Vector3, Vector3, string, Transform, NetId>.Get(ReceiveSpawnBulletImpact);
 
     private static ClientStaticMethod<Vector3, Vector3, string, Transform> SendSpawnLegacyImpact = ClientStaticMethod<Vector3, Vector3, string, Transform>.Get(ReceiveSpawnLegacyImpact);
 
@@ -1194,7 +1194,7 @@ public class DamageTool
         }
     }
 
-    private static void PlayBulletImpactAudio(Vector3 position, string materialName)
+    private static void PlayBulletImpactAudio(Vector3 position, string materialName, bool wasInstigatedByLocalPlayer)
     {
         OneShotAudioDefinition audioDef = PhysicMaterialCustomData.GetAudioDef(materialName, "BulletImpact");
         if (!(audioDef == null))
@@ -1206,6 +1206,7 @@ public class DamageTool
                 oneShotAudioParameters.volume = 0.6f * audioDef.volumeMultiplier;
                 oneShotAudioParameters.RandomizePitch(audioDef.minPitch, audioDef.maxPitch);
                 oneShotAudioParameters.SetLinearRolloff(1f, 16f);
+                oneShotAudioParameters.spatialBlend = (wasInstigatedByLocalPlayer ? 0.9f : 1f);
                 oneShotAudioParameters.Play();
             }
         }
@@ -1256,16 +1257,18 @@ public class DamageTool
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
-    public static void ReceiveSpawnBulletImpact(Vector3 position, Vector3 normal, string materialName, Transform colliderTransform)
+    public static void ReceiveSpawnBulletImpact(Vector3 position, Vector3 normal, string materialName, Transform colliderTransform, NetId instigatorNetId)
     {
+        bool wasInstigatedByLocalPlayer = Player.player != null && instigatorNetId == Player.player.channel.owner.GetNetId();
         LocalSpawnBulletImpactEffect(position, normal, materialName, colliderTransform);
-        PlayBulletImpactAudio(position, materialName);
+        PlayBulletImpactAudio(position, materialName, wasInstigatedByLocalPlayer);
     }
 
-    internal static void ServerSpawnBulletImpact(Vector3 position, Vector3 normal, string materialName, Transform colliderTransform, List<ITransportConnection> transportConnections)
+    internal static void ServerSpawnBulletImpact(Vector3 position, Vector3 normal, string materialName, Transform colliderTransform, SteamPlayer instigatingClient, List<ITransportConnection> transportConnections)
     {
         position += normal * UnityEngine.Random.Range(0.04f, 0.06f);
-        SendSpawnBulletImpact.Invoke(ENetReliability.Unreliable, transportConnections, position, normal, materialName, colliderTransform);
+        NetId arg = instigatingClient?.GetNetId() ?? NetId.INVALID;
+        SendSpawnBulletImpact.Invoke(ENetReliability.Unreliable, transportConnections, position, normal, materialName, colliderTransform, arg);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]

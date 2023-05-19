@@ -52,7 +52,6 @@ public class Crosshair : SleekWrapper
     public void SynchronizeCustomColors()
     {
         Color crosshairColor = OptionsSettings.crosshairColor;
-        crosshairColor.a = 0.5f;
         centerDotImage.color = crosshairColor;
         crosshairLeftImage.color = crosshairColor;
         crosshairRightImage.color = crosshairColor;

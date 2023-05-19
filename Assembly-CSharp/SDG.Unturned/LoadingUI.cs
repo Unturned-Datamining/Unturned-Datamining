@@ -549,14 +549,14 @@ public class LoadingUI : MonoBehaviour
         RichTextUtil.replaceNewlineMarkup(ref s);
         s = ItemTool.filterRarityRichText(s);
         tipLabel.text = local.format("Tip", s);
-        loadingProgressBar.sizeOffset_X = -20;
+        loadingBarBox.sizeOffset_X = -20;
         cancelButton.isVisible = false;
     }
 
     private static void onQueuePositionUpdated()
     {
         loadingProgressBar.DescriptionText = localization.format("Queue_Position", Provider.queuePosition + 1);
-        loadingProgressBar.sizeOffset_X = -130;
+        loadingBarBox.sizeOffset_X = -130;
         cancelButton.isVisible = true;
     }
 
@@ -695,11 +695,11 @@ public class LoadingUI : MonoBehaviour
         window.AddChild(creditsLabel);
         cancelButton = Glazier.Get().CreateButton();
         cancelButton.positionOffset_X = -110;
-        cancelButton.positionOffset_Y = -60;
+        cancelButton.positionOffset_Y = -50;
         cancelButton.positionScale_X = 1f;
         cancelButton.positionScale_Y = 1f;
         cancelButton.sizeOffset_X = 100;
-        cancelButton.sizeOffset_Y = 50;
+        cancelButton.sizeOffset_Y = 40;
         cancelButton.fontSize = ESleekFontSize.Medium;
         cancelButton.text = localization.format("Queue_Cancel");
         cancelButton.tooltipText = localization.format("Queue_Cancel_Tooltip");

@@ -534,9 +534,30 @@ public class ItemGunAsset : ItemWeaponAsset
             ballisticSteps = (byte)Mathf.CeilToInt(range / ballisticTravel);
         }
         muzzleVelocity = ballisticTravel * (float)PlayerInput.TOCK_PER_SECOND;
-        if (data.TryParseFloat("Ballistic_Drop", out var value) && value < 0.001f)
+        if (data.TryParseFloat("Ballistic_Drop", out var value))
         {
-            bulletGravityMultiplier = 0f;
+            if (value < 1E-06f)
+            {
+                bulletGravityMultiplier = 0f;
+            }
+            else
+            {
+                float num6 = 0f;
+                Vector3 forward = Vector3.forward;
+                for (int l = 0; l < ballisticSteps; l++)
+                {
+                    num6 += forward.y * ballisticTravel;
+                    forward.y -= value;
+                    forward.Normalize();
+                }
+                float num7 = (float)(int)ballisticSteps * 0.02f;
+                float num8 = 2f * num6 / (num7 * num7);
+                bulletGravityMultiplier = num8 / -9.81f;
+                if ((bool)Assets.shouldValidateAssets)
+                {
+                    UnturnedLog.info($"Converted \"{FriendlyName}\" Ballistic_Drop {value} to Bullet_Gravity_Multiplier {bulletGravityMultiplier}");
+                }
+            }
         }
         else
         {
@@ -604,10 +625,10 @@ public class ItemGunAsset : ItemWeaponAsset
         }
         float defaultValue2 = ((action == EAction.String) ? 16f : ((action != EAction.Rocket) ? 512f : 64f));
         gunshotRolloffDistance = data.ParseFloat("Gunshot_Rolloff_Distance", defaultValue2);
-        int num6 = data.ParseInt32("Shoot_Quest_Rewards");
-        if (num6 > 0)
+        int num9 = data.ParseInt32("Shoot_Quest_Rewards");
+        if (num9 > 0)
         {
-            shootQuestRewards = new INPCReward[num6];
+            shootQuestRewards = new INPCReward[num9];
             NPCTool.readRewards(data, localization, "Shoot_Quest_Reward_", shootQuestRewards, this);
         }
         aimInDuration = data.ParseFloat("Aim_In_Duration", 0.2f);
