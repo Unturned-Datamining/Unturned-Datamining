@@ -330,7 +330,7 @@ public class TempSteamworksMatchmaking
         else
         {
             bool flag = filterMonetization == EServerMonetizationTag.NonGameplay;
-            if (!LiveConfig.Get().ShouldServersWithoutMonetizationTagBeVisibleInInternetServerList)
+            if (!LiveConfig.Get().shouldServersWithoutMonetizationTagBeVisibleInInternetServerList)
             {
                 flag |= string.IsNullOrWhiteSpace(PlaySettings.serversName);
             }

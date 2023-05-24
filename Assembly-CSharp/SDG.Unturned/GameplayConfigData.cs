@@ -26,6 +26,8 @@ public class GameplayConfigData
 
     public bool Allow_Dynamic_Groups;
 
+    public bool Allow_Lobby_Groups;
+
     public bool Allow_Shoulder_Camera;
 
     public bool Can_Suicide;
@@ -89,6 +91,7 @@ public class GameplayConfigData
         Group_Player_List = true;
         Allow_Static_Groups = true;
         Allow_Dynamic_Groups = true;
+        Allow_Lobby_Groups = true;
         Allow_Shoulder_Camera = true;
         Can_Suicide = true;
         Friendly_Fire = false;

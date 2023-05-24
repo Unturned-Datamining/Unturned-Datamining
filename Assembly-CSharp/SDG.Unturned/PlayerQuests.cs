@@ -1923,15 +1923,22 @@ public class PlayerQuests : PlayerCaller
         {
             if (groupID == CSteamID.Nil)
             {
-                if (base.channel.owner.lobbyID != CSteamID.Nil)
+                if (base.channel.owner.lobbyID != CSteamID.Nil && Provider.modeConfigData.Gameplay.Allow_Lobby_Groups)
                 {
-                    groupID = base.channel.owner.lobbyID;
                     bool wasCreated;
-                    GroupInfo orAddGroup = GroupManager.getOrAddGroup(groupID, base.channel.owner.playerID.playerName + "'s Group", out wasCreated);
-                    orAddGroup.members++;
-                    groupRank = (wasCreated ? EPlayerGroupRank.OWNER : EPlayerGroupRank.MEMBER);
-                    inMainGroup = false;
-                    GroupManager.sendGroupInfo(orAddGroup);
+                    GroupInfo orAddGroup = GroupManager.getOrAddGroup(base.channel.owner.lobbyID, base.channel.owner.playerID.playerName + "'s Group", out wasCreated);
+                    if (wasCreated || orAddGroup.hasSpaceForMoreMembersInGroup)
+                    {
+                        groupID = base.channel.owner.lobbyID;
+                        orAddGroup.members++;
+                        groupRank = (wasCreated ? EPlayerGroupRank.OWNER : EPlayerGroupRank.MEMBER);
+                        inMainGroup = false;
+                        GroupManager.sendGroupInfo(orAddGroup);
+                    }
+                    else
+                    {
+                        loadMainGroup();
+                    }
                 }
                 else
                 {

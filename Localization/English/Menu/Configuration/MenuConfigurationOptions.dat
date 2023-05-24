@@ -54,6 +54,9 @@ UI_Tooltip Interface Skin
 Hitmarker_Static Static Hitmarkers
 Hitmarker_Dynamic Dynamic Hitmarkers
 Hitmarker_Tooltip Hitmarker Locking
+HitmarkerStyle_Animated Animated
+HitmarkerStyle_Classic Classic
+HitmarkerStyle_Label Hitmarker Style
 
 Crosshair_Box Crosshair Color
 Hitmarker_Box Hitmarker Color

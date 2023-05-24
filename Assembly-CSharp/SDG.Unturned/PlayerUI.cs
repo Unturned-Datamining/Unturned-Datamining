@@ -160,21 +160,44 @@ public class PlayerUI : MonoBehaviour
         }
     }
 
-    public static void hitmark(int index, Vector3 point, bool worldspace, EPlayerHit newHit)
+    public static void hitmark(int bulletIndex, Vector3 point, bool worldspace, EPlayerHit newHit)
     {
-        if (wantsWindowEnabled && Provider.modeConfigData.Gameplay.Hitmarkers)
+        if (!wantsWindowEnabled || !Provider.modeConfigData.Gameplay.Hitmarkers)
         {
-            HitmarkerInfo item = default(HitmarkerInfo);
-            item.worldPosition = point;
-            item.shouldFollowWorldPosition = worldspace || OptionsSettings.hitmarker;
-            item.sleekElement = PlayerLifeUI.ClaimHitmarker();
-            item.sleekElement.SetStyle(newHit);
-            item.sleekElement.PlayAnimation();
-            PlayerLifeUI.activeHitmarkers.Add(item);
-            if (newHit == EPlayerHit.CRITICAL)
+            return;
+        }
+        if (OptionsSettings.hitmarkerStyle == EHitmarkerStyle.Classic)
+        {
+            for (int num = PlayerLifeUI.activeHitmarkers.Count - 1; num >= 0; num--)
             {
-                MainCamera.instance.GetComponent<AudioSource>().PlayOneShot(hitCriticalSound, 0.5f);
+                HitmarkerInfo hitmarkerInfo = PlayerLifeUI.activeHitmarkers[num];
+                if (hitmarkerInfo.bulletIndex == bulletIndex)
+                {
+                    PlayerLifeUI.ReleaseHitmarker(hitmarkerInfo.sleekElement);
+                    PlayerLifeUI.activeHitmarkers.RemoveAtFast(num);
+                    break;
+                }
             }
+        }
+        HitmarkerInfo item = default(HitmarkerInfo);
+        item.worldPosition = point;
+        item.shouldFollowWorldPosition = worldspace || OptionsSettings.hitmarker;
+        item.sleekElement = PlayerLifeUI.ClaimHitmarker();
+        item.sleekElement.SetStyle(newHit);
+        if (OptionsSettings.hitmarkerStyle == EHitmarkerStyle.Animated)
+        {
+            item.sleekElement.PlayAnimation();
+            item.bulletIndex = -1;
+        }
+        else
+        {
+            item.sleekElement.ApplyClassicPositions();
+            item.bulletIndex = bulletIndex;
+        }
+        PlayerLifeUI.activeHitmarkers.Add(item);
+        if (newHit == EPlayerHit.CRITICAL)
+        {
+            MainCamera.instance.GetComponent<AudioSource>().PlayOneShot(hitCriticalSound, 0.5f);
         }
     }
 

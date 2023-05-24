@@ -1140,7 +1140,7 @@ public class Assets : MonoBehaviour
     private IEnumerator LoadAssetsFromWorkerThread()
     {
         double realtimeSinceStartupAsDouble = Time.realtimeSinceStartupAsDouble;
-        while (worker.IsWorking)
+        while (worker.IsWorking || pendingMasterBundles.Count > 0)
         {
             if (worker.TryDequeueMasterBundle(out var result))
             {

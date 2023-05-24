@@ -1,11 +1,12 @@
 using System;
 using Steamworks;
-using Unturned.LiveConfig;
 
 namespace SDG.Unturned;
 
 public static class LiveConfig
 {
+    public static bool WasPopulated => LiveConfigManager.Get().wasPopulated;
+
     public static event System.Action OnRefreshed
     {
         add
@@ -26,7 +27,7 @@ public static class LiveConfig
         }
     }
 
-    public static global::Unturned.LiveConfig.LiveConfig Get()
+    public static LiveConfigData Get()
     {
         return LiveConfigManager.Get().config;
     }

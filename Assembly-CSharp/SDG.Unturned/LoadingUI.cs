@@ -498,6 +498,7 @@ public class LoadingUI : MonoBehaviour
                     stringBuilder.Append("<color=#f0f0f0>");
                     stringBuilder.Append(localization.format("Creators"));
                     stringBuilder.AppendLine("</color>");
+                    stringBuilder.AppendLine();
                     for (int i = 0; i < Level.info.configData.Creators.Length; i++)
                     {
                         stringBuilder.AppendLine(Level.info.configData.Creators[i]);
@@ -510,8 +511,9 @@ public class LoadingUI : MonoBehaviour
                         stringBuilder.AppendLine();
                     }
                     stringBuilder.Append("<color=#f0f0f0>");
-                    stringBuilder.AppendLine(localization.format("Collaborators"));
+                    stringBuilder.Append(localization.format("Collaborators"));
                     stringBuilder.AppendLine("</color>");
+                    stringBuilder.AppendLine();
                     for (int j = 0; j < Level.info.configData.Collaborators.Length; j++)
                     {
                         stringBuilder.AppendLine(Level.info.configData.Collaborators[j]);
@@ -524,8 +526,9 @@ public class LoadingUI : MonoBehaviour
                         stringBuilder.AppendLine();
                     }
                     stringBuilder.Append("<color=#f0f0f0>");
-                    stringBuilder.AppendLine(localization.format("Thanks"));
+                    stringBuilder.Append(localization.format("Thanks"));
                     stringBuilder.AppendLine("</color>");
+                    stringBuilder.AppendLine();
                     for (int k = 0; k < Level.info.configData.Thanks.Length; k++)
                     {
                         stringBuilder.AppendLine(Level.info.configData.Thanks[k]);

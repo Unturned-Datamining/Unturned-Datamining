@@ -29,7 +29,7 @@
 	{
 		"Major_Version": 23,
 		"Minor_Version": 7,
-		"Patch_Version": 104,
+		"Patch_Version": 105,
 		"GrantPackageIDs":
 		[
 			487
@@ -172,17 +172,5 @@
 				"Visible_In_Singleplayer_Recommendations_List": false
 			}
 		]
-	},
-	"Stockpile":
-	{
-		"New_Items_Start": "2023-03-01T00:12:00Z",
-		"New_Items_End": "2023-03-07T00:12:00Z",
-		"New_Items":
-		[
-			1330,
-			1331
-		],
-		"Exclude_Items_From_Highlight":
-		[]
 	}
 }

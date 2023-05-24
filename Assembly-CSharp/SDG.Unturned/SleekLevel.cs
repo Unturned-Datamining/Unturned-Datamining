@@ -1,5 +1,4 @@
 using UnityEngine;
-using Unturned.LiveConfig;
 
 namespace SDG.Unturned;
 
@@ -30,10 +29,10 @@ public class SleekLevel : SleekWrapper
         {
             return;
         }
-        MainMenuWorkshopFeaturedLiveConfig featured = LiveConfig.Get().MainMenuWorkshop.Featured;
-        if (featured.Status != 0 && featured.IsFeatured(level.publishedFileId))
+        MainMenuWorkshopFeaturedLiveConfig featured = LiveConfig.Get().mainMenuWorkshop.featured;
+        if (featured.status != 0 && featured.IsFeatured(level.publishedFileId))
         {
-            SleekNew sleekNew = new SleekNew(featured.Status == EMapStatus.Updated);
+            SleekNew sleekNew = new SleekNew(featured.status == EMapStatus.Updated);
             if (icon != null)
             {
                 icon.AddChild(sleekNew);

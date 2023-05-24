@@ -80,6 +80,8 @@ public class MenuConfigurationOptionsUI
 
     private static SleekButtonState hitmarkerButton;
 
+    private static SleekButtonState hitmarkerStyleButton;
+
     private static ISleekBox crosshairBox;
 
     private static SleekColorPicker crosshairColorPicker;
@@ -314,6 +316,11 @@ public class MenuConfigurationOptionsUI
         OptionsSettings.hitmarker = index == 1;
     }
 
+    private static void onSwappedHitmarkerStyleState(SleekButtonState button, int index)
+    {
+        OptionsSettings.hitmarkerStyle = (EHitmarkerStyle)index;
+    }
+
     private static void onCrosshairColorPicked(SleekColorPicker picker, Color color)
     {
         OptionsSettings.crosshairColor = color;
@@ -423,6 +430,7 @@ public class MenuConfigurationOptionsUI
         talkButton.state = (OptionsSettings.talk ? 1 : 0);
         uiButton.state = (OptionsSettings.proUI ? 1 : 0);
         hitmarkerButton.state = (OptionsSettings.hitmarker ? 1 : 0);
+        hitmarkerStyleButton.state = (int)OptionsSettings.hitmarkerStyle;
         crosshairColorPicker.state = OptionsSettings.crosshairColor;
         hitmarkerColorPicker.state = OptionsSettings.hitmarkerColor;
         criticalHitmarkerColorPicker.state = OptionsSettings.criticalHitmarkerColor;
@@ -738,6 +746,14 @@ public class MenuConfigurationOptionsUI
         hitmarkerButton.tooltip = localization.format("Hitmarker_Tooltip");
         hitmarkerButton.onSwappedState = onSwappedHitmarkerState;
         optionsBox.AddChild(hitmarkerButton);
+        num += 40;
+        hitmarkerStyleButton = new SleekButtonState(new GUIContent(localization.format("HitmarkerStyle_Animated")), new GUIContent(localization.format("HitmarkerStyle_Classic")));
+        hitmarkerStyleButton.positionOffset_Y = num;
+        hitmarkerStyleButton.sizeOffset_X = 200;
+        hitmarkerStyleButton.sizeOffset_Y = 30;
+        hitmarkerStyleButton.addLabel(localization.format("HitmarkerStyle_Label"), ESleekSide.RIGHT);
+        hitmarkerStyleButton.onSwappedState = onSwappedHitmarkerStyleState;
+        optionsBox.AddChild(hitmarkerStyleButton);
         num += 40;
         crosshairBox = Glazier.Get().CreateBox();
         crosshairBox.positionOffset_Y = num;

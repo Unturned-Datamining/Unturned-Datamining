@@ -11,4 +11,6 @@ public struct HitmarkerInfo
     public bool shouldFollowWorldPosition;
 
     public SleekHitmarker sleekElement;
+
+    public int bulletIndex;
 }

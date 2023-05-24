@@ -1,14 +1,15 @@
 using System;
 using System.Collections;
-using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Unturned.LiveConfig;
+namespace SDG.Unturned;
 
 public class LiveConfigManager : MonoBehaviour
 {
-    public LiveConfig config = new LiveConfig();
+    public LiveConfigData config = new LiveConfigData();
+
+    public bool wasPopulated;
 
     private bool isRefreshing;
 
@@ -39,7 +40,7 @@ public class LiveConfigManager : MonoBehaviour
 
     private IEnumerator RequestConfig()
     {
-        string uri = "https://smartlydressedgames.com/UnturnedLiveConfig.json";
+        string uri = "https://smartlydressedgames.com/UnturnedLiveConfig.dat";
         UnityWebRequest request = UnityWebRequest.Get(uri);
         request.timeout = 10;
         yield return request.SendWebRequest();
@@ -51,7 +52,15 @@ public class LiveConfigManager : MonoBehaviour
         {
             try
             {
-                config = JsonConvert.DeserializeObject<LiveConfig>(request.downloadHandler.text);
+                DatParser datParser = new DatParser();
+                DatDictionary data = datParser.Parse(request.downloadHandler.text);
+                if (datParser.HasError)
+                {
+                    Debug.LogError("Error parsing live config: \"" + datParser.ErrorMessage + "\"");
+                }
+                config = new LiveConfigData();
+                config.Parse(data);
+                wasPopulated = true;
             }
             catch (Exception exception)
             {

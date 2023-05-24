@@ -207,9 +207,9 @@ public class PlayerCrafting : PlayerCaller
                 break;
             }
             List<InventorySearch>[] array = new List<InventorySearch>[blueprint.supplies.Length];
-            for (byte b = 0; b < blueprint.supplies.Length; b = (byte)(b + 1))
+            for (int j = 0; j < blueprint.supplies.Length; j++)
             {
-                BlueprintSupply blueprintSupply = blueprint.supplies[b];
+                BlueprintSupply blueprintSupply = blueprint.supplies[j];
                 List<InventorySearch> list = base.player.inventory.search(blueprintSupply.id, findEmpty: false, findHealthy: true);
                 if (list.Count == 0)
                 {
@@ -232,37 +232,37 @@ public class PlayerCrafting : PlayerCaller
                 {
                     list.Sort(qualityAscendingComparator);
                 }
-                array[b] = list;
+                array[j] = list;
             }
             if (blueprint.type == EBlueprintType.REPAIR)
             {
                 List<InventorySearch> list2 = base.player.inventory.search(itemAsset.id, findEmpty: false, findHealthy: false);
-                byte b2 = byte.MaxValue;
-                byte b3 = byte.MaxValue;
-                for (byte b4 = 0; b4 < list2.Count; b4 = (byte)(b4 + 1))
+                byte b = byte.MaxValue;
+                int num2 = -1;
+                for (int k = 0; k < list2.Count; k++)
                 {
-                    if (list2[b4].jar.item.quality < b2)
+                    if (list2[k].jar.item.quality < b)
                     {
-                        b2 = list2[b4].jar.item.quality;
-                        b3 = b4;
+                        b = list2[k].jar.item.quality;
+                        num2 = k;
                     }
                 }
-                if (b3 == byte.MaxValue)
+                if (num2 < 0)
                 {
                     break;
                 }
-                InventorySearch inventorySearch = list2[b3];
+                InventorySearch inventorySearch = list2[num2];
                 if (base.player.equipment.checkSelection(inventorySearch.page, inventorySearch.jar.x, inventorySearch.jar.y))
                 {
                     base.player.equipment.dequip();
                 }
-                for (byte b5 = 0; b5 < array.Length; b5 = (byte)(b5 + 1))
+                for (byte b2 = 0; b2 < array.Length; b2 = (byte)(b2 + 1))
                 {
-                    BlueprintSupply blueprintSupply2 = blueprint.supplies[b5];
-                    List<InventorySearch> list3 = array[b5];
-                    for (byte b6 = 0; b6 < blueprintSupply2.amount; b6 = (byte)(b6 + 1))
+                    BlueprintSupply blueprintSupply2 = blueprint.supplies[b2];
+                    List<InventorySearch> list3 = array[b2];
+                    for (byte b3 = 0; b3 < blueprintSupply2.amount; b3 = (byte)(b3 + 1))
                     {
-                        InventorySearch inventorySearch2 = list3[b6];
+                        InventorySearch inventorySearch2 = list3[b3];
                         if (base.player.equipment.checkSelection(inventorySearch2.page, inventorySearch2.jar.x, inventorySearch2.jar.y))
                         {
                             base.player.equipment.dequip();
@@ -285,43 +285,43 @@ public class PlayerCrafting : PlayerCaller
             else if (blueprint.type == EBlueprintType.AMMO)
             {
                 List<InventorySearch> list4 = base.player.inventory.search(itemAsset.id, findEmpty: true, findHealthy: true);
-                int num2 = -1;
-                byte b7 = byte.MaxValue;
-                for (byte b8 = 0; b8 < list4.Count; b8 = (byte)(b8 + 1))
+                int num3 = -1;
+                int num4 = -1;
+                for (int l = 0; l < list4.Count; l++)
                 {
-                    if (list4[b8].jar.item.amount > num2 && list4[b8].jar.item.amount < itemAsset.amount)
+                    if (list4[l].jar.item.amount > num3 && list4[l].jar.item.amount < itemAsset.amount)
                     {
-                        num2 = list4[b8].jar.item.amount;
-                        b7 = b8;
+                        num3 = list4[l].jar.item.amount;
+                        num4 = l;
                     }
                 }
-                if (b7 == byte.MaxValue)
+                if (num4 < 0)
                 {
                     break;
                 }
-                InventorySearch inventorySearch3 = list4[b7];
-                int num3 = itemAsset.amount - num2;
+                InventorySearch inventorySearch3 = list4[num4];
+                int num5 = itemAsset.amount - num3;
                 if (base.player.equipment.checkSelection(inventorySearch3.page, inventorySearch3.jar.x, inventorySearch3.jar.y))
                 {
                     base.player.equipment.dequip();
                 }
                 List<InventorySearch> list5 = array[0];
-                for (byte b9 = 0; b9 < list5.Count; b9 = (byte)(b9 + 1))
+                for (byte b4 = 0; b4 < list5.Count; b4 = (byte)(b4 + 1))
                 {
-                    InventorySearch inventorySearch4 = list5[b9];
+                    InventorySearch inventorySearch4 = list5[b4];
                     if (inventorySearch4.jar != inventorySearch3.jar)
                     {
                         if (base.player.equipment.checkSelection(inventorySearch4.page, inventorySearch4.jar.x, inventorySearch4.jar.y))
                         {
                             base.player.equipment.dequip();
                         }
-                        if (inventorySearch4.jar.item.amount > num3)
+                        if (inventorySearch4.jar.item.amount > num5)
                         {
-                            base.player.inventory.sendUpdateAmount(inventorySearch4.page, inventorySearch4.jar.x, inventorySearch4.jar.y, (byte)(inventorySearch4.jar.item.amount - num3));
-                            num3 = 0;
+                            base.player.inventory.sendUpdateAmount(inventorySearch4.page, inventorySearch4.jar.x, inventorySearch4.jar.y, (byte)(inventorySearch4.jar.item.amount - num5));
+                            num5 = 0;
                             break;
                         }
-                        num3 -= inventorySearch4.jar.item.amount;
+                        num5 -= inventorySearch4.jar.item.amount;
                         base.player.inventory.sendUpdateAmount(inventorySearch4.page, inventorySearch4.jar.x, inventorySearch4.jar.y, 0);
                         Asset asset = inventorySearch4.GetAsset();
                         if (asset == null || asset is ItemSupplyAsset || !(asset is ItemMagazineAsset itemMagazineAsset) || itemMagazineAsset.deleteEmpty)
@@ -332,24 +332,24 @@ public class PlayerCrafting : PlayerCaller
                                 base.player.equipment.sendSlot(inventorySearch4.page);
                             }
                         }
-                        if (num3 == 0)
+                        if (num5 == 0)
                         {
                             break;
                         }
                     }
                 }
-                base.player.inventory.sendUpdateAmount(inventorySearch3.page, inventorySearch3.jar.x, inventorySearch3.jar.y, (byte)(itemAsset.amount - num3));
+                base.player.inventory.sendUpdateAmount(inventorySearch3.page, inventorySearch3.jar.x, inventorySearch3.jar.y, (byte)(itemAsset.amount - num5));
                 SendRefreshCrafting.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection());
             }
             else
             {
-                for (byte b10 = 0; b10 < array.Length; b10 = (byte)(b10 + 1))
+                for (byte b5 = 0; b5 < array.Length; b5 = (byte)(b5 + 1))
                 {
-                    BlueprintSupply blueprintSupply3 = blueprint.supplies[b10];
-                    List<InventorySearch> list6 = array[b10];
-                    for (byte b11 = 0; b11 < blueprintSupply3.amount; b11 = (byte)(b11 + 1))
+                    BlueprintSupply blueprintSupply3 = blueprint.supplies[b5];
+                    List<InventorySearch> list6 = array[b5];
+                    for (byte b6 = 0; b6 < blueprintSupply3.amount; b6 = (byte)(b6 + 1))
                     {
-                        InventorySearch inventorySearch5 = list6[b11];
+                        InventorySearch inventorySearch5 = list6[b6];
                         if (base.player.equipment.checkSelection(inventorySearch5.page, inventorySearch5.jar.x, inventorySearch5.jar.y))
                         {
                             base.player.equipment.dequip();
@@ -361,11 +361,11 @@ public class PlayerCrafting : PlayerCaller
                         }
                     }
                 }
-                for (byte b12 = 0; b12 < blueprint.outputs.Length; b12 = (byte)(b12 + 1))
+                BlueprintOutput[] outputs = blueprint.outputs;
+                foreach (BlueprintOutput blueprintOutput in outputs)
                 {
-                    BlueprintOutput blueprintOutput = blueprint.outputs[b12];
                     ItemAsset itemAsset2 = Assets.find(EAssetType.ITEM, blueprintOutput.id) as ItemAsset;
-                    for (byte b13 = 0; b13 < blueprintOutput.amount; b13 = (byte)(b13 + 1))
+                    for (int n = 0; n < blueprintOutput.amount; n++)
                     {
                         if (blueprint.transferState)
                         {

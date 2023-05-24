@@ -14,8 +14,6 @@ public class StatusData
 
     public MapsStatusData Maps;
 
-    public StockpileStatusData Stockpile;
-
     public StatusData()
     {
         Achievements = new AchievementStatusData();
@@ -24,6 +22,5 @@ public class StatusData
         Menu = new MenuStatusData();
         News = new NewsStatusData();
         Maps = new MapsStatusData();
-        Stockpile = new StockpileStatusData();
     }
 }

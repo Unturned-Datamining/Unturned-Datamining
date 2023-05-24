@@ -104,9 +104,8 @@ public class PlayerDashboardCraftingUI
                 {
                     continue;
                 }
-                for (int i = 0; i < item.blueprints.Count; i++)
+                foreach (Blueprint blueprint in item.blueprints)
                 {
-                    Blueprint blueprint = item.blueprints[i];
                     if (flag2 ? DoesAnyItemNameContainString(blueprint, newItemNameFilter) : (blueprint.type == (EBlueprintType)newBlueprintTypeFilterIndex))
                     {
                         list.Add(blueprint);
@@ -124,132 +123,131 @@ public class PlayerDashboardCraftingUI
             list.Clear();
         }
         visibleBlueprints.Clear();
-        for (int j = 0; j < list.Count; j++)
+        foreach (Blueprint item2 in list)
         {
-            Blueprint blueprint2 = list[j];
-            if ((blueprint2.skill == EBlueprintSkill.REPAIR && blueprint2.level > Provider.modeConfigData.Gameplay.Repair_Level_Max) || (!string.IsNullOrEmpty(blueprint2.map) && !blueprint2.map.Equals(Level.info.name, StringComparison.InvariantCultureIgnoreCase)) || !blueprint2.areConditionsMet(Player.player) || Player.player.crafting.isBlueprintBlacklisted(blueprint2))
+            if ((item2.skill == EBlueprintSkill.REPAIR && item2.level > Provider.modeConfigData.Gameplay.Repair_Level_Max) || (!string.IsNullOrEmpty(item2.map) && !item2.map.Equals(Level.info.name, StringComparison.InvariantCultureIgnoreCase)) || !item2.areConditionsMet(Player.player) || Player.player.crafting.isBlueprintBlacklisted(item2))
             {
                 continue;
             }
-            ItemAsset sourceItem = blueprint2.sourceItem;
-            ushort num = 0;
+            ItemAsset sourceItem = item2.sourceItem;
+            int num = 0;
             bool flag3 = true;
-            blueprint2.hasSupplies = true;
-            blueprint2.hasSkills = blueprint2.skill == EBlueprintSkill.NONE || (blueprint2.skill == EBlueprintSkill.CRAFT && Player.player.skills.skills[2][1].level >= blueprint2.level) || (blueprint2.skill == EBlueprintSkill.COOK && flag && Player.player.skills.skills[2][3].level >= blueprint2.level) || (blueprint2.skill == EBlueprintSkill.REPAIR && Player.player.skills.skills[2][7].level >= blueprint2.level);
-            List<InventorySearch>[] array = new List<InventorySearch>[blueprint2.supplies.Length];
-            for (byte b = 0; b < blueprint2.supplies.Length; b = (byte)(b + 1))
+            item2.hasSupplies = true;
+            item2.hasSkills = item2.skill == EBlueprintSkill.NONE || (item2.skill == EBlueprintSkill.CRAFT && Player.player.skills.skills[2][1].level >= item2.level) || (item2.skill == EBlueprintSkill.COOK && flag && Player.player.skills.skills[2][3].level >= item2.level) || (item2.skill == EBlueprintSkill.REPAIR && Player.player.skills.skills[2][7].level >= item2.level);
+            List<InventorySearch>[] array = new List<InventorySearch>[item2.supplies.Length];
+            for (int i = 0; i < item2.supplies.Length; i++)
             {
-                BlueprintSupply blueprintSupply = blueprint2.supplies[b];
+                BlueprintSupply blueprintSupply = item2.supplies[i];
                 List<InventorySearch> list3 = Player.player.inventory.search(blueprintSupply.id, findEmpty: false, findHealthy: true);
                 ushort num2 = 0;
-                foreach (InventorySearch item2 in list3)
+                foreach (InventorySearch item3 in list3)
                 {
-                    num2 = (ushort)(num2 + item2.jar.item.amount);
+                    num2 = (ushort)(num2 + item3.jar.item.amount);
                 }
-                num = (ushort)(num + num2);
+                num += num2;
                 blueprintSupply.hasAmount = num2;
-                if (blueprint2.type == EBlueprintType.AMMO)
+                if (item2.type == EBlueprintType.AMMO)
                 {
                     if (blueprintSupply.hasAmount == 0)
                     {
-                        blueprint2.hasSupplies = false;
+                        item2.hasSupplies = false;
                         flag3 = false;
                     }
                 }
                 else if (blueprintSupply.hasAmount < blueprintSupply.amount)
                 {
-                    blueprint2.hasSupplies = false;
+                    item2.hasSupplies = false;
                     if (blueprintSupply.isCritical)
                     {
                         flag3 = false;
                     }
                 }
-                array[b] = list3;
+                array[i] = list3;
             }
-            if (blueprint2.tool != 0)
+            if (item2.tool != 0)
             {
-                InventorySearch inventorySearch = Player.player.inventory.has(blueprint2.tool);
-                blueprint2.tools = ((inventorySearch != null) ? ((ushort)1) : ((ushort)0));
-                blueprint2.hasTool = inventorySearch != null;
-                if (inventorySearch == null && blueprint2.toolCritical)
+                InventorySearch inventorySearch = Player.player.inventory.has(item2.tool);
+                item2.tools = ((inventorySearch != null) ? ((ushort)1) : ((ushort)0));
+                item2.hasTool = inventorySearch != null;
+                if (inventorySearch == null && item2.toolCritical)
                 {
                     flag3 = false;
                 }
             }
             else
             {
-                blueprint2.tools = 1;
-                blueprint2.hasTool = true;
+                item2.tools = 1;
+                item2.hasTool = true;
             }
-            if (blueprint2.type == EBlueprintType.REPAIR)
+            if (item2.type == EBlueprintType.REPAIR)
             {
                 List<InventorySearch> list4 = Player.player.inventory.search(sourceItem.id, findEmpty: false, findHealthy: false);
-                byte b2 = byte.MaxValue;
-                byte b3 = byte.MaxValue;
-                for (byte b4 = 0; b4 < list4.Count; b4 = (byte)(b4 + 1))
+                byte b = byte.MaxValue;
+                int num3 = -1;
+                for (int j = 0; j < list4.Count; j++)
                 {
-                    if (list4[b4].jar.item.quality < b2)
+                    if (list4[j].jar.item.quality < b)
                     {
-                        b2 = list4[b4].jar.item.quality;
-                        b3 = b4;
+                        b = list4[j].jar.item.quality;
+                        num3 = j;
                     }
                 }
-                if (b3 != byte.MaxValue)
+                if (num3 >= 0)
                 {
-                    blueprint2.items = list4[b3].jar.item.quality;
-                    num = (ushort)(num + 1);
+                    item2.items = list4[num3].jar.item.quality;
+                    num++;
                 }
                 else
                 {
-                    blueprint2.items = 0;
+                    item2.items = 0;
                 }
-                blueprint2.hasItem = b3 != byte.MaxValue;
+                item2.hasItem = num3 > 0;
             }
-            else if (blueprint2.type == EBlueprintType.AMMO)
+            else if (item2.type == EBlueprintType.AMMO)
             {
                 List<InventorySearch> list5 = Player.player.inventory.search(sourceItem.id, findEmpty: true, findHealthy: true);
-                int num3 = -1;
-                byte b5 = byte.MaxValue;
-                for (byte b6 = 0; b6 < list5.Count; b6 = (byte)(b6 + 1))
+                int num4 = -1;
+                int num5 = -1;
+                for (int k = 0; k < list5.Count; k++)
                 {
-                    if (list5[b6].jar.item.amount > num3 && list5[b6].jar.item.amount < sourceItem.amount)
+                    if (list5[k].jar.item.amount > num4 && list5[k].jar.item.amount < sourceItem.amount)
                     {
-                        num3 = list5[b6].jar.item.amount;
-                        b5 = b6;
+                        num4 = list5[k].jar.item.amount;
+                        num5 = k;
                     }
                 }
-                if (b5 != byte.MaxValue)
+                if (num5 >= 0)
                 {
-                    if (list5[b5].jar.item.id == blueprint2.supplies[0].id)
+                    if (list5[num5].jar.item.id == item2.supplies[0].id)
                     {
-                        blueprint2.supplies[0].hasAmount -= (ushort)num3;
+                        item2.supplies[0].hasAmount -= (ushort)num4;
                     }
-                    blueprint2.supplies[0].amount = (byte)(sourceItem.amount - num3);
-                    blueprint2.items = list5[b5].jar.item.amount;
-                    num = (ushort)(num + 1);
+                    item2.supplies[0].amount = (byte)(sourceItem.amount - num4);
+                    item2.items = list5[num5].jar.item.amount;
+                    num++;
                 }
                 else
                 {
-                    blueprint2.supplies[0].amount = 0;
-                    blueprint2.items = 0;
+                    item2.supplies[0].amount = 0;
+                    item2.items = 0;
                 }
-                blueprint2.hasItem = b5 != byte.MaxValue;
-                if (b5 == byte.MaxValue)
+                item2.hasItem = num5 >= 0;
+                if (num5 < 0)
                 {
-                    blueprint2.products = 0;
+                    item2.products = 0;
                 }
-                else if (blueprint2.items + blueprint2.supplies[0].hasAmount > sourceItem.amount)
+                else if (item2.items + item2.supplies[0].hasAmount > sourceItem.amount)
                 {
-                    blueprint2.products = sourceItem.amount;
+                    item2.products = sourceItem.amount;
                 }
                 else
                 {
-                    blueprint2.products = (ushort)(blueprint2.items + blueprint2.supplies[0].hasAmount);
+                    item2.products = (ushort)(item2.items + item2.supplies[0].hasAmount);
                 }
             }
             else
             {
-                blueprint2.hasItem = true;
+                item2.hasItem = true;
             }
             if (!(flag2 || flag3))
             {
@@ -257,30 +255,30 @@ public class PlayerDashboardCraftingUI
             }
             if (newHideUncraftable)
             {
-                bool ignoringBlueprint = Player.player.crafting.getIgnoringBlueprint(blueprint2);
-                if (blueprint2.hasSupplies && blueprint2.hasTool && blueprint2.hasItem && blueprint2.hasSkills && !ignoringBlueprint)
+                bool ignoringBlueprint = Player.player.crafting.getIgnoringBlueprint(item2);
+                if (item2.hasSupplies && item2.hasTool && item2.hasItem && item2.hasSkills && !ignoringBlueprint)
                 {
-                    visibleBlueprints.Add(blueprint2);
+                    visibleBlueprints.Add(item2);
                 }
             }
             else if (newFilteredBlueprintsOverride != null)
             {
-                if (blueprint2.hasSupplies && blueprint2.hasTool && blueprint2.hasItem && blueprint2.hasSkills)
+                if (item2.hasSupplies && item2.hasTool && item2.hasItem && item2.hasSkills)
                 {
-                    visibleBlueprints.Insert(0, blueprint2);
+                    visibleBlueprints.Insert(0, item2);
                 }
                 else
                 {
-                    visibleBlueprints.Add(blueprint2);
+                    visibleBlueprints.Add(item2);
                 }
             }
-            else if (blueprint2.hasSupplies && blueprint2.hasTool && blueprint2.hasItem && blueprint2.hasSkills)
+            else if (item2.hasSupplies && item2.hasTool && item2.hasItem && item2.hasSkills)
             {
-                visibleBlueprints.Insert(0, blueprint2);
+                visibleBlueprints.Insert(0, item2);
             }
-            else if (flag2 || ((blueprint2.type == EBlueprintType.AMMO || blueprint2.type == EBlueprintType.REPAIR || num != 0) && blueprint2.hasItem))
+            else if (flag2 || ((item2.type == EBlueprintType.AMMO || item2.type == EBlueprintType.REPAIR || num != 0) && item2.hasItem))
             {
-                visibleBlueprints.Add(blueprint2);
+                visibleBlueprints.Add(item2);
             }
         }
         filteredBlueprintsOverride = newFilteredBlueprintsOverride;

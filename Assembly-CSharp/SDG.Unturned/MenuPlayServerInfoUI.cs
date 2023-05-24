@@ -260,7 +260,7 @@ public class MenuPlayServerInfoUI
         new IPv4Address(serverInfo.ip);
         bool flag = !serverInfo.steamID.BPersistentGameServerAccount() && new IPv4Address(serverInfo.ip).IsWideAreaNetwork;
         flag &= serverInfo.infoSource != SteamServerInfo.EInfoSource.LanServerList;
-        flag &= !LiveConfig.Get().ShouldAllowJoiningInternetServersWithoutGslt;
+        flag &= !LiveConfig.Get().shouldAllowJoiningInternetServersWithoutGslt;
         if (flag)
         {
             UnturnedLog.info($"{serverInfo.name} is not logged in ({serverInfo.steamID}) and IP ({new IPv4Address(serverInfo.ip)}) is WAN");

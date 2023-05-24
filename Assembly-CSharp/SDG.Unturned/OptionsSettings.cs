@@ -20,9 +20,11 @@ public class OptionsSettings
 
     private const byte SAVEDATA_VERSION_ADDED_CROSSHAIR_AND_HITMARKER_ALPHA = 43;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 43;
+    private const byte SAVEDATA_VERSION_ADDED_HITMARKER_STYLE = 44;
 
-    public static readonly byte SAVEDATA_VERSION = 43;
+    private const byte SAVEDATA_VERSION_NEWEST = 44;
+
+    public static readonly byte SAVEDATA_VERSION = 44;
 
     public static readonly byte MIN_FOV = 60;
 
@@ -91,6 +93,8 @@ public class OptionsSettings
     public static float staticCrosshairSize;
 
     public static ECrosshairShape crosshairShape;
+
+    public static EHitmarkerStyle hitmarkerStyle;
 
     public static Color crosshairColor;
 
@@ -309,6 +313,7 @@ public class OptionsSettings
         useStaticCrosshair = false;
         staticCrosshairSize = 0.1f;
         crosshairShape = ECrosshairShape.Line;
+        hitmarkerStyle = EHitmarkerStyle.Animated;
         crosshairColor = new Color(1f, 1f, 1f, 0.5f);
         hitmarkerColor = new Color(1f, 1f, 1f, 0.5f);
         criticalHitmarkerColor = new Color(1f, 0f, 0f, 0.5f);
@@ -609,6 +614,14 @@ public class OptionsSettings
             hitmarkerColor.a = (float)(int)block.readByte() / 255f;
             criticalHitmarkerColor.a = (float)(int)block.readByte() / 255f;
         }
+        if (b < 44)
+        {
+            hitmarkerStyle = EHitmarkerStyle.Animated;
+        }
+        else
+        {
+            hitmarkerStyle = EHitmarkerStyle.Classic;
+        }
         if (!Provider.isPro)
         {
             backgroundColor = new Color(0.9f, 0.9f, 0.9f);
@@ -622,7 +635,7 @@ public class OptionsSettings
     public static void save()
     {
         Block block = new Block();
-        block.writeByte(43);
+        block.writeByte(44);
         block.writeBoolean(music);
         block.writeBoolean(splashscreen);
         block.writeBoolean(timer);
@@ -667,6 +680,7 @@ public class OptionsSettings
         block.writeByte(MathfEx.RoundAndClampToByte(crosshairColor.a * 255f));
         block.writeByte(MathfEx.RoundAndClampToByte(hitmarkerColor.a * 255f));
         block.writeByte(MathfEx.RoundAndClampToByte(criticalHitmarkerColor.a * 255f));
+        block.writeByte((byte)hitmarkerStyle);
         ReadWrite.writeBlock("/Options.dat", useCloud: true, block);
     }
 }

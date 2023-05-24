@@ -1,4 +1,4 @@
-namespace Unturned.LiveConfig;
+namespace SDG.Unturned;
 
 public enum EMapStatus
 {

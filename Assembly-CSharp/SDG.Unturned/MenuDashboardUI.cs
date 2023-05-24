@@ -7,7 +7,6 @@ using SDG.SteamworksProvider.Services.Store;
 using Steamworks;
 using UnityEngine;
 using UnityEngine.UI;
-using Unturned.LiveConfig;
 
 namespace SDG.Unturned;
 
@@ -178,17 +177,17 @@ public class MenuDashboardUI
 
     private static void onClickedAlertButton(ISleekElement button)
     {
-        global::Unturned.LiveConfig.LiveConfig liveConfig = LiveConfig.Get();
-        if (!string.IsNullOrEmpty(liveConfig.MainMenuAlert.Link))
+        LiveConfigData liveConfigData = LiveConfig.Get();
+        if (!string.IsNullOrEmpty(liveConfigData.mainMenuAlert.link))
         {
             if (!Provider.provider.browserService.canOpenBrowser)
             {
                 MenuUI.alert(MenuSurvivorsCharacterUI.localization.format("Overlay"));
                 return;
             }
-            Provider.provider.browserService.open(liveConfig.MainMenuAlert.Link);
+            Provider.provider.browserService.open(liveConfigData.mainMenuAlert.link);
         }
-        ConvenientSavedata.get().write("MainMenuAlertSeenId", liveConfig.MainMenuAlert.Id);
+        ConvenientSavedata.get().write("MainMenuAlertSeenId", liveConfigData.mainMenuAlert.id);
     }
 
     private static void filterContent(string header, string source, ref string contents, ref int lines)
@@ -524,9 +523,9 @@ public class MenuDashboardUI
         {
             gameObject.transform.SetAsFirstSibling();
         }
-        MainMenuWorkshopFeaturedLiveConfig featured = LiveConfig.Get().MainMenuWorkshop.Featured;
+        MainMenuWorkshopFeaturedLiveConfig featured = LiveConfig.Get().mainMenuWorkshop.featured;
         bool flag = featured.IsFeatured(pDetails.m_nPublishedFileId.m_PublishedFileId);
-        string key = ((!flag) ? "Featured_Workshop_Title" : (featured.Type switch
+        string key = ((!flag) ? "Featured_Workshop_Title" : (featured.type switch
         {
             EFeaturedWorkshopType.Curated => "Curated_Workshop_Title", 
             _ => "Highlighted_Workshop_Title", 
@@ -535,9 +534,9 @@ public class MenuDashboardUI
         Transform transform = gameObject.transform.Find("TitleLayout");
         transform.Find("Title").GetComponent<Text>().text = text;
         Transform transform2 = transform.Find("Status");
-        if (flag && featured.Status != 0)
+        if (flag && featured.status != 0)
         {
-            string text2 = Provider.localization.format((featured.Status == EMapStatus.Updated) ? "Updated" : "New");
+            string text2 = Provider.localization.format((featured.status == EMapStatus.Updated) ? "Updated" : "New");
             transform2.GetComponent<Text>().text = text2;
             transform2.gameObject.SetActive(value: true);
         }
@@ -566,7 +565,7 @@ public class MenuDashboardUI
         GameObject gameObject4 = UnityEngine.Object.Instantiate(templateReadMoreContent);
         gameObject4.name = "ReadMore_Content";
         gameObject4.GetComponent<RectTransform>().SetParent(gameObject.transform, worldPositionStays: true);
-        if (flag && featured.AutoExpandDescription)
+        if (flag && featured.autoExpandDescription)
         {
             gameObject4.SetActive(value: true);
         }
@@ -574,9 +573,9 @@ public class MenuDashboardUI
         try
         {
             string contents = pDetails.m_rgchDescription;
-            if (flag && !string.IsNullOrEmpty(featured.OverrideDescription))
+            if (flag && !string.IsNullOrEmpty(featured.overrideDescription))
             {
-                contents = featured.OverrideDescription;
+                contents = featured.overrideDescription;
             }
             insertContent(gameObject4, contents);
         }
@@ -604,7 +603,7 @@ public class MenuDashboardUI
         nPublishedFileId = pDetails.m_nPublishedFileId;
         component2.url = "http://steamcommunity.com/sharedfiles/filedetails/?id=" + nPublishedFileId.ToString();
         Transform transform5 = gameObject5.transform.Find("StockpileButton");
-        int[] associatedStockpileItems = featured.AssociatedStockpileItems;
+        int[] associatedStockpileItems = featured.associatedStockpileItems;
         if (flag && associatedStockpileItems != null && associatedStockpileItems.Length != 0)
         {
             List<int> list = new List<int>(associatedStockpileItems.Length);
@@ -645,11 +644,11 @@ public class MenuDashboardUI
         }
         Transform transform7 = gameObject5.transform.Find("NewsButton");
         Transform transform8 = transform7.Find("NewsLabel");
-        if (flag && !string.IsNullOrEmpty(featured.LinkURL))
+        if (flag && !string.IsNullOrEmpty(featured.linkURL))
         {
             transform7.gameObject.SetActive(value: true);
-            transform8.GetComponent<Text>().text = featured.LinkText;
-            transform7.GetComponent<WebLink>().url = featured.LinkURL;
+            transform8.GetComponent<Text>().text = featured.linkText;
+            transform7.GetComponent<WebLink>().url = featured.linkURL;
         }
         else
         {
@@ -703,8 +702,8 @@ public class MenuDashboardUI
             UnturnedLog.warn("Popular workshop items response was empty");
             return;
         }
-        MainMenuWorkshopPopularLiveConfig popular = LiveConfig.Get().MainMenuWorkshop.Popular;
-        int num = Mathf.Min((int)unNumResultsReturned, popular.CarouselItems);
+        MainMenuWorkshopPopularLiveConfig popular = LiveConfig.Get().mainMenuWorkshop.popular;
+        int num = Mathf.Min((int)unNumResultsReturned, popular.carouselItems);
         if (num > 0)
         {
             List<uint> list = new List<uint>(num);
@@ -806,9 +805,9 @@ public class MenuDashboardUI
 
     private static void queryPopularWorkshopItems()
     {
-        MainMenuWorkshopPopularLiveConfig popular = LiveConfig.Get().MainMenuWorkshop.Popular;
-        uint num = popular.TrendDays;
-        if (num < 1 || popular.CarouselItems < 1)
+        MainMenuWorkshopPopularLiveConfig popular = LiveConfig.Get().mainMenuWorkshop.popular;
+        uint num = popular.trendDays;
+        if (num < 1 || popular.carouselItems < 1)
         {
             UnturnedLog.warn("Not requesting popular workshop files for news feed");
             return;
@@ -895,16 +894,16 @@ public class MenuDashboardUI
 
     private static void PopulateAlertFromLiveConfig()
     {
-        global::Unturned.LiveConfig.LiveConfig liveConfig = LiveConfig.Get();
-        if (string.IsNullOrEmpty(liveConfig.MainMenuAlert.Header) || string.IsNullOrEmpty(liveConfig.MainMenuAlert.Body) || (ConvenientSavedata.get().read("MainMenuAlertSeenId", out long value) && value >= liveConfig.MainMenuAlert.Id))
+        LiveConfigData liveConfigData = LiveConfig.Get();
+        if (string.IsNullOrEmpty(liveConfigData.mainMenuAlert.header) || string.IsNullOrEmpty(liveConfigData.mainMenuAlert.body) || (ConvenientSavedata.get().read("MainMenuAlertSeenId", out long value) && value >= liveConfigData.mainMenuAlert.id))
         {
             return;
         }
         bool flag = false;
-        if (liveConfig.MainMenuAlert.UseTimeWindow && !flag)
+        if (liveConfigData.mainMenuAlert.useTimeWindow && !flag)
         {
             DateTime utcNow = DateTime.UtcNow;
-            if (utcNow < liveConfig.MainMenuAlert.StartTime || utcNow > liveConfig.MainMenuAlert.EndTime)
+            if (utcNow < liveConfigData.mainMenuAlert.startTime || utcNow > liveConfigData.mainMenuAlert.endTime)
             {
                 return;
             }
@@ -967,13 +966,13 @@ public class MenuDashboardUI
             canvas.transform.Find("View").GetComponent<RectTransform>().offsetMax -= new Vector2(0f, 70f);
             canvas.transform.Find("Scrollbar").GetComponent<RectTransform>().offsetMax -= new Vector2(0f, 70f);
         }
-        Color color = Palette.hex(liveConfig.MainMenuAlert.Color);
-        alertHeaderLabel.text = liveConfig.MainMenuAlert.Header;
+        Color color = Palette.hex(liveConfigData.mainMenuAlert.color);
+        alertHeaderLabel.text = liveConfigData.mainMenuAlert.header;
         alertHeaderLabel.textColor = color;
-        alertBodyLabel.text = liveConfig.MainMenuAlert.Body;
-        if (!string.IsNullOrEmpty(liveConfig.MainMenuAlert.IconName))
+        alertBodyLabel.text = liveConfigData.mainMenuAlert.body;
+        if (!string.IsNullOrEmpty(liveConfigData.mainMenuAlert.iconName))
         {
-            alertImage.texture = icons.load<Texture2D>(liveConfig.MainMenuAlert.IconName);
+            alertImage.texture = icons.load<Texture2D>(liveConfigData.mainMenuAlert.iconName);
             alertImage.color = color;
             alertImage.isVisible = true;
         }
@@ -981,18 +980,18 @@ public class MenuDashboardUI
         {
             alertImage.isVisible = false;
         }
-        if (!string.IsNullOrEmpty(liveConfig.MainMenuAlert.IconURL))
+        if (!string.IsNullOrEmpty(liveConfigData.mainMenuAlert.iconURL))
         {
-            alertWebImage.Refresh(liveConfig.MainMenuAlert.IconURL);
+            alertWebImage.Refresh(liveConfigData.mainMenuAlert.iconURL);
             alertWebImage.isVisible = true;
         }
         else
         {
             alertWebImage.isVisible = false;
         }
-        if (!string.IsNullOrEmpty(liveConfig.MainMenuAlert.Link))
+        if (!string.IsNullOrEmpty(liveConfigData.mainMenuAlert.link))
         {
-            alertLinkLabel.text = liveConfig.MainMenuAlert.Link;
+            alertLinkLabel.text = liveConfigData.mainMenuAlert.link;
             alertLinkLabel.textColor = color * 0.5f;
             alertLinkLabel.isVisible = true;
         }
@@ -1004,14 +1003,14 @@ public class MenuDashboardUI
 
     private static void UpdateWorkshopFromLiveConfig()
     {
-        MainMenuWorkshopLiveConfig mainMenuWorkshop = LiveConfig.Get().MainMenuWorkshop;
-        if (mainMenuWorkshop.AllowNews && SteamUser.BLoggedOn() && !hasBegunQueryingLiveConfigWorkshop)
+        MainMenuWorkshopLiveConfig mainMenuWorkshop = LiveConfig.Get().mainMenuWorkshop;
+        if (mainMenuWorkshop.allowNews && SteamUser.BLoggedOn() && !hasBegunQueryingLiveConfigWorkshop)
         {
             hasBegunQueryingLiveConfigWorkshop = true;
             ulong num = 0uL;
-            if (mainMenuWorkshop.Featured.FileIds != null && mainMenuWorkshop.Featured.FileIds.Length != 0)
+            if (mainMenuWorkshop.featured.fileIds != null && mainMenuWorkshop.featured.fileIds.Length != 0)
             {
-                num = mainMenuWorkshop.Featured.FileIds.RandomOrDefault();
+                num = mainMenuWorkshop.featured.fileIds.RandomOrDefault();
             }
             if (num != 0 && !LocalNews.wasWorkshopItemDismissed(num))
             {

@@ -218,30 +218,23 @@ internal abstract class ItemStore
         return -1;
     }
 
-    protected void CheckNewItems()
+    protected void RefreshNewItems()
     {
-        int[] new_Items = Provider.statusData.Stockpile.New_Items;
-        if (new_Items != null && new_Items.Length != 0)
+        int[] newItems = LiveConfig.Get().itemStore.newItems;
+        if (newItems != null && newItems.Length != 0)
         {
-            if (ItemStoreSavedata.IsNowWithinSpan())
+            List<int> list = new List<int>(newItems.Length);
+            int[] array = newItems;
+            foreach (int itemdefid in array)
             {
-                List<int> list = new List<int>(new_Items.Length);
-                int[] array = new_Items;
-                foreach (int itemdefid in array)
+                int num = FindListingIndex(itemdefid);
+                if (num >= 0)
                 {
-                    int num = FindListingIndex(itemdefid);
-                    if (num >= 0)
-                    {
-                        listings[num].isNew = true;
-                        list.Add(num);
-                    }
+                    listings[num].isNew = true;
+                    list.Add(num);
                 }
-                newListingIndices = list.ToArray();
             }
-            else
-            {
-                newListingIndices = null;
-            }
+            newListingIndices = list.ToArray();
         }
         else
         {
@@ -249,13 +242,13 @@ internal abstract class ItemStore
         }
     }
 
-    protected void CheckFeaturedItems()
+    protected void RefreshFeaturedItems()
     {
-        int[] featured_Items = Provider.statusData.Stockpile.Featured_Items;
-        if (featured_Items != null && featured_Items.Length != 0)
+        int[] featuredItems = LiveConfig.Get().itemStore.featuredItems;
+        if (featuredItems != null && featuredItems.Length != 0)
         {
-            List<int> list = new List<int>(featured_Items.Length);
-            int[] array = featured_Items;
+            List<int> list = new List<int>(featuredItems.Length);
+            int[] array = featuredItems;
             foreach (int itemdefid in array)
             {
                 int num = FindListingIndex(itemdefid);
@@ -272,13 +265,13 @@ internal abstract class ItemStore
         }
     }
 
-    protected void CheckExcludedItems()
+    protected void RefreshExcludedItems()
     {
-        int[] exclude_Items_From_Highlight = Provider.statusData.Stockpile.Exclude_Items_From_Highlight;
-        if (exclude_Items_From_Highlight != null && exclude_Items_From_Highlight.Length != 0)
+        int[] excludeItemsFromHighlight = LiveConfig.Get().itemStore.excludeItemsFromHighlight;
+        if (excludeItemsFromHighlight != null && excludeItemsFromHighlight.Length != 0)
         {
             List<int> list = new List<int>();
-            int[] array = exclude_Items_From_Highlight;
+            int[] array = excludeItemsFromHighlight;
             foreach (int itemdefid in array)
             {
                 int num = FindListingIndex(itemdefid);

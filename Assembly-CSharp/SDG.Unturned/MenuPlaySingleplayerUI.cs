@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Unturned.LiveConfig;
 
 namespace SDG.Unturned;
 
@@ -224,10 +223,10 @@ public class MenuPlaySingleplayerUI
             feedbackButton.isVisible = true;
             num += feedbackButton.sizeOffset_Y + 10;
         }
-        MainMenuWorkshopFeaturedLiveConfig featured = LiveConfig.Get().MainMenuWorkshop.Featured;
-        if (featured.IsFeatured(levelInfo.publishedFileId) && !string.IsNullOrEmpty(featured.LinkURL))
+        MainMenuWorkshopFeaturedLiveConfig featured = LiveConfig.Get().mainMenuWorkshop.featured;
+        if (featured.IsFeatured(levelInfo.publishedFileId) && !string.IsNullOrEmpty(featured.linkURL))
         {
-            newsButton.text = featured.LinkText;
+            newsButton.text = featured.linkText;
             newsButton.positionOffset_Y = num;
             newsButton.isVisible = true;
             _ = num + (newsButton.sizeOffset_Y + 10);
@@ -269,8 +268,8 @@ public class MenuPlaySingleplayerUI
         {
             curatedMapsButton.RemoveChild(curatedStatusLabel);
             curatedStatusLabel = null;
-            MainMenuWorkshopFeaturedLiveConfig featured = LiveConfig.Get().MainMenuWorkshop.Featured;
-            ConvenientSavedata.get().write("SingleplayerCuratedSeenId", featured.Id);
+            MainMenuWorkshopFeaturedLiveConfig featured = LiveConfig.Get().mainMenuWorkshop.featured;
+            ConvenientSavedata.get().write("SingleplayerCuratedSeenId", featured.id);
         }
         PlaySettings.singleplayerCategory = ESingleplayerMapCategory.CURATED;
         refreshLevels();
@@ -434,8 +433,8 @@ public class MenuPlaySingleplayerUI
 
     private static void onClickedNewsButton(ISleekElement button)
     {
-        MainMenuWorkshopFeaturedLiveConfig featured = LiveConfig.Get().MainMenuWorkshop.Featured;
-        Provider.provider.browserService.open(featured.LinkURL);
+        MainMenuWorkshopFeaturedLiveConfig featured = LiveConfig.Get().mainMenuWorkshop.featured;
+        Provider.provider.browserService.open(featured.linkURL);
     }
 
     private static void onClickedBackButton(ISleekElement button)
@@ -448,10 +447,10 @@ public class MenuPlaySingleplayerUI
     {
         if (!hasCreatedFeaturedMapLabel)
         {
-            MainMenuWorkshopFeaturedLiveConfig featured = LiveConfig.Get().MainMenuWorkshop.Featured;
-            if (featured.Status != 0 && featured.Type == EFeaturedWorkshopType.Curated && (!ConvenientSavedata.get().read("SingleplayerCuratedSeenId", out long value) || value < featured.Id))
+            MainMenuWorkshopFeaturedLiveConfig featured = LiveConfig.Get().mainMenuWorkshop.featured;
+            if (featured.status != 0 && featured.type == EFeaturedWorkshopType.Curated && (!ConvenientSavedata.get().read("SingleplayerCuratedSeenId", out long value) || value < featured.id))
             {
-                curatedStatusLabel = new SleekNew(featured.Status == EMapStatus.Updated);
+                curatedStatusLabel = new SleekNew(featured.status == EMapStatus.Updated);
                 curatedMapsButton.AddChild(curatedStatusLabel);
                 hasCreatedFeaturedMapLabel = true;
             }

@@ -543,12 +543,12 @@ public class ItemGunAsset : ItemWeaponAsset
             else
             {
                 float num6 = 0f;
-                Vector3 forward = Vector3.forward;
+                Vector2 right = Vector2.right;
                 for (int l = 0; l < ballisticSteps; l++)
                 {
-                    num6 += forward.y * ballisticTravel;
-                    forward.y -= value;
-                    forward.Normalize();
+                    num6 += right.y * ballisticTravel;
+                    right.y -= value;
+                    right.Normalize();
                 }
                 float num7 = (float)(int)ballisticSteps * 0.02f;
                 float num8 = 2f * num6 / (num7 * num7);

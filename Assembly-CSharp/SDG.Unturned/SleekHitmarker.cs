@@ -5,6 +5,10 @@ namespace SDG.Unturned;
 
 public class SleekHitmarker : SleekWrapper
 {
+    private const int IMAGE_SIZE = 16;
+
+    private const int HALF_IMAGE_SIZE = 8;
+
     private ISleekImage neImage;
 
     private ISleekImage seImage;
@@ -80,10 +84,42 @@ public class SleekHitmarker : SleekWrapper
         swImage.positionScale_Y = 0.5f + num7 * 0.1f;
         nwImage.positionScale_X = 0.5f + num8 * 0.1f;
         nwImage.positionScale_Y = 0.5f + num9 * 0.1f;
+        neImage.positionOffset_X = -8;
+        neImage.positionOffset_Y = -8;
+        seImage.positionOffset_X = -8;
+        seImage.positionOffset_Y = -8;
+        swImage.positionOffset_X = -8;
+        swImage.positionOffset_Y = -8;
+        nwImage.positionOffset_X = -8;
+        nwImage.positionOffset_Y = -8;
         neImage.lerpPositionScale(0.5f + num2 * 0.5f, 0.5f + num3 * 0.5f, ESleekLerp.LINEAR, PlayerUI.HIT_TIME);
         seImage.lerpPositionScale(0.5f + num4 * 0.5f, 0.5f + num5 * 0.5f, ESleekLerp.LINEAR, PlayerUI.HIT_TIME);
         swImage.lerpPositionScale(0.5f + num6 * 0.5f, 0.5f + num7 * 0.5f, ESleekLerp.LINEAR, PlayerUI.HIT_TIME);
         nwImage.lerpPositionScale(0.5f + num8 * 0.5f, 0.5f + num9 * 0.5f, ESleekLerp.LINEAR, PlayerUI.HIT_TIME);
+    }
+
+    public void ApplyClassicPositions()
+    {
+        neImage.angle = 0f;
+        seImage.angle = 90f;
+        swImage.angle = 180f;
+        nwImage.angle = 270f;
+        neImage.positionScale_X = 0.5f;
+        neImage.positionScale_Y = 0.5f;
+        seImage.positionScale_X = 0.5f;
+        seImage.positionScale_Y = 0.5f;
+        swImage.positionScale_X = 0.5f;
+        swImage.positionScale_Y = 0.5f;
+        nwImage.positionScale_X = 0.5f;
+        nwImage.positionScale_Y = 0.5f;
+        neImage.positionOffset_X = 8;
+        neImage.positionOffset_Y = -24;
+        seImage.positionOffset_X = 8;
+        seImage.positionOffset_Y = 8;
+        swImage.positionOffset_X = -24;
+        swImage.positionOffset_Y = 8;
+        nwImage.positionOffset_X = -24;
+        nwImage.positionOffset_Y = -24;
     }
 
     public SleekHitmarker()

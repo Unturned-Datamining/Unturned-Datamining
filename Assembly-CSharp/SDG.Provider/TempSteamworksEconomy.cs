@@ -486,7 +486,7 @@ public class TempSteamworksEconomy
 
     public void dropInventory()
     {
-        SteamItemDef_t steamItemDef_t = new SteamItemDef_t(LiveConfig.Get().PlaytimeGeneratorItemDefId);
+        SteamItemDef_t steamItemDef_t = new SteamItemDef_t(LiveConfig.Get().playtimeGeneratorItemDefId);
         if (steamItemDef_t.m_SteamItemDef > 0)
         {
             UnturnedLog.info($"Requesting playtime drop ({steamItemDef_t})");

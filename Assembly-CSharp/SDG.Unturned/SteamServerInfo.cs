@@ -144,7 +144,7 @@ public class SteamServerInfo
         this.hostBanFlags = hostBanFlags;
         if (hostBanFlags.HasFlag(EHostBanFlags.QueryPingWarning))
         {
-            sortingPing += LiveConfig.Get().QueryPingWarningOffsetMs;
+            sortingPing += LiveConfig.Get().queryPingWarningOffsetMs;
         }
     }
 
