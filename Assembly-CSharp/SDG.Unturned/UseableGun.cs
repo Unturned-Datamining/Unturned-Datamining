@@ -3588,22 +3588,25 @@ public class UseableGun : Useable
                 thirdMuzzleEmitter.transform.localPosition = Vector3.zero;
             }
         }
-        EffectAsset effectAsset = thirdAttachments?.magazineAsset?.FindTracerEffectAsset();
-        if (currentTracerEffectAsset != effectAsset)
+        if (thirdAttachments?.magazineAsset != null)
         {
-            if (tracerEmitter != null)
+            EffectAsset effectAsset = thirdAttachments.magazineAsset.FindTracerEffectAsset();
+            if (currentTracerEffectAsset != effectAsset)
             {
-                EffectManager.DestroyIntoPool(tracerEmitter.gameObject);
-                tracerEmitter = null;
-            }
-            currentTracerEffectAsset = effectAsset;
-            if (effectAsset != null)
-            {
-                Transform transform5 = EffectManager.InstantiateFromPool(effectAsset.effect).transform;
-                transform5.name = "Tracer";
-                transform5.localPosition = Vector3.zero;
-                transform5.localRotation = Quaternion.identity;
-                tracerEmitter = transform5.GetComponent<ParticleSystem>();
+                if (tracerEmitter != null)
+                {
+                    EffectManager.DestroyIntoPool(tracerEmitter.gameObject);
+                    tracerEmitter = null;
+                }
+                currentTracerEffectAsset = effectAsset;
+                if (effectAsset != null)
+                {
+                    Transform transform5 = EffectManager.InstantiateFromPool(effectAsset.effect).transform;
+                    transform5.name = "Tracer";
+                    transform5.localPosition = Vector3.zero;
+                    transform5.localRotation = Quaternion.identity;
+                    tracerEmitter = transform5.GetComponent<ParticleSystem>();
+                }
             }
         }
         if (base.channel.isOwner && firstAttachments.magazineModel != null)

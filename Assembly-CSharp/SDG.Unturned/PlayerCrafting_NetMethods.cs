@@ -88,7 +88,7 @@ public static class PlayerCrafting_NetMethods
             reader.ReadUInt16(out var value2);
             reader.ReadUInt8(out var value3);
             reader.ReadBit(out var value4);
-            playerCrafting.ReceiveCraft(value2, value3, value4);
+            playerCrafting.ReceiveCraft(in context, value2, value3, value4);
         }
     }
 

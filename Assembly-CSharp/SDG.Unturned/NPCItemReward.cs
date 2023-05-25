@@ -14,17 +14,17 @@ public class NPCItemReward : INPCReward
 
     public bool shouldAutoEquip { get; protected set; }
 
-    public ushort sight { get; protected set; }
+    public int sight { get; protected set; }
 
-    public ushort tactical { get; protected set; }
+    public int tactical { get; protected set; }
 
-    public ushort grip { get; protected set; }
+    public int grip { get; protected set; }
 
-    public ushort barrel { get; protected set; }
+    public int barrel { get; protected set; }
 
-    public ushort magazine { get; protected set; }
+    public int magazine { get; protected set; }
 
-    public byte ammo { get; protected set; }
+    public int ammo { get; protected set; }
 
     public EItemOrigin origin { get; protected set; }
 
@@ -47,10 +47,16 @@ public class NPCItemReward : INPCReward
         for (byte b = 0; b < amount; b = (byte)(b + 1))
         {
             Item item;
-            if (sight > 0 || tactical > 0 || grip > 0 || barrel > 0 || magazine > 0)
+            if (sight > -1 || tactical > -1 || grip > -1 || barrel > -1 || magazine > -1 || ammo > -1)
             {
                 ItemGunAsset itemGunAsset = itemAsset as ItemGunAsset;
-                byte[] state = itemGunAsset.getState((sight > 0) ? sight : itemGunAsset.sightID, (tactical > 0) ? tactical : itemGunAsset.tacticalID, (grip > 0) ? grip : itemGunAsset.gripID, (barrel > 0) ? barrel : itemGunAsset.barrelID, (magazine > 0) ? magazine : itemGunAsset.getMagazineID(), (ammo > 0) ? ammo : itemGunAsset.ammoMax);
+                ushort num = ((sight > -1) ? MathfEx.ClampToUShort(sight) : itemGunAsset.sightID);
+                ushort num2 = ((tactical > -1) ? MathfEx.ClampToUShort(tactical) : itemGunAsset.tacticalID);
+                ushort num3 = ((grip > -1) ? MathfEx.ClampToUShort(grip) : itemGunAsset.gripID);
+                ushort num4 = ((barrel > -1) ? MathfEx.ClampToUShort(barrel) : itemGunAsset.barrelID);
+                ushort num5 = ((magazine > -1) ? MathfEx.ClampToUShort(magazine) : itemGunAsset.getMagazineID());
+                byte b2 = ((ammo > -1) ? MathfEx.ClampToByte(ammo) : itemGunAsset.ammoMax);
+                byte[] state = itemGunAsset.getState(num, num2, num3, num4, num5, b2);
                 item = new Item(itemAsset.id, 1, 100, state);
             }
             else
@@ -122,7 +128,7 @@ public class NPCItemReward : INPCReward
         return sleekBox;
     }
 
-    public NPCItemReward(Guid newItemGuid, ushort newID, byte newAmount, bool newShouldAutoEquip, ushort newSight, ushort newTactical, ushort newGrip, ushort newBarrel, ushort newMagazine, byte newAmmo, EItemOrigin origin, string newText)
+    public NPCItemReward(Guid newItemGuid, ushort newID, byte newAmount, bool newShouldAutoEquip, int newSight, int newTactical, int newGrip, int newBarrel, int newMagazine, int newAmmo, EItemOrigin origin, string newText)
         : base(newText)
     {
         itemGuid = newItemGuid;

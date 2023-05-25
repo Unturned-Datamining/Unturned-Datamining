@@ -7,8 +7,6 @@ namespace SDG.Unturned;
 
 internal class SteamItemStore : ItemStore
 {
-    private bool hasPricingInformation;
-
     private CallResult<SteamInventoryRequestPricesResult_t> requestPricesCallResult;
 
     private CallResult<SteamInventoryStartPurchaseResult_t> startPurchaseCallResult;
@@ -218,13 +216,16 @@ internal class SteamItemStore : ItemStore
         }
         listings = list.ToArray();
         discountedListingIndices = list2.ToArray();
-        hasPricingInformation = true;
         int num2 = (base.HasDiscountedListings ? GetDiscountedListingIndices().Length : 0);
         int num3 = GetListings().Length;
         UnturnedLog.info($"Received Steam item store prices - Discounted: {num2} All: {num3}");
         if (LiveConfig.WasPopulated)
         {
             OnLiveConfigRefreshed();
+        }
+        else
+        {
+            LiveConfig.OnRefreshed += OnLiveConfigRefreshed;
         }
     }
 
@@ -259,16 +260,14 @@ internal class SteamItemStore : ItemStore
 
     private void OnLiveConfigRefreshed()
     {
-        if (hasPricingInformation)
-        {
-            RefreshNewItems();
-            RefreshFeaturedItems();
-            RefreshExcludedItems();
-            int num = (base.HasNewListings ? GetNewListingIndices().Length : 0);
-            int num2 = (base.HasFeaturedListings ? GetFeaturedListingIndices().Length : 0);
-            UnturnedLog.info($"Received Steam item store live config - New: {num} Featured: {num2}");
-            OnPricesReceived?.Invoke();
-        }
+        LiveConfig.OnRefreshed -= OnLiveConfigRefreshed;
+        RefreshNewItems();
+        RefreshFeaturedItems();
+        RefreshExcludedItems();
+        int num = (base.HasNewListings ? GetNewListingIndices().Length : 0);
+        int num2 = (base.HasFeaturedListings ? GetFeaturedListingIndices().Length : 0);
+        UnturnedLog.info($"Received Steam item store live config - New: {num} Featured: {num2}");
+        OnPricesReceived?.Invoke();
     }
 
     public SteamItemStore()
@@ -276,6 +275,5 @@ internal class SteamItemStore : ItemStore
         requestPricesCallResult = CallResult<SteamInventoryRequestPricesResult_t>.Create(OnRequestPricesResultReady);
         startPurchaseCallResult = CallResult<SteamInventoryStartPurchaseResult_t>.Create(OnStartPurchaseResultReady);
         microTxnAuthCallback = Callback<MicroTxnAuthorizationResponse_t>.Create(OnMicroTxnAuthorizationResponse);
-        LiveConfig.OnRefreshed += OnLiveConfigRefreshed;
     }
 }

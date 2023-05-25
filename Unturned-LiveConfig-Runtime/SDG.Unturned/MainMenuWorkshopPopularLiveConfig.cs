@@ -1,6 +1,6 @@
 namespace SDG.Unturned;
 
-public struct MainMenuWorkshopPopularLiveConfig
+public class MainMenuWorkshopPopularLiveConfig
 {
     public uint trendDays;
 

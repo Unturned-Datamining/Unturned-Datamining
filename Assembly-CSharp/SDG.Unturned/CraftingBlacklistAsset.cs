@@ -40,10 +40,16 @@ public class CraftingBlacklistAsset : Asset
 
     protected List<ushort> resolvedOutputItems;
 
+    protected bool allowCoreBlueprints = true;
+
     protected List<BlacklistedBlueprint> blueprints = new List<BlacklistedBlueprint>();
 
     public bool isBlueprintBlacklisted(Blueprint blueprint)
     {
+        if (!allowCoreBlueprints && blueprint.sourceItem.origin == Assets.coreOrigin)
+        {
+            return true;
+        }
         foreach (BlacklistedBlueprint blueprint2 in blueprints)
         {
             if (blueprint2.index == blueprint.id)
@@ -128,5 +134,6 @@ public class CraftingBlacklistAsset : Asset
         {
             blueprints = node.ParseListOfStructs<BlacklistedBlueprint>();
         }
+        allowCoreBlueprints = data.ParseBool("Allow_Core_Blueprints", defaultValue: true);
     }
 }

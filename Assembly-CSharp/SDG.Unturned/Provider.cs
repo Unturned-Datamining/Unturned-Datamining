@@ -1968,6 +1968,7 @@ public class Provider : MonoBehaviour
         countShutdownTimer = timer;
         lastTimerMessage = Time.realtimeSinceStartup;
         shutdownMessage = explanation;
+        UnturnedLog.info($"Set server shutdown timer to {timer}s (client message: {explanation})");
     }
 
     public static void RequestDisconnect(string reason)
@@ -3997,6 +3998,8 @@ public class Provider : MonoBehaviour
     private IEnumerator QuitAfterDelay(float seconds)
     {
         yield return new WaitForSeconds(seconds);
+        Application.quitting -= onApplicationQuitting;
+        onApplicationQuitting();
         QuitGame("server shutdown");
     }
 
@@ -4181,6 +4184,7 @@ public class Provider : MonoBehaviour
             {
                 return;
             }
+            UnturnedLog.info("Server shutdown timer reached zero");
             didServerShutdownTimerReachZero = true;
             countShutdownTimer = -1;
             broadcastCommenceShutdown();
@@ -4196,8 +4200,12 @@ public class Provider : MonoBehaviour
             {
                 SteamGameServer.EndAuthSession(client.playerID.steamID);
             }
-            float seconds = (flag ? 1f : 0f);
-            StartCoroutine(QuitAfterDelay(seconds));
+            float num = (flag ? 1f : 0f);
+            if (flag)
+            {
+                UnturnedLog.info($"Delaying server quit by {num}s to ensure shutdown message reaches clients");
+            }
+            StartCoroutine(QuitAfterDelay(num));
         }
     }
 

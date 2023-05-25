@@ -481,7 +481,7 @@ public class NPCTool
                 data.ParseGuidOrLegacyId(key3, out var guid, out var legacyId);
                 bool newShouldAutoEquip = data.ParseBool(prefix + i + "_Auto_Equip");
                 EItemOrigin origin = data.ParseEnum(prefix + i + "_Origin", EItemOrigin.CRAFT);
-                rewards[i] = new NPCItemReward(guid, legacyId, data.ParseUInt8(prefix + i + "_Amount", 0), newShouldAutoEquip, data.ParseUInt16(prefix + i + "_Sight", 0), data.ParseUInt16(prefix + i + "_Tactical", 0), data.ParseUInt16(prefix + i + "_Grip", 0), data.ParseUInt16(prefix + i + "_Barrel", 0), data.ParseUInt16(prefix + i + "_Magazine", 0), data.ParseUInt8(prefix + i + "_Ammo", 0), origin, desc);
+                rewards[i] = new NPCItemReward(guid, legacyId, data.ParseUInt8(prefix + i + "_Amount", 0), newShouldAutoEquip, data.ParseInt32(prefix + i + "_Sight", -1), data.ParseInt32(prefix + i + "_Tactical", -1), data.ParseInt32(prefix + i + "_Grip", -1), data.ParseInt32(prefix + i + "_Barrel", -1), data.ParseInt32(prefix + i + "_Magazine", -1), data.ParseInt32(prefix + i + "_Ammo", -1), origin, desc);
                 break;
             }
             case ENPCRewardType.ITEM_RANDOM:

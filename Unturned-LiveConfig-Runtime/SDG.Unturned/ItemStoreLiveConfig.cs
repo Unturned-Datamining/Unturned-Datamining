@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace SDG.Unturned;
 
-public struct ItemStoreLiveConfig
+public class ItemStoreLiveConfig
 {
     public long promotionId;
 

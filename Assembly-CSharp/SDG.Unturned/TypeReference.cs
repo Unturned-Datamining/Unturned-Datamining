@@ -14,7 +14,7 @@ public struct TypeReference<T> : ITypeReference, IFormattedFileReadable, IFormat
     {
         get
         {
-            if (!string.IsNullOrEmpty(assemblyQualifiedName))
+            if (!string.IsNullOrEmpty(assemblyQualifiedName) && assemblyQualifiedName.IndexOfAny(DatValue.INVALID_TYPE_CHARS) < 0)
             {
                 return Type.GetType(assemblyQualifiedName);
             }

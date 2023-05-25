@@ -2,7 +2,7 @@ using System;
 
 namespace SDG.Unturned;
 
-public struct MainMenuAlert
+public class MainMenuAlert
 {
     public long id;
 

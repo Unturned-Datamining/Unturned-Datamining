@@ -654,15 +654,15 @@ public class PlayerEquipment : PlayerCaller
     {
         if (firstMythic != null)
         {
-            firstMythic.isMythic = base.player.clothing.isSkinned && base.player.clothing.isMythic;
+            firstMythic.IsMythicalEffectEnabled = base.player.clothing.isSkinned && base.player.clothing.isMythic;
         }
         if (thirdMythic != null)
         {
-            thirdMythic.isMythic = base.player.clothing.isSkinned && base.player.clothing.isMythic;
+            thirdMythic.IsMythicalEffectEnabled = base.player.clothing.isSkinned && base.player.clothing.isMythic;
         }
         if (characterMythic != null)
         {
-            characterMythic.isMythic = base.player.clothing.isSkinned && base.player.clothing.isMythic;
+            characterMythic.IsMythicalEffectEnabled = base.player.clothing.isSkinned && base.player.clothing.isMythic;
         }
         if (thirdSlots == null)
         {
@@ -672,11 +672,11 @@ public class PlayerEquipment : PlayerCaller
         {
             if (thirdMythics[b] != null)
             {
-                thirdMythics[b].isMythic = base.player.clothing.isSkinned && base.player.clothing.isMythic;
+                thirdMythics[b].IsMythicalEffectEnabled = base.player.clothing.isSkinned && base.player.clothing.isMythic;
             }
             if (characterSlots != null && characterMythics[b] != null)
             {
-                characterMythics[b].isMythic = base.player.clothing.isSkinned && base.player.clothing.isMythic;
+                characterMythics[b].IsMythicalEffectEnabled = base.player.clothing.isSkinned && base.player.clothing.isMythic;
             }
         }
     }
@@ -794,7 +794,7 @@ public class PlayerEquipment : PlayerCaller
         applySkinVisual();
         if (thirdMythics[slot] != null)
         {
-            thirdMythics[slot].isMythic = base.player.clothing.isSkinned && base.player.clothing.isMythic;
+            thirdMythics[slot].IsMythicalEffectEnabled = base.player.clothing.isSkinned && base.player.clothing.isMythic;
         }
         if (characterSlots == null)
         {
@@ -849,7 +849,7 @@ public class PlayerEquipment : PlayerCaller
         applySkinVisual();
         if (characterMythics[slot] != null)
         {
-            characterMythics[slot].isMythic = base.player.clothing.isSkinned && base.player.clothing.isMythic;
+            characterMythics[slot].IsMythicalEffectEnabled = base.player.clothing.isSkinned && base.player.clothing.isMythic;
         }
     }
 
@@ -1038,7 +1038,7 @@ public class PlayerEquipment : PlayerCaller
         applySkinVisual();
         if (characterMythic != null)
         {
-            characterMythic.isMythic = base.player.clothing.isSkinned && base.player.clothing.isMythic;
+            characterMythic.IsMythicalEffectEnabled = base.player.clothing.isSkinned && base.player.clothing.isMythic;
         }
     }
 
@@ -1191,7 +1191,7 @@ public class PlayerEquipment : PlayerCaller
             applySkinVisual();
             if (firstMythic != null)
             {
-                firstMythic.isMythic = base.player.clothing.isSkinned && base.player.clothing.isMythic;
+                firstMythic.IsMythicalEffectEnabled = base.player.clothing.isSkinned && base.player.clothing.isMythic;
             }
             _characterModel = ItemTool.getItem(quality, state, viewmodel: false, asset, skinAsset, tempCharacterMesh, out tempCharacterMaterial, getUseableStatTrackerValue, prefabOverride);
             fixStatTrackerHookScale(_characterModel);
@@ -1222,7 +1222,7 @@ public class PlayerEquipment : PlayerCaller
             applySkinVisual();
             if (characterMythic != null)
             {
-                characterMythic.isMythic = base.player.clothing.isSkinned && base.player.clothing.isMythic;
+                characterMythic.IsMythicalEffectEnabled = base.player.clothing.isSkinned && base.player.clothing.isMythic;
             }
         }
         _thirdModel = ItemTool.InstantiateItem(quality, state, viewmodel: false, asset, skinAsset, shouldDestroyColliders: true, tempThirdMesh, out tempThirdMaterial, getUseableStatTrackerValue, prefabOverride);
@@ -1257,7 +1257,7 @@ public class PlayerEquipment : PlayerCaller
         applySkinVisual();
         if (thirdMythic != null)
         {
-            thirdMythic.isMythic = base.player.clothing.isSkinned && base.player.clothing.isMythic;
+            thirdMythic.IsMythicalEffectEnabled = base.player.clothing.isSkinned && base.player.clothing.isMythic;
         }
         if (asset.animations != null && asset.animations.Length != 0)
         {

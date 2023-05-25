@@ -163,11 +163,10 @@ public class PlayerCrafting : PlayerCaller
     [Obsolete]
     public void askCraft(CSteamID steamID, ushort id, byte index, bool force)
     {
-        ReceiveCraft(id, index, force);
     }
 
-    [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 10, legacyName = "askCraft")]
-    public void ReceiveCraft(ushort id, byte index, bool force)
+    [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 10)]
+    public void ReceiveCraft(in ServerInvocationContext context, ushort id, byte index, bool force)
     {
         if ((Level.info != null && Level.info.configData != null && !Level.info.configData.Allow_Crafting) || base.player.equipment.isBusy)
         {
@@ -347,6 +346,10 @@ public class PlayerCrafting : PlayerCaller
                 {
                     BlueprintSupply blueprintSupply3 = blueprint.supplies[b5];
                     List<InventorySearch> list6 = array[b5];
+                    if (list6.Count < blueprintSupply3.amount)
+                    {
+                        return;
+                    }
                     for (byte b6 = 0; b6 < blueprintSupply3.amount; b6 = (byte)(b6 + 1))
                     {
                         InventorySearch inventorySearch5 = list6[b6];

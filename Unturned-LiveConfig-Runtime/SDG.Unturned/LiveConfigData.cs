@@ -2,11 +2,11 @@ namespace SDG.Unturned;
 
 public class LiveConfigData
 {
-    public MainMenuAlert mainMenuAlert;
+    public MainMenuAlert mainMenuAlert = new MainMenuAlert();
 
-    public MainMenuWorkshopLiveConfig mainMenuWorkshop;
+    public MainMenuWorkshopLiveConfig mainMenuWorkshop = new MainMenuWorkshopLiveConfig();
 
-    public ItemStoreLiveConfig itemStore;
+    public ItemStoreLiveConfig itemStore = new ItemStoreLiveConfig();
 
     public bool shouldAllowJoiningInternetServersWithoutGslt;
 
@@ -18,17 +18,14 @@ public class LiveConfigData
 
     public void Parse(DatDictionary data)
     {
-        mainMenuAlert = default(MainMenuAlert);
         if (data.TryGetDictionary("MainMenuAlert", out var node))
         {
             mainMenuAlert.Parse(node);
         }
-        mainMenuWorkshop = default(MainMenuWorkshopLiveConfig);
         if (data.TryGetDictionary("MainMenuWorkshop", out var node2))
         {
             mainMenuWorkshop.Parse(node2);
         }
-        itemStore = default(ItemStoreLiveConfig);
         if (data.TryGetDictionary("ItemStore", out var node3))
         {
             itemStore.Parse(node3);

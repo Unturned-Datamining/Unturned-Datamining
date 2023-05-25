@@ -72,6 +72,7 @@ public class SaveManager : SteamCaller
     {
         if (Provider.isServer && Level.isLoaded)
         {
+            UnturnedLog.info("Saving during server shutdown");
             save();
         }
     }

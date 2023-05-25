@@ -80,6 +80,8 @@ public class Flag
 
     public void bakeNavigation()
     {
+        VolumeManager<CullingVolume, CullingVolumeManager>.Get().ImmediatelySyncAllVolumes();
+        LevelObjects.ImmediatelySyncRegionalVisibility();
         float x = MIN_SIZE + width * (MAX_SIZE - MIN_SIZE);
         float z = MIN_SIZE + height * (MAX_SIZE - MIN_SIZE);
         if (Level.info.configData.Use_Legacy_Water && LevelLighting.seaLevel < 0.99f && !Level.info.configData.Allow_Underwater_Features)

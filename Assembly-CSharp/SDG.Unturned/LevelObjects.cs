@@ -881,6 +881,30 @@ public class LevelObjects : MonoBehaviour
         isHierarchyReady = true;
     }
 
+    internal static void ImmediatelySyncRegionalVisibility()
+    {
+        if (!isRegionalVisibilityDirty)
+        {
+            return;
+        }
+        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        {
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            {
+                if (loads[b, b2] != -1)
+                {
+                    bool isActiveInRegion = regions[b, b2];
+                    foreach (LevelObject item in objects[b, b2])
+                    {
+                        item.SetIsActiveInRegion(isActiveInRegion);
+                    }
+                    loads[b, b2] = -1;
+                }
+            }
+        }
+        isRegionalVisibilityDirty = false;
+    }
+
     private void tickRegionalVisibility()
     {
         bool flag = true;

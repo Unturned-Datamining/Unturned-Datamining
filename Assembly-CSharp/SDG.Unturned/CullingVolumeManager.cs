@@ -42,6 +42,12 @@ public class CullingVolumeManager : VolumeManager<CullingVolume, CullingVolumeMa
         TimeUtility.updated += OnUpdateCullingVolumes;
     }
 
+    internal void ImmediatelySyncAllVolumes()
+    {
+        wasViewTeleported = true;
+        OnUpdateCullingVolumes();
+    }
+
     internal void ClearOverlappingObjects()
     {
         foreach (CullingVolume allVolume in allVolumes)

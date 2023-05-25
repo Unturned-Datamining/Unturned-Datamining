@@ -6,20 +6,20 @@ public class MythicLocker : MonoBehaviour
 {
     public MythicLockee system;
 
-    private bool _isMythic = true;
+    private bool _isMythicalEffectEnabled = true;
 
-    public bool isMythic
+    public bool IsMythicalEffectEnabled
     {
         get
         {
-            return _isMythic;
+            return _isMythicalEffectEnabled;
         }
         set
         {
-            _isMythic = value;
+            _isMythicalEffectEnabled = value;
             if (base.gameObject.activeInHierarchy)
             {
-                system.gameObject.SetActive(isMythic);
+                system.gameObject.SetActive(IsMythicalEffectEnabled);
             }
         }
     }
@@ -46,7 +46,7 @@ public class MythicLocker : MonoBehaviour
     {
         if (!(system == null))
         {
-            system.gameObject.SetActive(isMythic);
+            system.gameObject.SetActive(IsMythicalEffectEnabled);
         }
     }
 

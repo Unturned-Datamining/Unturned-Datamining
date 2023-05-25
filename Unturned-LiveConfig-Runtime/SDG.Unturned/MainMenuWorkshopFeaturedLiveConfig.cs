@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace SDG.Unturned;
 
-public struct MainMenuWorkshopFeaturedLiveConfig
+public class MainMenuWorkshopFeaturedLiveConfig
 {
     public long id;
 

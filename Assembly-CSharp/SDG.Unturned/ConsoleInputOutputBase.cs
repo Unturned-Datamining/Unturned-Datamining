@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Threading;
 
 namespace SDG.Unturned;
 
@@ -17,7 +18,7 @@ public class ConsoleInputOutputBase : ICommandInputOutput
 
     public bool shouldProxyRedirectedOutput;
 
-    protected bool wantsToTerminate;
+    protected int wantsToTerminate;
 
     protected bool isTerminating;
 
@@ -74,7 +75,7 @@ public class ConsoleInputOutputBase : ICommandInputOutput
 
     public virtual void update()
     {
-        if (wantsToTerminate && !isTerminating)
+        if (wantsToTerminate > 0 && !isTerminating)
         {
             isTerminating = true;
             handleTermination();
@@ -124,7 +125,7 @@ public class ConsoleInputOutputBase : ICommandInputOutput
     protected virtual void handleCancelEvent(object sender, ConsoleCancelEventArgs args)
     {
         args.Cancel = true;
-        wantsToTerminate = true;
+        Interlocked.Exchange(ref wantsToTerminate, 1);
     }
 
     protected virtual void handleTermination()

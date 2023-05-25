@@ -8,6 +8,8 @@ public sealed class DatValue : IDatNode
 {
     public string value;
 
+    public static readonly char[] INVALID_TYPE_CHARS = new char[3] { '\\', ':', '/' };
+
     public EDatNodeType NodeType => EDatNodeType.Value;
 
     public DatValue()
@@ -299,6 +301,10 @@ public sealed class DatValue : IDatNode
 
     public Type ParseType(Type defaultValue = null)
     {
+        if (string.IsNullOrEmpty(value) || value.IndexOfAny(INVALID_TYPE_CHARS) >= 0)
+        {
+            return defaultValue;
+        }
         Type type = Type.GetType(value, throwOnError: false, ignoreCase: true);
         if (!(type != null))
         {

@@ -6,15 +6,15 @@ public class MythicLockee : MonoBehaviour
 {
     public MythicLocker locker;
 
-    public bool isMythic
+    public bool IsMythicalEffectEnabled
     {
         get
         {
-            return locker.isMythic;
+            return locker.IsMythicalEffectEnabled;
         }
         set
         {
-            locker.isMythic = value;
+            locker.IsMythicalEffectEnabled = value;
         }
     }
 }
