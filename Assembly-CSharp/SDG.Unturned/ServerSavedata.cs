@@ -2,6 +2,18 @@ namespace SDG.Unturned;
 
 public class ServerSavedata
 {
+    public static string directoryName
+    {
+        get
+        {
+            if (Dedicator.IsDedicatedServer)
+            {
+                return "Servers";
+            }
+            return "Worlds";
+        }
+    }
+
     public static string directory
     {
         get

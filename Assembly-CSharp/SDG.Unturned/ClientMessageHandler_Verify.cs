@@ -10,7 +10,9 @@ internal static class ClientMessageHandler_Verify
     internal static void ReadMessage(NetPakReader reader)
     {
         Provider.isWaitingForConnectResponse = false;
-        byte[] ticket = Provider.openTicket();
+        SteamNetworkingIdentity serverIdentity = default(SteamNetworkingIdentity);
+        serverIdentity.SetSteamID(Provider.server);
+        byte[] ticket = Provider.openTicket(serverIdentity);
         if (ticket == null)
         {
             Provider._connectionFailureInfo = ESteamConnectionFailureInfo.AUTH_EMPTY;

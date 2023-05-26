@@ -22,9 +22,11 @@ public class OptionsSettings
 
     private const byte SAVEDATA_VERSION_ADDED_HITMARKER_STYLE = 44;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 44;
+    private const byte SAVEDATA_VERSION_ADDED_HITMARKER_STYLE_FIX = 45;
 
-    public static readonly byte SAVEDATA_VERSION = 44;
+    private const byte SAVEDATA_VERSION_NEWEST = 45;
+
+    public static readonly byte SAVEDATA_VERSION = 45;
 
     public static readonly byte MIN_FOV = 60;
 
@@ -614,13 +616,13 @@ public class OptionsSettings
             hitmarkerColor.a = (float)(int)block.readByte() / 255f;
             criticalHitmarkerColor.a = (float)(int)block.readByte() / 255f;
         }
-        if (b < 44)
+        if (b < 45)
         {
             hitmarkerStyle = EHitmarkerStyle.Animated;
         }
         else
         {
-            hitmarkerStyle = EHitmarkerStyle.Classic;
+            hitmarkerStyle = (EHitmarkerStyle)block.readByte();
         }
         if (!Provider.isPro)
         {
@@ -635,7 +637,7 @@ public class OptionsSettings
     public static void save()
     {
         Block block = new Block();
-        block.writeByte(44);
+        block.writeByte(45);
         block.writeBoolean(music);
         block.writeBoolean(splashscreen);
         block.writeBoolean(timer);

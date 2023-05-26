@@ -859,7 +859,7 @@ public class MenuSurvivorsClothingUI
         if (HolidayUtil.getActiveHoliday() == ENPCHoliday.PRIDE_MONTH)
         {
             econCraftOptions.Add(new EconCraftOption("Craft_ProgressPridePin", 1333, 5));
-            econCraftOptions.Add(new EconCraftOption("Craft_ProgressPrideJersy", 1334, 5));
+            econCraftOptions.Add(new EconCraftOption("Craft_ProgressPrideJersey", 1334, 5));
         }
         craftingButtons = new ISleekButton[econCraftOptions.Count];
         for (int j = 0; j < craftingButtons.Length; j++)

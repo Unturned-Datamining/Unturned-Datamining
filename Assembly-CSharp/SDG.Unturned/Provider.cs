@@ -3968,18 +3968,22 @@ public class Provider : MonoBehaviour
         pings[0] = value;
     }
 
-    internal static byte[] openTicket()
+    internal static byte[] openTicket(SteamNetworkingIdentity serverIdentity)
     {
         if (ticketHandle != HAuthTicket.Invalid)
         {
             return null;
         }
         byte[] array = new byte[1024];
-        ticketHandle = SteamUser.GetAuthSessionTicket(array, array.Length, out var pcbTicket);
+        serverIdentity.ToString(out var buf);
+        UnturnedLog.info("Calling GetAuthSessionTicket with identity " + buf);
+        ticketHandle = SteamUser.GetAuthSessionTicket(array, array.Length, out var pcbTicket, ref serverIdentity);
         if (pcbTicket == 0)
         {
+            UnturnedLog.info("GetAuthSessionTicket returned size zero");
             return null;
         }
+        UnturnedLog.info($"GetAuthSessionTicket ticket handle is valid: {ticketHandle != HAuthTicket.Invalid} (size: {pcbTicket})");
         byte[] array2 = new byte[pcbTicket];
         Buffer.BlockCopy(array, 0, array2, 0, (int)pcbTicket);
         return array2;

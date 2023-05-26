@@ -556,10 +556,6 @@ public class Assets : MonoBehaviour
                 UnturnedLog.info("Found duplicate of master bundle '{0}' originally in '{1}' at '{2}'", mb.config.assetBundleName, masterBundleConfig.directoryPath, mb.config.directoryPath);
                 return null;
             }
-            if (mb.config.origin == coreOrigin)
-            {
-                coreMasterBundle = mb.config;
-            }
             return mb.config;
         }
         catch (Exception e)
@@ -1059,12 +1055,12 @@ public class Assets : MonoBehaviour
         {
             AddSearchLocation(path, legacyServerSharedOrigin);
         }
-        string path2 = Path.Combine(ReadWrite.PATH, ServerSavedata.directory, Provider.serverID, "Workshop", "Content");
+        string path2 = Path.Combine(ReadWrite.PATH, ServerSavedata.directoryName, Provider.serverID, "Workshop", "Content");
         if (ReadWrite.folderExists(path2, usePath: false))
         {
             AddSearchLocation(path2, legacyPerServerOrigin);
         }
-        string path3 = Path.Combine(ReadWrite.PATH, ServerSavedata.directory, Provider.serverID, "Bundles");
+        string path3 = Path.Combine(ReadWrite.PATH, ServerSavedata.directoryName, Provider.serverID, "Bundles");
         if (ReadWrite.folderExists(path3, usePath: false))
         {
             AddSearchLocation(path3, legacyPerServerOrigin);
@@ -1166,6 +1162,10 @@ public class Assets : MonoBehaviour
                         loadingStats.totalMasterBundlesLoaded++;
                         if (masterBundleConfig2.assetBundle != null)
                         {
+                            if (masterBundleConfig2.origin == coreOrigin)
+                            {
+                                coreMasterBundle = masterBundleConfig2;
+                            }
                             allMasterBundles.Add(masterBundleConfig2);
                         }
                     }

@@ -693,11 +693,30 @@ public class PlayerMovement : PlayerCaller
         OneShotAudioDefinition oneShotAudioDefinition;
         if (base.player.stance.stance == EPlayerStance.SWIM)
         {
-            oneShotAudioDefinition = ((!base.player.stance.areEyesUnderwater) ? Assets.coreMasterBundle.assetBundle.LoadAsset<OneShotAudioDefinition>("Assets/CoreMasterBundle/Effects/Physics/Swim/HeavyWading/Swim_HeavyWading.asset") : Assets.coreMasterBundle.assetBundle.LoadAsset<OneShotAudioDefinition>("Assets/CoreMasterBundle/Effects/Physics/Swim/MediumWading/Swim_MediumWading.asset"));
+            if (base.player.stance.areEyesUnderwater)
+            {
+                oneShotAudioDefinition = Assets.coreMasterBundle.assetBundle.LoadAsset<OneShotAudioDefinition>("Assets/CoreMasterBundle/Effects/Physics/Swim/MediumWading/Swim_MediumWading.asset");
+                if (oneShotAudioDefinition == null)
+                {
+                    UnturnedLog.warn("Missing built-in medium wading audio");
+                }
+            }
+            else
+            {
+                oneShotAudioDefinition = Assets.coreMasterBundle.assetBundle.LoadAsset<OneShotAudioDefinition>("Assets/CoreMasterBundle/Effects/Physics/Swim/HeavyWading/Swim_HeavyWading.asset");
+                if (oneShotAudioDefinition == null)
+                {
+                    UnturnedLog.warn("Missing built-in heavy wading audio");
+                }
+            }
         }
         else if (WaterUtility.isPointUnderwater(base.transform.position + new Vector3(0f, 0.5f, 0f)))
         {
             oneShotAudioDefinition = Assets.coreMasterBundle.assetBundle.LoadAsset<OneShotAudioDefinition>("Assets/CoreMasterBundle/Effects/Physics/Swim/LightWading/Swim_LightWading.asset");
+            if (oneShotAudioDefinition == null)
+            {
+                UnturnedLog.warn("Missing built-in light wading audio");
+            }
         }
         else
         {

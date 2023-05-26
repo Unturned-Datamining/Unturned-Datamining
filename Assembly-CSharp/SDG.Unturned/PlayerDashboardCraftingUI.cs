@@ -201,7 +201,7 @@ public class PlayerDashboardCraftingUI
                 {
                     item2.items = 0;
                 }
-                item2.hasItem = num3 > 0;
+                item2.hasItem = num3 >= 0;
             }
             else if (item2.type == EBlueprintType.AMMO)
             {

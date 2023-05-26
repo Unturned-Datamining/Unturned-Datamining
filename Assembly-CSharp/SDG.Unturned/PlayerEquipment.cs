@@ -1633,8 +1633,12 @@ public class PlayerEquipment : PlayerCaller
     {
         if (base.channel.isOwner)
         {
-            AudioClip clip = Assets.coreMasterBundle.assetBundle.LoadAsset<AudioClip>("Assets/CoreMasterBundle/Sounds/MeleeAttack_02.mp3");
-            base.player.playSound(clip);
+            AudioClip audioClip = Assets.coreMasterBundle.assetBundle.LoadAsset<AudioClip>("Assets/CoreMasterBundle/Sounds/MeleeAttack_02.mp3");
+            if (audioClip == null)
+            {
+                UnturnedLog.warn("Missing built-in punching audio");
+            }
+            base.player.playSound(audioClip);
             RaycastInfo raycastInfo = DamageTool.raycast(new Ray(base.player.look.aim.position, base.player.look.aim.forward), 1.75f, RayMasks.DAMAGE_CLIENT, base.player);
             if (raycastInfo.player != null && DAMAGE_PLAYER_MULTIPLIER.damage > 1f && DamageTool.isPlayerAllowedToDamagePlayer(base.player, raycastInfo.player))
             {
