@@ -4183,7 +4183,9 @@ public class UseableGun : Useable
                     PlayerLifeUI.scopeOverlay.scopeImage.texture = mainTexture;
                     if (firstAttachments.aimHook.parent.Find("Reticule") != null)
                     {
-                        PlayerLifeUI.scopeOverlay.scopeImage.color = OptionsSettings.criticalHitmarkerColor;
+                        Color criticalHitmarkerColor = OptionsSettings.criticalHitmarkerColor;
+                        criticalHitmarkerColor.a = 1f;
+                        PlayerLifeUI.scopeOverlay.scopeImage.color = criticalHitmarkerColor;
                     }
                     else
                     {

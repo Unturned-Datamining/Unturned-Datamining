@@ -577,8 +577,10 @@ public class Attachments : MonoBehaviour
                         reticuleMaterial = component.material;
                         if (reticuleMaterial != null)
                         {
-                            reticuleMaterial.SetColor("_Color", OptionsSettings.criticalHitmarkerColor);
-                            reticuleMaterial.SetColor("_EmissionColor", OptionsSettings.criticalHitmarkerColor);
+                            Color criticalHitmarkerColor = OptionsSettings.criticalHitmarkerColor;
+                            criticalHitmarkerColor.a = 1f;
+                            reticuleMaterial.SetColor("_Color", criticalHitmarkerColor);
+                            reticuleMaterial.SetColor("_EmissionColor", criticalHitmarkerColor);
                         }
                     }
                 }
