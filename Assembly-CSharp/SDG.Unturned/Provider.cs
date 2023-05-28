@@ -2213,6 +2213,16 @@ public class Provider : MonoBehaviour
                 CommandWindow.LogError("Fatal error: unable to load fallback map");
             }
         }
+        List<PublishedFileId_t> list = null;
+        if (_serverWorkshopFileIDs != null)
+        {
+            list = new List<PublishedFileId_t>(_serverWorkshopFileIDs.Count);
+            foreach (ulong serverWorkshopFileID in _serverWorkshopFileIDs)
+            {
+                list.Add(new PublishedFileId_t(serverWorkshopFileID));
+            }
+        }
+        Assets.ApplyServerAssetMapping(level, list);
         Level.load(level, hasAuthority: true);
         loadGameMode();
         applyLevelModeConfigOverrides();

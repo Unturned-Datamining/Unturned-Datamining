@@ -277,6 +277,18 @@ public class DatParser
                 {
                     currentChar = '\n';
                 }
+                else if (currentChar == 't')
+                {
+                    currentChar = '\t';
+                }
+                else if (currentChar != '\\')
+                {
+                    stringBuilder.Append('\\');
+                    if (!hasError)
+                    {
+                        ErrorMessage = $"unrecognized escape sequence (\\{currentChar}) on line {currentLineNumber} - if this is a file path please use forward slash (/)";
+                    }
+                }
             }
             else
             {
@@ -312,6 +324,18 @@ public class DatParser
                 if (currentChar == 'n')
                 {
                     currentChar = '\n';
+                }
+                else if (currentChar == 't')
+                {
+                    currentChar = '\t';
+                }
+                else if (currentChar != '\\' && currentChar != '"')
+                {
+                    stringBuilder.Append('\\');
+                    if (!hasError)
+                    {
+                        ErrorMessage = $"unrecognized escape sequence (\\{currentChar}) on line {currentLineNumber} - if this is a file path please use forward slash (/)";
+                    }
                 }
             }
             else

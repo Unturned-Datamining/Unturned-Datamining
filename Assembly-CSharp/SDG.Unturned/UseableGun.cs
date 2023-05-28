@@ -583,19 +583,25 @@ public class UseableGun : Useable
         }
         Vector3 position = MainCamera.instance.transform.position;
         float num = Vector3.Dot(position - origin, direction);
-        if (num > 0f && num < range)
+        if (!(num > 0f) || !(num < range))
         {
-            Vector3 vector = origin + direction * num;
-            if ((vector - position).sqrMagnitude < 25f)
+            return;
+        }
+        Vector3 vector = origin + direction * num;
+        if ((vector - position).sqrMagnitude < 25f)
+        {
+            OneShotAudioDefinition oneShotAudioDefinition = Assets.coreMasterBundle.assetBundle.LoadAsset<OneShotAudioDefinition>("Assets/CoreMasterBundle/Effects/Guns/BulletFlyby.asset");
+            if (oneShotAudioDefinition == null)
             {
-                OneShotAudioDefinition oneShotAudioDefinition = Assets.coreMasterBundle.assetBundle.LoadAsset<OneShotAudioDefinition>("Assets/CoreMasterBundle/Effects/Guns/BulletFlyby.asset");
-                AudioClip randomClip = oneShotAudioDefinition.GetRandomClip();
-                OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(vector, randomClip);
-                oneShotAudioParameters.minDistance = 0f;
-                oneShotAudioParameters.maxDistance = 5f;
-                oneShotAudioParameters.RandomizePitch(oneShotAudioDefinition.minPitch, oneShotAudioDefinition.maxPitch);
-                oneShotAudioParameters.Play();
+                UnturnedLog.warn("Missing built-in bullet flyby audio");
+                return;
             }
+            AudioClip randomClip = oneShotAudioDefinition.GetRandomClip();
+            OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(vector, randomClip);
+            oneShotAudioParameters.minDistance = 0f;
+            oneShotAudioParameters.maxDistance = 5f;
+            oneShotAudioParameters.RandomizePitch(oneShotAudioDefinition.minPitch, oneShotAudioDefinition.maxPitch);
+            oneShotAudioParameters.Play();
         }
     }
 
@@ -1055,9 +1061,13 @@ public class UseableGun : Useable
         }
         if (base.channel.isOwner)
         {
-            AudioClip clip = Assets.coreMasterBundle.assetBundle.LoadAsset<AudioClip>("Assets/CoreMasterBundle/Sounds/MeleeAttack_01.mp3");
+            AudioClip audioClip = Assets.coreMasterBundle.assetBundle.LoadAsset<AudioClip>("Assets/CoreMasterBundle/Sounds/MeleeAttack_01.mp3");
+            if (audioClip == null)
+            {
+                UnturnedLog.warn("Missing built-in bayonet audio");
+            }
             base.player.animator.AddBayonetViewmodelCameraOffset(0f, 0f, 0.8f);
-            base.player.playSound(clip, 0.5f);
+            base.player.playSound(audioClip, 0.5f);
             if (Provider.provider.statisticsService.userStatisticsService.getStatistic("Accuracy_Shot", out int data))
             {
                 Provider.provider.statisticsService.userStatisticsService.setStatistic("Accuracy_Shot", data + 1);

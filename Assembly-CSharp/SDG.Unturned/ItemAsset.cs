@@ -541,7 +541,9 @@ public class ItemAsset : Asset, ISkinableAsset
             NPCTool.readConditions(data, localization, "Blueprint_" + b3 + "_Condition_", array3, this);
             INPCReward[] array4 = new INPCReward[data.ParseUInt8("Blueprint_" + b3 + "_Rewards", 0)];
             NPCTool.readRewards(data, localization, "Blueprint_" + b3 + "_Reward_", array4, this);
-            blueprints.Add(new Blueprint(this, b3, newType, array, array2, newTool, newToolCritical, newBuild, guid, b11, newSkill, newTransferState, @string, array3, array4));
+            Blueprint blueprint = new Blueprint(this, b3, newType, array, array2, newTool, newToolCritical, newBuild, guid, b11, newSkill, newTransferState, @string, array3, array4);
+            blueprint.canBeVisibleWhenSearchedWithoutRequiredItems = data.ParseBool($"Blueprint_{b3}_Searchable", defaultValue: true);
+            blueprints.Add(blueprint);
         }
         for (byte b12 = 0; b12 < b2; b12 = (byte)(b12 + 1))
         {
@@ -589,8 +591,8 @@ public class ItemAsset : Asset, ISkinableAsset
             bool flag = false;
             for (byte b15 = 0; b15 < blueprints.Count; b15 = (byte)(b15 + 1))
             {
-                Blueprint blueprint = blueprints[b15];
-                if (blueprint.type == EBlueprintType.REPAIR)
+                Blueprint blueprint2 = blueprints[b15];
+                if (blueprint2.type == EBlueprintType.REPAIR)
                 {
                     Action action = new Action(id, EActionType.BLUEPRINT, new ActionBlueprint[1]
                     {
@@ -598,11 +600,11 @@ public class ItemAsset : Asset, ISkinableAsset
                     }, null, null, "Repair");
                     actions.Insert(0, action);
                 }
-                else if (blueprint.type == EBlueprintType.AMMO)
+                else if (blueprint2.type == EBlueprintType.AMMO)
                 {
                     flag = true;
                 }
-                else if (blueprint.supplies.Length == 1 && blueprint.supplies[0].id == id)
+                else if (blueprint2.supplies.Length == 1 && blueprint2.supplies[0].id == id)
                 {
                     Action action2 = new Action(id, EActionType.BLUEPRINT, new ActionBlueprint[1]
                     {

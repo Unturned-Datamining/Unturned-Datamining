@@ -249,7 +249,7 @@ public class PlayerDashboardCraftingUI
             {
                 item2.hasItem = true;
             }
-            if (!(flag2 || flag3))
+            if (!flag3 && (!flag2 || !item2.canBeVisibleWhenSearchedWithoutRequiredItems))
             {
                 continue;
             }

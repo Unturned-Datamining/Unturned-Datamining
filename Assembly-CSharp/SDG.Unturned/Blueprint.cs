@@ -40,6 +40,8 @@ public class Blueprint
 
     public ushort items;
 
+    public bool canBeVisibleWhenSearchedWithoutRequiredItems = true;
+
     public ItemAsset sourceItem { get; protected set; }
 
     public byte id => _id;

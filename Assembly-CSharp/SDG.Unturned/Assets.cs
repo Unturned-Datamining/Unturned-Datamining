@@ -488,7 +488,7 @@ public class Assets : MonoBehaviour
 
     private static void AddAssetsFromOriginToCurrentMapping(AssetOrigin origin)
     {
-        UnturnedLog.info($"Adding {origin.assets.Count} asset(s) from origin \"{origin.name}\" to server mapping");
+        UnturnedLog.info($"Adding {origin.assets.Count} asset(s) from origin {origin.name} to server mapping");
         foreach (Asset asset in origin.assets)
         {
             AddToMapping(asset, overrideExistingID: true, currentAssetMapping);
@@ -498,34 +498,49 @@ public class Assets : MonoBehaviour
     internal static void ApplyServerAssetMapping(LevelInfo pendingLevel, List<PublishedFileId_t> serverWorkshopFileIds)
     {
         currentAssetMapping = new AssetMapping();
-        AddAssetsFromOriginToCurrentMapping(coreOrigin);
+        List<AssetOrigin> list = new List<AssetOrigin>();
+        list.Add(coreOrigin);
         AssetOrigin assetOrigin = null;
         if (pendingLevel != null)
         {
             assetOrigin = FindLevelOrigin(pendingLevel);
             if (assetOrigin != null)
             {
-                AddAssetsFromOriginToCurrentMapping(assetOrigin);
+                list.Add(assetOrigin);
             }
         }
-        if (serverWorkshopFileIds == null)
+        if (serverWorkshopFileIds != null)
         {
-            return;
-        }
-        foreach (PublishedFileId_t serverWorkshopFileId in serverWorkshopFileIds)
-        {
-            AssetOrigin assetOrigin2 = FindWorkshopFileOrigin(serverWorkshopFileId.m_PublishedFileId);
-            if (assetOrigin2 != null)
+            foreach (PublishedFileId_t serverWorkshopFileId in serverWorkshopFileIds)
             {
-                if (assetOrigin2 != assetOrigin)
+                AssetOrigin assetOrigin2 = FindWorkshopFileOrigin(serverWorkshopFileId.m_PublishedFileId);
+                if (assetOrigin2 != null)
                 {
-                    AddAssetsFromOriginToCurrentMapping(assetOrigin2);
+                    if (assetOrigin2 != assetOrigin)
+                    {
+                        list.Add(assetOrigin2);
+                    }
+                }
+                else
+                {
+                    UnturnedLog.info($"Unable to find assets for server mapping (file ID {serverWorkshopFileId})");
                 }
             }
-            else
+        }
+        if (Dedicator.IsDedicatedServer)
+        {
+            foreach (AssetOrigin assetOrigin3 in assetOrigins)
             {
-                UnturnedLog.error($"Unable to find assets for server mapping (file ID {serverWorkshopFileId})");
+                if (assetOrigin3 != reloadOrigin && assetOrigin3.assets.Count >= 1 && !list.Contains(assetOrigin3))
+                {
+                    UnturnedLog.info("Inserting asset origin " + assetOrigin3.name + " before other assets to reduce chances of ID conflicts because otherwise it was not included");
+                    list.Insert(0, assetOrigin3);
+                }
             }
+        }
+        foreach (AssetOrigin item in list)
+        {
+            AddAssetsFromOriginToCurrentMapping(item);
         }
     }
 
@@ -571,11 +586,20 @@ public class Assets : MonoBehaviour
         MasterBundleConfig result = null;
         foreach (MasterBundleConfig allMasterBundle in allMasterBundles)
         {
-            if (allMasterBundle.directoryPath.Length >= num && path.StartsWith(allMasterBundle.directoryPath))
+            if (allMasterBundle.directoryPath.Length < num || !path.StartsWith(allMasterBundle.directoryPath))
             {
-                num = allMasterBundle.directoryPath.Length;
-                result = allMasterBundle;
+                continue;
             }
+            if (path.Length > allMasterBundle.directoryPath.Length)
+            {
+                char c = path[allMasterBundle.directoryPath.Length];
+                if (c != '/' && c != '\\')
+                {
+                    continue;
+                }
+            }
+            num = allMasterBundle.directoryPath.Length;
+            result = allMasterBundle;
         }
         return result;
     }

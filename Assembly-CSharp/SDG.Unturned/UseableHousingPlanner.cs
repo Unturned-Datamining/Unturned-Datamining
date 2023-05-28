@@ -91,12 +91,26 @@ public class UseableHousingPlanner : Useable
         if (success)
         {
             OneShotAudioDefinition oneShotAudioDefinition = Assets.coreMasterBundle.assetBundle.LoadAsset<OneShotAudioDefinition>("Assets/CoreMasterBundle/Sounds/Popup/Popup.asset");
-            base.player.playSound(oneShotAudioDefinition.GetRandomClip(), 0.5f * oneShotAudioDefinition.volumeMultiplier, UnityEngine.Random.Range(oneShotAudioDefinition.minPitch, oneShotAudioDefinition.maxPitch), 0f);
+            if (oneShotAudioDefinition == null)
+            {
+                UnturnedLog.warn("Missing built-in housing planner success audio");
+            }
+            else
+            {
+                base.player.playSound(oneShotAudioDefinition.GetRandomClip(), 0.5f * oneShotAudioDefinition.volumeMultiplier, UnityEngine.Random.Range(oneShotAudioDefinition.minPitch, oneShotAudioDefinition.maxPitch), 0f);
+            }
         }
         else
         {
-            AudioClip clip = Assets.coreMasterBundle.assetBundle.LoadAsset<AudioClip>("Assets/CoreMasterBundle/Sounds/Error.wav");
-            base.player.playSound(clip, 0.5f, 1f, 0.025f);
+            AudioClip audioClip = Assets.coreMasterBundle.assetBundle.LoadAsset<AudioClip>("Assets/CoreMasterBundle/Sounds/Error.wav");
+            if (audioClip == null)
+            {
+                UnturnedLog.warn("Missing built-in housing planner error audio");
+            }
+            else
+            {
+                base.player.playSound(audioClip, 0.5f, 1f, 0.025f);
+            }
         }
     }
 
