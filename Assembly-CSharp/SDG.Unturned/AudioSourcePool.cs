@@ -15,6 +15,8 @@ internal class AudioSourcePool : MonoBehaviour
 
     private int nextPlayId = 1;
 
+    private int nextSourceId = 1;
+
     public static AudioSourcePool Get()
     {
         if (instance == null)
@@ -46,6 +48,8 @@ internal class AudioSourcePool : MonoBehaviour
         else
         {
             pooledAudioSource = new PooledAudioSource();
+            pooledAudioSource.sourceId = nextSourceId;
+            nextSourceId++;
             GameObject gameObject = new GameObject("PooledAudioSource");
             pooledAudioSource.component = gameObject.AddComponent<AudioSource>();
             pooledAudioSource.component.playOnAwake = false;
@@ -62,9 +66,10 @@ internal class AudioSourcePool : MonoBehaviour
         pooledAudioSource.component.minDistance = parameters.minDistance;
         pooledAudioSource.component.maxDistance = parameters.maxDistance;
         pooledAudioSource.component.Play();
+        pooledAudioSource.isInPool = false;
         pooledAudioSource.playId = nextPlayId;
         nextPlayId++;
-        StartCoroutine(PlayCoroutine(pooledAudioSource, parameters.clip.length / parameters.pitch + 0.1f));
+        StartCoroutine(PlayCoroutine(pooledAudioSource, pooledAudioSource.playId, parameters.clip.length / parameters.pitch + 0.1f));
         return new OneShotAudioHandle(pooledAudioSource);
     }
 
@@ -78,10 +83,12 @@ internal class AudioSourcePool : MonoBehaviour
                 audioSource.component.transform.parent = null;
             }
             availableComponents.Add(audioSource);
+            audioSource.isInPool = true;
+            audioSource.playId = 0;
         }
     }
 
-    private IEnumerator PlayCoroutine(PooledAudioSource audioSource, float duration)
+    private IEnumerator PlayCoroutine(PooledAudioSource audioSource, int playId, float duration)
     {
         if (duration < 1f)
         {
@@ -91,7 +98,10 @@ internal class AudioSourcePool : MonoBehaviour
         {
             yield return new WaitForSeconds(duration);
         }
-        StopAndReleaseAudioSource(audioSource);
+        if (!audioSource.isInPool && audioSource.playId == playId)
+        {
+            StopAndReleaseAudioSource(audioSource);
+        }
     }
 
     private void OnEnable()

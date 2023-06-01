@@ -532,7 +532,7 @@ public class PlayerAnimator : PlayerCaller
     public void NotifyClothingIsVisible()
     {
         isHiddenWaitingForClothing = false;
-        if (!base.channel.isOwner && !Dedicator.IsDedicatedServer && !base.player.life.isDead)
+        if (!base.channel.isOwner && !Dedicator.IsDedicatedServer && base.player.life.IsAlive)
         {
             if (thirdRenderer_0 != null)
             {

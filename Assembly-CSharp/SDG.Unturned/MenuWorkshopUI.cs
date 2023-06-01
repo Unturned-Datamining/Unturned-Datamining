@@ -131,7 +131,7 @@ public class MenuWorkshopUI
 
     private static void onClickedDocsButton(ISleekElement button)
     {
-        Provider.provider.browserService.open("https://github.com/SmartlyDressedGames/U3-Docs#Unturned-Documentation");
+        Provider.provider.browserService.open("https://docs.smartlydressedgames.com");
     }
 
     private static void onClickedBackButton(ISleekElement button)

@@ -719,6 +719,7 @@ public class MenuConfigurationOptionsUI
         talkButton.sizeOffset_Y = 30;
         talkButton.state = (OptionsSettings.talk ? 1 : 0);
         talkButton.tooltip = localization.format("Talk_Tooltip");
+        talkButton.addLabel(localization.format("Talk_Label"), ESleekSide.RIGHT);
         talkButton.onSwappedState = onSwappedTalkState;
         optionsBox.AddChild(talkButton);
         num += 40;
@@ -728,6 +729,7 @@ public class MenuConfigurationOptionsUI
         metricButton.sizeOffset_Y = 30;
         metricButton.state = (OptionsSettings.metric ? 1 : 0);
         metricButton.tooltip = localization.format("Metric_Tooltip");
+        metricButton.addLabel(localization.format("Metric_Label"), ESleekSide.RIGHT);
         metricButton.onSwappedState = onSwappedMetricState;
         optionsBox.AddChild(metricButton);
         num += 40;
@@ -736,6 +738,7 @@ public class MenuConfigurationOptionsUI
         uiButton.sizeOffset_X = 200;
         uiButton.sizeOffset_Y = 30;
         uiButton.tooltip = localization.format("UI_Tooltip");
+        uiButton.addLabel(localization.format("UI_Label"), ESleekSide.RIGHT);
         uiButton.onSwappedState = onSwappedUIState;
         optionsBox.AddChild(uiButton);
         num += 40;
@@ -744,6 +747,7 @@ public class MenuConfigurationOptionsUI
         hitmarkerButton.sizeOffset_X = 200;
         hitmarkerButton.sizeOffset_Y = 30;
         hitmarkerButton.tooltip = localization.format("Hitmarker_Tooltip");
+        hitmarkerButton.addLabel(localization.format("Hitmarker_Label"), ESleekSide.RIGHT);
         hitmarkerButton.onSwappedState = onSwappedHitmarkerState;
         optionsBox.AddChild(hitmarkerButton);
         num += 40;

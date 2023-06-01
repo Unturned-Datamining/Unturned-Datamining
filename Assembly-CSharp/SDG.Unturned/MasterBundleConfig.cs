@@ -100,7 +100,7 @@ public class MasterBundleConfig
 
     public void StartLoad(byte[] inputData, byte[] inputHash)
     {
-        UnturnedLog.info("Loading asset bundle " + assetBundleName + "...");
+        UnturnedLog.info("Loading asset bundle \"" + assetBundleName + "\" from \"" + directoryPath + "\"...");
         assetBundleCreateRequest = AssetBundle.LoadFromMemoryAsync(inputData);
         hash = inputHash;
         loadStartTime = Time.realtimeSinceStartupAsDouble;
@@ -113,7 +113,7 @@ public class MasterBundleConfig
         if (assetBundle != null)
         {
             double num = Time.realtimeSinceStartupAsDouble - loadStartTime;
-            UnturnedLog.info($"Loading asset bundle {assetBundleName} took {num}s");
+            UnturnedLog.info($"Loading asset bundle \"{assetBundleName}\" took {num}s");
         }
         else
         {

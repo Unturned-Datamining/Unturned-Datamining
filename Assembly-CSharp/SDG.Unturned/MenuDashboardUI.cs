@@ -56,6 +56,8 @@ public class MenuDashboardUI
 
     private static ISleekLabel alertLinkLabel;
 
+    private static ISleekLabel dismissAlertLabel;
+
     private static ISleekLabel alertBodyLabel;
 
     private static GameObject canvas;
@@ -178,16 +180,22 @@ public class MenuDashboardUI
     private static void onClickedAlertButton(ISleekElement button)
     {
         LiveConfigData liveConfigData = LiveConfig.Get();
+        ConvenientSavedata.get().write("MainMenuAlertSeenId", liveConfigData.mainMenuAlert.id);
+        if (alertBox != null)
+        {
+            alertBox.isVisible = false;
+        }
         if (!string.IsNullOrEmpty(liveConfigData.mainMenuAlert.link))
         {
             if (!Provider.provider.browserService.canOpenBrowser)
             {
                 MenuUI.alert(MenuSurvivorsCharacterUI.localization.format("Overlay"));
-                return;
             }
-            Provider.provider.browserService.open(liveConfigData.mainMenuAlert.link);
+            else
+            {
+                Provider.provider.browserService.open(liveConfigData.mainMenuAlert.link);
+            }
         }
-        ConvenientSavedata.get().write("MainMenuAlertSeenId", liveConfigData.mainMenuAlert.id);
     }
 
     private static void filterContent(string header, string source, ref string contents, ref int lines)
@@ -950,6 +958,17 @@ public class MenuDashboardUI
             alertLinkLabel.fontSize = ESleekFontSize.Small;
             alertLinkLabel.isVisible = false;
             alertBox.AddChild(alertLinkLabel);
+            dismissAlertLabel = Glazier.Get().CreateLabel();
+            dismissAlertLabel.positionScale_Y = 1f;
+            dismissAlertLabel.positionOffset_X = 60;
+            dismissAlertLabel.positionOffset_Y = -35;
+            dismissAlertLabel.sizeScale_X = 1f;
+            dismissAlertLabel.sizeOffset_X = -65;
+            dismissAlertLabel.sizeOffset_Y = 30;
+            dismissAlertLabel.fontAlignment = TextAnchor.LowerRight;
+            dismissAlertLabel.fontSize = ESleekFontSize.Small;
+            dismissAlertLabel.text = localization.format("Featured_Workshop_Dismiss");
+            alertBox.AddChild(dismissAlertLabel);
             alertBodyLabel = Glazier.Get().CreateLabel();
             alertBodyLabel.positionOffset_X = 60;
             alertBodyLabel.positionOffset_Y = 20;
@@ -970,6 +989,7 @@ public class MenuDashboardUI
         alertHeaderLabel.text = liveConfigData.mainMenuAlert.header;
         alertHeaderLabel.textColor = color;
         alertBodyLabel.text = liveConfigData.mainMenuAlert.body;
+        dismissAlertLabel.textColor = color * 0.5f;
         if (!string.IsNullOrEmpty(liveConfigData.mainMenuAlert.iconName))
         {
             alertImage.texture = icons.load<Texture2D>(liveConfigData.mainMenuAlert.iconName);

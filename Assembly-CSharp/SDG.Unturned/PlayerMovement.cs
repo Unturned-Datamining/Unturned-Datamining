@@ -206,7 +206,7 @@ public class PlayerMovement : PlayerCaller
     {
         get
         {
-            if (!base.player.life.isDead)
+            if (base.player.life.IsAlive)
             {
                 return getVehicle() == null;
             }
@@ -500,7 +500,7 @@ public class PlayerMovement : PlayerCaller
         pendingSeatTransform = newSeatingTransform;
         pendingSeatPosition = newSeatingPosition;
         pendingSeatAngle = newSeatingAngle;
-        if ((!base.channel.isOwner && !Provider.isServer) || base.player.life.isDead || forceUpdate)
+        if ((!base.channel.isOwner && !Provider.isServer) || !base.player.life.IsAlive || forceUpdate)
         {
             updateVehicle();
         }

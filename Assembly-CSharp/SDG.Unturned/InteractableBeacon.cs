@@ -145,7 +145,7 @@ public class InteractableBeacon : MonoBehaviour, IManualOnDestroy
         }
         for (int i = 0; i < Provider.clients.Count; i++)
         {
-            if (Provider.clients[i].player != null && !Provider.clients[i].player.life.isDead && Provider.clients[i].player.movement.nav == nav)
+            if (Provider.clients[i].player != null && Provider.clients[i].player.life.IsAlive && Provider.clients[i].player.movement.nav == nav)
             {
                 Provider.clients[i].player.quests.trackHordeKill();
             }

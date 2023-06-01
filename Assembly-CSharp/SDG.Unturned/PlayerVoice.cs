@@ -375,7 +375,7 @@ public class PlayerVoice : PlayerCaller
     {
         bool chatVoiceOut = OptionsSettings.chatVoiceOut;
         bool key = InputEx.GetKey(ControlsSettings.voice);
-        bool flag = !base.player.life.isDead || allowTalkingWhileDead;
+        bool flag = base.player.life.IsAlive || allowTalkingWhileDead;
         inputWantsToRecord = chatVoiceOut && key && flag && customAllowTalking;
     }
 

@@ -79,7 +79,7 @@ public class LightningWeatherComponent : MonoBehaviour
             playerPositions.Clear();
             foreach (Player item in weatherComponent.EnumerateMaskedPlayers())
             {
-                if (!item.life.isDead)
+                if (item.life.IsAlive)
                 {
                     playerPositions.Add(item.transform.position);
                 }

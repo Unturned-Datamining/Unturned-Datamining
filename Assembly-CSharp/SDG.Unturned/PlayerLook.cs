@@ -856,7 +856,7 @@ public class PlayerLook : PlayerCaller
                 thirdPersonEyeHeight = Mathf.Lerp(thirdPersonEyeHeight, Mathf.Clamp(num, min, max), 4f * Time.deltaTime);
             }
             Camera instance = MainCamera.instance;
-            if (!base.player.life.isDead && !PlayerUI.window.showCursor)
+            if (base.player.life.IsAlive && !PlayerUI.window.showCursor)
             {
                 if (InputEx.GetKeyDown(ControlsSettings.perspective) && (Provider.cameraMode == ECameraMode.BOTH || (Provider.cameraMode == ECameraMode.VEHICLE && base.player.stance.stance == EPlayerStance.DRIVING)))
                 {

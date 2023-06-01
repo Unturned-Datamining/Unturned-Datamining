@@ -648,7 +648,7 @@ public class PlayerStance : PlayerCaller
         if (Provider.isServer && (double)(Time.realtimeSinceStartup - lastDetect) > 0.1)
         {
             lastDetect = Time.realtimeSinceStartup;
-            if (!base.player.life.isDead)
+            if (base.player.life.IsAlive)
             {
                 AlertTool.alert(base.player, base.transform.position, GetStealthDetectionRadius(), stance != EPlayerStance.SPRINT && stance != EPlayerStance.DRIVING, base.player.look.aim.forward, base.player.isSpotOn);
             }

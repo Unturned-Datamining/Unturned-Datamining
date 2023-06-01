@@ -62,16 +62,8 @@ public class ItemMeleeAsset : ItemWeaponAsset
         base.PopulateAsset(bundle, data, localization);
         _use = LoadRedirectableAsset<AudioClip>(bundle, "Use", data, "AttackAudioClip");
         _strength = data.ParseFloat("Strength");
-        _weak = data.ParseFloat("Weak");
-        if ((double)weak < 0.01)
-        {
-            _weak = 0.5f;
-        }
-        _strong = data.ParseFloat("Strong");
-        if ((double)strong < 0.01)
-        {
-            _strong = 0.33f;
-        }
+        _weak = data.ParseFloat("Weak", 0.5f);
+        _strong = data.ParseFloat("Strong", 0.33f);
         _stamina = data.ParseUInt8("Stamina", 0);
         _isRepair = data.ContainsKey("Repair");
         _isRepeated = data.ContainsKey("Repeated");

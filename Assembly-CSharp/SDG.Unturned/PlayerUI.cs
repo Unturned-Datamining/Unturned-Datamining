@@ -1523,7 +1523,7 @@ public class PlayerUI : MonoBehaviour
         if ((InputEx.GetKeyDown(ControlsSettings.left) || InputEx.GetKeyDown(ControlsSettings.up) || InputEx.GetKeyDown(ControlsSettings.right) || InputEx.GetKeyDown(ControlsSettings.down)) && PlayerDashboardUI.active)
         {
             PlayerDashboardUI.close();
-            if (!Player.player.life.isDead)
+            if (Player.player.life.IsAlive)
             {
                 PlayerLifeUI.open();
             }
@@ -1536,7 +1536,7 @@ public class PlayerUI : MonoBehaviour
         {
             escapeMenu();
         }
-        if (!Player.player.life.isDead)
+        if (Player.player.life.IsAlive)
         {
             if (InputEx.ConsumeKeyDown(ControlsSettings.dashboard))
             {

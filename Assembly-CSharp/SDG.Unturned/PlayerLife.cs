@@ -210,6 +210,8 @@ public class PlayerLife : PlayerCaller
 
     public bool isDead => _isDead;
 
+    public bool IsAlive => !_isDead;
+
     public byte health => _health;
 
     public byte food => _food;
@@ -553,7 +555,7 @@ public class PlayerLife : PlayerCaller
     private void doDamage(byte amount, Vector3 newRagdoll, EDeathCause newCause, ELimb newLimb, CSteamID newKiller, out EPlayerKill kill, bool trackKill = false, ERagdollEffect newRagdollEffect = ERagdollEffect.NONE, bool canCauseBleeding = true)
     {
         kill = EPlayerKill.NONE;
-        if (amount == 0 || isDead || isDead)
+        if (amount == 0 || isDead || !IsAlive)
         {
             return;
         }
@@ -802,7 +804,7 @@ public class PlayerLife : PlayerCaller
 
     public void askHeal(byte amount, bool healBleeding, bool healBroken)
     {
-        if (amount != 0 && !isDead && !isDead)
+        if (amount != 0 && !isDead && IsAlive)
         {
             if (amount >= 100 - health)
             {
@@ -856,7 +858,7 @@ public class PlayerLife : PlayerCaller
 
     public void askStarve(byte amount)
     {
-        if (amount != 0 && !isDead && !isDead)
+        if (amount != 0 && !isDead && IsAlive)
         {
             if (amount >= food)
             {
@@ -873,7 +875,7 @@ public class PlayerLife : PlayerCaller
 
     public void askEat(byte amount)
     {
-        if (amount != 0 && !isDead && !isDead)
+        if (amount != 0 && !isDead && IsAlive)
         {
             if (amount >= 100 - food)
             {
@@ -890,7 +892,7 @@ public class PlayerLife : PlayerCaller
 
     public void askDehydrate(byte amount)
     {
-        if (amount != 0 && !isDead && !isDead)
+        if (amount != 0 && !isDead && IsAlive)
         {
             if (amount >= water)
             {
@@ -907,7 +909,7 @@ public class PlayerLife : PlayerCaller
 
     public void askDrink(byte amount)
     {
-        if (amount != 0 && !isDead && !isDead)
+        if (amount != 0 && !isDead && IsAlive)
         {
             if (amount >= 100 - water)
             {
@@ -924,7 +926,7 @@ public class PlayerLife : PlayerCaller
 
     public void askInfect(byte amount)
     {
-        if (amount != 0 && !isDead && !isDead)
+        if (amount != 0 && !isDead && IsAlive)
         {
             if (amount >= virus)
             {
@@ -941,7 +943,7 @@ public class PlayerLife : PlayerCaller
 
     public void askRadiate(byte amount)
     {
-        if (amount != 0 && !isDead && !isDead)
+        if (amount != 0 && !isDead && IsAlive)
         {
             if (amount >= virus)
             {
@@ -957,7 +959,7 @@ public class PlayerLife : PlayerCaller
 
     public void askDisinfect(byte amount)
     {
-        if (amount != 0 && !isDead && !isDead)
+        if (amount != 0 && !isDead && IsAlive)
         {
             if (amount >= 100 - virus)
             {
@@ -980,7 +982,7 @@ public class PlayerLife : PlayerCaller
 
     public void askTire(byte amount)
     {
-        if (amount != 0 && !isDead && !isDead)
+        if (amount != 0 && !isDead && IsAlive)
         {
             lastTire = base.player.input.simulation;
             if (amount >= stamina)
@@ -997,7 +999,7 @@ public class PlayerLife : PlayerCaller
 
     public void askRest(byte amount)
     {
-        if (amount != 0 && !isDead && !isDead)
+        if (amount != 0 && !isDead && IsAlive)
         {
             if (amount >= 100 - stamina)
             {
@@ -1055,7 +1057,7 @@ public class PlayerLife : PlayerCaller
 
     public void askView(byte amount)
     {
-        if (amount != 0 && !isDead && !isDead)
+        if (amount != 0 && !isDead && IsAlive)
         {
             lastView = base.player.input.simulation;
             _vision = amount;
@@ -1145,7 +1147,7 @@ public class PlayerLife : PlayerCaller
 
     public void askBlind(byte amount)
     {
-        if (amount != 0 && !isDead && !isDead)
+        if (amount != 0 && !isDead && IsAlive)
         {
             if (amount >= vision)
             {
@@ -1164,7 +1166,7 @@ public class PlayerLife : PlayerCaller
 
     public void askSuffocate(byte amount)
     {
-        if (amount != 0 && !isDead && !isDead)
+        if (amount != 0 && !isDead && IsAlive)
         {
             lastSuffocate = base.player.input.simulation;
             if (amount >= oxygen)
@@ -1181,7 +1183,7 @@ public class PlayerLife : PlayerCaller
 
     public void askBreath(byte amount)
     {
-        if (amount != 0 && !isDead && !isDead)
+        if (amount != 0 && !isDead && IsAlive)
         {
             if (amount >= 100 - oxygen)
             {
@@ -1278,7 +1280,7 @@ public class PlayerLife : PlayerCaller
 
     public void ServerRespawn(bool atHome)
     {
-        if (!isDead)
+        if (IsAlive)
         {
             return;
         }
@@ -1337,7 +1339,7 @@ public class PlayerLife : PlayerCaller
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 2, legacyName = "askRespawn")]
     public void ReceiveRespawnRequest(bool atHome)
     {
-        if (!Provider.isServer || !isDead)
+        if (!Provider.isServer || IsAlive)
         {
             return;
         }
@@ -1371,7 +1373,7 @@ public class PlayerLife : PlayerCaller
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 2, legacyName = "askSuicide")]
     public void ReceiveSuicideRequest()
     {
-        if (!isDead && ((Level.info != null && Level.info.type == ELevelType.SURVIVAL) || !base.player.movement.isSafe || !base.player.movement.isSafeInfo.noWeapons) && Provider.modeConfigData.Gameplay.Can_Suicide)
+        if (IsAlive && ((Level.info != null && Level.info.type == ELevelType.SURVIVAL) || !base.player.movement.isSafe || !base.player.movement.isSafeInfo.noWeapons) && Provider.modeConfigData.Gameplay.Can_Suicide)
         {
             doDamage(100, Vector3.up * 10f, EDeathCause.SUICIDE, ELimb.SKULL, base.channel.owner.playerID.steamID, out var _);
         }
@@ -1594,7 +1596,7 @@ public class PlayerLife : PlayerCaller
                 lastView = simulation;
                 askBlind(1);
             }
-            if (!isDead)
+            if (IsAlive)
             {
                 Provider.provider.economyService.updateInventory();
             }

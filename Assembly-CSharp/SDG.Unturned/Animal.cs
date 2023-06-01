@@ -853,7 +853,7 @@ public class Animal : MonoBehaviour
         }
         if (isHunting)
         {
-            if (player != null && !player.life.isDead && player.stance.stance != EPlayerStance.SWIM)
+            if (player != null && player.life.IsAlive && player.stance.stance != EPlayerStance.SWIM)
             {
                 target = player.transform.position;
                 float num2 = MathfEx.HorizontalDistanceSquared(target, base.transform.position);

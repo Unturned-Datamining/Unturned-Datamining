@@ -18,7 +18,7 @@ public class VolumeTeleporter : MonoBehaviour
     private IEnumerator teleport()
     {
         yield return new WaitForSeconds(3f);
-        if (target != null && playerTeleported != null && !playerTeleported.life.isDead)
+        if (target != null && playerTeleported != null && playerTeleported.life.IsAlive)
         {
             playerTeleported.teleportToLocation(target.position, target.rotation.eulerAngles.y);
             if (playerTeleported.equipment.isSelected)

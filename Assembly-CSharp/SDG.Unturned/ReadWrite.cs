@@ -1,6 +1,4 @@
 using System.IO;
-using System.Security.AccessControl;
-using System.Security.Principal;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
@@ -598,30 +596,7 @@ public class ReadWrite
 
     public static bool hasDirectoryWritePermission(string path)
     {
-        try
-        {
-            AuthorizationRuleCollection accessRules = Directory.GetAccessControl(path).GetAccessRules(includeExplicit: true, includeInherited: true, typeof(SecurityIdentifier));
-            bool result = false;
-            foreach (FileSystemAccessRule item in accessRules)
-            {
-                if ((item.FileSystemRights & FileSystemRights.Write) == FileSystemRights.Write)
-                {
-                    switch (item.AccessControlType)
-                    {
-                    case AccessControlType.Allow:
-                        result = true;
-                        break;
-                    case AccessControlType.Deny:
-                        return false;
-                    }
-                }
-            }
-            return result;
-        }
-        catch
-        {
-            return false;
-        }
+        return true;
     }
 
     public static string[] getFolders(string path)

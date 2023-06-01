@@ -16,7 +16,7 @@ public struct OneShotAudioHandle
     {
         if (audioSource != null)
         {
-            if (playId == audioSource.playId)
+            if (!audioSource.isInPool && playId == audioSource.playId)
             {
                 AudioSourcePool.Get().StopAndReleaseAudioSource(audioSource);
             }

@@ -1176,7 +1176,7 @@ public class Player : MonoBehaviour
 
     protected void savePositionAndRotation()
     {
-        bool flag = !life.isDead;
+        bool flag = life.IsAlive;
         if (flag)
         {
             Vector3 vector = base.transform.position;

@@ -41,19 +41,23 @@ CrosshairShape_Label Crosshair Shape
 
 Metric_On Metric
 Metric_Off Imperial
-Metric_Tooltip Measurement System
+Metric_Tooltip Affects display of distance and speed.
+Metric_Label Unit System
 
 Talk_On Instant Talking
 Talk_Off Animated Talking
-Talk_Tooltip NPC Text Animation
+Talk_Tooltip Instant disables dialogue pauses and the per-letter animation.
+Talk_Label NPC Text Animation
 
-UI_Free White Interface
-UI_Pro Black Interface
-UI_Tooltip Interface Skin
+UI_Free Light
+UI_Pro Dark
+UI_Tooltip Light is more useful when combined with the UI color options from the Gold Upgrade.
+UI_Label Interface Theme
 
 Hitmarker_Static Static Hitmarkers
 Hitmarker_Dynamic Dynamic Hitmarkers
-Hitmarker_Tooltip Hitmarker Locking
+Hitmarker_Tooltip Static places hitmarkers in the center of the screen, whereas Dynamic tracks the 3D hit.
+Hitmarker_Label Hitmarker Positioning
 HitmarkerStyle_Animated Animated
 HitmarkerStyle_Classic Classic
 HitmarkerStyle_Label Hitmarker Style

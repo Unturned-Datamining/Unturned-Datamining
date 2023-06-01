@@ -166,7 +166,7 @@ public class PlayerInteract : PlayerCaller
         {
             return;
         }
-        if (base.player.stance.stance != EPlayerStance.DRIVING && base.player.stance.stance != EPlayerStance.SITTING && !base.player.life.isDead && !base.player.workzone.isBuilding)
+        if (base.player.stance.stance != EPlayerStance.DRIVING && base.player.stance.stance != EPlayerStance.SITTING && base.player.life.IsAlive && !base.player.workzone.isBuilding)
         {
             if (Time.realtimeSinceStartup - lastInteract > 0.1f)
             {
@@ -261,7 +261,7 @@ public class PlayerInteract : PlayerCaller
             _interactable = null;
             _interactable2 = null;
         }
-        if (base.player.life.isDead)
+        if (!base.player.life.IsAlive)
         {
             return;
         }

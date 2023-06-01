@@ -37,7 +37,7 @@ public class GermanyTeleporterB : GermanyTeleporterA
 
     private void onPlayerLifeUpdated(Player player)
     {
-        if (!(player == null) && player.life.isDead && !((player.transform.position - base.transform.position).sqrMagnitude > sqrBossRadius) && player.quests.getQuestStatus(248) != ENPCQuestStatus.COMPLETED)
+        if (!(player == null) && !player.life.IsAlive && !((player.transform.position - base.transform.position).sqrMagnitude > sqrBossRadius) && player.quests.getQuestStatus(248) != ENPCQuestStatus.COMPLETED)
         {
             player.quests.sendRemoveQuest(248);
         }

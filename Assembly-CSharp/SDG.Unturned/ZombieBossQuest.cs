@@ -44,7 +44,7 @@ public class ZombieBossQuest : MonoBehaviour
 
     private void onPlayerLifeUpdated(Player player)
     {
-        if (!(player == null) && player.life.isDead && !((player.transform.position - base.transform.position).sqrMagnitude > sqrRadius))
+        if (!(player == null) && !player.life.IsAlive && !((player.transform.position - base.transform.position).sqrMagnitude > sqrRadius))
         {
             player.quests.sendRemoveQuest(213);
         }

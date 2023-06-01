@@ -634,7 +634,7 @@ public class PlayerInput : PlayerCaller
                     if (playerInputPacket is DrivingPlayerInputPacket)
                     {
                         DrivingPlayerInputPacket drivingPlayerInputPacket2 = playerInputPacket as DrivingPlayerInputPacket;
-                        if (!base.player.life.isDead)
+                        if (base.player.life.IsAlive)
                         {
                             base.player.life.simulate(simulation);
                             base.player.look.simulate(0f, 0f, RATE);
@@ -648,7 +648,7 @@ public class PlayerInput : PlayerCaller
                     {
                         WalkingPlayerInputPacket walkingPlayerInputPacket2 = playerInputPacket as WalkingPlayerInputPacket;
                         byte analog = walkingPlayerInputPacket2.analog;
-                        if (!base.player.life.isDead)
+                        if (base.player.life.IsAlive)
                         {
                             base.player.life.simulate(simulation);
                             base.player.look.simulate(walkingPlayerInputPacket2.yaw, walkingPlayerInputPacket2.pitch, RATE);
@@ -689,7 +689,7 @@ public class PlayerInput : PlayerCaller
                     while (consumed < buffer)
                     {
                         consumed++;
-                        if (!base.player.life.isDead)
+                        if (base.player.life.IsAlive)
                         {
                             base.player.equipment.tock(clock);
                         }
