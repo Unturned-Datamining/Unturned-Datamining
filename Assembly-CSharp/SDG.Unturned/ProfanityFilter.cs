@@ -14,7 +14,11 @@ public class ProfanityFilter
 
     public static CommandLineFlag shouldInitSteamTextFiltering = new CommandLineFlag(defaultValue: true, "-NoSteamTextFiltering");
 
-    private static readonly string[] hardcodedBannedWords = new string[10] { "nigger", "niger", "jew", "fag", "faggot", "fagot", "faggit", "fagit", "rape", "raped" };
+    private static readonly string[] hardcodedBannedWords = new string[18]
+    {
+        "nigger", "niggers", "niger", "nigers", "jew", "jews", "fag", "fags", "faggot", "faggots",
+        "fagot", "fagots", "faggit", "faggits", "fagit", "fagits", "rape", "raped"
+    };
 
     public static string[] getCurseWords()
     {
