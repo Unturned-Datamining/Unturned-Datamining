@@ -94,7 +94,7 @@ public class ObjectAsset : Asset
 
     public INPCCondition[] interactabilityConditions;
 
-    public INPCReward[] interactabilityRewards;
+    protected NPCRewardsList interactabilityRewards;
 
     public EObjectRubble rubble;
 
@@ -420,13 +420,7 @@ public class ObjectAsset : Asset
 
     public void grantInteractabilityRewards(Player player, bool shouldSend)
     {
-        if (interactabilityRewards != null)
-        {
-            for (int i = 0; i < interactabilityRewards.Length; i++)
-            {
-                interactabilityRewards[i].grantReward(player, shouldSend);
-            }
-        }
+        interactabilityRewards.Grant(player, shouldSend);
     }
 
     protected bool recursivelyFixTag(GameObject parentGameObject, string oldTag, string newTag)
@@ -676,8 +670,7 @@ public class ObjectAsset : Asset
                 interactabilityEffect = data.ParseGuidOrLegacyId("Interactability_Effect", out interactabilityEffectGuid);
                 interactabilityConditions = new INPCCondition[data.ParseUInt8("Interactability_Conditions", 0)];
                 NPCTool.readConditions(data, localization, "Interactability_Condition_", interactabilityConditions, this);
-                interactabilityRewards = new INPCReward[data.ParseUInt8("Interactability_Rewards", 0)];
-                NPCTool.readRewards(data, localization, "Interactability_Reward_", interactabilityRewards, this);
+                interactabilityRewards.Parse(data, localization, this, "Interactability_Rewards", "Interactability_Reward_");
                 interactabilityResource = data.ParseUInt16("Interactability_Resource", 0);
                 interactabilityResourceState = BitConverter.GetBytes(interactabilityResource);
             }

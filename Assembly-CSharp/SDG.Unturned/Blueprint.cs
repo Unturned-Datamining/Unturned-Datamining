@@ -40,6 +40,8 @@ public class Blueprint
 
     public ushort items;
 
+    protected NPCRewardsList questRewardsList;
+
     public bool canBeVisibleWhenSearchedWithoutRequiredItems = true;
 
     public ItemAsset sourceItem { get; protected set; }
@@ -77,7 +79,7 @@ public class Blueprint
 
     public INPCCondition[] questConditions { get; protected set; }
 
-    public INPCReward[] questRewards { get; protected set; }
+    public INPCReward[] questRewards => questRewardsList.rewards;
 
     public EffectAsset FindBuildEffectAsset()
     {
@@ -112,21 +114,15 @@ public class Blueprint
 
     public void grantRewards(Player player, bool shouldSend)
     {
-        if (questRewards != null)
-        {
-            for (int i = 0; i < questRewards.Length; i++)
-            {
-                questRewards[i].grantReward(player, shouldSend);
-            }
-        }
+        questRewardsList.Grant(player, shouldSend);
     }
 
-    public Blueprint(ItemAsset newSourceItem, byte newID, EBlueprintType newType, BlueprintSupply[] newSupplies, BlueprintOutput[] newOutputs, ushort newTool, bool newToolCritical, ushort newBuild, byte newLevel, EBlueprintSkill newSkill, bool newTransferState, string newMap, INPCCondition[] newQuestConditions, INPCReward[] newQuestRewards)
-        : this(newSourceItem, newID, newType, newSupplies, newOutputs, newTool, newToolCritical, newBuild, default(Guid), newLevel, newSkill, newTransferState, newMap, newQuestConditions, newQuestRewards)
+    public Blueprint(ItemAsset newSourceItem, byte newID, EBlueprintType newType, BlueprintSupply[] newSupplies, BlueprintOutput[] newOutputs, ushort newTool, bool newToolCritical, ushort newBuild, byte newLevel, EBlueprintSkill newSkill, bool newTransferState, string newMap, INPCCondition[] newQuestConditions, NPCRewardsList newQuestRewardsList)
+        : this(newSourceItem, newID, newType, newSupplies, newOutputs, newTool, newToolCritical, newBuild, default(Guid), newLevel, newSkill, newTransferState, newMap, newQuestConditions, newQuestRewardsList)
     {
     }
 
-    public Blueprint(ItemAsset newSourceItem, byte newID, EBlueprintType newType, BlueprintSupply[] newSupplies, BlueprintOutput[] newOutputs, ushort newTool, bool newToolCritical, ushort newBuild, Guid newBuildEffectGuid, byte newLevel, EBlueprintSkill newSkill, bool newTransferState, string newMap, INPCCondition[] newQuestConditions, INPCReward[] newQuestRewards)
+    public Blueprint(ItemAsset newSourceItem, byte newID, EBlueprintType newType, BlueprintSupply[] newSupplies, BlueprintOutput[] newOutputs, ushort newTool, bool newToolCritical, ushort newBuild, Guid newBuildEffectGuid, byte newLevel, EBlueprintSkill newSkill, bool newTransferState, string newMap, INPCCondition[] newQuestConditions, NPCRewardsList newQuestRewardsList)
     {
         sourceItem = newSourceItem;
         _id = newID;
@@ -142,7 +138,7 @@ public class Blueprint
         _transferState = newTransferState;
         map = newMap;
         questConditions = newQuestConditions;
-        questRewards = newQuestRewards;
+        questRewardsList = newQuestRewardsList;
         hasSupplies = false;
         hasTool = false;
         tools = 0;

@@ -173,19 +173,19 @@ public class DialogueAsset : Asset
             byte? faceOverride = ((!data.ContainsKey("Message_" + b + "_FaceOverride")) ? null : new byte?(data.ParseUInt8("Message_" + b + "_FaceOverride", 0)));
             INPCCondition[] array3 = new INPCCondition[data.ParseUInt8("Message_" + b + "_Conditions", 0)];
             NPCTool.readConditions(data, localization, "Message_" + b + "_Condition_", array3, this);
-            INPCReward[] array4 = new INPCReward[data.ParseUInt8("Message_" + b + "_Rewards", 0)];
-            NPCTool.readRewards(data, localization, "Message_" + b + "_Reward_", array4, this);
-            messages[b] = new DialogueMessage(b, array, array2, newPrev, guid, faceOverride, array3, array4);
+            NPCRewardsList newRewardsList = default(NPCRewardsList);
+            newRewardsList.Parse(data, localization, this, "Message_" + b + "_Rewards", "Message_" + b + "_Reward_");
+            messages[b] = new DialogueMessage(b, array, array2, newPrev, guid, faceOverride, array3, newRewardsList);
         }
         responses = new DialogueResponse[num2];
         for (byte b4 = 0; b4 < responses.Length; b4 = (byte)(b4 + 1))
         {
-            byte[] array5 = new byte[data.ParseUInt8("Response_" + b4 + "_Messages", 0)];
-            for (byte b5 = 0; b5 < array5.Length; b5 = (byte)(b5 + 1))
+            byte[] array4 = new byte[data.ParseUInt8("Response_" + b4 + "_Messages", 0)];
+            for (byte b5 = 0; b5 < array4.Length; b5 = (byte)(b5 + 1))
             {
                 string text2 = "Response_" + b4 + "_Message_" + b5;
-                array5[b5] = data.ParseUInt8(text2, 0);
-                if (array5[b5] >= num)
+                array4[b5] = data.ParseUInt8(text2, 0);
+                if (array4[b5] >= num)
                 {
                     Assets.reportError(this, "{0} out of bounds ({1})", text2, num);
                 }
@@ -203,11 +203,11 @@ public class DialogueAsset : Asset
             {
                 throw new NotSupportedException("missing response " + b4);
             }
-            INPCCondition[] array6 = new INPCCondition[data.ParseUInt8("Response_" + b4 + "_Conditions", 0)];
-            NPCTool.readConditions(data, localization, "Response_" + b4 + "_Condition_", array6, this);
-            INPCReward[] array7 = new INPCReward[data.ParseUInt8("Response_" + b4 + "_Rewards", 0)];
-            NPCTool.readRewards(data, localization, "Response_" + b4 + "_Reward_", array7, this);
-            responses[b4] = new DialogueResponse(b4, array5, newDialogue, guid2, newQuest, guid3, newVendor, guid4, desc2, array6, array7);
+            INPCCondition[] array5 = new INPCCondition[data.ParseUInt8("Response_" + b4 + "_Conditions", 0)];
+            NPCTool.readConditions(data, localization, "Response_" + b4 + "_Condition_", array5, this);
+            NPCRewardsList newRewardsList2 = default(NPCRewardsList);
+            newRewardsList2.Parse(data, localization, this, "Response_" + b4 + "_Rewards", "Response_" + b4 + "_Reward_");
+            responses[b4] = new DialogueResponse(b4, array4, newDialogue, guid2, newQuest, guid3, newVendor, guid4, desc2, array5, newRewardsList2);
         }
     }
 }

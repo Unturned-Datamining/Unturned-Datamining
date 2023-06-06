@@ -2,6 +2,8 @@ namespace SDG.Unturned;
 
 public abstract class VendorElement
 {
+    protected NPCRewardsList rewardsList;
+
     public VendorAsset outerAsset { get; protected set; }
 
     public byte index { get; protected set; }
@@ -12,7 +14,7 @@ public abstract class VendorElement
 
     public INPCCondition[] conditions { get; protected set; }
 
-    public INPCReward[] rewards { get; protected set; }
+    public INPCReward[] rewards => rewardsList.rewards;
 
     public abstract string displayName { get; }
 
@@ -50,22 +52,16 @@ public abstract class VendorElement
 
     public void grantRewards(Player player, bool shouldSend)
     {
-        if (rewards != null)
-        {
-            for (int i = 0; i < rewards.Length; i++)
-            {
-                rewards[i].grantReward(player, shouldSend);
-            }
-        }
+        rewardsList.Grant(player, shouldSend);
     }
 
-    public VendorElement(VendorAsset newOuterAsset, byte newIndex, ushort newID, uint newCost, INPCCondition[] newConditions, INPCReward[] newRewards)
+    public VendorElement(VendorAsset newOuterAsset, byte newIndex, ushort newID, uint newCost, INPCCondition[] newConditions, NPCRewardsList newRewardsList)
     {
         outerAsset = newOuterAsset;
         index = newIndex;
         id = newID;
         cost = newCost;
         conditions = newConditions;
-        rewards = newRewards;
+        rewardsList = newRewardsList;
     }
 }

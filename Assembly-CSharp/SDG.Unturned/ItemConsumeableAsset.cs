@@ -46,6 +46,8 @@ public class ItemConsumeableAsset : ItemWeaponAsset
 
     protected ushort _explosion;
 
+    protected NPCRewardsList questRewardsList;
+
     public AudioClip use => _use;
 
     public byte health => _health;
@@ -101,7 +103,7 @@ public class ItemConsumeableAsset : ItemWeaponAsset
 
     public bool IsExplosive { get; private set; }
 
-    public INPCReward[] questRewards { get; protected set; }
+    public INPCReward[] questRewards => questRewardsList.rewards;
 
     public SpawnTableReward itemRewards { get; protected set; }
 
@@ -135,13 +137,7 @@ public class ItemConsumeableAsset : ItemWeaponAsset
 
     public void grantQuestRewards(Player player, bool shouldSend)
     {
-        if (questRewards != null)
-        {
-            for (int i = 0; i < questRewards.Length; i++)
-            {
-                questRewards[i].grantReward(player, shouldSend);
-            }
-        }
+        questRewardsList.Grant(player, shouldSend);
     }
 
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
@@ -177,8 +173,7 @@ public class ItemConsumeableAsset : ItemWeaponAsset
         _hasAid = data.ContainsKey("Aid");
         foodConstrainsWater = food >= water;
         shouldDeleteAfterUse = data.ParseBool("Should_Delete_After_Use", defaultValue: true);
-        questRewards = new INPCReward[data.ParseUInt8("Quest_Rewards", 0)];
-        NPCTool.readRewards(data, localization, "Quest_Reward_", questRewards, this);
+        questRewardsList.Parse(data, localization, this, "Quest_Rewards", "Quest_Reward_");
         ushort tableID = data.ParseUInt16("Item_Reward_Spawn_ID", 0);
         int min = data.ParseInt32("Min_Item_Rewards");
         int max = data.ParseInt32("Max_Item_Rewards");

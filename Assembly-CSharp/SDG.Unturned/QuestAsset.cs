@@ -4,13 +4,15 @@ namespace SDG.Unturned;
 
 public class QuestAsset : Asset
 {
+    protected NPCRewardsList rewardsList;
+
     public string questName { get; protected set; }
 
     public string questDescription { get; protected set; }
 
     public INPCCondition[] conditions { get; protected set; }
 
-    public INPCReward[] rewards { get; protected set; }
+    public INPCReward[] rewards => rewardsList.rewards;
 
     public override EAssetType assetCategory => EAssetType.NPC;
 
@@ -42,13 +44,7 @@ public class QuestAsset : Asset
 
     public void grantRewards(Player player, bool shouldSend)
     {
-        if (rewards != null)
-        {
-            for (int i = 0; i < rewards.Length; i++)
-            {
-                rewards[i].grantReward(player, shouldSend);
-            }
-        }
+        rewardsList.Grant(player, shouldSend);
     }
 
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
@@ -66,7 +62,6 @@ public class QuestAsset : Asset
         questDescription = desc;
         conditions = new INPCCondition[data.ParseUInt8("Conditions", 0)];
         NPCTool.readConditions(data, localization, "Condition_", conditions, this);
-        rewards = new INPCReward[data.ParseUInt8("Rewards", 0)];
-        NPCTool.readRewards(data, localization, "Reward_", rewards, this);
+        rewardsList.Parse(data, localization, this, "Rewards", "Reward_");
     }
 }

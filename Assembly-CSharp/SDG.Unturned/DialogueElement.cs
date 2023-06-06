@@ -2,11 +2,13 @@ namespace SDG.Unturned;
 
 public class DialogueElement
 {
+    protected NPCRewardsList rewardsList;
+
     public byte index { get; protected set; }
 
     public INPCCondition[] conditions { get; protected set; }
 
-    public INPCReward[] rewards { get; protected set; }
+    public INPCReward[] rewards => rewardsList.rewards;
 
     public bool areConditionsMet(Player player)
     {
@@ -36,19 +38,13 @@ public class DialogueElement
 
     public void grantRewards(Player player, bool shouldSend)
     {
-        if (rewards != null)
-        {
-            for (int i = 0; i < rewards.Length; i++)
-            {
-                rewards[i].grantReward(player, shouldSend);
-            }
-        }
+        rewardsList.Grant(player, shouldSend);
     }
 
-    public DialogueElement(byte newIndex, INPCCondition[] newConditions, INPCReward[] newRewards)
+    public DialogueElement(byte newIndex, INPCCondition[] newConditions, NPCRewardsList newRewardsList)
     {
         index = newIndex;
         conditions = newConditions;
-        rewards = newRewards;
+        rewardsList = newRewardsList;
     }
 }

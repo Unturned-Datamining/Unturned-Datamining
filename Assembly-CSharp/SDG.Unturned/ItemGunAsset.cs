@@ -161,7 +161,7 @@ public class ItemGunAsset : ItemWeaponAsset
 
     public float aimingMovementSpeedMultiplier;
 
-    public INPCReward[] shootQuestRewards;
+    protected NPCRewardsList shootQuestRewards;
 
     public AudioClip shoot => _shoot;
 
@@ -367,14 +367,7 @@ public class ItemGunAsset : ItemWeaponAsset
 
     public void GrantShootQuestRewards(Player player)
     {
-        if (shootQuestRewards != null)
-        {
-            INPCReward[] array = shootQuestRewards;
-            for (int i = 0; i < array.Length; i++)
-            {
-                array[i].grantReward(player, shouldSend: true);
-            }
-        }
+        shootQuestRewards.Grant(player);
     }
 
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
@@ -625,12 +618,7 @@ public class ItemGunAsset : ItemWeaponAsset
         }
         float defaultValue2 = ((action == EAction.String) ? 16f : ((action != EAction.Rocket) ? 512f : 64f));
         gunshotRolloffDistance = data.ParseFloat("Gunshot_Rolloff_Distance", defaultValue2);
-        int num9 = data.ParseInt32("Shoot_Quest_Rewards");
-        if (num9 > 0)
-        {
-            shootQuestRewards = new INPCReward[num9];
-            NPCTool.readRewards(data, localization, "Shoot_Quest_Reward_", shootQuestRewards, this);
-        }
+        shootQuestRewards.Parse(data, localization, this, "Shoot_Quest_Rewards", "Shoot_Quest_Reward_");
         aimInDuration = data.ParseFloat("Aim_In_Duration", 0.2f);
         shouldScaleAimAnimations = data.ParseBool("Scale_Aim_Animation_Speed", defaultValue: true);
     }

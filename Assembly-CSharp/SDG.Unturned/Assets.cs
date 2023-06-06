@@ -959,7 +959,11 @@ public class Assets : MonoBehaviour
             {
                 return false;
             }
-            if (myBlueprint.questRewards.Length != yourBlueprint.questRewards.Length)
+            if (myBlueprint.questRewards != null != (yourBlueprint.questRewards != null))
+            {
+                return false;
+            }
+            if (myBlueprint.questRewards != null && myBlueprint.questRewards.Length != yourBlueprint.questRewards.Length)
             {
                 return false;
             }
@@ -988,11 +992,14 @@ public class Assets : MonoBehaviour
                     return false;
                 }
             }
-            for (int l = 0; l < myBlueprint.questRewards.Length; l++)
+            if (myBlueprint.questRewards != null)
             {
-                if (!myBlueprint.questRewards[l].Equals(yourBlueprint.questRewards[l]))
+                for (int l = 0; l < myBlueprint.questRewards.Length; l++)
                 {
-                    return false;
+                    if (!myBlueprint.questRewards[l].Equals(yourBlueprint.questRewards[l]))
+                    {
+                        return false;
+                    }
                 }
             }
             return true;

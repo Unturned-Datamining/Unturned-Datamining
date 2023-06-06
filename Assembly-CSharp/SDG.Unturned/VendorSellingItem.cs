@@ -59,8 +59,8 @@ public class VendorSellingItem : VendorSellingBase
         }
     }
 
-    public VendorSellingItem(VendorAsset newOuterAsset, byte newIndex, ushort newID, uint newCost, INPCCondition[] newConditions, INPCReward[] newRewards)
-        : base(newOuterAsset, newIndex, newID, newCost, newConditions, newRewards)
+    public VendorSellingItem(VendorAsset newOuterAsset, byte newIndex, ushort newID, uint newCost, INPCCondition[] newConditions, NPCRewardsList newRewardsList)
+        : base(newOuterAsset, newIndex, newID, newCost, newConditions, newRewardsList)
     {
     }
 }

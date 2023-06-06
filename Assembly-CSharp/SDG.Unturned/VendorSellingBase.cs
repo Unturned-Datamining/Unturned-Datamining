@@ -42,8 +42,8 @@ public abstract class VendorSellingBase : VendorElement
         total = 0;
     }
 
-    public VendorSellingBase(VendorAsset newOuterAsset, byte newIndex, ushort newID, uint newCost, INPCCondition[] newConditions, INPCReward[] newRewards)
-        : base(newOuterAsset, newIndex, newID, newCost, newConditions, newRewards)
+    public VendorSellingBase(VendorAsset newOuterAsset, byte newIndex, ushort newID, uint newCost, INPCCondition[] newConditions, NPCRewardsList newRewardsList)
+        : base(newOuterAsset, newIndex, newID, newCost, newConditions, newRewardsList)
     {
     }
 }

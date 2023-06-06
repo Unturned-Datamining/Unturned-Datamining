@@ -53,8 +53,8 @@ public class VendorSellingVehicle : VendorSellingBase
         VehicleManager.spawnLockedVehicleForPlayerV2(base.id, point, rotation, player);
     }
 
-    public VendorSellingVehicle(VendorAsset newOuterAsset, byte newIndex, ushort newID, uint newCost, string newSpawnpoint, INPCCondition[] newConditions, INPCReward[] newRewards)
-        : base(newOuterAsset, newIndex, newID, newCost, newConditions, newRewards)
+    public VendorSellingVehicle(VendorAsset newOuterAsset, byte newIndex, ushort newID, uint newCost, string newSpawnpoint, INPCCondition[] newConditions, NPCRewardsList newRewardsList)
+        : base(newOuterAsset, newIndex, newID, newCost, newConditions, newRewardsList)
     {
         spawnpoint = newSpawnpoint;
     }

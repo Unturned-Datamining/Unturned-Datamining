@@ -28,8 +28,8 @@
 	"Game":
 	{
 		"Major_Version": 23,
-		"Minor_Version": 8,
-		"Patch_Version": 0,
+		"Minor_Version": 9,
+		"Patch_Version": 100,
 		"GrantPackageIDs":
 		[
 			487

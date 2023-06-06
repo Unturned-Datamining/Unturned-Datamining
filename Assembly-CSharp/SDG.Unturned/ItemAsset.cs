@@ -539,9 +539,9 @@ public class ItemAsset : Asset, ISkinableAsset
             string @string = data.GetString("Blueprint_" + b3 + "_Map");
             INPCCondition[] array3 = new INPCCondition[data.ParseUInt8("Blueprint_" + b3 + "_Conditions", 0)];
             NPCTool.readConditions(data, localization, "Blueprint_" + b3 + "_Condition_", array3, this);
-            INPCReward[] array4 = new INPCReward[data.ParseUInt8("Blueprint_" + b3 + "_Rewards", 0)];
-            NPCTool.readRewards(data, localization, "Blueprint_" + b3 + "_Reward_", array4, this);
-            Blueprint blueprint = new Blueprint(this, b3, newType, array, array2, newTool, newToolCritical, newBuild, guid, b11, newSkill, newTransferState, @string, array3, array4);
+            NPCRewardsList newQuestRewardsList = default(NPCRewardsList);
+            newQuestRewardsList.Parse(data, localization, this, "Blueprint_" + b3 + "_Rewards", "Blueprint_" + b3 + "_Reward_");
+            Blueprint blueprint = new Blueprint(this, b3, newType, array, array2, newTool, newToolCritical, newBuild, guid, b11, newSkill, newTransferState, @string, array3, newQuestRewardsList);
             blueprint.canBeVisibleWhenSearchedWithoutRequiredItems = data.ParseBool($"Blueprint_{b3}_Searchable", defaultValue: true);
             blueprints.Add(blueprint);
         }
@@ -557,12 +557,12 @@ public class ItemAsset : Asset, ISkinableAsset
             {
                 b13 = 1;
             }
-            ActionBlueprint[] array5 = new ActionBlueprint[b13];
-            for (byte b14 = 0; b14 < array5.Length; b14 = (byte)(b14 + 1))
+            ActionBlueprint[] array4 = new ActionBlueprint[b13];
+            for (byte b14 = 0; b14 < array4.Length; b14 = (byte)(b14 + 1))
             {
                 byte newID3 = data.ParseUInt8("Action_" + b12 + "_Blueprint_" + b14 + "_Index", 0);
                 bool newLink = data.ContainsKey("Action_" + b12 + "_Blueprint_" + b14 + "_Link");
-                array5[b14] = new ActionBlueprint(newID3, newLink);
+                array4[b14] = new ActionBlueprint(newID3, newLink);
             }
             string string2 = data.GetString("Action_" + b12 + "_Key");
             string newText;
@@ -584,7 +584,7 @@ public class ItemAsset : Asset, ISkinableAsset
             {
                 num2 = id;
             }
-            actions.Add(new Action(num2, newType2, array5, newText, newTooltip, string2));
+            actions.Add(new Action(num2, newType2, array4, newText, newTooltip, string2));
         }
         if (b2 == 0)
         {

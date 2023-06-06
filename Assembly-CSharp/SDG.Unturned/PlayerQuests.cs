@@ -117,6 +117,12 @@ public class PlayerQuests : PlayerCaller
 
     private static readonly ClientInstanceMethod SendQuests = ClientInstanceMethod.Get(typeof(PlayerQuests), "ReceiveQuests");
 
+    private GameObject delayedRewardsGameObject;
+
+    private PlayerDelayedQuestRewardsComponent delayedRewardsComponent;
+
+    private bool hasCreatedDelayedRewards;
+
     private bool wasLoadCalled;
 
     private float lastVehiclePurchaseRealtime = -10f;
@@ -1768,12 +1774,45 @@ public class PlayerQuests : PlayerCaller
         onExternalConditionsUpdated?.Invoke();
     }
 
+    internal PlayerDelayedQuestRewardsComponent GetOrCreateDelayedQuestRewards()
+    {
+        if (!hasCreatedDelayedRewards && delayedRewardsComponent == null)
+        {
+            hasCreatedDelayedRewards = true;
+            delayedRewardsGameObject = new GameObject();
+            delayedRewardsComponent = delayedRewardsGameObject.AddComponent<PlayerDelayedQuestRewardsComponent>();
+            delayedRewardsComponent.player = base.player;
+        }
+        return delayedRewardsComponent;
+    }
+
+    internal void StopDelayedQuestRewards()
+    {
+        if (delayedRewardsComponent != null)
+        {
+            delayedRewardsComponent.StopAllCoroutines();
+        }
+    }
+
+    private void OnLifeUpdated(bool isDead)
+    {
+        if (isDead)
+        {
+            StopDelayedQuestRewards();
+        }
+    }
+
     internal void InitializePlayer()
     {
         flagsMap = new Dictionary<ushort, PlayerQuestFlag>();
         flagsList = new List<PlayerQuestFlag>();
         questsList = new List<PlayerQuest>();
         groupInvites = new HashSet<CSteamID>();
+        if (Provider.isServer || base.channel.isOwner)
+        {
+            PlayerLife life = base.player.life;
+            life.onLifeUpdated = (LifeUpdated)Delegate.Combine(life.onLifeUpdated, new LifeUpdated(OnLifeUpdated));
+        }
         if (Provider.isServer)
         {
             load();
@@ -1816,6 +1855,12 @@ public class PlayerQuests : PlayerCaller
         if (base.channel.isOwner)
         {
             LightingManager.onTimeOfDayChanged = (TimeOfDayChanged)Delegate.Remove(LightingManager.onTimeOfDayChanged, new TimeOfDayChanged(onTimeOfDayChanged));
+        }
+        hasCreatedDelayedRewards = true;
+        if (delayedRewardsGameObject != null)
+        {
+            UnityEngine.Object.Destroy(delayedRewardsGameObject);
+            delayedRewardsGameObject = null;
         }
     }
 

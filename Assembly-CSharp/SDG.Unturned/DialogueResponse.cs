@@ -75,8 +75,8 @@ public class DialogueResponse : DialogueElement
         return Assets.FindNpcAssetByGuidOrLegacyId<VendorAsset>(vendorGuid, vendor);
     }
 
-    public DialogueResponse(byte newID, byte[] newMessages, ushort newDialogue, Guid newDialogueGuid, ushort newQuest, Guid newQuestGuid, ushort newVendor, Guid newVendorGuid, string newText, INPCCondition[] newConditions, INPCReward[] newRewards)
-        : base(newID, newConditions, newRewards)
+    public DialogueResponse(byte newID, byte[] newMessages, ushort newDialogue, Guid newDialogueGuid, ushort newQuest, Guid newQuestGuid, ushort newVendor, Guid newVendorGuid, string newText, INPCCondition[] newConditions, NPCRewardsList newRewardsList)
+        : base(newID, newConditions, newRewardsList)
     {
         messages = newMessages;
         dialogue = newDialogue;

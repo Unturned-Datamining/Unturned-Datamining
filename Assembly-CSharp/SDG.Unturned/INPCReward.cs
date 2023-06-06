@@ -4,6 +4,8 @@ namespace SDG.Unturned;
 
 public class INPCReward
 {
+    public float grantDelaySeconds = -1f;
+
     protected string text;
 
     public virtual void grantReward(Player player, bool shouldSend)

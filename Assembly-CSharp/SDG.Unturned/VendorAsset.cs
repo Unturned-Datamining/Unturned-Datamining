@@ -50,9 +50,9 @@ public class VendorAsset : Asset
             uint newCost = data.ParseUInt32("Buying_" + b + "_Cost");
             INPCCondition[] array = new INPCCondition[data.ParseUInt8("Buying_" + b + "_Conditions", 0)];
             NPCTool.readConditions(data, localization, "Buying_" + b + "_Condition_", array, this);
-            INPCReward[] array2 = new INPCReward[data.ParseUInt8("Buying_" + b + "_Rewards", 0)];
-            NPCTool.readRewards(data, localization, "Buying_" + b + "_Reward_", array2, this);
-            buying[b] = new VendorBuying(this, b, newID, newCost, array, array2);
+            NPCRewardsList newRewardsList = default(NPCRewardsList);
+            newRewardsList.Parse(data, localization, this, "Buying_" + b + "_Rewards", "Buying_" + b + "_Reward_");
+            buying[b] = new VendorBuying(this, b, newID, newCost, array, newRewardsList);
         }
         selling = new VendorSellingBase[data.ParseUInt8("Selling", 0)];
         for (byte b2 = 0; b2 < selling.Length; b2 = (byte)(b2 + 1))
@@ -64,13 +64,13 @@ public class VendorAsset : Asset
             }
             ushort newID2 = data.ParseUInt16("Selling_" + b2 + "_ID", 0);
             uint newCost2 = data.ParseUInt32("Selling_" + b2 + "_Cost");
-            INPCCondition[] array3 = new INPCCondition[data.ParseUInt8("Selling_" + b2 + "_Conditions", 0)];
-            NPCTool.readConditions(data, localization, "Selling_" + b2 + "_Condition_", array3, this);
-            INPCReward[] array4 = new INPCReward[data.ParseUInt8("Selling_" + b2 + "_Rewards", 0)];
-            NPCTool.readRewards(data, localization, "Selling_" + b2 + "_Reward_", array4, this);
+            INPCCondition[] array2 = new INPCCondition[data.ParseUInt8("Selling_" + b2 + "_Conditions", 0)];
+            NPCTool.readConditions(data, localization, "Selling_" + b2 + "_Condition_", array2, this);
+            NPCRewardsList newRewardsList2 = default(NPCRewardsList);
+            newRewardsList2.Parse(data, localization, this, "Selling_" + b2 + "_Rewards", "Selling_" + b2 + "_Reward_");
             if (text == null || text.Equals("Item", StringComparison.InvariantCultureIgnoreCase))
             {
-                selling[b2] = new VendorSellingItem(this, b2, newID2, newCost2, array3, array4);
+                selling[b2] = new VendorSellingItem(this, b2, newID2, newCost2, array2, newRewardsList2);
             }
             else
             {
@@ -84,7 +84,7 @@ public class VendorAsset : Asset
                 {
                     Assets.reportError(this, "missing \"" + text2 + "\" for vehicle");
                 }
-                selling[b2] = new VendorSellingVehicle(this, b2, newID2, newCost2, @string, array3, array4);
+                selling[b2] = new VendorSellingVehicle(this, b2, newID2, newCost2, @string, array2, newRewardsList2);
             }
         }
         enableSorting = !data.ContainsKey("Disable_Sorting");
