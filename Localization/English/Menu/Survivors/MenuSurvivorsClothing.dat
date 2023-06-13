@@ -46,14 +46,14 @@ Alert_Crafting Crafting...
 Craft_Entry Craft {0} - <color=gold>Crafting Materials</color> x{1}
 Craft_Common_Cosmetic <color=common>Low Tier Drop Cosmetic</color>
 Craft_Common_Skin <color=common>Low Tier Drop Skin</color>
-Craft_Uncommon_Cosmetic <color=common>High Tier Drop Cosmetic</color>
-Craft_Uncommon_Skin <color=common>High Tier Drop Skin</color>
-Craft_Stat_Tracker_Total_Kills <color=#ff7f00>Total Kills Counter</color>
-Craft_Stat_Tracker_Player_Kills <color=#ff0000>Player Kills Counter</color>
-Craft_Ragdoll_Effect_Zero_Kelvin <color=#00ffff>Zero Kelvin Weapon Kit</color>
+Craft_Uncommon_Cosmetic <color=uncommon>High Tier Drop Cosmetic</color>
+Craft_Uncommon_Skin <color=uncommon>High Tier Drop Skin</color>
+Craft_Stat_Tracker_Total_Kills <color=gold>Total Kills Counter</color>
+Craft_Stat_Tracker_Player_Kills <color=gold>Player Kills Counter</color>
+Craft_Ragdoll_Effect_Zero_Kelvin <color=gold>Zero Kelvin Weapon Kit</color>
 Craft_Mythical_Skin <color=mythical>Random Mythical Skin</color>
-Craft_Stat_Tracker_Removal_Tool <color=#909090>Kill Counter Removal Tool</color>
-Craft_Ragdoll_Effect_Removal_Tool <color=#909090>Ragdoll Modifier Removal Tool</color>
+Craft_Stat_Tracker_Removal_Tool <color=gold>Kill Counter Removal Tool</color>
+Craft_Ragdoll_Effect_Removal_Tool <color=gold>Ragdoll Modifier Removal Tool</color>
 Craft_ProgressPridePin <color=rare>Progress Pride Pin</color> (Pride Month)
 Craft_ProgressPrideJersey <color=rare>Progress Pride Jersey</color> (Pride Month)
 

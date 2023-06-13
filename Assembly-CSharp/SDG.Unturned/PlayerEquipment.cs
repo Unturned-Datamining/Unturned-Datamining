@@ -210,6 +210,8 @@ public class PlayerEquipment : PlayerCaller
 
     public static Action<PlayerEquipment, EPlayerPunch> OnPunch_Global;
 
+    private static MasterBundleReference<AudioClip> punchClipRef = new MasterBundleReference<AudioClip>("core.masterbundle", "Sounds/MeleeAttack_02.mp3");
+
     public ushort itemID => asset?.id ?? 0;
 
     public byte[] state
@@ -1633,7 +1635,7 @@ public class PlayerEquipment : PlayerCaller
     {
         if (base.channel.isOwner)
         {
-            AudioClip audioClip = Assets.coreMasterBundle.assetBundle.LoadAsset<AudioClip>("Assets/CoreMasterBundle/Sounds/MeleeAttack_02.mp3");
+            AudioClip audioClip = punchClipRef.loadAsset();
             if (audioClip == null)
             {
                 UnturnedLog.warn("Missing built-in punching audio");

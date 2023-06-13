@@ -581,18 +581,6 @@ public class GraphicsSettings
         }
     }
 
-    public static EGraphicQuality boneQuality
-    {
-        get
-        {
-            return graphicsSettingsData.BoneQuality;
-        }
-        set
-        {
-            graphicsSettingsData.BoneQuality = value;
-        }
-    }
-
     public static EGraphicQuality terrainQuality
     {
         get
@@ -913,21 +901,7 @@ public class GraphicsSettings
         }
         QualitySettings.lodBias = 2f + normalizedDrawDistance * 3f + Mathf.Clamp(Provider.preferenceData.Graphics.LOD_Bias, 0f, 5f);
         LODGroupManager.Get().SynchronizeLODBias();
-        switch (boneQuality)
-        {
-        case EGraphicQuality.LOW:
-            QualitySettings.skinWeights = SkinWeights.OneBone;
-            break;
-        case EGraphicQuality.MEDIUM:
-            QualitySettings.skinWeights = SkinWeights.TwoBones;
-            break;
-        case EGraphicQuality.HIGH:
-            QualitySettings.skinWeights = SkinWeights.FourBones;
-            break;
-        default:
-            QualitySettings.skinWeights = SkinWeights.OneBone;
-            break;
-        }
+        QualitySettings.skinWeights = SkinWeights.FourBones;
         if (MainCamera.instance != null)
         {
             MainCamera.instance.renderingPath = ((renderMode != 0) ? RenderingPath.Forward : RenderingPath.DeferredShading);

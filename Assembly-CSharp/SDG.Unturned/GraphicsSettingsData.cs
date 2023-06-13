@@ -80,8 +80,6 @@ public class GraphicsSettingsData
 
     public EGraphicQuality OutlineQuality { get; set; }
 
-    public EGraphicQuality BoneQuality { get; set; }
-
     public EGraphicQuality TerrainQuality { get; set; }
 
     public EGraphicQuality WindQuality { get; set; }
@@ -126,7 +124,6 @@ public class GraphicsSettingsData
         WaterQuality = EGraphicQuality.LOW;
         ScopeQuality2 = EGraphicQuality.OFF;
         OutlineQuality = EGraphicQuality.LOW;
-        BoneQuality = EGraphicQuality.MEDIUM;
         TerrainQuality = EGraphicQuality.MEDIUM;
         WindQuality = EGraphicQuality.OFF;
         TreeMode = ETreeGraphicMode.LEGACY;

@@ -84,8 +84,6 @@ public class MenuConfigurationGraphicsUI
 
     private static SleekButtonState outlineButton;
 
-    private static SleekButtonState boneButton;
-
     private static SleekButtonState terrainButton;
 
     private static SleekButtonState windButton;
@@ -303,12 +301,6 @@ public class MenuConfigurationGraphicsUI
         GraphicsSettings.apply("changed outline quality");
     }
 
-    private static void onSwappedBoneState(SleekButtonState button, int index)
-    {
-        GraphicsSettings.boneQuality = (EGraphicQuality)(index + 1);
-        GraphicsSettings.apply("changed bone quality");
-    }
-
     private static void onSwappedTerrainState(SleekButtonState button, int index)
     {
         GraphicsSettings.terrainQuality = (EGraphicQuality)(index + 1);
@@ -391,7 +383,6 @@ public class MenuConfigurationGraphicsUI
         waterButton.state = (int)(GraphicsSettings.waterQuality - 1);
         scopeButton.state = (int)GraphicsSettings.scopeQuality;
         outlineButton.state = (int)(GraphicsSettings.outlineQuality - 1);
-        boneButton.state = (int)(GraphicsSettings.boneQuality - 1);
         terrainButton.state = (int)(GraphicsSettings.terrainQuality - 1);
         windButton.state = (int)GraphicsSettings.windQuality;
         treeModeButton.state = (int)GraphicsSettings.treeMode;
@@ -778,16 +769,6 @@ public class MenuConfigurationGraphicsUI
         outlineButton.tooltip = localization.format("Outline_Button_Tooltip");
         outlineButton.onSwappedState = onSwappedOutlineState;
         graphicsBox.AddChild(outlineButton);
-        num += 40;
-        boneButton = new SleekButtonState(new GUIContent(localization.format("Medium")), new GUIContent(localization.format("High")), new GUIContent(localization.format("Ultra")));
-        boneButton.positionOffset_X = 205;
-        boneButton.positionOffset_Y = num;
-        boneButton.sizeOffset_X = 200;
-        boneButton.sizeOffset_Y = 30;
-        boneButton.addLabel(localization.format("Bone_Button_Label"), ESleekSide.RIGHT);
-        boneButton.tooltip = RichTextUtil.wrapWithColor(localization.format("Bone_Button_Tooltip"), color) + RichTextUtil.wrapWithColor("\n" + localization.format("Bone_Influences_Medium", localization.format("Medium")) + "\n" + localization.format("Bone_Influences_High", localization.format("High")) + "\n" + localization.format("Bone_Influences_Ultra", localization.format("Ultra")), color2);
-        boneButton.onSwappedState = onSwappedBoneState;
-        graphicsBox.AddChild(boneButton);
         num += 40;
         terrainButton = new SleekButtonState(new GUIContent(localization.format("Low")), new GUIContent(localization.format("Medium")), new GUIContent(localization.format("High")), new GUIContent(localization.format("Ultra")));
         terrainButton.positionOffset_X = 205;

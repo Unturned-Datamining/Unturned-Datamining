@@ -84,9 +84,9 @@ public class InteractableVehicle : Interactable
 
     private float _steer;
 
-    private float fly;
+    private float propellerRotationDegrees;
 
-    private Rotor[] rotors;
+    private PropellerModel[] propellerModels;
 
     private GameObject exhaustGameObject;
 
@@ -1481,11 +1481,16 @@ public class InteractableVehicle : Interactable
                 }
             }
         }
-        if (rotors != null)
+        if (propellerModels != null)
         {
-            for (int k = 0; k < rotors.Length; k++)
+            PropellerModel[] array = propellerModels;
+            foreach (PropellerModel propellerModel in array)
             {
-                UnityEngine.Object.Destroy(rotors[k].prop.gameObject);
+                if (propellerModel.transform != null)
+                {
+                    UnityEngine.Object.Destroy(propellerModel.transform.gameObject);
+                    propellerModel.transform = null;
+                }
             }
         }
         if (exhaustParticleSystems != null)
@@ -2737,7 +2742,8 @@ public class InteractableVehicle : Interactable
             {
                 if (isDriven)
                 {
-                    fly += (spedometer + (hasBattery ? 8f : 0f)) * 89f * Time.deltaTime;
+                    propellerRotationDegrees += (spedometer + (hasBattery ? 8f : 0f)) * 89f * Time.deltaTime;
+                    propellerRotationDegrees %= 360f;
                 }
                 spin += spedometer * 45f * Time.deltaTime;
                 if (tires != null)
@@ -2761,28 +2767,23 @@ public class InteractableVehicle : Interactable
                     front.localRotation = restFront;
                     front.transform.Rotate(0f, 0f, steer, Space.Self);
                 }
-                if (rotors != null)
+                if (propellerModels != null && propellerModels.Length != 0)
                 {
-                    for (int k = 0; k < rotors.Length; k++)
+                    Quaternion quaternion = Quaternion.AngleAxis(propellerRotationDegrees, Vector3.up);
+                    float a = ((!isDriven) ? 1f : ((asset.engine != EEngine.PLANE) ? Mathf.Lerp(1f, 0f, (spedometer - 8f) / 8f) : Mathf.Lerp(1f, 0f, (spedometer - 16f) / 8f)));
+                    PropellerModel[] array2 = propellerModels;
+                    foreach (PropellerModel propellerModel in array2)
                     {
-                        Rotor rotor = rotors[k];
-                        if (rotor == null || rotor.prop == null || rotor.material_0 == null || rotor.material_1 == null)
+                        if (propellerModel == null || propellerModel.transform == null || propellerModel.bladeMaterial == null || propellerModel.motionBlurMaterial == null)
                         {
                             break;
                         }
-                        rotor.prop.localRotation = rotor.rest * Quaternion.Euler(0f, fly, 0f);
-                        Color color = rotor.material_0.color;
-                        if (asset.engine == EEngine.PLANE)
-                        {
-                            color.a = Mathf.Lerp(1f, 0f, (spedometer - 16f) / 8f);
-                        }
-                        else
-                        {
-                            color.a = Mathf.Lerp(1f, 0f, (spedometer - 8f) / 8f);
-                        }
-                        rotor.material_0.color = color;
+                        propellerModel.transform.localRotation = propellerModel.baseLocationRotation * quaternion;
+                        Color color = propellerModel.bladeMaterial.color;
+                        color.a = a;
+                        propellerModel.bladeMaterial.color = color;
                         color.a = (1f - color.a) * 0.25f;
-                        rotor.material_1.color = color;
+                        propellerModel.motionBlurMaterial.color = color;
                     }
                 }
                 float num = (MathfEx.IsNearlyZero(physicsSpeed, 0.04f) ? 0f : Mathf.Max(0f, Mathf.InverseLerp(0f, asset.speedMax, physicsSpeed)));
@@ -2795,8 +2796,8 @@ public class InteractableVehicle : Interactable
                             exhaustGameObject.SetActive(value: true);
                             isExhaustGameObjectActive = true;
                         }
-                        ParticleSystem[] array2 = exhaustParticleSystems;
-                        foreach (ParticleSystem particleSystem in array2)
+                        ParticleSystem[] array3 = exhaustParticleSystems;
+                        foreach (ParticleSystem particleSystem in array3)
                         {
                             ParticleSystem.EmissionModule emission = particleSystem.emission;
                             emission.rateOverTime = (float)particleSystem.main.maxParticles * num;
@@ -2805,10 +2806,10 @@ public class InteractableVehicle : Interactable
                     else if (isExhaustGameObjectActive)
                     {
                         bool flag = false;
-                        ParticleSystem[] array2 = exhaustParticleSystems;
-                        for (int j = 0; j < array2.Length; j++)
+                        ParticleSystem[] array3 = exhaustParticleSystems;
+                        for (int j = 0; j < array3.Length; j++)
                         {
-                            if (array2[j].particleCount > 0)
+                            if (array3[j].particleCount > 0)
                             {
                                 flag = true;
                                 break;
@@ -2975,15 +2976,15 @@ public class InteractableVehicle : Interactable
             }
             if (tires != null)
             {
-                for (int l = 0; l < tires.Length && tires[l] != null; l++)
+                for (int k = 0; k < tires.Length && tires[k] != null; k++)
                 {
-                    tires[l].update(deltaTime);
+                    tires[k].update(deltaTime);
                 }
             }
             if (asset.engine == EEngine.TRAIN && road != null)
             {
-                TrainCar[] array3 = trainCars;
-                foreach (TrainCar trainCar in array3)
+                TrainCar[] array4 = trainCars;
+                foreach (TrainCar trainCar in array4)
                 {
                     road.getTrackData(clampRoadPosition(roadPosition + trainCar.trackPositionOffset + asset.trainWheelOffset), out var position, out var normal, out var direction);
                     road.getTrackData(clampRoadPosition(roadPosition + trainCar.trackPositionOffset - asset.trainWheelOffset), out var position2, out var normal2, out var direction2);
@@ -3000,12 +3001,12 @@ public class InteractableVehicle : Interactable
                     Vector3 size = boxCollider.size;
                     size.z = num3;
                     int num4 = Physics.OverlapBoxNonAlloc(vector, size / 2f, grab, transform3.rotation, RayMasks.BLOCK_TRAIN, QueryTriggerInteraction.Ignore);
-                    for (int m = 0; m < num4; m++)
+                    for (int l = 0; l < num4; l++)
                     {
                         bool flag4 = false;
-                        for (int n = 0; n < trainCars.Length; n++)
+                        for (int m = 0; m < trainCars.Length; m++)
                         {
-                            if (grab[m].transform.IsChildOf(trainCars[n].root) || grab[m].transform == trainCars[n].root)
+                            if (grab[l].transform.IsChildOf(trainCars[m].root) || grab[l].transform == trainCars[m].root)
                             {
                                 flag4 = true;
                                 break;
@@ -3015,9 +3016,9 @@ public class InteractableVehicle : Interactable
                         {
                             continue;
                         }
-                        if (grab[m].CompareTag("Vehicle"))
+                        if (grab[l].CompareTag("Vehicle"))
                         {
-                            Rigidbody component = grab[m].GetComponent<Rigidbody>();
+                            Rigidbody component = grab[l].GetComponent<Rigidbody>();
                             if (!component.isKinematic)
                             {
                                 component.AddForce(base.transform.forward * altSpeedOutput, ForceMode.VelocityChange);
@@ -3054,8 +3055,8 @@ public class InteractableVehicle : Interactable
         }
         if (!Dedicator.IsDedicatedServer && road != null)
         {
-            TrainCar[] array3 = trainCars;
-            foreach (TrainCar trainCar2 in array3)
+            TrainCar[] array4 = trainCars;
+            foreach (TrainCar trainCar2 in array4)
             {
                 road.getTrackData(clampRoadPosition(roadPosition + trainCar2.trackPositionOffset + asset.trainWheelOffset), out var position3, out var normal3, out var direction3);
                 trainCar2.currentFrontPosition = Vector3.Lerp(trainCar2.currentFrontPosition, position3, 8f * Time.deltaTime);
@@ -3074,9 +3075,9 @@ public class InteractableVehicle : Interactable
             {
                 if (tires != null)
                 {
-                    for (int num5 = 0; num5 < tires.Length && tires[num5] != null; num5++)
+                    for (int n = 0; n < tires.Length && tires[n] != null; n++)
                     {
-                        tires[num5].checkForTraps();
+                        tires[n].checkForTraps();
                     }
                 }
             }
@@ -3176,27 +3177,27 @@ public class InteractableVehicle : Interactable
                 }
             }
             flag5 &= hasBattery;
-            float num6 = 0f;
+            float num5 = 0f;
             if (flag5)
             {
-                num6 = asset.batteryChargeRate;
+                num5 = asset.batteryChargeRate;
             }
             else if (flag6)
             {
-                num6 = asset.batteryBurnRate;
+                num5 = asset.batteryBurnRate;
             }
-            batteryBuffer += deltaTime * num6;
-            ushort num7 = (ushort)Mathf.FloorToInt(batteryBuffer);
-            if (num7 > 0)
+            batteryBuffer += deltaTime * num5;
+            ushort num6 = (ushort)Mathf.FloorToInt(batteryBuffer);
+            if (num6 > 0)
             {
-                batteryBuffer -= (int)num7;
+                batteryBuffer -= (int)num6;
                 if (flag5)
                 {
-                    askChargeBattery(num7);
+                    askChargeBattery(num6);
                 }
                 else if (flag6)
                 {
-                    askBurnBattery(num7);
+                    askBurnBattery(num6);
                 }
             }
         }
@@ -3663,45 +3664,42 @@ public class InteractableVehicle : Interactable
             Transform transform22 = base.transform.Find("Rotors");
             if (transform22 != null)
             {
-                rotors = new Rotor[transform22.childCount];
-                for (int num9 = 0; num9 < transform22.childCount; num9++)
+                propellerModels = new PropellerModel[transform22.childCount];
+                int num9 = 0;
+                foreach (Transform item4 in transform22)
                 {
-                    Transform child3 = transform22.GetChild(num9);
-                    Rotor rotor = new Rotor();
-                    rotor.prop = child3;
-                    rotor.material_0 = child3.Find("Model_0").GetComponent<Renderer>()?.material;
-                    rotor.material_1 = child3.Find("Model_1").GetComponent<Renderer>()?.material;
-                    rotor.rest = child3.localRotation;
+                    PropellerModel propellerModel = new PropellerModel();
+                    propellerModel.transform = item4;
+                    propellerModel.bladeMaterial = item4.Find("Model_0").GetComponent<Renderer>()?.material;
+                    propellerModel.motionBlurMaterial = item4.Find("Model_1").GetComponent<Renderer>()?.material;
+                    propellerModel.baseLocationRotation = item4.localRotation;
                     if (asset.requiredShaderUpgrade)
                     {
-                        if (StandardShaderUtils.isMaterialUsingStandardShader(rotor.material_0))
+                        if (StandardShaderUtils.isMaterialUsingStandardShader(propellerModel.bladeMaterial))
                         {
-                            StandardShaderUtils.setModeToTransparent(rotor.material_0);
+                            StandardShaderUtils.setModeToTransparent(propellerModel.bladeMaterial);
                         }
-                        if (StandardShaderUtils.isMaterialUsingStandardShader(rotor.material_1))
+                        if (StandardShaderUtils.isMaterialUsingStandardShader(propellerModel.motionBlurMaterial))
                         {
-                            StandardShaderUtils.setModeToTransparent(rotor.material_1);
+                            StandardShaderUtils.setModeToTransparent(propellerModel.motionBlurMaterial);
                         }
                     }
-                    rotor.sortHandle_0 = DynamicWaterTransparentSort.Get().Register(child3, rotor.material_0);
-                    rotor.sortHandle_1 = DynamicWaterTransparentSort.Get().Register(child3, rotor.material_1);
-                    rotors[num9] = rotor;
+                    propellerModel.bladeTransparencySortHandle = DynamicWaterTransparentSort.Get().Register(item4, propellerModel.bladeMaterial);
+                    propellerModel.motionBlurTransparencySortHandle = DynamicWaterTransparentSort.Get().Register(item4, propellerModel.motionBlurMaterial);
+                    propellerModels[num9] = propellerModel;
+                    num9++;
                 }
             }
-            else
+            Transform transform24 = base.transform.Find("Exhaust");
+            if (transform24 != null)
             {
-                rotors = new Rotor[0];
-            }
-            Transform transform23 = base.transform.Find("Exhaust");
-            if (transform23 != null)
-            {
-                exhaustGameObject = transform23.gameObject;
+                exhaustGameObject = transform24.gameObject;
                 isExhaustGameObjectActive = exhaustGameObject.activeSelf;
-                exhaustParticleSystems = new ParticleSystem[transform23.childCount];
-                for (int num10 = 0; num10 < transform23.childCount; num10++)
+                exhaustParticleSystems = new ParticleSystem[transform24.childCount];
+                for (int num10 = 0; num10 < transform24.childCount; num10++)
                 {
-                    Transform child4 = transform23.GetChild(num10);
-                    exhaustParticleSystems[num10] = child4.GetComponent<ParticleSystem>();
+                    Transform child3 = transform24.GetChild(num10);
+                    exhaustParticleSystems[num10] = child3.GetComponent<ParticleSystem>();
                 }
             }
             if (this.wheel != null)
@@ -3729,10 +3727,10 @@ public class InteractableVehicle : Interactable
             trainCars[0] = getTrainCar(base.transform);
             for (int num11 = 1; num11 <= childCount; num11++)
             {
-                Transform transform24 = transform7.Find("Train_Car_" + num11);
-                transform24.parent = null;
-                transform24.GetOrAddComponent<VehicleRef>().vehicle = this;
-                TrainCar trainCar = getTrainCar(transform24);
+                Transform transform25 = transform7.Find("Train_Car_" + num11);
+                transform25.parent = null;
+                transform25.GetOrAddComponent<VehicleRef>().vehicle = this;
+                TrainCar trainCar = getTrainCar(transform25);
                 trainCar.trackPositionOffset = (float)num11 * (0f - asset.trainCarLength);
                 trainCars[num11] = trainCar;
             }
@@ -3905,23 +3903,24 @@ public class InteractableVehicle : Interactable
                 }
             }
         }
-        if (rotors == null)
+        if (propellerModels == null)
         {
             return;
         }
-        for (int l = 0; l < rotors.Length; l++)
+        PropellerModel[] array = propellerModels;
+        foreach (PropellerModel propellerModel in array)
         {
-            if (rotors[l].material_0 != null)
+            if (propellerModel.bladeMaterial != null)
             {
-                DynamicWaterTransparentSort.Get().Unregister(rotors[l].sortHandle_0);
-                UnityEngine.Object.DestroyImmediate(rotors[l].material_0);
-                rotors[l].material_0 = null;
+                DynamicWaterTransparentSort.Get().Unregister(propellerModel.bladeTransparencySortHandle);
+                UnityEngine.Object.DestroyImmediate(propellerModel.bladeMaterial);
+                propellerModel.bladeMaterial = null;
             }
-            if (rotors[l].material_1 != null)
+            if (propellerModel.motionBlurMaterial != null)
             {
-                DynamicWaterTransparentSort.Get().Unregister(rotors[l].sortHandle_1);
-                UnityEngine.Object.DestroyImmediate(rotors[l].material_1);
-                rotors[l].material_1 = null;
+                DynamicWaterTransparentSort.Get().Unregister(propellerModel.motionBlurTransparencySortHandle);
+                UnityEngine.Object.DestroyImmediate(propellerModel.motionBlurMaterial);
+                propellerModel.motionBlurMaterial = null;
             }
         }
     }

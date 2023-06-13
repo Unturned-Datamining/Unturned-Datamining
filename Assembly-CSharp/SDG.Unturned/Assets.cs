@@ -76,7 +76,7 @@ public class Assets : MonoBehaviour
 
     private static List<MasterBundleConfig> pendingMasterBundles;
 
-    internal static MasterBundleConfig coreMasterBundle;
+    private static MasterBundleConfig coreMasterBundle;
 
     internal static List<AssetOrigin> assetOrigins;
 
@@ -555,29 +555,6 @@ public class Assets : MonoBehaviour
         {
             instance.StartCoroutine(instance.LoadAllAssets());
         }
-    }
-
-    private static MasterBundleConfig LoadMasterBundleConfig(AssetsWorker.MasterBundle mb)
-    {
-        try
-        {
-            MasterBundleConfig masterBundleConfig = findMasterBundleByName(mb.config.assetBundleName);
-            if (masterBundleConfig == null)
-            {
-                masterBundleConfig = findMasterBundleInListByName(pendingMasterBundles, mb.config.assetBundleName);
-            }
-            if (masterBundleConfig != null)
-            {
-                UnturnedLog.info("Found duplicate of master bundle '{0}' originally in '{1}' at '{2}'", mb.config.assetBundleName, masterBundleConfig.directoryPath, mb.config.directoryPath);
-                return null;
-            }
-            return mb.config;
-        }
-        catch (Exception e)
-        {
-            UnturnedLog.exception(e);
-        }
-        return null;
     }
 
     public static MasterBundleConfig findMasterBundleByPath(string path)
@@ -1164,40 +1141,69 @@ public class Assets : MonoBehaviour
         worker.RequestSearch(path, origin);
     }
 
+    private MasterBundleConfig FindAndRemoveLoadedPendingMasterBundle()
+    {
+        for (int num = pendingMasterBundles.Count - 1; num >= 0; num--)
+        {
+            MasterBundleConfig masterBundleConfig = pendingMasterBundles[num];
+            if (masterBundleConfig.assetBundleCreateRequest.isDone)
+            {
+                pendingMasterBundles.RemoveAtFast(num);
+                return masterBundleConfig;
+            }
+        }
+        return null;
+    }
+
     private IEnumerator LoadAssetsFromWorkerThread()
     {
         double realtimeSinceStartupAsDouble = Time.realtimeSinceStartupAsDouble;
+        int gcFrameCount = 0;
         while (worker.IsWorking || pendingMasterBundles.Count > 0)
         {
             if (worker.TryDequeueMasterBundle(out var result))
             {
-                MasterBundleConfig masterBundleConfig = LoadMasterBundleConfig(result);
-                if (masterBundleConfig != null)
-                {
-                    pendingMasterBundles.Add(masterBundleConfig);
-                    masterBundleConfig.StartLoad(result.assetBundleData, result.hash);
-                    loadingStats.isLoadingAssetBundles = true;
-                }
+                MasterBundleConfig config = result.config;
+                pendingMasterBundles.Add(config);
+                config.StartLoad(result.assetBundleData, result.hash);
+                loadingStats.isLoadingAssetBundles = true;
                 continue;
             }
             AssetsWorker.AssetDefinition result2;
             if (pendingMasterBundles.Count > 0)
             {
-                for (int num = pendingMasterBundles.Count - 1; num >= 0; num--)
+                MasterBundleConfig masterBundleConfig = FindAndRemoveLoadedPendingMasterBundle();
+                if (masterBundleConfig != null)
                 {
-                    MasterBundleConfig masterBundleConfig2 = pendingMasterBundles[num];
-                    if (masterBundleConfig2.assetBundleCreateRequest.isDone)
+                    masterBundleConfig.FinishLoad();
+                    loadingStats.totalMasterBundlesLoaded++;
+                    if (masterBundleConfig.assetBundle != null)
                     {
-                        pendingMasterBundles.RemoveAtFast(num);
-                        masterBundleConfig2.FinishLoad();
-                        loadingStats.totalMasterBundlesLoaded++;
-                        if (masterBundleConfig2.assetBundle != null)
+                        if (masterBundleConfig.origin == coreOrigin)
                         {
-                            if (masterBundleConfig2.origin == coreOrigin)
+                            coreMasterBundle = masterBundleConfig;
+                        }
+                        allMasterBundles.Add(masterBundleConfig);
+                    }
+                    else
+                    {
+                        MasterBundleConfig masterBundleConfig2 = findMasterBundleByName(masterBundleConfig.assetBundleName);
+                        if (masterBundleConfig2 != null)
+                        {
+                            masterBundleConfig.CopyAssetBundleFromDuplicateConfig(masterBundleConfig2);
+                            if (masterBundleConfig.assetBundle != null)
                             {
-                                coreMasterBundle = masterBundleConfig2;
+                                UnturnedLog.info("Using \"" + masterBundleConfig2.assetBundleName + "\" in \"" + masterBundleConfig2.directoryPath + "\" as fallback asset bundle for \"" + masterBundleConfig.directoryPath + "\"");
+                                allMasterBundles.Add(masterBundleConfig);
                             }
-                            allMasterBundles.Add(masterBundleConfig2);
+                            else
+                            {
+                                UnturnedLog.info("Unable to use \"" + masterBundleConfig2.assetBundleName + "\" in \"" + masterBundleConfig2.directoryPath + "\" as fallback asset bundle for \"" + masterBundleConfig.directoryPath + "\"");
+                            }
+                        }
+                        else
+                        {
+                            UnturnedLog.info("Unable to find a fallback asset bundle for \"" + masterBundleConfig.assetBundleName + "\"");
                         }
                     }
                 }
@@ -1213,7 +1219,9 @@ public class Assets : MonoBehaviour
             if (Time.realtimeSinceStartupAsDouble - realtimeSinceStartupAsDouble > 0.05)
             {
                 SyncAssetDefinitionLoadingProgress();
-                if ((bool)shouldCollectGarbageAggressively)
+                int num = gcFrameCount + 1;
+                gcFrameCount = num;
+                if (gcFrameCount % 25 == 0 && (bool)shouldCollectGarbageAggressively)
                 {
                     CleanupMemory();
                 }
@@ -1309,6 +1317,7 @@ public class Assets : MonoBehaviour
         {
             CheckForNpcErrors();
         }
+        CleanupMemory();
         LoadingUI.SetLoadingText("Loading_Misc");
         yield return null;
         onAssetsRefreshed?.Invoke();
@@ -1338,6 +1347,7 @@ public class Assets : MonoBehaviour
         double startTime = Time.realtimeSinceStartupAsDouble;
         yield return LoadAssetsFromWorkerThread();
         linkSpawnsIfDirty();
+        CleanupMemory();
         UnturnedLog.info($"Loading new assets took {Time.realtimeSinceStartupAsDouble - startTime}s");
         isLoadingFromUpdate = false;
         OnNewAssetsFinishedLoading?.Invoke();

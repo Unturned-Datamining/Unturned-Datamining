@@ -379,10 +379,6 @@ public class ChatManager : SteamCaller
         {
             UnturnedLog.info("UnityEventMsg {0}: '{1}'", callingPlayer.playerID.steamID, text);
         }
-        if (ProfanityFilter.NaiveContainsHardcodedBannedWord(text))
-        {
-            return;
-        }
         Color chatted = Color.white;
         if (callingPlayer.isAdmin && !Provider.hideAdmins)
         {
@@ -395,7 +391,7 @@ public class ChatManager : SteamCaller
         bool isRich = false;
         bool isVisible = true;
         onChatted?.Invoke(callingPlayer, eChatMode, ref chatted, ref isRich, text, ref isVisible);
-        if (!(process(callingPlayer, text, flag) && isVisible))
+        if (ProfanityFilter.NaiveContainsHardcodedBannedWord(text) || !(process(callingPlayer, text, flag) && isVisible))
         {
             return;
         }

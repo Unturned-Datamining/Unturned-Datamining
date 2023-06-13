@@ -16,6 +16,8 @@ public class MasterBundleConfig
 
     private double loadStartTime;
 
+    internal MasterBundleConfig sourceConfig;
+
     public string directoryPath { get; protected set; }
 
     public string assetBundleName { get; protected set; }
@@ -98,6 +100,18 @@ public class MasterBundleConfig
         return assetPrefix + "/" + assetPath;
     }
 
+    internal void CopyAssetBundleFromDuplicateConfig(MasterBundleConfig otherConfig)
+    {
+        sourceConfig = otherConfig;
+        version = otherConfig.version;
+        assetBundle = otherConfig.assetBundle;
+        hash = otherConfig.hash;
+        doesHashFileExist = otherConfig.doesHashFileExist;
+        serverHashes = otherConfig.serverHashes;
+        assetBundleCreateRequest = null;
+        CheckOwnerCustomDataAndMaybeUnload();
+    }
+
     public void StartLoad(byte[] inputData, byte[] inputHash)
     {
         UnturnedLog.info("Loading asset bundle \"" + assetBundleName + "\" from \"" + directoryPath + "\"...");
@@ -113,17 +127,19 @@ public class MasterBundleConfig
         if (assetBundle != null)
         {
             double num = Time.realtimeSinceStartupAsDouble - loadStartTime;
-            UnturnedLog.info($"Loading asset bundle \"{assetBundleName}\" took {num}s");
+            UnturnedLog.info($"Loading asset bundle \"{assetBundleName}\" from \"{directoryPath}\" took {num}s");
+            return;
         }
-        else
-        {
-            UnturnedLog.warn("Failed to load asset bundle: " + getAssetBundlePath());
-        }
+        UnturnedLog.warn("Failed to load asset bundle \"" + assetBundleName + "\" from \"" + directoryPath + "\"");
     }
 
     public void unload()
     {
-        if (assetBundle != null)
+        if (sourceConfig != null)
+        {
+            assetBundle = null;
+        }
+        else if (assetBundle != null)
         {
             assetBundle.Unload(unloadAllLoadedObjects: false);
             assetBundle = null;
@@ -140,7 +156,6 @@ public class MasterBundleConfig
         AssetBundleCustomData assetBundleCustomData = assetBundle.LoadAsset<AssetBundleCustomData>(text);
         if (assetBundleCustomData == null)
         {
-            UnturnedLog.info("Tried loading \"" + assetBundleName + "\" optional custom data from \"" + text + "\"");
             return;
         }
         UnturnedLog.info("Loaded \"" + assetBundleName + "\" custom data from \"" + text + "\"");

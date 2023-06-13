@@ -103,7 +103,13 @@ public class LightningWeatherComponent : MonoBehaviour
 
     private IEnumerator AsyncLoadEffects()
     {
-        AssetBundleRequest request4 = Assets.coreMasterBundle.LoadAssetAsync<GameObject>("Effects/Weather/Lightning/LightningEffect.prefab");
+        MasterBundleConfig coreMasterBundle = Assets.findMasterBundleByName("core.masterbundle");
+        if (coreMasterBundle == null)
+        {
+            UnturnedLog.warn("Lightning missing core asset bundle");
+            yield break;
+        }
+        AssetBundleRequest request4 = coreMasterBundle.LoadAssetAsync<GameObject>("Effects/Weather/Lightning/LightningEffect.prefab");
         if (request4 != null)
         {
             yield return request4;
@@ -115,13 +121,13 @@ public class LightningWeatherComponent : MonoBehaviour
                 lineRenderer = effectInstance.GetComponent<LineRenderer>();
             }
         }
-        request4 = Assets.coreMasterBundle.LoadAssetAsync<AudioClip>("Effects/Weather/Lightning/thunder_lightning_strike_rumble_01.wav");
+        request4 = coreMasterBundle.LoadAssetAsync<AudioClip>("Effects/Weather/Lightning/thunder_lightning_strike_rumble_01.wav");
         yield return request4;
         nearClip = request4.asset as AudioClip;
-        request4 = Assets.coreMasterBundle.LoadAssetAsync<AudioClip>("Effects/Weather/Lightning/thunder_lightning_strike_rumble_02.wav");
+        request4 = coreMasterBundle.LoadAssetAsync<AudioClip>("Effects/Weather/Lightning/thunder_lightning_strike_rumble_02.wav");
         yield return request4;
         mediumClip = request4.asset as AudioClip;
-        request4 = Assets.coreMasterBundle.LoadAssetAsync<AudioClip>("Effects/Weather/Lightning/thunder_lightning_strike_rumble_04.wav");
+        request4 = coreMasterBundle.LoadAssetAsync<AudioClip>("Effects/Weather/Lightning/thunder_lightning_strike_rumble_04.wav");
         yield return request4;
         farClip = request4.asset as AudioClip;
     }

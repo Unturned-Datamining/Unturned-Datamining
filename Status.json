@@ -29,7 +29,7 @@
 	{
 		"Major_Version": 23,
 		"Minor_Version": 9,
-		"Patch_Version": 100,
+		"Patch_Version": 101,
 		"GrantPackageIDs":
 		[
 			487
@@ -97,7 +97,7 @@
 			{
 				"Name": "France",
 				"Workshop_File_Id": 1975500516,
-				"Visible_In_Singleplayer_Recommendations_List": false
+				"Visible_In_Singleplayer_Recommendations_List": true
 			},
 			{
 				"Name": "California",

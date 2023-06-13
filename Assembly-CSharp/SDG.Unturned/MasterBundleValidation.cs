@@ -30,6 +30,10 @@ internal static class MasterBundleValidation
 
     private static MasterBundleHash loadHashForBundle(MasterBundleConfig bundle)
     {
+        if (bundle.sourceConfig != null)
+        {
+            bundle = bundle.sourceConfig;
+        }
         string hashFilePath = bundle.getHashFilePath();
         if (!File.Exists(hashFilePath))
         {

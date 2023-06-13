@@ -178,6 +178,12 @@ public class PlayerMovement : PlayerCaller
 
     private static readonly ClientInstanceMethod<float> SendPluginSpeedMultiplier = ClientInstanceMethod<float>.Get(typeof(PlayerMovement), "ReceivePluginSpeedMultiplier");
 
+    private static MasterBundleReference<OneShotAudioDefinition> lightWadingAudioRef = new MasterBundleReference<OneShotAudioDefinition>("core.masterbundle", "Effects/Physics/Swim/LightWading/Swim_LightWading.asset");
+
+    private static MasterBundleReference<OneShotAudioDefinition> mediumWadingAudioRef = new MasterBundleReference<OneShotAudioDefinition>("core.masterbundle", "Effects/Physics/Swim/MediumWading/Swim_MediumWading.asset");
+
+    private static MasterBundleReference<OneShotAudioDefinition> heavyWadingAudioRef = new MasterBundleReference<OneShotAudioDefinition>("core.masterbundle", "Effects/Physics/Swim/HeavyWading/Swim_HeavyWading.asset");
+
     private ControllerColliderHit mostRecentControllerColliderHit;
 
     public static bool forceTrustClient
@@ -695,7 +701,7 @@ public class PlayerMovement : PlayerCaller
         {
             if (base.player.stance.areEyesUnderwater)
             {
-                oneShotAudioDefinition = Assets.coreMasterBundle.assetBundle.LoadAsset<OneShotAudioDefinition>("Assets/CoreMasterBundle/Effects/Physics/Swim/MediumWading/Swim_MediumWading.asset");
+                oneShotAudioDefinition = mediumWadingAudioRef.loadAsset();
                 if (oneShotAudioDefinition == null)
                 {
                     UnturnedLog.warn("Missing built-in medium wading audio");
@@ -703,7 +709,7 @@ public class PlayerMovement : PlayerCaller
             }
             else
             {
-                oneShotAudioDefinition = Assets.coreMasterBundle.assetBundle.LoadAsset<OneShotAudioDefinition>("Assets/CoreMasterBundle/Effects/Physics/Swim/HeavyWading/Swim_HeavyWading.asset");
+                oneShotAudioDefinition = heavyWadingAudioRef.loadAsset();
                 if (oneShotAudioDefinition == null)
                 {
                     UnturnedLog.warn("Missing built-in heavy wading audio");
@@ -712,7 +718,7 @@ public class PlayerMovement : PlayerCaller
         }
         else if (WaterUtility.isPointUnderwater(base.transform.position + new Vector3(0f, 0.5f, 0f)))
         {
-            oneShotAudioDefinition = Assets.coreMasterBundle.assetBundle.LoadAsset<OneShotAudioDefinition>("Assets/CoreMasterBundle/Effects/Physics/Swim/LightWading/Swim_LightWading.asset");
+            oneShotAudioDefinition = lightWadingAudioRef.loadAsset();
             if (oneShotAudioDefinition == null)
             {
                 UnturnedLog.warn("Missing built-in light wading audio");

@@ -7,6 +7,10 @@ namespace SDG.Unturned;
 
 public class UseableHousingPlanner : Useable
 {
+    private static MasterBundleReference<OneShotAudioDefinition> popupAudioRef = new MasterBundleReference<OneShotAudioDefinition>("core.masterbundle", "Sounds/Popup/Popup.asset");
+
+    private static MasterBundleReference<AudioClip> errorClipRef = new MasterBundleReference<AudioClip>("core.masterbundle", "Sounds/Error.wav");
+
     private static readonly ClientInstanceMethod<bool> SendPlaceHousingItemResult = ClientInstanceMethod<bool>.Get(typeof(UseableHousingPlanner), "ReceivePlaceHousingItemResult");
 
     private static readonly ServerInstanceMethod<Guid, Vector3, float> SendPlaceHousingItem = ServerInstanceMethod<Guid, Vector3, float>.Get(typeof(UseableHousingPlanner), "ReceivePlaceHousingItem");
@@ -90,7 +94,7 @@ public class UseableHousingPlanner : Useable
     {
         if (success)
         {
-            OneShotAudioDefinition oneShotAudioDefinition = Assets.coreMasterBundle.assetBundle.LoadAsset<OneShotAudioDefinition>("Assets/CoreMasterBundle/Sounds/Popup/Popup.asset");
+            OneShotAudioDefinition oneShotAudioDefinition = popupAudioRef.loadAsset();
             if (oneShotAudioDefinition == null)
             {
                 UnturnedLog.warn("Missing built-in housing planner success audio");
@@ -102,7 +106,7 @@ public class UseableHousingPlanner : Useable
         }
         else
         {
-            AudioClip audioClip = Assets.coreMasterBundle.assetBundle.LoadAsset<AudioClip>("Assets/CoreMasterBundle/Sounds/Error.wav");
+            AudioClip audioClip = errorClipRef.loadAsset();
             if (audioClip == null)
             {
                 UnturnedLog.warn("Missing built-in housing planner error audio");

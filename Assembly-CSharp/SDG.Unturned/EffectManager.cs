@@ -1517,7 +1517,14 @@ public class EffectManager : SteamCaller
             {
                 continue;
             }
-            pool.Instantiate(item.effect, item.id.ToString(), item.preload);
+            try
+            {
+                pool.Instantiate(item.effect, item.id.ToString(), item.preload);
+            }
+            catch (Exception e)
+            {
+                UnturnedLog.exception(e, "Caught exception while pre-populating pool with effect " + item.FriendlyName + ":");
+            }
             if (item.splatter <= 0 || item.splatterPreload <= 0)
             {
                 continue;
@@ -1526,7 +1533,14 @@ public class EffectManager : SteamCaller
             {
                 if (!(item.splatters[i] == null))
                 {
-                    pool.Instantiate(item.splatters[i], "Splatter", item.splatterPreload);
+                    try
+                    {
+                        pool.Instantiate(item.splatters[i], "Splatter", item.splatterPreload);
+                    }
+                    catch (Exception e2)
+                    {
+                        UnturnedLog.exception(e2, $"Caught exception while pre-populating pool with effect {item.FriendlyName} Splatter_{i}:");
+                    }
                 }
             }
         }

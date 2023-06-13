@@ -58,8 +58,6 @@ Scope_Button_Label Scope Quality
 Scope_Button_Tooltip Dual-render scope resolution
 Outline_Button_Label Outline Quality
 Outline_Button_Tooltip Highlight resolution and blur
-Bone_Button_Label Animation Quality
-Bone_Button_Tooltip Bone Influences Per Vertex
 Terrain_Button_Label Terrain Quality
 Terrain_Button_Tooltip Landscape geometry resolution
 Wind_Button_Label Wind Quality
@@ -78,10 +76,6 @@ Planar_Reflection_Low {0}: Landscape Only
 Planar_Reflection_Medium {0}: Sky, Trees, Structures, Large Objects
 Planar_Reflection_High {0}: Vehicles, Barricades, Medium Objects
 Planar_Reflection_Ultra {0}: Players, AI, Effects
-
-Bone_Influences_Medium {0}: One
-Bone_Influences_High {0}: Two
-Bone_Influences_Ultra {0}: Four
 
 Wind_Low {0}: Basic Wind
 Wind_Medium {0}+: SpeedTree Layered Wind

@@ -23,8 +23,14 @@ public class TriggerGrenadeBase : MonoBehaviour
 
     private void Awake()
     {
-        BoxCollider component = GetComponent<BoxCollider>();
-        component.isTrigger = true;
-        component.size *= 2f;
+        Collider component = GetComponent<Collider>();
+        if (component != null)
+        {
+            component.isTrigger = true;
+            if (component is BoxCollider boxCollider)
+            {
+                boxCollider.size *= 2f;
+            }
+        }
     }
 }

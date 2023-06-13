@@ -252,7 +252,11 @@ public class UseableGun : Useable
 
     private static readonly ClientInstanceMethod<Vector3, Vector3, ushort, ushort> SendPlayProject = ClientInstanceMethod<Vector3, Vector3, ushort, ushort>.Get(typeof(UseableGun), "ReceivePlayProject");
 
+    private static MasterBundleReference<OneShotAudioDefinition> bulletFlybyAudioRef = new MasterBundleReference<OneShotAudioDefinition>("core.masterbundle", "Effects/Guns/BulletFlyby.asset");
+
     private static readonly ClientInstanceMethod SendPlayShoot = ClientInstanceMethod.Get(typeof(UseableGun), "ReceivePlayShoot");
+
+    private static MasterBundleReference<AudioClip> jabClipRef = new MasterBundleReference<AudioClip>("core.masterbundle", "Sounds/MeleeAttack_01.mp3");
 
     internal const float BALLISTICS_DELTA_TIME = 0.02f;
 
@@ -590,7 +594,7 @@ public class UseableGun : Useable
         Vector3 vector = origin + direction * num;
         if ((vector - position).sqrMagnitude < 25f)
         {
-            OneShotAudioDefinition oneShotAudioDefinition = Assets.coreMasterBundle.assetBundle.LoadAsset<OneShotAudioDefinition>("Assets/CoreMasterBundle/Effects/Guns/BulletFlyby.asset");
+            OneShotAudioDefinition oneShotAudioDefinition = bulletFlybyAudioRef.loadAsset();
             if (oneShotAudioDefinition == null)
             {
                 UnturnedLog.warn("Missing built-in bullet flyby audio");
@@ -1061,7 +1065,7 @@ public class UseableGun : Useable
         }
         if (base.channel.isOwner)
         {
-            AudioClip audioClip = Assets.coreMasterBundle.assetBundle.LoadAsset<AudioClip>("Assets/CoreMasterBundle/Sounds/MeleeAttack_01.mp3");
+            AudioClip audioClip = jabClipRef.loadAsset();
             if (audioClip == null)
             {
                 UnturnedLog.warn("Missing built-in bayonet audio");
