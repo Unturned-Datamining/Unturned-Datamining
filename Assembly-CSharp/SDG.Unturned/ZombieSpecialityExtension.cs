@@ -19,9 +19,22 @@ public static class ZombieSpecialityExtension
         case EZombieSpeciality.BOSS_NUCLEAR:
         case EZombieSpeciality.BOSS_ELVER_STOMPER:
         case EZombieSpeciality.BOSS_KUWAIT:
+        case EZombieSpeciality.BOSS_BUAK_ELECTRIC:
+        case EZombieSpeciality.BOSS_BUAK_WIND:
+        case EZombieSpeciality.BOSS_BUAK_FIRE:
+        case EZombieSpeciality.BOSS_BUAK_FINAL:
             return true;
         default:
             return false;
         }
+    }
+
+    public static bool IsFromBuakMap(this EZombieSpeciality speciality)
+    {
+        if ((uint)(speciality - 21) <= 3u)
+        {
+            return true;
+        }
+        return false;
     }
 }

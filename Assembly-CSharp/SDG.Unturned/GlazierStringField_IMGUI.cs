@@ -105,7 +105,7 @@ internal class GlazierStringField_IMGUI : GlazierElementBase_IMGUI, ISleekField,
                 GUI.FocusControl(string.Empty);
                 this.onEscaped?.Invoke(this);
             }
-            else if (Event.current.keyCode == KeyCode.Return && !multiline)
+            else if ((Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter) && !multiline)
             {
                 this.onEntered?.Invoke(this);
                 GUI.FocusControl(string.Empty);

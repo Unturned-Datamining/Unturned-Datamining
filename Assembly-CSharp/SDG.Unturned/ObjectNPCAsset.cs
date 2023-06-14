@@ -96,6 +96,8 @@ public class ObjectNPCAsset : ObjectAsset
 
     public float poseHeadOffset { get; protected set; }
 
+    public ushort playerKnowsNameFlagId { get; protected set; }
+
     public bool IsDialogueRefNull()
     {
         if (dialogue == 0)
@@ -108,6 +110,19 @@ public class ObjectNPCAsset : ObjectAsset
     public DialogueAsset FindDialogueAsset()
     {
         return Assets.FindNpcAssetByGuidOrLegacyId<DialogueAsset>(dialogueGuid, dialogue);
+    }
+
+    public string GetNameShownToPlayer(Player player)
+    {
+        if (player == null || playerKnowsNameFlagId == 0)
+        {
+            return npcName;
+        }
+        if (player.quests.getFlag(playerKnowsNameFlagId, out var value) && value == 1)
+        {
+            return npcName;
+        }
+        return "???";
     }
 
     public bool doesPlayerHaveAccessToVendor(Player player, VendorAsset vendorAsset)
@@ -175,5 +190,6 @@ public class ObjectNPCAsset : ObjectAsset
         {
             poseHeadOffset = 0.1f;
         }
+        playerKnowsNameFlagId = data.ParseUInt16("PlayerKnowsNameFlagID", 0);
     }
 }

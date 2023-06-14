@@ -8,7 +8,7 @@ public static class EZombieSpeciality_NetEnum
     {
         uint value2;
         bool result = reader.ReadBits(5, out value2);
-        if (value2 <= 20)
+        if (value2 <= 24)
         {
             value = (EZombieSpeciality)value2;
             return result;

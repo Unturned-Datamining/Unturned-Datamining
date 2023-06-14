@@ -143,7 +143,7 @@ public class PlayerNPCDialogueUI
         {
             DialogueResponse dialogueResponse = responses[i];
             string text2 = dialogueResponse.text;
-            text2 = text2.Replace("<name_npc>", (PlayerLifeUI.npc != null) ? PlayerLifeUI.npc.npcAsset.npcName : "?");
+            text2 = text2.Replace("<name_npc>", (PlayerLifeUI.npc != null) ? PlayerLifeUI.npc.npcAsset.GetNameShownToPlayer(Player.player) : "null");
             text2 = text2.Replace("<name_char>", Player.player.channel.owner.playerID.characterName);
             QuestAsset questAsset = dialogueResponse.FindQuestAsset();
             Texture2D newIcon = null;
@@ -189,7 +189,7 @@ public class PlayerNPCDialogueUI
         if (message != null && message.pages != null && dialoguePage < message.pages.Length)
         {
             dialogueText = message.pages[dialoguePage].text;
-            dialogueText = dialogueText.Replace("<name_npc>", (PlayerLifeUI.npc != null) ? PlayerLifeUI.npc.npcAsset.npcName : "?");
+            dialogueText = dialogueText.Replace("<name_npc>", (PlayerLifeUI.npc != null) ? PlayerLifeUI.npc.npcAsset.GetNameShownToPlayer(Player.player) : "null");
             dialogueText = dialogueText.Replace("<name_char>", Player.player.channel.owner.playerID.characterName);
         }
         else

@@ -260,6 +260,8 @@ public class Zombie : MonoBehaviour
 
     private static readonly AssetReference<EffectAsset> KuwaitBossFlashbangRef = new AssetReference<EffectAsset>("5436f56485c841a7bbec8e79a163ad19");
 
+    private static readonly AssetReference<EffectAsset> BuakBossFlashbangRef = new AssetReference<EffectAsset>("b7acfd045ceb40c1b84788cb9159d0f2");
+
     private static readonly AssetReference<EffectAsset> Zombie_0_Ref = new AssetReference<EffectAsset>("000f550dc3d44586b7fc0f6e5b2530d9");
 
     private static readonly AssetReference<EffectAsset> Zombie_1_Ref = new AssetReference<EffectAsset>("f2f0d31897024317b32b58c00c1f78dd");
@@ -371,9 +373,9 @@ public class Zombie : MonoBehaviour
     {
         get
         {
-            if (zombieRegion.isHyper)
+            if (zombieRegion.isHyper && speciality != EZombieSpeciality.BOSS_ALL)
             {
-                return speciality != EZombieSpeciality.BOSS_ALL;
+                return speciality != EZombieSpeciality.BOSS_BUAK_FINAL;
             }
             return false;
         }
@@ -512,7 +514,7 @@ public class Zombie : MonoBehaviour
                     EffectManager.effect(effectAsset, radiation.position, Vector3.up);
                 }
             }
-            if (burner != null && (speciality == EZombieSpeciality.BURNER || speciality == EZombieSpeciality.BOSS_FIRE || speciality == EZombieSpeciality.BOSS_MAGMA))
+            if (burner != null && (speciality == EZombieSpeciality.BURNER || speciality == EZombieSpeciality.BOSS_FIRE || speciality == EZombieSpeciality.BOSS_MAGMA || speciality == EZombieSpeciality.BOSS_BUAK_FIRE))
             {
                 EffectAsset effectAsset2 = Assets.find(Zombie_2_Ref);
                 if (effectAsset2 != null)
@@ -862,7 +864,7 @@ public class Zombie : MonoBehaviour
             {
                 DamageTool.explode(base.transform.position + new Vector3(0f, 0.25f, 0f), 2f, EDeathCause.ACID, CSteamID.Nil, 20f, 0f, 20f, 0f, 0f, 0f, 0f, 0f, out var _, EExplosionDamageType.ZOMBIE_ACID, 2f, playImpactEffect: true, penetrateBuildables: false, EDamageOrigin.Radioactive_Zombie_Explosion);
             }
-            if (speciality == EZombieSpeciality.BURNER || speciality == EZombieSpeciality.BOSS_FIRE || speciality == EZombieSpeciality.BOSS_MAGMA)
+            if (speciality == EZombieSpeciality.BURNER || speciality == EZombieSpeciality.BOSS_FIRE || speciality == EZombieSpeciality.BOSS_MAGMA || speciality == EZombieSpeciality.BOSS_BUAK_FIRE)
             {
                 DamageTool.explode(base.transform.position + new Vector3(0f, 0.25f, 0f), 4f, EDeathCause.BURNER, CSteamID.Nil, 40f, 0f, 40f, 0f, 0f, 0f, 0f, 0f, out var _, EExplosionDamageType.ZOMBIE_FIRE, 4f, playImpactEffect: true, penetrateBuildables: false, EDamageOrigin.Flamable_Zombie_Explosion);
             }
@@ -1179,7 +1181,7 @@ public class Zombie : MonoBehaviour
         {
             if (burner != null)
             {
-                burner.gameObject.SetActive(speciality == EZombieSpeciality.BURNER || speciality == EZombieSpeciality.BOSS_FIRE || speciality == EZombieSpeciality.BOSS_MAGMA);
+                burner.gameObject.SetActive(speciality == EZombieSpeciality.BURNER || speciality == EZombieSpeciality.BOSS_FIRE || speciality == EZombieSpeciality.BOSS_MAGMA || speciality == EZombieSpeciality.BOSS_BUAK_FIRE);
             }
             if (acid != null)
             {
@@ -1191,17 +1193,17 @@ public class Zombie : MonoBehaviour
             }
             if (electric != null)
             {
-                electric.gameObject.SetActive(speciality == EZombieSpeciality.BOSS_ELECTRIC);
+                electric.gameObject.SetActive(speciality == EZombieSpeciality.BOSS_ELECTRIC || speciality == EZombieSpeciality.BOSS_BUAK_ELECTRIC);
             }
             if (fireSystem != null)
             {
                 ParticleSystem.EmissionModule emission = fireSystem.emission;
                 emission.enabled = false;
-                fireSystem.gameObject.SetActive(speciality == EZombieSpeciality.BOSS_FIRE || speciality == EZombieSpeciality.BOSS_MAGMA || speciality == EZombieSpeciality.BOSS_ALL);
+                fireSystem.gameObject.SetActive(speciality == EZombieSpeciality.BOSS_FIRE || speciality == EZombieSpeciality.BOSS_MAGMA || speciality == EZombieSpeciality.BOSS_ALL || speciality == EZombieSpeciality.BOSS_BUAK_FIRE || speciality == EZombieSpeciality.BOSS_BUAK_FINAL);
             }
             if (sparkSystem != null)
             {
-                sparkSystem.gameObject.SetActive(speciality == EZombieSpeciality.BOSS_ELECTRIC || speciality == EZombieSpeciality.BOSS_ALL);
+                sparkSystem.gameObject.SetActive(speciality == EZombieSpeciality.BOSS_ELECTRIC || speciality == EZombieSpeciality.BOSS_BUAK_ELECTRIC || speciality == EZombieSpeciality.BOSS_ALL || speciality == EZombieSpeciality.BOSS_BUAK_FINAL);
             }
         }
     }
@@ -1424,7 +1426,7 @@ public class Zombie : MonoBehaviour
     private void RandomizeBoulderThrowDelay()
     {
         boulderThrowDelay = UnityEngine.Random.Range(6f, 12f);
-        if (speciality == EZombieSpeciality.BOSS_KUWAIT)
+        if (speciality == EZombieSpeciality.BOSS_KUWAIT || speciality == EZombieSpeciality.BOSS_BUAK_FINAL)
         {
             boulderThrowDelay *= 0.5f;
         }
@@ -1501,6 +1503,22 @@ public class Zombie : MonoBehaviour
         else if (speciality == EZombieSpeciality.BOSS_KUWAIT)
         {
             health = 60000;
+        }
+        else if (speciality == EZombieSpeciality.BOSS_BUAK_WIND)
+        {
+            health = 6000;
+        }
+        else if (speciality == EZombieSpeciality.BOSS_BUAK_FIRE)
+        {
+            health = 6200;
+        }
+        else if (speciality == EZombieSpeciality.BOSS_BUAK_ELECTRIC)
+        {
+            health = 6400;
+        }
+        else if (speciality == EZombieSpeciality.BOSS_BUAK_FINAL)
+        {
+            health = 7000;
         }
         else if (isBoss)
         {
@@ -1799,7 +1817,7 @@ public class Zombie : MonoBehaviour
         }
         if (player != null || barricade != null || structure != null || targetObstructionVehicle != null || targetPassengerVehicle != null)
         {
-            if (player != null && (speciality == EZombieSpeciality.MEGA || speciality == EZombieSpeciality.BOSS_KUWAIT || (speciality == EZombieSpeciality.BOSS_ALL && UnityEngine.Random.value < 0.2f)) && Time.time - lastStartle > specialStartleDelay && Time.time - lastAttack > specialAttackDelay && Time.time - lastSpecial > boulderThrowDelay)
+            if (player != null && (speciality == EZombieSpeciality.MEGA || speciality == EZombieSpeciality.BOSS_KUWAIT || ((speciality == EZombieSpeciality.BOSS_ALL || speciality == EZombieSpeciality.BOSS_BUAK_FINAL) && UnityEngine.Random.value < 0.2f)) && Time.time - lastStartle > specialStartleDelay && Time.time - lastAttack > specialAttackDelay && Time.time - lastSpecial > boulderThrowDelay)
             {
                 if (num3 < 20f)
                 {
@@ -1831,45 +1849,49 @@ public class Zombie : MonoBehaviour
             {
                 isThrowRelocating = false;
             }
-            if (player != null && (speciality == EZombieSpeciality.ACID || speciality == EZombieSpeciality.BOSS_NUCLEAR || (speciality == EZombieSpeciality.BOSS_ALL && UnityEngine.Random.value < 0.2f)) && Time.time - lastStartle > specialStartleDelay && Time.time - lastAttack > specialAttackDelay && Time.time - lastSpecial > specialUseDelay)
+            if (player != null && (speciality == EZombieSpeciality.ACID || speciality == EZombieSpeciality.BOSS_NUCLEAR || ((speciality == EZombieSpeciality.BOSS_ALL || speciality == EZombieSpeciality.BOSS_BUAK_FINAL) && UnityEngine.Random.value < 0.2f)) && Time.time - lastStartle > specialStartleDelay && Time.time - lastAttack > specialAttackDelay && Time.time - lastSpecial > specialUseDelay)
             {
                 lastSpecial = Time.time;
                 specialUseDelay = UnityEngine.Random.Range(4f, 8f);
                 seeker.canMove = false;
                 ZombieManager.sendZombieSpit(this);
             }
-            if (player != null && (speciality == EZombieSpeciality.BOSS_WIND || speciality == EZombieSpeciality.BOSS_ELVER_STOMPER || (speciality == EZombieSpeciality.BOSS_ALL && UnityEngine.Random.value < 0.2f)) && Time.time - lastStartle > specialStartleDelay && Time.time - lastAttack > specialAttackDelay && Time.time - lastSpecial > specialUseDelay && (player.transform.position - base.transform.position).sqrMagnitude < 144f)
+            if (player != null && (speciality == EZombieSpeciality.BOSS_WIND || speciality == EZombieSpeciality.BOSS_BUAK_WIND || speciality == EZombieSpeciality.BOSS_ELVER_STOMPER || ((speciality == EZombieSpeciality.BOSS_ALL || speciality == EZombieSpeciality.BOSS_BUAK_FINAL) && UnityEngine.Random.value < 0.2f)) && Time.time - lastStartle > specialStartleDelay && Time.time - lastAttack > specialAttackDelay && Time.time - lastSpecial > specialUseDelay && (player.transform.position - base.transform.position).sqrMagnitude < 144f)
             {
                 lastSpecial = Time.time;
                 specialUseDelay = UnityEngine.Random.Range(4f, 8f);
                 seeker.canMove = false;
                 ZombieManager.sendZombieStomp(this);
             }
-            if (player != null && (speciality == EZombieSpeciality.BOSS_FIRE || speciality == EZombieSpeciality.BOSS_MAGMA || (speciality == EZombieSpeciality.BOSS_ALL && UnityEngine.Random.value < 0.2f)) && Time.time - lastStartle > specialStartleDelay && Time.time - lastAttack > specialAttackDelay && Time.time - lastSpecial > specialUseDelay && (player.transform.position - base.transform.position).sqrMagnitude < 529f)
+            if (player != null && (speciality == EZombieSpeciality.BOSS_FIRE || speciality == EZombieSpeciality.BOSS_MAGMA || speciality == EZombieSpeciality.BOSS_BUAK_FIRE || ((speciality == EZombieSpeciality.BOSS_ALL || speciality == EZombieSpeciality.BOSS_BUAK_FINAL) && UnityEngine.Random.value < 0.2f)) && Time.time - lastStartle > specialStartleDelay && Time.time - lastAttack > specialAttackDelay && Time.time - lastSpecial > specialUseDelay && (player.transform.position - base.transform.position).sqrMagnitude < 529f)
             {
                 lastSpecial = Time.time;
                 specialUseDelay = UnityEngine.Random.Range(4f, 8f);
                 seeker.canMove = false;
                 ZombieManager.sendZombieBreath(this);
             }
-            if (player != null && (speciality == EZombieSpeciality.BOSS_ELECTRIC || (speciality == EZombieSpeciality.BOSS_ALL && UnityEngine.Random.value < 0.2f)) && Time.time - lastStartle > specialStartleDelay && Time.time - lastAttack > specialAttackDelay && Time.time - lastSpecial > specialUseDelay && (player.transform.position - base.transform.position).sqrMagnitude > 4f && (player.transform.position - base.transform.position).sqrMagnitude < 4096f)
+            if (player != null && (speciality == EZombieSpeciality.BOSS_ELECTRIC || speciality == EZombieSpeciality.BOSS_BUAK_ELECTRIC || ((speciality == EZombieSpeciality.BOSS_ALL || speciality == EZombieSpeciality.BOSS_BUAK_FINAL) && UnityEngine.Random.value < 0.2f)) && Time.time - lastStartle > specialStartleDelay && Time.time - lastAttack > specialAttackDelay && Time.time - lastSpecial > specialUseDelay && (player.transform.position - base.transform.position).sqrMagnitude > 4f && (player.transform.position - base.transform.position).sqrMagnitude < 4096f)
             {
                 lastSpecial = Time.time;
                 specialUseDelay = UnityEngine.Random.Range(4f, 8f);
                 seeker.canMove = false;
                 ZombieManager.sendZombieCharge(this);
             }
-            if (player != null && speciality == EZombieSpeciality.BOSS_KUWAIT && Time.time - lastStartle > specialStartleDelay && Time.time - lastAttack > specialAttackDelay && Time.time - lastFlashbang > flashbangDelay && (player.transform.position - base.transform.position).sqrMagnitude > 4f && (player.transform.position - base.transform.position).sqrMagnitude < 1024f)
+            if (player != null && (speciality == EZombieSpeciality.BOSS_KUWAIT || speciality.IsFromBuakMap()) && Time.time - lastStartle > specialStartleDelay && Time.time - lastFlashbang > flashbangDelay && (player.transform.position - base.transform.position).sqrMagnitude > 4f && (player.transform.position - base.transform.position).sqrMagnitude < 1024f)
             {
                 lastFlashbang = Time.time;
                 flashbangDelay = UnityEngine.Random.Range(30f, 45f);
-                EffectAsset effectAsset = KuwaitBossFlashbangRef.Find();
+                EffectAsset effectAsset = ((speciality == EZombieSpeciality.BOSS_KUWAIT) ? KuwaitBossFlashbangRef.Find() : BuakBossFlashbangRef.Find());
                 if (effectAsset != null)
                 {
                     TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
                     parameters.reliable = true;
                     parameters.position = base.transform.position + new Vector3(0f, 5f, 0f);
                     EffectManager.triggerEffect(parameters);
+                }
+                else
+                {
+                    UnturnedLog.warn("Missing built-in zombie flashbang effect");
                 }
             }
             if ((structure != null || num3 < GetHorizontalAttackRangeSquared()) && num4 < GetVerticalAttackRange())

@@ -785,7 +785,7 @@ public class PlayerUI : MonoBehaviour
         case EPlayerMessage.TALK:
         {
             InteractableObjectNPC interactableObjectNPC = PlayerInteract.interactable as InteractableObjectNPC;
-            string arg = ((interactableObjectNPC != null && interactableObjectNPC.npcAsset != null) ? interactableObjectNPC.npcAsset.npcName : "null");
+            string arg = ((interactableObjectNPC != null && interactableObjectNPC.npcAsset != null) ? interactableObjectNPC.npcAsset.GetNameShownToPlayer(Player.player) : "null");
             messageLabel.text = PlayerLifeUI.localization.format("Talk", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact), arg);
             break;
         }
@@ -1118,7 +1118,7 @@ public class PlayerUI : MonoBehaviour
                     PlayerLifeUI.repeatChat(-1);
                 }
             }
-            else if (Event.current.keyCode == KeyCode.Return)
+            else if (Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter)
             {
                 if (PlayerLifeUI.chatting)
                 {

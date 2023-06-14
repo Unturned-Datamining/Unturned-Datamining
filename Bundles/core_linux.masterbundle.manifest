@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 126096325
+CRC: 1415868683
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 566055581a16cf45588aa122ae1f71cf
+    Hash: c6c4c8630a0dfd5eb0f68f04e588b26f
   TypeTreeHash:
     serializedVersion: 2
-    Hash: feb97dbf77ef8cec3212470924f33ba4
+    Hash: dbc1cd58f9800786615d0cca801bd2e5
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -3114,6 +3114,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Physics/BulletCasingBounce/Water/Bullet_Drop_Water_02.wav
 - Assets/CoreMasterBundle/Items/Barricades/Hatch_Metal/Item.prefab
 - Assets/CoreMasterBundle/Objects/Large/Utilities/Dam_1/Object.prefab
+- Assets/CoreMasterBundle/Effects/General/BuakBossFlashbang/Buak_Boss_Flashbang.wav
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Warehouse_0/Object.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Jetski_Green/Nav.prefab
 - Assets/CoreMasterBundle/Effects/Impacts/Flesh_Dynamic/Texture_1.png
@@ -4803,6 +4804,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Hats/Ghillie_Hood_Russia/Hat.prefab
 - Assets/CoreMasterBundle/Effects/Physics/BipedLand/Water/footstep_water_land_05.wav
 - Assets/CoreMasterBundle/Items/Barrels/Honeybadger_Barrel/Barrel.prefab
+- Assets/CoreMasterBundle/Effects/General/BuakBossFlashbang/Effect.prefab
 - Assets/CoreMasterBundle/Effects/Physics/MeleeImpact/MetalLight/metal_impact_light_03.wav
 - Assets/CoreMasterBundle/Skins/Ekho/Accelerator/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Truck_Blue/Nav.prefab

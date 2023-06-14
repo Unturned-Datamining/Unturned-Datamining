@@ -9,12 +9,17 @@ public class Flashbang : MonoBehaviour, IExplodableThrowable
 
     public float fuseLength = 2.5f;
 
+    public bool playAudioSource = true;
+
     public void Explode()
     {
-        AudioSource component = GetComponent<AudioSource>();
-        if (component != null)
+        if (playAudioSource)
         {
-            component.Play();
+            AudioSource component = GetComponent<AudioSource>();
+            if (component != null)
+            {
+                component.Play();
+            }
         }
         Light component2 = GetComponent<Light>();
         if (component2 != null && !component2.enabled)

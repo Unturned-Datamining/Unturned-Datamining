@@ -1525,7 +1525,7 @@ public class PlayerQuests : PlayerCaller
         if (availableMessage != -1)
         {
             DialogueMessage dialogueMessage = dialogueAsset.messages[availableMessage];
-            if (dialogueMessage != null && dialogueMessage.conditions != null && dialogueMessage.rewards != null)
+            if (dialogueMessage != null && dialogueMessage.conditions != null)
             {
                 dialogueMessage.applyConditions(base.player, shouldSend: false);
                 dialogueMessage.grantRewards(base.player, shouldSend: false);
@@ -1588,7 +1588,7 @@ public class PlayerQuests : PlayerCaller
             }
         }
         DialogueResponse dialogueResponse = dialogueAsset.responses[index];
-        if (dialogueResponse == null || dialogueResponse.conditions == null || dialogueResponse.rewards == null || !dialogueResponse.areConditionsMet(base.player))
+        if (dialogueResponse == null || dialogueResponse.conditions == null || !dialogueResponse.areConditionsMet(base.player))
         {
             return;
         }
