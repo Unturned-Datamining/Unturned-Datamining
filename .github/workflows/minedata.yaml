@@ -2,16 +2,19 @@ name: "Mine Data"
 
 on:
   schedule:
-    - cron: '0 */12 * * *'
+    - cron: '*/60 * * * *'
   workflow_dispatch:
 
 jobs:
-  linux:
-    name: "[Linux] Setup Steam and Unturned and decompile"
+  minedata_client:
+    name: "Setup Steam and Unturned and decompile"
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout
       uses: actions/checkout@v3
+      with:
+        ref: linux-client-preview
 
     - name: Checkout tools branch
       uses: actions/checkout@v3
@@ -29,6 +32,7 @@ jobs:
           *.jpg
           *.masterbundle
           Unturned_Data
+          Extras
         key: linux-unturned
 
     - name: Setup SteamCMD
@@ -40,21 +44,63 @@ jobs:
 
     - uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '6.0.x'
+        dotnet-version: '7.0.x'
 
     - name: Install dependencies
       run: dotnet restore tools/UnturnedDatamining/
 
     - name: Run tool
-      run: dotnet run --project ./tools/UnturnedDatamining/UnturnedDatamining/UnturnedDatamining.csproj -c Release --no-restore -- $GITHUB_WORKSPACE --nosteam --client
+      run: dotnet run --project ./tools/UnturnedDatamining/UnturnedDatamining/UnturnedDatamining.csproj -c Release --no-restore -- $GITHUB_WORKSPACE decompile --nosteam --client
 
     - name: Generate Commit Message
       run: |
-        echo "##[set-output name=message;]$(cat .commit)"
+        msg=$( cat .commit )
+        echo "message=$msg" >> "$GITHUB_OUTPUT"
       id: generate_commit_message
 
-    - uses: stefanzweifel/git-auto-commit-action@v4
+    - run: |
+        git config --global user.email "diffoz@users.noreply.github.com"
+        git config --global user.name "DiFFoZ"
+
+        git add .
+        git commit -m "${{ steps.generate_commit_message.outputs.message }}"
+        git push
+  minedata_websites:
+    name: "Download data from websites"
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
       with:
-        commit_message: ${{ steps.generate_commit_message.outputs.message }}
-        commit_user_name: DiFFoZ
-        commit_user_email: diffoz@users.noreply.github.com
+        ref: websites
+
+    - name: Checkout tools branch
+      uses: actions/checkout@v3
+      with:
+        repository: Unturned-Datamining/datamining-tool
+        path: tools
+
+    - uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '7.0.x'
+
+    - name: Install dependencies
+      run: dotnet restore tools/UnturnedDatamining/
+
+    - name: Run tool
+      run: dotnet run --project ./tools/UnturnedDatamining/UnturnedDatamining/UnturnedDatamining.csproj -c Release --no-restore -- $GITHUB_WORKSPACE websites
+
+    - name: Generate Commit Message
+      run: |
+        msg=$( cat .commit )
+        echo "message=$msg" >> "$GITHUB_OUTPUT"
+      id: generate_commit_message
+
+    - run: |
+        git config --global user.email "diffoz@users.noreply.github.com"
+        git config --global user.name "DiFFoZ"
+
+        git add .
+        git commit -m "${{ steps.generate_commit_message.outputs.message }}"
+        git push
