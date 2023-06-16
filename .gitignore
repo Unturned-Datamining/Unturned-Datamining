@@ -1,0 +1,6 @@
+*.commit
+SteamCMD/
+tools/
+steamcmd/
+
+.vs/
