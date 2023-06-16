@@ -1,0 +1,30 @@
+MainMenuAlert
+{
+	Id 28
+}
+MainMenuWorkshop
+{
+	AllowNews true
+	Featured
+	{
+		Id 6
+	}
+	Popular
+	{
+		TrendDays 30
+		CarouselItems 3
+	}
+}
+ItemStore
+{
+	PromotionId 2
+	FeaturedItems
+	[
+		1343
+		1350
+		1344
+	]
+}
+ShouldAllowJoiningInternetServersWithoutGslt false
+ShouldServersWithoutMonetizationTagBeVisibleInInternetServerList true
+QueryPingWarningOffsetMs 50
