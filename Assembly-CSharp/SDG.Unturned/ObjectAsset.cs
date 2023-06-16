@@ -735,6 +735,10 @@ public class ObjectAsset : Asset
             if (data.ContainsKey("Landmark_Quality"))
             {
                 landmarkQuality = (EGraphicQuality)Enum.Parse(typeof(EGraphicQuality), data.GetString("Landmark_Quality"), ignoreCase: true);
+                if (landmarkQuality < EGraphicQuality.LOW)
+                {
+                    landmarkQuality = EGraphicQuality.LOW;
+                }
             }
             else
             {

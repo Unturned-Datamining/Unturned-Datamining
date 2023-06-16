@@ -48,26 +48,35 @@ public class Boulder : MonoBehaviour
             }
             else if (other.transform.CompareTag("Vehicle"))
             {
-                InteractableVehicle component = other.transform.GetComponent<InteractableVehicle>();
-                if (component != null && component.asset != null && component.asset.isVulnerableToEnvironment)
+                if (Provider.modeConfigData.Zombies.Can_Target_Vehicles)
                 {
-                    VehicleManager.damage(component, DAMAGE_VEHICLE, num, canRepair: true, default(CSteamID), EDamageOrigin.Mega_Zombie_Boulder);
+                    InteractableVehicle component = other.transform.GetComponent<InteractableVehicle>();
+                    if (component != null && component.asset != null && component.asset.isVulnerableToEnvironment)
+                    {
+                        VehicleManager.damage(component, DAMAGE_VEHICLE, num, canRepair: true, default(CSteamID), EDamageOrigin.Mega_Zombie_Boulder);
+                    }
                 }
             }
             else if (other.transform.CompareTag("Barricade"))
             {
-                Transform barricadeRootTransform = DamageTool.getBarricadeRootTransform(other.transform);
-                if (barricadeRootTransform != null)
+                if (Provider.modeConfigData.Zombies.Can_Target_Barricades)
                 {
-                    BarricadeManager.damage(barricadeRootTransform, DAMAGE_BARRICADE, num, armor: true, default(CSteamID), EDamageOrigin.Mega_Zombie_Boulder);
+                    Transform barricadeRootTransform = DamageTool.getBarricadeRootTransform(other.transform);
+                    if (barricadeRootTransform != null)
+                    {
+                        BarricadeManager.damage(barricadeRootTransform, DAMAGE_BARRICADE, num, armor: true, default(CSteamID), EDamageOrigin.Mega_Zombie_Boulder);
+                    }
                 }
             }
             else if (other.transform.CompareTag("Structure"))
             {
-                Transform structureRootTransform = DamageTool.getStructureRootTransform(other.transform);
-                if (structureRootTransform != null)
+                if (Provider.modeConfigData.Zombies.Can_Target_Structures)
                 {
-                    StructureManager.damage(structureRootTransform, normalized, DAMAGE_STRUCTURE, num, armor: true, default(CSteamID), EDamageOrigin.Mega_Zombie_Boulder);
+                    Transform structureRootTransform = DamageTool.getStructureRootTransform(other.transform);
+                    if (structureRootTransform != null)
+                    {
+                        StructureManager.damage(structureRootTransform, normalized, DAMAGE_STRUCTURE, num, armor: true, default(CSteamID), EDamageOrigin.Mega_Zombie_Boulder);
+                    }
                 }
             }
             else if (other.transform.CompareTag("Resource"))

@@ -362,6 +362,10 @@ public class PlayerInventory : PlayerCaller
         }
         else
         {
+            if (items[page].getItemCount() >= 200)
+            {
+                return false;
+            }
             if (!items[page].checkSpaceEmpty(x, y, asset.size_x, asset.size_y, rot))
             {
                 return false;

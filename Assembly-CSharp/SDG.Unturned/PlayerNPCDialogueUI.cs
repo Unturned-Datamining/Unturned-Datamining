@@ -70,11 +70,11 @@ public class PlayerNPCDialogueUI
             active = true;
             if (PlayerLifeUI.npc != null && PlayerLifeUI.npc.npcAsset != null)
             {
-                characterLabel.text = PlayerLifeUI.npc.npcAsset.npcName;
+                characterLabel.text = PlayerLifeUI.npc.npcAsset.GetNameShownToPlayer(Player.player);
             }
             else
             {
-                characterLabel.text = "?";
+                characterLabel.text = "null";
             }
             updateDialogue(newDialogue, newPrevDialogue);
             container.AnimateIntoView();

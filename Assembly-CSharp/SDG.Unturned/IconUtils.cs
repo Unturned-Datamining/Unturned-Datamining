@@ -28,10 +28,6 @@ public class IconUtils
 
     public static ItemDefIconInfo getItemDefIcon(ushort itemID, ushort vehicleID, ushort skinID)
     {
-        if (itemID == 0 && vehicleID == 0)
-        {
-            return null;
-        }
         ItemAsset itemAsset = Assets.find(EAssetType.ITEM, itemID) as ItemAsset;
         VehicleAsset vehicleAsset = Assets.find(EAssetType.VEHICLE, vehicleID) as VehicleAsset;
         if (itemAsset == null && vehicleAsset == null)
@@ -39,6 +35,11 @@ public class IconUtils
             UnturnedLog.warn("Could not find a matching item ({0}) or vehicle ({1}) asset!", itemID, vehicleID);
             return null;
         }
+        return getItemDefIcon(itemAsset, vehicleAsset, skinID);
+    }
+
+    public static ItemDefIconInfo getItemDefIcon(ItemAsset itemAsset, VehicleAsset vehicleAsset, ushort skinID)
+    {
         ItemDefIconInfo itemDefIconInfo = new ItemDefIconInfo();
         if (skinID != 0)
         {
@@ -47,7 +48,7 @@ public class IconUtils
                 UnturnedLog.warn("Couldn't find a skin asset for: " + skinID);
                 return null;
             }
-            ushort num = ((vehicleAsset == null) ? itemID : vehicleID);
+            ushort num = vehicleAsset?.id ?? itemAsset.id;
             string text = ((vehicleAsset == null) ? itemAsset.name : vehicleAsset.sharedSkinName);
             itemDefIconInfo.extraPath = ReadWrite.PATH + "/Extras/Econ/" + text + "_" + num + "_" + skinAsset.name + "_" + skinAsset.id;
             if (vehicleAsset != null)
@@ -65,7 +66,7 @@ public class IconUtils
         {
             if (itemAsset != null && string.IsNullOrEmpty(itemAsset.proPath))
             {
-                UnturnedLog.error("Failed to find pro path for: " + itemID + " " + vehicleID + " " + skinID);
+                UnturnedLog.error("Failed to find pro path for: " + itemAsset.id + " " + vehicleAsset?.id + " " + skinID);
                 return null;
             }
             itemDefIconInfo.extraPath = ReadWrite.PATH + "/Extras/Econ/" + itemAsset.name + "_" + itemAsset.id;

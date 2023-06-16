@@ -16,21 +16,21 @@ public class Animal : MonoBehaviour
 
     private Renderer renderer_1;
 
-    private float lastEat;
+    private double lastEat;
 
-    private float lastGlance;
+    private double lastGlance;
 
-    private float lastStartle;
+    private double lastStartle;
 
-    private float lastWander;
+    private double lastWander;
 
-    private float lastStuck;
+    private double lastStuck;
 
-    private float lastTarget;
+    private double lastTarget;
 
-    private float lastAttack;
+    private double lastAttack;
 
-    private float lastRegen;
+    private double lastRegen;
 
     private float eatTime;
 
@@ -42,9 +42,9 @@ public class Animal : MonoBehaviour
 
     private float attackInterval;
 
-    private float startedRoar;
+    private double startedRoar;
 
-    private float startedPanic;
+    private double startedPanic;
 
     private float eatDelay;
 
@@ -104,7 +104,7 @@ public class Animal : MonoBehaviour
 
     private float undergroundTestTimer = 10f;
 
-    private float lastTick;
+    private double lastTick;
 
     private bool hasIdleAnimation;
 
@@ -130,7 +130,7 @@ public class Animal : MonoBehaviour
             {
                 isTicking = true;
                 AnimalManager.tickingAnimals.Add(this);
-                lastTick = Time.time;
+                lastTick = Time.timeAsDouble;
             }
         }
         else if (isTicking)
@@ -156,7 +156,7 @@ public class Animal : MonoBehaviour
         {
             return;
         }
-        lastEat = Time.time;
+        lastEat = Time.timeAsDouble;
         eatDelay = UnityEngine.Random.Range(4f, 8f);
         isPlayingEat = true;
         if (!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer)
@@ -181,7 +181,7 @@ public class Animal : MonoBehaviour
         {
             return;
         }
-        lastGlance = Time.time;
+        lastGlance = Time.timeAsDouble;
         glanceDelay = UnityEngine.Random.Range(4f, 8f);
         isPlayingGlance = true;
         if (!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer)
@@ -206,7 +206,7 @@ public class Animal : MonoBehaviour
         {
             return;
         }
-        lastStartle = Time.time;
+        lastStartle = Time.timeAsDouble;
         isPlayingStartle = true;
         if (!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer)
         {
@@ -230,7 +230,7 @@ public class Animal : MonoBehaviour
         {
             return;
         }
-        lastAttack = Time.time;
+        lastAttack = Time.timeAsDouble;
         isPlayingAttack = true;
         if (!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer)
         {
@@ -246,9 +246,9 @@ public class Animal : MonoBehaviour
             {
                 Assets.reportError(asset, "missing AnimationClip \"" + text + "\"");
             }
-            if (asset != null && asset.roars != null && asset.roars.Length != 0 && Time.time - startedRoar > 1f)
+            if (asset != null && asset.roars != null && asset.roars.Length != 0 && Time.timeAsDouble - startedRoar > 1.0)
             {
-                startedRoar = Time.time;
+                startedRoar = Time.timeAsDouble;
                 AudioClip clip2 = asset.roars[UnityEngine.Random.Range(0, asset.roars.Length)];
                 OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform, clip2);
                 oneShotAudioParameters.volume = 0.5f;
@@ -261,9 +261,9 @@ public class Animal : MonoBehaviour
 
     public void askPanic()
     {
-        if (!isDead && (!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer) && asset != null && asset.panics != null && asset.panics.Length != 0 && Time.time - startedPanic > 1f)
+        if (!isDead && (!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer) && asset != null && asset.panics != null && asset.panics.Length != 0 && Time.timeAsDouble - startedPanic > 1.0)
         {
-            startedPanic = Time.time;
+            startedPanic = Time.timeAsDouble;
             AudioClip clip = asset.panics[UnityEngine.Random.Range(0, asset.panics.Length)];
             OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform, clip);
             oneShotAudioParameters.volume = 0.5f;
@@ -318,7 +318,7 @@ public class Animal : MonoBehaviour
         {
             AnimalManager.sendAnimalPanic(this);
         }
-        lastRegen = Time.time;
+        lastRegen = Time.timeAsDouble;
     }
 
     public void sendRevive(Vector3 position, float angle)
@@ -425,7 +425,7 @@ public class Animal : MonoBehaviour
                 isWandering = false;
                 isHunting = true;
                 updateTicking();
-                lastStuck = Time.time;
+                lastStuck = Time.timeAsDouble;
                 player = newPlayer;
             }
             else if ((newPlayer.transform.position - base.transform.position).sqrMagnitude < (player.transform.position - base.transform.position).sqrMagnitude)
@@ -504,7 +504,7 @@ public class Animal : MonoBehaviour
         }
         if (!isDead && !isFleeing && !isHunting)
         {
-            lastWander = Time.time;
+            lastWander = Time.timeAsDouble;
             _isFleeing = false;
             isWandering = true;
             isHunting = false;
@@ -612,9 +612,9 @@ public class Animal : MonoBehaviour
     private void reset()
     {
         target = base.transform.position;
-        lastStartle = Time.time;
-        lastWander = Time.time;
-        lastStuck = Time.time;
+        lastStartle = Time.timeAsDouble;
+        lastWander = Time.timeAsDouble;
+        lastStuck = Time.timeAsDouble;
         isPlayingEat = false;
         isPlayingGlance = false;
         isPlayingStartle = false;
@@ -700,15 +700,15 @@ public class Animal : MonoBehaviour
                     lastUpdateAngle = base.transform.rotation.eulerAngles.y;
                     isUpdated = true;
                     AnimalManager.updates++;
-                    if (isStuck && Time.time - lastStuck > 0.5f)
+                    if (isStuck && Time.timeAsDouble - lastStuck > 0.5)
                     {
                         isStuck = false;
-                        lastStuck = Time.time;
+                        lastStuck = Time.timeAsDouble;
                     }
                 }
                 else if (isMoving)
                 {
-                    if (Time.time - lastStuck > 0.125f)
+                    if (Time.timeAsDouble - lastStuck > 0.125)
                     {
                         isStuck = true;
                     }
@@ -716,7 +716,7 @@ public class Animal : MonoBehaviour
                 else
                 {
                     isStuck = false;
-                    lastStuck = Time.time;
+                    lastStuck = Time.timeAsDouble;
                 }
             }
         }
@@ -754,11 +754,11 @@ public class Animal : MonoBehaviour
         }
         if ((!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer) && !isMoving && !isPlayingEat && !isPlayingGlance && !isPlayingAttack)
         {
-            if (Time.time - lastEat > eatDelay)
+            if (Time.timeAsDouble - lastEat > (double)eatDelay)
             {
                 askEat();
             }
-            else if (Time.time - lastGlance > glanceDelay)
+            else if (Time.timeAsDouble - lastGlance > (double)glanceDelay)
             {
                 askGlance();
             }
@@ -767,50 +767,50 @@ public class Animal : MonoBehaviour
         {
             if (isStuck)
             {
-                if (Time.time - lastStuck > 0.75f)
+                if (Time.timeAsDouble - lastStuck > 0.75)
                 {
-                    lastStuck = Time.time;
+                    lastStuck = Time.timeAsDouble;
                     getWanderTarget();
                 }
             }
             else if (!isFleeing && !isHunting)
             {
-                if (Time.time - lastWander > wanderDelay)
+                if (Time.timeAsDouble - lastWander > (double)wanderDelay)
                 {
-                    lastWander = Time.time;
+                    lastWander = Time.timeAsDouble;
                     wanderDelay = UnityEngine.Random.Range(8f, 16f);
                     getWanderTarget();
                 }
             }
             else
             {
-                lastWander = Time.time;
+                lastWander = Time.timeAsDouble;
             }
         }
         if (isPlayingEat)
         {
-            if (Time.time - lastEat > eatTime)
+            if (Time.timeAsDouble - lastEat > (double)eatTime)
             {
                 isPlayingEat = false;
             }
         }
         else if (isPlayingGlance)
         {
-            if (Time.time - lastGlance > glanceTime)
+            if (Time.timeAsDouble - lastGlance > (double)glanceTime)
             {
                 isPlayingGlance = false;
             }
         }
         else if (isPlayingStartle)
         {
-            if (Time.time - lastStartle > startleTime)
+            if (Time.timeAsDouble - lastStartle > (double)startleTime)
             {
                 isPlayingStartle = false;
             }
         }
         else if (isPlayingAttack)
         {
-            if (Time.time - lastAttack > attackDuration)
+            if (Time.timeAsDouble - lastAttack > (double)attackDuration)
             {
                 isPlayingAttack = false;
             }
@@ -830,17 +830,17 @@ public class Animal : MonoBehaviour
                 animator.Play("Idle");
             }
         }
-        if (Provider.isServer && health < asset.health && Time.time - lastRegen > asset.regen)
+        if (Provider.isServer && health < asset.health && Time.timeAsDouble - lastRegen > (double)asset.regen)
         {
-            lastRegen = Time.time;
+            lastRegen = Time.timeAsDouble;
             health++;
         }
     }
 
     public void tick()
     {
-        float num = Time.time - lastTick;
-        lastTick = Time.time;
+        float num = (float)(Time.timeAsDouble - lastTick);
+        lastTick = Time.timeAsDouble;
         undergroundTestTimer -= num;
         if (undergroundTestTimer < 0f)
         {
@@ -860,11 +860,11 @@ public class Animal : MonoBehaviour
                 float num3 = Mathf.Abs(target.y - base.transform.position.y);
                 if (num2 < ((player.movement.getVehicle() != null) ? asset.horizontalVehicleAttackRangeSquared : asset.horizontalAttackRangeSquared) && num3 < asset.verticalAttackRange)
                 {
-                    if (Time.time - lastTarget > (Dedicator.IsDedicatedServer ? 0.3f : 0.1f))
+                    if (Time.timeAsDouble - lastTarget > (double)(Dedicator.IsDedicatedServer ? 0.3f : 0.1f))
                     {
                         if (isAttacking)
                         {
-                            if (Time.time - lastAttack > attackDuration * 0.5f)
+                            if (Time.timeAsDouble - lastAttack > (double)(attackDuration * 0.5f))
                             {
                                 isAttacking = false;
                                 byte damage = asset.damage;
@@ -888,7 +888,7 @@ public class Animal : MonoBehaviour
                                 }
                             }
                         }
-                        else if (Time.time - lastAttack > attackInterval)
+                        else if (Time.timeAsDouble - lastAttack > (double)attackInterval)
                         {
                             isAttacking = true;
                             AnimalManager.sendAnimalAttack(this);
@@ -903,7 +903,7 @@ public class Animal : MonoBehaviour
                 }
                 else
                 {
-                    lastTarget = Time.time;
+                    lastTarget = Time.timeAsDouble;
                     isAttacking = false;
                 }
             }
@@ -913,7 +913,7 @@ public class Animal : MonoBehaviour
                 isHunting = false;
                 updateTicking();
             }
-            lastWander = Time.time;
+            lastWander = Time.timeAsDouble;
         }
         move(num);
     }
@@ -962,9 +962,9 @@ public class Animal : MonoBehaviour
             nsb = new NetworkSnapshotBuffer<YawSnapshotInfo>(Provider.UPDATE_TIME, Provider.UPDATE_DELAY);
         }
         reset();
-        lastEat = Time.time + UnityEngine.Random.Range(4f, 16f);
-        lastGlance = Time.time + UnityEngine.Random.Range(4f, 16f);
-        lastWander = Time.time + UnityEngine.Random.Range(8f, 32f);
+        lastEat = Time.timeAsDouble + (double)UnityEngine.Random.Range(4f, 16f);
+        lastGlance = Time.timeAsDouble + (double)UnityEngine.Random.Range(4f, 16f);
+        lastWander = Time.timeAsDouble + (double)UnityEngine.Random.Range(8f, 32f);
         eatDelay = UnityEngine.Random.Range(4f, 8f);
         glanceDelay = UnityEngine.Random.Range(4f, 8f);
         wanderDelay = UnityEngine.Random.Range(8f, 16f);

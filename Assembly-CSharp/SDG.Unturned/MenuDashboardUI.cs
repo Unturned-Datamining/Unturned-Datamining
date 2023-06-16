@@ -993,7 +993,6 @@ public class MenuDashboardUI
         if (!string.IsNullOrEmpty(liveConfigData.mainMenuAlert.iconName))
         {
             alertImage.texture = icons.load<Texture2D>(liveConfigData.mainMenuAlert.iconName);
-            alertImage.color = color;
             alertImage.isVisible = true;
         }
         else
@@ -1009,6 +1008,9 @@ public class MenuDashboardUI
         {
             alertWebImage.isVisible = false;
         }
+        Color color2 = (liveConfigData.mainMenuAlert.shouldTintIcon ? color : Color.white);
+        alertImage.color = color2;
+        alertWebImage.color = color2;
         if (!string.IsNullOrEmpty(liveConfigData.mainMenuAlert.link))
         {
             alertLinkLabel.text = liveConfigData.mainMenuAlert.link;

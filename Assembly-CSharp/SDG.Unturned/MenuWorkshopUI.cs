@@ -156,6 +156,17 @@ public class MenuWorkshopUI
     private static void onClickedCaptureItemDefIconButton(ISleekElement button)
     {
         IconUtils.CreateExtrasDirectory();
+        if (Guid.TryParse(guidField.text, out var result))
+        {
+            Asset asset = Assets.find(result);
+            ItemAsset itemAsset = asset as ItemAsset;
+            VehicleAsset vehicleAsset = asset as VehicleAsset;
+            if (itemAsset != null || vehicleAsset != null)
+            {
+                IconUtils.getItemDefIcon(itemAsset, vehicleAsset, skinIDField.state);
+                return;
+            }
+        }
         IconUtils.getItemDefIcon(itemIDField.state, vehicleIDField.state, skinIDField.state);
     }
 

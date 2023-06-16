@@ -2221,7 +2221,10 @@ public class Zombie : MonoBehaviour
                 {
                     vector4 = hitInfo.point + hitInfo.normal;
                 }
-                DamageTool.explode(vector4, 5f, EDeathCause.SPARK, CSteamID.Nil, 25f, 0f, 0f, 250f, 250f, 250f, 250f, 250f, out var _, EExplosionDamageType.ZOMBIE_ELECTRIC, 4f, playImpactEffect: true, penetrateBuildables: false, EDamageOrigin.Zombie_Electric_Shock);
+                float barricadeDamage = (Provider.modeConfigData.Zombies.Can_Target_Barricades ? 250f : 0f);
+                float structureDamage = (Provider.modeConfigData.Zombies.Can_Target_Structures ? 250f : 0f);
+                float vehicleDamage = (Provider.modeConfigData.Zombies.Can_Target_Vehicles ? 250f : 0f);
+                DamageTool.explode(vector4, 5f, EDeathCause.SPARK, CSteamID.Nil, 25f, 0f, 0f, barricadeDamage, structureDamage, vehicleDamage, 250f, 250f, out var _, EExplosionDamageType.ZOMBIE_ELECTRIC, 4f, playImpactEffect: true, penetrateBuildables: false, EDamageOrigin.Zombie_Electric_Shock);
                 ZombieManager.sendZombieSpark(this, vector4);
             }
         }
@@ -2231,7 +2234,10 @@ public class Zombie : MonoBehaviour
             if (Provider.isServer)
             {
                 seeker.canMove = true;
-                DamageTool.explode(base.transform.position + new Vector3(0f, 1.5f, 0f), 10f, EDeathCause.BOULDER, CSteamID.Nil, 60f, 0f, 0f, 500f, 500f, 500f, 500f, 500f, out var _, EExplosionDamageType.ZOMBIE_ACID, 32f, playImpactEffect: true, penetrateBuildables: false, EDamageOrigin.Zombie_Stomp);
+                float barricadeDamage2 = (Provider.modeConfigData.Zombies.Can_Target_Barricades ? 500f : 0f);
+                float structureDamage2 = (Provider.modeConfigData.Zombies.Can_Target_Structures ? 500f : 0f);
+                float vehicleDamage2 = (Provider.modeConfigData.Zombies.Can_Target_Vehicles ? 500f : 0f);
+                DamageTool.explode(base.transform.position + new Vector3(0f, 1.5f, 0f), 10f, EDeathCause.BOULDER, CSteamID.Nil, 60f, 0f, 0f, barricadeDamage2, structureDamage2, vehicleDamage2, 500f, 500f, out var _, EExplosionDamageType.ZOMBIE_ACID, 32f, playImpactEffect: true, penetrateBuildables: false, EDamageOrigin.Zombie_Stomp);
                 EffectAsset effectAsset = Boulder.Metal_2_Ref.Find();
                 if (effectAsset != null)
                 {
@@ -2252,9 +2258,12 @@ public class Zombie : MonoBehaviour
                     float playerDamage = fireDamage;
                     float num2 = fireDamage * 10f;
                     fireDamage = 0f;
-                    DamageTool.explode(base.transform.position + new Vector3(0f, 1.25f, 0f) + base.transform.forward * 3f, 2f, EDeathCause.BURNER, CSteamID.Nil, playerDamage, 0f, 0f, num2, num2, num2, num2, num2, out var kills3, EExplosionDamageType.ZOMBIE_FIRE, 4f, playImpactEffect: false, penetrateBuildables: false, EDamageOrigin.Zombie_Fire_Breath);
-                    DamageTool.explode(base.transform.position + new Vector3(0f, 1.25f, 0f) + base.transform.forward * 7f, 3f, EDeathCause.BURNER, CSteamID.Nil, playerDamage, 0f, 0f, num2, num2, num2, num2, num2, out kills3, EExplosionDamageType.ZOMBIE_FIRE, 4f, playImpactEffect: false, penetrateBuildables: false, EDamageOrigin.Zombie_Fire_Breath);
-                    DamageTool.explode(base.transform.position + new Vector3(0f, 1.25f, 0f) + base.transform.forward * 12f, 4f, EDeathCause.BURNER, CSteamID.Nil, playerDamage, 0f, 0f, num2, num2, num2, num2, num2, out kills3, EExplosionDamageType.ZOMBIE_FIRE, 4f, playImpactEffect: false, penetrateBuildables: false, EDamageOrigin.Zombie_Fire_Breath);
+                    float barricadeDamage3 = (Provider.modeConfigData.Zombies.Can_Target_Barricades ? num2 : 0f);
+                    float structureDamage3 = (Provider.modeConfigData.Zombies.Can_Target_Structures ? num2 : 0f);
+                    float vehicleDamage3 = (Provider.modeConfigData.Zombies.Can_Target_Vehicles ? num2 : 0f);
+                    DamageTool.explode(base.transform.position + new Vector3(0f, 1.25f, 0f) + base.transform.forward * 3f, 2f, EDeathCause.BURNER, CSteamID.Nil, playerDamage, 0f, 0f, barricadeDamage3, structureDamage3, vehicleDamage3, num2, num2, out var kills3, EExplosionDamageType.ZOMBIE_FIRE, 4f, playImpactEffect: false, penetrateBuildables: false, EDamageOrigin.Zombie_Fire_Breath);
+                    DamageTool.explode(base.transform.position + new Vector3(0f, 1.25f, 0f) + base.transform.forward * 7f, 3f, EDeathCause.BURNER, CSteamID.Nil, playerDamage, 0f, 0f, barricadeDamage3, structureDamage3, vehicleDamage3, num2, num2, out kills3, EExplosionDamageType.ZOMBIE_FIRE, 4f, playImpactEffect: false, penetrateBuildables: false, EDamageOrigin.Zombie_Fire_Breath);
+                    DamageTool.explode(base.transform.position + new Vector3(0f, 1.25f, 0f) + base.transform.forward * 12f, 4f, EDeathCause.BURNER, CSteamID.Nil, playerDamage, 0f, 0f, barricadeDamage3, structureDamage3, vehicleDamage3, num2, num2, out kills3, EExplosionDamageType.ZOMBIE_FIRE, 4f, playImpactEffect: false, penetrateBuildables: false, EDamageOrigin.Zombie_Fire_Breath);
                 }
             }
             if (Time.time - lastSpecial > fireTime)
