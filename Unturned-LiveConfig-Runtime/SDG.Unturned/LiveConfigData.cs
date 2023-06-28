@@ -12,6 +12,8 @@ public class LiveConfigData
 
     public bool shouldServersWithoutMonetizationTagBeVisibleInInternetServerList;
 
+    public bool areBuakCraftableItemsAvailable;
+
     public int playtimeGeneratorItemDefId;
 
     public int queryPingWarningOffsetMs = 200;
@@ -32,6 +34,7 @@ public class LiveConfigData
         }
         shouldAllowJoiningInternetServersWithoutGslt = data.ParseBool("ShouldAllowJoiningInternetServersWithoutGslt");
         shouldServersWithoutMonetizationTagBeVisibleInInternetServerList = data.ParseBool("ShouldServersWithoutMonetizationTagBeVisibleInInternetServerList");
+        areBuakCraftableItemsAvailable = data.ParseBool("AreBuakCraftableItemsAvailable");
         playtimeGeneratorItemDefId = data.ParseInt32("PlaytimeGeneratorItemDefId");
         queryPingWarningOffsetMs = data.ParseInt32("QueryPingWarningOffsetMs", 200);
     }

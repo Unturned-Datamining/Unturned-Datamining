@@ -540,6 +540,10 @@ public class Level : MonoBehaviour
             {
                 text = "Arid_Visited";
             }
+            else if (string.Equals(info.name, "buak", StringComparison.InvariantCultureIgnoreCase))
+            {
+                text = "Buak_Visited";
+            }
             else if (string.Equals(info.name, "elver", StringComparison.InvariantCultureIgnoreCase))
             {
                 text = "Elver_Visited";

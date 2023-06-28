@@ -880,7 +880,7 @@ public class HumanClothes : MonoBehaviour
         glassesDirty = isDirty;
     }
 
-    private void applyHairOverride(ItemGearAsset itemAsset, Transform rootModel)
+    private void ApplyHairOverride(ItemGearAsset itemAsset, Transform rootModel)
     {
         if (string.IsNullOrEmpty(itemAsset.hairOverride))
         {
@@ -889,13 +889,40 @@ public class HumanClothes : MonoBehaviour
         Transform transform = rootModel.FindChildRecursive(itemAsset.hairOverride);
         if (transform == null)
         {
-            Assets.reportError(itemAsset, "cannot find hair override '{0}'", itemAsset.hairOverride);
+            Assets.reportError(itemAsset, "cannot find hair override \"{0}\"", itemAsset.hairOverride);
             return;
         }
         Renderer component = transform.GetComponent<Renderer>();
         if (component != null)
         {
             component.sharedMaterial = materialHair;
+        }
+        else
+        {
+            Assets.reportError(itemAsset, "hair override \"{0}\" does not have a renderer component", itemAsset.hairOverride);
+        }
+    }
+
+    private void ApplySkinOverride(ItemClothingAsset itemAsset, Transform rootModel)
+    {
+        if (string.IsNullOrEmpty(itemAsset.skinOverride))
+        {
+            return;
+        }
+        Transform transform = rootModel.FindChildRecursive(itemAsset.skinOverride);
+        if (transform == null)
+        {
+            Assets.reportError(itemAsset, "cannot find skin override \"{0}\"", itemAsset.skinOverride);
+            return;
+        }
+        Renderer component = transform.GetComponent<Renderer>();
+        if (component != null)
+        {
+            component.sharedMaterial = materialClothing;
+        }
+        else
+        {
+            Assets.reportError(itemAsset, "skin override \"{0}\" does not have a renderer component", itemAsset.skinOverride);
         }
     }
 
@@ -1106,7 +1133,8 @@ public class HumanClothes : MonoBehaviour
                             ItemTool.applyEffect(hatModel, inventoryMythicID3, EEffectType.HOOK);
                         }
                     }
-                    applyHairOverride(itemHatAsset, hatModel);
+                    ApplyHairOverride(itemHatAsset, hatModel);
+                    ApplySkinOverride(itemHatAsset, hatModel);
                 }
             }
             if (itemHatAsset != null && itemHatAsset.hat != null)
@@ -1142,6 +1170,7 @@ public class HumanClothes : MonoBehaviour
                         }
                     }
                     backpackModel.gameObject.SetActive(hasBackpack);
+                    ApplySkinOverride(itemBackpackAsset, backpackModel);
                 }
             }
             if (itemBackpackAsset != null)
@@ -1176,6 +1205,7 @@ public class HumanClothes : MonoBehaviour
                             ItemTool.applyEffect(vestModel, inventoryMythicID5, EEffectType.HOOK);
                         }
                     }
+                    ApplySkinOverride(itemVestAsset, vestModel);
                 }
             }
             if (itemVestAsset != null)
@@ -1212,7 +1242,8 @@ public class HumanClothes : MonoBehaviour
                         centerHeadEffect(skull, maskModel);
                         ItemTool.applyEffect(maskModel, num, EEffectType.HOOK);
                     }
-                    applyHairOverride(itemMaskAsset, maskModel);
+                    ApplyHairOverride(itemMaskAsset, maskModel);
+                    ApplySkinOverride(itemMaskAsset, maskModel);
                 }
             }
             if (itemMaskAsset != null && itemMaskAsset.mask != null)
@@ -1248,7 +1279,8 @@ public class HumanClothes : MonoBehaviour
                             ItemTool.applyEffect(glassesModel, inventoryMythicID6, EEffectType.HOOK);
                         }
                     }
-                    applyHairOverride(itemGlassesAsset, glassesModel);
+                    ApplyHairOverride(itemGlassesAsset, glassesModel);
+                    ApplySkinOverride(itemGlassesAsset, glassesModel);
                 }
             }
             if (itemGlassesAsset != null && itemGlassesAsset.glasses != null)

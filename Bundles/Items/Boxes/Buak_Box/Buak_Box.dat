@@ -1,0 +1,35 @@
+GUID be5e0d8263e54bdd9fc2f4b3f64dbea8
+Type Box
+
+Size_X 1
+Size_Y 1
+
+Generate 21062
+
+Probability_Model Equalized
+Contains_Bonus_Items True
+
+Drops 21
+Drop_0 -1
+Drop_1 "95201" // Buak_Angel_Devil
+Drop_2 "95301" // Buak_Griefer_Mask
+Drop_3 "95401" // Buak_Anomaly
+Drop_4 "95501" // Buak_Ram_Horns
+Drop_5 "95601" // Buak_Wind_Up_Key_II
+Drop_6 "95701" // Buak_Zipper
+Drop_7 "95801" // Buak_Recycled_Armour
+Drop_8 "95901" // Buak_Menpo
+Drop_9 "96001" // Buak_Pink_Hoodie
+Drop_10 "96101" // Buak_Skeleton_Hoodie
+Drop_11 "96201" // Buak_Skeleton_Pants
+Drop_12 "96301" // Buak_Hooded_Cap
+Drop_13 "96401" // Buak_Digital_Artist
+Drop_14 "96501" // Buak_Wizard_Hat
+Drop_15 "96601" // Buak_Skater_Locks
+Drop_16 "96701" // Buak_Pilot_Hat
+Drop_17 "96801" // Buak Cityscape Detonator
+Drop_18 "96901" // Buak_Keytar
+Drop_19 "97001" // Buak_Scythe
+Drop_20 "97101" // Buak_Tinkerer
+
+Pro

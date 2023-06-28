@@ -53,7 +53,7 @@ public class SleekButtonState : SleekWrapper
 
     private void synchronizeActiveContent()
     {
-        if (states != null && state < states.Length && states[state] != null)
+        if (states != null && state >= 0 && state < states.Length && states[state] != null)
         {
             button.text = states[state].text;
             button.icon = states[state].image as Texture2D;

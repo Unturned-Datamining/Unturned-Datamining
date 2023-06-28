@@ -38,6 +38,8 @@ public class ItemClothingAsset : ItemAsset
 
     public bool shouldDestroyClothingColliders { get; protected set; }
 
+    public string skinOverride { get; protected set; }
+
     public bool shouldBeVisible(bool isRagdoll)
     {
         if (isRagdoll)
@@ -96,6 +98,7 @@ public class ItemClothingAsset : ItemAsset
             wearAudio = new AudioReference("core.masterbundle", "Sounds/Sleeve.mp3");
         }
         shouldDestroyClothingColliders = data.ParseBool("Destroy_Clothing_Colliders", defaultValue: true);
+        skinOverride = data.GetString("Skin_Override");
     }
 
     protected override AudioReference GetDefaultInventoryAudio()

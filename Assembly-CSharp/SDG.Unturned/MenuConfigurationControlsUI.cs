@@ -137,7 +137,7 @@ public class MenuConfigurationControlsUI
 
     private static SleekButtonState leaningButton;
 
-    public static byte binding;
+    public static byte binding = byte.MaxValue;
 
     public static void open()
     {

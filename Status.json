@@ -22,14 +22,18 @@
 			"Festive2021_Cook",
 			"Arid_Finale",
 			"Arid_RPG",
-			"Frost_Expedition"
+			"Frost_Expedition",
+			"Buak_ADayInTheSun",
+			"Buak_Memory",
+			"Buak_TacoWaffle",
+			"Buak_Anomaly"
 		]
 	},
 	"Game":
 	{
 		"Major_Version": 23,
-		"Minor_Version": 9,
-		"Patch_Version": 0,
+		"Minor_Version": 10,
+		"Patch_Version": 100,
 		"GrantPackageIDs":
 		[
 			487
