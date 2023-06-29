@@ -303,7 +303,7 @@ public class ItemAsset : Asset, ISkinableAsset
     {
         base.PopulateAsset(bundle, data, localization);
         isPro = data.ContainsKey("Pro");
-        if (id < 2000 && !bundle.isCoreAsset && !data.ContainsKey("Bypass_ID_Limit"))
+        if (id < 2000 && !base.OriginAllowsVanillaLegacyId && !data.ContainsKey("Bypass_ID_Limit"))
         {
             throw new NotSupportedException("ID < 2000");
         }

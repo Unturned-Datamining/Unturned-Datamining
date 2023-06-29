@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1016515203
+CRC: 2718727238
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: a4a846711f5a004d3b02fd1738657c3c
+    Hash: e985100eb59e5bfbd9824d50cdea2bc2
   TypeTreeHash:
     serializedVersion: 2
     Hash: 0d81aa5e50a6473f54d359b6d369f12d
@@ -5366,6 +5366,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Pants/Coastguard_Bottom/Animations.prefab
 - Assets/CoreMasterBundle/Items/Structures/Roof_Pine_Triangle/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Quests/Liberator/Liberator_Strong/Object.prefab
+- Assets/CoreMasterBundle/Mythics/Buak_CrimsonNavigator/System_Hook.prefab
 - Assets/CoreMasterBundle/Skins/Snayperskya/Nativ/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Items/Shirts/Grocer_Top/Material.mat
 - Assets/CoreMasterBundle/Effects/Impacts/Paintball_Green_Dynamic/Texture_0.png
@@ -10581,6 +10582,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Snow_Run/footstep_snow_run_04.wav
 - Assets/CoreMasterBundle/Items/Throwables/Smoke_Blue/Throwable.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Spikes_Pine/Item.prefab
+- Assets/CoreMasterBundle/Mythics/Buak_Dazzling/System_Hook.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Zombie_4/Splat.mat
 - Assets/CoreMasterBundle/Items/Melee/Hockey/Animations.prefab
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Off_Roader_Blue/Object.prefab

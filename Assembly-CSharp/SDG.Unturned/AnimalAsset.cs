@@ -150,7 +150,7 @@ public class AnimalAsset : Asset
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
         base.PopulateAsset(bundle, data, localization);
-        if (id < 50 && !bundle.isCoreAsset && !data.ContainsKey("Bypass_ID_Limit"))
+        if (id < 50 && !base.OriginAllowsVanillaLegacyId && !data.ContainsKey("Bypass_ID_Limit"))
         {
             throw new NotSupportedException("ID < 50");
         }

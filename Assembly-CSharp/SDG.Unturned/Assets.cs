@@ -82,7 +82,7 @@ public class Assets : MonoBehaviour
 
     internal static AssetOrigin coreOrigin;
 
-    private static AssetOrigin reloadOrigin;
+    internal static AssetOrigin reloadOrigin;
 
     private static AssetOrigin legacyServerSharedOrigin;
 
@@ -740,7 +740,6 @@ public class Assets : MonoBehaviour
         {
             bundle = new Bundle(directoryName + "/" + text + ".unity3d", usePath: false);
         }
-        bundle.isCoreAsset = file.origin == coreOrigin;
         int num2 = datDictionary.ParseInt32("Asset_Bundle_Version", 1);
         if (num2 < 1)
         {

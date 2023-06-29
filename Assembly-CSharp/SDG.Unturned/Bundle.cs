@@ -8,8 +8,6 @@ public class Bundle
 {
     private static List<Renderer> renderers = new List<Renderer>();
 
-    internal bool isCoreAsset;
-
     public bool convertShadersToStandard;
 
     public bool consolidateShaders = true;

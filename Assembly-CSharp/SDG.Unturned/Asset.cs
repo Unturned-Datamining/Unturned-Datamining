@@ -55,6 +55,18 @@ public abstract class Asset
 
     public virtual EAssetType assetCategory => EAssetType.NONE;
 
+    protected bool OriginAllowsVanillaLegacyId
+    {
+        get
+        {
+            if (origin != Assets.coreOrigin)
+            {
+                return origin == Assets.reloadOrigin;
+            }
+            return true;
+        }
+    }
+
     public virtual string getFilePath()
     {
         return absoluteOriginFilePath;

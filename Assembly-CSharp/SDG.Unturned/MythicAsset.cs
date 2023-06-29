@@ -28,7 +28,7 @@ public class MythicAsset : Asset
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
         base.PopulateAsset(bundle, data, localization);
-        if (id < 500 && !bundle.isCoreAsset && !data.ContainsKey("Bypass_ID_Limit"))
+        if (id < 500 && !base.OriginAllowsVanillaLegacyId && !data.ContainsKey("Bypass_ID_Limit"))
         {
             throw new NotSupportedException("ID < 500");
         }
