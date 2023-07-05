@@ -1,11 +1,6 @@
 MainMenuAlert
 {
-	Id 30
-	Header Firefighter Zombie Plush
-	Body We have collaborated with Makeship to bring the Firefighter Zombie to life in the form of a limited-edition plush toy! Click here for more details.
-	Color #5349ed
-	Link https://www.makeship.com/products/unturned-firefighter-zombie-plush
-	IconName FirefighterPlush
+	Id 31
 }
 MainMenuWorkshop
 {
@@ -32,4 +27,5 @@ ItemStore
 }
 ShouldAllowJoiningInternetServersWithoutGslt false
 ShouldServersWithoutMonetizationTagBeVisibleInInternetServerList true
+AreBuakCraftableItemsAvailable true
 QueryPingWarningOffsetMs 50
