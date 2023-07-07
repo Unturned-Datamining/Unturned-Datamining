@@ -33,7 +33,7 @@
 	{
 		"Major_Version": 23,
 		"Minor_Version": 10,
-		"Patch_Version": 101,
+		"Patch_Version": 0,
 		"GrantPackageIDs":
 		[
 			487
@@ -53,9 +53,9 @@
 	},
 	"Menu":
 	{
-		"PromoStart": "2022-12-14T12:00:00Z",
-		"PromoEnd": "2022-12-30T12:00:00Z",
-		"PromoLevel": "FrostMenu"
+		"PromoStart": "2023-07-05T12:00:00Z",
+		"PromoEnd": "2023-07-21T12:00:00Z",
+		"PromoLevel": "BuakMenu"
 	},
 	"News":
 	{
@@ -66,13 +66,18 @@
 		"Auto_Subscribe":
 		[
 			{
-				"Workshop_File_Id": 2898548949,
-				"Start": "2022-12-14T00:12:00Z",
-				"End": "2023-12-14T00:12:00Z"
+				"Workshop_File_Id": 2999923887,
+				"Start": "2023-07-07T00:12:00Z",
+				"End": "2024-07-07T00:12:00Z"
 			}
 		],
 		"Curated_Map_Links":
 		[
+			{
+				"Name": "Buak",
+				"Workshop_File_Id": 2999923887,
+				"Visible_In_Singleplayer_Recommendations_List": true
+			},
 			{
 				"Name": "A6 Polaris",
 				"Workshop_File_Id": 2898548949,

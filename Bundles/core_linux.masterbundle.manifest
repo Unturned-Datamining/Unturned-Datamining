@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2718727238
+CRC: 4282762201
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: e985100eb59e5bfbd9824d50cdea2bc2
+    Hash: 2640405ffa993370e85dfec7cef703f7
   TypeTreeHash:
     serializedVersion: 2
     Hash: 0d81aa5e50a6473f54d359b6d369f12d
@@ -4230,6 +4230,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Rack_Pine/Barricade.prefab
 - Assets/CoreMasterBundle/Items/Elver2/Elver2_Octi_Pack/Item.prefab
 - Assets/CoreMasterBundle/Items/Masks/Bowtie_Rainbow_Emission/Mask.prefab
+- Assets/CoreMasterBundle/Objects/Medium/Furniture/JasperMemorial/Nav.prefab
 - Assets/CoreMasterBundle/Items/Masks/Balaclava_Green/Mask.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Construction_0/Object.prefab
 - Assets/CoreMasterBundle/Items/Magazines/Arrow_Explosive_1/Item.prefab
@@ -8128,8 +8129,9 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Medium/Quests/Research_Capsule/Research_Capsule_0/Object.prefab
 - Assets/CoreMasterBundle/Items/Guns/Scalar/Hammer.mp3
 - Assets/CoreMasterBundle/Items/Food/XMAS_Gingerbread/Item.prefab
-- Assets/CoreMasterBundle/Skins/Scalar/Cutter/Skin_Tertiary.mat
+- Assets/CoreMasterBundle/Objects/Medium/Furniture/JasperMemorial/Object.prefab
 - Assets/CoreMasterBundle/Effects/Impacts/Paintball_Purple_Dynamic/Material_2_Decal.mat
+- Assets/CoreMasterBundle/Skins/Scalar/Cutter/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Items/Hats/Beret_Bug_Report/Animations.prefab
 - Assets/CoreMasterBundle/Items/Outfits/Cultist/Cultist_Mask/Mask.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/House_07/Slots.prefab

@@ -228,6 +228,7 @@ public class CosmeticPreviewCapture : MonoBehaviour
         outfitCamera.Render();
         outfitCamera.targetTexture = null;
         clothes.hair = 0;
+        yield return new WaitForSeconds(1f);
     }
 
     private IEnumerator Render(Camera cameraComponent, RenderTexture targetTexture, RenderTexture downsampleTexture, Texture2D exportTexture, string exportFilePath)
