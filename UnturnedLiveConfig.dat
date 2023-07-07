@@ -7,7 +7,19 @@ MainMenuWorkshop
 	AllowNews true
 	Featured
 	{
-		Id 6
+		Id 7
+		FileIds
+		[
+			3000549606
+		]
+		Status New
+		Type Curated
+		AssociatedStockpileItems
+		[
+			21061
+			1351
+			1352
+		]
 	}
 	Popular
 	{
@@ -17,12 +29,12 @@ MainMenuWorkshop
 }
 ItemStore
 {
-	PromotionId 2
-	FeaturedItems
+	PromotionId 3
+	NewItems
 	[
-		1343
-		1350
-		1344
+		21061
+		1351
+		1352
 	]
 }
 ShouldAllowJoiningInternetServersWithoutGslt false
