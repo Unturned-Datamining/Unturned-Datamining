@@ -1,6 +1,11 @@
 MainMenuAlert
 {
-	Id 31
+	Id 32
+	Header Duo Buak Arent Event by WeslieG & Smeko
+	Body From the organizers: Win exclusive custom skins and cash prizes in a free-to-enter PVP tournament taking place on July 15th! The event has qualification style matches of 30 players each. Each match will be battle arena style where the border closes over a 1-hour period. There are separate NA and EU matches to give most players a chance to play. Click here for more info!
+	Color #FF55FF
+	Link https://discord.gg/unturnedevents
+	IconURL https://cdn.discordapp.com/attachments/456631256436965377/1125472242759893063/unturndevents40x40.png
 }
 MainMenuWorkshop
 {
