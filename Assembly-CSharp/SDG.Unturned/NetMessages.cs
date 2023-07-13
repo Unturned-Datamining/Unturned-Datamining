@@ -14,6 +14,8 @@ internal static class NetMessages
 
     public delegate void ServerReadHandler(ITransportConnection transportConnection, NetPakReader reader);
 
+    internal static CommandLineFlag shouldLogBadMessages;
+
     private static NetPakReader reader;
 
     private static NetPakWriter writer;
@@ -118,6 +120,7 @@ internal static class NetMessages
 
     static NetMessages()
     {
+        shouldLogBadMessages = new CommandLineFlag(defaultValue: false, "-LogBadMessages");
         reader = new NetPakReader();
         writer = new NetPakWriter();
         writer.buffer = Block.buffer;

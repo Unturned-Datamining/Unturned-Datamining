@@ -40,6 +40,10 @@ internal static class ServerMessageHandler_GetWorkshopFiles
                 Provider.workshopRequests[num] = value2;
                 if (flag2)
                 {
+                    if ((bool)NetMessages.shouldLogBadMessages)
+                    {
+                        UnturnedLog.info($"Ignoring GetWorkshopFiles message from {transportConnection} because they requested recently");
+                    }
                     return;
                 }
                 flag = true;

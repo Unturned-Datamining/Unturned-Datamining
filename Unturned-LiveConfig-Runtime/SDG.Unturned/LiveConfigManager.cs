@@ -53,7 +53,7 @@ public class LiveConfigManager : MonoBehaviour
             try
             {
                 DatParser datParser = new DatParser();
-                DatDictionary data = datParser.Parse(request.downloadHandler.text);
+                DatDictionary data = datParser.Parse(request.downloadHandler.data);
                 if (datParser.HasError)
                 {
                     Debug.LogError("Error parsing live config: \"" + datParser.ErrorMessage + "\"");

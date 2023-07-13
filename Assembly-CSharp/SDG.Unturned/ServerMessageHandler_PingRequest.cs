@@ -10,27 +10,49 @@ internal static class ServerMessageHandler_PingRequest
     {
         for (int i = 0; i < Provider.pending.Count; i++)
         {
-            if (transportConnection.Equals(Provider.pending[i].transportConnection))
+            if (!transportConnection.Equals(Provider.pending[i].transportConnection))
             {
-                if (!(Provider.pending[i].averagePingRequestsReceivedPerSecond > Provider.PING_REQUEST_INTERVAL * 2f))
-                {
-                    Provider.pending[i].lastReceivedPingRequestRealtime = Time.realtimeSinceStartup;
-                    Provider.pending[i].incrementNumPingRequestsReceived();
-                    NetMessages.SendMessageToClient(EClientMessage.PingResponse, ENetReliability.Unreliable, transportConnection, delegate
-                    {
-                    });
-                }
-                return;
+                continue;
             }
+            if (Provider.pending[i].averagePingRequestsReceivedPerSecond > Provider.PING_REQUEST_INTERVAL * 2f)
+            {
+                if ((bool)NetMessages.shouldLogBadMessages)
+                {
+                    UnturnedLog.info($"Ignoring PingRequest message from {transportConnection} because they exceeded rate limit");
+                }
+            }
+            else
+            {
+                Provider.pending[i].lastReceivedPingRequestRealtime = Time.realtimeSinceStartup;
+                Provider.pending[i].incrementNumPingRequestsReceived();
+                NetMessages.SendMessageToClient(EClientMessage.PingResponse, ENetReliability.Unreliable, transportConnection, delegate
+                {
+                });
+            }
+            return;
         }
         SteamPlayer steamPlayer = Provider.findPlayer(transportConnection);
-        if (steamPlayer != null && !(steamPlayer.averagePingRequestsReceivedPerSecond > Provider.PING_REQUEST_INTERVAL * 2f))
+        if (steamPlayer != null)
         {
-            steamPlayer.lastReceivedPingRequestRealtime = Time.realtimeSinceStartup;
-            steamPlayer.incrementNumPingRequestsReceived();
-            NetMessages.SendMessageToClient(EClientMessage.PingResponse, ENetReliability.Unreliable, transportConnection, delegate
+            if (steamPlayer.averagePingRequestsReceivedPerSecond > Provider.PING_REQUEST_INTERVAL * 2f)
             {
-            });
+                if ((bool)NetMessages.shouldLogBadMessages)
+                {
+                    UnturnedLog.info($"Ignoring PingRequest message from {transportConnection} because they exceeded rate limit");
+                }
+            }
+            else
+            {
+                steamPlayer.lastReceivedPingRequestRealtime = Time.realtimeSinceStartup;
+                steamPlayer.incrementNumPingRequestsReceived();
+                NetMessages.SendMessageToClient(EClientMessage.PingResponse, ENetReliability.Unreliable, transportConnection, delegate
+                {
+                });
+            }
+        }
+        else if ((bool)NetMessages.shouldLogBadMessages)
+        {
+            UnturnedLog.info($"Ignoring PingRequest message from {transportConnection} because there is no associated player");
         }
     }
 }

@@ -22,6 +22,10 @@ internal static class ServerMessageHandler_InvokeMethod
         SteamPlayer steamPlayer = Provider.findPlayer(transportConnection);
         if (steamPlayer == null)
         {
+            if ((bool)NetMessages.shouldLogBadMessages)
+            {
+                UnturnedLog.info($"Ignoring InvokeMethod message from {transportConnection} because there is no associated player");
+            }
             return;
         }
         ServerMethodInfo serverMethodInfo = NetReflection.serverMethods[value];

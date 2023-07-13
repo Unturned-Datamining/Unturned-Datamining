@@ -546,17 +546,7 @@ public class TempSteamworksWorkshop
         if (WorkshopTool.detectUGCMetaType(path, usePath: false, out var outType))
         {
             ugc.Add(new SteamContent(fileId, path, outType));
-            switch (outType)
-            {
-            case ESteamUGCType.MAP:
-                WorkshopTool.loadMapBundlesAndContent(path, fileId.m_PublishedFileId);
-                break;
-            default:
-                Assets.RequestAddSearchLocation(path, FindOrAddOrigin(fileId.m_PublishedFileId));
-                break;
-            case ESteamUGCType.LOCALIZATION:
-                break;
-            }
+            LoadFileIfAssetStartupAlreadyRan(fileId, path, outType);
         }
         else
         {
@@ -619,46 +609,52 @@ public class TempSteamworksWorkshop
 
     private void onItemInstalled(ItemInstalled_t callback)
     {
-        if (callback.m_unAppID.m_AppId != appInfo.id)
+        if (callback.m_unAppID.m_AppId == appInfo.id)
         {
+            PublishedFileId_t nPublishedFileId = callback.m_nPublishedFileId;
+            UnturnedLog.info("Workshop item installed: " + nPublishedFileId.ToString());
+            string explanation;
+            string path;
+            ESteamUGCType outType;
+            if (isInstalledItemAlreadyRegistered(callback.m_nPublishedFileId))
+            {
+                UnturnedLog.warn("Already registered newly installed workshop item '{0}', so ignoring this callback", callback.m_nPublishedFileId);
+            }
+            else if (shouldIgnoreFile(callback.m_nPublishedFileId, out explanation))
+            {
+                UnturnedLog.info("Ignoring newly installed workshop item because '{0}'", explanation);
+            }
+            else if (!getInstalledItemPath(callback.m_nPublishedFileId, out path))
+            {
+                UnturnedLog.warn("Unable to determine newly installed workshop item '{0}' file path", callback.m_nPublishedFileId);
+            }
+            else if (!WorkshopTool.detectUGCMetaType(path, usePath: false, out outType))
+            {
+                UnturnedLog.warn("Unable to determine newly installed workshop item '{0}' type", callback.m_nPublishedFileId);
+            }
+            else
+            {
+                ugc.Add(new SteamContent(callback.m_nPublishedFileId, path, outType));
+                LoadFileIfAssetStartupAlreadyRan(callback.m_nPublishedFileId, path, outType);
+            }
+        }
+    }
+
+    private void LoadFileIfAssetStartupAlreadyRan(PublishedFileId_t fileId, string path, ESteamUGCType type)
+    {
+        if (!((type == ESteamUGCType.MAP) ? Assets.hasLoadedMaps : Assets.hasLoadedUgc))
+        {
+            UnturnedLog.info($"Workshop file {fileId} not requesting load because asset refresh is in progress");
             return;
         }
-        PublishedFileId_t nPublishedFileId = callback.m_nPublishedFileId;
-        UnturnedLog.info("Workshop item installed: " + nPublishedFileId.ToString());
-        if (isInstalledItemAlreadyRegistered(callback.m_nPublishedFileId))
-        {
-            UnturnedLog.warn("Already registered newly installed workshop item '{0}', so ignoring this callback", callback.m_nPublishedFileId);
-            return;
-        }
-        if (shouldIgnoreFile(callback.m_nPublishedFileId, out var explanation))
-        {
-            UnturnedLog.info("Ignoring newly installed workshop item because '{0}'", explanation);
-            return;
-        }
-        if (!getInstalledItemPath(callback.m_nPublishedFileId, out var path))
-        {
-            UnturnedLog.warn("Unable to determine newly installed workshop item '{0}' file path", callback.m_nPublishedFileId);
-            return;
-        }
-        if (!WorkshopTool.detectUGCMetaType(path, usePath: false, out var outType))
-        {
-            UnturnedLog.warn("Unable to determine newly installed workshop item '{0}' type", callback.m_nPublishedFileId);
-            return;
-        }
-        ugc.Add(new SteamContent(callback.m_nPublishedFileId, path, outType));
-        if (!((outType == ESteamUGCType.MAP) ? Assets.hasLoadedMaps : Assets.hasLoadedUgc))
-        {
-            UnturnedLog.info("Deferring loading of {0}'s assets", callback.m_nPublishedFileId);
-            return;
-        }
-        switch (outType)
+        switch (type)
         {
         case ESteamUGCType.MAP:
-            WorkshopTool.loadMapBundlesAndContent(path, callback.m_nPublishedFileId.m_PublishedFileId);
+            WorkshopTool.loadMapBundlesAndContent(path, fileId.m_PublishedFileId);
             Level.broadcastLevelsRefreshed();
             break;
         default:
-            Assets.RequestAddSearchLocation(path, FindOrAddOrigin(callback.m_nPublishedFileId.m_PublishedFileId));
+            Assets.RequestAddSearchLocation(path, FindOrAddOrigin(fileId.m_PublishedFileId));
             break;
         case ESteamUGCType.LOCALIZATION:
             break;
@@ -852,23 +848,26 @@ public class TempSteamworksWorkshop
                 PublishedFileId_t publishedFileId_t = fileId;
                 UnturnedLog.warn("Unable to determine UGC type for installed item: " + publishedFileId_t.ToString());
             }
-            else if (isCompatible(fileId, outType, path, out explanation2))
+            else if (!isCompatible(fileId, outType, path, out explanation2))
             {
-                ugc.Add(new SteamContent(fileId, path, outType));
+                Assets.reportError(explanation2);
             }
             else
             {
-                Assets.reportError(explanation2);
+                ugc.Add(new SteamContent(fileId, path, outType));
+                LoadFileIfAssetStartupAlreadyRan(fileId, path, outType);
             }
         }
     }
 
     private void handleSubscribedItemsCallbackSuccess(SteamUGCQueryCompleted_t callback)
     {
+        UnturnedLog.info($"Received details for {callback.m_unNumResultsReturned} subscribed workshop file(s)");
         for (uint num = 0u; num < callback.m_unNumResultsReturned; num++)
         {
             if (cacheDetails(callback.m_handle, num, out var cachedDetails))
             {
+                UnturnedLog.info($"Subscribed workshop file {num + 1} of {callback.m_unNumResultsReturned}: \"{cachedDetails.name}\" ({cachedDetails.fileId})");
                 registerInstalledItem(cachedDetails.fileId);
             }
         }
@@ -927,21 +926,25 @@ public class TempSteamworksWorkshop
     {
         _ugc = new List<SteamContent>();
         uint numSubscribedItems = SteamUGC.GetNumSubscribedItems();
-        if (numSubscribedItems >= 1)
+        if (numSubscribedItems < 1)
         {
-            if ((bool)shouldIgnoreSubscribedItems)
-            {
-                UnturnedLog.info("Ignoring all workshop file subscriptions");
-                return;
-            }
-            locallySubscribedFileIds = new PublishedFileId_t[numSubscribedItems];
-            SteamUGC.GetSubscribedItems(locallySubscribedFileIds, numSubscribedItems);
-            registerLocalizations();
-            subscribedQueryHandle = SteamUGC.CreateQueryUGCDetailsRequest(locallySubscribedFileIds, numSubscribedItems);
-            SteamUGC.SetReturnKeyValueTags(subscribedQueryHandle, bReturnKeyValueTags: true);
-            SteamAPICall_t hAPICall = SteamUGC.SendQueryUGCRequest(subscribedQueryHandle);
-            subscribedQueryCompleted.Set(hAPICall);
+            UnturnedLog.info("Found zero workshop file subscriptions");
+            return;
         }
+        if ((bool)shouldIgnoreSubscribedItems)
+        {
+            UnturnedLog.info("Ignoring all workshop file subscriptions");
+            return;
+        }
+        locallySubscribedFileIds = new PublishedFileId_t[numSubscribedItems];
+        SteamUGC.GetSubscribedItems(locallySubscribedFileIds, numSubscribedItems);
+        UnturnedLog.info("Subscribed workshop file ID(s): " + string.Join(", ", locallySubscribedFileIds));
+        registerLocalizations();
+        UnturnedLog.info("Querying details for subscribed workshop files...");
+        subscribedQueryHandle = SteamUGC.CreateQueryUGCDetailsRequest(locallySubscribedFileIds, numSubscribedItems);
+        SteamUGC.SetReturnKeyValueTags(subscribedQueryHandle, bReturnKeyValueTags: true);
+        SteamAPICall_t hAPICall = SteamUGC.SendQueryUGCRequest(subscribedQueryHandle);
+        subscribedQueryCompleted.Set(hAPICall);
     }
 
     public void refreshPublished()

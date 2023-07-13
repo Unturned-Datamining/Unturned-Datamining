@@ -48,6 +48,7 @@ public class DatParser
         hasChar = false;
         currentLineNumber = 1;
         ReadChar();
+        SkipUtf8Bom();
         SkipWhitespaceAndComments();
         DatDictionary datDictionary = new DatDictionary();
         while (hasChar)
@@ -71,6 +72,13 @@ public class DatParser
         return Parse(stringReader);
     }
 
+    public DatDictionary Parse(byte[] input)
+    {
+        using MemoryStream stream = new MemoryStream(input);
+        using StreamReader streamReader = new StreamReader(stream);
+        return Parse(streamReader);
+    }
+
     private void ReadChar()
     {
         bool flag = hasChar && currentChar == '\r';
@@ -85,6 +93,23 @@ public class DatParser
         while (hasChar && (currentChar == ' ' || currentChar == '\t'))
         {
             ReadChar();
+        }
+    }
+
+    private void SkipUtf8Bom()
+    {
+        if (!hasChar || currentChar != 'ï')
+        {
+            return;
+        }
+        ReadChar();
+        if (hasChar && currentChar == '»')
+        {
+            ReadChar();
+            if (hasChar && currentChar == '¿')
+            {
+                ReadChar();
+            }
         }
     }
 

@@ -15,6 +15,10 @@ internal static class ServerMessageHandler_ValidateAssets
         SteamPlayer steamPlayer = Provider.findPlayer(transportConnection);
         if (steamPlayer == null)
         {
+            if ((bool)NetMessages.shouldLogBadMessages)
+            {
+                UnturnedLog.info($"Ignoring ValidateAssets message from {transportConnection} because there is no associated player");
+            }
             return;
         }
         if (!reader.ReadBits(MAX_ASSETS.bitCount, out var value))
