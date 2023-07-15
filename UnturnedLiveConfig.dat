@@ -1,10 +1,10 @@
 MainMenuAlert
 {
-	Id 32
-	Header Duo Buak Arent Event by WeslieG & Smeko
-	Body From the organizers: Win exclusive custom skins and cash prizes in a free-to-enter PVP tournament taking place on July 15th! The event has qualification style matches of 30 players each. Each match will be battle arena style where the border closes over a 1-hour period. There are separate NA and EU matches to give most players a chance to play. Click here for more info!
+	Id 33
+	Header LIVE: Unturned Events Arena-Style PvP Tournament on BUAK! by WeslieG & Smeko
+	Body From the organizers: DUO PvP tournament event going on right now come watch! Unturned Events is live on Twitch streaming an arena tournament with 150 participants! The winners get exclusive custom skins and a cash prize. Come join the audience and cheer for your favorite team!
 	Color #FF55FF
-	Link https://discord.gg/unturnedevents
+	Link https://www.twitch.tv/weslieg
 	IconURL https://cdn.discordapp.com/attachments/456631256436965377/1125472242759893063/unturndevents40x40.png
 }
 MainMenuWorkshop
