@@ -1,11 +1,11 @@
 MainMenuAlert
 {
-	Id 33
-	Header LIVE: Unturned Events Arena-Style PvP Tournament on BUAK! by WeslieG & Smeko
-	Body From the organizers: DUO PvP tournament event going on right now come watch! Unturned Events is live on Twitch streaming an arena tournament with 150 participants! The winners get exclusive custom skins and a cash prize. Come join the audience and cheer for your favorite team!
-	Color #FF55FF
-	Link https://www.twitch.tv/weslieg
-	IconURL https://cdn.discordapp.com/attachments/456631256436965377/1125472242759893063/unturndevents40x40.png
+	Id 34
+	Header Firefighter Zombie Plush Final Day
+	Body If you're interested or were on the fence it's still available for a short while! The Makeship campaign ends on Sunday July 16th at 11:00 PM PDT. Click here for more details.
+	Color #5349ed
+	Link https://www.makeship.com/products/unturned-firefighter-zombie-plush
+	IconName FirefighterPlush
 }
 MainMenuWorkshop
 {
