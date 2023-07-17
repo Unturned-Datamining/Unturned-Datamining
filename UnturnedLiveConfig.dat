@@ -1,11 +1,6 @@
 MainMenuAlert
 {
-	Id 34
-	Header Firefighter Zombie Plush Final Day
-	Body If you're interested or were on the fence it's still available for a short while! The Makeship campaign ends on Sunday July 16th at 11:00 PM PDT. Click here for more details.
-	Color #5349ed
-	Link https://www.makeship.com/products/unturned-firefighter-zombie-plush
-	IconName FirefighterPlush
+	Id 35
 }
 MainMenuWorkshop
 {
