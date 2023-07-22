@@ -1,11 +1,6 @@
 MainMenuAlert
 {
-	Id 36
-	Header Buak Craftable Items Final Day
-	Body Friday the 21st is the last day the limited-edition Buak cosmetics will be craftable. They are available from Menu > Survivors > Inventory > Crafting.
-	Color #f0f0f0
-	IconName Alert_Circle
-	TintIcon true
+	Id 37
 }
 MainMenuWorkshop
 {
@@ -44,5 +39,4 @@ ItemStore
 }
 ShouldAllowJoiningInternetServersWithoutGslt false
 ShouldServersWithoutMonetizationTagBeVisibleInInternetServerList true
-AreBuakCraftableItemsAvailable true
 QueryPingWarningOffsetMs 50
