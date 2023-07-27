@@ -7,19 +7,7 @@ MainMenuWorkshop
 	AllowNews true
 	Featured
 	{
-		Id 7
-		FileIds
-		[
-			3000549606
-		]
-		Status New
-		Type Curated
-		AssociatedStockpileItems
-		[
-			21061
-			1351
-			1352
-		]
+		Id 8
 	}
 	Popular
 	{
@@ -30,7 +18,7 @@ MainMenuWorkshop
 ItemStore
 {
 	PromotionId 3
-	NewItems
+	FeaturedItems
 	[
 		21061
 		1351
