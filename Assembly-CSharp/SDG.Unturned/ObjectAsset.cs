@@ -480,7 +480,7 @@ public class ObjectAsset : Asset
     private void ensureNavMeshReadable()
     {
         navMCs.Clear();
-        navGameObject?.getOrLoad().GetComponents(navMCs);
+        navGameObject?.getOrLoad().GetComponentsInChildren(includeInactive: true, navMCs);
         foreach (MeshCollider navMC in navMCs)
         {
             if (navMC.sharedMesh == null)

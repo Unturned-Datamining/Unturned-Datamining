@@ -99,12 +99,22 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Quest condition " + prefix + i + " missing _ID");
                 }
-                if (!data.ContainsKey(prefix + i + "_Status"))
+                ENPCQuestStatus eNPCQuestStatus = ENPCQuestStatus.NONE;
+                string key9 = prefix + i + "_Status";
+                if (!data.ContainsKey(key9))
                 {
                     Assets.reportError(assetContext, "Quest condition " + prefix + i + " missing _Status");
                 }
+                else
+                {
+                    eNPCQuestStatus = data.ParseEnum(key9, ENPCQuestStatus.NONE);
+                    if (eNPCQuestStatus == ENPCQuestStatus.NONE && flag)
+                    {
+                        Assets.reportError(assetContext, "Quest condition " + prefix + i + " has Reset enabled with Status None (probably accidental)");
+                    }
+                }
                 data.ParseGuidOrLegacyId(prefix + i + "_ID", out var guid2, out var legacyId2);
-                conditions[i] = new NPCQuestCondition(guid2, legacyId2, data.ParseEnum(prefix + i + "_Status", ENPCQuestStatus.NONE), data.ContainsKey(prefix + i + "_Ignore_NPC"), eNPCLogicType, desc, flag);
+                conditions[i] = new NPCQuestCondition(guid2, legacyId2, eNPCQuestStatus, data.ContainsKey(prefix + i + "_Ignore_NPC"), eNPCLogicType, desc, flag);
                 break;
             }
             case ENPCConditionType.SKILLSET:

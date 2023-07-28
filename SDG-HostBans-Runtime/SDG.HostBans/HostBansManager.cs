@@ -12,7 +12,15 @@ public class HostBansManager : MonoBehaviour
 
     private bool isRefreshing;
 
+    private bool _hasReceivedAnyResponse;
+
+    private int retryIndex;
+
+    private float[] retryIntervals = new float[4] { 30f, 300f, 600f, 1200f };
+
     private static HostBansManager instance;
+
+    public bool HasReceivedAnyResponse => _hasReceivedAnyResponse;
 
     public static HostBansManager Get()
     {
@@ -63,6 +71,7 @@ public class HostBansManager : MonoBehaviour
         if (!isRefreshing)
         {
             isRefreshing = true;
+            retryIndex = 0;
             StartCoroutine(RequestFilters());
         }
     }
@@ -82,6 +91,7 @@ public class HostBansManager : MonoBehaviour
         byte[] data = request.downloadHandler.data;
         try
         {
+            _hasReceivedAnyResponse = true;
             NetPakReader netPakReader = new NetPakReader();
             netPakReader.SetBuffer(data);
             filters = new HostBanFilters();
@@ -97,11 +107,37 @@ public class HostBansManager : MonoBehaviour
 
     private IEnumerator RequestFilters()
     {
+        yield return RequestFiltersWithRetries();
+        isRefreshing = false;
+    }
+
+    private IEnumerator RequestFiltersFromAllHosts()
+    {
         yield return RequestFiltersFromHost("https://smartlydressedgames.com");
         if (filters == null)
         {
-            yield return RequestFiltersFromHost("http://chaotic-island-paradise.s3-website-us-west-2.amazonaws.com");
+            yield return RequestFiltersFromHost("http://egg-calculate-remarkable.s3-website-us-west-2.amazonaws.com");
         }
-        isRefreshing = false;
+    }
+
+    private IEnumerator RequestFiltersWithRetries()
+    {
+        while (retryIndex < retryIntervals.Length)
+        {
+            yield return RequestFiltersFromAllHosts();
+            if (filters != null)
+            {
+                break;
+            }
+            float num = retryIntervals[retryIndex];
+            retryIndex++;
+            Debug.Log($"Will retry getting Steam matchmaking moderation filters in {num} seconds");
+            yield return new WaitForSecondsRealtime(num);
+            Debug.Log("Retrying getting Steam matchmaking moderation filters");
+        }
+        if (filters == null)
+        {
+            Debug.LogError("Failed to get Steam matchmaking moderations filters, no longer retrying");
+        }
     }
 }

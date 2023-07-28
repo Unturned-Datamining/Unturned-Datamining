@@ -287,7 +287,10 @@ public sealed class DatValue : IDatNode
 
     public bool TryParseDateTimeUtc(out DateTime value)
     {
-        return DateTime.TryParse(this.value, CultureInfo.InvariantCulture, DateTimeStyles.None, out value);
+        DateTimeStyles styles = DateTimeStyles.AssumeUniversal;
+        bool result = DateTime.TryParse(this.value, CultureInfo.InvariantCulture, styles, out value);
+        value = value.ToUniversalTime();
+        return result;
     }
 
     public DateTime ParseDateTimeUtc(DateTime defaultValue = default(DateTime))

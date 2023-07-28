@@ -102,7 +102,15 @@ public class MenuPlayMatchmakingUI
 
     private static void onClickedLuckyButton(ISleekElement button)
     {
-        Provider.connect(Provider.provider.matchmakingService.matchmakingBestServer, "", null);
+        EInternetMultiplayerAvailability internetMultiplayerAvailability = Provider.GetInternetMultiplayerAvailability();
+        if (internetMultiplayerAvailability != 0)
+        {
+            MenuUI.AlertInternetMultiplayerAvailability(internetMultiplayerAvailability);
+        }
+        else
+        {
+            Provider.connect(Provider.provider.matchmakingService.matchmakingBestServer, "", null);
+        }
     }
 
     private static void onSwappedModeState(SleekButtonState button, int index)

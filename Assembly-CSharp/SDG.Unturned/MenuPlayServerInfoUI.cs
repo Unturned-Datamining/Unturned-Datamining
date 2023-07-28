@@ -377,6 +377,15 @@ public class MenuPlayServerInfoUI
 
     private static void onClickedJoinButton(ISleekElement button)
     {
+        if (new IPv4Address(serverInfo.ip).IsWideAreaNetwork)
+        {
+            EInternetMultiplayerAvailability internetMultiplayerAvailability = Provider.GetInternetMultiplayerAvailability();
+            if (internetMultiplayerAvailability != 0)
+            {
+                MenuUI.AlertInternetMultiplayerAvailability(internetMultiplayerAvailability);
+                return;
+            }
+        }
         if (serverInfo.isPassworded && string.IsNullOrEmpty(serverPassword))
         {
             MenuServerPasswordUI.open(serverInfo, expectedWorkshopItems);

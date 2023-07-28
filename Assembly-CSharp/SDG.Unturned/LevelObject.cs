@@ -543,26 +543,30 @@ public class LevelObject
         if (Provider.isServer)
         {
             GameObject gameObject6 = asset.triggersGameObject?.getOrLoad();
+            Transform transform3;
             if (gameObject6 != null)
             {
-                Transform transform3 = UnityEngine.Object.Instantiate(gameObject6).transform;
-                transform3.name = "Triggers";
-                transform3.parent = this.transform;
-                transform3.localPosition = Vector3.zero;
-                transform3.localRotation = Quaternion.identity;
-                transform3.localScale = Vector3.one;
-                if (asset.shouldAddKillTriggers)
+                Transform obj = UnityEngine.Object.Instantiate(gameObject6).transform;
+                obj.name = "Triggers";
+                obj.parent = this.transform;
+                obj.localPosition = Vector3.zero;
+                obj.localRotation = Quaternion.identity;
+                obj.localScale = Vector3.one;
+                transform3 = obj;
+            }
+            else
+            {
+                transform3 = this.transform;
+            }
+            if (asset.shouldAddKillTriggers)
+            {
+                foreach (Transform item in transform3)
                 {
-                    int childCount = transform3.childCount;
-                    for (int k = 0; k < childCount; k++)
+                    if (item.name.Equals("Kill", StringComparison.OrdinalIgnoreCase))
                     {
-                        Transform child = transform3.GetChild(k);
-                        if (child.name.Equals("Kill", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            child.tag = "Trap";
-                            child.gameObject.layer = 30;
-                            child.gameObject.AddComponent<Barrier>();
-                        }
+                        item.tag = "Trap";
+                        item.gameObject.layer = 30;
+                        item.gameObject.AddComponent<Barrier>();
                     }
                 }
             }
@@ -571,10 +575,10 @@ public class LevelObject
         {
             if (Level.isEditor)
             {
-                Transform transform4 = this.transform.Find("Block");
-                if (transform4 != null && this.transform.GetComponent<Collider>() == null)
+                Transform transform5 = this.transform.Find("Block");
+                if (transform5 != null && this.transform.GetComponent<Collider>() == null)
                 {
-                    BoxCollider component4 = transform4.GetComponent<BoxCollider>();
+                    BoxCollider component4 = transform5.GetComponent<BoxCollider>();
                     if (component4 != null)
                     {
                         BoxCollider boxCollider = this.transform.gameObject.AddComponent<BoxCollider>();
@@ -588,14 +592,14 @@ public class LevelObject
                 GameObject gameObject7 = asset.slotsGameObject?.getOrLoad();
                 if (gameObject7 != null)
                 {
-                    Transform obj = UnityEngine.Object.Instantiate(gameObject7).transform;
-                    obj.name = "Slots";
-                    obj.parent = this.transform;
-                    obj.localPosition = Vector3.zero;
-                    obj.localRotation = Quaternion.identity;
-                    obj.localScale = Vector3.one;
+                    Transform obj2 = UnityEngine.Object.Instantiate(gameObject7).transform;
+                    obj2.name = "Slots";
+                    obj2.parent = this.transform;
+                    obj2.localPosition = Vector3.zero;
+                    obj2.localRotation = Quaternion.identity;
+                    obj2.localScale = Vector3.one;
                     reuseableRigidbodyList.Clear();
-                    obj.GetComponentsInChildren(reuseableRigidbodyList);
+                    obj2.GetComponentsInChildren(reuseableRigidbodyList);
                     foreach (Rigidbody reuseableRigidbody2 in reuseableRigidbodyList)
                     {
                         UnityEngine.Object.Destroy(reuseableRigidbody2);
@@ -646,10 +650,10 @@ public class LevelObject
             }
             if (asset.rubbleEditor == EObjectRubbleEditor.DEAD && Level.isEditor)
             {
-                Transform transform5 = this.transform.Find("Editor");
-                if (transform5 != null)
+                Transform transform6 = this.transform.Find("Editor");
+                if (transform6 != null)
                 {
-                    transform5.gameObject.SetActive(value: true);
+                    transform6.gameObject.SetActive(value: true);
                 }
             }
         }

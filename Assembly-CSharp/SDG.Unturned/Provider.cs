@@ -4046,6 +4046,19 @@ public class Provider : MonoBehaviour
         }
     }
 
+    internal static EInternetMultiplayerAvailability GetInternetMultiplayerAvailability()
+    {
+        if (!allowWebRequests)
+        {
+            return EInternetMultiplayerAvailability.NoWebRequests;
+        }
+        if (!HostBansManager.Get().HasReceivedAnyResponse)
+        {
+            return EInternetMultiplayerAvailability.NoConnection;
+        }
+        return EInternetMultiplayerAvailability.OK;
+    }
+
     private IEnumerator downloadIcon(PendingIconRequest iconQueryParams)
     {
         UnityWebRequest request = UnityWebRequestTexture.GetTexture(iconQueryParams.url, nonReadable: true);

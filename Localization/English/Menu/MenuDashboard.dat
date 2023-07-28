@@ -172,6 +172,9 @@ SteamNetworkingSockets_EndReason_Misc_SteamConnectivity Steam is experiencing co
 SteamNetworkingSockets_EndReason_Misc_Unknown Unknown miscellaneous connection error: {0}
 SteamNetworkingSockets_EndReason_Unknown Connected ended for unknown reason: {0}
 
+InternetMultiplayerUnavailable_NoWebRequests Internet multiplayer is unavailable when the -NoWebRequests launch option is enabled, sorry!
+InternetMultiplayerUnavailable_NoConnection Unable to launch Internet multiplayer because the server's moderation status is unreachable, sorry for the trouble! The connection may restore itself automatically.
+
 Pro_Title Permanent Gold Upgrade
 Pro_Button Gain access to extra character customization, premium servers, character slots and more by upgrading to a Gold account! Further details available on the store page.
 Pro_Button_Tooltip Click here to view the store page.

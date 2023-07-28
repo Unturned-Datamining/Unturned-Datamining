@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 1441307884
+CRC: 1420775220
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 98e4eb4e017766fe599283d9b0e99bbe
+    Hash: 36b9e94146c788763053df4c0f9bd6c1
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 0d81aa5e50a6473f54d359b6d369f12d
+    Hash: dbc1cd58f9800786615d0cca801bd2e5
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -60,8 +60,6 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 4614dcd670ca42c4cab6b475a3284c54, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: bc5dcd01db1ebec4d8f143d933b00964, type: 3}
-- Class: 114
   Script: {fileID: 11500000, guid: 721e288020df9ae45b6c07077404bfc7, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
@@ -79,8 +77,6 @@ ClassTypes:
   Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: 45d657ada4c84ef4ab54d2890047ce45, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: f3f417a0f0384774ab0428a83db05678, type: 3}
 - Class: 114
@@ -5903,6 +5899,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Garageframe_Birch/Barricade.prefab
 - Assets/CoreMasterBundle/Skins/Card/Comic/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Barricades/Charge_Bounce/Item.prefab
+- Assets/CoreMasterBundle/Objects/Large/Vehicles/Ship_0/Triggers.prefab
 - Assets/CoreMasterBundle/Skins/Eaglefire/Cryptic/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Effects/Physics/MeleeImpact/Ice/snow_digging_scooping_shoveling_11.wav
 - Assets/CoreMasterBundle/Vehicles/SUV_Yellow/Vehicle.prefab
@@ -8064,6 +8061,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Fusilaut/Crinus/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Effects/Physics/BulletCasingBounce/Sand/Bullet_Drop_Sand_04.wav
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Dirt_Walk/footstep_dirt_walk_run_09.wav
+- Assets/CoreMasterBundle/Objects/Large/Vehicles/Ship_1/Triggers.prefab
 - Assets/CoreMasterBundle/Effects/Physics/MeleeImpact/Grass/sweeping_broom_leaves_stones_10.wav
 - Assets/CoreMasterBundle/Vehicles/Hatchback_Yellow/Vehicle.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Barracks_4/Nav.prefab
@@ -9744,6 +9742,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Weather/Lightning/LightningTrail.mat
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Small_Glass_Bulletproof/Animations.prefab
 - Assets/CoreMasterBundle/Skins/Maplestrike/Militia_Maplestrike/Skin_Secondary_6.mat
+- Assets/CoreMasterBundle/Objects/Large/Vehicles/Ship_2/Triggers.prefab
 - Assets/CoreMasterBundle/Skins/Bulldog/Comic/Skin_Secondary_1371.mat
 - Assets/CoreMasterBundle/Skins/Hawkhound/Combatia/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Objects/Large/Buildings/House_09/Nav.prefab
@@ -10106,6 +10105,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Matamorez/Era/Skin_Secondary_153.mat
 - Assets/CoreMasterBundle/Items/Shirts/Parka_White/Animations.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Plaque_Birch/Nav.prefab
+- Assets/CoreMasterBundle/Objects/Large/Vehicles/Ship_3/Triggers.prefab
 - Assets/CoreMasterBundle/Items/Elver2/Elver2_Skater_Bottom_White/Item.prefab
 - Assets/CoreMasterBundle/Items/Hats/FranceHistorical_Helmet_Crusader/Item.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Business/Machinery_1/Nav.prefab

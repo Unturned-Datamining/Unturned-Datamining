@@ -144,6 +144,19 @@ public class MenuUI : MonoBehaviour
         isAlerting = true;
     }
 
+    internal static void AlertInternetMultiplayerAvailability(EInternetMultiplayerAvailability status)
+    {
+        switch (status)
+        {
+        case EInternetMultiplayerAvailability.NoWebRequests:
+            alert(MenuDashboardUI.localization.format("InternetMultiplayerUnavailable_NoWebRequests"));
+            break;
+        case EInternetMultiplayerAvailability.NoConnection:
+            alert(MenuDashboardUI.localization.format("InternetMultiplayerUnavailable_NoConnection"));
+            break;
+        }
+    }
+
     public static void alert(string origin, ulong instanceId, int itemDefId, ushort quantity)
     {
         SteamItemDetails_t item = default(SteamItemDetails_t);

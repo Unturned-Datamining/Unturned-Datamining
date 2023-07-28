@@ -241,7 +241,7 @@ public class SteamServerInfo
             }
             thumbnailURL = parseTagValue(gameTags, "<tn>", "</tn>");
             string message = data.GetGameDescription();
-            if (!RichTextUtil.isTextValidForSign(message))
+            if (!RichTextUtil.IsTextValidForServerListShortDescription(message))
             {
                 message = null;
             }

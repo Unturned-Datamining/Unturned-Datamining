@@ -405,6 +405,7 @@
 - [EHitmarkerStyle.cs](EHitmarkerStyle.cs)
 - [EHousingPlacementResult.cs](EHousingPlacementResult.cs)
 - [EHuntType.cs](EHuntType.cs)
+- [EInternetMultiplayerAvailability.cs](EInternetMultiplayerAvailability.cs)
 - [EItemOrigin.cs](EItemOrigin.cs)
 - [EItemRarity.cs](EItemRarity.cs)
 - [EItemType.cs](EItemType.cs)

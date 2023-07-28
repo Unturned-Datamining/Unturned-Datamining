@@ -4,6 +4,7 @@ using SDG.HostBans;
 using SDG.Unturned;
 using Steamworks;
 using UnityEngine;
+using Unturned.SystemEx;
 
 namespace SDG.Provider;
 
@@ -392,7 +393,28 @@ public class TempSteamworksMatchmaking
             SteamServerInfo steamServerInfo = new SteamServerInfo(data, SteamServerInfo.EInfoSource.DirectConnect);
             if (!steamServerInfo.isPro || SDG.Unturned.Provider.isPro)
             {
+                bool flag = false;
                 if (autoJoinServerQuery && (!steamServerInfo.isPassworded || !string.IsNullOrEmpty(connectionInfo.password)))
+                {
+                    if (new IPv4Address(steamServerInfo.ip).IsWideAreaNetwork)
+                    {
+                        EInternetMultiplayerAvailability internetMultiplayerAvailability = SDG.Unturned.Provider.GetInternetMultiplayerAvailability();
+                        if (internetMultiplayerAvailability != 0)
+                        {
+                            UnturnedLog.info($"Cannot directly connect because Internet multiplayer is unavailable ({internetMultiplayerAvailability})");
+                            flag = false;
+                        }
+                        else
+                        {
+                            flag = true;
+                        }
+                    }
+                    else
+                    {
+                        flag = true;
+                    }
+                }
+                if (flag)
                 {
                     SDG.Unturned.Provider.connect(steamServerInfo, connectionInfo.password, null);
                 }

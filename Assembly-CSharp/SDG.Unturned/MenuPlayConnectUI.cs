@@ -97,17 +97,25 @@ public class MenuPlayConnectUI
         if (string.IsNullOrEmpty(text2))
         {
             UnturnedLog.info("Parsed IP was empty");
+            return;
         }
-        else if (Parser.checkIP(text2))
+        if (!IPv4Address.TryParse(text2, out IPv4Address address))
         {
-            SteamConnectionInfo info = new SteamConnectionInfo(text2, portField.state, passwordField.text);
-            MenuSettings.save();
-            connect(info, shouldAutoJoin: false);
+            UnturnedLog.info("Unable to parse IP \"" + text2 + "\"");
+            return;
         }
-        else
+        if (address.IsWideAreaNetwork)
         {
-            UnturnedLog.info("Check IP '{0}' failed", text2);
+            EInternetMultiplayerAvailability internetMultiplayerAvailability = Provider.GetInternetMultiplayerAvailability();
+            if (internetMultiplayerAvailability != 0)
+            {
+                MenuUI.AlertInternetMultiplayerAvailability(internetMultiplayerAvailability);
+                return;
+            }
         }
+        SteamConnectionInfo info = new SteamConnectionInfo(address.value, portField.state, passwordField.text);
+        MenuSettings.save();
+        connect(info, shouldAutoJoin: false);
     }
 
     private static void onTypedIPField(ISleekField field, string text)

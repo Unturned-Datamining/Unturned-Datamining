@@ -830,33 +830,35 @@ public class TempSteamworksWorkshop
 
     private void registerInstalledItem(PublishedFileId_t fileId)
     {
-        if (!isInstalledItemAlreadyRegistered(fileId))
+        if (isInstalledItemAlreadyRegistered(fileId))
         {
-            string path;
-            ESteamUGCType outType;
-            string explanation2;
-            if (shouldIgnoreFile(fileId, out var explanation))
-            {
-                UnturnedLog.info("Ignoring subscribed item {0} because '{1}'", fileId, explanation);
-            }
-            else if (!getInstalledItemPath(fileId, out path))
-            {
-                UnturnedLog.warn("Unable to register installed item during startup: {0}\nPath:{1}", fileId, path);
-            }
-            else if (!WorkshopTool.detectUGCMetaType(path, usePath: false, out outType))
-            {
-                PublishedFileId_t publishedFileId_t = fileId;
-                UnturnedLog.warn("Unable to determine UGC type for installed item: " + publishedFileId_t.ToString());
-            }
-            else if (!isCompatible(fileId, outType, path, out explanation2))
-            {
-                Assets.reportError(explanation2);
-            }
-            else
-            {
-                ugc.Add(new SteamContent(fileId, path, outType));
-                LoadFileIfAssetStartupAlreadyRan(fileId, path, outType);
-            }
+            return;
+        }
+        if (shouldIgnoreFile(fileId, out var explanation))
+        {
+            UnturnedLog.info("Ignoring subscribed item {0} because '{1}'", fileId, explanation);
+            return;
+        }
+        if (!getInstalledItemPath(fileId, out var path))
+        {
+            UnturnedLog.warn("Unable to register installed item during startup: {0}\nPath:{1}", fileId, path);
+            return;
+        }
+        if (!WorkshopTool.detectUGCMetaType(path, usePath: false, out var outType))
+        {
+            PublishedFileId_t publishedFileId_t = fileId;
+            UnturnedLog.warn("Unable to determine UGC type for installed item: " + publishedFileId_t.ToString());
+            return;
+        }
+        if (!isCompatible(fileId, outType, path, out var explanation2))
+        {
+            Assets.reportError(explanation2);
+            return;
+        }
+        ugc.Add(new SteamContent(fileId, path, outType));
+        if (LocalWorkshopSettings.get().getEnabled(fileId))
+        {
+            LoadFileIfAssetStartupAlreadyRan(fileId, path, outType);
         }
     }
 

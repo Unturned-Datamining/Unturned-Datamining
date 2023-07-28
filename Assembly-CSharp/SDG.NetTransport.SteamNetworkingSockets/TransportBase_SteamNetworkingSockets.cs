@@ -126,6 +126,16 @@ public abstract class TransportBase_SteamNetworkingSockets : TransportBase
             item.m_val.m_int32 = 1;
             list.Add(item);
         }
+        SteamNetworkingConfigValue_t item2 = default(SteamNetworkingConfigValue_t);
+        item2.m_eDataType = ESteamNetworkingConfigDataType.k_ESteamNetworkingConfig_Int32;
+        item2.m_eValue = ESteamNetworkingConfigValue.k_ESteamNetworkingConfig_TimeoutInitial;
+        item2.m_val.m_int32 = 30000;
+        list.Add(item2);
+        SteamNetworkingConfigValue_t item3 = default(SteamNetworkingConfigValue_t);
+        item3.m_eDataType = ESteamNetworkingConfigDataType.k_ESteamNetworkingConfig_Int32;
+        item3.m_eValue = ESteamNetworkingConfigValue.k_ESteamNetworkingConfig_TimeoutConnected;
+        item3.m_val.m_int32 = 30000;
+        list.Add(item3);
         return list;
     }
 

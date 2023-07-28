@@ -58,4 +58,29 @@ public static class RichTextUtil
         }
         return true;
     }
+
+    internal static bool IsTextValidForServerListShortDescription(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return true;
+        }
+        if (!isTextValidForSign(text))
+        {
+            return false;
+        }
+        if (text.IndexOf("<style", StringComparison.OrdinalIgnoreCase) != -1)
+        {
+            return false;
+        }
+        if (text.IndexOf("<align", StringComparison.OrdinalIgnoreCase) != -1)
+        {
+            return false;
+        }
+        if (text.IndexOf("<space", StringComparison.OrdinalIgnoreCase) != -1)
+        {
+            return false;
+        }
+        return true;
+    }
 }
