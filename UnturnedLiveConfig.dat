@@ -1,6 +1,11 @@
 MainMenuAlert
 {
-	Id 37
+	Id 38
+	Header 2023 Summer MapJam - Nostalgia Theme
+	Body From the organizers: "We're all nostalgic for better days. Instead of going back, why don't we bring them to us? The MapJam mapping contest is now live until September 8th with a 'Nostalgia' theme."
+	Color #9AA6EA
+	Link https://forum.smartlydressedgames.com/t/unturned-summer-mapjam-2023/
+	IconURL https://cdn.smartlydressedgames.com/Images/MapJamBannerIcon.png
 }
 MainMenuWorkshop
 {
