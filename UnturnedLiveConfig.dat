@@ -1,11 +1,14 @@
 MainMenuAlert
 {
-	Id 38
-	Header 2023 Summer MapJam - Nostalgia Theme
-	Body From the organizers: "We're all nostalgic for better days. Instead of going back, why don't we bring them to us? The MapJam mapping contest is now live until September 8th with a 'Nostalgia' theme."
+	Id 39
+	Header 2023 Summer MapJam: Nostalgia - FINAL CALL FOR SUBMISSIONS!
+	Body From the organizers: "There's less than 24 hours remaining before submissions are closed! Get your work uploaded to the Steam Workshop, and on the official submission form! These maps will be publicly playable during the judging period - more information available on the announcement post immediately after submissions close."
 	Color #9AA6EA
-	Link https://forum.smartlydressedgames.com/t/unturned-summer-mapjam-2023/
-	IconURL https://cdn.smartlydressedgames.com/Images/MapJamBannerIcon.png
+	Link https://forum.smartlydressedgames.com/t/unturned-summer-mapjam-2023/23135
+	IconURL https://cdn.smartlydressedgames.com/Images/MapJamBannerIcon2.png
+	UseTimeWindow true
+	StartTime 2023-09-06 23:59:00
+	EndTime 2023-09-07 23:59:00
 }
 MainMenuWorkshop
 {
