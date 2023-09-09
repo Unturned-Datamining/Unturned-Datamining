@@ -1,21 +1,21 @@
 MainMenuAlert
 {
 	Id 39
-	Header 2023 Summer MapJam: Nostalgia - FINAL CALL FOR SUBMISSIONS!
-	Body From the organizers: "There's less than 24 hours remaining before submissions are closed! Get your work uploaded to the Steam Workshop, and on the official submission form! These maps will be publicly playable during the judging period - more information available on the announcement post immediately after submissions close."
-	Color #9AA6EA
-	Link https://forum.smartlydressedgames.com/t/unturned-summer-mapjam-2023/23135
-	IconURL https://cdn.smartlydressedgames.com/Images/MapJamBannerIcon2.png
-	UseTimeWindow true
-	StartTime 2023-09-06 23:59:00
-	EndTime 2023-09-07 23:59:00
 }
 MainMenuWorkshop
 {
 	AllowNews true
 	Featured
 	{
-		Id 8
+		Id 9
+		FileIds
+		[
+			3031900073
+			3032352090
+			3032049940
+		]
+		LinkText View Summer MapJam 2023 Winners
+		LinkURL https://forum.smartlydressedgames.com/t/unturned-summer-mapjam-2023-winners/23212
 	}
 	Popular
 	{
