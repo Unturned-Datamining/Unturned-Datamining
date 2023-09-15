@@ -1,21 +1,21 @@
 MainMenuAlert
 {
-	Id 39
+	Id 40
+	Header Finals for LiamDoesGame's 4v4 Tournament!
+	Body The finale for the LiamDoesGame 4v4 Tournament is being streamed today on YouTube as participants fight for exclusive trophy skins. Check it out to see who wins, and for other upcoming tournaments they're hosting!
+	Color #DE0B22
+	Link https://www.youtube.com/@LiamDoesGame/featured
+	IconURL cdn.smartlydressedgames.com/Images/LDGbanner.jpg
+	UseTimeWindow true
+	StartTime 2023-09-16 07:00:00
+	EndTime 2023-09-16 22:00:00
 }
 MainMenuWorkshop
 {
 	AllowNews true
 	Featured
 	{
-		Id 9
-		FileIds
-		[
-			3031900073
-			3032352090
-			3032049940
-		]
-		LinkText View Summer MapJam 2023 Winners
-		LinkURL https://forum.smartlydressedgames.com/t/unturned-summer-mapjam-2023-winners/23212
+		Id 10
 	}
 	Popular
 	{
@@ -26,12 +26,6 @@ MainMenuWorkshop
 ItemStore
 {
 	PromotionId 3
-	FeaturedItems
-	[
-		21061
-		1351
-		1352
-	]
 }
 ShouldAllowJoiningInternetServersWithoutGslt false
 ShouldServersWithoutMonetizationTagBeVisibleInInternetServerList true
