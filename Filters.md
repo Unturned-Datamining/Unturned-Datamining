@@ -23,37 +23,37 @@
 | 37.230.228.210             | HiddenFromAllServerLists, Blocked, WorkshopWarning |
 
 ## Name filters
-| Regex                                                        | BanFlags                                                      |
-| ------------------------------------------------------------ | ------------------------------------------------------------- |
-| (?i)(pandahut|panda hut)(?!.* )                              | HiddenFromAllServerLists                                      |
-| ^(-SOD-)                                                     | HiddenFromAllServerLists                                      |
-| (?i)(Auschwitz|Nazi|Nazista|Anti-Negro|Anti-Jew|Anti-Judeus) | HiddenFromAllServerLists, Blocked                             |
-| (?i)(nigger)                                                 | HiddenFromAllServerLists, Blocked                             |
-| (?i)(UnityPlay)                                              | HiddenFromAllServerLists, Blocked                             |
-| (?i)(UNIT)Y*У*(PL)                                           | HiddenFromAllServerLists, Blocked                             |
-| (?i)(ЮНИТИПЛЕЙ)                                              | HiddenFromAllServerLists, Blocked                             |
-| (?i)(FUNNYPLAY)                                              | HiddenFromAllServerLists, Blocked                             |
-| (?i)(YAKINDA)|(discord.gg/gporp)|(GPO LIFE)                  | HiddenFromInternetServerList                                  |
-| (?i)(Cronix)                                                 | HiddenFromAllServerLists, Blocked, WorkshopWarning            |
-| (?i)(Fenix Server)                                           | HiddenFromAllServerLists, Blocked, WorkshopWarning            |
-| (?i)(Fenix Project)                                          | HiddenFromAllServerLists, Blocked, WorkshopWarning            |
-| (?i)(NortxNetwork)                                           | HiddenFromAllServerLists, Blocked, WorkshopWarning            |
-| (?i)(no\s*-*\s*lag)                                          | HiddenFromInternetServerList                                  |
-| (?i)(DarkStar)                                               | Blocked, WorkshopWarning, HiddenFromInternetServerList        |
-| (?i)(Eagles Roleplay)|(EaglesRP)                             | MonetizationWarning, HiddenFromInternetServerList             |
-| (?i)(Sunnyvale)                                              | MonetizationWarning, HiddenFromInternetServerList             |
-| (?i)(horizon)                                                | QueryPingWarning                                              |
-| (?i)(BlackBear)                                              | QueryPingWarning                                              |
-| (?i)(Asgard Roleplay)                                        | MonetizationWarning, HiddenFromInternetServerList             |
-| (?i)(Galaxy Project)                                         | MonetizationWarning, HiddenFromInternetServerList             |
-| (?i)(A9 ARENA)                                               | HiddenFromInternetServerList, IncorrectMonetizationTagWarning |
-| (?i)(\[EU\] Eclipse)                                         | QueryPingWarning                                              |
+| Regex                                                                                 | BanFlags                                                      |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| (?i)(pandahut&#124;panda hut)(?!.* )                                                  | HiddenFromAllServerLists                                      |
+| ^(-SOD-)                                                                              | HiddenFromAllServerLists                                      |
+| (?i)(Auschwitz&#124;Nazi&#124;Nazista&#124;Anti-Negro&#124;Anti-Jew&#124;Anti-Judeus) | HiddenFromAllServerLists, Blocked                             |
+| (?i)(nigger)                                                                          | HiddenFromAllServerLists, Blocked                             |
+| (?i)(UnityPlay)                                                                       | HiddenFromAllServerLists, Blocked                             |
+| (?i)(UNIT)Y*У*(PL)                                                                    | HiddenFromAllServerLists, Blocked                             |
+| (?i)(ЮНИТИПЛЕЙ)                                                                       | HiddenFromAllServerLists, Blocked                             |
+| (?i)(FUNNYPLAY)                                                                       | HiddenFromAllServerLists, Blocked                             |
+| (?i)(YAKINDA)&#124;(discord.gg/gporp)&#124;(GPO LIFE)                                 | HiddenFromInternetServerList                                  |
+| (?i)(Cronix)                                                                          | HiddenFromAllServerLists, Blocked, WorkshopWarning            |
+| (?i)(Fenix Server)                                                                    | HiddenFromAllServerLists, Blocked, WorkshopWarning            |
+| (?i)(Fenix Project)                                                                   | HiddenFromAllServerLists, Blocked, WorkshopWarning            |
+| (?i)(NortxNetwork)                                                                    | HiddenFromAllServerLists, Blocked, WorkshopWarning            |
+| (?i)(no\s*-*\s*lag)                                                                   | HiddenFromInternetServerList                                  |
+| (?i)(DarkStar)                                                                        | Blocked, WorkshopWarning, HiddenFromInternetServerList        |
+| (?i)(Eagles Roleplay)&#124;(EaglesRP)                                                 | MonetizationWarning, HiddenFromInternetServerList             |
+| (?i)(Sunnyvale)                                                                       | MonetizationWarning, HiddenFromInternetServerList             |
+| (?i)(horizon)                                                                         | QueryPingWarning                                              |
+| (?i)(BlackBear)                                                                       | QueryPingWarning                                              |
+| (?i)(Asgard Roleplay)                                                                 | MonetizationWarning, HiddenFromInternetServerList             |
+| (?i)(Galaxy Project)                                                                  | MonetizationWarning, HiddenFromInternetServerList             |
+| (?i)(A9 ARENA)                                                                        | HiddenFromInternetServerList, IncorrectMonetizationTagWarning |
+| (?i)(\[EU\] Eclipse)                                                                  | QueryPingWarning                                              |
 
 ## Description filters
-| Regex                           | BanFlags                                           |
-| ------------------------------- | -------------------------------------------------- |
-| <color=#FFE818>ROLEPLAY</color> | HiddenFromAllServerLists, Blocked, WorkshopWarning |
-| (?i)(<style)|(<align)           | HiddenFromInternetServerList                       |
+| Regex                                       | BanFlags                                           |
+| ------------------------------------------- | -------------------------------------------------- |
+| &lt;color=#FFE818&gt;ROLEPLAY&lt;/color&gt; | HiddenFromAllServerLists, Blocked, WorkshopWarning |
+| (?i)(&lt;style)&#124;(&lt;align)            | HiddenFromInternetServerList                       |
 
 ## Thumbnail filters
 | Regex                                                    | IconPreview                                                                                                       | BanFlags                                           |
