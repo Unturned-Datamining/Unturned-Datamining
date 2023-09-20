@@ -13,7 +13,6 @@
 | 185.17.0.85                | HiddenFromAllServerLists, Blocked, WorkshopWarning |
 | 185.17.0.77                | HiddenFromAllServerLists, Blocked, WorkshopWarning |
 | 185.17.0.28                | HiddenFromAllServerLists, Blocked, WorkshopWarning |
-| 185.114.224.24:37031-37032 | HiddenFromAllServerLists, Blocked, WorkshopWarning |
 | 185.17.0.14                | HiddenFromAllServerLists, Blocked, WorkshopWarning |
 | 185.17.0.29                | HiddenFromAllServerLists, Blocked, WorkshopWarning |
 | 185.17.0.2                 | HiddenFromAllServerLists, Blocked, WorkshopWarning |
