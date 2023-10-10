@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace SDG.Unturned;
 
@@ -45,6 +46,48 @@ public class ItemTrapAsset : ItemBarricadeAsset
     public bool isBroken => _isBroken;
 
     public bool isExplosive => _isExplosive;
+
+    public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
+    {
+        base.BuildDescription(builder, itemInstance);
+        if (builder.shouldRestrictToLegacyContent)
+        {
+            return;
+        }
+        if (isExplosive)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ExplosionBlastRadius", MeasurementTool.FormatLengthString(range2)), 20002);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ExplosionPlayerDamage", Mathf.RoundToInt(playerDamage)), 20003);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ExplosionZombieDamage", Mathf.RoundToInt(zombieDamage)), 20003);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ExplosionAnimalDamage", Mathf.RoundToInt(animalDamage)), 20003);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ExplosionBarricadeDamage", Mathf.RoundToInt(barricadeDamage)), 20003);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ExplosionStructureDamage", Mathf.RoundToInt(structureDamage)), 20003);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ExplosionVehicleDamage", Mathf.RoundToInt(vehicleDamage)), 20003);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ExplosionResourceDamage", Mathf.RoundToInt(resourceDamage)), 20003);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ExplosionObjectDamage", Mathf.RoundToInt(objectDamage)), 20003);
+            return;
+        }
+        if (isBroken)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Trap_BreaksBones"), 10000);
+        }
+        if (damageTires)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Trap_DamagesTires"), 10000);
+        }
+        if (playerDamage > 0f)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Trap_PlayerDamage", Mathf.RoundToInt(playerDamage)), 20003);
+        }
+        if (zombieDamage > 0f)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Trap_ZombieDamage", Mathf.RoundToInt(zombieDamage)), 20003);
+        }
+        if (animalDamage > 0f)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Trap_AnimalDamage", Mathf.RoundToInt(animalDamage)), 20003);
+        }
+    }
 
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {

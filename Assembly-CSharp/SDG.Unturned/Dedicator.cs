@@ -47,7 +47,8 @@ public class Dedicator : MonoBehaviour
         if (IsDedicatedServer)
         {
             commandWindow = new CommandWindow();
-            Application.targetFrameRate = 50;
+            int num2 = (Application.targetFrameRate = 50);
+            UnturnedLog.info($"Dedicated server set target update rate to {num2}");
         }
     }
 

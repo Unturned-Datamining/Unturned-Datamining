@@ -259,7 +259,7 @@ public class ItemManager : SteamCaller
                 }
                 if ((to_page != byte.MaxValue) ? player.inventory.tryAddItem(regions[x, y].items[num].item, to_x, to_y, to_page, to_rot) : player.inventory.tryAddItem(regions[x, y].items[num].item, auto: true))
                 {
-                    if (!player.equipment.wasTryingToSelect && !player.equipment.isSelected)
+                    if (!player.equipment.wasTryingToSelect && !player.equipment.HasValidUseable)
                     {
                         player.animator.sendGesture(EPlayerGesture.PICKUP, all: true);
                     }
@@ -724,7 +724,7 @@ public class ItemManager : SteamCaller
             {
                 for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
                 {
-                    if (player.channel.isOwner && regions[b, b2].isNetworked && !Regions.checkArea(b, b2, new_x, new_y, ITEM_REGIONS))
+                    if (player.channel.IsLocalPlayer && regions[b, b2].isNetworked && !Regions.checkArea(b, b2, new_x, new_y, ITEM_REGIONS))
                     {
                         if (regions[b, b2].drops.Count > 0)
                         {
@@ -754,7 +754,7 @@ public class ItemManager : SteamCaller
                 {
                     continue;
                 }
-                if (player.channel.isOwner)
+                if (player.channel.IsLocalPlayer)
                 {
                     generateItems((byte)i, (byte)j);
                 }

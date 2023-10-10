@@ -844,13 +844,13 @@ public class TerrainEditor : IDevkitTool
         Landscape.DisableHoleColliders = false;
     }
 
-    protected float getBrushAlpha(float distance)
+    protected float getBrushAlpha(float normalizedDistance)
     {
-        if (distance < brushFalloff)
+        if (normalizedDistance <= brushFalloff || brushFalloff >= 1f)
         {
             return 1f;
         }
-        return (1f - distance) / (1f - brushFalloff);
+        return (1f - normalizedDistance) / (1f - brushFalloff);
     }
 
     protected void HandleHeightmapReadBrushAverage(LandscapeCoord tileCoord, HeightmapCoord heightmapCoord, Vector3 worldPosition, float currentHeight)

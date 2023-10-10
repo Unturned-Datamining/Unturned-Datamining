@@ -162,7 +162,7 @@ public class PlayerInteract : PlayerCaller
 
     private void Update()
     {
-        if (!base.channel.isOwner)
+        if (!base.channel.IsLocalPlayer)
         {
             return;
         }
@@ -396,14 +396,14 @@ public class PlayerInteract : PlayerCaller
                 }
                 else if (PlayerNPCDialogueUI.active)
                 {
-                    if (PlayerNPCDialogueUI.dialogueAnimating)
+                    if (PlayerNPCDialogueUI.IsDialogueAnimating)
                     {
-                        PlayerNPCDialogueUI.skipText();
+                        PlayerNPCDialogueUI.SkipAnimation();
                         return;
                     }
-                    if (PlayerNPCDialogueUI.dialogueHasNextPage)
+                    if (PlayerNPCDialogueUI.CanAdvanceToNextPage)
                     {
-                        PlayerNPCDialogueUI.nextPage();
+                        PlayerNPCDialogueUI.AdvancePage();
                         return;
                     }
                     PlayerNPCDialogueUI.close();
@@ -453,7 +453,7 @@ public class PlayerInteract : PlayerCaller
 
     internal void InitializePlayer()
     {
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             PlayerMovement movement = base.player.movement;
             movement.onPurchaseUpdated = (PurchaseUpdated)Delegate.Combine(movement.onPurchaseUpdated, new PurchaseUpdated(onPurchaseUpdated));

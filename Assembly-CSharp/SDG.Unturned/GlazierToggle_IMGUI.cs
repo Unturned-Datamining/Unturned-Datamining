@@ -8,9 +8,9 @@ internal class GlazierToggle_IMGUI : GlazierElementBase_IMGUI, ISleekToggle, ISl
 
     protected GUIContent content = new GUIContent();
 
-    public bool state { get; set; }
+    public bool Value { get; set; }
 
-    public string tooltipText
+    public string TooltipText
     {
         get
         {
@@ -23,28 +23,28 @@ internal class GlazierToggle_IMGUI : GlazierElementBase_IMGUI, ISleekToggle, ISl
         }
     }
 
-    public SleekColor backgroundColor { get; set; } = GlazierConst.DefaultToggleBackgroundColor;
+    public SleekColor BackgroundColor { get; set; } = GlazierConst.DefaultToggleBackgroundColor;
 
 
-    public SleekColor foregroundColor { get; set; } = GlazierConst.DefaultToggleForegroundColor;
+    public SleekColor ForegroundColor { get; set; } = GlazierConst.DefaultToggleForegroundColor;
 
 
-    public bool isInteractable { get; set; } = true;
+    public bool IsInteractable { get; set; } = true;
 
 
-    public event Toggled onToggled;
+    public event Toggled OnValueChanged;
 
     public override void OnGUI()
     {
         bool enabled = GUI.enabled;
-        GUI.enabled = isInteractable;
-        bool flag = GlazierUtils_IMGUI.drawToggle(drawRect, backgroundColor, state, content);
+        GUI.enabled = IsInteractable;
+        bool flag = GlazierUtils_IMGUI.drawToggle(drawRect, BackgroundColor, Value, content);
         GUI.enabled = enabled;
-        if (flag != state)
+        if (flag != Value)
         {
-            this.onToggled?.Invoke(this, flag);
+            this.OnValueChanged?.Invoke(this, flag);
         }
-        state = flag;
+        Value = flag;
         ChildrenOnGUI();
     }
 }

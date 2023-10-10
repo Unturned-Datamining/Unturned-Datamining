@@ -86,10 +86,23 @@ public class CharacterAnimator : MonoBehaviour
 
     public float getAnimationLength(string name)
     {
+        return GetAnimationLength(name);
+    }
+
+    public float GetAnimationLength(string name, bool scaled = true)
+    {
         AnimationState animationState = anim[name];
         if (animationState != null)
         {
-            return animationState.clip.length / animationState.speed;
+            if (scaled)
+            {
+                if (animationState.speed != 0f)
+                {
+                    return animationState.clip.length / animationState.speed;
+                }
+                return 0f;
+            }
+            return animationState.clip.length;
         }
         return 0f;
     }

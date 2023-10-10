@@ -141,19 +141,7 @@ public class LevelVehicles
         {
             Color newColor = river.readColor();
             string text = river.readString();
-            ushort num;
-            if (b > 3)
-            {
-                num = river.readUInt16();
-                if (num != 0 && SpawnTableTool.resolve(num) == 0 && (bool)Assets.shouldLoadAnyAssets)
-                {
-                    Assets.reportError(Level.info.name + " vehicle table \"" + text + "\" references invalid spawn table " + num + "!");
-                }
-            }
-            else
-            {
-                num = 0;
-            }
+            ushort num = (ushort)((b > 3) ? river.readUInt16() : 0);
             List<VehicleTier> list = new List<VehicleTier>();
             byte b4 = river.readByte();
             for (byte b5 = 0; b5 < b4; b5 = (byte)(b5 + 1))
@@ -169,10 +157,15 @@ public class LevelVehicles
                 }
                 list.Add(new VehicleTier(list2, newName, newChance));
             }
-            tables.Add(new VehicleTable(list, newColor, text, num));
+            VehicleTable vehicleTable = new VehicleTable(list, newColor, text, num);
+            tables.Add(vehicleTable);
             if (!Level.isEditor)
             {
-                tables[b3].buildTable();
+                vehicleTable.buildTable();
+            }
+            if (vehicleTable.tableID != 0 && SpawnTableTool.ResolveLegacyId(num, EAssetType.VEHICLE, vehicleTable.OnGetSpawnTableValidationErrorContext) == 0 && (bool)Assets.shouldLoadAnyAssets)
+            {
+                Assets.reportError(Level.info.name + " vehicle table \"" + text + "\" references invalid spawn table " + num + "!");
             }
         }
         ushort num2 = river.readUInt16();

@@ -525,7 +525,7 @@ public class PlayerStance : PlayerCaller
 
     private void Update()
     {
-        if (base.channel.isOwner && !PlayerUI.window.showCursor)
+        if (base.channel.IsLocalPlayer && !PlayerUI.window.showCursor)
         {
             if (!base.player.look.isOrbiting)
             {
@@ -658,7 +658,7 @@ public class PlayerStance : PlayerCaller
     internal void InitializePlayer()
     {
         _stance = EPlayerStance.STAND;
-        if (base.channel.isOwner || Provider.isServer)
+        if (base.channel.IsLocalPlayer || Provider.isServer)
         {
             lastStance = 0f;
             lastSubmergeSound = 0f;

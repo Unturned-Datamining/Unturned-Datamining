@@ -1224,7 +1224,7 @@ public class VehicleManager : SteamCaller
     public static void ReceiveEnterVehicleRequest(in ServerInvocationContext context, uint instanceID, byte[] hash, byte[] physicsProfileHash, byte engine)
     {
         Player player = context.GetPlayer();
-        if (player == null || player.life.isDead || player.equipment.isBusy || (LevelManager.isArenaMode && !LevelManager.isPlayerInArena(player)) || (player.equipment.isSelected && !player.equipment.isEquipped) || player.movement.getVehicle() != null)
+        if (player == null || player.life.isDead || player.equipment.isBusy || (LevelManager.isArenaMode && !LevelManager.isPlayerInArena(player)) || (player.equipment.HasValidUseable && !player.equipment.IsEquipAnimationFinished) || player.movement.getVehicle() != null)
         {
             return;
         }
@@ -1309,7 +1309,7 @@ public class VehicleManager : SteamCaller
         {
             return false;
         }
-        if (player.equipment.isSelected && !player.equipment.isEquipped)
+        if (player.equipment.HasValidUseable && !player.equipment.IsEquipAnimationFinished)
         {
             return false;
         }
@@ -1415,7 +1415,7 @@ public class VehicleManager : SteamCaller
     public static void ReceiveSwapVehicleRequest(in ServerInvocationContext context, byte toSeat)
     {
         Player player = context.GetPlayer();
-        if (player == null || player.life.isDead || player.equipment.isBusy || (player.equipment.isSelected && !player.equipment.isEquipped))
+        if (player == null || player.life.isDead || player.equipment.isBusy || (player.equipment.HasValidUseable && !player.equipment.IsEquipAnimationFinished))
         {
             return;
         }

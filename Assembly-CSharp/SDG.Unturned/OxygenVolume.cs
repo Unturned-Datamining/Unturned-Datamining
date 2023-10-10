@@ -12,14 +12,14 @@ public class OxygenVolume : LevelVolume<OxygenVolume, OxygenVolumeManager>
         public Menu(OxygenVolume volume)
         {
             this.volume = volume;
-            base.sizeOffset_X = 400;
-            base.sizeOffset_Y = 40;
+            base.SizeOffset_X = 400f;
+            base.SizeOffset_Y = 40f;
             ISleekToggle sleekToggle = Glazier.Get().CreateToggle();
-            sleekToggle.sizeOffset_X = 40;
-            sleekToggle.sizeOffset_Y = 40;
-            sleekToggle.state = volume.isBreathable;
-            sleekToggle.addLabel("Is Breathable", ESleekSide.RIGHT);
-            sleekToggle.onToggled += OnHasOxygenToggled;
+            sleekToggle.SizeOffset_X = 40f;
+            sleekToggle.SizeOffset_Y = 40f;
+            sleekToggle.Value = volume.isBreathable;
+            sleekToggle.AddLabel("Is Breathable", ESleekSide.RIGHT);
+            sleekToggle.OnValueChanged += OnHasOxygenToggled;
             AddChild(sleekToggle);
         }
 

@@ -85,7 +85,7 @@ public class ItemTable
     {
         if (tableID != 0)
         {
-            return SpawnTableTool.resolve(tableID);
+            return SpawnTableTool.ResolveLegacyId(tableID, EAssetType.ITEM, OnGetSpawnTableErrorContext);
         }
         float value = Random.value;
         if (tiers.Count == 0)
@@ -222,5 +222,15 @@ public class ItemTable
         _color = newColor;
         name = newName;
         tableID = newTableID;
+    }
+
+    private string OnGetSpawnTableErrorContext()
+    {
+        return "\"" + Level.info.name + "\" item table \"" + name + "\"";
+    }
+
+    internal string OnGetSpawnTableValidationErrorContext()
+    {
+        return "\"" + Level.info.name + " item table \"" + name + "\" validation";
     }
 }

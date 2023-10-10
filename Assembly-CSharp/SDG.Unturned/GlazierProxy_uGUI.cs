@@ -21,10 +21,10 @@ internal class GlazierProxy_uGUI : GlazierElementBase_uGUI
         base.Update();
     }
 
-    public override void destroy()
+    public override void InternalDestroy()
     {
         owner.OnDestroy();
-        base.destroy();
+        base.InternalDestroy();
     }
 
     protected override bool ReleaseIntoPool()

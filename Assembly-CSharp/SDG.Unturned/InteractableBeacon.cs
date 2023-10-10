@@ -168,11 +168,16 @@ public class InteractableBeacon : MonoBehaviour, IManualOnDestroy
         rewards = Mathf.Min(rewards, 256);
         for (int j = 0; j < rewards; j++)
         {
-            ushort num3 = SpawnTableTool.resolve(asset.rewardID);
+            ushort num3 = SpawnTableTool.ResolveLegacyId(asset.rewardID, EAssetType.ITEM, OnGetRewardErrorContext);
             if (num3 != 0)
             {
                 ItemManager.dropItem(new Item(num3, EItemOrigin.NATURE), base.transform.position, playEffect: false, isDropped: true, wideSpread: true);
             }
         }
+    }
+
+    private string OnGetRewardErrorContext()
+    {
+        return "Horde beacon reward " + asset?.FriendlyName;
     }
 }

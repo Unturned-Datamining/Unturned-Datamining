@@ -21,7 +21,7 @@ public class VolumeTeleporter : MonoBehaviour
         if (target != null && playerTeleported != null && playerTeleported.life.IsAlive)
         {
             playerTeleported.teleportToLocation(target.position, target.rotation.eulerAngles.y);
-            if (playerTeleported.equipment.isSelected)
+            if (playerTeleported.equipment.HasValidUseable)
             {
                 playerTeleported.equipment.dequip();
             }

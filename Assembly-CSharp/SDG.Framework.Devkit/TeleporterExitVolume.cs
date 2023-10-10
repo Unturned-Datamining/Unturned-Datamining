@@ -13,14 +13,14 @@ public class TeleporterExitVolume : LevelVolume<TeleporterExitVolume, Teleporter
         public Menu(TeleporterExitVolume volume)
         {
             this.volume = volume;
-            base.sizeOffset_X = 400;
-            base.sizeOffset_Y = 30;
+            base.SizeOffset_X = 400f;
+            base.SizeOffset_Y = 30f;
             ISleekField sleekField = Glazier.Get().CreateStringField();
-            sleekField.sizeOffset_X = 200;
-            sleekField.sizeOffset_Y = 30;
-            sleekField.text = volume.id;
-            sleekField.addLabel("ID", ESleekSide.RIGHT);
-            sleekField.onTyped += OnIdChanged;
+            sleekField.SizeOffset_X = 200f;
+            sleekField.SizeOffset_Y = 30f;
+            sleekField.Text = volume.id;
+            sleekField.AddLabel("ID", ESleekSide.RIGHT);
+            sleekField.OnTextChanged += OnIdChanged;
             AddChild(sleekField);
         }
 

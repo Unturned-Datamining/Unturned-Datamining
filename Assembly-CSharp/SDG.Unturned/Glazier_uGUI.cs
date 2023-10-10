@@ -64,32 +64,11 @@ internal class Glazier_uGUI : GlazierBase, IGlazier
 
     private static CommandLineInt clPixelPerfect = new CommandLineInt("-uGUIPixelPerfect");
 
-    public bool ShouldGameProcessKeyDown
-    {
-        get
-        {
-            GameObject currentSelectedGameObject = EventSystem.current.currentSelectedGameObject;
-            if (currentSelectedGameObject == null)
-            {
-                return true;
-            }
-            InputField component = currentSelectedGameObject.GetComponent<InputField>();
-            if (component != null)
-            {
-                return !component.isFocused;
-            }
-            TMP_InputField component2 = currentSelectedGameObject.GetComponent<TMP_InputField>();
-            if (component2 != null)
-            {
-                return !component2.isFocused;
-            }
-            return true;
-        }
-    }
-
     public bool SupportsDepth => true;
 
     public bool SupportsRichTextAlpha => true;
+
+    public bool SupportsAutomaticLayout => true;
 
     public SleekWindow Root
     {
@@ -110,7 +89,7 @@ internal class Glazier_uGUI : GlazierBase, IGlazier
             _root = value;
             if (_root != null)
             {
-                rootImpl = _root.attachmentRoot as GlazierElementBase_uGUI;
+                rootImpl = _root.AttachmentRoot as GlazierElementBase_uGUI;
                 if (rootImpl != null)
                 {
                     rootImpl.transform.SetParent(base.transform, worldPositionStays: false);
@@ -207,7 +186,7 @@ internal class Glazier_uGUI : GlazierBase, IGlazier
         {
             glazierImage_uGUI.ConstructFromImagePool(imagePoolData);
         }
-        glazierImage_uGUI.texture = texture;
+        glazierImage_uGUI.Texture = texture;
         glazierImage_uGUI.SynchronizeColors();
         return glazierImage_uGUI;
     }
@@ -222,7 +201,7 @@ internal class Glazier_uGUI : GlazierBase, IGlazier
         GlazierSprite_uGUI glazierSprite_uGUI = new GlazierSprite_uGUI(this, sprite);
         glazierSprite_uGUI.ConstructNew();
         elements.Add(glazierSprite_uGUI);
-        glazierSprite_uGUI.sprite = sprite;
+        glazierSprite_uGUI.Sprite = sprite;
         glazierSprite_uGUI.SynchronizeColors();
         return glazierSprite_uGUI;
     }
@@ -463,7 +442,7 @@ internal class Glazier_uGUI : GlazierBase, IGlazier
     private void SynchronizeFontMaterials()
     {
         Color shadowColor;
-        Color color = (shadowColor = OptionsSettings.shadowColor);
+        Color color = (shadowColor = SleekCustomization.shadowColor);
         shadowColor.a = 0.25f;
         Color value = color;
         value.a = 0.75f;
@@ -539,7 +518,7 @@ internal class Glazier_uGUI : GlazierBase, IGlazier
 
     private void SynchronizeTooltipShadowColor()
     {
-        Color shadowColor = OptionsSettings.shadowColor;
+        Color shadowColor = SleekCustomization.shadowColor;
         shadowColor.a = 0.5f;
         tooltipShadowImage.color = shadowColor;
     }
@@ -568,7 +547,7 @@ internal class Glazier_uGUI : GlazierBase, IGlazier
             wasCursorVisible = shouldDrawCursor;
             cursorImage.gameObject.SetActive(shouldDrawCursor);
         }
-        cursorImage.color = OptionsSettings.cursorColor;
+        cursorImage.color = SleekCustomization.cursorColor;
         Vector2 normalizedMousePosition = InputEx.NormalizedMousePosition;
         cursorTransform.anchorMin = normalizedMousePosition;
         cursorTransform.anchorMax = normalizedMousePosition;
@@ -660,6 +639,14 @@ internal class Glazier_uGUI : GlazierBase, IGlazier
         if (element.transform == null)
         {
             throw new Exception("uGUI element constructed with null transform");
+        }
+        if (element.gameObject.GetComponent<LayoutElement>() != null)
+        {
+            throw new Exception("uGUI GameObject has a LayoutElement component, likely not removed before returning to the pool");
+        }
+        if (element.gameObject.GetComponent<LayoutGroup>() != null)
+        {
+            throw new Exception("uGUI GameObject has a LayoutGroup component, likely not removed before returning to the pool");
         }
     }
 

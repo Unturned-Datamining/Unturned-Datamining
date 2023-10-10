@@ -4,7 +4,7 @@ internal class GlazierUInt8Field_IMGUI : GlazierNumericField_IMGUI, ISleekUInt8F
 {
     private byte _state;
 
-    public byte state
+    public byte Value
     {
         get
         {
@@ -13,15 +13,15 @@ internal class GlazierUInt8Field_IMGUI : GlazierNumericField_IMGUI, ISleekUInt8F
         set
         {
             _state = value;
-            text = state.ToString();
+            text = Value.ToString();
         }
     }
 
-    public event TypedByte onTypedByte;
+    public event TypedByte OnValueChanged;
 
     public GlazierUInt8Field_IMGUI()
     {
-        state = 0;
+        Value = 0;
     }
 
     protected override bool ParseNumericInput(string input)
@@ -31,7 +31,7 @@ internal class GlazierUInt8Field_IMGUI : GlazierNumericField_IMGUI, ISleekUInt8F
             if (_state != result)
             {
                 _state = result;
-                this.onTypedByte?.Invoke(this, _state);
+                this.OnValueChanged?.Invoke(this, _state);
             }
             return true;
         }

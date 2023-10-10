@@ -21,6 +21,8 @@ ReadMore_Link_Off [Collapse]
 Featured_Workshop_Link View on Workshop
 Featured_Workshop_Sub Subscribe
 Featured_Workshop_Unsub Unsubscribe
+Subscribe_Tooltip Subscribe to {0}
+Unsubscribe_Tooltip Unsubscribe from {0}
 Featured_Workshop_Stockpile_Link View {0} in Stockpile
 News_Author {0} - {1}
 News_Comments_Link View Comments
@@ -36,6 +38,8 @@ Hash_Level This server is using a modified version of the map.
 
 # https://support.smartlydressedgames.com/hc/en-us/articles/12233096287124
 Hash_Assembly This server is using modified code.
+
+Hash_Resources Built-in resources mismatch. Verifying game files should repair this.
 
 Version This server is running version {0} of the game, whereas you are running version {1}.
 Pro_Server You require Gold to join this server.
@@ -62,6 +66,8 @@ Auth_No_User You are not connected to an account.
 
 # https://support.smartlydressedgames.com/hc/en-us/articles/12233962470548
 Auth_Pub_Ban You are banned from playing multiplayer.
+
+Auth_Network_Identity_Failure Failed to authenticate because server Steam ID has changed. It may have been restarted or the Game Server Login Token may have changed. Refreshing the server list should fix this.
 
 Auth_Econ_Serialize Your econ ticket failed to serialize.
 Auth_Econ_Deserialize Your econ ticket failed to deserialize.

@@ -4,7 +4,7 @@ internal class GlazierFloat32Field_IMGUI : GlazierNumericField_IMGUI, ISleekFloa
 {
     private float _state;
 
-    public float state
+    public float Value
     {
         get
         {
@@ -13,17 +13,17 @@ internal class GlazierFloat32Field_IMGUI : GlazierNumericField_IMGUI, ISleekFloa
         set
         {
             _state = value;
-            text = state.ToString("F3");
+            text = Value.ToString("F3");
         }
     }
 
-    public event TypedSingle onEnteredSingle;
+    public event TypedSingle OnValueSubmitted;
 
-    public event TypedSingle onTypedSingle;
+    public event TypedSingle OnValueChanged;
 
     public GlazierFloat32Field_IMGUI()
     {
-        state = 0f;
+        Value = 0f;
     }
 
     protected override bool ParseNumericInput(string input)
@@ -37,7 +37,7 @@ internal class GlazierFloat32Field_IMGUI : GlazierNumericField_IMGUI, ISleekFloa
             if (_state != result)
             {
                 _state = result;
-                this.onTypedSingle?.Invoke(this, _state);
+                this.OnValueChanged?.Invoke(this, _state);
             }
             return true;
         }
@@ -46,6 +46,6 @@ internal class GlazierFloat32Field_IMGUI : GlazierNumericField_IMGUI, ISleekFloa
 
     protected override void OnReturnPressed()
     {
-        this.onEnteredSingle?.Invoke(this, _state);
+        this.OnValueSubmitted?.Invoke(this, _state);
     }
 }

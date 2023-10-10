@@ -20,7 +20,7 @@ internal class PlayerBrowserRequestUI : SleekFullscreenBox
         {
             isActive = true;
             this.url = url;
-            textBox.text = localization.format("Request") + "\n" + url + "\n\n\"" + msg + "\"";
+            textBox.Text = localization.format("Request") + "\n" + url + "\n\n\"" + msg + "\"";
             AnimateIntoView();
         }
     }
@@ -54,44 +54,44 @@ internal class PlayerBrowserRequestUI : SleekFullscreenBox
     public PlayerBrowserRequestUI()
     {
         localization = Localization.read("/Player/PlayerBrowserRequest.dat");
-        base.positionScale_Y = 1f;
-        base.positionOffset_X = 10;
-        base.positionOffset_Y = 10;
-        base.sizeOffset_X = -20;
-        base.sizeOffset_Y = -20;
-        base.sizeScale_X = 1f;
-        base.sizeScale_Y = 1f;
+        base.PositionScale_Y = 1f;
+        base.PositionOffset_X = 10f;
+        base.PositionOffset_Y = 10f;
+        base.SizeOffset_X = -20f;
+        base.SizeOffset_Y = -20f;
+        base.SizeScale_X = 1f;
+        base.SizeScale_Y = 1f;
         isActive = false;
         url = null;
         textBox = Glazier.Get().CreateBox();
-        textBox.positionOffset_X = -200;
-        textBox.positionOffset_Y = -50;
-        textBox.positionScale_X = 0.5f;
-        textBox.positionScale_Y = 0.5f;
-        textBox.sizeOffset_X = 400;
-        textBox.sizeOffset_Y = 100;
+        textBox.PositionOffset_X = -200f;
+        textBox.PositionOffset_Y = -50f;
+        textBox.PositionScale_X = 0.5f;
+        textBox.PositionScale_Y = 0.5f;
+        textBox.SizeOffset_X = 400f;
+        textBox.SizeOffset_Y = 100f;
         AddChild(textBox);
         yesButton = Glazier.Get().CreateButton();
-        yesButton.positionOffset_X = -200;
-        yesButton.positionOffset_Y = 60;
-        yesButton.positionScale_X = 0.5f;
-        yesButton.positionScale_Y = 0.5f;
-        yesButton.sizeOffset_X = 195;
-        yesButton.sizeOffset_Y = 30;
-        yesButton.text = localization.format("Yes_Button");
-        yesButton.tooltipText = localization.format("Yes_Button_Tooltip");
-        yesButton.onClickedButton += onClickedYesButton;
+        yesButton.PositionOffset_X = -200f;
+        yesButton.PositionOffset_Y = 60f;
+        yesButton.PositionScale_X = 0.5f;
+        yesButton.PositionScale_Y = 0.5f;
+        yesButton.SizeOffset_X = 195f;
+        yesButton.SizeOffset_Y = 30f;
+        yesButton.Text = localization.format("Yes_Button");
+        yesButton.TooltipText = localization.format("Yes_Button_Tooltip");
+        yesButton.OnClicked += onClickedYesButton;
         AddChild(yesButton);
         noButton = Glazier.Get().CreateButton();
-        noButton.positionOffset_X = 5;
-        noButton.positionOffset_Y = 60;
-        noButton.positionScale_X = 0.5f;
-        noButton.positionScale_Y = 0.5f;
-        noButton.sizeOffset_X = 195;
-        noButton.sizeOffset_Y = 30;
-        noButton.text = localization.format("No_Button");
-        noButton.tooltipText = localization.format("No_Button_Tooltip");
-        noButton.onClickedButton += onClickedNoButton;
+        noButton.PositionOffset_X = 5f;
+        noButton.PositionOffset_Y = 60f;
+        noButton.PositionScale_X = 0.5f;
+        noButton.PositionScale_Y = 0.5f;
+        noButton.SizeOffset_X = 195f;
+        noButton.SizeOffset_Y = 30f;
+        noButton.Text = localization.format("No_Button");
+        noButton.TooltipText = localization.format("No_Button_Tooltip");
+        noButton.OnClicked += onClickedNoButton;
         AddChild(noButton);
     }
 }

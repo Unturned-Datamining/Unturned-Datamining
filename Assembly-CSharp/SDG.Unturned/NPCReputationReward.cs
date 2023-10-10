@@ -4,16 +4,9 @@ public class NPCReputationReward : INPCReward
 {
     public int value { get; protected set; }
 
-    public override void grantReward(Player player, bool shouldSend)
+    public override void GrantReward(Player player)
     {
-        if (shouldSend)
-        {
-            player.skills.askRep(value);
-        }
-        else
-        {
-            player.skills.modRep(value);
-        }
+        player.skills.askRep(value);
     }
 
     public override string formatReward(Player player)

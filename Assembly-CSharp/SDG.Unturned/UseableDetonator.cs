@@ -58,7 +58,7 @@ public class UseableDetonator : Useable
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askPlunge")]
     public void ReceivePlayPlunge()
     {
-        if (base.player.equipment.isEquipped)
+        if (base.player.equipment.IsEquipAnimationFinished)
         {
             plunge();
         }
@@ -72,7 +72,7 @@ public class UseableDetonator : Useable
         }
         if (isUseable)
         {
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 for (int i = 0; i < charges.Count; i++)
                 {
@@ -126,7 +126,7 @@ public class UseableDetonator : Useable
         {
             return false;
         }
-        if (base.channel.isOwner && !isUsing && target != null)
+        if (base.channel.IsLocalPlayer && !isUsing && target != null)
         {
             if (target.isSelected)
             {
@@ -154,8 +154,8 @@ public class UseableDetonator : Useable
     public override void equip()
     {
         base.player.animator.play("Equip", smooth: true);
-        useTime = base.player.animator.getAnimationLength("Use");
-        if (base.channel.isOwner)
+        useTime = base.player.animator.GetAnimationLength("Use");
+        if (base.channel.IsLocalPlayer)
         {
             chargePoint = Vector3.zero;
             foundInRadius = new List<InteractableCharge>();
@@ -166,7 +166,7 @@ public class UseableDetonator : Useable
 
     public override void dequip()
     {
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             for (int i = 0; i < chargesInRadius.Count; i++)
             {
@@ -206,7 +206,7 @@ public class UseableDetonator : Useable
 
     public override void tick()
     {
-        if (!base.channel.isOwner)
+        if (!base.channel.IsLocalPlayer)
         {
             return;
         }

@@ -32,8 +32,8 @@
 	"Game":
 	{
 		"Major_Version": 23,
-		"Minor_Version": 11,
-		"Patch_Version": 1,
+		"Minor_Version": 12,
+		"Patch_Version": 108,
 		"GrantPackageIDs":
 		[
 			487
@@ -42,10 +42,10 @@
 	},
 	"Holidays":
 	{
-		"HalloweenStart": "2022-10-20T00:12:01Z",
-		"HalloweenEnd": "2022-11-01T23:59:59Z",
-		"ChristmasStart": "2022-12-07T00:00:01Z",
-		"ChristmasEnd": "2023-01-02T18:05:00Z",
+		"HalloweenStart": "2023-10-20T00:12:01Z",
+		"HalloweenEnd": "2023-11-01T23:59:59Z",
+		"ChristmasStart": "2023-12-07T00:00:01Z",
+		"ChristmasEnd": "2024-01-02T18:05:00Z",
 		"AprilFools_Start": "2023-04-01T00:00:00Z",
 		"AprilFools_End": "2023-04-02T00:00:00Z",
 		"ValentinesStart": "2023-02-13T12:00:01Z",

@@ -20,7 +20,7 @@ public struct SphereVolume : IShapeVolume
 
     public float internalVolume => 4.1887903f * radius * radius * radius;
 
-    public float surfaceArea => (float)Math.PI * 4f * radius * radius;
+    public float surfaceArea => MathF.PI * 4f * radius * radius;
 
     public bool containsPoint(Vector3 point)
     {

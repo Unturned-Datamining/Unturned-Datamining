@@ -6,8 +6,6 @@ namespace SDG.Unturned;
 
 internal class GlazierStringField_uGUI : GlazierElementBase_uGUI, ISleekField, ISleekElement, ISleekLabel, ISleekWithTooltip
 {
-    private char _replace = ' ';
-
     private GlazieruGUITooltip tooltipComponent;
 
     private FontStyle _fontStyle;
@@ -30,32 +28,20 @@ internal class GlazierStringField_uGUI : GlazierElementBase_uGUI, ISleekField, I
 
     private TextMeshProUGUI textComponent;
 
-    public char replace
+    public bool IsPasswordField
     {
         get
         {
-            return _replace;
+            return fieldComponent.contentType == TMP_InputField.ContentType.Password;
         }
         set
         {
-            if (_replace != value)
-            {
-                _replace = value;
-                if (_replace == ' ')
-                {
-                    fieldComponent.contentType = TMP_InputField.ContentType.Standard;
-                }
-                else
-                {
-                    fieldComponent.contentType = TMP_InputField.ContentType.Password;
-                }
-                fieldComponent.asteriskChar = _replace;
-                fieldComponent.ForceLabelUpdate();
-            }
+            fieldComponent.contentType = (value ? TMP_InputField.ContentType.Password : TMP_InputField.ContentType.Standard);
+            fieldComponent.ForceLabelUpdate();
         }
     }
 
-    public string hint
+    public string PlaceholderText
     {
         get
         {
@@ -67,7 +53,7 @@ internal class GlazierStringField_uGUI : GlazierElementBase_uGUI, ISleekField, I
         }
     }
 
-    public bool multiline
+    public bool IsMultiline
     {
         get
         {
@@ -80,7 +66,7 @@ internal class GlazierStringField_uGUI : GlazierElementBase_uGUI, ISleekField, I
         }
     }
 
-    public string text
+    public string Text
     {
         get
         {
@@ -92,7 +78,7 @@ internal class GlazierStringField_uGUI : GlazierElementBase_uGUI, ISleekField, I
         }
     }
 
-    public string tooltipText
+    public string TooltipText
     {
         get
         {
@@ -113,7 +99,7 @@ internal class GlazierStringField_uGUI : GlazierElementBase_uGUI, ISleekField, I
         }
     }
 
-    public FontStyle fontStyle
+    public FontStyle FontStyle
     {
         get
         {
@@ -127,7 +113,7 @@ internal class GlazierStringField_uGUI : GlazierElementBase_uGUI, ISleekField, I
         }
     }
 
-    public TextAnchor fontAlignment
+    public TextAnchor TextAlignment
     {
         get
         {
@@ -141,7 +127,7 @@ internal class GlazierStringField_uGUI : GlazierElementBase_uGUI, ISleekField, I
         }
     }
 
-    public ESleekFontSize fontSize
+    public ESleekFontSize FontSize
     {
         get
         {
@@ -155,7 +141,7 @@ internal class GlazierStringField_uGUI : GlazierElementBase_uGUI, ISleekField, I
         }
     }
 
-    public ETextContrastContext shadowStyle
+    public ETextContrastContext TextContrastContext
     {
         get
         {
@@ -164,15 +150,15 @@ internal class GlazierStringField_uGUI : GlazierElementBase_uGUI, ISleekField, I
         set
         {
             _contrastContext = value;
-            ETextContrastStyle eTextContrastStyle = SleekShadowStyle.ContextToStyle(value);
-            textComponent.fontSharedMaterial = base.glazier.GetFontMaterial(eTextContrastStyle);
-            textComponent.characterSpacing = GlazierUtils_uGUI.GetCharacterSpacing(eTextContrastStyle);
+            ETextContrastStyle shadowStyle = SleekShadowStyle.ContextToStyle(value);
+            textComponent.fontSharedMaterial = base.glazier.GetFontMaterial(shadowStyle);
+            textComponent.characterSpacing = GlazierUtils_uGUI.GetCharacterSpacing(shadowStyle);
             placeholderComponent.fontSharedMaterial = textComponent.fontSharedMaterial;
             placeholderComponent.characterSpacing = textComponent.characterSpacing;
         }
     }
 
-    public SleekColor textColor
+    public SleekColor TextColor
     {
         get
         {
@@ -190,7 +176,7 @@ internal class GlazierStringField_uGUI : GlazierElementBase_uGUI, ISleekField, I
         }
     }
 
-    public bool enableRichText
+    public bool AllowRichText
     {
         get
         {
@@ -201,7 +187,7 @@ internal class GlazierStringField_uGUI : GlazierElementBase_uGUI, ISleekField, I
         }
     }
 
-    public SleekColor backgroundColor
+    public SleekColor BackgroundColor
     {
         get
         {
@@ -214,7 +200,7 @@ internal class GlazierStringField_uGUI : GlazierElementBase_uGUI, ISleekField, I
         }
     }
 
-    public int maxLength
+    public int MaxLength
     {
         get
         {
@@ -226,11 +212,11 @@ internal class GlazierStringField_uGUI : GlazierElementBase_uGUI, ISleekField, I
         }
     }
 
-    public event Entered onEntered;
+    public event Entered OnTextSubmitted;
 
-    public event Typed onTyped;
+    public event Typed OnTextChanged;
 
-    public event Escaped onEscaped;
+    public event Escaped OnTextEscaped;
 
     public void FocusControl()
     {
@@ -294,14 +280,15 @@ internal class GlazierStringField_uGUI : GlazierElementBase_uGUI, ISleekField, I
         fieldComponent.customCaretColor = true;
         fieldComponent.isRichTextEditingAllowed = false;
         fieldComponent.richText = false;
+        fieldComponent.asteriskChar = '*';
         _backgroundColor = GlazierConst.DefaultFieldBackgroundColor;
         _textColor = GlazierConst.DefaultFieldForegroundColor;
-        shadowStyle = ETextContrastContext.Default;
-        fontStyle = FontStyle.Normal;
-        fontAlignment = TextAnchor.MiddleCenter;
-        fontSize = ESleekFontSize.Default;
-        maxLength = 100;
-        multiline = false;
+        TextContrastContext = ETextContrastContext.Default;
+        FontStyle = FontStyle.Normal;
+        TextAlignment = TextAnchor.MiddleCenter;
+        FontSize = ESleekFontSize.Default;
+        MaxLength = 100;
+        IsMultiline = false;
     }
 
     public override void SynchronizeColors()
@@ -340,11 +327,11 @@ internal class GlazierStringField_uGUI : GlazierElementBase_uGUI, ISleekField, I
 
     protected virtual void OnUnitySubmit(string input)
     {
-        this.onEntered?.Invoke(this);
+        this.OnTextSubmitted?.Invoke(this);
     }
 
     protected virtual void OnUnityValueChanged(string input)
     {
-        this.onTyped?.Invoke(this, input);
+        this.OnTextChanged?.Invoke(this, input);
     }
 }

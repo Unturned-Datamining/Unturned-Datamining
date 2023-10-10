@@ -9,7 +9,7 @@ internal abstract class GlazierNumericField_uGUI : GlazierStringField_uGUI, ISle
 
     protected void SynchronizeText()
     {
-        base.text = NumberToString();
+        base.Text = NumberToString();
     }
 
     protected override void OnUnityValueChanged(string input)

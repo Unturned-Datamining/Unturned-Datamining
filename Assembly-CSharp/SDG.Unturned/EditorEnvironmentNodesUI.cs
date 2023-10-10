@@ -62,8 +62,8 @@ internal class EditorEnvironmentNodesUI : SleekFullscreenBox
             focusedItemMenu = tempNodeBase.CreateMenu();
             if (focusedItemMenu != null)
             {
-                focusedItemMenu.positionOffset_Y = snapTransformField.positionOffset_Y - 10 - focusedItemMenu.sizeOffset_Y;
-                focusedItemMenu.positionScale_Y = 1f;
+                focusedItemMenu.PositionOffset_Y = snapTransformField.PositionOffset_Y - 10f - focusedItemMenu.SizeOffset_Y;
+                focusedItemMenu.PositionScale_Y = 1f;
                 AddChild(focusedItemMenu);
             }
         }
@@ -76,128 +76,128 @@ internal class EditorEnvironmentNodesUI : SleekFullscreenBox
         localization = Localization.read("/Editor/EditorLevelNodes.dat");
         Local local = Localization.read("/Editor/EditorLevelObjects.dat");
         Bundle bundle = Bundles.getBundle("/Bundles/Textures/Edit/Icons/EditorLevelObjects/EditorLevelObjects.unity3d");
-        int num = 0;
+        float num = 0f;
         surfaceMaskField = Glazier.Get().CreateUInt32Field();
-        surfaceMaskField.positionScale_Y = 1f;
-        surfaceMaskField.sizeOffset_X = 200;
-        surfaceMaskField.sizeOffset_Y = 30;
-        num -= surfaceMaskField.sizeOffset_Y;
-        surfaceMaskField.positionOffset_Y = num;
-        num -= 10;
-        surfaceMaskField.addLabel("Surface Mask (sorry this is not user-friendly at the moment)", ESleekSide.RIGHT);
-        surfaceMaskField.onTypedUInt32 += OnSurfaceMaskTyped;
+        surfaceMaskField.PositionScale_Y = 1f;
+        surfaceMaskField.SizeOffset_X = 200f;
+        surfaceMaskField.SizeOffset_Y = 30f;
+        num -= surfaceMaskField.SizeOffset_Y;
+        surfaceMaskField.PositionOffset_Y = num;
+        num -= 10f;
+        surfaceMaskField.AddLabel("Surface Mask (sorry this is not user-friendly at the moment)", ESleekSide.RIGHT);
+        surfaceMaskField.OnValueChanged += OnSurfaceMaskTyped;
         AddChild(surfaceMaskField);
         coordinateButton = new SleekButtonState(new GUIContent(local.format("CoordinateButtonTextGlobal"), bundle.load<Texture>("Global")), new GUIContent(local.format("CoordinateButtonTextLocal"), bundle.load<Texture>("Local")));
-        coordinateButton.positionScale_Y = 1f;
-        coordinateButton.sizeOffset_X = 200;
-        coordinateButton.sizeOffset_Y = 30;
-        num -= coordinateButton.sizeOffset_Y;
-        coordinateButton.positionOffset_Y = num;
-        num -= 10;
+        coordinateButton.PositionScale_Y = 1f;
+        coordinateButton.SizeOffset_X = 200f;
+        coordinateButton.SizeOffset_Y = 30f;
+        num -= coordinateButton.SizeOffset_Y;
+        coordinateButton.PositionOffset_Y = num;
+        num -= 10f;
         coordinateButton.tooltip = local.format("CoordinateButtonTooltip");
         coordinateButton.onSwappedState = OnSwappedStateCoordinate;
         AddChild(coordinateButton);
         scaleButton = new SleekButtonIcon(bundle.load<Texture2D>("Scale"));
-        scaleButton.positionScale_Y = 1f;
-        scaleButton.sizeOffset_X = 200;
-        scaleButton.sizeOffset_Y = 30;
-        num -= scaleButton.sizeOffset_Y;
-        scaleButton.positionOffset_Y = num;
-        num -= 10;
+        scaleButton.PositionScale_Y = 1f;
+        scaleButton.SizeOffset_X = 200f;
+        scaleButton.SizeOffset_Y = 30f;
+        num -= scaleButton.SizeOffset_Y;
+        scaleButton.PositionOffset_Y = num;
+        num -= 10f;
         scaleButton.text = local.format("ScaleButtonText", ControlsSettings.tool_3);
         scaleButton.tooltip = local.format("ScaleButtonTooltip");
         scaleButton.onClickedButton += OnScaleClicked;
         AddChild(scaleButton);
         rotateButton = new SleekButtonIcon(bundle.load<Texture2D>("Rotate"));
-        rotateButton.positionScale_Y = 1f;
-        rotateButton.sizeOffset_X = 200;
-        rotateButton.sizeOffset_Y = 30;
-        num -= rotateButton.sizeOffset_Y;
-        rotateButton.positionOffset_Y = num;
-        num -= 10;
+        rotateButton.PositionScale_Y = 1f;
+        rotateButton.SizeOffset_X = 200f;
+        rotateButton.SizeOffset_Y = 30f;
+        num -= rotateButton.SizeOffset_Y;
+        rotateButton.PositionOffset_Y = num;
+        num -= 10f;
         rotateButton.text = local.format("RotateButtonText", ControlsSettings.tool_1);
         rotateButton.tooltip = local.format("RotateButtonTooltip");
         rotateButton.onClickedButton += OnRotateClicked;
         AddChild(rotateButton);
         transformButton = new SleekButtonIcon(bundle.load<Texture2D>("Transform"));
-        transformButton.positionScale_Y = 1f;
-        transformButton.sizeOffset_X = 200;
-        transformButton.sizeOffset_Y = 30;
-        num -= transformButton.sizeOffset_Y;
-        transformButton.positionOffset_Y = num;
-        num -= 10;
+        transformButton.PositionScale_Y = 1f;
+        transformButton.SizeOffset_X = 200f;
+        transformButton.SizeOffset_Y = 30f;
+        num -= transformButton.SizeOffset_Y;
+        transformButton.PositionOffset_Y = num;
+        num -= 10f;
         transformButton.text = local.format("TransformButtonText", ControlsSettings.tool_0);
         transformButton.tooltip = local.format("TransformButtonTooltip");
         transformButton.onClickedButton += OnTransformClicked;
         AddChild(transformButton);
         snapRotationField = Glazier.Get().CreateFloat32Field();
-        snapRotationField.positionScale_Y = 1f;
-        snapRotationField.sizeOffset_X = 200;
-        snapRotationField.sizeOffset_Y = 30;
-        num -= snapRotationField.sizeOffset_Y;
-        snapRotationField.positionOffset_Y = num;
-        num -= 10;
-        snapRotationField.addLabel(local.format("SnapRotationLabelText"), ESleekSide.RIGHT);
-        snapRotationField.onTypedSingle += OnTypedSnapRotationField;
+        snapRotationField.PositionScale_Y = 1f;
+        snapRotationField.SizeOffset_X = 200f;
+        snapRotationField.SizeOffset_Y = 30f;
+        num -= snapRotationField.SizeOffset_Y;
+        snapRotationField.PositionOffset_Y = num;
+        num -= 10f;
+        snapRotationField.AddLabel(local.format("SnapRotationLabelText"), ESleekSide.RIGHT);
+        snapRotationField.OnValueChanged += OnTypedSnapRotationField;
         AddChild(snapRotationField);
         snapTransformField = Glazier.Get().CreateFloat32Field();
-        snapTransformField.positionScale_Y = 1f;
-        snapTransformField.sizeOffset_X = 200;
-        snapTransformField.sizeOffset_Y = 30;
-        num -= snapTransformField.sizeOffset_Y;
-        snapTransformField.positionOffset_Y = num;
-        snapTransformField.addLabel(local.format("SnapTransformLabelText"), ESleekSide.RIGHT);
-        snapTransformField.onTypedSingle += OnTypedSnapTransformField;
+        snapTransformField.PositionScale_Y = 1f;
+        snapTransformField.SizeOffset_X = 200f;
+        snapTransformField.SizeOffset_Y = 30f;
+        num -= snapTransformField.SizeOffset_Y;
+        snapTransformField.PositionOffset_Y = num;
+        snapTransformField.AddLabel(local.format("SnapTransformLabelText"), ESleekSide.RIGHT);
+        snapTransformField.OnValueChanged += OnTypedSnapTransformField;
         AddChild(snapTransformField);
         bundle.unload();
-        int num2 = 0;
+        float num2 = 0f;
         ISleekElement sleekElement = Glazier.Get().CreateFrame();
-        sleekElement.positionScale_X = 1f;
-        sleekElement.sizeOffset_X = 200;
-        sleekElement.positionOffset_X = -sleekElement.sizeOffset_X;
-        sleekElement.sizeScale_Y = 1f;
+        sleekElement.PositionScale_X = 1f;
+        sleekElement.SizeOffset_X = 200f;
+        sleekElement.PositionOffset_X = 0f - sleekElement.SizeOffset_X;
+        sleekElement.SizeScale_Y = 1f;
         AddChild(sleekElement);
         ISleekButton sleekButton = Glazier.Get().CreateButton();
-        sleekButton.positionOffset_Y = num2;
-        sleekButton.sizeScale_X = 1f;
-        sleekButton.sizeOffset_Y = 30;
-        sleekButton.text = "Airdrop Marker";
-        sleekButton.onClickedButton += delegate
+        sleekButton.PositionOffset_Y = num2;
+        sleekButton.SizeScale_X = 1f;
+        sleekButton.SizeOffset_Y = 30f;
+        sleekButton.Text = "Airdrop Marker";
+        sleekButton.OnClicked += delegate
         {
             tool.activeNodeSystem = AirdropDevkitNodeSystem.Get();
         };
         sleekElement.AddChild(sleekButton);
-        num2 += sleekButton.sizeOffset_Y;
+        num2 += sleekButton.SizeOffset_Y;
         ISleekButton sleekButton2 = Glazier.Get().CreateButton();
-        sleekButton2.positionOffset_Y = num2;
-        sleekButton2.sizeScale_X = 1f;
-        sleekButton2.sizeOffset_Y = 30;
-        sleekButton2.text = "Named Location";
-        sleekButton2.onClickedButton += delegate
+        sleekButton2.PositionOffset_Y = num2;
+        sleekButton2.SizeScale_X = 1f;
+        sleekButton2.SizeOffset_Y = 30f;
+        sleekButton2.Text = "Named Location";
+        sleekButton2.OnClicked += delegate
         {
             tool.activeNodeSystem = LocationDevkitNodeSystem.Get();
         };
         sleekElement.AddChild(sleekButton2);
-        num2 += sleekButton2.sizeOffset_Y;
+        num2 += sleekButton2.SizeOffset_Y;
         ISleekButton sleekButton3 = Glazier.Get().CreateButton();
-        sleekButton3.positionOffset_Y = num2;
-        sleekButton3.sizeScale_X = 1f;
-        sleekButton3.sizeOffset_Y = 30;
-        sleekButton3.text = "Spawnpoint";
-        sleekButton3.onClickedButton += delegate
+        sleekButton3.PositionOffset_Y = num2;
+        sleekButton3.SizeScale_X = 1f;
+        sleekButton3.SizeOffset_Y = 30f;
+        sleekButton3.Text = "Spawnpoint";
+        sleekButton3.OnClicked += delegate
         {
             tool.activeNodeSystem = SpawnpointSystemV2.Get();
         };
         sleekElement.AddChild(sleekButton3);
-        _ = num2 + sleekButton3.sizeOffset_Y;
+        _ = num2 + sleekButton3.SizeOffset_Y;
     }
 
     private void SyncSettings()
     {
-        surfaceMaskField.state = (uint)DevkitSelectionToolOptions.instance.selectionMask;
+        surfaceMaskField.Value = (uint)DevkitSelectionToolOptions.instance.selectionMask;
         coordinateButton.state = (DevkitSelectionToolOptions.instance.localSpace ? 1 : 0);
-        snapRotationField.state = DevkitSelectionToolOptions.instance.snapRotation;
-        snapTransformField.state = DevkitSelectionToolOptions.instance.snapPosition;
+        snapRotationField.Value = DevkitSelectionToolOptions.instance.snapRotation;
+        snapTransformField.Value = DevkitSelectionToolOptions.instance.snapPosition;
     }
 
     private void OnSurfaceMaskTyped(ISleekUInt32Field field, uint state)

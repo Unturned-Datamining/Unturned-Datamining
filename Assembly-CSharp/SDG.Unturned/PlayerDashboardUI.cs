@@ -144,15 +144,15 @@ public class PlayerDashboardUI
     {
         parentButton.isClickable = false;
         ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-        sleekLabel.positionOffset_X = parentButton.positionOffset_X;
-        sleekLabel.positionScale_X = parentButton.positionScale_X;
-        sleekLabel.sizeOffset_X = -parentButton.sizeOffset_X;
-        sleekLabel.sizeOffset_Y = parentButton.sizeOffset_Y;
-        sleekLabel.sizeScale_X = parentButton.sizeScale_X;
-        sleekLabel.text = localization.format("Crafting_Disabled");
-        sleekLabel.textColor = ESleekTint.BAD;
-        sleekLabel.fontSize = ESleekFontSize.Large;
-        sleekLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+        sleekLabel.PositionOffset_X = parentButton.PositionOffset_X;
+        sleekLabel.PositionScale_X = parentButton.PositionScale_X;
+        sleekLabel.SizeOffset_X = 0f - parentButton.SizeOffset_X;
+        sleekLabel.SizeOffset_Y = parentButton.SizeOffset_Y;
+        sleekLabel.SizeScale_X = parentButton.SizeScale_X;
+        sleekLabel.Text = localization.format("Crafting_Disabled");
+        sleekLabel.TextColor = ESleekTint.BAD;
+        sleekLabel.FontSize = ESleekFontSize.Large;
+        sleekLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
         container.AddChild(sleekLabel);
     }
 
@@ -166,19 +166,19 @@ public class PlayerDashboardUI
         Local local = Localization.read("/Player/PlayerDashboard.dat");
         Bundle bundle = Bundles.getBundle("/Bundles/Textures/Player/Icons/PlayerDashboard/PlayerDashboard.unity3d");
         container = new SleekFullscreenBox();
-        container.positionScale_Y = -1f;
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionScale_Y = -1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         PlayerUI.container.AddChild(container);
         active = false;
         inventoryButton = new SleekButtonIcon(bundle.load<Texture2D>("Inventory"));
-        inventoryButton.sizeOffset_X = -5;
-        inventoryButton.sizeOffset_Y = 50;
-        inventoryButton.sizeScale_X = 0.25f;
+        inventoryButton.SizeOffset_X = -5f;
+        inventoryButton.SizeOffset_Y = 50f;
+        inventoryButton.SizeScale_X = 0.25f;
         inventoryButton.text = local.format("Inventory", ControlsSettings.inventory);
         inventoryButton.tooltip = local.format("Inventory_Tooltip");
         inventoryButton.onClickedButton += onClickedInventoryButton;
@@ -186,11 +186,11 @@ public class PlayerDashboardUI
         inventoryButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(inventoryButton);
         craftingButton = new SleekButtonIcon(bundle.load<Texture2D>("Crafting"));
-        craftingButton.positionOffset_X = 5;
-        craftingButton.positionScale_X = 0.25f;
-        craftingButton.sizeOffset_X = -10;
-        craftingButton.sizeOffset_Y = 50;
-        craftingButton.sizeScale_X = 0.25f;
+        craftingButton.PositionOffset_X = 5f;
+        craftingButton.PositionScale_X = 0.25f;
+        craftingButton.SizeOffset_X = -10f;
+        craftingButton.SizeOffset_Y = 50f;
+        craftingButton.SizeScale_X = 0.25f;
         craftingButton.text = local.format("Crafting", ControlsSettings.crafting);
         craftingButton.tooltip = local.format("Crafting_Tooltip");
         craftingButton.iconColor = ESleekTint.FOREGROUND;
@@ -205,11 +205,11 @@ public class PlayerDashboardUI
             craftingButton.onClickedButton += onClickedCraftingButton;
         }
         skillsButton = new SleekButtonIcon(bundle.load<Texture2D>("Skills"));
-        skillsButton.positionOffset_X = 5;
-        skillsButton.positionScale_X = 0.5f;
-        skillsButton.sizeOffset_X = -10;
-        skillsButton.sizeOffset_Y = 50;
-        skillsButton.sizeScale_X = 0.25f;
+        skillsButton.PositionOffset_X = 5f;
+        skillsButton.PositionScale_X = 0.5f;
+        skillsButton.SizeOffset_X = -10f;
+        skillsButton.SizeOffset_Y = 50f;
+        skillsButton.SizeScale_X = 0.25f;
         skillsButton.text = local.format("Skills", ControlsSettings.skills);
         skillsButton.tooltip = local.format("Skills_Tooltip");
         skillsButton.iconColor = ESleekTint.FOREGROUND;
@@ -224,11 +224,11 @@ public class PlayerDashboardUI
             skillsButton.onClickedButton += onClickedSkillsButton;
         }
         informationButton = new SleekButtonIcon(bundle.load<Texture2D>("Information"));
-        informationButton.positionOffset_X = 5;
-        informationButton.positionScale_X = 0.75f;
-        informationButton.sizeOffset_X = -5;
-        informationButton.sizeOffset_Y = 50;
-        informationButton.sizeScale_X = 0.25f;
+        informationButton.PositionOffset_X = 5f;
+        informationButton.PositionScale_X = 0.75f;
+        informationButton.SizeOffset_X = -5f;
+        informationButton.SizeOffset_Y = 50f;
+        informationButton.SizeScale_X = 0.25f;
         informationButton.text = local.format("Information", ControlsSettings.map);
         informationButton.tooltip = local.format("Information_Tooltip");
         informationButton.iconColor = ESleekTint.FOREGROUND;
@@ -244,11 +244,11 @@ public class PlayerDashboardUI
         }
         if (Level.info != null && Level.info.type == ELevelType.HORDE)
         {
-            inventoryButton.sizeScale_X = 0.5f;
-            craftingButton.isVisible = false;
-            skillsButton.isVisible = false;
-            informationButton.positionScale_X = 0.5f;
-            informationButton.sizeScale_X = 0.5f;
+            inventoryButton.SizeScale_X = 0.5f;
+            craftingButton.IsVisible = false;
+            skillsButton.IsVisible = false;
+            informationButton.PositionScale_X = 0.5f;
+            informationButton.SizeScale_X = 0.5f;
         }
         bundle.unload();
         new PlayerDashboardInventoryUI();

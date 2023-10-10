@@ -43,7 +43,7 @@ public class UseableGrower : Useable
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askGrow")]
     public void ReceivePlayGrow()
     {
-        if (base.player.equipment.isEquipped)
+        if (base.player.equipment.IsEquipAnimationFinished)
         {
             grow();
         }
@@ -51,7 +51,7 @@ public class UseableGrower : Useable
 
     private bool fire()
     {
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             RaycastInfo raycastInfo = DamageTool.raycast(new Ray(base.player.look.aim.position, base.player.look.aim.forward), 3f, RayMasks.DAMAGE_CLIENT);
             if (raycastInfo.transform == null || !raycastInfo.transform.CompareTag("Barricade"))
@@ -137,7 +137,7 @@ public class UseableGrower : Useable
     public override void equip()
     {
         base.player.animator.play("Equip", smooth: true);
-        useTime = base.player.animator.getAnimationLength("Use");
+        useTime = base.player.animator.GetAnimationLength("Use");
     }
 
     public override void simulate(uint simulation, bool inputSteady)

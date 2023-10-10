@@ -17,11 +17,6 @@ public struct SpawnTableReward
         this.max = max;
     }
 
-    public ushort resolve()
-    {
-        return SpawnTableTool.resolve(tableID);
-    }
-
     public int count()
     {
         return Random.Range(min, max + 1);

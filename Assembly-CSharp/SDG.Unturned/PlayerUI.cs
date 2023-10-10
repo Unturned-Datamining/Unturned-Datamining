@@ -160,44 +160,28 @@ public class PlayerUI : MonoBehaviour
         }
     }
 
-    public static void hitmark(int bulletIndex, Vector3 point, bool worldspace, EPlayerHit newHit)
+    public static void hitmark(Vector3 point, bool worldspace, EPlayerHit newHit)
     {
-        if (!wantsWindowEnabled || !Provider.modeConfigData.Gameplay.Hitmarkers)
+        if (wantsWindowEnabled && Provider.modeConfigData.Gameplay.Hitmarkers)
         {
-            return;
-        }
-        if (OptionsSettings.hitmarkerStyle == EHitmarkerStyle.Classic)
-        {
-            for (int num = PlayerLifeUI.activeHitmarkers.Count - 1; num >= 0; num--)
+            HitmarkerInfo item = default(HitmarkerInfo);
+            item.worldPosition = point;
+            item.shouldFollowWorldPosition = worldspace || OptionsSettings.ShouldHitmarkersFollowWorldPosition;
+            item.sleekElement = PlayerLifeUI.ClaimHitmarker();
+            item.sleekElement.SetStyle(newHit);
+            if (OptionsSettings.hitmarkerStyle == EHitmarkerStyle.Animated)
             {
-                HitmarkerInfo hitmarkerInfo = PlayerLifeUI.activeHitmarkers[num];
-                if (hitmarkerInfo.bulletIndex == bulletIndex)
-                {
-                    PlayerLifeUI.ReleaseHitmarker(hitmarkerInfo.sleekElement);
-                    PlayerLifeUI.activeHitmarkers.RemoveAtFast(num);
-                    break;
-                }
+                item.sleekElement.PlayAnimation();
             }
-        }
-        HitmarkerInfo item = default(HitmarkerInfo);
-        item.worldPosition = point;
-        item.shouldFollowWorldPosition = worldspace || OptionsSettings.hitmarker;
-        item.sleekElement = PlayerLifeUI.ClaimHitmarker();
-        item.sleekElement.SetStyle(newHit);
-        if (OptionsSettings.hitmarkerStyle == EHitmarkerStyle.Animated)
-        {
-            item.sleekElement.PlayAnimation();
-            item.bulletIndex = -1;
-        }
-        else
-        {
-            item.sleekElement.ApplyClassicPositions();
-            item.bulletIndex = bulletIndex;
-        }
-        PlayerLifeUI.activeHitmarkers.Add(item);
-        if (newHit == EPlayerHit.CRITICAL)
-        {
-            MainCamera.instance.GetComponent<AudioSource>().PlayOneShot(hitCriticalSound, 0.5f);
+            else
+            {
+                item.sleekElement.ApplyClassicPositions();
+            }
+            PlayerLifeUI.activeHitmarkers.Add(item);
+            if (newHit == EPlayerHit.CRITICAL)
+            {
+                MainCamera.instance.GetComponent<AudioSource>().PlayOneShot(hitCriticalSound, 0.5f);
+            }
         }
     }
 
@@ -213,21 +197,21 @@ public class PlayerUI : MonoBehaviour
 
     public static void updateScope(bool isScoped)
     {
-        PlayerLifeUI.scopeOverlay.isVisible = isScoped;
-        container.isVisible = !isScoped;
+        PlayerLifeUI.scopeOverlay.IsVisible = isScoped;
+        container.IsVisible = !isScoped;
         UpdateWindowEnabled();
     }
 
     public static void updateBinoculars(bool isBinoculars)
     {
-        PlayerLifeUI.binocularsOverlay.isVisible = isBinoculars;
-        container.isVisible = !isBinoculars;
+        PlayerLifeUI.binocularsOverlay.IsVisible = isBinoculars;
+        container.IsVisible = !isBinoculars;
         UpdateWindowEnabled();
     }
 
     private static void UpdateWindowEnabled()
     {
-        window.isEnabled = wantsWindowEnabled || PlayerLifeUI.scopeOverlay.isVisible || PlayerLifeUI.binocularsOverlay.isVisible || isBlindfolded || isWindowEnabledByColorOverlay;
+        window.isEnabled = wantsWindowEnabled || PlayerLifeUI.scopeOverlay.IsVisible || PlayerLifeUI.binocularsOverlay.IsVisible || isBlindfolded || isWindowEnabledByColorOverlay;
     }
 
     public static void enableCrosshair()
@@ -285,33 +269,33 @@ public class PlayerUI : MonoBehaviour
                 if (messagePlayer == null)
                 {
                     messagePlayer = new SleekPlayer(steamPlayer, isButton: false, SleekPlayer.ESleekPlayerDisplayContext.NONE);
-                    messagePlayer.positionOffset_X = -150;
-                    messagePlayer.positionOffset_Y = -130;
-                    messagePlayer.positionScale_X = 0.5f;
-                    messagePlayer.positionScale_Y = 1f;
-                    messagePlayer.sizeOffset_X = 300;
-                    messagePlayer.sizeOffset_Y = 50;
+                    messagePlayer.PositionOffset_X = -150f;
+                    messagePlayer.PositionOffset_Y = -130f;
+                    messagePlayer.PositionScale_X = 0.5f;
+                    messagePlayer.PositionScale_Y = 1f;
+                    messagePlayer.SizeOffset_X = 300f;
+                    messagePlayer.SizeOffset_Y = 50f;
                     container.AddChild(messagePlayer);
                 }
             }
-            messageBox.isVisible = false;
+            messageBox.IsVisible = false;
             if (messagePlayer != null)
             {
-                messagePlayer.isVisible = true;
+                messagePlayer.IsVisible = true;
             }
             return;
         }
-        messageBox.isVisible = true;
+        messageBox.IsVisible = true;
         if (messagePlayer != null)
         {
-            messagePlayer.isVisible = false;
+            messagePlayer.IsVisible = false;
         }
-        messageIcon_0.positionOffset_Y = 45;
-        messageProgress_0.positionOffset_Y = 50;
-        messageIcon_1.positionOffset_Y = 75;
-        messageProgress_1.positionOffset_Y = 80;
-        messageIcon_2.positionOffset_Y = 105;
-        messageProgress_2.positionOffset_Y = 110;
+        messageIcon_0.PositionOffset_Y = 45f;
+        messageProgress_0.PositionOffset_Y = 50f;
+        messageIcon_1.PositionOffset_Y = 75f;
+        messageProgress_1.PositionOffset_Y = 80f;
+        messageIcon_2.PositionOffset_Y = 105f;
+        messageProgress_2.PositionOffset_Y = 110f;
         switch (message)
         {
         case EPlayerMessage.VEHICLE_ENTER:
@@ -319,52 +303,52 @@ public class PlayerUI : MonoBehaviour
             InteractableVehicle interactableVehicle = (InteractableVehicle)PlayerInteract.interactable;
             int num2 = 45;
             bool flag = interactableVehicle.usesFuel || interactableVehicle.asset.isStaminaPowered;
-            messageIcon_0.isVisible = flag;
-            messageProgress_0.isVisible = flag;
+            messageIcon_0.IsVisible = flag;
+            messageProgress_0.IsVisible = flag;
             if (flag)
             {
-                messageIcon_0.positionOffset_Y = num2;
-                messageProgress_0.positionOffset_Y = num2 + 5;
+                messageIcon_0.PositionOffset_Y = num2;
+                messageProgress_0.PositionOffset_Y = num2 + 5;
                 num2 += 30;
             }
-            messageIcon_1.isVisible = interactableVehicle.usesHealth;
-            messageProgress_1.isVisible = interactableVehicle.usesHealth;
+            messageIcon_1.IsVisible = interactableVehicle.usesHealth;
+            messageProgress_1.IsVisible = interactableVehicle.usesHealth;
             if (interactableVehicle.usesHealth)
             {
-                messageIcon_1.positionOffset_Y = num2;
-                messageProgress_1.positionOffset_Y = num2 + 5;
+                messageIcon_1.PositionOffset_Y = num2;
+                messageProgress_1.PositionOffset_Y = num2 + 5;
                 num2 += 30;
             }
-            messageIcon_2.isVisible = interactableVehicle.usesBattery;
-            messageProgress_2.isVisible = interactableVehicle.usesBattery;
+            messageIcon_2.IsVisible = interactableVehicle.usesBattery;
+            messageProgress_2.IsVisible = interactableVehicle.usesBattery;
             if (interactableVehicle.usesBattery)
             {
-                messageIcon_2.positionOffset_Y = num2;
-                messageProgress_2.positionOffset_Y = num2 + 5;
+                messageIcon_2.PositionOffset_Y = num2;
+                messageProgress_2.PositionOffset_Y = num2 + 5;
                 num2 += 30;
             }
-            messageBox.sizeOffset_Y = num2 - 5;
+            messageBox.SizeOffset_Y = num2 - 5;
             if (flag)
             {
                 interactableVehicle.getDisplayFuel(out var currentFuel, out var maxFuel);
                 messageProgress_0.state = (float)(int)currentFuel / (float)(int)maxFuel;
                 messageProgress_0.color = Palette.COLOR_Y;
-                messageIcon_0.texture = PlayerLifeUI.icons.load<Texture2D>("Fuel");
+                messageIcon_0.Texture = PlayerLifeUI.icons.load<Texture2D>("Fuel");
             }
             if (interactableVehicle.usesHealth)
             {
                 messageProgress_1.state = (float)(int)interactableVehicle.health / (float)(int)interactableVehicle.asset.health;
                 messageProgress_1.color = Palette.COLOR_R;
-                messageIcon_1.texture = PlayerLifeUI.icons.load<Texture2D>("Health");
+                messageIcon_1.Texture = PlayerLifeUI.icons.load<Texture2D>("Health");
             }
             if (interactableVehicle.usesBattery)
             {
                 messageProgress_2.state = (float)(int)interactableVehicle.batteryCharge / 10000f;
                 messageProgress_2.color = Palette.COLOR_Y;
-                messageIcon_2.texture = PlayerLifeUI.icons.load<Texture2D>("Stamina");
+                messageIcon_2.Texture = PlayerLifeUI.icons.load<Texture2D>("Stamina");
             }
-            messageQualityImage.isVisible = false;
-            messageAmountLabel.isVisible = false;
+            messageQualityImage.IsVisible = false;
+            messageAmountLabel.IsVisible = false;
             break;
         }
         case EPlayerMessage.GROW:
@@ -372,13 +356,13 @@ public class PlayerUI : MonoBehaviour
         case EPlayerMessage.GENERATOR_OFF:
         case EPlayerMessage.VOLUME_WATER:
         case EPlayerMessage.VOLUME_FUEL:
-            messageBox.sizeOffset_Y = 70;
-            messageProgress_0.isVisible = true;
-            messageIcon_0.isVisible = true;
-            messageProgress_1.isVisible = false;
-            messageIcon_1.isVisible = false;
-            messageProgress_2.isVisible = false;
-            messageIcon_2.isVisible = false;
+            messageBox.SizeOffset_Y = 70f;
+            messageProgress_0.IsVisible = true;
+            messageIcon_0.IsVisible = true;
+            messageProgress_1.IsVisible = false;
+            messageIcon_1.IsVisible = false;
+            messageProgress_2.IsVisible = false;
+            messageIcon_2.IsVisible = false;
             switch (message)
             {
             case EPlayerMessage.GENERATOR_ON:
@@ -386,7 +370,7 @@ public class PlayerUI : MonoBehaviour
             {
                 InteractableGenerator interactableGenerator = (InteractableGenerator)PlayerInteract.interactable;
                 messageProgress_0.state = (float)(int)interactableGenerator.fuel / (float)(int)interactableGenerator.capacity;
-                messageIcon_0.texture = PlayerLifeUI.icons.load<Texture2D>("Fuel");
+                messageIcon_0.Texture = PlayerLifeUI.icons.load<Texture2D>("Fuel");
                 break;
             }
             case EPlayerMessage.GROW:
@@ -398,7 +382,7 @@ public class PlayerUI : MonoBehaviour
                     num = (float)Provider.time - (float)interactableFarm.planted;
                 }
                 messageProgress_0.state = num / (float)interactableFarm.growth;
-                messageIcon_0.texture = PlayerLifeUI.icons.load<Texture2D>("Grow");
+                messageIcon_0.Texture = PlayerLifeUI.icons.load<Texture2D>("Grow");
                 break;
             }
             case EPlayerMessage.VOLUME_WATER:
@@ -418,7 +402,7 @@ public class PlayerUI : MonoBehaviour
                     messageProgress_0.state = (interactableRainBarrel.isFull ? 1f : 0f);
                     text = ((!interactableRainBarrel.isFull) ? PlayerLifeUI.localization.format("Empty") : PlayerLifeUI.localization.format("Full"));
                 }
-                messageIcon_0.texture = PlayerLifeUI.icons.load<Texture2D>("Water");
+                messageIcon_0.Texture = PlayerLifeUI.icons.load<Texture2D>("Water");
                 break;
             case EPlayerMessage.VOLUME_FUEL:
                 if (PlayerInteract.interactable is InteractableObjectResource)
@@ -436,7 +420,7 @@ public class PlayerUI : MonoBehaviour
                     InteractableOil interactableOil = (InteractableOil)PlayerInteract.interactable;
                     messageProgress_0.state = (float)(int)interactableOil.fuel / (float)(int)interactableOil.capacity;
                 }
-                messageIcon_0.texture = PlayerLifeUI.icons.load<Texture2D>("Fuel");
+                messageIcon_0.Texture = PlayerLifeUI.icons.load<Texture2D>("Fuel");
                 break;
             }
             switch (message)
@@ -451,378 +435,378 @@ public class PlayerUI : MonoBehaviour
                 messageProgress_0.color = Palette.COLOR_Y;
                 break;
             }
-            messageQualityImage.isVisible = false;
-            messageAmountLabel.isVisible = false;
+            messageQualityImage.IsVisible = false;
+            messageAmountLabel.IsVisible = false;
             break;
         case EPlayerMessage.ITEM:
-            messageBox.sizeOffset_Y = 70;
+            messageBox.SizeOffset_Y = 70f;
             if (objects.Length == 2)
             {
                 if (((ItemAsset)objects[1]).showQuality)
                 {
-                    messageQualityImage.color = ItemTool.getQualityColor((float)(int)((Item)objects[0]).quality / 100f);
-                    messageAmountLabel.text = ((Item)objects[0]).quality + "%";
-                    messageAmountLabel.textColor = messageQualityImage.color;
-                    messageQualityImage.isVisible = true;
-                    messageAmountLabel.isVisible = true;
+                    messageQualityImage.TintColor = ItemTool.getQualityColor((float)(int)((Item)objects[0]).quality / 100f);
+                    messageAmountLabel.Text = ((Item)objects[0]).quality + "%";
+                    messageAmountLabel.TextColor = messageQualityImage.TintColor;
+                    messageQualityImage.IsVisible = true;
+                    messageAmountLabel.IsVisible = true;
                 }
                 else if (((ItemAsset)objects[1]).amount > 1)
                 {
-                    messageAmountLabel.text = "x" + ((Item)objects[0]).amount;
-                    messageAmountLabel.textColor = ESleekTint.FONT;
-                    messageQualityImage.isVisible = false;
-                    messageAmountLabel.isVisible = true;
+                    messageAmountLabel.Text = "x" + ((Item)objects[0]).amount;
+                    messageAmountLabel.TextColor = ESleekTint.FONT;
+                    messageQualityImage.IsVisible = false;
+                    messageAmountLabel.IsVisible = true;
                 }
                 else
                 {
-                    messageQualityImage.isVisible = false;
-                    messageAmountLabel.isVisible = false;
+                    messageQualityImage.IsVisible = false;
+                    messageAmountLabel.IsVisible = false;
                 }
             }
-            messageProgress_0.isVisible = false;
-            messageIcon_0.isVisible = false;
-            messageProgress_1.isVisible = false;
-            messageIcon_1.isVisible = false;
-            messageProgress_2.isVisible = false;
-            messageIcon_2.isVisible = false;
+            messageProgress_0.IsVisible = false;
+            messageIcon_0.IsVisible = false;
+            messageProgress_1.IsVisible = false;
+            messageIcon_1.IsVisible = false;
+            messageProgress_2.IsVisible = false;
+            messageIcon_2.IsVisible = false;
             break;
         default:
-            messageBox.sizeOffset_Y = 50;
-            messageQualityImage.isVisible = false;
-            messageAmountLabel.isVisible = false;
-            messageProgress_0.isVisible = false;
-            messageIcon_0.isVisible = false;
-            messageProgress_1.isVisible = false;
-            messageIcon_1.isVisible = false;
-            messageProgress_2.isVisible = false;
-            messageIcon_2.isVisible = false;
+            messageBox.SizeOffset_Y = 50f;
+            messageQualityImage.IsVisible = false;
+            messageAmountLabel.IsVisible = false;
+            messageProgress_0.IsVisible = false;
+            messageIcon_0.IsVisible = false;
+            messageProgress_1.IsVisible = false;
+            messageIcon_1.IsVisible = false;
+            messageProgress_2.IsVisible = false;
+            messageIcon_2.IsVisible = false;
             break;
         }
         bool flag2 = message == EPlayerMessage.ITEM || message == EPlayerMessage.VEHICLE_ENTER;
         if (flag2)
         {
-            messageBox.backgroundColor = SleekColor.BackgroundIfLight(color);
+            messageBox.BackgroundColor = SleekColor.BackgroundIfLight(color);
         }
         else
         {
-            messageBox.backgroundColor = ESleekTint.BACKGROUND;
+            messageBox.BackgroundColor = ESleekTint.BACKGROUND;
         }
-        messageLabel.enableRichText = message == EPlayerMessage.CONDITION || message == EPlayerMessage.TALK || message == EPlayerMessage.INTERACT;
-        if (messageLabel.enableRichText)
+        messageLabel.AllowRichText = message == EPlayerMessage.CONDITION || message == EPlayerMessage.TALK || message == EPlayerMessage.INTERACT;
+        if (messageLabel.AllowRichText)
         {
-            messageLabel.textColor = ESleekTint.RICH_TEXT_DEFAULT;
-            messageLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+            messageLabel.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+            messageLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
         }
         else if (flag2)
         {
-            messageLabel.textColor = color;
-            messageLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+            messageLabel.TextColor = color;
+            messageLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
         }
         else
         {
-            messageLabel.textColor = ESleekTint.FONT;
-            messageLabel.shadowStyle = ETextContrastContext.Default;
+            messageLabel.TextColor = ESleekTint.FONT;
+            messageLabel.TextContrastContext = ETextContrastContext.Default;
         }
-        messageBox.sizeOffset_X = 200;
+        messageBox.SizeOffset_X = 200f;
         switch (message)
         {
         case EPlayerMessage.ITEM:
-            messageBox.sizeOffset_X = 300;
-            messageLabel.text = PlayerLifeUI.localization.format("Item", text, MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
+            messageBox.SizeOffset_X = 300f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Item", text, MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
             break;
         case EPlayerMessage.VEHICLE_ENTER:
         {
-            messageBox.sizeOffset_X = 300;
+            messageBox.SizeOffset_X = 300f;
             InteractableVehicle interactableVehicle2 = (InteractableVehicle)PlayerInteract.interactable;
-            messageLabel.text = PlayerLifeUI.localization.format(interactableVehicle2.isLocked ? "Vehicle_Enter_Locked" : "Vehicle_Enter_Unlocked", text, MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
+            messageLabel.Text = PlayerLifeUI.localization.format(interactableVehicle2.isLocked ? "Vehicle_Enter_Locked" : "Vehicle_Enter_Unlocked", text, MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
             break;
         }
         case EPlayerMessage.DOOR_OPEN:
-            messageLabel.text = PlayerLifeUI.localization.format("Door_Open", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
+            messageLabel.Text = PlayerLifeUI.localization.format("Door_Open", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
             break;
         case EPlayerMessage.DOOR_CLOSE:
-            messageLabel.text = PlayerLifeUI.localization.format("Door_Close", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
+            messageLabel.Text = PlayerLifeUI.localization.format("Door_Close", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
             break;
         case EPlayerMessage.LOCKED:
-            messageLabel.text = PlayerLifeUI.localization.format("Locked");
+            messageLabel.Text = PlayerLifeUI.localization.format("Locked");
             break;
         case EPlayerMessage.BLOCKED:
-            messageLabel.text = PlayerLifeUI.localization.format("Blocked");
+            messageLabel.Text = PlayerLifeUI.localization.format("Blocked");
             break;
         case EPlayerMessage.PLACEMENT_OBSTRUCTED_BY:
-            messageLabel.text = PlayerLifeUI.localization.format("PlacementObstructedBy", text);
+            messageLabel.Text = PlayerLifeUI.localization.format("PlacementObstructedBy", text);
             break;
         case EPlayerMessage.PILLAR:
-            messageLabel.text = PlayerLifeUI.localization.format("Pillar");
+            messageLabel.Text = PlayerLifeUI.localization.format("Pillar");
             break;
         case EPlayerMessage.POST:
-            messageLabel.text = PlayerLifeUI.localization.format("Post");
+            messageLabel.Text = PlayerLifeUI.localization.format("Post");
             break;
         case EPlayerMessage.ROOF:
-            messageLabel.text = PlayerLifeUI.localization.format("Roof");
+            messageLabel.Text = PlayerLifeUI.localization.format("Roof");
             break;
         case EPlayerMessage.WALL:
-            messageLabel.text = PlayerLifeUI.localization.format("Wall");
+            messageLabel.Text = PlayerLifeUI.localization.format("Wall");
             break;
         case EPlayerMessage.CORNER:
-            messageLabel.text = PlayerLifeUI.localization.format("Corner");
+            messageLabel.Text = PlayerLifeUI.localization.format("Corner");
             break;
         case EPlayerMessage.GROUND:
-            messageLabel.text = PlayerLifeUI.localization.format("Ground");
+            messageLabel.Text = PlayerLifeUI.localization.format("Ground");
             break;
         case EPlayerMessage.DOORWAY:
-            messageLabel.text = PlayerLifeUI.localization.format("Doorway");
+            messageLabel.Text = PlayerLifeUI.localization.format("Doorway");
             break;
         case EPlayerMessage.WINDOW:
-            messageLabel.text = PlayerLifeUI.localization.format("Window");
+            messageLabel.Text = PlayerLifeUI.localization.format("Window");
             break;
         case EPlayerMessage.GARAGE:
-            messageLabel.text = PlayerLifeUI.localization.format("Garage");
+            messageLabel.Text = PlayerLifeUI.localization.format("Garage");
             break;
         case EPlayerMessage.BED_ON:
-            messageLabel.text = PlayerLifeUI.localization.format("Bed_On", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact), text);
+            messageLabel.Text = PlayerLifeUI.localization.format("Bed_On", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact), text);
             break;
         case EPlayerMessage.BED_OFF:
-            messageLabel.text = PlayerLifeUI.localization.format("Bed_Off", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact), text);
+            messageLabel.Text = PlayerLifeUI.localization.format("Bed_Off", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact), text);
             break;
         case EPlayerMessage.BED_CLAIMED:
-            messageLabel.text = PlayerLifeUI.localization.format("Bed_Claimed");
+            messageLabel.Text = PlayerLifeUI.localization.format("Bed_Claimed");
             break;
         case EPlayerMessage.BOUNDS:
-            messageLabel.text = PlayerLifeUI.localization.format("Bounds");
+            messageLabel.Text = PlayerLifeUI.localization.format("Bounds");
             break;
         case EPlayerMessage.STORAGE:
-            messageLabel.text = PlayerLifeUI.localization.format("Storage", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
+            messageLabel.Text = PlayerLifeUI.localization.format("Storage", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
             break;
         case EPlayerMessage.FARM:
-            messageLabel.text = PlayerLifeUI.localization.format("Farm", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
+            messageLabel.Text = PlayerLifeUI.localization.format("Farm", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
             break;
         case EPlayerMessage.GROW:
-            messageLabel.text = PlayerLifeUI.localization.format("Grow");
+            messageLabel.Text = PlayerLifeUI.localization.format("Grow");
             break;
         case EPlayerMessage.SOIL:
-            messageLabel.text = PlayerLifeUI.localization.format("Soil");
+            messageLabel.Text = PlayerLifeUI.localization.format("Soil");
             break;
         case EPlayerMessage.FIRE_ON:
-            messageLabel.text = PlayerLifeUI.localization.format("Fire_On", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
+            messageLabel.Text = PlayerLifeUI.localization.format("Fire_On", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
             break;
         case EPlayerMessage.FIRE_OFF:
-            messageLabel.text = PlayerLifeUI.localization.format("Fire_Off", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
+            messageLabel.Text = PlayerLifeUI.localization.format("Fire_Off", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
             break;
         case EPlayerMessage.FORAGE:
-            messageLabel.text = PlayerLifeUI.localization.format("Forage", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
+            messageLabel.Text = PlayerLifeUI.localization.format("Forage", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
             break;
         case EPlayerMessage.GENERATOR_ON:
-            messageLabel.text = PlayerLifeUI.localization.format("Generator_On", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
+            messageLabel.Text = PlayerLifeUI.localization.format("Generator_On", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
             break;
         case EPlayerMessage.GENERATOR_OFF:
-            messageLabel.text = PlayerLifeUI.localization.format("Generator_Off", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
+            messageLabel.Text = PlayerLifeUI.localization.format("Generator_Off", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
             break;
         case EPlayerMessage.SPOT_ON:
-            messageLabel.text = PlayerLifeUI.localization.format("Spot_On", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
+            messageLabel.Text = PlayerLifeUI.localization.format("Spot_On", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
             break;
         case EPlayerMessage.SPOT_OFF:
-            messageLabel.text = PlayerLifeUI.localization.format("Spot_Off", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
+            messageLabel.Text = PlayerLifeUI.localization.format("Spot_Off", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
             break;
         case EPlayerMessage.PURCHASE:
             if (objects.Length == 2)
             {
-                messageLabel.text = PlayerLifeUI.localization.format("Purchase", objects[0], objects[1], MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
+                messageLabel.Text = PlayerLifeUI.localization.format("Purchase", objects[0], objects[1], MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
             }
             break;
         case EPlayerMessage.POWER:
-            messageLabel.text = PlayerLifeUI.localization.format("Power");
+            messageLabel.Text = PlayerLifeUI.localization.format("Power");
             break;
         case EPlayerMessage.USE:
-            messageLabel.text = PlayerLifeUI.localization.format("Use", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
+            messageLabel.Text = PlayerLifeUI.localization.format("Use", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
             break;
         case EPlayerMessage.TUTORIAL_MOVE:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Move", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.left), MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.right), MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.up), MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.down));
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Move", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.left), MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.right), MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.up), MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.down));
             break;
         case EPlayerMessage.TUTORIAL_LOOK:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Look");
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Look");
             break;
         case EPlayerMessage.TUTORIAL_JUMP:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Jump", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.jump));
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Jump", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.jump));
             break;
         case EPlayerMessage.TUTORIAL_PERSPECTIVE:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Perspective", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.perspective));
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Perspective", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.perspective));
             break;
         case EPlayerMessage.TUTORIAL_RUN:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Run", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.sprint));
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Run", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.sprint));
             break;
         case EPlayerMessage.TUTORIAL_INVENTORY:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Inventory", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Inventory", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
             break;
         case EPlayerMessage.TUTORIAL_SURVIVAL:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Survival", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.inventory), MenuConfigurationControlsUI.getKeyCodeText(KeyCode.Mouse1));
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Survival", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.inventory), MenuConfigurationControlsUI.getKeyCodeText(KeyCode.Mouse1));
             break;
         case EPlayerMessage.TUTORIAL_GUN:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Gun", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.secondary), MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.primary));
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Gun", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.secondary), MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.primary));
             break;
         case EPlayerMessage.TUTORIAL_LADDER:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Ladder");
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Ladder");
             break;
         case EPlayerMessage.TUTORIAL_CRAFT:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Craft", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.attach), MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.crafting));
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Craft", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.attach), MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.crafting));
             break;
         case EPlayerMessage.TUTORIAL_SKILLS:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Skills", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.skills));
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Skills", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.skills));
             break;
         case EPlayerMessage.TUTORIAL_SWIM:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Swim", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.jump));
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Swim", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.jump));
             break;
         case EPlayerMessage.TUTORIAL_MEDICAL:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Medical", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.primary));
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Medical", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.primary));
             break;
         case EPlayerMessage.TUTORIAL_VEHICLE:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Vehicle", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.secondary), MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.primary), MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Vehicle", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.secondary), MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.primary), MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
             break;
         case EPlayerMessage.TUTORIAL_CROUCH:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Crouch", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.crouch));
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Crouch", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.crouch));
             break;
         case EPlayerMessage.TUTORIAL_PRONE:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Prone", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.prone));
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Prone", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.prone));
             break;
         case EPlayerMessage.TUTORIAL_EDUCATED:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Educated", MenuConfigurationControlsUI.getKeyCodeText(KeyCode.Escape));
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Educated", MenuConfigurationControlsUI.getKeyCodeText(KeyCode.Escape));
             break;
         case EPlayerMessage.TUTORIAL_HARVEST:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Harvest", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Harvest", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
             break;
         case EPlayerMessage.TUTORIAL_FISH:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Fish", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.primary));
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Fish", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.primary));
             break;
         case EPlayerMessage.TUTORIAL_BUILD:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Build");
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Build");
             break;
         case EPlayerMessage.TUTORIAL_HORN:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Horn", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.primary));
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Horn", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.primary));
             break;
         case EPlayerMessage.TUTORIAL_LIGHTS:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Lights", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.secondary));
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Lights", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.secondary));
             break;
         case EPlayerMessage.TUTORIAL_SIRENS:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Sirens", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.other));
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Sirens", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.other));
             break;
         case EPlayerMessage.TUTORIAL_FARM:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Farm");
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Farm");
             break;
         case EPlayerMessage.TUTORIAL_POWER:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Power");
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Power");
             break;
         case EPlayerMessage.TUTORIAL_FIRE:
-            messageBox.sizeOffset_X = 600;
-            messageLabel.text = PlayerLifeUI.localization.format("Tutorial_Fire", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.crafting));
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Fire", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.crafting));
             break;
         case EPlayerMessage.CLAIM:
-            messageLabel.text = PlayerLifeUI.localization.format("Claim");
+            messageLabel.Text = PlayerLifeUI.localization.format("Claim");
             break;
         case EPlayerMessage.UNDERWATER:
-            messageLabel.text = PlayerLifeUI.localization.format("Underwater");
+            messageLabel.Text = PlayerLifeUI.localization.format("Underwater");
             break;
         case EPlayerMessage.NAV:
-            messageLabel.text = PlayerLifeUI.localization.format("Nav");
+            messageLabel.Text = PlayerLifeUI.localization.format("Nav");
             break;
         case EPlayerMessage.SPAWN:
-            messageLabel.text = PlayerLifeUI.localization.format("Spawn");
+            messageLabel.Text = PlayerLifeUI.localization.format("Spawn");
             break;
         case EPlayerMessage.MOBILE:
-            messageLabel.text = PlayerLifeUI.localization.format("Mobile");
+            messageLabel.Text = PlayerLifeUI.localization.format("Mobile");
             break;
         case EPlayerMessage.BUILD_ON_OCCUPIED_VEHICLE:
-            messageLabel.text = PlayerLifeUI.localization.format("Build_On_Occupied_Vehicle");
+            messageLabel.Text = PlayerLifeUI.localization.format("Build_On_Occupied_Vehicle");
             break;
         case EPlayerMessage.NOT_ALLOWED_HERE:
-            messageLabel.text = PlayerLifeUI.localization.format("Not_Allowed_Here");
+            messageLabel.Text = PlayerLifeUI.localization.format("Not_Allowed_Here");
             break;
         case EPlayerMessage.CANNOT_BUILD_ON_VEHICLE:
-            messageLabel.text = PlayerLifeUI.localization.format("Cannot_Build_On_Vehicle");
+            messageLabel.Text = PlayerLifeUI.localization.format("Cannot_Build_On_Vehicle");
             break;
         case EPlayerMessage.TOO_FAR_FROM_HULL:
-            messageLabel.text = PlayerLifeUI.localization.format("Too_Far_From_Hull");
+            messageLabel.Text = PlayerLifeUI.localization.format("Too_Far_From_Hull");
             break;
         case EPlayerMessage.CANNOT_BUILD_WHILE_SEATED:
-            messageLabel.text = PlayerLifeUI.localization.format("Cannot_Build_While_Seated");
+            messageLabel.Text = PlayerLifeUI.localization.format("Cannot_Build_While_Seated");
             break;
         case EPlayerMessage.OIL:
-            messageLabel.text = PlayerLifeUI.localization.format("Oil");
+            messageLabel.Text = PlayerLifeUI.localization.format("Oil");
             break;
         case EPlayerMessage.VOLUME_WATER:
-            messageLabel.text = PlayerLifeUI.localization.format("Volume_Water", text);
+            messageLabel.Text = PlayerLifeUI.localization.format("Volume_Water", text);
             break;
         case EPlayerMessage.VOLUME_FUEL:
-            messageLabel.text = PlayerLifeUI.localization.format("Volume_Fuel");
+            messageLabel.Text = PlayerLifeUI.localization.format("Volume_Fuel");
             break;
         case EPlayerMessage.TRAPDOOR:
-            messageLabel.text = PlayerLifeUI.localization.format("Trapdoor");
+            messageLabel.Text = PlayerLifeUI.localization.format("Trapdoor");
             break;
         case EPlayerMessage.TALK:
         {
             InteractableObjectNPC interactableObjectNPC = PlayerInteract.interactable as InteractableObjectNPC;
             string arg = ((interactableObjectNPC != null && interactableObjectNPC.npcAsset != null) ? interactableObjectNPC.npcAsset.GetNameShownToPlayer(Player.player) : "null");
-            messageLabel.text = PlayerLifeUI.localization.format("Talk", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact), arg);
+            messageLabel.Text = PlayerLifeUI.localization.format("Talk", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact), arg);
             break;
         }
         case EPlayerMessage.CONDITION:
-            messageLabel.text = text;
+            messageLabel.Text = text;
             break;
         case EPlayerMessage.INTERACT:
-            messageLabel.text = string.Format(text, MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
+            messageLabel.Text = string.Format(text, MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
             break;
         case EPlayerMessage.SAFEZONE:
-            messageLabel.text = PlayerLifeUI.localization.format("Safezone");
+            messageLabel.Text = PlayerLifeUI.localization.format("Safezone");
             break;
         case EPlayerMessage.CLIMB:
-            messageLabel.text = PlayerLifeUI.localization.format("Climb", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
+            messageLabel.Text = PlayerLifeUI.localization.format("Climb", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
             break;
         }
-        messageBox.positionOffset_X = -messageBox.sizeOffset_X / 2;
+        messageBox.PositionOffset_X = (0f - messageBox.SizeOffset_X) / 2f;
         if (transform != null && MainCamera.instance != null)
         {
-            messageBox.positionOffset_Y = 10;
+            messageBox.PositionOffset_Y = 10f;
             Vector3 vector = MainCamera.instance.WorldToViewportPoint(transform.position);
             Vector2 vector2 = container.ViewportToNormalizedPosition(vector);
-            messageBox.positionScale_X = vector2.x;
-            messageBox.positionScale_Y = vector2.y;
+            messageBox.PositionScale_X = vector2.x;
+            messageBox.PositionScale_Y = vector2.y;
         }
         else
         {
-            if (messageBox2.isVisible)
+            if (messageBox2.IsVisible)
             {
-                messageBox.positionOffset_Y = -80 - messageBox.sizeOffset_Y - 10 - messageBox2.sizeOffset_Y;
+                messageBox.PositionOffset_Y = -80f - messageBox.SizeOffset_Y - 10f - messageBox2.SizeOffset_Y;
             }
             else
             {
-                messageBox.positionOffset_Y = -80 - messageBox.sizeOffset_Y;
+                messageBox.PositionOffset_Y = -80f - messageBox.SizeOffset_Y;
             }
-            messageBox.positionScale_X = 0.5f;
-            messageBox.positionScale_Y = 1f;
+            messageBox.PositionScale_X = 0.5f;
+            messageBox.PositionScale_Y = 1f;
         }
     }
 
@@ -830,21 +814,21 @@ public class PlayerUI : MonoBehaviour
     {
         if (messageBox2 != null && PlayerLifeUI.localization != null && !ShouldIgnoreHintAndMessageRequests() && !isMessaged)
         {
-            messageBox2.isVisible = true;
+            messageBox2.IsVisible = true;
             lastHinted2 = true;
             isHinted2 = true;
             if (message == EPlayerMessage.SALVAGE)
             {
-                messageBox2.sizeOffset_Y = 100;
-                messageBox2.positionOffset_Y = -80 - messageBox2.sizeOffset_Y;
-                messageIcon2.isVisible = true;
-                messageProgress2_0.isVisible = true;
-                messageProgress2_1.isVisible = true;
-                messageIcon2.texture = PlayerLifeUI.icons.load<Texture2D>("Health");
-                messageLabel2.enableRichText = false;
-                messageLabel2.textColor = ESleekTint.FONT;
-                messageLabel2.shadowStyle = ETextContrastContext.Default;
-                messageLabel2.text = PlayerLifeUI.localization.format("Salvage", ControlsSettings.interact);
+                messageBox2.SizeOffset_Y = 100f;
+                messageBox2.PositionOffset_Y = -80f - messageBox2.SizeOffset_Y;
+                messageIcon2.IsVisible = true;
+                messageProgress2_0.IsVisible = true;
+                messageProgress2_1.IsVisible = true;
+                messageIcon2.Texture = PlayerLifeUI.icons.load<Texture2D>("Health");
+                messageLabel2.AllowRichText = false;
+                messageLabel2.TextColor = ESleekTint.FONT;
+                messageLabel2.TextContrastContext = ETextContrastContext.Default;
+                messageLabel2.Text = PlayerLifeUI.localization.format("Salvage", ControlsSettings.interact);
                 messageProgress2_0.state = progress;
                 messageProgress2_0.color = Palette.COLOR_P;
                 messageProgress2_1.state = data;
@@ -861,128 +845,128 @@ public class PlayerUI : MonoBehaviour
         }
         if (message == EPlayerMessage.NONE)
         {
-            messageBox2.isVisible = false;
+            messageBox2.IsVisible = false;
             messageDisappearTime = 0f;
             isMessaged = false;
         }
         else if (!ShouldIgnoreHintAndMessageRequests() && ((message != EPlayerMessage.EXPERIENCE && message != EPlayerMessage.REPUTATION) || (!PlayerNPCDialogueUI.active && !PlayerNPCQuestUI.active && !PlayerNPCVendorUI.active)))
         {
-            messageBox2.positionOffset_X = -200;
-            messageBox2.sizeOffset_X = 400;
-            messageBox2.sizeOffset_Y = 50;
-            messageBox2.positionOffset_Y = -80 - messageBox2.sizeOffset_Y;
-            messageBox2.isVisible = true;
-            messageIcon2.isVisible = false;
-            messageProgress2_0.isVisible = false;
-            messageProgress2_1.isVisible = false;
+            messageBox2.PositionOffset_X = -200f;
+            messageBox2.SizeOffset_X = 400f;
+            messageBox2.SizeOffset_Y = 50f;
+            messageBox2.PositionOffset_Y = -80f - messageBox2.SizeOffset_Y;
+            messageBox2.IsVisible = true;
+            messageIcon2.IsVisible = false;
+            messageProgress2_0.IsVisible = false;
+            messageProgress2_1.IsVisible = false;
             messageDisappearTime = Time.realtimeSinceStartup + duration;
             isMessaged = true;
-            messageLabel2.enableRichText = message == EPlayerMessage.NPC_CUSTOM;
-            if (messageLabel2.enableRichText)
+            messageLabel2.AllowRichText = message == EPlayerMessage.NPC_CUSTOM;
+            if (messageLabel2.AllowRichText)
             {
-                messageLabel2.textColor = ESleekTint.RICH_TEXT_DEFAULT;
-                messageLabel2.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+                messageLabel2.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+                messageLabel2.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
             }
             else
             {
-                messageLabel2.textColor = ESleekTint.FONT;
-                messageLabel2.shadowStyle = ETextContrastContext.Default;
+                messageLabel2.TextColor = ESleekTint.FONT;
+                messageLabel2.TextContrastContext = ETextContrastContext.Default;
             }
             if (message == EPlayerMessage.SPACE)
             {
-                messageLabel2.text = PlayerLifeUI.localization.format("Space");
+                messageLabel2.Text = PlayerLifeUI.localization.format("Space");
             }
             switch (message)
             {
             case EPlayerMessage.RELOAD:
-                messageLabel2.text = PlayerLifeUI.localization.format("Reload", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.reload));
+                messageLabel2.Text = PlayerLifeUI.localization.format("Reload", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.reload));
                 break;
             case EPlayerMessage.SAFETY:
-                messageLabel2.text = PlayerLifeUI.localization.format("Safety", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.firemode));
+                messageLabel2.Text = PlayerLifeUI.localization.format("Safety", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.firemode));
                 break;
             case EPlayerMessage.VEHICLE_EXIT:
-                messageLabel2.text = PlayerLifeUI.localization.format("Vehicle_Exit", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
+                messageLabel2.Text = PlayerLifeUI.localization.format("Vehicle_Exit", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
                 break;
             case EPlayerMessage.VEHICLE_SWAP:
-                messageLabel2.text = PlayerLifeUI.localization.format("Vehicle_Swap", Player.player.movement.getVehicle().passengers.Length);
+                messageLabel2.Text = PlayerLifeUI.localization.format("Vehicle_Swap", Player.player.movement.getVehicle().passengers.Length);
                 break;
             case EPlayerMessage.LIGHT:
-                messageLabel2.text = PlayerLifeUI.localization.format("Light", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.tactical));
+                messageLabel2.Text = PlayerLifeUI.localization.format("Light", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.tactical));
                 break;
             case EPlayerMessage.LASER:
-                messageLabel2.text = PlayerLifeUI.localization.format("Laser", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.tactical));
+                messageLabel2.Text = PlayerLifeUI.localization.format("Laser", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.tactical));
                 break;
             case EPlayerMessage.HOUSING_PLANNER_TUTORIAL:
-                messageLabel2.text = PlayerLifeUI.localization.format("HousingPlannerTutorial", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.attach));
+                messageLabel2.Text = PlayerLifeUI.localization.format("HousingPlannerTutorial", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.attach));
                 break;
             case EPlayerMessage.RANGEFINDER:
-                messageLabel2.text = PlayerLifeUI.localization.format("Rangefinder", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.tactical));
+                messageLabel2.Text = PlayerLifeUI.localization.format("Rangefinder", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.tactical));
                 break;
             case EPlayerMessage.EXPERIENCE:
-                messageLabel2.text = PlayerLifeUI.localization.format("Experience", text);
+                messageLabel2.Text = PlayerLifeUI.localization.format("Experience", text);
                 break;
             case EPlayerMessage.EMPTY:
-                messageLabel2.text = PlayerLifeUI.localization.format("Empty");
+                messageLabel2.Text = PlayerLifeUI.localization.format("Empty");
                 break;
             case EPlayerMessage.FULL:
-                messageLabel2.text = PlayerLifeUI.localization.format("Full");
+                messageLabel2.Text = PlayerLifeUI.localization.format("Full");
                 break;
             case EPlayerMessage.MOON_ON:
-                messageLabel2.text = PlayerLifeUI.localization.format("Moon_On");
+                messageLabel2.Text = PlayerLifeUI.localization.format("Moon_On");
                 break;
             case EPlayerMessage.MOON_OFF:
-                messageLabel2.text = PlayerLifeUI.localization.format("Moon_Off");
+                messageLabel2.Text = PlayerLifeUI.localization.format("Moon_Off");
                 break;
             case EPlayerMessage.SAFEZONE_ON:
-                messageLabel2.text = PlayerLifeUI.localization.format("Safezone_On");
+                messageLabel2.Text = PlayerLifeUI.localization.format("Safezone_On");
                 break;
             case EPlayerMessage.SAFEZONE_OFF:
-                messageLabel2.text = PlayerLifeUI.localization.format("Safezone_Off");
+                messageLabel2.Text = PlayerLifeUI.localization.format("Safezone_Off");
                 break;
             case EPlayerMessage.WAVE_ON:
-                messageLabel2.text = PlayerLifeUI.localization.format("Wave_On");
+                messageLabel2.Text = PlayerLifeUI.localization.format("Wave_On");
                 break;
             case EPlayerMessage.WAVE_OFF:
-                messageLabel2.text = PlayerLifeUI.localization.format("Wave_Off");
+                messageLabel2.Text = PlayerLifeUI.localization.format("Wave_Off");
                 break;
             case EPlayerMessage.DEADZONE_ON:
-                messageLabel2.text = PlayerLifeUI.localization.format("Deadzone_On");
+                messageLabel2.Text = PlayerLifeUI.localization.format("Deadzone_On");
                 break;
             case EPlayerMessage.DEADZONE_OFF:
-                messageLabel2.text = PlayerLifeUI.localization.format("Deadzone_Off");
+                messageLabel2.Text = PlayerLifeUI.localization.format("Deadzone_Off");
                 break;
             case EPlayerMessage.BUSY:
-                messageLabel2.text = PlayerLifeUI.localization.format("Busy");
+                messageLabel2.Text = PlayerLifeUI.localization.format("Busy");
                 break;
             case EPlayerMessage.FUEL:
-                messageLabel2.text = PlayerLifeUI.localization.format("Fuel", text);
+                messageLabel2.Text = PlayerLifeUI.localization.format("Fuel", text);
                 break;
             case EPlayerMessage.CLEAN:
-                messageLabel2.text = PlayerLifeUI.localization.format("Clean");
+                messageLabel2.Text = PlayerLifeUI.localization.format("Clean");
                 break;
             case EPlayerMessage.SALTY:
-                messageLabel2.text = PlayerLifeUI.localization.format("Salty");
+                messageLabel2.Text = PlayerLifeUI.localization.format("Salty");
                 break;
             case EPlayerMessage.DIRTY:
-                messageLabel2.text = PlayerLifeUI.localization.format("Dirty");
+                messageLabel2.Text = PlayerLifeUI.localization.format("Dirty");
                 break;
             case EPlayerMessage.REPUTATION:
-                messageLabel2.text = PlayerLifeUI.localization.format("Reputation", text);
+                messageLabel2.Text = PlayerLifeUI.localization.format("Reputation", text);
                 break;
             case EPlayerMessage.BAYONET:
-                messageLabel2.text = PlayerLifeUI.localization.format("Bayonet", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.tactical));
+                messageLabel2.Text = PlayerLifeUI.localization.format("Bayonet", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.tactical));
                 break;
             case EPlayerMessage.VEHICLE_LOCKED:
-                messageLabel2.text = PlayerLifeUI.localization.format("Vehicle_Locked", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.locker));
+                messageLabel2.Text = PlayerLifeUI.localization.format("Vehicle_Locked", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.locker));
                 break;
             case EPlayerMessage.VEHICLE_UNLOCKED:
-                messageLabel2.text = PlayerLifeUI.localization.format("Vehicle_Unlocked", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.locker));
+                messageLabel2.Text = PlayerLifeUI.localization.format("Vehicle_Unlocked", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.locker));
                 break;
             case EPlayerMessage.NPC_CUSTOM:
-                messageBox2.positionOffset_X = -300;
-                messageBox2.sizeOffset_X = 600;
+                messageBox2.PositionOffset_X = -300f;
+                messageBox2.SizeOffset_X = 600f;
                 RichTextUtil.replaceNewlineMarkup(ref text);
-                messageLabel2.text = text;
+                messageLabel2.Text = text;
                 break;
             }
         }
@@ -1298,35 +1282,35 @@ public class PlayerUI : MonoBehaviour
             }
             if (!flag)
             {
-                sleekLabel.isVisible = false;
+                sleekLabel.IsVisible = false;
                 continue;
             }
             if ((steamPlayer.model.position - camera.transform.position).sqrMagnitude > 262144f)
             {
-                sleekLabel.isVisible = false;
+                sleekLabel.IsVisible = false;
                 continue;
             }
             Vector3 vector = camera.WorldToViewportPoint(steamPlayer.model.position + Vector3.up * 3f);
             if (vector.z <= 0f)
             {
-                sleekLabel.isVisible = false;
+                sleekLabel.IsVisible = false;
                 continue;
             }
             Vector2 vector2 = groupUI.ViewportToNormalizedPosition(vector);
-            sleekLabel.positionScale_X = vector2.x;
-            sleekLabel.positionScale_Y = vector2.y;
-            if (!sleekLabel.isVisible)
+            sleekLabel.PositionScale_X = vector2.x;
+            sleekLabel.PositionScale_Y = vector2.y;
+            if (!sleekLabel.IsVisible)
             {
                 if (steamPlayer.isMemberOfSameGroupAs(Player.player) && !string.IsNullOrEmpty(steamPlayer.playerID.nickName))
                 {
-                    sleekLabel.text = steamPlayer.playerID.nickName;
+                    sleekLabel.Text = steamPlayer.playerID.nickName;
                 }
                 else
                 {
-                    sleekLabel.text = steamPlayer.playerID.characterName;
+                    sleekLabel.Text = steamPlayer.playerID.characterName;
                 }
             }
-            sleekLabel.isVisible = true;
+            sleekLabel.IsVisible = true;
         }
     }
 
@@ -1362,9 +1346,9 @@ public class PlayerUI : MonoBehaviour
                     vector2 = new Vector3(0.5f, 0.5f);
                     isVisible = true;
                 }
-                value.sleekElement.positionScale_X = vector2.x;
-                value.sleekElement.positionScale_Y = vector2.y;
-                value.sleekElement.isVisible = isVisible;
+                value.sleekElement.PositionScale_X = vector2.x;
+                value.sleekElement.PositionScale_Y = vector2.y;
+                value.sleekElement.IsVisible = isVisible;
             }
         }
     }
@@ -1378,11 +1362,11 @@ public class PlayerUI : MonoBehaviour
                 isHinted = false;
                 if (messageBox != null)
                 {
-                    messageBox.isVisible = false;
+                    messageBox.IsVisible = false;
                 }
                 if (messagePlayer != null)
                 {
-                    messagePlayer.isVisible = false;
+                    messagePlayer.IsVisible = false;
                 }
             }
             lastHinted = false;
@@ -1394,7 +1378,7 @@ public class PlayerUI : MonoBehaviour
                 isMessaged = false;
                 if (!isHinted2 && messageBox2 != null)
                 {
-                    messageBox2.isVisible = false;
+                    messageBox2.IsVisible = false;
                 }
             }
         }
@@ -1409,7 +1393,7 @@ public class PlayerUI : MonoBehaviour
                 isHinted2 = false;
                 if (messageBox2 != null)
                 {
-                    messageBox2.isVisible = false;
+                    messageBox2.IsVisible = false;
                 }
             }
             lastHinted2 = false;
@@ -1423,7 +1407,7 @@ public class PlayerUI : MonoBehaviour
             PlayerLifeUI.isVoteMessaged = false;
             if (PlayerLifeUI.voteBox != null)
             {
-                PlayerLifeUI.voteBox.isVisible = false;
+                PlayerLifeUI.voteBox.IsVisible = false;
             }
         }
     }
@@ -1771,7 +1755,7 @@ public class PlayerUI : MonoBehaviour
         }
         black = Color.Lerp(black, Palette.COLOR_R, painAlpha + (1f - num));
         black.a = Mathf.Max(num, painAlpha);
-        colorOverlayImage.color = black;
+        colorOverlayImage.TintColor = black;
         if (isWindowEnabledByColorOverlay && stunAlpha < 0.001f && painAlpha < 0.001f)
         {
             isWindowEnabledByColorOverlay = false;
@@ -1802,7 +1786,7 @@ public class PlayerUI : MonoBehaviour
             tickExitTimer();
             if (PlayerNPCDialogueUI.active)
             {
-                PlayerNPCDialogueUI.updateText();
+                PlayerNPCDialogueUI.UpdateAnimation();
             }
             if (PlayerDashboardInformationUI.active)
             {
@@ -1831,34 +1815,34 @@ public class PlayerUI : MonoBehaviour
         if (Player.player.channel.owner.playerID.BypassIntegrityChecks)
         {
             ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-            sleekLabel.sizeOffset_X = 200;
-            sleekLabel.sizeOffset_Y = 30;
-            sleekLabel.positionOffset_X = -100;
-            sleekLabel.positionOffset_Y = -15;
-            sleekLabel.positionScale_X = 0.5f;
-            sleekLabel.positionScale_Y = 0.2f;
-            sleekLabel.textColor = ESleekTint.BAD;
-            sleekLabel.text = "Bypassing integrity checks";
-            sleekLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+            sleekLabel.SizeOffset_X = 200f;
+            sleekLabel.SizeOffset_Y = 30f;
+            sleekLabel.PositionOffset_X = -100f;
+            sleekLabel.PositionOffset_Y = -15f;
+            sleekLabel.PositionScale_X = 0.5f;
+            sleekLabel.PositionScale_Y = 0.2f;
+            sleekLabel.TextColor = ESleekTint.BAD;
+            sleekLabel.Text = "Bypassing integrity checks";
+            sleekLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
             window.AddChild(sleekLabel);
         }
         colorOverlayImage = Glazier.Get().CreateImage();
-        colorOverlayImage.sizeScale_X = 1f;
-        colorOverlayImage.sizeScale_Y = 1f;
-        colorOverlayImage.texture = (Texture2D)GlazierResources.PixelTexture;
-        colorOverlayImage.color = new Color(0f, 0f, 0f, 0f);
+        colorOverlayImage.SizeScale_X = 1f;
+        colorOverlayImage.SizeScale_Y = 1f;
+        colorOverlayImage.Texture = (Texture2D)GlazierResources.PixelTexture;
+        colorOverlayImage.TintColor = new Color(0f, 0f, 0f, 0f);
         window.AddChild(colorOverlayImage);
         container = Glazier.Get().CreateFrame();
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         window.AddChild(container);
         wantsWindowEnabled = true;
         isWindowEnabledByColorOverlay = false;
         OptionsSettings.apply();
         GraphicsSettings.apply("loaded player");
         groupUI = new PlayerGroupUI();
-        groupUI.sizeScale_X = 1f;
-        groupUI.sizeScale_Y = 1f;
+        groupUI.SizeScale_X = 1f;
+        groupUI.SizeScale_Y = 1f;
         container.AddChild(groupUI);
         dashboardUI = new PlayerDashboardUI();
         pauseUI = new PlayerPauseUI();
@@ -1879,120 +1863,120 @@ public class PlayerUI : MonoBehaviour
         PlayerLifeUI.UpdateTrackedQuest();
         messagePlayer = null;
         messageBox = Glazier.Get().CreateBox();
-        messageBox.positionOffset_X = -200;
-        messageBox.positionScale_X = 0.5f;
-        messageBox.positionScale_Y = 1f;
-        messageBox.sizeOffset_X = 400;
+        messageBox.PositionOffset_X = -200f;
+        messageBox.PositionScale_X = 0.5f;
+        messageBox.PositionScale_Y = 1f;
+        messageBox.SizeOffset_X = 400f;
         container.AddChild(messageBox);
-        messageBox.isVisible = false;
+        messageBox.IsVisible = false;
         messageLabel = Glazier.Get().CreateLabel();
-        messageLabel.positionOffset_X = 5;
-        messageLabel.positionOffset_Y = 5;
-        messageLabel.sizeOffset_X = -10;
-        messageLabel.sizeOffset_Y = 40;
-        messageLabel.sizeScale_X = 1f;
-        messageLabel.fontSize = ESleekFontSize.Medium;
+        messageLabel.PositionOffset_X = 5f;
+        messageLabel.PositionOffset_Y = 5f;
+        messageLabel.SizeOffset_X = -10f;
+        messageLabel.SizeOffset_Y = 40f;
+        messageLabel.SizeScale_X = 1f;
+        messageLabel.FontSize = ESleekFontSize.Medium;
         messageBox.AddChild(messageLabel);
         messageIcon_0 = Glazier.Get().CreateImage();
-        messageIcon_0.positionOffset_X = 5;
-        messageIcon_0.positionOffset_Y = 45;
-        messageIcon_0.sizeOffset_X = 20;
-        messageIcon_0.sizeOffset_Y = 20;
+        messageIcon_0.PositionOffset_X = 5f;
+        messageIcon_0.PositionOffset_Y = 45f;
+        messageIcon_0.SizeOffset_X = 20f;
+        messageIcon_0.SizeOffset_Y = 20f;
         messageBox.AddChild(messageIcon_0);
-        messageIcon_0.isVisible = false;
+        messageIcon_0.IsVisible = false;
         messageIcon_1 = Glazier.Get().CreateImage();
-        messageIcon_1.positionOffset_X = 5;
-        messageIcon_1.positionOffset_Y = 75;
-        messageIcon_1.sizeOffset_X = 20;
-        messageIcon_1.sizeOffset_Y = 20;
+        messageIcon_1.PositionOffset_X = 5f;
+        messageIcon_1.PositionOffset_Y = 75f;
+        messageIcon_1.SizeOffset_X = 20f;
+        messageIcon_1.SizeOffset_Y = 20f;
         messageBox.AddChild(messageIcon_1);
-        messageIcon_1.isVisible = false;
+        messageIcon_1.IsVisible = false;
         messageIcon_2 = Glazier.Get().CreateImage();
-        messageIcon_2.positionOffset_X = 5;
-        messageIcon_2.positionOffset_Y = 105;
-        messageIcon_2.sizeOffset_X = 20;
-        messageIcon_2.sizeOffset_Y = 20;
+        messageIcon_2.PositionOffset_X = 5f;
+        messageIcon_2.PositionOffset_Y = 105f;
+        messageIcon_2.SizeOffset_X = 20f;
+        messageIcon_2.SizeOffset_Y = 20f;
         messageBox.AddChild(messageIcon_2);
-        messageIcon_2.isVisible = false;
+        messageIcon_2.IsVisible = false;
         messageProgress_0 = new SleekProgress("");
-        messageProgress_0.positionOffset_X = 30;
-        messageProgress_0.positionOffset_Y = 50;
-        messageProgress_0.sizeOffset_X = -40;
-        messageProgress_0.sizeOffset_Y = 10;
-        messageProgress_0.sizeScale_X = 1f;
+        messageProgress_0.PositionOffset_X = 30f;
+        messageProgress_0.PositionOffset_Y = 50f;
+        messageProgress_0.SizeOffset_X = -40f;
+        messageProgress_0.SizeOffset_Y = 10f;
+        messageProgress_0.SizeScale_X = 1f;
         messageBox.AddChild(messageProgress_0);
-        messageProgress_0.isVisible = false;
+        messageProgress_0.IsVisible = false;
         messageProgress_1 = new SleekProgress("");
-        messageProgress_1.positionOffset_X = 30;
-        messageProgress_1.positionOffset_Y = 80;
-        messageProgress_1.sizeOffset_X = -40;
-        messageProgress_1.sizeOffset_Y = 10;
-        messageProgress_1.sizeScale_X = 1f;
+        messageProgress_1.PositionOffset_X = 30f;
+        messageProgress_1.PositionOffset_Y = 80f;
+        messageProgress_1.SizeOffset_X = -40f;
+        messageProgress_1.SizeOffset_Y = 10f;
+        messageProgress_1.SizeScale_X = 1f;
         messageBox.AddChild(messageProgress_1);
-        messageProgress_1.isVisible = false;
+        messageProgress_1.IsVisible = false;
         messageProgress_2 = new SleekProgress("");
-        messageProgress_2.positionOffset_X = 30;
-        messageProgress_2.positionOffset_Y = 110;
-        messageProgress_2.sizeOffset_X = -40;
-        messageProgress_2.sizeOffset_Y = 10;
-        messageProgress_2.sizeScale_X = 1f;
+        messageProgress_2.PositionOffset_X = 30f;
+        messageProgress_2.PositionOffset_Y = 110f;
+        messageProgress_2.SizeOffset_X = -40f;
+        messageProgress_2.SizeOffset_Y = 10f;
+        messageProgress_2.SizeScale_X = 1f;
         messageBox.AddChild(messageProgress_2);
-        messageProgress_2.isVisible = false;
+        messageProgress_2.IsVisible = false;
         messageQualityImage = Glazier.Get().CreateImage(PlayerDashboardInventoryUI.icons.load<Texture2D>("Quality_0"));
-        messageQualityImage.positionOffset_X = -30;
-        messageQualityImage.positionOffset_Y = -30;
-        messageQualityImage.positionScale_X = 1f;
-        messageQualityImage.positionScale_Y = 1f;
-        messageQualityImage.sizeOffset_X = 20;
-        messageQualityImage.sizeOffset_Y = 20;
+        messageQualityImage.PositionOffset_X = -30f;
+        messageQualityImage.PositionOffset_Y = -30f;
+        messageQualityImage.PositionScale_X = 1f;
+        messageQualityImage.PositionScale_Y = 1f;
+        messageQualityImage.SizeOffset_X = 20f;
+        messageQualityImage.SizeOffset_Y = 20f;
         messageBox.AddChild(messageQualityImage);
-        messageQualityImage.isVisible = false;
+        messageQualityImage.IsVisible = false;
         messageAmountLabel = Glazier.Get().CreateLabel();
-        messageAmountLabel.positionOffset_X = 10;
-        messageAmountLabel.positionOffset_Y = -40;
-        messageAmountLabel.positionScale_Y = 1f;
-        messageAmountLabel.sizeOffset_X = -20;
-        messageAmountLabel.sizeOffset_Y = 30;
-        messageAmountLabel.sizeScale_X = 1f;
-        messageAmountLabel.fontAlignment = TextAnchor.LowerLeft;
-        messageAmountLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+        messageAmountLabel.PositionOffset_X = 10f;
+        messageAmountLabel.PositionOffset_Y = -40f;
+        messageAmountLabel.PositionScale_Y = 1f;
+        messageAmountLabel.SizeOffset_X = -20f;
+        messageAmountLabel.SizeOffset_Y = 30f;
+        messageAmountLabel.SizeScale_X = 1f;
+        messageAmountLabel.TextAlignment = TextAnchor.LowerLeft;
+        messageAmountLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
         messageBox.AddChild(messageAmountLabel);
-        messageAmountLabel.isVisible = false;
+        messageAmountLabel.IsVisible = false;
         messageBox2 = Glazier.Get().CreateBox();
-        messageBox2.positionOffset_X = -200;
-        messageBox2.positionScale_X = 0.5f;
-        messageBox2.positionScale_Y = 1f;
-        messageBox2.sizeOffset_X = 400;
+        messageBox2.PositionOffset_X = -200f;
+        messageBox2.PositionScale_X = 0.5f;
+        messageBox2.PositionScale_Y = 1f;
+        messageBox2.SizeOffset_X = 400f;
         container.AddChild(messageBox2);
-        messageBox2.isVisible = false;
+        messageBox2.IsVisible = false;
         messageLabel2 = Glazier.Get().CreateLabel();
-        messageLabel2.positionOffset_X = 5;
-        messageLabel2.positionOffset_Y = 5;
-        messageLabel2.sizeOffset_X = -10;
-        messageLabel2.sizeOffset_Y = 40;
-        messageLabel2.sizeScale_X = 1f;
-        messageLabel2.fontSize = ESleekFontSize.Medium;
+        messageLabel2.PositionOffset_X = 5f;
+        messageLabel2.PositionOffset_Y = 5f;
+        messageLabel2.SizeOffset_X = -10f;
+        messageLabel2.SizeOffset_Y = 40f;
+        messageLabel2.SizeScale_X = 1f;
+        messageLabel2.FontSize = ESleekFontSize.Medium;
         messageBox2.AddChild(messageLabel2);
         messageIcon2 = Glazier.Get().CreateImage();
-        messageIcon2.positionOffset_X = 5;
-        messageIcon2.positionOffset_Y = 75;
-        messageIcon2.sizeOffset_X = 20;
-        messageIcon2.sizeOffset_Y = 20;
+        messageIcon2.PositionOffset_X = 5f;
+        messageIcon2.PositionOffset_Y = 75f;
+        messageIcon2.SizeOffset_X = 20f;
+        messageIcon2.SizeOffset_Y = 20f;
         messageBox2.AddChild(messageIcon2);
-        messageIcon2.isVisible = false;
+        messageIcon2.IsVisible = false;
         messageProgress2_0 = new SleekProgress("");
-        messageProgress2_0.positionOffset_X = 5;
-        messageProgress2_0.positionOffset_Y = 50;
-        messageProgress2_0.sizeOffset_X = -10;
-        messageProgress2_0.sizeOffset_Y = 10;
-        messageProgress2_0.sizeScale_X = 1f;
+        messageProgress2_0.PositionOffset_X = 5f;
+        messageProgress2_0.PositionOffset_Y = 50f;
+        messageProgress2_0.SizeOffset_X = -10f;
+        messageProgress2_0.SizeOffset_Y = 10f;
+        messageProgress2_0.SizeScale_X = 1f;
         messageBox2.AddChild(messageProgress2_0);
         messageProgress2_1 = new SleekProgress("");
-        messageProgress2_1.positionOffset_X = 30;
-        messageProgress2_1.positionOffset_Y = 80;
-        messageProgress2_1.sizeOffset_X = -40;
-        messageProgress2_1.sizeOffset_Y = 10;
-        messageProgress2_1.sizeScale_X = 1f;
+        messageProgress2_1.PositionOffset_X = 30f;
+        messageProgress2_1.PositionOffset_Y = 80f;
+        messageProgress2_1.SizeOffset_X = -40f;
+        messageProgress2_1.SizeOffset_Y = 10f;
+        messageProgress2_1.SizeScale_X = 1f;
         messageBox2.AddChild(messageProgress2_1);
         painAlpha = 0f;
         stunAlpha = 0f;
@@ -2027,7 +2011,7 @@ public class PlayerUI : MonoBehaviour
             }
             if (!Provider.isApplicationQuitting)
             {
-                window.destroy();
+                window.InternalDestroy();
             }
             window = null;
             setIsHallucinating(isHallucinating: false);

@@ -349,7 +349,7 @@ public class PlayerClothing : PlayerCaller
             UpdateSpeedMultiplier();
             onShirtUpdated?.Invoke(shirt, quality, state);
             PlayerClothing.OnShirtChanged_Global?.Invoke(this);
-            if (base.channel.isOwner && !Provider.isServer)
+            if (base.channel.IsLocalPlayer && !Provider.isServer)
             {
                 ClientAssetIntegrity.QueueRequest(thirdClothes.shirtAsset);
             }
@@ -448,7 +448,7 @@ public class PlayerClothing : PlayerCaller
             UpdateSpeedMultiplier();
             onPantsUpdated?.Invoke(pants, quality, state);
             PlayerClothing.OnPantsChanged_Global?.Invoke(this);
-            if (base.channel.isOwner && !Provider.isServer)
+            if (base.channel.IsLocalPlayer && !Provider.isServer)
             {
                 ClientAssetIntegrity.QueueRequest(thirdClothes.pantsAsset);
             }
@@ -547,7 +547,7 @@ public class PlayerClothing : PlayerCaller
             UpdateSpeedMultiplier();
             onHatUpdated?.Invoke(hat, quality, state);
             PlayerClothing.OnHatChanged_Global?.Invoke(this);
-            if (base.channel.isOwner && !Provider.isServer)
+            if (base.channel.IsLocalPlayer && !Provider.isServer)
             {
                 ClientAssetIntegrity.QueueRequest(thirdClothes.hatAsset);
             }
@@ -645,7 +645,7 @@ public class PlayerClothing : PlayerCaller
             UpdateSpeedMultiplier();
             onBackpackUpdated?.Invoke(backpack, quality, state);
             PlayerClothing.OnBackpackChanged_Global?.Invoke(this);
-            if (base.channel.isOwner && !Provider.isServer)
+            if (base.channel.IsLocalPlayer && !Provider.isServer)
             {
                 ClientAssetIntegrity.QueueRequest(thirdClothes.backpackAsset);
             }
@@ -841,7 +841,7 @@ public class PlayerClothing : PlayerCaller
             UpdateSpeedMultiplier();
             onVestUpdated?.Invoke(vest, quality, state);
             PlayerClothing.OnVestChanged_Global?.Invoke(this);
-            if (base.channel.isOwner && !Provider.isServer)
+            if (base.channel.IsLocalPlayer && !Provider.isServer)
             {
                 ClientAssetIntegrity.QueueRequest(thirdClothes.vestAsset);
             }
@@ -940,7 +940,7 @@ public class PlayerClothing : PlayerCaller
             UpdateSpeedMultiplier();
             onMaskUpdated?.Invoke(mask, quality, state);
             PlayerClothing.OnMaskChanged_Global?.Invoke(this);
-            if (base.channel.isOwner && !Provider.isServer)
+            if (base.channel.IsLocalPlayer && !Provider.isServer)
             {
                 ClientAssetIntegrity.QueueRequest(thirdClothes.maskAsset);
             }
@@ -1031,7 +1031,7 @@ public class PlayerClothing : PlayerCaller
             onGlassesUpdated?.Invoke(glasses, quality, state);
             UpdateSpeedMultiplier();
             PlayerClothing.OnGlassesChanged_Global?.Invoke(this);
-            if (base.channel.isOwner && !Provider.isServer)
+            if (base.channel.IsLocalPlayer && !Provider.isServer)
             {
                 ClientAssetIntegrity.QueueRequest(thirdClothes.glassesAsset);
             }
@@ -1132,7 +1132,7 @@ public class PlayerClothing : PlayerCaller
         reader.ReadBit(out var value23);
         reader.ReadBit(out var value24);
         base.player.animator.NotifyClothingIsVisible();
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             Player.isLoadingClothing = false;
         }
@@ -1220,7 +1220,7 @@ public class PlayerClothing : PlayerCaller
         PlayerClothing.OnMaskChanged_Global?.Invoke(this);
         onGlassesUpdated?.Invoke(glasses, value20, value21);
         PlayerClothing.OnGlassesChanged_Global?.Invoke(this);
-        if (base.channel.isOwner && thirdClothes != null && !Provider.isServer)
+        if (base.channel.IsLocalPlayer && thirdClothes != null && !Provider.isServer)
         {
             ClientAssetIntegrity.QueueRequest(thirdClothes.shirtAsset);
             ClientAssetIntegrity.QueueRequest(thirdClothes.pantsAsset);
@@ -1445,7 +1445,7 @@ public class PlayerClothing : PlayerCaller
             PlayerStance stance = base.player.stance;
             stance.onStanceUpdated = (StanceUpdated)Delegate.Combine(stance.onStanceUpdated, new StanceUpdated(onStanceUpdated));
         }
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             if (base.player.first != null)
             {

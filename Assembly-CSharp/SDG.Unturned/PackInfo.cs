@@ -29,7 +29,7 @@ public class PackInfo
         set
         {
             _wanderAngle = value;
-            wanderNormal = new Vector3(Mathf.Cos((float)Math.PI / 180f * wanderAngle), 0f, Mathf.Sin((float)Math.PI / 180f * wanderAngle));
+            wanderNormal = new Vector3(Mathf.Cos(MathF.PI / 180f * wanderAngle), 0f, Mathf.Sin(MathF.PI / 180f * wanderAngle));
         }
     }
 

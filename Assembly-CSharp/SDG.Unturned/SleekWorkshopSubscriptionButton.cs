@@ -17,11 +17,22 @@ public class SleekWorkshopSubscriptionButton : SleekWrapper
 
     private ISleekButton button;
 
+    public override bool UseManualLayout
+    {
+        set
+        {
+            base.UseManualLayout = value;
+            button.UseManualLayout = value;
+            button.UseChildAutoLayout = ((!value) ? ESleekChildLayout.Horizontal : ESleekChildLayout.None);
+            button.ExpandChildren = !value;
+        }
+    }
+
     public void synchronizeText()
     {
         bool subscribed = Provider.provider.workshopService.getSubscribed(fileId.m_PublishedFileId);
-        button.text = (subscribed ? unsubscribeText : subscribeText);
-        button.tooltipText = (subscribed ? unsubscribeTooltip : subscribeTooltip);
+        button.Text = (subscribed ? unsubscribeText : subscribeText);
+        button.TooltipText = (subscribed ? unsubscribeTooltip : subscribeTooltip);
     }
 
     protected void handleClickedButton(ISleekElement thisButton)
@@ -34,10 +45,10 @@ public class SleekWorkshopSubscriptionButton : SleekWrapper
     public SleekWorkshopSubscriptionButton()
     {
         button = Glazier.Get().CreateButton();
-        button.sizeScale_X = 1f;
-        button.sizeScale_Y = 1f;
-        button.fontAlignment = TextAnchor.MiddleCenter;
-        button.onClickedButton += handleClickedButton;
+        button.SizeScale_X = 1f;
+        button.SizeScale_Y = 1f;
+        button.TextAlignment = TextAnchor.MiddleCenter;
+        button.OnClicked += handleClickedButton;
         AddChild(button);
     }
 }

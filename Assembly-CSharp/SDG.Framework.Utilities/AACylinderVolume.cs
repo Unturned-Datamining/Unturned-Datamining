@@ -20,9 +20,9 @@ public struct AACylinderVolume : IShapeVolume
         }
     }
 
-    public float internalVolume => height * (float)Math.PI * radius * radius;
+    public float internalVolume => height * MathF.PI * radius * radius;
 
-    public float surfaceArea => (float)Math.PI * radius * radius;
+    public float surfaceArea => MathF.PI * radius * radius;
 
     public bool containsPoint(Vector3 point)
     {

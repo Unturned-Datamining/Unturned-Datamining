@@ -173,6 +173,8 @@ public class Level : MonoBehaviour
 
     private static CommandLineBool clUseLevelBatching = new CommandLineBool("-UseLevelBatching");
 
+    private static CommandLineFlag shouldLogSpawnTablesAfterLoadingLevel = new CommandLineFlag(defaultValue: false, "-LogSpawnTablesAfterLoadingLevel");
+
     public static ushort border
     {
         get
@@ -1460,6 +1462,10 @@ public class Level : MonoBehaviour
         }
         LoadingUI.NotifyLevelLoadingProgress(1f);
         yield return null;
+        if ((bool)shouldLogSpawnTablesAfterLoadingLevel)
+        {
+            SpawnTableTool.LogAllSpawnTables();
+        }
         _isLoaded = true;
         isLoadingContent = false;
     }

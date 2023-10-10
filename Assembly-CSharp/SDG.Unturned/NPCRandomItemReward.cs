@@ -10,15 +10,11 @@ public class NPCRandomItemReward : INPCReward
 
     public EItemOrigin origin { get; protected set; }
 
-    public override void grantReward(Player player, bool shouldSend)
+    public override void GrantReward(Player player)
     {
-        if (!Provider.isServer)
-        {
-            return;
-        }
         for (byte b = 0; b < amount; b = (byte)(b + 1))
         {
-            ushort num = SpawnTableTool.resolve(id);
+            ushort num = SpawnTableTool.ResolveLegacyId(id, EAssetType.ITEM, OnGetSpawnTableErrorContext);
             if (num != 0)
             {
                 player.inventory.forceAddItem(new Item(num, origin), shouldAutoEquip, playEffect: false);
@@ -42,5 +38,10 @@ public class NPCRandomItemReward : INPCReward
         amount = newAmount;
         shouldAutoEquip = newShouldAutoEquip;
         this.origin = origin;
+    }
+
+    private string OnGetSpawnTableErrorContext()
+    {
+        return "NPC random item reward";
     }
 }

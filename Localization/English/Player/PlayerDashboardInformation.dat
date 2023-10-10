@@ -50,8 +50,10 @@ Group_Rank_Admin Admin
 Group_Rank_Owner Owner
 
 Streamer Streamer Mode
-Mute_On Mute
-Mute_Off Unmute
+MuteVoiceChat_Label Mute Voice
+UnmuteVoiceChat_Label Unmute Voice
+MuteTextChat_Label Mute Chat
+UnmuteTextChat_Label Unmute Chat
 Mute_Tooltip Mute/Unmute
 Vote_Kick Kick
 Vote_Kick_Tooltip Call Kick Vote

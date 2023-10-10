@@ -7,4 +7,5 @@ Asset_Prefix Assets/CoreMasterBundle
 // Version 2 is Unity 2017 LTS.
 // Version 3 is Unity 2018 and 2019 LTS. Older versions have shader consolidation enabled for backwards compatibility.
 // Version 4 is Unity 2020 LTS. 2019 did not need its own version but it is unfortunate they cannot be distinguished, so 2020 gets a new version.
-Asset_Bundle_Version 4
+// Version 5 is Unity 2021 LTS.
+Asset_Bundle_Version 5

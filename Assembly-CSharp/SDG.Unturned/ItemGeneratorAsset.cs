@@ -26,7 +26,8 @@ public class ItemGeneratorAsset : ItemBarricadeAsset
         _wirerange = data.ParseFloat("Wirerange");
         if (wirerange > PowerTool.MAX_POWER_RANGE + 0.1f)
         {
-            Assets.reportError(this, "Wirerange is further than the max supported power range of " + PowerTool.MAX_POWER_RANGE);
+            float mAX_POWER_RANGE = PowerTool.MAX_POWER_RANGE;
+            Assets.reportError(this, "Wirerange is further than the max supported power range of " + mAX_POWER_RANGE);
         }
         _burn = data.ParseFloat("Burn");
     }

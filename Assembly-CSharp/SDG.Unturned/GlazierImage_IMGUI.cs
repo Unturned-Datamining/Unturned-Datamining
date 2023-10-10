@@ -5,58 +5,58 @@ namespace SDG.Unturned;
 
 internal class GlazierImage_IMGUI : GlazierElementBase_IMGUI, ISleekImage, ISleekElement
 {
-    public Texture texture { get; set; }
+    public Texture Texture { get; set; }
 
-    public float angle { get; set; }
+    public float RotationAngle { get; set; }
 
-    public bool isAngled { get; set; }
+    public bool CanRotate { get; set; }
 
-    public bool shouldDestroyTexture { get; set; }
+    public bool ShouldDestroyTexture { get; set; }
 
-    public SleekColor color { get; set; } = ESleekTint.NONE;
+    public SleekColor TintColor { get; set; } = ESleekTint.NONE;
 
 
-    public event System.Action onImageClicked;
+    public event System.Action OnClicked;
 
-    public event System.Action onImageRightClicked;
+    public event System.Action OnRightClicked;
 
-    public void updateTexture(Texture2D newTexture)
+    public void UpdateTexture(Texture2D newTexture)
     {
-        texture = newTexture;
+        Texture = newTexture;
     }
 
-    public void setTextureAndShouldDestroy(Texture2D texture, bool shouldDestroyTexture)
+    public void SetTextureAndShouldDestroy(Texture2D texture, bool shouldDestroyTexture)
     {
-        if (this.texture != null && this.shouldDestroyTexture)
+        if (Texture != null && ShouldDestroyTexture)
         {
-            UnityEngine.Object.Destroy(this.texture);
+            UnityEngine.Object.Destroy(Texture);
         }
-        this.texture = texture;
-        this.shouldDestroyTexture = shouldDestroyTexture;
+        Texture = texture;
+        ShouldDestroyTexture = shouldDestroyTexture;
     }
 
-    public override void destroy()
+    public override void InternalDestroy()
     {
-        if (shouldDestroyTexture && texture != null)
+        if (ShouldDestroyTexture && Texture != null)
         {
-            UnityEngine.Object.DestroyImmediate(texture);
-            texture = null;
+            UnityEngine.Object.DestroyImmediate(Texture);
+            Texture = null;
         }
-        base.destroy();
+        base.InternalDestroy();
     }
 
     public override void OnGUI()
     {
-        if (isAngled)
+        if (CanRotate)
         {
-            GlazierUtils_IMGUI.drawAngledImageTexture(drawRect, texture, angle, color);
+            GlazierUtils_IMGUI.drawAngledImageTexture(drawRect, Texture, RotationAngle, TintColor);
         }
         else
         {
-            GlazierUtils_IMGUI.drawImageTexture(drawRect, texture, color);
+            GlazierUtils_IMGUI.drawImageTexture(drawRect, Texture, TintColor);
         }
         ChildrenOnGUI();
-        if (this.onImageClicked == null && this.onImageRightClicked == null)
+        if (this.OnClicked == null && this.OnRightClicked == null)
         {
             return;
         }
@@ -70,17 +70,17 @@ internal class GlazierImage_IMGUI : GlazierElementBase_IMGUI, ISleekImage, ISlee
         {
             if (Event.current.button == 0)
             {
-                this.onImageClicked?.Invoke();
+                this.OnClicked?.Invoke();
             }
             else if (Event.current.button == 1)
             {
-                this.onImageRightClicked?.Invoke();
+                this.OnRightClicked?.Invoke();
             }
         }
     }
 
     public GlazierImage_IMGUI(Texture texture)
     {
-        this.texture = texture;
+        Texture = texture;
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -14,11 +15,9 @@ public class PlayerNPCQuestUI
 
     private static QuestAsset quest;
 
-    private static DialogueResponse response;
+    private static DialogueResponse pendingResponse;
 
-    private static DialogueAsset acceptDialogue;
-
-    private static DialogueAsset declineDialogue;
+    private static DialogueAsset dialogueContext;
 
     private static EQuestViewMode mode;
 
@@ -56,12 +55,14 @@ public class PlayerNPCQuestUI
 
     private static ISleekButton returnButton;
 
-    public static void open(QuestAsset newQuest, DialogueResponse newResponse, DialogueAsset newAcceptDialogue, DialogueAsset newDeclineDialogue, EQuestViewMode newMode)
+    private static List<bool> areConditionsMet = new List<bool>(8);
+
+    public static void open(QuestAsset newQuest, DialogueAsset newDialogueContext, DialogueResponse newPendingResponse, EQuestViewMode newMode)
     {
         if (!active)
         {
             active = true;
-            updateQuest(newQuest, newResponse, newAcceptDialogue, newDeclineDialogue, newMode);
+            updateQuest(newQuest, newDialogueContext, newPendingResponse, newMode);
             container.AnimateIntoView();
         }
     }
@@ -78,14 +79,9 @@ public class PlayerNPCQuestUI
     public static void closeNicely()
     {
         close();
-        if (mode == EQuestViewMode.BEGIN)
+        if (mode == EQuestViewMode.BEGIN || mode == EQuestViewMode.END)
         {
-            PlayerNPCDialogueUI.open(declineDialogue, null);
-        }
-        else if (mode == EQuestViewMode.END)
-        {
-            PlayerNPCDialogueUI.registerResponse(declineDialogue, response);
-            PlayerNPCDialogueUI.open(acceptDialogue, declineDialogue);
+            PlayerNPCDialogueUI.OpenCurrentDialogue();
         }
         else if (mode == EQuestViewMode.DETAILS)
         {
@@ -97,139 +93,139 @@ public class PlayerNPCQuestUI
         }
     }
 
-    private static void updateQuest(QuestAsset newQuest, DialogueResponse newResponse, DialogueAsset newAcceptDialogue, DialogueAsset newDeclineDialogue, EQuestViewMode newMode)
+    private static void updateQuest(QuestAsset newQuest, DialogueAsset newDialogueContext, DialogueResponse newPendingResponse, EQuestViewMode newMode)
     {
         quest = newQuest;
-        response = newResponse;
-        acceptDialogue = newAcceptDialogue;
-        declineDialogue = newDeclineDialogue;
+        pendingResponse = newPendingResponse;
+        dialogueContext = newDialogueContext;
         mode = newMode;
         if (quest == null)
         {
             return;
         }
-        beginContainer.isVisible = mode == EQuestViewMode.BEGIN;
-        acceptButton.isClickable = true;
-        declineButton.isClickable = true;
-        endContainer.isVisible = mode == EQuestViewMode.END;
-        continueButton.isClickable = true;
-        detailsContainer.isVisible = mode == EQuestViewMode.DETAILS;
+        beginContainer.IsVisible = mode == EQuestViewMode.BEGIN;
+        endContainer.IsVisible = mode == EQuestViewMode.END;
+        detailsContainer.IsVisible = mode == EQuestViewMode.DETAILS;
+        SetButtonsAreClickable(isClickable: true);
         if (mode == EQuestViewMode.DETAILS)
         {
             if (Player.player.quests.GetTrackedQuest() == quest)
             {
-                trackButton.text = localization.format("Track_Off");
+                trackButton.Text = localization.format("Track_Off");
             }
             else
             {
-                trackButton.text = localization.format("Track_On");
+                trackButton.Text = localization.format("Track_On");
             }
         }
-        nameLabel.text = quest.questName;
-        descriptionLabel.text = quest.questDescription;
+        nameLabel.Text = quest.questName;
+        descriptionLabel.Text = quest.questDescription;
         int num = Screen.height - 80;
-        int num2 = 0;
+        float num2 = 0f;
         if (quest.conditions != null && quest.conditions.Length != 0)
         {
-            conditionsLabel.isVisible = true;
-            conditionsContainer.isVisible = true;
+            conditionsLabel.IsVisible = true;
+            conditionsContainer.IsVisible = true;
             conditionsContainer.RemoveAllChildren();
-            int num3 = 0;
-            for (int i = 0; i < quest.conditions.Length; i++)
+            float num3 = 0f;
+            areConditionsMet.Clear();
+            INPCCondition[] conditions = quest.conditions;
+            foreach (INPCCondition iNPCCondition in conditions)
             {
-                INPCCondition obj = quest.conditions[i];
-                bool flag = obj.isConditionMet(Player.player);
-                Texture2D icon = null;
-                if (mode != 0)
+                areConditionsMet.Add(iNPCCondition.isConditionMet(Player.player));
+            }
+            for (int j = 0; j < quest.conditions.Length; j++)
+            {
+                INPCCondition iNPCCondition2 = quest.conditions[j];
+                if (iNPCCondition2.AreUIRequirementsMet(areConditionsMet))
                 {
-                    icon = ((!flag) ? icons.load<Texture2D>("Incomplete") : icons.load<Texture2D>("Complete"));
-                }
-                ISleekElement sleekElement = obj.createUI(Player.player, icon);
-                if (sleekElement != null)
-                {
-                    sleekElement.positionOffset_Y = num3;
-                    conditionsContainer.AddChild(sleekElement);
-                    num3 += sleekElement.sizeOffset_Y;
+                    bool flag = areConditionsMet[j];
+                    Texture2D icon = null;
+                    if (mode != 0)
+                    {
+                        icon = ((!flag) ? icons.load<Texture2D>("Incomplete") : icons.load<Texture2D>("Complete"));
+                    }
+                    ISleekElement sleekElement = iNPCCondition2.createUI(Player.player, icon);
+                    if (sleekElement != null)
+                    {
+                        sleekElement.PositionOffset_Y = num3;
+                        conditionsContainer.AddChild(sleekElement);
+                        num3 += sleekElement.SizeOffset_Y;
+                    }
                 }
             }
-            conditionsContainer.sizeOffset_Y = num3;
-            num2 += 30;
+            conditionsContainer.SizeOffset_Y = num3;
+            num2 += 30f;
             num2 += num3;
         }
         else
         {
-            conditionsLabel.isVisible = false;
-            conditionsContainer.isVisible = false;
+            conditionsLabel.IsVisible = false;
+            conditionsContainer.IsVisible = false;
         }
         if (quest.rewards != null && quest.rewards.Length != 0)
         {
-            rewardsLabel.isVisible = true;
-            rewardsContainer.isVisible = true;
+            rewardsLabel.IsVisible = true;
+            rewardsContainer.IsVisible = true;
             rewardsContainer.RemoveAllChildren();
-            int num4 = 0;
-            for (int j = 0; j < quest.rewards.Length; j++)
+            float num4 = 0f;
+            for (int k = 0; k < quest.rewards.Length; k++)
             {
-                ISleekElement sleekElement2 = quest.rewards[j].createUI(Player.player);
+                ISleekElement sleekElement2 = quest.rewards[k].createUI(Player.player);
                 if (sleekElement2 != null)
                 {
-                    sleekElement2.positionOffset_Y = num4;
+                    sleekElement2.PositionOffset_Y = num4;
                     rewardsContainer.AddChild(sleekElement2);
-                    num4 += sleekElement2.sizeOffset_Y;
+                    num4 += sleekElement2.SizeOffset_Y;
                 }
             }
-            rewardsLabel.positionOffset_Y = num2;
-            rewardsContainer.positionOffset_Y = num2 + 30;
-            rewardsContainer.sizeOffset_Y = num4;
-            num2 += 30;
+            rewardsLabel.PositionOffset_Y = num2;
+            rewardsContainer.PositionOffset_Y = num2 + 30f;
+            rewardsContainer.SizeOffset_Y = num4;
+            num2 += 30f;
             num2 += num4;
         }
         else
         {
-            rewardsLabel.isVisible = false;
-            rewardsContainer.isVisible = false;
+            rewardsLabel.IsVisible = false;
+            rewardsContainer.IsVisible = false;
         }
-        detailsBox.contentSizeOffset = new Vector2(0f, num2);
-        if (num2 + 105 > num)
+        detailsBox.ContentSizeOffset = new Vector2(0f, num2);
+        if (num2 + 105f > (float)num)
         {
-            questBox.positionOffset_Y = 0;
-            questBox.positionScale_Y = 0f;
-            questBox.sizeOffset_Y = num;
-            detailsBox.positionOffset_Y = -num + 100;
-            detailsBox.sizeOffset_Y = num - 105;
+            questBox.PositionOffset_Y = 0f;
+            questBox.PositionScale_Y = 0f;
+            questBox.SizeOffset_Y = num;
+            detailsBox.PositionOffset_Y = -num + 100;
+            detailsBox.SizeOffset_Y = num - 105;
         }
         else
         {
-            questBox.positionOffset_Y = -num2 / 2 - 80;
-            questBox.positionScale_Y = 0.5f;
-            questBox.sizeOffset_Y = num2 + 100;
-            detailsBox.positionOffset_Y = -5 - num2;
-            detailsBox.sizeOffset_Y = num2;
+            questBox.PositionOffset_Y = (0f - num2) / 2f - 80f;
+            questBox.PositionScale_Y = 0.5f;
+            questBox.SizeOffset_Y = num2 + 100f;
+            detailsBox.PositionOffset_Y = -5f - num2;
+            detailsBox.SizeOffset_Y = num2;
         }
     }
 
     private static void onClickedAcceptButton(ISleekElement button)
     {
-        acceptButton.isClickable = false;
-        declineButton.isClickable = false;
-        close();
-        PlayerNPCDialogueUI.registerResponse(declineDialogue, response);
-        PlayerNPCDialogueUI.open(acceptDialogue, declineDialogue);
+        SetButtonsAreClickable(isClickable: false);
+        Player.player.quests.ClientChooseDialogueResponse(dialogueContext.GUID, pendingResponse.index);
     }
 
     private static void onClickedDeclineButton(ISleekElement button)
     {
-        acceptButton.isClickable = false;
-        declineButton.isClickable = false;
+        SetButtonsAreClickable(isClickable: false);
         close();
-        PlayerNPCDialogueUI.open(declineDialogue, null);
+        PlayerNPCDialogueUI.OpenCurrentDialogue();
     }
 
     private static void onClickedContinueButton(ISleekElement button)
     {
-        continueButton.isClickable = false;
-        close();
-        PlayerNPCDialogueUI.registerResponse(declineDialogue, response);
-        PlayerNPCDialogueUI.open(acceptDialogue, declineDialogue);
+        SetButtonsAreClickable(isClickable: false);
+        Player.player.quests.ClientChooseDialogueResponse(dialogueContext.GUID, pendingResponse.index);
     }
 
     private static void onClickedTrackButton(ISleekElement button)
@@ -245,16 +241,19 @@ public class PlayerNPCQuestUI
     private static void onClickedAbandonButton(ISleekElement button)
     {
         Player.player.quests.ClientAbandonQuest(quest);
-        if (!Provider.isServer)
-        {
-            Player.player.quests.AbandonQuest(quest);
-        }
         closeNicely();
     }
 
     private static void onClickedReturnButton(ISleekElement button)
     {
         closeNicely();
+    }
+
+    private static void SetButtonsAreClickable(bool isClickable)
+    {
+        acceptButton.IsClickable = isClickable;
+        declineButton.IsClickable = isClickable;
+        continueButton.IsClickable = isClickable;
     }
 
     public PlayerNPCQuestUI()
@@ -266,150 +265,150 @@ public class PlayerNPCQuestUI
         localization = Localization.read("/Player/PlayerNPCQuest.dat");
         icons = Bundles.getBundle("/Bundles/Textures/Player/Icons/PlayerNPCQuest/PlayerNPCQuest.unity3d");
         container = new SleekFullscreenBox();
-        container.positionScale_Y = 1f;
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         PlayerUI.container.AddChild(container);
         active = false;
         questBox = Glazier.Get().CreateBox();
-        questBox.positionOffset_X = -250;
-        questBox.positionScale_X = 0.5f;
-        questBox.sizeOffset_X = 500;
+        questBox.PositionOffset_X = -250f;
+        questBox.PositionScale_X = 0.5f;
+        questBox.SizeOffset_X = 500f;
         container.AddChild(questBox);
         nameLabel = Glazier.Get().CreateLabel();
-        nameLabel.positionOffset_X = 5;
-        nameLabel.positionOffset_Y = 5;
-        nameLabel.sizeOffset_X = -10;
-        nameLabel.sizeOffset_Y = 30;
-        nameLabel.sizeScale_X = 1f;
-        nameLabel.fontAlignment = TextAnchor.UpperLeft;
-        nameLabel.textColor = ESleekTint.RICH_TEXT_DEFAULT;
-        nameLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
-        nameLabel.enableRichText = true;
-        nameLabel.fontSize = ESleekFontSize.Medium;
+        nameLabel.PositionOffset_X = 5f;
+        nameLabel.PositionOffset_Y = 5f;
+        nameLabel.SizeOffset_X = -10f;
+        nameLabel.SizeOffset_Y = 30f;
+        nameLabel.SizeScale_X = 1f;
+        nameLabel.TextAlignment = TextAnchor.UpperLeft;
+        nameLabel.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+        nameLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+        nameLabel.AllowRichText = true;
+        nameLabel.FontSize = ESleekFontSize.Medium;
         questBox.AddChild(nameLabel);
         descriptionLabel = Glazier.Get().CreateLabel();
-        descriptionLabel.positionOffset_X = 5;
-        descriptionLabel.positionOffset_Y = 30;
-        descriptionLabel.sizeOffset_X = -10;
-        descriptionLabel.sizeOffset_Y = -35;
-        descriptionLabel.sizeScale_X = 1f;
-        descriptionLabel.sizeScale_Y = 1f;
-        descriptionLabel.fontAlignment = TextAnchor.UpperLeft;
-        descriptionLabel.textColor = ESleekTint.RICH_TEXT_DEFAULT;
-        descriptionLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
-        descriptionLabel.enableRichText = true;
+        descriptionLabel.PositionOffset_X = 5f;
+        descriptionLabel.PositionOffset_Y = 30f;
+        descriptionLabel.SizeOffset_X = -10f;
+        descriptionLabel.SizeOffset_Y = -35f;
+        descriptionLabel.SizeScale_X = 1f;
+        descriptionLabel.SizeScale_Y = 1f;
+        descriptionLabel.TextAlignment = TextAnchor.UpperLeft;
+        descriptionLabel.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+        descriptionLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+        descriptionLabel.AllowRichText = true;
         questBox.AddChild(descriptionLabel);
         detailsBox = Glazier.Get().CreateScrollView();
-        detailsBox.positionOffset_X = 5;
-        detailsBox.positionScale_Y = 1f;
-        detailsBox.sizeOffset_X = -10;
-        detailsBox.sizeScale_X = 1f;
-        detailsBox.scaleContentToWidth = true;
+        detailsBox.PositionOffset_X = 5f;
+        detailsBox.PositionScale_Y = 1f;
+        detailsBox.SizeOffset_X = -10f;
+        detailsBox.SizeScale_X = 1f;
+        detailsBox.ScaleContentToWidth = true;
         questBox.AddChild(detailsBox);
         conditionsLabel = Glazier.Get().CreateLabel();
-        conditionsLabel.sizeOffset_Y = 30;
-        conditionsLabel.sizeScale_X = 1f;
-        conditionsLabel.fontAlignment = TextAnchor.MiddleLeft;
-        conditionsLabel.text = localization.format("Conditions");
-        conditionsLabel.fontSize = ESleekFontSize.Medium;
+        conditionsLabel.SizeOffset_Y = 30f;
+        conditionsLabel.SizeScale_X = 1f;
+        conditionsLabel.TextAlignment = TextAnchor.MiddleLeft;
+        conditionsLabel.Text = localization.format("Conditions");
+        conditionsLabel.FontSize = ESleekFontSize.Medium;
         detailsBox.AddChild(conditionsLabel);
         conditionsContainer = Glazier.Get().CreateFrame();
-        conditionsContainer.positionOffset_Y = 30;
-        conditionsContainer.sizeScale_X = 1f;
+        conditionsContainer.PositionOffset_Y = 30f;
+        conditionsContainer.SizeScale_X = 1f;
         detailsBox.AddChild(conditionsContainer);
         rewardsLabel = Glazier.Get().CreateLabel();
-        rewardsLabel.sizeOffset_Y = 30;
-        rewardsLabel.sizeScale_X = 1f;
-        rewardsLabel.fontAlignment = TextAnchor.MiddleLeft;
-        rewardsLabel.text = localization.format("Rewards");
-        rewardsLabel.fontSize = ESleekFontSize.Medium;
+        rewardsLabel.SizeOffset_Y = 30f;
+        rewardsLabel.SizeScale_X = 1f;
+        rewardsLabel.TextAlignment = TextAnchor.MiddleLeft;
+        rewardsLabel.Text = localization.format("Rewards");
+        rewardsLabel.FontSize = ESleekFontSize.Medium;
         detailsBox.AddChild(rewardsLabel);
         rewardsContainer = Glazier.Get().CreateFrame();
-        rewardsContainer.sizeScale_X = 1f;
+        rewardsContainer.SizeScale_X = 1f;
         detailsBox.AddChild(rewardsContainer);
         beginContainer = Glazier.Get().CreateFrame();
-        beginContainer.positionOffset_Y = 10;
-        beginContainer.positionScale_Y = 1f;
-        beginContainer.sizeOffset_Y = 50;
-        beginContainer.sizeScale_X = 1f;
+        beginContainer.PositionOffset_Y = 10f;
+        beginContainer.PositionScale_Y = 1f;
+        beginContainer.SizeOffset_Y = 50f;
+        beginContainer.SizeScale_X = 1f;
         questBox.AddChild(beginContainer);
-        beginContainer.isVisible = false;
+        beginContainer.IsVisible = false;
         endContainer = Glazier.Get().CreateFrame();
-        endContainer.positionOffset_Y = 10;
-        endContainer.positionScale_Y = 1f;
-        endContainer.sizeOffset_Y = 50;
-        endContainer.sizeScale_X = 1f;
+        endContainer.PositionOffset_Y = 10f;
+        endContainer.PositionScale_Y = 1f;
+        endContainer.SizeOffset_Y = 50f;
+        endContainer.SizeScale_X = 1f;
         questBox.AddChild(endContainer);
-        endContainer.isVisible = false;
+        endContainer.IsVisible = false;
         detailsContainer = Glazier.Get().CreateFrame();
-        detailsContainer.positionOffset_Y = 10;
-        detailsContainer.positionScale_Y = 1f;
-        detailsContainer.sizeOffset_Y = 50;
-        detailsContainer.sizeScale_X = 1f;
+        detailsContainer.PositionOffset_Y = 10f;
+        detailsContainer.PositionScale_Y = 1f;
+        detailsContainer.SizeOffset_Y = 50f;
+        detailsContainer.SizeScale_X = 1f;
         questBox.AddChild(detailsContainer);
-        detailsContainer.isVisible = false;
+        detailsContainer.IsVisible = false;
         acceptButton = Glazier.Get().CreateButton();
-        acceptButton.sizeOffset_X = -5;
-        acceptButton.sizeScale_X = 0.5f;
-        acceptButton.sizeScale_Y = 1f;
-        acceptButton.text = localization.format("Accept");
-        acceptButton.tooltipText = localization.format("Accept_Tooltip");
-        acceptButton.fontSize = ESleekFontSize.Medium;
-        acceptButton.onClickedButton += onClickedAcceptButton;
+        acceptButton.SizeOffset_X = -5f;
+        acceptButton.SizeScale_X = 0.5f;
+        acceptButton.SizeScale_Y = 1f;
+        acceptButton.Text = localization.format("Accept");
+        acceptButton.TooltipText = localization.format("Accept_Tooltip");
+        acceptButton.FontSize = ESleekFontSize.Medium;
+        acceptButton.OnClicked += onClickedAcceptButton;
         beginContainer.AddChild(acceptButton);
         declineButton = Glazier.Get().CreateButton();
-        declineButton.positionOffset_X = 5;
-        declineButton.positionScale_X = 0.5f;
-        declineButton.sizeOffset_X = -5;
-        declineButton.sizeScale_X = 0.5f;
-        declineButton.sizeScale_Y = 1f;
-        declineButton.text = localization.format("Decline");
-        declineButton.tooltipText = localization.format("Decline_Tooltip");
-        declineButton.fontSize = ESleekFontSize.Medium;
-        declineButton.onClickedButton += onClickedDeclineButton;
+        declineButton.PositionOffset_X = 5f;
+        declineButton.PositionScale_X = 0.5f;
+        declineButton.SizeOffset_X = -5f;
+        declineButton.SizeScale_X = 0.5f;
+        declineButton.SizeScale_Y = 1f;
+        declineButton.Text = localization.format("Decline");
+        declineButton.TooltipText = localization.format("Decline_Tooltip");
+        declineButton.FontSize = ESleekFontSize.Medium;
+        declineButton.OnClicked += onClickedDeclineButton;
         beginContainer.AddChild(declineButton);
         continueButton = Glazier.Get().CreateButton();
-        continueButton.sizeScale_X = 1f;
-        continueButton.sizeScale_Y = 1f;
-        continueButton.text = localization.format("Continue");
-        continueButton.tooltipText = localization.format("Continue_Tooltip");
-        continueButton.fontSize = ESleekFontSize.Medium;
-        continueButton.onClickedButton += onClickedContinueButton;
+        continueButton.SizeScale_X = 1f;
+        continueButton.SizeScale_Y = 1f;
+        continueButton.Text = localization.format("Continue");
+        continueButton.TooltipText = localization.format("Continue_Tooltip");
+        continueButton.FontSize = ESleekFontSize.Medium;
+        continueButton.OnClicked += onClickedContinueButton;
         endContainer.AddChild(continueButton);
         trackButton = Glazier.Get().CreateButton();
-        trackButton.sizeOffset_X = -5;
-        trackButton.sizeScale_X = 0.333f;
-        trackButton.sizeScale_Y = 1f;
-        trackButton.tooltipText = localization.format("Track_Tooltip");
-        trackButton.fontSize = ESleekFontSize.Medium;
-        trackButton.onClickedButton += onClickedTrackButton;
+        trackButton.SizeOffset_X = -5f;
+        trackButton.SizeScale_X = 0.333f;
+        trackButton.SizeScale_Y = 1f;
+        trackButton.TooltipText = localization.format("Track_Tooltip");
+        trackButton.FontSize = ESleekFontSize.Medium;
+        trackButton.OnClicked += onClickedTrackButton;
         detailsContainer.AddChild(trackButton);
         abandonButton = Glazier.Get().CreateButton();
-        abandonButton.positionOffset_X = 5;
-        abandonButton.positionScale_X = 0.333f;
-        abandonButton.sizeOffset_X = -10;
-        abandonButton.sizeScale_X = 0.333f;
-        abandonButton.sizeScale_Y = 1f;
-        abandonButton.text = localization.format("Abandon");
-        abandonButton.tooltipText = localization.format("Abandon_Tooltip");
-        abandonButton.fontSize = ESleekFontSize.Medium;
-        abandonButton.onClickedButton += onClickedAbandonButton;
+        abandonButton.PositionOffset_X = 5f;
+        abandonButton.PositionScale_X = 0.333f;
+        abandonButton.SizeOffset_X = -10f;
+        abandonButton.SizeScale_X = 0.333f;
+        abandonButton.SizeScale_Y = 1f;
+        abandonButton.Text = localization.format("Abandon");
+        abandonButton.TooltipText = localization.format("Abandon_Tooltip");
+        abandonButton.FontSize = ESleekFontSize.Medium;
+        abandonButton.OnClicked += onClickedAbandonButton;
         detailsContainer.AddChild(abandonButton);
         returnButton = Glazier.Get().CreateButton();
-        returnButton.positionOffset_X = 5;
-        returnButton.positionScale_X = 0.667f;
-        returnButton.sizeOffset_X = -5;
-        returnButton.sizeScale_X = 0.333f;
-        returnButton.sizeScale_Y = 1f;
-        returnButton.text = localization.format("Return");
-        returnButton.tooltipText = localization.format("Return_Tooltip");
-        returnButton.fontSize = ESleekFontSize.Medium;
-        returnButton.onClickedButton += onClickedReturnButton;
+        returnButton.PositionOffset_X = 5f;
+        returnButton.PositionScale_X = 0.667f;
+        returnButton.SizeOffset_X = -5f;
+        returnButton.SizeScale_X = 0.333f;
+        returnButton.SizeScale_Y = 1f;
+        returnButton.Text = localization.format("Return");
+        returnButton.TooltipText = localization.format("Return_Tooltip");
+        returnButton.FontSize = ESleekFontSize.Medium;
+        returnButton.OnClicked += onClickedReturnButton;
         detailsContainer.AddChild(returnButton);
     }
 }

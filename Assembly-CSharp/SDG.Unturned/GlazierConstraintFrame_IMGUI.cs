@@ -8,7 +8,7 @@ internal class GlazierConstraintFrame_IMGUI : GlazierElementBase_IMGUI, ISleekCo
 
     private float _aspectRatio = 1f;
 
-    public ESleekConstraint constraint
+    public ESleekConstraint Constraint
     {
         get
         {
@@ -37,7 +37,7 @@ internal class GlazierConstraintFrame_IMGUI : GlazierElementBase_IMGUI, ISleekCo
     protected override Rect CalculateDrawRect()
     {
         Rect result = base.CalculateDrawRect();
-        if (constraint == ESleekConstraint.FitInParent)
+        if (Constraint == ESleekConstraint.FitInParent)
         {
             if (result.width < result.height * _aspectRatio)
             {

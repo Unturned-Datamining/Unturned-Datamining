@@ -19,9 +19,9 @@ public class SleekCharacter : SleekWrapper
 
     public void updateCharacter(Character character)
     {
-        nameLabel.text = MenuSurvivorsCharacterUI.localization.format("Name_Label", character.name);
-        nickLabel.text = MenuSurvivorsCharacterUI.localization.format("Nick_Label", character.nick);
-        skillsetLabel.text = MenuSurvivorsCharacterUI.localization.format("Skillset_" + (byte)character.skillset);
+        nameLabel.Text = MenuSurvivorsCharacterUI.localization.format("Name_Label", character.name);
+        nickLabel.Text = MenuSurvivorsCharacterUI.localization.format("Nick_Label", character.nick);
+        skillsetLabel.Text = MenuSurvivorsCharacterUI.localization.format("Skillset_" + (byte)character.skillset);
     }
 
     private void onClickedButton(ISleekElement button)
@@ -40,48 +40,48 @@ public class SleekCharacter : SleekWrapper
     {
         index = newIndex;
         button = Glazier.Get().CreateButton();
-        button.sizeScale_X = 1f;
-        button.sizeScale_Y = 1f;
-        button.onClickedButton += onClickedButton;
+        button.SizeScale_X = 1f;
+        button.SizeScale_Y = 1f;
+        button.OnClicked += onClickedButton;
         AddChild(button);
         nameLabel = Glazier.Get().CreateLabel();
-        nameLabel.positionOffset_X = 5;
-        nameLabel.positionOffset_Y = 5;
-        nameLabel.sizeOffset_X = -10;
-        nameLabel.sizeOffset_Y = -10;
-        nameLabel.sizeScale_X = 1f;
-        nameLabel.sizeScale_Y = 1f;
-        nameLabel.fontAlignment = TextAnchor.UpperCenter;
+        nameLabel.PositionOffset_X = 5f;
+        nameLabel.PositionOffset_Y = 5f;
+        nameLabel.SizeOffset_X = -10f;
+        nameLabel.SizeOffset_Y = -10f;
+        nameLabel.SizeScale_X = 1f;
+        nameLabel.SizeScale_Y = 1f;
+        nameLabel.TextAlignment = TextAnchor.UpperCenter;
         button.AddChild(nameLabel);
         nickLabel = Glazier.Get().CreateLabel();
-        nickLabel.positionOffset_X = 5;
-        nickLabel.positionOffset_Y = 5;
-        nickLabel.sizeOffset_X = -10;
-        nickLabel.sizeOffset_Y = -10;
-        nickLabel.sizeScale_X = 1f;
-        nickLabel.sizeScale_Y = 1f;
-        nickLabel.fontAlignment = TextAnchor.MiddleCenter;
+        nickLabel.PositionOffset_X = 5f;
+        nickLabel.PositionOffset_Y = 5f;
+        nickLabel.SizeOffset_X = -10f;
+        nickLabel.SizeOffset_Y = -10f;
+        nickLabel.SizeScale_X = 1f;
+        nickLabel.SizeScale_Y = 1f;
+        nickLabel.TextAlignment = TextAnchor.MiddleCenter;
         button.AddChild(nickLabel);
         skillsetLabel = Glazier.Get().CreateLabel();
-        skillsetLabel.positionOffset_X = 5;
-        skillsetLabel.positionOffset_Y = 5;
-        skillsetLabel.sizeOffset_X = -10;
-        skillsetLabel.sizeOffset_Y = -10;
-        skillsetLabel.sizeScale_X = 1f;
-        skillsetLabel.sizeScale_Y = 1f;
-        skillsetLabel.fontAlignment = TextAnchor.LowerCenter;
+        skillsetLabel.PositionOffset_X = 5f;
+        skillsetLabel.PositionOffset_Y = 5f;
+        skillsetLabel.SizeOffset_X = -10f;
+        skillsetLabel.SizeOffset_Y = -10f;
+        skillsetLabel.SizeScale_X = 1f;
+        skillsetLabel.SizeScale_Y = 1f;
+        skillsetLabel.TextAlignment = TextAnchor.LowerCenter;
         button.AddChild(skillsetLabel);
         if (!Provider.isPro && index >= Customization.FREE_CHARACTERS)
         {
             Bundle bundle = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Pro/Pro.unity3d");
             ISleekImage sleekImage = Glazier.Get().CreateImage();
-            sleekImage.positionOffset_X = -20;
-            sleekImage.positionOffset_Y = -20;
-            sleekImage.positionScale_X = 0.5f;
-            sleekImage.positionScale_Y = 0.5f;
-            sleekImage.sizeOffset_X = 40;
-            sleekImage.sizeOffset_Y = 40;
-            sleekImage.texture = bundle.load<Texture2D>("Lock_Medium");
+            sleekImage.PositionOffset_X = -20f;
+            sleekImage.PositionOffset_Y = -20f;
+            sleekImage.PositionScale_X = 0.5f;
+            sleekImage.PositionScale_Y = 0.5f;
+            sleekImage.SizeOffset_X = 40f;
+            sleekImage.SizeOffset_Y = 40f;
+            sleekImage.Texture = bundle.load<Texture2D>("Lock_Medium");
             button.AddChild(sleekImage);
             bundle.unload();
         }

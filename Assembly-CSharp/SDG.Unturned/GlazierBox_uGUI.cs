@@ -31,7 +31,7 @@ internal class GlazierBox_uGUI : GlazierElementBase_uGUI, ISleekBox, ISleekLabel
 
     private TextMeshProUGUI textComponent;
 
-    public string text
+    public string Text
     {
         get
         {
@@ -43,7 +43,7 @@ internal class GlazierBox_uGUI : GlazierElementBase_uGUI, ISleekBox, ISleekLabel
         }
     }
 
-    public string tooltipText
+    public string TooltipText
     {
         get
         {
@@ -64,7 +64,7 @@ internal class GlazierBox_uGUI : GlazierElementBase_uGUI, ISleekBox, ISleekLabel
         }
     }
 
-    public FontStyle fontStyle
+    public FontStyle FontStyle
     {
         get
         {
@@ -77,7 +77,7 @@ internal class GlazierBox_uGUI : GlazierElementBase_uGUI, ISleekBox, ISleekLabel
         }
     }
 
-    public TextAnchor fontAlignment
+    public TextAnchor TextAlignment
     {
         get
         {
@@ -90,7 +90,7 @@ internal class GlazierBox_uGUI : GlazierElementBase_uGUI, ISleekBox, ISleekLabel
         }
     }
 
-    public ESleekFontSize fontSize
+    public ESleekFontSize FontSize
     {
         get
         {
@@ -103,7 +103,7 @@ internal class GlazierBox_uGUI : GlazierElementBase_uGUI, ISleekBox, ISleekLabel
         }
     }
 
-    public ETextContrastContext shadowStyle
+    public ETextContrastContext TextContrastContext
     {
         get
         {
@@ -112,13 +112,13 @@ internal class GlazierBox_uGUI : GlazierElementBase_uGUI, ISleekBox, ISleekLabel
         set
         {
             _contrastContext = value;
-            ETextContrastStyle eTextContrastStyle = SleekShadowStyle.ContextToStyle(value);
-            textComponent.fontSharedMaterial = base.glazier.GetFontMaterial(eTextContrastStyle);
-            textComponent.characterSpacing = GlazierUtils_uGUI.GetCharacterSpacing(eTextContrastStyle);
+            ETextContrastStyle shadowStyle = SleekShadowStyle.ContextToStyle(value);
+            textComponent.fontSharedMaterial = base.glazier.GetFontMaterial(shadowStyle);
+            textComponent.characterSpacing = GlazierUtils_uGUI.GetCharacterSpacing(shadowStyle);
         }
     }
 
-    public SleekColor textColor
+    public SleekColor TextColor
     {
         get
         {
@@ -135,7 +135,7 @@ internal class GlazierBox_uGUI : GlazierElementBase_uGUI, ISleekBox, ISleekLabel
         }
     }
 
-    public bool enableRichText
+    public bool AllowRichText
     {
         get
         {
@@ -147,7 +147,7 @@ internal class GlazierBox_uGUI : GlazierElementBase_uGUI, ISleekBox, ISleekLabel
         }
     }
 
-    public SleekColor backgroundColor
+    public SleekColor BackgroundColor
     {
         get
         {
@@ -162,11 +162,11 @@ internal class GlazierBox_uGUI : GlazierElementBase_uGUI, ISleekBox, ISleekLabel
 
     private void PostConstructBox()
     {
-        fontAlignment = TextAnchor.MiddleCenter;
-        fontSize = ESleekFontSize.Default;
-        shadowStyle = ETextContrastContext.Default;
-        fontStyle = FontStyle.Normal;
-        enableRichText = false;
+        TextAlignment = TextAnchor.MiddleCenter;
+        FontSize = ESleekFontSize.Default;
+        TextContrastContext = ETextContrastContext.Default;
+        FontStyle = FontStyle.Normal;
+        AllowRichText = false;
     }
 
     protected override bool ReleaseIntoPool()
@@ -224,6 +224,7 @@ internal class GlazierBox_uGUI : GlazierElementBase_uGUI, ISleekBox, ISleekLabel
         ConstructFromPool(poolData);
         imageComponent = poolData.imageComponent;
         textComponent = poolData.textComponent;
+        textComponent.rectTransform.reset();
         textComponent.text = string.Empty;
         PostConstructBox();
     }

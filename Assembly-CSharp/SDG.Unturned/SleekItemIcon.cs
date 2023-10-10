@@ -10,7 +10,7 @@ public class SleekItemIcon : SleekWrapper
     {
         set
         {
-            internalImage.angle = value * 90;
+            internalImage.RotationAngle = value * 90;
         }
     }
 
@@ -18,7 +18,7 @@ public class SleekItemIcon : SleekWrapper
     {
         set
         {
-            internalImage.isAngled = value;
+            internalImage.CanRotate = value;
         }
     }
 
@@ -26,17 +26,17 @@ public class SleekItemIcon : SleekWrapper
     {
         get
         {
-            return internalImage.color;
+            return internalImage.TintColor;
         }
         set
         {
-            internalImage.color = value;
+            internalImage.TintColor = value;
         }
     }
 
     public void Clear()
     {
-        internalImage.texture = null;
+        internalImage.Texture = null;
     }
 
     public void Refresh(ushort id, byte quality, byte[] state)
@@ -62,8 +62,8 @@ public class SleekItemIcon : SleekWrapper
     public SleekItemIcon()
     {
         internalImage = Glazier.Get().CreateImage();
-        internalImage.sizeScale_X = 1f;
-        internalImage.sizeScale_Y = 1f;
+        internalImage.SizeScale_X = 1f;
+        internalImage.SizeScale_Y = 1f;
         AddChild(internalImage);
     }
 
@@ -71,7 +71,7 @@ public class SleekItemIcon : SleekWrapper
     {
         if (internalImage != null)
         {
-            internalImage.texture = texture;
+            internalImage.Texture = texture;
         }
     }
 }

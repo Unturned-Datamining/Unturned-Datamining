@@ -59,7 +59,7 @@ public static class LocalHwid
             104, 115, 97, 72, 101, 103, 97, 114, 111, 116,
             83, 100, 117, 111, 108, 67
         };
-        Array.Reverse((Array)array);
+        Array.Reverse(array);
         string @string = Encoding.UTF8.GetString(array);
         string text = PlayerPrefs.GetString(@string);
         if (string.IsNullOrEmpty(text) || text.Length != 32)
@@ -78,7 +78,7 @@ public static class LocalHwid
             101, 104, 99, 97, 67, 101, 114, 111, 116, 83,
             109, 101, 116, 73
         };
-        Array.Reverse((Array)array);
+        Array.Reverse(array);
         string @string = Encoding.UTF8.GetString(array);
         if (!ConvenientSavedata.get().read(@string, out string value) || value.Length != 32)
         {

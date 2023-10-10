@@ -41,7 +41,7 @@ public class LiveConfigManager : MonoBehaviour
     private IEnumerator RequestConfig()
     {
         string uri = "https://smartlydressedgames.com/UnturnedLiveConfig.dat";
-        UnityWebRequest request = UnityWebRequest.Get(uri);
+        using UnityWebRequest request = UnityWebRequest.Get(uri);
         request.timeout = 10;
         yield return request.SendWebRequest();
         if (request.result != UnityWebRequest.Result.Success)

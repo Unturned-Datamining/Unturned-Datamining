@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
@@ -101,6 +100,44 @@ public class ItemStructureAsset : ItemPlaceableAsset
     public override bool canBeUsedInSafezone(SafezoneNode safezone, bool byAdmin)
     {
         return !safezone.noBuildables;
+    }
+
+    public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
+    {
+        base.BuildDescription(builder, itemInstance);
+        if (!builder.shouldRestrictToLegacyContent)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Buildable_Health", _health), 20000);
+            switch (armorTier)
+            {
+            case EArmorTier.LOW:
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Buildable_ArmorTier_Low"), 20000);
+                break;
+            case EArmorTier.HIGH:
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Buildable_ArmorTier_High"), 20000);
+                break;
+            }
+            if (_isUnpickupable)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Buildable_CannotPickup"), 20000);
+            }
+            else if (!_isSalvageable)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Buildable_CannotSalvage"), 20000);
+            }
+            if (!isRepairable)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Buildable_CannotRepair"), 20000);
+            }
+            if (proofExplosion)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Buildable_ExplosionProof"), 20000);
+            }
+            if (!_isVulnerable)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Buildable_Invulnerable"), 20000);
+            }
+        }
     }
 
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)

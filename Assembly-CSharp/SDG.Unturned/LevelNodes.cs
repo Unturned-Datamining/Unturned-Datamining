@@ -317,7 +317,7 @@ public class LevelNodes
                     {
                         flag2 = true;
                         ushort num3 = river.readUInt16();
-                        if (SpawnTableTool.resolve(num3) == 0 && (bool)Assets.shouldLoadAnyAssets && Regions.tryGetCoordinate(vector, out var x, out var y))
+                        if (SpawnTableTool.ResolveLegacyId(num3, EAssetType.ITEM, OnGetTestAirdropSpawnTableErrorContext) == 0 && (bool)Assets.shouldLoadAnyAssets && Regions.tryGetCoordinate(vector, out var x, out var y))
                         {
                             Assets.reportError(Level.info.name + " airdrop references invalid spawn table " + num3 + " at (" + x + ", " + y + ")!");
                         }
@@ -423,5 +423,10 @@ public class LevelNodes
             }
         }
         river.closeRiver();
+    }
+
+    private static string OnGetTestAirdropSpawnTableErrorContext()
+    {
+        return "level nodes airdrop test";
     }
 }

@@ -25,7 +25,7 @@ public class ObjectManager : SteamCaller
 
     private static readonly ClientStaticMethod<byte, byte, ushort, byte, bool, Vector3> SendObjectRubble = ClientStaticMethod<byte, byte, ushort, byte, bool, Vector3>.Get(ReceiveObjectRubble);
 
-    private static readonly ServerStaticMethod<byte, byte, ushort> SendUseObjectNPC = ServerStaticMethod<byte, byte, ushort>.Get(ReceiveUseObjectNPC);
+    internal static readonly ServerStaticMethod<NetId> SendTalkWithNpcRequest = ServerStaticMethod<NetId>.Get(ReceiveTalkWithNpcRequest);
 
     private static readonly ServerStaticMethod<byte, byte, ushort> SendUseObjectQuest = ServerStaticMethod<byte, byte, ushort>.Get(ReceiveUseObjectQuest);
 
@@ -137,11 +137,11 @@ public class ObjectManager : SteamCaller
             byte[] state = levelObject.state;
             if (section == byte.MaxValue)
             {
-                state[state.Length - 1] = 0;
+                state[^1] = 0;
             }
             else
             {
-                state[state.Length - 1] = (byte)(state[state.Length - 1] & ~Types.SHIFTS[section]);
+                state[^1] = (byte)(state[^1] & ~Types.SHIFTS[section]);
             }
             SendObjectRubble.InvokeAndLoopback(ENetReliability.Reliable, GatherRemoteClientConnections(x, y), x, y, index, section, arg5: false, direction * (int)pendingTotalDamage);
         }
@@ -162,40 +162,22 @@ public class ObjectManager : SteamCaller
         }
     }
 
-    public static void useObjectNPC(Transform transform)
+    [SteamCall(ESteamCallValidation.SERVERSIDE, ratelimitHz = 5)]
+    public static void ReceiveTalkWithNpcRequest(in ServerInvocationContext context, NetId netId)
     {
-        if (tryGetRegion(transform, out var x, out var y, out var index))
-        {
-            SendUseObjectNPC.Invoke(ENetReliability.Reliable, x, y, index);
-        }
-    }
-
-    [Obsolete]
-    public void askUseObjectNPC(CSteamID steamID, byte x, byte y, ushort index)
-    {
-        ServerInvocationContext context = ServerInvocationContext.FromSteamIDForBackwardsCompatibility(steamID);
-        ReceiveUseObjectNPC(in context, x, y, index);
-    }
-
-    [SteamCall(ESteamCallValidation.SERVERSIDE, ratelimitHz = 5, legacyName = "askUseObjectNPC")]
-    public static void ReceiveUseObjectNPC(in ServerInvocationContext context, byte x, byte y, ushort index)
-    {
-        if (!Regions.checkSafe(x, y))
-        {
-            return;
-        }
         Player player = context.GetPlayer();
         if (player == null || player.life.isDead)
         {
             return;
         }
-        player.quests.checkNPC = null;
-        if (index < LevelObjects.objects[x, y].Count && LevelObjects.objects[x, y][index] != null && !(LevelObjects.objects[x, y][index].transform == null) && !((LevelObjects.objects[x, y][index].transform.position - player.transform.position).sqrMagnitude > 400f))
+        player.quests.ClearActiveNpc();
+        InteractableObjectNPC npcFromObjectNetId = InteractableObjectNPC.GetNpcFromObjectNetId(netId);
+        if (!(npcFromObjectNetId == null) && !((npcFromObjectNetId.transform.position - player.transform.position).sqrMagnitude > 400f) && npcFromObjectNetId.objectAsset.areConditionsMet(player))
         {
-            InteractableObjectNPC interactableObjectNPC = LevelObjects.objects[x, y][index].interactable as InteractableObjectNPC;
-            if (interactableObjectNPC != null && interactableObjectNPC.objectAsset.areConditionsMet(player))
+            DialogueAsset dialogueAsset = npcFromObjectNetId.npcAsset.FindDialogueAsset();
+            if (dialogueAsset != null)
             {
-                player.quests.checkNPC = interactableObjectNPC;
+                player.quests.ApproveTalkWithNpcRequest(npcFromObjectNetId, dialogueAsset);
             }
         }
     }
@@ -228,8 +210,8 @@ public class ObjectManager : SteamCaller
             InteractableObject interactable = LevelObjects.objects[x, y][index].interactable;
             if (interactable != null && (interactable is InteractableObjectQuest || interactable is InteractableObjectNote) && interactable.objectAsset.areConditionsMet(player) && interactable.objectAsset.areInteractabilityConditionsMet(player))
             {
-                interactable.objectAsset.applyInteractabilityConditions(player, shouldSend: true);
-                interactable.objectAsset.grantInteractabilityRewards(player, shouldSend: true);
+                interactable.objectAsset.ApplyInteractabilityConditions(player);
+                interactable.objectAsset.GrantInteractabilityRewards(player);
                 ObjectManager.OnQuestObjectUsed.TryInvoke("OnQuestObjectUsed", player, interactable);
             }
         }
@@ -263,8 +245,8 @@ public class ObjectManager : SteamCaller
             InteractableObjectDropper interactableObjectDropper = LevelObjects.objects[x, y][index].interactable as InteractableObjectDropper;
             if (interactableObjectDropper != null && interactableObjectDropper.isUsable && interactableObjectDropper.objectAsset.areConditionsMet(player) && interactableObjectDropper.objectAsset.areInteractabilityConditionsMet(player))
             {
-                interactableObjectDropper.objectAsset.applyInteractabilityConditions(player, shouldSend: true);
-                interactableObjectDropper.objectAsset.grantInteractabilityRewards(player, shouldSend: true);
+                interactableObjectDropper.objectAsset.ApplyInteractabilityConditions(player);
+                interactableObjectDropper.objectAsset.GrantInteractabilityRewards(player);
                 interactableObjectDropper.drop();
             }
         }
@@ -373,8 +355,8 @@ public class ObjectManager : SteamCaller
             InteractableObjectBinaryState interactableObjectBinaryState = LevelObjects.objects[x, y][index].interactable as InteractableObjectBinaryState;
             if (!(interactableObjectBinaryState == null) && interactableObjectBinaryState.isUsable && interactableObjectBinaryState.isUsed != isUsed && (interactableObjectBinaryState.modHookCounter > 0 || (!((LevelObjects.objects[x, y][index].transform.position - player.transform.position).sqrMagnitude > 400f) && !interactableObjectBinaryState.objectAsset.interactabilityRemote)) && interactableObjectBinaryState.objectAsset.areConditionsMet(player) && interactableObjectBinaryState.objectAsset.areInteractabilityConditionsMet(player))
             {
-                interactableObjectBinaryState.objectAsset.applyInteractabilityConditions(player, shouldSend: true);
-                interactableObjectBinaryState.objectAsset.grantInteractabilityRewards(player, shouldSend: true);
+                interactableObjectBinaryState.objectAsset.ApplyInteractabilityConditions(player);
+                interactableObjectBinaryState.objectAsset.GrantInteractabilityRewards(player);
                 SendObjectBinaryState.InvokeAndLoopback(ENetReliability.Reliable, GatherRemoteClientConnections(x, y), x, y, index, isUsed);
                 LevelObjects.objects[x, y][index].state[0] = (byte)(interactableObjectBinaryState.isUsed ? 1u : 0u);
             }
@@ -570,7 +552,7 @@ public class ObjectManager : SteamCaller
                 if (b != byte.MaxValue)
                 {
                     byte[] state = LevelObjects.objects[updateObjects_X, updateObjects_Y][regions[updateObjects_X, updateObjects_Y].updateObjectIndex].state;
-                    state[state.Length - 1] = (byte)(state[state.Length - 1] | Types.SHIFTS[b]);
+                    state[^1] = (byte)(state[^1] | Types.SHIFTS[b]);
                     SendObjectRubble.InvokeAndLoopback(ENetReliability.Reliable, GatherRemoteClientConnections(updateObjects_X, updateObjects_Y), updateObjects_X, updateObjects_Y, regions[updateObjects_X, updateObjects_Y].updateObjectIndex, b, arg5: true, Vector3.zero);
                 }
             }
@@ -616,7 +598,7 @@ public class ObjectManager : SteamCaller
                             player.movement.loadedRegions[b, b2].isObjectsLoaded = false;
                         }
                     }
-                    else if (player.channel.isOwner && regions[b, b2].isNetworked && !Regions.checkArea(b, b2, new_x, new_y, OBJECT_REGIONS))
+                    else if (player.channel.IsLocalPlayer && regions[b, b2].isNetworked && !Regions.checkArea(b, b2, new_x, new_y, OBJECT_REGIONS))
                     {
                         regions[b, b2].isNetworked = false;
                     }
@@ -766,7 +748,7 @@ public class ObjectManager : SteamCaller
             }
             if (levelObject.rubble != null)
             {
-                array[array.Length - 1] = byte.MaxValue;
+                array[^1] = byte.MaxValue;
                 levelObject.rubble.updateState(levelObject.asset, array);
             }
         }

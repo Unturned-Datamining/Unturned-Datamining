@@ -68,47 +68,47 @@ internal class EditorInteract : MonoBehaviour
         if (InputEx.GetKeyDown(KeyCode.F1))
         {
             LevelVisibility.roadsVisible = !LevelVisibility.roadsVisible;
-            EditorLevelVisibilityUI.roadsToggle.state = LevelVisibility.roadsVisible;
+            EditorLevelVisibilityUI.roadsToggle.Value = LevelVisibility.roadsVisible;
         }
         if (InputEx.GetKeyDown(KeyCode.F2))
         {
             LevelVisibility.navigationVisible = !LevelVisibility.navigationVisible;
-            EditorLevelVisibilityUI.navigationToggle.state = LevelVisibility.navigationVisible;
+            EditorLevelVisibilityUI.navigationToggle.Value = LevelVisibility.navigationVisible;
         }
         if (InputEx.GetKeyDown(KeyCode.F3))
         {
             LevelVisibility.nodesVisible = !LevelVisibility.nodesVisible;
-            EditorLevelVisibilityUI.nodesToggle.state = LevelVisibility.nodesVisible;
+            EditorLevelVisibilityUI.nodesToggle.Value = LevelVisibility.nodesVisible;
         }
         if (InputEx.GetKeyDown(KeyCode.F4))
         {
             LevelVisibility.itemsVisible = !LevelVisibility.itemsVisible;
-            EditorLevelVisibilityUI.itemsToggle.state = LevelVisibility.itemsVisible;
+            EditorLevelVisibilityUI.itemsToggle.Value = LevelVisibility.itemsVisible;
         }
         if (InputEx.GetKeyDown(KeyCode.F5))
         {
             LevelVisibility.playersVisible = !LevelVisibility.playersVisible;
-            EditorLevelVisibilityUI.playersToggle.state = LevelVisibility.playersVisible;
+            EditorLevelVisibilityUI.playersToggle.Value = LevelVisibility.playersVisible;
         }
         if (InputEx.GetKeyDown(KeyCode.F6))
         {
             LevelVisibility.zombiesVisible = !LevelVisibility.zombiesVisible;
-            EditorLevelVisibilityUI.zombiesToggle.state = LevelVisibility.zombiesVisible;
+            EditorLevelVisibilityUI.zombiesToggle.Value = LevelVisibility.zombiesVisible;
         }
         if (InputEx.GetKeyDown(KeyCode.F7))
         {
             LevelVisibility.vehiclesVisible = !LevelVisibility.vehiclesVisible;
-            EditorLevelVisibilityUI.vehiclesToggle.state = LevelVisibility.vehiclesVisible;
+            EditorLevelVisibilityUI.vehiclesToggle.Value = LevelVisibility.vehiclesVisible;
         }
         if (InputEx.GetKeyDown(KeyCode.F8))
         {
             LevelVisibility.borderVisible = !LevelVisibility.borderVisible;
-            EditorLevelVisibilityUI.borderToggle.state = LevelVisibility.borderVisible;
+            EditorLevelVisibilityUI.borderToggle.Value = LevelVisibility.borderVisible;
         }
         if (InputEx.GetKeyDown(KeyCode.F9))
         {
             LevelVisibility.animalsVisible = !LevelVisibility.animalsVisible;
-            EditorLevelVisibilityUI.animalsToggle.state = LevelVisibility.animalsVisible;
+            EditorLevelVisibilityUI.animalsToggle.Value = LevelVisibility.animalsVisible;
         }
         if (activeTool == null)
         {

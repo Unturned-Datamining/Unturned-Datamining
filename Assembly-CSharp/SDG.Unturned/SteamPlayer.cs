@@ -86,7 +86,9 @@ public class SteamPlayer : SteamConnectedClientBase
 
     public float nextVote;
 
-    public bool isMuted;
+    public bool isVoiceChatLocallyMuted;
+
+    public bool isTextChatLocallyMuted;
 
     [Obsolete("This field should not have been externally used and will be removed in a future version.")]
     public float rpcCredits;
@@ -162,11 +164,29 @@ public class SteamPlayer : SteamConnectedClientBase
 
     public CSteamID lobbyID { get; private set; }
 
-    public bool IsLocalPlayer { get; private set; }
+    public bool IsLocalServerHost { get; private set; }
 
     public NetId GetNetId()
     {
         return _netId;
+    }
+
+    public void SetVoiceChatLocallyMuted(bool newVoiceChatLocallyMuted)
+    {
+        if (isVoiceChatLocallyMuted != newVoiceChatLocallyMuted)
+        {
+            isVoiceChatLocallyMuted = newVoiceChatLocallyMuted;
+            LocalPlayerBlocklist.SetVoiceChatMuted(playerID.steamID, isVoiceChatLocallyMuted);
+        }
+    }
+
+    public void SetTextChatLocallyMuted(bool newTextChatLocallyMuted)
+    {
+        if (isTextChatLocallyMuted != newTextChatLocallyMuted)
+        {
+            isTextChatLocallyMuted = newTextChatLocallyMuted;
+            LocalPlayerBlocklist.SetTextChatMuted(playerID.steamID, isTextChatLocallyMuted);
+        }
     }
 
     public bool getItemSkinItemDefID(ushort itemID, out int itemdefid)
@@ -432,13 +452,18 @@ public class SteamPlayer : SteamConnectedClientBase
         base.transportConnection = transportConnection;
         _netId = netId;
         NetIdRegistry.Assign(_netId, this);
-        IsLocalPlayer = transportConnection != null && !Dedicator.IsDedicatedServer;
+        IsLocalServerHost = transportConnection != null && !Dedicator.IsDedicatedServer;
+        bool flag = newPlayerID.steamID == Provider.client;
+        if (!flag && !Dedicator.IsDedicatedServer)
+        {
+            LocalPlayerBlocklist.GetBlockStatus(newPlayerID.steamID, out isVoiceChatLocallyMuted, out isTextChatLocallyMuted);
+        }
         _playerID = newPlayerID;
         _model = newModel;
         model.name = playerID.characterName + " [" + playerID.playerName + "]";
         model.GetComponent<SteamChannel>().id = newChannel;
         model.GetComponent<SteamChannel>().owner = this;
-        model.GetComponent<SteamChannel>().isOwner = playerID.steamID == Provider.client;
+        model.GetComponent<SteamChannel>().IsLocalPlayer = flag;
         model.GetComponent<SteamChannel>().setup();
         _player = model.GetComponent<Player>();
         _player.AssignNetIdBlock(_netId);

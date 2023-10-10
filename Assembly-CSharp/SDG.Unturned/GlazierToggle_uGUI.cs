@@ -17,7 +17,7 @@ internal class GlazierToggle_uGUI : GlazierElementBase_uGUI, ISleekToggle, ISlee
 
     private Toggle toggleComponent;
 
-    public bool state
+    public bool Value
     {
         get
         {
@@ -29,7 +29,7 @@ internal class GlazierToggle_uGUI : GlazierElementBase_uGUI, ISleekToggle, ISlee
         }
     }
 
-    public string tooltipText
+    public string TooltipText
     {
         get
         {
@@ -50,7 +50,7 @@ internal class GlazierToggle_uGUI : GlazierElementBase_uGUI, ISleekToggle, ISlee
         }
     }
 
-    public SleekColor backgroundColor
+    public SleekColor BackgroundColor
     {
         get
         {
@@ -63,7 +63,7 @@ internal class GlazierToggle_uGUI : GlazierElementBase_uGUI, ISleekToggle, ISlee
         }
     }
 
-    public SleekColor foregroundColor
+    public SleekColor ForegroundColor
     {
         get
         {
@@ -76,7 +76,7 @@ internal class GlazierToggle_uGUI : GlazierElementBase_uGUI, ISleekToggle, ISlee
         }
     }
 
-    public bool isInteractable
+    public bool IsInteractable
     {
         get
         {
@@ -89,7 +89,7 @@ internal class GlazierToggle_uGUI : GlazierElementBase_uGUI, ISleekToggle, ISlee
         }
     }
 
-    public event Toggled onToggled;
+    public event Toggled OnValueChanged;
 
     public GlazierToggle_uGUI(Glazier_uGUI glazier)
         : base(glazier)
@@ -99,8 +99,8 @@ internal class GlazierToggle_uGUI : GlazierElementBase_uGUI, ISleekToggle, ISlee
     public override void ConstructNew()
     {
         base.ConstructNew();
-        base.sizeOffset_X = 40;
-        base.sizeOffset_Y = 40;
+        base.SizeOffset_X = 40f;
+        base.SizeOffset_Y = 40f;
         GameObject gameObject = new GameObject("Background", typeof(RectTransform));
         gameObject.transform.SetParent(base.transform, worldPositionStays: false);
         RectTransform rectTransform = gameObject.GetRectTransform();
@@ -130,7 +130,7 @@ internal class GlazierToggle_uGUI : GlazierElementBase_uGUI, ISleekToggle, ISlee
     {
         Color color = _backgroundColor;
         Color color2 = _foregroundColor;
-        if (!isInteractable)
+        if (!IsInteractable)
         {
             color.a *= 0.25f;
             color2.a *= 0.25f;
@@ -164,6 +164,6 @@ internal class GlazierToggle_uGUI : GlazierElementBase_uGUI, ISleekToggle, ISlee
 
     private void uGUIonValueChanged(bool isOn)
     {
-        this.onToggled?.Invoke(this, isOn);
+        this.OnValueChanged?.Invoke(this, isOn);
     }
 }

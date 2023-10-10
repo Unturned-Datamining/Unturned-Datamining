@@ -17,4 +17,9 @@ public static class ColorEx
     {
         return (Mathf.Abs(color.r - 1f) < tolerance) & (Mathf.Abs(color.g - 1f) < tolerance) & (Mathf.Abs(color.b - 1f) < tolerance);
     }
+
+    public static Color WithAlpha(this Color color, float alphaOverride)
+    {
+        return new Color(color.r, color.g, color.b, alphaOverride);
+    }
 }

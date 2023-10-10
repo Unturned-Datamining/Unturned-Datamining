@@ -48,14 +48,14 @@ public class PlayerDashboardSkillsUI
     {
         skills = Player.player.skills.skills[specialityIndex];
         skillsScrollBox.RemoveAllChildren();
-        skillsScrollBox.contentSizeOffset = new Vector2(0f, skills.Length * 90 - 10);
+        skillsScrollBox.ContentSizeOffset = new Vector2(0f, skills.Length * 90 - 10);
         for (byte b = 0; b < skills.Length; b = (byte)(b + 1))
         {
             Skill skill = skills[b];
             SleekSkill sleekSkill = new SleekSkill(specialityIndex, b, skill);
-            sleekSkill.positionOffset_Y = b * 90;
-            sleekSkill.sizeOffset_Y = 80;
-            sleekSkill.sizeScale_X = 1f;
+            sleekSkill.PositionOffset_Y = b * 90;
+            sleekSkill.SizeOffset_Y = 80f;
+            sleekSkill.SizeScale_X = 1f;
             sleekSkill.onClickedButton += onClickedSkillButton;
             skillsScrollBox.AddChild(sleekSkill);
         }
@@ -64,13 +64,13 @@ public class PlayerDashboardSkillsUI
             backdropBox.RemoveChild(boostButton);
         }
         boostButton = new SleekBoost((byte)Player.player.skills.boost);
-        boostButton.positionOffset_X = 5;
-        boostButton.positionOffset_Y = -90;
-        boostButton.positionScale_X = 0.5f;
-        boostButton.positionScale_Y = 1f;
-        boostButton.sizeOffset_X = -15;
-        boostButton.sizeOffset_Y = 80;
-        boostButton.sizeScale_X = 0.5f;
+        boostButton.PositionOffset_X = 5f;
+        boostButton.PositionOffset_Y = -90f;
+        boostButton.PositionScale_X = 0.5f;
+        boostButton.PositionScale_Y = 1f;
+        boostButton.SizeOffset_X = -15f;
+        boostButton.SizeOffset_Y = 80f;
+        boostButton.SizeScale_X = 0.5f;
         boostButton.onClickedButton += onClickedBoostButton;
         backdropBox.AddChild(boostButton);
         selectedSpeciality = specialityIndex;
@@ -78,7 +78,7 @@ public class PlayerDashboardSkillsUI
 
     private static void onClickedSpecialityButton(ISleekElement button)
     {
-        updateSelection((byte)((button.positionOffset_X + 85) / 60));
+        updateSelection((byte)((button.PositionOffset_X + 85f) / 60f));
     }
 
     private static void onClickedBoostButton(ISleekElement button)
@@ -91,7 +91,7 @@ public class PlayerDashboardSkillsUI
 
     private static void onClickedSkillButton(ISleekElement button)
     {
-        byte b = (byte)(button.positionOffset_Y / 90);
+        byte b = (byte)(button.PositionOffset_Y / 90f);
         if (skills[b].level < skills[b].GetClampedMaxUnlockableLevel() && Player.player.skills.experience >= Player.player.skills.cost(selectedSpeciality, b))
         {
             Player.player.skills.sendUpgrade(selectedSpeciality, b, InputEx.GetKey(ControlsSettings.other));
@@ -100,7 +100,7 @@ public class PlayerDashboardSkillsUI
 
     private static void onExperienceUpdated(uint newExperience)
     {
-        experienceBox.text = localization.format("Experience", newExperience.ToString());
+        experienceBox.Text = localization.format("Experience", newExperience.ToString());
     }
 
     private static void onBoostUpdated(EPlayerBoost newBoost)
@@ -128,53 +128,53 @@ public class PlayerDashboardSkillsUI
         localization = Localization.read("/Player/PlayerDashboardSkills.dat");
         icons = Bundles.getBundle("/Bundles/Textures/Player/Icons/PlayerDashboardSkills/PlayerDashboardSkills.unity3d");
         container = new SleekFullscreenBox();
-        container.positionScale_Y = 1f;
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         PlayerUI.container.AddChild(container);
         active = false;
         selectedSpeciality = byte.MaxValue;
         backdropBox = Glazier.Get().CreateBox();
-        backdropBox.positionOffset_Y = 60;
-        backdropBox.sizeOffset_Y = -60;
-        backdropBox.sizeScale_X = 1f;
-        backdropBox.sizeScale_Y = 1f;
-        backdropBox.backgroundColor = new SleekColor(ESleekTint.BACKGROUND, 0.5f);
+        backdropBox.PositionOffset_Y = 60f;
+        backdropBox.SizeOffset_Y = -60f;
+        backdropBox.SizeScale_X = 1f;
+        backdropBox.SizeScale_Y = 1f;
+        backdropBox.BackgroundColor = new SleekColor(ESleekTint.BACKGROUND, 0.5f);
         container.AddChild(backdropBox);
         experienceBox = Glazier.Get().CreateBox();
-        experienceBox.positionOffset_X = 10;
-        experienceBox.positionOffset_Y = -90;
-        experienceBox.positionScale_Y = 1f;
-        experienceBox.sizeOffset_X = -15;
-        experienceBox.sizeOffset_Y = 80;
-        experienceBox.sizeScale_X = 0.5f;
-        experienceBox.fontSize = ESleekFontSize.Medium;
+        experienceBox.PositionOffset_X = 10f;
+        experienceBox.PositionOffset_Y = -90f;
+        experienceBox.PositionScale_Y = 1f;
+        experienceBox.SizeOffset_X = -15f;
+        experienceBox.SizeOffset_Y = 80f;
+        experienceBox.SizeScale_X = 0.5f;
+        experienceBox.FontSize = ESleekFontSize.Medium;
         backdropBox.AddChild(experienceBox);
         for (int i = 0; i < PlayerSkills.SPECIALITIES; i++)
         {
             SleekButtonIcon sleekButtonIcon = new SleekButtonIcon(icons.load<Texture2D>("Speciality_" + i));
-            sleekButtonIcon.positionOffset_X = -85 + i * 60;
-            sleekButtonIcon.positionOffset_Y = 10;
-            sleekButtonIcon.positionScale_X = 0.5f;
-            sleekButtonIcon.sizeOffset_X = 50;
-            sleekButtonIcon.sizeOffset_Y = 50;
+            sleekButtonIcon.PositionOffset_X = -85 + i * 60;
+            sleekButtonIcon.PositionOffset_Y = 10f;
+            sleekButtonIcon.PositionScale_X = 0.5f;
+            sleekButtonIcon.SizeOffset_X = 50f;
+            sleekButtonIcon.SizeOffset_Y = 50f;
             sleekButtonIcon.tooltip = localization.format("Speciality_" + i + "_Tooltip");
             sleekButtonIcon.iconColor = ESleekTint.FOREGROUND;
             sleekButtonIcon.onClickedButton += onClickedSpecialityButton;
             backdropBox.AddChild(sleekButtonIcon);
         }
         skillsScrollBox = Glazier.Get().CreateScrollView();
-        skillsScrollBox.positionOffset_X = 10;
-        skillsScrollBox.positionOffset_Y = 70;
-        skillsScrollBox.sizeOffset_X = -20;
-        skillsScrollBox.sizeOffset_Y = -170;
-        skillsScrollBox.sizeScale_X = 1f;
-        skillsScrollBox.sizeScale_Y = 1f;
-        skillsScrollBox.scaleContentToWidth = true;
+        skillsScrollBox.PositionOffset_X = 10f;
+        skillsScrollBox.PositionOffset_Y = 70f;
+        skillsScrollBox.SizeOffset_X = -20f;
+        skillsScrollBox.SizeOffset_Y = -170f;
+        skillsScrollBox.SizeScale_X = 1f;
+        skillsScrollBox.SizeScale_Y = 1f;
+        skillsScrollBox.ScaleContentToWidth = true;
         backdropBox.AddChild(skillsScrollBox);
         boostButton = null;
         updateSelection(0);

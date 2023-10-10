@@ -15,37 +15,37 @@ public class EffectVolume : LevelVolume<EffectVolume, EffectVolumeManager>
         public Menu(EffectVolume volume)
         {
             this.volume = volume;
-            base.sizeOffset_X = 400;
-            base.sizeOffset_Y = 110;
+            base.SizeOffset_X = 400f;
+            base.SizeOffset_Y = 110f;
             ISleekField sleekField = Glazier.Get().CreateStringField();
-            sleekField.sizeOffset_X = 200;
-            sleekField.sizeOffset_Y = 30;
+            sleekField.SizeOffset_X = 200f;
+            sleekField.SizeOffset_Y = 30f;
             if (volume._effectGuid.IsEmpty())
             {
-                sleekField.text = volume._id.ToString();
+                sleekField.Text = volume._id.ToString();
             }
             else
             {
-                sleekField.text = volume._effectGuid.ToString("N");
+                sleekField.Text = volume._effectGuid.ToString("N");
             }
-            sleekField.addLabel("Effect ID", ESleekSide.RIGHT);
-            sleekField.onTyped += OnIdChanged;
+            sleekField.AddLabel("Effect ID", ESleekSide.RIGHT);
+            sleekField.OnTextChanged += OnIdChanged;
             AddChild(sleekField);
             ISleekFloat32Field sleekFloat32Field = Glazier.Get().CreateFloat32Field();
-            sleekFloat32Field.positionOffset_Y = 40;
-            sleekFloat32Field.sizeOffset_X = 200;
-            sleekFloat32Field.sizeOffset_Y = 30;
-            sleekFloat32Field.state = volume.emissionMultiplier;
-            sleekFloat32Field.addLabel("Emission Rate", ESleekSide.RIGHT);
-            sleekFloat32Field.onTypedSingle += OnEmissionChanged;
+            sleekFloat32Field.PositionOffset_Y = 40f;
+            sleekFloat32Field.SizeOffset_X = 200f;
+            sleekFloat32Field.SizeOffset_Y = 30f;
+            sleekFloat32Field.Value = volume.emissionMultiplier;
+            sleekFloat32Field.AddLabel("Emission Rate", ESleekSide.RIGHT);
+            sleekFloat32Field.OnValueChanged += OnEmissionChanged;
             AddChild(sleekFloat32Field);
             ISleekFloat32Field sleekFloat32Field2 = Glazier.Get().CreateFloat32Field();
-            sleekFloat32Field2.positionOffset_Y = 80;
-            sleekFloat32Field2.sizeOffset_X = 200;
-            sleekFloat32Field2.sizeOffset_Y = 30;
-            sleekFloat32Field2.state = volume.audioRangeMultiplier;
-            sleekFloat32Field2.addLabel("Audio Range", ESleekSide.RIGHT);
-            sleekFloat32Field2.onTypedSingle += OnAudioRangeChanged;
+            sleekFloat32Field2.PositionOffset_Y = 80f;
+            sleekFloat32Field2.SizeOffset_X = 200f;
+            sleekFloat32Field2.SizeOffset_Y = 30f;
+            sleekFloat32Field2.Value = volume.audioRangeMultiplier;
+            sleekFloat32Field2.AddLabel("Audio Range", ESleekSide.RIGHT);
+            sleekFloat32Field2.OnValueChanged += OnAudioRangeChanged;
             AddChild(sleekFloat32Field2);
         }
 

@@ -22,16 +22,16 @@ public class PlayerBarricadeSignUI
         {
             active = true;
             sign = null;
-            yesButton.isVisible = false;
-            yesButton.isClickable = true;
-            noButton.positionOffset_X = -200;
-            noButton.sizeOffset_X = 400;
+            yesButton.IsVisible = false;
+            yesButton.IsClickable = true;
+            noButton.PositionOffset_X = -200f;
+            noButton.SizeOffset_X = 400f;
             string message = newText;
             ProfanityFilter.ApplyFilter(OptionsSettings.filter, ref message);
             message = message.Replace("<name_char>", Player.player.channel.owner.playerID.characterName);
-            textBox.text = message;
-            textField.isVisible = false;
-            textBox.isVisible = true;
+            textBox.Text = message;
+            textField.IsVisible = false;
+            textBox.IsVisible = true;
             container.AnimateIntoView();
         }
     }
@@ -45,13 +45,13 @@ public class PlayerBarricadeSignUI
         }
         active = true;
         sign = newSign;
-        yesButton.isVisible = true;
-        yesButton.isClickable = true;
-        noButton.positionOffset_X = 5;
-        noButton.sizeOffset_X = 195;
-        textField.text = sign.DisplayText;
-        textField.isVisible = true;
-        textBox.isVisible = false;
+        yesButton.IsVisible = true;
+        yesButton.IsClickable = true;
+        noButton.PositionOffset_X = 5f;
+        noButton.SizeOffset_X = 195f;
+        textField.Text = sign.DisplayText;
+        textField.IsVisible = true;
+        textBox.IsVisible = false;
         container.AnimateIntoView();
     }
 
@@ -71,11 +71,11 @@ public class PlayerBarricadeSignUI
         if (sign != null)
         {
             string text2 = sign.trimText(text);
-            yesButton.isClickable = sign.isTextValid(text2);
+            yesButton.IsClickable = sign.isTextValid(text2);
         }
         else
         {
-            yesButton.isClickable = false;
+            yesButton.IsClickable = false;
         }
     }
 
@@ -83,7 +83,7 @@ public class PlayerBarricadeSignUI
     {
         if (sign != null)
         {
-            string newText = sign.trimText(textField.text);
+            string newText = sign.trimText(textField.Text);
             sign.ClientSetText(newText);
         }
         PlayerLifeUI.open();
@@ -100,56 +100,56 @@ public class PlayerBarricadeSignUI
     {
         Local local = Localization.read("/Player/PlayerBarricadeSign.dat");
         container = new SleekFullscreenBox();
-        container.positionScale_Y = 1f;
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         PlayerUI.container.AddChild(container);
         active = false;
         sign = null;
         textField = Glazier.Get().CreateStringField();
-        textField.positionOffset_X = -200;
-        textField.positionScale_X = 0.5f;
-        textField.positionScale_Y = 0.1f;
-        textField.sizeOffset_X = 400;
-        textField.sizeScale_Y = 0.8f;
-        textField.maxLength = 200;
-        textField.multiline = true;
-        textField.onTyped += onTypedSignText;
+        textField.PositionOffset_X = -200f;
+        textField.PositionScale_X = 0.5f;
+        textField.PositionScale_Y = 0.1f;
+        textField.SizeOffset_X = 400f;
+        textField.SizeScale_Y = 0.8f;
+        textField.MaxLength = 200;
+        textField.IsMultiline = true;
+        textField.OnTextChanged += onTypedSignText;
         container.AddChild(textField);
         textBox = Glazier.Get().CreateBox();
-        textBox.positionOffset_X = -200;
-        textBox.positionScale_X = 0.5f;
-        textBox.positionScale_Y = 0.1f;
-        textBox.sizeOffset_X = 400;
-        textBox.sizeScale_Y = 0.8f;
-        textBox.textColor = ESleekTint.RICH_TEXT_DEFAULT;
-        textBox.enableRichText = true;
+        textBox.PositionOffset_X = -200f;
+        textBox.PositionScale_X = 0.5f;
+        textBox.PositionScale_Y = 0.1f;
+        textBox.SizeOffset_X = 400f;
+        textBox.SizeScale_Y = 0.8f;
+        textBox.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+        textBox.AllowRichText = true;
         container.AddChild(textBox);
         yesButton = Glazier.Get().CreateButton();
-        yesButton.positionOffset_X = -200;
-        yesButton.positionOffset_Y = 5;
-        yesButton.positionScale_X = 0.5f;
-        yesButton.positionScale_Y = 0.9f;
-        yesButton.sizeOffset_X = 195;
-        yesButton.sizeOffset_Y = 30;
-        yesButton.text = local.format("Yes_Button");
-        yesButton.tooltipText = local.format("Yes_Button_Tooltip");
-        yesButton.onClickedButton += onClickedYesButton;
+        yesButton.PositionOffset_X = -200f;
+        yesButton.PositionOffset_Y = 5f;
+        yesButton.PositionScale_X = 0.5f;
+        yesButton.PositionScale_Y = 0.9f;
+        yesButton.SizeOffset_X = 195f;
+        yesButton.SizeOffset_Y = 30f;
+        yesButton.Text = local.format("Yes_Button");
+        yesButton.TooltipText = local.format("Yes_Button_Tooltip");
+        yesButton.OnClicked += onClickedYesButton;
         container.AddChild(yesButton);
         noButton = Glazier.Get().CreateButton();
-        noButton.positionOffset_X = 5;
-        noButton.positionOffset_Y = 5;
-        noButton.positionScale_X = 0.5f;
-        noButton.positionScale_Y = 0.9f;
-        noButton.sizeOffset_X = 195;
-        noButton.sizeOffset_Y = 30;
-        noButton.text = local.format("No_Button");
-        noButton.tooltipText = local.format("No_Button_Tooltip");
-        noButton.onClickedButton += onClickedNoButton;
+        noButton.PositionOffset_X = 5f;
+        noButton.PositionOffset_Y = 5f;
+        noButton.PositionScale_X = 0.5f;
+        noButton.PositionScale_Y = 0.9f;
+        noButton.SizeOffset_X = 195f;
+        noButton.SizeOffset_Y = 30f;
+        noButton.Text = local.format("No_Button");
+        noButton.TooltipText = local.format("No_Button_Tooltip");
+        noButton.OnClicked += onClickedNoButton;
         container.AddChild(noButton);
     }
 }

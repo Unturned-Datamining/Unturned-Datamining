@@ -39,7 +39,7 @@ public class UseableFilter : Useable
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askFilter")]
     public void ReceivePlayFilter()
     {
-        if (base.player.equipment.isEquipped)
+        if (base.player.equipment.IsEquipAnimationFinished)
         {
             filter();
         }
@@ -69,7 +69,7 @@ public class UseableFilter : Useable
     public override void equip()
     {
         base.player.animator.play("Equip", smooth: true);
-        useTime = base.player.animator.getAnimationLength("Use");
+        useTime = base.player.animator.GetAnimationLength("Use");
     }
 
     public override void simulate(uint simulation, bool inputSteady)

@@ -11,7 +11,7 @@ internal class GlazierElementBase_IMGUI : GlazierElementBase
 
     private List<GlazierElementBase_IMGUI> _children = new List<GlazierElementBase_IMGUI>();
 
-    public override ISleekElement parent => _parent;
+    public override ISleekElement Parent => _parent;
 
     public virtual void OnGUI()
     {
@@ -20,7 +20,7 @@ internal class GlazierElementBase_IMGUI : GlazierElementBase
 
     public override int FindIndexOfChild(ISleekElement child)
     {
-        return _children.IndexOf((GlazierElementBase_IMGUI)child.attachmentRoot);
+        return _children.IndexOf((GlazierElementBase_IMGUI)child.AttachmentRoot);
     }
 
     public override ISleekElement GetChildAtIndex(int index)
@@ -30,15 +30,15 @@ internal class GlazierElementBase_IMGUI : GlazierElementBase
 
     public override void RemoveChild(ISleekElement child)
     {
-        if (child.attachmentRoot is GlazierElementBase_IMGUI glazierElementBase_IMGUI)
+        if (child.AttachmentRoot is GlazierElementBase_IMGUI glazierElementBase_IMGUI)
         {
             glazierElementBase_IMGUI._parent = null;
-            glazierElementBase_IMGUI.destroy();
+            glazierElementBase_IMGUI.InternalDestroy();
             _children.Remove(glazierElementBase_IMGUI);
         }
         else
         {
-            UnturnedLog.warn("{0} cannot remove non-IMGUI element {1}", GetType().Name, child.attachmentRoot.GetType().Name);
+            UnturnedLog.warn("{0} cannot remove non-IMGUI element {1}", GetType().Name, child.AttachmentRoot.GetType().Name);
         }
     }
 
@@ -47,7 +47,7 @@ internal class GlazierElementBase_IMGUI : GlazierElementBase
         foreach (GlazierElementBase_IMGUI child in _children)
         {
             child._parent = null;
-            child.destroy();
+            child.InternalDestroy();
         }
         _children.Clear();
     }
@@ -56,7 +56,7 @@ internal class GlazierElementBase_IMGUI : GlazierElementBase
     {
         foreach (GlazierElementBase_IMGUI child in _children)
         {
-            if (child.isVisible)
+            if (child.IsVisible)
             {
                 child.Update();
             }
@@ -65,7 +65,7 @@ internal class GlazierElementBase_IMGUI : GlazierElementBase
 
     public override void AddChild(ISleekElement child)
     {
-        if (child.attachmentRoot is GlazierElementBase_IMGUI glazierElementBase_IMGUI)
+        if (child.AttachmentRoot is GlazierElementBase_IMGUI glazierElementBase_IMGUI)
         {
             if (glazierElementBase_IMGUI._parent != this)
             {
@@ -80,11 +80,11 @@ internal class GlazierElementBase_IMGUI : GlazierElementBase
         }
         else
         {
-            UnturnedLog.warn("{0} cannot add non-IMGUI element {1}", GetType().Name, child.attachmentRoot.GetType().Name);
+            UnturnedLog.warn("{0} cannot add non-IMGUI element {1}", GetType().Name, child.AttachmentRoot.GetType().Name);
         }
     }
 
-    public override void destroy()
+    public override void InternalDestroy()
     {
         RemoveAllChildren();
     }
@@ -136,6 +136,19 @@ internal class GlazierElementBase_IMGUI : GlazierElementBase
         return result;
     }
 
+    public override Vector2 GetAbsoluteSize()
+    {
+        return GetDrawRectInScreenSpace().size;
+    }
+
+    public override void SetAsFirstSibling()
+    {
+        if (_parent != null && _parent._children.Remove(this))
+        {
+            _parent._children.Insert(0, this);
+        }
+    }
+
     protected virtual void TransformChildDrawPositionIntoParentSpace(ref Vector2 position)
     {
     }
@@ -144,9 +157,9 @@ internal class GlazierElementBase_IMGUI : GlazierElementBase
     {
         Rect result = drawRect;
         Vector2 position = result.position;
-        for (GlazierElementBase_IMGUI glazierElementBase_IMGUI = _parent; glazierElementBase_IMGUI != null; glazierElementBase_IMGUI = glazierElementBase_IMGUI._parent)
+        for (GlazierElementBase_IMGUI parent = _parent; parent != null; parent = parent._parent)
         {
-            glazierElementBase_IMGUI.TransformChildDrawPositionIntoParentSpace(ref position);
+            parent.TransformChildDrawPositionIntoParentSpace(ref position);
         }
         result.position = position;
         return result;
@@ -165,14 +178,14 @@ internal class GlazierElementBase_IMGUI : GlazierElementBase
             {
                 return new Rect(1920f, 0f, 1920f, 1080f);
             }
-            return new Rect(base.positionOffset_X, base.positionOffset_Y, Screen.width, Screen.height);
+            return new Rect(base.PositionOffset_X, base.PositionOffset_Y, Screen.width, Screen.height);
         }
         float userInterfaceScale = GraphicsSettings.userInterfaceScale;
         Rect layoutRect = _parent.GetLayoutRect();
-        layoutRect.x += (float)base.positionOffset_X * userInterfaceScale + layoutRect.width * base.positionScale_X;
-        layoutRect.y += (float)base.positionOffset_Y * userInterfaceScale + layoutRect.height * base.positionScale_Y;
-        layoutRect.width = (float)base.sizeOffset_X * userInterfaceScale + layoutRect.width * base.sizeScale_X;
-        layoutRect.height = (float)base.sizeOffset_Y * userInterfaceScale + layoutRect.height * base.sizeScale_Y;
+        layoutRect.x += base.PositionOffset_X * userInterfaceScale + layoutRect.width * base.PositionScale_X;
+        layoutRect.y += base.PositionOffset_Y * userInterfaceScale + layoutRect.height * base.PositionScale_Y;
+        layoutRect.width = base.SizeOffset_X * userInterfaceScale + layoutRect.width * base.SizeScale_X;
+        layoutRect.height = base.SizeOffset_Y * userInterfaceScale + layoutRect.height * base.SizeScale_Y;
         return layoutRect;
     }
 
@@ -191,7 +204,7 @@ internal class GlazierElementBase_IMGUI : GlazierElementBase
         for (int i = 0; i < _children.Count; i++)
         {
             GlazierElementBase_IMGUI glazierElementBase_IMGUI = _children[i];
-            if (glazierElementBase_IMGUI.isVisible)
+            if (glazierElementBase_IMGUI.IsVisible)
             {
                 glazierElementBase_IMGUI.OnGUI();
             }

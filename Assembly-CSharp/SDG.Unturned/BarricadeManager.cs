@@ -2303,7 +2303,7 @@ public class BarricadeManager : SteamCaller
                             player.movement.loadedRegions[b, b2].isBarricadesLoaded = false;
                         }
                     }
-                    else if (player.channel.isOwner && regions[b, b2].isNetworked && !Regions.checkArea(b, b2, new_x, new_y, BARRICADE_REGIONS))
+                    else if (player.channel.IsLocalPlayer && regions[b, b2].isNetworked && !Regions.checkArea(b, b2, new_x, new_y, BARRICADE_REGIONS))
                     {
                         if (regions[b, b2].drops.Count > 0)
                         {
@@ -2533,6 +2533,12 @@ public class BarricadeManager : SteamCaller
             }
         }
         river.closeRiver();
+    }
+
+    [Conditional("LOG_BARRICADE_LOADING")]
+    private static void LogLoading(string message)
+    {
+        UnturnedLog.info(message);
     }
 
     private static void loadRegion(byte version, River river, BarricadeRegion region)

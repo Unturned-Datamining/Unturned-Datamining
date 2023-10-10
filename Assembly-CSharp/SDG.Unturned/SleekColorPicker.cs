@@ -43,23 +43,23 @@ public class SleekColorPicker : SleekWrapper
 
     private void updateColor()
     {
-        colorImage.color = color;
+        colorImage.TintColor = color;
     }
 
     private void updateColorText()
     {
-        rField.state = (byte)(color.r * 255f);
-        gField.state = (byte)(color.g * 255f);
-        bField.state = (byte)(color.b * 255f);
-        aField.state = (byte)(color.a * 255f);
+        rField.Value = (byte)(color.r * 255f);
+        gField.Value = (byte)(color.g * 255f);
+        bField.Value = (byte)(color.b * 255f);
+        aField.Value = (byte)(color.a * 255f);
     }
 
     private void updateColorSlider()
     {
-        rSlider.state = color.r;
-        gSlider.state = color.g;
-        bSlider.state = color.b;
-        aSlider.state = color.a;
+        rSlider.Value = color.r;
+        gSlider.Value = color.g;
+        bSlider.Value = color.b;
+        aSlider.Value = color.a;
     }
 
     private void onTypedRField(ISleekUInt8Field field, byte value)
@@ -128,97 +128,97 @@ public class SleekColorPicker : SleekWrapper
 
     public void SetAllowAlpha(bool allowAlpha)
     {
-        aField.isVisible = allowAlpha;
-        aSlider.isVisible = allowAlpha;
+        aField.IsVisible = allowAlpha;
+        aSlider.IsVisible = allowAlpha;
         if (allowAlpha)
         {
-            base.sizeOffset_Y = 150;
-            rField.sizeOffset_X = 50;
-            gField.positionOffset_X = rField.positionOffset_X + rField.sizeOffset_X;
-            gField.sizeOffset_X = 50;
-            bField.positionOffset_X = gField.positionOffset_X + gField.sizeOffset_X;
-            bField.sizeOffset_X = 50;
-            aField.positionOffset_X = bField.positionOffset_X + bField.sizeOffset_X;
+            base.SizeOffset_Y = 150f;
+            rField.SizeOffset_X = 50f;
+            gField.PositionOffset_X = rField.PositionOffset_X + rField.SizeOffset_X;
+            gField.SizeOffset_X = 50f;
+            bField.PositionOffset_X = gField.PositionOffset_X + gField.SizeOffset_X;
+            bField.SizeOffset_X = 50f;
+            aField.PositionOffset_X = bField.PositionOffset_X + bField.SizeOffset_X;
         }
         else
         {
-            base.sizeOffset_Y = 120;
-            rField.sizeOffset_X = 60;
-            gField.positionOffset_X = rField.positionOffset_X + rField.sizeOffset_X + 10;
-            gField.sizeOffset_X = 60;
-            bField.positionOffset_X = gField.positionOffset_X + gField.sizeOffset_X + 10;
-            bField.sizeOffset_X = 60;
+            base.SizeOffset_Y = 120f;
+            rField.SizeOffset_X = 60f;
+            gField.PositionOffset_X = rField.PositionOffset_X + rField.SizeOffset_X + 10f;
+            gField.SizeOffset_X = 60f;
+            bField.PositionOffset_X = gField.PositionOffset_X + gField.SizeOffset_X + 10f;
+            bField.SizeOffset_X = 60f;
         }
     }
 
     public SleekColorPicker()
     {
         color = Color.black;
-        base.sizeOffset_X = 240;
+        base.SizeOffset_X = 240f;
         colorImage = Glazier.Get().CreateImage();
-        colorImage.sizeOffset_X = 30;
-        colorImage.sizeOffset_Y = 30;
-        colorImage.texture = (Texture2D)GlazierResources.PixelTexture;
+        colorImage.SizeOffset_X = 30f;
+        colorImage.SizeOffset_Y = 30f;
+        colorImage.Texture = (Texture2D)GlazierResources.PixelTexture;
         AddChild(colorImage);
         rField = Glazier.Get().CreateUInt8Field();
-        rField.positionOffset_X = 40;
-        rField.sizeOffset_Y = 30;
-        rField.textColor = Palette.COLOR_R;
-        rField.onTypedByte += onTypedRField;
+        rField.PositionOffset_X = 40f;
+        rField.SizeOffset_Y = 30f;
+        rField.TextColor = Palette.COLOR_R;
+        rField.OnValueChanged += onTypedRField;
         AddChild(rField);
         gField = Glazier.Get().CreateUInt8Field();
-        gField.sizeOffset_Y = 30;
-        gField.textColor = Palette.COLOR_G;
-        gField.onTypedByte += onTypedGField;
+        gField.SizeOffset_Y = 30f;
+        gField.TextColor = Palette.COLOR_G;
+        gField.OnValueChanged += onTypedGField;
         AddChild(gField);
         bField = Glazier.Get().CreateUInt8Field();
-        bField.sizeOffset_Y = 30;
-        bField.textColor = Palette.COLOR_B;
-        bField.onTypedByte += onTypedBField;
+        bField.SizeOffset_Y = 30f;
+        bField.TextColor = Palette.COLOR_B;
+        bField.OnValueChanged += onTypedBField;
         AddChild(bField);
         aField = Glazier.Get().CreateUInt8Field();
-        aField.sizeOffset_X = 50;
-        aField.sizeOffset_Y = 30;
-        aField.textColor = Palette.COLOR_W;
-        aField.onTypedByte += onTypedAField;
-        aField.isVisible = false;
+        aField.SizeOffset_X = 50f;
+        aField.SizeOffset_Y = 30f;
+        aField.TextColor = Palette.COLOR_W;
+        aField.OnValueChanged += onTypedAField;
+        aField.IsVisible = false;
         AddChild(aField);
         rSlider = Glazier.Get().CreateSlider();
-        rSlider.positionOffset_X = 40;
-        rSlider.positionOffset_Y = 40;
-        rSlider.sizeOffset_X = 200;
-        rSlider.sizeOffset_Y = 20;
-        rSlider.orientation = ESleekOrientation.HORIZONTAL;
-        rSlider.addLabel("R", Palette.COLOR_R, ESleekSide.LEFT);
-        rSlider.onDragged += onDraggedRSlider;
+        rSlider.PositionOffset_X = 40f;
+        rSlider.PositionOffset_Y = 40f;
+        rSlider.SizeOffset_X = 200f;
+        rSlider.SizeOffset_Y = 20f;
+        rSlider.Orientation = ESleekOrientation.HORIZONTAL;
+        rSlider.AddLabel("R", Palette.COLOR_R, ESleekSide.LEFT);
+        rSlider.OnValueChanged += onDraggedRSlider;
         AddChild(rSlider);
         gSlider = Glazier.Get().CreateSlider();
-        gSlider.positionOffset_X = 40;
-        gSlider.positionOffset_Y = 70;
-        gSlider.sizeOffset_X = 200;
-        gSlider.sizeOffset_Y = 20;
-        gSlider.orientation = ESleekOrientation.HORIZONTAL;
-        gSlider.addLabel("G", Palette.COLOR_G, ESleekSide.LEFT);
-        gSlider.onDragged += onDraggedGSlider;
+        gSlider.PositionOffset_X = 40f;
+        gSlider.PositionOffset_Y = 70f;
+        gSlider.SizeOffset_X = 200f;
+        gSlider.SizeOffset_Y = 20f;
+        gSlider.Orientation = ESleekOrientation.HORIZONTAL;
+        gSlider.AddLabel("G", Palette.COLOR_G, ESleekSide.LEFT);
+        gSlider.OnValueChanged += onDraggedGSlider;
         AddChild(gSlider);
         bSlider = Glazier.Get().CreateSlider();
-        bSlider.positionOffset_X = 40;
-        bSlider.positionOffset_Y = 100;
-        bSlider.sizeOffset_X = 200;
-        bSlider.sizeOffset_Y = 20;
-        bSlider.orientation = ESleekOrientation.HORIZONTAL;
-        bSlider.addLabel("B", Palette.COLOR_B, ESleekSide.LEFT);
-        bSlider.onDragged += onDraggedBSlider;
+        bSlider.PositionOffset_X = 40f;
+        bSlider.PositionOffset_Y = 100f;
+        bSlider.SizeOffset_X = 200f;
+        bSlider.SizeOffset_Y = 20f;
+        bSlider.Orientation = ESleekOrientation.HORIZONTAL;
+        bSlider.AddLabel("B", Palette.COLOR_B, ESleekSide.LEFT);
+        bSlider.OnValueChanged += onDraggedBSlider;
         AddChild(bSlider);
         aSlider = Glazier.Get().CreateSlider();
-        aSlider.positionOffset_X = 40;
-        aSlider.positionOffset_Y = 130;
-        aSlider.sizeOffset_X = 200;
-        aSlider.sizeOffset_Y = 20;
-        aSlider.orientation = ESleekOrientation.HORIZONTAL;
-        aSlider.addLabel("A", Palette.COLOR_W, ESleekSide.LEFT);
-        aSlider.onDragged += onDraggedASlider;
-        aSlider.isVisible = false;
+        aSlider.PositionOffset_X = 40f;
+        aSlider.PositionOffset_Y = 130f;
+        aSlider.SizeOffset_X = 200f;
+        aSlider.SizeOffset_Y = 20f;
+        aSlider.Orientation = ESleekOrientation.HORIZONTAL;
+        aSlider.AddLabel("A", Palette.COLOR_W, ESleekSide.LEFT);
+        aSlider.OnValueChanged += onDraggedASlider;
+        aSlider.IsVisible = false;
         AddChild(aSlider);
         SetAllowAlpha(allowAlpha: false);
     }

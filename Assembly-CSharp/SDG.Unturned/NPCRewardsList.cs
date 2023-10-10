@@ -6,7 +6,7 @@ public struct NPCRewardsList
 {
     internal INPCReward[] rewards;
 
-    public void Grant(Player player, bool shouldSend = true)
+    public void Grant(Player player)
     {
         if (rewards == null || rewards.Length == 0)
         {
@@ -19,11 +19,11 @@ public struct NPCRewardsList
             {
                 if (iNPCReward.grantDelaySeconds > 0f)
                 {
-                    player.quests.GetOrCreateDelayedQuestRewards().GrantReward(iNPCReward, shouldSend);
+                    player.quests.GetOrCreateDelayedQuestRewards().GrantReward(iNPCReward);
                 }
                 else
                 {
-                    iNPCReward.grantReward(player, shouldSend);
+                    iNPCReward.GrantReward(player);
                 }
             }
         }
@@ -41,5 +41,11 @@ public struct NPCRewardsList
             rewards = new INPCReward[num];
             NPCTool.readRewards(data, localization, prefixKey, rewards, assetContext);
         }
+    }
+
+    [Obsolete("Removed shouldSend parameter")]
+    public void Grant(Player player, bool shouldSend = true)
+    {
+        Grant(player);
     }
 }

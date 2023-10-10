@@ -56,7 +56,7 @@ public class EditorLevelVisibilityUI
             active = false;
             for (int i = 0; i < regionLabels.Length; i++)
             {
-                regionLabels[i].isVisible = false;
+                regionLabels[i].IsVisible = false;
             }
             container.AnimateOutOfView(1f, 0f);
         }
@@ -198,16 +198,16 @@ public class EditorLevelVisibilityUI
                 }
                 long num8 = (long)num4 * (long)num7;
                 float quality = Mathf.Clamp01((float)(1.0 - (double)num8 / 50000000.0));
-                sleekLabel.text = localization.format("Point", num2, num3);
-                sleekLabel.text = sleekLabel.text + "\n" + localization.format("Objects", num4, num6);
-                sleekLabel.text = sleekLabel.text + "\n" + localization.format("Triangles", num7);
+                sleekLabel.Text = localization.format("Point", num2, num3);
+                sleekLabel.Text = sleekLabel.Text + "\n" + localization.format("Objects", num4, num6);
+                sleekLabel.Text = sleekLabel.Text + "\n" + localization.format("Triangles", num7);
                 if (num4 == 0 && num7 == 0)
                 {
-                    sleekLabel.textColor = Color.white;
+                    sleekLabel.TextColor = Color.white;
                 }
                 else
                 {
-                    sleekLabel.textColor = ItemTool.getQualityColor(quality);
+                    sleekLabel.TextColor = ItemTool.getQualityColor(quality);
                 }
             }
         }
@@ -229,18 +229,18 @@ public class EditorLevelVisibilityUI
                     if (vector.z > 0f)
                     {
                         Vector2 vector2 = container.ViewportToNormalizedPosition(vector);
-                        sleekLabel.positionScale_X = vector2.x;
-                        sleekLabel.positionScale_Y = vector2.y;
-                        sleekLabel.isVisible = true;
+                        sleekLabel.PositionScale_X = vector2.x;
+                        sleekLabel.PositionScale_Y = vector2.y;
+                        sleekLabel.IsVisible = true;
                     }
                     else
                     {
-                        sleekLabel.isVisible = false;
+                        sleekLabel.IsVisible = false;
                     }
                 }
                 else
                 {
-                    sleekLabel.isVisible = false;
+                    sleekLabel.IsVisible = false;
                 }
             }
         }
@@ -250,120 +250,120 @@ public class EditorLevelVisibilityUI
     {
         localization = Localization.read("/Editor/EditorLevelVisibility.dat");
         container = new SleekFullscreenBox();
-        container.positionScale_X = 1f;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionScale_X = 1f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         EditorUI.window.AddChild(container);
         active = false;
         roadsToggle = Glazier.Get().CreateToggle();
-        roadsToggle.positionOffset_X = -210;
-        roadsToggle.positionOffset_Y = 90;
-        roadsToggle.positionScale_X = 1f;
-        roadsToggle.sizeOffset_X = 40;
-        roadsToggle.sizeOffset_Y = 40;
-        roadsToggle.state = LevelVisibility.roadsVisible;
-        roadsToggle.addLabel(localization.format("Roads_Label"), ESleekSide.RIGHT);
-        roadsToggle.onToggled += onToggledRoadsToggle;
+        roadsToggle.PositionOffset_X = -210f;
+        roadsToggle.PositionOffset_Y = 90f;
+        roadsToggle.PositionScale_X = 1f;
+        roadsToggle.SizeOffset_X = 40f;
+        roadsToggle.SizeOffset_Y = 40f;
+        roadsToggle.Value = LevelVisibility.roadsVisible;
+        roadsToggle.AddLabel(localization.format("Roads_Label"), ESleekSide.RIGHT);
+        roadsToggle.OnValueChanged += onToggledRoadsToggle;
         container.AddChild(roadsToggle);
         navigationToggle = Glazier.Get().CreateToggle();
-        navigationToggle.positionOffset_X = -210;
-        navigationToggle.positionOffset_Y = 140;
-        navigationToggle.positionScale_X = 1f;
-        navigationToggle.sizeOffset_X = 40;
-        navigationToggle.sizeOffset_Y = 40;
-        navigationToggle.state = LevelVisibility.navigationVisible;
-        navigationToggle.addLabel(localization.format("Navigation_Label"), ESleekSide.RIGHT);
-        navigationToggle.onToggled += onToggledNavigationToggle;
+        navigationToggle.PositionOffset_X = -210f;
+        navigationToggle.PositionOffset_Y = 140f;
+        navigationToggle.PositionScale_X = 1f;
+        navigationToggle.SizeOffset_X = 40f;
+        navigationToggle.SizeOffset_Y = 40f;
+        navigationToggle.Value = LevelVisibility.navigationVisible;
+        navigationToggle.AddLabel(localization.format("Navigation_Label"), ESleekSide.RIGHT);
+        navigationToggle.OnValueChanged += onToggledNavigationToggle;
         container.AddChild(navigationToggle);
         nodesToggle = Glazier.Get().CreateToggle();
-        nodesToggle.positionOffset_X = -210;
-        nodesToggle.positionOffset_Y = 190;
-        nodesToggle.positionScale_X = 1f;
-        nodesToggle.sizeOffset_X = 40;
-        nodesToggle.sizeOffset_Y = 40;
-        nodesToggle.state = LevelVisibility.nodesVisible;
-        nodesToggle.addLabel(localization.format("Nodes_Label"), ESleekSide.RIGHT);
-        nodesToggle.onToggled += onToggledNodesToggle;
+        nodesToggle.PositionOffset_X = -210f;
+        nodesToggle.PositionOffset_Y = 190f;
+        nodesToggle.PositionScale_X = 1f;
+        nodesToggle.SizeOffset_X = 40f;
+        nodesToggle.SizeOffset_Y = 40f;
+        nodesToggle.Value = LevelVisibility.nodesVisible;
+        nodesToggle.AddLabel(localization.format("Nodes_Label"), ESleekSide.RIGHT);
+        nodesToggle.OnValueChanged += onToggledNodesToggle;
         container.AddChild(nodesToggle);
         itemsToggle = Glazier.Get().CreateToggle();
-        itemsToggle.positionOffset_X = -210;
-        itemsToggle.positionOffset_Y = 240;
-        itemsToggle.positionScale_X = 1f;
-        itemsToggle.sizeOffset_X = 40;
-        itemsToggle.sizeOffset_Y = 40;
-        itemsToggle.state = LevelVisibility.itemsVisible;
-        itemsToggle.addLabel(localization.format("Items_Label"), ESleekSide.RIGHT);
-        itemsToggle.onToggled += onToggledItemsToggle;
+        itemsToggle.PositionOffset_X = -210f;
+        itemsToggle.PositionOffset_Y = 240f;
+        itemsToggle.PositionScale_X = 1f;
+        itemsToggle.SizeOffset_X = 40f;
+        itemsToggle.SizeOffset_Y = 40f;
+        itemsToggle.Value = LevelVisibility.itemsVisible;
+        itemsToggle.AddLabel(localization.format("Items_Label"), ESleekSide.RIGHT);
+        itemsToggle.OnValueChanged += onToggledItemsToggle;
         container.AddChild(itemsToggle);
         playersToggle = Glazier.Get().CreateToggle();
-        playersToggle.positionOffset_X = -210;
-        playersToggle.positionOffset_Y = 290;
-        playersToggle.positionScale_X = 1f;
-        playersToggle.sizeOffset_X = 40;
-        playersToggle.sizeOffset_Y = 40;
-        playersToggle.state = LevelVisibility.playersVisible;
-        playersToggle.addLabel(localization.format("Players_Label"), ESleekSide.RIGHT);
-        playersToggle.onToggled += onToggledPlayersToggle;
+        playersToggle.PositionOffset_X = -210f;
+        playersToggle.PositionOffset_Y = 290f;
+        playersToggle.PositionScale_X = 1f;
+        playersToggle.SizeOffset_X = 40f;
+        playersToggle.SizeOffset_Y = 40f;
+        playersToggle.Value = LevelVisibility.playersVisible;
+        playersToggle.AddLabel(localization.format("Players_Label"), ESleekSide.RIGHT);
+        playersToggle.OnValueChanged += onToggledPlayersToggle;
         container.AddChild(playersToggle);
         zombiesToggle = Glazier.Get().CreateToggle();
-        zombiesToggle.positionOffset_X = -210;
-        zombiesToggle.positionOffset_Y = 340;
-        zombiesToggle.positionScale_X = 1f;
-        zombiesToggle.sizeOffset_X = 40;
-        zombiesToggle.sizeOffset_Y = 40;
-        zombiesToggle.state = LevelVisibility.zombiesVisible;
-        zombiesToggle.addLabel(localization.format("Zombies_Label"), ESleekSide.RIGHT);
-        zombiesToggle.onToggled += onToggledZombiesToggle;
+        zombiesToggle.PositionOffset_X = -210f;
+        zombiesToggle.PositionOffset_Y = 340f;
+        zombiesToggle.PositionScale_X = 1f;
+        zombiesToggle.SizeOffset_X = 40f;
+        zombiesToggle.SizeOffset_Y = 40f;
+        zombiesToggle.Value = LevelVisibility.zombiesVisible;
+        zombiesToggle.AddLabel(localization.format("Zombies_Label"), ESleekSide.RIGHT);
+        zombiesToggle.OnValueChanged += onToggledZombiesToggle;
         container.AddChild(zombiesToggle);
         vehiclesToggle = Glazier.Get().CreateToggle();
-        vehiclesToggle.positionOffset_X = -210;
-        vehiclesToggle.positionOffset_Y = 390;
-        vehiclesToggle.positionScale_X = 1f;
-        vehiclesToggle.sizeOffset_X = 40;
-        vehiclesToggle.sizeOffset_Y = 40;
-        vehiclesToggle.state = LevelVisibility.vehiclesVisible;
-        vehiclesToggle.addLabel(localization.format("Vehicles_Label"), ESleekSide.RIGHT);
-        vehiclesToggle.onToggled += onToggledVehiclesToggle;
+        vehiclesToggle.PositionOffset_X = -210f;
+        vehiclesToggle.PositionOffset_Y = 390f;
+        vehiclesToggle.PositionScale_X = 1f;
+        vehiclesToggle.SizeOffset_X = 40f;
+        vehiclesToggle.SizeOffset_Y = 40f;
+        vehiclesToggle.Value = LevelVisibility.vehiclesVisible;
+        vehiclesToggle.AddLabel(localization.format("Vehicles_Label"), ESleekSide.RIGHT);
+        vehiclesToggle.OnValueChanged += onToggledVehiclesToggle;
         container.AddChild(vehiclesToggle);
         borderToggle = Glazier.Get().CreateToggle();
-        borderToggle.positionOffset_X = -210;
-        borderToggle.positionOffset_Y = 440;
-        borderToggle.positionScale_X = 1f;
-        borderToggle.sizeOffset_X = 40;
-        borderToggle.sizeOffset_Y = 40;
-        borderToggle.state = LevelVisibility.borderVisible;
-        borderToggle.addLabel(localization.format("Border_Label"), ESleekSide.RIGHT);
-        borderToggle.onToggled += onToggledBorderToggle;
+        borderToggle.PositionOffset_X = -210f;
+        borderToggle.PositionOffset_Y = 440f;
+        borderToggle.PositionScale_X = 1f;
+        borderToggle.SizeOffset_X = 40f;
+        borderToggle.SizeOffset_Y = 40f;
+        borderToggle.Value = LevelVisibility.borderVisible;
+        borderToggle.AddLabel(localization.format("Border_Label"), ESleekSide.RIGHT);
+        borderToggle.OnValueChanged += onToggledBorderToggle;
         container.AddChild(borderToggle);
         animalsToggle = Glazier.Get().CreateToggle();
-        animalsToggle.positionOffset_X = -210;
-        animalsToggle.positionOffset_Y = 490;
-        animalsToggle.positionScale_X = 1f;
-        animalsToggle.sizeOffset_X = 40;
-        animalsToggle.sizeOffset_Y = 40;
-        animalsToggle.state = LevelVisibility.animalsVisible;
-        animalsToggle.addLabel(localization.format("Animals_Label"), ESleekSide.RIGHT);
-        animalsToggle.onToggled += onToggledAnimalsToggle;
+        animalsToggle.PositionOffset_X = -210f;
+        animalsToggle.PositionOffset_Y = 490f;
+        animalsToggle.PositionScale_X = 1f;
+        animalsToggle.SizeOffset_X = 40f;
+        animalsToggle.SizeOffset_Y = 40f;
+        animalsToggle.Value = LevelVisibility.animalsVisible;
+        animalsToggle.AddLabel(localization.format("Animals_Label"), ESleekSide.RIGHT);
+        animalsToggle.OnValueChanged += onToggledAnimalsToggle;
         container.AddChild(animalsToggle);
         decalsToggle = Glazier.Get().CreateToggle();
-        decalsToggle.positionOffset_X = -210;
-        decalsToggle.positionOffset_Y = 540;
-        decalsToggle.positionScale_X = 1f;
-        decalsToggle.sizeOffset_X = 40;
-        decalsToggle.sizeOffset_Y = 40;
-        decalsToggle.state = DecalSystem.IsVisible;
-        decalsToggle.addLabel(localization.format("Decals_Label"), ESleekSide.RIGHT);
-        decalsToggle.onToggled += onToggledDecalsToggle;
+        decalsToggle.PositionOffset_X = -210f;
+        decalsToggle.PositionOffset_Y = 540f;
+        decalsToggle.PositionScale_X = 1f;
+        decalsToggle.SizeOffset_X = 40f;
+        decalsToggle.SizeOffset_Y = 40f;
+        decalsToggle.Value = DecalSystem.IsVisible;
+        decalsToggle.AddLabel(localization.format("Decals_Label"), ESleekSide.RIGHT);
+        decalsToggle.OnValueChanged += onToggledDecalsToggle;
         container.AddChild(decalsToggle);
         regionLabels = new ISleekLabel[DEBUG_SIZE * DEBUG_SIZE];
         for (int i = 0; i < regionLabels.Length; i++)
         {
             ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-            sleekLabel.positionOffset_X = -100;
-            sleekLabel.positionOffset_Y = -25;
-            sleekLabel.sizeOffset_X = 200;
-            sleekLabel.sizeOffset_Y = 50;
-            sleekLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+            sleekLabel.PositionOffset_X = -100f;
+            sleekLabel.PositionOffset_Y = -25f;
+            sleekLabel.SizeOffset_X = 200f;
+            sleekLabel.SizeOffset_Y = 50f;
+            sleekLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
             regionLabels[i] = sleekLabel;
             container.AddChild(sleekLabel);
         }

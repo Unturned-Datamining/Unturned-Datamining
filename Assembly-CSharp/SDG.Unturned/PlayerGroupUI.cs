@@ -12,13 +12,13 @@ internal class PlayerGroupUI : SleekWrapper
     private void addGroup(SteamPlayer player)
     {
         ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-        sleekLabel.positionOffset_X = -100;
-        sleekLabel.positionOffset_Y = -15;
-        sleekLabel.sizeOffset_X = 200;
-        sleekLabel.sizeOffset_Y = 30;
-        sleekLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+        sleekLabel.PositionOffset_X = -100f;
+        sleekLabel.PositionOffset_Y = -15f;
+        sleekLabel.SizeOffset_X = 200f;
+        sleekLabel.SizeOffset_Y = 30f;
+        sleekLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
         AddChild(sleekLabel);
-        sleekLabel.isVisible = false;
+        sleekLabel.IsVisible = false;
         groups.Add(sleekLabel);
     }
 

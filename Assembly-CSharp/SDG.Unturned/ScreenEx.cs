@@ -33,7 +33,7 @@ public static class ScreenEx
         Resolution[] recommendedResolutions = GetRecommendedResolutions();
         if (recommendedResolutions.Length != 0)
         {
-            return recommendedResolutions[recommendedResolutions.Length - 1];
+            return recommendedResolutions[^1];
         }
         return Screen.currentResolution;
     }

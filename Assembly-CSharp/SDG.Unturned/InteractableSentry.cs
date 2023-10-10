@@ -385,7 +385,7 @@ public class InteractableSentry : InteractableStorage
                     for (int i = 0; i < playersInRadius.Count; i++)
                     {
                         Player player2 = playersInRadius[i];
-                        if (player2.channel.owner.playerID.steamID == base.owner || player2.quests.isMemberOfGroup(base.group) || player2.life.isDead || player2.animator.gesture == EPlayerGesture.ARREST_START || (player2.movement.isSafe && player2.movement.isSafeInfo.noWeapons) || !player2.movement.canAddSimulationResultsToUpdates || (player != null && player2.animator.gesture == EPlayerGesture.SURRENDER_START) || (sentryMode == ESentryMode.FRIENDLY && !(Time.realtimeSinceStartup - player2.equipment.lastPunching < 2f) && (!player2.equipment.isSelected || player2.equipment.asset == null || !player2.equipment.asset.shouldFriendlySentryTargetUser)))
+                        if (player2.channel.owner.playerID.steamID == base.owner || player2.quests.isMemberOfGroup(base.group) || player2.life.isDead || player2.animator.gesture == EPlayerGesture.ARREST_START || (player2.movement.isSafe && player2.movement.isSafeInfo.noWeapons) || !player2.movement.canAddSimulationResultsToUpdates || (player != null && player2.animator.gesture == EPlayerGesture.SURRENDER_START) || (sentryMode == ESentryMode.FRIENDLY && !(Time.realtimeSinceStartup - player2.equipment.lastPunching < 2f) && (!player2.equipment.HasValidUseable || player2.equipment.asset == null || !player2.equipment.asset.shouldFriendlySentryTargetUser)))
                         {
                             continue;
                         }

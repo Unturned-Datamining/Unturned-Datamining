@@ -17,9 +17,9 @@ public class NPCCurrencyCondition : NPCLogicCondition
         return doesLogicPass(inventoryValue, value);
     }
 
-    public override void applyCondition(Player player, bool shouldSend)
+    public override void ApplyCondition(Player player)
     {
-        if (Provider.isServer && shouldReset)
+        if (shouldReset)
         {
             currency.Find()?.spendValue(player, value);
         }

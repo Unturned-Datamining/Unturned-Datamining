@@ -34,10 +34,10 @@ public class MenuServerPasswordUI
             container.AnimateIntoView();
             serverInfo = newServerInfo;
             expectedWorkshopItems = newExpectedWorkshopItems;
-            connectButton.isClickable = false;
-            passwordField.text = string.Empty;
-            passwordField.replace = '*';
-            showPasswordToggle.state = false;
+            connectButton.IsClickable = false;
+            passwordField.Text = string.Empty;
+            passwordField.IsPasswordField = true;
+            showPasswordToggle.Value = false;
         }
     }
 
@@ -54,63 +54,63 @@ public class MenuServerPasswordUI
     {
         localization = Localization.read("/Menu/Play/MenuServerPassword.dat");
         container = new SleekFullscreenBox();
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.positionScale_Y = 1f;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.PositionScale_Y = 1f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         MenuUI.container.AddChild(container);
         isActive = false;
         explanationLabel = Glazier.Get().CreateLabel();
-        explanationLabel.positionOffset_Y = -75;
-        explanationLabel.positionScale_X = 0.25f;
-        explanationLabel.positionScale_Y = 0.5f;
-        explanationLabel.sizeScale_X = 0.5f;
-        explanationLabel.sizeOffset_Y = 30;
-        explanationLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
-        explanationLabel.text = localization.format("Explanation");
+        explanationLabel.PositionOffset_Y = -75f;
+        explanationLabel.PositionScale_X = 0.25f;
+        explanationLabel.PositionScale_Y = 0.5f;
+        explanationLabel.SizeScale_X = 0.5f;
+        explanationLabel.SizeOffset_Y = 30f;
+        explanationLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
+        explanationLabel.Text = localization.format("Explanation");
         container.AddChild(explanationLabel);
         passwordField = Glazier.Get().CreateStringField();
-        passwordField.positionOffset_X = -100;
-        passwordField.positionOffset_Y = -35;
-        passwordField.positionScale_X = 0.5f;
-        passwordField.positionScale_Y = 0.5f;
-        passwordField.sizeOffset_X = 200;
-        passwordField.sizeOffset_Y = 30;
-        passwordField.addLabel(localization.format("Password_Label"), ESleekSide.RIGHT);
-        passwordField.replace = '*';
-        passwordField.maxLength = 0;
-        passwordField.onTyped += OnTypedPasswordField;
-        passwordField.onEntered += OnPasswordFieldSubmitted;
+        passwordField.PositionOffset_X = -100f;
+        passwordField.PositionOffset_Y = -35f;
+        passwordField.PositionScale_X = 0.5f;
+        passwordField.PositionScale_Y = 0.5f;
+        passwordField.SizeOffset_X = 200f;
+        passwordField.SizeOffset_Y = 30f;
+        passwordField.AddLabel(localization.format("Password_Label"), ESleekSide.RIGHT);
+        passwordField.IsPasswordField = true;
+        passwordField.MaxLength = 0;
+        passwordField.OnTextChanged += OnTypedPasswordField;
+        passwordField.OnTextSubmitted += OnPasswordFieldSubmitted;
         container.AddChild(passwordField);
         showPasswordToggle = Glazier.Get().CreateToggle();
-        showPasswordToggle.positionOffset_X = -100;
-        showPasswordToggle.positionOffset_Y = 5;
-        showPasswordToggle.positionScale_X = 0.5f;
-        showPasswordToggle.positionScale_Y = 0.5f;
-        showPasswordToggle.sizeOffset_X = 40;
-        showPasswordToggle.sizeOffset_Y = 40;
-        showPasswordToggle.onToggled += OnToggledShowPassword;
-        showPasswordToggle.addLabel(localization.format("Show_Password_Label"), ESleekSide.RIGHT);
+        showPasswordToggle.PositionOffset_X = -100f;
+        showPasswordToggle.PositionOffset_Y = 5f;
+        showPasswordToggle.PositionScale_X = 0.5f;
+        showPasswordToggle.PositionScale_Y = 0.5f;
+        showPasswordToggle.SizeOffset_X = 40f;
+        showPasswordToggle.SizeOffset_Y = 40f;
+        showPasswordToggle.OnValueChanged += OnToggledShowPassword;
+        showPasswordToggle.AddLabel(localization.format("Show_Password_Label"), ESleekSide.RIGHT);
         container.AddChild(showPasswordToggle);
         connectButton = Glazier.Get().CreateButton();
-        connectButton.positionOffset_X = -100;
-        connectButton.positionOffset_Y = 55;
-        connectButton.positionScale_X = 0.5f;
-        connectButton.positionScale_Y = 0.5f;
-        connectButton.sizeOffset_X = 200;
-        connectButton.sizeOffset_Y = 30;
-        connectButton.text = localization.format("Connect_Button");
-        connectButton.tooltipText = localization.format("Connect_Button");
-        connectButton.onClickedButton += OnClickedConnectButton;
+        connectButton.PositionOffset_X = -100f;
+        connectButton.PositionOffset_Y = 55f;
+        connectButton.PositionScale_X = 0.5f;
+        connectButton.PositionScale_Y = 0.5f;
+        connectButton.SizeOffset_X = 200f;
+        connectButton.SizeOffset_Y = 30f;
+        connectButton.Text = localization.format("Connect_Button");
+        connectButton.TooltipText = localization.format("Connect_Button");
+        connectButton.OnClicked += OnClickedConnectButton;
         container.AddChild(connectButton);
         backButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));
-        backButton.positionOffset_Y = -50;
-        backButton.positionScale_Y = 1f;
-        backButton.sizeOffset_X = 200;
-        backButton.sizeOffset_Y = 50;
+        backButton.PositionOffset_Y = -50f;
+        backButton.PositionScale_Y = 1f;
+        backButton.SizeOffset_X = 200f;
+        backButton.SizeOffset_Y = 50f;
         backButton.text = MenuDashboardUI.localization.format("BackButtonText");
         backButton.tooltip = MenuDashboardUI.localization.format("BackButtonTooltip");
         backButton.onClickedButton += OnClickedBackButton;
@@ -121,20 +121,20 @@ public class MenuServerPasswordUI
 
     private static void OnClickedConnectButton(ISleekElement button)
     {
-        if (!string.IsNullOrEmpty(passwordField.text))
+        if (!string.IsNullOrEmpty(passwordField.Text))
         {
-            Provider.connect(serverInfo, passwordField.text, expectedWorkshopItems);
+            Provider.connect(serverInfo, passwordField.Text, expectedWorkshopItems);
         }
     }
 
     private static void OnToggledShowPassword(ISleekToggle toggle, bool show)
     {
-        passwordField.replace = (show ? ' ' : '*');
+        passwordField.IsPasswordField = !show;
     }
 
     private static void OnTypedPasswordField(ISleekField field, string text)
     {
-        connectButton.isClickable = !string.IsNullOrEmpty(text);
+        connectButton.IsClickable = !string.IsNullOrEmpty(text);
     }
 
     private static void OnPasswordFieldSubmitted(ISleekField field)

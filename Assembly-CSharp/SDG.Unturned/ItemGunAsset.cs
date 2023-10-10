@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
@@ -275,12 +274,86 @@ public class ItemGunAsset : ItemWeaponAsset
 
     protected override bool doesItemTypeHaveSkins => true;
 
-    public override string getContext(string desc, byte[] state)
+    public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
     {
-        ushort num = BitConverter.ToUInt16(state, 8);
-        desc = ((!(Assets.find(EAssetType.ITEM, num) is ItemMagazineAsset itemMagazineAsset)) ? (desc + PlayerDashboardInventoryUI.localization.format("Ammo", PlayerDashboardInventoryUI.localization.format("None"), 0, 0)) : (desc + PlayerDashboardInventoryUI.localization.format("Ammo", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemMagazineAsset.rarity)) + ">" + itemMagazineAsset.itemName + "</color>", state[10], itemMagazineAsset.amount)));
-        desc += "\n\n";
-        return desc;
+        base.BuildDescription(builder, itemInstance);
+        ushort num = BitConverter.ToUInt16(itemInstance.state, 8);
+        if (Assets.find(EAssetType.ITEM, num) is ItemMagazineAsset itemMagazineAsset)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("Ammo", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemMagazineAsset.rarity)) + ">" + itemMagazineAsset.itemName + "</color>", itemInstance.state[10], itemMagazineAsset.amount), 2000);
+        }
+        else
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("Ammo", PlayerDashboardInventoryUI.localization.format("None"), 0, 0), 2000);
+        }
+        if (!builder.shouldRestrictToLegacyContent)
+        {
+            ushort num2 = BitConverter.ToUInt16(itemInstance.state, 0);
+            ushort num3 = BitConverter.ToUInt16(itemInstance.state, 2);
+            ushort num4 = BitConverter.ToUInt16(itemInstance.state, 4);
+            ushort num5 = BitConverter.ToUInt16(itemInstance.state, 6);
+            ItemSightAsset itemSightAsset = Assets.find(EAssetType.ITEM, num2) as ItemSightAsset;
+            ItemTacticalAsset itemTacticalAsset = Assets.find(EAssetType.ITEM, num3) as ItemTacticalAsset;
+            ItemGripAsset itemGripAsset = Assets.find(EAssetType.ITEM, num4) as ItemGripAsset;
+            ItemBarrelAsset itemBarrelAsset = Assets.find(EAssetType.ITEM, num5) as ItemBarrelAsset;
+            if (itemSightAsset != null && (hasSight || num2 != sightID))
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_SightAttachment", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemSightAsset.rarity)) + ">" + itemSightAsset.itemName + "</color>"), 2000);
+            }
+            else if (hasSight)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_SightAttachment", PlayerDashboardInventoryUI.localization.format("None")), 2000);
+            }
+            if (itemTacticalAsset != null && (hasTactical || num3 != tacticalID))
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_TacticalAttachment", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemTacticalAsset.rarity)) + ">" + itemTacticalAsset.itemName + "</color>"), 2000);
+            }
+            else if (hasTactical)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_TacticalAttachment", PlayerDashboardInventoryUI.localization.format("None")), 2000);
+            }
+            if (itemGripAsset != null && (hasGrip || num4 != gripID))
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_GripAttachment", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemGripAsset.rarity)) + ">" + itemGripAsset.itemName + "</color>"), 2000);
+            }
+            else if (hasGrip)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_GripAttachment", PlayerDashboardInventoryUI.localization.format("None")), 2000);
+            }
+            if (itemBarrelAsset != null && (hasBarrel || num5 != barrelID))
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_BarrelAttachment", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemBarrelAsset.rarity)) + ">" + itemBarrelAsset.itemName + "</color>"), 2000);
+            }
+            else if (hasBarrel)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_BarrelAttachment", PlayerDashboardInventoryUI.localization.format("None")), 2000);
+            }
+            float f = 50f / (float)Mathf.Max(1, firerate + 1) * 60f;
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Firerate", Mathf.RoundToInt(f)), 10000);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Spread", $"{57.29578f * baseSpreadAngleRadians:N1}"), 10000);
+            if (spreadAim != 1f)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_AimingSpreadModifier", PlayerDashboardInventoryUI.FormatStatModifier(spreadAim, higherIsPositive: false, higherIsBeneficial: false)), 10000);
+            }
+            if (aimingRecoilMultiplier != 1f)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_RecoilModifier_Aiming", PlayerDashboardInventoryUI.FormatStatModifier(aimingRecoilMultiplier, higherIsPositive: false, higherIsBeneficial: false)), 10000);
+            }
+            if (damageFalloffRange != 1f && damageFalloffMultiplier != 1f)
+            {
+                string arg = MeasurementTool.FormatLengthString(range * damageFalloffRange);
+                string arg2 = MeasurementTool.FormatLengthString(range * damageFalloffMaxRange);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_DamageFalloff", arg, arg2, $"{damageFalloffMultiplier:P}"), 10000);
+            }
+            if (_projectile != null)
+            {
+                BuildExplosiveDescription(builder, itemInstance);
+            }
+            else
+            {
+                BuildNonExplosiveDescription(builder, itemInstance);
+            }
+        }
     }
 
     public override byte[] getState(EItemOrigin origin)
@@ -470,7 +543,7 @@ public class ItemGunAsset : ItemWeaponAsset
         spreadAim = data.ParseFloat("Spread_Aim");
         if (data.ContainsKey("Spread_Angle_Degrees"))
         {
-            baseSpreadAngleRadians = (float)Math.PI / 180f * data.ParseFloat("Spread_Angle_Degrees");
+            baseSpreadAngleRadians = MathF.PI / 180f * data.ParseFloat("Spread_Angle_Degrees");
             spreadHip = Mathf.Tan(baseSpreadAngleRadians);
         }
         else

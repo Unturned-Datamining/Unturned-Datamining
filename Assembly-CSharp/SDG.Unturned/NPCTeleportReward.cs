@@ -6,19 +6,16 @@ public class NPCTeleportReward : INPCReward
 {
     public string spawnpoint { get; protected set; }
 
-    public override void grantReward(Player player, bool shouldSend)
+    public override void GrantReward(Player player)
     {
-        if (Provider.isServer)
+        Spawnpoint spawnpoint = SpawnpointSystemV2.Get().FindSpawnpoint(this.spawnpoint);
+        if (spawnpoint == null)
         {
-            Spawnpoint spawnpoint = SpawnpointSystemV2.Get().FindSpawnpoint(this.spawnpoint);
-            if (spawnpoint == null)
-            {
-                UnturnedLog.error("Failed to find NPC teleport reward spawnpoint: " + this.spawnpoint);
-            }
-            else if (!player.teleportToLocation(spawnpoint.transform.position, spawnpoint.transform.rotation.eulerAngles.y))
-            {
-                UnturnedLog.error("Unable to reward NPC teleport because {0} was obstructed.", this.spawnpoint);
-            }
+            UnturnedLog.error("Failed to find NPC teleport reward spawnpoint: " + this.spawnpoint);
+        }
+        else if (!player.teleportToLocation(spawnpoint.transform.position, spawnpoint.transform.rotation.eulerAngles.y))
+        {
+            UnturnedLog.error("Unable to reward NPC teleport because {0} was obstructed.", this.spawnpoint);
         }
     }
 

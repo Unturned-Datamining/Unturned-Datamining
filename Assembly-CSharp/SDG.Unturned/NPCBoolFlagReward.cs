@@ -6,16 +6,9 @@ public class NPCBoolFlagReward : INPCReward
 
     public bool value { get; protected set; }
 
-    public override void grantReward(Player player, bool shouldSend)
+    public override void GrantReward(Player player)
     {
-        if (shouldSend)
-        {
-            player.quests.sendSetFlag(id, (short)(value ? 1 : 0));
-        }
-        else
-        {
-            player.quests.setFlag(id, (short)(value ? 1 : 0));
-        }
+        player.quests.sendSetFlag(id, (short)(value ? 1 : 0));
     }
 
     public NPCBoolFlagReward(ushort newID, bool newValue, string newText)

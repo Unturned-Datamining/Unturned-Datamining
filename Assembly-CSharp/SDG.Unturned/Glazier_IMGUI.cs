@@ -22,11 +22,11 @@ internal class Glazier_IMGUI : GlazierBase, IGlazier
 
     private static StaticResourceRef<Texture2D> defaultCursor = new StaticResourceRef<Texture2D>("UI/Glazier_IMGUI/Cursor");
 
-    public bool ShouldGameProcessKeyDown => true;
-
     public bool SupportsDepth => false;
 
     public bool SupportsRichTextAlpha => false;
+
+    public bool SupportsAutomaticLayout => false;
 
     public SleekWindow Root
     {
@@ -43,7 +43,7 @@ internal class Glazier_IMGUI : GlazierBase, IGlazier
             _root = value;
             if (_root != null)
             {
-                rootImpl = _root.attachmentRoot as GlazierElementBase_IMGUI;
+                rootImpl = _root.AttachmentRoot as GlazierElementBase_IMGUI;
                 if (rootImpl != null)
                 {
                     rootImpl.isTransformDirty = true;
@@ -189,7 +189,7 @@ internal class Glazier_IMGUI : GlazierBase, IGlazier
         if (Root.ShouldDrawCursor)
         {
             Rect position = new Rect(Input.mousePosition.x, (float)Screen.height - Input.mousePosition.y, 20f, 20f);
-            GUI.color = OptionsSettings.cursorColor;
+            GUI.color = SleekCustomization.cursorColor;
             GUI.DrawTexture(position, (Texture2D)defaultCursor);
             GUI.color = Color.white;
         }

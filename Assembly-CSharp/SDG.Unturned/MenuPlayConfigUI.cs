@@ -92,10 +92,10 @@ public class MenuPlayConfigUI
         foreach (FieldInfo fieldInfo in fields)
         {
             ISleekBox sleekBox = Glazier.Get().CreateBox();
-            sleekBox.positionOffset_Y = configOffset;
-            sleekBox.sizeOffset_Y = 30;
-            sleekBox.sizeScale_X = 1f;
-            sleekBox.text = sanitizeName(fieldInfo.Name);
+            sleekBox.PositionOffset_Y = configOffset;
+            sleekBox.SizeOffset_Y = 30f;
+            sleekBox.SizeScale_X = 1f;
+            sleekBox.Text = sanitizeName(fieldInfo.Name);
             configBox.AddChild(sleekBox);
             int num = 40;
             configOffset += 40;
@@ -108,12 +108,12 @@ public class MenuPlayConfigUI
                 if (type == typeof(uint))
                 {
                     ISleekUInt32Field sleekUInt32Field = Glazier.Get().CreateUInt32Field();
-                    sleekUInt32Field.positionOffset_Y = num;
-                    sleekUInt32Field.sizeOffset_X = 200;
-                    sleekUInt32Field.sizeOffset_Y = 30;
-                    sleekUInt32Field.state = (uint)value2;
-                    sleekUInt32Field.addLabel(sanitizeName(fieldInfo2.Name), ESleekSide.RIGHT);
-                    sleekUInt32Field.onTypedUInt32 += onTypedUInt32;
+                    sleekUInt32Field.PositionOffset_Y = num;
+                    sleekUInt32Field.SizeOffset_X = 200f;
+                    sleekUInt32Field.SizeOffset_Y = 30f;
+                    sleekUInt32Field.Value = (uint)value2;
+                    sleekUInt32Field.AddLabel(sanitizeName(fieldInfo2.Name), ESleekSide.RIGHT);
+                    sleekUInt32Field.OnValueChanged += onTypedUInt32;
                     sleekBox.AddChild(sleekUInt32Field);
                     num += 40;
                     configOffset += 40;
@@ -121,12 +121,12 @@ public class MenuPlayConfigUI
                 else if (type == typeof(float))
                 {
                     ISleekFloat32Field sleekFloat32Field = Glazier.Get().CreateFloat32Field();
-                    sleekFloat32Field.positionOffset_Y = num;
-                    sleekFloat32Field.sizeOffset_X = 200;
-                    sleekFloat32Field.sizeOffset_Y = 30;
-                    sleekFloat32Field.state = (float)value2;
-                    sleekFloat32Field.addLabel(sanitizeName(fieldInfo2.Name), ESleekSide.RIGHT);
-                    sleekFloat32Field.onTypedSingle += onTypedSingle;
+                    sleekFloat32Field.PositionOffset_Y = num;
+                    sleekFloat32Field.SizeOffset_X = 200f;
+                    sleekFloat32Field.SizeOffset_Y = 30f;
+                    sleekFloat32Field.Value = (float)value2;
+                    sleekFloat32Field.AddLabel(sanitizeName(fieldInfo2.Name), ESleekSide.RIGHT);
+                    sleekFloat32Field.OnValueChanged += onTypedSingle;
                     sleekBox.AddChild(sleekFloat32Field);
                     num += 40;
                     configOffset += 40;
@@ -134,12 +134,12 @@ public class MenuPlayConfigUI
                 else if (type == typeof(bool))
                 {
                     ISleekToggle sleekToggle = Glazier.Get().CreateToggle();
-                    sleekToggle.positionOffset_Y = num;
-                    sleekToggle.sizeOffset_X = 40;
-                    sleekToggle.sizeOffset_Y = 40;
-                    sleekToggle.state = (bool)value2;
-                    sleekToggle.addLabel(sanitizeName(fieldInfo2.Name), ESleekSide.RIGHT);
-                    sleekToggle.onToggled += onToggled;
+                    sleekToggle.PositionOffset_Y = num;
+                    sleekToggle.SizeOffset_X = 40f;
+                    sleekToggle.SizeOffset_Y = 40f;
+                    sleekToggle.Value = (bool)value2;
+                    sleekToggle.AddLabel(sanitizeName(fieldInfo2.Name), ESleekSide.RIGHT);
+                    sleekToggle.OnValueChanged += onToggled;
                     sleekBox.AddChild(sleekToggle);
                     num += 50;
                     configOffset += 50;
@@ -148,15 +148,15 @@ public class MenuPlayConfigUI
             configOffset += 40;
             configGroups.Add(value);
         }
-        configBox.contentSizeOffset = new Vector2(0f, configOffset - 50);
+        configBox.ContentSizeOffset = new Vector2(0f, configOffset - 50);
     }
 
     private static void updateValue(ISleekElement sleek, object state)
     {
-        int index = configBox.FindIndexOfChild(sleek.parent);
+        int index = configBox.FindIndexOfChild(sleek.Parent);
         object obj = configGroups[index];
         FieldInfo[] fields = obj.GetType().GetFields();
-        int num = sleek.parent.FindIndexOfChild(sleek);
+        int num = sleek.Parent.FindIndexOfChild(sleek);
         fields[num].SetValue(obj, state);
     }
 
@@ -204,29 +204,29 @@ public class MenuPlayConfigUI
     {
         localization = Localization.read("/Menu/Play/MenuPlayConfig.dat");
         container = new SleekFullscreenBox();
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.positionScale_Y = 1f;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.PositionScale_Y = 1f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         MenuUI.container.AddChild(container);
         active = false;
         configBox = Glazier.Get().CreateScrollView();
-        configBox.positionOffset_X = -200;
-        configBox.positionOffset_Y = 100;
-        configBox.positionScale_X = 0.5f;
-        configBox.sizeOffset_X = 430;
-        configBox.sizeOffset_Y = -200;
-        configBox.sizeScale_Y = 1f;
-        configBox.scaleContentToWidth = true;
+        configBox.PositionOffset_X = -200f;
+        configBox.PositionOffset_Y = 100f;
+        configBox.PositionScale_X = 0.5f;
+        configBox.SizeOffset_X = 430f;
+        configBox.SizeOffset_Y = -200f;
+        configBox.SizeScale_Y = 1f;
+        configBox.ScaleContentToWidth = true;
         container.AddChild(configBox);
         backButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));
-        backButton.positionOffset_Y = -50;
-        backButton.positionScale_Y = 1f;
-        backButton.sizeOffset_X = 200;
-        backButton.sizeOffset_Y = 50;
+        backButton.PositionOffset_Y = -50f;
+        backButton.PositionScale_Y = 1f;
+        backButton.SizeOffset_X = 200f;
+        backButton.SizeOffset_Y = 50f;
         backButton.text = MenuDashboardUI.localization.format("BackButtonText");
         backButton.tooltip = MenuDashboardUI.localization.format("BackButtonTooltip");
         backButton.onClickedButton += onClickedBackButton;
@@ -234,16 +234,16 @@ public class MenuPlayConfigUI
         backButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(backButton);
         defaultButton = Glazier.Get().CreateButton();
-        defaultButton.positionOffset_X = -200;
-        defaultButton.positionOffset_Y = -50;
-        defaultButton.positionScale_X = 1f;
-        defaultButton.positionScale_Y = 1f;
-        defaultButton.sizeOffset_X = 200;
-        defaultButton.sizeOffset_Y = 50;
-        defaultButton.text = localization.format("Default");
-        defaultButton.tooltipText = localization.format("Default_Tooltip");
-        defaultButton.onClickedButton += onClickedDefaultButton;
-        defaultButton.fontSize = ESleekFontSize.Medium;
+        defaultButton.PositionOffset_X = -200f;
+        defaultButton.PositionOffset_Y = -50f;
+        defaultButton.PositionScale_X = 1f;
+        defaultButton.PositionScale_Y = 1f;
+        defaultButton.SizeOffset_X = 200f;
+        defaultButton.SizeOffset_Y = 50f;
+        defaultButton.Text = localization.format("Default");
+        defaultButton.TooltipText = localization.format("Default_Tooltip");
+        defaultButton.OnClicked += onClickedDefaultButton;
+        defaultButton.FontSize = ESleekFontSize.Medium;
         container.AddChild(defaultButton);
         configGroups = new List<object>();
     }

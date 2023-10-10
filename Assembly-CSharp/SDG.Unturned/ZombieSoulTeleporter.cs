@@ -51,7 +51,7 @@ public class ZombieSoulTeleporter : MonoBehaviour
                 continue;
             }
             player.teleportToLocationUnsafe(target.position, target.rotation.eulerAngles.y);
-            if (player.equipment.isSelected)
+            if (player.equipment.HasValidUseable)
             {
                 player.equipment.dequip();
             }

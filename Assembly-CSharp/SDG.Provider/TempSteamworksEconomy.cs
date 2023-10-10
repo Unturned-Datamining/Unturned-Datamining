@@ -376,7 +376,7 @@ public class TempSteamworksEconomy
         return (ushort)unturnedEconInfo.item_skin;
     }
 
-    public Texture2D LoadItemIcon(int itemdefid, bool large)
+    public Texture2D LoadItemIcon(int itemdefid)
     {
         UnturnedEconInfo unturnedEconInfo = econInfo.Find((UnturnedEconInfo x) => x.itemdefid == itemdefid);
         if (unturnedEconInfo == null)
@@ -392,7 +392,7 @@ public class TempSteamworksEconomy
             }
             if (itemAsset.econIconUseId)
             {
-                return Resources.Load<Texture2D>("Economy/Item/" + itemdefid + (large ? "/Icon_Large" : "/Icon_Small"));
+                return Resources.Load<Texture2D>("Economy/Item/" + itemdefid + "/Icon_Large");
             }
             if (itemAsset.type == EItemType.SHIRT || itemAsset.type == EItemType.PANTS || itemAsset.type == EItemType.HAT || itemAsset.type == EItemType.BACKPACK || itemAsset.type == EItemType.VEST || itemAsset.type == EItemType.GLASSES || itemAsset.type == EItemType.MASK)
             {
@@ -400,30 +400,15 @@ public class TempSteamworksEconomy
             }
             if (itemAsset.proPath == null || itemAsset.proPath.Length == 0)
             {
-                Asset asset = Assets.find(EAssetType.SKIN, (ushort)unturnedEconInfo.item_skin);
-                if (asset == null)
-                {
-                    return null;
-                }
-                return Resources.Load<Texture2D>("Economy/Skins/" + itemAsset.name + "/" + asset.name + (large ? "/Icon_Large" : "/Icon_Small"));
+                return null;
             }
-            return Resources.Load<Texture2D>("Economy" + itemAsset.proPath + (large ? "/Icon_Large" : "/Icon_Small"));
+            return Resources.Load<Texture2D>("Economy" + itemAsset.proPath + "/Icon_Large");
         }
         if (unturnedEconInfo.vehicle_guid != default(Guid))
         {
-            VehicleAsset vehicleAsset = Assets.find<VehicleAsset>(unturnedEconInfo.vehicle_guid);
-            if (vehicleAsset == null)
-            {
-                return null;
-            }
-            Asset asset2 = Assets.find(EAssetType.SKIN, (ushort)unturnedEconInfo.item_skin);
-            if (asset2 == null)
-            {
-                return null;
-            }
-            return Resources.Load<Texture2D>("Economy/Skins/" + vehicleAsset.sharedSkinName + "/" + asset2.name + (large ? "/Icon_Large" : "/Icon_Small"));
+            return null;
         }
-        return Resources.Load<Texture2D>("Economy/Item/" + itemdefid + (large ? "/Icon_Large" : "/Icon_Small"));
+        return Resources.Load<Texture2D>("Economy/Item/" + itemdefid + "/Icon_Large");
     }
 
     public void consumeItem(ulong instance, uint quantity)

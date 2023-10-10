@@ -36,18 +36,23 @@ internal static class ServerMessageHandler_ReadyToConnect
         }
         reader.ReadUInt8(out var value);
         reader.ReadString(out var value2);
+        value2 = value2.Trim();
         reader.ReadString(out var value3);
+        value3 = value3.Trim();
         byte[] array = new byte[20];
         reader.ReadBytes(array, 20);
         byte[] array2 = new byte[20];
         reader.ReadBytes(array2, 20);
         byte[] array3 = new byte[20];
         reader.ReadBytes(array3, 20);
+        byte[] array4 = new byte[20];
+        reader.ReadBytes(array4, 20);
         reader.ReadEnum(out var value4);
         reader.ReadUInt32(out var value5);
         reader.ReadBit(out var value6);
         reader.ReadUInt16(out var value7);
         reader.ReadString(out var value8);
+        value8 = value8.Trim();
         reader.ReadSteamID(out CSteamID value9);
         reader.ReadUInt8(out var value10);
         reader.ReadUInt8(out var value11);
@@ -76,14 +81,14 @@ internal static class ServerMessageHandler_ReadyToConnect
             Provider.reject(transportConnection, ESteamRejection.WRONG_HASH_ASSEMBLY);
             return;
         }
-        byte[][] array4 = new byte[value29][];
+        byte[][] array5 = new byte[value29][];
         for (byte b = 0; b < value29; b = (byte)(b + 1))
         {
-            array4[b] = new byte[20];
-            reader.ReadBytes(array4[b]);
+            array5[b] = new byte[20];
+            reader.ReadBytes(array5[b]);
         }
-        byte[] array5 = new byte[20];
-        reader.ReadBytes(array5, 20);
+        byte[] array6 = new byte[20];
+        reader.ReadBytes(array6, 20);
         reader.ReadSteamID(out CSteamID value30);
         if (Provider.findPendingPlayerBySteamId(value30) != null)
         {
@@ -99,7 +104,7 @@ internal static class ServerMessageHandler_ReadyToConnect
         {
             value = 0;
         }
-        SteamPlayerID steamPlayerID = new SteamPlayerID(value30, value, value2, value3, value8, value9, array4);
+        SteamPlayerID steamPlayerID = new SteamPlayerID(value30, value, value2, value3, value8, value9, array5);
         if (!Provider.canClientVersionJoinServer(value5))
         {
             Provider.reject(transportConnection, ESteamRejection.WRONG_VERSION, Provider.APP_VERSION);
@@ -183,10 +188,18 @@ internal static class ServerMessageHandler_ReadyToConnect
                 return;
             }
         }
-        if (steamPlayerID.steamID.m_SteamID != 76561198036822957L && steamPlayerID.steamID.m_SteamID != 76561198267201306L && (value2.Contains("Nelson", StringComparison.InvariantCultureIgnoreCase) || value3.Contains("Nelson", StringComparison.InvariantCultureIgnoreCase)))
+        if (steamPlayerID.steamID.m_SteamID != 76561198036822957L && steamPlayerID.steamID.m_SteamID != 76561198267201306L)
         {
-            Provider.reject(transportConnection, ESteamRejection.NAME_PLAYER_INVALID);
-            return;
+            if (IsNameBlockedByNelsonFilter(value2))
+            {
+                Provider.reject(transportConnection, ESteamRejection.NAME_PLAYER_INVALID);
+                return;
+            }
+            if (IsNameBlockedByNelsonFilter(value3))
+            {
+                Provider.reject(transportConnection, ESteamRejection.NAME_CHARACTER_INVALID);
+                return;
+            }
         }
         transportConnection.TryGetIPv4Address(out var address);
         Provider.checkBanStatus(steamPlayerID, address, out var isBanned, out var banReason, out var banRemainingDuration);
@@ -221,28 +234,33 @@ internal static class ServerMessageHandler_ReadyToConnect
             Provider.reject(transportConnection, ESteamRejection.WRONG_HASH_ASSEMBLY);
             return;
         }
-        if (Provider.configData.Server.Validate_EconInfo_Hash && !Hash.verifyHash(array5, TempSteamworksEconomy.econInfoHash) && !steamPlayerID.BypassIntegrityChecks)
+        if (array4.Length != 20)
+        {
+            Provider.reject(transportConnection, ESteamRejection.WRONG_HASH_RESOURCES);
+            return;
+        }
+        if (Provider.configData.Server.Validate_EconInfo_Hash && !Hash.verifyHash(array6, TempSteamworksEconomy.econInfoHash) && !steamPlayerID.BypassIntegrityChecks)
         {
             Provider.reject(transportConnection, ESteamRejection.WRONG_HASH_ECON);
             return;
         }
-        ModuleDependency[] array6;
+        ModuleDependency[] array7;
         if (string.IsNullOrEmpty(value25))
         {
-            array6 = new ModuleDependency[0];
+            array7 = new ModuleDependency[0];
         }
         else
         {
-            string[] array7 = value25.Split(';');
-            array6 = new ModuleDependency[array7.Length];
-            for (int i = 0; i < array6.Length; i++)
+            string[] array8 = value25.Split(';');
+            array7 = new ModuleDependency[array8.Length];
+            for (int i = 0; i < array7.Length; i++)
             {
-                string[] array8 = array7[i].Split(',');
-                if (array8.Length == 2)
+                string[] array9 = array8[i].Split(',');
+                if (array9.Length == 2)
                 {
-                    array6[i] = new ModuleDependency();
-                    array6[i].Name = array8[0];
-                    uint.TryParse(array8[1], NumberStyles.Any, CultureInfo.InvariantCulture, out array6[i].Version_Internal);
+                    array7[i] = new ModuleDependency();
+                    array7[i].Name = array9[0];
+                    uint.TryParse(array9[1], NumberStyles.Any, CultureInfo.InvariantCulture, out array7[i].Version_Internal);
                 }
             }
         }
@@ -250,14 +268,14 @@ internal static class ServerMessageHandler_ReadyToConnect
         Provider.critMods.Clear();
         ModuleHook.getRequiredModules(critMods);
         bool flag2 = true;
-        for (int j = 0; j < array6.Length; j++)
+        for (int j = 0; j < array7.Length; j++)
         {
             bool flag3 = false;
-            if (array6[j] != null)
+            if (array7[j] != null)
             {
                 for (int k = 0; k < critMods.Count; k++)
                 {
-                    if (critMods[k] != null && critMods[k].config != null && critMods[k].config.Name == array6[j].Name && critMods[k].config.Version_Internal >= array6[j].Version_Internal)
+                    if (critMods[k] != null && critMods[k].config != null && critMods[k].config.Name == array7[j].Name && critMods[k].config.Version_Internal >= array7[j].Version_Internal)
                     {
                         flag3 = true;
                         break;
@@ -281,9 +299,9 @@ internal static class ServerMessageHandler_ReadyToConnect
             bool flag5 = false;
             if (critMods[l] != null && critMods[l].config != null)
             {
-                for (int m = 0; m < array6.Length; m++)
+                for (int m = 0; m < array7.Length; m++)
                 {
-                    if (array6[m] != null && array6[m].Name == critMods[l].config.Name && array6[m].Version_Internal >= critMods[l].config.Version_Internal)
+                    if (array7[m] != null && array7[m].Name == critMods[l].config.Name && array7[m].Version_Internal >= critMods[l].config.Version_Internal)
                     {
                         flag5 = true;
                         break;
@@ -350,5 +368,18 @@ internal static class ServerMessageHandler_ReadyToConnect
         {
             Provider.verifyNextPlayerInQueue();
         }
+    }
+
+    private static bool IsNameBlockedByNelsonFilter(string name)
+    {
+        if (name.Equals("Nelson", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return true;
+        }
+        if (name.StartsWith("SDG", StringComparison.InvariantCultureIgnoreCase) && name.EndsWith("Nelson", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return true;
+        }
+        return false;
     }
 }

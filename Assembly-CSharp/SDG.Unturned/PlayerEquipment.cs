@@ -152,11 +152,11 @@ public class PlayerEquipment : PlayerCaller
 
     private bool hasVision;
 
+    private uint equipAnimStartedFrame;
+
+    private uint equipAnimLength;
+
     private float lastEquip;
-
-    private float lastEquipped;
-
-    private float equippedTime;
 
     private uint lastPunch;
 
@@ -285,19 +285,9 @@ public class PlayerEquipment : PlayerCaller
 
     public HotkeyInfo[] hotkeys => _hotkeys;
 
-    public bool isSelected
-    {
-        get
-        {
-            if (thirdModel != null)
-            {
-                return useable != null;
-            }
-            return false;
-        }
-    }
+    public bool HasValidUseable => useable != null;
 
-    public bool isEquipped => Time.realtimeSinceStartup - lastEquipped > equippedTime;
+    public bool IsEquipAnimationFinished => base.player.input.simulation - equipAnimStartedFrame >= equipAnimLength;
 
     public bool isTurret { get; private set; }
 
@@ -333,13 +323,19 @@ public class PlayerEquipment : PlayerCaller
     {
         get
         {
-            if (isSelected && isEquipped && !isBusy && base.player.animator.checkExists("Inspect") && !isInspecting)
+            if (HasValidUseable && IsEquipAnimationFinished && !isBusy && base.player.animator.checkExists("Inspect") && !isInspecting)
             {
                 return useable.canInspect;
             }
             return false;
         }
     }
+
+    [Obsolete("Renamed to HasValidUseable")]
+    public bool isSelected => HasValidUseable;
+
+    [Obsolete("Renamed to IsEquipAnimationFinished")]
+    public bool isEquipped => IsEquipAnimationFinished;
 
     public static event Action<PlayerEquipment> OnUseableChanged_Global;
 
@@ -479,6 +475,18 @@ public class PlayerEquipment : PlayerCaller
         }
     }
 
+    private void ApplyEquipableLocalScale(ItemAsset asset, Transform itemModelTransform)
+    {
+        if (!base.channel.owner.IsLeftHanded || asset.shouldLeftHandedCharactersMirrorEquippedItem)
+        {
+            itemModelTransform.localScale = Vector3.one;
+        }
+        else
+        {
+            itemModelTransform.localScale = new Vector3(-1f, 1f, 1f);
+        }
+    }
+
     protected void syncStatTrackTrackerVisibility(Transform itemModelTransform)
     {
         if (!(itemModelTransform == null))
@@ -518,7 +526,7 @@ public class PlayerEquipment : PlayerCaller
     {
         base.player.animator.setAnimationSpeed("Inspect", 1f);
         lastInspect = Time.realtimeSinceStartup;
-        inspectTime = base.player.animator.getAnimationLength("Inspect");
+        inspectTime = base.player.animator.GetAnimationLength("Inspect");
         base.player.animator.play("Inspect", smooth: false);
         inspectAudioHandle.Stop();
         if (asset != null)
@@ -703,7 +711,7 @@ public class PlayerEquipment : PlayerCaller
             tempCharacterMaterials[slot] = null;
             characterMythics[slot] = null;
         }
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             switch (slot)
             {
@@ -965,7 +973,7 @@ public class PlayerEquipment : PlayerCaller
                 characterSlots[slot].gameObject.SetActive(value: false);
             }
         }
-        if (base.channel.isOwner || Provider.isServer)
+        if (base.channel.IsLocalPlayer || Provider.isServer)
         {
             base.player.inventory.updateState(page, index, state);
         }
@@ -1014,7 +1022,7 @@ public class PlayerEquipment : PlayerCaller
         _characterModel = ItemTool.getItem(itemID, skin, 100, state, viewmodel: false, itemAsset, tempCharacterMesh, out tempCharacterMaterial, statTrackerCallback);
         fixStatTrackerHookScale(_characterModel);
         syncStatTrackTrackerVisibility(_characterModel);
-        if (itemAsset.isBackward)
+        if (itemAsset.ShouldAttachEquippedModelToLeftHand)
         {
             characterModel.transform.parent = _characterLeftHook;
         }
@@ -1161,13 +1169,13 @@ public class PlayerEquipment : PlayerCaller
             skinRagdollEffect = skinAsset.ragdollEffect;
         }
         GameObject prefabOverride = ((asset.equipablePrefab != null) ? asset.equipablePrefab : asset.item);
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             ClientAssetIntegrity.QueueRequest(_asset);
             _firstModel = ItemTool.InstantiateItem(quality, state, viewmodel: true, asset, skinAsset, shouldDestroyColliders: true, tempFirstMesh, out tempFirstMaterial, getUseableStatTrackerValue, prefabOverride);
             fixStatTrackerHookScale(_firstModel);
             syncStatTrackTrackerVisibility(_firstModel);
-            if (asset.isBackward)
+            if (asset.ShouldAttachEquippedModelToLeftHand)
             {
                 firstModel.transform.parent = firstLeftHook;
             }
@@ -1177,7 +1185,7 @@ public class PlayerEquipment : PlayerCaller
             }
             firstModel.localPosition = Vector3.zero;
             firstModel.localRotation = Quaternion.Euler(0f, 0f, 90f);
-            firstModel.localScale = Vector3.one;
+            ApplyEquipableLocalScale(_asset, firstModel);
             firstModel.gameObject.SetActive(value: false);
             firstModel.gameObject.SetActive(value: true);
             firstModel.DestroyRigidbody();
@@ -1198,7 +1206,7 @@ public class PlayerEquipment : PlayerCaller
             _characterModel = ItemTool.getItem(quality, state, viewmodel: false, asset, skinAsset, tempCharacterMesh, out tempCharacterMaterial, getUseableStatTrackerValue, prefabOverride);
             fixStatTrackerHookScale(_characterModel);
             syncStatTrackTrackerVisibility(_characterModel);
-            if (asset.isBackward)
+            if (asset.ShouldAttachEquippedModelToLeftHand)
             {
                 characterModel.transform.parent = characterLeftHook;
             }
@@ -1208,7 +1216,7 @@ public class PlayerEquipment : PlayerCaller
             }
             characterModel.localPosition = Vector3.zero;
             characterModel.localRotation = Quaternion.Euler(0f, 0f, 90f);
-            characterModel.localScale = Vector3.one;
+            ApplyEquipableLocalScale(_asset, characterModel);
             Rigidbody orAddComponent = characterModel.gameObject.GetOrAddComponent<Rigidbody>();
             orAddComponent.useGravity = false;
             orAddComponent.isKinematic = true;
@@ -1230,7 +1238,7 @@ public class PlayerEquipment : PlayerCaller
         _thirdModel = ItemTool.InstantiateItem(quality, state, viewmodel: false, asset, skinAsset, shouldDestroyColliders: true, tempThirdMesh, out tempThirdMaterial, getUseableStatTrackerValue, prefabOverride);
         fixStatTrackerHookScale(_thirdModel);
         syncStatTrackTrackerVisibility(_thirdModel);
-        if (asset.isBackward)
+        if (asset.ShouldAttachEquippedModelToLeftHand)
         {
             thirdModel.transform.parent = thirdLeftHook;
         }
@@ -1240,7 +1248,7 @@ public class PlayerEquipment : PlayerCaller
         }
         thirdModel.localPosition = Vector3.zero;
         thirdModel.localRotation = Quaternion.Euler(0f, 0f, 90f);
-        thirdModel.localScale = Vector3.one;
+        ApplyEquipableLocalScale(_asset, thirdModel);
         thirdModel.gameObject.SetActive(value: false);
         thirdModel.gameObject.SetActive(value: true);
         Rigidbody orAddComponent2 = thirdModel.GetOrAddComponent<Rigidbody>();
@@ -1282,8 +1290,8 @@ public class PlayerEquipment : PlayerCaller
             UnturnedLog.warn("{0} raised an exception during tellEquip.equip:", asset);
             UnturnedLog.exception(e2);
         }
-        lastEquipped = Time.realtimeSinceStartup;
-        equippedTime = base.player.animator.getAnimationLength("Equip");
+        equipAnimStartedFrame = base.player.input.simulation;
+        equipAnimLength = MathfEx.CeilToUInt(base.player.animator.GetAnimationLength("Equip") / PlayerInput.RATE);
         if (!Dedicator.IsDedicatedServer && asset.equip != null)
         {
             equipAudioHandle = base.player.playSound(asset.equip, 1f, 0.05f);
@@ -1305,7 +1313,7 @@ public class PlayerEquipment : PlayerCaller
 
     public void ServerEquip(byte page, byte x, byte y)
     {
-        if (isBusy || !canEquip || base.player.life.isDead || base.player.stance.stance == EPlayerStance.CLIMB || base.player.stance.stance == EPlayerStance.DRIVING || (isSelected && !isEquipped) || isTurret)
+        if (isBusy || !canEquip || base.player.life.isDead || base.player.stance.stance == EPlayerStance.CLIMB || base.player.stance.stance == EPlayerStance.DRIVING || (HasValidUseable && !IsEquipAnimationFinished) || isTurret)
         {
             return;
         }
@@ -1417,7 +1425,7 @@ public class PlayerEquipment : PlayerCaller
                 SendSlot.Invoke(GetNetId(), ENetReliability.Reliable, client.transportConnection, b, 0, new byte[0]);
             }
         }
-        if (isSelected)
+        if (HasValidUseable)
         {
             Guid arg = asset?.GUID ?? Guid.Empty;
             NetId netId = useable.GetNetId();
@@ -1453,7 +1461,7 @@ public class PlayerEquipment : PlayerCaller
                 SendSlot.Invoke(GetNetId(), ENetReliability.Reliable, transportConnections, b, 0, new byte[0]);
             }
         }
-        if (isSelected)
+        if (HasValidUseable)
         {
             Guid arg = asset?.GUID ?? Guid.Empty;
             NetId netId = useable.GetNetId();
@@ -1537,7 +1545,7 @@ public class PlayerEquipment : PlayerCaller
 
     public void equip(byte page, byte x, byte y)
     {
-        if (page < 0 || page >= PlayerInventory.PAGES - 2 || isBusy || !canEquip || base.player.life.isDead || base.player.stance.stance == EPlayerStance.CLIMB || base.player.stance.stance == EPlayerStance.DRIVING || (isSelected && !isEquipped))
+        if (page < 0 || page >= PlayerInventory.PAGES - 2 || isBusy || !canEquip || base.player.life.isDead || base.player.stance.stance == EPlayerStance.CLIMB || base.player.stance.stance == EPlayerStance.DRIVING || (HasValidUseable && !IsEquipAnimationFinished))
         {
             return;
         }
@@ -1580,7 +1588,7 @@ public class PlayerEquipment : PlayerCaller
 
     public void use()
     {
-        if (isSelected)
+        if (HasValidUseable)
         {
             ushort id = itemID;
             byte index = base.player.inventory.getIndex(equippedPage, equipped_x, equipped_y);
@@ -1602,7 +1610,7 @@ public class PlayerEquipment : PlayerCaller
 
     public void useStepA()
     {
-        if (isSelected)
+        if (HasValidUseable)
         {
             byte index = base.player.inventory.getIndex(equippedPage, equipped_x, equipped_y);
             ItemJar item = base.player.inventory.getItem(equippedPage, index);
@@ -1618,7 +1626,7 @@ public class PlayerEquipment : PlayerCaller
 
     public void useStepB()
     {
-        if (isSelected)
+        if (HasValidUseable)
         {
             ushort id = itemID;
             dequip();
@@ -1633,7 +1641,7 @@ public class PlayerEquipment : PlayerCaller
 
     private void punch(EPlayerPunch mode)
     {
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             AudioClip audioClip = punchClipRef.loadAsset();
             if (audioClip == null)
@@ -1644,11 +1652,11 @@ public class PlayerEquipment : PlayerCaller
             RaycastInfo raycastInfo = DamageTool.raycast(new Ray(base.player.look.aim.position, base.player.look.aim.forward), 1.75f, RayMasks.DAMAGE_CLIENT, base.player);
             if (raycastInfo.player != null && DAMAGE_PLAYER_MULTIPLIER.damage > 1f && DamageTool.isPlayerAllowedToDamagePlayer(base.player, raycastInfo.player))
             {
-                PlayerUI.hitmark(0, raycastInfo.point, worldspace: false, (raycastInfo.limb != ELimb.SKULL) ? EPlayerHit.ENTITIY : EPlayerHit.CRITICAL);
+                PlayerUI.hitmark(raycastInfo.point, worldspace: false, (raycastInfo.limb != ELimb.SKULL) ? EPlayerHit.ENTITIY : EPlayerHit.CRITICAL);
             }
             else if ((raycastInfo.zombie != null && DAMAGE_ZOMBIE_MULTIPLIER.damage > 1f) || (raycastInfo.animal != null && DAMAGE_ANIMAL_MULTIPLIER.damage > 1f))
             {
-                PlayerUI.hitmark(0, raycastInfo.point, worldspace: false, (raycastInfo.limb != ELimb.SKULL) ? EPlayerHit.ENTITIY : EPlayerHit.CRITICAL);
+                PlayerUI.hitmark(raycastInfo.point, worldspace: false, (raycastInfo.limb != ELimb.SKULL) ? EPlayerHit.ENTITIY : EPlayerHit.CRITICAL);
             }
             else if (raycastInfo.transform != null && raycastInfo.transform.CompareTag("Barricade") && DAMAGE_BARRICADE > 1f)
             {
@@ -1658,7 +1666,7 @@ public class PlayerEquipment : PlayerCaller
                     ItemBarricadeAsset itemBarricadeAsset = barricadeDrop.asset;
                     if (itemBarricadeAsset != null && itemBarricadeAsset.canBeDamaged && itemBarricadeAsset.isVulnerable)
                     {
-                        PlayerUI.hitmark(0, raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
+                        PlayerUI.hitmark(raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
                     }
                 }
             }
@@ -1670,7 +1678,7 @@ public class PlayerEquipment : PlayerCaller
                     ItemStructureAsset itemStructureAsset = structureDrop.asset;
                     if (itemStructureAsset != null && itemStructureAsset.canBeDamaged && itemStructureAsset.isVulnerable)
                     {
-                        PlayerUI.hitmark(0, raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
+                        PlayerUI.hitmark(raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
                     }
                 }
             }
@@ -1678,7 +1686,7 @@ public class PlayerEquipment : PlayerCaller
             {
                 if (raycastInfo.vehicle.asset != null && raycastInfo.vehicle.canBeDamaged && raycastInfo.vehicle.asset.isVulnerable)
                 {
-                    PlayerUI.hitmark(0, raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
+                    PlayerUI.hitmark(raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
                 }
             }
             else if (raycastInfo.transform != null && raycastInfo.transform.CompareTag("Resource") && DAMAGE_RESOURCE > 1f)
@@ -1688,7 +1696,7 @@ public class PlayerEquipment : PlayerCaller
                     ResourceSpawnpoint resourceSpawnpoint = ResourceManager.getResourceSpawnpoint(x, y, index);
                     if (resourceSpawnpoint != null && !resourceSpawnpoint.isDead && resourceSpawnpoint.asset.vulnerableToFists)
                     {
-                        PlayerUI.hitmark(0, raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
+                        PlayerUI.hitmark(raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
                     }
                 }
             }
@@ -1701,7 +1709,7 @@ public class PlayerEquipment : PlayerCaller
                     raycastInfo.section = componentInParent.getSection(raycastInfo.collider.transform);
                     if (componentInParent.IsSectionIndexValid(raycastInfo.section) && !componentInParent.isSectionDead(raycastInfo.section) && componentInParent.asset.rubbleBladeID == 0 && componentInParent.asset.rubbleIsVulnerable)
                     {
-                        PlayerUI.hitmark(0, raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
+                        PlayerUI.hitmark(raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
                     }
                 }
             }
@@ -1990,25 +1998,25 @@ public class PlayerEquipment : PlayerCaller
 
     private void simulate_UseableInput(uint simulation, EAttackInputFlags inputPrimary, EAttackInputFlags inputSecondary, bool inputSteady)
     {
-        if (inputPrimary.HasFlag(EAttackInputFlags.Start) && isSelected && isEquipped && !wasUsablePrimaryStarted)
+        if (inputPrimary.HasFlag(EAttackInputFlags.Start) && HasValidUseable && IsEquipAnimationFinished && !wasUsablePrimaryStarted)
         {
             wasUsablePrimaryStarted = StartUsablePrimary();
         }
-        if (inputPrimary.HasFlag(EAttackInputFlags.Stop) && isSelected && isEquipped && wasUsablePrimaryStarted)
+        if (inputPrimary.HasFlag(EAttackInputFlags.Stop) && HasValidUseable && IsEquipAnimationFinished && wasUsablePrimaryStarted)
         {
             wasUsablePrimaryStarted = false;
             StopUsablePrimary();
         }
-        if (inputSecondary.HasFlag(EAttackInputFlags.Start) && isSelected && isEquipped && !wasUsableSecondaryStarted)
+        if (inputSecondary.HasFlag(EAttackInputFlags.Start) && HasValidUseable && IsEquipAnimationFinished && !wasUsableSecondaryStarted)
         {
             wasUsableSecondaryStarted = StartUsableSecondary();
         }
-        if (inputSecondary.HasFlag(EAttackInputFlags.Stop) && isSelected && isEquipped && wasUsableSecondaryStarted)
+        if (inputSecondary.HasFlag(EAttackInputFlags.Stop) && HasValidUseable && IsEquipAnimationFinished && wasUsableSecondaryStarted)
         {
             wasUsableSecondaryStarted = false;
             StopUsableSecondary();
         }
-        if (isSelected && isEquipped)
+        if (HasValidUseable && IsEquipAnimationFinished)
         {
             try
             {
@@ -2020,7 +2028,7 @@ public class PlayerEquipment : PlayerCaller
                 UnturnedLog.exception(e);
             }
         }
-        if (Provider.isServer && isSelected && isEquipped && asset != null && asset.shouldDeleteAtZeroQuality && quality == 0)
+        if (Provider.isServer && HasValidUseable && IsEquipAnimationFinished && asset != null && asset.shouldDeleteAtZeroQuality && quality == 0)
         {
             use();
         }
@@ -2044,7 +2052,7 @@ public class PlayerEquipment : PlayerCaller
     {
         if (simulate_MustDequip())
         {
-            if (isSelected && Provider.isServer)
+            if (HasValidUseable && Provider.isServer)
             {
                 dequip();
             }
@@ -2085,7 +2093,7 @@ public class PlayerEquipment : PlayerCaller
                     inputPrimary = EAttackInputFlags.Stop;
                     inputSecondary = EAttackInputFlags.Stop;
                 }
-                if (isSelected)
+                if (HasValidUseable)
                 {
                     simulate_UseableInput(simulation, inputPrimary, inputSecondary, inputSteady);
                 }
@@ -2099,7 +2107,7 @@ public class PlayerEquipment : PlayerCaller
 
     public void tock(uint clock)
     {
-        if (isSelected && isEquipped)
+        if (HasValidUseable && IsEquipAnimationFinished)
         {
             try
             {
@@ -2115,12 +2123,12 @@ public class PlayerEquipment : PlayerCaller
 
     private void updateVision()
     {
-        if (hasVision && base.player.clothing.glassesState[0] != 0)
+        if (hasVision && base.player.clothing.glassesState != null && base.player.clothing.glassesState.Length != 0 && base.player.clothing.glassesState[0] != 0)
         {
             if (base.player.clothing.glassesAsset.vision == ELightingVision.HEADLAMP)
             {
                 base.player.enableHeadlamp(base.player.clothing.glassesAsset.lightConfig);
-                if (base.channel.isOwner)
+                if (base.channel.IsLocalPlayer)
                 {
                     LevelLighting.vision = ELightingVision.NONE;
                     LevelLighting.updateLighting();
@@ -2130,7 +2138,7 @@ public class PlayerEquipment : PlayerCaller
             else
             {
                 base.player.disableHeadlamp();
-                if (base.channel.isOwner)
+                if (base.channel.IsLocalPlayer)
                 {
                     LevelLighting.vision = ((base.player.look.perspective == EPlayerPerspective.FIRST) ? base.player.clothing.glassesAsset.vision : ELightingVision.NONE);
                     LevelLighting.nightvisionColor = base.player.clothing.glassesAsset.nightvisionColor;
@@ -2144,7 +2152,7 @@ public class PlayerEquipment : PlayerCaller
         else
         {
             base.player.disableHeadlamp();
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 LevelLighting.vision = ELightingVision.NONE;
                 LevelLighting.updateLighting();
@@ -2214,7 +2222,7 @@ public class PlayerEquipment : PlayerCaller
 
     private void bindHotkey(byte button)
     {
-        if (button < PlayerInventory.SLOTS || !PlayerDashboardInventoryUI.active)
+        if (button < PlayerInventory.SLOTS || !PlayerDashboardUI.active || !PlayerDashboardInventoryUI.active)
         {
             return;
         }
@@ -2263,7 +2271,7 @@ public class PlayerEquipment : PlayerCaller
                 {
                     equip(button, item.x, item.y);
                 }
-                else if (isSelected && isEquipped)
+                else if (HasValidUseable && IsEquipAnimationFinished)
                 {
                     dequip();
                 }
@@ -2275,7 +2283,7 @@ public class PlayerEquipment : PlayerCaller
             {
                 equip(hotkeyInfo.page, hotkeyInfo.x, hotkeyInfo.y);
             }
-            else if (isSelected && isEquipped)
+            else if (HasValidUseable && IsEquipAnimationFinished)
             {
                 dequip();
             }
@@ -2284,7 +2292,7 @@ public class PlayerEquipment : PlayerCaller
 
     private void Update()
     {
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             bool flag;
             bool flag2;
@@ -2312,6 +2320,12 @@ public class PlayerEquipment : PlayerCaller
                     flag2 = InputEx.GetKey(keyCode2);
                 }
                 if (PlayerManager.IsClientUnderFakeLagPenalty)
+                {
+                    flag = false;
+                    flag2 = false;
+                    localWantsToAim = false;
+                }
+                if (HasValidUseable && !IsEquipAnimationFinished)
                 {
                     flag = false;
                     flag2 = false;
@@ -2350,15 +2364,15 @@ public class PlayerEquipment : PlayerCaller
             localWasSecondaryHeldLastFrame = flag2;
         }
         wasTryingToSelect = false;
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             if (!PlayerUI.window.showCursor && !base.player.workzone.isBuilding)
             {
-                if (InputEx.GetKeyDown(ControlsSettings.vision) && hasVision && !PlayerLifeUI.scopeOverlay.isVisible)
+                if (InputEx.GetKeyDown(ControlsSettings.vision) && hasVision && !PlayerLifeUI.scopeOverlay.IsVisible)
                 {
                     SendToggleVisionRequest.Invoke(GetNetId(), ENetReliability.Unreliable);
                 }
-                if (InputEx.GetKeyDown(ControlsSettings.dequip) && isSelected && !isBusy && isEquipped)
+                if (InputEx.GetKeyDown(ControlsSettings.dequip) && HasValidUseable && !isBusy && IsEquipAnimationFinished)
                 {
                     dequip();
                 }
@@ -2371,7 +2385,7 @@ public class PlayerEquipment : PlayerCaller
                 }
             }
         }
-        if (isSelected)
+        if (HasValidUseable)
         {
             try
             {
@@ -2399,7 +2413,7 @@ public class PlayerEquipment : PlayerCaller
         tempThirdMaterials = new Material[PlayerInventory.SLOTS];
         thirdMythics = new MythicLockee[PlayerInventory.SLOTS];
         tempThirdMesh = new List<Mesh>(4);
-        if (base.channel.isOwner && base.player.character != null)
+        if (base.channel.IsLocalPlayer && base.player.character != null)
         {
             tempFirstMesh = new List<Mesh>(4);
             tempCharacterMesh = new List<Mesh>(4);
@@ -2427,7 +2441,7 @@ public class PlayerEquipment : PlayerCaller
             _thirdSecondaryMeleeSlot = base.player.animator.thirdSkeleton.Find("Right_Hip").Find("Right_Leg").Find("Secondary_Melee");
             _thirdSecondaryGunSlot = base.player.animator.thirdSkeleton.Find("Right_Hip").Find("Right_Leg").Find("Secondary_Gun");
         }
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             _characterPrimaryMeleeSlot = base.player.character.Find("Skeleton").Find("Spine").Find("Primary_Melee");
             _characterPrimaryLargeGunSlot = base.player.character.Find("Skeleton").Find("Spine").Find("Primary_Large_Gun");
@@ -2455,7 +2469,7 @@ public class PlayerEquipment : PlayerCaller
                 .Find("Right_Hand")
                 .Find("Right_Hook");
         }
-        if (base.channel.isOwner && base.player.character != null)
+        if (base.channel.IsLocalPlayer && base.player.character != null)
         {
             _characterLeftHook = base.player.character.transform.Find("Skeleton").Find("Spine").Find("Left_Shoulder")
                 .Find("Left_Arm")
@@ -2466,7 +2480,7 @@ public class PlayerEquipment : PlayerCaller
                 .Find("Right_Hand")
                 .Find("Right_Hook");
         }
-        if (base.channel.isOwner || Provider.isServer)
+        if (base.channel.IsLocalPlayer || Provider.isServer)
         {
             PlayerLife life = base.player.life;
             life.onVisionUpdated = (VisionUpdated)Delegate.Combine(life.onVisionUpdated, new VisionUpdated(onVisionUpdated));
@@ -2474,7 +2488,7 @@ public class PlayerEquipment : PlayerCaller
         PlayerClothing clothing = base.player.clothing;
         clothing.onGlassesUpdated = (GlassesUpdated)Delegate.Combine(clothing.onGlassesUpdated, new GlassesUpdated(onGlassesUpdated));
         base.player.clothing.VisualToggleChanged += OnVisualToggleChanged;
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             _hotkeys = new HotkeyInfo[8];
             for (byte b = 0; b < hotkeys.Length; b = (byte)(b + 1))
@@ -2530,7 +2544,7 @@ public class PlayerEquipment : PlayerCaller
             }
             _useable.ReleaseNetId();
         }
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             save();
         }

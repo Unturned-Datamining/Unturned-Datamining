@@ -279,6 +279,8 @@ public class PlayerCrafting : PlayerCaller
                     inventorySearch.jar.item.state[0] = 1;
                     base.player.inventory.sendUpdateInvState(inventorySearch.page, inventorySearch.jar.x, inventorySearch.jar.y, inventorySearch.jar.item.state);
                 }
+                blueprint.ApplyConditions(base.player);
+                blueprint.GrantRewards(base.player);
                 SendRefreshCrafting.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection());
             }
             else if (blueprint.type == EBlueprintType.AMMO)
@@ -338,6 +340,8 @@ public class PlayerCrafting : PlayerCaller
                     }
                 }
                 base.player.inventory.sendUpdateAmount(inventorySearch3.page, inventorySearch3.jar.x, inventorySearch3.jar.y, (byte)(itemAsset.amount - num5));
+                blueprint.ApplyConditions(base.player);
+                blueprint.GrantRewards(base.player);
                 SendRefreshCrafting.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection());
             }
             else
@@ -385,8 +389,8 @@ public class PlayerCrafting : PlayerCaller
                         }
                     }
                 }
-                blueprint.applyConditions(base.player, shouldSend: true);
-                blueprint.grantRewards(base.player, shouldSend: true);
+                blueprint.ApplyConditions(base.player);
+                blueprint.GrantRewards(base.player);
                 SendRefreshCrafting.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection());
             }
             if (!flag2)
@@ -459,7 +463,7 @@ public class PlayerCrafting : PlayerCaller
 
     internal void InitializePlayer()
     {
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             load();
         }
@@ -467,7 +471,7 @@ public class PlayerCrafting : PlayerCaller
 
     private void OnDestroy()
     {
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             save();
         }

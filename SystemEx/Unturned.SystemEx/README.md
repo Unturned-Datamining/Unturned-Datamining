@@ -8,6 +8,8 @@
 - [GuidExtension.cs](GuidExtension.cs)
 - [HashSetEx.cs](HashSetEx.cs)
 - [IPv4Address.cs](IPv4Address.cs)
+- [IPv4Filter.cs](IPv4Filter.cs)
+- [IPv4SubnetMask.cs](IPv4SubnetMask.cs)
 - [ListEx.cs](ListEx.cs)
 - [PathEx.cs](PathEx.cs)
 - [StringExtension.cs](StringExtension.cs)

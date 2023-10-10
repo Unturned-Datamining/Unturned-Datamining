@@ -17,39 +17,39 @@ public class SleekManageWorkshopEntry : SleekWrapper
         bool cachedDetails2 = TempSteamworksWorkshop.getCachedDetails(fileId, out cachedDetails);
         string text = (cachedDetails2 ? cachedDetails.GetTitle() : fileId.ToString());
         ISleekBox sleekBox = Glazier.Get().CreateBox();
-        sleekBox.sizeScale_X = 1f;
-        sleekBox.sizeScale_Y = 1f;
+        sleekBox.SizeScale_X = 1f;
+        sleekBox.SizeScale_Y = 1f;
         AddChild(sleekBox);
         ISleekToggle sleekToggle = Glazier.Get().CreateToggle();
-        sleekToggle.positionOffset_Y = -20;
-        sleekToggle.positionScale_Y = 0.5f;
-        sleekToggle.sizeOffset_X = 40;
-        sleekToggle.sizeOffset_Y = 40;
-        sleekToggle.onToggled += onToggledEnabled;
-        sleekToggle.state = getEnabled();
+        sleekToggle.PositionOffset_Y = -20f;
+        sleekToggle.PositionScale_Y = 0.5f;
+        sleekToggle.SizeOffset_X = 40f;
+        sleekToggle.SizeOffset_Y = 40f;
+        sleekToggle.OnValueChanged += onToggledEnabled;
+        sleekToggle.Value = getEnabled();
         AddChild(sleekToggle);
         ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-        sleekLabel.positionOffset_X = 40;
-        sleekLabel.positionOffset_Y = -15;
-        sleekLabel.positionScale_Y = 0.5f;
-        sleekLabel.sizeOffset_X = -40;
-        sleekLabel.sizeOffset_Y = 30;
-        sleekLabel.sizeScale_X = 1f;
-        sleekLabel.fontSize = ESleekFontSize.Medium;
-        sleekLabel.fontAlignment = TextAnchor.MiddleLeft;
-        sleekLabel.text = text;
-        sleekLabel.textColor = (cachedDetails.isBannedOrPrivate ? ESleekTint.BAD : ESleekTint.FONT);
+        sleekLabel.PositionOffset_X = 40f;
+        sleekLabel.PositionOffset_Y = -15f;
+        sleekLabel.PositionScale_Y = 0.5f;
+        sleekLabel.SizeOffset_X = -40f;
+        sleekLabel.SizeOffset_Y = 30f;
+        sleekLabel.SizeScale_X = 1f;
+        sleekLabel.FontSize = ESleekFontSize.Medium;
+        sleekLabel.TextAlignment = TextAnchor.MiddleLeft;
+        sleekLabel.Text = text;
+        sleekLabel.TextColor = (cachedDetails.isBannedOrPrivate ? ESleekTint.BAD : ESleekTint.FONT);
         AddChild(sleekLabel);
-        int num = -5;
+        float num = -5f;
         SleekWorkshopSubscriptionButton sleekWorkshopSubscriptionButton = new SleekWorkshopSubscriptionButton
         {
-            positionOffset_Y = -15,
-            positionScale_X = 1f,
-            positionScale_Y = 0.5f,
-            sizeOffset_X = 100,
-            sizeOffset_Y = 30
+            PositionOffset_Y = -15f,
+            PositionScale_X = 1f,
+            PositionScale_Y = 0.5f,
+            SizeOffset_X = 100f,
+            SizeOffset_Y = 30f
         };
-        num = (sleekWorkshopSubscriptionButton.positionOffset_X = num - sleekWorkshopSubscriptionButton.sizeOffset_X);
+        num = (sleekWorkshopSubscriptionButton.PositionOffset_X = num - sleekWorkshopSubscriptionButton.SizeOffset_X);
         sleekWorkshopSubscriptionButton.subscribeText = MenuWorkshopSubscriptionsUI.localization.format("Subscribe_Label");
         sleekWorkshopSubscriptionButton.unsubscribeText = MenuWorkshopSubscriptionsUI.localization.format("Unsubscribe_Label");
         sleekWorkshopSubscriptionButton.subscribeTooltip = MenuWorkshopSubscriptionsUI.localization.format("Subscribe_Tooltip", text);
@@ -57,84 +57,84 @@ public class SleekManageWorkshopEntry : SleekWrapper
         sleekWorkshopSubscriptionButton.fileId = fileId;
         sleekWorkshopSubscriptionButton.synchronizeText();
         AddChild(sleekWorkshopSubscriptionButton);
-        num -= 5;
+        num -= 5f;
         ISleekButton sleekButton = Glazier.Get().CreateButton();
-        sleekButton.positionOffset_Y = -15;
-        sleekButton.positionScale_X = 1f;
-        sleekButton.positionScale_Y = 0.5f;
-        sleekButton.sizeOffset_X = 100;
-        sleekButton.sizeOffset_Y = 30;
-        num = (sleekButton.positionOffset_X = num - sleekButton.sizeOffset_X);
-        sleekButton.text = MenuWorkshopSubscriptionsUI.localization.format("View_Label");
-        sleekButton.tooltipText = MenuWorkshopSubscriptionsUI.localization.format("View_Tooltip", text);
-        sleekButton.fontAlignment = TextAnchor.MiddleCenter;
-        sleekButton.onClickedButton += onClickedViewButton;
+        sleekButton.PositionOffset_Y = -15f;
+        sleekButton.PositionScale_X = 1f;
+        sleekButton.PositionScale_Y = 0.5f;
+        sleekButton.SizeOffset_X = 100f;
+        sleekButton.SizeOffset_Y = 30f;
+        num = (sleekButton.PositionOffset_X = num - sleekButton.SizeOffset_X);
+        sleekButton.Text = MenuWorkshopSubscriptionsUI.localization.format("View_Label");
+        sleekButton.TooltipText = MenuWorkshopSubscriptionsUI.localization.format("View_Tooltip", text);
+        sleekButton.TextAlignment = TextAnchor.MiddleCenter;
+        sleekButton.OnClicked += onClickedViewButton;
         AddChild(sleekButton);
-        num -= 5;
+        num -= 5f;
         if (ReadWrite.SupportsOpeningFileBrowser)
         {
             if (SteamUGC.GetItemInstallInfo(fileId, out var _, out installPath, 1024u, out var punTimeStamp))
             {
                 ISleekButton sleekButton2 = Glazier.Get().CreateButton();
-                sleekButton2.positionOffset_Y = -15;
-                sleekButton2.positionScale_X = 1f;
-                sleekButton2.positionScale_Y = 0.5f;
-                sleekButton2.sizeOffset_X = 100;
-                sleekButton2.sizeOffset_Y = 30;
-                num = (sleekButton2.positionOffset_X = num - sleekButton2.sizeOffset_X);
-                sleekButton2.text = MenuWorkshopSubscriptionsUI.localization.format("BrowseFiles_Label");
-                sleekButton2.tooltipText = MenuWorkshopSubscriptionsUI.localization.format("BrowseFiles_Tooltip", text);
-                sleekButton2.onClickedButton += OnClickedBrowseFilesButton;
+                sleekButton2.PositionOffset_Y = -15f;
+                sleekButton2.PositionScale_X = 1f;
+                sleekButton2.PositionScale_Y = 0.5f;
+                sleekButton2.SizeOffset_X = 100f;
+                sleekButton2.SizeOffset_Y = 30f;
+                num = (sleekButton2.PositionOffset_X = num - sleekButton2.SizeOffset_X);
+                sleekButton2.Text = MenuWorkshopSubscriptionsUI.localization.format("BrowseFiles_Label");
+                sleekButton2.TooltipText = MenuWorkshopSubscriptionsUI.localization.format("BrowseFiles_Tooltip", text);
+                sleekButton2.OnClicked += OnClickedBrowseFilesButton;
                 AddChild(sleekButton2);
-                num -= 5;
+                num -= 5f;
             }
             else
             {
                 ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
-                sleekLabel2.positionOffset_Y = -15;
-                sleekLabel2.positionScale_X = 1f;
-                sleekLabel2.positionScale_Y = 0.5f;
-                sleekLabel2.sizeOffset_X = 100;
-                sleekLabel2.sizeOffset_Y = 30;
-                num = (sleekLabel2.positionOffset_X = num - sleekLabel2.sizeOffset_X);
-                sleekLabel2.text = MenuWorkshopSubscriptionsUI.localization.format("NotInstalledLabel");
-                sleekLabel2.textColor = ESleekTint.BAD;
+                sleekLabel2.PositionOffset_Y = -15f;
+                sleekLabel2.PositionScale_X = 1f;
+                sleekLabel2.PositionScale_Y = 0.5f;
+                sleekLabel2.SizeOffset_X = 100f;
+                sleekLabel2.SizeOffset_Y = 30f;
+                num = (sleekLabel2.PositionOffset_X = num - sleekLabel2.SizeOffset_X);
+                sleekLabel2.Text = MenuWorkshopSubscriptionsUI.localization.format("NotInstalledLabel");
+                sleekLabel2.TextColor = ESleekTint.BAD;
                 AddChild(sleekLabel2);
-                num -= 5;
+                num -= 5f;
             }
             ISleekLabel sleekLabel3 = Glazier.Get().CreateLabel();
-            sleekLabel3.positionScale_X = 1f;
-            sleekLabel3.sizeOffset_X = 150;
-            sleekLabel3.sizeScale_Y = 1f;
-            num = (sleekLabel3.positionOffset_X = num - sleekLabel3.sizeOffset_X);
-            sleekLabel3.text = MenuWorkshopSubscriptionsUI.localization.format("LocalTimestampLabel") + "\n" + DateTimeEx.FromUtcUnixTimeSeconds(punTimeStamp).ToLocalTime().ToString();
-            sleekLabel3.fontSize = ESleekFontSize.Small;
+            sleekLabel3.PositionScale_X = 1f;
+            sleekLabel3.SizeOffset_X = 150f;
+            sleekLabel3.SizeScale_Y = 1f;
+            num = (sleekLabel3.PositionOffset_X = num - sleekLabel3.SizeOffset_X);
+            sleekLabel3.Text = MenuWorkshopSubscriptionsUI.localization.format("LocalTimestampLabel") + "\n" + DateTimeEx.FromUtcUnixTimeSeconds(punTimeStamp).ToLocalTime();
+            sleekLabel3.FontSize = ESleekFontSize.Small;
             AddChild(sleekLabel3);
-            num -= 5;
+            num -= 5f;
         }
         if (cachedDetails2)
         {
             ISleekLabel sleekLabel4 = Glazier.Get().CreateLabel();
-            sleekLabel4.positionScale_X = 1f;
-            sleekLabel4.sizeOffset_X = 150;
-            sleekLabel4.sizeScale_Y = 1f;
-            num = (sleekLabel4.positionOffset_X = num - sleekLabel4.sizeOffset_X);
-            sleekLabel4.text = MenuWorkshopSubscriptionsUI.localization.format("RemoteTimestampLabel") + "\n" + DateTimeEx.FromUtcUnixTimeSeconds(cachedDetails.updateTimestamp).ToLocalTime().ToString();
-            sleekLabel4.fontSize = ESleekFontSize.Small;
+            sleekLabel4.PositionScale_X = 1f;
+            sleekLabel4.SizeOffset_X = 150f;
+            sleekLabel4.SizeScale_Y = 1f;
+            num = (sleekLabel4.PositionOffset_X = num - sleekLabel4.SizeOffset_X);
+            sleekLabel4.Text = MenuWorkshopSubscriptionsUI.localization.format("RemoteTimestampLabel") + "\n" + DateTimeEx.FromUtcUnixTimeSeconds(cachedDetails.updateTimestamp).ToLocalTime();
+            sleekLabel4.FontSize = ESleekFontSize.Small;
             AddChild(sleekLabel4);
-            num -= 5;
+            num -= 5f;
         }
         if ((SteamUGC.GetItemState(fileId) & 8) == 8)
         {
             ISleekLabel sleekLabel5 = Glazier.Get().CreateLabel();
-            sleekLabel5.positionOffset_Y = -15;
-            sleekLabel5.positionScale_X = 1f;
-            sleekLabel5.positionScale_Y = 0.5f;
-            sleekLabel5.sizeOffset_X = 100;
-            sleekLabel5.sizeOffset_Y = 30;
-            num = (sleekLabel5.positionOffset_X = num - sleekLabel5.sizeOffset_X);
-            sleekLabel5.text = MenuWorkshopSubscriptionsUI.localization.format("ItemState_NeedsUpdate");
-            sleekLabel5.textColor = ESleekTint.BAD;
+            sleekLabel5.PositionOffset_Y = -15f;
+            sleekLabel5.PositionScale_X = 1f;
+            sleekLabel5.PositionScale_Y = 0.5f;
+            sleekLabel5.SizeOffset_X = 100f;
+            sleekLabel5.SizeOffset_Y = 30f;
+            num = (sleekLabel5.PositionOffset_X = num - sleekLabel5.SizeOffset_X);
+            sleekLabel5.Text = MenuWorkshopSubscriptionsUI.localization.format("ItemState_NeedsUpdate");
+            sleekLabel5.TextColor = ESleekTint.BAD;
             AddChild(sleekLabel5);
         }
     }

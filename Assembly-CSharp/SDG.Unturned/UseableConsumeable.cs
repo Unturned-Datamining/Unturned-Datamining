@@ -100,7 +100,7 @@ public class UseableConsumeable : Useable
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askConsume")]
     public void ReceivePlayConsume(EConsumeMode mode)
     {
-        if (base.player.equipment.isEquipped)
+        if (base.player.equipment.IsEquipAnimationFinished)
         {
             consumeMode = mode;
             consume();
@@ -135,7 +135,7 @@ public class UseableConsumeable : Useable
         {
             return false;
         }
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             RaycastInfo raycastInfo = DamageTool.raycast(new Ray(base.player.look.aim.position, base.player.look.aim.forward), 3f, RayMasks.DAMAGE_CLIENT);
             base.player.input.sendRaycast(raycastInfo, ERaycastInfoUsage.ConsumeableAid);
@@ -177,10 +177,10 @@ public class UseableConsumeable : Useable
     {
         base.player.animator.play("Equip", smooth: true);
         hasAid = ((ItemConsumeableAsset)base.player.equipment.asset).hasAid;
-        useTime = base.player.animator.getAnimationLength("Use");
+        useTime = base.player.animator.GetAnimationLength("Use");
         if (hasAid)
         {
-            aidTime = base.player.animator.getAnimationLength("Aid");
+            aidTime = base.player.animator.GetAnimationLength("Aid");
         }
     }
 
@@ -233,7 +233,7 @@ public class UseableConsumeable : Useable
             base.player.equipment.dequip();
             return;
         }
-        asset.grantQuestRewards(enemy, shouldSend: true);
+        asset.GrantQuestRewards(enemy);
         asset.itemRewards.grantItems(enemy, EItemOrigin.CRAFT, shouldAutoEquip: false);
         byte health = enemy.life.health;
         byte virus = enemy.life.virus;
@@ -315,7 +315,7 @@ public class UseableConsumeable : Useable
         byte vision = base.player.life.vision;
         byte b = (byte)((float)(int)asset.vision * (1f - base.player.skills.mastery(1, 2)));
         base.player.life.askView((byte)Mathf.Max(vision, b));
-        if (base.channel.isOwner && asset.vision > 0 && Provider.provider.achievementsService.getAchievement("Berries", out var has) && !has)
+        if (base.channel.IsLocalPlayer && asset.vision > 0 && Provider.provider.achievementsService.getAchievement("Berries", out var has) && !has)
         {
             Provider.provider.achievementsService.setAchievement("Berries");
         }
@@ -330,7 +330,7 @@ public class UseableConsumeable : Useable
             base.player.equipment.dequip();
             return;
         }
-        asset.grantQuestRewards(base.player, shouldSend: true);
+        asset.GrantQuestRewards(base.player);
         asset.itemRewards.grantItems(base.player, EItemOrigin.CRAFT, shouldAutoEquip: false);
         Vector3 vector = base.transform.position + Vector3.up;
         performHealth(base.player, asset.health);

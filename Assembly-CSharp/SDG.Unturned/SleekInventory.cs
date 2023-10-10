@@ -13,7 +13,7 @@ public class SleekInventory : SleekWrapper
 
     private ISleekConstraintFrame iconFrame;
 
-    private ISleekImage icon;
+    private SleekEconIcon icon;
 
     private ISleekLabel nameLabel;
 
@@ -44,30 +44,30 @@ public class SleekInventory : SleekWrapper
         instance = newInstance;
         item = newItem;
         quantity = newQuantity;
-        button.isClickable = isClickable;
+        button.IsClickable = isClickable;
         if (isLarge)
         {
-            iconFrame.sizeOffset_Y = -70;
-            nameLabel.fontSize = ESleekFontSize.Large;
-            nameLabel.positionOffset_Y = -70;
-            nameLabel.sizeOffset_Y = 70;
-            equippedIcon.sizeOffset_X = 20;
-            equippedIcon.sizeOffset_Y = 20;
-            statTrackerLabel.fontSize = ESleekFontSize.Default;
-            ragdollEffectLabel.fontSize = ESleekFontSize.Default;
-            particleEffectLabel.fontSize = ESleekFontSize.Default;
+            iconFrame.SizeOffset_Y = -70f;
+            nameLabel.FontSize = ESleekFontSize.Large;
+            nameLabel.PositionOffset_Y = -70f;
+            nameLabel.SizeOffset_Y = 70f;
+            equippedIcon.SizeOffset_X = 20f;
+            equippedIcon.SizeOffset_Y = 20f;
+            statTrackerLabel.FontSize = ESleekFontSize.Default;
+            ragdollEffectLabel.FontSize = ESleekFontSize.Default;
+            particleEffectLabel.FontSize = ESleekFontSize.Default;
         }
         else
         {
-            iconFrame.sizeOffset_Y = -50;
-            nameLabel.fontSize = ESleekFontSize.Default;
-            nameLabel.positionOffset_Y = -50;
-            nameLabel.sizeOffset_Y = 50;
-            equippedIcon.sizeOffset_X = 10;
-            equippedIcon.sizeOffset_Y = 10;
-            statTrackerLabel.fontSize = ESleekFontSize.Tiny;
-            ragdollEffectLabel.fontSize = ESleekFontSize.Tiny;
-            particleEffectLabel.fontSize = ESleekFontSize.Tiny;
+            iconFrame.SizeOffset_Y = -50f;
+            nameLabel.FontSize = ESleekFontSize.Default;
+            nameLabel.PositionOffset_Y = -50f;
+            nameLabel.SizeOffset_Y = 50f;
+            equippedIcon.SizeOffset_X = 10f;
+            equippedIcon.SizeOffset_Y = 10f;
+            statTrackerLabel.FontSize = ESleekFontSize.Tiny;
+            ragdollEffectLabel.FontSize = ESleekFontSize.Tiny;
+            particleEffectLabel.FontSize = ESleekFontSize.Tiny;
         }
         if (item != 0)
         {
@@ -75,15 +75,15 @@ public class SleekInventory : SleekWrapper
             {
                 _itemAsset = null;
                 _vehicleAsset = null;
-                icon.texture = (Texture2D)Resources.Load("Economy/Mystery" + (isLarge ? "/Icon_Large" : "/Icon_Small"));
-                icon.isVisible = true;
-                nameLabel.text = MenuSurvivorsClothingUI.localization.format("Mystery_" + item + "_Text");
-                button.tooltipText = MenuSurvivorsClothingUI.localization.format("Mystery_Tooltip");
-                button.backgroundColor = SleekColor.BackgroundIfLight(Palette.MYTHICAL);
-                button.textColor = Palette.MYTHICAL;
-                nameLabel.textColor = Palette.MYTHICAL;
-                nameLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
-                equippedIcon.isVisible = false;
+                icon.SetIsBoxMythicalIcon();
+                icon.IsVisible = true;
+                nameLabel.Text = MenuSurvivorsClothingUI.localization.format("Mystery_" + item + "_Text");
+                button.TooltipText = MenuSurvivorsClothingUI.localization.format("Mystery_Tooltip");
+                button.BackgroundColor = SleekColor.BackgroundIfLight(Palette.MYTHICAL);
+                button.TextColor = Palette.MYTHICAL;
+                nameLabel.TextColor = Palette.MYTHICAL;
+                nameLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+                equippedIcon.IsVisible = false;
             }
             else
             {
@@ -92,66 +92,65 @@ public class SleekInventory : SleekWrapper
                 {
                     _itemAsset = null;
                     _vehicleAsset = null;
-                    icon.texture = null;
-                    icon.isVisible = true;
-                    nameLabel.text = "itemdefid: " + item;
-                    button.tooltipText = "itemdefid: " + item;
-                    button.backgroundColor = ESleekTint.BACKGROUND;
-                    button.textColor = ESleekTint.FONT;
-                    nameLabel.textColor = ESleekTint.FONT;
-                    nameLabel.shadowStyle = ETextContrastContext.Default;
-                    equippedIcon.isVisible = false;
-                    statTrackerLabel.isVisible = false;
-                    ragdollEffectLabel.isVisible = false;
-                    particleEffectLabel.isVisible = false;
+                    icon.SetItemDefId(-1);
+                    icon.IsVisible = false;
+                    nameLabel.Text = "itemdefid: " + item;
+                    button.TooltipText = "itemdefid: " + item;
+                    button.BackgroundColor = ESleekTint.BACKGROUND;
+                    button.TextColor = ESleekTint.FONT;
+                    nameLabel.TextColor = ESleekTint.FONT;
+                    nameLabel.TextContrastContext = ETextContrastContext.Default;
+                    equippedIcon.IsVisible = false;
+                    statTrackerLabel.IsVisible = false;
+                    ragdollEffectLabel.IsVisible = false;
+                    particleEffectLabel.IsVisible = false;
                 }
                 else
                 {
                     _itemAsset = Assets.find<ItemAsset>(item_guid);
                     _vehicleAsset = Assets.find<VehicleAsset>(vehicle_guid);
-                    Texture2D texture2D = Provider.provider.economyService.LoadItemIcon(item, isLarge);
-                    icon.texture = texture2D;
-                    icon.isVisible = texture2D != null;
-                    nameLabel.text = Provider.provider.economyService.getInventoryName(item);
+                    icon.SetItemDefId(item);
+                    icon.IsVisible = true;
+                    nameLabel.Text = Provider.provider.economyService.getInventoryName(item);
                     if (quantity > 1)
                     {
                         ISleekLabel sleekLabel = nameLabel;
-                        sleekLabel.text = sleekLabel.text + " x" + quantity;
+                        sleekLabel.Text = sleekLabel.Text + " x" + quantity;
                     }
-                    button.tooltipText = Provider.provider.economyService.getInventoryType(item);
+                    button.TooltipText = Provider.provider.economyService.getInventoryType(item);
                     Color inventoryColor = Provider.provider.economyService.getInventoryColor(item);
-                    button.backgroundColor = SleekColor.BackgroundIfLight(inventoryColor);
-                    button.textColor = inventoryColor;
-                    nameLabel.textColor = inventoryColor;
-                    nameLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
-                    bool flag = ((itemAsset != null && itemAsset.proPath != null && itemAsset.proPath.Length != 0) ? Characters.isCosmeticEquipped(instance) : Characters.isSkinEquipped(instance));
-                    equippedIcon.isVisible = flag;
-                    if (equippedIcon.isVisible && equippedIcon.texture == null)
+                    button.BackgroundColor = SleekColor.BackgroundIfLight(inventoryColor);
+                    button.TextColor = inventoryColor;
+                    nameLabel.TextColor = inventoryColor;
+                    nameLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+                    bool isVisible = ((itemAsset != null && itemAsset.proPath != null && itemAsset.proPath.Length != 0) ? Characters.isCosmeticEquipped(instance) : Characters.isSkinEquipped(instance));
+                    equippedIcon.IsVisible = isVisible;
+                    if (equippedIcon.IsVisible && equippedIcon.Texture == null)
                     {
-                        equippedIcon.texture = MenuSurvivorsClothingUI.icons.load<Texture2D>("Equip");
+                        equippedIcon.Texture = MenuSurvivorsClothingUI.icons.load<Texture2D>("Equip");
                     }
                 }
             }
-            nameLabel.isVisible = true;
+            nameLabel.IsVisible = true;
             if (!Provider.provider.economyService.getInventoryStatTrackerValue(instance, out var type, out var kills))
             {
-                statTrackerLabel.isVisible = false;
+                statTrackerLabel.IsVisible = false;
             }
             else
             {
-                statTrackerLabel.isVisible = true;
-                statTrackerLabel.textColor = Provider.provider.economyService.getStatTrackerColor(type);
-                statTrackerLabel.text = kills.ToString("D7");
+                statTrackerLabel.IsVisible = true;
+                statTrackerLabel.TextColor = Provider.provider.economyService.getStatTrackerColor(type);
+                statTrackerLabel.Text = kills.ToString("D7");
             }
             if (!Provider.provider.economyService.getInventoryRagdollEffect(instance, out var _))
             {
-                ragdollEffectLabel.isVisible = false;
+                ragdollEffectLabel.IsVisible = false;
             }
             else
             {
-                ragdollEffectLabel.isVisible = true;
-                ragdollEffectLabel.textColor = new Color(0f, 1f, 1f);
-                ragdollEffectLabel.text = "0 Kelvin";
+                ragdollEffectLabel.IsVisible = true;
+                ragdollEffectLabel.TextColor = new Color(0f, 1f, 1f);
+                ragdollEffectLabel.Text = "0 Kelvin";
             }
             ushort num = Provider.provider.economyService.getInventoryMythicID(item);
             if (num == 0)
@@ -160,38 +159,38 @@ public class SleekInventory : SleekWrapper
             }
             if (num == 0)
             {
-                particleEffectLabel.isVisible = false;
+                particleEffectLabel.IsVisible = false;
             }
             else
             {
-                particleEffectLabel.isVisible = true;
+                particleEffectLabel.IsVisible = true;
                 if (Assets.find(EAssetType.MYTHIC, num) is MythicAsset mythicAsset)
                 {
-                    particleEffectLabel.text = mythicAsset.particleTagName;
+                    particleEffectLabel.Text = mythicAsset.particleTagName;
                 }
                 else
                 {
-                    particleEffectLabel.text = num.ToString();
+                    particleEffectLabel.Text = num.ToString();
                 }
             }
             if (!string.IsNullOrEmpty(extraTooltip))
             {
                 ISleekButton sleekButton = button;
-                sleekButton.tooltipText = sleekButton.tooltipText + "\n" + extraTooltip;
+                sleekButton.TooltipText = sleekButton.TooltipText + "\n" + extraTooltip;
             }
         }
         else
         {
             _itemAsset = null;
-            button.tooltipText = "";
-            button.backgroundColor = ESleekTint.BACKGROUND;
-            button.textColor = ESleekTint.FONT;
-            icon.isVisible = false;
-            nameLabel.isVisible = false;
-            equippedIcon.isVisible = false;
-            statTrackerLabel.isVisible = false;
-            ragdollEffectLabel.isVisible = false;
-            particleEffectLabel.isVisible = false;
+            button.TooltipText = "";
+            button.BackgroundColor = ESleekTint.BACKGROUND;
+            button.TextColor = ESleekTint.FONT;
+            icon.IsVisible = false;
+            nameLabel.IsVisible = false;
+            equippedIcon.IsVisible = false;
+            statTrackerLabel.IsVisible = false;
+            ragdollEffectLabel.IsVisible = false;
+            particleEffectLabel.IsVisible = false;
         }
     }
 
@@ -203,62 +202,62 @@ public class SleekInventory : SleekWrapper
     public SleekInventory()
     {
         button = Glazier.Get().CreateButton();
-        button.sizeScale_X = 1f;
-        button.sizeScale_Y = 1f;
-        button.onClickedButton += onClickedButton;
+        button.SizeScale_X = 1f;
+        button.SizeScale_Y = 1f;
+        button.OnClicked += onClickedButton;
         AddChild(button);
-        button.isClickable = false;
+        button.IsClickable = false;
         iconFrame = Glazier.Get().CreateConstraintFrame();
-        iconFrame.positionOffset_X = 5;
-        iconFrame.positionOffset_Y = 5;
-        iconFrame.sizeScale_X = 1f;
-        iconFrame.sizeScale_Y = 1f;
-        iconFrame.sizeOffset_X = -10;
-        iconFrame.constraint = ESleekConstraint.FitInParent;
+        iconFrame.PositionOffset_X = 5f;
+        iconFrame.PositionOffset_Y = 5f;
+        iconFrame.SizeScale_X = 1f;
+        iconFrame.SizeScale_Y = 1f;
+        iconFrame.SizeOffset_X = -10f;
+        iconFrame.Constraint = ESleekConstraint.FitInParent;
         AddChild(iconFrame);
-        icon = Glazier.Get().CreateImage();
-        icon.sizeScale_X = 1f;
-        icon.sizeScale_Y = 1f;
+        icon = new SleekEconIcon();
+        icon.SizeScale_X = 1f;
+        icon.SizeScale_Y = 1f;
         iconFrame.AddChild(icon);
-        icon.isVisible = false;
+        icon.IsVisible = false;
         equippedIcon = Glazier.Get().CreateImage();
-        equippedIcon.positionOffset_X = 5;
-        equippedIcon.positionOffset_Y = 5;
-        equippedIcon.color = ESleekTint.FOREGROUND;
+        equippedIcon.PositionOffset_X = 5f;
+        equippedIcon.PositionOffset_Y = 5f;
+        equippedIcon.TintColor = ESleekTint.FOREGROUND;
         AddChild(equippedIcon);
-        equippedIcon.isVisible = false;
+        equippedIcon.IsVisible = false;
         ragdollEffectLabel = Glazier.Get().CreateLabel();
-        ragdollEffectLabel.positionOffset_Y = -30;
-        ragdollEffectLabel.positionScale_Y = 1f;
-        ragdollEffectLabel.sizeOffset_Y = 30;
-        ragdollEffectLabel.sizeScale_X = 1f;
-        ragdollEffectLabel.fontAlignment = TextAnchor.LowerRight;
-        ragdollEffectLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
-        ragdollEffectLabel.fontStyle = FontStyle.Italic;
+        ragdollEffectLabel.PositionOffset_Y = -30f;
+        ragdollEffectLabel.PositionScale_Y = 1f;
+        ragdollEffectLabel.SizeOffset_Y = 30f;
+        ragdollEffectLabel.SizeScale_X = 1f;
+        ragdollEffectLabel.TextAlignment = TextAnchor.LowerRight;
+        ragdollEffectLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+        ragdollEffectLabel.FontStyle = FontStyle.Italic;
         AddChild(ragdollEffectLabel);
-        ragdollEffectLabel.isVisible = false;
+        ragdollEffectLabel.IsVisible = false;
         particleEffectLabel = Glazier.Get().CreateLabel();
-        particleEffectLabel.sizeOffset_Y = 30;
-        particleEffectLabel.sizeScale_X = 1f;
-        particleEffectLabel.textColor = Palette.MYTHICAL;
-        particleEffectLabel.fontAlignment = TextAnchor.UpperRight;
-        particleEffectLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+        particleEffectLabel.SizeOffset_Y = 30f;
+        particleEffectLabel.SizeScale_X = 1f;
+        particleEffectLabel.TextColor = Palette.MYTHICAL;
+        particleEffectLabel.TextAlignment = TextAnchor.UpperRight;
+        particleEffectLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
         AddChild(particleEffectLabel);
-        particleEffectLabel.isVisible = false;
+        particleEffectLabel.IsVisible = false;
         statTrackerLabel = Glazier.Get().CreateLabel();
-        statTrackerLabel.positionOffset_Y = -30;
-        statTrackerLabel.positionScale_Y = 1f;
-        statTrackerLabel.sizeOffset_Y = 30;
-        statTrackerLabel.sizeScale_X = 1f;
-        statTrackerLabel.fontAlignment = TextAnchor.LowerLeft;
-        statTrackerLabel.fontStyle = FontStyle.Italic;
-        statTrackerLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+        statTrackerLabel.PositionOffset_Y = -30f;
+        statTrackerLabel.PositionScale_Y = 1f;
+        statTrackerLabel.SizeOffset_Y = 30f;
+        statTrackerLabel.SizeScale_X = 1f;
+        statTrackerLabel.TextAlignment = TextAnchor.LowerLeft;
+        statTrackerLabel.FontStyle = FontStyle.Italic;
+        statTrackerLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
         AddChild(statTrackerLabel);
-        statTrackerLabel.isVisible = false;
+        statTrackerLabel.IsVisible = false;
         nameLabel = Glazier.Get().CreateLabel();
-        nameLabel.positionScale_Y = 1f;
-        nameLabel.sizeScale_X = 1f;
+        nameLabel.PositionScale_Y = 1f;
+        nameLabel.SizeScale_X = 1f;
         AddChild(nameLabel);
-        nameLabel.isVisible = false;
+        nameLabel.IsVisible = false;
     }
 }

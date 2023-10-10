@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 1482438818
+CRC: 3903160110
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 3ca9a35349a59729eca27510c2042b5e
+    Hash: a506e2d6c8c43b685d9ea12b9277e3c2
   TypeTreeHash:
     serializedVersion: 2
-    Hash: dbc1cd58f9800786615d0cca801bd2e5
+    Hash: fa4c767d602275505d4e1b2f73174642
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -41,8 +41,6 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 83
   Script: {instanceID: 0}
-- Class: 84
-  Script: {instanceID: 0}
 - Class: 95
   Script: {instanceID: 0}
 - Class: 108
@@ -50,9 +48,9 @@ ClassTypes:
 - Class: 111
   Script: {instanceID: 0}
 - Class: 114
-  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: a6e9242e5cb8b78429e422f41de137fd, type: 3}
 - Class: 114
@@ -88,7 +86,7 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: a9aa47a19491ba242ac67ffb7e6ee7a4, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 08feeb2689fb34b4a8e79087902f8ca4, type: 3}
 - Class: 114
@@ -172,13 +170,13 @@ SerializeReferenceClassIdentifiers:
   ClassName: UnityEngine.Events.PersistentListenerMode
 - AssemblyName: UnityEngine.CoreModule
   ClassName: UnityEngine.Events.UnityEvent
-- AssemblyName: UnityEngine.TextCoreModule
+- AssemblyName: UnityEngine.TextCoreFontEngineModule
   ClassName: UnityEngine.TextCore.FaceInfo
-- AssemblyName: UnityEngine.TextCoreModule
+- AssemblyName: UnityEngine.TextCoreFontEngineModule
   ClassName: UnityEngine.TextCore.Glyph
-- AssemblyName: UnityEngine.TextCoreModule
+- AssemblyName: UnityEngine.TextCoreFontEngineModule
   ClassName: UnityEngine.TextCore.GlyphMetrics
-- AssemblyName: UnityEngine.TextCoreModule
+- AssemblyName: UnityEngine.TextCoreFontEngineModule
   ClassName: UnityEngine.TextCore.GlyphRect
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.AnimationTriggers

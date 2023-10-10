@@ -13,14 +13,14 @@ public class PlayerClipVolume : LevelVolume<PlayerClipVolume, PlayerClipVolumeMa
         public Menu(PlayerClipVolume volume)
         {
             this.volume = volume;
-            base.sizeOffset_X = 400;
-            base.sizeOffset_Y = 40;
+            base.SizeOffset_X = 400f;
+            base.SizeOffset_Y = 40f;
             ISleekToggle sleekToggle = Glazier.Get().CreateToggle();
-            sleekToggle.sizeOffset_X = 40;
-            sleekToggle.sizeOffset_Y = 40;
-            sleekToggle.state = volume.blockPlayer;
-            sleekToggle.addLabel("Block Player", ESleekSide.RIGHT);
-            sleekToggle.onToggled += OnBlockPlayerToggled;
+            sleekToggle.SizeOffset_X = 40f;
+            sleekToggle.SizeOffset_Y = 40f;
+            sleekToggle.Value = volume.blockPlayer;
+            sleekToggle.AddLabel("Block Player", ESleekSide.RIGHT);
+            sleekToggle.OnValueChanged += OnBlockPlayerToggled;
             AddChild(sleekToggle);
         }
 

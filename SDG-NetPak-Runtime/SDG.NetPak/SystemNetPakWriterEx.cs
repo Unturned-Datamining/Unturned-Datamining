@@ -111,7 +111,7 @@ public static class SystemNetPakWriterEx
 
     public static bool WriteRadians(this NetPakWriter writer, float value, int bitCount = 8)
     {
-        float num = (value % ((float)Math.PI * 2f) + (float)Math.PI * 2f) % ((float)Math.PI * 2f) / ((float)Math.PI * 2f);
+        float num = (value % (MathF.PI * 2f) + MathF.PI * 2f) % (MathF.PI * 2f) / (MathF.PI * 2f);
         uint num2 = (uint)(1 << bitCount);
         uint value2 = (uint)(num * (float)num2);
         return writer.WriteBits(value2, bitCount);

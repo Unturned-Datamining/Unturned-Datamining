@@ -71,6 +71,12 @@ public class EffectManager : SteamCaller
 
     private static readonly ClientStaticMethod<Guid, Vector3> SendEffectPoint = ClientStaticMethod<Guid, Vector3>.Get(ReceiveEffectPoint);
 
+    private static readonly ClientStaticMethod<Guid, Vector3, Quaternion, Vector3> SendEffectPositionRotation_NonUniformScale = ClientStaticMethod<Guid, Vector3, Quaternion, Vector3>.Get(ReceiveEffectPositionRotation_NonUniformScale);
+
+    private static readonly ClientStaticMethod<Guid, Vector3, Quaternion, float> SendEffectPositionRotation_UniformScale = ClientStaticMethod<Guid, Vector3, Quaternion, float>.Get(ReceiveEffectPositionRotation_UniformScale);
+
+    private static readonly ClientStaticMethod<Guid, Vector3, Quaternion> SendEffectPositionRotation = ClientStaticMethod<Guid, Vector3, Quaternion>.Get(ReceiveEffectPositionRotation);
+
     private static readonly ClientStaticMethod<ushort, short> SendUIEffect = ClientStaticMethod<ushort, short>.Get(ReceiveUIEffect);
 
     private static readonly ClientStaticMethod<ushort, short, string> SendUIEffect1Arg = ClientStaticMethod<ushort, short, string>.Get(ReceiveUIEffect1Arg);
@@ -281,7 +287,7 @@ public class EffectManager : SteamCaller
             parameters.reliable = false;
             parameters.SetRelevantTransportConnections(Regions.GatherClientConnections(x, y, area));
             parameters.position = point;
-            parameters.direction = normal;
+            parameters.SetDirection(normal);
             triggerEffect(parameters);
         }
     }
@@ -308,7 +314,7 @@ public class EffectManager : SteamCaller
             parameters.reliable = true;
             parameters.SetRelevantTransportConnections(Regions.GatherClientConnections(x, y, area));
             parameters.position = point;
-            parameters.direction = normal;
+            parameters.SetDirection(normal);
             triggerEffect(parameters);
         }
     }
@@ -335,7 +341,7 @@ public class EffectManager : SteamCaller
             parameters.reliable = false;
             parameters.relevantDistance = radius;
             parameters.position = point;
-            parameters.direction = normal;
+            parameters.SetDirection(normal);
             triggerEffect(parameters);
         }
     }
@@ -362,7 +368,7 @@ public class EffectManager : SteamCaller
             parameters.reliable = true;
             parameters.relevantDistance = radius;
             parameters.position = point;
-            parameters.direction = normal;
+            parameters.SetDirection(normal);
             triggerEffect(parameters);
         }
     }
@@ -399,7 +405,7 @@ public class EffectManager : SteamCaller
             parameters.reliable = false;
             parameters.SetRelevantPlayer(transportConnection);
             parameters.position = point;
-            parameters.direction = normal;
+            parameters.SetDirection(normal);
             triggerEffect(parameters);
         }
     }
@@ -446,7 +452,7 @@ public class EffectManager : SteamCaller
             parameters.reliable = true;
             parameters.SetRelevantPlayer(transportConnection);
             parameters.position = point;
-            parameters.direction = normal;
+            parameters.SetDirection(normal);
             triggerEffect(parameters);
         }
     }
@@ -493,7 +499,7 @@ public class EffectManager : SteamCaller
             parameters.reliable = true;
             parameters.SetRelevantPlayer(transportConnection);
             parameters.position = point;
-            parameters.direction = normal;
+            parameters.SetDirection(normal);
             parameters.SetUniformScale(uniformScale);
             triggerEffect(parameters);
         }
@@ -518,7 +524,7 @@ public class EffectManager : SteamCaller
             parameters.reliable = true;
             parameters.SetRelevantPlayer(transportConnection);
             parameters.position = point;
-            parameters.direction = normal;
+            parameters.SetDirection(normal);
             parameters.scale = scale;
             triggerEffect(parameters);
         }
@@ -808,6 +814,48 @@ public class EffectManager : SteamCaller
     public static void ReceiveEffectPoint(Guid assetGuid, Vector3 point)
     {
         effect(assetGuid, point, Vector3.up);
+    }
+
+    [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
+    public static void ReceiveEffectPositionRotation_NonUniformScale(Guid assetGuid, Vector3 position, Quaternion rotation, Vector3 scale)
+    {
+        EffectAsset effectAsset = Assets.find(assetGuid) as EffectAsset;
+        if (!Provider.isServer)
+        {
+            ClientAssetIntegrity.QueueRequest(assetGuid, effectAsset, "TriggerEffect");
+        }
+        if (effectAsset != null)
+        {
+            internalSpawnEffect(effectAsset, position, rotation, scale, wasInstigatedByPlayer: false, null);
+        }
+    }
+
+    [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
+    public static void ReceiveEffectPositionRotation_UniformScale(Guid assetGuid, Vector3 position, Quaternion rotation, float uniformScale)
+    {
+        EffectAsset effectAsset = Assets.find(assetGuid) as EffectAsset;
+        if (!Provider.isServer)
+        {
+            ClientAssetIntegrity.QueueRequest(assetGuid, effectAsset, "TriggerEffect");
+        }
+        if (effectAsset != null)
+        {
+            internalSpawnEffect(effectAsset, position, rotation, new Vector3(uniformScale, uniformScale, uniformScale), wasInstigatedByPlayer: false, null);
+        }
+    }
+
+    [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
+    public static void ReceiveEffectPositionRotation(Guid assetGuid, Vector3 position, Quaternion rotation)
+    {
+        EffectAsset effectAsset = Assets.find(assetGuid) as EffectAsset;
+        if (!Provider.isServer)
+        {
+            ClientAssetIntegrity.QueueRequest(assetGuid, effectAsset, "TriggerEffect");
+        }
+        if (effectAsset != null)
+        {
+            internalSpawnEffect(effectAsset, position, rotation, Vector3.one, wasInstigatedByPlayer: false, null);
+        }
     }
 
     [Obsolete]
@@ -1224,6 +1272,16 @@ public class EffectManager : SteamCaller
 
     internal static Transform internalSpawnEffect(EffectAsset asset, Vector3 point, Vector3 normal, Vector3 scaleMultiplier, bool wasInstigatedByPlayer, Transform parent)
     {
+        Quaternion rotation = Quaternion.LookRotation(normal);
+        if (asset.randomizeRotation)
+        {
+            rotation *= Quaternion.Euler(0f, 0f, UnityEngine.Random.Range(0, 360));
+        }
+        return internalSpawnEffect(asset, point, rotation, scaleMultiplier, wasInstigatedByPlayer, parent);
+    }
+
+    internal static Transform internalSpawnEffect(EffectAsset asset, Vector3 point, Quaternion rotation, Vector3 scaleMultiplier, bool wasInstigatedByPlayer, Transform parent)
+    {
         if (parent != null && !parent.gameObject.activeInHierarchy)
         {
             return null;
@@ -1255,11 +1313,6 @@ public class EffectManager : SteamCaller
         {
             ClientAssetIntegrity.QueueRequest(asset);
         }
-        Quaternion rotation = Quaternion.LookRotation(normal);
-        if (asset.randomizeRotation)
-        {
-            rotation *= Quaternion.Euler(0f, 0f, UnityEngine.Random.Range(0, 360));
-        }
         if (pool == null)
         {
             return null;
@@ -1278,7 +1331,7 @@ public class EffectManager : SteamCaller
                 RaycastHit hitInfo;
                 if (asset.splatterLiquid)
                 {
-                    float f = UnityEngine.Random.Range(0f, (float)Math.PI * 2f);
+                    float f = UnityEngine.Random.Range(0f, MathF.PI * 2f);
                     float num = UnityEngine.Random.Range(1f, 6f);
                     Ray ray = new Ray(point + new Vector3(Mathf.Cos(f) * num, 0f, Mathf.Sin(f) * num), Vector3.down);
                     int layerMask = 471433216;
@@ -1286,7 +1339,7 @@ public class EffectManager : SteamCaller
                 }
                 else
                 {
-                    Ray ray2 = new Ray(point, -2f * normal + new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f)));
+                    Ray ray2 = new Ray(point, rotation * new Vector3(0f, 0f, -2f) + new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f)));
                     int layerMask2 = 471433216;
                     Physics.Raycast(ray2, out hitInfo, 8f, layerMask2);
                 }
@@ -1368,16 +1421,20 @@ public class EffectManager : SteamCaller
             return;
         }
         bool flag = parameters.asset.splatterTemperature != EPlayerTemperature.NONE || parameters.asset.spawnOnDedicatedServer;
+        Quaternion rotation = parameters.GetRotation();
+        if (parameters.asset.randomizeRotation)
+        {
+            rotation *= Quaternion.Euler(0f, 0f, UnityEngine.Random.Range(0, 360));
+        }
         if (!parameters.shouldReplicate)
         {
             if (!Dedicator.IsDedicatedServer || flag)
             {
-                internalSpawnEffect(parameters.asset, parameters.position, parameters.direction, parameters.scale, parameters.wasInstigatedByPlayer, null);
+                internalSpawnEffect(parameters.asset, parameters.position, rotation, parameters.scale, parameters.wasInstigatedByPlayer, null);
             }
             return;
         }
         ENetReliability reliability = ((!parameters.reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
-        bool flag2 = MathfEx.IsNearlyEqual(parameters.direction, Vector3.up);
         ITransportConnection transportConnection = parameters.relevantTransportConnection;
         if (parameters.relevantPlayerID != CSteamID.Nil)
         {
@@ -1387,7 +1444,7 @@ public class EffectManager : SteamCaller
         {
             if (Dedicator.IsDedicatedServer && flag)
             {
-                internalSpawnEffect(parameters.asset, parameters.position, parameters.direction, parameters.scale, parameters.wasInstigatedByPlayer, null);
+                internalSpawnEffect(parameters.asset, parameters.position, rotation, parameters.scale, parameters.wasInstigatedByPlayer, null);
             }
             PooledTransportConnectionList pooledTransportConnectionList = parameters.relevantTransportConnections;
             if (pooledTransportConnectionList == null)
@@ -1401,66 +1458,30 @@ public class EffectManager : SteamCaller
             }
             if (MathfEx.IsNearlyEqual(parameters.scale, Vector3.one))
             {
-                if (flag2)
-                {
-                    SendEffectPoint.Invoke(reliability, pooledTransportConnectionList, parameters.asset.GUID, parameters.position);
-                }
-                else
-                {
-                    SendEffectPointNormal.Invoke(reliability, pooledTransportConnectionList, parameters.asset.GUID, parameters.position, parameters.direction);
-                }
+                SendEffectPositionRotation.Invoke(reliability, pooledTransportConnectionList, parameters.asset.GUID, parameters.position, rotation);
             }
             else if (parameters.scale.AreComponentsNearlyEqual())
             {
                 float x = parameters.scale.x;
-                if (flag2)
-                {
-                    SendEffectPoint_UniformScale.Invoke(reliability, pooledTransportConnectionList, parameters.asset.GUID, parameters.position, x);
-                }
-                else
-                {
-                    SendEffectPointNormal_UniformScale.Invoke(reliability, pooledTransportConnectionList, parameters.asset.GUID, parameters.position, parameters.direction, x);
-                }
-            }
-            else if (flag2)
-            {
-                SendEffectPoint_NonUniformScale.Invoke(reliability, pooledTransportConnectionList, parameters.asset.GUID, parameters.position, parameters.scale);
+                SendEffectPositionRotation_UniformScale.Invoke(reliability, pooledTransportConnectionList, parameters.asset.GUID, parameters.position, rotation, x);
             }
             else
             {
-                SendEffectPointNormal_NonUniformScale.Invoke(reliability, pooledTransportConnectionList, parameters.asset.GUID, parameters.position, parameters.direction, parameters.scale);
+                SendEffectPositionRotation_NonUniformScale.Invoke(reliability, pooledTransportConnectionList, parameters.asset.GUID, parameters.position, rotation, parameters.scale);
             }
         }
         else if (MathfEx.IsNearlyEqual(parameters.scale, Vector3.one))
         {
-            if (flag2)
-            {
-                SendEffectPoint.Invoke(reliability, transportConnection, parameters.asset.GUID, parameters.position);
-            }
-            else
-            {
-                SendEffectPointNormal.Invoke(reliability, transportConnection, parameters.asset.GUID, parameters.position, parameters.direction);
-            }
+            SendEffectPositionRotation.Invoke(reliability, transportConnection, parameters.asset.GUID, parameters.position, rotation);
         }
         else if (parameters.scale.AreComponentsNearlyEqual())
         {
             float x2 = parameters.scale.x;
-            if (flag2)
-            {
-                SendEffectPoint_UniformScale.Invoke(reliability, transportConnection, parameters.asset.GUID, parameters.position, x2);
-            }
-            else
-            {
-                SendEffectPointNormal_UniformScale.Invoke(reliability, transportConnection, parameters.asset.GUID, parameters.position, parameters.direction, x2);
-            }
-        }
-        else if (flag2)
-        {
-            SendEffectPoint_NonUniformScale.Invoke(reliability, transportConnection, parameters.asset.GUID, parameters.position, parameters.scale);
+            SendEffectPositionRotation_UniformScale.Invoke(reliability, transportConnection, parameters.asset.GUID, parameters.position, rotation, x2);
         }
         else
         {
-            SendEffectPointNormal_NonUniformScale.Invoke(reliability, transportConnection, parameters.asset.GUID, parameters.position, parameters.direction, parameters.scale);
+            SendEffectPositionRotation_NonUniformScale.Invoke(reliability, transportConnection, parameters.asset.GUID, parameters.position, rotation, parameters.scale);
         }
     }
 

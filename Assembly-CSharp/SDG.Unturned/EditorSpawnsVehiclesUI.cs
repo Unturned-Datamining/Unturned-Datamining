@@ -85,16 +85,16 @@ public class EditorSpawnsVehiclesUI
             }
         }
         tableButtons = new ISleekButton[LevelVehicles.tables.Count];
-        tableScrollBox.contentSizeOffset = new Vector2(0f, tableButtons.Length * 40 - 10);
+        tableScrollBox.ContentSizeOffset = new Vector2(0f, tableButtons.Length * 40 - 10);
         for (int j = 0; j < tableButtons.Length; j++)
         {
             ISleekButton sleekButton = Glazier.Get().CreateButton();
-            sleekButton.positionOffset_X = 240;
-            sleekButton.positionOffset_Y = j * 40;
-            sleekButton.sizeOffset_X = 200;
-            sleekButton.sizeOffset_Y = 30;
-            sleekButton.text = j + " " + LevelVehicles.tables[j].name;
-            sleekButton.onClickedButton += onClickedTableButton;
+            sleekButton.PositionOffset_X = 240f;
+            sleekButton.PositionOffset_Y = j * 40;
+            sleekButton.SizeOffset_X = 200f;
+            sleekButton.SizeOffset_Y = 30f;
+            sleekButton.Text = j + " " + LevelVehicles.tables[j].name;
+            sleekButton.OnClicked += onClickedTableButton;
             tableScrollBox.AddChild(sleekButton);
             tableButtons[j] = sleekButton;
         }
@@ -105,9 +105,9 @@ public class EditorSpawnsVehiclesUI
         if (EditorSpawns.selectedVehicle < LevelVehicles.tables.Count)
         {
             VehicleTable vehicleTable = LevelVehicles.tables[EditorSpawns.selectedVehicle];
-            selectedBox.text = vehicleTable.name;
-            tableNameField.text = vehicleTable.name;
-            tableIDField.state = vehicleTable.tableID;
+            selectedBox.Text = vehicleTable.name;
+            tableNameField.Text = vehicleTable.name;
+            tableIDField.Value = vehicleTable.tableID;
             tableColorPicker.state = vehicleTable.color;
             if (tierButtons != null)
             {
@@ -121,27 +121,27 @@ public class EditorSpawnsVehiclesUI
             {
                 VehicleTier vehicleTier = vehicleTable.tiers[j];
                 ISleekButton sleekButton = Glazier.Get().CreateButton();
-                sleekButton.positionOffset_X = 240;
-                sleekButton.positionOffset_Y = 170 + j * 70;
-                sleekButton.sizeOffset_X = 200;
-                sleekButton.sizeOffset_Y = 30;
-                sleekButton.text = vehicleTier.name;
-                sleekButton.onClickedButton += onClickedTierButton;
+                sleekButton.PositionOffset_X = 240f;
+                sleekButton.PositionOffset_Y = 170 + j * 70;
+                sleekButton.SizeOffset_X = 200f;
+                sleekButton.SizeOffset_Y = 30f;
+                sleekButton.Text = vehicleTier.name;
+                sleekButton.OnClicked += onClickedTierButton;
                 spawnsScrollBox.AddChild(sleekButton);
                 ISleekSlider sleekSlider = Glazier.Get().CreateSlider();
-                sleekSlider.positionOffset_Y = 40;
-                sleekSlider.sizeOffset_X = 200;
-                sleekSlider.sizeOffset_Y = 20;
-                sleekSlider.orientation = ESleekOrientation.HORIZONTAL;
-                sleekSlider.state = vehicleTier.chance;
-                sleekSlider.addLabel(Mathf.RoundToInt(vehicleTier.chance * 100f) + "%", ESleekSide.LEFT);
-                sleekSlider.onDragged += onDraggedChanceSlider;
+                sleekSlider.PositionOffset_Y = 40f;
+                sleekSlider.SizeOffset_X = 200f;
+                sleekSlider.SizeOffset_Y = 20f;
+                sleekSlider.Orientation = ESleekOrientation.HORIZONTAL;
+                sleekSlider.Value = vehicleTier.chance;
+                sleekSlider.AddLabel(Mathf.RoundToInt(vehicleTier.chance * 100f) + "%", ESleekSide.LEFT);
+                sleekSlider.OnValueChanged += onDraggedChanceSlider;
                 sleekButton.AddChild(sleekSlider);
                 tierButtons[j] = sleekButton;
             }
-            tierNameField.positionOffset_Y = 170 + tierButtons.Length * 70;
-            addTierButton.positionOffset_Y = 170 + tierButtons.Length * 70 + 40;
-            removeTierButton.positionOffset_Y = 170 + tierButtons.Length * 70 + 40;
+            tierNameField.PositionOffset_Y = 170 + tierButtons.Length * 70;
+            addTierButton.PositionOffset_Y = 170 + tierButtons.Length * 70 + 40;
+            removeTierButton.PositionOffset_Y = 170 + tierButtons.Length * 70 + 40;
             if (vehicleButtons != null)
             {
                 for (int k = 0; k < vehicleButtons.Length; k++)
@@ -151,41 +151,41 @@ public class EditorSpawnsVehiclesUI
             }
             if (selectedTier < vehicleTable.tiers.Count)
             {
-                tierNameField.text = vehicleTable.tiers[selectedTier].name;
+                tierNameField.Text = vehicleTable.tiers[selectedTier].name;
                 vehicleButtons = new ISleekButton[vehicleTable.tiers[selectedTier].table.Count];
                 for (int l = 0; l < vehicleButtons.Length; l++)
                 {
                     ISleekButton sleekButton2 = Glazier.Get().CreateButton();
-                    sleekButton2.positionOffset_X = 240;
-                    sleekButton2.positionOffset_Y = 170 + tierButtons.Length * 70 + 80 + l * 40;
-                    sleekButton2.sizeOffset_X = 200;
-                    sleekButton2.sizeOffset_Y = 30;
+                    sleekButton2.PositionOffset_X = 240f;
+                    sleekButton2.PositionOffset_Y = 170 + tierButtons.Length * 70 + 80 + l * 40;
+                    sleekButton2.SizeOffset_X = 200f;
+                    sleekButton2.SizeOffset_Y = 30f;
                     VehicleAsset vehicleAsset = Assets.find(EAssetType.VEHICLE, vehicleTable.tiers[selectedTier].table[l].vehicle) as VehicleAsset;
                     string text = "?";
                     if (vehicleAsset != null)
                     {
                         text = ((!string.IsNullOrEmpty(vehicleAsset.vehicleName)) ? vehicleAsset.vehicleName : vehicleAsset.name);
                     }
-                    sleekButton2.text = vehicleTable.tiers[selectedTier].table[l].vehicle + " " + text;
-                    sleekButton2.onClickedButton += onClickVehicleButton;
+                    sleekButton2.Text = vehicleTable.tiers[selectedTier].table[l].vehicle + " " + text;
+                    sleekButton2.OnClicked += onClickVehicleButton;
                     spawnsScrollBox.AddChild(sleekButton2);
                     vehicleButtons[l] = sleekButton2;
                 }
             }
             else
             {
-                tierNameField.text = "";
+                tierNameField.Text = "";
                 vehicleButtons = new ISleekButton[0];
             }
-            vehicleIDField.positionOffset_Y = 170 + tierButtons.Length * 70 + 80 + vehicleButtons.Length * 40;
-            addVehicleButton.positionOffset_Y = 170 + tierButtons.Length * 70 + 80 + vehicleButtons.Length * 40 + 40;
-            removeVehicleButton.positionOffset_Y = 170 + tierButtons.Length * 70 + 80 + vehicleButtons.Length * 40 + 40;
-            spawnsScrollBox.contentSizeOffset = new Vector2(0f, 170 + tierButtons.Length * 70 + 80 + vehicleButtons.Length * 40 + 70);
+            vehicleIDField.PositionOffset_Y = 170 + tierButtons.Length * 70 + 80 + vehicleButtons.Length * 40;
+            addVehicleButton.PositionOffset_Y = 170 + tierButtons.Length * 70 + 80 + vehicleButtons.Length * 40 + 40;
+            removeVehicleButton.PositionOffset_Y = 170 + tierButtons.Length * 70 + 80 + vehicleButtons.Length * 40 + 40;
+            spawnsScrollBox.ContentSizeOffset = new Vector2(0f, 170 + tierButtons.Length * 70 + 80 + vehicleButtons.Length * 40 + 70);
             return;
         }
-        selectedBox.text = "";
-        tableNameField.text = "";
-        tableIDField.state = 0;
+        selectedBox.Text = "";
+        tableNameField.Text = "";
+        tableIDField.Value = 0;
         tableColorPicker.state = Color.white;
         if (tierButtons != null)
         {
@@ -195,10 +195,10 @@ public class EditorSpawnsVehiclesUI
             }
         }
         tierButtons = null;
-        tierNameField.text = "";
-        tierNameField.positionOffset_Y = 170;
-        addTierButton.positionOffset_Y = 210;
-        removeTierButton.positionOffset_Y = 210;
+        tierNameField.Text = "";
+        tierNameField.PositionOffset_Y = 170f;
+        addTierButton.PositionOffset_Y = 210f;
+        removeTierButton.PositionOffset_Y = 210f;
         if (vehicleButtons != null)
         {
             for (int n = 0; n < vehicleButtons.Length; n++)
@@ -207,17 +207,17 @@ public class EditorSpawnsVehiclesUI
             }
         }
         vehicleButtons = null;
-        vehicleIDField.positionOffset_Y = 250;
-        addVehicleButton.positionOffset_Y = 290;
-        removeVehicleButton.positionOffset_Y = 290;
-        spawnsScrollBox.contentSizeOffset = new Vector2(0f, 320f);
+        vehicleIDField.PositionOffset_Y = 250f;
+        addVehicleButton.PositionOffset_Y = 290f;
+        removeVehicleButton.PositionOffset_Y = 290f;
+        spawnsScrollBox.ContentSizeOffset = new Vector2(0f, 320f);
     }
 
     private static void onClickedTableButton(ISleekElement button)
     {
-        if (EditorSpawns.selectedVehicle != (byte)(button.positionOffset_Y / 40))
+        if (EditorSpawns.selectedVehicle != (byte)(button.PositionOffset_Y / 40f))
         {
-            EditorSpawns.selectedVehicle = (byte)(button.positionOffset_Y / 40);
+            EditorSpawns.selectedVehicle = (byte)(button.PositionOffset_Y / 40f);
             EditorSpawns.vehicleSpawn.GetComponent<Renderer>().material.color = LevelVehicles.tables[EditorSpawns.selectedVehicle].color;
             EditorSpawns.vehicleSpawn.Find("Arrow").GetComponent<Renderer>().material.color = LevelVehicles.tables[EditorSpawns.selectedVehicle].color;
         }
@@ -250,9 +250,9 @@ public class EditorSpawnsVehiclesUI
     {
         if (EditorSpawns.selectedVehicle < LevelVehicles.tables.Count)
         {
-            if (selectedTier != (byte)((button.positionOffset_Y - 170) / 70))
+            if (selectedTier != (byte)((button.PositionOffset_Y - 170f) / 70f))
             {
-                selectedTier = (byte)((button.positionOffset_Y - 170) / 70);
+                selectedTier = (byte)((button.PositionOffset_Y - 170f) / 70f);
             }
             else
             {
@@ -266,7 +266,7 @@ public class EditorSpawnsVehiclesUI
     {
         if (EditorSpawns.selectedVehicle < LevelVehicles.tables.Count)
         {
-            selectVehicle = (byte)((button.positionOffset_Y - 170 - tierButtons.Length * 70 - 80) / 40);
+            selectVehicle = (byte)((button.PositionOffset_Y - 170f - (float)(tierButtons.Length * 70) - 80f) / 40f);
             updateSelection();
         }
     }
@@ -277,7 +277,7 @@ public class EditorSpawnsVehiclesUI
         {
             return;
         }
-        int num = (slider.parent.positionOffset_Y - 170) / 70;
+        int num = Mathf.FloorToInt((slider.Parent.PositionOffset_Y - 170f) / 70f);
         LevelVehicles.tables[EditorSpawns.selectedVehicle].updateChance(num, state);
         for (int i = 0; i < LevelVehicles.tables[EditorSpawns.selectedVehicle].tiers.Count; i++)
         {
@@ -285,9 +285,9 @@ public class EditorSpawnsVehiclesUI
             ISleekSlider sleekSlider = (ISleekSlider)tierButtons[i].GetChildAtIndex(0);
             if (i != num)
             {
-                sleekSlider.state = vehicleTier.chance;
+                sleekSlider.Value = vehicleTier.chance;
             }
-            sleekSlider.updateLabel(Mathf.RoundToInt(vehicleTier.chance * 100f) + "%");
+            sleekSlider.UpdateLabel(Mathf.RoundToInt(vehicleTier.chance * 100f) + "%");
         }
     }
 
@@ -295,18 +295,18 @@ public class EditorSpawnsVehiclesUI
     {
         if (EditorSpawns.selectedVehicle < LevelVehicles.tables.Count)
         {
-            selectedBox.text = state;
+            selectedBox.Text = state;
             LevelVehicles.tables[EditorSpawns.selectedVehicle].name = state;
-            tableButtons[EditorSpawns.selectedVehicle].text = EditorSpawns.selectedVehicle + " " + state;
+            tableButtons[EditorSpawns.selectedVehicle].Text = EditorSpawns.selectedVehicle + " " + state;
         }
     }
 
     private static void onClickedAddTableButton(ISleekElement button)
     {
-        if (tableNameField.text != "")
+        if (tableNameField.Text != "")
         {
-            LevelVehicles.addTable(tableNameField.text);
-            tableNameField.text = "";
+            LevelVehicles.addTable(tableNameField.Text);
+            tableNameField.Text = "";
             updateTables();
             tableScrollBox.ScrollToBottom();
         }
@@ -328,16 +328,16 @@ public class EditorSpawnsVehiclesUI
         if (EditorSpawns.selectedVehicle < LevelVehicles.tables.Count && selectedTier < LevelVehicles.tables[EditorSpawns.selectedVehicle].tiers.Count)
         {
             LevelVehicles.tables[EditorSpawns.selectedVehicle].tiers[selectedTier].name = state;
-            tierButtons[selectedTier].text = state;
+            tierButtons[selectedTier].Text = state;
         }
     }
 
     private static void onClickedAddTierButton(ISleekElement button)
     {
-        if (EditorSpawns.selectedVehicle < LevelVehicles.tables.Count && tierNameField.text != "")
+        if (EditorSpawns.selectedVehicle < LevelVehicles.tables.Count && tierNameField.Text != "")
         {
-            LevelVehicles.tables[EditorSpawns.selectedVehicle].addTier(tierNameField.text);
-            tierNameField.text = "";
+            LevelVehicles.tables[EditorSpawns.selectedVehicle].addTier(tierNameField.Text);
+            tierNameField.Text = "";
             updateSelection();
         }
     }
@@ -355,13 +355,13 @@ public class EditorSpawnsVehiclesUI
     {
         if (EditorSpawns.selectedVehicle < LevelVehicles.tables.Count && selectedTier < LevelVehicles.tables[EditorSpawns.selectedVehicle].tiers.Count)
         {
-            if (Assets.find(EAssetType.VEHICLE, vehicleIDField.state) is VehicleAsset)
+            if (Assets.find(EAssetType.VEHICLE, vehicleIDField.Value) is VehicleAsset)
             {
-                LevelVehicles.tables[EditorSpawns.selectedVehicle].addVehicle(selectedTier, vehicleIDField.state);
+                LevelVehicles.tables[EditorSpawns.selectedVehicle].addVehicle(selectedTier, vehicleIDField.Value);
                 updateSelection();
                 spawnsScrollBox.ScrollToBottom();
             }
-            vehicleIDField.state = 0;
+            vehicleIDField.Value = 0;
         }
     }
 
@@ -400,49 +400,49 @@ public class EditorSpawnsVehiclesUI
         Local local = Localization.read("/Editor/EditorSpawnsVehicles.dat");
         Bundle bundle = Bundles.getBundle("/Bundles/Textures/Edit/Icons/EditorSpawnsVehicles/EditorSpawnsVehicles.unity3d");
         container = new SleekFullscreenBox();
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.positionScale_X = 1f;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.PositionScale_X = 1f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         EditorUI.window.AddChild(container);
         active = false;
         tableScrollBox = Glazier.Get().CreateScrollView();
-        tableScrollBox.positionOffset_X = -470;
-        tableScrollBox.positionOffset_Y = 120;
-        tableScrollBox.positionScale_X = 1f;
-        tableScrollBox.sizeOffset_X = 470;
-        tableScrollBox.sizeOffset_Y = 200;
-        tableScrollBox.scaleContentToWidth = true;
+        tableScrollBox.PositionOffset_X = -470f;
+        tableScrollBox.PositionOffset_Y = 120f;
+        tableScrollBox.PositionScale_X = 1f;
+        tableScrollBox.SizeOffset_X = 470f;
+        tableScrollBox.SizeOffset_Y = 200f;
+        tableScrollBox.ScaleContentToWidth = true;
         container.AddChild(tableScrollBox);
         tableNameField = Glazier.Get().CreateStringField();
-        tableNameField.positionOffset_X = -230;
-        tableNameField.positionOffset_Y = 330;
-        tableNameField.positionScale_X = 1f;
-        tableNameField.sizeOffset_X = 230;
-        tableNameField.sizeOffset_Y = 30;
-        tableNameField.maxLength = 64;
-        tableNameField.addLabel(local.format("TableNameFieldLabelText"), ESleekSide.LEFT);
-        tableNameField.onTyped += onTypedNameField;
+        tableNameField.PositionOffset_X = -230f;
+        tableNameField.PositionOffset_Y = 330f;
+        tableNameField.PositionScale_X = 1f;
+        tableNameField.SizeOffset_X = 230f;
+        tableNameField.SizeOffset_Y = 30f;
+        tableNameField.MaxLength = 64;
+        tableNameField.AddLabel(local.format("TableNameFieldLabelText"), ESleekSide.LEFT);
+        tableNameField.OnTextChanged += onTypedNameField;
         container.AddChild(tableNameField);
         addTableButton = new SleekButtonIcon(bundle.load<Texture2D>("Add"));
-        addTableButton.positionOffset_X = -230;
-        addTableButton.positionOffset_Y = 370;
-        addTableButton.positionScale_X = 1f;
-        addTableButton.sizeOffset_X = 110;
-        addTableButton.sizeOffset_Y = 30;
+        addTableButton.PositionOffset_X = -230f;
+        addTableButton.PositionOffset_Y = 370f;
+        addTableButton.PositionScale_X = 1f;
+        addTableButton.SizeOffset_X = 110f;
+        addTableButton.SizeOffset_Y = 30f;
         addTableButton.text = local.format("AddTableButtonText");
         addTableButton.tooltip = local.format("AddTableButtonTooltip");
         addTableButton.onClickedButton += onClickedAddTableButton;
         container.AddChild(addTableButton);
         removeTableButton = new SleekButtonIcon(bundle.load<Texture2D>("Remove"));
-        removeTableButton.positionOffset_X = -110;
-        removeTableButton.positionOffset_Y = 370;
-        removeTableButton.positionScale_X = 1f;
-        removeTableButton.sizeOffset_X = 110;
-        removeTableButton.sizeOffset_Y = 30;
+        removeTableButton.PositionOffset_X = -110f;
+        removeTableButton.PositionOffset_Y = 370f;
+        removeTableButton.PositionScale_X = 1f;
+        removeTableButton.SizeOffset_X = 110f;
+        removeTableButton.SizeOffset_Y = 30f;
         removeTableButton.text = local.format("RemoveTableButtonText");
         removeTableButton.tooltip = local.format("RemoveTableButtonTooltip");
         removeTableButton.onClickedButton += onClickedRemoveTableButton;
@@ -450,118 +450,118 @@ public class EditorSpawnsVehiclesUI
         tableButtons = null;
         updateTables();
         spawnsScrollBox = Glazier.Get().CreateScrollView();
-        spawnsScrollBox.positionOffset_X = -470;
-        spawnsScrollBox.positionOffset_Y = 410;
-        spawnsScrollBox.positionScale_X = 1f;
-        spawnsScrollBox.sizeOffset_X = 470;
-        spawnsScrollBox.sizeOffset_Y = -410;
-        spawnsScrollBox.sizeScale_Y = 1f;
-        spawnsScrollBox.scaleContentToWidth = true;
-        spawnsScrollBox.contentSizeOffset = new Vector2(0f, 1000f);
+        spawnsScrollBox.PositionOffset_X = -470f;
+        spawnsScrollBox.PositionOffset_Y = 410f;
+        spawnsScrollBox.PositionScale_X = 1f;
+        spawnsScrollBox.SizeOffset_X = 470f;
+        spawnsScrollBox.SizeOffset_Y = -410f;
+        spawnsScrollBox.SizeScale_Y = 1f;
+        spawnsScrollBox.ScaleContentToWidth = true;
+        spawnsScrollBox.ContentSizeOffset = new Vector2(0f, 1000f);
         container.AddChild(spawnsScrollBox);
         tableColorPicker = new SleekColorPicker();
-        tableColorPicker.positionOffset_X = 200;
+        tableColorPicker.PositionOffset_X = 200f;
         tableColorPicker.onColorPicked = onVehicleColorPicked;
         spawnsScrollBox.AddChild(tableColorPicker);
         tableIDField = Glazier.Get().CreateUInt16Field();
-        tableIDField.positionOffset_X = 240;
-        tableIDField.positionOffset_Y = 130;
-        tableIDField.sizeOffset_X = 200;
-        tableIDField.sizeOffset_Y = 30;
-        tableIDField.onTypedUInt16 += onTableIDFieldTyped;
-        tableIDField.addLabel(local.format("TableIDFieldLabelText"), ESleekSide.LEFT);
+        tableIDField.PositionOffset_X = 240f;
+        tableIDField.PositionOffset_Y = 130f;
+        tableIDField.SizeOffset_X = 200f;
+        tableIDField.SizeOffset_Y = 30f;
+        tableIDField.OnValueChanged += onTableIDFieldTyped;
+        tableIDField.AddLabel(local.format("TableIDFieldLabelText"), ESleekSide.LEFT);
         spawnsScrollBox.AddChild(tableIDField);
         tierNameField = Glazier.Get().CreateStringField();
-        tierNameField.positionOffset_X = 240;
-        tierNameField.sizeOffset_X = 200;
-        tierNameField.sizeOffset_Y = 30;
-        tierNameField.maxLength = 64;
-        tierNameField.addLabel(local.format("TierNameFieldLabelText"), ESleekSide.LEFT);
-        tierNameField.onTyped += onTypedTierNameField;
+        tierNameField.PositionOffset_X = 240f;
+        tierNameField.SizeOffset_X = 200f;
+        tierNameField.SizeOffset_Y = 30f;
+        tierNameField.MaxLength = 64;
+        tierNameField.AddLabel(local.format("TierNameFieldLabelText"), ESleekSide.LEFT);
+        tierNameField.OnTextChanged += onTypedTierNameField;
         spawnsScrollBox.AddChild(tierNameField);
         addTierButton = new SleekButtonIcon(bundle.load<Texture2D>("Add"));
-        addTierButton.positionOffset_X = 240;
-        addTierButton.sizeOffset_X = 95;
-        addTierButton.sizeOffset_Y = 30;
+        addTierButton.PositionOffset_X = 240f;
+        addTierButton.SizeOffset_X = 95f;
+        addTierButton.SizeOffset_Y = 30f;
         addTierButton.text = local.format("AddTierButtonText");
         addTierButton.tooltip = local.format("AddTierButtonTooltip");
         addTierButton.onClickedButton += onClickedAddTierButton;
         spawnsScrollBox.AddChild(addTierButton);
         removeTierButton = new SleekButtonIcon(bundle.load<Texture2D>("Remove"));
-        removeTierButton.positionOffset_X = 345;
-        removeTierButton.sizeOffset_X = 95;
-        removeTierButton.sizeOffset_Y = 30;
+        removeTierButton.PositionOffset_X = 345f;
+        removeTierButton.SizeOffset_X = 95f;
+        removeTierButton.SizeOffset_Y = 30f;
         removeTierButton.text = local.format("RemoveTierButtonText");
         removeTierButton.tooltip = local.format("RemoveTierButtonTooltip");
         removeTierButton.onClickedButton += onClickedRemoveTierButton;
         spawnsScrollBox.AddChild(removeTierButton);
         vehicleIDField = Glazier.Get().CreateUInt16Field();
-        vehicleIDField.positionOffset_X = 240;
-        vehicleIDField.sizeOffset_X = 200;
-        vehicleIDField.sizeOffset_Y = 30;
-        vehicleIDField.addLabel(local.format("VehicleIDFieldLabelText"), ESleekSide.LEFT);
+        vehicleIDField.PositionOffset_X = 240f;
+        vehicleIDField.SizeOffset_X = 200f;
+        vehicleIDField.SizeOffset_Y = 30f;
+        vehicleIDField.AddLabel(local.format("VehicleIDFieldLabelText"), ESleekSide.LEFT);
         spawnsScrollBox.AddChild(vehicleIDField);
         addVehicleButton = new SleekButtonIcon(bundle.load<Texture2D>("Add"));
-        addVehicleButton.positionOffset_X = 240;
-        addVehicleButton.sizeOffset_X = 95;
-        addVehicleButton.sizeOffset_Y = 30;
+        addVehicleButton.PositionOffset_X = 240f;
+        addVehicleButton.SizeOffset_X = 95f;
+        addVehicleButton.SizeOffset_Y = 30f;
         addVehicleButton.text = local.format("AddVehicleButtonText");
         addVehicleButton.tooltip = local.format("AddVehicleButtonTooltip");
         addVehicleButton.onClickedButton += onClickedAddVehicleButton;
         spawnsScrollBox.AddChild(addVehicleButton);
         removeVehicleButton = new SleekButtonIcon(bundle.load<Texture2D>("Remove"));
-        removeVehicleButton.positionOffset_X = 345;
-        removeVehicleButton.sizeOffset_X = 95;
-        removeVehicleButton.sizeOffset_Y = 30;
+        removeVehicleButton.PositionOffset_X = 345f;
+        removeVehicleButton.SizeOffset_X = 95f;
+        removeVehicleButton.SizeOffset_Y = 30f;
         removeVehicleButton.text = local.format("RemoveVehicleButtonText");
         removeVehicleButton.tooltip = local.format("RemoveVehicleButtonTooltip");
         removeVehicleButton.onClickedButton += onClickedRemoveVehicleButton;
         spawnsScrollBox.AddChild(removeVehicleButton);
         selectedBox = Glazier.Get().CreateBox();
-        selectedBox.positionOffset_X = -230;
-        selectedBox.positionOffset_Y = 80;
-        selectedBox.positionScale_X = 1f;
-        selectedBox.sizeOffset_X = 230;
-        selectedBox.sizeOffset_Y = 30;
-        selectedBox.addLabel(local.format("SelectionBoxLabelText"), ESleekSide.LEFT);
+        selectedBox.PositionOffset_X = -230f;
+        selectedBox.PositionOffset_Y = 80f;
+        selectedBox.PositionScale_X = 1f;
+        selectedBox.SizeOffset_X = 230f;
+        selectedBox.SizeOffset_Y = 30f;
+        selectedBox.AddLabel(local.format("SelectionBoxLabelText"), ESleekSide.LEFT);
         container.AddChild(selectedBox);
         tierButtons = null;
         vehicleButtons = null;
         updateSelection();
         radiusSlider = Glazier.Get().CreateSlider();
-        radiusSlider.positionOffset_Y = -130;
-        radiusSlider.positionScale_Y = 1f;
-        radiusSlider.sizeOffset_X = 200;
-        radiusSlider.sizeOffset_Y = 20;
-        radiusSlider.state = (float)(EditorSpawns.radius - EditorSpawns.MIN_REMOVE_SIZE) / (float)(int)EditorSpawns.MAX_REMOVE_SIZE;
-        radiusSlider.orientation = ESleekOrientation.HORIZONTAL;
-        radiusSlider.addLabel(local.format("RadiusSliderLabelText"), ESleekSide.RIGHT);
-        radiusSlider.onDragged += onDraggedRadiusSlider;
+        radiusSlider.PositionOffset_Y = -130f;
+        radiusSlider.PositionScale_Y = 1f;
+        radiusSlider.SizeOffset_X = 200f;
+        radiusSlider.SizeOffset_Y = 20f;
+        radiusSlider.Value = (float)(EditorSpawns.radius - EditorSpawns.MIN_REMOVE_SIZE) / (float)(int)EditorSpawns.MAX_REMOVE_SIZE;
+        radiusSlider.Orientation = ESleekOrientation.HORIZONTAL;
+        radiusSlider.AddLabel(local.format("RadiusSliderLabelText"), ESleekSide.RIGHT);
+        radiusSlider.OnValueChanged += onDraggedRadiusSlider;
         container.AddChild(radiusSlider);
         rotationSlider = Glazier.Get().CreateSlider();
-        rotationSlider.positionOffset_Y = -100;
-        rotationSlider.positionScale_Y = 1f;
-        rotationSlider.sizeOffset_X = 200;
-        rotationSlider.sizeOffset_Y = 20;
-        rotationSlider.state = EditorSpawns.rotation / 360f;
-        rotationSlider.orientation = ESleekOrientation.HORIZONTAL;
-        rotationSlider.addLabel(local.format("RotationSliderLabelText"), ESleekSide.RIGHT);
-        rotationSlider.onDragged += onDraggedRotationSlider;
+        rotationSlider.PositionOffset_Y = -100f;
+        rotationSlider.PositionScale_Y = 1f;
+        rotationSlider.SizeOffset_X = 200f;
+        rotationSlider.SizeOffset_Y = 20f;
+        rotationSlider.Value = EditorSpawns.rotation / 360f;
+        rotationSlider.Orientation = ESleekOrientation.HORIZONTAL;
+        rotationSlider.AddLabel(local.format("RotationSliderLabelText"), ESleekSide.RIGHT);
+        rotationSlider.OnValueChanged += onDraggedRotationSlider;
         container.AddChild(rotationSlider);
         addButton = new SleekButtonIcon(bundle.load<Texture2D>("Add"));
-        addButton.positionOffset_Y = -70;
-        addButton.positionScale_Y = 1f;
-        addButton.sizeOffset_X = 200;
-        addButton.sizeOffset_Y = 30;
+        addButton.PositionOffset_Y = -70f;
+        addButton.PositionScale_Y = 1f;
+        addButton.SizeOffset_X = 200f;
+        addButton.SizeOffset_Y = 30f;
         addButton.text = local.format("AddButtonText", ControlsSettings.tool_0);
         addButton.tooltip = local.format("AddButtonTooltip");
         addButton.onClickedButton += onClickedAddButton;
         container.AddChild(addButton);
         removeButton = new SleekButtonIcon(bundle.load<Texture2D>("Remove"));
-        removeButton.positionOffset_Y = -30;
-        removeButton.positionScale_Y = 1f;
-        removeButton.sizeOffset_X = 200;
-        removeButton.sizeOffset_Y = 30;
+        removeButton.PositionOffset_Y = -30f;
+        removeButton.PositionScale_Y = 1f;
+        removeButton.SizeOffset_X = 200f;
+        removeButton.SizeOffset_Y = 30f;
         removeButton.text = local.format("RemoveButtonText", ControlsSettings.tool_1);
         removeButton.tooltip = local.format("RemoveButtonTooltip");
         removeButton.onClickedButton += onClickedRemoveButton;

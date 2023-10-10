@@ -99,15 +99,15 @@ public class FoliageStorageV1 : IFoliageStorage
                 int num3 = binaryReader.ReadInt32();
                 for (int j = 0; j < num3; j++)
                 {
-                    Matrix4x4 matrix4x = default(Matrix4x4);
+                    Matrix4x4 newMatrix = default(Matrix4x4);
                     for (int k = 0; k < 16; k++)
                     {
-                        matrix4x[k] = binaryReader.ReadSingle();
+                        newMatrix[k] = binaryReader.ReadSingle();
                     }
                     bool newClearWhenBaked = num <= 2 || binaryReader.ReadBoolean();
-                    if (!tile.isInstanceCut(matrix4x.GetPosition()))
+                    if (!tile.isInstanceCut(newMatrix.GetPosition()))
                     {
-                        orAddList.addInstanceAppend(new FoliageInstanceGroup(assetReference, matrix4x, newClearWhenBaked));
+                        orAddList.addInstanceAppend(new FoliageInstanceGroup(assetReference, newMatrix, newClearWhenBaked));
                     }
                 }
             }

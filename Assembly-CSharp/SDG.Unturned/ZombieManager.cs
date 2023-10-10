@@ -656,7 +656,7 @@ public class ZombieManager : SteamCaller
         {
             for (int i = 0; i < value; i++)
             {
-                ushort num = SpawnTableTool.resolve(LevelZombies.tables[zombie.type].lootID);
+                ushort num = SpawnTableTool.ResolveLegacyId(LevelZombies.tables[zombie.type].lootID, EAssetType.ITEM, OnGetZombieLootSpawnTableErrorContext);
                 if (num != 0)
                 {
                     ItemManager.dropItem(new Item(num, EItemOrigin.WORLD), zombie.transform.position, playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
@@ -678,6 +678,11 @@ public class ZombieManager : SteamCaller
                 }
             }
         }
+    }
+
+    private static string OnGetZombieLootSpawnTableErrorContext()
+    {
+        return "zombie loot";
     }
 
     public void addZombie(byte bound, byte type, byte speciality, byte shirt, byte pants, byte hat, byte gear, byte move, byte idle, Vector3 position, float angle, bool isDead)
@@ -1069,7 +1074,7 @@ public class ZombieManager : SteamCaller
 
     private void onBoundUpdated(Player player, byte oldBound, byte newBound)
     {
-        if (player.channel.isOwner && LevelNavigation.checkSafe(oldBound) && regions[oldBound].isNetworked)
+        if (player.channel.IsLocalPlayer && LevelNavigation.checkSafe(oldBound) && regions[oldBound].isNetworked)
         {
             regions[oldBound].destroy();
             regions[oldBound].isNetworked = false;
@@ -1084,7 +1089,7 @@ public class ZombieManager : SteamCaller
         }
         if (LevelNavigation.checkSafe(newBound) && !player.movement.loadedBounds[newBound].isZombiesLoaded)
         {
-            if (player.channel.isOwner)
+            if (player.channel.IsLocalPlayer)
             {
                 generateZombies(newBound);
                 regions[newBound].isNetworked = true;
@@ -1388,7 +1393,7 @@ public class ZombieManager : SteamCaller
         PooledTransportConnectionList pooledTransportConnectionList = TransportConnectionListPool.Get();
         foreach (SteamPlayer client in Provider.clients)
         {
-            if (!client.IsLocalPlayer && client.player != null && client.player.movement.bound == bound)
+            if (!client.IsLocalServerHost && client.player != null && client.player.movement.bound == bound)
             {
                 pooledTransportConnectionList.Add(client.transportConnection);
             }

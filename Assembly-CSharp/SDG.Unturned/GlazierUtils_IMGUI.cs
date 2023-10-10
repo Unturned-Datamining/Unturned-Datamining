@@ -240,7 +240,7 @@ internal static class GlazierUtils_IMGUI
 
     private static void drawLabelOutline(Rect area, GUIContent content, ETextContrastStyle shadowStyle, float alpha)
     {
-        Color shadowColor = OptionsSettings.shadowColor;
+        Color shadowColor = SleekCustomization.shadowColor;
         switch (shadowStyle)
         {
         case ETextContrastStyle.None:
@@ -278,7 +278,7 @@ internal static class GlazierUtils_IMGUI
 
     private static void drawLabelOutline(Rect area, string text, ETextContrastStyle shadowStyle, float alpha)
     {
-        Color shadowColor = OptionsSettings.shadowColor;
+        Color shadowColor = SleekCustomization.shadowColor;
         switch (shadowStyle)
         {
         case ETextContrastStyle.None:

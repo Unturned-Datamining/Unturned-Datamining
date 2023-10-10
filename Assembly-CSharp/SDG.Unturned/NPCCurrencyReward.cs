@@ -6,12 +6,9 @@ public class NPCCurrencyReward : INPCReward
 
     public uint value { get; protected set; }
 
-    public override void grantReward(Player player, bool shouldSend)
+    public override void GrantReward(Player player)
     {
-        if (Provider.isServer)
-        {
-            currency.Find()?.grantValue(player, value);
-        }
+        currency.Find()?.grantValue(player, value);
     }
 
     public override string formatReward(Player player)

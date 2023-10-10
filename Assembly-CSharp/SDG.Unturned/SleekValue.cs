@@ -19,8 +19,8 @@ public class SleekValue : SleekWrapper
         set
         {
             _state = value;
-            field.state = state;
-            slider.state = state;
+            field.Value = state;
+            slider.Value = state;
         }
     }
 
@@ -28,34 +28,34 @@ public class SleekValue : SleekWrapper
     {
         onValued?.Invoke(this, state);
         _state = state;
-        slider.state = state;
+        slider.Value = state;
     }
 
     private void onDraggedSlider(ISleekSlider slider, float state)
     {
         onValued?.Invoke(this, state);
         _state = state;
-        field.state = state;
+        field.Value = state;
     }
 
     public SleekValue()
     {
         field = Glazier.Get().CreateFloat32Field();
-        field.sizeOffset_X = -5;
-        field.sizeScale_X = 0.4f;
-        field.sizeScale_Y = 1f;
-        field.onTypedSingle += onTypedSingleField;
+        field.SizeOffset_X = -5f;
+        field.SizeScale_X = 0.4f;
+        field.SizeScale_Y = 1f;
+        field.OnValueChanged += onTypedSingleField;
         AddChild(field);
         slider = Glazier.Get().CreateSlider();
-        slider.positionOffset_X = 5;
-        slider.positionOffset_Y = -10;
-        slider.positionScale_X = 0.4f;
-        slider.positionScale_Y = 0.5f;
-        slider.sizeOffset_X = -5;
-        slider.sizeOffset_Y = 20;
-        slider.sizeScale_X = 0.6f;
-        slider.orientation = ESleekOrientation.HORIZONTAL;
-        slider.onDragged += onDraggedSlider;
+        slider.PositionOffset_X = 5f;
+        slider.PositionOffset_Y = -10f;
+        slider.PositionScale_X = 0.4f;
+        slider.PositionScale_Y = 0.5f;
+        slider.SizeOffset_X = -5f;
+        slider.SizeOffset_Y = 20f;
+        slider.SizeScale_X = 0.6f;
+        slider.Orientation = ESleekOrientation.HORIZONTAL;
+        slider.OnValueChanged += onDraggedSlider;
         AddChild(slider);
     }
 }

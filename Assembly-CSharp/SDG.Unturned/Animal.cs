@@ -20,7 +20,7 @@ public class Animal : MonoBehaviour
 
     private double lastGlance;
 
-    private double lastStartle;
+    private double startleAnimationCompletionTime;
 
     private double lastWander;
 
@@ -35,8 +35,6 @@ public class Animal : MonoBehaviour
     private float eatTime;
 
     private float glanceTime;
-
-    private float startleTime;
 
     private float attackDuration;
 
@@ -56,11 +54,11 @@ public class Animal : MonoBehaviour
 
     private bool isPlayingGlance;
 
-    private bool isPlayingStartle;
+    private bool isPlayingStartleAnimation;
 
     private bool isPlayingAttack;
 
-    private Player player;
+    private Player currentTargetPlayer;
 
     private Vector3 lastUpdatePos;
 
@@ -120,6 +118,8 @@ public class Animal : MonoBehaviour
 
     public float lastDead => _lastDead;
 
+    public bool IsAlive => !isDead;
+
     public AnimalAsset asset => _asset;
 
     private void updateTicking()
@@ -147,7 +147,7 @@ public class Animal : MonoBehaviour
 
     public Player GetTargetPlayer()
     {
-        return player;
+        return currentTargetPlayer;
     }
 
     public void askEat()
@@ -200,21 +200,21 @@ public class Animal : MonoBehaviour
         }
     }
 
-    public void askStartle()
+    public void PlayStartleAnimation()
     {
         if (isDead)
         {
             return;
         }
-        lastStartle = Time.timeAsDouble;
-        isPlayingStartle = true;
+        startleAnimationCompletionTime = Time.timeAsDouble + 0.5;
+        isPlayingStartleAnimation = true;
         if (!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer)
         {
             string text = ((asset.startleAnimVariantsCount != 1) ? ("Startle_" + UnityEngine.Random.Range(0, asset.startleAnimVariantsCount)) : "Startle");
             AnimationClip clip = animator.GetClip(text);
             if (clip != null)
             {
-                startleTime = clip.length;
+                startleAnimationCompletionTime = Time.timeAsDouble + (double)clip.length;
                 animator.Play(text);
             }
             else if ((bool)Assets.shouldValidateAssets)
@@ -277,7 +277,7 @@ public class Animal : MonoBehaviour
     {
         kill = EPlayerKill.NONE;
         xp = 0u;
-        if (amount == 0 || isDead || isDead)
+        if (amount == 0 || isDead || !IsAlive)
         {
             return;
         }
@@ -399,12 +399,12 @@ public class Animal : MonoBehaviour
         updateTicking();
     }
 
-    public bool checkAlert(Player newPlayer)
+    public bool checkAlert(Player potentialTargetPlayer)
     {
-        return player != newPlayer;
+        return currentTargetPlayer != potentialTargetPlayer;
     }
 
-    public void alertPlayer(Player newPlayer, bool sendToPack)
+    public void alertPlayer(Player potentialTargetPlayer, bool sendToPack)
     {
         if (sendToPack)
         {
@@ -413,28 +413,32 @@ public class Animal : MonoBehaviour
                 Animal animal = pack.animals[i];
                 if (!(animal == null) && !(animal == this))
                 {
-                    animal.alertPlayer(newPlayer, sendToPack: false);
+                    animal.alertPlayer(potentialTargetPlayer, sendToPack: false);
                 }
             }
         }
-        if (!isDead && !(player == newPlayer))
+        if (!isDead && !(currentTargetPlayer == potentialTargetPlayer))
         {
-            if (player == null)
+            if (!isHunting)
+            {
+                AnimalManager.sendAnimalStartle(this);
+            }
+            if (currentTargetPlayer == null)
             {
                 _isFleeing = false;
                 isWandering = false;
                 isHunting = true;
                 updateTicking();
                 lastStuck = Time.timeAsDouble;
-                player = newPlayer;
+                currentTargetPlayer = potentialTargetPlayer;
             }
-            else if ((newPlayer.transform.position - base.transform.position).sqrMagnitude < (player.transform.position - base.transform.position).sqrMagnitude)
+            else if ((potentialTargetPlayer.transform.position - base.transform.position).sqrMagnitude < (currentTargetPlayer.transform.position - base.transform.position).sqrMagnitude)
             {
                 _isFleeing = false;
                 isWandering = false;
                 isHunting = true;
                 updateTicking();
-                player = newPlayer;
+                currentTargetPlayer = potentialTargetPlayer;
             }
         }
     }
@@ -522,7 +526,7 @@ public class Animal : MonoBehaviour
         isHunting = false;
         updateTicking();
         isStuck = false;
-        player = null;
+        currentTargetPlayer = null;
         target = base.transform.position;
     }
 
@@ -578,24 +582,24 @@ public class Animal : MonoBehaviour
     {
         if (controller != null)
         {
-            controller.SetDetectCollisionsDeferred(!isDead);
+            controller.SetDetectCollisionsDeferred(IsAlive);
         }
         if (!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer)
         {
             if (renderer_0 != null)
             {
-                renderer_0.enabled = !isDead;
+                renderer_0.enabled = IsAlive;
             }
             if (renderer_1 != null)
             {
-                renderer_1.enabled = !isDead;
+                renderer_1.enabled = IsAlive;
             }
-            skeleton.gameObject.SetActive(!isDead);
+            skeleton.gameObject.SetActive(IsAlive);
         }
         Collider component = GetComponent<Collider>();
         if (component != null)
         {
-            component.enabled = !isDead;
+            component.enabled = IsAlive;
         }
     }
 
@@ -612,12 +616,11 @@ public class Animal : MonoBehaviour
     private void reset()
     {
         target = base.transform.position;
-        lastStartle = Time.timeAsDouble;
         lastWander = Time.timeAsDouble;
         lastStuck = Time.timeAsDouble;
         isPlayingEat = false;
         isPlayingGlance = false;
-        isPlayingStartle = false;
+        isPlayingStartleAnimation = false;
         isMoving = false;
         isRunning = false;
         _isFleeing = false;
@@ -752,7 +755,7 @@ public class Animal : MonoBehaviour
                 base.transform.rotation = Quaternion.Euler(0f, currentSnapshot.yaw, 0f);
             }
         }
-        if ((!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer) && !isMoving && !isPlayingEat && !isPlayingGlance && !isPlayingAttack)
+        if ((!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer) && !isMoving && !isPlayingEat && !isPlayingGlance && !isPlayingAttack && Time.timeAsDouble - lastAttack > (double)attackInterval + 0.5)
         {
             if (Time.timeAsDouble - lastEat > (double)eatDelay)
             {
@@ -801,11 +804,11 @@ public class Animal : MonoBehaviour
                 isPlayingGlance = false;
             }
         }
-        else if (isPlayingStartle)
+        else if (isPlayingStartleAnimation)
         {
-            if (Time.timeAsDouble - lastStartle > (double)startleTime)
+            if (Time.timeAsDouble > startleAnimationCompletionTime)
             {
-                isPlayingStartle = false;
+                isPlayingStartleAnimation = false;
             }
         }
         else if (isPlayingAttack)
@@ -853,12 +856,12 @@ public class Animal : MonoBehaviour
         }
         if (isHunting)
         {
-            if (player != null && player.life.IsAlive && player.stance.stance != EPlayerStance.SWIM)
+            if (currentTargetPlayer != null && currentTargetPlayer.life.IsAlive && currentTargetPlayer.stance.stance != EPlayerStance.SWIM)
             {
-                target = player.transform.position;
+                target = currentTargetPlayer.transform.position;
                 float num2 = MathfEx.HorizontalDistanceSquared(target, base.transform.position);
                 float num3 = Mathf.Abs(target.y - base.transform.position.y);
-                if (num2 < ((player.movement.getVehicle() != null) ? asset.horizontalVehicleAttackRangeSquared : asset.horizontalAttackRangeSquared) && num3 < asset.verticalAttackRange)
+                if (num2 < ((currentTargetPlayer.movement.getVehicle() != null) ? asset.horizontalVehicleAttackRangeSquared : asset.horizontalAttackRangeSquared) && num3 < asset.verticalAttackRange)
                 {
                     if (Time.timeAsDouble - lastTarget > (double)(Dedicator.IsDedicatedServer ? 0.3f : 0.1f))
                     {
@@ -869,16 +872,16 @@ public class Animal : MonoBehaviour
                                 isAttacking = false;
                                 byte damage = asset.damage;
                                 damage = (byte)((float)(int)damage * Provider.modeConfigData.Animals.Damage_Multiplier);
-                                if (player.movement.getVehicle() != null)
+                                if (currentTargetPlayer.movement.getVehicle() != null)
                                 {
-                                    if (player.movement.getVehicle().asset != null && player.movement.getVehicle().asset.isVulnerableToEnvironment)
+                                    if (currentTargetPlayer.movement.getVehicle().asset != null && currentTargetPlayer.movement.getVehicle().asset.isVulnerableToEnvironment)
                                     {
-                                        VehicleManager.damage(player.movement.getVehicle(), (int)damage, 1f, canRepair: true, default(CSteamID), EDamageOrigin.Animal_Attack);
+                                        VehicleManager.damage(currentTargetPlayer.movement.getVehicle(), (int)damage, 1f, canRepair: true, default(CSteamID), EDamageOrigin.Animal_Attack);
                                     }
                                 }
                                 else
                                 {
-                                    DamagePlayerParameters parameters = new DamagePlayerParameters(player);
+                                    DamagePlayerParameters parameters = new DamagePlayerParameters(currentTargetPlayer);
                                     parameters.cause = EDeathCause.ANIMAL;
                                     parameters.killer = Provider.server;
                                     parameters.direction = (target - base.transform.position).normalized;
@@ -897,7 +900,7 @@ public class Animal : MonoBehaviour
                 }
                 else if (num2 > 4096f)
                 {
-                    player = null;
+                    currentTargetPlayer = null;
                     isHunting = false;
                     updateTicking();
                 }
@@ -909,7 +912,7 @@ public class Animal : MonoBehaviour
             }
             else
             {
-                player = null;
+                currentTargetPlayer = null;
                 isHunting = false;
                 updateTicking();
             }
@@ -925,7 +928,6 @@ public class Animal : MonoBehaviour
         attackInterval = asset.attackInterval;
         eatTime = 0.5f;
         glanceTime = 0.5f;
-        startleTime = 0.5f;
         if (!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer)
         {
             animator = base.transform.Find("Character").GetComponent<Animation>();
@@ -970,5 +972,11 @@ public class Animal : MonoBehaviour
         wanderDelay = UnityEngine.Random.Range(8f, 16f);
         updateLife();
         updateStates();
+    }
+
+    [Obsolete("Renamed to PlayStartleAnimation")]
+    public void askStartle()
+    {
+        PlayStartleAnimation();
     }
 }

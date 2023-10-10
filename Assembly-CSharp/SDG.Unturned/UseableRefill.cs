@@ -76,7 +76,7 @@ public class UseableRefill : Useable
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askUse")]
     public void ReceivePlayUse()
     {
-        if (base.player.equipment.isEquipped)
+        if (base.player.equipment.IsEquipAnimationFinished)
         {
             use();
         }
@@ -98,7 +98,7 @@ public class UseableRefill : Useable
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askRefill")]
     public void ReceivePlayRefill()
     {
-        if (base.player.equipment.isEquipped)
+        if (base.player.equipment.IsEquipAnimationFinished)
         {
             refill();
         }
@@ -107,7 +107,7 @@ public class UseableRefill : Useable
     private bool fire(bool mode, out ERefillWaterType newWaterType)
     {
         newWaterType = ERefillWaterType.EMPTY;
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             RaycastInfo raycastInfo = DamageTool.raycast(new Ray(base.player.look.aim.position, base.player.look.aim.forward), 3f, RayMasks.DAMAGE_CLIENT);
             if (!(raycastInfo.transform != null))
@@ -409,7 +409,7 @@ public class UseableRefill : Useable
         {
             SendPlayRefill.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner());
         }
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             msg();
         }
@@ -443,7 +443,7 @@ public class UseableRefill : Useable
                 {
                     SendPlayUse.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner());
                 }
-                if (base.channel.isOwner)
+                if (base.channel.IsLocalPlayer)
                 {
                     msg();
                 }
@@ -470,9 +470,9 @@ public class UseableRefill : Useable
     public override void equip()
     {
         base.player.animator.play("Equip", smooth: true);
-        useTime = base.player.animator.getAnimationLength("Use");
-        refillTime = base.player.animator.getAnimationLength("Refill");
-        if (base.channel.isOwner)
+        useTime = base.player.animator.GetAnimationLength("Use");
+        refillTime = base.player.animator.GetAnimationLength("Refill");
+        if (base.channel.IsLocalPlayer)
         {
             msg();
         }

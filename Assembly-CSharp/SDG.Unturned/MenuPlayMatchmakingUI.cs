@@ -63,11 +63,11 @@ public class MenuPlayMatchmakingUI
             Local local = level.getLocalization();
             if (local != null && local.has("Name"))
             {
-                selectedBox.text = local.format("Name");
+                selectedBox.Text = local.format("Name");
             }
             else
             {
-                selectedBox.text = PlaySettings.matchmakingMap;
+                selectedBox.Text = PlaySettings.matchmakingMap;
             }
         }
     }
@@ -129,7 +129,7 @@ public class MenuPlayMatchmakingUI
             if (levels[i] != null)
             {
                 SleekLevel sleekLevel = new SleekLevel(levels[i], isEditor: false);
-                sleekLevel.positionOffset_Y = i * 110;
+                sleekLevel.PositionOffset_Y = i * 110;
                 sleekLevel.onClickedLevel = onClickedLevel;
                 levelScrollBox.AddChild(sleekLevel);
                 levelButtons[i] = sleekLevel;
@@ -148,7 +148,7 @@ public class MenuPlayMatchmakingUI
             PlaySettings.matchmakingMap = levels[0].name;
         }
         updateSelection();
-        levelScrollBox.contentSizeOffset = new Vector2(0f, levels.Length * 110 - 10);
+        levelScrollBox.ContentSizeOffset = new Vector2(0f, levels.Length * 110 - 10);
     }
 
     private static void onLevelsRefreshed()
@@ -160,15 +160,15 @@ public class MenuPlayMatchmakingUI
     {
         if (progressBox != null)
         {
-            progressBox.text = localization.format("Progress_Matches", (Provider.provider.matchmakingService.serverList != null) ? Provider.provider.matchmakingService.serverList.Count : 0);
-            progressBox.text += "\n";
+            progressBox.Text = localization.format("Progress_Matches", (Provider.provider.matchmakingService.serverList != null) ? Provider.provider.matchmakingService.serverList.Count : 0);
+            progressBox.Text += "\n";
             if (Provider.provider.matchmakingService.matchmakingBestServer != null)
             {
-                progressBox.text += localization.format("Progress_Best", localization.format("Match_Yes", Provider.provider.matchmakingService.matchmakingBestServer.players, Provider.provider.matchmakingService.matchmakingBestServer.maxPlayers, Provider.provider.matchmakingService.matchmakingBestServer.ping));
+                progressBox.Text += localization.format("Progress_Best", localization.format("Match_Yes", Provider.provider.matchmakingService.matchmakingBestServer.players, Provider.provider.matchmakingService.matchmakingBestServer.maxPlayers, Provider.provider.matchmakingService.matchmakingBestServer.ping));
             }
             else
             {
-                progressBox.text += localization.format("Progress_Best", localization.format("Match_No"));
+                progressBox.Text += localization.format("Progress_Best", localization.format("Match_No"));
             }
         }
     }
@@ -177,8 +177,8 @@ public class MenuPlayMatchmakingUI
     {
         if (infoButton != null && luckyButton != null)
         {
-            infoButton.isVisible = Provider.provider.matchmakingService.matchmakingBestServer != null;
-            luckyButton.isVisible = Provider.provider.matchmakingService.matchmakingBestServer != null;
+            infoButton.IsVisible = Provider.provider.matchmakingService.matchmakingBestServer != null;
+            luckyButton.IsVisible = Provider.provider.matchmakingService.matchmakingBestServer != null;
         }
     }
 
@@ -212,66 +212,66 @@ public class MenuPlayMatchmakingUI
         localization = Localization.read("/Menu/Play/MenuPlayMatchmaking.dat");
         Bundle bundle = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Play/MenuPlayMatchmaking/MenuPlayMatchmaking.unity3d");
         container = new SleekFullscreenBox();
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.positionScale_Y = 1f;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.PositionScale_Y = 1f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         MenuUI.container.AddChild(container);
         active = false;
         levelScrollBox = Glazier.Get().CreateScrollView();
-        levelScrollBox.positionOffset_X = -200;
-        levelScrollBox.positionOffset_Y = 280;
-        levelScrollBox.positionScale_X = 0.5f;
-        levelScrollBox.sizeOffset_X = 430;
-        levelScrollBox.sizeOffset_Y = -380;
-        levelScrollBox.sizeScale_Y = 1f;
-        levelScrollBox.scaleContentToWidth = true;
+        levelScrollBox.PositionOffset_X = -200f;
+        levelScrollBox.PositionOffset_Y = 280f;
+        levelScrollBox.PositionScale_X = 0.5f;
+        levelScrollBox.SizeOffset_X = 430f;
+        levelScrollBox.SizeOffset_Y = -380f;
+        levelScrollBox.SizeScale_Y = 1f;
+        levelScrollBox.ScaleContentToWidth = true;
         container.AddChild(levelScrollBox);
         searchButton = new SleekButtonIcon(bundle.load<Texture2D>("Search"));
-        searchButton.positionOffset_X = -200;
-        searchButton.positionOffset_Y = 100;
-        searchButton.positionScale_X = 0.5f;
-        searchButton.sizeOffset_X = 400;
-        searchButton.sizeOffset_Y = 30;
+        searchButton.PositionOffset_X = -200f;
+        searchButton.PositionOffset_Y = 100f;
+        searchButton.PositionScale_X = 0.5f;
+        searchButton.SizeOffset_X = 400f;
+        searchButton.SizeOffset_Y = 30f;
         searchButton.text = localization.format("Search_Button");
         searchButton.tooltip = localization.format("Search_Button_Tooltip");
         searchButton.iconColor = ESleekTint.FOREGROUND;
         searchButton.onClickedButton += onClickedSearchButton;
         container.AddChild(searchButton);
         selectedBox = Glazier.Get().CreateBox();
-        selectedBox.positionOffset_X = -200;
-        selectedBox.positionOffset_Y = 250;
-        selectedBox.positionScale_X = 0.5f;
-        selectedBox.sizeOffset_X = 400;
-        selectedBox.sizeOffset_Y = 30;
+        selectedBox.PositionOffset_X = -200f;
+        selectedBox.PositionOffset_Y = 250f;
+        selectedBox.PositionScale_X = 0.5f;
+        selectedBox.SizeOffset_X = 400f;
+        selectedBox.SizeOffset_Y = 30f;
         container.AddChild(selectedBox);
         progressBox = Glazier.Get().CreateBox();
-        progressBox.positionOffset_X = -200;
-        progressBox.positionOffset_Y = 130;
-        progressBox.positionScale_X = 0.5f;
-        progressBox.sizeOffset_X = 400;
-        progressBox.sizeOffset_Y = 50;
+        progressBox.PositionOffset_X = -200f;
+        progressBox.PositionOffset_Y = 130f;
+        progressBox.PositionScale_X = 0.5f;
+        progressBox.SizeOffset_X = 400f;
+        progressBox.SizeOffset_Y = 50f;
         container.AddChild(progressBox);
         infoButton = new SleekButtonIcon(bundle.load<Texture2D>("Info"));
-        infoButton.positionOffset_X = -200;
-        infoButton.positionOffset_Y = 180;
-        infoButton.positionScale_X = 0.5f;
-        infoButton.sizeOffset_X = 195;
-        infoButton.sizeOffset_Y = 30;
+        infoButton.PositionOffset_X = -200f;
+        infoButton.PositionOffset_Y = 180f;
+        infoButton.PositionScale_X = 0.5f;
+        infoButton.SizeOffset_X = 195f;
+        infoButton.SizeOffset_Y = 30f;
         infoButton.text = localization.format("Info_Button");
         infoButton.tooltip = localization.format("Info_Button_Tooltip");
         infoButton.iconColor = ESleekTint.FOREGROUND;
         infoButton.onClickedButton += onClickedInfoButton;
         container.AddChild(infoButton);
         luckyButton = new SleekButtonIcon(bundle.load<Texture2D>("Lucky"));
-        luckyButton.positionOffset_X = 5;
-        luckyButton.positionOffset_Y = 180;
-        luckyButton.positionScale_X = 0.5f;
-        luckyButton.sizeOffset_X = 195;
-        luckyButton.sizeOffset_Y = 30;
+        luckyButton.PositionOffset_X = 5f;
+        luckyButton.PositionOffset_Y = 180f;
+        luckyButton.PositionScale_X = 0.5f;
+        luckyButton.SizeOffset_X = 195f;
+        luckyButton.SizeOffset_Y = 30f;
         luckyButton.text = localization.format("Lucky_Button");
         luckyButton.tooltip = localization.format("Lucky_Button_Tooltip");
         luckyButton.iconColor = ESleekTint.FOREGROUND;
@@ -280,11 +280,11 @@ public class MenuPlayMatchmakingUI
         updateProgressDisplay();
         updateMatchDisplay();
         modeButtonState = new SleekButtonState(new GUIContent(localization.format("Easy_Button"), bundle.load<Texture2D>("Easy")), new GUIContent(localization.format("Normal_Button"), bundle.load<Texture2D>("Normal")), new GUIContent(localization.format("Hard_Button"), bundle.load<Texture2D>("Hard")));
-        modeButtonState.positionOffset_X = -200;
-        modeButtonState.positionOffset_Y = 220;
-        modeButtonState.positionScale_X = 0.5f;
-        modeButtonState.sizeOffset_X = 400;
-        modeButtonState.sizeOffset_Y = 30;
+        modeButtonState.PositionOffset_X = -200f;
+        modeButtonState.PositionOffset_Y = 220f;
+        modeButtonState.PositionScale_X = 0.5f;
+        modeButtonState.SizeOffset_X = 400f;
+        modeButtonState.SizeOffset_Y = 30f;
         modeButtonState.state = (int)PlaySettings.matchmakingMode;
         modeButtonState.onSwappedState = onSwappedModeState;
         container.AddChild(modeButtonState);
@@ -292,10 +292,10 @@ public class MenuPlayMatchmakingUI
         refreshLevels();
         Level.onLevelsRefreshed = (LevelsRefreshed)Delegate.Combine(Level.onLevelsRefreshed, new LevelsRefreshed(onLevelsRefreshed));
         backButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));
-        backButton.positionOffset_Y = -50;
-        backButton.positionScale_Y = 1f;
-        backButton.sizeOffset_X = 200;
-        backButton.sizeOffset_Y = 50;
+        backButton.PositionOffset_Y = -50f;
+        backButton.PositionScale_Y = 1f;
+        backButton.SizeOffset_X = 200f;
+        backButton.SizeOffset_Y = 50f;
         backButton.text = MenuDashboardUI.localization.format("BackButtonText");
         backButton.tooltip = MenuDashboardUI.localization.format("BackButtonTooltip");
         backButton.onClickedButton += onClickedBackButton;

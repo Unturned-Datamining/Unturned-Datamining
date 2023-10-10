@@ -24,6 +24,8 @@ Remove_Table_Button_Tooltip Remove table
 Apply_Weights_Button Apply Weights
 Apply_Weights_Button_Tooltip Calculate chance percentages
 
+ID_Field_Hint ID or GUID
+
 Roots_Box {0} - Roots
 Roots_Box_Tooltip Parent Spawns
 

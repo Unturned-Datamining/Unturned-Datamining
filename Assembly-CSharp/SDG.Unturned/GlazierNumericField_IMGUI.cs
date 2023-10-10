@@ -14,13 +14,13 @@ internal abstract class GlazierNumericField_IMGUI : GlazierElementBase_IMGUI, IS
 
     private string controlName;
 
-    public string tooltipText { get; set; } = string.Empty;
+    public string TooltipText { get; set; } = string.Empty;
 
 
-    public SleekColor textColor { get; set; } = GlazierConst.DefaultFieldForegroundColor;
+    public SleekColor TextColor { get; set; } = GlazierConst.DefaultFieldForegroundColor;
 
 
-    public SleekColor backgroundColor { get; set; } = GlazierConst.DefaultFieldBackgroundColor;
+    public SleekColor BackgroundColor { get; set; } = GlazierConst.DefaultFieldBackgroundColor;
 
 
     public GlazierNumericField_IMGUI()
@@ -31,7 +31,7 @@ internal abstract class GlazierNumericField_IMGUI : GlazierElementBase_IMGUI, IS
     public override void OnGUI()
     {
         GUI.SetNextControlName(controlName);
-        string input = GlazierUtils_IMGUI.drawField(drawRect, fontStyle, fontAlignment, fontSizeInt, backgroundColor, textColor, text, 64, multiline: false, ETextContrastContext.Default);
+        string input = GlazierUtils_IMGUI.drawField(drawRect, fontStyle, fontAlignment, fontSizeInt, BackgroundColor, TextColor, text, 64, multiline: false, ETextContrastContext.Default);
         if (GUI.changed && ParseNumericInput(input))
         {
             text = input;

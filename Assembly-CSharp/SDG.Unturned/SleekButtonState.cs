@@ -109,8 +109,8 @@ public class SleekButtonState : SleekWrapper
     {
         _state = 0;
         button = new SleekButtonIcon(null);
-        button.sizeScale_X = 1f;
-        button.sizeScale_Y = 1f;
+        button.SizeScale_X = 1f;
+        button.SizeScale_Y = 1f;
         AddChild(button);
         if (newStates != null)
         {

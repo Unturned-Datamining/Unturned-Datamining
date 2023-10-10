@@ -14,9 +14,15 @@ internal class GlazierScrollView_uGUI : GlazierElementBase_uGUI, ISleekScrollVie
 
     private bool _reduceWidthWhenScrollbarVisible = true;
 
+    private ESleekScrollbarVisibility _verticalScrollbarVisibility;
+
     private SleekColor _backgroundColor;
 
     private SleekColor _foregroundColor;
+
+    protected bool _contentUseManualLayout = true;
+
+    protected bool _alignContentToBottom;
 
     private ScrollRectEx scrollRectComponent;
 
@@ -34,7 +40,7 @@ internal class GlazierScrollView_uGUI : GlazierElementBase_uGUI, ISleekScrollVie
 
     private Scrollbar verticalScrollbarComponent;
 
-    public bool scaleContentToWidth
+    public bool ScaleContentToWidth
     {
         get
         {
@@ -47,7 +53,7 @@ internal class GlazierScrollView_uGUI : GlazierElementBase_uGUI, ISleekScrollVie
         }
     }
 
-    public bool scaleContentToHeight
+    public bool ScaleContentToHeight
     {
         get
         {
@@ -60,7 +66,7 @@ internal class GlazierScrollView_uGUI : GlazierElementBase_uGUI, ISleekScrollVie
         }
     }
 
-    public float contentScaleFactor
+    public float ContentScaleFactor
     {
         get
         {
@@ -70,11 +76,11 @@ internal class GlazierScrollView_uGUI : GlazierElementBase_uGUI, ISleekScrollVie
         {
             _contentScaleFactor = value;
             contentTransform.anchorMin = new Vector2(0f, _scaleContentToHeight ? (1f - _contentScaleFactor) : 1f);
-            contentTransform.anchorMax = new Vector2(_scaleContentToWidth ? contentScaleFactor : 0f, 1f);
+            contentTransform.anchorMax = new Vector2(_scaleContentToWidth ? ContentScaleFactor : 0f, 1f);
         }
     }
 
-    public bool reduceWidthWhenScrollbarVisible
+    public bool ReduceWidthWhenScrollbarVisible
     {
         get
         {
@@ -87,7 +93,24 @@ internal class GlazierScrollView_uGUI : GlazierElementBase_uGUI, ISleekScrollVie
         }
     }
 
-    public Vector2 contentSizeOffset
+    public ESleekScrollbarVisibility VerticalScrollbarVisibility
+    {
+        get
+        {
+            return _verticalScrollbarVisibility;
+        }
+        set
+        {
+            if (_verticalScrollbarVisibility != value)
+            {
+                _verticalScrollbarVisibility = value;
+                verticalScrollbarBackgroundImage.gameObject.SetActive(_verticalScrollbarVisibility != ESleekScrollbarVisibility.Hidden);
+                verticalScrollbarHandleImage.gameObject.SetActive(_verticalScrollbarVisibility != ESleekScrollbarVisibility.Hidden);
+            }
+        }
+    }
+
+    public Vector2 ContentSizeOffset
     {
         get
         {
@@ -101,19 +124,7 @@ internal class GlazierScrollView_uGUI : GlazierElementBase_uGUI, ISleekScrollVie
         }
     }
 
-    public Vector2 state
-    {
-        get
-        {
-            return contentTransform.anchoredPosition;
-        }
-        set
-        {
-            contentTransform.anchoredPosition = value;
-        }
-    }
-
-    public Vector2 normalizedStateCenter
+    public Vector2 NormalizedStateCenter
     {
         get
         {
@@ -130,7 +141,7 @@ internal class GlazierScrollView_uGUI : GlazierElementBase_uGUI, ISleekScrollVie
         }
     }
 
-    public bool handleScrollWheel
+    public bool HandleScrollWheel
     {
         get
         {
@@ -142,7 +153,7 @@ internal class GlazierScrollView_uGUI : GlazierElementBase_uGUI, ISleekScrollVie
         }
     }
 
-    public SleekColor backgroundColor
+    public SleekColor BackgroundColor
     {
         get
         {
@@ -156,7 +167,7 @@ internal class GlazierScrollView_uGUI : GlazierElementBase_uGUI, ISleekScrollVie
         }
     }
 
-    public SleekColor foregroundColor
+    public SleekColor ForegroundColor
     {
         get
         {
@@ -170,13 +181,56 @@ internal class GlazierScrollView_uGUI : GlazierElementBase_uGUI, ISleekScrollVie
         }
     }
 
-    public float normalizedVerticalPosition => 1f - scrollRectComponent.verticalNormalizedPosition;
+    public float NormalizedVerticalPosition => 1f - scrollRectComponent.verticalNormalizedPosition;
 
-    public float normalizedViewportHeight => scrollRectComponent.verticalScrollbar.size;
+    public float NormalizedViewportHeight => scrollRectComponent.verticalScrollbar.size;
+
+    public bool ContentUseManualLayout
+    {
+        get
+        {
+            return _contentUseManualLayout;
+        }
+        set
+        {
+            if (_contentUseManualLayout != value)
+            {
+                _contentUseManualLayout = value;
+                if (_contentUseManualLayout)
+                {
+                    contentTransform.DestroyComponentIfExists<VerticalLayoutGroup>();
+                    contentTransform.DestroyComponentIfExists<ContentSizeFitter>();
+                }
+                else
+                {
+                    contentTransform.gameObject.AddComponent<VerticalLayoutGroup>();
+                    contentTransform.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+                }
+            }
+        }
+    }
+
+    public bool AlignContentToBottom
+    {
+        get
+        {
+            return _alignContentToBottom;
+        }
+        set
+        {
+            _alignContentToBottom = value;
+            contentTransform.pivot = new Vector2(0f, _alignContentToBottom ? 0f : 1f);
+        }
+    }
 
     public override RectTransform AttachmentTransform => contentTransform;
 
-    public event Action<Vector2> onValueChanged;
+    public event Action<Vector2> OnNormalizedValueChanged;
+
+    public void ScrollToTop()
+    {
+        scrollRectComponent.verticalNormalizedPosition = 1f;
+    }
 
     public void ScrollToBottom()
     {
@@ -296,7 +350,7 @@ internal class GlazierScrollView_uGUI : GlazierElementBase_uGUI, ISleekScrollVie
         scrollRectComponent.verticalScrollbarSpacing = 10f;
         scrollRectComponent.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHideAndExpandViewport;
         scrollRectComponent.verticalScrollbar = verticalScrollbarComponent;
-        handleScrollWheel = true;
+        HandleScrollWheel = true;
         _backgroundColor = GlazierConst.DefaultScrollViewBackgroundColor;
         _foregroundColor = GlazierConst.DefaultScrollViewForegroundColor;
     }
@@ -334,6 +388,6 @@ internal class GlazierScrollView_uGUI : GlazierElementBase_uGUI, ISleekScrollVie
     private void OnUnityValueChanged(Vector2 value)
     {
         value.y = 1f - value.y;
-        this.onValueChanged?.Invoke(value);
+        this.OnNormalizedValueChanged?.Invoke(value);
     }
 }

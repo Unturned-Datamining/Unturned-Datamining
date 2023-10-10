@@ -31,8 +31,8 @@ public class SleekScopeOverlay : SleekWrapper
 
         public void SyncIsVisible()
         {
-            horizontalLine.isVisible = isVisible;
-            distanceLabel.isVisible = isVisible && hasLabel;
+            horizontalLine.IsVisible = isVisible;
+            distanceLabel.IsVisible = isVisible && hasLabel;
         }
     }
 
@@ -74,7 +74,7 @@ public class SleekScopeOverlay : SleekWrapper
             return;
         }
         float num = OptionsSettings.GetZoomBaseFieldOfView() / Player.player.look.mainCameraZoomFactor;
-        float num2 = (float)Math.PI / 180f * num;
+        float num2 = MathF.PI / 180f * num;
         if (num2 < 0.001f)
         {
             DisableDistanceMarkers();
@@ -93,8 +93,8 @@ public class SleekScopeOverlay : SleekWrapper
                 break;
             }
             float num3 = Mathf.Abs(CalcAngle(muzzleVelocity, distanceMarker.distance, gravity)) / num2;
-            distanceMarker.horizontalLine.positionScale_Y = 0.5f + num3;
-            distanceMarker.distanceLabel.positionScale_Y = distanceMarker.horizontalLine.positionScale_Y;
+            distanceMarker.horizontalLine.PositionScale_Y = 0.5f + num3;
+            distanceMarker.distanceLabel.PositionScale_Y = distanceMarker.horizontalLine.PositionScale_Y;
             distanceMarker.SetIsVisible(num3 > 0.01f && num3 < 0.5f);
         }
     }
@@ -108,49 +108,49 @@ public class SleekScopeOverlay : SleekWrapper
     public SleekScopeOverlay()
     {
         scopeFrame = Glazier.Get().CreateConstraintFrame();
-        scopeFrame.sizeScale_X = 1f;
-        scopeFrame.sizeScale_Y = 1f;
-        scopeFrame.constraint = ESleekConstraint.FitInParent;
+        scopeFrame.SizeScale_X = 1f;
+        scopeFrame.SizeScale_Y = 1f;
+        scopeFrame.Constraint = ESleekConstraint.FitInParent;
         AddChild(scopeFrame);
         scopeOverlay = Glazier.Get().CreateImage((Texture2D)Resources.Load("Overlay/Scope"));
-        scopeOverlay.positionScale_X = 0.1f;
-        scopeOverlay.positionScale_Y = 0.1f;
-        scopeOverlay.sizeScale_X = 0.8f;
-        scopeOverlay.sizeScale_Y = 0.8f;
+        scopeOverlay.PositionScale_X = 0.1f;
+        scopeOverlay.PositionScale_Y = 0.1f;
+        scopeOverlay.SizeScale_X = 0.8f;
+        scopeOverlay.SizeScale_Y = 0.8f;
         scopeFrame.AddChild(scopeOverlay);
         scopeLeftOverlay = Glazier.Get().CreateImage((Texture2D)GlazierResources.PixelTexture);
-        scopeLeftOverlay.positionOffset_X = 1;
-        scopeLeftOverlay.positionScale_X = -10f;
-        scopeLeftOverlay.sizeScale_X = 10f;
-        scopeLeftOverlay.sizeScale_Y = 1f;
-        scopeLeftOverlay.color = Color.black;
+        scopeLeftOverlay.PositionOffset_X = 1f;
+        scopeLeftOverlay.PositionScale_X = -10f;
+        scopeLeftOverlay.SizeScale_X = 10f;
+        scopeLeftOverlay.SizeScale_Y = 1f;
+        scopeLeftOverlay.TintColor = Color.black;
         scopeOverlay.AddChild(scopeLeftOverlay);
         scopeRightOverlay = Glazier.Get().CreateImage((Texture2D)GlazierResources.PixelTexture);
-        scopeRightOverlay.positionOffset_X = -1;
-        scopeRightOverlay.positionScale_X = 1f;
-        scopeRightOverlay.sizeScale_X = 10f;
-        scopeRightOverlay.sizeScale_Y = 1f;
-        scopeRightOverlay.color = Color.black;
+        scopeRightOverlay.PositionOffset_X = -1f;
+        scopeRightOverlay.PositionScale_X = 1f;
+        scopeRightOverlay.SizeScale_X = 10f;
+        scopeRightOverlay.SizeScale_Y = 1f;
+        scopeRightOverlay.TintColor = Color.black;
         scopeOverlay.AddChild(scopeRightOverlay);
         scopeUpOverlay = Glazier.Get().CreateImage((Texture2D)GlazierResources.PixelTexture);
-        scopeUpOverlay.positionOffset_Y = 1;
-        scopeUpOverlay.positionScale_X = -10f;
-        scopeUpOverlay.positionScale_Y = -10f;
-        scopeUpOverlay.sizeScale_X = 21f;
-        scopeUpOverlay.sizeScale_Y = 10f;
-        scopeUpOverlay.color = Color.black;
+        scopeUpOverlay.PositionOffset_Y = 1f;
+        scopeUpOverlay.PositionScale_X = -10f;
+        scopeUpOverlay.PositionScale_Y = -10f;
+        scopeUpOverlay.SizeScale_X = 21f;
+        scopeUpOverlay.SizeScale_Y = 10f;
+        scopeUpOverlay.TintColor = Color.black;
         scopeOverlay.AddChild(scopeUpOverlay);
         scopeDownOverlay = Glazier.Get().CreateImage((Texture2D)GlazierResources.PixelTexture);
-        scopeDownOverlay.positionOffset_Y = -1;
-        scopeDownOverlay.positionScale_X = -10f;
-        scopeDownOverlay.positionScale_Y = 1f;
-        scopeDownOverlay.sizeScale_X = 21f;
-        scopeDownOverlay.sizeScale_Y = 10f;
-        scopeDownOverlay.color = Color.black;
+        scopeDownOverlay.PositionOffset_Y = -1f;
+        scopeDownOverlay.PositionScale_X = -10f;
+        scopeDownOverlay.PositionScale_Y = 1f;
+        scopeDownOverlay.SizeScale_X = 21f;
+        scopeDownOverlay.SizeScale_Y = 10f;
+        scopeDownOverlay.TintColor = Color.black;
         scopeOverlay.AddChild(scopeDownOverlay);
         scopeImage = Glazier.Get().CreateImage();
-        scopeImage.sizeScale_X = 1f;
-        scopeImage.sizeScale_Y = 1f;
+        scopeImage.SizeScale_X = 1f;
+        scopeImage.SizeScale_Y = 1f;
         scopeOverlay.AddChild(scopeImage);
         OptionsSettings.OnUnitSystemChanged += SyncMarkerLabels;
     }
@@ -165,11 +165,11 @@ public class SleekScopeOverlay : SleekWrapper
             }
             if (OptionsSettings.metric)
             {
-                distanceMarker.distanceLabel.text = $"{distanceMarker.distance} m";
+                distanceMarker.distanceLabel.Text = $"{distanceMarker.distance} m";
             }
             else
             {
-                distanceMarker.distanceLabel.text = $"{Mathf.RoundToInt(MeasurementTool.MtoYd(distanceMarker.distance))} yd";
+                distanceMarker.distanceLabel.Text = $"{Mathf.RoundToInt(MeasurementTool.MtoYd(distanceMarker.distance))} yd";
             }
         }
     }
@@ -204,36 +204,36 @@ public class SleekScopeOverlay : SleekWrapper
                 distanceMarker2 = new DistanceMarker();
                 distanceMarker2.isVisible = true;
                 distanceMarker2.horizontalLine = Glazier.Get().CreateImage((Texture2D)GlazierResources.PixelTexture);
-                distanceMarker2.horizontalLine.sizeOffset_Y = 1;
+                distanceMarker2.horizontalLine.SizeOffset_Y = 1f;
                 scopeFrame.AddChild(distanceMarker2.horizontalLine);
                 distanceMarker2.distanceLabel = Glazier.Get().CreateLabel();
-                distanceMarker2.distanceLabel.positionOffset_Y = -25;
-                distanceMarker2.distanceLabel.sizeOffset_X = 200;
-                distanceMarker2.distanceLabel.sizeOffset_Y = 50;
-                distanceMarker2.distanceLabel.fontStyle = FontStyle.Bold;
+                distanceMarker2.distanceLabel.PositionOffset_Y = -25f;
+                distanceMarker2.distanceLabel.SizeOffset_X = 200f;
+                distanceMarker2.distanceLabel.SizeOffset_Y = 50f;
+                distanceMarker2.distanceLabel.FontStyle = FontStyle.Bold;
                 scopeFrame.AddChild(distanceMarker2.distanceLabel);
                 distanceMarkers.Add(distanceMarker2);
             }
-            distanceMarker2.horizontalLine.sizeScale_X = distanceMarker.lineWidth;
+            distanceMarker2.horizontalLine.SizeScale_X = distanceMarker.lineWidth;
             if (distanceMarker.side == ItemSightAsset.DistanceMarker.ESide.Right)
             {
-                distanceMarker2.horizontalLine.positionScale_X = 0.5f + distanceMarker.lineOffset;
-                distanceMarker2.distanceLabel.positionScale_X = 0.5f + distanceMarker.lineOffset + distanceMarker.lineWidth;
-                distanceMarker2.distanceLabel.positionOffset_X = 0;
-                distanceMarker2.distanceLabel.fontAlignment = TextAnchor.MiddleLeft;
+                distanceMarker2.horizontalLine.PositionScale_X = 0.5f + distanceMarker.lineOffset;
+                distanceMarker2.distanceLabel.PositionScale_X = 0.5f + distanceMarker.lineOffset + distanceMarker.lineWidth;
+                distanceMarker2.distanceLabel.PositionOffset_X = 0f;
+                distanceMarker2.distanceLabel.TextAlignment = TextAnchor.MiddleLeft;
             }
             else
             {
-                distanceMarker2.horizontalLine.positionScale_X = 0.5f - distanceMarker.lineOffset - distanceMarker.lineWidth;
-                distanceMarker2.distanceLabel.positionScale_X = 0.5f - distanceMarker.lineOffset - distanceMarker.lineWidth;
-                distanceMarker2.distanceLabel.positionOffset_X = -distanceMarker2.distanceLabel.sizeOffset_X;
-                distanceMarker2.distanceLabel.fontAlignment = TextAnchor.MiddleRight;
+                distanceMarker2.horizontalLine.PositionScale_X = 0.5f - distanceMarker.lineOffset - distanceMarker.lineWidth;
+                distanceMarker2.distanceLabel.PositionScale_X = 0.5f - distanceMarker.lineOffset - distanceMarker.lineWidth;
+                distanceMarker2.distanceLabel.PositionOffset_X = 0f - distanceMarker2.distanceLabel.SizeOffset_X;
+                distanceMarker2.distanceLabel.TextAlignment = TextAnchor.MiddleRight;
             }
             distanceMarker2.distance = distanceMarker.distance;
             distanceMarker2.isEnabled = true;
             distanceMarker2.hasLabel = distanceMarker.hasLabel;
-            distanceMarker2.horizontalLine.color = distanceMarker.color;
-            distanceMarker2.distanceLabel.textColor = distanceMarker.color;
+            distanceMarker2.horizontalLine.TintColor = distanceMarker.color;
+            distanceMarker2.distanceLabel.TextColor = distanceMarker.color;
             distanceMarker2.SyncIsVisible();
         }
         for (int j = currentSightAsset.distanceMarkers.Count; j < distanceMarkers.Count; j++)

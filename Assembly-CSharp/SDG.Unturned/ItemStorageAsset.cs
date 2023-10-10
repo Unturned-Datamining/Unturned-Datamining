@@ -25,6 +25,15 @@ public class ItemStorageAsset : ItemBarricadeAsset
         return new byte[17];
     }
 
+    public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
+    {
+        base.BuildDescription(builder, itemInstance);
+        if (!builder.shouldRestrictToLegacyContent && storage_x > 0 && storage_y > 0)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_StorageDimensions", storage_x, storage_y), 2000);
+        }
+    }
+
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
         base.PopulateAsset(bundle, data, localization);

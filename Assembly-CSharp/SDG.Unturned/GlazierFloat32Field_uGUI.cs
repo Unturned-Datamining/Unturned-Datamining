@@ -6,7 +6,7 @@ internal class GlazierFloat32Field_uGUI : GlazierNumericField_uGUI, ISleekFloat3
 {
     private float _state;
 
-    public float state
+    public float Value
     {
         get
         {
@@ -19,9 +19,9 @@ internal class GlazierFloat32Field_uGUI : GlazierNumericField_uGUI, ISleekFloat3
         }
     }
 
-    public event TypedSingle onEnteredSingle;
+    public event TypedSingle OnValueSubmitted;
 
-    public event TypedSingle onTypedSingle;
+    public event TypedSingle OnValueChanged;
 
     public GlazierFloat32Field_uGUI(Glazier_uGUI glazier)
         : base(glazier)
@@ -37,7 +37,7 @@ internal class GlazierFloat32Field_uGUI : GlazierNumericField_uGUI, ISleekFloat3
 
     protected override void OnUnitySubmit(string input)
     {
-        this.onEnteredSingle?.Invoke(this, _state);
+        this.OnValueSubmitted?.Invoke(this, _state);
     }
 
     protected override bool ParseNumericInput(string input)
@@ -48,7 +48,7 @@ internal class GlazierFloat32Field_uGUI : GlazierNumericField_uGUI, ISleekFloat3
         }
         if (float.TryParse(input, out _state))
         {
-            this.onTypedSingle?.Invoke(this, _state);
+            this.OnValueChanged?.Invoke(this, _state);
             return true;
         }
         return false;
@@ -56,6 +56,6 @@ internal class GlazierFloat32Field_uGUI : GlazierNumericField_uGUI, ISleekFloat3
 
     protected override string NumberToString()
     {
-        return state.ToString("F3");
+        return Value.ToString("F3");
     }
 }

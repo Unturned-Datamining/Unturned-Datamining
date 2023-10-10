@@ -23,10 +23,10 @@ public class SleekProgress : SleekWrapper
         set
         {
             _state = Mathf.Clamp01(value);
-            foreground.sizeScale_X = state;
+            foreground.SizeScale_X = state;
             if (suffix.Length == 0)
             {
-                label.text = Mathf.RoundToInt(foreground.sizeScale_X * 100f) + "%";
+                label.Text = Mathf.RoundToInt(foreground.SizeScale_X * 100f) + "%";
             }
         }
     }
@@ -37,7 +37,7 @@ public class SleekProgress : SleekWrapper
         {
             if (suffix.Length != 0)
             {
-                label.text = value + suffix;
+                label.Text = value + suffix;
             }
         }
     }
@@ -46,36 +46,36 @@ public class SleekProgress : SleekWrapper
     {
         get
         {
-            return foreground.color;
+            return foreground.TintColor;
         }
         set
         {
             Color color = value;
             color.a = 0.5f;
-            background.color = color;
-            foreground.color = value;
+            background.TintColor = color;
+            foreground.TintColor = value;
         }
     }
 
     public SleekProgress(string newSuffix)
     {
         background = Glazier.Get().CreateImage();
-        background.sizeScale_X = 1f;
-        background.sizeScale_Y = 1f;
-        background.texture = (Texture2D)GlazierResources.PixelTexture;
+        background.SizeScale_X = 1f;
+        background.SizeScale_Y = 1f;
+        background.Texture = (Texture2D)GlazierResources.PixelTexture;
         AddChild(background);
         foreground = Glazier.Get().CreateImage();
-        foreground.sizeScale_X = 1f;
-        foreground.sizeScale_Y = 1f;
-        foreground.texture = (Texture2D)GlazierResources.PixelTexture;
+        foreground.SizeScale_X = 1f;
+        foreground.SizeScale_Y = 1f;
+        foreground.Texture = (Texture2D)GlazierResources.PixelTexture;
         AddChild(foreground);
         label = Glazier.Get().CreateLabel();
-        label.sizeScale_X = 1f;
-        label.positionScale_Y = 0.5f;
-        label.positionOffset_Y = -15;
-        label.sizeOffset_Y = 30;
-        label.textColor = Color.white;
-        label.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+        label.SizeScale_X = 1f;
+        label.PositionScale_Y = 0.5f;
+        label.PositionOffset_Y = -15f;
+        label.SizeOffset_Y = 30f;
+        label.TextColor = Color.white;
+        label.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
         AddChild(label);
         suffix = newSuffix;
     }

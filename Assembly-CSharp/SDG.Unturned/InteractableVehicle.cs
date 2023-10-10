@@ -1642,13 +1642,18 @@ public class InteractableVehicle : Interactable
         value = Mathf.Clamp(value, 0, 100);
         for (int i = 0; i < value; i++)
         {
-            float f = UnityEngine.Random.Range(0f, (float)Math.PI * 2f);
-            ushort num = SpawnTableTool.resolve(asset.dropsTableId);
+            float f = UnityEngine.Random.Range(0f, MathF.PI * 2f);
+            ushort num = SpawnTableTool.ResolveLegacyId(asset.dropsTableId, EAssetType.ITEM, OnGetDropsSpawnTableErrorContext);
             if (num != 0)
             {
                 ItemManager.dropItem(new Item(num, EItemOrigin.NATURE), base.transform.position + new Vector3(Mathf.Sin(f) * 3f, 1f, Mathf.Cos(f) * 3f), playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
             }
         }
+    }
+
+    private string OnGetDropsSpawnTableErrorContext()
+    {
+        return asset?.FriendlyName + " explosion drops";
     }
 
     public void addPlayer(byte seat, CSteamID steamID)

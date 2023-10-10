@@ -143,17 +143,17 @@ public class LoadingUI : MonoBehaviour
             }
             if (!Dedicator.IsDedicatedServer)
             {
-                if (!assetBundleProgressBar.isVisible)
+                if (!assetBundleProgressBar.IsVisible)
                 {
-                    assetBundleProgressBar.isVisible = true;
+                    assetBundleProgressBar.IsVisible = true;
                     UpdateLoadingBarPositions();
                 }
                 assetBundleProgressBar.ProgressPercentage = loadingStats.EstimateAssetBundleProgressPercentage();
             }
         }
-        else if (!Dedicator.IsDedicatedServer && assetBundleProgressBar.isVisible)
+        else if (!Dedicator.IsDedicatedServer && assetBundleProgressBar.IsVisible)
         {
-            assetBundleProgressBar.isVisible = false;
+            assetBundleProgressBar.IsVisible = false;
             UpdateLoadingBarPositions();
         }
     }
@@ -188,17 +188,17 @@ public class LoadingUI : MonoBehaviour
             }
             if (!Dedicator.IsDedicatedServer)
             {
-                if (!searchProgressBar.isVisible)
+                if (!searchProgressBar.IsVisible)
                 {
-                    searchProgressBar.isVisible = true;
+                    searchProgressBar.IsVisible = true;
                     UpdateLoadingBarPositions();
                 }
                 searchProgressBar.ProgressPercentage = loadingStats.EstimateSearchProgressPercentage();
             }
         }
-        else if (!Dedicator.IsDedicatedServer && searchProgressBar.isVisible)
+        else if (!Dedicator.IsDedicatedServer && searchProgressBar.IsVisible)
         {
-            searchProgressBar.isVisible = false;
+            searchProgressBar.IsVisible = false;
             UpdateLoadingBarPositions();
         }
     }
@@ -236,17 +236,17 @@ public class LoadingUI : MonoBehaviour
             }
             if (!Dedicator.IsDedicatedServer)
             {
-                if (!readProgressBar.isVisible)
+                if (!readProgressBar.IsVisible)
                 {
-                    readProgressBar.isVisible = true;
+                    readProgressBar.IsVisible = true;
                     UpdateLoadingBarPositions();
                 }
                 readProgressBar.ProgressPercentage = loadingStats.EstimateReadProgressPercentage();
             }
         }
-        else if (!Dedicator.IsDedicatedServer && readProgressBar.isVisible)
+        else if (!Dedicator.IsDedicatedServer && readProgressBar.IsVisible)
         {
-            readProgressBar.isVisible = false;
+            readProgressBar.IsVisible = false;
             UpdateLoadingBarPositions();
         }
     }
@@ -280,10 +280,10 @@ public class LoadingUI : MonoBehaviour
     {
         if (assetBundleProgressBar != null)
         {
-            assetBundleProgressBar.isVisible = false;
-            searchProgressBar.isVisible = false;
-            readProgressBar.isVisible = false;
-            downloadProgressBar.isVisible = false;
+            assetBundleProgressBar.IsVisible = false;
+            searchProgressBar.IsVisible = false;
+            readProgressBar.IsVisible = false;
+            downloadProgressBar.IsVisible = false;
         }
     }
 
@@ -300,7 +300,7 @@ public class LoadingUI : MonoBehaviour
     {
         if (downloadProgressBar != null)
         {
-            downloadProgressBar.isVisible = isDownloading;
+            downloadProgressBar.IsVisible = isDownloading;
             UpdateLoadingBarPositions();
         }
     }
@@ -323,10 +323,10 @@ public class LoadingUI : MonoBehaviour
 
     private static bool loadBackgroundImage(string path)
     {
-        if (backgroundImage.texture != null && backgroundImage.shouldDestroyTexture)
+        if (backgroundImage.Texture != null && backgroundImage.ShouldDestroyTexture)
         {
-            UnityEngine.Object.Destroy(backgroundImage.texture);
-            backgroundImage.texture = null;
+            UnityEngine.Object.Destroy(backgroundImage.Texture);
+            backgroundImage.Texture = null;
         }
         if (string.IsNullOrEmpty(path))
         {
@@ -336,8 +336,8 @@ public class LoadingUI : MonoBehaviour
         {
             return false;
         }
-        backgroundImage.texture = ReadWrite.readTextureFromFile(path);
-        backgroundImage.shouldDestroyTexture = true;
+        backgroundImage.Texture = ReadWrite.readTextureFromFile(path);
+        backgroundImage.ShouldDestroyTexture = true;
         return true;
     }
 
@@ -534,12 +534,12 @@ public class LoadingUI : MonoBehaviour
                         stringBuilder.AppendLine(Level.info.configData.Thanks[k]);
                     }
                 }
-                creditsLabel.text = stringBuilder.ToString();
-                creditsLabel.isVisible = true;
+                creditsLabel.Text = stringBuilder.ToString();
+                creditsLabel.IsVisible = true;
             }
             else
             {
-                creditsLabel.isVisible = false;
+                creditsLabel.IsVisible = false;
             }
         }
         else
@@ -547,20 +547,20 @@ public class LoadingUI : MonoBehaviour
             PickNonLevelBackgroundImage();
             DisableBackgroundAnim();
             loadingProgressBar.DescriptionText = localization.format("Loading");
-            creditsLabel.isVisible = false;
+            creditsLabel.IsVisible = false;
         }
         RichTextUtil.replaceNewlineMarkup(ref s);
         s = ItemTool.filterRarityRichText(s);
-        tipLabel.text = local.format("Tip", s);
-        loadingBarBox.sizeOffset_X = -20;
-        cancelButton.isVisible = false;
+        tipLabel.Text = local.format("Tip", s);
+        loadingBarBox.SizeOffset_X = -20f;
+        cancelButton.IsVisible = false;
     }
 
     private static void onQueuePositionUpdated()
     {
         loadingProgressBar.DescriptionText = localization.format("Queue_Position", Provider.queuePosition + 1);
-        loadingBarBox.sizeOffset_X = -130;
-        cancelButton.isVisible = true;
+        loadingBarBox.SizeOffset_X = -130f;
+        cancelButton.IsVisible = true;
     }
 
     private static void onClickedCancelButton(ISleekElement button)
@@ -628,86 +628,86 @@ public class LoadingUI : MonoBehaviour
         window.hackSortOrder = true;
         Glazier.Get().Root = window;
         backgroundImage = Glazier.Get().CreateImage();
-        backgroundImage.sizeScale_X = 1f;
-        backgroundImage.sizeScale_Y = 1f;
+        backgroundImage.SizeScale_X = 1f;
+        backgroundImage.SizeScale_Y = 1f;
         window.AddChild(backgroundImage);
         tipLabel = Glazier.Get().CreateLabel();
-        tipLabel.positionOffset_X = 10;
-        tipLabel.positionScale_Y = 1f;
-        tipLabel.sizeOffset_X = -20;
-        tipLabel.sizeOffset_Y = 100;
-        tipLabel.sizeScale_X = 1f;
-        tipLabel.fontSize = ESleekFontSize.Medium;
-        tipLabel.enableRichText = true;
-        tipLabel.textColor = ESleekTint.RICH_TEXT_DEFAULT;
-        tipLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
-        tipLabel.fontAlignment = TextAnchor.LowerCenter;
+        tipLabel.PositionOffset_X = 10f;
+        tipLabel.PositionScale_Y = 1f;
+        tipLabel.SizeOffset_X = -20f;
+        tipLabel.SizeOffset_Y = 100f;
+        tipLabel.SizeScale_X = 1f;
+        tipLabel.FontSize = ESleekFontSize.Medium;
+        tipLabel.AllowRichText = true;
+        tipLabel.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+        tipLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
+        tipLabel.TextAlignment = TextAnchor.LowerCenter;
         window.AddChild(tipLabel);
         loadingBarBox = Glazier.Get().CreateBox();
-        loadingBarBox.positionOffset_X = 10;
-        loadingBarBox.positionScale_Y = 1f;
-        loadingBarBox.sizeOffset_X = -20;
-        loadingBarBox.sizeScale_X = 1f;
+        loadingBarBox.PositionOffset_X = 10f;
+        loadingBarBox.PositionScale_Y = 1f;
+        loadingBarBox.SizeOffset_X = -20f;
+        loadingBarBox.SizeScale_X = 1f;
         window.AddChild(loadingBarBox);
         loadingProgressBar = new SleekLoadingScreenProgressBar();
-        loadingProgressBar.positionOffset_X = 10;
-        loadingProgressBar.sizeOffset_X = -20;
-        loadingProgressBar.sizeOffset_Y = 20;
-        loadingProgressBar.sizeScale_X = 1f;
+        loadingProgressBar.PositionOffset_X = 10f;
+        loadingProgressBar.SizeOffset_X = -20f;
+        loadingProgressBar.SizeOffset_Y = 20f;
+        loadingProgressBar.SizeScale_X = 1f;
         loadingBarBox.AddChild(loadingProgressBar);
         downloadProgressBar = new SleekLoadingScreenProgressBar();
-        downloadProgressBar.positionOffset_X = 10;
-        downloadProgressBar.sizeOffset_X = -20;
-        downloadProgressBar.sizeOffset_Y = 20;
-        downloadProgressBar.sizeScale_X = 1f;
-        downloadProgressBar.isVisible = false;
+        downloadProgressBar.PositionOffset_X = 10f;
+        downloadProgressBar.SizeOffset_X = -20f;
+        downloadProgressBar.SizeOffset_Y = 20f;
+        downloadProgressBar.SizeScale_X = 1f;
+        downloadProgressBar.IsVisible = false;
         loadingBarBox.AddChild(downloadProgressBar);
         assetBundleProgressBar = new SleekLoadingScreenProgressBar();
-        assetBundleProgressBar.positionOffset_X = 10;
-        assetBundleProgressBar.sizeOffset_X = -20;
-        assetBundleProgressBar.sizeOffset_Y = 20;
-        assetBundleProgressBar.sizeScale_X = 1f;
-        assetBundleProgressBar.isVisible = false;
+        assetBundleProgressBar.PositionOffset_X = 10f;
+        assetBundleProgressBar.SizeOffset_X = -20f;
+        assetBundleProgressBar.SizeOffset_Y = 20f;
+        assetBundleProgressBar.SizeScale_X = 1f;
+        assetBundleProgressBar.IsVisible = false;
         loadingBarBox.AddChild(assetBundleProgressBar);
         searchProgressBar = new SleekLoadingScreenProgressBar();
-        searchProgressBar.positionOffset_X = 10;
-        searchProgressBar.sizeOffset_X = -20;
-        searchProgressBar.sizeOffset_Y = 20;
-        searchProgressBar.sizeScale_X = 1f;
-        searchProgressBar.isVisible = false;
+        searchProgressBar.PositionOffset_X = 10f;
+        searchProgressBar.SizeOffset_X = -20f;
+        searchProgressBar.SizeOffset_Y = 20f;
+        searchProgressBar.SizeScale_X = 1f;
+        searchProgressBar.IsVisible = false;
         loadingBarBox.AddChild(searchProgressBar);
         readProgressBar = new SleekLoadingScreenProgressBar();
-        readProgressBar.positionOffset_X = 10;
-        readProgressBar.sizeOffset_X = -20;
-        readProgressBar.sizeOffset_Y = 20;
-        readProgressBar.sizeScale_X = 1f;
-        readProgressBar.isVisible = false;
+        readProgressBar.PositionOffset_X = 10f;
+        readProgressBar.SizeOffset_X = -20f;
+        readProgressBar.SizeOffset_Y = 20f;
+        readProgressBar.SizeScale_X = 1f;
+        readProgressBar.IsVisible = false;
         loadingBarBox.AddChild(readProgressBar);
         creditsLabel = Glazier.Get().CreateLabel();
-        creditsLabel.positionOffset_X = -250;
-        creditsLabel.positionOffset_Y = -500;
-        creditsLabel.positionScale_X = 0.75f;
-        creditsLabel.positionScale_Y = 0.5f;
-        creditsLabel.sizeOffset_X = 500;
-        creditsLabel.sizeOffset_Y = 1000;
-        creditsLabel.isVisible = false;
-        creditsLabel.enableRichText = true;
-        creditsLabel.fontAlignment = TextAnchor.MiddleCenter;
-        creditsLabel.textColor = ESleekTint.RICH_TEXT_DEFAULT;
-        creditsLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+        creditsLabel.PositionOffset_X = -250f;
+        creditsLabel.PositionOffset_Y = -500f;
+        creditsLabel.PositionScale_X = 0.75f;
+        creditsLabel.PositionScale_Y = 0.5f;
+        creditsLabel.SizeOffset_X = 500f;
+        creditsLabel.SizeOffset_Y = 1000f;
+        creditsLabel.IsVisible = false;
+        creditsLabel.AllowRichText = true;
+        creditsLabel.TextAlignment = TextAnchor.MiddleCenter;
+        creditsLabel.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+        creditsLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
         window.AddChild(creditsLabel);
         cancelButton = Glazier.Get().CreateButton();
-        cancelButton.positionOffset_X = -110;
-        cancelButton.positionOffset_Y = -50;
-        cancelButton.positionScale_X = 1f;
-        cancelButton.positionScale_Y = 1f;
-        cancelButton.sizeOffset_X = 100;
-        cancelButton.sizeOffset_Y = 40;
-        cancelButton.fontSize = ESleekFontSize.Medium;
-        cancelButton.text = localization.format("Queue_Cancel");
-        cancelButton.tooltipText = localization.format("Queue_Cancel_Tooltip");
-        cancelButton.onClickedButton += onClickedCancelButton;
-        cancelButton.isVisible = false;
+        cancelButton.PositionOffset_X = -110f;
+        cancelButton.PositionOffset_Y = -50f;
+        cancelButton.PositionScale_X = 1f;
+        cancelButton.PositionScale_Y = 1f;
+        cancelButton.SizeOffset_X = 100f;
+        cancelButton.SizeOffset_Y = 40f;
+        cancelButton.FontSize = ESleekFontSize.Medium;
+        cancelButton.Text = localization.format("Queue_Cancel");
+        cancelButton.TooltipText = localization.format("Queue_Cancel_Tooltip");
+        cancelButton.OnClicked += onClickedCancelButton;
+        cancelButton.IsVisible = false;
         window.AddChild(cancelButton);
         tip = ELoadingTip.NONE;
         Provider.onQueuePositionUpdated = (Provider.QueuePositionUpdated)Delegate.Combine(Provider.onQueuePositionUpdated, new Provider.QueuePositionUpdated(onQueuePositionUpdated));
@@ -722,37 +722,37 @@ public class LoadingUI : MonoBehaviour
     {
         if (!Dedicator.IsDedicatedServer)
         {
-            int num = 10;
-            if (downloadProgressBar.isVisible)
+            float num = 10f;
+            if (downloadProgressBar.IsVisible)
             {
-                downloadProgressBar.positionOffset_Y = num;
-                num += downloadProgressBar.sizeOffset_Y;
-                num += 10;
+                downloadProgressBar.PositionOffset_Y = num;
+                num += downloadProgressBar.SizeOffset_Y;
+                num += 10f;
             }
-            if (assetBundleProgressBar.isVisible)
+            if (assetBundleProgressBar.IsVisible)
             {
-                assetBundleProgressBar.positionOffset_Y = num;
-                num += assetBundleProgressBar.sizeOffset_Y;
-                num += 10;
+                assetBundleProgressBar.PositionOffset_Y = num;
+                num += assetBundleProgressBar.SizeOffset_Y;
+                num += 10f;
             }
-            if (searchProgressBar.isVisible)
+            if (searchProgressBar.IsVisible)
             {
-                searchProgressBar.positionOffset_Y = num;
-                num += searchProgressBar.sizeOffset_Y;
-                num += 10;
+                searchProgressBar.PositionOffset_Y = num;
+                num += searchProgressBar.SizeOffset_Y;
+                num += 10f;
             }
-            if (readProgressBar.isVisible)
+            if (readProgressBar.IsVisible)
             {
-                readProgressBar.positionOffset_Y = num;
-                num += readProgressBar.sizeOffset_Y;
-                num += 10;
+                readProgressBar.PositionOffset_Y = num;
+                num += readProgressBar.SizeOffset_Y;
+                num += 10f;
             }
-            loadingProgressBar.positionOffset_Y = num;
-            num += loadingProgressBar.sizeOffset_Y;
-            num += 10;
-            loadingBarBox.sizeOffset_Y = num;
-            loadingBarBox.positionOffset_Y = -num - 10;
-            tipLabel.positionOffset_Y = Mathf.Min(-210, loadingBarBox.positionOffset_Y - 10 - tipLabel.sizeOffset_Y);
+            loadingProgressBar.PositionOffset_Y = num;
+            num += loadingProgressBar.SizeOffset_Y;
+            num += 10f;
+            loadingBarBox.SizeOffset_Y = num;
+            loadingBarBox.PositionOffset_Y = 0f - num - 10f;
+            tipLabel.PositionOffset_Y = Mathf.Min(-210f, loadingBarBox.PositionOffset_Y - 10f - tipLabel.SizeOffset_Y);
         }
     }
 
@@ -760,24 +760,24 @@ public class LoadingUI : MonoBehaviour
     {
         progress = Mathf.Max(animMaxProgress, progress);
         animMaxProgress = progress;
-        backgroundImage.positionScale_X = Mathf.Lerp(animStart_X, animEnd_X, progress);
-        backgroundImage.positionScale_Y = Mathf.Lerp(animStart_Y, animEnd_Y, progress);
+        backgroundImage.PositionScale_X = Mathf.Lerp(animStart_X, animEnd_X, progress);
+        backgroundImage.PositionScale_Y = Mathf.Lerp(animStart_Y, animEnd_Y, progress);
     }
 
     private static void DisableBackgroundAnim()
     {
         animMaxProgress = 0f;
-        backgroundImage.positionScale_X = 0f;
-        backgroundImage.positionScale_Y = 0f;
-        backgroundImage.sizeScale_X = 1f;
-        backgroundImage.sizeScale_Y = 1f;
+        backgroundImage.PositionScale_X = 0f;
+        backgroundImage.PositionScale_Y = 0f;
+        backgroundImage.SizeScale_X = 1f;
+        backgroundImage.SizeScale_Y = 1f;
     }
 
     private static void EnableBackgroundAnim()
     {
         animMaxProgress = 0f;
-        backgroundImage.sizeScale_X = 1.01f;
-        backgroundImage.sizeScale_Y = 1.01f;
+        backgroundImage.SizeScale_X = 1.01f;
+        backgroundImage.SizeScale_Y = 1.01f;
         if (UnityEngine.Random.value < 0.5f)
         {
             animStart_X = -0.01f;
@@ -800,7 +800,7 @@ public class LoadingUI : MonoBehaviour
             animStart_Y = 0f - num2;
             animEnd_Y = 0f - num2 - num;
         }
-        backgroundImage.positionScale_X = animStart_X;
-        backgroundImage.positionScale_Y = animStart_Y;
+        backgroundImage.PositionScale_X = animStart_X;
+        backgroundImage.PositionScale_Y = animStart_Y;
     }
 }

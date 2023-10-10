@@ -165,19 +165,7 @@ public class LevelItems
             {
                 Color newColor = block.readColor();
                 string text = block.readString();
-                ushort num;
-                if (b > 3)
-                {
-                    num = block.readUInt16();
-                    if (num != 0 && SpawnTableTool.resolve(num) == 0 && (bool)Assets.shouldLoadAnyAssets)
-                    {
-                        Assets.reportError(Level.info.name + " item table \"" + text + "\" references invalid spawn table " + num + "!");
-                    }
-                }
-                else
-                {
-                    num = 0;
-                }
+                ushort num = (ushort)((b > 3) ? block.readUInt16() : 0);
                 List<ItemTier> list = new List<ItemTier>();
                 byte b4 = block.readByte();
                 for (byte b5 = 0; b5 < b4; b5 = (byte)(b5 + 1))
@@ -199,10 +187,15 @@ public class LevelItems
                         list.Add(new ItemTier(list2, newName, newChance));
                     }
                 }
-                tables.Add(new ItemTable(list, newColor, text, num));
+                ItemTable itemTable = new ItemTable(list, newColor, text, num);
+                tables.Add(itemTable);
                 if (!Level.isEditor)
                 {
-                    tables[b3].buildTable();
+                    itemTable.buildTable();
+                }
+                if (itemTable.tableID != 0 && SpawnTableTool.ResolveLegacyId(num, EAssetType.ITEM, itemTable.OnGetSpawnTableValidationErrorContext) == 0 && (bool)Assets.shouldLoadAnyAssets)
+                {
+                    Assets.reportError(Level.info.name + " item table \"" + text + "\" references invalid spawn table " + num + "!");
                 }
             }
         }

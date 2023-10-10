@@ -44,7 +44,7 @@ public class MenuWorkshopErrorUI
     {
         errorBox.NotifyDataChanged();
         List<string> reportedErrorsList = Assets.getReportedErrorsList();
-        infoBox.isVisible = reportedErrorsList.Count == 0;
+        infoBox.IsVisible = reportedErrorsList.Count == 0;
     }
 
     private static void OnClickedBrowseLogs(ISleekElement button)
@@ -66,7 +66,7 @@ public class MenuWorkshopErrorUI
     private static ISleekElement onCreateErrorMessage(string message)
     {
         ISleekBox sleekBox = Glazier.Get().CreateBox();
-        sleekBox.text = message;
+        sleekBox.Text = message;
         return sleekBox;
     }
 
@@ -74,57 +74,57 @@ public class MenuWorkshopErrorUI
     {
         localization = Localization.read("/Menu/Workshop/MenuWorkshopError.dat");
         container = new SleekFullscreenBox();
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.positionScale_Y = 1f;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.PositionScale_Y = 1f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         MenuUI.container.AddChild(container);
         active = false;
         headerBox = Glazier.Get().CreateBox();
-        headerBox.sizeOffset_Y = 50;
-        headerBox.sizeScale_X = 1f;
-        headerBox.fontSize = ESleekFontSize.Medium;
-        headerBox.text = localization.format("Header");
+        headerBox.SizeOffset_Y = 50f;
+        headerBox.SizeScale_X = 1f;
+        headerBox.FontSize = ESleekFontSize.Medium;
+        headerBox.Text = localization.format("Header");
         container.AddChild(headerBox);
         if (ReadWrite.SupportsOpeningFileBrowser)
         {
             ISleekButton sleekButton = Glazier.Get().CreateButton();
-            sleekButton.positionOffset_X = -210;
-            sleekButton.positionOffset_Y = -15;
-            sleekButton.positionScale_X = 1f;
-            sleekButton.positionScale_Y = 0.5f;
-            sleekButton.sizeOffset_X = 200;
-            sleekButton.sizeOffset_Y = 30;
-            sleekButton.text = localization.format("BrowseLogs_Label");
-            sleekButton.tooltipText = localization.format("BrowseLogs_Tooltip");
-            sleekButton.onClickedButton += OnClickedBrowseLogs;
+            sleekButton.PositionOffset_X = -210f;
+            sleekButton.PositionOffset_Y = -15f;
+            sleekButton.PositionScale_X = 1f;
+            sleekButton.PositionScale_Y = 0.5f;
+            sleekButton.SizeOffset_X = 200f;
+            sleekButton.SizeOffset_Y = 30f;
+            sleekButton.Text = localization.format("BrowseLogs_Label");
+            sleekButton.TooltipText = localization.format("BrowseLogs_Tooltip");
+            sleekButton.OnClicked += OnClickedBrowseLogs;
             headerBox.AddChild(sleekButton);
         }
         infoBox = Glazier.Get().CreateBox();
-        infoBox.positionOffset_Y = 60;
-        infoBox.sizeOffset_Y = 50;
-        infoBox.sizeScale_X = 1f;
-        infoBox.fontSize = ESleekFontSize.Medium;
-        infoBox.text = localization.format("No_Errors");
+        infoBox.PositionOffset_Y = 60f;
+        infoBox.SizeOffset_Y = 50f;
+        infoBox.SizeScale_X = 1f;
+        infoBox.FontSize = ESleekFontSize.Medium;
+        infoBox.Text = localization.format("No_Errors");
         container.AddChild(infoBox);
-        infoBox.isVisible = false;
+        infoBox.IsVisible = false;
         errorBox = new SleekList<string>();
-        errorBox.positionOffset_Y = 60;
-        errorBox.sizeOffset_Y = -120;
-        errorBox.sizeScale_X = 1f;
-        errorBox.sizeScale_Y = 1f;
+        errorBox.PositionOffset_Y = 60f;
+        errorBox.SizeOffset_Y = -120f;
+        errorBox.SizeScale_X = 1f;
+        errorBox.SizeScale_Y = 1f;
         errorBox.itemHeight = 50;
         errorBox.onCreateElement = onCreateErrorMessage;
         errorBox.SetData(Assets.getReportedErrorsList());
         container.AddChild(errorBox);
         backButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));
-        backButton.positionOffset_Y = -50;
-        backButton.positionScale_Y = 1f;
-        backButton.sizeOffset_X = 200;
-        backButton.sizeOffset_Y = 50;
+        backButton.PositionOffset_Y = -50f;
+        backButton.PositionScale_Y = 1f;
+        backButton.SizeOffset_X = 200f;
+        backButton.SizeOffset_Y = 50f;
         backButton.text = MenuDashboardUI.localization.format("BackButtonText");
         backButton.tooltip = MenuDashboardUI.localization.format("BackButtonTooltip");
         backButton.onClickedButton += onClickedBackButton;
@@ -132,16 +132,16 @@ public class MenuWorkshopErrorUI
         backButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(backButton);
         refreshButton = Glazier.Get().CreateButton();
-        refreshButton.positionOffset_X = -200;
-        refreshButton.positionOffset_Y = -50;
-        refreshButton.positionScale_X = 1f;
-        refreshButton.positionScale_Y = 1f;
-        refreshButton.sizeOffset_X = 200;
-        refreshButton.sizeOffset_Y = 50;
-        refreshButton.text = localization.format("Refresh");
-        refreshButton.tooltipText = localization.format("Refresh_Tooltip");
-        refreshButton.onClickedButton += onClickedRefreshButton;
-        refreshButton.fontSize = ESleekFontSize.Medium;
+        refreshButton.PositionOffset_X = -200f;
+        refreshButton.PositionOffset_Y = -50f;
+        refreshButton.PositionScale_X = 1f;
+        refreshButton.PositionScale_Y = 1f;
+        refreshButton.SizeOffset_X = 200f;
+        refreshButton.SizeOffset_Y = 50f;
+        refreshButton.Text = localization.format("Refresh");
+        refreshButton.TooltipText = localization.format("Refresh_Tooltip");
+        refreshButton.OnClicked += onClickedRefreshButton;
+        refreshButton.FontSize = ESleekFontSize.Medium;
         container.AddChild(refreshButton);
     }
 }

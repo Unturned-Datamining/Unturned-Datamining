@@ -436,7 +436,11 @@ public class ResourceSpawnpoint
                 model.gameObject.SetActive(value: false);
                 if (!Level.isEditor && asset.isForage)
                 {
-                    model.Find("Forage").gameObject.AddComponent<InteractableForage>().asset = asset;
+                    Transform transform = model.Find("Forage");
+                    if (transform != null)
+                    {
+                        transform.gameObject.AddComponent<InteractableForage>().asset = asset;
+                    }
                 }
                 if (asset.skyboxGameObject != null)
                 {

@@ -1,11 +1,21 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
 public class SpawnAsset : Asset
 {
-    private static SpawnTableWeightAscendingComparator comparator = new SpawnTableWeightAscendingComparator();
+    private class SpawnTableWeightComparator : IComparer<SpawnTable>
+    {
+        public int Compare(SpawnTable a, SpawnTable b)
+        {
+            return b.weight - a.weight;
+        }
+    }
+
+    private static SpawnTableWeightComparator comparator = new SpawnTableWeightComparator();
 
     protected List<SpawnTable> _roots;
 
@@ -39,37 +49,51 @@ public class SpawnAsset : Asset
         }
     }
 
+    internal SpawnTable PickRandomEntry(Func<string> errorContextCallback)
+    {
+        if (tables.Count < 1)
+        {
+            UnturnedLog.warn("Spawn table " + name + " from " + GetOriginName() + " resolved by " + (errorContextCallback?.Invoke() ?? "Unknown") + " while empty");
+            return null;
+        }
+        if (areTablesDirty)
+        {
+            UnturnedLog.warn("Spawn table " + name + " from " + GetOriginName() + " resolved by " + (errorContextCallback?.Invoke() ?? "Unknown") + " while dirty");
+            sortAndNormalizeWeights();
+        }
+        if (tables.Count == 1)
+        {
+            return tables[0];
+        }
+        float value = UnityEngine.Random.value;
+        for (int i = 0; i < tables.Count; i++)
+        {
+            if (value < tables[i].normalizedWeight || i == tables.Count - 1)
+            {
+                return tables[i];
+            }
+        }
+        UnturnedLog.error("Spawn table " + name + " from " + GetOriginName() + " resolved by " + (errorContextCallback?.Invoke() ?? "Unknown") + " had no valid entry (should never happen)");
+        return null;
+    }
+
+    [Obsolete]
     public void resolve(out ushort id, out bool isSpawn)
     {
         id = 0;
         isSpawn = false;
-        if (tables.Count < 1)
+        SpawnTable spawnTable = PickRandomEntry(null);
+        if (spawnTable != null)
         {
-            UnturnedLog.warn("Spawn table {0} '{1}' resolved while empty", base.id, name);
-            return;
-        }
-        if (areTablesDirty)
-        {
-            UnturnedLog.warn("Spawn table {0} '{1}' resolved while dirty", base.id, name);
-            sortAndNormalizeWeights();
-        }
-        float value = Random.value;
-        for (int i = 0; i < tables.Count; i++)
-        {
-            if (value < tables[i].chance || i == tables.Count - 1)
+            if (spawnTable.legacySpawnId != 0)
             {
-                if (tables[i].spawnID != 0)
-                {
-                    id = tables[i].spawnID;
-                    isSpawn = true;
-                    break;
-                }
-                if (tables[i].assetID != 0)
-                {
-                    id = tables[i].assetID;
-                    isSpawn = false;
-                    break;
-                }
+                id = spawnTable.legacySpawnId;
+                isSpawn = true;
+            }
+            else if (spawnTable.legacyAssetId != 0)
+            {
+                id = spawnTable.legacyAssetId;
+                isSpawn = false;
             }
         }
     }
@@ -81,6 +105,15 @@ public class SpawnAsset : Asset
             return;
         }
         areTablesDirty = false;
+        if (tables.Count < 1)
+        {
+            return;
+        }
+        if (tables.Count == 1)
+        {
+            tables[0].normalizedWeight = 1f;
+            return;
+        }
         tables.Sort(comparator);
         float num = 0f;
         foreach (SpawnTable table in tables)
@@ -91,7 +124,7 @@ public class SpawnAsset : Asset
         foreach (SpawnTable table2 in tables)
         {
             num2 += (float)table2.weight;
-            table2.chance = num2 / num;
+            table2.normalizedWeight = num2 / num;
         }
     }
 
@@ -100,34 +133,31 @@ public class SpawnAsset : Asset
         areTablesDirty = true;
     }
 
-    public void addSpawnTable(SpawnAsset other)
+    public void EditorAddChild(Asset newChild)
     {
-        SpawnTable spawnTable = new SpawnTable();
-        spawnTable.spawnID = id;
-        spawnTable.isLink = true;
-        other.roots.Add(spawnTable);
+        if (newChild is SpawnAsset spawnAsset)
+        {
+            SpawnTable spawnTable = new SpawnTable();
+            spawnTable.targetGuid = GUID;
+            spawnTable.isLink = true;
+            spawnAsset.roots.Add(spawnTable);
+        }
         SpawnTable spawnTable2 = new SpawnTable();
-        spawnTable2.spawnID = other.id;
+        spawnTable2.targetGuid = newChild.GUID;
         tables.Add(spawnTable2);
         markTablesDirty();
     }
 
-    public void addAssetTable(ushort newID)
+    public void EditorRemoveParentAtIndex(int parentIndex)
     {
-        SpawnTable spawnTable = new SpawnTable();
-        spawnTable.assetID = newID;
-        tables.Add(spawnTable);
-        markTablesDirty();
-    }
-
-    public void removeRootAtIndex(int rootIndex)
-    {
-        SpawnTable spawnTable = roots[rootIndex];
-        if (spawnTable.spawnID != 0 && Assets.find(EAssetType.SPAWN, spawnTable.spawnID) is SpawnAsset spawnAsset)
+        SpawnTable spawnTable = roots[parentIndex];
+        SpawnAsset spawnAsset = ((spawnTable.legacySpawnId == 0) ? (Assets.find(spawnTable.targetGuid) as SpawnAsset) : (Assets.find(EAssetType.SPAWN, spawnTable.legacySpawnId) as SpawnAsset));
+        if (spawnAsset != null)
         {
             for (int i = 0; i < spawnAsset.tables.Count; i++)
             {
-                if (spawnAsset.tables[i].spawnID == id)
+                SpawnTable spawnTable2 = spawnAsset.tables[i];
+                if ((spawnTable2.legacySpawnId != 0 && spawnTable2.legacySpawnId == id) || spawnTable2.targetGuid == GUID)
                 {
                     spawnAsset.tables.RemoveAt(i);
                     spawnAsset.markTablesDirty();
@@ -135,24 +165,26 @@ public class SpawnAsset : Asset
                 }
             }
         }
-        roots.RemoveAt(rootIndex);
+        roots.RemoveAt(parentIndex);
     }
 
-    public void removeTableAtIndex(int tableIndex)
+    public void EditorRemoveChildAtIndex(int childIndex)
     {
-        SpawnTable spawnTable = tables[tableIndex];
-        if (spawnTable.spawnID != 0 && Assets.find(EAssetType.SPAWN, spawnTable.spawnID) is SpawnAsset spawnAsset)
+        SpawnTable spawnTable = tables[childIndex];
+        SpawnAsset spawnAsset = ((spawnTable.legacySpawnId == 0) ? (Assets.find(spawnTable.targetGuid) as SpawnAsset) : (Assets.find(EAssetType.SPAWN, spawnTable.legacySpawnId) as SpawnAsset));
+        if (spawnAsset != null)
         {
             for (int i = 0; i < spawnAsset.roots.Count; i++)
             {
-                if (spawnAsset.roots[i].spawnID == id)
+                SpawnTable spawnTable2 = spawnAsset.roots[i];
+                if ((spawnTable2.legacySpawnId != 0 && spawnTable2.legacySpawnId == id) || spawnTable2.targetGuid == GUID)
                 {
                     spawnAsset.roots.RemoveAt(i);
                     break;
                 }
             }
         }
-        tables.RemoveAt(tableIndex);
+        tables.RemoveAt(childIndex);
         markTablesDirty();
     }
 
@@ -165,45 +197,92 @@ public class SpawnAsset : Asset
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
         base.PopulateAsset(bundle, data, localization);
-        int num = data.ParseInt32("Roots");
-        insertRoots = new List<SpawnTable>(num);
-        for (int i = 0; i < num; i++)
+        if (data.TryGetList("Roots", out var node))
         {
-            SpawnTable spawnTable = new SpawnTable();
-            spawnTable.spawnID = data.ParseUInt16("Root_" + i + "_Spawn_ID", 0);
-            spawnTable.isOverride = data.ContainsKey("Root_" + i + "_Override");
-            spawnTable.weight = data.ParseInt32("Root_" + i + "_Weight", spawnTable.isOverride ? 1 : 0);
-            spawnTable.chance = 0f;
-            if (spawnTable.spawnID == 0 && spawnTable.assetID == 0)
+            insertRoots = new List<SpawnTable>(node.Count);
+            _roots = new List<SpawnTable>(node.Count);
+            foreach (IDatNode item in node)
             {
-                Assets.reportError(this, "root " + i + " has neither a spawnID nor an assetID!");
+                if (item is DatDictionary datDictionary)
+                {
+                    SpawnTable spawnTable = new SpawnTable();
+                    if (spawnTable.TryParse(this, datDictionary))
+                    {
+                        insertRoots.Add(spawnTable);
+                    }
+                }
             }
-            if (spawnTable.weight <= 0)
-            {
-                Assets.reportError(this, "root " + i + " has no weight!");
-            }
-            insertRoots.Add(spawnTable);
         }
-        _roots = new List<SpawnTable>(num);
-        int num2 = data.ParseInt32("Tables");
-        _tables = new List<SpawnTable>(num2);
-        for (int j = 0; j < num2; j++)
+        else
         {
-            SpawnTable spawnTable2 = new SpawnTable();
-            spawnTable2.assetID = data.ParseUInt16("Table_" + j + "_Asset_ID", 0);
-            spawnTable2.spawnID = data.ParseUInt16("Table_" + j + "_Spawn_ID", 0);
-            spawnTable2.weight = data.ParseInt32("Table_" + j + "_Weight");
-            spawnTable2.chance = 0f;
-            if (spawnTable2.spawnID == 0 && spawnTable2.assetID == 0)
+            int num = data.ParseInt32("Roots");
+            insertRoots = new List<SpawnTable>(num);
+            for (int i = 0; i < num; i++)
             {
-                Assets.reportError(this, "table " + j + " has neither a spawnID nor an assetID!");
+                SpawnTable spawnTable2 = new SpawnTable();
+                spawnTable2.legacySpawnId = data.ParseUInt16("Root_" + i + "_Spawn_ID", 0);
+                spawnTable2.targetGuid = data.ParseGuid("Root_" + i + "_GUID");
+                spawnTable2.isOverride = data.ContainsKey("Root_" + i + "_Override");
+                spawnTable2.weight = data.ParseInt32("Root_" + i + "_Weight", spawnTable2.isOverride ? 1 : 0);
+                spawnTable2.normalizedWeight = 0f;
+                if (spawnTable2.legacySpawnId == 0 && spawnTable2.targetGuid.IsEmpty())
+                {
+                    Assets.reportError(this, "root " + i + " has neither a Spawn_ID or GUID set!");
+                }
+                if (spawnTable2.weight <= 0)
+                {
+                    Assets.reportError(this, "root " + i + " has no weight!");
+                }
+                insertRoots.Add(spawnTable2);
             }
-            if (spawnTable2.weight <= 0)
+            _roots = new List<SpawnTable>(num);
+        }
+        if (data.TryGetList("Tables", out var node2))
+        {
+            _tables = new List<SpawnTable>(node2.Count);
+            foreach (IDatNode item2 in node2)
             {
-                Assets.reportError(this, "table " + j + " has no weight!");
+                if (item2 is DatDictionary datDictionary2)
+                {
+                    SpawnTable spawnTable3 = new SpawnTable();
+                    if (spawnTable3.TryParse(this, datDictionary2))
+                    {
+                        tables.Add(spawnTable3);
+                    }
+                }
             }
-            tables.Add(spawnTable2);
+        }
+        else
+        {
+            int num2 = data.ParseInt32("Tables");
+            _tables = new List<SpawnTable>(num2);
+            for (int j = 0; j < num2; j++)
+            {
+                SpawnTable spawnTable4 = new SpawnTable();
+                spawnTable4.legacyAssetId = data.ParseUInt16("Table_" + j + "_Asset_ID", 0);
+                spawnTable4.legacySpawnId = data.ParseUInt16("Table_" + j + "_Spawn_ID", 0);
+                spawnTable4.targetGuid = data.ParseGuid("Table_" + j + "_GUID");
+                spawnTable4.weight = data.ParseInt32("Table_" + j + "_Weight");
+                spawnTable4.normalizedWeight = 0f;
+                if (spawnTable4.legacySpawnId == 0 && spawnTable4.legacyAssetId == 0 && spawnTable4.targetGuid.IsEmpty())
+                {
+                    Assets.reportError(this, "table " + j + " has neither a Spawn_ID, Asset_ID, or GUID set!");
+                }
+                if (spawnTable4.weight <= 0)
+                {
+                    Assets.reportError(this, "table " + j + " has no weight!");
+                }
+                tables.Add(spawnTable4);
+            }
         }
         areTablesDirty = true;
+    }
+
+    internal override void OnCreatedAtRuntime()
+    {
+        base.OnCreatedAtRuntime();
+        insertRoots = new List<SpawnTable>();
+        _roots = new List<SpawnTable>();
+        _tables = new List<SpawnTable>();
     }
 }

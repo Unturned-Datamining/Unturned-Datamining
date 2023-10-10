@@ -49,7 +49,7 @@ public class ItemPlaceableAsset : ItemAsset
         }
         for (int i = 0; i < value; i++)
         {
-            ushort num = SpawnTableTool.resolve(spawnAsset.id);
+            ushort num = SpawnTableTool.ResolveLegacyId(spawnAsset, EAssetType.ITEM, OnGetItemDroppedOnDestroySpawnTableErrorContext);
             if (num > 0)
             {
                 ItemManager.dropItem(new Item(num, EItemOrigin.NATURE), position + new Vector3(Random.Range(-2f, 2f), 2f, Random.Range(-2f, 2f)), playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
@@ -64,5 +64,10 @@ public class ItemPlaceableAsset : ItemAsset
         minItemsDroppedOnDestroy = data.ParseInt32("Min_Items_Dropped_On_Destroy");
         maxItemsDroppedOnDestroy = data.ParseInt32("Max_Items_Dropped_On_Destroy");
         itemDroppedOnDestroy = data.readAssetReference<SpawnAsset>("Item_Dropped_On_Destroy");
+    }
+
+    private string OnGetItemDroppedOnDestroySpawnTableErrorContext()
+    {
+        return FriendlyName + " items dropped on destroy";
     }
 }

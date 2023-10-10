@@ -28,7 +28,7 @@ public class NPCEventManager
 
     public static void broadcastEvent(Player instigatingPlayer, string eventId, bool shouldReplicate = false)
     {
-        if (!(instigatingPlayer == null) && !(instigatingPlayer.channel == null) && !string.IsNullOrEmpty(eventId))
+        if (!string.IsNullOrEmpty(eventId))
         {
             try
             {
@@ -40,7 +40,8 @@ public class NPCEventManager
             }
             if (shouldReplicate)
             {
-                SendBroadcast.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), (byte)instigatingPlayer.channel.owner.channel, eventId);
+                byte arg = (byte)((instigatingPlayer != null && instigatingPlayer.channel != null && instigatingPlayer.channel.owner != null) ? ((byte)instigatingPlayer.channel.owner.channel) : 0);
+                SendBroadcast.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), arg, eventId);
             }
         }
     }

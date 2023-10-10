@@ -85,7 +85,14 @@ public class LandscapeMaterialAsset : Asset
             {
                 layer.normalMapTexture = Texture2D.blackTexture;
             }
-            layer.tileSize = new Vector2((float)layer.diffuseTexture.width / 4f, (float)layer.diffuseTexture.height / 4f);
+            if (layer.diffuseTexture.isReadable)
+            {
+                layer.tileSize = new Vector2((float)layer.diffuseTexture.width * 0.25f, (float)layer.diffuseTexture.height * 0.25f);
+            }
+            else
+            {
+                layer.tileSize = new Vector2(16f, 16f);
+            }
         }
         return layer;
     }

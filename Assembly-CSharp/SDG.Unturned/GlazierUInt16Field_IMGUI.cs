@@ -4,7 +4,7 @@ internal class GlazierUInt16Field_IMGUI : GlazierNumericField_IMGUI, ISleekUInt1
 {
     private ushort _state;
 
-    public ushort state
+    public ushort Value
     {
         get
         {
@@ -13,31 +13,31 @@ internal class GlazierUInt16Field_IMGUI : GlazierNumericField_IMGUI, ISleekUInt1
         set
         {
             _state = value;
-            text = state.ToString();
+            text = Value.ToString();
         }
     }
 
-    public ushort minValue { get; set; }
+    public ushort MinValue { get; set; }
 
-    public ushort maxValue { get; set; } = ushort.MaxValue;
+    public ushort MaxValue { get; set; } = ushort.MaxValue;
 
 
-    public event TypedUInt16 onTypedUInt16;
+    public event TypedUInt16 OnValueChanged;
 
     public GlazierUInt16Field_IMGUI()
     {
-        state = 0;
+        Value = 0;
     }
 
     protected override bool ParseNumericInput(string input)
     {
         if (ushort.TryParse(input, out var result))
         {
-            result = MathfEx.Clamp(result, minValue, maxValue);
+            result = MathfEx.Clamp(result, MinValue, MaxValue);
             if (_state != result)
             {
                 _state = result;
-                this.onTypedUInt16?.Invoke(this, _state);
+                this.OnValueChanged?.Invoke(this, _state);
             }
             return true;
         }

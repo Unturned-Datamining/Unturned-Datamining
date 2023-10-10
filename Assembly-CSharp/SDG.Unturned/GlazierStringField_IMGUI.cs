@@ -10,26 +10,25 @@ internal class GlazierStringField_IMGUI : GlazierElementBase_IMGUI, ISleekField,
 
     private string controlName;
 
-    public char replace { get; set; } = ' ';
+    public bool IsPasswordField { get; set; }
+
+    public string PlaceholderText { get; set; } = string.Empty;
 
 
-    public string hint { get; set; } = string.Empty;
+    public bool IsMultiline { get; set; }
+
+    public string Text { get; set; } = string.Empty;
 
 
-    public bool multiline { get; set; }
-
-    public string text { get; set; } = string.Empty;
+    public string TooltipText { get; set; } = string.Empty;
 
 
-    public string tooltipText { get; set; } = string.Empty;
+    public FontStyle FontStyle { get; set; }
+
+    public TextAnchor TextAlignment { get; set; } = TextAnchor.MiddleCenter;
 
 
-    public FontStyle fontStyle { get; set; }
-
-    public TextAnchor fontAlignment { get; set; } = TextAnchor.MiddleCenter;
-
-
-    public ESleekFontSize fontSize
+    public ESleekFontSize FontSize
     {
         get
         {
@@ -42,12 +41,12 @@ internal class GlazierStringField_IMGUI : GlazierElementBase_IMGUI, ISleekField,
         }
     }
 
-    public ETextContrastContext shadowStyle { get; set; }
+    public ETextContrastContext TextContrastContext { get; set; }
 
-    public SleekColor textColor { get; set; } = GlazierConst.DefaultFieldForegroundColor;
+    public SleekColor TextColor { get; set; } = GlazierConst.DefaultFieldForegroundColor;
 
 
-    public bool enableRichText
+    public bool AllowRichText
     {
         get
         {
@@ -58,17 +57,17 @@ internal class GlazierStringField_IMGUI : GlazierElementBase_IMGUI, ISleekField,
         }
     }
 
-    public SleekColor backgroundColor { get; set; } = GlazierConst.DefaultFieldBackgroundColor;
+    public SleekColor BackgroundColor { get; set; } = GlazierConst.DefaultFieldBackgroundColor;
 
 
-    public int maxLength { get; set; } = 100;
+    public int MaxLength { get; set; } = 100;
 
 
-    public event Entered onEntered;
+    public event Entered OnTextSubmitted;
 
-    public event Typed onTyped;
+    public event Typed OnTextChanged;
 
-    public event Escaped onEscaped;
+    public event Escaped OnTextEscaped;
 
     public void FocusControl()
     {
@@ -86,28 +85,28 @@ internal class GlazierStringField_IMGUI : GlazierElementBase_IMGUI, ISleekField,
     public override void OnGUI()
     {
         GUI.SetNextControlName(controlName);
-        if (replace != ' ')
+        if (IsPasswordField)
         {
-            text = GlazierUtils_IMGUI.DrawPasswordField(drawRect, fontStyle, fontAlignment, fontSizeInt, backgroundColor, textColor, text, maxLength, hint, replace, shadowStyle);
+            Text = GlazierUtils_IMGUI.DrawPasswordField(drawRect, FontStyle, TextAlignment, fontSizeInt, BackgroundColor, TextColor, Text, MaxLength, PlaceholderText, '*', TextContrastContext);
         }
         else
         {
-            text = GlazierUtils_IMGUI.DrawTextInputField(drawRect, fontStyle, fontAlignment, fontSizeInt, backgroundColor, textColor, text, maxLength, hint, multiline, shadowStyle);
+            Text = GlazierUtils_IMGUI.DrawTextInputField(drawRect, FontStyle, TextAlignment, fontSizeInt, BackgroundColor, TextColor, Text, MaxLength, PlaceholderText, IsMultiline, TextContrastContext);
         }
         if (GUI.changed)
         {
-            this.onTyped?.Invoke(this, text);
+            this.OnTextChanged?.Invoke(this, Text);
         }
         if (GUI.GetNameOfFocusedControl() == controlName && Event.current.isKey && Event.current.type == EventType.KeyUp)
         {
             if (Event.current.keyCode == KeyCode.Escape)
             {
                 GUI.FocusControl(string.Empty);
-                this.onEscaped?.Invoke(this);
+                this.OnTextEscaped?.Invoke(this);
             }
-            else if ((Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter) && !multiline)
+            else if ((Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter) && !IsMultiline)
             {
-                this.onEntered?.Invoke(this);
+                this.OnTextSubmitted?.Invoke(this);
                 GUI.FocusControl(string.Empty);
             }
         }
@@ -116,8 +115,8 @@ internal class GlazierStringField_IMGUI : GlazierElementBase_IMGUI, ISleekField,
 
     public GlazierStringField_IMGUI()
     {
-        backgroundColor = GlazierConst.DefaultFieldBackgroundColor;
+        BackgroundColor = GlazierConst.DefaultFieldBackgroundColor;
         controlName = GlazierUtils_IMGUI.CreateUniqueControlName();
-        fontSize = ESleekFontSize.Default;
+        FontSize = ESleekFontSize.Default;
     }
 }

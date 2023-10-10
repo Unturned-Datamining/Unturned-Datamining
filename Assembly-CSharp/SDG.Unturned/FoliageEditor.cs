@@ -125,8 +125,8 @@ internal class FoliageEditor : IDevkitTool
             return;
         }
         bool flag = false;
-        float num = (float)Math.PI * brushRadius * brushRadius;
-        float num2 = ((DevkitFoliageToolOptions.instance.densityTarget > 0.0001f) ? Mathf.Sqrt(foliageAsset.density / DevkitFoliageToolOptions.instance.densityTarget / (float)Math.PI) : 0f);
+        float num = MathF.PI * brushRadius * brushRadius;
+        float num2 = ((DevkitFoliageToolOptions.instance.densityTarget > 0.0001f) ? Mathf.Sqrt(foliageAsset.density / DevkitFoliageToolOptions.instance.densityTarget / MathF.PI) : 0f);
         if (!addWeights.TryGetValue(foliageAsset, out var value))
         {
             addWeights.Add(foliageAsset, 0f);
@@ -145,7 +145,7 @@ internal class FoliageEditor : IDevkitTool
                 {
                     continue;
                 }
-                float f = (float)Math.PI * 2f * UnityEngine.Random.value;
+                float f = MathF.PI * 2f * UnityEngine.Random.value;
                 float x = Mathf.Cos(f) * num4;
                 float z = Mathf.Sin(f) * num4;
                 if (!Physics.Raycast(new Ray(brushWorldPosition + new Vector3(x, brushRadius, z), new Vector3(0f, -1f, 0f)), out var hitInfo, brushRadius * 2f, (int)DevkitFoliageToolOptions.instance.surfaceMask))
@@ -291,7 +291,7 @@ internal class FoliageEditor : IDevkitTool
             Bounds worldBounds = new Bounds(brushWorldPosition, new Vector3(brushRadius * 2f, 0f, brushRadius * 2f));
             float num = brushRadius * brushRadius;
             float num2 = num * brushFalloff * brushFalloff;
-            float num3 = (float)Math.PI * brushRadius * brushRadius;
+            float num3 = MathF.PI * brushRadius * brushRadius;
             bool key = InputEx.GetKey(KeyCode.LeftControl);
             bool flag = key || InputEx.GetKey(KeyCode.LeftAlt);
             if (key || flag || InputEx.GetKey(KeyCode.LeftShift))

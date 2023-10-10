@@ -77,6 +77,11 @@ public abstract class Asset
         return new AssetReference<T>(GUID);
     }
 
+    public string GetOriginName()
+    {
+        return origin?.name ?? "Unknown";
+    }
+
     public virtual void clearHash()
     {
         hash = new byte[20];
@@ -126,6 +131,10 @@ public abstract class Asset
             ignoreNPOT = data.ContainsKey("Ignore_NPOT");
             ignoreTextureReadable = data.ContainsKey("Ignore_TexRW");
         }
+    }
+
+    internal virtual void OnCreatedAtRuntime()
+    {
     }
 
     public override string ToString()

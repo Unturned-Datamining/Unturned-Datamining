@@ -28,12 +28,12 @@ public class EditorUI : MonoBehaviour
     {
         if (!isMessaged)
         {
-            messageBox.isVisible = true;
+            messageBox.IsVisible = true;
             lastHinted = true;
             isHinted = true;
             if (message == EEditorMessage.FOCUS)
             {
-                messageBox.text = text;
+                messageBox.Text = text;
             }
         }
     }
@@ -42,28 +42,28 @@ public class EditorUI : MonoBehaviour
     {
         if (OptionsSettings.hints)
         {
-            messageBox.isVisible = true;
+            messageBox.IsVisible = true;
             lastMessage = Time.realtimeSinceStartup;
             isMessaged = true;
             switch (message)
             {
             case EEditorMessage.HEIGHTS:
-                messageBox.text = EditorDashboardUI.localization.format("Heights", ControlsSettings.tool_2);
+                messageBox.Text = EditorDashboardUI.localization.format("Heights", ControlsSettings.tool_2);
                 break;
             case EEditorMessage.ROADS:
-                messageBox.text = EditorDashboardUI.localization.format("Roads", ControlsSettings.tool_2);
+                messageBox.Text = EditorDashboardUI.localization.format("Roads", ControlsSettings.tool_2);
                 break;
             case EEditorMessage.NAVIGATION:
-                messageBox.text = EditorDashboardUI.localization.format("Navigation", ControlsSettings.tool_2);
+                messageBox.Text = EditorDashboardUI.localization.format("Navigation", ControlsSettings.tool_2);
                 break;
             case EEditorMessage.OBJECTS:
-                messageBox.text = EditorDashboardUI.localization.format("Objects", ControlsSettings.other, ControlsSettings.tool_2, ControlsSettings.tool_2);
+                messageBox.Text = EditorDashboardUI.localization.format("Objects", ControlsSettings.other, ControlsSettings.tool_2, ControlsSettings.tool_2);
                 break;
             case EEditorMessage.NODES:
-                messageBox.text = EditorDashboardUI.localization.format("Nodes", ControlsSettings.tool_2);
+                messageBox.Text = EditorDashboardUI.localization.format("Nodes", ControlsSettings.tool_2);
                 break;
             case EEditorMessage.VISIBILITY:
-                messageBox.text = EditorDashboardUI.localization.format("Visibility");
+                messageBox.Text = EditorDashboardUI.localization.format("Visibility");
                 break;
             }
         }
@@ -167,7 +167,7 @@ public class EditorUI : MonoBehaviour
                 isMessaged = false;
                 if (!isHinted)
                 {
-                    messageBox.isVisible = false;
+                    messageBox.IsVisible = false;
                 }
             }
         }
@@ -176,7 +176,7 @@ public class EditorUI : MonoBehaviour
             if (!lastHinted)
             {
                 isHinted = false;
-                messageBox.isVisible = false;
+                messageBox.IsVisible = false;
             }
             lastHinted = false;
         }
@@ -190,15 +190,15 @@ public class EditorUI : MonoBehaviour
         GraphicsSettings.apply("editor loaded");
         dashboardUI = new EditorDashboardUI();
         messageBox = Glazier.Get().CreateBox();
-        messageBox.positionOffset_X = -150;
-        messageBox.positionOffset_Y = -60;
-        messageBox.positionScale_X = 0.5f;
-        messageBox.positionScale_Y = 1f;
-        messageBox.sizeOffset_X = 300;
-        messageBox.sizeOffset_Y = 50;
-        messageBox.fontSize = ESleekFontSize.Medium;
+        messageBox.PositionOffset_X = -150f;
+        messageBox.PositionOffset_Y = -60f;
+        messageBox.PositionScale_X = 0.5f;
+        messageBox.PositionScale_Y = 1f;
+        messageBox.SizeOffset_X = 300f;
+        messageBox.SizeOffset_Y = 50f;
+        messageBox.FontSize = ESleekFontSize.Medium;
         window.AddChild(messageBox);
-        messageBox.isVisible = false;
+        messageBox.IsVisible = false;
     }
 
     private void OnDestroy()
@@ -208,7 +208,7 @@ public class EditorUI : MonoBehaviour
             dashboardUI.OnDestroy();
             if (!Provider.isApplicationQuitting)
             {
-                window.destroy();
+                window.InternalDestroy();
             }
             window = null;
         }

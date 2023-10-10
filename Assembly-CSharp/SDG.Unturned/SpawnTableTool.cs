@@ -1,10 +1,121 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
 public class SpawnTableTool
 {
+    public static Asset Resolve(SpawnAsset spawnAsset, EAssetType legacyTargetAssetType, Func<string> errorContextCallback)
+    {
+        if (spawnAsset == null)
+        {
+            if ((bool)Assets.shouldLoadAnyAssets)
+            {
+                UnturnedLog.error((errorContextCallback?.Invoke() ?? "Unknown") + " attempted to resolve null spawn table");
+            }
+            return null;
+        }
+        for (int i = 0; i < 32; i++)
+        {
+            SpawnTable spawnTable = spawnAsset.PickRandomEntry(errorContextCallback);
+            if (spawnTable == null)
+            {
+                UnturnedLog.warn("Spawn table \"" + spawnAsset.name + "\" from " + spawnAsset.GetOriginName() + " resolved by " + (errorContextCallback?.Invoke() ?? "Unknown") + " returned null entry");
+                return null;
+            }
+            if (spawnTable.legacySpawnId != 0)
+            {
+                spawnAsset = Assets.find(EAssetType.SPAWN, spawnTable.legacySpawnId) as SpawnAsset;
+                if (spawnAsset == null)
+                {
+                    UnturnedLog.warn(string.Format("Spawn table \"{0}\" from {1} resolved by {2} unable to find table matching legacy spawn ID {3}", spawnAsset.name, spawnAsset.GetOriginName(), errorContextCallback?.Invoke() ?? "Unknown", spawnTable.legacySpawnId));
+                    return null;
+                }
+                continue;
+            }
+            if (spawnTable.legacyAssetId != 0)
+            {
+                Asset asset = Assets.find(legacyTargetAssetType, spawnTable.legacyAssetId);
+                if (asset == null)
+                {
+                    UnturnedLog.warn(string.Format("Spawn table \"{0}\" from {1} resolved by {2} unable to find asset matching legacy ID {3}", spawnAsset.name, spawnAsset.GetOriginName(), errorContextCallback?.Invoke() ?? "Unknown", spawnTable.legacyAssetId));
+                    return null;
+                }
+                return asset;
+            }
+            if (!spawnTable.targetGuid.IsEmpty())
+            {
+                Asset asset2 = Assets.find(spawnTable.targetGuid);
+                if (asset2 == null)
+                {
+                    UnturnedLog.warn(string.Format("Spawn table \"{0}\" from {1} resolved by {2} unable to find asset matching GUID {3}", spawnAsset.name, spawnAsset.GetOriginName(), errorContextCallback?.Invoke() ?? "Unknown", spawnTable.targetGuid));
+                    return null;
+                }
+                if (asset2 is SpawnAsset spawnAsset2)
+                {
+                    spawnAsset = spawnAsset2;
+                    continue;
+                }
+                return asset2;
+            }
+            return null;
+        }
+        UnturnedLog.warn("Spawn table \"" + spawnAsset.name + "\" from " + spawnAsset.GetOriginName() + " resolved by " + (errorContextCallback?.Invoke() ?? "Unknown") + " may have encountered a recursive loop and has given up");
+        return null;
+    }
+
+    public static Asset Resolve(Guid spawnAssetGuid, EAssetType legacyTargetAssetType, Func<string> errorContextCallback)
+    {
+        if (spawnAssetGuid.IsEmpty())
+        {
+            return null;
+        }
+        if (!(Assets.find(spawnAssetGuid) is SpawnAsset spawnAsset))
+        {
+            if ((bool)Assets.shouldLoadAnyAssets)
+            {
+                UnturnedLog.error(string.Format("Unable to find spawn table with guid {0} resolved by {1}", spawnAssetGuid, errorContextCallback?.Invoke() ?? "Unknown"));
+            }
+            return null;
+        }
+        return Resolve(spawnAsset, legacyTargetAssetType, errorContextCallback);
+    }
+
+    public static Asset Resolve(ushort spawnAssetLegacyId, EAssetType legacyTargetAssetType, Func<string> errorContextCallback)
+    {
+        if (spawnAssetLegacyId == 0)
+        {
+            return null;
+        }
+        if (!(Assets.find(EAssetType.SPAWN, spawnAssetLegacyId) is SpawnAsset spawnAsset))
+        {
+            if ((bool)Assets.shouldLoadAnyAssets)
+            {
+                UnturnedLog.error(string.Format("Unable to find spawn table with legacy ID {0} resolved by {1}", spawnAssetLegacyId, errorContextCallback?.Invoke() ?? "Unknown"));
+            }
+            return null;
+        }
+        return Resolve(spawnAsset, legacyTargetAssetType, errorContextCallback);
+    }
+
+    public static ushort ResolveLegacyId(SpawnAsset spawnAsset, EAssetType legacyTargetAssetType, Func<string> errorContextCallback)
+    {
+        return Resolve(spawnAsset, legacyTargetAssetType, errorContextCallback)?.id ?? 0;
+    }
+
+    public static ushort ResolveLegacyId(Guid spawnAssetGuid, EAssetType legacyTargetAssetType, Func<string> errorContextCallback)
+    {
+        return Resolve(spawnAssetGuid, legacyTargetAssetType, errorContextCallback)?.id ?? 0;
+    }
+
+    public static ushort ResolveLegacyId(ushort spawnAssetLegacyId, EAssetType legacyTargetAssetType, Func<string> errorContextCallback)
+    {
+        return Resolve(spawnAssetLegacyId, legacyTargetAssetType, errorContextCallback)?.id ?? 0;
+    }
+
+    [Obsolete("Please update to the newer Resolve methods with legacyTargetAssetType parameter which support GUIDs")]
     public static ushort resolve(ushort id)
     {
         if (!(Assets.find(EAssetType.SPAWN, id) is SpawnAsset spawnAsset))
@@ -19,25 +130,6 @@ public class SpawnTableTool
         if (isSpawn)
         {
             id = resolve(id);
-        }
-        return id;
-    }
-
-    internal static ushort resolve(Guid guid)
-    {
-        if (!(Assets.find(guid) is SpawnAsset spawnAsset))
-        {
-            if ((bool)Assets.shouldLoadAnyAssets)
-            {
-                Guid guid2 = guid;
-                UnturnedLog.error("Unable to find spawn table for resolve with guid " + guid2.ToString());
-            }
-            return 0;
-        }
-        spawnAsset.resolve(out var id, out var isSpawn);
-        if (isSpawn)
-        {
-            return resolve(id);
         }
         return id;
     }
@@ -438,5 +530,61 @@ public class SpawnTableTool
         exportAnimals(path, data, ref id, isLegacy);
         data.isCSV = true;
         ReadWrite.writeData(path + "/IDs.csv", useCloud: false, usePath: false, data);
+    }
+
+    public static void LogAllSpawnTables()
+    {
+        List<SpawnAsset> list = new List<SpawnAsset>(1000);
+        Assets.find(list);
+        UnturnedLog.info($"Dumping {list.Count} spawn tables:");
+        for (int i = 0; i < list.Count; i++)
+        {
+            SpawnAsset spawnAsset = list[i];
+            if (spawnAsset == null)
+            {
+                UnturnedLog.error("null entry in spawnAssets list???");
+                continue;
+            }
+            if (spawnAsset.tables == null || spawnAsset.tables.Count < 1)
+            {
+                UnturnedLog.info($"[{i + 1} of {list.Count}] {spawnAsset.name} is empty");
+                continue;
+            }
+            UnturnedLog.info($"[{i + 1} of {list.Count}] {spawnAsset.name} has {spawnAsset.tables.Count} children:");
+            for (int j = 0; j < spawnAsset.tables.Count; j++)
+            {
+                SpawnTable spawnTable = spawnAsset.tables[j];
+                string text;
+                if (spawnTable.legacySpawnId != 0)
+                {
+                    text = ((Assets.find(EAssetType.SPAWN, spawnTable.legacySpawnId) as SpawnAsset)?.name ?? $"Unknown ID {spawnTable.legacySpawnId}") + " (Spawn)";
+                }
+                else if (spawnTable.legacyAssetId != 0)
+                {
+                    ItemAsset obj = Assets.find(EAssetType.ITEM, spawnTable.legacyAssetId) as ItemAsset;
+                    VehicleAsset vehicleAsset = Assets.find(EAssetType.VEHICLE, spawnTable.legacyAssetId) as VehicleAsset;
+                    AnimalAsset animalAsset = Assets.find(EAssetType.ANIMAL, spawnTable.legacyAssetId) as AnimalAsset;
+                    string text2 = obj?.FriendlyName ?? $"Unknown ID {spawnTable.legacyAssetId}";
+                    string text3 = vehicleAsset?.FriendlyName ?? $"Unknown ID {spawnTable.legacyAssetId}";
+                    string text4 = animalAsset?.FriendlyName ?? $"Unknown ID {spawnTable.legacyAssetId}";
+                    text = text2 + " (Item) or " + text3 + " (Vehicle) or " + text4 + " (Animal) depending on context";
+                }
+                else if (!spawnTable.targetGuid.IsEmpty())
+                {
+                    Asset asset = Assets.find(spawnTable.targetGuid);
+                    text = ((asset == null) ? $"Unknown GUID {spawnTable.targetGuid}" : (asset.FriendlyName + " (" + asset.GetTypeNameWithoutSuffix() + ")"));
+                }
+                else
+                {
+                    text = "Empty";
+                }
+                float num = spawnTable.normalizedWeight;
+                if (j > 0)
+                {
+                    num -= spawnAsset.tables[j - 1].normalizedWeight;
+                }
+                UnturnedLog.info($"[{i + 1} of {list.Count}][{j + 1} of {spawnAsset.tables.Count}] {num:P} {text}");
+            }
+        }
     }
 }

@@ -101,20 +101,20 @@ public class Blueprint
         return true;
     }
 
-    public void applyConditions(Player player, bool shouldSend)
+    public void ApplyConditions(Player player)
     {
         if (questConditions != null)
         {
             for (int i = 0; i < questConditions.Length; i++)
             {
-                questConditions[i].applyCondition(player, shouldSend);
+                questConditions[i].ApplyCondition(player);
             }
         }
     }
 
-    public void grantRewards(Player player, bool shouldSend)
+    public void GrantRewards(Player player)
     {
-        questRewardsList.Grant(player, shouldSend);
+        questRewardsList.Grant(player);
     }
 
     public Blueprint(ItemAsset newSourceItem, byte newID, EBlueprintType newType, BlueprintSupply[] newSupplies, BlueprintOutput[] newOutputs, ushort newTool, bool newToolCritical, ushort newBuild, byte newLevel, EBlueprintSkill newSkill, bool newTransferState, string newMap, INPCCondition[] newQuestConditions, NPCRewardsList newQuestRewardsList)
@@ -171,5 +171,17 @@ public class Blueprint
             empty += outputs[b2].amount;
         }
         return empty;
+    }
+
+    [Obsolete("Removed shouldSend parameter")]
+    public void applyConditions(Player player, bool shouldSend)
+    {
+        ApplyConditions(player);
+    }
+
+    [Obsolete("Removed shouldSend parameter")]
+    public void grantRewards(Player player, bool shouldSend)
+    {
+        GrantRewards(player);
     }
 }

@@ -129,7 +129,7 @@ public static class SystemNetPakReaderEx
         uint value2;
         bool result = reader.ReadBits(bitCount, out value2);
         uint num = (uint)(1 << bitCount);
-        value = (float)value2 / (float)num * ((float)Math.PI * 2f);
+        value = (float)value2 / (float)num * (MathF.PI * 2f);
         return result;
     }
 

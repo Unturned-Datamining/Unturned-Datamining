@@ -39,7 +39,7 @@ public struct SpawnTableRewardEnumerator : IEnumerable<ushort>, IEnumerable, IEn
     {
         while (++index < count)
         {
-            assetID = SpawnTableTool.resolve(tableID);
+            assetID = SpawnTableTool.ResolveLegacyId(tableID, EAssetType.ITEM, OnGetSpawnTableErrorContext);
             if (assetID != 0)
             {
                 return true;
@@ -56,5 +56,10 @@ public struct SpawnTableRewardEnumerator : IEnumerable<ushort>, IEnumerable, IEn
     IEnumerator IEnumerable.GetEnumerator()
     {
         return this;
+    }
+
+    private string OnGetSpawnTableErrorContext()
+    {
+        return "consumable item";
     }
 }

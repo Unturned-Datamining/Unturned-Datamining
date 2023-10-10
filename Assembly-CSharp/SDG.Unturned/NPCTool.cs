@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace SDG.Unturned;
 
@@ -31,8 +32,6 @@ public class NPCTool
 
     public static void readConditions(DatDictionary data, Local localization, string prefix, INPCCondition[] conditions, Asset assetContext)
     {
-        Guid newObjectGuid = default(Guid);
-        Guid newTreeGuid = default(Guid);
         for (int i = 0; i < conditions.Length; i++)
         {
             string text = prefix + i + "_Type";
@@ -55,6 +54,7 @@ public class NPCTool
                 ENPCConditionType.HOLIDAY => ENPCLogicType.EQUAL, 
                 _ => ENPCLogicType.NONE, 
             });
+            INPCCondition iNPCCondition = null;
             switch (eNPCConditionType)
             {
             case ENPCConditionType.EXPERIENCE:
@@ -62,14 +62,14 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Experience condition " + prefix + i + " missing _Value");
                 }
-                conditions[i] = new NPCExperienceCondition(data.ParseUInt32(prefix + i + "_Value"), eNPCLogicType, desc, flag);
+                iNPCCondition = new NPCExperienceCondition(data.ParseUInt32(prefix + i + "_Value"), eNPCLogicType, desc, flag);
                 break;
             case ENPCConditionType.REPUTATION:
                 if (!data.ContainsKey(prefix + i + "_Value"))
                 {
                     Assets.reportError(assetContext, "Reputation condition " + prefix + i + " missing _Value");
                 }
-                conditions[i] = new NPCReputationCondition(data.ParseInt32(prefix + i + "_Value"), eNPCLogicType, desc);
+                iNPCCondition = new NPCReputationCondition(data.ParseInt32(prefix + i + "_Value"), eNPCLogicType, desc);
                 break;
             case ENPCConditionType.FLAG_BOOL:
                 if (!data.ContainsKey(prefix + i + "_ID"))
@@ -80,7 +80,7 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Bool flag condition " + prefix + i + " missing _Value");
                 }
-                conditions[i] = new NPCBoolFlagCondition(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseBool(prefix + i + "_Value"), data.ContainsKey(prefix + i + "_Allow_Unset"), eNPCLogicType, desc, flag);
+                iNPCCondition = new NPCBoolFlagCondition(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseBool(prefix + i + "_Value"), data.ContainsKey(prefix + i + "_Allow_Unset"), eNPCLogicType, desc, flag);
                 break;
             case ENPCConditionType.FLAG_SHORT:
                 if (!data.ContainsKey(prefix + i + "_ID"))
@@ -91,7 +91,7 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Short flag condition " + prefix + i + " missing _Value");
                 }
-                conditions[i] = new NPCShortFlagCondition(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseInt16(prefix + i + "_Value", 0), data.ContainsKey(prefix + i + "_Allow_Unset"), eNPCLogicType, desc, flag);
+                iNPCCondition = new NPCShortFlagCondition(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseInt16(prefix + i + "_Value", 0), data.ContainsKey(prefix + i + "_Allow_Unset"), eNPCLogicType, desc, flag);
                 break;
             case ENPCConditionType.QUEST:
             {
@@ -114,7 +114,7 @@ public class NPCTool
                     }
                 }
                 data.ParseGuidOrLegacyId(prefix + i + "_ID", out var guid2, out var legacyId2);
-                conditions[i] = new NPCQuestCondition(guid2, legacyId2, eNPCQuestStatus, data.ContainsKey(prefix + i + "_Ignore_NPC"), eNPCLogicType, desc, flag);
+                iNPCCondition = new NPCQuestCondition(guid2, legacyId2, eNPCQuestStatus, data.ContainsKey(prefix + i + "_Ignore_NPC"), eNPCLogicType, desc, flag);
                 break;
             }
             case ENPCConditionType.SKILLSET:
@@ -122,7 +122,7 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Skillset condition " + prefix + i + " missing _Value");
                 }
-                conditions[i] = new NPCSkillsetCondition(data.ParseEnum(prefix + i + "_Value", EPlayerSkillset.NONE), eNPCLogicType, desc);
+                iNPCCondition = new NPCSkillsetCondition(data.ParseEnum(prefix + i + "_Value", EPlayerSkillset.NONE), eNPCLogicType, desc);
                 break;
             case ENPCConditionType.ITEM:
             {
@@ -141,7 +141,7 @@ public class NPCTool
                     Assets.reportError(assetContext, "Resetting item condition only compatible with >= comparison. If you have a use in mind feel free to email Nelson.");
                 }
                 data.ParseGuidOrLegacyId(key6, out var guid, out var legacyId);
-                conditions[i] = new NPCItemCondition(guid, legacyId, data.ParseUInt16(prefix + i + "_Amount", 0), eNPCLogicType, desc, flag);
+                iNPCCondition = new NPCItemCondition(guid, legacyId, data.ParseUInt16(prefix + i + "_Amount", 0), eNPCLogicType, desc, flag);
                 break;
             }
             case ENPCConditionType.KILLS_ZOMBIE:
@@ -171,7 +171,7 @@ public class NPCTool
                 byte newNav2 = data.ParseUInt8(prefix + i + "_Nav", byte.MaxValue);
                 float newRadius = data.ParseFloat(prefix + i + "_Radius", 512f);
                 float newMinRadius = data.ParseFloat(prefix + i + "_MinRadius");
-                conditions[i] = new NPCZombieKillsCondition(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseInt16(prefix + i + "_Value", 0), newZombie, data.ContainsKey(prefix + i + "_Spawn"), newSpawnQuantity, newNav2, newRadius, newMinRadius, desc, flag);
+                iNPCCondition = new NPCZombieKillsCondition(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseInt16(prefix + i + "_Value", 0), newZombie, data.ContainsKey(prefix + i + "_Spawn"), newSpawnQuantity, newNav2, newRadius, newMinRadius, desc, flag);
                 break;
             }
             case ENPCConditionType.KILLS_HORDE:
@@ -187,7 +187,7 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Horde kills condition " + prefix + i + " missing _Nav");
                 }
-                conditions[i] = new NPCHordeKillsCondition(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseInt16(prefix + i + "_Value", 0), data.ParseUInt8(prefix + i + "_Nav", 0), desc, flag);
+                iNPCCondition = new NPCHordeKillsCondition(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseInt16(prefix + i + "_Value", 0), data.ParseUInt8(prefix + i + "_Nav", 0), desc, flag);
                 break;
             case ENPCConditionType.KILLS_ANIMAL:
                 if (!data.ContainsKey(prefix + i + "_ID"))
@@ -202,7 +202,7 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Animal kills condition " + prefix + i + " missing _Animal");
                 }
-                conditions[i] = new NPCAnimalKillsCondition(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseInt16(prefix + i + "_Value", 0), data.ParseUInt16(prefix + i + "_Animal", 0), desc, flag);
+                iNPCCondition = new NPCAnimalKillsCondition(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseInt16(prefix + i + "_Value", 0), data.ParseUInt16(prefix + i + "_Animal", 0), desc, flag);
                 break;
             case ENPCConditionType.COMPARE_FLAGS:
                 if (!data.ContainsKey(prefix + i + "_A_ID"))
@@ -213,42 +213,42 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Compare flags condition " + prefix + i + " missing _B_ID");
                 }
-                conditions[i] = new NPCCompareFlagsCondition(data.ParseUInt16(prefix + i + "_A_ID", 0), data.ParseUInt16(prefix + i + "_B_ID", 0), data.ContainsKey(prefix + i + "_Allow_A_Unset"), data.ContainsKey(prefix + i + "_Allow_B_Unset"), eNPCLogicType, desc, flag);
+                iNPCCondition = new NPCCompareFlagsCondition(data.ParseUInt16(prefix + i + "_A_ID", 0), data.ParseUInt16(prefix + i + "_B_ID", 0), data.ContainsKey(prefix + i + "_Allow_A_Unset"), data.ContainsKey(prefix + i + "_Allow_B_Unset"), eNPCLogicType, desc, flag);
                 break;
             case ENPCConditionType.TIME_OF_DAY:
                 if (!data.ContainsKey(prefix + i + "_Second"))
                 {
                     Assets.reportError(assetContext, "Time of day condition " + prefix + i + " missing _Second");
                 }
-                conditions[i] = new NPCTimeOfDayCondition(data.ParseInt32(prefix + i + "_Second"), eNPCLogicType, desc, flag);
+                iNPCCondition = new NPCTimeOfDayCondition(data.ParseInt32(prefix + i + "_Second"), eNPCLogicType, desc, flag);
                 break;
             case ENPCConditionType.PLAYER_LIFE_HEALTH:
                 if (!data.ContainsKey(prefix + i + "_Value"))
                 {
                     Assets.reportError(assetContext, "Player life health condition " + prefix + i + " missing _Value");
                 }
-                conditions[i] = new NPCPlayerLifeHealthCondition(data.ParseInt32(prefix + i + "_Value"), eNPCLogicType, desc);
+                iNPCCondition = new NPCPlayerLifeHealthCondition(data.ParseInt32(prefix + i + "_Value"), eNPCLogicType, desc);
                 break;
             case ENPCConditionType.PLAYER_LIFE_FOOD:
                 if (!data.ContainsKey(prefix + i + "_Value"))
                 {
                     Assets.reportError(assetContext, "Player life food condition " + prefix + i + " missing _Value");
                 }
-                conditions[i] = new NPCPlayerLifeFoodCondition(data.ParseInt32(prefix + i + "_Value"), eNPCLogicType, desc);
+                iNPCCondition = new NPCPlayerLifeFoodCondition(data.ParseInt32(prefix + i + "_Value"), eNPCLogicType, desc);
                 break;
             case ENPCConditionType.PLAYER_LIFE_WATER:
                 if (!data.ContainsKey(prefix + i + "_Value"))
                 {
                     Assets.reportError(assetContext, "Player life water condition " + prefix + i + " missing _Value");
                 }
-                conditions[i] = new NPCPlayerLifeWaterCondition(data.ParseInt32(prefix + i + "_Value"), eNPCLogicType, desc);
+                iNPCCondition = new NPCPlayerLifeWaterCondition(data.ParseInt32(prefix + i + "_Value"), eNPCLogicType, desc);
                 break;
             case ENPCConditionType.PLAYER_LIFE_VIRUS:
                 if (!data.ContainsKey(prefix + i + "_Value"))
                 {
                     Assets.reportError(assetContext, "Player life virus condition " + prefix + i + " missing _Value");
                 }
-                conditions[i] = new NPCPlayerLifeVirusCondition(data.ParseInt32(prefix + i + "_Value"), eNPCLogicType, desc);
+                iNPCCondition = new NPCPlayerLifeVirusCondition(data.ParseInt32(prefix + i + "_Value"), eNPCLogicType, desc);
                 break;
             case ENPCConditionType.HOLIDAY:
             {
@@ -265,7 +265,7 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Holiday condition " + prefix + i + " missing _Value");
                 }
-                conditions[i] = new NPCHolidayCondition(eNPCHoliday, eNPCLogicType);
+                iNPCCondition = new NPCHolidayCondition(eNPCHoliday, eNPCLogicType);
                 break;
             }
             case ENPCConditionType.KILLS_PLAYER:
@@ -277,7 +277,7 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Player kills condition " + prefix + i + " missing _Value");
                 }
-                conditions[i] = new NPCPlayerKillsCondition(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseInt16(prefix + i + "_Value", 0), desc, flag);
+                iNPCCondition = new NPCPlayerKillsCondition(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseInt16(prefix + i + "_Value", 0), desc, flag);
                 break;
             case ENPCConditionType.KILLS_OBJECT:
             {
@@ -289,16 +289,18 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Object kills condition " + prefix + i + " missing _Value");
                 }
+                Guid newObjectGuid;
                 if (data.ContainsKey(prefix + i + "_Object"))
                 {
                     newObjectGuid = data.ParseGuid(prefix + i + "_Object");
                 }
                 else
                 {
+                    newObjectGuid = default(Guid);
                     Assets.reportError(assetContext, "Object kills condition " + prefix + i + " missing _Object (GUID)");
                 }
                 byte newNav = data.ParseUInt8(prefix + i + "_Nav", byte.MaxValue);
-                conditions[i] = new NPCObjectKillsCondition(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseInt16(prefix + i + "_Value", 0), newObjectGuid, newNav, desc, flag);
+                iNPCCondition = new NPCObjectKillsCondition(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseInt16(prefix + i + "_Value", 0), newObjectGuid, newNav, desc, flag);
                 break;
             }
             case ENPCConditionType.CURRENCY:
@@ -315,10 +317,11 @@ public class NPCTool
                 }
                 AssetReference<ItemCurrencyAsset> newCurrency = data.readAssetReference<ItemCurrencyAsset>(key7);
                 uint newValue = data.ParseUInt32(key8);
-                conditions[i] = new NPCCurrencyCondition(newCurrency, newValue, eNPCLogicType, desc, flag);
+                iNPCCondition = new NPCCurrencyCondition(newCurrency, newValue, eNPCLogicType, desc, flag);
                 break;
             }
             case ENPCConditionType.KILLS_TREE:
+            {
                 if (!data.ContainsKey(prefix + i + "_ID"))
                 {
                     Assets.reportError(assetContext, "Tree kills condition " + prefix + i + " missing _ID");
@@ -327,16 +330,19 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Tree kills condition " + prefix + i + " missing _Value");
                 }
+                Guid newTreeGuid;
                 if (data.ContainsKey(prefix + i + "_Tree"))
                 {
                     newTreeGuid = data.ParseGuid(prefix + i + "_Tree");
                 }
                 else
                 {
+                    newTreeGuid = default(Guid);
                     Assets.reportError(assetContext, "Tree kills condition " + prefix + i + " missing _Tree (GUID)");
                 }
-                conditions[i] = new NPCTreeKillsCondition(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseInt16(prefix + i + "_Value", 0), newTreeGuid, desc, flag);
+                iNPCCondition = new NPCTreeKillsCondition(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseInt16(prefix + i + "_Value", 0), newTreeGuid, desc, flag);
                 break;
+            }
             case ENPCConditionType.WEATHER_STATUS:
             {
                 string key4 = prefix + i + "_GUID";
@@ -349,8 +355,7 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Weather condition " + prefix + i + " missing _Value");
                 }
-                AssetReference<WeatherAssetBase> newWeather2 = data.readAssetReference<WeatherAssetBase>(key4);
-                conditions[i] = new NPCWeatherStatusCondition(newWeather2, data.ParseEnum(key5, ENPCWeatherStatus.Active), eNPCLogicType, desc);
+                iNPCCondition = new NPCWeatherStatusCondition(data.readAssetReference<WeatherAssetBase>(key4), data.ParseEnum(key5, ENPCWeatherStatus.Active), eNPCLogicType, desc);
                 break;
             }
             case ENPCConditionType.WEATHER_BLEND_ALPHA:
@@ -365,8 +370,7 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Weather condition " + prefix + i + " missing _Value");
                 }
-                AssetReference<WeatherAssetBase> newWeather = data.readAssetReference<WeatherAssetBase>(key2);
-                conditions[i] = new NPCWeatherBlendAlphaCondition(newWeather, data.ParseFloat(key3), eNPCLogicType, desc);
+                iNPCCondition = new NPCWeatherBlendAlphaCondition(data.readAssetReference<WeatherAssetBase>(key2), data.ParseFloat(key3), eNPCLogicType, desc);
                 break;
             }
             case ENPCConditionType.IS_FULL_MOON:
@@ -376,10 +380,52 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Full moon condition " + prefix + i + " missing _Value");
                 }
-                conditions[i] = new NPCIsFullMoonCondition(data.ParseBool(key, defaultValue: true), desc);
+                iNPCCondition = new NPCIsFullMoonCondition(data.ParseBool(key, defaultValue: true), desc);
                 break;
             }
             }
+            if (iNPCCondition != null)
+            {
+                List<int> list = null;
+                if (data.TryGetString(prefix + i + "_UI_Requirements", out var value))
+                {
+                    string[] array = value.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                    if (array == null || array.Length < 1)
+                    {
+                        Assets.reportError(assetContext, prefix + i + " empty _UI_Requirements");
+                    }
+                    else
+                    {
+                        list = new List<int>(array.Length);
+                        string[] array2 = array;
+                        foreach (string text2 in array2)
+                        {
+                            if (!int.TryParse(text2, out var result))
+                            {
+                                Assets.reportError(assetContext, prefix + i + " unable to parse _UI_Requirements index from \"" + text2 + "\"");
+                            }
+                            else if (result < 0 || result >= conditions.Length)
+                            {
+                                Assets.reportError(assetContext, prefix + i + $" UI requirement index {result} out of bounds");
+                            }
+                            else if (result == i)
+                            {
+                                Assets.reportError(assetContext, prefix + i + " UI requirement depends on itself");
+                            }
+                            else
+                            {
+                                list.Add(result);
+                            }
+                        }
+                        if (list.Count < 1)
+                        {
+                            list = null;
+                        }
+                    }
+                }
+                iNPCCondition.uiRequirementIndices = list;
+            }
+            conditions[i] = iNPCCondition;
         }
     }
 
@@ -438,12 +484,12 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Short flag reward " + prefix + i + " missing _Value");
                 }
-                string key6 = prefix + i + "_Modification";
-                if (!data.ContainsKey(key6))
+                string key2 = prefix + i + "_Modification";
+                if (!data.ContainsKey(key2))
                 {
                     Assets.reportError(assetContext, "Short flag reward " + prefix + i + " missing _Modification");
                 }
-                iNPCReward = new NPCShortFlagReward(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseInt16(prefix + i + "_Value", 0), data.ParseEnum(key6, ENPCModificationType.NONE), desc);
+                iNPCReward = new NPCShortFlagReward(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseInt16(prefix + i + "_Value", 0), data.ParseEnum(key2, ENPCModificationType.NONE), desc);
                 break;
             }
             case ENPCRewardType.FLAG_SHORT_RANDOM:
@@ -460,12 +506,12 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Random short flag reward " + prefix + i + " missing _Max_Value");
                 }
-                string key4 = prefix + i + "_Modification";
-                if (!data.ContainsKey(key4))
+                string key6 = prefix + i + "_Modification";
+                if (!data.ContainsKey(key6))
                 {
                     Assets.reportError(assetContext, "Random short flag reward " + prefix + i + " missing _Modification");
                 }
-                iNPCReward = new NPCRandomShortFlagReward(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseInt16(prefix + i + "_Min_Value", 0), data.ParseInt16(prefix + i + "_Max_Value", 0), data.ParseEnum(key4, ENPCModificationType.NONE), desc);
+                iNPCReward = new NPCRandomShortFlagReward(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseInt16(prefix + i + "_Min_Value", 0), data.ParseInt16(prefix + i + "_Max_Value", 0), data.ParseEnum(key6, ENPCModificationType.NONE), desc);
                 break;
             }
             case ENPCRewardType.QUEST:
@@ -480,8 +526,8 @@ public class NPCTool
             }
             case ENPCRewardType.ITEM:
             {
-                string key3 = prefix + i + "_ID";
-                if (!data.ContainsKey(key3))
+                string key5 = prefix + i + "_ID";
+                if (!data.ContainsKey(key5))
                 {
                     Assets.reportError(assetContext, "Item reward " + prefix + i + " missing _ID");
                 }
@@ -489,7 +535,7 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Item reward " + prefix + i + " missing _Amount");
                 }
-                data.ParseGuidOrLegacyId(key3, out var guid, out var legacyId);
+                data.ParseGuidOrLegacyId(key5, out var guid, out var legacyId);
                 bool newShouldAutoEquip = data.ParseBool(prefix + i + "_Auto_Equip");
                 EItemOrigin origin = data.ParseEnum(prefix + i + "_Origin", EItemOrigin.CRAFT);
                 iNPCReward = new NPCItemReward(guid, legacyId, data.ParseUInt8(prefix + i + "_Amount", 0), newShouldAutoEquip, data.ParseInt32(prefix + i + "_Sight", -1), data.ParseInt32(prefix + i + "_Tactical", -1), data.ParseInt32(prefix + i + "_Grip", -1), data.ParseInt32(prefix + i + "_Barrel", -1), data.ParseInt32(prefix + i + "_Magazine", -1), data.ParseInt32(prefix + i + "_Ammo", -1), origin, desc);
@@ -559,28 +605,28 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Math reward " + prefix + i + " missing _B_ID or _B_Value");
                 }
-                string key5 = prefix + i + "_Operation";
-                if (!data.ContainsKey(key5))
+                string key7 = prefix + i + "_Operation";
+                if (!data.ContainsKey(key7))
                 {
                     Assets.reportError(assetContext, "Math reward " + prefix + i + " missing _Operation");
                 }
-                iNPCReward = new NPCFlagMathReward(data.ParseUInt16(prefix + i + "_A_ID", 0), data.ParseUInt16(prefix + i + "_B_ID", 0), data.ParseInt16(prefix + i + "_B_Value", 0), data.ParseEnum(key5, ENPCOperationType.NONE), desc);
+                iNPCReward = new NPCFlagMathReward(data.ParseUInt16(prefix + i + "_A_ID", 0), data.ParseUInt16(prefix + i + "_B_ID", 0), data.ParseInt16(prefix + i + "_B_Value", 0), data.ParseEnum(key7, ENPCOperationType.NONE), desc);
                 break;
             }
             case ENPCRewardType.CURRENCY:
             {
-                string key = prefix + i + "_GUID";
-                if (!data.ContainsKey(key))
+                string key3 = prefix + i + "_GUID";
+                if (!data.ContainsKey(key3))
                 {
                     Assets.reportError(assetContext, "Currency reward " + prefix + i + " missing _GUID");
                 }
-                string key2 = prefix + i + "_Value";
-                if (!data.ContainsKey(key2))
+                string key4 = prefix + i + "_Value";
+                if (!data.ContainsKey(key4))
                 {
                     Assets.reportError(assetContext, "Currency reward " + prefix + i + " missing _Value");
                 }
-                AssetReference<ItemCurrencyAsset> newCurrency = data.readAssetReference<ItemCurrencyAsset>(key);
-                uint newValue = data.ParseUInt32(key2);
+                AssetReference<ItemCurrencyAsset> newCurrency = data.readAssetReference<ItemCurrencyAsset>(key3);
+                uint newValue = data.ParseUInt32(key4);
                 iNPCReward = new NPCCurrencyReward(newCurrency, newValue, desc);
                 break;
             }
@@ -594,6 +640,16 @@ public class NPCTool
             case ENPCRewardType.PLAYER_SPAWNPOINT:
                 iNPCReward = new NPCPlayerSpawnpointReward(data.GetString(prefix + i + "_ID"), desc);
                 break;
+            case ENPCRewardType.PLAYER_LIFE_HEALTH:
+            {
+                string key = prefix + i + "_Value";
+                if (!data.ContainsKey(key))
+                {
+                    Assets.reportError(assetContext, "Player life health reward " + prefix + i + " missing _Value");
+                }
+                iNPCReward = new NPCPlayerLifeHealthReward(data.ParseInt32(key), desc);
+                break;
+            }
             }
             if (iNPCReward != null)
             {

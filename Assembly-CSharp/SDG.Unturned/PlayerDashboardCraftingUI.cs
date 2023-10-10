@@ -286,7 +286,7 @@ public class PlayerDashboardCraftingUI
         hideUncraftable = newHideUncraftable;
         itemNameFilter = newItemNameFilter;
         blueprintsScrollBox.ForceRebuildElements();
-        infoBox.isVisible = visibleBlueprints.Count == 0;
+        infoBox.IsVisible = visibleBlueprints.Count == 0;
     }
 
     private static void onInventoryResized(byte page, byte newWidth, byte newHeight)
@@ -307,8 +307,8 @@ public class PlayerDashboardCraftingUI
 
     private static void onClickedTypeButton(ISleekElement button)
     {
-        byte newBlueprintTypeFilterIndex = (byte)((button.positionOffset_X + -(TYPES * -30 + 5)) / 60);
-        searchField.text = "";
+        byte newBlueprintTypeFilterIndex = (byte)((button.PositionOffset_X + (float)(-(TYPES * -30 + 5))) / 60f);
+        searchField.Text = "";
         updateSelection(null, newBlueprintTypeFilterIndex, hideUncraftable, string.Empty);
     }
 
@@ -319,12 +319,12 @@ public class PlayerDashboardCraftingUI
 
     private static void onEnteredSearchField(ISleekField field)
     {
-        updateSelection(null, blueprintTypeFilterIndex, hideUncraftable, searchField.text);
+        updateSelection(null, blueprintTypeFilterIndex, hideUncraftable, searchField.Text);
     }
 
     private static void onClickedSearchButton(ISleekElement button)
     {
-        updateSelection(null, blueprintTypeFilterIndex, hideUncraftable, searchField.text);
+        updateSelection(null, blueprintTypeFilterIndex, hideUncraftable, searchField.Text);
     }
 
     private static void clickedBlueprint(Blueprint blueprint, bool all)
@@ -362,33 +362,33 @@ public class PlayerDashboardCraftingUI
         localization = Localization.read("/Player/PlayerDashboardCrafting.dat");
         icons = Bundles.getBundle("/Bundles/Textures/Player/Icons/PlayerDashboardCrafting/PlayerDashboardCrafting.unity3d");
         container = new SleekFullscreenBox();
-        container.positionScale_Y = 1f;
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         PlayerUI.container.AddChild(container);
         active = false;
         blueprintTypeFilterIndex = byte.MaxValue;
         hideUncraftable = false;
         itemNameFilter = string.Empty;
         backdropBox = Glazier.Get().CreateBox();
-        backdropBox.positionOffset_Y = 60;
-        backdropBox.sizeOffset_Y = -60;
-        backdropBox.sizeScale_X = 1f;
-        backdropBox.sizeScale_Y = 1f;
-        backdropBox.backgroundColor = new SleekColor(ESleekTint.BACKGROUND, 0.5f);
+        backdropBox.PositionOffset_Y = 60f;
+        backdropBox.SizeOffset_Y = -60f;
+        backdropBox.SizeScale_X = 1f;
+        backdropBox.SizeScale_Y = 1f;
+        backdropBox.BackgroundColor = new SleekColor(ESleekTint.BACKGROUND, 0.5f);
         container.AddChild(backdropBox);
         visibleBlueprints = new List<Blueprint>();
         blueprintsScrollBox = new SleekList<Blueprint>();
-        blueprintsScrollBox.positionOffset_X = 10;
-        blueprintsScrollBox.positionOffset_Y = 110;
-        blueprintsScrollBox.sizeOffset_X = -20;
-        blueprintsScrollBox.sizeOffset_Y = -120;
-        blueprintsScrollBox.sizeScale_X = 1f;
-        blueprintsScrollBox.sizeScale_Y = 1f;
+        blueprintsScrollBox.PositionOffset_X = 10f;
+        blueprintsScrollBox.PositionOffset_Y = 110f;
+        blueprintsScrollBox.SizeOffset_X = -20f;
+        blueprintsScrollBox.SizeOffset_Y = -120f;
+        blueprintsScrollBox.SizeScale_X = 1f;
+        blueprintsScrollBox.SizeScale_Y = 1f;
         blueprintsScrollBox.itemHeight = 195;
         blueprintsScrollBox.itemPadding = 10;
         blueprintsScrollBox.onCreateElement = onCreateBlueprint;
@@ -397,55 +397,55 @@ public class PlayerDashboardCraftingUI
         for (int i = 0; i < TYPES; i++)
         {
             SleekButtonIcon sleekButtonIcon = new SleekButtonIcon(icons.load<Texture2D>("Blueprint_" + i));
-            sleekButtonIcon.positionOffset_X = TYPES * -30 + 5 + i * 60;
-            sleekButtonIcon.positionOffset_Y = 10;
-            sleekButtonIcon.positionScale_X = 0.5f;
-            sleekButtonIcon.sizeOffset_X = 50;
-            sleekButtonIcon.sizeOffset_Y = 50;
+            sleekButtonIcon.PositionOffset_X = TYPES * -30 + 5 + i * 60;
+            sleekButtonIcon.PositionOffset_Y = 10f;
+            sleekButtonIcon.PositionScale_X = 0.5f;
+            sleekButtonIcon.SizeOffset_X = 50f;
+            sleekButtonIcon.SizeOffset_Y = 50f;
             sleekButtonIcon.tooltip = localization.format("Type_" + i + "_Tooltip");
             sleekButtonIcon.iconColor = ESleekTint.FOREGROUND;
             sleekButtonIcon.onClickedButton += onClickedTypeButton;
             backdropBox.AddChild(sleekButtonIcon);
         }
         hideUncraftableToggle = Glazier.Get().CreateToggle();
-        hideUncraftableToggle.positionOffset_X = -80;
-        hideUncraftableToggle.positionOffset_Y = 65;
-        hideUncraftableToggle.positionScale_X = 1f;
-        hideUncraftableToggle.sizeOffset_X = 40;
-        hideUncraftableToggle.sizeOffset_Y = 40;
-        hideUncraftableToggle.addLabel(localization.format("Hide_Uncraftable_Toggle_Label"), ESleekSide.LEFT);
-        hideUncraftableToggle.state = hideUncraftable;
-        hideUncraftableToggle.onToggled += onToggledHideUncraftableToggle;
+        hideUncraftableToggle.PositionOffset_X = -80f;
+        hideUncraftableToggle.PositionOffset_Y = 65f;
+        hideUncraftableToggle.PositionScale_X = 1f;
+        hideUncraftableToggle.SizeOffset_X = 40f;
+        hideUncraftableToggle.SizeOffset_Y = 40f;
+        hideUncraftableToggle.AddLabel(localization.format("Hide_Uncraftable_Toggle_Label"), ESleekSide.LEFT);
+        hideUncraftableToggle.Value = hideUncraftable;
+        hideUncraftableToggle.OnValueChanged += onToggledHideUncraftableToggle;
         backdropBox.AddChild(hideUncraftableToggle);
         searchField = Glazier.Get().CreateStringField();
-        searchField.positionOffset_X = 10;
-        searchField.positionOffset_Y = 70;
-        searchField.sizeOffset_X = -410;
-        searchField.sizeOffset_Y = 30;
-        searchField.sizeScale_X = 1f;
-        searchField.hint = localization.format("Search_Field_Hint");
-        searchField.onEntered += onEnteredSearchField;
+        searchField.PositionOffset_X = 10f;
+        searchField.PositionOffset_Y = 70f;
+        searchField.SizeOffset_X = -410f;
+        searchField.SizeOffset_Y = 30f;
+        searchField.SizeScale_X = 1f;
+        searchField.PlaceholderText = localization.format("Search_Field_Hint");
+        searchField.OnTextSubmitted += onEnteredSearchField;
         backdropBox.AddChild(searchField);
         searchButton = Glazier.Get().CreateButton();
-        searchButton.positionOffset_X = -390;
-        searchButton.positionOffset_Y = 70;
-        searchButton.positionScale_X = 1f;
-        searchButton.sizeOffset_X = 100;
-        searchButton.sizeOffset_Y = 30;
-        searchButton.text = localization.format("Search");
-        searchButton.tooltipText = localization.format("Search_Tooltip");
-        searchButton.onClickedButton += onClickedSearchButton;
+        searchButton.PositionOffset_X = -390f;
+        searchButton.PositionOffset_Y = 70f;
+        searchButton.PositionScale_X = 1f;
+        searchButton.SizeOffset_X = 100f;
+        searchButton.SizeOffset_Y = 30f;
+        searchButton.Text = localization.format("Search");
+        searchButton.TooltipText = localization.format("Search_Tooltip");
+        searchButton.OnClicked += onClickedSearchButton;
         backdropBox.AddChild(searchButton);
         infoBox = Glazier.Get().CreateBox();
-        infoBox.positionOffset_X = 10;
-        infoBox.positionOffset_Y = 110;
-        infoBox.sizeOffset_X = -20;
-        infoBox.sizeOffset_Y = 50;
-        infoBox.sizeScale_X = 1f;
-        infoBox.text = localization.format("No_Blueprints");
-        infoBox.fontSize = ESleekFontSize.Medium;
+        infoBox.PositionOffset_X = 10f;
+        infoBox.PositionOffset_Y = 110f;
+        infoBox.SizeOffset_X = -20f;
+        infoBox.SizeOffset_Y = 50f;
+        infoBox.SizeScale_X = 1f;
+        infoBox.Text = localization.format("No_Blueprints");
+        infoBox.FontSize = ESleekFontSize.Medium;
         backdropBox.AddChild(infoBox);
-        infoBox.isVisible = false;
+        infoBox.IsVisible = false;
         filteredBlueprintsOverride = null;
         blueprintTypeFilterIndex = 0;
         hideUncraftable = false;

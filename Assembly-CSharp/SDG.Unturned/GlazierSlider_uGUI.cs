@@ -19,7 +19,7 @@ internal class GlazierSlider_uGUI : GlazierElementBase_uGUI, ISleekSlider, ISlee
 
     private RectTransform backgroundTransform;
 
-    public ESleekOrientation orientation
+    public ESleekOrientation Orientation
     {
         get
         {
@@ -35,19 +35,7 @@ internal class GlazierSlider_uGUI : GlazierElementBase_uGUI, ISleekSlider, ISlee
         }
     }
 
-    public float size
-    {
-        get
-        {
-            return scrollbarComponent.size;
-        }
-        set
-        {
-            scrollbarComponent.size = value;
-        }
-    }
-
-    public float state
+    public float Value
     {
         get
         {
@@ -59,7 +47,7 @@ internal class GlazierSlider_uGUI : GlazierElementBase_uGUI, ISleekSlider, ISlee
         }
     }
 
-    public SleekColor backgroundColor
+    public SleekColor BackgroundColor
     {
         get
         {
@@ -72,7 +60,7 @@ internal class GlazierSlider_uGUI : GlazierElementBase_uGUI, ISleekSlider, ISlee
         }
     }
 
-    public SleekColor foregroundColor
+    public SleekColor ForegroundColor
     {
         get
         {
@@ -85,7 +73,7 @@ internal class GlazierSlider_uGUI : GlazierElementBase_uGUI, ISleekSlider, ISlee
         }
     }
 
-    public bool isInteractable
+    public bool IsInteractable
     {
         get
         {
@@ -98,7 +86,7 @@ internal class GlazierSlider_uGUI : GlazierElementBase_uGUI, ISleekSlider, ISlee
         }
     }
 
-    public event Dragged onDragged;
+    public event Dragged OnValueChanged;
 
     public GlazierSlider_uGUI(Glazier_uGUI glazier)
         : base(glazier)
@@ -139,7 +127,7 @@ internal class GlazierSlider_uGUI : GlazierElementBase_uGUI, ISleekSlider, ISlee
     {
         Color color = _backgroundColor;
         Color color2 = _foregroundColor;
-        if (!isInteractable)
+        if (!IsInteractable)
         {
             color.a *= 0.25f;
             color2.a *= 0.25f;
@@ -162,7 +150,7 @@ internal class GlazierSlider_uGUI : GlazierElementBase_uGUI, ISleekSlider, ISlee
 
     private void UpdateOrientation()
     {
-        switch (orientation)
+        switch (Orientation)
         {
         case ESleekOrientation.HORIZONTAL:
             backgroundTransform.anchorMin = new Vector2(0f, 0.5f);
@@ -181,6 +169,6 @@ internal class GlazierSlider_uGUI : GlazierElementBase_uGUI, ISleekSlider, ISlee
 
     private void OnSliderComponentValueChanged(float value)
     {
-        this.onDragged?.Invoke(this, value);
+        this.OnValueChanged?.Invoke(this, value);
     }
 }

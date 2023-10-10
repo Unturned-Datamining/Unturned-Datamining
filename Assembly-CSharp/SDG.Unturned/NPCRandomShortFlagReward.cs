@@ -19,14 +19,6 @@ public class NPCRandomShortFlagReward : NPCShortFlagReward
         }
     }
 
-    public override void grantReward(Player player, bool shouldSend)
-    {
-        if (Provider.isServer)
-        {
-            base.grantReward(player, shouldSend: true);
-        }
-    }
-
     public NPCRandomShortFlagReward(ushort newID, short newMinValue, short newMaxValue, ENPCModificationType newModificationType, string newText)
         : base(newID, 0, newModificationType, newText)
     {

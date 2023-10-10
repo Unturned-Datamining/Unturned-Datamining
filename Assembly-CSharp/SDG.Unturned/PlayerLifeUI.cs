@@ -32,11 +32,15 @@ public class PlayerLifeUI
 
     public static float lastVoteMessage;
 
-    private static ISleekScrollView chatHistoryBox;
+    private static ISleekScrollView chatHistoryBoxV1;
 
-    private static SleekChat[] chatHistoryLabels;
+    private static SleekChatEntryV1[] chatHistoryLabelsV1;
 
-    private static SleekChat[] chatPreviewLabels;
+    private static SleekChatEntryV1[] chatPreviewLabelsV1;
+
+    private static ISleekScrollView chatScrollViewV2;
+
+    private static Queue<SleekChatEntryV2> chatEntriesV2;
 
     public static ISleekField chatField;
 
@@ -190,7 +194,7 @@ public class PlayerLifeUI
 
     private static SleekBoxIcon arrestBox;
 
-    private static int repeatChatIndex;
+    private static int repeatChatIndex = 0;
 
     private static int cachedHotbarSearch;
 
@@ -201,6 +205,8 @@ public class PlayerLifeUI
     internal static List<HitmarkerInfo> activeHitmarkers;
 
     private static List<SleekHitmarker> hitmarkersPool;
+
+    private static List<bool> areConditionsMet = new List<bool>(8);
 
     public static SleekFullscreenBox container => _container;
 
@@ -239,17 +245,30 @@ public class PlayerLifeUI
 
     public static void openChat()
     {
-        if (!chatting)
+        if (chatting)
         {
-            chatting = true;
-            chatField.text = string.Empty;
-            chatField.lerpPositionOffset(100, chatField.positionOffset_Y, ESleekLerp.EXPONENTIAL, 20f);
-            chatModeButton.state = (int)PlayerUI.chat;
-            chatHistoryBox.isVisible = true;
-            chatHistoryBox.ScrollToBottom();
-            for (int i = 0; i < chatPreviewLabels.Length; i++)
+            return;
+        }
+        chatting = true;
+        chatField.Text = string.Empty;
+        chatField.AnimatePositionOffset(100f, chatField.PositionOffset_Y, ESleekLerp.EXPONENTIAL, 20f);
+        chatModeButton.state = (int)PlayerUI.chat;
+        if (chatEntriesV2 != null)
+        {
+            chatScrollViewV2.VerticalScrollbarVisibility = ESleekScrollbarVisibility.Default;
+            foreach (SleekChatEntryV2 item in chatEntriesV2)
             {
-                chatPreviewLabels[i].isVisible = false;
+                item.forceVisibleWhileBrowsingChatHistory = true;
+            }
+            chatScrollViewV2.ScrollToBottom();
+        }
+        else if (chatHistoryBoxV1 != null)
+        {
+            chatHistoryBoxV1.IsVisible = true;
+            chatHistoryBoxV1.ScrollToBottom();
+            for (int i = 0; i < chatPreviewLabelsV1.Length; i++)
+            {
+                chatPreviewLabelsV1[i].IsVisible = false;
             }
         }
     }
@@ -262,23 +281,35 @@ public class PlayerLifeUI
         }
         chatting = false;
         repeatChatIndex = 0;
-        if (chatField != null && chatHistoryBox != null && chatPreviewLabels != null)
+        if (chatField != null)
         {
-            chatField.text = string.Empty;
-            chatField.lerpPositionOffset(-chatField.sizeOffset_X - 50, chatField.positionOffset_Y, ESleekLerp.EXPONENTIAL, 20f);
-            chatHistoryBox.isVisible = false;
-            for (int i = 0; i < chatPreviewLabels.Length; i++)
+            chatField.Text = string.Empty;
+            chatField.AnimatePositionOffset(0f - chatField.SizeOffset_X - 50f, chatField.PositionOffset_Y, ESleekLerp.EXPONENTIAL, 20f);
+        }
+        if (chatEntriesV2 != null)
+        {
+            chatScrollViewV2.VerticalScrollbarVisibility = ESleekScrollbarVisibility.Hidden;
+            foreach (SleekChatEntryV2 item in chatEntriesV2)
             {
-                chatPreviewLabels[i].isVisible = true;
+                item.forceVisibleWhileBrowsingChatHistory = false;
+            }
+            chatScrollViewV2.ScrollToBottom();
+        }
+        else if (chatHistoryBoxV1 != null)
+        {
+            chatHistoryBoxV1.IsVisible = false;
+            for (int i = 0; i < chatPreviewLabelsV1.Length; i++)
+            {
+                chatPreviewLabelsV1[i].IsVisible = true;
             }
         }
     }
 
     public static void SendChatAndClose()
     {
-        if (!string.IsNullOrEmpty(chatField.text))
+        if (!string.IsNullOrEmpty(chatField.Text))
         {
-            ChatManager.sendChat(PlayerUI.chat, chatField.text);
+            ChatManager.sendChat(PlayerUI.chat, chatField.Text);
         }
         closeChat();
     }
@@ -290,7 +321,7 @@ public class PlayerLifeUI
             string recentlySentMessage = ChatManager.getRecentlySentMessage(repeatChatIndex);
             if (!string.IsNullOrEmpty(recentlySentMessage))
             {
-                chatField.text = recentlySentMessage;
+                chatField.Text = recentlySentMessage;
                 repeatChatIndex += delta;
             }
         }
@@ -324,15 +355,15 @@ public class PlayerLifeUI
             gesturing = true;
             for (int i = 0; i < faceButtons.Length; i++)
             {
-                faceButtons[i].isVisible = true;
+                faceButtons[i].IsVisible = true;
             }
-            bool isVisible = !Player.player.equipment.isSelected && Player.player.stance.stance != EPlayerStance.PRONE && Player.player.stance.stance != EPlayerStance.DRIVING && Player.player.stance.stance != EPlayerStance.SITTING;
-            surrenderButton.isVisible = isVisible;
-            pointButton.isVisible = isVisible;
-            waveButton.isVisible = isVisible;
-            saluteButton.isVisible = isVisible;
-            restButton.isVisible = isVisible;
-            facepalmButton.isVisible = isVisible;
+            bool isVisible = !Player.player.equipment.HasValidUseable && Player.player.stance.stance != EPlayerStance.PRONE && Player.player.stance.stance != EPlayerStance.DRIVING && Player.player.stance.stance != EPlayerStance.SITTING;
+            surrenderButton.IsVisible = isVisible;
+            pointButton.IsVisible = isVisible;
+            waveButton.IsVisible = isVisible;
+            saluteButton.IsVisible = isVisible;
+            restButton.IsVisible = isVisible;
+            facepalmButton.IsVisible = isVisible;
         }
     }
 
@@ -347,14 +378,14 @@ public class PlayerLifeUI
         {
             for (int i = 0; i < faceButtons.Length; i++)
             {
-                faceButtons[i].isVisible = false;
+                faceButtons[i].IsVisible = false;
             }
-            surrenderButton.isVisible = false;
-            pointButton.isVisible = false;
-            waveButton.isVisible = false;
-            saluteButton.isVisible = false;
-            restButton.isVisible = false;
-            facepalmButton.isVisible = false;
+            surrenderButton.IsVisible = false;
+            pointButton.IsVisible = false;
+            waveButton.IsVisible = false;
+            saluteButton.IsVisible = false;
+            restButton.IsVisible = false;
+            facepalmButton.IsVisible = false;
         }
     }
 
@@ -387,7 +418,7 @@ public class PlayerLifeUI
         }
     }
 
-    private static void updateHotbarItem(ref int offset, ItemJar jar, byte index)
+    private static void updateHotbarItem(ref float offset, ItemJar jar, byte index)
     {
         SleekItemIcon sleekItemIcon = hotbarImages[index];
         ISleekLabel sleekLabel = hotbarLabels[index];
@@ -403,23 +434,23 @@ public class PlayerLifeUI
             cachedHotbarValues[index].id = num;
             cachedHotbarValues[index].state = array;
             ItemAsset itemAsset = Assets.find(EAssetType.ITEM, num) as ItemAsset;
-            sleekItemIcon.isVisible = itemAsset != null;
-            sleekLabel.isVisible = itemAsset != null;
+            sleekItemIcon.IsVisible = itemAsset != null;
+            sleekLabel.IsVisible = itemAsset != null;
             if (itemAsset != null)
             {
-                sleekItemIcon.sizeOffset_X = itemAsset.size_x * 25;
-                sleekItemIcon.sizeOffset_Y = itemAsset.size_y * 25;
+                sleekItemIcon.SizeOffset_X = itemAsset.size_x * 25;
+                sleekItemIcon.SizeOffset_Y = itemAsset.size_y * 25;
                 sleekItemIcon.Refresh(jar.item.id, jar.item.quality, jar.item.state, itemAsset);
             }
         }
-        sleekItemIcon.positionOffset_X = offset;
-        sleekLabel.positionOffset_X = offset + sleekItemIcon.sizeOffset_X - 55;
-        if (sleekItemIcon.isVisible)
+        sleekItemIcon.PositionOffset_X = offset;
+        sleekLabel.PositionOffset_X = offset + sleekItemIcon.SizeOffset_X - 55f;
+        if (sleekItemIcon.IsVisible)
         {
-            offset += sleekItemIcon.sizeOffset_X;
-            hotbarContainer.sizeOffset_X = offset;
-            offset += 5;
-            hotbarContainer.sizeOffset_Y = Mathf.Max(hotbarContainer.sizeOffset_Y, sleekItemIcon.sizeOffset_Y);
+            offset += sleekItemIcon.SizeOffset_X;
+            hotbarContainer.SizeOffset_X = offset;
+            offset += 5f;
+            hotbarContainer.SizeOffset_Y = Mathf.Max(hotbarContainer.SizeOffset_Y, sleekItemIcon.SizeOffset_Y);
         }
     }
 
@@ -429,12 +460,12 @@ public class PlayerLifeUI
         {
             return;
         }
-        hotbarContainer.isVisible = !PlayerUI.messageBox.isVisible && !PlayerUI.messageBox2.isVisible && OptionsSettings.showHotbar;
+        hotbarContainer.IsVisible = !PlayerUI.messageBox.IsVisible && !PlayerUI.messageBox2.IsVisible && OptionsSettings.showHotbar;
         if (!Player.player.inventory.doesSearchNeedRefresh(ref cachedHotbarSearch))
         {
             return;
         }
-        int offset = 0;
+        float offset = 0f;
         updateHotbarItem(ref offset, Player.player.inventory.getItem(0, 0), 0);
         updateHotbarItem(ref offset, Player.player.inventory.getItem(1, 0), 1);
         for (byte b = 0; b < Player.player.equipment.hotkeys.Length; b = (byte)(b + 1))
@@ -452,17 +483,17 @@ public class PlayerLifeUI
             }
             updateHotbarItem(ref offset, itemJar, (byte)(b + 2));
         }
-        hotbarContainer.positionOffset_X = hotbarContainer.sizeOffset_X / -2;
-        hotbarContainer.positionOffset_Y = -80 - hotbarContainer.sizeOffset_Y;
+        hotbarContainer.PositionOffset_X = hotbarContainer.SizeOffset_X / -2f;
+        hotbarContainer.PositionOffset_Y = -80f - hotbarContainer.SizeOffset_Y;
     }
 
     public static void updateStatTracker()
     {
-        statTrackerLabel.isVisible = Player.player.equipment.getUseableStatTrackerValue(out var type, out var kills);
-        if (statTrackerLabel.isVisible)
+        statTrackerLabel.IsVisible = Player.player.equipment.getUseableStatTrackerValue(out var type, out var kills);
+        if (statTrackerLabel.IsVisible)
         {
-            statTrackerLabel.textColor = Provider.provider.economyService.getStatTrackerColor(type);
-            statTrackerLabel.text = localization.format((type == EStatTrackerType.TOTAL) ? "Stat_Tracker_Total_Kills" : "Stat_Tracker_Player_Kills", kills.ToString("D7"));
+            statTrackerLabel.TextColor = Provider.provider.economyService.getStatTrackerColor(type);
+            statTrackerLabel.Text = localization.format((type == EStatTrackerType.TOTAL) ? "Stat_Tracker_Total_Kills" : "Stat_Tracker_Player_Kills", kills.ToString("D7"));
         }
     }
 
@@ -550,8 +581,8 @@ public class PlayerLifeUI
     private static void updateCompassElement(ISleekElement element, float viewAngle, float elementAngle, out float alpha)
     {
         float num = Mathf.DeltaAngle(viewAngle, elementAngle) / 22.5f;
-        element.positionScale_X = num / 2f + 0.5f;
-        element.isVisible = Mathf.Abs(num) < 1f;
+        element.PositionScale_X = num / 2f + 0.5f;
+        element.IsVisible = Mathf.Abs(num) < 1f;
         alpha = 1f - MathfEx.Square(Mathf.Abs(num));
     }
 
@@ -588,13 +619,13 @@ public class PlayerLifeUI
     {
         if (Provider.modeConfigData.Gameplay.Compass || (Level.info != null && Level.info.type == ELevelType.ARENA))
         {
-            compassBox.isVisible = true;
+            compassBox.IsVisible = true;
         }
         else
         {
-            compassBox.isVisible = hasCompassInInventory();
+            compassBox.IsVisible = hasCompassInInventory();
         }
-        if (!compassBox.isVisible)
+        if (!compassBox.IsVisible)
         {
             return;
         }
@@ -605,9 +636,9 @@ public class PlayerLifeUI
         {
             float elementAngle = i * 5;
             ISleekLabel obj = compassLabels[i];
-            Color color = obj.textColor;
+            Color color = obj.TextColor;
             updateCompassElement(obj, y, elementAngle, out color.a);
-            obj.textColor = color;
+            obj.TextColor = color;
         }
         int num = 0;
         foreach (SteamPlayer client in Provider.clients)
@@ -627,10 +658,10 @@ public class PlayerLifeUI
                 else
                 {
                     sleekImage = Glazier.Get().CreateImage(icons.load<Texture2D>("Marker"));
-                    sleekImage.positionOffset_X = -10;
-                    sleekImage.positionOffset_Y = -5;
-                    sleekImage.sizeOffset_X = 20;
-                    sleekImage.sizeOffset_Y = 20;
+                    sleekImage.PositionOffset_X = -10f;
+                    sleekImage.PositionOffset_Y = -5f;
+                    sleekImage.SizeOffset_X = 20f;
+                    sleekImage.SizeOffset_Y = 20f;
                     compassMarkersContainer.AddChild(sleekImage);
                     compassMarkers.Add(sleekImage);
                 }
@@ -639,12 +670,12 @@ public class PlayerLifeUI
                 num2 *= 57.29578f;
                 Color markerColor = client.markerColor;
                 updateCompassElement(sleekImage, y, num2, out markerColor.a);
-                sleekImage.color = markerColor;
+                sleekImage.TintColor = markerColor;
             }
         }
         for (int num3 = compassMarkersVisibleCount - 1; num3 >= num; num3--)
         {
-            compassMarkers[num3].isVisible = false;
+            compassMarkers[num3].IsVisible = false;
         }
         compassMarkersVisibleCount = num;
     }
@@ -654,79 +685,79 @@ public class PlayerLifeUI
         Player player = Player.player;
         bool flag = player.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowStatusIcons);
         int num = 0;
-        bleedingBox.isVisible = player.life.isBleeding && flag;
-        if (bleedingBox.isVisible)
+        bleedingBox.IsVisible = player.life.isBleeding && flag;
+        if (bleedingBox.IsVisible)
         {
             num += 60;
         }
-        brokenBox.positionOffset_X = num;
-        brokenBox.isVisible = player.life.isBroken && flag;
-        if (brokenBox.isVisible)
+        brokenBox.PositionOffset_X = num;
+        brokenBox.IsVisible = player.life.isBroken && flag;
+        if (brokenBox.IsVisible)
         {
             num += 60;
         }
-        temperatureBox.positionOffset_X = num;
-        temperatureBox.isVisible = player.life.temperature != EPlayerTemperature.NONE && flag;
-        if (temperatureBox.isVisible)
+        temperatureBox.PositionOffset_X = num;
+        temperatureBox.IsVisible = player.life.temperature != EPlayerTemperature.NONE && flag;
+        if (temperatureBox.IsVisible)
         {
             num += 60;
         }
-        starvedBox.positionOffset_X = num;
-        starvedBox.isVisible = player.life.food == 0 && flag;
-        if (starvedBox.isVisible)
+        starvedBox.PositionOffset_X = num;
+        starvedBox.IsVisible = player.life.food == 0 && flag;
+        if (starvedBox.IsVisible)
         {
             num += 60;
         }
-        dehydratedBox.positionOffset_X = num;
-        dehydratedBox.isVisible = player.life.water == 0 && flag;
-        if (dehydratedBox.isVisible)
+        dehydratedBox.PositionOffset_X = num;
+        dehydratedBox.IsVisible = player.life.water == 0 && flag;
+        if (dehydratedBox.IsVisible)
         {
             num += 60;
         }
-        infectedBox.positionOffset_X = num;
-        infectedBox.isVisible = player.life.virus == 0 && flag;
-        if (infectedBox.isVisible)
+        infectedBox.PositionOffset_X = num;
+        infectedBox.IsVisible = player.life.virus == 0 && flag;
+        if (infectedBox.IsVisible)
         {
             num += 60;
         }
-        drownedBox.positionOffset_X = num;
-        drownedBox.isVisible = player.life.oxygen == 0 && flag;
-        if (drownedBox.isVisible)
+        drownedBox.PositionOffset_X = num;
+        drownedBox.IsVisible = player.life.oxygen == 0 && flag;
+        if (drownedBox.IsVisible)
         {
             num += 60;
         }
-        asphyxiatingBox.positionOffset_X = num;
-        asphyxiatingBox.isVisible = !drownedBox.isVisible && player.life.isAsphyxiating && flag;
-        if (asphyxiatingBox.isVisible)
+        asphyxiatingBox.PositionOffset_X = num;
+        asphyxiatingBox.IsVisible = !drownedBox.IsVisible && player.life.isAsphyxiating && flag;
+        if (asphyxiatingBox.IsVisible)
         {
             num += 60;
         }
-        moonBox.positionOffset_X = num;
-        moonBox.isVisible = LightingManager.isFullMoon && flag;
-        if (moonBox.isVisible)
+        moonBox.PositionOffset_X = num;
+        moonBox.IsVisible = LightingManager.isFullMoon && flag;
+        if (moonBox.IsVisible)
         {
             num += 60;
         }
-        radiationBox.positionOffset_X = num;
-        radiationBox.isVisible = player.movement.isRadiated && flag;
-        if (radiationBox.isVisible)
+        radiationBox.PositionOffset_X = num;
+        radiationBox.IsVisible = player.movement.isRadiated && flag;
+        if (radiationBox.IsVisible)
         {
             num += 60;
         }
-        safeBox.positionOffset_X = num;
-        safeBox.isVisible = player.movement.isSafe && flag;
-        if (safeBox.isVisible)
+        safeBox.PositionOffset_X = num;
+        safeBox.IsVisible = player.movement.isSafe && flag;
+        if (safeBox.IsVisible)
         {
             num += 60;
         }
-        arrestBox.positionOffset_X = num;
-        arrestBox.isVisible = player.animator.gesture == EPlayerGesture.ARREST_START && flag;
-        if (arrestBox.isVisible)
+        arrestBox.PositionOffset_X = num;
+        arrestBox.IsVisible = player.animator.gesture == EPlayerGesture.ARREST_START && flag;
+        if (arrestBox.IsVisible)
         {
             num += 60;
         }
-        statusIconsContainer.sizeOffset_X = num - 10;
-        statusIconsContainer.isVisible = num > 0;
+        statusIconsContainer.SizeOffset_X = num - 10;
+        statusIconsContainer.IsVisible = num > 0;
     }
 
     private static void updateLifeBoxVisibility()
@@ -752,9 +783,9 @@ public class PlayerLifeUI
             }
             if (Level.info.type == ELevelType.ARENA)
             {
-                levelTextBox.isVisible = true;
-                levelNumberBox.isVisible = true;
-                compassBox.positionOffset_Y = 60;
+                levelTextBox.IsVisible = true;
+                levelNumberBox.IsVisible = true;
+                compassBox.PositionOffset_Y = 60f;
             }
             if (Level.info.type != 0)
             {
@@ -769,73 +800,73 @@ public class PlayerLifeUI
             }
         }
         int num = 5;
-        healthIcon.isVisible = flag;
-        healthProgress.isVisible = flag;
+        healthIcon.IsVisible = flag;
+        healthProgress.IsVisible = flag;
         if (flag)
         {
-            healthIcon.positionOffset_Y = num;
-            healthProgress.positionOffset_Y = num + 5;
+            healthIcon.PositionOffset_Y = num;
+            healthProgress.PositionOffset_Y = num + 5;
             num += 30;
         }
-        foodIcon.isVisible = flag2;
-        foodProgress.isVisible = flag2;
+        foodIcon.IsVisible = flag2;
+        foodProgress.IsVisible = flag2;
         if (flag2)
         {
-            foodIcon.positionOffset_Y = num;
-            foodProgress.positionOffset_Y = num + 5;
+            foodIcon.PositionOffset_Y = num;
+            foodProgress.PositionOffset_Y = num + 5;
             num += 30;
         }
-        waterIcon.isVisible = flag3;
-        waterProgress.isVisible = flag3;
+        waterIcon.IsVisible = flag3;
+        waterProgress.IsVisible = flag3;
         if (flag3)
         {
-            waterIcon.positionOffset_Y = num;
-            waterProgress.positionOffset_Y = num + 5;
+            waterIcon.PositionOffset_Y = num;
+            waterProgress.PositionOffset_Y = num + 5;
             num += 30;
         }
-        virusIcon.isVisible = flag4;
-        virusProgress.isVisible = flag4;
+        virusIcon.IsVisible = flag4;
+        virusProgress.IsVisible = flag4;
         if (flag4)
         {
-            virusIcon.positionOffset_Y = num;
-            virusProgress.positionOffset_Y = num + 5;
+            virusIcon.PositionOffset_Y = num;
+            virusProgress.PositionOffset_Y = num + 5;
             num += 30;
         }
-        staminaIcon.isVisible = flag5;
-        staminaProgress.isVisible = flag5;
+        staminaIcon.IsVisible = flag5;
+        staminaProgress.IsVisible = flag5;
         if (flag5)
         {
-            staminaIcon.positionOffset_Y = num;
-            staminaProgress.positionOffset_Y = num + 5;
+            staminaIcon.PositionOffset_Y = num;
+            staminaProgress.PositionOffset_Y = num + 5;
             num += 30;
         }
-        waveLabel.isVisible = flag7;
-        scoreLabel.isVisible = flag7;
+        waveLabel.IsVisible = flag7;
+        scoreLabel.IsVisible = flag7;
         if (flag7)
         {
-            waveLabel.positionOffset_Y = num;
-            scoreLabel.positionOffset_Y = num;
+            waveLabel.PositionOffset_Y = num;
+            scoreLabel.PositionOffset_Y = num;
             num += 30;
         }
-        oxygenIcon.isVisible = flag6;
-        oxygenProgress.isVisible = flag6;
+        oxygenIcon.IsVisible = flag6;
+        oxygenProgress.IsVisible = flag6;
         if (flag6)
         {
-            oxygenIcon.positionOffset_Y = num;
-            oxygenProgress.positionOffset_Y = num + 5;
+            oxygenIcon.PositionOffset_Y = num;
+            oxygenProgress.PositionOffset_Y = num + 5;
             num += 30;
         }
-        lifeBox.sizeOffset_Y = num - 5;
-        lifeBox.positionOffset_Y = -lifeBox.sizeOffset_Y;
-        lifeBox.isVisible = lifeBox.sizeOffset_Y > 0;
-        statusIconsContainer.positionOffset_Y = lifeBox.positionOffset_Y - 60;
+        lifeBox.SizeOffset_Y = num - 5;
+        lifeBox.PositionOffset_Y = 0f - lifeBox.SizeOffset_Y;
+        lifeBox.IsVisible = lifeBox.SizeOffset_Y > 0f;
+        statusIconsContainer.PositionOffset_Y = lifeBox.PositionOffset_Y - 60f;
     }
 
     private static void UpdateVehicleBoxVisibility()
     {
         bool flag = vehicleVisibleByDefault;
         flag &= Player.player.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowVehicleStatus);
-        vehicleBox.isVisible = flag;
+        vehicleBox.IsVisible = flag;
     }
 
     private static void onBleedingUpdated(bool newBleeding)
@@ -884,12 +915,12 @@ public class PlayerLifeUI
 
     private static void onExperienceUpdated(uint newExperience)
     {
-        scoreLabel.text = localization.format("Score", newExperience.ToString());
+        scoreLabel.Text = localization.format("Score", newExperience.ToString());
     }
 
     private static void onWaveUpdated(bool newWaveReady, int newWaveIndex)
     {
-        waveLabel.text = localization.format("Round", newWaveIndex);
+        waveLabel.Text = localization.format("Round", newWaveIndex);
         if (newWaveReady)
         {
             PlayerUI.message(EPlayerMessage.WAVE_ON, "");
@@ -906,38 +937,38 @@ public class PlayerLifeUI
         {
             int num = 5;
             bool flag = newVehicle.usesFuel || newVehicle.asset.isStaminaPowered;
-            fuelIcon.isVisible = flag;
-            fuelProgress.isVisible = flag;
+            fuelIcon.IsVisible = flag;
+            fuelProgress.IsVisible = flag;
             if (flag)
             {
-                fuelIcon.positionOffset_Y = num;
-                fuelProgress.positionOffset_Y = num + 5;
+                fuelIcon.PositionOffset_Y = num;
+                fuelProgress.PositionOffset_Y = num + 5;
                 num += 30;
             }
-            speedIcon.positionOffset_Y = num;
-            speedProgress.positionOffset_Y = num + 5;
+            speedIcon.PositionOffset_Y = num;
+            speedProgress.PositionOffset_Y = num + 5;
             num += 30;
-            hpIcon.isVisible = newVehicle.usesHealth;
-            hpProgress.isVisible = newVehicle.usesHealth;
+            hpIcon.IsVisible = newVehicle.usesHealth;
+            hpProgress.IsVisible = newVehicle.usesHealth;
             if (newVehicle.usesHealth)
             {
-                hpIcon.positionOffset_Y = num;
-                hpProgress.positionOffset_Y = num + 5;
+                hpIcon.PositionOffset_Y = num;
+                hpProgress.PositionOffset_Y = num + 5;
                 num += 30;
             }
-            batteryChargeIcon.isVisible = newVehicle.usesBattery;
-            batteryChargeProgress.isVisible = newVehicle.usesBattery;
+            batteryChargeIcon.IsVisible = newVehicle.usesBattery;
+            batteryChargeProgress.IsVisible = newVehicle.usesBattery;
             if (newVehicle.usesBattery)
             {
-                batteryChargeIcon.positionOffset_Y = num;
-                batteryChargeProgress.positionOffset_Y = num + 5;
+                batteryChargeIcon.PositionOffset_Y = num;
+                batteryChargeProgress.PositionOffset_Y = num + 5;
                 num += 30;
             }
-            vehicleBox.sizeOffset_Y = num - 5;
-            vehicleBox.positionOffset_Y = -vehicleBox.sizeOffset_Y;
+            vehicleBox.SizeOffset_Y = num - 5;
+            vehicleBox.PositionOffset_Y = 0f - vehicleBox.SizeOffset_Y;
             if (newVehicle.passengers[Player.player.movement.getSeat()].turret != null)
             {
-                vehicleBox.positionOffset_Y -= 80;
+                vehicleBox.PositionOffset_Y -= 80f;
             }
             vehicleVisibleByDefault = true;
         }
@@ -969,12 +1000,12 @@ public class PlayerLifeUI
             InteractableVehicle vehicle = Player.player.movement.getVehicle();
             if (vehicle.asset != null && vehicle.asset.canBeLocked)
             {
-                vehicleLockedLabel.text = localization.format(vehicle.isLocked ? "Vehicle_Locked" : "Vehicle_Unlocked", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.locker));
-                vehicleLockedLabel.isVisible = true;
+                vehicleLockedLabel.Text = localization.format(vehicle.isLocked ? "Vehicle_Locked" : "Vehicle_Unlocked", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.locker));
+                vehicleLockedLabel.IsVisible = true;
             }
             else
             {
-                vehicleLockedLabel.isVisible = false;
+                vehicleLockedLabel.IsVisible = false;
             }
         }
         vehicleVisibleByDefault = isDriveable;
@@ -991,16 +1022,16 @@ public class PlayerLifeUI
                 gasmaskIcon.Refresh(maskAsset.id, Player.player.clothing.maskQuality, Player.player.clothing.maskState, maskAsset);
                 gasmaskProgress.state = (float)(int)Player.player.clothing.maskQuality / 100f;
                 gasmaskProgress.color = ItemTool.getQualityColor((float)(int)Player.player.clothing.maskQuality / 100f);
-                gasmaskBox.isVisible = true;
+                gasmaskBox.IsVisible = true;
             }
             else
             {
-                gasmaskBox.isVisible = false;
+                gasmaskBox.IsVisible = false;
             }
         }
         else
         {
-            gasmaskBox.isVisible = false;
+            gasmaskBox.IsVisible = false;
         }
     }
 
@@ -1043,7 +1074,7 @@ public class PlayerLifeUI
 
     private static void onTalked(bool isTalking)
     {
-        voiceBox.isVisible = isTalking;
+        voiceBox.IsVisible = isTalking;
     }
 
     internal static void UpdateTrackedQuest()
@@ -1051,34 +1082,40 @@ public class PlayerLifeUI
         QuestAsset trackedQuest = Player.player.quests.GetTrackedQuest();
         if (trackedQuest == null)
         {
-            trackedQuestTitle.isVisible = false;
-            trackedQuestBar.isVisible = false;
+            trackedQuestTitle.IsVisible = false;
+            trackedQuestBar.IsVisible = false;
             return;
         }
-        trackedQuestTitle.text = trackedQuest.questName;
+        trackedQuestTitle.Text = trackedQuest.questName;
         bool flag = true;
         if (trackedQuest.conditions != null)
         {
             trackedQuestBar.RemoveAllChildren();
-            int num = 5;
-            for (int i = 0; i < trackedQuest.conditions.Length; i++)
+            areConditionsMet.Clear();
+            INPCCondition[] conditions = trackedQuest.conditions;
+            foreach (INPCCondition iNPCCondition in conditions)
             {
-                INPCCondition iNPCCondition = trackedQuest.conditions[i];
-                if (iNPCCondition != null && !iNPCCondition.isConditionMet(Player.player))
+                areConditionsMet.Add(iNPCCondition.isConditionMet(Player.player));
+            }
+            int num = 5;
+            for (int j = 0; j < trackedQuest.conditions.Length; j++)
+            {
+                INPCCondition iNPCCondition2 = trackedQuest.conditions[j];
+                if (!areConditionsMet[j] && iNPCCondition2.AreUIRequirementsMet(areConditionsMet))
                 {
-                    string text = iNPCCondition.formatCondition(Player.player);
+                    string text = iNPCCondition2.formatCondition(Player.player);
                     if (!string.IsNullOrEmpty(text))
                     {
                         ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-                        sleekLabel.positionOffset_X = -300;
-                        sleekLabel.positionOffset_Y = num;
-                        sleekLabel.sizeOffset_X = 500;
-                        sleekLabel.sizeOffset_Y = 30;
-                        sleekLabel.enableRichText = true;
-                        sleekLabel.textColor = ESleekTint.RICH_TEXT_DEFAULT;
-                        sleekLabel.fontAlignment = TextAnchor.MiddleRight;
-                        sleekLabel.text = text;
-                        sleekLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+                        sleekLabel.PositionOffset_X = -300f;
+                        sleekLabel.PositionOffset_Y = num;
+                        sleekLabel.SizeOffset_X = 500f;
+                        sleekLabel.SizeOffset_Y = 30f;
+                        sleekLabel.AllowRichText = true;
+                        sleekLabel.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+                        sleekLabel.TextAlignment = TextAnchor.MiddleRight;
+                        sleekLabel.Text = text;
+                        sleekLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
                         trackedQuestBar.AddChild(sleekLabel);
                         num += 20;
                         flag = false;
@@ -1086,8 +1123,8 @@ public class PlayerLifeUI
                 }
             }
         }
-        trackedQuestTitle.isVisible = !flag;
-        trackedQuestBar.isVisible = trackedQuestTitle.isVisible;
+        trackedQuestTitle.IsVisible = !flag;
+        trackedQuestBar.IsVisible = trackedQuestTitle.IsVisible;
     }
 
     private static void OnTrackedQuestUpdated(PlayerQuests quests)
@@ -1095,26 +1132,51 @@ public class PlayerLifeUI
         UpdateTrackedQuest();
     }
 
-    private static void onListed()
+    private static void OnChatMessageReceived()
     {
-        int num = 0;
-        for (int i = 0; i < ChatManager.receivedChatHistory.Count && i < chatHistoryLabels.Length; i++)
+        if (chatScrollViewV2 != null && ChatManager.receivedChatHistory.Count > 0)
         {
-            int index = ChatManager.receivedChatHistory.Count - 1 - i;
-            chatHistoryLabels[i].representingChatMessage = ChatManager.receivedChatHistory[index];
-            num++;
-        }
-        int num2 = num * 40;
-        int num3 = chatPreviewLabels.Length * 40;
-        chatHistoryBox.sizeOffset_Y = Mathf.Min(num2, num3);
-        chatHistoryBox.positionOffset_Y = Mathf.Max(0, num3 - chatHistoryBox.sizeOffset_Y);
-        chatHistoryBox.contentSizeOffset = new Vector2(0f, num2);
-        for (int j = 0; j < chatPreviewLabels.Length; j++)
-        {
-            int num4 = chatPreviewLabels.Length - 1 - j;
-            if (num4 < ChatManager.receivedChatHistory.Count)
+            if (chatEntriesV2.Count >= Provider.preferenceData.Chat.History_Length)
             {
-                chatPreviewLabels[j].representingChatMessage = ChatManager.receivedChatHistory[num4];
+                SleekChatEntryV2 child = chatEntriesV2.Dequeue();
+                chatScrollViewV2.RemoveChild(child);
+            }
+            SleekChatEntryV2 sleekChatEntryV = new SleekChatEntryV2();
+            sleekChatEntryV.shouldFadeOutWithAge = Glazier.Get().SupportsRichTextAlpha;
+            sleekChatEntryV.forceVisibleWhileBrowsingChatHistory = chatting;
+            sleekChatEntryV.representingChatMessage = ChatManager.receivedChatHistory[0];
+            chatScrollViewV2.AddChild(sleekChatEntryV);
+            chatEntriesV2.Enqueue(sleekChatEntryV);
+            if (!chatting)
+            {
+                chatScrollViewV2.ScrollToBottom();
+            }
+        }
+        else
+        {
+            if (chatHistoryBoxV1 == null)
+            {
+                return;
+            }
+            int num = 0;
+            for (int i = 0; i < ChatManager.receivedChatHistory.Count && i < chatHistoryLabelsV1.Length; i++)
+            {
+                int index = ChatManager.receivedChatHistory.Count - 1 - i;
+                chatHistoryLabelsV1[i].representingChatMessage = ChatManager.receivedChatHistory[index];
+                num++;
+            }
+            int num2 = num * 40;
+            int num3 = chatPreviewLabelsV1.Length * 40;
+            chatHistoryBoxV1.SizeOffset_Y = Mathf.Min(num2, num3);
+            chatHistoryBoxV1.PositionOffset_Y = Mathf.Max(0f, (float)num3 - chatHistoryBoxV1.SizeOffset_Y);
+            chatHistoryBoxV1.ContentSizeOffset = new Vector2(0f, num2);
+            for (int j = 0; j < chatPreviewLabelsV1.Length; j++)
+            {
+                int num4 = chatPreviewLabelsV1.Length - 1 - j;
+                if (num4 < ChatManager.receivedChatHistory.Count)
+                {
+                    chatPreviewLabelsV1[j].representingChatMessage = ChatManager.receivedChatHistory[num4];
+                }
             }
         }
     }
@@ -1122,37 +1184,37 @@ public class PlayerLifeUI
     private static void onVotingStart(SteamPlayer origin, SteamPlayer target, byte votesNeeded)
     {
         isVoteMessaged = false;
-        voteBox.text = "";
-        voteBox.isVisible = true;
-        voteInfoLabel.isVisible = true;
-        votesNeededLabel.isVisible = true;
-        voteYesLabel.isVisible = true;
-        voteNoLabel.isVisible = true;
-        voteInfoLabel.text = localization.format("Vote_Kick", origin.playerID.characterName, origin.playerID.playerName, target.playerID.characterName, target.playerID.playerName);
-        votesNeededLabel.text = localization.format("Votes_Needed", votesNeeded);
-        voteYesLabel.text = localization.format("Vote_Yes", KeyCode.F1, 0);
-        voteNoLabel.text = localization.format("Vote_No", KeyCode.F2, 0);
+        voteBox.Text = "";
+        voteBox.IsVisible = true;
+        voteInfoLabel.IsVisible = true;
+        votesNeededLabel.IsVisible = true;
+        voteYesLabel.IsVisible = true;
+        voteNoLabel.IsVisible = true;
+        voteInfoLabel.Text = localization.format("Vote_Kick", origin.playerID.characterName, origin.playerID.playerName, target.playerID.characterName, target.playerID.playerName);
+        votesNeededLabel.Text = localization.format("Votes_Needed", votesNeeded);
+        voteYesLabel.Text = localization.format("Vote_Yes", KeyCode.F1, 0);
+        voteNoLabel.Text = localization.format("Vote_No", KeyCode.F2, 0);
     }
 
     private static void onVotingUpdate(byte voteYes, byte voteNo)
     {
-        voteYesLabel.text = localization.format("Vote_Yes", KeyCode.F1, voteYes);
-        voteNoLabel.text = localization.format("Vote_No", KeyCode.F2, voteNo);
+        voteYesLabel.Text = localization.format("Vote_Yes", KeyCode.F1, voteYes);
+        voteNoLabel.Text = localization.format("Vote_No", KeyCode.F2, voteNo);
     }
 
     private static void onVotingStop(EVotingMessage message)
     {
-        voteInfoLabel.isVisible = false;
-        votesNeededLabel.isVisible = false;
-        voteYesLabel.isVisible = false;
-        voteNoLabel.isVisible = false;
+        voteInfoLabel.IsVisible = false;
+        votesNeededLabel.IsVisible = false;
+        voteYesLabel.IsVisible = false;
+        voteNoLabel.IsVisible = false;
         switch (message)
         {
         case EVotingMessage.PASS:
-            voteBox.text = localization.format("Vote_Pass");
+            voteBox.Text = localization.format("Vote_Pass");
             break;
         case EVotingMessage.FAIL:
-            voteBox.text = localization.format("Vote_Fail");
+            voteBox.Text = localization.format("Vote_Fail");
             break;
         }
         isVoteMessaged = true;
@@ -1161,21 +1223,21 @@ public class PlayerLifeUI
 
     private static void onVotingMessage(EVotingMessage message)
     {
-        voteBox.isVisible = true;
-        voteInfoLabel.isVisible = false;
-        votesNeededLabel.isVisible = false;
-        voteYesLabel.isVisible = false;
-        voteNoLabel.isVisible = false;
+        voteBox.IsVisible = true;
+        voteInfoLabel.IsVisible = false;
+        votesNeededLabel.IsVisible = false;
+        voteYesLabel.IsVisible = false;
+        voteNoLabel.IsVisible = false;
         switch (message)
         {
         case EVotingMessage.OFF:
-            voteBox.text = localization.format("Vote_Off");
+            voteBox.Text = localization.format("Vote_Off");
             break;
         case EVotingMessage.DELAY:
-            voteBox.text = localization.format("Vote_Delay");
+            voteBox.Text = localization.format("Vote_Delay");
             break;
         case EVotingMessage.PLAYERS:
-            voteBox.text = localization.format("Vote_Players");
+            voteBox.Text = localization.format("Vote_Players");
             break;
         }
         isVoteMessaged = true;
@@ -1187,19 +1249,19 @@ public class PlayerLifeUI
         switch (newArenaMessage)
         {
         case EArenaMessage.LOBBY:
-            levelTextBox.text = localization.format("Arena_Lobby");
+            levelTextBox.Text = localization.format("Arena_Lobby");
             break;
         case EArenaMessage.WARMUP:
-            levelTextBox.text = localization.format("Arena_Warm_Up");
+            levelTextBox.Text = localization.format("Arena_Warm_Up");
             break;
         case EArenaMessage.PLAY:
-            levelTextBox.text = localization.format("Arena_Play");
+            levelTextBox.Text = localization.format("Arena_Play");
             break;
         case EArenaMessage.LOSE:
-            levelTextBox.text = localization.format("Arena_Lose");
+            levelTextBox.Text = localization.format("Arena_Lose");
             break;
         case EArenaMessage.INTERMISSION:
-            levelTextBox.text = localization.format("Arena_Intermission");
+            levelTextBox.Text = localization.format("Arena_Intermission");
             break;
         case EArenaMessage.DIED:
         case EArenaMessage.ABANDONED:
@@ -1230,13 +1292,13 @@ public class PlayerLifeUI
             switch (newArenaMessage)
             {
             case EArenaMessage.DIED:
-                levelTextBox.text = localization.format("Arena_Died", text);
+                levelTextBox.Text = localization.format("Arena_Died", text);
                 break;
             case EArenaMessage.ABANDONED:
-                levelTextBox.text = localization.format("Arena_Abandoned", text);
+                levelTextBox.Text = localization.format("Arena_Abandoned", text);
                 break;
             case EArenaMessage.WIN:
-                levelTextBox.text = localization.format("Arena_Win", text);
+                levelTextBox.Text = localization.format("Arena_Win", text);
                 break;
             }
         }
@@ -1244,7 +1306,7 @@ public class PlayerLifeUI
 
     private static void onLevelNumberUpdated(int newLevelNumber)
     {
-        levelNumberBox.text = newLevelNumber.ToString();
+        levelNumberBox.Text = newLevelNumber.ToString();
     }
 
     private static void onClickedFaceButton(ISleekElement button)
@@ -1315,7 +1377,7 @@ public class PlayerLifeUI
 
     public void OnDestroy()
     {
-        ChatManager.onChatMessageReceived = (ChatMessageReceivedHandler)Delegate.Remove(ChatManager.onChatMessageReceived, new ChatMessageReceivedHandler(onListed));
+        ChatManager.onChatMessageReceived = (ChatMessageReceivedHandler)Delegate.Remove(ChatManager.onChatMessageReceived, new ChatMessageReceivedHandler(OnChatMessageReceived));
         ChatManager.onVotingStart = (VotingStart)Delegate.Remove(ChatManager.onVotingStart, new VotingStart(onVotingStart));
         ChatManager.onVotingUpdate = (VotingUpdate)Delegate.Remove(ChatManager.onVotingUpdate, new VotingUpdate(onVotingUpdate));
         ChatManager.onVotingStop = (VotingStop)Delegate.Remove(ChatManager.onVotingStop, new VotingStop(onVotingStop));
@@ -1336,168 +1398,183 @@ public class PlayerLifeUI
         localization = Localization.read("/Player/PlayerLife.dat");
         icons = Bundles.getBundle("/Bundles/Textures/Player/Icons/PlayerLife/PlayerLife.unity3d");
         _container = new SleekFullscreenBox();
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         PlayerUI.container.AddChild(container);
         active = true;
         chatting = false;
-        chatHistoryBox = Glazier.Get().CreateScrollView();
-        chatHistoryBox.sizeOffset_X = 630;
-        chatHistoryBox.scaleContentToWidth = true;
-        container.AddChild(chatHistoryBox);
-        chatHistoryBox.isVisible = false;
-        chatHistoryLabels = new SleekChat[Provider.preferenceData.Chat.History_Length];
-        for (int i = 0; i < chatHistoryLabels.Length; i++)
+        if (Glazier.Get().SupportsAutomaticLayout)
         {
-            SleekChat sleekChat = new SleekChat
-            {
-                positionOffset_Y = i * 40,
-                sizeOffset_X = chatHistoryBox.sizeOffset_X - 30,
-                sizeOffset_Y = 40,
-                shouldFadeOutWithAge = false
-            };
-            chatHistoryBox.AddChild(sleekChat);
-            chatHistoryLabels[i] = sleekChat;
+            chatScrollViewV2 = Glazier.Get().CreateScrollView();
+            chatScrollViewV2.SizeOffset_X = 630f;
+            chatScrollViewV2.SizeOffset_Y = Provider.preferenceData.Chat.Preview_Length * 40;
+            chatScrollViewV2.ScaleContentToWidth = true;
+            chatScrollViewV2.ContentUseManualLayout = false;
+            chatScrollViewV2.AlignContentToBottom = true;
+            chatScrollViewV2.VerticalScrollbarVisibility = ESleekScrollbarVisibility.Hidden;
+            container.AddChild(chatScrollViewV2);
+            chatEntriesV2 = new Queue<SleekChatEntryV2>(Provider.preferenceData.Chat.History_Length);
         }
-        bool shouldFadeOutWithAge = Glazier.Get().SupportsRichTextAlpha && Provider.preferenceData.Chat.Enable_Fade_Out;
-        chatPreviewLabels = new SleekChat[Provider.preferenceData.Chat.Preview_Length];
-        for (int j = 0; j < chatPreviewLabels.Length; j++)
+        else
         {
-            SleekChat sleekChat2 = new SleekChat
+            chatHistoryBoxV1 = Glazier.Get().CreateScrollView();
+            chatHistoryBoxV1.SizeOffset_X = 630f;
+            chatHistoryBoxV1.ScaleContentToWidth = true;
+            container.AddChild(chatHistoryBoxV1);
+            chatHistoryBoxV1.IsVisible = false;
+            chatHistoryLabelsV1 = new SleekChatEntryV1[Provider.preferenceData.Chat.History_Length];
+            for (int i = 0; i < chatHistoryLabelsV1.Length; i++)
             {
-                positionOffset_Y = j * 40,
-                sizeOffset_X = chatHistoryBox.sizeOffset_X - 30,
-                sizeOffset_Y = 40,
-                shouldFadeOutWithAge = shouldFadeOutWithAge
-            };
-            container.AddChild(sleekChat2);
-            chatPreviewLabels[j] = sleekChat2;
+                SleekChatEntryV1 sleekChatEntryV = new SleekChatEntryV1
+                {
+                    PositionOffset_Y = i * 40,
+                    SizeOffset_X = chatHistoryBoxV1.SizeOffset_X - 30f,
+                    SizeOffset_Y = 40f,
+                    shouldFadeOutWithAge = false
+                };
+                chatHistoryBoxV1.AddChild(sleekChatEntryV);
+                chatHistoryLabelsV1[i] = sleekChatEntryV;
+            }
+            bool shouldFadeOutWithAge = Glazier.Get().SupportsRichTextAlpha && Provider.preferenceData.Chat.Enable_Fade_Out;
+            chatPreviewLabelsV1 = new SleekChatEntryV1[Provider.preferenceData.Chat.Preview_Length];
+            for (int j = 0; j < chatPreviewLabelsV1.Length; j++)
+            {
+                SleekChatEntryV1 sleekChatEntryV2 = new SleekChatEntryV1
+                {
+                    PositionOffset_Y = j * 40,
+                    SizeOffset_X = chatHistoryBoxV1.SizeOffset_X - 30f,
+                    SizeOffset_Y = 40f,
+                    shouldFadeOutWithAge = shouldFadeOutWithAge
+                };
+                container.AddChild(sleekChatEntryV2);
+                chatPreviewLabelsV1[j] = sleekChatEntryV2;
+            }
         }
         chatField = Glazier.Get().CreateStringField();
-        chatField.positionOffset_Y = Provider.preferenceData.Chat.Preview_Length * 40 + 10;
-        chatField.sizeOffset_X = chatHistoryBox.sizeOffset_X - 130;
-        chatField.positionOffset_X = -chatField.sizeOffset_X - 50;
-        chatField.sizeOffset_Y = 30;
-        chatField.fontAlignment = TextAnchor.MiddleLeft;
-        chatField.maxLength = ChatManager.MAX_MESSAGE_LENGTH;
-        chatField.onEscaped += OnChatFieldEscaped;
+        chatField.PositionOffset_Y = Provider.preferenceData.Chat.Preview_Length * 40 + 10;
+        chatField.SizeOffset_X = 500f;
+        chatField.PositionOffset_X = 0f - chatField.SizeOffset_X - 50f;
+        chatField.SizeOffset_Y = 30f;
+        chatField.TextAlignment = TextAnchor.MiddleLeft;
+        chatField.MaxLength = ChatManager.MAX_MESSAGE_LENGTH;
+        chatField.OnTextEscaped += OnChatFieldEscaped;
         container.AddChild(chatField);
         chatModeButton = new SleekButtonState();
         chatModeButton.useContentTooltip = true;
         chatModeButton.setContent(new GUIContent(localization.format("Mode_Global"), localization.format("Mode_Global_Tooltip", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.global))), new GUIContent(localization.format("Mode_Local"), localization.format("Mode_Local_Tooltip", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.local))), new GUIContent(localization.format("Mode_Group"), localization.format("Mode_Group_Tooltip", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.group))));
-        chatModeButton.positionOffset_X = -100;
-        chatModeButton.sizeOffset_X = 100;
-        chatModeButton.sizeOffset_Y = 30;
+        chatModeButton.PositionOffset_X = -100f;
+        chatModeButton.SizeOffset_X = 100f;
+        chatModeButton.SizeOffset_Y = 30f;
         chatModeButton.onSwappedState = OnSwappedChatModeState;
         chatField.AddChild(chatModeButton);
         sendChatButton = new SleekButtonIcon(icons.load<Texture2D>("SendChat"));
-        sendChatButton.positionScale_X = 1f;
-        sendChatButton.sizeOffset_X = 30;
-        sendChatButton.sizeOffset_Y = 30;
+        sendChatButton.PositionScale_X = 1f;
+        sendChatButton.SizeOffset_X = 30f;
+        sendChatButton.SizeOffset_Y = 30f;
         sendChatButton.tooltip = localization.format("SendChat_Tooltip", MenuConfigurationControlsUI.getKeyCodeText(KeyCode.Return));
         sendChatButton.iconColor = ESleekTint.FOREGROUND;
         sendChatButton.onClickedButton += OnSendChatButtonClicked;
         chatField.AddChild(sendChatButton);
         voteBox = Glazier.Get().CreateBox();
-        voteBox.positionOffset_X = -430;
-        voteBox.positionScale_X = 1f;
-        voteBox.sizeOffset_X = 430;
-        voteBox.sizeOffset_Y = 90;
+        voteBox.PositionOffset_X = -430f;
+        voteBox.PositionScale_X = 1f;
+        voteBox.SizeOffset_X = 430f;
+        voteBox.SizeOffset_Y = 90f;
         container.AddChild(voteBox);
-        voteBox.isVisible = false;
+        voteBox.IsVisible = false;
         voteInfoLabel = Glazier.Get().CreateLabel();
-        voteInfoLabel.sizeOffset_Y = 30;
-        voteInfoLabel.sizeScale_X = 1f;
+        voteInfoLabel.SizeOffset_Y = 30f;
+        voteInfoLabel.SizeScale_X = 1f;
         voteBox.AddChild(voteInfoLabel);
         votesNeededLabel = Glazier.Get().CreateLabel();
-        votesNeededLabel.positionOffset_Y = 30;
-        votesNeededLabel.sizeOffset_Y = 30;
-        votesNeededLabel.sizeScale_X = 1f;
+        votesNeededLabel.PositionOffset_Y = 30f;
+        votesNeededLabel.SizeOffset_Y = 30f;
+        votesNeededLabel.SizeScale_X = 1f;
         voteBox.AddChild(votesNeededLabel);
         voteYesLabel = Glazier.Get().CreateLabel();
-        voteYesLabel.positionOffset_Y = 60;
-        voteYesLabel.sizeOffset_Y = 30;
-        voteYesLabel.sizeScale_X = 0.5f;
+        voteYesLabel.PositionOffset_Y = 60f;
+        voteYesLabel.SizeOffset_Y = 30f;
+        voteYesLabel.SizeScale_X = 0.5f;
         voteBox.AddChild(voteYesLabel);
         voteNoLabel = Glazier.Get().CreateLabel();
-        voteNoLabel.positionOffset_Y = 60;
-        voteNoLabel.positionScale_X = 0.5f;
-        voteNoLabel.sizeOffset_Y = 30;
-        voteNoLabel.sizeScale_X = 0.5f;
+        voteNoLabel.PositionOffset_Y = 60f;
+        voteNoLabel.PositionScale_X = 0.5f;
+        voteNoLabel.SizeOffset_Y = 30f;
+        voteNoLabel.SizeScale_X = 0.5f;
         voteBox.AddChild(voteNoLabel);
         voiceBox = new SleekBoxIcon(icons.load<Texture2D>("Voice"));
-        voiceBox.positionOffset_Y = 210;
-        voiceBox.sizeOffset_X = 50;
-        voiceBox.sizeOffset_Y = 50;
+        voiceBox.PositionOffset_Y = 210f;
+        voiceBox.SizeOffset_X = 50f;
+        voiceBox.SizeOffset_Y = 50f;
         voiceBox.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(voiceBox);
-        voiceBox.isVisible = false;
+        voiceBox.IsVisible = false;
         trackedQuestTitle = Glazier.Get().CreateLabel();
-        trackedQuestTitle.positionOffset_X = -500;
-        trackedQuestTitle.positionOffset_Y = 200;
-        trackedQuestTitle.positionScale_X = 1f;
-        trackedQuestTitle.sizeOffset_X = 500;
-        trackedQuestTitle.sizeOffset_Y = 35;
-        trackedQuestTitle.enableRichText = true;
-        trackedQuestTitle.textColor = ESleekTint.RICH_TEXT_DEFAULT;
-        trackedQuestTitle.fontSize = ESleekFontSize.Medium;
-        trackedQuestTitle.fontAlignment = TextAnchor.LowerRight;
-        trackedQuestTitle.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+        trackedQuestTitle.PositionOffset_X = -500f;
+        trackedQuestTitle.PositionOffset_Y = 200f;
+        trackedQuestTitle.PositionScale_X = 1f;
+        trackedQuestTitle.SizeOffset_X = 500f;
+        trackedQuestTitle.SizeOffset_Y = 35f;
+        trackedQuestTitle.AllowRichText = true;
+        trackedQuestTitle.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+        trackedQuestTitle.FontSize = ESleekFontSize.Medium;
+        trackedQuestTitle.TextAlignment = TextAnchor.LowerRight;
+        trackedQuestTitle.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
         container.AddChild(trackedQuestTitle);
         trackedQuestBar = Glazier.Get().CreateImage();
-        trackedQuestBar.positionOffset_X = -200;
-        trackedQuestBar.positionOffset_Y = 240;
-        trackedQuestBar.positionScale_X = 1f;
-        trackedQuestBar.sizeOffset_X = 200;
-        trackedQuestBar.sizeOffset_Y = 3;
-        trackedQuestBar.texture = (Texture2D)GlazierResources.PixelTexture;
-        trackedQuestBar.color = ESleekTint.FOREGROUND;
+        trackedQuestBar.PositionOffset_X = -200f;
+        trackedQuestBar.PositionOffset_Y = 240f;
+        trackedQuestBar.PositionScale_X = 1f;
+        trackedQuestBar.SizeOffset_X = 200f;
+        trackedQuestBar.SizeOffset_Y = 3f;
+        trackedQuestBar.Texture = (Texture2D)GlazierResources.PixelTexture;
+        trackedQuestBar.TintColor = ESleekTint.FOREGROUND;
         container.AddChild(trackedQuestBar);
         levelTextBox = Glazier.Get().CreateBox();
-        levelTextBox.positionOffset_X = -180;
-        levelTextBox.positionScale_X = 0.5f;
-        levelTextBox.sizeOffset_X = 300;
-        levelTextBox.sizeOffset_Y = 50;
-        levelTextBox.fontSize = ESleekFontSize.Medium;
+        levelTextBox.PositionOffset_X = -180f;
+        levelTextBox.PositionScale_X = 0.5f;
+        levelTextBox.SizeOffset_X = 300f;
+        levelTextBox.SizeOffset_Y = 50f;
+        levelTextBox.FontSize = ESleekFontSize.Medium;
         container.AddChild(levelTextBox);
-        levelTextBox.isVisible = false;
+        levelTextBox.IsVisible = false;
         levelNumberBox = Glazier.Get().CreateBox();
-        levelNumberBox.positionOffset_X = 130;
-        levelNumberBox.positionScale_X = 0.5f;
-        levelNumberBox.sizeOffset_X = 50;
-        levelNumberBox.sizeOffset_Y = 50;
-        levelNumberBox.fontSize = ESleekFontSize.Medium;
+        levelNumberBox.PositionOffset_X = 130f;
+        levelNumberBox.PositionScale_X = 0.5f;
+        levelNumberBox.SizeOffset_X = 50f;
+        levelNumberBox.SizeOffset_Y = 50f;
+        levelNumberBox.FontSize = ESleekFontSize.Medium;
         container.AddChild(levelNumberBox);
-        levelNumberBox.isVisible = false;
+        levelNumberBox.IsVisible = false;
         cachedCompassSearch = -1;
         cachedHasCompass = false;
         compassBox = Glazier.Get().CreateBox();
-        compassBox.positionOffset_X = -180;
-        compassBox.positionScale_X = 0.5f;
-        compassBox.sizeOffset_X = 360;
-        compassBox.sizeOffset_Y = 50;
-        compassBox.fontSize = ESleekFontSize.Medium;
+        compassBox.PositionOffset_X = -180f;
+        compassBox.PositionScale_X = 0.5f;
+        compassBox.SizeOffset_X = 360f;
+        compassBox.SizeOffset_Y = 50f;
+        compassBox.FontSize = ESleekFontSize.Medium;
         container.AddChild(compassBox);
-        compassBox.isVisible = false;
+        compassBox.IsVisible = false;
         compassLabelsContainer = Glazier.Get().CreateFrame();
-        compassLabelsContainer.positionOffset_X = 10;
-        compassLabelsContainer.positionOffset_Y = 10;
-        compassLabelsContainer.sizeOffset_X = -20;
-        compassLabelsContainer.sizeOffset_Y = -20;
-        compassLabelsContainer.sizeScale_X = 1f;
-        compassLabelsContainer.sizeScale_Y = 1f;
+        compassLabelsContainer.PositionOffset_X = 10f;
+        compassLabelsContainer.PositionOffset_Y = 10f;
+        compassLabelsContainer.SizeOffset_X = -20f;
+        compassLabelsContainer.SizeOffset_Y = -20f;
+        compassLabelsContainer.SizeScale_X = 1f;
+        compassLabelsContainer.SizeScale_Y = 1f;
         compassBox.AddChild(compassLabelsContainer);
         compassMarkersContainer = Glazier.Get().CreateFrame();
-        compassMarkersContainer.positionOffset_X = 10;
-        compassMarkersContainer.positionOffset_Y = 10;
-        compassMarkersContainer.sizeOffset_X = -20;
-        compassMarkersContainer.sizeOffset_Y = -20;
-        compassMarkersContainer.sizeScale_X = 1f;
-        compassMarkersContainer.sizeScale_Y = 1f;
+        compassMarkersContainer.PositionOffset_X = 10f;
+        compassMarkersContainer.PositionOffset_Y = 10f;
+        compassMarkersContainer.SizeOffset_X = -20f;
+        compassMarkersContainer.SizeOffset_Y = -20f;
+        compassMarkersContainer.SizeScale_X = 1f;
+        compassMarkersContainer.SizeScale_Y = 1f;
         compassBox.AddChild(compassMarkersContainer);
         compassMarkers = new List<ISleekImage>();
         compassMarkersVisibleCount = 0;
@@ -1505,52 +1582,52 @@ public class PlayerLifeUI
         for (int k = 0; k < compassLabels.Length; k++)
         {
             ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-            sleekLabel.positionOffset_X = -25;
-            sleekLabel.sizeOffset_X = 50;
-            sleekLabel.sizeOffset_Y = 30;
-            sleekLabel.text = (k * 5).ToString();
-            sleekLabel.textColor = new Color(0.75f, 0.75f, 0.75f);
+            sleekLabel.PositionOffset_X = -25f;
+            sleekLabel.SizeOffset_X = 50f;
+            sleekLabel.SizeOffset_Y = 30f;
+            sleekLabel.Text = (k * 5).ToString();
+            sleekLabel.TextColor = new Color(0.75f, 0.75f, 0.75f);
             compassLabelsContainer.AddChild(sleekLabel);
             compassLabels[k] = sleekLabel;
         }
         ISleekLabel compassLabelByAngle = getCompassLabelByAngle(0);
-        compassLabelByAngle.fontSize = ESleekFontSize.Large;
-        compassLabelByAngle.text = "N";
-        compassLabelByAngle.textColor = Palette.COLOR_R;
+        compassLabelByAngle.FontSize = ESleekFontSize.Large;
+        compassLabelByAngle.Text = "N";
+        compassLabelByAngle.TextColor = Palette.COLOR_R;
         ISleekLabel compassLabelByAngle2 = getCompassLabelByAngle(45);
-        compassLabelByAngle2.fontSize = ESleekFontSize.Medium;
-        compassLabelByAngle2.text = "NE";
-        compassLabelByAngle2.textColor = new Color(1f, 1f, 1f);
+        compassLabelByAngle2.FontSize = ESleekFontSize.Medium;
+        compassLabelByAngle2.Text = "NE";
+        compassLabelByAngle2.TextColor = new Color(1f, 1f, 1f);
         ISleekLabel compassLabelByAngle3 = getCompassLabelByAngle(90);
-        compassLabelByAngle3.fontSize = ESleekFontSize.Large;
-        compassLabelByAngle3.text = "E";
-        compassLabelByAngle3.textColor = new Color(1f, 1f, 1f);
+        compassLabelByAngle3.FontSize = ESleekFontSize.Large;
+        compassLabelByAngle3.Text = "E";
+        compassLabelByAngle3.TextColor = new Color(1f, 1f, 1f);
         ISleekLabel compassLabelByAngle4 = getCompassLabelByAngle(135);
-        compassLabelByAngle4.fontSize = ESleekFontSize.Medium;
-        compassLabelByAngle4.text = "SE";
-        compassLabelByAngle4.textColor = new Color(1f, 1f, 1f);
+        compassLabelByAngle4.FontSize = ESleekFontSize.Medium;
+        compassLabelByAngle4.Text = "SE";
+        compassLabelByAngle4.TextColor = new Color(1f, 1f, 1f);
         ISleekLabel compassLabelByAngle5 = getCompassLabelByAngle(180);
-        compassLabelByAngle5.fontSize = ESleekFontSize.Large;
-        compassLabelByAngle5.text = "S";
-        compassLabelByAngle5.textColor = new Color(1f, 1f, 1f);
+        compassLabelByAngle5.FontSize = ESleekFontSize.Large;
+        compassLabelByAngle5.Text = "S";
+        compassLabelByAngle5.TextColor = new Color(1f, 1f, 1f);
         ISleekLabel compassLabelByAngle6 = getCompassLabelByAngle(225);
-        compassLabelByAngle6.fontSize = ESleekFontSize.Medium;
-        compassLabelByAngle6.text = "SW";
-        compassLabelByAngle6.textColor = new Color(1f, 1f, 1f);
+        compassLabelByAngle6.FontSize = ESleekFontSize.Medium;
+        compassLabelByAngle6.Text = "SW";
+        compassLabelByAngle6.TextColor = new Color(1f, 1f, 1f);
         ISleekLabel compassLabelByAngle7 = getCompassLabelByAngle(270);
-        compassLabelByAngle7.fontSize = ESleekFontSize.Large;
-        compassLabelByAngle7.text = "W";
-        compassLabelByAngle7.textColor = new Color(1f, 1f, 1f);
+        compassLabelByAngle7.FontSize = ESleekFontSize.Large;
+        compassLabelByAngle7.Text = "W";
+        compassLabelByAngle7.TextColor = new Color(1f, 1f, 1f);
         ISleekLabel compassLabelByAngle8 = getCompassLabelByAngle(315);
-        compassLabelByAngle8.fontSize = ESleekFontSize.Medium;
-        compassLabelByAngle8.text = "NW";
-        compassLabelByAngle8.textColor = new Color(1f, 1f, 1f);
+        compassLabelByAngle8.FontSize = ESleekFontSize.Medium;
+        compassLabelByAngle8.Text = "NW";
+        compassLabelByAngle8.TextColor = new Color(1f, 1f, 1f);
         hotbarContainer = Glazier.Get().CreateFrame();
-        hotbarContainer.positionScale_X = 0.5f;
-        hotbarContainer.positionScale_Y = 1f;
-        hotbarContainer.positionOffset_Y = -200;
+        hotbarContainer.PositionScale_X = 0.5f;
+        hotbarContainer.PositionScale_Y = 1f;
+        hotbarContainer.PositionOffset_Y = -200f;
         container.AddChild(hotbarContainer);
-        hotbarContainer.isVisible = false;
+        hotbarContainer.IsVisible = false;
         cachedHotbarSearch = -1;
         cachedHotbarValues = new CachedHotbarItem[10];
         hotbarImages = new SleekItemIcon[cachedHotbarValues.Length];
@@ -1561,174 +1638,174 @@ public class PlayerLifeUI
                 color = new Color(1f, 1f, 1f, 0.5f)
             };
             hotbarContainer.AddChild(sleekItemIcon);
-            sleekItemIcon.isVisible = false;
+            sleekItemIcon.IsVisible = false;
             hotbarImages[l] = sleekItemIcon;
         }
         hotbarLabels = new ISleekLabel[cachedHotbarValues.Length];
         for (int m = 0; m < hotbarLabels.Length; m++)
         {
             ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
-            sleekLabel2.positionOffset_Y = 5;
-            sleekLabel2.sizeOffset_X = 50;
-            sleekLabel2.sizeOffset_Y = 30;
-            sleekLabel2.text = ControlsSettings.getEquipmentHotkeyText(m);
-            sleekLabel2.fontAlignment = TextAnchor.UpperRight;
-            sleekLabel2.textColor = new SleekColor(ESleekTint.FONT, 0.75f);
-            sleekLabel2.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+            sleekLabel2.PositionOffset_Y = 5f;
+            sleekLabel2.SizeOffset_X = 50f;
+            sleekLabel2.SizeOffset_Y = 30f;
+            sleekLabel2.Text = ControlsSettings.getEquipmentHotkeyText(m);
+            sleekLabel2.TextAlignment = TextAnchor.UpperRight;
+            sleekLabel2.TextColor = new SleekColor(ESleekTint.FONT, 0.75f);
+            sleekLabel2.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
             hotbarContainer.AddChild(sleekLabel2);
-            sleekLabel2.isVisible = false;
+            sleekLabel2.IsVisible = false;
             hotbarLabels[m] = sleekLabel2;
         }
         statTrackerLabel = Glazier.Get().CreateLabel();
-        statTrackerLabel.positionOffset_X = -100;
-        statTrackerLabel.positionOffset_Y = -30;
-        statTrackerLabel.positionScale_X = 0.5f;
-        statTrackerLabel.positionScale_Y = 1f;
-        statTrackerLabel.sizeOffset_X = 200;
-        statTrackerLabel.sizeOffset_Y = 30;
-        statTrackerLabel.fontAlignment = TextAnchor.LowerCenter;
-        statTrackerLabel.fontStyle = FontStyle.Italic;
-        statTrackerLabel.fontSize = ESleekFontSize.Default;
+        statTrackerLabel.PositionOffset_X = -100f;
+        statTrackerLabel.PositionOffset_Y = -30f;
+        statTrackerLabel.PositionScale_X = 0.5f;
+        statTrackerLabel.PositionScale_Y = 1f;
+        statTrackerLabel.SizeOffset_X = 200f;
+        statTrackerLabel.SizeOffset_Y = 30f;
+        statTrackerLabel.TextAlignment = TextAnchor.LowerCenter;
+        statTrackerLabel.FontStyle = FontStyle.Italic;
+        statTrackerLabel.FontSize = ESleekFontSize.Default;
         container.AddChild(statTrackerLabel);
-        statTrackerLabel.isVisible = false;
+        statTrackerLabel.IsVisible = false;
         scopeOverlay = new SleekScopeOverlay();
-        scopeOverlay.sizeScale_X = 1f;
-        scopeOverlay.sizeScale_Y = 1f;
-        scopeOverlay.isVisible = false;
+        scopeOverlay.SizeScale_X = 1f;
+        scopeOverlay.SizeScale_Y = 1f;
+        scopeOverlay.IsVisible = false;
         PlayerUI.window.AddChild(scopeOverlay);
         binocularsOverlay = Glazier.Get().CreateImage((Texture2D)Resources.Load("Overlay/Binoculars"));
-        binocularsOverlay.sizeScale_X = 1f;
-        binocularsOverlay.sizeScale_Y = 1f;
+        binocularsOverlay.SizeScale_X = 1f;
+        binocularsOverlay.SizeScale_Y = 1f;
         PlayerUI.window.AddChild(binocularsOverlay);
-        binocularsOverlay.isVisible = false;
+        binocularsOverlay.IsVisible = false;
         faceButtons = new ISleekButton[Customization.FACES_FREE + Customization.FACES_PRO];
         for (int n = 0; n < faceButtons.Length; n++)
         {
-            float num = (float)Math.PI * 4f * ((float)n / (float)faceButtons.Length);
+            float num = MathF.PI * 4f * ((float)n / (float)faceButtons.Length);
             float num2 = 210f;
             if (n >= faceButtons.Length / 2)
             {
-                num += (float)Math.PI / (float)(faceButtons.Length / 2);
+                num += MathF.PI / (float)(faceButtons.Length / 2);
                 num2 += 30f;
             }
             ISleekButton sleekButton = Glazier.Get().CreateButton();
-            sleekButton.positionOffset_X = (int)(Mathf.Cos(num) * num2) - 20;
-            sleekButton.positionOffset_Y = (int)(Mathf.Sin(num) * num2) - 20;
-            sleekButton.positionScale_X = 0.5f;
-            sleekButton.positionScale_Y = 0.5f;
-            sleekButton.sizeOffset_X = 40;
-            sleekButton.sizeOffset_Y = 40;
+            sleekButton.PositionOffset_X = (int)(Mathf.Cos(num) * num2) - 20;
+            sleekButton.PositionOffset_Y = (int)(Mathf.Sin(num) * num2) - 20;
+            sleekButton.PositionScale_X = 0.5f;
+            sleekButton.PositionScale_Y = 0.5f;
+            sleekButton.SizeOffset_X = 40f;
+            sleekButton.SizeOffset_Y = 40f;
             container.AddChild(sleekButton);
-            sleekButton.isVisible = false;
+            sleekButton.IsVisible = false;
             ISleekImage sleekImage = Glazier.Get().CreateImage();
-            sleekImage.positionOffset_X = 10;
-            sleekImage.positionOffset_Y = 10;
-            sleekImage.sizeOffset_X = 20;
-            sleekImage.sizeOffset_Y = 20;
-            sleekImage.texture = (Texture2D)GlazierResources.PixelTexture;
-            sleekImage.color = Characters.active.skin;
+            sleekImage.PositionOffset_X = 10f;
+            sleekImage.PositionOffset_Y = 10f;
+            sleekImage.SizeOffset_X = 20f;
+            sleekImage.SizeOffset_Y = 20f;
+            sleekImage.Texture = (Texture2D)GlazierResources.PixelTexture;
+            sleekImage.TintColor = Characters.active.skin;
             sleekButton.AddChild(sleekImage);
             ISleekImage sleekImage2 = Glazier.Get().CreateImage();
-            sleekImage2.positionOffset_X = 2;
-            sleekImage2.positionOffset_Y = 2;
-            sleekImage2.sizeOffset_X = 16;
-            sleekImage2.sizeOffset_Y = 16;
-            sleekImage2.texture = (Texture2D)Resources.Load("Faces/" + n + "/Texture");
+            sleekImage2.PositionOffset_X = 2f;
+            sleekImage2.PositionOffset_Y = 2f;
+            sleekImage2.SizeOffset_X = 16f;
+            sleekImage2.SizeOffset_Y = 16f;
+            sleekImage2.Texture = (Texture2D)Resources.Load("Faces/" + n + "/Texture");
             sleekImage.AddChild(sleekImage2);
             if (n >= Customization.FACES_FREE)
             {
                 if (Provider.isPro)
                 {
-                    sleekButton.onClickedButton += onClickedFaceButton;
+                    sleekButton.OnClicked += onClickedFaceButton;
                 }
                 else
                 {
-                    sleekButton.backgroundColor = SleekColor.BackgroundIfLight(Palette.PRO);
+                    sleekButton.BackgroundColor = SleekColor.BackgroundIfLight(Palette.PRO);
                     Bundle bundle = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Pro/Pro.unity3d");
                     ISleekImage sleekImage3 = Glazier.Get().CreateImage();
-                    sleekImage3.positionOffset_X = -10;
-                    sleekImage3.positionOffset_Y = -10;
-                    sleekImage3.positionScale_X = 0.5f;
-                    sleekImage3.positionScale_Y = 0.5f;
-                    sleekImage3.sizeOffset_X = 20;
-                    sleekImage3.sizeOffset_Y = 20;
-                    sleekImage3.texture = bundle.load<Texture2D>("Lock_Small");
+                    sleekImage3.PositionOffset_X = -10f;
+                    sleekImage3.PositionOffset_Y = -10f;
+                    sleekImage3.PositionScale_X = 0.5f;
+                    sleekImage3.PositionScale_Y = 0.5f;
+                    sleekImage3.SizeOffset_X = 20f;
+                    sleekImage3.SizeOffset_Y = 20f;
+                    sleekImage3.Texture = bundle.load<Texture2D>("Lock_Small");
                     sleekButton.AddChild(sleekImage3);
                     bundle.unload();
                 }
             }
             else
             {
-                sleekButton.onClickedButton += onClickedFaceButton;
+                sleekButton.OnClicked += onClickedFaceButton;
             }
             faceButtons[n] = sleekButton;
         }
         surrenderButton = Glazier.Get().CreateButton();
-        surrenderButton.positionOffset_X = -160;
-        surrenderButton.positionOffset_Y = -15;
-        surrenderButton.positionScale_X = 0.5f;
-        surrenderButton.positionScale_Y = 0.5f;
-        surrenderButton.sizeOffset_X = 150;
-        surrenderButton.sizeOffset_Y = 30;
-        surrenderButton.text = localization.format("Surrender");
-        surrenderButton.onClickedButton += onClickedSurrenderButton;
+        surrenderButton.PositionOffset_X = -160f;
+        surrenderButton.PositionOffset_Y = -15f;
+        surrenderButton.PositionScale_X = 0.5f;
+        surrenderButton.PositionScale_Y = 0.5f;
+        surrenderButton.SizeOffset_X = 150f;
+        surrenderButton.SizeOffset_Y = 30f;
+        surrenderButton.Text = localization.format("Surrender");
+        surrenderButton.OnClicked += onClickedSurrenderButton;
         container.AddChild(surrenderButton);
-        surrenderButton.isVisible = false;
+        surrenderButton.IsVisible = false;
         pointButton = Glazier.Get().CreateButton();
-        pointButton.positionOffset_X = 10;
-        pointButton.positionOffset_Y = -15;
-        pointButton.positionScale_X = 0.5f;
-        pointButton.positionScale_Y = 0.5f;
-        pointButton.sizeOffset_X = 150;
-        pointButton.sizeOffset_Y = 30;
-        pointButton.text = localization.format("Point");
-        pointButton.onClickedButton += onClickedPointButton;
+        pointButton.PositionOffset_X = 10f;
+        pointButton.PositionOffset_Y = -15f;
+        pointButton.PositionScale_X = 0.5f;
+        pointButton.PositionScale_Y = 0.5f;
+        pointButton.SizeOffset_X = 150f;
+        pointButton.SizeOffset_Y = 30f;
+        pointButton.Text = localization.format("Point");
+        pointButton.OnClicked += onClickedPointButton;
         container.AddChild(pointButton);
-        pointButton.isVisible = false;
+        pointButton.IsVisible = false;
         waveButton = Glazier.Get().CreateButton();
-        waveButton.positionOffset_X = -75;
-        waveButton.positionOffset_Y = -55;
-        waveButton.positionScale_X = 0.5f;
-        waveButton.positionScale_Y = 0.5f;
-        waveButton.sizeOffset_X = 150;
-        waveButton.sizeOffset_Y = 30;
-        waveButton.text = localization.format("Wave");
-        waveButton.onClickedButton += onClickedWaveButton;
+        waveButton.PositionOffset_X = -75f;
+        waveButton.PositionOffset_Y = -55f;
+        waveButton.PositionScale_X = 0.5f;
+        waveButton.PositionScale_Y = 0.5f;
+        waveButton.SizeOffset_X = 150f;
+        waveButton.SizeOffset_Y = 30f;
+        waveButton.Text = localization.format("Wave");
+        waveButton.OnClicked += onClickedWaveButton;
         container.AddChild(waveButton);
-        waveButton.isVisible = false;
+        waveButton.IsVisible = false;
         saluteButton = Glazier.Get().CreateButton();
-        saluteButton.positionOffset_X = -75;
-        saluteButton.positionOffset_Y = 25;
-        saluteButton.positionScale_X = 0.5f;
-        saluteButton.positionScale_Y = 0.5f;
-        saluteButton.sizeOffset_X = 150;
-        saluteButton.sizeOffset_Y = 30;
-        saluteButton.text = localization.format("Salute");
-        saluteButton.onClickedButton += onClickedSaluteButton;
+        saluteButton.PositionOffset_X = -75f;
+        saluteButton.PositionOffset_Y = 25f;
+        saluteButton.PositionScale_X = 0.5f;
+        saluteButton.PositionScale_Y = 0.5f;
+        saluteButton.SizeOffset_X = 150f;
+        saluteButton.SizeOffset_Y = 30f;
+        saluteButton.Text = localization.format("Salute");
+        saluteButton.OnClicked += onClickedSaluteButton;
         container.AddChild(saluteButton);
-        saluteButton.isVisible = false;
+        saluteButton.IsVisible = false;
         restButton = Glazier.Get().CreateButton();
-        restButton.positionOffset_X = -160;
-        restButton.positionOffset_Y = 65;
-        restButton.positionScale_X = 0.5f;
-        restButton.positionScale_Y = 0.5f;
-        restButton.sizeOffset_X = 150;
-        restButton.sizeOffset_Y = 30;
-        restButton.text = localization.format("Rest");
-        restButton.onClickedButton += onClickedRestButton;
+        restButton.PositionOffset_X = -160f;
+        restButton.PositionOffset_Y = 65f;
+        restButton.PositionScale_X = 0.5f;
+        restButton.PositionScale_Y = 0.5f;
+        restButton.SizeOffset_X = 150f;
+        restButton.SizeOffset_Y = 30f;
+        restButton.Text = localization.format("Rest");
+        restButton.OnClicked += onClickedRestButton;
         container.AddChild(restButton);
-        restButton.isVisible = false;
+        restButton.IsVisible = false;
         facepalmButton = Glazier.Get().CreateButton();
-        facepalmButton.positionOffset_X = 10;
-        facepalmButton.positionOffset_Y = -95;
-        facepalmButton.positionScale_X = 0.5f;
-        facepalmButton.positionScale_Y = 0.5f;
-        facepalmButton.sizeOffset_X = 150;
-        facepalmButton.sizeOffset_Y = 30;
-        facepalmButton.text = localization.format("Facepalm");
-        facepalmButton.onClickedButton += onClickedFacepalmButton;
+        facepalmButton.PositionOffset_X = 10f;
+        facepalmButton.PositionOffset_Y = -95f;
+        facepalmButton.PositionScale_X = 0.5f;
+        facepalmButton.PositionScale_Y = 0.5f;
+        facepalmButton.SizeOffset_X = 150f;
+        facepalmButton.SizeOffset_Y = 30f;
+        facepalmButton.Text = localization.format("Facepalm");
+        facepalmButton.OnClicked += onClickedFacepalmButton;
         container.AddChild(facepalmButton);
-        facepalmButton.isVisible = false;
+        facepalmButton.IsVisible = false;
         activeHitmarkers = new List<HitmarkerInfo>(16);
         hitmarkersPool = new List<SleekHitmarker>(16);
         for (int num3 = 0; num3 < 16; num3++)
@@ -1736,263 +1813,263 @@ public class PlayerLifeUI
             ReleaseHitmarker(NewHitmarker());
         }
         crosshair = new Crosshair(icons);
-        crosshair.sizeScale_X = 1f;
-        crosshair.sizeScale_Y = 1f;
+        crosshair.SizeScale_X = 1f;
+        crosshair.SizeScale_Y = 1f;
         container.AddChild(crosshair);
         crosshair.SetPluginAllowsCenterDotVisible(Player.player.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowCenterDot));
         lifeBox = Glazier.Get().CreateBox();
-        lifeBox.positionScale_Y = 1f;
-        lifeBox.sizeScale_X = 0.2f;
+        lifeBox.PositionScale_Y = 1f;
+        lifeBox.SizeScale_X = 0.2f;
         container.AddChild(lifeBox);
         statusIconsContainer = Glazier.Get().CreateFrame();
-        statusIconsContainer.positionOffset_Y = -60;
-        statusIconsContainer.positionScale_Y = 1f;
-        statusIconsContainer.sizeScale_X = 0.2f;
-        statusIconsContainer.sizeOffset_Y = 50;
+        statusIconsContainer.PositionOffset_Y = -60f;
+        statusIconsContainer.PositionScale_Y = 1f;
+        statusIconsContainer.SizeScale_X = 0.2f;
+        statusIconsContainer.SizeOffset_Y = 50f;
         container.AddChild(statusIconsContainer);
         healthIcon = Glazier.Get().CreateImage();
-        healthIcon.positionOffset_X = 5;
-        healthIcon.sizeOffset_X = 20;
-        healthIcon.sizeOffset_Y = 20;
-        healthIcon.texture = icons.load<Texture2D>("Health");
+        healthIcon.PositionOffset_X = 5f;
+        healthIcon.SizeOffset_X = 20f;
+        healthIcon.SizeOffset_Y = 20f;
+        healthIcon.Texture = icons.load<Texture2D>("Health");
         lifeBox.AddChild(healthIcon);
         healthProgress = new SleekProgress("");
-        healthProgress.positionOffset_X = 30;
-        healthProgress.sizeOffset_X = -40;
-        healthProgress.sizeOffset_Y = 10;
-        healthProgress.sizeScale_X = 1f;
+        healthProgress.PositionOffset_X = 30f;
+        healthProgress.SizeOffset_X = -40f;
+        healthProgress.SizeOffset_Y = 10f;
+        healthProgress.SizeScale_X = 1f;
         healthProgress.color = Palette.COLOR_R;
         lifeBox.AddChild(healthProgress);
         foodIcon = Glazier.Get().CreateImage();
-        foodIcon.positionOffset_X = 5;
-        foodIcon.sizeOffset_X = 20;
-        foodIcon.sizeOffset_Y = 20;
-        foodIcon.texture = icons.load<Texture2D>("Food");
+        foodIcon.PositionOffset_X = 5f;
+        foodIcon.SizeOffset_X = 20f;
+        foodIcon.SizeOffset_Y = 20f;
+        foodIcon.Texture = icons.load<Texture2D>("Food");
         lifeBox.AddChild(foodIcon);
         foodProgress = new SleekProgress("");
-        foodProgress.positionOffset_X = 30;
-        foodProgress.sizeOffset_X = -40;
-        foodProgress.sizeOffset_Y = 10;
-        foodProgress.sizeScale_X = 1f;
+        foodProgress.PositionOffset_X = 30f;
+        foodProgress.SizeOffset_X = -40f;
+        foodProgress.SizeOffset_Y = 10f;
+        foodProgress.SizeScale_X = 1f;
         foodProgress.color = Palette.COLOR_O;
         lifeBox.AddChild(foodProgress);
         waterIcon = Glazier.Get().CreateImage();
-        waterIcon.positionOffset_X = 5;
-        waterIcon.sizeOffset_X = 20;
-        waterIcon.sizeOffset_Y = 20;
-        waterIcon.texture = icons.load<Texture2D>("Water");
+        waterIcon.PositionOffset_X = 5f;
+        waterIcon.SizeOffset_X = 20f;
+        waterIcon.SizeOffset_Y = 20f;
+        waterIcon.Texture = icons.load<Texture2D>("Water");
         lifeBox.AddChild(waterIcon);
         waterProgress = new SleekProgress("");
-        waterProgress.positionOffset_X = 30;
-        waterProgress.sizeOffset_X = -40;
-        waterProgress.sizeOffset_Y = 10;
-        waterProgress.sizeScale_X = 1f;
+        waterProgress.PositionOffset_X = 30f;
+        waterProgress.SizeOffset_X = -40f;
+        waterProgress.SizeOffset_Y = 10f;
+        waterProgress.SizeScale_X = 1f;
         waterProgress.color = Palette.COLOR_B;
         lifeBox.AddChild(waterProgress);
         virusIcon = Glazier.Get().CreateImage();
-        virusIcon.positionOffset_X = 5;
-        virusIcon.sizeOffset_X = 20;
-        virusIcon.sizeOffset_Y = 20;
-        virusIcon.texture = icons.load<Texture2D>("Virus");
+        virusIcon.PositionOffset_X = 5f;
+        virusIcon.SizeOffset_X = 20f;
+        virusIcon.SizeOffset_Y = 20f;
+        virusIcon.Texture = icons.load<Texture2D>("Virus");
         lifeBox.AddChild(virusIcon);
         virusProgress = new SleekProgress("");
-        virusProgress.positionOffset_X = 30;
-        virusProgress.sizeOffset_X = -40;
-        virusProgress.sizeOffset_Y = 10;
-        virusProgress.sizeScale_X = 1f;
+        virusProgress.PositionOffset_X = 30f;
+        virusProgress.SizeOffset_X = -40f;
+        virusProgress.SizeOffset_Y = 10f;
+        virusProgress.SizeScale_X = 1f;
         virusProgress.color = Palette.COLOR_G;
         lifeBox.AddChild(virusProgress);
         staminaIcon = Glazier.Get().CreateImage();
-        staminaIcon.positionOffset_X = 5;
-        staminaIcon.sizeOffset_X = 20;
-        staminaIcon.sizeOffset_Y = 20;
-        staminaIcon.texture = icons.load<Texture2D>("Stamina");
+        staminaIcon.PositionOffset_X = 5f;
+        staminaIcon.SizeOffset_X = 20f;
+        staminaIcon.SizeOffset_Y = 20f;
+        staminaIcon.Texture = icons.load<Texture2D>("Stamina");
         lifeBox.AddChild(staminaIcon);
         staminaProgress = new SleekProgress("");
-        staminaProgress.positionOffset_X = 30;
-        staminaProgress.sizeOffset_X = -40;
-        staminaProgress.sizeOffset_Y = 10;
-        staminaProgress.sizeScale_X = 1f;
+        staminaProgress.PositionOffset_X = 30f;
+        staminaProgress.SizeOffset_X = -40f;
+        staminaProgress.SizeOffset_Y = 10f;
+        staminaProgress.SizeScale_X = 1f;
         staminaProgress.color = Palette.COLOR_Y;
         lifeBox.AddChild(staminaProgress);
         waveLabel = Glazier.Get().CreateLabel();
-        waveLabel.sizeOffset_Y = 30;
-        waveLabel.sizeScale_X = 0.5f;
+        waveLabel.SizeOffset_Y = 30f;
+        waveLabel.SizeScale_X = 0.5f;
         lifeBox.AddChild(waveLabel);
         scoreLabel = Glazier.Get().CreateLabel();
-        scoreLabel.positionScale_X = 0.5f;
-        scoreLabel.sizeOffset_Y = 30;
-        scoreLabel.sizeScale_X = 0.5f;
+        scoreLabel.PositionScale_X = 0.5f;
+        scoreLabel.SizeOffset_Y = 30f;
+        scoreLabel.SizeScale_X = 0.5f;
         lifeBox.AddChild(scoreLabel);
         oxygenIcon = Glazier.Get().CreateImage();
-        oxygenIcon.positionOffset_X = 5;
-        oxygenIcon.sizeOffset_X = 20;
-        oxygenIcon.sizeOffset_Y = 20;
-        oxygenIcon.texture = icons.load<Texture2D>("Oxygen");
+        oxygenIcon.PositionOffset_X = 5f;
+        oxygenIcon.SizeOffset_X = 20f;
+        oxygenIcon.SizeOffset_Y = 20f;
+        oxygenIcon.Texture = icons.load<Texture2D>("Oxygen");
         lifeBox.AddChild(oxygenIcon);
         oxygenProgress = new SleekProgress("");
-        oxygenProgress.positionOffset_X = 30;
-        oxygenProgress.sizeOffset_X = -40;
-        oxygenProgress.sizeOffset_Y = 10;
-        oxygenProgress.sizeScale_X = 1f;
+        oxygenProgress.PositionOffset_X = 30f;
+        oxygenProgress.SizeOffset_X = -40f;
+        oxygenProgress.SizeOffset_Y = 10f;
+        oxygenProgress.SizeScale_X = 1f;
         oxygenProgress.color = Palette.COLOR_W;
         lifeBox.AddChild(oxygenProgress);
         vehicleBox = Glazier.Get().CreateBox();
-        vehicleBox.positionOffset_Y = -120;
-        vehicleBox.positionScale_X = 0.8f;
-        vehicleBox.positionScale_Y = 1f;
-        vehicleBox.sizeOffset_Y = 120;
-        vehicleBox.sizeScale_X = 0.2f;
+        vehicleBox.PositionOffset_Y = -120f;
+        vehicleBox.PositionScale_X = 0.8f;
+        vehicleBox.PositionScale_Y = 1f;
+        vehicleBox.SizeOffset_Y = 120f;
+        vehicleBox.SizeScale_X = 0.2f;
         container.AddChild(vehicleBox);
         vehicleVisibleByDefault = false;
         fuelIcon = Glazier.Get().CreateImage();
-        fuelIcon.positionOffset_X = 5;
-        fuelIcon.positionOffset_Y = 5;
-        fuelIcon.sizeOffset_X = 20;
-        fuelIcon.sizeOffset_Y = 20;
-        fuelIcon.texture = icons.load<Texture2D>("Fuel");
+        fuelIcon.PositionOffset_X = 5f;
+        fuelIcon.PositionOffset_Y = 5f;
+        fuelIcon.SizeOffset_X = 20f;
+        fuelIcon.SizeOffset_Y = 20f;
+        fuelIcon.Texture = icons.load<Texture2D>("Fuel");
         vehicleBox.AddChild(fuelIcon);
         fuelProgress = new SleekProgress("");
-        fuelProgress.positionOffset_X = 30;
-        fuelProgress.positionOffset_Y = 10;
-        fuelProgress.sizeOffset_X = -40;
-        fuelProgress.sizeOffset_Y = 10;
-        fuelProgress.sizeScale_X = 1f;
+        fuelProgress.PositionOffset_X = 30f;
+        fuelProgress.PositionOffset_Y = 10f;
+        fuelProgress.SizeOffset_X = -40f;
+        fuelProgress.SizeOffset_Y = 10f;
+        fuelProgress.SizeScale_X = 1f;
         fuelProgress.color = Palette.COLOR_Y;
         vehicleBox.AddChild(fuelProgress);
         speedIcon = Glazier.Get().CreateImage();
-        speedIcon.positionOffset_X = 5;
-        speedIcon.positionOffset_Y = 35;
-        speedIcon.sizeOffset_X = 20;
-        speedIcon.sizeOffset_Y = 20;
-        speedIcon.texture = icons.load<Texture2D>("Speed");
+        speedIcon.PositionOffset_X = 5f;
+        speedIcon.PositionOffset_Y = 35f;
+        speedIcon.SizeOffset_X = 20f;
+        speedIcon.SizeOffset_Y = 20f;
+        speedIcon.Texture = icons.load<Texture2D>("Speed");
         vehicleBox.AddChild(speedIcon);
         speedProgress = new SleekProgress(OptionsSettings.metric ? " kph" : " mph");
-        speedProgress.positionOffset_X = 30;
-        speedProgress.positionOffset_Y = 40;
-        speedProgress.sizeOffset_X = -40;
-        speedProgress.sizeOffset_Y = 10;
-        speedProgress.sizeScale_X = 1f;
+        speedProgress.PositionOffset_X = 30f;
+        speedProgress.PositionOffset_Y = 40f;
+        speedProgress.SizeOffset_X = -40f;
+        speedProgress.SizeOffset_Y = 10f;
+        speedProgress.SizeScale_X = 1f;
         speedProgress.color = Palette.COLOR_P;
         vehicleBox.AddChild(speedProgress);
         hpIcon = Glazier.Get().CreateImage();
-        hpIcon.positionOffset_X = 5;
-        hpIcon.positionOffset_Y = 65;
-        hpIcon.sizeOffset_X = 20;
-        hpIcon.sizeOffset_Y = 20;
-        hpIcon.texture = icons.load<Texture2D>("Health");
+        hpIcon.PositionOffset_X = 5f;
+        hpIcon.PositionOffset_Y = 65f;
+        hpIcon.SizeOffset_X = 20f;
+        hpIcon.SizeOffset_Y = 20f;
+        hpIcon.Texture = icons.load<Texture2D>("Health");
         vehicleBox.AddChild(hpIcon);
         hpProgress = new SleekProgress("");
-        hpProgress.positionOffset_X = 30;
-        hpProgress.positionOffset_Y = 70;
-        hpProgress.sizeOffset_X = -40;
-        hpProgress.sizeOffset_Y = 10;
-        hpProgress.sizeScale_X = 1f;
+        hpProgress.PositionOffset_X = 30f;
+        hpProgress.PositionOffset_Y = 70f;
+        hpProgress.SizeOffset_X = -40f;
+        hpProgress.SizeOffset_Y = 10f;
+        hpProgress.SizeScale_X = 1f;
         hpProgress.color = Palette.COLOR_R;
         vehicleBox.AddChild(hpProgress);
         batteryChargeIcon = Glazier.Get().CreateImage();
-        batteryChargeIcon.positionOffset_X = 5;
-        batteryChargeIcon.positionOffset_Y = 95;
-        batteryChargeIcon.sizeOffset_X = 20;
-        batteryChargeIcon.sizeOffset_Y = 20;
-        batteryChargeIcon.texture = icons.load<Texture2D>("Stamina");
+        batteryChargeIcon.PositionOffset_X = 5f;
+        batteryChargeIcon.PositionOffset_Y = 95f;
+        batteryChargeIcon.SizeOffset_X = 20f;
+        batteryChargeIcon.SizeOffset_Y = 20f;
+        batteryChargeIcon.Texture = icons.load<Texture2D>("Stamina");
         vehicleBox.AddChild(batteryChargeIcon);
         batteryChargeProgress = new SleekProgress("");
-        batteryChargeProgress.positionOffset_X = 30;
-        batteryChargeProgress.positionOffset_Y = 100;
-        batteryChargeProgress.sizeOffset_X = -40;
-        batteryChargeProgress.sizeOffset_Y = 10;
-        batteryChargeProgress.sizeScale_X = 1f;
+        batteryChargeProgress.PositionOffset_X = 30f;
+        batteryChargeProgress.PositionOffset_Y = 100f;
+        batteryChargeProgress.SizeOffset_X = -40f;
+        batteryChargeProgress.SizeOffset_Y = 10f;
+        batteryChargeProgress.SizeScale_X = 1f;
         batteryChargeProgress.color = Palette.COLOR_Y;
         vehicleBox.AddChild(batteryChargeProgress);
         vehicleLockedLabel = Glazier.Get().CreateLabel();
-        vehicleLockedLabel.positionOffset_Y = -25;
-        vehicleLockedLabel.sizeScale_X = 1f;
-        vehicleLockedLabel.sizeOffset_Y = 30;
-        vehicleLockedLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+        vehicleLockedLabel.PositionOffset_Y = -25f;
+        vehicleLockedLabel.SizeScale_X = 1f;
+        vehicleLockedLabel.SizeOffset_Y = 30f;
+        vehicleLockedLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
         vehicleBox.AddChild(vehicleLockedLabel);
         gasmaskBox = Glazier.Get().CreateBox();
-        gasmaskBox.positionOffset_X = -200;
-        gasmaskBox.positionOffset_Y = -60;
-        gasmaskBox.positionScale_X = 0.5f;
-        gasmaskBox.positionScale_Y = 1f;
-        gasmaskBox.sizeOffset_X = 400;
-        gasmaskBox.sizeOffset_Y = 60;
+        gasmaskBox.PositionOffset_X = -200f;
+        gasmaskBox.PositionOffset_Y = -60f;
+        gasmaskBox.PositionScale_X = 0.5f;
+        gasmaskBox.PositionScale_Y = 1f;
+        gasmaskBox.SizeOffset_X = 400f;
+        gasmaskBox.SizeOffset_Y = 60f;
         container.AddChild(gasmaskBox);
-        gasmaskBox.isVisible = false;
+        gasmaskBox.IsVisible = false;
         gasmaskIcon = new SleekItemIcon();
-        gasmaskIcon.positionOffset_X = 5;
-        gasmaskIcon.positionOffset_Y = 5;
-        gasmaskIcon.sizeOffset_X = 50;
-        gasmaskIcon.sizeOffset_Y = 50;
+        gasmaskIcon.PositionOffset_X = 5f;
+        gasmaskIcon.PositionOffset_Y = 5f;
+        gasmaskIcon.SizeOffset_X = 50f;
+        gasmaskIcon.SizeOffset_Y = 50f;
         gasmaskBox.AddChild(gasmaskIcon);
         gasmaskProgress = new SleekProgress("");
-        gasmaskProgress.positionOffset_X = 60;
-        gasmaskProgress.positionOffset_Y = 10;
-        gasmaskProgress.sizeOffset_X = -70;
-        gasmaskProgress.sizeOffset_Y = 40;
-        gasmaskProgress.sizeScale_X = 1f;
+        gasmaskProgress.PositionOffset_X = 60f;
+        gasmaskProgress.PositionOffset_Y = 10f;
+        gasmaskProgress.SizeOffset_X = -70f;
+        gasmaskProgress.SizeOffset_Y = 40f;
+        gasmaskProgress.SizeScale_X = 1f;
         gasmaskBox.AddChild(gasmaskProgress);
         bleedingBox = new SleekBoxIcon(icons.load<Texture2D>("Bleeding"));
-        bleedingBox.sizeOffset_X = 50;
-        bleedingBox.sizeOffset_Y = 50;
+        bleedingBox.SizeOffset_X = 50f;
+        bleedingBox.SizeOffset_Y = 50f;
         statusIconsContainer.AddChild(bleedingBox);
-        bleedingBox.isVisible = false;
+        bleedingBox.IsVisible = false;
         brokenBox = new SleekBoxIcon(icons.load<Texture2D>("Broken"));
-        brokenBox.sizeOffset_X = 50;
-        brokenBox.sizeOffset_Y = 50;
+        brokenBox.SizeOffset_X = 50f;
+        brokenBox.SizeOffset_Y = 50f;
         statusIconsContainer.AddChild(brokenBox);
-        brokenBox.isVisible = false;
+        brokenBox.IsVisible = false;
         temperatureBox = new SleekBoxIcon(null);
-        temperatureBox.sizeOffset_X = 50;
-        temperatureBox.sizeOffset_Y = 50;
+        temperatureBox.SizeOffset_X = 50f;
+        temperatureBox.SizeOffset_Y = 50f;
         statusIconsContainer.AddChild(temperatureBox);
-        temperatureBox.isVisible = false;
+        temperatureBox.IsVisible = false;
         starvedBox = new SleekBoxIcon(icons.load<Texture2D>("Starved"));
-        starvedBox.sizeOffset_X = 50;
-        starvedBox.sizeOffset_Y = 50;
+        starvedBox.SizeOffset_X = 50f;
+        starvedBox.SizeOffset_Y = 50f;
         statusIconsContainer.AddChild(starvedBox);
-        starvedBox.isVisible = false;
+        starvedBox.IsVisible = false;
         dehydratedBox = new SleekBoxIcon(icons.load<Texture2D>("Dehydrated"));
-        dehydratedBox.sizeOffset_X = 50;
-        dehydratedBox.sizeOffset_Y = 50;
+        dehydratedBox.SizeOffset_X = 50f;
+        dehydratedBox.SizeOffset_Y = 50f;
         statusIconsContainer.AddChild(dehydratedBox);
-        dehydratedBox.isVisible = false;
+        dehydratedBox.IsVisible = false;
         infectedBox = new SleekBoxIcon(icons.load<Texture2D>("Infected"));
-        infectedBox.sizeOffset_X = 50;
-        infectedBox.sizeOffset_Y = 50;
+        infectedBox.SizeOffset_X = 50f;
+        infectedBox.SizeOffset_Y = 50f;
         statusIconsContainer.AddChild(infectedBox);
-        infectedBox.isVisible = false;
+        infectedBox.IsVisible = false;
         drownedBox = new SleekBoxIcon(icons.load<Texture2D>("Drowned"));
-        drownedBox.sizeOffset_X = 50;
-        drownedBox.sizeOffset_Y = 50;
+        drownedBox.SizeOffset_X = 50f;
+        drownedBox.SizeOffset_Y = 50f;
         statusIconsContainer.AddChild(drownedBox);
-        drownedBox.isVisible = false;
+        drownedBox.IsVisible = false;
         asphyxiatingBox = new SleekBoxIcon(icons.load<Texture2D>("AsphyxiatingStatus"));
-        asphyxiatingBox.sizeOffset_X = 50;
-        asphyxiatingBox.sizeOffset_Y = 50;
+        asphyxiatingBox.SizeOffset_X = 50f;
+        asphyxiatingBox.SizeOffset_Y = 50f;
         statusIconsContainer.AddChild(asphyxiatingBox);
-        asphyxiatingBox.isVisible = false;
+        asphyxiatingBox.IsVisible = false;
         moonBox = new SleekBoxIcon(icons.load<Texture2D>("Moon"));
-        moonBox.sizeOffset_X = 50;
-        moonBox.sizeOffset_Y = 50;
+        moonBox.SizeOffset_X = 50f;
+        moonBox.SizeOffset_Y = 50f;
         statusIconsContainer.AddChild(moonBox);
-        moonBox.isVisible = false;
+        moonBox.IsVisible = false;
         radiationBox = new SleekBoxIcon(icons.load<Texture2D>("Deadzone"));
-        radiationBox.sizeOffset_X = 50;
-        radiationBox.sizeOffset_Y = 50;
+        radiationBox.SizeOffset_X = 50f;
+        radiationBox.SizeOffset_Y = 50f;
         statusIconsContainer.AddChild(radiationBox);
-        radiationBox.isVisible = false;
+        radiationBox.IsVisible = false;
         safeBox = new SleekBoxIcon(icons.load<Texture2D>("Safe"));
-        safeBox.sizeOffset_X = 50;
-        safeBox.sizeOffset_Y = 50;
+        safeBox.SizeOffset_X = 50f;
+        safeBox.SizeOffset_Y = 50f;
         statusIconsContainer.AddChild(safeBox);
-        safeBox.isVisible = false;
+        safeBox.IsVisible = false;
         arrestBox = new SleekBoxIcon(icons.load<Texture2D>("Arrest"));
-        arrestBox.sizeOffset_X = 50;
-        arrestBox.sizeOffset_Y = 50;
+        arrestBox.SizeOffset_X = 50f;
+        arrestBox.SizeOffset_Y = 50f;
         statusIconsContainer.AddChild(arrestBox);
-        arrestBox.isVisible = false;
+        arrestBox.IsVisible = false;
         updateIcons();
         updateLifeBoxVisibility();
         UpdateVehicleBoxVisibility();
@@ -2032,8 +2109,8 @@ public class PlayerLifeUI
         ZombieManager.onWaveUpdated = (WaveUpdated)Delegate.Combine(ZombieManager.onWaveUpdated, new WaveUpdated(onWaveUpdated));
         PlayerClothing clothing = Player.player.clothing;
         clothing.onMaskUpdated = (MaskUpdated)Delegate.Combine(clothing.onMaskUpdated, new MaskUpdated(onMaskUpdated));
-        onListed();
-        ChatManager.onChatMessageReceived = (ChatMessageReceivedHandler)Delegate.Combine(ChatManager.onChatMessageReceived, new ChatMessageReceivedHandler(onListed));
+        OnChatMessageReceived();
+        ChatManager.onChatMessageReceived = (ChatMessageReceivedHandler)Delegate.Combine(ChatManager.onChatMessageReceived, new ChatMessageReceivedHandler(OnChatMessageReceived));
         ChatManager.onVotingStart = (VotingStart)Delegate.Combine(ChatManager.onVotingStart, new VotingStart(onVotingStart));
         ChatManager.onVotingUpdate = (VotingUpdate)Delegate.Combine(ChatManager.onVotingUpdate, new VotingUpdate(onVotingUpdate));
         ChatManager.onVotingStop = (VotingStop)Delegate.Combine(ChatManager.onVotingStop, new VotingStop(onVotingStop));
@@ -2046,10 +2123,10 @@ public class PlayerLifeUI
     private static SleekHitmarker NewHitmarker()
     {
         SleekHitmarker sleekHitmarker = new SleekHitmarker();
-        sleekHitmarker.positionOffset_X = -64;
-        sleekHitmarker.positionOffset_Y = -64;
-        sleekHitmarker.sizeOffset_X = 128;
-        sleekHitmarker.sizeOffset_Y = 128;
+        sleekHitmarker.PositionOffset_X = -64f;
+        sleekHitmarker.PositionOffset_Y = -64f;
+        sleekHitmarker.SizeOffset_X = 128f;
+        sleekHitmarker.SizeOffset_Y = 128f;
         PlayerUI.window.AddChild(sleekHitmarker);
         return sleekHitmarker;
     }
@@ -2065,7 +2142,7 @@ public class PlayerLifeUI
 
     internal static void ReleaseHitmarker(SleekHitmarker hitmarker)
     {
-        hitmarker.isVisible = false;
+        hitmarker.IsVisible = false;
         hitmarkersPool.Add(hitmarker);
     }
 }

@@ -132,7 +132,7 @@ public struct AssetReference<T> : IAssetReference, IFormattedFileReadable, IForm
 
     public AssetReference(Guid GUID)
     {
-        this.GUID = GUID;
+        _guid = GUID;
     }
 
     public AssetReference(string GUID)
@@ -142,6 +142,6 @@ public struct AssetReference<T> : IAssetReference, IFormattedFileReadable, IForm
 
     public AssetReference(IAssetReference assetReference)
     {
-        GUID = assetReference.GUID;
+        _guid = assetReference.GUID;
     }
 }

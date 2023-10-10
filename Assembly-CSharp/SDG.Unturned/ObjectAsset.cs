@@ -352,7 +352,7 @@ public class ObjectAsset : Asset
             {
                 array = new byte[1];
             }
-            array[array.Length - 1] = (byte)((!Level.isEditor || rubbleEditor != EObjectRubbleEditor.DEAD) ? byte.MaxValue : 0);
+            array[^1] = (byte)((!Level.isEditor || rubbleEditor != EObjectRubbleEditor.DEAD) ? byte.MaxValue : 0);
         }
         return array;
     }
@@ -407,20 +407,20 @@ public class ObjectAsset : Asset
         return true;
     }
 
-    public void applyInteractabilityConditions(Player player, bool shouldSend)
+    public void ApplyInteractabilityConditions(Player player)
     {
         if (interactabilityConditions != null)
         {
             for (int i = 0; i < interactabilityConditions.Length; i++)
             {
-                interactabilityConditions[i].applyCondition(player, shouldSend);
+                interactabilityConditions[i].ApplyCondition(player);
             }
         }
     }
 
-    public void grantInteractabilityRewards(Player player, bool shouldSend)
+    public void GrantInteractabilityRewards(Player player)
     {
-        interactabilityRewards.Grant(player, shouldSend);
+        interactabilityRewards.Grant(player);
     }
 
     protected bool recursivelyFixTag(GameObject parentGameObject, string oldTag, string newTag)
@@ -764,5 +764,17 @@ public class ObjectAsset : Asset
         shouldExcludeFromLevelBatching |= type == EObjectType.NPC || type == EObjectType.DECAL;
         conditions = new INPCCondition[data.ParseUInt8("Conditions", 0)];
         NPCTool.readConditions(data, localization, "Condition_", conditions, this);
+    }
+
+    [Obsolete("Removed shouldSend parameter")]
+    public void applyInteractabilityConditions(Player player, bool shouldSend)
+    {
+        ApplyInteractabilityConditions(player);
+    }
+
+    [Obsolete("Removed shouldSend parameter")]
+    public void grantInteractabilityRewards(Player player, bool shouldSend)
+    {
+        GrantInteractabilityRewards(player);
     }
 }

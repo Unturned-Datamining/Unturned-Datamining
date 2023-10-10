@@ -6,7 +6,7 @@ internal class GlazierUInt16Field_uGUI : GlazierNumericField_uGUI, ISleekUInt16F
 {
     private ushort _state;
 
-    public ushort state
+    public ushort Value
     {
         get
         {
@@ -19,12 +19,12 @@ internal class GlazierUInt16Field_uGUI : GlazierNumericField_uGUI, ISleekUInt16F
         }
     }
 
-    public ushort minValue { get; set; }
+    public ushort MinValue { get; set; }
 
-    public ushort maxValue { get; set; } = ushort.MaxValue;
+    public ushort MaxValue { get; set; } = ushort.MaxValue;
 
 
-    public event TypedUInt16 onTypedUInt16;
+    public event TypedUInt16 OnValueChanged;
 
     public GlazierUInt16Field_uGUI(Glazier_uGUI glazier)
         : base(glazier)
@@ -42,8 +42,8 @@ internal class GlazierUInt16Field_uGUI : GlazierNumericField_uGUI, ISleekUInt16F
     {
         if (ushort.TryParse(input, out _state))
         {
-            _state = MathfEx.Clamp(_state, minValue, maxValue);
-            this.onTypedUInt16?.Invoke(this, _state);
+            _state = MathfEx.Clamp(_state, MinValue, MaxValue);
+            this.OnValueChanged?.Invoke(this, _state);
             return true;
         }
         return false;
@@ -51,6 +51,6 @@ internal class GlazierUInt16Field_uGUI : GlazierNumericField_uGUI, ISleekUInt16F
 
     protected override string NumberToString()
     {
-        return state.ToString();
+        return Value.ToString();
     }
 }

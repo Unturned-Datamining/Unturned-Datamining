@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,12 +10,14 @@ public class INPCCondition
 
     protected bool shouldReset;
 
+    internal List<int> uiRequirementIndices;
+
     public virtual bool isConditionMet(Player player)
     {
         return false;
     }
 
-    public virtual void applyCondition(Player player, bool shouldSend)
+    public virtual void ApplyCondition(Player player)
     {
     }
 
@@ -35,35 +38,35 @@ public class INPCCondition
             return null;
         }
         ISleekBox sleekBox = Glazier.Get().CreateBox();
-        sleekBox.sizeOffset_Y = 30;
-        sleekBox.sizeScale_X = 1f;
+        sleekBox.SizeOffset_Y = 30f;
+        sleekBox.SizeScale_X = 1f;
         if (icon != null)
         {
             ISleekImage sleekImage = Glazier.Get().CreateImage(icon);
-            sleekImage.positionOffset_X = 5;
-            sleekImage.positionOffset_Y = 5;
-            sleekImage.sizeOffset_X = 20;
-            sleekImage.sizeOffset_Y = 20;
+            sleekImage.PositionOffset_X = 5f;
+            sleekImage.PositionOffset_Y = 5f;
+            sleekImage.SizeOffset_X = 20f;
+            sleekImage.SizeOffset_Y = 20f;
             sleekBox.AddChild(sleekImage);
         }
         ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
         if (icon != null)
         {
-            sleekLabel.positionOffset_X = 30;
-            sleekLabel.sizeOffset_X = -35;
+            sleekLabel.PositionOffset_X = 30f;
+            sleekLabel.SizeOffset_X = -35f;
         }
         else
         {
-            sleekLabel.positionOffset_X = 5;
-            sleekLabel.sizeOffset_X = -10;
+            sleekLabel.PositionOffset_X = 5f;
+            sleekLabel.SizeOffset_X = -10f;
         }
-        sleekLabel.sizeScale_X = 1f;
-        sleekLabel.sizeScale_Y = 1f;
-        sleekLabel.fontAlignment = TextAnchor.MiddleLeft;
-        sleekLabel.textColor = ESleekTint.RICH_TEXT_DEFAULT;
-        sleekLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
-        sleekLabel.enableRichText = true;
-        sleekLabel.text = value;
+        sleekLabel.SizeScale_X = 1f;
+        sleekLabel.SizeScale_Y = 1f;
+        sleekLabel.TextAlignment = TextAnchor.MiddleLeft;
+        sleekLabel.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+        sleekLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+        sleekLabel.AllowRichText = true;
+        sleekLabel.Text = value;
         sleekBox.AddChild(sleekLabel);
         return sleekBox;
     }
@@ -77,9 +80,31 @@ public class INPCCondition
     {
     }
 
+    public bool AreUIRequirementsMet(List<bool> areConditionsMet)
+    {
+        if (uiRequirementIndices == null || uiRequirementIndices.Count < 1)
+        {
+            return true;
+        }
+        foreach (int uiRequirementIndex in uiRequirementIndices)
+        {
+            if (uiRequirementIndex >= 0 && uiRequirementIndex < areConditionsMet.Count && !areConditionsMet[uiRequirementIndex])
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public INPCCondition(string newText, bool newShouldReset)
     {
         text = newText;
         shouldReset = newShouldReset;
+    }
+
+    [Obsolete("Removed shouldSend parameter because ApplyCondition is only called on the server now")]
+    public virtual void applyCondition(Player player, bool shouldSend)
+    {
+        ApplyCondition(player);
     }
 }

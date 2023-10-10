@@ -26,21 +26,21 @@ public class MenuPlayServerInfoUI
         public ServerInfoViewWorkshopButton(PublishedFileId_t fileId, string name)
         {
             this.fileId = fileId;
-            base.sizeOffset_X = 20;
-            base.sizeOffset_Y = 20;
+            base.SizeOffset_X = 20f;
+            base.SizeOffset_Y = 20f;
             ISleekButton sleekButton = Glazier.Get().CreateButton();
-            sleekButton.sizeScale_X = 1f;
-            sleekButton.sizeScale_Y = 1f;
-            sleekButton.onClickedButton += onClickedButton;
-            sleekButton.tooltipText = MenuWorkshopSubscriptionsUI.localization.format("View_Tooltip", name);
+            sleekButton.SizeScale_X = 1f;
+            sleekButton.SizeScale_Y = 1f;
+            sleekButton.OnClicked += onClickedButton;
+            sleekButton.TooltipText = MenuWorkshopSubscriptionsUI.localization.format("View_Tooltip", name);
             AddChild(sleekButton);
             ISleekSprite sleekSprite = Glazier.Get().CreateSprite();
-            sleekSprite.positionOffset_X = 5;
-            sleekSprite.positionOffset_Y = 5;
-            sleekSprite.sizeOffset_X = 10;
-            sleekSprite.sizeOffset_Y = 10;
-            sleekSprite.sprite = MenuDashboardUI.icons.load<Sprite>("External_Link_Sprite");
-            sleekSprite.drawMethod = ESleekSpriteType.Regular;
+            sleekSprite.PositionOffset_X = 5f;
+            sleekSprite.PositionOffset_Y = 5f;
+            sleekSprite.SizeOffset_X = 10f;
+            sleekSprite.SizeOffset_Y = 10f;
+            sleekSprite.Sprite = MenuDashboardUI.icons.load<Sprite>("External_Link_Sprite");
+            sleekSprite.DrawMethod = ESleekSpriteType.Regular;
             sleekButton.AddChild(sleekSprite);
         }
 
@@ -178,25 +178,25 @@ public class MenuPlayServerInfoUI
             {
                 string title = cachedDetails.GetTitle();
                 ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-                sleekLabel.positionOffset_X = 5;
-                sleekLabel.positionOffset_Y = (int)(num * 20);
-                sleekLabel.sizeOffset_Y = 30;
-                sleekLabel.sizeScale_X = 1f;
-                sleekLabel.fontAlignment = TextAnchor.MiddleLeft;
-                sleekLabel.text = title;
-                sleekLabel.textColor = (cachedDetails.isBannedOrPrivate ? ESleekTint.BAD : ESleekTint.FONT);
+                sleekLabel.PositionOffset_X = 5f;
+                sleekLabel.PositionOffset_Y = (int)(num * 20);
+                sleekLabel.SizeOffset_Y = 30f;
+                sleekLabel.SizeScale_X = 1f;
+                sleekLabel.TextAlignment = TextAnchor.MiddleLeft;
+                sleekLabel.Text = title;
+                sleekLabel.TextColor = (cachedDetails.isBannedOrPrivate ? ESleekTint.BAD : ESleekTint.FONT);
                 ugcBox.AddChild(sleekLabel);
                 ServerInfoViewWorkshopButton serverInfoViewWorkshopButton = new ServerInfoViewWorkshopButton(cachedDetails.fileId, title);
-                serverInfoViewWorkshopButton.positionOffset_X = -45;
-                serverInfoViewWorkshopButton.positionOffset_Y = sleekLabel.positionOffset_Y + 5;
-                serverInfoViewWorkshopButton.positionScale_X = 1f;
+                serverInfoViewWorkshopButton.PositionOffset_X = -45f;
+                serverInfoViewWorkshopButton.PositionOffset_Y = sleekLabel.PositionOffset_Y + 5f;
+                serverInfoViewWorkshopButton.PositionScale_X = 1f;
                 ugcBox.AddChild(serverInfoViewWorkshopButton);
                 SleekWorkshopSubscriptionButton sleekWorkshopSubscriptionButton = new SleekWorkshopSubscriptionButton();
-                sleekWorkshopSubscriptionButton.positionOffset_X = -25;
-                sleekWorkshopSubscriptionButton.positionOffset_Y = sleekLabel.positionOffset_Y + 5;
-                sleekWorkshopSubscriptionButton.positionScale_X = 1f;
-                sleekWorkshopSubscriptionButton.sizeOffset_X = 20;
-                sleekWorkshopSubscriptionButton.sizeOffset_Y = 20;
+                sleekWorkshopSubscriptionButton.PositionOffset_X = -25f;
+                sleekWorkshopSubscriptionButton.PositionOffset_Y = sleekLabel.PositionOffset_Y + 5f;
+                sleekWorkshopSubscriptionButton.PositionScale_X = 1f;
+                sleekWorkshopSubscriptionButton.SizeOffset_X = 20f;
+                sleekWorkshopSubscriptionButton.SizeOffset_Y = 20f;
                 sleekWorkshopSubscriptionButton.subscribeText = localization.format("Subscribe");
                 sleekWorkshopSubscriptionButton.unsubscribeText = localization.format("Unsubscribe");
                 sleekWorkshopSubscriptionButton.subscribeTooltip = localization.format("Subscribe_Tooltip", title);
@@ -206,9 +206,9 @@ public class MenuPlayServerInfoUI
                 ugcBox.AddChild(sleekWorkshopSubscriptionButton);
             }
         }
-        ugcBox.sizeOffset_Y = (int)(callback.m_unNumResultsReturned * 20 + 10);
-        ugcTitle.isVisible = true;
-        ugcBox.isVisible = true;
+        ugcBox.SizeOffset_Y = (int)(callback.m_unNumResultsReturned * 20 + 10);
+        ugcTitle.IsVisible = true;
+        ugcBox.IsVisible = true;
         updateDetails();
     }
 
@@ -257,102 +257,102 @@ public class MenuPlayServerInfoUI
         serverPassword = newServerPassword;
         expectedWorkshopItems = null;
         linkUrls = null;
-        new IPv4Address(serverInfo.ip);
-        bool flag = !serverInfo.steamID.BPersistentGameServerAccount() && new IPv4Address(serverInfo.ip).IsWideAreaNetwork;
+        IPv4Address pv4Address = new IPv4Address(serverInfo.ip);
+        bool flag = !serverInfo.steamID.BPersistentGameServerAccount() && pv4Address.IsWideAreaNetwork;
         flag &= serverInfo.infoSource != SteamServerInfo.EInfoSource.LanServerList;
         flag &= !LiveConfig.Get().shouldAllowJoiningInternetServersWithoutGslt;
         if (flag)
         {
-            UnturnedLog.info($"{serverInfo.name} is not logged in ({serverInfo.steamID}) and IP ({new IPv4Address(serverInfo.ip)}) is WAN");
+            UnturnedLog.info($"{serverInfo.name} is not logged in ({serverInfo.steamID}) and IP ({pv4Address}) is WAN");
         }
-        notLoggedInWarningButton.isVisible = flag;
-        banFlags = HostBansManager.Get().MatchBasicDetails(serverInfo.ip, serverInfo.queryPort, serverInfo.name, serverInfo.steamID.m_SteamID);
+        notLoggedInWarningButton.IsVisible = flag;
+        banFlags = HostBansManager.Get().MatchBasicDetails(pv4Address, serverInfo.queryPort, serverInfo.name, serverInfo.steamID.m_SteamID);
         if (banFlags == EHostBanFlags.None)
         {
             banFlags = HostBansManager.Get().MatchExtendedDetails(serverInfo.descText, serverInfo.thumbnailURL);
         }
         UnturnedLog.info($"{serverInfo.name} host ban flags: {banFlags}");
         bool flag2 = banFlags.HasFlag(EHostBanFlags.Blocked);
-        hostBanWarningButton.isVisible = false;
-        hostBanWarningButton.text = string.Empty;
+        hostBanWarningButton.IsVisible = false;
+        hostBanWarningButton.Text = string.Empty;
         if (banFlags.HasFlag(EHostBanFlags.MonetizationWarning))
         {
-            hostBanWarningButton.isVisible = true;
-            hostBanWarningButton.text += localization.format("HostBan_MonetizationWarning");
+            hostBanWarningButton.IsVisible = true;
+            hostBanWarningButton.Text += localization.format("HostBan_MonetizationWarning");
         }
         if (banFlags.HasFlag(EHostBanFlags.WorkshopWarning))
         {
-            if (hostBanWarningButton.isVisible)
+            if (hostBanWarningButton.IsVisible)
             {
-                hostBanWarningButton.text += "\n";
+                hostBanWarningButton.Text += "\n";
             }
             else
             {
-                hostBanWarningButton.isVisible = true;
+                hostBanWarningButton.IsVisible = true;
             }
-            hostBanWarningButton.text += localization.format("HostBan_WorkshopWarning");
+            hostBanWarningButton.Text += localization.format("HostBan_WorkshopWarning");
         }
         if (banFlags.HasFlag(EHostBanFlags.IncorrectMonetizationTagWarning))
         {
-            if (hostBanWarningButton.isVisible)
+            if (hostBanWarningButton.IsVisible)
             {
-                hostBanWarningButton.text += "\n";
+                hostBanWarningButton.Text += "\n";
             }
             else
             {
-                hostBanWarningButton.isVisible = true;
+                hostBanWarningButton.IsVisible = true;
             }
-            hostBanWarningButton.text += localization.format("HostBan_IncorrectMonetizationTagWarning");
+            hostBanWarningButton.Text += localization.format("HostBan_IncorrectMonetizationTagWarning");
         }
         if (banFlags.HasFlag(EHostBanFlags.HostingProvider))
         {
-            if (hostBanWarningButton.isVisible)
+            if (hostBanWarningButton.IsVisible)
             {
-                hostBanWarningButton.text += "\n";
+                hostBanWarningButton.Text += "\n";
             }
             else
             {
-                hostBanWarningButton.isVisible = true;
+                hostBanWarningButton.IsVisible = true;
             }
-            hostBanWarningButton.text += localization.format("HostBan_HostingProvider");
+            hostBanWarningButton.Text += localization.format("HostBan_HostingProvider");
         }
         if (banFlags.HasFlag(EHostBanFlags.Apology))
         {
-            if (hostBanWarningButton.isVisible)
+            if (hostBanWarningButton.IsVisible)
             {
-                hostBanWarningButton.text += "\n";
+                hostBanWarningButton.Text += "\n";
             }
             else
             {
-                hostBanWarningButton.isVisible = true;
+                hostBanWarningButton.IsVisible = true;
             }
-            hostBanWarningButton.text += localization.format("HostBan_Apology");
-            hostBanWarningButton.textColor = ESleekTint.FONT;
-            hostBanWarningButton.isRaycastTarget = false;
+            hostBanWarningButton.Text += localization.format("HostBan_Apology");
+            hostBanWarningButton.TextColor = ESleekTint.FONT;
+            hostBanWarningButton.IsRaycastTarget = false;
         }
         else
         {
-            hostBanWarningButton.textColor = ESleekTint.BAD;
-            hostBanWarningButton.isRaycastTarget = true;
+            hostBanWarningButton.TextColor = ESleekTint.BAD;
+            hostBanWarningButton.IsRaycastTarget = true;
         }
         if (flag)
         {
-            joinButton.isVisible = false;
-            joinDisabledBox.isVisible = true;
-            joinDisabledBox.text = localization.format("NotLoggedInBlock_Label");
-            joinDisabledBox.tooltipText = localization.format("NotLoggedInBlock_Tooltip");
+            joinButton.IsVisible = false;
+            joinDisabledBox.IsVisible = true;
+            joinDisabledBox.Text = localization.format("NotLoggedInBlock_Label");
+            joinDisabledBox.TooltipText = localization.format("NotLoggedInBlock_Tooltip");
         }
         else if (flag2)
         {
-            joinButton.isVisible = false;
-            joinDisabledBox.isVisible = true;
-            joinDisabledBox.text = localization.format("ServerBlacklisted_Label");
-            joinDisabledBox.tooltipText = localization.format("ServerBlacklisted_Tooltip");
+            joinButton.IsVisible = false;
+            joinDisabledBox.IsVisible = true;
+            joinDisabledBox.Text = localization.format("ServerBlacklisted_Label");
+            joinDisabledBox.TooltipText = localization.format("ServerBlacklisted_Tooltip");
         }
         else
         {
-            joinButton.isVisible = true;
-            joinDisabledBox.isVisible = false;
+            joinButton.IsVisible = true;
+            joinDisabledBox.IsVisible = false;
         }
         reset();
         serverFavorited = Provider.GetServerIsFavorited(serverInfo.ip, serverInfo.queryPort);
@@ -435,19 +435,19 @@ public class MenuPlayServerInfoUI
 
     private static void reset()
     {
-        titleDescriptionLabel.text = "";
+        titleDescriptionLabel.Text = "";
         titleIconImage.Clear();
-        serverDescriptionBox.text = "";
+        serverDescriptionBox.Text = "";
     }
 
     private static void updateServerInfo()
     {
-        titleNameLabel.textColor = (serverInfo.isPro ? new SleekColor(Palette.PRO) : new SleekColor(ESleekTint.FONT));
-        titleNameLabel.text = serverInfo.name;
+        titleNameLabel.TextColor = (serverInfo.isPro ? new SleekColor(Palette.PRO) : new SleekColor(ESleekTint.FONT));
+        titleNameLabel.Text = serverInfo.name;
         int num = 0;
-        serverWorkshopLabel.text = localization.format("Workshop", localization.format(serverInfo.isWorkshop ? "Yes" : "No"));
+        serverWorkshopLabel.Text = localization.format("Workshop", localization.format(serverInfo.isWorkshop ? "Yes" : "No"));
         num += 20;
-        serverCombatLabel.text = localization.format("Combat", localization.format(serverInfo.isPvP ? "PvP" : "PvE"));
+        serverCombatLabel.Text = localization.format("Combat", localization.format(serverInfo.isPvP ? "PvP" : "PvE"));
         num += 20;
         string text = serverInfo.cameraMode switch
         {
@@ -457,13 +457,13 @@ public class MenuPlayServerInfoUI
             ECameraMode.VEHICLE => localization.format("Vehicle"), 
             _ => string.Empty, 
         };
-        serverPerspectiveLabel.text = localization.format("Perspective", text);
-        serverPerspectiveLabel.isVisible = !string.IsNullOrEmpty(text);
-        num += (serverPerspectiveLabel.isVisible ? 20 : 0);
+        serverPerspectiveLabel.Text = localization.format("Perspective", text);
+        serverPerspectiveLabel.IsVisible = !string.IsNullOrEmpty(text);
+        num += (serverPerspectiveLabel.IsVisible ? 20 : 0);
         string text2 = ((!serverInfo.IsVACSecure) ? localization.format("VAC_Insecure") : localization.format("VAC_Secure"));
         text2 = ((!serverInfo.IsBattlEyeSecure) ? (text2 + " + " + localization.format("BattlEye_Insecure")) : (text2 + " + " + localization.format("BattlEye_Secure")));
-        serverSecurityLabel.positionOffset_Y = num;
-        serverSecurityLabel.text = localization.format("Security", text2);
+        serverSecurityLabel.PositionOffset_Y = num;
+        serverSecurityLabel.Text = localization.format("Security", text2);
         num += 20;
         string arg = serverInfo.mode switch
         {
@@ -472,51 +472,51 @@ public class MenuPlayServerInfoUI
             EGameMode.HARD => localization.format("Hard"), 
             _ => string.Empty, 
         };
-        serverModeLabel.positionOffset_Y = num;
-        serverModeLabel.text = localization.format("Mode", arg);
+        serverModeLabel.PositionOffset_Y = num;
+        serverModeLabel.Text = localization.format("Mode", arg);
         num += 20;
-        serverCheatsLabel.positionOffset_Y = num;
-        serverCheatsLabel.text = localization.format("Cheats", localization.format(serverInfo.hasCheats ? "Yes" : "No"));
+        serverCheatsLabel.PositionOffset_Y = num;
+        serverCheatsLabel.Text = localization.format("Cheats", localization.format(serverInfo.hasCheats ? "Yes" : "No"));
         num += 20;
         if (serverInfo.monetization != 0)
         {
-            serverMonetizationLabel.isVisible = true;
-            serverMonetizationLabel.positionOffset_Y = num;
+            serverMonetizationLabel.IsVisible = true;
+            serverMonetizationLabel.PositionOffset_Y = num;
             switch (serverInfo.monetization)
             {
             case EServerMonetizationTag.None:
-                serverMonetizationLabel.text = localization.format("Monetization_None");
+                serverMonetizationLabel.Text = localization.format("Monetization_None");
                 break;
             case EServerMonetizationTag.NonGameplay:
-                serverMonetizationLabel.text = localization.format("Monetization_NonGameplay");
+                serverMonetizationLabel.Text = localization.format("Monetization_NonGameplay");
                 break;
             case EServerMonetizationTag.Monetized:
-                serverMonetizationLabel.text = localization.format("Monetization_Monetized");
+                serverMonetizationLabel.Text = localization.format("Monetization_Monetized");
                 break;
             default:
-                serverMonetizationLabel.text = "unknown: " + serverInfo.monetization;
+                serverMonetizationLabel.Text = "unknown: " + serverInfo.monetization;
                 break;
             }
             num += 20;
         }
         else
         {
-            serverMonetizationLabel.isVisible = false;
+            serverMonetizationLabel.IsVisible = false;
         }
-        serverPingLabel.text = localization.format("QueryPing", serverInfo.ping);
-        serverPingLabel.positionOffset_Y = num;
+        serverPingLabel.Text = localization.format("QueryPing", serverInfo.ping);
+        serverPingLabel.PositionOffset_Y = num;
         num += 20;
         if (banFlags.HasFlag(EHostBanFlags.QueryPingWarning))
         {
-            serverPingLabel.text += " - ";
-            serverPingLabel.text += localization.format("HostBan_QueryPingWarning");
-            serverPingLabel.textColor = ESleekTint.BAD;
+            serverPingLabel.Text += " - ";
+            serverPingLabel.Text += localization.format("HostBan_QueryPingWarning");
+            serverPingLabel.TextColor = ESleekTint.BAD;
         }
         else
         {
-            serverPingLabel.textColor = ESleekTint.FONT;
+            serverPingLabel.TextColor = ESleekTint.FONT;
         }
-        serverBox.sizeOffset_Y = num + 10;
+        serverBox.SizeOffset_Y = num + 10;
         updateDetails();
         LevelInfo level = Level.getLevel(serverInfo.map);
         if (level != null)
@@ -527,27 +527,27 @@ public class MenuPlayServerInfoUI
                 string desc = local.format("Description");
                 desc = ItemTool.filterRarityRichText(desc);
                 RichTextUtil.replaceNewlineMarkup(ref desc);
-                mapDescriptionBox.text = desc;
+                mapDescriptionBox.Text = desc;
             }
             if (local != null && local.has("Name"))
             {
-                mapNameBox.text = localization.format("Map", local.format("Name"));
+                mapNameBox.Text = localization.format("Map", local.format("Name"));
             }
             else
             {
-                mapNameBox.text = localization.format("Map", serverInfo.map);
+                mapNameBox.Text = localization.format("Map", serverInfo.map);
             }
             string previewImageFilePath = level.GetPreviewImageFilePath();
             if (!string.IsNullOrEmpty(previewImageFilePath))
             {
-                mapPreviewImage.setTextureAndShouldDestroy(ReadWrite.readTextureFromFile(previewImageFilePath), shouldDestroyTexture: true);
+                mapPreviewImage.SetTextureAndShouldDestroy(ReadWrite.readTextureFromFile(previewImageFilePath), shouldDestroyTexture: true);
             }
         }
         else
         {
-            mapDescriptionBox.text = string.Empty;
-            mapNameBox.text = serverInfo.map;
-            mapPreviewImage.setTextureAndShouldDestroy(null, shouldDestroyTexture: true);
+            mapDescriptionBox.Text = string.Empty;
+            mapNameBox.Text = serverInfo.map;
+            mapPreviewImage.SetTextureAndShouldDestroy(null, shouldDestroyTexture: true);
         }
     }
 
@@ -555,11 +555,11 @@ public class MenuPlayServerInfoUI
     {
         if (serverFavorited)
         {
-            favoriteButton.text = localization.format("Favorite_Off_Button");
+            favoriteButton.Text = localization.format("Favorite_Off_Button");
         }
         else
         {
-            favoriteButton.text = localization.format("Favorite_On_Button");
+            favoriteButton.Text = localization.format("Favorite_On_Button");
         }
     }
 
@@ -568,7 +568,7 @@ public class MenuPlayServerInfoUI
         playersScrollBox.RemoveAllChildren();
         playersOffset = 0;
         playerCount = 0;
-        playerCountBox.text = localization.format("Players", playerCount, serverInfo.maxPlayers);
+        playerCountBox.Text = localization.format("Players", playerCount, serverInfo.maxPlayers);
     }
 
     private static void onPlayersQueryRefreshed(string name, int score, float time)
@@ -592,45 +592,45 @@ public class MenuPlayServerInfoUI
             text = text + " " + timeSpan.Seconds + "s";
         }
         ISleekBox sleekBox = Glazier.Get().CreateBox();
-        sleekBox.positionOffset_Y = playersOffset;
-        sleekBox.sizeOffset_Y = 30;
-        sleekBox.sizeScale_X = 1f;
+        sleekBox.PositionOffset_Y = playersOffset;
+        sleekBox.SizeOffset_Y = 30f;
+        sleekBox.SizeScale_X = 1f;
         playersScrollBox.AddChild(sleekBox);
         ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-        sleekLabel.positionOffset_X = 5;
-        sleekLabel.sizeOffset_X = -10;
-        sleekLabel.sizeScale_X = 1f;
-        sleekLabel.sizeScale_Y = 1f;
-        sleekLabel.fontAlignment = TextAnchor.MiddleLeft;
-        sleekLabel.text = name;
+        sleekLabel.PositionOffset_X = 5f;
+        sleekLabel.SizeOffset_X = -10f;
+        sleekLabel.SizeScale_X = 1f;
+        sleekLabel.SizeScale_Y = 1f;
+        sleekLabel.TextAlignment = TextAnchor.MiddleLeft;
+        sleekLabel.Text = name;
         sleekBox.AddChild(sleekLabel);
         ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
-        sleekLabel2.positionOffset_X = -5;
-        sleekLabel2.sizeOffset_X = -10;
-        sleekLabel2.sizeScale_X = 1f;
-        sleekLabel2.sizeScale_Y = 1f;
-        sleekLabel2.fontAlignment = TextAnchor.MiddleRight;
-        sleekLabel2.text = text;
+        sleekLabel2.PositionOffset_X = -5f;
+        sleekLabel2.SizeOffset_X = -10f;
+        sleekLabel2.SizeScale_X = 1f;
+        sleekLabel2.SizeScale_Y = 1f;
+        sleekLabel2.TextAlignment = TextAnchor.MiddleRight;
+        sleekLabel2.Text = text;
         sleekBox.AddChild(sleekLabel2);
         playersOffset += 40;
-        playersScrollBox.contentSizeOffset = new Vector2(0f, playersOffset - 10);
+        playersScrollBox.ContentSizeOffset = new Vector2(0f, playersOffset - 10);
         playerCount++;
-        playerCountBox.text = localization.format("Players", playerCount, serverInfo.maxPlayers);
+        playerCountBox.Text = localization.format("Players", playerCount, serverInfo.maxPlayers);
     }
 
     private static void updateRules()
     {
         linksFrame.RemoveAllChildren();
-        linksFrame.isVisible = false;
-        ugcTitle.isVisible = false;
+        linksFrame.IsVisible = false;
+        ugcTitle.IsVisible = false;
         ugcBox.RemoveAllChildren();
-        ugcBox.isVisible = false;
-        configTitle.isVisible = false;
+        ugcBox.IsVisible = false;
+        configTitle.IsVisible = false;
         configBox.RemoveAllChildren();
-        configBox.isVisible = false;
-        rocketTitle.isVisible = false;
+        configBox.IsVisible = false;
+        rocketTitle.IsVisible = false;
         rocketBox.RemoveAllChildren();
-        rocketBox.isVisible = false;
+        rocketBox.IsVisible = false;
         updateDetails();
     }
 
@@ -647,7 +647,7 @@ public class MenuPlayServerInfoUI
         if (rulesMap.TryGetValue("Browser_Desc_Hint", out var value2) && !string.IsNullOrEmpty(value2))
         {
             ProfanityFilter.ApplyFilter(OptionsSettings.filter, ref value2);
-            titleDescriptionLabel.text = value2;
+            titleDescriptionLabel.Text = value2;
         }
         if (rulesMap.TryGetValue("Browser_Desc_Full_Count", out var value3) && int.TryParse(value3, NumberStyles.Any, CultureInfo.InvariantCulture, out var result) && result > 0)
         {
@@ -665,7 +665,7 @@ public class MenuPlayServerInfoUI
                 {
                     ProfanityFilter.ApplyFilter(OptionsSettings.filter, ref output);
                     RichTextUtil.replaceNewlineMarkup(ref output);
-                    serverDescriptionBox.text = output;
+                    serverDescriptionBox.Text = output;
                 }
             }
             else
@@ -717,52 +717,52 @@ public class MenuPlayServerInfoUI
                 ProfanityFilter.ApplyFilter(OptionsSettings.filter, ref output2);
                 linkUrls.Add(result3);
                 ISleekButton sleekButton = Glazier.Get().CreateButton();
-                sleekButton.positionOffset_Y += num;
-                sleekButton.sizeScale_X = 1f;
-                sleekButton.sizeOffset_Y = 30;
-                sleekButton.enableRichText = true;
-                sleekButton.text = output2;
-                sleekButton.tooltipText = result3;
-                sleekButton.textColor = ESleekTint.RICH_TEXT_DEFAULT;
-                sleekButton.onClickedButton += OnClickedLinkButton;
+                sleekButton.PositionOffset_Y += num;
+                sleekButton.SizeScale_X = 1f;
+                sleekButton.SizeOffset_Y = 30f;
+                sleekButton.AllowRichText = true;
+                sleekButton.Text = output2;
+                sleekButton.TooltipText = result3;
+                sleekButton.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+                sleekButton.OnClicked += OnClickedLinkButton;
                 linksFrame.AddChild(sleekButton);
                 num += 30;
             }
             if (num > 0)
             {
-                linksFrame.sizeOffset_Y = num;
-                linksFrame.isVisible = true;
+                linksFrame.SizeOffset_Y = num;
+                linksFrame.IsVisible = true;
             }
         }
         if (rulesMap.TryGetValue("rocketplugins", out var value8) && !string.IsNullOrEmpty(value8))
         {
             string[] array = value8.Split(',');
-            rocketBox.sizeOffset_Y = array.Length * 20 + 10;
+            rocketBox.SizeOffset_Y = array.Length * 20 + 10;
             for (int k = 0; k < array.Length; k++)
             {
                 ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-                sleekLabel.positionOffset_X = 5;
-                sleekLabel.positionOffset_Y = k * 20;
-                sleekLabel.sizeOffset_Y = 30;
-                sleekLabel.sizeScale_X = 1f;
-                sleekLabel.fontAlignment = TextAnchor.MiddleLeft;
-                sleekLabel.text = array[k];
+                sleekLabel.PositionOffset_X = 5f;
+                sleekLabel.PositionOffset_Y = k * 20;
+                sleekLabel.SizeOffset_Y = 30f;
+                sleekLabel.SizeScale_X = 1f;
+                sleekLabel.TextAlignment = TextAnchor.MiddleLeft;
+                sleekLabel.Text = array[k];
                 rocketBox.AddChild(sleekLabel);
             }
             if (serverInfo.pluginFramework == SteamServerInfo.EPluginFramework.Rocket)
             {
-                rocketTitle.text = localization.format("Plugins_Rocket");
+                rocketTitle.Text = localization.format("Plugins_Rocket");
             }
             else if (serverInfo.pluginFramework == SteamServerInfo.EPluginFramework.OpenMod)
             {
-                rocketTitle.text = localization.format("Plugins_OpenMod");
+                rocketTitle.Text = localization.format("Plugins_OpenMod");
             }
             else
             {
-                rocketTitle.text = localization.format("Plugins_Unknown");
+                rocketTitle.Text = localization.format("Plugins_Unknown");
             }
-            rocketTitle.isVisible = true;
-            rocketBox.isVisible = true;
+            rocketTitle.IsVisible = true;
+            rocketBox.IsVisible = true;
         }
         expectedWorkshopItems = new List<PublishedFileId_t>(0);
         if (rulesMap.TryGetValue("Mod_Count", out var value9) && int.TryParse(value9, NumberStyles.Any, CultureInfo.InvariantCulture, out var result4) && result4 > 0)
@@ -827,47 +827,47 @@ public class MenuPlayServerInfoUI
                     if (string.IsNullOrEmpty(text4))
                     {
                         ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
-                        sleekLabel2.positionOffset_X = 5;
-                        sleekLabel2.positionOffset_Y = num2;
-                        sleekLabel2.sizeOffset_X = -10;
-                        sleekLabel2.sizeOffset_Y = 30;
-                        sleekLabel2.sizeScale_X = 1f;
-                        sleekLabel2.fontAlignment = TextAnchor.MiddleLeft;
-                        sleekLabel2.textColor = Color.red;
-                        sleekLabel2.text = value12;
+                        sleekLabel2.PositionOffset_X = 5f;
+                        sleekLabel2.PositionOffset_Y = num2;
+                        sleekLabel2.SizeOffset_X = -10f;
+                        sleekLabel2.SizeOffset_Y = 30f;
+                        sleekLabel2.SizeScale_X = 1f;
+                        sleekLabel2.TextAlignment = TextAnchor.MiddleLeft;
+                        sleekLabel2.TextColor = Color.red;
+                        sleekLabel2.Text = value12;
                         configBox.AddChild(sleekLabel2);
                     }
                     else
                     {
                         ISleekLabel sleekLabel3 = Glazier.Get().CreateLabel();
-                        sleekLabel3.positionOffset_X = 5;
-                        sleekLabel3.positionOffset_Y = num2;
-                        sleekLabel3.sizeOffset_X = -5;
-                        sleekLabel3.sizeOffset_Y = 30;
-                        sleekLabel3.sizeScale_X = 0.25f;
-                        sleekLabel3.fontAlignment = TextAnchor.MiddleRight;
-                        sleekLabel3.text = MenuPlayConfigUI.sanitizeName(fieldName);
-                        sleekLabel3.textColor = new SleekColor(ESleekTint.FONT, 0.5f);
+                        sleekLabel3.PositionOffset_X = 5f;
+                        sleekLabel3.PositionOffset_Y = num2;
+                        sleekLabel3.SizeOffset_X = -5f;
+                        sleekLabel3.SizeOffset_Y = 30f;
+                        sleekLabel3.SizeScale_X = 0.25f;
+                        sleekLabel3.TextAlignment = TextAnchor.MiddleRight;
+                        sleekLabel3.Text = MenuPlayConfigUI.sanitizeName(fieldName);
+                        sleekLabel3.TextColor = new SleekColor(ESleekTint.FONT, 0.5f);
                         configBox.AddChild(sleekLabel3);
                         ISleekLabel sleekLabel4 = Glazier.Get().CreateLabel();
-                        sleekLabel4.positionOffset_X = 5;
-                        sleekLabel4.positionOffset_Y = num2;
-                        sleekLabel4.positionScale_X = 0.25f;
-                        sleekLabel4.sizeOffset_X = -5;
-                        sleekLabel4.sizeOffset_Y = 30;
-                        sleekLabel4.sizeScale_X = 0.75f;
-                        sleekLabel4.fontAlignment = TextAnchor.MiddleLeft;
-                        sleekLabel4.text = localization.format("Rule", MenuPlayConfigUI.sanitizeName(fieldName2), text4);
+                        sleekLabel4.PositionOffset_X = 5f;
+                        sleekLabel4.PositionOffset_Y = num2;
+                        sleekLabel4.PositionScale_X = 0.25f;
+                        sleekLabel4.SizeOffset_X = -5f;
+                        sleekLabel4.SizeOffset_Y = 30f;
+                        sleekLabel4.SizeScale_X = 0.75f;
+                        sleekLabel4.TextAlignment = TextAnchor.MiddleLeft;
+                        sleekLabel4.Text = localization.format("Rule", MenuPlayConfigUI.sanitizeName(fieldName2), text4);
                         configBox.AddChild(sleekLabel4);
                     }
                     num2 += 20;
                 }
             }
-            configBox.sizeOffset_Y = num2 + 10;
+            configBox.SizeOffset_Y = num2 + 10;
             if (num2 > 0)
             {
-                configTitle.isVisible = true;
-                configBox.isVisible = true;
+                configTitle.IsVisible = true;
+                configBox.IsVisible = true;
             }
         }
         if (!rulesMap.TryGetValue("GameVersion", out var value13))
@@ -876,17 +876,17 @@ public class MenuPlayServerInfoUI
         }
         if (Parser.TryGetUInt32FromIP(value13, out var value14) && Provider.APP_VERSION_PACKED != value14)
         {
-            joinButton.isVisible = false;
-            joinDisabledBox.isVisible = true;
+            joinButton.IsVisible = false;
+            joinDisabledBox.IsVisible = true;
             if (value14 > Provider.APP_VERSION_PACKED)
             {
-                joinDisabledBox.text = localization.format("ServerNewerVersion_Label", value13);
-                joinDisabledBox.tooltipText = localization.format("ServerNewerVersion_Tooltip");
+                joinDisabledBox.Text = localization.format("ServerNewerVersion_Label", value13);
+                joinDisabledBox.TooltipText = localization.format("ServerNewerVersion_Tooltip");
             }
             else
             {
-                joinDisabledBox.text = localization.format("ServerOlderVersion_Label", value13);
-                joinDisabledBox.tooltipText = localization.format("ServerOlderVersion_Tooltip");
+                joinDisabledBox.Text = localization.format("ServerOlderVersion_Label", value13);
+                joinDisabledBox.TooltipText = localization.format("ServerOlderVersion_Tooltip");
             }
         }
         updateDetails();
@@ -894,63 +894,63 @@ public class MenuPlayServerInfoUI
 
     private static void updateDetails()
     {
-        int num = 0;
-        if (hostBanWarningButton.isVisible)
+        float num = 0f;
+        if (hostBanWarningButton.IsVisible)
         {
-            hostBanWarningButton.positionOffset_X = num;
-            num += hostBanWarningButton.sizeOffset_Y + 10;
+            hostBanWarningButton.PositionOffset_X = num;
+            num += hostBanWarningButton.SizeOffset_Y + 10f;
         }
-        if (notLoggedInWarningButton.isVisible)
+        if (notLoggedInWarningButton.IsVisible)
         {
-            notLoggedInWarningButton.positionOffset_X = num;
-            num += notLoggedInWarningButton.sizeOffset_Y + 10;
+            notLoggedInWarningButton.PositionOffset_X = num;
+            num += notLoggedInWarningButton.SizeOffset_Y + 10f;
         }
-        if (linksFrame.isVisible)
+        if (linksFrame.IsVisible)
         {
-            linksFrame.positionOffset_Y = num;
-            num += linksFrame.sizeOffset_Y + 10;
+            linksFrame.PositionOffset_Y = num;
+            num += linksFrame.SizeOffset_Y + 10f;
         }
-        if (serverTitle.isVisible)
+        if (serverTitle.IsVisible)
         {
-            serverTitle.positionOffset_Y = num;
-            num += 40;
+            serverTitle.PositionOffset_Y = num;
+            num += 40f;
         }
-        if (serverBox.isVisible)
+        if (serverBox.IsVisible)
         {
-            serverBox.positionOffset_Y = num;
-            num += serverBox.sizeOffset_Y + 10;
+            serverBox.PositionOffset_Y = num;
+            num += serverBox.SizeOffset_Y + 10f;
         }
-        if (ugcTitle.isVisible)
+        if (ugcTitle.IsVisible)
         {
-            ugcTitle.positionOffset_Y = num;
-            num += ugcTitle.sizeOffset_Y + 10;
+            ugcTitle.PositionOffset_Y = num;
+            num += ugcTitle.SizeOffset_Y + 10f;
         }
-        if (ugcBox.isVisible)
+        if (ugcBox.IsVisible)
         {
-            ugcBox.positionOffset_Y = num;
-            num += ugcBox.sizeOffset_Y + 10;
+            ugcBox.PositionOffset_Y = num;
+            num += ugcBox.SizeOffset_Y + 10f;
         }
-        if (configTitle.isVisible)
+        if (configTitle.IsVisible)
         {
-            configTitle.positionOffset_Y = num;
-            num += configTitle.sizeOffset_Y + 10;
+            configTitle.PositionOffset_Y = num;
+            num += configTitle.SizeOffset_Y + 10f;
         }
-        if (configBox.isVisible)
+        if (configBox.IsVisible)
         {
-            configBox.positionOffset_Y = num;
-            num += configBox.sizeOffset_Y + 10;
+            configBox.PositionOffset_Y = num;
+            num += configBox.SizeOffset_Y + 10f;
         }
-        if (rocketTitle.isVisible)
+        if (rocketTitle.IsVisible)
         {
-            rocketTitle.positionOffset_Y = num;
-            num += rocketTitle.sizeOffset_Y + 10;
+            rocketTitle.PositionOffset_Y = num;
+            num += rocketTitle.SizeOffset_Y + 10f;
         }
-        if (rocketBox.isVisible)
+        if (rocketBox.IsVisible)
         {
-            rocketBox.positionOffset_Y = num;
-            num += rocketBox.sizeOffset_Y + 10;
+            rocketBox.PositionOffset_Y = num;
+            num += rocketBox.SizeOffset_Y + 10f;
         }
-        detailsScrollBox.contentSizeOffset = new Vector2(0f, num - 10);
+        detailsScrollBox.ContentSizeOffset = new Vector2(0f, num - 10f);
     }
 
     private static void OnClickedLinkButton(ISleekElement button)
@@ -988,289 +988,289 @@ public class MenuPlayServerInfoUI
     {
         localization = Localization.read("/Menu/Play/MenuPlayServerInfo.dat");
         container = new SleekFullscreenBox();
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.positionScale_Y = 1f;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.PositionScale_Y = 1f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         MenuUI.container.AddChild(container);
         active = false;
         infoContainer = Glazier.Get().CreateFrame();
-        infoContainer.positionOffset_Y = 94;
-        infoContainer.sizeOffset_Y = -154;
-        infoContainer.sizeScale_X = 1f;
-        infoContainer.sizeScale_Y = 1f;
+        infoContainer.PositionOffset_Y = 94f;
+        infoContainer.SizeOffset_Y = -154f;
+        infoContainer.SizeScale_X = 1f;
+        infoContainer.SizeScale_Y = 1f;
         container.AddChild(infoContainer);
         buttonsContainer = Glazier.Get().CreateFrame();
-        buttonsContainer.positionOffset_Y = -50;
-        buttonsContainer.positionScale_Y = 1f;
-        buttonsContainer.sizeOffset_Y = 50;
-        buttonsContainer.sizeScale_X = 1f;
+        buttonsContainer.PositionOffset_Y = -50f;
+        buttonsContainer.PositionScale_Y = 1f;
+        buttonsContainer.SizeOffset_Y = 50f;
+        buttonsContainer.SizeScale_X = 1f;
         container.AddChild(buttonsContainer);
         playersContainer = Glazier.Get().CreateFrame();
-        playersContainer.sizeOffset_X = 280;
-        playersContainer.sizeScale_Y = 1f;
+        playersContainer.SizeOffset_X = 280f;
+        playersContainer.SizeScale_Y = 1f;
         infoContainer.AddChild(playersContainer);
         detailsContainer = Glazier.Get().CreateFrame();
-        detailsContainer.positionOffset_X = 290;
-        detailsContainer.sizeOffset_X = -detailsContainer.positionOffset_X - 350;
-        detailsContainer.sizeScale_X = 1f;
-        detailsContainer.sizeScale_Y = 1f;
+        detailsContainer.PositionOffset_X = 290f;
+        detailsContainer.SizeOffset_X = 0f - detailsContainer.PositionOffset_X - 350f;
+        detailsContainer.SizeScale_X = 1f;
+        detailsContainer.SizeScale_Y = 1f;
         infoContainer.AddChild(detailsContainer);
         mapContainer = Glazier.Get().CreateFrame();
-        mapContainer.positionOffset_X = -340;
-        mapContainer.positionScale_X = 1f;
-        mapContainer.sizeOffset_X = 340;
-        mapContainer.sizeScale_Y = 1f;
+        mapContainer.PositionOffset_X = -340f;
+        mapContainer.PositionScale_X = 1f;
+        mapContainer.SizeOffset_X = 340f;
+        mapContainer.SizeScale_Y = 1f;
         infoContainer.AddChild(mapContainer);
         titleBox = Glazier.Get().CreateBox();
-        titleBox.sizeOffset_Y = 84;
-        titleBox.sizeScale_X = 1f;
+        titleBox.SizeOffset_Y = 84f;
+        titleBox.SizeScale_X = 1f;
         container.AddChild(titleBox);
         titleIconImage = new SleekWebImage();
-        titleIconImage.positionOffset_X = 10;
-        titleIconImage.positionOffset_Y = 10;
-        titleIconImage.sizeOffset_X = 64;
-        titleIconImage.sizeOffset_Y = 64;
+        titleIconImage.PositionOffset_X = 10f;
+        titleIconImage.PositionOffset_Y = 10f;
+        titleIconImage.SizeOffset_X = 64f;
+        titleIconImage.SizeOffset_Y = 64f;
         titleBox.AddChild(titleIconImage);
-        int positionOffset_X = (playersContainer.sizeOffset_X - mapContainer.sizeOffset_X) / 2;
+        float positionOffset_X = (playersContainer.SizeOffset_X - mapContainer.SizeOffset_X) / 2f;
         titleNameLabel = Glazier.Get().CreateLabel();
-        titleNameLabel.positionOffset_X = positionOffset_X;
-        titleNameLabel.positionOffset_Y = 5;
-        titleNameLabel.sizeOffset_Y = 40;
-        titleNameLabel.sizeScale_X = 1f;
-        titleNameLabel.fontSize = ESleekFontSize.Large;
+        titleNameLabel.PositionOffset_X = positionOffset_X;
+        titleNameLabel.PositionOffset_Y = 5f;
+        titleNameLabel.SizeOffset_Y = 40f;
+        titleNameLabel.SizeScale_X = 1f;
+        titleNameLabel.FontSize = ESleekFontSize.Large;
         titleBox.AddChild(titleNameLabel);
         titleDescriptionLabel = Glazier.Get().CreateLabel();
-        titleDescriptionLabel.positionOffset_X = positionOffset_X;
-        titleDescriptionLabel.positionOffset_Y = 45;
-        titleDescriptionLabel.sizeOffset_Y = 34;
-        titleDescriptionLabel.sizeScale_X = 1f;
-        titleDescriptionLabel.enableRichText = true;
-        titleDescriptionLabel.textColor = ESleekTint.RICH_TEXT_DEFAULT;
-        titleDescriptionLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+        titleDescriptionLabel.PositionOffset_X = positionOffset_X;
+        titleDescriptionLabel.PositionOffset_Y = 45f;
+        titleDescriptionLabel.SizeOffset_Y = 34f;
+        titleDescriptionLabel.SizeScale_X = 1f;
+        titleDescriptionLabel.AllowRichText = true;
+        titleDescriptionLabel.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+        titleDescriptionLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
         titleBox.AddChild(titleDescriptionLabel);
         playerCountBox = Glazier.Get().CreateBox();
-        playerCountBox.sizeScale_X = 1f;
-        playerCountBox.sizeOffset_Y = 30;
+        playerCountBox.SizeScale_X = 1f;
+        playerCountBox.SizeOffset_Y = 30f;
         playersContainer.AddChild(playerCountBox);
         playersScrollBox = Glazier.Get().CreateScrollView();
-        playersScrollBox.positionOffset_Y = 40;
-        playersScrollBox.sizeScale_X = 1f;
-        playersScrollBox.sizeOffset_Y = -40;
-        playersScrollBox.sizeScale_Y = 1f;
-        playersScrollBox.scaleContentToWidth = true;
+        playersScrollBox.PositionOffset_Y = 40f;
+        playersScrollBox.SizeScale_X = 1f;
+        playersScrollBox.SizeOffset_Y = -40f;
+        playersScrollBox.SizeScale_Y = 1f;
+        playersScrollBox.ScaleContentToWidth = true;
         playersContainer.AddChild(playersScrollBox);
         detailsBox = Glazier.Get().CreateBox();
-        detailsBox.sizeScale_X = 1f;
-        detailsBox.sizeOffset_Y = 30;
-        detailsBox.text = localization.format("Details");
+        detailsBox.SizeScale_X = 1f;
+        detailsBox.SizeOffset_Y = 30f;
+        detailsBox.Text = localization.format("Details");
         detailsContainer.AddChild(detailsBox);
         detailsScrollBox = Glazier.Get().CreateScrollView();
-        detailsScrollBox.positionOffset_Y = 40;
-        detailsScrollBox.sizeScale_X = 1f;
-        detailsScrollBox.sizeOffset_Y = -40;
-        detailsScrollBox.sizeScale_Y = 1f;
-        detailsScrollBox.scaleContentToWidth = true;
+        detailsScrollBox.PositionOffset_Y = 40f;
+        detailsScrollBox.SizeScale_X = 1f;
+        detailsScrollBox.SizeOffset_Y = -40f;
+        detailsScrollBox.SizeScale_Y = 1f;
+        detailsScrollBox.ScaleContentToWidth = true;
         detailsContainer.AddChild(detailsScrollBox);
         hostBanWarningButton = Glazier.Get().CreateButton();
-        hostBanWarningButton.sizeOffset_Y = 60;
-        hostBanWarningButton.sizeScale_X = 1f;
-        hostBanWarningButton.isVisible = false;
-        hostBanWarningButton.onClickedButton += OnClickedHostBanWarning;
+        hostBanWarningButton.SizeOffset_Y = 60f;
+        hostBanWarningButton.SizeScale_X = 1f;
+        hostBanWarningButton.IsVisible = false;
+        hostBanWarningButton.OnClicked += OnClickedHostBanWarning;
         detailsScrollBox.AddChild(hostBanWarningButton);
         notLoggedInWarningButton = Glazier.Get().CreateButton();
-        notLoggedInWarningButton.sizeOffset_Y = 60;
-        notLoggedInWarningButton.sizeScale_X = 1f;
-        notLoggedInWarningButton.isVisible = false;
-        notLoggedInWarningButton.onClickedButton += OnClickedNotLoggedInWarning;
-        notLoggedInWarningButton.text += localization.format("NotLoggedInMessage");
-        notLoggedInWarningButton.textColor = ESleekTint.BAD;
+        notLoggedInWarningButton.SizeOffset_Y = 60f;
+        notLoggedInWarningButton.SizeScale_X = 1f;
+        notLoggedInWarningButton.IsVisible = false;
+        notLoggedInWarningButton.OnClicked += OnClickedNotLoggedInWarning;
+        notLoggedInWarningButton.Text += localization.format("NotLoggedInMessage");
+        notLoggedInWarningButton.TextColor = ESleekTint.BAD;
         detailsScrollBox.AddChild(notLoggedInWarningButton);
-        notLoggedInWarningButton.isVisible = false;
+        notLoggedInWarningButton.IsVisible = false;
         linksFrame = Glazier.Get().CreateFrame();
-        linksFrame.positionOffset_Y = 40;
-        linksFrame.sizeScale_X = 1f;
+        linksFrame.PositionOffset_Y = 40f;
+        linksFrame.SizeScale_X = 1f;
         detailsScrollBox.AddChild(linksFrame);
         serverTitle = Glazier.Get().CreateBox();
-        serverTitle.sizeOffset_Y = 30;
-        serverTitle.sizeScale_X = 1f;
-        serverTitle.text = localization.format("Server");
+        serverTitle.SizeOffset_Y = 30f;
+        serverTitle.SizeScale_X = 1f;
+        serverTitle.Text = localization.format("Server");
         detailsScrollBox.AddChild(serverTitle);
         serverBox = Glazier.Get().CreateBox();
-        serverBox.positionOffset_Y = 40;
-        serverBox.sizeScale_X = 1f;
-        serverBox.sizeOffset_Y = 130;
+        serverBox.PositionOffset_Y = 40f;
+        serverBox.SizeScale_X = 1f;
+        serverBox.SizeOffset_Y = 130f;
         detailsScrollBox.AddChild(serverBox);
         serverWorkshopLabel = Glazier.Get().CreateLabel();
-        serverWorkshopLabel.positionOffset_X = 5;
-        serverWorkshopLabel.positionOffset_Y = 0;
-        serverWorkshopLabel.sizeOffset_Y = 30;
-        serverWorkshopLabel.sizeScale_X = 1f;
-        serverWorkshopLabel.fontAlignment = TextAnchor.MiddleLeft;
+        serverWorkshopLabel.PositionOffset_X = 5f;
+        serverWorkshopLabel.PositionOffset_Y = 0f;
+        serverWorkshopLabel.SizeOffset_Y = 30f;
+        serverWorkshopLabel.SizeScale_X = 1f;
+        serverWorkshopLabel.TextAlignment = TextAnchor.MiddleLeft;
         serverBox.AddChild(serverWorkshopLabel);
         serverCombatLabel = Glazier.Get().CreateLabel();
-        serverCombatLabel.positionOffset_X = 5;
-        serverCombatLabel.positionOffset_Y = 20;
-        serverCombatLabel.sizeOffset_Y = 30;
-        serverCombatLabel.sizeScale_X = 1f;
-        serverCombatLabel.fontAlignment = TextAnchor.MiddleLeft;
+        serverCombatLabel.PositionOffset_X = 5f;
+        serverCombatLabel.PositionOffset_Y = 20f;
+        serverCombatLabel.SizeOffset_Y = 30f;
+        serverCombatLabel.SizeScale_X = 1f;
+        serverCombatLabel.TextAlignment = TextAnchor.MiddleLeft;
         serverBox.AddChild(serverCombatLabel);
         serverPerspectiveLabel = Glazier.Get().CreateLabel();
-        serverPerspectiveLabel.positionOffset_X = 5;
-        serverPerspectiveLabel.positionOffset_Y = 40;
-        serverPerspectiveLabel.sizeOffset_Y = 30;
-        serverPerspectiveLabel.sizeScale_X = 1f;
-        serverPerspectiveLabel.fontAlignment = TextAnchor.MiddleLeft;
+        serverPerspectiveLabel.PositionOffset_X = 5f;
+        serverPerspectiveLabel.PositionOffset_Y = 40f;
+        serverPerspectiveLabel.SizeOffset_Y = 30f;
+        serverPerspectiveLabel.SizeScale_X = 1f;
+        serverPerspectiveLabel.TextAlignment = TextAnchor.MiddleLeft;
         serverBox.AddChild(serverPerspectiveLabel);
         serverSecurityLabel = Glazier.Get().CreateLabel();
-        serverSecurityLabel.positionOffset_X = 5;
-        serverSecurityLabel.positionOffset_Y = 60;
-        serverSecurityLabel.sizeOffset_Y = 30;
-        serverSecurityLabel.sizeScale_X = 1f;
-        serverSecurityLabel.fontAlignment = TextAnchor.MiddleLeft;
+        serverSecurityLabel.PositionOffset_X = 5f;
+        serverSecurityLabel.PositionOffset_Y = 60f;
+        serverSecurityLabel.SizeOffset_Y = 30f;
+        serverSecurityLabel.SizeScale_X = 1f;
+        serverSecurityLabel.TextAlignment = TextAnchor.MiddleLeft;
         serverBox.AddChild(serverSecurityLabel);
         serverModeLabel = Glazier.Get().CreateLabel();
-        serverModeLabel.positionOffset_X = 5;
-        serverModeLabel.positionOffset_Y = 80;
-        serverModeLabel.sizeOffset_Y = 30;
-        serverModeLabel.sizeScale_X = 1f;
-        serverModeLabel.fontAlignment = TextAnchor.MiddleLeft;
+        serverModeLabel.PositionOffset_X = 5f;
+        serverModeLabel.PositionOffset_Y = 80f;
+        serverModeLabel.SizeOffset_Y = 30f;
+        serverModeLabel.SizeScale_X = 1f;
+        serverModeLabel.TextAlignment = TextAnchor.MiddleLeft;
         serverBox.AddChild(serverModeLabel);
         serverCheatsLabel = Glazier.Get().CreateLabel();
-        serverCheatsLabel.positionOffset_X = 5;
-        serverCheatsLabel.positionOffset_Y = 100;
-        serverCheatsLabel.sizeOffset_Y = 30;
-        serverCheatsLabel.sizeScale_X = 1f;
-        serverCheatsLabel.fontAlignment = TextAnchor.MiddleLeft;
+        serverCheatsLabel.PositionOffset_X = 5f;
+        serverCheatsLabel.PositionOffset_Y = 100f;
+        serverCheatsLabel.SizeOffset_Y = 30f;
+        serverCheatsLabel.SizeScale_X = 1f;
+        serverCheatsLabel.TextAlignment = TextAnchor.MiddleLeft;
         serverBox.AddChild(serverCheatsLabel);
         serverMonetizationLabel = Glazier.Get().CreateLabel();
-        serverMonetizationLabel.positionOffset_X = 5;
-        serverMonetizationLabel.positionOffset_Y = 100;
-        serverMonetizationLabel.sizeOffset_Y = 30;
-        serverMonetizationLabel.sizeScale_X = 1f;
-        serverMonetizationLabel.fontAlignment = TextAnchor.MiddleLeft;
+        serverMonetizationLabel.PositionOffset_X = 5f;
+        serverMonetizationLabel.PositionOffset_Y = 100f;
+        serverMonetizationLabel.SizeOffset_Y = 30f;
+        serverMonetizationLabel.SizeScale_X = 1f;
+        serverMonetizationLabel.TextAlignment = TextAnchor.MiddleLeft;
         serverBox.AddChild(serverMonetizationLabel);
         serverPingLabel = Glazier.Get().CreateLabel();
-        serverPingLabel.positionOffset_X = 5;
-        serverPingLabel.positionOffset_Y = 100;
-        serverPingLabel.sizeOffset_Y = 30;
-        serverPingLabel.sizeScale_X = 1f;
-        serverPingLabel.fontAlignment = TextAnchor.MiddleLeft;
+        serverPingLabel.PositionOffset_X = 5f;
+        serverPingLabel.PositionOffset_Y = 100f;
+        serverPingLabel.SizeOffset_Y = 30f;
+        serverPingLabel.SizeScale_X = 1f;
+        serverPingLabel.TextAlignment = TextAnchor.MiddleLeft;
         serverBox.AddChild(serverPingLabel);
         ugcTitle = Glazier.Get().CreateBox();
-        ugcTitle.sizeOffset_Y = 30;
-        ugcTitle.sizeScale_X = 1f;
-        ugcTitle.text = localization.format("UGC");
+        ugcTitle.SizeOffset_Y = 30f;
+        ugcTitle.SizeScale_X = 1f;
+        ugcTitle.Text = localization.format("UGC");
         detailsScrollBox.AddChild(ugcTitle);
-        ugcTitle.isVisible = false;
+        ugcTitle.IsVisible = false;
         ugcBox = Glazier.Get().CreateBox();
-        ugcBox.sizeScale_X = 1f;
+        ugcBox.SizeScale_X = 1f;
         detailsScrollBox.AddChild(ugcBox);
-        ugcBox.isVisible = false;
+        ugcBox.IsVisible = false;
         configTitle = Glazier.Get().CreateBox();
-        configTitle.sizeOffset_Y = 30;
-        configTitle.sizeScale_X = 1f;
-        configTitle.text = localization.format("Config");
+        configTitle.SizeOffset_Y = 30f;
+        configTitle.SizeScale_X = 1f;
+        configTitle.Text = localization.format("Config");
         detailsScrollBox.AddChild(configTitle);
-        configTitle.isVisible = false;
+        configTitle.IsVisible = false;
         configBox = Glazier.Get().CreateBox();
-        configBox.sizeScale_X = 1f;
+        configBox.SizeScale_X = 1f;
         detailsScrollBox.AddChild(configBox);
-        configBox.isVisible = false;
+        configBox.IsVisible = false;
         rocketTitle = Glazier.Get().CreateBox();
-        rocketTitle.sizeOffset_Y = 30;
-        rocketTitle.sizeScale_X = 1f;
+        rocketTitle.SizeOffset_Y = 30f;
+        rocketTitle.SizeScale_X = 1f;
         detailsScrollBox.AddChild(rocketTitle);
-        rocketTitle.isVisible = false;
+        rocketTitle.IsVisible = false;
         rocketBox = Glazier.Get().CreateBox();
-        rocketBox.sizeScale_X = 1f;
+        rocketBox.SizeScale_X = 1f;
         detailsScrollBox.AddChild(rocketBox);
-        rocketBox.isVisible = false;
+        rocketBox.IsVisible = false;
         mapNameBox = Glazier.Get().CreateBox();
-        mapNameBox.sizeOffset_X = 340;
-        mapNameBox.sizeOffset_Y = 30;
+        mapNameBox.SizeOffset_X = 340f;
+        mapNameBox.SizeOffset_Y = 30f;
         mapContainer.AddChild(mapNameBox);
         mapPreviewBox = Glazier.Get().CreateBox();
-        mapPreviewBox.positionOffset_Y = 40;
-        mapPreviewBox.sizeOffset_X = 340;
-        mapPreviewBox.sizeOffset_Y = 200;
+        mapPreviewBox.PositionOffset_Y = 40f;
+        mapPreviewBox.SizeOffset_X = 340f;
+        mapPreviewBox.SizeOffset_Y = 200f;
         mapContainer.AddChild(mapPreviewBox);
         mapPreviewImage = Glazier.Get().CreateImage();
-        mapPreviewImage.positionOffset_X = 10;
-        mapPreviewImage.positionOffset_Y = 10;
-        mapPreviewImage.sizeOffset_X = -20;
-        mapPreviewImage.sizeOffset_Y = -20;
-        mapPreviewImage.sizeScale_X = 1f;
-        mapPreviewImage.sizeScale_Y = 1f;
+        mapPreviewImage.PositionOffset_X = 10f;
+        mapPreviewImage.PositionOffset_Y = 10f;
+        mapPreviewImage.SizeOffset_X = -20f;
+        mapPreviewImage.SizeOffset_Y = -20f;
+        mapPreviewImage.SizeScale_X = 1f;
+        mapPreviewImage.SizeScale_Y = 1f;
         mapPreviewBox.AddChild(mapPreviewImage);
         mapDescriptionBox = Glazier.Get().CreateBox();
-        mapDescriptionBox.positionOffset_Y = 250;
-        mapDescriptionBox.sizeOffset_X = 340;
-        mapDescriptionBox.sizeOffset_Y = 140;
-        mapDescriptionBox.fontAlignment = TextAnchor.UpperCenter;
-        mapDescriptionBox.enableRichText = true;
-        mapDescriptionBox.textColor = ESleekTint.RICH_TEXT_DEFAULT;
+        mapDescriptionBox.PositionOffset_Y = 250f;
+        mapDescriptionBox.SizeOffset_X = 340f;
+        mapDescriptionBox.SizeOffset_Y = 140f;
+        mapDescriptionBox.TextAlignment = TextAnchor.UpperCenter;
+        mapDescriptionBox.AllowRichText = true;
+        mapDescriptionBox.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
         mapContainer.AddChild(mapDescriptionBox);
         serverDescriptionBox = Glazier.Get().CreateBox();
-        serverDescriptionBox.positionOffset_Y = 400;
-        serverDescriptionBox.sizeOffset_X = 340;
-        serverDescriptionBox.sizeOffset_Y = -400;
-        serverDescriptionBox.sizeScale_Y = 1f;
-        serverDescriptionBox.fontAlignment = TextAnchor.UpperCenter;
-        serverDescriptionBox.enableRichText = true;
-        serverDescriptionBox.textColor = ESleekTint.RICH_TEXT_DEFAULT;
-        serverDescriptionBox.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+        serverDescriptionBox.PositionOffset_Y = 400f;
+        serverDescriptionBox.SizeOffset_X = 340f;
+        serverDescriptionBox.SizeOffset_Y = -400f;
+        serverDescriptionBox.SizeScale_Y = 1f;
+        serverDescriptionBox.TextAlignment = TextAnchor.UpperCenter;
+        serverDescriptionBox.AllowRichText = true;
+        serverDescriptionBox.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+        serverDescriptionBox.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
         mapContainer.AddChild(serverDescriptionBox);
         joinButton = Glazier.Get().CreateButton();
-        joinButton.sizeOffset_X = -5;
-        joinButton.sizeScale_X = 0.25f;
-        joinButton.sizeScale_Y = 1f;
-        joinButton.text = localization.format("Join_Button");
-        joinButton.tooltipText = localization.format("Join_Button_Tooltip");
-        joinButton.onClickedButton += onClickedJoinButton;
-        joinButton.fontSize = ESleekFontSize.Medium;
+        joinButton.SizeOffset_X = -5f;
+        joinButton.SizeScale_X = 0.25f;
+        joinButton.SizeScale_Y = 1f;
+        joinButton.Text = localization.format("Join_Button");
+        joinButton.TooltipText = localization.format("Join_Button_Tooltip");
+        joinButton.OnClicked += onClickedJoinButton;
+        joinButton.FontSize = ESleekFontSize.Medium;
         buttonsContainer.AddChild(joinButton);
         joinDisabledBox = Glazier.Get().CreateBox();
-        joinDisabledBox.sizeOffset_X = -5;
-        joinDisabledBox.sizeScale_X = 0.25f;
-        joinDisabledBox.sizeScale_Y = 1f;
-        joinDisabledBox.textColor = ESleekTint.BAD;
+        joinDisabledBox.SizeOffset_X = -5f;
+        joinDisabledBox.SizeScale_X = 0.25f;
+        joinDisabledBox.SizeScale_Y = 1f;
+        joinDisabledBox.TextColor = ESleekTint.BAD;
         buttonsContainer.AddChild(joinDisabledBox);
-        joinDisabledBox.isVisible = false;
+        joinDisabledBox.IsVisible = false;
         favoriteButton = Glazier.Get().CreateButton();
-        favoriteButton.positionOffset_X = 5;
-        favoriteButton.positionScale_X = 0.25f;
-        favoriteButton.sizeOffset_X = -10;
-        favoriteButton.sizeScale_X = 0.25f;
-        favoriteButton.sizeScale_Y = 1f;
-        favoriteButton.tooltipText = localization.format("Favorite_Button_Tooltip");
-        favoriteButton.onClickedButton += onClickedFavoriteButton;
-        favoriteButton.fontSize = ESleekFontSize.Medium;
+        favoriteButton.PositionOffset_X = 5f;
+        favoriteButton.PositionScale_X = 0.25f;
+        favoriteButton.SizeOffset_X = -10f;
+        favoriteButton.SizeScale_X = 0.25f;
+        favoriteButton.SizeScale_Y = 1f;
+        favoriteButton.TooltipText = localization.format("Favorite_Button_Tooltip");
+        favoriteButton.OnClicked += onClickedFavoriteButton;
+        favoriteButton.FontSize = ESleekFontSize.Medium;
         buttonsContainer.AddChild(favoriteButton);
         refreshButton = Glazier.Get().CreateButton();
-        refreshButton.positionOffset_X = 5;
-        refreshButton.positionScale_X = 0.5f;
-        refreshButton.sizeOffset_X = -10;
-        refreshButton.sizeScale_X = 0.25f;
-        refreshButton.sizeScale_Y = 1f;
-        refreshButton.text = localization.format("Refresh_Button");
-        refreshButton.tooltipText = localization.format("Refresh_Button_Tooltip");
-        refreshButton.onClickedButton += onClickedRefreshButton;
-        refreshButton.fontSize = ESleekFontSize.Medium;
+        refreshButton.PositionOffset_X = 5f;
+        refreshButton.PositionScale_X = 0.5f;
+        refreshButton.SizeOffset_X = -10f;
+        refreshButton.SizeScale_X = 0.25f;
+        refreshButton.SizeScale_Y = 1f;
+        refreshButton.Text = localization.format("Refresh_Button");
+        refreshButton.TooltipText = localization.format("Refresh_Button_Tooltip");
+        refreshButton.OnClicked += onClickedRefreshButton;
+        refreshButton.FontSize = ESleekFontSize.Medium;
         buttonsContainer.AddChild(refreshButton);
         cancelButton = Glazier.Get().CreateButton();
-        cancelButton.positionOffset_X = 5;
-        cancelButton.positionScale_X = 0.75f;
-        cancelButton.sizeOffset_X = -5;
-        cancelButton.sizeScale_X = 0.25f;
-        cancelButton.sizeScale_Y = 1f;
-        cancelButton.text = localization.format("Cancel_Button");
-        cancelButton.tooltipText = localization.format("Cancel_Button_Tooltip");
-        cancelButton.onClickedButton += onClickedCancelButton;
-        cancelButton.fontSize = ESleekFontSize.Medium;
+        cancelButton.PositionOffset_X = 5f;
+        cancelButton.PositionScale_X = 0.75f;
+        cancelButton.SizeOffset_X = -5f;
+        cancelButton.SizeScale_X = 0.25f;
+        cancelButton.SizeScale_Y = 1f;
+        cancelButton.Text = localization.format("Cancel_Button");
+        cancelButton.TooltipText = localization.format("Cancel_Button_Tooltip");
+        cancelButton.OnClicked += onClickedCancelButton;
+        cancelButton.FontSize = ESleekFontSize.Medium;
         buttonsContainer.AddChild(cancelButton);
         TempSteamworksMatchmaking matchmakingService = Provider.provider.matchmakingService;
         matchmakingService.onMasterServerQueryRefreshed = (TempSteamworksMatchmaking.MasterServerQueryRefreshed)Delegate.Combine(matchmakingService.onMasterServerQueryRefreshed, new TempSteamworksMatchmaking.MasterServerQueryRefreshed(onMasterServerQueryRefreshed));

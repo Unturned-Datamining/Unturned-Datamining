@@ -25,20 +25,12 @@ public class NPCCompareFlagsCondition : NPCLogicCondition
         return doesLogicPass(value, value2);
     }
 
-    public override void applyCondition(Player player, bool shouldSend)
+    public override void ApplyCondition(Player player)
     {
         if (shouldReset)
         {
-            if (shouldSend)
-            {
-                player.quests.sendRemoveFlag(flag_A_ID);
-                player.quests.sendRemoveFlag(flag_B_ID);
-            }
-            else
-            {
-                player.quests.removeFlag(flag_A_ID);
-                player.quests.removeFlag(flag_B_ID);
-            }
+            player.quests.sendRemoveFlag(flag_A_ID);
+            player.quests.sendRemoveFlag(flag_B_ID);
         }
     }
 

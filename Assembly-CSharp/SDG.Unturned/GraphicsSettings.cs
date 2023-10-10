@@ -47,6 +47,10 @@ public class GraphicsSettings
 
     private static CommandLineInt clRefreshRate = new CommandLineInt("-refreshrate");
 
+    private static bool hasAppliedTargetFrameRate = false;
+
+    private static int lastAppliedTargetFrameRate = -1;
+
     public static bool uncapLandmarks
     {
         get
@@ -724,24 +728,13 @@ public class GraphicsSettings
     internal static void ApplyVSyncAndTargetFrameRate()
     {
         QualitySettings.vSyncCount = (buffer ? 1 : 0);
-        if (clTargetFrameRate.hasValue)
+        int num = (clTargetFrameRate.hasValue ? ((clTargetFrameRate.value > 0) ? Mathf.Max(clTargetFrameRate.value, 15) : (-1)) : ((!UseTargetFrameRate) ? (-1) : Mathf.Max(TargetFrameRate, 15)));
+        if (num != lastAppliedTargetFrameRate || !hasAppliedTargetFrameRate)
         {
-            if (clTargetFrameRate.value <= 0)
-            {
-                Application.targetFrameRate = -1;
-            }
-            else
-            {
-                Application.targetFrameRate = Mathf.Max(clTargetFrameRate.value, 15);
-            }
-        }
-        else if (UseTargetFrameRate)
-        {
-            Application.targetFrameRate = Mathf.Max(TargetFrameRate, 15);
-        }
-        else
-        {
-            Application.targetFrameRate = -1;
+            hasAppliedTargetFrameRate = true;
+            lastAppliedTargetFrameRate = num;
+            Application.targetFrameRate = num;
+            UnturnedLog.info($"Set target frame rate to {num} fps");
         }
     }
 

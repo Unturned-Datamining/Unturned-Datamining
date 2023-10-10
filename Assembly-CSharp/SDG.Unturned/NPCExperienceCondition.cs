@@ -9,18 +9,11 @@ public class NPCExperienceCondition : NPCLogicCondition
         return doesLogicPass(player.skills.experience, experience);
     }
 
-    public override void applyCondition(Player player, bool shouldSend)
+    public override void ApplyCondition(Player player)
     {
         if (shouldReset)
         {
-            if (shouldSend)
-            {
-                player.skills.askSpend(experience);
-            }
-            else
-            {
-                player.skills.modXp2(experience);
-            }
+            player.skills.askSpend(experience);
         }
     }
 

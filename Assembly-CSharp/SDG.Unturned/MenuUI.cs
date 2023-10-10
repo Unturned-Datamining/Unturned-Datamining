@@ -62,10 +62,10 @@ public class MenuUI : MonoBehaviour
     {
         if (alertBox != null && originLabel != null)
         {
-            alertBox.positionOffset_Y = -50;
-            alertBox.sizeOffset_Y = 100;
-            copyNotificationButton.isVisible = true;
-            originLabel.isVisible = false;
+            alertBox.PositionOffset_Y = -50f;
+            alertBox.SizeOffset_Y = 100f;
+            copyNotificationButton.IsVisible = true;
+            originLabel.IsVisible = false;
             removeItemAlerts();
         }
     }
@@ -74,11 +74,11 @@ public class MenuUI : MonoBehaviour
     {
         if (alertBox != null && originLabel != null)
         {
-            alertBox.text = "";
-            alertBox.positionOffset_Y = -150;
-            alertBox.sizeOffset_Y = 300;
-            copyNotificationButton.isVisible = false;
-            originLabel.isVisible = true;
+            alertBox.Text = "";
+            alertBox.PositionOffset_Y = -150f;
+            alertBox.SizeOffset_Y = 300f;
+            copyNotificationButton.IsVisible = false;
+            originLabel.IsVisible = true;
         }
     }
 
@@ -86,13 +86,12 @@ public class MenuUI : MonoBehaviour
     {
         if (alertBox != null)
         {
-            alertBox.lerpPositionScale(0f, 0.5f, ESleekLerp.EXPONENTIAL, 20f);
+            alertBox.AnimatePositionScale(0f, 0.5f, ESleekLerp.EXPONENTIAL, 20f);
         }
         if (container != null)
         {
             container.AnimateOutOfView(-1f, 0f);
         }
-        MenuDashboardUI.setCanvasActive(isActive: false);
     }
 
     private static void updateDismissButton(bool canBeDismissed)
@@ -101,15 +100,15 @@ public class MenuUI : MonoBehaviour
         {
             if (Provider.provider.matchmakingService.isAttemptingServerQuery)
             {
-                dismissNotificationButton.text = MenuPlayConnectUI.localization.format("Cancel_Attempt_Label");
-                dismissNotificationButton.tooltipText = MenuPlayConnectUI.localization.format("Cancel_Attempt_Tooltip");
+                dismissNotificationButton.Text = MenuPlayConnectUI.localization.format("Cancel_Attempt_Label");
+                dismissNotificationButton.TooltipText = MenuPlayConnectUI.localization.format("Cancel_Attempt_Tooltip");
             }
             else
             {
-                dismissNotificationButton.text = MenuDashboardUI.localization.format("Dismiss_Notification_Label");
-                dismissNotificationButton.tooltipText = MenuDashboardUI.localization.format("Dismiss_Notification_Tooltip");
+                dismissNotificationButton.Text = MenuDashboardUI.localization.format("Dismiss_Notification_Label");
+                dismissNotificationButton.TooltipText = MenuDashboardUI.localization.format("Dismiss_Notification_Tooltip");
             }
-            dismissNotificationButton.isVisible = canBeDismissed;
+            dismissNotificationButton.IsVisible = canBeDismissed;
         }
     }
 
@@ -118,7 +117,7 @@ public class MenuUI : MonoBehaviour
         alertText();
         if (alertBox != null)
         {
-            alertBox.text = message;
+            alertBox.Text = message;
         }
         updateDismissButton(canBeDismissed);
         internalOpenAlert();
@@ -129,13 +128,12 @@ public class MenuUI : MonoBehaviour
         removeItemAlerts();
         if (alertBox != null)
         {
-            alertBox.lerpPositionScale(1f, 0.5f, ESleekLerp.EXPONENTIAL, 20f);
+            alertBox.AnimatePositionScale(1f, 0.5f, ESleekLerp.EXPONENTIAL, 20f);
         }
         if (container != null)
         {
             container.AnimateIntoView();
         }
-        MenuDashboardUI.setCanvasActive(isActive: true);
     }
 
     public static void alert(string message)
@@ -144,16 +142,21 @@ public class MenuUI : MonoBehaviour
         isAlerting = true;
     }
 
+    internal static string FormatInternetMultiplayerAvailabilityStatus(EInternetMultiplayerAvailability status)
+    {
+        return status switch
+        {
+            EInternetMultiplayerAvailability.NoWebRequests => MenuDashboardUI.localization.format("InternetMultiplayerUnavailable_NoWebRequests"), 
+            EInternetMultiplayerAvailability.NoConnection => MenuDashboardUI.localization.format("InternetMultiplayerUnavailable_NoConnection"), 
+            _ => string.Empty, 
+        };
+    }
+
     internal static void AlertInternetMultiplayerAvailability(EInternetMultiplayerAvailability status)
     {
-        switch (status)
+        if ((uint)(status - 1) <= 1u)
         {
-        case EInternetMultiplayerAvailability.NoWebRequests:
-            alert(MenuDashboardUI.localization.format("InternetMultiplayerUnavailable_NoWebRequests"));
-            break;
-        case EInternetMultiplayerAvailability.NoConnection:
-            alert(MenuDashboardUI.localization.format("InternetMultiplayerUnavailable_NoConnection"));
-            break;
+            alert(FormatInternetMultiplayerAvailabilityStatus(status));
         }
     }
 
@@ -170,8 +173,8 @@ public class MenuUI : MonoBehaviour
     {
         if (originLabel != null)
         {
-            originLabel.text = origin;
-            originLabel.textColor = Provider.provider.economyService.getInventoryColor(grantedItems[0].m_iDefinition.m_SteamItemDef);
+            originLabel.Text = origin;
+            originLabel.TextColor = Provider.provider.economyService.getInventoryColor(grantedItems[0].m_iDefinition.m_SteamItemDef);
         }
         removeItemAlerts();
         itemAlerts = new SleekInventory[grantedItems.Count];
@@ -182,11 +185,11 @@ public class MenuUI : MonoBehaviour
             bool flag = i == 0;
             int num2 = (flag ? 200 : 100);
             SleekInventory sleekInventory = new SleekInventory();
-            sleekInventory.positionOffset_X = num;
-            sleekInventory.positionOffset_Y = (flag ? 75 : 125);
-            sleekInventory.positionScale_X = 0.5f;
-            sleekInventory.sizeOffset_X = num2;
-            sleekInventory.sizeOffset_Y = num2;
+            sleekInventory.PositionOffset_X = num;
+            sleekInventory.PositionOffset_Y = (flag ? 75 : 125);
+            sleekInventory.PositionScale_X = 0.5f;
+            sleekInventory.SizeOffset_X = num2;
+            sleekInventory.SizeOffset_Y = num2;
             alertBox.AddChild(sleekInventory);
             sleekInventory.updateInventory(steamItemDetails_t.m_itemId.m_SteamItemInstanceID, steamItemDetails_t.m_iDefinition.m_SteamItemDef, steamItemDetails_t.m_unQuantity, isClickable: false, flag);
             itemAlerts[i] = sleekInventory;
@@ -202,8 +205,8 @@ public class MenuUI : MonoBehaviour
     {
         if (originLabel != null)
         {
-            originLabel.text = origin;
-            originLabel.textColor = ItemStore.PremiumColor;
+            originLabel.Text = origin;
+            originLabel.TextColor = ItemStore.PremiumColor;
         }
         removeItemAlerts();
         itemAlerts = new SleekInventory[grantedItems.Count];
@@ -212,11 +215,11 @@ public class MenuUI : MonoBehaviour
         {
             SteamItemDetails_t steamItemDetails_t = grantedItems[i];
             SleekInventory sleekInventory = new SleekInventory();
-            sleekInventory.positionOffset_X = num;
-            sleekInventory.positionOffset_Y = 75;
-            sleekInventory.positionScale_X = 0.5f;
-            sleekInventory.sizeOffset_X = 200;
-            sleekInventory.sizeOffset_Y = 200;
+            sleekInventory.PositionOffset_X = num;
+            sleekInventory.PositionOffset_Y = 75f;
+            sleekInventory.PositionScale_X = 0.5f;
+            sleekInventory.SizeOffset_X = 200f;
+            sleekInventory.SizeOffset_Y = 200f;
             alertBox.AddChild(sleekInventory);
             sleekInventory.updateInventory(steamItemDetails_t.m_itemId.m_SteamItemInstanceID, steamItemDetails_t.m_iDefinition.m_SteamItemDef, steamItemDetails_t.m_unQuantity, isClickable: false, isLarge: true);
             itemAlerts[i] = sleekInventory;
@@ -245,7 +248,7 @@ public class MenuUI : MonoBehaviour
 
     private static void OnClickedCopyNotification(ISleekElement button)
     {
-        GUIUtility.systemCopyBuffer = alertBox.text;
+        GUIUtility.systemCopyBuffer = alertBox.Text;
     }
 
     public static void closeAll()
@@ -578,7 +581,7 @@ public class MenuUI : MonoBehaviour
         }
         string format = "http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002?appid=304930&count={0}&feeds=steam_community_announcements";
         format = string.Format(format, num.ToString("D"));
-        UnityWebRequest request = UnityWebRequest.Get(format);
+        using UnityWebRequest request = UnityWebRequest.Get(format);
         request.timeout = 15;
         UnturnedLog.info("Requesting {0} Steam community announcements", num);
         yield return request.SendWebRequest();
@@ -616,7 +619,7 @@ public class MenuUI : MonoBehaviour
         }
         UnturnedLog.info("Checking for updates on Steam beta branch \"" + pchName + "\"...");
         string uri = "https://smartlydressedgames.com/unturned-steam-versions/" + pchName + ".txt";
-        UnityWebRequest request = UnityWebRequest.Get(uri);
+        using UnityWebRequest request = UnityWebRequest.Get(uri);
         request.timeout = 30;
         yield return request.SendWebRequest();
         if (request.result == UnityWebRequest.Result.Success)
@@ -666,42 +669,42 @@ public class MenuUI : MonoBehaviour
             workshop = base.transform.parent.Find("Workshop");
             window = new SleekWindow();
             container = new SleekFullscreenBox();
-            container.sizeScale_X = 1f;
-            container.sizeScale_Y = 1f;
+            container.SizeScale_X = 1f;
+            container.SizeScale_Y = 1f;
             window.AddChild(container);
             alertBox = Glazier.Get().CreateBox();
-            alertBox.positionOffset_X = 10;
-            alertBox.positionOffset_Y = -25;
-            alertBox.positionScale_X = 1f;
-            alertBox.positionScale_Y = 0.5f;
-            alertBox.sizeScale_X = 1f;
-            alertBox.sizeOffset_X = -20;
-            alertBox.sizeOffset_Y = 50;
-            alertBox.fontSize = ESleekFontSize.Medium;
+            alertBox.PositionOffset_X = 10f;
+            alertBox.PositionOffset_Y = -25f;
+            alertBox.PositionScale_X = 1f;
+            alertBox.PositionScale_Y = 0.5f;
+            alertBox.SizeScale_X = 1f;
+            alertBox.SizeOffset_X = -20f;
+            alertBox.SizeOffset_Y = 50f;
+            alertBox.FontSize = ESleekFontSize.Medium;
             window.AddChild(alertBox);
             originLabel = Glazier.Get().CreateLabel();
-            originLabel.sizeOffset_Y = 50;
-            originLabel.sizeScale_X = 1f;
-            originLabel.fontSize = ESleekFontSize.Large;
+            originLabel.SizeOffset_Y = 50f;
+            originLabel.SizeScale_X = 1f;
+            originLabel.FontSize = ESleekFontSize.Large;
             alertBox.AddChild(originLabel);
-            originLabel.isVisible = false;
+            originLabel.IsVisible = false;
             dismissNotificationButton = Glazier.Get().CreateButton();
-            dismissNotificationButton.positionOffset_X = -100;
-            dismissNotificationButton.positionOffset_Y = 10;
-            dismissNotificationButton.positionScale_X = 0.5f;
-            dismissNotificationButton.positionScale_Y = 1f;
-            dismissNotificationButton.sizeOffset_X = 200;
-            dismissNotificationButton.sizeOffset_Y = 30;
-            dismissNotificationButton.onClickedButton += onClickedDismissNotification;
-            dismissNotificationButton.fontSize = ESleekFontSize.Medium;
+            dismissNotificationButton.PositionOffset_X = -100f;
+            dismissNotificationButton.PositionOffset_Y = 10f;
+            dismissNotificationButton.PositionScale_X = 0.5f;
+            dismissNotificationButton.PositionScale_Y = 1f;
+            dismissNotificationButton.SizeOffset_X = 200f;
+            dismissNotificationButton.SizeOffset_Y = 30f;
+            dismissNotificationButton.OnClicked += onClickedDismissNotification;
+            dismissNotificationButton.FontSize = ESleekFontSize.Medium;
             alertBox.AddChild(dismissNotificationButton);
             copyNotificationButton = new SleekButtonIcon(null, 20);
-            copyNotificationButton.positionOffset_X = -100;
-            copyNotificationButton.positionOffset_Y = 50;
-            copyNotificationButton.positionScale_X = 0.5f;
-            copyNotificationButton.positionScale_Y = 1f;
-            copyNotificationButton.sizeOffset_X = 200;
-            copyNotificationButton.sizeOffset_Y = 30;
+            copyNotificationButton.PositionOffset_X = -100f;
+            copyNotificationButton.PositionOffset_Y = 50f;
+            copyNotificationButton.PositionScale_X = 0.5f;
+            copyNotificationButton.PositionScale_Y = 1f;
+            copyNotificationButton.SizeOffset_X = 200f;
+            copyNotificationButton.SizeOffset_Y = 30f;
             copyNotificationButton.onClickedButton += OnClickedCopyNotification;
             copyNotificationButton.fontSize = ESleekFontSize.Medium;
             alertBox.AddChild(copyNotificationButton);
@@ -729,7 +732,7 @@ public class MenuUI : MonoBehaviour
             }
             if (!Provider.isApplicationQuitting)
             {
-                window.destroy();
+                window.InternalDestroy();
             }
             window = null;
         }

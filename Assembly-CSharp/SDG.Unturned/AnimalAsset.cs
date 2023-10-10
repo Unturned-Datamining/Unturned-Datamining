@@ -233,4 +233,9 @@ public class AnimalAsset : Asset
         shouldPlayAnimsOnDedicatedServer = data.ParseBool("Should_Play_Anims_On_Dedicated_Server");
         _rewardXP = data.ParseUInt32("Reward_XP");
     }
+
+    internal string OnGetRewardSpawnTableErrorContext()
+    {
+        return FriendlyName + " reward";
+    }
 }

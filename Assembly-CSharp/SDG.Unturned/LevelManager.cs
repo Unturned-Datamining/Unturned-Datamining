@@ -202,7 +202,7 @@ public class LevelManager : SteamCaller
     {
         targetCenter = currentCenter;
         targetRadius = currentRadius * Provider.modeConfigData.Events.Arena_Compactor_Shrink_Factor;
-        float f = UnityEngine.Random.Range(0f, (float)Math.PI * 2f);
+        float f = UnityEngine.Random.Range(0f, MathF.PI * 2f);
         float num = Mathf.Cos(f);
         float num2 = Mathf.Sin(f);
         float num3 = UnityEngine.Random.Range(0f, currentRadius - targetRadius);
@@ -370,14 +370,22 @@ public class LevelManager : SteamCaller
             {
                 for (ushort num3 = 0; num3 < arena_Loadout.Amount; num3 = (ushort)(num3 + 1))
                 {
-                    ushort newID = SpawnTableTool.resolve(arena_Loadout.Table_ID);
-                    arenaPlayer.steamPlayer.player.inventory.forceAddItemAuto(new Item(newID, full: true), autoEquipWeapon: true, autoEquipUseable: false, autoEquipClothing: true, playEffect: false);
+                    ushort num4 = SpawnTableTool.ResolveLegacyId(arena_Loadout.Table_ID, EAssetType.ITEM, OnGetArenaLoadoutsSpawnTableErrorContext);
+                    if (num4 != 0)
+                    {
+                        arenaPlayer.steamPlayer.player.inventory.forceAddItemAuto(new Item(num4, full: true), autoEquipWeapon: true, autoEquipUseable: false, autoEquipClothing: true, playEffect: false);
+                    }
                 }
             }
         }
         arenaAirdrop();
         arenaState = EArenaState.PLAY;
         SendLevelNumber.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), (byte)arenaPlayers.Count);
+    }
+
+    private string OnGetArenaLoadoutsSpawnTableErrorContext()
+    {
+        return "level config arena loadout";
     }
 
     private void arenaAirdrop()

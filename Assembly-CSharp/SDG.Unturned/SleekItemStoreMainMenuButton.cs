@@ -20,56 +20,56 @@ internal class SleekItemStoreMainMenuButton : SleekWrapper
         this.listing = listing;
         Color inventoryColor = Provider.provider.economyService.getInventoryColor(listing.itemdefid);
         ISleekButton sleekButton = Glazier.Get().CreateButton();
-        sleekButton.sizeScale_X = 1f;
-        sleekButton.sizeScale_Y = 1f;
-        sleekButton.onClickedButton += OnClickedItemButton;
-        sleekButton.textColor = inventoryColor;
-        sleekButton.tooltipText = Provider.provider.economyService.getInventoryType(listing.itemdefid);
-        sleekButton.backgroundColor = SleekColor.BackgroundIfLight(inventoryColor);
+        sleekButton.SizeScale_X = 1f;
+        sleekButton.SizeScale_Y = 1f;
+        sleekButton.OnClicked += OnClickedItemButton;
+        sleekButton.TextColor = inventoryColor;
+        sleekButton.TooltipText = Provider.provider.economyService.getInventoryType(listing.itemdefid);
+        sleekButton.BackgroundColor = SleekColor.BackgroundIfLight(inventoryColor);
         AddChild(sleekButton);
-        Texture2D texture = Provider.provider.economyService.LoadItemIcon(listing.itemdefid, large: false);
-        ISleekImage sleekImage = Glazier.Get().CreateImage(texture);
-        sleekImage.positionOffset_X = 5;
-        sleekImage.positionOffset_Y = 5;
-        sleekImage.sizeOffset_X = 40;
-        sleekImage.sizeOffset_Y = 40;
-        sleekButton.AddChild(sleekImage);
+        SleekEconIcon sleekEconIcon = new SleekEconIcon();
+        sleekEconIcon.PositionOffset_X = 5f;
+        sleekEconIcon.PositionOffset_Y = 5f;
+        sleekEconIcon.SizeOffset_X = 40f;
+        sleekEconIcon.SizeOffset_Y = 40f;
+        sleekEconIcon.SetItemDefId(listing.itemdefid);
+        sleekButton.AddChild(sleekEconIcon);
         ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-        sleekLabel.positionOffset_X = 50;
-        sleekLabel.sizeScale_X = 1f;
-        sleekLabel.sizeScale_Y = 1f;
-        sleekLabel.sizeOffset_X = -50;
-        sleekLabel.fontAlignment = TextAnchor.MiddleLeft;
-        sleekLabel.fontSize = ESleekFontSize.Medium;
-        sleekLabel.text = Provider.provider.economyService.getInventoryName(listing.itemdefid);
-        sleekLabel.textColor = inventoryColor;
-        sleekLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+        sleekLabel.PositionOffset_X = 50f;
+        sleekLabel.SizeScale_X = 1f;
+        sleekLabel.SizeScale_Y = 1f;
+        sleekLabel.SizeOffset_X = -50f;
+        sleekLabel.TextAlignment = TextAnchor.MiddleLeft;
+        sleekLabel.FontSize = ESleekFontSize.Medium;
+        sleekLabel.Text = Provider.provider.economyService.getInventoryName(listing.itemdefid);
+        sleekLabel.TextColor = inventoryColor;
+        sleekLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
         sleekButton.AddChild(sleekLabel);
         ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
-        sleekLabel2.sizeScale_X = 1f;
-        sleekLabel2.sizeScale_Y = 1f;
-        sleekLabel2.fontAlignment = TextAnchor.LowerRight;
-        sleekLabel2.textColor = ItemStore.PremiumColor;
-        sleekLabel2.text = ItemStore.Get().FormatPrice(listing.currentPrice);
-        sleekLabel2.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+        sleekLabel2.SizeScale_X = 1f;
+        sleekLabel2.SizeScale_Y = 1f;
+        sleekLabel2.TextAlignment = TextAnchor.LowerRight;
+        sleekLabel2.TextColor = ItemStore.PremiumColor;
+        sleekLabel2.Text = ItemStore.Get().FormatPrice(listing.currentPrice);
+        sleekLabel2.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
         sleekButton.AddChild(sleekLabel2);
         if (labelType != 0)
         {
             ISleekLabel sleekLabel3 = Glazier.Get().CreateLabel();
-            sleekLabel3.sizeScale_X = 1f;
-            sleekLabel3.sizeScale_Y = 1f;
-            sleekLabel3.fontAlignment = TextAnchor.UpperRight;
-            sleekLabel3.textColor = Color.green;
-            sleekLabel3.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+            sleekLabel3.SizeScale_X = 1f;
+            sleekLabel3.SizeScale_Y = 1f;
+            sleekLabel3.TextAlignment = TextAnchor.UpperRight;
+            sleekLabel3.TextColor = Color.green;
+            sleekLabel3.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
             sleekButton.AddChild(sleekLabel3);
             switch (labelType)
             {
             case ELabelType.New:
                 hasNewLabel = true;
-                sleekLabel3.text = Provider.localization.format("New");
+                sleekLabel3.Text = Provider.localization.format("New");
                 break;
             case ELabelType.Sale:
-                sleekLabel3.text = MenuSurvivorsClothingUI.localization.format("Itemstore_Sale") + "\n" + ItemStore.Get().FormatDiscount(listing.currentPrice, listing.basePrice);
+                sleekLabel3.Text = MenuSurvivorsClothingUI.localization.format("Itemstore_Sale") + "\n" + ItemStore.Get().FormatDiscount(listing.currentPrice, listing.basePrice);
                 break;
             }
         }
@@ -82,6 +82,6 @@ internal class SleekItemStoreMainMenuButton : SleekWrapper
             ItemStoreSavedata.MarkNewListingSeen(listing.itemdefid);
         }
         ItemStore.Get().ViewItem(listing.itemdefid);
-        base.isVisible = false;
+        base.IsVisible = false;
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -8,7 +9,7 @@ public class INPCReward
 
     protected string text;
 
-    public virtual void grantReward(Player player, bool shouldSend)
+    public virtual void GrantReward(Player player)
     {
     }
 
@@ -25,18 +26,18 @@ public class INPCReward
             return null;
         }
         ISleekBox sleekBox = Glazier.Get().CreateBox();
-        sleekBox.sizeOffset_Y = 30;
-        sleekBox.sizeScale_X = 1f;
+        sleekBox.SizeOffset_Y = 30f;
+        sleekBox.SizeScale_X = 1f;
         ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-        sleekLabel.positionOffset_X = 5;
-        sleekLabel.sizeOffset_X = -10;
-        sleekLabel.sizeScale_X = 1f;
-        sleekLabel.sizeScale_Y = 1f;
-        sleekLabel.fontAlignment = TextAnchor.MiddleLeft;
-        sleekLabel.textColor = ESleekTint.RICH_TEXT_DEFAULT;
-        sleekLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
-        sleekLabel.enableRichText = true;
-        sleekLabel.text = value;
+        sleekLabel.PositionOffset_X = 5f;
+        sleekLabel.SizeOffset_X = -10f;
+        sleekLabel.SizeScale_X = 1f;
+        sleekLabel.SizeScale_Y = 1f;
+        sleekLabel.TextAlignment = TextAnchor.MiddleLeft;
+        sleekLabel.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+        sleekLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+        sleekLabel.AllowRichText = true;
+        sleekLabel.Text = value;
         sleekBox.AddChild(sleekLabel);
         return sleekBox;
     }
@@ -44,5 +45,11 @@ public class INPCReward
     public INPCReward(string newText)
     {
         text = newText;
+    }
+
+    [Obsolete("Removed shouldSend parameter because GrantReward is only called on the server now")]
+    public virtual void grantReward(Player player, bool shouldSend)
+    {
+        GrantReward(player);
     }
 }

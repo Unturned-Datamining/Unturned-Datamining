@@ -135,7 +135,7 @@ public struct IPv4Address : IEquatable<IPv4Address>, IComparable<IPv4Address>
     public static bool TryParsePortRange(string input, int startIndex, int length, out ushort minPort, out ushort maxPort)
     {
         minPort = 0;
-        maxPort = 0;
+        maxPort = ushort.MaxValue;
         if (string.IsNullOrEmpty(input))
         {
             return false;

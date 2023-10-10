@@ -674,7 +674,6 @@ public class VehicleAsset : Asset, ISkinableAsset
             turretInfo.pitchMin = data.ParseFloat("Turret_" + b + "_Pitch_Min");
             turretInfo.pitchMax = data.ParseFloat("Turret_" + b + "_Pitch_Max");
             turretInfo.useAimCamera = !data.ContainsKey("Turret_" + b + "_Ignore_Aim_Camera");
-            turretInfo.aimOffset = data.ParseFloat("Turret_" + b + "_Aim_Offset");
             _turrets[b] = turretInfo;
         }
         isVulnerable = !data.ContainsKey("Invulnerable");

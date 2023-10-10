@@ -16,13 +16,13 @@ public class SleekBoxIcon : SleekWrapper
     {
         set
         {
-            iconImage.texture = value;
-            if (iconSize == 0 && iconImage.texture != null)
+            iconImage.Texture = value;
+            if (iconSize == 0 && iconImage.Texture != null)
             {
-                iconImage.sizeOffset_X = iconImage.texture.width;
-                iconImage.sizeOffset_Y = iconImage.texture.height;
-                label.positionOffset_X = iconImage.sizeOffset_X + iconImage.positionOffset_X * 2;
-                label.sizeOffset_X = -label.positionOffset_X - 5;
+                iconImage.SizeOffset_X = iconImage.Texture.width;
+                iconImage.SizeOffset_Y = iconImage.Texture.height;
+                label.PositionOffset_X = iconImage.SizeOffset_X + iconImage.PositionOffset_X * 2f;
+                label.SizeOffset_X = 0f - label.PositionOffset_X - 5f;
             }
         }
     }
@@ -31,11 +31,11 @@ public class SleekBoxIcon : SleekWrapper
     {
         get
         {
-            return label.text;
+            return label.Text;
         }
         set
         {
-            label.text = value;
+            label.Text = value;
         }
     }
 
@@ -43,11 +43,11 @@ public class SleekBoxIcon : SleekWrapper
     {
         get
         {
-            return box.tooltipText;
+            return box.TooltipText;
         }
         set
         {
-            box.tooltipText = value;
+            box.TooltipText = value;
         }
     }
 
@@ -55,11 +55,11 @@ public class SleekBoxIcon : SleekWrapper
     {
         get
         {
-            return label.fontSize;
+            return label.FontSize;
         }
         set
         {
-            label.fontSize = value;
+            label.FontSize = value;
         }
     }
 
@@ -67,11 +67,11 @@ public class SleekBoxIcon : SleekWrapper
     {
         get
         {
-            return iconImage.color;
+            return iconImage.TintColor;
         }
         set
         {
-            iconImage.color = value;
+            iconImage.TintColor = value;
         }
     }
 
@@ -79,32 +79,32 @@ public class SleekBoxIcon : SleekWrapper
     {
         iconSize = newSize;
         box = Glazier.Get().CreateBox();
-        box.sizeScale_X = 1f;
-        box.sizeScale_Y = 1f;
+        box.SizeScale_X = 1f;
+        box.SizeScale_Y = 1f;
         AddChild(box);
         iconImage = Glazier.Get().CreateImage();
-        iconImage.positionOffset_X = 5;
-        iconImage.positionOffset_Y = 5;
-        iconImage.texture = newIcon;
+        iconImage.PositionOffset_X = 5f;
+        iconImage.PositionOffset_Y = 5f;
+        iconImage.Texture = newIcon;
         AddChild(iconImage);
         if (iconSize == 0)
         {
-            if (iconImage.texture != null)
+            if (iconImage.Texture != null)
             {
-                iconImage.sizeOffset_X = iconImage.texture.width;
-                iconImage.sizeOffset_Y = iconImage.texture.height;
+                iconImage.SizeOffset_X = iconImage.Texture.width;
+                iconImage.SizeOffset_Y = iconImage.Texture.height;
             }
         }
         else
         {
-            iconImage.sizeOffset_X = iconSize;
-            iconImage.sizeOffset_Y = iconSize;
+            iconImage.SizeOffset_X = iconSize;
+            iconImage.SizeOffset_Y = iconSize;
         }
         label = Glazier.Get().CreateLabel();
-        label.sizeScale_X = 1f;
-        label.sizeScale_Y = 1f;
-        label.positionOffset_X = iconImage.sizeOffset_X + iconImage.positionOffset_X * 2;
-        label.sizeOffset_X = -label.positionOffset_X - 5;
+        label.SizeScale_X = 1f;
+        label.SizeScale_Y = 1f;
+        label.PositionOffset_X = iconImage.SizeOffset_X + iconImage.PositionOffset_X * 2f;
+        label.SizeOffset_X = 0f - label.PositionOffset_X - 5f;
         AddChild(label);
     }
 

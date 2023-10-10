@@ -65,11 +65,11 @@ public class MenuPlayConnectUI
 
     private static void onClickedConnectButton(ISleekElement button)
     {
-        if (portField.state == 0)
+        if (portField.Value == 0)
         {
             return;
         }
-        string text = ipField.text.ToLower();
+        string text = ipField.Text.ToLower();
         text = text.Trim();
         if (string.IsNullOrEmpty(text))
         {
@@ -113,7 +113,7 @@ public class MenuPlayConnectUI
                 return;
             }
         }
-        SteamConnectionInfo info = new SteamConnectionInfo(address.value, portField.state, passwordField.text);
+        SteamConnectionInfo info = new SteamConnectionInfo(address.value, portField.Value, passwordField.Text);
         MenuSettings.save();
         connect(info, shouldAutoJoin: false);
     }
@@ -121,19 +121,19 @@ public class MenuPlayConnectUI
     private static void onTypedIPField(ISleekField field, string text)
     {
         PlaySettings.connectIP = text;
-        addressInfoBox.isVisible = false;
+        addressInfoBox.IsVisible = false;
     }
 
     private static void TryParseIpPort()
     {
-        string text = ipField.text;
+        string text = ipField.Text;
         int num = text.LastIndexOf(':');
         if (num >= 0 && ushort.TryParse(text.Substring(num + 1), out var result))
         {
             PlaySettings.connectIP = text.Substring(0, num);
             PlaySettings.connectPort = result;
-            ipField.text = PlaySettings.connectIP;
-            portField.state = PlaySettings.connectPort;
+            ipField.Text = PlaySettings.connectIP;
+            portField.Value = PlaySettings.connectPort;
         }
     }
 
@@ -184,8 +184,8 @@ public class MenuPlayConnectUI
 
     private static void RefreshAddressInfo()
     {
-        addressInfoBox.isVisible = false;
-        string text = ipField.text.ToLower();
+        addressInfoBox.IsVisible = false;
+        string text = ipField.Text.ToLower();
         text = text.Trim();
         if (string.IsNullOrEmpty(text))
         {
@@ -213,15 +213,15 @@ public class MenuPlayConnectUI
         {
             if (address.IsLoopback)
             {
-                addressInfoBox.text = localization.format("Address_Loopback_Label");
-                addressInfoBox.tooltipText = localization.format("Address_Loopback_Tooltip");
-                addressInfoBox.isVisible = true;
+                addressInfoBox.Text = localization.format("Address_Loopback_Label");
+                addressInfoBox.TooltipText = localization.format("Address_Loopback_Tooltip");
+                addressInfoBox.IsVisible = true;
             }
             else if (address.IsLocalPrivate)
             {
-                addressInfoBox.text = localization.format("Address_LocalPrivate_Label");
-                addressInfoBox.tooltipText = localization.format("Address_LocalPrivate_Tooltip");
-                addressInfoBox.isVisible = true;
+                addressInfoBox.Text = localization.format("Address_LocalPrivate_Label");
+                addressInfoBox.TooltipText = localization.format("Address_LocalPrivate_Tooltip");
+                addressInfoBox.IsVisible = true;
             }
         }
     }
@@ -243,69 +243,69 @@ public class MenuPlayConnectUI
         localization = Localization.read("/Menu/Play/MenuPlayConnect.dat");
         Bundle bundle = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Play/MenuPlayConnect/MenuPlayConnect.unity3d");
         container = new SleekFullscreenBox();
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.positionScale_Y = 1f;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.PositionScale_Y = 1f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         MenuUI.container.AddChild(container);
         active = false;
         ipField = Glazier.Get().CreateStringField();
-        ipField.positionOffset_X = -100;
-        ipField.positionOffset_Y = -75;
-        ipField.positionScale_X = 0.5f;
-        ipField.positionScale_Y = 0.5f;
-        ipField.sizeOffset_X = 200;
-        ipField.sizeOffset_Y = 30;
-        ipField.maxLength = 64;
-        ipField.addLabel(localization.format("IP_Field_Label"), ESleekSide.RIGHT);
-        ipField.text = PlaySettings.connectIP;
-        ipField.onTyped += onTypedIPField;
-        ipField.onEntered += OnIpFieldCommitted;
+        ipField.PositionOffset_X = -100f;
+        ipField.PositionOffset_Y = -75f;
+        ipField.PositionScale_X = 0.5f;
+        ipField.PositionScale_Y = 0.5f;
+        ipField.SizeOffset_X = 200f;
+        ipField.SizeOffset_Y = 30f;
+        ipField.MaxLength = 64;
+        ipField.AddLabel(localization.format("IP_Field_Label"), ESleekSide.RIGHT);
+        ipField.Text = PlaySettings.connectIP;
+        ipField.OnTextChanged += onTypedIPField;
+        ipField.OnTextSubmitted += OnIpFieldCommitted;
         container.AddChild(ipField);
         addressInfoBox = Glazier.Get().CreateBox();
-        addressInfoBox.positionOffset_X = -210;
-        addressInfoBox.positionOffset_Y = -75;
-        addressInfoBox.positionScale_X = 0.5f;
-        addressInfoBox.positionScale_Y = 0.5f;
-        addressInfoBox.sizeOffset_X = 100;
-        addressInfoBox.sizeOffset_Y = 30;
-        addressInfoBox.isVisible = false;
+        addressInfoBox.PositionOffset_X = -210f;
+        addressInfoBox.PositionOffset_Y = -75f;
+        addressInfoBox.PositionScale_X = 0.5f;
+        addressInfoBox.PositionScale_Y = 0.5f;
+        addressInfoBox.SizeOffset_X = 100f;
+        addressInfoBox.SizeOffset_Y = 30f;
+        addressInfoBox.IsVisible = false;
         container.AddChild(addressInfoBox);
         RefreshAddressInfo();
         portField = Glazier.Get().CreateUInt16Field();
-        portField.positionOffset_X = -100;
-        portField.positionOffset_Y = -35;
-        portField.positionScale_X = 0.5f;
-        portField.positionScale_Y = 0.5f;
-        portField.sizeOffset_X = 200;
-        portField.sizeOffset_Y = 30;
-        portField.addLabel(localization.format("Port_Field_Label"), ESleekSide.RIGHT);
-        portField.state = PlaySettings.connectPort;
-        portField.onTypedUInt16 += onTypedPortField;
+        portField.PositionOffset_X = -100f;
+        portField.PositionOffset_Y = -35f;
+        portField.PositionScale_X = 0.5f;
+        portField.PositionScale_Y = 0.5f;
+        portField.SizeOffset_X = 200f;
+        portField.SizeOffset_Y = 30f;
+        portField.AddLabel(localization.format("Port_Field_Label"), ESleekSide.RIGHT);
+        portField.Value = PlaySettings.connectPort;
+        portField.OnValueChanged += onTypedPortField;
         container.AddChild(portField);
         passwordField = Glazier.Get().CreateStringField();
-        passwordField.positionOffset_X = -100;
-        passwordField.positionOffset_Y = 5;
-        passwordField.positionScale_X = 0.5f;
-        passwordField.positionScale_Y = 0.5f;
-        passwordField.sizeOffset_X = 200;
-        passwordField.sizeOffset_Y = 30;
-        passwordField.addLabel(localization.format("Password_Field_Label"), ESleekSide.RIGHT);
-        passwordField.replace = localization.format("Password_Field_Replace").ToCharArray()[0];
-        passwordField.maxLength = 0;
-        passwordField.text = PlaySettings.connectPassword;
-        passwordField.onTyped += onTypedPasswordField;
+        passwordField.PositionOffset_X = -100f;
+        passwordField.PositionOffset_Y = 5f;
+        passwordField.PositionScale_X = 0.5f;
+        passwordField.PositionScale_Y = 0.5f;
+        passwordField.SizeOffset_X = 200f;
+        passwordField.SizeOffset_Y = 30f;
+        passwordField.AddLabel(localization.format("Password_Field_Label"), ESleekSide.RIGHT);
+        passwordField.IsPasswordField = true;
+        passwordField.MaxLength = 0;
+        passwordField.Text = PlaySettings.connectPassword;
+        passwordField.OnTextChanged += onTypedPasswordField;
         container.AddChild(passwordField);
         connectButton = new SleekButtonIcon(bundle.load<Texture2D>("Connect"));
-        connectButton.positionOffset_X = -100;
-        connectButton.positionOffset_Y = 45;
-        connectButton.positionScale_X = 0.5f;
-        connectButton.positionScale_Y = 0.5f;
-        connectButton.sizeOffset_X = 200;
-        connectButton.sizeOffset_Y = 30;
+        connectButton.PositionOffset_X = -100f;
+        connectButton.PositionOffset_Y = 45f;
+        connectButton.PositionScale_X = 0.5f;
+        connectButton.PositionScale_Y = 0.5f;
+        connectButton.SizeOffset_X = 200f;
+        connectButton.SizeOffset_Y = 30f;
         connectButton.text = localization.format("Connect_Button");
         connectButton.tooltip = localization.format("Connect_Button_Tooltip");
         connectButton.iconColor = ESleekTint.FOREGROUND;
@@ -339,10 +339,10 @@ public class MenuPlayConnectUI
         }
         bundle.unload();
         backButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));
-        backButton.positionOffset_Y = -50;
-        backButton.positionScale_Y = 1f;
-        backButton.sizeOffset_X = 200;
-        backButton.sizeOffset_Y = 50;
+        backButton.PositionOffset_Y = -50f;
+        backButton.PositionScale_Y = 1f;
+        backButton.SizeOffset_X = 200f;
+        backButton.SizeOffset_Y = 50f;
         backButton.text = MenuDashboardUI.localization.format("BackButtonText");
         backButton.tooltip = MenuDashboardUI.localization.format("BackButtonTooltip");
         backButton.onClickedButton += onClickedBackButton;

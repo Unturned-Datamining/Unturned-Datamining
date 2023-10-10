@@ -199,9 +199,16 @@ public class LevelNavigation
 
     public static Transform addFlag(Vector3 point)
     {
-        RecastGraph newGraph = addGraph();
+        RecastGraph graph = null;
+        Func<bool, bool> update = delegate
+        {
+            graph = addGraph();
+            return true;
+        };
+        AstarPath.active.AddWorkItem(new AstarPath.AstarWorkItem(update));
+        AstarPath.active.FlushWorkItems();
         FlagData flagData = new FlagData("", 64);
-        flags.Add(new Flag(point, newGraph, flagData));
+        flags.Add(new Flag(point, graph, flagData));
         LevelNavigation.flagData.Add(flagData);
         return flags[flags.Count - 1].model;
     }
@@ -305,92 +312,94 @@ public class LevelNavigation
                 flagData.Add(new FlagData("", 64));
             }
         }
-        if (Level.isEditor)
+        Func<bool, bool> update = delegate
         {
-            flags = new List<Flag>();
-            UnityEngine.Object.Destroy(AstarPath.active.GetComponent<TileHandlerHelpers>());
-            if (ReadWrite.fileExists(Level.info.path + "/Environment/Flags.dat", useCloud: false, usePath: false))
+            if (Level.isEditor)
             {
-                River river3 = new River(Level.info.path + "/Environment/Flags.dat", usePath: false);
-                byte b6 = river3.readByte();
-                if (b6 > 2)
+                flags = new List<Flag>();
+                UnityEngine.Object.Destroy(AstarPath.active.GetComponent<TileHandlerHelpers>());
+                if (ReadWrite.fileExists(Level.info.path + "/Environment/Flags.dat", useCloud: false, usePath: false))
                 {
-                    byte b7 = river3.readByte();
-                    if (flagData.Count < b7)
+                    River river3 = new River(Level.info.path + "/Environment/Flags.dat", usePath: false);
+                    byte b6 = river3.readByte();
+                    if (b6 > 2)
                     {
-                        UnturnedLog.error($"Navigation flag data count ({flagData.Count}) does not match flags count ({b7}) during editor load, fixing");
-                        for (int j = flagData.Count; j < b7; j++)
+                        byte b7 = river3.readByte();
+                        if (flagData.Count < b7)
                         {
-                            flagData.Add(new FlagData("", 64));
-                        }
-                    }
-                    for (byte b8 = 0; b8 < b7; b8 = (byte)(b8 + 1))
-                    {
-                        Vector3 newPoint = river3.readSingleVector3();
-                        float num = river3.readSingle();
-                        float num2 = river3.readSingle();
-                        if (b6 < 4)
-                        {
-                            num *= 0.5f;
-                            num2 *= 0.5f;
-                        }
-                        RecastGraph recastGraph = null;
-                        if (ReadWrite.fileExists(Level.info.path + "/Environment/Navigation_" + b8.ToString(CultureInfo.InvariantCulture) + ".dat", useCloud: false, usePath: false))
-                        {
-                            River river4 = new River(Level.info.path + "/Environment/Navigation_" + b8.ToString(CultureInfo.InvariantCulture) + ".dat", usePath: false);
-                            if (river4.readByte() > 0)
+                            UnturnedLog.error($"Navigation flag data count ({flagData.Count}) does not match flags count ({b7}) during editor load, fixing");
+                            for (int j = flagData.Count; j < b7; j++)
                             {
-                                recastGraph = buildGraph(river4);
+                                flagData.Add(new FlagData("", 64));
                             }
-                            river4.closeRiver();
                         }
-                        if (recastGraph == null)
+                        for (byte b8 = 0; b8 < b7; b8 = (byte)(b8 + 1))
                         {
-                            recastGraph = addGraph();
+                            Vector3 newPoint = river3.readSingleVector3();
+                            float num = river3.readSingle();
+                            float num2 = river3.readSingle();
+                            if (b6 < 4)
+                            {
+                                num *= 0.5f;
+                                num2 *= 0.5f;
+                            }
+                            RecastGraph recastGraph = null;
+                            if (ReadWrite.fileExists(Level.info.path + "/Environment/Navigation_" + b8.ToString(CultureInfo.InvariantCulture) + ".dat", useCloud: false, usePath: false))
+                            {
+                                River river4 = new River(Level.info.path + "/Environment/Navigation_" + b8.ToString(CultureInfo.InvariantCulture) + ".dat", usePath: false);
+                                if (river4.readByte() > 0)
+                                {
+                                    recastGraph = buildGraph(river4);
+                                }
+                                river4.closeRiver();
+                            }
+                            if (recastGraph == null)
+                            {
+                                recastGraph = addGraph();
+                            }
+                            flags.Add(new Flag(newPoint, num, num2, recastGraph, flagData[b8]));
                         }
-                        flags.Add(new Flag(newPoint, num, num2, recastGraph, flagData[b8]));
                     }
+                    river3.closeRiver();
                 }
-                river3.closeRiver();
-            }
-            if (bounds.Count != AstarPath.active.graphs.Length)
-            {
-                UnturnedLog.error("Navigation bounds count ({0}) does not match graph count ({1}) during editor load, fixing", bounds.Count, AstarPath.active.graphs.Length);
-                updateBounds();
-            }
-        }
-        else
-        {
-            if (!Provider.isServer)
-            {
-                return;
-            }
-            int num3 = 0;
-            int num4 = 0;
-            while (num3 < 5)
-            {
-                string text = Level.info.path + "/Environment/Navigation_" + num4.ToString(CultureInfo.InvariantCulture) + ".dat";
-                if (ReadWrite.fileExists(text, useCloud: false, usePath: false))
+                if (bounds.Count != AstarPath.active.graphs.Length)
                 {
-                    River river5 = new River(text, usePath: false);
-                    if (river5.readByte() > 0)
+                    UnturnedLog.error("Navigation bounds count ({0}) does not match graph count ({1}) during editor load, fixing", bounds.Count, AstarPath.active.graphs.Length);
+                    updateBounds();
+                }
+            }
+            else if (Provider.isServer)
+            {
+                int num3 = 0;
+                int num4 = 0;
+                while (num3 < 5)
+                {
+                    string text = Level.info.path + "/Environment/Navigation_" + num4.ToString(CultureInfo.InvariantCulture) + ".dat";
+                    if (ReadWrite.fileExists(text, useCloud: false, usePath: false))
                     {
-                        buildGraph(river5);
+                        River river5 = new River(text, usePath: false);
+                        if (river5.readByte() > 0)
+                        {
+                            buildGraph(river5);
+                        }
+                        river5.closeRiver();
+                        num3 = 0;
                     }
-                    river5.closeRiver();
-                    num3 = 0;
+                    else
+                    {
+                        num3++;
+                    }
+                    num4++;
                 }
-                else
+                if (bounds.Count != AstarPath.active.graphs.Length)
                 {
-                    num3++;
+                    UnturnedLog.error("Navigation bounds count ({0}) does not match graph count ({1}) during server load", bounds.Count, AstarPath.active.graphs.Length);
                 }
-                num4++;
             }
-            if (bounds.Count != AstarPath.active.graphs.Length)
-            {
-                UnturnedLog.error("Navigation bounds count ({0}) does not match graph count ({1}) during server load", bounds.Count, AstarPath.active.graphs.Length);
-            }
-        }
+            return true;
+        };
+        AstarPath.active.AddWorkItem(new AstarPath.AstarWorkItem(update));
+        AstarPath.active.FlushWorkItems();
     }
 
     public static void save()

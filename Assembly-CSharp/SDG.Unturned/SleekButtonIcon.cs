@@ -18,15 +18,15 @@ public class SleekButtonIcon : SleekWrapper
     {
         set
         {
-            iconImage.texture = value;
-            if (iconSize == 0 && !iconScale && iconImage.texture != null)
+            iconImage.Texture = value;
+            if (iconSize == 0 && !iconScale && iconImage.Texture != null)
             {
-                iconImage.sizeOffset_X = iconImage.texture.width;
-                iconImage.sizeOffset_Y = iconImage.texture.height;
+                iconImage.SizeOffset_X = iconImage.Texture.width;
+                iconImage.SizeOffset_Y = iconImage.Texture.height;
                 if (label != null)
                 {
-                    label.positionOffset_X = iconImage.sizeOffset_X + iconImage.positionOffset_X * 2;
-                    label.sizeOffset_X = -label.positionOffset_X - 5;
+                    label.PositionOffset_X = iconImage.SizeOffset_X + iconImage.PositionOffset_X * 2f;
+                    label.SizeOffset_X = 0f - label.PositionOffset_X - 5f;
                 }
             }
         }
@@ -38,19 +38,19 @@ public class SleekButtonIcon : SleekWrapper
         {
             if (label == null)
             {
-                return button.text;
+                return button.Text;
             }
-            return label.text;
+            return label.Text;
         }
         set
         {
             if (label != null)
             {
-                label.text = value;
+                label.Text = value;
             }
             else
             {
-                button.text = value;
+                button.Text = value;
             }
         }
     }
@@ -59,11 +59,11 @@ public class SleekButtonIcon : SleekWrapper
     {
         get
         {
-            return button.tooltipText;
+            return button.TooltipText;
         }
         set
         {
-            button.tooltipText = value;
+            button.TooltipText = value;
         }
     }
 
@@ -71,14 +71,14 @@ public class SleekButtonIcon : SleekWrapper
     {
         get
         {
-            return button.fontSize;
+            return button.FontSize;
         }
         set
         {
-            button.fontSize = value;
+            button.FontSize = value;
             if (label != null)
             {
-                label.fontSize = value;
+                label.FontSize = value;
             }
         }
     }
@@ -87,14 +87,14 @@ public class SleekButtonIcon : SleekWrapper
     {
         get
         {
-            return button.shadowStyle;
+            return button.TextContrastContext;
         }
         set
         {
-            button.shadowStyle = value;
+            button.TextContrastContext = value;
             if (label != null)
             {
-                label.shadowStyle = value;
+                label.TextContrastContext = value;
             }
         }
     }
@@ -103,11 +103,11 @@ public class SleekButtonIcon : SleekWrapper
     {
         get
         {
-            return button.backgroundColor;
+            return button.BackgroundColor;
         }
         set
         {
-            button.backgroundColor = value;
+            button.BackgroundColor = value;
         }
     }
 
@@ -115,14 +115,14 @@ public class SleekButtonIcon : SleekWrapper
     {
         get
         {
-            return button.textColor;
+            return button.TextColor;
         }
         set
         {
-            button.textColor = value;
+            button.TextColor = value;
             if (label != null)
             {
-                label.textColor = value;
+                label.TextColor = value;
             }
         }
     }
@@ -131,14 +131,14 @@ public class SleekButtonIcon : SleekWrapper
     {
         get
         {
-            return button.enableRichText;
+            return button.AllowRichText;
         }
         set
         {
-            button.enableRichText = value;
+            button.AllowRichText = value;
             if (label != null)
             {
-                label.enableRichText = value;
+                label.AllowRichText = value;
             }
         }
     }
@@ -147,12 +147,12 @@ public class SleekButtonIcon : SleekWrapper
     {
         set
         {
-            iconImage.positionOffset_X = value;
-            iconImage.positionOffset_Y = value;
+            iconImage.PositionOffset_X = value;
+            iconImage.PositionOffset_Y = value;
             if (label != null)
             {
-                label.positionOffset_X = iconImage.sizeOffset_X + iconImage.positionOffset_X * 2;
-                label.sizeOffset_X = -label.positionOffset_X - 5;
+                label.PositionOffset_X = iconImage.SizeOffset_X + iconImage.PositionOffset_X * 2f;
+                label.SizeOffset_X = 0f - label.PositionOffset_X - 5f;
             }
         }
     }
@@ -161,11 +161,11 @@ public class SleekButtonIcon : SleekWrapper
     {
         get
         {
-            return iconImage.color;
+            return iconImage.TintColor;
         }
         set
         {
-            iconImage.color = value;
+            iconImage.TintColor = value;
         }
     }
 
@@ -173,11 +173,11 @@ public class SleekButtonIcon : SleekWrapper
     {
         get
         {
-            return button.isClickable;
+            return button.IsClickable;
         }
         set
         {
-            button.isClickable = value;
+            button.IsClickable = value;
         }
     }
 
@@ -190,47 +190,47 @@ public class SleekButtonIcon : SleekWrapper
         iconSize = newSize;
         iconScale = newScale;
         button = Glazier.Get().CreateButton();
-        button.sizeScale_X = 1f;
-        button.sizeScale_Y = 1f;
-        button.backgroundColor = ESleekTint.BACKGROUND;
-        button.onClickedButton += onClickedInternalButton;
-        button.onRightClickedButton += onRightClickedInternalButton;
+        button.SizeScale_X = 1f;
+        button.SizeScale_Y = 1f;
+        button.BackgroundColor = ESleekTint.BACKGROUND;
+        button.OnClicked += onClickedInternalButton;
+        button.OnRightClicked += onRightClickedInternalButton;
         AddChild(button);
         iconImage = Glazier.Get().CreateImage();
-        iconImage.texture = newIcon;
+        iconImage.Texture = newIcon;
         iconPositionOffset = 5;
         if (iconScale)
         {
-            iconImage.sizeOffset_X = -10;
-            iconImage.sizeOffset_Y = -10;
-            iconImage.sizeScale_X = 1f;
-            iconImage.sizeScale_Y = 1f;
+            iconImage.SizeOffset_X = -10f;
+            iconImage.SizeOffset_Y = -10f;
+            iconImage.SizeScale_X = 1f;
+            iconImage.SizeScale_Y = 1f;
         }
         else
         {
             if (iconSize == 0)
             {
-                if (iconImage.texture != null)
+                if (iconImage.Texture != null)
                 {
-                    iconImage.sizeOffset_X = iconImage.texture.width;
-                    iconImage.sizeOffset_Y = iconImage.texture.height;
+                    iconImage.SizeOffset_X = iconImage.Texture.width;
+                    iconImage.SizeOffset_Y = iconImage.Texture.height;
                 }
             }
             else
             {
-                iconImage.sizeOffset_X = iconSize;
-                iconImage.sizeOffset_Y = iconSize;
+                iconImage.SizeOffset_X = iconSize;
+                iconImage.SizeOffset_Y = iconSize;
             }
             label = Glazier.Get().CreateLabel();
-            label.sizeScale_X = 1f;
-            label.sizeScale_Y = 1f;
-            label.positionOffset_X = iconImage.sizeOffset_X + iconImage.positionOffset_X * 2;
-            label.sizeOffset_X = -label.positionOffset_X - 5;
+            label.SizeScale_X = 1f;
+            label.SizeScale_Y = 1f;
+            label.PositionOffset_X = iconImage.SizeOffset_X + iconImage.PositionOffset_X * 2f;
+            label.SizeOffset_X = 0f - label.PositionOffset_X - 5f;
             AddChild(label);
         }
         AddChild(iconImage);
-        button.fontAlignment = TextAnchor.MiddleCenter;
-        button.fontSize = ESleekFontSize.Default;
+        button.TextAlignment = TextAnchor.MiddleCenter;
+        button.FontSize = ESleekFontSize.Default;
     }
 
     public SleekButtonIcon(Texture2D newIcon, int newSize)

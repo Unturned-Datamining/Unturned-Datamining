@@ -70,6 +70,9 @@ internal static class ClientMessageHandler_Rejected
         case ESteamRejection.AUTH_PUB_BAN:
             Provider._connectionFailureInfo = ESteamConnectionFailureInfo.AUTH_PUB_BAN;
             break;
+        case ESteamRejection.AUTH_NETWORK_IDENTITY_FAILURE:
+            Provider._connectionFailureInfo = ESteamConnectionFailureInfo.AUTH_NETWORK_IDENTITY_FAILURE;
+            break;
         case ESteamRejection.AUTH_ECON_DESERIALIZE:
             Provider._connectionFailureInfo = ESteamConnectionFailureInfo.AUTH_ECON_DESERIALIZE;
             break;
@@ -162,6 +165,9 @@ internal static class ClientMessageHandler_Rejected
             break;
         case ESteamRejection.NAME_PRIVATE_NUMBER:
             Provider._connectionFailureInfo = ESteamConnectionFailureInfo.NAME_PRIVATE_NUMBER;
+            break;
+        case ESteamRejection.WRONG_HASH_RESOURCES:
+            Provider._connectionFailureInfo = ESteamConnectionFailureInfo.HASH_RESOURCES;
             break;
         default:
             Provider._connectionFailureInfo = ESteamConnectionFailureInfo.REJECT_UNKNOWN;

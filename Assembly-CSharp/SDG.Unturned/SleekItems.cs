@@ -57,11 +57,11 @@ public class SleekItems : SleekWrapper
     {
         get
         {
-            return grid.isRaycastTarget;
+            return grid.IsRaycastTarget;
         }
         set
         {
-            grid.isRaycastTarget = value;
+            grid.IsRaycastTarget = value;
         }
     }
 
@@ -96,8 +96,9 @@ public class SleekItems : SleekWrapper
     {
         _width = newWidth;
         _height = newHeight;
-        horizontalScrollView.contentSizeOffset = new Vector2((float)(int)width * 50f, (float)(int)height * 50f);
-        base.sizeOffset_Y = height * 50 + 30;
+        horizontalScrollView.ContentSizeOffset = new Vector2((float)(int)width * 50f, (float)(int)height * 50f);
+        base.SizeOffset_Y = height * 50 + 30;
+        grid.TileRepeatHintForUITK = new Vector2Int(newWidth, newHeight);
     }
 
     public void clear()
@@ -152,7 +153,7 @@ public class SleekItems : SleekWrapper
         int num2 = jar.y * 50;
         for (int i = 0; i < items.Count; i++)
         {
-            if (items[i].positionOffset_X == num && items[i].positionOffset_Y == num2)
+            if (items[i].PositionOffset_X == (float)num && items[i].PositionOffset_Y == (float)num2)
             {
                 return i;
             }
@@ -163,8 +164,8 @@ public class SleekItems : SleekWrapper
     private SleekItem createElementForItem(ItemJar jar)
     {
         SleekItem sleekItem = new SleekItem(jar);
-        sleekItem.positionOffset_X = jar.x * 50;
-        sleekItem.positionOffset_Y = jar.y * 50;
+        sleekItem.PositionOffset_X = jar.x * 50;
+        sleekItem.PositionOffset_Y = jar.y * 50;
         sleekItem.onClickedItem = onClickedItem;
         sleekItem.onDraggedItem = onDraggedItem;
         itemsPanel.AddChild(sleekItem);
@@ -175,12 +176,12 @@ public class SleekItems : SleekWrapper
 
     private void onClickedItem(SleekItem item)
     {
-        onSelectedItem?.Invoke(page, (byte)(item.positionOffset_X / 50), (byte)(item.positionOffset_Y / 50));
+        onSelectedItem?.Invoke(page, (byte)(item.PositionOffset_X / 50f), (byte)(item.PositionOffset_Y / 50f));
     }
 
     private void onDraggedItem(SleekItem item)
     {
-        onGrabbedItem?.Invoke(page, (byte)(item.positionOffset_X / 50), (byte)(item.positionOffset_Y / 50), item);
+        onGrabbedItem?.Invoke(page, (byte)(item.PositionOffset_X / 50f), (byte)(item.PositionOffset_Y / 50f), item);
     }
 
     private void onClickedGrid()
@@ -196,22 +197,22 @@ public class SleekItems : SleekWrapper
         _page = newPage;
         _items = new List<SleekItem>();
         pendingItems = new List<ItemJar>();
-        base.sizeScale_X = 1f;
+        base.SizeScale_X = 1f;
         horizontalScrollView = Glazier.Get().CreateScrollView();
-        horizontalScrollView.sizeScale_X = 1f;
-        horizontalScrollView.sizeScale_Y = 1f;
-        horizontalScrollView.handleScrollWheel = false;
+        horizontalScrollView.SizeScale_X = 1f;
+        horizontalScrollView.SizeScale_Y = 1f;
+        horizontalScrollView.HandleScrollWheel = false;
         AddChild(horizontalScrollView);
         grid = Glazier.Get().CreateSprite();
-        grid.sizeScale_X = 1f;
-        grid.sizeScale_Y = 1f;
-        grid.sprite = PlayerDashboardInventoryUI.icons.load<Sprite>("Grid_Sprite");
-        grid.onImageClicked += onClickedGrid;
-        grid.color = ESleekTint.FOREGROUND;
+        grid.SizeScale_X = 1f;
+        grid.SizeScale_Y = 1f;
+        grid.Sprite = PlayerDashboardInventoryUI.icons.load<Sprite>("Grid_Sprite");
+        grid.OnClicked += onClickedGrid;
+        grid.TintColor = ESleekTint.FOREGROUND;
         horizontalScrollView.AddChild(grid);
         itemsPanel = Glazier.Get().CreateFrame();
-        itemsPanel.sizeScale_X = 1f;
-        itemsPanel.sizeScale_Y = 1f;
+        itemsPanel.SizeScale_X = 1f;
+        itemsPanel.SizeScale_Y = 1f;
         grid.AddChild(itemsPanel);
     }
 }

@@ -14,13 +14,13 @@ public class DeadzoneVolume : LevelVolume<DeadzoneVolume, DeadzoneVolumeManager>
         public Menu(DeadzoneVolume volume)
         {
             this.volume = volume;
-            base.sizeOffset_X = 400;
-            base.sizeOffset_Y = 30;
+            base.SizeOffset_X = 400f;
+            base.SizeOffset_Y = 30f;
             SleekButtonState sleekButtonState = new SleekButtonState(new GUIContent("Default Radiation"), new GUIContent("Full Suit Radiation"));
-            sleekButtonState.sizeOffset_X = 200;
-            sleekButtonState.sizeOffset_Y = 30;
+            sleekButtonState.SizeOffset_X = 200f;
+            sleekButtonState.SizeOffset_Y = 30f;
             sleekButtonState.state = (int)volume.DeadzoneType;
-            sleekButtonState.addLabel("Deadzone Type", ESleekSide.RIGHT);
+            sleekButtonState.AddLabel("Deadzone Type", ESleekSide.RIGHT);
             sleekButtonState.onSwappedState = (SwappedState)Delegate.Combine(sleekButtonState.onSwappedState, new SwappedState(OnSwappedState));
             AddChild(sleekButtonState);
         }

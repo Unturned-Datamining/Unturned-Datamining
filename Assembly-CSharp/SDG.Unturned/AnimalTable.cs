@@ -79,7 +79,7 @@ public class AnimalTable
     {
         if (tableID != 0)
         {
-            return SpawnTableTool.resolve(tableID);
+            return SpawnTableTool.ResolveLegacyId(tableID, EAssetType.ANIMAL, OnGetSpawnTableErrorContext);
         }
         float value = Random.value;
         if (tiers.Count == 0)
@@ -216,5 +216,15 @@ public class AnimalTable
         _color = newColor;
         name = newName;
         tableID = newTableID;
+    }
+
+    private string OnGetSpawnTableErrorContext()
+    {
+        return "\"" + Level.info.name + "\" animal table \"" + name + "\"";
+    }
+
+    internal string OnGetSpawnTableValidationErrorContext()
+    {
+        return "\"" + Level.info.name + "\" animal table \"" + name + "\" validation";
     }
 }

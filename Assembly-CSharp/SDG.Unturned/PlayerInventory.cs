@@ -394,7 +394,7 @@ public class PlayerInventory : PlayerCaller
         if (items[page].tryAddItem(item))
         {
             base.player.equipment.sendSlot(page);
-            if (!base.player.equipment.isSelected)
+            if (!base.player.equipment.HasValidUseable)
             {
                 base.player.equipment.ServerEquip(page, 0, 0);
             }
@@ -467,7 +467,7 @@ public class PlayerInventory : PlayerCaller
         {
             if (items[b].tryAddItem(item))
             {
-                if (autoEquipUseable && !base.player.equipment.isSelected && asset.slot.canEquipInPage(b) && asset.canPlayerEquip)
+                if (autoEquipUseable && !base.player.equipment.HasValidUseable && asset.slot.canEquipInPage(b) && asset.canPlayerEquip)
                 {
                     ItemJar item2 = items[b].getItem((byte)(items[b].getItemCount() - 1));
                     base.player.equipment.ServerEquip(b, item2.x, item2.y);
@@ -933,7 +933,7 @@ public class PlayerInventory : PlayerCaller
 
     internal void SendInitialPlayerState(SteamPlayer client)
     {
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             Player.isLoadingInventory = false;
             for (byte b = 0; b < PAGES - 2; b = (byte)(b + 1))
@@ -975,7 +975,7 @@ public class PlayerInventory : PlayerCaller
 
     public void sendStorage()
     {
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             onInventoryResized(STORAGE, items[STORAGE].width, items[STORAGE].height);
             if (items[STORAGE].height > 0)
@@ -1060,7 +1060,7 @@ public class PlayerInventory : PlayerCaller
     {
         byte index = getIndex(page, x, y);
         updateAmount(page, index, amount);
-        if (!base.channel.isOwner && ownerHasInventory)
+        if (!base.channel.IsLocalPlayer && ownerHasInventory)
         {
             SendUpdateAmount.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), page, index, amount);
         }
@@ -1070,7 +1070,7 @@ public class PlayerInventory : PlayerCaller
     {
         byte index = getIndex(page, x, y);
         updateQuality(page, index, quality);
-        if (!base.channel.isOwner && ownerHasInventory)
+        if (!base.channel.IsLocalPlayer && ownerHasInventory)
         {
             SendUpdateQuality.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), page, index, quality);
         }
@@ -1080,7 +1080,7 @@ public class PlayerInventory : PlayerCaller
     {
         byte index = getIndex(page, x, y);
         updateState(page, index, state);
-        if (!base.channel.isOwner && ownerHasInventory)
+        if (!base.channel.IsLocalPlayer && ownerHasInventory)
         {
             SendUpdateInvState.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), page, index, state);
         }
@@ -1130,10 +1130,18 @@ public class PlayerInventory : PlayerCaller
         {
             for (ushort num = 0; num < spawn_Loadout.Amount; num = (ushort)(num + 1))
             {
-                ushort newID = SpawnTableTool.resolve(spawn_Loadout.Table_ID);
-                tryAddItemAuto(new Item(newID, full: true), autoEquipWeapon: true, autoEquipUseable: false, autoEquipClothing: true, playEffect: false);
+                ushort num2 = SpawnTableTool.ResolveLegacyId(spawn_Loadout.Table_ID, EAssetType.ITEM, OnGetSpawnLoadoutErrorContext);
+                if (num2 != 0)
+                {
+                    tryAddItemAuto(new Item(num2, full: true), autoEquipWeapon: true, autoEquipUseable: false, autoEquipClothing: true, playEffect: false);
+                }
             }
         }
+    }
+
+    private string OnGetSpawnLoadoutErrorContext()
+    {
+        return "level config spawn loadout";
     }
 
     private void onShirtUpdated(ushort id, byte quality, byte[] state)
@@ -1275,7 +1283,7 @@ public class PlayerInventory : PlayerCaller
 
     private void onLifeUpdated(bool isDead)
     {
-        if ((Provider.isServer || base.channel.isOwner) && isDead)
+        if ((Provider.isServer || base.channel.IsLocalPlayer) && isDead)
         {
             closeStorage();
         }
@@ -1337,7 +1345,7 @@ public class PlayerInventory : PlayerCaller
 
     private void onItemsResized(byte page, byte newWidth, byte newHeight)
     {
-        if (!base.channel.isOwner && Provider.isServer && ownerHasInventory)
+        if (!base.channel.IsLocalPlayer && Provider.isServer && ownerHasInventory)
         {
             SendSize.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), page, newWidth, newHeight);
         }
@@ -1353,7 +1361,7 @@ public class PlayerInventory : PlayerCaller
 
     private void onItemAdded(byte page, byte index, ItemJar jar)
     {
-        if (!base.channel.isOwner && Provider.isServer && ownerHasInventory)
+        if (!base.channel.IsLocalPlayer && Provider.isServer && ownerHasInventory)
         {
             sendItemAdd(page, jar);
         }
@@ -1365,7 +1373,7 @@ public class PlayerInventory : PlayerCaller
     {
         if (Provider.isServer)
         {
-            if (!base.channel.isOwner && ownerHasInventory)
+            if (!base.channel.IsLocalPlayer && ownerHasInventory)
             {
                 sendItemRemove(page, jar);
             }
@@ -1391,7 +1399,7 @@ public class PlayerInventory : PlayerCaller
         }
         if (Provider.isServer)
         {
-            if (!base.channel.isOwner && ownerHasInventory)
+            if (!base.channel.IsLocalPlayer && ownerHasInventory)
             {
                 sendItemRemove(page, jar);
             }
@@ -1436,7 +1444,7 @@ public class PlayerInventory : PlayerCaller
             Items obj5 = items[b];
             obj5.onStateUpdated = (StateUpdated)Delegate.Combine(obj5.onStateUpdated, new StateUpdated(onItemStateUpdated));
         }
-        if (base.channel.isOwner || Provider.isServer)
+        if (base.channel.IsLocalPlayer || Provider.isServer)
         {
             PlayerLife life = base.player.life;
             life.onLifeUpdated = (LifeUpdated)Delegate.Combine(life.onLifeUpdated, new LifeUpdated(onLifeUpdated));

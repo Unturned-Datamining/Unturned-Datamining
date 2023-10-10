@@ -6,7 +6,7 @@ internal class GlazierFloat64Field_uGUI : GlazierNumericField_uGUI, ISleekFloat6
 {
     private double _state;
 
-    public double state
+    public double Value
     {
         get
         {
@@ -19,7 +19,7 @@ internal class GlazierFloat64Field_uGUI : GlazierNumericField_uGUI, ISleekFloat6
         }
     }
 
-    public event TypedDouble onTypedDouble;
+    public event TypedDouble OnValueChanged;
 
     public GlazierFloat64Field_uGUI(Glazier_uGUI glazier)
         : base(glazier)
@@ -41,7 +41,7 @@ internal class GlazierFloat64Field_uGUI : GlazierNumericField_uGUI, ISleekFloat6
         }
         if (double.TryParse(input, out _state))
         {
-            this.onTypedDouble?.Invoke(this, _state);
+            this.OnValueChanged?.Invoke(this, _state);
             return true;
         }
         return false;
@@ -49,6 +49,6 @@ internal class GlazierFloat64Field_uGUI : GlazierNumericField_uGUI, ISleekFloat6
 
     protected override string NumberToString()
     {
-        return state.ToString("F3");
+        return Value.ToString("F3");
     }
 }

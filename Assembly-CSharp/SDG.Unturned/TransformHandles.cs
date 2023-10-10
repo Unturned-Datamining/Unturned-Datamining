@@ -861,9 +861,9 @@ public class TransformHandles
         if (wantsToSnap)
         {
             Color color = new Color(0f, 0f, 0f, 0.5f);
-            float num = (float)Math.PI / 180f * dragPreviousAngle;
-            float num2 = (float)Math.PI / 180f * snapRotationIntervalDegrees;
-            int num3 = Mathf.Max(1, Mathf.CeilToInt((float)Math.PI / 2f / num2));
+            float num = MathF.PI / 180f * dragPreviousAngle;
+            float num2 = MathF.PI / 180f * snapRotationIntervalDegrees;
+            int num3 = Mathf.Max(1, Mathf.CeilToInt(MathF.PI / 2f / num2));
             for (int i = -num3; i <= num3; i++)
             {
                 if (i != 0)
@@ -880,7 +880,7 @@ public class TransformHandles
         }
         Color white = Color.white;
         RuntimeGizmos.Get().Circle(pivotPosition, dragRotationOutwardDirection, dragRotationTangent, viewScale, white, 0f, 32, EGizmoLayer.Foreground);
-        float f2 = (float)Math.PI / 180f * dragPreviousAngle;
+        float f2 = MathF.PI / 180f * dragPreviousAngle;
         float num6 = Mathf.Cos(f2);
         float num7 = Mathf.Sin(f2);
         Vector3 vector2 = dragRotationOutwardDirection * num6 + dragRotationTangent * num7;

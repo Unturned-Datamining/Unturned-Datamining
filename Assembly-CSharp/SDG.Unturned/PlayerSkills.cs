@@ -172,7 +172,7 @@ public class PlayerSkills : PlayerCaller
     public void ReceiveExperience(uint newExperience)
     {
         uint arg = _experience;
-        if (base.channel.isOwner && newExperience > experience && Level.info.type != ELevelType.HORDE && wasLoaded)
+        if (base.channel.IsLocalPlayer && newExperience > experience && Level.info.type != ELevelType.HORDE && wasLoaded)
         {
             if (Provider.provider.statisticsService.userStatisticsService.getStatistic("Found_Experience", out int data))
             {
@@ -195,7 +195,7 @@ public class PlayerSkills : PlayerCaller
     public void ReceiveReputation(int newReputation)
     {
         int arg = _reputation;
-        if (base.channel.isOwner && newReputation != reputation && Level.info.type != ELevelType.HORDE && wasLoaded)
+        if (base.channel.IsLocalPlayer && newReputation != reputation && Level.info.type != ELevelType.HORDE && wasLoaded)
         {
             bool has2;
             if (newReputation <= -200)
@@ -252,7 +252,7 @@ public class PlayerSkills : PlayerCaller
             return;
         }
         skills[speciality][index].level = level;
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             bool flag = true;
             bool flag2 = true;
@@ -324,7 +324,7 @@ public class PlayerSkills : PlayerCaller
 
     public void askSpend(uint cost)
     {
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             SendExperience.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), experience - cost);
             return;
@@ -337,7 +337,7 @@ public class PlayerSkills : PlayerCaller
 
     public void askAward(uint award)
     {
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             SendExperience.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), experience + award);
             return;
@@ -384,7 +384,7 @@ public class PlayerSkills : PlayerCaller
         if (pay != 0)
         {
             pay = (uint)((float)pay * Provider.modeConfigData.Players.Experience_Multiplier);
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 SendExperience.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), experience + pay);
                 return;

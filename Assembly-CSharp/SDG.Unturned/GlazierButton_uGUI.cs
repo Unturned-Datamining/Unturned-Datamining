@@ -35,7 +35,7 @@ internal class GlazierButton_uGUI : GlazierElementBase_uGUI, ISleekButton, ISlee
 
     private TextMeshProUGUI textComponent;
 
-    public string text
+    public string Text
     {
         get
         {
@@ -47,7 +47,7 @@ internal class GlazierButton_uGUI : GlazierElementBase_uGUI, ISleekButton, ISlee
         }
     }
 
-    public string tooltipText
+    public string TooltipText
     {
         get
         {
@@ -68,7 +68,7 @@ internal class GlazierButton_uGUI : GlazierElementBase_uGUI, ISleekButton, ISlee
         }
     }
 
-    public FontStyle fontStyle
+    public FontStyle FontStyle
     {
         get
         {
@@ -81,7 +81,7 @@ internal class GlazierButton_uGUI : GlazierElementBase_uGUI, ISleekButton, ISlee
         }
     }
 
-    public TextAnchor fontAlignment
+    public TextAnchor TextAlignment
     {
         get
         {
@@ -94,7 +94,7 @@ internal class GlazierButton_uGUI : GlazierElementBase_uGUI, ISleekButton, ISlee
         }
     }
 
-    public ESleekFontSize fontSize
+    public ESleekFontSize FontSize
     {
         get
         {
@@ -107,7 +107,7 @@ internal class GlazierButton_uGUI : GlazierElementBase_uGUI, ISleekButton, ISlee
         }
     }
 
-    public ETextContrastContext shadowStyle
+    public ETextContrastContext TextContrastContext
     {
         get
         {
@@ -116,13 +116,13 @@ internal class GlazierButton_uGUI : GlazierElementBase_uGUI, ISleekButton, ISlee
         set
         {
             _contrastContext = value;
-            ETextContrastStyle eTextContrastStyle = SleekShadowStyle.ContextToStyle(value);
-            textComponent.fontSharedMaterial = base.glazier.GetFontMaterial(eTextContrastStyle);
-            textComponent.characterSpacing = GlazierUtils_uGUI.GetCharacterSpacing(eTextContrastStyle);
+            ETextContrastStyle shadowStyle = SleekShadowStyle.ContextToStyle(value);
+            textComponent.fontSharedMaterial = base.glazier.GetFontMaterial(shadowStyle);
+            textComponent.characterSpacing = GlazierUtils_uGUI.GetCharacterSpacing(shadowStyle);
         }
     }
 
-    public bool isClickable
+    public bool IsClickable
     {
         get
         {
@@ -135,7 +135,7 @@ internal class GlazierButton_uGUI : GlazierElementBase_uGUI, ISleekButton, ISlee
         }
     }
 
-    public bool isRaycastTarget
+    public bool IsRaycastTarget
     {
         get
         {
@@ -147,7 +147,7 @@ internal class GlazierButton_uGUI : GlazierElementBase_uGUI, ISleekButton, ISlee
         }
     }
 
-    public SleekColor textColor
+    public SleekColor TextColor
     {
         get
         {
@@ -164,7 +164,7 @@ internal class GlazierButton_uGUI : GlazierElementBase_uGUI, ISleekButton, ISlee
         }
     }
 
-    public bool enableRichText
+    public bool AllowRichText
     {
         get
         {
@@ -176,7 +176,7 @@ internal class GlazierButton_uGUI : GlazierElementBase_uGUI, ISleekButton, ISlee
         }
     }
 
-    public SleekColor backgroundColor
+    public SleekColor BackgroundColor
     {
         get
         {
@@ -189,17 +189,17 @@ internal class GlazierButton_uGUI : GlazierElementBase_uGUI, ISleekButton, ISlee
         }
     }
 
-    public event ClickedButton onClickedButton;
+    public event ClickedButton OnClicked;
 
-    public event ClickedButton onRightClickedButton;
+    public event ClickedButton OnRightClicked;
 
     private void PostConstructButton()
     {
-        fontAlignment = TextAnchor.MiddleCenter;
-        fontSize = ESleekFontSize.Default;
-        shadowStyle = ETextContrastContext.Default;
-        fontStyle = FontStyle.Normal;
-        enableRichText = false;
+        TextAlignment = TextAnchor.MiddleCenter;
+        FontSize = ESleekFontSize.Default;
+        TextContrastContext = ETextContrastContext.Default;
+        FontStyle = FontStyle.Normal;
+        AllowRichText = false;
     }
 
     protected override bool ReleaseIntoPool()
@@ -268,6 +268,7 @@ internal class GlazierButton_uGUI : GlazierElementBase_uGUI, ISleekButton, ISlee
         textComponent = poolData.textComponent;
         imageComponent.raycastTarget = true;
         textComponent.text = string.Empty;
+        textComponent.rectTransform.reset();
         buttonComponent.interactable = true;
         buttonComponent.onClick.RemoveAllListeners();
         buttonComponent.onRightClick.RemoveAllListeners();
@@ -279,12 +280,12 @@ internal class GlazierButton_uGUI : GlazierElementBase_uGUI, ISleekButton, ISlee
     public override void SynchronizeColors()
     {
         Color color = _backgroundColor;
-        if (!isClickable)
+        if (!IsClickable)
         {
             color.a *= 0.25f;
         }
         imageComponent.color = color;
-        textComponent.color = textColor;
+        textComponent.color = TextColor;
         if (tooltipComponent != null)
         {
             tooltipComponent.color = _textColor;
@@ -304,11 +305,11 @@ internal class GlazierButton_uGUI : GlazierElementBase_uGUI, ISleekButton, ISlee
 
     private void OnUnityButtonClicked()
     {
-        this.onClickedButton?.Invoke(this);
+        this.OnClicked?.Invoke(this);
     }
 
     private void OnUnityButtonRightClicked()
     {
-        this.onRightClickedButton?.Invoke(this);
+        this.OnRightClicked?.Invoke(this);
     }
 }

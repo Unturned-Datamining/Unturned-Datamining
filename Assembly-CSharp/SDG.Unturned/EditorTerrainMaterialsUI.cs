@@ -91,10 +91,10 @@ internal class EditorTerrainMaterialsUI : SleekFullscreenBox
     {
         base.OnUpdate();
         modeButton.state = (int)TerrainEditor.splatmapMode;
-        brushRadiusField.state = DevkitLandscapeToolSplatmapOptions.instance.brushRadius;
-        brushFalloffField.state = DevkitLandscapeToolSplatmapOptions.instance.brushFalloff;
-        brushStrengthField.state = EditorInteract.instance.terrainTool.splatmapBrushStrength;
-        weightTargetField.state = DevkitLandscapeToolSplatmapOptions.instance.weightTarget;
+        brushRadiusField.Value = DevkitLandscapeToolSplatmapOptions.instance.brushRadius;
+        brushFalloffField.Value = DevkitLandscapeToolSplatmapOptions.instance.brushFalloff;
+        brushStrengthField.Value = EditorInteract.instance.terrainTool.splatmapBrushStrength;
+        weightTargetField.Value = DevkitLandscapeToolSplatmapOptions.instance.weightTarget;
         LandscapeMaterialAsset landscapeMaterialAsset = TerrainEditor.splatmapMaterialTarget.Find();
         if (selectedMaterialAsset != landscapeMaterialAsset)
         {
@@ -112,17 +112,17 @@ internal class EditorTerrainMaterialsUI : SleekFullscreenBox
         }
         if (TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.PAINT)
         {
-            hintLabel.text = localization.format("Hint_Paint", "Shift", "Ctrl", "Alt");
-            hintLabel.isVisible = true;
+            hintLabel.Text = localization.format("Hint_Paint", "Shift", "Ctrl", "Alt");
+            hintLabel.IsVisible = true;
         }
         else if (TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.CUT)
         {
-            hintLabel.text = localization.format("Hint_Cut", "Shift");
-            hintLabel.isVisible = true;
+            hintLabel.Text = localization.format("Hint_Cut", "Shift");
+            hintLabel.IsVisible = true;
         }
         else
         {
-            hintLabel.isVisible = false;
+            hintLabel.IsVisible = false;
         }
         UpdateLowerLeftOffset();
     }
@@ -133,207 +133,207 @@ internal class EditorTerrainMaterialsUI : SleekFullscreenBox
         DevkitLandscapeToolSplatmapOptions.load();
         searchAssets = new List<LandscapeMaterialAsset>();
         hintLabel = Glazier.Get().CreateLabel();
-        hintLabel.positionScale_Y = 1f;
-        hintLabel.positionOffset_Y = -30;
-        hintLabel.sizeScale_X = 1f;
-        hintLabel.sizeOffset_Y = 30;
-        hintLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
-        hintLabel.isVisible = false;
+        hintLabel.PositionScale_Y = 1f;
+        hintLabel.PositionOffset_Y = -30f;
+        hintLabel.SizeScale_X = 1f;
+        hintLabel.SizeOffset_Y = 30f;
+        hintLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
+        hintLabel.IsVisible = false;
         AddChild(hintLabel);
         modeButton = new SleekButtonState(new GUIContent(localization.format("Mode_Paint", "Q")), new GUIContent(localization.format("Mode_Auto", "W")), new GUIContent(localization.format("Mode_Smooth", "E")), new GUIContent(localization.format("Mode_Cut", "R")));
-        modeButton.positionScale_Y = 1f;
-        modeButton.sizeOffset_X = 200;
-        modeButton.sizeOffset_Y = 30;
-        modeButton.addLabel(localization.format("Mode_Label"), ESleekSide.RIGHT);
+        modeButton.PositionScale_Y = 1f;
+        modeButton.SizeOffset_X = 200f;
+        modeButton.SizeOffset_Y = 30f;
+        modeButton.AddLabel(localization.format("Mode_Label"), ESleekSide.RIGHT);
         modeButton.state = (int)TerrainEditor.splatmapMode;
         SleekButtonState sleekButtonState = modeButton;
         sleekButtonState.onSwappedState = (SwappedState)Delegate.Combine(sleekButtonState.onSwappedState, new SwappedState(OnSwappedMode));
         AddChild(modeButton);
         brushRadiusField = Glazier.Get().CreateFloat32Field();
-        brushRadiusField.positionScale_Y = 1f;
-        brushRadiusField.sizeOffset_X = 200;
-        brushRadiusField.sizeOffset_Y = 30;
-        brushRadiusField.addLabel(localization.format("BrushRadius", "B"), ESleekSide.RIGHT);
-        brushRadiusField.state = DevkitLandscapeToolSplatmapOptions.instance.brushRadius;
-        brushRadiusField.onTypedSingle += OnBrushRadiusTyped;
+        brushRadiusField.PositionScale_Y = 1f;
+        brushRadiusField.SizeOffset_X = 200f;
+        brushRadiusField.SizeOffset_Y = 30f;
+        brushRadiusField.AddLabel(localization.format("BrushRadius", "B"), ESleekSide.RIGHT);
+        brushRadiusField.Value = DevkitLandscapeToolSplatmapOptions.instance.brushRadius;
+        brushRadiusField.OnValueChanged += OnBrushRadiusTyped;
         AddChild(brushRadiusField);
         brushFalloffField = Glazier.Get().CreateFloat32Field();
-        brushFalloffField.positionScale_Y = 1f;
-        brushFalloffField.sizeOffset_X = 200;
-        brushFalloffField.sizeOffset_Y = 30;
-        brushFalloffField.addLabel(localization.format("BrushFalloff", "F"), ESleekSide.RIGHT);
-        brushFalloffField.state = DevkitLandscapeToolSplatmapOptions.instance.brushFalloff;
-        brushFalloffField.onTypedSingle += OnBrushFalloffTyped;
+        brushFalloffField.PositionScale_Y = 1f;
+        brushFalloffField.SizeOffset_X = 200f;
+        brushFalloffField.SizeOffset_Y = 30f;
+        brushFalloffField.AddLabel(localization.format("BrushFalloff", "F"), ESleekSide.RIGHT);
+        brushFalloffField.Value = DevkitLandscapeToolSplatmapOptions.instance.brushFalloff;
+        brushFalloffField.OnValueChanged += OnBrushFalloffTyped;
         AddChild(brushFalloffField);
         brushStrengthField = Glazier.Get().CreateFloat32Field();
-        brushStrengthField.positionScale_Y = 1f;
-        brushStrengthField.sizeOffset_X = 200;
-        brushStrengthField.sizeOffset_Y = 30;
-        brushStrengthField.addLabel(localization.format("BrushStrength", "V"), ESleekSide.RIGHT);
-        brushStrengthField.state = DevkitLandscapeToolSplatmapOptions.instance.brushStrength;
-        brushStrengthField.onTypedSingle += OnBrushStrengthTyped;
+        brushStrengthField.PositionScale_Y = 1f;
+        brushStrengthField.SizeOffset_X = 200f;
+        brushStrengthField.SizeOffset_Y = 30f;
+        brushStrengthField.AddLabel(localization.format("BrushStrength", "V"), ESleekSide.RIGHT);
+        brushStrengthField.Value = DevkitLandscapeToolSplatmapOptions.instance.brushStrength;
+        brushStrengthField.OnValueChanged += OnBrushStrengthTyped;
         AddChild(brushStrengthField);
         smoothMethodButton = new SleekButtonState(new GUIContent(localization.format("SmoothMethod_BrushAverage")), new GUIContent(localization.format("SmoothMethod_PixelAverage")));
-        smoothMethodButton.positionScale_Y = 1f;
-        smoothMethodButton.sizeOffset_X = 200;
-        smoothMethodButton.sizeOffset_Y = 30;
-        smoothMethodButton.addLabel(localization.format("SmoothMethod_Label"), ESleekSide.RIGHT);
+        smoothMethodButton.PositionScale_Y = 1f;
+        smoothMethodButton.SizeOffset_X = 200f;
+        smoothMethodButton.SizeOffset_Y = 30f;
+        smoothMethodButton.AddLabel(localization.format("SmoothMethod_Label"), ESleekSide.RIGHT);
         smoothMethodButton.state = (int)DevkitLandscapeToolSplatmapOptions.instance.smoothMethod;
         SleekButtonState sleekButtonState2 = smoothMethodButton;
         sleekButtonState2.onSwappedState = (SwappedState)Delegate.Combine(sleekButtonState2.onSwappedState, new SwappedState(OnSwappedSmoothMethod));
         AddChild(smoothMethodButton);
         autoRayMaskField = Glazier.Get().CreateUInt32Field();
-        autoRayMaskField.positionScale_Y = 1f;
-        autoRayMaskField.sizeOffset_X = 200;
-        autoRayMaskField.sizeOffset_Y = 30;
-        autoRayMaskField.addLabel("Ray Mask (sorry this is not user-friendly at the moment)", ESleekSide.RIGHT);
-        autoRayMaskField.state = (uint)DevkitLandscapeToolSplatmapOptions.instance.autoRayMask;
-        autoRayMaskField.onTypedUInt32 += OnAutoRayMaskTyped;
+        autoRayMaskField.PositionScale_Y = 1f;
+        autoRayMaskField.SizeOffset_X = 200f;
+        autoRayMaskField.SizeOffset_Y = 30f;
+        autoRayMaskField.AddLabel("Ray Mask (sorry this is not user-friendly at the moment)", ESleekSide.RIGHT);
+        autoRayMaskField.Value = (uint)DevkitLandscapeToolSplatmapOptions.instance.autoRayMask;
+        autoRayMaskField.OnValueChanged += OnAutoRayMaskTyped;
         AddChild(autoRayMaskField);
         autoRayLengthField = Glazier.Get().CreateFloat32Field();
-        autoRayLengthField.positionScale_Y = 1f;
-        autoRayLengthField.sizeOffset_X = 200;
-        autoRayLengthField.sizeOffset_Y = 30;
-        autoRayLengthField.addLabel(localization.format("AutoRayLength"), ESleekSide.RIGHT);
-        autoRayLengthField.state = DevkitLandscapeToolSplatmapOptions.instance.autoRayLength;
-        autoRayLengthField.onTypedSingle += OnAutoRayLengthTyped;
+        autoRayLengthField.PositionScale_Y = 1f;
+        autoRayLengthField.SizeOffset_X = 200f;
+        autoRayLengthField.SizeOffset_Y = 30f;
+        autoRayLengthField.AddLabel(localization.format("AutoRayLength"), ESleekSide.RIGHT);
+        autoRayLengthField.Value = DevkitLandscapeToolSplatmapOptions.instance.autoRayLength;
+        autoRayLengthField.OnValueChanged += OnAutoRayLengthTyped;
         AddChild(autoRayLengthField);
         autoRayRadiusField = Glazier.Get().CreateFloat32Field();
-        autoRayRadiusField.positionScale_Y = 1f;
-        autoRayRadiusField.sizeOffset_X = 200;
-        autoRayRadiusField.sizeOffset_Y = 30;
-        autoRayRadiusField.addLabel(localization.format("AutoRayRadius"), ESleekSide.RIGHT);
-        autoRayRadiusField.state = DevkitLandscapeToolSplatmapOptions.instance.autoRayRadius;
-        autoRayRadiusField.onTypedSingle += OnAutoRayRadiusTyped;
+        autoRayRadiusField.PositionScale_Y = 1f;
+        autoRayRadiusField.SizeOffset_X = 200f;
+        autoRayRadiusField.SizeOffset_Y = 30f;
+        autoRayRadiusField.AddLabel(localization.format("AutoRayRadius"), ESleekSide.RIGHT);
+        autoRayRadiusField.Value = DevkitLandscapeToolSplatmapOptions.instance.autoRayRadius;
+        autoRayRadiusField.OnValueChanged += OnAutoRayRadiusTyped;
         AddChild(autoRayRadiusField);
         useAutoFoundationToggle = Glazier.Get().CreateToggle();
-        useAutoFoundationToggle.positionScale_Y = 1f;
-        useAutoFoundationToggle.sizeOffset_X = 40;
-        useAutoFoundationToggle.sizeOffset_Y = 40;
-        useAutoFoundationToggle.state = DevkitLandscapeToolSplatmapOptions.instance.useAutoFoundation;
-        useAutoFoundationToggle.onToggled += OnClickedUseAutoFoundation;
-        useAutoFoundationToggle.addLabel(localization.format("UseAutoFoundation"), ESleekSide.RIGHT);
+        useAutoFoundationToggle.PositionScale_Y = 1f;
+        useAutoFoundationToggle.SizeOffset_X = 40f;
+        useAutoFoundationToggle.SizeOffset_Y = 40f;
+        useAutoFoundationToggle.Value = DevkitLandscapeToolSplatmapOptions.instance.useAutoFoundation;
+        useAutoFoundationToggle.OnValueChanged += OnClickedUseAutoFoundation;
+        useAutoFoundationToggle.AddLabel(localization.format("UseAutoFoundation"), ESleekSide.RIGHT);
         AddChild(useAutoFoundationToggle);
         autoMaxAngleBeginField = Glazier.Get().CreateFloat32Field();
-        autoMaxAngleBeginField.positionScale_Y = 1f;
-        autoMaxAngleBeginField.sizeOffset_X = 100;
-        autoMaxAngleBeginField.sizeOffset_Y = 30;
-        autoMaxAngleBeginField.state = DevkitLandscapeToolSplatmapOptions.instance.autoMaxAngleBegin;
-        autoMaxAngleBeginField.onTypedSingle += OnAutoMaxAngleBeginTyped;
+        autoMaxAngleBeginField.PositionScale_Y = 1f;
+        autoMaxAngleBeginField.SizeOffset_X = 100f;
+        autoMaxAngleBeginField.SizeOffset_Y = 30f;
+        autoMaxAngleBeginField.Value = DevkitLandscapeToolSplatmapOptions.instance.autoMaxAngleBegin;
+        autoMaxAngleBeginField.OnValueChanged += OnAutoMaxAngleBeginTyped;
         AddChild(autoMaxAngleBeginField);
         autoMaxAngleEndField = Glazier.Get().CreateFloat32Field();
-        autoMaxAngleEndField.positionOffset_X = 100;
-        autoMaxAngleEndField.positionScale_Y = 1f;
-        autoMaxAngleEndField.sizeOffset_X = 100;
-        autoMaxAngleEndField.sizeOffset_Y = 30;
-        autoMaxAngleEndField.state = DevkitLandscapeToolSplatmapOptions.instance.autoMaxAngleEnd;
-        autoMaxAngleEndField.onTypedSingle += OnAutoMaxAngleEndTyped;
-        autoMaxAngleEndField.addLabel(localization.format("MaxAngleRange"), ESleekSide.RIGHT);
+        autoMaxAngleEndField.PositionOffset_X = 100f;
+        autoMaxAngleEndField.PositionScale_Y = 1f;
+        autoMaxAngleEndField.SizeOffset_X = 100f;
+        autoMaxAngleEndField.SizeOffset_Y = 30f;
+        autoMaxAngleEndField.Value = DevkitLandscapeToolSplatmapOptions.instance.autoMaxAngleEnd;
+        autoMaxAngleEndField.OnValueChanged += OnAutoMaxAngleEndTyped;
+        autoMaxAngleEndField.AddLabel(localization.format("MaxAngleRange"), ESleekSide.RIGHT);
         AddChild(autoMaxAngleEndField);
         autoMinAngleBeginField = Glazier.Get().CreateFloat32Field();
-        autoMinAngleBeginField.positionScale_Y = 1f;
-        autoMinAngleBeginField.sizeOffset_X = 100;
-        autoMinAngleBeginField.sizeOffset_Y = 30;
-        autoMinAngleBeginField.state = DevkitLandscapeToolSplatmapOptions.instance.autoMinAngleBegin;
-        autoMinAngleBeginField.onTypedSingle += OnAutoMinAngleBeginTyped;
+        autoMinAngleBeginField.PositionScale_Y = 1f;
+        autoMinAngleBeginField.SizeOffset_X = 100f;
+        autoMinAngleBeginField.SizeOffset_Y = 30f;
+        autoMinAngleBeginField.Value = DevkitLandscapeToolSplatmapOptions.instance.autoMinAngleBegin;
+        autoMinAngleBeginField.OnValueChanged += OnAutoMinAngleBeginTyped;
         AddChild(autoMinAngleBeginField);
         autoMinAngleEndField = Glazier.Get().CreateFloat32Field();
-        autoMinAngleEndField.positionOffset_X = 100;
-        autoMinAngleEndField.positionScale_Y = 1f;
-        autoMinAngleEndField.sizeOffset_X = 100;
-        autoMinAngleEndField.sizeOffset_Y = 30;
-        autoMinAngleEndField.state = DevkitLandscapeToolSplatmapOptions.instance.autoMinAngleEnd;
-        autoMinAngleEndField.onTypedSingle += OnAutoMinAngleEndTyped;
-        autoMinAngleEndField.addLabel(localization.format("MinAngleRange"), ESleekSide.RIGHT);
+        autoMinAngleEndField.PositionOffset_X = 100f;
+        autoMinAngleEndField.PositionScale_Y = 1f;
+        autoMinAngleEndField.SizeOffset_X = 100f;
+        autoMinAngleEndField.SizeOffset_Y = 30f;
+        autoMinAngleEndField.Value = DevkitLandscapeToolSplatmapOptions.instance.autoMinAngleEnd;
+        autoMinAngleEndField.OnValueChanged += OnAutoMinAngleEndTyped;
+        autoMinAngleEndField.AddLabel(localization.format("MinAngleRange"), ESleekSide.RIGHT);
         AddChild(autoMinAngleEndField);
         useAutoSlopeToggle = Glazier.Get().CreateToggle();
-        useAutoSlopeToggle.positionScale_Y = 1f;
-        useAutoSlopeToggle.sizeOffset_X = 40;
-        useAutoSlopeToggle.sizeOffset_Y = 40;
-        useAutoSlopeToggle.state = DevkitLandscapeToolSplatmapOptions.instance.useAutoSlope;
-        useAutoSlopeToggle.onToggled += OnClickedUseAutoSlope;
-        useAutoSlopeToggle.addLabel(localization.format("UseAutoSlope"), ESleekSide.RIGHT);
+        useAutoSlopeToggle.PositionScale_Y = 1f;
+        useAutoSlopeToggle.SizeOffset_X = 40f;
+        useAutoSlopeToggle.SizeOffset_Y = 40f;
+        useAutoSlopeToggle.Value = DevkitLandscapeToolSplatmapOptions.instance.useAutoSlope;
+        useAutoSlopeToggle.OnValueChanged += OnClickedUseAutoSlope;
+        useAutoSlopeToggle.AddLabel(localization.format("UseAutoSlope"), ESleekSide.RIGHT);
         AddChild(useAutoSlopeToggle);
         useWeightTargetToggle = Glazier.Get().CreateToggle();
-        useWeightTargetToggle.positionScale_Y = 1f;
-        useWeightTargetToggle.sizeOffset_X = 40;
-        useWeightTargetToggle.sizeOffset_Y = 40;
-        useWeightTargetToggle.state = DevkitLandscapeToolSplatmapOptions.instance.useWeightTarget;
-        useWeightTargetToggle.onToggled += OnClickedUseWeightTarget;
+        useWeightTargetToggle.PositionScale_Y = 1f;
+        useWeightTargetToggle.SizeOffset_X = 40f;
+        useWeightTargetToggle.SizeOffset_Y = 40f;
+        useWeightTargetToggle.Value = DevkitLandscapeToolSplatmapOptions.instance.useWeightTarget;
+        useWeightTargetToggle.OnValueChanged += OnClickedUseWeightTarget;
         AddChild(useWeightTargetToggle);
         weightTargetField = Glazier.Get().CreateFloat32Field();
-        weightTargetField.positionOffset_X = 40;
-        weightTargetField.positionScale_Y = 1f;
-        weightTargetField.sizeOffset_X = 160;
-        weightTargetField.sizeOffset_Y = 30;
-        weightTargetField.state = DevkitLandscapeToolSplatmapOptions.instance.weightTarget;
-        weightTargetField.addLabel(localization.format("WeightTarget", "G"), ESleekSide.RIGHT);
-        weightTargetField.onTypedSingle += OnWeightTargetTyped;
+        weightTargetField.PositionOffset_X = 40f;
+        weightTargetField.PositionScale_Y = 1f;
+        weightTargetField.SizeOffset_X = 160f;
+        weightTargetField.SizeOffset_Y = 30f;
+        weightTargetField.Value = DevkitLandscapeToolSplatmapOptions.instance.weightTarget;
+        weightTargetField.AddLabel(localization.format("WeightTarget", "G"), ESleekSide.RIGHT);
+        weightTargetField.OnValueChanged += OnWeightTargetTyped;
         AddChild(weightTargetField);
         maxPreviewSamplesField = Glazier.Get().CreateUInt32Field();
-        maxPreviewSamplesField.positionScale_Y = 1f;
-        maxPreviewSamplesField.sizeOffset_X = 200;
-        maxPreviewSamplesField.sizeOffset_Y = 30;
-        maxPreviewSamplesField.addLabel(localization.format("MaxPreviewSamples"), ESleekSide.RIGHT);
-        maxPreviewSamplesField.state = DevkitLandscapeToolSplatmapOptions.instance.maxPreviewSamples;
-        maxPreviewSamplesField.onTypedUInt32 += OnMaxPreviewSamplesTyped;
+        maxPreviewSamplesField.PositionScale_Y = 1f;
+        maxPreviewSamplesField.SizeOffset_X = 200f;
+        maxPreviewSamplesField.SizeOffset_Y = 30f;
+        maxPreviewSamplesField.AddLabel(localization.format("MaxPreviewSamples"), ESleekSide.RIGHT);
+        maxPreviewSamplesField.Value = DevkitLandscapeToolSplatmapOptions.instance.maxPreviewSamples;
+        maxPreviewSamplesField.OnValueChanged += OnMaxPreviewSamplesTyped;
         AddChild(maxPreviewSamplesField);
         previewMethodButton = new SleekButtonState(new GUIContent(localization.format("PreviewMethod_BrushAlpha")), new GUIContent(localization.format("PreviewMethod_Weight")));
-        previewMethodButton.positionScale_Y = 1f;
-        previewMethodButton.sizeOffset_X = 200;
-        previewMethodButton.sizeOffset_Y = 30;
-        previewMethodButton.addLabel(localization.format("PreviewMethod_Label"), ESleekSide.RIGHT);
+        previewMethodButton.PositionScale_Y = 1f;
+        previewMethodButton.SizeOffset_X = 200f;
+        previewMethodButton.SizeOffset_Y = 30f;
+        previewMethodButton.AddLabel(localization.format("PreviewMethod_Label"), ESleekSide.RIGHT);
         previewMethodButton.state = (int)DevkitLandscapeToolSplatmapOptions.instance.previewMethod;
         SleekButtonState sleekButtonState3 = previewMethodButton;
         sleekButtonState3.onSwappedState = (SwappedState)Delegate.Combine(sleekButtonState3.onSwappedState, new SwappedState(OnSwappedPreviewMethod));
         AddChild(previewMethodButton);
         highlightHolesToggle = Glazier.Get().CreateToggle();
-        highlightHolesToggle.positionScale_Y = 1f;
-        highlightHolesToggle.sizeOffset_X = 40;
-        highlightHolesToggle.sizeOffset_Y = 40;
-        highlightHolesToggle.onToggled += OnClickedHighlightHoles;
-        highlightHolesToggle.isVisible = false;
-        highlightHolesToggle.addLabel(localization.format("HighlightHoles_Label"), ESleekSide.RIGHT);
+        highlightHolesToggle.PositionScale_Y = 1f;
+        highlightHolesToggle.SizeOffset_X = 40f;
+        highlightHolesToggle.SizeOffset_Y = 40f;
+        highlightHolesToggle.OnValueChanged += OnClickedHighlightHoles;
+        highlightHolesToggle.IsVisible = false;
+        highlightHolesToggle.AddLabel(localization.format("HighlightHoles_Label"), ESleekSide.RIGHT);
         AddChild(highlightHolesToggle);
         UpdateLowerLeftOffset();
-        int num = 0;
+        float num = 0f;
         selectedAssetBox = new SleekBoxIcon(null, 64);
-        selectedAssetBox.positionScale_X = 1f;
-        selectedAssetBox.sizeOffset_X = 300;
-        selectedAssetBox.positionOffset_X = -selectedAssetBox.sizeOffset_X;
-        selectedAssetBox.sizeOffset_Y = 74;
-        selectedAssetBox.addLabel(localization.format("SelectedAsset", "Alt"), ESleekSide.LEFT);
+        selectedAssetBox.PositionScale_X = 1f;
+        selectedAssetBox.SizeOffset_X = 300f;
+        selectedAssetBox.PositionOffset_X = 0f - selectedAssetBox.SizeOffset_X;
+        selectedAssetBox.SizeOffset_Y = 74f;
+        selectedAssetBox.AddLabel(localization.format("SelectedAsset", "Alt"), ESleekSide.LEFT);
         AddChild(selectedAssetBox);
-        num += selectedAssetBox.sizeOffset_Y + 10;
+        num += selectedAssetBox.SizeOffset_Y + 10f;
         onlyUsedMaterialsToggle = Glazier.Get().CreateToggle();
-        onlyUsedMaterialsToggle.positionScale_X = 1f;
-        onlyUsedMaterialsToggle.sizeOffset_X = 40;
-        onlyUsedMaterialsToggle.positionOffset_X = -300;
-        onlyUsedMaterialsToggle.sizeOffset_Y = 40;
-        onlyUsedMaterialsToggle.positionOffset_Y = num;
-        onlyUsedMaterialsToggle.addLabel(localization.format("OnlyUsedMaterials"), ESleekSide.RIGHT);
-        onlyUsedMaterialsToggle.state = true;
-        onlyUsedMaterialsToggle.onToggled += OnClickedOnlyUsedMaterials;
+        onlyUsedMaterialsToggle.PositionScale_X = 1f;
+        onlyUsedMaterialsToggle.SizeOffset_X = 40f;
+        onlyUsedMaterialsToggle.PositionOffset_X = -300f;
+        onlyUsedMaterialsToggle.SizeOffset_Y = 40f;
+        onlyUsedMaterialsToggle.PositionOffset_Y = num;
+        onlyUsedMaterialsToggle.AddLabel(localization.format("OnlyUsedMaterials"), ESleekSide.RIGHT);
+        onlyUsedMaterialsToggle.Value = true;
+        onlyUsedMaterialsToggle.OnValueChanged += OnClickedOnlyUsedMaterials;
         AddChild(onlyUsedMaterialsToggle);
-        num += onlyUsedMaterialsToggle.sizeOffset_Y + 10;
+        num += onlyUsedMaterialsToggle.SizeOffset_Y + 10f;
         searchField = Glazier.Get().CreateStringField();
-        searchField.positionOffset_X = -300;
-        searchField.positionOffset_Y = num;
-        searchField.positionScale_X = 1f;
-        searchField.sizeOffset_X = 300;
-        searchField.sizeOffset_Y = 30;
-        searchField.hint = localization.format("SearchHint");
-        searchField.onEntered += OnNameFilterEntered;
+        searchField.PositionOffset_X = -300f;
+        searchField.PositionOffset_Y = num;
+        searchField.PositionScale_X = 1f;
+        searchField.SizeOffset_X = 300f;
+        searchField.SizeOffset_Y = 30f;
+        searchField.PlaceholderText = localization.format("SearchHint");
+        searchField.OnTextSubmitted += OnNameFilterEntered;
         AddChild(searchField);
-        num += searchField.sizeOffset_Y + 10;
+        num += searchField.SizeOffset_Y + 10f;
         assetScrollView = Glazier.Get().CreateScrollView();
-        assetScrollView.positionScale_X = 1f;
-        assetScrollView.sizeOffset_X = 300;
-        assetScrollView.positionOffset_X = -assetScrollView.sizeOffset_X;
-        assetScrollView.positionOffset_Y = num;
-        assetScrollView.sizeOffset_Y = -num;
-        assetScrollView.sizeScale_Y = 1f;
-        assetScrollView.scaleContentToWidth = true;
+        assetScrollView.PositionScale_X = 1f;
+        assetScrollView.SizeOffset_X = 300f;
+        assetScrollView.PositionOffset_X = 0f - assetScrollView.SizeOffset_X;
+        assetScrollView.PositionOffset_Y = num;
+        assetScrollView.SizeOffset_Y = 0f - num;
+        assetScrollView.SizeScale_Y = 1f;
+        assetScrollView.ScaleContentToWidth = true;
         AddChild(assetScrollView);
     }
 
@@ -452,8 +452,8 @@ internal class EditorTerrainMaterialsUI : SleekFullscreenBox
     {
         searchAssets.Clear();
         assetScrollView.RemoveAllChildren();
-        int num = 0;
-        if (onlyUsedMaterialsToggle.state)
+        float num = 0f;
+        if (onlyUsedMaterialsToggle.Value)
         {
             Landscape.GetUniqueMaterials(searchAssets);
         }
@@ -461,7 +461,7 @@ internal class EditorTerrainMaterialsUI : SleekFullscreenBox
         {
             Assets.find(searchAssets);
         }
-        string searchText = searchField.text;
+        string searchText = searchField.Text;
         if (!string.IsNullOrEmpty(searchText))
         {
             searchAssets.RemoveSwap((LandscapeMaterialAsset asset) => asset.FriendlyName.IndexOf(searchText, StringComparison.CurrentCultureIgnoreCase) == -1);
@@ -470,103 +470,103 @@ internal class EditorTerrainMaterialsUI : SleekFullscreenBox
         foreach (LandscapeMaterialAsset searchAsset in searchAssets)
         {
             SleekButtonIcon sleekButtonIcon = new SleekButtonIcon(Assets.load(searchAsset.texture), 64);
-            sleekButtonIcon.positionOffset_Y = num;
-            sleekButtonIcon.sizeScale_X = 1f;
-            sleekButtonIcon.sizeOffset_Y = 74;
+            sleekButtonIcon.PositionOffset_Y = num;
+            sleekButtonIcon.SizeScale_X = 1f;
+            sleekButtonIcon.SizeOffset_Y = 74f;
             sleekButtonIcon.text = searchAsset.FriendlyName;
             sleekButtonIcon.onClickedButton += OnAssetClicked;
             assetScrollView.AddChild(sleekButtonIcon);
-            num += sleekButtonIcon.sizeOffset_Y;
+            num += sleekButtonIcon.SizeOffset_Y;
         }
-        assetScrollView.contentSizeOffset = new Vector2(0f, num);
+        assetScrollView.ContentSizeOffset = new Vector2(0f, num);
     }
 
     private void UpdateLowerLeftOffset()
     {
-        int num = 0;
-        num -= modeButton.sizeOffset_Y;
-        modeButton.positionOffset_Y = num;
-        num -= 10;
-        num -= previewMethodButton.sizeOffset_Y;
-        previewMethodButton.positionOffset_Y = num;
-        num -= 10;
-        num -= maxPreviewSamplesField.sizeOffset_Y;
-        maxPreviewSamplesField.positionOffset_Y = num;
-        num -= 10;
-        smoothMethodButton.isVisible = TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.SMOOTH;
-        if (smoothMethodButton.isVisible)
+        float num = 0f;
+        num -= modeButton.SizeOffset_Y;
+        modeButton.PositionOffset_Y = num;
+        num -= 10f;
+        num -= previewMethodButton.SizeOffset_Y;
+        previewMethodButton.PositionOffset_Y = num;
+        num -= 10f;
+        num -= maxPreviewSamplesField.SizeOffset_Y;
+        maxPreviewSamplesField.PositionOffset_Y = num;
+        num -= 10f;
+        smoothMethodButton.IsVisible = TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.SMOOTH;
+        if (smoothMethodButton.IsVisible)
         {
-            num -= smoothMethodButton.sizeOffset_Y;
-            smoothMethodButton.positionOffset_Y = num;
-            num -= 10;
+            num -= smoothMethodButton.SizeOffset_Y;
+            smoothMethodButton.PositionOffset_Y = num;
+            num -= 10f;
         }
-        autoRayRadiusField.isVisible = TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.PAINT && DevkitLandscapeToolSplatmapOptions.instance.useAutoFoundation;
-        autoRayLengthField.isVisible = autoRayRadiusField.isVisible;
-        autoRayMaskField.isVisible = autoRayRadiusField.isVisible;
-        if (autoRayRadiusField.isVisible)
+        autoRayRadiusField.IsVisible = TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.PAINT && DevkitLandscapeToolSplatmapOptions.instance.useAutoFoundation;
+        autoRayLengthField.IsVisible = autoRayRadiusField.IsVisible;
+        autoRayMaskField.IsVisible = autoRayRadiusField.IsVisible;
+        if (autoRayRadiusField.IsVisible)
         {
-            num -= autoRayMaskField.sizeOffset_Y;
-            autoRayMaskField.positionOffset_Y = num;
-            num -= autoRayLengthField.sizeOffset_Y;
-            autoRayLengthField.positionOffset_Y = num;
-            num -= autoRayRadiusField.sizeOffset_Y;
-            autoRayRadiusField.positionOffset_Y = num;
+            num -= autoRayMaskField.SizeOffset_Y;
+            autoRayMaskField.PositionOffset_Y = num;
+            num -= autoRayLengthField.SizeOffset_Y;
+            autoRayLengthField.PositionOffset_Y = num;
+            num -= autoRayRadiusField.SizeOffset_Y;
+            autoRayRadiusField.PositionOffset_Y = num;
         }
-        useAutoFoundationToggle.isVisible = TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.PAINT;
-        if (useAutoFoundationToggle.isVisible)
+        useAutoFoundationToggle.IsVisible = TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.PAINT;
+        if (useAutoFoundationToggle.IsVisible)
         {
-            num -= useAutoFoundationToggle.sizeOffset_Y;
-            useAutoFoundationToggle.positionOffset_Y = num;
-            num -= 10;
+            num -= useAutoFoundationToggle.SizeOffset_Y;
+            useAutoFoundationToggle.PositionOffset_Y = num;
+            num -= 10f;
         }
-        autoMinAngleBeginField.isVisible = TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.PAINT && DevkitLandscapeToolSplatmapOptions.instance.useAutoSlope;
-        autoMinAngleEndField.isVisible = autoMinAngleBeginField.isVisible;
-        autoMaxAngleBeginField.isVisible = autoMinAngleBeginField.isVisible;
-        autoMaxAngleEndField.isVisible = autoMinAngleBeginField.isVisible;
-        if (autoMinAngleBeginField.isVisible)
+        autoMinAngleBeginField.IsVisible = TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.PAINT && DevkitLandscapeToolSplatmapOptions.instance.useAutoSlope;
+        autoMinAngleEndField.IsVisible = autoMinAngleBeginField.IsVisible;
+        autoMaxAngleBeginField.IsVisible = autoMinAngleBeginField.IsVisible;
+        autoMaxAngleEndField.IsVisible = autoMinAngleBeginField.IsVisible;
+        if (autoMinAngleBeginField.IsVisible)
         {
-            num -= autoMaxAngleBeginField.sizeOffset_Y;
-            autoMaxAngleBeginField.positionOffset_Y = num;
-            autoMaxAngleEndField.positionOffset_Y = num;
-            num -= autoMinAngleBeginField.sizeOffset_Y;
-            autoMinAngleBeginField.positionOffset_Y = num;
-            autoMinAngleEndField.positionOffset_Y = num;
+            num -= autoMaxAngleBeginField.SizeOffset_Y;
+            autoMaxAngleBeginField.PositionOffset_Y = num;
+            autoMaxAngleEndField.PositionOffset_Y = num;
+            num -= autoMinAngleBeginField.SizeOffset_Y;
+            autoMinAngleBeginField.PositionOffset_Y = num;
+            autoMinAngleEndField.PositionOffset_Y = num;
         }
-        useAutoSlopeToggle.isVisible = TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.PAINT;
-        if (useAutoSlopeToggle.isVisible)
+        useAutoSlopeToggle.IsVisible = TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.PAINT;
+        if (useAutoSlopeToggle.IsVisible)
         {
-            num -= useAutoSlopeToggle.sizeOffset_Y;
-            useAutoSlopeToggle.positionOffset_Y = num;
-            num -= 10;
+            num -= useAutoSlopeToggle.SizeOffset_Y;
+            useAutoSlopeToggle.PositionOffset_Y = num;
+            num -= 10f;
         }
-        useWeightTargetToggle.isVisible = TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.PAINT;
-        weightTargetField.isVisible = useWeightTargetToggle.isVisible;
-        if (useWeightTargetToggle.isVisible)
+        useWeightTargetToggle.IsVisible = TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.PAINT;
+        weightTargetField.IsVisible = useWeightTargetToggle.IsVisible;
+        if (useWeightTargetToggle.IsVisible)
         {
-            num -= useWeightTargetToggle.sizeOffset_Y;
-            useWeightTargetToggle.positionOffset_Y = num;
-            weightTargetField.positionOffset_Y = num + 5;
-            num -= 10;
+            num -= useWeightTargetToggle.SizeOffset_Y;
+            useWeightTargetToggle.PositionOffset_Y = num;
+            weightTargetField.PositionOffset_Y = num + 5f;
+            num -= 10f;
         }
-        brushStrengthField.isVisible = TerrainEditor.splatmapMode != TerrainEditor.EDevkitLandscapeToolSplatmapMode.CUT;
-        brushFalloffField.isVisible = brushStrengthField.isVisible;
-        if (brushStrengthField.isVisible)
+        brushStrengthField.IsVisible = TerrainEditor.splatmapMode != TerrainEditor.EDevkitLandscapeToolSplatmapMode.CUT;
+        brushFalloffField.IsVisible = brushStrengthField.IsVisible;
+        if (brushStrengthField.IsVisible)
         {
-            num -= brushStrengthField.sizeOffset_Y;
-            brushStrengthField.positionOffset_Y = num;
-            num -= 10;
-            num -= brushFalloffField.sizeOffset_Y;
-            brushFalloffField.positionOffset_Y = num;
-            num -= 10;
+            num -= brushStrengthField.SizeOffset_Y;
+            brushStrengthField.PositionOffset_Y = num;
+            num -= 10f;
+            num -= brushFalloffField.SizeOffset_Y;
+            brushFalloffField.PositionOffset_Y = num;
+            num -= 10f;
         }
-        num -= brushRadiusField.sizeOffset_Y;
-        brushRadiusField.positionOffset_Y = num;
-        num -= 10;
-        highlightHolesToggle.isVisible = TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.CUT;
-        if (highlightHolesToggle.isVisible)
+        num -= brushRadiusField.SizeOffset_Y;
+        brushRadiusField.PositionOffset_Y = num;
+        num -= 10f;
+        highlightHolesToggle.IsVisible = TerrainEditor.splatmapMode == TerrainEditor.EDevkitLandscapeToolSplatmapMode.CUT;
+        if (highlightHolesToggle.IsVisible)
         {
-            num -= highlightHolesToggle.sizeOffset_Y;
-            highlightHolesToggle.positionOffset_Y = num;
+            num -= highlightHolesToggle.SizeOffset_Y;
+            highlightHolesToggle.PositionOffset_Y = num;
         }
     }
 }

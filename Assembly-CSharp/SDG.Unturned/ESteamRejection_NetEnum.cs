@@ -8,7 +8,7 @@ public static class ESteamRejection_NetEnum
     {
         uint value2;
         bool result = reader.ReadBits(6, out value2);
-        if (value2 <= 45)
+        if (value2 <= 47)
         {
             value = (ESteamRejection)value2;
             return result;

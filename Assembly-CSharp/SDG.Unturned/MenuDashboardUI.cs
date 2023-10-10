@@ -6,7 +6,6 @@ using SDG.NetTransport;
 using SDG.SteamworksProvider.Services.Store;
 using Steamworks;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace SDG.Unturned;
 
@@ -20,8 +19,6 @@ public class MenuDashboardUI
 
     public static bool active;
 
-    private static bool canvasActive;
-
     private static SleekButtonIcon playButton;
 
     private static SleekButtonIcon survivorsButton;
@@ -31,6 +28,8 @@ public class MenuDashboardUI
     private static SleekButtonIcon workshopButton;
 
     private static SleekButtonIcon exitButton;
+
+    private static ISleekScrollView mainScrollView;
 
     private static ISleekButton proButton;
 
@@ -60,29 +59,13 @@ public class MenuDashboardUI
 
     private static ISleekLabel alertBodyLabel;
 
-    private static GameObject canvas;
-
-    private static GameObject templateNews;
-
-    private static GameObject templateWorkshop;
-
-    private static GameObject templateText;
-
-    private static GameObject templateImage;
-
-    private static GameObject templateLink;
-
-    private static GameObject templateReadMoreLink;
-
-    private static GameObject templateReadMoreContent;
-
-    private static GameObject templateWorkshopLinks;
-
-    private static int mainHeaderOffset;
+    private static float mainHeaderOffset;
 
     private static NewsResponse newsResponse;
 
     private static bool hasNewAnnouncement;
+
+    private static ISleekElement newAnnouncement;
 
     private static UGCQueryHandle_t popularWorkshopHandle = UGCQueryHandle_t.Invalid;
 
@@ -108,21 +91,13 @@ public class MenuDashboardUI
 
     private MenuWorkshopUI workshopUI;
 
-    public static void setCanvasActive(bool isActive)
-    {
-        canvasActive = isActive;
-        if (!(canvas == null))
-        {
-            canvas.GetComponent<Canvas>().enabled = active && canvasActive;
-        }
-    }
+    private const string STEAM_CLAN_IMAGE = "https://clan.cloudflare.steamstatic.com/images/";
 
     public static void open()
     {
         if (!active)
         {
             active = true;
-            setCanvasActive(isActive: true);
             container.AnimateIntoView();
         }
     }
@@ -132,7 +107,6 @@ public class MenuDashboardUI
         if (active)
         {
             active = false;
-            setCanvasActive(isActive: false);
             container.AnimateOutOfView(0f, 1f);
         }
     }
@@ -183,7 +157,7 @@ public class MenuDashboardUI
         ConvenientSavedata.get().write("MainMenuAlertSeenId", liveConfigData.mainMenuAlert.id);
         if (alertBox != null)
         {
-            alertBox.isVisible = false;
+            alertBox.IsVisible = false;
         }
         if (!string.IsNullOrEmpty(liveConfigData.mainMenuAlert.link))
         {
@@ -198,31 +172,7 @@ public class MenuDashboardUI
         }
     }
 
-    private static void filterContent(string header, string source, ref string contents, ref int lines)
-    {
-        int num = source.IndexOf("[b]" + header + ":[/b]");
-        if (num == -1)
-        {
-            return;
-        }
-        contents = contents + "<i>" + header + "</i>:\n";
-        lines += 2;
-        int num2 = source.IndexOf("[list]", num);
-        int num3 = source.IndexOf("[/list]", num2);
-        string[] array = source.Substring(num2 + 6, num3 - (num2 + 6)).Split(new string[1] { "[*]" }, StringSplitOptions.RemoveEmptyEntries);
-        foreach (string text in array)
-        {
-            if (text.Length > 0)
-            {
-                contents += text;
-                lines++;
-            }
-        }
-        contents += "\n";
-        lines++;
-    }
-
-    private static void insertContent(GameObject news, string contents)
+    private static void InsertSteamBbCode(ISleekElement parent, string contents)
     {
         if (string.IsNullOrEmpty(contents))
         {
@@ -301,50 +251,54 @@ public class MenuDashboardUI
                 }
                 num5 = num10 + 6;
             }
-            for (int k = 0; k < list.Count; k++)
+            foreach (SubcontentInfo item in list)
             {
-                SubcontentInfo subcontentInfo5 = list[k];
-                if (subcontentInfo5.isImage)
+                if (item.isImage)
                 {
-                    GameObject gameObject = UnityEngine.Object.Instantiate(templateImage);
-                    gameObject.name = "Image";
-                    gameObject.GetComponent<RectTransform>().SetParent(news.transform, worldPositionStays: true);
-                    gameObject.SetActive(value: true);
-                    subcontentInfo5.url = subcontentInfo5.url.Replace("{STEAM_CLAN_IMAGE}", "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/clans/");
-                    gameObject.transform.GetChild(0).GetComponent<WebImage>().url = subcontentInfo5.url;
+                    SleekWebImage sleekWebImage = new SleekWebImage();
+                    sleekWebImage.UseManualLayout = false;
+                    sleekWebImage.UseWidthLayoutOverride = true;
+                    sleekWebImage.UseHeightLayoutOverride = true;
+                    sleekWebImage.useImageDimensions = true;
+                    item.url = item.url.Replace("{STEAM_CLAN_IMAGE}", "https://clan.cloudflare.steamstatic.com/images/");
+                    sleekWebImage.Refresh(item.url, shouldCache: false);
+                    parent.AddChild(sleekWebImage);
                     continue;
                 }
-                if (subcontentInfo5.isLink)
+                if (item.isLink)
                 {
-                    GameObject gameObject2 = UnityEngine.Object.Instantiate(templateLink);
-                    gameObject2.name = "Link";
-                    gameObject2.GetComponent<RectTransform>().SetParent(news.transform, worldPositionStays: true);
-                    gameObject2.SetActive(value: true);
-                    gameObject2.GetComponent<Text>().text = subcontentInfo5.content;
-                    gameObject2.GetComponent<WebLink>().url = subcontentInfo5.url;
+                    SleekWebLinkButton sleekWebLinkButton = new SleekWebLinkButton();
+                    sleekWebLinkButton.Text = item.content;
+                    sleekWebLinkButton.Url = item.url;
+                    sleekWebLinkButton.UseManualLayout = false;
+                    sleekWebLinkButton.UseChildAutoLayout = ESleekChildLayout.Vertical;
+                    sleekWebLinkButton.UseHeightLayoutOverride = true;
+                    sleekWebLinkButton.ExpandChildren = true;
+                    sleekWebLinkButton.SizeOffset_Y = 30f;
+                    parent.AddChild(sleekWebLinkButton);
                     continue;
                 }
-                subcontentInfo5.content = subcontentInfo5.content.TrimStart('\r', '\n');
-                subcontentInfo5.content = subcontentInfo5.content.Replace("[b]", "<b>");
-                subcontentInfo5.content = subcontentInfo5.content.Replace("[/b]", "</b>");
-                subcontentInfo5.content = subcontentInfo5.content.Replace("[i]", "<i>");
-                subcontentInfo5.content = subcontentInfo5.content.Replace("[/i]", "</i>");
-                subcontentInfo5.content = subcontentInfo5.content.Replace("[list]", "");
-                subcontentInfo5.content = subcontentInfo5.content.Replace("[/list]", "");
-                subcontentInfo5.content = subcontentInfo5.content.Replace("[*]", "- ");
-                subcontentInfo5.content = subcontentInfo5.content.Replace("[h1]", "<color=#5aa9d6><size=18>");
-                subcontentInfo5.content = subcontentInfo5.content.Replace("[/h1]", "</size></color>");
-                subcontentInfo5.content = subcontentInfo5.content.TrimEnd('\r', '\n');
-                if (string.IsNullOrEmpty(subcontentInfo5.content))
+                item.content = item.content.TrimStart('\r', '\n');
+                item.content = item.content.Replace("[b]", "<b>");
+                item.content = item.content.Replace("[/b]", "</b>");
+                item.content = item.content.Replace("[i]", "<i>");
+                item.content = item.content.Replace("[/i]", "</i>");
+                item.content = item.content.Replace("[list]", "");
+                item.content = item.content.Replace("[/list]", "");
+                item.content = item.content.Replace("[*]", "- ");
+                item.content = item.content.Replace("[h1]", "<size=20>");
+                item.content = item.content.Replace("[/h1]", "</size>");
+                item.content = item.content.TrimEnd('\r', '\n');
+                if (string.IsNullOrEmpty(item.content))
                 {
                     continue;
                 }
-                string[] array = subcontentInfo5.content.Split('\r', '\n');
+                string[] array = item.content.Split('\r', '\n');
                 string text2 = string.Empty;
                 string[] array2 = array;
-                for (int l = 0; l < array2.Length; l++)
+                for (int k = 0; k < array2.Length; k++)
                 {
-                    string text3 = array2[l].Trim();
+                    string text3 = array2[k].Trim();
                     if (string.IsNullOrEmpty(text3))
                     {
                         continue;
@@ -360,27 +314,30 @@ public class MenuDashboardUI
                     }
                     if (!string.IsNullOrEmpty(text2))
                     {
-                        GameObject gameObject3 = UnityEngine.Object.Instantiate(templateText);
-                        gameObject3.name = "Text";
-                        gameObject3.GetComponent<RectTransform>().SetParent(news.transform, worldPositionStays: true);
-                        gameObject3.SetActive(value: true);
-                        gameObject3.GetComponent<Text>().text = text2;
+                        ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
+                        sleekLabel.Text = text2;
+                        sleekLabel.UseManualLayout = false;
+                        sleekLabel.AllowRichText = true;
+                        sleekLabel.TextAlignment = TextAnchor.UpperLeft;
+                        parent.AddChild(sleekLabel);
                     }
                     text2 = text3;
-                    GameObject gameObject4 = UnityEngine.Object.Instantiate(templateText);
-                    gameObject4.name = "Text";
-                    gameObject4.GetComponent<RectTransform>().SetParent(news.transform, worldPositionStays: true);
-                    gameObject4.SetActive(value: true);
-                    gameObject4.GetComponent<Text>().text = text2;
+                    ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
+                    sleekLabel2.Text = text2;
+                    sleekLabel2.UseManualLayout = false;
+                    sleekLabel2.AllowRichText = true;
+                    sleekLabel2.TextAlignment = TextAnchor.UpperLeft;
+                    parent.AddChild(sleekLabel2);
                     text2 = string.Empty;
                 }
                 if (!string.IsNullOrEmpty(text2))
                 {
-                    GameObject gameObject5 = UnityEngine.Object.Instantiate(templateText);
-                    gameObject5.name = "Text";
-                    gameObject5.GetComponent<RectTransform>().SetParent(news.transform, worldPositionStays: true);
-                    gameObject5.SetActive(value: true);
-                    gameObject5.GetComponent<Text>().text = text2;
+                    ISleekLabel sleekLabel3 = Glazier.Get().CreateLabel();
+                    sleekLabel3.Text = text2;
+                    sleekLabel3.UseManualLayout = false;
+                    sleekLabel3.AllowRichText = true;
+                    sleekLabel3.TextAlignment = TextAnchor.UpperLeft;
+                    parent.AddChild(sleekLabel3);
                 }
             }
             if (num4 != -1)
@@ -394,11 +351,6 @@ public class MenuDashboardUI
 
     private static void receiveNewsResponse()
     {
-        if (templateNews == null)
-        {
-            UnturnedLog.warn("Missing templateNews to create for news web response");
-            return;
-        }
         for (int i = 0; i < newsResponse.AppNews.NewsItems.Length; i++)
         {
             NewsItem newsItem = newsResponse.AppNews.NewsItems[i];
@@ -406,10 +358,43 @@ public class MenuDashboardUI
             {
                 continue;
             }
-            GameObject gameObject = UnityEngine.Object.Instantiate(templateNews);
-            gameObject.name = "News_" + i;
-            gameObject.GetComponent<RectTransform>().SetParent(templateNews.transform.parent, worldPositionStays: true);
-            gameObject.SetActive(value: true);
+            ISleekBox sleekBox = Glazier.Get().CreateBox();
+            sleekBox.SizeScale_X = 1f;
+            sleekBox.UseManualLayout = false;
+            sleekBox.UseChildAutoLayout = ESleekChildLayout.Vertical;
+            ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
+            sleekLabel.Text = newsItem.Title;
+            sleekLabel.UseManualLayout = false;
+            sleekLabel.TextAlignment = TextAnchor.UpperLeft;
+            sleekLabel.FontSize = ESleekFontSize.Large;
+            sleekBox.AddChild(sleekLabel);
+            DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(newsItem.Date).ToLocalTime();
+            ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
+            sleekLabel2.Text = localization.format("News_Author", dateTime, newsItem.Author);
+            sleekLabel2.UseManualLayout = false;
+            sleekLabel2.TextAlignment = TextAnchor.UpperLeft;
+            sleekLabel2.FontSize = ESleekFontSize.Tiny;
+            sleekLabel2.TextColor = new SleekColor(ESleekTint.FONT, 0.5f);
+            sleekBox.AddChild(sleekLabel2);
+            try
+            {
+                InsertSteamBbCode(sleekBox, newsItem.Contents);
+            }
+            catch (Exception e)
+            {
+                UnturnedLog.warn("Announcement description mis-formatted! Nelson messed up.");
+                UnturnedLog.exception(e);
+            }
+            SleekWebLinkButton sleekWebLinkButton = new SleekWebLinkButton();
+            sleekWebLinkButton.Text = localization.format("News_Comments_Link");
+            sleekWebLinkButton.Url = newsItem.URL;
+            sleekWebLinkButton.UseManualLayout = false;
+            sleekWebLinkButton.UseChildAutoLayout = ESleekChildLayout.Vertical;
+            sleekWebLinkButton.UseHeightLayoutOverride = true;
+            sleekWebLinkButton.ExpandChildren = true;
+            sleekWebLinkButton.SizeOffset_Y = 30f;
+            sleekBox.AddChild(sleekWebLinkButton);
+            mainScrollView.AddChild(sleekBox);
             if (i == 0)
             {
                 if (ConvenientSavedata.get().read("Newest_Announcement", out long value))
@@ -423,47 +408,30 @@ public class MenuDashboardUI
                 if (hasNewAnnouncement)
                 {
                     ConvenientSavedata.get().write("Newest_Announcement", newsItem.Date);
-                    gameObject.transform.SetAsFirstSibling();
+                    sleekBox.SetAsFirstSibling();
+                    newAnnouncement = sleekBox;
                 }
             }
-            gameObject.transform.Find("Title").GetComponent<Text>().text = newsItem.Title;
-            DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(newsItem.Date).ToLocalTime();
-            gameObject.transform.Find("Author").GetComponent<Text>().text = localization.format("News_Author", dateTime, newsItem.Author);
-            try
-            {
-                insertContent(gameObject, newsItem.Contents);
-            }
-            catch (Exception e)
-            {
-                UnturnedLog.warn("Announcement description mis-formatted! Nelson messed up.");
-                UnturnedLog.exception(e);
-            }
-            GameObject gameObject2 = UnityEngine.Object.Instantiate(templateLink);
-            gameObject2.name = "Comments";
-            gameObject2.GetComponent<RectTransform>().SetParent(gameObject.transform, worldPositionStays: true);
-            gameObject2.SetActive(value: true);
-            gameObject2.GetComponent<Text>().text = localization.format("News_Comments_Link");
-            gameObject2.GetComponent<WebLink>().url = newsItem.URL;
         }
     }
 
     private static void OnUpdateDetected(string versionString, bool isRollback)
     {
         ISleekBox sleekBox = Glazier.Get().CreateBox();
-        sleekBox.positionOffset_X = 210;
-        sleekBox.positionOffset_Y = mainHeaderOffset;
-        sleekBox.sizeOffset_Y = 40;
-        sleekBox.sizeOffset_X = -210;
-        sleekBox.sizeScale_X = 1f;
-        sleekBox.fontSize = ESleekFontSize.Medium;
+        sleekBox.PositionOffset_X = 210f;
+        sleekBox.PositionOffset_Y = mainHeaderOffset;
+        sleekBox.SizeOffset_Y = 40f;
+        sleekBox.SizeOffset_X = -210f;
+        sleekBox.SizeScale_X = 1f;
+        sleekBox.FontSize = ESleekFontSize.Medium;
         container.AddChild(sleekBox);
         string key = (isRollback ? "RollbackAvailable" : "UpdateAvailable");
         string s = localization.format(key, versionString);
         RichTextUtil.replaceNewlineMarkup(ref s);
-        sleekBox.text = s;
-        mainHeaderOffset += sleekBox.sizeOffset_Y + 10;
-        canvas.transform.Find("View").GetComponent<RectTransform>().offsetMax -= new Vector2(0f, 50f);
-        canvas.transform.Find("Scrollbar").GetComponent<RectTransform>().offsetMax -= new Vector2(0f, 50f);
+        sleekBox.Text = s;
+        mainHeaderOffset += sleekBox.SizeOffset_Y + 10f;
+        mainScrollView.PositionOffset_Y += sleekBox.SizeOffset_Y + 10f;
+        mainScrollView.SizeOffset_Y -= sleekBox.SizeOffset_Y + 10f;
     }
 
     private static bool readNewsPreview()
@@ -514,22 +482,19 @@ public class MenuDashboardUI
             UnturnedLog.warn("Ignoring featured workshop file because visibility is private");
             return;
         }
-        if (templateWorkshop == null)
+        ISleekBox sleekBox = Glazier.Get().CreateBox();
+        sleekBox.SizeScale_X = 1f;
+        sleekBox.UseManualLayout = false;
+        sleekBox.UseChildAutoLayout = ESleekChildLayout.Vertical;
+        mainScrollView.AddChild(sleekBox);
+        if (hasNewAnnouncement && newAnnouncement != null)
         {
-            UnturnedLog.warn("Missing templateWorkshop to create for featured workshop article");
-            return;
-        }
-        GameObject gameObject = UnityEngine.Object.Instantiate(templateWorkshop);
-        gameObject.name = "Workshop";
-        gameObject.GetComponent<RectTransform>().SetParent(templateNews.transform.parent, worldPositionStays: true);
-        gameObject.SetActive(value: true);
-        if (hasNewAnnouncement)
-        {
-            gameObject.transform.SetSiblingIndex(1);
+            sleekBox.SetAsFirstSibling();
+            newAnnouncement.SetAsFirstSibling();
         }
         else
         {
-            gameObject.transform.SetAsFirstSibling();
+            sleekBox.SetAsFirstSibling();
         }
         MainMenuWorkshopFeaturedLiveConfig featured = LiveConfig.Get().mainMenuWorkshop.featured;
         bool flag = featured.IsFeatured(pDetails.m_nPublishedFileId.m_PublishedFileId);
@@ -539,43 +504,65 @@ public class MenuDashboardUI
             _ => "Highlighted_Workshop_Title", 
         }));
         string text = localization.format(key, pDetails.m_rgchTitle);
-        Transform transform = gameObject.transform.Find("TitleLayout");
-        transform.Find("Title").GetComponent<Text>().text = text;
-        Transform transform2 = transform.Find("Status");
+        ISleekElement sleekElement = Glazier.Get().CreateFrame();
+        sleekElement.UseManualLayout = false;
+        sleekElement.UseChildAutoLayout = ESleekChildLayout.Horizontal;
+        sleekBox.AddChild(sleekElement);
+        ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
+        sleekLabel.UseManualLayout = false;
+        sleekLabel.Text = text;
+        sleekLabel.FontSize = ESleekFontSize.Large;
+        sleekLabel.TextAlignment = TextAnchor.UpperLeft;
+        sleekElement.AddChild(sleekLabel);
         if (flag && featured.status != 0)
         {
-            string text2 = Provider.localization.format((featured.status == EMapStatus.Updated) ? "Updated" : "New");
-            transform2.GetComponent<Text>().text = text2;
-            transform2.gameObject.SetActive(value: true);
+            bool flag2 = featured.status == EMapStatus.Updated;
+            ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
+            sleekLabel2.UseManualLayout = false;
+            sleekLabel2.TextAlignment = TextAnchor.UpperLeft;
+            sleekLabel2.Text = Provider.localization.format(flag2 ? "Updated" : "New");
+            sleekLabel2.TextColor = Color.green;
+            sleekLabel2.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+            sleekElement.AddChild(sleekLabel2);
         }
-        else
-        {
-            transform2.gameObject.SetActive(value: false);
-        }
-        Transform transform3 = transform.Find("Dismiss");
-        transform3.GetComponent<Text>().text = localization.format("Featured_Workshop_Dismiss");
-        DismissWorkshopArticle component = transform3.GetComponent<DismissWorkshopArticle>();
-        component.id = pDetails.m_nPublishedFileId.m_PublishedFileId;
-        component.article = gameObject;
+        SleekDismissWorkshopArticleButton sleekDismissWorkshopArticleButton = new SleekDismissWorkshopArticleButton();
+        sleekDismissWorkshopArticleButton.PositionOffset_X = -105f;
+        sleekDismissWorkshopArticleButton.PositionOffset_Y = 5f;
+        sleekDismissWorkshopArticleButton.PositionScale_X = 1f;
+        sleekDismissWorkshopArticleButton.SizeOffset_X = 100f;
+        sleekDismissWorkshopArticleButton.SizeOffset_Y = 30f;
+        sleekDismissWorkshopArticleButton.internalButton.Text = localization.format("Featured_Workshop_Dismiss");
+        sleekDismissWorkshopArticleButton.articleId = pDetails.m_nPublishedFileId.m_PublishedFileId;
+        sleekDismissWorkshopArticleButton.targetContent = sleekBox;
+        sleekDismissWorkshopArticleButton.IgnoreLayout = true;
+        sleekBox.AddChild(sleekDismissWorkshopArticleButton);
         if (SteamUGC.GetQueryUGCPreviewURL(featuredWorkshopHandle, 0u, out var pchURL, 1024u))
         {
-            GameObject gameObject2 = UnityEngine.Object.Instantiate(templateImage);
-            gameObject2.name = "Preview";
-            gameObject2.GetComponent<RectTransform>().SetParent(gameObject.transform, worldPositionStays: true);
-            gameObject2.SetActive(value: true);
-            gameObject2.transform.GetChild(0).GetComponent<WebImage>().url = pchURL;
-            gameObject2.transform.GetChild(0).gameObject.AddComponent<LayoutElement>().preferredWidth = 960f;
+            SleekWebImage sleekWebImage = new SleekWebImage();
+            sleekWebImage.UseManualLayout = false;
+            sleekWebImage.useImageDimensions = true;
+            sleekWebImage.UseWidthLayoutOverride = true;
+            sleekWebImage.UseHeightLayoutOverride = true;
+            sleekWebImage.maxImageDimensionsWidth = 960f;
+            sleekBox.AddChild(sleekWebImage);
+            sleekWebImage.Refresh(pchURL, shouldCache: false);
         }
-        GameObject gameObject3 = UnityEngine.Object.Instantiate(templateReadMoreLink);
-        gameObject3.name = "ReadMore_Link";
-        gameObject3.GetComponent<RectTransform>().SetParent(gameObject.transform, worldPositionStays: true);
-        gameObject3.SetActive(value: true);
-        GameObject gameObject4 = UnityEngine.Object.Instantiate(templateReadMoreContent);
-        gameObject4.name = "ReadMore_Content";
-        gameObject4.GetComponent<RectTransform>().SetParent(gameObject.transform, worldPositionStays: true);
+        SleekReadMoreButton sleekReadMoreButton = new SleekReadMoreButton();
+        sleekReadMoreButton.UseManualLayout = false;
+        sleekReadMoreButton.UseChildAutoLayout = ESleekChildLayout.Vertical;
+        sleekReadMoreButton.UseHeightLayoutOverride = true;
+        sleekReadMoreButton.ExpandChildren = true;
+        sleekReadMoreButton.SizeOffset_Y = 30f;
+        ISleekElement sleekElement2 = Glazier.Get().CreateFrame();
+        sleekElement2.UseManualLayout = false;
+        sleekElement2.IsVisible = false;
+        sleekElement2.UseChildAutoLayout = ESleekChildLayout.Vertical;
+        sleekReadMoreButton.targetContent = sleekElement2;
+        sleekBox.AddChild(sleekReadMoreButton);
+        sleekBox.AddChild(sleekElement2);
         if (flag && featured.autoExpandDescription)
         {
-            gameObject4.SetActive(value: true);
+            sleekElement2.IsVisible = true;
         }
         PublishedFileId_t nPublishedFileId;
         try
@@ -585,7 +572,7 @@ public class MenuDashboardUI
             {
                 contents = featured.overrideDescription;
             }
-            insertContent(gameObject4, contents);
+            InsertSteamBbCode(sleekElement2, contents);
         }
         catch (Exception e)
         {
@@ -593,24 +580,24 @@ public class MenuDashboardUI
             UnturnedLog.warn("Workshop description mis-formatted! If you made this item I suggest you adjust it to display in-game properly: " + nPublishedFileId.ToString());
             UnturnedLog.exception(e);
         }
-        gameObject3.GetComponent<ReadMore>().targetContent = gameObject4;
-        gameObject3.GetComponent<ReadMore>().onText = localization.format("ReadMore_Link_On");
-        gameObject3.GetComponent<ReadMore>().offText = localization.format("ReadMore_Link_Off");
-        gameObject3.GetComponent<ReadMore>().Refresh();
-        if (templateWorkshopLinks == null)
-        {
-            UnturnedLog.warn("Missing templateWorkshopLinks to create for featured workshop article");
-            return;
-        }
-        GameObject gameObject5 = UnityEngine.Object.Instantiate(templateWorkshopLinks);
-        gameObject5.GetComponent<RectTransform>().SetParent(gameObject.transform, worldPositionStays: true);
-        gameObject5.SetActive(value: true);
-        Transform transform4 = gameObject5.transform.Find("ViewButton");
-        transform4.Find("ViewLabel").GetComponent<Text>().text = localization.format("Featured_Workshop_Link");
-        WebLink component2 = transform4.GetComponent<WebLink>();
+        sleekReadMoreButton.onText = localization.format("ReadMore_Link_On");
+        sleekReadMoreButton.offText = localization.format("ReadMore_Link_Off");
+        sleekReadMoreButton.Refresh();
+        ISleekElement sleekElement3 = Glazier.Get().CreateFrame();
+        sleekElement3.UseManualLayout = false;
+        sleekElement3.UseChildAutoLayout = ESleekChildLayout.Horizontal;
+        sleekElement3.ExpandChildren = true;
+        sleekElement3.SizeOffset_Y = 30f;
+        sleekElement3.UseHeightLayoutOverride = true;
+        sleekBox.AddChild(sleekElement3);
+        SleekWebLinkButton sleekWebLinkButton = new SleekWebLinkButton();
+        sleekWebLinkButton.UseManualLayout = false;
+        sleekWebLinkButton.Text = localization.format("Featured_Workshop_Link");
         nPublishedFileId = pDetails.m_nPublishedFileId;
-        component2.url = "http://steamcommunity.com/sharedfiles/filedetails/?id=" + nPublishedFileId.ToString();
-        Transform transform5 = gameObject5.transform.Find("StockpileButton");
+        sleekWebLinkButton.Url = "https://steamcommunity.com/sharedfiles/filedetails/?id=" + nPublishedFileId.ToString();
+        sleekWebLinkButton.UseChildAutoLayout = ESleekChildLayout.Vertical;
+        sleekWebLinkButton.ExpandChildren = true;
+        sleekElement3.AddChild(sleekWebLinkButton);
         int[] associatedStockpileItems = featured.associatedStockpileItems;
         if (flag && associatedStockpileItems != null && associatedStockpileItems.Length != 0)
         {
@@ -629,46 +616,42 @@ public class MenuDashboardUI
                 string inventoryName = Provider.provider.economyService.getInventoryName(num2);
                 if (string.IsNullOrEmpty(inventoryName))
                 {
-                    transform5.gameObject.SetActive(value: false);
                     UnturnedLog.warn("Unknown itemdefid {0} specified in featured workshop stockpile items", num2);
                 }
                 else
                 {
-                    Transform transform6 = transform5.Find("StockpileLabel");
-                    string text3 = localization.format("Featured_Workshop_Stockpile_Link", inventoryName);
-                    transform6.GetComponent<Text>().text = text3;
-                    transform5.GetComponent<StockpileLink>().itemdefid = num2;
-                    transform5.gameObject.SetActive(value: true);
+                    string text2 = localization.format("Featured_Workshop_Stockpile_Link", inventoryName);
+                    SleekStockpileLinkButton sleekStockpileLinkButton = new SleekStockpileLinkButton();
+                    sleekStockpileLinkButton.UseManualLayout = false;
+                    sleekStockpileLinkButton.internalButton.Text = text2;
+                    sleekStockpileLinkButton.itemdefid = num2;
+                    sleekStockpileLinkButton.UseChildAutoLayout = ESleekChildLayout.Vertical;
+                    sleekStockpileLinkButton.ExpandChildren = true;
+                    sleekElement3.AddChild(sleekStockpileLinkButton);
                 }
             }
-            else
-            {
-                transform5.gameObject.SetActive(value: false);
-            }
         }
-        else
-        {
-            transform5.gameObject.SetActive(value: false);
-        }
-        Transform transform7 = gameObject5.transform.Find("NewsButton");
-        Transform transform8 = transform7.Find("NewsLabel");
         if (flag && !string.IsNullOrEmpty(featured.linkURL))
         {
-            transform7.gameObject.SetActive(value: true);
-            transform8.GetComponent<Text>().text = featured.linkText;
-            transform7.GetComponent<WebLink>().url = featured.linkURL;
+            SleekWebLinkButton sleekWebLinkButton2 = new SleekWebLinkButton();
+            sleekWebLinkButton2.UseManualLayout = false;
+            sleekWebLinkButton2.Text = featured.linkText;
+            sleekWebLinkButton2.Url = featured.linkURL;
+            sleekWebLinkButton2.UseChildAutoLayout = ESleekChildLayout.Vertical;
+            sleekWebLinkButton2.ExpandChildren = true;
+            sleekElement3.AddChild(sleekWebLinkButton2);
         }
-        else
-        {
-            transform7.gameObject.SetActive(value: false);
-        }
-        ToggleWorkshopSubscription component3 = gameObject5.transform.Find("SubscribeButton").GetComponent<ToggleWorkshopSubscription>();
-        component3.parentFileId = pDetails.m_nPublishedFileId;
-        component3.childFileIds = new PublishedFileId_t[pDetails.m_unNumChildren];
-        SteamUGC.GetQueryUGCChildren(featuredWorkshopHandle, 0u, component3.childFileIds, pDetails.m_unNumChildren);
-        component3.subscribeText = localization.format("Featured_Workshop_Sub");
-        component3.unsubscribeText = localization.format("Featured_Workshop_Unsub");
-        component3.Refresh();
+        SleekWorkshopSubscriptionButton sleekWorkshopSubscriptionButton = new SleekWorkshopSubscriptionButton();
+        sleekWorkshopSubscriptionButton.UseManualLayout = false;
+        sleekWorkshopSubscriptionButton.subscribeText = localization.format("Featured_Workshop_Sub");
+        sleekWorkshopSubscriptionButton.unsubscribeText = localization.format("Featured_Workshop_Unsub");
+        sleekWorkshopSubscriptionButton.subscribeTooltip = localization.format("Subscribe_Tooltip", pDetails.m_rgchTitle);
+        sleekWorkshopSubscriptionButton.unsubscribeTooltip = localization.format("Unsubscribe_Tooltip", pDetails.m_rgchTitle);
+        sleekWorkshopSubscriptionButton.fileId = pDetails.m_nPublishedFileId;
+        sleekWorkshopSubscriptionButton.synchronizeText();
+        sleekWorkshopSubscriptionButton.UseChildAutoLayout = ESleekChildLayout.Vertical;
+        sleekWorkshopSubscriptionButton.ExpandChildren = true;
+        sleekElement3.AddChild(sleekWorkshopSubscriptionButton);
     }
 
     private static bool featurePopularItem(uint index)
@@ -894,9 +877,9 @@ public class MenuDashboardUI
             }
         }
         SleekItemStoreMainMenuButton sleekItemStoreMainMenuButton = new SleekItemStoreMainMenuButton(listing, eLabelType);
-        sleekItemStoreMainMenuButton.positionOffset_Y = 410;
-        sleekItemStoreMainMenuButton.sizeOffset_X = 200;
-        sleekItemStoreMainMenuButton.sizeOffset_Y = 50;
+        sleekItemStoreMainMenuButton.PositionOffset_Y = 410f;
+        sleekItemStoreMainMenuButton.SizeOffset_X = 200f;
+        sleekItemStoreMainMenuButton.SizeOffset_Y = 50f;
         container.AddChild(sleekItemStoreMainMenuButton);
     }
 
@@ -919,112 +902,116 @@ public class MenuDashboardUI
         if (alertBox == null)
         {
             alertBox = Glazier.Get().CreateButton();
-            alertBox.onClickedButton += onClickedAlertButton;
-            alertBox.positionOffset_X = 210;
-            alertBox.positionOffset_Y = mainHeaderOffset;
-            alertBox.sizeOffset_Y = 60;
-            alertBox.sizeOffset_X = -210;
-            alertBox.sizeScale_X = 1f;
+            alertBox.OnClicked += onClickedAlertButton;
+            alertBox.PositionOffset_X = 210f;
+            alertBox.PositionOffset_Y = mainHeaderOffset;
+            alertBox.SizeOffset_Y = 60f;
+            alertBox.SizeOffset_X = -210f;
+            alertBox.SizeScale_X = 1f;
             container.AddChild(alertBox);
             alertImage = Glazier.Get().CreateImage();
-            alertImage.positionOffset_X = 10;
-            alertImage.positionOffset_Y = 10;
-            alertImage.sizeOffset_X = 40;
-            alertImage.sizeOffset_Y = 40;
-            alertImage.isVisible = false;
+            alertImage.PositionOffset_X = 10f;
+            alertImage.PositionOffset_Y = 10f;
+            alertImage.SizeOffset_X = 40f;
+            alertImage.SizeOffset_Y = 40f;
+            alertImage.IsVisible = false;
             alertBox.AddChild(alertImage);
             alertWebImage = new SleekWebImage();
-            alertWebImage.positionOffset_X = 10;
-            alertWebImage.positionOffset_Y = 10;
-            alertWebImage.sizeOffset_X = 40;
-            alertWebImage.sizeOffset_Y = 40;
-            alertWebImage.isVisible = false;
+            alertWebImage.PositionOffset_X = 10f;
+            alertWebImage.PositionOffset_Y = 10f;
+            alertWebImage.SizeOffset_X = 40f;
+            alertWebImage.SizeOffset_Y = 40f;
+            alertWebImage.IsVisible = false;
             alertBox.AddChild(alertWebImage);
             alertHeaderLabel = Glazier.Get().CreateLabel();
-            alertHeaderLabel.positionOffset_X = 60;
-            alertHeaderLabel.sizeScale_X = 1f;
-            alertHeaderLabel.sizeOffset_X = -70;
-            alertHeaderLabel.sizeOffset_Y = 30;
-            alertHeaderLabel.fontAlignment = TextAnchor.MiddleLeft;
-            alertHeaderLabel.fontSize = ESleekFontSize.Medium;
-            alertHeaderLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+            alertHeaderLabel.PositionOffset_X = 60f;
+            alertHeaderLabel.SizeScale_X = 1f;
+            alertHeaderLabel.SizeOffset_X = -70f;
+            alertHeaderLabel.SizeOffset_Y = 30f;
+            alertHeaderLabel.TextAlignment = TextAnchor.MiddleLeft;
+            alertHeaderLabel.FontSize = ESleekFontSize.Medium;
+            alertHeaderLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
             alertBox.AddChild(alertHeaderLabel);
             alertLinkLabel = Glazier.Get().CreateLabel();
-            alertLinkLabel.positionOffset_X = 60;
-            alertLinkLabel.sizeScale_X = 1f;
-            alertLinkLabel.sizeOffset_X = -70;
-            alertLinkLabel.sizeOffset_Y = 30;
-            alertLinkLabel.fontAlignment = TextAnchor.MiddleRight;
-            alertLinkLabel.fontSize = ESleekFontSize.Small;
-            alertLinkLabel.isVisible = false;
+            alertLinkLabel.PositionOffset_X = 60f;
+            alertLinkLabel.SizeScale_X = 1f;
+            alertLinkLabel.SizeOffset_X = -70f;
+            alertLinkLabel.SizeOffset_Y = 30f;
+            alertLinkLabel.TextAlignment = TextAnchor.MiddleRight;
+            alertLinkLabel.FontSize = ESleekFontSize.Small;
+            alertLinkLabel.IsVisible = false;
             alertBox.AddChild(alertLinkLabel);
             dismissAlertLabel = Glazier.Get().CreateLabel();
-            dismissAlertLabel.positionScale_Y = 1f;
-            dismissAlertLabel.positionOffset_X = 60;
-            dismissAlertLabel.positionOffset_Y = -35;
-            dismissAlertLabel.sizeScale_X = 1f;
-            dismissAlertLabel.sizeOffset_X = -65;
-            dismissAlertLabel.sizeOffset_Y = 30;
-            dismissAlertLabel.fontAlignment = TextAnchor.LowerRight;
-            dismissAlertLabel.fontSize = ESleekFontSize.Small;
-            dismissAlertLabel.text = localization.format("Featured_Workshop_Dismiss");
+            dismissAlertLabel.PositionScale_Y = 1f;
+            dismissAlertLabel.PositionOffset_X = 60f;
+            dismissAlertLabel.PositionOffset_Y = -35f;
+            dismissAlertLabel.SizeScale_X = 1f;
+            dismissAlertLabel.SizeOffset_X = -65f;
+            dismissAlertLabel.SizeOffset_Y = 30f;
+            dismissAlertLabel.TextAlignment = TextAnchor.LowerRight;
+            dismissAlertLabel.FontSize = ESleekFontSize.Small;
+            dismissAlertLabel.Text = localization.format("Featured_Workshop_Dismiss");
             alertBox.AddChild(dismissAlertLabel);
             alertBodyLabel = Glazier.Get().CreateLabel();
-            alertBodyLabel.positionOffset_X = 60;
-            alertBodyLabel.positionOffset_Y = 20;
-            alertBodyLabel.sizeOffset_X = -70;
-            alertBodyLabel.sizeOffset_Y = -20;
-            alertBodyLabel.sizeScale_X = 1f;
-            alertBodyLabel.sizeScale_Y = 1f;
-            alertBodyLabel.fontAlignment = TextAnchor.UpperLeft;
-            alertBodyLabel.textColor = ESleekTint.RICH_TEXT_DEFAULT;
-            alertBodyLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
-            alertBodyLabel.enableRichText = true;
+            alertBodyLabel.PositionOffset_X = 60f;
+            alertBodyLabel.PositionOffset_Y = 20f;
+            alertBodyLabel.SizeOffset_X = -70f;
+            alertBodyLabel.SizeOffset_Y = -20f;
+            alertBodyLabel.SizeScale_X = 1f;
+            alertBodyLabel.SizeScale_Y = 1f;
+            alertBodyLabel.TextAlignment = TextAnchor.UpperLeft;
+            alertBodyLabel.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+            alertBodyLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+            alertBodyLabel.AllowRichText = true;
             alertBox.AddChild(alertBodyLabel);
-            mainHeaderOffset += alertBox.sizeOffset_Y + 10;
-            canvas.transform.Find("View").GetComponent<RectTransform>().offsetMax -= new Vector2(0f, 70f);
-            canvas.transform.Find("Scrollbar").GetComponent<RectTransform>().offsetMax -= new Vector2(0f, 70f);
+            mainHeaderOffset += alertBox.SizeOffset_Y + 10f;
+            mainScrollView.PositionOffset_Y += alertBox.SizeOffset_Y + 10f;
+            mainScrollView.SizeOffset_Y -= alertBox.SizeOffset_Y + 10f;
         }
         Color color = Palette.hex(liveConfigData.mainMenuAlert.color);
-        alertHeaderLabel.text = liveConfigData.mainMenuAlert.header;
-        alertHeaderLabel.textColor = color;
-        alertBodyLabel.text = liveConfigData.mainMenuAlert.body;
-        dismissAlertLabel.textColor = color * 0.5f;
+        alertHeaderLabel.Text = liveConfigData.mainMenuAlert.header;
+        alertHeaderLabel.TextColor = color;
+        alertBodyLabel.Text = liveConfigData.mainMenuAlert.body;
+        dismissAlertLabel.TextColor = color * 0.5f;
         if (!string.IsNullOrEmpty(liveConfigData.mainMenuAlert.iconName))
         {
-            alertImage.texture = icons.load<Texture2D>(liveConfigData.mainMenuAlert.iconName);
-            alertImage.isVisible = true;
+            alertImage.Texture = icons.load<Texture2D>(liveConfigData.mainMenuAlert.iconName);
+            alertImage.IsVisible = true;
         }
         else
         {
-            alertImage.isVisible = false;
+            alertImage.IsVisible = false;
         }
         if (!string.IsNullOrEmpty(liveConfigData.mainMenuAlert.iconURL))
         {
             alertWebImage.Refresh(liveConfigData.mainMenuAlert.iconURL);
-            alertWebImage.isVisible = true;
+            alertWebImage.IsVisible = true;
         }
         else
         {
-            alertWebImage.isVisible = false;
+            alertWebImage.IsVisible = false;
         }
         Color color2 = (liveConfigData.mainMenuAlert.shouldTintIcon ? color : Color.white);
-        alertImage.color = color2;
+        alertImage.TintColor = color2;
         alertWebImage.color = color2;
         if (!string.IsNullOrEmpty(liveConfigData.mainMenuAlert.link))
         {
-            alertLinkLabel.text = liveConfigData.mainMenuAlert.link;
-            alertLinkLabel.textColor = color * 0.5f;
-            alertLinkLabel.isVisible = true;
+            alertLinkLabel.Text = liveConfigData.mainMenuAlert.link;
+            alertLinkLabel.TextColor = color * 0.5f;
+            alertLinkLabel.IsVisible = true;
         }
         else
         {
-            alertLinkLabel.isVisible = false;
+            alertLinkLabel.IsVisible = false;
         }
     }
 
     private static void UpdateWorkshopFromLiveConfig()
     {
+        if (!Glazier.Get().SupportsAutomaticLayout)
+        {
+            return;
+        }
         MainMenuWorkshopLiveConfig mainMenuWorkshop = LiveConfig.Get().mainMenuWorkshop;
         if (mainMenuWorkshop.allowNews && SteamUser.BLoggedOn() && !hasBegunQueryingLiveConfigWorkshop)
         {
@@ -1062,17 +1049,6 @@ public class MenuDashboardUI
 
     public MenuDashboardUI()
     {
-        canvas = GameObject.Find("Canvas");
-        templateNews = canvas.transform.Find("View").Find("List").Find("Template_News")
-            .gameObject;
-        templateWorkshop = canvas.transform.Find("View").Find("List").Find("Template_Workshop")
-            .gameObject;
-        templateText = templateNews.transform.parent.Find("Template_Text").gameObject;
-        templateImage = templateNews.transform.parent.Find("Template_Image").gameObject;
-        templateLink = templateNews.transform.parent.Find("Template_Link").gameObject;
-        templateReadMoreLink = templateNews.transform.parent.Find("Template_ReadMore_Link").gameObject;
-        templateReadMoreContent = templateNews.transform.parent.Find("Template_ReadMore_Content").gameObject;
-        templateWorkshopLinks = templateNews.transform.parent.Find("Template_WorkshopLinks").gameObject;
         if (icons != null)
         {
             icons.unload();
@@ -1086,7 +1062,7 @@ public class MenuDashboardUI
         if (SteamUser.BLoggedOn())
         {
             hasNewAnnouncement = false;
-            if (!readNewsPreview())
+            if (Glazier.Get().SupportsAutomaticLayout && !readNewsPreview())
             {
                 MenuUI.instance.StartCoroutine(MenuUI.instance.requestSteamNews());
             }
@@ -1106,18 +1082,18 @@ public class MenuDashboardUI
             }
         }
         container = new SleekFullscreenBox();
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         MenuUI.container.AddChild(container);
         active = true;
         playButton = new SleekButtonIcon(icons.load<Texture2D>("Play"));
-        playButton.positionOffset_Y = 170;
-        playButton.sizeOffset_X = 200;
-        playButton.sizeOffset_Y = 50;
+        playButton.PositionOffset_Y = 170f;
+        playButton.SizeOffset_X = 200f;
+        playButton.SizeOffset_Y = 50f;
         playButton.text = localization.format("PlayButtonText");
         playButton.tooltip = localization.format("PlayButtonTooltip");
         playButton.onClickedButton += onClickedPlayButton;
@@ -1125,9 +1101,9 @@ public class MenuDashboardUI
         playButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(playButton);
         survivorsButton = new SleekButtonIcon(icons.load<Texture2D>("Survivors"));
-        survivorsButton.positionOffset_Y = 230;
-        survivorsButton.sizeOffset_X = 200;
-        survivorsButton.sizeOffset_Y = 50;
+        survivorsButton.PositionOffset_Y = 230f;
+        survivorsButton.SizeOffset_X = 200f;
+        survivorsButton.SizeOffset_Y = 50f;
         survivorsButton.text = localization.format("SurvivorsButtonText");
         survivorsButton.tooltip = localization.format("SurvivorsButtonTooltip");
         survivorsButton.onClickedButton += onClickedSurvivorsButton;
@@ -1135,9 +1111,9 @@ public class MenuDashboardUI
         survivorsButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(survivorsButton);
         configurationButton = new SleekButtonIcon(icons.load<Texture2D>("Configuration"));
-        configurationButton.positionOffset_Y = 290;
-        configurationButton.sizeOffset_X = 200;
-        configurationButton.sizeOffset_Y = 50;
+        configurationButton.PositionOffset_Y = 290f;
+        configurationButton.SizeOffset_X = 200f;
+        configurationButton.SizeOffset_Y = 50f;
         configurationButton.text = localization.format("ConfigurationButtonText");
         configurationButton.tooltip = localization.format("ConfigurationButtonTooltip");
         configurationButton.onClickedButton += onClickedConfigurationButton;
@@ -1145,9 +1121,9 @@ public class MenuDashboardUI
         configurationButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(configurationButton);
         workshopButton = new SleekButtonIcon(icons.load<Texture2D>("Workshop"));
-        workshopButton.positionOffset_Y = 350;
-        workshopButton.sizeOffset_X = 200;
-        workshopButton.sizeOffset_Y = 50;
+        workshopButton.PositionOffset_Y = 350f;
+        workshopButton.SizeOffset_X = 200f;
+        workshopButton.SizeOffset_Y = 50f;
         workshopButton.text = localization.format("WorkshopButtonText");
         workshopButton.tooltip = localization.format("WorkshopButtonTooltip");
         workshopButton.onClickedButton += onClickedWorkshopButton;
@@ -1155,49 +1131,71 @@ public class MenuDashboardUI
         workshopButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(workshopButton);
         exitButton = new SleekButtonIcon(icons.load<Texture2D>("Exit"));
-        exitButton.positionOffset_Y = -50;
-        exitButton.positionScale_Y = 1f;
-        exitButton.sizeOffset_X = 200;
-        exitButton.sizeOffset_Y = 50;
+        exitButton.PositionOffset_Y = -50f;
+        exitButton.PositionScale_Y = 1f;
+        exitButton.SizeOffset_X = 200f;
+        exitButton.SizeOffset_Y = 50f;
         exitButton.text = localization.format("ExitButtonText");
         exitButton.tooltip = localization.format("ExitButtonTooltip");
         exitButton.onClickedButton += onClickedExitButton;
         exitButton.fontSize = ESleekFontSize.Medium;
         exitButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(exitButton);
+        mainScrollView = Glazier.Get().CreateScrollView();
+        mainScrollView.PositionOffset_X = 210f;
+        mainScrollView.PositionOffset_Y = 170f;
+        mainScrollView.SizeScale_X = 1f;
+        mainScrollView.SizeScale_Y = 1f;
+        mainScrollView.SizeOffset_X = -210f;
+        mainScrollView.SizeOffset_Y = -170f;
+        mainScrollView.ScaleContentToWidth = true;
+        container.AddChild(mainScrollView);
+        if (!Glazier.Get().SupportsAutomaticLayout)
+        {
+            ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
+            sleekLabel.Text = "Featured workshop file and news feed are no longer supported when using the -Glazier=IMGUI launch option.";
+            sleekLabel.FontSize = ESleekFontSize.Large;
+            sleekLabel.SizeScale_X = 1f;
+            sleekLabel.SizeOffset_Y = 100f;
+            mainScrollView.ContentSizeOffset = new Vector2(0f, 100f);
+            mainScrollView.AddChild(sleekLabel);
+        }
+        else
+        {
+            mainScrollView.ContentUseManualLayout = false;
+        }
         if (!Provider.isPro)
         {
             proButton = Glazier.Get().CreateButton();
-            proButton.positionOffset_X = 210;
-            proButton.positionOffset_Y = -100;
-            proButton.positionScale_Y = 1f;
-            proButton.sizeOffset_Y = 100;
-            proButton.sizeOffset_X = -210;
-            proButton.sizeScale_X = 1f;
-            proButton.tooltipText = localization.format("Pro_Button_Tooltip");
-            proButton.backgroundColor = SleekColor.BackgroundIfLight(Palette.PRO);
-            proButton.textColor = Palette.PRO;
-            proButton.onClickedButton += onClickedProButton;
+            proButton.PositionOffset_X = 210f;
+            proButton.PositionOffset_Y = -100f;
+            proButton.PositionScale_Y = 1f;
+            proButton.SizeOffset_Y = 100f;
+            proButton.SizeOffset_X = -210f;
+            proButton.SizeScale_X = 1f;
+            proButton.TooltipText = localization.format("Pro_Button_Tooltip");
+            proButton.BackgroundColor = SleekColor.BackgroundIfLight(Palette.PRO);
+            proButton.TextColor = Palette.PRO;
+            proButton.OnClicked += onClickedProButton;
             container.AddChild(proButton);
             proLabel = Glazier.Get().CreateLabel();
-            proLabel.sizeScale_X = 1f;
-            proLabel.sizeOffset_Y = 50;
-            proLabel.text = localization.format("Pro_Title");
-            proLabel.textColor = Palette.PRO;
-            proLabel.fontSize = ESleekFontSize.Large;
+            proLabel.SizeScale_X = 1f;
+            proLabel.SizeOffset_Y = 50f;
+            proLabel.Text = localization.format("Pro_Title");
+            proLabel.TextColor = Palette.PRO;
+            proLabel.FontSize = ESleekFontSize.Large;
             proButton.AddChild(proLabel);
             featureLabel = Glazier.Get().CreateLabel();
-            featureLabel.positionOffset_Y = 50;
-            featureLabel.sizeOffset_Y = -50;
-            featureLabel.sizeScale_X = 1f;
-            featureLabel.sizeScale_Y = 1f;
-            featureLabel.text = localization.format("Pro_Button");
-            featureLabel.textColor = Palette.PRO;
+            featureLabel.PositionOffset_Y = 50f;
+            featureLabel.SizeOffset_Y = -50f;
+            featureLabel.SizeScale_X = 1f;
+            featureLabel.SizeScale_Y = 1f;
+            featureLabel.Text = localization.format("Pro_Button");
+            featureLabel.TextColor = Palette.PRO;
             proButton.AddChild(featureLabel);
-            canvas.transform.Find("View").GetComponent<RectTransform>().offsetMin += new Vector2(0f, 110f);
-            canvas.transform.Find("Scrollbar").GetComponent<RectTransform>().offsetMin += new Vector2(0f, 110f);
+            mainScrollView.SizeOffset_Y -= 110f;
         }
-        mainHeaderOffset = 170;
+        mainHeaderOffset = 170f;
         alertBox = null;
         if (SteamApps.GetCurrentBetaName(out var pchName, 64) && string.Equals(pchName, "preview", StringComparison.InvariantCultureIgnoreCase))
         {
@@ -1250,6 +1248,7 @@ public class MenuDashboardUI
                 ESteamConnectionFailureInfo.AUTH_USED => localization.format("Auth_Used"), 
                 ESteamConnectionFailureInfo.AUTH_NO_USER => localization.format("Auth_No_User"), 
                 ESteamConnectionFailureInfo.AUTH_PUB_BAN => localization.format("Auth_Pub_Ban"), 
+                ESteamConnectionFailureInfo.AUTH_NETWORK_IDENTITY_FAILURE => localization.format("Auth_Network_Identity_Failure"), 
                 ESteamConnectionFailureInfo.AUTH_ECON_SERIALIZE => localization.format("Auth_Econ_Serialize"), 
                 ESteamConnectionFailureInfo.AUTH_ECON_DESERIALIZE => localization.format("Auth_Econ_Deserialize"), 
                 ESteamConnectionFailureInfo.AUTH_ECON_VERIFY => localization.format("Auth_Econ_Verify"), 
@@ -1293,6 +1292,7 @@ public class MenuDashboardUI
                 ESteamConnectionFailureInfo.NAME_PRIVATE_LONG => localization.format("Name_Private_Long"), 
                 ESteamConnectionFailureInfo.NAME_PRIVATE_INVALID => localization.format("Name_Private_Invalid"), 
                 ESteamConnectionFailureInfo.NAME_PRIVATE_NUMBER => localization.format("Name_Private_Number"), 
+                ESteamConnectionFailureInfo.HASH_RESOURCES => localization.format("Hash_Resources"), 
                 _ => localization.format("Failure_Unknown", eSteamConnectionFailureInfo, connectionFailureReason), 
             };
             if (string.IsNullOrEmpty(text))
@@ -1312,16 +1312,16 @@ public class MenuDashboardUI
     private void CreatePreviewBranchChangelogButton()
     {
         ISleekButton sleekButton = Glazier.Get().CreateButton();
-        sleekButton.positionOffset_X = 210;
-        sleekButton.positionOffset_Y = mainHeaderOffset;
-        sleekButton.sizeOffset_Y = 60;
-        sleekButton.sizeOffset_X = -210;
-        sleekButton.sizeScale_X = 1f;
-        sleekButton.text = "Click here to open preview branch changelog.";
-        sleekButton.onClickedButton += OnClickedPreviewBranchChangelog;
+        sleekButton.PositionOffset_X = 210f;
+        sleekButton.PositionOffset_Y = mainHeaderOffset;
+        sleekButton.SizeOffset_Y = 60f;
+        sleekButton.SizeOffset_X = -210f;
+        sleekButton.SizeScale_X = 1f;
+        sleekButton.Text = "Click here to open preview branch changelog.";
+        sleekButton.OnClicked += OnClickedPreviewBranchChangelog;
         container.AddChild(sleekButton);
-        mainHeaderOffset += sleekButton.sizeOffset_Y + 10;
-        canvas.transform.Find("View").GetComponent<RectTransform>().offsetMax -= new Vector2(0f, 70f);
-        canvas.transform.Find("Scrollbar").GetComponent<RectTransform>().offsetMax -= new Vector2(0f, 70f);
+        mainHeaderOffset += sleekButton.SizeOffset_Y + 10f;
+        mainScrollView.PositionOffset_Y += sleekButton.SizeOffset_Y + 10f;
+        mainScrollView.SizeOffset_Y -= sleekButton.SizeOffset_Y + 10f;
     }
 }

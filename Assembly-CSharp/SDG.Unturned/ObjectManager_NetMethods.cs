@@ -30,22 +30,17 @@ public static class ObjectManager_NetMethods
         writer.WriteClampedVector3(ragdoll);
     }
 
-    [NetInvokableGeneratedMethod("ReceiveUseObjectNPC", ENetInvokableGeneratedMethodPurpose.Read)]
-    public static void ReceiveUseObjectNPC_Read(in ServerInvocationContext context)
+    [NetInvokableGeneratedMethod("ReceiveTalkWithNpcRequest", ENetInvokableGeneratedMethodPurpose.Read)]
+    public static void ReceiveTalkWithNpcRequest_Read(in ServerInvocationContext context)
     {
-        NetPakReader reader = context.reader;
-        reader.ReadUInt8(out var value);
-        reader.ReadUInt8(out var value2);
-        reader.ReadUInt16(out var value3);
-        ObjectManager.ReceiveUseObjectNPC(in context, value, value2, value3);
+        context.reader.ReadNetId(out var value);
+        ObjectManager.ReceiveTalkWithNpcRequest(in context, value);
     }
 
-    [NetInvokableGeneratedMethod("ReceiveUseObjectNPC", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveUseObjectNPC_Write(NetPakWriter writer, byte x, byte y, ushort index)
+    [NetInvokableGeneratedMethod("ReceiveTalkWithNpcRequest", ENetInvokableGeneratedMethodPurpose.Write)]
+    public static void ReceiveTalkWithNpcRequest_Write(NetPakWriter writer, NetId netId)
     {
-        writer.WriteUInt8(x);
-        writer.WriteUInt8(y);
-        writer.WriteUInt16(index);
+        writer.WriteNetId(netId);
     }
 
     [NetInvokableGeneratedMethod("ReceiveUseObjectQuest", ENetInvokableGeneratedMethodPurpose.Read)]

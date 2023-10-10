@@ -4,17 +4,16 @@ namespace SDG.Unturned;
 
 internal class GlazierSlider_IMGUI : GlazierElementBase_IMGUI, ISleekSlider, ISleekElement
 {
+    private const float NormalizedHandleSize = 0.25f;
+
     private float scroll;
 
     private float _state;
 
-    public ESleekOrientation orientation { get; set; } = ESleekOrientation.VERTICAL;
+    public ESleekOrientation Orientation { get; set; } = ESleekOrientation.VERTICAL;
 
 
-    public float size { get; set; } = 0.25f;
-
-
-    public float state
+    public float Value
     {
         get
         {
@@ -23,39 +22,39 @@ internal class GlazierSlider_IMGUI : GlazierElementBase_IMGUI, ISleekSlider, ISl
         set
         {
             _state = value;
-            scroll = state * (1f - size);
+            scroll = Value * 0.75f;
         }
     }
 
-    public SleekColor backgroundColor { get; set; } = GlazierConst.DefaultSliderBackgroundColor;
+    public SleekColor BackgroundColor { get; set; } = GlazierConst.DefaultSliderBackgroundColor;
 
 
-    public SleekColor foregroundColor { get; set; } = GlazierConst.DefaultSliderForegroundColor;
+    public SleekColor ForegroundColor { get; set; } = GlazierConst.DefaultSliderForegroundColor;
 
 
-    public bool isInteractable { get; set; } = true;
+    public bool IsInteractable { get; set; } = true;
 
 
-    public event Dragged onDragged;
+    public event Dragged OnValueChanged;
 
     public override void OnGUI()
     {
         bool enabled = GUI.enabled;
-        GUI.enabled = isInteractable;
-        float num = GlazierUtils_IMGUI.drawSlider(drawRect, orientation, scroll, size, backgroundColor);
+        GUI.enabled = IsInteractable;
+        float num = GlazierUtils_IMGUI.drawSlider(drawRect, Orientation, scroll, 0.25f, BackgroundColor);
         GUI.enabled = enabled;
         if (num != scroll)
         {
-            _state = num / (1f - size);
-            if (state < 0f)
+            _state = num / 0.75f;
+            if (Value < 0f)
             {
-                state = 0f;
+                Value = 0f;
             }
-            else if (state > 1f)
+            else if (Value > 1f)
             {
-                state = 1f;
+                Value = 1f;
             }
-            this.onDragged?.Invoke(this, state);
+            this.OnValueChanged?.Invoke(this, Value);
         }
         scroll = num;
         ChildrenOnGUI();

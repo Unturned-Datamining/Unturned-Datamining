@@ -176,7 +176,7 @@ public class UseableMelee : Useable
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askSwingStart")]
     public void ReceivePlaySwingStart()
     {
-        if (base.player.equipment.isEquipped)
+        if (base.player.equipment.IsEquipAnimationFinished)
         {
             startSwing();
         }
@@ -191,7 +191,7 @@ public class UseableMelee : Useable
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askSwingStop")]
     public void ReceivePlaySwingStop()
     {
-        if (base.player.equipment.isEquipped)
+        if (base.player.equipment.IsEquipAnimationFinished)
         {
             stopSwing();
         }
@@ -206,7 +206,7 @@ public class UseableMelee : Useable
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askSwing")]
     public void ReceivePlaySwing(ESwingMode mode)
     {
-        if (base.player.equipment.isEquipped)
+        if (base.player.equipment.IsEquipAnimationFinished)
         {
             swingMode = mode;
             swing();
@@ -220,7 +220,7 @@ public class UseableMelee : Useable
         {
             AlertTool.alert(base.transform.position, equippedMeleeAsset.alertRadius);
         }
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             if (Provider.provider.statisticsService.userStatisticsService.getStatistic("Accuracy_Shot", out int data))
             {
@@ -237,7 +237,7 @@ public class UseableMelee : Useable
                 {
                     Provider.provider.statisticsService.userStatisticsService.setStatistic("Headshots", data + 1);
                 }
-                PlayerUI.hitmark(0, raycastInfo.point, worldspace: false, (raycastInfo.limb != ELimb.SKULL) ? EPlayerHit.ENTITIY : EPlayerHit.CRITICAL);
+                PlayerUI.hitmark(raycastInfo.point, worldspace: false, (raycastInfo.limb != ELimb.SKULL) ? EPlayerHit.ENTITIY : EPlayerHit.CRITICAL);
             }
             else if ((raycastInfo.zombie != null && equippedMeleeAsset.zombieDamageMultiplier.damage > 1f) || (raycastInfo.animal != null && equippedMeleeAsset.animalDamageMultiplier.damage > 1f))
             {
@@ -249,7 +249,7 @@ public class UseableMelee : Useable
                 {
                     Provider.provider.statisticsService.userStatisticsService.setStatistic("Headshots", data + 1);
                 }
-                PlayerUI.hitmark(0, raycastInfo.point, worldspace: false, (raycastInfo.limb != ELimb.SKULL) ? EPlayerHit.ENTITIY : EPlayerHit.CRITICAL);
+                PlayerUI.hitmark(raycastInfo.point, worldspace: false, (raycastInfo.limb != ELimb.SKULL) ? EPlayerHit.ENTITIY : EPlayerHit.CRITICAL);
             }
             else if (raycastInfo.vehicle != null && equippedMeleeAsset.vehicleDamage > 1f)
             {
@@ -261,7 +261,7 @@ public class UseableMelee : Useable
                         {
                             Provider.provider.statisticsService.userStatisticsService.setStatistic("Accuracy_Hit", data + 1);
                         }
-                        PlayerUI.hitmark(0, raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
+                        PlayerUI.hitmark(raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
                     }
                 }
                 else if (!raycastInfo.vehicle.isDead && raycastInfo.vehicle.asset != null && raycastInfo.vehicle.canBeDamaged && (raycastInfo.vehicle.asset.isVulnerable || ((ItemWeaponAsset)base.player.equipment.asset).isInvulnerable))
@@ -270,7 +270,7 @@ public class UseableMelee : Useable
                     {
                         Provider.provider.statisticsService.userStatisticsService.setStatistic("Accuracy_Hit", data + 1);
                     }
-                    PlayerUI.hitmark(0, raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
+                    PlayerUI.hitmark(raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
                 }
             }
             else if (raycastInfo.transform != null && raycastInfo.transform.CompareTag("Barricade") && equippedMeleeAsset.barricadeDamage > 1f)
@@ -290,7 +290,7 @@ public class UseableMelee : Useable
                                 {
                                     Provider.provider.statisticsService.userStatisticsService.setStatistic("Accuracy_Hit", data + 1);
                                 }
-                                PlayerUI.hitmark(0, raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
+                                PlayerUI.hitmark(raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
                             }
                         }
                         else if (asset.canBeDamaged && (asset.isVulnerable || ((ItemWeaponAsset)base.player.equipment.asset).isInvulnerable))
@@ -299,7 +299,7 @@ public class UseableMelee : Useable
                             {
                                 Provider.provider.statisticsService.userStatisticsService.setStatistic("Accuracy_Hit", data + 1);
                             }
-                            PlayerUI.hitmark(0, raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
+                            PlayerUI.hitmark(raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
                         }
                     }
                 }
@@ -321,7 +321,7 @@ public class UseableMelee : Useable
                                 {
                                     Provider.provider.statisticsService.userStatisticsService.setStatistic("Accuracy_Hit", data + 1);
                                 }
-                                PlayerUI.hitmark(0, raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
+                                PlayerUI.hitmark(raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
                             }
                         }
                         else if (asset2.canBeDamaged && (asset2.isVulnerable || ((ItemWeaponAsset)base.player.equipment.asset).isInvulnerable))
@@ -330,7 +330,7 @@ public class UseableMelee : Useable
                             {
                                 Provider.provider.statisticsService.userStatisticsService.setStatistic("Accuracy_Hit", data + 1);
                             }
-                            PlayerUI.hitmark(0, raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
+                            PlayerUI.hitmark(raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
                         }
                     }
                 }
@@ -347,7 +347,7 @@ public class UseableMelee : Useable
                         {
                             Provider.provider.statisticsService.userStatisticsService.setStatistic("Accuracy_Hit", data + 1);
                         }
-                        PlayerUI.hitmark(0, raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
+                        PlayerUI.hitmark(raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
                     }
                 }
             }
@@ -364,7 +364,7 @@ public class UseableMelee : Useable
                         {
                             Provider.provider.statisticsService.userStatisticsService.setStatistic("Accuracy_Hit", data + 1);
                         }
-                        PlayerUI.hitmark(0, raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
+                        PlayerUI.hitmark(raycastInfo.point, worldspace: false, EPlayerHit.BUILD);
                     }
                 }
             }
@@ -696,7 +696,7 @@ public class UseableMelee : Useable
         if (equippedMeleeAsset.isLight)
         {
             interact = base.player.equipment.state[0] == 1;
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 firstLightHook = base.player.equipment.firstModel.Find("Model_0").Find("Light");
                 firstLightHook.tag = "Viewmodel";
@@ -711,7 +711,7 @@ public class UseableMelee : Useable
             }
             thirdLightHook = base.player.equipment.thirdModel.Find("Model_0").Find("Light");
             LightLODTool.applyLightLOD(thirdLightHook);
-            if (base.channel.isOwner && thirdLightHook != null)
+            if (base.channel.IsLocalPlayer && thirdLightHook != null)
             {
                 Transform transform2 = thirdLightHook.Find("Light");
                 if (transform2 != null)
@@ -729,7 +729,7 @@ public class UseableMelee : Useable
         updateAttachments();
         if (equippedMeleeAsset.isRepeated)
         {
-            if (base.channel.isOwner && base.player.equipment.firstModel.Find("Hit") != null)
+            if (base.channel.IsLocalPlayer && base.player.equipment.firstModel.Find("Hit") != null)
             {
                 firstEmitter = base.player.equipment.firstModel.Find("Hit").GetComponent<ParticleSystem>();
                 firstEmitter.tag = "Viewmodel";
@@ -739,20 +739,20 @@ public class UseableMelee : Useable
             {
                 thirdEmitter = base.player.equipment.thirdModel.Find("Hit").GetComponent<ParticleSystem>();
             }
-            weakTime = (uint)(base.player.animator.getAnimationLength("Start_Swing") / PlayerInput.RATE);
-            strongTime = (uint)(base.player.animator.getAnimationLength("Stop_Swing") / PlayerInput.RATE);
+            weakTime = (uint)(base.player.animator.GetAnimationLength("Start_Swing") / PlayerInput.RATE);
+            strongTime = (uint)(base.player.animator.GetAnimationLength("Stop_Swing") / PlayerInput.RATE);
         }
         else
         {
-            weakTime = (uint)(base.player.animator.getAnimationLength("Weak") / PlayerInput.RATE);
-            strongTime = (uint)(base.player.animator.getAnimationLength("Strong") / PlayerInput.RATE);
+            weakTime = (uint)(base.player.animator.GetAnimationLength("Weak") / PlayerInput.RATE);
+            strongTime = (uint)(base.player.animator.GetAnimationLength("Strong") / PlayerInput.RATE);
         }
     }
 
     public override void dequip()
     {
         base.player.disableItemSpotLight();
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             base.player.animator.viewmodelCameraLocalPositionOffset = Vector3.zero;
             if (firstFakeLight != null)
@@ -774,7 +774,7 @@ public class UseableMelee : Useable
 
     public override void tick()
     {
-        if (!base.player.equipment.isEquipped)
+        if (!base.player.equipment.IsEquipAnimationFinished)
         {
             return;
         }
@@ -789,7 +789,7 @@ public class UseableMelee : Useable
                     {
                         firstEmitter.Emit(4);
                     }
-                    if (thirdEmitter != null && (!base.channel.isOwner || base.player.look.perspective == EPlayerPerspective.THIRD))
+                    if (thirdEmitter != null && (!base.channel.IsLocalPlayer || base.player.look.perspective == EPlayerPerspective.THIRD))
                     {
                         thirdEmitter.Emit(4);
                     }
@@ -816,7 +816,7 @@ public class UseableMelee : Useable
                 isSwinging = false;
             }
         }
-        if (!base.channel.isOwner)
+        if (!base.channel.IsLocalPlayer)
         {
             return;
         }
@@ -862,7 +862,7 @@ public class UseableMelee : Useable
         }
         if (!Dedicator.IsDedicatedServer)
         {
-            if (base.channel.isOwner && firstLightHook != null)
+            if (base.channel.IsLocalPlayer && firstLightHook != null)
             {
                 firstLightHook.gameObject.SetActive(interact);
             }
@@ -883,7 +883,7 @@ public class UseableMelee : Useable
 
     private void Update()
     {
-        if (base.channel.isOwner && firstFakeLight != null && thirdLightHook != null)
+        if (base.channel.IsLocalPlayer && firstFakeLight != null && thirdLightHook != null)
         {
             firstFakeLight.position = thirdLightHook.position;
             if (firstFakeLight.gameObject.activeSelf != (base.player.look.perspective == EPlayerPerspective.FIRST && thirdLightHook.gameObject.activeSelf))

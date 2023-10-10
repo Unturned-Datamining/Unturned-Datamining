@@ -76,9 +76,9 @@ public class SleekButtonIconConfirm : SleekWrapper
 
     public void reset()
     {
-        mainButton.isVisible = true;
-        confirmButton.isVisible = false;
-        denyButton.isVisible = false;
+        mainButton.IsVisible = true;
+        confirmButton.IsVisible = false;
+        denyButton.IsVisible = false;
     }
 
     private void onClickedConfirmButton(ISleekElement button)
@@ -95,37 +95,37 @@ public class SleekButtonIconConfirm : SleekWrapper
 
     private void onClickedMainButton(ISleekElement button)
     {
-        mainButton.isVisible = false;
-        confirmButton.isVisible = true;
-        denyButton.isVisible = true;
+        mainButton.IsVisible = false;
+        confirmButton.IsVisible = true;
+        denyButton.IsVisible = true;
     }
 
     public SleekButtonIconConfirm(Texture2D newIcon, string newConfirm, string newConfirmTooltip, string newDeny, string newDenyTooltip)
     {
         mainButton = new SleekButtonIcon(newIcon);
-        mainButton.sizeScale_X = 1f;
-        mainButton.sizeScale_Y = 1f;
+        mainButton.SizeScale_X = 1f;
+        mainButton.SizeScale_Y = 1f;
         mainButton.onClickedButton += onClickedMainButton;
         AddChild(mainButton);
         confirmButton = Glazier.Get().CreateButton();
-        confirmButton.sizeOffset_X = -5;
-        confirmButton.sizeScale_X = 0.5f;
-        confirmButton.sizeScale_Y = 1f;
-        confirmButton.text = newConfirm;
-        confirmButton.tooltipText = newConfirmTooltip;
-        confirmButton.onClickedButton += onClickedConfirmButton;
+        confirmButton.SizeOffset_X = -5f;
+        confirmButton.SizeScale_X = 0.5f;
+        confirmButton.SizeScale_Y = 1f;
+        confirmButton.Text = newConfirm;
+        confirmButton.TooltipText = newConfirmTooltip;
+        confirmButton.OnClicked += onClickedConfirmButton;
         AddChild(confirmButton);
-        confirmButton.isVisible = false;
+        confirmButton.IsVisible = false;
         denyButton = Glazier.Get().CreateButton();
-        denyButton.positionOffset_X = 5;
-        denyButton.positionScale_X = 0.5f;
-        denyButton.sizeOffset_X = -5;
-        denyButton.sizeScale_X = 0.5f;
-        denyButton.sizeScale_Y = 1f;
-        denyButton.text = newDeny;
-        denyButton.tooltipText = newDenyTooltip;
-        denyButton.onClickedButton += onClickedDenyButton;
+        denyButton.PositionOffset_X = 5f;
+        denyButton.PositionScale_X = 0.5f;
+        denyButton.SizeOffset_X = -5f;
+        denyButton.SizeScale_X = 0.5f;
+        denyButton.SizeScale_Y = 1f;
+        denyButton.Text = newDeny;
+        denyButton.TooltipText = newDenyTooltip;
+        denyButton.OnClicked += onClickedDenyButton;
         AddChild(denyButton);
-        denyButton.isVisible = false;
+        denyButton.IsVisible = false;
     }
 }

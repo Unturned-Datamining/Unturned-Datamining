@@ -322,55 +322,60 @@ internal class AssetsWorker
         Interlocked.Increment(ref totalSearchLocationsFinishedSearching);
     }
 
-    private void ReaderThreadMain(object untypedState)
+    private async void ReaderThreadMain(object untypedState)
     {
-        WorkerThreadState workerThreadState = (WorkerThreadState)untypedState;
+        WorkerThreadState state = (WorkerThreadState)untypedState;
         while (shouldWorkerThreadsContinue > 0)
         {
-            WorkerThreadState.AssetDefFilePath result2;
-            if (workerThreadState.masterBundleFilePaths.TryDequeue(out var result))
+            WorkerThreadState.AssetDefFilePath result;
+            if (state.masterBundleFilePaths.TryDequeue(out var mbConfigPath))
             {
                 try
                 {
-                    DatDictionary data = workerThreadState.ReadFileWithoutHash(result);
-                    MasterBundleConfig masterBundleConfig = new MasterBundleConfig(Path.GetDirectoryName(result), data, workerThreadState.origin);
+                    DatDictionary data = state.ReadFileWithoutHash(mbConfigPath);
+                    string directoryName = Path.GetDirectoryName(mbConfigPath);
+                    MasterBundleConfig config = new MasterBundleConfig(directoryName, data, state.origin);
                     byte[] assetBundleData;
                     byte[] hash;
-                    using (FileStream underlyingStream = new FileStream(masterBundleConfig.getAssetBundlePath(), FileMode.Open, FileAccess.Read, FileShare.Read))
+                    using (FileStream fileStream = new FileStream(config.getAssetBundlePath(), FileMode.Open, FileAccess.Read, FileShare.Read))
                     {
-                        using SHA1Stream sHA1Stream = new SHA1Stream(underlyingStream);
+                        using SHA1Stream hashStream = new SHA1Stream(fileStream);
                         using MemoryStream memoryStream = new MemoryStream();
-                        sHA1Stream.CopyTo(memoryStream);
+                        await hashStream.CopyToAsync(memoryStream);
                         assetBundleData = memoryStream.ToArray();
-                        hash = sHA1Stream.Hash;
+                        hash = hashStream.Hash;
                     }
                     Interlocked.Increment(ref totalMasterBundlesRead);
-                    workerThreadState.owner.foundMasterBundles.Enqueue(new MasterBundle
+                    state.owner.foundMasterBundles.Enqueue(new MasterBundle
                     {
-                        config = masterBundleConfig,
+                        config = config,
                         assetBundleData = assetBundleData,
                         hash = hash
                     });
                 }
                 catch (Exception exception)
                 {
-                    workerThreadState.AddException(exception, "Caught exception reading master bundle config at: \"" + result + "\"");
+                    state.AddException(exception, "Caught exception reading master bundle config at: \"" + mbConfigPath + "\"");
                 }
             }
-            else if (workerThreadState.assetDefinitionFilePaths.TryDequeue(out result2))
+            else if (state.assetDefinitionFilePaths.TryDequeue(out result))
             {
                 try
                 {
-                    workerThreadState.AddFoundAsset(result2.filePath, result2.checkForTranslations);
+                    state.AddFoundAsset(result.filePath, result.checkForTranslations);
                 }
                 catch (Exception exception2)
                 {
-                    workerThreadState.AddException(exception2, "Caught exception reading asset definition at: \"" + result2.filePath + "\"");
+                    state.AddException(exception2, "Caught exception reading asset definition at: \"" + result.filePath + "\"");
                 }
             }
-            else if (workerThreadState.isFinishedSearching > 0)
+            else
             {
-                break;
+                if (state.isFinishedSearching > 0)
+                {
+                    break;
+                }
+                mbConfigPath = null;
             }
         }
         Interlocked.Increment(ref totalSearchLocationsFinishedReading);

@@ -41,9 +41,9 @@ public class NPCItemCondition : NPCLogicCondition
         return doesLogicPass(num, amount);
     }
 
-    public override void applyCondition(Player player, bool shouldSend)
+    public override void ApplyCondition(Player player)
     {
-        if (!Provider.isServer || !shouldReset)
+        if (!shouldReset)
         {
             return;
         }
@@ -99,63 +99,63 @@ public class NPCItemCondition : NPCLogicCondition
         ISleekBox sleekBox = Glazier.Get().CreateBox();
         if (itemAsset.size_y == 1)
         {
-            sleekBox.sizeOffset_Y = itemAsset.size_y * 50 + 10;
+            sleekBox.SizeOffset_Y = itemAsset.size_y * 50 + 10;
         }
         else
         {
-            sleekBox.sizeOffset_Y = itemAsset.size_y * 25 + 10;
+            sleekBox.SizeOffset_Y = itemAsset.size_y * 25 + 10;
         }
-        sleekBox.sizeScale_X = 1f;
+        sleekBox.SizeScale_X = 1f;
         if (icon != null)
         {
             ISleekImage sleekImage = Glazier.Get().CreateImage(icon);
-            sleekImage.positionOffset_X = 5;
-            sleekImage.positionOffset_Y = -10;
-            sleekImage.positionScale_Y = 0.5f;
-            sleekImage.sizeOffset_X = 20;
-            sleekImage.sizeOffset_Y = 20;
+            sleekImage.PositionOffset_X = 5f;
+            sleekImage.PositionOffset_Y = -10f;
+            sleekImage.PositionScale_Y = 0.5f;
+            sleekImage.SizeOffset_X = 20f;
+            sleekImage.SizeOffset_Y = 20f;
             sleekBox.AddChild(sleekImage);
         }
         SleekItemIcon sleekItemIcon = new SleekItemIcon();
         if (icon != null)
         {
-            sleekItemIcon.positionOffset_X = 30;
+            sleekItemIcon.PositionOffset_X = 30f;
         }
         else
         {
-            sleekItemIcon.positionOffset_X = 5;
+            sleekItemIcon.PositionOffset_X = 5f;
         }
-        sleekItemIcon.positionOffset_Y = 5;
+        sleekItemIcon.PositionOffset_Y = 5f;
         if (itemAsset.size_y == 1)
         {
-            sleekItemIcon.sizeOffset_X = itemAsset.size_x * 50;
-            sleekItemIcon.sizeOffset_Y = itemAsset.size_y * 50;
+            sleekItemIcon.SizeOffset_X = itemAsset.size_x * 50;
+            sleekItemIcon.SizeOffset_Y = itemAsset.size_y * 50;
         }
         else
         {
-            sleekItemIcon.sizeOffset_X = itemAsset.size_x * 25;
-            sleekItemIcon.sizeOffset_Y = itemAsset.size_y * 25;
+            sleekItemIcon.SizeOffset_X = itemAsset.size_x * 25;
+            sleekItemIcon.SizeOffset_Y = itemAsset.size_y * 25;
         }
         sleekBox.AddChild(sleekItemIcon);
-        sleekItemIcon.Refresh(itemAsset.id, 100, itemAsset.getState(isFull: false), itemAsset, sleekItemIcon.sizeOffset_X, sleekItemIcon.sizeOffset_Y);
+        sleekItemIcon.Refresh(itemAsset.id, 100, itemAsset.getState(isFull: false), itemAsset, Mathf.RoundToInt(sleekItemIcon.SizeOffset_X), Mathf.RoundToInt(sleekItemIcon.SizeOffset_Y));
         ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
         if (icon != null)
         {
-            sleekLabel.positionOffset_X = 35 + sleekItemIcon.sizeOffset_X;
-            sleekLabel.sizeOffset_X = -40 - sleekItemIcon.sizeOffset_X;
+            sleekLabel.PositionOffset_X = 35f + sleekItemIcon.SizeOffset_X;
+            sleekLabel.SizeOffset_X = -40f - sleekItemIcon.SizeOffset_X;
         }
         else
         {
-            sleekLabel.positionOffset_X = 10 + sleekItemIcon.sizeOffset_X;
-            sleekLabel.sizeOffset_X = -15 - sleekItemIcon.sizeOffset_X;
+            sleekLabel.PositionOffset_X = 10f + sleekItemIcon.SizeOffset_X;
+            sleekLabel.SizeOffset_X = -15f - sleekItemIcon.SizeOffset_X;
         }
-        sleekLabel.sizeScale_X = 1f;
-        sleekLabel.sizeScale_Y = 1f;
-        sleekLabel.fontAlignment = TextAnchor.MiddleLeft;
-        sleekLabel.textColor = ESleekTint.RICH_TEXT_DEFAULT;
-        sleekLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
-        sleekLabel.enableRichText = true;
-        sleekLabel.text = value;
+        sleekLabel.SizeScale_X = 1f;
+        sleekLabel.SizeScale_Y = 1f;
+        sleekLabel.TextAlignment = TextAnchor.MiddleLeft;
+        sleekLabel.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+        sleekLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+        sleekLabel.AllowRichText = true;
+        sleekLabel.Text = value;
         sleekBox.AddChild(sleekLabel);
         return sleekBox;
     }

@@ -4,12 +4,9 @@ public class NPCPlayerSpawnpointReward : INPCReward
 {
     public string id { get; protected set; }
 
-    public override void grantReward(Player player, bool shouldSend)
+    public override void GrantReward(Player player)
     {
-        if (Provider.isServer)
-        {
-            player.quests.npcSpawnId = id;
-        }
+        player.quests.npcSpawnId = id;
     }
 
     public NPCPlayerSpawnpointReward(string newID, string newText)

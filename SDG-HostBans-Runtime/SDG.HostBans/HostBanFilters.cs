@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using SDG.NetPak;
+using Unturned.SystemEx;
 
 namespace SDG.HostBans;
 
@@ -16,11 +17,12 @@ public class HostBanFilters
 
     public List<HostBanSteamIdFilter> steamIds;
 
-    public EHostBanFlags IsAddressMatch(uint ip, ushort port)
+    public EHostBanFlags IsAddressMatch(IPv4Address ip, ushort port)
     {
         foreach (HostBanIPv4Filter address in addresses)
         {
-            if (address.ip == ip && port >= address.minPort && port <= address.maxPort)
+            IPv4Filter filter = address.filter;
+            if (filter.Matches(ip, port))
             {
                 return address.flags;
             }
@@ -57,7 +59,7 @@ public class HostBanFilters
 
     public void ReadConfiguration(NetPakReader reader)
     {
-        if (!reader.ReadUInt8(out var value) || value > 4)
+        if (!reader.ReadUInt8(out var value) || value > 5)
         {
             addresses = new List<HostBanIPv4Filter>();
             nameRegexes = new List<HostBanRegexFilter>();
@@ -66,15 +68,24 @@ public class HostBanFilters
             steamIds = new List<HostBanSteamIdFilter>();
             return;
         }
+        bool flag = value > 4;
         if (reader.ReadInt32(out var value2) && value2 > 0)
         {
             addresses = new List<HostBanIPv4Filter>(value2);
             for (int i = 0; i < value2; i++)
             {
                 HostBanIPv4Filter item = default(HostBanIPv4Filter);
-                reader.ReadUInt32(out item.ip);
-                reader.ReadUInt16(out item.minPort);
-                reader.ReadUInt16(out item.maxPort);
+                reader.ReadUInt32(out item.filter.address.value);
+                reader.ReadUInt16(out item.filter.minPort);
+                reader.ReadUInt16(out item.filter.maxPort);
+                if (flag)
+                {
+                    reader.ReadUInt32(out item.filter.subnetMask.value);
+                }
+                else
+                {
+                    item.filter.subnetMask = IPv4SubnetMask.SingleAddress;
+                }
                 reader.ReadUInt32(out var value3);
                 item.flags = (EHostBanFlags)value3;
                 addresses.Add(item);

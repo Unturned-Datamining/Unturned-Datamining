@@ -36,6 +36,15 @@ public class ItemBarrelAsset : ItemCaliberAsset
 
     public float gunshotRolloffDistanceMultiplier { get; protected set; }
 
+    public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
+    {
+        base.BuildDescription(builder, itemInstance);
+        if (!builder.shouldRestrictToLegacyContent && _ballisticDrop != 1f)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_BulletGravityModifier", PlayerDashboardInventoryUI.FormatStatModifier(_ballisticDrop, higherIsPositive: true, higherIsBeneficial: false)), 10000);
+        }
+    }
+
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
         base.PopulateAsset(bundle, data, localization);

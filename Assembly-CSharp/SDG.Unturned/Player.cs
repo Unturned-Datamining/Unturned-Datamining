@@ -809,7 +809,7 @@ public class Player : MonoBehaviour
 
     protected void trackStat(EPlayerStat stat)
     {
-        if (equipment.isSelected && equipment.isEquipped && equipment.asset != null)
+        if (equipment.HasValidUseable && equipment.IsEquipAnimationFinished && equipment.asset != null)
         {
             channel.owner.incrementStatTrackerValue(equipment.asset.sharedSkinLookupID, stat);
         }
@@ -839,7 +839,7 @@ public class Player : MonoBehaviour
 
     public void sendStat(EPlayerStat stat)
     {
-        if (!channel.isOwner)
+        if (!channel.IsLocalPlayer)
         {
             trackStat(stat);
         }
@@ -942,7 +942,7 @@ public class Player : MonoBehaviour
         {
             return;
         }
-        if (channel.isOwner)
+        if (channel.IsLocalPlayer)
         {
             firstSpot.gameObject.SetActive(isSpotOn && look.perspective == EPlayerPerspective.FIRST);
             thirdSpot.gameObject.SetActive(isSpotOn && look.perspective == EPlayerPerspective.THIRD);
@@ -1002,7 +1002,7 @@ public class Player : MonoBehaviour
 
     private void InitializePlayerStart()
     {
-        if (channel.isOwner)
+        if (channel.IsLocalPlayer)
         {
             _player = this;
             _first = base.transform.Find("First");
@@ -1054,7 +1054,7 @@ public class Player : MonoBehaviour
     internal void InitializePlayer()
     {
         PlayerUI playerUI = null;
-        if (channel.isOwner)
+        if (channel.IsLocalPlayer)
         {
             playerUI = base.transform.Find("First")?.Find("Camera")?.GetComponent<PlayerUI>();
         }
@@ -1154,7 +1154,7 @@ public class Player : MonoBehaviour
             UnityEngine.Object.DestroyImmediate(screenshotFinal);
             screenshotFinal = null;
         }
-        if (channel != null && channel.isOwner)
+        if (channel != null && channel.IsLocalPlayer)
         {
             isLoadingInventory = false;
             isLoadingLife = false;

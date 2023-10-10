@@ -282,6 +282,12 @@ public class Provider : MonoBehaviour
 
     private static float sentConnectRequestTime;
 
+    private static bool canCurrentlyHandleClientTransportFailure;
+
+    private static bool hasPendingClientTransportFailure;
+
+    private static string pendingClientTransportFailureMessage;
+
     internal static readonly NetLength MAX_SKINS_LENGTH = new NetLength(127u);
 
     internal static IClientTransport clientTransport;
@@ -825,7 +831,7 @@ public class Provider : MonoBehaviour
             Vector3 position = instance.transform.position;
             foreach (SteamPlayer client in clients)
             {
-                if (client.player == null || client.player.channel.isOwner)
+                if (client.player == null || client.player.channel.IsLocalPlayer)
                 {
                     continue;
                 }
@@ -1073,7 +1079,7 @@ public class Provider : MonoBehaviour
         float num = radius * radius;
         foreach (SteamPlayer client in _clients)
         {
-            if (!client.IsLocalPlayer && client.player != null && (client.player.transform.position - position).sqrMagnitude < num)
+            if (!client.IsLocalServerHost && client.player != null && (client.player.transform.position - position).sqrMagnitude < num)
             {
                 pooledTransportConnectionList.Add(client.transportConnection);
             }
@@ -1092,7 +1098,7 @@ public class Provider : MonoBehaviour
         PooledTransportConnectionList pooledTransportConnectionList = TransportConnectionListPool.Get();
         foreach (SteamPlayer client in _clients)
         {
-            if (!client.IsLocalPlayer)
+            if (!client.IsLocalServerHost)
             {
                 pooledTransportConnectionList.Add(client.transportConnection);
             }
@@ -1111,7 +1117,7 @@ public class Provider : MonoBehaviour
         PooledTransportConnectionList pooledTransportConnectionList = TransportConnectionListPool.Get();
         foreach (SteamPlayer client in _clients)
         {
-            if (!client.IsLocalPlayer && predicate(client))
+            if (!client.IsLocalServerHost && predicate(client))
             {
                 pooledTransportConnectionList.Add(client.transportConnection);
             }
@@ -1166,6 +1172,7 @@ public class Provider : MonoBehaviour
         }
         else if (currentServerInfo.isWorkshop && doServerItemsMatchAdvertisement(list))
         {
+            canCurrentlyHandleClientTransportFailure = false;
             UnturnedLog.info("Server specified {0} workshop item(s), querying details", list.Count);
             provider.workshopService.queryServerWorkshopItems(list, response.ip);
         }
@@ -1526,6 +1533,21 @@ public class Provider : MonoBehaviour
         }
     }
 
+    private static void ResetClientTransportFailure()
+    {
+        canCurrentlyHandleClientTransportFailure = true;
+        hasPendingClientTransportFailure = false;
+        pendingClientTransportFailureMessage = null;
+    }
+
+    private static void TriggerDisconnectFromClientTransportFailure()
+    {
+        hasPendingClientTransportFailure = false;
+        _connectionFailureInfo = ESteamConnectionFailureInfo.CUSTOM;
+        _connectionFailureReason = pendingClientTransportFailureMessage;
+        RequestDisconnect("Client transport failure: \"" + pendingClientTransportFailureMessage + "\"");
+    }
+
     private static void onLevelLoaded(int level)
     {
         if (level != 2)
@@ -1586,6 +1608,13 @@ public class Provider : MonoBehaviour
             }
             return;
         }
+        if (hasPendingClientTransportFailure)
+        {
+            UnturnedLog.info("Now able to handle client transport failure that occurred during level load");
+            TriggerDisconnectFromClientTransportFailure();
+            return;
+        }
+        canCurrentlyHandleClientTransportFailure = true;
         EClientPlatform clientPlatform = EClientPlatform.Linux;
         critMods.Clear();
         modBuilder.Length = 0;
@@ -1611,6 +1640,7 @@ public class Provider : MonoBehaviour
             writer.WriteBytes(_serverPasswordHash, 20);
             writer.WriteBytes(Level.hash, 20);
             writer.WriteBytes(ReadWrite.readData(), 20);
+            writer.WriteBytes(ResourceHash.localHash, 20);
             writer.WriteEnum(clientPlatform);
             writer.WriteUInt32(APP_VERSION_PACKED);
             writer.WriteBit(isPro);
@@ -1721,6 +1751,19 @@ public class Provider : MonoBehaviour
             SteamInventory.GetItemsByID(out provider.economyService.wearingResult, list.ToArray(), (uint)list.Count);
         }
         Level.loading();
+        ResetClientTransportFailure();
+        if (new IPv4Address(info.ip).IsWideAreaNetwork)
+        {
+            EInternetMultiplayerAvailability internetMultiplayerAvailability = GetInternetMultiplayerAvailability();
+            if (internetMultiplayerAvailability != 0)
+            {
+                clientTransport = new ClientTransport_Null();
+                _connectionFailureInfo = ESteamConnectionFailureInfo.CUSTOM;
+                _connectionFailureReason = MenuUI.FormatInternetMultiplayerAvailabilityStatus(internetMultiplayerAvailability);
+                RequestDisconnect($"Internet multiplayer unavailable ({internetMultiplayerAvailability})");
+                return;
+            }
+        }
         clientTransport = NetTransportFactory.CreateClientTransport(currentServerInfo.networkTransport);
         UnturnedLog.info("Initializing {0}", clientTransport.GetType().Name);
         clientTransport.Initialize(onClientTransportReady, onClientTransportFailure);
@@ -1755,9 +1798,16 @@ public class Provider : MonoBehaviour
 
     private static void onClientTransportFailure(string message)
     {
-        _connectionFailureInfo = ESteamConnectionFailureInfo.CUSTOM;
-        _connectionFailureReason = message;
-        RequestDisconnect("Client transport failure: \"" + message + "\"");
+        hasPendingClientTransportFailure = true;
+        pendingClientTransportFailureMessage = message;
+        if (canCurrentlyHandleClientTransportFailure)
+        {
+            TriggerDisconnectFromClientTransportFailure();
+        }
+        else
+        {
+            UnturnedLog.info("Deferring client transport failure because we can't currently handle it");
+        }
     }
 
     private static bool CompareClientAndServerWorkshopFileTimestamps()
@@ -1833,7 +1883,14 @@ public class Provider : MonoBehaviour
         }
         else if (CompareClientAndServerWorkshopFileTimestamps())
         {
+            if (hasPendingClientTransportFailure)
+            {
+                UnturnedLog.info("Now able to handle client transport failure that occurred during workshop file download/install/load");
+                TriggerDisconnectFromClientTransportFailure();
+                return;
+            }
             Assets.ApplyServerAssetMapping(level, provider.workshopService.serverPendingIDs);
+            canCurrentlyHandleClientTransportFailure = false;
             UnturnedLog.info("Loading server level ({0})", map);
             Level.load(level, hasAuthority: false);
             loadGameMode();
@@ -2367,7 +2424,7 @@ public class Provider : MonoBehaviour
             _clientName = localization.format("Console");
             autoShutdownManager = steam.gameObject.AddComponent<BuiltinAutoShutdown>();
             SteamGameServer.GetPublicIP().TryGetIPv4Address(out var address);
-            EHostBanFlags eHostBanFlags = HostBansManager.Get().MatchBasicDetails(address, port, serverName, _server.m_SteamID);
+            EHostBanFlags eHostBanFlags = HostBansManager.Get().MatchBasicDetails(new IPv4Address(address), port, serverName, _server.m_SteamID);
             eHostBanFlags |= HostBansManager.Get().MatchExtendedDetails(configData.Browser.Desc_Server_List, configData.Browser.Thumbnail);
             if ((eHostBanFlags & EHostBanFlags.RecommendHostCheckWarningsList) != 0)
             {
@@ -3148,6 +3205,10 @@ public class Provider : MonoBehaviour
         else if (callback.m_eAuthSessionResponse == EAuthSessionResponse.k_EAuthSessionResponsePublisherIssuedBan)
         {
             reject(callback.m_SteamID, ESteamRejection.AUTH_PUB_BAN);
+        }
+        else if (callback.m_eAuthSessionResponse == EAuthSessionResponse.k_EAuthSessionResponseAuthTicketNetworkIdentityFailure)
+        {
+            reject(callback.m_SteamID, ESteamRejection.AUTH_NETWORK_IDENTITY_FAILURE);
         }
         else
         {
@@ -4061,7 +4122,7 @@ public class Provider : MonoBehaviour
 
     private IEnumerator downloadIcon(PendingIconRequest iconQueryParams)
     {
-        UnityWebRequest request = UnityWebRequestTexture.GetTexture(iconQueryParams.url, nonReadable: true);
+        using UnityWebRequest request = UnityWebRequestTexture.GetTexture(iconQueryParams.url, nonReadable: true);
         request.timeout = 15;
         yield return request.SendWebRequest();
         Texture2D value = null;
@@ -4263,7 +4324,8 @@ public class Provider : MonoBehaviour
 
     private void WriteSteamAppIdFileAndEnvironmentVariables()
     {
-        string text = APP_ID.m_AppId.ToString(CultureInfo.InvariantCulture);
+        uint appId = APP_ID.m_AppId;
+        string text = appId.ToString(CultureInfo.InvariantCulture);
         UnturnedLog.info("Unturned overriding Steam AppId with \"" + text + "\"");
         try
         {
@@ -4653,6 +4715,7 @@ public class Provider : MonoBehaviour
         if (!Dedicator.IsDedicatedServer)
         {
             ConvenientSavedata.save();
+            LocalPlayerBlocklist.SaveIfDirty();
         }
         if (isInitialized)
         {

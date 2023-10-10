@@ -14,11 +14,11 @@ public class PlayerNPCVendorUI
 
     private static VendorAsset vendor;
 
-    private static DialogueResponse response;
-
     private static DialogueAsset dialogue;
 
-    private static DialogueAsset prevDialogue;
+    private static DialogueMessage nextMessage;
+
+    private static bool hasNextDialogue;
 
     private static List<VendorBuying> buying;
 
@@ -58,12 +58,12 @@ public class PlayerNPCVendorUI
 
     private static bool needsRefresh;
 
-    public static void open(VendorAsset newVendor, DialogueResponse newResponse, DialogueAsset newDialogue, DialogueAsset newPrevDialogue)
+    public static void open(VendorAsset newVendor, DialogueAsset newDialogue, DialogueMessage newNextMessage, bool newHasNextDialogue)
     {
         if (!active)
         {
             active = true;
-            updateVendor(newVendor, newResponse, newDialogue, newPrevDialogue);
+            updateVendor(newVendor, newDialogue, newNextMessage, newHasNextDialogue);
             container.AnimateIntoView();
         }
     }
@@ -80,7 +80,7 @@ public class PlayerNPCVendorUI
     public static void closeNicely()
     {
         close();
-        PlayerNPCDialogueUI.open(dialogue, prevDialogue);
+        PlayerNPCDialogueUI.open(dialogue, nextMessage, hasNextDialogue);
     }
 
     public static void MaybeRefresh()
@@ -110,43 +110,43 @@ public class PlayerNPCVendorUI
     private static void RefreshButtonVisibility()
     {
         Player player = Player.player;
-        int num = 0;
+        float num = 0f;
         for (int i = 0; i < buying.Count; i++)
         {
             bool flag = buying[i].areConditionsMet(player);
-            buyingButtons[i].isVisible = flag;
+            buyingButtons[i].IsVisible = flag;
             if (flag)
             {
-                buyingButtons[i].positionOffset_Y = num;
-                num += buyingButtons[i].sizeOffset_Y;
+                buyingButtons[i].PositionOffset_Y = num;
+                num += buyingButtons[i].SizeOffset_Y;
             }
         }
-        buyingBox.isVisible = num > 0;
-        buyingBox.contentSizeOffset = new Vector2(0f, num);
-        int num2 = 0;
+        buyingBox.IsVisible = num > 0f;
+        buyingBox.ContentSizeOffset = new Vector2(0f, num);
+        float num2 = 0f;
         for (int j = 0; j < selling.Count; j++)
         {
             bool flag2 = selling[j].areConditionsMet(player);
-            sellingButtons[j].isVisible = flag2;
+            sellingButtons[j].IsVisible = flag2;
             if (flag2)
             {
-                sellingButtons[j].positionOffset_Y = num2;
-                num2 += sellingButtons[j].sizeOffset_Y;
+                sellingButtons[j].PositionOffset_Y = num2;
+                num2 += sellingButtons[j].SizeOffset_Y;
             }
         }
-        sellingBox.isVisible = num2 > 0;
-        sellingBox.contentSizeOffset = new Vector2(0f, num2);
+        sellingBox.IsVisible = num2 > 0f;
+        sellingBox.ContentSizeOffset = new Vector2(0f, num2);
     }
 
     private static void RefreshExperienceOrCurrencyBoxAmount()
     {
-        if (experienceBox.isVisible)
+        if (experienceBox.IsVisible)
         {
-            experienceBox.text = localization.format("Experience", Player.player.skills.experience.ToString());
+            experienceBox.Text = localization.format("Experience", Player.player.skills.experience.ToString());
         }
         else
         {
-            if (!currencyBox.isVisible)
+            if (!currencyBox.IsVisible)
             {
                 return;
             }
@@ -156,11 +156,11 @@ public class PlayerNPCVendorUI
                 uint inventoryValue = itemCurrencyAsset.getInventoryValue(Player.player);
                 if (string.IsNullOrEmpty(itemCurrencyAsset.valueFormat))
                 {
-                    currencyLabel.text = inventoryValue.ToString("N");
+                    currencyLabel.Text = inventoryValue.ToString("N");
                 }
                 else
                 {
-                    currencyLabel.text = string.Format(itemCurrencyAsset.valueFormat, inventoryValue);
+                    currencyLabel.Text = string.Format(itemCurrencyAsset.valueFormat, inventoryValue);
                 }
             }
         }
@@ -168,9 +168,9 @@ public class PlayerNPCVendorUI
 
     private static void updateCurrencyOrExperienceBox()
     {
-        currencyBox.isVisible = vendor.currency.isValid;
-        experienceBox.isVisible = !currencyBox.isVisible;
-        if (!currencyBox.isVisible)
+        currencyBox.IsVisible = vendor.currency.isValid;
+        experienceBox.IsVisible = !currencyBox.IsVisible;
+        if (!currencyBox.IsVisible)
         {
             return;
         }
@@ -179,10 +179,10 @@ public class PlayerNPCVendorUI
         if (itemCurrencyAsset == null)
         {
             Assets.reportError(vendor, "unable to find currency");
-            currencyLabel.text = "Invalid";
+            currencyLabel.Text = "Invalid";
             return;
         }
-        int num = 5;
+        float num = 5f;
         ItemCurrencyAsset.Entry[] entries = itemCurrencyAsset.entries;
         for (int i = 0; i < entries.Length; i++)
         {
@@ -196,34 +196,34 @@ public class PlayerNPCVendorUI
             else if (entry.isVisibleInVendorMenu)
             {
                 SleekItemIcon sleekItemIcon = new SleekItemIcon();
-                sleekItemIcon.positionOffset_X = num;
-                sleekItemIcon.positionOffset_Y = 5;
+                sleekItemIcon.PositionOffset_X = num;
+                sleekItemIcon.PositionOffset_Y = 5f;
                 float num2 = (float)(int)itemAsset.size_x / (float)(int)itemAsset.size_y;
-                sleekItemIcon.sizeOffset_X = Mathf.RoundToInt(num2 * 40f);
-                sleekItemIcon.sizeOffset_Y = 40;
+                sleekItemIcon.SizeOffset_X = Mathf.RoundToInt(num2 * 40f);
+                sleekItemIcon.SizeOffset_Y = 40f;
                 currencyPanel.AddChild(sleekItemIcon);
-                sleekItemIcon.Refresh(itemAsset.id, 100, itemAsset.getState(isFull: false), itemAsset, sleekItemIcon.sizeOffset_X, sleekItemIcon.sizeOffset_Y);
+                sleekItemIcon.Refresh(itemAsset.id, 100, itemAsset.getState(isFull: false), itemAsset, Mathf.RoundToInt(sleekItemIcon.SizeOffset_X), Mathf.RoundToInt(sleekItemIcon.SizeOffset_Y));
                 ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-                sleekLabel.positionOffset_X = sleekItemIcon.positionOffset_X;
-                sleekLabel.positionOffset_Y = 0;
-                sleekLabel.sizeOffset_X = sleekItemIcon.sizeOffset_X;
-                sleekLabel.sizeScale_Y = 1f;
+                sleekLabel.PositionOffset_X = sleekItemIcon.PositionOffset_X;
+                sleekLabel.PositionOffset_Y = 0f;
+                sleekLabel.SizeOffset_X = sleekItemIcon.SizeOffset_X;
+                sleekLabel.SizeScale_Y = 1f;
                 uint value = entry.value;
-                sleekLabel.text = value.ToString();
-                sleekLabel.fontAlignment = TextAnchor.LowerCenter;
-                sleekLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+                sleekLabel.Text = value.ToString();
+                sleekLabel.TextAlignment = TextAnchor.LowerCenter;
+                sleekLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
                 currencyPanel.AddChild(sleekLabel);
-                num += sleekItemIcon.sizeOffset_X + 2;
+                num += sleekItemIcon.SizeOffset_X + 2f;
             }
         }
     }
 
-    private static void updateVendor(VendorAsset newVendor, DialogueResponse newResponse, DialogueAsset newDialogue, DialogueAsset newPrevDialogue)
+    private static void updateVendor(VendorAsset newVendor, DialogueAsset newDialogue, DialogueMessage newNextMessage, bool newHasNextDialogue)
     {
         vendor = newVendor;
-        response = newResponse;
         dialogue = newDialogue;
-        prevDialogue = newPrevDialogue;
+        nextMessage = newNextMessage;
+        hasNextDialogue = newHasNextDialogue;
         if (vendor == null)
         {
             return;
@@ -232,8 +232,8 @@ public class PlayerNPCVendorUI
         {
             PlayerLifeUI.npc.SetFaceOverride(vendor.faceOverride);
         }
-        nameLabel.text = vendor.vendorName;
-        descriptionLabel.text = vendor.vendorDescription;
+        nameLabel.Text = vendor.vendorName;
+        descriptionLabel.Text = vendor.vendorDescription;
         buyingButtons.Clear();
         sellingButtons.Clear();
         buying.Clear();
@@ -246,7 +246,7 @@ public class PlayerNPCVendorUI
         foreach (VendorBuying item in buying)
         {
             SleekVendor sleekVendor = new SleekVendor(item);
-            sleekVendor.sizeScale_X = 1f;
+            sleekVendor.SizeScale_X = 1f;
             sleekVendor.onClickedButton += onClickedBuyingButton;
             buyingBox.AddChild(sleekVendor);
             buyingButtons.Add(sleekVendor);
@@ -261,7 +261,7 @@ public class PlayerNPCVendorUI
         foreach (VendorSellingBase item2 in selling)
         {
             SleekVendor sleekVendor2 = new SleekVendor(item2);
-            sleekVendor2.sizeScale_X = 1f;
+            sleekVendor2.SizeScale_X = 1f;
             sleekVendor2.onClickedButton += onClickedSellingButton;
             sellingBox.AddChild(sleekVendor2);
             sellingButtons.Add(sleekVendor2);
@@ -326,13 +326,13 @@ public class PlayerNPCVendorUI
     {
         localization = Localization.read("/Player/PlayerNPCVendor.dat");
         container = new SleekFullscreenBox();
-        container.positionScale_Y = 1f;
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         PlayerUI.container.AddChild(container);
         active = false;
         buying = new List<VendorBuying>();
@@ -340,112 +340,112 @@ public class PlayerNPCVendorUI
         buyingButtons = new List<SleekVendor>();
         sellingButtons = new List<SleekVendor>();
         vendorBox = Glazier.Get().CreateBox();
-        vendorBox.sizeOffset_Y = -60;
-        vendorBox.sizeScale_X = 1f;
-        vendorBox.sizeScale_Y = 1f;
+        vendorBox.SizeOffset_Y = -60f;
+        vendorBox.SizeScale_X = 1f;
+        vendorBox.SizeScale_Y = 1f;
         container.AddChild(vendorBox);
         nameLabel = Glazier.Get().CreateLabel();
-        nameLabel.positionOffset_X = 5;
-        nameLabel.positionOffset_Y = 5;
-        nameLabel.sizeOffset_X = -10;
-        nameLabel.sizeOffset_Y = 40;
-        nameLabel.sizeScale_X = 1f;
-        nameLabel.textColor = ESleekTint.RICH_TEXT_DEFAULT;
-        nameLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
-        nameLabel.enableRichText = true;
-        nameLabel.fontSize = ESleekFontSize.Large;
+        nameLabel.PositionOffset_X = 5f;
+        nameLabel.PositionOffset_Y = 5f;
+        nameLabel.SizeOffset_X = -10f;
+        nameLabel.SizeOffset_Y = 40f;
+        nameLabel.SizeScale_X = 1f;
+        nameLabel.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+        nameLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+        nameLabel.AllowRichText = true;
+        nameLabel.FontSize = ESleekFontSize.Large;
         vendorBox.AddChild(nameLabel);
         descriptionLabel = Glazier.Get().CreateLabel();
-        descriptionLabel.positionOffset_X = 5;
-        descriptionLabel.positionOffset_Y = 40;
-        descriptionLabel.sizeOffset_X = -10;
-        descriptionLabel.sizeOffset_Y = 40;
-        descriptionLabel.sizeScale_X = 1f;
-        descriptionLabel.textColor = ESleekTint.RICH_TEXT_DEFAULT;
-        descriptionLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
-        descriptionLabel.enableRichText = true;
+        descriptionLabel.PositionOffset_X = 5f;
+        descriptionLabel.PositionOffset_Y = 40f;
+        descriptionLabel.SizeOffset_X = -10f;
+        descriptionLabel.SizeOffset_Y = 40f;
+        descriptionLabel.SizeScale_X = 1f;
+        descriptionLabel.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+        descriptionLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+        descriptionLabel.AllowRichText = true;
         vendorBox.AddChild(descriptionLabel);
         buyingLabel = Glazier.Get().CreateLabel();
-        buyingLabel.positionOffset_X = 5;
-        buyingLabel.positionOffset_Y = 80;
-        buyingLabel.sizeOffset_X = -40;
-        buyingLabel.sizeOffset_Y = 30;
-        buyingLabel.sizeScale_X = 0.5f;
-        buyingLabel.fontSize = ESleekFontSize.Medium;
-        buyingLabel.text = localization.format("Buying");
+        buyingLabel.PositionOffset_X = 5f;
+        buyingLabel.PositionOffset_Y = 80f;
+        buyingLabel.SizeOffset_X = -40f;
+        buyingLabel.SizeOffset_Y = 30f;
+        buyingLabel.SizeScale_X = 0.5f;
+        buyingLabel.FontSize = ESleekFontSize.Medium;
+        buyingLabel.Text = localization.format("Buying");
         vendorBox.AddChild(buyingLabel);
         buyingBox = Glazier.Get().CreateScrollView();
-        buyingBox.positionOffset_X = 5;
-        buyingBox.positionOffset_Y = 115;
-        buyingBox.sizeOffset_X = -10;
-        buyingBox.sizeOffset_Y = -120;
-        buyingBox.sizeScale_X = 0.5f;
-        buyingBox.sizeScale_Y = 1f;
-        buyingBox.scaleContentToWidth = true;
-        buyingBox.contentSizeOffset = new Vector2(0f, 1024f);
+        buyingBox.PositionOffset_X = 5f;
+        buyingBox.PositionOffset_Y = 115f;
+        buyingBox.SizeOffset_X = -10f;
+        buyingBox.SizeOffset_Y = -120f;
+        buyingBox.SizeScale_X = 0.5f;
+        buyingBox.SizeScale_Y = 1f;
+        buyingBox.ScaleContentToWidth = true;
+        buyingBox.ContentSizeOffset = new Vector2(0f, 1024f);
         vendorBox.AddChild(buyingBox);
         sellingLabel = Glazier.Get().CreateLabel();
-        sellingLabel.positionOffset_X = 5;
-        sellingLabel.positionOffset_Y = 80;
-        sellingLabel.positionScale_X = 0.5f;
-        sellingLabel.sizeOffset_X = -40;
-        sellingLabel.sizeOffset_Y = 30;
-        sellingLabel.sizeScale_X = 0.5f;
-        sellingLabel.fontSize = ESleekFontSize.Medium;
-        sellingLabel.text = localization.format("Selling");
+        sellingLabel.PositionOffset_X = 5f;
+        sellingLabel.PositionOffset_Y = 80f;
+        sellingLabel.PositionScale_X = 0.5f;
+        sellingLabel.SizeOffset_X = -40f;
+        sellingLabel.SizeOffset_Y = 30f;
+        sellingLabel.SizeScale_X = 0.5f;
+        sellingLabel.FontSize = ESleekFontSize.Medium;
+        sellingLabel.Text = localization.format("Selling");
         vendorBox.AddChild(sellingLabel);
         sellingBox = Glazier.Get().CreateScrollView();
-        sellingBox.positionOffset_X = 5;
-        sellingBox.positionOffset_Y = 115;
-        sellingBox.positionScale_X = 0.5f;
-        sellingBox.sizeOffset_X = -10;
-        sellingBox.sizeOffset_Y = -120;
-        sellingBox.sizeScale_X = 0.5f;
-        sellingBox.sizeScale_Y = 1f;
-        sellingBox.scaleContentToWidth = true;
-        sellingBox.contentSizeOffset = new Vector2(0f, 1024f);
+        sellingBox.PositionOffset_X = 5f;
+        sellingBox.PositionOffset_Y = 115f;
+        sellingBox.PositionScale_X = 0.5f;
+        sellingBox.SizeOffset_X = -10f;
+        sellingBox.SizeOffset_Y = -120f;
+        sellingBox.SizeScale_X = 0.5f;
+        sellingBox.SizeScale_Y = 1f;
+        sellingBox.ScaleContentToWidth = true;
+        sellingBox.ContentSizeOffset = new Vector2(0f, 1024f);
         vendorBox.AddChild(sellingBox);
         experienceBox = Glazier.Get().CreateBox();
-        experienceBox.positionOffset_Y = 10;
-        experienceBox.positionScale_Y = 1f;
-        experienceBox.sizeOffset_X = -5;
-        experienceBox.sizeOffset_Y = 50;
-        experienceBox.sizeScale_X = 0.5f;
-        experienceBox.fontSize = ESleekFontSize.Medium;
-        experienceBox.isVisible = false;
+        experienceBox.PositionOffset_Y = 10f;
+        experienceBox.PositionScale_Y = 1f;
+        experienceBox.SizeOffset_X = -5f;
+        experienceBox.SizeOffset_Y = 50f;
+        experienceBox.SizeScale_X = 0.5f;
+        experienceBox.FontSize = ESleekFontSize.Medium;
+        experienceBox.IsVisible = false;
         vendorBox.AddChild(experienceBox);
         currencyBox = Glazier.Get().CreateBox();
-        currencyBox.positionOffset_Y = 10;
-        currencyBox.positionScale_Y = 1f;
-        currencyBox.sizeOffset_X = -5;
-        currencyBox.sizeOffset_Y = 50;
-        currencyBox.sizeScale_X = 0.5f;
-        currencyBox.isVisible = false;
+        currencyBox.PositionOffset_Y = 10f;
+        currencyBox.PositionScale_Y = 1f;
+        currencyBox.SizeOffset_X = -5f;
+        currencyBox.SizeOffset_Y = 50f;
+        currencyBox.SizeScale_X = 0.5f;
+        currencyBox.IsVisible = false;
         vendorBox.AddChild(currencyBox);
         currencyPanel = Glazier.Get().CreateFrame();
-        currencyPanel.sizeScale_X = 1f;
-        currencyPanel.sizeScale_Y = 1f;
+        currencyPanel.SizeScale_X = 1f;
+        currencyPanel.SizeScale_Y = 1f;
         currencyBox.AddChild(currencyPanel);
         currencyLabel = Glazier.Get().CreateLabel();
-        currencyLabel.positionOffset_X = -160;
-        currencyLabel.positionScale_X = 1f;
-        currencyLabel.sizeOffset_X = 150;
-        currencyLabel.sizeScale_Y = 1f;
-        currencyLabel.fontAlignment = TextAnchor.MiddleRight;
-        currencyLabel.fontSize = ESleekFontSize.Medium;
+        currencyLabel.PositionOffset_X = -160f;
+        currencyLabel.PositionScale_X = 1f;
+        currencyLabel.SizeOffset_X = 150f;
+        currencyLabel.SizeScale_Y = 1f;
+        currencyLabel.TextAlignment = TextAnchor.MiddleRight;
+        currencyLabel.FontSize = ESleekFontSize.Medium;
         currencyBox.AddChild(currencyLabel);
         returnButton = Glazier.Get().CreateButton();
-        returnButton.positionOffset_X = 5;
-        returnButton.positionOffset_Y = 10;
-        returnButton.positionScale_X = 0.5f;
-        returnButton.positionScale_Y = 1f;
-        returnButton.sizeOffset_X = -5;
-        returnButton.sizeOffset_Y = 50;
-        returnButton.sizeScale_X = 0.5f;
-        returnButton.fontSize = ESleekFontSize.Medium;
-        returnButton.text = localization.format("Return");
-        returnButton.tooltipText = localization.format("Return_Tooltip");
-        returnButton.onClickedButton += onClickedReturnButton;
+        returnButton.PositionOffset_X = 5f;
+        returnButton.PositionOffset_Y = 10f;
+        returnButton.PositionScale_X = 0.5f;
+        returnButton.PositionScale_Y = 1f;
+        returnButton.SizeOffset_X = -5f;
+        returnButton.SizeOffset_Y = 50f;
+        returnButton.SizeScale_X = 0.5f;
+        returnButton.FontSize = ESleekFontSize.Medium;
+        returnButton.Text = localization.format("Return");
+        returnButton.TooltipText = localization.format("Return_Tooltip");
+        returnButton.OnClicked += onClickedReturnButton;
         vendorBox.AddChild(returnButton);
         PlayerInventory inventory = Player.player.inventory;
         inventory.onInventoryStateUpdated = (InventoryStateUpdated)Delegate.Combine(inventory.onInventoryStateUpdated, new InventoryStateUpdated(onInventoryStateUpdated));

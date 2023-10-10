@@ -911,7 +911,7 @@ public class DamageTool
                             parameters2.relevantDistance = EffectManager.SMALL;
                             parameters2.position = player.transform.position + Vector3.up;
                             EffectManager.triggerEffect(parameters2);
-                            parameters2.direction = -vector7;
+                            parameters2.SetDirection(-vector7);
                             EffectManager.triggerEffect(parameters2);
                         }
                     }
@@ -983,7 +983,7 @@ public class DamageTool
                         parameters3.relevantDistance = EffectManager.SMALL;
                         parameters3.position = zombie.transform.position + Vector3.up;
                         EffectManager.triggerEffect(parameters3);
-                        parameters3.direction = -vector9;
+                        parameters3.SetDirection(-vector9);
                         EffectManager.triggerEffect(parameters3);
                     }
                 }
@@ -1035,7 +1035,7 @@ public class DamageTool
                         parameters4.relevantDistance = EffectManager.SMALL;
                         parameters4.position = animal.transform.position + Vector3.up + Vector3.up;
                         EffectManager.triggerEffect(parameters4);
-                        parameters4.direction = -vector11;
+                        parameters4.SetDirection(-vector11);
                         EffectManager.triggerEffect(parameters4);
                     }
                 }
@@ -1175,7 +1175,7 @@ public class DamageTool
             position += normal * UnityEngine.Random.Range(0.04f, 0.06f);
             TriggerEffectParameters parameters = new TriggerEffectParameters(asset);
             parameters.position = position;
-            parameters.direction = normal;
+            parameters.SetDirection(normal);
             parameters.relevantDistance = EffectManager.SMALL;
             if (instigatingClient != null && instigatingClient.player != null && instigatingClient.player.channel != null)
             {

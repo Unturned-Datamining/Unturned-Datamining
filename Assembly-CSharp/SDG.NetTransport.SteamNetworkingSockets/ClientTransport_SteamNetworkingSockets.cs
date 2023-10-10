@@ -78,7 +78,7 @@ public class ClientTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
 
     public unsafe void Send(byte[] buffer, long size, ENetReliability reliability)
     {
-        if (isConnected)
+        if (isConnected && !didCloseConnection)
         {
             int nSendFlags = ReliabilityToSendFlags(reliability);
             fixed (byte* value = buffer)
@@ -91,7 +91,7 @@ public class ClientTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
     public bool Receive(byte[] buffer, out long size)
     {
         size = 0L;
-        if (!isConnected)
+        if (!isConnected || didCloseConnection)
         {
             return false;
         }

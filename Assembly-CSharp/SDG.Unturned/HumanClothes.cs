@@ -1403,7 +1403,7 @@ public class HumanClothes : MonoBehaviour
                 }
                 else
                 {
-                    skinnedMeshRenderer2.sharedMesh = meshes[meshes.Length - 1];
+                    skinnedMeshRenderer2.sharedMesh = meshes[^1];
                 }
                 num++;
             }

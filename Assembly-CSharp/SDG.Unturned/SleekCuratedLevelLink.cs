@@ -73,7 +73,7 @@ public class SleekCuratedLevelLink : SleekWrapper
 
     private void updateManageLabel(bool subscribed)
     {
-        manageButton.text = MenuPlaySingleplayerUI.localization.format(subscribed ? "Retired_Manage_Unsub" : "Retired_Manage_Sub");
+        manageButton.Text = MenuPlaySingleplayerUI.localization.format(subscribed ? "Retired_Manage_Unsub" : "Retired_Manage_Sub");
     }
 
     private void OnLiveConfigRefreshed()
@@ -107,59 +107,59 @@ public class SleekCuratedLevelLink : SleekWrapper
     public SleekCuratedLevelLink(CuratedMapLink curatedMap)
     {
         this.curatedMap = curatedMap;
-        base.sizeOffset_X = 400;
-        base.sizeOffset_Y = 100;
+        base.SizeOffset_X = 400f;
+        base.SizeOffset_Y = 100f;
         backdrop = Glazier.Get().CreateBox();
-        backdrop.sizeOffset_X = 0;
-        backdrop.sizeOffset_Y = 0;
-        backdrop.sizeScale_X = 1f;
-        backdrop.sizeScale_Y = 1f;
+        backdrop.SizeOffset_X = 0f;
+        backdrop.SizeOffset_Y = 0f;
+        backdrop.SizeScale_X = 1f;
+        backdrop.SizeScale_Y = 1f;
         AddChild(backdrop);
         string path = "/CuratedMapIcons/" + curatedMap.Workshop_File_Id + ".png";
         if (ReadWrite.fileExists(path, useCloud: false, usePath: true))
         {
             icon = Glazier.Get().CreateImage();
-            icon.positionOffset_X = 10;
-            icon.positionOffset_Y = 10;
-            icon.sizeOffset_X = -20;
-            icon.sizeOffset_Y = -20;
-            icon.sizeScale_X = 1f;
-            icon.sizeScale_Y = 1f;
-            icon.texture = ReadWrite.readTextureFromFile(path, useBasePath: true);
-            icon.shouldDestroyTexture = true;
+            icon.PositionOffset_X = 10f;
+            icon.PositionOffset_Y = 10f;
+            icon.SizeOffset_X = -20f;
+            icon.SizeOffset_Y = -20f;
+            icon.SizeScale_X = 1f;
+            icon.SizeScale_Y = 1f;
+            icon.Texture = ReadWrite.readTextureFromFile(path, useBasePath: true);
+            icon.ShouldDestroyTexture = true;
             backdrop.AddChild(icon);
         }
         nameLabel = Glazier.Get().CreateLabel();
-        nameLabel.positionOffset_Y = 10;
-        nameLabel.sizeScale_X = 1f;
-        nameLabel.sizeOffset_Y = 50;
-        nameLabel.fontAlignment = TextAnchor.MiddleCenter;
-        nameLabel.fontSize = ESleekFontSize.Medium;
-        nameLabel.text = curatedMap.Name;
-        nameLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+        nameLabel.PositionOffset_Y = 10f;
+        nameLabel.SizeScale_X = 1f;
+        nameLabel.SizeOffset_Y = 50f;
+        nameLabel.TextAlignment = TextAnchor.MiddleCenter;
+        nameLabel.FontSize = ESleekFontSize.Medium;
+        nameLabel.Text = curatedMap.Name;
+        nameLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
         backdrop.AddChild(nameLabel);
         viewOnWorkshopButton = Glazier.Get().CreateButton();
-        viewOnWorkshopButton.positionOffset_X = 15;
-        viewOnWorkshopButton.positionOffset_Y = -35;
-        viewOnWorkshopButton.positionScale_Y = 1f;
-        viewOnWorkshopButton.sizeOffset_X = 150;
-        viewOnWorkshopButton.sizeOffset_Y = 20;
-        viewOnWorkshopButton.fontSize = ESleekFontSize.Small;
-        viewOnWorkshopButton.text = MenuPlaySingleplayerUI.localization.format("Retired_View_Label");
-        viewOnWorkshopButton.tooltipText = MenuPlaySingleplayerUI.localization.format("Retired_View_Tooltip");
-        viewOnWorkshopButton.onClickedButton += onClickedViewButton;
+        viewOnWorkshopButton.PositionOffset_X = 15f;
+        viewOnWorkshopButton.PositionOffset_Y = -35f;
+        viewOnWorkshopButton.PositionScale_Y = 1f;
+        viewOnWorkshopButton.SizeOffset_X = 150f;
+        viewOnWorkshopButton.SizeOffset_Y = 20f;
+        viewOnWorkshopButton.FontSize = ESleekFontSize.Small;
+        viewOnWorkshopButton.Text = MenuPlaySingleplayerUI.localization.format("Retired_View_Label");
+        viewOnWorkshopButton.TooltipText = MenuPlaySingleplayerUI.localization.format("Retired_View_Tooltip");
+        viewOnWorkshopButton.OnClicked += onClickedViewButton;
         backdrop.AddChild(viewOnWorkshopButton);
         manageButton = Glazier.Get().CreateButton();
-        manageButton.positionOffset_X = -165;
-        manageButton.positionOffset_Y = -35;
-        manageButton.positionScale_X = 1f;
-        manageButton.positionScale_Y = 1f;
-        manageButton.sizeOffset_X = 150;
-        manageButton.sizeOffset_Y = 20;
-        manageButton.fontSize = ESleekFontSize.Small;
-        manageButton.tooltipText = MenuPlaySingleplayerUI.localization.format("Retired_Manage_Tooltip");
+        manageButton.PositionOffset_X = -165f;
+        manageButton.PositionOffset_Y = -35f;
+        manageButton.PositionScale_X = 1f;
+        manageButton.PositionScale_Y = 1f;
+        manageButton.SizeOffset_X = 150f;
+        manageButton.SizeOffset_Y = 20f;
+        manageButton.FontSize = ESleekFontSize.Small;
+        manageButton.TooltipText = MenuPlaySingleplayerUI.localization.format("Retired_Manage_Tooltip");
         updateManageLabel();
-        manageButton.onClickedButton += onClickedManageButton;
+        manageButton.OnClicked += onClickedManageButton;
         backdrop.AddChild(manageButton);
         hasCreatedStatusLabel = false;
         LiveConfig.OnRefreshed -= OnLiveConfigRefreshed;

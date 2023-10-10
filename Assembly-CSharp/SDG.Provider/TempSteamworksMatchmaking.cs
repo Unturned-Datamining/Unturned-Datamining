@@ -471,7 +471,8 @@ public class TempSteamworksMatchmaking
             UnturnedLog.info($"Ignoring server \"{serverDetails.GetServerName()}\" because it has a different AppID ({serverDetails.m_nAppID})");
             return;
         }
-        EHostBanFlags eHostBanFlags = HostBansManager.Get().MatchBasicDetails(serverDetails.m_NetAdr.GetIP(), serverDetails.m_NetAdr.GetQueryPort(), serverDetails.GetServerName(), serverDetails.m_steamID.m_SteamID);
+        IPv4Address ip = new IPv4Address(serverDetails.m_NetAdr.GetIP());
+        EHostBanFlags eHostBanFlags = HostBansManager.Get().MatchBasicDetails(ip, serverDetails.m_NetAdr.GetQueryPort(), serverDetails.GetServerName(), serverDetails.m_steamID.m_SteamID);
         if (eHostBanFlags.HasFlag(EHostBanFlags.HiddenFromAllServerLists) || eHostBanFlags.HasFlag(EHostBanFlags.Blocked) || (_currentList == ESteamServerList.INTERNET && eHostBanFlags.HasFlag(EHostBanFlags.HiddenFromInternetServerList)))
         {
             return;

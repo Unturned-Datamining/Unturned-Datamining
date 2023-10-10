@@ -3,6 +3,7 @@ using SDG.Framework.Foliage;
 using SDG.NetTransport;
 using Steamworks;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 
 namespace SDG.Unturned;
 
@@ -149,6 +150,8 @@ public class PlayerLook : PlayerCaller
     public bool shouldUseZoomFactorForSensitivity;
 
     private EPlayerPerspective _perspective;
+
+    private RenderTexture scopeRenderTexture;
 
     protected bool isZoomed;
 
@@ -309,24 +312,49 @@ public class PlayerLook : PlayerCaller
 
     public void updateScope(EGraphicQuality quality)
     {
+        bool flag = false;
+        int num = 0;
         switch (quality)
         {
-        case EGraphicQuality.OFF:
-            scopeCamera.targetTexture = null;
-            break;
         case EGraphicQuality.LOW:
-            scopeCamera.targetTexture = Resources.Load<RenderTexture>("RenderTextures/Scope_Low");
+            flag = true;
+            num = 256;
             break;
         case EGraphicQuality.MEDIUM:
-            scopeCamera.targetTexture = Resources.Load<RenderTexture>("RenderTextures/Scope_Medium");
+            flag = true;
+            num = 512;
             break;
         case EGraphicQuality.HIGH:
-            scopeCamera.targetTexture = Resources.Load<RenderTexture>("RenderTextures/Scope_High");
+            flag = true;
+            num = 1024;
             break;
         case EGraphicQuality.ULTRA:
-            scopeCamera.targetTexture = Resources.Load<RenderTexture>("RenderTextures/Scope_Ultra");
+            flag = true;
+            num = 2048;
             break;
         }
+        if (flag)
+        {
+            if (scopeRenderTexture != null && scopeRenderTexture.width != num)
+            {
+                UnityEngine.Object.Destroy(scopeRenderTexture);
+                scopeRenderTexture = null;
+            }
+            if (scopeRenderTexture == null)
+            {
+                GraphicsFormat colorFormat = GraphicsFormat.R8G8B8A8_SRGB;
+                GraphicsFormat depthStencilFormat = GraphicsFormat.D24_UNorm_S8_UInt;
+                scopeRenderTexture = new RenderTexture(num, num, colorFormat, depthStencilFormat);
+                scopeRenderTexture.name = "Dual-Render Scope";
+                scopeRenderTexture.hideFlags = HideFlags.HideAndDontSave;
+            }
+        }
+        else if (scopeRenderTexture != null)
+        {
+            UnityEngine.Object.Destroy(scopeRenderTexture);
+            scopeRenderTexture = null;
+        }
+        scopeCamera.targetTexture = scopeRenderTexture;
         if (quality != 0)
         {
             if (scopeMaterial == null)
@@ -351,6 +379,7 @@ public class PlayerLook : PlayerCaller
         scopeNightvisionColor = sightAsset.nightvisionColor;
         scopeNightvisionFogIntensity = sightAsset.nightvisionFogIntensity;
         scopeCamera.enabled = scopeCamera.targetTexture != null && scopeVision == ELightingVision.NONE;
+        scopeCamera.GetComponent<GrayscaleEffect>().blend = ((scopeVision == ELightingVision.CIVILIAN) ? 1f : 0f);
     }
 
     public void disableScope()
@@ -471,7 +500,7 @@ public class PlayerLook : PlayerCaller
         _pitch = 90f;
         _yaw = base.transform.localRotation.eulerAngles.y;
         updateRot();
-        if (base.channel.isOwner && perspective == EPlayerPerspective.FIRST)
+        if (base.channel.IsLocalPlayer && perspective == EPlayerPerspective.FIRST)
         {
             MainCamera.instance.transform.localRotation = Quaternion.Euler(pitch - 90f, 0f, 0f);
             MainCamera.instance.transform.localPosition = Vector3.up * eyes;
@@ -774,7 +803,7 @@ public class PlayerLook : PlayerCaller
 
     private void Update()
     {
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             if (InputEx.GetKey(KeyCode.LeftShift))
             {
@@ -940,8 +969,8 @@ public class PlayerLook : PlayerCaller
                     case ESensitivityScalingMode.ProjectionRatio:
                     {
                         float num3 = ((shouldUseZoomFactorForSensitivity && isScopeActive && perspective == EPlayerPerspective.FIRST && scopeCameraZoomFactor > 0f) ? scopeCamera.fieldOfView : instance.fieldOfView);
-                        float f = (float)Math.PI / 180f * num3 * 0.5f;
-                        float f2 = (float)Math.PI / 180f * OptionsSettings.DesiredVerticalFieldOfView * 0.5f;
+                        float f = MathF.PI / 180f * num3 * 0.5f;
+                        float f2 = MathF.PI / 180f * OptionsSettings.DesiredVerticalFieldOfView * 0.5f;
                         float projectionRatioCoefficient = ControlsSettings.projectionRatioCoefficient;
                         num2 = Mathf.Atan(projectionRatioCoefficient * Mathf.Tan(f)) / Mathf.Atan(projectionRatioCoefficient * Mathf.Tan(f2));
                         break;
@@ -1272,7 +1301,7 @@ public class PlayerLook : PlayerCaller
         updateLook();
         yawInputMultiplier = 1f;
         pitchInputMultiplier = 1f;
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             if (Provider.cameraMode == ECameraMode.THIRD)
             {
@@ -1312,6 +1341,11 @@ public class PlayerLook : PlayerCaller
 
     private void OnDestroy()
     {
+        if (scopeRenderTexture != null)
+        {
+            UnityEngine.Object.Destroy(scopeRenderTexture);
+            scopeRenderTexture = null;
+        }
         if (scopeMaterial != null)
         {
             UnityEngine.Object.Destroy(scopeMaterial);

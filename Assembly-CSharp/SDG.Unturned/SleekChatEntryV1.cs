@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-public class SleekChat : SleekWrapper
+public class SleekChatEntryV1 : SleekWrapper
 {
     public bool shouldFadeOutWithAge;
 
@@ -26,19 +26,19 @@ public class SleekChat : SleekWrapper
             if (string.IsNullOrEmpty(_representingChatMessage.iconURL))
             {
                 Texture2D texture = ((!OptionsSettings.streamer && _representingChatMessage.speaker != null) ? Provider.provider.communityService.getIcon(_representingChatMessage.speaker.playerID.steamID, shouldCache: true) : null);
-                avatarImage.texture = texture;
-                avatarImage.isVisible = true;
-                remoteImage.isVisible = false;
+                avatarImage.Texture = texture;
+                avatarImage.IsVisible = true;
+                remoteImage.IsVisible = false;
             }
             else
             {
                 remoteImage.Refresh(_representingChatMessage.iconURL);
-                avatarImage.isVisible = false;
-                remoteImage.isVisible = true;
+                avatarImage.IsVisible = false;
+                remoteImage.IsVisible = true;
             }
-            contentsLabel.textColor = _representingChatMessage.color;
-            contentsLabel.enableRichText = _representingChatMessage.useRichTextFormatting;
-            contentsLabel.text = _representingChatMessage.contents;
+            contentsLabel.TextColor = _representingChatMessage.color;
+            contentsLabel.AllowRichText = _representingChatMessage.useRichTextFormatting;
+            contentsLabel.Text = _representingChatMessage.contents;
         }
     }
 
@@ -49,39 +49,39 @@ public class SleekChat : SleekWrapper
             float value = representingChatMessage.age - Provider.preferenceData.Chat.Fade_Delay;
             value = Mathf.Clamp01(value);
             float a = 1f - value;
-            Color color = avatarImage.color;
+            Color color = avatarImage.TintColor;
             color.a = a;
-            avatarImage.color = color;
+            avatarImage.TintColor = color;
             remoteImage.color = color;
-            Color color2 = contentsLabel.textColor;
+            Color color2 = contentsLabel.TextColor;
             color2.a = a;
-            contentsLabel.textColor = color2;
+            contentsLabel.TextColor = color2;
         }
     }
 
-    public SleekChat()
+    public SleekChatEntryV1()
     {
         avatarImage = Glazier.Get().CreateImage();
-        avatarImage.positionOffset_Y = 4;
-        avatarImage.sizeOffset_X = 32;
-        avatarImage.sizeOffset_Y = 32;
-        avatarImage.isVisible = false;
+        avatarImage.PositionOffset_Y = 4f;
+        avatarImage.SizeOffset_X = 32f;
+        avatarImage.SizeOffset_Y = 32f;
+        avatarImage.IsVisible = false;
         AddChild(avatarImage);
         remoteImage = new SleekWebImage();
-        remoteImage.positionOffset_Y = 4;
-        remoteImage.sizeOffset_X = 32;
-        remoteImage.sizeOffset_Y = 32;
-        remoteImage.isVisible = false;
+        remoteImage.PositionOffset_Y = 4f;
+        remoteImage.SizeOffset_X = 32f;
+        remoteImage.SizeOffset_Y = 32f;
+        remoteImage.IsVisible = false;
         AddChild(remoteImage);
         contentsLabel = Glazier.Get().CreateLabel();
-        contentsLabel.positionOffset_X = 40;
-        contentsLabel.positionOffset_Y = -4;
-        contentsLabel.sizeOffset_X = -40;
-        contentsLabel.sizeOffset_Y = 48;
-        contentsLabel.sizeScale_X = 1f;
-        contentsLabel.fontSize = ESleekFontSize.Medium;
-        contentsLabel.fontAlignment = TextAnchor.MiddleLeft;
-        contentsLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+        contentsLabel.PositionOffset_X = 40f;
+        contentsLabel.PositionOffset_Y = -4f;
+        contentsLabel.SizeOffset_X = -40f;
+        contentsLabel.SizeOffset_Y = 48f;
+        contentsLabel.SizeScale_X = 1f;
+        contentsLabel.FontSize = ESleekFontSize.Medium;
+        contentsLabel.TextAlignment = TextAnchor.MiddleLeft;
+        contentsLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
         AddChild(contentsLabel);
     }
 }

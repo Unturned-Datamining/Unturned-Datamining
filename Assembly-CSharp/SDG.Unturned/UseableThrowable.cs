@@ -130,7 +130,7 @@ public class UseableThrowable : Useable
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askToss")]
     public void ReceiveToss(Vector3 origin, Vector3 force)
     {
-        if (base.player.equipment.isEquipped)
+        if (base.player.equipment.IsEquipAnimationFinished)
         {
             toss(origin, force);
         }
@@ -145,7 +145,7 @@ public class UseableThrowable : Useable
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askSwing")]
     public void ReceivePlaySwing()
     {
-        if (base.player.equipment.isEquipped)
+        if (base.player.equipment.IsEquipAnimationFinished)
         {
             swing();
         }
@@ -186,12 +186,12 @@ public class UseableThrowable : Useable
     public override void equip()
     {
         base.player.animator.play("Equip", smooth: true);
-        useTime = base.player.animator.getAnimationLength("Use");
+        useTime = base.player.animator.GetAnimationLength("Use");
     }
 
     public override void tick()
     {
-        if (!base.player.equipment.isEquipped || (!base.channel.isOwner && !Provider.isServer) || !isSwinging || !isThrowable)
+        if (!base.player.equipment.IsEquipAnimationFinished || (!base.channel.IsLocalPlayer && !Provider.isServer) || !isSwinging || !isThrowable)
         {
             return;
         }
@@ -213,7 +213,7 @@ public class UseableThrowable : Useable
         }
         Vector3 vector = forward * num;
         toss(position, vector);
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             if (Provider.provider.statisticsService.userStatisticsService.getStatistic("Found_Throwables", out int data))
             {

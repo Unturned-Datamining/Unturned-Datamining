@@ -91,7 +91,7 @@ public class UseableStructure : Useable
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askConstruct")]
     public void ReceivePlayConstruct()
     {
-        if (base.player.equipment.isEquipped)
+        if (base.player.equipment.IsEquipAnimationFinished)
         {
             PlayUseAnimation();
         }
@@ -109,7 +109,7 @@ public class UseableStructure : Useable
         }
         if (Dedicator.IsDedicatedServer ? isServerBuildRequestInitiallyApproved : UpdatePendingPlacement())
         {
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 SendBuildStructure.Invoke(GetNetId(), ENetReliability.Reliable, pendingPlacementPosition, pendingPlacementYaw + customRotationOffset);
             }
@@ -133,7 +133,7 @@ public class UseableStructure : Useable
         {
             return false;
         }
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             if (equippedStructureAsset.construct == EConstruct.FLOOR_POLY || equippedStructureAsset.construct == EConstruct.ROOF_POLY)
             {
@@ -152,8 +152,8 @@ public class UseableStructure : Useable
     public override void equip()
     {
         base.player.animator.play("Equip", smooth: true);
-        useAnimationDuration = base.player.animator.getAnimationLength("Use");
-        if (base.channel.isOwner)
+        useAnimationDuration = base.player.animator.GetAnimationLength("Use");
+        if (base.channel.IsLocalPlayer)
         {
             isPlacementPreviewValid = false;
             placementPreviewTransform = UseableHousingUtils.InstantiatePlacementPreview(equippedStructureAsset);
@@ -162,7 +162,7 @@ public class UseableStructure : Useable
 
     public override void dequip()
     {
-        if (base.channel.isOwner && placementPreviewTransform != null)
+        if (base.channel.IsLocalPlayer && placementPreviewTransform != null)
         {
             UnityEngine.Object.Destroy(placementPreviewTransform.gameObject);
         }
@@ -221,7 +221,7 @@ public class UseableStructure : Useable
                 AlertTool.alert(base.transform.position, 8f);
             }
         }
-        if (!base.channel.isOwner || placementPreviewTransform == null)
+        if (!base.channel.IsLocalPlayer || placementPreviewTransform == null)
         {
             return;
         }

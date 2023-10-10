@@ -49,6 +49,38 @@ public class ItemClothingAsset : ItemAsset
         return true;
     }
 
+    public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
+    {
+        base.BuildDescription(builder, itemInstance);
+        if (builder.shouldRestrictToLegacyContent)
+        {
+            return;
+        }
+        if (type == EItemType.HAT || type == EItemType.SHIRT || type == EItemType.PANTS || type == EItemType.VEST)
+        {
+            if (_armor != 1f)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Clothing_Armor", PlayerDashboardInventoryUI.FormatStatModifier(_armor, higherIsPositive: false, higherIsBeneficial: false)), 10000);
+            }
+            if (_explosionArmor != 1f)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Clothing_ExplosionArmor", PlayerDashboardInventoryUI.FormatStatModifier(_explosionArmor, higherIsPositive: false, higherIsBeneficial: false)), 10000);
+            }
+        }
+        if (movementSpeedMultiplier != 1f)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ClothingMovementSpeedModifier", PlayerDashboardInventoryUI.FormatStatModifier(movementSpeedMultiplier, higherIsPositive: true, higherIsBeneficial: true)), 10000);
+        }
+        if (_proofFire)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Clothing_FireProof"), 10000);
+        }
+        if (_proofRadiation)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Clothing_RadiationProof"), 10000);
+        }
+    }
+
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
         base.PopulateAsset(bundle, data, localization);

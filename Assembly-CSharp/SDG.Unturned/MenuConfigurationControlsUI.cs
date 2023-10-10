@@ -188,7 +188,7 @@ public class MenuConfigurationControlsUI
     public static void updateButton(byte index)
     {
         string keyCodeText = getKeyCodeText(ControlsSettings.bindings[index].key);
-        buttons[index].text = localization.format("Key_" + index + "_Button", keyCodeText);
+        buttons[index].Text = localization.format("Key_" + index + "_Button", keyCodeText);
     }
 
     private static void onTypedSensitivityField(ISleekFloat32Field field, float state)
@@ -248,7 +248,7 @@ public class MenuConfigurationControlsUI
         {
             binding++;
         }
-        (button as ISleekButton).text = localization.format("Key_" + binding + "_Button", "?");
+        (button as ISleekButton).Text = localization.format("Key_" + binding + "_Button", "?");
     }
 
     public static void bindOnGUI()
@@ -366,10 +366,10 @@ public class MenuConfigurationControlsUI
         proningButton.state = (int)ControlsSettings.proning;
         crouchingButton.state = (int)ControlsSettings.crouching;
         aimingButton.state = (int)ControlsSettings.aiming;
-        sensitivityField.state = ControlsSettings.mouseAimSensitivity;
-        projectionRatioCoefficientField.state = ControlsSettings.projectionRatioCoefficient;
-        invertToggle.state = ControlsSettings.invert;
-        invertFlightToggle.state = ControlsSettings.invert;
+        sensitivityField.Value = ControlsSettings.mouseAimSensitivity;
+        projectionRatioCoefficientField.Value = ControlsSettings.projectionRatioCoefficient;
+        invertToggle.Value = ControlsSettings.invert;
+        invertFlightToggle.Value = ControlsSettings.invert;
         sensitivityScalingModeButton.state = (int)ControlsSettings.sensitivityScalingMode;
     }
 
@@ -377,13 +377,13 @@ public class MenuConfigurationControlsUI
     {
         localization = Localization.read("/Menu/Configuration/MenuConfigurationControls.dat");
         container = new SleekFullscreenBox();
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.positionScale_Y = 1f;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.PositionScale_Y = 1f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         if (Provider.isConnected)
         {
             PlayerUI.container.AddChild(container);
@@ -399,94 +399,94 @@ public class MenuConfigurationControlsUI
         active = false;
         binding = byte.MaxValue;
         controlsBox = Glazier.Get().CreateScrollView();
-        controlsBox.positionOffset_X = -200;
-        controlsBox.positionOffset_Y = 100;
-        controlsBox.positionScale_X = 0.5f;
-        controlsBox.sizeOffset_X = 430;
-        controlsBox.sizeOffset_Y = -200;
-        controlsBox.sizeScale_Y = 1f;
-        controlsBox.scaleContentToWidth = true;
+        controlsBox.PositionOffset_X = -200f;
+        controlsBox.PositionOffset_Y = 100f;
+        controlsBox.PositionScale_X = 0.5f;
+        controlsBox.SizeOffset_X = 430f;
+        controlsBox.SizeOffset_Y = -200f;
+        controlsBox.SizeScale_Y = 1f;
+        controlsBox.ScaleContentToWidth = true;
         container.AddChild(controlsBox);
         int num = 0;
         invertToggle = Glazier.Get().CreateToggle();
-        invertToggle.positionOffset_Y = num;
-        invertToggle.sizeOffset_X = 40;
-        invertToggle.sizeOffset_Y = 40;
-        invertToggle.addLabel(localization.format("Invert_Toggle_Label"), ESleekSide.RIGHT);
-        invertToggle.onToggled += onToggledInvertToggle;
+        invertToggle.PositionOffset_Y = num;
+        invertToggle.SizeOffset_X = 40f;
+        invertToggle.SizeOffset_Y = 40f;
+        invertToggle.AddLabel(localization.format("Invert_Toggle_Label"), ESleekSide.RIGHT);
+        invertToggle.OnValueChanged += onToggledInvertToggle;
         controlsBox.AddChild(invertToggle);
         num += 50;
         invertFlightToggle = Glazier.Get().CreateToggle();
-        invertFlightToggle.positionOffset_Y = num;
-        invertFlightToggle.sizeOffset_X = 40;
-        invertFlightToggle.sizeOffset_Y = 40;
-        invertFlightToggle.addLabel(localization.format("Invert_Flight_Toggle_Label"), ESleekSide.RIGHT);
-        invertFlightToggle.onToggled += onToggledInvertFlightToggle;
+        invertFlightToggle.PositionOffset_Y = num;
+        invertFlightToggle.SizeOffset_X = 40f;
+        invertFlightToggle.SizeOffset_Y = 40f;
+        invertFlightToggle.AddLabel(localization.format("Invert_Flight_Toggle_Label"), ESleekSide.RIGHT);
+        invertFlightToggle.OnValueChanged += onToggledInvertFlightToggle;
         controlsBox.AddChild(invertFlightToggle);
         num += 50;
         sensitivityField = Glazier.Get().CreateFloat32Field();
-        sensitivityField.positionOffset_Y = num;
-        sensitivityField.sizeOffset_X = 200;
-        sensitivityField.sizeOffset_Y = 30;
-        sensitivityField.addLabel(localization.format("Sensitivity_Field_Label"), ESleekSide.RIGHT);
-        sensitivityField.onTypedSingle += onTypedSensitivityField;
+        sensitivityField.PositionOffset_Y = num;
+        sensitivityField.SizeOffset_X = 200f;
+        sensitivityField.SizeOffset_Y = 30f;
+        sensitivityField.AddLabel(localization.format("Sensitivity_Field_Label"), ESleekSide.RIGHT);
+        sensitivityField.OnValueChanged += onTypedSensitivityField;
         controlsBox.AddChild(sensitivityField);
         num += 40;
         sensitivityScalingModeButton = new SleekButtonState(new GUIContent(localization.format("SensitivityScalingMode_ProjectionRatio"), localization.format("SensitivityScalingMode_ProjectionRatio_Tooltip")), new GUIContent(localization.format("SensitivityScalingMode_ZoomFactor"), localization.format("SensitivityScalingMode_ZoomFactor_Tooltip")), new GUIContent(localization.format("SensitivityScalingMode_Legacy"), localization.format("SensitivityScalingMode_Legacy_Tooltip")), new GUIContent(localization.format("SensitivityScalingMode_None"), localization.format("SensitivityScalingMode_None_Tooltip")));
-        sensitivityScalingModeButton.positionOffset_Y = num;
-        sensitivityScalingModeButton.sizeOffset_X = 200;
-        sensitivityScalingModeButton.sizeOffset_Y = 30;
-        sensitivityScalingModeButton.addLabel(localization.format("SensitivityScalingMode_Label"), ESleekSide.RIGHT);
+        sensitivityScalingModeButton.PositionOffset_Y = num;
+        sensitivityScalingModeButton.SizeOffset_X = 200f;
+        sensitivityScalingModeButton.SizeOffset_Y = 30f;
+        sensitivityScalingModeButton.AddLabel(localization.format("SensitivityScalingMode_Label"), ESleekSide.RIGHT);
         sensitivityScalingModeButton.onSwappedState = OnSwappedSensitivityScalingMode;
         sensitivityScalingModeButton.useContentTooltip = true;
         controlsBox.AddChild(sensitivityScalingModeButton);
         num += 40;
         projectionRatioCoefficientField = Glazier.Get().CreateFloat32Field();
-        projectionRatioCoefficientField.positionOffset_Y = num;
-        projectionRatioCoefficientField.sizeOffset_X = 200;
-        projectionRatioCoefficientField.sizeOffset_Y = 30;
-        projectionRatioCoefficientField.tooltipText = localization.format("ProjectionRatioCoefficient_Tooltip");
-        projectionRatioCoefficientField.addLabel(localization.format("ProjectionRatioCoefficient_Label"), ESleekSide.RIGHT);
-        projectionRatioCoefficientField.onTypedSingle += onTypedProjectionRatioCoefficientField;
+        projectionRatioCoefficientField.PositionOffset_Y = num;
+        projectionRatioCoefficientField.SizeOffset_X = 200f;
+        projectionRatioCoefficientField.SizeOffset_Y = 30f;
+        projectionRatioCoefficientField.TooltipText = localization.format("ProjectionRatioCoefficient_Tooltip");
+        projectionRatioCoefficientField.AddLabel(localization.format("ProjectionRatioCoefficient_Label"), ESleekSide.RIGHT);
+        projectionRatioCoefficientField.OnValueChanged += onTypedProjectionRatioCoefficientField;
         controlsBox.AddChild(projectionRatioCoefficientField);
         num += 40;
         aimingButton = new SleekButtonState(new GUIContent(localization.format("Hold")), new GUIContent(localization.format("Toggle")));
-        aimingButton.positionOffset_Y = num;
-        aimingButton.sizeOffset_X = 200;
-        aimingButton.sizeOffset_Y = 30;
-        aimingButton.addLabel(localization.format("Aiming_Label"), ESleekSide.RIGHT);
+        aimingButton.PositionOffset_Y = num;
+        aimingButton.SizeOffset_X = 200f;
+        aimingButton.SizeOffset_Y = 30f;
+        aimingButton.AddLabel(localization.format("Aiming_Label"), ESleekSide.RIGHT);
         aimingButton.onSwappedState = onSwappedAimingState;
         controlsBox.AddChild(aimingButton);
         num += 40;
         crouchingButton = new SleekButtonState(new GUIContent(localization.format("Hold")), new GUIContent(localization.format("Toggle")));
-        crouchingButton.positionOffset_Y = num;
-        crouchingButton.sizeOffset_X = 200;
-        crouchingButton.sizeOffset_Y = 30;
-        crouchingButton.addLabel(localization.format("Crouching_Label"), ESleekSide.RIGHT);
+        crouchingButton.PositionOffset_Y = num;
+        crouchingButton.SizeOffset_X = 200f;
+        crouchingButton.SizeOffset_Y = 30f;
+        crouchingButton.AddLabel(localization.format("Crouching_Label"), ESleekSide.RIGHT);
         crouchingButton.onSwappedState = onSwappedCrouchingState;
         controlsBox.AddChild(crouchingButton);
         num += 40;
         proningButton = new SleekButtonState(new GUIContent(localization.format("Hold")), new GUIContent(localization.format("Toggle")));
-        proningButton.positionOffset_Y = num;
-        proningButton.sizeOffset_X = 200;
-        proningButton.sizeOffset_Y = 30;
-        proningButton.addLabel(localization.format("Proning_Label"), ESleekSide.RIGHT);
+        proningButton.PositionOffset_Y = num;
+        proningButton.SizeOffset_X = 200f;
+        proningButton.SizeOffset_Y = 30f;
+        proningButton.AddLabel(localization.format("Proning_Label"), ESleekSide.RIGHT);
         proningButton.onSwappedState = onSwappedProningState;
         controlsBox.AddChild(proningButton);
         num += 40;
         sprintingButton = new SleekButtonState(new GUIContent(localization.format("Hold")), new GUIContent(localization.format("Toggle")));
-        sprintingButton.positionOffset_Y = num;
-        sprintingButton.sizeOffset_X = 200;
-        sprintingButton.sizeOffset_Y = 30;
-        sprintingButton.addLabel(localization.format("Sprinting_Label"), ESleekSide.RIGHT);
+        sprintingButton.PositionOffset_Y = num;
+        sprintingButton.SizeOffset_X = 200f;
+        sprintingButton.SizeOffset_Y = 30f;
+        sprintingButton.AddLabel(localization.format("Sprinting_Label"), ESleekSide.RIGHT);
         sprintingButton.onSwappedState = onSwappedSprintingState;
         controlsBox.AddChild(sprintingButton);
         num += 40;
         leaningButton = new SleekButtonState(new GUIContent(localization.format("Hold")), new GUIContent(localization.format("Toggle")));
-        leaningButton.positionOffset_Y = num;
-        leaningButton.sizeOffset_X = 200;
-        leaningButton.sizeOffset_Y = 30;
-        leaningButton.addLabel(localization.format("Leaning_Label"), ESleekSide.RIGHT);
+        leaningButton.PositionOffset_Y = num;
+        leaningButton.SizeOffset_X = 200f;
+        leaningButton.SizeOffset_Y = 30f;
+        leaningButton.AddLabel(localization.format("Leaning_Label"), ESleekSide.RIGHT);
         leaningButton.onSwappedState = onSwappedLeaningState;
         controlsBox.AddChild(leaningButton);
         num += 40;
@@ -494,31 +494,31 @@ public class MenuConfigurationControlsUI
         for (byte b = 0; b < layouts.Length; b = (byte)(b + 1))
         {
             ISleekBox sleekBox = Glazier.Get().CreateBox();
-            sleekBox.positionOffset_Y = num;
-            sleekBox.sizeOffset_Y = 30;
-            sleekBox.sizeScale_X = 1f;
-            sleekBox.text = localization.format("Layout_" + b);
+            sleekBox.PositionOffset_Y = num;
+            sleekBox.SizeOffset_Y = 30f;
+            sleekBox.SizeScale_X = 1f;
+            sleekBox.Text = localization.format("Layout_" + b);
             controlsBox.AddChild(sleekBox);
             num += 40;
             for (byte b2 = 0; b2 < layouts[b].Length; b2 = (byte)(b2 + 1))
             {
                 ISleekButton sleekButton = Glazier.Get().CreateButton();
-                sleekButton.positionOffset_Y = 40 + b2 * 30;
-                sleekButton.sizeOffset_Y = 30;
-                sleekButton.sizeScale_X = 1f;
-                sleekButton.onClickedButton += onClickedKeyButton;
+                sleekButton.PositionOffset_Y = 40 + b2 * 30;
+                sleekButton.SizeOffset_Y = 30f;
+                sleekButton.SizeScale_X = 1f;
+                sleekButton.OnClicked += onClickedKeyButton;
                 sleekBox.AddChild(sleekButton);
                 num += 30;
                 buttons[layouts[b][b2]] = sleekButton;
             }
             num += 10;
         }
-        controlsBox.contentSizeOffset = new Vector2(0f, num - 10);
+        controlsBox.ContentSizeOffset = new Vector2(0f, num - 10);
         backButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));
-        backButton.positionOffset_Y = -50;
-        backButton.positionScale_Y = 1f;
-        backButton.sizeOffset_X = 200;
-        backButton.sizeOffset_Y = 50;
+        backButton.PositionOffset_Y = -50f;
+        backButton.PositionScale_Y = 1f;
+        backButton.SizeOffset_X = 200f;
+        backButton.SizeOffset_Y = 50f;
         backButton.text = MenuDashboardUI.localization.format("BackButtonText");
         backButton.tooltip = MenuDashboardUI.localization.format("BackButtonTooltip");
         backButton.onClickedButton += onClickedBackButton;
@@ -526,16 +526,16 @@ public class MenuConfigurationControlsUI
         backButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(backButton);
         defaultButton = Glazier.Get().CreateButton();
-        defaultButton.positionOffset_X = -200;
-        defaultButton.positionOffset_Y = -50;
-        defaultButton.positionScale_X = 1f;
-        defaultButton.positionScale_Y = 1f;
-        defaultButton.sizeOffset_X = 200;
-        defaultButton.sizeOffset_Y = 50;
-        defaultButton.text = MenuPlayConfigUI.localization.format("Default");
-        defaultButton.tooltipText = MenuPlayConfigUI.localization.format("Default_Tooltip");
-        defaultButton.onClickedButton += onClickedDefaultButton;
-        defaultButton.fontSize = ESleekFontSize.Medium;
+        defaultButton.PositionOffset_X = -200f;
+        defaultButton.PositionOffset_Y = -50f;
+        defaultButton.PositionScale_X = 1f;
+        defaultButton.PositionScale_Y = 1f;
+        defaultButton.SizeOffset_X = 200f;
+        defaultButton.SizeOffset_Y = 50f;
+        defaultButton.Text = MenuPlayConfigUI.localization.format("Default");
+        defaultButton.TooltipText = MenuPlayConfigUI.localization.format("Default_Tooltip");
+        defaultButton.OnClicked += onClickedDefaultButton;
+        defaultButton.FontSize = ESleekFontSize.Medium;
         container.AddChild(defaultButton);
         updateAll();
     }

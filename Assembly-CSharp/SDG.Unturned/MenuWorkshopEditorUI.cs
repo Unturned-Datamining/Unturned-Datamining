@@ -86,25 +86,25 @@ public class MenuWorkshopEditorUI
             string desc = localization.format("Description");
             desc = ItemTool.filterRarityRichText(desc);
             RichTextUtil.replaceNewlineMarkup(ref desc);
-            descriptionBox.text = desc;
+            descriptionBox.Text = desc;
         }
         if (localization != null && localization.has("Name"))
         {
-            selectedBox.text = localization.format("Name");
+            selectedBox.Text = localization.format("Name");
         }
         else
         {
-            selectedBox.text = PlaySettings.editorMap;
+            selectedBox.Text = PlaySettings.editorMap;
         }
-        if (previewImage.texture != null && previewImage.shouldDestroyTexture)
+        if (previewImage.Texture != null && previewImage.ShouldDestroyTexture)
         {
-            UnityEngine.Object.Destroy(previewImage.texture);
-            previewImage.texture = null;
+            UnityEngine.Object.Destroy(previewImage.Texture);
+            previewImage.Texture = null;
         }
         string previewImageFilePath = levelInfo.GetPreviewImageFilePath();
         if (!string.IsNullOrEmpty(previewImageFilePath))
         {
-            previewImage.texture = ReadWrite.readTextureFromFile(previewImageFilePath);
+            previewImage.Texture = ReadWrite.readTextureFromFile(previewImageFilePath);
         }
     }
 
@@ -119,10 +119,10 @@ public class MenuWorkshopEditorUI
 
     private static void onClickedAddButton(ISleekElement button)
     {
-        if (mapNameField.text != "")
+        if (mapNameField.Text != "")
         {
-            Level.add(mapNameField.text, (ELevelSize)(mapSizeState.state + 1), (mapTypeState.state != 0) ? ELevelType.ARENA : ELevelType.SURVIVAL);
-            mapNameField.text = "";
+            Level.add(mapNameField.Text, (ELevelSize)(mapSizeState.state + 1), (mapTypeState.state != 0) ? ELevelType.ARENA : ELevelType.SURVIVAL);
+            mapNameField.Text = "";
         }
     }
 
@@ -188,7 +188,7 @@ public class MenuWorkshopEditorUI
             if (levels[i] != null)
             {
                 SleekLevel sleekLevel = new SleekLevel(levels[i], isEditor: true);
-                sleekLevel.positionOffset_Y = i * 110;
+                sleekLevel.PositionOffset_Y = i * 110;
                 sleekLevel.onClickedLevel = onClickedLevel;
                 levelScrollBox.AddChild(sleekLevel);
                 levelButtons[i] = sleekLevel;
@@ -207,7 +207,7 @@ public class MenuWorkshopEditorUI
             PlaySettings.editorMap = levels[0].name;
         }
         updateSelection();
-        levelScrollBox.contentSizeOffset = new Vector2(0f, levels.Length * 110 - 10);
+        levelScrollBox.ContentSizeOffset = new Vector2(0f, levels.Length * 110 - 10);
     }
 
     private static void onClickedBackButton(ISleekElement button)
@@ -231,96 +231,96 @@ public class MenuWorkshopEditorUI
         Local local = Localization.read("/Menu/Workshop/MenuWorkshopEditor.dat");
         icons = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Workshop/MenuWorkshopEditor/MenuWorkshopEditor.unity3d");
         container = new SleekFullscreenBox();
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.positionScale_Y = 1f;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.PositionScale_Y = 1f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         MenuUI.container.AddChild(container);
         active = false;
         previewBox = Glazier.Get().CreateBox();
-        previewBox.positionOffset_X = -305;
-        previewBox.positionOffset_Y = 80;
-        previewBox.positionScale_X = 0.5f;
-        previewBox.sizeOffset_X = 340;
-        previewBox.sizeOffset_Y = 200;
+        previewBox.PositionOffset_X = -305f;
+        previewBox.PositionOffset_Y = 80f;
+        previewBox.PositionScale_X = 0.5f;
+        previewBox.SizeOffset_X = 340f;
+        previewBox.SizeOffset_Y = 200f;
         container.AddChild(previewBox);
         previewImage = Glazier.Get().CreateImage();
-        previewImage.positionOffset_X = 10;
-        previewImage.positionOffset_Y = 10;
-        previewImage.sizeOffset_X = -20;
-        previewImage.sizeOffset_Y = -20;
-        previewImage.sizeScale_X = 1f;
-        previewImage.sizeScale_Y = 1f;
-        previewImage.shouldDestroyTexture = true;
+        previewImage.PositionOffset_X = 10f;
+        previewImage.PositionOffset_Y = 10f;
+        previewImage.SizeOffset_X = -20f;
+        previewImage.SizeOffset_Y = -20f;
+        previewImage.SizeScale_X = 1f;
+        previewImage.SizeScale_Y = 1f;
+        previewImage.ShouldDestroyTexture = true;
         previewBox.AddChild(previewImage);
         levelScrollBox = Glazier.Get().CreateScrollView();
-        levelScrollBox.positionOffset_X = -95;
-        levelScrollBox.positionOffset_Y = 290;
-        levelScrollBox.positionScale_X = 0.5f;
-        levelScrollBox.sizeOffset_X = 430;
-        levelScrollBox.sizeOffset_Y = -390;
-        levelScrollBox.sizeScale_Y = 1f;
-        levelScrollBox.scaleContentToWidth = true;
+        levelScrollBox.PositionOffset_X = -95f;
+        levelScrollBox.PositionOffset_Y = 290f;
+        levelScrollBox.PositionScale_X = 0.5f;
+        levelScrollBox.SizeOffset_X = 430f;
+        levelScrollBox.SizeOffset_Y = -390f;
+        levelScrollBox.SizeScale_Y = 1f;
+        levelScrollBox.ScaleContentToWidth = true;
         container.AddChild(levelScrollBox);
         selectedBox = Glazier.Get().CreateBox();
-        selectedBox.positionOffset_X = 45;
-        selectedBox.positionOffset_Y = 80;
-        selectedBox.positionScale_X = 0.5f;
-        selectedBox.sizeOffset_X = 260;
-        selectedBox.sizeOffset_Y = 30;
+        selectedBox.PositionOffset_X = 45f;
+        selectedBox.PositionOffset_Y = 80f;
+        selectedBox.PositionScale_X = 0.5f;
+        selectedBox.SizeOffset_X = 260f;
+        selectedBox.SizeOffset_Y = 30f;
         container.AddChild(selectedBox);
         descriptionBox = Glazier.Get().CreateBox();
-        descriptionBox.positionOffset_X = 45;
-        descriptionBox.positionOffset_Y = 120;
-        descriptionBox.positionScale_X = 0.5f;
-        descriptionBox.sizeOffset_X = 260;
-        descriptionBox.sizeOffset_Y = 160;
-        descriptionBox.fontAlignment = TextAnchor.UpperCenter;
-        descriptionBox.enableRichText = true;
-        descriptionBox.textColor = ESleekTint.RICH_TEXT_DEFAULT;
+        descriptionBox.PositionOffset_X = 45f;
+        descriptionBox.PositionOffset_Y = 120f;
+        descriptionBox.PositionScale_X = 0.5f;
+        descriptionBox.SizeOffset_X = 260f;
+        descriptionBox.SizeOffset_Y = 160f;
+        descriptionBox.TextAlignment = TextAnchor.UpperCenter;
+        descriptionBox.AllowRichText = true;
+        descriptionBox.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
         container.AddChild(descriptionBox);
         mapNameField = Glazier.Get().CreateStringField();
-        mapNameField.positionOffset_X = -305;
-        mapNameField.positionOffset_Y = 370;
-        mapNameField.positionScale_X = 0.5f;
-        mapNameField.sizeOffset_X = 200;
-        mapNameField.sizeOffset_Y = 30;
-        mapNameField.maxLength = 24;
-        mapNameField.addLabel(local.format("Name_Field_Label"), ESleekSide.LEFT);
+        mapNameField.PositionOffset_X = -305f;
+        mapNameField.PositionOffset_Y = 370f;
+        mapNameField.PositionScale_X = 0.5f;
+        mapNameField.SizeOffset_X = 200f;
+        mapNameField.SizeOffset_Y = 30f;
+        mapNameField.MaxLength = 24;
+        mapNameField.AddLabel(local.format("Name_Field_Label"), ESleekSide.LEFT);
         container.AddChild(mapNameField);
         mapSizeState = new SleekButtonState(new GUIContent(MenuPlaySingleplayerUI.localization.format("Small")), new GUIContent(MenuPlaySingleplayerUI.localization.format("Medium")), new GUIContent(MenuPlaySingleplayerUI.localization.format("Large")));
-        mapSizeState.positionOffset_X = -305;
-        mapSizeState.positionOffset_Y = 410;
-        mapSizeState.positionScale_X = 0.5f;
-        mapSizeState.sizeOffset_X = 200;
-        mapSizeState.sizeOffset_Y = 30;
+        mapSizeState.PositionOffset_X = -305f;
+        mapSizeState.PositionOffset_Y = 410f;
+        mapSizeState.PositionScale_X = 0.5f;
+        mapSizeState.SizeOffset_X = 200f;
+        mapSizeState.SizeOffset_Y = 30f;
         container.AddChild(mapSizeState);
         mapTypeState = new SleekButtonState(new GUIContent(MenuPlaySingleplayerUI.localization.format("Survival")), new GUIContent(MenuPlaySingleplayerUI.localization.format("Arena")));
-        mapTypeState.positionOffset_X = -305;
-        mapTypeState.positionOffset_Y = 450;
-        mapTypeState.positionScale_X = 0.5f;
-        mapTypeState.sizeOffset_X = 200;
-        mapTypeState.sizeOffset_Y = 30;
+        mapTypeState.PositionOffset_X = -305f;
+        mapTypeState.PositionOffset_Y = 450f;
+        mapTypeState.PositionScale_X = 0.5f;
+        mapTypeState.SizeOffset_X = 200f;
+        mapTypeState.SizeOffset_Y = 30f;
         container.AddChild(mapTypeState);
         addButton = new SleekButtonIcon(icons.load<Texture2D>("Add"));
-        addButton.positionOffset_X = -305;
-        addButton.positionOffset_Y = 490;
-        addButton.positionScale_X = 0.5f;
-        addButton.sizeOffset_X = 200;
-        addButton.sizeOffset_Y = 30;
+        addButton.PositionOffset_X = -305f;
+        addButton.PositionOffset_Y = 490f;
+        addButton.PositionScale_X = 0.5f;
+        addButton.SizeOffset_X = 200f;
+        addButton.SizeOffset_Y = 30f;
         addButton.text = local.format("Add_Button");
         addButton.tooltip = local.format("Add_Button_Tooltip");
         addButton.onClickedButton += onClickedAddButton;
         container.AddChild(addButton);
         removeButton = new SleekButtonIconConfirm(icons.load<Texture2D>("Remove"), local.format("Remove_Button_Confirm"), local.format("Remove_Button_Confirm_Tooltip"), local.format("Remove_Button_Deny"), local.format("Remove_Button_Deny_Tooltip"));
-        removeButton.positionOffset_X = -305;
-        removeButton.positionOffset_Y = 530;
-        removeButton.positionScale_X = 0.5f;
-        removeButton.sizeOffset_X = 200;
-        removeButton.sizeOffset_Y = 30;
+        removeButton.PositionOffset_X = -305f;
+        removeButton.PositionOffset_Y = 530f;
+        removeButton.PositionScale_X = 0.5f;
+        removeButton.SizeOffset_X = 200f;
+        removeButton.SizeOffset_Y = 30f;
         removeButton.text = local.format("Remove_Button");
         removeButton.tooltip = local.format("Remove_Button_Tooltip");
         removeButton.onConfirmed = onClickedRemoveButton;
@@ -328,31 +328,31 @@ public class MenuWorkshopEditorUI
         if (ReadWrite.SupportsOpeningFileBrowser)
         {
             ISleekButton sleekButton = Glazier.Get().CreateButton();
-            sleekButton.positionOffset_X = -305;
-            sleekButton.positionOffset_Y = 330;
-            sleekButton.positionScale_X = 0.5f;
-            sleekButton.sizeOffset_X = 200;
-            sleekButton.sizeOffset_Y = 30;
-            sleekButton.text = local.format("BrowseFiles_Label");
-            sleekButton.onClickedButton += OnClickedBrowseFilesButton;
+            sleekButton.PositionOffset_X = -305f;
+            sleekButton.PositionOffset_Y = 330f;
+            sleekButton.PositionScale_X = 0.5f;
+            sleekButton.SizeOffset_X = 200f;
+            sleekButton.SizeOffset_Y = 30f;
+            sleekButton.Text = local.format("BrowseFiles_Label");
+            sleekButton.OnClicked += OnClickedBrowseFilesButton;
             container.AddChild(sleekButton);
         }
         editButton = new SleekButtonIcon(icons.load<Texture2D>("Edit"));
-        editButton.positionOffset_X = -305;
-        editButton.positionOffset_Y = 290;
-        editButton.positionScale_X = 0.5f;
-        editButton.sizeOffset_X = 200;
-        editButton.sizeOffset_Y = 30;
+        editButton.PositionOffset_X = -305f;
+        editButton.PositionOffset_Y = 290f;
+        editButton.PositionScale_X = 0.5f;
+        editButton.SizeOffset_X = 200f;
+        editButton.SizeOffset_Y = 30f;
         editButton.text = local.format("Edit_Button");
         editButton.tooltip = local.format("Edit_Button_Tooltip");
         editButton.iconColor = ESleekTint.FOREGROUND;
         editButton.onClickedButton += onClickedEditButton;
         container.AddChild(editButton);
         backButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));
-        backButton.positionOffset_Y = -50;
-        backButton.positionScale_Y = 1f;
-        backButton.sizeOffset_X = 200;
-        backButton.sizeOffset_Y = 50;
+        backButton.PositionOffset_Y = -50f;
+        backButton.PositionScale_Y = 1f;
+        backButton.SizeOffset_X = 200f;
+        backButton.SizeOffset_Y = 50f;
         backButton.text = MenuDashboardUI.localization.format("BackButtonText");
         backButton.tooltip = MenuDashboardUI.localization.format("BackButtonTooltip");
         backButton.onClickedButton += onClickedBackButton;

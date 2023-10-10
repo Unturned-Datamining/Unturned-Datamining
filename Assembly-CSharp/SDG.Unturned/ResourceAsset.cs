@@ -397,6 +397,10 @@ public class ResourceAsset : Asset
             {
                 transform7.gameObject.layer = 14;
             }
+            else
+            {
+                Assets.reportError(this, "foragable resource missing \"Forage\" GameObject");
+            }
         }
         forageRewardExperience = data.ParseUInt32("Forage_Reward_Experience", 1u);
         if (isForage)
@@ -422,5 +426,10 @@ public class ResourceAsset : Asset
         chart = data.ParseEnum("Chart", EObjectChart.NONE);
         shouldExcludeFromLevelBatching = data.ParseBool("Exclude_From_Level_Batching");
         shouldExcludeFromLevelBatching |= isSpeedTree;
+    }
+
+    internal string OnGetRewardSpawnTableErrorContext()
+    {
+        return FriendlyName + " reward";
     }
 }

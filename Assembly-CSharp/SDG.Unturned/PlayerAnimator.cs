@@ -344,13 +344,18 @@ public class PlayerAnimator : PlayerCaller
 
     public float getAnimationLength(string name)
     {
+        return GetAnimationLength(name);
+    }
+
+    public float GetAnimationLength(string name, bool scaled = true)
+    {
         if (firstAnimator != null)
         {
-            return firstAnimator.getAnimationLength(name);
+            return firstAnimator.GetAnimationLength(name, scaled);
         }
         if (thirdAnimator != null)
         {
-            return thirdAnimator.getAnimationLength(name);
+            return thirdAnimator.GetAnimationLength(name, scaled);
         }
         return 0f;
     }
@@ -500,7 +505,7 @@ public class PlayerAnimator : PlayerCaller
             _gesture = EPlayerGesture.NONE;
             onGestureUpdated?.Invoke(gesture);
         }
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             firstRenderer_0.enabled = !isDead && base.player.look.perspective == EPlayerPerspective.FIRST;
             firstSkeleton.gameObject.SetActive(!isDead && base.player.look.perspective == EPlayerPerspective.FIRST);
@@ -532,7 +537,7 @@ public class PlayerAnimator : PlayerCaller
     public void NotifyClothingIsVisible()
     {
         isHiddenWaitingForClothing = false;
-        if (!base.channel.isOwner && !Dedicator.IsDedicatedServer && base.player.life.IsAlive)
+        if (!base.channel.IsLocalPlayer && !Dedicator.IsDedicatedServer && base.player.life.IsAlive)
         {
             if (thirdRenderer_0 != null)
             {
@@ -666,7 +671,7 @@ public class PlayerAnimator : PlayerCaller
         {
             base.player.inventory.closeStorage();
         }
-        if (gesture != EPlayerGesture.ARREST_START && !base.player.equipment.isSelected && base.player.stance.stance != EPlayerStance.PRONE && base.player.stance.stance != EPlayerStance.DRIVING && base.player.stance.stance != EPlayerStance.SITTING && (newGesture == EPlayerGesture.INVENTORY_START || newGesture == EPlayerGesture.INVENTORY_STOP || newGesture == EPlayerGesture.SURRENDER_START || newGesture == EPlayerGesture.SURRENDER_STOP || newGesture == EPlayerGesture.POINT || newGesture == EPlayerGesture.WAVE || newGesture == EPlayerGesture.SALUTE || newGesture == EPlayerGesture.FACEPALM || newGesture == EPlayerGesture.REST_START || newGesture == EPlayerGesture.REST_STOP))
+        if (gesture != EPlayerGesture.ARREST_START && !base.player.equipment.HasValidUseable && base.player.stance.stance != EPlayerStance.PRONE && base.player.stance.stance != EPlayerStance.DRIVING && base.player.stance.stance != EPlayerStance.SITTING && (newGesture == EPlayerGesture.INVENTORY_START || newGesture == EPlayerGesture.INVENTORY_STOP || newGesture == EPlayerGesture.SURRENDER_START || newGesture == EPlayerGesture.SURRENDER_STOP || newGesture == EPlayerGesture.POINT || newGesture == EPlayerGesture.WAVE || newGesture == EPlayerGesture.SALUTE || newGesture == EPlayerGesture.FACEPALM || newGesture == EPlayerGesture.REST_START || newGesture == EPlayerGesture.REST_STOP))
         {
             bool flag = newGesture != EPlayerGesture.INVENTORY_START && newGesture != EPlayerGesture.INVENTORY_STOP;
             sendGesture(newGesture, flag);
@@ -707,7 +712,7 @@ public class PlayerAnimator : PlayerCaller
             }
             PlayerAnimator.OnGestureChanged_Global?.TryInvoke("OnGestureChanged_Global", this, gesture);
         }
-        else if (gesture == EPlayerGesture.INVENTORY_STOP || (!base.player.equipment.isSelected && base.player.stance.stance != EPlayerStance.PRONE && base.player.stance.stance != EPlayerStance.DRIVING && base.player.stance.stance != EPlayerStance.SITTING))
+        else if (gesture == EPlayerGesture.INVENTORY_STOP || (!base.player.equipment.HasValidUseable && base.player.stance.stance != EPlayerStance.PRONE && base.player.stance.stance != EPlayerStance.DRIVING && base.player.stance.stance != EPlayerStance.SITTING))
         {
             SendGestureRequest.Invoke(GetNetId(), ENetReliability.Reliable, gesture);
         }
@@ -818,7 +823,7 @@ public class PlayerAnimator : PlayerCaller
         {
             humanAnim.offset = 0f;
         }
-        if (!base.channel.isOwner && Provider.isServer)
+        if (!base.channel.IsLocalPlayer && Provider.isServer)
         {
             humanAnim.force();
         }
@@ -964,7 +969,7 @@ public class PlayerAnimator : PlayerCaller
     private void Update()
     {
         float aimingInertaMultiplier;
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             if (!PlayerUI.window.showCursor)
             {
@@ -1222,7 +1227,7 @@ public class PlayerAnimator : PlayerCaller
 
     private void LateUpdate()
     {
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             GetAimingViewmodelAlignment(out var aimingAlignmentOffset, out var _);
             viewmodelCameraTransform.localPosition = viewmodelCameraLocalPosition + aimingAlignmentOffset;
@@ -1232,7 +1237,7 @@ public class PlayerAnimator : PlayerCaller
     internal void InitializePlayer()
     {
         isHiddenWaitingForClothing = true;
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             if (base.player.first != null)
             {

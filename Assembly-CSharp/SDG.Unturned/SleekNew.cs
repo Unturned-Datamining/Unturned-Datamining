@@ -4,21 +4,21 @@ namespace SDG.Unturned;
 
 public class SleekNew : SleekWrapper
 {
-    private ISleekLabel label;
+    internal ISleekLabel label;
 
     public SleekNew(bool isUpdate = false)
     {
-        base.positionOffset_X = -105;
-        base.positionScale_X = 1f;
-        base.sizeOffset_X = 100;
-        base.sizeOffset_Y = 30;
+        base.PositionOffset_X = -105f;
+        base.PositionScale_X = 1f;
+        base.SizeOffset_X = 100f;
+        base.SizeOffset_Y = 30f;
         label = Glazier.Get().CreateLabel();
-        label.sizeScale_X = 1f;
-        label.sizeScale_Y = 1f;
-        label.fontAlignment = TextAnchor.MiddleRight;
-        label.text = Provider.localization.format(isUpdate ? "Updated" : "New");
-        label.textColor = Color.green;
-        label.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+        label.SizeScale_X = 1f;
+        label.SizeScale_Y = 1f;
+        label.TextAlignment = TextAnchor.MiddleRight;
+        label.Text = Provider.localization.format(isUpdate ? "Updated" : "New");
+        label.TextColor = Color.green;
+        label.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
         AddChild(label);
     }
 }

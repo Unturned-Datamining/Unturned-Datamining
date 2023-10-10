@@ -6,7 +6,7 @@ internal class GlazierUInt8Field_uGUI : GlazierNumericField_uGUI, ISleekUInt8Fie
 {
     private byte _state;
 
-    public byte state
+    public byte Value
     {
         get
         {
@@ -19,7 +19,7 @@ internal class GlazierUInt8Field_uGUI : GlazierNumericField_uGUI, ISleekUInt8Fie
         }
     }
 
-    public event TypedByte onTypedByte;
+    public event TypedByte OnValueChanged;
 
     public GlazierUInt8Field_uGUI(Glazier_uGUI glazier)
         : base(glazier)
@@ -37,7 +37,7 @@ internal class GlazierUInt8Field_uGUI : GlazierNumericField_uGUI, ISleekUInt8Fie
     {
         if (byte.TryParse(input, out _state))
         {
-            this.onTypedByte?.Invoke(this, _state);
+            this.OnValueChanged?.Invoke(this, _state);
             return true;
         }
         return false;
@@ -45,6 +45,6 @@ internal class GlazierUInt8Field_uGUI : GlazierNumericField_uGUI, ISleekUInt8Fie
 
     protected override string NumberToString()
     {
-        return state.ToString();
+        return Value.ToString();
     }
 }

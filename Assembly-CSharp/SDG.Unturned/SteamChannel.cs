@@ -23,8 +23,6 @@ public class SteamChannel : MonoBehaviour
 
     public SteamPlayer owner;
 
-    public bool isOwner;
-
     [Obsolete("Will be deprecated soon. Please discuss on the issue tracker and we will find an alternative.")]
     public static TriggerReceive onTriggerReceive;
 
@@ -41,7 +39,22 @@ public class SteamChannel : MonoBehaviour
 
     private static List<Component> workingComponents = new List<Component>();
 
+    [Obsolete("Renamed to IsLocalPlayer")]
+    public bool isOwner;
+
     public SteamChannelMethod[] calls { get; protected set; }
+
+    public bool IsLocalPlayer
+    {
+        get
+        {
+            return isOwner;
+        }
+        internal set
+        {
+            isOwner = value;
+        }
+    }
 
     [Obsolete]
     public bool longBinaryData
@@ -82,7 +95,7 @@ public class SteamChannel : MonoBehaviour
         PooledTransportConnectionList pooledTransportConnectionList = TransportConnectionListPool.Get();
         foreach (SteamPlayer client in Provider.clients)
         {
-            if (!client.IsLocalPlayer && client != owner)
+            if (!client.IsLocalServerHost && client != owner)
             {
                 pooledTransportConnectionList.Add(client.transportConnection);
             }
@@ -102,7 +115,7 @@ public class SteamChannel : MonoBehaviour
         float num = radius * radius;
         foreach (SteamPlayer client in Provider.clients)
         {
-            if (!client.IsLocalPlayer && client != owner && client.player != null && (client.player.transform.position - position).sqrMagnitude < num)
+            if (!client.IsLocalServerHost && client != owner && client.player != null && (client.player.transform.position - position).sqrMagnitude < num)
             {
                 pooledTransportConnectionList.Add(client.transportConnection);
             }
@@ -352,7 +365,7 @@ public class SteamChannel : MonoBehaviour
         if (call != -1)
         {
             getPacket(type, call, out var size, out var packet, arguments);
-            if (isOwner && steamID == Provider.client)
+            if (IsLocalPlayer && steamID == Provider.client)
             {
                 receive(Provider.client, packet, 0, size);
             }
@@ -423,7 +436,7 @@ public class SteamChannel : MonoBehaviour
             break;
         }
         case ESteamCall.OWNER:
-            if (isOwner)
+            if (IsLocalPlayer)
             {
                 receive(owner.playerID.steamID, packet, 0, size);
             }
@@ -527,7 +540,7 @@ public class SteamChannel : MonoBehaviour
             break;
         }
         case ESteamCall.OWNER:
-            if (isOwner)
+            if (IsLocalPlayer)
             {
                 receive(owner.playerID.steamID, packet, 0, size);
             }
@@ -631,7 +644,7 @@ public class SteamChannel : MonoBehaviour
             break;
         }
         case ESteamCall.OWNER:
-            if (isOwner)
+            if (IsLocalPlayer)
             {
                 receive(owner.playerID.steamID, packet, 0, size);
             }
@@ -753,7 +766,7 @@ public class SteamChannel : MonoBehaviour
             break;
         }
         case ESteamCall.OWNER:
-            if (isOwner)
+            if (IsLocalPlayer)
             {
                 receive(owner.playerID.steamID, packet, 0, size);
             }

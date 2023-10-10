@@ -72,6 +72,119 @@ Dirty Dirty
 Ammo Ammo: {0} {1}/{2}
 None Empty
 
+ItemDescription_SightAttachment Sight: {0}
+ItemDescription_TacticalAttachment Tactical: {0}
+ItemDescription_GripAttachment Grip: {0}
+ItemDescription_BarrelAttachment Barrel: {0}
+ItemDescription_Clothing_Armor Armor: {0}
+ItemDescription_Clothing_ExplosionArmor Explosion Armor: {0}
+ItemDescription_Clothing_FireProof Protects against fire.
+ItemDescription_Clothing_RadiationProof Protects against radiation.
+ItemDescription_ClothingMovementSpeedModifier Wearing Movement Speed: {0}
+ItemDescription_EquipableMovementSpeedModifier Equipped Movement Speed: {0}
+ItemDescription_PelletCount Pellets: {0}
+ItemDescription_BulletDamageModifier Bullet Damage: {0}
+ItemDescription_RecoilModifier_X Horizontal Recoil Control: {0}
+ItemDescription_RecoilModifier_Y Vertical Recoil Control: {0}
+ItemDescription_RecoilModifier_Aiming Aiming Recoil Control: {0}
+ItemDescription_AimDurationModifier Aiming Speed: {0}
+ItemDescription_AimingMovementSpeedModifier Aiming Movement Speed: {0}
+ItemDescription_SpreadModifier Accuracy: {0}
+ItemDescription_SwayModifier Scope Sway: {0}
+ItemDescription_AimingSpreadModifier Aiming Accuracy: {0}
+ItemDescription_ZoomFactor Zoom: {0}x
+ItemDescription_ThirdPersonZoomFactor Zoom (3rd-Person): {0}x
+ItemDescription_BulletGravityModifier Bullet Gravity: {0}
+ItemDescription_Consumeable_Explosive Explodes when consumed.
+ItemDescription_Consumeable_HealthPositive Restores Health: {0}
+ItemDescription_Consumeable_HealthNegative Damages Health: {0}
+ItemDescription_Consumeable_FoodPositive Restores Food: {0}
+ItemDescription_Consumeable_FoodNegative Depletes Food: {0}
+ItemDescription_Consumeable_WaterPositive Restores Water: {0}
+ItemDescription_Consumeable_WaterNegative Depletes Water: {0}
+ItemDescription_Consumeable_VirusPositive Restores Immunity: {0}
+ItemDescription_Consumeable_VirusNegative Infection Damage: {0}
+ItemDescription_Consumeable_StaminaPositive Restores Stamina: {0}
+ItemDescription_Consumeable_StaminaNegative Depletes Stamina: {0}
+ItemDescription_Consumeable_OxygenPositive Restores Oxygen: {0}
+ItemDescription_Consumeable_OxygenNegative Depletes Oxygen: {0}
+ItemDescription_Consumeable_WarmthPositive Provides Warmth: {0}
+ItemDescription_ConsumeableBleeding_Heal Stops bleeding.
+ItemDescription_ConsumeableBleeding_Cut Causes bleeding.
+ItemDescription_ConsumeableBones_Heal Fixes bones.
+ItemDescription_ConsumeableBones_Break Breaks bones.
+ItemDescription_ConsumeableMoldy Low quality indicates spoiling/mold and will hurt immunity.
+ItemDescription_Firerate Rate of Fire: {0} rpm
+ItemDescription_Spread Inaccuracy: {0} °
+ItemDescription_DamageFalloff Damage falloff begins at {0} down to {2} at {1}.
+ItemDescription_WeaponRange Range: {0}
+ItemDescription_WeaponDamage_Player_Head Player Headshot Damage: {0}
+ItemDescription_WeaponDamage_Player_Body Player Body Damage: {0}
+ItemDescription_WeaponDamage_Player_Arm Player Arm Damage: {0}
+ItemDescription_WeaponDamage_Player_Leg Player Leg Damage: {0}
+ItemDescription_WeaponDamage_Player_FoodPositive Impact Restores Food: {0}
+ItemDescription_WeaponDamage_Player_FoodNegative Hunger Damage: {0}
+ItemDescription_WeaponDamage_Player_WaterPositive Impact Restores Water: {0}
+ItemDescription_WeaponDamage_Player_WaterNegative Thirst Damage: {0}
+ItemDescription_WeaponDamage_Player_VirusPositive Impact Restores Immunity: {0}
+ItemDescription_WeaponDamage_Player_VirusNegative Infection Damage: {0}
+ItemDescription_WeaponDamage_Player_HallucinationPositive Damage Causes Hallucinations: {0}
+ItemDescription_WeaponDamage_Player_HallucinationNegative Impact Heals Hallucinations: {0}
+ItemDescription_WeaponBleeding_Always Damage always causes bleeding.
+ItemDescription_WeaponBleeding_Heal Impact stops bleeding.
+ItemDescription_WeaponBones_Always Damage breaks bones.
+ItemDescription_WeaponBones_Heal Impact fixes bones.
+ItemDescription_WeaponDamage_Zombie_Head Zombie Headshot Damage: {0}
+ItemDescription_WeaponDamage_Zombie_Body Zombie Body Damage: {0}
+ItemDescription_WeaponDamage_Zombie_Arm Zombie Arm Damage: {0}
+ItemDescription_WeaponDamage_Zombie_Leg Zombie Leg Damage: {0}
+ItemDescription_WeaponDamage_Animal_Head Animal Headshot Damage: {0}
+ItemDescription_WeaponDamage_Animal_Body Animal Body Damage: {0}
+ItemDescription_WeaponDamage_Animal_Limb Animal Limb Damage: {0}
+ItemDescription_WeaponDamage_Barricade Barricade Damage: {0}
+ItemDescription_WeaponDamage_Structure Structure Damage: {0}
+ItemDescription_WeaponDamage_Vehicle Vehicle Damage: {0}
+ItemDescription_WeaponDamage_Resource Resource Damage: {0}
+ItemDescription_WeaponDamage_Object Object Damage: {0}
+ItemDescription_WeaponDamage_Invulnerable Heavy Weapon: Can damage Tough entities.
+ItemDescription_ExplosiveBullet Explodes on impact.
+ItemDescription_ExplosionBlastRadius Explosion Radius: {0}
+ItemDescription_ExplosionPlayerDamage Player Damage (Explosion): {0}
+ItemDescription_ExplosionZombieDamage Zombie Damage (Explosion): {0}
+ItemDescription_ExplosionAnimalDamage Animal Damage (Explosion): {0}
+ItemDescription_ExplosionBarricadeDamage Barricade Damage (Explosion): {0}
+ItemDescription_ExplosionStructureDamage Structure Damage (Explosion): {0}
+ItemDescription_ExplosionVehicleDamage Vehicle Damage (Explosion): {0}
+ItemDescription_ExplosionResourceDamage Resource Damage (Explosion): {0}
+ItemDescription_ExplosionObjectDamage Object Damage (Explosion): {0}
+ItemDescription_Buildable_ArmorTier_Low Armor Tier: Low
+ItemDescription_Buildable_ArmorTier_High Armor Tier: High
+ItemDescription_Buildable_CannotPickup Cannot be picked up after placement.
+ItemDescription_Buildable_CannotSalvage Cannot be salvaged when damaged.
+ItemDescription_Buildable_CannotRepair Cannot be repaired when damaged.
+ItemDescription_Buildable_Health Health: {0}
+ItemDescription_Buildable_ExplosionProof Cannot be damaged by explosions.
+ItemDescription_Buildable_Lockable Locked for players outside your group.
+ItemDescription_Buildable_Invulnerable Tough: Can only be damaged by Heavy Weapons.
+ItemDescription_Farmable_GrowSpecificItem Produces: {0}
+ItemDescription_Farmable_RequiresSoil Must be planted in arable terrain.
+ItemDescription_Farmable_CanFertilize Growth can be expedited with fertilizer.
+ItemDescription_Farmable_AffectedByAgricultureSkill Yield is affected by your Agriculture skill level.
+ItemDescription_Farmable_AffectedByRain Growth can be expedited by rainy weather.
+ItemDescription_Trap_BreaksBones Trap breaks bones.
+ItemDescription_Trap_DamagesTires Trap pierces tires.
+ItemDescription_Trap_PlayerDamage Player Damage: {0}
+ItemDescription_Trap_ZombieDamage Zombie Damage: {0}
+ItemDescription_Trap_AnimalDamage Animal Damage: {0}
+ItemDescription_StorageDimensions Storage: {0} x {1}
+ItemDescription_Throwable_Flash Blinds nearby players looking into the explosion.
+ItemDescription_Throwable_Sticky Sticks to surface on impact.
+ItemDescription_Throwable_ExplodeOnImpact Explodes on impact.
+ItemDescription_Throwable_FuseLength Fuse Length: {0}
+ItemDescription_Melee_StrongAttackModifier Strong Attack Damage: {0}
+ItemDescription_Melee_StrongAttackStamina Strong Attack Stamina Cost: {0}
+ItemDescription_ArrestEnd_UnlocksItem Unlocks: {0}
+
 Equip_Button Equip
 Equip_Button_Tooltip Equip in your hands.
 Dequip_Button Dequip

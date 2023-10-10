@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SDG.NetTransport;
 using Steamworks;
 using UnityEngine;
+using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
@@ -10,7 +11,7 @@ public class ChatManager : SteamCaller
 {
     public delegate void ClientUnityEventPermissionsHandler(SteamPlayer player, string command, ref bool shouldExecuteCommand, ref bool shouldList);
 
-    public static readonly int MAX_MESSAGE_LENGTH = 127;
+    public static readonly int MAX_MESSAGE_LENGTH = 512;
 
     public static ChatMessageReceivedHandler onChatMessageReceived;
 
@@ -109,10 +110,10 @@ public class ChatManager : SteamCaller
         {
             color = Color.white;
         }
-        SteamPlayer speaker;
+        SteamPlayer steamPlayer;
         if (speakerSteamID == CSteamID.Nil)
         {
-            speaker = null;
+            steamPlayer = null;
         }
         else
         {
@@ -120,9 +121,13 @@ public class ChatManager : SteamCaller
             {
                 return;
             }
-            speaker = PlayerTool.getSteamPlayer(speakerSteamID);
+            steamPlayer = PlayerTool.getSteamPlayer(speakerSteamID);
+            if (steamPlayer.isTextChatLocallyMuted)
+            {
+                return;
+            }
         }
-        ReceivedChatMessage item = new ReceivedChatMessage(speaker, iconURL, mode, color, isRich, text);
+        ReceivedChatMessage item = new ReceivedChatMessage(steamPlayer, iconURL, mode, color, isRich, text);
         receivedChatHistory.Insert(0, item);
         if (receivedChatHistory.Count > Provider.preferenceData.Chat.History_Length)
         {
@@ -344,7 +349,7 @@ public class ChatManager : SteamCaller
             return;
         }
         text = text.Trim();
-        if (text.Length < 2)
+        if (text.Length < 2 || text.ContainsNewLine())
         {
             return;
         }

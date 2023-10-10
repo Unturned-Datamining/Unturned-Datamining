@@ -4,12 +4,9 @@ public class NPCEventReward : INPCReward
 {
     public string id { get; protected set; }
 
-    public override void grantReward(Player player, bool shouldSend)
+    public override void GrantReward(Player player)
     {
-        if (Provider.isServer)
-        {
-            NPCEventManager.broadcastEvent(player, id, shouldReplicate: true);
-        }
+        NPCEventManager.broadcastEvent(player, id, shouldReplicate: true);
     }
 
     public NPCEventReward(string newID, string newText)

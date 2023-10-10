@@ -15,6 +15,4 @@ public class TurretInfo
     public float pitchMax;
 
     public bool useAimCamera;
-
-    public float aimOffset;
 }

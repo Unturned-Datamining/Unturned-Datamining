@@ -18,8 +18,6 @@ public class ItemCaliberAsset : ItemAsset
 
     private float _shake;
 
-    private float _damage;
-
     private byte _firerate;
 
     protected bool _isPaintable;
@@ -40,8 +38,6 @@ public class ItemCaliberAsset : ItemAsset
 
     public float shake => _shake;
 
-    public float damage => _damage;
-
     public byte firerate => _firerate;
 
     public bool isPaintable => _isPaintable;
@@ -53,6 +49,46 @@ public class ItemCaliberAsset : ItemAsset
     public bool shouldDestroyAttachmentColliders { get; protected set; }
 
     public string instantiatedAttachmentName { get; protected set; }
+
+    public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
+    {
+        base.BuildDescription(builder, itemInstance);
+        if (!builder.shouldRestrictToLegacyContent)
+        {
+            if (_recoil_x != 1f)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_RecoilModifier_X", PlayerDashboardInventoryUI.FormatStatModifier(_recoil_x, higherIsPositive: false, higherIsBeneficial: false)), 10000);
+            }
+            if (_recoil_y != 1f)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_RecoilModifier_Y", PlayerDashboardInventoryUI.FormatStatModifier(_recoil_y, higherIsPositive: false, higherIsBeneficial: false)), 10000);
+            }
+            if (_spread != 1f)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_SpreadModifier", PlayerDashboardInventoryUI.FormatStatModifier(_spread, higherIsPositive: false, higherIsBeneficial: false)), 10000);
+            }
+            if (_sway != 1f)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_SwayModifier", PlayerDashboardInventoryUI.FormatStatModifier(_sway, higherIsPositive: false, higherIsBeneficial: false)), 10000);
+            }
+            if (aimingRecoilMultiplier != 1f)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_RecoilModifier_Aiming", PlayerDashboardInventoryUI.FormatStatModifier(aimingRecoilMultiplier, higherIsPositive: false, higherIsBeneficial: false)), 10000);
+            }
+            if (aimDurationMultiplier != 1f)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_AimDurationModifier", PlayerDashboardInventoryUI.FormatStatModifier(aimDurationMultiplier, higherIsPositive: false, higherIsBeneficial: false)), 10000);
+            }
+            if (aimingMovementSpeedMultiplier != 1f)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_AimingMovementSpeedModifier", PlayerDashboardInventoryUI.FormatStatModifier(aimingMovementSpeedMultiplier, higherIsPositive: true, higherIsBeneficial: true)), 10000);
+            }
+            if (ballisticDamageMultiplier != 1f)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_BulletDamageModifier", PlayerDashboardInventoryUI.FormatStatModifier(ballisticDamageMultiplier, higherIsPositive: true, higherIsBeneficial: true)), 10000);
+            }
+        }
+    }
 
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
@@ -69,7 +105,6 @@ public class ItemCaliberAsset : ItemAsset
         _spread = data.ParseFloat("Spread", 1f);
         _sway = data.ParseFloat("Sway", 1f);
         _shake = data.ParseFloat("Shake", 1f);
-        _damage = data.ParseFloat("Damage", 1f);
         _firerate = data.ParseUInt8("Firerate", 0);
         float defaultValue = data.ParseFloat("Damage", 1f);
         ballisticDamageMultiplier = data.ParseFloat("Ballistic_Damage_Multiplier", defaultValue);

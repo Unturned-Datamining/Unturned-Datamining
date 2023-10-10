@@ -14,7 +14,7 @@ public class UseableCloud : Useable
 
     public override void tick()
     {
-        if (base.player.equipment.isEquipped)
+        if (base.player.equipment.IsEquipAnimationFinished)
         {
             base.player.movement.itemGravityMultiplier = ((ItemCloudAsset)base.player.equipment.asset).gravity;
         }

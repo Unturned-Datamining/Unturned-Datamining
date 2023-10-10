@@ -18,20 +18,20 @@ internal class VolumeTypeButton : SleekWrapper
         this.owner = owner;
         this.volumeType = volumeType;
         visibilityButton = new SleekButtonState(new GUIContent("H", owner.localization.format("Visibility_Hidden")), new GUIContent("W", owner.localization.format("Visibility_Wireframe")), new GUIContent("S", owner.localization.format("Visibility_Solid")));
-        visibilityButton.sizeOffset_X = 50;
-        visibilityButton.sizeOffset_Y = 30;
+        visibilityButton.SizeOffset_X = 50f;
+        visibilityButton.SizeOffset_Y = 30f;
         visibilityButton.useContentTooltip = true;
         SleekButtonState sleekButtonState = visibilityButton;
         sleekButtonState.onSwappedState = (SwappedState)Delegate.Combine(sleekButtonState.onSwappedState, new SwappedState(OnSwappedVisibility));
         RefreshVisibility();
         AddChild(visibilityButton);
         nameButton = Glazier.Get().CreateButton();
-        nameButton.positionOffset_X = 50;
-        nameButton.sizeScale_X = 1f;
-        nameButton.sizeScale_Y = 1f;
-        nameButton.sizeOffset_X = -nameButton.positionOffset_X;
-        nameButton.text = volumeType.FriendlyName;
-        nameButton.onClickedButton += OnTypeClicked;
+        nameButton.PositionOffset_X = 50f;
+        nameButton.SizeScale_X = 1f;
+        nameButton.SizeScale_Y = 1f;
+        nameButton.SizeOffset_X = 0f - nameButton.PositionOffset_X;
+        nameButton.Text = volumeType.FriendlyName;
+        nameButton.OnClicked += OnTypeClicked;
         AddChild(nameButton);
     }
 

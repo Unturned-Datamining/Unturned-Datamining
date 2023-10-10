@@ -30,12 +30,11 @@ public class ItemFuelAsset : ItemAsset
         return array;
     }
 
-    public override string getContext(string desc, byte[] state)
+    public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
     {
-        ushort num = BitConverter.ToUInt16(state, 0);
-        desc += PlayerDashboardInventoryUI.localization.format("Fuel", ((int)((float)(int)num / (float)(int)fuel * 100f)).ToString());
-        desc += "\n\n";
-        return desc;
+        base.BuildDescription(builder, itemInstance);
+        ushort num = BitConverter.ToUInt16(itemInstance.state, 0);
+        builder.Append(PlayerDashboardInventoryUI.localization.format("Fuel", ((int)((float)(int)num / (float)(int)fuel * 100f)).ToString()), 2000);
     }
 
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)

@@ -165,7 +165,7 @@ public class PlayerVoice : PlayerCaller
     {
         get
         {
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 return !Provider.isServer;
             }
@@ -173,7 +173,7 @@ public class PlayerVoice : PlayerCaller
         }
     }
 
-    private bool canEverPlayback => !base.channel.isOwner;
+    private bool canEverPlayback => !base.channel.IsLocalPlayer;
 
     public event Talked onTalkingChanged;
 
@@ -314,7 +314,7 @@ public class PlayerVoice : PlayerCaller
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
     public void ReceivePlayVoiceChat(in ClientInvocationContext context)
     {
-        if (OptionsSettings.chatVoiceIn && !base.channel.owner.isMuted && audioData != null && !(audioSource == null) && !(audioSource.clip == null))
+        if (OptionsSettings.chatVoiceIn && !base.channel.owner.isVoiceChatLocallyMuted && audioData != null && !(audioSource == null) && !(audioSource.clip == null))
         {
             NetPakReader reader = context.reader;
             reader.ReadUInt16(out var value);

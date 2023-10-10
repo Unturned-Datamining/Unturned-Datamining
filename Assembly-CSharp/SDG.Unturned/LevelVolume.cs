@@ -22,34 +22,34 @@ public class LevelVolume<TVolume, TManager> : VolumeBase, IDevkitInteractableBeg
         public Menu(LevelVolume<TVolume, TManager> volume)
         {
             this.volume = volume;
-            base.sizeOffset_X = 400;
-            int num = 0;
+            base.SizeOffset_X = 400f;
+            float num = 0f;
             if (volume.supportsBoxShape && volume.supportsSphereShape)
             {
                 shapeButton = new SleekButtonStateEnum<ELevelVolumeShape>();
-                shapeButton.positionOffset_Y = num;
-                shapeButton.sizeOffset_X = 200;
-                shapeButton.sizeOffset_Y = 30;
+                shapeButton.PositionOffset_Y = num;
+                shapeButton.SizeOffset_X = 200f;
+                shapeButton.SizeOffset_Y = 30f;
                 shapeButton.SetEnum(volume.Shape);
-                shapeButton.addLabel("Shape", ESleekSide.RIGHT);
+                shapeButton.AddLabel("Shape", ESleekSide.RIGHT);
                 SleekButtonStateEnum<ELevelVolumeShape> sleekButtonStateEnum = shapeButton;
                 sleekButtonStateEnum.OnSwappedEnum = (Action<SleekButtonStateEnum<ELevelVolumeShape>, ELevelVolumeShape>)Delegate.Combine(sleekButtonStateEnum.OnSwappedEnum, new Action<SleekButtonStateEnum<ELevelVolumeShape>, ELevelVolumeShape>(OnShapeChanged));
                 AddChild(shapeButton);
-                num += shapeButton.sizeOffset_Y + 10;
+                num += shapeButton.SizeOffset_Y + 10f;
             }
             if (volume.supportsFalloff)
             {
                 falloffField = Glazier.Get().CreateFloat32Field();
-                falloffField.positionOffset_Y = num;
-                falloffField.sizeOffset_X = 200;
-                falloffField.sizeOffset_Y = 30;
-                falloffField.state = volume.falloffDistance;
-                falloffField.addLabel("Falloff", ESleekSide.RIGHT);
-                falloffField.onTypedSingle += OnFalloffTyped;
+                falloffField.PositionOffset_Y = num;
+                falloffField.SizeOffset_X = 200f;
+                falloffField.SizeOffset_Y = 30f;
+                falloffField.Value = volume.falloffDistance;
+                falloffField.AddLabel("Falloff", ESleekSide.RIGHT);
+                falloffField.OnValueChanged += OnFalloffTyped;
                 AddChild(falloffField);
-                num += falloffField.sizeOffset_Y + 10;
+                num += falloffField.SizeOffset_Y + 10f;
             }
-            base.sizeOffset_Y = num - 10;
+            base.SizeOffset_Y = num - 10f;
             prevShape = volume.Shape;
         }
 
@@ -492,9 +492,9 @@ public class LevelVolume<TVolume, TManager> : VolumeBase, IDevkitInteractableBeg
         if ((supportsBoxShape && supportsSphereShape) || supportsFalloff)
         {
             Menu menu = new Menu(this);
-            menu.positionScale_Y = 1f;
-            menu.positionOffset_Y = -menu.sizeOffset_Y;
-            childMenu.sizeOffset_Y += menu.sizeOffset_Y + 10;
+            menu.PositionScale_Y = 1f;
+            menu.PositionOffset_Y = 0f - menu.SizeOffset_Y;
+            childMenu.SizeOffset_Y += menu.SizeOffset_Y + 10f;
             childMenu.AddChild(menu);
         }
     }

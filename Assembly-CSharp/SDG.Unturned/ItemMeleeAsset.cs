@@ -57,6 +57,28 @@ public class ItemMeleeAsset : ItemWeaponAsset
         return new byte[0];
     }
 
+    public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
+    {
+        base.BuildDescription(builder, itemInstance);
+        if (builder.shouldRestrictToLegacyContent)
+        {
+            return;
+        }
+        if (!_isRepeated)
+        {
+            if (strength != 1f)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Melee_StrongAttackModifier", PlayerDashboardInventoryUI.FormatStatModifier(strength, higherIsPositive: true, higherIsBeneficial: true)), 10000);
+            }
+            if (stamina > 0)
+            {
+                string arg = PlayerDashboardInventoryUI.FormatStatColor(stamina.ToString(), isBeneficial: false);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Melee_StrongAttackStamina", arg), 10000);
+            }
+        }
+        BuildNonExplosiveDescription(builder, itemInstance);
+    }
+
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
         base.PopulateAsset(bundle, data, localization);

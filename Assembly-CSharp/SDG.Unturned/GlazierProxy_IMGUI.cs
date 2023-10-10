@@ -15,9 +15,9 @@ internal class GlazierProxy_IMGUI : GlazierElementBase_IMGUI
         base.Update();
     }
 
-    public override void destroy()
+    public override void InternalDestroy()
     {
         owner.OnDestroy();
-        base.destroy();
+        base.InternalDestroy();
     }
 }

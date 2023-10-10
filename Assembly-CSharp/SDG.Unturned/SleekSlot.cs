@@ -42,11 +42,11 @@ public class SleekSlot : SleekWrapper
     {
         get
         {
-            return image.isRaycastTarget;
+            return image.IsRaycastTarget;
         }
         set
         {
-            image.isRaycastTarget = value;
+            image.IsRaycastTarget = value;
         }
     }
 
@@ -73,10 +73,10 @@ public class SleekSlot : SleekWrapper
         if (jar != null)
         {
             _item = new SleekItem(jar);
-            item.positionOffset_X = -jar.size_x * 25;
-            item.positionOffset_Y = -jar.size_y * 25;
-            item.positionScale_X = 0.5f;
-            item.positionScale_Y = 0.5f;
+            item.PositionOffset_X = -jar.size_x * 25;
+            item.PositionOffset_Y = -jar.size_y * 25;
+            item.PositionScale_X = 0.5f;
+            item.PositionScale_Y = 0.5f;
             item.updateHotkey(page);
             item.onClickedItem = onClickedItem;
             item.onDraggedItem = onDraggedItem;
@@ -98,15 +98,15 @@ public class SleekSlot : SleekWrapper
     public SleekSlot(byte newPage)
     {
         _page = newPage;
-        base.sizeOffset_X = 250;
-        base.sizeOffset_Y = 150;
+        base.SizeOffset_X = 250f;
+        base.SizeOffset_Y = 150f;
         image = Glazier.Get().CreateSprite();
-        image.sizeScale_X = 1f;
-        image.sizeScale_Y = 1f;
-        image.drawMethod = ESleekSpriteType.Sliced;
-        image.sprite = PlayerDashboardInventoryUI.icons.load<Sprite>("Slot_Sprite");
-        image.color = ESleekTint.FOREGROUND;
-        image.onImageClicked += select;
+        image.SizeScale_X = 1f;
+        image.SizeScale_Y = 1f;
+        image.DrawMethod = ESleekSpriteType.Sliced;
+        image.Sprite = PlayerDashboardInventoryUI.icons.load<Sprite>("Slot_Sprite");
+        image.TintColor = ESleekTint.FOREGROUND;
+        image.OnClicked += select;
         AddChild(image);
     }
 }

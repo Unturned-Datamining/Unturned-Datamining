@@ -4,19 +4,9 @@ public class NPCHintReward : INPCReward
 {
     private float duration;
 
-    public override void grantReward(Player player, bool shouldSend)
+    public override void GrantReward(Player player)
     {
-        if (shouldSend)
-        {
-            if (Provider.isServer)
-            {
-                player.ServerShowHint(text, duration);
-            }
-        }
-        else if (Player.player == player)
-        {
-            PlayerUI.message(EPlayerMessage.NPC_CUSTOM, text, duration);
-        }
+        player.ServerShowHint(text, duration);
     }
 
     public NPCHintReward(float newDuration, string newText)

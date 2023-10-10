@@ -14,7 +14,7 @@ internal class GlazierConstraintFrame_uGUI : GlazierElementBase_uGUI, ISleekCons
 
     private AspectRatioFitter aspectRatioFitter;
 
-    public ESleekConstraint constraint
+    public ESleekConstraint Constraint
     {
         get
         {
@@ -27,7 +27,7 @@ internal class GlazierConstraintFrame_uGUI : GlazierElementBase_uGUI, ISleekCons
                 throw new NotSupportedException();
             }
             _constraint = value;
-            if (constraint == ESleekConstraint.FitInParent)
+            if (Constraint == ESleekConstraint.FitInParent)
             {
                 aspectRatioFitter = contentTransform.gameObject.AddComponent<AspectRatioFitter>();
                 aspectRatioFitter.aspectMode = AspectRatioFitter.AspectMode.FitInParent;

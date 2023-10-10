@@ -144,6 +144,15 @@ public static class NetIdRegistry
         return transform;
     }
 
+    public static NetId GetTransformNetId(Transform transform)
+    {
+        if (transform == null || !transformPairings.TryGetValue(transform, out var value))
+        {
+            return NetId.INVALID;
+        }
+        return value;
+    }
+
     public static bool GetTransformNetId(Transform transform, out NetId netId, out string path)
     {
         if (transform == null)

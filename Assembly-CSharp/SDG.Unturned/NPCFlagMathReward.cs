@@ -10,7 +10,7 @@ public class NPCFlagMathReward : INPCReward
 
     public ENPCOperationType operationType { get; protected set; }
 
-    public override void grantReward(Player player, bool shouldSend)
+    public override void GrantReward(Player player)
     {
         player.quests.getFlag(flag_A_ID, out var value);
         if (flag_B_ID == 0 || !player.quests.getFlag(flag_B_ID, out var value2))
@@ -40,14 +40,7 @@ public class NPCFlagMathReward : INPCReward
             value = (short)(value % value2);
             break;
         }
-        if (shouldSend)
-        {
-            player.quests.sendSetFlag(flag_A_ID, value);
-        }
-        else
-        {
-            player.quests.setFlag(flag_A_ID, value);
-        }
+        player.quests.sendSetFlag(flag_A_ID, value);
     }
 
     public NPCFlagMathReward(ushort newFlag_A_ID, ushort newFlag_B_ID, short newFlag_B_Value, ENPCOperationType newOperationType, string newText)

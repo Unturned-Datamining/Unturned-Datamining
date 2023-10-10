@@ -14,19 +14,12 @@ public class NPCQuestReward : INPCReward
         return Assets.FindNpcAssetByGuidOrLegacyId<QuestAsset>(questGuid, id);
     }
 
-    public override void grantReward(Player player, bool shouldSend)
+    public override void GrantReward(Player player)
     {
         QuestAsset questAsset = GetQuestAsset();
         if (questAsset != null)
         {
-            if (shouldSend)
-            {
-                player.quests.ServerAddQuest(questAsset);
-            }
-            else
-            {
-                player.quests.AddQuest(questAsset);
-            }
+            player.quests.ServerAddQuest(questAsset);
         }
     }
 

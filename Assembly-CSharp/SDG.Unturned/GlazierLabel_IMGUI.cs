@@ -16,7 +16,7 @@ internal class GlazierLabel_IMGUI : GlazierElementBase_IMGUI, ISleekLabel, ISlee
 
     protected GUIContent shadowContent;
 
-    public string text
+    public string Text
     {
         get
         {
@@ -29,7 +29,7 @@ internal class GlazierLabel_IMGUI : GlazierElementBase_IMGUI, ISleekLabel, ISlee
         }
     }
 
-    public string tooltipText
+    public string TooltipText
     {
         get
         {
@@ -42,12 +42,12 @@ internal class GlazierLabel_IMGUI : GlazierElementBase_IMGUI, ISleekLabel, ISlee
         }
     }
 
-    public FontStyle fontStyle { get; set; }
+    public FontStyle FontStyle { get; set; }
 
-    public TextAnchor fontAlignment { get; set; } = TextAnchor.MiddleCenter;
+    public TextAnchor TextAlignment { get; set; } = TextAnchor.MiddleCenter;
 
 
-    public ESleekFontSize fontSize
+    public ESleekFontSize FontSize
     {
         get
         {
@@ -60,17 +60,17 @@ internal class GlazierLabel_IMGUI : GlazierElementBase_IMGUI, ISleekLabel, ISlee
         }
     }
 
-    public ETextContrastContext shadowStyle { get; set; }
+    public ETextContrastContext TextContrastContext { get; set; }
 
-    public SleekColor textColor { get; set; } = GlazierConst.DefaultLabelForegroundColor;
+    public SleekColor TextColor { get; set; } = GlazierConst.DefaultLabelForegroundColor;
 
 
-    public bool enableRichText { get; set; }
+    public bool AllowRichText { get; set; }
 
     protected virtual void calculateContent()
     {
-        content = new GUIContent(text, tooltipText);
-        if (enableRichText)
+        content = new GUIContent(Text, TooltipText);
+        if (AllowRichText)
         {
             shadowContent = RichTextUtil.makeShadowContent(content);
         }
@@ -83,12 +83,12 @@ internal class GlazierLabel_IMGUI : GlazierElementBase_IMGUI, ISleekLabel, ISlee
     public GlazierLabel_IMGUI()
     {
         calculateContent();
-        fontSize = ESleekFontSize.Default;
+        FontSize = ESleekFontSize.Default;
     }
 
     public override void OnGUI()
     {
-        GlazierUtils_IMGUI.drawLabel(drawRect, fontStyle, fontAlignment, fontSizeInt, shadowContent, textColor, content, shadowStyle);
+        GlazierUtils_IMGUI.drawLabel(drawRect, FontStyle, TextAlignment, fontSizeInt, shadowContent, TextColor, content, TextContrastContext);
         ChildrenOnGUI();
     }
 }

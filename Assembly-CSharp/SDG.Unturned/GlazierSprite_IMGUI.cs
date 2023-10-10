@@ -7,45 +7,47 @@ internal class GlazierSprite_IMGUI : GlazierElementBase_IMGUI, ISleekSprite, ISl
 {
     private GUIStyle style;
 
-    public Sprite sprite { get; set; }
+    public Sprite Sprite { get; set; }
 
-    public SleekColor color { get; set; } = ESleekTint.NONE;
-
-
-    public ESleekSpriteType drawMethod { get; set; }
-
-    public bool isRaycastTarget { get; set; } = true;
+    public SleekColor TintColor { get; set; } = ESleekTint.NONE;
 
 
-    public event System.Action onImageClicked;
+    public ESleekSpriteType DrawMethod { get; set; }
+
+    public bool IsRaycastTarget { get; set; } = true;
+
+
+    public Vector2Int TileRepeatHintForUITK { get; set; }
+
+    public event System.Action OnClicked;
 
     public override void OnGUI()
     {
-        if (sprite != null)
+        if (Sprite != null)
         {
-            switch (drawMethod)
+            switch (DrawMethod)
             {
             case ESleekSpriteType.Tiled:
-                GlazierUtils_IMGUI.drawTile(drawRect, sprite.texture, color);
+                GlazierUtils_IMGUI.drawTile(drawRect, Sprite.texture, TintColor);
                 break;
             case ESleekSpriteType.Sliced:
                 if (style == null)
                 {
                     style = new GUIStyle();
-                    style.normal.background = sprite.texture;
+                    style.normal.background = Sprite.texture;
                     style.border = new RectOffset(20, 20, 20, 20);
                 }
-                GlazierUtils_IMGUI.drawSliced(drawRect, sprite.texture, color, style);
+                GlazierUtils_IMGUI.drawSliced(drawRect, Sprite.texture, TintColor, style);
                 break;
             case ESleekSpriteType.Regular:
-                GlazierUtils_IMGUI.drawImageTexture(drawRect, sprite.texture, color);
+                GlazierUtils_IMGUI.drawImageTexture(drawRect, Sprite.texture, TintColor);
                 break;
             }
         }
         ChildrenOnGUI();
-        if (this.onImageClicked != null)
+        if (this.OnClicked != null)
         {
-            GUI.enabled = isRaycastTarget && Event.current.type != EventType.Repaint && Event.current.type != EventType.Used;
+            GUI.enabled = IsRaycastTarget && Event.current.type != EventType.Repaint && Event.current.type != EventType.Used;
             Color backgroundColor = GUI.backgroundColor;
             GUI.backgroundColor = ColorEx.BlackZeroAlpha;
             bool num = GUI.Button(drawRect, string.Empty);
@@ -53,13 +55,13 @@ internal class GlazierSprite_IMGUI : GlazierElementBase_IMGUI, ISleekSprite, ISl
             GUI.backgroundColor = backgroundColor;
             if (num && Event.current.button == 0)
             {
-                this.onImageClicked?.Invoke();
+                this.OnClicked?.Invoke();
             }
         }
     }
 
     public GlazierSprite_IMGUI(Sprite sprite)
     {
-        this.sprite = sprite;
+        Sprite = sprite;
     }
 }

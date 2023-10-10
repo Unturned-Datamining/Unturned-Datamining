@@ -48,9 +48,14 @@ public class ItemAsset : Asset, ISkinableAsset
 
     public byte qualityMax;
 
+    [Obsolete("Renamed to ShouldAttachEquippedModelToLeftHand")]
     public bool isBackward;
 
     public bool shouldProcedurallyAnimateInertia;
+
+    public bool shouldLeftHandedCharactersMirrorEquippedItem;
+
+    public bool isEligibleForAutoStatDescriptions;
 
     protected GameObject _item;
 
@@ -151,6 +156,18 @@ public class ItemAsset : Asset, ISkinableAsset
         }
     }
 
+    public bool ShouldAttachEquippedModelToLeftHand
+    {
+        get
+        {
+            return isBackward;
+        }
+        protected set
+        {
+            isBackward = value;
+        }
+    }
+
     public GameObject item => _item;
 
     public string instantiatedItemName { get; protected set; }
@@ -207,9 +224,29 @@ public class ItemAsset : Asset, ISkinableAsset
         return new byte[0];
     }
 
-    public virtual string getContext(string desc, byte[] state)
+    public virtual void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
     {
-        return desc;
+        Local localization = PlayerDashboardInventoryUI.localization;
+        int num = (int)rarity;
+        string arg = localization.format("Rarity_" + num);
+        Local localization2 = PlayerDashboardInventoryUI.localization;
+        num = (int)type;
+        string arg2 = localization2.format("Type_" + num);
+        builder.Append("<color=" + Palette.hex(ItemTool.getRarityColorUI(rarity)) + ">" + PlayerDashboardInventoryUI.localization.format("Rarity_Type_Label", arg, arg2) + "</color>", 0);
+        builder.Append(_itemDescription, 200);
+        if (showQuality)
+        {
+            Color32 color = ItemTool.getQualityColor((float)(int)itemInstance.quality / 100f);
+            builder.Append("<color=" + Palette.hex(color) + ">" + PlayerDashboardInventoryUI.localization.format("Quality", itemInstance.quality) + "</color>", 400);
+        }
+        if (itemInstance.amount > 1)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("Amount", itemInstance.amount), 400);
+        }
+        if (!builder.shouldRestrictToLegacyContent && equipableMovementSpeedMultiplier != 1f)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_EquipableMovementSpeedModifier", PlayerDashboardInventoryUI.FormatStatModifier(equipableMovementSpeedMultiplier, higherIsPositive: true, higherIsBeneficial: true)), 10000);
+        }
     }
 
     public void applySkinBaseTextures(Material material)
@@ -407,7 +444,9 @@ public class ItemAsset : Asset, ISkinableAsset
         {
             qualityMax = 90;
         }
-        isBackward = data.ContainsKey("Backward");
+        ShouldAttachEquippedModelToLeftHand = data.ContainsKey("Backward");
+        shouldLeftHandedCharactersMirrorEquippedItem = data.ParseBool("Left_Handed_Characters_Mirror_Equipable", defaultValue: true);
+        isEligibleForAutoStatDescriptions = data.ParseBool("Use_Auto_Stat_Descriptions", defaultValue: true);
         shouldProcedurallyAnimateInertia = data.ParseBool("Procedurally_Animate_Inertia", defaultValue: true);
         useable = data.GetString("Useable");
         updateUseableType();

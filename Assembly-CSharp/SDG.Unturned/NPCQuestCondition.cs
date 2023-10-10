@@ -25,15 +25,10 @@ public class NPCQuestCondition : NPCLogicCondition
         return doesLogicPass(player.quests.GetQuestStatus(questAsset), status);
     }
 
-    public override void applyCondition(Player player, bool shouldSend)
+    public override void ApplyCondition(Player player)
     {
         if (!shouldReset)
         {
-            return;
-        }
-        if (shouldSend)
-        {
-            UnturnedLog.error("Resetting NPC quest condition over network not supported. ID: {0} Status: {1}");
             return;
         }
         QuestAsset questAsset = GetQuestAsset();
@@ -41,17 +36,14 @@ public class NPCQuestCondition : NPCLogicCondition
         {
             switch (status)
             {
-            case ENPCQuestStatus.NONE:
-                UnturnedLog.error("Reset none quest status? How should this work?");
-                break;
             case ENPCQuestStatus.ACTIVE:
-                player.quests.AbandonQuest(questAsset);
+                player.quests.ServerRemoveQuest(questAsset);
                 break;
             case ENPCQuestStatus.READY:
                 player.quests.CompleteQuest(questAsset, ignoreNPC);
                 break;
             case ENPCQuestStatus.COMPLETED:
-                player.quests.removeFlag(questAsset.id);
+                player.quests.sendRemoveFlag(questAsset.id);
                 break;
             }
         }

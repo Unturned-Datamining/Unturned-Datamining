@@ -199,7 +199,7 @@ public class AnimalManager : SteamCaller
     {
         if (index < animals.Count)
         {
-            animals[index].askStartle();
+            animals[index].PlayStartleAnimation();
         }
     }
 
@@ -336,7 +336,7 @@ public class AnimalManager : SteamCaller
             value = Mathf.Clamp(value, 0, 100);
             for (int i = 0; i < value; i++)
             {
-                ushort num = SpawnTableTool.resolve(animal.asset.rewardID);
+                ushort num = SpawnTableTool.ResolveLegacyId(animal.asset.rewardID, EAssetType.ITEM, animal.asset.OnGetRewardSpawnTableErrorContext);
                 if (num != 0)
                 {
                     ItemManager.dropItem(new Item(num, EItemOrigin.NATURE), animal.transform.position, playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
@@ -470,7 +470,7 @@ public class AnimalManager : SteamCaller
         for (int i = 0; i < packInfo.animals.Count; i++)
         {
             Animal animal = packInfo.animals[i];
-            if (animal == null || !animal.isDead || Time.realtimeSinceStartup - animal.lastDead < Provider.modeConfigData.Animals.Respawn_Time)
+            if (animal == null || animal.IsAlive || Time.realtimeSinceStartup - animal.lastDead < Provider.modeConfigData.Animals.Respawn_Time)
             {
                 return;
             }
@@ -631,7 +631,7 @@ public class AnimalManager : SteamCaller
                 {
                     Gizmos.color = (animal.isDead ? Color.red : Color.green);
                     Gizmos.DrawLine(averageAnimalPoint, animal.transform.position);
-                    if (!animal.isDead)
+                    if (animal.IsAlive)
                     {
                         Gizmos.color = Color.magenta;
                         Gizmos.DrawLine(animal.transform.position, animal.target);

@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace SDG.Unturned;
 
 public class ItemWeaponAsset : ItemAsset
@@ -93,6 +95,132 @@ public class ItemWeaponAsset : ItemAsset
         parameters.waterModifier = playerDamageWater;
         parameters.virusModifier = playerDamageVirus;
         parameters.hallucinationModifier = playerDamageHallucination;
+    }
+
+    protected void BuildExplosiveDescription(ItemDescriptionBuilder builder, Item itemInstance)
+    {
+        builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ExplosionBlastRadius", MeasurementTool.FormatLengthString(range)), 20002);
+        builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ExplosionPlayerDamage", Mathf.RoundToInt(playerDamageMultiplier.damage)), 20003);
+        builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ExplosionZombieDamage", Mathf.RoundToInt(zombieDamageMultiplier.damage)), 20003);
+        builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ExplosionAnimalDamage", Mathf.RoundToInt(animalDamageMultiplier.damage)), 20003);
+        builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ExplosionBarricadeDamage", Mathf.RoundToInt(barricadeDamage)), 20003);
+        builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ExplosionStructureDamage", Mathf.RoundToInt(structureDamage)), 20003);
+        builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ExplosionVehicleDamage", Mathf.RoundToInt(vehicleDamage)), 20003);
+        builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ExplosionResourceDamage", Mathf.RoundToInt(resourceDamage)), 20003);
+        builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ExplosionObjectDamage", Mathf.RoundToInt(objectDamage)), 20003);
+    }
+
+    protected void BuildNonExplosiveDescription(ItemDescriptionBuilder builder, Item itemInstance)
+    {
+        if (range > 0f)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponRange", MeasurementTool.FormatLengthString(range)), 10000);
+        }
+        int priority = 21000;
+        if (playerDamageMultiplier.damage > 0f)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Player_Head", Mathf.FloorToInt(playerDamageMultiplier.damage * playerDamageMultiplier.skull)), priority++);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Player_Body", Mathf.FloorToInt(playerDamageMultiplier.damage * playerDamageMultiplier.spine)), priority++);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Player_Arm", Mathf.FloorToInt(playerDamageMultiplier.damage * playerDamageMultiplier.arm)), priority++);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Player_Leg", Mathf.FloorToInt(playerDamageMultiplier.damage * playerDamageMultiplier.leg)), priority++);
+        }
+        int num = Mathf.RoundToInt(playerDamageFood);
+        if (num > 0)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Player_FoodPositive", num.ToString()), priority);
+        }
+        else if (num < 0)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Player_FoodNegative", num.ToString()), priority);
+        }
+        int num2 = Mathf.RoundToInt(playerDamageWater);
+        if (num2 > 0)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Player_WaterPositive", num2.ToString()), priority);
+        }
+        else if (num2 < 0)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Player_WaterNegative", num2.ToString()), priority);
+        }
+        int num3 = Mathf.RoundToInt(playerDamageVirus);
+        if (num3 > 0)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Player_VirusPositive", num3.ToString()), priority);
+        }
+        else if (num3 < 0)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Player_VirusNegative", num3.ToString()), priority);
+        }
+        int num4 = Mathf.RoundToInt(playerDamageHallucination);
+        if (num4 > 0)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Player_HallucinationPositive", $"{num4} s"), priority);
+        }
+        else if (num4 < 0)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Player_HallucinationNegative", $"{num4} s"), priority);
+        }
+        switch (playerDamageBleeding)
+        {
+        case DamagePlayerParameters.Bleeding.Always:
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponBleeding_Always"), priority);
+            break;
+        case DamagePlayerParameters.Bleeding.Heal:
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponBleeding_Heal"), priority);
+            break;
+        }
+        switch (playerDamageBones)
+        {
+        case DamagePlayerParameters.Bones.Always:
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponBones_Always"), priority);
+            break;
+        case DamagePlayerParameters.Bones.Heal:
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponBones_Heal"), priority);
+            break;
+        }
+        if (isInvulnerable)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Invulnerable"), 10000);
+        }
+        if (zombieDamageMultiplier.damage > 0f)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Zombie_Head", Mathf.FloorToInt(zombieDamageMultiplier.damage * zombieDamageMultiplier.skull)), 22000);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Zombie_Body", Mathf.FloorToInt(zombieDamageMultiplier.damage * zombieDamageMultiplier.spine)), 22001);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Zombie_Arm", Mathf.FloorToInt(zombieDamageMultiplier.damage * zombieDamageMultiplier.arm)), 22002);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Zombie_Leg", Mathf.FloorToInt(zombieDamageMultiplier.damage * zombieDamageMultiplier.leg)), 22003);
+        }
+        if (animalDamageMultiplier.damage > 0f)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Animal_Head", Mathf.FloorToInt(animalDamageMultiplier.damage * animalDamageMultiplier.skull)), 23000);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Animal_Body", Mathf.FloorToInt(animalDamageMultiplier.damage * animalDamageMultiplier.spine)), 23001);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Animal_Limb", Mathf.FloorToInt(animalDamageMultiplier.damage * animalDamageMultiplier.leg)), 23002);
+        }
+        if (barricadeDamage > 0f)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Barricade", Mathf.FloorToInt(barricadeDamage)), 24000);
+        }
+        if (structureDamage > 0f)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Structure", Mathf.FloorToInt(structureDamage)), 24000);
+        }
+        if (vehicleDamage > 0f)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Vehicle", Mathf.FloorToInt(vehicleDamage)), 24000);
+        }
+        if (resourceDamage > 0f)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Resource", Mathf.FloorToInt(resourceDamage)), 24000);
+        }
+        if (objectDamage > 0f)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WeaponDamage_Object", Mathf.FloorToInt(objectDamage)), 24000);
+        }
+    }
+
+    public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
+    {
+        base.BuildDescription(builder, itemInstance);
+        _ = builder.shouldRestrictToLegacyContent;
     }
 
     public ItemWeaponAsset()

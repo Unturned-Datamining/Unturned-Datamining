@@ -14,7 +14,7 @@ internal class GlazierSprite_uGUI : GlazierElementBase_uGUI, ISleekSprite, ISlee
 
     private ButtonEx buttonComponent;
 
-    public Sprite sprite
+    public Sprite Sprite
     {
         get
         {
@@ -26,7 +26,7 @@ internal class GlazierSprite_uGUI : GlazierElementBase_uGUI, ISleekSprite, ISlee
         }
     }
 
-    public SleekColor color
+    public SleekColor TintColor
     {
         get
         {
@@ -39,7 +39,7 @@ internal class GlazierSprite_uGUI : GlazierElementBase_uGUI, ISleekSprite, ISlee
         }
     }
 
-    public ESleekSpriteType drawMethod
+    public ESleekSpriteType DrawMethod
     {
         get
         {
@@ -63,7 +63,7 @@ internal class GlazierSprite_uGUI : GlazierElementBase_uGUI, ISleekSprite, ISlee
         }
     }
 
-    public bool isRaycastTarget
+    public bool IsRaycastTarget
     {
         get
         {
@@ -75,9 +75,11 @@ internal class GlazierSprite_uGUI : GlazierElementBase_uGUI, ISleekSprite, ISlee
         }
     }
 
+    public Vector2Int TileRepeatHintForUITK { get; set; }
+
     private event System.Action _onImageClicked;
 
-    public event System.Action onImageClicked
+    public event System.Action OnClicked
     {
         add
         {
@@ -104,14 +106,14 @@ internal class GlazierSprite_uGUI : GlazierElementBase_uGUI, ISleekSprite, ISlee
         imageComponent = base.gameObject.AddComponent<Image>();
         imageComponent.enabled = false;
         imageComponent.raycastTarget = false;
-        imageComponent.sprite = sprite;
+        imageComponent.sprite = Sprite;
         _color = ESleekTint.NONE;
-        drawMethod = ESleekSpriteType.Tiled;
+        DrawMethod = ESleekSpriteType.Tiled;
     }
 
     public override void SynchronizeColors()
     {
-        if (sprite != null)
+        if (Sprite != null)
         {
             imageComponent.color = _color;
             imageComponent.enabled = true;
@@ -129,7 +131,7 @@ internal class GlazierSprite_uGUI : GlazierElementBase_uGUI, ISleekSprite, ISlee
 
     protected override void EnableComponents()
     {
-        imageComponent.enabled = sprite != null || imageComponent.raycastTarget;
+        imageComponent.enabled = Sprite != null || imageComponent.raycastTarget;
     }
 
     private void CreateButton()

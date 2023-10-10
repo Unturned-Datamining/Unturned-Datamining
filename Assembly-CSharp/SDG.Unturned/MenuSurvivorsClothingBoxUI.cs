@@ -138,8 +138,8 @@ public class MenuSurvivorsClothingBoxUI
             lastAngle -= 1f;
             return;
         }
-        float num = (float)Math.PI / 2f;
-        float num2 = (float)target / (float)numBoxEntries * (float)Math.PI * 2f;
+        float num = MathF.PI / 2f;
+        float num2 = (float)target / (float)numBoxEntries * MathF.PI * 2f;
         if (angle > num2 - num)
         {
             rotation = target;
@@ -179,9 +179,9 @@ public class MenuSurvivorsClothingBoxUI
         lastRotation = 0;
         rotation = 0;
         target = -1;
-        disabledBox.isVisible = false;
-        keyButton.isVisible = true;
-        unboxButton.isVisible = true;
+        disabledBox.IsVisible = false;
+        keyButton.IsVisible = true;
+        unboxButton.IsVisible = true;
         boxButton.updateInventory(instance, item, newQuantity, isClickable: false, isLarge: true);
         boxAsset = Assets.find<ItemBoxAsset>(Provider.provider.economyService.getInventoryItemGuid(item));
         if (boxAsset != null)
@@ -205,50 +205,50 @@ public class MenuSurvivorsClothingBoxUI
             {
                 if (Provider.provider.economyService.hasCountryDetails)
                 {
-                    disabledBox.isVisible = true;
-                    disabledBox.text = localization.format("Region_Disabled", Provider.provider.economyService.getCountryWarningId());
+                    disabledBox.IsVisible = true;
+                    disabledBox.Text = localization.format("Region_Disabled", Provider.provider.economyService.getCountryWarningId());
                 }
                 else
                 {
-                    disabledBox.isVisible = false;
+                    disabledBox.IsVisible = false;
                 }
-                unboxButton.isVisible = false;
-                keyButton.isVisible = false;
+                unboxButton.IsVisible = false;
+                keyButton.IsVisible = false;
             }
             else if (boxAsset.destroy == 0)
             {
-                keyButton.isVisible = false;
+                keyButton.IsVisible = false;
                 unboxButton.icon = null;
-                unboxButton.positionOffset_X = 0;
-                unboxButton.positionScale_X = 0.3f;
-                unboxButton.sizeOffset_X = 0;
-                unboxButton.sizeScale_X = 0.4f;
+                unboxButton.PositionOffset_X = 0f;
+                unboxButton.PositionScale_X = 0.3f;
+                unboxButton.SizeOffset_X = 0f;
+                unboxButton.SizeScale_X = 0.4f;
                 unboxButton.text = localization.format(key);
                 unboxButton.tooltip = localization.format(key2);
-                unboxButton.isVisible = true;
+                unboxButton.IsVisible = true;
                 keyAsset = null;
             }
             else
             {
-                keyButton.isVisible = true;
+                keyButton.IsVisible = true;
                 unboxButton.icon = icons.load<Texture2D>("Unbox");
-                unboxButton.positionOffset_X = 5;
-                unboxButton.positionScale_X = 0.5f;
-                unboxButton.sizeOffset_X = -5;
-                unboxButton.sizeScale_X = 0.2f;
+                unboxButton.PositionOffset_X = 5f;
+                unboxButton.PositionScale_X = 0.5f;
+                unboxButton.SizeOffset_X = -5f;
+                unboxButton.SizeScale_X = 0.2f;
                 unboxButton.text = localization.format(key);
                 unboxButton.tooltip = localization.format(key2);
-                unboxButton.isVisible = true;
+                unboxButton.IsVisible = true;
                 keyAsset = Assets.find<ItemKeyAsset>(Provider.provider.economyService.getInventoryItemGuid(boxAsset.destroy));
                 if (keyAsset != null)
                 {
-                    keyButton.icon = Provider.provider.economyService.LoadItemIcon(boxAsset.destroy, large: false);
+                    keyButton.icon = Provider.provider.economyService.LoadItemIcon(boxAsset.destroy);
                 }
             }
-            size = (float)Math.PI * 2f / (float)numBoxEntries / 2.75f;
-            finalBox.positionScale_Y = 0.5f - size / 2f;
-            finalBox.sizeScale_X = size;
-            finalBox.sizeScale_Y = size;
+            size = MathF.PI * 2f / (float)numBoxEntries / 2.75f;
+            finalBox.PositionScale_Y = 0.5f - size / 2f;
+            finalBox.SizeScale_X = size;
+            finalBox.SizeScale_Y = size;
             if (dropButtons != null)
             {
                 for (int i = 0; i < dropButtons.Length; i++)
@@ -260,12 +260,12 @@ public class MenuSurvivorsClothingBoxUI
             for (int j = 0; j < numBoxEntries; j++)
             {
                 BoxEntry boxEntry = boxEntries[j];
-                float num = (float)Math.PI * 2f * (float)j / (float)numBoxEntries + (float)Math.PI;
+                float num = MathF.PI * 2f * (float)j / (float)numBoxEntries + MathF.PI;
                 SleekInventory sleekInventory = new SleekInventory();
-                sleekInventory.positionScale_X = 0.5f + Mathf.Cos(0f - num) * (0.5f - size / 2f) - size / 2f;
-                sleekInventory.positionScale_Y = 0.5f + Mathf.Sin(0f - num) * (0.5f - size / 2f) - size / 2f;
-                sleekInventory.sizeScale_X = size;
-                sleekInventory.sizeScale_Y = size;
+                sleekInventory.PositionScale_X = 0.5f + Mathf.Cos(0f - num) * (0.5f - size / 2f) - size / 2f;
+                sleekInventory.PositionScale_Y = 0.5f + Mathf.Sin(0f - num) * (0.5f - size / 2f) - size / 2f;
+                sleekInventory.SizeScale_X = size;
+                sleekInventory.SizeScale_Y = size;
                 if (boxEntry.probability > -0.5f)
                 {
                     sleekInventory.extraTooltip = boxEntry.probability.ToString("P");
@@ -284,11 +284,11 @@ public class MenuSurvivorsClothingBoxUI
 
     private static void synchronizeTotalProbabilities()
     {
-        rareLabel.isVisible = boxAsset.probabilityModel == EBoxProbabilityModel.Original;
-        epicLabel.isVisible = boxAsset.probabilityModel == EBoxProbabilityModel.Original;
-        legendaryLabel.isVisible = boxAsset.probabilityModel == EBoxProbabilityModel.Original;
-        equalizedLabel.isVisible = boxAsset.probabilityModel == EBoxProbabilityModel.Equalized;
-        bonusLabel.isVisible = boxAsset.containsBonusItems;
+        rareLabel.IsVisible = boxAsset.probabilityModel == EBoxProbabilityModel.Original;
+        epicLabel.IsVisible = boxAsset.probabilityModel == EBoxProbabilityModel.Original;
+        legendaryLabel.IsVisible = boxAsset.probabilityModel == EBoxProbabilityModel.Original;
+        equalizedLabel.IsVisible = boxAsset.probabilityModel == EBoxProbabilityModel.Equalized;
+        bonusLabel.IsVisible = boxAsset.containsBonusItems;
     }
 
     private static void organizeBoxEntries()
@@ -393,11 +393,11 @@ public class MenuSurvivorsClothingBoxUI
             Provider.provider.economyService.exchangeInventory(boxAsset.generate, destroy);
         }
         isUnboxing = true;
-        backButton.isVisible = false;
+        backButton.IsVisible = false;
         lastUnbox = Time.realtimeSinceStartup;
         lastAngle = Time.realtimeSinceStartup;
-        keyButton.isVisible = false;
-        unboxButton.isVisible = false;
+        keyButton.IsVisible = false;
+        unboxButton.IsVisible = false;
     }
 
     private static bool hasAssetsForGrantedItems(List<SteamItemDetails_t> grantedItems)
@@ -457,7 +457,7 @@ public class MenuSurvivorsClothingBoxUI
     private static void exchangeErrorAlert(string message)
     {
         isUnboxing = false;
-        backButton.isVisible = true;
+        backButton.IsVisible = true;
         MenuUI.alert(message);
         MenuSurvivorsClothingUI.open();
         close();
@@ -512,7 +512,7 @@ public class MenuSurvivorsClothingBoxUI
         if (Time.realtimeSinceStartup - lastUnbox > (float)Provider.CLIENT_TIMEOUT)
         {
             isUnboxing = false;
-            backButton.isVisible = true;
+            backButton.IsVisible = true;
             MenuUI.alert(localization.format("Exchange_Timed_Out"));
             MenuSurvivorsClothingUI.open();
             close();
@@ -523,7 +523,7 @@ public class MenuSurvivorsClothingBoxUI
             if (Time.realtimeSinceStartup - lastAngle > 0.5f)
             {
                 isUnboxing = false;
-                backButton.isVisible = true;
+                backButton.IsVisible = true;
                 string key = null;
                 switch (boxAsset.itemOrigin)
                 {
@@ -546,9 +546,9 @@ public class MenuSurvivorsClothingBoxUI
         }
         if (rotation < target - numBoxEntries || target == -1)
         {
-            if (angle < (float)Math.PI * 4f)
+            if (angle < MathF.PI * 4f)
             {
-                angle += (Time.realtimeSinceStartup - lastAngle) * size * Mathf.Lerp(80f, 20f, angle / ((float)Math.PI * 4f));
+                angle += (Time.realtimeSinceStartup - lastAngle) * size * Mathf.Lerp(80f, 20f, angle / (MathF.PI * 4f));
             }
             else
             {
@@ -557,31 +557,31 @@ public class MenuSurvivorsClothingBoxUI
         }
         else
         {
-            angle += (Time.realtimeSinceStartup - lastAngle) * Mathf.Max(((float)target - angle / ((float)Math.PI * 2f / (float)numBoxEntries)) / (float)numBoxEntries, 0.05f) * size * 20f;
+            angle += (Time.realtimeSinceStartup - lastAngle) * Mathf.Max(((float)target - angle / (MathF.PI * 2f / (float)numBoxEntries)) / (float)numBoxEntries, 0.05f) * size * 20f;
         }
         lastAngle = Time.realtimeSinceStartup;
-        rotation = (int)(angle / ((float)Math.PI * 2f / (float)numBoxEntries));
+        rotation = (int)(angle / (MathF.PI * 2f / (float)numBoxEntries));
         if (rotation == target)
         {
-            angle = (float)rotation * ((float)Math.PI * 2f / (float)numBoxEntries);
+            angle = (float)rotation * (MathF.PI * 2f / (float)numBoxEntries);
         }
         for (int i = 0; i < numBoxEntries; i++)
         {
-            float num = (float)Math.PI * 2f * (float)i / (float)numBoxEntries + (float)Math.PI;
-            dropButtons[i].positionScale_X = 0.5f + Mathf.Cos(angle - num) * (0.5f - size / 2f) - size / 2f;
-            dropButtons[i].positionScale_Y = 0.5f + Mathf.Sin(angle - num) * (0.5f - size / 2f) - size / 2f;
+            float num = MathF.PI * 2f * (float)i / (float)numBoxEntries + MathF.PI;
+            dropButtons[i].PositionScale_X = 0.5f + Mathf.Cos(angle - num) * (0.5f - size / 2f) - size / 2f;
+            dropButtons[i].PositionScale_Y = 0.5f + Mathf.Sin(angle - num) * (0.5f - size / 2f) - size / 2f;
         }
         if (rotation != lastRotation)
         {
             lastRotation = rotation;
-            boxButton.positionScale_Y = 0.25f;
-            boxButton.lerpPositionScale(0.3f, 0.3f, ESleekLerp.EXPONENTIAL, 20f);
-            finalBox.positionOffset_X = -20;
-            finalBox.positionOffset_Y = -20;
-            finalBox.sizeOffset_X = 40;
-            finalBox.sizeOffset_Y = 40;
-            finalBox.lerpPositionOffset(-10, -10, ESleekLerp.EXPONENTIAL, 1f);
-            finalBox.lerpSizeOffset(20, 20, ESleekLerp.EXPONENTIAL, 1f);
+            boxButton.PositionScale_Y = 0.25f;
+            boxButton.AnimatePositionScale(0.3f, 0.3f, ESleekLerp.EXPONENTIAL, 20f);
+            finalBox.PositionOffset_X = -20f;
+            finalBox.PositionOffset_Y = -20f;
+            finalBox.SizeOffset_X = 40f;
+            finalBox.SizeOffset_Y = 40f;
+            finalBox.AnimatePositionOffset(-10f, -10f, ESleekLerp.EXPONENTIAL, 1f);
+            finalBox.AnimateSizeOffset(20f, 20f, ESleekLerp.EXPONENTIAL, 1f);
             boxButton.updateInventory(0uL, boxEntries[rotation % numBoxEntries].id, 1, isClickable: false, isLarge: true);
             if (rotation == target)
             {
@@ -615,139 +615,139 @@ public class MenuSurvivorsClothingBoxUI
         }
         icons = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Survivors/MenuSurvivorsClothingBox/MenuSurvivorsClothingBox.unity3d");
         container = new SleekFullscreenBox();
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.positionScale_Y = 1f;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.PositionScale_Y = 1f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         MenuUI.container.AddChild(container);
         active = false;
         inventory = Glazier.Get().CreateConstraintFrame();
-        inventory.positionScale_X = 0.5f;
-        inventory.positionOffset_Y = 10;
-        inventory.sizeScale_X = 0.5f;
-        inventory.sizeScale_Y = 1f;
-        inventory.sizeOffset_Y = -20;
-        inventory.constraint = ESleekConstraint.FitInParent;
+        inventory.PositionScale_X = 0.5f;
+        inventory.PositionOffset_Y = 10f;
+        inventory.SizeScale_X = 0.5f;
+        inventory.SizeScale_Y = 1f;
+        inventory.SizeOffset_Y = -20f;
+        inventory.Constraint = ESleekConstraint.FitInParent;
         container.AddChild(inventory);
         finalBox = Glazier.Get().CreateBox();
-        finalBox.positionOffset_X = -10;
-        finalBox.positionOffset_Y = -10;
-        finalBox.sizeOffset_X = 20;
-        finalBox.sizeOffset_Y = 20;
+        finalBox.PositionOffset_X = -10f;
+        finalBox.PositionOffset_Y = -10f;
+        finalBox.SizeOffset_X = 20f;
+        finalBox.SizeOffset_Y = 20f;
         inventory.AddChild(finalBox);
         boxButton = new SleekInventory();
-        boxButton.positionOffset_Y = -30;
-        boxButton.positionScale_X = 0.3f;
-        boxButton.positionScale_Y = 0.3f;
-        boxButton.sizeScale_X = 0.4f;
-        boxButton.sizeScale_Y = 0.4f;
+        boxButton.PositionOffset_Y = -30f;
+        boxButton.PositionScale_X = 0.3f;
+        boxButton.PositionScale_Y = 0.3f;
+        boxButton.SizeScale_X = 0.4f;
+        boxButton.SizeScale_Y = 0.4f;
         inventory.AddChild(boxButton);
         keyButton = new SleekButtonIcon(null, 40);
-        keyButton.positionOffset_Y = -20;
-        keyButton.positionScale_X = 0.3f;
-        keyButton.positionScale_Y = 0.7f;
-        keyButton.sizeOffset_X = -5;
-        keyButton.sizeOffset_Y = 50;
-        keyButton.sizeScale_X = 0.2f;
+        keyButton.PositionOffset_Y = -20f;
+        keyButton.PositionScale_X = 0.3f;
+        keyButton.PositionScale_Y = 0.7f;
+        keyButton.SizeOffset_X = -5f;
+        keyButton.SizeOffset_Y = 50f;
+        keyButton.SizeScale_X = 0.2f;
         keyButton.text = localization.format("Key_Text");
         keyButton.tooltip = localization.format("Key_Tooltip");
         keyButton.onClickedButton += onClickedKeyButton;
         keyButton.fontSize = ESleekFontSize.Medium;
         keyButton.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
         inventory.AddChild(keyButton);
-        keyButton.isVisible = false;
+        keyButton.IsVisible = false;
         unboxButton = new SleekButtonIcon(null);
-        unboxButton.positionOffset_X = 5;
-        unboxButton.positionOffset_Y = -20;
-        unboxButton.positionScale_X = 0.5f;
-        unboxButton.positionScale_Y = 0.7f;
-        unboxButton.sizeOffset_X = -5;
-        unboxButton.sizeOffset_Y = 50;
-        unboxButton.sizeScale_X = 0.2f;
+        unboxButton.PositionOffset_X = 5f;
+        unboxButton.PositionOffset_Y = -20f;
+        unboxButton.PositionScale_X = 0.5f;
+        unboxButton.PositionScale_Y = 0.7f;
+        unboxButton.SizeOffset_X = -5f;
+        unboxButton.SizeOffset_Y = 50f;
+        unboxButton.SizeScale_X = 0.2f;
         unboxButton.text = localization.format("Unbox_Text");
         unboxButton.tooltip = localization.format("Unbox_Tooltip");
         unboxButton.onClickedButton += onClickedUnboxButton;
         unboxButton.fontSize = ESleekFontSize.Medium;
         unboxButton.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
         inventory.AddChild(unboxButton);
-        unboxButton.isVisible = false;
+        unboxButton.IsVisible = false;
         disabledBox = Glazier.Get().CreateBox();
-        disabledBox.positionOffset_Y = -20;
-        disabledBox.positionScale_X = 0.3f;
-        disabledBox.positionScale_Y = 0.7f;
-        disabledBox.sizeOffset_Y = 50;
-        disabledBox.sizeScale_X = 0.4f;
+        disabledBox.PositionOffset_Y = -20f;
+        disabledBox.PositionScale_X = 0.3f;
+        disabledBox.PositionScale_Y = 0.7f;
+        disabledBox.SizeOffset_Y = 50f;
+        disabledBox.SizeScale_X = 0.4f;
         inventory.AddChild(disabledBox);
-        disabledBox.isVisible = false;
+        disabledBox.IsVisible = false;
         rareLabel = Glazier.Get().CreateLabel();
-        rareLabel.positionOffset_X = 50;
-        rareLabel.positionOffset_Y = 50;
-        rareLabel.sizeOffset_X = 200;
-        rareLabel.sizeOffset_Y = 30;
-        rareLabel.text = localization.format("Rarity_Rare", formatQualityRarity(EItemRarity.RARE));
-        rareLabel.textColor = ItemTool.getRarityColorUI(EItemRarity.RARE);
-        rareLabel.fontAlignment = TextAnchor.MiddleLeft;
-        rareLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+        rareLabel.PositionOffset_X = 50f;
+        rareLabel.PositionOffset_Y = 50f;
+        rareLabel.SizeOffset_X = 200f;
+        rareLabel.SizeOffset_Y = 30f;
+        rareLabel.Text = localization.format("Rarity_Rare", formatQualityRarity(EItemRarity.RARE));
+        rareLabel.TextColor = ItemTool.getRarityColorUI(EItemRarity.RARE);
+        rareLabel.TextAlignment = TextAnchor.MiddleLeft;
+        rareLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
         container.AddChild(rareLabel);
         epicLabel = Glazier.Get().CreateLabel();
-        epicLabel.positionOffset_X = 50;
-        epicLabel.positionOffset_Y = 70;
-        epicLabel.sizeOffset_X = 200;
-        epicLabel.sizeOffset_Y = 30;
-        epicLabel.text = localization.format("Rarity_Epic", formatQualityRarity(EItemRarity.EPIC));
-        epicLabel.textColor = ItemTool.getRarityColorUI(EItemRarity.EPIC);
-        epicLabel.fontAlignment = TextAnchor.MiddleLeft;
-        epicLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+        epicLabel.PositionOffset_X = 50f;
+        epicLabel.PositionOffset_Y = 70f;
+        epicLabel.SizeOffset_X = 200f;
+        epicLabel.SizeOffset_Y = 30f;
+        epicLabel.Text = localization.format("Rarity_Epic", formatQualityRarity(EItemRarity.EPIC));
+        epicLabel.TextColor = ItemTool.getRarityColorUI(EItemRarity.EPIC);
+        epicLabel.TextAlignment = TextAnchor.MiddleLeft;
+        epicLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
         container.AddChild(epicLabel);
         legendaryLabel = Glazier.Get().CreateLabel();
-        legendaryLabel.positionOffset_X = 50;
-        legendaryLabel.positionOffset_Y = 90;
-        legendaryLabel.sizeOffset_X = 200;
-        legendaryLabel.sizeOffset_Y = 30;
-        legendaryLabel.text = localization.format("Rarity_Legendary", formatQualityRarity(EItemRarity.LEGENDARY));
-        legendaryLabel.textColor = ItemTool.getRarityColorUI(EItemRarity.LEGENDARY);
-        legendaryLabel.fontAlignment = TextAnchor.MiddleLeft;
-        legendaryLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+        legendaryLabel.PositionOffset_X = 50f;
+        legendaryLabel.PositionOffset_Y = 90f;
+        legendaryLabel.SizeOffset_X = 200f;
+        legendaryLabel.SizeOffset_Y = 30f;
+        legendaryLabel.Text = localization.format("Rarity_Legendary", formatQualityRarity(EItemRarity.LEGENDARY));
+        legendaryLabel.TextColor = ItemTool.getRarityColorUI(EItemRarity.LEGENDARY);
+        legendaryLabel.TextAlignment = TextAnchor.MiddleLeft;
+        legendaryLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
         container.AddChild(legendaryLabel);
         mythicalLabel = Glazier.Get().CreateLabel();
-        mythicalLabel.positionOffset_X = 50;
-        mythicalLabel.positionOffset_Y = 110;
-        mythicalLabel.sizeOffset_X = 200;
-        mythicalLabel.sizeOffset_Y = 30;
-        mythicalLabel.text = localization.format("Rarity_Mythical", formatQualityRarity(EItemRarity.MYTHICAL));
-        mythicalLabel.textColor = ItemTool.getRarityColorUI(EItemRarity.MYTHICAL);
-        mythicalLabel.fontAlignment = TextAnchor.MiddleLeft;
-        mythicalLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+        mythicalLabel.PositionOffset_X = 50f;
+        mythicalLabel.PositionOffset_Y = 110f;
+        mythicalLabel.SizeOffset_X = 200f;
+        mythicalLabel.SizeOffset_Y = 30f;
+        mythicalLabel.Text = localization.format("Rarity_Mythical", formatQualityRarity(EItemRarity.MYTHICAL));
+        mythicalLabel.TextColor = ItemTool.getRarityColorUI(EItemRarity.MYTHICAL);
+        mythicalLabel.TextAlignment = TextAnchor.MiddleLeft;
+        mythicalLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
         container.AddChild(mythicalLabel);
         equalizedLabel = Glazier.Get().CreateLabel();
-        equalizedLabel.positionOffset_X = 50;
-        equalizedLabel.positionOffset_Y = 50;
-        equalizedLabel.sizeOffset_X = 200;
-        equalizedLabel.sizeOffset_Y = 30;
-        equalizedLabel.text = localization.format("Rarity_Equalized");
-        equalizedLabel.fontAlignment = TextAnchor.MiddleLeft;
-        equalizedLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+        equalizedLabel.PositionOffset_X = 50f;
+        equalizedLabel.PositionOffset_Y = 50f;
+        equalizedLabel.SizeOffset_X = 200f;
+        equalizedLabel.SizeOffset_Y = 30f;
+        equalizedLabel.Text = localization.format("Rarity_Equalized");
+        equalizedLabel.TextAlignment = TextAnchor.MiddleLeft;
+        equalizedLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
         container.AddChild(equalizedLabel);
         bonusLabel = Glazier.Get().CreateLabel();
-        bonusLabel.positionOffset_X = 50;
-        bonusLabel.positionOffset_Y = 130;
-        bonusLabel.sizeOffset_X = 200;
-        bonusLabel.sizeOffset_Y = 30;
-        bonusLabel.text = localization.format("Rarity_Bonus_Items", (BONUS_ITEM_RARITY * 100f).ToString("0.0"));
-        bonusLabel.fontAlignment = TextAnchor.MiddleLeft;
-        bonusLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+        bonusLabel.PositionOffset_X = 50f;
+        bonusLabel.PositionOffset_Y = 130f;
+        bonusLabel.SizeOffset_X = 200f;
+        bonusLabel.SizeOffset_Y = 30f;
+        bonusLabel.Text = localization.format("Rarity_Bonus_Items", (BONUS_ITEM_RARITY * 100f).ToString("0.0"));
+        bonusLabel.TextAlignment = TextAnchor.MiddleLeft;
+        bonusLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
         container.AddChild(bonusLabel);
         dropButtons = null;
         TempSteamworksEconomy economyService = Provider.provider.economyService;
         economyService.onInventoryExchanged = (TempSteamworksEconomy.InventoryExchanged)Delegate.Combine(economyService.onInventoryExchanged, new TempSteamworksEconomy.InventoryExchanged(onInventoryExchanged));
         backButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));
-        backButton.positionOffset_Y = -50;
-        backButton.positionScale_Y = 1f;
-        backButton.sizeOffset_X = 200;
-        backButton.sizeOffset_Y = 50;
+        backButton.PositionOffset_Y = -50f;
+        backButton.PositionScale_Y = 1f;
+        backButton.SizeOffset_X = 200f;
+        backButton.SizeOffset_Y = 50f;
         backButton.text = MenuDashboardUI.localization.format("BackButtonText");
         backButton.tooltip = MenuDashboardUI.localization.format("BackButtonTooltip");
         backButton.onClickedButton += onClickedBackButton;

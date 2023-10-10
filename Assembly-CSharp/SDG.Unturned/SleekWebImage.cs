@@ -4,17 +4,21 @@ namespace SDG.Unturned;
 
 public class SleekWebImage : SleekWrapper
 {
+    public bool useImageDimensions;
+
+    public float maxImageDimensionsWidth = -1f;
+
     private ISleekImage internalImage;
 
     public SleekColor color
     {
         get
         {
-            return internalImage.color;
+            return internalImage.TintColor;
         }
         set
         {
-            internalImage.color = value;
+            internalImage.TintColor = value;
         }
     }
 
@@ -30,22 +34,36 @@ public class SleekWebImage : SleekWrapper
 
     public void Clear()
     {
-        internalImage.texture = null;
+        internalImage.Texture = null;
     }
 
     public SleekWebImage()
     {
         internalImage = Glazier.Get().CreateImage();
-        internalImage.sizeScale_X = 1f;
-        internalImage.sizeScale_Y = 1f;
+        internalImage.SizeScale_X = 1f;
+        internalImage.SizeScale_Y = 1f;
         AddChild(internalImage);
     }
 
     private void OnImageReady(Texture2D icon, bool responsibleForDestroy)
     {
+        if (useImageDimensions && icon != null)
+        {
+            if (maxImageDimensionsWidth > 0.5f && (float)icon.width > maxImageDimensionsWidth && icon.height > 0)
+            {
+                float num = (float)icon.width / (float)icon.height;
+                base.SizeOffset_X = maxImageDimensionsWidth;
+                base.SizeOffset_Y = maxImageDimensionsWidth / num;
+            }
+            else
+            {
+                base.SizeOffset_X = icon.width;
+                base.SizeOffset_Y = icon.height;
+            }
+        }
         if (internalImage != null)
         {
-            internalImage.setTextureAndShouldDestroy(icon, responsibleForDestroy);
+            internalImage.SetTextureAndShouldDestroy(icon, responsibleForDestroy);
         }
         else if (responsibleForDestroy)
         {

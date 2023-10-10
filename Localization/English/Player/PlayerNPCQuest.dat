@@ -19,6 +19,7 @@ Reward_Item {1} x{0}
 Reward_Item_Random Random Item x{0}
 Reward_Vehicle {0} x1
 Reward_Currency {0} Currency
+Reward_Health {0} Health
 
 Accept Accept
 Accept_Tooltip Take Quest

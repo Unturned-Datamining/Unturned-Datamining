@@ -13,18 +13,18 @@ public class AirdropDevkitNode : TempNodeBase
         public Menu(AirdropDevkitNode node)
         {
             this.node = node;
-            base.sizeOffset_X = 400;
-            int num = 0;
+            base.SizeOffset_X = 400f;
+            float num = 0f;
             ISleekUInt16Field sleekUInt16Field = Glazier.Get().CreateUInt16Field();
-            sleekUInt16Field.positionOffset_Y = num;
-            sleekUInt16Field.sizeOffset_X = 200;
-            sleekUInt16Field.sizeOffset_Y = 30;
-            sleekUInt16Field.state = node.id;
-            sleekUInt16Field.addLabel("ID", ESleekSide.RIGHT);
-            sleekUInt16Field.onTypedUInt16 += OnIdTyped;
+            sleekUInt16Field.PositionOffset_Y = num;
+            sleekUInt16Field.SizeOffset_X = 200f;
+            sleekUInt16Field.SizeOffset_Y = 30f;
+            sleekUInt16Field.Value = node.id;
+            sleekUInt16Field.AddLabel("ID", ESleekSide.RIGHT);
+            sleekUInt16Field.OnValueChanged += OnIdTyped;
             AddChild(sleekUInt16Field);
-            num += sleekUInt16Field.sizeOffset_Y + 10;
-            base.sizeOffset_Y = num - 10;
+            num += sleekUInt16Field.SizeOffset_Y + 10f;
+            base.SizeOffset_Y = num - 10f;
         }
 
         private void OnIdTyped(ISleekUInt16Field field, ushort state)

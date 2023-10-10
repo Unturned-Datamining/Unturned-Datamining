@@ -5,9 +5,9 @@ namespace SDG.Unturned;
 
 public static class MathfEx
 {
-    public const float TAU = (float)Math.PI * 2f;
+    public const float TAU = MathF.PI * 2f;
 
-    public const float HALF_PI = (float)Math.PI / 2f;
+    public const float HALF_PI = MathF.PI / 2f;
 
     public static Vector3 Clamp(Vector3 value, float min, float max)
     {
@@ -185,6 +185,11 @@ public static class MathfEx
         return (ushort)Mathf.Clamp(value, 0, 65535);
     }
 
+    public static uint ClampToUInt(int value)
+    {
+        return (uint)Mathf.Clamp(value, 0, int.MaxValue);
+    }
+
     public static int ClampLongToInt(long value, int min, int max)
     {
         if (value >= min)
@@ -228,6 +233,11 @@ public static class MathfEx
     public static ushort CeilToUShort(float value)
     {
         return ClampToUShort(Mathf.CeilToInt(value));
+    }
+
+    public static uint CeilToUInt(float value)
+    {
+        return ClampToUInt(Mathf.CeilToInt(value));
     }
 
     public static Vector2 RandomPositionInCircle(float radius)

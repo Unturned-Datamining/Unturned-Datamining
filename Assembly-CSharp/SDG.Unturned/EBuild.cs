@@ -40,5 +40,6 @@ public enum EBuild
     MANNEQUIN,
     STEREO,
     SIGN_WALL,
-    CLOCK
+    CLOCK,
+    BARRICADE_WALL
 }

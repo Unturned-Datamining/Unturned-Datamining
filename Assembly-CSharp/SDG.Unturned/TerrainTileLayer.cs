@@ -21,20 +21,20 @@ internal class TerrainTileLayer : SleekWrapper
             LandscapeMaterialAsset landscapeMaterialAsset = assetReference.Find();
             if (landscapeMaterialAsset != null)
             {
-                nameButton.text = landscapeMaterialAsset.FriendlyName;
+                nameButton.Text = landscapeMaterialAsset.FriendlyName;
             }
             else if (assetReference.isNull)
             {
-                nameButton.text = EditorTerrainTilesUI.localization.format("LayerNull");
+                nameButton.Text = EditorTerrainTilesUI.localization.format("LayerNull");
             }
             else
             {
-                nameButton.text = assetReference.GUID.ToString("N");
+                nameButton.Text = assetReference.GUID.ToString("N");
             }
         }
         else
         {
-            nameButton.text = string.Empty;
+            nameButton.Text = string.Empty;
         }
     }
 
@@ -43,16 +43,16 @@ internal class TerrainTileLayer : SleekWrapper
         this.owner = owner;
         this.layerIndex = layerIndex;
         layerBox = Glazier.Get().CreateBox();
-        layerBox.sizeOffset_X = 30;
-        layerBox.sizeScale_Y = 1f;
-        layerBox.text = layerIndex.ToString();
+        layerBox.SizeOffset_X = 30f;
+        layerBox.SizeScale_Y = 1f;
+        layerBox.Text = layerIndex.ToString();
         AddChild(layerBox);
         nameButton = Glazier.Get().CreateButton();
-        nameButton.positionOffset_X = 30;
-        nameButton.sizeScale_X = 1f;
-        nameButton.sizeScale_Y = 1f;
-        nameButton.sizeOffset_X = -30;
-        nameButton.onClickedButton += OnClicked;
+        nameButton.PositionOffset_X = 30f;
+        nameButton.SizeScale_X = 1f;
+        nameButton.SizeScale_Y = 1f;
+        nameButton.SizeOffset_X = -30f;
+        nameButton.OnClicked += OnClicked;
         AddChild(nameButton);
         UpdateSelectedTile();
     }

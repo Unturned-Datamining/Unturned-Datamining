@@ -50,7 +50,7 @@ internal class ItemStoreMenu : SleekFullscreenBox
     {
         IsOpen = true;
         AnimateIntoView();
-        viewCartButton.isVisible = !ItemStore.Get().IsCartEmpty;
+        viewCartButton.IsVisible = !ItemStore.Get().IsCartEmpty;
         if (areListingsDirty)
         {
             areListingsDirty = false;
@@ -64,7 +64,7 @@ internal class ItemStoreMenu : SleekFullscreenBox
 
     public void OpenNewItems()
     {
-        searchField.text = string.Empty;
+        searchField.Text = string.Empty;
         categoryFilter = ECategoryFilter.New;
         areListingsDirty = true;
         Open();
@@ -84,115 +84,115 @@ internal class ItemStoreMenu : SleekFullscreenBox
         localization = Localization.read("/Menu/Survivors/ItemStoreMenu.dat");
         icons = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Survivors/ItemStore/ItemStore.unity3d");
         instance = this;
-        base.positionScale_Y = 1f;
-        base.positionOffset_X = 10;
-        base.positionOffset_Y = 10;
-        base.sizeOffset_X = -20;
-        base.sizeOffset_Y = -20;
-        base.sizeScale_X = 1f;
-        base.sizeScale_Y = 1f;
+        base.PositionScale_Y = 1f;
+        base.PositionOffset_X = 10f;
+        base.PositionOffset_Y = 10f;
+        base.SizeOffset_X = -20f;
+        base.SizeOffset_Y = -20f;
+        base.SizeScale_X = 1f;
+        base.SizeScale_Y = 1f;
         ISleekConstraintFrame sleekConstraintFrame = Glazier.Get().CreateConstraintFrame();
-        sleekConstraintFrame.positionOffset_Y = 70;
-        sleekConstraintFrame.positionScale_X = 0.5f;
-        sleekConstraintFrame.sizeScale_X = 0.5f;
-        sleekConstraintFrame.sizeScale_Y = 1f;
-        sleekConstraintFrame.sizeOffset_Y = -105;
-        sleekConstraintFrame.constraint = ESleekConstraint.FitInParent;
+        sleekConstraintFrame.PositionOffset_Y = 70f;
+        sleekConstraintFrame.PositionScale_X = 0.5f;
+        sleekConstraintFrame.SizeScale_X = 0.5f;
+        sleekConstraintFrame.SizeScale_Y = 1f;
+        sleekConstraintFrame.SizeOffset_Y = -105f;
+        sleekConstraintFrame.Constraint = ESleekConstraint.FitInParent;
         AddChild(sleekConstraintFrame);
         listingButtons = new SleekItemStoreListing[25];
         for (int i = 0; i < 25; i++)
         {
             SleekItemStoreListing sleekItemStoreListing = new SleekItemStoreListing
             {
-                positionOffset_X = 5,
-                positionOffset_Y = 5,
-                positionScale_X = (float)(i % 5) * 0.2f,
-                positionScale_Y = (float)Mathf.FloorToInt((float)i / 5f) * 0.2f,
-                sizeOffset_X = -10,
-                sizeOffset_Y = -10,
-                sizeScale_X = 0.2f,
-                sizeScale_Y = 0.2f
+                PositionOffset_X = 5f,
+                PositionOffset_Y = 5f,
+                PositionScale_X = (float)(i % 5) * 0.2f,
+                PositionScale_Y = (float)Mathf.FloorToInt((float)i / 5f) * 0.2f,
+                SizeOffset_X = -10f,
+                SizeOffset_Y = -10f,
+                SizeScale_X = 0.2f,
+                SizeScale_Y = 0.2f
             };
             sleekConstraintFrame.AddChild(sleekItemStoreListing);
             listingButtons[i] = sleekItemStoreListing;
         }
         categoryButtonsFrame = Glazier.Get().CreateFrame();
-        categoryButtonsFrame.positionOffset_Y = -70;
-        categoryButtonsFrame.sizeScale_X = 1f;
-        categoryButtonsFrame.sizeOffset_Y = 30;
+        categoryButtonsFrame.PositionOffset_Y = -70f;
+        categoryButtonsFrame.SizeScale_X = 1f;
+        categoryButtonsFrame.SizeOffset_Y = 30f;
         sleekConstraintFrame.AddChild(categoryButtonsFrame);
         searchField = Glazier.Get().CreateStringField();
-        searchField.positionOffset_Y = -35;
-        searchField.sizeOffset_X = -110;
-        searchField.sizeOffset_Y = 30;
-        searchField.sizeScale_X = 1f;
-        searchField.hint = MenuSurvivorsClothingUI.localization.format("Search_Field_Hint");
-        searchField.onEntered += OnEnteredSearchField;
+        searchField.PositionOffset_Y = -35f;
+        searchField.SizeOffset_X = -110f;
+        searchField.SizeOffset_Y = 30f;
+        searchField.SizeScale_X = 1f;
+        searchField.PlaceholderText = MenuSurvivorsClothingUI.localization.format("Search_Field_Hint");
+        searchField.OnTextSubmitted += OnEnteredSearchField;
         sleekConstraintFrame.AddChild(searchField);
         ISleekButton sleekButton = Glazier.Get().CreateButton();
-        sleekButton.positionOffset_X = -105;
-        sleekButton.positionOffset_Y = -35;
-        sleekButton.positionScale_X = 1f;
-        sleekButton.sizeOffset_X = 100;
-        sleekButton.sizeOffset_Y = 30;
-        sleekButton.text = MenuSurvivorsClothingUI.localization.format("Search");
-        sleekButton.tooltipText = MenuSurvivorsClothingUI.localization.format("Search_Tooltip");
-        sleekButton.onClickedButton += OnClickedSearchButton;
+        sleekButton.PositionOffset_X = -105f;
+        sleekButton.PositionOffset_Y = -35f;
+        sleekButton.PositionScale_X = 1f;
+        sleekButton.SizeOffset_X = 100f;
+        sleekButton.SizeOffset_Y = 30f;
+        sleekButton.Text = MenuSurvivorsClothingUI.localization.format("Search");
+        sleekButton.TooltipText = MenuSurvivorsClothingUI.localization.format("Search_Tooltip");
+        sleekButton.OnClicked += OnClickedSearchButton;
         sleekConstraintFrame.AddChild(sleekButton);
         pageBox = Glazier.Get().CreateBox();
-        pageBox.positionOffset_X = -50;
-        pageBox.positionOffset_Y = 5;
-        pageBox.positionScale_X = 0.5f;
-        pageBox.positionScale_Y = 1f;
-        pageBox.sizeOffset_X = 100;
-        pageBox.sizeOffset_Y = 30;
-        pageBox.fontSize = ESleekFontSize.Medium;
+        pageBox.PositionOffset_X = -50f;
+        pageBox.PositionOffset_Y = 5f;
+        pageBox.PositionScale_X = 0.5f;
+        pageBox.PositionScale_Y = 1f;
+        pageBox.SizeOffset_X = 100f;
+        pageBox.SizeOffset_Y = 30f;
+        pageBox.FontSize = ESleekFontSize.Medium;
         sleekConstraintFrame.AddChild(pageBox);
         SleekButtonIcon sleekButtonIcon = new SleekButtonIcon(MenuSurvivorsClothingUI.icons.load<Texture2D>("Left"));
-        sleekButtonIcon.positionOffset_X = -85;
-        sleekButtonIcon.positionOffset_Y = 5;
-        sleekButtonIcon.positionScale_X = 0.5f;
-        sleekButtonIcon.positionScale_Y = 1f;
-        sleekButtonIcon.sizeOffset_X = 30;
-        sleekButtonIcon.sizeOffset_Y = 30;
+        sleekButtonIcon.PositionOffset_X = -85f;
+        sleekButtonIcon.PositionOffset_Y = 5f;
+        sleekButtonIcon.PositionScale_X = 0.5f;
+        sleekButtonIcon.PositionScale_Y = 1f;
+        sleekButtonIcon.SizeOffset_X = 30f;
+        sleekButtonIcon.SizeOffset_Y = 30f;
         sleekButtonIcon.tooltip = MenuSurvivorsClothingUI.localization.format("Left_Tooltip");
         sleekButtonIcon.iconColor = ESleekTint.FOREGROUND;
         sleekButtonIcon.onClickedButton += OnClickedLeftPageButton;
         sleekConstraintFrame.AddChild(sleekButtonIcon);
         SleekButtonIcon sleekButtonIcon2 = new SleekButtonIcon(MenuSurvivorsClothingUI.icons.load<Texture2D>("Right"));
-        sleekButtonIcon2.positionOffset_X = 55;
-        sleekButtonIcon2.positionOffset_Y = 5;
-        sleekButtonIcon2.positionScale_X = 0.5f;
-        sleekButtonIcon2.positionScale_Y = 1f;
-        sleekButtonIcon2.sizeOffset_X = 30;
-        sleekButtonIcon2.sizeOffset_Y = 30;
+        sleekButtonIcon2.PositionOffset_X = 55f;
+        sleekButtonIcon2.PositionOffset_Y = 5f;
+        sleekButtonIcon2.PositionScale_X = 0.5f;
+        sleekButtonIcon2.PositionScale_Y = 1f;
+        sleekButtonIcon2.SizeOffset_X = 30f;
+        sleekButtonIcon2.SizeOffset_Y = 30f;
         sleekButtonIcon2.tooltip = MenuSurvivorsClothingUI.localization.format("Right_Tooltip");
         sleekButtonIcon2.iconColor = ESleekTint.FOREGROUND;
         sleekButtonIcon2.onClickedButton += OnClickedRightPageButton;
         sleekConstraintFrame.AddChild(sleekButtonIcon2);
         viewCartButton = Glazier.Get().CreateButton();
-        viewCartButton.positionOffset_Y = -110;
-        viewCartButton.positionScale_Y = 1f;
-        viewCartButton.sizeOffset_X = 200;
-        viewCartButton.sizeOffset_Y = 50;
-        viewCartButton.text = localization.format("ViewCart_Label");
-        viewCartButton.tooltipText = localization.format("ViewCart_Tooltip");
-        viewCartButton.onClickedButton += OnClickedViewCartButton;
-        viewCartButton.fontSize = ESleekFontSize.Medium;
+        viewCartButton.PositionOffset_Y = -110f;
+        viewCartButton.PositionScale_Y = 1f;
+        viewCartButton.SizeOffset_X = 200f;
+        viewCartButton.SizeOffset_Y = 50f;
+        viewCartButton.Text = localization.format("ViewCart_Label");
+        viewCartButton.TooltipText = localization.format("ViewCart_Tooltip");
+        viewCartButton.OnClicked += OnClickedViewCartButton;
+        viewCartButton.FontSize = ESleekFontSize.Medium;
         AddChild(viewCartButton);
         ISleekSprite sleekSprite = Glazier.Get().CreateSprite(icons.load<Sprite>("Cart"));
-        sleekSprite.positionOffset_X = 5;
-        sleekSprite.positionOffset_Y = 5;
-        sleekSprite.sizeOffset_X = 40;
-        sleekSprite.sizeOffset_Y = 40;
-        sleekSprite.color = ESleekTint.FOREGROUND;
-        sleekSprite.drawMethod = ESleekSpriteType.Regular;
+        sleekSprite.PositionOffset_X = 5f;
+        sleekSprite.PositionOffset_Y = 5f;
+        sleekSprite.SizeOffset_X = 40f;
+        sleekSprite.SizeOffset_Y = 40f;
+        sleekSprite.TintColor = ESleekTint.FOREGROUND;
+        sleekSprite.DrawMethod = ESleekSpriteType.Regular;
         viewCartButton.AddChild(sleekSprite);
         SleekButtonIcon sleekButtonIcon3 = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));
-        sleekButtonIcon3.positionOffset_Y = -50;
-        sleekButtonIcon3.positionScale_Y = 1f;
-        sleekButtonIcon3.sizeOffset_X = 200;
-        sleekButtonIcon3.sizeOffset_Y = 50;
+        sleekButtonIcon3.PositionOffset_Y = -50f;
+        sleekButtonIcon3.PositionScale_Y = 1f;
+        sleekButtonIcon3.SizeOffset_X = 200f;
+        sleekButtonIcon3.SizeOffset_Y = 50f;
         sleekButtonIcon3.text = MenuDashboardUI.localization.format("BackButtonText");
         sleekButtonIcon3.tooltip = MenuDashboardUI.localization.format("BackButtonTooltip");
         sleekButtonIcon3.onClickedButton += OnClickedBackButton;
@@ -278,7 +278,7 @@ internal class ItemStoreMenu : SleekFullscreenBox
 
     private void ApplySearchTextFilter()
     {
-        string text = searchField.text;
+        string text = searchField.Text;
         if (string.IsNullOrEmpty(text))
         {
             return;
@@ -338,7 +338,7 @@ internal class ItemStoreMenu : SleekFullscreenBox
 
     private void RefreshPage()
     {
-        pageBox.text = MenuSurvivorsClothingUI.localization.format("Page", pageIndex + 1, pageCount);
+        pageBox.Text = MenuSurvivorsClothingUI.localization.format("Page", pageIndex + 1, pageCount);
         int num = pageIndex * listingButtons.Length;
         int num2 = Mathf.Min(filteredListings.Count - num, listingButtons.Length);
         for (int i = 0; i < num2; i++)
@@ -364,54 +364,54 @@ internal class ItemStoreMenu : SleekFullscreenBox
         if (hasNewListings)
         {
             ISleekButton sleekButton = Glazier.Get().CreateButton();
-            sleekButton.positionScale_X = num2;
-            sleekButton.sizeScale_X = num3;
-            sleekButton.sizeScale_Y = 1f;
-            sleekButton.text = localization.format("FilterNewButton_Label") + " x" + itemStore.GetNewListingIndices().Length;
-            sleekButton.tooltipText = localization.format("FilterNewButton_Tooltip");
-            sleekButton.onClickedButton += OnClickedFilterNew;
+            sleekButton.PositionScale_X = num2;
+            sleekButton.SizeScale_X = num3;
+            sleekButton.SizeScale_Y = 1f;
+            sleekButton.Text = localization.format("FilterNewButton_Label") + " x" + itemStore.GetNewListingIndices().Length;
+            sleekButton.TooltipText = localization.format("FilterNewButton_Tooltip");
+            sleekButton.OnClicked += OnClickedFilterNew;
             categoryButtonsFrame.AddChild(sleekButton);
             num2 += num3;
         }
         if (hasFeaturedListings)
         {
             ISleekButton sleekButton2 = Glazier.Get().CreateButton();
-            sleekButton2.positionScale_X = num2;
-            sleekButton2.sizeScale_X = num3;
-            sleekButton2.sizeScale_Y = 1f;
-            sleekButton2.text = localization.format("FilterFeaturedButton_Label") + " x" + itemStore.GetFeaturedListingIndices().Length;
-            sleekButton2.tooltipText = localization.format("FilterFeaturedButton_Label");
-            sleekButton2.onClickedButton += OnClickedFilterFeatured;
+            sleekButton2.PositionScale_X = num2;
+            sleekButton2.SizeScale_X = num3;
+            sleekButton2.SizeScale_Y = 1f;
+            sleekButton2.Text = localization.format("FilterFeaturedButton_Label") + " x" + itemStore.GetFeaturedListingIndices().Length;
+            sleekButton2.TooltipText = localization.format("FilterFeaturedButton_Label");
+            sleekButton2.OnClicked += OnClickedFilterFeatured;
             categoryButtonsFrame.AddChild(sleekButton2);
             num2 += num3;
         }
         ISleekButton sleekButton3 = Glazier.Get().CreateButton();
-        sleekButton3.positionScale_X = num2;
-        sleekButton3.sizeScale_X = num3;
-        sleekButton3.sizeScale_Y = 1f;
-        sleekButton3.text = localization.format("FilterAllButton_Label");
-        sleekButton3.tooltipText = localization.format("FilterAllButton_Tooltip");
-        sleekButton3.onClickedButton += OnClickedFilterAll;
+        sleekButton3.PositionScale_X = num2;
+        sleekButton3.SizeScale_X = num3;
+        sleekButton3.SizeScale_Y = 1f;
+        sleekButton3.Text = localization.format("FilterAllButton_Label");
+        sleekButton3.TooltipText = localization.format("FilterAllButton_Tooltip");
+        sleekButton3.OnClicked += OnClickedFilterAll;
         categoryButtonsFrame.AddChild(sleekButton3);
         num2 += num3;
         ISleekButton sleekButton4 = Glazier.Get().CreateButton();
-        sleekButton4.positionScale_X = num2;
-        sleekButton4.sizeScale_X = num3;
-        sleekButton4.sizeScale_Y = 1f;
-        sleekButton4.text = localization.format("FilterBundlesButton_Label");
-        sleekButton4.tooltipText = localization.format("FilterBundlesButton_Tooltip");
-        sleekButton4.onClickedButton += OnClickedFilterBundles;
+        sleekButton4.PositionScale_X = num2;
+        sleekButton4.SizeScale_X = num3;
+        sleekButton4.SizeScale_Y = 1f;
+        sleekButton4.Text = localization.format("FilterBundlesButton_Label");
+        sleekButton4.TooltipText = localization.format("FilterBundlesButton_Tooltip");
+        sleekButton4.OnClicked += OnClickedFilterBundles;
         categoryButtonsFrame.AddChild(sleekButton4);
         num2 += num3;
         if (hasDiscountedListings)
         {
             ISleekButton sleekButton5 = Glazier.Get().CreateButton();
-            sleekButton5.positionScale_X = num2;
-            sleekButton5.sizeScale_X = num3;
-            sleekButton5.sizeScale_Y = 1f;
-            sleekButton5.text = localization.format("FilterSpecialsButton_Label") + " x" + itemStore.GetDiscountedListingIndices().Length;
-            sleekButton5.tooltipText = localization.format("FilterSpecialsButton_Tooltip");
-            sleekButton5.onClickedButton += OnClickedFilterSpecials;
+            sleekButton5.PositionScale_X = num2;
+            sleekButton5.SizeScale_X = num3;
+            sleekButton5.SizeScale_Y = 1f;
+            sleekButton5.Text = localization.format("FilterSpecialsButton_Label") + " x" + itemStore.GetDiscountedListingIndices().Length;
+            sleekButton5.TooltipText = localization.format("FilterSpecialsButton_Tooltip");
+            sleekButton5.OnClicked += OnClickedFilterSpecials;
             categoryButtonsFrame.AddChild(sleekButton5);
         }
     }

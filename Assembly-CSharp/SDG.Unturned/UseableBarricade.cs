@@ -285,7 +285,7 @@ public class UseableBarricade : Useable
 
     private Vector3 getPointInWorldSpace()
     {
-        if (parent == null || (base.channel.isOwner && !wasAsked))
+        if (parent == null || (base.channel.IsLocalPlayer && !wasAsked))
         {
             return point;
         }
@@ -296,14 +296,14 @@ public class UseableBarricade : Useable
     {
         if (base.player.movement.isSafe && base.player.movement.isSafeInfo.noBuildables)
         {
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 PlayerUI.hint(null, EPlayerMessage.SAFEZONE);
             }
             return false;
         }
         Vector3 pointInWorldSpace = getPointInWorldSpace();
-        if (base.channel.isOwner && parentVehicle != null)
+        if (base.channel.IsLocalPlayer && parentVehicle != null)
         {
             if (!allowedToPlaceOnVehicle)
             {
@@ -320,7 +320,7 @@ public class UseableBarricade : Useable
         {
             if (!LevelNavigation.checkSafeFakeNav(pointInWorldSpace) || parent != null)
             {
-                if (base.channel.isOwner)
+                if (base.channel.IsLocalPlayer)
                 {
                     PlayerUI.hint(null, EPlayerMessage.NAV);
                 }
@@ -331,7 +331,7 @@ public class UseableBarricade : Useable
                 ZombieDifficultyAsset difficultyInBound = ZombieManager.getDifficultyInBound(bound);
                 if (difficultyInBound != null && !difficultyInBound.Allow_Horde_Beacon)
                 {
-                    if (base.channel.isOwner)
+                    if (base.channel.IsLocalPlayer)
                     {
                         PlayerUI.hint(null, EPlayerMessage.NOT_ALLOWED_HERE);
                     }
@@ -343,7 +343,7 @@ public class UseableBarricade : Useable
         {
             if (parent != null && !ClaimManager.canBuildOnVehicle(parent, base.channel.owner.playerID.steamID, base.player.quests.groupID))
             {
-                if (base.channel.isOwner)
+                if (base.channel.IsLocalPlayer)
                 {
                     PlayerUI.hint(null, EPlayerMessage.CLAIM);
                 }
@@ -351,7 +351,7 @@ public class UseableBarricade : Useable
             }
             if (!ClaimManager.checkCanBuild(pointInWorldSpace, base.channel.owner.playerID.steamID, base.player.quests.groupID, equippedBarricadeAsset.build == EBuild.CLAIM))
             {
-                if (base.channel.isOwner)
+                if (base.channel.IsLocalPlayer)
                 {
                     PlayerUI.hint(null, EPlayerMessage.CLAIM);
                 }
@@ -360,7 +360,7 @@ public class UseableBarricade : Useable
         }
         if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && VolumeManager<PlayerClipVolume, PlayerClipVolumeManager>.Get().IsPositionInsideAnyVolume(pointInWorldSpace))
         {
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 PlayerUI.hint(null, EPlayerMessage.BOUNDS);
             }
@@ -374,7 +374,7 @@ public class UseableBarricade : Useable
             }
             if (VolumeManager<KillVolume, KillVolumeManager>.Get().IsPositionInsideAnyVolume(pointInWorldSpace))
             {
-                if (base.channel.isOwner)
+                if (base.channel.IsLocalPlayer)
                 {
                     PlayerUI.hint(null, EPlayerMessage.BOUNDS);
                 }
@@ -383,7 +383,7 @@ public class UseableBarricade : Useable
         }
         if (!equippedBarricadeAsset.allowPlacementOnVehicle && !Provider.modeConfigData.Gameplay.Bypass_Buildable_Mobility && parent != null && parentVehicle != null && parentVehicle.asset != null && !parentVehicle.asset.supportsMobileBuildables)
         {
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 PlayerUI.hint(null, EPlayerMessage.MOBILE);
             }
@@ -391,7 +391,7 @@ public class UseableBarricade : Useable
         }
         if (parent != null && parentVehicle != null && parentVehicle.anySeatsOccupied)
         {
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 PlayerUI.hint(null, EPlayerMessage.BUILD_ON_OCCUPIED_VEHICLE);
             }
@@ -399,7 +399,7 @@ public class UseableBarricade : Useable
         }
         if (base.player.movement.getVehicle() != null)
         {
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 PlayerUI.hint(null, EPlayerMessage.CANNOT_BUILD_WHILE_SEATED);
             }
@@ -407,7 +407,7 @@ public class UseableBarricade : Useable
         }
         if ((Level.info == null || Level.info.type != ELevelType.ARENA) && !LevelPlayers.checkCanBuild(pointInWorldSpace))
         {
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 PlayerUI.hint(null, EPlayerMessage.SPAWN);
             }
@@ -419,7 +419,7 @@ public class UseableBarricade : Useable
         }
         if (WaterUtility.isPointUnderwater(pointInWorldSpace) && (equippedBarricadeAsset.build == EBuild.CAMPFIRE || equippedBarricadeAsset.build == EBuild.TORCH))
         {
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 PlayerUI.hint(null, EPlayerMessage.UNDERWATER);
             }
@@ -435,7 +435,7 @@ public class UseableBarricade : Useable
         }
         if (Physics.OverlapBoxNonAlloc(mask: (!(parent != null)) ? RayMasks.BLOCK_CHAR_BUILDABLE_OVERLAP_NOT_ON_VEHICLE : RayMasks.BLOCK_CHAR_BUILDABLE_OVERLAP, center: pointInWorldSpace + boundsRotation * boundsCenter, halfExtents: boundsOverlap, results: checkColliders, orientation: boundsRotation, queryTriggerInteraction: QueryTriggerInteraction.Collide) > 0)
         {
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 PlayerUI.hint(null, EPlayerMessage.BLOCKED);
             }
@@ -446,7 +446,7 @@ public class UseableBarricade : Useable
             Vector3 end = pointInWorldSpace + new Vector3(0f, 0.1f, 0f);
             if (Physics.Linecast(base.player.transform.position + Vector3.up * (base.player.look.heightLook * 0.5f), end, out var _, RayMasks.BLOCK_BED_LOS, QueryTriggerInteraction.Ignore))
             {
-                if (base.channel.isOwner)
+                if (base.channel.IsLocalPlayer)
                 {
                     PlayerUI.hint(null, EPlayerMessage.BLOCKED);
                 }
@@ -461,7 +461,7 @@ public class UseableBarricade : Useable
             halfExtents.z += 0.6f;
             if (Physics.OverlapBoxNonAlloc(pointInWorldSpace + boundsRotation * boundsCenter, halfExtents, checkColliders, boundsRotation, RayMasks.BLOCK_DOOR_OPENING) > 0)
             {
-                if (base.channel.isOwner)
+                if (base.channel.IsLocalPlayer)
                 {
                     PlayerUI.hint(null, EPlayerMessage.BLOCKED);
                 }
@@ -486,7 +486,7 @@ public class UseableBarricade : Useable
             }
             if (flag && Physics.OverlapSphereNonAlloc(pointInWorldSpace + boundsRotation * new Vector3(0f - boundsExtents.x, 0f, boundsExtents.x), 0.75f, checkColliders, RayMasks.BLOCK_DOOR_OPENING) > 0)
             {
-                if (base.channel.isOwner)
+                if (base.channel.IsLocalPlayer)
                 {
                     PlayerUI.hint(null, EPlayerMessage.BLOCKED);
                 }
@@ -494,7 +494,7 @@ public class UseableBarricade : Useable
             }
             if (flag2 && Physics.OverlapSphereNonAlloc(pointInWorldSpace + boundsRotation * new Vector3(boundsExtents.x, 0f, boundsExtents.x), 0.75f, checkColliders, RayMasks.BLOCK_DOOR_OPENING) > 0)
             {
-                if (base.channel.isOwner)
+                if (base.channel.IsLocalPlayer)
                 {
                     PlayerUI.hint(null, EPlayerMessage.BLOCKED);
                 }
@@ -534,7 +534,7 @@ public class UseableBarricade : Useable
                     }
                     if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Level.checkSafeIncludingClipVolumes(point))
                     {
-                        if (base.channel.isOwner)
+                        if (base.channel.IsLocalPlayer)
                         {
                             PlayerUI.hint(null, EPlayerMessage.BOUNDS);
                         }
@@ -542,7 +542,7 @@ public class UseableBarricade : Useable
                     }
                     if (Physics.OverlapSphereNonAlloc(point, equippedBarricadeAsset.radius, checkColliders, RayMasks.BLOCK_WINDOW) > 0)
                     {
-                        if (base.channel.isOwner)
+                        if (base.channel.IsLocalPlayer)
                         {
                             PlayerUI.hint(null, EPlayerMessage.BLOCKED);
                         }
@@ -551,14 +551,14 @@ public class UseableBarricade : Useable
                     return true;
                 }
                 point = Vector3.zero;
-                if (base.channel.isOwner)
+                if (base.channel.IsLocalPlayer)
                 {
                     PlayerUI.hint(null, EPlayerMessage.WINDOW);
                 }
                 return false;
             }
             point = Vector3.zero;
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 PlayerUI.hint(null, EPlayerMessage.WINDOW);
             }
@@ -578,7 +578,7 @@ public class UseableBarricade : Useable
             {
                 if (hit.normal.y < 0.01f)
                 {
-                    if (base.channel.isOwner)
+                    if (base.channel.IsLocalPlayer)
                     {
                         PlayerUI.hint(null, EPlayerMessage.BLOCKED);
                     }
@@ -594,7 +594,7 @@ public class UseableBarricade : Useable
                 }
                 if (equippedBarricadeAsset.build == EBuild.VEHICLE && Physics.Linecast(hit.point, point, out var _, RayMasks.BLOCK_BARRICADE))
                 {
-                    if (base.channel.isOwner)
+                    if (base.channel.IsLocalPlayer)
                     {
                         PlayerUI.hint(null, EPlayerMessage.BLOCKED);
                     }
@@ -602,7 +602,7 @@ public class UseableBarricade : Useable
                 }
                 if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Level.checkSafeIncludingClipVolumes(point))
                 {
-                    if (base.channel.isOwner)
+                    if (base.channel.IsLocalPlayer)
                     {
                         PlayerUI.hint(null, EPlayerMessage.BOUNDS);
                     }
@@ -612,7 +612,7 @@ public class UseableBarricade : Useable
                 {
                     if (Physics.OverlapSphereNonAlloc(point + Vector3.up, 0.95f + equippedBarricadeAsset.offset, checkColliders, RayMasks.BLOCK_BARRICADE) > 0)
                     {
-                        if (base.channel.isOwner)
+                        if (base.channel.IsLocalPlayer)
                         {
                             PlayerUI.hint(null, EPlayerMessage.BLOCKED);
                         }
@@ -621,7 +621,7 @@ public class UseableBarricade : Useable
                 }
                 else if (Physics.OverlapSphereNonAlloc(point, equippedBarricadeAsset.radius, checkColliders, RayMasks.BLOCK_BARRICADE) > 0)
                 {
-                    if (base.channel.isOwner)
+                    if (base.channel.IsLocalPlayer)
                     {
                         PlayerUI.hint(null, EPlayerMessage.BLOCKED);
                     }
@@ -640,7 +640,7 @@ public class UseableBarricade : Useable
                 point = hit.point + hit.normal * equippedBarricadeAsset.offset;
                 if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Level.checkSafeIncludingClipVolumes(point))
                 {
-                    if (base.channel.isOwner)
+                    if (base.channel.IsLocalPlayer)
                     {
                         PlayerUI.hint(null, EPlayerMessage.BOUNDS);
                     }
@@ -648,7 +648,7 @@ public class UseableBarricade : Useable
                 }
                 if (Physics.OverlapSphereNonAlloc(point, equippedBarricadeAsset.radius, checkColliders, RayMasks.BLOCK_BARRICADE) > 0)
                 {
-                    if (base.channel.isOwner)
+                    if (base.channel.IsLocalPlayer)
                     {
                         PlayerUI.hint(null, EPlayerMessage.BLOCKED);
                     }
@@ -679,7 +679,7 @@ public class UseableBarricade : Useable
                     {
                         if (!(equippedBarricadeAsset as ItemFarmAsset).ignoreSoilRestrictions && !PhysicMaterialCustomData.IsArable(materialName))
                         {
-                            if (base.channel.isOwner)
+                            if (base.channel.IsLocalPlayer)
                             {
                                 PlayerUI.hint(null, EPlayerMessage.SOIL);
                             }
@@ -688,7 +688,7 @@ public class UseableBarricade : Useable
                     }
                     else if (!PhysicMaterialCustomData.HasOil(materialName))
                     {
-                        if (base.channel.isOwner)
+                        if (base.channel.IsLocalPlayer)
                         {
                             PlayerUI.hint(null, EPlayerMessage.OIL);
                         }
@@ -699,7 +699,7 @@ public class UseableBarricade : Useable
                 {
                     if (equippedBarricadeAsset.build != EBuild.FARM)
                     {
-                        if (base.channel.isOwner)
+                        if (base.channel.IsLocalPlayer)
                         {
                             PlayerUI.hint(null, EPlayerMessage.OIL);
                         }
@@ -707,7 +707,7 @@ public class UseableBarricade : Useable
                     }
                     if (!(equippedBarricadeAsset as ItemFarmAsset).ignoreSoilRestrictions && !PhysicMaterialCustomData.IsArable(materialName))
                     {
-                        if (base.channel.isOwner)
+                        if (base.channel.IsLocalPlayer)
                         {
                             PlayerUI.hint(null, EPlayerMessage.SOIL);
                         }
@@ -716,7 +716,7 @@ public class UseableBarricade : Useable
                 }
                 if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Level.checkSafeIncludingClipVolumes(point))
                 {
-                    if (base.channel.isOwner)
+                    if (base.channel.IsLocalPlayer)
                     {
                         PlayerUI.hint(null, EPlayerMessage.BOUNDS);
                     }
@@ -724,7 +724,7 @@ public class UseableBarricade : Useable
                 }
                 if (Physics.OverlapSphereNonAlloc(point, equippedBarricadeAsset.radius, checkColliders, RayMasks.BLOCK_BARRICADE) > 0)
                 {
-                    if (base.channel.isOwner)
+                    if (base.channel.IsLocalPlayer)
                     {
                         PlayerUI.hint(null, EPlayerMessage.BLOCKED);
                     }
@@ -751,7 +751,7 @@ public class UseableBarricade : Useable
                     }
                     if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Level.checkSafeIncludingClipVolumes(point))
                     {
-                        if (base.channel.isOwner)
+                        if (base.channel.IsLocalPlayer)
                         {
                             PlayerUI.hint(null, EPlayerMessage.BOUNDS);
                         }
@@ -759,7 +759,7 @@ public class UseableBarricade : Useable
                     }
                     if (Physics.OverlapSphereNonAlloc(point, equippedBarricadeAsset.radius, checkColliders, RayMasks.BLOCK_FRAME) > 0)
                     {
-                        if (base.channel.isOwner)
+                        if (base.channel.IsLocalPlayer)
                         {
                             PlayerUI.hint(null, EPlayerMessage.BLOCKED);
                         }
@@ -768,14 +768,14 @@ public class UseableBarricade : Useable
                     return true;
                 }
                 point = Vector3.zero;
-                if (base.channel.isOwner)
+                if (base.channel.IsLocalPlayer)
                 {
                     PlayerUI.hint(null, EPlayerMessage.DOORWAY);
                 }
                 return false;
             }
             point = Vector3.zero;
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 PlayerUI.hint(null, EPlayerMessage.DOORWAY);
             }
@@ -812,7 +812,7 @@ public class UseableBarricade : Useable
                     angle_y += 180f;
                     if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Level.checkSafeIncludingClipVolumes(point))
                     {
-                        if (base.channel.isOwner)
+                        if (base.channel.IsLocalPlayer)
                         {
                             PlayerUI.hint(null, EPlayerMessage.BOUNDS);
                         }
@@ -820,7 +820,7 @@ public class UseableBarricade : Useable
                     }
                     if (Physics.OverlapSphereNonAlloc(point, equippedBarricadeAsset.radius, checkColliders, RayMasks.BLOCK_FRAME) > 0)
                     {
-                        if (base.channel.isOwner)
+                        if (base.channel.IsLocalPlayer)
                         {
                             PlayerUI.hint(null, EPlayerMessage.BLOCKED);
                         }
@@ -829,14 +829,14 @@ public class UseableBarricade : Useable
                     return true;
                 }
                 point = Vector3.zero;
-                if (base.channel.isOwner)
+                if (base.channel.IsLocalPlayer)
                 {
                     PlayerUI.hint(null, EPlayerMessage.TRAPDOOR);
                 }
                 return false;
             }
             point = Vector3.zero;
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 PlayerUI.hint(null, EPlayerMessage.TRAPDOOR);
             }
@@ -864,7 +864,7 @@ public class UseableBarricade : Useable
                     }
                     if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Level.checkSafeIncludingClipVolumes(point))
                     {
-                        if (base.channel.isOwner)
+                        if (base.channel.IsLocalPlayer)
                         {
                             PlayerUI.hint(null, EPlayerMessage.BOUNDS);
                         }
@@ -872,7 +872,7 @@ public class UseableBarricade : Useable
                     }
                     if (Physics.OverlapSphereNonAlloc(point, equippedBarricadeAsset.radius, checkColliders, RayMasks.BLOCK_FRAME) > 0)
                     {
-                        if (base.channel.isOwner)
+                        if (base.channel.IsLocalPlayer)
                         {
                             PlayerUI.hint(null, EPlayerMessage.BLOCKED);
                         }
@@ -880,7 +880,7 @@ public class UseableBarricade : Useable
                     }
                     if (Physics.OverlapSphereNonAlloc(point + hit.transform.forward * -1.5f + hit.transform.up * -2f, 0.25f, checkColliders, RayMasks.BLOCK_FRAME) > 0)
                     {
-                        if (base.channel.isOwner)
+                        if (base.channel.IsLocalPlayer)
                         {
                             PlayerUI.hint(null, EPlayerMessage.BLOCKED);
                         }
@@ -889,14 +889,14 @@ public class UseableBarricade : Useable
                     return true;
                 }
                 point = Vector3.zero;
-                if (base.channel.isOwner)
+                if (base.channel.IsLocalPlayer)
                 {
                     PlayerUI.hint(null, EPlayerMessage.GARAGE);
                 }
                 return false;
             }
             point = Vector3.zero;
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 PlayerUI.hint(null, EPlayerMessage.GARAGE);
             }
@@ -913,7 +913,7 @@ public class UseableBarricade : Useable
                     angle_y = hit.transform.rotation.eulerAngles.y;
                     if (Physics.OverlapSphereNonAlloc(point + hit.transform.up * 0.5f, 0.1f, checkColliders, RayMasks.BLOCK_BARRICADE) > 0)
                     {
-                        if (base.channel.isOwner)
+                        if (base.channel.IsLocalPlayer)
                         {
                             PlayerUI.hint(null, EPlayerMessage.BLOCKED);
                         }
@@ -921,7 +921,7 @@ public class UseableBarricade : Useable
                     }
                     if (Physics.OverlapSphereNonAlloc(point + hit.transform.up * -0.5f, 0.1f, checkColliders, RayMasks.BLOCK_BARRICADE) > 0)
                     {
-                        if (base.channel.isOwner)
+                        if (base.channel.IsLocalPlayer)
                         {
                             PlayerUI.hint(null, EPlayerMessage.BLOCKED);
                         }
@@ -936,7 +936,7 @@ public class UseableBarricade : Useable
                         angle_y = Quaternion.LookRotation(hit.normal).eulerAngles.y;
                         if (Physics.OverlapSphereNonAlloc(point + Quaternion.Euler(0f, angle_y, 0f) * Vector3.right * 0.5f, 0.1f, checkColliders, RayMasks.BLOCK_BARRICADE) > 0)
                         {
-                            if (base.channel.isOwner)
+                            if (base.channel.IsLocalPlayer)
                             {
                                 PlayerUI.hint(null, EPlayerMessage.BLOCKED);
                             }
@@ -944,7 +944,7 @@ public class UseableBarricade : Useable
                         }
                         if (Physics.OverlapSphereNonAlloc(point + Quaternion.Euler(0f, angle_y, 0f) * Vector3.left * 0.5f, 0.1f, checkColliders, RayMasks.BLOCK_BARRICADE) > 0)
                         {
-                            if (base.channel.isOwner)
+                            if (base.channel.IsLocalPlayer)
                             {
                                 PlayerUI.hint(null, EPlayerMessage.BLOCKED);
                             }
@@ -963,7 +963,7 @@ public class UseableBarricade : Useable
                         }
                         if (Physics.OverlapSphereNonAlloc(point, 0.5f, checkColliders, RayMasks.BLOCK_BARRICADE) > 0)
                         {
-                            if (base.channel.isOwner)
+                            if (base.channel.IsLocalPlayer)
                             {
                                 PlayerUI.hint(null, EPlayerMessage.BLOCKED);
                             }
@@ -972,7 +972,7 @@ public class UseableBarricade : Useable
                     }
                     if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Level.checkSafeIncludingClipVolumes(point))
                     {
-                        if (base.channel.isOwner)
+                        if (base.channel.IsLocalPlayer)
                         {
                             PlayerUI.hint(null, EPlayerMessage.BOUNDS);
                         }
@@ -984,7 +984,7 @@ public class UseableBarricade : Useable
             point = Vector3.zero;
             return false;
         }
-        if (equippedBarricadeAsset.build == EBuild.TORCH || equippedBarricadeAsset.build == EBuild.STORAGE_WALL || equippedBarricadeAsset.build == EBuild.SIGN_WALL || equippedBarricadeAsset.build == EBuild.CAGE)
+        if (equippedBarricadeAsset.build == EBuild.TORCH || equippedBarricadeAsset.build == EBuild.STORAGE_WALL || equippedBarricadeAsset.build == EBuild.SIGN_WALL || equippedBarricadeAsset.build == EBuild.CAGE || equippedBarricadeAsset.build == EBuild.BARRICADE_WALL)
         {
             Physics.SphereCast(base.player.look.aim.position, 0.1f, base.player.look.aim.forward, out hit, equippedBarricadeAsset.range, RayMasks.BARRICADE_INTERACT);
             if (hit.transform != null && Mathf.Abs(hit.normal.y) < 0.1f)
@@ -993,7 +993,7 @@ public class UseableBarricade : Useable
                 angle_y = Quaternion.LookRotation(hit.normal).eulerAngles.y;
                 if (Physics.OverlapSphereNonAlloc(point, 0.1f, checkColliders, RayMasks.BLOCK_BARRICADE) > 0)
                 {
-                    if (base.channel.isOwner)
+                    if (base.channel.IsLocalPlayer)
                     {
                         PlayerUI.hint(null, EPlayerMessage.BLOCKED);
                     }
@@ -1001,7 +1001,7 @@ public class UseableBarricade : Useable
                 }
                 if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Level.checkSafeIncludingClipVolumes(point))
                 {
-                    if (base.channel.isOwner)
+                    if (base.channel.IsLocalPlayer)
                     {
                         PlayerUI.hint(null, EPlayerMessage.BOUNDS);
                     }
@@ -1009,7 +1009,7 @@ public class UseableBarricade : Useable
                 }
                 return true;
             }
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 PlayerUI.hint(null, EPlayerMessage.WALL);
             }
@@ -1027,7 +1027,7 @@ public class UseableBarricade : Useable
                 point = hit.point + hit.normal * -0.125f + quaternion * Vector3.forward * equippedBarricadeAsset.offset;
                 if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Level.checkSafeIncludingClipVolumes(point))
                 {
-                    if (base.channel.isOwner)
+                    if (base.channel.IsLocalPlayer)
                     {
                         PlayerUI.hint(null, EPlayerMessage.BOUNDS);
                     }
@@ -1035,7 +1035,7 @@ public class UseableBarricade : Useable
                 }
                 if (Physics.OverlapSphereNonAlloc(point, equippedBarricadeAsset.radius, checkColliders, RayMasks.BLOCK_BARRICADE) > 0)
                 {
-                    if (base.channel.isOwner)
+                    if (base.channel.IsLocalPlayer)
                     {
                         PlayerUI.hint(null, EPlayerMessage.BLOCKED);
                     }
@@ -1082,7 +1082,7 @@ public class UseableBarricade : Useable
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askBuild")]
     public void ReceivePlayBuild()
     {
-        if (base.player.equipment.isEquipped)
+        if (base.player.equipment.IsEquipAnimationFinished)
         {
             build();
         }
@@ -1096,7 +1096,7 @@ public class UseableBarricade : Useable
         }
         if (Dedicator.IsDedicatedServer ? isValid : check())
         {
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 if (parent != null)
                 {
@@ -1133,7 +1133,7 @@ public class UseableBarricade : Useable
         {
             return false;
         }
-        if (equippedBarricadeAsset.build == EBuild.GLASS || equippedBarricadeAsset.build == EBuild.CHARGE || equippedBarricadeAsset.build == EBuild.CLOCK || equippedBarricadeAsset.build == EBuild.NOTE || equippedBarricadeAsset.build == EBuild.FORTIFICATION || equippedBarricadeAsset.build == EBuild.DOOR || equippedBarricadeAsset.build == EBuild.GATE || equippedBarricadeAsset.build == EBuild.SHUTTER || equippedBarricadeAsset.build == EBuild.HATCH || equippedBarricadeAsset.build == EBuild.TORCH || equippedBarricadeAsset.build == EBuild.CAGE || equippedBarricadeAsset.build == EBuild.STORAGE_WALL || equippedBarricadeAsset.build == EBuild.SIGN_WALL)
+        if (equippedBarricadeAsset.build == EBuild.GLASS || equippedBarricadeAsset.build == EBuild.CHARGE || equippedBarricadeAsset.build == EBuild.CLOCK || equippedBarricadeAsset.build == EBuild.NOTE || equippedBarricadeAsset.build == EBuild.FORTIFICATION || equippedBarricadeAsset.build == EBuild.DOOR || equippedBarricadeAsset.build == EBuild.GATE || equippedBarricadeAsset.build == EBuild.SHUTTER || equippedBarricadeAsset.build == EBuild.HATCH || equippedBarricadeAsset.build == EBuild.TORCH || equippedBarricadeAsset.build == EBuild.CAGE || equippedBarricadeAsset.build == EBuild.STORAGE_WALL || equippedBarricadeAsset.build == EBuild.SIGN_WALL || equippedBarricadeAsset.build == EBuild.BARRICADE_WALL)
         {
             return false;
         }
@@ -1151,7 +1151,7 @@ public class UseableBarricade : Useable
     public override void equip()
     {
         base.player.animator.play("Equip", smooth: true);
-        useTime = base.player.animator.getAnimationLength("Use");
+        useTime = base.player.animator.GetAnimationLength("Use");
         if (Dedicator.IsDedicatedServer)
         {
             if (equippedBarricadeAsset.build == EBuild.MANNEQUIN)
@@ -1184,7 +1184,7 @@ public class UseableBarricade : Useable
             }
             boundsOverlap = boundsExtents + new Vector3(0.5f, 0.5f, 0.5f);
         }
-        if (!base.channel.isOwner)
+        if (!base.channel.IsLocalPlayer)
         {
             return;
         }
@@ -1344,7 +1344,7 @@ public class UseableBarricade : Useable
     {
         base.player.look.isIgnoringInput = false;
         inputWantsToRotate = false;
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             if (help != null)
             {
@@ -1526,7 +1526,7 @@ public class UseableBarricade : Useable
                 AlertTool.alert(base.transform.position, 8f);
             }
         }
-        if (!base.channel.isOwner || help == null || isUsing)
+        if (!base.channel.IsLocalPlayer || help == null || isUsing)
         {
             return;
         }

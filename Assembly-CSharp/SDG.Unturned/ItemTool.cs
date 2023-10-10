@@ -110,35 +110,35 @@ public class ItemTool : MonoBehaviour
         return Color.Lerp(Palette.COLOR_Y, Palette.COLOR_G, (quality - 0.5f) * 2f);
     }
 
-    private static Transform getEffectSystem(ushort mythicID, EEffectType type)
+    private static GameObject InstantiateMythicEffect(ushort mythicID, EEffectType type, Vector3 position, Quaternion rotation)
     {
         if (!(Assets.find(EAssetType.MYTHIC, mythicID) is MythicAsset mythicAsset))
         {
             return null;
         }
-        UnityEngine.Object @object;
+        GameObject gameObject;
         switch (type)
         {
         case EEffectType.AREA:
-            @object = mythicAsset.systemArea;
+            gameObject = mythicAsset.systemArea;
             break;
         case EEffectType.HOOK:
-            @object = mythicAsset.systemHook;
+            gameObject = mythicAsset.systemHook;
             break;
         case EEffectType.FIRST:
-            @object = mythicAsset.systemFirst;
+            gameObject = mythicAsset.systemFirst;
             break;
         case EEffectType.THIRD:
-            @object = mythicAsset.systemThird;
+            gameObject = mythicAsset.systemThird;
             break;
         default:
             return null;
         }
-        if (@object == null)
+        if (gameObject == null)
         {
             return null;
         }
-        Transform obj = ((GameObject)UnityEngine.Object.Instantiate(@object)).transform;
+        GameObject obj = UnityEngine.Object.Instantiate(gameObject, position, rotation);
         obj.name = "System";
         return obj;
     }
@@ -165,29 +165,17 @@ public class ItemTool : MonoBehaviour
             return null;
         }
         Transform transform = model.Find("Effect");
-        Transform effectSystem = getEffectSystem(mythicID, type);
-        if (effectSystem != null)
+        Transform transform2 = ((transform != null) ? transform : model);
+        GameObject gameObject = InstantiateMythicEffect(mythicID, type, transform2.position, transform2.rotation);
+        if (gameObject != null)
         {
-            if (transform != null)
-            {
-                effectSystem.parent = transform;
-                MythicLockee mythicLockee = effectSystem.gameObject.AddComponent<MythicLockee>();
-                MythicLocker mythicLocker = transform.gameObject.AddComponent<MythicLocker>();
-                mythicLocker.system = mythicLockee;
-                mythicLockee.locker = mythicLocker;
-            }
-            else
-            {
-                effectSystem.parent = model;
-                MythicLockee mythicLockee2 = effectSystem.gameObject.AddComponent<MythicLockee>();
-                MythicLocker mythicLocker2 = model.gameObject.AddComponent<MythicLocker>();
-                mythicLocker2.system = mythicLockee2;
-                mythicLockee2.locker = mythicLocker2;
-            }
-            effectSystem.localPosition = Vector3.zero;
-            effectSystem.localRotation = Quaternion.identity;
+            MythicLockee mythicLockee = gameObject.AddComponent<MythicLockee>();
+            MythicLocker mythicLocker = transform2.gameObject.AddComponent<MythicLocker>();
+            mythicLocker.system = mythicLockee;
+            mythicLockee.locker = mythicLocker;
+            gameObject.SetActive(mythicLocker.gameObject.activeInHierarchy);
         }
-        return effectSystem;
+        return gameObject?.transform;
     }
 
     public static bool tryForceGiveItem(Player player, ushort id, byte amount)

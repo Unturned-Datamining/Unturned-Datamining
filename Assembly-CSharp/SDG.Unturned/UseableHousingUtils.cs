@@ -154,7 +154,7 @@ internal static class UseableHousingUtils
         {
             eHousingPlacementResult = ValidatePendingPlacement(asset, ref pendingPlacementPosition, pendingPlacementYaw + rotationOffset, ref obstructionHint);
         }
-        if (channel.isOwner)
+        if (channel.IsLocalPlayer)
         {
             switch (eHousingPlacementResult)
             {
@@ -211,7 +211,7 @@ internal static class UseableHousingUtils
         SteamChannel channel = player.channel;
         if (player.movement.isSafe && player.movement.isSafeInfo.noBuildables)
         {
-            if (channel.isOwner)
+            if (channel.IsLocalPlayer)
             {
                 PlayerUI.hint(null, EPlayerMessage.SAFEZONE);
             }
@@ -224,7 +224,7 @@ internal static class UseableHousingUtils
         }
         if (!ClaimManager.checkCanBuild(pendingPlacementPosition, channel.owner.playerID.steamID, player.quests.groupID, isClaim: false))
         {
-            if (channel.isOwner)
+            if (channel.IsLocalPlayer)
             {
                 PlayerUI.hint(null, EPlayerMessage.CLAIM);
             }
@@ -232,7 +232,7 @@ internal static class UseableHousingUtils
         }
         if (VolumeManager<PlayerClipVolume, PlayerClipVolumeManager>.Get().IsPositionInsideAnyVolume(pendingPlacementPosition))
         {
-            if (channel.isOwner)
+            if (channel.IsLocalPlayer)
             {
                 PlayerUI.hint(null, EPlayerMessage.BOUNDS);
             }
@@ -240,7 +240,7 @@ internal static class UseableHousingUtils
         }
         if (!LevelPlayers.checkCanBuild(pendingPlacementPosition))
         {
-            if (channel.isOwner)
+            if (channel.IsLocalPlayer)
             {
                 PlayerUI.hint(null, EPlayerMessage.SPAWN);
             }

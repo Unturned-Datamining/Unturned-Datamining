@@ -78,7 +78,7 @@ public class UseableFisher : Useable
         {
             if (castStrengthBox != null)
             {
-                return castStrengthBox.isVisible;
+                return castStrengthBox.IsVisible;
             }
             return false;
         }
@@ -114,7 +114,7 @@ public class UseableFisher : Useable
         PlayerLifeUI.close();
         if (castStrengthBox != null)
         {
-            castStrengthBox.isVisible = true;
+            castStrengthBox.IsVisible = true;
         }
     }
 
@@ -123,7 +123,7 @@ public class UseableFisher : Useable
         PlayerLifeUI.open();
         if (castStrengthBox != null)
         {
-            castStrengthBox.isVisible = false;
+            castStrengthBox.IsVisible = false;
         }
     }
 
@@ -157,7 +157,7 @@ public class UseableFisher : Useable
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askReel")]
     public void ReceivePlayReel()
     {
-        if (base.player.equipment.isEquipped)
+        if (base.player.equipment.IsEquipAnimationFinished)
         {
             reel();
         }
@@ -181,7 +181,7 @@ public class UseableFisher : Useable
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askCast")]
     public void ReceivePlayCast()
     {
-        if (base.player.equipment.isEquipped)
+        if (base.player.equipment.IsEquipAnimationFinished)
         {
             cast();
         }
@@ -199,7 +199,7 @@ public class UseableFisher : Useable
             base.player.equipment.isBusy = true;
             startedReel = Time.realtimeSinceStartup;
             isReeling = true;
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 isBobbing = true;
                 if (bobberTransform != null && !isLuring && Time.realtimeSinceStartup - lastLuck > luckTime - 1.4f && Time.realtimeSinceStartup - lastLuck < luckTime)
@@ -213,7 +213,7 @@ public class UseableFisher : Useable
                 if (isCatch)
                 {
                     isCatch = false;
-                    ushort num = SpawnTableTool.resolve(((ItemFisherAsset)base.player.equipment.asset).rewardID);
+                    ushort num = SpawnTableTool.ResolveLegacyId(((ItemFisherAsset)base.player.equipment.asset).rewardID, EAssetType.ITEM, OnGetRewardErrorContext);
                     if (num != 0)
                     {
                         base.player.inventory.forceAddItem(new Item(num, EItemOrigin.NATURE), auto: false);
@@ -230,7 +230,7 @@ public class UseableFisher : Useable
             isStrengthening = true;
             strengthTime = 0u;
             strengthMultiplier = 0f;
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 startStrength();
             }
@@ -243,7 +243,7 @@ public class UseableFisher : Useable
         if (!base.player.equipment.isBusy && isStrengthening)
         {
             isStrengthening = false;
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 stopStrength();
             }
@@ -251,7 +251,7 @@ public class UseableFisher : Useable
             base.player.equipment.isBusy = true;
             startedCast = Time.realtimeSinceStartup;
             isCasting = true;
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 isBobbing = true;
             }
@@ -269,9 +269,9 @@ public class UseableFisher : Useable
     public override void equip()
     {
         base.player.animator.play("Equip", smooth: true);
-        castTime = base.player.animator.getAnimationLength("Cast");
-        reelTime = base.player.animator.getAnimationLength("Reel");
-        if (base.channel.isOwner)
+        castTime = base.player.animator.GetAnimationLength("Cast");
+        reelTime = base.player.animator.GetAnimationLength("Reel");
+        if (base.channel.IsLocalPlayer)
         {
             firstHook = base.player.equipment.firstModel.Find("Hook");
             thirdHook = base.player.equipment.thirdModel.Find("Hook");
@@ -282,33 +282,33 @@ public class UseableFisher : Useable
             thirdLine = (LineRenderer)base.player.equipment.thirdModel.Find("Line").GetComponent<Renderer>();
             thirdLine.gameObject.SetActive(value: true);
             castStrengthBox = Glazier.Get().CreateBox();
-            castStrengthBox.positionOffset_X = -20;
-            castStrengthBox.positionOffset_Y = -110;
-            castStrengthBox.positionScale_X = 0.5f;
-            castStrengthBox.positionScale_Y = 0.5f;
-            castStrengthBox.sizeOffset_X = 40;
-            castStrengthBox.sizeOffset_Y = 220;
+            castStrengthBox.PositionOffset_X = -20f;
+            castStrengthBox.PositionOffset_Y = -110f;
+            castStrengthBox.PositionScale_X = 0.5f;
+            castStrengthBox.PositionScale_Y = 0.5f;
+            castStrengthBox.SizeOffset_X = 40f;
+            castStrengthBox.SizeOffset_Y = 220f;
             PlayerUI.container.AddChild(castStrengthBox);
-            castStrengthBox.isVisible = false;
+            castStrengthBox.IsVisible = false;
             castStrengthArea = Glazier.Get().CreateFrame();
-            castStrengthArea.positionOffset_X = 10;
-            castStrengthArea.positionOffset_Y = 10;
-            castStrengthArea.sizeOffset_X = -20;
-            castStrengthArea.sizeOffset_Y = -20;
-            castStrengthArea.sizeScale_X = 1f;
-            castStrengthArea.sizeScale_Y = 1f;
+            castStrengthArea.PositionOffset_X = 10f;
+            castStrengthArea.PositionOffset_Y = 10f;
+            castStrengthArea.SizeOffset_X = -20f;
+            castStrengthArea.SizeOffset_Y = -20f;
+            castStrengthArea.SizeScale_X = 1f;
+            castStrengthArea.SizeScale_Y = 1f;
             castStrengthBox.AddChild(castStrengthArea);
             castStrengthBar = Glazier.Get().CreateImage();
-            castStrengthBar.sizeScale_X = 1f;
-            castStrengthBar.sizeScale_Y = 1f;
-            castStrengthBar.texture = (Texture2D)GlazierResources.PixelTexture;
+            castStrengthBar.SizeScale_X = 1f;
+            castStrengthBar.SizeScale_Y = 1f;
+            castStrengthBar.Texture = (Texture2D)GlazierResources.PixelTexture;
             castStrengthArea.AddChild(castStrengthBar);
         }
     }
 
     public override void dequip()
     {
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             if (bobberTransform != null)
             {
@@ -331,20 +331,20 @@ public class UseableFisher : Useable
         {
             strengthTime++;
             uint num = (uint)(100 + base.player.skills.skills[2][4].level * 20);
-            strengthMultiplier = 1f - Mathf.Abs(Mathf.Sin((float)((strengthTime + num / 2u) % num) / (float)num * (float)Math.PI));
+            strengthMultiplier = 1f - Mathf.Abs(Mathf.Sin((float)((strengthTime + num / 2u) % num) / (float)num * MathF.PI));
             strengthMultiplier *= strengthMultiplier;
-            if (base.channel.isOwner && castStrengthBar != null)
+            if (base.channel.IsLocalPlayer && castStrengthBar != null)
             {
-                castStrengthBar.positionScale_Y = 1f - strengthMultiplier;
-                castStrengthBar.sizeScale_Y = strengthMultiplier;
-                castStrengthBar.color = ItemTool.getQualityColor(strengthMultiplier);
+                castStrengthBar.PositionScale_Y = 1f - strengthMultiplier;
+                castStrengthBar.SizeScale_Y = strengthMultiplier;
+                castStrengthBar.TintColor = ItemTool.getQualityColor(strengthMultiplier);
             }
         }
     }
 
     public override void tick()
     {
-        if (!base.player.equipment.isEquipped || !base.channel.isOwner)
+        if (!base.player.equipment.IsEquipAnimationFinished || !base.channel.IsLocalPlayer)
         {
             return;
         }
@@ -418,7 +418,7 @@ public class UseableFisher : Useable
             base.player.equipment.isBusy = false;
             isReeling = false;
         }
-        if (!base.channel.isOwner && Time.realtimeSinceStartup - lastLuck > luckTime && !isReeling)
+        if (!base.channel.IsLocalPlayer && Time.realtimeSinceStartup - lastLuck > luckTime && !isReeling)
         {
             resetLuck();
             hasLuckReset = true;
@@ -492,5 +492,10 @@ public class UseableFisher : Useable
         {
             bobberRigidbody.MovePosition(Vector3.Lerp(bobberTransform.position, water + Vector3.up * Mathf.Sin(Time.time) * 0.25f, 4f * Time.deltaTime));
         }
+    }
+
+    private string OnGetRewardErrorContext()
+    {
+        return "fishing " + base.player.equipment.asset?.FriendlyName + " reward";
     }
 }

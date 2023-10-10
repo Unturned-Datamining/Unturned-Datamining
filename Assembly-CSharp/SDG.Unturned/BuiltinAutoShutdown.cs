@@ -165,21 +165,37 @@ internal class BuiltinAutoShutdown : MonoBehaviour
     private IEnumerator CheckVersion(string url)
     {
         yield return new WaitForSecondsRealtime(300f);
-        string text;
-        uint value;
         while (true)
         {
             UnturnedLog.info("Checking for game updates...");
-            UnityWebRequest request = UnityWebRequest.Get(url);
+            using UnityWebRequest request = UnityWebRequest.Get(url);
             request.timeout = 30;
             yield return request.SendWebRequest();
             if (request.result == UnityWebRequest.Result.Success)
             {
-                text = request.downloadHandler.text;
-                if (Parser.TryGetUInt32FromIP(text, out value))
+                string text = request.downloadHandler.text;
+                if (Parser.TryGetUInt32FromIP(text, out var value))
                 {
                     if (value != Provider.APP_VERSION_PACKED)
                     {
+                        if (value > Provider.APP_VERSION_PACKED)
+                        {
+                            CommandWindow.Log("Detected newer game version: " + text);
+                        }
+                        else
+                        {
+                            CommandWindow.Log("Detected rollback to older game version: " + text);
+                        }
+                        bool shouldShutdown = true;
+                        GameUpdateMonitor.NotifyGameUpdateDetected(text, ref shouldShutdown);
+                        if (shouldShutdown)
+                        {
+                            isShuttingDownForUpdate = true;
+                            isUpdateRollback = value < Provider.APP_VERSION_PACKED;
+                            updateVersionString = text;
+                            updateShutdownWarningIndex = updateShutdownWarnings.Count - 1;
+                            updateShutdownRealtime = Time.realtimeSinceStartupAsDouble + ((updateShutdownWarningIndex >= 0) ? updateShutdownWarnings[updateShutdownWarningIndex] : 0.0);
+                        }
                         break;
                     }
                     UnturnedLog.info("Game version is up-to-date");
@@ -194,24 +210,6 @@ internal class BuiltinAutoShutdown : MonoBehaviour
                 UnturnedLog.info("Network error checking for game updates: \"" + request.error + "\"");
             }
             yield return new WaitForSecondsRealtime(600f);
-        }
-        if (value > Provider.APP_VERSION_PACKED)
-        {
-            CommandWindow.Log("Detected newer game version: " + text);
-        }
-        else
-        {
-            CommandWindow.Log("Detected rollback to older game version: " + text);
-        }
-        bool shouldShutdown = true;
-        GameUpdateMonitor.NotifyGameUpdateDetected(text, ref shouldShutdown);
-        if (shouldShutdown)
-        {
-            isShuttingDownForUpdate = true;
-            isUpdateRollback = value < Provider.APP_VERSION_PACKED;
-            updateVersionString = text;
-            updateShutdownWarningIndex = updateShutdownWarnings.Count - 1;
-            updateShutdownRealtime = Time.realtimeSinceStartupAsDouble + ((updateShutdownWarningIndex >= 0) ? updateShutdownWarnings[updateShutdownWarningIndex] : 0.0);
         }
     }
 }

@@ -35,7 +35,7 @@ public class UseableClothing : Useable
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askWear")]
     public void ReceivePlayWear()
     {
-        if (base.player.equipment.isEquipped)
+        if (base.player.equipment.IsEquipAnimationFinished)
         {
             wear();
         }
@@ -61,7 +61,7 @@ public class UseableClothing : Useable
     public override void equip()
     {
         base.player.animator.play("Equip", smooth: true);
-        useTime = base.player.animator.getAnimationLength("Use");
+        useTime = base.player.animator.GetAnimationLength("Use");
     }
 
     public override void simulate(uint simulation, bool inputSteady)

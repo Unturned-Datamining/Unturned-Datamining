@@ -83,16 +83,16 @@ public class EditorSpawnsAnimalsUI
             }
         }
         tableButtons = new ISleekButton[LevelAnimals.tables.Count];
-        tableScrollBox.contentSizeOffset = new Vector2(0f, tableButtons.Length * 40 - 10);
+        tableScrollBox.ContentSizeOffset = new Vector2(0f, tableButtons.Length * 40 - 10);
         for (int j = 0; j < tableButtons.Length; j++)
         {
             ISleekButton sleekButton = Glazier.Get().CreateButton();
-            sleekButton.positionOffset_X = 240;
-            sleekButton.positionOffset_Y = j * 40;
-            sleekButton.sizeOffset_X = 200;
-            sleekButton.sizeOffset_Y = 30;
-            sleekButton.text = j + " " + LevelAnimals.tables[j].name;
-            sleekButton.onClickedButton += onClickedTableButton;
+            sleekButton.PositionOffset_X = 240f;
+            sleekButton.PositionOffset_Y = j * 40;
+            sleekButton.SizeOffset_X = 200f;
+            sleekButton.SizeOffset_Y = 30f;
+            sleekButton.Text = j + " " + LevelAnimals.tables[j].name;
+            sleekButton.OnClicked += onClickedTableButton;
             tableScrollBox.AddChild(sleekButton);
             tableButtons[j] = sleekButton;
         }
@@ -103,9 +103,9 @@ public class EditorSpawnsAnimalsUI
         if (EditorSpawns.selectedAnimal < LevelAnimals.tables.Count)
         {
             AnimalTable animalTable = LevelAnimals.tables[EditorSpawns.selectedAnimal];
-            selectedBox.text = animalTable.name;
-            tableNameField.text = animalTable.name;
-            tableIDField.state = animalTable.tableID;
+            selectedBox.Text = animalTable.name;
+            tableNameField.Text = animalTable.name;
+            tableIDField.Value = animalTable.tableID;
             tableColorPicker.state = animalTable.color;
             if (tierButtons != null)
             {
@@ -119,27 +119,27 @@ public class EditorSpawnsAnimalsUI
             {
                 AnimalTier animalTier = animalTable.tiers[j];
                 ISleekButton sleekButton = Glazier.Get().CreateButton();
-                sleekButton.positionOffset_X = 240;
-                sleekButton.positionOffset_Y = 170 + j * 70;
-                sleekButton.sizeOffset_X = 200;
-                sleekButton.sizeOffset_Y = 30;
-                sleekButton.text = animalTier.name;
-                sleekButton.onClickedButton += onClickedTierButton;
+                sleekButton.PositionOffset_X = 240f;
+                sleekButton.PositionOffset_Y = 170 + j * 70;
+                sleekButton.SizeOffset_X = 200f;
+                sleekButton.SizeOffset_Y = 30f;
+                sleekButton.Text = animalTier.name;
+                sleekButton.OnClicked += onClickedTierButton;
                 spawnsScrollBox.AddChild(sleekButton);
                 ISleekSlider sleekSlider = Glazier.Get().CreateSlider();
-                sleekSlider.positionOffset_Y = 40;
-                sleekSlider.sizeOffset_X = 200;
-                sleekSlider.sizeOffset_Y = 20;
-                sleekSlider.orientation = ESleekOrientation.HORIZONTAL;
-                sleekSlider.state = animalTier.chance;
-                sleekSlider.addLabel(Mathf.RoundToInt(animalTier.chance * 100f) + "%", ESleekSide.LEFT);
-                sleekSlider.onDragged += onDraggedChanceSlider;
+                sleekSlider.PositionOffset_Y = 40f;
+                sleekSlider.SizeOffset_X = 200f;
+                sleekSlider.SizeOffset_Y = 20f;
+                sleekSlider.Orientation = ESleekOrientation.HORIZONTAL;
+                sleekSlider.Value = animalTier.chance;
+                sleekSlider.AddLabel(Mathf.RoundToInt(animalTier.chance * 100f) + "%", ESleekSide.LEFT);
+                sleekSlider.OnValueChanged += onDraggedChanceSlider;
                 sleekButton.AddChild(sleekSlider);
                 tierButtons[j] = sleekButton;
             }
-            tierNameField.positionOffset_Y = 170 + tierButtons.Length * 70;
-            addTierButton.positionOffset_Y = 170 + tierButtons.Length * 70 + 40;
-            removeTierButton.positionOffset_Y = 170 + tierButtons.Length * 70 + 40;
+            tierNameField.PositionOffset_Y = 170 + tierButtons.Length * 70;
+            addTierButton.PositionOffset_Y = 170 + tierButtons.Length * 70 + 40;
+            removeTierButton.PositionOffset_Y = 170 + tierButtons.Length * 70 + 40;
             if (animalButtons != null)
             {
                 for (int k = 0; k < animalButtons.Length; k++)
@@ -149,41 +149,41 @@ public class EditorSpawnsAnimalsUI
             }
             if (selectedTier < animalTable.tiers.Count)
             {
-                tierNameField.text = animalTable.tiers[selectedTier].name;
+                tierNameField.Text = animalTable.tiers[selectedTier].name;
                 animalButtons = new ISleekButton[animalTable.tiers[selectedTier].table.Count];
                 for (int l = 0; l < animalButtons.Length; l++)
                 {
                     ISleekButton sleekButton2 = Glazier.Get().CreateButton();
-                    sleekButton2.positionOffset_X = 240;
-                    sleekButton2.positionOffset_Y = 170 + tierButtons.Length * 70 + 80 + l * 40;
-                    sleekButton2.sizeOffset_X = 200;
-                    sleekButton2.sizeOffset_Y = 30;
+                    sleekButton2.PositionOffset_X = 240f;
+                    sleekButton2.PositionOffset_Y = 170 + tierButtons.Length * 70 + 80 + l * 40;
+                    sleekButton2.SizeOffset_X = 200f;
+                    sleekButton2.SizeOffset_Y = 30f;
                     AnimalAsset animalAsset = Assets.find(EAssetType.ANIMAL, animalTable.tiers[selectedTier].table[l].animal) as AnimalAsset;
                     string text = "?";
                     if (animalAsset != null)
                     {
                         text = ((!string.IsNullOrEmpty(animalAsset.animalName)) ? animalAsset.animalName : animalAsset.name);
                     }
-                    sleekButton2.text = animalTable.tiers[selectedTier].table[l].animal + " " + text;
-                    sleekButton2.onClickedButton += onClickAnimalButton;
+                    sleekButton2.Text = animalTable.tiers[selectedTier].table[l].animal + " " + text;
+                    sleekButton2.OnClicked += onClickAnimalButton;
                     spawnsScrollBox.AddChild(sleekButton2);
                     animalButtons[l] = sleekButton2;
                 }
             }
             else
             {
-                tierNameField.text = "";
+                tierNameField.Text = "";
                 animalButtons = new ISleekButton[0];
             }
-            animalIDField.positionOffset_Y = 170 + tierButtons.Length * 70 + 80 + animalButtons.Length * 40;
-            addAnimalButton.positionOffset_Y = 170 + tierButtons.Length * 70 + 80 + animalButtons.Length * 40 + 40;
-            removeAnimalButton.positionOffset_Y = 170 + tierButtons.Length * 70 + 80 + animalButtons.Length * 40 + 40;
-            spawnsScrollBox.contentSizeOffset = new Vector2(0f, 170 + tierButtons.Length * 70 + 80 + animalButtons.Length * 40 + 70);
+            animalIDField.PositionOffset_Y = 170 + tierButtons.Length * 70 + 80 + animalButtons.Length * 40;
+            addAnimalButton.PositionOffset_Y = 170 + tierButtons.Length * 70 + 80 + animalButtons.Length * 40 + 40;
+            removeAnimalButton.PositionOffset_Y = 170 + tierButtons.Length * 70 + 80 + animalButtons.Length * 40 + 40;
+            spawnsScrollBox.ContentSizeOffset = new Vector2(0f, 170 + tierButtons.Length * 70 + 80 + animalButtons.Length * 40 + 70);
             return;
         }
-        selectedBox.text = "";
-        tableNameField.text = "";
-        tableIDField.state = 0;
+        selectedBox.Text = "";
+        tableNameField.Text = "";
+        tableIDField.Value = 0;
         tableColorPicker.state = Color.white;
         if (tierButtons != null)
         {
@@ -193,10 +193,10 @@ public class EditorSpawnsAnimalsUI
             }
         }
         tierButtons = null;
-        tierNameField.text = "";
-        tierNameField.positionOffset_Y = 170;
-        addTierButton.positionOffset_Y = 210;
-        removeTierButton.positionOffset_Y = 210;
+        tierNameField.Text = "";
+        tierNameField.PositionOffset_Y = 170f;
+        addTierButton.PositionOffset_Y = 210f;
+        removeTierButton.PositionOffset_Y = 210f;
         if (animalButtons != null)
         {
             for (int n = 0; n < animalButtons.Length; n++)
@@ -205,17 +205,17 @@ public class EditorSpawnsAnimalsUI
             }
         }
         animalButtons = null;
-        animalIDField.positionOffset_Y = 250;
-        addAnimalButton.positionOffset_Y = 290;
-        removeAnimalButton.positionOffset_Y = 290;
-        spawnsScrollBox.contentSizeOffset = new Vector2(0f, 320f);
+        animalIDField.PositionOffset_Y = 250f;
+        addAnimalButton.PositionOffset_Y = 290f;
+        removeAnimalButton.PositionOffset_Y = 290f;
+        spawnsScrollBox.ContentSizeOffset = new Vector2(0f, 320f);
     }
 
     private static void onClickedTableButton(ISleekElement button)
     {
-        if (EditorSpawns.selectedAnimal != (byte)(button.positionOffset_Y / 40))
+        if (EditorSpawns.selectedAnimal != (byte)(button.PositionOffset_Y / 40f))
         {
-            EditorSpawns.selectedAnimal = (byte)(button.positionOffset_Y / 40);
+            EditorSpawns.selectedAnimal = (byte)(button.PositionOffset_Y / 40f);
             EditorSpawns.animalSpawn.GetComponent<Renderer>().material.color = LevelAnimals.tables[EditorSpawns.selectedAnimal].color;
         }
         else
@@ -246,9 +246,9 @@ public class EditorSpawnsAnimalsUI
     {
         if (EditorSpawns.selectedAnimal < LevelAnimals.tables.Count)
         {
-            if (selectedTier != (byte)((button.positionOffset_Y - 170) / 70))
+            if (selectedTier != (byte)((button.PositionOffset_Y - 170f) / 70f))
             {
-                selectedTier = (byte)((button.positionOffset_Y - 170) / 70);
+                selectedTier = (byte)((button.PositionOffset_Y - 170f) / 70f);
             }
             else
             {
@@ -262,7 +262,7 @@ public class EditorSpawnsAnimalsUI
     {
         if (EditorSpawns.selectedAnimal < LevelAnimals.tables.Count)
         {
-            selectAnimal = (byte)((button.positionOffset_Y - 170 - tierButtons.Length * 70 - 80) / 40);
+            selectAnimal = (byte)((button.PositionOffset_Y - 170f - (float)(tierButtons.Length * 70) - 80f) / 40f);
             updateSelection();
         }
     }
@@ -273,7 +273,7 @@ public class EditorSpawnsAnimalsUI
         {
             return;
         }
-        int num = (slider.parent.positionOffset_Y - 170) / 70;
+        int num = Mathf.FloorToInt((slider.Parent.PositionOffset_Y - 170f) / 70f);
         LevelAnimals.tables[EditorSpawns.selectedAnimal].updateChance(num, state);
         for (int i = 0; i < LevelAnimals.tables[EditorSpawns.selectedAnimal].tiers.Count; i++)
         {
@@ -281,9 +281,9 @@ public class EditorSpawnsAnimalsUI
             ISleekSlider sleekSlider = (ISleekSlider)tierButtons[i].GetChildAtIndex(0);
             if (i != num)
             {
-                sleekSlider.state = animalTier.chance;
+                sleekSlider.Value = animalTier.chance;
             }
-            sleekSlider.updateLabel(Mathf.RoundToInt(animalTier.chance * 100f) + "%");
+            sleekSlider.UpdateLabel(Mathf.RoundToInt(animalTier.chance * 100f) + "%");
         }
     }
 
@@ -291,18 +291,18 @@ public class EditorSpawnsAnimalsUI
     {
         if (EditorSpawns.selectedAnimal < LevelAnimals.tables.Count)
         {
-            selectedBox.text = state;
+            selectedBox.Text = state;
             LevelAnimals.tables[EditorSpawns.selectedAnimal].name = state;
-            tableButtons[EditorSpawns.selectedAnimal].text = EditorSpawns.selectedAnimal + " " + state;
+            tableButtons[EditorSpawns.selectedAnimal].Text = EditorSpawns.selectedAnimal + " " + state;
         }
     }
 
     private static void onClickedAddTableButton(ISleekElement button)
     {
-        if (tableNameField.text != "")
+        if (tableNameField.Text != "")
         {
-            LevelAnimals.addTable(tableNameField.text);
-            tableNameField.text = "";
+            LevelAnimals.addTable(tableNameField.Text);
+            tableNameField.Text = "";
             updateTables();
             tableScrollBox.ScrollToBottom();
         }
@@ -324,16 +324,16 @@ public class EditorSpawnsAnimalsUI
         if (EditorSpawns.selectedAnimal < LevelAnimals.tables.Count && selectedTier < LevelAnimals.tables[EditorSpawns.selectedAnimal].tiers.Count)
         {
             LevelAnimals.tables[EditorSpawns.selectedAnimal].tiers[selectedTier].name = state;
-            tierButtons[selectedTier].text = state;
+            tierButtons[selectedTier].Text = state;
         }
     }
 
     private static void onClickedAddTierButton(ISleekElement button)
     {
-        if (EditorSpawns.selectedAnimal < LevelAnimals.tables.Count && tierNameField.text != "")
+        if (EditorSpawns.selectedAnimal < LevelAnimals.tables.Count && tierNameField.Text != "")
         {
-            LevelAnimals.tables[EditorSpawns.selectedAnimal].addTier(tierNameField.text);
-            tierNameField.text = "";
+            LevelAnimals.tables[EditorSpawns.selectedAnimal].addTier(tierNameField.Text);
+            tierNameField.Text = "";
             updateSelection();
         }
     }
@@ -351,13 +351,13 @@ public class EditorSpawnsAnimalsUI
     {
         if (EditorSpawns.selectedAnimal < LevelAnimals.tables.Count && selectedTier < LevelAnimals.tables[EditorSpawns.selectedAnimal].tiers.Count)
         {
-            if (Assets.find(EAssetType.ANIMAL, animalIDField.state) is AnimalAsset)
+            if (Assets.find(EAssetType.ANIMAL, animalIDField.Value) is AnimalAsset)
             {
-                LevelAnimals.tables[EditorSpawns.selectedAnimal].addAnimal(selectedTier, animalIDField.state);
+                LevelAnimals.tables[EditorSpawns.selectedAnimal].addAnimal(selectedTier, animalIDField.Value);
                 updateSelection();
                 spawnsScrollBox.ScrollToBottom();
             }
-            animalIDField.state = 0;
+            animalIDField.Value = 0;
         }
     }
 
@@ -391,49 +391,49 @@ public class EditorSpawnsAnimalsUI
         Local local = Localization.read("/Editor/EditorSpawnsAnimals.dat");
         Bundle bundle = Bundles.getBundle("/Bundles/Textures/Edit/Icons/EditorSpawnsAnimals/EditorSpawnsAnimals.unity3d");
         container = new SleekFullscreenBox();
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.positionScale_X = 1f;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.PositionScale_X = 1f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         EditorUI.window.AddChild(container);
         active = false;
         tableScrollBox = Glazier.Get().CreateScrollView();
-        tableScrollBox.positionOffset_X = -470;
-        tableScrollBox.positionOffset_Y = 120;
-        tableScrollBox.positionScale_X = 1f;
-        tableScrollBox.sizeOffset_X = 470;
-        tableScrollBox.sizeOffset_Y = 200;
-        tableScrollBox.scaleContentToWidth = true;
+        tableScrollBox.PositionOffset_X = -470f;
+        tableScrollBox.PositionOffset_Y = 120f;
+        tableScrollBox.PositionScale_X = 1f;
+        tableScrollBox.SizeOffset_X = 470f;
+        tableScrollBox.SizeOffset_Y = 200f;
+        tableScrollBox.ScaleContentToWidth = true;
         container.AddChild(tableScrollBox);
         tableNameField = Glazier.Get().CreateStringField();
-        tableNameField.positionOffset_X = -230;
-        tableNameField.positionOffset_Y = 330;
-        tableNameField.positionScale_X = 1f;
-        tableNameField.sizeOffset_X = 230;
-        tableNameField.sizeOffset_Y = 30;
-        tableNameField.maxLength = 64;
-        tableNameField.addLabel(local.format("TableNameFieldLabelText"), ESleekSide.LEFT);
-        tableNameField.onTyped += onTypedNameField;
+        tableNameField.PositionOffset_X = -230f;
+        tableNameField.PositionOffset_Y = 330f;
+        tableNameField.PositionScale_X = 1f;
+        tableNameField.SizeOffset_X = 230f;
+        tableNameField.SizeOffset_Y = 30f;
+        tableNameField.MaxLength = 64;
+        tableNameField.AddLabel(local.format("TableNameFieldLabelText"), ESleekSide.LEFT);
+        tableNameField.OnTextChanged += onTypedNameField;
         container.AddChild(tableNameField);
         addTableButton = new SleekButtonIcon(bundle.load<Texture2D>("Add"));
-        addTableButton.positionOffset_X = -230;
-        addTableButton.positionOffset_Y = 370;
-        addTableButton.positionScale_X = 1f;
-        addTableButton.sizeOffset_X = 110;
-        addTableButton.sizeOffset_Y = 30;
+        addTableButton.PositionOffset_X = -230f;
+        addTableButton.PositionOffset_Y = 370f;
+        addTableButton.PositionScale_X = 1f;
+        addTableButton.SizeOffset_X = 110f;
+        addTableButton.SizeOffset_Y = 30f;
         addTableButton.text = local.format("AddTableButtonText");
         addTableButton.tooltip = local.format("AddTableButtonTooltip");
         addTableButton.onClickedButton += onClickedAddTableButton;
         container.AddChild(addTableButton);
         removeTableButton = new SleekButtonIcon(bundle.load<Texture2D>("Remove"));
-        removeTableButton.positionOffset_X = -110;
-        removeTableButton.positionOffset_Y = 370;
-        removeTableButton.positionScale_X = 1f;
-        removeTableButton.sizeOffset_X = 110;
-        removeTableButton.sizeOffset_Y = 30;
+        removeTableButton.PositionOffset_X = -110f;
+        removeTableButton.PositionOffset_Y = 370f;
+        removeTableButton.PositionScale_X = 1f;
+        removeTableButton.SizeOffset_X = 110f;
+        removeTableButton.SizeOffset_Y = 30f;
         removeTableButton.text = local.format("RemoveTableButtonText");
         removeTableButton.tooltip = local.format("RemoveTableButtonTooltip");
         removeTableButton.onClickedButton += onClickedRemoveTableButton;
@@ -441,108 +441,108 @@ public class EditorSpawnsAnimalsUI
         tableButtons = null;
         updateTables();
         spawnsScrollBox = Glazier.Get().CreateScrollView();
-        spawnsScrollBox.positionOffset_X = -470;
-        spawnsScrollBox.positionOffset_Y = 410;
-        spawnsScrollBox.positionScale_X = 1f;
-        spawnsScrollBox.sizeOffset_X = 470;
-        spawnsScrollBox.sizeOffset_Y = -410;
-        spawnsScrollBox.sizeScale_Y = 1f;
-        spawnsScrollBox.scaleContentToWidth = true;
-        spawnsScrollBox.contentSizeOffset = new Vector2(0f, 1000f);
+        spawnsScrollBox.PositionOffset_X = -470f;
+        spawnsScrollBox.PositionOffset_Y = 410f;
+        spawnsScrollBox.PositionScale_X = 1f;
+        spawnsScrollBox.SizeOffset_X = 470f;
+        spawnsScrollBox.SizeOffset_Y = -410f;
+        spawnsScrollBox.SizeScale_Y = 1f;
+        spawnsScrollBox.ScaleContentToWidth = true;
+        spawnsScrollBox.ContentSizeOffset = new Vector2(0f, 1000f);
         container.AddChild(spawnsScrollBox);
         tableColorPicker = new SleekColorPicker();
-        tableColorPicker.positionOffset_X = 200;
+        tableColorPicker.PositionOffset_X = 200f;
         tableColorPicker.onColorPicked = onAnimalColorPicked;
         spawnsScrollBox.AddChild(tableColorPicker);
         tableIDField = Glazier.Get().CreateUInt16Field();
-        tableIDField.positionOffset_X = 240;
-        tableIDField.positionOffset_Y = 130;
-        tableIDField.sizeOffset_X = 200;
-        tableIDField.sizeOffset_Y = 30;
-        tableIDField.onTypedUInt16 += onTableIDFieldTyped;
-        tableIDField.addLabel(local.format("TableIDFieldLabelText"), ESleekSide.LEFT);
+        tableIDField.PositionOffset_X = 240f;
+        tableIDField.PositionOffset_Y = 130f;
+        tableIDField.SizeOffset_X = 200f;
+        tableIDField.SizeOffset_Y = 30f;
+        tableIDField.OnValueChanged += onTableIDFieldTyped;
+        tableIDField.AddLabel(local.format("TableIDFieldLabelText"), ESleekSide.LEFT);
         spawnsScrollBox.AddChild(tableIDField);
         tierNameField = Glazier.Get().CreateStringField();
-        tierNameField.positionOffset_X = 240;
-        tierNameField.sizeOffset_X = 200;
-        tierNameField.sizeOffset_Y = 30;
-        tierNameField.maxLength = 64;
-        tierNameField.addLabel(local.format("TierNameFieldLabelText"), ESleekSide.LEFT);
-        tierNameField.onTyped += onTypedTierNameField;
+        tierNameField.PositionOffset_X = 240f;
+        tierNameField.SizeOffset_X = 200f;
+        tierNameField.SizeOffset_Y = 30f;
+        tierNameField.MaxLength = 64;
+        tierNameField.AddLabel(local.format("TierNameFieldLabelText"), ESleekSide.LEFT);
+        tierNameField.OnTextChanged += onTypedTierNameField;
         spawnsScrollBox.AddChild(tierNameField);
         addTierButton = new SleekButtonIcon(bundle.load<Texture2D>("Add"));
-        addTierButton.positionOffset_X = 240;
-        addTierButton.sizeOffset_X = 95;
-        addTierButton.sizeOffset_Y = 30;
+        addTierButton.PositionOffset_X = 240f;
+        addTierButton.SizeOffset_X = 95f;
+        addTierButton.SizeOffset_Y = 30f;
         addTierButton.text = local.format("AddTierButtonText");
         addTierButton.tooltip = local.format("AddTierButtonTooltip");
         addTierButton.onClickedButton += onClickedAddTierButton;
         spawnsScrollBox.AddChild(addTierButton);
         removeTierButton = new SleekButtonIcon(bundle.load<Texture2D>("Remove"));
-        removeTierButton.positionOffset_X = 345;
-        removeTierButton.sizeOffset_X = 95;
-        removeTierButton.sizeOffset_Y = 30;
+        removeTierButton.PositionOffset_X = 345f;
+        removeTierButton.SizeOffset_X = 95f;
+        removeTierButton.SizeOffset_Y = 30f;
         removeTierButton.text = local.format("RemoveTierButtonText");
         removeTierButton.tooltip = local.format("RemoveTierButtonTooltip");
         removeTierButton.onClickedButton += onClickedRemoveTierButton;
         spawnsScrollBox.AddChild(removeTierButton);
         animalIDField = Glazier.Get().CreateUInt16Field();
-        animalIDField.positionOffset_X = 240;
-        animalIDField.sizeOffset_X = 200;
-        animalIDField.sizeOffset_Y = 30;
-        animalIDField.addLabel(local.format("AnimalIDFieldLabelText"), ESleekSide.LEFT);
+        animalIDField.PositionOffset_X = 240f;
+        animalIDField.SizeOffset_X = 200f;
+        animalIDField.SizeOffset_Y = 30f;
+        animalIDField.AddLabel(local.format("AnimalIDFieldLabelText"), ESleekSide.LEFT);
         spawnsScrollBox.AddChild(animalIDField);
         addAnimalButton = new SleekButtonIcon(bundle.load<Texture2D>("Add"));
-        addAnimalButton.positionOffset_X = 240;
-        addAnimalButton.sizeOffset_X = 95;
-        addAnimalButton.sizeOffset_Y = 30;
+        addAnimalButton.PositionOffset_X = 240f;
+        addAnimalButton.SizeOffset_X = 95f;
+        addAnimalButton.SizeOffset_Y = 30f;
         addAnimalButton.text = local.format("AddAnimalButtonText");
         addAnimalButton.tooltip = local.format("AddAnimalButtonTooltip");
         addAnimalButton.onClickedButton += onClickedAddAnimalButton;
         spawnsScrollBox.AddChild(addAnimalButton);
         removeAnimalButton = new SleekButtonIcon(bundle.load<Texture2D>("Remove"));
-        removeAnimalButton.positionOffset_X = 345;
-        removeAnimalButton.sizeOffset_X = 95;
-        removeAnimalButton.sizeOffset_Y = 30;
+        removeAnimalButton.PositionOffset_X = 345f;
+        removeAnimalButton.SizeOffset_X = 95f;
+        removeAnimalButton.SizeOffset_Y = 30f;
         removeAnimalButton.text = local.format("RemoveAnimalButtonText");
         removeAnimalButton.tooltip = local.format("RemoveAnimalButtonTooltip");
         removeAnimalButton.onClickedButton += onClickedRemoveAnimalButton;
         spawnsScrollBox.AddChild(removeAnimalButton);
         selectedBox = Glazier.Get().CreateBox();
-        selectedBox.positionOffset_X = -230;
-        selectedBox.positionOffset_Y = 80;
-        selectedBox.positionScale_X = 1f;
-        selectedBox.sizeOffset_X = 230;
-        selectedBox.sizeOffset_Y = 30;
-        selectedBox.addLabel(local.format("SelectionBoxLabelText"), ESleekSide.LEFT);
+        selectedBox.PositionOffset_X = -230f;
+        selectedBox.PositionOffset_Y = 80f;
+        selectedBox.PositionScale_X = 1f;
+        selectedBox.SizeOffset_X = 230f;
+        selectedBox.SizeOffset_Y = 30f;
+        selectedBox.AddLabel(local.format("SelectionBoxLabelText"), ESleekSide.LEFT);
         container.AddChild(selectedBox);
         tierButtons = null;
         animalButtons = null;
         updateSelection();
         radiusSlider = Glazier.Get().CreateSlider();
-        radiusSlider.positionOffset_Y = -100;
-        radiusSlider.positionScale_Y = 1f;
-        radiusSlider.sizeOffset_X = 200;
-        radiusSlider.sizeOffset_Y = 20;
-        radiusSlider.state = (float)(EditorSpawns.radius - EditorSpawns.MIN_REMOVE_SIZE) / (float)(int)EditorSpawns.MAX_REMOVE_SIZE;
-        radiusSlider.orientation = ESleekOrientation.HORIZONTAL;
-        radiusSlider.addLabel(local.format("RadiusSliderLabelText"), ESleekSide.RIGHT);
-        radiusSlider.onDragged += onDraggedRadiusSlider;
+        radiusSlider.PositionOffset_Y = -100f;
+        radiusSlider.PositionScale_Y = 1f;
+        radiusSlider.SizeOffset_X = 200f;
+        radiusSlider.SizeOffset_Y = 20f;
+        radiusSlider.Value = (float)(EditorSpawns.radius - EditorSpawns.MIN_REMOVE_SIZE) / (float)(int)EditorSpawns.MAX_REMOVE_SIZE;
+        radiusSlider.Orientation = ESleekOrientation.HORIZONTAL;
+        radiusSlider.AddLabel(local.format("RadiusSliderLabelText"), ESleekSide.RIGHT);
+        radiusSlider.OnValueChanged += onDraggedRadiusSlider;
         container.AddChild(radiusSlider);
         addButton = new SleekButtonIcon(bundle.load<Texture2D>("Add"));
-        addButton.positionOffset_Y = -70;
-        addButton.positionScale_Y = 1f;
-        addButton.sizeOffset_X = 200;
-        addButton.sizeOffset_Y = 30;
+        addButton.PositionOffset_Y = -70f;
+        addButton.PositionScale_Y = 1f;
+        addButton.SizeOffset_X = 200f;
+        addButton.SizeOffset_Y = 30f;
         addButton.text = local.format("AddButtonText", ControlsSettings.tool_0);
         addButton.tooltip = local.format("AddButtonTooltip");
         addButton.onClickedButton += onClickedAddButton;
         container.AddChild(addButton);
         removeButton = new SleekButtonIcon(bundle.load<Texture2D>("Remove"));
-        removeButton.positionOffset_Y = -30;
-        removeButton.positionScale_Y = 1f;
-        removeButton.sizeOffset_X = 200;
-        removeButton.sizeOffset_Y = 30;
+        removeButton.PositionOffset_Y = -30f;
+        removeButton.PositionScale_Y = 1f;
+        removeButton.SizeOffset_X = 200f;
+        removeButton.SizeOffset_Y = 30f;
         removeButton.text = local.format("RemoveButtonText", ControlsSettings.tool_1);
         removeButton.tooltip = local.format("RemoveButtonTooltip");
         removeButton.onClickedButton += onClickedRemoveButton;

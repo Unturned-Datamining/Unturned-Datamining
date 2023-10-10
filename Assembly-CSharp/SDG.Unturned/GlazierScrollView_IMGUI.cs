@@ -15,11 +15,13 @@ internal class GlazierScrollView_IMGUI : GlazierElementBase_IMGUI, ISleekScrollV
 
     private Vector2 _contentSizeOffset;
 
+    private Vector2 state;
+
     private Rect contentRect;
 
     private Rect viewRect;
 
-    public bool scaleContentToWidth
+    public bool ScaleContentToWidth
     {
         get
         {
@@ -32,7 +34,7 @@ internal class GlazierScrollView_IMGUI : GlazierElementBase_IMGUI, ISleekScrollV
         }
     }
 
-    public bool scaleContentToHeight
+    public bool ScaleContentToHeight
     {
         get
         {
@@ -45,7 +47,7 @@ internal class GlazierScrollView_IMGUI : GlazierElementBase_IMGUI, ISleekScrollV
         }
     }
 
-    public float contentScaleFactor
+    public float ContentScaleFactor
     {
         get
         {
@@ -58,7 +60,7 @@ internal class GlazierScrollView_IMGUI : GlazierElementBase_IMGUI, ISleekScrollV
         }
     }
 
-    public bool reduceWidthWhenScrollbarVisible
+    public bool ReduceWidthWhenScrollbarVisible
     {
         get
         {
@@ -71,7 +73,9 @@ internal class GlazierScrollView_IMGUI : GlazierElementBase_IMGUI, ISleekScrollV
         }
     }
 
-    public Vector2 contentSizeOffset
+    public ESleekScrollbarVisibility VerticalScrollbarVisibility { get; set; }
+
+    public Vector2 ContentSizeOffset
     {
         get
         {
@@ -84,9 +88,7 @@ internal class GlazierScrollView_IMGUI : GlazierElementBase_IMGUI, ISleekScrollV
         }
     }
 
-    public Vector2 state { get; set; }
-
-    public Vector2 normalizedStateCenter
+    public Vector2 NormalizedStateCenter
     {
         get
         {
@@ -106,16 +108,16 @@ internal class GlazierScrollView_IMGUI : GlazierElementBase_IMGUI, ISleekScrollV
         }
     }
 
-    public bool handleScrollWheel { get; set; } = true;
+    public bool HandleScrollWheel { get; set; } = true;
 
 
-    public SleekColor backgroundColor { get; set; } = GlazierConst.DefaultScrollViewBackgroundColor;
+    public SleekColor BackgroundColor { get; set; } = GlazierConst.DefaultScrollViewBackgroundColor;
 
 
-    public SleekColor foregroundColor { get; set; } = GlazierConst.DefaultScrollViewForegroundColor;
+    public SleekColor ForegroundColor { get; set; } = GlazierConst.DefaultScrollViewForegroundColor;
 
 
-    public float normalizedVerticalPosition
+    public float NormalizedVerticalPosition
     {
         get
         {
@@ -127,7 +129,7 @@ internal class GlazierScrollView_IMGUI : GlazierElementBase_IMGUI, ISleekScrollV
         }
     }
 
-    public float normalizedViewportHeight
+    public float NormalizedViewportHeight
     {
         get
         {
@@ -139,7 +141,17 @@ internal class GlazierScrollView_IMGUI : GlazierElementBase_IMGUI, ISleekScrollV
         }
     }
 
-    public event Action<Vector2> onValueChanged;
+    public bool ContentUseManualLayout { get; set; } = true;
+
+
+    public bool AlignContentToBottom { get; set; }
+
+    public event Action<Vector2> OnNormalizedValueChanged;
+
+    public void ScrollToTop()
+    {
+        state = new Vector2(state.x, state.y);
+    }
 
     public void ScrollToBottom()
     {
@@ -148,19 +160,19 @@ internal class GlazierScrollView_IMGUI : GlazierElementBase_IMGUI, ISleekScrollV
 
     public override void OnGUI()
     {
-        GUI.backgroundColor = backgroundColor;
+        GUI.backgroundColor = BackgroundColor;
         Vector2 vector = GUI.BeginScrollView(drawRect, state, viewRect);
         if (state != vector)
         {
             state = vector;
-            if (this.onValueChanged != null)
+            if (this.OnNormalizedValueChanged != null)
             {
                 Vector2 obj = new Vector2(state.x / (contentRect.width - drawRect.width), state.y / (contentRect.height - drawRect.height));
-                this.onValueChanged(obj);
+                this.OnNormalizedValueChanged(obj);
             }
         }
         ChildrenOnGUI();
-        GUI.EndScrollView(handleScrollWheel);
+        GUI.EndScrollView(HandleScrollWheel);
     }
 
     protected override void TransformChildDrawPositionIntoParentSpace(ref Vector2 position)
@@ -180,27 +192,27 @@ internal class GlazierScrollView_IMGUI : GlazierElementBase_IMGUI, ISleekScrollV
     {
         base.UpdateDirtyTransform();
         float userInterfaceScale = GraphicsSettings.userInterfaceScale;
-        contentRect.width = contentSizeOffset.x * userInterfaceScale;
-        contentRect.height = contentSizeOffset.y * userInterfaceScale;
-        if (scaleContentToWidth)
+        contentRect.width = ContentSizeOffset.x * userInterfaceScale;
+        contentRect.height = ContentSizeOffset.y * userInterfaceScale;
+        if (ScaleContentToWidth)
         {
-            contentRect.width += drawRect.width * contentScaleFactor;
+            contentRect.width += drawRect.width * ContentScaleFactor;
         }
-        if (scaleContentToHeight)
+        if (ScaleContentToHeight)
         {
-            contentRect.height += drawRect.height * contentScaleFactor;
+            contentRect.height += drawRect.height * ContentScaleFactor;
         }
         bool num = contentRect.height >= drawRect.height;
-        if (num && reduceWidthWhenScrollbarVisible && scaleContentToWidth)
+        if (num && ReduceWidthWhenScrollbarVisible && ScaleContentToWidth)
         {
             contentRect.width -= 30f;
         }
-        if (contentRect.width >= drawRect.width && scaleContentToHeight)
+        if (contentRect.width >= drawRect.width && ScaleContentToHeight)
         {
             contentRect.height -= 30f;
         }
         viewRect = contentRect;
-        if (num && !reduceWidthWhenScrollbarVisible && scaleContentToWidth)
+        if (num && !ReduceWidthWhenScrollbarVisible && ScaleContentToWidth)
         {
             viewRect.width -= 30f;
         }

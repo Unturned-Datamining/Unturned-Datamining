@@ -58,14 +58,6 @@ public class MythicLocker : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        if (!(system == null))
-        {
-            system.transform.parent = null;
-        }
-    }
-
     private void OnDestroy()
     {
         if (!(system == null))

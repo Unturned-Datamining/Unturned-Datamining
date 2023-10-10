@@ -11,27 +11,21 @@ public class InteractableFarm : Interactable
 
     private uint _planted;
 
-    private uint _growth;
-
-    private ushort _grow;
-
-    private Guid growSpawnTableGuid;
-
     private bool isGrown;
 
     public uint harvestRewardExperience;
-
-    private bool isAffectedByAgricultureSkill;
 
     internal static readonly ClientInstanceMethod<uint> SendPlanted = ClientInstanceMethod<uint>.Get(typeof(InteractableFarm), "ReceivePlanted");
 
     private static readonly ServerInstanceMethod SendHarvestRequest = ServerInstanceMethod.Get(typeof(InteractableFarm), "ReceiveHarvestRequest");
 
+    private ItemFarmAsset farmAsset;
+
     public uint planted => _planted;
 
-    public uint growth => _growth;
+    public uint growth => farmAsset?.growth ?? 1;
 
-    public ushort grow => _grow;
+    public ushort grow => farmAsset?.grow ?? 0;
 
     public bool canFertilize { get; protected set; }
 
@@ -56,11 +50,8 @@ public class InteractableFarm : Interactable
 
     public override void updateState(Asset asset, byte[] state)
     {
-        ItemFarmAsset itemFarmAsset = asset as ItemFarmAsset;
-        _growth = itemFarmAsset.growth;
-        _grow = itemFarmAsset.grow;
-        growSpawnTableGuid = itemFarmAsset.growSpawnTableGuid;
-        isAffectedByAgricultureSkill = itemFarmAsset.isAffectedByAgricultureSkill;
+        farmAsset = asset as ItemFarmAsset;
+        harvestRewardExperience = farmAsset?.harvestRewardExperience ?? 0;
         if (state.Length >= 4)
         {
             _planted = BitConverter.ToUInt32(state, 0);
@@ -69,8 +60,6 @@ public class InteractableFarm : Interactable
         {
             _planted = 0u;
         }
-        canFertilize = ((ItemFarmAsset)asset).canFertilize;
-        harvestRewardExperience = ((ItemFarmAsset)asset).harvestRewardExperience;
         if (isGrown)
         {
             isGrown = false;
@@ -111,7 +100,7 @@ public class InteractableFarm : Interactable
 
     private void onRainUpdated(ELightingRain rain)
     {
-        if (rain == ELightingRain.POST_DRIZZLE && !Physics.Raycast(base.transform.position + Vector3.up, Vector3.up, 32f, RayMasks.BLOCK_WIND))
+        if (rain == ELightingRain.POST_DRIZZLE && (farmAsset == null || farmAsset.shouldRainAffectGrowth) && !Physics.Raycast(base.transform.position + Vector3.up, Vector3.up, 32f, RayMasks.BLOCK_WIND))
         {
             updatePlanted(1u);
             if (Provider.isServer)
@@ -175,21 +164,31 @@ public class InteractableFarm : Interactable
             BarricadeManager.onHarvestPlantRequested(player.channel.owner.playerID.steamID, x, y, plant, index, ref shouldAllow);
         }
         InteractableFarm.OnHarvestRequested_Global?.Invoke(this, context.GetCallingPlayer(), ref shouldAllow);
-        if (shouldAllow && checkFarm())
+        if (!shouldAllow || !checkFarm())
         {
-            ushort num = _grow;
+            return;
+        }
+        if (farmAsset != null)
+        {
+            ushort num = farmAsset.grow;
             if (num == 0)
             {
-                num = SpawnTableTool.resolve(growSpawnTableGuid);
+                num = SpawnTableTool.ResolveLegacyId(farmAsset.growSpawnTableGuid, EAssetType.ITEM, OnGetGrowSpawnTableErrorContext);
             }
             player.inventory.forceAddItem(new Item(num, EItemOrigin.NATURE), auto: true);
-            if (isAffectedByAgricultureSkill && UnityEngine.Random.value < player.skills.mastery(2, 5))
+            if (farmAsset.isAffectedByAgricultureSkill && UnityEngine.Random.value < player.skills.mastery(2, 5))
             {
                 player.inventory.forceAddItem(new Item(num, EItemOrigin.NATURE), auto: true);
             }
-            BarricadeManager.damage(base.transform, 2f, 1f, armor: false, default(CSteamID), EDamageOrigin.Plant_Harvested);
-            player.sendStat(EPlayerStat.FOUND_PLANTS);
-            player.skills.askPay(harvestRewardExperience);
+            farmAsset.harvestRewardsList.Grant(player);
         }
+        BarricadeManager.damage(base.transform, 2f, 1f, armor: false, default(CSteamID), EDamageOrigin.Plant_Harvested);
+        player.sendStat(EPlayerStat.FOUND_PLANTS);
+        player.skills.askPay(harvestRewardExperience);
+    }
+
+    private string OnGetGrowSpawnTableErrorContext()
+    {
+        return "Farmable " + farmAsset?.FriendlyName;
     }
 }

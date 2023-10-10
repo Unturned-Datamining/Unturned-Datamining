@@ -320,7 +320,7 @@ public class CosmeticPreviewCapture : MonoBehaviour
     private void FitCameraToBounds(Camera cameraComponent, Bounds worldBounds)
     {
         float magnitude = worldBounds.extents.magnitude;
-        float f = cameraComponent.fieldOfView * 0.5f * ((float)Math.PI / 180f);
+        float f = cameraComponent.fieldOfView * 0.5f * (MathF.PI / 180f);
         float b = magnitude / Mathf.Sin(f);
         b = Mathf.Max(0.55f, b);
         float num = b + cameraComponent.nearClipPlane;

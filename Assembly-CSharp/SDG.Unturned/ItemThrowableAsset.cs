@@ -68,6 +68,34 @@ public class ItemThrowableAsset : ItemWeaponAsset
         return true;
     }
 
+    public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
+    {
+        base.BuildDescription(builder, itemInstance);
+        if (!builder.shouldRestrictToLegacyContent)
+        {
+            if (_isFlash)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Throwable_Flash"), 2000);
+            }
+            if (_isSticky)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Throwable_Sticky"), 2000);
+            }
+            if (_explodeOnImpact)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Throwable_ExplodeOnImpact"), 2000);
+            }
+            if (_isExplosive || _isFlash)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Throwable_FuseLength", $"{_fuseLength:0.0} s"), 2000);
+            }
+            if (_isExplosive)
+            {
+                BuildExplosiveDescription(builder, itemInstance);
+            }
+        }
+    }
+
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
         base.PopulateAsset(bundle, data, localization);

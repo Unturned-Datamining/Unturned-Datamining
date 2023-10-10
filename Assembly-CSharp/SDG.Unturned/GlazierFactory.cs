@@ -19,6 +19,11 @@ public static class GlazierFactory
                 Glazier.instance = Glazier_uGUI.CreateGlazier();
                 return;
             }
+            if (string.Equals(value, "UIToolkit"))
+            {
+                Glazier.instance = Glazier_UIToolkit.CreateGlazier();
+                return;
+            }
             UnturnedLog.warn("Unknown glazier implementation \"{0}\"", value);
         }
         Glazier.instance = Glazier_uGUI.CreateGlazier();

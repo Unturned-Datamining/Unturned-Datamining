@@ -11,6 +11,7 @@ internal static class WebUtils
             result = null;
             return false;
         }
+        uriString = uriString.Trim();
         if (!uriString.StartsWith("http://", StringComparison.OrdinalIgnoreCase) && !uriString.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
         {
             uriString = "https://" + uriString;

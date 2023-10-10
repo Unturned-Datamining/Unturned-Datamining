@@ -222,7 +222,7 @@ public class InteractableObjectRubble : MonoBehaviour
         value = Mathf.Clamp(value, 0, 100);
         for (int j = 0; j < value; j++)
         {
-            ushort num = SpawnTableTool.resolve(asset.rubbleRewardID);
+            ushort num = SpawnTableTool.ResolveLegacyId(asset.rubbleRewardID, EAssetType.ITEM, OnGetSpawnTableErrorContext);
             if (num != 0)
             {
                 ItemManager.dropItem(new Item(num, EItemOrigin.NATURE), dropTransform.position, playEffect: false, Dedicator.IsDedicatedServer, wideSpread: false);
@@ -309,8 +309,13 @@ public class InteractableObjectRubble : MonoBehaviour
         }
         for (byte b2 = 0; b2 < rubbleInfos.Length; b2 = (byte)(b2 + 1))
         {
-            bool isAlive = (state[state.Length - 1] & Types.SHIFTS[b2]) == Types.SHIFTS[b2];
+            bool isAlive = (state[^1] & Types.SHIFTS[b2]) == Types.SHIFTS[b2];
             updateRubble(b2, isAlive, playEffect: false, Vector3.zero);
         }
+    }
+
+    private string OnGetSpawnTableErrorContext()
+    {
+        return asset?.FriendlyName + " rubble reward";
     }
 }

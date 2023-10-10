@@ -19,82 +19,82 @@ internal class SleekItemStorePriceBox : SleekWrapper
         uint num = (uint)Mathf.Max(quantity, 1);
         if (currentPrice == basePrice)
         {
-            basePriceLabel.isVisible = false;
-            discountStrikethrough.isVisible = false;
-            percentageLabel.isVisible = false;
-            currentPriceLabel.positionScale_X = 0f;
-            currentPriceLabel.positionScale_Y = 0f;
-            currentPriceLabel.sizeScale_X = 1f;
-            currentPriceLabel.sizeScale_Y = 1f;
-            currentPriceLabel.text = ItemStore.Get().FormatPrice(currentPrice * num);
+            basePriceLabel.IsVisible = false;
+            discountStrikethrough.IsVisible = false;
+            percentageLabel.IsVisible = false;
+            currentPriceLabel.PositionScale_X = 0f;
+            currentPriceLabel.PositionScale_Y = 0f;
+            currentPriceLabel.SizeScale_X = 1f;
+            currentPriceLabel.SizeScale_Y = 1f;
+            currentPriceLabel.Text = ItemStore.Get().FormatPrice(currentPrice * num);
             if (quantity > 1)
             {
-                backdropBox.tooltipText = $"{ItemStore.Get().FormatPrice(currentPrice)} x {quantity} = {currentPriceLabel.text}";
+                backdropBox.TooltipText = $"{ItemStore.Get().FormatPrice(currentPrice)} x {quantity} = {currentPriceLabel.Text}";
             }
             else
             {
-                backdropBox.tooltipText = currentPriceLabel.text;
+                backdropBox.TooltipText = currentPriceLabel.Text;
             }
             return;
         }
-        basePriceLabel.isVisible = true;
-        discountStrikethrough.isVisible = true;
-        percentageLabel.isVisible = true;
-        currentPriceLabel.positionScale_X = 0.5f;
-        currentPriceLabel.positionScale_Y = 0.5f;
-        currentPriceLabel.sizeScale_X = 0.5f;
-        currentPriceLabel.sizeScale_Y = 0.5f;
+        basePriceLabel.IsVisible = true;
+        discountStrikethrough.IsVisible = true;
+        percentageLabel.IsVisible = true;
+        currentPriceLabel.PositionScale_X = 0.5f;
+        currentPriceLabel.PositionScale_Y = 0.5f;
+        currentPriceLabel.SizeScale_X = 0.5f;
+        currentPriceLabel.SizeScale_Y = 0.5f;
         ulong num2 = basePrice * num;
         ulong num3 = currentPrice * num;
-        basePriceLabel.text = ItemStore.Get().FormatPrice(num2);
-        currentPriceLabel.text = ItemStore.Get().FormatPrice(num3);
-        percentageLabel.text = ItemStore.Get().FormatDiscount(num3, num2);
+        basePriceLabel.Text = ItemStore.Get().FormatPrice(num2);
+        currentPriceLabel.Text = ItemStore.Get().FormatPrice(num3);
+        percentageLabel.Text = ItemStore.Get().FormatDiscount(num3, num2);
         if (quantity > 1)
         {
-            string text = $"{ItemStore.Get().FormatPrice(basePrice)} x {quantity} = {basePriceLabel.text}";
-            string text2 = $"{ItemStore.Get().FormatPrice(currentPrice)} x {quantity} = {currentPriceLabel.text}";
-            backdropBox.tooltipText = RichTextUtil.wrapWithColor(text, Color.gray) + "\n" + RichTextUtil.wrapWithColor(percentageLabel.text, Color.green) + "\n" + RichTextUtil.wrapWithColor(text2, ItemStore.PremiumColor);
+            string text = $"{ItemStore.Get().FormatPrice(basePrice)} x {quantity} = {basePriceLabel.Text}";
+            string text2 = $"{ItemStore.Get().FormatPrice(currentPrice)} x {quantity} = {currentPriceLabel.Text}";
+            backdropBox.TooltipText = RichTextUtil.wrapWithColor(text, Color.gray) + "\n" + RichTextUtil.wrapWithColor(percentageLabel.Text, Color.green) + "\n" + RichTextUtil.wrapWithColor(text2, ItemStore.PremiumColor);
         }
         else
         {
-            backdropBox.tooltipText = RichTextUtil.wrapWithColor(basePriceLabel.text, Color.gray) + "\n" + RichTextUtil.wrapWithColor(percentageLabel.text, Color.green) + "\n" + RichTextUtil.wrapWithColor(currentPriceLabel.text, ItemStore.PremiumColor);
+            backdropBox.TooltipText = RichTextUtil.wrapWithColor(basePriceLabel.Text, Color.gray) + "\n" + RichTextUtil.wrapWithColor(percentageLabel.Text, Color.green) + "\n" + RichTextUtil.wrapWithColor(currentPriceLabel.Text, ItemStore.PremiumColor);
         }
     }
 
     public SleekItemStorePriceBox()
     {
         backdropBox = Glazier.Get().CreateBox();
-        backdropBox.sizeScale_X = 1f;
-        backdropBox.sizeScale_Y = 1f;
-        backdropBox.textColor = ItemStore.PremiumColor;
+        backdropBox.SizeScale_X = 1f;
+        backdropBox.SizeScale_Y = 1f;
+        backdropBox.TextColor = ItemStore.PremiumColor;
         AddChild(backdropBox);
         basePriceLabel = Glazier.Get().CreateLabel();
-        basePriceLabel.positionScale_X = 0.5f;
-        basePriceLabel.sizeScale_X = 0.5f;
-        basePriceLabel.sizeScale_Y = 0.5f;
-        basePriceLabel.fontSize = ESleekFontSize.Medium;
-        basePriceLabel.textColor = Color.gray;
+        basePriceLabel.PositionScale_X = 0.5f;
+        basePriceLabel.SizeScale_X = 0.5f;
+        basePriceLabel.SizeScale_Y = 0.5f;
+        basePriceLabel.FontSize = ESleekFontSize.Medium;
+        basePriceLabel.TextColor = Color.gray;
         AddChild(basePriceLabel);
         discountStrikethrough = Glazier.Get().CreateImage((Texture2D)GlazierResources.PixelTexture);
-        discountStrikethrough.positionScale_X = 0.5f;
-        discountStrikethrough.positionScale_Y = 0.25f;
-        discountStrikethrough.positionOffset_Y = -1;
-        discountStrikethrough.sizeOffset_Y = 1;
-        discountStrikethrough.sizeScale_X = 0.5f;
-        discountStrikethrough.isAngled = true;
-        discountStrikethrough.angle = -15f;
-        discountStrikethrough.color = Palette.COLOR_R;
+        discountStrikethrough.PositionScale_X = 0.5f;
+        discountStrikethrough.PositionScale_Y = 0.25f;
+        discountStrikethrough.PositionOffset_Y = -1f;
+        discountStrikethrough.SizeOffset_Y = 1f;
+        discountStrikethrough.SizeScale_X = 0.5f;
+        discountStrikethrough.CanRotate = true;
+        discountStrikethrough.RotationAngle = -15f;
+        discountStrikethrough.TintColor = Palette.COLOR_R;
         AddChild(discountStrikethrough);
         currentPriceLabel = Glazier.Get().CreateLabel();
-        currentPriceLabel.sizeScale_X = 1f;
-        currentPriceLabel.fontSize = ESleekFontSize.Medium;
-        currentPriceLabel.textColor = ItemStore.PremiumColor;
+        currentPriceLabel.SizeScale_X = 1f;
+        currentPriceLabel.FontSize = ESleekFontSize.Medium;
+        currentPriceLabel.TextColor = ItemStore.PremiumColor;
         AddChild(currentPriceLabel);
         percentageLabel = Glazier.Get().CreateLabel();
-        percentageLabel.sizeScale_X = 0.5f;
-        percentageLabel.sizeScale_Y = 1f;
-        percentageLabel.fontSize = ESleekFontSize.Medium;
-        percentageLabel.textColor = Color.green;
+        percentageLabel.SizeScale_X = 0.5f;
+        percentageLabel.SizeScale_Y = 1f;
+        percentageLabel.FontSize = ESleekFontSize.Medium;
+        percentageLabel.TextColor = Color.green;
         AddChild(percentageLabel);
     }
 }

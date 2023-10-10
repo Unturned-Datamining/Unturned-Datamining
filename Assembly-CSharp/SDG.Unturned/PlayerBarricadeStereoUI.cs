@@ -39,7 +39,7 @@ public class PlayerBarricadeStereoUI : SleekFullscreenBox
         refreshSongs();
         if (stereo != null)
         {
-            volumeSlider.state = stereo.volume;
+            volumeSlider.Value = stereo.volume;
         }
         updateVolumeSliderLabel();
         AnimateIntoView();
@@ -65,34 +65,34 @@ public class PlayerBarricadeStereoUI : SleekFullscreenBox
         songs.Clear();
         Assets.FindAssetsByType_UseDefaultAssetMapping(songs);
         songsBox.RemoveAllChildren();
-        songsBox.contentSizeOffset = new Vector2(0f, songs.Count * 30);
+        songsBox.ContentSizeOffset = new Vector2(0f, songs.Count * 30);
         for (int i = 0; i < songs.Count; i++)
         {
             StereoSongAsset stereoSongAsset = songs[i];
             ISleekButton sleekButton = Glazier.Get().CreateButton();
-            sleekButton.positionOffset_Y = i * 30;
-            sleekButton.sizeOffset_Y = 30;
-            sleekButton.sizeScale_X = 1f;
-            sleekButton.onClickedButton += onClickedPlayButton;
-            sleekButton.textColor = ESleekTint.RICH_TEXT_DEFAULT;
-            sleekButton.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
-            sleekButton.enableRichText = true;
+            sleekButton.PositionOffset_Y = i * 30;
+            sleekButton.SizeOffset_Y = 30f;
+            sleekButton.SizeScale_X = 1f;
+            sleekButton.OnClicked += onClickedPlayButton;
+            sleekButton.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+            sleekButton.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+            sleekButton.AllowRichText = true;
             songsBox.AddChild(sleekButton);
             if (!string.IsNullOrEmpty(stereoSongAsset.titleText))
             {
-                sleekButton.text = stereoSongAsset.titleText;
+                sleekButton.Text = stereoSongAsset.titleText;
             }
             else
             {
-                sleekButton.text = "Sorry, I broke some song names. :( -Nelson";
+                sleekButton.Text = "Sorry, I broke some song names. :( -Nelson";
             }
             if (!string.IsNullOrEmpty(stereoSongAsset.linkURL))
             {
-                sleekButton.sizeOffset_X -= 30;
+                sleekButton.SizeOffset_X -= 30f;
                 SleekButtonIcon sleekButtonIcon = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("External_Link"));
-                sleekButtonIcon.positionScale_X = 1f;
-                sleekButtonIcon.sizeOffset_X = 30;
-                sleekButtonIcon.sizeOffset_Y = 30;
+                sleekButtonIcon.PositionScale_X = 1f;
+                sleekButtonIcon.SizeOffset_X = 30f;
+                sleekButtonIcon.SizeOffset_Y = 30f;
                 sleekButtonIcon.tooltip = stereoSongAsset.linkURL;
                 sleekButtonIcon.onClickedButton += onClickedLinkButton;
                 sleekButton.AddChild(sleekButtonIcon);
@@ -104,7 +104,7 @@ public class PlayerBarricadeStereoUI : SleekFullscreenBox
     {
         if (stereo != null)
         {
-            volumeSlider.updateLabel(localization.format("Volume_Slider_Label", stereo.compressedVolume));
+            volumeSlider.UpdateLabel(localization.format("Volume_Slider_Label", stereo.compressedVolume));
         }
     }
 
@@ -133,7 +133,7 @@ public class PlayerBarricadeStereoUI : SleekFullscreenBox
 
     private void onClickedLinkButton(ISleekElement button)
     {
-        int num = songsBox.FindIndexOfChild(button.parent);
+        int num = songsBox.FindIndexOfChild(button.Parent);
         if (num < songs.Count)
         {
             StereoSongAsset stereoSongAsset = songs[num];
@@ -178,55 +178,55 @@ public class PlayerBarricadeStereoUI : SleekFullscreenBox
     public PlayerBarricadeStereoUI()
     {
         localization = Localization.read("/Player/PlayerBarricadeStereo.dat");
-        base.positionScale_Y = 1f;
-        base.positionOffset_X = 10;
-        base.positionOffset_Y = 10;
-        base.sizeOffset_X = -20;
-        base.sizeOffset_Y = -20;
-        base.sizeScale_X = 1f;
-        base.sizeScale_Y = 1f;
+        base.PositionScale_Y = 1f;
+        base.PositionOffset_X = 10f;
+        base.PositionOffset_Y = 10f;
+        base.SizeOffset_X = -20f;
+        base.SizeOffset_Y = -20f;
+        base.SizeScale_X = 1f;
+        base.SizeScale_Y = 1f;
         active = false;
         stereo = null;
         stopButton = Glazier.Get().CreateButton();
-        stopButton.positionOffset_X = -200;
-        stopButton.positionOffset_Y = 5;
-        stopButton.positionScale_X = 0.5f;
-        stopButton.positionScale_Y = 0.9f;
-        stopButton.sizeOffset_X = 195;
-        stopButton.sizeOffset_Y = 30;
-        stopButton.text = localization.format("Stop_Button");
-        stopButton.tooltipText = localization.format("Stop_Button_Tooltip");
-        stopButton.onClickedButton += onClickedStopButton;
+        stopButton.PositionOffset_X = -200f;
+        stopButton.PositionOffset_Y = 5f;
+        stopButton.PositionScale_X = 0.5f;
+        stopButton.PositionScale_Y = 0.9f;
+        stopButton.SizeOffset_X = 195f;
+        stopButton.SizeOffset_Y = 30f;
+        stopButton.Text = localization.format("Stop_Button");
+        stopButton.TooltipText = localization.format("Stop_Button_Tooltip");
+        stopButton.OnClicked += onClickedStopButton;
         AddChild(stopButton);
         closeButton = Glazier.Get().CreateButton();
-        closeButton.positionOffset_X = 5;
-        closeButton.positionOffset_Y = 5;
-        closeButton.positionScale_X = 0.5f;
-        closeButton.positionScale_Y = 0.9f;
-        closeButton.sizeOffset_X = 195;
-        closeButton.sizeOffset_Y = 30;
-        closeButton.text = localization.format("Close_Button");
-        closeButton.tooltipText = localization.format("Close_Button_Tooltip");
-        closeButton.onClickedButton += onClickedCloseButton;
+        closeButton.PositionOffset_X = 5f;
+        closeButton.PositionOffset_Y = 5f;
+        closeButton.PositionScale_X = 0.5f;
+        closeButton.PositionScale_Y = 0.9f;
+        closeButton.SizeOffset_X = 195f;
+        closeButton.SizeOffset_Y = 30f;
+        closeButton.Text = localization.format("Close_Button");
+        closeButton.TooltipText = localization.format("Close_Button_Tooltip");
+        closeButton.OnClicked += onClickedCloseButton;
         AddChild(closeButton);
         volumeSlider = Glazier.Get().CreateSlider();
-        volumeSlider.positionOffset_X = -200;
-        volumeSlider.positionOffset_Y = -25;
-        volumeSlider.positionScale_X = 0.5f;
-        volumeSlider.positionScale_Y = 0.1f;
-        volumeSlider.sizeOffset_X = 250;
-        volumeSlider.sizeOffset_Y = 20;
-        volumeSlider.orientation = ESleekOrientation.HORIZONTAL;
-        volumeSlider.onDragged += onDraggedVolumeSlider;
-        volumeSlider.addLabel("", ESleekSide.RIGHT);
+        volumeSlider.PositionOffset_X = -200f;
+        volumeSlider.PositionOffset_Y = -25f;
+        volumeSlider.PositionScale_X = 0.5f;
+        volumeSlider.PositionScale_Y = 0.1f;
+        volumeSlider.SizeOffset_X = 250f;
+        volumeSlider.SizeOffset_Y = 20f;
+        volumeSlider.Orientation = ESleekOrientation.HORIZONTAL;
+        volumeSlider.OnValueChanged += onDraggedVolumeSlider;
+        volumeSlider.AddLabel("", ESleekSide.RIGHT);
         AddChild(volumeSlider);
         songsBox = Glazier.Get().CreateScrollView();
-        songsBox.positionOffset_X = -200;
-        songsBox.positionScale_X = 0.5f;
-        songsBox.positionScale_Y = 0.1f;
-        songsBox.sizeOffset_X = 400;
-        songsBox.sizeScale_Y = 0.8f;
-        songsBox.scaleContentToWidth = true;
+        songsBox.PositionOffset_X = -200f;
+        songsBox.PositionScale_X = 0.5f;
+        songsBox.PositionScale_Y = 0.1f;
+        songsBox.SizeOffset_X = 400f;
+        songsBox.SizeScale_Y = 0.8f;
+        songsBox.ScaleContentToWidth = true;
         AddChild(songsBox);
     }
 }

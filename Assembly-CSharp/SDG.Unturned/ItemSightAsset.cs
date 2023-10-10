@@ -67,7 +67,25 @@ public class ItemSightAsset : ItemCaliberAsset
 
     public float zoom { get; private set; }
 
+    public float thirdPersonZoomFactor { get; private set; }
+
     public bool isHolographic => _isHolographic;
+
+    public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
+    {
+        base.BuildDescription(builder, itemInstance);
+        if (!builder.shouldRestrictToLegacyContent)
+        {
+            if (zoom != 1f)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ZoomFactor", zoom), 10000);
+            }
+            if (thirdPersonZoomFactor != 1.25f)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ThirdPersonZoomFactor", thirdPersonZoomFactor), 10001);
+            }
+        }
+    }
 
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
@@ -92,6 +110,7 @@ public class ItemSightAsset : ItemCaliberAsset
             _vision = ELightingVision.NONE;
         }
         zoom = Mathf.Max(1f, data.ParseFloat("Zoom"));
+        thirdPersonZoomFactor = Mathf.Max(1f, data.ParseFloat("ThirdPerson_Zoom", 1.25f));
         shouldZoomUsingEyes = data.ParseBool("Zoom_Using_Eyes");
         shouldOffsetScopeOverlayByOneTexel = data.ParseBool("Offset_Scope_Overlay_By_One_Texel");
         _isHolographic = data.ContainsKey("Holographic");

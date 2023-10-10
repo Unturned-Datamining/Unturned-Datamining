@@ -47,7 +47,7 @@ public class MenuConfigurationDisplayUI
 
     private static void onClickedResolutionButton(ISleekElement button)
     {
-        int num = (button.positionOffset_Y - 230) / 40;
+        int num = Mathf.FloorToInt((button.PositionOffset_Y - 230f) / 40f);
         GraphicsSettings.resolution = new GraphicsSettingsResolution(ScreenEx.GetRecommendedResolutions()[num]);
         GraphicsSettings.apply("changed resolution");
     }
@@ -79,7 +79,7 @@ public class MenuConfigurationDisplayUI
     {
         GraphicsSettings.UseTargetFrameRate = state;
         GraphicsSettings.apply("changed use target frame rate");
-        targetFrameRateField.isVisible = state;
+        targetFrameRateField.IsVisible = state;
     }
 
     private static void OnTypedTargetFrameRate(ISleekUInt32Field field, uint state)
@@ -109,13 +109,13 @@ public class MenuConfigurationDisplayUI
     {
         localization = Localization.read("/Menu/Configuration/MenuConfigurationDisplay.dat");
         container = new SleekFullscreenBox();
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.positionScale_Y = 1f;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.PositionScale_Y = 1f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         if (Provider.isConnected)
         {
             PlayerUI.container.AddChild(container);
@@ -131,32 +131,32 @@ public class MenuConfigurationDisplayUI
         active = false;
         Resolution[] recommendedResolutions = ScreenEx.GetRecommendedResolutions();
         resolutionsBox = Glazier.Get().CreateScrollView();
-        resolutionsBox.positionOffset_X = -200;
-        resolutionsBox.positionOffset_Y = 100;
-        resolutionsBox.positionScale_X = 0.5f;
-        resolutionsBox.sizeOffset_X = 430;
-        resolutionsBox.sizeOffset_Y = -200;
-        resolutionsBox.sizeScale_Y = 1f;
-        resolutionsBox.scaleContentToWidth = true;
-        resolutionsBox.contentSizeOffset = new Vector2(0f, 230 + recommendedResolutions.Length * 40 - 10);
+        resolutionsBox.PositionOffset_X = -200f;
+        resolutionsBox.PositionOffset_Y = 100f;
+        resolutionsBox.PositionScale_X = 0.5f;
+        resolutionsBox.SizeOffset_X = 430f;
+        resolutionsBox.SizeOffset_Y = -200f;
+        resolutionsBox.SizeScale_Y = 1f;
+        resolutionsBox.ScaleContentToWidth = true;
+        resolutionsBox.ContentSizeOffset = new Vector2(0f, 230 + recommendedResolutions.Length * 40 - 10);
         container.AddChild(resolutionsBox);
         buttons = new ISleekButton[recommendedResolutions.Length];
         for (byte b = 0; b < buttons.Length; b = (byte)(b + 1))
         {
             Resolution resolution = recommendedResolutions[b];
             ISleekButton sleekButton = Glazier.Get().CreateButton();
-            sleekButton.positionOffset_Y = 230 + b * 40;
-            sleekButton.sizeOffset_Y = 30;
-            sleekButton.sizeScale_X = 1f;
-            sleekButton.onClickedButton += onClickedResolutionButton;
-            sleekButton.text = resolution.width + " x " + resolution.height + " [" + resolution.refreshRate + "Hz]";
+            sleekButton.PositionOffset_Y = 230 + b * 40;
+            sleekButton.SizeOffset_Y = 30f;
+            sleekButton.SizeScale_X = 1f;
+            sleekButton.OnClicked += onClickedResolutionButton;
+            sleekButton.Text = resolution.width + " x " + resolution.height + " [" + resolution.refreshRate + "Hz]";
             resolutionsBox.AddChild(sleekButton);
             buttons[b] = sleekButton;
         }
         fullscreenMode = new SleekButtonState(new GUIContent(localization.format("Fullscreen_Mode_Exclusive")), new GUIContent(localization.format("Fullscreen_Mode_Borderless")), new GUIContent(localization.format("Fullscreen_Mode_Windowed")));
-        fullscreenMode.sizeOffset_X = 200;
-        fullscreenMode.sizeOffset_Y = 30;
-        fullscreenMode.addLabel(localization.format("Fullscreen_Mode_Label"), ESleekSide.RIGHT);
+        fullscreenMode.SizeOffset_X = 200f;
+        fullscreenMode.SizeOffset_Y = 30f;
+        fullscreenMode.AddLabel(localization.format("Fullscreen_Mode_Label"), ESleekSide.RIGHT);
         fullscreenMode.tooltip = localization.format("Fullscreen_Mode_Tooltip");
         switch (GraphicsSettings.fullscreenMode)
         {
@@ -173,43 +173,43 @@ public class MenuConfigurationDisplayUI
         fullscreenMode.onSwappedState = onSwappedFullscreenState;
         resolutionsBox.AddChild(fullscreenMode);
         bufferToggle = Glazier.Get().CreateToggle();
-        bufferToggle.positionOffset_Y = 50;
-        bufferToggle.sizeOffset_X = 40;
-        bufferToggle.sizeOffset_Y = 40;
-        bufferToggle.addLabel(localization.format("Buffer_Toggle_Label"), ESleekSide.RIGHT);
-        bufferToggle.state = GraphicsSettings.buffer;
-        bufferToggle.onToggled += onToggledBufferToggle;
+        bufferToggle.PositionOffset_Y = 50f;
+        bufferToggle.SizeOffset_X = 40f;
+        bufferToggle.SizeOffset_Y = 40f;
+        bufferToggle.AddLabel(localization.format("Buffer_Toggle_Label"), ESleekSide.RIGHT);
+        bufferToggle.Value = GraphicsSettings.buffer;
+        bufferToggle.OnValueChanged += onToggledBufferToggle;
         resolutionsBox.AddChild(bufferToggle);
         userInterfaceScaleField = Glazier.Get().CreateFloat32Field();
-        userInterfaceScaleField.positionOffset_Y = 100;
-        userInterfaceScaleField.sizeOffset_X = 200;
-        userInterfaceScaleField.sizeOffset_Y = 30;
-        userInterfaceScaleField.addLabel(localization.format("User_Interface_Scale_Field_Label"), ESleekSide.RIGHT);
-        userInterfaceScaleField.state = GraphicsSettings.userInterfaceScale;
-        userInterfaceScaleField.onEnteredSingle += onTypedUserInterfaceScale;
+        userInterfaceScaleField.PositionOffset_Y = 100f;
+        userInterfaceScaleField.SizeOffset_X = 200f;
+        userInterfaceScaleField.SizeOffset_Y = 30f;
+        userInterfaceScaleField.AddLabel(localization.format("User_Interface_Scale_Field_Label"), ESleekSide.RIGHT);
+        userInterfaceScaleField.Value = GraphicsSettings.userInterfaceScale;
+        userInterfaceScaleField.OnValueSubmitted += onTypedUserInterfaceScale;
         resolutionsBox.AddChild(userInterfaceScaleField);
         targetFrameRateToggle = Glazier.Get().CreateToggle();
-        targetFrameRateToggle.positionOffset_Y = 140;
-        targetFrameRateToggle.sizeOffset_X = 40;
-        targetFrameRateToggle.sizeOffset_Y = 40;
-        targetFrameRateToggle.addLabel(localization.format("UseTargetFrameRate_Toggle_Label"), ESleekSide.RIGHT);
-        targetFrameRateToggle.state = GraphicsSettings.UseTargetFrameRate;
-        targetFrameRateToggle.onToggled += OnToggledTargetFrameRate;
+        targetFrameRateToggle.PositionOffset_Y = 140f;
+        targetFrameRateToggle.SizeOffset_X = 40f;
+        targetFrameRateToggle.SizeOffset_Y = 40f;
+        targetFrameRateToggle.AddLabel(localization.format("UseTargetFrameRate_Toggle_Label"), ESleekSide.RIGHT);
+        targetFrameRateToggle.Value = GraphicsSettings.UseTargetFrameRate;
+        targetFrameRateToggle.OnValueChanged += OnToggledTargetFrameRate;
         resolutionsBox.AddChild(targetFrameRateToggle);
         targetFrameRateField = Glazier.Get().CreateUInt32Field();
-        targetFrameRateField.positionOffset_Y = 180;
-        targetFrameRateField.sizeOffset_X = 200;
-        targetFrameRateField.sizeOffset_Y = 30;
-        targetFrameRateField.addLabel(localization.format("TargetFrameRate_Field_Label"), ESleekSide.RIGHT);
-        targetFrameRateField.state = (uint)GraphicsSettings.TargetFrameRate;
-        targetFrameRateField.onTypedUInt32 += OnTypedTargetFrameRate;
-        targetFrameRateField.isVisible = GraphicsSettings.UseTargetFrameRate;
+        targetFrameRateField.PositionOffset_Y = 180f;
+        targetFrameRateField.SizeOffset_X = 200f;
+        targetFrameRateField.SizeOffset_Y = 30f;
+        targetFrameRateField.AddLabel(localization.format("TargetFrameRate_Field_Label"), ESleekSide.RIGHT);
+        targetFrameRateField.Value = (uint)GraphicsSettings.TargetFrameRate;
+        targetFrameRateField.OnValueChanged += OnTypedTargetFrameRate;
+        targetFrameRateField.IsVisible = GraphicsSettings.UseTargetFrameRate;
         resolutionsBox.AddChild(targetFrameRateField);
         backButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));
-        backButton.positionOffset_Y = -50;
-        backButton.positionScale_Y = 1f;
-        backButton.sizeOffset_X = 200;
-        backButton.sizeOffset_Y = 50;
+        backButton.PositionOffset_Y = -50f;
+        backButton.PositionScale_Y = 1f;
+        backButton.SizeOffset_X = 200f;
+        backButton.SizeOffset_Y = 50f;
         backButton.text = MenuDashboardUI.localization.format("BackButtonText");
         backButton.tooltip = MenuDashboardUI.localization.format("BackButtonTooltip");
         backButton.onClickedButton += onClickedBackButton;

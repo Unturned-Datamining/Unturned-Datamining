@@ -11,16 +11,17 @@ public class DialogueAsset : Asset
 
     public override EAssetType assetCategory => EAssetType.NPC;
 
-    public int getAvailableMessage(Player player)
+    public DialogueMessage GetAvailableMessage(Player player)
     {
         for (int i = 0; i < messages.Length; i++)
         {
-            if (messages[i].areConditionsMet(player))
+            DialogueMessage dialogueMessage = messages[i];
+            if (dialogueMessage.areConditionsMet(player))
             {
-                return i;
+                return dialogueMessage;
             }
         }
-        return -1;
+        return null;
     }
 
     internal void GetAllResponsesForMessage(int messageIndex, List<DialogueResponse> messageResponses)
@@ -99,41 +100,6 @@ public class DialogueAsset : Asset
         }
     }
 
-    public bool doesPlayerHaveAccessToVendor(Player player, VendorAsset vendorAsset)
-    {
-        return doesPlayerHaveAccessToVendorInternal(player, vendorAsset, 0);
-    }
-
-    private bool doesPlayerHaveAccessToVendorInternal(Player player, VendorAsset vendorAsset, int depth)
-    {
-        int availableMessage = getAvailableMessage(player);
-        if (availableMessage < 0)
-        {
-            return false;
-        }
-        List<DialogueResponse> list = new List<DialogueResponse>(responses.Length);
-        getAvailableResponses(player, availableMessage, list);
-        foreach (DialogueResponse item in list)
-        {
-            if (item.FindVendorAsset() == vendorAsset)
-            {
-                return true;
-            }
-        }
-        if (depth < 3)
-        {
-            foreach (DialogueResponse item2 in list)
-            {
-                DialogueAsset dialogueAsset = item2.FindDialogueAsset();
-                if (dialogueAsset != null && dialogueAsset.doesPlayerHaveAccessToVendorInternal(player, vendorAsset, depth + 1))
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
         base.PopulateAsset(bundle, data, localization);
@@ -209,5 +175,17 @@ public class DialogueAsset : Asset
             newRewardsList2.Parse(data, localization, this, "Response_" + b4 + "_Rewards", "Response_" + b4 + "_Reward_");
             responses[b4] = new DialogueResponse(b4, array4, newDialogue, guid2, newQuest, guid3, newVendor, guid4, desc2, array5, newRewardsList2);
         }
+    }
+
+    [Obsolete("Please use GetAvailableMessage which returns the DialogueMessage rather than index")]
+    public int getAvailableMessage(Player player)
+    {
+        return ((int?)GetAvailableMessage(player)?.index) ?? (-1);
+    }
+
+    [Obsolete("Server now tracks dialogue tree")]
+    public bool doesPlayerHaveAccessToVendor(Player player, VendorAsset vendorAsset)
+    {
+        return true;
     }
 }

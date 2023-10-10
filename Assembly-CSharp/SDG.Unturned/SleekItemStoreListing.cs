@@ -10,7 +10,7 @@ internal class SleekItemStoreListing : SleekWrapper
 
     private ISleekButton button;
 
-    private ISleekImage iconImage;
+    private SleekEconIcon iconImage;
 
     private ISleekLabel nameAndPriceLabel;
 
@@ -21,99 +21,97 @@ internal class SleekItemStoreListing : SleekWrapper
     public SleekItemStoreListing()
     {
         button = Glazier.Get().CreateButton();
-        button.sizeScale_X = 1f;
-        button.sizeScale_Y = 1f;
-        button.onClickedButton += OnClickedButton;
+        button.SizeScale_X = 1f;
+        button.SizeScale_Y = 1f;
+        button.OnClicked += OnClickedButton;
         AddChild(button);
         ISleekConstraintFrame sleekConstraintFrame = Glazier.Get().CreateConstraintFrame();
-        sleekConstraintFrame.positionOffset_X = 5;
-        sleekConstraintFrame.positionOffset_Y = 5;
-        sleekConstraintFrame.sizeScale_X = 1f;
-        sleekConstraintFrame.sizeScale_Y = 1f;
-        sleekConstraintFrame.sizeOffset_X = -10;
-        sleekConstraintFrame.sizeOffset_Y = -50;
-        sleekConstraintFrame.constraint = ESleekConstraint.FitInParent;
+        sleekConstraintFrame.PositionOffset_X = 5f;
+        sleekConstraintFrame.PositionOffset_Y = 5f;
+        sleekConstraintFrame.SizeScale_X = 1f;
+        sleekConstraintFrame.SizeScale_Y = 1f;
+        sleekConstraintFrame.SizeOffset_X = -10f;
+        sleekConstraintFrame.SizeOffset_Y = -50f;
+        sleekConstraintFrame.Constraint = ESleekConstraint.FitInParent;
         AddChild(sleekConstraintFrame);
-        iconImage = Glazier.Get().CreateImage();
-        iconImage.sizeScale_X = 1f;
-        iconImage.sizeScale_Y = 1f;
+        iconImage = new SleekEconIcon();
+        iconImage.SizeScale_X = 1f;
+        iconImage.SizeScale_Y = 1f;
         sleekConstraintFrame.AddChild(iconImage);
         nameAndPriceLabel = Glazier.Get().CreateLabel();
-        nameAndPriceLabel.positionScale_Y = 1f;
-        nameAndPriceLabel.positionOffset_Y = -50;
-        nameAndPriceLabel.sizeScale_X = 1f;
-        nameAndPriceLabel.sizeOffset_Y = 50;
-        nameAndPriceLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
-        nameAndPriceLabel.fontAlignment = TextAnchor.LowerLeft;
-        nameAndPriceLabel.enableRichText = true;
+        nameAndPriceLabel.PositionScale_Y = 1f;
+        nameAndPriceLabel.PositionOffset_Y = -50f;
+        nameAndPriceLabel.SizeScale_X = 1f;
+        nameAndPriceLabel.SizeOffset_Y = 50f;
+        nameAndPriceLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+        nameAndPriceLabel.TextAlignment = TextAnchor.LowerLeft;
+        nameAndPriceLabel.AllowRichText = true;
         AddChild(nameAndPriceLabel);
         cartImage = Glazier.Get().CreateSprite(ItemStoreMenu.instance.icons.load<Sprite>("Cart"));
-        cartImage.positionOffset_X = 5;
-        cartImage.positionOffset_Y = 5;
-        cartImage.sizeOffset_X = 20;
-        cartImage.sizeOffset_Y = 20;
-        cartImage.drawMethod = ESleekSpriteType.Regular;
-        cartImage.color = ESleekTint.FOREGROUND;
+        cartImage.PositionOffset_X = 5f;
+        cartImage.PositionOffset_Y = 5f;
+        cartImage.SizeOffset_X = 20f;
+        cartImage.SizeOffset_Y = 20f;
+        cartImage.DrawMethod = ESleekSpriteType.Regular;
+        cartImage.TintColor = ESleekTint.FOREGROUND;
         AddChild(cartImage);
         stampLabel = Glazier.Get().CreateLabel();
-        stampLabel.sizeScale_X = 1f;
-        stampLabel.sizeOffset_Y = 50;
-        stampLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
-        stampLabel.fontAlignment = TextAnchor.UpperRight;
-        stampLabel.textColor = Color.green;
+        stampLabel.SizeScale_X = 1f;
+        stampLabel.SizeOffset_Y = 50f;
+        stampLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+        stampLabel.TextAlignment = TextAnchor.UpperRight;
+        stampLabel.TextColor = Color.green;
         AddChild(stampLabel);
     }
 
     public void RefreshInCart()
     {
-        cartImage.isVisible = button.isClickable && ItemStore.Get().GetQuantityInCart(listing.itemdefid) > 0;
+        cartImage.IsVisible = button.IsClickable && ItemStore.Get().GetQuantityInCart(listing.itemdefid) > 0;
     }
 
     public void SetListing(ItemStore.Listing listing)
     {
-        button.isClickable = true;
-        iconImage.isVisible = true;
-        nameAndPriceLabel.isVisible = true;
+        button.IsClickable = true;
+        iconImage.IsVisible = true;
+        nameAndPriceLabel.IsVisible = true;
         this.listing = listing;
         Color inventoryColor = Provider.provider.economyService.getInventoryColor(listing.itemdefid);
         string inventoryName = Provider.provider.economyService.getInventoryName(listing.itemdefid);
         string text = ItemStore.Get().FormatPrice(listing.currentPrice);
-        nameAndPriceLabel.text = RichTextUtil.wrapWithColor(inventoryName, inventoryColor) + "\n" + RichTextUtil.wrapWithColor(text, ItemStore.PremiumColor);
-        nameAndPriceLabel.textColor = inventoryColor;
-        button.backgroundColor = SleekColor.BackgroundIfLight(inventoryColor);
-        button.textColor = inventoryColor;
-        button.tooltipText = Provider.provider.economyService.getInventoryType(listing.itemdefid);
-        Texture2D texture2D = Provider.provider.economyService.LoadItemIcon(listing.itemdefid, large: false);
-        iconImage.texture = texture2D;
-        iconImage.isVisible = texture2D != null;
+        nameAndPriceLabel.Text = RichTextUtil.wrapWithColor(inventoryName, inventoryColor) + "\n" + RichTextUtil.wrapWithColor(text, ItemStore.PremiumColor);
+        nameAndPriceLabel.TextColor = inventoryColor;
+        button.BackgroundColor = SleekColor.BackgroundIfLight(inventoryColor);
+        button.TextColor = inventoryColor;
+        button.TooltipText = Provider.provider.economyService.getInventoryType(listing.itemdefid);
+        iconImage.SetItemDefId(listing.itemdefid);
         if (listing.isNew && !ItemStoreSavedata.WasNewListingSeen(listing.itemdefid))
         {
             hasNewLabel = true;
-            stampLabel.text = Provider.localization.format("New");
-            stampLabel.isVisible = true;
+            stampLabel.Text = Provider.localization.format("New");
+            stampLabel.IsVisible = true;
         }
         else if (listing.currentPrice < listing.basePrice)
         {
             hasNewLabel = false;
-            stampLabel.text = MenuSurvivorsClothingUI.localization.format("Itemstore_Sale") + "\n" + ItemStore.Get().FormatDiscount(listing.currentPrice, listing.basePrice);
-            stampLabel.isVisible = true;
+            stampLabel.Text = MenuSurvivorsClothingUI.localization.format("Itemstore_Sale") + "\n" + ItemStore.Get().FormatDiscount(listing.currentPrice, listing.basePrice);
+            stampLabel.IsVisible = true;
         }
         else
         {
             hasNewLabel = false;
-            stampLabel.isVisible = false;
+            stampLabel.IsVisible = false;
         }
         RefreshInCart();
     }
 
     public void ClearListing()
     {
-        button.isClickable = false;
-        iconImage.isVisible = false;
-        nameAndPriceLabel.isVisible = false;
-        cartImage.isVisible = false;
-        button.tooltipText = null;
-        stampLabel.isVisible = false;
+        button.IsClickable = false;
+        iconImage.IsVisible = false;
+        nameAndPriceLabel.IsVisible = false;
+        cartImage.IsVisible = false;
+        button.TooltipText = null;
+        stampLabel.IsVisible = false;
     }
 
     private void OnClickedButton(ISleekElement button)
@@ -121,7 +119,7 @@ internal class SleekItemStoreListing : SleekWrapper
         if (hasNewLabel)
         {
             ItemStoreSavedata.MarkNewListingSeen(listing.itemdefid);
-            stampLabel.isVisible = false;
+            stampLabel.IsVisible = false;
         }
         ItemStoreDetailsMenu.instance.Open(listing);
         ItemStoreMenu.instance.Close();

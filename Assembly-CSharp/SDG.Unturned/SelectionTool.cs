@@ -401,104 +401,110 @@ public class SelectionTool : IDevkitTool
                 }
             }
         }
-        if (DevkitSelectionManager.selection.Count <= 0)
+        if (DevkitSelectionManager.selection.Count > 0)
         {
-            return;
-        }
-        if (mode == ESelectionMode.POSITION)
-        {
-            handles.SetPreferredMode(wantsBoundsEditor ? TransformHandles.EMode.PositionBounds : TransformHandles.EMode.Position);
-        }
-        else if (mode == ESelectionMode.SCALE)
-        {
-            handles.SetPreferredMode(wantsBoundsEditor ? TransformHandles.EMode.ScaleBounds : TransformHandles.EMode.Scale);
-        }
-        else
-        {
-            handles.SetPreferredMode(TransformHandles.EMode.Rotation);
-        }
-        bool num = mode == ESelectionMode.SCALE || wantsBoundsEditor;
-        handlePosition = Vector3.zero;
-        handleRotation = Quaternion.identity;
-        bool flag2 = !num && !DevkitSelectionToolOptions.instance.localSpace;
-        foreach (DevkitSelection item4 in DevkitSelectionManager.selection)
-        {
-            if (!(item4.gameObject == null))
+            if (mode == ESelectionMode.POSITION)
             {
-                handlePosition += item4.transform.position;
-                if (!flag2)
+                handles.SetPreferredMode(wantsBoundsEditor ? TransformHandles.EMode.PositionBounds : TransformHandles.EMode.Position);
+            }
+            else if (mode == ESelectionMode.SCALE)
+            {
+                handles.SetPreferredMode(wantsBoundsEditor ? TransformHandles.EMode.ScaleBounds : TransformHandles.EMode.Scale);
+            }
+            else
+            {
+                handles.SetPreferredMode(TransformHandles.EMode.Rotation);
+            }
+            bool num = mode == ESelectionMode.SCALE || wantsBoundsEditor;
+            handlePosition = Vector3.zero;
+            handleRotation = Quaternion.identity;
+            bool flag2 = !num && !DevkitSelectionToolOptions.instance.localSpace;
+            foreach (DevkitSelection item4 in DevkitSelectionManager.selection)
+            {
+                if (!(item4.gameObject == null))
                 {
-                    handleRotation = item4.transform.rotation;
-                    flag2 = true;
-                }
-            }
-        }
-        handlePosition /= (float)DevkitSelectionManager.selection.Count;
-        handles.SetPreferredPivot(handlePosition, handleRotation);
-        if (wantsBoundsEditor)
-        {
-            handles.UpdateBoundsFromSelection(EnumerateSelectedGameObjects());
-        }
-        if (InputEx.GetKeyDown(KeyCode.C))
-        {
-            copyBuffer.Clear();
-            foreach (DevkitSelection item5 in DevkitSelectionManager.selection)
-            {
-                copyBuffer.Add(item5.gameObject);
-            }
-        }
-        if (InputEx.GetKeyDown(KeyCode.V))
-        {
-            DevkitTransactionManager.beginTransaction("Paste");
-            foreach (GameObject item6 in copyBuffer)
-            {
-                IDevkitSelectionCopyableHandler component = item6.GetComponent<IDevkitSelectionCopyableHandler>();
-                GameObject gameObject = ((component == null) ? Object.Instantiate(item6) : component.copySelection());
-                IDevkitHierarchyItem component2 = gameObject.GetComponent<IDevkitHierarchyItem>();
-                if (component2 != null)
-                {
-                    component2.instanceID = LevelHierarchy.generateUniqueInstanceID();
-                }
-                DevkitTransactionUtility.recordInstantiation(gameObject);
-                copySelectionDelay.Add(gameObject);
-            }
-            DevkitTransactionManager.endTransaction();
-        }
-        if (InputEx.GetKeyDown(KeyCode.Delete))
-        {
-            DevkitTransactionManager.beginTransaction("Delete");
-            foreach (DevkitSelection item7 in DevkitSelectionManager.selection)
-            {
-                DevkitTransactionUtility.recordDestruction(item7.gameObject);
-            }
-            DevkitSelectionManager.clear();
-            DevkitTransactionManager.endTransaction();
-        }
-        if (InputEx.GetKeyDown(KeyCode.B))
-        {
-            referencePosition = handlePosition;
-            referenceRotation = handleRotation;
-            referenceScale = Vector3.one;
-            hasReferenceScale = false;
-            if (DevkitSelectionManager.selection.Count == 1)
-            {
-                foreach (DevkitSelection item8 in DevkitSelectionManager.selection)
-                {
-                    if (!(item8.gameObject == null))
+                    handlePosition += item4.transform.position;
+                    if (!flag2)
                     {
-                        referenceScale = item8.transform.localScale;
-                        hasReferenceScale = true;
+                        handleRotation = item4.transform.rotation;
+                        flag2 = true;
                     }
                 }
             }
-        }
-        if (InputEx.GetKeyDown(KeyCode.N))
-        {
-            moveHandle(referencePosition, referenceRotation, referenceScale, doRotation: true, hasReferenceScale);
+            handlePosition /= (float)DevkitSelectionManager.selection.Count;
+            handles.SetPreferredPivot(handlePosition, handleRotation);
+            if (wantsBoundsEditor)
+            {
+                handles.UpdateBoundsFromSelection(EnumerateSelectedGameObjects());
+            }
+            if (InputEx.GetKeyDown(KeyCode.C))
+            {
+                copyBuffer.Clear();
+                foreach (DevkitSelection item5 in DevkitSelectionManager.selection)
+                {
+                    copyBuffer.Add(item5.gameObject);
+                }
+            }
+            if (InputEx.GetKeyDown(KeyCode.V))
+            {
+                DevkitTransactionManager.beginTransaction("Paste");
+                foreach (GameObject item6 in copyBuffer)
+                {
+                    IDevkitSelectionCopyableHandler component = item6.GetComponent<IDevkitSelectionCopyableHandler>();
+                    GameObject gameObject = ((component == null) ? Object.Instantiate(item6) : component.copySelection());
+                    IDevkitHierarchyItem component2 = gameObject.GetComponent<IDevkitHierarchyItem>();
+                    if (component2 != null)
+                    {
+                        component2.instanceID = LevelHierarchy.generateUniqueInstanceID();
+                    }
+                    DevkitTransactionUtility.recordInstantiation(gameObject);
+                    copySelectionDelay.Add(gameObject);
+                }
+                DevkitTransactionManager.endTransaction();
+            }
+            if (InputEx.GetKeyDown(KeyCode.Delete))
+            {
+                DevkitTransactionManager.beginTransaction("Delete");
+                foreach (DevkitSelection item7 in DevkitSelectionManager.selection)
+                {
+                    DevkitTransactionUtility.recordDestruction(item7.gameObject);
+                }
+                DevkitSelectionManager.clear();
+                DevkitTransactionManager.endTransaction();
+            }
+            if (InputEx.GetKeyDown(KeyCode.B))
+            {
+                referencePosition = handlePosition;
+                referenceRotation = handleRotation;
+                referenceScale = Vector3.one;
+                hasReferenceScale = false;
+                if (DevkitSelectionManager.selection.Count == 1)
+                {
+                    foreach (DevkitSelection item8 in DevkitSelectionManager.selection)
+                    {
+                        if (!(item8.gameObject == null))
+                        {
+                            referenceScale = item8.transform.localScale;
+                            hasReferenceScale = true;
+                        }
+                    }
+                }
+            }
+            if (InputEx.GetKeyDown(KeyCode.N))
+            {
+                moveHandle(referencePosition, referenceRotation, referenceScale, doRotation: true, hasReferenceScale);
+            }
         }
         if (InputEx.GetKeyDown(ControlsSettings.focus))
         {
-            MainCamera.instance.transform.parent.position = handlePosition - 15f * MainCamera.instance.transform.forward;
+            if (DevkitSelectionManager.selection.Count > 0)
+            {
+                MainCamera.instance.transform.parent.position = handlePosition - 15f * MainCamera.instance.transform.forward;
+            }
+            else
+            {
+                MainCamera.instance.transform.parent.position = MainCamera.instance.transform.forward * -512f;
+            }
         }
     }
 

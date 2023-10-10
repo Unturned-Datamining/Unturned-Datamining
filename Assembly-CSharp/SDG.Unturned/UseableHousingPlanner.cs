@@ -164,7 +164,7 @@ public class UseableHousingPlanner : Useable
         {
             return false;
         }
-        if (base.channel.isOwner && selectedAsset != null && UpdatePendingPlacement())
+        if (base.channel.IsLocalPlayer && selectedAsset != null && UpdatePendingPlacement())
         {
             SendPlaceHousingItem.Invoke(GetNetId(), ENetReliability.Reliable, selectedAsset.GUID, pendingPlacementPosition, pendingPlacementYaw + customRotationOffset);
             return true;
@@ -174,7 +174,7 @@ public class UseableHousingPlanner : Useable
 
     public override bool startSecondary()
     {
-        if (base.channel.isOwner && selectedAsset != null)
+        if (base.channel.IsLocalPlayer && selectedAsset != null)
         {
             if (selectedAsset.construct == EConstruct.FLOOR_POLY || selectedAsset.construct == EConstruct.ROOF_POLY)
             {
@@ -194,7 +194,7 @@ public class UseableHousingPlanner : Useable
     public override void equip()
     {
         base.player.animator.play("Equip", smooth: true);
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             itemSearch = new List<InventorySearch>();
             floors = new List<InventorySearch>();
@@ -203,179 +203,179 @@ public class UseableHousingPlanner : Useable
             pillars = new List<InventorySearch>();
             itemAmounts = new Dictionary<ushort, int>();
             selectedItemBox = Glazier.Get().CreateBox();
-            selectedItemBox.positionOffset_Y = -50;
-            selectedItemBox.positionScale_X = 0.7f;
-            selectedItemBox.positionScale_Y = 1f;
-            selectedItemBox.sizeOffset_Y = 50;
-            selectedItemBox.sizeScale_X = 0.3f;
-            selectedItemBox.isVisible = false;
+            selectedItemBox.PositionOffset_Y = -50f;
+            selectedItemBox.PositionScale_X = 0.7f;
+            selectedItemBox.PositionScale_Y = 1f;
+            selectedItemBox.SizeOffset_Y = 50f;
+            selectedItemBox.SizeScale_X = 0.3f;
+            selectedItemBox.IsVisible = false;
             PlayerLifeUI.container.AddChild(selectedItemBox);
             selectedItemNameLabel = Glazier.Get().CreateLabel();
-            selectedItemNameLabel.positionOffset_X = 10;
-            selectedItemNameLabel.sizeScale_X = 1f;
-            selectedItemNameLabel.sizeScale_Y = 1f;
-            selectedItemNameLabel.sizeOffset_X = -20;
-            selectedItemNameLabel.fontAlignment = TextAnchor.MiddleRight;
-            selectedItemNameLabel.fontSize = ESleekFontSize.Large;
+            selectedItemNameLabel.PositionOffset_X = 10f;
+            selectedItemNameLabel.SizeScale_X = 1f;
+            selectedItemNameLabel.SizeScale_Y = 1f;
+            selectedItemNameLabel.SizeOffset_X = -20f;
+            selectedItemNameLabel.TextAlignment = TextAnchor.MiddleRight;
+            selectedItemNameLabel.FontSize = ESleekFontSize.Large;
             selectedItemBox.AddChild(selectedItemNameLabel);
-            selectedItemNameLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+            selectedItemNameLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
             selectedItemQuantityLabel = Glazier.Get().CreateLabel();
-            selectedItemQuantityLabel.positionOffset_X = 10;
-            selectedItemQuantityLabel.sizeScale_X = 1f;
-            selectedItemQuantityLabel.sizeScale_Y = 1f;
-            selectedItemQuantityLabel.sizeOffset_X = -20;
-            selectedItemQuantityLabel.fontAlignment = TextAnchor.MiddleLeft;
-            selectedItemQuantityLabel.fontSize = ESleekFontSize.Large;
+            selectedItemQuantityLabel.PositionOffset_X = 10f;
+            selectedItemQuantityLabel.SizeScale_X = 1f;
+            selectedItemQuantityLabel.SizeScale_Y = 1f;
+            selectedItemQuantityLabel.SizeOffset_X = -20f;
+            selectedItemQuantityLabel.TextAlignment = TextAnchor.MiddleLeft;
+            selectedItemQuantityLabel.FontSize = ESleekFontSize.Large;
             selectedItemBox.AddChild(selectedItemQuantityLabel);
-            selectedItemQuantityLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+            selectedItemQuantityLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
             Local local = Localization.read("/Player/Useable/PlayerUseableHousingPlanner.dat");
             Bundle bundle = Bundles.getBundle("/Bundles/Textures/Player/Icons/Useable/PlayerUseableHousingPlanner/PlayerUseableHousingPlanner.unity3d");
             Texture texture = bundle.load<Texture>("RadialMenu");
             bundle.unload();
             itemSelectionContainer = Glazier.Get().CreateFrame();
-            itemSelectionContainer.sizeScale_X = 1f;
-            itemSelectionContainer.sizeScale_Y = 1f;
-            itemSelectionContainer.isVisible = false;
+            itemSelectionContainer.SizeScale_X = 1f;
+            itemSelectionContainer.SizeScale_Y = 1f;
+            itemSelectionContainer.IsVisible = false;
             PlayerUI.container.AddChild(itemSelectionContainer);
             ISleekImage sleekImage = Glazier.Get().CreateImage(texture);
-            sleekImage.positionScale_X = 0.5f;
-            sleekImage.positionScale_Y = 0.5f;
-            sleekImage.positionOffset_X = 50;
-            sleekImage.positionOffset_Y = -306;
-            sleekImage.sizeOffset_X = 256;
-            sleekImage.sizeOffset_Y = 256;
-            sleekImage.color = SleekColor.BackgroundIfLight(new Color(0f, 0f, 0f, 0.2f));
+            sleekImage.PositionScale_X = 0.5f;
+            sleekImage.PositionScale_Y = 0.5f;
+            sleekImage.PositionOffset_X = 50f;
+            sleekImage.PositionOffset_Y = -306f;
+            sleekImage.SizeOffset_X = 256f;
+            sleekImage.SizeOffset_Y = 256f;
+            sleekImage.TintColor = SleekColor.BackgroundIfLight(new Color(0f, 0f, 0f, 0.2f));
             itemSelectionContainer.AddChild(sleekImage);
             floorsLabel = Glazier.Get().CreateLabel();
-            floorsLabel.positionScale_X = 0.5f;
-            floorsLabel.positionScale_Y = 0.5f;
-            floorsLabel.positionOffset_X = 50;
-            floorsLabel.positionOffset_Y = -306;
-            floorsLabel.sizeOffset_X = 256;
-            floorsLabel.sizeOffset_Y = 256;
-            floorsLabel.fontSize = ESleekFontSize.Large;
-            floorsLabel.text = local.format("Floors");
+            floorsLabel.PositionScale_X = 0.5f;
+            floorsLabel.PositionScale_Y = 0.5f;
+            floorsLabel.PositionOffset_X = 50f;
+            floorsLabel.PositionOffset_Y = -306f;
+            floorsLabel.SizeOffset_X = 256f;
+            floorsLabel.SizeOffset_Y = 256f;
+            floorsLabel.FontSize = ESleekFontSize.Large;
+            floorsLabel.Text = local.format("Floors");
             itemSelectionContainer.AddChild(floorsLabel);
-            floorsLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+            floorsLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
             noFloorItemsLabel = Glazier.Get().CreateLabel();
-            noFloorItemsLabel.positionScale_X = 0.5f;
-            noFloorItemsLabel.positionScale_Y = 0.5f;
-            noFloorItemsLabel.positionOffset_X = 50;
-            noFloorItemsLabel.positionOffset_Y = -286;
-            noFloorItemsLabel.sizeOffset_X = 256;
-            noFloorItemsLabel.sizeOffset_Y = 256;
-            noFloorItemsLabel.fontSize = ESleekFontSize.Medium;
-            noFloorItemsLabel.textColor = ESleekTint.BAD;
-            noFloorItemsLabel.text = local.format("NoItems");
-            noFloorItemsLabel.isVisible = false;
+            noFloorItemsLabel.PositionScale_X = 0.5f;
+            noFloorItemsLabel.PositionScale_Y = 0.5f;
+            noFloorItemsLabel.PositionOffset_X = 50f;
+            noFloorItemsLabel.PositionOffset_Y = -286f;
+            noFloorItemsLabel.SizeOffset_X = 256f;
+            noFloorItemsLabel.SizeOffset_Y = 256f;
+            noFloorItemsLabel.FontSize = ESleekFontSize.Medium;
+            noFloorItemsLabel.TextColor = ESleekTint.BAD;
+            noFloorItemsLabel.Text = local.format("NoItems");
+            noFloorItemsLabel.IsVisible = false;
             itemSelectionContainer.AddChild(noFloorItemsLabel);
-            noFloorItemsLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+            noFloorItemsLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
             ISleekImage sleekImage2 = Glazier.Get().CreateImage(texture);
-            sleekImage2.positionScale_X = 0.5f;
-            sleekImage2.positionScale_Y = 0.5f;
-            sleekImage2.positionOffset_X = 50;
-            sleekImage2.positionOffset_Y = 50;
-            sleekImage2.sizeOffset_X = 256;
-            sleekImage2.sizeOffset_Y = 256;
-            sleekImage2.color = SleekColor.BackgroundIfLight(new Color(0f, 0f, 0f, 0.2f));
+            sleekImage2.PositionScale_X = 0.5f;
+            sleekImage2.PositionScale_Y = 0.5f;
+            sleekImage2.PositionOffset_X = 50f;
+            sleekImage2.PositionOffset_Y = 50f;
+            sleekImage2.SizeOffset_X = 256f;
+            sleekImage2.SizeOffset_Y = 256f;
+            sleekImage2.TintColor = SleekColor.BackgroundIfLight(new Color(0f, 0f, 0f, 0.2f));
             itemSelectionContainer.AddChild(sleekImage2);
             roofsLabel = Glazier.Get().CreateLabel();
-            roofsLabel.positionScale_X = 0.5f;
-            roofsLabel.positionScale_Y = 0.5f;
-            roofsLabel.positionOffset_X = 50;
-            roofsLabel.positionOffset_Y = 50;
-            roofsLabel.sizeOffset_X = 256;
-            roofsLabel.sizeOffset_Y = 256;
-            roofsLabel.fontSize = ESleekFontSize.Large;
-            roofsLabel.text = local.format("Roofs");
+            roofsLabel.PositionScale_X = 0.5f;
+            roofsLabel.PositionScale_Y = 0.5f;
+            roofsLabel.PositionOffset_X = 50f;
+            roofsLabel.PositionOffset_Y = 50f;
+            roofsLabel.SizeOffset_X = 256f;
+            roofsLabel.SizeOffset_Y = 256f;
+            roofsLabel.FontSize = ESleekFontSize.Large;
+            roofsLabel.Text = local.format("Roofs");
             itemSelectionContainer.AddChild(roofsLabel);
-            roofsLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+            roofsLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
             noRoofItemsLabel = Glazier.Get().CreateLabel();
-            noRoofItemsLabel.positionScale_X = 0.5f;
-            noRoofItemsLabel.positionScale_Y = 0.5f;
-            noRoofItemsLabel.positionOffset_X = 50;
-            noRoofItemsLabel.positionOffset_Y = 70;
-            noRoofItemsLabel.sizeOffset_X = 256;
-            noRoofItemsLabel.sizeOffset_Y = 256;
-            noRoofItemsLabel.fontSize = ESleekFontSize.Medium;
-            noRoofItemsLabel.textColor = ESleekTint.BAD;
-            noRoofItemsLabel.text = local.format("NoItems");
-            noRoofItemsLabel.isVisible = false;
+            noRoofItemsLabel.PositionScale_X = 0.5f;
+            noRoofItemsLabel.PositionScale_Y = 0.5f;
+            noRoofItemsLabel.PositionOffset_X = 50f;
+            noRoofItemsLabel.PositionOffset_Y = 70f;
+            noRoofItemsLabel.SizeOffset_X = 256f;
+            noRoofItemsLabel.SizeOffset_Y = 256f;
+            noRoofItemsLabel.FontSize = ESleekFontSize.Medium;
+            noRoofItemsLabel.TextColor = ESleekTint.BAD;
+            noRoofItemsLabel.Text = local.format("NoItems");
+            noRoofItemsLabel.IsVisible = false;
             itemSelectionContainer.AddChild(noRoofItemsLabel);
-            noRoofItemsLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+            noRoofItemsLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
             ISleekImage sleekImage3 = Glazier.Get().CreateImage(texture);
-            sleekImage3.positionScale_X = 0.5f;
-            sleekImage3.positionScale_Y = 0.5f;
-            sleekImage3.positionOffset_X = -306;
-            sleekImage3.positionOffset_Y = -306;
-            sleekImage3.sizeOffset_X = 256;
-            sleekImage3.sizeOffset_Y = 256;
-            sleekImage3.color = SleekColor.BackgroundIfLight(new Color(0f, 0f, 0f, 0.2f));
+            sleekImage3.PositionScale_X = 0.5f;
+            sleekImage3.PositionScale_Y = 0.5f;
+            sleekImage3.PositionOffset_X = -306f;
+            sleekImage3.PositionOffset_Y = -306f;
+            sleekImage3.SizeOffset_X = 256f;
+            sleekImage3.SizeOffset_Y = 256f;
+            sleekImage3.TintColor = SleekColor.BackgroundIfLight(new Color(0f, 0f, 0f, 0.2f));
             itemSelectionContainer.AddChild(sleekImage3);
             wallsLabel = Glazier.Get().CreateLabel();
-            wallsLabel.positionScale_X = 0.5f;
-            wallsLabel.positionScale_Y = 0.5f;
-            wallsLabel.positionOffset_X = -306;
-            wallsLabel.positionOffset_Y = -306;
-            wallsLabel.sizeOffset_X = 256;
-            wallsLabel.sizeOffset_Y = 256;
-            wallsLabel.fontSize = ESleekFontSize.Large;
-            wallsLabel.text = local.format("Walls");
+            wallsLabel.PositionScale_X = 0.5f;
+            wallsLabel.PositionScale_Y = 0.5f;
+            wallsLabel.PositionOffset_X = -306f;
+            wallsLabel.PositionOffset_Y = -306f;
+            wallsLabel.SizeOffset_X = 256f;
+            wallsLabel.SizeOffset_Y = 256f;
+            wallsLabel.FontSize = ESleekFontSize.Large;
+            wallsLabel.Text = local.format("Walls");
             itemSelectionContainer.AddChild(wallsLabel);
-            wallsLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+            wallsLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
             noWallItemsLabel = Glazier.Get().CreateLabel();
-            noWallItemsLabel.positionScale_X = 0.5f;
-            noWallItemsLabel.positionScale_Y = 0.5f;
-            noWallItemsLabel.positionOffset_X = -306;
-            noWallItemsLabel.positionOffset_Y = -286;
-            noWallItemsLabel.sizeOffset_X = 256;
-            noWallItemsLabel.sizeOffset_Y = 256;
-            noWallItemsLabel.fontSize = ESleekFontSize.Medium;
-            noWallItemsLabel.textColor = ESleekTint.BAD;
-            noWallItemsLabel.text = local.format("NoItems");
-            noWallItemsLabel.isVisible = false;
+            noWallItemsLabel.PositionScale_X = 0.5f;
+            noWallItemsLabel.PositionScale_Y = 0.5f;
+            noWallItemsLabel.PositionOffset_X = -306f;
+            noWallItemsLabel.PositionOffset_Y = -286f;
+            noWallItemsLabel.SizeOffset_X = 256f;
+            noWallItemsLabel.SizeOffset_Y = 256f;
+            noWallItemsLabel.FontSize = ESleekFontSize.Medium;
+            noWallItemsLabel.TextColor = ESleekTint.BAD;
+            noWallItemsLabel.Text = local.format("NoItems");
+            noWallItemsLabel.IsVisible = false;
             itemSelectionContainer.AddChild(noWallItemsLabel);
-            noWallItemsLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+            noWallItemsLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
             ISleekImage sleekImage4 = Glazier.Get().CreateImage(texture);
-            sleekImage4.positionScale_X = 0.5f;
-            sleekImage4.positionScale_Y = 0.5f;
-            sleekImage4.positionOffset_X = -306;
-            sleekImage4.positionOffset_Y = 50;
-            sleekImage4.sizeOffset_X = 256;
-            sleekImage4.sizeOffset_Y = 256;
-            sleekImage4.color = SleekColor.BackgroundIfLight(new Color(0f, 0f, 0f, 0.2f));
+            sleekImage4.PositionScale_X = 0.5f;
+            sleekImage4.PositionScale_Y = 0.5f;
+            sleekImage4.PositionOffset_X = -306f;
+            sleekImage4.PositionOffset_Y = 50f;
+            sleekImage4.SizeOffset_X = 256f;
+            sleekImage4.SizeOffset_Y = 256f;
+            sleekImage4.TintColor = SleekColor.BackgroundIfLight(new Color(0f, 0f, 0f, 0.2f));
             itemSelectionContainer.AddChild(sleekImage4);
             pillarsLabel = Glazier.Get().CreateLabel();
-            pillarsLabel.positionScale_X = 0.5f;
-            pillarsLabel.positionScale_Y = 0.5f;
-            pillarsLabel.positionOffset_X = -306;
-            pillarsLabel.positionOffset_Y = 50;
-            pillarsLabel.sizeOffset_X = 256;
-            pillarsLabel.sizeOffset_Y = 256;
-            pillarsLabel.fontSize = ESleekFontSize.Large;
-            pillarsLabel.text = local.format("Pillars");
+            pillarsLabel.PositionScale_X = 0.5f;
+            pillarsLabel.PositionScale_Y = 0.5f;
+            pillarsLabel.PositionOffset_X = -306f;
+            pillarsLabel.PositionOffset_Y = 50f;
+            pillarsLabel.SizeOffset_X = 256f;
+            pillarsLabel.SizeOffset_Y = 256f;
+            pillarsLabel.FontSize = ESleekFontSize.Large;
+            pillarsLabel.Text = local.format("Pillars");
             itemSelectionContainer.AddChild(pillarsLabel);
-            pillarsLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+            pillarsLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
             noPillarItemsLabel = Glazier.Get().CreateLabel();
-            noPillarItemsLabel.positionScale_X = 0.5f;
-            noPillarItemsLabel.positionScale_Y = 0.5f;
-            noPillarItemsLabel.positionOffset_X = -306;
-            noPillarItemsLabel.positionOffset_Y = 70;
-            noPillarItemsLabel.sizeOffset_X = 256;
-            noPillarItemsLabel.sizeOffset_Y = 256;
-            noPillarItemsLabel.fontSize = ESleekFontSize.Medium;
-            noPillarItemsLabel.textColor = ESleekTint.BAD;
-            noPillarItemsLabel.text = local.format("NoItems");
-            noPillarItemsLabel.isVisible = false;
+            noPillarItemsLabel.PositionScale_X = 0.5f;
+            noPillarItemsLabel.PositionScale_Y = 0.5f;
+            noPillarItemsLabel.PositionOffset_X = -306f;
+            noPillarItemsLabel.PositionOffset_Y = 70f;
+            noPillarItemsLabel.SizeOffset_X = 256f;
+            noPillarItemsLabel.SizeOffset_Y = 256f;
+            noPillarItemsLabel.FontSize = ESleekFontSize.Medium;
+            noPillarItemsLabel.TextColor = ESleekTint.BAD;
+            noPillarItemsLabel.Text = local.format("NoItems");
+            noPillarItemsLabel.IsVisible = false;
             itemSelectionContainer.AddChild(noPillarItemsLabel);
-            noPillarItemsLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
+            noPillarItemsLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
             PlayerUI.message(EPlayerMessage.HOUSING_PLANNER_TUTORIAL, "");
         }
     }
 
     public override void dequip()
     {
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             SetItemSelectionMenuOpen(isOpen: false);
             SetSelectedAsset(null);
@@ -386,7 +386,7 @@ public class UseableHousingPlanner : Useable
 
     public override void tick()
     {
-        if (!base.channel.isOwner)
+        if (!base.channel.IsLocalPlayer)
         {
             return;
         }
@@ -454,7 +454,7 @@ public class UseableHousingPlanner : Useable
         {
             PlayerLifeUI.open();
         }
-        itemSelectionContainer.isVisible = isOpen;
+        itemSelectionContainer.IsVisible = isOpen;
         if (!isOpen)
         {
             return;
@@ -489,47 +489,47 @@ public class UseableHousingPlanner : Useable
         roofs.Sort(CompareItemNames);
         walls.Sort(CompareItemNames);
         pillars.Sort(CompareItemNames);
-        noFloorItemsLabel.isVisible = floors.Count < 1;
-        noRoofItemsLabel.isVisible = roofs.Count < 1;
-        noWallItemsLabel.isVisible = walls.Count < 1;
-        noPillarItemsLabel.isVisible = pillars.Count < 1;
-        floorsMenu = new SleekJars(128f, floors, (float)Math.PI * 3f / 4f);
-        floorsMenu.positionScale_X = 0.5f;
-        floorsMenu.positionScale_Y = 0.5f;
-        floorsMenu.positionOffset_X = 50;
-        floorsMenu.positionOffset_Y = -306;
-        floorsMenu.sizeOffset_X = 256;
-        floorsMenu.sizeOffset_Y = 256;
+        noFloorItemsLabel.IsVisible = floors.Count < 1;
+        noRoofItemsLabel.IsVisible = roofs.Count < 1;
+        noWallItemsLabel.IsVisible = walls.Count < 1;
+        noPillarItemsLabel.IsVisible = pillars.Count < 1;
+        floorsMenu = new SleekJars(128f, floors, MathF.PI * 3f / 4f);
+        floorsMenu.PositionScale_X = 0.5f;
+        floorsMenu.PositionScale_Y = 0.5f;
+        floorsMenu.PositionOffset_X = 50f;
+        floorsMenu.PositionOffset_Y = -306f;
+        floorsMenu.SizeOffset_X = 256f;
+        floorsMenu.SizeOffset_Y = 256f;
         SleekJars sleekJars = floorsMenu;
         sleekJars.onClickedJar = (ClickedJar)Delegate.Combine(sleekJars.onClickedJar, new ClickedJar(OnSelectedFloorItem));
         itemSelectionContainer.AddChild(floorsMenu);
         roofsMenu = new SleekJars(128f, roofs, 3.926991f);
-        roofsMenu.positionScale_X = 0.5f;
-        roofsMenu.positionScale_Y = 0.5f;
-        roofsMenu.positionOffset_X = 50;
-        roofsMenu.positionOffset_Y = 50;
-        roofsMenu.sizeOffset_X = 256;
-        roofsMenu.sizeOffset_Y = 256;
+        roofsMenu.PositionScale_X = 0.5f;
+        roofsMenu.PositionScale_Y = 0.5f;
+        roofsMenu.PositionOffset_X = 50f;
+        roofsMenu.PositionOffset_Y = 50f;
+        roofsMenu.SizeOffset_X = 256f;
+        roofsMenu.SizeOffset_Y = 256f;
         SleekJars sleekJars2 = roofsMenu;
         sleekJars2.onClickedJar = (ClickedJar)Delegate.Combine(sleekJars2.onClickedJar, new ClickedJar(OnSelectedRoofItem));
         itemSelectionContainer.AddChild(roofsMenu);
-        wallsMenu = new SleekJars(128f, walls, (float)Math.PI / 4f);
-        wallsMenu.positionScale_X = 0.5f;
-        wallsMenu.positionScale_Y = 0.5f;
-        wallsMenu.positionOffset_X = -306;
-        wallsMenu.positionOffset_Y = -306;
-        wallsMenu.sizeOffset_X = 256;
-        wallsMenu.sizeOffset_Y = 256;
+        wallsMenu = new SleekJars(128f, walls, MathF.PI / 4f);
+        wallsMenu.PositionScale_X = 0.5f;
+        wallsMenu.PositionScale_Y = 0.5f;
+        wallsMenu.PositionOffset_X = -306f;
+        wallsMenu.PositionOffset_Y = -306f;
+        wallsMenu.SizeOffset_X = 256f;
+        wallsMenu.SizeOffset_Y = 256f;
         SleekJars sleekJars3 = wallsMenu;
         sleekJars3.onClickedJar = (ClickedJar)Delegate.Combine(sleekJars3.onClickedJar, new ClickedJar(OnSelectedWallItem));
         itemSelectionContainer.AddChild(wallsMenu);
         pillarsMenu = new SleekJars(128f, pillars, 5.4977875f);
-        pillarsMenu.positionScale_X = 0.5f;
-        pillarsMenu.positionScale_Y = 0.5f;
-        pillarsMenu.positionOffset_X = -306;
-        pillarsMenu.positionOffset_Y = 50;
-        pillarsMenu.sizeOffset_X = 256;
-        pillarsMenu.sizeOffset_Y = 256;
+        pillarsMenu.PositionScale_X = 0.5f;
+        pillarsMenu.PositionScale_Y = 0.5f;
+        pillarsMenu.PositionOffset_X = -306f;
+        pillarsMenu.PositionOffset_Y = 50f;
+        pillarsMenu.SizeOffset_X = 256f;
+        pillarsMenu.SizeOffset_Y = 256f;
         SleekJars sleekJars4 = pillarsMenu;
         sleekJars4.onClickedJar = (ClickedJar)Delegate.Combine(sleekJars4.onClickedJar, new ClickedJar(OnSelectedPillarItem));
         itemSelectionContainer.AddChild(pillarsMenu);
@@ -574,19 +574,19 @@ public class UseableHousingPlanner : Useable
         if (selectedAsset != null)
         {
             placementPreviewTransform = UseableHousingUtils.InstantiatePlacementPreview(selectedAsset);
-            selectedItemNameLabel.text = selectedAsset.itemName;
-            selectedItemNameLabel.textColor = ItemTool.getRarityColorUI(selectedAsset.rarity);
+            selectedItemNameLabel.Text = selectedAsset.itemName;
+            selectedItemNameLabel.TextColor = ItemTool.getRarityColorUI(selectedAsset.rarity);
             if (itemAmounts.TryGetValue(selectedAsset.id, out var value))
             {
-                selectedItemQuantityLabel.text = "x" + value;
-                selectedItemQuantityLabel.isVisible = true;
+                selectedItemQuantityLabel.Text = "x" + value;
+                selectedItemQuantityLabel.IsVisible = true;
             }
             else
             {
-                selectedItemQuantityLabel.isVisible = false;
+                selectedItemQuantityLabel.IsVisible = false;
             }
         }
-        selectedItemBox.isVisible = selectedAsset != null;
+        selectedItemBox.IsVisible = selectedAsset != null;
     }
 
     private bool UpdatePendingPlacement()
@@ -620,7 +620,7 @@ public class UseableHousingPlanner : Useable
         {
             if (itemAmounts.TryGetValue(selectedAsset.id, out var value2))
             {
-                selectedItemQuantityLabel.text = "x" + value2;
+                selectedItemQuantityLabel.Text = "x" + value2;
             }
             else
             {

@@ -81,7 +81,7 @@ public class VehicleTable
     {
         if (tableID != 0)
         {
-            return SpawnTableTool.resolve(tableID);
+            return SpawnTableTool.ResolveLegacyId(tableID, EAssetType.VEHICLE, OnGetSpawnTableErrorContext);
         }
         float value = Random.value;
         if (tiers.Count == 0)
@@ -218,5 +218,15 @@ public class VehicleTable
         _color = newColor;
         name = newName;
         tableID = newTableID;
+    }
+
+    private string OnGetSpawnTableErrorContext()
+    {
+        return "\"" + Level.info.name + "\" vehicle table \"" + name + "\"";
+    }
+
+    internal string OnGetSpawnTableValidationErrorContext()
+    {
+        return "\"" + Level.info.name + "\" vehicle table \"" + name + "\" validation";
     }
 }

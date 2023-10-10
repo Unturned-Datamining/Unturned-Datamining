@@ -45,21 +45,21 @@ public class MenuCreditsUI
     {
         localization = Localization.read("/Menu/MenuCredits.dat");
         container = new SleekFullscreenBox();
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.positionScale_Y = -1f;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.PositionScale_Y = -1f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         MenuUI.container.AddChild(container);
         active = false;
         returnButton = new SleekButtonIcon(MenuPauseUI.icons.load<Texture2D>("Exit"));
-        returnButton.positionOffset_X = -250;
-        returnButton.positionOffset_Y = 100;
-        returnButton.positionScale_X = 0.5f;
-        returnButton.sizeOffset_X = 500;
-        returnButton.sizeOffset_Y = 50;
+        returnButton.PositionOffset_X = -250f;
+        returnButton.PositionOffset_Y = 100f;
+        returnButton.PositionScale_X = 0.5f;
+        returnButton.SizeOffset_X = 500f;
+        returnButton.SizeOffset_Y = 50f;
         returnButton.text = MenuPauseUI.localization.format("Return_Button");
         returnButton.tooltip = MenuPauseUI.localization.format("Return_Button_Tooltip");
         returnButton.onClickedButton += onClickedReturnButton;
@@ -67,24 +67,24 @@ public class MenuCreditsUI
         returnButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(returnButton);
         creditsBox = Glazier.Get().CreateBox();
-        creditsBox.positionOffset_X = -250;
-        creditsBox.positionOffset_Y = 160;
-        creditsBox.positionScale_X = 0.5f;
-        creditsBox.sizeOffset_X = 500;
-        creditsBox.sizeOffset_Y = -260;
-        creditsBox.sizeScale_Y = 1f;
-        creditsBox.fontSize = ESleekFontSize.Medium;
+        creditsBox.PositionOffset_X = -250f;
+        creditsBox.PositionOffset_Y = 160f;
+        creditsBox.PositionScale_X = 0.5f;
+        creditsBox.SizeOffset_X = 500f;
+        creditsBox.SizeOffset_Y = -260f;
+        creditsBox.SizeScale_Y = 1f;
+        creditsBox.FontSize = ESleekFontSize.Medium;
         container.AddChild(creditsBox);
         scrollBox = Glazier.Get().CreateScrollView();
-        scrollBox.positionOffset_X = 5;
-        scrollBox.positionOffset_Y = 5;
-        scrollBox.sizeOffset_X = -10;
-        scrollBox.sizeOffset_Y = -10;
-        scrollBox.sizeScale_X = 1f;
-        scrollBox.sizeScale_Y = 1f;
-        scrollBox.scaleContentToWidth = true;
+        scrollBox.PositionOffset_X = 5f;
+        scrollBox.PositionOffset_Y = 5f;
+        scrollBox.SizeOffset_X = -10f;
+        scrollBox.SizeOffset_Y = -10f;
+        scrollBox.SizeScale_X = 1f;
+        scrollBox.SizeScale_Y = 1f;
+        scrollBox.ScaleContentToWidth = true;
         creditsBox.AddChild(scrollBox);
-        int verticalOffset = 0;
+        float verticalOffset = 0f;
         AddHeader(localization.format("Header_Unturned"), ref verticalOffset);
         AddRow("Nelson Sexton", "adding bugs and breaking the game", ref verticalOffset);
         AddRow("Tyler \"MoltonMontro\" Pope", "community+web+server admin", ref verticalOffset);
@@ -114,67 +114,67 @@ public class MenuCreditsUI
         };
         Array.Sort(obj2);
         AddRowColumns(obj2, ref verticalOffset);
-        scrollBox.contentSizeOffset = new Vector2(0f, verticalOffset);
+        scrollBox.ContentSizeOffset = new Vector2(0f, verticalOffset);
     }
 
-    private static void AddHeader(string key, ref int verticalOffset)
+    private static void AddHeader(string key, ref float verticalOffset)
     {
         ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-        sleekLabel.positionOffset_Y = verticalOffset;
-        sleekLabel.sizeOffset_Y = 50;
-        sleekLabel.sizeScale_X = 1f;
-        sleekLabel.fontAlignment = TextAnchor.MiddleCenter;
-        sleekLabel.fontSize = ESleekFontSize.Large;
-        sleekLabel.text = localization.format(key);
+        sleekLabel.PositionOffset_Y = verticalOffset;
+        sleekLabel.SizeOffset_Y = 50f;
+        sleekLabel.SizeScale_X = 1f;
+        sleekLabel.TextAlignment = TextAnchor.MiddleCenter;
+        sleekLabel.FontSize = ESleekFontSize.Large;
+        sleekLabel.Text = localization.format(key);
         scrollBox.AddChild(sleekLabel);
-        verticalOffset += sleekLabel.sizeOffset_Y;
+        verticalOffset += sleekLabel.SizeOffset_Y;
     }
 
-    private static void AddRow(string contributor, string contribution, ref int verticalOffset)
+    private static void AddRow(string contributor, string contribution, ref float verticalOffset)
     {
         ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-        sleekLabel.positionOffset_Y = verticalOffset;
-        sleekLabel.sizeOffset_Y = 30;
-        sleekLabel.sizeScale_X = 1f;
-        sleekLabel.fontAlignment = TextAnchor.MiddleLeft;
-        sleekLabel.fontSize = ESleekFontSize.Medium;
-        sleekLabel.text = contributor;
+        sleekLabel.PositionOffset_Y = verticalOffset;
+        sleekLabel.SizeOffset_Y = 30f;
+        sleekLabel.SizeScale_X = 1f;
+        sleekLabel.TextAlignment = TextAnchor.MiddleLeft;
+        sleekLabel.FontSize = ESleekFontSize.Medium;
+        sleekLabel.Text = contributor;
         scrollBox.AddChild(sleekLabel);
         ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
-        sleekLabel2.positionOffset_Y = verticalOffset;
-        sleekLabel2.sizeOffset_Y = 30;
-        sleekLabel2.sizeScale_X = 1f;
-        sleekLabel2.fontAlignment = TextAnchor.MiddleRight;
-        sleekLabel2.fontSize = ESleekFontSize.Medium;
-        sleekLabel2.text = contribution;
+        sleekLabel2.PositionOffset_Y = verticalOffset;
+        sleekLabel2.SizeOffset_Y = 30f;
+        sleekLabel2.SizeScale_X = 1f;
+        sleekLabel2.TextAlignment = TextAnchor.MiddleRight;
+        sleekLabel2.FontSize = ESleekFontSize.Medium;
+        sleekLabel2.Text = contribution;
         scrollBox.AddChild(sleekLabel2);
-        verticalOffset += 30;
+        verticalOffset += 30f;
     }
 
-    private static void AddRowColumns(string[] contributors, ref int verticalOffset)
+    private static void AddRowColumns(string[] contributors, ref float verticalOffset)
     {
         int num = 0;
         foreach (string text in contributors)
         {
             ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-            sleekLabel.positionOffset_Y = verticalOffset;
-            sleekLabel.positionScale_X = (float)num * 0.5f;
-            sleekLabel.sizeOffset_Y = 30;
-            sleekLabel.sizeScale_X = 0.5f;
-            sleekLabel.fontAlignment = TextAnchor.MiddleCenter;
-            sleekLabel.fontSize = ESleekFontSize.Medium;
-            sleekLabel.text = text;
+            sleekLabel.PositionOffset_Y = verticalOffset;
+            sleekLabel.PositionScale_X = (float)num * 0.5f;
+            sleekLabel.SizeOffset_Y = 30f;
+            sleekLabel.SizeScale_X = 0.5f;
+            sleekLabel.TextAlignment = TextAnchor.MiddleCenter;
+            sleekLabel.FontSize = ESleekFontSize.Medium;
+            sleekLabel.Text = text;
             scrollBox.AddChild(sleekLabel);
             num++;
             if (num >= 2)
             {
                 num = 0;
-                verticalOffset += 30;
+                verticalOffset += 30f;
             }
         }
         if (num > 0)
         {
-            verticalOffset += 30;
+            verticalOffset += 30f;
         }
     }
 }

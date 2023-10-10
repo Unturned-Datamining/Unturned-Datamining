@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -44,7 +45,7 @@ public class PlayerDashboardInventoryUI
 
     private static byte dragFromRot;
 
-    private static ISleekImage characterImage;
+    private static SleekCameraImage characterImage;
 
     private static ISleekSlider characterSlider;
 
@@ -70,13 +71,17 @@ public class PlayerDashboardInventoryUI
 
     private static SleekItems[] items;
 
-    private static ISleekImage selectionFrame;
+    private static ISleekElement selectionFrame;
+
+    private static ISleekImage outsideSelectionInvisibleButton;
 
     private static ISleekBox selectionBackdropBox;
 
     private static ISleekBox selectionIconBox;
 
     private static SleekItemIcon selectionIconImage;
+
+    private static ISleekScrollView selectionDescriptionScrollView;
 
     private static ISleekBox selectionDescriptionBox;
 
@@ -169,15 +174,15 @@ public class PlayerDashboardInventoryUI
             Player.player.character.Find("Camera").gameObject.SetActive(value: true);
             if (isSplitClothingArea)
             {
-                clothingBox.sizeOffset_X = -5;
-                clothingBox.sizeScale_X = 0.5f;
-                areaBox.isVisible = true;
+                clothingBox.SizeOffset_X = -5f;
+                clothingBox.SizeScale_X = 0.5f;
+                areaBox.IsVisible = true;
             }
             else
             {
-                clothingBox.sizeOffset_X = 0;
-                clothingBox.sizeScale_X = 1f;
-                areaBox.isVisible = false;
+                clothingBox.SizeOffset_X = 0f;
+                clothingBox.SizeScale_X = 1f;
+                areaBox.IsVisible = false;
             }
             updateVehicle();
             resetNearbyDrops();
@@ -190,10 +195,10 @@ public class PlayerDashboardInventoryUI
             if (Player.player != null)
             {
                 characterPlayer = new SleekPlayer(Player.player.channel.owner, isButton: true, SleekPlayer.ESleekPlayerDisplayContext.NONE);
-                characterPlayer.positionOffset_X = 10;
-                characterPlayer.positionOffset_Y = 10;
-                characterPlayer.sizeOffset_X = 410;
-                characterPlayer.sizeOffset_Y = 50;
+                characterPlayer.PositionOffset_X = 10f;
+                characterPlayer.PositionOffset_Y = 10f;
+                characterPlayer.SizeOffset_X = 410f;
+                characterPlayer.SizeOffset_Y = 50f;
                 backdropBox.AddChild(characterPlayer);
             }
             container.AnimateIntoView();
@@ -219,12 +224,12 @@ public class PlayerDashboardInventoryUI
         {
             isDragging = true;
             setItemsEnabled(enabled: false);
-            dragItem.isVisible = true;
+            dragItem.IsVisible = true;
             if (hasDragOutsideHandlers)
             {
-                dragOutsideHandler.isVisible = true;
-                dragOutsideClothingHandler.isVisible = true;
-                dragOutsideAreaHandler.isVisible = true;
+                dragOutsideHandler.IsVisible = true;
+                dragOutsideClothingHandler.IsVisible = true;
+                dragOutsideAreaHandler.IsVisible = true;
             }
             PlayInventoryAudio(dragJar.GetAsset());
         }
@@ -238,12 +243,12 @@ public class PlayerDashboardInventoryUI
             PlayInventoryAudio(dragJar.GetAsset());
             dragJar.rot = dragFromRot;
             setItemsEnabled(enabled: true);
-            dragItem.isVisible = false;
+            dragItem.IsVisible = false;
             if (hasDragOutsideHandlers)
             {
-                dragOutsideHandler.isVisible = false;
-                dragOutsideClothingHandler.isVisible = false;
-                dragOutsideAreaHandler.isVisible = false;
+                dragOutsideHandler.IsVisible = false;
+                dragOutsideClothingHandler.IsVisible = false;
+                dragOutsideAreaHandler.IsVisible = false;
             }
         }
     }
@@ -267,7 +272,7 @@ public class PlayerDashboardInventoryUI
         ISleekButton[] array = headers;
         for (int i = 0; i < array.Length; i++)
         {
-            array[i].isRaycastTarget = enabled;
+            array[i].IsRaycastTarget = enabled;
         }
         SleekSlot[] array2 = slots;
         for (int i = 0; i < array2.Length; i++)
@@ -551,7 +556,7 @@ public class PlayerDashboardInventoryUI
             setItemsEnabled(enabled: false);
             setMiscButtonsEnabled(enabled: false);
         }
-        selectionFrame.isVisible = true;
+        selectionFrame.IsVisible = true;
         _selectedJar = Player.player.inventory.getItem(page, Player.player.inventory.getIndex(page, x, y));
         if (selectedJar == null)
         {
@@ -567,17 +572,27 @@ public class PlayerDashboardInventoryUI
         int num2;
         if (selectedAsset.size_x <= selectedAsset.size_y)
         {
-            selectionBackdropBox.sizeOffset_X = 490;
-            selectionBackdropBox.sizeOffset_Y = 330;
-            selectionIconBox.sizeOffset_X = 210;
-            selectionIconBox.sizeOffset_Y = 310;
-            selectionDescriptionBox.positionOffset_X = 230;
-            selectionDescriptionBox.positionOffset_Y = 10;
-            selectionDescriptionBox.sizeOffset_X = 250;
-            selectionDescriptionBox.sizeOffset_Y = 150;
-            selectionActionsBox.positionOffset_X = 230;
-            selectionActionsBox.positionOffset_Y = 170;
-            selectionActionsBox.sizeOffset_Y = 150;
+            selectionBackdropBox.SizeOffset_X = 490f;
+            selectionBackdropBox.SizeOffset_Y = 330f;
+            selectionIconBox.SizeOffset_X = 210f;
+            selectionIconBox.SizeOffset_Y = 310f;
+            if (selectionDescriptionScrollView != null)
+            {
+                selectionDescriptionScrollView.PositionOffset_X = 230f;
+                selectionDescriptionScrollView.PositionOffset_Y = 10f;
+                selectionDescriptionScrollView.SizeOffset_X = 250f;
+                selectionDescriptionScrollView.SizeOffset_Y = 150f;
+            }
+            else
+            {
+                selectionDescriptionBox.PositionOffset_X = 230f;
+                selectionDescriptionBox.PositionOffset_Y = 10f;
+                selectionDescriptionBox.SizeOffset_X = 250f;
+                selectionDescriptionBox.SizeOffset_Y = 150f;
+            }
+            selectionActionsBox.PositionOffset_X = 230f;
+            selectionActionsBox.PositionOffset_Y = 170f;
+            selectionActionsBox.SizeOffset_Y = 150f;
             if (selectedAsset.size_x == selectedAsset.size_y)
             {
                 num = 200;
@@ -591,142 +606,153 @@ public class PlayerDashboardInventoryUI
         }
         else
         {
-            selectionBackdropBox.sizeOffset_X = 530;
-            selectionBackdropBox.sizeOffset_Y = 390;
-            selectionIconBox.sizeOffset_X = 510;
-            selectionIconBox.sizeOffset_Y = 210;
-            selectionDescriptionBox.positionOffset_X = 10;
-            selectionDescriptionBox.positionOffset_Y = 230;
-            selectionDescriptionBox.sizeOffset_X = 250;
-            selectionDescriptionBox.sizeOffset_Y = 150;
-            selectionActionsBox.positionOffset_X = 270;
-            selectionActionsBox.positionOffset_Y = 230;
-            selectionActionsBox.sizeOffset_Y = 150;
+            selectionBackdropBox.SizeOffset_X = 530f;
+            selectionBackdropBox.SizeOffset_Y = 390f;
+            selectionIconBox.SizeOffset_X = 510f;
+            selectionIconBox.SizeOffset_Y = 210f;
+            if (selectionDescriptionScrollView != null)
+            {
+                selectionDescriptionScrollView.PositionOffset_X = 10f;
+                selectionDescriptionScrollView.PositionOffset_Y = 230f;
+                selectionDescriptionScrollView.SizeOffset_X = 250f;
+                selectionDescriptionScrollView.SizeOffset_Y = 150f;
+            }
+            else
+            {
+                selectionDescriptionBox.PositionOffset_X = 10f;
+                selectionDescriptionBox.PositionOffset_Y = 230f;
+                selectionDescriptionBox.SizeOffset_X = 250f;
+                selectionDescriptionBox.SizeOffset_Y = 150f;
+            }
+            selectionActionsBox.PositionOffset_X = 270f;
+            selectionActionsBox.PositionOffset_Y = 230f;
+            selectionActionsBox.SizeOffset_Y = 150f;
             num = 500;
             num2 = 200;
         }
-        selectionIconImage.positionOffset_X = -num / 2;
-        selectionIconImage.positionOffset_Y = -num2 / 2;
-        selectionIconImage.sizeOffset_X = num;
-        selectionIconImage.sizeOffset_Y = num2;
+        selectionIconImage.PositionOffset_X = -num / 2;
+        selectionIconImage.PositionOffset_Y = -num2 / 2;
+        selectionIconImage.SizeOffset_X = num;
+        selectionIconImage.SizeOffset_Y = num2;
         selectionIconImage.Refresh(selectedJar.item.id, selectedJar.item.quality, selectedJar.item.state, selectedAsset, num, num2);
         Vector2 vector = Input.mousePosition;
         vector.y = (float)Screen.height - vector.y;
         vector /= GraphicsSettings.userInterfaceScale;
-        selectionBackdropBox.positionOffset_X = (int)Mathf.Clamp(vector.x - (float)(selectionBackdropBox.sizeOffset_X / 2), 0f, (float)Screen.width / GraphicsSettings.userInterfaceScale - (float)selectionBackdropBox.sizeOffset_X);
-        selectionBackdropBox.positionOffset_Y = (int)Mathf.Clamp(vector.y - (float)(selectionBackdropBox.sizeOffset_Y / 2), 0f, (float)Screen.height / GraphicsSettings.userInterfaceScale - (float)selectionBackdropBox.sizeOffset_Y);
-        Local local = localization;
-        int rarity = (int)selectedAsset.rarity;
-        string arg = local.format("Rarity_" + rarity);
-        Local local2 = localization;
-        rarity = (int)selectedAsset.type;
-        string arg2 = local2.format("Type_" + rarity);
-        selectionDescriptionLabel.text = "<color=" + Palette.hex(ItemTool.getRarityColorUI(selectedAsset.rarity)) + ">" + localization.format("Rarity_Type_Label", arg, arg2) + "</color>\n\n";
-        if (selectedAsset.showQuality)
+        selectionBackdropBox.PositionOffset_X = (int)Mathf.Clamp(vector.x - selectionBackdropBox.SizeOffset_X / 2f, 0f, (float)Screen.width / GraphicsSettings.userInterfaceScale - selectionBackdropBox.SizeOffset_X);
+        selectionBackdropBox.PositionOffset_Y = (int)Mathf.Clamp(vector.y - selectionBackdropBox.SizeOffset_Y / 2f, 0f, (float)Screen.height / GraphicsSettings.userInterfaceScale - selectionBackdropBox.SizeOffset_Y);
+        StringBuilder stringBuilder = new StringBuilder(512);
+        ItemDescriptionBuilder builder = default(ItemDescriptionBuilder);
+        builder.shouldRestrictToLegacyContent = !Glazier.Get().SupportsAutomaticLayout || !selectedAsset.isEligibleForAutoStatDescriptions;
+        builder.lines = new List<ItemDescriptionLine>();
+        selectedAsset.BuildDescription(builder, selectedJar.item);
+        builder.lines.Sort();
+        int num3 = 0;
+        foreach (ItemDescriptionLine line in builder.lines)
         {
-            Color32 color = ItemTool.getQualityColor((float)(int)selectedJar.item.quality / 100f);
-            ISleekLabel sleekLabel = selectionDescriptionLabel;
-            sleekLabel.text = sleekLabel.text + "<color=" + Palette.hex(color) + ">" + localization.format("Quality", selectedJar.item.quality) + "</color>\n\n";
+            if (line.priority - num3 > 100)
+            {
+                stringBuilder.AppendLine();
+            }
+            stringBuilder.AppendLine(line.text);
+            num3 = line.priority;
         }
-        if (selectedAsset.amount > 1)
+        selectionDescriptionLabel.Text = stringBuilder.ToString();
+        if (selectionDescriptionScrollView != null)
         {
-            ISleekLabel sleekLabel2 = selectionDescriptionLabel;
-            sleekLabel2.text = sleekLabel2.text + localization.format("Amount", selectedJar.item.amount) + "\n\n";
+            selectionDescriptionScrollView.ScrollToTop();
         }
-        selectionDescriptionLabel.text = selectedAsset.getContext(selectionDescriptionLabel.text, selectedJar.item.state);
-        selectionDescriptionLabel.text += selectedAsset.itemDescription;
-        selectionNameLabel.text = selectedAsset.itemName;
+        selectionNameLabel.Text = selectedAsset.itemName;
         if (selectedPage < PlayerInventory.SLOTS)
         {
-            selectionHotkeyLabel.text = localization.format("Hotkey_Set", ControlsSettings.getEquipmentHotkeyText(selectedPage));
-            selectionHotkeyLabel.isVisible = true;
+            selectionHotkeyLabel.Text = localization.format("Hotkey_Set", ControlsSettings.getEquipmentHotkeyText(selectedPage));
+            selectionHotkeyLabel.IsVisible = true;
         }
-        else if (selectedPage < PlayerInventory.STORAGE)
+        else if (selectedPage < PlayerInventory.STORAGE && selectedAsset.slot.canEquipFromBag())
         {
-            selectionHotkeyLabel.text = localization.format("Hotkey_Unset");
-            selectionHotkeyLabel.isVisible = true;
+            selectionHotkeyLabel.Text = localization.format("Hotkey_Unset");
+            selectionHotkeyLabel.IsVisible = true;
             for (byte b = 0; b < Player.player.equipment.hotkeys.Length; b = (byte)(b + 1))
             {
                 HotkeyInfo hotkeyInfo = Player.player.equipment.hotkeys[b];
                 if (hotkeyInfo.page == selectedPage && hotkeyInfo.x == selected_x && hotkeyInfo.y == selected_y)
                 {
-                    selectionHotkeyLabel.text = localization.format("Hotkey_Set", ControlsSettings.getEquipmentHotkeyText(b + 2));
+                    selectionHotkeyLabel.Text = localization.format("Hotkey_Set", ControlsSettings.getEquipmentHotkeyText(b + 2));
                     break;
                 }
             }
         }
         else
         {
-            selectionHotkeyLabel.isVisible = false;
+            selectionHotkeyLabel.IsVisible = false;
         }
         if (Player.player.equipment.checkSelection(page, x, y))
         {
-            selectionEquipButton.text = localization.format("Dequip_Button");
-            selectionEquipButton.tooltipText = localization.format("Dequip_Button_Tooltip");
+            selectionEquipButton.Text = localization.format("Dequip_Button");
+            selectionEquipButton.TooltipText = localization.format("Dequip_Button_Tooltip");
         }
         else
         {
-            selectionEquipButton.text = localization.format("Equip_Button");
-            selectionEquipButton.tooltipText = localization.format("Equip_Button_Tooltip");
+            selectionEquipButton.Text = localization.format("Equip_Button");
+            selectionEquipButton.TooltipText = localization.format("Equip_Button_Tooltip");
         }
         if (selectedAsset.type == EItemType.GUN)
         {
-            selectionContextButton.text = localization.format("Attachments_Button");
-            selectionContextButton.tooltipText = localization.format("Attachments_Button_Tooltip");
-            selectionContextButton.isVisible = selectedPage >= PlayerInventory.SLOTS && selectedPage < PlayerInventory.AREA;
+            selectionContextButton.Text = localization.format("Attachments_Button");
+            selectionContextButton.TooltipText = localization.format("Attachments_Button_Tooltip");
+            selectionContextButton.IsVisible = selectedPage >= PlayerInventory.SLOTS && selectedPage < PlayerInventory.AREA;
         }
         else
         {
-            selectionContextButton.isVisible = false;
+            selectionContextButton.IsVisible = false;
         }
         bool flag = page == PlayerInventory.AREA;
         if (flag)
         {
-            selectionDropButton.text = localization.format("Pickup_Button");
-            selectionDropButton.tooltipText = localization.format("Pickup_Button_Tooltip");
+            selectionDropButton.Text = localization.format("Pickup_Button");
+            selectionDropButton.TooltipText = localization.format("Pickup_Button_Tooltip");
         }
         else
         {
-            selectionDropButton.text = localization.format("Drop_Button");
-            selectionDropButton.tooltipText = localization.format("Drop_Button_Tooltip");
+            selectionDropButton.Text = localization.format("Drop_Button");
+            selectionDropButton.TooltipText = localization.format("Drop_Button_Tooltip");
         }
         if (page == PlayerInventory.STORAGE)
         {
-            selectionStorageButton.text = localization.format("Take_Button");
-            selectionStorageButton.tooltipText = localization.format("Take_Button_Tooltip");
+            selectionStorageButton.Text = localization.format("Take_Button");
+            selectionStorageButton.TooltipText = localization.format("Take_Button_Tooltip");
         }
         else
         {
-            selectionStorageButton.text = localization.format("Store_Button");
-            selectionStorageButton.tooltipText = localization.format("Store_Button_Tooltip");
+            selectionStorageButton.Text = localization.format("Store_Button");
+            selectionStorageButton.TooltipText = localization.format("Store_Button_Tooltip");
         }
-        selectionEquipButton.isVisible = selectedAsset.canPlayerEquip && page < PlayerInventory.PAGES - 2;
-        selectionDropButton.isVisible = flag || selectedAsset.allowManualDrop;
-        selectionStorageButton.isVisible = Player.player.inventory.isStoring;
-        int num3 = 0;
-        if (selectionEquipButton.isVisible)
+        selectionEquipButton.IsVisible = selectedAsset.canPlayerEquip && page < PlayerInventory.PAGES - 2;
+        selectionDropButton.IsVisible = flag || selectedAsset.allowManualDrop;
+        selectionStorageButton.IsVisible = Player.player.inventory.isStoring;
+        int num4 = 0;
+        if (selectionEquipButton.IsVisible)
         {
-            selectionEquipButton.positionOffset_Y = num3;
-            num3 += 40;
+            selectionEquipButton.PositionOffset_Y = num4;
+            num4 += 40;
         }
-        if (selectionContextButton.isVisible)
+        if (selectionContextButton.IsVisible)
         {
-            selectionContextButton.positionOffset_Y = num3;
-            num3 += 40;
+            selectionContextButton.PositionOffset_Y = num4;
+            num4 += 40;
         }
-        if (selectionDropButton.isVisible)
+        if (selectionDropButton.IsVisible)
         {
-            selectionDropButton.positionOffset_Y = num3;
-            num3 += 40;
+            selectionDropButton.PositionOffset_Y = num4;
+            num4 += 40;
         }
-        if (selectionStorageButton.isVisible)
+        if (selectionStorageButton.IsVisible)
         {
-            selectionStorageButton.positionOffset_Y = num3;
-            num3 += 40;
+            selectionStorageButton.PositionOffset_Y = num4;
+            num4 += 40;
         }
         selectionExtraActionsBox.RemoveAllChildren();
-        selectionExtraActionsBox.positionOffset_Y = num3;
-        int num4 = 0;
+        selectionExtraActionsBox.PositionOffset_Y = num4;
+        int num5 = 0;
         if (page != PlayerInventory.AREA)
         {
             actions.Clear();
@@ -747,28 +773,28 @@ public class PlayerDashboardInventoryUI
                 }
                 actions.Add(action);
                 ISleekButton sleekButton = Glazier.Get().CreateButton();
-                sleekButton.positionOffset_Y = num4;
-                sleekButton.sizeScale_X = 1f;
-                sleekButton.sizeOffset_Y = 30;
+                sleekButton.PositionOffset_Y = num5;
+                sleekButton.SizeScale_X = 1f;
+                sleekButton.SizeOffset_Y = 30f;
                 if (!string.IsNullOrEmpty(action.key))
                 {
-                    sleekButton.text = localization.format(action.key + "_Button");
-                    sleekButton.tooltipText = localization.format(action.key + "_Button_Tooltip");
+                    sleekButton.Text = localization.format(action.key + "_Button");
+                    sleekButton.TooltipText = localization.format(action.key + "_Button_Tooltip");
                 }
                 else
                 {
-                    sleekButton.text = action.text;
-                    sleekButton.tooltipText = action.tooltip;
+                    sleekButton.Text = action.text;
+                    sleekButton.TooltipText = action.tooltip;
                 }
-                sleekButton.onClickedButton += onClickedAction;
+                sleekButton.OnClicked += onClickedAction;
                 selectionExtraActionsBox.AddChild(sleekButton);
+                num5 += 40;
                 num4 += 40;
-                num3 += 40;
             }
         }
-        selectionExtraActionsBox.sizeOffset_Y = num4 - 10;
-        selectionActionsBox.contentSizeOffset = new Vector2(0f, num3 - 10);
-        selectionNameLabel.textColor = ItemTool.getRarityColorUI(selectedAsset.rarity);
+        selectionExtraActionsBox.SizeOffset_Y = num5 - 10;
+        selectionActionsBox.ContentSizeOffset = new Vector2(0f, num4 - 10);
+        selectionNameLabel.TextColor = ItemTool.getRarityColorUI(selectedAsset.rarity);
     }
 
     public static void closeSelection()
@@ -783,7 +809,7 @@ public class PlayerDashboardInventoryUI
                 setItemsEnabled(enabled: true);
                 setMiscButtonsEnabled(enabled: true);
             }
-            selectionFrame.isVisible = false;
+            selectionFrame.IsVisible = false;
         }
     }
 
@@ -911,7 +937,7 @@ public class PlayerDashboardInventoryUI
                 }
             }
         }
-        else if (Player.player.equipment.isSelected && !Player.player.equipment.isBusy && Player.player.equipment.isEquipped)
+        else if (Player.player.equipment.HasValidUseable && !Player.player.equipment.isBusy && Player.player.equipment.IsEquipAnimationFinished)
         {
             Player.player.equipment.dequip();
             if (page == selectedPage && x == selected_x && y == selected_y)
@@ -999,8 +1025,8 @@ public class PlayerDashboardInventoryUI
             dragFrom_y = y;
             dragFromRot = dragJar.rot;
             dragOffset = -item.GetNormalizedCursorPosition();
-            dragOffset.x *= item.sizeOffset_X;
-            dragOffset.y *= item.sizeOffset_Y;
+            dragOffset.x *= item.SizeOffset_X;
+            dragOffset.y *= item.SizeOffset_Y;
             if (dragJar.rot == 1)
             {
                 float x2 = dragOffset.x;
@@ -1327,93 +1353,93 @@ public class PlayerDashboardInventoryUI
         if (vehicle != null && vehicle.asset != null)
         {
             VehicleAsset asset = vehicle.asset;
-            vehicleNameLabel.text = asset.vehicleName;
-            vehicleNameLabel.textColor = ItemTool.getRarityColorUI(asset.rarity);
+            vehicleNameLabel.Text = asset.vehicleName;
+            vehicleNameLabel.TextColor = ItemTool.getRarityColorUI(asset.rarity);
             int num = 0;
             int num2 = 0;
             if (asset.canBeLocked)
             {
-                vehicleLockButton.text = localization.format(vehicle.isLocked ? "Vehicle_Lock_Off" : "Vehicle_Lock_On", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.locker));
-                vehicleLockButton.tooltipText = localization.format("Vehicle_Lock_Tooltip");
-                vehicleLockButton.isVisible = true;
-                vehicleLockButton.positionOffset_Y = num;
+                vehicleLockButton.Text = localization.format(vehicle.isLocked ? "Vehicle_Lock_Off" : "Vehicle_Lock_On", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.locker));
+                vehicleLockButton.TooltipText = localization.format("Vehicle_Lock_Tooltip");
+                vehicleLockButton.IsVisible = true;
+                vehicleLockButton.PositionOffset_Y = num;
                 num += 40;
             }
             else
             {
-                vehicleLockButton.isVisible = false;
+                vehicleLockButton.IsVisible = false;
             }
             if (asset.hasHorn)
             {
-                vehicleHornButton.text = localization.format("Vehicle_Horn", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.primary));
-                vehicleHornButton.tooltipText = localization.format("Vehicle_Horn_Tooltip");
-                vehicleHornButton.isVisible = true;
-                vehicleHornButton.positionOffset_Y = num;
+                vehicleHornButton.Text = localization.format("Vehicle_Horn", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.primary));
+                vehicleHornButton.TooltipText = localization.format("Vehicle_Horn_Tooltip");
+                vehicleHornButton.IsVisible = true;
+                vehicleHornButton.PositionOffset_Y = num;
                 num += 40;
             }
             else
             {
-                vehicleHornButton.isVisible = false;
+                vehicleHornButton.IsVisible = false;
             }
             if (asset.hasHeadlights)
             {
-                vehicleHeadlightsButton.text = localization.format(vehicle.headlightsOn ? "Vehicle_Headlights_Off" : "Vehicle_Headlights_On", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.secondary));
-                vehicleHeadlightsButton.tooltipText = localization.format("Vehicle_Headlights_Tooltip");
-                vehicleHeadlightsButton.isVisible = true;
-                vehicleHeadlightsButton.positionOffset_Y = num;
+                vehicleHeadlightsButton.Text = localization.format(vehicle.headlightsOn ? "Vehicle_Headlights_Off" : "Vehicle_Headlights_On", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.secondary));
+                vehicleHeadlightsButton.TooltipText = localization.format("Vehicle_Headlights_Tooltip");
+                vehicleHeadlightsButton.IsVisible = true;
+                vehicleHeadlightsButton.PositionOffset_Y = num;
                 num += 40;
             }
             else
             {
-                vehicleHeadlightsButton.isVisible = false;
+                vehicleHeadlightsButton.IsVisible = false;
             }
             if (asset.hasSirens)
             {
-                vehicleSirensButton.text = localization.format(vehicle.sirensOn ? "Vehicle_Sirens_Off" : "Vehicle_Sirens_On", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.other));
-                vehicleSirensButton.tooltipText = localization.format("Vehicle_Sirens_Tooltip");
-                vehicleSirensButton.isVisible = true;
-                vehicleSirensButton.positionOffset_Y = num;
+                vehicleSirensButton.Text = localization.format(vehicle.sirensOn ? "Vehicle_Sirens_Off" : "Vehicle_Sirens_On", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.other));
+                vehicleSirensButton.TooltipText = localization.format("Vehicle_Sirens_Tooltip");
+                vehicleSirensButton.IsVisible = true;
+                vehicleSirensButton.PositionOffset_Y = num;
                 num += 40;
             }
             else
             {
-                vehicleSirensButton.isVisible = false;
+                vehicleSirensButton.IsVisible = false;
             }
             if (asset.engine == EEngine.BLIMP)
             {
-                vehicleBlimpButton.text = localization.format(vehicle.isBlimpFloating ? "Vehicle_Blimp_Off" : "Vehicle_Blimp_On", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.other));
-                vehicleBlimpButton.tooltipText = localization.format("Vehicle_Blimp_Tooltip");
-                vehicleBlimpButton.isVisible = true;
-                vehicleBlimpButton.positionOffset_Y = num;
+                vehicleBlimpButton.Text = localization.format(vehicle.isBlimpFloating ? "Vehicle_Blimp_Off" : "Vehicle_Blimp_On", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.other));
+                vehicleBlimpButton.TooltipText = localization.format("Vehicle_Blimp_Tooltip");
+                vehicleBlimpButton.IsVisible = true;
+                vehicleBlimpButton.PositionOffset_Y = num;
                 num += 40;
             }
             else
             {
-                vehicleBlimpButton.isVisible = false;
+                vehicleBlimpButton.IsVisible = false;
             }
             if (asset.hasHook)
             {
-                vehicleHookButton.text = localization.format("Vehicle_Hook", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.other));
-                vehicleHookButton.tooltipText = localization.format("Vehicle_Hook_Tooltip");
-                vehicleHookButton.isVisible = true;
-                vehicleHookButton.positionOffset_Y = num;
+                vehicleHookButton.Text = localization.format("Vehicle_Hook", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.other));
+                vehicleHookButton.TooltipText = localization.format("Vehicle_Hook_Tooltip");
+                vehicleHookButton.IsVisible = true;
+                vehicleHookButton.PositionOffset_Y = num;
                 num += 40;
             }
             else
             {
-                vehicleHookButton.isVisible = false;
+                vehicleHookButton.IsVisible = false;
             }
             if (vehicle.usesBattery && vehicle.hasBattery && vehicle.asset.canStealBattery)
             {
-                vehicleStealBatteryButton.text = localization.format("Vehicle_Steal_Battery");
-                vehicleStealBatteryButton.tooltipText = localization.format("Vehicle_Steal_Battery_Tooltip");
-                vehicleStealBatteryButton.isVisible = true;
-                vehicleStealBatteryButton.positionOffset_Y = num;
+                vehicleStealBatteryButton.Text = localization.format("Vehicle_Steal_Battery");
+                vehicleStealBatteryButton.TooltipText = localization.format("Vehicle_Steal_Battery_Tooltip");
+                vehicleStealBatteryButton.IsVisible = true;
+                vehicleStealBatteryButton.PositionOffset_Y = num;
                 num += 40;
             }
             else
             {
-                vehicleStealBatteryButton.isVisible = false;
+                vehicleStealBatteryButton.IsVisible = false;
             }
             int value = 0;
             ushort num3 = 0;
@@ -1450,73 +1476,73 @@ public class PlayerDashboardInventoryUI
             }
             if (flag2)
             {
-                vehicleSkinButton.text = localization.format(flag ? "Vehicle_Skin_Off" : "Vehicle_Skin_On");
-                vehicleSkinButton.tooltipText = localization.format("Vehicle_Skin_Tooltip");
-                vehicleSkinButton.isVisible = true;
-                vehicleSkinButton.positionOffset_Y = num;
+                vehicleSkinButton.Text = localization.format(flag ? "Vehicle_Skin_Off" : "Vehicle_Skin_On");
+                vehicleSkinButton.TooltipText = localization.format("Vehicle_Skin_Tooltip");
+                vehicleSkinButton.IsVisible = true;
+                vehicleSkinButton.PositionOffset_Y = num;
                 num += 40;
             }
             else
             {
-                vehicleSkinButton.isVisible = false;
+                vehicleSkinButton.IsVisible = false;
             }
             if (Player.player.stance.stance == EPlayerStance.DRIVING)
             {
-                vehiclePassengersBox.positionOffset_X = 270;
-                vehiclePassengersBox.sizeOffset_X = -280;
-                vehicleActionsBox.isVisible = true;
+                vehiclePassengersBox.PositionOffset_X = 270f;
+                vehiclePassengersBox.SizeOffset_X = -280f;
+                vehicleActionsBox.IsVisible = true;
             }
             else
             {
-                vehiclePassengersBox.positionOffset_X = 10;
-                vehiclePassengersBox.sizeOffset_X = -20;
-                vehicleActionsBox.isVisible = false;
+                vehiclePassengersBox.PositionOffset_X = 10f;
+                vehiclePassengersBox.SizeOffset_X = -20f;
+                vehicleActionsBox.IsVisible = false;
             }
             vehiclePassengersBox.RemoveAllChildren();
             for (int i = 0; i < vehicle.passengers.Length; i++)
             {
                 Passenger passenger = vehicle.passengers[i];
                 ISleekButton sleekButton = Glazier.Get().CreateButton();
-                sleekButton.positionOffset_Y = num2;
-                sleekButton.sizeOffset_Y = 30;
-                sleekButton.sizeScale_X = 1f;
-                sleekButton.onClickedButton += onClickedVehiclePassengerButton;
+                sleekButton.PositionOffset_Y = num2;
+                sleekButton.SizeOffset_Y = 30f;
+                sleekButton.SizeScale_X = 1f;
+                sleekButton.OnClicked += onClickedVehiclePassengerButton;
                 vehiclePassengersBox.AddChild(sleekButton);
                 if (passenger.player != null)
                 {
                     string localDisplayName = passenger.player.GetLocalDisplayName();
                     if (i < 12)
                     {
-                        sleekButton.text = localization.format("Vehicle_Seat_Slot", localDisplayName, "F" + (i + 1));
+                        sleekButton.Text = localization.format("Vehicle_Seat_Slot", localDisplayName, "F" + (i + 1));
                     }
                     else
                     {
-                        sleekButton.text = localDisplayName;
+                        sleekButton.Text = localDisplayName;
                     }
                 }
                 else if (i < 12)
                 {
-                    sleekButton.text = localization.format("Vehicle_Seat_Slot", localization.format("Vehicle_Seat_Empty"), "F" + (i + 1));
+                    sleekButton.Text = localization.format("Vehicle_Seat_Slot", localization.format("Vehicle_Seat_Empty"), "F" + (i + 1));
                 }
                 else
                 {
-                    sleekButton.text = localization.format("Vehicle_Seat_Empty");
+                    sleekButton.Text = localization.format("Vehicle_Seat_Empty");
                 }
                 num2 += 40;
             }
-            vehicleActionsBox.sizeOffset_Y = num - 10;
-            vehiclePassengersBox.sizeOffset_Y = num2 - 10;
-            vehicleBox.isVisible = true;
+            vehicleActionsBox.SizeOffset_Y = num - 10;
+            vehiclePassengersBox.SizeOffset_Y = num2 - 10;
+            vehicleBox.IsVisible = true;
             int num5 = Mathf.Max(num, num2);
-            vehicleBox.sizeOffset_Y = 60 + num5;
-            headers[PlayerInventory.STORAGE - PlayerInventory.SLOTS].textColor = vehicleNameLabel.textColor;
-            headers[PlayerInventory.STORAGE - PlayerInventory.SLOTS].text = localization.format("Storage_Trunk", vehicleNameLabel.text);
+            vehicleBox.SizeOffset_Y = 60 + num5;
+            headers[PlayerInventory.STORAGE - PlayerInventory.SLOTS].TextColor = vehicleNameLabel.TextColor;
+            headers[PlayerInventory.STORAGE - PlayerInventory.SLOTS].Text = localization.format("Storage_Trunk", vehicleNameLabel.Text);
         }
         else
         {
-            vehicleBox.isVisible = false;
-            headers[PlayerInventory.STORAGE - PlayerInventory.SLOTS].textColor = ESleekTint.FONT;
-            headers[PlayerInventory.STORAGE - PlayerInventory.SLOTS].text = localization.format("Storage");
+            vehicleBox.IsVisible = false;
+            headers[PlayerInventory.STORAGE - PlayerInventory.SLOTS].TextColor = ESleekTint.FONT;
+            headers[PlayerInventory.STORAGE - PlayerInventory.SLOTS].Text = localization.format("Storage");
         }
         updateBoxAreas();
     }
@@ -1543,9 +1569,9 @@ public class PlayerDashboardInventoryUI
             items[page].resize(newWidth, newHeight);
             if (page > 0)
             {
-                headers[page].isVisible = newHeight > 0;
+                headers[page].IsVisible = newHeight > 0;
             }
-            items[page].isVisible = newHeight > 0;
+            items[page].IsVisible = newHeight > 0;
             if (page == PlayerInventory.STORAGE - PlayerInventory.SLOTS && newHeight == 0)
             {
                 items[page].clear();
@@ -1556,98 +1582,98 @@ public class PlayerDashboardInventoryUI
 
     private static void updateBoxAreas()
     {
-        int num = 0;
-        int num2 = 0;
+        float num = 0f;
+        float num2 = 0f;
         bool flag = isSplitClothingArea;
-        if (vehicleBox.isVisible)
+        if (vehicleBox.IsVisible)
         {
             if (flag)
             {
-                if (vehicleBox.parent != areaBox)
+                if (vehicleBox.Parent != areaBox)
                 {
                     areaBox.AddChild(vehicleBox);
                 }
-                vehicleBox.positionOffset_Y = num2;
-                num2 += vehicleBox.sizeOffset_Y + 10;
+                vehicleBox.PositionOffset_Y = num2;
+                num2 += vehicleBox.SizeOffset_Y + 10f;
             }
             else
             {
-                if (vehicleBox.parent != clothingBox)
+                if (vehicleBox.Parent != clothingBox)
                 {
                     clothingBox.AddChild(vehicleBox);
                 }
-                vehicleBox.positionOffset_Y = num;
-                num += vehicleBox.sizeOffset_Y + 10;
+                vehicleBox.PositionOffset_Y = num;
+                num += vehicleBox.SizeOffset_Y + 10f;
             }
         }
         for (byte b = 0; b < items.Length; b = (byte)(b + 1))
         {
-            if (headers[b].isVisible)
+            if (headers[b].IsVisible)
             {
                 if (flag && (b == PlayerInventory.STORAGE - PlayerInventory.SLOTS || b == PlayerInventory.AREA - PlayerInventory.SLOTS))
                 {
-                    if (headers[b].parent != areaBox)
+                    if (headers[b].Parent != areaBox)
                     {
                         areaBox.AddChild(headers[b]);
                     }
-                    if (items[b].parent != areaBox)
+                    if (items[b].Parent != areaBox)
                     {
                         areaBox.AddChild(items[b]);
                     }
-                    headers[b].positionOffset_Y = num2;
-                    items[b].positionOffset_Y = num2 + 70;
-                    num2 += items[b].sizeOffset_Y + 80;
+                    headers[b].PositionOffset_Y = num2;
+                    items[b].PositionOffset_Y = num2 + 70f;
+                    num2 += items[b].SizeOffset_Y + 80f;
                 }
                 else
                 {
-                    if (headers[b].parent != clothingBox)
+                    if (headers[b].Parent != clothingBox)
                     {
                         clothingBox.AddChild(headers[b]);
                     }
-                    if (items[b].parent != clothingBox)
+                    if (items[b].Parent != clothingBox)
                     {
                         clothingBox.AddChild(items[b]);
                     }
-                    headers[b].positionOffset_Y = num;
-                    items[b].positionOffset_Y = num + 70;
-                    num += items[b].sizeOffset_Y + 80;
+                    headers[b].PositionOffset_Y = num;
+                    items[b].PositionOffset_Y = num + 70f;
+                    num += items[b].SizeOffset_Y + 80f;
                 }
             }
         }
-        headers[7].isVisible = Player.player.clothing.hatAsset != null;
-        if (headers[7].isVisible)
+        headers[7].IsVisible = Player.player.clothing.hatAsset != null;
+        if (headers[7].IsVisible)
         {
-            headers[7].positionOffset_Y = num;
-            num += 70;
+            headers[7].PositionOffset_Y = num;
+            num += 70f;
         }
-        headers[8].isVisible = Player.player.clothing.maskAsset != null;
-        if (headers[8].isVisible)
+        headers[8].IsVisible = Player.player.clothing.maskAsset != null;
+        if (headers[8].IsVisible)
         {
-            headers[8].positionOffset_Y = num;
-            num += 70;
+            headers[8].PositionOffset_Y = num;
+            num += 70f;
         }
-        headers[9].isVisible = Player.player.clothing.glassesAsset != null;
-        if (headers[9].isVisible)
+        headers[9].IsVisible = Player.player.clothing.glassesAsset != null;
+        if (headers[9].IsVisible)
         {
-            headers[9].positionOffset_Y = num;
-            num += 70;
+            headers[9].PositionOffset_Y = num;
+            num += 70f;
         }
-        clothingBox.contentSizeOffset = new Vector2(0f, num - 10);
-        areaBox.contentSizeOffset = new Vector2(0f, num2 - 10);
+        clothingBox.ContentSizeOffset = new Vector2(0f, num - 10f);
+        areaBox.ContentSizeOffset = new Vector2(0f, num2 - 10f);
         InteractableStorage interactableStorage = PlayerInteract.interactable as InteractableStorage;
         if (interactableStorage != null && interactableStorage.isDisplay)
         {
-            headers[PlayerInventory.STORAGE - PlayerInventory.SLOTS].sizeOffset_X = -180;
-            rot_xButton.isVisible = true;
-            rot_yButton.isVisible = true;
-            rot_zButton.isVisible = true;
+            headers[PlayerInventory.STORAGE - PlayerInventory.SLOTS].SizeOffset_X = -180f;
+            rot_xButton.IsVisible = true;
+            rot_yButton.IsVisible = true;
+            rot_zButton.IsVisible = true;
         }
         else
         {
-            headers[PlayerInventory.STORAGE - PlayerInventory.SLOTS].sizeOffset_X = 0;
-            rot_xButton.isVisible = false;
-            rot_yButton.isVisible = false;
-            rot_zButton.isVisible = false;
+            headers[PlayerInventory.STORAGE - PlayerInventory.SLOTS].SizeOffset_X = 0f;
+            rot_xButton.IsVisible = false;
+            rot_yButton.IsVisible = false;
+            rot_zButton.IsVisible = false;
         }
     }
 
@@ -1756,18 +1782,18 @@ public class PlayerDashboardInventoryUI
         ItemAsset shirtAsset = Player.player.clothing.shirtAsset;
         if (shirtAsset != null)
         {
-            headers[3].text = shirtAsset.itemName;
-            headers[3].GetChildAtIndex(0).sizeOffset_X = shirtAsset.size_x * 25;
-            headers[3].GetChildAtIndex(0).sizeOffset_Y = shirtAsset.size_y * 25;
-            headers[3].GetChildAtIndex(0).positionOffset_Y = -headers[3].GetChildAtIndex(0).sizeOffset_Y / 2;
+            headers[3].Text = shirtAsset.itemName;
+            headers[3].GetChildAtIndex(0).SizeOffset_X = shirtAsset.size_x * 25;
+            headers[3].GetChildAtIndex(0).SizeOffset_Y = shirtAsset.size_y * 25;
+            headers[3].GetChildAtIndex(0).PositionOffset_Y = (0f - headers[3].GetChildAtIndex(0).SizeOffset_Y) / 2f;
             headerItemIcons[3].Refresh(shirtAsset.id, newShirtQuality, newShirtState);
-            ((ISleekLabel)headers[3].GetChildAtIndex(2)).text = newShirtQuality + "%";
+            ((ISleekLabel)headers[3].GetChildAtIndex(2)).Text = newShirtQuality + "%";
             Color rarityColorUI = ItemTool.getRarityColorUI(shirtAsset.rarity);
-            headers[3].backgroundColor = SleekColor.BackgroundIfLight(rarityColorUI);
-            headers[3].textColor = rarityColorUI;
+            headers[3].BackgroundColor = SleekColor.BackgroundIfLight(rarityColorUI);
+            headers[3].TextColor = rarityColorUI;
             Color qualityColor = ItemTool.getQualityColor((float)(int)newShirtQuality / 100f);
-            ((ISleekImage)headers[3].GetChildAtIndex(1)).color = qualityColor;
-            ((ISleekLabel)headers[3].GetChildAtIndex(2)).textColor = qualityColor;
+            ((ISleekImage)headers[3].GetChildAtIndex(1)).TintColor = qualityColor;
+            ((ISleekLabel)headers[3].GetChildAtIndex(2)).TextColor = qualityColor;
         }
     }
 
@@ -1778,18 +1804,18 @@ public class PlayerDashboardInventoryUI
             ItemAsset pantsAsset = Player.player.clothing.pantsAsset;
             if (pantsAsset != null)
             {
-                headers[4].text = pantsAsset.itemName;
-                headers[4].GetChildAtIndex(0).sizeOffset_X = pantsAsset.size_x * 25;
-                headers[4].GetChildAtIndex(0).sizeOffset_Y = pantsAsset.size_y * 25;
-                headers[4].GetChildAtIndex(0).positionOffset_Y = -headers[4].GetChildAtIndex(0).sizeOffset_Y / 2;
+                headers[4].Text = pantsAsset.itemName;
+                headers[4].GetChildAtIndex(0).SizeOffset_X = pantsAsset.size_x * 25;
+                headers[4].GetChildAtIndex(0).SizeOffset_Y = pantsAsset.size_y * 25;
+                headers[4].GetChildAtIndex(0).PositionOffset_Y = (0f - headers[4].GetChildAtIndex(0).SizeOffset_Y) / 2f;
                 headerItemIcons[4].Refresh(pantsAsset.id, newPantsQuality, newPantsState);
-                ((ISleekLabel)headers[4].GetChildAtIndex(2)).text = newPantsQuality + "%";
+                ((ISleekLabel)headers[4].GetChildAtIndex(2)).Text = newPantsQuality + "%";
                 Color rarityColorUI = ItemTool.getRarityColorUI(pantsAsset.rarity);
-                headers[4].backgroundColor = SleekColor.BackgroundIfLight(rarityColorUI);
-                headers[4].textColor = rarityColorUI;
+                headers[4].BackgroundColor = SleekColor.BackgroundIfLight(rarityColorUI);
+                headers[4].TextColor = rarityColorUI;
                 Color qualityColor = ItemTool.getQualityColor((float)(int)newPantsQuality / 100f);
-                ((ISleekImage)headers[4].GetChildAtIndex(1)).color = qualityColor;
-                ((ISleekLabel)headers[4].GetChildAtIndex(2)).textColor = qualityColor;
+                ((ISleekImage)headers[4].GetChildAtIndex(1)).TintColor = qualityColor;
+                ((ISleekLabel)headers[4].GetChildAtIndex(2)).TextColor = qualityColor;
             }
         }
     }
@@ -1801,20 +1827,20 @@ public class PlayerDashboardInventoryUI
             ItemAsset hatAsset = Player.player.clothing.hatAsset;
             if (hatAsset != null)
             {
-                headers[7].text = hatAsset.itemName;
-                headers[7].GetChildAtIndex(0).sizeOffset_X = hatAsset.size_x * 25;
-                headers[7].GetChildAtIndex(0).sizeOffset_Y = hatAsset.size_y * 25;
-                headers[7].GetChildAtIndex(0).positionOffset_Y = -headers[7].GetChildAtIndex(0).sizeOffset_Y / 2;
+                headers[7].Text = hatAsset.itemName;
+                headers[7].GetChildAtIndex(0).SizeOffset_X = hatAsset.size_x * 25;
+                headers[7].GetChildAtIndex(0).SizeOffset_Y = hatAsset.size_y * 25;
+                headers[7].GetChildAtIndex(0).PositionOffset_Y = (0f - headers[7].GetChildAtIndex(0).SizeOffset_Y) / 2f;
                 headerItemIcons[7].Refresh(newHatObsolete, newHatQuality, newHatState);
-                ((ISleekLabel)headers[7].GetChildAtIndex(2)).text = newHatQuality + "%";
+                ((ISleekLabel)headers[7].GetChildAtIndex(2)).Text = newHatQuality + "%";
                 Color rarityColorUI = ItemTool.getRarityColorUI(hatAsset.rarity);
-                headers[7].backgroundColor = SleekColor.BackgroundIfLight(rarityColorUI);
-                headers[7].textColor = rarityColorUI;
+                headers[7].BackgroundColor = SleekColor.BackgroundIfLight(rarityColorUI);
+                headers[7].TextColor = rarityColorUI;
                 Color qualityColor = ItemTool.getQualityColor((float)(int)newHatQuality / 100f);
-                ((ISleekImage)headers[7].GetChildAtIndex(1)).color = qualityColor;
-                ((ISleekLabel)headers[7].GetChildAtIndex(2)).textColor = qualityColor;
+                ((ISleekImage)headers[7].GetChildAtIndex(1)).TintColor = qualityColor;
+                ((ISleekLabel)headers[7].GetChildAtIndex(2)).TextColor = qualityColor;
             }
-            headers[7].isVisible = hatAsset != null;
+            headers[7].IsVisible = hatAsset != null;
             updateBoxAreas();
         }
     }
@@ -1824,18 +1850,18 @@ public class PlayerDashboardInventoryUI
         ItemAsset backpackAsset = Player.player.clothing.backpackAsset;
         if (backpackAsset != null)
         {
-            headers[1].text = backpackAsset.itemName;
-            headers[1].GetChildAtIndex(0).sizeOffset_X = backpackAsset.size_x * 25;
-            headers[1].GetChildAtIndex(0).sizeOffset_Y = backpackAsset.size_y * 25;
-            headers[1].GetChildAtIndex(0).positionOffset_Y = -headers[1].GetChildAtIndex(0).sizeOffset_Y / 2;
+            headers[1].Text = backpackAsset.itemName;
+            headers[1].GetChildAtIndex(0).SizeOffset_X = backpackAsset.size_x * 25;
+            headers[1].GetChildAtIndex(0).SizeOffset_Y = backpackAsset.size_y * 25;
+            headers[1].GetChildAtIndex(0).PositionOffset_Y = (0f - headers[1].GetChildAtIndex(0).SizeOffset_Y) / 2f;
             headerItemIcons[1].Refresh(backpackAsset.id, newBackpackQuality, newBackpackState);
-            ((ISleekLabel)headers[1].GetChildAtIndex(2)).text = newBackpackQuality + "%";
+            ((ISleekLabel)headers[1].GetChildAtIndex(2)).Text = newBackpackQuality + "%";
             Color rarityColorUI = ItemTool.getRarityColorUI(backpackAsset.rarity);
-            headers[1].backgroundColor = SleekColor.BackgroundIfLight(rarityColorUI);
-            headers[1].textColor = rarityColorUI;
+            headers[1].BackgroundColor = SleekColor.BackgroundIfLight(rarityColorUI);
+            headers[1].TextColor = rarityColorUI;
             Color qualityColor = ItemTool.getQualityColor((float)(int)newBackpackQuality / 100f);
-            ((ISleekImage)headers[1].GetChildAtIndex(1)).color = qualityColor;
-            ((ISleekLabel)headers[1].GetChildAtIndex(2)).textColor = qualityColor;
+            ((ISleekImage)headers[1].GetChildAtIndex(1)).TintColor = qualityColor;
+            ((ISleekLabel)headers[1].GetChildAtIndex(2)).TextColor = qualityColor;
         }
     }
 
@@ -1844,18 +1870,18 @@ public class PlayerDashboardInventoryUI
         ItemAsset vestAsset = Player.player.clothing.vestAsset;
         if (vestAsset != null)
         {
-            headers[2].text = vestAsset.itemName;
-            headers[2].GetChildAtIndex(0).sizeOffset_X = vestAsset.size_x * 25;
-            headers[2].GetChildAtIndex(0).sizeOffset_Y = vestAsset.size_y * 25;
-            headers[2].GetChildAtIndex(0).positionOffset_Y = -headers[2].GetChildAtIndex(0).sizeOffset_Y / 2;
+            headers[2].Text = vestAsset.itemName;
+            headers[2].GetChildAtIndex(0).SizeOffset_X = vestAsset.size_x * 25;
+            headers[2].GetChildAtIndex(0).SizeOffset_Y = vestAsset.size_y * 25;
+            headers[2].GetChildAtIndex(0).PositionOffset_Y = (0f - headers[2].GetChildAtIndex(0).SizeOffset_Y) / 2f;
             headerItemIcons[2].Refresh(vestAsset.id, newVestQuality, newVestState);
-            ((ISleekLabel)headers[2].GetChildAtIndex(2)).text = newVestQuality + "%";
+            ((ISleekLabel)headers[2].GetChildAtIndex(2)).Text = newVestQuality + "%";
             Color rarityColorUI = ItemTool.getRarityColorUI(vestAsset.rarity);
-            headers[2].backgroundColor = SleekColor.BackgroundIfLight(rarityColorUI);
-            headers[2].textColor = rarityColorUI;
+            headers[2].BackgroundColor = SleekColor.BackgroundIfLight(rarityColorUI);
+            headers[2].TextColor = rarityColorUI;
             Color qualityColor = ItemTool.getQualityColor((float)(int)newVestQuality / 100f);
-            ((ISleekImage)headers[2].GetChildAtIndex(1)).color = qualityColor;
-            ((ISleekLabel)headers[2].GetChildAtIndex(2)).textColor = qualityColor;
+            ((ISleekImage)headers[2].GetChildAtIndex(1)).TintColor = qualityColor;
+            ((ISleekLabel)headers[2].GetChildAtIndex(2)).TextColor = qualityColor;
         }
     }
 
@@ -1866,20 +1892,20 @@ public class PlayerDashboardInventoryUI
             ItemAsset maskAsset = Player.player.clothing.maskAsset;
             if (maskAsset != null)
             {
-                headers[8].text = maskAsset.itemName;
-                headers[8].GetChildAtIndex(0).sizeOffset_X = maskAsset.size_x * 25;
-                headers[8].GetChildAtIndex(0).sizeOffset_Y = maskAsset.size_y * 25;
-                headers[8].GetChildAtIndex(0).positionOffset_Y = -headers[8].GetChildAtIndex(0).sizeOffset_Y / 2;
+                headers[8].Text = maskAsset.itemName;
+                headers[8].GetChildAtIndex(0).SizeOffset_X = maskAsset.size_x * 25;
+                headers[8].GetChildAtIndex(0).SizeOffset_Y = maskAsset.size_y * 25;
+                headers[8].GetChildAtIndex(0).PositionOffset_Y = (0f - headers[8].GetChildAtIndex(0).SizeOffset_Y) / 2f;
                 headerItemIcons[8].Refresh(maskAsset.id, newMaskQuality, newMaskState);
-                ((ISleekLabel)headers[8].GetChildAtIndex(2)).text = newMaskQuality + "%";
+                ((ISleekLabel)headers[8].GetChildAtIndex(2)).Text = newMaskQuality + "%";
                 Color rarityColorUI = ItemTool.getRarityColorUI(maskAsset.rarity);
-                headers[8].backgroundColor = SleekColor.BackgroundIfLight(rarityColorUI);
-                headers[8].textColor = rarityColorUI;
+                headers[8].BackgroundColor = SleekColor.BackgroundIfLight(rarityColorUI);
+                headers[8].TextColor = rarityColorUI;
                 Color qualityColor = ItemTool.getQualityColor((float)(int)newMaskQuality / 100f);
-                ((ISleekImage)headers[8].GetChildAtIndex(1)).color = qualityColor;
-                ((ISleekLabel)headers[8].GetChildAtIndex(2)).textColor = qualityColor;
+                ((ISleekImage)headers[8].GetChildAtIndex(1)).TintColor = qualityColor;
+                ((ISleekLabel)headers[8].GetChildAtIndex(2)).TextColor = qualityColor;
             }
-            headers[8].isVisible = maskAsset != null;
+            headers[8].IsVisible = maskAsset != null;
             updateBoxAreas();
         }
     }
@@ -1891,20 +1917,20 @@ public class PlayerDashboardInventoryUI
             ItemAsset glassesAsset = Player.player.clothing.glassesAsset;
             if (glassesAsset != null)
             {
-                headers[9].text = glassesAsset.itemName;
-                headers[9].GetChildAtIndex(0).sizeOffset_X = glassesAsset.size_x * 25;
-                headers[9].GetChildAtIndex(0).sizeOffset_Y = glassesAsset.size_y * 25;
-                headers[9].GetChildAtIndex(0).positionOffset_Y = -headers[9].GetChildAtIndex(0).sizeOffset_Y / 2;
+                headers[9].Text = glassesAsset.itemName;
+                headers[9].GetChildAtIndex(0).SizeOffset_X = glassesAsset.size_x * 25;
+                headers[9].GetChildAtIndex(0).SizeOffset_Y = glassesAsset.size_y * 25;
+                headers[9].GetChildAtIndex(0).PositionOffset_Y = (0f - headers[9].GetChildAtIndex(0).SizeOffset_Y) / 2f;
                 headerItemIcons[9].Refresh(glassesAsset.id, newGlassesQuality, newGlassesState);
-                ((ISleekLabel)headers[9].GetChildAtIndex(2)).text = newGlassesQuality + "%";
+                ((ISleekLabel)headers[9].GetChildAtIndex(2)).Text = newGlassesQuality + "%";
                 Color rarityColorUI = ItemTool.getRarityColorUI(glassesAsset.rarity);
-                headers[9].backgroundColor = SleekColor.BackgroundIfLight(rarityColorUI);
-                headers[9].textColor = rarityColorUI;
+                headers[9].BackgroundColor = SleekColor.BackgroundIfLight(rarityColorUI);
+                headers[9].TextColor = rarityColorUI;
                 Color qualityColor = ItemTool.getQualityColor((float)(int)newGlassesQuality / 100f);
-                ((ISleekImage)headers[9].GetChildAtIndex(1)).color = qualityColor;
-                ((ISleekLabel)headers[9].GetChildAtIndex(2)).textColor = qualityColor;
+                ((ISleekImage)headers[9].GetChildAtIndex(1)).TintColor = qualityColor;
+                ((ISleekLabel)headers[9].GetChildAtIndex(2)).TextColor = qualityColor;
             }
-            headers[9].isVisible = glassesAsset != null;
+            headers[9].IsVisible = glassesAsset != null;
             updateBoxAreas();
         }
     }
@@ -1918,7 +1944,7 @@ public class PlayerDashboardInventoryUI
         switch (i)
         {
         case 0:
-            if (Player.player.equipment.isSelected && !Player.player.equipment.isBusy && Player.player.equipment.isEquipped)
+            if (Player.player.equipment.HasValidUseable && !Player.player.equipment.isBusy && Player.player.equipment.IsEquipAnimationFinished)
             {
                 Player.player.equipment.dequip();
             }
@@ -1981,11 +2007,11 @@ public class PlayerDashboardInventoryUI
 
     private static void refreshDraggedVisualPosition()
     {
-        dragItem.positionOffset_X = (int)dragPivot.x;
-        dragItem.positionOffset_Y = (int)dragPivot.y;
+        dragItem.PositionOffset_X = (int)dragPivot.x;
+        dragItem.PositionOffset_Y = (int)dragPivot.y;
         Vector2 vector = PlayerUI.container.ViewportToNormalizedPosition(InputEx.NormalizedMousePosition);
-        dragItem.positionScale_X = vector.x;
-        dragItem.positionScale_Y = vector.y;
+        dragItem.PositionScale_X = vector.x;
+        dragItem.PositionScale_Y = vector.y;
     }
 
     public static void updateDraggedItem()
@@ -2088,32 +2114,32 @@ public class PlayerDashboardInventoryUI
         _selected_y = byte.MaxValue;
         isDragging = false;
         container = new SleekFullscreenBox();
-        container.positionScale_Y = 1f;
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         PlayerUI.container.AddChild(container);
         active = true;
         backdropBox = Glazier.Get().CreateBox();
-        backdropBox.positionOffset_Y = 60;
-        backdropBox.sizeOffset_Y = -60;
-        backdropBox.sizeScale_X = 1f;
-        backdropBox.sizeScale_Y = 1f;
-        backdropBox.backgroundColor = new SleekColor(ESleekTint.BACKGROUND, 0.5f);
+        backdropBox.PositionOffset_Y = 60f;
+        backdropBox.SizeOffset_Y = -60f;
+        backdropBox.SizeScale_X = 1f;
+        backdropBox.SizeScale_Y = 1f;
+        backdropBox.BackgroundColor = new SleekColor(ESleekTint.BACKGROUND, 0.5f);
         container.AddChild(backdropBox);
         characterPlayer = null;
         hasDragOutsideHandlers = Glazier.Get().SupportsDepth;
         if (hasDragOutsideHandlers)
         {
             dragOutsideHandler = Glazier.Get().CreateImage();
-            dragOutsideHandler.sizeScale_X = 1f;
-            dragOutsideHandler.sizeScale_Y = 1f;
-            dragOutsideHandler.onImageClicked += onClickedDuringDrag;
-            dragOutsideHandler.onImageRightClicked += onRightClickedDuringDrag;
-            dragOutsideHandler.isVisible = false;
+            dragOutsideHandler.SizeScale_X = 1f;
+            dragOutsideHandler.SizeScale_Y = 1f;
+            dragOutsideHandler.OnClicked += onClickedDuringDrag;
+            dragOutsideHandler.OnRightClicked += onRightClickedDuringDrag;
+            dragOutsideHandler.IsVisible = false;
             backdropBox.AddChild(dragOutsideHandler);
         }
         else
@@ -2121,30 +2147,31 @@ public class PlayerDashboardInventoryUI
             dragOutsideHandler = null;
         }
         ISleekBox sleekBox = Glazier.Get().CreateBox();
-        sleekBox.positionOffset_X = 10;
-        sleekBox.positionOffset_Y = 70;
-        sleekBox.sizeOffset_X = 410;
-        sleekBox.sizeOffset_Y = -280;
-        sleekBox.sizeScale_Y = 1f;
+        sleekBox.PositionOffset_X = 10f;
+        sleekBox.PositionOffset_Y = 70f;
+        sleekBox.SizeOffset_X = 410f;
+        sleekBox.SizeOffset_Y = -280f;
+        sleekBox.SizeScale_Y = 1f;
         backdropBox.AddChild(sleekBox);
         ISleekConstraintFrame sleekConstraintFrame = Glazier.Get().CreateConstraintFrame();
-        sleekConstraintFrame.sizeScale_Y = 1f;
-        sleekConstraintFrame.constraint = ESleekConstraint.FitInParent;
+        sleekConstraintFrame.SizeScale_Y = 1f;
+        sleekConstraintFrame.Constraint = ESleekConstraint.FitInParent;
         if (Glazier.Get().SupportsDepth)
         {
-            sleekConstraintFrame.positionScale_X = -0.5f;
-            sleekConstraintFrame.sizeScale_X = 2f;
+            sleekConstraintFrame.PositionScale_X = -0.5f;
+            sleekConstraintFrame.SizeScale_X = 2f;
         }
         else
         {
-            sleekConstraintFrame.positionScale_X = 0f;
-            sleekConstraintFrame.sizeScale_X = 1f;
+            sleekConstraintFrame.PositionScale_X = 0f;
+            sleekConstraintFrame.SizeScale_X = 1f;
         }
         sleekBox.AddChild(sleekConstraintFrame);
-        characterImage = Glazier.Get().CreateImage(Resources.Load<Texture>("RenderTextures/Character"));
-        characterImage.sizeScale_X = 1f;
-        characterImage.sizeScale_Y = 1f;
-        characterImage.onImageClicked += onClickedCharacter;
+        characterImage = new SleekCameraImage();
+        characterImage.SizeScale_X = 1f;
+        characterImage.SizeScale_Y = 1f;
+        characterImage.internalImage.OnClicked += onClickedCharacter;
+        characterImage.SetCamera(Player.player.look.characterCamera);
         sleekConstraintFrame.AddChild(characterImage);
         slots = new SleekSlot[PlayerInventory.SLOTS];
         for (byte b = 0; b < slots.Length; b = (byte)(b + 1))
@@ -2155,90 +2182,90 @@ public class PlayerDashboardInventoryUI
             slots[b].onPlacedItem = onPlacedItem;
             backdropBox.AddChild(slots[b]);
         }
-        slots[0].positionOffset_X = 10;
-        slots[0].positionOffset_Y = -160;
-        slots[0].positionScale_Y = 1f;
-        slots[1].positionOffset_X = 270;
-        slots[1].positionOffset_Y = -160;
-        slots[1].positionScale_Y = 1f;
-        slots[1].sizeOffset_X = 150;
+        slots[0].PositionOffset_X = 10f;
+        slots[0].PositionOffset_Y = -160f;
+        slots[0].PositionScale_Y = 1f;
+        slots[1].PositionOffset_X = 270f;
+        slots[1].PositionOffset_Y = -160f;
+        slots[1].PositionScale_Y = 1f;
+        slots[1].SizeOffset_X = 150f;
         characterSlider = Glazier.Get().CreateSlider();
-        characterSlider.sizeOffset_Y = 20;
-        characterSlider.sizeScale_X = 1f;
-        characterSlider.sizeOffset_X = -120;
-        characterSlider.positionOffset_X = 120;
-        characterSlider.positionOffset_Y = 15;
-        characterSlider.positionScale_Y = 1f;
-        characterSlider.orientation = ESleekOrientation.HORIZONTAL;
-        characterSlider.onDragged += onDraggedCharacterSlider;
+        characterSlider.SizeOffset_Y = 20f;
+        characterSlider.SizeScale_X = 1f;
+        characterSlider.SizeOffset_X = -120f;
+        characterSlider.PositionOffset_X = 120f;
+        characterSlider.PositionOffset_Y = 15f;
+        characterSlider.PositionScale_Y = 1f;
+        characterSlider.Orientation = ESleekOrientation.HORIZONTAL;
+        characterSlider.OnValueChanged += onDraggedCharacterSlider;
         sleekBox.AddChild(characterSlider);
         swapCosmeticsButton = new SleekButtonIcon(icons.load<Texture2D>("Swap_Cosmetics"));
-        swapCosmeticsButton.positionOffset_Y = 10;
-        swapCosmeticsButton.positionScale_Y = 1f;
-        swapCosmeticsButton.sizeOffset_X = 30;
-        swapCosmeticsButton.sizeOffset_Y = 30;
+        swapCosmeticsButton.PositionOffset_Y = 10f;
+        swapCosmeticsButton.PositionScale_Y = 1f;
+        swapCosmeticsButton.SizeOffset_X = 30f;
+        swapCosmeticsButton.SizeOffset_Y = 30f;
         swapCosmeticsButton.tooltip = localization.format("Swap_Cosmetics_Tooltip");
         swapCosmeticsButton.iconColor = ESleekTint.FOREGROUND;
         swapCosmeticsButton.onClickedButton += onClickedSwapCosmeticsButton;
         sleekBox.AddChild(swapCosmeticsButton);
         swapSkinsButton = new SleekButtonIcon(icons.load<Texture2D>("Swap_Skins"));
-        swapSkinsButton.positionOffset_X = 40;
-        swapSkinsButton.positionOffset_Y = 10;
-        swapSkinsButton.positionScale_Y = 1f;
-        swapSkinsButton.sizeOffset_X = 30;
-        swapSkinsButton.sizeOffset_Y = 30;
+        swapSkinsButton.PositionOffset_X = 40f;
+        swapSkinsButton.PositionOffset_Y = 10f;
+        swapSkinsButton.PositionScale_Y = 1f;
+        swapSkinsButton.SizeOffset_X = 30f;
+        swapSkinsButton.SizeOffset_Y = 30f;
         swapSkinsButton.tooltip = localization.format("Swap_Skins_Tooltip");
         swapSkinsButton.iconColor = ESleekTint.FOREGROUND;
         swapSkinsButton.onClickedButton += onClickedSwapSkinsButton;
         sleekBox.AddChild(swapSkinsButton);
         swapMythicsButton = new SleekButtonIcon(icons.load<Texture2D>("Swap_Mythics"));
-        swapMythicsButton.positionOffset_X = 80;
-        swapMythicsButton.positionOffset_Y = 10;
-        swapMythicsButton.positionScale_Y = 1f;
-        swapMythicsButton.sizeOffset_X = 30;
-        swapMythicsButton.sizeOffset_Y = 30;
+        swapMythicsButton.PositionOffset_X = 80f;
+        swapMythicsButton.PositionOffset_Y = 10f;
+        swapMythicsButton.PositionScale_Y = 1f;
+        swapMythicsButton.SizeOffset_X = 30f;
+        swapMythicsButton.SizeOffset_Y = 30f;
         swapMythicsButton.tooltip = localization.format("Swap_Mythics_Tooltip");
         swapMythicsButton.iconColor = ESleekTint.FOREGROUND;
         swapMythicsButton.onClickedButton += onClickedSwapMythicsButton;
         sleekBox.AddChild(swapMythicsButton);
         box = Glazier.Get().CreateFrame();
-        box.positionOffset_X = 430;
-        box.positionOffset_Y = 10;
-        box.sizeOffset_X = -440;
-        box.sizeOffset_Y = -20;
-        box.sizeScale_X = 1f;
-        box.sizeScale_Y = 1f;
+        box.PositionOffset_X = 430f;
+        box.PositionOffset_Y = 10f;
+        box.SizeOffset_X = -440f;
+        box.SizeOffset_Y = -20f;
+        box.SizeScale_X = 1f;
+        box.SizeScale_Y = 1f;
         backdropBox.AddChild(box);
         clothingBox = Glazier.Get().CreateScrollView();
-        clothingBox.sizeScale_X = 1f;
-        clothingBox.sizeScale_Y = 1f;
-        clothingBox.contentSizeOffset = new Vector2(0f, 1000f);
-        clothingBox.scaleContentToWidth = true;
+        clothingBox.SizeScale_X = 1f;
+        clothingBox.SizeScale_Y = 1f;
+        clothingBox.ContentSizeOffset = new Vector2(0f, 1000f);
+        clothingBox.ScaleContentToWidth = true;
         box.AddChild(clothingBox);
         areaBox = Glazier.Get().CreateScrollView();
-        areaBox.positionOffset_X = 5;
-        areaBox.positionScale_X = 0.5f;
-        areaBox.sizeOffset_X = -5;
-        areaBox.sizeScale_X = 0.5f;
-        areaBox.sizeScale_Y = 1f;
-        areaBox.contentSizeOffset = new Vector2(0f, 1000f);
-        areaBox.scaleContentToWidth = true;
+        areaBox.PositionOffset_X = 5f;
+        areaBox.PositionScale_X = 0.5f;
+        areaBox.SizeOffset_X = -5f;
+        areaBox.SizeScale_X = 0.5f;
+        areaBox.SizeScale_Y = 1f;
+        areaBox.ContentSizeOffset = new Vector2(0f, 1000f);
+        areaBox.ScaleContentToWidth = true;
         box.AddChild(areaBox);
         if (hasDragOutsideHandlers)
         {
             dragOutsideClothingHandler = Glazier.Get().CreateImage();
-            dragOutsideClothingHandler.sizeScale_X = 1f;
-            dragOutsideClothingHandler.sizeScale_Y = 1f;
-            dragOutsideClothingHandler.onImageClicked += onClickedDuringDrag;
-            dragOutsideClothingHandler.onImageRightClicked += onRightClickedDuringDrag;
-            dragOutsideClothingHandler.isVisible = false;
+            dragOutsideClothingHandler.SizeScale_X = 1f;
+            dragOutsideClothingHandler.SizeScale_Y = 1f;
+            dragOutsideClothingHandler.OnClicked += onClickedDuringDrag;
+            dragOutsideClothingHandler.OnRightClicked += onRightClickedDuringDrag;
+            dragOutsideClothingHandler.IsVisible = false;
             clothingBox.AddChild(dragOutsideClothingHandler);
             dragOutsideAreaHandler = Glazier.Get().CreateImage();
-            dragOutsideAreaHandler.sizeScale_X = 1f;
-            dragOutsideAreaHandler.sizeScale_Y = 1f;
-            dragOutsideAreaHandler.onImageClicked += onClickedDuringDrag;
-            dragOutsideAreaHandler.onImageRightClicked += onRightClickedDuringDrag;
-            dragOutsideAreaHandler.isVisible = false;
+            dragOutsideAreaHandler.SizeScale_X = 1f;
+            dragOutsideAreaHandler.SizeScale_Y = 1f;
+            dragOutsideAreaHandler.OnClicked += onClickedDuringDrag;
+            dragOutsideAreaHandler.OnRightClicked += onRightClickedDuringDrag;
+            dragOutsideAreaHandler.IsVisible = false;
             areaBox.AddChild(dragOutsideAreaHandler);
         }
         else
@@ -2250,16 +2277,16 @@ public class PlayerDashboardInventoryUI
         for (byte b2 = 0; b2 < headers.Length; b2 = (byte)(b2 + 1))
         {
             headers[b2] = Glazier.Get().CreateButton();
-            headers[b2].sizeOffset_Y = 60;
-            headers[b2].sizeScale_X = 1f;
-            headers[b2].fontSize = ESleekFontSize.Medium;
-            headers[b2].onClickedButton += onClickedHeader;
-            headers[b2].shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+            headers[b2].SizeOffset_Y = 60f;
+            headers[b2].SizeScale_X = 1f;
+            headers[b2].FontSize = ESleekFontSize.Medium;
+            headers[b2].OnClicked += onClickedHeader;
+            headers[b2].TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
             clothingBox.AddChild(headers[b2]);
-            headers[b2].isVisible = false;
+            headers[b2].IsVisible = false;
         }
-        headers[0].isVisible = true;
-        headers[PlayerInventory.AREA - PlayerInventory.SLOTS].isVisible = true;
+        headers[0].IsVisible = true;
+        headers[PlayerInventory.AREA - PlayerInventory.SLOTS].IsVisible = true;
         headerItemIcons = new SleekItemIcon[headers.Length];
         for (byte b3 = 1; b3 < headers.Length; b3 = (byte)(b3 + 1))
         {
@@ -2267,34 +2294,34 @@ public class PlayerDashboardInventoryUI
             {
                 SleekItemIcon sleekItemIcon = new SleekItemIcon
                 {
-                    positionOffset_X = 5,
-                    positionScale_Y = 0.5f
+                    PositionOffset_X = 5f,
+                    PositionScale_Y = 0.5f
                 };
                 headerItemIcons[b3] = sleekItemIcon;
                 headers[b3].AddChild(sleekItemIcon);
                 ISleekImage sleekImage = Glazier.Get().CreateImage();
-                sleekImage.positionOffset_X = -25;
-                sleekImage.positionOffset_Y = -25;
-                sleekImage.positionScale_X = 1f;
-                sleekImage.positionScale_Y = 1f;
-                sleekImage.sizeOffset_X = 20;
-                sleekImage.sizeOffset_Y = 20;
-                sleekImage.texture = icons.load<Texture2D>("Quality_0");
+                sleekImage.PositionOffset_X = -25f;
+                sleekImage.PositionOffset_Y = -25f;
+                sleekImage.PositionScale_X = 1f;
+                sleekImage.PositionScale_Y = 1f;
+                sleekImage.SizeOffset_X = 20f;
+                sleekImage.SizeOffset_Y = 20f;
+                sleekImage.Texture = icons.load<Texture2D>("Quality_0");
                 headers[b3].AddChild(sleekImage);
                 ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-                sleekLabel.positionOffset_X = -105;
-                sleekLabel.positionOffset_Y = 5;
-                sleekLabel.positionScale_X = 1f;
-                sleekLabel.sizeOffset_X = 100;
-                sleekLabel.sizeOffset_Y = -10;
-                sleekLabel.sizeScale_Y = 1f;
-                sleekLabel.fontAlignment = TextAnchor.UpperRight;
-                sleekLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+                sleekLabel.PositionOffset_X = -105f;
+                sleekLabel.PositionOffset_Y = 5f;
+                sleekLabel.PositionScale_X = 1f;
+                sleekLabel.SizeOffset_X = 100f;
+                sleekLabel.SizeOffset_Y = -10f;
+                sleekLabel.SizeScale_Y = 1f;
+                sleekLabel.TextAlignment = TextAnchor.UpperRight;
+                sleekLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
                 headers[b3].AddChild(sleekLabel);
             }
         }
-        headers[0].text = localization.format("Hands");
-        headers[PlayerInventory.AREA - PlayerInventory.SLOTS].text = localization.format("Area");
+        headers[0].Text = localization.format("Hands");
+        headers[PlayerInventory.AREA - PlayerInventory.SLOTS].Text = localization.format("Area");
         onShirtUpdated(0, Player.player.clothing.shirtQuality, Player.player.clothing.shirtState);
         onPantsUpdated(0, Player.player.clothing.pantsQuality, Player.player.clothing.pantsState);
         onBackpackUpdated(0, Player.player.clothing.backpackQuality, Player.player.clothing.backpackState);
@@ -2310,189 +2337,214 @@ public class PlayerDashboardInventoryUI
         }
         areaItems = new Items(PlayerInventory.AREA);
         actions = new List<Action>();
-        selectionFrame = Glazier.Get().CreateImage();
-        selectionFrame.sizeScale_X = 1f;
-        selectionFrame.sizeScale_Y = 1f;
-        selectionFrame.onImageClicked += onClickedOutsideSelection;
-        selectionFrame.onImageRightClicked += onClickedOutsideSelection;
-        selectionFrame.texture = (Texture2D)GlazierResources.PixelTexture;
-        selectionFrame.color = new Color(0f, 0f, 0f, 0.5f);
-        selectionFrame.isVisible = false;
+        selectionFrame = Glazier.Get().CreateFrame();
+        selectionFrame.SizeScale_X = 1f;
+        selectionFrame.SizeScale_Y = 1f;
+        selectionFrame.IsVisible = false;
         PlayerUI.container.AddChild(selectionFrame);
+        outsideSelectionInvisibleButton = Glazier.Get().CreateImage();
+        outsideSelectionInvisibleButton.SizeScale_X = 1f;
+        outsideSelectionInvisibleButton.SizeScale_Y = 1f;
+        outsideSelectionInvisibleButton.OnClicked += onClickedOutsideSelection;
+        outsideSelectionInvisibleButton.OnRightClicked += onClickedOutsideSelection;
+        outsideSelectionInvisibleButton.Texture = (Texture2D)GlazierResources.PixelTexture;
+        outsideSelectionInvisibleButton.TintColor = new Color(0f, 0f, 0f, 0.5f);
+        selectionFrame.AddChild(outsideSelectionInvisibleButton);
         selectionBackdropBox = Glazier.Get().CreateBox();
-        selectionBackdropBox.sizeOffset_X = 530;
-        selectionBackdropBox.sizeOffset_Y = 440;
+        selectionBackdropBox.SizeOffset_X = 530f;
+        selectionBackdropBox.SizeOffset_Y = 440f;
         selectionFrame.AddChild(selectionBackdropBox);
         selectionIconBox = Glazier.Get().CreateBox();
-        selectionIconBox.positionOffset_X = 10;
-        selectionIconBox.positionOffset_Y = 10;
-        selectionIconBox.sizeOffset_X = 510;
-        selectionIconBox.sizeOffset_Y = 310;
+        selectionIconBox.PositionOffset_X = 10f;
+        selectionIconBox.PositionOffset_Y = 10f;
+        selectionIconBox.SizeOffset_X = 510f;
+        selectionIconBox.SizeOffset_Y = 310f;
         selectionBackdropBox.AddChild(selectionIconBox);
         selectionIconImage = new SleekItemIcon();
-        selectionIconImage.positionScale_X = 0.5f;
-        selectionIconImage.positionScale_Y = 0.5f;
+        selectionIconImage.PositionScale_X = 0.5f;
+        selectionIconImage.PositionScale_Y = 0.5f;
         selectionIconBox.AddChild(selectionIconImage);
-        selectionDescriptionBox = Glazier.Get().CreateBox();
-        selectionDescriptionBox.positionOffset_X = 10;
-        selectionDescriptionBox.positionOffset_Y = 330;
-        selectionDescriptionBox.sizeOffset_X = 250;
-        selectionDescriptionBox.sizeOffset_Y = 100;
-        selectionBackdropBox.AddChild(selectionDescriptionBox);
-        selectionDescriptionLabel = Glazier.Get().CreateLabel();
-        selectionDescriptionLabel.enableRichText = true;
-        selectionDescriptionLabel.positionOffset_X = 5;
-        selectionDescriptionLabel.positionOffset_Y = 5;
-        selectionDescriptionLabel.sizeOffset_X = -10;
-        selectionDescriptionLabel.sizeOffset_Y = -10;
-        selectionDescriptionLabel.sizeScale_X = 1f;
-        selectionDescriptionLabel.sizeScale_Y = 1f;
-        selectionDescriptionLabel.fontAlignment = TextAnchor.UpperLeft;
-        selectionDescriptionLabel.textColor = ESleekTint.RICH_TEXT_DEFAULT;
-        selectionDescriptionLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
-        selectionDescriptionBox.AddChild(selectionDescriptionLabel);
+        if (Glazier.Get().SupportsAutomaticLayout)
+        {
+            selectionDescriptionScrollView = Glazier.Get().CreateScrollView();
+            selectionDescriptionScrollView.PositionOffset_X = 10f;
+            selectionDescriptionScrollView.PositionOffset_Y = 330f;
+            selectionDescriptionScrollView.SizeOffset_X = 250f;
+            selectionDescriptionScrollView.SizeOffset_Y = 100f;
+            selectionDescriptionScrollView.ScaleContentToWidth = true;
+            selectionDescriptionScrollView.ContentUseManualLayout = false;
+            selectionBackdropBox.AddChild(selectionDescriptionScrollView);
+            selectionDescriptionLabel = Glazier.Get().CreateLabel();
+            selectionDescriptionLabel.UseManualLayout = false;
+            selectionDescriptionLabel.AllowRichText = true;
+            selectionDescriptionLabel.TextAlignment = TextAnchor.UpperLeft;
+            selectionDescriptionLabel.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+            selectionDescriptionLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+            selectionDescriptionScrollView.AddChild(selectionDescriptionLabel);
+        }
+        else
+        {
+            selectionDescriptionBox = Glazier.Get().CreateBox();
+            selectionDescriptionBox.PositionOffset_X = 10f;
+            selectionDescriptionBox.PositionOffset_Y = 330f;
+            selectionDescriptionBox.SizeOffset_X = 250f;
+            selectionDescriptionBox.SizeOffset_Y = 100f;
+            selectionBackdropBox.AddChild(selectionDescriptionBox);
+            selectionDescriptionLabel = Glazier.Get().CreateLabel();
+            selectionDescriptionLabel.AllowRichText = true;
+            selectionDescriptionLabel.PositionOffset_X = 5f;
+            selectionDescriptionLabel.PositionOffset_Y = 5f;
+            selectionDescriptionLabel.SizeOffset_X = -10f;
+            selectionDescriptionLabel.SizeOffset_Y = -10f;
+            selectionDescriptionLabel.SizeScale_X = 1f;
+            selectionDescriptionLabel.SizeScale_Y = 1f;
+            selectionDescriptionLabel.TextAlignment = TextAnchor.UpperLeft;
+            selectionDescriptionLabel.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+            selectionDescriptionLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+            selectionDescriptionBox.AddChild(selectionDescriptionLabel);
+        }
         selectionNameLabel = Glazier.Get().CreateLabel();
-        selectionNameLabel.positionOffset_Y = -70;
-        selectionNameLabel.positionScale_Y = 1f;
-        selectionNameLabel.sizeOffset_Y = 70;
-        selectionNameLabel.sizeScale_X = 1f;
-        selectionNameLabel.fontSize = ESleekFontSize.Large;
-        selectionNameLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+        selectionNameLabel.PositionOffset_Y = -70f;
+        selectionNameLabel.PositionScale_Y = 1f;
+        selectionNameLabel.SizeOffset_Y = 70f;
+        selectionNameLabel.SizeScale_X = 1f;
+        selectionNameLabel.FontSize = ESleekFontSize.Large;
+        selectionNameLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
         selectionIconBox.AddChild(selectionNameLabel);
         selectionHotkeyLabel = Glazier.Get().CreateLabel();
-        selectionHotkeyLabel.positionOffset_X = 5;
-        selectionHotkeyLabel.positionOffset_Y = 5;
-        selectionHotkeyLabel.sizeOffset_X = -10;
-        selectionHotkeyLabel.sizeOffset_Y = 30;
-        selectionHotkeyLabel.sizeScale_X = 1f;
-        selectionHotkeyLabel.fontAlignment = TextAnchor.UpperRight;
+        selectionHotkeyLabel.PositionOffset_X = 5f;
+        selectionHotkeyLabel.PositionOffset_Y = 5f;
+        selectionHotkeyLabel.SizeOffset_X = -10f;
+        selectionHotkeyLabel.SizeOffset_Y = 30f;
+        selectionHotkeyLabel.SizeScale_X = 1f;
+        selectionHotkeyLabel.TextAlignment = TextAnchor.UpperRight;
         selectionIconBox.AddChild(selectionHotkeyLabel);
         selectionActionsBox = Glazier.Get().CreateScrollView();
-        selectionActionsBox.positionOffset_X = 270;
-        selectionActionsBox.positionOffset_Y = 330;
-        selectionActionsBox.sizeOffset_X = -280;
-        selectionActionsBox.sizeOffset_Y = 100;
-        selectionActionsBox.sizeScale_X = 1f;
-        selectionActionsBox.scaleContentToWidth = true;
+        selectionActionsBox.PositionOffset_X = 270f;
+        selectionActionsBox.PositionOffset_Y = 330f;
+        selectionActionsBox.SizeOffset_X = -280f;
+        selectionActionsBox.SizeOffset_Y = 100f;
+        selectionActionsBox.SizeScale_X = 1f;
+        selectionActionsBox.ScaleContentToWidth = true;
         selectionBackdropBox.AddChild(selectionActionsBox);
         selectionEquipButton = Glazier.Get().CreateButton();
-        selectionEquipButton.sizeScale_X = 1f;
-        selectionEquipButton.sizeOffset_Y = 30;
-        selectionEquipButton.onClickedButton += onClickedEquip;
+        selectionEquipButton.SizeScale_X = 1f;
+        selectionEquipButton.SizeOffset_Y = 30f;
+        selectionEquipButton.OnClicked += onClickedEquip;
         selectionActionsBox.AddChild(selectionEquipButton);
         selectionContextButton = Glazier.Get().CreateButton();
-        selectionContextButton.sizeScale_X = 1f;
-        selectionContextButton.sizeOffset_Y = 30;
-        selectionContextButton.onClickedButton += onClickedContext;
+        selectionContextButton.SizeScale_X = 1f;
+        selectionContextButton.SizeOffset_Y = 30f;
+        selectionContextButton.OnClicked += onClickedContext;
         selectionActionsBox.AddChild(selectionContextButton);
         selectionDropButton = Glazier.Get().CreateButton();
-        selectionDropButton.sizeScale_X = 1f;
-        selectionDropButton.sizeOffset_Y = 30;
-        selectionDropButton.onClickedButton += onClickedDrop;
+        selectionDropButton.SizeScale_X = 1f;
+        selectionDropButton.SizeOffset_Y = 30f;
+        selectionDropButton.OnClicked += onClickedDrop;
         selectionActionsBox.AddChild(selectionDropButton);
         selectionStorageButton = Glazier.Get().CreateButton();
-        selectionStorageButton.sizeScale_X = 1f;
-        selectionStorageButton.sizeOffset_Y = 30;
-        selectionStorageButton.onClickedButton += onClickedStore;
+        selectionStorageButton.SizeScale_X = 1f;
+        selectionStorageButton.SizeOffset_Y = 30f;
+        selectionStorageButton.OnClicked += onClickedStore;
         selectionActionsBox.AddChild(selectionStorageButton);
         selectionExtraActionsBox = Glazier.Get().CreateFrame();
-        selectionExtraActionsBox.sizeScale_X = 1f;
+        selectionExtraActionsBox.SizeScale_X = 1f;
         selectionActionsBox.AddChild(selectionExtraActionsBox);
         vehicleBox = Glazier.Get().CreateBox();
-        vehicleBox.sizeScale_X = 1f;
+        vehicleBox.SizeScale_X = 1f;
         clothingBox.AddChild(vehicleBox);
         vehicleNameLabel = Glazier.Get().CreateLabel();
-        vehicleNameLabel.sizeOffset_Y = 60;
-        vehicleNameLabel.sizeScale_X = 1f;
-        vehicleNameLabel.fontSize = ESleekFontSize.Medium;
-        vehicleNameLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+        vehicleNameLabel.SizeOffset_Y = 60f;
+        vehicleNameLabel.SizeScale_X = 1f;
+        vehicleNameLabel.FontSize = ESleekFontSize.Medium;
+        vehicleNameLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
         vehicleBox.AddChild(vehicleNameLabel);
         vehicleActionsBox = Glazier.Get().CreateFrame();
-        vehicleActionsBox.positionOffset_X = 10;
-        vehicleActionsBox.positionOffset_Y = 60;
-        vehicleActionsBox.sizeOffset_X = 250;
+        vehicleActionsBox.PositionOffset_X = 10f;
+        vehicleActionsBox.PositionOffset_Y = 60f;
+        vehicleActionsBox.SizeOffset_X = 250f;
         vehicleBox.AddChild(vehicleActionsBox);
         vehicleLockButton = Glazier.Get().CreateButton();
-        vehicleLockButton.sizeOffset_Y = 30;
-        vehicleLockButton.sizeScale_X = 1f;
-        vehicleLockButton.onClickedButton += onClickedVehicleLockButton;
+        vehicleLockButton.SizeOffset_Y = 30f;
+        vehicleLockButton.SizeScale_X = 1f;
+        vehicleLockButton.OnClicked += onClickedVehicleLockButton;
         vehicleActionsBox.AddChild(vehicleLockButton);
-        vehicleLockButton.isVisible = false;
+        vehicleLockButton.IsVisible = false;
         vehicleHornButton = Glazier.Get().CreateButton();
-        vehicleHornButton.sizeOffset_Y = 30;
-        vehicleHornButton.sizeScale_X = 1f;
-        vehicleHornButton.onClickedButton += onClickedVehicleHornButton;
+        vehicleHornButton.SizeOffset_Y = 30f;
+        vehicleHornButton.SizeScale_X = 1f;
+        vehicleHornButton.OnClicked += onClickedVehicleHornButton;
         vehicleActionsBox.AddChild(vehicleHornButton);
-        vehicleHornButton.isVisible = false;
+        vehicleHornButton.IsVisible = false;
         vehicleHeadlightsButton = Glazier.Get().CreateButton();
-        vehicleHeadlightsButton.sizeOffset_Y = 30;
-        vehicleHeadlightsButton.sizeScale_X = 1f;
-        vehicleHeadlightsButton.onClickedButton += onClickedVehicleHeadlightsButton;
+        vehicleHeadlightsButton.SizeOffset_Y = 30f;
+        vehicleHeadlightsButton.SizeScale_X = 1f;
+        vehicleHeadlightsButton.OnClicked += onClickedVehicleHeadlightsButton;
         vehicleActionsBox.AddChild(vehicleHeadlightsButton);
-        vehicleHeadlightsButton.isVisible = false;
+        vehicleHeadlightsButton.IsVisible = false;
         vehicleSirensButton = Glazier.Get().CreateButton();
-        vehicleSirensButton.sizeOffset_Y = 30;
-        vehicleSirensButton.sizeScale_X = 1f;
-        vehicleSirensButton.onClickedButton += onClickedVehicleSirensButton;
+        vehicleSirensButton.SizeOffset_Y = 30f;
+        vehicleSirensButton.SizeScale_X = 1f;
+        vehicleSirensButton.OnClicked += onClickedVehicleSirensButton;
         vehicleActionsBox.AddChild(vehicleSirensButton);
-        vehicleSirensButton.isVisible = false;
+        vehicleSirensButton.IsVisible = false;
         vehicleBlimpButton = Glazier.Get().CreateButton();
-        vehicleBlimpButton.sizeOffset_Y = 30;
-        vehicleBlimpButton.sizeScale_X = 1f;
-        vehicleBlimpButton.onClickedButton += onClickedVehicleBlimpButton;
+        vehicleBlimpButton.SizeOffset_Y = 30f;
+        vehicleBlimpButton.SizeScale_X = 1f;
+        vehicleBlimpButton.OnClicked += onClickedVehicleBlimpButton;
         vehicleActionsBox.AddChild(vehicleBlimpButton);
-        vehicleBlimpButton.isVisible = false;
+        vehicleBlimpButton.IsVisible = false;
         vehicleHookButton = Glazier.Get().CreateButton();
-        vehicleHookButton.sizeOffset_Y = 30;
-        vehicleHookButton.sizeScale_X = 1f;
-        vehicleHookButton.onClickedButton += onClickedVehicleHookButton;
+        vehicleHookButton.SizeOffset_Y = 30f;
+        vehicleHookButton.SizeScale_X = 1f;
+        vehicleHookButton.OnClicked += onClickedVehicleHookButton;
         vehicleActionsBox.AddChild(vehicleHookButton);
-        vehicleHookButton.isVisible = false;
+        vehicleHookButton.IsVisible = false;
         vehicleStealBatteryButton = Glazier.Get().CreateButton();
-        vehicleStealBatteryButton.sizeOffset_Y = 30;
-        vehicleStealBatteryButton.sizeScale_X = 1f;
-        vehicleStealBatteryButton.onClickedButton += onClickedVehicleStealBatteryButton;
+        vehicleStealBatteryButton.SizeOffset_Y = 30f;
+        vehicleStealBatteryButton.SizeScale_X = 1f;
+        vehicleStealBatteryButton.OnClicked += onClickedVehicleStealBatteryButton;
         vehicleActionsBox.AddChild(vehicleStealBatteryButton);
-        vehicleStealBatteryButton.isVisible = false;
+        vehicleStealBatteryButton.IsVisible = false;
         vehicleSkinButton = Glazier.Get().CreateButton();
-        vehicleSkinButton.sizeOffset_Y = 30;
-        vehicleSkinButton.sizeScale_X = 1f;
-        vehicleSkinButton.onClickedButton += onClickedVehicleSkinButton;
+        vehicleSkinButton.SizeOffset_Y = 30f;
+        vehicleSkinButton.SizeScale_X = 1f;
+        vehicleSkinButton.OnClicked += onClickedVehicleSkinButton;
         vehicleActionsBox.AddChild(vehicleSkinButton);
-        vehicleSkinButton.isVisible = false;
+        vehicleSkinButton.IsVisible = false;
         vehiclePassengersBox = Glazier.Get().CreateFrame();
-        vehiclePassengersBox.positionOffset_Y = 60;
-        vehiclePassengersBox.sizeScale_X = 1f;
+        vehiclePassengersBox.PositionOffset_Y = 60f;
+        vehiclePassengersBox.SizeScale_X = 1f;
         vehicleBox.AddChild(vehiclePassengersBox);
         rot_xButton = Glazier.Get().CreateButton();
-        rot_xButton.positionScale_X = 1f;
-        rot_xButton.sizeOffset_X = 60;
-        rot_xButton.sizeOffset_Y = 60;
-        rot_xButton.onClickedButton += onClickedRot_XButton;
-        rot_xButton.text = localization.format("Rot_X");
+        rot_xButton.PositionScale_X = 1f;
+        rot_xButton.SizeOffset_X = 60f;
+        rot_xButton.SizeOffset_Y = 60f;
+        rot_xButton.OnClicked += onClickedRot_XButton;
+        rot_xButton.Text = localization.format("Rot_X");
         headers[PlayerInventory.STORAGE - PlayerInventory.SLOTS].AddChild(rot_xButton);
-        rot_xButton.isVisible = false;
+        rot_xButton.IsVisible = false;
         rot_yButton = Glazier.Get().CreateButton();
-        rot_yButton.positionScale_X = 1f;
-        rot_yButton.positionOffset_X = 60;
-        rot_yButton.sizeOffset_X = 60;
-        rot_yButton.sizeOffset_Y = 60;
-        rot_yButton.onClickedButton += onClickedRot_YButton;
-        rot_yButton.text = localization.format("Rot_Y");
+        rot_yButton.PositionScale_X = 1f;
+        rot_yButton.PositionOffset_X = 60f;
+        rot_yButton.SizeOffset_X = 60f;
+        rot_yButton.SizeOffset_Y = 60f;
+        rot_yButton.OnClicked += onClickedRot_YButton;
+        rot_yButton.Text = localization.format("Rot_Y");
         headers[PlayerInventory.STORAGE - PlayerInventory.SLOTS].AddChild(rot_yButton);
-        rot_yButton.isVisible = false;
+        rot_yButton.IsVisible = false;
         rot_zButton = Glazier.Get().CreateButton();
-        rot_zButton.positionScale_X = 1f;
-        rot_zButton.positionOffset_X = 120;
-        rot_zButton.sizeOffset_X = 60;
-        rot_zButton.sizeOffset_Y = 60;
-        rot_zButton.onClickedButton += onClickedRot_ZButton;
-        rot_zButton.text = localization.format("Rot_Z");
+        rot_zButton.PositionScale_X = 1f;
+        rot_zButton.PositionOffset_X = 120f;
+        rot_zButton.SizeOffset_X = 60f;
+        rot_zButton.SizeOffset_Y = 60f;
+        rot_zButton.OnClicked += onClickedRot_ZButton;
+        rot_zButton.Text = localization.format("Rot_Z");
         headers[PlayerInventory.STORAGE - PlayerInventory.SLOTS].AddChild(rot_zButton);
-        rot_zButton.isVisible = false;
+        rot_zButton.IsVisible = false;
         dragItem = new SleekItem();
         PlayerUI.container.AddChild(dragItem);
-        dragItem.isVisible = false;
+        dragItem.IsVisible = false;
         dragItem.SetIsDragItem();
         dragOffset = Vector2.zero;
         dragPivot = Vector2.zero;
@@ -2530,5 +2582,19 @@ public class PlayerDashboardInventoryUI
         clothing6.onMaskUpdated = (MaskUpdated)Delegate.Combine(clothing6.onMaskUpdated, new MaskUpdated(onMaskUpdated));
         PlayerClothing clothing7 = Player.player.clothing;
         clothing7.onGlassesUpdated = (GlassesUpdated)Delegate.Combine(clothing7.onGlassesUpdated, new GlassesUpdated(onGlassesUpdated));
+    }
+
+    internal static string FormatStatColor(string text, bool isBeneficial)
+    {
+        Color32 color = (isBeneficial ? OptionsSettings.fontColor : OptionsSettings.badColor);
+        return "<color=" + Palette.hex(color) + ">" + text + "</color>";
+    }
+
+    internal static string FormatStatModifier(float modifier, bool higherIsPositive, bool higherIsBeneficial)
+    {
+        char c = ((!higherIsPositive) ? ((modifier > 1f) ? '-' : '+') : ((modifier > 1f) ? '+' : '-'));
+        bool isBeneficial = (higherIsBeneficial ? (modifier > 1f) : (modifier < 1f));
+        float num = ((modifier > 1f) ? (modifier - 1f) : (1f - modifier));
+        return FormatStatColor($"{c}{num:P}", isBeneficial);
     }
 }

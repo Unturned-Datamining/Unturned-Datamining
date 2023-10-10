@@ -8,6 +8,10 @@ public class GameStatusData
 
     public byte Patch_Version;
 
+    public int[] GrantPackageIDs;
+
+    public string GrantPackageURL;
+
     public string FormatApplicationVersion()
     {
         return $"3.{Major_Version}.{Minor_Version}.{Patch_Version}";

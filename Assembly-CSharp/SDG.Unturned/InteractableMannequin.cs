@@ -417,7 +417,7 @@ public class InteractableMannequin : Interactable, IManualOnDestroy
     public void ReceiveUpdateRequest(in ServerInvocationContext context, EMannequinUpdateMode updateMode)
     {
         Player player = context.GetPlayer();
-        if (player == null || player.life.isDead || player.equipment.isBusy || (player.equipment.isSelected && !player.equipment.isEquipped) || (base.transform.position - player.transform.position).sqrMagnitude > 400f || !BarricadeManager.tryGetRegion(base.transform, out var x, out var y, out var plant, out var region) || !isUpdatable || !checkUpdate(player.channel.owner.playerID.steamID, player.quests.groupID))
+        if (player == null || player.life.isDead || player.equipment.isBusy || (player.equipment.HasValidUseable && !player.equipment.IsEquipAnimationFinished) || (base.transform.position - player.transform.position).sqrMagnitude > 400f || !BarricadeManager.tryGetRegion(base.transform, out var x, out var y, out var plant, out var region) || !isUpdatable || !checkUpdate(player.channel.owner.playerID.steamID, player.quests.groupID))
         {
             return;
         }
@@ -459,7 +459,7 @@ public class InteractableMannequin : Interactable, IManualOnDestroy
             break;
         case EMannequinUpdateMode.ADD:
         {
-            if (!player.equipment.isSelected || !player.equipment.isEquipped || player.equipment.isBusy || player.equipment.asset == null || !(player.equipment.useable is UseableClothing))
+            if (!player.equipment.HasValidUseable || !player.equipment.IsEquipAnimationFinished || player.equipment.isBusy || player.equipment.asset == null || !(player.equipment.useable is UseableClothing))
             {
                 return;
             }

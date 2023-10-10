@@ -9,7 +9,7 @@ public class UseableOptic : Useable
 
     public override bool startSecondary()
     {
-        if (base.channel.isOwner && !isZoomed && base.player.look.perspective == EPlayerPerspective.FIRST)
+        if (base.channel.IsLocalPlayer && !isZoomed && base.player.look.perspective == EPlayerPerspective.FIRST)
         {
             isZoomed = true;
             startZoom();
@@ -20,7 +20,7 @@ public class UseableOptic : Useable
 
     public override void stopSecondary()
     {
-        if (base.channel.isOwner && isZoomed)
+        if (base.channel.IsLocalPlayer && isZoomed)
         {
             isZoomed = false;
             stopZoom();
@@ -56,7 +56,7 @@ public class UseableOptic : Useable
     public override void equip()
     {
         base.player.animator.play("Equip", smooth: true);
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             PlayerLook look = base.player.look;
             look.onPerspectiveUpdated = (PerspectiveUpdated)Delegate.Combine(look.onPerspectiveUpdated, new PerspectiveUpdated(onPerspectiveUpdated));
@@ -65,7 +65,7 @@ public class UseableOptic : Useable
 
     public override void dequip()
     {
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             if (isZoomed)
             {

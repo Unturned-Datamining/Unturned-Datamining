@@ -12,8 +12,6 @@ public struct TriggerEffectParameters
 
     public Vector3 position;
 
-    public Vector3 direction;
-
     public Vector3 scale;
 
     public bool shouldReplicate;
@@ -24,12 +22,57 @@ public struct TriggerEffectParameters
 
     public float relevantDistance;
 
-    [Obsolete("Please use SetRelevantPlayer instead! This field will be removed.")]
-    public CSteamID relevantPlayerID;
+    private Quaternion rotation;
+
+    private bool wasRotationSet;
 
     internal ITransportConnection relevantTransportConnection;
 
     internal PooledTransportConnectionList relevantTransportConnections;
+
+    [Obsolete("Please use SetRelevantPlayer instead! This field will be removed.")]
+    public CSteamID relevantPlayerID;
+
+    [Obsolete("Please use GetDirection and SetDirection instead now that rotation quaternion is supported. This field will be removed.")]
+    public Vector3 direction;
+
+    public Quaternion GetRotation()
+    {
+        if (!wasRotationSet)
+        {
+            return Quaternion.LookRotation(direction);
+        }
+        return rotation;
+    }
+
+    public void SetRotation(Quaternion rotation)
+    {
+        this.rotation = rotation;
+        wasRotationSet = true;
+    }
+
+    public Vector3 GetDirection()
+    {
+        if (!wasRotationSet)
+        {
+            return direction;
+        }
+        return rotation * Vector3.forward;
+    }
+
+    public void SetDirection(Vector3 forward)
+    {
+        direction = forward;
+        rotation = Quaternion.LookRotation(forward);
+        wasRotationSet = true;
+    }
+
+    public void SetDirection(Vector3 forward, Vector3 upwards)
+    {
+        direction = forward;
+        rotation = Quaternion.LookRotation(forward, upwards);
+        wasRotationSet = true;
+    }
 
     public void SetUniformScale(float scale)
     {
@@ -72,6 +115,8 @@ public struct TriggerEffectParameters
         wasInstigatedByPlayer = false;
         relevantDistance = 128f;
         relevantPlayerID = CSteamID.Nil;
+        rotation = Quaternion.identity;
+        wasRotationSet = false;
         relevantTransportConnection = null;
         relevantTransportConnections = null;
     }

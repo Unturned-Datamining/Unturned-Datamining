@@ -26,62 +26,6 @@ public class ReadWrite
 
     public static bool SupportsOpeningFileBrowser => false;
 
-    public static bool appIn(byte[] h, byte p)
-    {
-        Block block = readBlock("/Extras/Sources/Animation/appout.log", useCloud: false, 0);
-        byte[] hash_ = block.readByteArray();
-        byte[] hash_2 = block.readByteArray();
-        byte[] hash_3 = block.readByteArray();
-        byte[] hash_4 = block.readByteArray();
-        byte[] hash_5 = block.readByteArray();
-        byte[] hash_6 = block.readByteArray();
-        byte[] hash_7 = block.readByteArray();
-        switch (p)
-        {
-        case 0:
-            if (Hash.verifyHash(h, hash_))
-            {
-                return true;
-            }
-            break;
-        case 1:
-            if (Hash.verifyHash(h, hash_))
-            {
-                return true;
-            }
-            if (Hash.verifyHash(h, hash_2))
-            {
-                return true;
-            }
-            if (Hash.verifyHash(h, hash_3))
-            {
-                return true;
-            }
-            break;
-        case 2:
-            if (Hash.verifyHash(h, hash_4))
-            {
-                return true;
-            }
-            if (Hash.verifyHash(h, hash_5))
-            {
-                return true;
-            }
-            break;
-        case 3:
-            if (Hash.verifyHash(h, hash_6))
-            {
-                return true;
-            }
-            if (Hash.verifyHash(h, hash_7))
-            {
-                return true;
-            }
-            break;
-        }
-        return false;
-    }
-
     public static byte[] readData()
     {
         FileStream fileStream = new FileStream(PATH + "/Unturned_Data/Managed/Assembly-CSharp.dll", FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -517,7 +461,7 @@ public class ReadWrite
         }
         if (!Directory.Exists(path))
         {
-            Directory.CreateDirectory(path).Attributes = FileAttributes.Directory | FileAttributes.Hidden;
+            Directory.CreateDirectory(path).Attributes = FileAttributes.Hidden | FileAttributes.Directory;
         }
     }
 

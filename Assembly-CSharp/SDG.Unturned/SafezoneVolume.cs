@@ -11,22 +11,22 @@ public class SafezoneVolume : LevelVolume<SafezoneVolume, SafezoneVolumeManager>
         public Menu(SafezoneVolume volume)
         {
             this.volume = volume;
-            base.sizeOffset_X = 400;
-            base.sizeOffset_Y = 90;
+            base.SizeOffset_X = 400f;
+            base.SizeOffset_Y = 90f;
             ISleekToggle sleekToggle = Glazier.Get().CreateToggle();
-            sleekToggle.sizeOffset_X = 40;
-            sleekToggle.sizeOffset_Y = 40;
-            sleekToggle.state = volume.noWeapons;
-            sleekToggle.addLabel("No Weapons", ESleekSide.RIGHT);
-            sleekToggle.onToggled += OnWeaponsToggled;
+            sleekToggle.SizeOffset_X = 40f;
+            sleekToggle.SizeOffset_Y = 40f;
+            sleekToggle.Value = volume.noWeapons;
+            sleekToggle.AddLabel("No Weapons", ESleekSide.RIGHT);
+            sleekToggle.OnValueChanged += OnWeaponsToggled;
             AddChild(sleekToggle);
             ISleekToggle sleekToggle2 = Glazier.Get().CreateToggle();
-            sleekToggle2.positionOffset_Y = 50;
-            sleekToggle2.sizeOffset_X = 40;
-            sleekToggle2.sizeOffset_Y = 40;
-            sleekToggle2.state = volume.noBuildables;
-            sleekToggle2.addLabel("No Buildables", ESleekSide.RIGHT);
-            sleekToggle2.onToggled += OnBuildablesToggled;
+            sleekToggle2.PositionOffset_Y = 50f;
+            sleekToggle2.SizeOffset_X = 40f;
+            sleekToggle2.SizeOffset_Y = 40f;
+            sleekToggle2.Value = volume.noBuildables;
+            sleekToggle2.AddLabel("No Buildables", ESleekSide.RIGHT);
+            sleekToggle2.OnValueChanged += OnBuildablesToggled;
             AddChild(sleekToggle2);
         }
 

@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace SDG.Unturned;
 
@@ -32,6 +33,15 @@ public class MeasurementTool
     public static long MtoYd(long m)
     {
         return (long)((float)m * 1.09361f);
+    }
+
+    public static string FormatLengthString(float length)
+    {
+        if (OptionsSettings.metric)
+        {
+            return $"{Mathf.RoundToInt(length)} m";
+        }
+        return $"{Mathf.RoundToInt(MtoYd(length))} yd";
     }
 
     public static byte angleToByte(float angle)

@@ -49,8 +49,8 @@ public class MenuSurvivorsCharacterUI
     {
         if (index == Characters.selected)
         {
-            nameField.text = character.name;
-            nickField.text = character.nick;
+            nameField.Text = character.name;
+            nickField.Text = character.nick;
             SleekBoxIcon sleekBoxIcon = skillsetBox;
             Bundle bundle = icons;
             int skillset = (int)character.skillset;
@@ -77,7 +77,7 @@ public class MenuSurvivorsCharacterUI
 
     private static void onClickedSkillset(ISleekElement button)
     {
-        Characters.skillify((EPlayerSkillset)(button.positionOffset_Y / 40));
+        Characters.skillify((EPlayerSkillset)(button.PositionOffset_Y / 40f));
     }
 
     private static void onClickedBackButton(ISleekElement button)
@@ -100,84 +100,84 @@ public class MenuSurvivorsCharacterUI
         localization = Localization.read("/Menu/Survivors/MenuSurvivorsCharacter.dat");
         icons = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Survivors/MenuSurvivorsCharacter/MenuSurvivorsCharacter.unity3d");
         container = new SleekFullscreenBox();
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.positionScale_Y = 1f;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.PositionScale_Y = 1f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         MenuUI.container.AddChild(container);
         active = false;
         characterBox = Glazier.Get().CreateScrollView();
-        characterBox.positionOffset_X = -100;
-        characterBox.positionOffset_Y = 45;
-        characterBox.positionScale_X = 0.75f;
-        characterBox.positionScale_Y = 0.5f;
-        characterBox.sizeOffset_X = 230;
-        characterBox.sizeOffset_Y = -145;
-        characterBox.sizeScale_Y = 0.5f;
-        characterBox.scaleContentToWidth = true;
-        characterBox.contentSizeOffset = new Vector2(0f, (Customization.FREE_CHARACTERS + Customization.PRO_CHARACTERS) * 80 - 10);
+        characterBox.PositionOffset_X = -100f;
+        characterBox.PositionOffset_Y = 45f;
+        characterBox.PositionScale_X = 0.75f;
+        characterBox.PositionScale_Y = 0.5f;
+        characterBox.SizeOffset_X = 230f;
+        characterBox.SizeOffset_Y = -145f;
+        characterBox.SizeScale_Y = 0.5f;
+        characterBox.ScaleContentToWidth = true;
+        characterBox.ContentSizeOffset = new Vector2(0f, (Customization.FREE_CHARACTERS + Customization.PRO_CHARACTERS) * 80 - 10);
         container.AddChild(characterBox);
         characterButtons = new SleekCharacter[Customization.FREE_CHARACTERS + Customization.PRO_CHARACTERS];
         for (byte b = 0; b < characterButtons.Length; b = (byte)(b + 1))
         {
             SleekCharacter sleekCharacter = new SleekCharacter(b)
             {
-                positionOffset_Y = b * 80,
-                sizeOffset_X = 200,
-                sizeOffset_Y = 70,
+                PositionOffset_Y = b * 80,
+                SizeOffset_X = 200f,
+                SizeOffset_Y = 70f,
                 onClickedCharacter = onClickedCharacter
             };
             characterBox.AddChild(sleekCharacter);
             characterButtons[b] = sleekCharacter;
         }
         nameField = Glazier.Get().CreateStringField();
-        nameField.positionOffset_X = -100;
-        nameField.positionOffset_Y = 100;
-        nameField.positionScale_X = 0.75f;
-        nameField.sizeOffset_X = 200;
-        nameField.sizeOffset_Y = 30;
-        nameField.maxLength = 32;
-        nameField.addLabel(localization.format("Name_Field_Label"), ESleekSide.LEFT);
-        nameField.onTyped += onTypedNameField;
+        nameField.PositionOffset_X = -100f;
+        nameField.PositionOffset_Y = 100f;
+        nameField.PositionScale_X = 0.75f;
+        nameField.SizeOffset_X = 200f;
+        nameField.SizeOffset_Y = 30f;
+        nameField.MaxLength = 32;
+        nameField.AddLabel(localization.format("Name_Field_Label"), ESleekSide.LEFT);
+        nameField.OnTextChanged += onTypedNameField;
         container.AddChild(nameField);
         nickField = Glazier.Get().CreateStringField();
-        nickField.positionOffset_X = -100;
-        nickField.positionOffset_Y = 140;
-        nickField.positionScale_X = 0.75f;
-        nickField.sizeOffset_X = 200;
-        nickField.sizeOffset_Y = 30;
-        nickField.maxLength = 32;
-        nickField.addLabel(localization.format("Nick_Field_Label"), ESleekSide.LEFT);
-        nickField.onTyped += onTypedNickField;
+        nickField.PositionOffset_X = -100f;
+        nickField.PositionOffset_Y = 140f;
+        nickField.PositionScale_X = 0.75f;
+        nickField.SizeOffset_X = 200f;
+        nickField.SizeOffset_Y = 30f;
+        nickField.MaxLength = 32;
+        nickField.AddLabel(localization.format("Nick_Field_Label"), ESleekSide.LEFT);
+        nickField.OnTextChanged += onTypedNickField;
         container.AddChild(nickField);
         skillsetBox = new SleekBoxIcon(null);
-        skillsetBox.positionOffset_X = -100;
-        skillsetBox.positionOffset_Y = 180;
-        skillsetBox.positionScale_X = 0.75f;
-        skillsetBox.sizeOffset_X = 200;
-        skillsetBox.sizeOffset_Y = 30;
+        skillsetBox.PositionOffset_X = -100f;
+        skillsetBox.PositionOffset_Y = 180f;
+        skillsetBox.PositionScale_X = 0.75f;
+        skillsetBox.SizeOffset_X = 200f;
+        skillsetBox.SizeOffset_Y = 30f;
         skillsetBox.iconColor = ESleekTint.FOREGROUND;
-        skillsetBox.addLabel(localization.format("Skillset_Box_Label"), ESleekSide.LEFT);
+        skillsetBox.AddLabel(localization.format("Skillset_Box_Label"), ESleekSide.LEFT);
         container.AddChild(skillsetBox);
         skillsetsBox = Glazier.Get().CreateScrollView();
-        skillsetsBox.positionOffset_X = -100;
-        skillsetsBox.positionOffset_Y = 220;
-        skillsetsBox.positionScale_X = 0.75f;
-        skillsetsBox.sizeOffset_X = 230;
-        skillsetsBox.sizeOffset_Y = -185;
-        skillsetsBox.sizeScale_Y = 0.5f;
-        skillsetsBox.scaleContentToWidth = true;
-        skillsetsBox.contentSizeOffset = new Vector2(0f, Customization.SKILLSETS * 40 - 10);
+        skillsetsBox.PositionOffset_X = -100f;
+        skillsetsBox.PositionOffset_Y = 220f;
+        skillsetsBox.PositionScale_X = 0.75f;
+        skillsetsBox.SizeOffset_X = 230f;
+        skillsetsBox.SizeOffset_Y = -185f;
+        skillsetsBox.SizeScale_Y = 0.5f;
+        skillsetsBox.ScaleContentToWidth = true;
+        skillsetsBox.ContentSizeOffset = new Vector2(0f, Customization.SKILLSETS * 40 - 10);
         container.AddChild(skillsetsBox);
         for (int i = 0; i < Customization.SKILLSETS; i++)
         {
             SleekButtonIcon sleekButtonIcon = new SleekButtonIcon(icons.load<Texture2D>("Skillset_" + i));
-            sleekButtonIcon.positionOffset_Y = i * 40;
-            sleekButtonIcon.sizeOffset_X = 200;
-            sleekButtonIcon.sizeOffset_Y = 30;
+            sleekButtonIcon.PositionOffset_Y = i * 40;
+            sleekButtonIcon.SizeOffset_X = 200f;
+            sleekButtonIcon.SizeOffset_Y = 30f;
             sleekButtonIcon.text = localization.format("Skillset_" + i);
             sleekButtonIcon.iconColor = ESleekTint.FOREGROUND;
             sleekButtonIcon.onClickedButton += onClickedSkillset;
@@ -186,10 +186,10 @@ public class MenuSurvivorsCharacterUI
         Characters.onCharacterUpdated = (CharacterUpdated)Delegate.Combine(Characters.onCharacterUpdated, new CharacterUpdated(onCharacterUpdated));
         onCharacterUpdated(Characters.selected, Characters.list[Characters.selected]);
         backButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));
-        backButton.positionOffset_Y = -50;
-        backButton.positionScale_Y = 1f;
-        backButton.sizeOffset_X = 200;
-        backButton.sizeOffset_Y = 50;
+        backButton.PositionOffset_Y = -50f;
+        backButton.PositionScale_Y = 1f;
+        backButton.SizeOffset_X = 200f;
+        backButton.SizeOffset_Y = 50f;
         backButton.text = MenuDashboardUI.localization.format("BackButtonText");
         backButton.tooltip = MenuDashboardUI.localization.format("BackButtonTooltip");
         backButton.onClickedButton += onClickedBackButton;

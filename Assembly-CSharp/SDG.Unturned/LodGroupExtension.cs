@@ -6,8 +6,7 @@ public static class LodGroupExtension
 {
     public static float GetCullingScreenSize(this LODGroup lodGroup)
     {
-        LOD[] lODs = lodGroup.GetLODs();
-        return lODs[lODs.Length - 1].screenRelativeTransitionHeight;
+        return lodGroup.GetLODs()[^1].screenRelativeTransitionHeight;
     }
 
     public static void ClampCulling(this LODGroup lodGroup, float max)

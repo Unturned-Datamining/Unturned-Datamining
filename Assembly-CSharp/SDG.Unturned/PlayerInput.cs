@@ -332,7 +332,7 @@ public class PlayerInput : PlayerCaller
     private void ClientResimulate()
     {
         ClientRemoveInputHistory(clientResimulationFrameNumber);
-        if (base.player.movement.getVehicle() != null || base.player.movement.hasPendingVehicleChange)
+        if (base.player.movement.getVehicle() != null || base.player.movement.hasPendingVehicleChange || !base.player.movement.controller.enabled)
         {
             return;
         }
@@ -471,7 +471,7 @@ public class PlayerInput : PlayerCaller
         {
             return;
         }
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             if (count % SAMPLES == 0)
             {
@@ -716,7 +716,7 @@ public class PlayerInput : PlayerCaller
         _tick = Time.realtimeSinceStartup;
         _simulation = 0u;
         _clock = 0u;
-        if (base.channel.isOwner || Provider.isServer)
+        if (base.channel.IsLocalPlayer || Provider.isServer)
         {
             keys = new bool[10 + ControlsSettings.NUM_PLUGIN_KEYS];
             flags = new ushort[10 + ControlsSettings.NUM_PLUGIN_KEYS];
@@ -725,12 +725,12 @@ public class PlayerInput : PlayerCaller
                 flags[b] = (ushort)(1 << (int)b);
             }
         }
-        if (base.channel.isOwner && Provider.isServer)
+        if (base.channel.IsLocalPlayer && Provider.isServer)
         {
             hasDoneOcclusionCheck = false;
             inputs = new Queue<InputInfo>();
         }
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             clientPendingInput = null;
             clientInputHistory = new List<ClientMovementInput>();

@@ -27,25 +27,25 @@ public class MenuPlayLobbiesUI
         {
             steamID = newSteamID;
             button = Glazier.Get().CreateButton();
-            button.sizeScale_X = 1f;
-            button.sizeScale_Y = 1f;
-            button.onClickedButton += onClickedPlayerButton;
+            button.SizeScale_X = 1f;
+            button.SizeScale_Y = 1f;
+            button.OnClicked += onClickedPlayerButton;
             AddChild(button);
             avatarImage = Glazier.Get().CreateImage();
-            avatarImage.positionOffset_X = 9;
-            avatarImage.positionOffset_Y = 9;
-            avatarImage.sizeOffset_X = 32;
-            avatarImage.sizeOffset_Y = 32;
-            avatarImage.texture = Provider.provider.communityService.getIcon(steamID);
-            avatarImage.shouldDestroyTexture = true;
+            avatarImage.PositionOffset_X = 9f;
+            avatarImage.PositionOffset_Y = 9f;
+            avatarImage.SizeOffset_X = 32f;
+            avatarImage.SizeOffset_Y = 32f;
+            avatarImage.Texture = Provider.provider.communityService.getIcon(steamID);
+            avatarImage.ShouldDestroyTexture = true;
             button.AddChild(avatarImage);
             nameLabel = Glazier.Get().CreateLabel();
-            nameLabel.positionOffset_X = 40;
-            nameLabel.sizeOffset_X = -40;
-            nameLabel.sizeScale_X = 1f;
-            nameLabel.sizeScale_Y = 1f;
-            nameLabel.text = SteamFriends.GetFriendPersonaName(steamID);
-            nameLabel.fontSize = ESleekFontSize.Medium;
+            nameLabel.PositionOffset_X = 40f;
+            nameLabel.SizeOffset_X = -40f;
+            nameLabel.SizeScale_X = 1f;
+            nameLabel.SizeScale_Y = 1f;
+            nameLabel.Text = SteamFriends.GetFriendPersonaName(steamID);
+            nameLabel.FontSize = ESleekFontSize.Medium;
             button.AddChild(nameLabel);
         }
     }
@@ -102,12 +102,12 @@ public class MenuPlayLobbiesUI
         for (int i = 0; i < lobbyMemberCount; i++)
         {
             SleekLobbyPlayerButton sleekLobbyPlayerButton = new SleekLobbyPlayerButton(Lobbies.getLobbyMemberByIndex(i));
-            sleekLobbyPlayerButton.positionOffset_Y = i * 50;
-            sleekLobbyPlayerButton.sizeOffset_Y = 50;
-            sleekLobbyPlayerButton.sizeScale_X = 1f;
+            sleekLobbyPlayerButton.PositionOffset_Y = i * 50;
+            sleekLobbyPlayerButton.SizeOffset_Y = 50f;
+            sleekLobbyPlayerButton.SizeScale_X = 1f;
             membersBox.AddChild(sleekLobbyPlayerButton);
         }
-        membersBox.contentSizeOffset = new Vector2(0f, lobbyMemberCount * 50);
+        membersBox.ContentSizeOffset = new Vector2(0f, lobbyMemberCount * 50);
     }
 
     private static void handleLobbiesRefreshed()
@@ -150,7 +150,7 @@ public class MenuPlayLobbiesUI
     private static void setWaitingForLobby(bool waiting)
     {
         inviteButton.isClickable = !waiting;
-        waitingLabel.isVisible = waiting;
+        waitingLabel.IsVisible = waiting;
     }
 
     public void OnDestroy()
@@ -164,41 +164,41 @@ public class MenuPlayLobbiesUI
         localization = Localization.read("/Menu/Play/MenuPlayLobbies.dat");
         Bundle bundle = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Play/MenuPlayLobbies/MenuPlayLobbies.unity3d");
         container = new SleekFullscreenBox();
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.positionScale_Y = 1f;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.PositionScale_Y = 1f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         MenuUI.container.AddChild(container);
         active = false;
         bundle.unload();
         membersLabel = Glazier.Get().CreateLabel();
-        membersLabel.positionOffset_X = -200;
-        membersLabel.positionOffset_Y = 100;
-        membersLabel.positionScale_X = 0.5f;
-        membersLabel.sizeOffset_X = 400;
-        membersLabel.sizeOffset_Y = 50;
-        membersLabel.text = localization.format("Members");
-        membersLabel.fontSize = ESleekFontSize.Medium;
+        membersLabel.PositionOffset_X = -200f;
+        membersLabel.PositionOffset_Y = 100f;
+        membersLabel.PositionScale_X = 0.5f;
+        membersLabel.SizeOffset_X = 400f;
+        membersLabel.SizeOffset_Y = 50f;
+        membersLabel.Text = localization.format("Members");
+        membersLabel.FontSize = ESleekFontSize.Medium;
         container.AddChild(membersLabel);
         membersBox = Glazier.Get().CreateScrollView();
-        membersBox.positionOffset_X = -200;
-        membersBox.positionOffset_Y = 150;
-        membersBox.positionScale_X = 0.5f;
-        membersBox.sizeOffset_X = 430;
-        membersBox.sizeOffset_Y = -300;
-        membersBox.sizeScale_Y = 1f;
-        membersBox.scaleContentToWidth = true;
+        membersBox.PositionOffset_X = -200f;
+        membersBox.PositionOffset_Y = 150f;
+        membersBox.PositionScale_X = 0.5f;
+        membersBox.SizeOffset_X = 430f;
+        membersBox.SizeOffset_Y = -300f;
+        membersBox.SizeScale_Y = 1f;
+        membersBox.ScaleContentToWidth = true;
         container.AddChild(membersBox);
         inviteButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Invite"));
-        inviteButton.positionOffset_X = -200;
-        inviteButton.positionOffset_Y = -150;
-        inviteButton.positionScale_X = 0.5f;
-        inviteButton.positionScale_Y = 1f;
-        inviteButton.sizeOffset_X = 400;
-        inviteButton.sizeOffset_Y = 50;
+        inviteButton.PositionOffset_X = -200f;
+        inviteButton.PositionOffset_Y = -150f;
+        inviteButton.PositionScale_X = 0.5f;
+        inviteButton.PositionScale_Y = 1f;
+        inviteButton.SizeOffset_X = 400f;
+        inviteButton.SizeOffset_Y = 50f;
         inviteButton.text = localization.format("Invite_Button");
         inviteButton.tooltip = localization.format("Invite_Button_Tooltip");
         inviteButton.onClickedButton += onClickedInviteButton;
@@ -206,20 +206,20 @@ public class MenuPlayLobbiesUI
         inviteButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(inviteButton);
         waitingLabel = Glazier.Get().CreateLabel();
-        waitingLabel.positionOffset_X = -200;
-        waitingLabel.positionOffset_Y = -200;
-        waitingLabel.positionScale_X = 0.5f;
-        waitingLabel.positionScale_Y = 1f;
-        waitingLabel.sizeOffset_X = 400;
-        waitingLabel.sizeOffset_Y = 50;
-        waitingLabel.text = localization.format("Waiting");
-        waitingLabel.isVisible = false;
+        waitingLabel.PositionOffset_X = -200f;
+        waitingLabel.PositionOffset_Y = -200f;
+        waitingLabel.PositionScale_X = 0.5f;
+        waitingLabel.PositionScale_Y = 1f;
+        waitingLabel.SizeOffset_X = 400f;
+        waitingLabel.SizeOffset_Y = 50f;
+        waitingLabel.Text = localization.format("Waiting");
+        waitingLabel.IsVisible = false;
         container.AddChild(waitingLabel);
         backButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));
-        backButton.positionOffset_Y = -50;
-        backButton.positionScale_Y = 1f;
-        backButton.sizeOffset_X = 200;
-        backButton.sizeOffset_Y = 50;
+        backButton.PositionOffset_Y = -50f;
+        backButton.PositionScale_Y = 1f;
+        backButton.SizeOffset_X = 200f;
+        backButton.SizeOffset_Y = 50f;
         backButton.text = MenuDashboardUI.localization.format("BackButtonText");
         backButton.tooltip = MenuDashboardUI.localization.format("BackButtonTooltip");
         backButton.onClickedButton += onClickedBackButton;

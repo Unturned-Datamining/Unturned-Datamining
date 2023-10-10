@@ -4,7 +4,7 @@ internal class GlazierFloat64Field_IMGUI : GlazierNumericField_IMGUI, ISleekFloa
 {
     private double _state;
 
-    public double state
+    public double Value
     {
         get
         {
@@ -13,15 +13,15 @@ internal class GlazierFloat64Field_IMGUI : GlazierNumericField_IMGUI, ISleekFloa
         set
         {
             _state = value;
-            text = state.ToString("F3");
+            text = Value.ToString("F3");
         }
     }
 
-    public event TypedDouble onTypedDouble;
+    public event TypedDouble OnValueChanged;
 
     public GlazierFloat64Field_IMGUI()
     {
-        state = 0.0;
+        Value = 0.0;
     }
 
     protected override bool ParseNumericInput(string input)
@@ -35,7 +35,7 @@ internal class GlazierFloat64Field_IMGUI : GlazierNumericField_IMGUI, ISleekFloa
             if (_state != result)
             {
                 _state = result;
-                this.onTypedDouble?.Invoke(this, _state);
+                this.OnValueChanged?.Invoke(this, _state);
             }
             return true;
         }

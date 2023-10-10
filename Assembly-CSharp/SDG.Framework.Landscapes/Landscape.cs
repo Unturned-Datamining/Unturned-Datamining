@@ -643,6 +643,10 @@ public class Landscape : DevkitHierarchyItemBase
 
     public static void linkNeighbors()
     {
+        if (Dedicator.IsDedicatedServer)
+        {
+            return;
+        }
         bool supportsInstancing = SystemInfo.supportsInstancing;
         foreach (LandscapeTile value2 in tiles.Values)
         {

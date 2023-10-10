@@ -124,7 +124,7 @@ public class Wheel
                 TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
                 parameters.relevantDistance = EffectManager.SMALL;
                 parameters.position = wheel.transform.position;
-                parameters.direction = wheel.transform.up;
+                parameters.SetDirection(wheel.transform.up);
                 EffectManager.triggerEffect(parameters);
             }
         }

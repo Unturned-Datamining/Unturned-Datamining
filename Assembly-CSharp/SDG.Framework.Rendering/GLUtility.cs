@@ -196,7 +196,7 @@ public class GLUtility
 
     public static void circle(Vector3 center, float radius, Vector3 horizontalAxis, Vector3 verticalAxis, float steps = 0f)
     {
-        float num = (float)Math.PI * 2f;
+        float num = MathF.PI * 2f;
         float num2 = 0f;
         if (steps == 0f)
         {
@@ -221,7 +221,7 @@ public class GLUtility
     {
         if (handleGLCircleOffset != null)
         {
-            float num = (float)Math.PI * 2f;
+            float num = MathF.PI * 2f;
             float num2 = 0f;
             float num3 = num / Mathf.Clamp(4f * radius, 8f, 128f);
             Vector3 point = matrix.MultiplyPoint3x4(center + horizontalAxis * radius);

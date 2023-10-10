@@ -13,27 +13,27 @@ public class LocationDevkitNode : TempNodeBase
         public Menu(LocationDevkitNode node)
         {
             this.node = node;
-            base.sizeOffset_X = 400;
-            int num = 0;
+            base.SizeOffset_X = 400f;
+            float num = 0f;
             ISleekField sleekField = Glazier.Get().CreateStringField();
-            sleekField.positionOffset_Y = num;
-            sleekField.sizeOffset_X = 200;
-            sleekField.sizeOffset_Y = 30;
-            sleekField.text = node.locationName;
-            sleekField.addLabel("Name", ESleekSide.RIGHT);
-            sleekField.onTyped += OnIdTyped;
+            sleekField.PositionOffset_Y = num;
+            sleekField.SizeOffset_X = 200f;
+            sleekField.SizeOffset_Y = 30f;
+            sleekField.Text = node.locationName;
+            sleekField.AddLabel("Name", ESleekSide.RIGHT);
+            sleekField.OnTextChanged += OnIdTyped;
             AddChild(sleekField);
-            num += sleekField.sizeOffset_Y + 10;
+            num += sleekField.SizeOffset_Y + 10f;
             ISleekToggle sleekToggle = Glazier.Get().CreateToggle();
-            sleekToggle.positionOffset_Y = num;
-            sleekToggle.sizeOffset_X = 40;
-            sleekToggle.sizeOffset_Y = 40;
-            sleekToggle.state = node.isVisibleOnMap;
-            sleekToggle.addLabel("Visible on map", ESleekSide.RIGHT);
-            sleekToggle.onToggled += OnVisibleOnMapToggled;
+            sleekToggle.PositionOffset_Y = num;
+            sleekToggle.SizeOffset_X = 40f;
+            sleekToggle.SizeOffset_Y = 40f;
+            sleekToggle.Value = node.isVisibleOnMap;
+            sleekToggle.AddLabel("Visible on map", ESleekSide.RIGHT);
+            sleekToggle.OnValueChanged += OnVisibleOnMapToggled;
             AddChild(sleekToggle);
-            num += sleekToggle.sizeOffset_Y + 10;
-            base.sizeOffset_Y = num - 10;
+            num += sleekToggle.SizeOffset_Y + 10f;
+            base.SizeOffset_Y = num - 10f;
         }
 
         private void OnIdTyped(ISleekField field, string state)

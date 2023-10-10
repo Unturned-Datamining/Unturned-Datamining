@@ -404,24 +404,33 @@ public class Assets : MonoBehaviour
         return null;
     }
 
-    public static void runtimeCreate(Type type)
+    internal static Asset CreateAtRuntime(Type type, ushort legacyId)
     {
         try
         {
             if (Activator.CreateInstance(type) is Asset asset)
             {
                 asset.GUID = Guid.NewGuid();
+                asset.id = legacyId;
                 AddToMapping(asset, overrideExistingID: false, defaultAssetMapping);
                 if (asset is IDirtyable)
                 {
                     (asset as IDirtyable).isDirty = true;
                 }
+                asset.OnCreatedAtRuntime();
+                return asset;
             }
         }
         catch (Exception e)
         {
             UnturnedLog.exception(e);
         }
+        return null;
+    }
+
+    internal static T CreateAtRuntime<T>(ushort legacyId) where T : Asset
+    {
+        return CreateAtRuntime(typeof(T), legacyId) as T;
     }
 
     internal static void AddToMapping(Asset asset, bool overrideExistingID, AssetMapping assetMapping)
@@ -648,7 +657,7 @@ public class Assets : MonoBehaviour
                 return;
             }
         }
-        else if (!assetData.TryParseGuid("GUID", out value))
+        else if (!assetData.ContainsKey("GUID"))
         {
             value = Guid.NewGuid();
             try
@@ -656,11 +665,17 @@ public class Assets : MonoBehaviour
                 string text2 = File.ReadAllText(path);
                 text2 = "GUID " + value.ToString("N") + "\n" + text2;
                 File.WriteAllText(path, text2);
+                UnturnedLog.info($"Assigned GUID {value:N} to asset \"{path}\"");
             }
             catch (Exception e)
             {
                 UnturnedLog.exception(e, "Caught IO exception adding GUID to \"" + path + "\":");
             }
+        }
+        else if (!assetData.TryParseGuid("GUID", out value))
+        {
+            reportError("Unable to parse GUID in \"" + path + "\"");
+            return;
         }
         if (value.IsEmpty())
         {
@@ -746,10 +761,10 @@ public class Assets : MonoBehaviour
             reportError(text + " Lowest individual asset bundle version is 1 (default), associated with 5.5.");
             num2 = 1;
         }
-        else if (num2 > 4)
+        else if (num2 > 5)
         {
-            reportError(text + " Highest individual asset bundle version is 4, associated with 2020 LTS.");
-            num2 = 4;
+            reportError(text + " Highest individual asset bundle version is 5, associated with 2021 LTS.");
+            num2 = 5;
         }
         int num3 = Mathf.Max(a, num2);
         bundle.convertShadersToStandard = num3 < 2;
@@ -832,11 +847,12 @@ public class Assets : MonoBehaviour
             return;
         }
         hasUnlinkedSpawns = false;
-        Dictionary<ushort, Asset>.ValueCollection values = defaultAssetMapping.legacyAssetsTable[EAssetType.SPAWN].Values;
+        List<SpawnAsset> list = new List<SpawnAsset>();
+        FindAssetsByType_UseDefaultAssetMapping(list);
         int num = 0;
         int num2 = 0;
         int num3 = 0;
-        foreach (SpawnAsset item in values)
+        foreach (SpawnAsset item in list)
         {
             if (item.insertRoots.Count < 1)
             {
@@ -844,39 +860,60 @@ public class Assets : MonoBehaviour
             }
             foreach (SpawnTable insertRoot in item.insertRoots)
             {
-                if (insertRoot.spawnID == 0)
+                SpawnAsset spawnAsset;
+                if (insertRoot.legacySpawnId != 0)
                 {
-                    continue;
+                    spawnAsset = find(EAssetType.SPAWN, insertRoot.legacySpawnId) as SpawnAsset;
+                    if (spawnAsset == null)
+                    {
+                        reportError(item, "unable to find root {0} during link", insertRoot.legacySpawnId);
+                        continue;
+                    }
                 }
-                if (!(find(EAssetType.SPAWN, insertRoot.spawnID) is SpawnAsset spawnAsset2))
+                else
                 {
-                    reportError(item, "unable to find root {0} during link", insertRoot.spawnID);
-                    continue;
+                    if (insertRoot.targetGuid.IsEmpty())
+                    {
+                        continue;
+                    }
+                    Asset asset = find(insertRoot.targetGuid);
+                    if (asset == null)
+                    {
+                        reportError(item, "unable to find root {0} during link", insertRoot.targetGuid);
+                        continue;
+                    }
+                    spawnAsset = asset as SpawnAsset;
+                    if (spawnAsset == null)
+                    {
+                        reportError(item, $"root {insertRoot.targetGuid} found as {asset.GetTypeNameWithoutSuffix()} {asset.FriendlyName} (not a spawn table)");
+                        continue;
+                    }
                 }
-                insertRoot.spawnID = item.id;
+                insertRoot.legacySpawnId = 0;
+                insertRoot.targetGuid = item.GUID;
                 insertRoot.isLink = true;
-                spawnAsset2.tables.Add(insertRoot);
+                spawnAsset.tables.Add(insertRoot);
                 if (insertRoot.isOverride)
                 {
-                    spawnAsset2.markOverridden();
+                    spawnAsset.markOverridden();
                 }
-                spawnAsset2.markTablesDirty();
+                spawnAsset.markTablesDirty();
                 num++;
                 if ((bool)shouldLogSpawnInsertions)
                 {
                     if (insertRoot.isOverride)
                     {
-                        UnturnedLog.info("Spawn {0} overriding {1}", item.name, spawnAsset2.name);
+                        UnturnedLog.info("Spawn {0} overriding {1}", item.name, spawnAsset.name);
                     }
                     else
                     {
-                        UnturnedLog.info("Spawn {0} inserted into {1}", item.name, spawnAsset2.name);
+                        UnturnedLog.info("Spawn {0} inserted into {1}", item.name, spawnAsset.name);
                     }
                 }
             }
             item.insertRoots.Clear();
         }
-        foreach (SpawnAsset item2 in values)
+        foreach (SpawnAsset item2 in list)
         {
             if (item2.areTablesDirty)
             {
@@ -884,27 +921,50 @@ public class Assets : MonoBehaviour
                 num2++;
             }
         }
-        foreach (SpawnAsset item3 in values)
+        foreach (SpawnAsset item3 in list)
         {
             foreach (SpawnTable table in item3.tables)
             {
-                if (table.spawnID != 0 && !table.hasNotifiedChild)
+                if (table.hasNotifiedChild)
                 {
-                    table.hasNotifiedChild = true;
-                    if (!(find(EAssetType.SPAWN, table.spawnID) is SpawnAsset spawnAsset5))
+                    continue;
+                }
+                table.hasNotifiedChild = true;
+                SpawnAsset spawnAsset2;
+                if (table.legacySpawnId != 0)
+                {
+                    spawnAsset2 = find(EAssetType.SPAWN, table.legacySpawnId) as SpawnAsset;
+                    if (spawnAsset2 == null)
                     {
-                        reportError(item3, "unable to find child table {0} during link", table.spawnID);
+                        reportError(item3, "unable to find child table {0} during link", table.legacySpawnId);
                         continue;
                     }
-                    SpawnTable spawnTable = new SpawnTable();
-                    spawnTable.assetID = 0;
-                    spawnTable.spawnID = item3.id;
-                    spawnTable.weight = table.weight;
-                    spawnTable.chance = table.chance;
-                    spawnTable.isLink = table.isLink;
-                    spawnAsset5.roots.Add(spawnTable);
-                    num3++;
                 }
+                else
+                {
+                    if (table.targetGuid.IsEmpty())
+                    {
+                        continue;
+                    }
+                    Asset asset2 = find(table.targetGuid);
+                    if (asset2 == null)
+                    {
+                        reportError(item3, "unable to find child {0} during link", table.targetGuid);
+                        continue;
+                    }
+                    spawnAsset2 = asset2 as SpawnAsset;
+                    if (spawnAsset2 == null)
+                    {
+                        continue;
+                    }
+                }
+                SpawnTable spawnTable = new SpawnTable();
+                spawnTable.targetGuid = item3.GUID;
+                spawnTable.weight = table.weight;
+                spawnTable.normalizedWeight = table.normalizedWeight;
+                spawnTable.isLink = table.isLink;
+                spawnAsset2.roots.Add(spawnTable);
+                num3++;
             }
         }
         UnturnedLog.info("Link spawns: {0} children, {1} sorted/normalized and {2} parents", num, num2, num3);
@@ -1298,6 +1358,7 @@ public class Assets : MonoBehaviour
             {
                 Provider.initAutoSubscribeMaps();
             }
+            ResourceHash.Initialize();
             yield return LoadAssetsFromWorkerThread();
         }
         LoadingUI.SetLoadingText("Loading_Blueprints");

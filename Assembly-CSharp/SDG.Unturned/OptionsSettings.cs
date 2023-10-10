@@ -68,6 +68,7 @@ public class OptionsSettings
 
     public static bool ambience;
 
+    [Obsolete("Renamed to ShouldHitmarkersFollowWorldPosition")]
     public static bool hitmarker;
 
     public static bool streamer;
@@ -103,10 +104,6 @@ public class OptionsSettings
     public static Color hitmarkerColor;
 
     public static Color criticalHitmarkerColor;
-
-    public static Color cursorColor = Color.white;
-
-    private static Color _shadowColor = Color.black;
 
     public static float fov
     {
@@ -149,6 +146,30 @@ public class OptionsSettings
         {
             SleekCustomization.darkTheme = value;
             OptionsSettings.OnThemeChanged?.Invoke();
+        }
+    }
+
+    public static bool ShouldHitmarkersFollowWorldPosition
+    {
+        get
+        {
+            return hitmarker;
+        }
+        set
+        {
+            hitmarker = value;
+        }
+    }
+
+    public static Color cursorColor
+    {
+        get
+        {
+            return SleekCustomization.cursorColor;
+        }
+        set
+        {
+            SleekCustomization.cursorColor = value;
         }
     }
 
@@ -195,11 +216,11 @@ public class OptionsSettings
     {
         get
         {
-            return _shadowColor;
+            return SleekCustomization.shadowColor;
         }
         set
         {
-            _shadowColor = value;
+            SleekCustomization.shadowColor = value;
             OptionsSettings.OnCustomColorsChanged?.Invoke();
         }
     }
@@ -301,7 +322,7 @@ public class OptionsSettings
         hints = true;
         ambience = true;
         proUI = true;
-        hitmarker = false;
+        ShouldHitmarkersFollowWorldPosition = false;
         streamer = false;
         featuredWorkshop = true;
         matchmakingShowAllMaps = false;
@@ -458,11 +479,11 @@ public class OptionsSettings
         }
         if (b > 20)
         {
-            hitmarker = block.readBoolean();
+            ShouldHitmarkersFollowWorldPosition = block.readBoolean();
         }
         else
         {
-            hitmarker = false;
+            ShouldHitmarkersFollowWorldPosition = false;
         }
         if (b > 21)
         {
@@ -656,7 +677,7 @@ public class OptionsSettings
         block.writeBoolean(hints);
         block.writeBoolean(ambience);
         block.writeBoolean(proUI);
-        block.writeBoolean(hitmarker);
+        block.writeBoolean(ShouldHitmarkersFollowWorldPosition);
         block.writeBoolean(streamer);
         block.writeBoolean(featuredWorkshop);
         block.writeBoolean(matchmakingShowAllMaps);

@@ -31,6 +31,14 @@ public class PlayerQuests : PlayerCaller
 
     public InteractableObjectNPC checkNPC;
 
+    private DialogueAsset serverCurrentDialogueAsset;
+
+    private VendorAsset serverCurrentVendorAsset;
+
+    private DialogueMessage serverCurrentDialogueMessage;
+
+    private DialogueAsset serverDefaultNextDialogueAsset;
+
     private Dictionary<ushort, PlayerQuestFlag> flagsMap;
 
     public ExternalConditionsUpdated onExternalConditionsUpdated;
@@ -105,17 +113,23 @@ public class PlayerQuests : PlayerCaller
 
     private static readonly ClientInstanceMethod<Guid> SendAddQuest = ClientInstanceMethod<Guid>.Get(typeof(PlayerQuests), "ReceiveAddQuest");
 
-    private static readonly ClientInstanceMethod<Guid> SendRemoveQuest = ClientInstanceMethod<Guid>.Get(typeof(PlayerQuests), "ReceiveRemoveQuest");
+    private static readonly ClientInstanceMethod<Guid, bool> SendRemoveQuest = ClientInstanceMethod<Guid, bool>.Get(typeof(PlayerQuests), "ReceiveRemoveQuest");
 
     private static readonly ServerInstanceMethod<Guid> SendTrackQuest = ServerInstanceMethod<Guid>.Get(typeof(PlayerQuests), "ReceiveTrackQuest");
 
-    private static readonly ServerInstanceMethod<Guid> SendAbandonQuest = ServerInstanceMethod<Guid>.Get(typeof(PlayerQuests), "ReceiveAbandonQuest");
+    private static readonly ServerInstanceMethod<Guid> SendAbandonQuestRequest = ServerInstanceMethod<Guid>.Get(typeof(PlayerQuests), "ReceiveAbandonQuestRequest");
 
-    private static readonly ServerInstanceMethod<Guid> SendRegisterMessage = ServerInstanceMethod<Guid>.Get(typeof(PlayerQuests), "ReceiveRegisterMessage");
+    private static readonly ServerInstanceMethod<Guid, byte> SendChooseDialogueResponseRequest = ServerInstanceMethod<Guid, byte>.Get(typeof(PlayerQuests), "ReceiveChooseDialogueResponseRequest");
 
-    private static readonly ServerInstanceMethod<Guid, byte> SendRegisterResponse = ServerInstanceMethod<Guid, byte>.Get(typeof(PlayerQuests), "ReceiveRegisterResponse");
+    private static readonly ServerInstanceMethod<Guid, byte> SendChooseDefaultNextDialogueRequest = ServerInstanceMethod<Guid, byte>.Get(typeof(PlayerQuests), "ReceiveChooseDefaultNextDialogueRequest");
 
     private static readonly ClientInstanceMethod SendQuests = ClientInstanceMethod.Get(typeof(PlayerQuests), "ReceiveQuests");
+
+    private static readonly ClientInstanceMethod<NetId, Guid, byte, bool> SendTalkWithNpcResponse = ClientInstanceMethod<NetId, Guid, byte, bool>.Get(typeof(PlayerQuests), "ReceiveTalkWithNpcResponse");
+
+    private static readonly ClientInstanceMethod<Guid, byte, bool> SendOpenDialogue = ClientInstanceMethod<Guid, byte, bool>.Get(typeof(PlayerQuests), "ReceiveOpenDialogue");
+
+    private static readonly ClientInstanceMethod<Guid, Guid, byte, bool> SendOpenVendor = ClientInstanceMethod<Guid, Guid, byte, bool>.Get(typeof(PlayerQuests), "ReceiveOpenVendor");
 
     private GameObject delayedRewardsGameObject;
 
@@ -680,7 +694,7 @@ public class PlayerQuests : PlayerCaller
         {
             return false;
         }
-        if (!base.channel.isOwner)
+        if (!base.channel.IsLocalPlayer)
         {
             SendRemoveGroupInviteClient.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), groupId);
         }
@@ -697,7 +711,7 @@ public class PlayerQuests : PlayerCaller
             {
                 GroupManager.sendGroupInfo(base.channel.GetOwnerTransportConnection(), groupInfo);
             }
-            if (!base.channel.isOwner)
+            if (!base.channel.IsLocalPlayer)
             {
                 SendAddGroupInviteClient.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), newGroupID);
             }
@@ -859,7 +873,7 @@ public class PlayerQuests : PlayerCaller
             num = ~num;
             flagsList.Insert(num, value2);
         }
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             if (id == 29)
             {
@@ -907,7 +921,7 @@ public class PlayerQuests : PlayerCaller
         {
             flagsMap.Remove(id);
             flagsList.RemoveAt(num);
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 onFlagUpdated?.Invoke(id);
                 TriggerTrackedQuestUpdated();
@@ -938,7 +952,7 @@ public class PlayerQuests : PlayerCaller
                 questsList.Add(item);
             }
             TrackQuest(questAsset);
-            if (base.channel.isOwner && this.OnLocalPlayerQuestsChanged != null)
+            if (base.channel.IsLocalPlayer && this.OnLocalPlayerQuestsChanged != null)
             {
                 this.OnLocalPlayerQuestsChanged(questAsset.id);
             }
@@ -1003,7 +1017,7 @@ public class PlayerQuests : PlayerCaller
         return ENPCQuestStatus.NONE;
     }
 
-    public void RemoveQuest(QuestAsset questAsset)
+    public void RemoveQuest(QuestAsset questAsset, bool wasCompleted = false)
     {
         int num = FindIndexOfQuest(questAsset);
         if (num >= 0)
@@ -1021,9 +1035,17 @@ public class PlayerQuests : PlayerCaller
                 TrackQuest(null);
             }
         }
-        if (base.channel.isOwner && questAsset != null && this.OnLocalPlayerQuestsChanged != null)
+        if (base.channel.IsLocalPlayer && questAsset != null)
         {
-            this.OnLocalPlayerQuestsChanged(questAsset.id);
+            if (wasCompleted && Provider.provider.achievementsService.getAchievement("Quest", out var has) && !has)
+            {
+                Provider.provider.achievementsService.setAchievement("Quest");
+            }
+            this.OnLocalPlayerQuestsChanged?.Invoke(questAsset.id);
+        }
+        if (questAsset != null && wasCompleted)
+        {
+            triggerQuestCompleted(questAsset);
         }
     }
 
@@ -1179,15 +1201,10 @@ public class PlayerQuests : PlayerCaller
     {
         if (questAsset != null && (ignoreNPC || (!(checkNPC == null) && !((checkNPC.transform.position - base.transform.position).sqrMagnitude > 400f))) && GetQuestStatus(questAsset) == ENPCQuestStatus.READY)
         {
-            RemoveQuest(questAsset);
-            setFlag(questAsset.id, 1);
-            questAsset.applyConditions(base.player, shouldSend: false);
-            questAsset.grantRewards(base.player, shouldSend: false);
-            if (base.channel.isOwner && Provider.provider.achievementsService.getAchievement("Quest", out var has) && !has)
-            {
-                Provider.provider.achievementsService.setAchievement("Quest");
-            }
-            triggerQuestCompleted(questAsset);
+            ServerRemoveQuest(questAsset, wasCompleted: true);
+            sendSetFlag(questAsset.id, 1);
+            questAsset.ApplyConditions(base.player);
+            questAsset.GrantRewards(base.player);
         }
     }
 
@@ -1209,25 +1226,25 @@ public class PlayerQuests : PlayerCaller
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 10, legacyName = "askSellToVendor")]
     public void ReceiveSellToVendor(in ServerInvocationContext context, Guid assetGuid, byte index, bool asManyAsPossible)
     {
-        if (checkNPC == null || (checkNPC.transform.position - base.transform.position).sqrMagnitude > 400f)
+        if (checkNPC == null || (checkNPC.transform.position - base.transform.position).sqrMagnitude > 400f || serverCurrentVendorAsset == null)
         {
             return;
         }
         VendorAsset vendorAsset = Assets.find<VendorAsset>(assetGuid);
-        if (vendorAsset == null || vendorAsset.buying == null || index >= vendorAsset.buying.Length)
+        if (vendorAsset == null || vendorAsset != serverCurrentVendorAsset || vendorAsset.buying == null || index >= vendorAsset.buying.Length)
         {
             return;
         }
         VendorBuying vendorBuying = vendorAsset.buying[index];
-        if (vendorBuying == null || !checkNPC.npcAsset.doesPlayerHaveAccessToVendor(base.player, vendorAsset))
+        if (vendorBuying == null)
         {
             return;
         }
         int num = 0;
         while (vendorBuying.canSell(base.player) && vendorBuying.areConditionsMet(base.player))
         {
-            vendorBuying.applyConditions(base.player, shouldSend: true);
-            vendorBuying.grantRewards(base.player, shouldSend: true);
+            vendorBuying.ApplyConditions(base.player);
+            vendorBuying.GrantRewards(base.player);
             vendorBuying.sell(base.player);
             num++;
             if (!asManyAsPossible || num >= 10)
@@ -1257,17 +1274,17 @@ public class PlayerQuests : PlayerCaller
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 10, legacyName = "askBuyFromVendor")]
     public void ReceiveBuyFromVendor(in ServerInvocationContext context, Guid assetGuid, byte index, bool asManyAsPossible)
     {
-        if (checkNPC == null || (checkNPC.transform.position - base.transform.position).sqrMagnitude > 400f)
+        if (checkNPC == null || (checkNPC.transform.position - base.transform.position).sqrMagnitude > 400f || serverCurrentVendorAsset == null)
         {
             return;
         }
         VendorAsset vendorAsset = Assets.find<VendorAsset>(assetGuid);
-        if (vendorAsset == null || vendorAsset.selling == null || index >= vendorAsset.selling.Length)
+        if (vendorAsset == null || vendorAsset != serverCurrentVendorAsset || vendorAsset.selling == null || index >= vendorAsset.selling.Length)
         {
             return;
         }
         VendorSellingBase vendorSellingBase = vendorAsset.selling[index];
-        if (vendorSellingBase == null || !checkNPC.npcAsset.doesPlayerHaveAccessToVendor(base.player, vendorAsset))
+        if (vendorSellingBase == null)
         {
             return;
         }
@@ -1283,8 +1300,8 @@ public class PlayerQuests : PlayerCaller
         int num = 0;
         while (vendorSellingBase.canBuy(base.player) && vendorSellingBase.areConditionsMet(base.player))
         {
-            vendorSellingBase.applyConditions(base.player, shouldSend: true);
-            vendorSellingBase.grantRewards(base.player, shouldSend: true);
+            vendorSellingBase.ApplyConditions(base.player);
+            vendorSellingBase.GrantRewards(base.player);
             vendorSellingBase.buy(base.player);
             num++;
             if (!asManyAsPossible || num >= 10)
@@ -1320,7 +1337,7 @@ public class PlayerQuests : PlayerCaller
     public void sendSetFlag(ushort id, short value)
     {
         setFlag(id, value);
-        if (!base.channel.isOwner)
+        if (!base.channel.IsLocalPlayer)
         {
             SendSetFlag.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), id, value);
         }
@@ -1341,7 +1358,7 @@ public class PlayerQuests : PlayerCaller
     public void sendRemoveFlag(ushort id)
     {
         removeFlag(id);
-        if (!base.channel.isOwner)
+        if (!base.channel.IsLocalPlayer)
         {
             SendRemoveFlag.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), id);
         }
@@ -1367,7 +1384,7 @@ public class PlayerQuests : PlayerCaller
         if (questAsset != null)
         {
             AddQuest(questAsset);
-            if (!base.channel.isOwner)
+            if (!base.channel.IsLocalPlayer)
             {
                 SendAddQuest.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), questAsset.GUID);
             }
@@ -1389,23 +1406,28 @@ public class PlayerQuests : PlayerCaller
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
-    public void ReceiveRemoveQuest(Guid assetGuid)
+    public void ReceiveRemoveQuest(Guid assetGuid, bool wasCompleted)
     {
         QuestAsset questAsset = Assets.find<QuestAsset>(assetGuid);
         if (questAsset != null)
         {
-            RemoveQuest(questAsset);
+            RemoveQuest(questAsset, wasCompleted);
         }
     }
 
     public void ServerRemoveQuest(QuestAsset questAsset)
     {
+        ServerRemoveQuest(questAsset, wasCompleted: false);
+    }
+
+    public void ServerRemoveQuest(QuestAsset questAsset, bool wasCompleted = false)
+    {
         if (questAsset != null)
         {
-            RemoveQuest(questAsset);
-            if (!base.channel.isOwner)
+            RemoveQuest(questAsset, wasCompleted);
+            if (!base.channel.IsLocalPlayer)
             {
-                SendRemoveQuest.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), questAsset.GUID);
+                SendRemoveQuest.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), questAsset.GUID, wasCompleted);
             }
         }
     }
@@ -1427,7 +1449,7 @@ public class PlayerQuests : PlayerCaller
         {
             _trackedQuest = questAsset;
         }
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             TriggerTrackedQuestUpdated();
         }
@@ -1464,9 +1486,10 @@ public class PlayerQuests : PlayerCaller
         ClientTrackQuest(questAsset);
     }
 
+    [Obsolete("Identical to ServerRemoveQuest")]
     public void AbandonQuest(QuestAsset questAsset)
     {
-        RemoveQuest(questAsset);
+        ServerRemoveQuest(questAsset);
     }
 
     [Obsolete]
@@ -1484,12 +1507,12 @@ public class PlayerQuests : PlayerCaller
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 5)]
-    public void ReceiveAbandonQuest(Guid assetGuid)
+    public void ReceiveAbandonQuestRequest(Guid assetGuid)
     {
         QuestAsset questAsset = Assets.find<QuestAsset>(assetGuid);
         if (questAsset != null)
         {
-            AbandonQuest(questAsset);
+            ServerRemoveQuest(questAsset);
         }
     }
 
@@ -1497,7 +1520,7 @@ public class PlayerQuests : PlayerCaller
     {
         if (questAsset != null)
         {
-            SendAbandonQuest.Invoke(GetNetId(), ENetReliability.Reliable, questAsset.GUID);
+            SendAbandonQuestRequest.Invoke(GetNetId(), ENetReliability.Reliable, questAsset.GUID);
         }
     }
 
@@ -1510,73 +1533,24 @@ public class PlayerQuests : PlayerCaller
         }
     }
 
-    public void registerMessage(Guid assetGuid)
-    {
-        if (checkNPC == null || (checkNPC.transform.position - base.transform.position).sqrMagnitude > 400f)
-        {
-            return;
-        }
-        DialogueAsset dialogueAsset = Assets.find<DialogueAsset>(assetGuid);
-        if (dialogueAsset == null)
-        {
-            return;
-        }
-        int availableMessage = dialogueAsset.getAvailableMessage(base.player);
-        if (availableMessage != -1)
-        {
-            DialogueMessage dialogueMessage = dialogueAsset.messages[availableMessage];
-            if (dialogueMessage != null && dialogueMessage.conditions != null)
-            {
-                dialogueMessage.applyConditions(base.player, shouldSend: false);
-                dialogueMessage.grantRewards(base.player, shouldSend: false);
-            }
-        }
-    }
-
-    [Obsolete]
-    public void askRegisterMessage(CSteamID steamID, ushort id)
-    {
-        throw new NotSupportedException();
-    }
-
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 20)]
-    public void ReceiveRegisterMessage(Guid assetGuid)
+    public void ReceiveChooseDialogueResponseRequest(in ServerInvocationContext context, Guid assetGuid, byte index)
     {
-        registerMessage(assetGuid);
-    }
-
-    public void sendRegisterMessage(Guid assetGuid)
-    {
-        SendRegisterMessage.Invoke(GetNetId(), ENetReliability.Reliable, assetGuid);
-    }
-
-    public void registerResponse(Guid assetGuid, byte index)
-    {
-        if (checkNPC == null || (checkNPC.transform.position - base.transform.position).sqrMagnitude > 400f)
+        if (checkNPC == null || (checkNPC.transform.position - base.transform.position).sqrMagnitude > 400f || serverCurrentDialogueAsset == null || serverCurrentDialogueMessage == null)
         {
             return;
         }
         DialogueAsset dialogueAsset = Assets.find<DialogueAsset>(assetGuid);
-        if (dialogueAsset == null || dialogueAsset.responses == null || index >= dialogueAsset.responses.Length)
+        if (dialogueAsset == null || dialogueAsset != serverCurrentDialogueAsset || dialogueAsset.responses == null || index >= dialogueAsset.responses.Length)
         {
             return;
         }
-        int availableMessage = dialogueAsset.getAvailableMessage(base.player);
-        if (availableMessage == -1)
-        {
-            return;
-        }
-        DialogueMessage dialogueMessage = dialogueAsset.messages[availableMessage];
-        if (dialogueMessage == null)
-        {
-            return;
-        }
-        if (dialogueMessage.responses != null && dialogueMessage.responses.Length != 0)
+        if (serverCurrentDialogueMessage.responses != null && serverCurrentDialogueMessage.responses.Length != 0)
         {
             bool flag = false;
-            for (int i = 0; i < dialogueMessage.responses.Length; i++)
+            for (int i = 0; i < serverCurrentDialogueMessage.responses.Length; i++)
             {
-                if (index == dialogueMessage.responses[i])
+                if (index == serverCurrentDialogueMessage.responses[i])
                 {
                     flag = true;
                     break;
@@ -1597,7 +1571,7 @@ public class PlayerQuests : PlayerCaller
             bool flag2 = false;
             for (int j = 0; j < dialogueResponse.messages.Length; j++)
             {
-                if (availableMessage == dialogueResponse.messages[j])
+                if (serverCurrentDialogueMessage.index == dialogueResponse.messages[j])
                 {
                     flag2 = true;
                     break;
@@ -1608,24 +1582,73 @@ public class PlayerQuests : PlayerCaller
                 return;
             }
         }
-        dialogueResponse.applyConditions(base.player, shouldSend: false);
-        dialogueResponse.grantRewards(base.player, shouldSend: false);
-    }
-
-    [Obsolete]
-    public void askRegisterResponse(CSteamID steamID, ushort id, byte index)
-    {
+        dialogueResponse.ApplyConditions(base.player);
+        dialogueResponse.GrantRewards(base.player);
+        VendorAsset vendorAsset = dialogueResponse.FindVendorAsset();
+        DialogueAsset dialogueAsset2 = dialogueResponse.FindDialogueAsset();
+        DialogueMessage dialogueMessage = dialogueAsset2?.GetAvailableMessage(base.player);
+        if (vendorAsset != null)
+        {
+            if (dialogueAsset2 == null || dialogueMessage == null)
+            {
+                dialogueAsset2 = serverCurrentDialogueAsset;
+                dialogueMessage = serverCurrentDialogueMessage;
+            }
+            serverDefaultNextDialogueAsset = dialogueMessage.FindPrevDialogueAsset() ?? serverCurrentDialogueAsset;
+            serverCurrentDialogueAsset = dialogueAsset2;
+            serverCurrentDialogueMessage = dialogueMessage;
+            serverCurrentVendorAsset = vendorAsset;
+            SendOpenVendor.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), vendorAsset.GUID, dialogueAsset2.GUID, dialogueMessage.index, serverDefaultNextDialogueAsset != null);
+        }
+        else if (dialogueAsset2 != null && dialogueMessage != null)
+        {
+            serverDefaultNextDialogueAsset = dialogueMessage?.FindPrevDialogueAsset() ?? serverCurrentDialogueAsset;
+            serverCurrentDialogueAsset = dialogueAsset2;
+            serverCurrentDialogueMessage = dialogueMessage;
+            serverCurrentVendorAsset = null;
+            SendOpenDialogue.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), dialogueAsset2.GUID, dialogueMessage.index, serverDefaultNextDialogueAsset != null);
+        }
+        if (dialogueMessage != null)
+        {
+            dialogueMessage.ApplyConditions(base.player);
+            dialogueMessage.GrantRewards(base.player);
+        }
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 20)]
-    public void ReceiveRegisterResponse(Guid assetGuid, byte index)
+    public void ReceiveChooseDefaultNextDialogueRequest(in ServerInvocationContext context, Guid assetGuid, byte index)
     {
-        registerResponse(assetGuid, index);
+        if (checkNPC == null || (checkNPC.transform.position - base.transform.position).sqrMagnitude > 400f || serverDefaultNextDialogueAsset == null || serverCurrentDialogueAsset == null || serverCurrentDialogueMessage == null)
+        {
+            return;
+        }
+        DialogueAsset dialogueAsset = Assets.find<DialogueAsset>(assetGuid);
+        if (dialogueAsset != null && dialogueAsset == serverCurrentDialogueAsset && index == serverCurrentDialogueMessage.index)
+        {
+            DialogueAsset dialogueAsset2 = serverDefaultNextDialogueAsset;
+            DialogueMessage dialogueMessage = dialogueAsset2?.GetAvailableMessage(base.player);
+            serverDefaultNextDialogueAsset = null;
+            if (dialogueMessage != null)
+            {
+                serverDefaultNextDialogueAsset = dialogueMessage.FindPrevDialogueAsset() ?? serverCurrentDialogueAsset;
+                serverCurrentDialogueAsset = dialogueAsset2;
+                serverCurrentDialogueMessage = dialogueMessage;
+                serverCurrentVendorAsset = null;
+                SendOpenDialogue.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), dialogueAsset2.GUID, dialogueMessage.index, arg3: true);
+                dialogueMessage.ApplyConditions(base.player);
+                dialogueMessage.GrantRewards(base.player);
+            }
+        }
     }
 
-    public void sendRegisterResponse(Guid assetGuid, byte index)
+    public void ClientChooseDialogueResponse(Guid assetGuid, byte index)
     {
-        SendRegisterResponse.Invoke(GetNetId(), ENetReliability.Reliable, assetGuid, index);
+        SendChooseDialogueResponseRequest.Invoke(GetNetId(), ENetReliability.Reliable, assetGuid, index);
+    }
+
+    public void ClientChooseNextDialogue(Guid assetGuid, byte index)
+    {
+        SendChooseDefaultNextDialogueRequest.Invoke(GetNetId(), ENetReliability.Reliable, assetGuid, index);
     }
 
     [Obsolete]
@@ -1643,7 +1666,7 @@ public class PlayerQuests : PlayerCaller
         reader.ReadUInt32(out _radioFrequency);
         reader.ReadSteamID(out _groupID);
         reader.ReadEnum(out _groupRank);
-        if (!base.channel.isOwner)
+        if (!base.channel.IsLocalPlayer)
         {
             return;
         }
@@ -1708,7 +1731,7 @@ public class PlayerQuests : PlayerCaller
     internal void SendInitialPlayerState(SteamPlayer client)
     {
         bool sendingToOwner = base.channel.owner == client;
-        if (base.channel.isOwner && sendingToOwner)
+        if (base.channel.IsLocalPlayer && sendingToOwner)
         {
             return;
         }
@@ -1774,6 +1797,96 @@ public class PlayerQuests : PlayerCaller
         onExternalConditionsUpdated?.Invoke();
     }
 
+    [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
+    public void ReceiveTalkWithNpcResponse(in ClientInvocationContext context, NetId targetNpcNetId, Guid dialogueAssetGuid, byte messageIndex, bool hasNextDialogue)
+    {
+        InteractableObjectNPC npcFromObjectNetId = InteractableObjectNPC.GetNpcFromObjectNetId(targetNpcNetId);
+        if (!(npcFromObjectNetId == null))
+        {
+            DialogueAsset dialogueAsset = Assets.find<DialogueAsset>(dialogueAssetGuid);
+            ClientAssetIntegrity.QueueRequest(dialogueAssetGuid, dialogueAsset, "talk with NPC response");
+            if (dialogueAsset != null && messageIndex < dialogueAsset.messages.Length)
+            {
+                checkNPC = npcFromObjectNetId;
+                PlayerLifeUI.close();
+                PlayerLifeUI.npc = npcFromObjectNetId;
+                npcFromObjectNetId.isLookingAtPlayer = true;
+                PlayerNPCDialogueUI.open(dialogueAsset, dialogueAsset.messages[messageIndex], hasNextDialogue);
+            }
+        }
+    }
+
+    internal void ApproveTalkWithNpcRequest(InteractableObjectNPC targetNpc, DialogueAsset rootDialogueAsset)
+    {
+        DialogueMessage availableMessage = rootDialogueAsset.GetAvailableMessage(base.player);
+        if (availableMessage == null)
+        {
+            UnturnedLog.warn("Unable to approve talk with NPC (" + targetNpc.npcAsset.FriendlyName + ") request because there is no valid message");
+            return;
+        }
+        checkNPC = targetNpc;
+        serverCurrentDialogueAsset = rootDialogueAsset;
+        serverCurrentDialogueMessage = availableMessage;
+        serverCurrentVendorAsset = null;
+        serverDefaultNextDialogueAsset = availableMessage.FindPrevDialogueAsset();
+        SendTalkWithNpcResponse.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), targetNpc.GetNpcNetId(), rootDialogueAsset.GUID, serverCurrentDialogueMessage.index, serverDefaultNextDialogueAsset != null);
+        serverCurrentDialogueMessage.ApplyConditions(base.player);
+        serverCurrentDialogueMessage.GrantRewards(base.player);
+    }
+
+    internal void ClearActiveNpc()
+    {
+        checkNPC = null;
+        serverCurrentDialogueAsset = null;
+        serverCurrentDialogueMessage = null;
+        serverCurrentVendorAsset = null;
+        serverDefaultNextDialogueAsset = null;
+    }
+
+    [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
+    public void ReceiveOpenDialogue(in ClientInvocationContext context, Guid dialogueAssetGuid, byte messageIndex, bool hasNextDialogue)
+    {
+        DialogueAsset dialogueAsset = Assets.find<DialogueAsset>(dialogueAssetGuid);
+        ClientAssetIntegrity.QueueRequest(dialogueAssetGuid, dialogueAsset, "open dialogue");
+        if (dialogueAsset != null && dialogueAsset.messages != null)
+        {
+            _ = dialogueAsset.messages.LongLength;
+            if (PlayerNPCVendorUI.active)
+            {
+                PlayerNPCVendorUI.close();
+            }
+            if (PlayerNPCQuestUI.active)
+            {
+                PlayerNPCQuestUI.close();
+            }
+            DialogueMessage newMessage = dialogueAsset.messages[messageIndex];
+            PlayerNPCDialogueUI.open(dialogueAsset, newMessage, hasNextDialogue);
+        }
+    }
+
+    [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
+    public void ReceiveOpenVendor(in ClientInvocationContext context, Guid vendorAssetGuid, Guid dialogueAssetGuid, byte messageIndex, bool hasNextDialogue)
+    {
+        VendorAsset vendorAsset = Assets.find<VendorAsset>(vendorAssetGuid);
+        DialogueAsset dialogueAsset = Assets.find<DialogueAsset>(dialogueAssetGuid);
+        ClientAssetIntegrity.QueueRequest(vendorAssetGuid, vendorAsset, "open vendor");
+        ClientAssetIntegrity.QueueRequest(dialogueAssetGuid, dialogueAsset, "open vendor");
+        if (vendorAsset != null && dialogueAsset != null && dialogueAsset.messages != null)
+        {
+            _ = dialogueAsset.messages.LongLength;
+            if (PlayerNPCDialogueUI.active)
+            {
+                PlayerNPCDialogueUI.close();
+            }
+            if (PlayerNPCQuestUI.active)
+            {
+                PlayerNPCQuestUI.close();
+            }
+            DialogueMessage newNextMessage = dialogueAsset.messages[messageIndex];
+            PlayerNPCVendorUI.open(vendorAsset, dialogueAsset, newNextMessage, hasNextDialogue);
+        }
+    }
+
     internal PlayerDelayedQuestRewardsComponent GetOrCreateDelayedQuestRewards()
     {
         if (!hasCreatedDelayedRewards && delayedRewardsComponent == null)
@@ -1808,7 +1921,7 @@ public class PlayerQuests : PlayerCaller
         flagsList = new List<PlayerQuestFlag>();
         questsList = new List<PlayerQuest>();
         groupInvites = new HashSet<CSteamID>();
-        if (Provider.isServer || base.channel.isOwner)
+        if (Provider.isServer || base.channel.IsLocalPlayer)
         {
             PlayerLife life = base.player.life;
             life.onLifeUpdated = (LifeUpdated)Delegate.Combine(life.onLifeUpdated, new LifeUpdated(OnLifeUpdated));
@@ -1817,12 +1930,12 @@ public class PlayerQuests : PlayerCaller
         {
             load();
             base.player.movement.PlayerNavChanged += OnPlayerNavChanged;
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 onFlagsUpdated?.Invoke();
             }
         }
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             PlayerSkills skills = base.player.skills;
             skills.onExperienceUpdated = (ExperienceUpdated)Delegate.Combine(skills.onExperienceUpdated, new ExperienceUpdated(onExperienceUpdated));
@@ -1836,7 +1949,7 @@ public class PlayerQuests : PlayerCaller
 
     private void Start()
     {
-        if (base.channel.isOwner || Provider.isServer)
+        if (base.channel.IsLocalPlayer || Provider.isServer)
         {
             try
             {
@@ -1852,7 +1965,7 @@ public class PlayerQuests : PlayerCaller
 
     private void OnDestroy()
     {
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             LightingManager.onTimeOfDayChanged = (TimeOfDayChanged)Delegate.Remove(LightingManager.onTimeOfDayChanged, new TimeOfDayChanged(onTimeOfDayChanged));
         }

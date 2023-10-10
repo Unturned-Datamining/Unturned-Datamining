@@ -49,7 +49,7 @@ public class SleekList<T> : SleekWrapper where T : class
         {
             num += (data.Count - 1) * itemPadding;
         }
-        scrollView.contentSizeOffset = new Vector2(0f, num);
+        scrollView.ContentSizeOffset = new Vector2(0f, num);
         UpdateVisibleRange();
     }
 
@@ -76,10 +76,10 @@ public class SleekList<T> : SleekWrapper where T : class
     public SleekList()
     {
         scrollView = Glazier.Get().CreateScrollView();
-        scrollView.sizeScale_X = 1f;
-        scrollView.sizeScale_Y = 1f;
-        scrollView.scaleContentToWidth = true;
-        scrollView.onValueChanged += onValueChanged;
+        scrollView.SizeScale_X = 1f;
+        scrollView.SizeScale_Y = 1f;
+        scrollView.ScaleContentToWidth = true;
+        scrollView.OnNormalizedValueChanged += onValueChanged;
         AddChild(scrollView);
     }
 
@@ -129,7 +129,7 @@ public class SleekList<T> : SleekWrapper where T : class
             }
             else
             {
-                visibleEntry.element.positionOffset_Y = num5 * (itemHeight + itemPadding);
+                visibleEntry.element.PositionOffset_Y = num5 * (itemHeight + itemPadding);
             }
         }
         for (int i = num2; i <= num3; i++)
@@ -139,9 +139,9 @@ public class SleekList<T> : SleekWrapper where T : class
             {
                 IndexOfCreateElementItem = i;
                 ISleekElement sleekElement = onCreateElement(item);
-                sleekElement.sizeOffset_Y = itemHeight;
-                sleekElement.sizeScale_X = 1f;
-                sleekElement.positionOffset_Y = i * (itemHeight + itemPadding);
+                sleekElement.SizeOffset_Y = itemHeight;
+                sleekElement.SizeScale_X = 1f;
+                sleekElement.PositionOffset_Y = i * (itemHeight + itemPadding);
                 scrollView.AddChild(sleekElement);
                 visibleEntries.Add(new VisibleEntry(item, sleekElement));
             }
@@ -150,12 +150,12 @@ public class SleekList<T> : SleekWrapper where T : class
 
     private void UpdateVisibleRange()
     {
-        UpdateVisibleRange(scrollView.normalizedVerticalPosition);
+        UpdateVisibleRange(scrollView.NormalizedVerticalPosition);
     }
 
     private int CalculateVisibleItemsCount()
     {
-        return Mathf.CeilToInt(scrollView.normalizedViewportHeight * (float)data.Count);
+        return Mathf.CeilToInt(scrollView.NormalizedViewportHeight * (float)data.Count);
     }
 
     private void onValueChanged(Vector2 value)

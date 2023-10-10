@@ -60,7 +60,7 @@ public class Carepackage : MonoBehaviour
                     int num = 0;
                     while (num < 8)
                     {
-                        ushort num2 = SpawnTableTool.resolve(id);
+                        ushort num2 = SpawnTableTool.ResolveLegacyId(id, EAssetType.ITEM, OnGetSpawnTableErrorContext);
                         if (num2 == 0)
                         {
                             break;
@@ -90,5 +90,10 @@ public class Carepackage : MonoBehaviour
             }
         }
         UnityEngine.Object.Destroy(base.gameObject);
+    }
+
+    private string OnGetSpawnTableErrorContext()
+    {
+        return "airdrop care package";
     }
 }

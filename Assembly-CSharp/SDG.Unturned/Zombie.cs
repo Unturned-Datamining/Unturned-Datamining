@@ -2113,7 +2113,7 @@ public class Zombie : MonoBehaviour
                 pullDelay = UnityEngine.Random.Range(24f, 96f);
                 if (!isLeaving && ZombieManager.canSpareWanderer)
                 {
-                    float f = UnityEngine.Random.value * (float)Math.PI * 2f;
+                    float f = UnityEngine.Random.value * MathF.PI * 2f;
                     float num = UnityEngine.Random.Range(0.5f, 1f);
                     isWandering = true;
                     ZombieManager.wanderingCount++;

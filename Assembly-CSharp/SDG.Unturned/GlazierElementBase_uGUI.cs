@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace SDG.Unturned;
 
@@ -17,11 +18,11 @@ internal abstract class GlazierElementBase_uGUI : GlazierElementBase
 
     public Glazier_uGUI glazier { get; private set; }
 
-    public override bool isVisible
+    public override bool IsVisible
     {
         get
         {
-            return base.isVisible;
+            return base.IsVisible;
         }
         set
         {
@@ -33,13 +34,159 @@ internal abstract class GlazierElementBase_uGUI : GlazierElementBase
         }
     }
 
-    public override ISleekElement parent => _parent;
+    public override bool UseManualLayout
+    {
+        set
+        {
+            isTransformDirty |= _useManualLayout != value;
+            _useManualLayout = value;
+        }
+    }
+
+    public override bool UseWidthLayoutOverride
+    {
+        set
+        {
+            bool flag = _useWidthLayoutOverride != value;
+            isTransformDirty |= flag;
+            _useWidthLayoutOverride = value;
+            if (flag)
+            {
+                if (ShouldHaveLayoutElementComponent)
+                {
+                    transform.GetOrAddComponent<LayoutElement>();
+                }
+                else
+                {
+                    transform.DestroyComponentIfExists<LayoutElement>();
+                }
+            }
+        }
+    }
+
+    public override bool UseHeightLayoutOverride
+    {
+        set
+        {
+            bool flag = _useHeightLayoutOverride != value;
+            isTransformDirty |= flag;
+            _useHeightLayoutOverride = value;
+            if (flag)
+            {
+                if (ShouldHaveLayoutElementComponent)
+                {
+                    transform.GetOrAddComponent<LayoutElement>();
+                }
+                else
+                {
+                    transform.DestroyComponentIfExists<LayoutElement>();
+                }
+            }
+        }
+    }
+
+    public override ESleekChildLayout UseChildAutoLayout
+    {
+        set
+        {
+            bool num = _useChildAutoLayout != value;
+            _useChildAutoLayout = value;
+            if (num)
+            {
+                if (_useChildAutoLayout == ESleekChildLayout.Horizontal)
+                {
+                    HorizontalLayoutGroup orAddComponent = transform.GetOrAddComponent<HorizontalLayoutGroup>();
+                    orAddComponent.childForceExpandWidth = _expandChildren;
+                    orAddComponent.childForceExpandHeight = false;
+                }
+                else
+                {
+                    transform.DestroyComponentIfExists<HorizontalLayoutGroup>();
+                }
+                if (_useChildAutoLayout == ESleekChildLayout.Vertical)
+                {
+                    VerticalLayoutGroup orAddComponent2 = transform.GetOrAddComponent<VerticalLayoutGroup>();
+                    orAddComponent2.childForceExpandWidth = false;
+                    orAddComponent2.childForceExpandHeight = _expandChildren;
+                }
+                else
+                {
+                    transform.DestroyComponentIfExists<VerticalLayoutGroup>();
+                }
+                ApplyChildPerpendicularAlignment();
+            }
+        }
+    }
+
+    public override ESleekChildPerpendicularAlignment ChildPerpendicularAlignment
+    {
+        set
+        {
+            _childPerpendicularAlignment = value;
+            ApplyChildPerpendicularAlignment();
+        }
+    }
+
+    public override bool ExpandChildren
+    {
+        set
+        {
+            bool num = _expandChildren != value;
+            _expandChildren = value;
+            if (num)
+            {
+                switch (_useChildAutoLayout)
+                {
+                case ESleekChildLayout.Horizontal:
+                    transform.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = _expandChildren;
+                    break;
+                case ESleekChildLayout.Vertical:
+                    transform.GetComponent<VerticalLayoutGroup>().childForceExpandHeight = _expandChildren;
+                    break;
+                }
+            }
+        }
+    }
+
+    public override bool IgnoreLayout
+    {
+        set
+        {
+            bool num = _ignoreLayout != value;
+            _ignoreLayout = value;
+            if (num)
+            {
+                if (ShouldHaveLayoutElementComponent)
+                {
+                    transform.GetOrAddComponent<LayoutElement>().ignoreLayout = true;
+                }
+                else
+                {
+                    transform.DestroyComponentIfExists<LayoutElement>();
+                }
+            }
+        }
+    }
+
+    public override ISleekElement Parent => _parent;
 
     public virtual RectTransform AttachmentTransform => transform;
 
     public GameObject gameObject { get; private set; }
 
     public RectTransform transform { get; private set; }
+
+    private bool ShouldHaveLayoutElementComponent
+    {
+        get
+        {
+            if (!_useWidthLayoutOverride && !_useHeightLayoutOverride)
+            {
+                return _ignoreLayout;
+            }
+            return true;
+        }
+    }
 
     public GlazierElementBase_uGUI(Glazier_uGUI glazier)
     {
@@ -62,7 +209,7 @@ internal abstract class GlazierElementBase_uGUI : GlazierElementBase
 
     public override int FindIndexOfChild(ISleekElement child)
     {
-        return _children.IndexOf((GlazierElementBase_uGUI)child.attachmentRoot);
+        return _children.IndexOf((GlazierElementBase_uGUI)child.AttachmentRoot);
     }
 
     public override ISleekElement GetChildAtIndex(int index)
@@ -76,15 +223,15 @@ internal abstract class GlazierElementBase_uGUI : GlazierElementBase
         {
             throw new ArgumentNullException("child");
         }
-        if (child.attachmentRoot is GlazierElementBase_uGUI glazierElementBase_uGUI)
+        if (child.AttachmentRoot is GlazierElementBase_uGUI glazierElementBase_uGUI)
         {
             glazierElementBase_uGUI._parent = null;
-            glazierElementBase_uGUI.destroy();
+            glazierElementBase_uGUI.InternalDestroy();
             _children.Remove(glazierElementBase_uGUI);
         }
         else
         {
-            UnturnedLog.warn("{0} cannot remove non-IMGUI element {1}", GetType().Name, child.attachmentRoot.GetType().Name);
+            UnturnedLog.warn("{0} cannot remove non-IMGUI element {1}", GetType().Name, child.AttachmentRoot.GetType().Name);
         }
     }
 
@@ -93,7 +240,7 @@ internal abstract class GlazierElementBase_uGUI : GlazierElementBase
         foreach (GlazierElementBase_uGUI child in _children)
         {
             child._parent = null;
-            child.destroy();
+            child.InternalDestroy();
         }
         _children.Clear();
     }
@@ -102,7 +249,7 @@ internal abstract class GlazierElementBase_uGUI : GlazierElementBase
     {
         foreach (GlazierElementBase_uGUI child in _children)
         {
-            if (child.isVisible)
+            if (child.IsVisible)
             {
                 child.Update();
             }
@@ -119,7 +266,7 @@ internal abstract class GlazierElementBase_uGUI : GlazierElementBase
 
     public override void AddChild(ISleekElement child)
     {
-        if (child.attachmentRoot is GlazierElementBase_uGUI glazierElementBase_uGUI)
+        if (child.AttachmentRoot is GlazierElementBase_uGUI glazierElementBase_uGUI)
         {
             if (glazierElementBase_uGUI._parent != this)
             {
@@ -136,7 +283,7 @@ internal abstract class GlazierElementBase_uGUI : GlazierElementBase
         }
         else
         {
-            UnturnedLog.warn("{0} cannot add non-uGUI element {1}", GetType().Name, child.attachmentRoot.GetType().Name);
+            UnturnedLog.warn("{0} cannot add non-uGUI element {1}", GetType().Name, child.AttachmentRoot.GetType().Name);
         }
     }
 
@@ -153,13 +300,51 @@ internal abstract class GlazierElementBase_uGUI : GlazierElementBase
         return new Vector2((vector.x - absoluteRect.xMin) / absoluteRect.width, ((float)Screen.height - vector.y - absoluteRect.yMin) / absoluteRect.height);
     }
 
+    public override Vector2 GetAbsoluteSize()
+    {
+        return transform.GetAbsoluteRect().size;
+    }
+
+    public override void SetAsFirstSibling()
+    {
+        if (_parent != null)
+        {
+            transform.SetAsFirstSibling();
+            if (_parent._children.Remove(this))
+            {
+                _parent._children.Insert(0, this);
+            }
+        }
+    }
+
     protected override void UpdateDirtyTransform()
     {
         isTransformDirty = false;
-        transform.anchorMin = new Vector2(base.positionScale_X, 1f - base.positionScale_Y - base.sizeScale_Y);
-        transform.anchorMax = new Vector2(base.positionScale_X + base.sizeScale_X, 1f - base.positionScale_Y);
-        transform.anchoredPosition = new Vector2(base.positionOffset_X, -base.positionOffset_Y);
-        transform.sizeDelta = new Vector2(base.sizeOffset_X, base.sizeOffset_Y);
+        if (_useManualLayout)
+        {
+            transform.anchorMin = new Vector2(base.PositionScale_X, 1f - base.PositionScale_Y - base.SizeScale_Y);
+            transform.anchorMax = new Vector2(base.PositionScale_X + base.SizeScale_X, 1f - base.PositionScale_Y);
+            transform.anchoredPosition = new Vector2(base.PositionOffset_X, 0f - base.PositionOffset_Y);
+            transform.sizeDelta = new Vector2(base.SizeOffset_X, base.SizeOffset_Y);
+        }
+        else
+        {
+            transform.anchorMin = new Vector2(0f, 1f);
+            transform.anchorMax = new Vector2(0f, 1f);
+            transform.anchoredPosition = Vector2.zero;
+            transform.sizeDelta = Vector2.zero;
+        }
+        if (_useWidthLayoutOverride || _useHeightLayoutOverride)
+        {
+            LayoutElement component = transform.GetComponent<LayoutElement>();
+            if (component != null)
+            {
+                component.preferredWidth = (_useWidthLayoutOverride ? base.SizeOffset_X : 0f);
+                component.preferredHeight = (_useHeightLayoutOverride ? base.SizeOffset_Y : 0f);
+                component.minWidth = component.preferredWidth;
+                component.minHeight = component.preferredHeight;
+            }
+        }
     }
 
     protected virtual bool ReleaseIntoPool()
@@ -180,13 +365,41 @@ internal abstract class GlazierElementBase_uGUI : GlazierElementBase
         transform = null;
     }
 
-    public override void destroy()
+    public override void InternalDestroy()
     {
         RemoveAllChildren();
+        if (ShouldHaveLayoutElementComponent)
+        {
+            transform.DestroyComponentIfExists<LayoutElement>();
+        }
+        if (_useChildAutoLayout != 0)
+        {
+            transform.DestroyComponentIfExists<LayoutGroup>();
+        }
         if (!ReleaseIntoPool() && gameObject != null)
         {
             UnityEngine.Object.Destroy(gameObject);
             gameObject = null;
+        }
+    }
+
+    private void ApplyChildPerpendicularAlignment()
+    {
+        if (_useChildAutoLayout == ESleekChildLayout.Horizontal)
+        {
+            HorizontalLayoutGroup component = transform.GetComponent<HorizontalLayoutGroup>();
+            switch (_childPerpendicularAlignment)
+            {
+            default:
+                component.childAlignment = TextAnchor.MiddleLeft;
+                break;
+            case ESleekChildPerpendicularAlignment.Top:
+                component.childAlignment = TextAnchor.UpperLeft;
+                break;
+            case ESleekChildPerpendicularAlignment.Bottom:
+                component.childAlignment = TextAnchor.LowerLeft;
+                break;
+            }
         }
     }
 }

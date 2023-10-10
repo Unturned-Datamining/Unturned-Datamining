@@ -9,7 +9,7 @@ public static class RandomEx
     {
         halfAngleRadians = Mathf.Min(halfAngleRadians, 1.5697963f);
         float num = Mathf.Sin(halfAngleRadians * Mathf.Sqrt(UnityEngine.Random.value));
-        float f = (float)Math.PI * 2f * UnityEngine.Random.value;
+        float f = MathF.PI * 2f * UnityEngine.Random.value;
         float num2 = Mathf.Cos(f);
         float num3 = Mathf.Sin(f);
         float num4 = num2 * num;

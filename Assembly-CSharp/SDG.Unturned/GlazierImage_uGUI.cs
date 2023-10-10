@@ -27,7 +27,7 @@ internal class GlazierImage_uGUI : GlazierElementBase_uGUI, ISleekImage, ISleekE
 
     private ButtonEx buttonComponent;
 
-    public Texture texture
+    public Texture Texture
     {
         get
         {
@@ -37,12 +37,12 @@ internal class GlazierImage_uGUI : GlazierElementBase_uGUI, ISleekImage, ISleekE
         {
             if (desiredTexture != value)
             {
-                internalSetTexture(value, shouldDestroyTexture);
+                internalSetTexture(value, ShouldDestroyTexture);
             }
         }
     }
 
-    public float angle
+    public float RotationAngle
     {
         get
         {
@@ -55,7 +55,7 @@ internal class GlazierImage_uGUI : GlazierElementBase_uGUI, ISleekImage, ISleekE
         }
     }
 
-    public bool isAngled
+    public bool CanRotate
     {
         get
         {
@@ -75,9 +75,9 @@ internal class GlazierImage_uGUI : GlazierElementBase_uGUI, ISleekImage, ISleekE
         }
     }
 
-    public bool shouldDestroyTexture { get; set; }
+    public bool ShouldDestroyTexture { get; set; }
 
-    public SleekColor color
+    public SleekColor TintColor
     {
         get
         {
@@ -92,7 +92,7 @@ internal class GlazierImage_uGUI : GlazierElementBase_uGUI, ISleekImage, ISleekE
 
     private event System.Action _onImageClicked;
 
-    public event System.Action onImageClicked
+    public event System.Action OnClicked
     {
         add
         {
@@ -110,7 +110,7 @@ internal class GlazierImage_uGUI : GlazierElementBase_uGUI, ISleekImage, ISleekE
 
     private event System.Action _onImageRightClicked;
 
-    public event System.Action onImageRightClicked
+    public event System.Action OnRightClicked
     {
         add
         {
@@ -126,30 +126,30 @@ internal class GlazierImage_uGUI : GlazierElementBase_uGUI, ISleekImage, ISleekE
         }
     }
 
-    public void updateTexture(Texture2D newTexture)
+    public void UpdateTexture(Texture2D newTexture)
     {
         if (desiredTexture != newTexture)
         {
-            internalSetTexture(newTexture, shouldDestroyTexture);
+            internalSetTexture(newTexture, ShouldDestroyTexture);
         }
     }
 
-    public void setTextureAndShouldDestroy(Texture2D newTexture, bool newShouldDestroyTexture)
+    public void SetTextureAndShouldDestroy(Texture2D newTexture, bool newShouldDestroyTexture)
     {
-        if (desiredTexture != newTexture || shouldDestroyTexture != newShouldDestroyTexture)
+        if (desiredTexture != newTexture || ShouldDestroyTexture != newShouldDestroyTexture)
         {
             internalSetTexture(newTexture, newShouldDestroyTexture);
         }
     }
 
-    public override void destroy()
+    public override void InternalDestroy()
     {
-        if (shouldDestroyTexture && desiredTexture != null)
+        if (ShouldDestroyTexture && desiredTexture != null)
         {
             UnityEngine.Object.Destroy(desiredTexture);
             desiredTexture = null;
         }
-        base.destroy();
+        base.InternalDestroy();
     }
 
     protected override bool ReleaseIntoPool()
@@ -195,6 +195,10 @@ internal class GlazierImage_uGUI : GlazierElementBase_uGUI, ISleekImage, ISleekE
         ConstructFromPool(poolData);
         pivotTransform = poolData.pivotTransform;
         rawImageComponent = poolData.rawImageComponent;
+        pivotTransform.anchorMin = Vector2.zero;
+        pivotTransform.anchorMax = Vector2.one;
+        pivotTransform.anchoredPosition = Vector2.zero;
+        pivotTransform.sizeDelta = Vector2.zero;
         pivotTransform.localRotation = Quaternion.identity;
         rawImageComponent.texture = (Texture2D)GlazierResources.PixelTexture;
     }
@@ -242,13 +246,13 @@ internal class GlazierImage_uGUI : GlazierElementBase_uGUI, ISleekImage, ISleekE
             }
             return;
         }
-        if (shouldDestroyTexture && desiredTexture != null)
+        if (ShouldDestroyTexture && desiredTexture != null)
         {
             UnityEngine.Object.Destroy(desiredTexture);
             desiredTexture = null;
         }
         desiredTexture = newTexture;
-        shouldDestroyTexture = newShouldDestroyTexture;
+        ShouldDestroyTexture = newShouldDestroyTexture;
         rawImageComponent.texture = ((desiredTexture != null) ? desiredTexture : ((Texture2D)GlazierResources.PixelTexture));
         SynchronizeColors();
     }

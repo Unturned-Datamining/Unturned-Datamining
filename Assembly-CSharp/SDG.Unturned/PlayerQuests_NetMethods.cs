@@ -694,15 +694,17 @@ public static class PlayerQuests_NetMethods
             if (!(playerQuests == null))
             {
                 reader.ReadGuid(out var value2);
-                playerQuests.ReceiveRemoveQuest(value2);
+                reader.ReadBit(out var value3);
+                playerQuests.ReceiveRemoveQuest(value2, value3);
             }
         }
     }
 
     [NetInvokableGeneratedMethod("ReceiveRemoveQuest", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveRemoveQuest_Write(NetPakWriter writer, Guid assetGuid)
+    public static void ReceiveRemoveQuest_Write(NetPakWriter writer, Guid assetGuid, bool wasCompleted)
     {
         writer.WriteGuid(assetGuid);
+        writer.WriteBit(wasCompleted);
     }
 
     [NetInvokableGeneratedMethod("ReceiveTrackQuest", ENetInvokableGeneratedMethodPurpose.Read)]
@@ -737,8 +739,8 @@ public static class PlayerQuests_NetMethods
         writer.WriteGuid(assetGuid);
     }
 
-    [NetInvokableGeneratedMethod("ReceiveAbandonQuest", ENetInvokableGeneratedMethodPurpose.Read)]
-    public static void ReceiveAbandonQuest_Read(in ServerInvocationContext context)
+    [NetInvokableGeneratedMethod("ReceiveAbandonQuestRequest", ENetInvokableGeneratedMethodPurpose.Read)]
+    public static void ReceiveAbandonQuestRequest_Read(in ServerInvocationContext context)
     {
         NetPakReader reader = context.reader;
         if (!reader.ReadNetId(out var value))
@@ -759,50 +761,18 @@ public static class PlayerQuests_NetMethods
                 return;
             }
             reader.ReadGuid(out var value2);
-            playerQuests.ReceiveAbandonQuest(value2);
+            playerQuests.ReceiveAbandonQuestRequest(value2);
         }
     }
 
-    [NetInvokableGeneratedMethod("ReceiveAbandonQuest", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveAbandonQuest_Write(NetPakWriter writer, Guid assetGuid)
+    [NetInvokableGeneratedMethod("ReceiveAbandonQuestRequest", ENetInvokableGeneratedMethodPurpose.Write)]
+    public static void ReceiveAbandonQuestRequest_Write(NetPakWriter writer, Guid assetGuid)
     {
         writer.WriteGuid(assetGuid);
     }
 
-    [NetInvokableGeneratedMethod("ReceiveRegisterMessage", ENetInvokableGeneratedMethodPurpose.Read)]
-    public static void ReceiveRegisterMessage_Read(in ServerInvocationContext context)
-    {
-        NetPakReader reader = context.reader;
-        if (!reader.ReadNetId(out var value))
-        {
-            return;
-        }
-        object obj = NetIdRegistry.Get(value);
-        if (obj == null)
-        {
-            return;
-        }
-        PlayerQuests playerQuests = obj as PlayerQuests;
-        if (!(playerQuests == null))
-        {
-            if (!context.IsOwnerOf(playerQuests.channel))
-            {
-                context.Kick($"not owner of {playerQuests}");
-                return;
-            }
-            reader.ReadGuid(out var value2);
-            playerQuests.ReceiveRegisterMessage(value2);
-        }
-    }
-
-    [NetInvokableGeneratedMethod("ReceiveRegisterMessage", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveRegisterMessage_Write(NetPakWriter writer, Guid assetGuid)
-    {
-        writer.WriteGuid(assetGuid);
-    }
-
-    [NetInvokableGeneratedMethod("ReceiveRegisterResponse", ENetInvokableGeneratedMethodPurpose.Read)]
-    public static void ReceiveRegisterResponse_Read(in ServerInvocationContext context)
+    [NetInvokableGeneratedMethod("ReceiveChooseDialogueResponseRequest", ENetInvokableGeneratedMethodPurpose.Read)]
+    public static void ReceiveChooseDialogueResponseRequest_Read(in ServerInvocationContext context)
     {
         NetPakReader reader = context.reader;
         if (!reader.ReadNetId(out var value))
@@ -824,12 +794,46 @@ public static class PlayerQuests_NetMethods
             }
             reader.ReadGuid(out var value2);
             reader.ReadUInt8(out var value3);
-            playerQuests.ReceiveRegisterResponse(value2, value3);
+            playerQuests.ReceiveChooseDialogueResponseRequest(in context, value2, value3);
         }
     }
 
-    [NetInvokableGeneratedMethod("ReceiveRegisterResponse", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveRegisterResponse_Write(NetPakWriter writer, Guid assetGuid, byte index)
+    [NetInvokableGeneratedMethod("ReceiveChooseDialogueResponseRequest", ENetInvokableGeneratedMethodPurpose.Write)]
+    public static void ReceiveChooseDialogueResponseRequest_Write(NetPakWriter writer, Guid assetGuid, byte index)
+    {
+        writer.WriteGuid(assetGuid);
+        writer.WriteUInt8(index);
+    }
+
+    [NetInvokableGeneratedMethod("ReceiveChooseDefaultNextDialogueRequest", ENetInvokableGeneratedMethodPurpose.Read)]
+    public static void ReceiveChooseDefaultNextDialogueRequest_Read(in ServerInvocationContext context)
+    {
+        NetPakReader reader = context.reader;
+        if (!reader.ReadNetId(out var value))
+        {
+            return;
+        }
+        object obj = NetIdRegistry.Get(value);
+        if (obj == null)
+        {
+            return;
+        }
+        PlayerQuests playerQuests = obj as PlayerQuests;
+        if (!(playerQuests == null))
+        {
+            if (!context.IsOwnerOf(playerQuests.channel))
+            {
+                context.Kick($"not owner of {playerQuests}");
+                return;
+            }
+            reader.ReadGuid(out var value2);
+            reader.ReadUInt8(out var value3);
+            playerQuests.ReceiveChooseDefaultNextDialogueRequest(in context, value2, value3);
+        }
+    }
+
+    [NetInvokableGeneratedMethod("ReceiveChooseDefaultNextDialogueRequest", ENetInvokableGeneratedMethodPurpose.Write)]
+    public static void ReceiveChooseDefaultNextDialogueRequest_Write(NetPakWriter writer, Guid assetGuid, byte index)
     {
         writer.WriteGuid(assetGuid);
         writer.WriteUInt8(index);
@@ -851,5 +855,99 @@ public static class PlayerQuests_NetMethods
                 playerQuests.ReceiveQuests(in context);
             }
         }
+    }
+
+    [NetInvokableGeneratedMethod("ReceiveTalkWithNpcResponse", ENetInvokableGeneratedMethodPurpose.Read)]
+    public static void ReceiveTalkWithNpcResponse_Read(in ClientInvocationContext context)
+    {
+        NetPakReader reader = context.reader;
+        if (!reader.ReadNetId(out var value))
+        {
+            return;
+        }
+        object obj = NetIdRegistry.Get(value);
+        if (obj != null)
+        {
+            PlayerQuests playerQuests = obj as PlayerQuests;
+            if (!(playerQuests == null))
+            {
+                reader.ReadNetId(out var value2);
+                reader.ReadGuid(out var value3);
+                reader.ReadUInt8(out var value4);
+                reader.ReadBit(out var value5);
+                playerQuests.ReceiveTalkWithNpcResponse(in context, value2, value3, value4, value5);
+            }
+        }
+    }
+
+    [NetInvokableGeneratedMethod("ReceiveTalkWithNpcResponse", ENetInvokableGeneratedMethodPurpose.Write)]
+    public static void ReceiveTalkWithNpcResponse_Write(NetPakWriter writer, NetId targetNpcNetId, Guid dialogueAssetGuid, byte messageIndex, bool hasNextDialogue)
+    {
+        writer.WriteNetId(targetNpcNetId);
+        writer.WriteGuid(dialogueAssetGuid);
+        writer.WriteUInt8(messageIndex);
+        writer.WriteBit(hasNextDialogue);
+    }
+
+    [NetInvokableGeneratedMethod("ReceiveOpenDialogue", ENetInvokableGeneratedMethodPurpose.Read)]
+    public static void ReceiveOpenDialogue_Read(in ClientInvocationContext context)
+    {
+        NetPakReader reader = context.reader;
+        if (!reader.ReadNetId(out var value))
+        {
+            return;
+        }
+        object obj = NetIdRegistry.Get(value);
+        if (obj != null)
+        {
+            PlayerQuests playerQuests = obj as PlayerQuests;
+            if (!(playerQuests == null))
+            {
+                reader.ReadGuid(out var value2);
+                reader.ReadUInt8(out var value3);
+                reader.ReadBit(out var value4);
+                playerQuests.ReceiveOpenDialogue(in context, value2, value3, value4);
+            }
+        }
+    }
+
+    [NetInvokableGeneratedMethod("ReceiveOpenDialogue", ENetInvokableGeneratedMethodPurpose.Write)]
+    public static void ReceiveOpenDialogue_Write(NetPakWriter writer, Guid dialogueAssetGuid, byte messageIndex, bool hasNextDialogue)
+    {
+        writer.WriteGuid(dialogueAssetGuid);
+        writer.WriteUInt8(messageIndex);
+        writer.WriteBit(hasNextDialogue);
+    }
+
+    [NetInvokableGeneratedMethod("ReceiveOpenVendor", ENetInvokableGeneratedMethodPurpose.Read)]
+    public static void ReceiveOpenVendor_Read(in ClientInvocationContext context)
+    {
+        NetPakReader reader = context.reader;
+        if (!reader.ReadNetId(out var value))
+        {
+            return;
+        }
+        object obj = NetIdRegistry.Get(value);
+        if (obj != null)
+        {
+            PlayerQuests playerQuests = obj as PlayerQuests;
+            if (!(playerQuests == null))
+            {
+                reader.ReadGuid(out var value2);
+                reader.ReadGuid(out var value3);
+                reader.ReadUInt8(out var value4);
+                reader.ReadBit(out var value5);
+                playerQuests.ReceiveOpenVendor(in context, value2, value3, value4, value5);
+            }
+        }
+    }
+
+    [NetInvokableGeneratedMethod("ReceiveOpenVendor", ENetInvokableGeneratedMethodPurpose.Write)]
+    public static void ReceiveOpenVendor_Write(NetPakWriter writer, Guid vendorAssetGuid, Guid dialogueAssetGuid, byte messageIndex, bool hasNextDialogue)
+    {
+        writer.WriteGuid(vendorAssetGuid);
+        writer.WriteGuid(dialogueAssetGuid);
+        writer.WriteUInt8(messageIndex);
+        writer.WriteBit(hasNextDialogue);
     }
 }

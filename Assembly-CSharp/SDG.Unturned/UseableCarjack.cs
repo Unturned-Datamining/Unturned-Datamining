@@ -47,7 +47,7 @@ public class UseableCarjack : Useable
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askPull")]
     public void ReceivePlayPull()
     {
-        if (base.player.equipment.isEquipped)
+        if (base.player.equipment.IsEquipAnimationFinished)
         {
             pull();
         }
@@ -72,7 +72,7 @@ public class UseableCarjack : Useable
 
     private bool fire()
     {
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             RaycastInfo raycastInfo = DamageTool.raycast(new Ray(base.player.look.aim.position, base.player.look.aim.forward), 3f, RayMasks.DAMAGE_CLIENT);
             if (raycastInfo.vehicle == null || !isVehicleValid(raycastInfo.vehicle))
@@ -134,7 +134,7 @@ public class UseableCarjack : Useable
     public override void equip()
     {
         base.player.animator.play("Equip", smooth: true);
-        useTime = base.player.animator.getAnimationLength("Use");
+        useTime = base.player.animator.GetAnimationLength("Use");
     }
 
     public override void simulate(uint simulation, bool inputSteady)

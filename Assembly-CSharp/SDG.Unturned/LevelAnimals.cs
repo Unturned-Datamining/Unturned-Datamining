@@ -137,19 +137,7 @@ public class LevelAnimals
         {
             Color newColor = river.readColor();
             string text = river.readString();
-            ushort num;
-            if (b > 2)
-            {
-                num = river.readUInt16();
-                if (num != 0 && SpawnTableTool.resolve(num) == 0 && (bool)Assets.shouldLoadAnyAssets)
-                {
-                    Assets.reportError(Level.info.name + " animal table \"" + text + "\" references invalid spawn table " + num + "!");
-                }
-            }
-            else
-            {
-                num = 0;
-            }
+            ushort num = (ushort)((b > 2) ? river.readUInt16() : 0);
             List<AnimalTier> list = new List<AnimalTier>();
             byte b4 = river.readByte();
             for (byte b5 = 0; b5 < b4; b5 = (byte)(b5 + 1))
@@ -165,10 +153,15 @@ public class LevelAnimals
                 }
                 list.Add(new AnimalTier(list2, newName, newChance));
             }
-            tables.Add(new AnimalTable(list, newColor, text, num));
+            AnimalTable animalTable = new AnimalTable(list, newColor, text, num);
+            tables.Add(animalTable);
             if (!Level.isEditor)
             {
-                tables[b3].buildTable();
+                animalTable.buildTable();
+            }
+            if (animalTable.tableID != 0 && SpawnTableTool.ResolveLegacyId(num, EAssetType.ANIMAL, animalTable.OnGetSpawnTableValidationErrorContext) == 0 && (bool)Assets.shouldLoadAnyAssets)
+            {
+                Assets.reportError(Level.info.name + " animal table \"" + text + "\" references invalid spawn table " + num + "!");
             }
         }
         ushort num2 = river.readUInt16();

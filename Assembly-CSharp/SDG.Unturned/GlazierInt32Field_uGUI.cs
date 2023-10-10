@@ -6,7 +6,7 @@ internal class GlazierInt32Field_uGUI : GlazierNumericField_uGUI, ISleekInt32Fie
 {
     private int _state;
 
-    public int state
+    public int Value
     {
         get
         {
@@ -19,7 +19,7 @@ internal class GlazierInt32Field_uGUI : GlazierNumericField_uGUI, ISleekInt32Fie
         }
     }
 
-    public event TypedInt32 onTypedInt;
+    public event TypedInt32 OnValueChanged;
 
     public GlazierInt32Field_uGUI(Glazier_uGUI glazier)
         : base(glazier)
@@ -37,7 +37,7 @@ internal class GlazierInt32Field_uGUI : GlazierNumericField_uGUI, ISleekInt32Fie
     {
         if (int.TryParse(input, out _state))
         {
-            this.onTypedInt?.Invoke(this, _state);
+            this.OnValueChanged?.Invoke(this, _state);
             return true;
         }
         return false;
@@ -45,6 +45,6 @@ internal class GlazierInt32Field_uGUI : GlazierNumericField_uGUI, ISleekInt32Fie
 
     protected override string NumberToString()
     {
-        return state.ToString();
+        return Value.ToString();
     }
 }

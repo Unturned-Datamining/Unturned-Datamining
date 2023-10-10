@@ -6,15 +6,7 @@ public class ItemDefIconInfo
 {
     public string extraPath;
 
-    private bool hasSmall;
-
     private bool hasLarge;
-
-    public void onSmallItemIconReady(Texture2D texture)
-    {
-        hasSmall = true;
-        complete();
-    }
 
     public void onLargeItemIconReady(Texture2D texture)
     {
@@ -27,7 +19,7 @@ public class ItemDefIconInfo
 
     private void complete()
     {
-        if (hasSmall && hasLarge)
+        if (hasLarge)
         {
             IconUtils.icons.Remove(this);
         }

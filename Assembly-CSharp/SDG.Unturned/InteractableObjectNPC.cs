@@ -1,3 +1,4 @@
+using SDG.NetTransport;
 using UnityEngine;
 using Unturned.SystemEx;
 
@@ -42,6 +43,16 @@ public class InteractableObjectNPC : InteractableObject
     private Quaternion headRotation;
 
     public ObjectNPCAsset npcAsset => _npcAsset;
+
+    public NetId GetNpcNetId()
+    {
+        return NetIdRegistry.GetTransformNetId(base.transform);
+    }
+
+    public static InteractableObjectNPC GetNpcFromObjectNetId(NetId netId)
+    {
+        return NetIdRegistry.GetTransform(netId, null)?.GetComponent<InteractableObjectNPC>();
+    }
 
     internal void SetFaceOverride(byte? faceOverride)
     {
@@ -224,7 +235,7 @@ public class InteractableObjectNPC : InteractableObject
             Transform item = ItemTool.getItem(itemAsset2.id, 0, 100, itemAsset2.getState(), viewmodel: false, itemAsset2, shouldDestroyColliders: true, null, out tempMaterial, null);
             if (npcAsset.equipped == ESlotType.PRIMARY)
             {
-                if (itemAsset2.isBackward)
+                if (itemAsset2.ShouldAttachEquippedModelToLeftHand)
                 {
                     item.transform.parent = parent6;
                 }
@@ -259,7 +270,7 @@ public class InteractableObjectNPC : InteractableObject
             Transform item2 = ItemTool.getItem(itemAsset3.id, 0, 100, itemAsset3.getState(), viewmodel: false, itemAsset3, shouldDestroyColliders: true, null, out tempMaterial2, null);
             if (npcAsset.equipped == ESlotType.SECONDARY)
             {
-                if (itemAsset3.isBackward)
+                if (itemAsset3.ShouldAttachEquippedModelToLeftHand)
                 {
                     item2.transform.parent = parent6;
                 }
@@ -288,7 +299,7 @@ public class InteractableObjectNPC : InteractableObject
         {
             Material tempMaterial3;
             Transform item3 = ItemTool.getItem(itemAsset4.id, 0, 100, itemAsset4.getState(), viewmodel: false, itemAsset4, shouldDestroyColliders: true, null, out tempMaterial3, null);
-            if (itemAsset4.isBackward)
+            if (itemAsset4.ShouldAttachEquippedModelToLeftHand)
             {
                 item3.transform.parent = parent6;
             }
@@ -341,18 +352,14 @@ public class InteractableObjectNPC : InteractableObject
 
     public override void use()
     {
-        DialogueAsset dialogueAsset = npcAsset.FindDialogueAsset();
-        if (dialogueAsset == null)
+        if (npcAsset.FindDialogueAsset() == null)
         {
             UnturnedLog.warn("Failed to find NPC dialogue: " + npcAsset.FriendlyName);
-            return;
         }
-        ObjectManager.useObjectNPC(base.transform);
-        Player.player.quests.checkNPC = this;
-        PlayerLifeUI.close();
-        PlayerLifeUI.npc = this;
-        isLookingAtPlayer = true;
-        PlayerNPCDialogueUI.open(dialogueAsset, null);
+        else
+        {
+            ObjectManager.SendTalkWithNpcRequest.Invoke(ENetReliability.Reliable, GetNpcNetId());
+        }
     }
 
     public override bool checkUseable()

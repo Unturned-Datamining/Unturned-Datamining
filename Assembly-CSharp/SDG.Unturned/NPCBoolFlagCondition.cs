@@ -13,18 +13,11 @@ public class NPCBoolFlagCondition : NPCFlagCondition
         return base.allowUnset;
     }
 
-    public override void applyCondition(Player player, bool shouldSend)
+    public override void ApplyCondition(Player player)
     {
         if (shouldReset)
         {
-            if (shouldSend)
-            {
-                player.quests.sendRemoveFlag(base.id);
-            }
-            else
-            {
-                player.quests.removeFlag(base.id);
-            }
+            player.quests.sendRemoveFlag(base.id);
         }
     }
 

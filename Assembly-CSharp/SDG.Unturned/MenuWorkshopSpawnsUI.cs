@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using UnityEngine;
+using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
@@ -18,7 +19,7 @@ public class MenuWorkshopSpawnsUI
 
     private static SleekButtonState typeButton;
 
-    private static ISleekUInt16Field viewIDField;
+    private static ISleekField viewIDField;
 
     private static ISleekButton viewButton;
 
@@ -34,11 +35,11 @@ public class MenuWorkshopSpawnsUI
 
     private static ISleekField rawField;
 
-    private static ISleekUInt16Field addRootIDField;
+    private static ISleekField addRootIDField;
 
     private static SleekButtonIcon addRootSpawnButton;
 
-    private static ISleekUInt16Field addTableIDField;
+    private static ISleekField addTableIDField;
 
     private static SleekButtonIcon addTableAssetButton;
 
@@ -70,14 +71,27 @@ public class MenuWorkshopSpawnsUI
         }
     }
 
+    private static SpawnAsset FindCurrentAsset()
+    {
+        if (ushort.TryParse(viewIDField.Text, out var result))
+        {
+            return Assets.find(EAssetType.SPAWN, result) as SpawnAsset;
+        }
+        if (Guid.TryParse(viewIDField.Text, out var result2))
+        {
+            return Assets.find(result2) as SpawnAsset;
+        }
+        return null;
+    }
+
     private static void refresh()
     {
-        rawField.isVisible = false;
-        rootsBox.isVisible = true;
-        tablesBox.isVisible = true;
+        rawField.IsVisible = false;
+        rootsBox.IsVisible = true;
+        tablesBox.IsVisible = true;
         rootsBox.RemoveAllChildren();
         tablesBox.RemoveAllChildren();
-        MenuWorkshopSpawnsUI.asset = Assets.find(EAssetType.SPAWN, viewIDField.state) as SpawnAsset;
+        MenuWorkshopSpawnsUI.asset = FindCurrentAsset();
         switch (typeButton.state)
         {
         case 0:
@@ -94,279 +108,320 @@ public class MenuWorkshopSpawnsUI
             return;
         }
         int num = 120;
-        rootsBox.positionOffset_Y = num;
+        rootsBox.PositionOffset_Y = num;
         num += 40;
         if (MenuWorkshopSpawnsUI.asset != null)
         {
-            rootsBox.text = localization.format("Roots_Box", viewIDField.state + " " + MenuWorkshopSpawnsUI.asset.name);
+            rootsBox.Text = localization.format("Roots_Box", MenuWorkshopSpawnsUI.asset.name);
             for (int i = 0; i < MenuWorkshopSpawnsUI.asset.roots.Count; i++)
             {
                 SpawnTable spawnTable = MenuWorkshopSpawnsUI.asset.roots[i];
-                if (spawnTable.spawnID != 0)
+                SpawnAsset spawnAsset;
+                if (spawnTable.legacySpawnId != 0)
                 {
-                    ISleekButton sleekButton = Glazier.Get().CreateButton();
-                    sleekButton.positionOffset_Y = 40 + i * 40;
-                    sleekButton.sizeOffset_X = -260;
-                    sleekButton.sizeScale_X = 1f;
-                    sleekButton.sizeOffset_Y = 30;
-                    sleekButton.onClickedButton += onClickedRootButton;
-                    rootsBox.AddChild(sleekButton);
-                    num += 40;
-                    if (Assets.find(EAssetType.SPAWN, spawnTable.spawnID) is SpawnAsset spawnAsset)
-                    {
-                        sleekButton.text = spawnTable.spawnID + " " + spawnAsset.name;
-                    }
-                    else
-                    {
-                        sleekButton.text = spawnTable.spawnID + " ?";
-                    }
-                    ISleekInt32Field sleekInt32Field = Glazier.Get().CreateInt32Field();
-                    sleekInt32Field.positionOffset_X = 10;
-                    sleekInt32Field.positionScale_X = 1f;
-                    sleekInt32Field.sizeOffset_X = 55;
-                    sleekInt32Field.sizeOffset_Y = 30;
-                    sleekInt32Field.state = spawnTable.weight;
-                    sleekInt32Field.tooltipText = localization.format("Weight_Tooltip");
-                    sleekInt32Field.onTypedInt += onTypedRootWeightField;
-                    sleekButton.AddChild(sleekInt32Field);
-                    ISleekBox sleekBox = Glazier.Get().CreateBox();
-                    sleekBox.positionOffset_X = 75;
-                    sleekBox.positionScale_X = 1f;
-                    sleekBox.sizeOffset_X = 55;
-                    sleekBox.sizeOffset_Y = 30;
-                    sleekBox.text = Math.Round(spawnTable.chance * 1000f) / 10.0 + "%";
-                    sleekBox.tooltipText = localization.format("Chance_Tooltip");
-                    sleekButton.AddChild(sleekBox);
-                    SleekButtonIcon sleekButtonIcon = new SleekButtonIcon(MenuWorkshopEditorUI.icons.load<Texture2D>("Remove"));
-                    sleekButtonIcon.positionOffset_X = 140;
-                    sleekButtonIcon.positionScale_X = 1f;
-                    sleekButtonIcon.sizeOffset_X = 120;
-                    sleekButtonIcon.sizeOffset_Y = 30;
-                    sleekButtonIcon.text = localization.format("Remove_Root_Button");
-                    sleekButtonIcon.tooltip = localization.format("Remove_Root_Button_Tooltip");
-                    sleekButtonIcon.onClickedButton += onClickedRemoveRootButton;
-                    sleekButton.AddChild(sleekButtonIcon);
+                    spawnAsset = Assets.find(EAssetType.SPAWN, spawnTable.legacySpawnId) as SpawnAsset;
                 }
+                else
+                {
+                    if (spawnTable.targetGuid.IsEmpty())
+                    {
+                        continue;
+                    }
+                    spawnAsset = Assets.find(spawnTable.targetGuid) as SpawnAsset;
+                }
+                ISleekButton sleekButton = Glazier.Get().CreateButton();
+                sleekButton.PositionOffset_Y = 40 + i * 40;
+                sleekButton.SizeOffset_X = -260f;
+                sleekButton.SizeScale_X = 1f;
+                sleekButton.SizeOffset_Y = 30f;
+                sleekButton.OnClicked += onClickedRootButton;
+                rootsBox.AddChild(sleekButton);
+                num += 40;
+                if (spawnAsset != null)
+                {
+                    sleekButton.Text = spawnAsset.name;
+                }
+                else if (spawnTable.legacySpawnId != 0)
+                {
+                    sleekButton.Text = $"{spawnTable.legacySpawnId} ?";
+                }
+                else
+                {
+                    sleekButton.Text = $"{spawnTable.targetGuid:N} ?";
+                }
+                ISleekInt32Field sleekInt32Field = Glazier.Get().CreateInt32Field();
+                sleekInt32Field.PositionOffset_X = 10f;
+                sleekInt32Field.PositionScale_X = 1f;
+                sleekInt32Field.SizeOffset_X = 55f;
+                sleekInt32Field.SizeOffset_Y = 30f;
+                sleekInt32Field.Value = spawnTable.weight;
+                sleekInt32Field.TooltipText = localization.format("Weight_Tooltip");
+                sleekInt32Field.OnValueChanged += onTypedRootWeightField;
+                sleekButton.AddChild(sleekInt32Field);
+                ISleekBox sleekBox = Glazier.Get().CreateBox();
+                sleekBox.PositionOffset_X = 75f;
+                sleekBox.PositionScale_X = 1f;
+                sleekBox.SizeOffset_X = 55f;
+                sleekBox.SizeOffset_Y = 30f;
+                sleekBox.Text = spawnTable.normalizedWeight.ToString("P");
+                sleekBox.TooltipText = localization.format("Chance_Tooltip");
+                sleekButton.AddChild(sleekBox);
+                SleekButtonIcon sleekButtonIcon = new SleekButtonIcon(MenuWorkshopEditorUI.icons.load<Texture2D>("Remove"));
+                sleekButtonIcon.PositionOffset_X = 140f;
+                sleekButtonIcon.PositionScale_X = 1f;
+                sleekButtonIcon.SizeOffset_X = 120f;
+                sleekButtonIcon.SizeOffset_Y = 30f;
+                sleekButtonIcon.text = localization.format("Remove_Root_Button");
+                sleekButtonIcon.tooltip = localization.format("Remove_Root_Button_Tooltip");
+                sleekButtonIcon.onClickedButton += onClickedRemoveRootButton;
+                sleekButton.AddChild(sleekButtonIcon);
             }
-            addRootIDField.positionOffset_Y = num;
-            addRootSpawnButton.positionOffset_Y = num;
+            addRootIDField.PositionOffset_Y = num;
+            addRootSpawnButton.PositionOffset_Y = num;
             num += 40;
-            addRootIDField.isVisible = true;
-            addRootSpawnButton.isVisible = true;
+            addRootIDField.IsVisible = true;
+            addRootSpawnButton.IsVisible = true;
         }
         else
         {
-            rootsBox.text = localization.format("Roots_Box", viewIDField.state + " ?");
-            addRootIDField.isVisible = false;
-            addRootSpawnButton.isVisible = false;
+            rootsBox.Text = localization.format("Roots_Box", viewIDField.Text + " ?");
+            addRootIDField.IsVisible = false;
+            addRootSpawnButton.IsVisible = false;
         }
         num += 40;
-        tablesBox.positionOffset_Y = num;
+        tablesBox.PositionOffset_Y = num;
         num += 40;
         if (MenuWorkshopSpawnsUI.asset != null)
         {
-            tablesBox.text = localization.format("Tables_Box", viewIDField.state + " " + MenuWorkshopSpawnsUI.asset.name);
+            tablesBox.Text = localization.format("Tables_Box", MenuWorkshopSpawnsUI.asset.name);
             for (int j = 0; j < MenuWorkshopSpawnsUI.asset.tables.Count; j++)
             {
                 SpawnTable spawnTable2 = MenuWorkshopSpawnsUI.asset.tables[j];
-                ISleekElement sleekElement = null;
-                if (spawnTable2.spawnID != 0)
+                Asset asset;
+                SpawnAsset spawnAsset2;
+                bool flag;
+                if (spawnTable2.legacySpawnId != 0)
+                {
+                    asset = null;
+                    spawnAsset2 = Assets.find(EAssetType.SPAWN, spawnTable2.legacySpawnId) as SpawnAsset;
+                    flag = true;
+                }
+                else if (spawnTable2.legacyAssetId != 0)
+                {
+                    asset = Assets.find(type, spawnTable2.legacyAssetId);
+                    spawnAsset2 = null;
+                    flag = false;
+                }
+                else
+                {
+                    asset = Assets.find(spawnTable2.targetGuid);
+                    spawnAsset2 = asset as SpawnAsset;
+                    flag = spawnAsset2 != null;
+                }
+                ISleekElement sleekElement;
+                if (flag)
                 {
                     ISleekButton sleekButton2 = Glazier.Get().CreateButton();
-                    sleekButton2.positionOffset_Y = 40 + j * 40;
-                    sleekButton2.sizeOffset_X = -260;
-                    sleekButton2.sizeScale_X = 1f;
-                    sleekButton2.sizeOffset_Y = 30;
-                    sleekButton2.onClickedButton += onClickedTableButton;
+                    sleekButton2.PositionOffset_Y = 40 + j * 40;
+                    sleekButton2.SizeOffset_X = -260f;
+                    sleekButton2.SizeScale_X = 1f;
+                    sleekButton2.SizeOffset_Y = 30f;
+                    sleekButton2.OnClicked += onClickedTableButton;
                     tablesBox.AddChild(sleekButton2);
                     sleekElement = sleekButton2;
                     num += 40;
-                    if (Assets.find(EAssetType.SPAWN, spawnTable2.spawnID) is SpawnAsset spawnAsset2)
+                    if (spawnAsset2 != null)
                     {
-                        sleekButton2.text = spawnTable2.spawnID + " " + spawnAsset2.name;
+                        sleekButton2.Text = spawnAsset2.name;
+                    }
+                    else if (spawnTable2.legacySpawnId != 0)
+                    {
+                        sleekButton2.Text = $"{spawnTable2.legacySpawnId} ?";
                     }
                     else
                     {
-                        sleekButton2.text = spawnTable2.spawnID + " ?";
+                        sleekButton2.Text = $"{spawnTable2.targetGuid:N} ?";
                     }
                 }
-                else if (spawnTable2.assetID != 0)
+                else
                 {
                     ISleekBox sleekBox2 = Glazier.Get().CreateBox();
-                    sleekBox2.positionOffset_Y = 40 + j * 40;
-                    sleekBox2.sizeOffset_X = -260;
-                    sleekBox2.sizeScale_X = 1f;
-                    sleekBox2.sizeOffset_Y = 30;
+                    sleekBox2.PositionOffset_Y = 40 + j * 40;
+                    sleekBox2.SizeOffset_X = -260f;
+                    sleekBox2.SizeScale_X = 1f;
+                    sleekBox2.SizeOffset_Y = 30f;
                     tablesBox.AddChild(sleekBox2);
                     sleekElement = sleekBox2;
                     num += 40;
-                    Asset asset = Assets.find(type, spawnTable2.assetID);
                     if (asset != null)
                     {
-                        sleekBox2.text = spawnTable2.assetID + " " + asset.name;
-                        if (type == EAssetType.ITEM)
+                        sleekBox2.Text = asset.FriendlyName;
+                        if (asset is ItemAsset itemAsset)
                         {
-                            ItemAsset itemAsset = asset as ItemAsset;
-                            if (MenuWorkshopSpawnsUI.asset != null)
-                            {
-                                sleekBox2.textColor = ItemTool.getRarityColorUI(itemAsset.rarity);
-                            }
+                            sleekBox2.TextColor = ItemTool.getRarityColorUI(itemAsset.rarity);
                         }
-                        else if (type == EAssetType.VEHICLE)
+                        else if (asset is VehicleAsset vehicleAsset)
                         {
-                            VehicleAsset vehicleAsset = asset as VehicleAsset;
-                            if (MenuWorkshopSpawnsUI.asset != null)
-                            {
-                                sleekBox2.textColor = ItemTool.getRarityColorUI(vehicleAsset.rarity);
-                            }
+                            sleekBox2.TextColor = ItemTool.getRarityColorUI(vehicleAsset.rarity);
                         }
+                    }
+                    else if (spawnTable2.legacyAssetId != 0)
+                    {
+                        sleekBox2.Text = $"{spawnTable2.legacyAssetId} ?";
                     }
                     else
                     {
-                        sleekBox2.text = spawnTable2.assetID + " ?";
+                        sleekBox2.Text = $"{spawnTable2.targetGuid:N} ?";
                     }
                 }
                 if (sleekElement != null)
                 {
                     ISleekInt32Field sleekInt32Field2 = Glazier.Get().CreateInt32Field();
-                    sleekInt32Field2.positionOffset_X = 10;
-                    sleekInt32Field2.positionScale_X = 1f;
-                    sleekInt32Field2.sizeOffset_X = 55;
-                    sleekInt32Field2.sizeOffset_Y = 30;
-                    sleekInt32Field2.state = spawnTable2.weight;
-                    sleekInt32Field2.tooltipText = localization.format("Weight_Tooltip");
-                    sleekInt32Field2.onTypedInt += onTypedTableWeightField;
+                    sleekInt32Field2.PositionOffset_X = 10f;
+                    sleekInt32Field2.PositionScale_X = 1f;
+                    sleekInt32Field2.SizeOffset_X = 55f;
+                    sleekInt32Field2.SizeOffset_Y = 30f;
+                    sleekInt32Field2.Value = spawnTable2.weight;
+                    sleekInt32Field2.TooltipText = localization.format("Weight_Tooltip");
+                    sleekInt32Field2.OnValueChanged += onTypedTableWeightField;
                     sleekElement.AddChild(sleekInt32Field2);
-                    float num2 = spawnTable2.chance;
+                    float num2 = spawnTable2.normalizedWeight;
                     if (j > 0)
                     {
-                        num2 -= MenuWorkshopSpawnsUI.asset.tables[j - 1].chance;
+                        num2 -= MenuWorkshopSpawnsUI.asset.tables[j - 1].normalizedWeight;
                     }
                     ISleekBox sleekBox3 = Glazier.Get().CreateBox();
-                    sleekBox3.positionOffset_X = 75;
-                    sleekBox3.positionScale_X = 1f;
-                    sleekBox3.sizeOffset_X = 55;
-                    sleekBox3.sizeOffset_Y = 30;
-                    sleekBox3.text = Math.Round(num2 * 1000f) / 10.0 + "%";
-                    sleekBox3.tooltipText = localization.format("Chance_Tooltip");
+                    sleekBox3.PositionOffset_X = 75f;
+                    sleekBox3.PositionScale_X = 1f;
+                    sleekBox3.SizeOffset_X = 55f;
+                    sleekBox3.SizeOffset_Y = 30f;
+                    sleekBox3.Text = num2.ToString("P");
+                    sleekBox3.TooltipText = localization.format("Chance_Tooltip");
                     sleekElement.AddChild(sleekBox3);
                     SleekButtonIcon sleekButtonIcon2 = new SleekButtonIcon(MenuWorkshopEditorUI.icons.load<Texture2D>("Remove"));
-                    sleekButtonIcon2.positionOffset_X = 140;
-                    sleekButtonIcon2.positionScale_X = 1f;
-                    sleekButtonIcon2.sizeOffset_X = 120;
-                    sleekButtonIcon2.sizeOffset_Y = 30;
+                    sleekButtonIcon2.PositionOffset_X = 140f;
+                    sleekButtonIcon2.PositionScale_X = 1f;
+                    sleekButtonIcon2.SizeOffset_X = 120f;
+                    sleekButtonIcon2.SizeOffset_Y = 30f;
                     sleekButtonIcon2.text = localization.format("Remove_Table_Button");
                     sleekButtonIcon2.tooltip = localization.format("Remove_Table_Button_Tooltip");
                     sleekButtonIcon2.onClickedButton += onClickedRemoveTableButton;
                     sleekElement.AddChild(sleekButtonIcon2);
                 }
             }
-            addTableIDField.positionOffset_Y = num;
-            addTableAssetButton.positionOffset_Y = num;
-            addTableSpawnButton.positionOffset_Y = num;
+            addTableIDField.PositionOffset_Y = num;
+            addTableAssetButton.PositionOffset_Y = num;
+            addTableSpawnButton.PositionOffset_Y = num;
             num += 40;
-            addTableIDField.isVisible = true;
-            addTableAssetButton.isVisible = true;
-            addTableSpawnButton.isVisible = true;
+            addTableIDField.IsVisible = true;
+            addTableAssetButton.IsVisible = true;
+            addTableSpawnButton.IsVisible = true;
         }
         else
         {
-            tablesBox.text = localization.format("Tables_Box", viewIDField.state + " ?");
-            addTableIDField.isVisible = false;
-            addTableAssetButton.isVisible = false;
-            addTableSpawnButton.isVisible = false;
+            tablesBox.Text = localization.format("Tables_Box", viewIDField.Text + " ?");
+            addTableIDField.IsVisible = false;
+            addTableAssetButton.IsVisible = false;
+            addTableSpawnButton.IsVisible = false;
         }
         if (MenuWorkshopSpawnsUI.asset != null)
         {
-            applyWeightsButton.positionOffset_Y = num;
+            applyWeightsButton.PositionOffset_Y = num;
             num += 40;
-            applyWeightsButton.isVisible = true;
+            applyWeightsButton.IsVisible = true;
         }
         else
         {
-            applyWeightsButton.isVisible = false;
+            applyWeightsButton.IsVisible = false;
         }
-        spawnsBox.contentSizeOffset = new Vector2(0f, num - 10);
+        spawnsBox.ContentSizeOffset = new Vector2(0f, num - 10);
     }
 
     private static string getRaw(SpawnAsset asset)
     {
-        string text = "Type Spawn";
-        text = text + "\nID " + asset.id;
-        int num = 0;
-        int num2 = 0;
-        for (int i = 0; i < asset.roots.Count; i++)
+        using StringWriter stringWriter = new StringWriter();
+        using DatWriter datWriter = new DatWriter(stringWriter);
+        datWriter.WriteKeyValue("GUID", asset.GUID);
+        datWriter.WriteKeyValue("Type", "Spawn");
+        datWriter.WriteKeyValue("ID", asset.id);
+        bool flag = false;
+        if (asset.roots != null)
         {
-            SpawnTable spawnTable = asset.roots[i];
-            if (spawnTable.isLink && spawnTable.weight > 0)
+            foreach (SpawnTable root in asset.roots)
             {
-                num++;
-            }
-        }
-        if (num > 0)
-        {
-            text += "\n";
-            text = text + "\nRoots " + num;
-            for (int j = 0; j < asset.roots.Count; j++)
-            {
-                SpawnTable spawnTable2 = asset.roots[j];
-                if (spawnTable2.isLink && spawnTable2.weight > 0)
+                if (root.isLink && (root.weight > 0 || root.isOverride))
                 {
-                    text = text + "\nRoot_" + num2 + "_Spawn_ID " + spawnTable2.spawnID;
-                    text = text + "\nRoot_" + num2 + "_Weight " + spawnTable2.weight;
-                    num2++;
+                    flag = true;
+                    break;
                 }
             }
         }
-        int num3 = 0;
-        int num4 = 0;
-        for (int k = 0; k < asset.tables.Count; k++)
+        if (flag)
         {
-            SpawnTable spawnTable3 = asset.tables[k];
-            if (!spawnTable3.isLink && spawnTable3.weight > 0)
+            datWriter.WriteEmptyLine();
+            datWriter.WriteListStart("Roots");
+            foreach (SpawnTable root2 in asset.roots)
             {
-                num3++;
-            }
-        }
-        if (num3 > 0)
-        {
-            text += "\n";
-            text = text + "\nTables " + asset.tables.Count;
-            for (int l = 0; l < asset.tables.Count; l++)
-            {
-                SpawnTable spawnTable4 = asset.tables[l];
-                if (!spawnTable4.isLink && spawnTable4.weight > 0)
+                if (root2.isLink && (root2.weight > 0 || root2.isOverride))
                 {
-                    text = ((spawnTable4.assetID == 0) ? (text + "\nTable_" + num4 + "_Spawn_ID " + spawnTable4.spawnID) : (text + "\nTable_" + num4 + "_Asset_ID " + spawnTable4.assetID));
-                    text = text + "\nTable_" + num4 + "_Weight " + spawnTable4.weight;
-                    num4++;
+                    datWriter.WriteDictionaryStart();
+                    root2.Write(datWriter, type);
+                    datWriter.WriteDictionaryEnd();
+                }
+            }
+            datWriter.WriteListEnd();
+        }
+        bool flag2 = false;
+        if (asset.tables != null)
+        {
+            foreach (SpawnTable table in asset.tables)
+            {
+                if (!table.isLink && table.weight > 0)
+                {
+                    flag2 = true;
+                    break;
                 }
             }
         }
-        return text;
+        if (flag2)
+        {
+            datWriter.WriteEmptyLine();
+            datWriter.WriteListStart("Tables");
+            foreach (SpawnTable table2 in asset.tables)
+            {
+                if (!table2.isLink && table2.weight > 0)
+                {
+                    datWriter.WriteDictionaryStart();
+                    table2.Write(datWriter, type);
+                    datWriter.WriteDictionaryEnd();
+                }
+            }
+            datWriter.WriteListEnd();
+        }
+        return stringWriter.ToString();
     }
 
     private static void raw()
     {
-        rawField.isVisible = true;
-        rootsBox.isVisible = false;
-        tablesBox.isVisible = false;
-        addRootIDField.isVisible = false;
-        addRootSpawnButton.isVisible = false;
-        addTableIDField.isVisible = false;
-        addTableAssetButton.isVisible = false;
-        addTableSpawnButton.isVisible = false;
-        applyWeightsButton.isVisible = false;
-        asset = Assets.find(EAssetType.SPAWN, viewIDField.state) as SpawnAsset;
+        rawField.IsVisible = true;
+        rootsBox.IsVisible = false;
+        tablesBox.IsVisible = false;
+        addRootIDField.IsVisible = false;
+        addRootSpawnButton.IsVisible = false;
+        addTableIDField.IsVisible = false;
+        addTableAssetButton.IsVisible = false;
+        addTableSpawnButton.IsVisible = false;
+        applyWeightsButton.IsVisible = false;
+        asset = FindCurrentAsset();
         string text = ((asset == null) ? "?" : getRaw(asset));
-        rawField.text = text;
+        rawField.Text = text;
         GUIUtility.systemCopyBuffer = text;
-        spawnsBox.contentSizeOffset = new Vector2(0f, 1080f);
+        spawnsBox.ContentSizeOffset = new Vector2(0f, 1080f);
     }
 
     private static void write()
     {
-        asset = Assets.find(EAssetType.SPAWN, viewIDField.state) as SpawnAsset;
+        asset = FindCurrentAsset();
         if (asset != null && !string.IsNullOrEmpty(asset.absoluteOriginFilePath) && File.Exists(asset.absoluteOriginFilePath))
         {
             string contents = getRaw(asset);
@@ -392,11 +447,13 @@ public class MenuWorkshopSpawnsUI
 
     private static void onClickedNewButton(ISleekElement button)
     {
-        Assets.AddToMapping(new SpawnAsset
+        ushort.TryParse(viewIDField.Text, out var result);
+        SpawnAsset spawnAsset = Assets.CreateAtRuntime<SpawnAsset>(result);
+        if (spawnAsset != null)
         {
-            id = viewIDField.state
-        }, overrideExistingID: false, Assets.defaultAssetMapping);
-        refresh();
+            viewIDField.Text = spawnAsset.GUID.ToString("N");
+            refresh();
+        }
     }
 
     private static void onClickedWriteButton(ISleekElement button)
@@ -407,110 +464,133 @@ public class MenuWorkshopSpawnsUI
     private static void onClickedRootButton(ISleekElement button)
     {
         int index = rootsBox.FindIndexOfChild(button);
-        ushort spawnID = asset.roots[index].spawnID;
-        viewIDField.state = spawnID;
+        SpawnTable spawnTable = asset.roots[index];
+        if (spawnTable.legacySpawnId != 0)
+        {
+            viewIDField.Text = spawnTable.legacySpawnId.ToString();
+        }
+        else
+        {
+            viewIDField.Text = spawnTable.targetGuid.ToString("N");
+        }
         refresh();
     }
 
     private static void onClickedTableButton(ISleekElement button)
     {
         int index = tablesBox.FindIndexOfChild(button);
-        ushort spawnID = asset.tables[index].spawnID;
-        viewIDField.state = spawnID;
+        SpawnTable spawnTable = asset.tables[index];
+        if (spawnTable.legacySpawnId != 0)
+        {
+            viewIDField.Text = spawnTable.legacySpawnId.ToString();
+        }
+        else
+        {
+            viewIDField.Text = spawnTable.targetGuid.ToString("N");
+        }
         refresh();
     }
 
     private static void onTypedRootWeightField(ISleekInt32Field field, int state)
     {
-        int index = rootsBox.FindIndexOfChild(field.parent);
+        int index = rootsBox.FindIndexOfChild(field.Parent);
         asset.roots[index].weight = state;
     }
 
     private static void onClickedAddRootSpawnButton(ISleekElement button)
     {
-        if (addRootIDField.state == 0)
+        ushort result;
+        Guid result2;
+        SpawnAsset spawnAsset = (ushort.TryParse(addRootIDField.Text, out result) ? (Assets.find(EAssetType.SPAWN, result) as SpawnAsset) : ((!Guid.TryParse(addRootIDField.Text, out result2)) ? null : Assets.find<SpawnAsset>(result2)));
+        if (spawnAsset == null)
         {
+            UnturnedLog.info("Spawns editor unable to find parent spawn asset matching \"" + addRootIDField.Text + "\"");
             return;
         }
-        for (int i = 0; i < asset.roots.Count; i++)
+        foreach (SpawnTable root in asset.roots)
         {
-            if (asset.roots[i].spawnID == addRootIDField.state)
+            if ((root.legacySpawnId != 0 && root.legacySpawnId == spawnAsset.id) || root.targetGuid == spawnAsset.GUID)
             {
+                UnturnedLog.info("Spawns editor current asset " + asset.FriendlyName + " already contains parent " + spawnAsset.FriendlyName);
                 return;
             }
         }
-        if (Assets.find(EAssetType.SPAWN, addRootIDField.state) is SpawnAsset spawnAsset)
-        {
-            SpawnTable spawnTable = new SpawnTable();
-            spawnTable.spawnID = addRootIDField.state;
-            spawnTable.isLink = true;
-            asset.roots.Add(spawnTable);
-            SpawnTable spawnTable2 = new SpawnTable();
-            spawnTable2.spawnID = asset.id;
-            spawnTable2.isLink = true;
-            spawnAsset.tables.Add(spawnTable2);
-            spawnAsset.markTablesDirty();
-            addRootIDField.state = 0;
-            refresh();
-        }
+        SpawnTable spawnTable = new SpawnTable();
+        spawnTable.targetGuid = spawnAsset.GUID;
+        spawnTable.isLink = true;
+        asset.roots.Add(spawnTable);
+        SpawnTable spawnTable2 = new SpawnTable();
+        spawnTable2.targetGuid = asset.GUID;
+        spawnTable2.isLink = true;
+        spawnAsset.tables.Add(spawnTable2);
+        spawnAsset.markTablesDirty();
+        addRootIDField.Text = string.Empty;
+        refresh();
     }
 
     private static void onClickedRemoveRootButton(ISleekElement button)
     {
-        int rootIndex = rootsBox.FindIndexOfChild(button.parent);
-        asset.removeRootAtIndex(rootIndex);
+        int parentIndex = rootsBox.FindIndexOfChild(button.Parent);
+        asset.EditorRemoveParentAtIndex(parentIndex);
         refresh();
     }
 
     private static void onTypedTableWeightField(ISleekInt32Field field, int state)
     {
-        int tableIndex = tablesBox.FindIndexOfChild(field.parent);
+        int tableIndex = tablesBox.FindIndexOfChild(field.Parent);
         asset.setTableWeightAtIndex(tableIndex, state);
     }
 
     private static void onClickedAddTableAssetButton(ISleekElement button)
     {
-        if (addTableIDField.state == 0)
+        ushort result;
+        Guid result2;
+        Asset asset = (ushort.TryParse(addTableIDField.Text, out result) ? Assets.find(type, result) : ((!Guid.TryParse(addTableIDField.Text, out result2)) ? null : Assets.find(result2)));
+        if (asset == null)
         {
+            UnturnedLog.info("Spawns editor unable to find child asset matching \"" + addRootIDField.Text + "\"");
             return;
         }
-        for (int i = 0; i < asset.tables.Count; i++)
+        foreach (SpawnTable table in MenuWorkshopSpawnsUI.asset.tables)
         {
-            if (asset.tables[i].assetID == addTableIDField.state)
+            if ((table.legacyAssetId != 0 && table.legacyAssetId == asset.id) || table.targetGuid == asset.GUID)
             {
+                UnturnedLog.info("Spawns editor current asset " + MenuWorkshopSpawnsUI.asset.FriendlyName + " already contains child asset " + asset.FriendlyName);
                 return;
             }
         }
-        asset.addAssetTable(addTableIDField.state);
-        addTableIDField.state = 0;
+        MenuWorkshopSpawnsUI.asset.EditorAddChild(asset);
+        addTableIDField.Text = string.Empty;
         refresh();
     }
 
     private static void onClickedAddTableSpawnButton(ISleekElement button)
     {
-        if (addTableIDField.state == 0)
+        ushort result;
+        Guid result2;
+        SpawnAsset spawnAsset = (ushort.TryParse(addTableIDField.Text, out result) ? (Assets.find(EAssetType.SPAWN, result) as SpawnAsset) : ((!Guid.TryParse(addTableIDField.Text, out result2)) ? null : (Assets.find(result2) as SpawnAsset)));
+        if (spawnAsset == null)
         {
+            UnturnedLog.info("Spawns editor unable to find child spawn matching \"" + addTableIDField.Text + "\"");
             return;
         }
-        for (int i = 0; i < asset.tables.Count; i++)
+        foreach (SpawnTable table in asset.tables)
         {
-            if (asset.tables[i].spawnID == addTableIDField.state)
+            if ((table.legacySpawnId != 0 && table.legacySpawnId == spawnAsset.id) || table.targetGuid == spawnAsset.GUID)
             {
+                UnturnedLog.info("Spawns editor current asset " + asset.FriendlyName + " already contains child spawn " + spawnAsset.FriendlyName);
                 return;
             }
         }
-        if (Assets.find(EAssetType.SPAWN, addTableIDField.state) is SpawnAsset other)
-        {
-            asset.addSpawnTable(other);
-            addTableIDField.state = 0;
-            refresh();
-        }
+        asset.EditorAddChild(spawnAsset);
+        addTableIDField.Text = string.Empty;
+        refresh();
     }
 
     private static void onClickedRemoveTableButton(ISleekElement button)
     {
-        int tableIndex = tablesBox.FindIndexOfChild(button.parent);
-        asset.removeTableAtIndex(tableIndex);
+        int childIndex = tablesBox.FindIndexOfChild(button.Parent);
+        asset.EditorRemoveChildAtIndex(childIndex);
         refresh();
     }
 
@@ -524,134 +604,137 @@ public class MenuWorkshopSpawnsUI
     {
         localization = Localization.read("/Menu/Workshop/MenuWorkshopSpawns.dat");
         container = new SleekFullscreenBox();
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.positionScale_Y = 1f;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.PositionScale_Y = 1f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         MenuUI.container.AddChild(container);
         active = false;
         spawnsBox = Glazier.Get().CreateScrollView();
-        spawnsBox.positionOffset_X = -315;
-        spawnsBox.positionOffset_Y = 100;
-        spawnsBox.positionScale_X = 0.5f;
-        spawnsBox.sizeOffset_X = 630;
-        spawnsBox.sizeOffset_Y = -200;
-        spawnsBox.sizeScale_Y = 1f;
-        spawnsBox.scaleContentToWidth = true;
+        spawnsBox.PositionOffset_X = -315f;
+        spawnsBox.PositionOffset_Y = 100f;
+        spawnsBox.PositionScale_X = 0.5f;
+        spawnsBox.SizeOffset_X = 630f;
+        spawnsBox.SizeOffset_Y = -200f;
+        spawnsBox.SizeScale_Y = 1f;
+        spawnsBox.ScaleContentToWidth = true;
         container.AddChild(spawnsBox);
         typeButton = new SleekButtonState(new GUIContent(localization.format("Type_Item")), new GUIContent(localization.format("Type_Vehicle")), new GUIContent(localization.format("Type_Animal")));
-        typeButton.sizeOffset_X = 600;
-        typeButton.sizeOffset_Y = 30;
+        typeButton.SizeOffset_X = 600f;
+        typeButton.SizeOffset_Y = 30f;
         typeButton.tooltip = localization.format("Type_Tooltip");
         spawnsBox.AddChild(typeButton);
-        viewIDField = Glazier.Get().CreateUInt16Field();
-        viewIDField.positionOffset_Y = 40;
-        viewIDField.sizeOffset_X = 160;
-        viewIDField.sizeOffset_Y = 30;
+        viewIDField = Glazier.Get().CreateStringField();
+        viewIDField.PositionOffset_Y = 40f;
+        viewIDField.SizeOffset_X = 160f;
+        viewIDField.SizeOffset_Y = 30f;
+        viewIDField.PlaceholderText = localization.format("ID_Field_Hint");
         spawnsBox.AddChild(viewIDField);
         viewButton = Glazier.Get().CreateButton();
-        viewButton.positionOffset_X = 170;
-        viewButton.positionOffset_Y = 40;
-        viewButton.sizeOffset_X = 100;
-        viewButton.sizeOffset_Y = 30;
-        viewButton.text = localization.format("View_Button");
-        viewButton.tooltipText = localization.format("View_Button_Tooltip");
-        viewButton.onClickedButton += onClickedViewButton;
+        viewButton.PositionOffset_X = 170f;
+        viewButton.PositionOffset_Y = 40f;
+        viewButton.SizeOffset_X = 100f;
+        viewButton.SizeOffset_Y = 30f;
+        viewButton.Text = localization.format("View_Button");
+        viewButton.TooltipText = localization.format("View_Button_Tooltip");
+        viewButton.OnClicked += onClickedViewButton;
         spawnsBox.AddChild(viewButton);
         rawButton = Glazier.Get().CreateButton();
-        rawButton.positionOffset_X = 280;
-        rawButton.positionOffset_Y = 40;
-        rawButton.sizeOffset_X = 100;
-        rawButton.sizeOffset_Y = 30;
-        rawButton.text = localization.format("Raw_Button");
-        rawButton.tooltipText = localization.format("Raw_Button_Tooltip");
-        rawButton.onClickedButton += onClickedRawButton;
+        rawButton.PositionOffset_X = 280f;
+        rawButton.PositionOffset_Y = 40f;
+        rawButton.SizeOffset_X = 100f;
+        rawButton.SizeOffset_Y = 30f;
+        rawButton.Text = localization.format("Raw_Button");
+        rawButton.TooltipText = localization.format("Raw_Button_Tooltip");
+        rawButton.OnClicked += onClickedRawButton;
         spawnsBox.AddChild(rawButton);
         newButton = Glazier.Get().CreateButton();
-        newButton.positionOffset_X = 390;
-        newButton.positionOffset_Y = 40;
-        newButton.sizeOffset_X = 100;
-        newButton.sizeOffset_Y = 30;
-        newButton.text = localization.format("New_Button");
-        newButton.tooltipText = localization.format("New_Button_Tooltip");
-        newButton.onClickedButton += onClickedNewButton;
+        newButton.PositionOffset_X = 390f;
+        newButton.PositionOffset_Y = 40f;
+        newButton.SizeOffset_X = 100f;
+        newButton.SizeOffset_Y = 30f;
+        newButton.Text = localization.format("New_Button");
+        newButton.TooltipText = localization.format("New_Button_Tooltip");
+        newButton.OnClicked += onClickedNewButton;
         spawnsBox.AddChild(newButton);
         writeButton = Glazier.Get().CreateButton();
-        writeButton.positionOffset_X = 500;
-        writeButton.positionOffset_Y = 40;
-        writeButton.sizeOffset_X = 100;
-        writeButton.sizeOffset_Y = 30;
-        writeButton.text = localization.format("Write_Button");
-        writeButton.tooltipText = localization.format("Write_Button_Tooltip");
-        writeButton.onClickedButton += onClickedWriteButton;
+        writeButton.PositionOffset_X = 500f;
+        writeButton.PositionOffset_Y = 40f;
+        writeButton.SizeOffset_X = 100f;
+        writeButton.SizeOffset_Y = 30f;
+        writeButton.Text = localization.format("Write_Button");
+        writeButton.TooltipText = localization.format("Write_Button_Tooltip");
+        writeButton.OnClicked += onClickedWriteButton;
         spawnsBox.AddChild(writeButton);
-        addRootIDField = Glazier.Get().CreateUInt16Field();
-        addRootIDField.sizeOffset_X = 470;
-        addRootIDField.sizeOffset_Y = 30;
+        addRootIDField = Glazier.Get().CreateStringField();
+        addRootIDField.SizeOffset_X = 470f;
+        addRootIDField.SizeOffset_Y = 30f;
+        addRootIDField.PlaceholderText = localization.format("ID_Field_Hint");
         spawnsBox.AddChild(addRootIDField);
         addRootSpawnButton = new SleekButtonIcon(MenuWorkshopEditorUI.icons.load<Texture2D>("Add"));
-        addRootSpawnButton.positionOffset_X = 480;
-        addRootSpawnButton.sizeOffset_X = 120;
-        addRootSpawnButton.sizeOffset_Y = 30;
+        addRootSpawnButton.PositionOffset_X = 480f;
+        addRootSpawnButton.SizeOffset_X = 120f;
+        addRootSpawnButton.SizeOffset_Y = 30f;
         addRootSpawnButton.text = localization.format("Add_Root_Spawn_Button");
         addRootSpawnButton.tooltip = localization.format("Add_Root_Spawn_Button_Tooltip");
         addRootSpawnButton.onClickedButton += onClickedAddRootSpawnButton;
         spawnsBox.AddChild(addRootSpawnButton);
-        addTableIDField = Glazier.Get().CreateUInt16Field();
-        addTableIDField.sizeOffset_X = 340;
-        addTableIDField.sizeOffset_Y = 30;
+        addTableIDField = Glazier.Get().CreateStringField();
+        addTableIDField.SizeOffset_X = 340f;
+        addTableIDField.SizeOffset_Y = 30f;
+        addTableIDField.PlaceholderText = localization.format("ID_Field_Hint");
         spawnsBox.AddChild(addTableIDField);
         addTableAssetButton = new SleekButtonIcon(MenuWorkshopEditorUI.icons.load<Texture2D>("Add"));
-        addTableAssetButton.positionOffset_X = 350;
-        addTableAssetButton.sizeOffset_X = 120;
-        addTableAssetButton.sizeOffset_Y = 30;
+        addTableAssetButton.PositionOffset_X = 350f;
+        addTableAssetButton.SizeOffset_X = 120f;
+        addTableAssetButton.SizeOffset_Y = 30f;
         addTableAssetButton.text = localization.format("Add_Table_Asset_Button");
         addTableAssetButton.tooltip = localization.format("Add_Table_Asset_Button_Tooltip");
         addTableAssetButton.onClickedButton += onClickedAddTableAssetButton;
         spawnsBox.AddChild(addTableAssetButton);
         addTableSpawnButton = new SleekButtonIcon(MenuWorkshopEditorUI.icons.load<Texture2D>("Add"));
-        addTableSpawnButton.positionOffset_X = 480;
-        addTableSpawnButton.sizeOffset_X = 120;
-        addTableSpawnButton.sizeOffset_Y = 30;
+        addTableSpawnButton.PositionOffset_X = 480f;
+        addTableSpawnButton.SizeOffset_X = 120f;
+        addTableSpawnButton.SizeOffset_Y = 30f;
         addTableSpawnButton.text = localization.format("Add_Table_Spawn_Button");
         addTableSpawnButton.tooltip = localization.format("Add_Table_Spawn_Button_Tooltip");
         addTableSpawnButton.onClickedButton += onClickedAddTableSpawnButton;
         spawnsBox.AddChild(addTableSpawnButton);
         applyWeightsButton = Glazier.Get().CreateButton();
-        applyWeightsButton.sizeOffset_X = 600;
-        applyWeightsButton.sizeOffset_Y = 30;
-        applyWeightsButton.text = localization.format("Apply_Weights_Button");
-        applyWeightsButton.tooltipText = localization.format("Apply_Weights_Button_Tooltip");
-        applyWeightsButton.onClickedButton += onClickedApplyWeightsButton;
+        applyWeightsButton.SizeOffset_X = 600f;
+        applyWeightsButton.SizeOffset_Y = 30f;
+        applyWeightsButton.Text = localization.format("Apply_Weights_Button");
+        applyWeightsButton.TooltipText = localization.format("Apply_Weights_Button_Tooltip");
+        applyWeightsButton.OnClicked += onClickedApplyWeightsButton;
         spawnsBox.AddChild(applyWeightsButton);
         rootsBox = Glazier.Get().CreateBox();
-        rootsBox.positionOffset_Y = 40;
-        rootsBox.sizeOffset_X = 600;
-        rootsBox.sizeOffset_Y = 30;
-        rootsBox.tooltipText = localization.format("Roots_Box_Tooltip");
+        rootsBox.PositionOffset_Y = 40f;
+        rootsBox.SizeOffset_X = 600f;
+        rootsBox.SizeOffset_Y = 30f;
+        rootsBox.TooltipText = localization.format("Roots_Box_Tooltip");
         spawnsBox.AddChild(rootsBox);
         tablesBox = Glazier.Get().CreateBox();
-        tablesBox.positionOffset_Y = 80;
-        tablesBox.sizeOffset_X = 600;
-        tablesBox.sizeOffset_Y = 30;
-        tablesBox.tooltipText = localization.format("Tables_Box_Tooltip");
+        tablesBox.PositionOffset_Y = 80f;
+        tablesBox.SizeOffset_X = 600f;
+        tablesBox.SizeOffset_Y = 30f;
+        tablesBox.TooltipText = localization.format("Tables_Box_Tooltip");
         spawnsBox.AddChild(tablesBox);
         rawField = Glazier.Get().CreateStringField();
-        rawField.positionOffset_Y = 80;
-        rawField.sizeOffset_X = 600;
-        rawField.sizeOffset_Y = 1000;
-        rawField.multiline = true;
-        rawField.maxLength = 4096;
-        rawField.fontAlignment = TextAnchor.UpperLeft;
+        rawField.PositionOffset_Y = 80f;
+        rawField.SizeOffset_X = 600f;
+        rawField.SizeOffset_Y = 1000f;
+        rawField.IsMultiline = true;
+        rawField.MaxLength = 4096;
+        rawField.TextAlignment = TextAnchor.UpperLeft;
         spawnsBox.AddChild(rawField);
         backButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));
-        backButton.positionOffset_Y = -50;
-        backButton.positionScale_Y = 1f;
-        backButton.sizeOffset_X = 200;
-        backButton.sizeOffset_Y = 50;
+        backButton.PositionOffset_Y = -50f;
+        backButton.PositionScale_Y = 1f;
+        backButton.SizeOffset_X = 200f;
+        backButton.SizeOffset_Y = 50f;
         backButton.text = MenuDashboardUI.localization.format("BackButtonText");
         backButton.tooltip = MenuDashboardUI.localization.format("BackButtonTooltip");
         backButton.onClickedButton += onClickedBackButton;

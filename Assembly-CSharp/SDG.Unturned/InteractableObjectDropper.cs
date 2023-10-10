@@ -66,7 +66,7 @@ public class InteractableObjectDropper : InteractableObject
         }
         if (interactabilityRewardID != 0)
         {
-            ushort num = SpawnTableTool.resolve(interactabilityRewardID);
+            ushort num = SpawnTableTool.ResolveLegacyId(interactabilityRewardID, EAssetType.ITEM, OnGetDropSpawnTableErrorContext);
             if (num != 0)
             {
                 ItemManager.dropItem(new Item(num, EItemOrigin.NATURE), dropTransform.position, playEffect: false, isDropped: true, wideSpread: false);
@@ -146,5 +146,10 @@ public class InteractableObjectDropper : InteractableObject
         text = "";
         color = Color.white;
         return true;
+    }
+
+    private string OnGetDropSpawnTableErrorContext()
+    {
+        return base.objectAsset?.FriendlyName + " drop";
     }
 }

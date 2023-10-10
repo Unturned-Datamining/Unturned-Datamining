@@ -3,6 +3,7 @@ using System.Collections;
 using SDG.NetPak;
 using UnityEngine;
 using UnityEngine.Networking;
+using Unturned.SystemEx;
 
 namespace SDG.HostBans;
 
@@ -34,7 +35,7 @@ public class HostBansManager : MonoBehaviour
         return instance;
     }
 
-    public EHostBanFlags MatchBasicDetails(uint ip, ushort port, string name, ulong steamId)
+    public EHostBanFlags MatchBasicDetails(IPv4Address ip, ushort port, string name, ulong steamId)
     {
         if (filters != null)
         {
@@ -79,7 +80,7 @@ public class HostBansManager : MonoBehaviour
     private IEnumerator RequestFiltersFromHost(string host)
     {
         string uri = host + "/UnturnedHostBans/filters.bin";
-        UnityWebRequest request = UnityWebRequest.Get(uri);
+        using UnityWebRequest request = UnityWebRequest.Get(uri);
         request.timeout = 10;
         yield return request.SendWebRequest();
         if (request.result != UnityWebRequest.Result.Success)

@@ -298,7 +298,7 @@ public class PlayerLife : PlayerCaller
         _deathCause = newCause;
         _deathLimb = newLimb;
         _deathKiller = newKiller;
-        if (base.channel.isOwner && Provider.provider.statisticsService.userStatisticsService.getStatistic("Deaths_Players", out int data))
+        if (base.channel.IsLocalPlayer && Provider.provider.statisticsService.userStatisticsService.getStatistic("Deaths_Players", out int data))
         {
             Provider.provider.statisticsService.userStatisticsService.setStatistic("Deaths_Players", data + 1);
         }
@@ -321,9 +321,9 @@ public class PlayerLife : PlayerCaller
         {
             RagdollTool.ragdollPlayer(base.transform.position, base.transform.rotation, base.player.animator.thirdSkeleton, ragdoll, base.player.clothing, ragdollEffect);
         }
-        if (base.player.movement.controller != null)
+        if (base.channel.IsLocalPlayer || Provider.isServer)
         {
-            base.player.movement.controller.DisableDetectCollisions();
+            base.player.movement.UpdateCharacterControllerEnabled();
         }
         if (onLifeUpdated != null)
         {
@@ -347,6 +347,10 @@ public class PlayerLife : PlayerCaller
         _isDead = false;
         _lastRespawn = Time.realtimeSinceStartup;
         base.player.ReceiveTeleport(position, angle);
+        if (base.channel.IsLocalPlayer || Provider.isServer)
+        {
+            base.player.movement.UpdateCharacterControllerEnabled();
+        }
         onLifeUpdated?.Invoke(isDead);
         onPlayerLifeUpdated?.Invoke(base.player);
         try
@@ -1048,7 +1052,7 @@ public class PlayerLife : PlayerCaller
         if (num != 0)
         {
             simulatedModifyStamina(num);
-            if (!base.channel.isOwner)
+            if (!base.channel.IsLocalPlayer)
             {
                 SendModifyStamina.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), num);
             }
@@ -1138,7 +1142,7 @@ public class PlayerLife : PlayerCaller
         if (num != 0)
         {
             simulatedModifyWarmth(num);
-            if (!base.channel.isOwner)
+            if (!base.channel.IsLocalPlayer)
             {
                 SendModifyWarmth.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), num);
             }
@@ -1589,7 +1593,7 @@ public class PlayerLife : PlayerCaller
                 serverSetLegsBroken(newLegsBroken: false);
             }
         }
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             if (vision > 0 && simulation - lastView > 12)
             {
@@ -1601,7 +1605,7 @@ public class PlayerLife : PlayerCaller
                 Provider.provider.economyService.updateInventory();
             }
         }
-        if (!base.channel.isOwner && !Provider.isServer)
+        if (!base.channel.IsLocalPlayer && !Provider.isServer)
         {
             return;
         }

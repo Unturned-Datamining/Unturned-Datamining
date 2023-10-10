@@ -843,7 +843,7 @@ public class StructureManager : SteamCaller
                             player.movement.loadedRegions[b, b2].isStructuresLoaded = false;
                         }
                     }
-                    else if (player.channel.isOwner && regions[b, b2].isNetworked && !Regions.checkArea(b, b2, new_x, new_y, STRUCTURE_REGIONS))
+                    else if (player.channel.IsLocalPlayer && regions[b, b2].isNetworked && !Regions.checkArea(b, b2, new_x, new_y, STRUCTURE_REGIONS))
                     {
                         if (regions[b, b2].drops.Count > 0)
                         {

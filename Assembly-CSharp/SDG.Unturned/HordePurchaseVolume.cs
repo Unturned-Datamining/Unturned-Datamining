@@ -11,22 +11,22 @@ public class HordePurchaseVolume : LevelVolume<HordePurchaseVolume, HordePurchas
         public Menu(HordePurchaseVolume volume)
         {
             this.volume = volume;
-            base.sizeOffset_X = 400;
-            base.sizeOffset_Y = 70;
+            base.SizeOffset_X = 400f;
+            base.SizeOffset_Y = 70f;
             ISleekUInt16Field sleekUInt16Field = Glazier.Get().CreateUInt16Field();
-            sleekUInt16Field.sizeOffset_X = 200;
-            sleekUInt16Field.sizeOffset_Y = 30;
-            sleekUInt16Field.state = volume.id;
-            sleekUInt16Field.addLabel("Item ID", ESleekSide.RIGHT);
-            sleekUInt16Field.onTypedUInt16 += OnIdChanged;
+            sleekUInt16Field.SizeOffset_X = 200f;
+            sleekUInt16Field.SizeOffset_Y = 30f;
+            sleekUInt16Field.Value = volume.id;
+            sleekUInt16Field.AddLabel("Item ID", ESleekSide.RIGHT);
+            sleekUInt16Field.OnValueChanged += OnIdChanged;
             AddChild(sleekUInt16Field);
             ISleekUInt32Field sleekUInt32Field = Glazier.Get().CreateUInt32Field();
-            sleekUInt32Field.positionOffset_Y = 40;
-            sleekUInt32Field.sizeOffset_X = 200;
-            sleekUInt32Field.sizeOffset_Y = 30;
-            sleekUInt32Field.state = volume.cost;
-            sleekUInt32Field.addLabel("Cost", ESleekSide.RIGHT);
-            sleekUInt32Field.onTypedUInt32 += OnCostChanged;
+            sleekUInt32Field.PositionOffset_Y = 40f;
+            sleekUInt32Field.SizeOffset_X = 200f;
+            sleekUInt32Field.SizeOffset_Y = 30f;
+            sleekUInt32Field.Value = volume.cost;
+            sleekUInt32Field.AddLabel("Cost", ESleekSide.RIGHT);
+            sleekUInt32Field.OnValueChanged += OnCostChanged;
             AddChild(sleekUInt32Field);
         }
 

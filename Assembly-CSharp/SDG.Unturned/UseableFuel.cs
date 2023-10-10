@@ -51,7 +51,7 @@ public class UseableFuel : Useable
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askGlug")]
     public void ReceivePlayGlug()
     {
-        if (base.player.equipment.isEquipped)
+        if (base.player.equipment.IsEquipAnimationFinished)
         {
             glug();
         }
@@ -59,7 +59,7 @@ public class UseableFuel : Useable
 
     private bool fire(EUseMode mode)
     {
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             RaycastInfo raycastInfo = DamageTool.raycast(new Ray(base.player.look.aim.position, base.player.look.aim.forward), 3f, RayMasks.DAMAGE_CLIENT);
             if (raycastInfo.vehicle != null)
@@ -451,7 +451,7 @@ public class UseableFuel : Useable
 
     public override void updateState(byte[] newState)
     {
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             fuel = BitConverter.ToUInt16(newState, 0);
             PlayerUI.message(EPlayerMessage.FUEL, ((int)((float)(int)fuel / (float)(int)((ItemFuelAsset)base.player.equipment.asset).fuel * 100f)).ToString());
@@ -460,7 +460,7 @@ public class UseableFuel : Useable
 
     public override void equip()
     {
-        if (base.channel.isOwner || Provider.isServer)
+        if (base.channel.IsLocalPlayer || Provider.isServer)
         {
             if (base.player.equipment.state.Length < 2)
             {
@@ -470,8 +470,8 @@ public class UseableFuel : Useable
             fuel = BitConverter.ToUInt16(base.player.equipment.state, 0);
         }
         base.player.animator.play("Equip", smooth: true);
-        useTime = base.player.animator.getAnimationLength("Use");
-        if (base.channel.isOwner)
+        useTime = base.player.animator.GetAnimationLength("Use");
+        if (base.channel.IsLocalPlayer)
         {
             PlayerUI.message(EPlayerMessage.FUEL, ((int)((float)(int)fuel / (float)(int)((ItemFuelAsset)base.player.equipment.asset).fuel * 100f)).ToString());
         }

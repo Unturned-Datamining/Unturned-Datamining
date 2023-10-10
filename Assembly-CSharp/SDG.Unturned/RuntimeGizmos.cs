@@ -646,7 +646,7 @@ public class RuntimeGizmos : MonoBehaviour
 
     private void RenderCircle(Vector3 center, Vector3 axisU, Vector3 axisV, float radius, int resolution, Color color)
     {
-        float num = (float)Math.PI * 2f / (float)resolution;
+        float num = MathF.PI * 2f / (float)resolution;
         Vector3 v = center + axisU * radius;
         GL.Begin(2);
         GL.Color(color);
@@ -664,7 +664,7 @@ public class RuntimeGizmos : MonoBehaviour
 
     private void RenderSemicircle(Vector3 center, Vector3 axisU, Vector3 axisV, float radius, int resolution, Color color)
     {
-        float num = (float)Math.PI / (float)resolution;
+        float num = MathF.PI / (float)resolution;
         GL.Begin(2);
         GL.Color(color);
         GL.Vertex(center + axisU * radius);
@@ -681,7 +681,7 @@ public class RuntimeGizmos : MonoBehaviour
 
     private void DrawSemicircleUsingLineRenderer(Vector3 center, Vector3 axisU, Vector3 axisV, float radius, int resolution, Color color)
     {
-        float num = (float)Math.PI / (float)resolution;
+        float num = MathF.PI / (float)resolution;
         LineRenderer lineRenderer = ClaimLineRenderer();
         lineRenderer.positionCount = resolution + 1;
         lineRenderer.loop = false;
@@ -770,7 +770,7 @@ public class RuntimeGizmos : MonoBehaviour
 
     private void DrawCircleUsingLineRenderer(Vector3 center, Vector3 axisU, Vector3 axisV, float radius, int resolution, Color color)
     {
-        float num = (float)Math.PI * 2f / (float)resolution;
+        float num = MathF.PI * 2f / (float)resolution;
         _ = Vector3.Cross(axisU, axisV).normalized;
         LineRenderer lineRenderer = ClaimLineRenderer();
         lineRenderer.positionCount = resolution;

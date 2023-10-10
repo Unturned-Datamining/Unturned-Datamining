@@ -27,7 +27,9 @@ public class SleekPlayer : SleekWrapper
 
     private ISleekImage skillset;
 
-    private ISleekButton muteButton;
+    private ISleekButton muteVoiceChatButton;
+
+    private ISleekButton muteTextChatButton;
 
     private ESleekPlayerDisplayContext context;
 
@@ -38,10 +40,16 @@ public class SleekPlayer : SleekWrapper
         Provider.provider.browserService.open("http://steamcommunity.com/profiles/" + player.playerID.steamID.ToString());
     }
 
-    private void onClickedMuteButton(ISleekElement button)
+    private void OnMuteVoiceChatClicked(ISleekElement button)
     {
-        player.isMuted = !player.isMuted;
-        muteButton.text = (player.isMuted ? PlayerDashboardInformationUI.localization.format("Mute_Off") : PlayerDashboardInformationUI.localization.format("Mute_On"));
+        player.SetVoiceChatLocallyMuted(!player.isVoiceChatLocallyMuted);
+        UpdateMuteVoiceChatLabel();
+    }
+
+    private void OnMuteTextChatClicked(ISleekElement button)
+    {
+        player.SetTextChatLocallyMuted(!player.isTextChatLocallyMuted);
+        UpdateMuteTextChatLabel();
     }
 
     private void onClickedPromoteButton(ISleekElement button)
@@ -80,7 +88,7 @@ public class SleekPlayer : SleekWrapper
 
     private void onTalked(bool isTalking)
     {
-        voice.isVisible = isTalking;
+        voice.IsVisible = isTalking;
     }
 
     public override void OnDestroy()
@@ -89,6 +97,16 @@ public class SleekPlayer : SleekWrapper
         {
             player.player.voice.onTalkingChanged -= onTalked;
         }
+    }
+
+    private void UpdateMuteVoiceChatLabel()
+    {
+        muteVoiceChatButton.Text = (player.isVoiceChatLocallyMuted ? PlayerDashboardInformationUI.localization.format("UnmuteVoiceChat_Label") : PlayerDashboardInformationUI.localization.format("MuteVoiceChat_Label"));
+    }
+
+    private void UpdateMuteTextChatLabel()
+    {
+        muteTextChatButton.Text = (player.isTextChatLocallyMuted ? PlayerDashboardInformationUI.localization.format("UnmuteTextChat_Label") : PlayerDashboardInformationUI.localization.format("MuteTextChat_Label"));
     }
 
     public SleekPlayer(SteamPlayer newPlayer, bool isButton, ESleekPlayerDisplayContext context)
@@ -111,134 +129,134 @@ public class SleekPlayer : SleekWrapper
         if (isButton)
         {
             ISleekButton sleekButton = Glazier.Get().CreateButton();
-            sleekButton.sizeScale_X = 1f;
-            sleekButton.sizeScale_Y = 1f;
-            sleekButton.tooltipText = player.playerID.playerName;
-            sleekButton.fontSize = ESleekFontSize.Medium;
-            sleekButton.backgroundColor = backgroundColor;
-            sleekButton.textColor = textColor;
-            sleekButton.onClickedButton += onClickedPlayerButton;
+            sleekButton.SizeScale_X = 1f;
+            sleekButton.SizeScale_Y = 1f;
+            sleekButton.TooltipText = player.playerID.playerName;
+            sleekButton.FontSize = ESleekFontSize.Medium;
+            sleekButton.BackgroundColor = backgroundColor;
+            sleekButton.TextColor = textColor;
+            sleekButton.OnClicked += onClickedPlayerButton;
             AddChild(sleekButton);
             box = sleekButton;
         }
         else
         {
             ISleekBox sleekBox = Glazier.Get().CreateBox();
-            sleekBox.sizeScale_X = 1f;
-            sleekBox.sizeScale_Y = 1f;
-            sleekBox.tooltipText = player.playerID.playerName;
-            sleekBox.fontSize = ESleekFontSize.Medium;
-            sleekBox.backgroundColor = backgroundColor;
-            sleekBox.textColor = textColor;
+            sleekBox.SizeScale_X = 1f;
+            sleekBox.SizeScale_Y = 1f;
+            sleekBox.TooltipText = player.playerID.playerName;
+            sleekBox.FontSize = ESleekFontSize.Medium;
+            sleekBox.BackgroundColor = backgroundColor;
+            sleekBox.TextColor = textColor;
             AddChild(sleekBox);
             box = sleekBox;
         }
         avatarImage = Glazier.Get().CreateImage();
-        avatarImage.positionOffset_X = 9;
-        avatarImage.positionOffset_Y = 9;
-        avatarImage.sizeOffset_X = 32;
-        avatarImage.sizeOffset_Y = 32;
-        avatarImage.texture = texture;
-        avatarImage.shouldDestroyTexture = true;
+        avatarImage.PositionOffset_X = 9f;
+        avatarImage.PositionOffset_Y = 9f;
+        avatarImage.SizeOffset_X = 32f;
+        avatarImage.SizeOffset_Y = 32f;
+        avatarImage.Texture = texture;
+        avatarImage.ShouldDestroyTexture = true;
         box.AddChild(avatarImage);
         if (player.player != null && player.player.skills != null)
         {
             repImage = Glazier.Get().CreateImage();
-            repImage.positionOffset_X = 46;
-            repImage.positionOffset_Y = 9;
-            repImage.sizeOffset_X = 32;
-            repImage.sizeOffset_Y = 32;
-            repImage.texture = PlayerTool.getRepTexture(player.player.skills.reputation);
-            repImage.color = PlayerTool.getRepColor(player.player.skills.reputation);
+            repImage.PositionOffset_X = 46f;
+            repImage.PositionOffset_Y = 9f;
+            repImage.SizeOffset_X = 32f;
+            repImage.SizeOffset_Y = 32f;
+            repImage.Texture = PlayerTool.getRepTexture(player.player.skills.reputation);
+            repImage.TintColor = PlayerTool.getRepColor(player.player.skills.reputation);
             box.AddChild(repImage);
         }
         nameLabel = Glazier.Get().CreateLabel();
-        nameLabel.positionOffset_X = 83;
-        nameLabel.sizeOffset_X = -113;
-        nameLabel.sizeOffset_Y = 30;
-        nameLabel.sizeScale_X = 1f;
-        nameLabel.text = player.GetLocalDisplayName();
-        nameLabel.fontSize = ESleekFontSize.Medium;
+        nameLabel.PositionOffset_X = 83f;
+        nameLabel.SizeOffset_X = -113f;
+        nameLabel.SizeOffset_Y = 30f;
+        nameLabel.SizeScale_X = 1f;
+        nameLabel.Text = player.GetLocalDisplayName();
+        nameLabel.FontSize = ESleekFontSize.Medium;
         box.AddChild(nameLabel);
         if (player.player != null && player.player.skills != null)
         {
             repLabel = Glazier.Get().CreateLabel();
-            repLabel.positionOffset_X = 83;
-            repLabel.positionOffset_Y = 20;
-            repLabel.sizeOffset_X = -113;
-            repLabel.sizeOffset_Y = 30;
-            repLabel.sizeScale_X = 1f;
-            repLabel.textColor = repImage.color;
-            repLabel.text = PlayerTool.getRepTitle(player.player.skills.reputation);
-            repLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+            repLabel.PositionOffset_X = 83f;
+            repLabel.PositionOffset_Y = 20f;
+            repLabel.SizeOffset_X = -113f;
+            repLabel.SizeOffset_Y = 30f;
+            repLabel.SizeScale_X = 1f;
+            repLabel.TextColor = repImage.TintColor;
+            repLabel.Text = PlayerTool.getRepTitle(player.player.skills.reputation);
+            repLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
             box.AddChild(repLabel);
         }
         if (context == ESleekPlayerDisplayContext.GROUP_ROSTER)
         {
-            nameLabel.positionOffset_Y = -5;
-            repLabel.positionOffset_Y = 10;
+            nameLabel.PositionOffset_Y = -5f;
+            repLabel.PositionOffset_Y = 10f;
             ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-            sleekLabel.positionOffset_X = 83;
-            sleekLabel.positionOffset_Y = 25;
-            sleekLabel.sizeOffset_X = -113;
-            sleekLabel.sizeOffset_Y = 30;
-            sleekLabel.sizeScale_X = 1f;
-            sleekLabel.textColor = repImage.color;
-            sleekLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+            sleekLabel.PositionOffset_X = 83f;
+            sleekLabel.PositionOffset_Y = 25f;
+            sleekLabel.SizeOffset_X = -113f;
+            sleekLabel.SizeOffset_Y = 30f;
+            sleekLabel.SizeScale_X = 1f;
+            sleekLabel.TextColor = repImage.TintColor;
+            sleekLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
             box.AddChild(sleekLabel);
             switch (player.player.quests.groupRank)
             {
             case EPlayerGroupRank.MEMBER:
-                sleekLabel.text = PlayerDashboardInformationUI.localization.format("Group_Rank_Member");
+                sleekLabel.Text = PlayerDashboardInformationUI.localization.format("Group_Rank_Member");
                 break;
             case EPlayerGroupRank.ADMIN:
-                sleekLabel.text = PlayerDashboardInformationUI.localization.format("Group_Rank_Admin");
+                sleekLabel.Text = PlayerDashboardInformationUI.localization.format("Group_Rank_Admin");
                 break;
             case EPlayerGroupRank.OWNER:
-                sleekLabel.text = PlayerDashboardInformationUI.localization.format("Group_Rank_Owner");
+                sleekLabel.Text = PlayerDashboardInformationUI.localization.format("Group_Rank_Owner");
                 break;
             }
         }
         voice = Glazier.Get().CreateImage();
-        voice.positionOffset_X = 15;
-        voice.positionOffset_Y = 15;
-        voice.sizeOffset_X = 20;
-        voice.sizeOffset_Y = 20;
-        voice.texture = PlayerDashboardInformationUI.icons.load<Texture2D>("Voice");
+        voice.PositionOffset_X = 15f;
+        voice.PositionOffset_Y = 15f;
+        voice.SizeOffset_X = 20f;
+        voice.SizeOffset_Y = 20f;
+        voice.Texture = PlayerDashboardInformationUI.icons.load<Texture2D>("Voice");
         box.AddChild(voice);
         skillset = Glazier.Get().CreateImage();
-        skillset.positionOffset_X = -25;
-        skillset.positionOffset_Y = 25;
-        skillset.positionScale_X = 1f;
-        skillset.sizeOffset_X = 20;
-        skillset.sizeOffset_Y = 20;
-        skillset.texture = MenuSurvivorsCharacterUI.icons.load<Texture2D>("Skillset_" + (int)player.skillset);
-        skillset.color = ESleekTint.FOREGROUND;
+        skillset.PositionOffset_X = -25f;
+        skillset.PositionOffset_Y = 25f;
+        skillset.PositionScale_X = 1f;
+        skillset.SizeOffset_X = 20f;
+        skillset.SizeOffset_Y = 20f;
+        skillset.Texture = MenuSurvivorsCharacterUI.icons.load<Texture2D>("Skillset_" + (int)player.skillset);
+        skillset.TintColor = ESleekTint.FOREGROUND;
         box.AddChild(skillset);
         if (player.isAdmin && !Provider.isServer)
         {
-            nameLabel.textColor = Palette.ADMIN;
-            nameLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+            nameLabel.TextColor = Palette.ADMIN;
+            nameLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
             icon = Glazier.Get().CreateImage();
-            icon.positionOffset_X = -25;
-            icon.positionOffset_Y = 5;
-            icon.positionScale_X = 1f;
-            icon.sizeOffset_X = 20;
-            icon.sizeOffset_Y = 20;
-            icon.texture = PlayerDashboardInformationUI.icons.load<Texture2D>("Admin");
+            icon.PositionOffset_X = -25f;
+            icon.PositionOffset_Y = 5f;
+            icon.PositionScale_X = 1f;
+            icon.SizeOffset_X = 20f;
+            icon.SizeOffset_Y = 20f;
+            icon.Texture = PlayerDashboardInformationUI.icons.load<Texture2D>("Admin");
             box.AddChild(icon);
         }
         else if (player.isPro)
         {
-            nameLabel.textColor = Palette.PRO;
-            nameLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+            nameLabel.TextColor = Palette.PRO;
+            nameLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
             icon = Glazier.Get().CreateImage();
-            icon.positionOffset_X = -25;
-            icon.positionOffset_Y = 5;
-            icon.positionScale_X = 1f;
-            icon.sizeOffset_X = 20;
-            icon.sizeOffset_Y = 20;
-            icon.texture = PlayerDashboardInformationUI.icons.load<Texture2D>("Pro");
+            icon.PositionOffset_X = -25f;
+            icon.PositionOffset_Y = 5f;
+            icon.PositionScale_X = 1f;
+            icon.SizeOffset_X = 20f;
+            icon.SizeOffset_Y = 20f;
+            icon.Texture = PlayerDashboardInformationUI.icons.load<Texture2D>("Pro");
             box.AddChild(icon);
         }
         switch (context)
@@ -246,33 +264,33 @@ public class SleekPlayer : SleekWrapper
         case ESleekPlayerDisplayContext.GROUP_ROSTER:
         {
             int num2 = 0;
-            if (!player.player.channel.isOwner)
+            if (!player.player.channel.IsLocalPlayer)
             {
                 if (Player.player.quests.hasPermissionToChangeRank)
                 {
                     if (player.player.quests.groupRank < EPlayerGroupRank.OWNER)
                     {
                         ISleekButton sleekButton5 = Glazier.Get().CreateButton();
-                        sleekButton5.positionOffset_X = num2;
-                        sleekButton5.positionScale_X = 1f;
-                        sleekButton5.sizeOffset_X = 80;
-                        sleekButton5.sizeScale_Y = 1f;
-                        sleekButton5.text = PlayerDashboardInformationUI.localization.format("Group_Promote");
-                        sleekButton5.tooltipText = PlayerDashboardInformationUI.localization.format("Group_Promote_Tooltip");
-                        sleekButton5.onClickedButton += onClickedPromoteButton;
+                        sleekButton5.PositionOffset_X = num2;
+                        sleekButton5.PositionScale_X = 1f;
+                        sleekButton5.SizeOffset_X = 80f;
+                        sleekButton5.SizeScale_Y = 1f;
+                        sleekButton5.Text = PlayerDashboardInformationUI.localization.format("Group_Promote");
+                        sleekButton5.TooltipText = PlayerDashboardInformationUI.localization.format("Group_Promote_Tooltip");
+                        sleekButton5.OnClicked += onClickedPromoteButton;
                         box.AddChild(sleekButton5);
                         num2 += 80;
                     }
                     if (player.player.quests.groupRank == EPlayerGroupRank.ADMIN)
                     {
                         ISleekButton sleekButton6 = Glazier.Get().CreateButton();
-                        sleekButton6.positionOffset_X = num2;
-                        sleekButton6.positionScale_X = 1f;
-                        sleekButton6.sizeOffset_X = 80;
-                        sleekButton6.sizeScale_Y = 1f;
-                        sleekButton6.text = PlayerDashboardInformationUI.localization.format("Group_Demote");
-                        sleekButton6.tooltipText = PlayerDashboardInformationUI.localization.format("Group_Demote_Tooltip");
-                        sleekButton6.onClickedButton += onClickedDemoteButton;
+                        sleekButton6.PositionOffset_X = num2;
+                        sleekButton6.PositionScale_X = 1f;
+                        sleekButton6.SizeOffset_X = 80f;
+                        sleekButton6.SizeScale_Y = 1f;
+                        sleekButton6.Text = PlayerDashboardInformationUI.localization.format("Group_Demote");
+                        sleekButton6.TooltipText = PlayerDashboardInformationUI.localization.format("Group_Demote_Tooltip");
+                        sleekButton6.OnClicked += onClickedDemoteButton;
                         box.AddChild(sleekButton6);
                         num2 += 80;
                     }
@@ -280,75 +298,87 @@ public class SleekPlayer : SleekWrapper
                 if (Player.player.quests.hasPermissionToKickMembers && player.player.quests.canBeKickedFromGroup)
                 {
                     ISleekButton sleekButton7 = Glazier.Get().CreateButton();
-                    sleekButton7.positionOffset_X = num2;
-                    sleekButton7.positionScale_X = 1f;
-                    sleekButton7.sizeOffset_X = 50;
-                    sleekButton7.sizeScale_Y = 1f;
-                    sleekButton7.text = PlayerDashboardInformationUI.localization.format("Group_Kick");
-                    sleekButton7.tooltipText = PlayerDashboardInformationUI.localization.format("Group_Kick_Tooltip");
-                    sleekButton7.onClickedButton += onClickedKickButton;
+                    sleekButton7.PositionOffset_X = num2;
+                    sleekButton7.PositionScale_X = 1f;
+                    sleekButton7.SizeOffset_X = 50f;
+                    sleekButton7.SizeScale_Y = 1f;
+                    sleekButton7.Text = PlayerDashboardInformationUI.localization.format("Group_Kick");
+                    sleekButton7.TooltipText = PlayerDashboardInformationUI.localization.format("Group_Kick_Tooltip");
+                    sleekButton7.OnClicked += onClickedKickButton;
                     box.AddChild(sleekButton7);
                     num2 += 50;
                 }
             }
-            box.sizeOffset_X = -num2;
+            box.SizeOffset_X = -num2;
             break;
         }
         case ESleekPlayerDisplayContext.PLAYER_LIST:
         {
             int num = 0;
-            muteButton = Glazier.Get().CreateButton();
-            muteButton.positionScale_X = 1f;
-            muteButton.sizeOffset_X = 60;
-            muteButton.sizeScale_Y = 1f;
-            muteButton.text = (player.isMuted ? PlayerDashboardInformationUI.localization.format("Mute_Off") : PlayerDashboardInformationUI.localization.format("Mute_On"));
-            muteButton.tooltipText = PlayerDashboardInformationUI.localization.format("Mute_Tooltip");
-            muteButton.onClickedButton += onClickedMuteButton;
-            box.AddChild(muteButton);
-            num += 60;
-            if (!player.player.channel.isOwner && !player.isAdmin)
+            if (!player.player.channel.IsLocalPlayer)
+            {
+                muteVoiceChatButton = Glazier.Get().CreateButton();
+                muteVoiceChatButton.PositionScale_X = 1f;
+                muteVoiceChatButton.SizeOffset_X = 100f;
+                muteVoiceChatButton.SizeScale_Y = 0.5f;
+                UpdateMuteVoiceChatLabel();
+                muteVoiceChatButton.TooltipText = PlayerDashboardInformationUI.localization.format("Mute_Tooltip");
+                muteVoiceChatButton.OnClicked += OnMuteVoiceChatClicked;
+                box.AddChild(muteVoiceChatButton);
+                muteTextChatButton = Glazier.Get().CreateButton();
+                muteTextChatButton.PositionScale_X = 1f;
+                muteTextChatButton.PositionScale_Y = 0.5f;
+                muteTextChatButton.SizeOffset_X = 100f;
+                muteTextChatButton.SizeScale_Y = 0.5f;
+                UpdateMuteTextChatLabel();
+                muteTextChatButton.TooltipText = PlayerDashboardInformationUI.localization.format("Mute_Tooltip");
+                muteTextChatButton.OnClicked += OnMuteTextChatClicked;
+                box.AddChild(muteTextChatButton);
+                num += 100;
+            }
+            if (!player.player.channel.IsLocalPlayer && !player.isAdmin)
             {
                 ISleekButton sleekButton2 = Glazier.Get().CreateButton();
-                sleekButton2.positionOffset_X = num;
-                sleekButton2.positionScale_X = 1f;
-                sleekButton2.sizeOffset_X = 50;
-                sleekButton2.sizeScale_Y = 1f;
-                sleekButton2.text = PlayerDashboardInformationUI.localization.format("Vote_Kick");
-                sleekButton2.tooltipText = PlayerDashboardInformationUI.localization.format("Vote_Kick_Tooltip");
-                sleekButton2.onClickedButton += onClickedKickButton;
+                sleekButton2.PositionOffset_X = num;
+                sleekButton2.PositionScale_X = 1f;
+                sleekButton2.SizeOffset_X = 50f;
+                sleekButton2.SizeScale_Y = 1f;
+                sleekButton2.Text = PlayerDashboardInformationUI.localization.format("Vote_Kick");
+                sleekButton2.TooltipText = PlayerDashboardInformationUI.localization.format("Vote_Kick_Tooltip");
+                sleekButton2.OnClicked += onClickedKickButton;
                 box.AddChild(sleekButton2);
                 num += 50;
             }
             if (Player.player != null)
             {
-                if (!player.player.channel.isOwner && Player.player.quests.isMemberOfAGroup && Player.player.quests.hasPermissionToInviteMembers && Player.player.quests.hasSpaceForMoreMembersInGroup && !player.player.quests.isMemberOfAGroup)
+                if (!player.player.channel.IsLocalPlayer && Player.player.quests.isMemberOfAGroup && Player.player.quests.hasPermissionToInviteMembers && Player.player.quests.hasSpaceForMoreMembersInGroup && !player.player.quests.isMemberOfAGroup)
                 {
                     ISleekButton sleekButton3 = Glazier.Get().CreateButton();
-                    sleekButton3.positionOffset_X = num;
-                    sleekButton3.positionScale_X = 1f;
-                    sleekButton3.sizeOffset_X = 60;
-                    sleekButton3.sizeScale_Y = 1f;
-                    sleekButton3.text = PlayerDashboardInformationUI.localization.format("Group_Invite");
-                    sleekButton3.tooltipText = PlayerDashboardInformationUI.localization.format("Group_Invite_Tooltip");
-                    sleekButton3.onClickedButton += onClickedInviteButton;
+                    sleekButton3.PositionOffset_X = num;
+                    sleekButton3.PositionScale_X = 1f;
+                    sleekButton3.SizeOffset_X = 60f;
+                    sleekButton3.SizeScale_Y = 1f;
+                    sleekButton3.Text = PlayerDashboardInformationUI.localization.format("Group_Invite");
+                    sleekButton3.TooltipText = PlayerDashboardInformationUI.localization.format("Group_Invite_Tooltip");
+                    sleekButton3.OnClicked += onClickedInviteButton;
                     box.AddChild(sleekButton3);
                     num += 60;
                 }
                 if (Player.player.channel.owner.isAdmin)
                 {
                     ISleekButton sleekButton4 = Glazier.Get().CreateButton();
-                    sleekButton4.positionOffset_X = num;
-                    sleekButton4.positionScale_X = 1f;
-                    sleekButton4.sizeOffset_X = 50;
-                    sleekButton4.sizeScale_Y = 1f;
-                    sleekButton4.text = PlayerDashboardInformationUI.localization.format("Spy");
-                    sleekButton4.tooltipText = PlayerDashboardInformationUI.localization.format("Spy_Tooltip");
-                    sleekButton4.onClickedButton += onClickedSpyButton;
+                    sleekButton4.PositionOffset_X = num;
+                    sleekButton4.PositionScale_X = 1f;
+                    sleekButton4.SizeOffset_X = 50f;
+                    sleekButton4.SizeScale_Y = 1f;
+                    sleekButton4.Text = PlayerDashboardInformationUI.localization.format("Spy");
+                    sleekButton4.TooltipText = PlayerDashboardInformationUI.localization.format("Spy_Tooltip");
+                    sleekButton4.OnClicked += onClickedSpyButton;
                     box.AddChild(sleekButton4);
                     num += 50;
                 }
             }
-            box.sizeOffset_X = -num;
+            box.SizeOffset_X = -num;
             break;
         }
         }

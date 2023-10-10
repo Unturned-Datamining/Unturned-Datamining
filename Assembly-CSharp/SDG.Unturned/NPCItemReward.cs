@@ -33,12 +33,8 @@ public class NPCItemReward : INPCReward
         return Assets.FindItemByGuidOrLegacyId<ItemAsset>(itemGuid, id);
     }
 
-    public override void grantReward(Player player, bool shouldSend)
+    public override void GrantReward(Player player)
     {
-        if (!Provider.isServer)
-        {
-            return;
-        }
         ItemAsset itemAsset = GetItemAsset();
         if (itemAsset == null)
         {
@@ -98,38 +94,38 @@ public class NPCItemReward : INPCReward
         ISleekBox sleekBox = Glazier.Get().CreateBox();
         if (itemAsset.size_y == 1)
         {
-            sleekBox.sizeOffset_Y = itemAsset.size_y * 50 + 10;
+            sleekBox.SizeOffset_Y = itemAsset.size_y * 50 + 10;
         }
         else
         {
-            sleekBox.sizeOffset_Y = itemAsset.size_y * 25 + 10;
+            sleekBox.SizeOffset_Y = itemAsset.size_y * 25 + 10;
         }
-        sleekBox.sizeScale_X = 1f;
+        sleekBox.SizeScale_X = 1f;
         SleekItemIcon sleekItemIcon = new SleekItemIcon();
-        sleekItemIcon.positionOffset_X = 5;
-        sleekItemIcon.positionOffset_Y = 5;
+        sleekItemIcon.PositionOffset_X = 5f;
+        sleekItemIcon.PositionOffset_Y = 5f;
         if (itemAsset.size_y == 1)
         {
-            sleekItemIcon.sizeOffset_X = itemAsset.size_x * 50;
-            sleekItemIcon.sizeOffset_Y = itemAsset.size_y * 50;
+            sleekItemIcon.SizeOffset_X = itemAsset.size_x * 50;
+            sleekItemIcon.SizeOffset_Y = itemAsset.size_y * 50;
         }
         else
         {
-            sleekItemIcon.sizeOffset_X = itemAsset.size_x * 25;
-            sleekItemIcon.sizeOffset_Y = itemAsset.size_y * 25;
+            sleekItemIcon.SizeOffset_X = itemAsset.size_x * 25;
+            sleekItemIcon.SizeOffset_Y = itemAsset.size_y * 25;
         }
         sleekBox.AddChild(sleekItemIcon);
-        sleekItemIcon.Refresh(itemAsset.id, 100, itemAsset.getState(isFull: false), itemAsset, sleekItemIcon.sizeOffset_X, sleekItemIcon.sizeOffset_Y);
+        sleekItemIcon.Refresh(itemAsset.id, 100, itemAsset.getState(isFull: false), itemAsset, Mathf.RoundToInt(sleekItemIcon.SizeOffset_X), Mathf.RoundToInt(sleekItemIcon.SizeOffset_Y));
         ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-        sleekLabel.positionOffset_X = 10 + sleekItemIcon.sizeOffset_X;
-        sleekLabel.sizeOffset_X = -15 - sleekItemIcon.sizeOffset_X;
-        sleekLabel.sizeScale_X = 1f;
-        sleekLabel.sizeScale_Y = 1f;
-        sleekLabel.fontAlignment = TextAnchor.MiddleLeft;
-        sleekLabel.textColor = ESleekTint.RICH_TEXT_DEFAULT;
-        sleekLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
-        sleekLabel.enableRichText = true;
-        sleekLabel.text = value;
+        sleekLabel.PositionOffset_X = 10f + sleekItemIcon.SizeOffset_X;
+        sleekLabel.SizeOffset_X = -15f - sleekItemIcon.SizeOffset_X;
+        sleekLabel.SizeScale_X = 1f;
+        sleekLabel.SizeScale_Y = 1f;
+        sleekLabel.TextAlignment = TextAnchor.MiddleLeft;
+        sleekLabel.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+        sleekLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+        sleekLabel.AllowRichText = true;
+        sleekLabel.Text = value;
         sleekBox.AddChild(sleekLabel);
         return sleekBox;
     }

@@ -147,7 +147,7 @@ public class ResourceManager : SteamCaller
                             value = Mathf.Clamp(value, 0, 100);
                             for (int i = 0; i < value; i++)
                             {
-                                ushort num2 = SpawnTableTool.resolve(asset.rewardID);
+                                ushort num2 = SpawnTableTool.ResolveLegacyId(asset.rewardID, EAssetType.ITEM, asset.OnGetRewardSpawnTableErrorContext);
                                 if (num2 != 0)
                                 {
                                     if (asset.hasDebris)
@@ -178,7 +178,7 @@ public class ResourceManager : SteamCaller
                                 value3 = Mathf.Clamp(value3, 0, 100);
                                 for (int k = 0; k < value3; k++)
                                 {
-                                    float f = UnityEngine.Random.Range(0f, (float)Math.PI * 2f);
+                                    float f = UnityEngine.Random.Range(0f, MathF.PI * 2f);
                                     ItemManager.dropItem(new Item(asset.stick, EItemOrigin.NATURE), resource.position + new Vector3(Mathf.Sin(f) * 3f, 1f, Mathf.Cos(f) * 3f), playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
                                 }
                             }
@@ -257,7 +257,7 @@ public class ResourceManager : SteamCaller
             parameters.relevantDistance = EffectManager.MEDIUM;
             EffectManager.triggerEffect(parameters);
         }
-        ushort num = ((asset.rewardID == 0) ? asset.log : SpawnTableTool.resolve(asset.rewardID));
+        ushort num = ((asset.rewardID == 0) ? asset.log : SpawnTableTool.ResolveLegacyId(asset.rewardID, EAssetType.ITEM, asset.OnGetRewardSpawnTableErrorContext));
         if (num != 0)
         {
             player.inventory.forceAddItem(new Item(num, EItemOrigin.NATURE), auto: true);
@@ -500,7 +500,7 @@ public class ResourceManager : SteamCaller
                             player.movement.loadedRegions[b, b2].isResourcesLoaded = false;
                         }
                     }
-                    else if (player.channel.isOwner && regions[b, b2].isNetworked && !Regions.checkArea(b, b2, new_x, new_y, RESOURCE_REGIONS))
+                    else if (player.channel.IsLocalPlayer && regions[b, b2].isNetworked && !Regions.checkArea(b, b2, new_x, new_y, RESOURCE_REGIONS))
                     {
                         regions[b, b2].isNetworked = false;
                     }

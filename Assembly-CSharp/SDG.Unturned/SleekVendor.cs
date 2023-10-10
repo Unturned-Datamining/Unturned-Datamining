@@ -32,16 +32,16 @@ public class SleekVendor : SleekWrapper
             if (element is VendorBuying vendorBuying)
             {
                 vendorBuying.format(Player.player, out var total, out var amount);
-                button.isClickable = total >= amount;
-                amountLabel.text = PlayerNPCVendorUI.localization.format("Amount_Buy", total, amount);
+                button.IsClickable = total >= amount;
+                amountLabel.Text = PlayerNPCVendorUI.localization.format("Amount_Buy", total, amount);
             }
             else if (element is VendorSellingBase vendorSellingBase)
             {
                 vendorSellingBase.format(Player.player, out var total2);
-                button.isClickable = vendorSellingBase.canBuy(Player.player);
-                amountLabel.text = PlayerNPCVendorUI.localization.format("Amount_Sell", total2);
+                button.IsClickable = vendorSellingBase.canBuy(Player.player);
+                amountLabel.Text = PlayerNPCVendorUI.localization.format("Amount_Sell", total2);
             }
-            amountLabel.textColor = (button.isClickable ? ESleekTint.FONT : ESleekTint.BAD);
+            amountLabel.TextColor = (button.IsClickable ? ESleekTint.FONT : ESleekTint.BAD);
         }
     }
 
@@ -49,92 +49,92 @@ public class SleekVendor : SleekWrapper
     {
         element = newElement;
         button = Glazier.Get().CreateButton();
-        button.sizeScale_X = 1f;
-        button.sizeScale_Y = 1f;
-        button.onClickedButton += onClickedInternalButton;
+        button.SizeScale_X = 1f;
+        button.SizeScale_Y = 1f;
+        button.OnClicked += onClickedInternalButton;
         AddChild(button);
-        int num = 0;
-        base.sizeOffset_Y = 60;
+        float num = 0f;
+        base.SizeOffset_Y = 60f;
         if (element.hasIcon && Assets.find(EAssetType.ITEM, element.id) is ItemAsset itemAsset)
         {
             SleekItemIcon sleekItemIcon = new SleekItemIcon
             {
-                positionOffset_X = 5,
-                positionOffset_Y = 5
+                PositionOffset_X = 5f,
+                PositionOffset_Y = 5f
             };
             if (itemAsset.size_y == 1)
             {
-                sleekItemIcon.sizeOffset_X = itemAsset.size_x * 100;
-                sleekItemIcon.sizeOffset_Y = itemAsset.size_y * 100;
+                sleekItemIcon.SizeOffset_X = itemAsset.size_x * 100;
+                sleekItemIcon.SizeOffset_Y = itemAsset.size_y * 100;
             }
             else
             {
-                sleekItemIcon.sizeOffset_X = itemAsset.size_x * 50;
-                sleekItemIcon.sizeOffset_Y = itemAsset.size_y * 50;
+                sleekItemIcon.SizeOffset_X = itemAsset.size_x * 50;
+                sleekItemIcon.SizeOffset_Y = itemAsset.size_y * 50;
             }
-            num = sleekItemIcon.sizeOffset_X;
+            num = sleekItemIcon.SizeOffset_X;
             AddChild(sleekItemIcon);
-            sleekItemIcon.Refresh(element.id, 100, itemAsset.getState(isFull: false), itemAsset, sleekItemIcon.sizeOffset_X, sleekItemIcon.sizeOffset_Y);
-            base.sizeOffset_Y = sleekItemIcon.sizeOffset_Y + 10;
+            sleekItemIcon.Refresh(element.id, 100, itemAsset.getState(isFull: false), itemAsset, Mathf.RoundToInt(sleekItemIcon.SizeOffset_X), Mathf.RoundToInt(sleekItemIcon.SizeOffset_Y));
+            base.SizeOffset_Y = sleekItemIcon.SizeOffset_Y + 10f;
         }
         string displayName = element.displayName;
         if (!string.IsNullOrEmpty(displayName))
         {
             ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-            sleekLabel.positionOffset_X = num + 10;
-            sleekLabel.positionOffset_Y = 5;
-            sleekLabel.sizeOffset_X = -num - 15;
-            sleekLabel.sizeOffset_Y = 30;
-            sleekLabel.sizeScale_X = 1f;
-            sleekLabel.text = displayName;
-            sleekLabel.fontSize = ESleekFontSize.Medium;
-            sleekLabel.fontAlignment = TextAnchor.UpperLeft;
-            sleekLabel.textColor = ItemTool.getRarityColorUI(element.rarity);
-            sleekLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+            sleekLabel.PositionOffset_X = num + 10f;
+            sleekLabel.PositionOffset_Y = 5f;
+            sleekLabel.SizeOffset_X = 0f - num - 15f;
+            sleekLabel.SizeOffset_Y = 30f;
+            sleekLabel.SizeScale_X = 1f;
+            sleekLabel.Text = displayName;
+            sleekLabel.FontSize = ESleekFontSize.Medium;
+            sleekLabel.TextAlignment = TextAnchor.UpperLeft;
+            sleekLabel.TextColor = ItemTool.getRarityColorUI(element.rarity);
+            sleekLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
             AddChild(sleekLabel);
         }
         string displayDesc = element.displayDesc;
         if (!string.IsNullOrEmpty(displayDesc))
         {
             ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
-            sleekLabel2.positionOffset_X = num + 10;
-            sleekLabel2.positionOffset_Y = 25;
-            sleekLabel2.sizeOffset_X = -num - 15;
-            sleekLabel2.sizeOffset_Y = -30;
-            sleekLabel2.sizeScale_X = 1f;
-            sleekLabel2.sizeScale_Y = 1f;
-            sleekLabel2.fontAlignment = TextAnchor.UpperLeft;
-            sleekLabel2.textColor = ESleekTint.RICH_TEXT_DEFAULT;
-            sleekLabel2.enableRichText = true;
-            sleekLabel2.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
-            sleekLabel2.text = displayDesc;
+            sleekLabel2.PositionOffset_X = num + 10f;
+            sleekLabel2.PositionOffset_Y = 25f;
+            sleekLabel2.SizeOffset_X = 0f - num - 15f;
+            sleekLabel2.SizeOffset_Y = -30f;
+            sleekLabel2.SizeScale_X = 1f;
+            sleekLabel2.SizeScale_Y = 1f;
+            sleekLabel2.TextAlignment = TextAnchor.UpperLeft;
+            sleekLabel2.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+            sleekLabel2.AllowRichText = true;
+            sleekLabel2.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+            sleekLabel2.Text = displayDesc;
             AddChild(sleekLabel2);
         }
         ISleekLabel sleekLabel3 = Glazier.Get().CreateLabel();
-        sleekLabel3.positionOffset_X = num + 10;
-        sleekLabel3.positionOffset_Y = -35;
-        sleekLabel3.positionScale_Y = 1f;
-        sleekLabel3.sizeOffset_X = -num - 15;
-        sleekLabel3.sizeOffset_Y = 30;
-        sleekLabel3.sizeScale_X = 1f;
-        sleekLabel3.fontAlignment = TextAnchor.LowerRight;
+        sleekLabel3.PositionOffset_X = num + 10f;
+        sleekLabel3.PositionOffset_Y = -35f;
+        sleekLabel3.PositionScale_Y = 1f;
+        sleekLabel3.SizeOffset_X = 0f - num - 15f;
+        sleekLabel3.SizeOffset_Y = 30f;
+        sleekLabel3.SizeScale_X = 1f;
+        sleekLabel3.TextAlignment = TextAnchor.LowerRight;
         AddChild(sleekLabel3);
         if (element is VendorBuying)
         {
-            sleekLabel3.text = PlayerNPCVendorUI.localization.format("Price", formatCost(element.cost));
+            sleekLabel3.Text = PlayerNPCVendorUI.localization.format("Price", formatCost(element.cost));
         }
         else
         {
-            sleekLabel3.text = PlayerNPCVendorUI.localization.format("Cost", formatCost(element.cost));
+            sleekLabel3.Text = PlayerNPCVendorUI.localization.format("Cost", formatCost(element.cost));
         }
         amountLabel = Glazier.Get().CreateLabel();
-        amountLabel.positionOffset_X = num + 10;
-        amountLabel.positionOffset_Y = -35;
-        amountLabel.positionScale_Y = 1f;
-        amountLabel.sizeOffset_X = -num - 15;
-        amountLabel.sizeOffset_Y = 30;
-        amountLabel.sizeScale_X = 1f;
-        amountLabel.fontAlignment = TextAnchor.LowerLeft;
+        amountLabel.PositionOffset_X = num + 10f;
+        amountLabel.PositionOffset_Y = -35f;
+        amountLabel.PositionScale_Y = 1f;
+        amountLabel.SizeOffset_X = 0f - num - 15f;
+        amountLabel.SizeOffset_Y = 30f;
+        amountLabel.SizeScale_X = 1f;
+        amountLabel.TextAlignment = TextAnchor.LowerLeft;
         AddChild(amountLabel);
         updateAmount();
     }

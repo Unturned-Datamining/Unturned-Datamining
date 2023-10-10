@@ -54,27 +54,27 @@ public class PlayerDeathUI
     {
         if (PlayerLife.deathCause == EDeathCause.BLEEDING)
         {
-            causeBox.text = localization.format("Bleeding");
+            causeBox.Text = localization.format("Bleeding");
         }
         else if (PlayerLife.deathCause == EDeathCause.BONES)
         {
-            causeBox.text = localization.format("Bones");
+            causeBox.Text = localization.format("Bones");
         }
         else if (PlayerLife.deathCause == EDeathCause.FREEZING)
         {
-            causeBox.text = localization.format("Freezing");
+            causeBox.Text = localization.format("Freezing");
         }
         else if (PlayerLife.deathCause == EDeathCause.BURNING)
         {
-            causeBox.text = localization.format("Burning");
+            causeBox.Text = localization.format("Burning");
         }
         else if (PlayerLife.deathCause == EDeathCause.FOOD)
         {
-            causeBox.text = localization.format("Food");
+            causeBox.Text = localization.format("Food");
         }
         else if (PlayerLife.deathCause == EDeathCause.WATER)
         {
-            causeBox.text = localization.format("Water");
+            causeBox.Text = localization.format("Water");
         }
         else if (PlayerLife.deathCause == EDeathCause.GUN || PlayerLife.deathCause == EDeathCause.MELEE || PlayerLife.deathCause == EDeathCause.PUNCH || PlayerLife.deathCause == EDeathCause.ROADKILL || PlayerLife.deathCause == EDeathCause.GRENADE || PlayerLife.deathCause == EDeathCause.MISSILE || PlayerLife.deathCause == EDeathCause.CHARGE || PlayerLife.deathCause == EDeathCause.SPLASH)
         {
@@ -110,104 +110,104 @@ public class PlayerDeathUI
             }
             if (PlayerLife.deathCause == EDeathCause.GUN)
             {
-                causeBox.text = localization.format("Gun", arg, text, text2);
+                causeBox.Text = localization.format("Gun", arg, text, text2);
             }
             else if (PlayerLife.deathCause == EDeathCause.MELEE)
             {
-                causeBox.text = localization.format("Melee", arg, text, text2);
+                causeBox.Text = localization.format("Melee", arg, text, text2);
             }
             else if (PlayerLife.deathCause == EDeathCause.PUNCH)
             {
-                causeBox.text = localization.format("Punch", arg, text, text2);
+                causeBox.Text = localization.format("Punch", arg, text, text2);
             }
             else if (PlayerLife.deathCause == EDeathCause.ROADKILL)
             {
-                causeBox.text = localization.format("Roadkill", text, text2);
+                causeBox.Text = localization.format("Roadkill", text, text2);
             }
             else if (PlayerLife.deathCause == EDeathCause.GRENADE)
             {
-                causeBox.text = localization.format("Grenade", text, text2);
+                causeBox.Text = localization.format("Grenade", text, text2);
             }
             else if (PlayerLife.deathCause == EDeathCause.MISSILE)
             {
-                causeBox.text = localization.format("Missile", text, text2);
+                causeBox.Text = localization.format("Missile", text, text2);
             }
             else if (PlayerLife.deathCause == EDeathCause.CHARGE)
             {
-                causeBox.text = localization.format("Charge", text, text2);
+                causeBox.Text = localization.format("Charge", text, text2);
             }
             else if (PlayerLife.deathCause == EDeathCause.SPLASH)
             {
-                causeBox.text = localization.format("Splash", text, text2);
+                causeBox.Text = localization.format("Splash", text, text2);
             }
         }
         else if (PlayerLife.deathCause == EDeathCause.ZOMBIE)
         {
-            causeBox.text = localization.format("Zombie");
+            causeBox.Text = localization.format("Zombie");
         }
         else if (PlayerLife.deathCause == EDeathCause.ANIMAL)
         {
-            causeBox.text = localization.format("Animal");
+            causeBox.Text = localization.format("Animal");
         }
         else if (PlayerLife.deathCause == EDeathCause.SUICIDE)
         {
-            causeBox.text = localization.format("Suicide");
+            causeBox.Text = localization.format("Suicide");
         }
         else if (PlayerLife.deathCause == EDeathCause.KILL)
         {
-            causeBox.text = localization.format("Kill");
+            causeBox.Text = localization.format("Kill");
         }
         else if (PlayerLife.deathCause == EDeathCause.INFECTION)
         {
-            causeBox.text = localization.format("Infection");
+            causeBox.Text = localization.format("Infection");
         }
         else if (PlayerLife.deathCause == EDeathCause.BREATH)
         {
-            causeBox.text = localization.format("Breath");
+            causeBox.Text = localization.format("Breath");
         }
         else if (PlayerLife.deathCause == EDeathCause.ZOMBIE)
         {
-            causeBox.text = localization.format("Zombie");
+            causeBox.Text = localization.format("Zombie");
         }
         else if (PlayerLife.deathCause == EDeathCause.VEHICLE)
         {
-            causeBox.text = localization.format("Vehicle");
+            causeBox.Text = localization.format("Vehicle");
         }
         else if (PlayerLife.deathCause == EDeathCause.SHRED)
         {
-            causeBox.text = localization.format("Shred");
+            causeBox.Text = localization.format("Shred");
         }
         else if (PlayerLife.deathCause == EDeathCause.LANDMINE)
         {
-            causeBox.text = localization.format("Landmine");
+            causeBox.Text = localization.format("Landmine");
         }
         else if (PlayerLife.deathCause == EDeathCause.ARENA)
         {
-            causeBox.text = localization.format("Arena");
+            causeBox.Text = localization.format("Arena");
         }
         else if (PlayerLife.deathCause == EDeathCause.SENTRY)
         {
-            causeBox.text = localization.format("Sentry");
+            causeBox.Text = localization.format("Sentry");
         }
         else if (PlayerLife.deathCause == EDeathCause.ACID)
         {
-            causeBox.text = localization.format("Acid");
+            causeBox.Text = localization.format("Acid");
         }
         else if (PlayerLife.deathCause == EDeathCause.BOULDER)
         {
-            causeBox.text = localization.format("Boulder");
+            causeBox.Text = localization.format("Boulder");
         }
         else if (PlayerLife.deathCause == EDeathCause.BURNER)
         {
-            causeBox.text = localization.format("Burner");
+            causeBox.Text = localization.format("Burner");
         }
         else if (PlayerLife.deathCause == EDeathCause.SPIT)
         {
-            causeBox.text = localization.format("Spit");
+            causeBox.Text = localization.format("Spit");
         }
         else if (PlayerLife.deathCause == EDeathCause.SPARK)
         {
-            causeBox.text = localization.format("Spark");
+            causeBox.Text = localization.format("Spark");
         }
     }
 
@@ -240,41 +240,41 @@ public class PlayerDeathUI
         localization = Localization.read("/Player/PlayerDeath.dat");
         Bundle bundle = Bundles.getBundle("/Bundles/Textures/Player/Icons/PlayerDeath/PlayerDeath.unity3d");
         container = new SleekFullscreenBox();
-        container.positionScale_Y = 1f;
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         PlayerUI.container.AddChild(container);
         active = false;
         containerOnScreen = false;
         causeBox = Glazier.Get().CreateBox();
-        causeBox.positionOffset_Y = -25;
-        causeBox.positionScale_Y = 0.8f;
-        causeBox.sizeOffset_Y = 50;
-        causeBox.sizeScale_X = 1f;
+        causeBox.PositionOffset_Y = -25f;
+        causeBox.PositionScale_Y = 0.8f;
+        causeBox.SizeOffset_Y = 50f;
+        causeBox.SizeScale_X = 1f;
         container.AddChild(causeBox);
         homeButton = new SleekButtonIcon(bundle.load<Texture2D>("Home"));
-        homeButton.positionOffset_X = -205;
-        homeButton.positionOffset_Y = 35;
-        homeButton.positionScale_X = 0.5f;
-        homeButton.positionScale_Y = 0.8f;
-        homeButton.sizeOffset_X = 200;
-        homeButton.sizeOffset_Y = 30;
+        homeButton.PositionOffset_X = -205f;
+        homeButton.PositionOffset_Y = 35f;
+        homeButton.PositionScale_X = 0.5f;
+        homeButton.PositionScale_Y = 0.8f;
+        homeButton.SizeOffset_X = 200f;
+        homeButton.SizeOffset_Y = 30f;
         homeButton.text = localization.format("Home_Button");
         homeButton.tooltip = localization.format("Home_Button_Tooltip");
         homeButton.iconColor = ESleekTint.FOREGROUND;
         homeButton.onClickedButton += onClickedHomeButton;
         container.AddChild(homeButton);
         respawnButton = new SleekButtonIcon(bundle.load<Texture2D>("Respawn"));
-        respawnButton.positionOffset_X = 5;
-        respawnButton.positionOffset_Y = 35;
-        respawnButton.positionScale_X = 0.5f;
-        respawnButton.positionScale_Y = 0.8f;
-        respawnButton.sizeOffset_X = 200;
-        respawnButton.sizeOffset_Y = 30;
+        respawnButton.PositionOffset_X = 5f;
+        respawnButton.PositionOffset_Y = 35f;
+        respawnButton.PositionScale_X = 0.5f;
+        respawnButton.PositionScale_Y = 0.8f;
+        respawnButton.SizeOffset_X = 200f;
+        respawnButton.SizeOffset_Y = 30f;
         respawnButton.text = localization.format("Respawn_Button");
         respawnButton.tooltip = localization.format("Respawn_Button_Tooltip");
         respawnButton.iconColor = ESleekTint.FOREGROUND;

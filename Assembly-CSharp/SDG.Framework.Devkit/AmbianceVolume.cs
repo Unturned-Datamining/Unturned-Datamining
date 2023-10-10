@@ -15,77 +15,77 @@ public class AmbianceVolume : LevelVolume<AmbianceVolume, AmbianceVolumeManager>
         public Menu(AmbianceVolume volume)
         {
             this.volume = volume;
-            base.sizeOffset_X = 400;
+            base.SizeOffset_X = 400f;
             ISleekField sleekField = Glazier.Get().CreateStringField();
-            sleekField.sizeOffset_X = 200;
-            sleekField.sizeOffset_Y = 30;
+            sleekField.SizeOffset_X = 200f;
+            sleekField.SizeOffset_Y = 30f;
             if (volume._effectGuid.IsEmpty())
             {
-                sleekField.text = volume._id.ToString();
+                sleekField.Text = volume._id.ToString();
             }
             else
             {
-                sleekField.text = volume._effectGuid.ToString("N");
+                sleekField.Text = volume._effectGuid.ToString("N");
             }
-            sleekField.addLabel("Effect ID", ESleekSide.RIGHT);
-            sleekField.onTyped += OnIdChanged;
+            sleekField.AddLabel("Effect ID", ESleekSide.RIGHT);
+            sleekField.OnTextChanged += OnIdChanged;
             AddChild(sleekField);
             ISleekToggle sleekToggle = Glazier.Get().CreateToggle();
-            sleekToggle.positionOffset_Y = 40;
-            sleekToggle.sizeOffset_X = 40;
-            sleekToggle.sizeOffset_Y = 40;
-            sleekToggle.state = volume.noWater;
-            sleekToggle.addLabel("No Water", ESleekSide.RIGHT);
-            sleekToggle.onToggled += OnNoWaterToggled;
+            sleekToggle.PositionOffset_Y = 40f;
+            sleekToggle.SizeOffset_X = 40f;
+            sleekToggle.SizeOffset_Y = 40f;
+            sleekToggle.Value = volume.noWater;
+            sleekToggle.AddLabel("No Water", ESleekSide.RIGHT);
+            sleekToggle.OnValueChanged += OnNoWaterToggled;
             AddChild(sleekToggle);
             ISleekToggle sleekToggle2 = Glazier.Get().CreateToggle();
-            sleekToggle2.positionOffset_Y = 80;
-            sleekToggle2.sizeOffset_X = 40;
-            sleekToggle2.sizeOffset_Y = 40;
-            sleekToggle2.state = volume.noLighting;
-            sleekToggle2.addLabel("No Lighting", ESleekSide.RIGHT);
-            sleekToggle2.onToggled += OnNoLightingToggled;
+            sleekToggle2.PositionOffset_Y = 80f;
+            sleekToggle2.SizeOffset_X = 40f;
+            sleekToggle2.SizeOffset_Y = 40f;
+            sleekToggle2.Value = volume.noLighting;
+            sleekToggle2.AddLabel("No Lighting", ESleekSide.RIGHT);
+            sleekToggle2.OnValueChanged += OnNoLightingToggled;
             AddChild(sleekToggle2);
             ISleekUInt32Field sleekUInt32Field = Glazier.Get().CreateUInt32Field();
-            sleekUInt32Field.positionOffset_Y = 120;
-            sleekUInt32Field.sizeOffset_X = 200;
-            sleekUInt32Field.sizeOffset_Y = 30;
-            sleekUInt32Field.state = volume.weatherMask;
-            sleekUInt32Field.addLabel("Weather Mask", ESleekSide.RIGHT);
-            sleekUInt32Field.onTypedUInt32 += OnWeatherMaskChanged;
+            sleekUInt32Field.PositionOffset_Y = 120f;
+            sleekUInt32Field.SizeOffset_X = 200f;
+            sleekUInt32Field.SizeOffset_Y = 30f;
+            sleekUInt32Field.Value = volume.weatherMask;
+            sleekUInt32Field.AddLabel("Weather Mask", ESleekSide.RIGHT);
+            sleekUInt32Field.OnValueChanged += OnWeatherMaskChanged;
             AddChild(sleekUInt32Field);
             ISleekToggle sleekToggle3 = Glazier.Get().CreateToggle();
-            sleekToggle3.positionOffset_Y = 150;
-            sleekToggle3.sizeOffset_X = 40;
-            sleekToggle3.sizeOffset_Y = 40;
-            sleekToggle3.state = volume.overrideFog;
-            sleekToggle3.addLabel("Override Fog", ESleekSide.RIGHT);
-            sleekToggle3.onToggled += OnOverrideFogToggled;
+            sleekToggle3.PositionOffset_Y = 150f;
+            sleekToggle3.SizeOffset_X = 40f;
+            sleekToggle3.SizeOffset_Y = 40f;
+            sleekToggle3.Value = volume.overrideFog;
+            sleekToggle3.AddLabel("Override Fog", ESleekSide.RIGHT);
+            sleekToggle3.OnValueChanged += OnOverrideFogToggled;
             AddChild(sleekToggle3);
             SleekColorPicker sleekColorPicker = new SleekColorPicker
             {
-                positionOffset_Y = 190,
+                PositionOffset_Y = 190f,
                 state = volume.fogColor
             };
             sleekColorPicker.onColorPicked = (ColorPicked)Delegate.Combine(sleekColorPicker.onColorPicked, new ColorPicked(OnFogColorPicked));
             AddChild(sleekColorPicker);
             ISleekFloat32Field sleekFloat32Field = Glazier.Get().CreateFloat32Field();
-            sleekFloat32Field.positionOffset_Y = 200 + sleekColorPicker.sizeOffset_Y;
-            sleekFloat32Field.sizeOffset_X = 200;
-            sleekFloat32Field.sizeOffset_Y = 30;
-            sleekFloat32Field.state = volume.fogIntensity;
-            sleekFloat32Field.addLabel("Fog Intensity", ESleekSide.RIGHT);
-            sleekFloat32Field.onTypedSingle += OnFogIntensityChanged;
+            sleekFloat32Field.PositionOffset_Y = 200f + sleekColorPicker.SizeOffset_Y;
+            sleekFloat32Field.SizeOffset_X = 200f;
+            sleekFloat32Field.SizeOffset_Y = 30f;
+            sleekFloat32Field.Value = volume.fogIntensity;
+            sleekFloat32Field.AddLabel("Fog Intensity", ESleekSide.RIGHT);
+            sleekFloat32Field.OnValueChanged += OnFogIntensityChanged;
             AddChild(sleekFloat32Field);
             ISleekToggle sleekToggle4 = Glazier.Get().CreateToggle();
-            sleekToggle4.positionOffset_Y = sleekFloat32Field.positionOffset_Y + 40;
-            sleekToggle4.sizeOffset_X = 40;
-            sleekToggle4.sizeOffset_Y = 40;
-            sleekToggle4.state = volume.overrideAtmosphericFog;
-            sleekToggle4.addLabel("Override Atmospheric Fog", ESleekSide.RIGHT);
-            sleekToggle4.onToggled += OnOverrideAtmosphericFogToggled;
+            sleekToggle4.PositionOffset_Y = sleekFloat32Field.PositionOffset_Y + 40f;
+            sleekToggle4.SizeOffset_X = 40f;
+            sleekToggle4.SizeOffset_Y = 40f;
+            sleekToggle4.Value = volume.overrideAtmosphericFog;
+            sleekToggle4.AddLabel("Override Atmospheric Fog", ESleekSide.RIGHT);
+            sleekToggle4.OnValueChanged += OnOverrideAtmosphericFogToggled;
             AddChild(sleekToggle4);
-            base.sizeOffset_Y = sleekToggle4.positionOffset_Y + 40;
+            base.SizeOffset_Y = sleekToggle4.PositionOffset_Y + 40f;
         }
 
         private void OnIdChanged(ISleekField field, string effectIdString)

@@ -125,11 +125,6 @@ public class ObjectNPCAsset : ObjectAsset
         return "???";
     }
 
-    public bool doesPlayerHaveAccessToVendor(Player player, VendorAsset vendorAsset)
-    {
-        return FindDialogueAsset()?.doesPlayerHaveAccessToVendor(player, vendorAsset) ?? false;
-    }
-
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
         base.PopulateAsset(bundle, data, localization);
@@ -191,5 +186,11 @@ public class ObjectNPCAsset : ObjectAsset
             poseHeadOffset = 0.1f;
         }
         playerKnowsNameFlagId = data.ParseUInt16("PlayerKnowsNameFlagID", 0);
+    }
+
+    [Obsolete("Server now tracks dialogue tree")]
+    public bool doesPlayerHaveAccessToVendor(Player player, VendorAsset vendorAsset)
+    {
+        return true;
     }
 }

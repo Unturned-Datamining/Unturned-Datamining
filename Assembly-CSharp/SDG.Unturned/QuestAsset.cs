@@ -31,20 +31,20 @@ public class QuestAsset : Asset
         return true;
     }
 
-    public void applyConditions(Player player, bool shouldSend)
+    public void ApplyConditions(Player player)
     {
         if (conditions != null)
         {
             for (int i = 0; i < conditions.Length; i++)
             {
-                conditions[i].applyCondition(player, shouldSend);
+                conditions[i].ApplyCondition(player);
             }
         }
     }
 
-    public void grantRewards(Player player, bool shouldSend)
+    public void GrantRewards(Player player)
     {
-        rewardsList.Grant(player, shouldSend);
+        rewardsList.Grant(player);
     }
 
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
@@ -63,5 +63,17 @@ public class QuestAsset : Asset
         conditions = new INPCCondition[data.ParseUInt8("Conditions", 0)];
         NPCTool.readConditions(data, localization, "Condition_", conditions, this);
         rewardsList.Parse(data, localization, this, "Rewards", "Reward_");
+    }
+
+    [Obsolete("Removed shouldSend parameter")]
+    public void applyConditions(Player player, bool shouldSend)
+    {
+        ApplyConditions(player);
+    }
+
+    [Obsolete("Removed shouldSend parameter")]
+    public void grantRewards(Player player, bool shouldSend)
+    {
+        GrantRewards(player);
     }
 }

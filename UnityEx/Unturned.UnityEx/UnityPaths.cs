@@ -15,8 +15,11 @@ public static class UnityPaths
 
     public static readonly DirectoryInfo GameDirectory;
 
+    public static readonly DirectoryInfo GameDataDirectory;
+
     static UnityPaths()
     {
-        GameDirectory = new DirectoryInfo(Application.dataPath).Parent;
+        GameDataDirectory = new DirectoryInfo(Application.dataPath);
+        GameDirectory = GameDataDirectory.Parent;
     }
 }

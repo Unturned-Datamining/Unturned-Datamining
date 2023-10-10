@@ -154,6 +154,64 @@ public static class EffectManager_NetMethods
         writer.WriteClampedVector3(point);
     }
 
+    [NetInvokableGeneratedMethod("ReceiveEffectPositionRotation_NonUniformScale", ENetInvokableGeneratedMethodPurpose.Read)]
+    public static void ReceiveEffectPositionRotation_NonUniformScale_Read(in ClientInvocationContext context)
+    {
+        NetPakReader reader = context.reader;
+        reader.ReadGuid(out var value);
+        reader.ReadClampedVector3(out var value2);
+        reader.ReadQuaternion(out var value3);
+        reader.ReadClampedVector3(out var value4);
+        EffectManager.ReceiveEffectPositionRotation_NonUniformScale(value, value2, value3, value4);
+    }
+
+    [NetInvokableGeneratedMethod("ReceiveEffectPositionRotation_NonUniformScale", ENetInvokableGeneratedMethodPurpose.Write)]
+    public static void ReceiveEffectPositionRotation_NonUniformScale_Write(NetPakWriter writer, Guid assetGuid, Vector3 position, Quaternion rotation, Vector3 scale)
+    {
+        writer.WriteGuid(assetGuid);
+        writer.WriteClampedVector3(position);
+        writer.WriteQuaternion(rotation);
+        writer.WriteClampedVector3(scale);
+    }
+
+    [NetInvokableGeneratedMethod("ReceiveEffectPositionRotation_UniformScale", ENetInvokableGeneratedMethodPurpose.Read)]
+    public static void ReceiveEffectPositionRotation_UniformScale_Read(in ClientInvocationContext context)
+    {
+        NetPakReader reader = context.reader;
+        reader.ReadGuid(out var value);
+        reader.ReadClampedVector3(out var value2);
+        reader.ReadQuaternion(out var value3);
+        reader.ReadFloat(out var value4);
+        EffectManager.ReceiveEffectPositionRotation_UniformScale(value, value2, value3, value4);
+    }
+
+    [NetInvokableGeneratedMethod("ReceiveEffectPositionRotation_UniformScale", ENetInvokableGeneratedMethodPurpose.Write)]
+    public static void ReceiveEffectPositionRotation_UniformScale_Write(NetPakWriter writer, Guid assetGuid, Vector3 position, Quaternion rotation, float uniformScale)
+    {
+        writer.WriteGuid(assetGuid);
+        writer.WriteClampedVector3(position);
+        writer.WriteQuaternion(rotation);
+        writer.WriteFloat(uniformScale);
+    }
+
+    [NetInvokableGeneratedMethod("ReceiveEffectPositionRotation", ENetInvokableGeneratedMethodPurpose.Read)]
+    public static void ReceiveEffectPositionRotation_Read(in ClientInvocationContext context)
+    {
+        NetPakReader reader = context.reader;
+        reader.ReadGuid(out var value);
+        reader.ReadClampedVector3(out var value2);
+        reader.ReadQuaternion(out var value3);
+        EffectManager.ReceiveEffectPositionRotation(value, value2, value3);
+    }
+
+    [NetInvokableGeneratedMethod("ReceiveEffectPositionRotation", ENetInvokableGeneratedMethodPurpose.Write)]
+    public static void ReceiveEffectPositionRotation_Write(NetPakWriter writer, Guid assetGuid, Vector3 position, Quaternion rotation)
+    {
+        writer.WriteGuid(assetGuid);
+        writer.WriteClampedVector3(position);
+        writer.WriteQuaternion(rotation);
+    }
+
     [NetInvokableGeneratedMethod("ReceiveUIEffect", ENetInvokableGeneratedMethodPurpose.Read)]
     public static void ReceiveUIEffect_Read(in ClientInvocationContext context)
     {

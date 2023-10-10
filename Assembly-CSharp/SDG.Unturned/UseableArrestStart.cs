@@ -35,7 +35,7 @@ public class UseableArrestStart : Useable
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askArrest")]
     public void ReceivePlayArrest()
     {
-        if (base.player.equipment.isEquipped)
+        if (base.player.equipment.IsEquipAnimationFinished)
         {
             arrest();
         }
@@ -47,7 +47,7 @@ public class UseableArrestStart : Useable
         {
             return false;
         }
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             RaycastInfo raycastInfo = DamageTool.raycast(new Ray(base.player.look.aim.position, base.player.look.aim.forward), 3f, RayMasks.DAMAGE_CLIENT);
             if (raycastInfo.player != null && raycastInfo.player.animator.gesture == EPlayerGesture.SURRENDER_START)
@@ -89,7 +89,7 @@ public class UseableArrestStart : Useable
     public override void equip()
     {
         base.player.animator.play("Equip", smooth: true);
-        useTime = base.player.animator.getAnimationLength("Use");
+        useTime = base.player.animator.GetAnimationLength("Use");
     }
 
     public override void simulate(uint simulation, bool inputSteady)

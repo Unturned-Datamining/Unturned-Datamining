@@ -8,18 +8,11 @@ public class NPCShortFlagReward : INPCReward
 
     public ENPCModificationType modificationType { get; protected set; }
 
-    public override void grantReward(Player player, bool shouldSend)
+    public override void GrantReward(Player player)
     {
         if (modificationType == ENPCModificationType.ASSIGN)
         {
-            if (shouldSend)
-            {
-                player.quests.sendSetFlag(id, value);
-            }
-            else
-            {
-                player.quests.setFlag(id, value);
-            }
+            player.quests.sendSetFlag(id, value);
             return;
         }
         player.quests.getFlag(id, out var num);
@@ -31,14 +24,7 @@ public class NPCShortFlagReward : INPCReward
         {
             num = (short)(num - value);
         }
-        if (shouldSend)
-        {
-            player.quests.sendSetFlag(id, num);
-        }
-        else
-        {
-            player.quests.setFlag(id, num);
-        }
+        player.quests.sendSetFlag(id, num);
     }
 
     public NPCShortFlagReward(ushort newID, short newValue, ENPCModificationType newModificationType, string newText)

@@ -20,18 +20,11 @@ public class NPCTreeKillsCondition : INPCCondition
         return false;
     }
 
-    public override void applyCondition(Player player, bool shouldSend)
+    public override void ApplyCondition(Player player)
     {
         if (shouldReset)
         {
-            if (shouldSend)
-            {
-                player.quests.sendRemoveFlag(id);
-            }
-            else
-            {
-                player.quests.removeFlag(id);
-            }
+            player.quests.sendRemoveFlag(id);
         }
     }
 

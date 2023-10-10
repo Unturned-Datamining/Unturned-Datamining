@@ -15,30 +15,30 @@ public class CullingVolume : LevelVolume<CullingVolume, CullingVolumeManager>
         public Menu(CullingVolume volume)
         {
             this.volume = volume;
-            base.sizeOffset_X = 400;
-            base.sizeOffset_Y = 80;
+            base.SizeOffset_X = 400f;
+            base.SizeOffset_Y = 80f;
             distanceField = Glazier.Get().CreateFloat32Field();
-            distanceField.positionOffset_Y = 0;
-            distanceField.sizeOffset_X = 200;
-            distanceField.sizeOffset_Y = 30;
-            distanceField.state = volume.cullDistance;
-            distanceField.addLabel("Cull Distance", ESleekSide.RIGHT);
-            distanceField.onTypedSingle += OnDistanceChanged;
+            distanceField.PositionOffset_Y = 0f;
+            distanceField.SizeOffset_X = 200f;
+            distanceField.SizeOffset_Y = 30f;
+            distanceField.Value = volume.cullDistance;
+            distanceField.AddLabel("Cull Distance", ESleekSide.RIGHT);
+            distanceField.OnValueChanged += OnDistanceChanged;
             AddChild(distanceField);
             ISleekToggle sleekToggle = Glazier.Get().CreateToggle();
-            sleekToggle.positionOffset_Y = 40;
-            sleekToggle.sizeOffset_X = 40;
-            sleekToggle.sizeOffset_Y = 40;
-            sleekToggle.state = volume.includeLargeObjects;
-            sleekToggle.addLabel("Include Large Objects", ESleekSide.RIGHT);
-            sleekToggle.onToggled += OnIncludeLargeObjectsToggled;
+            sleekToggle.PositionOffset_Y = 40f;
+            sleekToggle.SizeOffset_X = 40f;
+            sleekToggle.SizeOffset_Y = 40f;
+            sleekToggle.Value = volume.includeLargeObjects;
+            sleekToggle.AddLabel("Include Large Objects", ESleekSide.RIGHT);
+            sleekToggle.OnValueChanged += OnIncludeLargeObjectsToggled;
             AddChild(sleekToggle);
         }
 
         private void OnDistanceChanged(ISleekFloat32Field field, float value)
         {
             volume.cullDistance = Mathf.Clamp(value, 1f, ObjectManager.OBJECT_REGIONS * Regions.REGION_SIZE);
-            distanceField.state = volume.cullDistance;
+            distanceField.Value = volume.cullDistance;
         }
 
         private void OnIncludeLargeObjectsToggled(ISleekToggle toggle, bool value)

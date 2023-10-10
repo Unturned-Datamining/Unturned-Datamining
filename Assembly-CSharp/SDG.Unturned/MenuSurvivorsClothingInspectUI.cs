@@ -13,7 +13,7 @@ public class MenuSurvivorsClothingInspectUI
 
     private static ISleekConstraintFrame inventory;
 
-    private static ISleekImage image;
+    private static SleekCameraImage image;
 
     private static ISleekSlider slider;
 
@@ -37,7 +37,7 @@ public class MenuSurvivorsClothingInspectUI
             camera.gameObject.SetActive(value: true);
             look._yaw = 0f;
             look.yaw = 0f;
-            slider.state = 0f;
+            slider.Value = 0f;
             container.AnimateIntoView();
         }
     }
@@ -133,48 +133,49 @@ public class MenuSurvivorsClothingInspectUI
     public MenuSurvivorsClothingInspectUI()
     {
         container = new SleekFullscreenBox();
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.positionScale_Y = 1f;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.PositionScale_Y = 1f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         MenuUI.container.AddChild(container);
         active = false;
         inventory = Glazier.Get().CreateConstraintFrame();
-        inventory.positionScale_X = 0.5f;
-        inventory.positionOffset_Y = 10;
-        inventory.positionScale_Y = 0.125f;
-        inventory.sizeScale_X = 0.5f;
-        inventory.sizeScale_Y = 0.75f;
-        inventory.sizeOffset_Y = -20;
-        inventory.constraint = ESleekConstraint.FitInParent;
+        inventory.PositionScale_X = 0.5f;
+        inventory.PositionOffset_Y = 10f;
+        inventory.PositionScale_Y = 0.125f;
+        inventory.SizeScale_X = 0.5f;
+        inventory.SizeScale_Y = 0.75f;
+        inventory.SizeOffset_Y = -20f;
+        inventory.Constraint = ESleekConstraint.FitInParent;
         container.AddChild(inventory);
         ISleekBox sleekBox = Glazier.Get().CreateBox();
-        sleekBox.sizeScale_X = 1f;
-        sleekBox.sizeScale_Y = 1f;
+        sleekBox.SizeScale_X = 1f;
+        sleekBox.SizeScale_Y = 1f;
         inventory.AddChild(sleekBox);
-        image = Glazier.Get().CreateImage(Resources.Load<Texture>("RenderTextures/Item"));
-        image.sizeScale_X = 1f;
-        image.sizeScale_Y = 1f;
+        image = new SleekCameraImage();
+        image.SizeScale_X = 1f;
+        image.SizeScale_Y = 1f;
         sleekBox.AddChild(image);
         slider = Glazier.Get().CreateSlider();
-        slider.positionOffset_Y = 10;
-        slider.positionScale_Y = 1f;
-        slider.sizeOffset_Y = 20;
-        slider.sizeScale_X = 1f;
-        slider.orientation = ESleekOrientation.HORIZONTAL;
-        slider.onDragged += onDraggedSlider;
+        slider.PositionOffset_Y = 10f;
+        slider.PositionScale_Y = 1f;
+        slider.SizeOffset_Y = 20f;
+        slider.SizeScale_X = 1f;
+        slider.Orientation = ESleekOrientation.HORIZONTAL;
+        slider.OnValueChanged += onDraggedSlider;
         sleekBox.AddChild(slider);
         inspect = GameObject.Find("Inspect").transform;
         look = inspect.GetComponent<ItemLook>();
         camera = look.inspectCamera;
+        image.SetCamera(camera);
         backButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));
-        backButton.positionOffset_Y = -50;
-        backButton.positionScale_Y = 1f;
-        backButton.sizeOffset_X = 200;
-        backButton.sizeOffset_Y = 50;
+        backButton.PositionOffset_Y = -50f;
+        backButton.PositionScale_Y = 1f;
+        backButton.SizeOffset_X = 200f;
+        backButton.SizeOffset_Y = 50f;
         backButton.text = MenuDashboardUI.localization.format("BackButtonText");
         backButton.tooltip = MenuDashboardUI.localization.format("BackButtonTooltip");
         backButton.onClickedButton += onClickedBackButton;

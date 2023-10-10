@@ -267,7 +267,7 @@ public class LevelObject
 
     private void onPlayerCreated(Player player)
     {
-        if (!player.channel.isOwner)
+        if (!player.channel.IsLocalPlayer)
         {
             return;
         }

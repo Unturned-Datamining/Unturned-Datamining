@@ -360,6 +360,14 @@ public class PlayerMovement : PlayerCaller
         DoTeleport(inputTransform, outputTransform);
     }
 
+    internal void UpdateCharacterControllerEnabled()
+    {
+        if (controller != null)
+        {
+            controller.enabled = vehicle == null && base.player.life.IsAlive;
+        }
+    }
+
     public void setSize(EPlayerHeight newHeight)
     {
         if (newHeight != height)
@@ -378,7 +386,7 @@ public class PlayerMovement : PlayerCaller
             EPlayerHeight.PRONE => HEIGHT_PRONE, 
             _ => 2f, 
         };
-        if ((base.channel.isOwner || Provider.isServer) && controller != null)
+        if ((base.channel.IsLocalPlayer || Provider.isServer) && controller != null)
         {
             controller.height = num;
             controller.center = new Vector3(0f, num / 2f, 0f);
@@ -420,7 +428,7 @@ public class PlayerMovement : PlayerCaller
             base.player.transform.parent = pendingSeatTransform;
             base.player.ReceiveTeleport(pendingSeatPosition, pendingSeatAngle);
         }
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             if (flag && Level.info != null && Level.info.name.ToLower() != "tutorial" && Provider.provider.achievementsService.getAchievement("Wheel", out var has) && !has)
             {
@@ -443,9 +451,9 @@ public class PlayerMovement : PlayerCaller
                 PlayerUI.enableDot();
             }
         }
-        if (base.channel.isOwner || Provider.isServer)
+        if (base.channel.IsLocalPlayer || Provider.isServer)
         {
-            controller.enabled = vehicle == null;
+            UpdateCharacterControllerEnabled();
             if (vehicle != null)
             {
                 if (flag)
@@ -462,7 +470,7 @@ public class PlayerMovement : PlayerCaller
                 base.player.stance.checkStance(EPlayerStance.STAND);
             }
         }
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             onSeated?.Invoke(flag, vehicle != null, interactableVehicle != null, interactableVehicle, vehicle);
             if (flag && onVehicleUpdated != null)
@@ -506,7 +514,7 @@ public class PlayerMovement : PlayerCaller
         pendingSeatTransform = newSeatingTransform;
         pendingSeatPosition = newSeatingPosition;
         pendingSeatAngle = newSeatingAngle;
-        if ((!base.channel.isOwner && !Provider.isServer) || !base.player.life.IsAlive || forceUpdate)
+        if ((!base.channel.IsLocalPlayer && !Provider.isServer) || !base.player.life.IsAlive || forceUpdate)
         {
             updateVehicle();
         }
@@ -527,7 +535,7 @@ public class PlayerMovement : PlayerCaller
     public void sendPluginGravityMultiplier(float newPluginGravityMultiplier)
     {
         pluginGravityMultiplier = newPluginGravityMultiplier;
-        if (!base.channel.isOwner)
+        if (!base.channel.IsLocalPlayer)
         {
             SendPluginGravityMultiplier.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), newPluginGravityMultiplier);
         }
@@ -548,7 +556,7 @@ public class PlayerMovement : PlayerCaller
     public void sendPluginJumpMultiplier(float newPluginJumpMultiplier)
     {
         pluginJumpMultiplier = newPluginJumpMultiplier;
-        if (!base.channel.isOwner)
+        if (!base.channel.IsLocalPlayer)
         {
             SendPluginJumpMultiplier.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), newPluginJumpMultiplier);
         }
@@ -569,7 +577,7 @@ public class PlayerMovement : PlayerCaller
     public void sendPluginSpeedMultiplier(float newPluginSpeedMultiplier)
     {
         pluginSpeedMultiplier = newPluginSpeedMultiplier;
-        if (!base.channel.isOwner)
+        if (!base.channel.IsLocalPlayer)
         {
             SendPluginSpeedMultiplier.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), newPluginSpeedMultiplier);
         }
@@ -577,7 +585,7 @@ public class PlayerMovement : PlayerCaller
 
     public void tellState(Vector3 newPosition, byte newPitch, byte newYaw)
     {
-        if (!base.channel.isOwner)
+        if (!base.channel.IsLocalPlayer)
         {
             checkGround(newPosition);
             lastUpdatePos = newPosition;
@@ -608,7 +616,7 @@ public class PlayerMovement : PlayerCaller
         float num = PlayerStance.RADIUS - 0.001f;
         Physics.SphereCast(new Ray(position + new Vector3(0f, num, 0f), Vector3.down), num, out ground, 0.125f, bLOCK_COLLISION, QueryTriggerInteraction.Ignore);
         _isGrounded = ground.transform != null;
-        if ((base.channel.isOwner || Provider.isServer) && controller.isGrounded)
+        if ((base.channel.IsLocalPlayer || Provider.isServer) && controller.enabled && controller.isGrounded)
         {
             _isGrounded = true;
         }
@@ -782,7 +790,7 @@ public class PlayerMovement : PlayerCaller
     public void simulate()
     {
         updateRegionAndBound();
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             lastUpdatePos = base.transform.position;
         }
@@ -796,7 +804,7 @@ public class PlayerMovement : PlayerCaller
     public void simulate(uint simulation, int recov, bool inputBrake, bool inputStamina, Vector3 point, Quaternion rotation, float speed, float physicsSpeed, int turn, float delta)
     {
         updateRegionAndBound();
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             lastUpdatePos = base.transform.position;
         }
@@ -817,7 +825,7 @@ public class PlayerMovement : PlayerCaller
     public void simulate(uint simulation, int recov, int input_x, int input_y, float look_x, float look_y, bool inputJump, bool inputSprint, float deltaTime)
     {
         updateRegionAndBound();
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             lastUpdatePos = base.transform.position;
         }
@@ -853,7 +861,7 @@ public class PlayerMovement : PlayerCaller
             mostRecentControllerColliderHit = null;
             velocity = Vector3.zero;
             pendingLaunchVelocity = Vector3.zero;
-            if (base.channel.isOwner)
+            if (base.channel.IsLocalPlayer)
             {
                 vehicle.simulate(simulation, recov, input_x, input_y, look_x, look_y, inputJump, inputSprint, deltaTime);
                 if (onVehicleUpdated != null)
@@ -871,7 +879,10 @@ public class PlayerMovement : PlayerCaller
             pendingLaunchVelocity = Vector3.zero;
             velocity = new Vector3(0f, _move.z * speed * 0.5f, 0f);
             mostRecentControllerColliderHit = null;
-            controller.CheckedMove(velocity * deltaTime);
+            if (controller.enabled)
+            {
+                controller.CheckedMove(velocity * deltaTime);
+            }
         }
         else if (base.player.stance.stance == EPlayerStance.SWIM)
         {
@@ -886,7 +897,10 @@ public class PlayerMovement : PlayerCaller
                     velocity.y = SWIM * pluginJumpMultiplier;
                 }
                 mostRecentControllerColliderHit = null;
-                controller.CheckedMove(velocity * deltaTime);
+                if (controller.enabled)
+                {
+                    controller.CheckedMove(velocity * deltaTime);
+                }
             }
             else
             {
@@ -894,7 +908,10 @@ public class PlayerMovement : PlayerCaller
                 velocity = base.transform.rotation * move.normalized * speed * 1.5f;
                 velocity.y = (surfaceElevation - 1.275f - base.transform.position.y) / 8f;
                 mostRecentControllerColliderHit = null;
-                controller.CheckedMove(velocity * deltaTime);
+                if (controller.enabled)
+                {
+                    controller.CheckedMove(velocity * deltaTime);
+                }
             }
         }
         else
@@ -995,7 +1012,7 @@ public class PlayerMovement : PlayerCaller
             }
             velocity += pendingLaunchVelocity;
             pendingLaunchVelocity = Vector3.zero;
-            if (base.channel.isOwner && LoadingUI.isBlocked)
+            if (base.channel.IsLocalPlayer && LoadingUI.isBlocked)
             {
                 velocity = Vector3.zero;
             }
@@ -1003,7 +1020,10 @@ public class PlayerMovement : PlayerCaller
             {
                 Vector3 position = base.transform.position;
                 mostRecentControllerColliderHit = null;
-                controller.CheckedMove(velocity * deltaTime);
+                if (controller.enabled)
+                {
+                    controller.CheckedMove(velocity * deltaTime);
+                }
                 if (!flag)
                 {
                     checkGround(base.transform.position);
@@ -1063,7 +1083,7 @@ public class PlayerMovement : PlayerCaller
                 base.transform.position = worldspacePosition;
             }
         }
-        if (base.channel.isOwner || !Provider.isServer || updates == null)
+        if (base.channel.IsLocalPlayer || !Provider.isServer || updates == null)
         {
             return;
         }
@@ -1090,7 +1110,7 @@ public class PlayerMovement : PlayerCaller
         {
             snapshot = nsb.getCurrentSnapshot();
         }
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             if (!PlayerUI.window.showCursor && !LoadingUI.isBlocked)
             {
@@ -1193,7 +1213,7 @@ public class PlayerMovement : PlayerCaller
         {
             lastFootstep = Time.time;
             bool flag = false;
-            if (!base.channel.isOwner)
+            if (!base.channel.IsLocalPlayer)
             {
                 bool num = isGrounded;
                 checkGround(base.transform.position);
@@ -1214,7 +1234,7 @@ public class PlayerMovement : PlayerCaller
                 }
             }
         }
-        if (base.channel.isOwner)
+        if (base.channel.IsLocalPlayer)
         {
             if (base.player.look.isOrbiting && (!base.player.workzone.isBuilding || InputEx.GetKey(ControlsSettings.secondary)))
             {
@@ -1295,7 +1315,7 @@ public class PlayerMovement : PlayerCaller
                 base.transform.localPosition = snapshot.pos;
             }
         }
-        if (!base.channel.isOwner && base.player.third != null)
+        if (!base.channel.IsLocalPlayer && base.player.third != null)
         {
             if (base.player.stance.stance == EPlayerStance.PRONE)
             {
@@ -1403,7 +1423,7 @@ public class PlayerMovement : PlayerCaller
         _region_y = byte.MaxValue;
         _bound = byte.MaxValue;
         _nav = byte.MaxValue;
-        if (base.channel.isOwner || Provider.isServer)
+        if (base.channel.IsLocalPlayer || Provider.isServer)
         {
             _loadedRegions = new LoadedRegion[Regions.WORLD_SIZE, Regions.WORLD_SIZE];
             for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
@@ -1421,7 +1441,7 @@ public class PlayerMovement : PlayerCaller
         }
         warp_x = 1;
         warp_y = 1;
-        if (Provider.isServer || base.channel.isOwner)
+        if (Provider.isServer || base.channel.IsLocalPlayer)
         {
             controller = GetComponent<CharacterController>();
             controller.enableOverlapRecovery = false;

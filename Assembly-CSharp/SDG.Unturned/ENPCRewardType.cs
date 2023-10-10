@@ -18,5 +18,6 @@ public enum ENPCRewardType
     FLAG_MATH,
     CURRENCY,
     HINT,
-    PLAYER_SPAWNPOINT
+    PLAYER_SPAWNPOINT,
+    PLAYER_LIFE_HEALTH
 }

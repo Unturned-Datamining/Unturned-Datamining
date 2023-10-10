@@ -93,57 +93,57 @@ public class MenuSurvivorsClothingDeleteUI
         quantity = newQuantity;
         mode = newMode;
         instigator = newInstigator;
-        deleteBox.sizeOffset_Y = 130;
-        yesButton.tooltipText = localization.format((mode == EDeleteMode.SALVAGE) ? "Yes_Salvage_Tooltip" : ((mode == EDeleteMode.TAG_TOOL_ADD || mode == EDeleteMode.TAG_TOOL_REMOVE) ? "Yes_Tag_Tool_Tooltip" : "Yes_Delete_Tooltip"));
+        deleteBox.SizeOffset_Y = 130f;
+        yesButton.TooltipText = localization.format((mode == EDeleteMode.SALVAGE) ? "Yes_Salvage_Tooltip" : ((mode == EDeleteMode.TAG_TOOL_ADD || mode == EDeleteMode.TAG_TOOL_REMOVE) ? "Yes_Tag_Tool_Tooltip" : "Yes_Delete_Tooltip"));
         if (mode == EDeleteMode.TAG_TOOL_ADD || mode == EDeleteMode.TAG_TOOL_REMOVE)
         {
             int inventoryItem = Provider.provider.economyService.getInventoryItem(instigator);
-            intentLabel.text = localization.format("Intent_Tag_Tool", "<color=" + Palette.hex(Provider.provider.economyService.getInventoryColor(inventoryItem)) + ">" + Provider.provider.economyService.getInventoryName(inventoryItem) + "</color>", "<color=" + Palette.hex(Provider.provider.economyService.getInventoryColor(item)) + ">" + Provider.provider.economyService.getInventoryName(item) + "</color>");
+            intentLabel.Text = localization.format("Intent_Tag_Tool", "<color=" + Palette.hex(Provider.provider.economyService.getInventoryColor(inventoryItem)) + ">" + Provider.provider.economyService.getInventoryName(inventoryItem) + "</color>", "<color=" + Palette.hex(Provider.provider.economyService.getInventoryColor(item)) + ">" + Provider.provider.economyService.getInventoryName(item) + "</color>");
         }
         else
         {
-            intentLabel.text = localization.format((mode == EDeleteMode.SALVAGE) ? "Intent_Salvage" : "Intent_Delete", "<color=" + Palette.hex(Provider.provider.economyService.getInventoryColor(item)) + ">" + Provider.provider.economyService.getInventoryName(item) + "</color>");
+            intentLabel.Text = localization.format((mode == EDeleteMode.SALVAGE) ? "Intent_Salvage" : "Intent_Delete", "<color=" + Palette.hex(Provider.provider.economyService.getInventoryColor(item)) + ">" + Provider.provider.economyService.getInventoryName(item) + "</color>");
         }
-        confirmLabel.text = localization.format("Confirm", localization.format((mode == EDeleteMode.SALVAGE) ? "Salvage" : "Delete"));
-        confirmLabel.isVisible = mode != EDeleteMode.TAG_TOOL_ADD && mode != EDeleteMode.TAG_TOOL_REMOVE;
-        confirmField.hint = localization.format((mode == EDeleteMode.SALVAGE) ? "Salvage" : "Delete");
-        confirmField.text = string.Empty;
-        confirmField.isVisible = mode != EDeleteMode.TAG_TOOL_ADD && mode != EDeleteMode.TAG_TOOL_REMOVE;
+        confirmLabel.Text = localization.format("Confirm", localization.format((mode == EDeleteMode.SALVAGE) ? "Salvage" : "Delete"));
+        confirmLabel.IsVisible = mode != EDeleteMode.TAG_TOOL_ADD && mode != EDeleteMode.TAG_TOOL_REMOVE;
+        confirmField.PlaceholderText = localization.format((mode == EDeleteMode.SALVAGE) ? "Salvage" : "Delete");
+        confirmField.Text = string.Empty;
+        confirmField.IsVisible = mode != EDeleteMode.TAG_TOOL_ADD && mode != EDeleteMode.TAG_TOOL_REMOVE;
         if (mode == EDeleteMode.TAG_TOOL_ADD || mode == EDeleteMode.TAG_TOOL_REMOVE)
         {
-            yesButton.positionOffset_X = -65;
-            yesButton.positionScale_X = 0.5f;
-            noButton.positionOffset_X = 5;
-            noButton.positionScale_X = 0.5f;
+            yesButton.PositionOffset_X = -65f;
+            yesButton.PositionScale_X = 0.5f;
+            noButton.PositionOffset_X = 5f;
+            noButton.PositionScale_X = 0.5f;
         }
         else
         {
-            yesButton.positionOffset_X = -135;
-            yesButton.positionScale_X = 1f;
-            noButton.positionOffset_X = -65;
-            noButton.positionScale_X = 1f;
+            yesButton.PositionOffset_X = -135f;
+            yesButton.PositionScale_X = 1f;
+            noButton.PositionOffset_X = -65f;
+            noButton.PositionScale_X = 1f;
         }
         if (mode == EDeleteMode.TAG_TOOL_ADD)
         {
-            warningLabel.text = localization.format("Warning_UndoableWithTool");
+            warningLabel.Text = localization.format("Warning_UndoableWithTool");
         }
         else
         {
-            warningLabel.text = localization.format("Warning");
+            warningLabel.Text = localization.format("Warning");
         }
-        quantityField.state = 1;
-        quantityField.maxValue = quantity;
+        quantityField.Value = 1;
+        quantityField.MaxValue = quantity;
         if (mode == EDeleteMode.DELETE && quantity > 1)
         {
-            quantityLabel.text = localization.format("Quantity", quantity);
-            deleteBox.sizeOffset_Y += 50;
-            quantityLabel.isVisible = true;
-            quantityField.isVisible = true;
+            quantityLabel.Text = localization.format("Quantity", quantity);
+            deleteBox.SizeOffset_Y += 50f;
+            quantityLabel.IsVisible = true;
+            quantityField.IsVisible = true;
         }
         else
         {
-            quantityLabel.isVisible = false;
-            quantityField.isVisible = false;
+            quantityLabel.IsVisible = false;
+            quantityField.IsVisible = false;
         }
     }
 
@@ -151,7 +151,7 @@ public class MenuSurvivorsClothingDeleteUI
     {
         if (mode == EDeleteMode.SALVAGE)
         {
-            if (confirmField.text != localization.format("Salvage"))
+            if (confirmField.Text != localization.format("Salvage"))
             {
                 return;
             }
@@ -159,11 +159,11 @@ public class MenuSurvivorsClothingDeleteUI
         }
         else if (mode == EDeleteMode.DELETE)
         {
-            if (confirmField.text != localization.format("Delete"))
+            if (confirmField.Text != localization.format("Delete"))
             {
                 return;
             }
-            Provider.provider.economyService.consumeItem(instance, MathfEx.Min(quantityField.state, quantity));
+            Provider.provider.economyService.consumeItem(instance, MathfEx.Min(quantityField.Value, quantity));
         }
         MenuSurvivorsClothingUI.open();
         close();
@@ -184,103 +184,103 @@ public class MenuSurvivorsClothingDeleteUI
     {
         localization = Localization.read("/Menu/Survivors/MenuSurvivorsClothingDelete.dat");
         container = new SleekFullscreenBox();
-        container.positionOffset_X = 10;
-        container.positionOffset_Y = 10;
-        container.positionScale_Y = 1f;
-        container.sizeOffset_X = -20;
-        container.sizeOffset_Y = -20;
-        container.sizeScale_X = 1f;
-        container.sizeScale_Y = 1f;
+        container.PositionOffset_X = 10f;
+        container.PositionOffset_Y = 10f;
+        container.PositionScale_Y = 1f;
+        container.SizeOffset_X = -20f;
+        container.SizeOffset_Y = -20f;
+        container.SizeScale_X = 1f;
+        container.SizeScale_Y = 1f;
         MenuUI.container.AddChild(container);
         active = false;
         inventory = Glazier.Get().CreateConstraintFrame();
-        inventory.positionScale_X = 0.5f;
-        inventory.positionOffset_Y = 10;
-        inventory.sizeScale_X = 0.5f;
-        inventory.sizeScale_Y = 1f;
-        inventory.sizeOffset_Y = -20;
-        inventory.constraint = ESleekConstraint.FitInParent;
+        inventory.PositionScale_X = 0.5f;
+        inventory.PositionOffset_Y = 10f;
+        inventory.SizeScale_X = 0.5f;
+        inventory.SizeScale_Y = 1f;
+        inventory.SizeOffset_Y = -20f;
+        inventory.Constraint = ESleekConstraint.FitInParent;
         container.AddChild(inventory);
         deleteBox = Glazier.Get().CreateBox();
-        deleteBox.positionOffset_Y = -65;
-        deleteBox.positionScale_Y = 0.5f;
-        deleteBox.sizeOffset_Y = 130;
-        deleteBox.sizeScale_X = 1f;
+        deleteBox.PositionOffset_Y = -65f;
+        deleteBox.PositionScale_Y = 0.5f;
+        deleteBox.SizeOffset_Y = 130f;
+        deleteBox.SizeScale_X = 1f;
         inventory.AddChild(deleteBox);
         intentLabel = Glazier.Get().CreateLabel();
-        intentLabel.enableRichText = true;
-        intentLabel.positionOffset_X = 5;
-        intentLabel.positionOffset_Y = 0;
-        intentLabel.sizeOffset_X = -10;
-        intentLabel.sizeOffset_Y = 30;
-        intentLabel.sizeScale_X = 1f;
-        intentLabel.textColor = ESleekTint.RICH_TEXT_DEFAULT;
-        intentLabel.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+        intentLabel.AllowRichText = true;
+        intentLabel.PositionOffset_X = 5f;
+        intentLabel.PositionOffset_Y = 0f;
+        intentLabel.SizeOffset_X = -10f;
+        intentLabel.SizeOffset_Y = 30f;
+        intentLabel.SizeScale_X = 1f;
+        intentLabel.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+        intentLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
         deleteBox.AddChild(intentLabel);
         warningLabel = Glazier.Get().CreateLabel();
-        warningLabel.positionOffset_X = 5;
-        warningLabel.positionOffset_Y = 20;
-        warningLabel.sizeOffset_X = -10;
-        warningLabel.sizeOffset_Y = 30;
-        warningLabel.sizeScale_X = 1f;
+        warningLabel.PositionOffset_X = 5f;
+        warningLabel.PositionOffset_Y = 20f;
+        warningLabel.SizeOffset_X = -10f;
+        warningLabel.SizeOffset_Y = 30f;
+        warningLabel.SizeScale_X = 1f;
         deleteBox.AddChild(warningLabel);
         confirmLabel = Glazier.Get().CreateLabel();
-        confirmLabel.positionOffset_X = 5;
-        confirmLabel.positionOffset_Y = 40;
-        confirmLabel.sizeOffset_X = -10;
-        confirmLabel.sizeOffset_Y = 30;
-        confirmLabel.sizeScale_X = 1f;
+        confirmLabel.PositionOffset_X = 5f;
+        confirmLabel.PositionOffset_Y = 40f;
+        confirmLabel.SizeOffset_X = -10f;
+        confirmLabel.SizeOffset_Y = 30f;
+        confirmLabel.SizeScale_X = 1f;
         deleteBox.AddChild(confirmLabel);
         confirmField = Glazier.Get().CreateStringField();
-        confirmField.positionOffset_X = 5;
-        confirmField.positionOffset_Y = 75;
-        confirmField.sizeOffset_X = -150;
-        confirmField.sizeOffset_Y = 50;
-        confirmField.sizeScale_X = 1f;
-        confirmField.fontSize = ESleekFontSize.Medium;
+        confirmField.PositionOffset_X = 5f;
+        confirmField.PositionOffset_Y = 75f;
+        confirmField.SizeOffset_X = -150f;
+        confirmField.SizeOffset_Y = 50f;
+        confirmField.SizeScale_X = 1f;
+        confirmField.FontSize = ESleekFontSize.Medium;
         deleteBox.AddChild(confirmField);
         yesButton = Glazier.Get().CreateButton();
-        yesButton.positionOffset_X = -135;
-        yesButton.positionOffset_Y = 75;
-        yesButton.positionScale_X = 1f;
-        yesButton.sizeOffset_X = 60;
-        yesButton.sizeOffset_Y = 50;
-        yesButton.fontSize = ESleekFontSize.Medium;
-        yesButton.text = localization.format("Yes");
-        yesButton.onClickedButton += onClickedYesButton;
+        yesButton.PositionOffset_X = -135f;
+        yesButton.PositionOffset_Y = 75f;
+        yesButton.PositionScale_X = 1f;
+        yesButton.SizeOffset_X = 60f;
+        yesButton.SizeOffset_Y = 50f;
+        yesButton.FontSize = ESleekFontSize.Medium;
+        yesButton.Text = localization.format("Yes");
+        yesButton.OnClicked += onClickedYesButton;
         deleteBox.AddChild(yesButton);
         noButton = Glazier.Get().CreateButton();
-        noButton.positionOffset_X = -65;
-        noButton.positionOffset_Y = 75;
-        noButton.positionScale_X = 1f;
-        noButton.sizeOffset_X = 60;
-        noButton.sizeOffset_Y = 50;
-        noButton.fontSize = ESleekFontSize.Medium;
-        noButton.text = localization.format("No");
-        noButton.tooltipText = localization.format("No_Tooltip");
-        noButton.onClickedButton += onClickedNoButton;
+        noButton.PositionOffset_X = -65f;
+        noButton.PositionOffset_Y = 75f;
+        noButton.PositionScale_X = 1f;
+        noButton.SizeOffset_X = 60f;
+        noButton.SizeOffset_Y = 50f;
+        noButton.FontSize = ESleekFontSize.Medium;
+        noButton.Text = localization.format("No");
+        noButton.TooltipText = localization.format("No_Tooltip");
+        noButton.OnClicked += onClickedNoButton;
         deleteBox.AddChild(noButton);
         quantityLabel = Glazier.Get().CreateLabel();
-        quantityLabel.positionOffset_X = 5;
-        quantityLabel.positionOffset_Y = -35;
-        quantityLabel.positionScale_Y = 1f;
-        quantityLabel.sizeOffset_X = -10;
-        quantityLabel.sizeOffset_Y = 30;
-        quantityLabel.sizeScale_X = 0.75f;
-        quantityLabel.fontAlignment = TextAnchor.MiddleRight;
-        quantityLabel.isVisible = false;
+        quantityLabel.PositionOffset_X = 5f;
+        quantityLabel.PositionOffset_Y = -35f;
+        quantityLabel.PositionScale_Y = 1f;
+        quantityLabel.SizeOffset_X = -10f;
+        quantityLabel.SizeOffset_Y = 30f;
+        quantityLabel.SizeScale_X = 0.75f;
+        quantityLabel.TextAlignment = TextAnchor.MiddleRight;
+        quantityLabel.IsVisible = false;
         deleteBox.AddChild(quantityLabel);
         quantityField = Glazier.Get().CreateUInt16Field();
-        quantityField.positionOffset_X = 5;
-        quantityField.positionOffset_Y = -35;
-        quantityField.positionScale_X = 0.75f;
-        quantityField.positionScale_Y = 1f;
-        quantityField.sizeOffset_X = -10;
-        quantityField.sizeOffset_Y = 30;
-        quantityField.sizeScale_X = 0.25f;
-        quantityField.state = 1;
-        quantityField.minValue = 1;
-        quantityField.isVisible = false;
+        quantityField.PositionOffset_X = 5f;
+        quantityField.PositionOffset_Y = -35f;
+        quantityField.PositionScale_X = 0.75f;
+        quantityField.PositionScale_Y = 1f;
+        quantityField.SizeOffset_X = -10f;
+        quantityField.SizeOffset_Y = 30f;
+        quantityField.SizeScale_X = 0.25f;
+        quantityField.Value = 1;
+        quantityField.MinValue = 1;
+        quantityField.IsVisible = false;
         deleteBox.AddChild(quantityField);
     }
 }

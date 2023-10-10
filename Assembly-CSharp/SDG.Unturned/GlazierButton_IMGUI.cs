@@ -6,10 +6,10 @@ internal class GlazierButton_IMGUI : GlazierLabel_IMGUI, ISleekButton, ISleekEle
 {
     private bool _isRaycastTarget = true;
 
-    public bool isClickable { get; set; } = true;
+    public bool IsClickable { get; set; } = true;
 
 
-    public bool isRaycastTarget
+    public bool IsRaycastTarget
     {
         get
         {
@@ -22,36 +22,36 @@ internal class GlazierButton_IMGUI : GlazierLabel_IMGUI, ISleekButton, ISleekEle
         }
     }
 
-    public SleekColor backgroundColor { get; set; }
+    public SleekColor BackgroundColor { get; set; }
 
-    public event ClickedButton onClickedButton;
+    public event ClickedButton OnClicked;
 
-    public event ClickedButton onRightClickedButton;
+    public event ClickedButton OnRightClicked;
 
     public override void OnGUI()
     {
         bool enabled = GUI.enabled;
-        GUI.enabled = isClickable;
-        if (isRaycastTarget)
+        GUI.enabled = IsClickable;
+        if (IsRaycastTarget)
         {
-            if (GlazierUtils_IMGUI.drawButton(drawRect, backgroundColor))
+            if (GlazierUtils_IMGUI.drawButton(drawRect, BackgroundColor))
             {
                 if (Event.current.button == 0)
                 {
-                    this.onClickedButton?.Invoke(this);
+                    this.OnClicked?.Invoke(this);
                 }
                 else if (Event.current.button == 1)
                 {
-                    this.onRightClickedButton?.Invoke(this);
+                    this.OnRightClicked?.Invoke(this);
                 }
             }
         }
         else
         {
-            GlazierUtils_IMGUI.drawBox(drawRect, backgroundColor);
+            GlazierUtils_IMGUI.drawBox(drawRect, BackgroundColor);
         }
         GUI.enabled = enabled;
-        GlazierUtils_IMGUI.drawLabel(drawRect, base.fontStyle, base.fontAlignment, fontSizeInt, shadowContent, base.textColor, content, base.shadowStyle);
+        GlazierUtils_IMGUI.drawLabel(drawRect, base.FontStyle, base.TextAlignment, fontSizeInt, shadowContent, base.TextColor, content, base.TextContrastContext);
         ChildrenOnGUI();
     }
 
@@ -66,6 +66,6 @@ internal class GlazierButton_IMGUI : GlazierLabel_IMGUI, ISleekButton, ISleekEle
 
     public GlazierButton_IMGUI()
     {
-        backgroundColor = GlazierConst.DefaultButtonBackgroundColor;
+        BackgroundColor = GlazierConst.DefaultButtonBackgroundColor;
     }
 }

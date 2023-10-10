@@ -8,17 +8,17 @@ public class PlayerDelayedQuestRewardsComponent : MonoBehaviour
 {
     public Player player;
 
-    internal void GrantReward(INPCReward reward, bool shouldSend)
+    internal void GrantReward(INPCReward reward)
     {
-        StartCoroutine(GrantRewardCoroutine(reward, shouldSend));
+        StartCoroutine(GrantRewardCoroutine(reward));
     }
 
-    private IEnumerator GrantRewardCoroutine(INPCReward reward, bool shouldSend)
+    private IEnumerator GrantRewardCoroutine(INPCReward reward)
     {
         yield return new WaitForSeconds(reward.grantDelaySeconds);
         try
         {
-            reward.grantReward(player, shouldSend);
+            reward.GrantReward(player);
         }
         catch (Exception e)
         {

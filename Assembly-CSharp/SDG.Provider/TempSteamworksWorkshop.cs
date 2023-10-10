@@ -209,7 +209,7 @@ public class TempSteamworksWorkshop
                 explanation = $"Workshop version of \"{cachedDetails.GetTitle()}\" has not yet been updated from Unity 5.5 and cannot be loaded.";
                 return false;
             }
-            if (cachedDetails.compatibilityVersion > 4)
+            if (cachedDetails.compatibilityVersion > 5)
             {
                 explanation = $"Workshop version of \"{cachedDetails.GetTitle()}\" has been updated to an unknown future version of Unity and cannot be loaded.";
                 return false;
@@ -781,7 +781,7 @@ public class TempSteamworksWorkshop
             SteamUGC.AddItemKeyValueTag(uGCUpdateHandle_t, WorkshopDownloadRestrictions.IP_RESTRICTIONS_KVTAG, ugcAllowedIPs);
         }
         SteamUGC.RemoveItemKeyValueTags(uGCUpdateHandle_t, COMPATIBILITY_VERSION_KVTAG);
-        SteamUGC.AddItemKeyValueTag(uGCUpdateHandle_t, COMPATIBILITY_VERSION_KVTAG, 4.ToString());
+        SteamUGC.AddItemKeyValueTag(uGCUpdateHandle_t, COMPATIBILITY_VERSION_KVTAG, 5.ToString());
         if (ugcVisibility == ESteamUGCVisibility.PUBLIC)
         {
             SteamUGC.SetItemVisibility(uGCUpdateHandle_t, ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityPublic);

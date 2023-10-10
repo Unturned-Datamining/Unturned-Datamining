@@ -53,28 +53,28 @@ internal class EditorTerrainHeightUI : SleekFullscreenBox
     {
         base.OnUpdate();
         modeButton.state = (int)TerrainEditor.heightmapMode;
-        brushRadiusField.state = DevkitLandscapeToolHeightmapOptions.instance.brushRadius;
-        brushFalloffField.state = DevkitLandscapeToolHeightmapOptions.instance.brushFalloff;
-        brushStrengthField.state = EditorInteract.instance.terrainTool.heightmapBrushStrength;
-        flattenTargetField.state = DevkitLandscapeToolHeightmapOptions.instance.flattenTarget;
+        brushRadiusField.Value = DevkitLandscapeToolHeightmapOptions.instance.brushRadius;
+        brushFalloffField.Value = DevkitLandscapeToolHeightmapOptions.instance.brushFalloff;
+        brushStrengthField.Value = EditorInteract.instance.terrainTool.heightmapBrushStrength;
+        flattenTargetField.Value = DevkitLandscapeToolHeightmapOptions.instance.flattenTarget;
         if (TerrainEditor.heightmapMode == TerrainEditor.EDevkitLandscapeToolHeightmapMode.ADJUST)
         {
-            hintLabel.text = localization.format("Hint_Adjust", "Shift");
-            hintLabel.isVisible = true;
+            hintLabel.Text = localization.format("Hint_Adjust", "Shift");
+            hintLabel.IsVisible = true;
         }
         else if (TerrainEditor.heightmapMode == TerrainEditor.EDevkitLandscapeToolHeightmapMode.FLATTEN)
         {
-            hintLabel.text = localization.format("Hint_Flatten", "Alt");
-            hintLabel.isVisible = true;
+            hintLabel.Text = localization.format("Hint_Flatten", "Alt");
+            hintLabel.IsVisible = true;
         }
         else if (TerrainEditor.heightmapMode == TerrainEditor.EDevkitLandscapeToolHeightmapMode.RAMP)
         {
-            hintLabel.text = localization.format("Hint_Ramp", "R");
-            hintLabel.isVisible = true;
+            hintLabel.Text = localization.format("Hint_Ramp", "R");
+            hintLabel.IsVisible = true;
         }
         else
         {
-            hintLabel.isVisible = false;
+            hintLabel.IsVisible = false;
         }
         UpdateLowerLeftOffset();
     }
@@ -84,79 +84,79 @@ internal class EditorTerrainHeightUI : SleekFullscreenBox
         localization = Localization.read("/Editor/EditorTerrainHeight.dat");
         DevkitLandscapeToolHeightmapOptions.load();
         hintLabel = Glazier.Get().CreateLabel();
-        hintLabel.positionScale_Y = 1f;
-        hintLabel.positionOffset_Y = -30;
-        hintLabel.sizeScale_X = 1f;
-        hintLabel.sizeOffset_Y = 30;
-        hintLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
-        hintLabel.isVisible = false;
+        hintLabel.PositionScale_Y = 1f;
+        hintLabel.PositionOffset_Y = -30f;
+        hintLabel.SizeScale_X = 1f;
+        hintLabel.SizeOffset_Y = 30f;
+        hintLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
+        hintLabel.IsVisible = false;
         AddChild(hintLabel);
         modeButton = new SleekButtonState(new GUIContent(localization.format("Mode_Adjust", "Q")), new GUIContent(localization.format("Mode_Flatten", "W")), new GUIContent(localization.format("Mode_Smooth", "E")), new GUIContent(localization.format("Mode_Ramp", "R")));
-        modeButton.positionScale_Y = 1f;
-        modeButton.sizeOffset_X = 200;
-        modeButton.sizeOffset_Y = 30;
-        modeButton.addLabel(localization.format("Mode_Label"), ESleekSide.RIGHT);
+        modeButton.PositionScale_Y = 1f;
+        modeButton.SizeOffset_X = 200f;
+        modeButton.SizeOffset_Y = 30f;
+        modeButton.AddLabel(localization.format("Mode_Label"), ESleekSide.RIGHT);
         modeButton.state = (int)TerrainEditor.heightmapMode;
         SleekButtonState sleekButtonState = modeButton;
         sleekButtonState.onSwappedState = (SwappedState)Delegate.Combine(sleekButtonState.onSwappedState, new SwappedState(OnSwappedMode));
         AddChild(modeButton);
         brushRadiusField = Glazier.Get().CreateFloat32Field();
-        brushRadiusField.positionScale_Y = 1f;
-        brushRadiusField.sizeOffset_X = 200;
-        brushRadiusField.sizeOffset_Y = 30;
-        brushRadiusField.addLabel(localization.format("BrushRadius", "B"), ESleekSide.RIGHT);
-        brushRadiusField.state = DevkitLandscapeToolHeightmapOptions.instance.brushRadius;
-        brushRadiusField.onTypedSingle += OnBrushRadiusTyped;
+        brushRadiusField.PositionScale_Y = 1f;
+        brushRadiusField.SizeOffset_X = 200f;
+        brushRadiusField.SizeOffset_Y = 30f;
+        brushRadiusField.AddLabel(localization.format("BrushRadius", "B"), ESleekSide.RIGHT);
+        brushRadiusField.Value = DevkitLandscapeToolHeightmapOptions.instance.brushRadius;
+        brushRadiusField.OnValueChanged += OnBrushRadiusTyped;
         AddChild(brushRadiusField);
         brushFalloffField = Glazier.Get().CreateFloat32Field();
-        brushFalloffField.positionScale_Y = 1f;
-        brushFalloffField.sizeOffset_X = 200;
-        brushFalloffField.sizeOffset_Y = 30;
-        brushFalloffField.addLabel(localization.format("BrushFalloff", "F"), ESleekSide.RIGHT);
-        brushFalloffField.state = DevkitLandscapeToolHeightmapOptions.instance.brushFalloff;
-        brushFalloffField.onTypedSingle += OnBrushFalloffTyped;
+        brushFalloffField.PositionScale_Y = 1f;
+        brushFalloffField.SizeOffset_X = 200f;
+        brushFalloffField.SizeOffset_Y = 30f;
+        brushFalloffField.AddLabel(localization.format("BrushFalloff", "F"), ESleekSide.RIGHT);
+        brushFalloffField.Value = DevkitLandscapeToolHeightmapOptions.instance.brushFalloff;
+        brushFalloffField.OnValueChanged += OnBrushFalloffTyped;
         AddChild(brushFalloffField);
         brushStrengthField = Glazier.Get().CreateFloat32Field();
-        brushStrengthField.positionScale_Y = 1f;
-        brushStrengthField.sizeOffset_X = 200;
-        brushStrengthField.sizeOffset_Y = 30;
-        brushStrengthField.addLabel(localization.format("BrushStrength", "V"), ESleekSide.RIGHT);
-        brushStrengthField.state = DevkitLandscapeToolHeightmapOptions.instance.brushStrength;
-        brushStrengthField.onTypedSingle += OnBrushStrengthTyped;
+        brushStrengthField.PositionScale_Y = 1f;
+        brushStrengthField.SizeOffset_X = 200f;
+        brushStrengthField.SizeOffset_Y = 30f;
+        brushStrengthField.AddLabel(localization.format("BrushStrength", "V"), ESleekSide.RIGHT);
+        brushStrengthField.Value = DevkitLandscapeToolHeightmapOptions.instance.brushStrength;
+        brushStrengthField.OnValueChanged += OnBrushStrengthTyped;
         AddChild(brushStrengthField);
         smoothMethodButton = new SleekButtonState(new GUIContent(localization.format("SmoothMethod_BrushAverage")), new GUIContent(localization.format("SmoothMethod_PixelAverage")));
-        smoothMethodButton.positionScale_Y = 1f;
-        smoothMethodButton.sizeOffset_X = 200;
-        smoothMethodButton.sizeOffset_Y = 30;
-        smoothMethodButton.addLabel(localization.format("SmoothMethod_Label"), ESleekSide.RIGHT);
+        smoothMethodButton.PositionScale_Y = 1f;
+        smoothMethodButton.SizeOffset_X = 200f;
+        smoothMethodButton.SizeOffset_Y = 30f;
+        smoothMethodButton.AddLabel(localization.format("SmoothMethod_Label"), ESleekSide.RIGHT);
         smoothMethodButton.state = (int)DevkitLandscapeToolHeightmapOptions.instance.smoothMethod;
         SleekButtonState sleekButtonState2 = smoothMethodButton;
         sleekButtonState2.onSwappedState = (SwappedState)Delegate.Combine(sleekButtonState2.onSwappedState, new SwappedState(OnSwappedSmoothMethod));
         AddChild(smoothMethodButton);
         flattenTargetField = Glazier.Get().CreateFloat32Field();
-        flattenTargetField.positionScale_Y = 1f;
-        flattenTargetField.sizeOffset_X = 200;
-        flattenTargetField.sizeOffset_Y = 30;
-        flattenTargetField.addLabel(localization.format("FlattenTarget", "Alt"), ESleekSide.RIGHT);
-        flattenTargetField.state = DevkitLandscapeToolHeightmapOptions.instance.flattenTarget;
-        flattenTargetField.onTypedSingle += OnFlattenTargetTyped;
+        flattenTargetField.PositionScale_Y = 1f;
+        flattenTargetField.SizeOffset_X = 200f;
+        flattenTargetField.SizeOffset_Y = 30f;
+        flattenTargetField.AddLabel(localization.format("FlattenTarget", "Alt"), ESleekSide.RIGHT);
+        flattenTargetField.Value = DevkitLandscapeToolHeightmapOptions.instance.flattenTarget;
+        flattenTargetField.OnValueChanged += OnFlattenTargetTyped;
         AddChild(flattenTargetField);
         flattenMethodButton = new SleekButtonState(new GUIContent(localization.format("FlattenMethod_Regular")), new GUIContent(localization.format("FlattenMethod_Min")), new GUIContent(localization.format("FlattenMethod_Max")));
-        flattenMethodButton.positionScale_Y = 1f;
-        flattenMethodButton.sizeOffset_X = 200;
-        flattenMethodButton.sizeOffset_Y = 30;
-        flattenMethodButton.addLabel(localization.format("FlattenMethod_Label"), ESleekSide.RIGHT);
+        flattenMethodButton.PositionScale_Y = 1f;
+        flattenMethodButton.SizeOffset_X = 200f;
+        flattenMethodButton.SizeOffset_Y = 30f;
+        flattenMethodButton.AddLabel(localization.format("FlattenMethod_Label"), ESleekSide.RIGHT);
         flattenMethodButton.state = (int)DevkitLandscapeToolHeightmapOptions.instance.flattenMethod;
         SleekButtonState sleekButtonState3 = flattenMethodButton;
         sleekButtonState3.onSwappedState = (SwappedState)Delegate.Combine(sleekButtonState3.onSwappedState, new SwappedState(OnSwappedFlattenMethod));
         AddChild(flattenMethodButton);
         maxPreviewSamplesField = Glazier.Get().CreateUInt32Field();
-        maxPreviewSamplesField.positionScale_Y = 1f;
-        maxPreviewSamplesField.sizeOffset_X = 200;
-        maxPreviewSamplesField.sizeOffset_Y = 30;
-        maxPreviewSamplesField.addLabel(localization.format("MaxPreviewSamples"), ESleekSide.RIGHT);
-        maxPreviewSamplesField.state = DevkitLandscapeToolHeightmapOptions.instance.maxPreviewSamples;
-        maxPreviewSamplesField.onTypedUInt32 += OnMaxPreviewSamplesTyped;
+        maxPreviewSamplesField.PositionScale_Y = 1f;
+        maxPreviewSamplesField.SizeOffset_X = 200f;
+        maxPreviewSamplesField.SizeOffset_Y = 30f;
+        maxPreviewSamplesField.AddLabel(localization.format("MaxPreviewSamples"), ESleekSide.RIGHT);
+        maxPreviewSamplesField.Value = DevkitLandscapeToolHeightmapOptions.instance.maxPreviewSamples;
+        maxPreviewSamplesField.OnValueChanged += OnMaxPreviewSamplesTyped;
         AddChild(maxPreviewSamplesField);
         UpdateLowerLeftOffset();
     }
@@ -203,38 +203,38 @@ internal class EditorTerrainHeightUI : SleekFullscreenBox
 
     private void UpdateLowerLeftOffset()
     {
-        int num = 0;
-        num -= modeButton.sizeOffset_Y;
-        modeButton.positionOffset_Y = num;
-        num -= 10;
-        num -= maxPreviewSamplesField.sizeOffset_Y;
-        maxPreviewSamplesField.positionOffset_Y = num;
-        num -= 10;
-        smoothMethodButton.isVisible = TerrainEditor.heightmapMode == TerrainEditor.EDevkitLandscapeToolHeightmapMode.SMOOTH;
-        if (smoothMethodButton.isVisible)
+        float num = 0f;
+        num -= modeButton.SizeOffset_Y;
+        modeButton.PositionOffset_Y = num;
+        num -= 10f;
+        num -= maxPreviewSamplesField.SizeOffset_Y;
+        maxPreviewSamplesField.PositionOffset_Y = num;
+        num -= 10f;
+        smoothMethodButton.IsVisible = TerrainEditor.heightmapMode == TerrainEditor.EDevkitLandscapeToolHeightmapMode.SMOOTH;
+        if (smoothMethodButton.IsVisible)
         {
-            num -= smoothMethodButton.sizeOffset_Y;
-            smoothMethodButton.positionOffset_Y = num;
-            num -= 10;
+            num -= smoothMethodButton.SizeOffset_Y;
+            smoothMethodButton.PositionOffset_Y = num;
+            num -= 10f;
         }
-        flattenMethodButton.isVisible = TerrainEditor.heightmapMode == TerrainEditor.EDevkitLandscapeToolHeightmapMode.FLATTEN;
-        flattenTargetField.isVisible = flattenMethodButton.isVisible;
-        if (flattenMethodButton.isVisible)
+        flattenMethodButton.IsVisible = TerrainEditor.heightmapMode == TerrainEditor.EDevkitLandscapeToolHeightmapMode.FLATTEN;
+        flattenTargetField.IsVisible = flattenMethodButton.IsVisible;
+        if (flattenMethodButton.IsVisible)
         {
-            num -= flattenMethodButton.sizeOffset_Y;
-            flattenMethodButton.positionOffset_Y = num;
-            num -= 10;
-            num -= flattenTargetField.sizeOffset_Y;
-            flattenTargetField.positionOffset_Y = num;
-            num -= 10;
+            num -= flattenMethodButton.SizeOffset_Y;
+            flattenMethodButton.PositionOffset_Y = num;
+            num -= 10f;
+            num -= flattenTargetField.SizeOffset_Y;
+            flattenTargetField.PositionOffset_Y = num;
+            num -= 10f;
         }
-        num -= brushStrengthField.sizeOffset_Y;
-        brushStrengthField.positionOffset_Y = num;
-        num -= 10;
-        num -= brushFalloffField.sizeOffset_Y;
-        brushFalloffField.positionOffset_Y = num;
-        num -= 10;
-        num -= brushRadiusField.sizeOffset_Y;
-        brushRadiusField.positionOffset_Y = num;
+        num -= brushStrengthField.SizeOffset_Y;
+        brushStrengthField.PositionOffset_Y = num;
+        num -= 10f;
+        num -= brushFalloffField.SizeOffset_Y;
+        brushFalloffField.PositionOffset_Y = num;
+        num -= 10f;
+        num -= brushRadiusField.SizeOffset_Y;
+        brushRadiusField.PositionOffset_Y = num;
     }
 }

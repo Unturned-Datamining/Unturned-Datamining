@@ -10,7 +10,7 @@ public static class CapsuleColliderEx
     public static float GetCapsuleVolume(this CapsuleCollider collider)
     {
         float num = Mathf.Abs(collider.radius);
-        float num2 = (float)Math.PI * num * num;
+        float num2 = MathF.PI * num * num;
         float num3 = num2 * num;
         return num2 * collider.height + 1.3333334f * num3;
     }

@@ -30,61 +30,61 @@ public class Crosshair : SleekWrapper
     public void SetGameWantsCenterDotVisible(bool isVisible)
     {
         gameWantsCenterDotVisible = isVisible;
-        centerDotImage.isVisible = gameWantsCenterDotVisible && pluginAllowsCenterDotVisible;
+        centerDotImage.IsVisible = gameWantsCenterDotVisible && pluginAllowsCenterDotVisible;
     }
 
     public void SetPluginAllowsCenterDotVisible(bool isVisible)
     {
         pluginAllowsCenterDotVisible = isVisible;
-        centerDotImage.isVisible = gameWantsCenterDotVisible && pluginAllowsCenterDotVisible;
+        centerDotImage.IsVisible = gameWantsCenterDotVisible && pluginAllowsCenterDotVisible;
     }
 
     public void SetDirectionalArrowsVisible(bool isVisible)
     {
         isGunCrosshairVisible = isVisible;
-        crosshairLeftImage.isVisible = isVisible;
-        crosshairRightImage.isVisible = isVisible;
-        crosshairDownImage.isVisible = isVisible;
-        crosshairUpImage.isVisible = isVisible;
+        crosshairLeftImage.IsVisible = isVisible;
+        crosshairRightImage.IsVisible = isVisible;
+        crosshairDownImage.IsVisible = isVisible;
+        crosshairUpImage.IsVisible = isVisible;
         isInterpolatedSpreadValid &= isGunCrosshairVisible;
     }
 
     public void SynchronizeCustomColors()
     {
         Color crosshairColor = OptionsSettings.crosshairColor;
-        centerDotImage.color = crosshairColor;
-        crosshairLeftImage.color = crosshairColor;
-        crosshairRightImage.color = crosshairColor;
-        crosshairDownImage.color = crosshairColor;
-        crosshairUpImage.color = crosshairColor;
+        centerDotImage.TintColor = crosshairColor;
+        crosshairLeftImage.TintColor = crosshairColor;
+        crosshairRightImage.TintColor = crosshairColor;
+        crosshairDownImage.TintColor = crosshairColor;
+        crosshairUpImage.TintColor = crosshairColor;
     }
 
     public void SynchronizeImages()
     {
         if (OptionsSettings.crosshairShape == ECrosshairShape.Classic)
         {
-            crosshairLeftImage.sizeOffset_X = 8;
-            crosshairLeftImage.texture = icons.load<Texture>("Crosshair_Left_Square");
-            crosshairRightImage.sizeOffset_X = 8;
-            crosshairRightImage.texture = icons.load<Texture>("Crosshair_Right_Square");
-            crosshairUpImage.sizeOffset_Y = 8;
-            crosshairUpImage.texture = icons.load<Texture>("Crosshair_Up_Square");
-            crosshairDownImage.sizeOffset_Y = 8;
-            crosshairDownImage.texture = icons.load<Texture>("Crosshair_Down_Square");
+            crosshairLeftImage.SizeOffset_X = 8f;
+            crosshairLeftImage.Texture = icons.load<Texture>("Crosshair_Left_Square");
+            crosshairRightImage.SizeOffset_X = 8f;
+            crosshairRightImage.Texture = icons.load<Texture>("Crosshair_Right_Square");
+            crosshairUpImage.SizeOffset_Y = 8f;
+            crosshairUpImage.Texture = icons.load<Texture>("Crosshair_Up_Square");
+            crosshairDownImage.SizeOffset_Y = 8f;
+            crosshairDownImage.Texture = icons.load<Texture>("Crosshair_Down_Square");
         }
         else
         {
-            crosshairLeftImage.sizeOffset_X = 16;
-            crosshairLeftImage.texture = icons.load<Texture>("Crosshair_Left");
-            crosshairRightImage.sizeOffset_X = 16;
-            crosshairRightImage.texture = icons.load<Texture>("Crosshair_Right");
-            crosshairUpImage.sizeOffset_Y = 16;
-            crosshairUpImage.texture = icons.load<Texture>("Crosshair_Up");
-            crosshairDownImage.sizeOffset_Y = 16;
-            crosshairDownImage.texture = icons.load<Texture>("Crosshair_Down");
+            crosshairLeftImage.SizeOffset_X = 16f;
+            crosshairLeftImage.Texture = icons.load<Texture>("Crosshair_Left");
+            crosshairRightImage.SizeOffset_X = 16f;
+            crosshairRightImage.Texture = icons.load<Texture>("Crosshair_Right");
+            crosshairUpImage.SizeOffset_Y = 16f;
+            crosshairUpImage.Texture = icons.load<Texture>("Crosshair_Up");
+            crosshairDownImage.SizeOffset_Y = 16f;
+            crosshairDownImage.Texture = icons.load<Texture>("Crosshair_Down");
         }
-        crosshairLeftImage.positionOffset_X = -crosshairLeftImage.sizeOffset_X;
-        crosshairUpImage.positionOffset_Y = -crosshairUpImage.sizeOffset_Y;
+        crosshairLeftImage.PositionOffset_X = 0f - crosshairLeftImage.SizeOffset_X;
+        crosshairUpImage.PositionOffset_Y = 0f - crosshairUpImage.SizeOffset_Y;
     }
 
     public override void OnUpdate()
@@ -107,7 +107,7 @@ public class Crosshair : SleekWrapper
             return;
         }
         float fieldOfView = instance.fieldOfView;
-        float num = (float)Math.PI / 180f * fieldOfView * 0.5f;
+        float num = MathF.PI / 180f * fieldOfView * 0.5f;
         if (num < 0.001f)
         {
             isInterpolatedSpreadValid = false;
@@ -121,8 +121,8 @@ public class Crosshair : SleekWrapper
             Vector3 vector = rotation * quaternion * Vector3.forward;
             Vector2 viewportPosition = instance.WorldToViewportPoint(instance.transform.position + vector);
             vector2 = ViewportToNormalizedPosition(viewportPosition);
-            vector2.x += base.parent.positionScale_X;
-            vector2.y += base.parent.positionScale_Y;
+            vector2.x += base.Parent.PositionScale_X;
+            vector2.y += base.Parent.PositionScale_Y;
         }
         else
         {
@@ -148,57 +148,57 @@ public class Crosshair : SleekWrapper
             num5 = Mathf.Lerp(0.0025f, 0.05f, OptionsSettings.staticCrosshairSize);
             num6 = num5 * instance.aspect;
         }
-        crosshairLeftImage.positionScale_X = vector2.x - num5;
-        crosshairLeftImage.positionScale_Y = vector2.y;
-        crosshairRightImage.positionScale_X = vector2.x + num5;
-        crosshairRightImage.positionScale_Y = vector2.y;
-        crosshairUpImage.positionScale_X = vector2.x;
-        crosshairUpImage.positionScale_Y = vector2.y - num6;
-        crosshairDownImage.positionScale_X = vector2.x;
-        crosshairDownImage.positionScale_Y = vector2.y + num6;
+        crosshairLeftImage.PositionScale_X = vector2.x - num5;
+        crosshairLeftImage.PositionScale_Y = vector2.y;
+        crosshairRightImage.PositionScale_X = vector2.x + num5;
+        crosshairRightImage.PositionScale_Y = vector2.y;
+        crosshairUpImage.PositionScale_X = vector2.x;
+        crosshairUpImage.PositionScale_Y = vector2.y - num6;
+        crosshairDownImage.PositionScale_X = vector2.x;
+        crosshairDownImage.PositionScale_Y = vector2.y + num6;
     }
 
     public Crosshair(Bundle icons)
     {
         this.icons = icons;
         centerDotImage = Glazier.Get().CreateImage();
-        centerDotImage.positionOffset_X = -4;
-        centerDotImage.positionOffset_Y = -4;
-        centerDotImage.positionScale_X = 0.5f;
-        centerDotImage.positionScale_Y = 0.5f;
-        centerDotImage.sizeOffset_X = 8;
-        centerDotImage.sizeOffset_Y = 8;
-        centerDotImage.texture = icons.load<Texture>("Dot");
+        centerDotImage.PositionOffset_X = -4f;
+        centerDotImage.PositionOffset_Y = -4f;
+        centerDotImage.PositionScale_X = 0.5f;
+        centerDotImage.PositionScale_Y = 0.5f;
+        centerDotImage.SizeOffset_X = 8f;
+        centerDotImage.SizeOffset_Y = 8f;
+        centerDotImage.Texture = icons.load<Texture>("Dot");
         AddChild(centerDotImage);
         gameWantsCenterDotVisible = true;
         crosshairLeftImage = Glazier.Get().CreateImage();
-        crosshairLeftImage.positionOffset_Y = -4;
-        crosshairLeftImage.positionScale_X = 0.5f;
-        crosshairLeftImage.positionScale_Y = 0.5f;
-        crosshairLeftImage.sizeOffset_Y = 8;
+        crosshairLeftImage.PositionOffset_Y = -4f;
+        crosshairLeftImage.PositionScale_X = 0.5f;
+        crosshairLeftImage.PositionScale_Y = 0.5f;
+        crosshairLeftImage.SizeOffset_Y = 8f;
         AddChild(crosshairLeftImage);
-        crosshairLeftImage.isVisible = false;
+        crosshairLeftImage.IsVisible = false;
         crosshairRightImage = Glazier.Get().CreateImage();
-        crosshairRightImage.positionOffset_Y = -4;
-        crosshairRightImage.positionScale_X = 0.5f;
-        crosshairRightImage.positionScale_Y = 0.5f;
-        crosshairRightImage.sizeOffset_Y = 8;
+        crosshairRightImage.PositionOffset_Y = -4f;
+        crosshairRightImage.PositionScale_X = 0.5f;
+        crosshairRightImage.PositionScale_Y = 0.5f;
+        crosshairRightImage.SizeOffset_Y = 8f;
         AddChild(crosshairRightImage);
-        crosshairRightImage.isVisible = false;
+        crosshairRightImage.IsVisible = false;
         crosshairDownImage = Glazier.Get().CreateImage();
-        crosshairDownImage.positionOffset_X = -4;
-        crosshairDownImage.positionScale_X = 0.5f;
-        crosshairDownImage.positionScale_Y = 0.5f;
-        crosshairDownImage.sizeOffset_X = 8;
+        crosshairDownImage.PositionOffset_X = -4f;
+        crosshairDownImage.PositionScale_X = 0.5f;
+        crosshairDownImage.PositionScale_Y = 0.5f;
+        crosshairDownImage.SizeOffset_X = 8f;
         AddChild(crosshairDownImage);
-        crosshairDownImage.isVisible = false;
+        crosshairDownImage.IsVisible = false;
         crosshairUpImage = Glazier.Get().CreateImage();
-        crosshairUpImage.positionOffset_X = -4;
-        crosshairUpImage.positionScale_X = 0.5f;
-        crosshairUpImage.positionScale_Y = 0.5f;
-        crosshairUpImage.sizeOffset_X = 8;
+        crosshairUpImage.PositionOffset_X = -4f;
+        crosshairUpImage.PositionScale_X = 0.5f;
+        crosshairUpImage.PositionScale_Y = 0.5f;
+        crosshairUpImage.SizeOffset_X = 8f;
         AddChild(crosshairUpImage);
-        crosshairUpImage.isVisible = false;
+        crosshairUpImage.IsVisible = false;
         SynchronizeCustomColors();
         SynchronizeImages();
     }
