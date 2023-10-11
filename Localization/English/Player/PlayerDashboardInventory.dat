@@ -72,6 +72,7 @@ Dirty Dirty
 Ammo Ammo: {0} {1}/{2}
 None Empty
 
+ItemDescription_AmountWithCapacity Amount: {0}/{1}
 ItemDescription_SightAttachment Sight: {0}
 ItemDescription_TacticalAttachment Tactical: {0}
 ItemDescription_GripAttachment Grip: {0}
@@ -115,7 +116,8 @@ ItemDescription_ConsumeableBones_Heal Fixes bones.
 ItemDescription_ConsumeableBones_Break Breaks bones.
 ItemDescription_ConsumeableMoldy Low quality indicates spoiling/mold and will hurt immunity.
 ItemDescription_Firerate Rate of Fire: {0} rpm
-ItemDescription_Spread Inaccuracy: {0} °
+ItemDescription_Spread Spread (Hipfire): {0} °
+ItemDescription_Spread_Aim Spread (Aiming): {0} °
 ItemDescription_DamageFalloff Damage falloff begins at {0} down to {2} at {1}.
 ItemDescription_WeaponRange Range: {0}
 ItemDescription_WeaponDamage_Player_Head Player Headshot Damage: {0}

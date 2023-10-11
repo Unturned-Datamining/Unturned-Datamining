@@ -73,11 +73,11 @@ public class ItemClothingAsset : ItemAsset
         }
         if (_proofFire)
         {
-            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Clothing_FireProof"), 10000);
+            builder.Append(PlayerDashboardInventoryUI.FormatStatColor(PlayerDashboardInventoryUI.localization.format("ItemDescription_Clothing_FireProof"), isBeneficial: true), 10000);
         }
         if (_proofRadiation)
         {
-            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Clothing_RadiationProof"), 10000);
+            builder.Append(PlayerDashboardInventoryUI.FormatStatColor(PlayerDashboardInventoryUI.localization.format("ItemDescription_Clothing_RadiationProof"), isBeneficial: true), 10000);
         }
     }
 

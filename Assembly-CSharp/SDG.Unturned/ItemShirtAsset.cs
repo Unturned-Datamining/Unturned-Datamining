@@ -124,7 +124,7 @@ public class ItemShirtAsset : ItemBagAsset
                 {
                     Assets.reportError(this, "texture 'Shirt' can save memory by disabling read/write");
                 }
-                if (shirt.format != TextureFormat.RGBA32 && (shirt.width <= 256 || shirt.height <= 256))
+                if (shirt.format != TextureFormat.RGBA32 && (shirt.width <= 128 || shirt.height <= 128))
                 {
                     Assets.reportError(this, $"texture Shirt looks weird because it is relatively low resolution but has compression enabled ({shirt.format})");
                 }
@@ -136,7 +136,7 @@ public class ItemShirtAsset : ItemBagAsset
                 {
                     Assets.reportError(this, "texture 'Emission' can save memory by disabling read/write");
                 }
-                if (emission.width <= 256 || emission.height <= 256)
+                if (emission.width <= 128 || emission.height <= 128)
                 {
                     if (emission.format == TextureFormat.RGBA32)
                     {
@@ -155,7 +155,7 @@ public class ItemShirtAsset : ItemBagAsset
                 {
                     Assets.reportError(this, "texture 'Metallic' can save memory by disabling read/write");
                 }
-                if (metallic.format != TextureFormat.RGBA32 && (metallic.width <= 256 || metallic.height <= 256))
+                if (metallic.format != TextureFormat.RGBA32 && (metallic.width <= 128 || metallic.height <= 128))
                 {
                     Assets.reportError(this, $"texture Metallic looks weird because it is relatively low resolution but has compression enabled ({metallic.format})");
                 }

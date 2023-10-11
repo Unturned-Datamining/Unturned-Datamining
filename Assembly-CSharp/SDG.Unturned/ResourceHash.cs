@@ -26,7 +26,7 @@ public class ResourceHash
 
     private static CommandLineFlag shouldSkipHashing = new CommandLineFlag(defaultValue: false, "-SkipResourcesHashing");
 
-    private static CommandLineFlag shouldLogHash = new CommandLineFlag(defaultValue: true, "-LogResourcesHash");
+    private static CommandLineFlag shouldLogHash = new CommandLineFlag(defaultValue: false, "-LogResourcesHash");
 
     public static void Initialize()
     {
@@ -71,6 +71,7 @@ public class ResourceHash
         {
             if (Directory.Exists(fullName))
             {
+                long previousElapsedMs = state.watch.ElapsedMilliseconds;
                 List<string> list = GatherFilePaths(fullName);
                 List<byte[]> hashes = new List<byte[]>();
                 foreach (string path in list)
@@ -83,7 +84,10 @@ public class ResourceHash
                     hashes.Add(hash);
                     if (state.shouldLogVerbose)
                     {
-                        state.logMessages.Add($"Including {path} in resources hash: {Hash.toString(hash)} ({state.watch.ElapsedMilliseconds} ms)");
+                        long elapsedMilliseconds = state.watch.ElapsedMilliseconds;
+                        long num = elapsedMilliseconds - previousElapsedMs;
+                        previousElapsedMs = elapsedMilliseconds;
+                        state.logMessages.Add($"Including {path} in resources hash: {Hash.toString(hash)} ({num} ms)");
                     }
                 }
                 byte[] hash2 = Hash.combine(hashes);

@@ -27,7 +27,7 @@ public class InteractableFarm : Interactable
 
     public ushort grow => farmAsset?.grow ?? 0;
 
-    public bool canFertilize { get; protected set; }
+    public bool canFertilize => farmAsset?.canFertilize ?? false;
 
     public bool IsFullyGrown
     {

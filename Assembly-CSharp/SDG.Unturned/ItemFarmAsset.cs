@@ -29,28 +29,46 @@ public class ItemFarmAsset : ItemBarricadeAsset
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
     {
         base.BuildDescription(builder, itemInstance);
-        if (!builder.shouldRestrictToLegacyContent)
+        if (builder.shouldRestrictToLegacyContent)
         {
-            if (grow != 0 && Assets.find(EAssetType.ITEM, grow) is ItemAsset itemAsset)
+            return;
+        }
+        if (grow != 0 && Assets.find(EAssetType.ITEM, grow) is ItemAsset itemAsset)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Farmable_GrowSpecificItem", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemAsset.rarity)) + ">" + itemAsset.itemName + "</color>"), 2000);
+        }
+        builder.stringBuilder.Clear();
+        if (!ignoreSoilRestrictions)
+        {
+            builder.stringBuilder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Farmable_RequiresSoil"));
+        }
+        if (canFertilize)
+        {
+            if (builder.stringBuilder.Length > 0)
             {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Farmable_GrowSpecificItem", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemAsset.rarity)) + ">" + itemAsset.itemName + "</color>"), 2000);
+                builder.stringBuilder.Append(' ');
             }
-            if (!ignoreSoilRestrictions)
+            builder.stringBuilder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Farmable_CanFertilize"));
+        }
+        if (isAffectedByAgricultureSkill)
+        {
+            if (builder.stringBuilder.Length > 0)
             {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Farmable_RequiresSoil"), 10000);
+                builder.stringBuilder.Append(' ');
             }
-            if (canFertilize)
+            builder.stringBuilder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Farmable_AffectedByAgricultureSkill"));
+        }
+        if (shouldRainAffectGrowth)
+        {
+            if (builder.stringBuilder.Length > 0)
             {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Farmable_CanFertilize"), 10000);
+                builder.stringBuilder.Append(' ');
             }
-            if (isAffectedByAgricultureSkill)
-            {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Farmable_AffectedByAgricultureSkill"), 10000);
-            }
-            if (shouldRainAffectGrowth)
-            {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Farmable_AffectedByRain"), 10000);
-            }
+            builder.stringBuilder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Farmable_AffectedByRain"));
+        }
+        if (builder.stringBuilder.Length > 0)
+        {
+            builder.Append(builder.stringBuilder.ToString(), 15000);
         }
     }
 

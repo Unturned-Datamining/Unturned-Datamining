@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 
 namespace SDG.Unturned;
 
@@ -8,12 +9,14 @@ public struct ItemDescriptionBuilder
 
     public List<ItemDescriptionLine> lines;
 
-    public void Append(string text, int priority)
+    public StringBuilder stringBuilder;
+
+    public void Append(string text, int sortOrder)
     {
         lines.Add(new ItemDescriptionLine
         {
             text = text,
-            priority = priority
+            sortOrder = sortOrder
         });
     }
 }

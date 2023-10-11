@@ -333,7 +333,7 @@ public class ItemGunAsset : ItemWeaponAsset
             builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Spread", $"{57.29578f * baseSpreadAngleRadians:N1}"), 10000);
             if (spreadAim != 1f)
             {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_AimingSpreadModifier", PlayerDashboardInventoryUI.FormatStatModifier(spreadAim, higherIsPositive: false, higherIsBeneficial: false)), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Spread_Aim", $"{57.29578f * baseSpreadAngleRadians * spreadAim:N1}"), 10000);
             }
             if (aimingRecoilMultiplier != 1f)
             {

@@ -81,6 +81,54 @@ public class ItemAsset : Asset, ISkinableAsset
 
     protected Texture2D _emissionBase;
 
+    protected const int DescSort_RarityAndType = 0;
+
+    protected const int DescSort_LoreText = 200;
+
+    protected const int DescSort_QualityAndAmount = 400;
+
+    protected const int DescSort_Important = 2000;
+
+    protected const int DescSort_ItemStat = 10000;
+
+    protected const int DescSort_ClothingStat = 10000;
+
+    protected const int DescSort_ConsumeableStat = 10000;
+
+    protected const int DescSort_GunStat = 10000;
+
+    protected const int DescSort_GunAttachmentStat = 10000;
+
+    protected const int DescSort_MeleeStat = 10000;
+
+    protected const int DescSort_RefillStat = 10000;
+
+    protected const int DescSort_Weapon_NonExplosive_Common = 10000;
+
+    protected const int DescSort_TrapKeyword = 10001;
+
+    protected const int DescSort_TrapStat = 10002;
+
+    protected const int DescSort_FarmableText = 15000;
+
+    protected const int DescSort_BuildableCommon = 20000;
+
+    protected const int DescSort_ExplosiveBulletDamage = 30000;
+
+    protected const int DescSort_ExplosiveChargeDamage = 30000;
+
+    protected const int DescSort_ExplosiveTrapDamage = 30000;
+
+    protected const int DescSort_Weapon_Explosive_RangeAndDamage = 30000;
+
+    protected const int DescSort_Weapon_NonExplosive_PlayerDamage = 30000;
+
+    protected const int DescSort_Weapon_NonExplosive_ZombieDamage = 31000;
+
+    protected const int DescSort_Weapon_NonExplosive_AnimalDamage = 32000;
+
+    protected const int DescSort_Weapon_NonExplosive_OtherDamage = 33000;
+
     public bool shouldVerifyHash => _shouldVerifyHash;
 
     internal override bool ShouldVerifyHash => _shouldVerifyHash;
@@ -239,9 +287,9 @@ public class ItemAsset : Asset, ISkinableAsset
             Color32 color = ItemTool.getQualityColor((float)(int)itemInstance.quality / 100f);
             builder.Append("<color=" + Palette.hex(color) + ">" + PlayerDashboardInventoryUI.localization.format("Quality", itemInstance.quality) + "</color>", 400);
         }
-        if (itemInstance.amount > 1)
+        if (amount > 1)
         {
-            builder.Append(PlayerDashboardInventoryUI.localization.format("Amount", itemInstance.amount), 400);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_AmountWithCapacity", itemInstance.amount, amount), 400);
         }
         if (!builder.shouldRestrictToLegacyContent && equipableMovementSpeedMultiplier != 1f)
         {

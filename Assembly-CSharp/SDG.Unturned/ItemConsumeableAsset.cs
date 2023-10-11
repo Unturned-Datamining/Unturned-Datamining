@@ -182,7 +182,7 @@ public class ItemConsumeableAsset : ItemWeaponAsset
             }
             else if (oxygen < 0)
             {
-                string arg8 = PlayerDashboardInventoryUI.FormatStatColor(oxygen.ToString(), isBeneficial: false);
+                string arg8 = PlayerDashboardInventoryUI.FormatStatColor((-oxygen).ToString(), isBeneficial: false);
                 builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_OxygenNegative", arg8), 10000);
             }
             int num = Mathf.RoundToInt((float)_warmth / 12.5f);
@@ -191,7 +191,7 @@ public class ItemConsumeableAsset : ItemWeaponAsset
                 string arg9 = PlayerDashboardInventoryUI.FormatStatColor($"{num} s", isBeneficial: true);
                 builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_WarmthPositive", arg9), 10000);
             }
-            if (itemInstance.quality < 50)
+            if (itemInstance.quality < 50 && _food + _water > 0)
             {
                 builder.Append(PlayerDashboardInventoryUI.FormatStatColor(PlayerDashboardInventoryUI.localization.format("ItemDescription_ConsumeableMoldy"), isBeneficial: false), 10000);
             }
@@ -215,7 +215,7 @@ public class ItemConsumeableAsset : ItemWeaponAsset
             }
             if (IsExplosive)
             {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_Explosive"), 2000);
+                builder.Append(PlayerDashboardInventoryUI.FormatStatColor(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_Explosive"), isBeneficial: false), 2000);
                 BuildExplosiveDescription(builder, itemInstance);
             }
         }

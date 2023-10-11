@@ -642,19 +642,21 @@ public class PlayerDashboardInventoryUI
         selectionBackdropBox.PositionOffset_Y = (int)Mathf.Clamp(vector.y - selectionBackdropBox.SizeOffset_Y / 2f, 0f, (float)Screen.height / GraphicsSettings.userInterfaceScale - selectionBackdropBox.SizeOffset_Y);
         StringBuilder stringBuilder = new StringBuilder(512);
         ItemDescriptionBuilder builder = default(ItemDescriptionBuilder);
+        builder.stringBuilder = stringBuilder;
         builder.shouldRestrictToLegacyContent = !Glazier.Get().SupportsAutomaticLayout || !selectedAsset.isEligibleForAutoStatDescriptions;
         builder.lines = new List<ItemDescriptionLine>();
         selectedAsset.BuildDescription(builder, selectedJar.item);
         builder.lines.Sort();
         int num3 = 0;
+        stringBuilder.Clear();
         foreach (ItemDescriptionLine line in builder.lines)
         {
-            if (line.priority - num3 > 100)
+            if (line.sortOrder - num3 > 100)
             {
                 stringBuilder.AppendLine();
             }
             stringBuilder.AppendLine(line.text);
-            num3 = line.priority;
+            num3 = line.sortOrder;
         }
         selectionDescriptionLabel.Text = stringBuilder.ToString();
         if (selectionDescriptionScrollView != null)
@@ -667,7 +669,7 @@ public class PlayerDashboardInventoryUI
             selectionHotkeyLabel.Text = localization.format("Hotkey_Set", ControlsSettings.getEquipmentHotkeyText(selectedPage));
             selectionHotkeyLabel.IsVisible = true;
         }
-        else if (selectedPage < PlayerInventory.STORAGE && selectedAsset.slot.canEquipFromBag())
+        else if (selectedPage < PlayerInventory.STORAGE && ItemTool.checkUseable(selectedPage, selectedJar.item.id))
         {
             selectionHotkeyLabel.Text = localization.format("Hotkey_Unset");
             selectionHotkeyLabel.IsVisible = true;
