@@ -25,7 +25,16 @@ MainMenuWorkshop
 }
 ItemStore
 {
-	PromotionId 3
+	PromotionId 4
+	NewItems
+	[
+		1387
+		1394
+		1400
+		1404
+		1410
+		1415
+	]
 }
 ShouldAllowJoiningInternetServersWithoutGslt false
 ShouldServersWithoutMonetizationTagBeVisibleInInternetServerList true
