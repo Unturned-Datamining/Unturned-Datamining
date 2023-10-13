@@ -366,7 +366,7 @@ public class MenuDashboardUI
             sleekLabel.Text = newsItem.Title;
             sleekLabel.UseManualLayout = false;
             sleekLabel.TextAlignment = TextAnchor.UpperLeft;
-            sleekLabel.FontSize = ESleekFontSize.Large;
+            sleekLabel.FontSize = ESleekFontSize.Title;
             sleekBox.AddChild(sleekLabel);
             DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(newsItem.Date).ToLocalTime();
             ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
@@ -446,10 +446,10 @@ public class MenuDashboardUI
         newsItem.Author = "Preview";
         newsItem.Title = "Preview";
         newsItem.Contents = contents;
+        newsItem.Date = DateTime.UtcNow.ToUnixTimeSeconds();
         newsResponse = new NewsResponse();
         newsResponse.AppNews = new AppNews();
         newsResponse.AppNews.NewsItems = new NewsItem[1] { newsItem };
-        hasNewAnnouncement = true;
         receiveNewsResponse();
         return true;
     }
@@ -511,7 +511,7 @@ public class MenuDashboardUI
         ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
         sleekLabel.UseManualLayout = false;
         sleekLabel.Text = text;
-        sleekLabel.FontSize = ESleekFontSize.Large;
+        sleekLabel.FontSize = ESleekFontSize.Title;
         sleekLabel.TextAlignment = TextAnchor.UpperLeft;
         sleekElement.AddChild(sleekLabel);
         if (flag && featured.status != 0)
@@ -1062,10 +1062,6 @@ public class MenuDashboardUI
         if (SteamUser.BLoggedOn())
         {
             hasNewAnnouncement = false;
-            if (Glazier.Get().SupportsAutomaticLayout && !readNewsPreview())
-            {
-                MenuUI.instance.StartCoroutine(MenuUI.instance.requestSteamNews());
-            }
             MenuUI.instance.StartCoroutine(MenuUI.instance.CheckForUpdates(OnUpdateDetected));
             if (steamUGCQueryCompletedPopular == null)
             {
@@ -1301,6 +1297,10 @@ public class MenuDashboardUI
             }
             MenuUI.alert(text);
             UnturnedLog.info(text);
+        }
+        if (SteamUser.BLoggedOn() && Glazier.Get().SupportsAutomaticLayout && !readNewsPreview())
+        {
+            MenuUI.instance.StartCoroutine(MenuUI.instance.requestSteamNews());
         }
     }
 
