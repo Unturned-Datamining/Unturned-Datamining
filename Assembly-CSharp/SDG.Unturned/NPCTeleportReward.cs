@@ -19,6 +19,15 @@ public class NPCTeleportReward : INPCReward
         }
     }
 
+    public override string ToString()
+    {
+        if (grantDelaySeconds > 0f)
+        {
+            return $"teleport to \"{spawnpoint}\" after {grantDelaySeconds} s";
+        }
+        return "teleport to \"" + spawnpoint + "\"";
+    }
+
     public NPCTeleportReward(string newSpawnpoint, string newText)
         : base(newText)
     {

@@ -383,13 +383,12 @@ public class PlayerNPCDialogueUI
         }
         DialogueAsset dialogueAsset = dialogueResponse.FindDialogueAsset();
         VendorAsset vendorAsset = dialogueResponse.FindVendorAsset();
-        if (dialogueAsset != null || vendorAsset != null)
+        if (dialogueAsset == null && vendorAsset == null)
         {
-            Player.player.quests.ClientChooseDialogueResponse(dialogue.GUID, dialogueResponse.index);
-            return;
+            close();
+            PlayerLifeUI.open();
         }
-        close();
-        PlayerLifeUI.open();
+        Player.player.quests.ClientChooseDialogueResponse(dialogue.GUID, dialogueResponse.index);
     }
 
     private static void SetResponseButtonsAreClickable(bool clickable)

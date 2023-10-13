@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 
 namespace SDG.Unturned;
 
@@ -41,6 +42,25 @@ public struct NPCRewardsList
             rewards = new INPCReward[num];
             NPCTool.readRewards(data, localization, prefixKey, rewards, assetContext);
         }
+    }
+
+    public void DebugDumpToStringBuilder(StringBuilder output)
+    {
+        output.AppendLine($"{rewards?.Length} reward(s)");
+        if (rewards != null)
+        {
+            for (int i = 0; i < rewards.Length; i++)
+            {
+                output.AppendLine($"[{i}]: {rewards[i]}");
+            }
+        }
+    }
+
+    public string DebugDumpToString()
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        DebugDumpToStringBuilder(stringBuilder);
+        return stringBuilder.ToString();
     }
 
     [Obsolete("Removed shouldSend parameter")]

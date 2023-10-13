@@ -106,7 +106,7 @@ public class ResourceHash
         {
             state.logMessages.Add("Caught exception hashing resources: " + ex.Message);
         }
-        ThreadUtil.QueueGameThreadWorkItem(OnHashReady, state);
+        GameThreadQueueUtil.QueueGameThreadWorkItem(OnHashReady, state);
     }
 
     private static void OnHashReady(object voidState)

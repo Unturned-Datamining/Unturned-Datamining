@@ -152,9 +152,11 @@ public class PlayerEquipment : PlayerCaller
 
     private bool hasVision;
 
+    private double equipAnimCompletedTime;
+
     private uint equipAnimStartedFrame;
 
-    private uint equipAnimLength;
+    private uint equipAnimLengthFrames;
 
     private float lastEquip;
 
@@ -287,7 +289,17 @@ public class PlayerEquipment : PlayerCaller
 
     public bool HasValidUseable => useable != null;
 
-    public bool IsEquipAnimationFinished => base.player.input.simulation - equipAnimStartedFrame >= equipAnimLength;
+    public bool IsEquipAnimationFinished
+    {
+        get
+        {
+            if (base.channel.IsLocalPlayer || Provider.isServer)
+            {
+                return base.player.input.simulation - equipAnimStartedFrame >= equipAnimLengthFrames;
+            }
+            return Time.timeAsDouble >= equipAnimCompletedTime;
+        }
+    }
 
     public bool isTurret { get; private set; }
 
@@ -1291,7 +1303,9 @@ public class PlayerEquipment : PlayerCaller
             UnturnedLog.exception(e2);
         }
         equipAnimStartedFrame = base.player.input.simulation;
-        equipAnimLength = MathfEx.CeilToUInt(base.player.animator.GetAnimationLength("Equip") / PlayerInput.RATE);
+        float animationLength = base.player.animator.GetAnimationLength("Equip");
+        equipAnimLengthFrames = MathfEx.CeilToUInt((float)equipAnimLengthFrames / PlayerInput.RATE);
+        equipAnimCompletedTime = Time.timeAsDouble + (double)animationLength;
         if (!Dedicator.IsDedicatedServer && asset.equip != null)
         {
             equipAudioHandle = base.player.playSound(asset.equip, 1f, 0.05f);
