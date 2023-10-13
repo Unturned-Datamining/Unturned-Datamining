@@ -1630,11 +1630,11 @@ public class PlayerQuests : PlayerCaller
             serverDefaultNextDialogueAsset = null;
             if (dialogueMessage != null)
             {
-                serverDefaultNextDialogueAsset = dialogueMessage.FindPrevDialogueAsset() ?? serverCurrentDialogueAsset;
+                serverDefaultNextDialogueAsset = dialogueMessage.FindPrevDialogueAsset();
                 serverCurrentDialogueAsset = dialogueAsset2;
                 serverCurrentDialogueMessage = dialogueMessage;
                 serverCurrentVendorAsset = null;
-                SendOpenDialogue.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), dialogueAsset2.GUID, dialogueMessage.index, arg3: true);
+                SendOpenDialogue.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), dialogueAsset2.GUID, dialogueMessage.index, serverDefaultNextDialogueAsset != null);
                 dialogueMessage.ApplyConditions(base.player);
                 dialogueMessage.GrantRewards(base.player);
             }

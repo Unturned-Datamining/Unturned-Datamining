@@ -583,7 +583,7 @@ public class ItemGunAsset : ItemWeaponAsset
             float num5 = Mathf.Abs((float)(int)ballisticSteps * ballisticTravel - range);
             if (num5 > 0.1f)
             {
-                Assets.reportError(this, "range and manual ballistic range are mistmached by " + num5 + "m. Recommended to only have one or the other specified!");
+                Assets.reportError(this, "range and manual ballistic range are mismatched by " + num5 + "m. Recommended to only have one or the other specified!");
             }
         }
         else if (flag)
