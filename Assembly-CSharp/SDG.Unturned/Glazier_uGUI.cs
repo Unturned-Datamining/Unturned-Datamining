@@ -650,6 +650,23 @@ internal class Glazier_uGUI : GlazierBase, IGlazier
         }
     }
 
+    [Conditional("VALIDATE_GLAZIER_USE_AFTER_DESTROY")]
+    private void ValidateGameObjectReturnedToPool(GameObject gameObject)
+    {
+        if (gameObject == null)
+        {
+            throw new Exception("uGUI element returned null gameObject to pool");
+        }
+        if (gameObject.GetComponent<LayoutElement>() != null)
+        {
+            throw new Exception("uGUI GameObject has a LayoutElement component, should have been removed before returning to the pool");
+        }
+        if (gameObject.GetComponent<LayoutGroup>() != null)
+        {
+            throw new Exception("uGUI GameObject has a LayoutGroup component, should have been removed before returning to the pool");
+        }
+    }
+
     private T ClaimElementFromPool<T>(List<T> pool) where T : GlazierElementBase_uGUI.PoolData
     {
         while (pool.Count > 0)

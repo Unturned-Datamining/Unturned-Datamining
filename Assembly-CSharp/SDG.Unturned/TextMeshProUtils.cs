@@ -6,7 +6,7 @@ public static class TextMeshProUtils
 {
     public const string DefaultFontName = "LiberationSans SDF";
 
-    public static StaticResourceRef<TMP_FontAsset> DefaultFont { get; private set; } = new StaticResourceRef<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+    public static StaticResourceRef<TMP_FontAsset> DefaultFont { get; private set; } = new StaticResourceRef<TMP_FontAsset>("UI/LiberationSans SDF with CJK");
 
 
     public static void FixupFont(TextMeshPro component)
