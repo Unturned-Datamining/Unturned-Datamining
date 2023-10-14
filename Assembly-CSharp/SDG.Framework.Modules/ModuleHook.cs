@@ -23,9 +23,13 @@ public class ModuleHook : MonoBehaviour
 
     protected static Dictionary<string, AssemblyFileSettings> nameToPath;
 
+    protected static Dictionary<AssemblyName, string> discoveredNameToPath;
+
     protected static Dictionary<string, Assembly> nameToAssembly;
 
     private static CommandLineFlag shouldLogAssemblyResolve = new CommandLineFlag(defaultValue: false, "-LogAssemblyResolve");
+
+    private static CommandLineFlag shouldSearchModulesForDLLs = new CommandLineFlag(defaultValue: true, "-NoVanillaAssemblySearch");
 
     public static List<Module> modules { get; protected set; }
 
@@ -146,6 +150,36 @@ public class ModuleHook : MonoBehaviour
         return null;
     }
 
+    private static Assembly LoadAssemblyFromDiscoveredPaths(AssemblyName loadAssemblyName)
+    {
+        Assembly assembly = null;
+        try
+        {
+            foreach (KeyValuePair<AssemblyName, string> item in discoveredNameToPath)
+            {
+                AssemblyName key = item.Key;
+                string value = item.Value;
+                if (string.Equals(key.Name, loadAssemblyName.Name) && key.Version >= loadAssemblyName.Version)
+                {
+                    UnturnedLog.info($"Using discovered assembly for \"{loadAssemblyName}\" at \"{value}\"");
+                    assembly = Assembly.Load(File.ReadAllBytes(value));
+                    if (assembly != null)
+                    {
+                        nameToAssembly.Add(key.Name, assembly);
+                        return assembly;
+                    }
+                    return assembly;
+                }
+            }
+            return assembly;
+        }
+        catch (Exception e)
+        {
+            UnturnedLog.exception(e, $"Caught exception loading assembly for \"{loadAssemblyName}\" from discovered paths:");
+            return assembly;
+        }
+    }
+
     public static Assembly resolveAssemblyPath(string path)
     {
         return resolveAssemblyName(AssemblyName.GetAssemblyName(path).FullName);
@@ -206,9 +240,17 @@ public class ModuleHook : MonoBehaviour
         {
             return assembly3;
         }
+        if ((bool)shouldSearchModulesForDLLs)
+        {
+            assembly3 = LoadAssemblyFromDiscoveredPaths(new AssemblyName(args.Name));
+            if (assembly3 != null)
+            {
+                return assembly3;
+            }
+        }
         if ((bool)shouldLogAssemblyResolve)
         {
-            UnturnedLog.error("Unable to resolve dependency \"" + args.Name + "\"! Include it in one of your module assembly lists.");
+            UnturnedLog.error("Vanilla unable to resolve dependency \"" + args.Name + "\"! Please include it in one of your module assembly lists.");
         }
         if (ModuleHook.PostVanillaAssemblyResolve != null)
         {
@@ -307,6 +349,39 @@ public class ModuleHook : MonoBehaviour
             Directory.CreateDirectory(pATH);
         }
         return pATH;
+    }
+
+    private void DiscoverAssemblies()
+    {
+        try
+        {
+            string[] files = Directory.GetFiles(getModulesRootPath(), "*.dll", SearchOption.AllDirectories);
+            foreach (string text in files)
+            {
+                try
+                {
+                    AssemblyName assemblyName = AssemblyName.GetAssemblyName(text);
+                    UnturnedLog.info($"Discovered assembly \"{assemblyName}\" at \"{text}\"");
+                    if (!discoveredNameToPath.TryGetValue(assemblyName, out var value))
+                    {
+                        discoveredNameToPath.Add(assemblyName, text);
+                        UnturnedLog.info($"Discovered assembly \"{assemblyName}\" at \"{text}\"");
+                    }
+                    else
+                    {
+                        UnturnedLog.info($"Discovered duplicate of assembly \"{assemblyName}\" at \"{text}\" (first found at \"{value}\")");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    UnturnedLog.info("Caught exception trying to determine AssemblyName for dll \"" + text + "\": \"" + ex.Message + "\"");
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            UnturnedLog.exception(e, "Caught exception discovering assemblies in Modules folder:");
+        }
     }
 
     private List<ModuleConfig> findModules()
@@ -433,9 +508,14 @@ public class ModuleHook : MonoBehaviour
     {
         modules = new List<Module>();
         nameToPath = new Dictionary<string, AssemblyFileSettings>();
+        discoveredNameToPath = new Dictionary<AssemblyName, string>();
         nameToAssembly = new Dictionary<string, Assembly>();
         if (shouldLoadModules)
         {
+            if ((bool)shouldSearchModulesForDLLs)
+            {
+                DiscoverAssemblies();
+            }
             List<ModuleConfig> list = findModules();
             sortModules(list);
             if (list.Count > 0)
