@@ -1304,7 +1304,7 @@ public class PlayerEquipment : PlayerCaller
         }
         equipAnimStartedFrame = base.player.input.simulation;
         float animationLength = base.player.animator.GetAnimationLength("Equip");
-        equipAnimLengthFrames = MathfEx.CeilToUInt((float)equipAnimLengthFrames / PlayerInput.RATE);
+        equipAnimLengthFrames = MathfEx.CeilToUInt(animationLength / PlayerInput.RATE);
         equipAnimCompletedTime = Time.timeAsDouble + (double)animationLength;
         if (!Dedicator.IsDedicatedServer && asset.equip != null)
         {

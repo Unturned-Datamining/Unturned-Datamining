@@ -49,6 +49,12 @@ public class ModuleHook : MonoBehaviour
 
     public static event ModulesShutdownHandler onModulesShutdown;
 
+    public static event ResolveEventHandler PreVanillaAssemblyResolve;
+
+    public static event ResolveEventHandler PreVanillaAssemblyResolvePostRedirects;
+
+    public static event ResolveEventHandler PostVanillaAssemblyResolve;
+
     public static void getRequiredModules(List<Module> result)
     {
         if (modules == null || result == null)
@@ -147,6 +153,25 @@ public class ModuleHook : MonoBehaviour
 
     protected Assembly handleAssemblyResolve(object sender, ResolveEventArgs args)
     {
+        if (ModuleHook.PreVanillaAssemblyResolve != null)
+        {
+            Assembly assembly = ModuleHook.PreVanillaAssemblyResolve(sender, args);
+            if ((bool)shouldLogAssemblyResolve)
+            {
+                if (assembly != null)
+                {
+                    UnturnedLog.info($"PreVanillaAssemblyResolve found \"{assembly.FullName}\" for \"{args.RequestingAssembly}\"");
+                }
+                else
+                {
+                    UnturnedLog.info($"PreVanillaAssemblyResolve is bound but unable to find \"{args.Name}\" for \"{args.RequestingAssembly}\"");
+                }
+            }
+            if (assembly != null)
+            {
+                return assembly;
+            }
+        }
         if (string.Equals(args.Name, "Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"))
         {
             UnturnedLog.info("Redirecting Assembly-CSharp-firstpass to com.rlabrecque.steamworks.net for {0}", args.RequestingAssembly);
@@ -157,12 +182,54 @@ public class ModuleHook : MonoBehaviour
             UnturnedLog.info("Redirecting Steamworks.NET to com.rlabrecque.steamworks.net for {0}", args.RequestingAssembly);
             return typeof(SteamAPI).Assembly;
         }
-        Assembly assembly = resolveAssemblyName(args.Name);
-        if (assembly == null && (bool)shouldLogAssemblyResolve)
+        if (ModuleHook.PreVanillaAssemblyResolvePostRedirects != null)
+        {
+            Assembly assembly2 = ModuleHook.PreVanillaAssemblyResolvePostRedirects(sender, args);
+            if ((bool)shouldLogAssemblyResolve)
+            {
+                if (assembly2 != null)
+                {
+                    UnturnedLog.info($"PreVanillaAssemblyResolvePostRedirects found \"{assembly2.FullName}\" for \"{args.RequestingAssembly}\"");
+                }
+                else
+                {
+                    UnturnedLog.info($"PreVanillaAssemblyResolvePostRedirects is bound but unable to find \"{args.Name}\" for \"{args.RequestingAssembly}\"");
+                }
+            }
+            if (assembly2 != null)
+            {
+                return assembly2;
+            }
+        }
+        Assembly assembly3 = resolveAssemblyName(args.Name);
+        if (assembly3 != null)
+        {
+            return assembly3;
+        }
+        if ((bool)shouldLogAssemblyResolve)
         {
             UnturnedLog.error("Unable to resolve dependency \"" + args.Name + "\"! Include it in one of your module assembly lists.");
         }
-        return assembly;
+        if (ModuleHook.PostVanillaAssemblyResolve != null)
+        {
+            Assembly assembly4 = ModuleHook.PostVanillaAssemblyResolve(sender, args);
+            if ((bool)shouldLogAssemblyResolve)
+            {
+                if (assembly4 != null)
+                {
+                    UnturnedLog.info($"PostVanillaAssemblyResolve found \"{assembly4.FullName}\" for \"{args.RequestingAssembly}\"");
+                }
+                else
+                {
+                    UnturnedLog.info($"PostVanillaAssemblyResolve is bound but unable to find \"{args.Name}\" for \"{args.RequestingAssembly}\"");
+                }
+            }
+            if (assembly4 != null)
+            {
+                return assembly4;
+            }
+        }
+        return null;
     }
 
     protected Assembly OnTypeResolve(object sender, ResolveEventArgs args)
