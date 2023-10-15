@@ -17,6 +17,8 @@ internal class GlazierScrollView_IMGUI : GlazierElementBase_IMGUI, ISleekScrollV
 
     private Vector2 state;
 
+    private bool _isRaycastTarget = true;
+
     private Rect contentRect;
 
     private Rect viewRect;
@@ -145,6 +147,18 @@ internal class GlazierScrollView_IMGUI : GlazierElementBase_IMGUI, ISleekScrollV
 
 
     public bool AlignContentToBottom { get; set; }
+
+    public bool IsRaycastTarget
+    {
+        get
+        {
+            return _isRaycastTarget;
+        }
+        set
+        {
+            _isRaycastTarget = value;
+        }
+    }
 
     public event Action<Vector2> OnNormalizedValueChanged;
 

@@ -27,10 +27,14 @@ public class TimerEventHook : MonoBehaviour
         if (coroutine != null)
         {
             StopCoroutine(coroutine);
+            coroutine = null;
         }
         shouldTimerLoop = looping;
-        coroutine = InternalStartTimer(duration);
-        StartCoroutine(coroutine);
+        if (base.gameObject.activeInHierarchy)
+        {
+            coroutine = InternalStartTimer(duration);
+            StartCoroutine(coroutine);
+        }
     }
 
     public void SetDefaultTimer()
@@ -53,7 +57,7 @@ public class TimerEventHook : MonoBehaviour
         yield return new WaitForSeconds(duration);
         coroutine = null;
         OnTimerTriggered.Invoke();
-        if (shouldTimerLoop && coroutine == null)
+        if (shouldTimerLoop && coroutine == null && base.gameObject.activeInHierarchy)
         {
             coroutine = InternalStartTimer(duration);
             StartCoroutine(coroutine);

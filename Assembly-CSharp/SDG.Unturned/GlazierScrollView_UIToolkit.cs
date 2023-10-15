@@ -30,6 +30,8 @@ internal class GlazierScrollView_UIToolkit : GlazierElementBase_UIToolkit, ISlee
 
     protected bool _alignContentToBottom;
 
+    private bool _isRaycastTarget = true;
+
     private ScrollView control;
 
     private VisualElement contentViewport;
@@ -235,6 +237,18 @@ internal class GlazierScrollView_UIToolkit : GlazierElementBase_UIToolkit, ISlee
                 _alignContentToBottom = value;
                 contentViewport.style.justifyContent = (_alignContentToBottom ? ((StyleEnum<Justify>)Justify.FlexEnd) : ((StyleEnum<Justify>)StyleKeyword.Null));
             }
+        }
+    }
+
+    public bool IsRaycastTarget
+    {
+        get
+        {
+            return _isRaycastTarget;
+        }
+        set
+        {
+            _isRaycastTarget = value;
         }
     }
 

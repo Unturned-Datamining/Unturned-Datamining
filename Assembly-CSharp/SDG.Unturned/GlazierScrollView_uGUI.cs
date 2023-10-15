@@ -28,6 +28,8 @@ internal class GlazierScrollView_uGUI : GlazierElementBase_uGUI, ISleekScrollVie
 
     private RectTransform contentTransform;
 
+    private Image contentImage;
+
     private Image horizontalScrollbarBackgroundImage;
 
     private Image horizontalScrollbarHandleImage;
@@ -223,6 +225,18 @@ internal class GlazierScrollView_uGUI : GlazierElementBase_uGUI, ISleekScrollVie
         }
     }
 
+    public bool IsRaycastTarget
+    {
+        get
+        {
+            return contentImage.raycastTarget;
+        }
+        set
+        {
+            contentImage.raycastTarget = value;
+        }
+    }
+
     public override RectTransform AttachmentTransform => contentTransform;
 
     public event Action<Vector2> OnNormalizedValueChanged;
@@ -269,7 +283,8 @@ internal class GlazierScrollView_uGUI : GlazierElementBase_uGUI, ISleekScrollVie
         contentTransform.anchoredPosition = Vector2.zero;
         contentTransform.sizeDelta = Vector2.zero;
         scrollRectComponent.content = contentTransform;
-        gameObject.AddComponent<Image>().color = new Color(1f, 1f, 1f, 0f);
+        contentImage = gameObject.AddComponent<Image>();
+        contentImage.color = new Color(1f, 1f, 1f, 0f);
         GameObject gameObject2 = new GameObject("Horizontal Scrollbar", typeof(RectTransform));
         RectTransform rectTransform2 = gameObject2.GetRectTransform();
         rectTransform2.SetParent(base.transform, worldPositionStays: false);

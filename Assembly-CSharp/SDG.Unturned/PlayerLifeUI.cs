@@ -256,6 +256,7 @@ public class PlayerLifeUI
         if (chatEntriesV2 != null)
         {
             chatScrollViewV2.VerticalScrollbarVisibility = ESleekScrollbarVisibility.Default;
+            chatScrollViewV2.IsRaycastTarget = true;
             foreach (SleekChatEntryV2 item in chatEntriesV2)
             {
                 item.forceVisibleWhileBrowsingChatHistory = true;
@@ -289,6 +290,7 @@ public class PlayerLifeUI
         if (chatEntriesV2 != null)
         {
             chatScrollViewV2.VerticalScrollbarVisibility = ESleekScrollbarVisibility.Hidden;
+            chatScrollViewV2.IsRaycastTarget = false;
             foreach (SleekChatEntryV2 item in chatEntriesV2)
             {
                 item.forceVisibleWhileBrowsingChatHistory = false;
@@ -1416,6 +1418,7 @@ public class PlayerLifeUI
             chatScrollViewV2.ContentUseManualLayout = false;
             chatScrollViewV2.AlignContentToBottom = true;
             chatScrollViewV2.VerticalScrollbarVisibility = ESleekScrollbarVisibility.Hidden;
+            chatScrollViewV2.IsRaycastTarget = false;
             container.AddChild(chatScrollViewV2);
             chatEntriesV2 = new Queue<SleekChatEntryV2>(Provider.preferenceData.Chat.History_Length);
         }
