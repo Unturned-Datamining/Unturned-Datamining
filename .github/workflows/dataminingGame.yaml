@@ -1,4 +1,4 @@
-name: "Mine Data"
+name: "Mine Data (Game)"
 
 on:
   schedule:
@@ -31,8 +31,13 @@ jobs:
           *.png
           *.jpg
           *.masterbundle
+          *.splatmap
+          *.heightmap
+          *.unity3d
           Unturned_Data
           Extras
+          MonoBleedingEdge
+          BattlEye
         key: linux-unturned
 
     - name: Setup SteamCMD
@@ -50,46 +55,12 @@ jobs:
       run: dotnet restore tools/UnturnedDatamining/
 
     - name: Run tool
-      run: dotnet run --project ./tools/UnturnedDatamining/UnturnedDatamining/UnturnedDatamining.csproj -c Release --no-restore -- $GITHUB_WORKSPACE decompile --nosteam --client
-
-    - name: Generate Commit Message
-      run: |
-        msg=$( cat .commit )
-        echo "message=$msg" >> "$GITHUB_OUTPUT"
-      id: generate_commit_message
-
-    - run: |
-        git config --global user.email "diffoz@users.noreply.github.com"
-        git config --global user.name "DiFFoZ"
-
-        git add .
-        git commit -m "${{ steps.generate_commit_message.outputs.message }}"
-        git push
-  minedata_websites:
-    name: "Download data from websites"
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        ref: websites
-
-    - name: Checkout tools branch
-      uses: actions/checkout@v3
-      with:
-        repository: Unturned-Datamining/datamining-tool
-        path: tools
-
-    - uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '7.0.x'
-
-    - name: Install dependencies
-      run: dotnet restore tools/UnturnedDatamining/
+      if: ${{ github.event_name == 'workflow_dispatch' }}
+      run: dotnet run --project ./tools/UnturnedDatamining/UnturnedDatamining/UnturnedDatamining.csproj -c Release --no-restore -- $GITHUB_WORKSPACE decompile --force --client
 
     - name: Run tool
-      run: dotnet run --project ./tools/UnturnedDatamining/UnturnedDatamining/UnturnedDatamining.csproj -c Release --no-restore -- $GITHUB_WORKSPACE websites
+      if: ${{ github.event_name == 'schedule' }}
+      run: dotnet run --project ./tools/UnturnedDatamining/UnturnedDatamining/UnturnedDatamining.csproj -c Release --no-restore -- $GITHUB_WORKSPACE decompile --client
 
     - name: Generate Commit Message
       run: |
