@@ -18,7 +18,7 @@ public class SleekSkill : SleekWrapper
         button.OnClicked += onClickedInternalButton;
         button.IsClickable = Player.player.skills.experience >= num && skill.level < skill.GetClampedMaxUnlockableLevel();
         AddChild(button);
-        for (byte b = 0; b < skill.GetClampedMaxUnlockableLevel(); b = (byte)(b + 1))
+        for (byte b = 0; b < skill.GetClampedMaxUnlockableLevel(); b++)
         {
             ISleekImage sleekImage = Glazier.Get().CreateImage();
             sleekImage.PositionOffset_X = -20 - b * 20;
@@ -54,9 +54,9 @@ public class SleekSkill : SleekWrapper
         sleekImage2.SizeOffset_X = 20f;
         sleekImage2.SizeOffset_Y = 20f;
         sleekImage2.TintColor = ESleekTint.FOREGROUND;
-        for (byte b2 = 0; b2 < PlayerSkills.SKILLSETS.Length; b2 = (byte)(b2 + 1))
+        for (byte b2 = 0; b2 < PlayerSkills.SKILLSETS.Length; b2++)
         {
-            for (byte b3 = 0; b3 < PlayerSkills.SKILLSETS[b2].Length; b3 = (byte)(b3 + 1))
+            for (byte b3 = 0; b3 < PlayerSkills.SKILLSETS[b2].Length; b3++)
             {
                 SpecialitySkillPair specialitySkillPair = PlayerSkills.SKILLSETS[b2][b3];
                 if (speciality == specialitySkillPair.speciality && index == specialitySkillPair.skill)

@@ -121,7 +121,7 @@ public class MenuSurvivorsCharacterUI
         characterBox.ContentSizeOffset = new Vector2(0f, (Customization.FREE_CHARACTERS + Customization.PRO_CHARACTERS) * 80 - 10);
         container.AddChild(characterBox);
         characterButtons = new SleekCharacter[Customization.FREE_CHARACTERS + Customization.PRO_CHARACTERS];
-        for (byte b = 0; b < characterButtons.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < characterButtons.Length; b++)
         {
             SleekCharacter sleekCharacter = new SleekCharacter(b)
             {

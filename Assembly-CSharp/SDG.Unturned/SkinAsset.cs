@@ -115,7 +115,7 @@ public class SkinAsset : Asset
         _primarySkin = loadRequiredAsset<Material>(bundle, "Skin_Primary");
         _secondarySkins = new Dictionary<ushort, Material>();
         ushort num = data.ParseUInt16("Secondary_Skins", 0);
-        for (ushort num2 = 0; num2 < num; num2 = (ushort)(num2 + 1))
+        for (ushort num2 = 0; num2 < num; num2++)
         {
             ushort key = data.ParseUInt16("Secondary_" + num2, 0);
             if (!secondarySkins.ContainsKey(key))
@@ -128,7 +128,7 @@ public class SkinAsset : Asset
         _tertiarySkin = bundle.load<Material>("Skin_Tertiary");
         ushort num3 = data.ParseUInt16("Override_Meshes", 0);
         overrideMeshes = new List<Mesh>(num3);
-        for (ushort num4 = 0; num4 < num3; num4 = (ushort)(num4 + 1))
+        for (ushort num4 = 0; num4 < num3; num4++)
         {
             GameObject gameObject = bundle.load<GameObject>("Override_Mesh_" + num4);
             if (gameObject != null)

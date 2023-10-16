@@ -176,7 +176,7 @@ public class AnimalManager : SteamCaller
         {
             return;
         }
-        for (ushort num = 0; num < value2; num = (ushort)(num + 1))
+        for (ushort num = 0; num < value2; num++)
         {
             reader.ReadUInt16(out var value3);
             reader.ReadClampedVector3(out var value4);
@@ -243,7 +243,7 @@ public class AnimalManager : SteamCaller
     {
         NetPakReader reader = context.reader;
         reader.ReadUInt16(out var value);
-        for (ushort num = 0; num < value; num = (ushort)(num + 1))
+        for (ushort num = 0; num < value; num++)
         {
             ReadSingleAnimal(reader);
         }
@@ -279,7 +279,7 @@ public class AnimalManager : SteamCaller
         SendMultipleAnimals.Invoke(ENetReliability.Reliable, transportConnection, delegate(NetPakWriter writer)
         {
             writer.WriteUInt16((ushort)animals.Count);
-            for (ushort num = 0; num < animals.Count; num = (ushort)(num + 1))
+            for (ushort num = 0; num < animals.Count; num++)
             {
                 WriteSingleAnimal(animals[num], writer);
             }

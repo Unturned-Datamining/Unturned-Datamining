@@ -426,7 +426,7 @@ public class InteractableVehicle : Interactable
     {
         get
         {
-            for (byte b = 0; b < passengers.Length; b = (byte)(b + 1))
+            for (byte b = 0; b < passengers.Length; b++)
             {
                 if (passengers[b].player != null)
                 {
@@ -573,7 +573,7 @@ public class InteractableVehicle : Interactable
         get
         {
             int num = 0;
-            for (byte b = 0; b < Mathf.Min(8, tires.Length); b = (byte)(b + 1))
+            for (byte b = 0; b < Mathf.Min(8, tires.Length); b++)
             {
                 if (tires[b].isAlive)
                 {
@@ -585,7 +585,7 @@ public class InteractableVehicle : Interactable
         }
         set
         {
-            for (byte b = 0; b < Mathf.Min(8, tires.Length); b = (byte)(b + 1))
+            for (byte b = 0; b < Mathf.Min(8, tires.Length); b++)
             {
                 if (!(tires[b].wheel == null))
                 {
@@ -1618,7 +1618,7 @@ public class InteractableVehicle : Interactable
     {
         if (Provider.isServer && trunkItems != null)
         {
-            for (byte b = 0; b < trunkItems.getItemCount(); b = (byte)(b + 1))
+            for (byte b = 0; b < trunkItems.getItemCount(); b++)
             {
                 ItemManager.dropItem(trunkItems.getItem(b).item, base.transform.position, playEffect: false, isDropped: true, wideSpread: true);
             }
@@ -1998,7 +1998,7 @@ public class InteractableVehicle : Interactable
         {
             return false;
         }
-        for (byte b = 0; b < passengers.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < passengers.Length; b++)
         {
             if (passengers[b] != null && passengers[b].player == player.channel.owner)
             {
@@ -2006,7 +2006,7 @@ public class InteractableVehicle : Interactable
             }
         }
         bool flag = player.animator.gesture == EPlayerGesture.ARREST_START;
-        for (byte b2 = (byte)(flag ? 1u : 0u); b2 < passengers.Length; b2 = (byte)(b2 + 1))
+        for (byte b2 = (byte)(flag ? 1u : 0u); b2 < passengers.Length; b2++)
         {
             if (passengers[b2] != null && passengers[b2].player == null && (!flag || passengers[b2].turret == null))
             {
@@ -2054,7 +2054,7 @@ public class InteractableVehicle : Interactable
     public bool findPlayerSeat(CSteamID player, out byte seat)
     {
         seat = byte.MaxValue;
-        for (byte b = 0; b < passengers.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < passengers.Length; b++)
         {
             if (passengers[b] != null && passengers[b].player != null && passengers[b].player.playerID.steamID == player)
             {
@@ -2088,7 +2088,7 @@ public class InteractableVehicle : Interactable
                 return false;
             }
         }
-        for (byte b = 0; b < passengers.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < passengers.Length; b++)
         {
             if (passengers[b] != null && passengers[b].player != null && passengers[b].player.player == player)
             {
@@ -2216,7 +2216,7 @@ public class InteractableVehicle : Interactable
     {
         point = center.position;
         angle = MeasurementTool.angleToByte(center.rotation.eulerAngles.y);
-        Vector3 vector = (((int)seat % 2 == 0) ? (-center.right) : center.right);
+        Vector3 vector = ((seat % 2 == 0) ? (-center.right) : center.right);
         if (getExitSidePoint(vector, out point))
         {
             return true;

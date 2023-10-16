@@ -664,7 +664,7 @@ public class VehicleAsset : Asset, ISkinableAsset
         validSpeedUp = data.ParseFloat("Valid_Speed_Up", defaultValue3);
         validSpeedDown = data.ParseFloat("Valid_Speed_Down", defaultValue4);
         _turrets = new TurretInfo[data.ParseUInt8("Turrets", 0)];
-        for (byte b = 0; b < turrets.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < turrets.Length; b++)
         {
             TurretInfo turretInfo = new TurretInfo();
             turretInfo.seatIndex = data.ParseUInt8("Turret_" + b + "_Seat_Index", 0);

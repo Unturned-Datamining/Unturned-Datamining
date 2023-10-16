@@ -55,7 +55,7 @@ public class VendorBuying : VendorElement
         ushort num = 0;
         foreach (InventorySearch item in search)
         {
-            num = (ushort)(num + item.jar.item.amount);
+            num += item.jar.item.amount;
         }
         return num >= itemAsset.amount;
     }
@@ -81,7 +81,7 @@ public class VendorBuying : VendorElement
                 player.inventory.sendUpdateAmount(item.page, item.jar.x, item.jar.y, (byte)(item.jar.item.amount - num));
                 break;
             }
-            num = (ushort)(num - item.jar.item.amount);
+            num -= item.jar.item.amount;
             player.inventory.sendUpdateAmount(item.page, item.jar.x, item.jar.y, 0);
             player.crafting.removeItem(item.page, item.jar);
             if (item.page < PlayerInventory.SLOTS)
@@ -114,7 +114,7 @@ public class VendorBuying : VendorElement
         search.Clear();
         player.inventory.search(search, base.id, findEmpty: false, findHealthy: true);
         total = 0;
-        for (byte b = 0; b < search.Count; b = (byte)(b + 1))
+        for (byte b = 0; b < search.Count; b++)
         {
             total += search[b].jar.item.amount;
         }

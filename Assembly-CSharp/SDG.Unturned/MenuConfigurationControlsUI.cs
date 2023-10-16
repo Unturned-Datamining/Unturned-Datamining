@@ -354,9 +354,9 @@ public class MenuConfigurationControlsUI
 
     private static void updateAll()
     {
-        for (byte b = 0; b < layouts.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < layouts.Length; b++)
         {
-            for (byte b2 = 0; b2 < layouts[b].Length; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < layouts[b].Length; b2++)
             {
                 updateButton(layouts[b][b2]);
             }
@@ -491,7 +491,7 @@ public class MenuConfigurationControlsUI
         controlsBox.AddChild(leaningButton);
         num += 40;
         buttons = new ISleekButton[ControlsSettings.bindings.Length];
-        for (byte b = 0; b < layouts.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < layouts.Length; b++)
         {
             ISleekBox sleekBox = Glazier.Get().CreateBox();
             sleekBox.PositionOffset_Y = num;
@@ -500,7 +500,7 @@ public class MenuConfigurationControlsUI
             sleekBox.Text = localization.format("Layout_" + b);
             controlsBox.AddChild(sleekBox);
             num += 40;
-            for (byte b2 = 0; b2 < layouts[b].Length; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < layouts[b].Length; b2++)
             {
                 ISleekButton sleekButton = Glazier.Get().CreateButton();
                 sleekButton.PositionOffset_Y = 40 + b2 * 30;

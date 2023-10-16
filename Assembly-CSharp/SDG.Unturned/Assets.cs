@@ -1007,14 +1007,14 @@ public class Assets : MonoBehaviour
             {
                 return false;
             }
-            for (byte b5 = 0; b5 < myBlueprint.outputs.Length; b5 = (byte)(b5 + 1))
+            for (byte b5 = 0; b5 < myBlueprint.outputs.Length; b5++)
             {
                 if (myBlueprint.outputs[b5].id != yourBlueprint.outputs[b5].id)
                 {
                     return false;
                 }
             }
-            for (byte b6 = 0; b6 < myBlueprint.supplies.Length; b6 = (byte)(b6 + 1))
+            for (byte b6 = 0; b6 < myBlueprint.supplies.Length; b6++)
             {
                 if (myBlueprint.supplies[b6].id != yourBlueprint.supplies[b6].id)
                 {
@@ -1049,10 +1049,10 @@ public class Assets : MonoBehaviour
         for (int i = 0; i < list.Count; i++)
         {
             ItemAsset itemAsset = list[i];
-            for (byte b = 0; b < itemAsset.blueprints.Count; b = (byte)(b + 1))
+            for (byte b = 0; b < itemAsset.blueprints.Count; b++)
             {
                 Blueprint blueprint = itemAsset.blueprints[b];
-                for (byte b2 = 0; b2 < itemAsset.blueprints.Count; b2 = (byte)(b2 + 1))
+                for (byte b2 = 0; b2 < itemAsset.blueprints.Count; b2++)
                 {
                     if (b2 != b)
                     {
@@ -1071,10 +1071,10 @@ public class Assets : MonoBehaviour
                     continue;
                 }
                 ItemAsset itemAsset2 = list[j];
-                for (byte b3 = 0; b3 < itemAsset.blueprints.Count; b3 = (byte)(b3 + 1))
+                for (byte b3 = 0; b3 < itemAsset.blueprints.Count; b3++)
                 {
                     Blueprint blueprint2 = itemAsset.blueprints[b3];
-                    for (byte b4 = 0; b4 < itemAsset2.blueprints.Count; b4 = (byte)(b4 + 1))
+                    for (byte b4 = 0; b4 < itemAsset2.blueprints.Count; b4++)
                     {
                         Blueprint arg2 = itemAsset2.blueprints[b4];
                         if (func(blueprint2, arg2))
@@ -1569,7 +1569,8 @@ public class Assets : MonoBehaviour
                 text2 = ((!string.Equals(asset.FriendlyName, serverFriendlyName)) ? (text2 + "\nClient display name is \"" + asset.FriendlyName + "\", whereas server display name is \"" + serverFriendlyName + "\".") : (text2 + "\nDisplay name \"" + serverFriendlyName + "\" matches between client and server."));
                 text2 = ((!string.Equals(asset.name, serverName)) ? (text2 + "\nClient file name is \"" + asset.name + "\", whereas server file name is \"" + serverName + "\".") : (text2 + "\nFile name \"" + asset.name + "\" matches between client and server."));
             }
-            text2 = (Provider._connectionFailureReason = ((!string.Equals(text, serverAssetOrigin)) ? (text2 + "\nClient asset is from " + text + ", whereas server asset is from " + serverAssetOrigin + ".") : (text2 + "\nClient and server agree this asset is from " + text + ".")));
+            text2 = ((!string.Equals(text, serverAssetOrigin)) ? (text2 + "\nClient asset is from " + text + ", whereas server asset is from " + serverAssetOrigin + ".") : (text2 + "\nClient and server agree this asset is from " + text + "."));
+            Provider._connectionFailureReason = text2;
         }
         else
         {

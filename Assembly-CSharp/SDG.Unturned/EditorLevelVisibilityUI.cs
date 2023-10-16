@@ -127,8 +127,8 @@ public class EditorLevelVisibilityUI
             for (int j = 0; j < DEBUG_SIZE; j++)
             {
                 int num = i * DEBUG_SIZE + j;
-                int num2 = x - (int)DEBUG_SIZE / 2 + i;
-                int num3 = y - (int)DEBUG_SIZE / 2 + j;
+                int num2 = x - DEBUG_SIZE / 2 + i;
+                int num3 = y - DEBUG_SIZE / 2 + j;
                 ISleekLabel sleekLabel = regionLabels[num];
                 if (!Regions.checkSafe(num2, num3))
                 {
@@ -220,12 +220,12 @@ public class EditorLevelVisibilityUI
             for (int j = 0; j < DEBUG_SIZE; j++)
             {
                 int num = i * DEBUG_SIZE + j;
-                int x = Editor.editor.area.region_x - (int)DEBUG_SIZE / 2 + i;
-                int y = Editor.editor.area.region_y - (int)DEBUG_SIZE / 2 + j;
+                int x = Editor.editor.area.region_x - DEBUG_SIZE / 2 + i;
+                int y = Editor.editor.area.region_y - DEBUG_SIZE / 2 + j;
                 ISleekLabel sleekLabel = regionLabels[num];
                 if (Regions.tryGetPoint(x, y, out var point))
                 {
-                    Vector3 vector = MainCamera.instance.WorldToViewportPoint(point + new Vector3((int)Regions.REGION_SIZE / 2, 0f, (int)Regions.REGION_SIZE / 2));
+                    Vector3 vector = MainCamera.instance.WorldToViewportPoint(point + new Vector3(Regions.REGION_SIZE / 2, 0f, Regions.REGION_SIZE / 2));
                     if (vector.z > 0f)
                     {
                         Vector2 vector2 = container.ViewportToNormalizedPosition(vector);

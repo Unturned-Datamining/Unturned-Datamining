@@ -137,20 +137,20 @@ public class LevelVehicles
             river.readSteamID();
         }
         byte b2 = river.readByte();
-        for (byte b3 = 0; b3 < b2; b3 = (byte)(b3 + 1))
+        for (byte b3 = 0; b3 < b2; b3++)
         {
             Color newColor = river.readColor();
             string text = river.readString();
             ushort num = (ushort)((b > 3) ? river.readUInt16() : 0);
             List<VehicleTier> list = new List<VehicleTier>();
             byte b4 = river.readByte();
-            for (byte b5 = 0; b5 < b4; b5 = (byte)(b5 + 1))
+            for (byte b5 = 0; b5 < b4; b5++)
             {
                 string newName = river.readString();
                 float newChance = river.readSingle();
                 List<VehicleSpawn> list2 = new List<VehicleSpawn>();
                 byte b6 = river.readByte();
-                for (byte b7 = 0; b7 < b6; b7 = (byte)(b7 + 1))
+                for (byte b7 = 0; b7 < b6; b7++)
                 {
                     ushort newVehicle = river.readUInt16();
                     list2.Add(new VehicleSpawn(newVehicle));
@@ -184,20 +184,20 @@ public class LevelVehicles
         River river = new River(Level.info.path + "/Spawns/Vehicles.dat", usePath: false);
         river.writeByte(SAVEDATA_VERSION);
         river.writeByte((byte)tables.Count);
-        for (byte b = 0; b < tables.Count; b = (byte)(b + 1))
+        for (byte b = 0; b < tables.Count; b++)
         {
             VehicleTable vehicleTable = tables[b];
             river.writeColor(vehicleTable.color);
             river.writeString(vehicleTable.name);
             river.writeUInt16(vehicleTable.tableID);
             river.writeByte((byte)vehicleTable.tiers.Count);
-            for (byte b2 = 0; b2 < vehicleTable.tiers.Count; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < vehicleTable.tiers.Count; b2++)
             {
                 VehicleTier vehicleTier = vehicleTable.tiers[b2];
                 river.writeString(vehicleTier.name);
                 river.writeSingle(vehicleTier.chance);
                 river.writeByte((byte)vehicleTier.table.Count);
-                for (byte b3 = 0; b3 < vehicleTier.table.Count; b3 = (byte)(b3 + 1))
+                for (byte b3 = 0; b3 < vehicleTier.table.Count; b3++)
                 {
                     VehicleSpawn vehicleSpawn = vehicleTier.table[b3];
                     river.writeUInt16(vehicleSpawn.vehicle);

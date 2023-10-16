@@ -36,7 +36,7 @@ public class NPCItemCondition : NPCLogicCondition
         ushort num = 0;
         foreach (InventorySearch item in search)
         {
-            num = (ushort)(num + item.jar.item.amount);
+            num += item.jar.item.amount;
         }
         return doesLogicPass(num, amount);
     }

@@ -166,7 +166,8 @@ public class BarricadeTool : MonoBehaviour
             else if (asset.build == EBuild.SENTRY || asset.build == EBuild.SENTRY_FREEFORM)
             {
                 InteractableSentry interactableSentry = transform.gameObject.AddComponent<InteractableSentry>();
-                InteractablePower interactablePower = (interactableSentry.power = transform.gameObject.AddComponent<InteractablePower>());
+                InteractablePower power = transform.gameObject.AddComponent<InteractablePower>();
+                interactableSentry.power = power;
                 interactableSentry.updateState(asset, state);
             }
             else if (asset.build == EBuild.LIBRARY)

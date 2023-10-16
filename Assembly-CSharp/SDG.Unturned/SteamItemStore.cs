@@ -43,8 +43,7 @@ internal class SteamItemStore : ItemStore
         {
             UnturnedLog.warn("Item store unavailable for itemdefid {0}, using browser", itemdefid);
         }
-        AppId_t aPP_ID = Provider.APP_ID;
-        Provider.openURL("http://store.steampowered.com/itemstore/" + aPP_ID.ToString() + "/detail/" + itemdefid);
+        Provider.openURL("http://store.steampowered.com/itemstore/" + Provider.APP_ID.ToString() + "/detail/" + itemdefid);
     }
 
     public override void ViewNewItems()
@@ -63,8 +62,7 @@ internal class SteamItemStore : ItemStore
         {
             UnturnedLog.warn("Item store does not have listings for new items, using browser");
         }
-        AppId_t aPP_ID = Provider.APP_ID;
-        Provider.openURL("http://store.steampowered.com/itemstore/" + aPP_ID.ToString() + "/browse/?filter=New");
+        Provider.openURL("http://store.steampowered.com/itemstore/" + Provider.APP_ID.ToString() + "/browse/?filter=New");
     }
 
     public override void ViewStore()
@@ -83,8 +81,7 @@ internal class SteamItemStore : ItemStore
         {
             UnturnedLog.warn("Item store unavailable, using browser");
         }
-        AppId_t aPP_ID = Provider.APP_ID;
-        Provider.openURL("http://store.steampowered.com/itemstore/" + aPP_ID.ToString());
+        Provider.openURL("http://store.steampowered.com/itemstore/" + Provider.APP_ID.ToString());
     }
 
     public override void RequestPrices()

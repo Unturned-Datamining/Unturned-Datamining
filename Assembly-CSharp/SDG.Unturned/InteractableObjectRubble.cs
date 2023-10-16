@@ -33,7 +33,7 @@ public class InteractableObjectRubble : MonoBehaviour
 
     public bool isAllAlive()
     {
-        for (byte b = 0; b < rubbleInfos.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < rubbleInfos.Length; b++)
         {
             if (rubbleInfos[b].isDead)
             {
@@ -45,7 +45,7 @@ public class InteractableObjectRubble : MonoBehaviour
 
     public bool isAllDead()
     {
-        for (byte b = 0; b < rubbleInfos.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < rubbleInfos.Length; b++)
         {
             if (!rubbleInfos[b].isDead)
             {
@@ -73,7 +73,7 @@ public class InteractableObjectRubble : MonoBehaviour
     {
         if (section == byte.MaxValue)
         {
-            for (section = 0; section < rubbleInfos.Length; section = (byte)(section + 1))
+            for (section = 0; section < rubbleInfos.Length; section++)
             {
                 rubbleInfos[section].askDamage(amount);
             }
@@ -86,7 +86,7 @@ public class InteractableObjectRubble : MonoBehaviour
 
     public byte checkCanReset(float multiplier)
     {
-        for (byte b = 0; b < rubbleInfos.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < rubbleInfos.Length; b++)
         {
             if (rubbleInfos[b].isDead && asset.rubbleReset > 1f && Time.realtimeSinceStartup - rubbleInfos[b].lastDead > asset.rubbleReset * multiplier)
             {
@@ -100,7 +100,7 @@ public class InteractableObjectRubble : MonoBehaviour
     {
         if (hitTransform != null)
         {
-            for (byte b = 0; b < rubbleInfos.Length; b = (byte)(b + 1))
+            for (byte b = 0; b < rubbleInfos.Length; b++)
             {
                 RubbleInfo rubbleInfo = rubbleInfos[b];
                 if (hitTransform.IsChildOf(rubbleInfo.section))
@@ -264,7 +264,7 @@ public class InteractableObjectRubble : MonoBehaviour
             rubbleInfos[0] = rubbleInfo2;
         }
         dropTransform = base.transform.Find("Drop");
-        for (byte b = 0; b < rubbleInfos.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < rubbleInfos.Length; b++)
         {
             RubbleInfo rubbleInfo3 = rubbleInfos[b];
             Transform section2 = rubbleInfo3.section;
@@ -307,7 +307,7 @@ public class InteractableObjectRubble : MonoBehaviour
             }
             rubbleInfo3.effectTransform = section2.Find("Effect");
         }
-        for (byte b2 = 0; b2 < rubbleInfos.Length; b2 = (byte)(b2 + 1))
+        for (byte b2 = 0; b2 < rubbleInfos.Length; b2++)
         {
             bool isAlive = (state[^1] & Types.SHIFTS[b2]) == Types.SHIFTS[b2];
             updateRubble(b2, isAlive, playEffect: false, Vector3.zero);

@@ -24,7 +24,7 @@ public class VehicleTable
         set
         {
             _color = value;
-            for (ushort num = 0; num < LevelVehicles.spawns.Count; num = (ushort)(num + 1))
+            for (ushort num = 0; num < LevelVehicles.spawns.Count; num++)
             {
                 VehicleSpawnpoint vehicleSpawnpoint = LevelVehicles.spawns[num];
                 if (vehicleSpawnpoint.type == EditorSpawns.selectedVehicle)

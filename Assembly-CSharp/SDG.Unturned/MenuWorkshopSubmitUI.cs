@@ -56,13 +56,13 @@ public class MenuWorkshopSubmitUI
 
     private static List<ISleekButton> publishedButtons;
 
-    private static string tag => typeState.state switch
+    private static string tag => (ESteamUGCType)typeState.state switch
     {
-        0 => mapTypeState.states[mapTypeState.state].text, 
-        3 => itemTypeState.states[itemTypeState.state].text, 
-        4 => vehicleTypeState.states[vehicleTypeState.state].text, 
-        5 => skinTypeState.states[skinTypeState.state].text, 
-        2 => objectTypeState.states[objectTypeState.state].text, 
+        ESteamUGCType.MAP => mapTypeState.states[mapTypeState.state].text, 
+        ESteamUGCType.ITEM => itemTypeState.states[itemTypeState.state].text, 
+        ESteamUGCType.VEHICLE => vehicleTypeState.states[vehicleTypeState.state].text, 
+        ESteamUGCType.SKIN => skinTypeState.states[skinTypeState.state].text, 
+        ESteamUGCType.OBJECT => objectTypeState.states[objectTypeState.state].text, 
         _ => "", 
     };
 
@@ -102,15 +102,15 @@ public class MenuWorkshopSubmitUI
         }
         else
         {
-            switch (typeState.state)
+            switch ((ESteamUGCType)typeState.state)
             {
-            case 0:
+            case ESteamUGCType.MAP:
                 if (!WorkshopTool.checkMapValid(text, usePath: false))
                 {
                     text2 = localization.format("PathFieldNotification_Map");
                 }
                 break;
-            case 1:
+            case ESteamUGCType.LOCALIZATION:
                 if (!WorkshopTool.checkLocalizationValid(text, usePath: false))
                 {
                     text2 = localization.format("PathFieldNotification_Localization");

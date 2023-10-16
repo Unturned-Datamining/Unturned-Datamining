@@ -487,11 +487,10 @@ public class TempSteamworksWorkshop
             if (testDownloadRestrictions(callback.m_handle, num, serverDownloadIP, cachedDetails.GetTitle()))
             {
                 serverPendingIDs.Add(cachedDetails.fileId);
+                continue;
             }
-            else
-            {
-                serverInvalidItemsCount++;
-            }
+            int num2 = serverInvalidItemsCount + 1;
+            serverInvalidItemsCount = num2;
         }
         downloadServerItems(serverPendingIDs);
     }

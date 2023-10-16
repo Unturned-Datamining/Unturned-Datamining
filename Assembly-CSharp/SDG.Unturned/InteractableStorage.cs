@@ -102,7 +102,7 @@ public class InteractableStorage : Interactable, IManualOnDestroy
         {
             Block block = new Block();
             block.write(owner, group, items.getItemCount());
-            for (byte b = 0; b < items.getItemCount(); b = (byte)(b + 1))
+            for (byte b = 0; b < items.getItemCount(); b++)
             {
                 ItemJar item = items.getItem(b);
                 block.write(item.x, item.y, item.rot, item.item.id, item.item.amount, item.item.quality, item.item.state);
@@ -320,7 +320,7 @@ public class InteractableStorage : Interactable, IManualOnDestroy
             _items = new Items(PlayerInventory.STORAGE);
             items.resize(((ItemStorageAsset)asset).storage_x, ((ItemStorageAsset)asset).storage_y);
             byte b = block.readByte();
-            for (byte b2 = 0; b2 < b; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < b; b2++)
             {
                 if (BarricadeManager.version > 7)
                 {
@@ -433,7 +433,7 @@ public class InteractableStorage : Interactable, IManualOnDestroy
         items.onStateUpdated = null;
         if (!despawnWhenDestroyed)
         {
-            for (byte b = 0; b < items.getItemCount(); b = (byte)(b + 1))
+            for (byte b = 0; b < items.getItemCount(); b++)
             {
                 ItemManager.dropItem(items.getItem(b).item, base.transform.position, playEffect: false, isDropped: true, wideSpread: true);
             }

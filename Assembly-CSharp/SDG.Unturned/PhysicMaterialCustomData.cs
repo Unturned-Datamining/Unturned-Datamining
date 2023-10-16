@@ -45,7 +45,8 @@ internal static class PhysicMaterialCustomData
         {
             if (item.audioDefs.TryGetValue(propertyName, out var value))
             {
-                return value.loadAsset();
+                result = value.loadAsset();
+                break;
             }
         }
         return result;
@@ -58,7 +59,8 @@ internal static class PhysicMaterialCustomData
         {
             if (item.bulletImpactEffect.isValid)
             {
-                return item.bulletImpactEffect;
+                result = item.bulletImpactEffect;
+                return result;
             }
         }
         return result;
@@ -99,7 +101,7 @@ internal static class PhysicMaterialCustomData
             }
             if (flag && flag2 && flag3 && flag4)
             {
-                return result;
+                break;
             }
         }
         return result;
@@ -112,7 +114,8 @@ internal static class PhysicMaterialCustomData
         {
             if (item.isArable.HasValue)
             {
-                return item.isArable.Value;
+                result = item.isArable.Value;
+                break;
             }
         }
         return result;
@@ -125,7 +128,8 @@ internal static class PhysicMaterialCustomData
         {
             if (item.hasOil.HasValue)
             {
-                return item.hasOil.Value;
+                result = item.hasOil.Value;
+                break;
             }
         }
         return result;

@@ -92,7 +92,7 @@ public class Items
         {
             return byte.MaxValue;
         }
-        for (byte b = 0; b < items.Count; b = (byte)(b + 1))
+        for (byte b = 0; b < items.Count; b++)
         {
             if (items[b].x == x && items[b].y == y)
             {
@@ -122,13 +122,13 @@ public class Items
         {
             return byte.MaxValue;
         }
-        for (byte b = 0; b < items.Count; b = (byte)(b + 1))
+        for (byte b = 0; b < items.Count; b++)
         {
             if (items[b].x <= x && items[b].y <= y)
             {
                 byte b2 = items[b].size_x;
                 byte b3 = items[b].size_y;
-                if ((int)items[b].rot % 2 == 1)
+                if (items[b].rot % 2 == 1)
                 {
                     b2 = items[b].size_y;
                     b3 = items[b].size_x;
@@ -146,7 +146,7 @@ public class Items
 
     public List<InventorySearch> search(List<InventorySearch> search, EItemType type)
     {
-        for (byte b = 0; b < items.Count; b = (byte)(b + 1))
+        for (byte b = 0; b < items.Count; b++)
         {
             ItemJar itemJar = items[b];
             if (itemJar.item.amount > 0)
@@ -169,7 +169,7 @@ public class Items
 
     public List<InventorySearch> search(List<InventorySearch> search, EItemType type, ushort caliber, bool allowZeroCaliber)
     {
-        for (byte b = 0; b < items.Count; b = (byte)(b + 1))
+        for (byte b = 0; b < items.Count; b++)
         {
             ItemJar itemJar = items[b];
             if (itemJar.item.amount > 0)
@@ -197,7 +197,7 @@ public class Items
                         }
                         else
                         {
-                            for (byte b2 = 0; b2 < ((ItemCaliberAsset)asset).calibers.Length; b2 = (byte)(b2 + 1))
+                            for (byte b2 = 0; b2 < ((ItemCaliberAsset)asset).calibers.Length; b2++)
                             {
                                 if (((ItemCaliberAsset)asset).calibers[b2] == caliber)
                                 {
@@ -215,7 +215,7 @@ public class Items
 
     public List<InventorySearch> search(List<InventorySearch> search, ushort id, bool findEmpty, bool findHealthy)
     {
-        for (byte b = 0; b < items.Count; b = (byte)(b + 1))
+        for (byte b = 0; b < items.Count; b++)
         {
             ItemJar itemJar = items[b];
             if ((findEmpty || itemJar.item.amount > 0) && (findHealthy || itemJar.item.quality < 100) && itemJar.item.id == id)
@@ -228,7 +228,7 @@ public class Items
 
     public InventorySearch has(ushort id)
     {
-        for (byte b = 0; b < items.Count; b = (byte)(b + 1))
+        for (byte b = 0; b < items.Count; b++)
         {
             ItemJar itemJar = items[b];
             if (itemJar.item.amount > 0 && itemJar.item.id == id)
@@ -319,9 +319,9 @@ public class Items
         _width = newWidth;
         _height = newHeight;
         slots = new bool[width, height];
-        for (byte b = 0; b < width; b = (byte)(b + 1))
+        for (byte b = 0; b < width; b++)
         {
-            for (byte b2 = 0; b2 < height; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < height; b2++)
             {
                 slots[b, b2] = false;
             }
@@ -329,12 +329,12 @@ public class Items
         List<ItemJar> list = new List<ItemJar>();
         if (items != null)
         {
-            for (byte b3 = 0; b3 < items.Count; b3 = (byte)(b3 + 1))
+            for (byte b3 = 0; b3 < items.Count; b3++)
             {
                 ItemJar itemJar = items[b3];
                 byte b4 = itemJar.size_x;
                 byte b5 = itemJar.size_y;
-                if ((int)itemJar.rot % 2 == 1)
+                if (itemJar.rot % 2 == 1)
                 {
                     b4 = itemJar.size_y;
                     b5 = itemJar.size_x;
@@ -367,15 +367,15 @@ public class Items
         {
             return items.Count == 0;
         }
-        if ((int)rot % 2 == 1)
+        if (rot % 2 == 1)
         {
             byte num = size_x;
             size_x = size_y;
             size_y = num;
         }
-        for (byte b = pos_x; b < pos_x + size_x; b = (byte)(b + 1))
+        for (byte b = pos_x; b < pos_x + size_x; b++)
         {
-            for (byte b2 = pos_y; b2 < pos_y + size_y; b2 = (byte)(b2 + 1))
+            for (byte b2 = pos_y; b2 < pos_y + size_y; b2++)
             {
                 if (b >= width || b2 >= height)
                 {
@@ -398,21 +398,21 @@ public class Items
         }
         byte b = size_x;
         byte b2 = size_y;
-        if ((int)oldRot % 2 == 1)
+        if (oldRot % 2 == 1)
         {
             b = size_y;
             b2 = size_x;
         }
         byte b3 = size_x;
         byte b4 = size_y;
-        if ((int)newRot % 2 == 1)
+        if (newRot % 2 == 1)
         {
             b3 = size_y;
             b4 = size_x;
         }
-        for (byte b5 = new_x; b5 < new_x + b3; b5 = (byte)(b5 + 1))
+        for (byte b5 = new_x; b5 < new_x + b3; b5++)
         {
-            for (byte b6 = new_y; b6 < new_y + b4; b6 = (byte)(b6 + 1))
+            for (byte b6 = new_y; b6 < new_y + b4; b6++)
             {
                 if (b5 >= width || b6 >= height)
                 {
@@ -438,21 +438,21 @@ public class Items
         {
             return true;
         }
-        if ((int)oldRot % 2 == 1)
+        if (oldRot % 2 == 1)
         {
             byte num = oldSize_X;
             oldSize_X = oldSize_Y;
             oldSize_Y = num;
         }
-        if ((int)newRot % 2 == 1)
+        if (newRot % 2 == 1)
         {
             byte num2 = newSize_X;
             newSize_X = newSize_Y;
             newSize_Y = num2;
         }
-        for (byte b = x; b < x + newSize_X; b = (byte)(b + 1))
+        for (byte b = x; b < x + newSize_X; b++)
         {
-            for (byte b2 = y; b2 < y + newSize_Y; b2 = (byte)(b2 + 1))
+            for (byte b2 = y; b2 < y + newSize_Y; b2++)
             {
                 if (b >= width || b2 >= height)
                 {
@@ -484,15 +484,15 @@ public class Items
             rot = 0;
             return items.Count == 0;
         }
-        for (byte b = 0; b < height - size_y + 1; b = (byte)(b + 1))
+        for (byte b = 0; b < height - size_y + 1; b++)
         {
-            for (byte b2 = 0; b2 < width - size_x + 1; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < width - size_x + 1; b2++)
             {
                 bool flag = false;
                 byte b3 = 0;
                 while (b3 < size_y && !flag)
                 {
-                    for (byte b4 = 0; b4 < size_x; b4 = (byte)(b4 + 1))
+                    for (byte b4 = 0; b4 < size_x; b4++)
                     {
                         if (slots[b2 + b4, b + b3])
                         {
@@ -507,19 +507,19 @@ public class Items
                             return true;
                         }
                     }
-                    b3 = (byte)(b3 + 1);
+                    b3++;
                 }
             }
         }
-        for (byte b5 = 0; b5 < height - size_x + 1; b5 = (byte)(b5 + 1))
+        for (byte b5 = 0; b5 < height - size_x + 1; b5++)
         {
-            for (byte b6 = 0; b6 < width - size_y + 1; b6 = (byte)(b6 + 1))
+            for (byte b6 = 0; b6 < width - size_y + 1; b6++)
             {
                 bool flag2 = false;
                 byte b7 = 0;
                 while (b7 < size_x && !flag2)
                 {
-                    for (byte b8 = 0; b8 < size_y; b8 = (byte)(b8 + 1))
+                    for (byte b8 = 0; b8 < size_y; b8++)
                     {
                         if (slots[b6 + b8, b5 + b7])
                         {
@@ -534,7 +534,7 @@ public class Items
                             return true;
                         }
                     }
-                    b7 = (byte)(b7 + 1);
+                    b7++;
                 }
             }
         }
@@ -545,14 +545,14 @@ public class Items
     {
         byte b = jar.size_x;
         byte b2 = jar.size_y;
-        if ((int)jar.rot % 2 == 1)
+        if (jar.rot % 2 == 1)
         {
             b = jar.size_y;
             b2 = jar.size_x;
         }
-        for (byte b3 = 0; b3 < b; b3 = (byte)(b3 + 1))
+        for (byte b3 = 0; b3 < b; b3++)
         {
-            for (byte b4 = 0; b4 < b2; b4 = (byte)(b4 + 1))
+            for (byte b4 = 0; b4 < b2; b4++)
             {
                 if (jar.x + b3 < width && jar.y + b4 < height)
                 {

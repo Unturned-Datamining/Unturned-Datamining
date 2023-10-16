@@ -555,7 +555,7 @@ public class ItemAsset : Asset, ISkinableAsset
         byte b2 = data.ParseUInt8("Actions", 0);
         _blueprints = new List<Blueprint>(b);
         _actions = new List<Action>(b2);
-        for (byte b3 = 0; b3 < b; b3 = (byte)(b3 + 1))
+        for (byte b3 = 0; b3 < b; b3++)
         {
             if (!data.ContainsKey("Blueprint_" + b3 + "_Type"))
             {
@@ -568,7 +568,7 @@ public class ItemAsset : Asset, ISkinableAsset
                 b4 = 1;
             }
             BlueprintSupply[] array = new BlueprintSupply[b4];
-            for (byte b5 = 0; b5 < array.Length; b5 = (byte)(b5 + 1))
+            for (byte b5 = 0; b5 < array.Length; b5++)
             {
                 ushort newID = data.ParseUInt16("Blueprint_" + b3 + "_Supply_" + b5 + "_ID", 0);
                 bool newCritical = data.ContainsKey("Blueprint_" + b3 + "_Supply_" + b5 + "_Critical");
@@ -584,7 +584,7 @@ public class ItemAsset : Asset, ISkinableAsset
             if (b7 > 0)
             {
                 array2 = new BlueprintOutput[b7];
-                for (byte b8 = 0; b8 < array2.Length; b8 = (byte)(b8 + 1))
+                for (byte b8 = 0; b8 < array2.Length; b8++)
                 {
                     ushort newID2 = data.ParseUInt16("Blueprint_" + b3 + "_Output_" + b8 + "_ID", 0);
                     byte b9 = data.ParseUInt8("Blueprint_" + b3 + "_Output_" + b8 + "_Amount", 0);
@@ -632,7 +632,7 @@ public class ItemAsset : Asset, ISkinableAsset
             blueprint.canBeVisibleWhenSearchedWithoutRequiredItems = data.ParseBool($"Blueprint_{b3}_Searchable", defaultValue: true);
             blueprints.Add(blueprint);
         }
-        for (byte b12 = 0; b12 < b2; b12 = (byte)(b12 + 1))
+        for (byte b12 = 0; b12 < b2; b12++)
         {
             if (!data.ContainsKey("Action_" + b12 + "_Type"))
             {
@@ -645,7 +645,7 @@ public class ItemAsset : Asset, ISkinableAsset
                 b13 = 1;
             }
             ActionBlueprint[] array4 = new ActionBlueprint[b13];
-            for (byte b14 = 0; b14 < array4.Length; b14 = (byte)(b14 + 1))
+            for (byte b14 = 0; b14 < array4.Length; b14++)
             {
                 byte newID3 = data.ParseUInt8("Action_" + b12 + "_Blueprint_" + b14 + "_Index", 0);
                 bool newLink = data.ContainsKey("Action_" + b12 + "_Blueprint_" + b14 + "_Link");
@@ -676,7 +676,7 @@ public class ItemAsset : Asset, ISkinableAsset
         if (b2 == 0)
         {
             bool flag = false;
-            for (byte b15 = 0; b15 < blueprints.Count; b15 = (byte)(b15 + 1))
+            for (byte b15 = 0; b15 < blueprints.Count; b15++)
             {
                 Blueprint blueprint2 = blueprints[b15];
                 if (blueprint2.type == EBlueprintType.REPAIR)
@@ -703,7 +703,7 @@ public class ItemAsset : Asset, ISkinableAsset
             if (flag)
             {
                 List<ActionBlueprint> list = new List<ActionBlueprint>();
-                for (byte b16 = 0; b16 < blueprints.Count; b16 = (byte)(b16 + 1))
+                for (byte b16 = 0; b16 < blueprints.Count; b16++)
                 {
                     if (blueprints[b16].type == EBlueprintType.AMMO)
                     {

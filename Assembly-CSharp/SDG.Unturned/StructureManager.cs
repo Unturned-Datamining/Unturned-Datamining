@@ -525,9 +525,9 @@ public class StructureManager : SteamCaller
         {
             return;
         }
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 askClearRegionStructures(b, b2);
             }
@@ -599,15 +599,12 @@ public class StructureManager : SteamCaller
                 try
                 {
                     housingConnections.LinkConnections(structureDrop);
-                    return transform;
                 }
                 catch (Exception e)
                 {
                     UnturnedLog.exception(e, "Caught exception while linking housing connections:");
-                    return transform;
                 }
             }
-            return transform;
         }
         catch (Exception e2)
         {
@@ -616,10 +613,10 @@ public class StructureManager : SteamCaller
             if (transform != null)
             {
                 UnityEngine.Object.Destroy(transform.gameObject);
-                return null;
+                transform = null;
             }
-            return transform;
         }
+        return transform;
     }
 
     [Obsolete]
@@ -689,7 +686,7 @@ public class StructureManager : SteamCaller
         {
             reader.ReadFloat(out var value5);
             instantiationsToInsert.Clear();
-            for (ushort num = 0; num < value4; num = (ushort)(num + 1))
+            for (ushort num = 0; num < value4; num++)
             {
                 StructureInstantiationParameters item = default(StructureInstantiationParameters);
                 item.region = region;
@@ -789,9 +786,9 @@ public class StructureManager : SteamCaller
 
     private static void updateActivity(CSteamID owner, CSteamID group)
     {
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 updateActivity(regions[b, b2], owner, group);
             }
@@ -812,9 +809,9 @@ public class StructureManager : SteamCaller
             return;
         }
         regions = new StructureRegion[Regions.WORLD_SIZE, Regions.WORLD_SIZE];
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 regions[b, b2] = new StructureRegion();
             }
@@ -832,9 +829,9 @@ public class StructureManager : SteamCaller
     {
         if (step == 0)
         {
-            for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+            for (byte b = 0; b < Regions.WORLD_SIZE; b++)
             {
-                for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+                for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
                 {
                     if (Provider.isServer)
                     {
@@ -939,9 +936,9 @@ public class StructureManager : SteamCaller
             }
             if (b > 1)
             {
-                for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+                for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
                 {
-                    for (byte b3 = 0; b3 < Regions.WORLD_SIZE; b3 = (byte)(b3 + 1))
+                    for (byte b3 = 0; b3 < Regions.WORLD_SIZE; b3++)
                     {
                         StructureRegion region = regions[b2, b3];
                         loadRegion(b, river, region);
@@ -961,9 +958,9 @@ public class StructureManager : SteamCaller
         if (flag && LevelObjects.buildables != null)
         {
             int num = 0;
-            for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4 = (byte)(b4 + 1))
+            for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4++)
             {
-                for (byte b5 = 0; b5 < Regions.WORLD_SIZE; b5 = (byte)(b5 + 1))
+                for (byte b5 = 0; b5 < Regions.WORLD_SIZE; b5++)
                 {
                     List<LevelBuildableObject> list = LevelObjects.buildables[b4, b5];
                     if (list != null && list.Count != 0)
@@ -1007,9 +1004,9 @@ public class StructureManager : SteamCaller
         river.writeByte(SAVEDATA_VERSION);
         river.writeUInt32(Provider.time);
         river.writeUInt32(instanceCount);
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 StructureRegion region = regions[b, b2];
                 saveRegion(river, region);
@@ -1021,7 +1018,7 @@ public class StructureManager : SteamCaller
     private static void loadRegion(byte version, River river, StructureRegion region)
     {
         ushort num = river.readUInt16();
-        for (ushort num2 = 0; num2 < num; num2 = (ushort)(num2 + 1))
+        for (ushort num2 = 0; num2 < num; num2++)
         {
             ItemStructureAsset itemStructureAsset;
             if (version < 8)
@@ -1058,7 +1055,7 @@ public class StructureManager : SteamCaller
             if (version > 3)
             {
                 newObjActiveDate = river.readUInt32();
-                if (Provider.time - serverActiveDate > Provider.modeConfigData.Structures.Decay_Time / 2u)
+                if (Provider.time - serverActiveDate > Provider.modeConfigData.Structures.Decay_Time / 2)
                 {
                     newObjActiveDate = Provider.time;
                 }
@@ -1095,7 +1092,7 @@ public class StructureManager : SteamCaller
             StructureData serversideData = drop.serversideData;
             if ((!Dedicator.IsDedicatedServer || Provider.modeConfigData.Structures.Decay_Time == 0 || time < serversideData.objActiveDate || time - serversideData.objActiveDate < Provider.modeConfigData.Structures.Decay_Time) && serversideData.structure.asset.isSaveable)
             {
-                num = (ushort)(num + 1);
+                num++;
             }
         }
         river.writeUInt16(num);

@@ -141,7 +141,7 @@ public class MenuConfigurationDisplayUI
         resolutionsBox.ContentSizeOffset = new Vector2(0f, 230 + recommendedResolutions.Length * 40 - 10);
         container.AddChild(resolutionsBox);
         buttons = new ISleekButton[recommendedResolutions.Length];
-        for (byte b = 0; b < buttons.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < buttons.Length; b++)
         {
             Resolution resolution = recommendedResolutions[b];
             ISleekButton sleekButton = Glazier.Get().CreateButton();

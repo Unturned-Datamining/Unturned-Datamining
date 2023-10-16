@@ -401,7 +401,7 @@ public class Data
         int num = 0;
         foreach (KeyValuePair<string, string> datum in data)
         {
-            KeyValuePair<string, string> keyValuePair = (array[num] = datum);
+            array[num] = datum;
             num++;
         }
         return array;

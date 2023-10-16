@@ -361,7 +361,7 @@ public class PlayerVoice : PlayerCaller
             num8 = (num8 + 1) % audioData.Length;
         }
         audioClip.SetData(audioData, 0);
-        float num9 = (float)(nBytesWritten / 2u) * secondsPerSample;
+        float num9 = (float)(nBytesWritten / 2) * secondsPerSample;
         if (!isPlayingVoiceData && !hasPendingVoiceData)
         {
             hasPendingVoiceData = true;

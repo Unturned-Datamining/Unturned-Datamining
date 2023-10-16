@@ -58,7 +58,7 @@ public class LevelNavigation
         bound = byte.MaxValue;
         if (bounds != null)
         {
-            for (byte b = 0; b < bounds.Count; b = (byte)(b + 1))
+            for (byte b = 0; b < bounds.Count; b++)
             {
                 if (bounds[b].ContainsXZ(point))
                 {
@@ -75,7 +75,7 @@ public class LevelNavigation
         nav = byte.MaxValue;
         if (AstarPath.active != null)
         {
-            for (byte b = 0; b < Mathf.Min(bounds.Count, AstarPath.active.graphs.Length); b = (byte)(b + 1))
+            for (byte b = 0; b < Mathf.Min(bounds.Count, AstarPath.active.graphs.Length); b++)
             {
                 if (AstarPath.active.graphs[b] != null && ((RecastGraph)AstarPath.active.graphs[b]).forcedBounds.ContainsXZ(point))
                 {
@@ -102,7 +102,7 @@ public class LevelNavigation
         {
             return false;
         }
-        for (byte b = 0; b < bounds.Count; b = (byte)(b + 1))
+        for (byte b = 0; b < bounds.Count; b++)
         {
             if (bounds[b].ContainsXZ(point))
             {
@@ -118,7 +118,7 @@ public class LevelNavigation
         {
             return false;
         }
-        for (byte b = 0; b < LevelNavigation.bounds.Count; b = (byte)(b + 1))
+        for (byte b = 0; b < LevelNavigation.bounds.Count; b++)
         {
             Bounds bounds = LevelNavigation.bounds[b];
             bounds.size -= BOUNDS_SIZE;
@@ -136,7 +136,7 @@ public class LevelNavigation
         {
             return false;
         }
-        for (byte b = 0; b < AstarPath.active.graphs.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < AstarPath.active.graphs.Length; b++)
         {
             if (AstarPath.active.graphs[b] != null && ((RecastGraph)AstarPath.active.graphs[b]).forcedBounds.ContainsXZ(point))
             {
@@ -261,7 +261,7 @@ public class LevelNavigation
             if (river.readByte() > 0)
             {
                 byte b = river.readByte();
-                for (byte b2 = 0; b2 < b; b2 = (byte)(b2 + 1))
+                for (byte b2 = 0; b2 < b; b2++)
                 {
                     Vector3 center = river.readSingleVector3();
                     Vector3 size = river.readSingleVector3();
@@ -277,7 +277,7 @@ public class LevelNavigation
             if (b3 > 0)
             {
                 byte b4 = river2.readByte();
-                for (byte b5 = 0; b5 < b4; b5 = (byte)(b5 + 1))
+                for (byte b5 = 0; b5 < b4; b5++)
                 {
                     string newDifficultyGUID = river2.readString();
                     byte newMaxZombies = 64;
@@ -333,7 +333,7 @@ public class LevelNavigation
                                 flagData.Add(new FlagData("", 64));
                             }
                         }
-                        for (byte b8 = 0; b8 < b7; b8 = (byte)(b8 + 1))
+                        for (byte b8 = 0; b8 < b7; b8++)
                         {
                             Vector3 newPoint = river3.readSingleVector3();
                             float num = river3.readSingle();
@@ -411,7 +411,7 @@ public class LevelNavigation
         River river = new River(Level.info.path + "/Environment/Bounds.dat", usePath: false);
         river.writeByte(SAVEDATA_BOUNDS_VERSION);
         river.writeByte((byte)bounds.Count);
-        for (byte b = 0; b < bounds.Count; b = (byte)(b + 1))
+        for (byte b = 0; b < bounds.Count; b++)
         {
             river.writeSingleVector3(bounds[b].center);
             river.writeSingleVector3(bounds[b].size);
@@ -420,7 +420,7 @@ public class LevelNavigation
         River river2 = new River(Level.info.path + "/Environment/Flags_Data.dat", usePath: false);
         river2.writeByte(5);
         river2.writeByte((byte)flagData.Count);
-        for (byte b2 = 0; b2 < flagData.Count; b2 = (byte)(b2 + 1))
+        for (byte b2 = 0; b2 < flagData.Count; b2++)
         {
             river2.writeString(flagData[b2].difficultyGUID);
             river2.writeByte(flagData[b2].maxZombies);
@@ -438,7 +438,7 @@ public class LevelNavigation
             num++;
         }
         river3.writeByte((byte)flags.Count);
-        for (byte b3 = 0; b3 < flags.Count; b3 = (byte)(b3 + 1))
+        for (byte b3 = 0; b3 < flags.Count; b3++)
         {
             Flag flag = flags[b3];
             river3.writeSingleVector3(flag.point);

@@ -195,7 +195,7 @@ public class ItemManager : SteamCaller
             return;
         }
         ItemRegion itemRegion = regions[x, y];
-        for (ushort num = 0; num < itemRegion.drops.Count; num = (ushort)(num + 1))
+        for (ushort num = 0; num < itemRegion.drops.Count; num++)
         {
             if (itemRegion.drops[num].instanceID == instanceID)
             {
@@ -232,7 +232,7 @@ public class ItemManager : SteamCaller
             return;
         }
         ItemRegion itemRegion = regions[x, y];
-        for (ushort num = 0; num < itemRegion.items.Count; num = (ushort)(num + 1))
+        for (ushort num = 0; num < itemRegion.items.Count; num++)
         {
             ItemData itemData = itemRegion.items[num];
             if (itemData.instanceID == instanceID)
@@ -311,9 +311,9 @@ public class ItemManager : SteamCaller
         {
             return;
         }
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 askClearRegionItems(b, b2);
             }
@@ -440,7 +440,7 @@ public class ItemManager : SteamCaller
         {
             reader.ReadFloat(out var value5);
             instantiationsToInsert.Clear();
-            for (ushort num = 0; num < value4; num = (ushort)(num + 1))
+            for (ushort num = 0; num < value4; num++)
             {
                 ItemInstantiationParameters item = default(ItemInstantiationParameters);
                 item.region_x = value;
@@ -561,7 +561,7 @@ public class ItemManager : SteamCaller
                 {
                     flag2 = false;
                 }
-                for (ushort num2 = 0; num2 < regions[respawnItems_X, respawnItems_Y].items.Count; num2 = (ushort)(num2 + 1))
+                for (ushort num2 = 0; num2 < regions[respawnItems_X, respawnItems_Y].items.Count; num2++)
                 {
                     if ((regions[respawnItems_X, respawnItems_Y].items[num2].point - itemSpawnpoint.point).sqrMagnitude < 4f)
                     {
@@ -668,9 +668,9 @@ public class ItemManager : SteamCaller
             return;
         }
         regions = new ItemRegion[Regions.WORLD_SIZE, Regions.WORLD_SIZE];
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 regions[b, b2] = new ItemRegion();
             }
@@ -686,9 +686,9 @@ public class ItemManager : SteamCaller
         {
             return;
         }
-        for (byte b3 = 0; b3 < Regions.WORLD_SIZE; b3 = (byte)(b3 + 1))
+        for (byte b3 = 0; b3 < Regions.WORLD_SIZE; b3++)
         {
-            for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4 = (byte)(b4 + 1))
+            for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4++)
             {
                 generateItems(b3, b4);
             }
@@ -720,9 +720,9 @@ public class ItemManager : SteamCaller
     {
         if (step == 0)
         {
-            for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+            for (byte b = 0; b < Regions.WORLD_SIZE; b++)
             {
-                for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+                for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
                 {
                     if (player.channel.IsLocalPlayer && regions[b, b2].isNetworked && !Regions.checkArea(b, b2, new_x, new_y, ITEM_REGIONS))
                     {

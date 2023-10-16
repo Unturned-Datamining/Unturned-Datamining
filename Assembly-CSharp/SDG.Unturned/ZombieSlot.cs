@@ -16,7 +16,7 @@ public class ZombieSlot
         {
             return;
         }
-        for (byte b = 0; b < table.Count; b = (byte)(b + 1))
+        for (byte b = 0; b < table.Count; b++)
         {
             if (table[b].item == id)
             {

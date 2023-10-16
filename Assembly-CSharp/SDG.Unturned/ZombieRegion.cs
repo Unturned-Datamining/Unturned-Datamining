@@ -254,7 +254,7 @@ public class ZombieRegion
 
     public void destroy()
     {
-        for (ushort num = 0; num < zombies.Count; num = (ushort)(num + 1))
+        for (ushort num = 0; num < zombies.Count; num++)
         {
             UnityEngine.Object.Destroy(zombies[num].gameObject);
         }

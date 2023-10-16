@@ -132,7 +132,8 @@ public class SleekManageWorkshopEntry : SleekWrapper
             sleekLabel5.PositionScale_Y = 0.5f;
             sleekLabel5.SizeOffset_X = 100f;
             sleekLabel5.SizeOffset_Y = 30f;
-            num = (sleekLabel5.PositionOffset_X = num - sleekLabel5.SizeOffset_X);
+            num -= sleekLabel5.SizeOffset_X;
+            sleekLabel5.PositionOffset_X = num;
             sleekLabel5.Text = MenuWorkshopSubscriptionsUI.localization.format("ItemState_NeedsUpdate");
             sleekLabel5.TextColor = ESleekTint.BAD;
             AddChild(sleekLabel5);

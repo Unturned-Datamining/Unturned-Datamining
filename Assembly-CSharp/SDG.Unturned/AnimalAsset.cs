@@ -213,12 +213,12 @@ public class AnimalAsset : Asset
             _rewardMax = 4;
         }
         _roars = new AudioClip[data.ParseUInt8("Roars", 0)];
-        for (byte b = 0; b < roars.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < roars.Length; b++)
         {
             roars[b] = bundle.load<AudioClip>("Roar_" + b);
         }
         _panics = new AudioClip[data.ParseUInt8("Panics", 0)];
-        for (byte b2 = 0; b2 < panics.Length; b2 = (byte)(b2 + 1))
+        for (byte b2 = 0; b2 < panics.Length; b2++)
         {
             panics[b2] = bundle.load<AudioClip>("Panic_" + b2);
         }

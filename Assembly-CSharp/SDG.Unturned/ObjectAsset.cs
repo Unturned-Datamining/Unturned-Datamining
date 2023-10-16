@@ -612,7 +612,7 @@ public class ObjectAsset : Asset
                 {
                     ushort num4 = data.ParseUInt16("Interactability_Text_Lines", 0);
                     StringBuilder stringBuilder = new StringBuilder();
-                    for (ushort num5 = 0; num5 < num4; num5 = (ushort)(num5 + 1))
+                    for (ushort num5 = 0; num5 < num4; num5++)
                     {
                         string desc = localization.format("Interactability_Text_Line_" + num5);
                         desc = ItemTool.filterRarityRichText(desc);
@@ -662,7 +662,7 @@ public class ObjectAsset : Asset
                     interactabilityNav = EObjectInteractabilityNav.NONE;
                 }
                 interactabilityDrops = new ushort[data.ParseUInt8("Interactability_Drops", 0)];
-                for (byte b = 0; b < interactabilityDrops.Length; b = (byte)(b + 1))
+                for (byte b = 0; b < interactabilityDrops.Length; b++)
                 {
                     interactabilityDrops[b] = data.ParseUInt16("Interactability_Drop_" + b, 0);
                 }

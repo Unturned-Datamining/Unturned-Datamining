@@ -60,7 +60,7 @@ public class PlayerDashboardCraftingUI
 
     private static bool DoesAnyItemNameContainString(Blueprint blueprint, string text)
     {
-        for (byte b = 0; b < blueprint.outputs.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < blueprint.outputs.Length; b++)
         {
             BlueprintOutput blueprintOutput = blueprint.outputs[b];
             if (Assets.find(EAssetType.ITEM, blueprintOutput.id) is ItemAsset itemAsset && itemAsset.itemName != null && itemAsset.itemName.IndexOf(text, StringComparison.OrdinalIgnoreCase) != -1)
@@ -72,7 +72,7 @@ public class PlayerDashboardCraftingUI
         {
             return true;
         }
-        for (byte b2 = 0; b2 < blueprint.supplies.Length; b2 = (byte)(b2 + 1))
+        for (byte b2 = 0; b2 < blueprint.supplies.Length; b2++)
         {
             BlueprintSupply blueprintSupply = blueprint.supplies[b2];
             if (Assets.find(EAssetType.ITEM, blueprintSupply.id) is ItemAsset itemAsset3 && itemAsset3.itemName != null && itemAsset3.itemName.IndexOf(text, StringComparison.OrdinalIgnoreCase) != -1)
@@ -142,7 +142,7 @@ public class PlayerDashboardCraftingUI
                 ushort num2 = 0;
                 foreach (InventorySearch item3 in list3)
                 {
-                    num2 = (ushort)(num2 + item3.jar.item.amount);
+                    num2 += item3.jar.item.amount;
                 }
                 num += num2;
                 blueprintSupply.hasAmount = num2;

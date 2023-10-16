@@ -538,7 +538,7 @@ public class ControlsSettings
             leaning = EControlMode.HOLD;
         }
         byte b2 = block.readByte();
-        for (byte b3 = 0; b3 < b2; b3 = (byte)(b3 + 1))
+        for (byte b3 = 0; b3 < b2; b3++)
         {
             if (b3 >= bindings.Length)
             {
@@ -585,7 +585,7 @@ public class ControlsSettings
         block.writeByte((byte)sprinting);
         block.writeByte((byte)leaning);
         block.writeByte((byte)bindings.Length);
-        for (byte b = 0; b < bindings.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < bindings.Length; b++)
         {
             ControlBinding controlBinding = bindings[b];
             block.writeUInt16((ushort)controlBinding.key);

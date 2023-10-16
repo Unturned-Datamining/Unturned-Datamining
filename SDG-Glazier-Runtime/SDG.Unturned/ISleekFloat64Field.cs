@@ -2,7 +2,7 @@ namespace SDG.Unturned;
 
 public interface ISleekFloat64Field : ISleekElement, ISleekNumericField, ISleekWithTooltip
 {
-    double state { get; set; }
+    double Value { get; set; }
 
-    event TypedDouble onTypedDouble;
+    event TypedDouble OnValueChanged;
 }

@@ -470,7 +470,7 @@ public class PlayerLifeUI
         float offset = 0f;
         updateHotbarItem(ref offset, Player.player.inventory.getItem(0, 0), 0);
         updateHotbarItem(ref offset, Player.player.inventory.getItem(1, 0), 1);
-        for (byte b = 0; b < Player.player.equipment.hotkeys.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < Player.player.equipment.hotkeys.Length; b++)
         {
             HotkeyInfo hotkeyInfo = Player.player.equipment.hotkeys[b];
             ItemJar itemJar = null;
@@ -595,7 +595,7 @@ public class PlayerLifeUI
             return cachedHasCompass;
         }
         cachedHasCompass = false;
-        for (byte b = 0; b < PlayerInventory.PAGES - 2; b = (byte)(b + 1))
+        for (byte b = 0; b < PlayerInventory.PAGES - 2; b++)
         {
             Items items = Player.player.inventory.items[b];
             if (items != null)
@@ -1316,7 +1316,7 @@ public class PlayerLifeUI
         byte b = 0;
         while (b < faceButtons.Length && faceButtons[b] != button)
         {
-            b = (byte)(b + 1);
+            b++;
         }
         Player.player.clothing.sendSwapFace(b);
         closeGestures();

@@ -49,7 +49,7 @@ public class PlayerDashboardSkillsUI
         skills = Player.player.skills.skills[specialityIndex];
         skillsScrollBox.RemoveAllChildren();
         skillsScrollBox.ContentSizeOffset = new Vector2(0f, skills.Length * 90 - 10);
-        for (byte b = 0; b < skills.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < skills.Length; b++)
         {
             Skill skill = skills[b];
             SleekSkill sleekSkill = new SleekSkill(specialityIndex, b, skill);

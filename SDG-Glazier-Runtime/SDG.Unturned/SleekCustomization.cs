@@ -12,7 +12,11 @@ public static class SleekCustomization
 
     public static Color fontColor = Color.white;
 
+    public static Color cursorColor = Color.white;
+
     public static Color badColor = new Color32(191, 31, 31, byte.MaxValue);
+
+    public static Color shadowColor = Color.black;
 
     public static ETextContrastPreference defaultTextContrast;
 

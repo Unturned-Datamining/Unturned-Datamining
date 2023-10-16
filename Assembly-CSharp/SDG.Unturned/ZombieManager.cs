@@ -310,7 +310,7 @@ public class ZombieManager : SteamCaller
         {
             return;
         }
-        for (ushort num = 0; num < value3; num = (ushort)(num + 1))
+        for (ushort num = 0; num < value3; num++)
         {
             reader.ReadUInt16(out var value4);
             reader.ReadClampedVector3(out var value5);
@@ -517,7 +517,7 @@ public class ZombieManager : SteamCaller
             regions[value].isNetworked = true;
             reader.ReadBit(out var value2);
             reader.ReadUInt16(out var value3);
-            for (ushort num = 0; num < value3; num = (ushort)(num + 1))
+            for (ushort num = 0; num < value3; num++)
             {
                 reader.ReadUInt8(out var value4);
                 reader.ReadUInt8(out var value5);
@@ -549,7 +549,7 @@ public class ZombieManager : SteamCaller
             writer.WriteUInt8(bound);
             writer.WriteBit(region.hasBeacon);
             writer.WriteUInt16((ushort)region.zombies.Count);
-            for (ushort num = 0; num < region.zombies.Count; num = (ushort)(num + 1))
+            for (ushort num = 0; num < region.zombies.Count; num++)
             {
                 Zombie zombie = region.zombies[num];
                 writer.WriteUInt8(zombie.type);
@@ -998,7 +998,7 @@ public class ZombieManager : SteamCaller
         {
             return;
         }
-        for (ushort num2 = 0; num2 < zombieRegion.zombies.Count; num2 = (ushort)(num2 + 1))
+        for (ushort num2 = 0; num2 < zombieRegion.zombies.Count; num2++)
         {
             if (!zombieRegion.zombies[num2].isDead && (zombieRegion.zombies[num2].transform.position - zombieSpawnpoint.point).sqrMagnitude < 4f)
             {
@@ -1016,7 +1016,7 @@ public class ZombieManager : SteamCaller
         {
             if (!zombieTable.isMega)
             {
-                for (byte b2 = 0; b2 < LevelZombies.tables.Count; b2 = (byte)(b2 + 1))
+                for (byte b2 = 0; b2 < LevelZombies.tables.Count; b2++)
                 {
                     ZombieTable zombieTable2 = LevelZombies.tables[b2];
                     if (zombieTable2.isMega)
@@ -1118,7 +1118,7 @@ public class ZombieManager : SteamCaller
                 return;
             }
             _regions = new ZombieRegion[LevelNavigation.bounds.Count];
-            for (byte b = 0; b < regions.Length; b = (byte)(b + 1))
+            for (byte b = 0; b < regions.Length; b++)
             {
                 regions[b] = new ZombieRegion(b);
                 Vector3 center = LevelNavigation.bounds[b].center;
@@ -1138,7 +1138,7 @@ public class ZombieManager : SteamCaller
                 {
                     return;
                 }
-                for (byte b2 = 0; b2 < LevelNavigation.bounds.Count; b2 = (byte)(b2 + 1))
+                for (byte b2 = 0; b2 < LevelNavigation.bounds.Count; b2++)
                 {
                     generateZombies(b2);
                 }
@@ -1205,44 +1205,48 @@ public class ZombieManager : SteamCaller
 
     private void updateRegionsAndSendZombieStates()
     {
-        for (byte regionIndex = 0; regionIndex < regions.Length; regionIndex++)
+        byte regionIndex = 0;
+        while (regionIndex < regions.Length)
         {
             ZombieRegion region = regions[regionIndex];
             region.UpdateRegion();
-            if (region.updates <= 0)
+            if (region.updates > 0)
             {
-                continue;
-            }
-            if (Dedicator.IsDedicatedServer)
-            {
-                seq++;
-                SendZombieStates.Invoke(ENetReliability.Unreliable, GatherRemoteClientConnections(regionIndex), delegate(NetPakWriter writer)
+                if (Dedicator.IsDedicatedServer)
                 {
-                    writer.WriteUInt8(regionIndex);
-                    writer.WriteUInt32(seq);
-                    writer.WriteUInt16(region.updates);
-                    foreach (Zombie zombie in region.zombies)
+                    seq++;
+                    SendZombieStates.Invoke(ENetReliability.Unreliable, GatherRemoteClientConnections(regionIndex), delegate(NetPakWriter writer)
                     {
-                        if (zombie.isUpdated)
+                        writer.WriteUInt8(regionIndex);
+                        writer.WriteUInt32(seq);
+                        writer.WriteUInt16(region.updates);
+                        foreach (Zombie zombie in region.zombies)
                         {
-                            zombie.isUpdated = false;
-                            writer.WriteUInt16(zombie.id);
-                            writer.WriteClampedVector3(zombie.transform.position);
-                            writer.WriteDegrees(zombie.transform.eulerAngles.y);
+                            if (zombie.isUpdated)
+                            {
+                                zombie.isUpdated = false;
+                                writer.WriteUInt16(zombie.id);
+                                writer.WriteClampedVector3(zombie.transform.position);
+                                writer.WriteDegrees(zombie.transform.eulerAngles.y);
+                            }
+                        }
+                    });
+                    region.updates = 0;
+                }
+                else
+                {
+                    foreach (Zombie zombie2 in region.zombies)
+                    {
+                        if (zombie2.isUpdated)
+                        {
+                            zombie2.isUpdated = false;
                         }
                     }
-                });
-                region.updates = 0;
-                continue;
-            }
-            foreach (Zombie zombie2 in region.zombies)
-            {
-                if (zombie2.isUpdated)
-                {
-                    zombie2.isUpdated = false;
+                    region.updates = 0;
                 }
             }
-            region.updates = 0;
+            byte b = (byte)(regionIndex + 1);
+            regionIndex = b;
         }
     }
 

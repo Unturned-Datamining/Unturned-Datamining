@@ -24,7 +24,7 @@ public class AnimalTable
         set
         {
             _color = value;
-            for (ushort num = 0; num < LevelAnimals.spawns.Count; num = (ushort)(num + 1))
+            for (ushort num = 0; num < LevelAnimals.spawns.Count; num++)
             {
                 AnimalSpawnpoint animalSpawnpoint = LevelAnimals.spawns[num];
                 if (animalSpawnpoint.type == EditorSpawns.selectedAnimal)

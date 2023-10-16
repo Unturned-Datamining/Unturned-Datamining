@@ -22,7 +22,7 @@ public class OxygenVolumeManager : VolumeManager<OxygenVolume, OxygenVolumeManag
                 if (maxAlpha > 0.9999f)
                 {
                     maxAlpha = 1f;
-                    return result;
+                    break;
                 }
             }
         }
@@ -42,7 +42,7 @@ public class OxygenVolumeManager : VolumeManager<OxygenVolume, OxygenVolumeManag
                 if (maxAlpha > 0.9999f)
                 {
                     maxAlpha = 1f;
-                    return result;
+                    break;
                 }
             }
         }

@@ -149,7 +149,7 @@ public class Blueprint
         string empty = string.Empty;
         empty += type;
         empty += ": ";
-        for (byte b = 0; b < supplies.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < supplies.Length; b++)
         {
             if (b > 0)
             {
@@ -160,7 +160,7 @@ public class Blueprint
             empty += supplies[b].amount;
         }
         empty += " = ";
-        for (byte b2 = 0; b2 < outputs.Length; b2 = (byte)(b2 + 1))
+        for (byte b2 = 0; b2 < outputs.Length; b2++)
         {
             if (b2 > 0)
             {

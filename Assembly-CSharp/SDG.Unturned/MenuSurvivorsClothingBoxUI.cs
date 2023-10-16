@@ -340,12 +340,13 @@ public class MenuSurvivorsClothingBoxUI
                 if (boxAsset.probabilityModel == EBoxProbabilityModel.Original)
                 {
                     int num4 = dictionary[value.rarity];
-                    float num5 = (value.probability = qualityRarities[value.rarity] / (float)num4);
+                    float probability = qualityRarities[value.rarity] / (float)num4;
+                    value.probability = probability;
                 }
                 else
                 {
-                    int num6 = num - 1;
-                    value.probability = 1f / (float)num6;
+                    int num5 = num - 1;
+                    value.probability = 1f / (float)num5;
                 }
                 num3 += value.probability;
             }

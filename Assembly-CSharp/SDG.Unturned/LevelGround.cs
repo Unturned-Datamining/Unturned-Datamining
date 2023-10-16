@@ -226,7 +226,7 @@ public class LevelGround : MonoBehaviour
 
     public static float getConversionHeight(Vector3 point)
     {
-        if (point.x < (float)(-Level.size / 2) || point.z < (float)(-Level.size / 2) || point.x > (float)((int)Level.size / 2) || point.z > (float)((int)Level.size / 2))
+        if (point.x < (float)(-Level.size / 2) || point.z < (float)(-Level.size / 2) || point.x > (float)(Level.size / 2) || point.z > (float)(Level.size / 2))
         {
             return _terrain2.SampleHeight(point);
         }
@@ -235,7 +235,7 @@ public class LevelGround : MonoBehaviour
 
     public static float getConversionWeight(Vector3 point, int layer)
     {
-        if (point.x < (float)(-Level.size / 2) || point.z < (float)(-Level.size / 2) || point.x > (float)((int)Level.size / 2) || point.z > (float)((int)Level.size / 2) || _terrain2.SampleHeight(point) > _terrain.SampleHeight(point))
+        if (point.x < (float)(-Level.size / 2) || point.z < (float)(-Level.size / 2) || point.x > (float)(Level.size / 2) || point.z > (float)(Level.size / 2) || _terrain2.SampleHeight(point) > _terrain.SampleHeight(point))
         {
             int alphamap2_X = getAlphamap2_X(point);
             if (alphamap2_X < 0 || alphamap2_X >= data2.alphamapWidth)
@@ -373,9 +373,9 @@ public class LevelGround : MonoBehaviour
     public static void removeSpawn(Vector3 point, float radius)
     {
         radius *= radius;
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 List<ResourceSpawnpoint> list = new List<ResourceSpawnpoint>();
                 for (int i = 0; i < trees[b, b2].Count; i++)
@@ -597,16 +597,16 @@ public class LevelGround : MonoBehaviour
         _regions = new bool[Regions.WORLD_SIZE, Regions.WORLD_SIZE];
         loads = new int[Regions.WORLD_SIZE, Regions.WORLD_SIZE];
         shouldInstantlyLoad = true;
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 loads[b, b2] = -1;
             }
         }
-        for (byte b3 = 0; b3 < Regions.WORLD_SIZE; b3 = (byte)(b3 + 1))
+        for (byte b3 = 0; b3 < Regions.WORLD_SIZE; b3++)
         {
-            for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4 = (byte)(b4 + 1))
+            for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4++)
             {
                 trees[b3, b4] = new List<ResourceSpawnpoint>();
             }
@@ -626,12 +626,12 @@ public class LevelGround : MonoBehaviour
                 treeRedirectorMap = new TreeRedirectorMap();
             }
             LevelBatching levelBatching = (Level.shouldUseLevelBatching ? LevelBatching.Get() : null);
-            for (byte b6 = 0; b6 < Regions.WORLD_SIZE; b6 = (byte)(b6 + 1))
+            for (byte b6 = 0; b6 < Regions.WORLD_SIZE; b6++)
             {
-                for (byte b7 = 0; b7 < Regions.WORLD_SIZE; b7 = (byte)(b7 + 1))
+                for (byte b7 = 0; b7 < Regions.WORLD_SIZE; b7++)
                 {
                     ushort num = river.readUInt16();
-                    for (ushort num2 = 0; num2 < num; num2 = (ushort)(num2 + 1))
+                    for (ushort num2 = 0; num2 < num; num2++)
                     {
                         if (b5 > 4)
                         {
@@ -728,8 +728,8 @@ public class LevelGround : MonoBehaviour
         _terrain.treeMaximumFullLODCount = 0;
         _data = new TerrainData();
         data.name = "Ground";
-        data.heightmapResolution = (int)size / 8;
-        data.alphamapResolution = (int)size / 4;
+        data.heightmapResolution = size / 8;
+        data.alphamapResolution = size / 4;
         data.size = new Vector3((int)size, Level.TERRAIN, (int)size);
         data.wavingGrassTint = Color.white;
         byte b = 0;
@@ -832,8 +832,8 @@ public class LevelGround : MonoBehaviour
             }
             UnityEngine.Object.DestroyImmediate(texture2D3);
         }
-        data.baseMapResolution = (int)size / 8;
-        data.baseMapResolution = (int)size / 4;
+        data.baseMapResolution = size / 8;
+        data.baseMapResolution = size / 4;
         _terrain.terrainData = data;
         _terrain.terrainData.wavingGrassAmount = 0f;
         _terrain.terrainData.wavingGrassSpeed = 1f;
@@ -859,8 +859,8 @@ public class LevelGround : MonoBehaviour
         _terrain2.treeMaximumFullLODCount = 0;
         _data2 = new TerrainData();
         data2.name = "Ground2";
-        data2.heightmapResolution = (int)size / 16;
-        data2.alphamapResolution = (int)size / 8;
+        data2.heightmapResolution = size / 16;
+        data2.alphamapResolution = size / 8;
         data2.size = new Vector3(size * 2, Level.TERRAIN, size * 2);
         if (ReadWrite.fileExists(Level.info.path + "/Terrain/Heightmap2.png", useCloud: false, usePath: false))
         {
@@ -953,8 +953,8 @@ public class LevelGround : MonoBehaviour
             }
             UnityEngine.Object.DestroyImmediate(texture2D6);
         }
-        data2.baseMapResolution = (int)size / 8;
-        data2.baseMapResolution = (int)size / 4;
+        data2.baseMapResolution = size / 8;
+        data2.baseMapResolution = size / 4;
         _terrain2.terrainData = data2;
         data2.wavingGrassTint = Color.white;
     }
@@ -963,13 +963,13 @@ public class LevelGround : MonoBehaviour
     {
         River river = new River(Level.info.path + "/Terrain/Trees.dat", usePath: false);
         river.writeByte(6);
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 List<ResourceSpawnpoint> list = trees[b, b2];
                 river.writeUInt16((ushort)list.Count);
-                for (ushort num = 0; num < list.Count; num = (ushort)(num + 1))
+                for (ushort num = 0; num < list.Count; num++)
                 {
                     ResourceSpawnpoint resourceSpawnpoint = list[num];
                     ushort id = resourceSpawnpoint.id;
@@ -1029,9 +1029,9 @@ public class LevelGround : MonoBehaviour
         {
             return;
         }
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 if (regions[b, b2] && !Regions.checkArea(b, b2, new_x, new_y, RESOURCE_REGIONS))
                 {
@@ -1106,9 +1106,9 @@ public class LevelGround : MonoBehaviour
     private void tickRegionalVisibility()
     {
         bool flag = true;
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 if (loads[b, b2] != -1)
                 {

@@ -14,6 +14,8 @@ public interface IGlazier
 
     bool SupportsRichTextAlpha { get; }
 
+    bool SupportsAutomaticLayout { get; }
+
     ISleekBox CreateBox();
 
     ISleekButton CreateButton();

@@ -41,9 +41,9 @@ public class LevelItems
         {
             return;
         }
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 for (int i = 0; i < spawns[b, b2].Count; i++)
                 {
@@ -64,9 +64,9 @@ public class LevelItems
     public static void removeTable()
     {
         tables.RemoveAt(EditorSpawns.selectedItem);
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 List<ItemSpawnpoint> list = new List<ItemSpawnpoint>();
                 for (int i = 0; i < spawns[b, b2].Count; i++)
@@ -112,9 +112,9 @@ public class LevelItems
     public static void removeSpawn(Vector3 point, float radius)
     {
         radius *= radius;
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 List<ItemSpawnpoint> list = new List<ItemSpawnpoint>();
                 for (int i = 0; i < spawns[b, b2].Count; i++)
@@ -161,20 +161,20 @@ public class LevelItems
                 block.readSteamID();
             }
             byte b2 = block.readByte();
-            for (byte b3 = 0; b3 < b2; b3 = (byte)(b3 + 1))
+            for (byte b3 = 0; b3 < b2; b3++)
             {
                 Color newColor = block.readColor();
                 string text = block.readString();
                 ushort num = (ushort)((b > 3) ? block.readUInt16() : 0);
                 List<ItemTier> list = new List<ItemTier>();
                 byte b4 = block.readByte();
-                for (byte b5 = 0; b5 < b4; b5 = (byte)(b5 + 1))
+                for (byte b5 = 0; b5 < b4; b5++)
                 {
                     string newName = block.readString();
                     float newChance = block.readSingle();
                     List<ItemSpawn> list2 = new List<ItemSpawn>();
                     byte b6 = block.readByte();
-                    for (byte b7 = 0; b7 < b6; b7 = (byte)(b7 + 1))
+                    for (byte b7 = 0; b7 < b6; b7++)
                     {
                         ushort num2 = block.readUInt16();
                         if (Assets.find(EAssetType.ITEM, num2) is ItemAsset itemAsset && !itemAsset.isPro)
@@ -199,9 +199,9 @@ public class LevelItems
                 }
             }
         }
-        for (byte b8 = 0; b8 < Regions.WORLD_SIZE; b8 = (byte)(b8 + 1))
+        for (byte b8 = 0; b8 < Regions.WORLD_SIZE; b8++)
         {
-            for (byte b9 = 0; b9 < Regions.WORLD_SIZE; b9 = (byte)(b9 + 1))
+            for (byte b9 = 0; b9 < Regions.WORLD_SIZE; b9++)
             {
                 spawns[b8, b9] = new List<ItemSpawnpoint>();
             }
@@ -211,12 +211,12 @@ public class LevelItems
             River river = new River(Level.info.path + "/Spawns/Jars.dat", usePath: false);
             if (river.readByte() > 0)
             {
-                for (byte b10 = 0; b10 < Regions.WORLD_SIZE; b10 = (byte)(b10 + 1))
+                for (byte b10 = 0; b10 < Regions.WORLD_SIZE; b10++)
                 {
-                    for (byte b11 = 0; b11 < Regions.WORLD_SIZE; b11 = (byte)(b11 + 1))
+                    for (byte b11 = 0; b11 < Regions.WORLD_SIZE; b11++)
                     {
                         ushort num3 = river.readUInt16();
-                        for (ushort num4 = 0; num4 < num3; num4 = (ushort)(num4 + 1))
+                        for (ushort num4 = 0; num4 < num3; num4++)
                         {
                             byte newType = river.readByte();
                             Vector3 newPoint = river.readSingleVector3();
@@ -228,9 +228,9 @@ public class LevelItems
             river.closeRiver();
             return;
         }
-        for (byte b12 = 0; b12 < Regions.WORLD_SIZE; b12 = (byte)(b12 + 1))
+        for (byte b12 = 0; b12 < Regions.WORLD_SIZE; b12++)
         {
-            for (byte b13 = 0; b13 < Regions.WORLD_SIZE; b13 = (byte)(b13 + 1))
+            for (byte b13 = 0; b13 < Regions.WORLD_SIZE; b13++)
             {
                 spawns[b12, b13] = new List<ItemSpawnpoint>();
                 if (ReadWrite.fileExists(Level.info.path + "/Spawns/Items_" + b12 + "_" + b13 + ".dat", useCloud: false, usePath: false))
@@ -239,7 +239,7 @@ public class LevelItems
                     if (river2.readByte() > 0)
                     {
                         ushort num5 = river2.readUInt16();
-                        for (ushort num6 = 0; num6 < num5; num6 = (ushort)(num6 + 1))
+                        for (ushort num6 = 0; num6 < num5; num6++)
                         {
                             byte newType2 = river2.readByte();
                             Vector3 newPoint2 = river2.readSingleVector3();
@@ -257,20 +257,20 @@ public class LevelItems
         Block block = new Block();
         block.writeByte(SAVEDATA_VERSION);
         block.writeByte((byte)tables.Count);
-        for (byte b = 0; b < tables.Count; b = (byte)(b + 1))
+        for (byte b = 0; b < tables.Count; b++)
         {
             ItemTable itemTable = tables[b];
             block.writeColor(itemTable.color);
             block.writeString(itemTable.name);
             block.writeUInt16(itemTable.tableID);
             block.write((byte)itemTable.tiers.Count);
-            for (byte b2 = 0; b2 < itemTable.tiers.Count; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < itemTable.tiers.Count; b2++)
             {
                 ItemTier itemTier = itemTable.tiers[b2];
                 block.writeString(itemTier.name);
                 block.writeSingle(itemTier.chance);
                 block.writeByte((byte)itemTier.table.Count);
-                for (byte b3 = 0; b3 < itemTier.table.Count; b3 = (byte)(b3 + 1))
+                for (byte b3 = 0; b3 < itemTier.table.Count; b3++)
                 {
                     ItemSpawn itemSpawn = itemTier.table[b3];
                     block.writeUInt16(itemSpawn.item);
@@ -280,13 +280,13 @@ public class LevelItems
         ReadWrite.writeBlock(Level.info.path + "/Spawns/Items.dat", useCloud: false, usePath: false, block);
         River river = new River(Level.info.path + "/Spawns/Jars.dat", usePath: false);
         river.writeByte(SAVEDATA_VERSION);
-        for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4 = (byte)(b4 + 1))
+        for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4++)
         {
-            for (byte b5 = 0; b5 < Regions.WORLD_SIZE; b5 = (byte)(b5 + 1))
+            for (byte b5 = 0; b5 < Regions.WORLD_SIZE; b5++)
             {
                 List<ItemSpawnpoint> list = spawns[b4, b5];
                 river.writeUInt16((ushort)list.Count);
-                for (ushort num = 0; num < list.Count; num = (ushort)(num + 1))
+                for (ushort num = 0; num < list.Count; num++)
                 {
                     ItemSpawnpoint itemSpawnpoint = list[num];
                     river.writeByte(itemSpawnpoint.type);

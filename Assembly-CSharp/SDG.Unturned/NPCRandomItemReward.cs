@@ -12,7 +12,7 @@ public class NPCRandomItemReward : INPCReward
 
     public override void GrantReward(Player player)
     {
-        for (byte b = 0; b < amount; b = (byte)(b + 1))
+        for (byte b = 0; b < amount; b++)
         {
             ushort num = SpawnTableTool.ResolveLegacyId(id, EAssetType.ITEM, OnGetSpawnTableErrorContext);
             if (num != 0)

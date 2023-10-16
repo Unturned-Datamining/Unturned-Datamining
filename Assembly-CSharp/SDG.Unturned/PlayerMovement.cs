@@ -1426,15 +1426,15 @@ public class PlayerMovement : PlayerCaller
         if (base.channel.IsLocalPlayer || Provider.isServer)
         {
             _loadedRegions = new LoadedRegion[Regions.WORLD_SIZE, Regions.WORLD_SIZE];
-            for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+            for (byte b = 0; b < Regions.WORLD_SIZE; b++)
             {
-                for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+                for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
                 {
                     loadedRegions[b, b2] = new LoadedRegion();
                 }
             }
             _loadedBounds = new LoadedBound[LevelNavigation.bounds.Count];
-            for (byte b3 = 0; b3 < LevelNavigation.bounds.Count; b3 = (byte)(b3 + 1))
+            for (byte b3 = 0; b3 < LevelNavigation.bounds.Count; b3++)
             {
                 loadedBounds[b3] = new LoadedBound();
             }

@@ -119,7 +119,7 @@ public class SteamBlacklist
         if (b > 1)
         {
             ushort num = river.readUInt16();
-            for (ushort num2 = 0; num2 < num; num2 = (ushort)(num2 + 1))
+            for (ushort num2 = 0; num2 < num; num2++)
             {
                 CSteamID newPlayerID = river.readSteamID();
                 uint newIP = ((b > 2) ? river.readUInt32() : 0u);
@@ -163,7 +163,7 @@ public class SteamBlacklist
         River river = ServerSavedata.openRiver("/Server/Blacklist.dat", isReading: false);
         river.writeByte(SAVEDATA_VERSION);
         river.writeUInt16((ushort)list.Count);
-        for (ushort num = 0; num < list.Count; num = (ushort)(num + 1))
+        for (ushort num = 0; num < list.Count; num++)
         {
             SteamBlacklistID steamBlacklistID = list[num];
             river.writeSteamID(steamBlacklistID.playerID);

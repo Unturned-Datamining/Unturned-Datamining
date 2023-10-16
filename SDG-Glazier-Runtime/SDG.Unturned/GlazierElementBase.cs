@@ -7,13 +7,13 @@ public abstract class GlazierElementBase : ISleekElement
 {
     protected bool _isVisible = true;
 
-    private int fromPositionOffset_X;
+    private float fromPositionOffset_X;
 
-    private int fromPositionOffset_Y;
+    private float fromPositionOffset_Y;
 
-    private int toPositionOffset_X;
+    private float toPositionOffset_X;
 
-    private int toPositionOffset_Y;
+    private float toPositionOffset_Y;
 
     private float fromPositionScale_X;
 
@@ -23,13 +23,13 @@ public abstract class GlazierElementBase : ISleekElement
 
     private float toPositionScale_Y;
 
-    private int fromSizeOffset_X;
+    private float fromSizeOffset_X;
 
-    private int fromSizeOffset_Y;
+    private float fromSizeOffset_Y;
 
-    private int toSizeOffset_X;
+    private float toSizeOffset_X;
 
-    private int toSizeOffset_Y;
+    private float toSizeOffset_Y;
 
     private float fromSizeScale_X;
 
@@ -73,23 +73,37 @@ public abstract class GlazierElementBase : ISleekElement
 
     public bool isTransformDirty;
 
-    private int _positionOffset_X;
+    private float _positionOffset_X;
 
-    private int _positionOffset_Y;
+    private float _positionOffset_Y;
 
     private float _positionScale_X;
 
     private float _positionScale_Y;
 
-    private int _sizeOffset_X;
+    private float _sizeOffset_X;
 
-    private int _sizeOffset_Y;
+    private float _sizeOffset_Y;
 
     private float _sizeScale_X;
 
     private float _sizeScale_Y;
 
-    public virtual bool isVisible
+    protected bool _useManualLayout = true;
+
+    protected bool _useWidthLayoutOverride;
+
+    protected bool _useHeightLayoutOverride;
+
+    protected ESleekChildLayout _useChildAutoLayout;
+
+    protected ESleekChildPerpendicularAlignment _childPerpendicularAlignment;
+
+    protected bool _expandChildren;
+
+    protected bool _ignoreLayout;
+
+    public virtual bool IsVisible
     {
         get
         {
@@ -101,11 +115,11 @@ public abstract class GlazierElementBase : ISleekElement
         }
     }
 
-    public abstract ISleekElement parent { get; }
+    public abstract ISleekElement Parent { get; }
 
-    public ISleekLabel sideLabel { get; private set; }
+    public ISleekLabel SideLabel { get; private set; }
 
-    public int positionOffset_X
+    public float PositionOffset_X
     {
         get
         {
@@ -118,7 +132,7 @@ public abstract class GlazierElementBase : ISleekElement
         }
     }
 
-    public int positionOffset_Y
+    public float PositionOffset_Y
     {
         get
         {
@@ -131,7 +145,7 @@ public abstract class GlazierElementBase : ISleekElement
         }
     }
 
-    public float positionScale_X
+    public float PositionScale_X
     {
         get
         {
@@ -144,7 +158,7 @@ public abstract class GlazierElementBase : ISleekElement
         }
     }
 
-    public float positionScale_Y
+    public float PositionScale_Y
     {
         get
         {
@@ -157,7 +171,7 @@ public abstract class GlazierElementBase : ISleekElement
         }
     }
 
-    public int sizeOffset_X
+    public float SizeOffset_X
     {
         get
         {
@@ -170,7 +184,7 @@ public abstract class GlazierElementBase : ISleekElement
         }
     }
 
-    public int sizeOffset_Y
+    public float SizeOffset_Y
     {
         get
         {
@@ -183,7 +197,7 @@ public abstract class GlazierElementBase : ISleekElement
         }
     }
 
-    public float sizeScale_X
+    public float SizeScale_X
     {
         get
         {
@@ -196,7 +210,7 @@ public abstract class GlazierElementBase : ISleekElement
         }
     }
 
-    public float sizeScale_Y
+    public float SizeScale_Y
     {
         get
         {
@@ -209,98 +223,182 @@ public abstract class GlazierElementBase : ISleekElement
         }
     }
 
-    public ISleekElement attachmentRoot => this;
+    public ISleekElement AttachmentRoot => this;
 
-    public bool isAnimatingTransform => isAnimatingPositionOffset | isAnimatingPositionScale | isAnimatingSizeOffset | isAnimatingSizeScale;
+    public bool IsAnimatingTransform => isAnimatingPositionOffset | isAnimatingPositionScale | isAnimatingSizeOffset | isAnimatingSizeScale;
 
-    public abstract void destroy();
+    public virtual bool UseManualLayout
+    {
+        get
+        {
+            return _useManualLayout;
+        }
+        set
+        {
+            _useManualLayout = value;
+        }
+    }
 
-    public void lerpPositionOffset(int newPositionOffset_X, int newPositionOffset_Y, ESleekLerp lerp, float time)
+    public virtual bool UseWidthLayoutOverride
+    {
+        get
+        {
+            return _useWidthLayoutOverride;
+        }
+        set
+        {
+            _useWidthLayoutOverride = value;
+        }
+    }
+
+    public virtual bool UseHeightLayoutOverride
+    {
+        get
+        {
+            return _useHeightLayoutOverride;
+        }
+        set
+        {
+            _useHeightLayoutOverride = value;
+        }
+    }
+
+    public virtual ESleekChildLayout UseChildAutoLayout
+    {
+        get
+        {
+            return _useChildAutoLayout;
+        }
+        set
+        {
+            _useChildAutoLayout = value;
+        }
+    }
+
+    public virtual ESleekChildPerpendicularAlignment ChildPerpendicularAlignment
+    {
+        get
+        {
+            return _childPerpendicularAlignment;
+        }
+        set
+        {
+            _childPerpendicularAlignment = value;
+        }
+    }
+
+    public virtual bool ExpandChildren
+    {
+        get
+        {
+            return _expandChildren;
+        }
+        set
+        {
+            _expandChildren = value;
+        }
+    }
+
+    public virtual bool IgnoreLayout
+    {
+        get
+        {
+            return _ignoreLayout;
+        }
+        set
+        {
+            _ignoreLayout = value;
+        }
+    }
+
+    public abstract void InternalDestroy();
+
+    public void AnimatePositionOffset(float newPositionOffset_X, float newPositionOffset_Y, ESleekLerp lerp, float time)
     {
         isAnimatingPositionOffset = true;
         positionOffsetLerpMethod = lerp;
         positionOffsetLerpTime = time;
         positionOffsetLerpValue = 0f;
-        fromPositionOffset_X = positionOffset_X;
-        fromPositionOffset_Y = positionOffset_Y;
+        fromPositionOffset_X = PositionOffset_X;
+        fromPositionOffset_Y = PositionOffset_Y;
         toPositionOffset_X = newPositionOffset_X;
         toPositionOffset_Y = newPositionOffset_Y;
     }
 
-    public void lerpPositionScale(float newPositionScale_X, float newPositionScale_Y, ESleekLerp lerp, float time)
+    public void AnimatePositionScale(float newPositionScale_X, float newPositionScale_Y, ESleekLerp lerp, float time)
     {
         isAnimatingPositionScale = true;
         positionScaleLerpMethod = lerp;
         positionScaleLerpTime = time;
         positionScaleLerpValue = 0f;
-        fromPositionScale_X = positionScale_X;
-        fromPositionScale_Y = positionScale_Y;
+        fromPositionScale_X = PositionScale_X;
+        fromPositionScale_Y = PositionScale_Y;
         toPositionScale_X = newPositionScale_X;
         toPositionScale_Y = newPositionScale_Y;
     }
 
-    public void lerpSizeOffset(int newSizeOffset_X, int newSizeOffset_Y, ESleekLerp lerp, float time)
+    public void AnimateSizeOffset(float newSizeOffset_X, float newSizeOffset_Y, ESleekLerp lerp, float time)
     {
         isAnimatingSizeOffset = true;
         sizeOffsetLerpMethod = lerp;
         sizeOffsetLerpTime = time;
         sizeOffsetLerpValue = 0f;
-        fromSizeOffset_X = sizeOffset_X;
-        fromSizeOffset_Y = sizeOffset_Y;
+        fromSizeOffset_X = SizeOffset_X;
+        fromSizeOffset_Y = SizeOffset_Y;
         toSizeOffset_X = newSizeOffset_X;
         toSizeOffset_Y = newSizeOffset_Y;
     }
 
-    public void lerpSizeScale(float newSizeScale_X, float newSizeScale_Y, ESleekLerp lerp, float time)
+    public void AnimateSizeScale(float newSizeScale_X, float newSizeScale_Y, ESleekLerp lerp, float time)
     {
         isAnimatingSizeScale = true;
         sizeScaleLerpMethod = lerp;
         sizeScaleLerpTime = time;
         sizeScaleLerpValue = 0f;
-        fromSizeScale_X = sizeScale_X;
-        fromSizeScale_Y = sizeScale_Y;
+        fromSizeScale_X = SizeScale_X;
+        fromSizeScale_Y = SizeScale_Y;
         toSizeScale_X = newSizeScale_X;
         toSizeScale_Y = newSizeScale_Y;
     }
 
     public abstract void AddChild(ISleekElement child);
 
-    public void addLabel(string text, ESleekSide side)
+    public void AddLabel(string text, ESleekSide side)
     {
-        addLabel(text, Color.white, side);
+        AddLabel(text, Color.white, side);
     }
 
-    public void addLabel(string text, Color color, ESleekSide side)
+    public void AddLabel(string text, Color color, ESleekSide side)
     {
-        sideLabel = Glazier.Get().CreateLabel();
+        SideLabel = Glazier.Get().CreateLabel();
         switch (side)
         {
         case ESleekSide.LEFT:
-            sideLabel.positionOffset_X = -205;
-            sideLabel.fontAlignment = TextAnchor.MiddleRight;
+            SideLabel.PositionOffset_X = -205f;
+            SideLabel.TextAlignment = TextAnchor.MiddleRight;
             break;
         case ESleekSide.RIGHT:
-            sideLabel.positionOffset_X = 5;
-            sideLabel.positionScale_X = 1f;
-            sideLabel.fontAlignment = TextAnchor.MiddleLeft;
+            SideLabel.PositionOffset_X = 5f;
+            SideLabel.PositionScale_X = 1f;
+            SideLabel.TextAlignment = TextAnchor.MiddleLeft;
             break;
         }
-        sideLabel.positionOffset_Y = -30;
-        sideLabel.positionScale_Y = 0.5f;
-        sideLabel.sizeOffset_X = 200;
-        sideLabel.sizeOffset_Y = 60;
+        SideLabel.PositionOffset_Y = -30f;
+        SideLabel.PositionScale_Y = 0.5f;
+        SideLabel.SizeOffset_X = 200f;
+        SideLabel.SizeOffset_Y = 60f;
         if (color != Color.white)
         {
-            sideLabel.textColor = color;
+            SideLabel.TextColor = color;
         }
-        sideLabel.text = text;
-        sideLabel.shadowStyle = ETextContrastContext.ColorfulBackdrop;
-        AddChild(sideLabel);
+        SideLabel.Text = text;
+        SideLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
+        AddChild(SideLabel);
     }
 
-    public void updateLabel(string text)
+    public void UpdateLabel(string text)
     {
-        sideLabel.text = text;
+        SideLabel.Text = text;
     }
 
     public abstract int FindIndexOfChild(ISleekElement sleek);
@@ -313,7 +411,7 @@ public abstract class GlazierElementBase : ISleekElement
 
     public virtual void Update()
     {
-        if (isAnimatingTransform)
+        if (IsAnimatingTransform)
         {
             UpdateAnimation();
         }
@@ -344,13 +442,13 @@ public abstract class GlazierElementBase : ISleekElement
             if (positionOffsetLerpValue >= 0.999f)
             {
                 isAnimatingPositionOffset = false;
-                positionOffset_X = toPositionOffset_X;
-                positionOffset_Y = toPositionOffset_Y;
+                PositionOffset_X = toPositionOffset_X;
+                PositionOffset_Y = toPositionOffset_Y;
             }
             else
             {
-                positionOffset_X = Mathf.RoundToInt(Mathf.Lerp(fromPositionOffset_X, toPositionOffset_X, positionOffsetLerpValue));
-                positionOffset_Y = Mathf.RoundToInt(Mathf.Lerp(fromPositionOffset_Y, toPositionOffset_Y, positionOffsetLerpValue));
+                PositionOffset_X = Mathf.Lerp(fromPositionOffset_X, toPositionOffset_X, positionOffsetLerpValue);
+                PositionOffset_Y = Mathf.Lerp(fromPositionOffset_Y, toPositionOffset_Y, positionOffsetLerpValue);
             }
             positionOffsetLerpValue = InterpValue(positionOffsetLerpValue, positionOffsetLerpMethod, positionOffsetLerpTime, unscaledDeltaTime);
         }
@@ -359,13 +457,13 @@ public abstract class GlazierElementBase : ISleekElement
             if (positionScaleLerpValue >= 0.999f)
             {
                 isAnimatingPositionScale = false;
-                positionScale_X = toPositionScale_X;
-                positionScale_Y = toPositionScale_Y;
+                PositionScale_X = toPositionScale_X;
+                PositionScale_Y = toPositionScale_Y;
             }
             else
             {
-                positionScale_X = Mathf.Lerp(fromPositionScale_X, toPositionScale_X, positionScaleLerpValue);
-                positionScale_Y = Mathf.Lerp(fromPositionScale_Y, toPositionScale_Y, positionScaleLerpValue);
+                PositionScale_X = Mathf.Lerp(fromPositionScale_X, toPositionScale_X, positionScaleLerpValue);
+                PositionScale_Y = Mathf.Lerp(fromPositionScale_Y, toPositionScale_Y, positionScaleLerpValue);
             }
             positionScaleLerpValue = InterpValue(positionScaleLerpValue, positionScaleLerpMethod, positionScaleLerpTime, unscaledDeltaTime);
         }
@@ -374,13 +472,13 @@ public abstract class GlazierElementBase : ISleekElement
             if (sizeOffsetLerpValue >= 0.999f)
             {
                 isAnimatingSizeOffset = false;
-                sizeOffset_X = toSizeOffset_X;
-                sizeOffset_Y = toSizeOffset_Y;
+                SizeOffset_X = toSizeOffset_X;
+                SizeOffset_Y = toSizeOffset_Y;
             }
             else
             {
-                sizeOffset_X = Mathf.RoundToInt(Mathf.Lerp(fromSizeOffset_X, toSizeOffset_X, sizeOffsetLerpValue));
-                sizeOffset_Y = Mathf.RoundToInt(Mathf.Lerp(fromSizeOffset_Y, toSizeOffset_Y, sizeOffsetLerpValue));
+                SizeOffset_X = Mathf.Lerp(fromSizeOffset_X, toSizeOffset_X, sizeOffsetLerpValue);
+                SizeOffset_Y = Mathf.Lerp(fromSizeOffset_Y, toSizeOffset_Y, sizeOffsetLerpValue);
             }
             sizeOffsetLerpValue = InterpValue(sizeOffsetLerpValue, sizeOffsetLerpMethod, sizeOffsetLerpTime, unscaledDeltaTime);
         }
@@ -389,13 +487,13 @@ public abstract class GlazierElementBase : ISleekElement
             if (sizeScaleLerpValue >= 0.999f)
             {
                 isAnimatingSizeScale = false;
-                sizeScale_X = toSizeScale_X;
-                sizeScale_Y = toSizeScale_Y;
+                SizeScale_X = toSizeScale_X;
+                SizeScale_Y = toSizeScale_Y;
             }
             else
             {
-                sizeScale_X = Mathf.Lerp(fromSizeScale_X, toSizeScale_X, sizeScaleLerpValue);
-                sizeScale_Y = Mathf.Lerp(fromSizeScale_Y, toSizeScale_Y, sizeScaleLerpValue);
+                SizeScale_X = Mathf.Lerp(fromSizeScale_X, toSizeScale_X, sizeScaleLerpValue);
+                SizeScale_Y = Mathf.Lerp(fromSizeScale_Y, toSizeScale_Y, sizeScaleLerpValue);
             }
             sizeScaleLerpValue = InterpValue(sizeScaleLerpValue, sizeScaleLerpMethod, sizeScaleLerpTime, unscaledDeltaTime);
         }
@@ -404,6 +502,10 @@ public abstract class GlazierElementBase : ISleekElement
     public abstract Vector2 ViewportToNormalizedPosition(Vector2 viewportPosition);
 
     public abstract Vector2 GetNormalizedCursorPosition();
+
+    public abstract Vector2 GetAbsoluteSize();
+
+    public abstract void SetAsFirstSibling();
 
     protected abstract void UpdateDirtyTransform();
 
@@ -419,13 +521,13 @@ public abstract class GlazierElementBase : ISleekElement
         isAnimatingSizeOffset = false;
         isAnimatingSizeScale = false;
         isTransformDirty = true;
-        sideLabel = null;
-        _positionOffset_X = 0;
-        _positionOffset_Y = 0;
+        SideLabel = null;
+        _positionOffset_X = 0f;
+        _positionOffset_Y = 0f;
         _positionScale_X = 0f;
         _positionScale_Y = 0f;
-        _sizeOffset_X = 0;
-        _sizeOffset_Y = 0;
+        _sizeOffset_X = 0f;
+        _sizeOffset_Y = 0f;
         _sizeScale_X = 0f;
         _sizeScale_Y = 0f;
     }

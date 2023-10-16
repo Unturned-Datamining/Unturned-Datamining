@@ -2,13 +2,13 @@ namespace SDG.Unturned;
 
 public interface ISleekToggle : ISleekElement, ISleekWithTooltip
 {
-    bool state { get; set; }
+    bool Value { get; set; }
 
-    SleekColor backgroundColor { get; set; }
+    SleekColor BackgroundColor { get; set; }
 
-    SleekColor foregroundColor { get; set; }
+    SleekColor ForegroundColor { get; set; }
 
-    bool isInteractable { get; set; }
+    bool IsInteractable { get; set; }
 
-    event Toggled onToggled;
+    event Toggled OnValueChanged;
 }

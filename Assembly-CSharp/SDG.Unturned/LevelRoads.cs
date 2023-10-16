@@ -206,7 +206,7 @@ public class LevelRoads
                         materials[b3].offset = river.readSingle();
                     }
                     materials[b3].isConcrete = river.readBoolean();
-                    b3 = (byte)(b3 + 1);
+                    b3++;
                 }
             }
             river.closeRiver();
@@ -218,13 +218,13 @@ public class LevelRoads
             if (b4 > 1)
             {
                 ushort num = river2.readUInt16();
-                for (ushort num2 = 0; num2 < num; num2 = (ushort)(num2 + 1))
+                for (ushort num2 = 0; num2 < num; num2++)
                 {
                     ushort num3 = river2.readUInt16();
                     byte newMaterial = river2.readByte();
                     bool newLoop = b4 > 2 && river2.readBoolean();
                     List<RoadJoint> list = new List<RoadJoint>();
-                    for (ushort num4 = 0; num4 < num3; num4 = (ushort)(num4 + 1))
+                    for (ushort num4 = 0; num4 < num3; num4++)
                     {
                         Vector3 vertex = river2.readSingleVector3();
                         Vector3[] array2 = new Vector3[2];
@@ -241,7 +241,7 @@ public class LevelRoads
                     }
                     if (b4 < 3)
                     {
-                        for (ushort num5 = 0; num5 < num3; num5 = (ushort)(num5 + 1))
+                        for (ushort num5 = 0; num5 < num3; num5++)
                         {
                             RoadJoint roadJoint = list[num5];
                             if (num5 == 0)
@@ -267,12 +267,12 @@ public class LevelRoads
             else if (b4 > 0)
             {
                 byte b5 = river2.readByte();
-                for (byte b6 = 0; b6 < b5; b6 = (byte)(b6 + 1))
+                for (byte b6 = 0; b6 < b5; b6++)
                 {
                     byte b7 = river2.readByte();
                     byte newMaterial2 = river2.readByte();
                     List<RoadJoint> list2 = new List<RoadJoint>();
-                    for (byte b8 = 0; b8 < b7; b8 = (byte)(b8 + 1))
+                    for (byte b8 = 0; b8 < b7; b8++)
                     {
                         Vector3 vertex2 = river2.readSingleVector3();
                         Vector3[] tangents = new Vector3[2];
@@ -280,7 +280,7 @@ public class LevelRoads
                         RoadJoint item2 = new RoadJoint(vertex2, tangents, mode2, 0f, ignoreTerrain: false);
                         list2.Add(item2);
                     }
-                    for (byte b9 = 0; b9 < b7; b9 = (byte)(b9 + 1))
+                    for (byte b9 = 0; b9 < b7; b9++)
                     {
                         RoadJoint roadJoint2 = list2[b9];
                         if (b9 == 0)
@@ -316,7 +316,7 @@ public class LevelRoads
         River river = new River(Level.info.path + "/Environment/Roads.dat", usePath: false);
         river.writeByte(SAVEDATA_ROADS_VERSION);
         river.writeByte((byte)materials.Length);
-        for (byte b = 0; b < materials.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < materials.Length; b++)
         {
             river.writeSingle(materials[b].width);
             river.writeSingle(materials[b].height);
@@ -328,15 +328,15 @@ public class LevelRoads
         river = new River(Level.info.path + "/Environment/Paths.dat", usePath: false);
         river.writeByte(SAVEDATA_PATHS_VERSION);
         ushort num = 0;
-        for (ushort num2 = 0; num2 < roads.Count; num2 = (ushort)(num2 + 1))
+        for (ushort num2 = 0; num2 < roads.Count; num2++)
         {
             if (roads[num2].joints.Count > 1)
             {
-                num = (ushort)(num + 1);
+                num++;
             }
         }
         river.writeUInt16(num);
-        for (ushort num3 = 0; num3 < roads.Count; num3 = (ushort)(num3 + 1))
+        for (ushort num3 = 0; num3 < roads.Count; num3++)
         {
             List<RoadJoint> joints = roads[num3].joints;
             if (joints.Count > 1)
@@ -344,7 +344,7 @@ public class LevelRoads
                 river.writeUInt16((ushort)joints.Count);
                 river.writeByte(roads[num3].material);
                 river.writeBoolean(roads[num3].isLoop);
-                for (ushort num4 = 0; num4 < joints.Count; num4 = (ushort)(num4 + 1))
+                for (ushort num4 = 0; num4 < joints.Count; num4++)
                 {
                     RoadJoint roadJoint = joints[num4];
                     river.writeSingleVector3(roadJoint.vertex);

@@ -69,7 +69,7 @@ internal static class ServerMessageHandler_ReadyToConnect
         reader.ReadUInt64(out var value22);
         reader.ReadUInt64(out var value23);
         pendingPackageSkins.Clear();
-        reader.ReadList(pendingPackageSkins, (SystemNetPakReaderEx.ReadListItem<ulong>)reader.ReadUInt64, Provider.MAX_SKINS_LENGTH);
+        reader.ReadList(pendingPackageSkins, reader.ReadUInt64, Provider.MAX_SKINS_LENGTH);
         reader.ReadEnum(out var value24);
         reader.ReadString(out var value25);
         reader.ReadString(out var value26);
@@ -82,7 +82,7 @@ internal static class ServerMessageHandler_ReadyToConnect
             return;
         }
         byte[][] array5 = new byte[value29][];
-        for (byte b = 0; b < value29; b = (byte)(b + 1))
+        for (byte b = 0; b < value29; b++)
         {
             array5[b] = new byte[20];
             reader.ReadBytes(array5[b]);

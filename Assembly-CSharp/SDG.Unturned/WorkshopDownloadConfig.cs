@@ -78,16 +78,17 @@ public class WorkshopDownloadConfig
 
     private static WorkshopDownloadConfig loadFromLegacyFormat()
     {
+        WorkshopDownloadConfig workshopDownloadConfig;
         try
         {
-            WorkshopDownloadConfig workshopDownloadConfig = new WorkshopDownloadConfig();
+            workshopDownloadConfig = new WorkshopDownloadConfig();
             workshopDownloadConfig.File_IDs = ServerSavedata.deserializeJSON<List<ulong>>("/WorkshopDownloadIDs.json");
-            return workshopDownloadConfig;
         }
         catch (Exception e)
         {
             UnturnedLog.exception(e, "Unable to parse WorkshopDownloadIDs.json! consider validating with a JSON linter");
-            return null;
+            workshopDownloadConfig = null;
         }
+        return workshopDownloadConfig;
     }
 }

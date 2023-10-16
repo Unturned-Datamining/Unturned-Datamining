@@ -94,7 +94,7 @@ public class ItemCaliberAsset : ItemAsset
     {
         base.PopulateAsset(bundle, data, localization);
         _calibers = new ushort[data.ParseUInt8("Calibers", 0)];
-        for (byte b = 0; b < calibers.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < calibers.Length; b++)
         {
             _calibers[b] = data.ParseUInt16("Caliber_" + b, 0);
         }

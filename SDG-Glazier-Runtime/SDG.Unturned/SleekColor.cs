@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace SDG.Unturned;
 
@@ -90,6 +91,11 @@ public struct SleekColor
         }
     }
 
+    public StyleColor GetStyleColor()
+    {
+        return new StyleColor(Get());
+    }
+
     public void SetAlpha(float alpha)
     {
         customColor.a = alpha;
@@ -113,6 +119,11 @@ public struct SleekColor
     public static implicit operator Color(SleekColor color)
     {
         return color.Get();
+    }
+
+    public static implicit operator StyleColor(SleekColor color)
+    {
+        return color.GetStyleColor();
     }
 
     private SleekColor(ESleekTint tint, Color customColor)

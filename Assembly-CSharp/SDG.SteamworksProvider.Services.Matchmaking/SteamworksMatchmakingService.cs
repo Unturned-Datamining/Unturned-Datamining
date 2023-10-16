@@ -12,7 +12,8 @@ public class SteamworksMatchmakingService : Service, IMatchmakingService, IServi
     public IServerInfoRequestHandle requestServerInfo(uint ip, ushort port, ServerInfoRequestReadyCallback callback)
     {
         SteamworksServerInfoRequestHandle steamworksServerInfoRequestHandle = new SteamworksServerInfoRequestHandle(callback);
-        HServerQuery hServerQuery = (steamworksServerInfoRequestHandle.query = SteamMatchmakingServers.PingServer(ip, (ushort)(port + 1), steamworksServerInfoRequestHandle.pingResponse = new ISteamMatchmakingPingResponse(steamworksServerInfoRequestHandle.onServerResponded, steamworksServerInfoRequestHandle.onServerFailedToRespond)));
+        HServerQuery query = SteamMatchmakingServers.PingServer(ip, (ushort)(port + 1), steamworksServerInfoRequestHandle.pingResponse = new ISteamMatchmakingPingResponse(steamworksServerInfoRequestHandle.onServerResponded, steamworksServerInfoRequestHandle.onServerFailedToRespond));
+        steamworksServerInfoRequestHandle.query = query;
         serverInfoRequestHandles.Add(steamworksServerInfoRequestHandle);
         return steamworksServerInfoRequestHandle;
     }

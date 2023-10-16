@@ -242,7 +242,7 @@ public class PlayerInventory : PlayerCaller
 
     public void search(List<InventorySearch> search, EItemType type)
     {
-        for (byte b = SLOTS; b < PAGES - 2; b = (byte)(b + 1))
+        for (byte b = SLOTS; b < PAGES - 2; b++)
         {
             items[b].search(search, type);
         }
@@ -272,7 +272,7 @@ public class PlayerInventory : PlayerCaller
 
     public void search(List<InventorySearch> search, EItemType type, ushort caliber, bool allowZeroCaliber)
     {
-        for (byte b = SLOTS; b < PAGES - 2; b = (byte)(b + 1))
+        for (byte b = SLOTS; b < PAGES - 2; b++)
         {
             items[b].search(search, type, caliber, allowZeroCaliber);
         }
@@ -287,7 +287,7 @@ public class PlayerInventory : PlayerCaller
 
     public void search(List<InventorySearch> search, ushort id, bool findEmpty, bool findHealthy)
     {
-        for (byte b = SLOTS; b < PAGES - 2; b = (byte)(b + 1))
+        for (byte b = SLOTS; b < PAGES - 2; b++)
         {
             items[b].search(search, id, findEmpty, findHealthy);
         }
@@ -319,7 +319,7 @@ public class PlayerInventory : PlayerCaller
 
     public InventorySearch has(ushort id)
     {
-        for (byte b = 0; b < PAGES - 1; b = (byte)(b + 1))
+        for (byte b = 0; b < PAGES - 1; b++)
         {
             InventorySearch inventorySearch = items[b].has(id);
             if (inventorySearch != null)
@@ -463,7 +463,7 @@ public class PlayerInventory : PlayerCaller
                 return true;
             }
         }
-        for (byte b = SLOTS; b < PAGES - 2; b = (byte)(b + 1))
+        for (byte b = SLOTS; b < PAGES - 2; b++)
         {
             if (items[b].tryAddItem(item))
             {
@@ -687,7 +687,7 @@ public class PlayerInventory : PlayerCaller
             removeItem(page_0, index);
             if (page_0 == page_1 && b > index)
             {
-                b = (byte)(b - 1);
+                b--;
             }
             removeItem(page_1, b);
             if (page_0 < SLOTS)
@@ -874,7 +874,7 @@ public class PlayerInventory : PlayerCaller
         reader.ReadUInt8(out var value2);
         items[STORAGE].resize(value, value2);
         reader.ReadUInt8(out var value3);
-        for (byte b = 0; b < value3; b = (byte)(b + 1))
+        for (byte b = 0; b < value3; b++)
         {
             reader.ReadUInt8(out var value4);
             reader.ReadUInt8(out var value5);
@@ -904,13 +904,13 @@ public class PlayerInventory : PlayerCaller
     {
         Player.isLoadingInventory = false;
         NetPakReader reader = context.reader;
-        for (byte b = 0; b < PAGES - 2; b = (byte)(b + 1))
+        for (byte b = 0; b < PAGES - 2; b++)
         {
             reader.ReadUInt8(out var value);
             reader.ReadUInt8(out var value2);
             items[b].resize(value, value2);
             reader.ReadUInt8(out var value3);
-            for (byte b2 = 0; b2 < value3; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < value3; b2++)
             {
                 reader.ReadUInt8(out var value4);
                 reader.ReadUInt8(out var value5);
@@ -936,10 +936,10 @@ public class PlayerInventory : PlayerCaller
         if (base.channel.IsLocalPlayer)
         {
             Player.isLoadingInventory = false;
-            for (byte b = 0; b < PAGES - 2; b = (byte)(b + 1))
+            for (byte b = 0; b < PAGES - 2; b++)
             {
                 onInventoryResized?.Invoke(b, items[b].width, items[b].height);
-                for (byte b2 = 0; b2 < items[b].getItemCount(); b2 = (byte)(b2 + 1))
+                for (byte b2 = 0; b2 < items[b].getItemCount(); b2++)
                 {
                     ItemJar item = items[b].getItem(b2);
                     onItemAdded(b, b2, item);
@@ -950,12 +950,12 @@ public class PlayerInventory : PlayerCaller
         {
             SendInventory.Invoke(GetNetId(), ENetReliability.Reliable, client.transportConnection, delegate(NetPakWriter writer)
             {
-                for (byte b3 = 0; b3 < PAGES - 2; b3 = (byte)(b3 + 1))
+                for (byte b3 = 0; b3 < PAGES - 2; b3++)
                 {
                     writer.WriteUInt8(items[b3].width);
                     writer.WriteUInt8(items[b3].height);
                     writer.WriteUInt8(items[b3].getItemCount());
-                    for (byte b4 = 0; b4 < items[b3].getItemCount(); b4 = (byte)(b4 + 1))
+                    for (byte b4 = 0; b4 < items[b3].getItemCount(); b4++)
                     {
                         ItemJar item2 = items[b3].getItem(b4);
                         writer.WriteUInt8(item2.x);
@@ -982,7 +982,7 @@ public class PlayerInventory : PlayerCaller
             {
                 onInventoryStored?.Invoke();
             }
-            for (byte b = 0; b < items[STORAGE].getItemCount(); b = (byte)(b + 1))
+            for (byte b = 0; b < items[STORAGE].getItemCount(); b++)
             {
                 ItemJar item = items[STORAGE].getItem(b);
                 onItemAdded(STORAGE, b, item);
@@ -995,7 +995,7 @@ public class PlayerInventory : PlayerCaller
             writer.WriteUInt8(items[STORAGE].width);
             writer.WriteUInt8(items[STORAGE].height);
             writer.WriteUInt8(items[STORAGE].getItemCount());
-            for (byte b2 = 0; b2 < items[STORAGE].getItemCount(); b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < items[STORAGE].getItemCount(); b2++)
             {
                 ItemJar item2 = items[STORAGE].getItem(b2);
                 writer.WriteUInt8(item2.x);
@@ -1128,7 +1128,7 @@ public class PlayerInventory : PlayerCaller
         }
         foreach (ArenaLoadout spawn_Loadout in Level.info.configData.Spawn_Loadouts)
         {
-            for (ushort num = 0; num < spawn_Loadout.Amount; num = (ushort)(num + 1))
+            for (ushort num = 0; num < spawn_Loadout.Amount; num++)
             {
                 ushort num2 = SpawnTableTool.ResolveLegacyId(spawn_Loadout.Table_ID, EAssetType.ITEM, OnGetSpawnLoadoutErrorContext);
                 if (num2 != 0)
@@ -1308,7 +1308,7 @@ public class PlayerInventory : PlayerCaller
         {
             if (isDead)
             {
-                for (byte b = SLOTS; b < PAGES - 2; b = (byte)(b + 1))
+                for (byte b = SLOTS; b < PAGES - 2; b++)
                 {
                     items[b].resize(0, 0);
                 }
@@ -1326,7 +1326,7 @@ public class PlayerInventory : PlayerCaller
                 return;
             }
             float num = (base.player.life.wasPvPDeath ? Provider.modeConfigData.Players.Lose_Items_PvP : Provider.modeConfigData.Players.Lose_Items_PvE);
-            for (byte b2 = SLOTS; b2 < PAGES - 2; b2 = (byte)(b2 + 1))
+            for (byte b2 = SLOTS; b2 < PAGES - 2; b2++)
             {
                 if (items[b2].getItemCount() > 0)
                 {
@@ -1430,7 +1430,7 @@ public class PlayerInventory : PlayerCaller
     internal void InitializePlayer()
     {
         items = new Items[PAGES];
-        for (byte b = 0; b < PAGES - 1; b = (byte)(b + 1))
+        for (byte b = 0; b < PAGES - 1; b++)
         {
             items[b] = new Items(b);
             Items obj = items[b];
@@ -1459,7 +1459,7 @@ public class PlayerInventory : PlayerCaller
             clothing3.onBackpackUpdated = (BackpackUpdated)Delegate.Combine(clothing3.onBackpackUpdated, new BackpackUpdated(onBackpackUpdated));
             PlayerClothing clothing4 = base.player.clothing;
             clothing4.onVestUpdated = (VestUpdated)Delegate.Combine(clothing4.onVestUpdated, new VestUpdated(onVestUpdated));
-            for (byte b2 = 0; b2 < PAGES - 1; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < PAGES - 1; b2++)
             {
                 items[b2].onItemDiscarded = onItemDiscarded;
             }
@@ -1476,11 +1476,11 @@ public class PlayerInventory : PlayerCaller
             byte b = block.readByte();
             if (b > 3)
             {
-                for (byte b2 = 0; b2 < PAGES - 2; b2 = (byte)(b2 + 1))
+                for (byte b2 = 0; b2 < PAGES - 2; b2++)
                 {
                     items[b2].loadSize(block.readByte(), block.readByte());
                     byte b3 = block.readByte();
-                    for (byte b4 = 0; b4 < b3; b4 = (byte)(b4 + 1))
+                    for (byte b4 = 0; b4 < b3; b4++)
                     {
                         byte x = block.readByte();
                         byte y = block.readByte();
@@ -1545,7 +1545,7 @@ public class PlayerInventory : PlayerCaller
         }
         Block block = new Block();
         block.writeByte(SAVEDATA_VERSION);
-        for (byte b = 0; b < PAGES - 2; b = (byte)(b + 1))
+        for (byte b = 0; b < PAGES - 2; b++)
         {
             bool flag3 = base.player.life.isDead && ((b >= SLOTS) ? flag2 : flag);
             byte value;
@@ -1566,7 +1566,7 @@ public class PlayerInventory : PlayerCaller
             block.writeByte(value);
             block.writeByte(value2);
             block.writeByte(b2);
-            for (byte b3 = 0; b3 < b2; b3 = (byte)(b3 + 1))
+            for (byte b3 = 0; b3 < b2; b3++)
             {
                 ItemJar item = items[b].getItem(b3);
                 block.writeByte(item?.x ?? 0);

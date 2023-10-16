@@ -4,17 +4,17 @@ namespace SDG.Unturned;
 
 public interface ISleekLabel : ISleekElement
 {
-    string text { get; set; }
+    string Text { get; set; }
 
-    FontStyle fontStyle { get; set; }
+    FontStyle FontStyle { get; set; }
 
-    TextAnchor fontAlignment { get; set; }
+    TextAnchor TextAlignment { get; set; }
 
-    ESleekFontSize fontSize { get; set; }
+    ESleekFontSize FontSize { get; set; }
 
-    ETextContrastContext shadowStyle { get; set; }
+    ETextContrastContext TextContrastContext { get; set; }
 
-    SleekColor textColor { get; set; }
+    SleekColor TextColor { get; set; }
 
-    bool enableRichText { get; set; }
+    bool AllowRichText { get; set; }
 }

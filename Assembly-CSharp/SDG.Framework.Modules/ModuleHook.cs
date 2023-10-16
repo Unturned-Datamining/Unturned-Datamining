@@ -166,18 +166,16 @@ public class ModuleHook : MonoBehaviour
                     if (assembly != null)
                     {
                         nameToAssembly.Add(key.Name, assembly);
-                        return assembly;
                     }
-                    return assembly;
+                    break;
                 }
             }
-            return assembly;
         }
         catch (Exception e)
         {
             UnturnedLog.exception(e, $"Caught exception loading assembly for \"{loadAssemblyName}\" from discovered paths:");
-            return assembly;
         }
+        return assembly;
     }
 
     public static Assembly resolveAssemblyPath(string path)

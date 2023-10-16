@@ -364,18 +364,18 @@ public class ZombieClothing
             return;
         }
         clothes = new Material[LevelZombies.tables.Count][,];
-        for (byte b = 0; b < LevelZombies.tables.Count; b = (byte)(b + 1))
+        for (byte b = 0; b < LevelZombies.tables.Count; b++)
         {
             ZombieTable zombieTable = LevelZombies.tables[b];
             clothes[b] = new Material[zombieTable.slots[0].table.Count + 1, zombieTable.slots[1].table.Count + 1];
-            for (byte b2 = 0; b2 < zombieTable.slots[0].table.Count + 1; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < zombieTable.slots[0].table.Count + 1; b2++)
             {
                 ushort shirt = 0;
                 if (b2 < zombieTable.slots[0].table.Count)
                 {
                     shirt = zombieTable.slots[0].table[b2].item;
                 }
-                for (byte b3 = 0; b3 < zombieTable.slots[1].table.Count + 1; b3 = (byte)(b3 + 1))
+                for (byte b3 = 0; b3 < zombieTable.slots[1].table.Count + 1; b3++)
                 {
                     ushort pants = 0;
                     if (b3 < zombieTable.slots[1].table.Count)

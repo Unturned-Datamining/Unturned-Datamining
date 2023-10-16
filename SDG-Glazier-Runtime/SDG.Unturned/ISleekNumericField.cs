@@ -2,7 +2,7 @@ namespace SDG.Unturned;
 
 public interface ISleekNumericField : ISleekWithTooltip
 {
-    SleekColor backgroundColor { get; set; }
+    SleekColor BackgroundColor { get; set; }
 
-    SleekColor textColor { get; set; }
+    SleekColor TextColor { get; set; }
 }

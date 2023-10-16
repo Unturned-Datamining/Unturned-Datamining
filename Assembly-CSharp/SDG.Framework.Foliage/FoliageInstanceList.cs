@@ -93,7 +93,8 @@ public class FoliageInstanceList : IPoolable
                 Vector3 position = matrix.GetPosition();
                 Quaternion rotation = matrix.GetRotation();
                 Vector3 randomScale = foliageInstancedMeshInfoAsset.randomScale;
-                matrix = (list[num] = Matrix4x4.TRS(position, rotation, randomScale));
+                matrix = Matrix4x4.TRS(position, rotation, randomScale);
+                list[num] = matrix;
             }
         }
     }

@@ -44,7 +44,7 @@ public class VendorAsset : Asset
             faceOverride = null;
         }
         buying = new VendorBuying[data.ParseUInt8("Buying", 0)];
-        for (byte b = 0; b < buying.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < buying.Length; b++)
         {
             ushort newID = data.ParseUInt16("Buying_" + b + "_ID", 0);
             uint newCost = data.ParseUInt32("Buying_" + b + "_Cost");
@@ -55,7 +55,7 @@ public class VendorAsset : Asset
             buying[b] = new VendorBuying(this, b, newID, newCost, array, newRewardsList);
         }
         selling = new VendorSellingBase[data.ParseUInt8("Selling", 0)];
-        for (byte b2 = 0; b2 < selling.Length; b2 = (byte)(b2 + 1))
+        for (byte b2 = 0; b2 < selling.Length; b2++)
         {
             string text = null;
             if (data.ContainsKey("Selling_" + b2 + "_Type"))

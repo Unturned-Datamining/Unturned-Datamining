@@ -247,19 +247,19 @@ public class LevelNodes
                 bool flag = false;
                 bool flag2 = false;
                 ushort num = river.readByte();
-                for (ushort num2 = 0; num2 < num; num2 = (ushort)(num2 + 1))
+                for (ushort num2 = 0; num2 < num; num2++)
                 {
                     Vector3 vector = river.readSingleVector3();
-                    switch (river.readByte())
+                    switch ((ENodeType)river.readByte())
                     {
-                    case 0:
+                    case ENodeType.LOCATION:
                     {
                         flag2 = true;
                         string newName = river.readString();
                         _nodes.Add(new LocationNode(vector, newName));
                         break;
                     }
-                    case 1:
+                    case ENodeType.SAFEZONE:
                     {
                         flag = true;
                         float newRadius2 = river.readSingle();
@@ -281,7 +281,7 @@ public class LevelNodes
                         _nodes.Add(new SafezoneNode(vector, newRadius2, newHeight, newNoWeapons, newNoBuildables));
                         break;
                     }
-                    case 2:
+                    case ENodeType.PURCHASE:
                     {
                         flag = true;
                         float newRadius4 = river.readSingle();
@@ -290,7 +290,7 @@ public class LevelNodes
                         _nodes.Add(new PurchaseNode(vector, newRadius4, newID2, newCost));
                         break;
                     }
-                    case 3:
+                    case ENodeType.ARENA:
                     {
                         flag = true;
                         float num4 = river.readSingle();
@@ -301,7 +301,7 @@ public class LevelNodes
                         _nodes.Add(new ArenaNode(vector, num4));
                         break;
                     }
-                    case 4:
+                    case ENodeType.DEADZONE:
                     {
                         flag = true;
                         float newRadius3 = river.readSingle();
@@ -313,7 +313,7 @@ public class LevelNodes
                         _nodes.Add(new DeadzoneNode(vector, newRadius3, newDeadzoneType));
                         break;
                     }
-                    case 5:
+                    case ENodeType.AIRDROP:
                     {
                         flag2 = true;
                         ushort num3 = river.readUInt16();
@@ -324,7 +324,7 @@ public class LevelNodes
                         _nodes.Add(new AirdropNode(vector, num3));
                         break;
                     }
-                    case 6:
+                    case ENodeType.EFFECT:
                     {
                         flag = true;
                         byte newShape = 0;
@@ -367,15 +367,15 @@ public class LevelNodes
         River river = new River(Level.info.path + "/Environment/Nodes.dat", usePath: false);
         river.writeByte(9);
         byte b = 0;
-        for (ushort num = 0; num < _nodes.Count; num = (ushort)(num + 1))
+        for (ushort num = 0; num < _nodes.Count; num++)
         {
             if (_nodes[num].type != 0 || ((LocationNode)_nodes[num]).name.Length > 0)
             {
-                b = (byte)(b + 1);
+                b++;
             }
         }
         river.writeByte(b);
-        for (byte b2 = 0; b2 < _nodes.Count; b2 = (byte)(b2 + 1))
+        for (byte b2 = 0; b2 < _nodes.Count; b2++)
         {
             if (_nodes[b2].type != 0 || ((LocationNode)_nodes[b2]).name.Length > 0)
             {

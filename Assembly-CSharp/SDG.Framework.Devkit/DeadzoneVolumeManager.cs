@@ -15,7 +15,7 @@ public class DeadzoneVolumeManager : VolumeManager<DeadzoneVolume, DeadzoneVolum
                 deadzoneVolume = allVolume;
                 if (deadzoneVolume.DeadzoneType == EDeadzoneType.FullSuitRadiation)
                 {
-                    return deadzoneVolume;
+                    break;
                 }
             }
         }

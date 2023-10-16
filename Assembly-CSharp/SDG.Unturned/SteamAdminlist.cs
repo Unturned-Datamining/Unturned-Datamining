@@ -103,7 +103,7 @@ public class SteamAdminlist
         if (river.readByte() > 1)
         {
             ushort num = river.readUInt16();
-            for (ushort num2 = 0; num2 < num; num2 = (ushort)(num2 + 1))
+            for (ushort num2 = 0; num2 < num; num2++)
             {
                 CSteamID newPlayerID = river.readSteamID();
                 CSteamID newJudgeID = river.readSteamID();
@@ -119,7 +119,7 @@ public class SteamAdminlist
         River river = ServerSavedata.openRiver("/Server/Adminlist.dat", isReading: false);
         river.writeByte(SAVEDATA_VERSION);
         river.writeUInt16((ushort)list.Count);
-        for (ushort num = 0; num < list.Count; num = (ushort)(num + 1))
+        for (ushort num = 0; num < list.Count; num++)
         {
             SteamAdminID steamAdminID = list[num];
             river.writeSteamID(steamAdminID.playerID);

@@ -387,7 +387,7 @@ public class Level : MonoBehaviour
             return false;
         }
         Vector3 vector = new Vector3(Mathf.Abs(point.x), point.y, Mathf.Abs(point.z));
-        if (vector.x > (float)((int)size / 2 - border) || vector.z > (float)((int)size / 2 - border))
+        if (vector.x > (float)(size / 2 - border) || vector.z > (float)(size / 2 - border))
         {
             return false;
         }
@@ -969,9 +969,9 @@ public class Level : MonoBehaviour
     private static PreCaptureObjectState GetObjectState()
     {
         PreCaptureObjectState preCaptureObjectState = new PreCaptureObjectState();
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 foreach (LevelObject item in LevelObjects.objects[b, b2])
                 {
@@ -1005,9 +1005,9 @@ public class Level : MonoBehaviour
 
     private static void RestorePreCaptureState(PreCaptureObjectState state)
     {
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 foreach (LevelObject item in LevelObjects.objects[b, b2])
                 {
@@ -1055,7 +1055,7 @@ public class Level : MonoBehaviour
             num2 = size;
             satelliteCaptureTransform.position = new Vector3(0f, 1028f, 0f);
             satelliteCaptureTransform.rotation = Quaternion.Euler(90f, 0f, 0f);
-            satelliteCaptureCamera.orthographicSize = (int)size / 2 - border;
+            satelliteCaptureCamera.orthographicSize = size / 2 - border;
             satelliteCaptureCamera.aspect = 1f;
         }
         RenderTexture temporary = RenderTexture.GetTemporary(num * 2, num2 * 2, 32);
@@ -1552,7 +1552,7 @@ public class Level : MonoBehaviour
                 obj2.name = "Cap";
                 obj2.parent = clips;
                 Transform transform = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load(isEditor ? "Level/Wall" : "Level/Clip"))).transform;
-                transform.position = new Vector3((int)size / 2 - border, HEIGHT / 8f, 0f);
+                transform.position = new Vector3(size / 2 - border, HEIGHT / 8f, 0f);
                 transform.localScale = new Vector3(size - border * 2, HEIGHT / 4f, 1f);
                 transform.rotation = Quaternion.Euler(0f, -90f, 0f);
                 transform.name = "Clip";
@@ -1572,7 +1572,7 @@ public class Level : MonoBehaviour
                     transform.GetComponent<Renderer>().material.mainTextureScale = new Vector2((float)(size - border * 2) / 32f, 4f);
                 }
                 transform = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load(isEditor ? "Level/Wall" : "Level/Clip"))).transform;
-                transform.position = new Vector3(0f, HEIGHT / 8f, (int)size / 2 - border);
+                transform.position = new Vector3(0f, HEIGHT / 8f, size / 2 - border);
                 transform.localScale = new Vector3(size - border * 2, HEIGHT / 4f, 1f);
                 transform.rotation = Quaternion.Euler(0f, 180f, 0f);
                 transform.name = "Clip";

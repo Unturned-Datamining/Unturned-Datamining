@@ -1695,15 +1695,15 @@ public class PlayerLife : PlayerCaller
                     byte b = 8;
                     if (base.player.clothing.shirtAsset != null || base.player.clothing.vestAsset != null)
                     {
-                        b = (byte)(b - 2);
+                        b -= 2;
                     }
                     if (base.player.clothing.pantsAsset != null)
                     {
-                        b = (byte)(b - 2);
+                        b -= 2;
                     }
                     if (base.player.clothing.hatAsset != null)
                     {
-                        b = (byte)(b - 2);
+                        b -= 2;
                     }
                     askDamage(b, Vector3.up, EDeathCause.FREEZING, ELimb.SPINE, Provider.server, out var _);
                 }
@@ -1721,15 +1721,15 @@ public class PlayerLife : PlayerCaller
                     byte b2 = 1;
                     if (base.player.clothing.shirtAsset != null || base.player.clothing.vestAsset != null)
                     {
-                        b2 = (byte)(b2 + 1);
+                        b2++;
                     }
                     if (base.player.clothing.pantsAsset != null)
                     {
-                        b2 = (byte)(b2 + 1);
+                        b2++;
                     }
                     if (base.player.clothing.hatAsset != null)
                     {
-                        b2 = (byte)(b2 + 1);
+                        b2++;
                     }
                     if (!wasCovered || simulation - lastCovered > 50 * b2)
                     {
@@ -1740,15 +1740,15 @@ public class PlayerLife : PlayerCaller
                             byte b3 = 4;
                             if (base.player.clothing.shirtAsset != null || base.player.clothing.vestAsset != null)
                             {
-                                b3 = (byte)(b3 - 1);
+                                b3--;
                             }
                             if (base.player.clothing.pantsAsset != null)
                             {
-                                b3 = (byte)(b3 - 1);
+                                b3--;
                             }
                             if (base.player.clothing.hatAsset != null)
                             {
-                                b3 = (byte)(b3 - 1);
+                                b3--;
                             }
                             askDamage(b3, Vector3.up, EDeathCause.FREEZING, ELimb.SPINE, Provider.server, out var _);
                         }

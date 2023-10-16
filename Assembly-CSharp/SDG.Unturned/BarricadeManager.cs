@@ -985,9 +985,9 @@ public class BarricadeManager : SteamCaller
     {
         point = Vector3.zero;
         angle = 0;
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 if (tryGetBedInRegion(regions[b, b2], owner, ref point, ref angle))
                 {
@@ -995,7 +995,7 @@ public class BarricadeManager : SteamCaller
                 }
             }
         }
-        for (ushort num = 0; num < vehicleRegions.Count; num = (ushort)(num + 1))
+        for (ushort num = 0; num < vehicleRegions.Count; num++)
         {
             if (tryGetBedInRegion(vehicleRegions[num], owner, ref point, ref angle))
             {
@@ -1007,7 +1007,7 @@ public class BarricadeManager : SteamCaller
 
     private static bool UnclaimBedsInRegion(CSteamID owner, BarricadeRegion region, byte x, byte y, ushort plant)
     {
-        for (ushort num = 0; num < region.drops.Count; num = (ushort)(num + 1))
+        for (ushort num = 0; num < region.drops.Count; num++)
         {
             BarricadeDrop barricadeDrop = region.drops[num];
             if (barricadeDrop.serversideData.barricade.state.Length != 0)
@@ -1026,9 +1026,9 @@ public class BarricadeManager : SteamCaller
 
     public static void unclaimBeds(CSteamID owner)
     {
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 BarricadeRegion region = regions[b, b2];
                 if (UnclaimBedsInRegion(owner, region, b, b2, ushort.MaxValue))
@@ -1037,7 +1037,7 @@ public class BarricadeManager : SteamCaller
                 }
             }
         }
-        for (ushort num = 0; num < vehicleRegions.Count; num = (ushort)(num + 1))
+        for (ushort num = 0; num < vehicleRegions.Count; num++)
         {
             BarricadeRegion region2 = vehicleRegions[num];
             if (UnclaimBedsInRegion(owner, region2, byte.MaxValue, byte.MaxValue, num))
@@ -1388,9 +1388,9 @@ public class BarricadeManager : SteamCaller
         {
             return;
         }
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 askClearRegionBarricades(b, b2);
             }
@@ -1701,7 +1701,6 @@ public class BarricadeManager : SteamCaller
             barricadeDrop.AssignNetId(netId);
             transform.GetOrAddComponent<BarricadeRefComponent>().tempNotSureIfBarricadeShouldBeAComponentYet = barricadeDrop;
             region.drops.Add(barricadeDrop);
-            return transform;
         }
         catch (Exception e)
         {
@@ -1710,10 +1709,10 @@ public class BarricadeManager : SteamCaller
             if (transform != null)
             {
                 UnityEngine.Object.Destroy(transform.gameObject);
-                return null;
+                transform = null;
             }
-            return transform;
         }
+        return transform;
     }
 
     [Obsolete]
@@ -1816,7 +1815,7 @@ public class BarricadeManager : SteamCaller
         {
             reader.ReadFloat(out var value6);
             instantiationsToInsert.Clear();
-            for (ushort num = 0; num < value5; num = (ushort)(num + 1))
+            for (ushort num = 0; num < value5; num++)
             {
                 BarricadeInstantiationParameters item = default(BarricadeInstantiationParameters);
                 item.region = region;
@@ -1968,7 +1967,7 @@ public class BarricadeManager : SteamCaller
 
     public static void uprootPlant(Transform parent)
     {
-        for (ushort num = 0; num < vehicleRegions.Count; num = (ushort)(num + 1))
+        for (ushort num = 0; num < vehicleRegions.Count; num++)
         {
             VehicleBarricadeRegion vehicleBarricadeRegion = vehicleRegions[num];
             if (vehicleBarricadeRegion.parent == parent)
@@ -1986,7 +1985,7 @@ public class BarricadeManager : SteamCaller
 
     public static void trimPlant(Transform parent)
     {
-        for (ushort num = 0; num < vehicleRegions.Count; num = (ushort)(num + 1))
+        for (ushort num = 0; num < vehicleRegions.Count; num++)
         {
             BarricadeRegion barricadeRegion = vehicleRegions[num];
             if (barricadeRegion.parent == parent)
@@ -2244,14 +2243,14 @@ public class BarricadeManager : SteamCaller
 
     private static void updateActivity(CSteamID owner, CSteamID group)
     {
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 updateActivity(regions[b, b2], owner, group);
             }
         }
-        for (ushort num = 0; num < vehicleRegions.Count; num = (ushort)(num + 1))
+        for (ushort num = 0; num < vehicleRegions.Count; num++)
         {
             updateActivity(vehicleRegions[num], owner, group);
         }
@@ -2271,9 +2270,9 @@ public class BarricadeManager : SteamCaller
             return;
         }
         regions = new BarricadeRegion[Regions.WORLD_SIZE, Regions.WORLD_SIZE];
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 regions[b, b2] = new BarricadeRegion(null);
             }
@@ -2292,9 +2291,9 @@ public class BarricadeManager : SteamCaller
     {
         if (step == 0)
         {
-            for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+            for (byte b = 0; b < Regions.WORLD_SIZE; b++)
             {
-                for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+                for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
                 {
                     if (Provider.isServer)
                     {
@@ -2408,9 +2407,9 @@ public class BarricadeManager : SteamCaller
             }
             if (version > 0)
             {
-                for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+                for (byte b = 0; b < Regions.WORLD_SIZE; b++)
                 {
-                    for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+                    for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
                     {
                         BarricadeRegion region = regions[b, b2];
                         loadRegion(version, river, region);
@@ -2421,7 +2420,7 @@ public class BarricadeManager : SteamCaller
                     if (version > 13)
                     {
                         ushort num = river.readUInt16();
-                        for (ushort num2 = 0; num2 < num; num2 = (ushort)(num2 + 1))
+                        for (ushort num2 = 0; num2 < num; num2++)
                         {
                             uint num3 = river.readUInt32();
                             int num4 = ((version >= 16) ? river.readByte() : 0);
@@ -2458,9 +2457,9 @@ public class BarricadeManager : SteamCaller
         if (flag && LevelObjects.buildables != null)
         {
             int num5 = 0;
-            for (byte b3 = 0; b3 < Regions.WORLD_SIZE; b3 = (byte)(b3 + 1))
+            for (byte b3 = 0; b3 < Regions.WORLD_SIZE; b3++)
             {
-                for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4 = (byte)(b4 + 1))
+                for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4++)
                 {
                     List<LevelBuildableObject> list = LevelObjects.buildables[b3, b4];
                     if (list != null && list.Count != 0)
@@ -2504,9 +2503,9 @@ public class BarricadeManager : SteamCaller
         river.writeByte(18);
         river.writeUInt32(Provider.time);
         river.writeUInt32(instanceCount);
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 BarricadeRegion region = regions[b, b2];
                 saveRegion(river, region);
@@ -2518,7 +2517,7 @@ public class BarricadeManager : SteamCaller
             InteractableVehicle vehicle = vehicleRegion.vehicle;
             if (vehicle != null && !vehicle.isAutoClearable)
             {
-                num = (ushort)(num + 1);
+                num++;
             }
         }
         river.writeUInt16(num);
@@ -2544,7 +2543,7 @@ public class BarricadeManager : SteamCaller
     private static void loadRegion(byte version, River river, BarricadeRegion region)
     {
         ushort num = river.readUInt16();
-        for (ushort num2 = 0; num2 < num; num2 = (ushort)(num2 + 1))
+        for (ushort num2 = 0; num2 < num; num2++)
         {
             ItemBarricadeAsset itemBarricadeAsset;
             if (version < 17)
@@ -2582,7 +2581,7 @@ public class BarricadeManager : SteamCaller
             if (version > 5)
             {
                 newObjActiveDate = river.readUInt32();
-                if (Provider.time - serverActiveDate > Provider.modeConfigData.Barricades.Decay_Time / 2u)
+                if (Provider.time - serverActiveDate > Provider.modeConfigData.Barricades.Decay_Time / 2)
                 {
                     newObjActiveDate = Provider.time;
                 }
@@ -2635,7 +2634,7 @@ public class BarricadeManager : SteamCaller
             BarricadeData serversideData = drop.serversideData;
             if ((!Dedicator.IsDedicatedServer || Provider.modeConfigData.Barricades.Decay_Time == 0 || time < serversideData.objActiveDate || time - serversideData.objActiveDate < Provider.modeConfigData.Barricades.Decay_Time) && serversideData.barricade.asset.isSaveable)
             {
-                num = (ushort)(num + 1);
+                num++;
             }
         }
         river.writeUInt16(num);

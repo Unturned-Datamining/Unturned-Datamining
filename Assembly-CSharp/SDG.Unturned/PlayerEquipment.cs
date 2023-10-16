@@ -360,7 +360,7 @@ public class PlayerEquipment : PlayerCaller
             button = page;
             return true;
         }
-        for (byte b = 0; b < hotkeys.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < hotkeys.Length; b++)
         {
             HotkeyInfo hotkeyInfo = hotkeys[b];
             if (hotkeyInfo.page == page && hotkeyInfo.x == jar.x && hotkeyInfo.y == jar.y && hotkeyInfo.id == jar.item.id)
@@ -629,7 +629,7 @@ public class PlayerEquipment : PlayerCaller
         }
         if (thirdSlots != null)
         {
-            for (byte b = 0; b < thirdSlots.Length; b = (byte)(b + 1))
+            for (byte b = 0; b < thirdSlots.Length; b++)
             {
                 if (thirdSlots[b] != null && thirdSkinneds[b] != base.player.clothing.isSkinned)
                 {
@@ -690,7 +690,7 @@ public class PlayerEquipment : PlayerCaller
         {
             return;
         }
-        for (byte b = 0; b < thirdSlots.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < thirdSlots.Length; b++)
         {
             if (thirdMythics[b] != null)
             {
@@ -1420,7 +1420,7 @@ public class PlayerEquipment : PlayerCaller
 
     internal void SendInitialPlayerState(SteamPlayer client)
     {
-        for (byte b = 0; b < PlayerInventory.SLOTS; b = (byte)(b + 1))
+        for (byte b = 0; b < PlayerInventory.SLOTS; b++)
         {
             ItemJar item = base.player.inventory.getItem(b, 0);
             if (item != null)
@@ -1456,7 +1456,7 @@ public class PlayerEquipment : PlayerCaller
 
     internal void SendInitialPlayerState(List<ITransportConnection> transportConnections)
     {
-        for (byte b = 0; b < PlayerInventory.SLOTS; b = (byte)(b + 1))
+        for (byte b = 0; b < PlayerInventory.SLOTS; b++)
         {
             ItemJar item = base.player.inventory.getItem(b, 0);
             if (item != null)
@@ -1958,14 +1958,13 @@ public class PlayerEquipment : PlayerCaller
         try
         {
             result = useable.startPrimary();
-            return result;
         }
         catch (Exception e)
         {
             UnturnedLog.warn("{0} raised an exception during simulate.startPrimary:", asset);
             UnturnedLog.exception(e);
-            return result;
         }
+        return result;
     }
 
     private void StopUsablePrimary()
@@ -1987,14 +1986,13 @@ public class PlayerEquipment : PlayerCaller
         try
         {
             result = useable.startSecondary();
-            return result;
         }
         catch (Exception e)
         {
             UnturnedLog.warn("{0} raised an exception during useable.startSecondary:", asset);
             UnturnedLog.exception(e);
-            return result;
         }
+        return result;
     }
 
     private void StopUsableSecondary()
@@ -2218,7 +2216,7 @@ public class PlayerEquipment : PlayerCaller
         }
         if (base.player.life.wasPvPDeath ? Provider.modeConfigData.Players.Lose_Weapons_PvP : Provider.modeConfigData.Players.Lose_Weapons_PvE)
         {
-            for (byte b = 0; b < PlayerInventory.SLOTS; b = (byte)(b + 1))
+            for (byte b = 0; b < PlayerInventory.SLOTS; b++)
             {
                 updateSlot(b, 0, new byte[0]);
             }
@@ -2391,7 +2389,7 @@ public class PlayerEquipment : PlayerCaller
                     dequip();
                 }
             }
-            for (byte b = 0; b < 10; b = (byte)(b + 1))
+            for (byte b = 0; b < 10; b++)
             {
                 if (InputEx.GetKeyDown(ControlsSettings.getEquipmentHotbarKeyCode(b)))
                 {
@@ -2505,7 +2503,7 @@ public class PlayerEquipment : PlayerCaller
         if (base.channel.IsLocalPlayer)
         {
             _hotkeys = new HotkeyInfo[8];
-            for (byte b = 0; b < hotkeys.Length; b = (byte)(b + 1))
+            for (byte b = 0; b < hotkeys.Length; b++)
             {
                 hotkeys[b] = new HotkeyInfo();
             }
@@ -2581,7 +2579,7 @@ public class PlayerEquipment : PlayerCaller
         {
             Block block = ReadWrite.readBlock(itemHotkeysFilePath, useCloud: false, 0);
             block.readByte();
-            for (byte b = 0; b < hotkeys.Length; b = (byte)(b + 1))
+            for (byte b = 0; b < hotkeys.Length; b++)
             {
                 HotkeyInfo obj = hotkeys[b];
                 obj.id = block.readUInt16();
@@ -2605,7 +2603,7 @@ public class PlayerEquipment : PlayerCaller
             return;
         }
         bool flag = false;
-        for (byte b = 0; b < hotkeys.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < hotkeys.Length; b++)
         {
             HotkeyInfo hotkeyInfo = hotkeys[b];
             if (hotkeyInfo.id != 0 || (hotkeyInfo.page != byte.MaxValue && hotkeyInfo.x != byte.MaxValue && hotkeyInfo.y != byte.MaxValue))
@@ -2630,7 +2628,7 @@ public class PlayerEquipment : PlayerCaller
         }
         Block block = new Block();
         block.writeByte(SAVEDATA_VERSION);
-        for (byte b2 = 0; b2 < hotkeys.Length; b2 = (byte)(b2 + 1))
+        for (byte b2 = 0; b2 < hotkeys.Length; b2++)
         {
             HotkeyInfo hotkeyInfo2 = hotkeys[b2];
             block.writeUInt16(hotkeyInfo2.id);

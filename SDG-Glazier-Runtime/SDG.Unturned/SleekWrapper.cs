@@ -7,145 +7,229 @@ public class SleekWrapper : ISleekElement
 {
     private ISleekElement implementation;
 
-    public bool isVisible
+    public bool IsVisible
     {
         get
         {
-            return implementation.isVisible;
+            return implementation.IsVisible;
         }
         set
         {
-            implementation.isVisible = value;
+            implementation.IsVisible = value;
         }
     }
 
-    public ISleekElement parent => implementation.parent;
+    public ISleekElement Parent => implementation.Parent;
 
-    public ISleekLabel sideLabel => implementation.sideLabel;
+    public ISleekLabel SideLabel => implementation.SideLabel;
 
-    public int positionOffset_X
+    public float PositionOffset_X
     {
         get
         {
-            return implementation.positionOffset_X;
+            return implementation.PositionOffset_X;
         }
         set
         {
-            implementation.positionOffset_X = value;
+            implementation.PositionOffset_X = value;
         }
     }
 
-    public int positionOffset_Y
+    public float PositionOffset_Y
     {
         get
         {
-            return implementation.positionOffset_Y;
+            return implementation.PositionOffset_Y;
         }
         set
         {
-            implementation.positionOffset_Y = value;
+            implementation.PositionOffset_Y = value;
         }
     }
 
-    public float positionScale_X
+    public float PositionScale_X
     {
         get
         {
-            return implementation.positionScale_X;
+            return implementation.PositionScale_X;
         }
         set
         {
-            implementation.positionScale_X = value;
+            implementation.PositionScale_X = value;
         }
     }
 
-    public float positionScale_Y
+    public float PositionScale_Y
     {
         get
         {
-            return implementation.positionScale_Y;
+            return implementation.PositionScale_Y;
         }
         set
         {
-            implementation.positionScale_Y = value;
+            implementation.PositionScale_Y = value;
         }
     }
 
-    public int sizeOffset_X
+    public float SizeOffset_X
     {
         get
         {
-            return implementation.sizeOffset_X;
+            return implementation.SizeOffset_X;
         }
         set
         {
-            implementation.sizeOffset_X = value;
+            implementation.SizeOffset_X = value;
         }
     }
 
-    public int sizeOffset_Y
+    public float SizeOffset_Y
     {
         get
         {
-            return implementation.sizeOffset_Y;
+            return implementation.SizeOffset_Y;
         }
         set
         {
-            implementation.sizeOffset_Y = value;
+            implementation.SizeOffset_Y = value;
         }
     }
 
-    public float sizeScale_X
+    public float SizeScale_X
     {
         get
         {
-            return implementation.sizeScale_X;
+            return implementation.SizeScale_X;
         }
         set
         {
-            implementation.sizeScale_X = value;
+            implementation.SizeScale_X = value;
         }
     }
 
-    public float sizeScale_Y
+    public float SizeScale_Y
     {
         get
         {
-            return implementation.sizeScale_Y;
+            return implementation.SizeScale_Y;
         }
         set
         {
-            implementation.sizeScale_Y = value;
+            implementation.SizeScale_Y = value;
         }
     }
 
-    public ISleekElement attachmentRoot => implementation;
+    public ISleekElement AttachmentRoot => implementation;
 
-    public bool isAnimatingTransform => implementation.isAnimatingTransform;
+    public bool IsAnimatingTransform => implementation.IsAnimatingTransform;
 
-    public void destroy()
+    public virtual bool UseManualLayout
     {
-        implementation.destroy();
+        get
+        {
+            return implementation.UseManualLayout;
+        }
+        set
+        {
+            implementation.UseManualLayout = value;
+        }
     }
 
-    public void lerpPositionOffset(int newPositionOffset_X, int newPositionOffset_Y, ESleekLerp lerp, float time)
+    public bool UseWidthLayoutOverride
     {
-        implementation.lerpPositionOffset(newPositionOffset_X, newPositionOffset_Y, lerp, time);
+        get
+        {
+            return implementation.UseWidthLayoutOverride;
+        }
+        set
+        {
+            implementation.UseWidthLayoutOverride = value;
+        }
     }
 
-    public void lerpPositionScale(float newPositionScale_X, float newPositionScale_Y, ESleekLerp lerp, float time)
+    public bool UseHeightLayoutOverride
     {
-        implementation.lerpPositionScale(newPositionScale_X, newPositionScale_Y, lerp, time);
+        get
+        {
+            return implementation.UseHeightLayoutOverride;
+        }
+        set
+        {
+            implementation.UseHeightLayoutOverride = value;
+        }
     }
 
-    public void lerpSizeOffset(int newSizeOffset_X, int newSizeOffset_Y, ESleekLerp lerp, float time)
+    public ESleekChildLayout UseChildAutoLayout
     {
-        implementation.lerpSizeOffset(newSizeOffset_X, newSizeOffset_Y, lerp, time);
+        get
+        {
+            return implementation.UseChildAutoLayout;
+        }
+        set
+        {
+            implementation.UseChildAutoLayout = value;
+        }
     }
 
-    public void lerpSizeScale(float newSizeScale_X, float newSizeScale_Y, ESleekLerp lerp, float time)
+    public ESleekChildPerpendicularAlignment ChildPerpendicularAlignment
     {
-        implementation.lerpSizeScale(newSizeScale_X, newSizeScale_Y, lerp, time);
+        get
+        {
+            return implementation.ChildPerpendicularAlignment;
+        }
+        set
+        {
+            implementation.ChildPerpendicularAlignment = value;
+        }
+    }
+
+    public bool ExpandChildren
+    {
+        get
+        {
+            return implementation.ExpandChildren;
+        }
+        set
+        {
+            implementation.ExpandChildren = value;
+        }
+    }
+
+    public bool IgnoreLayout
+    {
+        get
+        {
+            return implementation.IgnoreLayout;
+        }
+        set
+        {
+            implementation.IgnoreLayout = value;
+        }
+    }
+
+    public void InternalDestroy()
+    {
+        implementation.InternalDestroy();
+    }
+
+    public void AnimatePositionOffset(float newPositionOffset_X, float newPositionOffset_Y, ESleekLerp lerp, float time)
+    {
+        implementation.AnimatePositionOffset(newPositionOffset_X, newPositionOffset_Y, lerp, time);
+    }
+
+    public void AnimatePositionScale(float newPositionScale_X, float newPositionScale_Y, ESleekLerp lerp, float time)
+    {
+        implementation.AnimatePositionScale(newPositionScale_X, newPositionScale_Y, lerp, time);
+    }
+
+    public void AnimateSizeOffset(float newSizeOffset_X, float newSizeOffset_Y, ESleekLerp lerp, float time)
+    {
+        implementation.AnimateSizeOffset(newSizeOffset_X, newSizeOffset_Y, lerp, time);
+    }
+
+    public void AnimateSizeScale(float newSizeScale_X, float newSizeScale_Y, ESleekLerp lerp, float time)
+    {
+        implementation.AnimateSizeScale(newSizeScale_X, newSizeScale_Y, lerp, time);
     }
 
     public void AddChild(ISleekElement sleek)
@@ -153,19 +237,19 @@ public class SleekWrapper : ISleekElement
         implementation.AddChild(sleek);
     }
 
-    public void addLabel(string text, ESleekSide side)
+    public void AddLabel(string text, ESleekSide side)
     {
-        implementation.addLabel(text, side);
+        implementation.AddLabel(text, side);
     }
 
-    public void addLabel(string text, Color color, ESleekSide side)
+    public void AddLabel(string text, Color color, ESleekSide side)
     {
-        implementation.addLabel(text, color, side);
+        implementation.AddLabel(text, color, side);
     }
 
-    public void updateLabel(string text)
+    public void UpdateLabel(string text)
     {
-        implementation.updateLabel(text);
+        implementation.UpdateLabel(text);
     }
 
     public int FindIndexOfChild(ISleekElement sleek)
@@ -201,6 +285,16 @@ public class SleekWrapper : ISleekElement
     public Vector2 GetNormalizedCursorPosition()
     {
         return implementation.GetNormalizedCursorPosition();
+    }
+
+    public Vector2 GetAbsoluteSize()
+    {
+        return implementation.GetAbsoluteSize();
+    }
+
+    public void SetAsFirstSibling()
+    {
+        implementation.SetAsFirstSibling();
     }
 
     public virtual void OnUpdate()

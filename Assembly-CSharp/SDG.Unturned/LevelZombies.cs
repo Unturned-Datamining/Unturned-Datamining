@@ -46,9 +46,9 @@ public class LevelZombies
         {
             return;
         }
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 for (int i = 0; i < spawns[b, b2].Count; i++)
                 {
@@ -69,9 +69,9 @@ public class LevelZombies
     public static void removeTable()
     {
         tables.RemoveAt(EditorSpawns.selectedZombie);
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 List<ZombieSpawnpoint> list = new List<ZombieSpawnpoint>();
                 for (int i = 0; i < spawns[b, b2].Count; i++)
@@ -109,9 +109,9 @@ public class LevelZombies
     public static void removeSpawn(Vector3 point, float radius)
     {
         radius *= radius;
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 List<ZombieSpawnpoint> list = new List<ZombieSpawnpoint>();
                 for (int i = 0; i < spawns[b, b2].Count; i++)
@@ -145,7 +145,7 @@ public class LevelZombies
             if (b > 2)
             {
                 byte b2 = block.readByte();
-                for (byte b3 = 0; b3 < b2; b3 = (byte)(b3 + 1))
+                for (byte b3 = 0; b3 < b2; b3++)
                 {
                     Color newColor = block.readColor();
                     string newName = block.readString();
@@ -167,12 +167,12 @@ public class LevelZombies
                     }
                     ZombieSlot[] array = new ZombieSlot[4];
                     byte b4 = block.readByte();
-                    for (byte b5 = 0; b5 < b4; b5 = (byte)(b5 + 1))
+                    for (byte b5 = 0; b5 < b4; b5++)
                     {
                         List<ZombieCloth> list = new List<ZombieCloth>();
                         float newChance = block.readSingle();
                         byte b6 = block.readByte();
-                        for (byte b7 = 0; b7 < b6; b7 = (byte)(b7 + 1))
+                        for (byte b7 = 0; b7 < b6; b7++)
                         {
                             ushort num = block.readUInt16();
                             if (Assets.find(EAssetType.ITEM, num) is ItemAsset)
@@ -188,19 +188,19 @@ public class LevelZombies
             else
             {
                 byte b8 = block.readByte();
-                for (byte b9 = 0; b9 < b8; b9 = (byte)(b9 + 1))
+                for (byte b9 = 0; b9 < b8; b9++)
                 {
                     Color newColor2 = block.readColor();
                     string newName2 = block.readString();
                     byte newLootIndex2 = block.readByte();
                     ZombieSlot[] array2 = new ZombieSlot[4];
                     byte b10 = block.readByte();
-                    for (byte b11 = 0; b11 < b10; b11 = (byte)(b11 + 1))
+                    for (byte b11 = 0; b11 < b10; b11++)
                     {
                         List<ZombieCloth> list2 = new List<ZombieCloth>();
                         float newChance2 = block.readSingle();
                         byte b12 = block.readByte();
-                        for (byte b13 = 0; b13 < b12; b13 = (byte)(b13 + 1))
+                        for (byte b13 = 0; b13 < b12; b13++)
                         {
                             ushort num2 = block.readUInt16();
                             if (Assets.find(EAssetType.ITEM, num2) is ItemAsset)
@@ -215,9 +215,9 @@ public class LevelZombies
             }
         }
         _spawns = new List<ZombieSpawnpoint>[Regions.WORLD_SIZE, Regions.WORLD_SIZE];
-        for (byte b14 = 0; b14 < Regions.WORLD_SIZE; b14 = (byte)(b14 + 1))
+        for (byte b14 = 0; b14 < Regions.WORLD_SIZE; b14++)
         {
-            for (byte b15 = 0; b15 < Regions.WORLD_SIZE; b15 = (byte)(b15 + 1))
+            for (byte b15 = 0; b15 < Regions.WORLD_SIZE; b15++)
             {
                 spawns[b14, b15] = new List<ZombieSpawnpoint>();
             }
@@ -229,12 +229,12 @@ public class LevelZombies
                 River river = new River(Level.info.path + "/Spawns/Animals.dat", usePath: false);
                 if (river.readByte() > 0)
                 {
-                    for (byte b16 = 0; b16 < Regions.WORLD_SIZE; b16 = (byte)(b16 + 1))
+                    for (byte b16 = 0; b16 < Regions.WORLD_SIZE; b16++)
                     {
-                        for (byte b17 = 0; b17 < Regions.WORLD_SIZE; b17 = (byte)(b17 + 1))
+                        for (byte b17 = 0; b17 < Regions.WORLD_SIZE; b17++)
                         {
                             ushort num3 = river.readUInt16();
-                            for (ushort num4 = 0; num4 < num3; num4 = (ushort)(num4 + 1))
+                            for (ushort num4 = 0; num4 < num3; num4++)
                             {
                                 byte newType = river.readByte();
                                 Vector3 newPoint = river.readSingleVector3();
@@ -246,9 +246,9 @@ public class LevelZombies
                 river.closeRiver();
                 return;
             }
-            for (byte b18 = 0; b18 < Regions.WORLD_SIZE; b18 = (byte)(b18 + 1))
+            for (byte b18 = 0; b18 < Regions.WORLD_SIZE; b18++)
             {
-                for (byte b19 = 0; b19 < Regions.WORLD_SIZE; b19 = (byte)(b19 + 1))
+                for (byte b19 = 0; b19 < Regions.WORLD_SIZE; b19++)
                 {
                     spawns[b18, b19] = new List<ZombieSpawnpoint>();
                     if (ReadWrite.fileExists(Level.info.path + "/Spawns/Animals_" + b18 + "_" + b19 + ".dat", useCloud: false, usePath: false))
@@ -257,7 +257,7 @@ public class LevelZombies
                         if (river2.readByte() > 0)
                         {
                             ushort num5 = river2.readUInt16();
-                            for (ushort num6 = 0; num6 < num5; num6 = (ushort)(num6 + 1))
+                            for (ushort num6 = 0; num6 < num5; num6++)
                             {
                                 byte newType2 = river2.readByte();
                                 Vector3 newPoint2 = river2.readSingleVector3();
@@ -285,12 +285,12 @@ public class LevelZombies
                 River river3 = new River(Level.info.path + "/Spawns/Animals.dat", usePath: false);
                 if (river3.readByte() > 0)
                 {
-                    for (byte b20 = 0; b20 < Regions.WORLD_SIZE; b20 = (byte)(b20 + 1))
+                    for (byte b20 = 0; b20 < Regions.WORLD_SIZE; b20++)
                     {
-                        for (byte b21 = 0; b21 < Regions.WORLD_SIZE; b21 = (byte)(b21 + 1))
+                        for (byte b21 = 0; b21 < Regions.WORLD_SIZE; b21++)
                         {
                             ushort num7 = river3.readUInt16();
-                            for (ushort num8 = 0; num8 < num7; num8 = (ushort)(num8 + 1))
+                            for (ushort num8 = 0; num8 < num7; num8++)
                             {
                                 byte newType3 = river3.readByte();
                                 Vector3 vector = river3.readSingleVector3();
@@ -305,9 +305,9 @@ public class LevelZombies
                 river3.closeRiver();
                 return;
             }
-            for (byte b22 = 0; b22 < Regions.WORLD_SIZE; b22 = (byte)(b22 + 1))
+            for (byte b22 = 0; b22 < Regions.WORLD_SIZE; b22++)
             {
-                for (byte b23 = 0; b23 < Regions.WORLD_SIZE; b23 = (byte)(b23 + 1))
+                for (byte b23 = 0; b23 < Regions.WORLD_SIZE; b23++)
                 {
                     if (ReadWrite.fileExists(Level.info.path + "/Spawns/Animals_" + b22 + "_" + b23 + ".dat", useCloud: false, usePath: false))
                     {
@@ -315,7 +315,7 @@ public class LevelZombies
                         if (river4.readByte() > 0)
                         {
                             ushort num9 = river4.readUInt16();
-                            for (ushort num10 = 0; num10 < num9; num10 = (ushort)(num10 + 1))
+                            for (ushort num10 = 0; num10 < num9; num10++)
                             {
                                 byte newType4 = river4.readByte();
                                 Vector3 vector2 = river4.readSingleVector3();
@@ -337,7 +337,7 @@ public class LevelZombies
         Block block = new Block();
         block.writeByte(SAVEDATA_TABLE_VERSION);
         block.writeByte((byte)tables.Count);
-        for (byte b = 0; b < tables.Count; b = (byte)(b + 1))
+        for (byte b = 0; b < tables.Count; b++)
         {
             ZombieTable zombieTable = tables[b];
             block.writeColor(zombieTable.color);
@@ -351,12 +351,12 @@ public class LevelZombies
             block.writeSingle(zombieTable.regen);
             block.writeString(zombieTable.difficultyGUID);
             block.write((byte)zombieTable.slots.Length);
-            for (byte b2 = 0; b2 < zombieTable.slots.Length; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < zombieTable.slots.Length; b2++)
             {
                 ZombieSlot zombieSlot = zombieTable.slots[b2];
                 block.writeSingle(zombieSlot.chance);
                 block.writeByte((byte)zombieSlot.table.Count);
-                for (byte b3 = 0; b3 < zombieSlot.table.Count; b3 = (byte)(b3 + 1))
+                for (byte b3 = 0; b3 < zombieSlot.table.Count; b3++)
                 {
                     ZombieCloth zombieCloth = zombieSlot.table[b3];
                     block.writeUInt16(zombieCloth.item);
@@ -366,13 +366,13 @@ public class LevelZombies
         ReadWrite.writeBlock(Level.info.path + "/Spawns/Zombies.dat", useCloud: false, usePath: false, block);
         River river = new River(Level.info.path + "/Spawns/Animals.dat", usePath: false);
         river.writeByte(SAVEDATA_SPAWN_VERSION);
-        for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4 = (byte)(b4 + 1))
+        for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4++)
         {
-            for (byte b5 = 0; b5 < Regions.WORLD_SIZE; b5 = (byte)(b5 + 1))
+            for (byte b5 = 0; b5 < Regions.WORLD_SIZE; b5++)
             {
                 List<ZombieSpawnpoint> list = spawns[b4, b5];
                 river.writeUInt16((ushort)list.Count);
-                for (ushort num = 0; num < list.Count; num = (ushort)(num + 1))
+                for (ushort num = 0; num < list.Count; num++)
                 {
                     ZombieSpawnpoint zombieSpawnpoint = list[num];
                     river.writeByte(zombieSpawnpoint.type);

@@ -65,9 +65,9 @@ public class ResourceManager : SteamCaller
         {
             return;
         }
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 askClearRegionResources(b, b2);
             }
@@ -110,7 +110,7 @@ public class ResourceManager : SteamCaller
             return;
         }
         List<ResourceSpawnpoint> list = LevelGround.trees[x, y];
-        for (ushort num = 0; num < list.Count; num = (ushort)(num + 1))
+        for (ushort num = 0; num < list.Count; num++)
         {
             if (resource == list[num].model)
             {
@@ -209,7 +209,7 @@ public class ResourceManager : SteamCaller
             return;
         }
         List<ResourceSpawnpoint> list = LevelGround.trees[x, y];
-        for (ushort num = 0; num < list.Count; num = (ushort)(num + 1))
+        for (ushort num = 0; num < list.Count; num++)
         {
             if (resource == list[num].model)
             {
@@ -332,7 +332,7 @@ public class ResourceManager : SteamCaller
             {
                 list[num].revive();
             }
-            num = (ushort)(num + 1);
+            num++;
         }
     }
 
@@ -345,7 +345,7 @@ public class ResourceManager : SteamCaller
             writer.WriteUInt8(y);
             ushort num = (ushort)regionTrees.Count;
             writer.WriteUInt16(num);
-            for (ushort num2 = 0; num2 < num; num2 = (ushort)(num2 + 1))
+            for (ushort num2 = 0; num2 < num; num2++)
             {
                 writer.WriteBit(regionTrees[num2].isDead);
             }
@@ -474,9 +474,9 @@ public class ResourceManager : SteamCaller
             return;
         }
         regions = new ResourceRegion[Regions.WORLD_SIZE, Regions.WORLD_SIZE];
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 regions[b, b2] = new ResourceRegion();
             }
@@ -489,9 +489,9 @@ public class ResourceManager : SteamCaller
     {
         if (step == 0)
         {
-            for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+            for (byte b = 0; b < Regions.WORLD_SIZE; b++)
             {
-                for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+                for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
                 {
                     if (Provider.isServer)
                     {

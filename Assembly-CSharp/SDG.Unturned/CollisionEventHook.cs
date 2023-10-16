@@ -46,7 +46,8 @@ public class CollisionEventHook : MonoBehaviour
         if (!(other == null) && other.CompareTag("Player"))
         {
             OnPlayerEnter.Invoke();
-            numOverlappingPlayers++;
+            int num = numOverlappingPlayers + 1;
+            numOverlappingPlayers = num;
         }
     }
 
@@ -55,7 +56,8 @@ public class CollisionEventHook : MonoBehaviour
         if (!(other == null) && other.CompareTag("Player"))
         {
             OnPlayerExit.Invoke();
-            numOverlappingPlayers--;
+            int num = numOverlappingPlayers - 1;
+            numOverlappingPlayers = num;
         }
     }
 }

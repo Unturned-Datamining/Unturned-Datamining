@@ -945,7 +945,7 @@ public class Landscape : DevkitHierarchyItemBase
     internal IEnumerator AutoConvertLegacyTerrain()
     {
         shouldTriggerLandscapeLoaded = false;
-        int num = (int)Level.size / TILE_SIZE_INT;
+        int num = Level.size / TILE_SIZE_INT;
         int halfTiles = num / 2 + 1;
         for (int tile_x = -halfTiles; tile_x < halfTiles; tile_x++)
         {

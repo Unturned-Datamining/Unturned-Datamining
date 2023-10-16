@@ -25,19 +25,19 @@ public class NPCFlagMathReward : INPCReward
             value = value2;
             break;
         case ENPCOperationType.ADDITION:
-            value = (short)(value + value2);
+            value += value2;
             break;
         case ENPCOperationType.SUBTRACTION:
-            value = (short)(value - value2);
+            value -= value2;
             break;
         case ENPCOperationType.MULTIPLICATION:
-            value = (short)(value * value2);
+            value *= value2;
             break;
         case ENPCOperationType.DIVISION:
-            value = (short)(value / value2);
+            value /= value2;
             break;
         case ENPCOperationType.MODULO:
-            value = (short)(value % value2);
+            value %= value2;
             break;
         }
         player.quests.sendSetFlag(flag_A_ID, value);

@@ -4,49 +4,63 @@ namespace SDG.Unturned;
 
 public interface ISleekElement
 {
-    bool isVisible { get; set; }
+    bool IsVisible { get; set; }
 
-    ISleekElement parent { get; }
+    ISleekElement Parent { get; }
 
-    ISleekLabel sideLabel { get; }
+    ISleekLabel SideLabel { get; }
 
-    int positionOffset_X { get; set; }
+    float PositionOffset_X { get; set; }
 
-    int positionOffset_Y { get; set; }
+    float PositionOffset_Y { get; set; }
 
-    float positionScale_X { get; set; }
+    float PositionScale_X { get; set; }
 
-    float positionScale_Y { get; set; }
+    float PositionScale_Y { get; set; }
 
-    int sizeOffset_X { get; set; }
+    float SizeOffset_X { get; set; }
 
-    int sizeOffset_Y { get; set; }
+    float SizeOffset_Y { get; set; }
 
-    float sizeScale_X { get; set; }
+    float SizeScale_X { get; set; }
 
-    float sizeScale_Y { get; set; }
+    float SizeScale_Y { get; set; }
 
-    ISleekElement attachmentRoot { get; }
+    ISleekElement AttachmentRoot { get; }
 
-    bool isAnimatingTransform { get; }
+    bool IsAnimatingTransform { get; }
 
-    void destroy();
+    bool UseManualLayout { get; set; }
 
-    void lerpPositionOffset(int newPositionOffset_X, int newPositionOffset_Y, ESleekLerp lerp, float time);
+    bool UseWidthLayoutOverride { get; set; }
 
-    void lerpPositionScale(float newPositionScale_X, float newPositionScale_Y, ESleekLerp lerp, float time);
+    bool UseHeightLayoutOverride { get; set; }
 
-    void lerpSizeOffset(int newSizeOffset_X, int newSizeOffset_Y, ESleekLerp lerp, float time);
+    ESleekChildLayout UseChildAutoLayout { get; set; }
 
-    void lerpSizeScale(float newSizeScale_X, float newSizeScale_Y, ESleekLerp lerp, float time);
+    ESleekChildPerpendicularAlignment ChildPerpendicularAlignment { get; set; }
+
+    bool ExpandChildren { get; set; }
+
+    bool IgnoreLayout { get; set; }
+
+    void InternalDestroy();
+
+    void AnimatePositionOffset(float newPositionOffset_X, float newPositionOffset_Y, ESleekLerp lerp, float time);
+
+    void AnimatePositionScale(float newPositionScale_X, float newPositionScale_Y, ESleekLerp lerp, float time);
+
+    void AnimateSizeOffset(float newSizeOffset_X, float newSizeOffset_Y, ESleekLerp lerp, float time);
+
+    void AnimateSizeScale(float newSizeScale_X, float newSizeScale_Y, ESleekLerp lerp, float time);
 
     void AddChild(ISleekElement child);
 
-    void addLabel(string text, ESleekSide side);
+    void AddLabel(string text, ESleekSide side);
 
-    void addLabel(string text, Color color, ESleekSide side);
+    void AddLabel(string text, Color color, ESleekSide side);
 
-    void updateLabel(string text);
+    void UpdateLabel(string text);
 
     int FindIndexOfChild(ISleekElement sleek);
 
@@ -61,4 +75,8 @@ public interface ISleekElement
     Vector2 ViewportToNormalizedPosition(Vector2 viewportPosition);
 
     Vector2 GetNormalizedCursorPosition();
+
+    Vector2 GetAbsoluteSize();
+
+    void SetAsFirstSibling();
 }

@@ -5,21 +5,21 @@ namespace SDG.Unturned;
 
 public interface ISleekImage : ISleekElement
 {
-    Texture texture { get; set; }
+    Texture Texture { get; set; }
 
-    float angle { get; set; }
+    float RotationAngle { get; set; }
 
-    bool isAngled { get; set; }
+    bool CanRotate { get; set; }
 
-    bool shouldDestroyTexture { get; set; }
+    bool ShouldDestroyTexture { get; set; }
 
-    SleekColor color { get; set; }
+    SleekColor TintColor { get; set; }
 
-    event Action onImageClicked;
+    event Action OnClicked;
 
-    event Action onImageRightClicked;
+    event Action OnRightClicked;
 
-    void updateTexture(Texture2D newTexture);
+    void UpdateTexture(Texture2D newTexture);
 
-    void setTextureAndShouldDestroy(Texture2D texture, bool shouldDestroyTexture);
+    void SetTextureAndShouldDestroy(Texture2D texture, bool shouldDestroyTexture);
 }

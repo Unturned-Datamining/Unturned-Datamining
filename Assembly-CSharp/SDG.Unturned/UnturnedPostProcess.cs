@@ -226,15 +226,15 @@ public class UnturnedPostProcess : MonoBehaviour
         baseProfile.screenSpaceReflections.active = flag;
         if (flag)
         {
-            EGraphicQuality reflectionQuality = GraphicsSettings.reflectionQuality;
-            baseProfile.screenSpaceReflections.preset.Override(reflectionQuality switch
+            ScreenSpaceReflectionPreset x = GraphicsSettings.reflectionQuality switch
             {
                 EGraphicQuality.LOW => ScreenSpaceReflectionPreset.Low, 
                 EGraphicQuality.MEDIUM => ScreenSpaceReflectionPreset.Medium, 
                 EGraphicQuality.HIGH => ScreenSpaceReflectionPreset.High, 
                 EGraphicQuality.ULTRA => ScreenSpaceReflectionPreset.Ultra, 
                 _ => ScreenSpaceReflectionPreset.Low, 
-            });
+            };
+            baseProfile.screenSpaceReflections.preset.Override(x);
         }
     }
 

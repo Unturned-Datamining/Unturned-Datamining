@@ -83,9 +83,10 @@ public class NetworkStream
     {
         ushort num = readUInt16();
         char[] array = new char[num];
-        for (ushort num2 = 0; num2 < num; num2 = (ushort)(num2 + 1))
+        for (ushort num2 = 0; num2 < num; num2++)
         {
-            char c = (array[num2] = readChar());
+            char c = readChar();
+            array[num2] = c;
         }
         return new string(array);
     }
@@ -167,7 +168,7 @@ public class NetworkStream
         ushort num = (ushort)data.Length;
         char[] array = data.ToCharArray();
         writeUInt16(num);
-        for (ushort num2 = 0; num2 < num; num2 = (ushort)(num2 + 1))
+        for (ushort num2 = 0; num2 < num; num2++)
         {
             char data2 = array[num2];
             writeChar(data2);

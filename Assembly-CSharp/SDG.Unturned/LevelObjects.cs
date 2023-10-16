@@ -460,16 +460,16 @@ public class LevelObjects : MonoBehaviour
         _loads = new int[Regions.WORLD_SIZE, Regions.WORLD_SIZE];
         shouldInstantlyLoad = true;
         isHierarchyReady = false;
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 loads[b, b2] = -1;
             }
         }
-        for (byte b3 = 0; b3 < Regions.WORLD_SIZE; b3 = (byte)(b3 + 1))
+        for (byte b3 = 0; b3 < Regions.WORLD_SIZE; b3++)
         {
-            for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4 = (byte)(b4 + 1))
+            for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4++)
             {
                 objects[b3, b4] = new List<LevelObject>();
                 buildables[b3, b4] = new List<LevelBuildableObject>();
@@ -501,12 +501,12 @@ public class LevelObjects : MonoBehaviour
                 {
                     availableInstanceID = 1u;
                 }
-                for (byte b6 = 0; b6 < Regions.WORLD_SIZE; b6 = (byte)(b6 + 1))
+                for (byte b6 = 0; b6 < Regions.WORLD_SIZE; b6++)
                 {
-                    for (byte b7 = 0; b7 < Regions.WORLD_SIZE; b7 = (byte)(b7 + 1))
+                    for (byte b7 = 0; b7 < Regions.WORLD_SIZE; b7++)
                     {
                         ushort num = river.readUInt16();
-                        for (ushort num2 = 0; num2 < num; num2 = (ushort)(num2 + 1))
+                        for (ushort num2 = 0; num2 < num; num2++)
                         {
                             Vector3 vector = river.readSingleVector3();
                             Quaternion roundedIfNearlyAxisAligned = river.readSingleQuaternion().GetRoundedIfNearlyAxisAligned();
@@ -601,9 +601,9 @@ public class LevelObjects : MonoBehaviour
         }
         else
         {
-            for (byte b10 = 0; b10 < Regions.WORLD_SIZE; b10 = (byte)(b10 + 1))
+            for (byte b10 = 0; b10 < Regions.WORLD_SIZE; b10++)
             {
-                for (byte b11 = 0; b11 < Regions.WORLD_SIZE; b11 = (byte)(b11 + 1))
+                for (byte b11 = 0; b11 < Regions.WORLD_SIZE; b11++)
                 {
                     if (ReadWrite.fileExists(Level.info.path + "/Objects/Objects_" + b10 + "_" + b11 + ".dat", useCloud: false, usePath: false))
                     {
@@ -611,7 +611,7 @@ public class LevelObjects : MonoBehaviour
                         if (river2.readByte() > 0)
                         {
                             ushort num4 = river2.readUInt16();
-                            for (ushort num5 = 0; num5 < num4; num5 = (ushort)(num5 + 1))
+                            for (ushort num5 = 0; num5 < num4; num5++)
                             {
                                 Vector3 position = river2.readSingleVector3();
                                 Quaternion rotation = river2.readSingleQuaternion();
@@ -633,12 +633,12 @@ public class LevelObjects : MonoBehaviour
         {
             River river3 = new River(Level.info.path + "/Level/Buildables.dat", usePath: false);
             river3.readByte();
-            for (byte b12 = 0; b12 < Regions.WORLD_SIZE; b12 = (byte)(b12 + 1))
+            for (byte b12 = 0; b12 < Regions.WORLD_SIZE; b12++)
             {
-                for (byte b13 = 0; b13 < Regions.WORLD_SIZE; b13 = (byte)(b13 + 1))
+                for (byte b13 = 0; b13 < Regions.WORLD_SIZE; b13++)
                 {
                     ushort num7 = river3.readUInt16();
-                    for (ushort num8 = 0; num8 < num7; num8 = (ushort)(num8 + 1))
+                    for (ushort num8 = 0; num8 < num7; num8++)
                     {
                         Vector3 vector2 = river3.readSingleVector3();
                         Quaternion newRotation = river3.readSingleQuaternion();
@@ -691,13 +691,13 @@ public class LevelObjects : MonoBehaviour
         River river = new River(Level.info.path + "/Level/Objects.dat", usePath: false);
         river.writeByte(11);
         river.writeUInt32(availableInstanceID);
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 List<LevelObject> list = objects[b, b2];
                 river.writeUInt16((ushort)list.Count);
-                for (ushort num = 0; num < list.Count; num = (ushort)(num + 1))
+                for (ushort num = 0; num < list.Count; num++)
                 {
                     LevelObject levelObject = list[num];
                     Transform placeholderTransform = levelObject.transform;
@@ -741,13 +741,13 @@ public class LevelObjects : MonoBehaviour
         river.closeRiver();
         River river2 = new River(Level.info.path + "/Level/Buildables.dat", usePath: false);
         river2.writeByte(SAVEDATA_VERSION);
-        for (byte b3 = 0; b3 < Regions.WORLD_SIZE; b3 = (byte)(b3 + 1))
+        for (byte b3 = 0; b3 < Regions.WORLD_SIZE; b3++)
         {
-            for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4 = (byte)(b4 + 1))
+            for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4++)
             {
                 List<LevelBuildableObject> list2 = buildables[b3, b4];
                 river2.writeUInt16((ushort)list2.Count);
-                for (ushort num2 = 0; num2 < list2.Count; num2 = (ushort)(num2 + 1))
+                for (ushort num2 = 0; num2 < list2.Count; num2++)
                 {
                     LevelBuildableObject levelBuildableObject = list2[num2];
                     if (levelBuildableObject != null && levelBuildableObject.transform != null && levelBuildableObject.id != 0)
@@ -786,9 +786,9 @@ public class LevelObjects : MonoBehaviour
         {
             return;
         }
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 if (regions[b, b2] && !Regions.checkArea(b, b2, new_x, new_y, OBJECT_REGIONS))
                 {
@@ -887,9 +887,9 @@ public class LevelObjects : MonoBehaviour
         {
             return;
         }
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 if (loads[b, b2] != -1)
                 {
@@ -908,9 +908,9 @@ public class LevelObjects : MonoBehaviour
     private void tickRegionalVisibility()
     {
         bool flag = true;
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 int num = loads[b, b2];
                 if (num != -1)

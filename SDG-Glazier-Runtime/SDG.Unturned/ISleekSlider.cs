@@ -2,17 +2,15 @@ namespace SDG.Unturned;
 
 public interface ISleekSlider : ISleekElement
 {
-    ESleekOrientation orientation { get; set; }
+    ESleekOrientation Orientation { get; set; }
 
-    float size { get; set; }
+    float Value { get; set; }
 
-    float state { get; set; }
+    SleekColor BackgroundColor { get; set; }
 
-    SleekColor backgroundColor { get; set; }
+    SleekColor ForegroundColor { get; set; }
 
-    SleekColor foregroundColor { get; set; }
+    bool IsInteractable { get; set; }
 
-    bool isInteractable { get; set; }
-
-    event Dragged onDragged;
+    event Dragged OnValueChanged;
 }

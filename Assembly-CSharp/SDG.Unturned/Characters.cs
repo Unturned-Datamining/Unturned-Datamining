@@ -581,7 +581,7 @@ public class Characters : MonoBehaviour
         clothes.color = active.color;
         clothes.hand = active.hand;
         clothes.apply();
-        for (byte b = 0; b < slots.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < slots.Length; b++)
         {
             apply(b, showItems);
         }
@@ -691,7 +691,7 @@ public class Characters : MonoBehaviour
         Provider.provider.economyService.refreshInventory();
         if (list != null)
         {
-            for (byte b = 0; b < list.Length; b = (byte)(b + 1))
+            for (byte b = 0; b < list.Length; b++)
             {
                 if (list[b] != null)
                 {
@@ -713,7 +713,7 @@ public class Characters : MonoBehaviour
                     if (b2 >= 14)
                     {
                         ushort num = block.readUInt16();
-                        for (ushort num2 = 0; num2 < num; num2 = (ushort)(num2 + 1))
+                        for (ushort num2 = 0; num2 < num; num2++)
                         {
                             ulong num3 = block.readUInt64();
                             if (num3 != 0L)
@@ -727,7 +727,7 @@ public class Characters : MonoBehaviour
                     {
                         _selected = 0;
                     }
-                    for (byte b3 = 0; b3 < list.Length; b3 = (byte)(b3 + 1))
+                    for (byte b3 = 0; b3 < list.Length; b3++)
                     {
                         ushort newShirt = block.readUInt16();
                         ushort newPants = block.readUInt16();
@@ -812,7 +812,7 @@ public class Characters : MonoBehaviour
                 }
                 else
                 {
-                    for (byte b8 = 0; b8 < list.Length; b8 = (byte)(b8 + 1))
+                    for (byte b8 = 0; b8 < list.Length; b8++)
                     {
                         list[b8] = new Character();
                         onCharacterUpdated?.Invoke(b8, list[b8]);
@@ -824,7 +824,7 @@ public class Characters : MonoBehaviour
         {
             _selected = 0;
         }
-        for (byte b9 = 0; b9 < list.Length; b9 = (byte)(b9 + 1))
+        for (byte b9 = 0; b9 < list.Length; b9++)
         {
             if (list[b9] == null)
             {
@@ -846,13 +846,13 @@ public class Characters : MonoBehaviour
         Block block = new Block();
         block.writeByte(SAVEDATA_VERSION);
         block.writeUInt16((ushort)packageSkins.Count);
-        for (ushort num = 0; num < packageSkins.Count; num = (ushort)(num + 1))
+        for (ushort num = 0; num < packageSkins.Count; num++)
         {
             ulong value = packageSkins[num];
             block.writeUInt64(value);
         }
         block.writeByte(selected);
-        for (byte b = 0; b < list.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < list.Length; b++)
         {
             Character character = list[b];
             if (character == null)

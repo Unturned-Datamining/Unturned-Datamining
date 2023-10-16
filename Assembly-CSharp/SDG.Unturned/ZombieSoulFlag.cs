@@ -39,7 +39,7 @@ public class ZombieSoulFlag : MonoBehaviour
             {
                 EffectManager.sendEffect(collectEffect, player.channel.GetOwnerTransportConnection(), zombie.transform.position + Vector3.up, (base.transform.position - zombie.transform.position + Vector3.up).normalized);
                 player.quests.getFlag(flagKills, out var value2);
-                value2 = (short)(value2 + 1);
+                value2++;
                 player.quests.sendSetFlag(flagKills, value2);
                 if (value2 >= soulsNeeded)
                 {

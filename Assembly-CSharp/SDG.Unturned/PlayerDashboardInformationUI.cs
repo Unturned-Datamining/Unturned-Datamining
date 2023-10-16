@@ -387,7 +387,7 @@ public class PlayerDashboardInformationUI
         {
             return;
         }
-        for (byte b = 0; b < PlayerInventory.PAGES - 2; b = (byte)(b + 1))
+        for (byte b = 0; b < PlayerInventory.PAGES - 2; b++)
         {
             Items items = Player.player.inventory.items[b];
             if (items != null)
@@ -1040,7 +1040,7 @@ public class PlayerDashboardInformationUI
         }
         else
         {
-            maxZoomMultiplier = (int)Level.size / 1024 + 1;
+            maxZoomMultiplier = Level.size / 1024 + 1;
         }
         mapBox = Glazier.Get().CreateScrollView();
         mapBox.SizeScale_X = 1f;

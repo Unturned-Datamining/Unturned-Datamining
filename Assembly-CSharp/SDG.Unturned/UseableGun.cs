@@ -799,7 +799,7 @@ public class UseableGun : Useable
                 }
                 float halfAngleRadians = CalculateSpreadAngleRadians(num, GetSimulationAimAlpha());
                 byte pellets = thirdAttachments.magazineAsset.pellets;
-                for (byte b = 0; b < pellets; b = (byte)(b + 1))
+                for (byte b = 0; b < pellets; b++)
                 {
                     BulletInfo bulletInfo = new BulletInfo();
                     bulletInfo.origin = base.player.look.aim.position;
@@ -958,7 +958,7 @@ public class UseableGun : Useable
             if (equippedGunAsset.projectile == null)
             {
                 byte pellets2 = thirdAttachments.magazineAsset.pellets;
-                for (byte b2 = 0; b2 < pellets2; b2 = (byte)(b2 + 1))
+                for (byte b2 = 0; b2 < pellets2; b2++)
                 {
                     BulletInfo bulletInfo2;
                     if (base.channel.IsLocalPlayer)
@@ -1768,9 +1768,9 @@ public class UseableGun : Useable
                 if (asset.calibers.Length != 0)
                 {
                     bool flag = false;
-                    for (byte b = 0; b < asset.calibers.Length; b = (byte)(b + 1))
+                    for (byte b = 0; b < asset.calibers.Length; b++)
                     {
-                        for (byte b2 = 0; b2 < equippedGunAsset.attachmentCalibers.Length; b2 = (byte)(b2 + 1))
+                        for (byte b2 = 0; b2 < equippedGunAsset.attachmentCalibers.Length; b2++)
                         {
                             if (asset.calibers[b] == equippedGunAsset.attachmentCalibers[b2])
                             {
@@ -1848,9 +1848,9 @@ public class UseableGun : Useable
                 if (asset.calibers.Length != 0)
                 {
                     bool flag = false;
-                    for (byte b = 0; b < asset.calibers.Length; b = (byte)(b + 1))
+                    for (byte b = 0; b < asset.calibers.Length; b++)
                     {
-                        for (byte b2 = 0; b2 < equippedGunAsset.attachmentCalibers.Length; b2 = (byte)(b2 + 1))
+                        for (byte b2 = 0; b2 < equippedGunAsset.attachmentCalibers.Length; b2++)
                         {
                             if (asset.calibers[b] == equippedGunAsset.attachmentCalibers[b2])
                             {
@@ -1928,9 +1928,9 @@ public class UseableGun : Useable
                 if (asset.calibers.Length != 0)
                 {
                     bool flag = false;
-                    for (byte b = 0; b < asset.calibers.Length; b = (byte)(b + 1))
+                    for (byte b = 0; b < asset.calibers.Length; b++)
                     {
-                        for (byte b2 = 0; b2 < equippedGunAsset.attachmentCalibers.Length; b2 = (byte)(b2 + 1))
+                        for (byte b2 = 0; b2 < equippedGunAsset.attachmentCalibers.Length; b2++)
                         {
                             if (asset.calibers[b] == equippedGunAsset.attachmentCalibers[b2])
                             {
@@ -2008,9 +2008,9 @@ public class UseableGun : Useable
                 if (asset.calibers.Length != 0)
                 {
                     bool flag = false;
-                    for (byte b = 0; b < asset.calibers.Length; b = (byte)(b + 1))
+                    for (byte b = 0; b < asset.calibers.Length; b++)
                     {
-                        for (byte b2 = 0; b2 < equippedGunAsset.attachmentCalibers.Length; b2 = (byte)(b2 + 1))
+                        for (byte b2 = 0; b2 < equippedGunAsset.attachmentCalibers.Length; b2++)
                         {
                             if (asset.calibers[b] == equippedGunAsset.attachmentCalibers[b2])
                             {
@@ -2093,9 +2093,9 @@ public class UseableGun : Useable
                 if (asset.calibers.Length != 0)
                 {
                     bool flag = false;
-                    for (byte b = 0; b < asset.calibers.Length; b = (byte)(b + 1))
+                    for (byte b = 0; b < asset.calibers.Length; b++)
                     {
-                        for (byte b2 = 0; b2 < equippedGunAsset.magazineCalibers.Length; b2 = (byte)(b2 + 1))
+                        for (byte b2 = 0; b2 < equippedGunAsset.magazineCalibers.Length; b2++)
                         {
                             if (asset.calibers[b] == equippedGunAsset.magazineCalibers[b2])
                             {
@@ -2953,7 +2953,7 @@ public class UseableGun : Useable
                     {
                         byte b = 0;
                         byte b2 = byte.MaxValue;
-                        for (byte b3 = 0; b3 < magazineSearch.Count; b3 = (byte)(b3 + 1))
+                        for (byte b3 = 0; b3 < magazineSearch.Count; b3++)
                         {
                             if (magazineSearch[b3].jar.item.amount > b)
                             {
@@ -3236,7 +3236,7 @@ public class UseableGun : Useable
             {
                 steadyAccuracy++;
             }
-            base.player.life.askSuffocate((byte)(5 - (int)base.player.skills.skills[0][5].level / 2));
+            base.player.life.askSuffocate((byte)(5 - base.player.skills.skills[0][5].level / 2));
             if (base.player.life.oxygen == 0)
             {
                 canSteady = false;

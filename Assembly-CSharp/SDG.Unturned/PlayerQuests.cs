@@ -1072,7 +1072,7 @@ public class PlayerQuests : PlayerCaller
                 if (playerQuest.asset.conditions[j] is NPCHordeKillsCondition nPCHordeKillsCondition && nPCHordeKillsCondition.nav == base.player.movement.nav)
                 {
                     getFlag(nPCHordeKillsCondition.id, out var value);
-                    value = (short)(value + 1);
+                    value++;
                     sendSetFlag(nPCHordeKillsCondition.id, value);
                 }
             }
@@ -1098,7 +1098,7 @@ public class PlayerQuests : PlayerCaller
                 if (playerQuest.asset.conditions[j] is NPCZombieKillsCondition nPCZombieKillsCondition && (nPCZombieKillsCondition.zombie == EZombieSpeciality.NONE || nPCZombieKillsCondition.zombie == zombie.speciality) && (nPCZombieKillsCondition.nav == byte.MaxValue || nPCZombieKillsCondition.nav == base.player.movement.bound) && (!(nPCZombieKillsCondition.sqrRadius > 0.01f) || !(sqrMagnitude > nPCZombieKillsCondition.sqrRadius)) && (!(nPCZombieKillsCondition.sqrMinRadius > 0.01f) || !(sqrMagnitude < nPCZombieKillsCondition.sqrMinRadius)))
                 {
                     getFlag(nPCZombieKillsCondition.id, out var value);
-                    value = (short)(value + 1);
+                    value++;
                     sendSetFlag(nPCZombieKillsCondition.id, value);
                 }
             }
@@ -1119,7 +1119,7 @@ public class PlayerQuests : PlayerCaller
                 if (conditions[i] is NPCObjectKillsCondition nPCObjectKillsCondition && (nPCObjectKillsCondition.nav == byte.MaxValue || nPCObjectKillsCondition.nav == nav) && nPCObjectKillsCondition.objectGuid.Equals(objectGuid))
                 {
                     getFlag(nPCObjectKillsCondition.id, out var value);
-                    value = (short)(value + 1);
+                    value++;
                     sendSetFlag(nPCObjectKillsCondition.id, value);
                 }
             }
@@ -1140,7 +1140,7 @@ public class PlayerQuests : PlayerCaller
                 if (conditions[i] is NPCTreeKillsCondition nPCTreeKillsCondition && nPCTreeKillsCondition.treeGuid.Equals(treeGuid))
                 {
                     getFlag(nPCTreeKillsCondition.id, out var value);
-                    value = (short)(value + 1);
+                    value++;
                     sendSetFlag(nPCTreeKillsCondition.id, value);
                 }
             }
@@ -1165,7 +1165,7 @@ public class PlayerQuests : PlayerCaller
                 if (playerQuest.asset.conditions[j] is NPCAnimalKillsCondition nPCAnimalKillsCondition && nPCAnimalKillsCondition.animal == animal.id)
                 {
                     getFlag(nPCAnimalKillsCondition.id, out var value);
-                    value = (short)(value + 1);
+                    value++;
                     sendSetFlag(nPCAnimalKillsCondition.id, value);
                 }
             }
@@ -1190,7 +1190,7 @@ public class PlayerQuests : PlayerCaller
                 if (playerQuest.asset.conditions[j] is NPCPlayerKillsCondition nPCPlayerKillsCondition)
                 {
                     getFlag(nPCPlayerKillsCondition.id, out var value);
-                    value = (short)(value + 1);
+                    value++;
                     sendSetFlag(nPCPlayerKillsCondition.id, value);
                 }
             }
@@ -1671,7 +1671,7 @@ public class PlayerQuests : PlayerCaller
             return;
         }
         reader.ReadUInt16(out var value);
-        for (ushort num = 0; num < value; num = (ushort)(num + 1))
+        for (ushort num = 0; num < value; num++)
         {
             reader.ReadUInt16(out var value2);
             reader.ReadInt16(out var value3);
@@ -1714,7 +1714,7 @@ public class PlayerQuests : PlayerCaller
     private void WriteOwnerState(NetPakWriter writer)
     {
         writer.WriteUInt16((ushort)flagsList.Count);
-        for (ushort num = 0; num < flagsList.Count; num = (ushort)(num + 1))
+        for (ushort num = 0; num < flagsList.Count; num++)
         {
             PlayerQuestFlag playerQuestFlag = flagsList[num];
             writer.WriteUInt16(playerQuestFlag.id);
@@ -1850,7 +1850,7 @@ public class PlayerQuests : PlayerCaller
         ClientAssetIntegrity.QueueRequest(dialogueAssetGuid, dialogueAsset, "open dialogue");
         if (dialogueAsset != null && dialogueAsset.messages != null)
         {
-            _ = dialogueAsset.messages.LongLength;
+            _ = dialogueAsset.messages.Length;
             if (PlayerNPCVendorUI.active)
             {
                 PlayerNPCVendorUI.close();
@@ -1873,7 +1873,7 @@ public class PlayerQuests : PlayerCaller
         ClientAssetIntegrity.QueueRequest(dialogueAssetGuid, dialogueAsset, "open vendor");
         if (vendorAsset != null && dialogueAsset != null && dialogueAsset.messages != null)
         {
-            _ = dialogueAsset.messages.LongLength;
+            _ = dialogueAsset.messages.Length;
             if (PlayerNPCDialogueUI.active)
             {
                 PlayerNPCDialogueUI.close();
@@ -2024,7 +2024,7 @@ public class PlayerQuests : PlayerCaller
                     inMainGroup = false;
                 }
                 ushort num = river.readUInt16();
-                for (ushort num2 = 0; num2 < num; num2 = (ushort)(num2 + 1))
+                for (ushort num2 = 0; num2 < num; num2++)
                 {
                     ushort num3 = river.readUInt16();
                     short newValue = river.readInt16();
@@ -2048,7 +2048,7 @@ public class PlayerQuests : PlayerCaller
                 else
                 {
                     ushort num5 = river.readUInt16();
-                    for (ushort num6 = 0; num6 < num5; num6 = (ushort)(num6 + 1))
+                    for (ushort num6 = 0; num6 < num5; num6++)
                     {
                         PlayerQuest item2 = new PlayerQuest(river.readUInt16());
                         questsList.Add(item2);
@@ -2173,7 +2173,7 @@ public class PlayerQuests : PlayerCaller
         river.writeByte((byte)groupRank);
         river.writeBoolean(inMainGroup);
         river.writeUInt16((ushort)flagsList.Count);
-        for (ushort num = 0; num < flagsList.Count; num = (ushort)(num + 1))
+        for (ushort num = 0; num < flagsList.Count; num++)
         {
             PlayerQuestFlag playerQuestFlag = flagsList[num];
             river.writeUInt16(playerQuestFlag.id);

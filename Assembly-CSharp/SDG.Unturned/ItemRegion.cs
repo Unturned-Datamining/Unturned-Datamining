@@ -35,7 +35,7 @@ public class ItemRegion
 
     public void DestroyAll()
     {
-        for (ushort num = 0; num < drops.Count; num = (ushort)(num + 1))
+        for (ushort num = 0; num < drops.Count; num++)
         {
             UnityEngine.Object.Destroy(drops[num].model.gameObject);
         }

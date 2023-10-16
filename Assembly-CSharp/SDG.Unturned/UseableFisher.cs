@@ -331,7 +331,7 @@ public class UseableFisher : Useable
         {
             strengthTime++;
             uint num = (uint)(100 + base.player.skills.skills[2][4].level * 20);
-            strengthMultiplier = 1f - Mathf.Abs(Mathf.Sin((float)((strengthTime + num / 2u) % num) / (float)num * MathF.PI));
+            strengthMultiplier = 1f - Mathf.Abs(Mathf.Sin((float)((strengthTime + num / 2) % num) / (float)num * MathF.PI));
             strengthMultiplier *= strengthMultiplier;
             if (base.channel.IsLocalPlayer && castStrengthBar != null)
             {

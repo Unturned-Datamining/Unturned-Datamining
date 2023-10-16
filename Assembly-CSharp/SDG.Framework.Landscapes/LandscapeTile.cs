@@ -136,7 +136,8 @@ public class LandscapeTile : IFormattedFileReadable, IFormattedFileWritable, IFo
         {
             for (int j = 0; j < Landscape.HEIGHTMAP_RESOLUTION; j++)
             {
-                float num = (heightmap[i, j] = (float)(int)(ushort)((sHA1Stream.ReadByte() << 8) | sHA1Stream.ReadByte()) / 65535f);
+                float num = (float)(int)(ushort)((sHA1Stream.ReadByte() << 8) | sHA1Stream.ReadByte()) / 65535f;
+                heightmap[i, j] = num;
             }
         }
         Level.includeHash(text, sHA1Stream.Hash);
@@ -168,7 +169,8 @@ public class LandscapeTile : IFormattedFileReadable, IFormattedFileWritable, IFo
             {
                 for (int k = 0; k < Landscape.SPLATMAP_LAYERS; k++)
                 {
-                    float num = (splatmap[i, j, k] = (float)(int)(byte)sHA1Stream.ReadByte() / 255f);
+                    float num = (float)(int)(byte)sHA1Stream.ReadByte() / 255f;
+                    splatmap[i, j, k] = num;
                 }
             }
         }

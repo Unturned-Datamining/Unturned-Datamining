@@ -658,7 +658,7 @@ public class InteractableSentry : InteractableStorage
                 {
                     BarricadeManager.sendShootSentry(base.transform);
                     byte pellets = attachments.magazineAsset.pellets;
-                    for (byte b = 0; b < pellets; b = (byte)(b + 1))
+                    for (byte b = 0; b < pellets; b++)
                     {
                         EPlayerKill kill = EPlayerKill.NONE;
                         uint xp = 0u;

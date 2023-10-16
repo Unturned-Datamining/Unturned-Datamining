@@ -133,20 +133,20 @@ public class LevelAnimals
         River river = new River(Level.info.path + "/Spawns/Fauna.dat", usePath: false);
         byte b = river.readByte();
         byte b2 = river.readByte();
-        for (byte b3 = 0; b3 < b2; b3 = (byte)(b3 + 1))
+        for (byte b3 = 0; b3 < b2; b3++)
         {
             Color newColor = river.readColor();
             string text = river.readString();
             ushort num = (ushort)((b > 2) ? river.readUInt16() : 0);
             List<AnimalTier> list = new List<AnimalTier>();
             byte b4 = river.readByte();
-            for (byte b5 = 0; b5 < b4; b5 = (byte)(b5 + 1))
+            for (byte b5 = 0; b5 < b4; b5++)
             {
                 string newName = river.readString();
                 float newChance = river.readSingle();
                 List<AnimalSpawn> list2 = new List<AnimalSpawn>();
                 byte b6 = river.readByte();
-                for (byte b7 = 0; b7 < b6; b7 = (byte)(b7 + 1))
+                for (byte b7 = 0; b7 < b6; b7++)
                 {
                     ushort newAnimal = river.readUInt16();
                     list2.Add(new AnimalSpawn(newAnimal));
@@ -179,20 +179,20 @@ public class LevelAnimals
         River river = new River(Level.info.path + "/Spawns/Fauna.dat", usePath: false);
         river.writeByte(SAVEDATA_VERSION);
         river.writeByte((byte)tables.Count);
-        for (byte b = 0; b < tables.Count; b = (byte)(b + 1))
+        for (byte b = 0; b < tables.Count; b++)
         {
             AnimalTable animalTable = tables[b];
             river.writeColor(animalTable.color);
             river.writeString(animalTable.name);
             river.writeUInt16(animalTable.tableID);
             river.writeByte((byte)animalTable.tiers.Count);
-            for (byte b2 = 0; b2 < animalTable.tiers.Count; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < animalTable.tiers.Count; b2++)
             {
                 AnimalTier animalTier = animalTable.tiers[b2];
                 river.writeString(animalTier.name);
                 river.writeSingle(animalTier.chance);
                 river.writeByte((byte)animalTier.table.Count);
-                for (byte b3 = 0; b3 < animalTier.table.Count; b3 = (byte)(b3 + 1))
+                for (byte b3 = 0; b3 < animalTier.table.Count; b3++)
                 {
                     AnimalSpawn animalSpawn = animalTier.table[b3];
                     river.writeUInt16(animalSpawn.animal);

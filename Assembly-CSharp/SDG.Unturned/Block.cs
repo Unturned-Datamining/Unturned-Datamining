@@ -56,7 +56,7 @@ public class Block
         if (block != null && step < block.Length)
         {
             string[] array = new string[readByte()];
-            for (byte b = 0; b < array.Length; b = (byte)(b + 1))
+            for (byte b = 0; b < array.Length; b++)
             {
                 array[b] = readString();
             }
@@ -82,13 +82,13 @@ public class Block
         {
             bool[] array = new bool[readUInt16()];
             ushort num = (ushort)Mathf.CeilToInt((float)array.Length / 8f);
-            for (ushort num2 = 0; num2 < num; num2 = (ushort)(num2 + 1))
+            for (ushort num2 = 0; num2 < num; num2++)
             {
                 byte b = 0;
                 while (b < 8 && num2 * 8 + b < array.Length)
                 {
                     array[num2 * 8 + b] = (block[step + num2] & Types.SHIFTS[b]) == Types.SHIFTS[b];
-                    b = (byte)(b + 1);
+                    b++;
                 }
             }
             step += num;
@@ -183,9 +183,10 @@ public class Block
     {
         ushort num = readUInt16();
         int[] array = new int[num];
-        for (ushort num2 = 0; num2 < num; num2 = (ushort)(num2 + 1))
+        for (ushort num2 = 0; num2 < num; num2++)
         {
-            int num3 = (array[num2] = readInt32());
+            int num3 = readInt32();
+            array[num2] = num3;
         }
         return array;
     }
@@ -242,9 +243,10 @@ public class Block
     {
         ushort num = readUInt16();
         ulong[] array = new ulong[num];
-        for (ushort num2 = 0; num2 < num; num2 = (ushort)(num2 + 1))
+        for (ushort num2 = 0; num2 < num; num2++)
         {
-            ulong num3 = (array[num2] = readUInt64());
+            ulong num3 = readUInt64();
+            array[num2] = num3;
         }
         return array;
     }
@@ -594,7 +596,7 @@ public class Block
     {
         byte b = (byte)values.Length;
         writeByte(b);
-        for (byte b2 = 0; b2 < b; b2 = (byte)(b2 + 1))
+        for (byte b2 = 0; b2 < b; b2++)
         {
             writeString(values[b2]);
         }
@@ -611,7 +613,7 @@ public class Block
     {
         writeUInt16((ushort)values.Length);
         ushort num = (ushort)Mathf.CeilToInt((float)values.Length / 8f);
-        for (ushort num2 = 0; num2 < num; num2 = (ushort)(num2 + 1))
+        for (ushort num2 = 0; num2 < num; num2++)
         {
             buffer[step + num2] = 0;
             byte b = 0;
@@ -621,7 +623,7 @@ public class Block
                 {
                     buffer[step + num2] |= Types.SHIFTS[b];
                 }
-                b = (byte)(b + 1);
+                b++;
             }
         }
         step += num;
@@ -678,7 +680,7 @@ public class Block
     public void writeInt32Array(int[] values)
     {
         writeUInt16((ushort)values.Length);
-        for (ushort num = 0; num < values.Length; num = (ushort)(num + 1))
+        for (ushort num = 0; num < values.Length; num++)
         {
             writeInt32(values[num]);
         }
@@ -715,7 +717,7 @@ public class Block
     public void writeUInt64Array(ulong[] values)
     {
         writeUInt16((ushort)values.Length);
-        for (ushort num = 0; num < values.Length; num = (ushort)(num + 1))
+        for (ushort num = 0; num < values.Length; num++)
         {
             writeUInt64(values[num]);
         }

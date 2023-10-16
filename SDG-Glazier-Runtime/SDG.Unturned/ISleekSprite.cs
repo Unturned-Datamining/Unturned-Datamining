@@ -5,13 +5,15 @@ namespace SDG.Unturned;
 
 public interface ISleekSprite : ISleekElement
 {
-    Sprite sprite { get; set; }
+    Sprite Sprite { get; set; }
 
-    SleekColor color { get; set; }
+    SleekColor TintColor { get; set; }
 
-    ESleekSpriteType drawMethod { get; set; }
+    ESleekSpriteType DrawMethod { get; set; }
 
-    bool isRaycastTarget { get; set; }
+    bool IsRaycastTarget { get; set; }
 
-    event Action onImageClicked;
+    Vector2Int TileRepeatHintForUITK { get; set; }
+
+    event Action OnClicked;
 }

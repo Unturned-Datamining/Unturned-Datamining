@@ -182,7 +182,8 @@ public class ProfanityFilter
         {
             text2 += replacementChar;
         }
-        text2 = (text = text2 + text.Substring(startIndex + curseWordLength, text.Length - startIndex - curseWordLength));
+        text2 += text.Substring(startIndex + curseWordLength, text.Length - startIndex - curseWordLength);
+        text = text2;
     }
 
     private static void LoadCurseWords()

@@ -790,7 +790,7 @@ public class DamageTool
                 {
                     continue;
                 }
-                for (byte b = 0; b < componentInParent.getSectionCount(); b = (byte)(b + 1))
+                for (byte b = 0; b < componentInParent.getSectionCount(); b++)
                 {
                     RubbleInfo sectionInfo = componentInParent.getSectionInfo(b);
                     if (sectionInfo.isDead)
@@ -1354,13 +1354,11 @@ public class DamageTool
             try
             {
                 DamageTool.onPlayerAllowedToDamagePlayer(instigator, victim, ref isAllowed);
-                return isAllowed;
             }
             catch (Exception e)
             {
                 UnturnedLog.warn("Plugin raised an exception from onPlayerAllowedToDamagePlayer:");
                 UnturnedLog.exception(e);
-                return isAllowed;
             }
         }
         return isAllowed;

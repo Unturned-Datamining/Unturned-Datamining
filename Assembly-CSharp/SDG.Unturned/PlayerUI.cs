@@ -1719,7 +1719,7 @@ public class PlayerUI : MonoBehaviour
                 {
                     text += "\n";
                 }
-                text += string.Format("{0, 5} {1, 5}", Player.player.quests.flagsList[i].id, Player.player.quests.flagsList[i].value);
+                text += $"{Player.player.quests.flagsList[i].id,5} {Player.player.quests.flagsList[i].value,5}";
             }
             GUIUtility.systemCopyBuffer = text;
         }

@@ -161,7 +161,7 @@ public class VehicleManager : SteamCaller
         if (asset.canTiresBeDamaged)
         {
             int num = 0;
-            for (byte b = 0; b < 8; b = (byte)(b + 1))
+            for (byte b = 0; b < 8; b++)
             {
                 if (UnityEngine.Random.value < Provider.modeConfigData.Vehicles.Has_Tire_Chance)
                 {
@@ -434,7 +434,7 @@ public class VehicleManager : SteamCaller
         writer.WriteSteamID(vehicle.lockedGroup);
         writer.WriteBit(vehicle.isLocked);
         writer.WriteUInt8((byte)vehicle.passengers.Length);
-        for (byte b = 0; b < vehicle.passengers.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < vehicle.passengers.Length; b++)
         {
             Passenger passenger = vehicle.passengers[b];
             if (passenger.player != null)
@@ -705,7 +705,7 @@ public class VehicleManager : SteamCaller
         {
             return;
         }
-        for (ushort num = 0; num < value2; num = (ushort)(num + 1))
+        for (ushort num = 0; num < value2; num++)
         {
             reader.ReadUInt32(out var value3);
             reader.ReadClampedVector3(out var value4, 13, 8);
@@ -1528,14 +1528,14 @@ public class VehicleManager : SteamCaller
             {
                 if (turrets != null && turrets.Length == interactableVehicle.turrets.Length)
                 {
-                    for (byte b = 0; b < interactableVehicle.turrets.Length; b = (byte)(b + 1))
+                    for (byte b = 0; b < interactableVehicle.turrets.Length; b++)
                     {
                         interactableVehicle.turrets[b].state = turrets[b];
                     }
                 }
                 else
                 {
-                    for (byte b2 = 0; b2 < interactableVehicle.turrets.Length; b2 = (byte)(b2 + 1))
+                    for (byte b2 = 0; b2 < interactableVehicle.turrets.Length; b2++)
                     {
                         if (Assets.find(EAssetType.ITEM, vehicleAsset.turrets[b2].itemID) is ItemAsset itemAsset)
                         {
@@ -1550,7 +1550,7 @@ public class VehicleManager : SteamCaller
             }
             if (passengers != null)
             {
-                for (byte b3 = 0; b3 < passengers.Length; b3 = (byte)(b3 + 1))
+                for (byte b3 = 0; b3 < passengers.Length; b3++)
                 {
                     if (passengers[b3] != CSteamID.Nil)
                     {
@@ -1572,16 +1572,14 @@ public class VehicleManager : SteamCaller
                 {
                     BarricadeManager.registerVehicleRegion(interactableVehicle.trainCars[i].root, interactableVehicle, i, ++netId);
                 }
-                return interactableVehicle;
             }
-            return interactableVehicle;
         }
         catch (Exception e)
         {
             UnturnedLog.warn("Exception while spawning vehicle: {0}", vehicleAsset.name);
             UnturnedLog.exception(e);
-            return interactableVehicle;
         }
+        return interactableVehicle;
     }
 
     private bool canUseSpawnpoint(VehicleSpawnpoint spawn)
@@ -1919,7 +1917,7 @@ public class VehicleManager : SteamCaller
             if (b > 2)
             {
                 ushort num2 = river.readUInt16();
-                for (ushort num3 = 0; num3 < num2; num3 = (ushort)(num3 + 1))
+                for (ushort num3 = 0; num3 < num2; num3++)
                 {
                     VehicleAsset vehicleAsset;
                     if (b < 14)
@@ -1975,7 +1973,7 @@ public class VehicleManager : SteamCaller
                     if (b > 3)
                     {
                         array = new byte[river.readByte()][];
-                        for (byte b2 = 0; b2 < array.Length; b2 = (byte)(b2 + 1))
+                        for (byte b2 = 0; b2 < array.Length; b2++)
                         {
                             array[b2] = river.readBytes();
                         }
@@ -1986,7 +1984,7 @@ public class VehicleManager : SteamCaller
                     if (flag)
                     {
                         array2 = new ItemJar[river.readByte()];
-                        for (byte b3 = 0; b3 < array2.Length; b3 = (byte)(b3 + 1))
+                        for (byte b3 = 0; b3 < array2.Length; b3++)
                         {
                             byte new_x = river.readByte();
                             byte new_y = river.readByte();
@@ -2012,7 +2010,7 @@ public class VehicleManager : SteamCaller
                             interactableVehicle.batteryItemGuid = batteryItemGuid;
                             if (flag && array2 != null && array2.Length != 0 && interactableVehicle.trunkItems != null && interactableVehicle.trunkItems.height > 0)
                             {
-                                for (byte b4 = 0; b4 < array2.Length; b4 = (byte)(b4 + 1))
+                                for (byte b4 = 0; b4 < array2.Length; b4++)
                                 {
                                     ItemJar itemJar = array2[b4];
                                     if (itemJar != null)
@@ -2029,7 +2027,7 @@ public class VehicleManager : SteamCaller
             else
             {
                 ushort num6 = river.readUInt16();
-                for (ushort num7 = 0; num7 < num6; num7 = (ushort)(num7 + 1))
+                for (ushort num7 = 0; num7 < num6; num7++)
                 {
                     river.readUInt16();
                     river.readColor();
@@ -2066,16 +2064,16 @@ public class VehicleManager : SteamCaller
         River river = LevelSavedata.openRiver("/Vehicles.dat", isReading: false);
         river.writeByte(15);
         ushort num = 0;
-        for (ushort num2 = 0; num2 < vehicles.Count; num2 = (ushort)(num2 + 1))
+        for (ushort num2 = 0; num2 < vehicles.Count; num2++)
         {
             InteractableVehicle interactableVehicle = vehicles[num2];
             if (!(interactableVehicle == null) && !(interactableVehicle.transform == null) && !interactableVehicle.isAutoClearable)
             {
-                num = (ushort)(num + 1);
+                num++;
             }
         }
         river.writeUInt16(num);
-        for (ushort num3 = 0; num3 < vehicles.Count; num3 = (ushort)(num3 + 1))
+        for (ushort num3 = 0; num3 < vehicles.Count; num3++)
         {
             InteractableVehicle interactableVehicle2 = vehicles[num3];
             if (!(interactableVehicle2 == null) && !(interactableVehicle2.transform == null) && !interactableVehicle2.isAutoClearable)
@@ -2108,7 +2106,7 @@ public class VehicleManager : SteamCaller
                 {
                     byte b = (byte)interactableVehicle2.turrets.Length;
                     river.writeByte(b);
-                    for (byte b2 = 0; b2 < b; b2 = (byte)(b2 + 1))
+                    for (byte b2 = 0; b2 < b; b2++)
                     {
                         Passenger passenger = interactableVehicle2.turrets[b2];
                         if (passenger != null && passenger.state != null)
@@ -2130,7 +2128,7 @@ public class VehicleManager : SteamCaller
                     river.writeBoolean(value: true);
                     byte itemCount = interactableVehicle2.trunkItems.getItemCount();
                     river.writeByte(itemCount);
-                    for (byte b3 = 0; b3 < itemCount; b3 = (byte)(b3 + 1))
+                    for (byte b3 = 0; b3 < itemCount; b3++)
                     {
                         ItemJar item = interactableVehicle2.trunkItems.getItem(b3);
                         river.writeByte(item?.x ?? 0);

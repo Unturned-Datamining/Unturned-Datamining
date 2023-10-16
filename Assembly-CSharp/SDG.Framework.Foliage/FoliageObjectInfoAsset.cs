@@ -23,9 +23,9 @@ public class FoliageObjectInfoAsset : FoliageInfoAsset
         Bounds worldBounds = volume.worldBounds;
         RegionBounds regionBounds = new RegionBounds(worldBounds);
         int num = 0;
-        for (byte b = regionBounds.min.x; b <= regionBounds.max.x; b = (byte)(b + 1))
+        for (byte b = regionBounds.min.x; b <= regionBounds.max.x; b++)
         {
-            for (byte b2 = regionBounds.min.y; b2 <= regionBounds.max.y; b2 = (byte)(b2 + 1))
+            for (byte b2 = regionBounds.min.y; b2 <= regionBounds.max.y; b2++)
             {
                 foreach (LevelObject item in LevelObjects.objects[b, b2])
                 {

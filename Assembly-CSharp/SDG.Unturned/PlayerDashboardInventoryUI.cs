@@ -444,7 +444,7 @@ public class PlayerDashboardInventoryUI
         }
         Blueprint[] array = new Blueprint[action.blueprints.Length];
         bool flag = false;
-        for (byte b = 0; b < array.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < array.Length; b++)
         {
             array[b] = itemAsset.blueprints[action.blueprints[b].id];
             if (action.blueprints[b].isLink)
@@ -505,7 +505,7 @@ public class PlayerDashboardInventoryUI
         if (!(interactableStorage == null) && interactableStorage.isDisplay)
         {
             byte rot_x = interactableStorage.rot_x;
-            rot_x = (byte)(rot_x + 1);
+            rot_x++;
             if (rot_x > 3)
             {
                 rot_x = 0;
@@ -521,7 +521,7 @@ public class PlayerDashboardInventoryUI
         if (!(interactableStorage == null) && interactableStorage.isDisplay)
         {
             byte rot_y = interactableStorage.rot_y;
-            rot_y = (byte)(rot_y + 1);
+            rot_y++;
             if (rot_y > 3)
             {
                 rot_y = 0;
@@ -673,7 +673,7 @@ public class PlayerDashboardInventoryUI
         {
             selectionHotkeyLabel.Text = localization.format("Hotkey_Unset");
             selectionHotkeyLabel.IsVisible = true;
-            for (byte b = 0; b < Player.player.equipment.hotkeys.Length; b = (byte)(b + 1))
+            for (byte b = 0; b < Player.player.equipment.hotkeys.Length; b++)
             {
                 HotkeyInfo hotkeyInfo = Player.player.equipment.hotkeys[b];
                 if (hotkeyInfo.page == selectedPage && hotkeyInfo.x == selected_x && hotkeyInfo.y == selected_y)
@@ -1074,7 +1074,7 @@ public class PlayerDashboardInventoryUI
             }
             byte b = dragJar.size_x;
             byte b2 = dragJar.size_y;
-            if ((int)dragJar.rot % 2 == 1)
+            if (dragJar.rot % 2 == 1)
             {
                 b = dragJar.size_y;
                 b2 = dragJar.size_x;
@@ -1567,7 +1567,7 @@ public class PlayerDashboardInventoryUI
     {
         if (page >= PlayerInventory.SLOTS)
         {
-            page = (byte)(page - PlayerInventory.SLOTS);
+            page -= PlayerInventory.SLOTS;
             items[page].resize(newWidth, newHeight);
             if (page > 0)
             {
@@ -1608,7 +1608,7 @@ public class PlayerDashboardInventoryUI
                 num += vehicleBox.SizeOffset_Y + 10f;
             }
         }
-        for (byte b = 0; b < items.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < items.Length; b++)
         {
             if (headers[b].IsVisible)
             {
@@ -1681,11 +1681,11 @@ public class PlayerDashboardInventoryUI
 
     private static void updateHotkeys()
     {
-        for (byte b = 0; b < PlayerInventory.STORAGE - PlayerInventory.SLOTS; b = (byte)(b + 1))
+        for (byte b = 0; b < PlayerInventory.STORAGE - PlayerInventory.SLOTS; b++)
         {
             items[b].resetHotkeyDisplay();
         }
-        for (byte b2 = 0; b2 < Player.player.equipment.hotkeys.Length; b2 = (byte)(b2 + 1))
+        for (byte b2 = 0; b2 < Player.player.equipment.hotkeys.Length; b2++)
         {
             HotkeyInfo hotkeyInfo = Player.player.equipment.hotkeys[b2];
             byte button = (byte)(b2 + 2);
@@ -1721,7 +1721,7 @@ public class PlayerDashboardInventoryUI
             slots[page].updateItem(jar);
             return;
         }
-        page = (byte)(page - PlayerInventory.SLOTS);
+        page -= PlayerInventory.SLOTS;
         items[page].updateItem(jar);
     }
 
@@ -1732,7 +1732,7 @@ public class PlayerDashboardInventoryUI
             slots[page].applyItem(jar);
             return;
         }
-        page = (byte)(page - PlayerInventory.SLOTS);
+        page -= PlayerInventory.SLOTS;
         items[page].addItem(jar);
     }
 
@@ -1747,7 +1747,7 @@ public class PlayerDashboardInventoryUI
             slots[page].applyItem(null);
             return;
         }
-        page = (byte)(page - PlayerInventory.SLOTS);
+        page -= PlayerInventory.SLOTS;
         items[page].removeItem(jar);
     }
 
@@ -2046,7 +2046,7 @@ public class PlayerDashboardInventoryUI
         ItemJar item = areaItems.getItem((byte)(areaItems.getItemCount() - 1));
         item.interactableItem = interactableItem;
         interactableItem.jar = item;
-        byte b = (byte)(areaItems.height - (item.y + (((int)item.rot % 2 == 0) ? item.size_y : item.size_x)));
+        byte b = (byte)(areaItems.height - (item.y + ((item.rot % 2 == 0) ? item.size_y : item.size_x)));
         if (b < 3 && areaItems.height + b <= 200)
         {
             areaItems.resize(areaItems.width, (byte)(areaItems.height + (3 - b)));
@@ -2176,7 +2176,7 @@ public class PlayerDashboardInventoryUI
         characterImage.SetCamera(Player.player.look.characterCamera);
         sleekConstraintFrame.AddChild(characterImage);
         slots = new SleekSlot[PlayerInventory.SLOTS];
-        for (byte b = 0; b < slots.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < slots.Length; b++)
         {
             slots[b] = new SleekSlot(b);
             slots[b].onSelectedItem = onSelectedItem;
@@ -2276,7 +2276,7 @@ public class PlayerDashboardInventoryUI
             dragOutsideAreaHandler = null;
         }
         headers = new ISleekButton[PlayerInventory.PAGES - PlayerInventory.SLOTS + 3];
-        for (byte b2 = 0; b2 < headers.Length; b2 = (byte)(b2 + 1))
+        for (byte b2 = 0; b2 < headers.Length; b2++)
         {
             headers[b2] = Glazier.Get().CreateButton();
             headers[b2].SizeOffset_Y = 60f;
@@ -2290,7 +2290,7 @@ public class PlayerDashboardInventoryUI
         headers[0].IsVisible = true;
         headers[PlayerInventory.AREA - PlayerInventory.SLOTS].IsVisible = true;
         headerItemIcons = new SleekItemIcon[headers.Length];
-        for (byte b3 = 1; b3 < headers.Length; b3 = (byte)(b3 + 1))
+        for (byte b3 = 1; b3 < headers.Length; b3++)
         {
             if (b3 != PlayerInventory.STORAGE - PlayerInventory.SLOTS && b3 != PlayerInventory.AREA - PlayerInventory.SLOTS)
             {
@@ -2329,7 +2329,7 @@ public class PlayerDashboardInventoryUI
         onBackpackUpdated(0, Player.player.clothing.backpackQuality, Player.player.clothing.backpackState);
         onVestUpdated(0, Player.player.clothing.vestQuality, Player.player.clothing.vestState);
         items = new SleekItems[PlayerInventory.PAGES - PlayerInventory.SLOTS];
-        for (byte b4 = 0; b4 < items.Length; b4 = (byte)(b4 + 1))
+        for (byte b4 = 0; b4 < items.Length; b4++)
         {
             items[b4] = new SleekItems((byte)(PlayerInventory.SLOTS + b4));
             items[b4].onSelectedItem = onSelectedItem;

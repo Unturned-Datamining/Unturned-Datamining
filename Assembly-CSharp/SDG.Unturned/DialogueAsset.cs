@@ -110,10 +110,10 @@ public class DialogueAsset : Asset
         int num = data.ParseInt32("Messages");
         int num2 = data.ParseUInt8("Responses", 0);
         messages = new DialogueMessage[num];
-        for (byte b = 0; b < messages.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < messages.Length; b++)
         {
             DialoguePage[] array = new DialoguePage[data.ParseUInt8("Message_" + b + "_Pages", 0)];
-            for (byte b2 = 0; b2 < array.Length; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < array.Length; b2++)
             {
                 string desc = localization.format("Message_" + b + "_Page_" + b2);
                 desc = ItemTool.filterRarityRichText(desc);
@@ -125,7 +125,7 @@ public class DialogueAsset : Asset
                 array[b2] = new DialoguePage(desc);
             }
             byte[] array2 = new byte[data.ParseUInt8("Message_" + b + "_Responses", 0)];
-            for (byte b3 = 0; b3 < array2.Length; b3 = (byte)(b3 + 1))
+            for (byte b3 = 0; b3 < array2.Length; b3++)
             {
                 string text = "Message_" + b + "_Response_" + b3;
                 array2[b3] = data.ParseUInt8(text, 0);
@@ -144,10 +144,10 @@ public class DialogueAsset : Asset
             messages[b] = new DialogueMessage(b, array, array2, newPrev, guid, faceOverride, array3, newRewardsList);
         }
         responses = new DialogueResponse[num2];
-        for (byte b4 = 0; b4 < responses.Length; b4 = (byte)(b4 + 1))
+        for (byte b4 = 0; b4 < responses.Length; b4++)
         {
             byte[] array4 = new byte[data.ParseUInt8("Response_" + b4 + "_Messages", 0)];
-            for (byte b5 = 0; b5 < array4.Length; b5 = (byte)(b5 + 1))
+            for (byte b5 = 0; b5 < array4.Length; b5++)
             {
                 string text2 = "Response_" + b4 + "_Message_" + b5;
                 array4[b5] = data.ParseUInt8(text2, 0);

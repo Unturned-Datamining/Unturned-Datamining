@@ -129,7 +129,7 @@ public class TempSteamworksEconomy
                     }
                     EconExchangePair item2 = new EconExchangePair(inventoryDetails[i].m_itemId.m_SteamItemInstanceID, num2);
                     pairs.Add(item2);
-                    num = (ushort)(num + num2);
+                    num += num2;
                     if (num == requiredQuantity)
                     {
                         return true;

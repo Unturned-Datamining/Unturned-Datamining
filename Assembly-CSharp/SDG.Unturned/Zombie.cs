@@ -2042,7 +2042,7 @@ public class Zombie : MonoBehaviour
                                     }
                                 }
                                 DamageTool.damage(player, EDeathCause.ZOMBIE, ELimb.SKULL, Provider.server, (target.position - base.transform.position).normalized, (int)b, 1f, out var _);
-                                player.life.askInfect((byte)((float)((int)b / 3) * (1f - player.skills.mastery(1, 2) * 0.5f)));
+                                player.life.askInfect((byte)((float)(b / 3) * (1f - player.skills.mastery(1, 2) * 0.5f)));
                             }
                         }
                     }

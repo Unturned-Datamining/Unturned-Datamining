@@ -408,9 +408,9 @@ public class ObjectManager : SteamCaller
         {
             return;
         }
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 askClearRegionObjects(b, b2);
             }
@@ -462,7 +462,7 @@ public class ObjectManager : SteamCaller
         {
             writer.WriteUInt8(x);
             writer.WriteUInt8(y);
-            for (ushort num = 0; num < LevelObjects.objects[x, y].Count; num = (ushort)(num + 1))
+            for (ushort num = 0; num < LevelObjects.objects[x, y].Count; num++)
             {
                 LevelObject levelObject = LevelObjects.objects[x, y][num];
                 if (levelObject.state != null && levelObject.state.Length != 0)
@@ -568,9 +568,9 @@ public class ObjectManager : SteamCaller
             return;
         }
         regions = new ObjectRegion[Regions.WORLD_SIZE, Regions.WORLD_SIZE];
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 regions[b, b2] = new ObjectRegion();
             }
@@ -587,9 +587,9 @@ public class ObjectManager : SteamCaller
     {
         if (step == 0)
         {
-            for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+            for (byte b = 0; b < Regions.WORLD_SIZE; b++)
             {
-                for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+                for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
                 {
                     if (Provider.isServer)
                     {
@@ -672,9 +672,9 @@ public class ObjectManager : SteamCaller
         }
         River river = LevelSavedata.openRiver("/Objects.dat", isReading: true);
         river.readByte();
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 loadRegion(river, LevelObjects.objects[b, b2]);
             }
@@ -686,9 +686,9 @@ public class ObjectManager : SteamCaller
     {
         River river = LevelSavedata.openRiver("/Objects.dat", isReading: false);
         river.writeByte(SAVEDATA_VERSION);
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 saveRegion(river, LevelObjects.objects[b, b2]);
             }
@@ -756,7 +756,7 @@ public class ObjectManager : SteamCaller
 
     private static void saveRegion(River river, List<LevelObject> objects)
     {
-        for (ushort num = 0; num < objects.Count; num = (ushort)(num + 1))
+        for (ushort num = 0; num < objects.Count; num++)
         {
             LevelObject levelObject = objects[num];
             if (levelObject.state != null && levelObject.state.Length != 0)

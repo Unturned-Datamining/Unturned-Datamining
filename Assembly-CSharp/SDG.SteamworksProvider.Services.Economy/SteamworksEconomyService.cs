@@ -81,7 +81,8 @@ public class SteamworksEconomyService : Service, IEconomyService, IService
             array2 = new SteamworksEconomyItem[punOutItemsArraySize];
             for (uint num = 0u; num < punOutItemsArraySize; num++)
             {
-                SteamworksEconomyItem steamworksEconomyItem = (array2[num] = new SteamworksEconomyItem(array[num]));
+                SteamworksEconomyItem steamworksEconomyItem = new SteamworksEconomyItem(array[num]);
+                array2[num] = steamworksEconomyItem;
             }
         }
         else

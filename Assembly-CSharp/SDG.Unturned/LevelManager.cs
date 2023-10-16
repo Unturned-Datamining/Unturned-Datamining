@@ -211,17 +211,17 @@ public class LevelManager : SteamCaller
         {
             targetRadius = targetCenter.x - (float)(-Level.size / 2 + Level.border);
         }
-        if (targetCenter.x + targetRadius > (float)((int)Level.size / 2 - Level.border))
+        if (targetCenter.x + targetRadius > (float)(Level.size / 2 - Level.border))
         {
-            targetRadius = (float)((int)Level.size / 2 - Level.border) - targetCenter.x;
+            targetRadius = (float)(Level.size / 2 - Level.border) - targetCenter.x;
         }
         if (targetCenter.z - targetRadius < (float)(-Level.size / 2 + Level.border))
         {
             targetRadius = targetCenter.z - (float)(-Level.size / 2 + Level.border);
         }
-        if (targetCenter.z + targetRadius > (float)((int)Level.size / 2 - Level.border))
+        if (targetCenter.z + targetRadius > (float)(Level.size / 2 - Level.border))
         {
-            targetRadius = (float)((int)Level.size / 2 - Level.border) - targetCenter.z;
+            targetRadius = (float)(Level.size / 2 - Level.border) - targetCenter.z;
         }
     }
 
@@ -299,9 +299,9 @@ public class LevelManager : SteamCaller
 
     private void arenaSpawn()
     {
-        for (byte b = 0; b < Regions.WORLD_SIZE; b = (byte)(b + 1))
+        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 if (LevelItems.spawns[b, b2].Count > 0)
                 {
@@ -368,7 +368,7 @@ public class LevelManager : SteamCaller
             arenaPlayers.Add(arenaPlayer);
             foreach (ArenaLoadout arena_Loadout in Level.info.configData.Arena_Loadouts)
             {
-                for (ushort num3 = 0; num3 < arena_Loadout.Amount; num3 = (ushort)(num3 + 1))
+                for (ushort num3 = 0; num3 < arena_Loadout.Amount; num3++)
                 {
                     ushort num4 = SpawnTableTool.ResolveLegacyId(arena_Loadout.Table_ID, EAssetType.ITEM, OnGetArenaLoadoutsSpawnTableErrorContext);
                     if (num4 != 0)
@@ -676,7 +676,7 @@ public class LevelManager : SteamCaller
         NetPakReader reader = context.reader;
         reader.ReadUInt8(out var value);
         ulong[] array = new ulong[value];
-        for (byte b = 0; b < value; b = (byte)(b + 1))
+        for (byte b = 0; b < value; b++)
         {
             reader.ReadUInt64(out array[b]);
         }
@@ -688,7 +688,7 @@ public class LevelManager : SteamCaller
     {
         byte b = (byte)newPlayerIDs.Length;
         writer.WriteUInt8(b);
-        for (byte b2 = 0; b2 < b; b2 = (byte)(b2 + 1))
+        for (byte b2 = 0; b2 < b; b2++)
         {
             writer.WriteUInt64(newPlayerIDs[b2]);
         }
@@ -732,13 +732,13 @@ public class LevelManager : SteamCaller
             Vector3 zero = Vector3.zero;
             if (UnityEngine.Random.value < 0.5f)
             {
-                zero.x = (float)((int)Level.size / 2) * (0f - Mathf.Sign(point.x));
-                zero.z = (float)UnityEngine.Random.Range(0, (int)Level.size / 2) * (0f - Mathf.Sign(point.z));
+                zero.x = (float)(Level.size / 2) * (0f - Mathf.Sign(point.x));
+                zero.z = (float)UnityEngine.Random.Range(0, Level.size / 2) * (0f - Mathf.Sign(point.z));
             }
             else
             {
-                zero.x = (float)UnityEngine.Random.Range(0, (int)Level.size / 2) * (0f - Mathf.Sign(point.x));
-                zero.z = (float)((int)Level.size / 2) * (0f - Mathf.Sign(point.z));
+                zero.x = (float)UnityEngine.Random.Range(0, Level.size / 2) * (0f - Mathf.Sign(point.x));
+                zero.z = (float)(Level.size / 2) * (0f - Mathf.Sign(point.z));
             }
             float y = point.y + 450f;
             point.y = 0f;
@@ -765,7 +765,7 @@ public class LevelManager : SteamCaller
             }
             if (airdropInfo.dropped)
             {
-                if (Mathf.Abs(airdropInfo.state.x) > (float)((int)Level.size / 2 + 2048) || Mathf.Abs(airdropInfo.state.z) > (float)((int)Level.size / 2 + 2048))
+                if (Mathf.Abs(airdropInfo.state.x) > (float)(Level.size / 2 + 2048) || Mathf.Abs(airdropInfo.state.z) > (float)(Level.size / 2 + 2048))
                 {
                     if (airdropInfo.model != null)
                     {

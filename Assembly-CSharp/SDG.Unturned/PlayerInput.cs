@@ -554,11 +554,11 @@ public class PlayerInput : PlayerCaller
             if (consumed == buffer && clientPendingInput != null && !Provider.isServer)
             {
                 ushort num2 = 0;
-                for (byte b = 0; b < keys.Length; b = (byte)(b + 1))
+                for (byte b = 0; b < keys.Length; b++)
                 {
                     if (keys[b])
                     {
-                        num2 = (ushort)(num2 | flags[b]);
+                        num2 |= flags[b];
                     }
                 }
                 clientPendingInput.keys = num2;
@@ -625,7 +625,7 @@ public class PlayerInput : PlayerCaller
                     }
                     hasDoneOcclusionCheck = false;
                     inputs = playerInputPacket.serversideInputs;
-                    for (byte b2 = 0; b2 < keys.Length; b2 = (byte)(b2 + 1))
+                    for (byte b2 = 0; b2 < keys.Length; b2++)
                     {
                         keys[b2] = (playerInputPacket.keys & flags[b2]) == flags[b2];
                     }
@@ -678,7 +678,7 @@ public class PlayerInput : PlayerCaller
                     }
                     if (onPluginKeyTick != null)
                     {
-                        for (byte b3 = 0; b3 < ControlsSettings.NUM_PLUGIN_KEYS; b3 = (byte)(b3 + 1))
+                        for (byte b3 = 0; b3 < ControlsSettings.NUM_PLUGIN_KEYS; b3++)
                         {
                             int num3 = keys.Length - ControlsSettings.NUM_PLUGIN_KEYS + b3;
                             onPluginKeyTick(base.player, simulation, b3, keys[num3]);
@@ -720,7 +720,7 @@ public class PlayerInput : PlayerCaller
         {
             keys = new bool[10 + ControlsSettings.NUM_PLUGIN_KEYS];
             flags = new ushort[10 + ControlsSettings.NUM_PLUGIN_KEYS];
-            for (byte b = 0; b < keys.Length; b = (byte)(b + 1))
+            for (byte b = 0; b < keys.Length; b++)
             {
                 flags[b] = (ushort)(1 << (int)b);
             }

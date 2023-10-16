@@ -98,7 +98,7 @@ public class SleekItem : SleekWrapper
         {
             button.TooltipText = asset.itemName;
         }
-        if ((int)jar.rot % 2 == 0)
+        if (jar.rot % 2 == 0)
         {
             base.SizeOffset_X = asset.size_x * 50;
             base.SizeOffset_Y = asset.size_y * 50;

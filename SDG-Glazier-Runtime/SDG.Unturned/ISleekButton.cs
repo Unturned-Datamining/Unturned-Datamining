@@ -2,13 +2,13 @@ namespace SDG.Unturned;
 
 public interface ISleekButton : ISleekElement, ISleekLabel, ISleekWithTooltip
 {
-    SleekColor backgroundColor { get; set; }
+    SleekColor BackgroundColor { get; set; }
 
-    bool isClickable { get; set; }
+    bool IsClickable { get; set; }
 
-    bool isRaycastTarget { get; set; }
+    bool IsRaycastTarget { get; set; }
 
-    event ClickedButton onClickedButton;
+    event ClickedButton OnClicked;
 
-    event ClickedButton onRightClickedButton;
+    event ClickedButton OnRightClicked;
 }

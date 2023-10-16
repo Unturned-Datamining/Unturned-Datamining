@@ -40,7 +40,7 @@ public class NPCItemReward : INPCReward
         {
             return;
         }
-        for (byte b = 0; b < amount; b = (byte)(b + 1))
+        for (byte b = 0; b < amount; b++)
         {
             Item item;
             if (sight > -1 || tactical > -1 || grip > -1 || barrel > -1 || magazine > -1 || ammo > -1)

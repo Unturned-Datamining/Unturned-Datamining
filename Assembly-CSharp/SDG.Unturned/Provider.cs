@@ -1661,7 +1661,7 @@ public class Provider : MonoBehaviour
             writer.WriteUInt64(Characters.active.packageVest);
             writer.WriteUInt64(Characters.active.packageMask);
             writer.WriteUInt64(Characters.active.packageGlasses);
-            writer.WriteList(Characters.packageSkins, (SystemNetPakWriterEx.WriteListItem<ulong>)writer.WriteUInt64, MAX_SKINS_LENGTH);
+            writer.WriteList(Characters.packageSkins, writer.WriteUInt64, MAX_SKINS_LENGTH);
             writer.WriteEnum(Characters.active.skillset);
             writer.WriteString(modBuilder.ToString());
             writer.WriteString(language);
@@ -2700,8 +2700,8 @@ public class Provider : MonoBehaviour
 
     private void NotifyClientsInQueueOfPosition()
     {
-        int queuePosition;
-        for (queuePosition = 0; queuePosition < pending.Count; queuePosition++)
+        int queuePosition = 0;
+        while (queuePosition < pending.Count)
         {
             if (pending[queuePosition].lastNotifiedQueuePosition != queuePosition)
             {
@@ -2711,6 +2711,8 @@ public class Provider : MonoBehaviour
                     writer.WriteUInt8(MathfEx.ClampToByte(queuePosition));
                 });
             }
+            int num = queuePosition + 1;
+            queuePosition = num;
         }
     }
 
@@ -3691,7 +3693,7 @@ public class Provider : MonoBehaviour
 
     private static bool findClientForKickBanDismiss(CSteamID steamID, out SteamPlayer foundClient, out byte foundIndex)
     {
-        for (byte b = 0; b < clients.Count; b = (byte)(b + 1))
+        for (byte b = 0; b < clients.Count; b++)
         {
             SteamPlayer steamPlayer = clients[b];
             if (steamPlayer.playerID.steamID == steamID)

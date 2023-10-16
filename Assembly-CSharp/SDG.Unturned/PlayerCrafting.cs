@@ -217,7 +217,7 @@ public class PlayerCrafting : PlayerCaller
                 ushort num = 0;
                 foreach (InventorySearch item2 in list)
                 {
-                    num = (ushort)(num + item2.jar.item.amount);
+                    num += item2.jar.item.amount;
                 }
                 if (num < blueprintSupply.amount && blueprint.type != EBlueprintType.AMMO)
                 {
@@ -255,11 +255,11 @@ public class PlayerCrafting : PlayerCaller
                 {
                     base.player.equipment.dequip();
                 }
-                for (byte b2 = 0; b2 < array.Length; b2 = (byte)(b2 + 1))
+                for (byte b2 = 0; b2 < array.Length; b2++)
                 {
                     BlueprintSupply blueprintSupply2 = blueprint.supplies[b2];
                     List<InventorySearch> list3 = array[b2];
-                    for (byte b3 = 0; b3 < blueprintSupply2.amount; b3 = (byte)(b3 + 1))
+                    for (byte b3 = 0; b3 < blueprintSupply2.amount; b3++)
                     {
                         InventorySearch inventorySearch2 = list3[b3];
                         if (base.player.equipment.checkSelection(inventorySearch2.page, inventorySearch2.jar.x, inventorySearch2.jar.y))
@@ -307,7 +307,7 @@ public class PlayerCrafting : PlayerCaller
                     base.player.equipment.dequip();
                 }
                 List<InventorySearch> list5 = array[0];
-                for (byte b4 = 0; b4 < list5.Count; b4 = (byte)(b4 + 1))
+                for (byte b4 = 0; b4 < list5.Count; b4++)
                 {
                     InventorySearch inventorySearch4 = list5[b4];
                     if (inventorySearch4.jar != inventorySearch3.jar)
@@ -346,7 +346,7 @@ public class PlayerCrafting : PlayerCaller
             }
             else
             {
-                for (byte b5 = 0; b5 < array.Length; b5 = (byte)(b5 + 1))
+                for (byte b5 = 0; b5 < array.Length; b5++)
                 {
                     BlueprintSupply blueprintSupply3 = blueprint.supplies[b5];
                     List<InventorySearch> list6 = array[b5];
@@ -354,7 +354,7 @@ public class PlayerCrafting : PlayerCaller
                     {
                         return;
                     }
-                    for (byte b6 = 0; b6 < blueprintSupply3.amount; b6 = (byte)(b6 + 1))
+                    for (byte b6 = 0; b6 < blueprintSupply3.amount; b6++)
                     {
                         InventorySearch inventorySearch5 = list6[b6];
                         if (base.player.equipment.checkSelection(inventorySearch5.page, inventorySearch5.jar.x, inventorySearch5.jar.y))

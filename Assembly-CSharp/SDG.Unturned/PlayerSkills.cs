@@ -310,12 +310,12 @@ public class PlayerSkills : PlayerCaller
     {
         if (Level.info != null && Level.info.type != ELevelType.ARENA)
         {
-            for (byte b = 0; b < SKILLSETS[(byte)base.channel.owner.skillset].Length; b = (byte)(b + 1))
+            for (byte b = 0; b < SKILLSETS[(byte)base.channel.owner.skillset].Length; b++)
             {
                 SpecialitySkillPair specialitySkillPair = SKILLSETS[(byte)base.channel.owner.skillset][b];
                 if (speciality == specialitySkillPair.speciality && index == specialitySkillPair.skill)
                 {
-                    return skills[speciality][index].cost / 2u;
+                    return skills[speciality][index].cost / 2;
                 }
             }
         }
@@ -628,13 +628,13 @@ public class PlayerSkills : PlayerCaller
         if (Level.info == null || Level.info.type == ELevelType.SURVIVAL)
         {
             float num = (base.player.life.wasPvPDeath ? Provider.modeConfigData.Players.Lose_Skills_PvP : Provider.modeConfigData.Players.Lose_Skills_PvE);
-            for (byte b = 0; b < skills.Length; b = (byte)(b + 1))
+            for (byte b = 0; b < skills.Length; b++)
             {
                 Skill[] array = skills[b];
-                for (byte b2 = 0; b2 < array.Length; b2 = (byte)(b2 + 1))
+                for (byte b2 = 0; b2 < array.Length; b2++)
                 {
                     bool flag = true;
-                    for (byte b3 = 0; b3 < SKILLSETS[(byte)base.channel.owner.skillset].Length; b3 = (byte)(b3 + 1))
+                    for (byte b3 = 0; b3 < SKILLSETS[(byte)base.channel.owner.skillset].Length; b3++)
                     {
                         SpecialitySkillPair specialitySkillPair = SKILLSETS[(byte)base.channel.owner.skillset][b3];
                         if (b == specialitySkillPair.speciality && b2 == specialitySkillPair.skill)
@@ -654,9 +654,9 @@ public class PlayerSkills : PlayerCaller
         }
         else
         {
-            for (byte b4 = 0; b4 < skills.Length; b4 = (byte)(b4 + 1))
+            for (byte b4 = 0; b4 < skills.Length; b4++)
             {
-                for (byte b5 = 0; b5 < skills[b4].Length; b5 = (byte)(b5 + 1))
+                for (byte b5 = 0; b5 < skills[b4].Length; b5++)
                 {
                     skills[b4][b5].level = 0;
                 }
@@ -762,11 +762,11 @@ public class PlayerSkills : PlayerCaller
             {
                 return;
             }
-            for (byte b2 = 0; b2 < skills.Length; b2 = (byte)(b2 + 1))
+            for (byte b2 = 0; b2 < skills.Length; b2++)
             {
                 if (skills[b2] != null)
                 {
-                    for (byte b3 = 0; b3 < skills[b2].Length; b3 = (byte)(b3 + 1))
+                    for (byte b3 = 0; b3 < skills[b2].Length; b3++)
                     {
                         skills[b2][b3].level = block.readByte();
                         if (skills[b2][b3].level > skills[b2][b3].max)
@@ -794,11 +794,11 @@ public class PlayerSkills : PlayerCaller
         block.writeUInt32(experience);
         block.writeInt32(reputation);
         block.writeByte((byte)boost);
-        for (byte b = 0; b < skills.Length; b = (byte)(b + 1))
+        for (byte b = 0; b < skills.Length; b++)
         {
             if (skills[b] != null)
             {
-                for (byte b2 = 0; b2 < skills[b].Length; b2 = (byte)(b2 + 1))
+                for (byte b2 = 0; b2 < skills[b].Length; b2++)
                 {
                     block.writeByte(skills[b][b2].level);
                 }
@@ -811,10 +811,10 @@ public class PlayerSkills : PlayerCaller
     {
         if (Provider.modeConfigData.Players.Spawn_With_Max_Skills)
         {
-            for (byte b = 0; b < skills.Length; b = (byte)(b + 1))
+            for (byte b = 0; b < skills.Length; b++)
             {
                 Skill[] array = skills[b];
-                for (byte b2 = 0; b2 < array.Length; b2 = (byte)(b2 + 1))
+                for (byte b2 = 0; b2 < array.Length; b2++)
                 {
                     array[b2].setLevelToMax();
                 }

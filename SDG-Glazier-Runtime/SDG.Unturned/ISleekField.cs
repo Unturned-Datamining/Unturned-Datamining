@@ -2,21 +2,21 @@ namespace SDG.Unturned;
 
 public interface ISleekField : ISleekElement, ISleekLabel, ISleekWithTooltip
 {
-    char replace { get; set; }
+    bool IsPasswordField { get; set; }
 
-    string hint { get; set; }
+    string PlaceholderText { get; set; }
 
-    bool multiline { get; set; }
+    bool IsMultiline { get; set; }
 
-    int maxLength { get; set; }
+    int MaxLength { get; set; }
 
-    SleekColor backgroundColor { get; set; }
+    SleekColor BackgroundColor { get; set; }
 
-    event Entered onEntered;
+    event Entered OnTextSubmitted;
 
-    event Typed onTyped;
+    event Typed OnTextChanged;
 
-    event Escaped onEscaped;
+    event Escaped OnTextEscaped;
 
     void FocusControl();
 

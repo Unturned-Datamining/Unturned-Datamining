@@ -5,31 +5,39 @@ namespace SDG.Unturned;
 
 public interface ISleekScrollView : ISleekElement
 {
-    bool scaleContentToWidth { get; set; }
+    bool ScaleContentToWidth { get; set; }
 
-    bool scaleContentToHeight { get; set; }
+    bool ScaleContentToHeight { get; set; }
 
-    float contentScaleFactor { get; set; }
+    float ContentScaleFactor { get; set; }
 
-    bool reduceWidthWhenScrollbarVisible { get; set; }
+    bool ReduceWidthWhenScrollbarVisible { get; set; }
 
-    Vector2 contentSizeOffset { get; set; }
+    ESleekScrollbarVisibility VerticalScrollbarVisibility { get; set; }
 
-    Vector2 state { get; set; }
+    Vector2 ContentSizeOffset { get; set; }
 
-    Vector2 normalizedStateCenter { get; set; }
+    Vector2 NormalizedStateCenter { get; set; }
 
-    bool handleScrollWheel { get; set; }
+    bool HandleScrollWheel { get; set; }
 
-    SleekColor backgroundColor { get; set; }
+    SleekColor BackgroundColor { get; set; }
 
-    SleekColor foregroundColor { get; set; }
+    SleekColor ForegroundColor { get; set; }
 
-    float normalizedVerticalPosition { get; }
+    float NormalizedVerticalPosition { get; }
 
-    float normalizedViewportHeight { get; }
+    float NormalizedViewportHeight { get; }
 
-    event Action<Vector2> onValueChanged;
+    bool ContentUseManualLayout { get; set; }
+
+    bool AlignContentToBottom { get; set; }
+
+    bool IsRaycastTarget { get; set; }
+
+    event Action<Vector2> OnNormalizedValueChanged;
+
+    void ScrollToTop();
 
     void ScrollToBottom();
 }

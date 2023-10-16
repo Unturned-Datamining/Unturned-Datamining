@@ -18,11 +18,11 @@ public class NPCShortFlagReward : INPCReward
         player.quests.getFlag(id, out var num);
         if (modificationType == ENPCModificationType.INCREMENT)
         {
-            num = (short)(num + value);
+            num += value;
         }
         else if (modificationType == ENPCModificationType.DECREMENT)
         {
-            num = (short)(num - value);
+            num -= value;
         }
         player.quests.sendSetFlag(id, num);
     }

@@ -61,7 +61,7 @@ public class PlayerManager : SteamCaller
         {
             return;
         }
-        for (ushort num = 0; num < value2; num = (ushort)(num + 1))
+        for (ushort num = 0; num < value2; num++)
         {
             reader.ReadUInt8(out var value3);
             reader.ReadClampedVector3(out var value4);

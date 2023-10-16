@@ -2,11 +2,11 @@ namespace SDG.Unturned;
 
 public interface ISleekUInt16Field : ISleekElement, ISleekNumericField, ISleekWithTooltip
 {
-    ushort state { get; set; }
+    ushort Value { get; set; }
 
-    ushort minValue { get; set; }
+    ushort MinValue { get; set; }
 
-    ushort maxValue { get; set; }
+    ushort MaxValue { get; set; }
 
-    event TypedUInt16 onTypedUInt16;
+    event TypedUInt16 OnValueChanged;
 }

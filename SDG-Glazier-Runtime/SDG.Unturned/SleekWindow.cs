@@ -87,7 +87,7 @@ public class SleekWindow : SleekWrapper
         showCursor = true;
         isEnabled = true;
         drawCursorWhileDisabled = false;
-        base.sizeScale_X = 1f;
-        base.sizeScale_Y = 1f;
+        base.SizeScale_X = 1f;
+        base.SizeScale_Y = 1f;
     }
 }
