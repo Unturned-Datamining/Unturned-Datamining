@@ -22,6 +22,7 @@
 | 37.230.228.210             | HiddenFromAllServerLists, Blocked, WorkshopWarning |
 | 194.147.90.244:23443-23444 | HiddenFromAllServerLists, Blocked, WorkshopWarning |
 | 109.248.4.107              | HiddenFromAllServerLists, Blocked, WorkshopWarning |
+| 92.38.222.24               | HiddenFromAllServerLists, Blocked, WorkshopWarning |
 
 ## Name filters
 | Regex                                                                                 | BanFlags                                                      |
