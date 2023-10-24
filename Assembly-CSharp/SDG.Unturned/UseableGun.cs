@@ -2335,7 +2335,7 @@ public class UseableGun : Useable
 
     public override bool startSecondary()
     {
-        if ((!isAiming && !isReloading && !isHammering && !isUnjamming && !isAttaching && !needsRechamber) & (!isSprinting || equippedGunAsset.canAimDuringSprint))
+        if ((!isAiming && !isReloading && !isHammering && !isUnjamming && !isAttaching && !needsRechamber && firemode != EFiremode.SAFETY) & (!isSprinting || equippedGunAsset.canAimDuringSprint))
         {
             isAiming = true;
             startAim();

@@ -411,6 +411,10 @@ public class LevelObject
                 gameObject.name = asset.name;
                 NetIdRegistry.AssignTransform(netId, _transform);
                 isDecal = this.transform.Find("Decal");
+                if (isDecal)
+                {
+                    gameObject.hideFlags = HideFlags.None;
+                }
                 if (asset.useScale)
                 {
                     this.transform.localScale = newScale;
@@ -428,6 +432,10 @@ public class LevelObject
                 NetIdRegistry.AssignTransform(netId, _transform);
             }
             isDecal = this.transform.Find("Decal");
+            if (isDecal)
+            {
+                gameObject2.hideFlags = HideFlags.None;
+            }
             if (asset.useScale)
             {
                 this.transform.localScale = newScale;

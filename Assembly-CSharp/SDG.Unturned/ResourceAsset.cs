@@ -25,8 +25,6 @@ public class ResourceAsset : Asset
 
     public uint rewardXP;
 
-    public float radius;
-
     public float scale;
 
     public float verticalOffset;
@@ -361,7 +359,6 @@ public class ResourceAsset : Asset
             _skyboxGameObject.SetTagIfUntaggedRecursively("Resource");
         }
         health = data.ParseUInt16("Health", 0);
-        radius = data.ParseFloat("Radius");
         scale = Mathf.Abs(data.ParseFloat("Scale"));
         verticalOffset = data.ParseFloat("Vertical_Offset", -0.75f);
         explosion = data.ParseGuidOrLegacyId("Explosion", out _explosionGuid);

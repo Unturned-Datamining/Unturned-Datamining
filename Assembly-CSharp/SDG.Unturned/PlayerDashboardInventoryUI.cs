@@ -2344,14 +2344,21 @@ public class PlayerDashboardInventoryUI
         selectionFrame.SizeScale_Y = 1f;
         selectionFrame.IsVisible = false;
         PlayerUI.container.AddChild(selectionFrame);
-        outsideSelectionInvisibleButton = Glazier.Get().CreateImage();
-        outsideSelectionInvisibleButton.SizeScale_X = 1f;
-        outsideSelectionInvisibleButton.SizeScale_Y = 1f;
-        outsideSelectionInvisibleButton.OnClicked += onClickedOutsideSelection;
-        outsideSelectionInvisibleButton.OnRightClicked += onClickedOutsideSelection;
-        outsideSelectionInvisibleButton.Texture = (Texture2D)GlazierResources.PixelTexture;
-        outsideSelectionInvisibleButton.TintColor = new Color(0f, 0f, 0f, 0.5f);
-        selectionFrame.AddChild(outsideSelectionInvisibleButton);
+        if (hasDragOutsideHandlers)
+        {
+            outsideSelectionInvisibleButton = Glazier.Get().CreateImage();
+            outsideSelectionInvisibleButton.SizeScale_X = 1f;
+            outsideSelectionInvisibleButton.SizeScale_Y = 1f;
+            outsideSelectionInvisibleButton.OnClicked += onClickedOutsideSelection;
+            outsideSelectionInvisibleButton.OnRightClicked += onClickedOutsideSelection;
+            outsideSelectionInvisibleButton.Texture = (Texture2D)GlazierResources.PixelTexture;
+            outsideSelectionInvisibleButton.TintColor = new Color(0f, 0f, 0f, 0.5f);
+            selectionFrame.AddChild(outsideSelectionInvisibleButton);
+        }
+        else
+        {
+            outsideSelectionInvisibleButton = null;
+        }
         selectionBackdropBox = Glazier.Get().CreateBox();
         selectionBackdropBox.SizeOffset_X = 530f;
         selectionBackdropBox.SizeOffset_Y = 440f;

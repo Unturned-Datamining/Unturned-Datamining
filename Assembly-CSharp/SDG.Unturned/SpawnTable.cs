@@ -21,6 +21,23 @@ public class SpawnTable
 
     public bool hasNotifiedChild;
 
+    public Asset FindAsset(EAssetType legacyAssetType)
+    {
+        if (!targetGuid.IsEmpty())
+        {
+            return Assets.find(targetGuid);
+        }
+        if (legacyAssetId > 0)
+        {
+            return Assets.find(legacyAssetType, legacyAssetId);
+        }
+        if (legacySpawnId > 0)
+        {
+            return Assets.find(EAssetType.SPAWN, legacySpawnId) as SpawnAsset;
+        }
+        return null;
+    }
+
     internal bool TryParse(Asset assetContext, DatDictionary datDictionary)
     {
         targetGuid = datDictionary.ParseGuid("Guid");

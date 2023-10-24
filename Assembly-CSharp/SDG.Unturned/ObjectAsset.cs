@@ -65,8 +65,6 @@ public class ObjectAsset : Asset
 
     public float interactabilityDelay;
 
-    public bool interactabilityEmission;
-
     public EObjectInteractabilityHint interactabilityHint;
 
     public string interactabilityText;
@@ -516,8 +514,8 @@ public class ObjectAsset : Asset
         }
         else if (type == EObjectType.DECAL)
         {
-            float num = data.ParseFloat("Decal_X");
-            float num2 = data.ParseFloat("Decal_Y");
+            float num = data.ParseFloat("Decal_X", 1f);
+            float num2 = data.ParseFloat("Decal_Y", 1f);
             float num3 = 1f;
             if (data.ContainsKey("Decal_LOD_Bias"))
             {
@@ -607,7 +605,6 @@ public class ObjectAsset : Asset
                 {
                     interactabilityHint = (EObjectInteractabilityHint)Enum.Parse(typeof(EObjectInteractabilityHint), data.GetString("Interactability_Hint"), ignoreCase: true);
                 }
-                interactabilityEmission = data.ContainsKey("Interactability_Emission");
                 if (interactability == EObjectInteractability.NOTE)
                 {
                     ushort num4 = data.ParseUInt16("Interactability_Text_Lines", 0);

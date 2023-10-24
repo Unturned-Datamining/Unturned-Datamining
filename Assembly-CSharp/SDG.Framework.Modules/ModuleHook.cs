@@ -152,30 +152,37 @@ public class ModuleHook : MonoBehaviour
 
     private static Assembly LoadAssemblyFromDiscoveredPaths(AssemblyName loadAssemblyName)
     {
-        Assembly assembly = null;
+        Assembly value = null;
         try
         {
             foreach (KeyValuePair<AssemblyName, string> item in discoveredNameToPath)
             {
                 AssemblyName key = item.Key;
-                string value = item.Value;
-                if (string.Equals(key.Name, loadAssemblyName.Name) && key.Version >= loadAssemblyName.Version)
+                string value2 = item.Value;
+                if (!string.Equals(key.Name, loadAssemblyName.Name) || !(key.Version >= loadAssemblyName.Version))
                 {
-                    UnturnedLog.info($"Using discovered assembly for \"{loadAssemblyName}\" at \"{value}\"");
-                    assembly = Assembly.Load(File.ReadAllBytes(value));
-                    if (assembly != null)
-                    {
-                        nameToAssembly.Add(key.Name, assembly);
-                    }
-                    break;
+                    continue;
                 }
+                if ((bool)shouldLogAssemblyResolve)
+                {
+                    UnturnedLog.info($"Using discovered assembly for \"{loadAssemblyName}\" at \"{value2}\"");
+                }
+                if (!nameToAssembly.TryGetValue(key.Name, out value))
+                {
+                    value = Assembly.Load(File.ReadAllBytes(value2));
+                    if (value != null)
+                    {
+                        nameToAssembly.Add(key.Name, value);
+                    }
+                }
+                break;
             }
         }
         catch (Exception e)
         {
             UnturnedLog.exception(e, $"Caught exception loading assembly for \"{loadAssemblyName}\" from discovered paths:");
         }
-        return assembly;
+        return value;
     }
 
     public static Assembly resolveAssemblyPath(string path)
@@ -206,12 +213,18 @@ public class ModuleHook : MonoBehaviour
         }
         if (string.Equals(args.Name, "Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"))
         {
-            UnturnedLog.info("Redirecting Assembly-CSharp-firstpass to com.rlabrecque.steamworks.net for {0}", args.RequestingAssembly);
+            if ((bool)shouldLogAssemblyResolve)
+            {
+                UnturnedLog.info("Redirecting Assembly-CSharp-firstpass to com.rlabrecque.steamworks.net for {0}", args.RequestingAssembly);
+            }
             return typeof(SteamAPI).Assembly;
         }
         if (string.Equals(args.Name, "Steamworks.NET, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"))
         {
-            UnturnedLog.info("Redirecting Steamworks.NET to com.rlabrecque.steamworks.net for {0}", args.RequestingAssembly);
+            if ((bool)shouldLogAssemblyResolve)
+            {
+                UnturnedLog.info("Redirecting Steamworks.NET to com.rlabrecque.steamworks.net for {0}", args.RequestingAssembly);
+            }
             return typeof(SteamAPI).Assembly;
         }
         if (ModuleHook.PreVanillaAssemblyResolvePostRedirects != null)

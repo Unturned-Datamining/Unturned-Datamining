@@ -27,12 +27,12 @@ public class SpawnTableTool
             }
             if (spawnTable.legacySpawnId != 0)
             {
-                spawnAsset = Assets.find(EAssetType.SPAWN, spawnTable.legacySpawnId) as SpawnAsset;
-                if (spawnAsset == null)
+                if (!(Assets.find(EAssetType.SPAWN, spawnTable.legacySpawnId) is SpawnAsset spawnAsset2))
                 {
                     UnturnedLog.warn(string.Format("Spawn table \"{0}\" from {1} resolved by {2} unable to find table matching legacy spawn ID {3}", spawnAsset.name, spawnAsset.GetOriginName(), errorContextCallback?.Invoke() ?? "Unknown", spawnTable.legacySpawnId));
                     return null;
                 }
+                spawnAsset = spawnAsset2;
                 continue;
             }
             if (spawnTable.legacyAssetId != 0)
@@ -53,9 +53,9 @@ public class SpawnTableTool
                     UnturnedLog.warn(string.Format("Spawn table \"{0}\" from {1} resolved by {2} unable to find asset matching GUID {3}", spawnAsset.name, spawnAsset.GetOriginName(), errorContextCallback?.Invoke() ?? "Unknown", spawnTable.targetGuid));
                     return null;
                 }
-                if (asset2 is SpawnAsset spawnAsset2)
+                if (asset2 is SpawnAsset spawnAsset3)
                 {
-                    spawnAsset = spawnAsset2;
+                    spawnAsset = spawnAsset3;
                     continue;
                 }
                 return asset2;

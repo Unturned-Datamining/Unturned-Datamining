@@ -43,6 +43,8 @@ public class MenuWorkshopUI
 
     private static ISleekButton captureAllItemIconsButton;
 
+    private static ISleekButton captureAllSkinIconsButton;
+
     private static ISleekButton captureItemDefIconButton;
 
     private static ISleekButton captureOutfitPreviewButton;
@@ -151,6 +153,12 @@ public class MenuWorkshopUI
     {
         IconUtils.CreateExtrasDirectory();
         IconUtils.captureAllItemIcons();
+    }
+
+    private static void onClickedCaptureAllSkinIconsButton(ISleekElement button)
+    {
+        IconUtils.CreateExtrasDirectory();
+        IconUtils.CaptureAllSkinIcons();
     }
 
     private static void onClickedCaptureItemDefIconButton(ISleekElement button)
@@ -340,66 +348,85 @@ public class MenuWorkshopUI
         iconToolsContainer.SizeScale_Y = 1f;
         container.AddChild(iconToolsContainer);
         iconToolsContainer.IsVisible = false;
+        int num = 0;
         itemIDField = Glazier.Get().CreateUInt16Field();
+        itemIDField.PositionOffset_Y = num;
         itemIDField.SizeOffset_X = 150f;
         itemIDField.SizeOffset_Y = 25f;
         itemIDField.AddLabel("Item ID", ESleekSide.RIGHT);
         iconToolsContainer.AddChild(itemIDField);
+        num += 25;
         vehicleIDField = Glazier.Get().CreateUInt16Field();
-        vehicleIDField.PositionOffset_Y = 25f;
+        vehicleIDField.PositionOffset_Y = num;
         vehicleIDField.SizeOffset_X = 150f;
         vehicleIDField.SizeOffset_Y = 25f;
         vehicleIDField.AddLabel("Vehicle ID", ESleekSide.RIGHT);
         iconToolsContainer.AddChild(vehicleIDField);
+        num += 25;
         skinIDField = Glazier.Get().CreateUInt16Field();
-        skinIDField.PositionOffset_Y = 50f;
+        skinIDField.PositionOffset_Y = num;
         skinIDField.SizeOffset_X = 150f;
         skinIDField.SizeOffset_Y = 25f;
         skinIDField.AddLabel("Skin ID", ESleekSide.RIGHT);
         iconToolsContainer.AddChild(skinIDField);
+        num += 25;
         captureItemIconButton = Glazier.Get().CreateButton();
-        captureItemIconButton.PositionOffset_Y = 75f;
+        captureItemIconButton.PositionOffset_Y = num;
         captureItemIconButton.SizeOffset_X = 150f;
         captureItemIconButton.SizeOffset_Y = 25f;
         captureItemIconButton.Text = "Item Icon";
         captureItemIconButton.OnClicked += onClickedCaptureItemIconButton;
         iconToolsContainer.AddChild(captureItemIconButton);
+        num += 25;
         captureAllItemIconsButton = Glazier.Get().CreateButton();
-        captureAllItemIconsButton.PositionOffset_Y = 100f;
+        captureAllItemIconsButton.PositionOffset_Y = num;
         captureAllItemIconsButton.SizeOffset_X = 150f;
         captureAllItemIconsButton.SizeOffset_Y = 25f;
         captureAllItemIconsButton.Text = "All Item Icons";
         captureAllItemIconsButton.OnClicked += onClickedCaptureAllItemIconsButton;
         iconToolsContainer.AddChild(captureAllItemIconsButton);
+        num += 25;
+        captureAllSkinIconsButton = Glazier.Get().CreateButton();
+        captureAllSkinIconsButton.PositionOffset_Y = num;
+        captureAllSkinIconsButton.SizeOffset_X = 150f;
+        captureAllSkinIconsButton.SizeOffset_Y = 25f;
+        captureAllSkinIconsButton.Text = "All Skin Icons";
+        captureAllSkinIconsButton.OnClicked += onClickedCaptureAllSkinIconsButton;
+        iconToolsContainer.AddChild(captureAllSkinIconsButton);
+        num += 25;
         captureItemDefIconButton = Glazier.Get().CreateButton();
-        captureItemDefIconButton.PositionOffset_Y = 125f;
+        captureItemDefIconButton.PositionOffset_Y = num;
         captureItemDefIconButton.SizeOffset_X = 150f;
         captureItemDefIconButton.SizeOffset_Y = 25f;
         captureItemDefIconButton.Text = "Econ Icon";
         captureItemDefIconButton.OnClicked += onClickedCaptureItemDefIconButton;
         iconToolsContainer.AddChild(captureItemDefIconButton);
+        num += 25;
         guidField = Glazier.Get().CreateStringField();
-        guidField.PositionOffset_Y = 150f;
+        guidField.PositionOffset_Y = num;
         guidField.SizeOffset_X = 150f;
         guidField.SizeOffset_Y = 25f;
         guidField.AddLabel("GUID", ESleekSide.RIGHT);
         iconToolsContainer.AddChild(guidField);
+        num += 25;
         captureOutfitPreviewButton = Glazier.Get().CreateButton();
-        captureOutfitPreviewButton.PositionOffset_Y = 175f;
+        captureOutfitPreviewButton.PositionOffset_Y = num;
         captureOutfitPreviewButton.SizeOffset_X = 150f;
         captureOutfitPreviewButton.SizeOffset_Y = 25f;
         captureOutfitPreviewButton.Text = "Outfit Preview";
         captureOutfitPreviewButton.OnClicked += OnCaptureOutfitPreviewClicked;
         iconToolsContainer.AddChild(captureOutfitPreviewButton);
+        num += 25;
         captureCosmeticPreviewsButton = Glazier.Get().CreateButton();
-        captureCosmeticPreviewsButton.PositionOffset_Y = 200f;
+        captureCosmeticPreviewsButton.PositionOffset_Y = num;
         captureCosmeticPreviewsButton.SizeOffset_X = 150f;
         captureCosmeticPreviewsButton.SizeOffset_Y = 25f;
         captureCosmeticPreviewsButton.Text = "All Cosmetic Previews";
         captureCosmeticPreviewsButton.OnClicked += OnCaptureCosmeticPreviewsClicked;
         iconToolsContainer.AddChild(captureCosmeticPreviewsButton);
+        num += 25;
         captureAllOutfitPreviewsButton = Glazier.Get().CreateButton();
-        captureAllOutfitPreviewsButton.PositionOffset_Y = 225f;
+        captureAllOutfitPreviewsButton.PositionOffset_Y = num;
         captureAllOutfitPreviewsButton.SizeOffset_X = 150f;
         captureAllOutfitPreviewsButton.SizeOffset_Y = 25f;
         captureAllOutfitPreviewsButton.Text = "All Outfit Previews";

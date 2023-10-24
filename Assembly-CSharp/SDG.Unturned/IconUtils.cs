@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using SDG.Provider;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -92,6 +93,19 @@ public class IconUtils
         foreach (ItemAsset item in list)
         {
             captureItemIcon(item);
+        }
+    }
+
+    public static void CaptureAllSkinIcons()
+    {
+        foreach (UnturnedEconInfo item in TempSteamworksEconomy.econInfo)
+        {
+            if (item.item_skin != 0)
+            {
+                ItemAsset itemAsset = Assets.find(item.item_guid) as ItemAsset;
+                VehicleAsset vehicleAsset = Assets.find(item.vehicle_guid) as VehicleAsset;
+                getItemDefIcon(itemAsset, vehicleAsset, (ushort)item.item_skin);
+            }
         }
     }
 

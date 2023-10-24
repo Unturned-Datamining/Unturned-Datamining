@@ -3,4 +3,5 @@ Type Large
 ID 605
 
 LOD Mesh
+LOD_Bias 1.5
 Has_Clip_Prefab false
