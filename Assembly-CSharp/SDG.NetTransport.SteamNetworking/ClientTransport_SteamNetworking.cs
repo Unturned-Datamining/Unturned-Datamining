@@ -3,6 +3,9 @@ using Steamworks;
 
 namespace SDG.NetTransport.SteamNetworking;
 
+/// <summary>
+/// SteamNetworking is deprecated.
+/// </summary>
 public class ClientTransport_SteamNetworking : TransportBase_SteamNetworking, IClientTransport
 {
     private static Callback<P2PSessionRequest_t> p2pSessionRequest;

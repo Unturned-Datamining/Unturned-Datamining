@@ -3,6 +3,9 @@ using System.Net;
 
 namespace SDG.NetTransport.Loopback;
 
+/// <summary>
+/// Dummy connection used in singleplayer.
+/// </summary>
 public struct TransportConnection_Loopback : ITransportConnection, IEquatable<ITransportConnection>
 {
     public static readonly ITransportConnection DedicatedServer = DedicatedServerLoopback;

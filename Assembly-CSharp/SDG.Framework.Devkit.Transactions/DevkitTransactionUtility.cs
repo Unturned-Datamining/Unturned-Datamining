@@ -19,6 +19,9 @@ public class DevkitTransactionUtility
         DevkitTransactionManager.recordTransaction(new DevkitGameObjectInstantiationTransaction(go));
     }
 
+    /// <summary>
+    /// Save the state of all the fields and properties on this object to the current transaction group so that they can be checked for changes once the transaction has ended.
+    /// </summary>
     public static void recordObjectDelta(object instance)
     {
         DevkitTransactionManager.recordTransaction(new DevkitObjectDeltaTransaction(instance));

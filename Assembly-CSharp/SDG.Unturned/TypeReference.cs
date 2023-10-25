@@ -22,8 +22,14 @@ public struct TypeReference<T> : ITypeReference, IFormattedFileReadable, IFormat
         }
     }
 
+    /// <summary>
+    /// Whether the type has been asigned. Note that this doesn't mean an asset with <see cref="P:SDG.Unturned.TypeReference`1.assemblyQualifiedName" /> exists.
+    /// </summary>
     public bool isValid => !string.IsNullOrEmpty(assemblyQualifiedName);
 
+    /// <summary>
+    /// True if resovling this type reference would get that type.
+    /// </summary>
     public bool isReferenceTo(Type type)
     {
         if (type != null)

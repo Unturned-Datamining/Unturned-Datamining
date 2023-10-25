@@ -7,6 +7,9 @@ public class GameProject
 {
     private static string _projectPath;
 
+    /// <summary>
+    /// Absolute path to project directory, e.g. C:/U3
+    /// </summary>
     [Obsolete("Replaced by UnityPaths.ProjectDirectory")]
     public static string PROJECT_PATH
     {

@@ -3,6 +3,9 @@ using SDG.NetPak;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Optional parameter for error logging.
+/// </summary>
 public readonly struct ClientInvocationContext
 {
     public enum EOrigin

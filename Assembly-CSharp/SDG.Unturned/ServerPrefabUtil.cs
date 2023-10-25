@@ -7,12 +7,18 @@ using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Helpers on the dedicated server to optimize client prefabs for server usage.
+/// </summary>
 internal static class ServerPrefabUtil
 {
     private static List<Component> workingComponents;
 
     private static HashSet<Type> typesToRemove;
 
+    /// <summary>
+    /// Optimize client prefab for server usage.
+    /// </summary>
     public static void RemoveClientComponents(GameObject gameObject)
     {
         gameObject.GetComponentsInChildren(includeInactive: true, workingComponents);

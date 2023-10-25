@@ -2,6 +2,9 @@ using System;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Matches the console behavior prior to command IO refactor.
+/// </summary>
 public class LegacyInputOutput : ICommandInputOutput
 {
     public event CommandInputHandler inputCommitted;

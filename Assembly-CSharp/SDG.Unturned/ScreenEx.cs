@@ -3,6 +3,11 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Extensions to the built-in Screen class.
+/// We have run into multiple problems with the Screen.resolutions property over the years, so this class aims to
+/// protect against bad data.
+/// </summary>
 public static class ScreenEx
 {
     private static Resolution[] cachedResolutions;

@@ -27,8 +27,14 @@ public class TempSteamworksEconomy
 
     public InventoryDropped onInventoryDropped;
 
+    /// <summary>
+    /// Invoked after a successful exchange with the newly granted items.
+    /// </summary>
     public InventoryExchanged onInventoryExchanged;
 
+    /// <summary>
+    /// Invoke after a succesful purchase from the item store.
+    /// </summary>
     public InventoryExchanged onInventoryPurchased;
 
     public InventoryExchangeFailed onInventoryExchangeFailed;
@@ -51,6 +57,9 @@ public class TempSteamworksEconomy
 
     public bool isInventoryAvailable;
 
+    /// <summary>
+    /// Purchase result does not have a handle, so we guess based on when it arrives.
+    /// </summary>
     public bool isExpectingPurchaseResult;
 
     private SteamworksAppInfo appInfo;
@@ -67,8 +76,16 @@ public class TempSteamworksEconomy
 
     public List<SteamItemDetails_t> inventory => inventoryDetails;
 
+    /// <summary>
+    /// Do we know the player's region?
+    /// If not, default to not allowing random items.
+    /// </summary>
     public bool hasCountryDetails { get; protected set; }
 
+    /// <summary>
+    /// Does the player's region allow crates and keys to be used?
+    /// Similar to TF2 and other Valve games we disable unboxing in certain regions.
+    /// </summary>
     public bool doesCountryAllowRandomItems { get; protected set; }
 
     public void open(ulong id)
@@ -76,6 +93,9 @@ public class TempSteamworksEconomy
         SDG.Unturned.Provider.openURL("http://steamcommunity.com/profiles/" + SteamUser.GetSteamID().ToString() + "/inventory/?sellOnLoad=1#" + SteamUtils.GetAppID().ToString() + "_2_" + id);
     }
 
+    /// <summary>
+    /// Find the first instanceId of a given itemDefId.
+    /// </summary>
     public ulong getInventoryPackage(int item)
     {
         if (inventoryDetails != null)
@@ -91,6 +111,9 @@ public class TempSteamworksEconomy
         return 0uL;
     }
 
+    /// <summary>
+    /// Count quantity of a given itemDefId.
+    /// </summary>
     public int countInventoryPackages(int item)
     {
         int num = 0;
@@ -107,6 +130,9 @@ public class TempSteamworksEconomy
         return num;
     }
 
+    /// <summary>
+    /// Find certain quantity of given itemDefId.
+    /// </summary>
     public bool getInventoryPackages(int item, ushort requiredQuantity, out List<EconExchangePair> pairs)
     {
         ushort num = 0;
@@ -203,6 +229,9 @@ public class TempSteamworksEconomy
         return 0;
     }
 
+    /// <summary>
+    /// Does itemdefid exist in the EconInfo.json file?
+    /// </summary>
     public bool IsItemKnown(int item)
     {
         return econInfo.Find((UnturnedEconInfo x) => x.itemdefid == item) != null;
@@ -248,6 +277,9 @@ public class TempSteamworksEconomy
         return econInfo.Find((UnturnedEconInfo x) => x.itemdefid == item)?.scraps ?? 0;
     }
 
+    /// <summary>
+    /// Get item with an exchange recipe for the appropriate number of scraps.
+    /// </summary>
     public int getScrapExchangeItem(int item)
     {
         return getInventoryScraps(item) switch
@@ -489,6 +521,10 @@ public class TempSteamworksEconomy
         }
     }
 
+    /// <summary>
+    /// One player's inventory became so large that the Steam client's built-in GetInventory fails,
+    /// so as temporary fix we can send them a json file with their inventory.
+    /// </summary>
     private void loadInventoryFromResponseFile(string filePath)
     {
         UnturnedLog.info("Loading Steam inventory from GetInventory response file: {0}", filePath);
@@ -532,6 +568,9 @@ public class TempSteamworksEconomy
         }
     }
 
+    /// <summary>
+    /// Add an item locally that we know exists in the online inventory, but is just a matter of waiting for it.
+    /// </summary>
     private void addLocalItem(SteamItemDetails_t item, string tags, string dynamic_props)
     {
         inventoryDetails.Add(item);
@@ -542,6 +581,9 @@ public class TempSteamworksEconomy
         dynamicInventoryDetails.Add(item.m_itemId.m_SteamItemInstanceID, value);
     }
 
+    /// <summary>
+    /// Remove an item locally that we know no longer exists in the online inventory.
+    /// </summary>
     private void removeLocalItem(SteamItemDetails_t item)
     {
         for (int i = 0; i < inventoryDetails.Count; i++)
@@ -555,6 +597,9 @@ public class TempSteamworksEconomy
         dynamicInventoryDetails.Remove(item.m_itemId.m_SteamItemInstanceID);
     }
 
+    /// <summary>
+    /// Update our local version of an item that we know has changed, but we are waiting for a full refresh.
+    /// </summary>
     private bool updateLocalItem(SteamItemDetails_t item, SteamInventoryResult_t resultHandle, uint resultIndex)
     {
         removeLocalItem(item);
@@ -615,6 +660,9 @@ public class TempSteamworksEconomy
         steamPending.inventoryDetailsReady();
     }
 
+    /// <summary>
+    /// Callback when client knows which items were crafted or exchanged.
+    /// </summary>
     private void handleClientExchangeResultReady(SteamInventoryResultReady_t callback)
     {
         SteamInventoryResult_t handle = callback.m_handle;
@@ -647,6 +695,9 @@ public class TempSteamworksEconomy
         }
     }
 
+    /// <summary>
+    /// Callback when client thinks result was from purchase.
+    /// </summary>
     private void handleClientPurchaseResultReady(SteamInventoryResultReady_t callback)
     {
         SteamInventoryResult_t handle = callback.m_handle;
@@ -675,6 +726,10 @@ public class TempSteamworksEconomy
         onInventoryRefreshed?.Invoke();
     }
 
+    /// <summary>
+    /// 2022-01-01 it does not seem to be documented by Steam, but we get SteamInventoryResultReady callbacks
+    /// for external events like AddItem calls, so we may as well handle them.
+    /// </summary>
     private void UpdateLocalItemsFromUnknownResult(SteamInventoryResult_t resultHandle)
     {
         uint punOutItemsArraySize = 0u;
@@ -871,11 +926,17 @@ public class TempSteamworksEconomy
         }
     }
 
+    /// <summary>
+    /// If player's region does not allow crates and keys to be used, return the country code.
+    /// </summary>
     public string getCountryWarningId()
     {
         return SteamUtils.GetIPCountry();
     }
 
+    /// <summary>
+    /// Similar to TF2 and other Valve games we disable unboxing in certain regions, so hide those items.
+    /// </summary>
     public bool isItemHiddenByCountryRestrictions(int itemdefid)
     {
         if (doesCountryAllowRandomItems)
@@ -894,6 +955,9 @@ public class TempSteamworksEconomy
         return false;
     }
 
+    /// <summary>
+    /// Similar to TF2 and other Valve games we disable unboxing in certain regions.
+    /// </summary>
     private void initCountryRestrictions()
     {
         string iPCountry = SteamUtils.GetIPCountry();
@@ -912,6 +976,9 @@ public class TempSteamworksEconomy
         }
     }
 
+    /// <summary>
+    /// Not called on dedicated server.
+    /// </summary>
     public void initializeClient()
     {
         initCountryRestrictions();

@@ -126,6 +126,9 @@ public class Bundle
         }
     }
 
+    /// <summary>
+    /// Save a reference to an object in the asset bundle, but defer loading it until requested by game code.
+    /// </summary>
     public virtual void loadDeferred<T>(string name, out IDeferredAsset<T> asset, LoadedAssetDeferredCallback<T> callback = null) where T : UnityEngine.Object
     {
         NonDeferredAsset<T> nonDeferredAsset = default(NonDeferredAsset<T>);

@@ -14,6 +14,9 @@ public class VendorAsset : Asset
 
     public VendorSellingBase[] selling { get; protected set; }
 
+    /// <summary>
+    /// Should the buying and selling lists be alphabetically sorted?
+    /// </summary>
     public bool enableSorting { get; protected set; }
 
     public AssetReference<ItemCurrencyAsset> currency { get; protected set; }

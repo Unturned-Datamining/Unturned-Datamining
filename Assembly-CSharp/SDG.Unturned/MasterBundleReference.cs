@@ -3,14 +3,27 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Essentially identical to ContentReference, but MasterBundle is more convenient.
+/// Perhaps in the future all asset/content systems will be consolidated.
+/// </summary>
 public struct MasterBundleReference<T> : IFormattedFileReadable, IFormattedFileWritable, IDatParseable where T : Object
 {
     public static MasterBundleReference<T> invalid = new MasterBundleReference<T>(null, null);
 
+    /// <summary>
+    /// Name of master bundle file.
+    /// </summary>
     public string name;
 
+    /// <summary>
+    /// Path to Unity asset within asset bundle.
+    /// </summary>
     public string path;
 
+    /// <summary>
+    /// Are name or path null or empty?
+    /// </summary>
     public bool isNull
     {
         get
@@ -23,6 +36,9 @@ public struct MasterBundleReference<T> : IFormattedFileReadable, IFormattedFileW
         }
     }
 
+    /// <summary>
+    /// Are both name and path non-null and non-empty?
+    /// </summary>
     public bool isValid => !isNull;
 
     public MasterBundleReference(string name, string path)

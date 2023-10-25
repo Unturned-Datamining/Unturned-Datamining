@@ -81,6 +81,10 @@ public class PlayerInventory : PlayerCaller
 
     public static ushort[][] skillsets = SKILLSETS_SERVER;
 
+    /// <summary>
+    /// Every time the inventory changes this number is incremented.
+    /// While a little messy, the idea is to prevent inventory checks from happening every frame.
+    /// </summary>
     protected int receivedUpdateIndex;
 
     public bool isStoring;
@@ -89,6 +93,11 @@ public class PlayerInventory : PlayerCaller
 
     public InteractableStorage storage;
 
+    /// <summary>
+    /// Did owner call askInventory yet?
+    /// Prevents duplicate tell_X RPCs from being sent to owner prior to initial sync.
+    /// Ideally should be cleaned up with netcode refactor. (Client should not need to ask server for initial state.)
+    /// </summary>
     private bool ownerHasInventory;
 
     public InventoryResized onInventoryResized;
@@ -137,11 +146,17 @@ public class PlayerInventory : PlayerCaller
 
     public bool shouldStorageOpenDashboard => !isStorageTrunk;
 
+    /// <summary>
+    /// Should be called every time something changes in the inventory.
+    /// </summary>
     protected void incrementUpdateIndex()
     {
         receivedUpdateIndex++;
     }
 
+    /// <summary>
+    /// Helper to prevent checking the inventory every frame for systems that don't use events.
+    /// </summary>
     public bool doesSearchNeedRefresh(ref int index)
     {
         if (index == receivedUpdateIndex)
@@ -389,6 +404,9 @@ public class PlayerInventory : PlayerCaller
         return tryAddItemAuto(item, auto, auto, auto, playEffect);
     }
 
+    /// <summary>
+    /// Helper for tryAddItemAuto.
+    /// </summary>
     private bool tryAddItemEquip(Item item, byte page)
     {
         if (items[page].tryAddItem(item))
@@ -532,6 +550,11 @@ public class PlayerInventory : PlayerCaller
         return items[page].checkSpaceDrag(old_x, old_y, oldRot, new_x, new_y, newRot, size_x, size_y, checkSame);
     }
 
+    /// <summary>
+    /// Given an item coordinate (page, x, y) could a new item take the place of an old (existing) item without
+    /// overlapping other item(s) space? Always true for equipment slots (page less than SLOTS).
+    /// For example if oldSize is (1, 2) rot 0, and newSize is (2, 1) rot 1, then they can swap.
+    /// </summary>
     public bool checkSpaceSwap(byte page, byte x, byte y, byte oldSize_X, byte oldSize_Y, byte oldRot, byte newSize_X, byte newSize_Y, byte newRot)
     {
         if (page < 0 || page >= PAGES)
@@ -633,6 +656,10 @@ public class PlayerInventory : PlayerCaller
         ReceiveSwapItem(page_0, x_0, y_0, rot_0, page_1, x_1, y_1, rot_1);
     }
 
+    /// <summary>
+    /// Swap coordinates of two existing items.
+    /// Rotation is provided to handle differently shaped items e.g. a 1x2 item with a 2x1 item. 
+    /// </summary>
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 10, legacyName = "askSwapItem")]
     public void ReceiveSwapItem(byte page_0, byte x_0, byte y_0, byte rot_0, byte page_1, byte x_1, byte y_1, byte rot_1)
     {
@@ -716,6 +743,10 @@ public class PlayerInventory : PlayerCaller
         SendDragItem.Invoke(GetNetId(), ENetReliability.Unreliable, page_0, x_0, y_0, page_1, x_1, y_1, rot_1);
     }
 
+    /// <summary>
+    /// Swap coordinates of two existing items.
+    /// Rotation is provided to handle differently shaped items e.g. a 1x2 item with a 2x1 item. 
+    /// </summary>
     public void sendSwapItem(byte page_0, byte x_0, byte y_0, byte rot_0, byte page_1, byte x_1, byte y_1, byte rot_1)
     {
         SendSwapItem.Invoke(GetNetId(), ENetReliability.Unreliable, page_0, x_0, y_0, rot_0, page_1, x_1, y_1, rot_1);
@@ -1204,6 +1235,9 @@ public class PlayerInventory : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Called from player movement to close storage that has moved away.
+    /// </summary>
     public void closeDistantStorage()
     {
         if (isStoring && !isStorageTrunk && !(storage == null) && storage.shouldCloseWhenOutsideRange)
@@ -1216,6 +1250,9 @@ public class PlayerInventory : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Serverside open a storage crate and notify client. 
+    /// </summary>
     public void openStorage(InteractableStorage newStorage)
     {
         if (isStoring)
@@ -1231,6 +1268,9 @@ public class PlayerInventory : PlayerCaller
         sendStorage();
     }
 
+    /// <summary>
+    /// Serverside grant access to car trunk storage and notify client.
+    /// </summary>
     public void openTrunk(Items trunkItems)
     {
         if (isStoring)
@@ -1244,6 +1284,9 @@ public class PlayerInventory : PlayerCaller
         sendStorage();
     }
 
+    /// <summary>
+    /// Serverside revoke trunk access and notify client.
+    /// </summary>
     public void closeTrunk()
     {
         if (isStorageTrunk)
@@ -1252,6 +1295,9 @@ public class PlayerInventory : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Called on both client and server, as well as by storage itself when destroyed.
+    /// </summary>
     public void closeStorage()
     {
         if (!isStoring)

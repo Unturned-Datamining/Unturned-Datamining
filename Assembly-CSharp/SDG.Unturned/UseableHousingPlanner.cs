@@ -15,18 +15,39 @@ public class UseableHousingPlanner : Useable
 
     private static readonly ServerInstanceMethod<Guid, Vector3, float> SendPlaceHousingItem = ServerInstanceMethod<Guid, Vector3, float>.Get(typeof(UseableHousingPlanner), "ReceivePlaceHousingItem");
 
+    /// <summary>
+    /// Stripped-down version of structure prefab for previewing where the structure will be spawned.
+    /// </summary>
     private Transform placementPreviewTransform;
 
+    /// <summary>
+    /// Whether preview object is currently highlighted positively.
+    /// </summary>
     private bool isPlacementPreviewValid;
 
+    /// <summary>
+    /// Position the item should be spawned at.
+    /// </summary>
     private Vector3 pendingPlacementPosition;
 
+    /// <summary>
+    /// Rotation the item should be spawned at.
+    /// </summary>
     private float pendingPlacementYaw;
 
+    /// <summary>
+    /// Interpolated toward customRotationOffset.
+    /// </summary>
     private float animatedRotationOffset;
 
+    /// <summary>
+    /// Allows players to flip walls.
+    /// </summary>
     private float customRotationOffset;
 
+    /// <summary>
+    /// Vertical offset using scroll wheel.
+    /// </summary>
     private float foundationPositionOffset;
 
     private ItemStructureAsset selectedAsset;
@@ -59,6 +80,9 @@ public class UseableHousingPlanner : Useable
 
     private ISleekLabel noPillarItemsLabel;
 
+    /// <summary>
+    /// Box in the HUD with selected item name and quantity.
+    /// </summary>
     private ISleekBox selectedItemBox;
 
     private ISleekLabel selectedItemNameLabel;
@@ -602,6 +626,10 @@ public class UseableHousingPlanner : Useable
         return true;
     }
 
+    /// <summary>
+    /// Search inventory for housing items, count the quantity of each, and remove
+    /// duplicate entries from the list because it is used for the UI.
+    /// </summary>
     private void RefreshAvailableItems()
     {
         itemSearch.Clear();

@@ -16,6 +16,10 @@ public class Assets : MonoBehaviour
 {
     internal class AssetMapping
     {
+        /// <summary>
+        /// Calling this "legacy" is a bit of a stretch because even most of the vanilla assets are
+        /// built around the 16-bit IDs. Ideally no new code should be relying on 16-bit IDs however.
+        /// </summary>
         public Dictionary<EAssetType, Dictionary<ushort, Asset>> legacyAssetsTable;
 
         public Dictionary<Guid, Asset> assetDictionary;
@@ -46,10 +50,19 @@ public class Assets : MonoBehaviour
 
     private static Assets instance;
 
+    /// <summary>
+    /// The first time asset loading finishes it will load the main menu.
+    /// </summary>
     private static bool hasFinishedInitialStartupLoading;
 
+    /// <summary>
+    /// If true, either loading during initial startup or full refresh.
+    /// </summary>
     private static bool isLoadingAllAssets;
 
+    /// <summary>
+    /// If true, currently searching locations added after initial startup loading.
+    /// </summary>
     private static bool isLoadingFromUpdate;
 
     public static AssetsRefreshed onAssetsRefreshed;
@@ -58,24 +71,61 @@ public class Assets : MonoBehaviour
 
     internal static AssetMapping defaultAssetMapping;
 
+    /// <summary>
+    /// In singleplayer and the level editor this is the same as defaultAssetMapping,
+    /// but when playing on a server a subset of assets based on the server's workshop files is used.
+    /// </summary>
     private static AssetMapping currentAssetMapping;
 
+    /// <summary>
+    /// Should folders be scanned for and load .dat and asset bundle files?
+    /// Plugin developers find it useful to quickly launch the server.
+    /// </summary>
     public static CommandLineFlag shouldLoadAnyAssets = new CommandLineFlag(defaultValue: true, "-SkipAssets");
 
+    /// <summary>
+    /// Do we want to enable shouldDeferLoadingAssets?
+    /// </summary>
     public static CommandLineFlag wantsDeferLoadingAssets = new CommandLineFlag(defaultValue: true, "-NoDeferAssets");
 
+    /// <summary>
+    /// Should extra validation be performed on assets as they load?
+    /// Useful for developing, but it does slow down loading.
+    /// </summary>
     public static CommandLineFlag shouldValidateAssets = new CommandLineFlag(defaultValue: false, "-ValidateAssets");
 
+    /// <summary>
+    /// Should workshop asset names and IDs be logged while loading?
+    /// Useful when debugging unknown workshop content.
+    /// </summary>
     public static CommandLineFlag shouldLogWorkshopAssets = new CommandLineFlag(defaultValue: false, "-LogWorkshopAssets");
 
+    /// <summary>
+    /// Should GC and clear unused assets be called after every loading frame?
+    /// Potentially useful for players running out of RAM, refer to:
+    /// https://github.com/SmartlyDressedGames/Unturned-3.x-Community/issues/1352#issuecomment-751138105
+    /// </summary>
     private static CommandLineFlag shouldCollectGarbageAggressively = new CommandLineFlag(defaultValue: false, "-AggressiveGC");
 
+    /// <summary>
+    /// Should modded spawn tables being inserted into parents be logged?
+    /// Useful for debugging workshop spawn table problems.
+    /// </summary>
     private static CommandLineFlag shouldLogSpawnInsertions = new CommandLineFlag(defaultValue: false, "-LogSpawnInsertions");
 
+    /// <summary>
+    /// Loaded master bundles.
+    /// </summary>
     private static List<MasterBundleConfig> allMasterBundles;
 
+    /// <summary>
+    /// Loading master bundles.
+    /// </summary>
     private static List<MasterBundleConfig> pendingMasterBundles;
 
+    /// <summary>
+    /// Master bundle from root /Bundles directory containing vanilla assets.
+    /// </summary>
     private static MasterBundleConfig coreMasterBundle;
 
     internal static List<AssetOrigin> assetOrigins;
@@ -90,6 +140,10 @@ public class Assets : MonoBehaviour
 
     private static List<string> errors;
 
+    /// <summary>
+    /// Do we have any new spawn assets that have not been linked yet?
+    /// Used to skip linking spawns if not required when downloading assets.
+    /// </summary>
     private static bool hasUnlinkedSpawns;
 
     internal static readonly ClientStaticMethod<Guid> SendKickForInvalidGuid = ClientStaticMethod<Guid>.Get(ReceiveKickForInvalidGuid);
@@ -110,8 +164,16 @@ public class Assets : MonoBehaviour
 
     public static TypeRegistryDictionary useableTypes => _useableTypes;
 
+    /// <summary>
+    /// Has initial client UGC loading step run yet?
+    /// Used to defer asset loading for workshop installs that occured during startup.
+    /// </summary>
     public static bool hasLoadedUgc { get; protected set; }
 
+    /// <summary>
+    /// Has initial map loading step run yet?
+    /// Used to defer map loading for workshop installs that occured during startup.
+    /// </summary>
     public static bool hasLoadedMaps { get; protected set; }
 
     public static bool isLoading
@@ -138,6 +200,10 @@ public class Assets : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Should some specific asset types which opt-in be allowed to defer loading from asset bundles until used?
+    /// Disabled by asset validation because all assets need to be loaded.
+    /// </summary>
     public static bool shouldDeferLoadingAssets
     {
         get
@@ -150,6 +216,10 @@ public class Assets : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// While an asset is being loaded, this is the master bundle for that asset.
+    /// Used by master bundle pointer as a default.
+    /// </summary>
     public static MasterBundleConfig currentMasterBundle { get; private set; }
 
     private static string getExceptionMessage(Exception e)
@@ -280,6 +350,10 @@ public class Assets : MonoBehaviour
         return value;
     }
 
+    /// <summary>
+    /// Find an asset by GUID reference.
+    /// </summary>
+    /// <returns>Asset with matching GUID if it exists, null otherwise.</returns>
     public static T find<T>(AssetReference<T> reference) where T : Asset
     {
         if (!reference.isValid)
@@ -289,6 +363,11 @@ public class Assets : MonoBehaviour
         return find(reference.GUID) as T;
     }
 
+    /// <summary>
+    /// Find an asset by GUID reference.
+    /// Maybe considered a hack? Ignores the current per-server asset mapping.
+    /// </summary>
+    /// <returns>Asset with matching GUID if it exists, null otherwise.</returns>
     public static T Find_UseDefaultAssetMapping<T>(AssetReference<T> reference) where T : Asset
     {
         if (reference.isNull)
@@ -299,6 +378,9 @@ public class Assets : MonoBehaviour
         return value as T;
     }
 
+    /// <summary>
+    /// Load content from an assetbundle.
+    /// </summary>
     public static T load<T>(ContentReference<T> reference) where T : UnityEngine.Object
     {
         if (!reference.isValid)
@@ -319,12 +401,20 @@ public class Assets : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// Find an asset by GUID reference.
+    /// </summary>
+    /// <returns>Asset with matching GUID if it exists, null otherwise.</returns>
     public static Asset find(Guid GUID)
     {
         currentAssetMapping.assetDictionary.TryGetValue(GUID, out var value);
         return value;
     }
 
+    /// <summary>
+    /// Find an asset by GUID reference.
+    /// </summary>
+    /// <returns>Asset with matching GUID if it exists, null otherwise.</returns>
     public static T find<T>(Guid guid) where T : Asset
     {
         return find(guid) as T;
@@ -366,11 +456,18 @@ public class Assets : MonoBehaviour
         return find<T>(guid);
     }
 
+    /// <summary>
+    /// Append assets that extend from result type.
+    /// </summary>
     public static void find<T>(List<T> results) where T : Asset
     {
         FindAssetsInListByType(currentAssetMapping.assetList, results);
     }
 
+    /// <summary>
+    /// Maybe considered a hack? Ignores the current per-server asset mapping.
+    /// Append assets that extend from result type.
+    /// </summary>
     internal static void FindAssetsByType_UseDefaultAssetMapping<T>(List<T> results) where T : Asset
     {
         FindAssetsInListByType(defaultAssetMapping.assetList, results);
@@ -504,6 +601,13 @@ public class Assets : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// While playing on server the client will use the same dictionary/list of assets the server uses in order
+    /// to reduce issues with ID conflicts.
+    ///
+    /// 2023-05-27: server now ALSO uses the same logic to ensure IDs are applied in consistent order regardless
+    /// of multi-threaded loading order.
+    /// </summary>
     internal static void ApplyServerAssetMapping(LevelInfo pendingLevel, List<PublishedFileId_t> serverWorkshopFileIds)
     {
         currentAssetMapping = new AssetMapping();
@@ -566,6 +670,9 @@ public class Assets : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Search all loaded master bundles for one in path's hierarchy.
+    /// </summary>
     public static MasterBundleConfig findMasterBundleByPath(string path)
     {
         int num = 0;
@@ -602,11 +709,18 @@ public class Assets : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// Find loaded master bundle by name.
+    /// </summary>
     public static MasterBundleConfig findMasterBundleByName(string name, bool matchExtension = true)
     {
         return findMasterBundleInListByName(allMasterBundles, name, matchExtension);
     }
 
+    /// <summary>
+    /// Unload all asset bundles from memory, and empty known list.
+    /// Called when reloading assets.
+    /// </summary>
     private static void UnloadAllMasterBundles()
     {
         foreach (MasterBundleConfig allMasterBundle in allMasterBundles)
@@ -616,6 +730,9 @@ public class Assets : MonoBehaviour
         allMasterBundles.Clear();
     }
 
+    /// <summary>
+    /// Catches exceptions thrown by LoadFile to avoid breaking loading.
+    /// </summary>
     private static void TryLoadFile(AssetsWorker.AssetDefinition file)
     {
         try
@@ -813,11 +930,17 @@ public class Assets : MonoBehaviour
         currentMasterBundle = null;
     }
 
+    /// <summary>
+    /// Called when a new workshop item is installed either on client or server. 
+    /// </summary>
     public static void RequestAddSearchLocation(string absoluteDirectoryPath, AssetOrigin origin)
     {
         instance.AddSearchLocation(absoluteDirectoryPath, origin);
     }
 
+    /// <summary>
+    /// Reload assets in given folder.
+    /// </summary>
     public static void reload(string absolutePath)
     {
         if (hasFinishedInitialStartupLoading && !isLoading)
@@ -840,6 +963,11 @@ public class Assets : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Can now be safely called multiple times on client in order to handle spawns for downloaded maps.
+    /// Spawn tables have "roots" which allow mods to insert custom spawns into the vanilla spawn tables.
+    /// This method is used after workshop assets are loaded on client, or after the dedicated server is done downloading workshop content.
+    /// </summary>
     public static void linkSpawns()
     {
         if (!hasUnlinkedSpawns)
@@ -975,6 +1103,9 @@ public class Assets : MonoBehaviour
         MasterBundleValidation.initialize(allMasterBundles);
     }
 
+    /// <summary>
+    /// Look through all item blueprints and log errors if there are duplicates.
+    /// </summary>
     private void CheckForBlueprintErrors()
     {
         Func<Blueprint, Blueprint, bool> func = delegate(Blueprint myBlueprint, Blueprint yourBlueprint)
@@ -1087,6 +1218,10 @@ public class Assets : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Look through all dialogue and check that their referenced
+    /// dialogueID or vendorID is an actual loaded asset.
+    /// </summary>
     private void CheckForNpcErrors()
     {
         List<DialogueAsset> list = new List<DialogueAsset>();
@@ -1109,12 +1244,23 @@ public class Assets : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Manually run asset unload and garbage collection in the hope
+    /// that it will minimize RAM allocated during loading.
+    /// </summary>
     private void CleanupMemory()
     {
         Resources.UnloadUnusedAssets();
         GC.Collect();
     }
 
+    /// <summary>
+    /// Helper for Assets.init.
+    /// Load all non-map assets from:
+    /// 	/Bundles/Workshop/Content
+    /// 	/Servers/ServerID/Workshop/Content
+    /// 	/Servers/ServerID/Bundles
+    /// </summary>
     private void AddDedicatedServerUgcSearchLocations()
     {
         string path = Path.Combine(ReadWrite.PATH, "Bundles", "Workshop", "Content");
@@ -1134,6 +1280,10 @@ public class Assets : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Helper for Assets.init.
+    /// Load all non-map assets from subscribed UGC.
+    /// </summary>
     private void AddClientUgcSearchLocations()
     {
         if (Provider.provider.workshopService.ugc == null)
@@ -1153,6 +1303,10 @@ public class Assets : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Helper for modders creating workshop content.
+    /// Loads folders in the "Sandbox" directory the same way workshop files are loaded.
+    /// </summary>
     private void AddSandboxSearchLocations()
     {
         string path = Path.Combine(ReadWrite.PATH, "Sandbox");
@@ -1175,6 +1329,10 @@ public class Assets : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Helper for Assets.init.
+    /// Load all assets in each map's Bundles folder, and content in map's Content folder.
+    /// </summary>
     private void AddMapSearchLocations()
     {
         LevelInfo[] levels = Level.getLevels(ESingleplayerMapCategory.ALL);
@@ -1413,6 +1571,11 @@ public class Assets : MonoBehaviour
         OnNewAssetsFinishedLoading?.Invoke();
     }
 
+    /// <summary>
+    /// Not the tidiest place for this, but it allows startup to pause and show error message.
+    /// Occasionally there have been reports of the steamclient redist files being out of date on the dedicated
+    /// server causing problems. For example: https://github.com/SmartlyDressedGames/Unturned-3.x-Community/issues/2866#issuecomment-965945985
+    /// </summary>
     private bool TestDedicatedServerSteamRedist()
     {
         string text = PathEx.Join(UnityPaths.GameDirectory, "linux64", "steamclient.so");

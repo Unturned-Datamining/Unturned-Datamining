@@ -38,6 +38,9 @@ public class Regions
         }
     }
 
+    /// <summary>
+    /// Convert world-space point into region coordinates that may be out of bounds.
+    /// </summary>
     private static void getUnsafeCoordinates(Vector3 point, out int x, out int y)
     {
         x = Mathf.FloorToInt((point.x + 4096f) / (float)(int)REGION_SIZE);
@@ -83,6 +86,10 @@ public class Regions
         return false;
     }
 
+    /// <summary>
+    /// Clamp position into the maximum bounds expected by the game, not necessarily the level bounds.
+    /// </summary>
+    /// <returns>True if position was modified.</returns>
     public static bool clampPositionIntoBounds(ref Vector3 position)
     {
         bool result = false;

@@ -3,6 +3,9 @@ using UnityEngine.Rendering.PostProcessing;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Manages global post-process volumes.
+/// </summary>
 public class UnturnedPostProcess : MonoBehaviour
 {
     private class PostProcessProfileWrapper
@@ -152,6 +155,9 @@ public class UnturnedPostProcess : MonoBehaviour
         baseProfile.vignette.intensity.Override(Mathf.Abs(Mathf.Sin(hallucinationTimer / num2)) * num);
     }
 
+    /// <summary>
+    /// Callback when in-game graphic settings change.
+    /// </summary>
     public void applyUserSettings()
     {
         if (basePostProcess != null)
@@ -165,6 +171,9 @@ public class UnturnedPostProcess : MonoBehaviour
         syncScreenSpaceReflections();
     }
 
+    /// <summary>
+    /// Callback when player changes perspective.
+    /// </summary>
     public void notifyPerspectiveChanged()
     {
         syncBloom();

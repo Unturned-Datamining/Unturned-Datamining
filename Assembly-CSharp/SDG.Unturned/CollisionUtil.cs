@@ -9,6 +9,10 @@ public static class CollisionUtil
 
     private static Collider[] results = new Collider[1];
 
+    /// <summary>
+    /// Find colliders in gameObject and encapsulate their bounding boxes together.
+    /// </summary>
+    /// <returns>True if bounds were determined, false otherwise.</returns>
     public static bool EncapsulateColliderBounds(GameObject gameObject, bool includeInactive, out Bounds bounds)
     {
         getBoundsWorkingList.Clear();
@@ -26,6 +30,9 @@ public static class CollisionUtil
         return false;
     }
 
+    /// <summary>
+    /// Find colliders in gameObject and the point closest to position, otherwise use gameObject position.
+    /// </summary>
     public static Vector3 ClosestPoint(GameObject gameObject, Vector3 position, bool includeInactive)
     {
         getBoundsWorkingList.Clear();
@@ -93,6 +100,9 @@ public static class CollisionUtil
         return collider.OverlapBoxNonAlloc(results, mask, queryTriggerInteraction);
     }
 
+    /// <summary>
+    /// Does sphere overlap anything?
+    /// </summary>
     public static bool OverlapSphere(Vector3 position, float radius, int layerMask, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
         return Physics.OverlapSphereNonAlloc(position, radius, results, layerMask, queryTriggerInteraction) > 0;

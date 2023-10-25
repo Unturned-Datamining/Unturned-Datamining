@@ -120,6 +120,9 @@ public class Player : MonoBehaviour
 
     private static readonly ClientInstanceMethod<EPlayerMessage> SendUIMessage = ClientInstanceMethod<EPlayerMessage>.Get(typeof(Player), "ReceiveUIMessage");
 
+    /// <summary>
+    /// How many calls to <see cref="M:SDG.Unturned.Player.tryToPerformRateLimitedAction" /> will succeed per second.
+    /// </summary>
     public uint maxRateLimitedActionsPerSecond = 10u;
 
     private NetId _netId;
@@ -138,6 +141,9 @@ public class Player : MonoBehaviour
 
     public static Player player => _player;
 
+    /// <summary>
+    /// Exposed for Rocket transition to modules backwards compatibility.
+    /// </summary>
     public static Player instance => player;
 
     public SteamChannel channel => _channel;
@@ -215,6 +221,10 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Is this player currently in a plugin's modal dialog?
+    /// Enables cursor movement while not in a vanilla menu.
+    /// </summary>
     public bool inPluginModal => isPluginWidgetFlagActive(EPluginWidgetFlags.Modal);
 
     public EPluginWidgetFlags pluginWidgetFlags { get; protected set; } = EPluginWidgetFlags.Default;
@@ -222,10 +232,21 @@ public class Player : MonoBehaviour
 
     public bool wantsBattlEyeLogs { get; protected set; }
 
+    /// <summary>
+    /// How many rate limited actions have been performed recently.
+    /// Increased after performing each rate limited action, and decreased over time.
+    /// Cannot perform actions when greater than one.
+    /// </summary>
     public float rateLimitedActionsCredits { get; protected set; }
 
+    /// <summary>
+    /// Used by plugins.
+    /// </summary>
     public static event PlayerStatIncremented onPlayerStatIncremented;
 
+    /// <summary>
+    /// Invoked on client when a plugin changes the widget flags. 
+    /// </summary>
     public event PluginWidgetFlagsChanged onLocalPluginWidgetFlagsChanged;
 
     public OneShotAudioHandle PlayAudioReference(AudioReference audioReference)
@@ -313,6 +334,9 @@ public class Player : MonoBehaviour
     {
     }
 
+    /// <summary>
+    /// Not rate limited because server tracks number of expected screenshots.
+    /// </summary>
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER)]
     public void ReceiveScreenshotRelay(in ServerInvocationContext context)
     {
@@ -418,6 +442,10 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Request client to open a given URL.
+    /// Allows plugins to open web browser, but also gives client the chance to ignore it.
+    /// </summary>
     public void sendBrowserRequest(string msg, string url)
     {
         SendBrowserRequest.Invoke(GetNetId(), ENetReliability.Reliable, channel.GetOwnerTransportConnection(), msg, url);
@@ -461,6 +489,11 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Tell client to join a specific server.
+    /// Disconnects client and sends them to the join server screen.
+    /// Only used by plugins.
+    /// </summary>
     public void sendRelayToServer(uint ip, ushort port, string password, bool shouldShowMenu = true)
     {
         SendRelayToServer.Invoke(GetNetId(), ENetReliability.Reliable, channel.GetOwnerTransportConnection(), ip, port, password, shouldShowMenu);
@@ -523,6 +556,10 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Tell the client whether to be in plugin modal mode or not.
+    /// Kept from prior to introduction of pluginWidgetFlags.
+    /// </summary>
     [Obsolete]
     public void serversideSetPluginModal(bool enableModal)
     {
@@ -631,6 +668,9 @@ public class Player : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// Teleport to a random player spawn designated in the level.
+    /// </summary>
     public bool teleportToRandomSpawnPoint()
     {
         PlayerSpawnpoint spawn = LevelPlayers.getSpawn(isAlt: false);
@@ -642,6 +682,9 @@ public class Player : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Teleport to bed, if player has set one.
+    /// </summary>
     public bool teleportToBed()
     {
         if (BarricadeManager.tryGetBed(channel.owner.playerID.steamID, out var point, out var angle))
@@ -973,6 +1016,13 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Note: new official code should be using per-method rate limit attribute.
+    /// This is kept for backwards compatibility with plugins however.
+    ///
+    /// Call this method before any requests the client can spam to the server.
+    /// </summary>
+    /// <returns>Should your code proceed with the rate limited action?</returns>
     public bool tryToPerformRateLimitedAction()
     {
         bool num = rateLimitedActionsCredits < 1f;
@@ -983,6 +1033,9 @@ public class Player : MonoBehaviour
         return num;
     }
 
+    /// <summary>
+    /// Call every frame to cool down rate limiting.
+    /// </summary>
     protected void updateRateLimiting()
     {
         rateLimitedActionsCredits -= Time.deltaTime;
@@ -1000,6 +1053,9 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// This code was in the Start message, and should happen before other initialization.
+    /// </summary>
     private void InitializePlayerStart()
     {
         if (channel.IsLocalPlayer)
@@ -1051,6 +1107,9 @@ public class Player : MonoBehaviour
         _voice.AssignNetId(++baseId);
     }
 
+    /// <summary>
+    /// Hacky replacement for Start() that runs after net ids are assigned but before sending player state.
+    /// </summary>
     internal void InitializePlayer()
     {
         PlayerUI playerUI = null;

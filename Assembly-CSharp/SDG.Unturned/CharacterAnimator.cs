@@ -89,6 +89,7 @@ public class CharacterAnimator : MonoBehaviour
         return GetAnimationLength(name);
     }
 
+    /// <param name="scaled">If true, include current animation speed modifier.</param>
     public float GetAnimationLength(string name, bool scaled = true)
     {
         AnimationState animationState = anim[name];
@@ -129,6 +130,7 @@ public class CharacterAnimator : MonoBehaviour
         return anim[name] != null;
     }
 
+    /// <returns>True if an animation was found and started playing.</returns>
     public bool play(string name, bool smooth)
     {
         if (anim[name] == null)

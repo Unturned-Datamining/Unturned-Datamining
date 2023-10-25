@@ -6,6 +6,10 @@ namespace SDG.Unturned;
 
 public class HousingConnections
 {
+    /// <summary>
+    /// Side length of square and triangular floor/roof.
+    /// Walls can be slightly less, but we treat them as if they are the full length.
+    /// </summary>
     public const float EDGE_LENGTH = 6f;
 
     public const float HALF_EDGE_LENGTH = 3f;
@@ -14,8 +18,14 @@ public class HousingConnections
 
     public const float HALF_WALL_HEIGHT = 2.125f;
 
+    /// <summary>
+    /// Vertical distance from edge center to wall pivot.
+    /// </summary>
     public const float WALL_PIVOT_OFFSET = 2.125f;
 
+    /// <summary>
+    /// Vertical distance from edge center to rampart pivot.
+    /// </summary>
     public const float RAMPART_PIVOT_OFFSET = 0.9f;
 
     private const float FOUNDATION_HEIGHT = 10.25f;
@@ -24,30 +34,61 @@ public class HousingConnections
 
     private const float FOUNDATION_CENTER_OFFSET = -4.875f;
 
+    /// <summary>
+    /// If position is nearly equal within this threshold then edges/vertices will connect.
+    /// </summary>
     private const float LINK_TOLERANCE = 0.02f;
 
+    /// <summary>
+    /// Maximum distance from player's viewpoint to allow placement.
+    /// </summary>
     internal const float MAX_PLACEMENT_DISTANCE = 16f;
 
     internal const float MAX_PLACEMENT_SQR_DISTANCE = 256f;
 
+    /// <summary>
+    /// How far to search for empty slot best match.
+    /// </summary>
     private const float MAX_FIND_EMPTY_SLOT_DISTANCE = 8f;
 
     private const float MAX_FIND_EMPTY_SLOT_SQR_DISTANCE = 64f;
 
+    /// <summary>
+    /// Cosine of the angle between ray direction and direction toward slot must be greater than this.
+    /// </summary>
     private const float MIN_FIND_EMPTY_SLOT_COSINE = 0.9f;
 
+    /// <summary>
+    /// When validating item placement expand physics overlap this much.
+    /// Useful to ensure slightly-touching overlaps (e.g. pillar touching the pillar above) are handled properly.
+    /// </summary>
     private const float PLACEMENT_OVERLAP_PADDING = 0.02f;
 
+    /// <summary>
+    /// Ensure players, vehicles, zombies, animals, etc are not within this distance of pending placement.
+    /// </summary>
     private const float CHARACTER_OVERLAP_PADDING = 0.25f;
 
     private const float HALF_CHARACTER_OVERLAP_PADDING = 0.125f;
 
+    /// <summary>
+    /// Distance from triangle pivot to apex of triangle.
+    /// </summary>
     private const float TRIANGLE_APEX_PIVOT_OFFSET = 2.1961524f;
 
+    /// <summary>
+    /// Radius of circle within triangle edges.
+    /// </summary>
     private const float TRIANGLE_INNER_RADIUS = 1.7320508f;
 
+    /// <summary>
+    /// Distance from triangle pivot to center of triangle.
+    /// </summary>
     internal const float TRIANGLE_CENTER_PIVOT_OFFSET = -1.2679492f;
 
+    /// <summary>
+    /// Small threshold to allow placing even with existing barricades on the floor.
+    /// </summary>
     private const float FOUNDATION_TOP_MARGIN = 0.1f;
 
     private const float HALF_FOUNDATION_TOP_MARGIN = 0.05f;
@@ -56,8 +97,18 @@ public class HousingConnections
 
     private const float HALF_ROOF_THICKNESS = 0.25f;
 
+    /// <summary>
+    /// House overlap is approximately the same size as the housing item's collider(s), and is intended to check whether
+    /// any pre-existing barricades or structural items are in the way. For example whether a wall cannot be placed because
+    /// there is a storage crate in the way, or if a foundation is blocked by another slightly rotated foundation.
+    /// </summary>
     private const int HOUSE_OVERLAP_LAYER_MASK = 402653184;
 
+    /// <summary>
+    /// Character overlap is slightly larger than the house overlap, and checks whether any players, vehicles, animals, zombies, etc
+    /// are nearby. This is necessary because when house and characters were combined in a single physics query it was possible to
+    /// stand *just* close enough to step into the collider as it was spawned.
+    /// </summary>
     private const int CHARACTER_OVERLAP_LAYER_MASK = 83887616;
 
     private readonly Vector3 leftLocalDirection = new Vector3(0.8660254f, -0.5f, 0f);
@@ -70,6 +121,9 @@ public class HousingConnections
 
     private Collider[] overlapBuffer = new Collider[50];
 
+    /// <summary>
+    /// Working buffer for placement overlap tests.
+    /// </summary>
     private HashSet<StructureDrop> ignoreDrops = new HashSet<StructureDrop>();
 
     public HousingConnections()
@@ -110,6 +164,9 @@ public class HousingConnections
         results.Add($"Housing connection vertex edges: {num7}");
     }
 
+    /// <summary>
+    /// Called when a housing item is spawned or after moving an existing item.
+    /// </summary>
     internal void LinkConnections(StructureDrop drop)
     {
         switch (drop.asset.construct)
@@ -144,6 +201,9 @@ public class HousingConnections
         }
     }
 
+    /// <summary>
+    /// Called before a housing item is destroyed or before moving a housing item.
+    /// </summary>
     internal void UnlinkConnections(StructureDrop drop)
     {
         switch (drop.asset.construct)
@@ -174,6 +234,10 @@ public class HousingConnections
         }
     }
 
+    /// <summary>
+    /// Search grid for existing vertex at approximately equal position.
+    /// Considers adjacent grid cells if near cell boundary to avoid issues with floating point inaccuracy. 
+    /// </summary>
     private HousingVertex FindVertex(Vector3 position)
     {
         foreach (HousingVertex item in verticesGrid.EnumerateItemsInSquare(position, 0.02f))
@@ -186,6 +250,10 @@ public class HousingConnections
         return null;
     }
 
+    /// <summary>
+    /// Search grid for existing edge at approximately equal position.
+    /// Considers adjacent grid cells if near cell boundary to avoid issues with floating point inaccuracy. 
+    /// </summary>
     private HousingEdge FindEdge(Vector3 position)
     {
         foreach (HousingEdge item in edgesGrid.EnumerateItemsInSquare(position, 0.02f))
@@ -265,6 +333,9 @@ public class HousingConnections
         return LinkFloorEdge(drop, edgePosition, direction, rotation);
     }
 
+    /// <summary>
+    /// Find existing edge and add connection, or add new empty edge.
+    /// </summary>
     private HousingEdge LinkFloorEdge(StructureDrop floor, Vector3 edgePosition, Vector3 direction, float rotation)
     {
         HousingEdge housingEdge = FindEdge(edgePosition);
@@ -299,6 +370,9 @@ public class HousingConnections
         return housingEdge;
     }
 
+    /// <summary>
+    /// Find existing vertex and add connection, or add new empty vertex.
+    /// </summary>
     private HousingVertex LinkFloorVertex(StructureDrop floor, Vector3 vertexPosition)
     {
         HousingVertex housingVertex = FindVertex(vertexPosition);
@@ -432,6 +506,9 @@ public class HousingConnections
         LinkEdgeWithVertices(housingTriangleFloorConnections.edge2, housingTriangleFloorConnections.vertex1, housingTriangleFloorConnections.vertex2);
     }
 
+    /// <summary>
+    /// Find existing edge and set associated wall, or add an empty edge at wall's location.
+    /// </summary>
     private void LinkWall(StructureDrop wall, float pivotOffset)
     {
         Vector3 vector = wall.model.position + new Vector3(0f, pivotOffset, 0f);
@@ -514,6 +591,9 @@ public class HousingConnections
         housingEdge3.walls.Add(wall);
     }
 
+    /// <summary>
+    /// Find slot occupied by wall and remove if no longer attached to anything.
+    /// </summary>
     private void UnlinkWall(StructureDrop wall)
     {
         HousingWallConnections housingWallConnections = (HousingWallConnections)wall.housingConnectionData;
@@ -549,6 +629,9 @@ public class HousingConnections
         }
     }
 
+    /// <summary>
+    /// Find existing vertex and set associated pillar, or add an empty vertex at pillar's location.
+    /// </summary>
     private void LinkPillar(StructureDrop pillar, Vector3 lowerVertexPosition)
     {
         Vector3 position = lowerVertexPosition + new Vector3(0f, 4.25f, 0f);
@@ -576,6 +659,9 @@ public class HousingConnections
         housingVertex.pillars.Add(pillar);
     }
 
+    /// <summary>
+    /// Find slot occupied by pillar and remove if no longer attached to anything.
+    /// </summary>
     private void UnlinkPillar(StructureDrop pillar)
     {
         HousingPillarConnections housingPillarConnections = (HousingPillarConnections)pillar.housingConnectionData;
@@ -754,6 +840,11 @@ public class HousingConnections
         return false;
     }
 
+    /// <summary>
+    /// Hack to prevent ignoring floor which might be overlapping pending floor placement.
+    /// For example when placing a square floor on the opposite edge of a spot which has a triangular floor
+    /// we do not want to ignore the triangular floor during the physics query.
+    /// </summary>
     private void IgnoreVertexFloorsExceptNearPosition(HousingVertex vertex, Vector3 overlapCenter, float pendingItemRadius)
     {
         if (vertex == null)
@@ -859,6 +950,9 @@ public class HousingConnections
         return false;
     }
 
+    /// <summary>
+    /// Used by triangular floor and roof validation to test for collisions.
+    /// </summary>
     private bool TestTriangleOverlapsCommon(Vector3 center, float placementRotation, float overlapPositionOffset, float overlapHalfHeight, ref string obstructionHint)
     {
         Vector3 outerHalfExtents = new Vector3(3.02f, overlapHalfHeight, 0.32000002f);
@@ -1075,6 +1169,9 @@ public class HousingConnections
         return EHousingPlacementResult.Success;
     }
 
+    /// <summary>
+    /// Ensure wall fits in an empty slot.
+    /// </summary>
     internal EHousingPlacementResult ValidateWallPlacement(ref Vector3 pendingPlacementPosition, float pivotOffset, bool requiresPillars, bool requiresFullHeightPillars, ref string obstructionHint)
     {
         Vector3 vector = pendingPlacementPosition + new Vector3(0f, 0f - pivotOffset, 0f);
@@ -1162,6 +1259,9 @@ public class HousingConnections
         return EHousingPlacementResult.Success;
     }
 
+    /// <summary>
+    /// Ensure pillar fits in an empty slot.
+    /// </summary>
     internal EHousingPlacementResult ValidatePillarPlacement(ref Vector3 pendingPlacementPosition, float pivotOffset, ref string obstructionHint)
     {
         Vector3 vector = pendingPlacementPosition + new Vector3(0f, 0f - pivotOffset, 0f);

@@ -63,6 +63,10 @@ public class ItemGunAsset : ItemWeaponAsset
 
     public bool shouldDeleteEmptyMagazines;
 
+    /// <summary>
+    /// Defaults to false. If true, attachments must specify at least one non-zero caliber.
+    /// Requested by Great Hero J to block vanilla attachments in VGR.
+    /// </summary>
     public bool requiresNonZeroAttachmentCaliber;
 
     public bool hasSafety;
@@ -84,10 +88,19 @@ public class ItemGunAsset : ItemWeaponAsset
     [Obsolete("Replaced by baseSpreadAngleRadians")]
     public float spreadHip;
 
+    /// <summary>
+    /// Spread multiplier while sprinting.
+    /// </summary>
     public float spreadSprint;
 
+    /// <summary>
+    /// Spread multiplier while crouched.
+    /// </summary>
     public float spreadCrouch;
 
+    /// <summary>
+    /// Spread multiplier while prone.
+    /// </summary>
     public float spreadProne;
 
     public float recoilMin_x;
@@ -98,12 +111,24 @@ public class ItemGunAsset : ItemWeaponAsset
 
     public float recoilMax_y;
 
+    /// <summary>
+    /// Recoil magnitude multiplier while the gun is aiming down sights.
+    /// </summary>
     public float aimingRecoilMultiplier;
 
+    /// <summary>
+    /// Recoil magnitude while sprinting.
+    /// </summary>
     public float recoilSprint;
 
+    /// <summary>
+    /// Recoil magnitude while crouched.
+    /// </summary>
     public float recoilCrouch;
 
+    /// <summary>
+    /// Recoil magnitude while prone.
+    /// </summary>
     public float recoilProne;
 
     public float recover_x;
@@ -128,12 +153,24 @@ public class ItemGunAsset : ItemWeaponAsset
 
     public float ballisticForce;
 
+    /// <summary>
+    /// [0, 1] percentage of maximum range where damage begins decreasing toward falloff multiplier.
+    /// </summary>
     public float damageFalloffRange;
 
+    /// <summary>
+    /// [0, 1] percentage of maximum range where damage finishes decreasing toward falloff multiplier.
+    /// </summary>
     public float damageFalloffMaxRange;
 
+    /// <summary>
+    /// [0, 1] percentage of damage to apply at damageFalloffMaxRange.
+    /// </summary>
     public float damageFalloffMultiplier;
 
+    /// <summary>
+    /// Seconds before physics projectile is destroyed.
+    /// </summary>
     public float projectileLifespan;
 
     public bool projectilePenetrateBuildables;
@@ -158,6 +195,9 @@ public class ItemGunAsset : ItemWeaponAsset
 
     public ushort explosion;
 
+    /// <summary>
+    /// Movement speed multiplier while the gun is aiming down sights.
+    /// </summary>
     public float aimingMovementSpeedMultiplier;
 
     protected NPCRewardsList shootQuestRewards;
@@ -174,30 +214,66 @@ public class ItemGunAsset : ItemWeaponAsset
 
     public AudioClip chamberJammedSound => _chamberJammedSound;
 
+    /// <summary>
+    /// Sound to play when input is pressed but weapon has a fire delay.
+    /// </summary>
     public AudioClip fireDelaySound { get; protected set; }
 
+    /// <summary>
+    /// Maximum distance the gunshot can be heard.
+    /// </summary>
     public float gunshotRolloffDistance { get; protected set; }
 
     public GameObject projectile => _projectile;
 
     public override bool shouldFriendlySentryTargetUser => true;
 
+    /// <summary>
+    /// Override Rangefinder attachment's maximum range.
+    /// Defaults to range value.
+    /// </summary>
     public float rangeRangefinder { get; protected set; }
 
+    /// <summary>
+    /// Can this weapon instantly kill players by headshots?
+    /// Only valid when game config also enables this.
+    /// </summary>
     public bool instakillHeadshots { get; protected set; }
 
+    /// <summary>
+    /// Can this weapon be fired without consuming ammo?
+    /// Some mods use this for turrets.
+    /// </summary>
     public bool infiniteAmmo { get; protected set; }
 
+    /// <summary>
+    /// Ammo quantity to consume per shot fired.
+    /// </summary>
     public byte ammoPerShot { get; protected set; }
 
+    /// <summary>
+    /// Simulation steps to wait after input before firing.
+    /// </summary>
     public int fireDelay { get; protected set; }
 
+    /// <summary>
+    /// Can magazine be changed by player?
+    /// </summary>
     public bool allowMagazineChange { get; protected set; }
 
+    /// <summary>
+    /// Can player ADS while sprinting and vice versa?
+    /// </summary>
     public bool canAimDuringSprint { get; protected set; }
 
+    /// <summary>
+    /// Seconds from pressing "aim" to fully aiming down sights.
+    /// </summary>
     public float aimInDuration { get; protected set; }
 
+    /// <summary>
+    /// If true, Aim_Start and Aim_Stop animations are scaled according to actual aim duration.
+    /// </summary>
     public bool shouldScaleAimAnimations { get; protected set; }
 
     public ushort sightID
@@ -264,12 +340,25 @@ public class ItemGunAsset : ItemWeaponAsset
 
     public override bool showQuality => true;
 
+    /// <summary>
+    /// Is this gun setup to have a change of jamming?
+    /// </summary>
     public bool canEverJam { get; protected set; }
 
+    /// <summary>
+    /// [0, 1] quality percentage that jamming will start happening.
+    /// </summary>
     public float jamQualityThreshold { get; protected set; }
 
+    /// <summary>
+    /// [0, 1] percentage of the time that shots will jam the gun when at 0% quality.
+    /// Chance of jamming is blended between 0% at jamQualityThreshold and jamMaxChance% at 0% quality.
+    /// </summary>
     public float jamMaxChance { get; protected set; }
 
+    /// <summary>
+    /// Name of the animation to play when unjamming chamber.
+    /// </summary>
     public string unjamChamberAnimName { get; protected set; }
 
     protected override bool doesItemTypeHaveSkins => true;

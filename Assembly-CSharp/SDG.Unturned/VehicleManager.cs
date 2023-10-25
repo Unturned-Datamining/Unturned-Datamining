@@ -119,12 +119,21 @@ public class VehicleManager : SteamCaller
 
     private int decayUpdateIndex;
 
+    /// <summary>
+    /// +0 = InteractableVehicle
+    /// +1 = root transform
+    /// +X = VehicleBarricadeRegion
+    /// Asset does not know number of train cars, so we always reserve slack.
+    /// </summary>
     internal const int NETIDS_PER_VEHICLE = 21;
 
     internal const int POSITION_FRAC_BIT_COUNT = 8;
 
     internal const int ROTATION_BIT_COUNT = 11;
 
+    /// <summary>
+    /// Exposed for Rocket transition to modules backwards compatibility.
+    /// </summary>
     public static VehicleManager instance => manager;
 
     public static List<InteractableVehicle> vehicles => _vehicles;
@@ -145,6 +154,9 @@ public class VehicleManager : SteamCaller
 
     public static event SwapSeatRequestHandler onSwapSeatRequested;
 
+    /// <summary>
+    /// Invoked immediately before Destroy vehicle.
+    /// </summary>
     public static event Action<InteractableVehicle> OnPreDestroyVehicle;
 
     public static event ToggleVehicleLockRequested OnToggleVehicleLockRequested;
@@ -190,6 +202,9 @@ public class VehicleManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// Find vehicle with matching replicated instance ID.
+    /// </summary>
     public static InteractableVehicle findVehicleByNetInstanceID(uint instanceID)
     {
         foreach (InteractableVehicle vehicle in vehicles)
@@ -288,6 +303,9 @@ public class VehicleManager : SteamCaller
         return spawnVehicleInternal(id, point, angle, player.channel.owner.playerID.steamID);
     }
 
+    /// <summary>
+    /// Added so that garage plugins do not need to invoke RPC manually.
+    /// </summary>
     public static InteractableVehicle SpawnVehicleV3(VehicleAsset asset, ushort skinID, ushort mythicID, float roadPosition, Vector3 point, Quaternion angle, bool sirens, bool blimp, bool headlights, bool taillights, ushort fuel, ushort health, ushort batteryCharge, CSteamID owner, CSteamID group, bool locked, byte[][] turrets, byte tireAliveMask)
     {
         NetId netId = NetIdRegistry.ClaimBlock(21u);
@@ -303,6 +321,10 @@ public class VehicleManager : SteamCaller
         return spawnedVehicle;
     }
 
+    /// <summary>
+    /// Used by external spawn vehicle methods.
+    /// </summary>
+    /// <param name="owner">Owner to lock vehicle for by default. Used to lock vehicles to the player who purchased them.</param>
     private static InteractableVehicle spawnVehicleInternal(ushort id, Vector3 point, Quaternion angle, CSteamID owner)
     {
         if (!(Assets.find(EAssetType.VEHICLE, id) is VehicleAsset vehicleAsset))
@@ -352,6 +374,9 @@ public class VehicleManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// Client-side request server to toggle headlights.
+    /// </summary>
     public static void sendVehicleHeadlights()
     {
         InteractableVehicle vehicle = Player.player.movement.getVehicle();
@@ -365,6 +390,9 @@ public class VehicleManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// As client request server to use bonus feature like towing hook or police sirens.
+    /// </summary>
     public static void sendVehicleBonus()
     {
         InteractableVehicle vehicle = Player.player.movement.getVehicle();
@@ -865,6 +893,10 @@ public class VehicleManager : SteamCaller
         Level.isLoadingVehicles = false;
     }
 
+    /// <summary>
+    /// Helper for servers with huge numbers of vehicles.
+    /// Called with fixed span of indexes e.g. [0, 10), then [10, 20). This function then clamps the final span to the vehicle count.
+    /// </summary>
     private static void askVehiclesHelper(ITransportConnection transportConnection, int startIndex, int endIndex)
     {
         if (endIndex > vehicles.Count)
@@ -1291,6 +1323,9 @@ public class VehicleManager : SteamCaller
         SendEnterVehicle.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), instanceID, seat, player.channel.owner.playerID.steamID);
     }
 
+    /// <summary>
+    /// Does as few tests as possible while maintaining base game expectations.
+    /// </summary>
     public static bool ServerForcePassengerIntoVehicle(Player player, InteractableVehicle vehicle)
     {
         if (player == null)
@@ -1371,6 +1406,11 @@ public class VehicleManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// Force remove player from vehicle they were in, if any.
+    /// Called when player disconnects to tidy up and run callbacks.
+    /// </summary>
+    /// <returns>True if player was in a vehicle, false otherwise.</returns>
     public static bool forceRemovePlayer(CSteamID player)
     {
         InteractableVehicle interactableVehicle = null;
@@ -1393,6 +1433,9 @@ public class VehicleManager : SteamCaller
         return false;
     }
 
+    /// <summary>
+    /// Remove player from vehicle and teleport them to an unchecked destination.
+    /// </summary>
     public static bool removePlayerTeleportUnsafe(InteractableVehicle vehicle, Player player, Vector3 position, float yaw)
     {
         if (vehicle.findPlayerSeat(player, out var seat))
@@ -1582,6 +1625,9 @@ public class VehicleManager : SteamCaller
         return interactableVehicle;
     }
 
+    /// <summary>
+    /// Is spawnpoint open for vehicle?
+    /// </summary>
     private bool canUseSpawnpoint(VehicleSpawnpoint spawn)
     {
         foreach (InteractableVehicle vehicle in vehicles)
@@ -1594,6 +1640,9 @@ public class VehicleManager : SteamCaller
         return true;
     }
 
+    /// <summary>
+    /// Try to find a random spawnpoint to spawn a vehicle while server is running.
+    /// </summary>
     private VehicleSpawnpoint findRandomSpawn()
     {
         List<VehicleSpawnpoint> spawns = LevelVehicles.spawns;
@@ -1610,6 +1659,9 @@ public class VehicleManager : SteamCaller
         return null;
     }
 
+    /// <summary>
+    /// Add a new vehicle at given spawnpoint.
+    /// </summary>
     private InteractableVehicle addVehicleAtSpawn(VehicleSpawnpoint spawn)
     {
         if (spawn == null)
@@ -1631,6 +1683,9 @@ public class VehicleManager : SteamCaller
         return addVehicle(vehicleAsset.GUID, 0, 0, 0f, point, Quaternion.Euler(0f, spawn.angle, 0f), sirens: false, blimp: false, headlights: false, taillights: false, ushort.MaxValue, isExploded: false, ushort.MaxValue, ushort.MaxValue, CSteamID.Nil, CSteamID.Nil, locked: false, null, null, allocateInstanceID(), getVehicleRandomTireAliveMask(vehicleAsset), netId);
     }
 
+    /// <summary>
+    /// Add a new vehicle at given spawnpoint and replicate to clients.
+    /// </summary>
     private void addVehicleAtSpawnAndReplicate(VehicleSpawnpoint spawn)
     {
         InteractableVehicle character = addVehicleAtSpawn(spawn);
@@ -2150,6 +2205,9 @@ public class VehicleManager : SteamCaller
         river.closeRiver();
     }
 
+    /// <summary>
+    /// Called on server each frame to slowly damage abandoned vehicle.
+    /// </summary>
     private void UpdateDecay()
     {
         decayUpdateIndex = (decayUpdateIndex + 1) % _vehicles.Count;

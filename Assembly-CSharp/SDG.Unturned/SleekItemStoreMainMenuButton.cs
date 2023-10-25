@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Displays a single random item. Placed under the other main menu buttons.
+/// </summary>
 internal class SleekItemStoreMainMenuButton : SleekWrapper
 {
     public enum ELabelType

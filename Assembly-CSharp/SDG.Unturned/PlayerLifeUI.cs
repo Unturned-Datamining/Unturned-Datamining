@@ -316,6 +316,10 @@ public class PlayerLifeUI
         closeChat();
     }
 
+    /// <summary>
+    /// Fill chat field with previous sent message.
+    /// Useful for repeating commands with minor changes.
+    /// </summary>
     public static void repeatChat(int delta)
     {
         if (chatField != null)
@@ -456,6 +460,9 @@ public class PlayerLifeUI
         }
     }
 
+    /// <summary>
+    /// Use the latest hotbar items in the UI.
+    /// </summary>
     public static void updateHotbar()
     {
         if (hotbarContainer == null || Player.player == null)

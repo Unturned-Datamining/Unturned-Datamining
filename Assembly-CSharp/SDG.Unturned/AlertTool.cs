@@ -27,6 +27,13 @@ public class AlertTool
         return true;
     }
 
+    /// <summary>
+    /// Alerts any agents in the area to the player if needed.
+    /// </summary>
+    /// <param name="player">The player causing this alert.</param>
+    /// <param name="position">The position of the alert.</param>
+    /// <param name="radius">The detection radius.</param>
+    /// <param name="sneak">Whether or not to hide.</param>
     public static void alert(Player player, Vector3 position, float radius, bool sneak, Vector3 spotDir, bool isSpotOn)
     {
         _ = Level.getAsset()?.minStealthRadius;
@@ -118,6 +125,11 @@ public class AlertTool
         }
     }
 
+    /// <summary>
+    /// Alerts any agents in the area.
+    /// </summary>
+    /// <param name="position">The position of the alert.</param>
+    /// <param name="radius">The detection radius.</param>
     public static void alert(Vector3 position, float radius)
     {
         float sqrRadius = radius * radius;

@@ -172,6 +172,9 @@ public class Data
         return new Color(readSingle(key + "_R", defaultColor.r), readSingle(key + "_G", defaultColor.g), readSingle(key + "_B", defaultColor.b));
     }
 
+    /// <summary>
+    /// Read 8-bit per channel color excluding alpha.
+    /// </summary>
     public Color32 ReadColor32RGB(string key, Color32 defaultValue)
     {
         return new Color32(readByte(key + "_R", defaultValue.r), readByte(key + "_G", defaultValue.g), readByte(key + "_B", defaultValue.b), byte.MaxValue);
@@ -211,6 +214,9 @@ public class Data
         legacyId = 0;
     }
 
+    /// <summary>
+    /// Intended as a drop-in replacement for existing assets with property uint16s.
+    /// </summary>
     public ushort ReadGuidOrLegacyId(string key, out Guid guid)
     {
         ReadGuidOrLegacyId(key, out guid, out var legacyId);

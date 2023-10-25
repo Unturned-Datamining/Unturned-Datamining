@@ -40,6 +40,9 @@ public class PlayerLife : PlayerCaller
 
     public static Action<PlayerLife, EDeathCause, ELimb, CSteamID> RocketLegacyOnDeath;
 
+    /// <summary>
+    /// Invoked after player finishes respawning.
+    /// </summary>
     public static Action<PlayerLife> OnRevived_Global;
 
     public LifeUpdated onLifeUpdated;
@@ -192,6 +195,9 @@ public class PlayerLife : PlayerCaller
 
     private static readonly ServerInstanceMethod SendSuicideRequest = ServerInstanceMethod.Get(typeof(PlayerLife), "ReceiveSuicideRequest");
 
+    /// <summary>
+    /// Used by UI. True when underwater or inside non-breathable oxygen volume.
+    /// </summary>
     internal bool isAsphyxiating;
 
     private static readonly AssetReference<EffectAsset> BonesRef = new AssetReference<EffectAsset>("663158e0a71346068947b29978818ef7");
@@ -238,8 +244,14 @@ public class PlayerLife : PlayerCaller
 
     public float lastDeath => _lastDeath;
 
+    /// <summary>
+    /// Invoked prior to built-in death logic.
+    /// </summary>
     public static event Action<PlayerLife> OnPreDeath;
 
+    /// <summary>
+    /// Event for plugins when player dies.
+    /// </summary>
     public static event PlayerDiedCallback onPlayerDied;
 
     public static event RespawnPointSelector OnSelectingRespawnPoint;
@@ -263,6 +275,11 @@ public class PlayerLife : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Tracks this player as an aggressor if they were recently an aggressor or if they haven't been attacked recently.
+    /// </summary>
+    /// <param name="force">Ignores rules and just make aggressive.</param>
+    /// <param name="spreadToGroup">Whether to call markAggressive on group members.</param>
     public void markAggressive(bool force, bool spreadToGroup = true)
     {
         if (force || Time.realtimeSinceStartup - lastTimeAggressive < COMBAT_COOLDOWN)
@@ -534,6 +551,7 @@ public class PlayerLife : PlayerCaller
         askDamage(amount, newRagdoll, newCause, newLimb, newKiller, out kill, trackKill, newRagdollEffect, canCauseBleeding, bypassSafezone: false);
     }
 
+    /// <param name="bypassSafezone">Should damage be dealt even while inside safezone?</param>
     public void askDamage(byte amount, Vector3 newRagdoll, EDeathCause newCause, ELimb newLimb, CSteamID newKiller, out EPlayerKill kill, bool trackKill = false, ERagdollEffect newRagdollEffect = ERagdollEffect.NONE, bool canCauseBleeding = true, bool bypassSafezone = false)
     {
         kill = EPlayerKill.NONE;
@@ -831,6 +849,9 @@ public class PlayerLife : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Set bleeding state and replicate to owner if changed.
+    /// </summary>
     public void serverSetBleeding(bool newBleeding)
     {
         if (newBleeding)
@@ -846,6 +867,9 @@ public class PlayerLife : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Set legs broken state and replicate to owner if changed.
+    /// </summary>
     public void serverSetLegsBroken(bool newLegsBroken)
     {
         if (newLegsBroken)
@@ -1017,6 +1041,10 @@ public class PlayerLife : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Add to or subtract from stamina level.
+    /// Does not replicate the change.
+    /// </summary>
     public void simulatedModifyStamina(short delta)
     {
         if (delta > 0)
@@ -1029,6 +1057,10 @@ public class PlayerLife : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Add to or subtract from stamina level.
+    /// Does not replicate the change.
+    /// </summary>
     public void simulatedModifyStamina(float delta)
     {
         simulatedModifyStamina(MathfEx.RoundAndClampToShort(delta));
@@ -1040,12 +1072,18 @@ public class PlayerLife : PlayerCaller
         ReceiveModifyStamina(delta);
     }
 
+    /// <summary>
+    /// Called from the server to modify stamina.
+    /// </summary>
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "clientModifyStamina")]
     public void ReceiveModifyStamina(short delta)
     {
         simulatedModifyStamina(delta);
     }
 
+    /// <summary>
+    /// Add to or subtract from stamina level on the client and server.
+    /// </summary>
     public void serverModifyStamina(float delta)
     {
         short num = MathfEx.RoundAndClampToShort(delta);
@@ -1075,6 +1113,9 @@ public class PlayerLife : PlayerCaller
         ReceiveModifyHallucination(delta);
     }
 
+    /// <summary>
+    /// Called from the server to induce a hallucination.
+    /// </summary>
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "clientModifyHallucination")]
     public void ReceiveModifyHallucination(short delta)
     {
@@ -1088,6 +1129,9 @@ public class PlayerLife : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Add to or subtract from hallucination level on the client.
+    /// </summary>
     public void serverModifyHallucination(float delta)
     {
         short num = MathfEx.RoundAndClampToShort(delta);
@@ -1109,6 +1153,10 @@ public class PlayerLife : PlayerCaller
         serverModifyHallucination((int)amount);
     }
 
+    /// <summary>
+    /// Add to or subtract from warmth level.
+    /// Does not replicate the change.
+    /// </summary>
     public void simulatedModifyWarmth(short delta)
     {
         if (delta != 0 && !isDead)
@@ -1130,12 +1178,18 @@ public class PlayerLife : PlayerCaller
         ReceiveModifyWarmth(delta);
     }
 
+    /// <summary>
+    /// Called from the server to modify warmth.
+    /// </summary>
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "clientModifyWarmth")]
     public void ReceiveModifyWarmth(short delta)
     {
         simulatedModifyWarmth(delta);
     }
 
+    /// <summary>
+    /// Add to or subtract from warmth level on the client and server.
+    /// </summary>
     public void serverModifyWarmth(float delta)
     {
         short num = MathfEx.RoundAndClampToShort(delta);
@@ -1201,6 +1255,10 @@ public class PlayerLife : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Add to or subtract from oxygen level.
+    /// Does not replicate the change.
+    /// </summary>
     public void simulatedModifyOxygen(sbyte delta)
     {
         if (delta > 0)
@@ -1220,6 +1278,10 @@ public class PlayerLife : PlayerCaller
         simulatedModifyOxygen(MathfEx.RoundAndClampToSByte(delta));
     }
 
+    /// <summary>
+    /// Add to or subtract from health level.
+    /// Replicates change to owner.
+    /// </summary>
     public void serverModifyHealth(float delta)
     {
         if (delta > 0f)
@@ -1234,6 +1296,10 @@ public class PlayerLife : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Add to or subtract from food level.
+    /// Replicates change to owner.
+    /// </summary>
     public void serverModifyFood(float delta)
     {
         if (delta > 0f)
@@ -1248,6 +1314,10 @@ public class PlayerLife : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Add to or subtract from water level.
+    /// Replicates change to owner.
+    /// </summary>
     public void serverModifyWater(float delta)
     {
         if (delta > 0f)
@@ -1262,6 +1332,10 @@ public class PlayerLife : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Add to or subtract from virus level.
+    /// Replicates change to owner.
+    /// </summary>
     public void serverModifyVirus(float delta)
     {
         if (delta > 0f)
@@ -1282,6 +1356,9 @@ public class PlayerLife : PlayerCaller
         ReceiveRespawnRequest(atHome);
     }
 
+    /// <summary>
+    /// Used by plugins to respawn the player bypassing timers. Issue #2701
+    /// </summary>
     public void ServerRespawn(bool atHome)
     {
         if (IsAlive)
@@ -1383,6 +1460,9 @@ public class PlayerLife : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Used to refill all client stats like stamina
+    /// </summary>
     public void sendRevive()
     {
         _health = (byte)Provider.modeConfigData.Players.Health_Default;

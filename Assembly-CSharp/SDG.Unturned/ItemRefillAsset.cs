@@ -9,6 +9,9 @@ public class ItemRefillAsset : ItemAsset
 
     public AudioClip use => _use;
 
+    /// <summary>
+    /// Kept for backwards compatibility with plugins.
+    /// </summary>
     [Obsolete("Replaced by separate stats for each water type")]
     public byte water => MathfEx.RoundAndClampToByte(cleanWater);
 

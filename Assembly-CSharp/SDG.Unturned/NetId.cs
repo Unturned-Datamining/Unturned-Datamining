@@ -13,6 +13,9 @@ public struct NetId : IEquatable<NetId>
         this.id = id;
     }
 
+    /// <summary>
+    /// Zero is treated as unset.
+    /// </summary>
     public bool IsNull()
     {
         return id == 0;

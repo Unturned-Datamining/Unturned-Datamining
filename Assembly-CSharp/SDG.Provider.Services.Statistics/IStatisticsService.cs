@@ -5,7 +5,13 @@ namespace SDG.Provider.Services.Statistics;
 
 public interface IStatisticsService : IService
 {
+    /// <summary>
+    /// Current user statistics implementation.
+    /// </summary>
     IUserStatisticsService userStatisticsService { get; }
 
+    /// <summary>
+    /// Current global statistics implementation.
+    /// </summary>
     IGlobalStatisticsService globalStatisticsService { get; }
 }

@@ -3,17 +3,37 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Allows Unity events to spawn effects.
+/// </summary>
 [AddComponentMenu("Unturned/Effect Spawner")]
 public class EffectSpawner : MonoBehaviour
 {
+    /// <summary>
+    /// GUID of effect asset to spawn when SpawnDefaultEffect is invoked.
+    /// </summary>
     public string DefaultEffectAssetGuid;
 
+    /// <summary>
+    /// If true the server will spawn the effect and replicate it to clients,
+    /// otherwise clients will predict their own local copy.
+    /// </summary>
     public bool AuthorityOnly;
 
+    /// <summary>
+    /// Should the RPC be called in reliable mode? Unreliable effects might not be received.
+    /// </summary>
     public bool Reliable;
 
+    /// <summary>
+    /// Transform to spawn the effect at.
+    /// If unset this game object's transform will be used instead.
+    /// </summary>
     public Transform OverrideTransform;
 
+    /// <summary>
+    /// Applied if greater than zero. Defaults to 128.
+    /// </summary>
     public float OverrideRelevantDistance;
 
     public void SpawnDefaultEffect()

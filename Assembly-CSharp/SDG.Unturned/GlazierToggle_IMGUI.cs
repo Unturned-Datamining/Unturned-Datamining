@@ -6,10 +6,16 @@ internal class GlazierToggle_IMGUI : GlazierElementBase_IMGUI, ISleekToggle, ISl
 {
     private string _tooltip;
 
+    /// <summary>
+    /// Holds tooltip text
+    /// </summary>
     protected GUIContent content = new GUIContent();
 
     public bool Value { get; set; }
 
+    /// <summary>
+    /// Tooltip text.
+    /// </summary>
     public string TooltipText
     {
         get

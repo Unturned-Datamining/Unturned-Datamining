@@ -54,6 +54,9 @@ public static class AssetValidation
         }
     }
 
+    /// <summary>
+    /// Relatively efficiently find mesh components, and log an error if their mesh is missing, among other checks.
+    /// </summary>
     public static void searchGameObjectForErrors(Asset owningAsset, GameObject gameObject)
     {
         if (gameObject == null)

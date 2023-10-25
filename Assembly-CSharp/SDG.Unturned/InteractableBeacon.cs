@@ -31,6 +31,10 @@ public class InteractableBeacon : MonoBehaviour, IManualOnDestroy
         }
     }
 
+    /// <summary>
+    /// Number of players inside the navmesh when the beacon was placed.
+    /// Clamped to 1 if ShouldScaleWithNumberOfParticipants is false.
+    /// </summary>
     public int initialParticipants { get; private set; }
 
     public void updateState(ItemBarricadeAsset asset)

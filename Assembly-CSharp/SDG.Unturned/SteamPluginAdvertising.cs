@@ -99,6 +99,9 @@ internal class SteamPluginAdvertising : IPluginAdvertising
         return pluginNames;
     }
 
+    /// <summary>
+    /// Called once key/values can be set.
+    /// </summary>
     public void NotifyGameServerReady()
     {
         isGameServerReady = true;

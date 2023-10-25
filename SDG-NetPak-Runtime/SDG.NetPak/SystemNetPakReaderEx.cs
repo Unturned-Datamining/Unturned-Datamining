@@ -9,6 +9,9 @@ public static class SystemNetPakReaderEx
 
     public delegate bool ReadListItemWithReader<T>(NetPakReader reader, out T item);
 
+    /// <summary>
+    /// For example bitCount of 7 allows range [-64, +64).
+    /// </summary>
     public static bool ReadSignedInt(this NetPakReader reader, int bitCount, out int value)
     {
         uint value2;
@@ -18,6 +21,10 @@ public static class SystemNetPakReaderEx
         return result;
     }
 
+    /// <summary>
+    /// Values outside the range are clamped into range.
+    /// For example intBitCount of 7 allows range [-64, +64).
+    /// </summary>
     public static bool ReadClampedFloat(this NetPakReader reader, int intBitCount, int fracBitCount, out float value)
     {
         int value2;
@@ -92,6 +99,9 @@ public static class SystemNetPakReaderEx
         return result;
     }
 
+    /// <summary>
+    /// Decode a float in the range [0.0, 1.0]. Endpoints are encoded exactly, but not the midpoint (0.5).
+    /// </summary>
     public static bool ReadUnsignedNormalizedFloat(this NetPakReader reader, int bitCount, out float value)
     {
         uint value2;
@@ -101,6 +111,9 @@ public static class SystemNetPakReaderEx
         return result;
     }
 
+    /// <summary>
+    /// Decode a float in the range [-1.0, +1.0]. Endpoints and midpoint (0.0) are encoded exactly.
+    /// </summary>
     public static bool ReadSignedNormalizedFloat(this NetPakReader reader, int bitCount, out float value)
     {
         uint value2;
@@ -225,6 +238,9 @@ public static class SystemNetPakReaderEx
         return flag;
     }
 
+    /// <summary>
+    /// Ideally should not be used by new code.
+    /// </summary>
     public static bool ReadStateArray(this NetPakReader reader, out byte[] value)
     {
         byte value2;

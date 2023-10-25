@@ -4,6 +4,10 @@ namespace SDG.Unturned;
 
 public class NPCZombieKillsCondition : INPCCondition
 {
+    /// <summary>
+    /// Only kills outside this radius around the player are tracked.
+    /// NSTM requested this for a sniping zombies quest.
+    /// </summary>
     public float sqrMinRadius;
 
     public ushort id { get; protected set; }
@@ -12,14 +16,29 @@ public class NPCZombieKillsCondition : INPCCondition
 
     public EZombieSpeciality zombie { get; protected set; }
 
+    /// <summary>
+    /// Should zombie(s) of the required type be spawned when player enters the area?
+    /// </summary>
     public bool spawn { get; protected set; }
 
+    /// <summary>
+    /// How many to spawn if spawning <see cref="P:SDG.Unturned.NPCZombieKillsCondition.spawn" /> is enabled.
+    /// </summary>
     public int spawnQuantity { get; protected set; }
 
+    /// <summary>
+    /// Navmesh index player must be within. If set to byte.MaxValue then anywhere on the map is eligible.
+    /// </summary>
     public byte nav { get; protected set; }
 
+    /// <summary>
+    /// Only kills within this radius around the player are tracked.
+    /// </summary>
     public float sqrRadius { get; protected set; }
 
+    /// <summary>
+    /// If spawning is enabled, whether to use the timer between spawns.
+    /// </summary>
     public bool usesBossInterval { get; protected set; }
 
     public override bool isConditionMet(Player player)

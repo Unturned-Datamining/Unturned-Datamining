@@ -219,6 +219,10 @@ public class CosmeticPreviewCapture : MonoBehaviour
         };
     }
 
+    /// <summary>
+    /// Render character with hair and skin otherwise it might be cyan.
+    /// (public issue #3615)
+    /// </summary>
     private IEnumerator RenderDefaultCharacter()
     {
         yield return new WaitForEndOfFrame();

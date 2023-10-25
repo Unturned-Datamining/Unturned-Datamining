@@ -1,5 +1,8 @@
 namespace SDG.Unturned;
 
+/// <summary>
+/// Tracks whether we should show the "NEW" label on listings and item store button.
+/// </summary>
 public static class ItemStoreSavedata
 {
     public static bool WasNewListingsPageSeen()
@@ -12,18 +15,27 @@ public static class ItemStoreSavedata
         return false;
     }
 
+    /// <summary>
+    /// Track that player has seen the page with all new listings.
+    /// </summary>
     public static void MarkNewListingsPageSeen()
     {
         ItemStoreLiveConfig itemStore = LiveConfig.Get().itemStore;
         ConvenientSavedata.get().write("ItemStoreSeenPromotionId", itemStore.promotionId);
     }
 
+    /// <summary>
+    /// Has player seen the given listing?
+    /// </summary>
     public static bool WasNewListingSeen(int itemdefid)
     {
         string flag = FormatNewListingSeenFlag(itemdefid);
         return ConvenientSavedata.get().hasFlag(flag);
     }
 
+    /// <summary>
+    /// Track that the player has seen the given listing.
+    /// </summary>
     public static void MarkNewListingSeen(int itemdefid)
     {
         string flag = FormatNewListingSeenFlag(itemdefid);

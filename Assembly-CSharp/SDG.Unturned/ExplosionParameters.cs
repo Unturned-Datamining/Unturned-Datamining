@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Payload for the DamageTool.explode function.
+/// Moved into struct because the amount of arguments to that function were insane, but now is not the time to completely refactor damage.
+/// </summary>
 public struct ExplosionParameters
 {
     public Vector3 point;
@@ -41,6 +45,9 @@ public struct ExplosionParameters
 
     public float objectDamage;
 
+    /// <summary>
+    /// Speed to launch players away from blast position.
+    /// </summary>
     public float launchSpeed;
 
     public ExplosionParameters(Vector3 point, float damageRadius, EDeathCause cause, CSteamID killer)

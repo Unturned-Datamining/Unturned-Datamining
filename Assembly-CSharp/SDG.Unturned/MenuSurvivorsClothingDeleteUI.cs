@@ -60,6 +60,9 @@ public class MenuSurvivorsClothingDeleteUI
         }
     }
 
+    /// <summary>
+    /// Note: inventory service does not support exchanging multiple items simultaneously.
+    /// </summary>
     public static void salvageItem(int itemID, ulong instanceID)
     {
         int scrapExchangeItem = Provider.provider.economyService.getScrapExchangeItem(itemID);

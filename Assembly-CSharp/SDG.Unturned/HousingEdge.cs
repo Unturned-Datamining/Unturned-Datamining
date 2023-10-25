@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Initially these were structs so that they would be adjacent in memory and therefore faster to iterate lots of them,
+/// but making them classes lets them reference each other which significantly simplifies finding adjactent housing parts.
+/// </summary>
 internal class HousingEdge
 {
     public Vector3 position;
@@ -11,10 +15,22 @@ internal class HousingEdge
 
     public float rotation;
 
+    /// <summary>
+    /// Item along positive direction.
+    /// Can be multiple on existing saves or if players found an exploit.
+    /// </summary>
     public List<StructureDrop> forwardFloors;
 
+    /// <summary>
+    /// Item along negative direction.
+    /// Can be multiple on existing saves or if players found an exploit.
+    /// </summary>
     public List<StructureDrop> backwardFloors;
 
+    /// <summary>
+    /// Item between floors.
+    /// Can be multiple on existing saves or if players found an exploit.
+    /// </summary>
     public List<StructureDrop> walls;
 
     public HousingVertex vertex0;
@@ -41,6 +57,15 @@ internal class HousingEdge
         }
     }
 
+    /// <summary>
+    /// This check prevents placing roof onto the upper edge of a rampart because ramparts
+    /// create an edge at full wall height even though they are short.
+    ///
+    /// Ideally in the future wall height will become configurable and remove
+    /// the need for this check.
+    ///
+    /// See public issue #3590.
+    /// </summary>
     public bool CanAttachRoof
     {
         get
@@ -61,6 +86,9 @@ internal class HousingEdge
         }
     }
 
+    /// <summary>
+    /// Is there a wall in this slot, and is it full height (not rampart)?
+    /// </summary>
     public bool HasFullHeightWall()
     {
         foreach (StructureDrop wall in walls)

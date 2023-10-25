@@ -1,5 +1,9 @@
 namespace SDG.Unturned;
 
+/// <summary>
+/// Hashes for Windows, Linux, and Mac asset bundles.
+/// Only loaded on the dedicated server. Null otherwise.
+/// </summary>
 internal class MasterBundleHash
 {
     public byte[] windowsHash;
@@ -19,6 +23,9 @@ internal class MasterBundleHash
         };
     }
 
+    /// <summary>
+    /// Does given hash match any of the platform hashes?
+    /// </summary>
     public bool DoesAnyHashMatch(byte[] hash)
     {
         if (windowsHash == null || macHash == null || linuxHash == null)

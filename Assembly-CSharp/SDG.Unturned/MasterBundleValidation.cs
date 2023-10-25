@@ -4,8 +4,14 @@ using System.IO;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Compares client asset bundle hash with server known hashes.
+/// </summary>
 internal static class MasterBundleValidation
 {
+    /// <summary>
+    /// Called by asset startup to cache which bundles are eligible for hashing.
+    /// </summary>
     public static void initialize(List<MasterBundleConfig> allMasterBundles)
     {
         if (!Dedicator.IsDedicatedServer)

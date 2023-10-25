@@ -17,6 +17,9 @@ public class SteamChannelMethod
 
     public EContextType contextType;
 
+    /// <summary>
+    /// Index of the context parameter, if not None.
+    /// </summary>
     public int contextParameterIndex;
 
     public Component component { get; protected set; }
@@ -27,6 +30,10 @@ public class SteamChannelMethod
 
     public Type[] types { get; protected set; }
 
+    /// <summary>
+    /// Reflected attribute that was used to find this method.
+    /// Contains extra information about how to call it.
+    /// </summary>
     public SteamCall attribute { get; protected set; }
 
     public SteamChannelMethod(Component newComponent, MethodInfo newMethod, string legacyMethodName, Type[] newTypes, int typesReadOffset, EContextType contextType, int contextParameterIndex, SteamCall attribute)

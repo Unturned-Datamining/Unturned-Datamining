@@ -160,6 +160,9 @@ public class GroupManager : SteamCaller
         results.Add($"Queued group exits: {queuedExits.Count}");
     }
 
+    /// <summary>
+    /// Is player already waiting to exit their group?
+    /// </summary>
     public static bool isPlayerInGroupExitQueue(Player player)
     {
         foreach (QueuedGroupExit queuedExit in queuedExits)
@@ -172,6 +175,9 @@ public class GroupManager : SteamCaller
         return false;
     }
 
+    /// <summary>
+    /// Add player to exit queue if enabled, or immediately remove.
+    /// </summary>
     public static void requestGroupExit(Player player)
     {
         uint timer_Leave_Group = Provider.modeConfigData.Gameplay.Timer_Leave_Group;
@@ -190,6 +196,9 @@ public class GroupManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// Remove player from queue if they're waiting to exit their group.
+    /// </summary>
     public static void cancelGroupExit(Player player)
     {
         for (int num = queuedExits.Count - 1; num >= 0; num--)

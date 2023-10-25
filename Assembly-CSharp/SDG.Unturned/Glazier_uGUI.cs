@@ -610,6 +610,9 @@ internal class Glazier_uGUI : GlazierBase, IGlazier
         }
     }
 
+    /// <summary>
+    /// Enumerate elements that are not in the pool.
+    /// </summary>
     private IEnumerable<GlazierElementBase_uGUI> EnumerateLiveElements()
     {
         int index = elements.Count - 1;
@@ -629,6 +632,9 @@ internal class Glazier_uGUI : GlazierBase, IGlazier
         }
     }
 
+    /// <summary>
+    /// Sanity check all returned elements have a gameObject.
+    /// </summary>
     [Conditional("VALIDATE_GLAZIER_USE_AFTER_DESTROY")]
     private void ValidateNewElement(GlazierElementBase_uGUI element)
     {

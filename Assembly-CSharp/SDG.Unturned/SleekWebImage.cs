@@ -4,8 +4,16 @@ namespace SDG.Unturned;
 
 public class SleekWebImage : SleekWrapper
 {
+    /// <summary>
+    /// If true, SizeOffset_X and SizeOffset_Y are used when image is available.
+    /// Defaults to false.
+    /// </summary>
     public bool useImageDimensions;
 
+    /// <summary>
+    /// If useImageDimensions is on and image width exceeds this value, scale down
+    /// respecting aspect ratio.
+    /// </summary>
     public float maxImageDimensionsWidth = -1f;
 
     private ISleekImage internalImage;

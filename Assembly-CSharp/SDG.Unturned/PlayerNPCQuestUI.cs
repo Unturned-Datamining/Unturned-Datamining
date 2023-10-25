@@ -15,8 +15,22 @@ public class PlayerNPCQuestUI
 
     private static QuestAsset quest;
 
+    /// <summary>
+    /// Valid when opened in Begin or End mode.
+    ///
+    /// If the quest is ready to complete the UI is opened in End mode to allow
+    /// the player to see what rewards they will receive after clicking continue. 
+    /// Otherwise, in Begin mode the UI is opened to allow the player to review
+    /// the conditions before accepting or declining the request.
+    ///
+    /// If the player cancels the pending response is NOT chosen.
+    /// </summary>
     private static DialogueResponse pendingResponse;
 
+    /// <summary>
+    /// Valid when opened in Begin or End mode.
+    /// The player clicked pendingResponse in this dialogue to open the quest UI.
+    /// </summary>
     private static DialogueAsset dialogueContext;
 
     private static EQuestViewMode mode;

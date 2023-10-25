@@ -30,6 +30,9 @@ public class PlayerDashboardCraftingUI
 
     private static ISleekToggle hideUncraftableToggle;
 
+    /// <summary>
+    /// Used by inventory item context menu to override which blueprints are shown.
+    /// </summary>
     public static Blueprint[] filteredBlueprintsOverride;
 
     private static byte blueprintTypeFilterIndex;

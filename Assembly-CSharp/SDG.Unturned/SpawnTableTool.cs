@@ -7,6 +7,11 @@ namespace SDG.Unturned;
 
 public class SpawnTableTool
 {
+    /// <summary>
+    /// Returning an Asset rather than the older IDs allows GUIDs to be used.
+    /// legacyTargetAssetType is required for compatibility with spawn tables using legacy 16-bit IDs.
+    /// </summary>
+    /// <returns></returns>
     public static Asset Resolve(SpawnAsset spawnAsset, EAssetType legacyTargetAssetType, Func<string> errorContextCallback)
     {
         if (spawnAsset == null)
@@ -100,16 +105,25 @@ public class SpawnTableTool
         return Resolve(spawnAsset, legacyTargetAssetType, errorContextCallback);
     }
 
+    /// <summary>
+    /// For backwards compatibility with features that still need a legacy ID rather than asset.
+    /// </summary>
     public static ushort ResolveLegacyId(SpawnAsset spawnAsset, EAssetType legacyTargetAssetType, Func<string> errorContextCallback)
     {
         return Resolve(spawnAsset, legacyTargetAssetType, errorContextCallback)?.id ?? 0;
     }
 
+    /// <summary>
+    /// For backwards compatibility with features that still need a legacy ID rather than asset.
+    /// </summary>
     public static ushort ResolveLegacyId(Guid spawnAssetGuid, EAssetType legacyTargetAssetType, Func<string> errorContextCallback)
     {
         return Resolve(spawnAssetGuid, legacyTargetAssetType, errorContextCallback)?.id ?? 0;
     }
 
+    /// <summary>
+    /// For backwards compatibility with features that still need a legacy ID rather than asset.
+    /// </summary>
     public static ushort ResolveLegacyId(ushort spawnAssetLegacyId, EAssetType legacyTargetAssetType, Func<string> errorContextCallback)
     {
         return Resolve(spawnAssetLegacyId, legacyTargetAssetType, errorContextCallback)?.id ?? 0;

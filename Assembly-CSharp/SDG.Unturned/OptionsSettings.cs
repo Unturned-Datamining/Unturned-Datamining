@@ -22,6 +22,9 @@ public class OptionsSettings
 
     private const byte SAVEDATA_VERSION_ADDED_HITMARKER_STYLE = 44;
 
+    /// <summary>
+    /// Unfortunately the version which added hitmarker style saved but didn't actually load (sigh).
+    /// </summary>
     private const byte SAVEDATA_VERSION_ADDED_HITMARKER_STYLE_FIX = 45;
 
     private const byte SAVEDATA_VERSION_NEWEST = 45;
@@ -97,6 +100,9 @@ public class OptionsSettings
 
     public static ECrosshairShape crosshairShape;
 
+    /// <summary>
+    /// Controls whether hitmarkers are animated outward (newer) or just a static image ("classic"). 
+    /// </summary>
     public static EHitmarkerStyle hitmarkerStyle;
 
     public static Color crosshairColor;
@@ -240,10 +246,19 @@ public class OptionsSettings
 
     public static event System.Action OnUnitSystemChanged;
 
+    /// <summary>
+    /// Invoked when custom UI colors are set.
+    /// </summary>
     public static event System.Action OnCustomColorsChanged;
 
+    /// <summary>
+    /// Invoked when dark/light theme is set.
+    /// </summary>
     public static event System.Action OnThemeChanged;
 
+    /// <summary>
+    /// Prior to 3.22.8.0 all scopes/optics had a base fov of 90 degrees.
+    /// </summary>
     public static float GetZoomBaseFieldOfView()
     {
         if (ControlsSettings.sensitivityScalingMode != ESensitivityScalingMode.Legacy)

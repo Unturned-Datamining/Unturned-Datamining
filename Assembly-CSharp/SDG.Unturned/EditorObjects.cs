@@ -285,6 +285,9 @@ public class EditorObjects : MonoBehaviour
         calculateHandleOffsets();
     }
 
+    /// <summary>
+    /// Reset dragging handle and register transformation.
+    /// </summary>
     private void releaseHandle()
     {
         applySelection();

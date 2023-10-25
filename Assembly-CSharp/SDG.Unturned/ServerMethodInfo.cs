@@ -19,6 +19,9 @@ public class ServerMethodInfo
 
     internal uint methodIndex;
 
+    /// <summary>
+    /// Index into per-connection rate limiting array.
+    /// </summary>
     internal int rateLimitIndex;
 
     public override string ToString()

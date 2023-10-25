@@ -34,8 +34,14 @@ public class GraphicsSettingsData
 
     public bool IsItemIconAntiAliasingEnabled;
 
+    /// <summary>
+    /// Far clip plane multiplier in-game.
+    /// </summary>
     public float FarClipDistance;
 
+    /// <summary>
+    /// Far clip plane multiplier in level editor.
+    /// </summary>
     public float EditorFarClipDistance;
 
     public ERenderMode RenderMode2;

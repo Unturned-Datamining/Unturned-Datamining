@@ -24,6 +24,7 @@ public class ClaimManager : MonoBehaviour
         return true;
     }
 
+    /// <param name="isClaim">True if it's a new claim flag.</param>
     public static bool canBuildOnVehicle(Transform vehicle, CSteamID owner, CSteamID group)
     {
         foreach (ClaimPlant plant in plants)

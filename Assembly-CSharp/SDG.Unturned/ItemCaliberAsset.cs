@@ -8,8 +8,14 @@ public class ItemCaliberAsset : ItemAsset
 
     private float _recoil_y;
 
+    /// <summary>
+    /// Recoil magnitude multiplier while the gun is aiming down sights.
+    /// </summary>
     public float aimingRecoilMultiplier;
 
+    /// <summary>
+    /// Multiplier for gun's Aim_In_Duration.
+    /// </summary>
     public float aimDurationMultiplier;
 
     private float _spread;
@@ -22,6 +28,9 @@ public class ItemCaliberAsset : ItemAsset
 
     protected bool _isPaintable;
 
+    /// <summary>
+    /// Movement speed multiplier while the gun is aiming down sights.
+    /// </summary>
     public float aimingMovementSpeedMultiplier;
 
     protected bool _isBipod;
@@ -42,12 +51,22 @@ public class ItemCaliberAsset : ItemAsset
 
     public bool isPaintable => _isPaintable;
 
+    /// <summary>
+    /// Multiplier for normal bullet damage.
+    /// </summary>
     public float ballisticDamageMultiplier { get; protected set; }
 
     public bool ShouldOnlyAffectAimWhileProne => _isBipod;
 
     public bool shouldDestroyAttachmentColliders { get; protected set; }
 
+    /// <summary>
+    /// Name to use when instantiating attachment prefab.
+    /// By default the asset guid is used, but it can be overridden because some
+    /// modders rely on the name for Unity's legacy animation component. For example
+    /// in Toothy Deerryte's case there were a lot of duplicate animations to work
+    /// around the guid naming, simplified by overriding name.
+    /// </summary>
     public string instantiatedAttachmentName { get; protected set; }
 
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)

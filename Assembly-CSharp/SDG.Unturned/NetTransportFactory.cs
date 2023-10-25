@@ -6,6 +6,9 @@ using SDG.NetTransport.SystemSockets;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Not extendable until transport API is better finalized.
+/// </summary>
 internal static class NetTransportFactory
 {
     internal const string SystemSocketsTag = "sys";

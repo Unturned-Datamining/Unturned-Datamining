@@ -15,6 +15,9 @@ public class ObjectAsset : Asset
 
     private GameObject loadedModel;
 
+    /// <summary>
+    /// Prevents calling getOrLoad redundantly if asset does not exist.
+    /// </summary>
     private bool hasLoadedModel;
 
     private IDeferredAsset<GameObject> clientModel;
@@ -43,6 +46,9 @@ public class ObjectAsset : Asset
 
     public bool isSoft;
 
+    /// <summary>
+    /// Should landing on this object inflict fall damage?
+    /// </summary>
     public bool causesFallDamage;
 
     public bool isCollisionImportant;
@@ -100,11 +106,17 @@ public class ObjectAsset : Asset
 
     public ushort rubbleHealth;
 
+    /// <summary>
+    /// Effect played when single segment is destroyed.
+    /// </summary>
     public Guid rubbleEffectGuid;
 
     [Obsolete]
     public ushort rubbleEffect;
 
+    /// <summary>
+    /// Effect played when all segments are destroyed.
+    /// </summary>
     public Guid rubbleFinaleGuid;
 
     [Obsolete]
@@ -114,8 +126,15 @@ public class ObjectAsset : Asset
 
     public ushort rubbleRewardID;
 
+    /// <summary>
+    /// Weapon must have matching blade ID to damage object.
+    /// Both weapons and objects default to zero so they can be damaged by default.
+    /// </summary>
     public byte rubbleBladeID;
 
+    /// <summary>
+    /// [0, 1] probability of dropping any rewards.
+    /// </summary>
     public float rubbleRewardProbability;
 
     public byte rubbleRewardsMin;
@@ -138,14 +157,28 @@ public class ObjectAsset : Asset
 
     public bool shouldAddNightLightScript;
 
+    /// <summary>
+    /// Should colliders in the Triggers GameObject with "Kill" name kill players?
+    /// If Triggers GameObject is not set, searches Object instead.
+    /// </summary>
     public bool shouldAddKillTriggers;
 
     public bool allowStructures;
 
+    /// <summary>
+    /// Should this object only be visible if gore is enabled?
+    /// Allows pre-placed blood splatters to be hidden for younger players.
+    /// </summary>
     public bool isGore;
 
+    /// <summary>
+    /// Object to use during the Christmas event instead.
+    /// </summary>
     public AssetReference<ObjectAsset> christmasRedirect;
 
+    /// <summary>
+    /// Object to use during the Halloween event instead.
+    /// </summary>
     public AssetReference<ObjectAsset> halloweenRedirect;
 
     private static HashSet<ushort> tempAssociatedFlags = new HashSet<ushort>();
@@ -164,6 +197,9 @@ public class ObjectAsset : Asset
 
     public override string FriendlyName => objectName;
 
+    /// <summary>
+    /// Only activated during this holiday.
+    /// </summary>
     public ENPCHoliday holidayRestriction { get; protected set; }
 
     public override EAssetType assetCategory => EAssetType.OBJECT;
@@ -247,6 +283,9 @@ public class ObjectAsset : Asset
         }
     }
 
+    /// <summary>
+    /// Clip.prefab
+    /// </summary>
     protected void OnServerModelLoaded(GameObject asset)
     {
         if (asset == null && type != EObjectType.SMALL)
@@ -259,6 +298,9 @@ public class ObjectAsset : Asset
         }
     }
 
+    /// <summary>
+    /// Object.prefab
+    /// </summary>
     protected void OnClientModelLoaded(GameObject asset)
     {
         if (asset == null)
@@ -321,6 +363,9 @@ public class ObjectAsset : Asset
         return Assets.FindEffectAssetByGuidOrLegacyId(rubbleFinaleGuid, rubbleFinale);
     }
 
+    /// <summary>
+    /// Get asset ref to replace this one for holiday, or null if it should not be redirected.
+    /// </summary>
     public AssetReference<ObjectAsset> getHolidayRedirect()
     {
         return HolidayUtil.getActiveHoliday() switch
@@ -370,6 +415,10 @@ public class ObjectAsset : Asset
         return true;
     }
 
+    /// <summary>
+    /// If any conditions use flags they will be added to a set,
+    /// otherwise null is returned.
+    /// </summary>
     internal HashSet<ushort> GetConditionAssociatedFlags()
     {
         if (conditions == null)
@@ -421,6 +470,11 @@ public class ObjectAsset : Asset
         interactabilityRewards.Grant(player);
     }
 
+    /// <summary>
+    /// Recursively change all children including root from oldTag to newTag.
+    /// Aborts if a child doesn't match the old tag because it might be something we shouldn't change the tag of.
+    /// <return>True if tags were all successfully changed.</return>
+    /// </summary>
     protected bool recursivelyFixTag(GameObject parentGameObject, string oldTag, string newTag)
     {
         if (parentGameObject.CompareTag(oldTag))
@@ -441,6 +495,11 @@ public class ObjectAsset : Asset
         return false;
     }
 
+    /// <summary>
+    /// Recursively change all children including root from oldLayer to newLayer.
+    /// Aborts if a child doesn't match the old layer because it might be something we shouldn't change the layer of.
+    /// <return>True if layers were all successfully changed.</return>
+    /// </summary>
     protected bool recursivelyFixLayer(GameObject parentGameObject, int oldLayer, int newLayer)
     {
         if (parentGameObject.layer == oldLayer)
@@ -475,6 +534,10 @@ public class ObjectAsset : Asset
         }
     }
 
+    /// <summary>
+    /// Called if we have a valid Nav GameObject.
+    /// Recast requires any meshes used on the Nav objects to be CPU readable, so we log errors here if they're not marked as such.
+    /// </summary>
     private void ensureNavMeshReadable()
     {
         navMCs.Clear();

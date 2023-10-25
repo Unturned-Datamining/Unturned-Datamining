@@ -48,6 +48,7 @@ public abstract class FoliageInfoAsset : Asset
         }
     }
 
+    /// <param name="followRules">Should angle limits and subtractive volumes be respected? Disabled when manually placing individually.</param>
     public virtual void addFoliageToSurface(Vector3 surfacePosition, Vector3 surfaceNormal, bool clearWhenBaked, bool followRules)
     {
         if (!followRules || isAngleValid(surfaceNormal))
@@ -83,6 +84,9 @@ public abstract class FoliageInfoAsset : Asset
         }
     }
 
+    /// <summary>
+    /// Pick a point inside the bounds to test for foliage placement. The base implementation is completely random, but a blue noise implementation could be very nice.
+    /// </summary>
     protected virtual Vector3 getTestPosition(Bounds bounds)
     {
         float x = Random.Range(-1f, 1f) * bounds.extents.x;

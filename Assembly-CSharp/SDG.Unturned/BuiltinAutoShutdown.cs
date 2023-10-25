@@ -6,6 +6,9 @@ using UnityEngine.Networking;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Manages scheduled restart for dedicated server.
+/// </summary>
 internal class BuiltinAutoShutdown : MonoBehaviour
 {
     public bool isScheduledShutdownEnabled;
@@ -14,6 +17,9 @@ internal class BuiltinAutoShutdown : MonoBehaviour
 
     private double scheduledShutdownRealtime;
 
+    /// <summary>
+    /// Sorted from low to high.
+    /// </summary>
     private List<double> scheduledShutdownWarnings;
 
     private int scheduledShutdownWarningIndex = -1;
@@ -26,6 +32,9 @@ internal class BuiltinAutoShutdown : MonoBehaviour
 
     private string updateVersionString;
 
+    /// <summary>
+    /// Sorted from low to high.
+    /// </summary>
     private List<double> updateShutdownWarnings;
 
     private int updateShutdownWarningIndex = -1;

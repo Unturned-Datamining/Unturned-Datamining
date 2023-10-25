@@ -2,6 +2,9 @@ namespace SDG.Unturned;
 
 public class AchievementStatusData
 {
+    /// <summary>
+    /// Names of achievements that can be granted by NPC rewards.
+    /// </summary>
     public string[] NPC_Achievement_IDs;
 
     public bool canBeGrantedByNPC(string id)

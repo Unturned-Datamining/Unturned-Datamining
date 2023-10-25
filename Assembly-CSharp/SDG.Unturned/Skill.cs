@@ -6,10 +6,19 @@ public class Skill
 {
     public byte level;
 
+    /// <summary>
+    /// Vanilla maximum level.
+    /// </summary>
     public byte max;
 
+    /// <summary>
+    /// If set, maximum skill level attainable through gameplay.
+    /// </summary>
     public int maxUnlockableLevel = -1;
 
+    /// <summary>
+    /// Multiplier for XP upgrade cost.
+    /// </summary>
     public float costMultiplier = 1f;
 
     private uint _cost;
@@ -34,6 +43,10 @@ public class Skill
 
     public uint cost => MathfEx.RoundAndClampToUInt((float)_cost * ((float)(int)level * difficulty + 1f) * costMultiplier);
 
+    /// <summary>
+    /// Get maximum level, or maxUnlockableLevel if set.
+    /// </summary>
+    /// <returns></returns>
     public int GetClampedMaxUnlockableLevel()
     {
         if (maxUnlockableLevel <= -1)

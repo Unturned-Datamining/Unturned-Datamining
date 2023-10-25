@@ -19,8 +19,14 @@ internal class GlazierImage_uGUI : GlazierElementBase_uGUI, ISleekImage, ISleekE
 
     private SleekColor _color = ESleekTint.NONE;
 
+    /// <summary>
+    /// The base transform does not rotate, instead a child transform is created with the pivot in the center.
+    /// </summary>
     private RectTransform pivotTransform;
 
+    /// <summary>
+    /// To work around a uGUI bug we always a sign a texture, even if desiredTexture is null.
+    /// </summary>
     private Texture desiredTexture;
 
     private RawImage rawImageComponent;

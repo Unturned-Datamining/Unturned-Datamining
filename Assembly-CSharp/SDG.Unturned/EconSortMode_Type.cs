@@ -3,6 +3,9 @@ using Steamworks;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Sorts type alphabetically to the front of the list.
+/// </summary>
 public class EconSortMode_Type : Comparer<SteamItemDetails_t>
 {
     public override int Compare(SteamItemDetails_t x, SteamItemDetails_t y)

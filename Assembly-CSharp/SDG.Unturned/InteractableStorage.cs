@@ -57,6 +57,12 @@ public class InteractableStorage : Interactable, IManualOnDestroy
 
     public bool despawnWhenDestroyed;
 
+    /// <summary>
+    /// If player gets too far away from this storage while using it, should we close out?
+    /// False by default for trunk storage because player is inside vehicle.
+    /// Plugins needed to be able to set this to false for "virtual storage" plugins,
+    /// so we default to false and set to true if asset enables it.
+    /// </summary>
     public bool shouldCloseWhenOutsideRange;
 
     public RebuiltStateHandler onStateRebuilt;

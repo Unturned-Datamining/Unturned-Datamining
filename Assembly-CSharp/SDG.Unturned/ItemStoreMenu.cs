@@ -8,9 +8,21 @@ internal class ItemStoreMenu : SleekFullscreenBox
     private enum ECategoryFilter
     {
         None,
+        /// <summary>
+        /// Collections of multiple items. 
+        /// </summary>
         Bundles,
+        /// <summary>
+        /// Discounted items.
+        /// </summary>
         Specials,
+        /// <summary>
+        /// Items marked as new in the Status.json file.
+        /// </summary>
         New,
+        /// <summary>
+        /// Items marked as featured in the Status.json file.
+        /// </summary>
         Featured
     }
 
@@ -26,16 +38,28 @@ internal class ItemStoreMenu : SleekFullscreenBox
 
     private ISleekField searchField;
 
+    /// <summary>
+    /// Displays the current page number.
+    /// </summary>
     private ISleekBox pageBox;
 
+    /// <summary>
+    /// Only visible when cart is not empty.
+    /// </summary>
     private ISleekButton viewCartButton;
 
     private List<ItemStore.Listing> filteredListings;
 
+    /// <summary>
+    /// [0, pageCount)
+    /// </summary>
     private int pageIndex;
 
     private int pageCount;
 
+    /// <summary>
+    /// If true, listings should be re-filtered when opening the menu.
+    /// </summary>
     private bool areListingsDirty;
 
     private ECategoryFilter categoryFilter;
@@ -276,6 +300,9 @@ internal class ItemStoreMenu : SleekFullscreenBox
         }
     }
 
+    /// <summary>
+    /// Remove items that do not match search text.
+    /// </summary>
     private void ApplySearchTextFilter()
     {
         string text = searchField.Text;
@@ -336,6 +363,9 @@ internal class ItemStoreMenu : SleekFullscreenBox
         }
     }
 
+    /// <summary>
+    /// Note SetListing also calls RefreshInCart.
+    /// </summary>
     private void RefreshPage()
     {
         pageBox.Text = MenuSurvivorsClothingUI.localization.format("Page", pageIndex + 1, pageCount);
@@ -352,6 +382,9 @@ internal class ItemStoreMenu : SleekFullscreenBox
         }
     }
 
+    /// <summary>
+    /// Cannot be created until store data is available.
+    /// </summary>
     private void CreateFilterCategoryButtons()
     {
         ItemStore itemStore = ItemStore.Get();

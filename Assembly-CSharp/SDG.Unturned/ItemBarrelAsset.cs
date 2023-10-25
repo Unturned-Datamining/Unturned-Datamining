@@ -34,6 +34,9 @@ public class ItemBarrelAsset : ItemCaliberAsset
 
     public float ballisticDrop => _ballisticDrop;
 
+    /// <summary>
+    /// Multiplier for the maximum distance the gunshot can be heard.
+    /// </summary>
     public float gunshotRolloffDistanceMultiplier { get; protected set; }
 
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)

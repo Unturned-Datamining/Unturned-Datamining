@@ -20,22 +20,38 @@ public class GameplayConfigData
 
     public bool Group_HUD;
 
+    /// <summary>
+    /// Should group connections be shown on player list?
+    /// </summary>
     public bool Group_Player_List;
 
     public bool Allow_Static_Groups;
 
     public bool Allow_Dynamic_Groups;
 
+    /// <summary>
+    /// If true, allow automatically creating an in-game group for members of your Steam lobby.
+    /// Requires Allow_Dynamic_Groups to be enabled as well.
+    /// </summary>
     public bool Allow_Lobby_Groups;
 
     public bool Allow_Shoulder_Camera;
 
     public bool Can_Suicide;
 
+    /// <summary>
+    /// Is friendly-fire allowed?
+    /// </summary>
     public bool Friendly_Fire;
 
+    /// <summary>
+    /// Are sentry guns and beds allowed on vehicles?
+    /// </summary>
     public bool Bypass_Buildable_Mobility;
 
+    /// <summary>
+    /// Should holiday (Halloween and Christmas) content like NPC outfits and decorations be loaded?
+    /// </summary>
     public bool Allow_Holidays = true;
 
     internal const uint MAX_TIMER_EXIT = 60u;
@@ -50,14 +66,29 @@ public class GameplayConfigData
 
     public uint Max_Group_Members;
 
+    /// <summary>
+    /// Scales velocity added to players by explosion knock-back.
+    /// </summary>
     public float Explosion_Launch_Speed_Multiplier = 1f;
 
+    /// <summary>
+    /// Scales midair input change in player direction.
+    /// </summary>
     public float AirStrafing_Acceleration_Multiplier = 1f;
 
+    /// <summary>
+    /// Scales midair decrease in speed while faster than max walk speed.
+    /// </summary>
     public float AirStrafing_Deceleration_Multiplier = 1f;
 
+    /// <summary>
+    /// Scales magnitude of recoil while using third-person perspective.
+    /// </summary>
     public float ThirdPerson_RecoilMultiplier = 2f;
 
+    /// <summary>
+    /// Scales magnitude of bullet inaccuracy while using third-person perspective.
+    /// </summary>
     public float ThirdPerson_SpreadMultiplier = 2f;
 
     internal static CommandLineFlag _forceTrustClient = new CommandLineFlag(defaultValue: false, "-ForceTrustClient");

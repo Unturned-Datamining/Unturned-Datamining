@@ -62,6 +62,9 @@ public class SleekItem : SleekWrapper
         }
     }
 
+    /// <summary>
+    /// Set this item as the dragging preview.
+    /// </summary>
     public void SetIsDragItem()
     {
         button.IsRaycastTarget = false;

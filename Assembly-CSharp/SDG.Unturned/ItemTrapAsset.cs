@@ -23,8 +23,15 @@ public class ItemTrapAsset : ItemBarricadeAsset
 
     public float objectDamage;
 
+    /// <summary>
+    /// Seconds after placement before damage can be dealt.
+    /// </summary>
     public float trapSetupDelay;
 
+    /// <summary>
+    /// Seconds interval between damage dealt.
+    /// i.e., will not cause damage if less than this amount of time passed since the last damage.
+    /// </summary>
     public float trapCooldown;
 
     public float explosionLaunchSpeed;

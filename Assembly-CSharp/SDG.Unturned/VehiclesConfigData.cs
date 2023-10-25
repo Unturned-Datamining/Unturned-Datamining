@@ -2,8 +2,14 @@ namespace SDG.Unturned;
 
 public class VehiclesConfigData
 {
+    /// <summary>
+    /// Seconds vehicle can be neglected before it begins taking damage.
+    /// </summary>
     public float Decay_Time;
 
+    /// <summary>
+    /// After vehicle has been neglected for more than Decay_Time seconds it will begin taking this much damage per second.
+    /// </summary>
     public float Decay_Damage_Per_Second;
 
     public float Has_Battery_Chance;

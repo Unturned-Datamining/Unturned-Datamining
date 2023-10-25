@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Payload for the DamageTool.damageAnimal function.
+/// </summary>
 public struct DamageAnimalParameters
 {
     public Animal animal;
@@ -10,6 +13,9 @@ public struct DamageAnimalParameters
 
     public float damage;
 
+    /// <summary>
+    /// Should game mode config damage multiplier be factored in?
+    /// </summary>
     public bool applyGlobalArmorMultiplier;
 
     public ELimb limb;

@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Represents an item the vendor is buying from players.
+/// </summary>
 public class VendorBuying : VendorElement
 {
     private static InventorySearchQualityAscendingComparator qualityAscendingComparator = new InventorySearchQualityAscendingComparator();

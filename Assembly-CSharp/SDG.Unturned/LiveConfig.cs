@@ -19,6 +19,9 @@ public static class LiveConfig
         }
     }
 
+    /// <summary>
+    /// Called during startup and when returning to the main menu.
+    /// </summary>
     public static void Refresh()
     {
         if (SteamUser.BLoggedOn() && (bool)Provider.allowWebRequests)
@@ -27,6 +30,9 @@ public static class LiveConfig
         }
     }
 
+    /// <summary>
+    /// Result is never null, but may be empty or out-of-date.
+    /// </summary>
     public static LiveConfigData Get()
     {
         return LiveConfigManager.Get().config;

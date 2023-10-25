@@ -22,6 +22,9 @@ public class SteamPlayer : SteamConnectedClientBase
 
     private int _channel;
 
+    /// <summary>
+    /// Not an actual Steam ID or BattlEye ID, instead this is used to map player references to and from BE.
+    /// </summary>
     internal int battlEyeId;
 
     private bool _isAdmin;
@@ -95,8 +98,14 @@ public class SteamPlayer : SteamConnectedClientBase
 
     public float lastReceivedPingRequestRealtime;
 
+    /// <summary>
+    /// Next time method is allowed to be called.
+    /// </summary>
     public float[] rpcAllowedTimes = new float[NetReflection.rateLimitedMethodsCount];
 
+    /// <summary>
+    /// Number of times client has tried to invoke this method while rate-limited.
+    /// </summary>
     internal int[] rpcHitCount = new int[NetReflection.rateLimitedMethodsCount];
 
     internal EClientPlatform clientPlatform;
@@ -164,6 +173,9 @@ public class SteamPlayer : SteamConnectedClientBase
 
     public CSteamID lobbyID { get; private set; }
 
+    /// <summary>
+    /// True for offline or listen server host.
+    /// </summary>
     public bool IsLocalServerHost { get; private set; }
 
     public NetId GetNetId()
@@ -229,6 +241,10 @@ public class SteamPlayer : SteamConnectedClientBase
         return false;
     }
 
+    /// <summary>
+    /// Build econ details struct from tags and dynamic_props.
+    /// Note that details cannot be modified because it's a struct and has copies of the data.
+    /// </summary>
     public bool getDynamicEconDetails(ushort itemID, out DynamicEconDetails details)
     {
         if (!getItemSkinItemDefID(itemID, out var itemdefid))
@@ -351,6 +367,11 @@ public class SteamPlayer : SteamConnectedClientBase
         UnturnedLog.info($"Submitted {num} item property update(s)");
     }
 
+    /// <summary>
+    /// Add a recent ping sample to the average ping window.
+    /// Updates ping based on the average of several recent ping samples.
+    /// </summary>
+    /// <param name="value">Most recent ping value.</param>
     public void lag(float value)
     {
         value = Mathf.Clamp01(value);
@@ -367,6 +388,7 @@ public class SteamPlayer : SteamConnectedClientBase
         pings[0] = value;
     }
 
+    /// <returns>True if both players exist, are both members of groups, and are both members of the same group.</returns>
     public bool isMemberOfSameGroupAs(Player other)
     {
         if (player != null && other != null)
@@ -376,6 +398,7 @@ public class SteamPlayer : SteamConnectedClientBase
         return false;
     }
 
+    /// <returns>True if both players exist, are both members of groups, and are both members of the same group.</returns>
     public bool isMemberOfSameGroupAs(SteamPlayer other)
     {
         if (other != null)
@@ -385,6 +408,10 @@ public class SteamPlayer : SteamConnectedClientBase
         return false;
     }
 
+    /// <summary>
+    /// Get real IPv4 address of remote player NOT the relay server.
+    /// </summary>
+    /// <returns>True if address was available, and not flagged as a relay server.</returns>
     public bool getIPv4Address(out uint address)
     {
         if (base.transportConnection != null)
@@ -395,12 +422,19 @@ public class SteamPlayer : SteamConnectedClientBase
         return false;
     }
 
+    /// <summary>
+    /// See above, returns zero if failed.
+    /// </summary>
     public uint getIPv4AddressOrZero()
     {
         getIPv4Address(out var address);
         return address;
     }
 
+    /// <summary>
+    /// Get real address of remote player NOT a relay server.
+    /// </summary>
+    /// <returns>Null if address was unavailable.</returns>
     public IPAddress getAddress()
     {
         if (base.transportConnection != null)
@@ -410,6 +444,10 @@ public class SteamPlayer : SteamConnectedClientBase
         return null;
     }
 
+    /// <summary>
+    /// Get string representation of remote end point.
+    /// </summary>
+    /// <returns>Null if address was unavailable.</returns>
     public string getAddressString(bool withPort)
     {
         if (base.transportConnection != null)
@@ -438,6 +476,9 @@ public class SteamPlayer : SteamConnectedClientBase
         return playerID.GetHashCode();
     }
 
+    /// <summary>
+    /// Players can set a "nickname" which is only shown to the members in their group.
+    /// </summary>
     internal string GetLocalDisplayName()
     {
         if (!string.IsNullOrEmpty(playerID.nickName) && playerID.steamID != Provider.client && player != null && player.quests != null && Player.player != null && player.quests.isMemberOfSameGroupAs(Player.player))

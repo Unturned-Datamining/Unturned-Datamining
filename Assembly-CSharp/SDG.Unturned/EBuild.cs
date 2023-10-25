@@ -1,5 +1,8 @@
 namespace SDG.Unturned;
 
+/// <summary>
+/// 2023-02-28: note order is important because BarricadeManager saves as a byte!
+/// </summary>
 public enum EBuild
 {
     FORTIFICATION,

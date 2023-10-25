@@ -82,6 +82,10 @@ public class Landscape : DevkitHierarchyItemBase
 
     public static Landscape instance { get; protected set; }
 
+    /// <summary>
+    /// Hacky workaround for height and material brushes in editor. As far as I can tell in Unity 2019 LTS there is no method to ignore
+    /// holes when raycasting against terrain (e.g. when painting holes), so we use a duplicate TerrainData without holes in the editor.
+    /// </summary>
     public static bool DisableHoleColliders
     {
         get
@@ -139,6 +143,9 @@ public class Landscape : DevkitHierarchyItemBase
         }
     }
 
+    /// <summary>
+    /// Is point (on XZ plane) inside a masked-out pixel?
+    /// </summary>
     public static bool IsPointInsideHole(Vector3 worldPosition)
     {
         LandscapeCoord landscapeCoord = new LandscapeCoord(worldPosition);
@@ -249,6 +256,7 @@ public class Landscape : DevkitHierarchyItemBase
         return false;
     }
 
+    /// <param name="ignoreLayer">If the highest weight layer is ignoreLayer then the next highest will be returned.</param>
     public static int getSplatmapHighestWeightLayerIndex(SplatmapCoord splatmapCoord, float[,,] currentWeights, int ignoreLayer = -1)
     {
         float num = -1f;
@@ -264,6 +272,7 @@ public class Landscape : DevkitHierarchyItemBase
         return result;
     }
 
+    /// <param name="ignoreLayer">If the highest weight layer is ignoreLayer then the next highest will be returned.</param>
     public static int getSplatmapHighestWeightLayerIndex(float[] currentWeights, int ignoreLayer = -1)
     {
         float num = -1f;
@@ -563,6 +572,9 @@ public class Landscape : DevkitHierarchyItemBase
         LevelHierarchy.MarkDirty();
     }
 
+    /// <summary>
+    /// Appends heightmap vertices to points list.
+    /// </summary>
     public static void getHeightmapVertices(Bounds worldBounds, LandscapeGetHeightmapVerticesHandler callback)
     {
         if (callback == null)
@@ -595,6 +607,9 @@ public class Landscape : DevkitHierarchyItemBase
         }
     }
 
+    /// <summary>
+    /// Appends heightmap vertices to points list.
+    /// </summary>
     public static void getSplatmapVertices(Bounds worldBounds, LandscapeGetSplatmapVerticesHandler callback)
     {
         if (callback == null)
@@ -641,6 +656,9 @@ public class Landscape : DevkitHierarchyItemBase
         }
     }
 
+    /// <summary>
+    /// Call this after you're done adding new tiles.
+    /// </summary>
     public static void linkNeighbors()
     {
         if (Dedicator.IsDedicatedServer)
@@ -671,6 +689,9 @@ public class Landscape : DevkitHierarchyItemBase
         }
     }
 
+    /// <summary>
+    /// Call this to sync a new tile up with nearby tiles.
+    /// </summary>
     public static void reconcileNeighbors(LandscapeTile tile)
     {
         LandscapeTile tile2 = getTile(new LandscapeCoord(tile.coord.x - 1, tile.coord.y));
@@ -861,6 +882,9 @@ public class Landscape : DevkitHierarchyItemBase
         }
     }
 
+    /// <summary>
+    /// Capturing ortho view of map, so we raise the terrain to max quality.
+    /// </summary>
     protected void onSatellitePreCapture()
     {
         foreach (KeyValuePair<LandscapeCoord, LandscapeTile> tile in tiles)
@@ -871,6 +895,9 @@ public class Landscape : DevkitHierarchyItemBase
         }
     }
 
+    /// <summary>
+    /// Finished capturing ortho view of map, so we restore the terrain to preferred quality.
+    /// </summary>
     protected void onSatellitePostCapture()
     {
         float terrainBasemapDistance = GraphicsSettings.terrainBasemapDistance;

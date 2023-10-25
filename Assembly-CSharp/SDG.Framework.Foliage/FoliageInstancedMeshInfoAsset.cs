@@ -17,10 +17,19 @@ public class FoliageInstancedMeshInfoAsset : FoliageInfoAsset
 
     public int drawDistance;
 
+    /// <summary>
+    /// Foliage to use during the Christmas event instead.
+    /// </summary>
     public AssetReference<FoliageInstancedMeshInfoAsset>? christmasRedirect;
 
+    /// <summary>
+    /// Foliage to use during the Halloween event instead.
+    /// </summary>
     public AssetReference<FoliageInstancedMeshInfoAsset>? halloweenRedirect;
 
+    /// <summary>
+    /// Get asset ref to replace this one for holiday, invalid to disable, or null if it should not be redirected.
+    /// </summary>
     public AssetReference<FoliageInstancedMeshInfoAsset>? getHolidayRedirect()
     {
         return HolidayUtil.getActiveHoliday() switch

@@ -45,22 +45,44 @@ public class ResourceAsset : Asset
 
     public bool isForage;
 
+    /// <summary>
+    /// Amount of experience to reward foraging player.
+    /// </summary>
     public uint forageRewardExperience;
 
+    /// <summary>
+    /// Forageable resource message.
+    /// </summary>
     public string interactabilityText;
 
     public bool hasDebris;
 
+    /// <summary>
+    /// Weapon must have matching blade ID to damage tree.
+    /// Both weapons and trees default to zero so they can be damaged by default.
+    /// </summary>
     public byte bladeID;
 
     public float reset;
 
+    /// <summary>
+    /// Whether this asset is a SpeedTree model, can be false if an option to use the old models is enabled.
+    /// </summary>
     public bool isSpeedTree;
 
+    /// <summary>
+    /// Whether to reset SpeedTree LOD weights to default.
+    /// </summary>
     public bool defaultLODWeights;
 
+    /// <summary>
+    /// Tree to use during the Christmas event instead.
+    /// </summary>
     public AssetReference<ResourceAsset> christmasRedirect;
 
+    /// <summary>
+    /// Tree to use during the Halloween event instead.
+    /// </summary>
     public AssetReference<ResourceAsset> halloweenRedirect;
 
     public EObjectChart chart;
@@ -94,6 +116,9 @@ public class ResourceAsset : Asset
 
     public override EAssetType assetCategory => EAssetType.RESOURCE;
 
+    /// <summary>
+    /// Only activated during this holiday.
+    /// </summary>
     public ENPCHoliday holidayRestriction { get; protected set; }
 
     public EffectAsset FindExplosionEffectAsset()
@@ -101,6 +126,9 @@ public class ResourceAsset : Asset
         return Assets.FindEffectAssetByGuidOrLegacyId(_explosionGuid, explosion);
     }
 
+    /// <summary>
+    /// Get asset ref to replace this one for holiday, or null if it should not be redirected.
+    /// </summary>
     public AssetReference<ResourceAsset> getHolidayRedirect()
     {
         return HolidayUtil.getActiveHoliday() switch

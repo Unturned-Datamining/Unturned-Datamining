@@ -6,6 +6,9 @@ namespace SDG.Unturned;
 
 public class CommandTeleport : Command
 {
+    /// <summary>
+    /// Cast a ray from the sky to find highest point.
+    /// </summary>
     protected bool raycastFromSkyToPosition(ref Vector3 position)
     {
         position.y = 1024f;
@@ -17,6 +20,9 @@ public class CommandTeleport : Command
         return false;
     }
 
+    /// <summary>
+    /// Cast a ray from slightly above point so indoor teleport nodes work.
+    /// </summary>
     protected void raycastFromNearPosition(ref Vector3 position)
     {
         if (Physics.Raycast(position + new Vector3(0f, 4f, 0f), Vector3.down, out var hitInfo, 8f, RayMasks.WAYPOINT))

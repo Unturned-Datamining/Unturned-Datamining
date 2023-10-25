@@ -7,12 +7,24 @@ namespace SDG.Unturned;
 [AddComponentMenu("Unturned/Timer Event Hook")]
 public class TimerEventHook : MonoBehaviour
 {
+    /// <summary>
+    /// Invoked when timer expires.
+    /// </summary>
     public UnityEvent OnTimerTriggered;
 
+    /// <summary>
+    /// Number of seconds to use when SetDefaultTimer is invoked.
+    /// </summary>
     public float DefaultDuration;
 
+    /// <summary>
+    /// Should timer loop when SetDefaultTimer is invoked?
+    /// </summary>
     public bool DefaultLooping;
 
+    /// <summary>
+    /// Handle to stop the coroutine.
+    /// </summary>
     private IEnumerator coroutine;
 
     private bool shouldTimerLoop;
@@ -42,6 +54,9 @@ public class TimerEventHook : MonoBehaviour
         SetTimer(DefaultDuration, DefaultLooping);
     }
 
+    /// <summary>
+    /// Stop pending timer from triggering.
+    /// </summary>
     public void CancelTimer()
     {
         if (coroutine != null)

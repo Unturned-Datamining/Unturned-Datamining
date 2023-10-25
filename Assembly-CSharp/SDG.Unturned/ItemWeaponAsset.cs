@@ -34,16 +34,31 @@ public class ItemWeaponAsset : ItemAsset
 
     public DamagePlayerParameters.Bones playerDamageBones { get; protected set; }
 
+    /// <summary>
+    /// Added to player's food value.
+    /// </summary>
     public float playerDamageFood { get; protected set; }
 
+    /// <summary>
+    /// Added to player's water value.
+    /// </summary>
     public float playerDamageWater { get; protected set; }
 
+    /// <summary>
+    /// Added to player's virus value.
+    /// </summary>
     public float playerDamageVirus { get; protected set; }
 
+    /// <summary>
+    /// Added to player's hallucination value.
+    /// </summary>
     public float playerDamageHallucination { get; protected set; }
 
     public EZombieStunOverride zombieStunOverride { get; protected set; }
 
+    /// <summary>
+    /// Get animal or player damage based on game mode config.
+    /// </summary>
     public IDamageMultiplier animalOrPlayerDamageMultiplier
     {
         get
@@ -56,6 +71,9 @@ public class ItemWeaponAsset : ItemAsset
         }
     }
 
+    /// <summary>
+    /// Get zombie or player damage based on game mode config.
+    /// </summary>
     public IDamageMultiplier zombieOrPlayerDamageMultiplier
     {
         get
@@ -68,8 +86,16 @@ public class ItemWeaponAsset : ItemAsset
         }
     }
 
+    /// <summary>
+    /// Should player/animal/zombie surface be nulled on hit?
+    /// Requested by spyjack for a chainsaw-style shield that was overboard with the blood.
+    /// </summary>
     public bool allowFleshFx { get; protected set; }
 
+    /// <summary>
+    /// Should this weapon bypass the DamageTool.allowedToDamagePlayer test?
+    /// Used by weapons that heal players in PvE.
+    /// </summary>
     public bool bypassAllowedToDamagePlayer { get; protected set; }
 
     public bool hasBladeID(byte bladeID)
@@ -97,6 +123,9 @@ public class ItemWeaponAsset : ItemAsset
         parameters.hallucinationModifier = playerDamageHallucination;
     }
 
+    /// <summary>
+    /// Please refer to ItemWeaponAsset.BuildDescription for an explanation of why this is necessary.
+    /// </summary>
     protected void BuildExplosiveDescription(ItemDescriptionBuilder builder, Item itemInstance)
     {
         int sortOrder = 30000;
@@ -111,6 +140,9 @@ public class ItemWeaponAsset : ItemAsset
         builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ExplosionObjectDamage", Mathf.RoundToInt(objectDamage)), sortOrder);
     }
 
+    /// <summary>
+    /// Please refer to ItemWeaponAsset.BuildDescription for an explanation of why this is necessary.
+    /// </summary>
     protected void BuildNonExplosiveDescription(ItemDescriptionBuilder builder, Item itemInstance)
     {
         if (range > 0f)

@@ -32,6 +32,9 @@ public class OxygenVolume : LevelVolume<OxygenVolume, OxygenVolumeManager>
     [SerializeField]
     private bool _isBreathable = true;
 
+    /// <summary>
+    /// If true oxygen is restored while in this volume, otherwise if false oxygen is depleted.
+    /// </summary>
     public bool isBreathable
     {
         get

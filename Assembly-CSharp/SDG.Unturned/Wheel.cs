@@ -20,12 +20,19 @@ public class Wheel
 
     public bool isPowered;
 
+    /// <summary>
+    /// Does this wheel affect brake torque?
+    /// </summary>
     public bool hasBrakes;
 
     private bool _isGrounded;
 
     protected bool _isAlive;
 
+    /// <summary>
+    /// Should steering angle affect this tire?
+    /// Some visual-only tires appear to be steered.
+    /// </summary>
     public bool isAnimationSteered;
 
     public float stiffnessTractionMultiplier = 0.25f;
@@ -83,6 +90,9 @@ public class Wheel
         }
     }
 
+    /// <summary>
+    /// Turn on/off physics as needed. Overridden by isAlive.
+    /// </summary>
     public bool isPhysical
     {
         get

@@ -24,6 +24,11 @@ public class PlayerManager : SteamCaller
 
     private float lastSendOverflowWarning;
 
+    /// <summary>
+    /// Whether local client is currently penalized for potentially using a lag switch. Server has an equivalent check which reduces
+    /// damage dealt, whereas the clientside check stops shooting in order to prevent abuse of inbound-only lagswitches. For example,
+    /// if a cheater freezes enemy positions by dropping inbound traffic while still sending movement and shooting outbound traffic.
+    /// </summary>
     internal static bool IsClientUnderFakeLagPenalty
     {
         get

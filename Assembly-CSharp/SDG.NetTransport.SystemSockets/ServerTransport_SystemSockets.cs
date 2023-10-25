@@ -6,6 +6,9 @@ using SDG.Unturned;
 
 namespace SDG.NetTransport.SystemSockets;
 
+/// <summary>
+/// Implementation using .NET Berkeley sockets.
+/// </summary>
 public class ServerTransport_SystemSockets : TransportBase_SystemSockets, IServerTransport
 {
     internal struct PendingMessage

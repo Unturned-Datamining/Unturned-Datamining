@@ -21,10 +21,19 @@ public struct AssetReference<T> : IAssetReference, IFormattedFileReadable, IForm
         }
     }
 
+    /// <summary>
+    /// Whether the asset has been assigned. Note that this doesn't mean an asset with <see cref="P:SDG.Unturned.AssetReference`1.GUID" /> exists.
+    /// </summary>
     public bool isValid => GUID != Guid.Empty;
 
+    /// <summary>
+    /// Is this asset not assigned?
+    /// </summary>
     public bool isNull => GUID == Guid.Empty;
 
+    /// <summary>
+    /// True if resolving this asset reference would get that asset.
+    /// </summary>
     public bool isReferenceTo(Asset asset)
     {
         if (asset != null)
@@ -34,6 +43,9 @@ public struct AssetReference<T> : IAssetReference, IFormattedFileReadable, IForm
         return false;
     }
 
+    /// <summary>
+    /// Resolve reference with asset manager.
+    /// </summary>
     public T Find()
     {
         return Assets.find(this);

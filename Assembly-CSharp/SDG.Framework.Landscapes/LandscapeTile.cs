@@ -19,12 +19,25 @@ public class LandscapeTile : IFormattedFileReadable, IFormattedFileWritable, IFo
 
     public float[,,] splatmap;
 
+    /// <summary>
+    /// True is solid and false is empty.
+    /// </summary>
     public bool[,] holes;
 
+    /// <summary>
+    /// Marked true when level editor or legacy hole volumes modify hole data.
+    /// Defaults to false in which case holes do not need to be saved.
+    ///
+    /// Initially this was not going to be marked by hole volumes because they can re-generate the holes, but saving
+    /// hole volume cuts is helpful when upgrading to remove hole volumes from a map.
+    /// </summary>
     public bool hasAnyHolesData;
 
     private TerrainLayer[] terrainLayers;
 
+    /// <summary>
+    /// Heightmap-only data used in level editor. Refer to Landscape.DisableHoleColliders for explanation.
+    /// </summary>
     public TerrainData dataWithoutHoles;
 
     public GameObject gameObject { get; protected set; }
@@ -301,6 +314,9 @@ public class LandscapeTile : IFormattedFileReadable, IFormattedFileWritable, IFo
         }
     }
 
+    /// <summary>
+    /// Call this when done changing material references to grab their textures and pass them to the terrain renderer.
+    /// </summary>
     public void updatePrototypes()
     {
         if (Dedicator.IsDedicatedServer)

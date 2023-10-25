@@ -6,6 +6,9 @@ using System.Threading;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Responsible for loading asset definitions on a separate thread.
+/// </summary>
 internal class AssetsWorker
 {
     public struct MasterBundle
@@ -29,8 +32,14 @@ internal class AssetsWorker
 
         public DatDictionary fallbackTranslationData;
 
+        /// <summary>
+        /// Parser error messages, if any.
+        /// </summary>
         public string assetError;
 
+        /// <summary>
+        /// Warning: on worker thread this only acts as handle. Do not access.
+        /// </summary>
         public AssetOrigin origin;
     }
 
@@ -57,6 +66,9 @@ internal class AssetsWorker
 
         public int isFinishedSearching;
 
+        /// <summary>
+        /// Warning: on worker thread this only acts as handle. Do not access.
+        /// </summary>
         public AssetOrigin origin;
 
         public DatDictionary ReadFileWithoutHash(string path)
@@ -230,6 +242,9 @@ internal class AssetsWorker
 
     private bool languageIsEnglish;
 
+    /// <summary>
+    /// Used on main thread to determine when all queued tasks have finished.
+    /// </summary>
     public bool IsWorking => isWorking;
 
     public void Initialize()
@@ -285,6 +300,9 @@ internal class AssetsWorker
         }
     }
 
+    /// <summary>
+    /// Loop searching directories recursively for asset bundle and asset definition files.
+    /// </summary>
     private void SearcherThreadMain(object untypedState)
     {
         WorkerThreadState workerThreadState = (WorkerThreadState)untypedState;

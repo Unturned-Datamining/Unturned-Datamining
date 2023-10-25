@@ -37,6 +37,10 @@ public class PlayerQuests : PlayerCaller
 
     private DialogueMessage serverCurrentDialogueMessage;
 
+    /// <summary>
+    /// The dialogue to go to when a message has no available responses.
+    /// If this is not specified the previous dialogue is used as a default.
+    /// </summary>
     private DialogueAsset serverDefaultNextDialogueAsset;
 
     private Dictionary<ushort, PlayerQuestFlag> flagsMap;
@@ -55,6 +59,10 @@ public class PlayerQuests : PlayerCaller
 
     private Vector3 _markerPosition;
 
+    /// <summary>
+    /// Overrides label text next to marker on map.
+    /// Used by plugins. Not saved to disk.
+    /// </summary>
     private string _markerTextOverride;
 
     private uint _radioFrequency;
@@ -63,8 +71,15 @@ public class PlayerQuests : PlayerCaller
 
     private EPlayerGroupRank _groupRank;
 
+    /// <summary>
+    /// Kept serverside. Used to check whether the player is currently in their Steam group or just a normal in-game group.
+    /// </summary>
     private bool inMainGroup;
 
+    /// <summary>
+    /// If set, default spawn logic will check for a location node or spawnpoint node matching name.
+    /// Saved and loaded between sessions.
+    /// </summary>
     public string npcSpawnId;
 
     private static readonly ClientInstanceMethod<bool, Vector3, string> SendMarkerState = ClientInstanceMethod<bool, Vector3, string>.Get(typeof(PlayerQuests), "ReceiveMarkerState");
@@ -135,6 +150,9 @@ public class PlayerQuests : PlayerCaller
 
     private PlayerDelayedQuestRewardsComponent delayedRewardsComponent;
 
+    /// <summary>
+    /// Prevent re-creating it during destroy (e.g. plugin granting rewards) from leaking gameobject.
+    /// </summary>
     private bool hasCreatedDelayedRewards;
 
     private bool wasLoadCalled;
@@ -236,10 +254,19 @@ public class PlayerQuests : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Check before allowing changes to this player's <see cref="P:SDG.Unturned.PlayerQuests.groupID" />
+    /// </summary>
     public bool canChangeGroupMembership => !LevelManager.isPlayerInArena(base.player);
 
+    /// <summary>
+    /// Can rename the group.
+    /// </summary>
     public bool hasPermissionToChangeName => groupRank == EPlayerGroupRank.OWNER;
 
+    /// <summary>
+    /// Can promote and demote members.
+    /// </summary>
     public bool hasPermissionToChangeRank => groupRank == EPlayerGroupRank.OWNER;
 
     public bool hasPermissionToInviteMembers
@@ -308,10 +335,19 @@ public class PlayerQuests : PlayerCaller
 
     public bool isMemberOfAGroup => groupID != CSteamID.Nil;
 
+    /// <summary>
+    /// For level objects with QuestCondition called when quests are added or removed.
+    /// </summary>
     internal event Action<ushort> OnLocalPlayerQuestsChanged;
 
+    /// <summary>
+    /// Event specifically for plugins to listen to global quest progress.
+    /// </summary>
     public static event AnyFlagChangedHandler onAnyFlagChanged;
 
+    /// <summary>
+    /// Event for plugins when group or rank changes.
+    /// </summary>
     public static event GroupChangedCallback onGroupChanged;
 
     public event TrackedQuestUpdated TrackedQuestUpdated;
@@ -423,11 +459,17 @@ public class PlayerQuests : PlayerCaller
         replicateSetMarker(newIsMarkerPlaced, newMarkerPosition, string.Empty);
     }
 
+    /// <summary>
+    /// Called serverside to set marker on clients.
+    /// </summary>
     public void replicateSetMarker(bool newIsMarkerPlaced, Vector3 newMarkerPosition, string newMarkerTextOverride = "")
     {
         SendMarkerState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), newIsMarkerPlaced, newMarkerPosition, newMarkerTextOverride);
     }
 
+    /// <summary>
+    /// Ask server to set marker.
+    /// </summary>
     public void sendSetMarker(bool newIsMarkerPlaced, Vector3 newMarkerPosition)
     {
         SendSetMarkerRequest.Invoke(GetNetId(), ENetReliability.Reliable, newIsMarkerPlaced, newMarkerPosition);
@@ -498,6 +540,9 @@ public class PlayerQuests : PlayerCaller
         return false;
     }
 
+    /// <summary>
+    /// Call serverside to replicate new rank to clients
+    /// </summary>
     public void changeRank(EPlayerGroupRank newRank)
     {
         SendGroupState.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), groupID, newRank);
@@ -509,6 +554,9 @@ public class PlayerQuests : PlayerCaller
         ReceiveAcceptGroupInvitationRequest(newGroupID);
     }
 
+    /// <summary>
+    /// Set player's group to their Steam group (if any) without testing restrictions.
+    /// </summary>
     public void ServerAssignToMainGroup()
     {
         CSteamID group = base.channel.owner.playerID.group;
@@ -573,6 +621,7 @@ public class PlayerQuests : PlayerCaller
         SendDeclineGroupInvitationRequest.Invoke(GetNetId(), ENetReliability.Reliable, newGroupID);
     }
 
+    /// <param name="force">Ignores group changing rules when true.</param>
     public void leaveGroup(bool force = false)
     {
         if (!force && (!canChangeGroupMembership || !hasPermissionToLeaveGroup))
@@ -701,6 +750,9 @@ public class PlayerQuests : PlayerCaller
         return true;
     }
 
+    /// <summary>
+    /// Serverside send packet telling player about this invite
+    /// </summary>
     public void sendAddGroupInvite(CSteamID newGroupID)
     {
         if (!groupInvites.Contains(newGroupID))
@@ -1197,6 +1249,9 @@ public class PlayerQuests : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Called on server to finalize and remove quest.
+    /// </summary>
     public void CompleteQuest(QuestAsset questAsset, bool ignoreNPC = false)
     {
         if (questAsset != null && (ignoreNPC || (!(checkNPC == null) && !((checkNPC.transform.position - base.transform.position).sqrMagnitude > 400f))) && GetQuestStatus(questAsset) == ENPCQuestStatus.READY)
@@ -1516,6 +1571,9 @@ public class PlayerQuests : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Called by quest details UI to request server to abandon quest.
+    /// </summary>
     public void ClientAbandonQuest(QuestAsset questAsset)
     {
         if (questAsset != null)
@@ -1646,6 +1704,9 @@ public class PlayerQuests : PlayerCaller
         SendChooseDialogueResponseRequest.Invoke(GetNetId(), ENetReliability.Reliable, assetGuid, index);
     }
 
+    /// <summary>
+    /// Called when there are no responses to choose, but server has indicated a next dialogue is available.
+    /// </summary>
     public void ClientChooseNextDialogue(Guid assetGuid, byte index)
     {
         SendChooseDefaultNextDialogueRequest.Invoke(GetNetId(), ENetReliability.Reliable, assetGuid, index);
@@ -1816,6 +1877,9 @@ public class PlayerQuests : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Called in singleplayer and on the server after client requests NPC dialogue.
+    /// </summary>
     internal void ApproveTalkWithNpcRequest(InteractableObjectNPC targetNpc, DialogueAsset rootDialogueAsset)
     {
         DialogueMessage availableMessage = rootDialogueAsset.GetAvailableMessage(base.player);

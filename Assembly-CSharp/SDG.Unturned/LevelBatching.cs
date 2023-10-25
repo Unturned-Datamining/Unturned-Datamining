@@ -5,8 +5,14 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Merges textures used in the level into an atlas to assist runtime draw call batching.
+/// </summary>
 internal class LevelBatching
 {
+    /// <summary>
+    /// Tracks which mesh filters and skinned mesh renderers were referencing a given mesh.
+    /// </summary>
     private class MeshUsers
     {
         public List<MeshFilter> meshFilters = new List<MeshFilter>();
@@ -35,12 +41,26 @@ internal class LevelBatching
         }
     }
 
+    /// <summary>
+    /// Tracks which meshes and materials were referencing a given texture.
+    /// </summary>
     private class TextureUsers
     {
+        /// <summary>
+        /// If true, UVs should be centered and overridden because original mesh was not textured. 
+        /// </summary>
         public bool isGeneratedTexture;
 
+        /// <summary>
+        /// Maps original mesh to any mesh filters using it.
+        /// When mesh's UVs are modified the mesh filters need to be pointed at the copied mesh.
+        /// </summary>
         public Dictionary<Mesh, MeshUsers> componentsUsingMesh = new Dictionary<Mesh, MeshUsers>();
 
+        /// <summary>
+        /// Renderers with a material using the texture.
+        /// After combining texture the renderers need to be pointed at the combined material.
+        /// </summary>
         public List<Renderer> renderersUsingTexture = new List<Renderer>();
 
         public void AddMeshFilter(MeshFilter meshFilter)
@@ -64,6 +84,9 @@ internal class LevelBatching
         }
     }
 
+    /// <summary>
+    /// Tracks which textures were referencing a given shader.
+    /// </summary>
     private class ShaderGroup
     {
         public Material materialTemplate;
@@ -88,6 +111,10 @@ internal class LevelBatching
         }
     }
 
+    /// <summary>
+    /// StaticBatchingUtility.Combine requires input renderers are enabled and active in hierarchy,
+    /// so we temporarily activate/enable them to keep this logic out of LevelObject/ResourceSpawnpoint.
+    /// </summary>
     private struct StaticBatchingInitialState
     {
         public Transform parent;
@@ -97,6 +124,10 @@ internal class LevelBatching
         public bool wasActive;
     }
 
+    /// <summary>
+    /// Skip renderer children of these transforms, if any.
+    /// For example we skip lights with material instances and rubble debris.
+    /// </summary>
     private List<Transform> ignoreTransforms = new List<Transform>();
 
     private List<Renderer> renderers = new List<Renderer>();
@@ -129,22 +160,46 @@ internal class LevelBatching
 
     private int propertyID_Glossiness = Shader.PropertyToID("_Glossiness");
 
+    /// <summary>
+    /// Meshes we logged an explanation for as to why they can't be atlased.
+    /// </summary>
     private HashSet<Mesh> loggedMeshes = new HashSet<Mesh>();
 
+    /// <summary>
+    /// Textures we logged an explanation for as to why they can't be atlased.
+    /// </summary>
     private HashSet<Texture2D> loggedTextures = new HashSet<Texture2D>();
 
+    /// <summary>
+    /// Materials we logged an explanation for as to why they can't be atlased.
+    /// </summary>
     private HashSet<Material> loggedMaterials = new HashSet<Material>();
 
     private List<MeshRenderer> staticBatchingMeshRenderers = new List<MeshRenderer>();
 
+    /// <summary>
+    /// Objects instantiated for the lifetime of the level that should be destroyed when exiting the level.
+    /// </summary>
     private List<UnityEngine.Object> objectsToDestroy = new List<UnityEngine.Object>();
 
+    /// <summary>
+    /// If true, don't assign texture atlas to material so batched materials are obvious.
+    /// </summary>
     private CommandLineFlag wantsToPreviewTextureAtlas = new CommandLineFlag(defaultValue: false, "-PreviewLevelBatchingTextureAtlas");
 
+    /// <summary>
+    /// If true, log why texture/material can't be included in atlas.
+    /// </summary>
     private CommandLineFlag shouldLogTextureAtlasExclusions = new CommandLineFlag(defaultValue: false, "-LogLevelBatchingTextureAtlasExclusions");
 
+    /// <summary>
+    /// If true, log if mesh has UVs outside [0, 1] range.
+    /// </summary>
     private CommandLineFlag shouldValidateUVs = new CommandLineFlag(defaultValue: false, "-ValidateLevelBatchingUVs");
 
+    /// <summary>
+    /// We generate a 1x1 texture for materials without one.
+    /// </summary>
     private Dictionary<Material, Texture2D> colorTextures = new Dictionary<Material, Texture2D>();
 
     public static LevelBatching Get()
@@ -544,6 +599,9 @@ internal class LevelBatching
         return false;
     }
 
+    /// <summary>
+    /// Most objects in Unturned use the standard shader without transparency/emissive/detail/etc.
+    /// </summary>
     private bool CanAtlasStandardMaterialSimpleOpaque(Material material, Renderer renderer, bool isSpecular)
     {
         if (!Mathf.Approximately(material.GetFloat(propertyID_Mode), 0f))

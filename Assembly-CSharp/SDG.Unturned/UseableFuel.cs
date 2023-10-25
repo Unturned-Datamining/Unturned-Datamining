@@ -9,7 +9,13 @@ public class UseableFuel : Useable
 {
     private enum EUseMode
     {
+        /// <summary>
+        /// Add fuel to target.
+        /// </summary>
         Deposit,
+        /// <summary>
+        /// Remove fuel from target.
+        /// </summary>
         Withdraw
     }
 

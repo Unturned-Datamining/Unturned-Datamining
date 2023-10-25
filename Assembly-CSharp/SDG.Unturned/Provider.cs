@@ -42,23 +42,45 @@ public class Provider : MonoBehaviour
     [Obsolete]
     public delegate void ServerWritingPacketHandler(CSteamID remoteSteamId, ESteamPacket type, byte[] payload, int size, int channel);
 
+    /// <summary>
+    /// Workshop info is requested prior to authenticating so that it can be downloaded before joining,
+    /// but cheat devs are abusing this to spam the server with workshop requests. This class keeps
+    /// track of who and when requested that information.
+    /// </summary>
     internal struct WorkshopRequestLog
     {
+        /// <summary>
+        /// Hash code of remote connection.
+        /// </summary>
         public int sender;
 
         public float realTime;
     }
 
+    /// <summary>
+    /// The server ignores workshop info requests if it's been less than 30 seconds,
+    /// so we cache that info for 1 minute in-case we try to connect again right away.
+    /// </summary>
     internal class CachedWorkshopResponse
     {
+        /// <summary>
+        /// This information is needed before the level is loaded.
+        /// </summary>
         public ENPCHoliday holiday;
 
         public CSteamID server;
 
+        /// <summary>
+        /// Server's IP from when we originally received response.
+        /// Used to test download restrictions.
+        /// </summary>
         public uint ip;
 
         public List<ServerRequiredWorkshopFile> requiredFiles = new List<ServerRequiredWorkshopFile>();
 
+        /// <summary>
+        /// Last realtime this cache was updated.
+        /// </summary>
         public float realTime;
 
         internal bool FindRequiredFile(ulong fileId, out ServerRequiredWorkshopFile details)
@@ -240,12 +262,26 @@ public class Provider : MonoBehaviour
 
     internal static bool isWaitingForWorkshopResponse;
 
+    /// <summary>
+    /// After client submits EServerMessage.Authenticate we are waiting
+    /// for the EClientMessage.Accepted response.
+    /// </summary>
     internal static bool isWaitingForAuthenticationResponse;
 
+    /// <summary>
+    /// Realtime that client sent EServerMessage.Authenticate request.
+    /// </summary>
     internal static double sentAuthenticationRequestTime;
 
+    /// <summary>
+    /// File IDs the client thinks the server advertised it was using, or null if UGC response was pending.
+    /// Prevents the server from advertising a smaller or fake list of items.
+    /// </summary>
     private static List<PublishedFileId_t> waitingForExpectedWorkshopItems;
 
+    /// <summary>
+    /// Needed before loading level.
+    /// </summary>
     internal static ENPCHoliday authorityHoliday;
 
     private static CachedWorkshopResponse currentServerWorkshopResponse;
@@ -276,12 +312,26 @@ public class Provider : MonoBehaviour
 
     private static int nextBattlEyePlayerId = 1;
 
+    /// <summary>
+    /// Called when determining spawnpoint during player login.
+    /// </summary>
     public static LoginSpawningHandler onLoginSpawning;
 
+    /// <summary>
+    /// Is client waiting for response to ESteamPacket.CONNECT request?
+    /// </summary>
     internal static bool isWaitingForConnectResponse;
 
+    /// <summary>
+    /// Realtime that client sent ESteamPacket.CONNECT request.
+    /// </summary>
     private static float sentConnectRequestTime;
 
+    /// <summary>
+    /// Nelson 2023-08-09: adding because in some cases, namely workshop download and level loading,
+    /// we can't properly handle client transport failures because these loading systems don't
+    /// currently support cancelling partway through. (public issue #4036)
+    /// </summary>
     private static bool canCurrentlyHandleClientTransportFailure;
 
     private static bool hasPendingClientTransportFailure;
@@ -290,8 +340,14 @@ public class Provider : MonoBehaviour
 
     internal static readonly NetLength MAX_SKINS_LENGTH = new NetLength(127u);
 
+    /// <summary>
+    /// Manages client to server communication.
+    /// </summary>
     internal static IClientTransport clientTransport;
 
+    /// <summary>
+    /// Manages server to client communication.
+    /// </summary>
     private static IServerTransport serverTransport;
 
     private static int countShutdownTimer = -1;
@@ -310,6 +366,10 @@ public class Provider : MonoBehaviour
 
     private static bool isDedicatedUGCInstalled;
 
+    /// <summary>
+    /// Was not able to find documentation for this unfortunately,
+    /// but it seems the max length is 127 characters as of 2022-09-12.
+    /// </summary>
     private const int STEAM_KEYVALUE_MAX_VALUE_LENGTH = 127;
 
     [Obsolete]
@@ -321,6 +381,9 @@ public class Provider : MonoBehaviour
 
     private static List<CSteamID> netIgnoredSteamIDs = new List<CSteamID>();
 
+    /// <summary>
+    /// Private to prevent plugins from changing the value.
+    /// </summary>
     private static CommandLineFlag _constNetEvents = new CommandLineFlag(defaultValue: false, "-ConstNetEvents");
 
     [Obsolete]
@@ -359,6 +422,9 @@ public class Provider : MonoBehaviour
 
     private static Callback<GSClientGroupStatus_t> clientGroupStatus;
 
+    /// <summary>
+    /// Allows hosting providers to limit the configurable max players value from the command-line.
+    /// </summary>
     private static CommandLineInt clMaxPlayersLimit = new CommandLineInt("-MaxPlayersLimit");
 
     private static byte _maxPlayers;
@@ -371,10 +437,19 @@ public class Provider : MonoBehaviour
 
     private static string _serverName;
 
+    /// <summary>
+    /// Deprecated-ish IPv4 to bind listen socket to. Set by bind command.
+    /// </summary>
     public static uint ip;
 
+    /// <summary>
+    /// Local address to bind listen socket to. Set by bind command.
+    /// </summary>
     public static string bindAddress;
 
+    /// <summary>
+    /// Steam query port.
+    /// </summary>
     public static ushort port;
 
     internal static byte[] _serverPasswordHash;
@@ -409,6 +484,9 @@ public class Provider : MonoBehaviour
 
     internal static ModeConfigData _modeConfigData;
 
+    /// <summary>
+    /// Number of transport connection failures on this frame.
+    /// </summary>
     private int clientsKickedForTransportConnectionFailureCount;
 
     private static uint STEAM_FAVORITE_FLAG_FAVORITE = 1u;
@@ -469,8 +547,15 @@ public class Provider : MonoBehaviour
 
     private static float initialLocalRealtime;
 
+    /// <summary>
+    /// Current UTC as reported by backend servers.
+    /// Used by holiday events to keep timing somewhat synced between players. 
+    /// </summary>
     private static DateTime unixEpochDateTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
+    /// <summary>
+    /// Invoked after backend realtime becomes available.
+    /// </summary>
     public static BackendRealtimeAvailableHandler onBackendRealtimeAvailable;
 
     private static SteamAPIWarningMessageHook_t apiWarningMessageHook;
@@ -495,10 +580,17 @@ public class Provider : MonoBehaviour
 
     private static bool wasQuitGameCalled;
 
+    /// <summary>
+    /// A couple of players have reported the PRO_DESYNC kick because their client thinks they own the gold upgrade,
+    /// but the Steam backend thinks otherwise. This option is a bit of a hack to work around the problem for them.
+    /// </summary>
     private static CommandLineFlag shouldCheckForGoldUpgrade = new CommandLineFlag(defaultValue: true, "-NoGoldUpgrade");
 
     public static string APP_VERSION { get; protected set; }
 
+    /// <summary>
+    /// App version string packed into a 32-bit number for replication.
+    /// </summary>
     public static uint APP_VERSION_PACKED { get; protected set; }
 
     public static string language
@@ -516,6 +608,9 @@ public class Provider : MonoBehaviour
 
     public static string path => _path;
 
+    /// <summary>
+    /// Path to directory containing "Editor", "Menu", "Player", "Curse_Words.txt", etc files.
+    /// </summary>
     public static string localizationRoot { get; private set; }
 
     public static List<string> streamerNames { get; private set; }
@@ -542,6 +637,9 @@ public class Provider : MonoBehaviour
 
     public static List<SteamPlayer> clients => _clients;
 
+    /// <summary>
+    /// Exposed for Rocket transition to modules backwards compatibility.
+    /// </summary>
     [Obsolete]
     public static List<SteamPlayer> players => clients;
 
@@ -586,6 +684,10 @@ public class Provider : MonoBehaviour
 
     public static List<SteamChannel> receivers => _receivers;
 
+    /// <summary>
+    /// Should the network transport layer accept incoming connections?
+    /// If both the queue and connected slots are full then incoming connections are ignored.
+    /// </summary>
     public static bool hasRoomForNewConnection
     {
         get
@@ -610,6 +712,9 @@ public class Provider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Should buffers used by plugin network events be read-only copies?
+    /// </summary>
     public static bool useConstNetEvents => _constNetEvents;
 
     public static byte maxPlayers
@@ -717,6 +822,10 @@ public class Provider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Number of seconds since January 1st, 1970 GMT as reported by backend servers.
+    /// Used by holiday events to keep timing somewhat synced between players.
+    /// </summary>
     public static uint backendRealtimeSeconds
     {
         get
@@ -733,14 +842,30 @@ public class Provider : MonoBehaviour
 
     public static DateTime backendRealtimeDate => unixEpochDateTime.AddSeconds(backendRealtimeSeconds);
 
+    /// <summary>
+    /// Has the initial backend realtime been queried yet?
+    /// Not available immediately on servers because SteamGameServerUtils cannot be used until the actual Steam instance is available.
+    /// </summary>
     public static bool isBackendRealtimeAvailable => initialBackendRealtimeSeconds != 0;
 
+    /// <summary>
+    /// Has the onApplicationQuitting callback been invoked?
+    /// </summary>
     public static bool isApplicationQuitting { get; private set; }
 
+    /// <summary>
+    /// Event for plugins when BattlEye wants to kick a player.
+    /// </summary>
     public static event BattlEyeKickCallback onBattlEyeKick;
 
+    /// <summary>
+    /// Event for plugins prior to kicking players during shutdown.
+    /// </summary>
     public static event CommenceShutdownHandler onCommenceShutdown;
 
+    /// <summary>
+    /// Event for plugins when rejecting a player.
+    /// </summary>
     public static event RejectingPlayerCallback onRejectingPlayer;
 
     private IEnumerator CaptureScreenshot()
@@ -888,6 +1013,9 @@ public class Provider : MonoBehaviour
         UnturnedLog.info("BattlEye client requested restart with reason: " + reason);
     }
 
+    /// <summary>
+    /// Called clientside by BattlEye when it needs us to send a packet to the server.
+    /// </summary>
     internal static void battlEyeClientSendPacket(IntPtr packetHandle, int length)
     {
         NetMessages.SendMessageToServer(EServerMessage.BattlEye, ENetReliability.Unreliable, delegate(NetPakWriter writer)
@@ -954,6 +1082,9 @@ public class Provider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Called serverside by BattlEye when it needs us to send a packet to a player.
+    /// </summary>
     private static void battlEyeServerSendPacket(int playerID, IntPtr packetHandle, int length)
     {
         for (int i = 0; i < clients.Count; i++)
@@ -970,6 +1101,9 @@ public class Provider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Call whenever something impacting rich presence changes for example loading a server or changing lobbies.
+    /// </summary>
     public static void updateRichPresence()
     {
         if (!Dedicator.IsDedicatedServer)
@@ -1183,11 +1317,19 @@ public class Provider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Only safe to use serverside.
+    /// Get the list of workshop ids that a client needs to download when joining.
+    /// </summary>
     public static List<ulong> getServerWorkshopFileIDs()
     {
         return _serverWorkshopFileIDs;
     }
 
+    /// <summary>
+    /// Only safe to use serverside.
+    /// Lets clients know that this workshop id is being used on the server, and that they need to download it when joining.
+    /// </summary>
     public static void registerServerUsingWorkshopFileId(ulong id)
     {
         registerServerUsingWorkshopFileId(id, 0u);
@@ -1207,6 +1349,10 @@ public class Provider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Channel id was 32-bits, but now that it is in the RPC header it can be 8-bits since there never that many
+    /// players online. The "manager" components are on channel 1, and each player has a channel.
+    /// </summary>
     private static int allocPlayerChannelId()
     {
         for (int i = 0; i < 255; i++)
@@ -1274,6 +1420,9 @@ public class Provider : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// Find player in the queue associated with a client connection.
+    /// </summary>
     public static SteamPending findPendingPlayer(ITransportConnection transportConnection)
     {
         if (transportConnection == null)
@@ -1302,6 +1451,9 @@ public class Provider : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// Find player associated with a client connection.
+    /// </summary>
     public static SteamPlayer findPlayer(ITransportConnection transportConnection)
     {
         if (transportConnection == null)
@@ -1318,6 +1470,10 @@ public class Provider : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// Find net transport layer connection associated with a client steam id. This could be a pending player in the
+    /// queue, or a fully connected player.
+    /// </summary>
     public static ITransportConnection findTransportConnection(CSteamID steamId)
     {
         foreach (SteamPlayer client in clients)
@@ -1337,6 +1493,9 @@ public class Provider : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// Find player steam id associated with connection, otherwise nil if not found.
+    /// </summary>
     public static CSteamID findTransportConnectionSteamId(ITransportConnection transportConnection)
     {
         return findPlayer(transportConnection)?.playerID.steamID ?? findPendingPlayer(transportConnection)?.playerID.steamID ?? CSteamID.Nil;
@@ -1422,6 +1581,9 @@ public class Provider : MonoBehaviour
         });
     }
 
+    /// <summary>
+    /// If there's space on the server, asks player at front of queue for their verification to begin playing.
+    /// </summary>
     internal static void verifyNextPlayerInQueue()
     {
         if (pending.Count >= 1 && clients.Count < maxPlayers)
@@ -1679,6 +1841,11 @@ public class Provider : MonoBehaviour
         });
     }
 
+    /// <summary>
+    /// Connect to server entry point on client.
+    /// Requests workshop details for download prior to loading level.
+    /// Once workshop is ready launch() is called.
+    /// </summary>
     public static void connect(SteamServerInfo info, string password, List<PublishedFileId_t> expectedWorkshopItems)
     {
         if (isConnected)
@@ -1769,6 +1936,9 @@ public class Provider : MonoBehaviour
         clientTransport.Initialize(onClientTransportReady, onClientTransportFailure);
     }
 
+    /// <summary>
+    /// Callback once client transport is ready to send messages.
+    /// </summary>
     private static void onClientTransportReady()
     {
         CachedWorkshopResponse cachedWorkshopResponse = null;
@@ -1796,6 +1966,9 @@ public class Provider : MonoBehaviour
         });
     }
 
+    /// <summary>
+    /// Callback when something goes wrong and client must disconnect.
+    /// </summary>
     private static void onClientTransportFailure(string message)
     {
         hasPendingClientTransportFailure = true;
@@ -1873,6 +2046,11 @@ public class Provider : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// Multiplayer load level entry point on client.
+    /// Called once workshop downloads are finished, or we know the server is not using workshop.
+    /// Once level is loaded the connect packet is sent to the server.
+    /// </summary>
     public static void launch()
     {
         LevelInfo level = Level.getLevel(map);
@@ -2034,6 +2212,9 @@ public class Provider : MonoBehaviour
         disconnect();
     }
 
+    /// <summary>
+    /// Client should call RequestDisconnect instead to ensure all disconnects have a logged reason.
+    /// </summary>
     public static void disconnect()
     {
         if (!Dedicator.IsDedicatedServer && Player.player != null && Player.player.channel != null && Player.player.channel.owner != null)
@@ -2172,6 +2353,9 @@ public class Provider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Internet server callback when backend is ready.
+    /// </summary>
     private static void handleServerReady()
     {
         if (!isServerConnectedToSteam)
@@ -2231,6 +2415,9 @@ public class Provider : MonoBehaviour
         };
     }
 
+    /// <summary>
+    /// If missing map is a curated map then log information about how to install it.
+    /// </summary>
     private static void maybeLogCuratedMapFallback(string attemptedMap)
     {
         if (statusData == null || statusData.Maps == null || statusData.Maps.Curated_Map_Links == null)
@@ -2440,6 +2627,9 @@ public class Provider : MonoBehaviour
         timeLastPacketWasReceivedFromServer = Time.realtimeSinceStartup;
     }
 
+    /// <summary>
+    /// Set key/value tags on Steam server advertisement so that client can display text in browser.
+    /// </summary>
     private static void AdvertiseFullDescription(string message)
     {
         if (string.IsNullOrEmpty(message))
@@ -2472,6 +2662,9 @@ public class Provider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Set key/value tags on Steam server advertisement so that client can display server config in browser.
+    /// </summary>
     private static void AdvertiseConfig()
     {
         ModeConfigData modeConfig = ConfigData.CreateDefault(singleplayer: false).getModeConfig(mode);
@@ -2535,6 +2728,10 @@ public class Provider : MonoBehaviour
         SteamGameServer.SetKeyValue("Cfg_Count", num.ToString(CultureInfo.InvariantCulture));
     }
 
+    /// <summary>
+    /// Primarily kept for backwards compatibility with plugins. Some RPCs that reply to sender also use this but
+    /// should be tidied up.
+    /// </summary>
     [Obsolete]
     public static void send(CSteamID steamID, ESteamPacket type, byte[] packet, int size, int channel)
     {
@@ -2545,6 +2742,10 @@ public class Provider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Hack to deal with the oversight of reordering the ESteamPacket enum during net messaging rewrite causing
+    /// older plugins to send wrong packet type.
+    /// </summary>
     [Obsolete]
     private static bool remapSteamPacketType(ref ESteamPacket type)
     {
@@ -2561,6 +2762,9 @@ public class Provider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Send to a connected client.
+    /// </summary>
     [Obsolete]
     public static void sendToClient(ITransportConnection transportConnection, ESteamPacket type, byte[] packet, int size)
     {
@@ -2589,11 +2793,19 @@ public class Provider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Hacked-together initial implementation to refuse network messages from specific players.
+    /// On PC some cheats send garbage packets in which case those clients should be blocked.
+    /// </summary>
     public static bool shouldNetIgnoreSteamId(CSteamID id)
     {
         return netIgnoredSteamIDs.Contains(id);
     }
 
+    /// <summary>
+    /// Close connection, and refuse all future connection attempts from a remote player.
+    /// Used when garbage messages are received from hacked clients to avoid wasting time on them.
+    /// </summary>
     public static void refuseGarbageConnection(CSteamID remoteId, string reason)
     {
         string[] obj = new string[5] { "Refusing connections from ", null, null, null, null };
@@ -2632,6 +2844,9 @@ public class Provider : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// First four bytes of RPC messages are the channel id.
+    /// </summary>
     internal static bool getChannelHeader(byte[] packet, int size, int offset, out int channel)
     {
         int num = offset + 2;
@@ -2644,6 +2859,9 @@ public class Provider : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// Is version number supplied by client compatible with us?
+    /// </summary>
     internal static bool canClientVersionJoinServer(uint version)
     {
         return version == APP_VERSION_PACKED;
@@ -2698,6 +2916,9 @@ public class Provider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Notify players waiting to join server if their position in the queue has changed.
+    /// </summary>
     private void NotifyClientsInQueueOfPosition()
     {
         int queuePosition = 0;
@@ -2772,6 +2993,9 @@ public class Provider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Prevent any particular client from delaying the server connection queue process.
+    /// </summary>
     private void KickClientsBlockingUpQueue()
     {
         if (pending.Count < 1)
@@ -3265,11 +3489,17 @@ public class Provider : MonoBehaviour
         handleClientGroupStatus(callback);
     }
 
+    /// <summary>
+    /// If hosting a server, get the game traffic port.
+    /// </summary>
     public static ushort GetServerConnectionPort()
     {
         return (ushort)(port + 1);
     }
 
+    /// <summary>
+    /// Called while running
+    /// </summary>
     public static void resetConfig()
     {
         _modeConfigData = new ModeConfigData(mode);
@@ -3404,6 +3634,11 @@ public class Provider : MonoBehaviour
         accept(player.playerID, player.assignedPro, player.assignedAdmin, player.face, player.hair, player.beard, player.skin, player.color, player.markerColor, player.hand, player.shirtItem, player.pantsItem, player.hatItem, player.backpackItem, player.vestItem, player.maskItem, player.glassesItem, player.skinItems, player.skinTags, player.skinDynamicProps, player.skillset, player.language, player.lobbyID, player.clientPlatform);
     }
 
+    /// <summary>
+    /// Used to build packet about each existing player for new player, and then once to build a packet
+    /// for existing players about the new player. Note that in this second case forPlayer is null
+    /// because the packet is re-used.
+    /// </summary>
     private static void WriteConnectedMessage(NetPakWriter writer, SteamPlayer aboutPlayer, SteamPlayer forPlayer)
     {
         writer.WriteNetId(aboutPlayer.GetNetId());
@@ -3463,6 +3698,9 @@ public class Provider : MonoBehaviour
         writer.WriteString(aboutPlayer.language);
     }
 
+    /// <summary>
+    /// Not exactly ideal, but this a few old "once per player" client-&gt;server RPCs.
+    /// </summary>
     private static void SendInitialGlobalState(SteamPlayer client)
     {
         LightingManager.SendInitialGlobalState(client);
@@ -3716,6 +3954,9 @@ public class Provider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Notify client that they were kicked.
+    /// </summary>
     private static void notifyKickedInternal(ITransportConnection transportConnection, string reason)
     {
         NetMessages.SendMessageToClient(EClientMessage.Kicked, ENetReliability.Reliable, transportConnection, delegate(NetPakWriter writer)
@@ -3738,6 +3979,9 @@ public class Provider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Notify client that they were banned.
+    /// </summary>
     internal static void notifyBannedInternal(ITransportConnection transportConnection, string reason, uint duration)
     {
         NetMessages.SendMessageToClient(EClientMessage.Banned, ENetReliability.Reliable, transportConnection, delegate(NetPakWriter writer)
@@ -3761,6 +4005,10 @@ public class Provider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Player left server by canceling their ticket, or we are disconnecting them without telling them.
+    /// Does not send any packets to the disconnecting player.
+    /// </summary>
     public static void dismiss(CSteamID steamID)
     {
         if (findClientForKickBanDismiss(steamID, out var foundClient, out var foundIndex))
@@ -3781,6 +4029,9 @@ public class Provider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Callback when a pending player or existing player unexpectedly loses connection at the transport level.
+    /// </summary>
     private static void OnServerTransportConnectionFailure(ITransportConnection transportConnection, string debugString, bool isError)
     {
         SteamPending steamPending = findPendingPlayer(transportConnection);
@@ -3896,6 +4147,9 @@ public class Provider : MonoBehaviour
         provider.multiplayerService.serverMultiplayerService.close();
     }
 
+    /// <summary>
+    /// Check whether a server is one of our favorites or not.
+    /// </summary>
     public static bool GetServerIsFavorited(uint ip, ushort queryPort)
     {
         foreach (CachedFavorite cachedFavorite in cachedFavorites)
@@ -3916,6 +4170,9 @@ public class Provider : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Set whether a server is one of our favorites or not.
+    /// </summary>
     public static void SetServerIsFavorited(uint ip, ushort connectionPort, ushort queryPort, bool newFavorited)
     {
         bool flag = false;
@@ -3946,6 +4203,10 @@ public class Provider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Open URL in the steam overlay, or if disabled use the default browser instead.
+    /// Warning: any third party url should be checked by WebUtils.ParseThirdPartyUrl.
+    /// </summary>
     public static void openURL(string url)
     {
         if (SteamUtils.IsOverlayEnabled())
@@ -3958,6 +4219,9 @@ public class Provider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Toggle whether we've favorited the server we're currently playing on.
+    /// </summary>
     public static void toggleCurrentServerFavorited()
     {
         if (!isServer)
@@ -4307,6 +4571,10 @@ public class Provider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// In here because we want to call this very early in startup after initializing provider,
+    /// but with plenty of time to hopefully install maps prior to reaching the main menu.
+    /// </summary>
     public static void initAutoSubscribeMaps()
     {
         if (statusData == null || statusData.Maps == null)
@@ -4324,6 +4592,10 @@ public class Provider : MonoBehaviour
         ConvenientSavedata.SaveIfDirty();
     }
 
+    /// <summary>
+    /// This file is of particular importance to the dedicated server because otherwise Steam networking sockets
+    /// will say the certificate is for the wrong app. When launching the game outside Steam this sets the app.
+    /// </summary>
     private void WriteSteamAppIdFileAndEnvironmentVariables()
     {
         uint appId = APP_ID.m_AppId;
@@ -4352,6 +4624,9 @@ public class Provider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Hackily exposed as an easy way for editor code to check the verison number.
+    /// </summary>
     public static StatusData LoadStatusData()
     {
         if (ReadWrite.fileExists("/Status.json", useCloud: false, usePath: true))
@@ -4710,6 +4985,9 @@ public class Provider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Moved from OnApplicationQuit when that was deprecated.
+    /// </summary>
     private void onApplicationQuitting()
     {
         UnturnedLog.info("Application quitting");
@@ -4734,6 +5012,9 @@ public class Provider : MonoBehaviour
         Application.Quit();
     }
 
+    /// <summary>
+    /// Moved from OnApplicationQuit when Application.CancelQuit was deprecated.
+    /// </summary>
     private bool onApplicationWantsToQuit()
     {
         if (wasQuitGameCalled)

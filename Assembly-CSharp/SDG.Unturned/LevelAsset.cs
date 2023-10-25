@@ -49,28 +49,61 @@ public class LevelAsset : Asset
 
     public AssetReference<AirdropAsset> airdropRef;
 
+    /// <summary>
+    /// Player stealth radius cannot go below this value.
+    /// </summary>
     public float minStealthRadius;
 
+    /// <summary>
+    /// Deal damage and break legs if speed is greater than this value.
+    /// </summary>
     public float fallDamageSpeedThreshold;
 
+    /// <summary>
+    /// By default players in singleplayer and admins in multiplayer have a faster salvage time.
+    /// This option was requested for maps with entirely custom balanced salvage times.
+    /// </summary>
     public bool enableAdminFasterSalvageDuration = true;
 
     public List<AssetReference<CraftingBlacklistAsset>> craftingBlacklists;
 
+    /// <summary>
+    /// Cached result of finding all craftingBlacklists.
+    /// </summary>
     private List<CraftingBlacklistAsset> resolvedCraftingBlacklists;
 
+    /// <summary>
+    /// Determines which weather can naturally occur in this level.
+    /// Null if empty.
+    /// </summary>
     public SchedulableWeather[] schedulableWeathers;
 
+    /// <summary>
+    /// If set, this weather will always be active and scheduled weather is disabled.
+    /// </summary>
     public AssetReference<WeatherAssetBase> perpetualWeatherRef;
 
     public LoadingScreenMusic[] loadingScreenMusic;
 
+    /// <summary>
+    /// Defaults to false because some servers have rules and info on the loading screen.
+    /// </summary>
     public bool shouldAnimateBackgroundImage;
 
+    /// <summary>
+    /// Volume weather mask used while not inside an ambience volume.
+    /// </summary>
     public uint globalWeatherMask;
 
+    /// <summary>
+    /// Allows level to override skill max levels.
+    /// Null if empty, otherwise matches 1:1 with PlayerSkills._skills.
+    /// </summary>
     public SkillRule[][] skillRules;
 
+    /// <summary>
+    /// If false, clouds are removed from the skybox.
+    /// </summary>
     public bool hasClouds = true;
 
     public bool isBlueprintBlacklisted(Blueprint blueprint)

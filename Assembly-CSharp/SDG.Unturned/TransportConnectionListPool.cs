@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Pool lists to avoid loopback re-using an existing list.
+/// Callers do not need to manually return lists because they are reset before each frame.
+/// </summary>
 internal static class TransportConnectionListPool
 {
     private static List<PooledTransportConnectionList> available;

@@ -362,6 +362,13 @@ public class AnimalManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// Spawns an animal into the world.
+    /// </summary>
+    /// <param name="id">The ID of the animal.</param>
+    /// <param name="point">Position to spawn the animal.</param>
+    /// <param name="angle">Angle to spawn the animal.</param>
+    /// <param name="isDead">Whether the animal is dead or not.</param>
     private Animal addAnimal(ushort id, Vector3 point, float angle, bool isDead)
     {
         if (Assets.find(EAssetType.ANIMAL, id) is AnimalAsset animalAsset)
@@ -381,6 +388,11 @@ public class AnimalManager : SteamCaller
         return null;
     }
 
+    /// <summary>
+    /// Gets the animal at a specific index.
+    /// </summary>
+    /// <param name="index">The index of the animal.</param>
+    /// <returns></returns>
     public static Animal getAnimal(ushort index)
     {
         if (index >= animals.Count)
@@ -390,6 +402,9 @@ public class AnimalManager : SteamCaller
         return animals[index];
     }
 
+    /// <summary>
+    /// Find replacement spawnpoint for an animal and teleport it there.
+    /// </summary>
     public static void TeleportAnimalBackIntoMap(Animal animal)
     {
         Vector3? vector = null;
@@ -439,6 +454,9 @@ public class AnimalManager : SteamCaller
         animal.transform.position = vector.Value + Vector3.up;
     }
 
+    /// <summary>
+    /// Used in arena mode to reset all animals to dead.
+    /// </summary>
     public static void askClearAllAnimals()
     {
         foreach (Animal animal in animals)

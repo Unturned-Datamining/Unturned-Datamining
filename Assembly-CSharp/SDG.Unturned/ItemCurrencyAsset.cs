@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Associates items of the same currency, e.g. dollars or bullets.
+/// </summary>
 public class ItemCurrencyAsset : Asset
 {
     public struct Entry
@@ -11,6 +14,10 @@ public class ItemCurrencyAsset : Asset
 
         public uint value;
 
+        /// <summary>
+        /// Should this item/value be shown in the list of vendor currency items?
+        /// Useful to hide modded item stacks e.g. a stack of 100x $20 bills.
+        /// </summary>
         public bool isVisibleInVendorMenu;
     }
 
@@ -18,12 +25,21 @@ public class ItemCurrencyAsset : Asset
 
     private static ItemCurrencyComparer valueComparer = new ItemCurrencyComparer();
 
+    /// <summary>
+    /// String to format value {0} into.
+    /// </summary>
     public string valueFormat { get; protected set; }
 
+    /// <summary>
+    /// String to format value {0} of total {1} into if not otherwise specified in NPC condition.
+    /// </summary>
     public string defaultConditionFormat { get; protected set; }
 
     public Entry[] entries { get; protected set; }
 
+    /// <summary>
+    /// Sum up value of each currency item in player's inventory.
+    /// </summary>
     public uint getInventoryValue(Player player)
     {
         uint num = 0u;
@@ -47,11 +63,17 @@ public class ItemCurrencyAsset : Asset
         return num;
     }
 
+    /// <summary>
+    /// Does player have access to items covering certain value?
+    /// </summary>
     public bool canAfford(Player player, uint value)
     {
         return getInventoryValue(player) >= value;
     }
 
+    /// <summary>
+    /// Add items to player's inventory to reward value.
+    /// </summary>
     public void grantValue(Player player, uint requiredValue)
     {
         if (requiredValue < 1)
@@ -75,6 +97,9 @@ public class ItemCurrencyAsset : Asset
         }
     }
 
+    /// <summary>
+    /// Remove items from player's inventory to pay required value.
+    /// </summary>
     public bool spendValue(Player player, uint requiredValue)
     {
         if (!canAfford(player, requiredValue))

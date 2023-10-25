@@ -28,12 +28,20 @@ public class Grenade : MonoBehaviour, IExplodableThrowable
 
     public Guid explosionEffectGuid;
 
+    /// <summary>
+    /// Kept because lots of modders have been using this script in Unity,
+    /// so removing legacy effect id would break their content.
+    /// </summary>
     public ushort explosion;
 
     public float fuseLength = 2.5f;
 
     public float explosionLaunchSpeed;
 
+    /// <summary>
+    /// Hack for modders using grenade component as a way to deal radial damage. Not a good long term solution but
+    /// widely requested for the meantime until I get the chance to rewrite some of the health stuff.
+    /// </summary>
     public bool shouldDestroySelf = true;
 
     public void Explode()

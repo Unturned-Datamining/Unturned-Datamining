@@ -96,6 +96,10 @@ public class PhysicsTool
         };
     }
 
+    /// <summary>
+    /// Get legacy enum corresponding to Unity physics material object name.
+    /// Moved from obsolete <cref>checkMaterial</cref> method.
+    /// </summary>
     [Obsolete("Intended for backwards compatibility")]
     public static EPhysicsMaterial GetLegacyMaterialByName(string name)
     {

@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Represents a vehicle the vendor is selling to players.
+/// </summary>
 public class VendorSellingVehicle : VendorSellingBase
 {
     public override string displayName

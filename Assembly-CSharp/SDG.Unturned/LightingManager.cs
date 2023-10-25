@@ -10,9 +10,22 @@ public class LightingManager : SteamCaller
 {
     private enum EScheduledWeatherStage
     {
+        /// <summary>
+        /// Weather has not been decided yet. Level might not have any enabled.
+        /// </summary>
         None,
+        /// <summary>
+        /// Weather has been forecast. Timer counts down until activation.
+        /// </summary>
         Forecast,
+        /// <summary>
+        /// Weather is now active. Timer counts down until deactivation.
+        /// </summary>
         Active,
+        /// <summary>
+        /// Weather is active. Will not deactivate naturally.
+        /// Prevents loaded perpetual weather from deactivating.
+        /// </summary>
         PerpetuallyActive
     }
 
@@ -20,20 +33,32 @@ public class LightingManager : SteamCaller
 
     public static DayNightUpdated onDayNightUpdated;
 
+    /// <summary>
+    /// Delegate not reset when level reset.
+    /// </summary>
     public static DayNightUpdated onDayNightUpdated_ModHook;
 
     public static TimeOfDayChanged onTimeOfDayChanged;
 
     public static MoonUpdated onMoonUpdated;
 
+    /// <summary>
+    /// Delegate not reset when level reset.
+    /// </summary>
     public static MoonUpdated onMoonUpdated_ModHook;
 
     public static RainUpdated onRainUpdated;
 
+    /// <summary>
+    /// Delegate not reset when level reset.
+    /// </summary>
     public static RainUpdated onRainUpdated_ModHook;
 
     public static SnowUpdated onSnowUpdated;
 
+    /// <summary>
+    /// Delegate not reset when level reset.
+    /// </summary>
     public static SnowUpdated onSnowUpdated_ModHook;
 
     private static LightingManager manager;
@@ -56,14 +81,27 @@ public class LightingManager : SteamCaller
     [Obsolete]
     public static uint snowDuration;
 
+    /// <summary>
+    /// Determines which weather can naturally be scheduled in this level.
+    /// Includes default rain and snow for older levels.
+    /// </summary>
     private static LevelAsset.SchedulableWeather[] schedulableWeathers;
 
     private static EScheduledWeatherStage scheduledWeatherStage;
 
+    /// <summary>
+    /// Seconds until weather activates.
+    /// </summary>
     private static float scheduledWeatherForecastTimer;
 
+    /// <summary>
+    /// Seconds until weather deactivates.
+    /// </summary>
     private static float scheduledWeatherActiveTimer;
 
+    /// <summary>
+    /// Forecast or active weather.
+    /// </summary>
     private static AssetReference<WeatherAssetBase> scheduledWeatherRef;
 
     private static bool shouldTickScheduledWeather;
@@ -132,6 +170,10 @@ public class LightingManager : SteamCaller
     [Obsolete]
     public static bool hasSnow => false;
 
+    /// <summary>
+    /// Get weather override for the currently loaded level.
+    /// Warning: this is kept for backwards compatibility, whereas newer maps will set LevelAsset.perpetualWeather.
+    /// </summary>
     public static ELevelWeatherOverride levelWeatherOverride
     {
         get
@@ -238,11 +280,15 @@ public class LightingManager : SteamCaller
         shouldTickScheduledWeather = true;
     }
 
+    /// <summary>
+    /// Set weather active and disable scheduling.
+    /// </summary>
     public static void ActivatePerpetualWeather(WeatherAssetBase asset)
     {
         SetPerpetualWeather(asset, 0f);
     }
 
+    /// <returns>True if given weather has config.</returns>
     public static bool ForecastWeatherImmediately(WeatherAssetBase weatherAsset)
     {
         if (schedulableWeathers != null)
@@ -263,6 +309,9 @@ public class LightingManager : SteamCaller
         return false;
     }
 
+    /// <summary>
+    /// Cancel scheduled weather and re-evaluate on next update.
+    /// </summary>
     public static void ResetScheduledWeather()
     {
         if (LevelLighting.GetActiveWeatherAsset() != null)
@@ -272,6 +321,9 @@ public class LightingManager : SteamCaller
         scheduledWeatherStage = EScheduledWeatherStage.None;
     }
 
+    /// <summary>
+    /// Cancel active weather and prevent next weather from being scheduled.
+    /// </summary>
     public static void DisableWeather()
     {
         if (LevelLighting.GetActiveWeatherAsset() != null)
@@ -510,6 +562,9 @@ public class LightingManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// Assign schedulableWeathers array according to level asset or legacy lighting settings.
+    /// </summary>
     private void InitSchedulableWeathers()
     {
         if (Provider.modeConfigData.Events.Weather_Duration_Multiplier < 0.001f)
@@ -571,6 +626,7 @@ public class LightingManager : SteamCaller
         schedulableWeathers = list.ToArray();
     }
 
+    /// <returns>True if perpetual weather was enabled, false otherwise.</returns>
     private bool InitPerpetualWeather()
     {
         LevelAsset asset = Level.getAsset();

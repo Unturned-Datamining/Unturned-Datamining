@@ -11,6 +11,10 @@ public class LevelObject
 {
     private static List<Rigidbody> reuseableRigidbodyList = new List<Rigidbody>();
 
+    /// <summary>
+    /// If true, object is within a culling volume.
+    /// Name is old and not very specific, but not changing because it's public.
+    /// </summary>
     public bool isSpeciallyCulled;
 
     private bool isDecal;
@@ -45,6 +49,9 @@ public class LevelObject
 
     private bool haveConditionsBeenChecked;
 
+    /// <summary>
+    /// Assume renderers default to enabled.
+    /// </summary>
     private bool areRenderersEnabled = true;
 
     private HashSet<ushort> associatedFlags;
@@ -53,6 +60,10 @@ public class LevelObject
 
     public Transform transform => _transform;
 
+    /// <summary>
+    /// Transform created to preserve objects whose assets failed to load.
+    /// Separate from default transform to avoid messing with old behavior when transform is null.
+    /// </summary>
     public Transform placeholderTransform { get; protected set; }
 
     public Transform skybox => _skybox;
@@ -69,6 +80,10 @@ public class LevelObject
 
     public InteractableObjectRubble rubble => _rubble;
 
+    /// <summary>
+    /// Can this object's rubble be damaged?
+    /// Allows holiday restrictions to be taken into account. (Otherwise holiday presents could be destroyed out of season.)
+    /// </summary>
     public bool canDamageRubble => areConditionsMet;
 
     public ELevelObjectPlacementOrigin placementOrigin { get; protected set; }
@@ -98,8 +113,14 @@ public class LevelObject
         }
     }
 
+    /// <summary>
+    /// Object activation is time-sliced, so this does not necessarily match whether the region is active.
+    /// </summary>
     internal bool isActiveInRegion { get; private set; }
 
+    /// <summary>
+    /// Defaults to true because most objects are not inside a culling volume. 
+    /// </summary>
     internal bool isVisibleInCullingVolume { get; private set; } = true;
 
 
@@ -242,11 +263,17 @@ public class LevelObject
         updateConditions();
     }
 
+    /// <summary>
+    /// Used if the object asset has weather blend alpha conditions.
+    /// </summary>
     private void OnWeatherBlendAlphaChanged(WeatherAssetBase weatherAsset, float blendAlpha)
     {
         updateConditions();
     }
 
+    /// <summary>
+    /// Used if the object asset has weather status conditions.
+    /// </summary>
     private void OnWeatherStatusChanged(WeatherAssetBase weatherAsset, EWeatherStatusChange statusChange)
     {
         updateConditions();
@@ -257,6 +284,10 @@ public class LevelObject
         updateConditions();
     }
 
+    /// <summary>
+    /// Callback when an individual quest flag changes for the local player.
+    /// Refreshes visibility conditions if the flag was relevant to this object.
+    /// </summary>
     private void onFlagUpdated(ushort id)
     {
         if (associatedFlags != null && associatedFlags.Contains(id))
@@ -716,6 +747,9 @@ public class LevelObject
         UpdateSkyboxActive();
     }
 
+    /// <summary>
+    /// Separate from UpdateActiveAndRenderersEnabled so graphics settings can call it.
+    /// </summary>
     internal void UpdateSkyboxActive()
     {
         isSkyboxEnabled = !isActiveInRegion;

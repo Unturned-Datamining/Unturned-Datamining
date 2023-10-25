@@ -16,12 +16,24 @@ public class ItemSightAsset : ItemCaliberAsset
 
         public float distance;
 
+        /// <summary>
+        /// [0, 1] local distance from center to start of line.
+        /// </summary>
         public float lineOffset;
 
+        /// <summary>
+        /// [0, 1] local width of horizontal line.
+        /// </summary>
         public float lineWidth;
 
+        /// <summary>
+        /// Whether line/number are on left or right side of the center line.
+        /// </summary>
         public ESide side;
 
+        /// <summary>
+        /// If true, text label for distance is visible.
+        /// </summary>
         public bool hasLabel;
 
         public Color32 color;
@@ -55,8 +67,14 @@ public class ItemSightAsset : ItemCaliberAsset
 
     private bool _isHolographic;
 
+    /// <summary>
+    /// Whether main camera field of view should zoom without scope camera / scope overlay.
+    /// </summary>
     public bool shouldZoomUsingEyes;
 
+    /// <summary>
+    /// If true, scale scope overly by 1 texel to keep "middle" pixel centered.
+    /// </summary>
     public bool shouldOffsetScopeOverlayByOneTexel;
 
     public List<DistanceMarker> distanceMarkers;
@@ -65,8 +83,15 @@ public class ItemSightAsset : ItemCaliberAsset
 
     public ELightingVision vision => _vision;
 
+    /// <summary>
+    /// Factor e.g. 2 is a 2x multiplier.
+    /// Prior to 2022-04-11 this was the target field of view. (90/fov)
+    /// </summary>
     public float zoom { get; private set; }
 
+    /// <summary>
+    /// Zoom factor used in third-person view.
+    /// </summary>
     public float thirdPersonZoomFactor { get; private set; }
 
     public bool isHolographic => _isHolographic;

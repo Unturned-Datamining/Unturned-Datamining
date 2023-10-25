@@ -16,6 +16,10 @@ internal class FoliageEditor : IDevkitTool
     {
         PAINT,
         EXACT,
+        /// <summary>
+        /// This is a bit of a hack in order to simplify the foliage menu when most of the time editors are either
+        /// manually placing foliage or automatically baking it.
+        /// </summary>
         BAKE
     }
 
@@ -511,6 +515,10 @@ internal class FoliageEditor : IDevkitTool
         GLRenderer.render -= handleGLRender;
     }
 
+    /// <summary>
+    /// Get brush strength multiplier where strength decreases past falloff. Use this method so that different falloffs e.g. linear, curved can be added.
+    /// </summary>
+    /// <param name="distance">Percentage of <see cref="P:SDG.Unturned.FoliageEditor.brushRadius" />.</param>
     private float getBrushAlpha(float distance)
     {
         if (distance < brushFalloff)

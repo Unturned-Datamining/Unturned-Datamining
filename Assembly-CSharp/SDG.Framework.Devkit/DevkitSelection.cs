@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace SDG.Framework.Devkit;
 
+/// <summary>
+/// Hold onto collider and gameobject separately because collider isn't necessarily attached to gameobject.
+/// </summary>
 public class DevkitSelection : IEquatable<DevkitSelection>
 {
     public static DevkitSelection invalid = new DevkitSelection(null, null);

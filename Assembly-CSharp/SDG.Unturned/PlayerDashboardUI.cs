@@ -156,6 +156,9 @@ public class PlayerDashboardUI
         container.AddChild(sleekLabel);
     }
 
+    /// <summary>
+    /// Temporary to unbind events because this class is static for now. (sigh)
+    /// </summary>
     public void OnDestroy()
     {
         infoUI.OnDestroy();

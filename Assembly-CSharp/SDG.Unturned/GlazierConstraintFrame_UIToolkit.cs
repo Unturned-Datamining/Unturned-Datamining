@@ -3,6 +3,10 @@ using UnityEngine.UIElements;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// UITK implementation consists of a container element which respects the regular position and size
+/// properties, and a child content element which fits itself in the container.
+/// </summary>
 internal class GlazierConstraintFrame_UIToolkit : GlazierElementBase_UIToolkit, ISleekConstraintFrame, ISleekElement
 {
     private ConstraintFrameParentElement containerElement;

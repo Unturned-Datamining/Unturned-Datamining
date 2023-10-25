@@ -44,6 +44,10 @@ public class PlayerAnimator : PlayerCaller
 
     public GestureUpdated onGestureUpdated;
 
+    /// <summary>
+    /// Empty transform created at the world origin.
+    /// The first-person Viewmodel transform is re-parented to this.
+    /// </summary>
     public Transform viewmodelParentTransform;
 
     private CharacterAnimator firstAnimator;
@@ -62,64 +66,144 @@ public class PlayerAnimator : PlayerCaller
 
     private Transform _thirdSkeleton;
 
+    /// <summary>
+    /// Child of the first-person skull transform.
+    /// </summary>
     public Transform viewmodelCameraTransform;
 
+    /// <summary>
+    /// Camera near world origin masking the first-person arms and weapon.
+    /// </summary>
     public Camera viewmodelCamera;
 
+    /// <summary>
+    /// Constant (non-animated) offset. Used by gun to center the 3D sights on screen, and by chainsaw to shake the viewmodel.
+    /// </summary>
     public Vector3 viewmodelCameraLocalPositionOffset;
 
+    /// <summary>
+    /// Used to hide viewmodel arms while using a vehicle turret gun.
+    /// </summary>
     public Vector3 turretViewmodelCameraLocalPositionOffset;
 
+    /// <summary>
+    /// Offsets main camera and aim rotation while aiming with a scoped gun.
+    /// </summary>
     public Vector3 scopeSway;
 
+    /// <summary>
+    /// Animated toward viewmodelSwayMultiplier.
+    /// </summary>
     private float blendedViewmodelSwayMultiplier;
 
+    /// <summary>
+    /// Small number (0.1) while aiming, 1 while not aiming.
+    /// Reduces viewmodel animation while aiming to make 3D sights more usable.
+    /// </summary>
     public float viewmodelSwayMultiplier;
 
+    /// <summary>
+    /// Animated toward viewmodelOffsetPreferenceMultiplier.
+    /// </summary>
     private float blendedViewmodelOffsetPreferenceMultiplier;
 
+    /// <summary>
+    /// 0 while aiming, 1 while not aiming.
+    /// Players can customize the 3D position of the viewmodel on screen, but this needs
+    /// to be blended out while aiming down sights otherwise it would not line up with
+    /// the center of the screen.
+    /// </summary>
     public float viewmodelOffsetPreferenceMultiplier;
 
+    /// <summary>
+    /// Animated toward viewmodelCameraLocalPositionOffset, recoil, and bayonet offsets.
+    /// </summary>
     private Vector3 blendedViewmodelCameraLocalPositionOffset;
 
+    /// <summary>
+    /// Abruptly offset when gun is fired, then animated back toward zero.
+    /// </summary>
     public Rk4Spring3 recoilViewmodelCameraOffset;
 
+    /// <summary>
+    /// Abruptly offset when gun is fired, then animated back toward zero.
+    /// x = pitch, y = yaw, z = roll
+    /// </summary>
     public Rk4Spring3 recoilViewmodelCameraRotation;
 
     public Vector3 recoilViewmodelCameraMask = Vector3.one;
 
+    /// <summary>
+    /// Abruptly offset when bayonet is used, then animated back toward zero.
+    /// </summary>
     private Vector3 bayonetViewmodelCameraOffset;
 
+    /// <summary>
+    /// Animated while player is moving.
+    /// </summary>
     public Rk4Spring2 viewmodelMovementOffset;
 
+    /// <summary>
+    /// Blended from multiple viewmodel parameters and then applied to viewmodelCameraTransform.
+    /// </summary>
     private Vector3 viewmodelCameraLocalPosition;
 
     public Rk4SpringQ viewmodelTargetExplosionLocalRotation;
 
+    /// <summary>
+    /// Smoothing adds some initial blend-in which felt nicer for explosion rumble.
+    /// </summary>
     private Quaternion viewmodelSmoothedExplosionLocalRotation = Quaternion.identity;
 
     public float viewmodelExplosionSmoothingSpeed;
 
+    /// <summary>
+    /// Meshes are disabled until clothing is received.
+    /// </summary>
     private bool isHiddenWaitingForClothing;
 
+    /// <summary>
+    /// Target viewmodelCameraLocalPosition except while driving.
+    /// </summary>
     private Vector3 desiredViewmodelCameraLocalPosition;
 
+    /// <summary>
+    /// Animated while playing is moving.
+    /// x = pitch, y = roll
+    /// </summary>
     public Rk4Spring2 viewmodelCameraMovementLocalRotation;
 
     private Vector3 viewmodelCameraLocalRotation;
 
+    /// <summary>
+    /// Used to measure change in pitch between frames.
+    /// </summary>
     private float lastFramePitchInput;
 
+    /// <summary>
+    /// Used to measure change in yaw between frames.
+    /// </summary>
     private float lastFrameYawInput;
 
+    /// <summary>
+    /// Animated according to change in pitch/yaw input between frames so that gun rolls slightly while turning.
+    /// </summary>
     public Rk4Spring3 rotationInputViewmodelRoll;
 
     private bool lastFrameHadItemPosition;
 
     private Vector3 lastFrameItemPosition;
 
+    /// <summary>
+    /// Animated according to change in item position between frames so that animations have more inertia.
+    /// </summary>
     public Rk4Spring3 viewmodelItemInertiaRotation;
 
+    /// <summary>
+    /// Degrees per meter of item distance travelled.
+    /// Pitch is driven by vertical displacement, yaw and roll are driven by horizontal.
+    /// x = pitch, y = yaw, z = roll
+    /// </summary>
     public Vector3 viewmodelItemInertiaMask;
 
     private bool inputWantsToLeanLeft;
@@ -128,6 +212,10 @@ public class PlayerAnimator : PlayerCaller
 
     internal bool leanObstructed;
 
+    /// <summary>
+    /// In third-person this delays leaning in case player only wanted
+    /// to switch camera side without leaning.
+    /// </summary>
     private float lastCameraSideInputRealtime;
 
     private int lastLean;
@@ -152,6 +240,9 @@ public class PlayerAnimator : PlayerCaller
 
     private static readonly ClientInstanceMethod<EPlayerGesture> SendGesture = ClientInstanceMethod<EPlayerGesture>.Get(typeof(PlayerAnimator), "ReceiveGesture");
 
+    /// <summary>
+    /// Event for server plugins to monitor whether player is in-inventory.
+    /// </summary>
     public InventoryGestureListener onInventoryGesture;
 
     private static readonly ServerInstanceMethod<EPlayerGesture> SendGestureRequest = ServerInstanceMethod<EPlayerGesture>.Get(typeof(PlayerAnimator), "ReceiveGestureRequest");
@@ -284,6 +375,9 @@ public class PlayerAnimator : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Invoked after tellGesture is called with the new gesture.
+    /// </summary>
     public static event Action<PlayerAnimator, EPlayerGesture> OnGestureChanged_Global;
 
     public static event Action<PlayerAnimator> OnLeanChanged_Global;
@@ -347,6 +441,7 @@ public class PlayerAnimator : PlayerCaller
         return GetAnimationLength(name);
     }
 
+    /// <param name="scaled">If true, include current animation speed modifier.</param>
     public float GetAnimationLength(string name, bool scaled = true)
     {
         if (firstAnimator != null)
@@ -472,6 +567,9 @@ public class PlayerAnimator : PlayerCaller
         bayonetViewmodelCameraOffset.z += fling_z;
     }
 
+    /// <summary>
+    /// At this point camera is already being shook, we just add some of the same shake to viewmodel for secondary motion.
+    /// </summary>
     internal void FlinchFromExplosion(Vector3 worldRotationAxis, float adjustedMagnitudeDegrees)
     {
         Vector3 axis = viewmodelCameraTransform.InverseTransformDirection(worldRotationAxis);
@@ -534,6 +632,9 @@ public class PlayerAnimator : PlayerCaller
         thirdSkeleton.gameObject.SetActive(!isDead);
     }
 
+    /// <summary>
+    /// Called by clothing to make mesh renderers visible.
+    /// </summary>
     public void NotifyClothingIsVisible()
     {
         isHiddenWaitingForClothing = false;
@@ -664,6 +765,9 @@ public class PlayerAnimator : PlayerCaller
         ReceiveGestureRequest((EPlayerGesture)id);
     }
 
+    /// <summary>
+    /// Rate limit is relatively high because this RPC handles open/close inventory notification.
+    /// </summary>
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 15, legacyName = "askGesture")]
     public void ReceiveGestureRequest(EPlayerGesture newGesture)
     {
@@ -1225,6 +1329,11 @@ public class PlayerAnimator : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// 2023-01-18: Viewmodel camera position was originally set during Update (and still is for compatibility),
+    /// but for aiming alignment that uses the previous frame's animation position, so we also modify during
+    /// LateUpdate to use this frame's animation position.
+    /// </summary>
     private void LateUpdate()
     {
         if (base.channel.IsLocalPlayer)

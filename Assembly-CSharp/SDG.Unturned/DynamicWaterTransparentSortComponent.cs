@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Registers renderers with DynamicWaterTransparentSort manager.
+/// </summary>
 public class DynamicWaterTransparentSortComponent : MonoBehaviour
 {
     private struct ManagedMaterial

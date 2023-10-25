@@ -25,6 +25,10 @@ public class SleekServer : SleekWrapper
 
     public ClickedServer onClickedServer;
 
+    /// <summary>
+    /// Is the server this widget represents currently favorited?
+    /// Can be false on the favorites list.
+    /// </summary>
     public bool isCurrentlyFavorited => Provider.GetServerIsFavorited(info.ip, info.queryPort);
 
     private void onClickedFavoriteOffButton(ISleekElement button)

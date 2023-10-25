@@ -5,6 +5,10 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Manages render queue for transparent materials on non-stationary objects.
+/// Updates one material per frame.
+/// </summary>
 public class DynamicWaterTransparentSort : MonoBehaviour
 {
     private class TransparentObject
@@ -109,6 +113,9 @@ public class DynamicWaterTransparentSort : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Callback when camera above/under water changes.
+    /// </summary>
     private void HandleIsSeaChanged(bool isSea)
     {
         for (int num = managedObjects.Count - 1; num >= 0; num--)

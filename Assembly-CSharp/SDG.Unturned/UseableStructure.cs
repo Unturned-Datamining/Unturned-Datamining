@@ -11,30 +11,69 @@ public class UseableStructure : Useable
 
     private static readonly ClientInstanceMethod SendPlayConstruct = ClientInstanceMethod.Get(typeof(UseableStructure), "ReceivePlayConstruct");
 
+    /// <summary>
+    /// Stripped-down version of structure prefab for previewing where the structure will be spawned.
+    /// </summary>
     private Transform placementPreviewTransform;
 
+    /// <summary>
+    /// Whether preview object is currently highlighted positively.
+    /// </summary>
     private bool isPlacementPreviewValid;
 
+    /// <summary>
+    /// Time when "Use" animation clip started playing in seconds.
+    /// </summary>
     private double useAnimationStartTime;
 
+    /// <summary>
+    /// Length of "Use" animation clip in seconds.
+    /// </summary>
     private float useAnimationDuration;
 
+    /// <summary>
+    /// True when animation starts playing, false after placement sound is played.
+    /// </summary>
     private bool isWaitingForSoundTrigger;
 
+    /// <summary>
+    /// Whether the "Use" animation clip started playing.
+    /// </summary>
     private bool isUseAnimationPlaying;
 
+    /// <summary>
+    /// If running as server, whether ReceiveBuildStructure has been called yet.
+    /// </summary>
     private bool hasServerReceivedBuildRequest;
 
+    /// <summary>
+    /// Whether basic range and claim checks passed.
+    /// </summary>
     private bool isServerBuildRequestInitiallyApproved;
 
+    /// <summary>
+    /// Position the item should be spawned at.
+    /// </summary>
     private Vector3 pendingPlacementPosition;
 
+    /// <summary>
+    /// Rotation the item should be spawned at.
+    /// </summary>
     private float pendingPlacementYaw;
 
+    /// <summary>
+    /// Interpolated toward customRotationOffset.
+    /// </summary>
     private float animatedRotationOffset;
 
+    /// <summary>
+    /// Allows players to flip walls.
+    /// </summary>
     private float customRotationOffset;
 
+    /// <summary>
+    /// Vertical offset using scroll wheel.
+    /// </summary>
     private float foundationPositionOffset;
 
     private Vector3 serverPlacementPosition;
@@ -43,8 +82,14 @@ public class UseableStructure : Useable
 
     public ItemStructureAsset equippedStructureAsset => base.player.equipment.asset as ItemStructureAsset;
 
+    /// <summary>
+    /// Whether enough time has passed for "Use" animation to finish.
+    /// </summary>
     private bool HasFinishedUseAnimation => Time.timeAsDouble - useAnimationStartTime > (double)useAnimationDuration;
 
+    /// <summary>
+    /// Whether animation has reached the time when placement sound should play.
+    /// </summary>
     private bool HasReachedSoundTrigger => Time.timeAsDouble - useAnimationStartTime > (double)(useAnimationDuration * 0.8f);
 
     [Obsolete]

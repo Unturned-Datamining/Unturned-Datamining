@@ -4,6 +4,9 @@ using System.Net.Sockets;
 
 namespace SDG.NetTransport.SystemSockets;
 
+/// <summary>
+/// Implements message boundaries on top of a TCP stream socket.
+/// </summary>
 internal class SocketMessageLayer
 {
     private static byte[] sizeBuffer = new byte[2];

@@ -15,6 +15,9 @@ public class Pool<T>
 
     protected Queue<T> pool;
 
+    /// <summary>
+    /// Number of items in underlying queue.
+    /// </summary>
     public int count => pool.Count;
 
     public event PoolClaimedHandler claimed;

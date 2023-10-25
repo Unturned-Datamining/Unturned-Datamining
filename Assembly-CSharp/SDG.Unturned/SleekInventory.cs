@@ -27,6 +27,9 @@ public class SleekInventory : SleekWrapper
 
     public ClickedInventory onClickedInventory;
 
+    /// <summary>
+    /// Hack, we put this string on a newline for box probabilities.
+    /// </summary>
     public string extraTooltip;
 
     public ItemAsset itemAsset => _itemAsset;

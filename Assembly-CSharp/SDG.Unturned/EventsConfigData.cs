@@ -18,8 +18,14 @@ public class EventsConfigData
 
     public float Snow_Duration_Max;
 
+    /// <summary>
+    /// Each per-level custom weather frequency is multiplied by this value.
+    /// </summary>
     public float Weather_Frequency_Multiplier;
 
+    /// <summary>
+    /// Each per-level custom weather duration is multiplied by this value.
+    /// </summary>
     public float Weather_Duration_Multiplier;
 
     public float Airdrop_Frequency_Min;

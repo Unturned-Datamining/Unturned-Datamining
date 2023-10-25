@@ -22,6 +22,9 @@ public class VehicleAsset : Asset, ISkinableAsset
 
     private GameObject loadedModel;
 
+    /// <summary>
+    /// Prevents calling getOrLoad redundantly if asset does not exist.
+    /// </summary>
     private bool hasLoadedModel;
 
     private IDeferredAsset<GameObject> clientModel;
@@ -100,12 +103,21 @@ public class VehicleAsset : Asset, ISkinableAsset
 
     protected Texture2D _emissionBase;
 
+    /// <summary>
+    /// To non-explosions.
+    /// </summary>
     public bool isVulnerable;
 
     public bool isVulnerableToExplosions;
 
+    /// <summary>
+    /// Mega zombie rocks, zombies, animals.
+    /// </summary>
     public bool isVulnerableToEnvironment;
 
+    /// <summary>
+    /// Crashing into stuff.
+    /// </summary>
     public bool isVulnerableToBumper;
 
     public bool canTiresBeDamaged;
@@ -180,6 +192,9 @@ public class VehicleAsset : Asset, ISkinableAsset
     [Obsolete("Separated into ShouldExplosionCauseDamage and ShouldExplosionBurnMaterials.")]
     public bool isExplosive => !IsExplosionEffectRefNull();
 
+    /// <summary>
+    /// If true, explosion will damage nearby entities and kill passengers.
+    /// </summary>
     public bool ShouldExplosionCauseDamage { get; protected set; }
 
     public bool ShouldExplosionBurnMaterials { get; protected set; }
@@ -192,14 +207,31 @@ public class VehicleAsset : Asset, ISkinableAsset
 
     public bool hasZip => _hasZip;
 
+    /// <summary>
+    /// When true the bicycle animation is used and extra speed is stamina powered.
+    /// Bad way to implement it.
+    /// </summary>
     public bool hasBicycle => _hasBicycle;
 
+    /// <summary>
+    /// Can this vehicle ever spawn with a charged battery?
+    /// Uses game mode battery stats when true, or overrides by preventing battery spawn when false.
+    /// </summary>
     public bool canSpawnWithBattery { get; protected set; }
 
+    /// <summary>
+    /// Battery charge when first spawning in is multiplied by this [0, 1] number.
+    /// </summary>
     public float batterySpawnChargeMultiplier { get; protected set; }
 
+    /// <summary>
+    /// Battery decrease per second.
+    /// </summary>
     public float batteryBurnRate { get; protected set; }
 
+    /// <summary>
+    /// Battery increase per second.
+    /// </summary>
     public float batteryChargeRate { get; protected set; }
 
     public EBatteryMode batteryDriving { get; protected set; }
@@ -210,6 +242,9 @@ public class VehicleAsset : Asset, ISkinableAsset
 
     public EBatteryMode batterySirens { get; protected set; }
 
+    /// <summary>
+    /// Fuel decrease per second.
+    /// </summary>
     public float fuelBurnRate { get; protected set; }
 
     public bool isReclined { get; protected set; }
@@ -226,14 +261,26 @@ public class VehicleAsset : Asset, ISkinableAsset
 
     public float sqrDelta => _sqrDelta;
 
+    /// <summary>
+    /// Client sends physics simulation results to server. If upward (+Y) speed exceeds this, mark the move invalid.
+    /// </summary>
     public float validSpeedUp { get; protected set; }
 
+    /// <summary>
+    /// Client sends physics simulation results to server. If downward (-Y) speed exceeds this, mark the move invalid.
+    /// </summary>
     public float validSpeedDown { get; protected set; }
 
     public float camFollowDistance => _camFollowDistance;
 
+    /// <summary>
+    /// Vertical first-person view translation.
+    /// </summary>
     public float camDriverOffset { get; protected set; }
 
+    /// <summary>
+    /// Vertical first-person view translation.
+    /// </summary>
     public float camPassengerOffset { get; protected set; }
 
     public float bumperMultiplier => _bumperMultiplier;
@@ -250,6 +297,9 @@ public class VehicleAsset : Asset, ISkinableAsset
 
     public bool CanDecay { get; private set; }
 
+    /// <summary>
+    /// Can this vehicle be repaired by a seated player?
+    /// </summary>
     public bool canRepairWhileSeated { get; protected set; }
 
     public float childExplosionArmorMultiplier { get; protected set; }
@@ -276,34 +326,72 @@ public class VehicleAsset : Asset, ISkinableAsset
 
     public bool isBatteryPowered { get; protected set; }
 
+    /// <summary>
+    /// Can mobile barricades e.g. bed or sentry guns be placed on this vehicle?
+    /// </summary>
     public bool supportsMobileBuildables { get; protected set; }
 
+    /// <summary>
+    /// Should capsule colliders be added to seat transforms?
+    /// Useful to prevent bikes from leaning into walls.
+    /// </summary>
     public bool shouldSpawnSeatCapsules { get; protected set; }
 
+    /// <summary>
+    /// Can players lock the vehicle to their clan/group?
+    /// True by default, but mods want to be able to disable.
+    /// </summary>
     public bool canBeLocked { get; protected set; }
 
+    /// <summary>
+    /// Can players steal the battery?
+    /// </summary>
     public bool canStealBattery { get; protected set; }
 
     public byte trunkStorage_X { get; set; }
 
     public byte trunkStorage_Y { get; set; }
 
+    /// <summary>
+    /// Spawn table to drop items from on death.
+    /// </summary>
     public ushort dropsTableId { get; protected set; }
 
+    /// <summary>
+    /// Minimum number of items to drop on death.
+    /// </summary>
     public byte dropsMin { get; protected set; }
 
+    /// <summary>
+    /// Maximum number of items to drop on death.
+    /// </summary>
     public byte dropsMax { get; protected set; }
 
+    /// <summary>
+    /// Item ID of compatible tire.
+    /// </summary>
     public ushort tireID { get; protected set; }
 
+    /// <summary>
+    /// Number of tire visuals to rotate with steering wheel.
+    /// </summary>
     public int numSteeringTires { get; protected set; }
 
     public int[] steeringTireIndices { get; protected set; }
 
+    /// <summary>
+    /// Was a center of mass specified in the .dat?
+    /// </summary>
     public bool hasCenterOfMassOverride { get; protected set; }
 
+    /// <summary>
+    /// If hasCenterOfMassOverride, use this value.
+    /// </summary>
     public Vector3 centerOfMass { get; protected set; }
 
+    /// <summary>
+    /// If set, override the wheel collider mass with this value.
+    /// </summary>
     public float? wheelColliderMassOverride { get; protected set; }
 
     public AssetReference<VehiclePhysicsProfileAsset> physicsProfileRef { get; protected set; }
@@ -389,6 +477,9 @@ public class VehicleAsset : Asset, ISkinableAsset
         asset.SetTagIfUntaggedRecursively("Vehicle");
     }
 
+    /// <summary>
+    /// Clip.prefab
+    /// </summary>
     protected void OnServerModelLoaded(GameObject asset)
     {
         if (asset == null)
@@ -402,6 +493,9 @@ public class VehicleAsset : Asset, ISkinableAsset
         onModelLoaded(asset);
     }
 
+    /// <summary>
+    /// Vehicle.prefab
+    /// </summary>
     protected void OnClientModelLoaded(GameObject asset)
     {
         if (asset == null)

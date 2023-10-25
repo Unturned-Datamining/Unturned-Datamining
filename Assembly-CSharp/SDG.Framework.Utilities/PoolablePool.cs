@@ -2,6 +2,12 @@ using System;
 
 namespace SDG.Framework.Utilities;
 
+/// <summary>
+/// Pool of objects that implement the IPoolable interface.
+///
+/// Useful for types that do not need special construction,
+/// and want notification when claimed and released.
+/// </summary>
 public static class PoolablePool<T> where T : IPoolable
 {
     private static Pool<T> pool;

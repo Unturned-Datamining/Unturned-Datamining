@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Exposes the same API as the older Block class used by existing netcode, but implemented using new bit reader/writer. 
+/// </summary>
 internal class NetPakBlockImplementation
 {
     [Obsolete]

@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Represents an item the vendor is selling to players.
+/// </summary>
 public class VendorSellingItem : VendorSellingBase
 {
     private static List<InventorySearch> search = new List<InventorySearch>();

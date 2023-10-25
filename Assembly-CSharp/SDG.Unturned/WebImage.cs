@@ -12,6 +12,9 @@ public class WebImage : MonoBehaviour
 
     public bool shouldCache = true;
 
+    /// <summary>
+    /// If set, we are responsible for destroying texture.
+    /// </summary>
     protected Texture2D texture;
 
     protected Sprite sprite;

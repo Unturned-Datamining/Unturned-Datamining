@@ -41,6 +41,9 @@ public class InteractableDoor : Interactable
 
     public bool isOpenable => Time.realtimeSinceStartup - opened > 0.75f;
 
+    /// <summary>
+    /// Invoked when door is opened/closed, but not when loaded.
+    /// </summary>
     public static event Action<InteractableDoor> OnDoorChanged_Global;
 
     public bool checkToggle(CSteamID enemyPlayer, CSteamID enemyGroup)

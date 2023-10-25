@@ -45,6 +45,11 @@ public class PlayerMovement : PlayerCaller
 
     private static readonly float SPEED_PRONE = 1.5f;
 
+    /// <summary>
+    /// Jump speed = sqrt(2 * jump height * gravity)
+    /// Jump height = (jump speed ^ 2) / (2 * gravity)
+    /// With 7 speed and 9.81 * 3 gravity = apex height of 1.66496772
+    /// </summary>
     private static readonly float JUMP = 7f;
 
     private static readonly float SWIM = 3f;
@@ -140,6 +145,12 @@ public class PlayerMovement : PlayerCaller
 
     private bool _jump;
 
+    /// <summary>
+    /// Was set to true during teleport, and restored to false during the next movement tick.
+    ///
+    /// Server pauses movement when this is set until next client update that matches,
+    /// in order to prevent rubberbanding following a teleport.
+    /// </summary>
     [Obsolete]
     public bool isAllowed;
 
@@ -150,6 +161,9 @@ public class PlayerMovement : PlayerCaller
 
     public bool canAddSimulationResultsToUpdates;
 
+    /// <summary>
+    /// Flag for plugins to allow maintenance access underneath the map.
+    /// </summary>
     public bool bypassUndergroundWhitelist;
 
     internal bool hasPendingVehicleChange;
@@ -184,6 +198,13 @@ public class PlayerMovement : PlayerCaller
 
     private static MasterBundleReference<OneShotAudioDefinition> heavyWadingAudioRef = new MasterBundleReference<OneShotAudioDefinition>("core.masterbundle", "Effects/Physics/Swim/HeavyWading/Swim_HeavyWading.asset");
 
+    /// <summary>
+    /// In the future this can probably replace checkGround for locally simulated character?
+    /// (Unturned only started using OnControllerColliderHit on 2023-01-31)
+    ///
+    /// 2023-02-28: be careful with .gameObject property because it returns .collider.gameObject
+    /// which can cause a null reference exception. (public issue #3726)
+    /// </summary>
     private ControllerColliderHit mostRecentControllerColliderHit;
 
     public static bool forceTrustClient
@@ -199,6 +220,10 @@ public class PlayerMovement : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Note: Only UpdateCharacterControllerEnabled should modify whether controller is enabled.
+    /// (turning off and back on is fine though)
+    /// </summary>
     public CharacterController controller { get; protected set; }
 
     public float totalGravityMultiplier => itemGravityMultiplier * pluginGravityMultiplier;
@@ -246,6 +271,9 @@ public class PlayerMovement : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Valid while isRadiated.
+    /// </summary>
     public IDeadzoneNode ActiveDeadzone { get; private set; }
 
     public HordePurchaseVolume purchaseNode
@@ -262,6 +290,9 @@ public class PlayerMovement : PlayerCaller
 
     public IAmbianceNode effectNode { get; private set; }
 
+    /// <summary>
+    /// Set according to volume or level global asset fallback.
+    /// </summary>
     public uint WeatherMask { get; protected set; }
 
     public bool isMoving => _isMoving;
@@ -403,6 +434,9 @@ public class PlayerMovement : PlayerCaller
         return vehicle;
     }
 
+    /// <summary>
+    /// Get seat (if any), otherwise null.
+    /// </summary>
     public Passenger getVehicleSeat()
     {
         if (!(vehicle != null) || vehicle.passengers == null || seat >= vehicle.passengers.Length)
@@ -771,6 +805,10 @@ public class PlayerMovement : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Serverside force player to exit vehicle regardless of safe exit points.
+    /// </summary>
+    /// <returns>True if player was seated in vehicle.</returns>
     public bool forceRemoveFromVehicle()
     {
         if (vehicle != null && base.channel != null && base.channel.owner != null && vehicle.forceRemovePlayer(out var b, base.channel.owner.playerID.steamID, out var point, out var angle))
@@ -787,6 +825,9 @@ public class PlayerMovement : PlayerCaller
         return false;
     }
 
+    /// <summary>
+    /// Dedicated server simulate while input queue is empty.
+    /// </summary>
     public void simulate()
     {
         updateRegionAndBound();
@@ -801,6 +842,9 @@ public class PlayerMovement : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Dedicated server simulate driving input.
+    /// </summary>
     public void simulate(uint simulation, int recov, bool inputBrake, bool inputStamina, Vector3 point, Quaternion rotation, float speed, float physicsSpeed, int turn, float delta)
     {
         updateRegionAndBound();
@@ -822,6 +866,9 @@ public class PlayerMovement : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Client and dedicated server simulate walking input.
+    /// </summary>
     public void simulate(uint simulation, int recov, int input_x, int input_y, float look_x, float look_y, bool inputJump, bool inputSprint, float deltaTime)
     {
         updateRegionAndBound();

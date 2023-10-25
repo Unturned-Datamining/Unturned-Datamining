@@ -33,6 +33,9 @@ public class InteractableGenerator : Interactable, IManualOnDestroy
 
     private static readonly ServerInstanceMethod<bool> SendToggleRequest = ServerInstanceMethod<bool>.Get(typeof(InteractableGenerator), "ReceiveToggleRequest");
 
+    /// <summary>
+    /// Unsorted list of world space generators turned-on and fueled.
+    /// </summary>
     private static List<InteractableGenerator> worldCandidates = new List<InteractableGenerator>(40);
 
     private bool isWorldCandidate;
@@ -145,6 +148,9 @@ public class InteractableGenerator : Interactable, IManualOnDestroy
         }
     }
 
+    /// <summary>
+    /// Catch exceptions to prevent a broken powerable from breaking all the other powerable items in the area.
+    /// </summary>
     private void updatePowerableIsWired(InteractablePower powerable, bool isWired)
     {
         try

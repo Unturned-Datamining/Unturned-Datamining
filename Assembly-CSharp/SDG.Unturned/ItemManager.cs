@@ -22,6 +22,10 @@ public class ItemManager : SteamCaller
 
     private static ItemManager manager;
 
+    /// <summary>
+    /// List of all interactable items. Originally only used to clamp their distance from the drop point to ensure
+    /// clients can always pick them up, but now used to find items within a radius for nearby menu as well.
+    /// </summary>
     public static List<InteractableItem> clampedItems;
 
     private static List<ItemInstantiationParameters> pendingInstantiations = new List<ItemInstantiationParameters>();
@@ -56,14 +60,24 @@ public class ItemManager : SteamCaller
 
     private Stopwatch instantiationTimer = new Stopwatch();
 
+    /// <summary>
+    /// Instantiate at least this many items per frame even if we exceed our time budget.
+    /// </summary>
     private const int MIN_INSTANTIATIONS_PER_FRAME = 5;
 
     private const int MIN_DESTROY_PER_FRAME = 10;
 
+    /// <summary>
+    /// Exposed for Rocket transition to modules backwards compatibility.
+    /// </summary>
     public static ItemManager instance => manager;
 
     public static ItemRegion[,] regions { get; private set; }
 
+    /// <summary>
+    /// Kept for plugin backwards compatibility.
+    /// This one is problematic because on the client physics can move items between regions.
+    /// </summary>
     public static void getItemsInRadius(Vector3 center, float sqrRadius, List<RegionCoordinate> search, List<InteractableItem> result)
     {
         if (regions == null)
@@ -88,6 +102,9 @@ public class ItemManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// Find physically simulated items within radius.
+    /// </summary>
     public static void findSimulatedItemsInRadius(Vector3 center, float sqrRadius, List<InteractableItem> result)
     {
         if (clampedItems == null)
@@ -519,6 +536,10 @@ public class ItemManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// Despawn any old items in the current despawn region.
+    /// </summary>
+    /// <returns>True if the region had items to search through.</returns>
     private bool despawnItems()
     {
         if (Level.info == null || Level.info.type == ELevelType.ARENA)
@@ -542,6 +563,10 @@ public class ItemManager : SteamCaller
         return false;
     }
 
+    /// <summary>
+    /// Attempt to respawn an item in the current respawn region.
+    /// </summary>
+    /// <returns>True if an item was succesfully respawned.</returns>
     private bool respawnItems()
     {
         if (Level.info == null || Level.info.type == ELevelType.ARENA)
@@ -654,6 +679,9 @@ public class ItemManager : SteamCaller
         regions[x, y].items = list;
     }
 
+    /// <summary>
+    /// Not ideal, but there was a problem because onLevelLoaded was not resetting these after disconnecting.
+    /// </summary>
     internal static void ClearNetworkStuff()
     {
         pendingInstantiations = new List<ItemInstantiationParameters>();

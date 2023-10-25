@@ -141,6 +141,10 @@ public class BarricadeDrop
         }
     }
 
+    /// <summary>
+    /// Not using rate limit attribute because this is potentially called for hundreds of barricades at once,
+    /// and only admins will actually be allowed to apply the transform.
+    /// </summary>
     [SteamCall(ESteamCallValidation.SERVERSIDE)]
     public void ReceiveTransformRequest(in ServerInvocationContext context, Vector3 point, byte angle_x, byte angle_y, byte angle_z)
     {
@@ -173,6 +177,9 @@ public class BarricadeDrop
         }
     }
 
+    /// <summary>
+    /// Only used by plugins.
+    /// </summary>
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, deferMode = ENetInvocationDeferMode.Queue)]
     public void ReceiveUpdateState(byte[] newState)
     {
@@ -240,11 +247,18 @@ public class BarricadeDrop
         }
     }
 
+    /// <summary>
+    /// See BarricadeRegion.FindBarricadeByRootFast comment.
+    /// </summary>
     internal static BarricadeDrop FindByRootFast(Transform rootTransform)
     {
         return rootTransform.GetComponent<BarricadeRefComponent>().tempNotSureIfBarricadeShouldBeAComponentYet;
     }
 
+    /// <summary>
+    /// For code which does not know whether transform exists and/or even is a barricade.
+    /// See BarricadeRegion.FindBarricadeByRootFast comment.
+    /// </summary>
     internal static BarricadeDrop FindByTransformFastMaybeNull(Transform transform)
     {
         return transform?.root.GetComponent<BarricadeRefComponent>()?.tempNotSureIfBarricadeShouldBeAComponentYet;

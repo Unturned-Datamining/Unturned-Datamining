@@ -1,5 +1,9 @@
 namespace SDG.Unturned;
 
+/// <summary>
+/// Wraps audio source to prevent caller from meddling with it, and to allow the implementation
+/// to change in the future if necessary.
+/// </summary>
 public struct OneShotAudioHandle
 {
     private PooledAudioSource audioSource;

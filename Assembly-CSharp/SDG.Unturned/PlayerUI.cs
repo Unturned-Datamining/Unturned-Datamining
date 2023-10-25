@@ -120,6 +120,10 @@ public class PlayerUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Many places checked that the cursor and chat were closed to see if a menu could be opened. Moved here to
+    /// also consider that useable might have a menu open.
+    /// </summary>
     private bool canOpenMenus
     {
         get
@@ -230,6 +234,10 @@ public class PlayerUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Hints/messages are the pop-up texts below the interaction prompt, e.g. "reload" or "full moon rises". 
+    /// Got a complaint that the item placement obstructed hint was shown if placing multiple signs.
+    /// </summary>
     private static bool ShouldIgnoreHintAndMessageRequests()
     {
         if (!PlayerBarricadeSignUI.active)
@@ -1250,6 +1258,9 @@ public class PlayerUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Adjust screen positioning and visibility of player name widgets to match their world-space counterparts.
+    /// </summary>
     private void updateGroupLabels()
     {
         if (Player.player == null || MainCamera.instance == null || groupUI.groups == null || groupUI.groups.Count != Provider.clients.Count)
@@ -1314,6 +1325,9 @@ public class PlayerUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Update hitmarker visibility, and their world-space positions if user enabled that.
+    /// </summary>
     private void updateHitmarkers()
     {
         if (PlayerLifeUI.activeHitmarkers == null || MainCamera.instance == null)
@@ -1353,6 +1367,9 @@ public class PlayerUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Disable hints and messages if no longer applicable.
+    /// </summary>
     private void updateHintsAndMessages()
     {
         if (isHinted)
@@ -1400,6 +1417,9 @@ public class PlayerUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Disable vote popup if enough time has passed.
+    /// </summary>
     private void updateVoteDisplay()
     {
         if (PlayerLifeUI.isVoteMessaged && Time.realtimeSinceStartup - PlayerLifeUI.lastVoteMessage > 2f)
@@ -1412,6 +1432,9 @@ public class PlayerUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Pause the game if playing singleplayer and menu is open.
+    /// </summary>
     private void updatePauseTimeScale()
     {
         if (Provider.isServer && (MenuConfigurationOptionsUI.active || MenuConfigurationDisplayUI.active || MenuConfigurationGraphicsUI.active || MenuConfigurationControlsUI.active || PlayerPauseUI.active))

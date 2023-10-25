@@ -47,12 +47,24 @@ public class UseableConsumeable : Useable
         }
     }
 
+    /// <summary>
+    /// Broadcasts for plugins before applying consumeable stats to another player.
+    /// </summary>
     public static event PerformingAidHandler onPerformingAid;
 
+    /// <summary>
+    /// Broadcasts for plugins after applying consumeable stats to another player.
+    /// </summary>
     public static event PerformedAidHandler onPerformedAid;
 
+    /// <summary>
+    /// Broadcasts for plugins before applying consumeable stats to self.
+    /// </summary>
     public static event ConsumeRequestedHandler onConsumeRequested;
 
+    /// <summary>
+    /// Broadcasts for plugins after applying consumeable stats to self.
+    /// </summary>
     public static event ConsumePerformedHandler onConsumePerformed;
 
     private bool invokeConsumeRequested(ItemConsumeableAsset asset)
@@ -224,6 +236,9 @@ public class UseableConsumeable : Useable
         }
     }
 
+    /// <summary>
+    /// Called serverside when using consumeable on another player.
+    /// </summary>
     protected void performAid(ItemConsumeableAsset asset)
     {
         bool shouldAllow = true;
@@ -309,6 +324,9 @@ public class UseableConsumeable : Useable
         }
     }
 
+    /// <summary>
+    /// Called by owner and server when using consumeable on self.
+    /// </summary>
     protected void performUseOnSelf(ItemConsumeableAsset asset)
     {
         base.player.life.askRest(asset.energy);

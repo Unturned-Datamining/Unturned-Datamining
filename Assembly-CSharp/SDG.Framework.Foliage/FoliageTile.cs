@@ -79,6 +79,9 @@ public class FoliageTile : IFormattedFileReadable, IFormattedFileWritable
         return false;
     }
 
+    /// <summary>
+    /// Does this tile contain any placed foliage?
+    /// </summary>
     public bool isEmpty()
     {
         foreach (KeyValuePair<AssetReference<FoliageInstancedMeshInfoAsset>, FoliageInstanceList> instance in instances)

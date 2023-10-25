@@ -19,8 +19,14 @@ public class LevelNodes
 
     private static List<Node> _nodes;
 
+    /// <summary>
+    /// If true then level should convert old node types to volumes.
+    /// </summary>
     internal static bool hasLegacyVolumesForConversion;
 
+    /// <summary>
+    /// If true then level should convert old non-volumes types to devkit objects.
+    /// </summary>
     internal static bool hasLegacyNodesForConversion;
 
     [Obsolete("Was the parent of all editor nodes in the past, but now empty for TransformHierarchy performance.")]
@@ -44,6 +50,10 @@ public class LevelNodes
     [Obsolete("All legacy node types have been converted to subclasses of IDevkitHierarchyItem")]
     public static List<Node> nodes => _nodes;
 
+    /// <summary>
+    /// Hash of nodes file.
+    /// Prevents using the level editor to make noLight nodes visible.
+    /// </summary>
     public static byte[] hash { get; private set; }
 
     internal static void AutoConvertLegacyVolumes()

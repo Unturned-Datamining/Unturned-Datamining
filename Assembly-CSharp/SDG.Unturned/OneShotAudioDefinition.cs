@@ -56,6 +56,10 @@ public class OneShotAudioDefinition : ScriptableObject
         list[lhsIndex] = value;
     }
 
+    /// <summary>
+    /// Durstenfeld version of Fisher-Yates shuffle:
+    /// https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm
+    /// </summary>
     private void ShuffleClips(List<AudioClip> list)
     {
         for (int num = list.Count - 1; num > 0; num--)
@@ -65,6 +69,9 @@ public class OneShotAudioDefinition : ScriptableObject
         }
     }
 
+    /// <summary>
+    /// Same as above, but prevent the last clip from being shuffled to the front in order to prevent repeats.
+    /// </summary>
     private void ReshuffleClips(List<AudioClip> list)
     {
         Swap(list, 0, UnityEngine.Random.Range(0, list.Count - 1));

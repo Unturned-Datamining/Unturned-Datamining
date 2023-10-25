@@ -15,6 +15,9 @@ public class IOUtility
 
     public static ISerializer xmlSerializer = new XMLSerializer();
 
+    /// <summary>
+    /// Path to the folder which contains the Unity player executable.
+    /// </summary>
     [Obsolete("Replaced by UnturnedPaths.RootDirectory")]
     public static string rootPath => UnturnedPaths.RootDirectory.FullName;
 }

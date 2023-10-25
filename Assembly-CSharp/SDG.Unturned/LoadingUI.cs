@@ -13,6 +13,9 @@ public class LoadingUI : MonoBehaviour
 
     private static bool _isInitialized;
 
+    /// <summary>
+    /// Camera used while transitioning between scenes to prevent the "no cameras rendering" warning.
+    /// </summary>
     public Camera placeholderCamera;
 
     public static SleekWindow window;
@@ -39,6 +42,10 @@ public class LoadingUI : MonoBehaviour
 
     private static ISleekLabel creditsLabel;
 
+    /// <summary>
+    /// Set to Time.frameCount + 1 while loading.
+    /// In the past used realtime, but that was unreliable if an individual frame took too long.
+    /// </summary>
     private static int lastLoading;
 
     private static ELoadingTip tip;
@@ -383,6 +390,9 @@ public class LoadingUI : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Select a loading image while on the startup screen or a level without any images.
+    /// </summary>
     private static void PickNonLevelBackgroundImage()
     {
         if (!OptionsSettings.enableScreenshotsOnLoadingScreen || !pickBackgroundImage(PathEx.Join(UnturnedPaths.RootDirectory, "Screenshots"), onlyWithoutHud: true))

@@ -31,6 +31,11 @@ public class InteractableCharge : Interactable
 
     public Guid detonationEffectGuid;
 
+    /// <summary>
+    /// Kept because lots of modders have been these scripts in Unity,
+    /// so removing legacy effect id would break their content.
+    /// Note: unsure about this one because it is private and not serialized.
+    /// </summary>
     private ushort explosion2;
 
     private float explosionLaunchSpeed;

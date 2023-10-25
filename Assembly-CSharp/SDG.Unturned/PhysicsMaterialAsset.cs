@@ -1,7 +1,14 @@
 namespace SDG.Unturned;
 
+/// <summary>
+/// Expands upon Unity physics material properties for gameplay features.
+/// </summary>
 public class PhysicsMaterialAsset : PhysicsMaterialAssetBase
 {
+    /// <summary>
+    /// Originally considered assets for each legacy material with fallback to main material, but the fallback
+    /// would mean a failed lookup for every property in the vast majority of cases.
+    /// </summary>
     public string[] physicMaterialNames;
 
     public AssetReference<PhysicsMaterialAsset> fallbackRef;
@@ -10,14 +17,29 @@ public class PhysicsMaterialAsset : PhysicsMaterialAssetBase
 
     public EPhysicsMaterialCharacterFrictionMode characterFrictionMode;
 
+    /// <summary>
+    /// If true, crops can be planted on this material.
+    /// </summary>
     public bool? isArable;
 
+    /// <summary>
+    /// If true, oil drills can be placed on this material.
+    /// </summary>
     public bool? hasOil;
 
+    /// <summary>
+    /// For custom friction mode, multiplies character acceleration.
+    /// </summary>
     public float? characterAccelerationMultiplier;
 
+    /// <summary>
+    /// For custom friction mode, multiplies character deceleration.
+    /// </summary>
     public float? characterDecelerationMultiplier;
 
+    /// <summary>
+    /// For custom friction mode, multiplies character max speed.
+    /// </summary>
     public float? characterMaxSpeedMultiplier;
 
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)

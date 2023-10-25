@@ -3,6 +3,9 @@ using Steamworks;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Sorts higher rarity items into the front of the list.
+/// </summary>
 public class EconItemRarityComparer : Comparer<SteamItemDetails_t>
 {
     public override int Compare(SteamItemDetails_t x, SteamItemDetails_t y)

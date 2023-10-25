@@ -49,6 +49,9 @@ public class Hash
         return true;
     }
 
+    /// <summary>
+    /// Combine two existing 20-byte hashes.
+    /// </summary>
     public static byte[] combineSHA1Hashes(byte[] a, byte[] b)
     {
         if (a.Length != 20 || b.Length != 20)

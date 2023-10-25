@@ -13,10 +13,17 @@ public class PlayerInput : PlayerCaller
 
     public static readonly float RATE = 0.08f;
 
+    /// <summary>
+    /// Calls to UseableGun.tock per second.
+    /// </summary>
     public static readonly uint TOCK_PER_SECOND = 50u;
 
     private const int VANILLA_DIGITAL_KEYS = 10;
 
+    /// <summary>
+    /// Called for every input packet received allowing plugins to listen for a few special
+    /// keys they can display in chat/effect UIs.
+    /// </summary>
     public static PluginKeyTickHandler onPluginKeyTick;
 
     private float _tick;
@@ -47,6 +54,9 @@ public class PlayerInput : PlayerCaller
 
     private Queue<PlayerInputPacket> serversidePackets;
 
+    /// <summary>
+    /// Ideally simulation frame number would be signed, but there is a lot of code expecting unsigned.
+    /// </summary>
     private uint serverLastReceivedSimulationFrameNumber = uint.MaxValue;
 
     public int recov;
@@ -59,16 +69,36 @@ public class PlayerInput : PlayerCaller
 
     private bool isDismissed;
 
+    /// <summary>
+    /// askInput is always called the same number of times per second because it's run from FixedUpdate,
+    /// but the spacing between calls can vary depending on network and whether client FPS is low.
+    /// </summary>
     private static readonly float EXPECTED_ASKINPUT_PER_SECOND = 1f / RATE;
 
+    /// <summary>
+    /// If average askInput calls per second exceeds this, we either ignore their request or flat-out kick them.
+    /// </summary>
     private static readonly int MAX_ASKINPUT_PER_SECOND = (int)(EXPECTED_ASKINPUT_PER_SECOND + 3f);
 
+    /// <summary>
+    /// If average askInput calls per second exceeds this we silently kick them.
+    /// </summary>
     private static readonly int KICK_ASKINPUT_PER_SECOND = (int)(EXPECTED_ASKINPUT_PER_SECOND * 5f);
 
+    /// <summary>
+    /// Number of times askInput has been called by client.
+    /// Even with huge packet loss, we know that 
+    /// </summary>
     private int serversideAskInputCount;
 
+    /// <summary>
+    /// Realtime that the first call to askInput was made by the client.
+    /// </summary>
     private float initialServersideAskInputTime = -1f;
 
+    /// <summary>
+    /// Realtime that the previous askInput kick test was performed.
+    /// </summary>
     private float latestAskInputDismissTestTime = -1f;
 
     private static readonly int ASKINPUT_WINDOW_LENGTH = 10;
@@ -103,14 +133,25 @@ public class PlayerInput : PlayerCaller
 
     private const float MIN_FAKE_LAG_THRESHOLD_SECONDS = 1f;
 
+    /// <summary>
+    /// Counter of simulation frames before fake lag penalty is disabled.
+    /// </summary>
     private int fakeLagPenaltyFrames;
 
+    /// <summary>
+    /// Player damage multiplier while under penalty for fake lag. (10%)
+    /// </summary>
     internal const float FAKE_LAG_PENALTY_DAMAGE = 0.1f;
 
     public float tick => _tick;
 
     public uint simulation => _simulation;
 
+    /// <summary>
+    /// Whether client is currently penalized for potentially using a lag switch. False positives are relatively
+    /// likely when client framerate hitches (e.g. loading dense region), so we only modify their stats (e.g. reduce
+    /// player damage) for a corresponding duration.
+    /// </summary>
     public bool IsUnderFakeLagPenalty => fakeLagPenaltyFrames > 0;
 
     public uint clock => _clock;
@@ -140,6 +181,10 @@ public class PlayerInput : PlayerCaller
         return inputs.Count;
     }
 
+    /// <summary>
+    /// Get the hit result of a raycast on the server. Until a generic way to address net objects is implemented
+    /// this is how legacy features specify which player/animal/zombie/vehicle/etc they want to interact with.
+    /// </summary>
     public InputInfo getInput(bool doOcclusionCheck, ERaycastInfoUsage usage)
     {
         if (inputs == null)
@@ -297,6 +342,10 @@ public class PlayerInput : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Set rollingWindowIndex to newIndex, zeroing all input counts along the way.
+    /// Important to zero the intermediary indexes in-case server stalled for more than one second.
+    /// </summary>
     private void advanceRollingWindowIndex(int newIndex)
     {
         do
@@ -360,6 +409,9 @@ public class PlayerInput : PlayerCaller
         isResimulating = false;
     }
 
+    /// <summary>
+    /// Notify client there has been a prediction error, so movement needs to be re-simulated.
+    /// </summary>
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
     public void ReceiveSimulateMispredictedInputs(uint frameNumber, EPlayerStance stance, Vector3 position, Vector3 velocity, byte stamina, int lastTireOffset, int lastRestOffset)
     {
@@ -373,6 +425,9 @@ public class PlayerInput : PlayerCaller
         clientResimulationLastRestOffset = lastRestOffset;
     }
 
+    /// <summary>
+    /// Notify client old inputs can be discarded because they were predicted correctly.
+    /// </summary>
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
     public void ReceiveAckGoodInputs(uint frameNumber)
     {
@@ -392,6 +447,9 @@ public class PlayerInput : PlayerCaller
     {
     }
 
+    /// <summary>
+    /// Not using rate limit attribute because it internally keeps a rolling window limit.
+    /// </summary>
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER)]
     public void ReceiveInputs(in ServerInvocationContext context)
     {
@@ -460,6 +518,10 @@ public class PlayerInput : PlayerCaller
         hasInputed = true;
     }
 
+    /// <summary>
+    /// Only bound on dedicated server.
+    /// When dieing in a vehicle this prevents delay handling packets.
+    /// </summary>
     private void onLifeUpdated(bool isDead)
     {
         serversidePackets.Clear();

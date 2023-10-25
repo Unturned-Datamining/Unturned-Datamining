@@ -4,14 +4,29 @@ namespace SDG.Unturned;
 
 public class StereoSongAsset : Asset
 {
+    /// <summary>
+    /// Text from *.dat localization file.
+    /// </summary>
     public string titleText;
 
+    /// <summary>
+    /// Older *.content asset bundle reference. 
+    /// </summary>
     public ContentReference<AudioClip> songContentRef;
 
+    /// <summary>
+    /// Newer *.masterbundle reference.
+    /// </summary>
     public MasterBundleReference<AudioClip> songMbRef;
 
+    /// <summary>
+    /// Whether audio source should loop.
+    /// </summary>
     public bool isLoop;
 
+    /// <summary>
+    /// Optional URL to open in web browser.
+    /// </summary>
     public string linkURL { get; protected set; }
 
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)

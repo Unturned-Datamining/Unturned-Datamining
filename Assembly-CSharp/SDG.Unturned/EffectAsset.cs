@@ -63,6 +63,9 @@ public class EffectAsset : Asset
 
     public bool isStatic => _isStatic;
 
+    /// <summary>
+    /// If true the music option is respected when this effect is used by ambiance volume.
+    /// </summary>
     public bool isMusic { get; private set; }
 
     public byte preload => _preload;
@@ -76,6 +79,9 @@ public class EffectAsset : Asset
         }
     }
 
+    /// <summary>
+    /// In multiplayer the effect will be spawned for players within this radius.
+    /// </summary>
     public float relevantDistance { get; protected set; }
 
     public bool spawnOnDedicatedServer { get; protected set; }

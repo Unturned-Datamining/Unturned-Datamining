@@ -45,6 +45,9 @@ public class MenuUI : MonoBehaviour
 
     private MenuDashboardUI dashboard;
 
+    /// <summary>
+    /// Remove any existing item alert widgets.
+    /// </summary>
     private static void removeItemAlerts()
     {
         if (itemAlerts != null)
@@ -169,6 +172,10 @@ public class MenuUI : MonoBehaviour
         alertNewItems(origin, new List<SteamItemDetails_t> { item });
     }
 
+    /// <summary>
+    /// Open fullscreen alert showcasing newly granted items.
+    /// Uses first item for title color, so items should be sorted by priority.
+    /// </summary>
     public static void alertNewItems(string origin, List<SteamItemDetails_t> grantedItems)
     {
         if (originLabel != null)
@@ -201,6 +208,9 @@ public class MenuUI : MonoBehaviour
         isAlerting = true;
     }
 
+    /// <summary>
+    /// Open fullscreen alert showcasing newly granted items.
+    /// </summary>
     public static void alertPurchasedItems(string origin, List<SteamItemDetails_t> grantedItems)
     {
         if (originLabel != null)
@@ -307,6 +317,10 @@ public class MenuUI : MonoBehaviour
         MenuConfigurationControlsUI.bindOnGUI();
     }
 
+    /// <summary>
+    /// Handle esc/back key press.
+    /// Still really messy, but this used to be inside a huge nested if/elseif in Update.
+    /// </summary>
     private void escapeMenu()
     {
         if (Provider.provider.matchmakingService.isAttemptingServerQuery)
@@ -561,6 +575,10 @@ public class MenuUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Despite being newer code, this is obviously not ideal. Previously the news request was using the Steam HTTP
+    /// API which might have been the cause of some crashes, so it was quickly converted to Unity web request instead.
+    /// </summary>
     internal IEnumerator requestSteamNews()
     {
         int num = Provider.statusData.News.Announcements_Count;

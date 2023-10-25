@@ -30,6 +30,10 @@ internal abstract class GlazierBase : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Originally this was only in the uGUI implementation, but plugins can create uGUI text fields
+    /// regardless of which glazier is used.
+    /// </summary>
     public virtual bool ShouldGameProcessKeyDown
     {
         get

@@ -3,8 +3,15 @@ using System.Runtime.InteropServices;
 
 namespace SDG.NetPak;
 
+/// <summary>
+/// Packs bits into a 32-bit buffer value, and from there into a byte array. GafferOnGames recommends this approach
+/// rather than "farting across a buffer at byte level like it's 1985".
+/// </summary>
 public class NetPakWriter
 {
+    /// <summary>
+    /// Lightweight error when exceptions are disabled. Bitwise OR to prevent different errors from clobbering each other. 
+    /// </summary>
     [Flags]
     public enum EErrorFlags
     {

@@ -8,8 +8,17 @@ using UnityEngine;
 
 namespace SDG.Framework.Foliage;
 
+/// <summary>
+/// Replacement foliage storage with all tiles in a single file.
+///
+/// In the level editor all tiles are loaded into memory, whereas during gameplay the relevant tiles
+/// are loaded as-needed by a worker thread.
+/// </summary>
 public class FoliageStorageV2 : IFoliageStorage
 {
+    /// <summary>
+    /// Data-only FoliageInstanceList shared between threads.
+    /// </summary>
     private class TilePerAssetData
     {
         public AssetReference<FoliageInstancedMeshInfoAsset> assetRef;
@@ -19,6 +28,9 @@ public class FoliageStorageV2 : IFoliageStorage
         public List<bool> clearWhenBaked;
     }
 
+    /// <summary>
+    /// Data-only FoliageTile shared between threads.
+    /// </summary>
     private class TileData
     {
         public FoliageCoord coord;
@@ -42,30 +54,70 @@ public class FoliageStorageV2 : IFoliageStorage
 
     private bool hasAllTilesInMemory;
 
+    /// <summary>
+    /// Order is important because TileBecameRelevant is called from the closest tile outward.
+    /// </summary>
     private List<FoliageTile> mainThreadTilesWithRelevancyChanges = new List<FoliageTile>();
 
+    /// <summary>
+    /// Offsets into blob for per-tile data.
+    /// </summary>
     private Dictionary<FoliageCoord, long> tileBlobOffsets = new Dictionary<FoliageCoord, long>();
 
+    /// <summary>
+    /// Tiles save an index into this list rather than guid.
+    /// </summary>
     private List<AssetReference<FoliageInstancedMeshInfoAsset>> assetsHeader = new List<AssetReference<FoliageInstancedMeshInfoAsset>>();
 
     private int loadedFileVersion;
 
+    /// <summary>
+    /// Offset from header data.
+    /// </summary>
     private long tileBlobHeaderOffset;
 
     private Thread workerThread;
 
     private bool shouldWorkerThreadContinue;
 
+    /// <summary>
+    /// Ready to be released to the worker thread during the next lock.
+    /// </summary>
     private TileData mainThreadTileDataFromPreviousUpdate;
 
+    /// <summary>
+    /// Mutex lock. Only used in the main thread Update loop and worker thread loop.
+    /// </summary>
     private object lockObject;
 
+    /// <summary>
+    /// SHARED BY BOTH THREADS!
+    /// Coordinates requested by main thread for worker thread to read.
+    /// This is a list because while main thread is busy the worker thread can continue reading.
+    /// </summary>
     private LinkedList<FoliageCoord> workerThreadTileQueue = new LinkedList<FoliageCoord>();
 
+    /// <summary>
+    /// SHARED BY BOTH THREADS!
+    /// Tiles read by worker thread ready to be copied into actual foliage tiles on main thread.
+    /// </summary>
     private Queue<TileData> tileDataFromWorkerThread = new Queue<TileData>();
 
+    /// <summary>
+    /// SHARED BY BOTH THREADS!
+    /// Main thread has finished using this tile data and it can be released back to the pool on the worker thread.
+    /// This is a list because main thread could have populated multiple foliage tiles while the worker thread was busy reading.
+    /// </summary>
     private List<TileData> tileDataFromMainThread = new List<TileData>();
 
+    /// <summary>
+    /// Lifecycle:
+    /// 1. Worker thread claims or allocates data.
+    /// 2. Worker thread passes data to main thread.
+    /// 3. Main thread copies data over to actual foliage tile.
+    /// 4. Main thread passes data back to worker thread.
+    /// 5. Worker thread releases data back to pool.
+    /// </summary>
     private Stack<TilePerAssetData> perAssetDataPool;
 
     private Stack<TileData> tileDataPool;
@@ -508,6 +560,9 @@ public class FoliageStorageV2 : IFoliageStorage
         }
     }
 
+    /// <summary>
+    /// Entry point for worker thread loop.
+    /// </summary>
     private void WorkerThreadMain()
     {
         perAssetDataPool = new Stack<TilePerAssetData>();

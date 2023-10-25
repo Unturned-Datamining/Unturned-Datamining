@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Remaps asset load requests into a large asset bundle rather than small individual asset bundles.
+/// </summary>
 public class MasterBundle : Bundle
 {
     private static Dictionary<Type, string[]> typeExtensions = new Dictionary<Type, string[]>
@@ -26,8 +29,14 @@ public class MasterBundle : Bundle
         }
     };
 
+    /// <summary>
+    /// Config that contains the actual large AssetBundle.
+    /// </summary>
     public MasterBundleConfig cfg { get; protected set; }
 
+    /// <summary>
+    /// Asset path relative to the master AssetBundle.
+    /// </summary>
     public string relativePath { get; protected set; }
 
     protected override bool willBeUnloadedDuringUse => false;

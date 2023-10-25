@@ -16,6 +16,10 @@ public class LevelLighting
 
         public NetId netId;
 
+        /// <summary>
+        /// [0, 1] used to avoid invoking BlendAlphaChanged every frame.
+        /// Compared against globalBlendAlpha not taking into account local volume.
+        /// </summary>
         public float eventBlendAlpha;
 
         public GameObject gameObject;
@@ -123,8 +127,14 @@ public class LevelLighting
 
     private static float _wind;
 
+    /// <summary>
+    /// Kept for backwards compatibility with mod hooks, plugins, and events.
+    /// </summary>
     public static ELightingRain rainyness;
 
+    /// <summary>
+    /// Kept for backwards compatibility with mod hooks, plugins, and events.
+    /// </summary>
     public static ELightingSnow snowyness;
 
     private static List<CustomWeatherInstance> customWeatherInstances;
@@ -183,10 +193,19 @@ public class LevelLighting
 
     private static float raysIntensity;
 
+    /// <summary>
+    /// Level designed target fog color.
+    /// </summary>
     private static Color levelFogColor;
 
+    /// <summary>
+    /// Level designed target fog intensity.
+    /// </summary>
     private static float levelFogIntensity;
 
+    /// <summary>
+    /// Level designed target atmospheric fog intensity.
+    /// </summary>
     private static float levelAtmosphericFog;
 
     public static Transform sun;
@@ -426,6 +445,10 @@ public class LevelLighting
     [Obsolete]
     public static float drizzlyness { get; private set; }
 
+    /// <summary>
+    /// Hash of lighting config.
+    /// Prevents using the level editor to make night time look like day.
+    /// </summary>
     public static byte[] hash { get; private set; }
 
     public static LightingInfo[] times => _times;
@@ -741,6 +764,11 @@ public class LevelLighting
         return false;
     }
 
+    /// <summary>
+    /// If global ocean plane is enabled then return the worldspace height,
+    /// otherwise return the optional default value. Default for volume based
+    /// water is -1024, but atmosphere measure uses a default of zero.
+    /// </summary>
     public static float getWaterSurfaceElevation(float defaultValue = -1024f)
     {
         if (Level.info != null && Level.info.configData.Use_Legacy_Water && seaLevel < 0.99f)
@@ -1458,6 +1486,10 @@ public class LevelLighting
         }
     }
 
+    /// <summary>
+    /// Ticked on dedicated server as well as client so that server can listen for weather events.
+    /// </summary>
+    /// <param name="localVolumeMask">On dedicated server this is always 0xFFFFFFFF.</param>
     public static void tickCustomWeatherBlending(uint localVolumeMask)
     {
         int frameCount = Time.frameCount;
@@ -1895,6 +1927,9 @@ public class LevelLighting
         cachedGroundColor = new Color(-1f, -1f, -1f);
     }
 
+    /// <summary>
+    /// Reset any global shader properties that may affect the main menu.
+    /// </summary>
     public static void resetForMainMenu()
     {
         setAtmosphericFog(0f);

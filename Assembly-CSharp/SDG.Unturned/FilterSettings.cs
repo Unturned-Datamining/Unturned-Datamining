@@ -14,6 +14,9 @@ public class FilterSettings
 
     public static EAttendance filterAttendance;
 
+    /// <summary>
+    /// If true, only servers with available player slots are shown.
+    /// </summary>
     public static bool filterNotFull;
 
     public static EVACProtectionFilter filterVACProtection;

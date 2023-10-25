@@ -2,6 +2,9 @@ namespace SDG.Unturned;
 
 public class NPCHintReward : INPCReward
 {
+    /// <summary>
+    /// How many seconds message should popup.
+    /// </summary>
     private float duration;
 
     public override void GrantReward(Player player)

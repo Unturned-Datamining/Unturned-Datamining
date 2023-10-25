@@ -5,8 +5,14 @@ using SDG.Unturned;
 
 namespace SDG.Framework.Modules;
 
+/// <summary>
+/// Wraps module assembly and handles initialization.
+/// </summary>
 public class Module
 {
+    /// <summary>
+    /// True when config is enabled and dependencies are enabled.
+    /// </summary>
     protected bool _isEnabled;
 
     private List<IModuleNexus> nexii;
@@ -35,12 +41,24 @@ public class Module
         }
     }
 
+    /// <summary>
+    /// Metadata.
+    /// </summary>
     public ModuleConfig config { get; protected set; }
 
+    /// <summary>
+    /// Assembly files loaded.
+    /// </summary>
     public Assembly[] assemblies { get; protected set; }
 
+    /// <summary>
+    /// Types in the assemblies of this module. Refer to this for types rather than the assemblies to avoid exception and garbage.
+    /// </summary>
     public Type[] types { get; protected set; }
 
+    /// <summary>
+    /// How far along the initialization to shutdown lifecycle this module is.
+    /// </summary>
     public EModuleStatus status { get; protected set; }
 
     public event ModuleLoaded onModuleLoaded;

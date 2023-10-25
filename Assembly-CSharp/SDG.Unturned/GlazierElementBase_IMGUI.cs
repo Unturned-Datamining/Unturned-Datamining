@@ -3,10 +3,16 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Base class for IMGUI implementations of primitive building block widgets.
+/// </summary>
 internal class GlazierElementBase_IMGUI : GlazierElementBase
 {
     public GlazierElementBase_IMGUI _parent;
 
+    /// <summary>
+    /// Position passed into the GUI draw methods.
+    /// </summary>
     public Rect drawRect;
 
     private List<GlazierElementBase_IMGUI> _children = new List<GlazierElementBase_IMGUI>();

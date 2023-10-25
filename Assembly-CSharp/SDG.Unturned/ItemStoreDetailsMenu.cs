@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Examine a store listing with description text.
+/// </summary>
 internal class ItemStoreDetailsMenu : SleekFullscreenBox
 {
     public static ItemStoreDetailsMenu instance;
@@ -28,6 +31,9 @@ internal class ItemStoreDetailsMenu : SleekFullscreenBox
 
     private ISleekButton decrementQuantityButton;
 
+    /// <summary>
+    /// Only visible when cart is not empty.
+    /// </summary>
     private ISleekButton viewCartButton;
 
     public bool IsOpen { get; private set; }

@@ -16,12 +16,24 @@ public class BarricadesConfigData
 
     public float Melee_Repair_Multiplier;
 
+    /// <summary>
+    /// Should players be allowed to build on their vehicles?
+    /// </summary>
     public bool Allow_Item_Placement_On_Vehicle;
 
+    /// <summary>
+    /// Should players be allowed to build traps (e.g. barbed wire) on their vehicles?
+    /// </summary>
     public bool Allow_Trap_Placement_On_Vehicle;
 
+    /// <summary>
+    /// Furthest away from colliders a player can build an item onto their vehicle.
+    /// </summary>
     public float Max_Item_Distance_From_Hull;
 
+    /// <summary>
+    /// Furthest away from colliders a player can build a trap (e.g. barbed wire) onto their vehicle.
+    /// </summary>
     public float Max_Trap_Distance_From_Hull;
 
     public float getArmorMultiplier(EArmorTier armorTier)

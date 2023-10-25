@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Work-in-progress plan to allow modders to create custom physics effects.
+/// </summary>
 internal static class PhysicMaterialCustomData
 {
     private class CombinedPhysicMaterialInfo
@@ -107,6 +110,9 @@ internal static class PhysicMaterialCustomData
         return result;
     }
 
+    /// <summary>
+    /// Can crops be planted on a given material?
+    /// </summary>
     public static bool IsArable(string materialName)
     {
         bool result = false;
@@ -121,6 +127,9 @@ internal static class PhysicMaterialCustomData
         return result;
     }
 
+    /// <summary>
+    /// Can oil drills be placed on a given material?
+    /// </summary>
     public static bool HasOil(string materialName)
     {
         bool result = false;

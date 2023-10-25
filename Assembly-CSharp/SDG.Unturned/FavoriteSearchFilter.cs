@@ -3,6 +3,9 @@ using System.IO;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Parses fv:X from input string and loads X.txt from game folder.
+/// </summary>
 public struct FavoriteSearchFilter<T>
 {
     public delegate bool SubFilterParser(string input, out T subFilter);

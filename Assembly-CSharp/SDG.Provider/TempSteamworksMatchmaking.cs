@@ -80,6 +80,9 @@ public class TempSteamworksMatchmaking
 
     private int serverQueryAttempts;
 
+    /// <summary>
+    /// Reset after starting connection attempt, so set to true afterwards to auto join the server.
+    /// </summary>
     public bool autoJoinServerQuery;
 
     private HServerListRequest serverListRequest = HServerListRequest.Invalid;

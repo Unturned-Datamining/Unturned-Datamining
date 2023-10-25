@@ -11,6 +11,10 @@ public class Acid : MonoBehaviour
 
     public Guid effectGuid;
 
+    /// <summary>
+    /// Kept because lots of modders have been using this script in Unity,
+    /// so removing legacy effect id would break their content.
+    /// </summary>
     public ushort effectID;
 
     private void OnTriggerEnter(Collider other)

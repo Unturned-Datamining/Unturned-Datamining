@@ -44,6 +44,10 @@ public class Types
 
     public static readonly Type COLOR_TYPE = typeof(Color);
 
+    /// <summary>
+    /// Not originally supported by networking. Added temporarily during netpak rewrite because the quaternion
+    /// compression is so much better for vehicles than three byte Euler rotation.
+    /// </summary>
     public static readonly Type QUATERNION_TYPE = typeof(Quaternion);
 
     public static readonly byte[] SHIFTS = new byte[8] { 1, 2, 4, 8, 16, 32, 64, 128 };

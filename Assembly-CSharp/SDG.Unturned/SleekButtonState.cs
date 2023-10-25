@@ -6,6 +6,9 @@ public class SleekButtonState : SleekWrapper
 {
     private int _state;
 
+    /// <summary>
+    /// If true, button tooltip will be overridden with tooltip from states array.
+    /// </summary>
     public bool useContentTooltip;
 
     public SwappedState onSwappedState;

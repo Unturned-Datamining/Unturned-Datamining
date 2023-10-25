@@ -205,6 +205,9 @@ public class ItemTool : MonoBehaviour
         return itemAsset.slot.canEquipInPage(page);
     }
 
+    /// <summary>
+    /// No longer used in vanilla. Kept in case plugins are using it.
+    /// </summary>
     public static Transform getItem(ushort id, ushort skin, byte quality, byte[] state, bool viewmodel, GetStatTrackerValueHandler statTrackerCallback)
     {
         ItemAsset itemAsset = Assets.find(EAssetType.ITEM, id) as ItemAsset;
@@ -259,6 +262,9 @@ public class ItemTool : MonoBehaviour
         return InstantiateItem(quality, state, viewmodel, itemAsset, skinAsset, shouldDestroyColliders, outTempMeshes, out tempMaterial, statTrackerCallback, prefabOverride);
     }
 
+    /// <summary>
+    /// Actual internal implementation.
+    /// </summary>
     internal static Transform InstantiateItem(byte quality, byte[] state, bool viewmodel, ItemAsset itemAsset, SkinAsset skinAsset, bool shouldDestroyColliders, List<Mesh> outTempMeshes, out Material tempMaterial, GetStatTrackerValueHandler statTrackerCallback, GameObject prefabOverride = null)
     {
         tempMaterial = null;
@@ -546,6 +552,9 @@ public class ItemTool : MonoBehaviour
         return new DynamicEconDetails(currentIconTags, currentIconDynamicProps).getStatTrackerValue(out type, out kills);
     }
 
+    /// <summary>
+    /// World to local bounds only works well for axis-aligned icons.
+    /// </summary>
     private bool IsTransformAxisAligned(Transform cameraTransform)
     {
         Vector3 eulerAngles = cameraTransform.localRotation.eulerAngles;
@@ -563,6 +572,9 @@ public class ItemTool : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Unity's Camera.orthographicSize is half the height of the viewing volume. Width is calculated from aspect ratio.
+    /// </summary>
     private float CalculateOrthographicSize(ItemAsset assetContext, GameObject modelGameObject, Transform cameraTransform, int renderWidth, int renderHeight)
     {
         renderers.Clear();

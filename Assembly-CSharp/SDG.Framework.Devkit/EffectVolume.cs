@@ -83,6 +83,10 @@ public class EffectVolume : LevelVolume<EffectVolume, EffectVolumeManager>
     [SerializeField]
     internal Guid _effectGuid;
 
+    /// <summary>
+    /// Kept because lots of modders have been using this script in Unity,
+    /// so removing legacy effect id would break their content.
+    /// </summary>
     [SerializeField]
     protected ushort _id;
 

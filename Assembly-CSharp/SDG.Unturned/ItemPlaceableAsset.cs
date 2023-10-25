@@ -2,14 +2,30 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Common base for barricades and structures.
+/// 2023-01-16: not ideal to be adding this so late in development, but at least it is a step in the right direction.
+/// </summary>
 public class ItemPlaceableAsset : ItemAsset
 {
+    /// <summary>
+    /// Item recovered when picked up below 100% health.
+    /// </summary>
     public AssetReference<ItemAsset> salvageItemRef { get; protected set; }
 
+    /// <summary>
+    /// Minimum number of items to drop when destroyed.
+    /// </summary>
     public int minItemsDroppedOnDestroy { get; protected set; }
 
+    /// <summary>
+    /// Maximum number of items to drop when destroyed.
+    /// </summary>
     public int maxItemsDroppedOnDestroy { get; protected set; }
 
+    /// <summary>
+    /// Spawn table for items dropped when destroyed.
+    /// </summary>
     public AssetReference<SpawnAsset> itemDroppedOnDestroy { get; protected set; }
 
     public ItemAsset FindSalvageItemAsset()
@@ -21,6 +37,9 @@ public class ItemPlaceableAsset : ItemAsset
         return FindDefaultSalvageItemAsset();
     }
 
+    /// <summary>
+    /// By default a crafting ingredient is salvaged.
+    /// </summary>
     internal ItemAsset FindDefaultSalvageItemAsset()
     {
         foreach (Blueprint blueprint in base.blueprints)

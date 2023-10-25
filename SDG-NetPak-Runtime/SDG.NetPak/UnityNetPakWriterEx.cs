@@ -4,6 +4,19 @@ namespace SDG.NetPak;
 
 public static class UnityNetPakWriterEx
 {
+    /// <summary>
+    /// Uses "smallest three" optimization described by Glenn Fiedler: https://gafferongames.com/post/snapshot_compression/
+    /// Quoting here in case the link moves: "Since we know the quaternion represents a rotation its length must
+    /// be 1, so x^2+y^2+z^2+w^2 = 1. We can use this identity to drop one component and reconstruct it on the
+    /// other side. For example, if you send x,y,z you can reconstruct w = sqrt(1 - x^2 - y^2 - z^2). You might
+    /// think you need to send a sign bit for w in case it is negative, but you don’t, because you can make w always
+    /// positive by negating the entire quaternion if w is negative (in quaternion space (x,y,z,w) and (-x,-y,-z,-w)
+    /// represent the same rotation.) Don’t always drop the same component due to numerical precision issues.
+    /// Instead, find the component with the largest absolute value and encode its index using two bits [0, 3]
+    /// (0=x, 1=y, 2=z, 3=w), then send the index of the largest component and the smallest three components over
+    /// the network (hence the name). On the other side use the index of the largest bit to know which component
+    /// you have to reconstruct from the other three."
+    /// </summary>
     public static bool WriteQuaternion(this NetPakWriter writer, Quaternion value, int bitsPerComponent = 9)
     {
         int num = 0;
@@ -70,6 +83,9 @@ public static class UnityNetPakWriterEx
         return writer.WriteBits((uint)num, 2) & writer.WriteSignedNormalizedFloat(num5 * num3 * 1.4142135f, bitsPerComponent) & writer.WriteSignedNormalizedFloat(num6 * num3 * 1.4142135f, bitsPerComponent) & writer.WriteSignedNormalizedFloat(num7 * num3 * 1.4142135f, bitsPerComponent);
     }
 
+    /// <summary>
+    /// Similar to the quaternion optimization, but needs a sign bit for the largest value.
+    /// </summary>
     public static bool WriteNormalVector3(this NetPakWriter writer, Vector3 value, int bitsPerComponent = 9)
     {
         int num = 0;
@@ -127,16 +143,25 @@ public static class UnityNetPakWriterEx
         return writer.WriteBits((uint)num, 2) & writer.WriteBit(value2) & writer.WriteSignedNormalizedFloat(num4 * 1.4142135f, bitsPerComponent) & writer.WriteSignedNormalizedFloat(num5 * 1.4142135f, bitsPerComponent);
     }
 
+    /// <summary>
+    /// Default intBitCount of 13 allows a range of [-4096, +4096).
+    /// </summary>
     public static bool WriteClampedVector3(this NetPakWriter writer, Vector3 value, int intBitCount = 13, int fracBitCount = 7)
     {
         return writer.WriteClampedFloat(value.x, intBitCount, fracBitCount) & writer.WriteClampedFloat(value.y, intBitCount, fracBitCount) & writer.WriteClampedFloat(value.z, intBitCount, fracBitCount);
     }
 
+    /// <summary>
+    /// Write 8-bit per channel color excluding alpha.
+    /// </summary>
     public static bool WriteColor32RGB(this NetPakWriter writer, Color32 value)
     {
         return writer.WriteUInt8(value.r) & writer.WriteUInt8(value.g) & writer.WriteUInt8(value.b);
     }
 
+    /// <summary>
+    /// Write 8-bit per channel color including alpha.
+    /// </summary>
     public static bool WriteColor32RGBA(this NetPakWriter writer, Color32 value)
     {
         return writer.WriteUInt8(value.r) & writer.WriteUInt8(value.g) & writer.WriteUInt8(value.b) & writer.WriteUInt8(value.a);

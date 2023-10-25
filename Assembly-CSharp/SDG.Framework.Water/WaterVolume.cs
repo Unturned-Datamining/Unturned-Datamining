@@ -74,6 +74,9 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
 
     public GameObject waterPlane;
 
+    /// <summary>
+    /// All water tiles and the planar reflection component reference this material.
+    /// </summary>
     public Material sharedMaterial;
 
     public PlanarReflection planarReflection;
@@ -89,6 +92,9 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
     [SerializeField]
     protected bool _isSeaLevel;
 
+    /// <summary>
+    /// Flag for legacy sea level.
+    /// </summary>
     internal bool isManagedByLighting;
 
     public ERefillWaterType waterType = ERefillWaterType.SALTY;
@@ -132,6 +138,9 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
         }
     }
 
+    /// <summary>
+    /// If true rain will be occluded below the surface on the Y axis.
+    /// </summary>
     public bool isSeaLevel
     {
         get

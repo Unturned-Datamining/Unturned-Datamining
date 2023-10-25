@@ -10,6 +10,9 @@ using UnityEngine;
 
 namespace SDG.Framework.Modules;
 
+/// <summary>
+/// Runs before everything else to find and load modules.
+/// </summary>
 public class ModuleHook : MonoBehaviour
 {
     protected class AssemblyFileSettings
@@ -23,20 +26,40 @@ public class ModuleHook : MonoBehaviour
 
     protected static Dictionary<string, AssemblyFileSettings> nameToPath;
 
+    /// <summary>
+    /// These are *.dll files discovered in the modules folder.
+    /// </summary>
     protected static Dictionary<AssemblyName, string> discoveredNameToPath;
 
     protected static Dictionary<string, Assembly> nameToAssembly;
 
+    /// <summary>
+    /// Should missing DLLs be logged?
+    /// Opt-in because RocketMod has its own handler.
+    /// </summary>
     private static CommandLineFlag shouldLogAssemblyResolve = new CommandLineFlag(defaultValue: false, "-LogAssemblyResolve");
 
+    /// <summary>
+    /// Should vanilla search for *.dll files?
+    /// Can be turned off in case it conflicts with third-party search mechanism.
+    /// </summary>
     private static CommandLineFlag shouldSearchModulesForDLLs = new CommandLineFlag(defaultValue: true, "-NoVanillaAssemblySearch");
 
     public static List<Module> modules { get; protected set; }
 
+    /// <summary>
+    /// Temporarily contains Unturned's code untils it's moved into modules.
+    /// </summary>
     public static Assembly coreAssembly { get; protected set; }
 
+    /// <summary>
+    /// Temporarily contains <see cref="P:SDG.Framework.Modules.ModuleHook.coreAssembly" /> types.
+    /// </summary>
     public static Type[] coreTypes { get; protected set; }
 
+    /// <summary>
+    /// Should module assemblies be loaded?
+    /// </summary>
     private static bool shouldLoadModules
     {
         get
@@ -49,16 +72,29 @@ public class ModuleHook : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Called once after all startup enabled modules are loaded. Not called when modules are initialized due to enabling/disabling.
+    /// </summary>
     public static event ModulesInitializedHandler onModulesInitialized;
 
+    /// <summary>
+    /// Called once after all modules are shutdown. Not called when modules are shutdown due to enabling/disabling.
+    /// </summary>
     public static event ModulesShutdownHandler onModulesShutdown;
 
+    /// <summary>
+    /// Event for plugin frameworks (e.g., Rocket) to override AssemblyResolve handling.
+    /// </summary>
     public static event ResolveEventHandler PreVanillaAssemblyResolve;
 
     public static event ResolveEventHandler PreVanillaAssemblyResolvePostRedirects;
 
     public static event ResolveEventHandler PostVanillaAssemblyResolve;
 
+    /// <summary>
+    /// Find modules containing an assembly with the Both_Required role.
+    /// </summary>
+    /// <param name="result">Modules to append to.</param>
     public static void getRequiredModules(List<Module> result)
     {
         if (modules == null || result == null)
@@ -89,6 +125,10 @@ public class ModuleHook : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Find module using dependency name.
+    /// </summary>
+    /// <returns></returns>
     public static Module getModuleByName(string name)
     {
         if (modules == null)
@@ -351,6 +391,10 @@ public class ModuleHook : MonoBehaviour
         modules[index].isEnabled = false;
     }
 
+    /// <summary>
+    /// Depending on the platform, assemblies are found in different directories.
+    /// </summary>
+    /// <returns>Root folder for modules.</returns>
     private string getModulesRootPath()
     {
         string pATH = ReadWrite.PATH;
@@ -362,6 +406,9 @@ public class ModuleHook : MonoBehaviour
         return pATH;
     }
 
+    /// <summary>
+    /// Search Modules directory for .dll files and save their AssemblyName to discoveredNameToPath.
+    /// </summary>
     private void DiscoverAssemblies()
     {
         try
@@ -395,6 +442,9 @@ public class ModuleHook : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Search Modules directory for .module files and load them.
+    /// </summary>
     private List<ModuleConfig> findModules()
     {
         List<ModuleConfig> list = new List<ModuleConfig>();
@@ -438,6 +488,9 @@ public class ModuleHook : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Orders configs by dependency and removes those that are missing files.
+    /// </summary>
     private void sortModules(List<ModuleConfig> configs)
     {
         ModuleComparer comparer = new ModuleComparer();

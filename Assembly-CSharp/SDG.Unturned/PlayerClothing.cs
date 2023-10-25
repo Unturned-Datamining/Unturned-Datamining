@@ -173,20 +173,44 @@ public class PlayerClothing : PlayerCaller
 
     public Color color => thirdClothes.color;
 
+    /// <summary>
+    /// Called when the player clicks the cosmetic, visual or skin toggle buttons.
+    /// </summary>
     public event VisualToggleChanged VisualToggleChanged;
 
+    /// <summary>
+    /// Invoked after any player's shirt values change (not including loading).
+    /// </summary>
     public static event Action<PlayerClothing> OnShirtChanged_Global;
 
+    /// <summary>
+    /// Invoked after any player's shirt values change (not including loading).
+    /// </summary>
     public static event Action<PlayerClothing> OnPantsChanged_Global;
 
+    /// <summary>
+    /// Invoked after any player's hat values change (not including loading).
+    /// </summary>
     public static event Action<PlayerClothing> OnHatChanged_Global;
 
+    /// <summary>
+    /// Invoked after any player's backpack values change (not including loading).
+    /// </summary>
     public static event Action<PlayerClothing> OnBackpackChanged_Global;
 
+    /// <summary>
+    /// Invoked after any player's backpack values change (not including loading).
+    /// </summary>
     public static event Action<PlayerClothing> OnVestChanged_Global;
 
+    /// <summary>
+    /// Invoked after any player's backpack values change (not including loading).
+    /// </summary>
     public static event Action<PlayerClothing> OnMaskChanged_Global;
 
+    /// <summary>
+    /// Invoked after any player's glasses values change (not including loading).
+    /// </summary>
     public static event Action<PlayerClothing> OnGlassesChanged_Global;
 
     [Obsolete]

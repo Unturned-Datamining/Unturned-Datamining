@@ -233,6 +233,9 @@ public class MenuPlayServersUI
         };
     }
 
+    /// <summary>
+    /// Synchronize widgets with their values.
+    /// </summary>
     private static void updateAll()
     {
         nameField.Text = PlaySettings.serversName;

@@ -2,6 +2,9 @@ using Steamworks;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Essentially deprecated for now.
+/// </summary>
 public class CommandGameMode : Command
 {
     protected override void execute(CSteamID executorID, string parameter)

@@ -5,10 +5,16 @@ using UnityEngine.UIElements;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Base class for UIToolkit implementations of primitive building block widgets.
+/// </summary>
 internal abstract class GlazierElementBase_UIToolkit : GlazierElementBase
 {
     public GlazierElementBase_UIToolkit _parent;
 
+    /// <summary>
+    /// Set by child.
+    /// </summary>
     public VisualElement visualElement;
 
     private List<GlazierElementBase_UIToolkit> _children = new List<GlazierElementBase_UIToolkit>();
@@ -246,6 +252,10 @@ internal abstract class GlazierElementBase_UIToolkit : GlazierElementBase
         glazier.RemoveDestroyedElement(this);
     }
 
+    /// <summary>
+    /// Synchronize control colors with background/text/image etc. colors.
+    /// Called when custom UI colors are changed, and after constructor.
+    /// </summary>
     internal virtual void SynchronizeColors()
     {
     }

@@ -4,6 +4,9 @@ namespace SDG.Unturned;
 
 public class SleekChatEntryV1 : SleekWrapper
 {
+    /// <summary>
+    /// Does this label fade out as the chat message gets older?
+    /// </summary>
     public bool shouldFadeOutWithAge;
 
     protected ReceivedChatMessage _representingChatMessage;
@@ -14,6 +17,9 @@ public class SleekChatEntryV1 : SleekWrapper
 
     private ISleekLabel contentsLabel;
 
+    /// <summary>
+    /// Chat message values to show.
+    /// </summary>
     public ReceivedChatMessage representingChatMessage
     {
         get

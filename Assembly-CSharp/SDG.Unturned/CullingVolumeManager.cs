@@ -7,6 +7,9 @@ namespace SDG.Unturned;
 
 public class CullingVolumeManager : VolumeManager<CullingVolume, CullingVolumeManager>
 {
+    /// <summary>
+    /// True for the next update after the player is teleported.
+    /// </summary>
     private bool wasViewTeleported;
 
     private int cullingUpdateIndex;
@@ -23,6 +26,10 @@ public class CullingVolumeManager : VolumeManager<CullingVolume, CullingVolumeMa
 
     private CustomSampler gizmoLabelSampler = CustomSampler.Create("CullingVolumeManager.LabelGizmos");
 
+    /// <summary>
+    /// Hide culling volume by default because new mappers might wonder what these purple boxes
+    /// are and why their number goes away after moving objects.
+    /// </summary>
     protected override ELevelVolumeVisibility DefaultVisibility => ELevelVolumeVisibility.Hidden;
 
     protected override void OnUpdateGizmos(RuntimeGizmos runtimeGizmos)
@@ -42,6 +49,9 @@ public class CullingVolumeManager : VolumeManager<CullingVolume, CullingVolumeMa
         TimeUtility.updated += OnUpdateCullingVolumes;
     }
 
+    /// <summary>
+    /// Called by navmesh baking to complete pending object changes that may affect which nav objects are enabled.
+    /// </summary>
     internal void ImmediatelySyncAllVolumes()
     {
         wasViewTeleported = true;
@@ -83,6 +93,9 @@ public class CullingVolumeManager : VolumeManager<CullingVolume, CullingVolumeMa
         wasViewTeleported = true;
     }
 
+    /// <summary>
+    /// Check a fixed number of volumes for visibility updates per frame.
+    /// </summary>
     private void UpdateRelevantCullingVolumes()
     {
         bool forceCull = Level.isEditor && EditorVolumesUI.EditorWantsToPreviewCulling;
@@ -113,6 +126,9 @@ public class CullingVolumeManager : VolumeManager<CullingVolume, CullingVolumeMa
         volumesToRemoveFromUpdatesList.Clear();
     }
 
+    /// <summary>
+    /// Any volumes in the process of enabling/disabling get updated once per frame.
+    /// </summary>
     private void UpdateObjectsVisibility()
     {
         foreach (CullingVolume volumesWithVisibilityUpdate in volumesWithVisibilityUpdates)

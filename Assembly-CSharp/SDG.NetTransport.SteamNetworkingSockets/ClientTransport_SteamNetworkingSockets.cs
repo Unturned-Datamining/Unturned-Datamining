@@ -26,6 +26,9 @@ public class ClientTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
 
     private bool didSetupDebugOutput;
 
+    /// <summary>
+    /// Recycled array for every read call.
+    /// </summary>
     private IntPtr[] messageAddresses = new IntPtr[1];
 
     public void Initialize(ClientTransportReady callback, ClientTransportFailure failureCallback)
@@ -267,6 +270,9 @@ public class ClientTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
         }
     }
 
+    /// <summary>
+    /// Must close the handle to free up resources.
+    /// </summary>
     private void HandleState_ClosedByPeer(ref SteamNetConnectionStatusChangedCallback_t callback)
     {
         Log("Client connection closed by peer ({0}) \"{1}\"", callback.m_info.m_eEndReason, callback.m_info.m_szEndDebug);
@@ -278,6 +284,9 @@ public class ClientTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
         InvokeFailureCallback(callback.m_info.m_eEndReason);
     }
 
+    /// <summary>
+    /// Must close the handle to free up resources.
+    /// </summary>
     private void HandleState_ProblemDetectedLocally(ref SteamNetConnectionStatusChangedCallback_t callback)
     {
         Log("Client connection problem detected locally ({0}) \"{1}\"", callback.m_info.m_eEndReason, callback.m_info.m_szEndDebug);

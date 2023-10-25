@@ -10,6 +10,9 @@ public class ArenaNode : Node
 
     internal float _normalizedRadius;
 
+    /// <summary>
+    /// This value is confusing because in the level editor it is the normalized radius, but in-game it is the radius.
+    /// </summary>
     public float radius
     {
         get

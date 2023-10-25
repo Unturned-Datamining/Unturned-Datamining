@@ -25,6 +25,9 @@ public class SleekItems : SleekWrapper
 
     private List<SleekItem> _items;
 
+    /// <summary>
+    /// Rather than creating all SleekItems as once we create a few per frame.
+    /// </summary>
     private List<ItemJar> pendingItems;
 
     private bool _areItemsEnabled = true;
@@ -65,6 +68,9 @@ public class SleekItems : SleekWrapper
         }
     }
 
+    /// <summary>
+    /// Reset all items hotkey label.
+    /// </summary>
     public void resetHotkeyDisplay()
     {
         foreach (SleekItem item in _items)

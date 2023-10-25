@@ -29,6 +29,9 @@ public class UseableThrowable : Useable
 
     private bool isThrowable => Time.realtimeSinceStartup - startedUse > useTime * 0.6f;
 
+    /// <summary>
+    /// Plugin-only event when throwable is spawned on server.
+    /// </summary>
     public static event ThrowableSpawnedHandler onThrowableSpawned;
 
     private void toss(Vector3 origin, Vector3 force)

@@ -44,6 +44,9 @@ public class ConsoleWriterProxy : TextWriter
         defaultConsoleWriter.Flush();
     }
 
+    /// <summary>
+    /// This is the only /required/ override of text writer.
+    /// </summary>
     public override void Write(char value)
     {
         customWriter.Write(value);

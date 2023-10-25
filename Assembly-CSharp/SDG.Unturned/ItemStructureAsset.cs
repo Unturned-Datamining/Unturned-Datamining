@@ -22,8 +22,14 @@ public class ItemStructureAsset : ItemPlaceableAsset
 
     protected ushort _explosion;
 
+    /// <summary>
+    /// If false this structure cannot take damage.
+    /// </summary>
     public bool canBeDamaged = true;
 
+    /// <summary>
+    /// Modded structures can disable pooling if they have custom incompatible logic.
+    /// </summary>
     public bool eligibleForPooling = true;
 
     public bool requiresPillars = true;
@@ -40,6 +46,9 @@ public class ItemStructureAsset : ItemPlaceableAsset
 
     protected bool _isSaveable;
 
+    /// <summary>
+    /// Optional alternative structure prefab specifically for the client preview spawned.
+    /// </summary>
     public MasterBundleReference<GameObject> placementPreviewRef;
 
     private static List<Transform> transformsToDestroy = new List<Transform>();
@@ -88,6 +97,10 @@ public class ItemStructureAsset : ItemPlaceableAsset
 
     public float foliageCutRadius { get; protected set; }
 
+    /// <summary>
+    /// Length of raycast downward from pivot to check floor is above terrain.
+    /// Vanilla floors can be placed a maximum of 10 meters above terrain.
+    /// </summary>
     public float terrainTestHeight { get; protected set; }
 
     public override bool shouldFriendlySentryTargetUser => true;
@@ -237,6 +250,9 @@ public class ItemStructureAsset : ItemPlaceableAsset
         return new AudioReference("core.masterbundle", "Sounds/Inventory/HeavyMetalEquipment.asset");
     }
 
+    /// <summary>
+    /// Called on the dedicated server to optimize client prefab for server usage.
+    /// </summary>
     private void RemoveClientComponents(GameObject gameObject)
     {
         foreach (Transform item in gameObject.transform)

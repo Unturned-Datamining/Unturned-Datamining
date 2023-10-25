@@ -66,6 +66,10 @@ public class ResourceSpawnpoint
 
     public Transform skybox => _skybox;
 
+    /// <summary>
+    /// Can this tree be damaged?
+    /// Allows holiday restrictions to be taken into account. (Otherwise holiday trees could be destroyed out of season.)
+    /// </summary>
     public bool canBeDamaged => areConditionsMet;
 
     public bool checkCanReset(float multiplier)
@@ -341,6 +345,9 @@ public class ResourceSpawnpoint
         return model.position;
     }
 
+    /// <summary>
+    /// Used if the asset has holiday restrictions.
+    /// </summary>
     private void updateConditions()
     {
         if (asset == null)

@@ -35,8 +35,14 @@ public class PlayerInteract : PlayerCaller
 
     private static readonly ClientInstanceMethod SendPlayInspect = ClientInstanceMethod.Get(typeof(PlayerInteract), "ReceivePlayInspect");
 
+    /// <summary>
+    /// Outlined object is not necessarily the focused object, so we track it to disable later if focus is destroyed.
+    /// </summary>
     private Transform highlightedTransform;
 
+    /// <summary>
+    /// Was focus non-null during last update? Used to detect when focus was destroyed.
+    /// </summary>
     private bool didHaveFocus;
 
     public static Interactable interactable => _interactable;
@@ -86,6 +92,10 @@ public class PlayerInteract : PlayerCaller
         ReceiveSalvageTimeOverride(overrideValue);
     }
 
+    /// <summary>
+    /// Called from the server to override salvage duration.
+    /// Only used by plugins.
+    /// </summary>
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellSalvageTimeOverride")]
     public void ReceiveSalvageTimeOverride(float overrideValue)
     {
@@ -93,6 +103,10 @@ public class PlayerInteract : PlayerCaller
         shouldOverrideSalvageTime = overrideSalvageTimeValue > -0.5f;
     }
 
+    /// <summary>
+    /// Override salvage duration without admin.
+    /// Only used by plugins.
+    /// </summary>
     public void sendSalvageTimeOverride(float overrideValue)
     {
         SendSalvageTimeOverride.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), overrideValue);

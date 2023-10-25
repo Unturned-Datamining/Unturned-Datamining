@@ -43,6 +43,9 @@ public class AnimalAsset : Asset
 
     protected AudioClip[] _panics;
 
+    /// <summary>
+    /// Minimum seconds between attacks.
+    /// </summary>
     public float attackInterval;
 
     public string animalName => _animalName;
@@ -85,22 +88,46 @@ public class AnimalAsset : Asset
 
     public AudioClip[] panics => _panics;
 
+    /// <summary>
+    /// Number of Attack_# animations.
+    /// </summary>
     public int attackAnimVariantsCount { get; protected set; }
 
+    /// <summary>
+    /// Number of Eat_# animations.
+    /// </summary>
     public int eatAnimVariantsCount { get; protected set; }
 
+    /// <summary>
+    /// Number of Glance_# animations.
+    /// </summary>
     public int glanceAnimVariantsCount { get; protected set; }
 
+    /// <summary>
+    /// Number of Startle_# animations.
+    /// </summary>
     public int startleAnimVariantsCount { get; protected set; }
 
+    /// <summary>
+    /// Maximum distance on the XZ plane.
+    /// </summary>
     public float horizontalAttackRangeSquared { get; protected set; }
 
+    /// <summary>
+    /// Maximum distance on the XZ plane when attacking vehicles.
+    /// </summary>
     public float horizontalVehicleAttackRangeSquared { get; protected set; }
 
+    /// <summary>
+    /// Maximum distance on the Y axis.
+    /// </summary>
     public float verticalAttackRange { get; protected set; }
 
     public override EAssetType assetCategory => EAssetType.ANIMAL;
 
+    /// <summary>
+    /// Temporary until something better makes sense? For Spyjack.
+    /// </summary>
     public bool shouldPlayAnimsOnDedicatedServer { get; private set; }
 
     protected void validateAnimations(GameObject root)

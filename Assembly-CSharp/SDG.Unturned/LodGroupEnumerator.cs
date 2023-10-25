@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Allows foreach loop to iterate renderers defined in lod group.
+/// </summary>
 public struct LodGroupEnumerator : IEnumerator<Renderer>, IEnumerator, IDisposable, IEnumerable<Renderer>, IEnumerable
 {
     private LOD[] lods;

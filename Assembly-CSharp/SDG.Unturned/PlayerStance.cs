@@ -31,6 +31,9 @@ public class PlayerStance : PlayerCaller
 
     private EPlayerStance _stance;
 
+    /// <summary>
+    /// Stance to fit available space when loading in.
+    /// </summary>
     public EPlayerStance initialStance = EPlayerStance.STAND;
 
     private float lastStance;
@@ -57,8 +60,15 @@ public class PlayerStance : PlayerCaller
 
     private RaycastHit ladder;
 
+    /// <summary>
+    /// Regular interact ray still hits the ladder, but we only allow climbing within a smaller range to make its
+    /// teleport less powerful.
+    /// </summary>
     internal const float LADDER_INTERACT_RANGE = 4f;
 
+    /// <summary>
+    /// Ladder forward ray is 0.75m, so we move slightly less than that away from the ladder.
+    /// </summary>
     internal const float LADDER_INTERACT_TELEPORT_OFFSET = 0.65f;
 
     internal static readonly ServerInstanceMethod<Vector3> SendClimbRequest = ServerInstanceMethod<Vector3>.Get(typeof(PlayerStance), "ReceiveClimbRequest");
@@ -86,6 +96,9 @@ public class PlayerStance : PlayerCaller
 
     public bool sprint => _localWantsToSprint;
 
+    /// <summary>
+    /// Older, cached version of areEyesUnderwater.
+    /// </summary>
     public bool isSubmerged => _isSubmerged;
 
     internal bool canCurrentStanceTransitionToClimbing
@@ -100,6 +113,9 @@ public class PlayerStance : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Return false if there are any external restrictions (e.g. reloading, handcuffed) preventing climbing.
+    /// </summary>
     internal bool isAllowedToStartClimbing
     {
         get
@@ -112,14 +128,28 @@ public class PlayerStance : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Test whether bottom of controller is currently inside a water volume.
+    /// </summary>
     public bool areFeetUnderwater => WaterUtility.isPointUnderwater(base.transform.position);
 
+    /// <summary>
+    /// Test whether viewpoint is currently inside a water volume.
+    /// </summary>
     public bool areEyesUnderwater => WaterUtility.isPointUnderwater(base.player.look.aim.position);
 
+    /// <summary>
+    /// Test whether body is currently inside a water volume.
+    /// Enters the swimming stance while true.
+    /// </summary>
     public bool isBodyUnderwater => WaterUtility.isPointUnderwater(base.transform.position + new Vector3(0f, 1.25f, 0f));
 
+    /// <summary>
+    /// Invoked after any player's stance changes (not including loading).
+    /// </summary>
     public static event Action<PlayerStance> OnStanceChanged_Global;
 
+    /// <returns>Distance zombies can detect this player within.</returns>
     public float GetStealthDetectionRadius()
     {
         if (base.player.movement.nav != byte.MaxValue && ZombieManager.regions[base.player.movement.nav].isHyper)
@@ -163,6 +193,9 @@ public class PlayerStance : PlayerCaller
         return 0f;
     }
 
+    /// <summary>
+    /// Draw debug capsule matching the player size.
+    /// </summary>
     public static void drawCapsule(Vector3 position, float height, Color color, float lifespan = 0f)
     {
         Vector3 begin = position + new Vector3(0f, RADIUS, 0f);
@@ -170,6 +203,9 @@ public class PlayerStance : PlayerCaller
         RuntimeGizmos.Get().Capsule(begin, end, RADIUS, color, lifespan);
     }
 
+    /// <summary>
+    /// Draw standing-height debug capsule matching the player size.
+    /// </summary>
     public static void drawStandingCapsule(Vector3 position, Color color, float lifespan = 0f)
     {
         Vector3 begin = position + new Vector3(0f, RADIUS, 0f);
@@ -177,6 +213,9 @@ public class PlayerStance : PlayerCaller
         RuntimeGizmos.Get().Capsule(begin, end, RADIUS, color, lifespan);
     }
 
+    /// <summary>
+    /// Is there enough height for our capsule at a position?
+    /// </summary>
     public static bool hasHeightClearanceAtPosition(Vector3 position, float height)
     {
         Vector3 start = position + new Vector3(0f, RADIUS + 0.01f, 0f);
@@ -192,26 +231,41 @@ public class PlayerStance : PlayerCaller
         return true;
     }
 
+    /// <summary>
+    /// Could a standing player capsule fit at the given position?
+    /// </summary>
     public static bool hasStandingHeightClearanceAtPosition(Vector3 position)
     {
         return hasHeightClearanceAtPosition(position, PlayerMovement.HEIGHT_STAND);
     }
 
+    /// <summary>
+    /// Could a crouching player capsule fit at the given position?
+    /// </summary>
     public static bool hasCrouchingHeightClearanceAtPosition(Vector3 position)
     {
         return hasHeightClearanceAtPosition(position, PlayerMovement.HEIGHT_CROUCH);
     }
 
+    /// <summary>
+    /// Could a prone player capsule fit at the given position?
+    /// </summary>
     public static bool hasProneHeightClearanceAtPosition(Vector3 position)
     {
         return hasHeightClearanceAtPosition(position, PlayerMovement.HEIGHT_PRONE);
     }
 
+    /// <summary>
+    /// Could a standing player capsule teleport to the given position?
+    /// </summary>
     public static bool hasTeleportClearanceAtPosition(Vector3 position)
     {
         return hasHeightClearanceAtPosition(position, PlayerMovement.HEIGHT_STAND + 0.5f);
     }
 
+    /// <summary>
+    /// Is there any compatible stance that can fit at position?
+    /// </summary>
     public static bool getStanceForPosition(Vector3 position, ref EPlayerStance stance)
     {
         if (hasStandingHeightClearanceAtPosition(position))
@@ -232,6 +286,9 @@ public class PlayerStance : PlayerCaller
         return false;
     }
 
+    /// <summary>
+    /// Using our capsule's current height would there be enough space at a given position?
+    /// </summary>
     public bool wouldHaveHeightClearanceAtPosition(Vector3 position, float padding = 0f)
     {
         CharacterController controller = base.player.movement.controller;
@@ -239,6 +296,9 @@ public class PlayerStance : PlayerCaller
         return hasHeightClearanceAtPosition(position, num + padding);
     }
 
+    /// <summary>
+    /// Does capsule have appropriate clearance for a pending height change?
+    /// </summary>
     public bool hasHeightClearance(float height)
     {
         return hasHeightClearanceAtPosition(base.transform.position, height);
@@ -265,6 +325,9 @@ public class PlayerStance : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Replicate stance to clients.
+    /// </summary>
     private void replicateStance(bool notifyOwner)
     {
         if (notifyOwner)

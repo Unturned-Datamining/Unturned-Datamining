@@ -57,6 +57,9 @@ public enum ESteamPacket
     BATTLEYE,
     [Obsolete]
     GUIDTABLE,
+    /// <summary>
+    /// Server response to a non-rejected CONNECT request. Notifies client they are in the queue.
+    /// </summary>
     [Obsolete]
     CLIENT_PENDING,
     [Obsolete]

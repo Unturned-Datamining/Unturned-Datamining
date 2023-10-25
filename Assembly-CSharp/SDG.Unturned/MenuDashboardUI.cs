@@ -63,6 +63,10 @@ public class MenuDashboardUI
 
     private static NewsResponse newsResponse;
 
+    /// <summary>
+    /// Has a new announcement been posted by the developer?
+    /// If so, it is given priority over the featured workshop item.
+    /// </summary>
     private static bool hasNewAnnouncement;
 
     private static ISleekElement newAnnouncement;
@@ -75,6 +79,9 @@ public class MenuDashboardUI
 
     private static CallResult<SteamUGCQueryCompleted_t> steamUGCQueryCompletedFeatured;
 
+    /// <summary>
+    /// Ensures workshop files are not refreshed more than once per main menu load.
+    /// </summary>
     private static bool hasBegunQueryingLiveConfigWorkshop;
 
     private MenuPauseUI pauseUI;
@@ -349,6 +356,9 @@ public class MenuDashboardUI
         }
     }
 
+    /// <summary>
+    /// Called after newsResponse is updated from web request.
+    /// </summary>
     private static void receiveNewsResponse()
     {
         for (int i = 0; i < newsResponse.AppNews.NewsItems.Length; i++)
@@ -434,6 +444,9 @@ public class MenuDashboardUI
         mainScrollView.SizeOffset_Y -= sleekBox.SizeOffset_Y + 10f;
     }
 
+    /// <summary>
+    /// Read News.txt file from Cloud directory to preview on main menu.
+    /// </summary>
     private static bool readNewsPreview()
     {
         string path = Path.Combine(ReadWrite.PATH, "Cloud", "News.txt");
@@ -654,6 +667,10 @@ public class MenuDashboardUI
         sleekElement3.AddChild(sleekWorkshopSubscriptionButton);
     }
 
+    /// <summary>
+    /// Helper for handlePopularItemResults.
+    /// If player has not dismissed item at index then proceed with query and return true.
+    /// </summary>
     private static bool featurePopularItem(uint index)
     {
         if (!SteamUGC.GetQueryUGCResult(popularWorkshopHandle, index, out var pDetails))
@@ -684,6 +701,10 @@ public class MenuDashboardUI
         return true;
     }
 
+    /// <summary>
+    /// Successfully queried popular workshop items.
+    /// Tries to decide on an item that player has not dismissed.
+    /// </summary>
     private static void handlePopularItemResults(SteamUGCQueryCompleted_t callback)
     {
         UnturnedLog.info("Received popular workshop files");
@@ -738,6 +759,9 @@ public class MenuDashboardUI
         }
     }
 
+    /// <summary>
+    /// Response about the item we decided to display.
+    /// </summary>
     private static void onFeaturedQueryCompleted(SteamUGCQueryCompleted_t callback, bool io)
     {
         if (io)
@@ -794,6 +818,9 @@ public class MenuDashboardUI
         steamUGCQueryCompletedFeatured.Set(hAPICall);
     }
 
+    /// <summary>
+    /// Submit query for recently trending popular workshop items.
+    /// </summary>
     private static void queryPopularWorkshopItems()
     {
         MainMenuWorkshopPopularLiveConfig popular = LiveConfig.Get().mainMenuWorkshop.popular;
@@ -1006,6 +1033,9 @@ public class MenuDashboardUI
         }
     }
 
+    /// <summary>
+    /// Entry point to deciding which workshop item is featured above recent announcements.
+    /// </summary>
     private static void UpdateWorkshopFromLiveConfig()
     {
         if (!Glazier.Get().SupportsAutomaticLayout)

@@ -238,6 +238,9 @@ internal static class GlazierUtils_IMGUI
         }
     }
 
+    /// <summary>
+    /// Helper for drawing label outline/shadow so that we can easily change it.
+    /// </summary>
     private static void drawLabelOutline(Rect area, GUIContent content, ETextContrastStyle shadowStyle, float alpha)
     {
         Color shadowColor = SleekCustomization.shadowColor;
@@ -276,6 +279,9 @@ internal static class GlazierUtils_IMGUI
         }
     }
 
+    /// <summary>
+    /// Helper for drawing label outline/shadow so that we can easily change it.
+    /// </summary>
     private static void drawLabelOutline(Rect area, string text, ETextContrastStyle shadowStyle, float alpha)
     {
         Color shadowColor = SleekCustomization.shadowColor;

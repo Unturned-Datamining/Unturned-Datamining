@@ -14,6 +14,9 @@ public class PlayerBarricadeStereoUI : SleekFullscreenBox
 
     private InteractableStereo stereo;
 
+    /// <summary>
+    /// Hack to prevent hitting volume rate limit because (at least as of 2022-05-24) we do not have an event for finished dragging.
+    /// </summary>
     private double lastUpdateVolumeRealtime;
 
     private bool hasPendingVolumeUpdate;

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// HUD with projected labels for teammates.
+/// </summary>
 internal class PlayerGroupUI : SleekWrapper
 {
     private List<ISleekLabel> _groups;

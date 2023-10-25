@@ -10,12 +10,19 @@ public static class SystemNetPakWriterEx
 
     public delegate bool WriteListItemWithWriter<T>(NetPakWriter writer, T item);
 
+    /// <summary>
+    /// For example bitCount of 7 allows range [-64, +64).
+    /// </summary>
     public static bool WriteSignedInt(this NetPakWriter writer, int value, int bitCount)
     {
         int num = 1 << bitCount - 1;
         return writer.WriteBits((uint)(value + num), bitCount);
     }
 
+    /// <summary>
+    /// Values outside the range are clamped into range.
+    /// For example intBitCount of 7 allows range [-64, +64).
+    /// </summary>
     public static bool WriteClampedFloat(this NetPakWriter writer, float value, int intBitCount, int fracBitCount)
     {
         int num = 1 << intBitCount - 1;
@@ -79,6 +86,9 @@ public static class SystemNetPakWriterEx
         return writer.WriteBits((uint)(value >> 32), 32) & writer.WriteBits((uint)value, 32);
     }
 
+    /// <summary>
+    /// Encode a float in the range [0.0, 1.0]. Endpoints are encoded exactly, but not the midpoint (0.5).
+    /// </summary>
     public static bool WriteUnsignedNormalizedFloat(this NetPakWriter writer, float value, int bitCount)
     {
         uint num = (uint)((1 << bitCount) - 1);
@@ -86,6 +96,9 @@ public static class SystemNetPakWriterEx
         return writer.WriteBits(value2, bitCount);
     }
 
+    /// <summary>
+    /// Encode a float in the range [-1.0, +1.0]. Endpoints and midpoint (0.0) are encoded exactly.
+    /// </summary>
     public static bool WriteSignedNormalizedFloat(this NetPakWriter writer, float value, int bitCount)
     {
         uint num = (uint)(1 << bitCount - 1);
@@ -109,6 +122,9 @@ public static class SystemNetPakWriterEx
         return writer.WriteUInt32(value2);
     }
 
+    /// <summary>
+    /// Encode radians wrapped into the range [0, TWO_PI).
+    /// </summary>
     public static bool WriteRadians(this NetPakWriter writer, float value, int bitCount = 8)
     {
         float num = (value % (MathF.PI * 2f) + MathF.PI * 2f) % (MathF.PI * 2f) / (MathF.PI * 2f);
@@ -117,6 +133,9 @@ public static class SystemNetPakWriterEx
         return writer.WriteBits(value2, bitCount);
     }
 
+    /// <summary>
+    /// Encode degrees wrapped into the range [0, 360).
+    /// </summary>
     public static bool WriteDegrees(this NetPakWriter writer, float value, int bitCount = 8)
     {
         float num = (value % 360f + 360f) % 360f / 360f;
@@ -182,6 +201,9 @@ public static class SystemNetPakWriterEx
         return flag;
     }
 
+    /// <summary>
+    /// Ideally should not be used by new code.
+    /// </summary>
     public static bool WriteStateArray(this NetPakWriter writer, byte[] value)
     {
         byte b = (byte)value.Length;

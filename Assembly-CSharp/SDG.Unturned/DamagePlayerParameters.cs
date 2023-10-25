@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Payload for the DamageTool.damagePlayer function.
+/// </summary>
 public struct DamagePlayerParameters
 {
     public enum Bleeding
@@ -34,12 +37,24 @@ public struct DamagePlayerParameters
 
     public float times;
 
+    /// <summary>
+    /// Should armor worn on matching limb be factored in?
+    /// </summary>
     public bool respectArmor;
 
+    /// <summary>
+    /// Should game mode config damage multiplier be factored in?
+    /// </summary>
     public bool applyGlobalArmorMultiplier;
 
+    /// <summary>
+    /// If player dies should it count towards quests?
+    /// </summary>
     public bool trackKill;
 
+    /// <summary>
+    /// Effect to apply to ragdoll if dead.
+    /// </summary>
     public ERagdollEffect ragdollEffect;
 
     public Bleeding bleedingModifier;

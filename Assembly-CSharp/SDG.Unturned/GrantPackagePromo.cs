@@ -6,8 +6,16 @@ namespace SDG.Unturned;
 
 public static class GrantPackagePromo
 {
+    /// <summary>
+    /// Last realtime a request was sent.
+    /// Used to rate-limit clientside.
+    /// </summary>
     private static float RequestRealtime;
 
+    /// <summary>
+    /// Perform rate limiting and update timestamp.
+    /// </summary>
+    /// <returns>True if we can proceed with request.</returns>
     private static bool CheckRateLimit()
     {
         float realtimeSinceStartup = Time.realtimeSinceStartup;
@@ -19,6 +27,9 @@ public static class GrantPackagePromo
         return true;
     }
 
+    /// <summary>
+    /// Do we think the local player is eligible to send request?
+    /// </summary>
     public static bool IsEligible()
     {
         if (Provider.statusData == null || Provider.statusData.Game == null)

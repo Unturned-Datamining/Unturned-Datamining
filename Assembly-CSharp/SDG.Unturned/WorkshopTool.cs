@@ -36,11 +36,17 @@ public class WorkshopTool
         return false;
     }
 
+    /// <summary>
+    /// Given path to a workshop map, try to find its /Bundles folder.
+    /// </summary>
     public static bool findMapBundlesPath(string path, out string bundlesPath)
     {
         return findMapNestedPath(path, "/Bundles", out bundlesPath);
     }
 
+    /// <summary>
+    /// Given path to a workshop map, try to find its /Content folder.
+    /// </summary>
     public static bool findMapContentPath(string path, out string contentPath)
     {
         return findMapNestedPath(path, "/Content", out contentPath);
@@ -52,6 +58,11 @@ public class WorkshopTool
         loadMapBundlesAndContent(workshopItemPath, 0uL);
     }
 
+    /// <summary>
+    /// Maps on the workshop are a root folder named after the published file id, containing
+    /// the map folder itself with the level name. In order to load the map's bundles and content
+    /// properly we need to find the nested Bundles and Content folders.
+    /// </summary>
     public static void loadMapBundlesAndContent(string workshopItemPath, ulong workshopFileId)
     {
         if (findMapBundlesPath(workshopItemPath, out var bundlesPath))

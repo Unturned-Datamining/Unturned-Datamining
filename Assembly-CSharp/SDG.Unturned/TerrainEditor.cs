@@ -76,6 +76,9 @@ public class TerrainEditor : IDevkitTool
 
     protected Vector3 flattenPlanePosition;
 
+    /// <summary>
+    /// Whether the pointer is currently in a spot that can be painted.
+    /// </summary>
     protected bool isPointerOnLandscape;
 
     protected bool isPointerOnTilePlane;
@@ -844,6 +847,10 @@ public class TerrainEditor : IDevkitTool
         Landscape.DisableHoleColliders = false;
     }
 
+    /// <summary>
+    /// Get brush strength multiplier where strength decreases past falloff. Use this method so that different falloffs e.g. linear, curved can be added.
+    /// </summary>
+    /// <param name="normalizedDistance">Percentage of <see cref="P:SDG.Unturned.TerrainEditor.brushRadius" />.</param>
     protected float getBrushAlpha(float normalizedDistance)
     {
         if (normalizedDistance <= brushFalloff || brushFalloff >= 1f)

@@ -147,6 +147,9 @@ public class PlayerTool
         return null;
     }
 
+    /// <summary>
+    /// Find client with given RPC channel ID.
+    /// </summary>
     public static SteamPlayer findSteamPlayerByChannel(int channel)
     {
         foreach (SteamPlayer client in Provider.clients)

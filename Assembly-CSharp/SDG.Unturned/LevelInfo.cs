@@ -18,12 +18,22 @@ public class LevelInfo
 
     private Local cachedLocalization;
 
+    /// <summary>
+    /// Absolute path to the map folder.
+    /// </summary>
     public string path { get; protected set; }
 
     public string name => _name;
 
+    /// <summary>
+    /// Whether unity analytics should track this map's name. Don't want to burn all the analysis points!
+    /// </summary>
     public bool canAnalyticsTrack => isSpecial;
 
+    /// <summary>
+    /// Maps included with the game only, separate from category because arena maps are misc.
+    /// Category is set as part of the config file. This is only mainly used to enable unity analytics tracking for map name.
+    /// </summary>
     public bool isSpecial
     {
         get
@@ -36,10 +46,16 @@ public class LevelInfo
         }
     }
 
+    /// <summary>
+    /// Only used for play menu categories at the moment.
+    /// </summary>
     public bool isFromWorkshop { get; protected set; }
 
     public ulong publishedFileId { get; protected set; }
 
+    /// <summary>
+    /// Test whether this map's workshop file ID is in the curated maps list.
+    /// </summary>
     public bool isCurated
     {
         get
@@ -63,6 +79,9 @@ public class LevelInfo
         }
     }
 
+    /// <summary>
+    /// Web URL to map feedback discussions.
+    /// </summary>
     public string feedbackUrl
     {
         get
@@ -87,6 +106,9 @@ public class LevelInfo
 
     public LevelInfoConfigData configData { get; private set; }
 
+    /// <summary>
+    /// Cache level's asset, if any.
+    /// </summary>
     public LevelAsset resolveAsset()
     {
         if (cachedAsset == null && !didResolveAsset)
@@ -163,6 +185,9 @@ public class LevelInfo
         return name;
     }
 
+    /// <summary>
+    /// Preview.png should be 320x180
+    /// </summary>
     public string GetPreviewImageFilePath()
     {
         string result = Path.Combine(path, "Preview.png");
@@ -173,6 +198,9 @@ public class LevelInfo
         return GetLoadingScreenImagePath();
     }
 
+    /// <summary>
+    /// Get a random file path in the /Screenshots folder, or fallback to Level.png if it exists.
+    /// </summary>
     public string GetLoadingScreenImagePath()
     {
         string randomScreenshotPath = GetRandomScreenshotPath();
@@ -188,6 +216,9 @@ public class LevelInfo
         return null;
     }
 
+    /// <summary>
+    /// Get a random file path in the /Screenshots folder
+    /// </summary>
     internal string GetRandomScreenshotPath()
     {
         string text = Path.Combine(path, "Screenshots");

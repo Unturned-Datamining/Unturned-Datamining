@@ -34,6 +34,9 @@ public class ZombieDifficultyAsset : Asset
 
     public int Normal_Stun_Threshold;
 
+    /// <summary>
+    /// Can horde beacons be placed in the associated bounds?
+    /// </summary>
     public bool Allow_Horde_Beacon;
 
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)

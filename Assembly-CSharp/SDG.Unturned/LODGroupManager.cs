@@ -58,6 +58,9 @@ internal class LODGroupManager
         }
     }
 
+    /// <summary>
+    /// Called after lod bias may have changed.
+    /// </summary>
     public void SynchronizeLODBias()
     {
         float lodBias = QualitySettings.lodBias;

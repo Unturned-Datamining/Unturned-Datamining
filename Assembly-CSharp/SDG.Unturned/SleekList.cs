@@ -32,6 +32,9 @@ public class SleekList<T> : SleekWrapper where T : class
 
     private int oldVisibleItemsCount;
 
+    /// <summary>
+    /// Kind of hacky... Used by player list for group connections.
+    /// </summary>
     public int IndexOfCreateElementItem { get; private set; }
 
     public ISleekScrollView scrollView { get; private set; }

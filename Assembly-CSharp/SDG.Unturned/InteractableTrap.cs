@@ -32,6 +32,10 @@ public class InteractableTrap : Interactable
 
     public Guid trapDetonationEffectGuid;
 
+    /// <summary>
+    /// Kept because lots of modders have been using this script in Unity,
+    /// so removing legacy effect id would break their content.
+    /// </summary>
     private ushort explosion2;
 
     private bool isBroken;

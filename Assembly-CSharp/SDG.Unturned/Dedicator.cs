@@ -11,6 +11,11 @@ public class Dedicator : MonoBehaviour
 
     private static bool _isDedicated;
 
+    /// <summary>
+    /// Should dedicated server disable requests to internet?
+    /// While in LAN mode skips the Steam backend connection and workshop item queries.
+    /// Needs a non-Steam networking implementation before it will be truly offline only.
+    /// </summary>
     public static CommandLineFlag offlineOnly = new CommandLineFlag(defaultValue: false, "-OfflineOnly");
 
     private static bool _hasBattlEye;
@@ -19,11 +24,19 @@ public class Dedicator : MonoBehaviour
 
     public static CommandWindow commandWindow { get; protected set; }
 
+    /// <summary>
+    /// Is the application running as a headless server?
+    /// Replacement for isDedicated property. The property could not be changed to const in dedicated-server-only
+    /// builds without potentially breaking plugins. Only development builds can be run as both client or server.
+    /// </summary>
     public static bool IsDedicatedServer => _isDedicated;
 
     [Obsolete("Server plugins do not need to check this because they run on the dedicated-server-only builds.")]
     public static bool isDedicated => _isDedicated;
 
+    /// <summary>
+    /// Are we currently running the standalone dedicated server app?
+    /// </summary>
     public static bool isStandaloneDedicatedServer => false;
 
     public static bool hasBattlEye => _hasBattlEye;

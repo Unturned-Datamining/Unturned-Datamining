@@ -50,8 +50,14 @@ public class LevelGround : MonoBehaviour
 
     private static float[,,] alphamap2HQ;
 
+    /// <summary>
+    /// If true then level should convert old terrain.
+    /// </summary>
     public static bool hasLegacyDataForConversion;
 
+    /// <summary>
+    /// Material guids converted by legacy asset bundle hash or texture names.
+    /// </summary>
     public static AssetReference<LandscapeMaterialAsset>[] legacyMaterialGuids;
 
     private static Transform _models;
@@ -160,6 +166,10 @@ public class LevelGround : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Hash of Trees.dat, or zeroed if any assets were missing locally.
+    /// Should only be used if level is configured to, as many mod maps are typically missing assets.
+    /// </summary>
     public static byte[] treesHash { get; private set; }
 
     [Obsolete("Legacy terrain game object only exists for auto-conversion")]
@@ -1007,6 +1017,11 @@ public class LevelGround : MonoBehaviour
         saveTrees();
     }
 
+    /// <summary>
+    /// Game does not currently have a way to resave level's Config.json file, so instead we save a text file
+    /// indicating that the terrain auto conversion was performed. If there was a bug with auto conversion then
+    /// all of the old files are still present and can be re-converted.
+    /// </summary>
     private static string GetConversionMarkerFilePath()
     {
         return Path.Combine(Level.info.path, "Terrain", "TerrainWasAutoConverted.txt");
@@ -1103,6 +1118,9 @@ public class LevelGround : MonoBehaviour
         area.onRegionUpdated = (EditorRegionUpdated)Delegate.Combine(area.onRegionUpdated, new EditorRegionUpdated(onRegionUpdated));
     }
 
+    /// <summary>
+    /// Stagger regional visibility across multiple frames.
+    /// </summary>
     private void tickRegionalVisibility()
     {
         bool flag = true;

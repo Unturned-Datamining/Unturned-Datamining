@@ -6,8 +6,14 @@ public class Useable : PlayerCaller
 
     public virtual bool canInspect => true;
 
+    /// <summary>
+    /// Does useable have a menu open?
+    /// If so pause menu, dashboard, and other menus cannot be opened.
+    /// </summary>
     public virtual bool isUseableShowingMenu => false;
 
+    /// <returns>True if primary action was started and stopPrimary should be called in the future.
+    /// Useful to allow input to be held until action executes.</returns>
     public virtual bool startPrimary()
     {
         return false;
@@ -17,6 +23,8 @@ public class Useable : PlayerCaller
     {
     }
 
+    /// <returns>True if secondary action was started and stopSecondary should be called in the future.
+    /// Useful to allow input to be held until action executes.</returns>
     public virtual bool startSecondary()
     {
         return false;

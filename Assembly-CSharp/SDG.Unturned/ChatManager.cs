@@ -13,10 +13,21 @@ public class ChatManager : SteamCaller
 
     public static readonly int MAX_MESSAGE_LENGTH = 512;
 
+    /// <summary>
+    /// Called on the client after a new message is inserted to the front of the list.
+    /// </summary>
     public static ChatMessageReceivedHandler onChatMessageReceived;
 
+    /// <summary>
+    /// Called on the server when preparing a message to be sent to a player.
+    /// Allows controlling how %SPEAKER% is formatted for the receiving player.
+    /// </summary>
     public static ServerSendingChatMessageHandler onServerSendingMessage;
 
+    /// <summary>
+    /// Called on the server when formatting a player's message before sending to anyone.
+    /// Allows structuring the message and where the player's name is, for example: '[CustomPluginRoleThing] %SPEAKER% - OriginalMessageText'
+    /// </summary>
     public static ServerFormattingChatMessageHandler onServerFormattingMessage;
 
     public static Chatted onChatted;
@@ -93,14 +104,25 @@ public class ChatManager : SteamCaller
 
     private static readonly ServerStaticMethod<byte, string> SendChatRequest = ServerStaticMethod<byte, string>.Get(ReceiveChatRequest);
 
+    /// <summary>
+    /// Previous messages sent to server from this client.
+    /// Used to repeat chat commands.
+    /// </summary>
     private static string[] recentlySentMessages = new string[10];
 
+    /// <summary>
+    /// Exposed for Rocket transition to modules backwards compatibility.
+    /// </summary>
     public static ChatManager instance => manager;
 
     public static List<ReceivedChatMessage> receivedChatHistory => _receivedChatHistory;
 
     public static event ClientUnityEventPermissionsHandler onCheckUnityEventPermissions;
 
+    /// <summary>
+    /// Add a newly received chat message to the front of the list,
+    /// and remove an old message if necessary.
+    /// </summary>
     public static void receiveChatMessage(CSteamID speakerSteamID, string iconURL, EChatMode mode, Color color, bool isRich, string text)
     {
         text = text.Trim();
@@ -460,6 +482,9 @@ public class ChatManager : SteamCaller
         return recentlySentMessages[index];
     }
 
+    /// <summary>
+    /// Send a request to chat from the client to the server.
+    /// </summary>
     public static void sendChat(EChatMode mode, string text)
     {
         for (int num = recentlySentMessages.Length - 1; num > 0; num--)
@@ -470,6 +495,10 @@ public class ChatManager : SteamCaller
         SendChatRequest.Invoke(ENetReliability.Reliable, (byte)mode, text);
     }
 
+    /// <summary>
+    /// Allows Unity events to send text chat messages from the client, for example to execute commands.
+    /// Messenger context is logged to help track down abusive assets.
+    /// </summary>
     public static void clientSendMessage_UnityEvent(EChatMode mode, string text, ClientTextChatMessenger messenger)
     {
         if (messenger == null)
@@ -480,6 +509,10 @@ public class ChatManager : SteamCaller
         SendChatRequest.Invoke(ENetReliability.Reliable, (byte)(mode | (EChatMode)128), text);
     }
 
+    /// <summary>
+    /// Allows Unity events to broadcast text chat messages from the server.
+    /// Messenger context is logged to help track down abusive assets.
+    /// </summary>
     public static void serverSendMessage_UnityEvent(string text, Color color, string iconURL, bool useRichTextFormatting, ServerTextChatMessenger messenger)
     {
         if (messenger == null)
@@ -493,11 +526,21 @@ public class ChatManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// Server send message to specific player.
+    /// Used in vanilla for the welcome message.
+    /// Should not be removed because plugins may depend on it.
+    /// </summary>
     public static void say(CSteamID target, string text, Color color, bool isRich = false)
     {
         say(target, text, color, EChatMode.WELCOME, isRich);
     }
 
+    /// <summary>
+    /// Server send message to specific player.
+    /// Used in vanilla by help command to tell player about command options.
+    /// Should not be removed because plugins may depend on it.
+    /// </summary>
     public static void say(CSteamID target, string text, Color color, EChatMode mode, bool isRich = false)
     {
         SteamPlayer steamPlayer = PlayerTool.getSteamPlayer(target);
@@ -507,11 +550,26 @@ public class ChatManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// Server send message to all players.
+    /// Used in vanilla by some alerts and broadcast command.
+    /// Should not be removed because plugins may depend on it.
+    /// </summary>
     public static void say(string text, Color color, bool isRich = false)
     {
         serverSendMessage(text, color, null, null, EChatMode.SAY, null, isRich);
     }
 
+    /// <summary>
+    /// Serverside send a chat message to all players, or a specific player.
+    /// </summary>
+    /// <param name="text">Contents to display.</param>
+    /// <param name="color">Default text color unless rich formatting overrides it.</param>
+    /// <param name="fromPlayer">Player who sent the message (used for avatar), or null if send by a plugin.</param>
+    /// <param name="toPlayer">Send message to only this player, or all players if null.</param>
+    /// <param name="mode">Mostly deprecated, but global/local/group may be displayed.</param>
+    /// <param name="iconURL">URL to a 32x32 .png to show rather than a player avatar, or null/empty.</param>
+    /// <param name="useRichTextFormatting">Enable rich tags e.g., bold, italics in the message contents.</param>
     public static void serverSendMessage(string text, Color color, SteamPlayer fromPlayer = null, SteamPlayer toPlayer = null, EChatMode mode = EChatMode.SAY, string iconURL = null, bool useRichTextFormatting = false)
     {
         if (!Provider.isServer)

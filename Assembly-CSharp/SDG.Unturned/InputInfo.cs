@@ -30,8 +30,14 @@ public class InputInfo
 
     public InteractableVehicle vehicle;
 
+    /// <summary>
+    /// Root transform.
+    /// </summary>
     public Transform transform;
 
+    /// <summary>
+    /// Hit collider's transform. Can be null.
+    /// </summary>
     public Transform colliderTransform;
 
     public byte section;

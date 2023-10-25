@@ -1356,6 +1356,11 @@ public class HumanClothes : MonoBehaviour
         markAllDirty(isDirty: false);
     }
 
+    /// <summary>
+    /// Center mythical effect hook horizontally, but maintain vertical placement.
+    /// Lots of hats/masks/glasses have off-center effects intentionally, but community
+    /// feedback suggests centering to make effects like circling atoms look better.
+    /// </summary>
     private void centerHeadEffect(Transform skull, Transform model)
     {
         Transform transform = model.Find("Effect");
@@ -1376,6 +1381,10 @@ public class HumanClothes : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Set mesh of all character mesh renderers.
+    /// Tries to match renderer index to mesh LOD index.
+    /// </summary>
     private void setCharacterMeshes(Mesh[] meshes)
     {
         SkinnedMeshRenderer[] array;
@@ -1410,6 +1419,9 @@ public class HumanClothes : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Set material of all character mesh renderers.
+    /// </summary>
     private void setCharacterMaterial(Material material)
     {
         SkinnedMeshRenderer[] array = characterMeshRenderers;

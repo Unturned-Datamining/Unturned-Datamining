@@ -3,6 +3,9 @@ using System.Security.Cryptography;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Run hash algorithm for all data passing through a stream.
+/// </summary>
 public class HashStream : Stream
 {
     private Stream underlyingStream;

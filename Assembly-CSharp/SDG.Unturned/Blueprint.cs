@@ -42,6 +42,11 @@ public class Blueprint
 
     protected NPCRewardsList questRewardsList;
 
+    /// <summary>
+    /// 2023-05-27: requested by Renaxon because some Arid blueprints are debug-only and
+    /// should not be visible when players search by name. (the 3.23.7.0 update made
+    /// non-craftable blueprints searchable for Buak)
+    /// </summary>
     public bool canBeVisibleWhenSearchedWithoutRequiredItems = true;
 
     public ItemAsset sourceItem { get; protected set; }
@@ -77,8 +82,14 @@ public class Blueprint
 
     public string map { get; private set; }
 
+    /// <summary>
+    /// Must match conditions to craft.
+    /// </summary>
     public INPCCondition[] questConditions { get; protected set; }
 
+    /// <summary>
+    /// Extra rewards given after crafting. Not displayed.
+    /// </summary>
     public INPCReward[] questRewards => questRewardsList.rewards;
 
     public EffectAsset FindBuildEffectAsset()

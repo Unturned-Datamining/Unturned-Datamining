@@ -4,6 +4,10 @@ using Steamworks;
 
 namespace SDG.NetTransport.SteamNetworkingSockets;
 
+/// <summary>
+/// Implementing as a struct wrapping the connection handle would remove the cost of looking up the connection,
+/// but implementing as a class makes it cheap to cache information like the remote identity.
+/// </summary>
 internal class TransportConnection_SteamNetworkingSockets : ITransportConnection, IEquatable<ITransportConnection>
 {
     internal bool wasClosed;

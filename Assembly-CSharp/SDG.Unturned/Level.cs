@@ -97,10 +97,19 @@ public class Level : MonoBehaviour
 
     private static Level instance;
 
+    /// <summary>
+    /// Placeholder created between unloading the main menu and loading into game or editor.
+    /// </summary>
     internal static AudioListener placeholderAudioListener;
 
+    /// <summary>
+    /// Loading screen music.
+    /// </summary>
     private static AudioSource musicAudioSource;
 
+    /// <summary>
+    /// Clip to play to fade out loop.
+    /// </summary>
     private static AudioClip musicOutroClip;
 
     private static float musicOutroVolume;
@@ -125,6 +134,9 @@ public class Level : MonoBehaviour
 
     private static List<byte[]> pendingHashes;
 
+    /// <summary>
+    /// Useful to narrow down why a player is getting kicked for modified level files when joining a server.
+    /// </summary>
     private static CommandLineFlag shouldLogLevelHash = new CommandLineFlag(defaultValue: false, "-LogLevelHash");
 
     private static FoliageVolumeManager foliageVolumeManager;
@@ -241,6 +253,10 @@ public class Level : MonoBehaviour
 
     public static LevelInfo info => _info;
 
+    /// <summary>
+    /// Should loading code proceed with redirects?
+    /// Disabled by level and when in the editor.
+    /// </summary>
     public static bool shouldUseHolidayRedirects { get; private set; }
 
     public static bool shouldUseLevelBatching { get; private set; }
@@ -331,6 +347,9 @@ public class Level : MonoBehaviour
 
     public static byte[] hash { get; private set; }
 
+    /// <summary>
+    /// Display version string of the currently loaded level.
+    /// </summary>
     public static string version
     {
         get
@@ -343,6 +362,9 @@ public class Level : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Version string of the currently loaded level packed into an integer.
+    /// </summary>
     public static uint packedVersion
     {
         get
@@ -376,6 +398,10 @@ public class Level : MonoBehaviour
 
     public static event SatelliteCaptureDelegate onSatellitePostCapture;
 
+    /// <summary>
+    /// Is a point safely within the level bounds?
+    /// Also checks player clip volumes if legacy borders are disabled.
+    /// </summary>
     public static bool checkSafeIncludingClipVolumes(Vector3 point)
     {
         if (info != null && !info.configData.Use_Legacy_Clip_Borders)
@@ -394,6 +420,10 @@ public class Level : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// Is given Y (vertical) coordinate within level's height range?
+    /// Maps using landscapes have a larger range than older maps.
+    /// </summary>
     public static bool isPointWithinValidHeight(float y)
     {
         if (y >= -1024f)
@@ -409,11 +439,18 @@ public class Level : MonoBehaviour
         return checkSafeIncludingClipVolumes(point);
     }
 
+    /// <summary>
+    /// Notify menus that levels list has changed.
+    /// Used when creating/deleting levels, as well as following workshop changes.
+    /// </summary>
     public static void broadcastLevelsRefreshed()
     {
         onLevelsRefreshed?.Invoke();
     }
 
+    /// <summary>
+    /// Get level's cached asset, if any.
+    /// </summary>
     public static LevelAsset getAsset()
     {
         if (info == null)
@@ -755,6 +792,9 @@ public class Level : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// Load level details from Level.dat in directory path.
+    /// </summary>
     private static LevelInfo loadLevelInfo(string path, bool usePath, ulong publishedFileId = 0uL)
     {
         if (!ReadWrite.fileExists(path + "/Level.dat", useCloud: false, usePath))
@@ -934,6 +974,10 @@ public class Level : MonoBehaviour
         return list.ToArray();
     }
 
+    /// <summary>
+    /// Server list allows player to enter a map name when searching, so we try to find a local
+    /// copy of the level for version number comparison. (Server map version might differ.)
+    /// </summary>
     public static LevelInfo findLevelForServerFilter(string filter)
     {
         if (string.IsNullOrWhiteSpace(filter) || filter.Length < 2)

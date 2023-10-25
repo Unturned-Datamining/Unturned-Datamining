@@ -38,6 +38,9 @@ public class ItemConsumeableAsset : ItemWeaponAsset
 
     private uint _warmth;
 
+    /// <summary>
+    /// Experience to add or subtract when used. Defaults to zero.
+    /// </summary>
     public int experience;
 
     private bool _hasAid;
@@ -107,6 +110,9 @@ public class ItemConsumeableAsset : ItemWeaponAsset
 
     public SpawnTableReward itemRewards { get; protected set; }
 
+    /// <summary>
+    /// Canned beans have skins from April Fools.
+    /// </summary>
     protected override bool doesItemTypeHaveSkins => id == 13;
 
     public override bool shouldFriendlySentryTargetUser

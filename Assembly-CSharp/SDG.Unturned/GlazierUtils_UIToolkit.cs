@@ -5,6 +5,11 @@ namespace SDG.Unturned;
 
 internal static class GlazierUtils_UIToolkit
 {
+    /// <summary>
+    /// By default, clickable only responds to LeftMouse without the Control modifier.
+    /// Unturned (currently) filters left/right mouse and modifiers outside Glazier,
+    /// so add activators for left/right and control modifier to all clickables.
+    /// </summary>
     public static void AddClickableActivators(Clickable clickable)
     {
         clickable.activators.Add(new ManipulatorActivationFilter
@@ -78,6 +83,10 @@ internal static class GlazierUtils_UIToolkit
         };
     }
 
+    /// <summary>
+    /// USS best practices mentions inline styles have a higher memory overhead, so we
+    /// only apply an inline value if it doesn't match the default :root font style.
+    /// </summary>
     public static StyleEnum<FontStyle> GetFontStyle(FontStyle fontStyle)
     {
         if (fontStyle == FontStyle.Normal)
@@ -87,6 +96,10 @@ internal static class GlazierUtils_UIToolkit
         return fontStyle;
     }
 
+    /// <summary>
+    /// USS best practices mentions inline styles have a higher memory overhead, so we
+    /// only apply an inline value if it doesn't match the default :root text alignment.
+    /// </summary>
     public static StyleEnum<TextAnchor> GetTextAlignment(TextAnchor textAlignment)
     {
         if (textAlignment == TextAnchor.MiddleCenter)

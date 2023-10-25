@@ -5,6 +5,9 @@ namespace SDG.Unturned;
 
 public static class ListExtension
 {
+    /// <summary>
+    /// Get index within bounds assuming list is not empty.
+    /// </summary>
     public static int GetRandomIndex<T>(this List<T> list)
     {
         return Random.Range(0, list.Count);
@@ -19,6 +22,9 @@ public static class ListExtension
         return default(T);
     }
 
+    /// <summary>
+    /// Add a new item using its default constructor.
+    /// </summary>
     public static T AddDefaulted<T>(this List<T> list) where T : class, new()
     {
         T val = new T();

@@ -9,7 +9,15 @@ public interface IDevkitHierarchyItem : IFormattedFileReadable, IFormattedFileWr
 
     GameObject areaSelectGameObject { get; }
 
+    /// <summary>
+    /// If true, write to LevelHierarchy file.
+    /// False for externally managed objects like legacy lighting WaterVolume.
+    /// </summary>
     bool ShouldSave { get; }
 
+    /// <summary>
+    /// If true, editor tools can select and transform.
+    /// False for items like the object-owned culling volumes.
+    /// </summary>
     bool CanBeSelected { get; }
 }

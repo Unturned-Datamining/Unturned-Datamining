@@ -2,11 +2,17 @@ namespace SDG.Unturned;
 
 public static class ZombieSpecialityExtension
 {
+    /// <summary>
+    /// Is this one of the Dying Light volatile zombies? Only spawns during night. Explodes into fire at dawn.
+    /// </summary>
     public static bool IsDLVolatile(this EZombieSpeciality speciality)
     {
         return speciality == EZombieSpeciality.DL_RED_VOLATILE || speciality == EZombieSpeciality.DL_BLUE_VOLATILE;
     }
 
+    /// <summary>
+    /// Does this have the BOSS_* prefix?
+    /// </summary>
     public static bool IsBoss(this EZombieSpeciality speciality)
     {
         switch (speciality)

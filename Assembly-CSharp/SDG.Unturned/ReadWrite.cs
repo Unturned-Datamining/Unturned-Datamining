@@ -11,6 +11,10 @@ public class ReadWrite
 {
     public static readonly string PATH = UnturnedPaths.RootDirectory.FullName;
 
+    /// <summary>
+    /// Potentially useful for players with corrupted cloud storage.
+    /// https://github.com/SmartlyDressedGames/Unturned-3.x-Community/issues/2756
+    /// </summary>
     private static CommandLineFlag disableSteamCloudRead = new CommandLineFlag(defaultValue: false, "-DisableSteamCloudRead");
 
     private static readonly XmlSerializerNamespaces XML_SERIALIZER_NAMESPACES = new XmlSerializerNamespaces(new XmlQualifiedName[1] { XmlQualifiedName.Empty });
@@ -57,6 +61,9 @@ public class ReadWrite
         return JsonConvert.DeserializeObject<T>(@string);
     }
 
+    /// <summary>
+    /// Deserialize JSON onto an existing object instance.
+    /// </summary>
     public static void populateJSON(string path, object target, bool usePath = true)
     {
         byte[] array = readBytes(path, useCloud: false, usePath);
@@ -249,6 +256,10 @@ public class ReadWrite
         return array;
     }
 
+    /// <summary>
+    /// Introduced much later (2020) than most of the other methods in this class (2014) in order to properly handle
+    /// BOM/preamble of text files. Matches somewhat undesirable legacy behavior like creating directories.
+    /// </summary>
     private static string readString(string filePath, bool useCloud, bool prependPath)
     {
         if (useCloud)
@@ -582,6 +593,9 @@ public class ReadWrite
         File.Copy(source, destination);
     }
 
+    /// <summary>
+    /// Read GUI texture from a .jpg or .png file.
+    /// </summary>
     public static Texture2D readTextureFromFile(string path, bool useBasePath, EReadTextureFromFileMode mode = EReadTextureFromFileMode.UI)
     {
         if (useBasePath)
@@ -591,6 +605,9 @@ public class ReadWrite
         return readTextureFromFile(path);
     }
 
+    /// <summary>
+    /// Read GUI texture from a .jpg or .png file.
+    /// </summary>
     public static Texture2D readTextureFromFile(string absolutePath, EReadTextureFromFileMode mode = EReadTextureFromFileMode.UI)
     {
         byte[] data = File.ReadAllBytes(absolutePath);

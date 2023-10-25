@@ -16,6 +16,10 @@ public class PlayerDeathUI
 
     public static SleekButtonIcon respawnButton;
 
+    /// <summary>
+    /// Has the contained been animated into visibility on-screen?
+    /// Used to disable animating out if disabled.
+    /// </summary>
     private static bool containerOnScreen;
 
     public static void open(bool fromDeath)

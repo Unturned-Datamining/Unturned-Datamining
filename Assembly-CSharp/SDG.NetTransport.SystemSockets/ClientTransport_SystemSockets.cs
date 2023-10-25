@@ -5,6 +5,9 @@ using SDG.Unturned;
 
 namespace SDG.NetTransport.SystemSockets;
 
+/// <summary>
+/// Implementation using .NET Berkeley sockets.
+/// </summary>
 public class ClientTransport_SystemSockets : TransportBase_SystemSockets, IClientTransport
 {
     private Socket socket;

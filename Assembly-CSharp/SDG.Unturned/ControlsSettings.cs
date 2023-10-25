@@ -166,8 +166,14 @@ public class ControlsSettings
 
     public const byte NUM_ITEM_HOTBAR_KEYS = 10;
 
+    /// <summary>
+    /// When held the cursor is released.
+    /// </summary>
     public const byte CUSTOM_MODAL = 74;
 
+    /// <summary>
+    /// Multiplier for Input.GetAxis("mouse_x") and Input.GetAxis("mouse_y")
+    /// </summary>
     public static float mouseAimSensitivity;
 
     public static bool invert;
@@ -310,8 +316,15 @@ public class ControlsSettings
 
     public static KeyCode rotate => bindings[ROTATE].key;
 
+    /// <summary>
+    /// When held the cursor is released.
+    /// </summary>
     public static KeyCode CustomModal => bindings[74].key;
 
+    /// <summary>
+    /// Replace instances of <plugin_num /> with their bound key text.
+    /// Allows server effects to display plugin hotkeys.
+    /// </summary>
     public static void formatPluginHotkeysIntoText(ref string text)
     {
         for (int i = 0; i < NUM_PLUGIN_KEYS; i++)
@@ -323,6 +336,9 @@ public class ControlsSettings
         }
     }
 
+    /// <summary>
+    /// Item 0 is "1" and item 9 is "0"
+    /// </summary>
     public static string getEquipmentHotkeyText(int index)
     {
         return MenuConfigurationControlsUI.getKeyCodeText(getEquipmentHotbarKeyCode(index));

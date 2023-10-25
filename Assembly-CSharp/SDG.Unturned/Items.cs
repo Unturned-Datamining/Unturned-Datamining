@@ -361,6 +361,7 @@ public class Items
         onStateUpdated?.Invoke();
     }
 
+    /// checks whether a space contains any filled slots
     public bool checkSpaceEmpty(byte pos_x, byte pos_y, byte size_x, byte size_y, byte rot)
     {
         if (page < PlayerInventory.SLOTS)
@@ -390,6 +391,7 @@ public class Items
         return true;
     }
 
+    /// checks whether an item can be dragged and takes into account if the item overlaps its old self
     public bool checkSpaceDrag(byte old_x, byte old_y, byte oldRot, byte new_x, byte new_y, byte newRot, byte size_x, byte size_y, bool checkSame)
     {
         if (page < PlayerInventory.SLOTS)
@@ -432,6 +434,9 @@ public class Items
         return true;
     }
 
+    /// <summary>
+    /// checks whether the spot currently used by the old item is big enough to fit the new item
+    /// </summary>
     public bool checkSpaceSwap(byte x, byte y, byte oldSize_X, byte oldSize_Y, byte oldRot, byte newSize_X, byte newSize_Y, byte newRot)
     {
         if (page < PlayerInventory.SLOTS)

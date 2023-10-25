@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Restricts which items can be crafted.
+/// </summary>
 public class CraftingBlacklistAsset : Asset
 {
     protected struct BlacklistedBlueprint : IDatParseable
@@ -32,16 +35,28 @@ public class CraftingBlacklistAsset : Asset
         }
     }
 
+    /// <summary>
+    /// Restrict blueprints that consume these items.
+    /// </summary>
     protected List<AssetReference<ItemAsset>> inputItems = new List<AssetReference<ItemAsset>>();
 
+    /// <summary>
+    /// Restrict blueprints that generate these items.
+    /// </summary>
     protected List<AssetReference<ItemAsset>> outputItems = new List<AssetReference<ItemAsset>>();
 
     protected List<ushort> resolvedInputItems;
 
     protected List<ushort> resolvedOutputItems;
 
+    /// <summary>
+    /// If false, blueprints on vanilla/core/built-in items are not allowed. Defaults to true.
+    /// </summary>
     protected bool allowCoreBlueprints = true;
 
+    /// <summary>
+    /// Restrict specific blueprints.
+    /// </summary>
     protected List<BlacklistedBlueprint> blueprints = new List<BlacklistedBlueprint>();
 
     public bool isBlueprintBlacklisted(Blueprint blueprint)

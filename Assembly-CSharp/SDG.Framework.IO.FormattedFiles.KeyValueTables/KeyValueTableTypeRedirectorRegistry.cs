@@ -7,6 +7,9 @@ public static class KeyValueTableTypeRedirectorRegistry
 {
     private static Dictionary<string, string> redirects;
 
+    /// <summary>
+    /// If the type name has been redirected this method will be called recursively until the most recent name is found and returned.
+    /// </summary>
     public static string chase(string assemblyQualifiedName)
     {
         if (redirects.TryGetValue(assemblyQualifiedName, out var value))

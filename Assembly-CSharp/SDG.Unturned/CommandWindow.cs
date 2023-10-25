@@ -10,8 +10,15 @@ public class CommandWindow
 
     public static CommandWindowOutputted onCommandWindowOutputted;
 
+    /// <summary>
+    /// Should the default console I/O handler be created?
+    /// Plugins can disable on the command line when overriding handler.
+    /// </summary>
     public static CommandLineFlag shouldCreateDefaultConsole = new CommandLineFlag(defaultValue: true, "-NoDefaultConsole");
 
+    /// <summary>
+    /// Should the legacy blocking (game thread) console be created?
+    /// </summary>
     private static CommandLineFlag shouldCreateLegacyConsole = new CommandLineFlag(defaultValue: false, "-LegacyConsole");
 
     private string _title;
@@ -43,8 +50,15 @@ public class CommandWindow
         }
     }
 
+    /// <summary>
+    /// Broadcasts after dedicated server name changes.
+    /// Command IO interface binds to this rather than having a title-specific method.
+    /// </summary>
     public event CommandWindowTitleChanged onTitleChanged;
 
+    /// <summary>
+    /// Log white information.
+    /// </summary>
     public static void Log(object text)
     {
         if (insideExplicitLogging)
@@ -68,6 +82,9 @@ public class CommandWindow
         Log(string.Format(format, args));
     }
 
+    /// <summary>
+    /// Log yellow warning.
+    /// </summary>
     public static void LogWarning(object text)
     {
         if (insideExplicitLogging)
@@ -91,6 +108,9 @@ public class CommandWindow
         LogWarning(string.Format(format, args));
     }
 
+    /// <summary>
+    /// Log red error.
+    /// </summary>
     public static void LogError(object text)
     {
         if (insideExplicitLogging)
@@ -114,6 +134,9 @@ public class CommandWindow
         LogError(string.Format(format, args));
     }
 
+    /// <summary>
+    /// Print white message to console.
+    /// </summary>
     private void internalLogInformation(string information)
     {
         try
@@ -137,6 +160,9 @@ public class CommandWindow
         }
     }
 
+    /// <summary>
+    /// Print yellow message to console.
+    /// </summary>
     private void internalLogWarning(string warning)
     {
         try
@@ -160,6 +186,9 @@ public class CommandWindow
         }
     }
 
+    /// <summary>
+    /// Print red message to console.
+    /// </summary>
     private void internalLogError(string error)
     {
         try
@@ -200,6 +229,9 @@ public class CommandWindow
         }
     }
 
+    /// <summary>
+    /// Cannot use UnturnedLog here because it may recursively call CommandWindow if another exception is thrown.
+    /// </summary>
     private void HandleException(string message, Exception exception)
     {
         Logs.printLine(message);
@@ -212,6 +244,9 @@ public class CommandWindow
         while (exception != null);
     }
 
+    /// <summary>
+    /// Called during Unity Update loop.
+    /// </summary>
     public void update()
     {
         foreach (ICommandInputOutput ioHandler in ioHandlers)
@@ -253,6 +288,9 @@ public class CommandWindow
         }
     }
 
+    /// <summary>
+    /// Called during OnApplicationQuit.
+    /// </summary>
     public void shutdown()
     {
         List<ICommandInputOutput> list = new List<ICommandInputOutput>(ioHandlers);
@@ -263,6 +301,9 @@ public class CommandWindow
         }
     }
 
+    /// <summary>
+    /// Helper for plugins that want to replace the default without the shouldCreateDefaultConsole flag.
+    /// </summary>
     public void removeDefaultIOHandler()
     {
         if (defaultIOHandler != null)

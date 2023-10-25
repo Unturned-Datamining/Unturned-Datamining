@@ -4,6 +4,9 @@ namespace SDG.Unturned;
 
 public class LightLOD : MonoBehaviour
 {
+    /// <summary>
+    /// Prevents static member from being initialized during MonoBehaviour construction. (Unity warning)
+    /// </summary>
     private static class HelperClass
     {
         public static CommandLineFlag disableLightLods = new CommandLineFlag(defaultValue: false, "-DisableLightLODs");

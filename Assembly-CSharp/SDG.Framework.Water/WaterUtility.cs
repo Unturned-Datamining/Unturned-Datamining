@@ -41,12 +41,16 @@ public class WaterUtility
         return VolumeManager<WaterVolume, WaterVolumeManager>.Get().IsPositionInsideAnyVolume(point);
     }
 
+    /// <param name="volume">Null if under old water level, otherwise the volume.</param>
     public static bool isPointUnderwater(Vector3 point, out WaterVolume volume)
     {
         volume = VolumeManager<WaterVolume, WaterVolumeManager>.Get().GetFirstOverlappingVolume(point);
         return volume != null;
     }
 
+    /// <summary>
+    /// Find the water elevation underneath point, or above point if underwater.
+    /// </summary>
     public static float getWaterSurfaceElevation(Vector3 point)
     {
         bool flag = false;

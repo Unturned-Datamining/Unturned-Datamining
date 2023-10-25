@@ -20,6 +20,9 @@ public class PlayerInputPacket
         }
     }
 
+    /// <summary>
+    /// Worst case scenario, maybe shotgun hit or fast spray SMG.
+    /// </summary>
     private static int MAX_CLIENTSIDE_INPUTS = 16;
 
     public List<ClientRaycast> clientsideInputs;

@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Moved icon code from MenuTitleUI to here.
+/// </summary>
 public class IconUtils
 {
     public static List<ItemDefIconInfo> icons = new List<ItemDefIconInfo>();
@@ -15,6 +18,9 @@ public class IconUtils
 
     private static CosmeticPreviewCapture cosmeticPreviewCapture;
 
+    /// <summary>
+    /// These directories are excluded from source control and Steam depots so they might not exist yet.
+    /// </summary>
     public static void CreateExtrasDirectory()
     {
         ReadWrite.createFolder("/Extras/Econ");

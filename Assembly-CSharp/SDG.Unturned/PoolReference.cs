@@ -9,6 +9,9 @@ public class PoolReference : MonoBehaviour
 
     public bool inPool;
 
+    /// <summary>
+    /// Enabled for effects held by guns and sentries.
+    /// </summary>
     public bool excludeFromDestroyAll;
 
     private Coroutine invokeAfterDelayCoroutine;

@@ -76,6 +76,9 @@ public class PlayerSavedata
         return ServerSavedata.fileExists("/Players/" + playerID.steamID.ToString() + "_" + playerID.characterID + "/" + Level.info.name + path);
     }
 
+    /// <summary>
+    /// Delete all savedata folders for player's characters.
+    /// </summary>
     public static void deleteFolder(SteamPlayerID playerID)
     {
         int num = Customization.FREE_CHARACTERS + Customization.PRO_CHARACTERS;

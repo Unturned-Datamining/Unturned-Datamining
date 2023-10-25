@@ -5,6 +5,9 @@ namespace SDG.Unturned;
 
 public class INPCReward
 {
+    /// <summary>
+    /// If &gt;0 the game will start a coroutine to grant the reward after waiting.
+    /// </summary>
     public float grantDelaySeconds = -1f;
 
     protected string text;

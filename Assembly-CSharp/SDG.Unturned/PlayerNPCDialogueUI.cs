@@ -21,6 +21,10 @@ public class PlayerNPCDialogueUI
 
     private static DialogueMessage message;
 
+    /// <summary>
+    /// If true, the player can press Interact [F] when there are no responses
+    /// and the "next" dialogue will be opened.
+    /// </summary>
     private static bool hasNextDialogue;
 
     private static List<DialogueResponse> responses = new List<DialogueResponse>();
@@ -37,30 +41,73 @@ public class PlayerNPCDialogueUI
 
     private static List<SleekButtonIcon> responseButtons = new List<SleekButtonIcon>();
 
+    /// <summary>
+    /// Each dialogue message is separated into multiple pages.
+    /// </summary>
     private static int dialoguePageIndex;
 
+    /// <summary>
+    /// Current page localized text with name_npc and name_char formatted in.
+    /// </summary>
     private static string pageFormattedText;
 
+    /// <summary>
+    /// Seconds elapsed while viewing current page not including pause timer.
+    /// Used to gradually show the message text.
+    /// </summary>
     private static float pageAnimationTime;
 
+    /// <summary>
+    /// Seconds to wait before resuming pageAnimationTime counting.
+    /// </summary>
     private static float pauseTimer;
 
+    /// <summary>
+    /// Appends chars from pageFormattedText according to pageAnimationTime.
+    /// </summary>
     private static StringBuilder animatedTextBuilder = new StringBuilder();
 
+    /// <summary>
+    /// Rich text formatting tags to close those opened by visible text in animatedTextBuilder.
+    /// For example, if animatedTextBuilder includes an opening color=#, this includes the closing color markup.
+    /// Required depending on Glazier used.
+    /// </summary>
     private static string animatedTextClosingRichTags;
 
+    /// <summary>
+    /// Number of chars of pageFormattedText currently visible.
+    /// </summary>
     private static int animatedCharsVisibleCount;
 
+    /// <summary>
+    /// Added to animation visible chars to skip time on markup.
+    /// </summary>
     private static int pageAnimationTimeVisibleCharsOffset;
 
+    /// <summary>
+    /// Seconds elapsed since responses started becoming visible.
+    /// Used to gradually enable responses rather than all at once.
+    /// </summary>
     private static float responsesVisibleTime;
 
+    /// <summary>
+    /// Animated toward total number of responses to make them gradually visible.
+    /// </summary>
     private static int visibleResponsesCount;
 
+    /// <summary>
+    /// If true, animation is finished and there is another page to show when Interact [F] is pressed.
+    /// </summary>
     public static bool CanAdvanceToNextPage { get; private set; }
 
+    /// <summary>
+    /// If true, text on current page is in the process of gradually appearing.
+    /// </summary>
     public static bool IsDialogueAnimating { get; private set; }
 
+    /// <summary>
+    /// Used by quest UI to return to current dialogue.
+    /// </summary>
     public static void OpenCurrentDialogue()
     {
         open(dialogue, message, hasNextDialogue);
@@ -161,6 +208,9 @@ public class PlayerNPCDialogueUI
         UpdatePage();
     }
 
+    /// <summary>
+    /// Update timers and UI for current page index.
+    /// </summary>
     private static void UpdatePage()
     {
         messageLabel.Text = string.Empty;
@@ -230,6 +280,9 @@ public class PlayerNPCDialogueUI
         return false;
     }
 
+    /// <summary>
+    /// Called when the player presses Interact [F] in dialogue screen.
+    /// </summary>
     public static void AdvancePage()
     {
         if (dialoguePageIndex == message.pages.Length - 1)
@@ -270,6 +323,10 @@ public class PlayerNPCDialogueUI
         }
     }
 
+    /// <summary>
+    /// Show complete text for the current page and make responses visible.
+    /// Called if dialogue animation is disabled, and when the player presses Interact [F] during animation.
+    /// </summary>
     public static void SkipAnimation()
     {
         messageLabel.Text = pageFormattedText.Replace("<pause>", "");

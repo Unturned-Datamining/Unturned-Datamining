@@ -2,6 +2,10 @@ namespace SDG.Unturned;
 
 public static class SteamBBCodeUtils
 {
+    /// <summary>
+    /// In-game rich text does not support embedded YouTube videos, but they look great in the web browser,
+    /// so we simply remove them from the in-game text.
+    /// </summary>
     public static void removeYouTubePreviews(ref string bbcode)
     {
         int num = 0;
@@ -22,6 +26,9 @@ public static class SteamBBCodeUtils
         }
     }
 
+    /// <summary>
+    /// Unfortunately in-game rich text does not have code formatting yet, so remove the tags while preserving text.
+    /// </summary>
     public static void removeCodeFormatting(ref string bbcode)
     {
         bbcode = bbcode.Replace("[code]", string.Empty);

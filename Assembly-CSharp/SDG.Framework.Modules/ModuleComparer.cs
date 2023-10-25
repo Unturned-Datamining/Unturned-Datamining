@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace SDG.Framework.Modules;
 
+/// <summary>
+/// Sorts modules by dependencies.
+/// </summary>
 public class ModuleComparer : IComparer<ModuleConfig>
 {
     public int Compare(ModuleConfig x, ModuleConfig y)

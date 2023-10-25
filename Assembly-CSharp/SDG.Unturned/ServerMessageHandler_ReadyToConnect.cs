@@ -370,6 +370,11 @@ internal static class ServerMessageHandler_ReadyToConnect
         }
     }
 
+    /// <summary>
+    /// Kick players maybe trying to impersonate me. I guess nobody else named Nelson is allowed in the game!
+    /// 2023-09-19: relaxed this a bit by trimming names and using Equals/Starts/Ends rather than Contains
+    /// because there was a player with Nelson in their username.
+    /// </summary>
     private static bool IsNameBlockedByNelsonFilter(string name)
     {
         if (name.Equals("Nelson", StringComparison.InvariantCultureIgnoreCase))

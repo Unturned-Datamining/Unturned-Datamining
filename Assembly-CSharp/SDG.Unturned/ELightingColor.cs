@@ -14,5 +14,8 @@ public enum ELightingColor
     CLOUDS,
     RAYS,
     PARTICLE_LIGHTING,
+    /// <summary>
+    /// Used by weather assets.
+    /// </summary>
     CUSTOM_OVERRIDE
 }

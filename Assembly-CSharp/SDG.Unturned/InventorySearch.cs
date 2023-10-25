@@ -36,6 +36,10 @@ public class InventorySearch
         }
     }
 
+    /// <summary>
+    /// Serverside delete an amount of this item.
+    /// </summary>
+    /// <returns>Total amount deleted.</returns>
     public uint deleteAmount(Player player, uint desiredAmount)
     {
         dequipIfEquipped(player);

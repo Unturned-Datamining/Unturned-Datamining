@@ -8,6 +8,10 @@ public class SteamPlayerID
 {
     private CSteamID _steamID;
 
+    /// <summary>
+    /// In vanilla this field is ONLY used for the per-character saves on servers.
+    /// If that changes check that it does not affect the savedata options.
+    /// </summary>
     public byte characterID;
 
     private string _playerName;
@@ -18,6 +22,9 @@ public class SteamPlayerID
 
     public CSteamID group;
 
+    /// <summary>
+    /// Array of 20-byte SHA1 hashes.
+    /// </summary>
     private byte[][] hwids;
 
     public CSteamID steamID => _steamID;
@@ -81,6 +88,11 @@ public class SteamPlayerID
     [Obsolete("Each client has multiple HWIDs, call GetHwids instead, this property returns the first HWID")]
     public byte[] hwid => hwids[0];
 
+    /// <summary>
+    /// Ignore requests to kick me in debug mode. :)
+    /// Steam ID may not have been authenticated yet here which may seem like a security risk, but fortunately that
+    /// would get caught when Steam auth ticket response is received.
+    /// </summary>
     internal bool BypassIntegrityChecks
     {
         get
@@ -93,6 +105,14 @@ public class SteamPlayerID
         }
     }
 
+    /// <summary>
+    /// 20-byte SHA1 salted hashes of client's hardware ID(s).
+    /// Providing multiple HWIDs makes it more difficult to bypass HWID bans because spoofing a single component
+    /// only changes one of the bans. For example spoofing the MAC address will not spoof the Windows GUID.
+    ///
+    /// Randomized if system did not support hwid, or perhaps player is cheating.
+    /// Should not be called on the client side, but just in case there is a default zeroed array.
+    /// </summary>
     public IEnumerable<byte[]> GetHwids()
     {
         return hwids;

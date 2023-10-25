@@ -76,6 +76,9 @@ public class PlayersConfigData
 
     public bool Allow_Instakill_Headshots;
 
+    /// <summary>
+    /// Should each character slot have separate savedata?
+    /// </summary>
     public bool Allow_Per_Character_Saves;
 
     public PlayersConfigData(EGameMode mode)

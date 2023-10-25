@@ -1,5 +1,8 @@
 namespace SDG.Unturned;
 
+/// <summary>
+/// Currently used by plugins to identify what damaged a buildable.
+/// </summary>
 public enum EDamageOrigin
 {
     Unknown,

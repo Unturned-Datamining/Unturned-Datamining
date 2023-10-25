@@ -20,6 +20,9 @@ public class SleekScopeOverlay : SleekWrapper
 
         public bool hasLabel;
 
+        /// <summary>
+        /// Separate from isEnabled to hide markers when they are outside the scope.
+        /// </summary>
         public void SetIsVisible(bool isVisible)
         {
             if (this.isVisible != isVisible)
@@ -29,6 +32,9 @@ public class SleekScopeOverlay : SleekWrapper
             }
         }
 
+        /// <summary>
+        /// Used to sync hasLabel visibility.
+        /// </summary>
         public void SyncIsVisible()
         {
             horizontalLine.IsVisible = isVisible;
@@ -54,6 +60,10 @@ public class SleekScopeOverlay : SleekWrapper
 
     private List<DistanceMarker> distanceMarkers = new List<DistanceMarker>();
 
+    /// <summary>
+    /// Calculate angle in radians the player would need to offset their aim upward
+    /// to hit a target a certain distance away.
+    /// </summary>
     internal static float CalcAngle(float speed, float distance, float gravity)
     {
         return Mathf.Asin(distance * gravity / (speed * speed)) * 0.5f;

@@ -10,6 +10,9 @@ namespace SDG.Unturned;
 
 public class ZombieManager : SteamCaller
 {
+    /// <summary>
+    /// Could potentially be reused generically.
+    /// </summary>
     private class ZombieSpecialityWeightedRandom : IComparer<ZombieSpecialityWeightedRandom.Entry>
     {
         public struct Entry
@@ -173,6 +176,9 @@ public class ZombieManager : SteamCaller
 
     internal static readonly AssetReference<EffectAsset> Souls_1_Ref = new AssetReference<EffectAsset>("c17b00f2a58646c8a9ea728f6d72e54e");
 
+    /// <summary>
+    /// Exposed for Rocket transition to modules backwards compatibility.
+    /// </summary>
     public static ZombieManager instance => manager;
 
     public static ZombieRegion[] regions => _regions;
@@ -725,6 +731,9 @@ public class ZombieManager : SteamCaller
         return null;
     }
 
+    /// <summary>
+    /// Find difficulty asset (if valid) for navigation bound index.
+    /// </summary>
     public static ZombieDifficultyAsset getDifficultyInBound(byte bound)
     {
         if (bound < LevelNavigation.flagData.Count)
@@ -784,6 +793,9 @@ public class ZombieManager : SteamCaller
         return zombieSpecialityTable.get();
     }
 
+    /// <summary>
+    /// When zombie falls outside the map it needs a replacement spawnpoint within the same navmesh area.
+    /// </summary>
     private static ZombieSpawnpoint getReplacementSpawnpointInBound(byte bound)
     {
         if (bound < LevelZombies.zombies.Length)
@@ -803,6 +815,9 @@ public class ZombieManager : SteamCaller
         return null;
     }
 
+    /// <summary>
+    /// Find replacement spawnpoint for a zombie and teleport it there.
+    /// </summary>
     public static void teleportZombieBackIntoMap(Zombie zombie)
     {
         ZombieSpawnpoint replacementSpawnpointInBound = getReplacementSpawnpointInBound(zombie.bound);
@@ -1150,6 +1165,9 @@ public class ZombieManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// Kills night-only zombies at dawn. 
+    /// </summary>
     private void onDayNightUpdated(bool isDaytime)
     {
         if (!isDaytime)

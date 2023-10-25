@@ -5,9 +5,15 @@ namespace SDG.Unturned;
 
 public class Carepackage : MonoBehaviour
 {
+    /// <summary>
+    /// Item ID of barricade to spawn after landing.
+    /// </summary>
     [Obsolete]
     public ushort barricadeID = 1374;
 
+    /// <summary>
+    /// Barricade to spawn after landing.
+    /// </summary>
     public ItemBarricadeAsset barricadeAsset;
 
     public ushort id;
@@ -16,6 +22,10 @@ public class Carepackage : MonoBehaviour
 
     private bool isExploded;
 
+    /// <summary>
+    /// Kill any players inside the spawned interactable box.
+    /// Uses hardcoded size of 4 x 4 x 4.
+    /// </summary>
     private void squishPlayersUnderBox(Transform barricade)
     {
         foreach (SteamPlayer client in Provider.clients)

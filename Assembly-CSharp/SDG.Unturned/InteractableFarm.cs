@@ -23,8 +23,14 @@ public class InteractableFarm : Interactable
 
     public uint planted => _planted;
 
+    /// <summary>
+    /// Number of seconds to finish growing.
+    /// </summary>
     public uint growth => farmAsset?.growth ?? 1;
 
+    /// <summary>
+    /// Item legacy ID to grant the player.
+    /// </summary>
     public ushort grow => farmAsset?.grow ?? 0;
 
     public bool canFertilize => farmAsset?.canFertilize ?? false;

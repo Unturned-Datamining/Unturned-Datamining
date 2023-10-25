@@ -3,12 +3,18 @@ using Steamworks;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Static functions for creating monitor instance on server.
+/// </summary>
 public static class DedicatedWorkshopUpdateMonitorFactory
 {
     public delegate IDedicatedWorkshopUpdateMonitor CreateHandler(LevelInfo level);
 
     public static event CreateHandler onCreateForLevel;
 
+    /// <summary>
+    /// Entry point called by dedicated server after loading level.
+    /// </summary>
     public static IDedicatedWorkshopUpdateMonitor createForLevel(LevelInfo level)
     {
         if (!WorkshopDownloadConfig.get().Should_Monitor_Updates)
@@ -22,6 +28,9 @@ public static class DedicatedWorkshopUpdateMonitorFactory
         return DedicatedWorkshopUpdateMonitorFactory.onCreateForLevel(level);
     }
 
+    /// <summary>
+    /// Create vanilla update monitor that watches for changes to workshop level file.
+    /// </summary>
     public static IDedicatedWorkshopUpdateMonitor createDefaultForLevel(LevelInfo level)
     {
         if (!createMonitoredItemForLevel(level, out var monitoredItem))
@@ -32,6 +41,9 @@ public static class DedicatedWorkshopUpdateMonitorFactory
         return new DedicatedWorkshopUpdateMonitor(new DedicatedWorkshopUpdateMonitor.MonitoredItem[1] { monitoredItem });
     }
 
+    /// <summary>
+    /// Helper to get updated timestamp from workshop items loaded by DedicatedUGC.
+    /// </summary>
     public static bool getCachedInitialTimestamp(PublishedFileId_t fileId, out uint timestamp)
     {
         if (TempSteamworksWorkshop.getCachedDetails(fileId, out var cachedDetails))
@@ -43,6 +55,9 @@ public static class DedicatedWorkshopUpdateMonitorFactory
         return false;
     }
 
+    /// <summary>
+    /// Helper to create monitored item for use with default DedicatedWorkshopUpdateMonitor implementation.
+    /// </summary>
     public static bool createMonitoredItem(PublishedFileId_t fileId, out DedicatedWorkshopUpdateMonitor.MonitoredItem monitoredItem)
     {
         if (getCachedInitialTimestamp(fileId, out var timestamp))
@@ -56,6 +71,9 @@ public static class DedicatedWorkshopUpdateMonitorFactory
         return false;
     }
 
+    /// <summary>
+    /// For use with default DedicatedWorkshopUpdateMonitor implementation.
+    /// </summary>
     public static bool createMonitoredItemForLevel(LevelInfo level, out DedicatedWorkshopUpdateMonitor.MonitoredItem monitoredItem)
     {
         if (level != null && level.isFromWorkshop)

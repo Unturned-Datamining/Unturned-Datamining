@@ -6,6 +6,10 @@ namespace SDG.Unturned;
 
 public class ItemAsset : Asset, ISkinableAsset
 {
+    /// <summary>
+    /// Helper for plugins that want item prefabs server-side.
+    /// e.g. Allows item icons to be captured on dedicated server.
+    /// </summary>
     public static CommandLineFlag shouldAlwaysLoadItemPrefab = new CommandLineFlag(defaultValue: false, "-AlwaysLoadItemPrefab");
 
     protected bool _shouldVerifyHash;
@@ -20,6 +24,9 @@ public class ItemAsset : Asset, ISkinableAsset
 
     protected string _proPath;
 
+    /// <summary>
+    /// Hack for Kuwait aura icons.
+    /// </summary>
     public bool econIconUseId;
 
     public bool isPro;
@@ -32,10 +39,21 @@ public class ItemAsset : Asset, ISkinableAsset
 
     public byte size_y;
 
+    /// <summary>
+    /// Vertical half size of icon camera.
+    /// Values less than zero are disabled.
+    /// </summary>
     public float iconCameraOrthographicSize;
 
+    /// <summary>
+    /// Vertical half size of economy icon camera.
+    /// </summary>
     public float econIconCameraOrthographicSize;
 
+    /// <summary>
+    /// Should the newer automatic placement and orthographic size for axis-aligned icon cameras be used?
+    /// Enabled by default, but optionally disabled for manual adjustment.
+    /// </summary>
     public bool isEligibleForAutomaticIconMeasurements;
 
     public byte amount;
@@ -51,24 +69,47 @@ public class ItemAsset : Asset, ISkinableAsset
     [Obsolete("Renamed to ShouldAttachEquippedModelToLeftHand")]
     public bool isBackward;
 
+    /// <summary>
+    /// Whether viewmodel should procedurally animate inertia of equipped item.
+    /// Useful for low-quality older animations, but modders may wish to disable for high-quality newer animations.
+    /// </summary>
     public bool shouldProcedurallyAnimateInertia;
 
+    /// <summary>
+    /// Defaults to true. If false, the equipped item model is flipped to counteract the flipped character.
+    /// </summary>
     public bool shouldLeftHandedCharactersMirrorEquippedItem;
 
+    /// <summary>
+    /// If true, stats like damage, accuracy, health, etc. are automatically appended to the description.
+    /// Defaults to true.
+    /// </summary>
     public bool isEligibleForAutoStatDescriptions;
 
     protected GameObject _item;
 
+    /// <summary>
+    /// Optional alternative item prefab specifically for the PlayerEquipment prefab spawned.
+    /// </summary>
     public GameObject equipablePrefab;
 
+    /// <summary>
+    /// Movement speed multiplier while the item is equipped in the hands.
+    /// </summary>
     public float equipableMovementSpeedMultiplier = 1f;
 
     protected AudioClip _equip;
 
     protected AnimationClip[] _animations;
 
+    /// <summary>
+    /// Sound to play when inspecting the equipped item.
+    /// </summary>
     public AudioReference inspectAudio;
 
+    /// <summary>
+    /// Sound to play when moving or rotating the item in the inventory.
+    /// </summary>
     public AudioReference inventoryAudio;
 
     protected List<Blueprint> _blueprints;
@@ -81,6 +122,8 @@ public class ItemAsset : Asset, ISkinableAsset
 
     protected Texture2D _emissionBase;
 
+    /// sortOrder values for description lines.
+    /// Difference in value greater than 100 creates an empty line.
     protected const int DescSort_RarityAndType = 0;
 
     protected const int DescSort_LoreText = 200;
@@ -103,6 +146,9 @@ public class ItemAsset : Asset, ISkinableAsset
 
     protected const int DescSort_RefillStat = 10000;
 
+    /// <summary>
+    /// Properties common to Gun and Melee.
+    /// </summary>
     protected const int DescSort_Weapon_NonExplosive_Common = 10000;
 
     protected const int DescSort_TrapKeyword = 10001;
@@ -111,6 +157,9 @@ public class ItemAsset : Asset, ISkinableAsset
 
     protected const int DescSort_FarmableText = 15000;
 
+    /// <summary>
+    /// Properties common to Barricade and Structure.
+    /// </summary>
     protected const int DescSort_BuildableCommon = 20000;
 
     protected const int DescSort_ExplosiveBulletDamage = 30000;
@@ -119,14 +168,29 @@ public class ItemAsset : Asset, ISkinableAsset
 
     protected const int DescSort_ExplosiveTrapDamage = 30000;
 
+    /// <summary>
+    /// Properties common to Gun, Consumable, and Throwable.
+    /// </summary>
     protected const int DescSort_Weapon_Explosive_RangeAndDamage = 30000;
 
+    /// <summary>
+    /// Properties common to Gun and Melee.
+    /// </summary>
     protected const int DescSort_Weapon_NonExplosive_PlayerDamage = 30000;
 
+    /// <summary>
+    /// Properties common to Gun and Melee.
+    /// </summary>
     protected const int DescSort_Weapon_NonExplosive_ZombieDamage = 31000;
 
+    /// <summary>
+    /// Properties common to Gun and Melee.
+    /// </summary>
     protected const int DescSort_Weapon_NonExplosive_AnimalDamage = 32000;
 
+    /// <summary>
+    /// Properties common to Gun and Melee.
+    /// </summary>
     protected const int DescSort_Weapon_NonExplosive_OtherDamage = 33000;
 
     public bool shouldVerifyHash => _shouldVerifyHash;
@@ -141,8 +205,15 @@ public class ItemAsset : Asset, ISkinableAsset
 
     public string proPath => _proPath;
 
+    /// <summary>
+    /// Useable subclass.
+    /// </summary>
     public Type useableType { get; protected set; }
 
+    /// <summary>
+    /// Can this useable be equipped by players?
+    /// True for most items, but allows modders to create sentry-only weapons.
+    /// </summary>
     public bool canPlayerEquip { get; protected set; }
 
     [Obsolete("Renamed to canPlayerEquip")]
@@ -158,6 +229,9 @@ public class ItemAsset : Asset, ISkinableAsset
         }
     }
 
+    /// <summary>
+    /// Can this useable be equipped while underwater?
+    /// </summary>
     public bool canUseUnderwater { get; protected set; }
 
     public byte count
@@ -204,6 +278,10 @@ public class ItemAsset : Asset, ISkinableAsset
         }
     }
 
+    /// <summary>
+    /// If true, equipable prefab is a child of the left hand rather than the right.
+    /// Defaults to false.
+    /// </summary>
     public bool ShouldAttachEquippedModelToLeftHand
     {
         get
@@ -218,6 +296,13 @@ public class ItemAsset : Asset, ISkinableAsset
 
     public GameObject item => _item;
 
+    /// <summary>
+    /// Name to use when instantiating item prefab.
+    /// By default the asset legacy id is used, but it can be overridden because some
+    /// modders rely on the name for Unity's legacy animation component. For example
+    /// in Toothy Deerryte's case there were a lot of duplicate animations to work
+    /// around the id naming, simplified by overriding name.
+    /// </summary>
     public string instantiatedItemName { get; protected set; }
 
     public AudioClip equip => _equip;
@@ -232,8 +317,14 @@ public class ItemAsset : Asset, ISkinableAsset
 
     public virtual bool showQuality => overrideShowQuality;
 
+    /// <summary>
+    /// When a player dies with this item, should an item drop be spawned?
+    /// </summary>
     public bool shouldDropOnDeath { get; protected set; }
 
+    /// <summary>
+    /// Can player click the drop button on this item?
+    /// </summary>
     public bool allowManualDrop { get; protected set; }
 
     public Texture albedoBase => _albedoBase;
@@ -242,19 +333,43 @@ public class ItemAsset : Asset, ISkinableAsset
 
     public Texture emissionBase => _emissionBase;
 
+    /// <summary>
+    /// If this item is compatible with skins for another item, lookup that item's ID instead.
+    /// </summary>
     public ushort sharedSkinLookupID { get; protected set; }
 
+    /// <summary>
+    /// Should friendly-mode sentry guns target a player who has this item equipped?
+    /// </summary>
     public virtual bool shouldFriendlySentryTargetUser => false;
 
+    /// <summary>
+    /// Kept in case any plugins refer to it.
+    /// Renamed to shouldFriendlySentryTargetUser.
+    /// </summary>
     [Obsolete]
     public virtual bool isDangerous => shouldFriendlySentryTargetUser;
 
+    /// <summary>
+    /// Should this item be deleted when using and quality hits zero?
+    /// e.g. final melee hit shatters the weapon.
+    /// </summary>
     public bool shouldDeleteAtZeroQuality { get; protected set; }
 
+    /// <summary>
+    /// Should the game destroy all child colliders on the item when requested?
+    /// Physics items in the world and on character preview don't request destroy,
+    /// but items attached to the character do. Mods might be using colliders
+    /// in unexpected ways (e.g., riot shield) so they can disable this default.
+    /// </summary>
     public bool shouldDestroyItemColliders { get; protected set; }
 
     public override EAssetType assetCategory => EAssetType.ITEM;
 
+    /// <summary>
+    /// Are there any official skins for this item type?
+    /// Skips checking for base textures if item cannot have skins.
+    /// </summary>
     protected virtual bool doesItemTypeHaveSkins => false;
 
     public byte[] getState()
@@ -315,6 +430,10 @@ public class ItemAsset : Asset, ISkinableAsset
         return canBeUsedInSafezone(safezone, byAdmin: false);
     }
 
+    /// <summary>
+    /// Should players be allowed to start primary/secondary use of this item while inside given safezone?
+    /// If returns false the primary/secondary inputs are set to false.
+    /// </summary>
     public virtual bool canBeUsedInSafezone(SafezoneNode safezone, bool byAdmin)
     {
         if (safezone.noWeapons)
@@ -324,6 +443,9 @@ public class ItemAsset : Asset, ISkinableAsset
         return true;
     }
 
+    /// <summary>
+    /// Find useableType by useable name.
+    /// </summary>
     private void updateUseableType()
     {
         if (string.IsNullOrEmpty(useable))

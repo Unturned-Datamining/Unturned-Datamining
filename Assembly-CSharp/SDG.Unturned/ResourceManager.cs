@@ -51,6 +51,9 @@ public class ResourceManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// Revive all trees in a specific region.
+    /// </summary>
     public static void askClearRegionResources(byte x, byte y)
     {
         if (Provider.isServer && Regions.checkSafe(x, y) && LevelGround.trees[x, y].Count > 0)
@@ -59,6 +62,9 @@ public class ResourceManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// Revive trees worldwide. Used between arena rounds.
+    /// </summary>
     public static void askClearAllResources()
     {
         if (!Provider.isServer)

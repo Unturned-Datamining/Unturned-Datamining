@@ -8,6 +8,9 @@ public class SteamPacker
     [Obsolete]
     public static Block block = new Block();
 
+    /// <summary>
+    /// Temporary replacement for static block member because plugins might depend on it.
+    /// </summary>
     private static NetPakBlockImplementation luggageBlock = new NetPakBlockImplementation();
 
     [Obsolete]

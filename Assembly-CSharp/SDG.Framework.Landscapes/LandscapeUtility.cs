@@ -2,6 +2,9 @@ namespace SDG.Framework.Landscapes;
 
 public class LandscapeUtility
 {
+    /// <summary>
+    /// If a heightmap coordinate is out of bounds the tile/heightamp coordinate will be adjusted so that it is in bounds again.
+    /// </summary>
     public static void cleanHeightmapCoord(ref LandscapeCoord tileCoord, ref HeightmapCoord heightmapCoord)
     {
         if (heightmapCoord.x < 0)
@@ -26,6 +29,9 @@ public class LandscapeUtility
         }
     }
 
+    /// <summary>
+    /// If a splatmap coordinate is out of bounds the tile/splatmap coordinate will be adjusted so that it is in bounds again.
+    /// </summary>
     public static void cleanSplatmapCoord(ref LandscapeCoord tileCoord, ref SplatmapCoord splatmapCoord)
     {
         if (splatmapCoord.x < 0)

@@ -18,6 +18,9 @@ public class ZombieRegion
 
     public ushort respawnZombieIndex;
 
+    /// <summary>
+    /// Number of alive zombies.
+    /// </summary>
     public int alive;
 
     public bool isNetworked;
@@ -32,6 +35,9 @@ public class ZombieRegion
 
     private Zombie bossZombie;
 
+    /// <summary>
+    /// Last time a quest boss was spawned.
+    /// </summary>
     private float lastBossTime = -1f;
 
     internal int aliveBossZombieCount;
@@ -89,11 +95,17 @@ public class ZombieRegion
         return aliveBossZombieCount;
     }
 
+    /// <summary>
+    /// Allow another quest to spawn a boss zombie immediately.
+    /// </summary>
     public void resetQuestBossTimer()
     {
         lastBossTime = -1f;
     }
 
+    /// <summary>
+    /// Kills the boss zombie if nobody is around, if the boss was killed it calls UpdateBoss.
+    /// </summary>
     public void UpdateRegion()
     {
         if (bossZombie == null)
@@ -139,6 +151,9 @@ public class ZombieRegion
         }
     }
 
+    /// <summary>
+    /// Checks for players in the area with quests and spawns boss zombies accordingly.
+    /// </summary>
     public void UpdateBoss()
     {
         if (bossZombie != null)

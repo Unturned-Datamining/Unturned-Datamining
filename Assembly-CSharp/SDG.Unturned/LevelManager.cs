@@ -85,10 +85,16 @@ public class LevelManager : SteamCaller
 
     private static readonly ClientStaticMethod<Vector3, Vector3, float, float, float> SendAirdropState = ClientStaticMethod<Vector3, Vector3, float, float, float>.Get(ReceiveAirdropState);
 
+    /// <summary>
+    /// Exposed for Rocket transition to modules backwards compatibility.
+    /// </summary>
     public static LevelManager instance => manager;
 
     public static ELevelType levelType => _levelType;
 
+    /// <summary>
+    /// Is the active level an Arena mode map?
+    /// </summary>
     public static bool isArenaMode => levelType == ELevelType.ARENA;
 
     public static Vector3 arenaCurrentCenter => _arenaCurrentCenter;
@@ -198,6 +204,9 @@ public class LevelManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// Find a new smaller circle within the old circle and clamp it to the playable level area.
+    /// </summary>
     private void getArenaTarget(Vector3 currentCenter, float currentRadius, out Vector3 targetCenter, out float targetRadius)
     {
         targetCenter = currentCenter;

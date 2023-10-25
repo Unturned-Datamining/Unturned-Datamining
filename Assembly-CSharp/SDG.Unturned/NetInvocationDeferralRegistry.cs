@@ -4,10 +4,17 @@ using SDG.NetPak;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// When a client method is called on a target object that does not exist yet this class is responsible for
+/// deferring the invocation until the instance does exist. For example until finished async loading.
+/// </summary>
 public static class NetInvocationDeferralRegistry
 {
     private struct DeferredInvocation
     {
+        /// <summary>
+        /// Invocations are grouped by net id block to ensure order is preserved between related objects. 
+        /// </summary>
         public NetId netId;
 
         public uint scratch;
@@ -18,6 +25,9 @@ public static class NetInvocationDeferralRegistry
 
         public ClientMethodInfo methodInfo;
 
+        /// <summary>
+        /// Not a member of ClientMethodInfo because it does not need to be looked up using reflection.
+        /// </summary>
         public NetInvokeDeferred callback;
     }
 
@@ -25,6 +35,10 @@ public static class NetInvocationDeferralRegistry
 
     private static List<List<DeferredInvocation>> pool = new List<List<DeferredInvocation>>();
 
+    /// <summary>
+    /// Called by generated methods when target object does not exist. If target object has been marked deferred
+    /// then the method will be invoked after it exists.
+    /// </summary>
     public static void Defer(NetId key, in ClientInvocationContext context, NetInvokeDeferred callback)
     {
         if (deferrals.TryGetValue(key, out var value))
@@ -42,6 +56,9 @@ public static class NetInvocationDeferralRegistry
         }
     }
 
+    /// <summary>
+    /// Add list of deferred invocations for key. Otherwise messages will be discarded assuming it was canceled.
+    /// </summary>
     public static void MarkDeferred(NetId key, uint blockSize = 1u)
     {
         if (!deferrals.TryGetValue(key, out var value))
@@ -54,6 +71,9 @@ public static class NetInvocationDeferralRegistry
         }
     }
 
+    /// <summary>
+    /// Remove pending invocations.
+    /// </summary>
     public static void Cancel(NetId key, uint blockSize = 1u)
     {
         if (deferrals.TryGetValue(key, out var value))
@@ -82,6 +102,9 @@ public static class NetInvocationDeferralRegistry
         }
     }
 
+    /// <summary>
+    /// Invoke all deferred calls.
+    /// </summary>
     public static void Invoke(NetId key, uint blockSize = 1u)
     {
         if (!deferrals.TryGetValue(key, out var value))
@@ -105,6 +128,9 @@ public static class NetInvocationDeferralRegistry
         pool.Add(value);
     }
 
+    /// <summary>
+    /// Called before loading level.
+    /// </summary>
     internal static void Clear()
     {
         deferrals.Clear();

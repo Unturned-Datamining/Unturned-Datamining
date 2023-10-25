@@ -2,6 +2,10 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Assets cannot be loaded from Resources during static initialization, so this reference defers the load until
+/// the first time user tries to use it.
+/// </summary>
 public class StaticResourceRef<T> where T : Object
 {
     private string path;

@@ -15,9 +15,15 @@ public class TempSteamworksWorkshop
 
     public delegate void PublishedRemoved();
 
+    /// <summary>
+    /// Used when transitioning Unity versions breaks asset bundles. Replaced by AssetBundleVersion const values.
+    /// </summary>
     [Obsolete]
     public static readonly byte COMPATIBILITY_VERSION = 3;
 
+    /// <summary>
+    /// Workshop item key-value tag storing the version number.
+    /// </summary>
     public static readonly string COMPATIBILITY_VERSION_KVTAG = "compatibility_version";
 
     private SteamworksAppInfo appInfo;
@@ -66,6 +72,9 @@ public class TempSteamworksWorkshop
 
     private List<SteamPublished> _published;
 
+    /// <summary>
+    /// Maps published file id to name, version, etc.
+    /// </summary>
     private static Dictionary<ulong, CachedUGCDetails> cachedUGCDetails = new Dictionary<ulong, CachedUGCDetails>();
 
     private static readonly PublishedFileId_t FRANCE = new PublishedFileId_t(1975500516uL);
@@ -86,22 +95,43 @@ public class TempSteamworksWorkshop
 
     private CallResult<SteamUGCQueryCompleted_t> serverItemsQueryCompleted;
 
+    /// <summary>
+    /// File IDs the client knows the server is using. Fallback in-case the query fails.
+    /// </summary>
     internal List<PublishedFileId_t> serverPendingIDs;
 
+    /// <summary>
+    /// IP of the currently connected server, or zero if unable to retrieve from network system.
+    /// Used for testing download restrictions.
+    /// </summary>
     protected uint serverDownloadIP;
 
     private Callback<DownloadItemResult_t> itemDownloaded;
 
+    /// <summary>
+    /// Callback when player subscribes to an item and it finishes downloading.
+    /// Different than the game-managed DownloadItem calls.
+    /// </summary>
     private Callback<ItemInstalled_t> itemInstalled;
 
+    /// <summary>
+    /// Workshop file ids we were locally subscribed to during startup.
+    /// These items are queried for compatibility before registering.
+    /// </summary>
     private PublishedFileId_t[] locallySubscribedFileIds;
 
     private UGCQueryHandle_t subscribedQueryHandle;
 
     private CallResult<SteamUGCQueryCompleted_t> subscribedQueryCompleted;
 
+    /// <summary>
+    /// If specified, player's workshop file subscriptions are not registered at startup.
+    /// </summary>
     private static CommandLineFlag shouldIgnoreSubscribedItems = new CommandLineFlag(defaultValue: false, "-NoWorkshopSubscriptions");
 
+    /// <summary>
+    /// Map of subscriptions added/removed by the player through the in-game client API, as opposed to the web browser.
+    /// </summary>
     private Dictionary<PublishedFileId_t, bool> ingameSubscriptions = new Dictionary<PublishedFileId_t, bool>();
 
     public bool canOpenWorkshop => true;
@@ -110,6 +140,9 @@ public class TempSteamworksWorkshop
 
     public List<SteamPublished> published => _published;
 
+    /// <summary>
+    /// Number of items currently connected server was not authorized to download.
+    /// </summary>
     public int serverInvalidItemsCount { get; protected set; }
 
     public void open(PublishedFileId_t id)
@@ -117,6 +150,9 @@ public class TempSteamworksWorkshop
         SteamFriends.ActivateGameOverlayToWebPage("http://steamcommunity.com/sharedfiles/filedetails/?id=" + id.m_PublishedFileId);
     }
 
+    /// <summary>
+    /// Get compatibility version from workshop query, or zero if unset.
+    /// </summary>
     public static byte getCompatibilityVersion(UGCQueryHandle_t queryHandle, uint index)
     {
         uint num = (Dedicator.IsDedicatedServer ? SteamGameServerUGC.GetQueryUGCNumKeyValueTags(queryHandle, index) : SteamUGC.GetQueryUGCNumKeyValueTags(queryHandle, index));
@@ -143,6 +179,12 @@ public class TempSteamworksWorkshop
         UnturnedLog.info("\tVisibility: {0}", details.m_eVisibility);
     }
 
+    /// <summary>
+    /// Save the details from a workshop query for lookup later.
+    /// Allows game to inspect the installed files before deciding if they are
+    /// compatible, since maps and localization are not affected by unity upgrades.
+    /// Previously the compatibility test occurred before downloading the content.
+    /// </summary>
     public static bool cacheDetails(UGCQueryHandle_t queryHandle, uint index, out CachedUGCDetails cachedDetails)
     {
         cachedDetails = default(CachedUGCDetails);
@@ -175,6 +217,9 @@ public class TempSteamworksWorkshop
         return num;
     }
 
+    /// <summary>
+    /// Get cached workshop item details.
+    /// </summary>
     public static bool getCachedDetails(PublishedFileId_t fileId, out CachedUGCDetails cachedDetails)
     {
         return cachedUGCDetails.TryGetValue(fileId.m_PublishedFileId, out cachedDetails);
@@ -219,6 +264,12 @@ public class TempSteamworksWorkshop
         return true;
     }
 
+    /// <summary>
+    /// Should caller skip loading a given workshop file?
+    ///
+    /// Used to skip workshop version of map if the map is locally installed,
+    /// e.g. Canyon Arena moved to workshop and auto-subscribed.
+    /// </summary>
     public static bool shouldIgnoreFile(PublishedFileId_t fileId, out string explanation)
     {
         if (fileId == FRANCE && ReadWrite.fileExists("/Maps/France/Config.json", useCloud: false, usePath: true))
@@ -373,6 +424,10 @@ public class TempSteamworksWorkshop
         SteamUGC.DownloadItem(publishedFileId_t, bHighPriority: true);
     }
 
+    /// <summary>
+    /// Helper for downloadServerItems.
+    /// Called for each workshop item we want to download for the server.
+    /// </summary>
     private void enqueueServerItemDownloadOrInstallFromCache(PublishedFileId_t fileId)
     {
         bool flag = isInstalledItemAlreadyRegistered(fileId);
@@ -421,6 +476,10 @@ public class TempSteamworksWorkshop
         }
     }
 
+    /// <summary>
+    /// Called once we know which items the server is allowed to use (queryServerItems),
+    /// or the query has failed in which case we proceed with all items it told us.
+    /// </summary>
     private void downloadServerItems(List<PublishedFileId_t> itemIDs)
     {
         installing = new List<PublishedFileId_t>();
@@ -444,6 +503,10 @@ public class TempSteamworksWorkshop
         downloadNextItem();
     }
 
+    /// <summary>
+    /// Is currently connected server allowed to auto-download the workshop item?
+    /// Requested by mod authors so that they can whitelist/blacklist access.
+    /// </summary>
     private bool testDownloadRestrictions(UGCQueryHandle_t queryHandle, uint resultIndex, uint ip, string itemDisplayText)
     {
         if (ip == 0)
@@ -476,6 +539,11 @@ public class TempSteamworksWorkshop
         }
     }
 
+    /// <summary>
+    /// Successfully queried details of the items current server is using.
+    /// Ensure server has permission to use these items, then proceed with downloading.
+    /// Also caches item titles for use on the loading screen.
+    /// </summary>
     private void handleServerItemsQuerySuccess(SteamUGCQueryCompleted_t callback)
     {
         string iPFromUInt = Parser.getIPFromUInt32(serverDownloadIP);
@@ -495,6 +563,10 @@ public class TempSteamworksWorkshop
         downloadServerItems(serverPendingIDs);
     }
 
+    /// <summary>
+    /// IO or bad result occurred when querying items the current server is using.
+    /// We do not know the file details, but we proceed with downloading them all.
+    /// </summary>
     private void handleServerItemsQueryFailed()
     {
         downloadServerItems(serverPendingIDs);
@@ -523,12 +595,19 @@ public class TempSteamworksWorkshop
         }
     }
 
+    /// <summary>
+    /// Called prior to downloading, and after a connection failure.
+    /// </summary>
     public void resetServerInvalidItems()
     {
         serverPendingIDs = null;
         serverInvalidItemsCount = 0;
     }
 
+    /// <summary>
+    /// Client now knows the published file IDs the server is using, but
+    /// queries the workshop for additional information before installing.
+    /// </summary>
     public void queryServerWorkshopItems(List<PublishedFileId_t> fileIDs, uint serverIP)
     {
         serverPendingIDs = fileIDs;
@@ -813,6 +892,10 @@ public class TempSteamworksWorkshop
         return false;
     }
 
+    /// <summary>
+    /// Get path to an already-installed workshop item.
+    /// </summary>
+    /// <returns>True if the path was found.</returns>
     private bool getInstalledItemPath(PublishedFileId_t fileId, out string path)
     {
         EItemState itemState = (EItemState)SteamUGC.GetItemState(fileId);
@@ -827,6 +910,10 @@ public class TempSteamworksWorkshop
         return false;
     }
 
+    /// <summary>
+    /// Used during startup to register subscribed workshop items.
+    /// Given a workshop item file id, if its files exist on disk then register it.
+    /// </summary>
     private void registerInstalledItem(PublishedFileId_t fileId)
     {
         if (isInstalledItemAlreadyRegistered(fileId))
@@ -861,6 +948,9 @@ public class TempSteamworksWorkshop
         }
     }
 
+    /// <summary>
+    /// Called when subscribed items callback was successful to register all compatible files.
+    /// </summary>
     private void handleSubscribedItemsCallbackSuccess(SteamUGCQueryCompleted_t callback)
     {
         UnturnedLog.info($"Received details for {callback.m_unNumResultsReturned} subscribed workshop file(s)");
@@ -874,6 +964,11 @@ public class TempSteamworksWorkshop
         }
     }
 
+    /// <summary>
+    /// Called when subscribed items callback did not execute as expected,
+    /// maybe because steam's servers are offline. In this case we can't check
+    /// compatibility so we register all the locally subscribed items as compatible.
+    /// </summary>
     private void handleSubscribedItemsCallbackFailed()
     {
         UnturnedLog.info("Registering {0} locally subscribed item(s)", locallySubscribedFileIds.Length);
@@ -884,6 +979,11 @@ public class TempSteamworksWorkshop
         }
     }
 
+    /// <summary>
+    /// Register any localization-type workshop content before waiting for the steam callbacks.
+    /// Important so that localizations are available for loading screens and whatnot during startup.
+    /// Any items we register now will be skipped later.
+    /// </summary>
     private void registerLocalizations()
     {
         PublishedFileId_t[] array = locallySubscribedFileIds;
@@ -981,6 +1081,10 @@ public class TempSteamworksWorkshop
         return false;
     }
 
+    /// <summary>
+    /// Called by us when we subscribe to an item from in-game.
+    /// If item already exists on-disk steam doesn't always call onItemInstalled, so we do our own check and potentially load.
+    /// </summary>
     private void gameSubscribed(PublishedFileId_t fileId)
     {
         if (!isInstalledItemAlreadyRegistered(fileId))

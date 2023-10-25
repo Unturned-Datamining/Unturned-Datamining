@@ -13,6 +13,10 @@ internal class SteamItemStore : ItemStore
 
     private Callback<MicroTxnAuthorizationResponse_t> microTxnAuthCallback;
 
+    /// <summary>
+    /// If overlay is disabled there is no point showing the in-game item store because the player will not be able
+    /// to checkout. We request listings regardless in order to show the "sale" label automatically.
+    /// </summary>
     private bool IsOverlayEnabledForCheckout => SteamUtils.IsOverlayEnabled();
 
     public override event System.Action OnPricesReceived;
@@ -126,6 +130,9 @@ internal class SteamItemStore : ItemStore
         OnPurchaseResult?.Invoke(EPurchaseResult.UnableToInitialize);
     }
 
+    /// <summary>
+    /// Steam currency codes seem to be ISO 4217, however the documentation (as of 2021-01-29) does not say so.
+    /// </summary>
     private NumberFormatInfo GetCurrencyFormatInfo(string threeLetterCode)
     {
         try

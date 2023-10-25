@@ -7,6 +7,9 @@ public class WalkingPlayerInputPacket : PlayerInputPacket
 {
     public byte analog;
 
+    /// <summary>
+    /// Resulting transform.position immediately after movement.simulate was called.
+    /// </summary>
     public Vector3 clientPosition;
 
     public float yaw;

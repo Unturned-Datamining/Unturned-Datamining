@@ -10,8 +10,14 @@ public class ItemFarmAsset : ItemBarricadeAsset
 
     public Guid growSpawnTableGuid;
 
+    /// <summary>
+    /// Amount of experience to reward harvesting player.
+    /// </summary>
     public uint harvestRewardExperience;
 
+    /// <summary>
+    /// NPC rewards to grant upon harvesting the crop.
+    /// </summary>
     internal NPCRewardsList harvestRewardsList;
 
     public uint growth => _growth;
@@ -22,8 +28,14 @@ public class ItemFarmAsset : ItemBarricadeAsset
 
     public bool canFertilize { get; protected set; }
 
+    /// <summary>
+    /// If true, harvesting has a chance to provide a second item.
+    /// </summary>
     public bool isAffectedByAgricultureSkill { get; protected set; }
 
+    /// <summary>
+    /// If true, rain will finish growing the plant.
+    /// </summary>
     public bool shouldRainAffectGrowth { get; protected set; }
 
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)

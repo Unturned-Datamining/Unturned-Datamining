@@ -96,6 +96,10 @@ public class InteractableMannequin : Interactable, IManualOnDestroy
 
     public ushort glasses => clothes.glasses;
 
+    /// <summary>
+    /// Are any players standing on the mannequin?
+    /// Used to prevent exploiting pose switches to push through objects.
+    /// </summary>
     public bool isObstructedByPlayers()
     {
         Vector3 position = base.transform.position;

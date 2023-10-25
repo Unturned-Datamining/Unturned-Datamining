@@ -130,10 +130,17 @@ public class UseableGun : Useable
 
     private AudioSource whir;
 
+    /// <summary>
+    /// reticuleHook.localPosition after instantiation, or zero if null.
+    /// </summary>
     private Vector3 originalReticuleHookLocalPosition;
 
     private bool isShooting;
 
+    /// <summary>
+    /// True if startPrimary was called this simulation frame.
+    /// Allows gun to shoot even if stopPrimary is called immediately afterwards.
+    /// </summary>
     private bool wasTriggerJustPulled;
 
     private bool isJabbing;
@@ -162,6 +169,9 @@ public class UseableGun : Useable
 
     private int bursts;
 
+    /// <summary>
+    /// Remaining calls to tock before firing.
+    /// </summary>
     private int fireDelayCounter;
 
     private int aimAccuracy;
@@ -198,6 +208,10 @@ public class UseableGun : Useable
 
     private bool needsReplace;
 
+    /// <summary>
+    /// Is the tactical attachment toggle on?
+    /// e.g. True when the laser is enabled.
+    /// </summary>
     private bool interact;
 
     private byte ammo;
@@ -214,10 +228,20 @@ public class UseableGun : Useable
 
     private List<InventorySearch> magazineSearch;
 
+    /// <summary>
+    /// Factor e.g. 2 is a 2x multiplier.
+    /// Prior to 2022-04-11 this was the target field of view. (90/fov)
+    /// </summary>
     private float firstPersonZoomFactor;
 
+    /// <summary>
+    /// Zoom multiplier in third-person.
+    /// </summary>
     private float thirdPersonZoomFactor = 1.25f;
 
+    /// <summary>
+    /// Whether main camera field of view should zoom without scope camera / scope overlay.
+    /// </summary>
     private bool shouldZoomUsingEyes;
 
     private float crosshair;
@@ -290,6 +314,9 @@ public class UseableGun : Useable
 
     public bool isAiming { get; protected set; }
 
+    /// <summary>
+    /// Should stat modifiers from the current tactical attachment be used?
+    /// </summary>
     private bool shouldEnableTacticalStats
     {
         get
@@ -331,16 +358,26 @@ public class UseableGun : Useable
 
     public static event ChangeAttachmentRequestHandler onChangeMagazineRequested;
 
+    /// <summary>
+    /// Plugin-only event when bullet is fired on server.
+    /// </summary>
     public static event BulletSpawnedHandler onBulletSpawned;
 
+    /// <summary>
+    /// Plugin-only event when bullet hit is received from client.
+    /// </summary>
     public static event BulletHitHandler onBulletHit;
 
+    /// <summary>
+    /// Plugin-only event when projectile is spawned on server.
+    /// </summary>
     public static event ProjectileSpawnedHandler onProjectileSpawned;
 
     public static event Action<UseableGun> OnReloading_Global;
 
     public static event Action<UseableGun> OnAimingChanged_Global;
 
+    /// <returns>Whether plugin allowed attachment.</returns>
     private bool changeAttachmentRequested(ChangeAttachmentRequestHandler handler, Item oldItem, ItemJar newItem)
     {
         if (handler != null)
@@ -453,6 +490,10 @@ public class UseableGun : Useable
         }
     }
 
+    /// <summary>
+    /// Original barrel and magazine assets are supplied because they may have already been deleted. Barrel is only
+    /// valid if quality was greater than zero.
+    /// </summary>
     private void project(Vector3 origin, Vector3 direction, ItemBarrelAsset barrelAsset, ItemMagazineAsset magazineAsset)
     {
         if (gunshotAudioSource != null)
@@ -715,6 +756,9 @@ public class UseableGun : Useable
         }
     }
 
+    /// <summary>
+    /// Called on server and owning client.
+    /// </summary>
     private void fire()
     {
         float num = (float)(int)base.player.equipment.quality / 100f;
@@ -1230,6 +1274,9 @@ public class UseableGun : Useable
         }
     }
 
+    /// <summary>
+    /// Calculate damage multiplier for individual bullet.
+    /// </summary>
     private float getBulletDamageMultiplier(ref BulletInfo bullet)
     {
         float num = ((bullet.quality < 0.5f) ? (0.5f + bullet.quality) : 1f);
@@ -2220,6 +2267,9 @@ public class UseableGun : Useable
         }
     }
 
+    /// <summary>
+    /// Requested for plugin use.
+    /// </summary>
     public void ServerPlayReload(bool shouldHammer)
     {
         shouldHammer &= equippedGunAsset.hammer != null;
@@ -2232,6 +2282,10 @@ public class UseableGun : Useable
         ReceivePlayChamberJammed(correctedAmmo);
     }
 
+    /// <summary>
+    /// Request from the server to play a gun jammed animation.
+    /// Since client can't predict chamber jams we fixup the predicted ammo count.
+    /// </summary>
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askPlayChamberJammed")]
     public void ReceivePlayChamberJammed(byte correctedAmmo)
     {
@@ -4569,6 +4623,12 @@ public class UseableGun : Useable
         }
     }
 
+    /// <summary>
+    /// This is a bit of a hack... aimAccuracy is [0, maxAimingAccuracy] and changed during each FixedUpdate call,
+    /// but was used in some gameplay display features like holo sight, laser, ADS, etc. (yes, should
+    /// be de-coupled from FixedUpdate but that is its own issue) To smooth this out we interpolate
+    /// slightly behind the aimAccuracy value depending on the time since FixedUpdate.
+    /// </summary>
     private float GetInterpolatedAimAlpha()
     {
         float num = (float)((Time.timeAsDouble - Time.fixedTimeAsDouble) / (double)Time.fixedDeltaTime);
@@ -4748,6 +4808,9 @@ public class UseableGun : Useable
         }
     }
 
+    /// <summary>
+    /// Holographic sights follow the true aiming direction regardless of viewmodel animation.
+    /// </summary>
     private void UpdateHolographicReticulePosition()
     {
         firstAttachments.reticuleHook.localPosition = originalReticuleHookLocalPosition;

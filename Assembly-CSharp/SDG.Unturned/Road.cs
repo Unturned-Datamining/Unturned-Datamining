@@ -25,6 +25,9 @@ public class Road
 
     private List<RoadPath> _paths;
 
+    /// <summary>
+    /// Only set in play mode for determing if we should cache brute force lengths.
+    /// </summary>
     public ushort roadIndex { get; protected set; }
 
     public Transform road => _road;

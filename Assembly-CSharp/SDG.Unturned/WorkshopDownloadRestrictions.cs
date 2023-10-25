@@ -3,12 +3,23 @@ using Steamworks;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Utilities for testing whether a particular server is allowed to download a workshop item.
+/// Available from client and server side so that clients can help enforce restrictions.
+/// </summary>
 public class WorkshopDownloadRestrictions
 {
+    /// <summary>
+    /// Workshop item key-value tag storing IP whitelist and blacklist.
+    /// </summary>
     public static readonly string IP_RESTRICTIONS_KVTAG = "allowed_ips";
 
     private static readonly char[] IP_SEPARATOR = new char[1] { ',' };
 
+    /// <summary>
+    /// Get ip restrictions value if set, otherwise null.
+    /// Can be called from client or server.
+    /// </summary>
     public static string getAllowedIpsTagValue(UGCQueryHandle_t queryHandle, uint resultIndex)
     {
         WorkshopUtils.findQueryUGCKeyValue(queryHandle, resultIndex, IP_RESTRICTIONS_KVTAG, out var value);
@@ -36,6 +47,9 @@ public class WorkshopDownloadRestrictions
         return getRestrictionResult(allowedIpsTagValue, ip);
     }
 
+    /// <summary>
+    /// Test whether IP is whitelisted or blacklisted in filter.
+    /// </summary>
     public static EWorkshopDownloadRestrictionResult getRestrictionResult(string filter, uint ip)
     {
         parseAllowedIPs(filter, out var whitelist, out var blacklist);
@@ -58,6 +72,9 @@ public class WorkshopDownloadRestrictions
         return EWorkshopDownloadRestrictionResult.NoRestrictions;
     }
 
+    /// <summary>
+    /// Split x,y-z format into whitelist [x, y] and blacklist [z].
+    /// </summary>
     public static void splitAllowedIPs(string allowedIPs, out string[] whitelistIps, out string[] blacklistIps)
     {
         whitelistIps = null;
@@ -76,6 +93,9 @@ public class WorkshopDownloadRestrictions
         }
     }
 
+    /// <summary>
+    /// Split whitelist-blacklist format and parse string IPs into integer IPs.
+    /// </summary>
     public static void parseAllowedIPs(string allowedIPs, out uint[] whitelist, out uint[] blacklist)
     {
         splitAllowedIPs(allowedIPs, out var whitelistIps, out var blacklistIps);
@@ -97,6 +117,9 @@ public class WorkshopDownloadRestrictions
         }
     }
 
+    /// <summary>
+    /// Parse CIDR string IPs into integer IPs.
+    /// </summary>
     public static void parseStringIps(string[] strings, out uint[] integers)
     {
         int num = strings.Length;

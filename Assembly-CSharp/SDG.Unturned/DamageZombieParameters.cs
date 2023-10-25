@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Payload for the DamageTool.damageZombie function.
+/// </summary>
 public struct DamageZombieParameters
 {
     public Zombie zombie;
@@ -12,6 +15,9 @@ public struct DamageZombieParameters
 
     public bool respectArmor;
 
+    /// <summary>
+    /// Should game mode config damage multiplier be factored in?
+    /// </summary>
     public bool applyGlobalArmorMultiplier;
 
     public bool allowBackstab;
@@ -26,6 +32,9 @@ public struct DamageZombieParameters
 
     public object instigator;
 
+    /// <summary>
+    /// Equivalent to the "armor" parameter of the legacy damage function.
+    /// </summary>
     public bool legacyArmor
     {
         set

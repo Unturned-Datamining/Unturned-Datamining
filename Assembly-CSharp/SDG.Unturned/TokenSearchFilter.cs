@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Splits string and compares substrings ignoring case.
+/// Tokens containing a colon ':' are ignored so that they can represent special filters like MasterBundleSearchFilter.
+/// </summary>
 public struct TokenSearchFilter
 {
     private string[] tokens;

@@ -58,6 +58,10 @@ public class MenuPlaySingleplayerUI
 
     private static SleekNew curatedStatusLabel;
 
+    /// <summary>
+    /// Stockpile item definition id with rev-share for the level creators.
+    /// Randomly selected from associated items list.
+    /// </summary>
     private static int featuredItemDefId;
 
     private bool hasCreatedFeaturedMapLabel;

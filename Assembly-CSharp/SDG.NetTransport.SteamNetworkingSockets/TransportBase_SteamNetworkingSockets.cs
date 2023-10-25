@@ -16,20 +16,35 @@ public abstract class TransportBase_SteamNetworkingSockets : TransportBase
         public string message;
     }
 
+    /// <summary>
+    /// Should certificate authentication be disabled for UDP connections?
+    /// </summary>
     protected static CommandLineFlag clAllowWithoutAuth = new CommandLineFlag(defaultValue: false, "-SNS_AllowWithoutAuth");
 
+    /// <summary>
+    /// Thanks DiFFoZ! Ensures GC does not release the delegate.
+    /// </summary>
     private FSteamNetworkingSocketsDebugOutput debugOutputFunc;
 
     private ConcurrentQueue<DebugOutput> debugOutputQueue = new ConcurrentQueue<DebugOutput>();
 
+    /// <summary>
+    /// Does host want extra debug output?
+    /// </summary>
     private static CommandLineInt clLogSteamNetworkingSockets = new CommandLineInt("-LogSteamNetworkingSockets");
 
+    /// <summary>
+    /// Log verbose information that should not be included in release builds.
+    /// </summary>
     [Conditional("LOG_NETTRANSPORT_STEAMNETWORKINGSOCKETS")]
     internal void DebugLog(string format, params object[] args)
     {
         UnturnedLog.info(format, args);
     }
 
+    /// <summary>
+    /// Log helpful information that should be included in release builds.
+    /// </summary>
     internal void Log(string format, params object[] args)
     {
         UnturnedLog.info(format, args);
@@ -145,6 +160,10 @@ public abstract class TransportBase_SteamNetworkingSockets : TransportBase
         return debugOutputFunc;
     }
 
+    /// <summary>
+    /// This callback may be called from a service thread. It must be threadsafe and fast! Do not make any other
+    /// Steamworks calls from within the handler.
+    /// </summary>
     private void OnDebugOutput(ESteamNetworkingSocketsDebugOutputType nType, IntPtr pszMsg)
     {
         try

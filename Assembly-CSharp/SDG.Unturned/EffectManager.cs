@@ -41,8 +41,14 @@ public class EffectManager : SteamCaller
 
     private static List<InputField> inputFieldComponents = new List<InputField>();
 
+    /// <summary>
+    /// TextMesh Pro uGUI text components.
+    /// </summary>
     private static List<TextMeshProUGUI> tmpTexts = new List<TextMeshProUGUI>();
 
+    /// <summary>
+    /// TextMesh Pro uGUI input field components.
+    /// </summary>
     private static List<TMP_InputField> tmpInputFields = new List<TMP_InputField>();
 
     private static EffectManager manager;
@@ -101,14 +107,31 @@ public class EffectManager : SteamCaller
 
     private static readonly ServerStaticMethod<string, string> SendEffectTextCommitted = ServerStaticMethod<string, string>.Get(ReceiveEffectTextCommitted);
 
+    /// <summary>
+    /// Objects registered so that they can be destroyed all at once if needed.
+    /// May be null if they were destroyed with a timer.
+    /// </summary>
     private List<GameObject> debrisGameObjects = new List<GameObject>();
 
+    /// <summary>
+    /// Plugin UIs spawned by the server.
+    /// </summary>
     private List<UIEffectInstance> uiEffectInstances = new List<UIEffectInstance>();
 
+    /// <summary>
+    /// Maps root transform to any attached effects.
+    /// This allows us to detach effects when returning a barricade/structure to their pool.
+    /// </summary>
     private static Dictionary<Transform, List<GameObject>> attachedEffects;
 
+    /// <summary>
+    /// Recycled lists for attachedEffects dictionary.
+    /// </summary>
     private static Stack<List<GameObject>> attachedEffectsListPool;
 
+    /// <summary>
+    /// Exposed for Rocket transition to modules backwards compatibility.
+    /// </summary>
     public static EffectManager instance => manager;
 
     [Obsolete("Renamed to InstantiateFromPool to fix name conflict with Object.Instantiate")]
@@ -266,6 +289,10 @@ public class EffectManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// This effect makes a nice clicky sound and lots of older code used it,
+    /// so I moved it into a little helper method here.
+    /// </summary>
     internal static void TriggerFiremodeEffect(Vector3 position)
     {
         EffectAsset effectAsset = FiremodeRef.Find();
@@ -738,6 +765,8 @@ public class EffectManager : SteamCaller
         }
     }
 
+    /// <param name="shouldCache">If true, client will download the image once and re-use it for subsequent calls.</param>
+    /// <param name="forceRefresh">If true, client will destroy any cached copy of the image and re-acquire it.</param>
     public static void sendUIEffectImageURL(short key, ITransportConnection transportConnection, bool reliable, string childName, string url, bool shouldCache = true, bool forceRefresh = false)
     {
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
@@ -1057,6 +1086,9 @@ public class EffectManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// Notify server that a button was clicked in a clientside effect.
+    /// </summary>
     public static void sendEffectClicked(string buttonName)
     {
         SendEffectClicked.Invoke(ENetReliability.Reliable, buttonName);
@@ -1079,6 +1111,9 @@ public class EffectManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// Notify server that an input field text was committed.
+    /// </summary>
     public static void sendEffectTextCommitted(string inputFieldName, string text)
     {
         SendEffectTextCommitted.Invoke(ENetReliability.Reliable, inputFieldName, text);
@@ -1094,6 +1129,9 @@ public class EffectManager : SteamCaller
         return transform;
     }
 
+    /// <summary>
+    /// If an effect with a given key exists, destroy it.
+    /// </summary>
     private static void destroyUIEffect(short key)
     {
         if (indexedUIEffects.TryGetValue(key, out var value))
@@ -1280,6 +1318,9 @@ public class EffectManager : SteamCaller
         return internalSpawnEffect(asset, point, rotation, scaleMultiplier, wasInstigatedByPlayer, parent);
     }
 
+    /// <summary>
+    /// parent should only be set if that system also calls ClearAttachments, otherwise attachedEffects will leak memory.
+    /// </summary>
     internal static Transform internalSpawnEffect(EffectAsset asset, Vector3 point, Quaternion rotation, Vector3 scaleMultiplier, bool wasInstigatedByPlayer, Transform parent)
     {
         if (parent != null && !parent.gameObject.activeInHierarchy)
@@ -1414,6 +1455,10 @@ public class EffectManager : SteamCaller
         return transform;
     }
 
+    /// <summary>
+    /// Helper for sending and spawning effects.
+    /// Newer and refactored code should use this method.
+    /// </summary>
     public static void triggerEffect(TriggerEffectParameters parameters)
     {
         if (parameters.asset == null)
@@ -1614,6 +1659,9 @@ public class EffectManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// Called prior to destroying effect (if attached) to free up attachments list.
+    /// </summary>
     internal static void UnregisterAttachment(GameObject effect)
     {
         Transform root = effect.transform.root;
@@ -1628,6 +1676,9 @@ public class EffectManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// Called after attaching effect so that it can be returned to pool when/if parent is destroyed.
+    /// </summary>
     private static void RegisterAttachment(GameObject effect)
     {
         Transform root = effect.transform.root;

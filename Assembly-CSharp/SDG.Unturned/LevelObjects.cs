@@ -7,6 +7,11 @@ namespace SDG.Unturned;
 
 public class LevelObjects : MonoBehaviour
 {
+    /// <summary>
+    /// Should objects that failed to load due to missing assets be saved?
+    /// If true, a placeholder transform is created and used to save.
+    /// If false, objects without assets are zeroed during save. (old default)  
+    /// </summary>
     public static CommandLineFlag preserveMissingAssets = new CommandLineFlag(defaultValue: true, "-NoPreserveMissingObjects");
 
     private const byte SAVEDATA_VERSION_BEFORE_NAMED_VERSIONS = 10;
@@ -73,6 +78,9 @@ public class LevelObjects : MonoBehaviour
 
     public static int[,] loads => _loads;
 
+    /// <summary>
+    /// Hash of Objects.dat
+    /// </summary>
     public static byte[] hash { get; private set; }
 
     public static bool shouldInstantlyLoad { get; private set; }
@@ -881,6 +889,9 @@ public class LevelObjects : MonoBehaviour
         isHierarchyReady = true;
     }
 
+    /// <summary>
+    /// Called by navmesh baking to complete pending object changes that may affect which nav objects are enabled.
+    /// </summary>
     internal static void ImmediatelySyncRegionalVisibility()
     {
         if (!isRegionalVisibilityDirty)
@@ -905,6 +916,9 @@ public class LevelObjects : MonoBehaviour
         isRegionalVisibilityDirty = false;
     }
 
+    /// <summary>
+    /// Stagger regional visibility across multiple frames.
+    /// </summary>
     private void tickRegionalVisibility()
     {
         bool flag = true;

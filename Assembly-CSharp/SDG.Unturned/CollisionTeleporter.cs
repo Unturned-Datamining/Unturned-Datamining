@@ -2,11 +2,20 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Seamlessly teleports player to an equivalent position at the destination upon contact.
+/// </summary>
 [AddComponentMenu("Unturned/Collision Teleporter")]
 public class CollisionTeleporter : MonoBehaviour
 {
+    /// <summary>
+    /// Target position and rotation.
+    /// </summary>
     public Transform DestinationTransform;
 
+    /// <summary>
+    /// Only used in the Unity editor for visualization.
+    /// </summary>
     public Color GizmoColor = Color.blue;
 
     private void OnTriggerEnter(Collider other)

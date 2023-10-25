@@ -9,6 +9,9 @@ public class LogFile
 
     private StreamWriter writer;
 
+    /// <summary>
+    /// Absolute path to *.log file.
+    /// </summary>
     public string path { get; private set; }
 
     public LogFile(string path)

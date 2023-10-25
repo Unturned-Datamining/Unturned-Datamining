@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Properties common to asset and extensions. For example both can specify sounds.
+/// </summary>
 public class PhysicsMaterialAssetBase : Asset
 {
     public Dictionary<string, MasterBundleReference<OneShotAudioDefinition>> audioDefs;

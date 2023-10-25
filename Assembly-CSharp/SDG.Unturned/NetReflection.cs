@@ -27,12 +27,18 @@ public static class NetReflection
 
     public static readonly int serverMethodsBitCount;
 
+    /// <summary>
+    /// Number of server methods with rate limits.
+    /// </summary>
     public static readonly int rateLimitedMethodsCount;
 
     private static List<string> pendingMessages;
 
     private static Action<string> logCallback;
 
+    /// <summary>
+    /// Log all known net methods.
+    /// </summary>
     public static void Dump()
     {
         Log($"{clientMethods.Length} client methods ({clientMethodsBitCount} bits):");
@@ -169,6 +175,9 @@ public static class NetReflection
         }
     }
 
+    /// <summary>
+    /// This class gets used from type initializers, so Unity's built-in log is not an option unfortunately.
+    /// </summary>
     private static void Log(string message)
     {
         if (logCallback != null)

@@ -1,5 +1,11 @@
 namespace SDG.Unturned;
 
+/// <summary>
+/// Almost every menu has a container element for its contents which spans the entire screen. This element is then
+/// animated into and out of view. In the IMGUI implementation this was fine because containers off-screen were not
+/// processed, but with uGUI they were still considered active. To solve the uGUI performance overhead this class
+/// was introduced to disable visibility after animating out of view.
+/// </summary>
 public class SleekFullscreenBox : SleekWrapper
 {
     public void AnimateIntoView()

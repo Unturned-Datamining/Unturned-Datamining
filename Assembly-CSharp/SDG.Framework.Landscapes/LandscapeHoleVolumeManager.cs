@@ -28,6 +28,9 @@ public class LandscapeHoleVolumeManager : VolumeManager<LandscapeHoleVolume, Lan
 
     private List<HoleModification> holeModifications = new List<HoleModification>();
 
+    /// <summary>
+    /// Called by loading after landscapes (and legacy conversion) have been loaded.
+    /// </summary>
     public void ApplyToTerrain()
     {
         modifiedTiles.Clear();

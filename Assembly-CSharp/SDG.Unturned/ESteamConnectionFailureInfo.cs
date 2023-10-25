@@ -54,19 +54,60 @@ public enum ESteamConnectionFailureInfo
     BATTLEYE_UPDATE,
     BATTLEYE_UNKNOWN,
     LEVEL_VERSION,
+    /// <summary>
+    /// EconInfo.json hash does not match.
+    /// </summary>
     ECON_HASH,
+    /// <summary>
+    /// Master bundle hashes do not match.
+    /// </summary>
     HASH_MASTER_BUNDLE,
     REJECT_UNKNOWN,
     WORKSHOP_DOWNLOAD_RESTRICTION,
+    /// <summary>
+    /// Workshop usage advertised on server list does not match during connect.
+    /// </summary>
     WORKSHOP_ADVERTISEMENT_MISMATCH,
+    /// <summary>
+    /// Used by client transport to show a custom localized message.
+    /// </summary>
     CUSTOM,
+    /// <summary>
+    /// Server has not received an auth session response from Steam yet.
+    /// </summary>
     LATE_PENDING_STEAM_AUTH,
+    /// <summary>
+    /// Server has not received an economy response from Steam yet.
+    /// </summary>
     LATE_PENDING_STEAM_ECON,
+    /// <summary>
+    /// Server has not received a groups response from Steam yet.
+    /// </summary>
     LATE_PENDING_STEAM_GROUPS,
+    /// <summary>
+    /// Player nickname exceeds limit.
+    /// </summary>
     NAME_PRIVATE_LONG,
+    /// <summary>
+    /// Player nickname contains invalid characters.
+    /// </summary>
     NAME_PRIVATE_INVALID,
+    /// <summary>
+    /// Player nickname should not be a number.
+    /// </summary>
     NAME_PRIVATE_NUMBER,
+    /// <summary>
+    /// Server did not respond to EServerMessage.Authenticate
+    /// </summary>
     TIMED_OUT_LOGIN,
+    /// <summary>
+    /// Player resources folders don't match.
+    /// </summary>
     HASH_RESOURCES,
+    /// <summary>
+    /// The network identity in the ticket does not match the server authenticating the ticket.
+    /// This can happen if server's Steam ID has changed from what the client thinks it is.
+    /// For example, joining a stale entry in the server list. (public issue #4101)
+    /// </summary>
     AUTH_NETWORK_IDENTITY_FAILURE
 }

@@ -52,6 +52,9 @@ public class RagdollTool
         }
     }
 
+    /// <summary>
+    /// Find materials in finished ragdoll and replace them with the appropriate effect.
+    /// </summary>
     private static void applyRagdollEffect(Transform root, ERagdollEffect effect)
     {
         if (effect == ERagdollEffect.NONE)

@@ -66,16 +66,34 @@ public class MenuSurvivorsClothingUI
 
     private static SleekButtonIcon refreshButton;
 
+    /// <summary>
+    /// Toggle button to open/close advanced filters panel.
+    /// </summary>
     private static SleekButtonIcon optionsButton;
 
+    /// <summary>
+    /// On/off checkbox for including description text in filter.
+    /// </summary>
     private static ISleekToggle searchDescriptionsToggle;
 
+    /// <summary>
+    /// Switch between sort modes.
+    /// </summary>
     private static SleekButtonState sortModeButton;
 
+    /// <summary>
+    /// On/off checkbox to reverse sort results.
+    /// </summary>
     private static ISleekToggle reverseSortOrderToggle;
 
+    /// <summary>
+    /// On/off checkbox to show only equipped items.
+    /// </summary>
     private static ISleekToggle filterEquippedToggle;
 
+    /// <summary>
+    /// Container for advanced options.
+    /// </summary>
     private static ISleekElement optionsPanel;
 
     private static ISleekSlider characterSlider;
@@ -88,12 +106,24 @@ public class MenuSurvivorsClothingUI
 
     private static ulong filterInstigator;
 
+    /// <summary>
+    /// Whether to include description text in filter.
+    /// </summary>
     private static bool searchDescriptions;
 
+    /// <summary>
+    /// How to sort filtered items.
+    /// </summary>
     private static ESortMode sortMode;
 
+    /// <summary>
+    /// Should sorted list be reversed?
+    /// </summary>
     private static bool reverseSortOrder;
 
+    /// <summary>
+    /// Should only equipped items be shown?
+    /// </summary>
     private static bool filterEquipped;
 
     private MenuSurvivorsClothingItemUI itemUI;
@@ -371,6 +401,9 @@ public class MenuSurvivorsClothingUI
         }
     }
 
+    /// <summary>
+    /// Remove items that do not match search text.
+    /// </summary>
     private static void applySearchTextFilter()
     {
         string text = searchField.Text;
@@ -418,6 +451,9 @@ public class MenuSurvivorsClothingUI
         }
     }
 
+    /// <summary>
+    /// Removed items that are not equipped.
+    /// </summary>
     private static void applyEquippedFilter()
     {
         if (!filterEquipped)

@@ -36,6 +36,10 @@ public struct DynamicEconDetails
         return false;
     }
 
+    /// <summary>
+    /// Parse dynamic tag mythic effect.
+    /// </summary>
+    /// <returns>ID of mythical asset, or zero if not in tags.</returns>
     public ushort getParticleEffect()
     {
         int num = tags.IndexOf("particle_effect:");

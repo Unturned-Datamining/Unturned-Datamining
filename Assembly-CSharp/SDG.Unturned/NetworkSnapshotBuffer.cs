@@ -61,6 +61,9 @@ public class NetworkSnapshotBuffer<T> where T : ISnapshotInfo<T>
         return result;
     }
 
+    /// <summary>
+    /// Sets the point to lerp from, should be called after resetting position or things like that.
+    /// </summary>
     public void updateLastSnapshot(T info)
     {
         readIndex = 0;

@@ -24,6 +24,9 @@ public class FoliageSystem : DevkitHierarchyItemBase
 
     protected static Dictionary<FoliageCoord, FoliageTile> tiles;
 
+    /// <summary>
+    /// Implementation of tile data storage.
+    /// </summary>
     protected static IFoliageStorage storage;
 
     protected static Queue<KeyValuePair<FoliageTile, List<IFoliageSurface>>> bakeQueue;
@@ -46,10 +49,22 @@ public class FoliageSystem : DevkitHierarchyItemBase
 
     public bool hiddenByMaterialEditor;
 
+    /// <summary>
+    /// 2022-04-26: drawTiles previously looped over a square [-N, +N] from the upper-left to the bottom-right,
+    /// and each tile checked radial distance. We can improve over this by pre-computing the radial offsets and
+    /// starting from the center to improve responsiveness. N is [1, 5]
+    /// </summary>
     private static readonly FoliageCoord[][] DRAW_OFFSETS;
 
+    /// <summary>
+    /// Version number associated with this particular system instance.
+    /// </summary>
     protected uint version;
 
+    /// <summary>
+    /// 2022-04-26: this used to be environment layer, but "scope focus foliage" can draw outside that render distance
+    /// so we now use the sky layer which is visible up to the far clip plane.
+    /// </summary>
     private const int foliageRenderLayer = 18;
 
     public static FoliageSystem instance { get; private set; }
@@ -60,6 +75,9 @@ public class FoliageSystem : DevkitHierarchyItemBase
 
     public static int bakeQueueTotal { get; private set; }
 
+    /// <summary>
+    /// Settings configured when starting the bake.
+    /// </summary>
     public static FoliageBakeSettings bakeSettings { get; private set; }
 
     public static event FoliageSystemPreBakeHandler preBake;
@@ -492,6 +510,9 @@ public class FoliageSystem : DevkitHierarchyItemBase
         writer.endObject();
     }
 
+    /// <summary>
+    /// Automatically placing foliage onto tiles in editor.
+    /// </summary>
     protected void tickBakeQueue()
     {
         KeyValuePair<FoliageTile, List<IFoliageSurface>> keyValuePair = bakeQueue.Dequeue();

@@ -8,15 +8,31 @@ namespace SDG.Unturned;
 
 public class MenuSurvivorsClothingBoxUI
 {
+    /// <summary>
+    /// Internal struct menu uses to sort items in box.
+    /// </summary>
     private struct BoxEntry
     {
+        /// <summary>
+        /// Item definition id.
+        /// </summary>
         public int id;
 
+        /// <summary>
+        /// Rarity used to sort mythical &gt; legendary &gt; epic &gt; rare.
+        /// </summary>
         public EItemRarity rarity;
 
+        /// <summary>
+        /// [0, 1] calculated chance of this item being unboxed.
+        /// Shown to player in item tooltips.
+        /// </summary>
         public float probability;
     }
 
+    /// <summary>
+    /// Sorts box entries from highest to lowest rarity.
+    /// </summary>
     private class BoxEntryComparer : Comparer<BoxEntry>
     {
         public override int Compare(BoxEntry x, BoxEntry y)
@@ -82,10 +98,20 @@ public class MenuSurvivorsClothingBoxUI
 
     private static ulong instance;
 
+    /// <summary>
+    /// Items server told us we unboxed, but we wait for the animation to finish before showing.
+    /// Typically one, but some newer boxes have bonus items occassionally.
+    /// </summary>
     private static List<SteamItemDetails_t> unboxedItems;
 
+    /// <summary>
+    /// Is one of the unboxed items mythical rarity?
+    /// </summary>
     private static bool didUnboxMythical;
 
+    /// <summary>
+    /// Items in the box.
+    /// </summary>
     private static List<BoxEntry> boxEntries;
 
     private static int numBoxEntries;
@@ -122,11 +148,19 @@ public class MenuSurvivorsClothingBoxUI
 
     private static SleekInventory[] dropButtons;
 
+    /// <summary>
+    /// Format qualityRarities as ##.#
+    /// Does not use 'P' format because localized strings unfortunately already had % sign.
+    /// </summary>
     private static string formatQualityRarity(EItemRarity rarity)
     {
         return (qualityRarities[rarity] * 100f).ToString("0.0");
     }
 
+    /// <summary>
+    /// Skip unboxing animation.
+    /// Initial call rotates to just before the item, next call skips entirely.
+    /// </summary>
     public static void skipAnimation()
     {
         if (!isUnboxing || target == -1)
@@ -401,6 +435,10 @@ public class MenuSurvivorsClothingBoxUI
         unboxButton.IsVisible = false;
     }
 
+    /// <summary>
+    /// Does client know about all the granted items?
+    /// If not, either something is bad in the econ config (uh oh!) or client is out of date.
+    /// </summary>
     private static bool hasAssetsForGrantedItems(List<SteamItemDetails_t> grantedItems)
     {
         foreach (SteamItemDetails_t grantedItem in grantedItems)

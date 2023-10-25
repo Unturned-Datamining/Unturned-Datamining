@@ -8,14 +8,26 @@ public class WeatherComponentBase : MonoBehaviour
 {
     public WeatherAssetBase asset;
 
+    /// <summary>
+    /// [0, 1] blends towards one while active regardless of local volume.
+    /// </summary>
     public float globalBlendAlpha;
 
+    /// <summary>
+    /// [0, 1] blends towards one if current volume bitwise AND with asset is non-zero.
+    /// </summary>
     public float localVolumeBlendAlpha;
 
     public bool isWeatherActive;
 
+    /// <summary>
+    /// If blending was not ticket yet then local blend can use global value, e.g. loading into rain storm.
+    /// </summary>
     public bool hasTickedBlending;
 
+    /// <summary>
+    /// Is blendAlpha at 100%?
+    /// </summary>
     public bool isFullyTransitionedIn;
 
     public Color fogColor;
@@ -32,8 +44,14 @@ public class WeatherComponentBase : MonoBehaviour
 
     public Color cloudRimColor;
 
+    /// <summary>
+    /// [0, 1] Rain puddle alpha cutoff.
+    /// </summary>
     public float puddleWaterLevel;
 
+    /// <summary>
+    /// [0, 1] Rain puddle ripples alpha.
+    /// </summary>
     public float puddleIntensity;
 
     public float brightnessMultiplier = 1f;
@@ -50,6 +68,9 @@ public class WeatherComponentBase : MonoBehaviour
 
     internal NetId netId;
 
+    /// <summary>
+    /// Lesser of global or volume blend alphas. 
+    /// </summary>
     public float EffectBlendAlpha => Mathf.Min(globalBlendAlpha, localVolumeBlendAlpha);
 
     public NetId GetNetId()

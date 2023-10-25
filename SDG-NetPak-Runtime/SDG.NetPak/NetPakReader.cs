@@ -2,15 +2,34 @@ using System;
 
 namespace SDG.NetPak;
 
+/// <summary>
+/// Unpacks bits from a byte array into a 32-bit buffer value. GafferOnGames recommends this approach rather than
+/// "farting across a buffer at byte level like it's 1985".
+/// </summary>
 public class NetPakReader
 {
+    /// <summary>
+    /// Lightweight error when exceptions are disabled. Bitwise OR to prevent different errors from clobbering each other. 
+    /// </summary>
     [Flags]
     public enum EErrorFlags
     {
         None = 0,
+        /// <summary>
+        /// Call to ReadBits or ReadBytes would have overflowed our buffer.
+        /// </summary>
         SourceBufferOverflow = 1,
+        /// <summary>
+        /// Buffer passed into ReadBytes would have overflowed.
+        /// </summary>
         DestinationBufferOverflow = 2,
+        /// <summary>
+        /// AlignToByte bits should be zero.
+        /// </summary>
         AlignmentPadding = 4,
+        /// <summary>
+        /// Buffer passed into SaveState would have overflowed.
+        /// </summary>
         SaveStateBufferOverflow = 8
     }
 
@@ -26,10 +45,20 @@ public class NetPakReader
 
     public EErrorFlags errors;
 
+    /// <summary>
+    /// Imprecise because sent byte length is rounded up from bit length, but should help find particularly
+    /// egregious reading errors.
+    /// </summary>
     public bool ReachedEndOfSegment => readByteIndex == bufferLength;
 
+    /// <summary>
+    /// Number of bytes until end of segment is reached.
+    /// </summary>
     public int RemainingSegmentLength => bufferLength - readByteIndex;
 
+    /// <summary>
+    /// Save remaining data to resume reading later. Used by net invokables to defer invocation.
+    /// </summary>
     public unsafe bool SaveState(out uint scratch, out int scratchBitCount, byte[] buffer)
     {
         long num = RemainingSegmentLength;
@@ -75,6 +104,9 @@ public class NetPakReader
         errors = EErrorFlags.None;
     }
 
+    /// <summary>
+    /// Used by invocation messages to show more error context rather than the default.
+    /// </summary>
     public void ResetErrors()
     {
         errors = EErrorFlags.None;
@@ -98,6 +130,9 @@ public class NetPakReader
         this.bufferLength = bufferLength;
     }
 
+    /// <summary>
+    /// Used by NetInvokable loopback to copy buffer from writer to reader.
+    /// </summary>
     public unsafe void SetBufferSegmentCopy(byte[] sourceBuffer, byte[] destinationBuffer, int bufferLength)
     {
         buffer = destinationBuffer;
@@ -179,6 +214,10 @@ public class NetPakReader
         return true;
     }
 
+    /// <summary>
+    /// Assumes length is greater than zero!
+    /// Moves reader forward according to length.
+    /// </summary>
     public bool ReadBytesPtr(int length, out byte[] source, out int bufferOffset)
     {
         if (!AlignToByte())

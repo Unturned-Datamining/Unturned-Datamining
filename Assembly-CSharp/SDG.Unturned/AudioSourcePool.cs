@@ -88,6 +88,9 @@ internal class AudioSourcePool : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Timer needs playId as well in case source has been recycled by the time duration expires.
+    /// </summary>
     private IEnumerator PlayCoroutine(PooledAudioSource audioSource, int playId, float duration)
     {
         if (duration < 1f)

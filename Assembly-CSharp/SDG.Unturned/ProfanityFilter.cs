@@ -14,6 +14,10 @@ public class ProfanityFilter
 
     public static CommandLineFlag shouldInitSteamTextFiltering = new CommandLineFlag(defaultValue: true, "-NoSteamTextFiltering");
 
+    /// <summary>
+    /// 2023-04-17: suggestion is to have a hardcoded list of hate speech that gets filtered
+    /// regardless of whether profanity filter is enabled. (https://forum.smartlydressedgames.com/t/22477)
+    /// </summary>
     private static readonly string[] hardcodedBannedWords = new string[18]
     {
         "nigger", "niggers", "niger", "nigers", "jew", "jews", "fag", "fags", "faggot", "faggots",

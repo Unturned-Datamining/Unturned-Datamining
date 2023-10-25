@@ -5,6 +5,9 @@ using UnityEngine.PlayerLoop;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Disables Unity native systems unused by Unturned.
+/// </summary>
 public static class UnturnedPlayerLoop
 {
     public static void initialize()

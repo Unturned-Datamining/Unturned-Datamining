@@ -4,6 +4,10 @@ using System.IO;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Allows mappers to bulk replace assets by listing pairs in a text file.
+/// https://github.com/SmartlyDressedGames/Unturned-3.x-Community/issues/2275
+/// </summary>
 public static class EditorAssetRedirector
 {
     private static Dictionary<Guid, Guid> mappings;

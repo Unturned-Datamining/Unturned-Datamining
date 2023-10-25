@@ -145,6 +145,10 @@ public class StructureDrop
         }
     }
 
+    /// <summary>
+    /// Not using rate limit attribute because this is potentially called for hundreds of structures at once,
+    /// and only admins will actually be allowed to apply the transform.
+    /// </summary>
     [SteamCall(ESteamCallValidation.SERVERSIDE)]
     public void ReceiveTransformRequest(in ServerInvocationContext context, Vector3 point, byte angle_x, byte angle_y, byte angle_z)
     {
@@ -221,11 +225,18 @@ public class StructureDrop
         StructureManager.destroyStructure(this, x, y, (_model.position - player.transform.position).normalized * 100f, wasPickedUp: true);
     }
 
+    /// <summary>
+    /// See BarricadeRegion.FindBarricadeByRootFast comment.
+    /// </summary>
     internal static StructureDrop FindByRootFast(Transform rootTransform)
     {
         return rootTransform.GetComponent<StructureRefComponent>().tempNotSureIfStructureShouldBeAComponentYet;
     }
 
+    /// <summary>
+    /// For code which does not know whether transform exists and/or even is part of a house.
+    /// See BarricadeRegion.FindBarricadeByRootFast comment.
+    /// </summary>
     internal static StructureDrop FindByTransformFastMaybeNull(Transform transform)
     {
         return transform?.root.GetComponent<StructureRefComponent>()?.tempNotSureIfStructureShouldBeAComponentYet;

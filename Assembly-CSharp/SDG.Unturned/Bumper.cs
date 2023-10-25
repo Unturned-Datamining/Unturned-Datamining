@@ -30,6 +30,9 @@ public class Bumper : MonoBehaviour
         vehicle = newVehicle;
     }
 
+    /// <summary>
+    /// Get SteamID of vehicle's driver, or nil if not driven.
+    /// </summary>
     protected CSteamID getInstigatorSteamID()
     {
         if ((bool)vehicle && vehicle.isDriven)
@@ -39,6 +42,9 @@ public class Bumper : MonoBehaviour
         return CSteamID.Nil;
     }
 
+    /// <summary>
+    /// Crashed into something, if applicable take self damage from collision.
+    /// </summary>
     protected void takeCrashDamage(float damage, bool canRepair = true)
     {
         if (!(vehicle == null) && vehicle.asset != null && vehicle.asset.isVulnerableToBumper)

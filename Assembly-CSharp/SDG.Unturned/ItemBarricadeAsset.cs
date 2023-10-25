@@ -25,8 +25,14 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
 
     protected ushort _explosion;
 
+    /// <summary>
+    /// If false this barricade cannot take damage.
+    /// </summary>
     public bool canBeDamaged = true;
 
+    /// <summary>
+    /// Modded barricades can disable pooling if they have custom incompatible logic.
+    /// </summary>
     public bool eligibleForPooling = true;
 
     protected bool _isLocked;
@@ -41,12 +47,19 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
 
     protected bool _isUnpickupable;
 
+    /// <summary>
+    /// Defaults to false, except for explosive charges which bypass claims.
+    /// Requested by Renaxon for collectible barricades that raiders can steal without destroying.
+    /// </summary>
     public bool shouldBypassPickupOwnership;
 
     protected bool _isSalvageable;
 
     protected bool _isSaveable;
 
+    /// <summary>
+    /// Optional alternative barricade prefab specifically for the client preview spawned.
+    /// </summary>
     public MasterBundleReference<GameObject> placementPreviewRef;
 
     private Guid _vehicleGuid;
@@ -99,6 +112,10 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
 
     public bool isUnpickupable => _isUnpickupable;
 
+    /// <summary>
+    /// Defaults to false, except for explosive charges which bypass claims.
+    /// If true the item can be placed inside player clip volumes. (out of bounds)
+    /// </summary>
     public bool AllowPlacementInsideClipVolumes { get; private set; }
 
     public bool isSalvageable => _isSalvageable;
@@ -107,6 +124,10 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
 
     public bool isSaveable => _isSaveable;
 
+    /// <summary>
+    /// Should door colliders remain active while animation is playing?
+    /// Enabled by modders trying to make stuff like elevators.
+    /// </summary>
     public bool allowCollisionWhileAnimating { get; protected set; }
 
     public override bool shouldFriendlySentryTargetUser => true;

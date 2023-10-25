@@ -14,6 +14,11 @@ public class MenuPlayConnectUI
 
     public static bool active;
 
+    /// <summary>
+    /// These server relay variables redirect the client to another server when the menu opens
+    /// similar to how Steam sets the +connect string on game startup. Allows plugin to redirect
+    /// player to another server on the same network.
+    /// </summary>
     public static bool hasPendingServerRelay;
 
     public static uint serverRelayIP;
@@ -38,6 +43,7 @@ public class MenuPlayConnectUI
 
     private static bool isLaunched;
 
+    /// <param name="shouldAutoJoin">If true the server is immediately joined, otherwise show server details beforehand.</param>
     public static void connect(SteamConnectionInfo info, bool shouldAutoJoin)
     {
         Provider.provider.matchmakingService.connect(info);

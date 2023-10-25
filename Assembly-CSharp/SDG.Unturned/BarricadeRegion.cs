@@ -23,6 +23,9 @@ public class BarricadeRegion
 
     public Transform parent => _parent;
 
+    /// <summary>
+    /// New code should not use this. Only intended for backwards compatibility.
+    /// </summary>
     public int IndexOfBarricadeByRootTransform(Transform rootTransform)
     {
         for (int i = 0; i < _drops.Count; i++)
@@ -47,6 +50,11 @@ public class BarricadeRegion
         return null;
     }
 
+    /// <summary>
+    /// Ideally the interactable components should have a reference to their barricade, but that will maybe happen
+    /// after the NetId rewrites. For the meantime this is to avoid calling FindBarricadeByRootTransform. If we go
+    /// the component route then FindBarricadeByRootTransform will do the same as this method.
+    /// </summary>
     internal BarricadeDrop FindBarricadeByRootFast(Transform rootTransform)
     {
         return rootTransform.GetComponent<BarricadeRefComponent>().tempNotSureIfBarricadeShouldBeAComponentYet;

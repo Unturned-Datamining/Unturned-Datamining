@@ -15,14 +15,29 @@ public class WeatherAssetBase : Asset
 
     public float lightningTargetRadius;
 
+    /// <summary>
+    /// Seconds between weather event starting and reaching full intensity.
+    /// </summary>
     public float fadeInDuration { get; protected set; }
 
+    /// <summary>
+    /// Seconds between weather event ending and reaching zero intensity.
+    /// </summary>
     public float fadeOutDuration { get; protected set; }
 
+    /// <summary>
+    /// Sound clip to play. Volume matches the intensity.
+    /// </summary>
     public MasterBundleReference<AudioClip> ambientAudio { get; protected set; }
 
+    /// <summary>
+    /// Component to spawn for additional weather logic.
+    /// </summary>
     public Type componentType { get; protected set; }
 
+    /// <summary>
+    /// If per-volume mask AND is non zero the weather will blend in.
+    /// </summary>
     public uint volumeMask { get; protected set; }
 
     public bool hasLightning { get; protected set; }

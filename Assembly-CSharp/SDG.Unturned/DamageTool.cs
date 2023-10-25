@@ -55,10 +55,19 @@ public class DamageTool
 
     private static readonly AssetReference<EffectAsset> AlienDynamicRef = new AssetReference<EffectAsset>("67a4addd45174d7e9ca5c8ec24f8010f");
 
+    /// <summary>
+    /// Replacement for playerDamaged.
+    /// </summary>
     public static event DamagePlayerHandler damagePlayerRequested;
 
+    /// <summary>
+    /// Replacement for zombieDamaged.
+    /// </summary>
     public static event DamageZombieHandler damageZombieRequested;
 
+    /// <summary>
+    /// Replacement for animalDamaged.
+    /// </summary>
     public static event DamageAnimalHandler damageAnimalRequested;
 
     public static event PlayerAllowedToDamagePlayerHandler onPlayerAllowedToDamagePlayer;
@@ -171,11 +180,17 @@ public class DamageTool
         return transform;
     }
 
+    /// <summary>
+    /// Was necessary when structures were children of level transform.
+    /// </summary>
     public static Transform getStructureRootTransform(Transform structureTransform)
     {
         return structureTransform.root;
     }
 
+    /// <summary>
+    /// Was necessary when trees were children of ground transform.
+    /// </summary>
     public static Transform getResourceRootTransform(Transform resourceTransform)
     {
         return resourceTransform.root;
@@ -282,6 +297,9 @@ public class DamageTool
         damagePlayer(parameters, out kill);
     }
 
+    /// <summary>
+    /// Get average explosionArmor of player's equipped clothing.
+    /// </summary>
     public static float getPlayerExplosionArmor(Player player)
     {
         if (player == null)
@@ -372,6 +390,9 @@ public class DamageTool
         return 1f;
     }
 
+    /// <summary>
+    /// Refer to getPlayerExplosionArmor for explanation of total/average.
+    /// </summary>
     public static float GetZombieExplosionArmor(Zombie zombie)
     {
         if (zombie.type < LevelZombies.tables.Count)
@@ -445,6 +466,9 @@ public class DamageTool
         damagePlayer(parameters, out kill);
     }
 
+    /// <summary>
+    /// Do damage to a zombie.
+    /// </summary>
     public static void damageZombie(DamageZombieParameters parameters, out EPlayerKill kill, out uint xp)
     {
         if (parameters.zombie == null || parameters.zombie.isDead)
@@ -501,6 +525,9 @@ public class DamageTool
         }
     }
 
+    /// <summary>
+    /// Legacy function replaced by damageZombie.
+    /// </summary>
     public static void damage(Zombie zombie, Vector3 direction, float damage, float times, out EPlayerKill kill, out uint xp, EZombieStunOverride zombieStunOverride = EZombieStunOverride.None, ERagdollEffect ragdollEffect = ERagdollEffect.NONE)
     {
         DamageZombieParameters parameters = new DamageZombieParameters(zombie, direction, damage);
@@ -510,6 +537,9 @@ public class DamageTool
         damageZombie(parameters, out kill, out xp);
     }
 
+    /// <summary>
+    /// Legacy function replaced by damageZombie.
+    /// </summary>
     public static void damage(Zombie zombie, ELimb limb, Vector3 direction, IDamageMultiplier multiplier, float times, bool armor, out EPlayerKill kill, out uint xp, EZombieStunOverride zombieStunOverride = EZombieStunOverride.None, ERagdollEffect ragdollEffect = ERagdollEffect.NONE)
     {
         DamageZombieParameters parameters = DamageZombieParameters.make(zombie, direction, multiplier, limb);
@@ -520,6 +550,9 @@ public class DamageTool
         damageZombie(parameters, out kill, out xp);
     }
 
+    /// <summary>
+    /// Do damage to an animal.
+    /// </summary>
     public static void damageAnimal(DamageAnimalParameters parameters, out EPlayerKill kill, out uint xp)
     {
         if (parameters.animal == null || parameters.animal.isDead)
@@ -557,6 +590,9 @@ public class DamageTool
         }
     }
 
+    /// <summary>
+    /// Legacy function replaced by damageAnimal.
+    /// </summary>
     public static void damage(Animal animal, Vector3 direction, float damage, float times, out EPlayerKill kill, out uint xp, ERagdollEffect ragdollEffect = ERagdollEffect.NONE)
     {
         DamageAnimalParameters parameters = new DamageAnimalParameters(animal, direction, damage);
@@ -565,6 +601,9 @@ public class DamageTool
         damageAnimal(parameters, out kill, out xp);
     }
 
+    /// <summary>
+    /// Legacy function replaced by damageAnimal.
+    /// </summary>
     public static void damage(Animal animal, ELimb limb, Vector3 direction, IDamageMultiplier multiplier, float times, out EPlayerKill kill, out uint xp, ERagdollEffect ragdollEffect = ERagdollEffect.NONE)
     {
         DamageAnimalParameters parameters = DamageAnimalParameters.make(animal, direction, multiplier, limb);
@@ -660,6 +699,9 @@ public class DamageTool
         }
     }
 
+    /// <summary>
+    /// This unwieldy mess is the original explode function, but should be maintained for backwards compatibility with plugins.
+    /// </summary>
     public static void explode(Vector3 point, float damageRadius, EDeathCause cause, CSteamID killer, float playerDamage, float zombieDamage, float animalDamage, float barricadeDamage, float structureDamage, float vehicleDamage, float resourceDamage, float objectDamage, out List<EPlayerKill> kills, EExplosionDamageType damageType = EExplosionDamageType.CONVENTIONAL, float alertRadius = 32f, bool playImpactEffect = true, bool penetrateBuildables = false, EDamageOrigin damageOrigin = EDamageOrigin.Unknown, ERagdollEffect ragdollEffect = ERagdollEffect.NONE)
     {
         ExplosionParameters parameters = new ExplosionParameters(point, damageRadius, cause, killer);
@@ -681,6 +723,9 @@ public class DamageTool
         explode(parameters, out kills);
     }
 
+    /// <summary>
+    /// Do radial damage.
+    /// </summary>
     public static void explode(ExplosionParameters parameters, out List<EPlayerKill> kills)
     {
         explosionKills.Clear();
@@ -1093,12 +1138,18 @@ public class DamageTool
         return PhysicsTool.GetLegacyMaterialByName(PhysicsTool.GetMaterialName(point, transform, collider));
     }
 
+    /// <summary>
+    /// Server spawn impact effect for all players within range.
+    /// </summary>
     [Obsolete("Replaced by separate melee and bullet impact methods")]
     public static void impact(Vector3 point, Vector3 normal, EPhysicsMaterial material, bool forceDynamic)
     {
         impact(point, normal, material, forceDynamic, CSteamID.Nil, point);
     }
 
+    /// <summary>
+    /// Server spawn impact effect for all players within range. Optional "spectator" receives effect regardless of distance.
+    /// </summary>
     [Obsolete("Replaced by separate melee and bullet impact methods")]
     public static void impact(Vector3 point, Vector3 normal, EPhysicsMaterial material, bool forceDynamic, CSteamID spectatorID, Vector3 spectatorPoint)
     {
@@ -1159,6 +1210,9 @@ public class DamageTool
         }
     }
 
+    /// <summary>
+    /// Server spawn effect by ID for all players within range. Optional "spectator" receives effect regardless of distance.
+    /// </summary>
     [Obsolete("Replaced by ServerTriggerImpactEffectForMagazinesV2")]
     public static void impact(Vector3 point, Vector3 normal, ushort id, CSteamID spectatorID, Vector3 spectatorPoint)
     {
@@ -1168,6 +1222,9 @@ public class DamageTool
         }
     }
 
+    /// <summary>
+    /// Server spawn effect for all players within range and instigator receives effect regardless of distance.
+    /// </summary>
     public static void ServerTriggerImpactEffectForMagazinesV2(EffectAsset asset, Vector3 position, Vector3 normal, SteamPlayer instigatingClient)
     {
         if (asset != null)
@@ -1185,6 +1242,9 @@ public class DamageTool
         }
     }
 
+    /// <summary>
+    /// parent should only be set if that system also calls ClearAttachments, otherwise attachedEffects will leak memory.
+    /// </summary>
     internal static void LocalSpawnBulletImpactEffect(Vector3 position, Vector3 normal, string materialName, Transform parent)
     {
         EffectAsset effectAsset = PhysicMaterialCustomData.WipDoNotUseTemp_GetBulletImpactEffect(materialName).Find();

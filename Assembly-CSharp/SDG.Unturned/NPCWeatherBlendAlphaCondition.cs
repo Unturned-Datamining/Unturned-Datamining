@@ -1,5 +1,8 @@
 namespace SDG.Unturned;
 
+/// <summary>
+/// Compares weather intensity to value.
+/// </summary>
 public class NPCWeatherBlendAlphaCondition : NPCLogicCondition
 {
     public AssetReference<WeatherAssetBase> weather { get; private set; }

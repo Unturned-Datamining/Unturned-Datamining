@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Caches uint16 ID to ID redirects.
+/// </summary>
 internal class TreeRedirectorMap
 {
     private Dictionary<Guid, ResourceAsset> redirectedIds;

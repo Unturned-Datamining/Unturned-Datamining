@@ -9,18 +9,40 @@ namespace SDG.Unturned;
 
 public static class DedicatedUGC
 {
+    /// <summary>
+    /// Request for details about the pending items.
+    /// </summary>
     private static UGCQueryHandle_t queryHandle;
 
+    /// <summary>
+    /// File IDs of all the items we have enqueued for query.
+    /// </summary>
     private static HashSet<ulong> itemsQueried;
 
+    /// <summary>
+    /// Built from user-specified workshop item IDs, and then expanded as the query results
+    /// arrive with details about any dependent or child items.
+    /// </summary>
     private static Queue<PublishedFileId_t> itemsToQuery;
 
+    /// <summary>
+    /// File IDs requested by the latest query submitted.
+    /// </summary>
     private static PublishedFileId_t[] itemsPendingQuery;
 
+    /// <summary>
+    /// Number of times we've tried re-submitted failed queries.
+    /// </summary>
     private static uint queryRetryCount;
 
+    /// <summary>
+    /// Built as the valid list of items arrive.
+    /// </summary>
     private static Queue<PublishedFileId_t> itemsToDownload;
 
+    /// <summary>
+    /// ID of the latest item we requested for download so that we can test if the callback is for us.
+    /// </summary>
     private static PublishedFileId_t currentDownload;
 
     private static CallResult<SteamUGCQueryCompleted_t> queryCompleted;
@@ -35,6 +57,9 @@ public static class DedicatedUGC
 
     private static uint maxQueryRetries => WorkshopDownloadConfig.get().Max_Query_Retries;
 
+    /// <summary>
+    /// Broadcasts once all workshop assets are finished installing.
+    /// </summary>
     public static event DedicatedUGCInstalledHandler installed;
 
     public static void registerItemInstallation(ulong id)
@@ -42,6 +67,10 @@ public static class DedicatedUGC
         enqueueItemToQuery(new PublishedFileId_t(id));
     }
 
+    /// <summary>
+    /// Called once the server is done registering items it wants to install.
+    /// </summary>
+    /// <param name="onlyFromCache">True when running in offline-only mode.</param>
     public static void beginInstallingItems(bool onlyFromCache)
     {
         CommandWindow.Log(itemsToQuery.Count + " workshop item(s) requested");
@@ -61,6 +90,10 @@ public static class DedicatedUGC
         }
     }
 
+    /// <summary>
+    /// Enqueue an item if we have not queried it yet. This guards against querying an item
+    /// that is in two separate collections leading to duplicates.
+    /// </summary>
     private static bool enqueueItemToQuery(PublishedFileId_t item)
     {
         if (itemsQueried.Contains(item.m_PublishedFileId))
@@ -84,6 +117,7 @@ public static class DedicatedUGC
         }
     }
 
+    /// <returns>True if item was installed from cache.</returns>
     private static bool installFromCache(PublishedFileId_t fileId)
     {
         if (SteamGameServerUGC.GetItemInstallInfo(fileId, out var _, out var pchFolder, 1024u, out var punTimeStamp) && ReadWrite.folderExists(pchFolder, usePath: false))
@@ -135,6 +169,9 @@ public static class DedicatedUGC
         }
     }
 
+    /// <summary>
+    /// Used in offline-only mode.
+    /// </summary>
     private static void installItemsToQueryFromCache()
     {
         CommandWindow.Log("Only installing cached workshop files (no query / download)");
@@ -149,6 +186,13 @@ public static class DedicatedUGC
         OnFinishedDownloadingItems();
     }
 
+    /// <summary>
+    /// Prepare a query that will request metadata for all the workshop items we want to install.
+    /// This allows us to check if the items are allowed to be auto-downloaded to this server, and to
+    /// detect any child or dependent items.
+    ///
+    /// Waits for onQueryCompleted.
+    /// </summary>
     private static void submitQuery()
     {
         CommandWindow.Log("Submitting workshop query for " + itemsToQuery.Count + " item(s)...");
@@ -157,6 +201,9 @@ public static class DedicatedUGC
         submitQueryHelper(itemsPendingQuery);
     }
 
+    /// <summary>
+    /// Re-submit previous query after a query failure.
+    /// </summary>
     private static void resubmitQuery()
     {
         queryRetryCount++;

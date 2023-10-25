@@ -63,6 +63,9 @@ public class CullingVolume : LevelVolume<CullingVolume, CullingVolumeManager>
 
     private int objectUpdateIndex = -1;
 
+    /// <summary>
+    /// Flag in case levelObject is destroyed.
+    /// </summary>
     private bool isManagedByLevelObject;
 
     private LevelObject targetLevelObject;

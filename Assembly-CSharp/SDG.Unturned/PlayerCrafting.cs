@@ -155,6 +155,10 @@ public class PlayerCrafting : PlayerCaller
         onCraftingUpdated?.Invoke();
     }
 
+    /// <summary>
+    /// Requested for plugin use.
+    /// Notifies owner they should refresh the crafting menu.
+    /// </summary>
     public void ServerRefreshOwnerCrafting()
     {
         SendRefreshCrafting.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection());
@@ -422,6 +426,9 @@ public class PlayerCrafting : PlayerCaller
         SendCraft.Invoke(GetNetId(), ENetReliability.Unreliable, id, index, force);
     }
 
+    /// <summary>
+    /// Get whether this player is ignoring a blueprint.
+    /// </summary>
     public bool getIgnoringBlueprint(Blueprint blueprint)
     {
         if (blueprint == null)
@@ -438,6 +445,10 @@ public class PlayerCrafting : PlayerCaller
         return false;
     }
 
+    /// <summary>
+    /// Set whether this player is ignoring a blueprint.
+    /// This is a kludge to help with accidentally crafting items like blindfolds.
+    /// </summary>
     public void setIgnoringBlueprint(Blueprint blueprint, bool isIgnoring)
     {
         if (blueprint == null)

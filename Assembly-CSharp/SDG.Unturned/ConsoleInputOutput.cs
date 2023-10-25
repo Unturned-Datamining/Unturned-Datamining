@@ -2,6 +2,9 @@ using System;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Read commands from standard input, and write logs to standard output.
+/// </summary>
 public class ConsoleInputOutput : ConsoleInputOutputBase
 {
     protected string pendingInput = string.Empty;
@@ -40,6 +43,10 @@ public class ConsoleInputOutput : ConsoleInputOutputBase
         redrawInputLine();
     }
 
+    /// <summary>
+    /// Each Update we consume a key press from the console buffer if available.
+    /// Unfortunately ReadLine is not an option without blocking output, so we maintain our own pending input.
+    /// </summary>
     protected virtual void inputFromConsole()
     {
         if (Console.KeyAvailable)

@@ -123,6 +123,9 @@ public class ServerTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
         }
     }
 
+    /// <summary>
+    /// Find game connection associated with Steam connection.
+    /// </summary>
     private TransportConnection_SteamNetworkingSockets FindConnection(HSteamNetConnection steamConnectionHandle)
     {
         foreach (TransportConnection_SteamNetworkingSockets transportConnection in transportConnections)
@@ -198,6 +201,9 @@ public class ServerTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
         transportConnections.Add(item);
     }
 
+    /// <summary>
+    /// Must close the handle to free up resources.
+    /// </summary>
     private void HandleState_ClosedByPeer(ref SteamNetConnectionStatusChangedCallback_t callback)
     {
         TransportConnection_SteamNetworkingSockets transportConnection_SteamNetworkingSockets = FindConnection(callback.m_hConn);
@@ -221,6 +227,9 @@ public class ServerTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
         }
     }
 
+    /// <summary>
+    /// Must close the handle to free up resources.
+    /// </summary>
     private void HandleState_ProblemDetectedLocally(ref SteamNetConnectionStatusChangedCallback_t callback)
     {
         TransportConnection_SteamNetworkingSockets transportConnection_SteamNetworkingSockets = FindConnection(callback.m_hConn);

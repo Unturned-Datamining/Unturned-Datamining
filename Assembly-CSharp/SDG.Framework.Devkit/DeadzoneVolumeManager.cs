@@ -22,6 +22,9 @@ public class DeadzoneVolumeManager : VolumeManager<DeadzoneVolume, DeadzoneVolum
         return deadzoneVolume;
     }
 
+    /// <summary>
+    /// Hacked to check horizontal distance.
+    /// </summary>
     public bool IsNavmeshCenterInsideAnyVolume(Vector3 position)
     {
         foreach (DeadzoneVolume allVolume in allVolumes)

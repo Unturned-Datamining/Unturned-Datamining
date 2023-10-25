@@ -35,6 +35,9 @@ public class DateTimeRange
         return false;
     }
 
+    /// <summary>
+    /// Is client UTC time within this time range?
+    /// </summary>
     public bool isNowWithinRange()
     {
         DateTime utcNow = DateTime.UtcNow;
@@ -45,6 +48,9 @@ public class DateTimeRange
         return false;
     }
 
+    /// <summary>
+    /// Is server UTC time within this time range?
+    /// </summary>
     public bool isBackendNowWithinRange()
     {
         DateTime backendRealtimeDate = Provider.backendRealtimeDate;

@@ -20,8 +20,14 @@ public class InteractableSign : Interactable
 
     private bool hasInitializedTextComponents;
 
+    /// <summary>
+    /// Legacy uGUI text on canvas.
+    /// </summary>
     private Text label_0;
 
+    /// <summary>
+    /// Legacy uGUI text on canvas.
+    /// </summary>
     private Text label_1;
 
     private List<TextMeshPro> tmpComponents;
@@ -34,8 +40,16 @@ public class InteractableSign : Interactable
 
     public CSteamID group => _group;
 
+    /// <summary>
+    /// Actual unfiltered text.
+    /// Kept because plugins might be referencing, and game should use directly once state byte array is refactored.
+    /// </summary>
     public string text { get; private set; }
 
+    /// <summary>
+    /// If profanity filter is enabled this filtered text is displayed on the 3D sign and in the note UI.
+    /// Null or empty on the dedicated server.
+    /// </summary>
     public string DisplayText { get; private set; }
 
     public bool hasMesh

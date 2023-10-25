@@ -4,6 +4,9 @@ public static class GlazierFactory
 {
     private static CommandLineString clImpl = new CommandLineString("-Glazier");
 
+    /// <summary>
+    /// Create glazier implementation. Invoked early during startup.
+    /// </summary>
     public static void Create()
     {
         if (clImpl.hasValue)

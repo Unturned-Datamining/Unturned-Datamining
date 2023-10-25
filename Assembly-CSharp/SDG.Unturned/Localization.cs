@@ -20,6 +20,9 @@ public class Localization
         return tryRead(path, usePath: true);
     }
 
+    /// <summary>
+    /// Load {Language}.dat and/or English.dat from folder path.
+    /// </summary>
     public static Local tryRead(string path, bool usePath)
     {
         if (usePath)

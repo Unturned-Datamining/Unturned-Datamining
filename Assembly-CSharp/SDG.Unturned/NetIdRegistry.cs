@@ -15,6 +15,9 @@ public static class NetIdRegistry
 
     private static Dictionary<NetId, object> pairings = new Dictionary<NetId, object>();
 
+    /// <summary>
+    /// Reverse pairing specifically for building net id + relative path name.
+    /// </summary>
     private static Dictionary<Transform, NetId> transformPairings = new Dictionary<Transform, NetId>();
 
     public static NetId Claim()
@@ -144,6 +147,9 @@ public static class NetIdRegistry
         return transform;
     }
 
+    /// <summary>
+    /// Get net ID only if transform is directly registered, not if transform is the child of a registered transform.
+    /// </summary>
     public static NetId GetTransformNetId(Transform transform)
     {
         if (transform == null || !transformPairings.TryGetValue(transform, out var value))
@@ -205,6 +211,9 @@ public static class NetIdRegistry
         return false;
     }
 
+    /// <summary>
+    /// Log every registered pairing.
+    /// </summary>
     public static void Dump()
     {
         int num = 0;
@@ -215,6 +224,9 @@ public static class NetIdRegistry
         }
     }
 
+    /// <summary>
+    /// Called before loading level.
+    /// </summary>
     public static void Clear()
     {
         counter = 0u;

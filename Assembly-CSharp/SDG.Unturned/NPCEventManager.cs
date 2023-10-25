@@ -3,6 +3,9 @@ using SDG.NetTransport;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Allows NPCs to trigger plugin or script events.
+/// </summary>
 public class NPCEventManager
 {
     private static readonly ClientStaticMethod<byte, string> SendBroadcast = ClientStaticMethod<byte, string>.Get(ReceiveBroadcast);
@@ -10,6 +13,9 @@ public class NPCEventManager
     [Obsolete("onEvent provides the instigating player.")]
     public static event NPCEventTriggeredHandler eventTriggered;
 
+    /// <summary>
+    /// instigatingPlayer can be null. For example, if instigated by NpcGlobalEventMessenger.
+    /// </summary>
     public static event NPCEventHandler onEvent;
 
     [Obsolete("broadcastEvent provides the instigating player.")]

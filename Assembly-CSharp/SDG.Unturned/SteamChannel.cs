@@ -9,6 +9,9 @@ namespace SDG.Unturned;
 
 public class SteamChannel : MonoBehaviour
 {
+    /// <summary>
+    /// If changing header size remember to update PlayerManager and allocPlayerChannelId.
+    /// </summary>
     public const int CHANNEL_ID_HEADER_SIZE = 1;
 
     public const int RPC_HEADER_SIZE = 2;
@@ -16,6 +19,9 @@ public class SteamChannel : MonoBehaviour
     [Obsolete]
     public const int VOICE_HEADER_SIZE = 3;
 
+    /// <summary>
+    /// How far to shift compressed voice data.
+    /// </summary>
     [Obsolete]
     public const int VOICE_DATA_OFFSET = 6;
 
@@ -23,16 +29,25 @@ public class SteamChannel : MonoBehaviour
 
     public SteamPlayer owner;
 
+    /// <summary>
+    /// Don't use this. Originally added so that Rocketmod didn't have to inject into the game's assembly.
+    /// </summary>
     [Obsolete("Will be deprecated soon. Please discuss on the issue tracker and we will find an alternative.")]
     public static TriggerReceive onTriggerReceive;
 
     private static bool warnedAboutTriggerReceive;
 
+    /// <summary>
+    /// Don't use this. Originally added so that Rocketmod didn't have to inject into the game's assembly.
+    /// </summary>
     [Obsolete("Will be deprecated soon. Please discuss on the issue tracker and we will find an alternative.")]
     public static TriggerSend onTriggerSend;
 
     private static bool warnedAboutTriggerSend;
 
+    /// <summary>
+    /// Does array of RPCs need to be rebuilt?
+    /// </summary>
     private bool callArrayDirty = true;
 
     private static List<SteamChannelMethod> workingCalls = new List<SteamChannelMethod>();
@@ -44,6 +59,11 @@ public class SteamChannel : MonoBehaviour
 
     public SteamChannelMethod[] calls { get; protected set; }
 
+    /// <summary>
+    /// If true, this object is owned by a locally-controlled player.
+    /// For example, some code is not run for "remote" players.
+    /// Always true in singleplayer. Always false on dedicated server.
+    /// </summary>
     public bool IsLocalPlayer
     {
         get
@@ -69,6 +89,9 @@ public class SteamChannel : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Use on server when invoking client methods on the owning player.
+    /// </summary>
     public ITransportConnection GetOwnerTransportConnection()
     {
         return owner?.transportConnection;
@@ -90,6 +113,9 @@ public class SteamChannel : MonoBehaviour
         return steamID == owner.playerID.steamID;
     }
 
+    /// <summary>
+    /// Replacement for ESteamCall.NOT_OWNER.
+    /// </summary>
     public PooledTransportConnectionList GatherRemoteClientConnectionsExcludingOwner()
     {
         PooledTransportConnectionList pooledTransportConnectionList = TransportConnectionListPool.Get();
@@ -149,6 +175,7 @@ public class SteamChannel : MonoBehaviour
         return GatherOwnerAndClientConnectionsWithinSphere(position, radius);
     }
 
+    /// <returns>True if the call succeeded, or false if the sender should be refused.</returns>
     [Obsolete]
     public bool receive(CSteamID steamID, byte[] packet, int offset, int size)
     {
@@ -819,11 +846,18 @@ public class SteamChannel : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Calls array needs rebuilding the next time it is used.
+    /// Should be invoked when adding/removing components with RPCs.
+    /// </summary>
     public void markDirty()
     {
         callArrayDirty = true;
     }
 
+    /// <summary>
+    /// Find methods with SteamCall attribute, and gather them into an array.
+    /// </summary>
     private void buildCallArray()
     {
         workingCalls.Clear();
@@ -921,6 +955,9 @@ public class SteamChannel : MonoBehaviour
         encodeChannelId(packet);
     }
 
+    /// <summary>
+    /// Encode byte array of voice data to send.
+    /// </summary>
     [Obsolete]
     public void encodeVoicePacket(byte callIndex, out int size, out byte[] packet, byte[] bytes, ushort length, bool usingWalkieTalkie)
     {
@@ -928,6 +965,9 @@ public class SteamChannel : MonoBehaviour
         packet = null;
     }
 
+    /// <summary>
+    /// Decode voice parameters from byte array.
+    /// </summary>
     [Obsolete]
     public void decodeVoicePacket(byte[] packet, out uint compressedSize, out bool usingWalkieTalkie)
     {

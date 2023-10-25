@@ -58,18 +58,31 @@ public class StructureManager : SteamCaller
 
     private static ClientStaticMethod SendMultipleStructures = ClientStaticMethod.Get(ReceiveMultipleStructures);
 
+    /// <summary>
+    /// Maps prefab unique id to inactive list.
+    /// </summary>
     private Dictionary<int, Stack<GameObject>> pool;
 
     private Stopwatch instantiationTimer = new Stopwatch();
 
+    /// <summary>
+    /// Instantiate at least this many structures per frame even if we exceed our time budget.
+    /// </summary>
     private const int MIN_INSTANTIATIONS_PER_FRAME = 5;
 
     private const int MIN_DESTROY_PER_FRAME = 10;
 
     internal const int POSITION_FRAC_BIT_COUNT = 11;
 
+    /// <summary>
+    /// +0 = StructureDrop
+    /// +1 = root transform
+    /// </summary>
     internal const int NETIDS_PER_STRUCTURE = 2;
 
+    /// <summary>
+    /// Exposed for Rocket transition to modules backwards compatibility.
+    /// </summary>
     public static StructureManager instance => manager;
 
     public static StructureRegion[,] regions { get; private set; }
@@ -251,6 +264,9 @@ public class StructureManager : SteamCaller
         destroyStructure(structure, x, y, ragdoll, wasPickedUp: false);
     }
 
+    /// <summary>
+    /// Remove structure instance on server and client.
+    /// </summary>
     public static void destroyStructure(StructureDrop structure, byte x, byte y, Vector3 ragdoll, bool wasPickedUp)
     {
         if (tryGetRegion(x, y, out var region))
@@ -260,6 +276,9 @@ public class StructureManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// Used by ownership change and damaged event to tell relevant clients the new health.
+    /// </summary>
     private static void sendHealthChanged(byte x, byte y, StructureDrop structure)
     {
         StructureDrop.SendHealth.Invoke(structure.GetNetId(), ENetReliability.Unreliable, Provider.GatherClientConnectionsMatchingPredicate((SteamPlayer client) => client.player != null && OwnershipTool.checkToggle(client.playerID.steamID, structure.serversideData.owner, client.player.quests.groupID, structure.serversideData.group) && Regions.checkArea(x, y, client.player.movement.region_x, client.player.movement.region_y, STRUCTURE_REGIONS)), (byte)Mathf.RoundToInt((float)(int)structure.serversideData.structure.health / (float)(int)structure.asset.health * 100f));
@@ -371,6 +390,9 @@ public class StructureManager : SteamCaller
         return false;
     }
 
+    /// <summary>
+    /// Legacy function for UseableStructure.
+    /// </summary>
     public static bool dropStructure(Structure structure, Vector3 point, float angle_x, float angle_y, float angle_z, ulong owner, ulong group)
     {
         if (structure.asset == null)
@@ -387,6 +409,9 @@ public class StructureManager : SteamCaller
         return dropReplicatedStructure(structure, point, rotation, owner, group);
     }
 
+    /// <summary>
+    /// Spawn a new structure and replicate it.
+    /// </summary>
     public static bool dropReplicatedStructure(Structure structure, Vector3 point, Quaternion rotation, ulong owner, ulong group)
     {
         Vector3 eulerAngles = rotation.eulerAngles;
@@ -420,6 +445,9 @@ public class StructureManager : SteamCaller
         throw new NotSupportedException("Removed during structure NetId rewrite");
     }
 
+    /// <summary>
+    /// Not an instance method because structure might not exist yet, in which case we cancel instantiation.
+    /// </summary>
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
     public static void ReceiveDestroyStructure(in ClientInvocationContext context, NetId netId, Vector3 ragdoll, bool wasPickedUp)
     {
@@ -795,6 +823,9 @@ public class StructureManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// Not ideal, but there was a problem because onLevelLoaded was not resetting these after disconnecting.
+    /// </summary>
     internal static void ClearNetworkStuff()
     {
         pendingInstantiations = new List<StructureInstantiationParameters>();

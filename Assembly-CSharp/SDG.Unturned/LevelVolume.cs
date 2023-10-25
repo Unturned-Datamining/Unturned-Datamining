@@ -81,6 +81,9 @@ public class LevelVolume<TVolume, TManager> : VolumeBase, IDevkitInteractableBeg
     [SerializeField]
     private ELevelVolumeShape _shape;
 
+    /// <summary>
+    /// Distance inward from edge before intensity reaches 100%.
+    /// </summary>
     public float falloffDistance;
 
     internal bool isSelected;
@@ -88,6 +91,9 @@ public class LevelVolume<TVolume, TManager> : VolumeBase, IDevkitInteractableBeg
     [SerializeField]
     internal Collider volumeCollider;
 
+    /// <summary>
+    /// Editor-only solid/opaque child mesh renderer object.
+    /// </summary>
     [SerializeField]
     protected GameObject editorGameObject;
 
@@ -97,6 +103,11 @@ public class LevelVolume<TVolume, TManager> : VolumeBase, IDevkitInteractableBeg
     [SerializeField]
     protected MeshRenderer editorMeshRenderer;
 
+    /// <summary>
+    /// If true during Awake the collider component will be added.
+    /// Otherwise only in the level editor. Some volume types like water use the collider in gameplay,
+    /// whereas most only need the collider for general-purpose selection in the level editor.
+    /// </summary>
     protected bool forceShouldAddCollider;
 
     protected bool supportsBoxShape = true;
@@ -224,6 +235,9 @@ public class LevelVolume<TVolume, TManager> : VolumeBase, IDevkitInteractableBeg
         }
     }
 
+    /// <summary>
+    /// Alpha is 0.0 outside volume and 1.0 inside inner volume.
+    /// </summary>
     public bool IsPositionInsideVolumeWithAlpha(Vector3 position, out float alpha)
     {
         if (falloffDistance < 0.0001f)
@@ -267,16 +281,26 @@ public class LevelVolume<TVolume, TManager> : VolumeBase, IDevkitInteractableBeg
         }
     }
 
+    /// <summary>
+    /// World space size of the box.
+    /// </summary>
     public Vector3 GetBoxSize()
     {
         return base.transform.localScale.GetAbs();
     }
 
+    /// <summary>
+    /// Half the world space size of the box.
+    /// </summary>
     public Vector3 GetBoxExtents()
     {
         return base.transform.localScale.GetAbs() * 0.5f;
     }
 
+    /// <summary>
+    /// World space size of inner falloff box when falloffDistance is non-zero.
+    /// For example a 24x12x6 box with a falloff of 4 has an inner box sized 16x4x0.
+    /// </summary>
     public Vector3 GetInnerBoxSize()
     {
         Vector3 abs = base.transform.localScale.GetAbs();
@@ -286,6 +310,9 @@ public class LevelVolume<TVolume, TManager> : VolumeBase, IDevkitInteractableBeg
         return abs;
     }
 
+    /// <summary>
+    /// World space extents of inner falloff box when falloffDistance is non-zero.
+    /// </summary>
     public Vector3 GetInnerBoxExtents()
     {
         Vector3 result = base.transform.localScale.GetAbs() * 0.5f;
@@ -295,34 +322,52 @@ public class LevelVolume<TVolume, TManager> : VolumeBase, IDevkitInteractableBeg
         return result;
     }
 
+    /// <summary>
+    /// Local space size of inner falloff box when falloffDistance is non-zero.
+    /// </summary>
     public Vector3 GetLocalInnerBoxSize()
     {
         Vector3 abs = base.transform.localScale.GetAbs();
         return new Vector3(Mathf.Max(0f, abs.x - falloffDistance * 2f) / abs.x, Mathf.Max(0f, abs.y - falloffDistance * 2f) / abs.y, Mathf.Max(0f, abs.z - falloffDistance * 2f) / abs.z);
     }
 
+    /// <summary>
+    /// Local space extents of inner falloff box when falloffDistance is non-zero.
+    /// </summary>
     public Vector3 GetLocalInnerBoxExtents()
     {
         Vector3 abs = base.transform.localScale.GetAbs();
         return new Vector3(Mathf.Max(0f, abs.x * 0.5f - falloffDistance) / abs.x, Mathf.Max(0f, abs.y * 0.5f - falloffDistance) / abs.y, Mathf.Max(0f, abs.z * 0.5f - falloffDistance) / abs.z);
     }
 
+    /// <summary>
+    /// World space radius of the sphere.
+    /// </summary>
     public float GetSphereRadius()
     {
         return base.transform.localScale.GetAbs().GetMax() * 0.5f;
     }
 
+    /// <summary>
+    /// Local space radius of the sphere.
+    /// </summary>
     public float GetLocalSphereRadius()
     {
         return 0.5f;
     }
 
+    /// <summary>
+    /// World space radius of inner falloff sphere when falloffDistance is non-zero.
+    /// </summary>
     public float GetWorldSpaceInnerSphereRadius()
     {
         float num = base.transform.localScale.GetAbs().GetMax() * 0.5f;
         return Mathf.Max(0f, num - falloffDistance);
     }
 
+    /// <summary>
+    /// Local space radius of inner falloff sphere when falloffDistance is non-zero.
+    /// </summary>
     public float GetLocalInnerSphereRadius()
     {
         float max = base.transform.localScale.GetAbs().GetMax();
@@ -336,6 +381,9 @@ public class LevelVolume<TVolume, TManager> : VolumeBase, IDevkitInteractableBeg
         base.transform.localScale = new Vector3(num, num, num);
     }
 
+    /// <summary>
+    /// Useful for code which previously depended on creating the Unity collider to calculate bounding box.
+    /// </summary>
     public Bounds CalculateWorldBounds()
     {
         Bounds result = new Bounds(base.transform.position, Vector3.zero);
@@ -356,6 +404,9 @@ public class LevelVolume<TVolume, TManager> : VolumeBase, IDevkitInteractableBeg
         return new Bounds(Vector3.zero, base.transform.localScale.GetAbs());
     }
 
+    /// <summary>
+    /// Called in the level editor during registraion and when visibility is changed.
+    /// </summary>
     public virtual void UpdateEditorVisibility(ELevelVolumeVisibility visibility)
     {
         volumeCollider.enabled = visibility != ELevelVolumeVisibility.Hidden;

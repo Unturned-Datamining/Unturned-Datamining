@@ -14,8 +14,14 @@ internal class SleekItemStoreListing : SleekWrapper
 
     private ISleekLabel nameAndPriceLabel;
 
+    /// <summary>
+    /// Icon visible when this listing is in the cart.
+    /// </summary>
     private ISleekSprite cartImage;
 
+    /// <summary>
+    /// "SALE" or "NEW" text visible when applicable.
+    /// </summary>
     private ISleekLabel stampLabel;
 
     public SleekItemStoreListing()

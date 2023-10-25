@@ -5,6 +5,9 @@ namespace SDG.Unturned;
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 public class NetInvokableGeneratedMethodAttribute : Attribute
 {
+    /// <summary>
+    /// Method the annotated method was generated for.
+    /// </summary>
     public readonly string targetMethodName;
 
     public readonly ENetInvokableGeneratedMethodPurpose purpose;

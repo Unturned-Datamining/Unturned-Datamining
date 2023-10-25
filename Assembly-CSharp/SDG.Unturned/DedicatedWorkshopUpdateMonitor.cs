@@ -4,6 +4,9 @@ using Steamworks;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// If using a map from the workshop, this class monitors it for changes so the server can be restarted.
+/// </summary>
 public class DedicatedWorkshopUpdateMonitor : IDedicatedWorkshopUpdateMonitor
 {
     public struct MonitoredItem
@@ -13,16 +16,29 @@ public class DedicatedWorkshopUpdateMonitor : IDedicatedWorkshopUpdateMonitor
         public uint initialTimestamp;
     }
 
+    /// <summary>
+    /// Were update(s) detected that should be handled on next tick?
+    /// </summary>
     protected bool shouldDoFinalTick;
 
+    /// <summary>
+    /// Are we done monitoring?
+    /// Default finished once an update is detected.
+    /// </summary>
     protected bool isFinishedTicking;
 
     protected MonitoredItem[] monitoredItems;
 
     protected PublishedFileId_t[] fileIdsForQuery;
 
+    /// <summary>
+    /// Interval between query submissions.
+    /// </summary>
     protected float queryInterval;
 
+    /// <summary>
+    /// Accumulated time before submitting query after passing interval.
+    /// </summary>
     protected float queryTimer;
 
     private CallResult<SteamUGCQueryCompleted_t> queryCompleted;
@@ -66,6 +82,9 @@ public class DedicatedWorkshopUpdateMonitor : IDedicatedWorkshopUpdateMonitor
         }
     }
 
+    /// <summary>
+    /// Request status of workshop items.
+    /// </summary>
     protected void submitQueryRequest(PublishedFileId_t[] fileIds)
     {
         if (fileIds != null && fileIds.Length >= 1)
@@ -80,6 +99,9 @@ public class DedicatedWorkshopUpdateMonitor : IDedicatedWorkshopUpdateMonitor
         }
     }
 
+    /// <summary>
+    /// Called the next tick after update(s) detected.
+    /// </summary>
     protected virtual void handleFinalTick()
     {
         WorkshopDownloadConfig workshopDownloadConfig = WorkshopDownloadConfig.get();
@@ -87,12 +109,18 @@ public class DedicatedWorkshopUpdateMonitor : IDedicatedWorkshopUpdateMonitor
         Provider.shutdown(workshopDownloadConfig.Shutdown_Update_Detected_Timer, workshopDownloadConfig.Shutdown_Kick_Message);
     }
 
+    /// <summary>
+    /// Called when a queried item's update timestamp is newer than our initially loaded version.
+    /// </summary>
     protected virtual void handleUpdateDetected(SteamUGCDetails_t fileDetails)
     {
         CommandWindow.LogFormat("Detected an update to '{0}' ({1})", fileDetails.m_rgchTitle, fileDetails.m_nPublishedFileId);
         shouldDoFinalTick = true;
     }
 
+    /// <summary>
+    /// Called when results from a call to submitQueryRequest are available.
+    /// </summary>
     protected virtual void handleQueryResponse(SteamUGCQueryCompleted_t callback)
     {
         for (uint num = 0u; num < callback.m_unNumResultsReturned; num++)
@@ -115,6 +143,9 @@ public class DedicatedWorkshopUpdateMonitor : IDedicatedWorkshopUpdateMonitor
         }
     }
 
+    /// <summary>
+    /// Called once timer reaches interval.
+    /// </summary>
     protected virtual void handleTimerTriggered()
     {
         submitQueryRequest(fileIdsForQuery);
@@ -136,6 +167,9 @@ public class DedicatedWorkshopUpdateMonitor : IDedicatedWorkshopUpdateMonitor
         return false;
     }
 
+    /// <summary>
+    /// Callback from Steam when results from a call to submitQueryRequest are available.
+    /// </summary>
     private void onQueryCompleted(SteamUGCQueryCompleted_t callback, bool ioFailure)
     {
         if (!(callback.m_handle != queryHandle))

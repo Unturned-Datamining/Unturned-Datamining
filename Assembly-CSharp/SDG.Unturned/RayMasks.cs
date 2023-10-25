@@ -112,6 +112,10 @@ public class RayMasks
 
     public static readonly int BLOCK_VEHICLE = 1671168;
 
+    /// <summary>
+    /// Used to test whether player can fit in a space.
+    /// Includes terrain because tested capsule could be slightly underground, and clip to prevent exploits at sky limit.
+    /// </summary>
     public static readonly int BLOCK_STANCE = 473546752;
 
     public static readonly int BLOCK_NAVMESH = 4734976;
@@ -122,6 +126,11 @@ public class RayMasks
 
     public static readonly int BLOCK_PLAYERCAM_1P = 470335488;
 
+    /// <summary>
+    /// Used for third-person camera in vehicle.
+    /// Does not include resource layer because attached barricades are put on that layer.
+    /// Barricades layer itself is included to prevent looking inside player bases.
+    /// </summary>
     public static readonly int BLOCK_VEHICLECAM = 404258816;
 
     public static readonly int BLOCK_VISION = 98304;
@@ -132,6 +141,10 @@ public class RayMasks
 
     public static readonly int BLOCK_LEAN = BLOCK_STANCE;
 
+    /// <summary>
+    /// Used to test whether player can enter a vehicle.
+    /// Does not include resource layer because attached barricades are put on that layer.
+    /// </summary>
     public static readonly int BLOCK_ENTRY = 405897216;
 
     public static readonly int BLOCK_EXIT = 406437888;
@@ -186,11 +199,24 @@ public class RayMasks
     [Obsolete("Replaced by EFFECT_SPLATTER to make const")]
     public static readonly int SPLATTER = 1671168;
 
+    /// <summary>
+    /// 2023-02-02: adding more layers since splatter can be attached to them now.
+    /// parent should only be set if that system also calls ClearAttachments, otherwise attachedEffects will leak memory.
+    /// </summary>
     public const int EFFECT_SPLATTER = 471433216;
 
+    /// <summary>
+    /// Layer mask for CharacterController overlap test.
+    /// </summary>
     public const int CHARACTER_CONTROLLER_MOVE = 406437888;
 
+    /// <summary>
+    /// Layer mask for CharacterController overlap test while inside landscape hole volume.
+    /// </summary>
     public const int CHARACTER_CONTROLLER_MOVE_IGNORE_GROUND = 405389312;
 
+    /// <summary>
+    /// Lightning strike raycasts from sky to ground using this layer mask.
+    /// </summary>
     public const int LIGHTNING = 471449600;
 }

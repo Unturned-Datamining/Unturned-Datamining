@@ -14,6 +14,10 @@ public class FlagData
 
     public bool hyperAgro;
 
+    /// <summary>
+    /// Maximum count of naturally spawned boss zombies. Unlimited if negative.
+    /// Game will not spawn/respawn boss zombie types passing this limit, but quest spawns can bypass it.
+    /// </summary>
     public int maxBossZombies;
 
     public string difficultyGUID

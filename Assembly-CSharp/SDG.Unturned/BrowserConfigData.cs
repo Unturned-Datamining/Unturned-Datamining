@@ -22,6 +22,9 @@ public class BrowserConfigData
 
     public string Desc_Server_List;
 
+    /// <summary>
+    /// https://steamcommunity.com/dev/managegameservers
+    /// </summary>
     public string Login_Token;
 
     [JsonConverter(typeof(StringEnumConverter))]

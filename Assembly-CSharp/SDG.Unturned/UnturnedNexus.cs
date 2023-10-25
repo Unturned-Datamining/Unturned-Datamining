@@ -4,6 +4,9 @@ namespace SDG.Unturned;
 
 public class UnturnedNexus : IModuleNexus
 {
+    /// <summary>
+    /// Register all built-in asset and useable types.
+    /// </summary>
     public void initialize()
     {
         Assets.assetTypes.addType("Hat", typeof(ItemHatAsset));

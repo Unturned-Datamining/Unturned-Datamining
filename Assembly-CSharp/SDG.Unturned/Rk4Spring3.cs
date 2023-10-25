@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Thanks to Glenn Fiedler for this RK4 implementation article:
+/// https://gafferongames.com/post/integration_basics/
+/// </summary>
 [Serializable]
 public struct Rk4Spring3
 {
@@ -17,8 +21,15 @@ public struct Rk4Spring3
 
     public Vector3 targetPosition;
 
+    /// <summary>
+    /// Higher values return to the target position faster.
+    /// </summary>
     public float stiffness;
 
+    /// <summary>
+    /// Higher values reduce bounciness and settle at the target position faster.
+    /// e.g. a value of zero will bounce back and forth for a long time (indefinitely?)
+    /// </summary>
     public float damping;
 
     private Vector3 currentVelocity;

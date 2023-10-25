@@ -4,8 +4,15 @@ using UnityEngine.SceneManagement;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Component in the root Menu scene.
+/// Additively loads decoration levels without modifying main scene.
+/// </summary>
 public class MenuMapVisibility : MonoBehaviour
 {
+    /// <summary>
+    /// Prevents static member from being initialized during MonoBehaviour construction. (Unity warning)
+    /// </summary>
     private static class HelperClass
     {
         public static CommandLineString clAdditiveMenuOverride = new CommandLineString("-AdditiveMenuOverride");

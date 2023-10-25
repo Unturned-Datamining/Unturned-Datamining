@@ -54,6 +54,10 @@ public class Commander
         return false;
     }
 
+    /// <summary>
+    /// Allows Unity events to execute commands from the server.
+    /// Messenger context is logged to help track down abusive assets.
+    /// </summary>
     public static void execute_UnityEvent(string command, ServerTextChatMessenger messenger)
     {
         if (messenger == null)

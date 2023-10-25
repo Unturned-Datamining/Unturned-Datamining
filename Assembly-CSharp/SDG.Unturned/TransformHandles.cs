@@ -4,14 +4,32 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Merging the devkit, legacy, and housing transform handles into one place.
+/// </summary>
 public class TransformHandles
 {
     public enum EMode
     {
+        /// <summary>
+        /// Position and plane handles for each axis.
+        /// </summary>
         Position,
+        /// <summary>
+        /// Disc handles for each axis.
+        /// </summary>
         Rotation,
+        /// <summary>
+        /// Scale handles for each axis.
+        /// </summary>
         Scale,
+        /// <summary>
+        /// Position handles on each side of box.
+        /// </summary>
         PositionBounds,
+        /// <summary>
+        /// Scale handles on each side of box which both move and resize the box.
+        /// </summary>
         ScaleBounds
     }
 
@@ -75,8 +93,14 @@ public class TransformHandles
 
     private EMode mode;
 
+    /// <summary>
+    /// Center of handle.
+    /// </summary>
     private Vector3 pivotPosition;
 
+    /// <summary>
+    /// Rotation of handle.
+    /// </summary>
     private Quaternion pivotRotation = Quaternion.identity;
 
     private Vector3 preferredPivotPosition;
@@ -85,12 +109,24 @@ public class TransformHandles
 
     private Bounds pivotBounds;
 
+    /// <summary>
+    /// True if pivotBounds is non-zero.
+    /// </summary>
     private bool hasPivotBounds;
 
+    /// <summary>
+    /// Mouse currently over this handle.
+    /// </summary>
     private EComponent hoverComponent;
 
+    /// <summary>
+    /// Mouse currently dragging this handle.
+    /// </summary>
     private EComponent dragComponent;
 
+    /// <summary>
+    /// Direction from camera toward pivot.
+    /// </summary>
     private Vector3 viewDirection;
 
     private Vector3 viewRight;
@@ -99,8 +135,14 @@ public class TransformHandles
 
     private Vector3 cameraForward;
 
+    /// <summary>
+    /// Multiplier according to distance between camera and pivot to keep handles a constant on-screen size.
+    /// </summary>
     private float viewScale = 1f;
 
+    /// <summary>
+    /// Multiplier to flip axis handles according to which side the camera is on.
+    /// </summary>
     private Vector3 viewAxisFlip = Vector3.one;
 
     private Vector3 dragPreviousPosition;
@@ -129,14 +171,29 @@ public class TransformHandles
 
     private float dragPlaneInitialDistance1;
 
+    /// <summary>
+    /// Pivot rotation when rotation drag started.
+    /// </summary>
     private Quaternion dragRotationOrigin;
 
+    /// <summary>
+    /// Rotating around this axis.
+    /// </summary>
     private Vector3 dragRotationAxis;
 
+    /// <summary>
+    /// Direction from circle center to edge point.
+    /// </summary>
     private Vector3 dragRotationOutwardDirection;
 
+    /// <summary>
+    /// Point on the edge of the circle.
+    /// </summary>
     private Vector3 dragRotationEdgePoint;
 
+    /// <summary>
+    /// Drag along this tangent to the circle.
+    /// </summary>
     private Vector3 dragRotationTangent;
 
     private Vector3 dragScaleOrigin;
@@ -153,10 +210,20 @@ public class TransformHandles
 
     private float dragScaleBounds;
 
+    /// <summary>
+    /// Invoked when handle is clicked so that tool can save selection transform relative to pivot.
+    /// This avoids floating point precision loss of applying delta for each Transformed event.
+    /// </summary>
     public event PreTransformEventHandler OnPreTransform;
 
+    /// <summary>
+    /// Invoked when handle is dragged and value actually changes.
+    /// </summary>
     public event TranslatedAndRotatedEventHandler OnTranslatedAndRotated;
 
+    /// <summary>
+    /// Invoked when handle is dragged and value actually changes.
+    /// </summary>
     public event TransformedEventHandler OnTransformed;
 
     public Vector3 GetPivotPosition()
@@ -169,12 +236,20 @@ public class TransformHandles
         return pivotRotation;
     }
 
+    /// <summary>
+    /// Preferred mode only takes effect while not dragging.
+    /// Bounds modes fall back to non-bounds modes if bounds are not set.
+    /// </summary>
     public void SetPreferredMode(EMode preferredMode)
     {
         this.preferredMode = preferredMode;
         SyncMode();
     }
 
+    /// <summary>
+    /// Pivot only takes effect while not dragging. This is to help ensure
+    /// the caller does not depend on the internal pivot values.
+    /// </summary>
     public void SetPreferredPivot(Vector3 position, Quaternion rotation)
     {
         preferredPivotPosition = position;
@@ -182,6 +257,10 @@ public class TransformHandles
         SyncPivot();
     }
 
+    /// <summary>
+    /// Somewhat hacky, useful to make the "copy-paste transform" feature easier to implement.
+    /// Invoke tranformed callback as if pivot were manually dragged to the new position and rotation.
+    /// </summary>
     public void ExternallyTransformPivot(Vector3 position, Quaternion rotation, bool modifyRotation)
     {
         if (dragComponent == EComponent.NONE)
@@ -195,6 +274,9 @@ public class TransformHandles
         }
     }
 
+    /// <summary>
+    /// Called before raycasting into the regular physics scene to give transform tool priority.
+    /// </summary>
     public bool Raycast(Ray mouseRay)
     {
         hoverComponent = EComponent.NONE;
@@ -952,6 +1034,9 @@ public class TransformHandles
         }
     }
 
+    /// <summary>
+    /// Update properties that depend on the transform of the camera relative to our handles.
+    /// </summary>
     private void UpdateViewProperties()
     {
         if (MainCamera.instance == null)

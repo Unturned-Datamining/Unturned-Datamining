@@ -8,8 +8,14 @@ public class ArenaPlayer
 
     private bool _hasDied;
 
+    /// <summary>
+    /// Time.time damage was last dealt so that damage is applied once per second.
+    /// </summary>
     public float lastAreaDamage;
 
+    /// <summary>
+    /// Timer increased while taking damage, and reset to zero while inside zone.
+    /// </summary>
     public float timeOutsideArea;
 
     public SteamPlayer steamPlayer => _steamPlayer;

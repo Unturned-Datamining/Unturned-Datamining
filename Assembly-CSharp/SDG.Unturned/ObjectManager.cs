@@ -41,6 +41,9 @@ public class ObjectManager : SteamCaller
 
     private static readonly ClientStaticMethod SendObjects = ClientStaticMethod.Get(ReceiveObjects);
 
+    /// <summary>
+    /// Invoked when askUseObjectQuest succeeds.
+    /// </summary>
     public static event Action<Player, InteractableObject> OnQuestObjectUsed;
 
     public static void getObjectsInRadius(Vector3 center, float sqrRadius, List<RegionCoordinate> search, List<Transform> result)

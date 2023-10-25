@@ -1,5 +1,8 @@
 namespace SDG.Unturned;
 
+/// <summary>
+/// Parses mb:X from input string and filters assets using X master bundle.
+/// </summary>
 public struct MasterBundleSearchFilter
 {
     private MasterBundleConfig masterBundle;

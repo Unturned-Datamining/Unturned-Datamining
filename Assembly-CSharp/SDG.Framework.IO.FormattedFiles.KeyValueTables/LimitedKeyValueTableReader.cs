@@ -5,6 +5,9 @@ namespace SDG.Framework.IO.FormattedFiles.KeyValueTables;
 
 public class LimitedKeyValueTableReader : KeyValueTableReader
 {
+    /// <summary>
+    /// After the key "limit" is loaded we stop reading.
+    /// </summary>
     public string limit { get; protected set; }
 
     protected override bool canContinueReadDictionary(StreamReader input, Dictionary<string, object> scope)

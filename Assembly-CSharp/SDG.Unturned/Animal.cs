@@ -98,8 +98,14 @@ public class Animal : MonoBehaviour
 
     private CharacterController controller;
 
+    /// <summary>
+    /// Whether this animal was updated in this network tick and needs to be resent.
+    /// </summary>
     public bool isUpdated;
 
+    /// <summary>
+    /// Reduces frequency of UndergroundAllowlist checks because it can be expensive with lots of entities and volumes. 
+    /// </summary>
     private float undergroundTestTimer = 10f;
 
     private double lastTick;
@@ -443,6 +449,10 @@ public class Animal : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Alert this animal that it was damaged from a given position.
+    /// Offensive animals investigate the position, whereas other animals run away.
+    /// </summary>
     public void alertDamagedFromPoint(Vector3 point)
     {
         if (asset != null && asset.behaviour == EAnimalBehaviour.OFFENSE)
@@ -455,11 +465,18 @@ public class Animal : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Alerts this animal that it needs to run away.
+    /// </summary>
+    /// <param name="newPosition">The position to run away from.</param>
     public void alertRunAwayFromPoint(Vector3 newPosition, bool sendToPack)
     {
         alertDirection((base.transform.position - newPosition).normalized, sendToPack);
     }
 
+    /// <summary>
+    /// Keep for plugin backwards compatibility.
+    /// </summary>
     [Obsolete("Clarified with alertRunAwayFromPoint, alertGoToPoint and alertDamagedFromPoint.")]
     public void alertPoint(Vector3 newPosition, bool sendToPack)
     {

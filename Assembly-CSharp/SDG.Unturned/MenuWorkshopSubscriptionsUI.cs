@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Repurposed from the Modules UI because it was unused.
+/// </summary>
 public class MenuWorkshopSubscriptionsUI
 {
     private SleekFullscreenBox container;

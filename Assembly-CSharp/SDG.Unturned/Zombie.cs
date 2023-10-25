@@ -104,8 +104,14 @@ public class Zombie : MonoBehaviour
 
     private Transform structure;
 
+    /// <summary>
+    /// If zombie is stuck this was a nearby vehicle potentially blocking our path.
+    /// </summary>
     private InteractableVehicle targetObstructionVehicle;
 
+    /// <summary>
+    /// If target player is passenger in a vehicle this is their vehicle.
+    /// </summary>
     private InteractableVehicle targetPassengerVehicle;
 
     private Transform target;
@@ -240,6 +246,9 @@ public class Zombie : MonoBehaviour
 
     private float specialUseDelay;
 
+    /// <summary>
+    /// Yeah it seems kinda ugly to pollute all zombies with this code... zombie rewrite eventually please.
+    /// </summary>
     private float flashbangDelay;
 
     private float lastFlashbang;
@@ -252,6 +261,9 @@ public class Zombie : MonoBehaviour
 
     private bool needsTickForPlacement;
 
+    /// <summary>
+    /// Reduces frequency of UndergroundAllowlist checks because it can be expensive with lots of entities and volumes. 
+    /// </summary>
     private float undergroundTestTimer = 10f;
 
     private float lastTick;
@@ -284,6 +296,9 @@ public class Zombie : MonoBehaviour
 
     private static List<EAbilityChoice> availableAbilityChoices = new List<EAbilityChoice>();
 
+    /// <summary>
+    /// Overrides hat item from zombie table with a specific item ID.
+    /// </summary>
     private ushort hatID
     {
         get
@@ -296,6 +311,9 @@ public class Zombie : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Overrides gear item from zombie table with a specific item ID.
+    /// </summary>
     private ushort gearID
     {
         get
@@ -391,6 +409,9 @@ public class Zombie : MonoBehaviour
 
     public bool isBoss => speciality.IsBoss();
 
+    /// <summary>
+    /// Boss zombies are considered mega as well.
+    /// </summary>
     public bool isMega
     {
         get
@@ -407,6 +428,10 @@ public class Zombie : MonoBehaviour
 
     public ZombieDifficultyAsset difficulty { get; private set; }
 
+    /// <summary>
+    /// Add or remove from ticking list if needed.
+    /// Separated from updateTicking in order to move once after first spawn.
+    /// </summary>
     private void setTicking(bool wantsToTick)
     {
         if (wantsToTick)
@@ -778,6 +803,9 @@ public class Zombie : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// If damage exceeds this value, stun the zombie.
+    /// </summary>
     public int getStunDamageThreshold()
     {
         if (isMega)
@@ -797,6 +825,9 @@ public class Zombie : MonoBehaviour
         return 20;
     }
 
+    /// <summary>
+    /// Used to kill night-only zombies at dawn.
+    /// </summary>
     public void killWithFireExplosion()
     {
         if (isDead)
@@ -1386,6 +1417,11 @@ public class Zombie : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Cache difficulty asset (if any) for this zombie's current type and bound.
+    /// Allows difficulty assets to override certain zombie behaviors.
+    /// Called after bound/type is initialized, and after type changes during respawn.
+    /// </summary>
     private void updateDifficulty()
     {
         if (Provider.isServer)
@@ -1526,6 +1562,9 @@ public class Zombie : MonoBehaviour
         setTicking(wantsToTick: true);
     }
 
+    /// <summary>
+    /// Called when zombie does not have a target, but has been stuck for a period.
+    /// </summary>
     private void findTargetWhileStuck()
     {
         bool can_Target_Structures = Provider.modeConfigData.Zombies.Can_Target_Structures;
@@ -2554,6 +2593,9 @@ public class Zombie : MonoBehaviour
         return num;
     }
 
+    /// <summary>
+    /// Helper to prevent mistakes or plugins from breaking alive zombie count.
+    /// </summary>
     private void SetCountedAsAliveInZombieRegion(bool newValue)
     {
         if (isCountedAsAliveInZombieRegion != newValue)
@@ -2570,6 +2612,9 @@ public class Zombie : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Helper to prevent mistakes or plugins from breaking alive boss zombie count.
+    /// </summary>
     private void SetCountedAsAliveBossInZombieRegion(bool newValue)
     {
         if (isCountedAsAliveBossInZombieRegion != newValue)
@@ -2586,6 +2631,11 @@ public class Zombie : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 2023-01-31: set height to 2 rather than adjusting per-zombie-type. Tall zombies (megas) couldn't
+    /// get through doorways, and short zombies (crawlers) could get underneath objects they shouldn't
+    /// like gas tanks. Zombies were also stacking on top of eachother a bit too much.
+    /// </summary>
     private void SetCapsuleRadiusAndHeight(float radius, float height)
     {
         if (Provider.isServer)

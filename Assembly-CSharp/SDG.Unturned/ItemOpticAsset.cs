@@ -4,6 +4,10 @@ namespace SDG.Unturned;
 
 public class ItemOpticAsset : ItemAsset
 {
+    /// <summary>
+    /// Factor e.g. 2 is a 2x multiplier.
+    /// Prior to 2022-04-11 this was the target field of view. (90/fov)
+    /// </summary>
     public float zoom { get; private set; }
 
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)

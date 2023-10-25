@@ -3,12 +3,18 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Overrides breathability for example in a deep cave with no oxygen, or near a deep sea plant that provides oxygen.
+/// </summary>
 public class OxygenVolumeManager : VolumeManager<OxygenVolume, OxygenVolumeManager>
 {
     internal List<OxygenVolume> breathableVolumes;
 
     internal List<OxygenVolume> nonBreathableVolumes;
 
+    /// <summary>
+    /// Find highest alpha breathable volume overlapping position.
+    /// </summary>
     public bool IsPositionInsideBreathableVolume(Vector3 position, out float maxAlpha)
     {
         bool result = false;
@@ -29,6 +35,9 @@ public class OxygenVolumeManager : VolumeManager<OxygenVolume, OxygenVolumeManag
         return result;
     }
 
+    /// <summary>
+    /// Find highest alpha non-breathable volume overlapping position.
+    /// </summary>
     public bool IsPositionInsideNonBreathableVolume(Vector3 position, out float maxAlpha)
     {
         bool result = false;

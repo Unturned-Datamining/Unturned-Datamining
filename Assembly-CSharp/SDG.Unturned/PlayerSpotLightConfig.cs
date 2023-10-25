@@ -4,6 +4,12 @@ namespace SDG.Unturned;
 
 public struct PlayerSpotLightConfig
 {
+    /// <summary>
+    /// If true, light contributes to player spotlight. Defaults to true.
+    ///
+    /// Can be set to false for modders with a custom light setup. For example, this was added
+    /// for a modder who is using melee lights to toggle a lightsaber-style glow.
+    /// </summary>
     public bool isEnabled;
 
     public float range;

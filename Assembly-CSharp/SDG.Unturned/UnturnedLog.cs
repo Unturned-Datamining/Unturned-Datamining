@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Unturned wrapper for Debug.Log, Debug.LogWarning, Debug.LogError, etc.
+/// </summary>
 public static class UnturnedLog
 {
     private static bool insideLog;
@@ -76,12 +79,21 @@ public static class UnturnedLog
         }
     }
 
+    /// <summary>
+    /// Log an exception with message providing context.
+    /// </summary>
     public static void exception(Exception e, string message)
     {
         error(message);
         exception(e);
     }
 
+    /// <summary>
+    /// Recursively logs inner exception.
+    ///
+    /// Should only be called by itself and exception because notifications
+    /// to CommandWindow would otherwise get re-sent here as errors.
+    /// </summary>
     private static void internalException(Exception e)
     {
         Logs.printLine(e.Message);
@@ -94,6 +106,13 @@ public static class UnturnedLog
         }
     }
 
+    /// <summary>
+    /// This is the ONLY place Unturned should be binding logMessageReceived.
+    ///
+    /// This gives us greater control over how logging is handled. In particular, Unity's
+    /// headless builds route logs (including stack traces) through stdout which is undesirable
+    /// for dedicated servers, so we only call Debug.Log* in the editor and development builds. 
+    /// </summary>
     private static void onBuiltinUnityLogMessageReceived(string text, string stack, LogType type)
     {
         if (!insideLog)
@@ -150,6 +169,9 @@ public static class UnturnedLog
         error(string.Format(format, args));
     }
 
+    /// <summary>
+    /// Log an exception with message providing context.
+    /// </summary>
     public static void exception(Exception e, string format, params object[] args)
     {
         try

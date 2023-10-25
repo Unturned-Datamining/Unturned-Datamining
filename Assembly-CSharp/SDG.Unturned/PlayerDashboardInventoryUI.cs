@@ -19,6 +19,9 @@ public class PlayerDashboardInventoryUI
 
     private static ISleekBox backdropBox;
 
+    /// <summary>
+    /// Added during the UI refactor to catch unhandled mouse clicks during drag.
+    /// </summary>
     private static ISleekImage dragOutsideHandler;
 
     private static ISleekImage dragOutsideClothingHandler;
@@ -71,8 +74,14 @@ public class PlayerDashboardInventoryUI
 
     private static SleekItems[] items;
 
+    /// <summary>
+    /// Contains inspect item box and invisible button.
+    /// </summary>
     private static ISleekElement selectionFrame;
 
+    /// <summary>
+    /// Added during the UI refactor to catch mouse clicks outside the selection box.
+    /// </summary>
     private static ISleekImage outsideSelectionInvisibleButton;
 
     private static ISleekBox selectionBackdropBox;
@@ -163,6 +172,11 @@ public class PlayerDashboardInventoryUI
 
     private static bool isSplitClothingArea => Screen.width >= 1350;
 
+    /// <summary>
+    /// Was ConsumeEvent called during this frame?
+    /// This is a hack to prevent firing when clicking in the UI on the same frame it closes.
+    /// Moved from SleekWindow and Event.current.Use() during UI refactor.
+    /// </summary>
     public static bool WasEventConsumed => eventGuard.HasBeenConsumed;
 
     public static void open()
@@ -267,6 +281,10 @@ public class PlayerDashboardInventoryUI
         }
     }
 
+    /// <summary>
+    /// Annoying frustrating workaround for IMGUI. Disable inventory headers, grids and slots while selection is open
+    /// to prevent them from interfering with selection menu.
+    /// </summary>
     private static void setMiscButtonsEnabled(bool enabled)
     {
         ISleekButton[] array = headers;
@@ -2007,6 +2025,9 @@ public class PlayerDashboardInventoryUI
         }
     }
 
+    /// <summary>
+    /// Move item drag visual to the cursor's position.
+    /// </summary>
     private static void refreshDraggedVisualPosition()
     {
         dragItem.PositionOffset_X = (int)dragPivot.x;

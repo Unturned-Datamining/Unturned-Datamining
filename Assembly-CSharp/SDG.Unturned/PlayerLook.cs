@@ -135,6 +135,9 @@ public class PlayerLook : PlayerCaller
 
     public Rk4SpringQ targetExplosionLocalRotation;
 
+    /// <summary>
+    /// Smoothing adds some initial blend-in which felt nicer for explosion rumble.
+    /// </summary>
     private Quaternion smoothedExplosionLocalRotation = Quaternion.identity;
 
     public float explosionSmoothingSpeed;
@@ -145,6 +148,9 @@ public class PlayerLook : PlayerCaller
 
     private float eyes;
 
+    /// <summary>
+    /// Slightly clamped third-person version of "eyes" value to prevent sweep from hitting floor.
+    /// </summary>
     private float thirdPersonEyeHeight;
 
     public bool shouldUseZoomFactorForSensitivity;
@@ -155,10 +161,22 @@ public class PlayerLook : PlayerCaller
 
     protected bool isZoomed;
 
+    /// <summary>
+    /// Can spectating be used without admin powers?
+    /// Plugins can enable spectator mode.
+    /// </summary>
     protected bool allowFreecamWithoutAdmin;
 
+    /// <summary>
+    /// Can workzone be used without admin powers?
+    /// Plugins can enable workzone permissions.
+    /// </summary>
     protected bool allowWorkzoneWithoutAdmin;
 
+    /// <summary>
+    /// Can spectator overlays be used without admin powers?
+    /// Plugins can enable specstats permissions.
+    /// </summary>
     protected bool allowSpecStatsWithoutAdmin;
 
     private static readonly ClientInstanceMethod<bool> SendFreecamAllowed = ClientInstanceMethod<bool>.Get(typeof(PlayerLook), "ReceiveFreecamAllowed");
@@ -167,6 +185,9 @@ public class PlayerLook : PlayerCaller
 
     private static readonly ClientInstanceMethod<bool> SendSpecStatsAllowed = ClientInstanceMethod<bool>.Get(typeof(PlayerLook), "ReceiveSpecStatsAllowed");
 
+    /// <summary>
+    /// Multiple hits are necessary because the first returned hit is not always the closest.
+    /// </summary>
     private static RaycastHit[] sweepHits = new RaycastHit[8];
 
     private const float NEAR_CLIP_SWEEP_RADIUS = 0.39f;
@@ -223,6 +244,10 @@ public class PlayerLook : PlayerCaller
 
     public Camera scopeCamera => _scopeCamera;
 
+    /// <summary>
+    /// Material instantiated when dual-render scopes are enabled.
+    /// Overrides the material of the gun sight attachment.
+    /// </summary>
     public Material scopeMaterial { get; private set; }
 
     public bool isScopeActive => _isScopeActive;
@@ -241,6 +266,9 @@ public class PlayerLook : PlayerCaller
 
     public float orbitYaw => _orbitYaw;
 
+    /// <summary>
+    /// Should player stats be visible in spectator mode?
+    /// </summary>
     public bool areSpecStatsVisible { get; protected set; }
 
     public bool isCam
@@ -300,11 +328,17 @@ public class PlayerLook : PlayerCaller
         base.transform.localRotation = Quaternion.Euler(0f, _yaw, 0f);
     }
 
+    /// <summary>
+    /// Get point-of-view in world-space.
+    /// </summary>
     public Vector3 getEyesPosition()
     {
         return aim.position;
     }
 
+    /// <summary>
+    /// Get point of view in worldspace without the left/right leaning modifier.
+    /// </summary>
     public Vector3 GetEyesPositionWithoutLeaning()
     {
         return base.transform.TransformPoint(aim.localPosition);
@@ -545,6 +579,9 @@ public class PlayerLook : PlayerCaller
         updateAim(delta);
     }
 
+    /// <summary>
+    /// Clamp _pitch within the [0, 180] range.
+    /// </summary>
     private void clampPitch()
     {
         Passenger vehicleSeat = base.player.movement.getVehicleSeat();
@@ -596,6 +633,9 @@ public class PlayerLook : PlayerCaller
         _pitch = Mathf.Clamp(_pitch, min, max);
     }
 
+    /// <summary>
+    /// Clamp yaw while seated, and keep within the [-360, 360] range.
+    /// </summary>
     private void clampYaw()
     {
         _yaw %= 360f;
@@ -726,6 +766,10 @@ public class PlayerLook : PlayerCaller
         ReceiveFreecamAllowed(isAllowed);
     }
 
+    /// <summary>
+    /// Called from the server to allow spectating without admin powers.
+    /// Only used by plugins.
+    /// </summary>
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellFreecamAllowed")]
     public void ReceiveFreecamAllowed(bool isAllowed)
     {
@@ -739,6 +783,10 @@ public class PlayerLook : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Allow use of spectator mode without admin powers.
+    /// Only used by plugins.
+    /// </summary>
     public void sendFreecamAllowed(bool isAllowed)
     {
         allowFreecamWithoutAdmin = isAllowed;
@@ -751,6 +799,10 @@ public class PlayerLook : PlayerCaller
         ReceiveWorkzoneAllowed(isAllowed);
     }
 
+    /// <summary>
+    /// Called from the server to allow workzone without admin powers.
+    /// Only used by plugins.
+    /// </summary>
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellWorkzoneAllowed")]
     public void ReceiveWorkzoneAllowed(bool isAllowed)
     {
@@ -762,6 +814,10 @@ public class PlayerLook : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Allow use of workzone mode without admin powers.
+    /// Only used by plugins.
+    /// </summary>
     public void sendWorkzoneAllowed(bool isAllowed)
     {
         allowWorkzoneWithoutAdmin = isAllowed;
@@ -774,6 +830,10 @@ public class PlayerLook : PlayerCaller
         ReceiveSpecStatsAllowed(isAllowed);
     }
 
+    /// <summary>
+    /// Called from the server to allow spectator overlays without admin powers.
+    /// Only used by plugins.
+    /// </summary>
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellSpecStatsAllowed")]
     public void ReceiveSpecStatsAllowed(bool isAllowed)
     {
@@ -784,12 +844,20 @@ public class PlayerLook : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Allow use of spectator overlay mode without admin powers.
+    /// Only used by plugins.
+    /// </summary>
     public void sendSpecStatsAllowed(bool isAllowed)
     {
         allowSpecStatsWithoutAdmin = isAllowed;
         SendSpecStatsAllowed.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), isAllowed);
     }
 
+    /// <summary>
+    /// Sweep a sphere to find collisions blocking the third-person camera.
+    /// </summary>
+    /// <returns>Valid world-space camera position.</returns>
     private Vector3 sphereCastCamera(Vector3 origin, Vector3 direction, float length, int layerMask)
     {
         int num = Physics.SphereCastNonAlloc(new Ray(origin, direction), 0.39f, sweepHits, length, layerMask, QueryTriggerInteraction.Ignore);

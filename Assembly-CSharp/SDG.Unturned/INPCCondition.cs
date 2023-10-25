@@ -10,6 +10,10 @@ public class INPCCondition
 
     protected bool shouldReset;
 
+    /// <summary>
+    /// If set, only show this condition in the UI when conditions with these indices are met.
+    /// For example don't show "arrest the criminal (name)" until "investigate crime" is completed.
+    /// </summary>
     internal List<int> uiRequirementIndices;
 
     public virtual bool isConditionMet(Player player)
@@ -71,11 +75,18 @@ public class INPCCondition
         return sleekBox;
     }
 
+    /// <summary>
+    /// Is this condition influenced by a given quest flag?
+    /// Used by level objects to determine if local player's flag change may affect visibility.
+    /// </summary>
     public virtual bool isAssociatedWithFlag(ushort flagID)
     {
         return false;
     }
 
+    /// <summary>
+    /// Replacement for isAssociatedWithFlag to fix quest conditions and somewhat improve perf.
+    /// </summary>
     internal virtual void GatherAssociatedFlags(HashSet<ushort> associatedFlags)
     {
     }

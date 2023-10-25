@@ -12,14 +12,27 @@ public class ItemClothingAsset : ItemAsset
 
     private bool _proofRadiation;
 
+    /// <summary>
+    /// Left-handed character skeleton is mirrored, so most item models are mirrored again to preserve appearance.
+    /// Unfortunately this does not work well for some items e.g. the particle system on Elver/Dango glasses.
+    /// </summary>
     internal bool shouldMirrorLeftHandedModel;
 
     public float movementSpeedMultiplier = 1f;
 
+    /// <summary>
+    /// Sound to play when equipped.
+    /// </summary>
     public AudioReference wearAudio;
 
+    /// <summary>
+    /// Multiplier to incoming damage. Defaults to 1.0.
+    /// </summary>
     public float armor => _armor;
 
+    /// <summary>
+    /// Multiplier to explosive damage. Defaults to <see cref="P:SDG.Unturned.ItemClothingAsset.armor" /> value if Armor_Explosion isn't specified.
+    /// </summary>
     public float explosionArmor => _explosionArmor;
 
     public override bool showQuality => true;
@@ -38,6 +51,9 @@ public class ItemClothingAsset : ItemAsset
 
     public bool shouldDestroyClothingColliders { get; protected set; }
 
+    /// <summary>
+    /// If set, find a child meshrenderer with this name and change its material to the character skin material.
+    /// </summary>
     public string skinOverride { get; protected set; }
 
     public bool shouldBeVisible(bool isRagdoll)

@@ -96,6 +96,9 @@ public class ObjectNPCAsset : ObjectAsset
 
     public float poseHeadOffset { get; protected set; }
 
+    /// <summary>
+    /// If non-zero, NPC name is shown as ??? until bool flag is true.
+    /// </summary>
     public ushort playerKnowsNameFlagId { get; protected set; }
 
     public bool IsDialogueRefNull()

@@ -19,10 +19,16 @@ public class GraphicsSettings
 
     public const float EFFECT_LOW = 16f;
 
+    /// <summary>
+    /// Planar reflection component updates its culling distance and culling mask when this is incremented.
+    /// </summary>
     public static int planarReflectionUpdateIndex;
 
     private static GraphicsSettingsData graphicsSettingsData = new GraphicsSettingsData();
 
+    /// <summary>
+    /// Overrides in-game UI scale setting.
+    /// </summary>
     private static CommandLineFloat uiScale = new CommandLineFloat("-ui_scale");
 
     private static bool didCacheUIScaleOverride = false;
@@ -31,6 +37,9 @@ public class GraphicsSettings
 
     private static CommandLineInt clTargetFrameRate = new CommandLineInt("-FrameRateLimit");
 
+    /// <summary>
+    /// Added for players who want to see if they can get better performance with a ridiculously low max draw distance.
+    /// </summary>
     private static CommandLineFloat clFarClipDistance = new CommandLineFloat("-FarClipDistance");
 
     private static bool changeResolution;
@@ -267,8 +276,14 @@ public class GraphicsSettings
         }
     }
 
+    /// <summary>
+    /// Distance to use terrain shaders before fallback to a baked texture.
+    /// </summary>
     public static float terrainBasemapDistance => blend ? 512 : 256;
 
+    /// <summary>
+    /// Higher error reduces vertex density as distance increases.
+    /// </summary>
     public static float terrainHeightmapPixelError
     {
         get
@@ -422,6 +437,10 @@ public class GraphicsSettings
         }
     }
 
+    /// <summary>
+    /// Multiplier for far clip plane distance.
+    /// Clamped within [0, 1] range to prevent editing config files for an advantage.
+    /// </summary>
     public static float NormalizedFarClipDistance
     {
         get
@@ -441,6 +460,10 @@ public class GraphicsSettings
         }
     }
 
+    /// <summary>
+    /// Multiplier for draw distance.
+    /// Clamped within [0, 1] range to prevent editing config files for an advantage.
+    /// </summary>
     public static float normalizedDrawDistance
     {
         get
@@ -453,6 +476,10 @@ public class GraphicsSettings
         }
     }
 
+    /// <summary>
+    /// Multiplier for draw distance of optional super-low LOD models.
+    /// Clamped within [0, 1] range to prevent editing config files for an advantage.
+    /// </summary>
     public static float normalizedLandmarkDrawDistance
     {
         get
@@ -1122,6 +1149,9 @@ public class GraphicsSettings
         apply("restoring defaults");
     }
 
+    /// <summary>
+    /// Called after loading graphics settings from disk so that their values can be adjusted.
+    /// </summary>
     private static void validateSettings()
     {
         if (graphicsSettingsData.UserInterfaceScale.IsFinite())
@@ -1142,6 +1172,10 @@ public class GraphicsSettings
         fixDefaultResolution();
     }
 
+    /// <summary>
+    /// If default resolution is zero, try falling back to a higher one.
+    /// Used when restoring defaults and validating loaded settings.
+    /// </summary>
     private static void fixDefaultResolution()
     {
         GraphicsSettingsResolution graphicsSettingsResolution = graphicsSettingsData.Resolution;

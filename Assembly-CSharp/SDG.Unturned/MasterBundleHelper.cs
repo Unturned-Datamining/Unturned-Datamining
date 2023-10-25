@@ -14,6 +14,9 @@ public static class MasterBundleHelper
         return File.Exists(getConfigPath(absoluteDirectory));
     }
 
+    /// <summary>
+    /// Append suffix to name, or if name contains a '.' insert it before.
+    /// </summary>
     public static string insertAssetBundleNameSuffix(string name, string suffix)
     {
         int num = name.IndexOf('.');

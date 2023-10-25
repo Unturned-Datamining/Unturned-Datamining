@@ -38,6 +38,10 @@ public class ZombiesConfigData
 
     public float Respawn_Beacon_Time;
 
+    /// <summary>
+    /// Minimum seconds between boss zombie spawns for players doing quests.
+    /// Players were abusing the spawns to farm boss tier loot.
+    /// </summary>
     public float Quest_Boss_Respawn_Interval;
 
     public float Damage_Multiplier;
@@ -46,6 +50,9 @@ public class ZombiesConfigData
 
     public float Backstab_Multiplier;
 
+    /// <summary>
+    /// Weapon damage multiplier against body, arms, legs. Useful for headshot-only mode.
+    /// </summary>
     public float NonHeadshot_Armor_Multiplier;
 
     public float Beacon_Experience_Multiplier;

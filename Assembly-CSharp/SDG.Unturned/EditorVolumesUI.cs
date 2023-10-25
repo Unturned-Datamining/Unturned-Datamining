@@ -356,6 +356,9 @@ internal class EditorVolumesUI : SleekFullscreenBox
         DevkitSelectionToolOptions.instance.selectionMask = (ERayMask)state;
     }
 
+    /// <summary>
+    /// Other menus can modify DevkitSelectionToolOptions so we need to sync our menu when opened.
+    /// </summary>
     private void SyncSettings()
     {
         surfaceMaskField.Value = (uint)DevkitSelectionToolOptions.instance.selectionMask;

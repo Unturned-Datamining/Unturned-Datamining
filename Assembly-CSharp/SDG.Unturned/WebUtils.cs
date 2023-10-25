@@ -4,6 +4,10 @@ namespace SDG.Unturned;
 
 internal static class WebUtils
 {
+    /// <summary>
+    /// The game uses Process.Start to open web links when the Steam overlay is unavailable, which could be exploited
+    /// to e.g. download and execute files. To prevent this we only allow valid http or https urls.
+    /// </summary>
     internal static bool ParseThirdPartyUrl(string uriString, out string result)
     {
         if (string.IsNullOrEmpty(uriString))

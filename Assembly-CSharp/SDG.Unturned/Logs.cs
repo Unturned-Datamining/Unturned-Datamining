@@ -4,8 +4,16 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Responsible for the per-process .log file in the Logs directory.
+/// Kept multiple log files in the past, but now consolidates all information
+/// into a single file named Client.log or Server_{Identifier}.log.
+/// </summary>
 public class Logs : MonoBehaviour
 {
+    /// <summary>
+    /// Should setup of the default *.log file be disabled?
+    /// </summary>
     public static CommandLineFlag noDefaultLog = new CommandLineFlag(defaultValue: false, "-NoDefaultLog");
 
     private static LogFile debugLog = null;
@@ -23,6 +31,9 @@ public class Logs : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Get logging to path.
+    /// </summary>
     public static string getLogFilePath()
     {
         if (debugLog == null)
@@ -32,6 +43,9 @@ public class Logs : MonoBehaviour
         return debugLog.path;
     }
 
+    /// <summary>
+    /// Set path to log to.
+    /// </summary>
     public static void setLogFilePath(string logFilePath)
     {
         if (!logFilePath.EndsWith(".log"))
@@ -77,6 +91,9 @@ public class Logs : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Close current log file.
+    /// </summary>
     public static void closeLogFile()
     {
         if (debugLog != null)

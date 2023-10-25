@@ -12,6 +12,9 @@ public class Item
 
     public ushort id => _id;
 
+    /// <summary>
+    /// Exposed for Rocket transition to modules backwards compatibility.
+    /// </summary>
     public byte durability
     {
         get
@@ -24,6 +27,9 @@ public class Item
         }
     }
 
+    /// <summary>
+    /// Exposed for Rocket transition to modules backwards compatibility.
+    /// </summary>
     public byte[] metadata
     {
         get
@@ -51,6 +57,9 @@ public class Item
     {
     }
 
+    /// <summary>
+    /// Ideally in a future rewrite asset overload will become the default rather than the overload taking legacy ID.
+    /// </summary>
     public Item(ItemAsset asset, EItemOrigin origin)
         : this(asset?.id ?? 0, origin)
     {

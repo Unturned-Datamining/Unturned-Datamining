@@ -17,6 +17,9 @@ public class SteamServerInfo
 
     public enum EInfoSource
     {
+        /// <summary>
+        /// Join server by IP.
+        /// </summary>
         DirectConnect,
         InternetServerList,
         FavoriteServerList,
@@ -97,14 +100,23 @@ public class SteamServerInfo
 
     public bool isPro => _isPro;
 
+    /// <summary>
+    /// ID of network transport implementation to use.
+    /// </summary>
     public string networkTransport { get; protected set; }
 
+    /// <summary>
+    /// Known plugin systems.
+    /// </summary>
     public EPluginFramework pluginFramework { get; protected set; }
 
     public string thumbnailURL { get; protected set; }
 
     public string descText { get; protected set; }
 
+    /// <summary>
+    /// Parses value between two keys <stuff>thing</stuff> would parse thing
+    /// </summary>
     protected string parseTagValue(string tags, string startKey, string endKey)
     {
         int num = tags.IndexOf(startKey);

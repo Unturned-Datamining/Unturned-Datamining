@@ -7,6 +7,10 @@ namespace SDG.Unturned;
 [Obsolete("Should not be specific to SteamGameServerNetworking after NetTransport rewrite")]
 public static class SteamGameServerNetworkingUtils
 {
+    /// <summary>
+    /// Get real IPv4 address of remote player NOT the relay server.
+    /// </summary>
+    /// <returns>True if address was available, and not flagged as a relay server.</returns>
     [Obsolete("Should not be specific to SteamGameServerNetworking")]
     public static bool getIPv4Address(CSteamID steamIDRemote, out uint address)
     {
@@ -19,6 +23,9 @@ public static class SteamGameServerNetworkingUtils
         return false;
     }
 
+    /// <summary>
+    /// See above, returns zero if failed.
+    /// </summary>
     [Obsolete("Should not be specific to SteamGameServerNetworking")]
     public static uint getIPv4AddressOrZero(CSteamID steamIDRemote)
     {

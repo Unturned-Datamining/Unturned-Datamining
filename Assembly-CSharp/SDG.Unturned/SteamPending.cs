@@ -243,6 +243,9 @@ public class SteamPending : SteamConnectedClientBase
         sentVerifyPacketRealtime = -1.0;
     }
 
+    /// <summary>
+    /// Used when kicking player in queue to log what backend system might be failing.
+    /// </summary>
     internal string GetQueueStateDebugString()
     {
         if (hasSentVerifyPacket)

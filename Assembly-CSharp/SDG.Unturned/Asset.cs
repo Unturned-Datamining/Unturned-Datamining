@@ -13,10 +13,21 @@ public abstract class Asset
 
     internal AssetOrigin origin;
 
+    /// <summary>
+    /// Null or empty if created at runtime, otherwise set by <see cref="T:SDG.Unturned.Assets" /> when loading.
+    /// </summary>
     public string absoluteOriginFilePath;
 
+    /// <summary>
+    /// Were this asset's shaders set to Standard and/or consolidated?
+    /// Needed for vehicle rotors special case.
+    /// </summary>
     public bool requiredShaderUpgrade;
 
+    /// <summary>
+    /// Should texture non-power-of-two warnings be ignored?
+    /// Unfortunately some third party assets have odd setups.
+    /// </summary>
     public bool ignoreNPOT;
 
     [Obsolete("Replaced by AssetOrigin class")]
@@ -43,10 +54,19 @@ public abstract class Asset
         }
     }
 
+    /// <summary>
+    /// Master bundle this asset loaded from.
+    /// </summary>
     public MasterBundleConfig originMasterBundle { get; protected set; }
 
+    /// <summary>
+    /// Should read/write texture warnings be ignored?
+    /// </summary>
     public bool ignoreTextureReadable { get; protected set; }
 
+    /// <summary>
+    /// Hash of the original input file.
+    /// </summary>
     public byte[] hash { get; internal set; }
 
     internal virtual bool ShouldVerifyHash => true;
@@ -82,6 +102,9 @@ public abstract class Asset
         return origin?.name ?? "Unknown";
     }
 
+    /// <summary>
+    /// Maybe temporary? Used when something in-game changes the asset so that it shouldn't be useable on the server anymore.
+    /// </summary>
     public virtual void clearHash()
     {
         hash = new byte[20];
@@ -92,6 +115,9 @@ public abstract class Asset
         hash = Hash.combineSHA1Hashes(hash, otherHash);
     }
 
+    /// <summary>
+    /// Most asset classes end in "Asset", so in debug strings if asset is clear from context we can remove the unnecessary suffix.
+    /// </summary>
     public string GetTypeNameWithoutSuffix()
     {
         string text = GetType().Name;
@@ -133,6 +159,9 @@ public abstract class Asset
         }
     }
 
+    /// <summary>
+    /// Perform any initialization required when PopulateAsset won't be called.
+    /// </summary>
     internal virtual void OnCreatedAtRuntime()
     {
     }
@@ -142,6 +171,9 @@ public abstract class Asset
         return id + " - " + name;
     }
 
+    /// <summary>
+    /// Planning ahead to potentially convert the game to use Unity's newer Addressables feature.
+    /// </summary>
     protected T LoadRedirectableAsset<T>(Bundle fromBundle, string defaultName, DatDictionary data, string key) where T : UnityEngine.Object
     {
         if (data.TryGetString(key, out var value))

@@ -2,6 +2,10 @@ using System;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Unturned equivalent of unity's PlayerPrefs.
+/// Convenient for saving one-off key-value pairs.
+/// </summary>
 public static class ConvenientSavedata
 {
     private static ConvenientSavedataImplementation instance = null;

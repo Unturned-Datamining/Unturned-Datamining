@@ -81,8 +81,14 @@ public class PlayerDashboardInformationUI
 
     private static ISleekImage mapImage;
 
+    /// <summary>
+    /// Labels for named locations.
+    /// </summary>
     private static ISleekElement mapLocationsContainer;
 
+    /// <summary>
+    /// Contains arena outer circle and inner target points.
+    /// </summary>
     private static ISleekElement mapArenaContainer;
 
     private static ISleekElement mapMarkersContainer;
@@ -93,8 +99,14 @@ public class PlayerDashboardInformationUI
 
     private static List<ISleekImage> arenaTargetPoints;
 
+    /// <summary>
+    /// Player avatars.
+    /// </summary>
     private static List<ISleekImage> remotePlayerImages;
 
+    /// <summary>
+    /// Arrow oriented with the local player.
+    /// </summary>
     private static ISleekImage localPlayerImage;
 
     private static ISleekImage arenaAreaCurrentOverlay;
@@ -809,6 +821,9 @@ public class PlayerDashboardInformationUI
         return yaw;
     }
 
+    /// <summary>
+    /// Convert level-space 3D position into normalized 2D position.
+    /// </summary>
     private static Vector2 ProjectWorldPositionToMap(Vector3 worldPosition)
     {
         CartographyVolume mainVolume = VolumeManager<CartographyVolume, CartographyVolumeManager>.Get().GetMainVolume();
@@ -821,6 +836,9 @@ public class PlayerDashboardInformationUI
         return new Vector2(worldPosition.x / num + 0.5f, 0.5f - worldPosition.z / num);
     }
 
+    /// <summary>
+    /// Convert normalized 2D position into level-space 3D position.
+    /// </summary>
     private static Vector3 DeprojectMapToWorld(Vector2 mapPosition)
     {
         CartographyVolume mainVolume = VolumeManager<CartographyVolume, CartographyVolumeManager>.Get().GetMainVolume();
@@ -978,6 +996,9 @@ public class PlayerDashboardInformationUI
         return sleekPlayer;
     }
 
+    /// <summary>
+    /// Temporary to unbind events because this class is static for now. (sigh)
+    /// </summary>
     public void OnDestroy()
     {
         PlayerUI.isBlindfoldedChanged -= handleIsBlindfoldedChanged;

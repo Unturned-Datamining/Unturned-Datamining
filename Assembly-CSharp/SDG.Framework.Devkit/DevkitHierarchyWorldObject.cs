@@ -15,6 +15,9 @@ public class DevkitHierarchyWorldObject : DevkitHierarchyWorldItem
 
     public ELevelObjectPlacementOrigin placementOrigin;
 
+    /// <summary>
+    /// Devkit objects are now converted to regular objects and excluded from the file when re-saving.
+    /// </summary>
     public override bool ShouldSave => false;
 
     protected override void readHierarchyItem(IFormattedFileReader reader)

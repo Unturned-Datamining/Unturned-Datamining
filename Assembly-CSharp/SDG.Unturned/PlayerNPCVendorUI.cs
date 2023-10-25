@@ -83,6 +83,9 @@ public class PlayerNPCVendorUI
         PlayerNPCDialogueUI.open(dialogue, nextMessage, hasNextDialogue);
     }
 
+    /// <summary>
+    /// Update currency and owned items if inventory has changed and menu is open.
+    /// </summary>
     public static void MaybeRefresh()
     {
         if (!active || !needsRefresh || vendor == null)
@@ -166,6 +169,9 @@ public class PlayerNPCVendorUI
         }
     }
 
+    /// <summary>
+    /// Update currency or experience depending what the vendor accepts.
+    /// </summary>
     private static void updateCurrencyOrExperienceBox()
     {
         currencyBox.IsVisible = vendor.currency.isValid;

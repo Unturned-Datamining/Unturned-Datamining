@@ -20,5 +20,8 @@ public class AirdropInfo
 
     public bool dropped;
 
+    /// <summary>
+    /// Calculated position (not directly replaced) to spawn falling box.
+    /// </summary>
     public Vector3 dropPosition;
 }

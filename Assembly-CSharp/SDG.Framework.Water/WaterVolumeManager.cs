@@ -5,6 +5,9 @@ namespace SDG.Framework.Water;
 
 public class WaterVolumeManager : VolumeManager<WaterVolume, WaterVolumeManager>
 {
+    /// <summary>
+    /// Water volume marked as being sea level.
+    /// </summary>
     public static WaterVolume seaLevelVolume;
 
     private EGraphicQuality oldWaterQuality;

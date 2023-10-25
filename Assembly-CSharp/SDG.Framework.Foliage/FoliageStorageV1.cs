@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace SDG.Framework.Foliage;
 
+/// <summary>
+/// Legacy implementation of foliage storage, with one file per tile.
+/// </summary>
 public class FoliageStorageV1 : IFoliageStorage
 {
     protected bool hasAllTilesInMemory;

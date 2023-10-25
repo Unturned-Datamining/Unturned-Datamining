@@ -122,6 +122,9 @@ public class UseableBarricade : Useable
         }
     }
 
+    /// <summary>
+    /// Does the item being placed count as a "trap" for the purposes of vehicle placement restrictions?
+    /// </summary>
     private bool useTrapRestrictions => equippedBarricadeAsset.type == EItemType.TRAP;
 
     private bool allowedToPlaceOnVehicle
@@ -152,6 +155,10 @@ public class UseableBarricade : Useable
 
     private float sqrMaxDistanceFromHull => MathfEx.Square(maxDistanceFromHull);
 
+    /// <summary>
+    /// Should placement ghost material change be done recursively?
+    /// e.g. Sentry has a deep hierarchy of meshes.
+    /// </summary>
     private bool isHighlightRecursive
     {
         get

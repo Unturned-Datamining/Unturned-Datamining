@@ -13,8 +13,14 @@ public class ParticleSystemCollisionAudio : MonoBehaviour
     [FormerlySerializedAs("audioPrefab")]
     public OneShotAudioDefinition audioDef;
 
+    /// <summary>
+    /// If set, audio clip associated with physics material will take priority.
+    /// </summary>
     public string materialPropertyName;
 
+    /// <summary>
+    /// Collision with speed lower than this value will not play a sound.
+    /// </summary>
     public float speedThreshold = 0.01f;
 
     public float minSpeed = 0.2f;
@@ -86,6 +92,9 @@ public class ParticleSystemCollisionAudio : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Currently triggers are only used for water.
+    /// </summary>
     private void OnParticleTrigger()
     {
         if (particleSystemComponent == null)

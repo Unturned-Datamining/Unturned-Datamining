@@ -5,12 +5,21 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// All main menu MTX shop code should be routed through here so that it could theoretically be ported to other
+/// platforms or stores. Obviously this is all very Steam specific at the moment, but at least the UI does not
+/// depend on Steam API here as much as older parts of the game.
+/// </summary>
 internal abstract class ItemStore
 {
     public struct Listing
     {
         public int itemdefid;
 
+        /// <summary>
+        /// Was this item marked as new in the config?
+        /// If new, and not marked as seen, then a "NEW" label is shown on the listing.
+        /// </summary>
         public bool isNew;
 
         public ulong currentPrice;
@@ -25,6 +34,9 @@ internal abstract class ItemStore
         public int quantity;
     }
 
+    /// <summary>
+    /// Messy, but we only show a menu alert if there was a problem.
+    /// </summary>
     public enum EPurchaseResult
     {
         UnableToInitialize,
@@ -39,12 +51,24 @@ internal abstract class ItemStore
 
     protected Listing[] listings;
 
+    /// <summary>
+    /// Subset of listings.
+    /// </summary>
     protected int[] newListingIndices;
 
+    /// <summary>
+    /// Subset of listings.
+    /// </summary>
     protected int[] featuredListingIndices;
 
+    /// <summary>
+    /// Subset of listings.
+    /// </summary>
     protected int[] discountedListingIndices;
 
+    /// <summary>
+    /// Subset of listings.
+    /// </summary>
     protected int[] exludedListingIndices;
 
     protected List<CartEntry> itemsInCart = new List<CartEntry>();
@@ -109,6 +133,10 @@ internal abstract class ItemStore
 
     public abstract void ViewStore();
 
+    /// <summary>
+    /// Do we have pricing details for a given item?
+    /// Price results may not have been returned yet, or item might not be public.
+    /// </summary>
     public bool FindListing(int itemdefid, out Listing listing)
     {
         Listing[] array = listings;
@@ -171,11 +199,17 @@ internal abstract class ItemStore
 
     public abstract void StartPurchase();
 
+    /// <summary>
+    /// Already filtered to only return locally known items which pass country restrictions.
+    /// </summary>
     public Listing[] GetListings()
     {
         return listings;
     }
 
+    /// <summary>
+    /// Empty if outside new time window.
+    /// </summary>
     public int[] GetNewListingIndices()
     {
         return newListingIndices;

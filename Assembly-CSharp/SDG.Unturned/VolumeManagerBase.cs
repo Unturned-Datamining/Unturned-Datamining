@@ -5,6 +5,9 @@ namespace SDG.Unturned;
 
 public abstract class VolumeManagerBase
 {
+    /// <summary>
+    /// Auto-registering list of volume manager subclasses for level editor.
+    /// </summary>
     internal static List<VolumeManagerBase> allManagers = new List<VolumeManagerBase>();
 
     public string FriendlyName { get; protected set; }

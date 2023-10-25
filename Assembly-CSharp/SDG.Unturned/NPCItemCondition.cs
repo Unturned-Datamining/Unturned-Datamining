@@ -8,6 +8,9 @@ public class NPCItemCondition : NPCLogicCondition
 {
     private static InventorySearchQualityAscendingComparator qualityAscendingComparator = new InventorySearchQualityAscendingComparator();
 
+    /// <summary>
+    /// isConditionMet can get called during applyCondition because item consume refreshes the UI.
+    /// </summary>
     private static List<InventorySearch> search = new List<InventorySearch>();
 
     private static List<InventorySearch> applyConditionSearch = new List<InventorySearch>();

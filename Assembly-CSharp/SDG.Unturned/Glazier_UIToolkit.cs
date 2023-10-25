@@ -19,8 +19,14 @@ internal class Glazier_UIToolkit : GlazierBase, IGlazier
 
     private HashSet<GlazierElementBase_UIToolkit> liveElements = new HashSet<GlazierElementBase_UIToolkit>();
 
+    /// <summary>
+    /// Container for SleekWindow element.
+    /// </summary>
     private VisualElement gameLayer;
 
+    /// <summary>
+    /// Container for top-level visual elements.
+    /// </summary>
     private VisualElement overlayLayer;
 
     private Label debugLabel;
@@ -29,8 +35,14 @@ internal class Glazier_UIToolkit : GlazierBase, IGlazier
 
     private Label tooltipLabel;
 
+    /// <summary>
+    /// Element under the cursor on the previous frame.
+    /// </summary>
     private GlazierElementBase_UIToolkit previousTooltipElement;
 
+    /// <summary>
+    /// Duration in seconds the cursor has been over the element.
+    /// </summary>
     private float tooltipFocusTimer;
 
     private bool wasCursorLocked;
@@ -312,6 +324,9 @@ internal class Glazier_UIToolkit : GlazierBase, IGlazier
         liveElements.Remove(element);
     }
 
+    /// <summary>
+    /// Sanity check all returned elements have a gameObject.
+    /// </summary>
     [Conditional("VALIDATE_GLAZIER_USE_AFTER_DESTROY")]
     private void ValidateNewElement(GlazierElementBase_UIToolkit element)
     {
@@ -321,6 +336,9 @@ internal class Glazier_UIToolkit : GlazierBase, IGlazier
         }
     }
 
+    /// <summary>
+    /// Create software cursor visual element.
+    /// </summary>
     private void CreateCursor()
     {
         cursorImage = new Image();
@@ -329,6 +347,9 @@ internal class Glazier_UIToolkit : GlazierBase, IGlazier
         overlayLayer.Add(cursorImage);
     }
 
+    /// <summary>
+    /// Create green label in the upper-left.
+    /// </summary>
     private void CreateDebugLabel()
     {
         debugLabel = new Label();
@@ -339,6 +360,9 @@ internal class Glazier_UIToolkit : GlazierBase, IGlazier
         overlayLayer.Add(debugLabel);
     }
 
+    /// <summary>
+    /// Create tooltip visual element.
+    /// </summary>
     private void CreateTooltip()
     {
         tooltipLabel = new Label();
@@ -350,6 +374,9 @@ internal class Glazier_UIToolkit : GlazierBase, IGlazier
         SynchronizeTooltipShadowColor();
     }
 
+    /// <summary>
+    /// Update upper-left green text.
+    /// </summary>
     private void UpdateDebugLabel()
     {
         if (OptionsSettings.debug && _root != null && (_root.isEnabled || _root.drawCursorWhileDisabled))
@@ -366,6 +393,9 @@ internal class Glazier_UIToolkit : GlazierBase, IGlazier
         }
     }
 
+    /// <summary>
+    /// Update software cursor visual element.
+    /// </summary>
     private void UpdateCursor()
     {
         cursorImage.visible = Root.ShouldDrawCursor;
@@ -376,6 +406,9 @@ internal class Glazier_UIToolkit : GlazierBase, IGlazier
         cursorImage.style.top = Length.Percent(normalizedMousePosition.y * 100f);
     }
 
+    /// <summary>
+    /// Find hovered element and update tooltip visibility/text.
+    /// </summary>
     private void UpdateTooltip()
     {
         Vector2 screenPosition = Input.mousePosition;

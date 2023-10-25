@@ -28,6 +28,9 @@ public static class CharacterControllerExtension
 
     private static List<PendingEnableRigidbody> pendingChanges;
 
+    /// <summary>
+    /// Does initialOverlaps array contain hit collider?
+    /// </summary>
     private static bool wasHitInitialOverlap(RaycastHit hit, int initialOverlapCount)
     {
         for (int i = 0; i < initialOverlapCount; i++)
@@ -40,6 +43,9 @@ public static class CharacterControllerExtension
         return false;
     }
 
+    /// <summary>
+    /// Does initialOverlaps array contain every hit collider?
+    /// </summary>
     private static bool wereAllHitsInitialOverlaps(int hitCount, int initialOverlapCount)
     {
         for (int i = 0; i < hitCount; i++)
@@ -52,6 +58,12 @@ public static class CharacterControllerExtension
         return true;
     }
 
+    /// <summary>
+    /// Perform a move, then do a capsule cast to determine if Unity PhysX went through a wall.
+    ///
+    /// Required when disabling overlap recovery because there are issues when walking toward slopes that bend inward.
+    /// To test if Unity works properly in the future; walk toward the inside of a barracks building in the PEI base.
+    /// </summary>
     public static void CheckedMove(this CharacterController component, Vector3 motion)
     {
         Vector3 position = component.transform.position;
@@ -94,18 +106,28 @@ public static class CharacterControllerExtension
         }
     }
 
+    /// <summary>
+    /// Set detectCollisions to false and cancel deferred requests to enable.
+    /// </summary>
     public static void DisableDetectCollisions(this CharacterController component)
     {
         component.detectCollisions = false;
         removePendingChange(component);
     }
 
+    /// <summary>
+    /// Set detectCollisions to true on the next frame.
+    /// Useful when CharacterController is teleported to prevent adding huge forces to overlapping rigidbodies.
+    /// </summary>
     public static void EnableDetectCollisionsNextFrame(this CharacterController component)
     {
         removePendingChange(component);
         pendingChanges.Add(new PendingEnableRigidbody(component));
     }
 
+    /// <summary>
+    /// If true EnableDetectCollisionsNextFrame, if false DisableDetectCollisions.
+    /// </summary>
     public static void SetDetectCollisionsDeferred(this CharacterController component, bool detectCollisions)
     {
         if (detectCollisions)
@@ -124,6 +146,10 @@ public static class CharacterControllerExtension
         component.EnableDetectCollisionsNextFrame();
     }
 
+    /// <summary>
+    /// Intentionally Update, not FixedUpdate. Physics transforms are applied between frames, whereas at low frame
+    /// rates there may be multiple FixedUpdates per frame.
+    /// </summary>
     private static void OnUpdate()
     {
         int frameCount = Time.frameCount;

@@ -34,6 +34,10 @@ public class SleekItemIcon : SleekWrapper
         }
     }
 
+    /// <summary>
+    /// Hide existing icon until refresh.
+    /// Experimented with doing this for every refresh, but it looks bad in particular for hotbar.
+    /// </summary>
     public void Clear()
     {
         internalImage.Texture = null;

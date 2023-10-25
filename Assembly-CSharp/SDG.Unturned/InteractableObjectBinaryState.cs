@@ -25,6 +25,10 @@ public class InteractableObjectBinaryState : InteractableObject
 
     private GameObject toggleGameObject;
 
+    /// <summary>
+    /// Number of event hooks monitoring or controlling this.
+    /// Used to allow client to control remote objects on server.
+    /// </summary>
     public int modHookCounter;
 
     private float lastEffect;
@@ -47,8 +51,14 @@ public class InteractableObjectBinaryState : InteractableObject
         }
     }
 
+    /// <summary>
+    /// Invoked after state is first loaded, synced from server when entering relevancy, or reset.
+    /// </summary>
     public event UsedChanged onStateInitialized;
 
+    /// <summary>
+    /// Invoked after interaction changes state.
+    /// </summary>
     public event UsedChanged onStateChanged;
 
     public bool checkCanReset(float multiplier)

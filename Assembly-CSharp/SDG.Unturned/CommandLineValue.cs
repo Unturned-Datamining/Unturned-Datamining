@@ -1,5 +1,9 @@
 namespace SDG.Unturned;
 
+/// <summary>
+/// Parses -X=Y from command-line.
+/// Ideally we could do "where T : TryParse" but for the meantime there are specialized subclasses.
+/// </summary>
 public abstract class CommandLineValue<T>
 {
     public string key { get; protected set; }

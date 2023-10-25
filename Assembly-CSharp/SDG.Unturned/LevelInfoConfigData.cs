@@ -33,8 +33,15 @@ public class LevelInfoConfigData
 
     public bool Use_Legacy_Water;
 
+    /// <summary>
+    /// Should underwater bubble particles be activated?
+    /// </summary>
     public bool Use_Vanilla_Bubbles;
 
+    /// <summary>
+    /// Should positions underground be clamped above ground?
+    /// Underground volumes are used to whitelist valid positions.
+    /// </summary>
     public bool Use_Underground_Whitelist;
 
     public bool Use_Legacy_Snow_Height;
@@ -61,8 +68,14 @@ public class LevelInfoConfigData
 
     public bool Allow_Information;
 
+    /// <summary>
+    /// If true, certain objects redirect to load others in-game.
+    /// </summary>
     public bool Allow_Holiday_Redirects;
 
+    /// <summary>
+    /// If true, electric objects are always powered, and generators have no effect.
+    /// </summary>
     public bool Has_Global_Electricity;
 
     public float Gravity;
@@ -91,13 +104,26 @@ public class LevelInfoConfigData
 
     public bool PlayerUI_GunVisible = true;
 
+    /// <summary>
+    /// Display version in the format "a.b.c.d".
+    /// </summary>
     public string Version;
 
+    /// <summary>
+    /// Version string packed into integer.
+    /// </summary>
     [JsonIgnore]
     public uint PackedVersion;
 
+    /// <summary>
+    /// Number of custom tips defined in per-level localization file.
+    /// Tip keys are read as Tip_#
+    /// </summary>
     public int Tips;
 
+    /// <summary>
+    /// LevelBatching is currently only enabled if map creator has verified it works properly.
+    /// </summary>
     public int Batching_Version;
 
     public bool Use_Arena_Compactor;

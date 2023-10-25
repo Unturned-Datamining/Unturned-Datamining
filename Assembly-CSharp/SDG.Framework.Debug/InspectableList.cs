@@ -4,8 +4,14 @@ namespace SDG.Framework.Debug;
 
 public class InspectableList<T> : List<T>, IInspectableList
 {
+    /// <summary>
+    /// Whether add can be called from the inspector.
+    /// </summary>
     public virtual bool canInspectorAdd { get; set; }
 
+    /// <summary>
+    /// Whether remove can be called from the inspector.
+    /// </summary>
     public virtual bool canInspectorRemove { get; set; }
 
     public event InspectableListAddedHandler inspectorAdded;

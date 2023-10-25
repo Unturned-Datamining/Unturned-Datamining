@@ -32,6 +32,9 @@ public abstract class ClientMethodHandle
         return null;
     }
 
+    /// <summary>
+    /// Write header common to both static and instance methods, and return writer.
+    /// </summary>
     protected NetPakWriter GetWriterWithStaticHeader()
     {
         NetPakWriter invokableWriter = NetMessages.GetInvokableWriter();

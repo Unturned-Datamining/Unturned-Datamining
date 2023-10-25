@@ -5,23 +5,54 @@ using Unturned.UnityEx;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Can be added to any GameObject to receive weather events:
+/// - Day/Night
+/// - Full Moon
+/// - Rain
+/// - Snow
+/// </summary>
 [AddComponentMenu("Unturned/Weather Event Hook")]
 public class WeatherEventHook : MonoBehaviour
 {
+    /// <summary>
+    /// Invoked when night changes to day.
+    /// </summary>
     public UnityEvent OnDay;
 
+    /// <summary>
+    /// Invoked when day changes to night.
+    /// </summary>
     public UnityEvent OnNight;
 
+    /// <summary>
+    /// Invoked when a zombie full-moon event starts.
+    /// </summary>
     public UnityEvent OnFullMoonBegin;
 
+    /// <summary>
+    /// Invoked when a zombie full-moon event finishes.
+    /// </summary>
     public UnityEvent OnFullMoonEnd;
 
+    /// <summary>
+    /// Invoked when rain starts to fall.
+    /// </summary>
     public UnityEvent OnRainBegin;
 
+    /// <summary>
+    /// Invoked when rain finishes falling.
+    /// </summary>
     public UnityEvent OnRainEnd;
 
+    /// <summary>
+    /// Invoked when snow starts to fall.
+    /// </summary>
     public UnityEvent OnSnowBegin;
 
+    /// <summary>
+    /// Invoked when snow finishes falling.
+    /// </summary>
     public UnityEvent OnSnowEnd;
 
     protected void onDayNightUpdated(bool isDaytime)

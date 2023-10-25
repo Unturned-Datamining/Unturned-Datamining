@@ -18,6 +18,11 @@ public class UnturnedEconInfo
         Achievement
     }
 
+    /// <summary>
+    /// This enum exists for sorting items based on rarity, and is derived from quality.
+    /// Quality order cannot be changed due to loading from older files, but this one is ordered
+    /// from lowest rarity to highest rarity and should match entries in quality.
+    /// </summary>
     public enum ERarity
     {
         Common,

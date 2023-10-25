@@ -5,6 +5,9 @@ namespace SDG.Unturned;
 
 public static class UndergroundAllowlist
 {
+    /// <summary>
+    /// If level is using underground allowlist then conditionally clamp world-space position.
+    /// </summary>
     public static bool AdjustPosition(ref Vector3 worldspacePosition, float offset, float threshold = 0.1f)
     {
         if (Level.info == null || !Level.info.configData.Use_Underground_Whitelist)
@@ -24,6 +27,9 @@ public static class UndergroundAllowlist
         return false;
     }
 
+    /// <summary>
+    /// Used by animals and zombies to teleport to a spawnpoint if outside the map.
+    /// </summary>
     public static bool IsPositionWithinValidHeight(Vector3 position, float threshold = 0.1f)
     {
         if (position.y < -1024f || position.y > 1024f)

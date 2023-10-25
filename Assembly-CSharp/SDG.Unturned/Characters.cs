@@ -169,6 +169,9 @@ public class Characters : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// Is cosmetic or skin equipped?
+    /// </summary>
     public static bool isEquipped(ulong instanceID)
     {
         if (!isSkinEquipped(instanceID))

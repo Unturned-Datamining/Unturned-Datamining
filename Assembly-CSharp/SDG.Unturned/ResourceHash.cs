@@ -24,8 +24,14 @@ public class ResourceHash
 
     private static bool wasInitialized;
 
+    /// <summary>
+    /// Useful to check whether hashing is causing problems.
+    /// </summary>
     private static CommandLineFlag shouldSkipHashing = new CommandLineFlag(defaultValue: false, "-SkipResourcesHashing");
 
+    /// <summary>
+    /// Useful to narrow down why a player is getting kicked for modified resource files when joining a server.
+    /// </summary>
     private static CommandLineFlag shouldLogHash = new CommandLineFlag(defaultValue: false, "-LogResourcesHash");
 
     public static void Initialize()
@@ -55,6 +61,7 @@ public class ResourceHash
         ThreadPool.QueueUserWorkItem(ThreadInitialize, resourceHashThreadState);
     }
 
+    /// <param name="dataPath">Unturned_Data folder path</param>
     public static List<string> GatherFilePaths(string dataPath)
     {
         List<string> list = new List<string>();

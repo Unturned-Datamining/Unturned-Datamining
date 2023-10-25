@@ -6,8 +6,14 @@ public class ItemSentryAsset : ItemStorageAsset
 {
     protected ESentryMode _sentryMode;
 
+    /// <summary>
+    /// Players/zombies within this range are treated as potential targets while scanning.
+    /// </summary>
     public float detectionRadius;
 
+    /// <summary>
+    /// Will not lose current target within this range. Prevents target from popping in and out of range.
+    /// </summary>
     public float targetLossRadius;
 
     public AssetReference<EffectAsset> targetAcquiredEffect;

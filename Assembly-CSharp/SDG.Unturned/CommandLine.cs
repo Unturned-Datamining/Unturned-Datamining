@@ -8,6 +8,9 @@ public class CommandLine
 {
     public static GetCommands onGetCommands;
 
+    /// <summary>
+    /// When Steam parses a steam://connect/ip:port URL it requires the query port (e.g. 27015).
+    /// </summary>
     public static bool TryGetSteamConnect(string line, out uint ip, out ushort queryPort, out string pass)
     {
         ip = 0u;
@@ -215,6 +218,17 @@ public class CommandLine
         return list.ToArray();
     }
 
+    /// <summary>
+    /// Handles these cases:
+    /// key value -&gt; value
+    /// key=value -&gt; value
+    /// key = value -&gt; value
+    /// key  =  value -&gt; value
+    /// key "value with spaces" -&gt; value with spaces
+    /// key "value with \" quotation marks" -&gt; value with " quotation marks
+    ///
+    /// Tested in CommandLineTests.cs
+    /// </summary>
     public static bool TryParseValue(string input, string key, out string value)
     {
         value = null;

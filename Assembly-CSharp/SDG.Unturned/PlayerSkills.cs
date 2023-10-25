@@ -131,12 +131,21 @@ public class PlayerSkills : PlayerCaller
 
     public static event ApplyingDefaultSkillsHandler onApplyingDefaultSkills;
 
+    /// <summary>
+    /// Invoked after any player's experience value changes (not including loading).
+    /// </summary>
     public static event Action<PlayerSkills, uint> OnExperienceChanged_Global;
 
+    /// <summary>
+    /// Invoked after any player's reputation value changes (not including loading).
+    /// </summary>
     public static event Action<PlayerSkills, int> OnReputationChanged_Global;
 
     public static event Action<PlayerSkills, byte, byte, byte> OnSkillUpgraded_Global;
 
+    /// <summary>
+    /// Ugly hack for the awful skills enums. Eventually skills should be replaced.
+    /// </summary>
     public static bool TryParseIndices(string input, out int specialityIndex, out int skillIndex)
     {
         if (Enum.TryParse<EPlayerOffense>(input, ignoreCase: true, out var result))
@@ -606,6 +615,9 @@ public class PlayerSkills : PlayerCaller
         SendBoost.Invoke(GetNetId(), ENetReliability.Reliable, transportConnections, boost);
     }
 
+    /// <summary>
+    /// Set every level to max and replicate.
+    /// </summary>
     public void ServerUnlockAllSkills()
     {
         Skill[][] array = skills;
@@ -807,6 +819,10 @@ public class PlayerSkills : PlayerCaller
         PlayerSavedata.writeBlock(base.channel.owner.playerID, "/Player/Skills.dat", block);
     }
 
+    /// <summary>
+    /// Serverside only.
+    /// Called when skills weren't loaded (no save, or in arena mode), as well as when reseting skills after death.
+    /// </summary>
     private void applyDefaultSkills()
     {
         if (Provider.modeConfigData.Players.Spawn_With_Max_Skills)

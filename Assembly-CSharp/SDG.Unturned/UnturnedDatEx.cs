@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// These are methods moved from the Data class which rely on core types and so cannot go in the UnturnedDat assembly.
+/// </summary>
 public static class UnturnedDatEx
 {
     public static void ParseGuidOrLegacyId(this DatDictionary dictionary, string key, out Guid guid, out ushort legacyId)
@@ -25,6 +28,9 @@ public static class UnturnedDatEx
         legacyId = 0;
     }
 
+    /// <summary>
+    /// Intended as a drop-in replacement for existing assets with property uint16s.
+    /// </summary>
     public static ushort ParseGuidOrLegacyId(this DatDictionary dictionary, string key, out Guid guid)
     {
         dictionary.ParseGuidOrLegacyId(key, out guid, out var legacyId);

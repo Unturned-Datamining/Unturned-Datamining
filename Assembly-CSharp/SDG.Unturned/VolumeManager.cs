@@ -16,6 +16,10 @@ public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume 
 
     private CustomSampler gizmoUpdateSampler;
 
+    /// <summary>
+    /// Should calling InstantiateVolume create a new volume?
+    /// False for deprecated (landscape hole volume) types.
+    /// </summary>
     protected bool allowInstantiation = true;
 
     protected bool supportsFalloff;

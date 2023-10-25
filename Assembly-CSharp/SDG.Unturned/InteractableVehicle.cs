@@ -42,6 +42,9 @@ public class InteractableVehicle : Interactable
 
     protected Transform[] effectSystems;
 
+    /// <summary>
+    /// Only used by trains. Constrains the train to this path.
+    /// </summary>
     public ushort roadIndex;
 
     public float roadPosition;
@@ -209,6 +212,10 @@ public class InteractableVehicle : Interactable
 
     private float fuelBurnBuffer;
 
+    /// <summary>
+    /// This check should really not be necessary, but somehow it is a recurring issue that servers get slowed down
+    /// by something going wrong and the vehicle exploding a billion times leaving items everywhere.
+    /// </summary>
     private bool hasDroppedScrapItemsAlready;
 
     public bool hasDefaultCenterOfMass;
@@ -217,26 +224,54 @@ public class InteractableVehicle : Interactable
 
     internal List<Collider> _vehicleColliders;
 
+    /// <summary>
+    /// Transform used for exit physics queries.
+    /// </summary>
     private Transform center;
 
+    /// <summary>
+    /// Skin material does not always need to be destroyed, so this is only valid if it should be destroyed.
+    /// </summary>
     private Material skinMaterialToDestroy;
 
+    /// <summary>
+    /// Time.time decayTimer was last updated.
+    /// </summary>
     internal float decayLastUpdateTime;
 
+    /// <summary>
+    /// Seconds since vehicle was interacted with.
+    /// </summary>
     internal float decayTimer;
 
+    /// <summary>
+    /// Fractional damage counter.
+    /// </summary>
     internal float decayPendingDamage;
 
+    /// <summary>
+    /// transform.position used to test whether vehicle is moving.
+    /// </summary>
     internal Vector3 decayLastUpdatePosition;
 
     public Road road { get; protected set; }
 
+    /// <summary>
+    /// Is this vehicle inside a safezone?
+    /// </summary>
     public bool isInsideSafezone { get; protected set; }
 
     public SafezoneNode insideSafezoneNode { get; protected set; }
 
+    /// <summary>
+    /// Duration in seconds since this vehicle entered a safezone,
+    /// or -1 if it's not in a safezone.
+    /// </summary>
     public float timeInsideSafezone { get; protected set; }
 
+    /// <summary>
+    /// Should askDamage requests currently be ignored because we are inside a safezone?
+    /// </summary>
     public bool isInsideNoDamageZone
     {
         get
@@ -339,6 +374,9 @@ public class InteractableVehicle : Interactable
         }
     }
 
+    /// <summary>
+    /// Whether the player can shoot their equipped turret.
+    /// </summary>
     public bool canUseTurret => !isDead;
 
     public bool canTurnOnLights
@@ -391,6 +429,9 @@ public class InteractableVehicle : Interactable
         }
     }
 
+    /// <summary>
+    /// Do any of the passenger seats have a player?
+    /// </summary>
     public bool anySeatsOccupied
     {
         get
@@ -489,6 +530,9 @@ public class InteractableVehicle : Interactable
         }
     }
 
+    /// <summary>
+    /// When the server saves it doesn't include any cleared vehicles.
+    /// </summary>
     public bool isAutoClearable
     {
         get
@@ -596,6 +640,12 @@ public class InteractableVehicle : Interactable
         }
     }
 
+    /// <summary>
+    /// Can a safe exit point currently be found?
+    ///
+    /// Called when considering to add a new passenger to prevent players from entering
+    /// a vehicle that they wouldn't be able to exit properly.
+    /// </summary>
     public bool isExitable
     {
         get
@@ -638,6 +688,10 @@ public class InteractableVehicle : Interactable
 
     public static event Action<InteractableVehicle, int, Player> OnPassengerRemoved_Global;
 
+    /// <summary>
+    /// Unfortunately old netcode sends train position as a Vector3 using the X channel, but new code only supports
+    /// [-4096, 4096) so we pack the train position into all three channels. Eventually this should be cleaned up.
+    /// </summary>
     internal static Vector3 PackRoadPosition(float roadPosition)
     {
         if (roadPosition >= 16384f)
@@ -663,6 +717,9 @@ public class InteractableVehicle : Interactable
         decayLastUpdatePosition = base.transform.position;
     }
 
+    /// <summary>
+    /// Is player currently allowed to repair this vehicle?
+    /// </summary>
     public bool canPlayerRepair(Player player)
     {
         if (!asset.canRepairWhileSeated)
@@ -717,6 +774,9 @@ public class InteractableVehicle : Interactable
         VehicleManager.sendVehicleTireAliveMask(this, tireAliveMask);
     }
 
+    /// <summary>
+    /// Can a tire item be used with this vehicle?
+    /// </summary>
     public bool isTireCompatible(ushort itemID)
     {
         if (asset != null)
@@ -742,6 +802,9 @@ public class InteractableVehicle : Interactable
         }
     }
 
+    /// <summary>
+    /// Find the index of the wheel collider that contains this position.
+    /// </summary>
     public int getHitTireIndex(Vector3 position)
     {
         for (int i = 0; i < tires.Length; i++)
@@ -755,6 +818,9 @@ public class InteractableVehicle : Interactable
         return -1;
     }
 
+    /// <summary>
+    /// Find the index of the wheel collider closest to this position, or -1 if not near any.
+    /// </summary>
     public int getClosestAliveTireIndex(Vector3 position, bool isAlive)
     {
         int result = -1;
@@ -829,6 +895,9 @@ public class InteractableVehicle : Interactable
         }
     }
 
+    /// <summary>
+    /// Called during simulate at fixed rate.
+    /// </summary>
     protected void simulateBurnFuel()
     {
         if (usesFuel && isEngineOn)
@@ -992,6 +1061,9 @@ public class InteractableVehicle : Interactable
         return true;
     }
 
+    /// <summary>
+    /// Is a given player allowed access to this vehicle?
+    /// </summary>
     public bool checkEnter(Player player)
     {
         if (player == null)
@@ -1064,6 +1136,9 @@ public class InteractableVehicle : Interactable
         isFrozen = false;
     }
 
+    /// <summary>
+    /// Average vehicle-space position of wheel bases.
+    /// </summary>
     private Vector3? calculateAverageLocalTireContactPosition()
     {
         if (tires == null)
@@ -1378,6 +1453,9 @@ public class InteractableVehicle : Interactable
         this.onTaillightsUpdated?.Invoke();
     }
 
+    /// <summary>
+    /// Turn taillights on/off depending on state.
+    /// </summary>
     private void synchronizeTaillights()
     {
         bool flag = isDriven && canTurnOnLights;
@@ -1983,6 +2061,10 @@ public class InteractableVehicle : Interactable
         InteractableVehicle.OnPassengerChangedSeats_Global.TryInvoke("OnPassengerChangedSeats_Global", this, fromSeatIndex, toSeatIndex);
     }
 
+    /// <summary>
+    /// VehicleManager expects this to only find the seat, not add the player,
+    /// because it does a LoS check.
+    /// </summary>
     public bool tryAddPlayer(out byte seat, Player player)
     {
         seat = byte.MaxValue;
@@ -2017,6 +2099,9 @@ public class InteractableVehicle : Interactable
         return false;
     }
 
+    /// <summary>
+    /// Call on the server to empty the vehicle of passengers.
+    /// </summary>
     public void forceRemoveAllPlayers()
     {
         for (int i = 0; i < passengers.Length; i++)
@@ -2038,6 +2123,10 @@ public class InteractableVehicle : Interactable
         }
     }
 
+    /// <summary>
+    /// Kicks them out even if there isn't a good spot. Used when killing the occupant.
+    /// </summary>
+    /// <returns>True if player is seated, false otherwise.</returns>
     public bool forceRemovePlayer(out byte seat, CSteamID player, out Vector3 point, out byte angle)
     {
         seat = byte.MaxValue;
@@ -2107,11 +2196,15 @@ public class InteractableVehicle : Interactable
         return false;
     }
 
+    /// <summary>
+    /// Could a player capsule fit in a given exit position?
+    /// </summary>
     protected bool isExitPositionEmpty(Vector3 position)
     {
         return PlayerStance.hasTeleportClearanceAtPosition(position);
     }
 
+    /// <returns>True if anything was hit.</returns>
     protected bool raycastIgnoringVehicleAndChildren(Vector3 origin, Vector3 direction, float maxDistance, out float hitDistance)
     {
         hitDistance = maxDistance;
@@ -2133,6 +2226,10 @@ public class InteractableVehicle : Interactable
         return result;
     }
 
+    /// <summary>
+    /// Raycast along a given direction, penetrating through barricades attached to THIS vehicle.
+    /// Returns point at the end of the ray if unblocked, or a safe (radius) distance away from hit.
+    /// </summary>
     protected Vector3 getExitDistanceInDirection(Vector3 origin, Vector3 direction, float maxDistance, float extraPadding = 0.1f)
     {
         raycastIgnoringVehicleAndChildren(origin, direction, maxDistance, out var hitDistance);
@@ -2197,6 +2294,15 @@ public class InteractableVehicle : Interactable
         return getSafeExitInDirection(position, direction, maxDistance, out exitPosition);
     }
 
+    /// <summary>
+    /// Fallback if there are absolutely no good exit points.
+    /// Sets point and angle with a normal player spawnpoint.
+    ///
+    /// Once vehicle is completely surrounded there is no nice way to pick an exit point. Finding
+    /// a point upwards is abused to teleport upward into bases, finding an empty capsule nearby is
+    /// abused to teleport through walls, so if we're sure there isn't a nice exit point we can
+    /// fallback to teleporting them to a safe spawnpoint.
+    /// </summary>
     protected void getExitSpawnPoint(Player player, ref Vector3 point, ref byte angle)
     {
         PlayerSpawnpoint spawn = LevelPlayers.getSpawn(Level.info != null && Level.info.type == ELevelType.ARENA && LevelManager.isPlayerInArena(player));
@@ -2212,6 +2318,7 @@ public class InteractableVehicle : Interactable
         }
     }
 
+    /// <returns>True if we can safely exit.</returns>
     internal bool tryGetExit(byte seat, out Vector3 point, out byte angle)
     {
         point = center.position;
@@ -2245,6 +2352,9 @@ public class InteractableVehicle : Interactable
         return false;
     }
 
+    /// <summary>
+    /// Initially use tryGetExit to find a safe exit, but if one isn't available then fallback to getExitSpawnPoint.
+    /// </summary>
     protected void forceGetExit(Player player, byte seat, out Vector3 point, out byte angle)
     {
         if (!tryGetExit(seat, out point, out angle))
@@ -2253,6 +2363,9 @@ public class InteractableVehicle : Interactable
         }
     }
 
+    /// <summary>
+    /// Dedicated server simulate driving input.
+    /// </summary>
     public void simulate(uint simulation, int recov, bool inputStamina, Vector3 point, Quaternion angle, float newSpeed, float newPhysicsSpeed, int newTurn, float delta)
     {
         if (asset.useStaminaBoost)
@@ -2397,6 +2510,9 @@ public class InteractableVehicle : Interactable
         }
     }
 
+    /// <summary>
+    /// Client simulate driving input.
+    /// </summary>
     public void simulate(uint simulation, int recov, int input_x, int input_y, float look_x, float look_y, bool inputBrake, bool inputStamina, float delta)
     {
         if (Provider.isServer && asset.engine != EEngine.TRAIN)
@@ -2711,6 +2827,11 @@ public class InteractableVehicle : Interactable
         return Mathf.Clamp(newRoadPosition, 0.5f + asset.trainWheelOffset, road.trackSampledLength - (float)(trainCars.Length - 1) * asset.trainCarLength - asset.trainWheelOffset - 0.5f);
     }
 
+    /// <summary>
+    /// 2020-11-26 experimented with dispatching all vehicle updates from C# in VehicleManager because they make up
+    /// a significant portion of the MonoBehaviour Update, but the savings on my PC with 24 vehicles on PEI was
+    /// minor. Not worth the potential troubles.
+    /// </summary>
     private void Update()
     {
         if (asset == null)
@@ -3212,6 +3333,10 @@ public class InteractableVehicle : Interactable
         }
     }
 
+    /// <summary>
+    /// Update whether this vehicle is inside a safezone.
+    /// If a certain option is enabled, unlock after time threshold is passed.
+    /// </summary>
     protected void updateSafezoneStatus(float deltaSeconds)
     {
         isInsideSafezone = LevelNodes.isPointInsideSafezone(base.transform.position, out var outSafezoneNode);
@@ -3244,6 +3369,9 @@ public class InteractableVehicle : Interactable
         safeInit(Assets.find(EAssetType.VEHICLE, id) as VehicleAsset);
     }
 
+    /// <summary>
+    /// Can be called without calling init.
+    /// </summary>
     internal void safeInit(VehicleAsset asset)
     {
         _asset = asset;
@@ -3930,6 +4058,9 @@ public class InteractableVehicle : Interactable
         }
     }
 
+    /// <summary>
+    /// Called after initializing vehicle.
+    /// </summary>
     public void gatherVehicleColliders()
     {
         _vehicleColliders = new List<Collider>();
@@ -3937,6 +4068,10 @@ public class InteractableVehicle : Interactable
         initCenterCollider();
     }
 
+    /// <summary>
+    /// Makes the collision detection system ignore all collisions between this vehicle and the given colliders.
+    /// Used to prevent vehicle from colliding with attached items.
+    /// </summary>
     public void ignoreCollisionWith(IEnumerable<Collider> otherColliders, bool shouldIgnore)
     {
         if (_vehicleColliders == null)
@@ -3963,6 +4098,9 @@ public class InteractableVehicle : Interactable
         }
     }
 
+    /// <summary>
+    /// Used to disable collision between skycrane and held vehicle.
+    /// </summary>
     private void ignoreCollisionWithVehicle(InteractableVehicle otherVehicle, bool shouldIgnore)
     {
         ignoreCollisionWith(otherVehicle._vehicleColliders, shouldIgnore);
@@ -3982,6 +4120,9 @@ public class InteractableVehicle : Interactable
         return (getClosestPointOnHull(position) - position).sqrMagnitude;
     }
 
+    /// <summary>
+    /// Find collider with the largest volume to use for exit physics queries.
+    /// </summary>
     private void initCenterCollider()
     {
         center = base.transform.Find("Center");

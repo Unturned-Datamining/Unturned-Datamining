@@ -12,6 +12,9 @@ public class Passenger
 
     private Transform _obj;
 
+    /// <summary>
+    /// Optional component on Turret_# GameObject for modding UnityEvents.
+    /// </summary>
     public VehicleTurretEventHook turretEventHook;
 
     private Transform _turretYaw;
@@ -22,6 +25,9 @@ public class Passenger
 
     public byte[] state;
 
+    /// <summary>
+    /// Optional collider matching the player capsule to prevent short vehicles (e.g. bikes) from clipping into walls.
+    /// </summary>
     internal CapsuleCollider collider;
 
     public Transform seat => _seat;

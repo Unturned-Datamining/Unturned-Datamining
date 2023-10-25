@@ -4,8 +4,14 @@ using SDG.NetTransport;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Allows file name to be included in kick message that client would otherwise not know.
+/// </summary>
 internal static class ServerMessageHandler_ValidateAssets
 {
+    /// <summary>
+    /// Actual max value is plus one because message never contains zero items.
+    /// </summary>
     internal static readonly NetLength MAX_ASSETS = new NetLength(7u);
 
     private static byte[] clientHash = new byte[20];

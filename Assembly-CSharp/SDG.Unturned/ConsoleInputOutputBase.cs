@@ -4,6 +4,9 @@ using System.Threading;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Read commands from standard input, and write logs to standard output.
+/// </summary>
 public class ConsoleInputOutputBase : ICommandInputOutput
 {
     public static CommandLineFlag defaultShouldRedirectInput = new CommandLineFlag(defaultValue: true, "-NoRedirectConsoleInput");
@@ -18,8 +21,14 @@ public class ConsoleInputOutputBase : ICommandInputOutput
 
     public bool shouldProxyRedirectedOutput;
 
+    /// <summary>
+    /// Has Ctrl-C or Ctrl-Break signal been received?
+    /// </summary>
     protected int wantsToTerminate;
 
+    /// <summary>
+    /// Is the Ctrl-C or Ctrl-Break signal being handled?
+    /// </summary>
     protected bool isTerminating;
 
     protected string desiredTitle;
@@ -103,11 +112,18 @@ public class ConsoleInputOutputBase : ICommandInputOutput
         Console.WriteLine(value);
     }
 
+    /// <summary>
+    /// Broadcast the inputCommited event.
+    /// </summary>
     protected void notifyInputCommitted(string input)
     {
         this.inputCommitted?.Invoke(input);
     }
 
+    /// <summary>
+    /// Synchronize console's title bar text.
+    /// Virtual because at one point Win32 SetTitleText was required.
+    /// </summary>
     protected virtual void synchronizeTitle(string title)
     {
         Console.Title = desiredTitle;
@@ -122,12 +138,18 @@ public class ConsoleInputOutputBase : ICommandInputOutput
         }
     }
 
+    /// <summary>
+    /// Intercept the Ctrl-C or Ctrl-Break termination.
+    /// </summary>
     protected virtual void handleCancelEvent(object sender, ConsoleCancelEventArgs args)
     {
         args.Cancel = true;
         Interlocked.Exchange(ref wantsToTerminate, 1);
     }
 
+    /// <summary>
+    /// Handle Ctrl-C or Ctrl-Break on the game thread.
+    /// </summary>
     protected virtual void handleTermination()
     {
         CommandWindow.Log("Handling SIGINT or SIGBREAK by requesting a graceful shutdown");

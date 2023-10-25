@@ -6,6 +6,9 @@ using Steamworks;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Optional parameter for error logging and responding to the invoker.
+/// </summary>
 public readonly struct ServerInvocationContext
 {
     public enum EOrigin

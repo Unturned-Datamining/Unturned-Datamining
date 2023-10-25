@@ -82,6 +82,9 @@ public class DevkitTransactionManager
         return devkitTransactionGroup;
     }
 
+    /// <summary>
+    /// Open a new transaction group which stores multiple undo/redoable actions, for example this would be called before moving an object.
+    /// </summary>
     public static void beginTransaction(string name)
     {
         if (transactionDepth == 0)
@@ -100,6 +103,9 @@ public class DevkitTransactionManager
         }
     }
 
+    /// <summary>
+    /// Close the pending transaction and finalize any change checks.
+    /// </summary>
     public static void endTransaction()
     {
         if (transactionDepth == 0)
@@ -123,6 +129,9 @@ public class DevkitTransactionManager
         }
     }
 
+    /// <summary>
+    /// Clear the undo/redo queues.
+    /// </summary>
     public static void resetTransactions()
     {
         clearUndo();

@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Base class for uGUI implementations of primitive building block widgets.
+/// </summary>
 internal abstract class GlazierElementBase_uGUI : GlazierElementBase
 {
     public class PoolData
@@ -170,12 +173,20 @@ internal abstract class GlazierElementBase_uGUI : GlazierElementBase
 
     public override ISleekElement Parent => _parent;
 
+    /// <summary>
+    /// RectTransform children should be attached to. Overridden by ScrollView content panel.
+    /// </summary>
     public virtual RectTransform AttachmentTransform => transform;
 
     public GameObject gameObject { get; private set; }
 
     public RectTransform transform { get; private set; }
 
+    /// <summary>
+    /// This helper property's purpose is to:
+    /// - Ensure other properties don't accidentally remove LayoutElement if others need it.
+    /// - Ensure LayoutElement is destroyed before returning to pool.
+    /// </summary>
     private bool ShouldHaveLayoutElementComponent
     {
         get
@@ -193,6 +204,9 @@ internal abstract class GlazierElementBase_uGUI : GlazierElementBase
         this.glazier = glazier;
     }
 
+    /// <summary>
+    /// Called after constructor when not populating from component pool.
+    /// </summary>
     public virtual void ConstructNew()
     {
         gameObject = new GameObject(GetType().Name, typeof(RectTransform));
@@ -200,6 +214,9 @@ internal abstract class GlazierElementBase_uGUI : GlazierElementBase
         transform.pivot = new Vector2(0f, 1f);
     }
 
+    /// <summary>
+    /// Called after constructor when re-using components from pool.
+    /// </summary>
     public void ConstructFromPool(PoolData poolData)
     {
         gameObject = poolData.gameObject;
@@ -256,10 +273,18 @@ internal abstract class GlazierElementBase_uGUI : GlazierElementBase
         }
     }
 
+    /// <summary>
+    /// Synchronize uGUI component colors with background/text/image etc. colors.
+    /// Called when custom UI colors are changed, and after constructor.
+    /// </summary>
     public virtual void SynchronizeColors()
     {
     }
 
+    /// <summary>
+    /// Synchronize uGUI component sprites with theme sprites.
+    /// Called when custom UI theme is changed, and after constructor.
+    /// </summary>
     public virtual void SynchronizeTheme()
     {
     }
@@ -347,11 +372,15 @@ internal abstract class GlazierElementBase_uGUI : GlazierElementBase
         }
     }
 
+    /// <returns>False if element couldn't be released into pool and should be destroyed.</returns>
     protected virtual bool ReleaseIntoPool()
     {
         return false;
     }
 
+    /// <summary>
+    /// Unity recommends enabling components after parenting into the destination hierarchy.
+    /// </summary>
     protected virtual void EnableComponents()
     {
     }

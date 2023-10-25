@@ -2,12 +2,18 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Allows map makers to create custom weather events.
+/// </summary>
 public class WeatherAsset : WeatherAssetBase
 {
     public struct WeatherColor
     {
         public Color customColor;
 
+        /// <summary>
+        /// If specified level editor color can be used rather than a per-asset color.
+        /// </summary>
         public ELightingColor levelEnum;
 
         public WeatherColor(DatDictionary data)
@@ -103,12 +109,24 @@ public class WeatherAsset : WeatherAssetBase
         }
     }
 
+    /// <summary>
+    /// Directional light shadow strength multiplier.
+    /// </summary>
     public float shadowStrengthMultiplier;
 
+    /// <summary>
+    /// Exponent applied to effect blend alpha.
+    /// </summary>
     public float fogBlendExponent;
 
+    /// <summary>
+    /// Exponent applied to effect blend alpha.
+    /// </summary>
     public float cloudBlendExponent;
 
+    /// <summary>
+    /// SpeedTree wind strength for blizzard. Should be removed?
+    /// </summary>
     public float windMain;
 
     public float staminaPerSecond;
@@ -125,10 +143,19 @@ public class WeatherAsset : WeatherAssetBase
 
     protected TimeValues[] timeValues;
 
+    /// <summary>
+    /// Does this weather affect fog color and density?
+    /// </summary>
     public bool overrideFog { get; protected set; }
 
+    /// <summary>
+    /// Does this weather affect sky fog color?
+    /// </summary>
     public bool overrideAtmosphericFog { get; protected set; }
 
+    /// <summary>
+    /// Does this weather affect cloud colors?
+    /// </summary>
     public bool overrideCloudColors { get; protected set; }
 
     public void getTimeValues(int blendKey, int currentKey, out TimeValues blendFrom, out TimeValues blendTo)

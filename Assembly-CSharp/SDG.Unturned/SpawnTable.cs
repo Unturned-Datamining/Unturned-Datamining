@@ -5,10 +5,20 @@ namespace SDG.Unturned;
 
 public class SpawnTable
 {
+    /// <summary>
+    /// If non-zero, legacy ID of final Asset to return.
+    /// </summary>
     internal ushort legacyAssetId;
 
+    /// <summary>
+    /// If non-zero, legacy ID of SpawnAsset to resolve.
+    /// </summary>
     internal ushort legacySpawnId;
 
+    /// <summary>
+    /// If both legacy IDs are zero this GUID will be used. If the target asset is
+    /// a SpawnAsset it will be further resolved, otherwise the found asset is returned.
+    /// </summary>
     internal Guid targetGuid;
 
     public int weight;
@@ -17,10 +27,21 @@ public class SpawnTable
 
     public bool isLink;
 
+    /// <summary>
+    /// Can be enabled by spawn tables that insert themselves into other spawn tables using the roots list.
+    /// If true, zeros the weight of child tables in the parent spawn table.
+    /// </summary>
     public bool isOverride;
 
+    /// <summary>
+    /// Has this spawn been added as a root of its child spawn table?
+    /// Used for debugging spawn hierarchy in editor.
+    /// </summary>
     public bool hasNotifiedChild;
 
+    /// <summary>
+    /// Helper method for plugins because IDs are internal.
+    /// </summary>
     public Asset FindAsset(EAssetType legacyAssetType)
     {
         if (!targetGuid.IsEmpty())

@@ -3,15 +3,35 @@ using UnityEngine.Events;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Can be added to any GameObject with a Trigger to receive events.
+/// Ensure that Layer will detect player overlaps. Trap is a good candidate.
+/// </summary>
 [AddComponentMenu("Unturned/Collision Event Hook")]
 public class CollisionEventHook : MonoBehaviour
 {
+    /// <summary>
+    /// Invoked when a player enters the trigger.
+    /// Called before OnFirstPlayerEnter.
+    /// </summary>
     public UnityEvent OnPlayerEnter;
 
+    /// <summary>
+    /// Invoked when a player exits the trigger.
+    /// Called before OnAllPlayersExit.
+    /// </summary>
     public UnityEvent OnPlayerExit;
 
+    /// <summary>
+    /// Invoked when first player enters the trigger, and not again until all players have left.
+    /// Called after OnPlayerEnter.
+    /// </summary>
     public UnityEvent OnFirstPlayerEnter;
 
+    /// <summary>
+    /// Invoked when last player exits the trigger.
+    /// Called after OnPlayerExit.
+    /// </summary>
     public UnityEvent OnAllPlayersExit;
 
     private int _numOverlappingPlayers;

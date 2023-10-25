@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// True once per frame, false otherwise.
+/// </summary>
 public struct OncePerFrameGuard
 {
     private int consumedFrameNumber;

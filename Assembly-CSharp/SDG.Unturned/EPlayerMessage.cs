@@ -100,18 +100,48 @@ public enum EPlayerMessage
     TALK,
     REPUTATION,
     CONDITION,
+    /// <summary>
+    /// Poorly named. Specific to InteractableObjectQuest.
+    /// </summary>
     INTERACT,
     SAFEZONE,
     BAYONET,
     VEHICLE_LOCKED,
     VEHICLE_UNLOCKED,
+    /// <summary>
+    /// Directly uses input string for custom message popups.
+    /// </summary>
     NPC_CUSTOM,
+    /// <summary>
+    /// Player cannot build on a vehicle with occupied seats.
+    /// </summary>
     BUILD_ON_OCCUPIED_VEHICLE,
+    /// <summary>
+    /// Horde beacon cannot be built here.
+    /// </summary>
     NOT_ALLOWED_HERE,
+    /// <summary>
+    /// Item type is not allowed on vehicles.
+    /// </summary>
     CANNOT_BUILD_ON_VEHICLE,
+    /// <summary>
+    /// Item must be placed closer to vehicle hull.
+    /// </summary>
     TOO_FAR_FROM_HULL,
+    /// <summary>
+    /// Player cannot build while seated in a vehicle because some vehicles are abusable to stick the camera through a wall.
+    /// </summary>
     CANNOT_BUILD_WHILE_SEATED,
+    /// <summary>
+    /// Interacting with ladder.
+    /// </summary>
     CLIMB,
+    /// <summary>
+    /// Popup when equipping housing planner "press T to show items"
+    /// </summary>
     HOUSING_PLANNER_TUTORIAL,
+    /// <summary>
+    /// Popup when structure is blocked by something named we can format into the message.
+    /// </summary>
     PLACEMENT_OBSTRUCTED_BY
 }

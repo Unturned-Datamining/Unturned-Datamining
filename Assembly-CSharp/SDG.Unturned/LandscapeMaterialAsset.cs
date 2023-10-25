@@ -35,10 +35,19 @@ public class LandscapeMaterialAsset : Asset
 
     public ERayMask autoRayMask;
 
+    /// <summary>
+    /// Material to use during the Christmas event instead.
+    /// </summary>
     public AssetReference<LandscapeMaterialAsset> christmasRedirect;
 
+    /// <summary>
+    /// Material to use during the Halloween event instead.
+    /// </summary>
     public AssetReference<LandscapeMaterialAsset> halloweenRedirect;
 
+    /// <summary>
+    /// Material to use during the April Fools event instead.
+    /// </summary>
     public AssetReference<LandscapeMaterialAsset> aprilFoolsRedirect;
 
     private TerrainLayer layer;

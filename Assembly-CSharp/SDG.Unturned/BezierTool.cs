@@ -4,6 +4,10 @@ namespace SDG.Unturned;
 
 public class BezierTool
 {
+    /// <param name="a">Start Vertex</param>
+    /// <param name="b">Start Vertex + Start Tangent</param>
+    /// <param name="c">End Vertex + End Tangent</param>
+    /// <param name="d">End Vertex</param>
     public static Vector3 getPosition(Vector3 a, Vector3 b, Vector3 c, Vector3 d, float t)
     {
         t = Mathf.Clamp01(t);
@@ -11,6 +15,10 @@ public class BezierTool
         return num * num * num * a + 3f * num * num * t * b + 3f * num * t * t * c + t * t * t * d;
     }
 
+    /// <param name="a">Start Vertex</param>
+    /// <param name="b">Start Vertex + Start Tangent</param>
+    /// <param name="c">End Vertex + End Tangent</param>
+    /// <param name="d">End Vertex</param>
     public static Vector3 getVelocity(Vector3 a, Vector3 b, Vector3 c, Vector3 d, float t)
     {
         t = Mathf.Clamp01(t);
@@ -18,11 +26,25 @@ public class BezierTool
         return 3f * num * num * (b - a) + 6f * num * t * (c - b) + 3f * t * t * (d - c);
     }
 
+    /// <param name="a">Start Vertex</param>
+    /// <param name="b">Start Vertex + Start Tangent</param>
+    /// <param name="c">End Vertex + End Tangent</param>
+    /// <param name="d">End Vertex</param>
     public static float getLengthEstimate(Vector3 a, Vector3 b, Vector3 c, Vector3 d)
     {
         return ((d - a).magnitude + (d - c).magnitude + (b - c).magnitude + (b - a).magnitude) / 2f;
     }
 
+    /// <param name="a">Start Vertex</param>
+    /// <param name="b">Start Vertex + Start Tangent</param>
+    /// <param name="c">End Vertex + End Tangent</param>
+    /// <param name="d">End Vertex</param>
+    /// <param name="distance">World units length along curve.</param>
+    /// <param name="uniformInterval">Spacing between points.</param>
+    /// <param name="intervalTolerance">Max estimate distance from uniform interval before we have to retry.</param>
+    /// <param name="attempts">How many times to retry if the estimate is too far off.</param>
+    /// <param name="cachedLength">If length is already known pass it in, otherwise it's recalculated.</param>
+    /// <returns>Time along curve. [0-1]</returns>
     public static float getTFromDistance(Vector3 a, Vector3 b, Vector3 c, Vector3 d, float distance, float uniformInterval, float intervalTolerance, int attempts, float cachedLength = -1f)
     {
         if (distance < 0f)
@@ -75,6 +97,13 @@ public class BezierTool
         return 0.5f;
     }
 
+    /// <param name="a">Start Vertex</param>
+    /// <param name="b">Start Vertex + Start Tangent</param>
+    /// <param name="c">End Vertex + End Tangent</param>
+    /// <param name="d">End Vertex</param>
+    /// <param name="uniformInterval">Spacing between points.</param>
+    /// <param name="intervalTolerance">Max estimate distance from uniform interval before we have to retry.</param>
+    /// <param name="attempts">How many times to retry if the estimate is too far off.</param>
     public static float getLengthBruteForce(Vector3 a, Vector3 b, Vector3 c, Vector3 d, float uniformInterval, float intervalTolerance, int attempts)
     {
         float lengthEstimate = getLengthEstimate(a, b, c, d);

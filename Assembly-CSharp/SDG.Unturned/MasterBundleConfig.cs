@@ -8,28 +8,65 @@ public class MasterBundleConfig
 {
     internal AssetOrigin origin;
 
+    /// <summary>
+    /// True if the server .hash file exists.
+    /// Hash file is not used by client, but client uses whether it exists to decide whether to include asset bundle hash in asset hash.
+    /// </summary>
     internal bool doesHashFileExist;
 
+    /// <summary>
+    /// Hashes for Windows, Linux, and Mac asset bundles.
+    /// Only loaded on the dedicated server. Null otherwise.
+    /// </summary>
     internal MasterBundleHash serverHashes;
 
     internal AssetBundleCreateRequest assetBundleCreateRequest;
 
     private double loadStartTime;
 
+    /// <summary>
+    /// If true, the associated asset bundle couldn't be loaded and was instead copied from another config.
+    /// </summary>
     internal MasterBundleConfig sourceConfig;
 
+    /// <summary>
+    /// Absolute path to directory containing bundle and .dat file.
+    /// </summary>
     public string directoryPath { get; protected set; }
 
+    /// <summary>
+    /// Name of the actual asset bundle file, e.g. Hawaii.unity3d
+    /// Asset bundle should be next to this config file.
+    /// </summary>
     public string assetBundleName { get; protected set; }
 
+    /// <summary>
+    /// assetBundleName without final .* extension.
+    /// </summary>
     public string assetBundleNameWithoutExtension { get; protected set; }
 
+    /// <summary>
+    /// Prefixed to all asset paths loaded from asset bundle.
+    /// Final path is built from assetPrefix + pathRelativeToBundlesFolder + assetName,
+    /// e.g. Assets/Hawaii/Bundles + /Objects/Large/House/ + Object.prefab
+    /// </summary>
     public string assetPrefix { get; protected set; }
 
+    /// <summary>
+    /// Custom asset bundle version used by Unturned to detect whether imports need
+    /// fixing up because they were exported from an older version of Unity.
+    /// </summary>
     public int version { get; protected set; }
 
+    /// <summary>
+    /// Loaded asset bundle.
+    /// </summary>
     public AssetBundle assetBundle { get; protected set; }
 
+    /// <summary>
+    /// Hash of loaded asset bundle file.
+    /// This is per-platform, so the server loads a hash file with all platform hashes.
+    /// </summary>
     public byte[] hash { get; protected set; }
 
     public MasterBundleConfig(string absoluteDirectory, DatDictionary data, AssetOrigin origin)
@@ -71,6 +108,9 @@ public class MasterBundleConfig
         doesHashFileExist = File.Exists(getHashFilePath());
     }
 
+    /// <summary>
+    /// Get absolute path to asset bundle file.
+    /// </summary>
     public string getAssetBundlePath()
     {
         string linuxAssetBundleName = MasterBundleHelper.getLinuxAssetBundleName(assetBundleName);
@@ -82,11 +122,17 @@ public class MasterBundleConfig
         return Path.Combine(directoryPath, assetBundleName);
     }
 
+    /// <summary>
+    /// Get absolute path to file with per-platform hashes.
+    /// </summary>
     public string getHashFilePath()
     {
         return MasterBundleHelper.getHashFileName(Path.Combine(directoryPath, assetBundleName));
     }
 
+    /// <summary>
+    /// Insert path prefix if set.
+    /// </summary>
     public string formatAssetPath(string assetPath)
     {
         if (string.IsNullOrEmpty(assetPrefix))
@@ -112,6 +158,9 @@ public class MasterBundleConfig
         CheckOwnerCustomDataAndMaybeUnload();
     }
 
+    /// <summary>
+    /// Load the underlying asset bundle.
+    /// </summary>
     public void StartLoad(byte[] inputData, byte[] inputHash)
     {
         UnturnedLog.info("Loading asset bundle \"" + assetBundleName + "\" from \"" + directoryPath + "\"...");

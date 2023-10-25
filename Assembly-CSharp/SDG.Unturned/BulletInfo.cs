@@ -5,6 +5,9 @@ namespace SDG.Unturned;
 
 public class BulletInfo
 {
+    /// <summary>
+    /// Starting position when the bullet was fired.
+    /// </summary>
     public Vector3 origin;
 
     [Obsolete("Will be removed in a future version. Please use the position property instead.")]

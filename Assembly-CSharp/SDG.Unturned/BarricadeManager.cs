@@ -14,6 +14,9 @@ public class BarricadeManager : SteamCaller
 {
     private static Collider[] checkColliders = new Collider[2];
 
+    /// <summary>
+    /// Barricade asset's EBuild included in saves to fix state length problems. (public issue #3725)
+    /// </summary>
     public const byte SAVEDATA_VERSION_INCLUDE_BUILD_ENUM = 18;
 
     private const byte SAVEDATA_VERSION_NEWEST = 18;
@@ -44,6 +47,9 @@ public class BarricadeManager : SteamCaller
 
     public static byte version = SAVEDATA_VERSION;
 
+    /// <summary>
+    /// Writable list of vehicle regions. Public add/remove methods should not be necessary.
+    /// </summary>
     private static List<VehicleBarricadeRegion> internalVehicleRegions;
 
     private static List<BarricadeRegion> backwardsCompatVehicleRegions;
@@ -68,22 +74,39 @@ public class BarricadeManager : SteamCaller
 
     private static readonly ClientStaticMethod SendMultipleBarricades = ClientStaticMethod.Get(ReceiveMultipleBarricades);
 
+    /// <summary>
+    /// Maps prefab unique id to inactive list.
+    /// </summary>
     private Dictionary<int, Stack<GameObject>> pool;
 
     private Stopwatch instantiationTimer = new Stopwatch();
 
+    /// <summary>
+    /// Instantiate at least this many barricades per frame even if we exceed our time budget.
+    /// </summary>
     private const int MIN_INSTANTIATIONS_PER_FRAME = 5;
 
     private const int MIN_DESTROY_PER_FRAME = 10;
 
     internal const int POSITION_FRAC_BIT_COUNT = 11;
 
+    /// <summary>
+    /// +0 = BarricadeDrop
+    /// +1 = root transform
+    /// +2 = Interactable (if exists)
+    /// </summary>
     internal const int NETIDS_PER_BARRICADE = 3;
 
+    /// <summary>
+    /// Exposed for Rocket transition to modules backwards compatibility.
+    /// </summary>
     public static BarricadeManager instance => manager;
 
     public static BarricadeRegion[,] regions { get; private set; }
 
+    /// <summary>
+    /// Exposed for Rocket transition to modules backwards compatibility.
+    /// </summary>
     public static BarricadeRegion[,] BarricadeRegions
     {
         get
@@ -1192,6 +1215,9 @@ public class BarricadeManager : SteamCaller
         destroyBarricade(region.drops[index], x, y, plant);
     }
 
+    /// <summary>
+    /// Remove barricade instance on server and client.
+    /// </summary>
     public static void destroyBarricade(BarricadeDrop barricade, byte x, byte y, ushort plant)
     {
         if (tryGetRegion(x, y, plant, out var region))
@@ -1201,6 +1227,9 @@ public class BarricadeManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// Used by ownership change and damaged event to tell relevant clients the new health.
+    /// </summary>
     private static void sendHealthChanged(byte x, byte y, ushort plant, BarricadeDrop barricade)
     {
         if (plant == ushort.MaxValue)
@@ -1240,6 +1269,9 @@ public class BarricadeManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// Legacy function for UseableBarricade.
+    /// </summary>
     public static Transform dropBarricade(Barricade barricade, Transform hit, Vector3 point, float angle_x, float angle_y, float angle_z, ulong owner, ulong group)
     {
         if (barricade.asset == null)
@@ -1260,6 +1292,9 @@ public class BarricadeManager : SteamCaller
         return dropNonPlantedBarricade(barricade, point, rotation, owner, group);
     }
 
+    /// <summary>
+    /// Common code between dropping barricade onto vehicle or into world.
+    /// </summary>
     private static Transform dropBarricadeIntoRegionInternal(BarricadeRegion region, Barricade barricade, Vector3 point, Quaternion rotation, ulong owner, ulong group)
     {
         Vector3 eulerAngles = rotation.eulerAngles;
@@ -1278,6 +1313,9 @@ public class BarricadeManager : SteamCaller
         return obj;
     }
 
+    /// <summary>
+    /// Spawn a new barricade attached to a vehicle and replicate it.
+    /// </summary>
     public static Transform dropPlantedBarricade(Transform parent, Barricade barricade, Vector3 point, Quaternion rotation, ulong owner, ulong group)
     {
         VehicleBarricadeRegion vehicleBarricadeRegion = FindVehicleRegionByTransform(parent);
@@ -1301,6 +1339,9 @@ public class BarricadeManager : SteamCaller
         return obj;
     }
 
+    /// <summary>
+    /// Spawn a new barricade and replicate it.
+    /// </summary>
     public static Transform dropNonPlantedBarricade(Barricade barricade, Vector3 point, Quaternion rotation, ulong owner, ulong group)
     {
         if (!Regions.tryGetCoordinate(point, out var x, out var y))
@@ -1333,6 +1374,9 @@ public class BarricadeManager : SteamCaller
         throw new NotSupportedException("Removed during barricade NetId rewrite");
     }
 
+    /// <summary>
+    /// Not an instance method because structure might not exist yet, in which case we cancel instantiation.
+    /// </summary>
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
     public static void ReceiveDestroyBarricade(in ClientInvocationContext context, NetId netId)
     {
@@ -1941,6 +1985,9 @@ public class BarricadeManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// Clean up before loading vehicles.
+    /// </summary>
     public static void clearPlants()
     {
         internalVehicleRegions = new List<VehicleBarricadeRegion>();
@@ -1948,6 +1995,11 @@ public class BarricadeManager : SteamCaller
         backwardsCompatVehicleRegions = null;
     }
 
+    /// <summary>
+    /// Register a new vehicle as a valid parent for barricades.
+    /// Each train car is registered after the root of the train.
+    /// Note: Nobody knows why these are called plants.
+    /// </summary>
     [Obsolete("Plugins should not be calling this")]
     public static void waterPlant(Transform parent)
     {
@@ -1965,6 +2017,9 @@ public class BarricadeManager : SteamCaller
         backwardsCompatVehicleRegions = null;
     }
 
+    /// <summary>
+    /// Called before destroying a vehicle GameObject because storage needed to be ManualDestroyed.
+    /// </summary>
     public static void uprootPlant(Transform parent)
     {
         for (ushort num = 0; num < vehicleRegions.Count; num++)
@@ -2003,6 +2058,10 @@ public class BarricadeManager : SteamCaller
     {
     }
 
+    /// <summary>
+    /// Send all vehicle-mounted barricades to client.
+    /// Called after sending vehicles so all plant indexes will be valid.
+    /// </summary>
     internal static void SendVehicleRegions(SteamPlayer client)
     {
         foreach (VehicleBarricadeRegion vehicleRegion in vehicleRegions)
@@ -2202,11 +2261,17 @@ public class BarricadeManager : SteamCaller
         throw new NotSupportedException("Moved into instance method as part of barricade NetId rewrite");
     }
 
+    /// <summary>
+    /// Original server-only version that does not replicate changes to clients.
+    /// </summary>
     public static void updateState(Transform transform, byte[] state, int size)
     {
         updateStateInternal(transform, state, size);
     }
 
+    /// <summary>
+    /// Only used by plugins. Replicates state change to clients.
+    /// </summary>
     public static void updateReplicatedState(Transform transform, byte[] state, int size)
     {
         updateStateInternal(transform, state, size, shouldReplicate: true);
@@ -2256,6 +2321,9 @@ public class BarricadeManager : SteamCaller
         }
     }
 
+    /// <summary>
+    /// Not ideal, but there was a problem because onLevelLoaded was not resetting these after disconnecting.
+    /// </summary>
     internal static void ClearNetworkStuff()
     {
         pendingInstantiations = new List<BarricadeInstantiationParameters>();

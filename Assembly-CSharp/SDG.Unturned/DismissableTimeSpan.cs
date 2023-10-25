@@ -14,6 +14,9 @@ public class DismissableTimeSpan
         this.key = key;
     }
 
+    /// <summary>
+    /// Is current UTC time within this time span, and player has not dismissed?
+    /// </summary>
     public bool isRelevant()
     {
         if (isNowWithinSpan())
@@ -27,6 +30,10 @@ public class DismissableTimeSpan
         return false;
     }
 
+    /// <summary>
+    /// Has the current time span been dismissed?
+    /// For example, player may have dismissed a previous event but not this current one.
+    /// </summary>
     public bool hasDismissedSpan()
     {
         if (!getDismissedTime(out var dismissedTime))
@@ -36,6 +43,9 @@ public class DismissableTimeSpan
         return dismissedTime >= range.start;
     }
 
+    /// <summary>
+    /// Is current UTC time within this time span?
+    /// </summary>
     public bool isNowWithinSpan()
     {
         return range.isNowWithinRange();

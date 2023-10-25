@@ -50,6 +50,9 @@ public class PlayerPauseUI
 
     public static float lastLeave;
 
+    /// <summary>
+    /// Exit button only needs to wait for timer in certain conditions.
+    /// </summary>
     public static bool shouldExitButtonRespectTimer
     {
         get

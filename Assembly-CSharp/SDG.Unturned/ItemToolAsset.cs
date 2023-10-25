@@ -10,6 +10,9 @@ public class ItemToolAsset : ItemAsset
 
     public override bool shouldFriendlySentryTargetUser => base.useableType != typeof(UseableWalkieTalkie);
 
+    /// <summary>
+    /// Tools like carjacks and tires can be used in safezone by admins for maintenance.
+    /// </summary>
     public override bool canBeUsedInSafezone(SafezoneNode safezone, bool byAdmin)
     {
         if (byAdmin)

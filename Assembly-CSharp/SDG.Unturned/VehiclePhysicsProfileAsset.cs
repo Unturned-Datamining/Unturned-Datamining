@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Overrides vehicle physics values in bulk without building asset bundles.
+/// </summary>
 public class VehiclePhysicsProfileAsset : Asset
 {
     public struct Friction

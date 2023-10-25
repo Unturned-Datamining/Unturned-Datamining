@@ -6,6 +6,9 @@ public abstract class VendorElement
 {
     protected NPCRewardsList rewardsList;
 
+    /// <summary>
+    /// Vendor asset that owns this buy/sell record.
+    /// </summary>
     public VendorAsset outerAsset { get; protected set; }
 
     public byte index { get; protected set; }

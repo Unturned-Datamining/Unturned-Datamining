@@ -148,6 +148,9 @@ public class PlayerEquipment : PlayerCaller
 
     private bool wasUsableSecondaryStarted;
 
+    /// <summary>
+    /// For aiming toggle input.
+    /// </summary>
     private bool localWantsToAim;
 
     private bool hasVision;
@@ -210,6 +213,9 @@ public class PlayerEquipment : PlayerCaller
 
     protected bool ignoreDequip_A;
 
+    /// <summary>
+    /// Invoked before dealing damage regardless of whether the punch impacted anything.
+    /// </summary>
     public static Action<PlayerEquipment, EPlayerPunch> OnPunch_Global;
 
     private static MasterBundleReference<AudioClip> punchClipRef = new MasterBundleReference<AudioClip>("core.masterbundle", "Sounds/MeleeAttack_02.mp3");
@@ -303,6 +309,10 @@ public class PlayerEquipment : PlayerCaller
 
     public bool isTurret { get; private set; }
 
+    /// <summary>
+    /// Does equipped useable have a menu open?
+    /// If so pause menu, dashboard, and other menus cannot be opened.
+    /// </summary>
     public bool isUseableShowingMenu
     {
         get
@@ -349,6 +359,9 @@ public class PlayerEquipment : PlayerCaller
     [Obsolete("Renamed to IsEquipAnimationFinished")]
     public bool isEquipped => IsEquipAnimationFinished;
 
+    /// <summary>
+    /// Invoked from tellEquip after change.
+    /// </summary>
     public static event Action<PlayerEquipment> OnUseableChanged_Global;
 
     public static event Action<PlayerEquipment> OnInspectingUseable_Global;
@@ -373,6 +386,9 @@ public class PlayerEquipment : PlayerCaller
         return false;
     }
 
+    /// <summary>
+    /// Get ragdoll effect to use when the current weapon deals damage.
+    /// </summary>
     public ERagdollEffect getUseableRagdollEffect()
     {
         if (base.player.clothing.isMythic)
@@ -382,6 +398,9 @@ public class PlayerEquipment : PlayerCaller
         return ERagdollEffect.NONE;
     }
 
+    /// <summary>
+    /// It should be safe to call this immediately because hotkeys are loaded in InitializePlayer.
+    /// </summary>
     public void ServerBindItemHotkey(byte hotkeyIndex, ItemAsset expectedItem, byte page, byte x, byte y)
     {
         SendItemHotkeySuggestion.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), hotkeyIndex, expectedItem?.GUID ?? Guid.Empty, page, x, y);
@@ -427,6 +446,9 @@ public class PlayerEquipment : PlayerCaller
         onHotkeysUpdated?.Invoke();
     }
 
+    /// <summary>
+    /// Prevent multiple hotkeys from referencing the same item.
+    /// </summary>
     private void ClearDuplicateHotkeys(int newHotkeyIndex)
     {
         HotkeyInfo hotkeyInfo = hotkeys[newHotkeyIndex];
@@ -475,6 +497,10 @@ public class PlayerEquipment : PlayerCaller
         return false;
     }
 
+    /// <summary>
+    /// Left-handed characters need the stat tracker to be flipped on the X axis so that the text reads properly.
+    /// ItemTool doesn't know about left/right handedness, so for the moment that's handled here because only players need this fixed up.
+    /// </summary>
     protected void fixStatTrackerHookScale(Transform itemModelTransform)
     {
         if (base.channel.owner.IsLeftHanded)
@@ -499,6 +525,9 @@ public class PlayerEquipment : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Match stat tracker gameobject's isActive to whether skins are visible.
+    /// </summary>
     protected void syncStatTrackTrackerVisibility(Transform itemModelTransform)
     {
         if (!(itemModelTransform == null))
@@ -511,6 +540,9 @@ public class PlayerEquipment : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Match all stat tracker visibilities to whether skins are visible.
+    /// </summary>
     protected void syncAllStatTrackerVisibility()
     {
         syncStatTrackTrackerVisibility(firstModel);
@@ -1557,6 +1589,9 @@ public class PlayerEquipment : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Called clientside to ask server to equip an item in the inventory.
+    /// </summary>
     public void equip(byte page, byte x, byte y)
     {
         if (page < 0 || page >= PlayerInventory.PAGES - 2 || isBusy || !canEquip || base.player.life.isDead || base.player.stance.stance == EPlayerStance.CLIMB || base.player.stance.stance == EPlayerStance.DRIVING || (HasValidUseable && !IsEquipAnimationFinished))
@@ -1580,6 +1615,9 @@ public class PlayerEquipment : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Hacked-in to bypass regular clientside checks when client would predict the item at given coords.
+    /// </summary>
     internal void ClientEquipAfterItemDrag(byte page, byte x, byte y)
     {
         SendEquipRequest.Invoke(GetNetId(), ENetReliability.Unreliable, page, x, y);
@@ -1622,6 +1660,9 @@ public class PlayerEquipment : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Remove the item from inventory so that if we die before <see cref="M:SDG.Unturned.PlayerEquipment.useStepB" /> the item isn't dropped
+    /// </summary>
     public void useStepA()
     {
         if (HasValidUseable)
@@ -1638,6 +1679,9 @@ public class PlayerEquipment : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Finish dequipping from <see cref="M:SDG.Unturned.PlayerEquipment.useStepA" />
+    /// </summary>
     public void useStepB()
     {
         if (HasValidUseable)
@@ -1935,6 +1979,9 @@ public class PlayerEquipment : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// (Temporarily?) separated out from simulate to try and get a better exception call stack.
+    /// </summary>
     private bool simulate_MustDequip()
     {
         if (base.player.stance.stance == EPlayerStance.DRIVING && !isTurret)
@@ -2008,6 +2055,9 @@ public class PlayerEquipment : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// (Temporarily?) separated out from simulate to try and get a better exception call stack.
+    /// </summary>
     private void simulate_UseableInput(uint simulation, EAttackInputFlags inputPrimary, EAttackInputFlags inputSecondary, bool inputSteady)
     {
         if (inputPrimary.HasFlag(EAttackInputFlags.Start) && HasValidUseable && IsEquipAnimationFinished && !wasUsablePrimaryStarted)
@@ -2046,6 +2096,9 @@ public class PlayerEquipment : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// (Temporarily?) separated out from simulate to try and get a better exception call stack.
+    /// </summary>
     private void simulate_PunchInput(uint simulation, EAttackInputFlags inputPrimary, EAttackInputFlags inputSecondary)
     {
         if (inputPrimary.HasFlag(EAttackInputFlags.Start) && !isBusy && base.player.stance.stance != EPlayerStance.PRONE && simulation - lastPunch > 5)
@@ -2232,6 +2285,9 @@ public class PlayerEquipment : PlayerCaller
         _equipped_y = byte.MaxValue;
     }
 
+    /// <summary>
+    /// Allow UI to process input [0, 9] key press when cursor is visible.
+    /// </summary>
     private void bindHotkey(byte button)
     {
         if (button < PlayerInventory.SLOTS || !PlayerDashboardUI.active || !PlayerDashboardInventoryUI.active)
@@ -2264,6 +2320,9 @@ public class PlayerEquipment : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Process input [0, 9] key press.
+    /// </summary>
     private void hotkey(byte button)
     {
         if (PlayerUI.window.showCursor)
@@ -2515,6 +2574,9 @@ public class PlayerEquipment : PlayerCaller
         life2.onLifeUpdated = (LifeUpdated)Delegate.Combine(life2.onLifeUpdated, new LifeUpdated(onLifeUpdated));
     }
 
+    /// <summary>
+    /// Called by input when preparing for simulation frame.
+    /// </summary>
     internal void CaptureAttackInputs(out EAttackInputFlags primaryAttack, out EAttackInputFlags secondaryAttack)
     {
         primaryAttack = EAttackInputFlags.None;

@@ -23,8 +23,14 @@ public class Crosshair : SleekWrapper
 
     private ISleekImage centerDotImage;
 
+    /// <summary>
+    /// Slightly interpolated copy of actual spread angle to smooth out sharp changes like crouch/prone.
+    /// </summary>
     private float interpolatedSpread;
 
+    /// <summary>
+    /// Allows interpolatedSpread to snap to target value when crosshair becomes visible.
+    /// </summary>
     private bool isInterpolatedSpreadValid;
 
     public void SetGameWantsCenterDotVisible(bool isVisible)

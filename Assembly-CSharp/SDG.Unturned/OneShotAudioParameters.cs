@@ -8,12 +8,18 @@ public struct OneShotAudioParameters
 
     public AudioClip clip;
 
+    /// <summary>
+    /// Optional parent transform to attach the audio source to.
+    /// </summary>
     public Transform parent;
 
     public float volume;
 
     public float pitch;
 
+    /// <summary>
+    /// 0 = 2D, 1 = 3D
+    /// </summary>
     public float spatialBlend;
 
     public AudioRolloffMode rolloffMode;
@@ -45,6 +51,9 @@ public struct OneShotAudioParameters
     {
     }
 
+    /// <summary>
+    /// 2D audio.
+    /// </summary>
     public OneShotAudioParameters(AudioClip clip)
         : this(Vector3.zero, clip, null)
     {

@@ -4,6 +4,19 @@ namespace SDG.NetPak;
 
 public static class UnityNetPakReaderEx
 {
+    /// <summary>
+    /// Uses "smallest three" optimization described by Glenn Fiedler: https://gafferongames.com/post/snapshot_compression/
+    /// Quoting here in case the link moves: "Since we know the quaternion represents a rotation its length must
+    /// be 1, so x^2+y^2+z^2+w^2 = 1. We can use this identity to drop one component and reconstruct it on the
+    /// other side. For example, if you send x,y,z you can reconstruct w = sqrt(1 - x^2 - y^2 - z^2). You might
+    /// think you need to send a sign bit for w in case it is negative, but you don’t, because you can make w always
+    /// positive by negating the entire quaternion if w is negative (in quaternion space (x,y,z,w) and (-x,-y,-z,-w)
+    /// represent the same rotation.) Don’t always drop the same component due to numerical precision issues.
+    /// Instead, find the component with the largest absolute value and encode its index using two bits [0, 3]
+    /// (0=x, 1=y, 2=z, 3=w), then send the index of the largest component and the smallest three components over
+    /// the network (hence the name). On the other side use the index of the largest bit to know which component
+    /// you have to reconstruct from the other three."
+    /// </summary>
     public static bool ReadQuaternion(this NetPakReader reader, out Quaternion value, int bitsPerComponent = 9)
     {
         if (!reader.ReadBits(2, out var value2))
@@ -40,6 +53,9 @@ public static class UnityNetPakReaderEx
         }
     }
 
+    /// <summary>
+    /// Similar to the quaternion optimization, but needs a sign bit for the largest value.
+    /// </summary>
     public static bool ReadNormalVector3(this NetPakReader reader, out Vector3 value, int bitsPerComponent = 9)
     {
         if (!reader.ReadBits(2, out var value2) || !reader.ReadBit(out var value3))
@@ -76,11 +92,17 @@ public static class UnityNetPakReaderEx
         }
     }
 
+    /// <summary>
+    /// Default intBitCount of 13 allows a range of [-4096, +4096).
+    /// </summary>
     public static bool ReadClampedVector3(this NetPakReader reader, out Vector3 value, int intBitCount = 13, int fracBitCount = 7)
     {
         return reader.ReadClampedFloat(intBitCount, fracBitCount, out value.x) & reader.ReadClampedFloat(intBitCount, fracBitCount, out value.y) & reader.ReadClampedFloat(intBitCount, fracBitCount, out value.z);
     }
 
+    /// <summary>
+    /// Read 8-bit per channel color excluding alpha.
+    /// </summary>
     public static bool ReadColor32RGB(this NetPakReader reader, out Color32 value)
     {
         byte value2;
@@ -91,6 +113,9 @@ public static class UnityNetPakReaderEx
         return result;
     }
 
+    /// <summary>
+    /// Read 8-bit per channel color excluding alpha.
+    /// </summary>
     public static bool ReadColor32RGB(this NetPakReader reader, out Color value)
     {
         Color32 value2;
@@ -99,6 +124,9 @@ public static class UnityNetPakReaderEx
         return result;
     }
 
+    /// <summary>
+    /// Read 8-bit per channel color including alpha.
+    /// </summary>
     public static bool ReadColor32RGBA(this NetPakReader reader, out Color32 value)
     {
         byte value2;
@@ -110,6 +138,9 @@ public static class UnityNetPakReaderEx
         return result;
     }
 
+    /// <summary>
+    /// Read 8-bit per channel color including alpha.
+    /// </summary>
     public static bool ReadColor32RGBA(this NetPakReader reader, out Color value)
     {
         Color32 value2;

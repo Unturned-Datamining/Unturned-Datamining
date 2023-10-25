@@ -49,6 +49,9 @@ public class LocationDevkitNode : TempNodeBase
 
     public string locationName;
 
+    /// <summary>
+    /// If true, visible in chart and satellite UIs.
+    /// </summary>
     public bool isVisibleOnMap = true;
 
     [SerializeField]

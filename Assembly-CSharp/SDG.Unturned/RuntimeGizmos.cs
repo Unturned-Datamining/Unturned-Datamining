@@ -6,12 +6,18 @@ using UnityEngine.Rendering;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// In-game debug drawing utility similar to Unity's editor Gizmos.
+/// </summary>
 public class RuntimeGizmos : MonoBehaviour
 {
     private struct BoxData
     {
         public Matrix4x4 matrix;
 
+        /// <summary>
+        /// Center relative to matrix.
+        /// </summary>
         public Vector3 localCenter;
 
         public Vector3 size;
@@ -78,6 +84,9 @@ public class RuntimeGizmos : MonoBehaviour
     {
         public Matrix4x4 matrix;
 
+        /// <summary>
+        /// Center relative to matrix.
+        /// </summary>
         public Vector3 localCenter;
 
         public Color color;
@@ -246,6 +255,7 @@ public class RuntimeGizmos : MonoBehaviour
         boxLayers[(int)layer].Add(new BoxData(matrix, Vector3.zero, size, color, lifespan));
     }
 
+    /// <param name="center">Local space relative to matrix.</param>
     public void Box(Matrix4x4 matrix, Vector3 center, Vector3 size, Color color, float lifespan = 0f, EGizmoLayer layer = EGizmoLayer.World)
     {
         boxLayers[(int)layer].Add(new BoxData(matrix, center, size, color, lifespan));
@@ -363,6 +373,9 @@ public class RuntimeGizmos : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Wireframe grid on the XZ plane.
+    /// </summary>
     public void GridXZ(Vector3 center, float size, int cells, Color color, float lifespan = 0f, EGizmoLayer layer = EGizmoLayer.World)
     {
         Vector3 vector = center - new Vector3(size * 0.5f, 0f, size * 0.5f);
@@ -843,6 +856,9 @@ public class RuntimeGizmos : MonoBehaviour
         CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Remove(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
     }
 
+    /// <summary>
+    /// LateUpdate so that the most up-to-date gizmos and main camera position are used.
+    /// </summary>
     private void LateUpdate()
     {
         if (!clUseLineRenderers.value)

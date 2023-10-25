@@ -21,6 +21,9 @@ public class SpawnAsset : Asset
 
     protected List<SpawnTable> _tables;
 
+    /// <summary>
+    /// Parent spawn assets this would like to be inserted into.
+    /// </summary>
     public List<SpawnTable> insertRoots { get; protected set; }
 
     public List<SpawnTable> roots => _roots;
@@ -31,8 +34,15 @@ public class SpawnAsset : Asset
 
     public bool hasBeenOverridden { get; protected set; }
 
+    /// <summary>
+    /// Do tables need to be sorted and normalized?
+    /// </summary>
     public bool areTablesDirty { get; protected set; }
 
+    /// <summary>
+    /// Zero weights of child spawn tables.
+    /// Called when inserting a root marked isOverride.
+    /// </summary>
     public void markOverridden()
     {
         if (hasBeenOverridden)
@@ -98,6 +108,9 @@ public class SpawnAsset : Asset
         }
     }
 
+    /// <summary>
+    /// Sort children by weight ascending, and calculate their normalized chance as a percentage of total weight.
+    /// </summary>
     public void sortAndNormalizeWeights()
     {
         if (!areTablesDirty)
@@ -148,6 +161,9 @@ public class SpawnAsset : Asset
         markTablesDirty();
     }
 
+    /// <summary>
+    /// Remove from roots, and if reference is valid remove us from their children.
+    /// </summary>
     public void EditorRemoveParentAtIndex(int parentIndex)
     {
         SpawnTable spawnTable = roots[parentIndex];
@@ -168,6 +184,9 @@ public class SpawnAsset : Asset
         roots.RemoveAt(parentIndex);
     }
 
+    /// <summary>
+    /// Remove from tables, and if referencing a child table remove us from their roots.
+    /// </summary>
     public void EditorRemoveChildAtIndex(int childIndex)
     {
         SpawnTable spawnTable = tables[childIndex];

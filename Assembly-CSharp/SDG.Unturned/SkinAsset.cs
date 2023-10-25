@@ -48,12 +48,19 @@ public class SkinAsset : Asset
 
     public Material tertiarySkin => _tertiarySkin;
 
+    /// <summary>
+    /// Used by dawn and dusk skins which pull per-level lighting colors.
+    /// </summary>
     public ELightingTime? lightingTime { get; private set; }
 
     public override EAssetType assetCategory => EAssetType.SKIN;
 
     public ERagdollEffect ragdollEffect { get; protected set; }
 
+    /// <summary>
+    /// Note: unfortunately it appears the stupid skin system always instantiated materials, but never destroys
+    /// them... will need to clean this up, but it will be tricky because the game does not hold a reference to them.
+    /// </summary>
     public void SetMaterialProperties(Material instance)
     {
         if (lightingTime.HasValue && LevelLighting.times != null)

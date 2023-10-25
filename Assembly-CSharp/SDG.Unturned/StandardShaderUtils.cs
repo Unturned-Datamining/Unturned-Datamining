@@ -2,8 +2,15 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Standard shader mode changes are based on built-in StandardShaderGUI.cs 
+/// </summary>
 public static class StandardShaderUtils
 {
+    /// <summary>
+    /// Does shader name match any of the standard shaders?
+    /// Standard, StandardSpecular and the Unturned "Decalable" variants all share nearly identical parameters.
+    /// </summary>
     public static bool isNameStandard(string name)
     {
         if (string.IsNullOrEmpty(name))
@@ -92,6 +99,9 @@ public static class StandardShaderUtils
         material.renderQueue = 3000;
     }
 
+    /// <summary>
+    /// Based on fixup routine in StandardShaderGUI SetMaterialKeywords.
+    /// </summary>
     public static void fixupEmission(Material material)
     {
         if (material.GetColor("_EmissionColor").maxColorComponent < 0.01f)
@@ -117,6 +127,10 @@ public static class StandardShaderUtils
         }
     }
 
+    /// <summary>
+    /// Conditionally fixup older standard materials.
+    /// </summary>
+    /// <returns>True if material was edited.</returns>
     public static bool maybeFixupMaterial(Material material)
     {
         if (!isMaterialUsingStandardShader(material))

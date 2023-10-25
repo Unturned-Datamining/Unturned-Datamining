@@ -5,11 +5,19 @@ namespace SDG.Unturned;
 
 public class NPCTool
 {
+    /// <summary>
+    /// Was redirected to HolidayUtil but kept for plugin backwards compatibility.
+    /// Refer to HolidayUtil for explanation of this weird situation.
+    /// </summary>
     public static ENPCHoliday getActiveHoliday()
     {
         return Provider.authorityHoliday;
     }
 
+    /// <summary>
+    /// Was redirected to HolidayUtil but kept for plugin backwards compatibility.
+    /// Refer to HolidayUtil for explanation of this weird situation.
+    /// </summary>
     public static bool isHolidayActive(ENPCHoliday holiday)
     {
         return holiday == Provider.authorityHoliday;

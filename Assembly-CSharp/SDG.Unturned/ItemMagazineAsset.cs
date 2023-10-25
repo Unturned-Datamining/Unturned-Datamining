@@ -58,10 +58,19 @@ public class ItemMagazineAsset : ItemCaliberAsset
 
     public float range => _range;
 
+    /// <summary>
+    /// Multiplier for explosive projectile damage.
+    /// </summary>
     public float projectileDamageMultiplier { get; protected set; }
 
+    /// <summary>
+    /// Multiplier for explosive projectile's blast radius.
+    /// </summary>
     public float projectileBlastRadiusMultiplier { get; protected set; }
 
+    /// <summary>
+    /// Multiplier for explosive projectile's initial force.
+    /// </summary>
     public float projectileLaunchForceMultiplier { get; protected set; }
 
     public ushort explosion => _explosion;
@@ -96,6 +105,9 @@ public class ItemMagazineAsset : ItemCaliberAsset
 
     public bool deleteEmpty => _deleteEmpty;
 
+    /// <summary>
+    /// Should amount be filled to capacity when detached?
+    /// </summary>
     public bool shouldFillAfterDetach { get; protected set; }
 
     public bool IsExplosionEffectRefNull()

@@ -2,6 +2,17 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Mesh Replacement Details
+/// .dat Flags:
+/// 	Has_1P_Character_Mesh_Override True		Bool
+/// 	Character_Mesh_3P_Override_LODs #		Int
+/// 	Has_Character_Material_Override True	Bool
+/// Asset Bundle Objects:
+/// 	Character_Mesh_1P_Override_#			GameObject with MeshFilter (mesh set to a skinned mesh)
+/// 	Character_Mesh_3P_Override_#			GameObject with MeshFilter (mesh set to a skinned mesh)
+/// 	Character_Material_Override				Material
+/// </summary>
 public class ItemShirtAsset : ItemBagAsset
 {
     protected Texture2D _shirt;
@@ -12,6 +23,9 @@ public class ItemShirtAsset : ItemBagAsset
 
     protected bool _ignoreHand;
 
+    /// <summary>
+    /// Replacement for the main character material that typically has clothes and skin color.
+    /// </summary>
     public Material characterMaterialOverride;
 
     public Texture2D shirt => _shirt;
@@ -22,8 +36,14 @@ public class ItemShirtAsset : ItemBagAsset
 
     public bool ignoreHand => _ignoreHand;
 
+    /// <summary>
+    /// Replacements for the main 1st-person character mesh.
+    /// </summary>
     public Mesh[] characterMeshOverride1pLODs { get; protected set; }
 
+    /// <summary>
+    /// Replacements for the main 3rd-person character mesh.
+    /// </summary>
     public Mesh[] characterMeshOverride3pLODs { get; protected set; }
 
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)

@@ -4,6 +4,9 @@ using System.Security.Cryptography;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Utility to hash a stream of bytes over several frames.
+/// </summary>
 public class TimeSliceHash<T> : IDisposable where T : HashAlgorithm, new()
 {
     private T algo;
@@ -14,6 +17,9 @@ public class TimeSliceHash<T> : IDisposable where T : HashAlgorithm, new()
 
     private bool disposed;
 
+    /// <summary>
+    /// [0, 1] percentage progress through the stream.
+    /// </summary>
     public float progress => (float)((double)stream.Position / (double)stream.Length);
 
     public TimeSliceHash(Stream stream)
@@ -24,6 +30,10 @@ public class TimeSliceHash<T> : IDisposable where T : HashAlgorithm, new()
         buffer = new byte[8192];
     }
 
+    /// <summary>
+    /// Advance 1MB further into the stream.
+    /// </summary>
+    /// <returns>True if there is more data, false if complete.</returns>
     public bool advance()
     {
         for (int i = 0; i < 122; i++)
@@ -58,6 +68,9 @@ public class TimeSliceHash<T> : IDisposable where T : HashAlgorithm, new()
         }
     }
 
+    /// <summary>
+    /// Get the computed hash after processing stream.
+    /// </summary>
     public byte[] computeHash()
     {
         return algo.Hash;

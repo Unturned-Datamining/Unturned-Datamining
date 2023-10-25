@@ -143,6 +143,10 @@ public class AmbianceVolume : LevelVolume<AmbianceVolume, AmbianceVolumeManager>
     [SerializeField]
     internal Guid _effectGuid;
 
+    /// <summary>
+    /// Kept because lots of modders have been using this script in Unity,
+    /// so removing legacy effect id would break their content.
+    /// </summary>
     [SerializeField]
     protected ushort _id;
 
@@ -152,6 +156,9 @@ public class AmbianceVolume : LevelVolume<AmbianceVolume, AmbianceVolumeManager>
     [SerializeField]
     protected bool _noLighting;
 
+    /// <summary>
+    /// If per-weather mask AND is non zero the weather will blend in.
+    /// </summary>
     [SerializeField]
     public uint weatherMask = uint.MaxValue;
 
@@ -249,6 +256,9 @@ public class AmbianceVolume : LevelVolume<AmbianceVolume, AmbianceVolumeManager>
         return sleekElement;
     }
 
+    /// <summary>
+    /// Used by lighting to get the currently active effect.
+    /// </summary>
     public EffectAsset GetEffectAsset()
     {
         return Assets.FindEffectAssetByGuidOrLegacyId(_effectGuid, _id);
