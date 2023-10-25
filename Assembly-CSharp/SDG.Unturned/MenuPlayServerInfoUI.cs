@@ -870,11 +870,7 @@ public class MenuPlayServerInfoUI
                 configBox.IsVisible = true;
             }
         }
-        if (!rulesMap.TryGetValue("GameVersion", out var value13))
-        {
-            value13 = "3.21.7.0";
-        }
-        if (Parser.TryGetUInt32FromIP(value13, out var value14) && Provider.APP_VERSION_PACKED != value14)
+        if (rulesMap.TryGetValue("GameVersion", out var value13) && Parser.TryGetUInt32FromIP(value13, out var value14) && Provider.APP_VERSION_PACKED != value14)
         {
             joinButton.IsVisible = false;
             joinDisabledBox.IsVisible = true;

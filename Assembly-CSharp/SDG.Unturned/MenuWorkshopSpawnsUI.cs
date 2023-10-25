@@ -140,6 +140,14 @@ public class MenuWorkshopSpawnsUI
                 if (spawnAsset != null)
                 {
                     sleekButton.Text = spawnAsset.name;
+                    if (spawnTable.legacySpawnId != 0)
+                    {
+                        sleekButton.TooltipText = $"{spawnTable.legacySpawnId} - {spawnAsset.GetOriginName()}";
+                    }
+                    else
+                    {
+                        sleekButton.TooltipText = $"{spawnTable.targetGuid:N} - {spawnAsset.GetOriginName()}";
+                    }
                 }
                 else if (spawnTable.legacySpawnId != 0)
                 {
@@ -233,6 +241,14 @@ public class MenuWorkshopSpawnsUI
                     if (spawnAsset2 != null)
                     {
                         sleekButton2.Text = spawnAsset2.name;
+                        if (spawnTable2.legacySpawnId != 0)
+                        {
+                            sleekButton2.TooltipText = $"{spawnTable2.legacySpawnId} - {spawnAsset2.GetOriginName()}";
+                        }
+                        else
+                        {
+                            sleekButton2.TooltipText = $"{spawnTable2.targetGuid:N} - {spawnAsset2.GetOriginName()}";
+                        }
                     }
                     else if (spawnTable2.legacySpawnId != 0)
                     {
@@ -263,6 +279,14 @@ public class MenuWorkshopSpawnsUI
                         else if (asset is VehicleAsset vehicleAsset)
                         {
                             sleekBox2.TextColor = ItemTool.getRarityColorUI(vehicleAsset.rarity);
+                        }
+                        if (spawnTable2.legacyAssetId != 0)
+                        {
+                            sleekBox2.TooltipText = $"{spawnTable2.legacyAssetId} - {asset.GetOriginName()}";
+                        }
+                        else
+                        {
+                            sleekBox2.TooltipText = $"{spawnTable2.targetGuid:N} - {asset.GetOriginName()}";
                         }
                     }
                     else if (spawnTable2.legacyAssetId != 0)
@@ -714,13 +738,11 @@ public class MenuWorkshopSpawnsUI
         rootsBox.PositionOffset_Y = 40f;
         rootsBox.SizeOffset_X = 600f;
         rootsBox.SizeOffset_Y = 30f;
-        rootsBox.TooltipText = localization.format("Roots_Box_Tooltip");
         spawnsBox.AddChild(rootsBox);
         tablesBox = Glazier.Get().CreateBox();
         tablesBox.PositionOffset_Y = 80f;
         tablesBox.SizeOffset_X = 600f;
         tablesBox.SizeOffset_Y = 30f;
-        tablesBox.TooltipText = localization.format("Tables_Box_Tooltip");
         spawnsBox.AddChild(tablesBox);
         rawField = Glazier.Get().CreateStringField();
         rawField.PositionOffset_Y = 80f;
