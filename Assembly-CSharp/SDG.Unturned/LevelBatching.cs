@@ -425,13 +425,9 @@ internal class LevelBatching
                     staticBatchingMeshRenderers.Add(meshRenderer);
                 }
             }
-            else if (renderer is SkinnedMeshRenderer skinnedMeshRenderer)
+            else if (renderer is SkinnedMeshRenderer { sharedMesh: var sharedMesh } skinnedMeshRenderer && sharedMesh != null && CanBatchMesh(sharedMesh, renderer))
             {
-                Mesh sharedMesh = skinnedMeshRenderer.sharedMesh;
-                if (sharedMesh != null && CanBatchMesh(sharedMesh, renderer))
-                {
-                    AddSkinnedMesh(skinnedMeshRenderer);
-                }
+                AddSkinnedMesh(skinnedMeshRenderer);
             }
         }
     }

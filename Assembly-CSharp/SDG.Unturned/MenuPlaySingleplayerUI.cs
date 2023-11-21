@@ -315,7 +315,7 @@ public class MenuPlaySingleplayerUI
     {
         if (!string.IsNullOrEmpty(PlaySettings.singleplayerMap))
         {
-            MenuPlayServersUI.openForMap(PlaySettings.singleplayerMap);
+            MenuPlayServersUI.serverListFiltersUI.OpenForMap(PlaySettings.singleplayerMap);
             close();
         }
     }

@@ -293,7 +293,7 @@ public class MenuDashboardUI
                 item.content = item.content.Replace("[list]", "");
                 item.content = item.content.Replace("[/list]", "");
                 item.content = item.content.Replace("[*]", "- ");
-                item.content = item.content.Replace("[h1]", "<size=20>");
+                item.content = item.content.Replace("[h1]", "<size=14>");
                 item.content = item.content.Replace("[/h1]", "</size>");
                 item.content = item.content.TrimEnd('\r', '\n');
                 if (string.IsNullOrEmpty(item.content))
@@ -376,7 +376,7 @@ public class MenuDashboardUI
             sleekLabel.Text = newsItem.Title;
             sleekLabel.UseManualLayout = false;
             sleekLabel.TextAlignment = TextAnchor.UpperLeft;
-            sleekLabel.FontSize = ESleekFontSize.Title;
+            sleekLabel.FontSize = ESleekFontSize.Large;
             sleekBox.AddChild(sleekLabel);
             DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(newsItem.Date).ToLocalTime();
             ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
@@ -524,7 +524,7 @@ public class MenuDashboardUI
         ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
         sleekLabel.UseManualLayout = false;
         sleekLabel.Text = text;
-        sleekLabel.FontSize = ESleekFontSize.Title;
+        sleekLabel.FontSize = ESleekFontSize.Large;
         sleekLabel.TextAlignment = TextAnchor.UpperLeft;
         sleekElement.AddChild(sleekLabel);
         if (flag && featured.status != 0)

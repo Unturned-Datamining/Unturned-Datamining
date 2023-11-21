@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -128,9 +129,28 @@ public abstract class Asset
         return text;
     }
 
+    /// <summary>
+    /// Remove "Asset" suffix and convert to title case.
+    /// </summary>
+    public virtual string GetTypeFriendlyName()
+    {
+        string typeNameWithoutSuffix = GetTypeNameWithoutSuffix();
+        StringBuilder stringBuilder = new StringBuilder(32);
+        for (int i = 0; i < typeNameWithoutSuffix.Length; i++)
+        {
+            char c = typeNameWithoutSuffix[i];
+            if (i > 0 && char.IsUpper(c))
+            {
+                stringBuilder.Append(' ');
+            }
+            stringBuilder.Append(c);
+        }
+        return stringBuilder.ToString();
+    }
+
     public string getTypeNameAndIdDisplayString()
     {
-        return $"({GetTypeNameWithoutSuffix()}) {name} [{id}]";
+        return $"({GetTypeFriendlyName()}) {name} [{id}]";
     }
 
     public Asset()
@@ -204,7 +224,7 @@ public abstract class Asset
             }
             string text3 = masterBundleConfig.formatAssetPath(text);
             T val = masterBundleConfig.assetBundle.LoadAsset<T>(text3);
-            if ((UnityEngine.Object)val == (UnityEngine.Object)null)
+            if (val == null)
             {
                 Assets.reportError(this, "failed to load asset \"" + text3 + "\" from \"" + masterBundleConfig.assetBundleName + "\" as " + typeof(T).Name);
             }
@@ -216,7 +236,7 @@ public abstract class Asset
     protected T loadRequiredAsset<T>(Bundle fromBundle, string name) where T : UnityEngine.Object
     {
         T val = fromBundle.load<T>(name);
-        if ((UnityEngine.Object)val == (UnityEngine.Object)null)
+        if (val == null)
         {
             Assets.reportError(this, "missing '{0}' {1}", name, typeof(T).Name);
         }

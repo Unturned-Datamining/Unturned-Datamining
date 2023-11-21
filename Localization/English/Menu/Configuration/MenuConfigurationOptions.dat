@@ -28,9 +28,6 @@ ScreenshotSupersampling_Label Enable Screenshot Supersampling
 ScreenshotSupersampling_Tooltip Render screenshots with 2x supersampling to reduce aliasing.
 ScreenshotsWhileLoading_Label Show Screenshots on Loading Screen
 ScreenshotsWhileLoading_Tooltip Enable your own screenshots on the startup loading screen.
-Matchmaking_Show_All_Maps_Toggle_Label Matchmaking Show All Maps
-Min_Matchmaking_Players_Field_Label Matchmaking Min Players
-Max_Matchmaking_Ping_Field_Label Matchmaking Max Ping
 
 UseStaticCrosshair_Label Enable Custom Sized Crosshair
 UseStaticCrosshair_Tooltip Use custom crosshair size rather than size calculated from spread.

@@ -29,7 +29,16 @@ public class LightingManager : SteamCaller
         PerpetuallyActive
     }
 
-    public static readonly byte SAVEDATA_VERSION = 6;
+    /// <summary>
+    /// Version before named version constants were introduced. (2023-11-07)
+    /// </summary>
+    public const byte SAVEDATA_VERSION_INITIAL = 6;
+
+    public const byte SAVEDATA_VERSION_ADDED_DATE_COUNTER = 7;
+
+    private const byte SAVEDATA_VERSION_NEWEST = 7;
+
+    public static readonly byte SAVEDATA_VERSION = 7;
 
     public static DayNightUpdated onDayNightUpdated;
 
@@ -66,6 +75,8 @@ public class LightingManager : SteamCaller
     private static uint _cycle;
 
     private static uint _time;
+
+    private static long dateCounter;
 
     private static uint _offset;
 
@@ -116,7 +127,7 @@ public class LightingManager : SteamCaller
 
     private static float windDelay;
 
-    private static readonly ClientStaticMethod<uint, uint, uint, byte, byte, Guid, float, NetId> SendInitialLightingState = ClientStaticMethod<uint, uint, uint, byte, byte, Guid, float, NetId>.Get(ReceiveInitialLightingState);
+    private static readonly ClientStaticMethod<uint, uint, uint, byte, byte, Guid, float, NetId, int> SendInitialLightingState = ClientStaticMethod<uint, uint, uint, byte, byte, Guid, float, NetId, int>.Get(ReceiveInitialLightingState);
 
     private static readonly ClientStaticMethod<uint> SendLightingCycle = ClientStaticMethod<uint>.Get(ReceiveLightingCycle);
 
@@ -161,6 +172,13 @@ public class LightingManager : SteamCaller
             SendLightingOffset.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), offset);
         }
     }
+
+    /// <summary>
+    /// Number of in-game days this world has run.
+    /// Incremented each time night ends.
+    /// Saved between sessions.
+    /// </summary>
+    public static long DateCounter => dateCounter;
 
     public static uint offset => _offset;
 
@@ -343,15 +361,17 @@ public class LightingManager : SteamCaller
     [Obsolete]
     public void tellLighting(CSteamID steamID, uint serverTime, uint newCycle, uint newOffset, byte moon, byte wind, Guid activeWeatherGuid, float activeWeatherBlendAlpha)
     {
-        ReceiveInitialLightingState(serverTime, newCycle, newOffset, moon, wind, activeWeatherGuid, activeWeatherBlendAlpha, default(NetId));
+        ReceiveInitialLightingState(serverTime, newCycle, newOffset, moon, wind, activeWeatherGuid, activeWeatherBlendAlpha, default(NetId), 0);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellLighting")]
-    public static void ReceiveInitialLightingState(uint serverTime, uint newCycle, uint newOffset, byte moon, byte wind, Guid activeWeatherGuid, float activeWeatherBlendAlpha, NetId activeWeatherNetId)
+    public static void ReceiveInitialLightingState(uint serverTime, uint newCycle, uint newOffset, byte moon, byte wind, Guid activeWeatherGuid, float activeWeatherBlendAlpha, NetId activeWeatherNetId, int newDateCounter)
     {
         Provider.time = serverTime;
         _cycle = newCycle;
         _offset = newOffset;
+        dateCounter = newDateCounter;
+        UnturnedLog.info($"Received initial date counter: {dateCounter}");
         WeatherAssetBase asset = new AssetReference<WeatherAssetBase>(activeWeatherGuid).Find();
         LevelLighting.SetActiveWeatherAsset(asset, activeWeatherBlendAlpha, activeWeatherNetId);
         if (!Provider.isServer)
@@ -379,7 +399,7 @@ public class LightingManager : SteamCaller
         {
             LevelLighting.GetActiveWeatherNetState(out var asset, out var blendAlpha, out var netId);
             Guid arg = asset?.GUID ?? Guid.Empty;
-            SendInitialLightingState.Invoke(ENetReliability.Reliable, client.transportConnection, Provider.time, cycle, offset, LevelLighting.moon, MeasurementTool.angleToByte(LevelLighting.wind), arg, blendAlpha, netId);
+            SendInitialLightingState.Invoke(ENetReliability.Reliable, client.transportConnection, Provider.time, cycle, offset, LevelLighting.moon, MeasurementTool.angleToByte(LevelLighting.wind), arg, blendAlpha, netId, (int)dateCounter);
         }
     }
 
@@ -481,6 +501,8 @@ public class LightingManager : SteamCaller
         {
             isCycled = false;
             isFullMoon = false;
+            dateCounter++;
+            UnturnedLog.info($"Incremented date counter: {dateCounter}");
             broadcastDayNightUpdated(isDaytime: true);
         }
         if (!Dedicator.IsDedicatedServer)
@@ -733,6 +755,7 @@ public class LightingManager : SteamCaller
         {
             _cycle = 3600u;
             _offset = 0u;
+            dateCounter = 0L;
             if (Level.info.type == ELevelType.HORDE)
             {
                 _time = (uint)((LevelLighting.bias + (1f - LevelLighting.bias) / 2f) * (float)cycle);
@@ -757,6 +780,7 @@ public class LightingManager : SteamCaller
         _cycle = 3600u;
         _time = 0u;
         _offset = 0u;
+        dateCounter = 0L;
         _isFullMoon = false;
         isCycled = false;
         broadcastDayNightUpdated(isDaytime: true);
@@ -850,6 +874,19 @@ public class LightingManager : SteamCaller
                     }
                 }
                 _offset = Provider.time - time;
+                if (b >= 7)
+                {
+                    dateCounter = river.readInt64();
+                    if (dateCounter < 0)
+                    {
+                        dateCounter = 0L;
+                    }
+                    UnturnedLog.info($"Loaded date counter: {dateCounter}");
+                }
+                else
+                {
+                    dateCounter = 0L;
+                }
                 flag = false;
             }
             river.closeRiver();
@@ -858,13 +895,14 @@ public class LightingManager : SteamCaller
         {
             _time = (uint)((float)cycle * LevelLighting.transition);
             _offset = Provider.time - time;
+            dateCounter = 0L;
         }
     }
 
     public static void save()
     {
         River river = LevelSavedata.openRiver("/Lighting.dat", isReading: false);
-        river.writeByte(SAVEDATA_VERSION);
+        river.writeByte(7);
         river.writeUInt32(cycle);
         river.writeUInt32(time);
         river.writeByte((byte)scheduledWeatherStage);
@@ -872,6 +910,7 @@ public class LightingManager : SteamCaller
         river.writeSingle(scheduledWeatherActiveTimer);
         river.writeGUID(scheduledWeatherRef.GUID);
         river.writeSingle(LevelLighting.GetActiveWeatherGlobalBlendAlpha());
+        river.writeInt64(dateCounter);
         river.closeRiver();
     }
 }

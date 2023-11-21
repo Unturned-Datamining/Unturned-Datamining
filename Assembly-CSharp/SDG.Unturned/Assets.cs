@@ -392,7 +392,7 @@ public class Assets : MonoBehaviour
         {
             string text = masterBundleConfig.formatAssetPath(reference.path);
             T val = masterBundleConfig.assetBundle.LoadAsset<T>(text);
-            if ((UnityEngine.Object)val == (UnityEngine.Object)null)
+            if (val == null)
             {
                 UnturnedLog.warn("Failed to load content reference '{0}' from master bundle '{1}' as {2}", text, reference.name, typeof(T).Name);
             }
@@ -553,7 +553,7 @@ public class Assets : MonoBehaviour
                 assetMapping.legacyAssetsTable[assetCategory].Add(asset.id, asset);
             }
         }
-        else if (assetCategory != 0 && (assetCategory != EAssetType.ITEM || !(asset is ItemAsset itemAsset) || !itemAsset.isPro || itemAsset.id != 0))
+        else if (assetCategory != 0 && (assetCategory != EAssetType.ITEM || !(asset is ItemAsset { isPro: not false, id: 0 })))
         {
             if (overrideExistingID)
             {
@@ -1013,7 +1013,7 @@ public class Assets : MonoBehaviour
                     spawnAsset = asset as SpawnAsset;
                     if (spawnAsset == null)
                     {
-                        reportError(item, $"root {insertRoot.targetGuid} found as {asset.GetTypeNameWithoutSuffix()} {asset.FriendlyName} (not a spawn table)");
+                        reportError(item, $"root {insertRoot.targetGuid} found as {asset.GetTypeFriendlyName()} {asset.FriendlyName} (not a spawn table)");
                         continue;
                     }
                 }
@@ -1498,6 +1498,7 @@ public class Assets : MonoBehaviour
         legacyPerServerOrigin.name = "Per-Server (Legacy)";
         assetOrigins.Add(legacyPerServerOrigin);
         yield return null;
+        ResourceHash.Initialize();
         if ((bool)shouldLoadAnyAssets)
         {
             AddSearchLocation(Path.Combine(ReadWrite.PATH, "Bundles"), coreOrigin);
@@ -1516,7 +1517,6 @@ public class Assets : MonoBehaviour
             {
                 Provider.initAutoSubscribeMaps();
             }
-            ResourceHash.Initialize();
             yield return LoadAssetsFromWorkerThread();
         }
         LoadingUI.SetLoadingText("Loading_Blueprints");

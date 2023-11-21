@@ -183,11 +183,14 @@ public class GroupManager : SteamCaller
         uint timer_Leave_Group = Provider.modeConfigData.Gameplay.Timer_Leave_Group;
         if (timer_Leave_Group != 0)
         {
-            alertGroupmatesTimer(player, timer_Leave_Group);
-            QueuedGroupExit queuedGroupExit = new QueuedGroupExit();
-            queuedGroupExit.playerID = player.channel.owner.playerID.steamID;
-            queuedGroupExit.remainingSeconds = timer_Leave_Group;
-            queuedExits.Add(queuedGroupExit);
+            if (!isPlayerInGroupExitQueue(player))
+            {
+                alertGroupmatesTimer(player, timer_Leave_Group);
+                QueuedGroupExit queuedGroupExit = new QueuedGroupExit();
+                queuedGroupExit.playerID = player.channel.owner.playerID.steamID;
+                queuedGroupExit.remainingSeconds = timer_Leave_Group;
+                queuedExits.Add(queuedGroupExit);
+            }
         }
         else
         {

@@ -1474,7 +1474,7 @@ public class PlayerLifeUI
         chatField.OnTextEscaped += OnChatFieldEscaped;
         container.AddChild(chatField);
         chatModeButton = new SleekButtonState();
-        chatModeButton.useContentTooltip = true;
+        chatModeButton.UseContentTooltip = true;
         chatModeButton.setContent(new GUIContent(localization.format("Mode_Global"), localization.format("Mode_Global_Tooltip", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.global))), new GUIContent(localization.format("Mode_Local"), localization.format("Mode_Local_Tooltip", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.local))), new GUIContent(localization.format("Mode_Group"), localization.format("Mode_Group_Tooltip", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.group))));
         chatModeButton.PositionOffset_X = -100f;
         chatModeButton.SizeOffset_X = 100f;

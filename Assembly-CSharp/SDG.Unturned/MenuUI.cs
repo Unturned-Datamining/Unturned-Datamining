@@ -269,10 +269,10 @@ public class MenuUI : MonoBehaviour
         MenuDashboardUI.close();
         MenuPlayUI.close();
         MenuPlaySingleplayerUI.close();
-        MenuPlayMatchmakingUI.close();
         MenuPlayLobbiesUI.close();
         MenuPlayConnectUI.close();
-        MenuPlayServersUI.close();
+        MenuPlayServersUI.serverListFiltersUI.close();
+        MenuPlayUI.serverListUI.close();
         MenuPlayServerInfoUI.close();
         MenuServerPasswordUI.close();
         MenuPlayConfigUI.close();
@@ -376,22 +376,23 @@ public class MenuUI : MonoBehaviour
                     MenuPlayConnectUI.open();
                     break;
                 case MenuPlayServerInfoUI.EServerInfoOpenContext.SERVERS:
-                    MenuPlayServersUI.open();
-                    break;
-                case MenuPlayServerInfoUI.EServerInfoOpenContext.MATCHMAKING:
-                    MenuPlayMatchmakingUI.open();
+                    MenuPlayUI.serverListUI.open();
                     break;
                 default:
                     UnturnedLog.info("Unknown server info open context: {0}", MenuPlayServerInfoUI.openContext);
                     break;
                 }
             }
-            else if (MenuPlayConnectUI.active || MenuPlayServersUI.active || MenuPlaySingleplayerUI.active || MenuPlayMatchmakingUI.active || MenuPlayLobbiesUI.active)
+            else if (MenuPlayServersUI.serverListFiltersUI.active)
+            {
+                MenuPlayServersUI.serverListFiltersUI.close();
+                MenuPlayUI.serverListUI.open();
+            }
+            else if (MenuPlayConnectUI.active || MenuPlayUI.serverListUI.active || MenuPlaySingleplayerUI.active || MenuPlayLobbiesUI.active)
             {
                 MenuPlayConnectUI.close();
-                MenuPlayServersUI.close();
+                MenuPlayUI.serverListUI.close();
                 MenuPlaySingleplayerUI.close();
-                MenuPlayMatchmakingUI.close();
                 MenuPlayLobbiesUI.close();
                 MenuPlayUI.open();
             }
@@ -534,7 +535,7 @@ public class MenuUI : MonoBehaviour
         MenuSurvivorsClothingBoxUI.update();
         tickInput();
         window.showCursor = true;
-        if (MenuPlayUI.active || MenuPlayConnectUI.active || MenuPlayServersUI.active || MenuPlayServerInfoUI.active || MenuServerPasswordUI.isActive || MenuPlaySingleplayerUI.active || MenuPlayMatchmakingUI.active || MenuPlayLobbiesUI.active || MenuPlayConfigUI.active)
+        if (MenuPlayUI.active || MenuPlayConnectUI.active || MenuPlayUI.serverListUI.active || MenuPlayServersUI.serverListFiltersUI.active || MenuPlayServerInfoUI.active || MenuServerPasswordUI.isActive || MenuPlaySingleplayerUI.active || MenuPlayLobbiesUI.active || MenuPlayConfigUI.active)
         {
             target = play;
         }

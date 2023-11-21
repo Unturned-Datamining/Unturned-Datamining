@@ -92,6 +92,26 @@ public class Blueprint
     /// </summary>
     public INPCReward[] questRewards => questRewardsList.rewards;
 
+    internal bool IsOutputFreeformBuildable
+    {
+        get
+        {
+            if (_outputs == null || _outputs.Length < 1)
+            {
+                return false;
+            }
+            BlueprintOutput[] array = _outputs;
+            foreach (BlueprintOutput blueprintOutput in array)
+            {
+                if (Assets.find(EAssetType.ITEM, blueprintOutput.id) is ItemBarricadeAsset { build: EBuild.FREEFORM })
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
     public EffectAsset FindBuildEffectAsset()
     {
         return Assets.FindEffectAssetByGuidOrLegacyId(_buildEffectGuid, _build);

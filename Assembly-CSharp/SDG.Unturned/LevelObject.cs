@@ -308,7 +308,7 @@ public class LevelObject
         INPCCondition[] conditions = asset.conditions;
         foreach (INPCCondition iNPCCondition in conditions)
         {
-            if (iNPCCondition is NPCTimeOfDayCondition || iNPCCondition is NPCIsFullMoonCondition)
+            if (iNPCCondition is NPCTimeOfDayCondition || iNPCCondition is NPCIsFullMoonCondition || iNPCCondition is NPCDateCounterCondition)
             {
                 flag = true;
             }
@@ -320,13 +320,13 @@ public class LevelObject
         conditions = asset.conditions;
         foreach (INPCCondition iNPCCondition2 in conditions)
         {
-            if (iNPCCondition2 is NPCWeatherBlendAlphaCondition nPCWeatherBlendAlphaCondition)
+            if (iNPCCondition2 is NPCWeatherBlendAlphaCondition { weather: var weather })
             {
-                WeatherEventListenerManager.AddBlendAlphaListener(nPCWeatherBlendAlphaCondition.weather.GUID, OnWeatherBlendAlphaChanged);
+                WeatherEventListenerManager.AddBlendAlphaListener(weather.GUID, OnWeatherBlendAlphaChanged);
             }
-            else if (iNPCCondition2 is NPCWeatherStatusCondition nPCWeatherStatusCondition)
+            else if (iNPCCondition2 is NPCWeatherStatusCondition { weather: var weather2 })
             {
-                WeatherEventListenerManager.AddStatusListener(nPCWeatherStatusCondition.weather.GUID, OnWeatherStatusChanged);
+                WeatherEventListenerManager.AddStatusListener(weather2.GUID, OnWeatherStatusChanged);
             }
         }
         if (flag)

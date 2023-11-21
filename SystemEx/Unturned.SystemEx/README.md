@@ -13,3 +13,4 @@
 - [ListEx.cs](ListEx.cs)
 - [PathEx.cs](PathEx.cs)
 - [StringExtension.cs](StringExtension.cs)
+- [TypeEx.cs](TypeEx.cs)

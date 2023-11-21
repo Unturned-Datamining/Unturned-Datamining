@@ -351,7 +351,7 @@ public class EditorSpawnsItemsUI
     {
         if (EditorSpawns.selectedItem < LevelItems.tables.Count && selectedTier < LevelItems.tables[EditorSpawns.selectedItem].tiers.Count)
         {
-            if (Assets.find(EAssetType.ITEM, itemIDField.Value) is ItemAsset itemAsset && !itemAsset.isPro)
+            if (Assets.find(EAssetType.ITEM, itemIDField.Value) is ItemAsset { isPro: false })
             {
                 LevelItems.tables[EditorSpawns.selectedItem].addItem(selectedTier, itemIDField.Value);
                 updateSelection();

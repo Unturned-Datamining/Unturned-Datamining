@@ -48,7 +48,7 @@ public class CommandGive : Command
             CommandWindow.LogError(localization.format("InvalidNumberErrorText", componentsFromSerial[2]));
             return;
         }
-        string text = componentsFromSerial[(!flag) ? 1 : 0];
+        string text = componentsFromSerial[(!flag) ? 1u : 0u];
         ushort result3;
         if (Guid.TryParse(text, out var result2))
         {

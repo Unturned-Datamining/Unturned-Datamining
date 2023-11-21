@@ -143,5 +143,9 @@ public enum EPlayerMessage
     /// <summary>
     /// Popup when structure is blocked by something named we can format into the message.
     /// </summary>
-    PLACEMENT_OBSTRUCTED_BY
+    PLACEMENT_OBSTRUCTED_BY,
+    /// <summary>
+    /// Notice that freeform buildables are blocked by <see cref="F:SDG.Unturned.GameplayConfigData.Allow_Freeform_Buildables">Allow_Freeform_Buildables</see>.
+    /// </summary>
+    FREEFORM_BUILDABLE_NOT_ALLOWED
 }

@@ -21,6 +21,12 @@ public class ItemGlassesAsset : ItemGearAsset
 
     public bool isBlindfold { get; protected set; }
 
+    /// <summary>
+    /// If true, NVGs work in third-person, not just first-person.
+    /// Defaults to false.
+    /// </summary>
+    public bool isNightvisionAllowedInThirdPerson { get; protected set; }
+
     public override byte[] getState(EItemOrigin origin)
     {
         if (vision != 0)
@@ -62,11 +68,21 @@ public class ItemGlassesAsset : ItemGearAsset
                 nightvisionColor = data.LegacyParseColor32RGB("Nightvision_Color", LevelLighting.NIGHTVISION_MILITARY);
                 nightvisionFogIntensity = data.ParseFloat("Nightvision_Fog_Intensity", 0.25f);
             }
+            isNightvisionAllowedInThirdPerson = data.ParseBool("Nightvision_Allowed_In_ThirdPerson");
         }
         else
         {
             _vision = ELightingVision.NONE;
         }
         isBlindfold = data.ContainsKey("Blindfold");
+    }
+
+    protected override bool GetDefaultTakesPriorityOverCosmetic()
+    {
+        if (vision == ELightingVision.NONE)
+        {
+            return !isBlindfold;
+        }
+        return false;
     }
 }

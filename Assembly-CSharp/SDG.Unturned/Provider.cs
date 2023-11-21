@@ -2457,6 +2457,10 @@ public class Provider : MonoBehaviour
                 CommandWindow.LogError("Fatal error: unable to load fallback map");
             }
         }
+        if (level != null)
+        {
+            map = level.name;
+        }
         List<PublishedFileId_t> list = null;
         if (_serverWorkshopFileIDs != null)
         {
@@ -3788,6 +3792,7 @@ public class Provider : MonoBehaviour
             writer.WriteBit(modeConfigData.Gameplay.Can_Suicide);
             writer.WriteBit(modeConfigData.Gameplay.Friendly_Fire);
             writer.WriteBit(modeConfigData.Gameplay.Bypass_Buildable_Mobility);
+            writer.WriteBit(modeConfigData.Gameplay.Allow_Freeform_Buildables);
             writer.WriteUInt16((ushort)modeConfigData.Gameplay.Timer_Exit);
             writer.WriteUInt16((ushort)modeConfigData.Gameplay.Timer_Respawn);
             writer.WriteUInt16((ushort)modeConfigData.Gameplay.Timer_Home);

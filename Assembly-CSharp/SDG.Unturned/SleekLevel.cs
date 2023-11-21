@@ -1,3 +1,5 @@
+using SDG.Provider;
+using Steamworks;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -66,20 +68,15 @@ public class SleekLevel : SleekWrapper
             button.OnClicked += onClickedButton;
         }
         AddChild(button);
-        string text = level.path + "/Icon.png";
-        if (ReadWrite.fileExists(text, useCloud: false, usePath: false))
-        {
-            icon = Glazier.Get().CreateImage();
-            icon.PositionOffset_X = 10f;
-            icon.PositionOffset_Y = 10f;
-            icon.SizeOffset_X = -20f;
-            icon.SizeOffset_Y = -20f;
-            icon.SizeScale_X = 1f;
-            icon.SizeScale_Y = 1f;
-            icon.Texture = ReadWrite.readTextureFromFile(text);
-            icon.ShouldDestroyTexture = true;
-            button.AddChild(icon);
-        }
+        icon = Glazier.Get().CreateImage();
+        icon.PositionOffset_X = 10f;
+        icon.PositionOffset_Y = 10f;
+        icon.SizeOffset_X = -20f;
+        icon.SizeOffset_Y = -20f;
+        icon.SizeScale_X = 1f;
+        icon.SizeScale_Y = 1f;
+        icon.Texture = LevelIconCache.GetOrLoadIcon(level);
+        button.AddChild(icon);
         nameLabel = Glazier.Get().CreateLabel();
         nameLabel.PositionOffset_Y = 10f;
         nameLabel.SizeScale_X = 1f;
@@ -157,6 +154,24 @@ public class SleekLevel : SleekWrapper
             sleekImage.TintColor = ESleekTint.FOREGROUND;
             button.AddChild(sleekImage);
             bundle.unload();
+        }
+        if (isEditor)
+        {
+            if (level.isFromWorkshop)
+            {
+                if (TempSteamworksWorkshop.getCachedDetails(new PublishedFileId_t(level.publishedFileId), out var cachedDetails))
+                {
+                    button.TooltipText = cachedDetails.GetTitle();
+                }
+                else
+                {
+                    button.TooltipText = level.publishedFileId.ToString();
+                }
+            }
+            else
+            {
+                button.TooltipText = level.path;
+            }
         }
         hasCreatedStatusLabel = false;
         LiveConfig.OnRefreshed -= OnLiveConfigRefreshed;

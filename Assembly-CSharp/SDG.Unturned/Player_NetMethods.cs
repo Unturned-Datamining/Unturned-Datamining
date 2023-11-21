@@ -187,6 +187,38 @@ public static class Player_NetMethods
         writer.WriteUInt32(newFlags);
     }
 
+    [NetInvokableGeneratedMethod("ReceiveAdminUsageFlags", ENetInvokableGeneratedMethodPurpose.Read)]
+    public static void ReceiveAdminUsageFlags_Read(in ServerInvocationContext context)
+    {
+        NetPakReader reader = context.reader;
+        if (!reader.ReadNetId(out var value))
+        {
+            return;
+        }
+        object obj = NetIdRegistry.Get(value);
+        if (obj == null)
+        {
+            return;
+        }
+        Player player = obj as Player;
+        if (!(player == null))
+        {
+            if (!context.IsOwnerOf(player.channel))
+            {
+                context.Kick($"not owner of {player}");
+                return;
+            }
+            reader.ReadUInt32(out var value2);
+            player.ReceiveAdminUsageFlags(in context, value2);
+        }
+    }
+
+    [NetInvokableGeneratedMethod("ReceiveAdminUsageFlags", ENetInvokableGeneratedMethodPurpose.Write)]
+    public static void ReceiveAdminUsageFlags_Write(NetPakWriter writer, uint newFlagsBitmask)
+    {
+        writer.WriteUInt32(newFlagsBitmask);
+    }
+
     [NetInvokableGeneratedMethod("ReceiveBattlEyeLogsRequest", ENetInvokableGeneratedMethodPurpose.Read)]
     public static void ReceiveBattlEyeLogsRequest_Read(in ServerInvocationContext context)
     {

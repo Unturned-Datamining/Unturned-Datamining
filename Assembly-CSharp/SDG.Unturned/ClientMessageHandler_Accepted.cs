@@ -103,6 +103,7 @@ internal static class ClientMessageHandler_Accepted
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Can_Suicide);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Friendly_Fire);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Bypass_Buildable_Mobility);
+        reader.ReadBit(out Provider._modeConfigData.Gameplay.Allow_Freeform_Buildables);
         reader.ReadUInt16(out var value4);
         Provider._modeConfigData.Gameplay.Timer_Exit = MathfEx.Min(value4, 60u);
         reader.ReadUInt16(out var value5);

@@ -177,7 +177,7 @@ public class LevelItems
                     for (byte b7 = 0; b7 < b6; b7++)
                     {
                         ushort num2 = block.readUInt16();
-                        if (Assets.find(EAssetType.ITEM, num2) is ItemAsset itemAsset && !itemAsset.isPro)
+                        if (Assets.find(EAssetType.ITEM, num2) is ItemAsset { isPro: false })
                         {
                             list2.Add(new ItemSpawn(num2));
                         }

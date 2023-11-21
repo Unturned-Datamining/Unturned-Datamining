@@ -2,162 +2,221 @@ GUID 0b3ca9ed9d6441df815d2ea4feb63cb0
 Type Spawn
 ID 956
 
-Tables 43
-
-// Guns
-
-Table_0_Asset_ID 1362
-Table_0_Weight 100
-Table_1_Asset_ID 1484
-Table_1_Weight 100
-Table_2_Asset_ID 112
-Table_2_Weight 100
-Table_3_Asset_ID 357
-Table_3_Weight 100
-Table_4_Asset_ID 1369
-Table_4_Weight 100
-Table_5_Asset_ID 1379
-Table_5_Weight 100
-Table_6_Asset_ID 346
-Table_6_Weight 100
-Table_7_Asset_ID 488
-Table_7_Weight 100
-Table_8_Asset_ID 1480
-Table_8_Weight 100
-Table_9_Asset_ID 132
-Table_9_Weight 100
-Table_10_Asset_ID 4
-Table_10_Weight 100
-Table_11_Asset_ID 1382
-Table_11_Weight 100
-Table_12_Asset_ID 1481
-Table_12_Weight 100
-Table_13_Asset_ID 1364
-Table_13_Weight 100
-Table_14_Asset_ID 1375
-Table_14_Weight 100
-Table_15_Asset_ID 297
-Table_15_Weight 100
-Table_16_Asset_ID 1037
-Table_16_Weight 100
-Table_17_Asset_ID 116
-Table_17_Weight 100
-Table_18_Asset_ID 519
-Table_18_Weight 100
-Table_19_Asset_ID 363
-Table_19_Weight 100
-Table_20_Asset_ID 1000
-Table_20_Weight 100
-Table_21_Asset_ID 1477
-Table_21_Weight 100
-Table_22_Asset_ID 1377
-Table_22_Weight 100
-Table_23_Asset_ID 126
-Table_23_Weight 100
-Table_24_Asset_ID 1024
-Table_24_Weight 100
-Table_25_Asset_ID 1018
-Table_25_Weight 100
-Table_26_Asset_ID 1447
-Table_26_Weight 100
-Table_27_Asset_ID 129
-Table_27_Weight 100
-Table_28_Asset_ID 18
-Table_28_Weight 100
-Table_29_Asset_ID 1027
-Table_29_Weight 100
-Table_30_Asset_ID 1366
-Table_30_Weight 100
-Table_31_Asset_ID 1041
-Table_31_Weight 100
-Table_32_Asset_ID 122
-Table_32_Weight 100
-
-// Barrels
-
-Table_33_Asset_ID 7
-Table_33_Weight 200
-Table_34_Asset_ID 144
-Table_34_Weight 200
-
-// Sights
-
-Table_35_Asset_ID 153
-Table_35_Weight 150
-Table_36_Asset_ID 21
-Table_36_Weight 150
-Table_37_Asset_ID 296
-Table_37_Weight 150
-
-// Tacticals
-
-Table_38_Asset_ID 1007
-Table_38_Weight 100
-Table_39_Asset_ID 1438
-Table_39_Weight 100
-Table_40_Asset_ID 1008
-Table_40_Weight 100
-Table_41_Asset_ID 151
-Table_41_Weight 100
-Table_42_Asset_ID 152
-Table_42_Weight 100
-
-// Magazines
-// Decided not to include because most of the time you'll get magazines for guns you don't have
-
-// Table_XX_Asset_ID 347
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 1209
-// Table_XX_Weight 200
-// Table_XX_Asset_ID 1485
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 1371
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 1381
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 489
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 133
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 1384
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 1483
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 1365
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 298
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 1003
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 6
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 17
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 1479
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 127
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 1026
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 123
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 125
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 1020
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 1449
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 113
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 130
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 1490
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 20
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 1029
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 1368
-// Table_XX_Weight 100
-// Table_XX_Asset_ID 1042
-// Table_XX_Weight 100
+Tables
+[
+	{
+		// Ranger Suppressor (Barrel Item)
+		LegacyAssetId 144
+		Weight 200
+	}
+	{
+		// Military Suppressor (Barrel Item)
+		LegacyAssetId 7
+		Weight 200
+	}
+	{
+		// 16x Scope (Sight Item)
+		LegacyAssetId 296
+		Weight 150
+	}
+	{
+		// 8x Scope (Sight Item)
+		LegacyAssetId 21
+		Weight 150
+	}
+	{
+		// 7x Scope (Sight Item)
+		LegacyAssetId 153
+		Weight 150
+	}
+	{
+		// Augewehr (Gun Item)
+		LegacyAssetId 1362
+		Weight 100
+	}
+	{
+		// Nykorev (Gun Item)
+		LegacyAssetId 126
+		Weight 100
+	}
+	{
+		// Peacemaker (Gun Item)
+		LegacyAssetId 1024
+		Weight 100
+	}
+	{
+		// Sabertooth (Gun Item)
+		LegacyAssetId 1018
+		Weight 100
+	}
+	{
+		// Scalar (Gun Item)
+		LegacyAssetId 1447
+		Weight 100
+	}
+	{
+		// Snayperskya (Gun Item)
+		LegacyAssetId 129
+		Weight 100
+	}
+	{
+		// Timberwolf (Gun Item)
+		LegacyAssetId 18
+		Weight 100
+	}
+	{
+		// Yuri (Gun Item)
+		LegacyAssetId 1041
+		Weight 100
+	}
+	{
+		// Vonya (Gun Item)
+		LegacyAssetId 1366
+		Weight 100
+	}
+	{
+		// Nightraider (Gun Item)
+		LegacyAssetId 1377
+		Weight 100
+	}
+	{
+		// Zubeknakov (Gun Item)
+		LegacyAssetId 122
+		Weight 100
+	}
+	{
+		// Adaptive Chambering (Tactical Item)
+		LegacyAssetId 1007
+		Weight 100
+	}
+	{
+		// Bayonet (Tactical Item)
+		LegacyAssetId 1438
+		Weight 100
+	}
+	{
+		// Rangefinder (Tactical Item)
+		LegacyAssetId 1008
+		Weight 100
+	}
+	{
+		// Viper (Gun Item)
+		LegacyAssetId 1027
+		Weight 100
+	}
+	{
+		// Tactical Laser (Tactical Item)
+		LegacyAssetId 151
+		Weight 100
+	}
+	{
+		// Maschinengewehr (Gun Item)
+		LegacyAssetId 1477
+		Weight 100
+	}
+	{
+		// Maplestrike (Gun Item)
+		LegacyAssetId 363
+		Weight 100
+	}
+	{
+		// Devil's Bane (Gun Item)
+		LegacyAssetId 1484
+		Weight 100
+	}
+	{
+		// Bluntforce (Gun Item)
+		LegacyAssetId 112
+		Weight 100
+	}
+	{
+		// Compound Bow (Gun Item)
+		LegacyAssetId 357
+		Weight 100
+	}
+	{
+		// Bulldog (Gun Item)
+		LegacyAssetId 1369
+		Weight 100
+	}
+	{
+		// Calling Card (Gun Item)
+		LegacyAssetId 1379
+		Weight 100
+	}
+	{
+		// Crossbow (Gun Item)
+		LegacyAssetId 346
+		Weight 100
+	}
+	{
+		// Desert Falcon (Gun Item)
+		LegacyAssetId 488
+		Weight 100
+	}
+	{
+		// Determinator (Gun Item)
+		LegacyAssetId 1480
+		Weight 100
+	}
+	{
+		// Matamorez (Gun Item)
+		LegacyAssetId 1000
+		Weight 100
+	}
+	{
+		// Dragonfang (Gun Item)
+		LegacyAssetId 132
+		Weight 100
+	}
+	{
+		// Ekho (Gun Item)
+		LegacyAssetId 1382
+		Weight 100
+	}
+	{
+		// Empire (Gun Item)
+		LegacyAssetId 1481
+		Weight 100
+	}
+	{
+		// Hell's Fury (Gun Item)
+		LegacyAssetId 1364
+		Weight 100
+	}
+	{
+		// Fusilaut (Gun Item)
+		LegacyAssetId 1375
+		Weight 100
+	}
+	{
+		// Grizzly (Gun Item)
+		LegacyAssetId 297
+		Weight 100
+	}
+	{
+		// Heartbreaker (Gun Item)
+		LegacyAssetId 1037
+		Weight 100
+	}
+	{
+		// PDW (Gun Item)
+		LegacyAssetId 116
+		Weight 100
+	}
+	{
+		// Rocket Launcher (Gun Item)
+		LegacyAssetId 519
+		Weight 100
+	}
+	{
+		// Eaglefire (Gun Item)
+		LegacyAssetId 4
+		Weight 100
+	}
+	{
+		// Tactical Light (Tactical Item)
+		LegacyAssetId 152
+		Weight 100
+	}
+]

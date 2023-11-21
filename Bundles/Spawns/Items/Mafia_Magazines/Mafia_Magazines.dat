@@ -2,6 +2,21 @@ GUID 67638a913aee4790ad359a0c85ff008d
 Type Spawn
 ID 633
 
-Tables 1
-Table_0_Asset_ID 1381
-Table_0_Weight 100
+Tables
+[
+	{
+		// Calling Card Magazine (Magazine Item)
+		LegacyAssetId 1381
+		Weight 100
+	}
+	{
+		// Maschinengewehr Magazine (Magazine Item)
+		Guid 78cb493018b8451e8ea7664434483e53
+		Weight 20
+	}
+	{
+		// Luger Magazine (Magazine Item)
+		Guid 29e816ce506b4763a5ff6f29a514ceb7
+		Weight 20
+	}
+]

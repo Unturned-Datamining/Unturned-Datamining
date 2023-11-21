@@ -438,7 +438,7 @@ public class MenuConfigurationControlsUI
         sensitivityScalingModeButton.SizeOffset_Y = 30f;
         sensitivityScalingModeButton.AddLabel(localization.format("SensitivityScalingMode_Label"), ESleekSide.RIGHT);
         sensitivityScalingModeButton.onSwappedState = OnSwappedSensitivityScalingMode;
-        sensitivityScalingModeButton.useContentTooltip = true;
+        sensitivityScalingModeButton.UseContentTooltip = true;
         controlsBox.AddChild(sensitivityScalingModeButton);
         num += 40;
         projectionRatioCoefficientField = Glazier.Get().CreateFloat32Field();

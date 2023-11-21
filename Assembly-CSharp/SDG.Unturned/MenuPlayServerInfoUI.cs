@@ -15,8 +15,7 @@ public class MenuPlayServerInfoUI
     public enum EServerInfoOpenContext
     {
         CONNECT,
-        SERVERS,
-        MATCHMAKING
+        SERVERS
     }
 
     private class ServerInfoViewWorkshopButton : SleekWrapper
@@ -418,10 +417,7 @@ public class MenuPlayServerInfoUI
             MenuPlayConnectUI.open();
             break;
         case EServerInfoOpenContext.SERVERS:
-            MenuPlayServersUI.open();
-            break;
-        case EServerInfoOpenContext.MATCHMAKING:
-            MenuPlayMatchmakingUI.open();
+            MenuPlayUI.serverListUI.open();
             break;
         }
         close();

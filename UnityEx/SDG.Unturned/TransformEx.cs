@@ -79,7 +79,7 @@ public static class TransformEx
     public static void DestroyComponentIfExists<T>(this Transform transform) where T : Component
     {
         T component = transform.GetComponent<T>();
-        if ((UnityEngine.Object)component != (UnityEngine.Object)null)
+        if (component != null)
         {
             UnityEngine.Object.Destroy(component);
         }

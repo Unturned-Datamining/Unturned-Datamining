@@ -191,6 +191,7 @@ Allow_Shoulder_Camera Allow Shoulder Camera
 Can_Suicide Can Suicide
 Friendly_Fire Friendly Fire
 Bypass_Buildable_Mobility Sentry Guns & Beds On Vehicles
+Allow_Freeform_Buildables Allow Freeform Buildables
 
 Timer_Exit Exit Timer
 Timer_Respawn Respawn Timer

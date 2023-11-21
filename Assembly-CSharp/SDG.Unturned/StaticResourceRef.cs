@@ -20,7 +20,7 @@ public class StaticResourceRef<T> where T : Object
         {
             needsLoad = false;
             asset = Resources.Load<T>(path);
-            if ((Object)asset == (Object)null)
+            if (asset == null)
             {
                 UnturnedLog.error("Missing resource {0} ({1})", path, typeof(T));
             }

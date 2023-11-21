@@ -953,7 +953,7 @@ public class PlayerEquipment : PlayerCaller
     {
         if (hasVision && base.player.clothing.glassesState.Length == 1)
         {
-            base.player.clothing.glassesState[0] = (byte)((base.player.clothing.glassesState[0] == 0) ? 1u : 0u);
+            base.player.clothing.glassesState[0] = ((base.player.clothing.glassesState[0] == 0) ? ((byte)1) : ((byte)0));
             updateVision();
         }
     }
@@ -1043,27 +1043,24 @@ public class PlayerEquipment : PlayerCaller
             return;
         }
         int value = 0;
-        ushort skin = 0;
+        ushort id = 0;
         ushort num = 0;
         if (base.channel.owner.skinItems != null && base.channel.owner.itemSkins != null && base.channel.owner.itemSkins.TryGetValue(itemAsset.sharedSkinLookupID, out value))
         {
-            skin = Provider.provider.economyService.getInventorySkinID(value);
+            id = Provider.provider.economyService.getInventorySkinID(value);
             num = Provider.provider.economyService.getInventoryMythicID(value);
             if (num == 0)
             {
                 num = base.channel.owner.getParticleEffectForItemDef(value);
             }
         }
-        GetStatTrackerValueHandler statTrackerCallback = null;
-        if (slot == 0)
+        SkinAsset skinAsset = Assets.find(EAssetType.SKIN, id) as SkinAsset;
+        if (slot != 0)
         {
-            statTrackerCallback = getSlot0StatTrackerValue;
+            _ = slot;
         }
-        else if (slot == 1)
-        {
-            statTrackerCallback = getSlot1StatTrackerValue;
-        }
-        _characterModel = ItemTool.getItem(itemID, skin, 100, state, viewmodel: false, itemAsset, tempCharacterMesh, out tempCharacterMaterial, statTrackerCallback);
+        GameObject prefabOverride = ((itemAsset.equipablePrefab != null) ? itemAsset.equipablePrefab : itemAsset.item);
+        _characterModel = ItemTool.getItem(100, state, viewmodel: false, itemAsset, skinAsset, tempCharacterMesh, out tempCharacterMaterial, getUseableStatTrackerValue, prefabOverride);
         fixStatTrackerHookScale(_characterModel);
         syncStatTrackTrackerVisibility(_characterModel);
         if (itemAsset.ShouldAttachEquippedModelToLeftHand)
@@ -2205,7 +2202,12 @@ public class PlayerEquipment : PlayerCaller
                 base.player.disableHeadlamp();
                 if (base.channel.IsLocalPlayer)
                 {
-                    LevelLighting.vision = ((base.player.look.perspective == EPlayerPerspective.FIRST) ? base.player.clothing.glassesAsset.vision : ELightingVision.NONE);
+                    ELightingVision vision = base.player.clothing.glassesAsset.vision;
+                    if (base.player.look.perspective != 0 && !base.player.clothing.glassesAsset.isNightvisionAllowedInThirdPerson)
+                    {
+                        vision = ELightingVision.NONE;
+                    }
+                    LevelLighting.vision = vision;
                     LevelLighting.nightvisionColor = base.player.clothing.glassesAsset.nightvisionColor;
                     LevelLighting.nightvisionFogIntensity = base.player.clothing.glassesAsset.nightvisionFogIntensity;
                     LevelLighting.updateLighting();

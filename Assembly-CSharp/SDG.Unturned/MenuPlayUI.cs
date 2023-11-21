@@ -14,8 +14,6 @@ public class MenuPlayUI
 
     private static SleekButtonIcon singleplayerButton;
 
-    private static SleekButtonIcon matchmakingButton;
-
     private static SleekButtonIcon lobbiesButton;
 
     private static SleekButtonIcon tutorialButton;
@@ -24,13 +22,11 @@ public class MenuPlayUI
 
     private MenuPlayConnectUI connectUI;
 
-    private MenuPlayServersUI serverListUI;
+    public static MenuPlayServersUI serverListUI;
 
     private MenuPlayServerInfoUI serverInfoUI;
 
     private MenuPlaySingleplayerUI singleplayerUI;
-
-    private MenuPlayMatchmakingUI matchmakingUI;
 
     private MenuPlayLobbiesUI lobbiesUI;
 
@@ -60,19 +56,13 @@ public class MenuPlayUI
 
     private static void onClickedServersButton(ISleekElement button)
     {
-        MenuPlayServersUI.open();
+        serverListUI.open();
         close();
     }
 
     private static void onClickedSingleplayerButton(ISleekElement button)
     {
         MenuPlaySingleplayerUI.open();
-        close();
-    }
-
-    private static void onClickedMatchmakingButton(ISleekElement button)
-    {
-        MenuPlayMatchmakingUI.open();
         close();
     }
 
@@ -106,10 +96,8 @@ public class MenuPlayUI
     public void OnDestroy()
     {
         connectUI.OnDestroy();
-        serverListUI.OnDestroy();
         serverInfoUI.OnDestroy();
         singleplayerUI.OnDestroy();
-        matchmakingUI.OnDestroy();
         lobbiesUI.OnDestroy();
     }
 
@@ -127,76 +115,15 @@ public class MenuPlayUI
         container.SizeScale_Y = 1f;
         MenuUI.container.AddChild(container);
         active = false;
-        connectButton = new SleekButtonIcon(bundle.load<Texture2D>("Connect"));
-        connectButton.PositionOffset_X = -100f;
-        connectButton.PositionOffset_Y = 95f;
-        connectButton.PositionScale_X = 0.5f;
-        connectButton.PositionScale_Y = 0.5f;
-        connectButton.SizeOffset_X = 200f;
-        connectButton.SizeOffset_Y = 50f;
-        connectButton.text = local.format("ConnectButtonText");
-        connectButton.tooltip = local.format("ConnectButtonTooltip");
-        connectButton.iconColor = ESleekTint.FOREGROUND;
-        connectButton.onClickedButton += onClickedConnectButton;
-        connectButton.fontSize = ESleekFontSize.Medium;
-        container.AddChild(connectButton);
-        serversButton = new SleekButtonIcon(bundle.load<Texture2D>("Servers"));
-        serversButton.PositionOffset_X = -100f;
-        serversButton.PositionOffset_Y = 35f;
-        serversButton.PositionScale_X = 0.5f;
-        serversButton.PositionScale_Y = 0.5f;
-        serversButton.SizeOffset_X = 200f;
-        serversButton.SizeOffset_Y = 50f;
-        serversButton.text = local.format("ServersButtonText");
-        serversButton.tooltip = local.format("ServersButtonTooltip");
-        serversButton.iconColor = ESleekTint.FOREGROUND;
-        serversButton.onClickedButton += onClickedServersButton;
-        serversButton.fontSize = ESleekFontSize.Medium;
-        container.AddChild(serversButton);
-        singleplayerButton = new SleekButtonIcon(bundle.load<Texture2D>("Singleplayer"));
-        singleplayerButton.PositionOffset_X = -100f;
-        singleplayerButton.PositionOffset_Y = -145f;
-        singleplayerButton.PositionScale_X = 0.5f;
-        singleplayerButton.PositionScale_Y = 0.5f;
-        singleplayerButton.SizeOffset_X = 200f;
-        singleplayerButton.SizeOffset_Y = 50f;
-        singleplayerButton.text = local.format("SingleplayerButtonText");
-        singleplayerButton.tooltip = local.format("SingleplayerButtonTooltip");
-        singleplayerButton.onClickedButton += onClickedSingleplayerButton;
-        singleplayerButton.iconColor = ESleekTint.FOREGROUND;
-        singleplayerButton.fontSize = ESleekFontSize.Medium;
-        container.AddChild(singleplayerButton);
-        matchmakingButton = new SleekButtonIcon(bundle.load<Texture2D>("Matchmaking"));
-        matchmakingButton.PositionOffset_X = -100f;
-        matchmakingButton.PositionOffset_Y = -85f;
-        matchmakingButton.PositionScale_X = 0.5f;
-        matchmakingButton.PositionScale_Y = 0.5f;
-        matchmakingButton.SizeOffset_X = 200f;
-        matchmakingButton.SizeOffset_Y = 50f;
-        matchmakingButton.text = local.format("MatchmakingButtonText");
-        matchmakingButton.tooltip = local.format("MatchmakingButtonTooltip");
-        matchmakingButton.onClickedButton += onClickedMatchmakingButton;
-        matchmakingButton.iconColor = ESleekTint.FOREGROUND;
-        matchmakingButton.fontSize = ESleekFontSize.Medium;
-        container.AddChild(matchmakingButton);
-        lobbiesButton = new SleekButtonIcon(bundle.load<Texture2D>("Lobbies"));
-        lobbiesButton.PositionOffset_X = -100f;
-        lobbiesButton.PositionOffset_Y = -25f;
-        lobbiesButton.PositionScale_X = 0.5f;
-        lobbiesButton.PositionScale_Y = 0.5f;
-        lobbiesButton.SizeOffset_X = 200f;
-        lobbiesButton.SizeOffset_Y = 50f;
-        lobbiesButton.text = local.format("LobbiesButtonText");
-        lobbiesButton.tooltip = local.format("LobbiesButtonTooltip");
-        lobbiesButton.onClickedButton += onClickedLobbiesButton;
-        lobbiesButton.iconColor = ESleekTint.FOREGROUND;
-        lobbiesButton.fontSize = ESleekFontSize.Medium;
-        container.AddChild(lobbiesButton);
+        float num = 0f;
+        ISleekElement sleekElement = Glazier.Get().CreateFrame();
+        sleekElement.PositionOffset_X = -100f;
+        sleekElement.PositionScale_X = 0.5f;
+        sleekElement.PositionScale_Y = 0.5f;
+        sleekElement.SizeOffset_X = 200f;
+        container.AddChild(sleekElement);
         tutorialButton = new SleekButtonIcon(bundle.load<Texture2D>("Tutorial"));
-        tutorialButton.PositionOffset_X = -100f;
-        tutorialButton.PositionOffset_Y = -205f;
-        tutorialButton.PositionScale_X = 0.5f;
-        tutorialButton.PositionScale_Y = 0.5f;
+        tutorialButton.PositionOffset_Y = num;
         tutorialButton.SizeOffset_X = 200f;
         tutorialButton.SizeOffset_Y = 50f;
         tutorialButton.text = local.format("TutorialButtonText");
@@ -204,12 +131,61 @@ public class MenuPlayUI
         tutorialButton.onClickedButton += onClickedTutorialButton;
         tutorialButton.fontSize = ESleekFontSize.Medium;
         tutorialButton.iconColor = ESleekTint.FOREGROUND;
-        container.AddChild(tutorialButton);
+        sleekElement.AddChild(tutorialButton);
+        num += tutorialButton.SizeOffset_Y;
+        num += 10f;
+        num += 50f;
+        num += 10f;
+        singleplayerButton = new SleekButtonIcon(bundle.load<Texture2D>("Singleplayer"));
+        singleplayerButton.PositionOffset_Y = num;
+        singleplayerButton.SizeOffset_X = 200f;
+        singleplayerButton.SizeOffset_Y = 50f;
+        singleplayerButton.text = local.format("SingleplayerButtonText");
+        singleplayerButton.tooltip = local.format("SingleplayerButtonTooltip");
+        singleplayerButton.onClickedButton += onClickedSingleplayerButton;
+        singleplayerButton.iconColor = ESleekTint.FOREGROUND;
+        singleplayerButton.fontSize = ESleekFontSize.Medium;
+        sleekElement.AddChild(singleplayerButton);
+        num += singleplayerButton.SizeOffset_Y;
+        num += 10f;
+        serversButton = new SleekButtonIcon(bundle.load<Texture2D>("Servers"));
+        serversButton.PositionOffset_Y = num;
+        serversButton.SizeOffset_X = 200f;
+        serversButton.SizeOffset_Y = 50f;
+        serversButton.text = local.format("ServersButtonText");
+        serversButton.tooltip = local.format("ServersButtonTooltip");
+        serversButton.iconColor = ESleekTint.FOREGROUND;
+        serversButton.onClickedButton += onClickedServersButton;
+        serversButton.fontSize = ESleekFontSize.Medium;
+        sleekElement.AddChild(serversButton);
+        num += serversButton.SizeOffset_Y;
+        num += 10f;
+        connectButton = new SleekButtonIcon(bundle.load<Texture2D>("Connect"));
+        connectButton.PositionOffset_Y = num;
+        connectButton.SizeOffset_X = 200f;
+        connectButton.SizeOffset_Y = 50f;
+        connectButton.text = local.format("ConnectButtonText");
+        connectButton.tooltip = local.format("ConnectButtonTooltip");
+        connectButton.iconColor = ESleekTint.FOREGROUND;
+        connectButton.onClickedButton += onClickedConnectButton;
+        connectButton.fontSize = ESleekFontSize.Medium;
+        sleekElement.AddChild(connectButton);
+        num += connectButton.SizeOffset_Y;
+        num += 10f;
+        lobbiesButton = new SleekButtonIcon(bundle.load<Texture2D>("Lobbies"));
+        lobbiesButton.PositionOffset_Y = num;
+        lobbiesButton.SizeOffset_X = 200f;
+        lobbiesButton.SizeOffset_Y = 50f;
+        lobbiesButton.text = local.format("LobbiesButtonText");
+        lobbiesButton.tooltip = local.format("LobbiesButtonTooltip");
+        lobbiesButton.onClickedButton += onClickedLobbiesButton;
+        lobbiesButton.iconColor = ESleekTint.FOREGROUND;
+        lobbiesButton.fontSize = ESleekFontSize.Medium;
+        sleekElement.AddChild(lobbiesButton);
+        num += lobbiesButton.SizeOffset_Y;
+        num += 10f;
         backButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));
-        backButton.PositionOffset_X = -100f;
-        backButton.PositionOffset_Y = 155f;
-        backButton.PositionScale_X = 0.5f;
-        backButton.PositionScale_Y = 0.5f;
+        backButton.PositionOffset_Y = num;
         backButton.SizeOffset_X = 200f;
         backButton.SizeOffset_Y = 50f;
         backButton.text = MenuDashboardUI.localization.format("BackButtonText");
@@ -217,13 +193,21 @@ public class MenuPlayUI
         backButton.onClickedButton += onClickedBackButton;
         backButton.fontSize = ESleekFontSize.Medium;
         backButton.iconColor = ESleekTint.FOREGROUND;
-        container.AddChild(backButton);
+        sleekElement.AddChild(backButton);
+        sleekElement.PositionOffset_Y = 0f - (sleekElement.SizeOffset_Y = num + backButton.SizeOffset_Y) / 2f;
         bundle.unload();
         connectUI = new MenuPlayConnectUI();
         serverListUI = new MenuPlayServersUI();
+        serverListUI.PositionOffset_X = 10f;
+        serverListUI.PositionOffset_Y = 10f;
+        serverListUI.PositionScale_Y = 1f;
+        serverListUI.SizeOffset_X = -20f;
+        serverListUI.SizeOffset_Y = -20f;
+        serverListUI.SizeScale_X = 1f;
+        serverListUI.SizeScale_Y = 1f;
+        MenuUI.container.AddChild(serverListUI);
         serverInfoUI = new MenuPlayServerInfoUI();
         singleplayerUI = new MenuPlaySingleplayerUI();
-        matchmakingUI = new MenuPlayMatchmakingUI();
         lobbiesUI = new MenuPlayLobbiesUI();
     }
 }

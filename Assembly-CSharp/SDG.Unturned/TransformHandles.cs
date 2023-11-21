@@ -785,9 +785,8 @@ public class TransformHandles
                     EncapsuleBounds(workingComponent.transform, boxCollider.center, boxCollider.size * 0.5f);
                     hasPivotBounds = true;
                 }
-                else if (workingComponent is SphereCollider sphereCollider)
+                else if (workingComponent is SphereCollider { radius: var radius } sphereCollider)
                 {
-                    float radius = sphereCollider.radius;
                     Vector3 extents2 = new Vector3(radius, radius, radius);
                     EncapsuleBounds(workingComponent.transform, sphereCollider.center, extents2);
                     hasPivotBounds = true;

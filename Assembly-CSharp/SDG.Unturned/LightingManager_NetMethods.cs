@@ -18,11 +18,12 @@ public static class LightingManager_NetMethods
         reader.ReadGuid(out var value6);
         reader.ReadFloat(out var value7);
         reader.ReadNetId(out var value8);
-        LightingManager.ReceiveInitialLightingState(value, value2, value3, value4, value5, value6, value7, value8);
+        reader.ReadInt32(out var value9);
+        LightingManager.ReceiveInitialLightingState(value, value2, value3, value4, value5, value6, value7, value8, value9);
     }
 
     [NetInvokableGeneratedMethod("ReceiveInitialLightingState", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveInitialLightingState_Write(NetPakWriter writer, uint serverTime, uint newCycle, uint newOffset, byte moon, byte wind, Guid activeWeatherGuid, float activeWeatherBlendAlpha, NetId activeWeatherNetId)
+    public static void ReceiveInitialLightingState_Write(NetPakWriter writer, uint serverTime, uint newCycle, uint newOffset, byte moon, byte wind, Guid activeWeatherGuid, float activeWeatherBlendAlpha, NetId activeWeatherNetId, int newDateCounter)
     {
         writer.WriteUInt32(serverTime);
         writer.WriteUInt32(newCycle);
@@ -32,6 +33,7 @@ public static class LightingManager_NetMethods
         writer.WriteGuid(activeWeatherGuid);
         writer.WriteFloat(activeWeatherBlendAlpha);
         writer.WriteNetId(activeWeatherNetId);
+        writer.WriteInt32(newDateCounter);
     }
 
     [NetInvokableGeneratedMethod("ReceiveLightingCycle", ENetInvokableGeneratedMethodPurpose.Read)]

@@ -586,7 +586,7 @@ public class SpawnTableTool
                 else if (!spawnTable.targetGuid.IsEmpty())
                 {
                     Asset asset = Assets.find(spawnTable.targetGuid);
-                    text = ((asset == null) ? $"Unknown GUID {spawnTable.targetGuid}" : (asset.FriendlyName + " (" + asset.GetTypeNameWithoutSuffix() + ")"));
+                    text = ((asset == null) ? $"Unknown GUID {spawnTable.targetGuid}" : (asset.FriendlyName + " (" + asset.GetTypeFriendlyName() + ")"));
                 }
                 else
                 {

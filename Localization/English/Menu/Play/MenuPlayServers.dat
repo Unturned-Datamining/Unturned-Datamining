@@ -1,88 +1,161 @@
+Columns_Tooltip Change visible columns.
+
 Server_Button {0} on {1}
-Server_Players {0}/{1}
+Server_Players {0} of {1}
 
-Name_Field_Hint Server Name Filter
-Password_Field_Hint Server Password
-Password_Field_Replace #
-Map_Field_Hint Map Filter
+Presets_Label Presets
+Presets_Tooltip Quickly save and load your preferred filters using custom named presets.
 
-Refresh_Label Search Category:
+DefaultPreset_Internet_Label Default Internet
+DefaultPreset_LAN_Label Default LAN
+DefaultPreset_History_Label Default History
+DefaultPreset_Favorites_Label Default Favorites
+DefaultPreset_Friends_Label Default Friends
 
-Refresh_Gold_Button Gold
-Refresh_Gold_Button_Tooltip Find servers that only allow gold members.
+PresetName_Empty Custom
+PresetName_Modified {0} (Modified)
 
-Refresh_Internet_Button Internet
-Refresh_Internet_Button_Tooltip Find servers on the internet.
+PresetNameField_Tooltip Name to use when creating a new preset.
+PresetNameField_Hint Example: My Preset
+NewPreset_Label Create New Preset
+NewPreset_Tooltip Add a preset using your current filters.
+DeletePreset_Label Delete Preset
+DeletePreset_Tooltip Permanently delete preset.
+DeletePreset_Confirm_Label Yes
+DeletePreset_Confirm_Tooltip Are you sure? This cannot be undone.
+DeletePreset_Deny_Label No
+DeletePreset_Deny_Tooltip Keep your preset.
 
-Refresh_LAN_Button LAN
-Refresh_LAN_Button_Tooltip Find servers on local network.
+Name_Filter_Label Server Name Filter
+Name_Filter_Hint Example: My Server
 
-Refresh_History_Button History
-Refresh_History_Button_Tooltip Find previously played on servers.
+Map_Filter_Label Map Name Filter
+Map_Filter_Hint Example: PEI
 
-Refresh_Favorites_Button Favorites
-Refresh_Favorites_Button_Tooltip Find favorited servers.
+Refresh_Label Refresh
+Refresh_Tooltip Search for servers matching filters.
+Refresh_Cancel_Label Cancel
+Refresh_Cancel_Tooltip Cancel ongoing search.
 
-Refresh_Friends_Button Friends
-Refresh_Friends_Button_Tooltip Find servers friends are playing on.
+List_Label List Source
+List_Internet_Label Internet
+List_Internet_Tooltip Find servers on the Internet.
+List_LAN_Label LAN
+List_LAN_Tooltip Find servers on your local network.
+List_History_Label History
+List_History_Tooltip Find servers you've played on before.
+List_Favorites_Label Favorites
+List_Favorites_Tooltip Find servers you've marked as favorites.
+List_Friends_Label Friends
+List_Friends_Tooltip Find servers your friends are playing on.
 
 HostingButtonText Hosting
 HostingButtonTooltip Read server hosting documentation.
 
+ViewPresetsButton_Label Presets
+ViewPresetsButton_Tooltip Toggle presets visibility.
+QuickFiltersButton_Label Simple Filters
+QuickFiltersButton_Tooltip Edit filters directly from the server list.
+PresetsEditorButton_Label Edit Filters:\n{0}
+PresetsEditorButton_Tooltip Edit filters and create or delete custom presets.
+
+Password_Filter_Label Password Protection Filter
 Any_Password_Button Any Password
+Password_Filter_Any_Tooltip Ignore whether servers require a password to join.
 Yes_Password_Button Has Password
+Password_Filter_Yes_Tooltip Only show servers that require a password to join.
 No_Password_Button No Password
+Password_Filter_No_Tooltip Only show servers that do not require a password.
 
+Workshop_Filter_Label Mods Usage Filter
 Any_Workshop_Button Any Workshop
+Workshop_Filter_Any_Tooltip Ignore whether servers use mods from the workshop.
 Yes_Workshop_Button Has Workshop
+Workshop_Filter_Yes_Tooltip Only show servers that use mods from the workshop.
 No_Workshop_Button No Workshop
+Workshop_Filter_No_Tooltip Only show servers that do not require mods from the workshop.
 
+Plugins_Filter_Label Code Plugins Filter
 Any_Plugins_Button Any Plugins
+Plugins_Filter_Any_Tooltip Ignore whether servers use code plugins.
 Yes_Plugins_Button Has Plugins
+Plugins_Filter_Yes_Tooltip Only show servers that use code plugins.
 No_Plugins_Button No Plugins
+Plugins_Filter_No_Tooltip Only show servers without any code plugins (vanilla).
 
-Attendance_Toggle Playing
-Security_Toggle Secure
-PvP_Toggle PvP
-
+Attendance_Filter_Label Attendance Filter
 Any_Attendance_Button Any Attendance
+Attendance_Filter_Any_Tooltip Ignore whether servers are empty or not.
 Empty_Button Empty
+Attendance_Filter_Empty_Tooltip Only show servers without any players online.
 HasPlayers_Button Has Players
+Attendance_Filter_HasPlayers_Tooltip Only show servers with at least one player online.
 
+Space_Filter_Label Space Filter
 Any_Space_Button Include Full
+Space_Filter_Any_Tooltip Ignore whether servers have space for more players.
 Space_Button Has Available Slots
+Space_Filter_HasSpace_Tooltip Only show servers with space for at least one more player.
 
+VAC_Filter_Label VAC Protection Filter
 VAC_Any_Button Any VAC
+VAC_Filter_Any_Tooltip Ignore whether servers are protected by Valve Anti-Cheat (VAC).
 VAC_Secure_Button VAC Secure
+VAC_Filter_Secure_Tooltip Only show servers that are protected by Valve Anti-Cheat (VAC).
 VAC_Insecure_Button VAC Insecure
+VAC_Filter_Insecure_Tooltip Only show servers that are not using Valve Anti-Cheat (VAC).
 
+BattlEye_Filter_Label BattlEye Protection Filter
 BattlEye_Any_Button Any BattlEye
+BattlEye_Filter_Any_Tooltip Ignore whether servers are protected by BattlEye anti-cheat.
 BattlEye_Secure_Button BattlEye Required
+BattlEye_Filter_Secure_Tooltip Only show servers that are protected by BattlEye anti-cheat.
 BattlEye_Insecure_Button BattlEye Disabled
+BattlEye_Filter_Insecure_Tooltip Only show servers that are not using BattlEye anti-cheat.
 
+Combat_Filter_Label Combat Filter
 Any_Combat_Button Any Combat
+Combat_Filter_Any_Tooltip Ignore whether servers are PvP or PvE.
 PvP_Button PvP
+Combat_Filter_PvP_Tooltip Only show servers that allow Player versus Player (PvP) combat.
 PvE_Button PvE
+Combat_Filter_PvE_Tooltip Only show servers that restrict combat to Player versus Environment (PvE).
 
+Cheats_Filter_Label Admin Cheat Codes Filter
 Any_Cheats_Button Any Cheats
+Cheats_Filter_Any_Tooltip Ignore whether servers allow admins to use cheat codes like item and vehicle spawning.
 Yes_Cheats_Button Cheats On
+Cheats_Filter_Yes_Tooltip Only show servers that allow admins to use cheat codes.
 No_Cheats_Button Cheats Off
+Cheats_Filter_No_Tooltip Only show servers that prevent admins from using cheat codes.
 
-Any_Mode_Button Any Mode
-Easy_Button Easy
-Normal_Button Normal
-Hard_Button Hard
-Pro_Button Gold
+Gold_Filter_Label Gold Filter
+Gold_Filter_Any_Label Any Gold Status
+Gold_Filter_Any_Tooltip Ignore whether servers require the Permanent Gold Upgrade DLC.
+Gold_Filter_DoesNotRequireGold_Label No Gold Requirement
+Gold_Filter_DoesNotRequireGold_Tooltip Only show servers that do not require the Permanent Gold Upgrade DLC.
+Gold_Filter_RequiresGold_Label Gold Required
+Gold_Filter_RequiresGold_Tooltip Only show servers that require the Permanent Gold Upgrade DLC.
 
+Perspective_Filter_Label Camera Mode Filter
 Any_Camera_Button Any Perspective
+Perspective_Filter_Any_Tooltip Ignore the camera modes allowed by servers.
 First_Button First Person
+Perspective_Filter_FirstPerson_Tooltip Only show servers that restrict the camera mode to first-person.
 Third_Button Third Person
+Perspective_Filter_ThirdPerson_Tooltip Only show servers that restrict the camera mode to third-person.
 Both_Button Both Perspectives
+Perspective_Filter_Both_Tooltip Only show servers that allow both first and third-person.
 Vehicle_Button Vehicle Third Person
+Perspective_Filter_Vehicle_Tooltip Only show servers that restrict the camera mode to first-person except in vehicles.
 
+Monetization_Filter_Label Monetization Filter
 Monetization_Any_Button Any Monetization
+Monetization_Filter_Any_Tooltip Ignore whether servers are monetized.
 Monetization_None_Button Not Monetized
+Monetization_Filter_None_Tooltip Only show servers that do not sell anything. (Completely free to play!)
 Monetization_NonGameplay_Button Non-Gameplay Monetization
+Monetization_Filter_NonGameplay_Tooltip Only show servers that either sell content without affecting gameplay or are completely non-monetized.
 
 Any_Map Any Map
 
@@ -96,12 +169,86 @@ Sort_Name_Tooltip Sort by name.
 
 Sort_Map Map
 Sort_Map_Tooltip Sort by map.
+Map_Column_Toggle_Label Map
+Map_Column_Toggle_Tooltip Toggle map column visibility.
 
 Sort_Players Players
 Sort_Players_Tooltip Sort by players.
+Players_Column_Toggle_Label Players
+Players_Column_Toggle_Tooltip Toggle players column visibility.
 
 Sort_Ping Ping
 Sort_Ping_Tooltip Sort by ping.
+Ping_Column_Toggle_Label Ping
+Ping_Column_Toggle_Tooltip Toggle ping column visibility.
+
+Anticheat_Column_Label Anti-cheat
+Anticheat_Column_Tooltip Sort by anti-cheat.
+Anticheat_Column_Toggle_Label Anti-cheat
+Anticheat_Column_Toggle_Tooltip Toggle anti-cheat column visibility.
+Anticheat_Column_BattlEye_Tooltip This server is protected by BattlEye anti-cheat.
+Anticheat_Column_VAC_Tooltip This server is protected by Valve Anti-Cheat (VAC).
+Anticheat_Column_Both_Tooltip This server is protected by VAC and BattlEye anti-cheat.
+Anticheat_Column_None_Tooltip This server is not protected by anti-cheat.
+
+Perspective_Column_Tooltip Sort by perspective.
+Perspective_Column_Toggle_Label Perspective
+Perspective_Column_Toggle_Tooltip Toggle perspective column visibility.
+Perspective_Column_First_Tooltip This server is first-person only.
+Perspective_Column_Third_Tooltip This server is third-person only.
+Perspective_Column_Both_Tooltip This server allows both first and third-person.
+Perspective_Column_Vehicle_Tooltip This server allows third-person in vehicles.
+
+Combat_Column_Tooltip Sort by combat (PvP/PvE) mode.
+Combat_Column_Toggle_Label Combat
+Combat_Column_Toggle_Tooltip Toggle combat (PvP/PvE) column visibility.
+Combat_Column_PvP_Tooltip This server allows Player versus Player (PvP) combat.
+Combat_Column_PvE_Tooltip This server is Player versus Environment (PvE) only.
+
+Password_Column_Tooltip Sort by password protection.
+Password_Column_Toggle_Label Password Protection
+Password_Column_Toggle_Tooltip Toggle password protection column visibility.
+Password_Column_Yes_Tooltip This server requires a password to join.
+Password_Column_No_Tooltip This server does not require a password.
+
+Workshop_Column_Tooltip Sort by whether mods are required.
+Workshop_Column_Toggle_Label Mods
+Workshop_Column_Toggle_Tooltip Toggle mods column visibility.
+Workshop_Column_Yes_Tooltip This server uses mods from the workshop.
+Workshop_Column_No_Tooltip This server does not require any mods.
+
+MaxPlayers_Column_Label Max Players
+MaxPlayers_Column_Tooltip Sort by max players.
+MaxPlayers_Column_Toggle_Label Max Players
+MaxPlayers_Column_Toggle_Tooltip Toggle max players column visibility.
+
+Gold_Column_Tooltip Sort by whether the Permanent Gold Upgrade DLC is required.
+Gold_Column_Toggle_Label Gold
+Gold_Column_Toggle_Tooltip Toggle gold column visibility.
+Gold_Column_Yes_Tooltip This server requires ownership of the Permanent Gold Upgrade DLC to join.
+Gold_Column_No_Tooltip This server does not require the Permanent Gold Upgrade DLC.
+
+Cheats_Column_Tooltip Sort by whether admins can use cheat codes.
+Cheats_Column_Toggle_Label Cheats
+Cheats_Column_Toggle_Tooltip Toggle cheats column visibility.
+Cheats_Column_Yes_Tooltip This server allows admins to use cheat codes like item and vehicle spawning.
+Cheats_Column_No_Tooltip This server prevents admins from using cheat codes.
+
+Monetization_Column_Tooltip Sort by monetization.
+Monetization_Column_Toggle_Label Monetization
+Monetization_Column_Toggle_Tooltip Toggle monetization column visibility.
+Monetization_Column_Unspecified_Tooltip This server did not specify its monetization type.
+Monetization_Column_NonGameplay_Tooltip This server sells content that does not affect gameplay.
+Monetization_Column_Monetized_Tooltip This server sells benefits that may affect gameplay.
+Monetization_Column_None_Tooltip This server does not sell anything. Completely free to play!
+
+Plugins_Column_Tooltip Sort by code plugin framework.
+Plugins_Column_Toggle_Label Plugins
+Plugins_Column_Toggle_Tooltip Toggle plugins column visibility.
+Plugins_Column_None_Tooltip This server does not use any code plugins.
+Plugins_Column_Rocket_Tooltip This server uses RocketMod code plugins.
+Plugins_Column_OpenMod_Tooltip This server uses OpenMod code plugins.
+Plugins_Column_Unknown_Tooltip This server uses an unknown plugin framework.
 
 Favorite_On_Button_Tooltip Favorite
 Favorite_Off_Button_Tooltip Unfavorite

@@ -4401,7 +4401,7 @@ public class UseableGun : Useable
 
     private void Update()
     {
-        if (!Dedicator.IsDedicatedServer && base.player.equipment.asset is ItemGunAsset itemGunAsset && itemGunAsset.action == EAction.Minigun)
+        if (!Dedicator.IsDedicatedServer && base.player.equipment.asset is ItemGunAsset { action: EAction.Minigun })
         {
             if (isMinigunSpinning)
             {

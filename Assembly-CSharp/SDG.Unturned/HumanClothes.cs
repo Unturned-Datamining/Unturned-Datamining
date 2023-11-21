@@ -967,8 +967,8 @@ public class HumanClothes : MonoBehaviour
             _glassesAsset = null;
             glassesDirty = true;
         }
-        ItemShirtAsset itemShirtAsset = ((visualShirtAsset != null && isVisual) ? visualShirtAsset : shirtAsset);
-        ItemPantsAsset itemPantsAsset = ((visualPantsAsset != null && isVisual) ? visualPantsAsset : pantsAsset);
+        ItemShirtAsset itemShirtAsset = ((visualShirtAsset != null && isVisual && (shirtAsset == null || !shirtAsset.TakesPriorityOverCosmetic)) ? visualShirtAsset : shirtAsset);
+        ItemPantsAsset itemPantsAsset = ((visualPantsAsset != null && isVisual && (pantsAsset == null || !pantsAsset.TakesPriorityOverCosmetic)) ? visualPantsAsset : pantsAsset);
         if (skinColorDirty)
         {
             materialClothing.SetColor(skinColorPropertyID, _skinColor);
@@ -1100,11 +1100,11 @@ public class HumanClothes : MonoBehaviour
                 flag3 &= itemPantsAsset.hairVisible;
                 flag4 &= itemPantsAsset.beardVisible;
             }
-            ItemHatAsset itemHatAsset = ((visualHatAsset != null && isVisual) ? visualHatAsset : hatAsset);
-            ItemBackpackAsset itemBackpackAsset = ((visualBackpackAsset != null && isVisual) ? visualBackpackAsset : backpackAsset);
-            ItemVestAsset itemVestAsset = ((visualVestAsset != null && isVisual) ? visualVestAsset : vestAsset);
-            ItemMaskAsset itemMaskAsset = ((visualMaskAsset != null && isVisual) ? visualMaskAsset : maskAsset);
-            ItemGlassesAsset itemGlassesAsset = ((visualGlassesAsset != null && isVisual && (glassesAsset == null || (glassesAsset.vision == ELightingVision.NONE && !glassesAsset.isBlindfold))) ? visualGlassesAsset : glassesAsset);
+            ItemHatAsset itemHatAsset = ((visualHatAsset != null && isVisual && (hatAsset == null || !hatAsset.TakesPriorityOverCosmetic)) ? visualHatAsset : hatAsset);
+            ItemBackpackAsset itemBackpackAsset = ((visualBackpackAsset != null && isVisual && (backpackAsset == null || !backpackAsset.TakesPriorityOverCosmetic)) ? visualBackpackAsset : backpackAsset);
+            ItemVestAsset itemVestAsset = ((visualVestAsset != null && isVisual && (vestAsset == null || !vestAsset.TakesPriorityOverCosmetic)) ? visualVestAsset : vestAsset);
+            ItemMaskAsset itemMaskAsset = ((visualMaskAsset != null && isVisual && (maskAsset == null || !maskAsset.TakesPriorityOverCosmetic)) ? visualMaskAsset : maskAsset);
+            ItemGlassesAsset itemGlassesAsset = ((visualGlassesAsset != null && isVisual && (glassesAsset == null || !glassesAsset.TakesPriorityOverCosmetic)) ? visualGlassesAsset : glassesAsset);
             if (hatDirty)
             {
                 if (hatModel != null)

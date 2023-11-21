@@ -50,15 +50,9 @@ public class MenuConfigurationOptionsUI
 
     private static ISleekToggle featuredWorkshopToggle;
 
-    private static ISleekToggle matchmakingShowAllMapsToggle;
-
     private static ISleekToggle showHotbarToggle;
 
     private static ISleekToggle pauseWhenUnfocusedToggle;
-
-    private static ISleekInt32Field minMatchmakingPlayersField;
-
-    private static ISleekInt32Field maxMatchmakingPingField;
 
     private static ISleekInt32Field screenshotSizeMultiplierField;
 
@@ -237,11 +231,6 @@ public class MenuConfigurationOptionsUI
         OptionsSettings.featuredWorkshop = state;
     }
 
-    private static void onToggledMatchmakingShowAllMapsToggle(ISleekToggle toggle, bool state)
-    {
-        OptionsSettings.matchmakingShowAllMaps = state;
-    }
-
     private static void onToggledShowHotbarToggle(ISleekToggle toggle, bool state)
     {
         OptionsSettings.showHotbar = state;
@@ -250,16 +239,6 @@ public class MenuConfigurationOptionsUI
     private static void onToggledPauseWhenUnfocusedToggle(ISleekToggle toggle, bool state)
     {
         OptionsSettings.pauseWhenUnfocused = state;
-    }
-
-    private static void onTypedMinMatchmakingPlayersField(ISleekInt32Field field, int state)
-    {
-        OptionsSettings.minMatchmakingPlayers = state;
-    }
-
-    private static void onTypedMaxMatchmakingPingField(ISleekInt32Field field, int state)
-    {
-        OptionsSettings.maxMatchmakingPing = state;
     }
 
     private static void OnScreenshotSizeMultiplierChanged(ISleekInt32Field field, int value)
@@ -415,11 +394,8 @@ public class MenuConfigurationOptionsUI
         ambienceToggle.Value = OptionsSettings.ambience;
         streamerToggle.Value = OptionsSettings.streamer;
         featuredWorkshopToggle.Value = OptionsSettings.featuredWorkshop;
-        matchmakingShowAllMapsToggle.Value = OptionsSettings.matchmakingShowAllMaps;
         showHotbarToggle.Value = OptionsSettings.showHotbar;
         pauseWhenUnfocusedToggle.Value = OptionsSettings.pauseWhenUnfocused;
-        minMatchmakingPlayersField.Value = OptionsSettings.minMatchmakingPlayers;
-        maxMatchmakingPingField.Value = OptionsSettings.maxMatchmakingPing;
         screenshotSizeMultiplierField.Value = OptionsSettings.screenshotSizeMultiplier;
         screenshotSupersamplingToggle.Value = OptionsSettings.enableScreenshotSupersampling;
         screenshotsWhileLoadingToggle.Value = OptionsSettings.enableScreenshotsOnLoadingScreen;
@@ -635,30 +611,6 @@ public class MenuConfigurationOptionsUI
         loadingScreenMusicVolumeSlider.OnValueChanged += onDraggedLoadingScreenMusicVolumeSlider;
         optionsBox.AddChild(loadingScreenMusicVolumeSlider);
         num += 30f;
-        matchmakingShowAllMapsToggle = Glazier.Get().CreateToggle();
-        matchmakingShowAllMapsToggle.PositionOffset_Y = num;
-        matchmakingShowAllMapsToggle.SizeOffset_X = 40f;
-        matchmakingShowAllMapsToggle.SizeOffset_Y = 40f;
-        matchmakingShowAllMapsToggle.AddLabel(localization.format("Matchmaking_Show_All_Maps_Toggle_Label"), ESleekSide.RIGHT);
-        matchmakingShowAllMapsToggle.OnValueChanged += onToggledMatchmakingShowAllMapsToggle;
-        optionsBox.AddChild(matchmakingShowAllMapsToggle);
-        num += 50f;
-        minMatchmakingPlayersField = Glazier.Get().CreateInt32Field();
-        minMatchmakingPlayersField.PositionOffset_Y = num;
-        minMatchmakingPlayersField.SizeOffset_X = 200f;
-        minMatchmakingPlayersField.SizeOffset_Y = 30f;
-        minMatchmakingPlayersField.AddLabel(localization.format("Min_Matchmaking_Players_Field_Label"), ESleekSide.RIGHT);
-        minMatchmakingPlayersField.OnValueChanged += onTypedMinMatchmakingPlayersField;
-        optionsBox.AddChild(minMatchmakingPlayersField);
-        num += 40f;
-        maxMatchmakingPingField = Glazier.Get().CreateInt32Field();
-        maxMatchmakingPingField.PositionOffset_Y = num;
-        maxMatchmakingPingField.SizeOffset_X = 200f;
-        maxMatchmakingPingField.SizeOffset_Y = 30f;
-        maxMatchmakingPingField.AddLabel(localization.format("Max_Matchmaking_Ping_Field_Label"), ESleekSide.RIGHT);
-        maxMatchmakingPingField.OnValueChanged += onTypedMaxMatchmakingPingField;
-        optionsBox.AddChild(maxMatchmakingPingField);
-        num += 40f;
         screenshotSizeMultiplierField = Glazier.Get().CreateInt32Field();
         screenshotSizeMultiplierField.PositionOffset_Y = num;
         screenshotSizeMultiplierField.SizeOffset_X = 200f;

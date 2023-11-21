@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using SDG.Unturned;
+using Unturned.SystemEx;
 
 namespace SDG.Framework.Modules;
 
@@ -127,19 +128,26 @@ public class Module
         for (int i = 0; i < types.Length; i++)
         {
             Type type = types[i];
-            if (!type.IsAbstract && typeFromHandle.IsAssignableFrom(type))
+            try
             {
-                IModuleNexus moduleNexus = Activator.CreateInstance(type) as IModuleNexus;
-                try
+                if (!type.IsAbstract && typeFromHandle.TryIsAssignableFrom(type))
                 {
-                    moduleNexus.initialize();
+                    IModuleNexus moduleNexus = Activator.CreateInstance(type) as IModuleNexus;
+                    try
+                    {
+                        moduleNexus.initialize();
+                    }
+                    catch (Exception e)
+                    {
+                        UnturnedLog.error("Caught exception while initializing module \"" + config.Name + "\" entry point \"" + type.Name + "\":");
+                        UnturnedLog.exception(e);
+                    }
+                    nexii.Add(moduleNexus);
                 }
-                catch (Exception e)
-                {
-                    UnturnedLog.error("Caught exception while initializing module \"" + config.Name + "\" entry point \"" + type.Name + "\":");
-                    UnturnedLog.exception(e);
-                }
-                nexii.Add(moduleNexus);
+            }
+            catch (Exception e2)
+            {
+                UnturnedLog.exception(e2, "Caught exception while searching for entry points in module \"" + config.Name + "\" type \"" + type.Name + "\"");
             }
         }
         status = EModuleStatus.Initialized;

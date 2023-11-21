@@ -20,7 +20,7 @@ internal class VolumeTypeButton : SleekWrapper
         visibilityButton = new SleekButtonState(new GUIContent("H", owner.localization.format("Visibility_Hidden")), new GUIContent("W", owner.localization.format("Visibility_Wireframe")), new GUIContent("S", owner.localization.format("Visibility_Solid")));
         visibilityButton.SizeOffset_X = 50f;
         visibilityButton.SizeOffset_Y = 30f;
-        visibilityButton.useContentTooltip = true;
+        visibilityButton.UseContentTooltip = true;
         SleekButtonState sleekButtonState = visibilityButton;
         sleekButtonState.onSwappedState = (SwappedState)Delegate.Combine(sleekButtonState.onSwappedState, new SwappedState(OnSwappedVisibility));
         RefreshVisibility();

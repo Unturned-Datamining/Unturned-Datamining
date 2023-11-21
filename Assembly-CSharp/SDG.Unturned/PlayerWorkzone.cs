@@ -64,6 +64,7 @@ public class PlayerWorkzone : PlayerCaller
             {
                 clearSelection();
             }
+            base.player.ClientSetAdminUsageFlagActive(EPlayerAdminUsageFlags.Workzone, _isBuilding);
         }
     }
 

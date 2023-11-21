@@ -2,14 +2,36 @@ GUID 974bbb7be79a49f2aaf8a3de197ddbae
 Type Spawn
 ID 769
 
-Tables 5
-Table_0_Asset_ID 1361
-Table_0_Weight 15
-Table_1_Asset_ID 1040
-Table_1_Weight 15
-Table_2_Asset_ID 123
-Table_2_Weight 10
-Table_3_Asset_ID 1479
-Table_3_Weight 10
-Table_4_Asset_ID 1371
-Table_4_Weight 10
+Tables
+[
+	{
+		// Teklowvka Magazine (Magazine Item)
+		LegacyAssetId 1361
+		Weight 15
+	}
+	{
+		// Kryzkarek Magazine (Magazine Item)
+		LegacyAssetId 1040
+		Weight 15
+	}
+	{
+		// Ranger Magazine (Magazine Item)
+		LegacyAssetId 123
+		Weight 10
+	}
+	{
+		// Maschinengewehr Magazine (Magazine Item)
+		LegacyAssetId 1479
+		Weight 10
+	}
+	{
+		// Bulldog Magazine (Magazine Item)
+		LegacyAssetId 1371
+		Weight 10
+	}
+	{
+		// 1911 Magazine (Magazine Item)
+		Guid d65116922b5f4a21b009e076d98ab94b
+		Weight 10
+	}
+]

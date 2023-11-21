@@ -24,7 +24,7 @@ public abstract class ClientMethodHandle
         if (clientMethodInfo != null)
         {
             TWriteDelegate val = NetReflection.CreateClientWriteDelegate<TWriteDelegate>(clientMethodInfo);
-            if ((Delegate)val != (Delegate)null)
+            if (val != null)
             {
                 return makeHandle(clientMethodInfo, val);
             }

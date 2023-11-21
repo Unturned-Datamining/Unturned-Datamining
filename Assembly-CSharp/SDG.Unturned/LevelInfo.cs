@@ -54,6 +54,11 @@ public class LevelInfo
     public ulong publishedFileId { get; protected set; }
 
     /// <summary>
+    /// SHA1 hash of the Level.dat file.
+    /// </summary>
+    public byte[] hash { get; protected set; }
+
+    /// <summary>
     /// Test whether this map's workshop file ID is in the curated maps list.
     /// </summary>
     public bool isCurated
@@ -229,7 +234,7 @@ public class LevelInfo
         return LoadingUI.GetRandomImagePathInDirectory(text, onlyWithoutHud: false);
     }
 
-    public LevelInfo(string newPath, string newName, ELevelSize newSize, ELevelType newType, bool newEditable, LevelInfoConfigData newConfigData, ulong publishedFileId)
+    public LevelInfo(string newPath, string newName, ELevelSize newSize, ELevelType newType, bool newEditable, LevelInfoConfigData newConfigData, ulong publishedFileId, byte[] hash)
     {
         path = newPath;
         _name = newName;
@@ -239,5 +244,6 @@ public class LevelInfo
         configData = newConfigData;
         isFromWorkshop = publishedFileId != 0;
         this.publishedFileId = publishedFileId;
+        this.hash = hash;
     }
 }

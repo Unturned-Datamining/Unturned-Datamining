@@ -33,9 +33,9 @@ public class CommandFlag : Command
             }
             flag = true;
         }
-        if (!ushort.TryParse(componentsFromSerial[(!flag) ? 1 : 0], out var result))
+        if (!ushort.TryParse(componentsFromSerial[(!flag) ? 1u : 0u], out var result))
         {
-            CommandWindow.LogError(localization.format("InvalidNumberErrorText", componentsFromSerial[(!flag) ? 1 : 0]));
+            CommandWindow.LogError(localization.format("InvalidNumberErrorText", componentsFromSerial[(!flag) ? 1u : 0u]));
             return;
         }
         if (!short.TryParse(componentsFromSerial[flag ? 1 : 2], out var result2))

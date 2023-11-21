@@ -74,9 +74,12 @@ internal static class ServerMessageHandler_ValidateAssets
             Asset asset = Assets.find(value3);
             if (asset == null)
             {
-                UnturnedLog.info($"Kicking {transportConnection} for invalid file integrity request guid: {value3:N}");
-                Assets.SendKickForInvalidGuid.Invoke(ENetReliability.Reliable, transportConnection, value3);
-                Provider.dismiss(steamPlayer.playerID.steamID);
+                if (!Assets.shouldLoadAnyAssets)
+                {
+                    UnturnedLog.info($"Kicking {transportConnection} for invalid file integrity request guid: {value3:N}");
+                    Assets.SendKickForInvalidGuid.Invoke(ENetReliability.Reliable, transportConnection, value3);
+                    Provider.dismiss(steamPlayer.playerID.steamID);
+                }
                 break;
             }
             if (!asset.ShouldVerifyHash)
@@ -101,7 +104,7 @@ internal static class ServerMessageHandler_ValidateAssets
                     {
                         text = "Unknown";
                     }
-                    UnturnedLog.info($"Kicking {transportConnection} for asset hash mismatch: \"{asset.FriendlyName}\" Type: {asset.GetTypeNameWithoutSuffix()} File: \"{asset.name}\" Id: {value3:N} Client: {Hash.toString(clientHash)} Server: {Hash.toString(array)}");
+                    UnturnedLog.info($"Kicking {transportConnection} for asset hash mismatch: \"{asset.FriendlyName}\" Type: {asset.GetTypeFriendlyName()} File: \"{asset.name}\" Id: {value3:N} Client: {Hash.toString(clientHash)} Server: {Hash.toString(array)}");
                     Assets.SendKickForHashMismatch.Invoke(ENetReliability.Reliable, transportConnection, value3, asset.name, asset.FriendlyName, array, asset.originMasterBundle?.assetBundleNameWithoutExtension, text);
                     Provider.dismiss(steamPlayer.playerID.steamID);
                     break;

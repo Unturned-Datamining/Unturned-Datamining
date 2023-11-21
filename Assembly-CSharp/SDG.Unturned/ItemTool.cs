@@ -180,7 +180,7 @@ public class ItemTool : MonoBehaviour
 
     public static bool tryForceGiveItem(Player player, ushort id, byte amount)
     {
-        if (!(Assets.find(EAssetType.ITEM, id) is ItemAsset itemAsset) || itemAsset.isPro)
+        if (!(Assets.find(EAssetType.ITEM, id) is ItemAsset { isPro: false }))
         {
             return false;
         }

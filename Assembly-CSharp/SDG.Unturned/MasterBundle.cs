@@ -74,7 +74,7 @@ public class MasterBundle : Bundle
         foreach (string text2 in array)
         {
             T val = cfg.assetBundle.LoadAsset<T>(text + text2);
-            if ((UnityEngine.Object)val != (UnityEngine.Object)null)
+            if (val != null)
             {
                 processLoadedObject(val);
                 return val;

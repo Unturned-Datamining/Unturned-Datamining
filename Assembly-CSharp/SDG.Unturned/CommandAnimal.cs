@@ -33,9 +33,9 @@ public class CommandAnimal : Command
             }
             flag = true;
         }
-        if (!ushort.TryParse(componentsFromSerial[(!flag) ? 1 : 0], out var result))
+        if (!ushort.TryParse(componentsFromSerial[(!flag) ? 1u : 0u], out var result))
         {
-            CommandWindow.LogError(localization.format("InvalidAnimalIDErrorText", componentsFromSerial[(!flag) ? 1 : 0]));
+            CommandWindow.LogError(localization.format("InvalidAnimalIDErrorText", componentsFromSerial[(!flag) ? 1u : 0u]));
         }
         else if (!AnimalManager.giveAnimal(player.player, result))
         {

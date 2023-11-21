@@ -2,8 +2,31 @@ GUID 45d0061f29cb402d8c2c601947ed230b
 Type Spawn
 ID 632
 
-Tables 2
-Table_0_Asset_ID 1379
-Table_0_Weight 200
-Table_1_Asset_ID 1390
-Table_1_Weight 100
+Tables
+[
+	{
+		// Calling Card (Gun Item)
+		LegacyAssetId 1379
+		Weight 200
+	}
+	{
+		// Pool Cue (Melee Item)
+		LegacyAssetId 1390
+		Weight 100
+	}
+	{
+		// Maschinengewehr (Gun Item)
+		Guid b007c73f4a23448bbe2d828240eae17d
+		Weight 25
+	}
+	{
+		// Luger (Gun Item)
+		Guid 90b25d37520b4330a452e36e82a41023
+		Weight 25
+	}
+	{
+		// Determinator (Gun Item)
+		Guid ac73fb1922374ef18a8e7c04d1403ba3
+		Weight 25
+	}
+]

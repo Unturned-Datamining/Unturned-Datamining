@@ -1,10 +1,32 @@
 GUID 3e8c961dc14c4451abc7cf07e66bd0e6
 Type Spawn
 ID 231
-Tables 3
-Table_0_Asset_ID 123
-Table_0_Weight 10
-Table_1_Asset_ID 1040
-Table_1_Weight 10
-Table_2_Asset_ID 1042
-Table_2_Weight 10
+
+Tables
+[
+	{
+		// Ranger Magazine (Magazine Item)
+		LegacyAssetId 123
+		Weight 10
+	}
+	{
+		// Kryzkarek Magazine (Magazine Item)
+		LegacyAssetId 1040
+		Weight 10
+	}
+	{
+		// Yuri Magazine (Magazine Item)
+		LegacyAssetId 1042
+		Weight 10
+	}
+	{
+		// Maschinengewehr Magazine (Magazine Item)
+		Guid 78cb493018b8451e8ea7664434483e53
+		Weight 5
+	}
+	{
+		// Luger Magazine (Magazine Item)
+		Guid 29e816ce506b4763a5ff6f29a514ceb7
+		Weight 5
+	}
+]

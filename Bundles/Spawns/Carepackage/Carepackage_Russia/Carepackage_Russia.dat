@@ -2,76 +2,171 @@ GUID b3a18613b4a3483c9c41968ceb46a8d7
 Type Spawn
 ID 615
 
-Tables 36
-Table_0_Asset_ID 6
-Table_0_Weight 200
-Table_1_Asset_ID 4
-Table_1_Weight 100
-Table_2_Asset_ID 1027
-Table_2_Weight 100
-Table_3_Asset_ID 1021
-Table_3_Weight 100
-Table_4_Asset_ID 1022
-Table_4_Weight 100
-Table_5_Asset_ID 1020
-Table_5_Weight 100
-Table_6_Asset_ID 1449
-Table_6_Weight 100
-Table_7_Asset_ID 1488
-Table_7_Weight 100
-Table_8_Asset_ID 1490
-Table_8_Weight 100
-Table_9_Asset_ID 1018
-Table_9_Weight 100
-Table_10_Asset_ID 1026
-Table_10_Weight 100
-Table_11_Asset_ID 113
-Table_11_Weight 100
-Table_12_Asset_ID 1447
-Table_12_Weight 100
-Table_13_Asset_ID 1024
-Table_13_Weight 100
-Table_14_Asset_ID 1029
-Table_14_Weight 100
-Table_15_Asset_ID 1480
-Table_15_Weight 100
-Table_16_Asset_ID 1479
-Table_16_Weight 100
-Table_17_Asset_ID 1487
-Table_17_Weight 100
-Table_18_Asset_ID 1477
-Table_18_Weight 100
-Table_19_Asset_ID 112
-Table_19_Weight 100
-Table_20_Asset_ID 1476
-Table_20_Weight 100
-Table_21_Asset_ID 1483
-Table_21_Weight 100
-Table_22_Asset_ID 1481
-Table_22_Weight 100
-Table_23_Asset_ID 489
-Table_23_Weight 50
-Table_24_Asset_ID 132
-Table_24_Weight 50
-Table_25_Asset_ID 488
-Table_25_Weight 50
-Table_26_Asset_ID 1484
-Table_26_Weight 50
-Table_27_Asset_ID 1485
-Table_27_Weight 50
-Table_28_Asset_ID 1037
-Table_28_Weight 50
-Table_29_Asset_ID 133
-Table_29_Weight 50
-Table_30_Asset_ID 363
-Table_30_Weight 50
-Table_31_Asset_ID 18
-Table_31_Weight 25
-Table_32_Asset_ID 20
-Table_32_Weight 25
-Table_33_Asset_ID 298
-Table_33_Weight 25
-Table_34_Asset_ID 116
-Table_34_Weight 25
-Table_35_Asset_ID 297
-Table_35_Weight 25
+Tables
+[
+	{
+		// Military Magazine (Magazine Item)
+		LegacyAssetId 6
+		Weight 200
+	}
+	{
+		// Empire (Gun Item)
+		LegacyAssetId 1481
+		Weight 100
+	}
+	{
+		// Bluntforce (Gun Item)
+		LegacyAssetId 112
+		Weight 100
+	}
+	{
+		// Viper Magazine (Magazine Item)
+		LegacyAssetId 1029
+		Weight 100
+	}
+	{
+		// Peacemaker (Gun Item)
+		LegacyAssetId 1024
+		Weight 100
+	}
+	{
+		// Scalar (Gun Item)
+		LegacyAssetId 1447
+		Weight 100
+	}
+	{
+		// Sabertooth Magazine (Magazine Item)
+		LegacyAssetId 1020
+		Weight 100
+	}
+	{
+		// Peacemaker Magazine (Magazine Item)
+		LegacyAssetId 1026
+		Weight 100
+	}
+	{
+		// Sabertooth (Gun Item)
+		LegacyAssetId 1018
+		Weight 100
+	}
+	{
+		// Empire Magazine (Magazine Item)
+		LegacyAssetId 1483
+		Weight 100
+	}
+	{
+		// Swissgewehr (Gun Item)
+		LegacyAssetId 1488
+		Weight 100
+	}
+	{
+		// Swissgewehr Magazine (Magazine Item)
+		LegacyAssetId 1490
+		Weight 100
+	}
+	{
+		// 12 Gauge Shells (Magazine Item)
+		LegacyAssetId 113
+		Weight 100
+	}
+	{
+		// Eaglefire (Gun Item)
+		LegacyAssetId 4
+		Weight 100
+	}
+	{
+		// Raw Explosives (Supply Item)
+		Guid 8ce5c560166545499432d6e01ce399cc
+		Weight 100
+	}
+	{
+		// Avenger (Gun Item)
+		LegacyAssetId 1021
+		Weight 100
+	}
+	{
+		// Avenger Magazine (Magazine Item)
+		LegacyAssetId 1022
+		Weight 100
+	}
+	{
+		// Viper (Gun Item)
+		LegacyAssetId 1027
+		Weight 100
+	}
+	{
+		// Scalar Magazine (Magazine Item)
+		LegacyAssetId 1449
+		Weight 100
+	}
+	{
+		// Devil's Bane Magazine (Magazine Item)
+		LegacyAssetId 1485
+		Weight 50
+	}
+	{
+		// Dragonfang Box (Magazine Item)
+		LegacyAssetId 133
+		Weight 50
+	}
+	{
+		// Maplestrike (Gun Item)
+		LegacyAssetId 363
+		Weight 50
+	}
+	{
+		// Heartbreaker (Gun Item)
+		LegacyAssetId 1037
+		Weight 50
+	}
+	{
+		// Dragonfang (Gun Item)
+		LegacyAssetId 132
+		Weight 50
+	}
+	{
+		// Devil's Bane (Gun Item)
+		LegacyAssetId 1484
+		Weight 50
+	}
+	{
+		// Desert Falcon (Gun Item)
+		LegacyAssetId 488
+		Weight 50
+	}
+	{
+		// Desert Falcon Magazine (Magazine Item)
+		LegacyAssetId 489
+		Weight 50
+	}
+	{
+		// Detonator (Detonator Item)
+		Guid 8d80a12a6f564850ab2478927648dd7a
+		Weight 40
+	}
+	{
+		// Grizzly Magazine (Magazine Item)
+		LegacyAssetId 298
+		Weight 25
+	}
+	{
+		// PDW (Gun Item)
+		LegacyAssetId 116
+		Weight 25
+	}
+	{
+		// Timberwolf (Gun Item)
+		LegacyAssetId 18
+		Weight 25
+	}
+	{
+		// Timberwolf Magazine (Magazine Item)
+		LegacyAssetId 20
+		Weight 25
+	}
+	{
+		// Grizzly (Gun Item)
+		LegacyAssetId 297
+		Weight 25
+	}
+]

@@ -82,7 +82,12 @@ public class NPCItemCondition : NPCLogicCondition
             string arg = "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemAsset.rarity)) + ">" + itemAsset.itemName + "</color>";
             search.Clear();
             player.inventory.search(search, itemAsset.id, findEmpty: false, findHealthy: true);
-            return string.Format(text, search.Count, amount, arg);
+            int num = 0;
+            foreach (InventorySearch item in search)
+            {
+                num += item.jar.item.amount;
+            }
+            return string.Format(text, num, amount, arg);
         }
         return string.Format(text, 0, amount, "?");
     }

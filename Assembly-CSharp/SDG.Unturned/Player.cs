@@ -106,6 +106,10 @@ public class Player : MonoBehaviour
 
     private static readonly ClientInstanceMethod<uint> SendSetPluginWidgetFlags = ClientInstanceMethod<uint>.Get(typeof(Player), "ReceiveSetPluginWidgetFlags");
 
+    private EPlayerAdminUsageFlags _adminUsageFlags;
+
+    private static readonly ServerInstanceMethod<uint> SendAdminUsageFlags = ServerInstanceMethod<uint>.Get(typeof(Player), "ReceiveAdminUsageFlags");
+
     private static readonly ServerInstanceMethod SendBattlEyeLogsRequest = ServerInstanceMethod.Get(typeof(Player), "ReceiveBattlEyeLogsRequest");
 
     private static readonly ClientInstanceMethod<string> SendTerminalRelay = ClientInstanceMethod<string>.Get(typeof(Player), "ReceiveTerminalRelay");
@@ -230,6 +234,14 @@ public class Player : MonoBehaviour
     public EPluginWidgetFlags pluginWidgetFlags { get; protected set; } = EPluginWidgetFlags.Default;
 
 
+    /// <summary>
+    /// Which admin powers are currently in use by the client.
+    /// Reported to the server by the client.
+    /// Does not control which admin powers are available.
+    /// Note: Hacks can prevent this notification from being sent.
+    /// </summary>
+    public EPlayerAdminUsageFlags AdminUsageFlags => _adminUsageFlags;
+
     public bool wantsBattlEyeLogs { get; protected set; }
 
     /// <summary>
@@ -238,6 +250,16 @@ public class Player : MonoBehaviour
     /// Cannot perform actions when greater than one.
     /// </summary>
     public float rateLimitedActionsCredits { get; protected set; }
+
+    /// <summary>
+    /// Per-player event invoked when admin usage flags change.
+    /// </summary>
+    public event AdminUsageFlagsChanged OnAdminUsageChanged;
+
+    /// <summary>
+    /// Event invoked when any player's admin usage flags change.
+    /// </summary>
+    public static event AdminUsageFlagsChanged OnAnyPlayerAdminUsageChanged;
 
     /// <summary>
     /// Used by plugins.
@@ -564,6 +586,87 @@ public class Player : MonoBehaviour
     public void serversideSetPluginModal(bool enableModal)
     {
         setPluginWidgetFlag(EPluginWidgetFlags.Modal, enableModal);
+    }
+
+    [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 8)]
+    public void ReceiveAdminUsageFlags(in ServerInvocationContext context, uint newFlagsBitmask)
+    {
+        try
+        {
+        }
+        catch
+        {
+            context.Kick("invalid admin usage flags");
+            return;
+        }
+        if (_adminUsageFlags == (EPlayerAdminUsageFlags)newFlagsBitmask)
+        {
+            return;
+        }
+        EPlayerAdminUsageFlags adminUsageFlags = _adminUsageFlags;
+        _adminUsageFlags = (EPlayerAdminUsageFlags)newFlagsBitmask;
+        if (adminUsageFlags.HasFlag(EPlayerAdminUsageFlags.Freecam) != ((EPlayerAdminUsageFlags)newFlagsBitmask).HasFlag(EPlayerAdminUsageFlags.Freecam))
+        {
+            if (((EPlayerAdminUsageFlags)newFlagsBitmask).HasFlag(EPlayerAdminUsageFlags.Freecam))
+            {
+                UnturnedLog.info($"{channel.owner.playerID} entered freecam admin mode");
+            }
+            else
+            {
+                UnturnedLog.info($"{channel.owner.playerID} exited freecam admin mode");
+            }
+        }
+        if (adminUsageFlags.HasFlag(EPlayerAdminUsageFlags.Workzone) != ((EPlayerAdminUsageFlags)newFlagsBitmask).HasFlag(EPlayerAdminUsageFlags.Workzone))
+        {
+            if (((EPlayerAdminUsageFlags)newFlagsBitmask).HasFlag(EPlayerAdminUsageFlags.Workzone))
+            {
+                UnturnedLog.info($"{channel.owner.playerID} entered workzone admin mode");
+            }
+            else
+            {
+                UnturnedLog.info($"{channel.owner.playerID} exited workzone admin mode");
+            }
+        }
+        if (adminUsageFlags.HasFlag(EPlayerAdminUsageFlags.SpectatorStatsOverlay) != ((EPlayerAdminUsageFlags)newFlagsBitmask).HasFlag(EPlayerAdminUsageFlags.SpectatorStatsOverlay))
+        {
+            if (((EPlayerAdminUsageFlags)newFlagsBitmask).HasFlag(EPlayerAdminUsageFlags.SpectatorStatsOverlay))
+            {
+                UnturnedLog.info($"{channel.owner.playerID} turned on spectator stats overlay admin mode");
+            }
+            else
+            {
+                UnturnedLog.info($"{channel.owner.playerID} turned off spectator stats overlay admin mode");
+            }
+        }
+        this.OnAdminUsageChanged?.Invoke(this, adminUsageFlags, (EPlayerAdminUsageFlags)newFlagsBitmask);
+        Player.OnAnyPlayerAdminUsageChanged?.Invoke(this, adminUsageFlags, (EPlayerAdminUsageFlags)newFlagsBitmask);
+    }
+
+    /// <summary>
+    /// Called on the client to notify the server of admin usage changes (if any).
+    /// </summary>
+    private void ClientSetAdminUsageFlags(EPlayerAdminUsageFlags newFlags)
+    {
+        if (_adminUsageFlags != newFlags)
+        {
+            _adminUsageFlags = newFlags;
+            SendAdminUsageFlags.Invoke(GetNetId(), ENetReliability.Reliable, (uint)_adminUsageFlags);
+        }
+    }
+
+    /// <summary>
+    /// Called on the client to notify the server of admin usage changes (if any).
+    /// </summary>
+    internal void ClientSetAdminUsageFlagActive(EPlayerAdminUsageFlags flag, bool active)
+    {
+        if (active)
+        {
+            ClientSetAdminUsageFlags(_adminUsageFlags | flag);
+        }
+        else
+        {
+            ClientSetAdminUsageFlags(_adminUsageFlags & ~flag);
+        }
     }
 
     [Obsolete]

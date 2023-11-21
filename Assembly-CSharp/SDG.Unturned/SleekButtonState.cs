@@ -6,14 +6,11 @@ public class SleekButtonState : SleekWrapper
 {
     private int _state;
 
-    /// <summary>
-    /// If true, button tooltip will be overridden with tooltip from states array.
-    /// </summary>
-    public bool useContentTooltip;
+    private bool _useContentTooltip;
 
     public SwappedState onSwappedState;
 
-    private SleekButtonIcon button;
+    internal SleekButtonIcon button;
 
     public GUIContent[] states { get; private set; }
 
@@ -54,13 +51,39 @@ public class SleekButtonState : SleekWrapper
         }
     }
 
+    /// <summary>
+    /// If true, button tooltip will be overridden with tooltip from states array.
+    /// </summary>
+    public bool UseContentTooltip
+    {
+        get
+        {
+            return _useContentTooltip;
+        }
+        set
+        {
+            _useContentTooltip = value;
+            if (_useContentTooltip)
+            {
+                if (states != null && state >= 0 && state < states.Length && states[state] != null)
+                {
+                    button.tooltip = states[state].tooltip;
+                }
+                else
+                {
+                    button.tooltip = string.Empty;
+                }
+            }
+        }
+    }
+
     private void synchronizeActiveContent()
     {
         if (states != null && state >= 0 && state < states.Length && states[state] != null)
         {
             button.text = states[state].text;
             button.icon = states[state].image as Texture2D;
-            if (useContentTooltip)
+            if (_useContentTooltip)
             {
                 button.tooltip = states[state].tooltip;
             }
@@ -69,7 +92,7 @@ public class SleekButtonState : SleekWrapper
         {
             button.text = string.Empty;
             button.icon = null;
-            if (useContentTooltip)
+            if (_useContentTooltip)
             {
                 button.tooltip = string.Empty;
             }
@@ -109,9 +132,14 @@ public class SleekButtonState : SleekWrapper
     }
 
     public SleekButtonState(params GUIContent[] newStates)
+        : this(0, newStates)
+    {
+    }
+
+    public SleekButtonState(int iconSize, params GUIContent[] newStates)
     {
         _state = 0;
-        button = new SleekButtonIcon(null);
+        button = new SleekButtonIcon(null, iconSize);
         button.SizeScale_X = 1f;
         button.SizeScale_Y = 1f;
         AddChild(button);

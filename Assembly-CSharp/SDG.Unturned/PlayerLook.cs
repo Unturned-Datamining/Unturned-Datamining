@@ -449,6 +449,7 @@ public class PlayerLook : PlayerCaller
             isTracking = false;
             isLocking = false;
             isFocusing = false;
+            base.player.ClientSetAdminUsageFlagActive(EPlayerAdminUsageFlags.Freecam, active: false);
             if (PlayerWorkzoneUI.active)
             {
                 PlayerWorkzoneUI.close();
@@ -780,6 +781,7 @@ public class PlayerLook : PlayerCaller
             isTracking = false;
             isLocking = false;
             isFocusing = false;
+            base.player.ClientSetAdminUsageFlagActive(EPlayerAdminUsageFlags.Freecam, active: false);
         }
     }
 
@@ -841,6 +843,7 @@ public class PlayerLook : PlayerCaller
         if (!canUseSpecStats)
         {
             areSpecStatsVisible = false;
+            base.player.ClientSetAdminUsageFlagActive(EPlayerAdminUsageFlags.SpectatorStatsOverlay, active: false);
         }
     }
 
@@ -884,6 +887,7 @@ public class PlayerLook : PlayerCaller
                         {
                             isTracking = true;
                         }
+                        base.player.ClientSetAdminUsageFlagActive(EPlayerAdminUsageFlags.Freecam, isCam);
                     }
                     if (InputEx.GetKeyDown(KeyCode.F2))
                     {
@@ -893,6 +897,7 @@ public class PlayerLook : PlayerCaller
                             isLocking = false;
                             isFocusing = false;
                         }
+                        base.player.ClientSetAdminUsageFlagActive(EPlayerAdminUsageFlags.Freecam, isCam);
                     }
                     if (InputEx.GetKeyDown(KeyCode.F3))
                     {
@@ -903,6 +908,7 @@ public class PlayerLook : PlayerCaller
                             isFocusing = false;
                             lockPosition = base.player.first.position;
                         }
+                        base.player.ClientSetAdminUsageFlagActive(EPlayerAdminUsageFlags.Freecam, isCam);
                     }
                     if (InputEx.GetKeyDown(KeyCode.F4))
                     {
@@ -913,6 +919,7 @@ public class PlayerLook : PlayerCaller
                             isLocking = false;
                             lockPosition = base.player.first.position;
                         }
+                        base.player.ClientSetAdminUsageFlagActive(EPlayerAdminUsageFlags.Freecam, isCam);
                     }
                     if (InputEx.GetKeyDown(KeyCode.F5))
                     {
@@ -942,6 +949,7 @@ public class PlayerLook : PlayerCaller
                     {
                         areSpecStatsVisible = true;
                     }
+                    base.player.ClientSetAdminUsageFlagActive(EPlayerAdminUsageFlags.SpectatorStatsOverlay, areSpecStatsVisible);
                 }
             }
             float num = heightLook;

@@ -1,12 +1,10 @@
-ConnectButtonText Connect
-ConnectButtonTooltip Connect
-ServersButtonText Servers
-ServersButtonTooltip Servers
+ConnectButtonText Connect by IP
+ConnectButtonTooltip Connect to a known address and port.
+ServersButtonText Multiplayer
+ServersButtonTooltip Browse servers to play over a network connection.
 SingleplayerButtonText Singleplayer
-SingleplayerButtonTooltip Singleplayer
-MatchmakingButtonText Matchmaking
-MatchmakingButtonTooltip Matchmaking
+SingleplayerButtonTooltip Offline without other players.
 LobbiesButtonText Lobby
-LobbiesButtonTooltip Lobby
+LobbiesButtonTooltip Form a party with your friends to join the same server as a group.
 TutorialButtonText Tutorial
 TutorialButtonTooltip Tutorial

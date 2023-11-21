@@ -1189,7 +1189,7 @@ public class PlayerQuests : PlayerCaller
             INPCCondition[] conditions = quests.asset.conditions;
             for (int i = 0; i < conditions.Length; i++)
             {
-                if (conditions[i] is NPCTreeKillsCondition nPCTreeKillsCondition && nPCTreeKillsCondition.treeGuid.Equals(treeGuid))
+                if (conditions[i] is NPCTreeKillsCondition { treeGuid: var treeGuid2 } nPCTreeKillsCondition && treeGuid2.Equals(treeGuid))
                 {
                     getFlag(nPCTreeKillsCondition.id, out var value);
                     value++;

@@ -7,7 +7,7 @@ public static class GameObjectEx
     public static T GetOrAddComponent<T>(this GameObject gameObject) where T : Component
     {
         T val = gameObject.GetComponent<T>();
-        if ((Object)val == (Object)null)
+        if (val == null)
         {
             val = gameObject.AddComponent<T>();
         }

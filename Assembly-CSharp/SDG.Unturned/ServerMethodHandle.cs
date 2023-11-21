@@ -23,7 +23,7 @@ public abstract class ServerMethodHandle
         if (serverMethodInfo != null)
         {
             TWriteDelegate val = NetReflection.CreateServerWriteDelegate<TWriteDelegate>(serverMethodInfo);
-            if ((Delegate)val != (Delegate)null)
+            if (val != null)
             {
                 return makeHandle(serverMethodInfo, val);
             }

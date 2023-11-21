@@ -35,7 +35,7 @@ public class CommandQuest : Command
             flag = true;
         }
         QuestAsset questAsset = null;
-        string text = componentsFromSerial[(!flag) ? 1 : 0];
+        string text = componentsFromSerial[(!flag) ? 1u : 0u];
         ushort result2;
         if (Guid.TryParse(text, out var result))
         {

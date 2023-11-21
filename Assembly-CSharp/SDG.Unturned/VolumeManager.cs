@@ -99,7 +99,7 @@ public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume 
 
     public bool IsPositionInsideAnyVolume(Vector3 position)
     {
-        return (Object)GetFirstOverlappingVolume(position) != (Object)null;
+        return GetFirstOverlappingVolume(position) != null;
     }
 
     public override bool Raycast(Ray ray, out RaycastHit hitInfo, float maxDistance)
@@ -139,7 +139,7 @@ public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume 
                 hitInfo = hitInfo2;
             }
         }
-        return (Object)hitVolume != (Object)null;
+        return hitVolume != null;
     }
 
     public virtual void AddVolume(TVolume volume)

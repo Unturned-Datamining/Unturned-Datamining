@@ -39,6 +39,7 @@ Hash_Level This server is using a modified version of the map.
 # https://support.smartlydressedgames.com/hc/en-us/articles/12233096287124
 Hash_Assembly This server is using modified code.
 
+# https://support.smartlydressedgames.com/hc/en-us/articles/20343153432468
 Hash_Resources Built-in resources mismatch. Verifying game files should repair this.
 
 Version This server is running version {0} of the game, whereas you are running version {1}.

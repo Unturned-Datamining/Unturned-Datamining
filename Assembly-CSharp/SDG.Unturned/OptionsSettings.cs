@@ -27,9 +27,11 @@ public class OptionsSettings
     /// </summary>
     private const byte SAVEDATA_VERSION_ADDED_HITMARKER_STYLE_FIX = 45;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 45;
+    private const byte SAVEDATA_VERSION_REMOVED_MATCHMAKING = 46;
 
-    public static readonly byte SAVEDATA_VERSION = 45;
+    private const byte SAVEDATA_VERSION_NEWEST = 46;
+
+    public static readonly byte SAVEDATA_VERSION = 46;
 
     public static readonly byte MIN_FOV = 60;
 
@@ -78,15 +80,9 @@ public class OptionsSettings
 
     public static bool featuredWorkshop;
 
-    public static bool matchmakingShowAllMaps;
-
     public static bool showHotbar;
 
     public static bool pauseWhenUnfocused;
-
-    public static int minMatchmakingPlayers;
-
-    public static int maxMatchmakingPing;
 
     public static int screenshotSizeMultiplier;
 
@@ -340,11 +336,8 @@ public class OptionsSettings
         ShouldHitmarkersFollowWorldPosition = false;
         streamer = false;
         featuredWorkshop = true;
-        matchmakingShowAllMaps = false;
         showHotbar = true;
         pauseWhenUnfocused = true;
-        minMatchmakingPlayers = 12;
-        maxMatchmakingPing = 300;
         screenshotSizeMultiplier = 1;
         enableScreenshotSupersampling = true;
         enableScreenshotsOnLoadingScreen = true;
@@ -516,13 +509,9 @@ public class OptionsSettings
         {
             featuredWorkshop = true;
         }
-        if (b > 28)
+        if (b > 28 && b < 46)
         {
-            matchmakingShowAllMaps = block.readBoolean();
-        }
-        else
-        {
-            matchmakingShowAllMaps = false;
+            block.readBoolean();
         }
         if (b > 29)
         {
@@ -540,21 +529,13 @@ public class OptionsSettings
         {
             pauseWhenUnfocused = true;
         }
-        if (b > 27)
+        if (b > 27 && b < 46)
         {
-            minMatchmakingPlayers = block.readInt32();
+            block.readInt32();
         }
-        else
+        if (b > 26 && b < 46)
         {
-            minMatchmakingPlayers = 12;
-        }
-        if (b > 26)
-        {
-            maxMatchmakingPing = block.readInt32();
-        }
-        else
-        {
-            maxMatchmakingPing = 300;
+            block.readInt32();
         }
         if (b > 6)
         {
@@ -673,7 +654,7 @@ public class OptionsSettings
     public static void save()
     {
         Block block = new Block();
-        block.writeByte(45);
+        block.writeByte(46);
         block.writeBoolean(music);
         block.writeBoolean(splashscreen);
         block.writeBoolean(timer);
@@ -695,11 +676,8 @@ public class OptionsSettings
         block.writeBoolean(ShouldHitmarkersFollowWorldPosition);
         block.writeBoolean(streamer);
         block.writeBoolean(featuredWorkshop);
-        block.writeBoolean(matchmakingShowAllMaps);
         block.writeBoolean(showHotbar);
         block.writeBoolean(pauseWhenUnfocused);
-        block.writeInt32(minMatchmakingPlayers);
-        block.writeInt32(maxMatchmakingPing);
         block.writeColor(crosshairColor);
         block.writeColor(hitmarkerColor);
         block.writeColor(criticalHitmarkerColor);

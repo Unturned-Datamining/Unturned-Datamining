@@ -37,7 +37,14 @@ public class SleekList<T> : SleekWrapper where T : class
     /// </summary>
     public int IndexOfCreateElementItem { get; private set; }
 
+    public int ElementCount => visibleEntries.Count;
+
     public ISleekScrollView scrollView { get; private set; }
+
+    public ISleekElement GetElement(int index)
+    {
+        return visibleEntries[index].element;
+    }
 
     public void SetData(List<T> data)
     {

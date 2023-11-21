@@ -59,7 +59,7 @@ public class CommandTeleport : Command
             CommandWindow.LogError(localization.format("NoPlayerErrorText", componentsFromSerial[0]));
             return;
         }
-        if (PlayerTool.tryGetSteamPlayer(componentsFromSerial[(!flag) ? 1 : 0], out var player2))
+        if (PlayerTool.tryGetSteamPlayer(componentsFromSerial[(!flag) ? 1u : 0u], out var player2))
         {
             if (player2.player.movement.getVehicle() != null)
             {
@@ -75,7 +75,7 @@ public class CommandTeleport : Command
             }
             return;
         }
-        if (componentsFromSerial[(!flag) ? 1 : 0].Equals(localization.format("WaypointCommand"), StringComparison.InvariantCultureIgnoreCase) && player.player.quests.isMarkerPlaced)
+        if (componentsFromSerial[(!flag) ? 1u : 0u].Equals(localization.format("WaypointCommand"), StringComparison.InvariantCultureIgnoreCase) && player.player.quests.isMarkerPlaced)
         {
             Vector3 position = player.player.quests.markerPosition;
             if (raycastFromSkyToPosition(ref position))
@@ -91,7 +91,7 @@ public class CommandTeleport : Command
             }
             return;
         }
-        if (componentsFromSerial[(!flag) ? 1 : 0].Equals(localization.format("BedCommand"), StringComparison.InvariantCultureIgnoreCase))
+        if (componentsFromSerial[(!flag) ? 1u : 0u].Equals(localization.format("BedCommand"), StringComparison.InvariantCultureIgnoreCase))
         {
             if (player.player.teleportToBed())
             {
@@ -106,7 +106,7 @@ public class CommandTeleport : Command
         LocationDevkitNode locationDevkitNode = null;
         foreach (LocationDevkitNode allNode in LocationDevkitNodeSystem.Get().GetAllNodes())
         {
-            if (NameTool.checkNames(componentsFromSerial[(!flag) ? 1 : 0], allNode.locationName))
+            if (NameTool.checkNames(componentsFromSerial[(!flag) ? 1u : 0u], allNode.locationName))
             {
                 locationDevkitNode = allNode;
                 break;
@@ -127,7 +127,7 @@ public class CommandTeleport : Command
         }
         else
         {
-            CommandWindow.LogError(localization.format("NoLocationErrorText", componentsFromSerial[(!flag) ? 1 : 0]));
+            CommandWindow.LogError(localization.format("NoLocationErrorText", componentsFromSerial[(!flag) ? 1u : 0u]));
         }
     }
 

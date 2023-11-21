@@ -38,7 +38,7 @@ public class PowerTool
         for (int i = 0; i < barricadesInRadius.Count; i++)
         {
             T component = barricadesInRadius[i].GetComponent<T>();
-            if (!((Object)component == (Object)null))
+            if (!(component == null))
             {
                 interactablesInRadius.Add(component);
             }
@@ -56,7 +56,7 @@ public class PowerTool
         for (int i = 0; i < barricadesInRadius.Count; i++)
         {
             T component = barricadesInRadius[i].GetComponent<T>();
-            if (!((Object)component == (Object)null))
+            if (!(component == null))
             {
                 interactablesInRadius.Add(component);
             }

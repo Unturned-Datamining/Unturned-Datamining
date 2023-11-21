@@ -33,9 +33,9 @@ public class CommandReputation : Command
             }
             flag = true;
         }
-        if (!int.TryParse(componentsFromSerial[(!flag) ? 1 : 0], out var result))
+        if (!int.TryParse(componentsFromSerial[(!flag) ? 1u : 0u], out var result))
         {
-            CommandWindow.LogError(localization.format("InvalidNumberErrorText", componentsFromSerial[(!flag) ? 1 : 0]));
+            CommandWindow.LogError(localization.format("InvalidNumberErrorText", componentsFromSerial[(!flag) ? 1u : 0u]));
             return;
         }
         player.player.skills.askRep(result);

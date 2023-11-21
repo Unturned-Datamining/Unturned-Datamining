@@ -20,6 +20,9 @@ Reward_Item_Random Random Item x{0}
 Reward_Vehicle {0} x1
 Reward_Currency {0} Currency
 Reward_Health {0} Health
+Reward_Food {0} Food
+Reward_Water {0} Water
+Reward_Virus {0} Immunity
 
 Accept Accept
 Accept_Tooltip Take Quest

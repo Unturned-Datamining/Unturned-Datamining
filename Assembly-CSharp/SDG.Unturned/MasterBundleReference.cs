@@ -118,7 +118,7 @@ public struct MasterBundleReference<T> : IFormattedFileReadable, IFormattedFileW
         }
         string text = masterBundleConfig.formatAssetPath(path);
         T val = masterBundleConfig.assetBundle.LoadAsset<T>(text);
-        if ((Object)val == (Object)null && logWarnings)
+        if (val == null && logWarnings)
         {
             UnturnedLog.warn("Failed to load asset '{0}' from master bundle '{1}' as {2}", text, name, typeof(T).Name);
         }

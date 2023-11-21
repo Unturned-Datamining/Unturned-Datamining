@@ -412,6 +412,16 @@ public class ItemAsset : Asset, ISkinableAsset
         }
     }
 
+    public override string GetTypeFriendlyName()
+    {
+        string text = base.GetTypeFriendlyName();
+        if (text.StartsWith("Item "))
+        {
+            text = text.Substring(5) + " Item";
+        }
+        return text;
+    }
+
     public void applySkinBaseTextures(Material material)
     {
         if (sharedSkinLookupID > 0 && sharedSkinLookupID != id && Assets.find(EAssetType.ITEM, sharedSkinLookupID) is ItemAsset itemAsset)

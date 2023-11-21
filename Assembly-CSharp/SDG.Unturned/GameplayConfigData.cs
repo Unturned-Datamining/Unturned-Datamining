@@ -54,6 +54,13 @@ public class GameplayConfigData
     /// </summary>
     public bool Allow_Holidays = true;
 
+    /// <summary>
+    /// Can "freeform" barricades be crafted and placed?
+    /// Defaults to true in singleplayer, false in multiplayer.
+    /// These barricades are highly controversial because they are easy to grief with.
+    /// </summary>
+    public bool Allow_Freeform_Buildables;
+
     internal const uint MAX_TIMER_EXIT = 60u;
 
     public uint Timer_Exit;
@@ -137,5 +144,6 @@ public class GameplayConfigData
     public void InitSingleplayerDefaults()
     {
         Bypass_Buildable_Mobility = true;
+        Allow_Freeform_Buildables = true;
     }
 }

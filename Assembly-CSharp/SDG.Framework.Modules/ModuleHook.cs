@@ -7,6 +7,7 @@ using SDG.NetTransport;
 using SDG.Unturned;
 using Steamworks;
 using UnityEngine;
+using Unturned.SystemEx;
 
 namespace SDG.Framework.Modules;
 
@@ -458,28 +459,35 @@ public class ModuleHook : MonoBehaviour
         string[] files = Directory.GetFiles(path, "*.module");
         foreach (string text in files)
         {
-            ModuleConfig moduleConfig = IOUtility.jsonDeserializer.deserialize<ModuleConfig>(text);
-            if (moduleConfig == null)
+            try
             {
-                UnturnedLog.warn("Unable to parse module config file: " + text);
-                continue;
+                ModuleConfig moduleConfig = IOUtility.jsonDeserializer.deserialize<ModuleConfig>(text);
+                if (moduleConfig == null)
+                {
+                    UnturnedLog.warn("Unable to parse module config file: " + text);
+                    continue;
+                }
+                moduleConfig.DirectoryPath = path;
+                moduleConfig.FilePath = text;
+                moduleConfig.Version_Internal = Parser.getUInt32FromIP(moduleConfig.Version);
+                for (int num = moduleConfig.Dependencies.Count - 1; num >= 0; num--)
+                {
+                    ModuleDependency moduleDependency = moduleConfig.Dependencies[num];
+                    if (moduleDependency.Name == "Framework" || moduleDependency.Name == "Unturned")
+                    {
+                        moduleConfig.Dependencies.RemoveAtFast(num);
+                    }
+                    else
+                    {
+                        moduleDependency.Version_Internal = Parser.getUInt32FromIP(moduleDependency.Version);
+                    }
+                }
+                configs.Add(moduleConfig);
             }
-            moduleConfig.DirectoryPath = path;
-            moduleConfig.FilePath = text;
-            moduleConfig.Version_Internal = Parser.getUInt32FromIP(moduleConfig.Version);
-            for (int num = moduleConfig.Dependencies.Count - 1; num >= 0; num--)
+            catch (Exception e)
             {
-                ModuleDependency moduleDependency = moduleConfig.Dependencies[num];
-                if (moduleDependency.Name == "Framework" || moduleDependency.Name == "Unturned")
-                {
-                    moduleConfig.Dependencies.RemoveAtFast(num);
-                }
-                else
-                {
-                    moduleDependency.Version_Internal = Parser.getUInt32FromIP(moduleDependency.Version);
-                }
+                UnturnedLog.exception(e, "Caught exception parsing .module file: " + text);
             }
-            configs.Add(moduleConfig);
         }
         string[] directories = Directory.GetDirectories(path);
         foreach (string path2 in directories)
@@ -700,7 +708,7 @@ public class ModuleHook : MonoBehaviour
         for (int i = 0; i < coreTypes.Length; i++)
         {
             Type type = coreTypes[i];
-            if (!type.IsAbstract && typeFromHandle.IsAssignableFrom(type))
+            if (!type.IsAbstract && typeFromHandle.TryIsAssignableFrom(type))
             {
                 IModuleNexus moduleNexus = Activator.CreateInstance(type) as IModuleNexus;
                 try

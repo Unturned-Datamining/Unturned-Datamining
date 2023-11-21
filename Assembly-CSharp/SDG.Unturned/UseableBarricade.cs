@@ -396,6 +396,14 @@ public class UseableBarricade : Useable
             }
             return false;
         }
+        if (equippedBarricadeAsset.build == EBuild.FREEFORM && !Provider.modeConfigData.Gameplay.Allow_Freeform_Buildables)
+        {
+            if (base.channel.IsLocalPlayer)
+            {
+                PlayerUI.hint(null, EPlayerMessage.FREEFORM_BUILDABLE_NOT_ALLOWED);
+            }
+            return false;
+        }
         if (parent != null && parentVehicle != null && parentVehicle.anySeatsOccupied)
         {
             if (base.channel.IsLocalPlayer)
@@ -1438,7 +1446,7 @@ public class UseableBarricade : Useable
                 VehicleAsset vehicleAsset = itemBarricadeAsset.FindVehicleAsset();
                 if (vehicleAsset != null)
                 {
-                    flag = VehicleManager.spawnVehicleV2(vehicleAsset.id, point, Quaternion.Euler(angle_x + rotate_x, angle_y + rotate_y, angle_z + rotate_z)) != null;
+                    flag = VehicleManager.spawnLockedVehicleForPlayerV2(vehicleAsset.id, point, Quaternion.Euler(angle_x + rotate_x, angle_y + rotate_y, angle_z + rotate_z), base.player) != null;
                 }
             }
             else

@@ -84,20 +84,20 @@ public class SpawnTable
         if (!targetGuid.IsEmpty())
         {
             Asset asset = Assets.find(targetGuid);
-            string message = ((asset != null) ? (asset.FriendlyName + " (" + asset.GetTypeNameWithoutSuffix() + ")") : $"Unknown {legacyAssetType}");
+            string message = ((asset != null) ? (asset.FriendlyName + " (" + asset.GetTypeFriendlyName() + ")") : $"Unknown {legacyAssetType}");
             writer.WriteComment(message);
             writer.WriteKeyValue("Guid", targetGuid);
         }
         else if (legacyAssetId > 0)
         {
             Asset asset2 = Assets.find(legacyAssetType, legacyAssetId);
-            string message2 = ((asset2 != null) ? (asset2.FriendlyName + " (" + asset2.GetTypeNameWithoutSuffix() + ")") : $"Unknown {legacyAssetType}");
+            string message2 = ((asset2 != null) ? (asset2.FriendlyName + " (" + asset2.GetTypeFriendlyName() + ")") : $"Unknown {legacyAssetType}");
             writer.WriteComment(message2);
             writer.WriteKeyValue("LegacyAssetId", legacyAssetId);
         }
         else if (legacySpawnId > 0)
         {
-            string message3 = ((Assets.find(EAssetType.SPAWN, legacySpawnId) is SpawnAsset spawnAsset) ? (spawnAsset.FriendlyName + " (" + spawnAsset.GetTypeNameWithoutSuffix() + ")") : "Unknown");
+            string message3 = ((Assets.find(EAssetType.SPAWN, legacySpawnId) is SpawnAsset spawnAsset) ? (spawnAsset.FriendlyName + " (" + spawnAsset.GetTypeFriendlyName() + ")") : "Unknown");
             writer.WriteComment(message3);
             writer.WriteKeyValue("LegacySpawnId", legacySpawnId);
         }

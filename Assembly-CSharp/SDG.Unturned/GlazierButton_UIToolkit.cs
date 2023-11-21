@@ -203,9 +203,9 @@ internal class GlazierButton_UIToolkit : GlazierElementBase_UIToolkit, ISleekBut
 
     private void OnClickedWithEventInfo(EventBase eventBase)
     {
-        if (eventBase is IMouseEvent mouseEvent)
+        if (eventBase is IMouseEvent { button: var button })
         {
-            switch (mouseEvent.button)
+            switch (button)
             {
             case 0:
                 this.OnClicked?.Invoke(this);

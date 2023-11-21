@@ -11,6 +11,7 @@ using SDG.Framework.Water;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
+using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
@@ -138,6 +139,8 @@ public class Level : MonoBehaviour
     /// Useful to narrow down why a player is getting kicked for modified level files when joining a server.
     /// </summary>
     private static CommandLineFlag shouldLogLevelHash = new CommandLineFlag(defaultValue: false, "-LogLevelHash");
+
+    private static List<LevelInfo> knownLevels = new List<LevelInfo>();
 
     private static FoliageVolumeManager foliageVolumeManager;
 
@@ -659,192 +662,90 @@ public class Level : MonoBehaviour
         }
     }
 
-    public static bool exists(string name)
-    {
-        if (ReadWrite.folderExists("/Maps/" + name))
-        {
-            return true;
-        }
-        if (Provider.provider.workshopService.ugc != null)
-        {
-            for (int i = 0; i < Provider.provider.workshopService.ugc.Count; i++)
-            {
-                SteamContent steamContent = Provider.provider.workshopService.ugc[i];
-                if (steamContent.type == ESteamUGCType.MAP && ReadWrite.folderExists(steamContent.path + "/" + name, usePath: false))
-                {
-                    return true;
-                }
-            }
-        }
-        else
-        {
-            if (!ReadWrite.folderExists("/Bundles/Workshop/Maps", usePath: true))
-            {
-                ReadWrite.createFolder("/Bundles/Workshop/Maps", usePath: true);
-            }
-            string[] folders = ReadWrite.getFolders("/Bundles/Workshop/Maps");
-            for (int j = 0; j < folders.Length; j++)
-            {
-                if (ReadWrite.folderExists(folders[j] + "/" + name, usePath: false))
-                {
-                    return true;
-                }
-            }
-            if (!ReadWrite.folderExists(ServerSavedata.directory + "/" + Provider.serverID + "/Workshop/Maps", usePath: true))
-            {
-                ReadWrite.createFolder(ServerSavedata.directory + "/" + Provider.serverID + "/Workshop/Maps", usePath: true);
-            }
-            string[] folders2 = ReadWrite.getFolders(ServerSavedata.directory + "/" + Provider.serverID + "/Workshop/Maps");
-            for (int k = 0; k < folders2.Length; k++)
-            {
-                if (ReadWrite.folderExists(folders2[k] + "/" + name, usePath: false))
-                {
-                    return true;
-                }
-            }
-            if (ReadWrite.folderExists(ServerSavedata.directory + "/" + Provider.serverID + "/Maps/" + name))
-            {
-                return true;
-            }
-        }
-        if (DedicatedUGC.ugc != null)
-        {
-            for (int l = 0; l < DedicatedUGC.ugc.Count; l++)
-            {
-                SteamContent steamContent2 = DedicatedUGC.ugc[l];
-                if (steamContent2.type == ESteamUGCType.MAP && ReadWrite.folderExists(steamContent2.path + "/" + name, usePath: false))
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public static byte[] getLevelHash(string path)
-    {
-        if (ReadWrite.fileExists(path + "/Level.dat", useCloud: false, usePath: false))
-        {
-            return ReadWrite.readBlock(path + "/Level.dat", useCloud: false, usePath: false, 1).getHash();
-        }
-        return new byte[20];
-    }
-
     public static LevelInfo getLevel(string name)
     {
-        if (ReadWrite.folderExists("/Maps/" + name))
+        ScanKnownLevels();
+        foreach (LevelInfo knownLevel in knownLevels)
         {
-            return loadLevelInfo("/Maps/" + name, usePath: true, 0uL);
-        }
-        if (Provider.provider.workshopService.ugc != null)
-        {
-            for (int i = 0; i < Provider.provider.workshopService.ugc.Count; i++)
+            if (string.Equals(name, knownLevel.name, StringComparison.OrdinalIgnoreCase))
             {
-                SteamContent steamContent = Provider.provider.workshopService.ugc[i];
-                if (LocalWorkshopSettings.get().getEnabled(steamContent.publishedFileID) && steamContent.type == ESteamUGCType.MAP && ReadWrite.folderExists(steamContent.path + "/" + name, usePath: false))
-                {
-                    return loadLevelInfo(steamContent.path + "/" + name, usePath: false, steamContent.publishedFileID.m_PublishedFileId);
-                }
-            }
-        }
-        else
-        {
-            if (!ReadWrite.folderExists("/Bundles/Workshop/Maps", usePath: true))
-            {
-                ReadWrite.createFolder("/Bundles/Workshop/Maps", usePath: true);
-            }
-            string[] folders = ReadWrite.getFolders("/Bundles/Workshop/Maps");
-            for (int j = 0; j < folders.Length; j++)
-            {
-                if (ReadWrite.folderExists(folders[j] + "/" + name, usePath: false))
-                {
-                    return loadLevelInfo(folders[j] + "/" + name, usePath: false, 0uL);
-                }
-            }
-            if (!ReadWrite.folderExists(ServerSavedata.directory + "/" + Provider.serverID + "/Workshop/Maps", usePath: true))
-            {
-                ReadWrite.createFolder(ServerSavedata.directory + "/" + Provider.serverID + "/Workshop/Maps", usePath: true);
-            }
-            string[] folders2 = ReadWrite.getFolders(ServerSavedata.directory + "/" + Provider.serverID + "/Workshop/Maps");
-            for (int k = 0; k < folders2.Length; k++)
-            {
-                if (ReadWrite.folderExists(folders2[k] + "/" + name, usePath: false))
-                {
-                    return loadLevelInfo(folders2[k] + "/" + name, usePath: false, 0uL);
-                }
-            }
-            if (ReadWrite.folderExists(ServerSavedata.directory + "/" + Provider.serverID + "/Maps/" + name))
-            {
-                return loadLevelInfo(ServerSavedata.directory + "/" + Provider.serverID + "/Maps/" + name, usePath: true, 0uL);
-            }
-        }
-        if (DedicatedUGC.ugc != null)
-        {
-            for (int l = 0; l < DedicatedUGC.ugc.Count; l++)
-            {
-                SteamContent steamContent2 = DedicatedUGC.ugc[l];
-                if (steamContent2.type == ESteamUGCType.MAP && ReadWrite.folderExists(steamContent2.path + "/" + name, usePath: false))
-                {
-                    return loadLevelInfo(steamContent2.path + "/" + name, usePath: false, steamContent2.publishedFileID.m_PublishedFileId);
-                }
+                return knownLevel;
             }
         }
         return null;
     }
 
+    private static LevelInfo ReadLevelInfo(string path, bool usePath, ulong publishedFileId = 0uL)
+    {
+        if (usePath)
+        {
+            path = ReadWrite.PATH + path;
+        }
+        return ReadLevelInfo(path, publishedFileId);
+    }
+
     /// <summary>
     /// Load level details from Level.dat in directory path.
     /// </summary>
-    private static LevelInfo loadLevelInfo(string path, bool usePath, ulong publishedFileId = 0uL)
+    private static LevelInfo ReadLevelInfo(string directoryPath, ulong publishedFileId = 0uL)
     {
-        if (!ReadWrite.fileExists(path + "/Level.dat", useCloud: false, usePath))
+        try
         {
-            return null;
-        }
-        Block block = ReadWrite.readBlock(path + "/Level.dat", useCloud: false, usePath, 0);
-        byte b = block.readByte();
-        bool newEditable = block.readSteamID() == Provider.client || ReadWrite.fileExists(path + "/.unlocker", useCloud: false, usePath);
-        ELevelSize newSize = (ELevelSize)block.readByte();
-        ELevelType newType = ELevelType.SURVIVAL;
-        if (b > 1)
-        {
-            newType = (ELevelType)block.readByte();
-        }
-        string text = ReadWrite.folderName(path);
-        string text2 = (usePath ? (ReadWrite.PATH + path) : path);
-        string path2 = Path.Combine(text2, "Config.json");
-        LevelInfoConfigData levelInfoConfigData;
-        if (File.Exists(path2))
-        {
-            try
+            string path = Path.Combine(directoryPath, "Level.dat");
+            if (!File.Exists(path))
             {
-                using FileStream underlyingStream = new FileStream(path2, FileMode.Open, FileAccess.Read, FileShare.Read);
-                using SHA1Stream sHA1Stream = new SHA1Stream(underlyingStream);
-                using StreamReader streamReader = new StreamReader(sHA1Stream);
-                levelInfoConfigData = JsonConvert.DeserializeObject<LevelInfoConfigData>(streamReader.ReadToEnd());
-                levelInfoConfigData.Hash = sHA1Stream.Hash;
+                return null;
             }
-            catch
+            Block block = ReadWrite.readBlock(path, useCloud: false, usePath: false, 0);
+            byte b = block.readByte();
+            byte[] array = block.getHash();
+            bool newEditable = block.readSteamID() == Provider.client || ReadWrite.fileExists(Path.Combine(directoryPath, ".unlocker"), useCloud: false, usePath: false);
+            ELevelSize newSize = (ELevelSize)block.readByte();
+            ELevelType newType = ELevelType.SURVIVAL;
+            if (b > 1)
             {
-                Assets.reportError($"Unable to parse {text}/Config.json! Consider validating with a JSON linter");
-                levelInfoConfigData = null;
+                newType = (ELevelType)block.readByte();
             }
-            if (levelInfoConfigData == null)
+            string text = ReadWrite.folderName(directoryPath);
+            string path2 = Path.Combine(directoryPath, "Config.json");
+            LevelInfoConfigData levelInfoConfigData;
+            if (File.Exists(path2))
+            {
+                try
+                {
+                    using FileStream underlyingStream = new FileStream(path2, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    using SHA1Stream sHA1Stream = new SHA1Stream(underlyingStream);
+                    using StreamReader streamReader = new StreamReader(sHA1Stream);
+                    levelInfoConfigData = JsonConvert.DeserializeObject<LevelInfoConfigData>(streamReader.ReadToEnd());
+                    levelInfoConfigData.Hash = sHA1Stream.Hash;
+                }
+                catch
+                {
+                    Assets.reportError($"Unable to parse {text}/Config.json! Consider validating with a JSON linter");
+                    levelInfoConfigData = null;
+                }
+                if (levelInfoConfigData == null)
+                {
+                    levelInfoConfigData = new LevelInfoConfigData();
+                }
+            }
+            else
             {
                 levelInfoConfigData = new LevelInfoConfigData();
             }
+            if (!Parser.TryGetUInt32FromIP(levelInfoConfigData.Version, out levelInfoConfigData.PackedVersion))
+            {
+                Assets.reportError($"Unable to parse level \"{text}\" version \"{levelInfoConfigData.PackedVersion}\". Expected format \"#.#.#.#\". Resetting to zero.");
+                levelInfoConfigData.Version = "0.0.0.0";
+                levelInfoConfigData.PackedVersion = 0u;
+            }
+            return new LevelInfo(directoryPath, text, newSize, newType, newEditable, levelInfoConfigData, publishedFileId, array);
         }
-        else
+        catch (Exception e)
         {
-            levelInfoConfigData = new LevelInfoConfigData();
+            UnturnedLog.exception(e, "Caught exception reading level info file (" + directoryPath + "):");
+            return null;
         }
-        if (!Parser.TryGetUInt32FromIP(levelInfoConfigData.Version, out levelInfoConfigData.PackedVersion))
-        {
-            Assets.reportError($"Unable to parse level \"{text}\" version \"{levelInfoConfigData.PackedVersion}\". Expected format \"#.#.#.#\". Resetting to zero.");
-            levelInfoConfigData.Version = "0.0.0.0";
-            levelInfoConfigData.PackedVersion = 0u;
-        }
-        return new LevelInfo(text2, text, newSize, newType, newEditable, levelInfoConfigData, publishedFileId);
     }
 
     private static bool doesLevelPassFilter(LevelInfo levelInfo, ESingleplayerMapCategory categoryFilter)
@@ -883,8 +784,6 @@ public class Level : MonoBehaviour
             return true;
         case ESingleplayerMapCategory.EDITABLE:
             return levelInfo.isEditable;
-        case ESingleplayerMapCategory.MATCHMAKING:
-            return levelInfo.configData.Visible_In_Matchmaking;
         default:
             UnturnedLog.warn("Unknown map filter '{0}'", categoryFilter);
             return true;
@@ -893,82 +792,13 @@ public class Level : MonoBehaviour
 
     public static LevelInfo[] getLevels(ESingleplayerMapCategory categoryFilter)
     {
+        ScanKnownLevels();
         List<LevelInfo> list = new List<LevelInfo>();
-        string[] folders = ReadWrite.getFolders("/Maps");
-        for (int i = 0; i < folders.Length; i++)
+        foreach (LevelInfo knownLevel in knownLevels)
         {
-            LevelInfo levelInfo = loadLevelInfo(folders[i], usePath: false, 0uL);
-            if (levelInfo != null && !(levelInfo.name.ToLower() == "tutorial") && doesLevelPassFilter(levelInfo, categoryFilter))
+            if (doesLevelPassFilter(knownLevel, categoryFilter))
             {
-                list.Add(levelInfo);
-            }
-        }
-        if (Provider.provider.workshopService.ugc != null)
-        {
-            for (int j = 0; j < Provider.provider.workshopService.ugc.Count; j++)
-            {
-                SteamContent steamContent = Provider.provider.workshopService.ugc[j];
-                if (LocalWorkshopSettings.get().getEnabled(steamContent.publishedFileID) && steamContent.type == ESteamUGCType.MAP)
-                {
-                    LevelInfo levelInfo2 = loadLevelInfo(ReadWrite.folderFound(steamContent.path, usePath: false), usePath: false, steamContent.publishedFileID.m_PublishedFileId);
-                    if (levelInfo2 != null && doesLevelPassFilter(levelInfo2, categoryFilter))
-                    {
-                        list.Add(levelInfo2);
-                    }
-                }
-            }
-        }
-        else
-        {
-            if (!ReadWrite.folderExists("/Bundles/Workshop/Maps", usePath: true))
-            {
-                ReadWrite.createFolder("/Bundles/Workshop/Maps", usePath: true);
-            }
-            string[] folders2 = ReadWrite.getFolders("/Bundles/Workshop/Maps");
-            for (int k = 0; k < folders2.Length; k++)
-            {
-                LevelInfo levelInfo3 = loadLevelInfo(folders2[k], usePath: false, 0uL);
-                if (levelInfo3 != null && doesLevelPassFilter(levelInfo3, categoryFilter))
-                {
-                    list.Add(levelInfo3);
-                }
-            }
-            if (!ReadWrite.folderExists(ServerSavedata.directory + "/" + Provider.serverID + "/Workshop/Maps", usePath: true))
-            {
-                ReadWrite.createFolder(ServerSavedata.directory + "/" + Provider.serverID + "/Workshop/Maps", usePath: true);
-            }
-            string[] folders3 = ReadWrite.getFolders(ServerSavedata.directory + "/" + Provider.serverID + "/Workshop/Maps");
-            for (int l = 0; l < folders3.Length; l++)
-            {
-                LevelInfo levelInfo4 = loadLevelInfo(folders3[l], usePath: false, 0uL);
-                if (levelInfo4 != null && doesLevelPassFilter(levelInfo4, categoryFilter))
-                {
-                    list.Add(levelInfo4);
-                }
-            }
-            folders = ReadWrite.getFolders(ServerSavedata.directory + "/" + Provider.serverID + "/Maps");
-            for (int m = 0; m < folders.Length; m++)
-            {
-                LevelInfo levelInfo5 = loadLevelInfo(folders[m], usePath: false, 0uL);
-                if (levelInfo5 != null && !(levelInfo5.name.ToLower() == "tutorial") && doesLevelPassFilter(levelInfo5, categoryFilter))
-                {
-                    list.Add(levelInfo5);
-                }
-            }
-        }
-        if (DedicatedUGC.ugc != null)
-        {
-            for (int n = 0; n < DedicatedUGC.ugc.Count; n++)
-            {
-                SteamContent steamContent2 = DedicatedUGC.ugc[n];
-                if (steamContent2.type == ESteamUGCType.MAP)
-                {
-                    LevelInfo levelInfo6 = loadLevelInfo(ReadWrite.folderFound(steamContent2.path, usePath: false), usePath: false, steamContent2.publishedFileID.m_PublishedFileId);
-                    if (levelInfo6 != null && doesLevelPassFilter(levelInfo6, categoryFilter))
-                    {
-                        list.Add(levelInfo6);
-                    }
-                }
+                list.Add(knownLevel);
             }
         }
         return list.ToArray();
@@ -984,15 +814,205 @@ public class Level : MonoBehaviour
         {
             return null;
         }
-        LevelInfo[] levels = getLevels(ESingleplayerMapCategory.ALL);
-        foreach (LevelInfo levelInfo in levels)
+        ScanKnownLevels();
+        foreach (LevelInfo knownLevel in knownLevels)
         {
-            if (levelInfo != null && levelInfo.configData != null && levelInfo.configData.PackedVersion != 0 && levelInfo.name.StartsWith(filter, StringComparison.InvariantCultureIgnoreCase))
+            if (knownLevel.configData != null && knownLevel.configData.PackedVersion != 0 && knownLevel.name.StartsWith(filter, StringComparison.OrdinalIgnoreCase))
             {
-                return levelInfo;
+                return knownLevel;
             }
         }
         return null;
+    }
+
+    private static LevelInfo FindKnownLevelByPath(string path)
+    {
+        foreach (LevelInfo knownLevel in knownLevels)
+        {
+            if (string.Equals(knownLevel.path, path))
+            {
+                return knownLevel;
+            }
+        }
+        return null;
+    }
+
+    private static LevelInfo FindKnownLevelByPublishedFileId(ulong fileId)
+    {
+        foreach (LevelInfo knownLevel in knownLevels)
+        {
+            if (knownLevel.publishedFileId == fileId)
+            {
+                return knownLevel;
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Search all map folders to add any previously unregistered maps.
+    /// </summary>
+    private static void ScanKnownLevels()
+    {
+        try
+        {
+            for (int num = knownLevels.Count - 1; num >= 0; num--)
+            {
+                LevelInfo levelInfo = knownLevels[num];
+                if (!Directory.Exists(levelInfo.path))
+                {
+                    knownLevels.RemoveAt(num);
+                    UnturnedLog.info("Removed previously discovered level \"" + levelInfo.name + "\" at \"" + levelInfo.path + "\" (no longer exists)");
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            UnturnedLog.exception(e, "Caught exception checking for deleted levels:");
+        }
+        try
+        {
+            string[] directories = Directory.GetDirectories(PathEx.Join(UnturnedPaths.RootDirectory, "Maps"));
+            foreach (string text in directories)
+            {
+                if (FindKnownLevelByPath(text) == null)
+                {
+                    LevelInfo levelInfo2 = ReadLevelInfo(text, 0uL);
+                    if (levelInfo2 != null)
+                    {
+                        knownLevels.Add(levelInfo2);
+                        UnturnedLog.info("Discovered level \"" + levelInfo2.name + "\" at \"" + levelInfo2.path + "\"");
+                    }
+                }
+            }
+        }
+        catch (Exception e2)
+        {
+            UnturnedLog.exception(e2, "Caught exception loading levels in root Maps folder:");
+        }
+        if (Provider.provider.workshopService.ugc != null)
+        {
+            try
+            {
+                foreach (SteamContent item in Provider.provider.workshopService.ugc)
+                {
+                    if (item.type == ESteamUGCType.MAP && LocalWorkshopSettings.get().getEnabled(item.publishedFileID) && FindKnownLevelByPublishedFileId(item.publishedFileID.m_PublishedFileId) == null)
+                    {
+                        LevelInfo levelInfo3 = ReadLevelInfo(ReadWrite.folderFound(item.path, usePath: false), item.publishedFileID.m_PublishedFileId);
+                        if (levelInfo3 != null)
+                        {
+                            knownLevels.Add(levelInfo3);
+                            UnturnedLog.info("Discovered level \"" + levelInfo3.name + "\" at \"" + levelInfo3.path + "\"");
+                        }
+                    }
+                }
+            }
+            catch (Exception e3)
+            {
+                UnturnedLog.exception(e3, "Caught exception loading levels from Steam Workshop:");
+            }
+        }
+        else
+        {
+            string text2 = PathEx.Join(UnturnedPaths.RootDirectory, "Bundles", "Workshop", "Maps");
+            try
+            {
+                if (!ReadWrite.folderExists(text2, usePath: false))
+                {
+                    ReadWrite.createFolder(text2, usePath: false);
+                }
+                string[] directories = Directory.GetDirectories(text2);
+                foreach (string text3 in directories)
+                {
+                    if (FindKnownLevelByPath(text3) == null)
+                    {
+                        LevelInfo levelInfo4 = ReadLevelInfo(text3, 0uL);
+                        if (levelInfo4 != null)
+                        {
+                            knownLevels.Add(levelInfo4);
+                            UnturnedLog.info("Discovered level \"" + levelInfo4.name + "\" at \"" + levelInfo4.path + "\"");
+                        }
+                    }
+                }
+            }
+            catch (Exception e4)
+            {
+                UnturnedLog.exception(e4, "Caught exception loading levels in legacy server global workshop Maps folder (" + text2 + "):");
+            }
+            string text4 = Path.Combine(ServerSavedata.directory, Provider.serverID, "Workshop", "Maps");
+            try
+            {
+                if (!ReadWrite.folderExists(text4, usePath: false))
+                {
+                    ReadWrite.createFolder(text4, usePath: false);
+                }
+                string[] directories = Directory.GetDirectories(text4);
+                foreach (string text5 in directories)
+                {
+                    if (FindKnownLevelByPath(text5) == null)
+                    {
+                        LevelInfo levelInfo5 = ReadLevelInfo(text5, 0uL);
+                        if (levelInfo5 != null)
+                        {
+                            knownLevels.Add(levelInfo5);
+                            UnturnedLog.info("Discovered level \"" + levelInfo5.name + "\" at \"" + levelInfo5.path + "\"");
+                        }
+                    }
+                }
+            }
+            catch (Exception e5)
+            {
+                UnturnedLog.exception(e5, "Caught exception loading levels in legacy per-server workshop Maps folder (" + text4 + "):");
+            }
+            string text6 = Path.Combine(ServerSavedata.directory, Provider.serverID, "Maps");
+            try
+            {
+                if (!ReadWrite.folderExists(text6, usePath: false))
+                {
+                    ReadWrite.createFolder(text6, usePath: false);
+                }
+                string[] directories = Directory.GetDirectories(text6);
+                foreach (string text7 in directories)
+                {
+                    if (FindKnownLevelByPath(text7) == null)
+                    {
+                        LevelInfo levelInfo6 = ReadLevelInfo(text7, 0uL);
+                        if (levelInfo6 != null)
+                        {
+                            knownLevels.Add(levelInfo6);
+                            UnturnedLog.info("Discovered level \"" + levelInfo6.name + "\" at \"" + levelInfo6.path + "\"");
+                        }
+                    }
+                }
+            }
+            catch (Exception e6)
+            {
+                UnturnedLog.exception(e6, "Caught exception loading levels in legacy per-server Maps folder (" + text6 + "):");
+            }
+        }
+        if (DedicatedUGC.ugc == null)
+        {
+            return;
+        }
+        try
+        {
+            foreach (SteamContent item2 in DedicatedUGC.ugc)
+            {
+                if (item2.type == ESteamUGCType.MAP && FindKnownLevelByPublishedFileId(item2.publishedFileID.m_PublishedFileId) == null)
+                {
+                    LevelInfo levelInfo7 = ReadLevelInfo(ReadWrite.folderFound(item2.path, usePath: false), item2.publishedFileID.m_PublishedFileId);
+                    if (levelInfo7 != null)
+                    {
+                        knownLevels.Add(levelInfo7);
+                        UnturnedLog.info("Discovered level \"" + levelInfo7.name + "\" at \"" + levelInfo7.path + "\"");
+                    }
+                }
+            }
+        }
+        catch (Exception e7)
+        {
+            UnturnedLog.exception(e7, "Caught exception loading levels from server Steam Workshop:");
+        }
     }
 
     public static void bindSatelliteCaptureInEditor(SatelliteCaptureDelegate preCapture, SatelliteCaptureDelegate postCapture)
@@ -1427,7 +1447,7 @@ public class Level : MonoBehaviour
             LoadingUI.NotifyLevelLoadingProgress(0.84210527f);
             yield return null;
         }
-        includeHash("Level.dat", getLevelHash(info.path));
+        includeHash("Level.dat", info.hash);
         if (info.configData.Hash != null)
         {
             includeHash("Config.json", info.configData.Hash);
@@ -1729,5 +1749,22 @@ public class Level : MonoBehaviour
             return musicAudioSource;
         }
         return null;
+    }
+
+    [Obsolete("Replaced by LevelInfo.hash")]
+    public static byte[] getLevelHash(string path)
+    {
+        LevelInfo levelInfo = ReadLevelInfo(path, 0uL);
+        if (levelInfo != null)
+        {
+            return levelInfo.hash;
+        }
+        return new byte[20];
+    }
+
+    [Obsolete("Was unused in vanilla, so simplified to just use the find level by name method.")]
+    public static bool exists(string name)
+    {
+        return getLevel(name) != null;
     }
 }

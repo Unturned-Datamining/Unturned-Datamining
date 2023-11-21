@@ -66,19 +66,19 @@ public class PlayerDashboardCraftingUI
         for (byte b = 0; b < blueprint.outputs.Length; b++)
         {
             BlueprintOutput blueprintOutput = blueprint.outputs[b];
-            if (Assets.find(EAssetType.ITEM, blueprintOutput.id) is ItemAsset itemAsset && itemAsset.itemName != null && itemAsset.itemName.IndexOf(text, StringComparison.OrdinalIgnoreCase) != -1)
+            if (Assets.find(EAssetType.ITEM, blueprintOutput.id) is ItemAsset { itemName: not null } itemAsset && itemAsset.itemName.IndexOf(text, StringComparison.OrdinalIgnoreCase) != -1)
             {
                 return true;
             }
         }
-        if (blueprint.tool != 0 && Assets.find(EAssetType.ITEM, blueprint.tool) is ItemAsset itemAsset2 && itemAsset2.itemName != null && itemAsset2.itemName.IndexOf(text, StringComparison.OrdinalIgnoreCase) != -1)
+        if (blueprint.tool != 0 && Assets.find(EAssetType.ITEM, blueprint.tool) is ItemAsset { itemName: not null } itemAsset2 && itemAsset2.itemName.IndexOf(text, StringComparison.OrdinalIgnoreCase) != -1)
         {
             return true;
         }
         for (byte b2 = 0; b2 < blueprint.supplies.Length; b2++)
         {
             BlueprintSupply blueprintSupply = blueprint.supplies[b2];
-            if (Assets.find(EAssetType.ITEM, blueprintSupply.id) is ItemAsset itemAsset3 && itemAsset3.itemName != null && itemAsset3.itemName.IndexOf(text, StringComparison.OrdinalIgnoreCase) != -1)
+            if (Assets.find(EAssetType.ITEM, blueprintSupply.id) is ItemAsset { itemName: not null } itemAsset3 && itemAsset3.itemName.IndexOf(text, StringComparison.OrdinalIgnoreCase) != -1)
             {
                 return true;
             }
@@ -128,7 +128,7 @@ public class PlayerDashboardCraftingUI
         visibleBlueprints.Clear();
         foreach (Blueprint item2 in list)
         {
-            if ((item2.skill == EBlueprintSkill.REPAIR && item2.level > Provider.modeConfigData.Gameplay.Repair_Level_Max) || (!string.IsNullOrEmpty(item2.map) && !item2.map.Equals(Level.info.name, StringComparison.InvariantCultureIgnoreCase)) || !item2.areConditionsMet(Player.player) || Player.player.crafting.isBlueprintBlacklisted(item2))
+            if ((item2.skill == EBlueprintSkill.REPAIR && item2.level > Provider.modeConfigData.Gameplay.Repair_Level_Max) || (!string.IsNullOrEmpty(item2.map) && !item2.map.Equals(Level.info.name, StringComparison.InvariantCultureIgnoreCase)) || !item2.areConditionsMet(Player.player) || Player.player.crafting.isBlueprintBlacklisted(item2) || (!Provider.modeConfigData.Gameplay.Allow_Freeform_Buildables && item2.IsOutputFreeformBuildable))
             {
                 continue;
             }

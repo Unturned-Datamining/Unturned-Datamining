@@ -88,8 +88,6 @@ public class LevelInfoConfigData
 
     public ESingleplayerMapCategory Category;
 
-    public bool Visible_In_Matchmaking;
-
     public bool PlayerUI_HealthVisible = true;
 
     public bool PlayerUI_FoodVisible = true;
@@ -167,7 +165,6 @@ public class LevelInfoConfigData
         Max_Walkable_Slope = -1f;
         Prevent_Building_Near_Spawnpoint_Radius = 16f;
         Category = ESingleplayerMapCategory.MISC;
-        Visible_In_Matchmaking = false;
         Use_Arena_Compactor = true;
         Arena_Loadouts = new List<ArenaLoadout>();
         Spawn_Loadouts = new List<ArenaLoadout>();

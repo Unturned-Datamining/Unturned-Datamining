@@ -7,6 +7,5 @@ public enum ESingleplayerMapCategory
     WORKSHOP,
     MISC,
     ALL,
-    EDITABLE,
-    MATCHMAKING
+    EDITABLE
 }

@@ -26,5 +26,6 @@ public enum ENPCConditionType
     KILLS_TREE,
     WEATHER_STATUS,
     WEATHER_BLEND_ALPHA,
-    IS_FULL_MOON
+    IS_FULL_MOON,
+    DATE_COUNTER
 }

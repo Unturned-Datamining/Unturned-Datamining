@@ -1366,7 +1366,7 @@ public class PlayerLife : PlayerCaller
             return;
         }
         sendRevive();
-        if (!atHome || !BarricadeManager.tryGetBed(base.channel.owner.playerID.steamID, out var point, out var angle))
+        if (!atHome || !BarricadeManager.tryGetBed(base.channel.owner.playerID.steamID, out var position, out var angle))
         {
             if (this.spawnpoint == null)
             {
@@ -1374,12 +1374,12 @@ public class PlayerLife : PlayerCaller
             }
             if (this.spawnpoint == null)
             {
-                point = base.transform.position;
+                position = base.transform.position;
                 angle = 0;
             }
             else
             {
-                point = this.spawnpoint.point;
+                position = this.spawnpoint.point;
                 angle = MeasurementTool.angleToByte(this.spawnpoint.angle);
             }
             string npcSpawnId = base.player.quests.npcSpawnId;
@@ -1388,7 +1388,7 @@ public class PlayerLife : PlayerCaller
                 Spawnpoint spawnpoint = SpawnpointSystemV2.Get().FindSpawnpoint(npcSpawnId);
                 if (spawnpoint != null)
                 {
-                    point = spawnpoint.transform.position;
+                    position = spawnpoint.transform.position;
                     angle = MeasurementTool.angleToByte(spawnpoint.transform.rotation.eulerAngles.y);
                 }
                 else
@@ -1396,7 +1396,7 @@ public class PlayerLife : PlayerCaller
                     LocationDevkitNode locationDevkitNode = LocationDevkitNodeSystem.Get().FindByName(npcSpawnId);
                     if (locationDevkitNode != null)
                     {
-                        point = locationDevkitNode.transform.position;
+                        position = locationDevkitNode.transform.position;
                         angle = MeasurementTool.angleToByte(UnityEngine.Random.Range(0f, 360f));
                     }
                     else
@@ -1410,11 +1410,11 @@ public class PlayerLife : PlayerCaller
         if (PlayerLife.OnSelectingRespawnPoint != null)
         {
             float yaw = MeasurementTool.byteToAngle(angle);
-            PlayerLife.OnSelectingRespawnPoint(this, atHome, ref point, ref yaw);
+            PlayerLife.OnSelectingRespawnPoint(this, atHome, ref position, ref yaw);
             angle = MeasurementTool.angleToByte(yaw);
         }
-        point += new Vector3(0f, 0.5f, 0f);
-        SendRevive.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), point, angle);
+        position += new Vector3(0f, 0.5f, 0f);
+        SendRevive.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), position, angle);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 2, legacyName = "askRespawn")]

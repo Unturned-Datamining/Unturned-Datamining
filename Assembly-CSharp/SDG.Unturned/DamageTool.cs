@@ -434,7 +434,7 @@ public class DamageTool
             case ELimb.SPINE:
             {
                 float num = 1f;
-                if (zombie.gear != byte.MaxValue && zombie.gear < LevelZombies.tables[zombie.type].slots[3].table.Count && Assets.find(EAssetType.ITEM, LevelZombies.tables[zombie.type].slots[3].table[zombie.gear].item) is ItemAsset itemAsset && itemAsset.type == EItemType.VEST)
+                if (zombie.gear != byte.MaxValue && zombie.gear < LevelZombies.tables[zombie.type].slots[3].table.Count && Assets.find(EAssetType.ITEM, LevelZombies.tables[zombie.type].slots[3].table[zombie.gear].item) is ItemAsset { type: EItemType.VEST } itemAsset)
                 {
                     num *= ((ItemClothingAsset)itemAsset).armor;
                 }

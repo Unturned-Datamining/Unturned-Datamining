@@ -180,9 +180,9 @@ internal class GlazierImage_UIToolkit : GlazierElementBase_UIToolkit, ISleekImag
 
     private void OnClickedWithEventInfo(EventBase eventBase)
     {
-        if (eventBase is IMouseEvent mouseEvent)
+        if (eventBase is IMouseEvent { button: var button })
         {
-            switch (mouseEvent.button)
+            switch (button)
             {
             case 0:
                 this._onImageClicked?.Invoke();

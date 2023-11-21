@@ -1540,6 +1540,12 @@ public class VehicleManager : SteamCaller
             Assets.reportError(vehicleAsset, "unable to spawn any gameobject");
             return null;
         }
+        if (!vehicleAsset.canBeLocked)
+        {
+            owner = CSteamID.Nil;
+            group = CSteamID.Nil;
+            locked = false;
+        }
         InteractableVehicle interactableVehicle = null;
         try
         {

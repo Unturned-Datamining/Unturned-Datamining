@@ -26,6 +26,17 @@ public class ItemClothingAsset : ItemAsset
     public AudioReference wearAudio;
 
     /// <summary>
+    /// Overrides value of TakesPriorityOverCosmetic if <see cref="F:SDG.Unturned.ItemClothingAsset.hasPriorityOverCosmeticOverride" /> is true.
+    /// </summary>
+    protected bool priorityOverCosmeticOverride;
+
+    /// <summary>
+    /// If true, the value of <see cref="F:SDG.Unturned.ItemClothingAsset.priorityOverCosmeticOverride" /> is used rather than <see cref="M:SDG.Unturned.ItemClothingAsset.GetDefaultTakesPriorityOverCosmetic" />.
+    /// Defaults to false. True if <see cref="F:SDG.Unturned.ItemClothingAsset.priorityOverCosmeticOverride" /> is set.
+    /// </summary>
+    protected bool hasPriorityOverCosmeticOverride;
+
+    /// <summary>
     /// Multiplier to incoming damage. Defaults to 1.0.
     /// </summary>
     public float armor => _armor;
@@ -55,6 +66,23 @@ public class ItemClothingAsset : ItemAsset
     /// If set, find a child meshrenderer with this name and change its material to the character skin material.
     /// </summary>
     public string skinOverride { get; protected set; }
+
+    /// <summary>
+    /// The player can be wearing both a "real" in-game item and a cosmetic item in the same clothing slot.
+    /// If true, the real item is shown rather than the cosmetic item. For example, night vision goggles
+    /// are shown over any glasses cosmetic because of their gameplay-related green glow.
+    /// </summary>
+    public bool TakesPriorityOverCosmetic
+    {
+        get
+        {
+            if (!hasPriorityOverCosmeticOverride)
+            {
+                return GetDefaultTakesPriorityOverCosmetic();
+            }
+            return priorityOverCosmeticOverride;
+        }
+    }
 
     public bool shouldBeVisible(bool isRagdoll)
     {
@@ -146,6 +174,7 @@ public class ItemClothingAsset : ItemAsset
             wearAudio = new AudioReference("core.masterbundle", "Sounds/Sleeve.mp3");
         }
         shouldDestroyClothingColliders = data.ParseBool("Destroy_Clothing_Colliders", defaultValue: true);
+        hasPriorityOverCosmeticOverride = data.TryParseBool("Priority_Over_Cosmetic", out priorityOverCosmeticOverride);
         skinOverride = data.GetString("Skin_Override");
     }
 
@@ -160,5 +189,10 @@ public class ItemClothingAsset : ItemAsset
             return new AudioReference("core.masterbundle", "Sounds/Inventory/LightClothEquipment.asset");
         }
         return new AudioReference("core.masterbundle", "Sounds/Inventory/MediumClothEquipment.asset");
+    }
+
+    protected virtual bool GetDefaultTakesPriorityOverCosmetic()
+    {
+        return false;
     }
 }
