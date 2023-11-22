@@ -110,7 +110,7 @@ public class MenuPlayServersUI : SleekFullscreenBox
             if (FilterSettings.activeFilters.presetId == 0)
             {
                 FilterSettings.activeFilters.CopyFrom(FilterSettings.defaultPresetInternet);
-                FilterSettings.activeFilters.presetName = MenuPlayUI.serverListUI.localization.format("DefaultPreset_Internet_Label");
+                FilterSettings.activeFilters.presetName = localization.format("DefaultPreset_Internet_Label");
                 FilterSettings.InvokeActiveFiltersReplaced();
             }
             else
@@ -612,7 +612,7 @@ public class MenuPlayServersUI : SleekFullscreenBox
         string text = FilterSettings.activeFilters.presetName;
         if (string.IsNullOrEmpty(text))
         {
-            text = MenuPlayUI.serverListUI.localization.format("PresetName_Empty");
+            text = localization.format("PresetName_Empty");
         }
         presetsEditorButton.text = localization.format("PresetsEditorButton_Label", text);
     }
@@ -1008,7 +1008,7 @@ public class MenuPlayServersUI : SleekFullscreenBox
     private void onClickedResetFilters(ISleekElement button)
     {
         FilterSettings.activeFilters.CopyFrom(FilterSettings.defaultPresetInternet);
-        FilterSettings.activeFilters.presetName = MenuPlayUI.serverListUI.localization.format("DefaultPreset_Internet_Label");
+        FilterSettings.activeFilters.presetName = localization.format("DefaultPreset_Internet_Label");
         FilterSettings.InvokeActiveFiltersReplaced();
     }
 

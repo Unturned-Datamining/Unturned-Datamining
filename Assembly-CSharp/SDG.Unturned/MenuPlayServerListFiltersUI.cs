@@ -4,6 +4,10 @@ namespace SDG.Unturned;
 
 public class MenuPlayServerListFiltersUI : SleekFullscreenBox
 {
+    public Local localization;
+
+    public Bundle icons;
+
     public bool active;
 
     private SleekButtonIcon backButton;
@@ -245,7 +249,7 @@ public class MenuPlayServerListFiltersUI : SleekFullscreenBox
     {
         if (string.IsNullOrEmpty(FilterSettings.activeFilters.presetName))
         {
-            filtersTitleBox.Text = MenuPlayUI.serverListUI.localization.format("PresetName_Empty");
+            filtersTitleBox.Text = localization.format("PresetName_Empty");
         }
         else
         {
@@ -306,8 +310,8 @@ public class MenuPlayServerListFiltersUI : SleekFullscreenBox
 
     public MenuPlayServerListFiltersUI(MenuPlayServersUI serverListUI)
     {
-        Local localization = serverListUI.localization;
-        Bundle icons = serverListUI.icons;
+        localization = serverListUI.localization;
+        icons = serverListUI.icons;
         active = false;
         ISleekElement sleekElement = Glazier.Get().CreateFrame();
         sleekElement.PositionOffset_X = -335f;
@@ -572,7 +576,7 @@ public class MenuPlayServerListFiltersUI : SleekFullscreenBox
         sleekButtonIcon.iconColor = ESleekTint.FOREGROUND;
         filtersScrollView.AddChild(sleekButtonIcon);
         num2 += sleekButtonIcon.SizeOffset_Y + 10f;
-        deletePresetButton = new SleekButtonIconConfirm(icons.load<Texture2D>("DeletePreset"), localization.format("DeletePreset_Confirm_Label"), localization.format("DeletePreset_Confirm_Tooltip"), localization.format("DeletePreset_Deny_Label"), localization.format("DeletePreset_Deny_Tooltip"));
+        deletePresetButton = new SleekButtonIconConfirm(icons.load<Texture2D>("DeletePreset"), localization.format("DeletePreset_Confirm_Label"), localization.format("DeletePreset_Confirm_Tooltip"), localization.format("DeletePreset_Deny_Label"), localization.format("DeletePreset_Deny_Tooltip"), 20);
         deletePresetButton.PositionOffset_X = 100f;
         deletePresetButton.PositionOffset_Y = num2;
         deletePresetButton.SizeOffset_X = 200f;

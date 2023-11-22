@@ -101,8 +101,13 @@ public class SleekButtonIconConfirm : SleekWrapper
     }
 
     public SleekButtonIconConfirm(Texture2D newIcon, string newConfirm, string newConfirmTooltip, string newDeny, string newDenyTooltip)
+        : this(newIcon, newConfirm, newConfirmTooltip, newDeny, newDenyTooltip, 0)
     {
-        mainButton = new SleekButtonIcon(newIcon, 20);
+    }
+
+    public SleekButtonIconConfirm(Texture2D newIcon, string newConfirm, string newConfirmTooltip, string newDeny, string newDenyTooltip, int iconSize)
+    {
+        mainButton = new SleekButtonIcon(newIcon, iconSize);
         mainButton.SizeScale_X = 1f;
         mainButton.SizeScale_Y = 1f;
         mainButton.onClickedButton += onClickedMainButton;
