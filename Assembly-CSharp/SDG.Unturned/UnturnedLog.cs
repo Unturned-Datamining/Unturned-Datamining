@@ -64,18 +64,21 @@ public static class UnturnedLog
 
     public static void exception(Exception e)
     {
-        if (insideLog)
+        if (e == null)
         {
-            return;
+            error("UnturnedLog.exception called with null argument");
         }
-        try
+        else if (!insideLog)
         {
-            insideLog = true;
-            internalException(e);
-        }
-        finally
-        {
-            insideLog = false;
+            try
+            {
+                insideLog = true;
+                internalException(e);
+            }
+            finally
+            {
+                insideLog = false;
+            }
         }
     }
 
@@ -96,10 +99,20 @@ public static class UnturnedLog
     /// </summary>
     private static void internalException(Exception e)
     {
-        Logs.printLine(e.Message);
-        Logs.printLine(e.StackTrace);
-        CommandWindow.LogError(e.Message);
-        CommandWindow.LogError(e.StackTrace);
+        string text = e.Message;
+        if (string.IsNullOrEmpty(text))
+        {
+            text = "(empty exception message)";
+        }
+        string text2 = e.StackTrace;
+        if (string.IsNullOrEmpty(text2))
+        {
+            text2 = "(empty stack trace)";
+        }
+        Logs.printLine(text);
+        Logs.printLine(text2);
+        CommandWindow.LogError(text);
+        CommandWindow.LogError(text2);
         if (e.InnerException != null)
         {
             internalException(e.InnerException);

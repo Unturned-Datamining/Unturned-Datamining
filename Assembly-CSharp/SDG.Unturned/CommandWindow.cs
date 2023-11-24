@@ -61,7 +61,7 @@ public class CommandWindow
     /// </summary>
     public static void Log(object text)
     {
-        if (insideExplicitLogging)
+        if (text == null || insideExplicitLogging)
         {
             return;
         }
@@ -87,7 +87,7 @@ public class CommandWindow
     /// </summary>
     public static void LogWarning(object text)
     {
-        if (insideExplicitLogging)
+        if (text == null || insideExplicitLogging)
         {
             return;
         }
@@ -113,7 +113,7 @@ public class CommandWindow
     /// </summary>
     public static void LogError(object text)
     {
-        if (insideExplicitLogging)
+        if (text == null || insideExplicitLogging)
         {
             return;
         }

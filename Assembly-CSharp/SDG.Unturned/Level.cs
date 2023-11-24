@@ -939,7 +939,7 @@ public class Level : MonoBehaviour
             {
                 UnturnedLog.exception(e4, "Caught exception loading levels in legacy server global workshop Maps folder (" + text2 + "):");
             }
-            string text4 = Path.Combine(ServerSavedata.directory, Provider.serverID, "Workshop", "Maps");
+            string text4 = PathEx.Join(UnturnedPaths.RootDirectory, ServerSavedata.directoryName, Provider.serverID, "Workshop", "Maps");
             try
             {
                 if (!ReadWrite.folderExists(text4, usePath: false))
@@ -964,7 +964,7 @@ public class Level : MonoBehaviour
             {
                 UnturnedLog.exception(e5, "Caught exception loading levels in legacy per-server workshop Maps folder (" + text4 + "):");
             }
-            string text6 = Path.Combine(ServerSavedata.directory, Provider.serverID, "Maps");
+            string text6 = PathEx.Join(UnturnedPaths.RootDirectory, ServerSavedata.directoryName, Provider.serverID, "Maps");
             try
             {
                 if (!ReadWrite.folderExists(text6, usePath: false))
