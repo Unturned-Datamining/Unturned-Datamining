@@ -4,6 +4,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using UnityEngine;
+using Unturned.UnityEx;
 
 namespace SDG.Unturned;
 
@@ -32,7 +33,7 @@ public class ReadWrite
 
     public static byte[] readData()
     {
-        FileStream fileStream = new FileStream(PATH + "/Unturned_Data/Managed/Assembly-CSharp.dll", FileMode.Open, FileAccess.Read, FileShare.Read);
+        FileStream fileStream = new FileStream(UnityPaths.GameDataDirectory.FullName + "/Managed/Assembly-CSharp.dll", FileMode.Open, FileAccess.Read, FileShare.Read);
         byte[] array = new byte[fileStream.Length];
         fileStream.Read(array, 0, array.Length);
         fileStream.Close();
