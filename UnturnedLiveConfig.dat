@@ -1,11 +1,11 @@
 MainMenuAlert
 {
-	Id 42
-	Header Sign-ups are open for EVENTures Global's last Unturned event of the year!
-	Body From the organizers: "EVENTures Global is hosting their last Unturned event of the year! It is a 200 player arena style event that is open to European, Australian, and North American players! Prizes include exclusive custom golden gun skins for the winning teams! More information can be found in the Discord!"
-	Color #FF55FF
-	Link https://discord.com/invite/eventures
-	IconURL https://cdn.smartlydressedgames.com/Images/EVENTSlogo.png
+	Id 43
+	Header The Unturned Podcast Ep #64 - Nelson Sexton 2
+	Body In this newest episode of the community-run Unturned podcast, the team interviews Nelson - the developer of Unturned - for the second time.
+	Color #F0F0F0
+	Link https://www.youtube.com/watch?v=t_habvfLZYI
+	IconURL https://cdn.smartlydressedgames.com/Images/unturned_podcast.jpg
 }
 MainMenuWorkshop
 {
