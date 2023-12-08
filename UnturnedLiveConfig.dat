@@ -1,11 +1,14 @@
 MainMenuAlert
 {
-	Id 43
-	Header The Unturned Podcast Ep #64 - Nelson Sexton 2
-	Body In this newest episode of the community-run Unturned podcast, the team interviews Nelson - the developer of Unturned - for the second time.
-	Color #F0F0F0
-	Link https://www.youtube.com/watch?v=t_habvfLZYI
-	IconURL https://cdn.smartlydressedgames.com/Images/unturned_podcast.jpg
+	Id 44
+	Header LIVE: EVENTures Global's last Unturned event of the year!
+	Body From the organizers: "EVENTures Global 200 player arena event has started! Go check out their live broadcast on Twitch, and cheer on your favorite team!"
+	Color #FF55FF
+	Link https://www.twitch.tv/weslieg
+	IconURL https://cdn.smartlydressedgames.com/Images/EVENTSlogo.png
+	UseTimeWindow true
+	StartTime 2023-12-09 00:30:00
+	EndTime 2023-12-10 02:30:00
 }
 MainMenuWorkshop
 {
