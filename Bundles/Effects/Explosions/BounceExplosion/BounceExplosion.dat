@@ -1,0 +1,9 @@
+GUID 13964fe188ea4627a79bd4e122438fd8
+Type Effect
+ID 168
+
+// This is the effect used by bounce charges and grenades.
+CameraShake_Radius 12
+CameraShake_MagnitudeDegrees 10
+
+Blast 137

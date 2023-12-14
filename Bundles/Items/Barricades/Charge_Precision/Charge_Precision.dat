@@ -16,14 +16,14 @@ Offset 0.05
 Player_Damage 250
 Zombie_Damage 250
 Animal_Damage 250
-Barricade_Damage 4000
-Structure_Damage 4000
+Barricade_Damage 2000
+Structure_Damage 2000
 Vehicle_Damage 1000
 Resource_Damage 4000
 Object_Damage 2000
 
 Range2 3
-Explosion2 123
+Explosion2 45
 
 Explosion 36
 Vulnerable

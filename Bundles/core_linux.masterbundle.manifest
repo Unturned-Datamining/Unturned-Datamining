@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1908970654
+CRC: 4049751176
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 012091de693c77b5284b5ddd1ee481ee
+    Hash: 68c36dac679d4c51cf1bae9aeac5c15d
   TypeTreeHash:
     serializedVersion: 2
     Hash: fa4c767d602275505d4e1b2f73174642
@@ -1941,11 +1941,11 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Fence_Barbedwire/Use.mp3
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Small_Glass_Weak/Item.prefab
 - Assets/CoreMasterBundle/Items/Pants/Leather_Bottom/Pants.png
-- Assets/CoreMasterBundle/Skins/Patterns/Royal_512x512/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Vests/BelgiumInfantry_Vest/Item.prefab
 - Assets/CoreMasterBundle/Terrain/Materials/PEI/Farm_Wheat_00.png
 - Assets/CoreMasterBundle/Items/Structures/Window_Brick/Animations.prefab
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Van_Blue/Object.prefab
+- Assets/CoreMasterBundle/Skins/Patterns/Royal_512x512/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Guns/Nightraider/Item.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Doorframe_Pine/Animations.prefab
 - Assets/CoreMasterBundle/Items/Filters/Filter/Animations.prefab
@@ -7292,6 +7292,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Guns/Bow_Pine/Item.prefab
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Racecar_Yellow/Object.prefab
 - Assets/CoreMasterBundle/Items/Pants/Snowman_Bottom/Material.mat
+- Assets/CoreMasterBundle/Effects/Explosions/BounceExplosion/Effect.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Clock_0/Material.mat
 - Assets/CoreMasterBundle/Skins/Zubeknakov/Fiery_Spectre/Skin_Secondary_123.mat
 - Assets/CoreMasterBundle/Items/Pants/Trunks_White/Animations.prefab
@@ -7315,6 +7316,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Guns/Hawkhound/Reload.mp3
 - Assets/CoreMasterBundle/Effects/Impacts/Paintball_Yellow_Dynamic/Splatter_1.prefab
 - Assets/CoreMasterBundle/Items/Hats/Beret_White/Hat.prefab
+- Assets/CoreMasterBundle/Effects/Explosions/BounceExplosion/BounceExplosion.wav
 - Assets/CoreMasterBundle/Items/Barricades/Cot_Yellow/Barricade.prefab
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Van_Purple/Object.prefab
 - Assets/CoreMasterBundle/Skins/Honeybadger/Toy/Skin_Primary.mat

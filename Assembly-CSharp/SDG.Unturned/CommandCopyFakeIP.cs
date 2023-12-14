@@ -12,7 +12,7 @@ public class CommandCopyFakeIP : Command
         {
             return;
         }
-        if (!Provider.configData.Server.Experimental_Use_FakeIP)
+        if (!Provider.configData.Server.Use_FakeIP)
         {
             CommandWindow.Log("Cannot copy Fake IP to clipboard because it's turned off in the server config.");
             return;

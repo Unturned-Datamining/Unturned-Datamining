@@ -19,7 +19,7 @@ Object_Damage 0
 Explosion_Launch_Speed 50
 
 Range 10
-Explosion 45
+Explosion 168
 
 Explosive
 Fuse_Length 1.0

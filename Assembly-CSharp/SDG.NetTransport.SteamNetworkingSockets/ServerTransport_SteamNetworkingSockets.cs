@@ -64,7 +64,7 @@ public class ServerTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
         localAddress.m_port = SDG.Unturned.Provider.GetServerConnectionPort();
         ipListenSocket = SteamGameServerNetworkingSockets.CreateListenSocketIP(ref localAddress, array.Length, array);
         Log("Server listen socket bound to {0}", AddressToString(localAddress));
-        if (SDG.Unturned.Provider.configData.Server.Experimental_Use_FakeIP)
+        if (SDG.Unturned.Provider.configData.Server.Use_FakeIP)
         {
             fakeIpListenSocket = SteamGameServerNetworkingSockets.CreateListenSocketP2PFakeIP(0, array.Length, array);
             Log("Server FakeIP listen socket: {0}", fakeIpListenSocket);
