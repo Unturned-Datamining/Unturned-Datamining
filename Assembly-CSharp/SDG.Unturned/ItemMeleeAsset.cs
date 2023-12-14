@@ -68,7 +68,7 @@ public class ItemMeleeAsset : ItemWeaponAsset
         {
             if (strength != 1f)
             {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Melee_StrongAttackModifier", PlayerDashboardInventoryUI.FormatStatModifier(strength, higherIsPositive: true, higherIsBeneficial: true)), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Melee_StrongAttackModifier", PlayerDashboardInventoryUI.FormatStatModifier(strength, higherIsPositive: true, higherIsBeneficial: true)), 10000 + DescSort_HigherIsBeneficial(strength));
             }
             if (stamina > 0)
             {

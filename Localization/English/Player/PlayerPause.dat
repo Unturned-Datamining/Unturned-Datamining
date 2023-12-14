@@ -33,6 +33,7 @@ VAC_Insecure VAC Insecure
 BattlEye_Secure BattlEye Required
 BattlEye_Insecure BattlEye Disabled
 Streamer Streamer Mode
+Offline Offline
 
 Favorite_On_Button_Text Favorite
 Favorite_Off_Button_Text Unfavorite

@@ -1906,29 +1906,31 @@ public class PlayerLife : PlayerCaller
         }
         float num2 = Mathf.Min(101f, Mathf.Abs(velocity));
         float num3 = 1f - base.player.skills.mastery(1, 4) * 0.75f;
-        float damage = num2 * num3;
+        float num4 = num2 * num3;
+        num4 *= base.player.clothing.fallingDamageMultiplier;
         if (!Provider.modeConfigData.Players.Can_Hurt_Legs)
         {
-            damage = 0f;
+            num4 = 0f;
         }
-        bool shouldBreakLegs = Provider.modeConfigData.Players.Can_Break_Legs;
+        bool can_Break_Legs = Provider.modeConfigData.Players.Can_Break_Legs;
+        can_Break_Legs &= !base.player.clothing.preventsFallingBrokenBones;
         if (this.OnFallDamageRequested != null)
         {
             try
             {
-                this.OnFallDamageRequested(this, velocity, ref damage, ref shouldBreakLegs);
+                this.OnFallDamageRequested(this, velocity, ref num4, ref can_Break_Legs);
             }
             catch (Exception e)
             {
                 UnturnedLog.exception(e, "Caught exception during OnFallDamageRequested:");
             }
         }
-        byte b = MathfEx.RoundAndClampToByte(damage);
+        byte b = MathfEx.RoundAndClampToByte(num4);
         if (b > 0)
         {
             askDamage(b, Vector3.down, EDeathCause.BONES, ELimb.SPINE, Provider.server, out var _);
         }
-        if (shouldBreakLegs)
+        if (can_Break_Legs)
         {
             breakLegs();
         }

@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using SDG.Framework.Utilities;
 using SDG.Unturned;
 using Steamworks;
+using Unturned.SystemEx;
 
 namespace SDG.NetTransport.SteamNetworkingSockets;
 
@@ -25,6 +26,8 @@ public class ClientTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
     private bool didCloseConnection;
 
     private bool didSetupDebugOutput;
+
+    private bool isRemoteUsingFakeIP;
 
     /// <summary>
     /// Recycled array for every read call.
@@ -124,6 +127,73 @@ public class ClientTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
         return true;
     }
 
+    public bool TryGetIPv4Address(out IPv4Address address)
+    {
+        if (!isConnected || didCloseConnection)
+        {
+            address = IPv4Address.Zero;
+            return false;
+        }
+        if (isRemoteUsingFakeIP)
+        {
+            address = SDG.Unturned.Provider.CurrentServerConnectParameters.address;
+            return true;
+        }
+        SteamNetConnectionInfo_t pInfo;
+        bool connectionInfo = Steamworks.SteamNetworkingSockets.GetConnectionInfo(connection, out pInfo);
+        uint num = (connectionInfo ? pInfo.m_addrRemote.GetIPv4() : 0u);
+        address = new IPv4Address(num);
+        if (connectionInfo)
+        {
+            return num != 0;
+        }
+        return false;
+    }
+
+    public bool TryGetConnectionPort(out ushort connectionPort)
+    {
+        if (!isConnected || didCloseConnection)
+        {
+            connectionPort = 0;
+            return false;
+        }
+        if (isRemoteUsingFakeIP)
+        {
+            connectionPort = SDG.Unturned.Provider.CurrentServerConnectParameters.connectionPort;
+            return true;
+        }
+        SteamNetConnectionInfo_t pInfo;
+        bool connectionInfo = Steamworks.SteamNetworkingSockets.GetConnectionInfo(connection, out pInfo);
+        connectionPort = (ushort)(connectionInfo ? pInfo.m_addrRemote.m_port : 0);
+        if (connectionInfo)
+        {
+            return connectionPort != 0;
+        }
+        return false;
+    }
+
+    public bool TryGetQueryPort(out ushort queryPort)
+    {
+        if (!isConnected || didCloseConnection)
+        {
+            queryPort = 0;
+            return false;
+        }
+        if (isRemoteUsingFakeIP)
+        {
+            queryPort = SDG.Unturned.Provider.CurrentServerConnectParameters.queryPort;
+            return true;
+        }
+        SteamNetConnectionInfo_t pInfo;
+        bool connectionInfo = Steamworks.SteamNetworkingSockets.GetConnectionInfo(connection, out pInfo);
+        queryPort = (ushort)(connectionInfo ? MathfEx.ClampToUShort(pInfo.m_addrRemote.m_port - 1) : 0);
+        if (connectionInfo)
+        {
+            return queryPort != 0;
+        }
+        return false;
+    }
+
     private void OnUpdate()
     {
         LogDebugOutput();
@@ -132,10 +202,30 @@ public class ClientTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
     private void Connect()
     {
         SteamNetworkingConfigValue_t[] array = BuildDefaultConfig().ToArray();
-        SteamNetworkingIPAddr address = default(SteamNetworkingIPAddr);
-        address.SetIPv4(SDG.Unturned.Provider.currentServerInfo.ip, SDG.Unturned.Provider.currentServerInfo.connectionPort);
-        connection = Steamworks.SteamNetworkingSockets.ConnectByIPAddress(ref address, array.Length, array);
-        Log("Client connecting to {0}", AddressToString(address));
+        if (!SDG.Unturned.Provider.CurrentServerConnectParameters.address.IsZero)
+        {
+            SteamNetworkingIPAddr address = default(SteamNetworkingIPAddr);
+            uint value = SDG.Unturned.Provider.CurrentServerConnectParameters.address.value;
+            if (SteamNetworkingUtils.IsFakeIPv4(value))
+            {
+                isRemoteUsingFakeIP = true;
+                address.SetIPv4(value, SDG.Unturned.Provider.CurrentServerConnectParameters.queryPort);
+                Log("Client connecting to {0} (FakeIP)", AddressToString(address));
+            }
+            else
+            {
+                address.SetIPv4(value, SDG.Unturned.Provider.CurrentServerConnectParameters.connectionPort);
+                Log("Client connecting to {0}", AddressToString(address));
+            }
+            connection = Steamworks.SteamNetworkingSockets.ConnectByIPAddress(ref address, array.Length, array);
+        }
+        else
+        {
+            SteamNetworkingIdentity identityRemote = default(SteamNetworkingIdentity);
+            identityRemote.SetSteamID(SDG.Unturned.Provider.CurrentServerConnectParameters.steamId);
+            connection = Steamworks.SteamNetworkingSockets.ConnectP2P(ref identityRemote, 0, array.Length, array);
+            Log("Client connecting to {0} (P2P)", IdentityToString(identityRemote));
+        }
     }
 
     private void OnSteamNetConnectionStatusChanged(SteamNetConnectionStatusChangedCallback_t callback)

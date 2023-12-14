@@ -129,6 +129,13 @@ public class PlayerVoice : PlayerCaller
     private static ClientInstanceMethod SendPlayVoiceChat = ClientInstanceMethod.Get(typeof(PlayerVoice), "ReceivePlayVoiceChat");
 
     /// <summary>
+    /// Set to true during OnDestroy to make sure we don't start recording again.
+    /// </summary>
+    private bool isBeingDestroyed;
+
+    private bool _isSteamRecording;
+
+    /// <summary>
     /// Internal value managed by inputWantsToRecord.
     /// </summary>
     private bool _inputWantsToRecord;
@@ -225,6 +232,33 @@ public class PlayerVoice : PlayerCaller
     }
 
     /// <summary>
+    /// If true, SteamUser.StartVoiceRecording has been called without a corresponding call to
+    /// SteamUser.StopVoiceRecording yet.
+    /// </summary>
+    private bool SteamIsRecording
+    {
+        get
+        {
+            return _isSteamRecording;
+        }
+        set
+        {
+            if (_isSteamRecording != value)
+            {
+                _isSteamRecording = value;
+                if (_isSteamRecording)
+                {
+                    SteamUser.StartVoiceRecording();
+                }
+                else
+                {
+                    SteamUser.StopVoiceRecording();
+                }
+            }
+        }
+    }
+
+    /// <summary>
     /// Set by updateInput based on whether voice is enabled, key is held, is alive, etc.
     /// Reset to false during OnDestroy to stop recording.
     /// </summary>
@@ -246,14 +280,7 @@ public class PlayerVoice : PlayerCaller
                 wasRecording = true;
                 pollRecordingTimer = 0f;
             }
-            if (inputWantsToRecord)
-            {
-                SteamUser.StartVoiceRecording();
-            }
-            else
-            {
-                SteamUser.StopVoiceRecording();
-            }
+            SynchronizeSteamIsRecording();
             SteamFriends.SetInGameVoiceSpeaking(Provider.user, inputWantsToRecord);
             if (!canEverPlayback)
             {
@@ -651,6 +678,11 @@ public class PlayerVoice : PlayerCaller
         if (!Dedicator.IsDedicatedServer)
         {
             audioSource = GetComponent<AudioSource>();
+            if (canEverRecord)
+            {
+                OptionsSettings.OnVoiceAlwaysRecordingChanged += SynchronizeSteamIsRecording;
+                SynchronizeSteamIsRecording();
+            }
             if (canEverPlayback)
             {
                 steamOptimalSampleRate = SteamUser.GetVoiceOptimalSampleRate();
@@ -667,9 +699,17 @@ public class PlayerVoice : PlayerCaller
 
     private void OnDestroy()
     {
+        isBeingDestroyed = true;
         if (canEverRecord)
         {
+            OptionsSettings.OnVoiceAlwaysRecordingChanged -= SynchronizeSteamIsRecording;
             inputWantsToRecord = false;
         }
+    }
+
+    private void SynchronizeSteamIsRecording()
+    {
+        bool chatVoiceOut = OptionsSettings.chatVoiceOut;
+        SteamIsRecording = chatVoiceOut && !isBeingDestroyed && (inputWantsToRecord || OptionsSettings.VoiceAlwaysRecording);
     }
 }

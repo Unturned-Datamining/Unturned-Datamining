@@ -5,7 +5,7 @@ namespace SDG.Unturned;
 /// </summary>
 public class ServerListComparer_PingDescending : ServerListComparer_PingAscending
 {
-    public override int Compare(SteamServerInfo lhs, SteamServerInfo rhs)
+    public override int Compare(SteamServerAdvertisement lhs, SteamServerAdvertisement rhs)
     {
         return -base.Compare(lhs, rhs);
     }

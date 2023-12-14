@@ -1,5 +1,6 @@
 using SDG.Unturned;
 using Steamworks;
+using Unturned.SystemEx;
 
 namespace SDG.NetTransport.SteamNetworking;
 
@@ -47,6 +48,39 @@ public class ClientTransport_SteamNetworking : TransportBase_SteamNetworking, IC
         }
         size = pcubMsgSize;
         return true;
+    }
+
+    public bool TryGetIPv4Address(out IPv4Address address)
+    {
+        if (Steamworks.SteamNetworking.GetP2PSessionState(serverId, out var pConnectionState) && pConnectionState.m_bUsingRelay == 0)
+        {
+            address = new IPv4Address(pConnectionState.m_nRemoteIP);
+            return address.value != 0;
+        }
+        address = IPv4Address.Zero;
+        return false;
+    }
+
+    public bool TryGetConnectionPort(out ushort connectionPort)
+    {
+        if (Steamworks.SteamNetworking.GetP2PSessionState(serverId, out var pConnectionState) && pConnectionState.m_bUsingRelay == 0)
+        {
+            connectionPort = pConnectionState.m_nRemotePort;
+            return connectionPort > 0;
+        }
+        connectionPort = 0;
+        return false;
+    }
+
+    public bool TryGetQueryPort(out ushort queryPort)
+    {
+        if (Steamworks.SteamNetworking.GetP2PSessionState(serverId, out var pConnectionState) && pConnectionState.m_bUsingRelay == 0)
+        {
+            queryPort = MathfEx.ClampToUShort(pConnectionState.m_nRemotePort - 1);
+            return queryPort > 0;
+        }
+        queryPort = 0;
+        return false;
     }
 
     private void OnP2PSessionRequest(P2PSessionRequest_t callback)

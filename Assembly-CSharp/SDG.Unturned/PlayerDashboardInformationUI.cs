@@ -776,7 +776,7 @@ public class PlayerDashboardInformationUI
     {
         sortedClients.Clear();
         sortedClients.AddRange(Provider.clients);
-        if (playerSortButton.state == 0)
+        if (!Provider.modeConfigData.Gameplay.Group_Player_List || playerSortButton.state == 0)
         {
             playersList.onCreateElement = OnCreatePlayerEntry;
             sortedClients.Sort((SteamPlayer lhs, SteamPlayer rhs) => lhs.GetLocalDisplayName().CompareTo(rhs.GetLocalDisplayName()));
@@ -996,6 +996,19 @@ public class PlayerDashboardInformationUI
         return sleekPlayer;
     }
 
+    private static void OnGameplayConfigReceived()
+    {
+        SyncPlayerSortButtonVisible();
+    }
+
+    private static void SyncPlayerSortButtonVisible()
+    {
+        bool group_Player_List = Provider.modeConfigData.Gameplay.Group_Player_List;
+        playerSortButton.IsVisible = group_Player_List;
+        playersList.PositionOffset_Y = (group_Player_List ? 30 : 0);
+        playersList.SizeOffset_Y = (group_Player_List ? (-30) : 0);
+    }
+
     /// <summary>
     /// Temporary to unbind events because this class is static for now. (sigh)
     /// </summary>
@@ -1009,6 +1022,7 @@ public class PlayerDashboardInformationUI
         }
         PlayerQuests.groupUpdated = (GroupUpdatedHandler)Delegate.Remove(PlayerQuests.groupUpdated, new GroupUpdatedHandler(handleGroupUpdated));
         GroupManager.groupInfoReady -= handleGroupInfoReady;
+        ClientMessageHandler_Accepted.OnGameplayConfigReceived -= OnGameplayConfigReceived;
     }
 
     public PlayerDashboardInformationUI()
@@ -1260,6 +1274,10 @@ public class PlayerDashboardInformationUI
         playerSortButton.SizeScale_X = 1f;
         playerSortButton.SizeOffset_Y = 30f;
         playerSortButton.onSwappedState = OnSwappedPlayerSortState;
+        if (ConvenientSavedata.get().read("PlayerListSortMode", out long value))
+        {
+            playerSortButton.state = MathfEx.ClampLongToInt(value, 0, 1);
+        }
         playersBox.AddChild(playerSortButton);
         playersList = new SleekList<SteamPlayer>();
         playersList.SizeScale_X = 1f;
@@ -1269,24 +1287,13 @@ public class PlayerDashboardInformationUI
         playersBox.AddChild(playersList);
         sortedClients.Clear();
         playersList.SetData(sortedClients);
-        if (Provider.modeConfigData.Gameplay.Group_Player_List)
-        {
-            playersList.PositionOffset_Y = 30f;
-            playersList.SizeOffset_Y = -30f;
-            if (ConvenientSavedata.get().read("PlayerListSortMode", out long value))
-            {
-                playerSortButton.state = MathfEx.ClampLongToInt(value, 0, 1);
-            }
-        }
-        else
-        {
-            playerSortButton.IsVisible = false;
-        }
         PlayerUI.isBlindfoldedChanged += handleIsBlindfoldedChanged;
         Player player = Player.player;
         player.onPlayerTeleported = (PlayerTeleported)Delegate.Combine(player.onPlayerTeleported, new PlayerTeleported(onPlayerTeleported));
         PlayerQuests.groupUpdated = (GroupUpdatedHandler)Delegate.Combine(PlayerQuests.groupUpdated, new GroupUpdatedHandler(handleGroupUpdated));
         GroupManager.groupInfoReady += handleGroupInfoReady;
+        ClientMessageHandler_Accepted.OnGameplayConfigReceived += OnGameplayConfigReceived;
+        SyncPlayerSortButtonVisible();
         onPlayerTeleported(Player.player, Player.player.transform.position);
         string text = ((Level.info != null) ? (Level.info.path + "/Chart.png") : null);
         if (text != null && ReadWrite.fileExists(text, useCloud: false, usePath: false))

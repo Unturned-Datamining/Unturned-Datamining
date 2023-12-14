@@ -1449,7 +1449,7 @@ public class PlayerLifeUI
                 chatHistoryBoxV1.AddChild(sleekChatEntryV);
                 chatHistoryLabelsV1[i] = sleekChatEntryV;
             }
-            bool shouldFadeOutWithAge = Glazier.Get().SupportsRichTextAlpha && Provider.preferenceData.Chat.Enable_Fade_Out;
+            bool supportsRichTextAlpha = Glazier.Get().SupportsRichTextAlpha;
             chatPreviewLabelsV1 = new SleekChatEntryV1[Provider.preferenceData.Chat.Preview_Length];
             for (int j = 0; j < chatPreviewLabelsV1.Length; j++)
             {
@@ -1458,7 +1458,7 @@ public class PlayerLifeUI
                     PositionOffset_Y = j * 40,
                     SizeOffset_X = chatHistoryBoxV1.SizeOffset_X - 30f,
                     SizeOffset_Y = 40f,
-                    shouldFadeOutWithAge = shouldFadeOutWithAge
+                    shouldFadeOutWithAge = supportsRichTextAlpha
                 };
                 container.AddChild(sleekChatEntryV2);
                 chatPreviewLabelsV1[j] = sleekChatEntryV2;

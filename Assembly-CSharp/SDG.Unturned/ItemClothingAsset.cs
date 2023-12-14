@@ -46,6 +46,11 @@ public class ItemClothingAsset : ItemAsset
     /// </summary>
     public float explosionArmor => _explosionArmor;
 
+    /// <summary>
+    /// Armor against falling damage. Defaults to 1.0, i.e., take the normal amount of damage.
+    /// </summary>
+    public float fallingDamageMultiplier { get; protected set; }
+
     public override bool showQuality => true;
 
     public bool proofWater => _proofWater;
@@ -53,6 +58,12 @@ public class ItemClothingAsset : ItemAsset
     public bool proofFire => _proofFire;
 
     public bool proofRadiation => _proofRadiation;
+
+    /// <summary>
+    /// If true on any worn clothing item, bones never break when falling.
+    /// Defaults to false.
+    /// </summary>
+    public bool preventsFallingBrokenBones { get; protected set; }
 
     public bool visibleOnRagdoll { get; protected set; }
 
@@ -104,24 +115,32 @@ public class ItemClothingAsset : ItemAsset
         {
             if (_armor != 1f)
             {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Clothing_Armor", PlayerDashboardInventoryUI.FormatStatModifier(_armor, higherIsPositive: false, higherIsBeneficial: false)), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Clothing_Armor", PlayerDashboardInventoryUI.FormatStatModifier(_armor, higherIsPositive: false, higherIsBeneficial: false)), 10000 + DescSort_LowerIsBeneficial(_armor));
             }
             if (_explosionArmor != 1f)
             {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Clothing_ExplosionArmor", PlayerDashboardInventoryUI.FormatStatModifier(_explosionArmor, higherIsPositive: false, higherIsBeneficial: false)), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Clothing_ExplosionArmor", PlayerDashboardInventoryUI.FormatStatModifier(_explosionArmor, higherIsPositive: false, higherIsBeneficial: false)), 10000 + DescSort_LowerIsBeneficial(_explosionArmor));
             }
         }
         if (movementSpeedMultiplier != 1f)
         {
-            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ClothingMovementSpeedModifier", PlayerDashboardInventoryUI.FormatStatModifier(movementSpeedMultiplier, higherIsPositive: true, higherIsBeneficial: true)), 10000);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ClothingMovementSpeedModifier", PlayerDashboardInventoryUI.FormatStatModifier(movementSpeedMultiplier, higherIsPositive: true, higherIsBeneficial: true)), 10000 + DescSort_HigherIsBeneficial(movementSpeedMultiplier));
+        }
+        if (fallingDamageMultiplier != 1f)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_FallingDamageModifier", PlayerDashboardInventoryUI.FormatStatModifier(fallingDamageMultiplier, higherIsPositive: true, higherIsBeneficial: false)), 10000 + DescSort_LowerIsBeneficial(fallingDamageMultiplier));
         }
         if (_proofFire)
         {
-            builder.Append(PlayerDashboardInventoryUI.FormatStatColor(PlayerDashboardInventoryUI.localization.format("ItemDescription_Clothing_FireProof"), isBeneficial: true), 10000);
+            builder.Append(PlayerDashboardInventoryUI.FormatStatColor(PlayerDashboardInventoryUI.localization.format("ItemDescription_Clothing_FireProof"), isBeneficial: true), 9999);
         }
         if (_proofRadiation)
         {
-            builder.Append(PlayerDashboardInventoryUI.FormatStatColor(PlayerDashboardInventoryUI.localization.format("ItemDescription_Clothing_RadiationProof"), isBeneficial: true), 10000);
+            builder.Append(PlayerDashboardInventoryUI.FormatStatColor(PlayerDashboardInventoryUI.localization.format("ItemDescription_Clothing_RadiationProof"), isBeneficial: true), 9999);
+        }
+        if (preventsFallingBrokenBones)
+        {
+            builder.Append(PlayerDashboardInventoryUI.FormatStatColor(PlayerDashboardInventoryUI.localization.format("ItemDescription_Clothing_FallingBoneBreakingProof"), isBeneficial: true), 9999);
         }
     }
 
@@ -132,6 +151,7 @@ public class ItemClothingAsset : ItemAsset
         {
             _armor = 1f;
             _explosionArmor = 1f;
+            fallingDamageMultiplier = 1f;
         }
         else
         {
@@ -152,9 +172,11 @@ public class ItemClothingAsset : ItemAsset
             {
                 _explosionArmor = armor;
             }
+            fallingDamageMultiplier = data.ParseFloat("Falling_Damage_Multiplier", 1f);
             _proofWater = data.ContainsKey("Proof_Water");
             _proofFire = data.ContainsKey("Proof_Fire");
             _proofRadiation = data.ContainsKey("Proof_Radiation");
+            preventsFallingBrokenBones = data.ParseBool("Prevents_Falling_Broken_Bones");
             movementSpeedMultiplier = data.ParseFloat("Movement_Speed_Multiplier", 1f);
         }
         visibleOnRagdoll = data.ParseBool("Visible_On_Ragdoll", defaultValue: true);

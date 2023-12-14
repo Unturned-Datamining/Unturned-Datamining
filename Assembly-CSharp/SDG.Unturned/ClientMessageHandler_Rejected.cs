@@ -119,7 +119,7 @@ internal static class ClientMessageHandler_Rejected
             Provider._connectionFailureInfo = ESteamConnectionFailureInfo.PING;
             if (MenuDashboardUI.localization.has("PingV2"))
             {
-                int num = ((Provider.currentServerInfo != null) ? Provider.currentServerInfo.ping : (-1));
+                int num = ((Provider.CurrentServerAdvertisement != null) ? Provider.CurrentServerAdvertisement.ping : (-1));
                 Provider._connectionFailureReason = MenuDashboardUI.localization.format("PingV2", num, value2);
             }
             else

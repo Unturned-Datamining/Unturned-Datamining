@@ -5,7 +5,7 @@ namespace SDG.Unturned;
 /// </summary>
 public class ServerListComparer_PlayersInverted : ServerListComparer_PlayersDefault
 {
-    public override int Compare(SteamServerInfo lhs, SteamServerInfo rhs)
+    public override int Compare(SteamServerAdvertisement lhs, SteamServerAdvertisement rhs)
     {
         return -base.Compare(lhs, rhs);
     }

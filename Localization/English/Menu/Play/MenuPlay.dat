@@ -1,5 +1,5 @@
-ConnectButtonText Connect by IP
-ConnectButtonTooltip Connect to a known address and port.
+ConnectButtonText Connect Directly
+ConnectButtonTooltip Connect by server code or to a known address and port.
 ServersButtonText Multiplayer
 ServersButtonTooltip Browse servers to play over a network connection.
 SingleplayerButtonText Singleplayer

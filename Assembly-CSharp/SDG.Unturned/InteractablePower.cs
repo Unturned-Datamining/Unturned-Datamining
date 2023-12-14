@@ -31,7 +31,7 @@ public class InteractablePower : Interactable
         {
             return true;
         }
-        if (base.isPlant)
+        if (base.IsChildOfVehicle)
         {
             ushort plant = ushort.MaxValue;
             BarricadeManager.tryGetPlant(base.transform.parent, out var _, out var _, out plant, out var _);

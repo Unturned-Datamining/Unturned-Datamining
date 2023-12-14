@@ -1,5 +1,7 @@
-IP_Field_Label IP
+Host_Field_Label Host or Server Code
+Host_Field_Tooltip Can be a server code shared with you, domain name, or IP address.
 Port_Field_Label Port
+Port_Field_Tooltip Automatically set if ":####" is present in host address.
 Password_Field_Label Password
 Password_Field_Replace #
 
@@ -19,3 +21,9 @@ Address_Loopback_Label This Machine
 Address_Loopback_Tooltip This address refers to a server on your computer.
 Address_LocalPrivate_Label LAN
 Address_LocalPrivate_Tooltip This address refers to a server on your local network.
+
+ServerCode_Valid_Label Server Code
+ServerCode_Valid_Tooltip This code refers to a game server.
+ServerCode_Invalid_Label Invalid Server Code
+ServerCode_Invalid_Tooltip This appears to be a server code, but does not refer to a game server.
+ServerCode_Friend_Tooltip This is a Steam friend code, not a server code.

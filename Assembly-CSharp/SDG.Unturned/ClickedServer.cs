@@ -1,3 +1,3 @@
 namespace SDG.Unturned;
 
-public delegate void ClickedServer(SleekServer server, SteamServerInfo info);
+public delegate void ClickedServer(SleekServer server, SteamServerAdvertisement info);

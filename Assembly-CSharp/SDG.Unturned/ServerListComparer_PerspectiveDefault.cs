@@ -2,9 +2,9 @@ using System.Collections.Generic;
 
 namespace SDG.Unturned;
 
-public class ServerListComparer_PerspectiveDefault : IComparer<SteamServerInfo>
+public class ServerListComparer_PerspectiveDefault : IComparer<SteamServerAdvertisement>
 {
-    public virtual int Compare(SteamServerInfo lhs, SteamServerInfo rhs)
+    public virtual int Compare(SteamServerAdvertisement lhs, SteamServerAdvertisement rhs)
     {
         if (lhs.cameraMode == rhs.cameraMode)
         {

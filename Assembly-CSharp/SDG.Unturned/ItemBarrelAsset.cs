@@ -44,7 +44,7 @@ public class ItemBarrelAsset : ItemCaliberAsset
         base.BuildDescription(builder, itemInstance);
         if (!builder.shouldRestrictToLegacyContent && _ballisticDrop != 1f)
         {
-            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_BulletGravityModifier", PlayerDashboardInventoryUI.FormatStatModifier(_ballisticDrop, higherIsPositive: true, higherIsBeneficial: false)), 10000);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_BulletGravityModifier", PlayerDashboardInventoryUI.FormatStatModifier(_ballisticDrop, higherIsPositive: true, higherIsBeneficial: false)), 10000 + DescSort_LowerIsBeneficial(_ballisticDrop));
         }
     }
 

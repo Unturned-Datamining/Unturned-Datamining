@@ -1,4 +1,3 @@
-using SDG.Framework.Rendering;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -24,28 +23,6 @@ public class DecalRenderer : MonoBehaviour
 
     private int ambientGroundID;
 
-    protected void handleGLRender()
-    {
-        if (!DecalSystem.IsVisible)
-        {
-            return;
-        }
-        float num = 128f + GraphicsSettings.normalizedDrawDistance * 128f;
-        foreach (Decal item in DecalSystem.decalsDiffuse)
-        {
-            if (!(item.material == null))
-            {
-                float num2 = num * item.lodBias;
-                float num3 = num2 * num2;
-                if (!((item.transform.position - cam.transform.position).sqrMagnitude > num3))
-                {
-                    Color color = (item.isSelected ? Color.yellow : Color.red);
-                    RuntimeGizmos.Get().Box(item.transform.localToWorldMatrix, Vector3.one, color);
-                }
-            }
-        }
-    }
-
     private void OnEnable()
     {
         cam = GetComponent<Camera>();
@@ -58,7 +35,6 @@ public class DecalRenderer : MonoBehaviour
             ambientSkyID = Shader.PropertyToID("_DecalHackAmbientSky");
             ambientGroundID = Shader.PropertyToID("_DecalHackAmbientGround");
         }
-        GLRenderer.render += handleGLRender;
     }
 
     public void OnDisable()
@@ -68,7 +44,6 @@ public class DecalRenderer : MonoBehaviour
             cam.RemoveCommandBuffer(CameraEvent.BeforeLighting, buffer);
             buffer = null;
         }
-        GLRenderer.render -= handleGLRender;
     }
 
     private void OnPreRender()

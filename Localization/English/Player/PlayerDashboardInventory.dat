@@ -61,7 +61,6 @@ Rarity_Type_Label {0} {1}
 Quality Quality: {0}%
 Amount Amount: {0}
 
-Fuel Fuel: {0}%
 Refill Water: {0}
 Empty Empty
 Full Full
@@ -81,7 +80,9 @@ ItemDescription_Clothing_Armor Armor: {0}
 ItemDescription_Clothing_ExplosionArmor Explosion Armor: {0}
 ItemDescription_Clothing_FireProof Protects against fire.
 ItemDescription_Clothing_RadiationProof Protects against radiation.
+ItemDescription_Clothing_FallingBoneBreakingProof Protects against breaking bones from long falls.
 ItemDescription_ClothingMovementSpeedModifier Wearing Movement Speed: {0}
+ItemDescription_FallingDamageModifier Falling Damage: {0}
 ItemDescription_EquipableMovementSpeedModifier Equipped Movement Speed: {0}
 ItemDescription_PelletCount Pellets: {0}
 ItemDescription_BulletDamageModifier Bullet Damage: {0}
@@ -186,6 +187,11 @@ ItemDescription_Throwable_FuseLength Fuse Length: {0}
 ItemDescription_Melee_StrongAttackModifier Strong Attack Damage: {0}
 ItemDescription_Melee_StrongAttackStamina Strong Attack Stamina Cost: {0}
 ItemDescription_ArrestEnd_UnlocksItem Unlocks: {0}
+ItemDescription_FuelAmountWithCapacity Fuel: {0}/{1} ({2})
+ItemDescription_FuelCapacity Fuel Capacity: {0}
+ItemDescription_WaterCapacity Water Capacity: {0}
+ItemDescription_FuelBurnRate Fuel Burned: {0}/hour
+ItemDescription_FuelMaxRuntime Max Runtime: {0} hour(s)
 
 Equip_Button Equip
 Equip_Button_Tooltip Equip in your hands.

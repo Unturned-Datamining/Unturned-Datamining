@@ -128,13 +128,13 @@ public class PlayerDashboardCraftingUI
         visibleBlueprints.Clear();
         foreach (Blueprint item2 in list)
         {
-            if ((item2.skill == EBlueprintSkill.REPAIR && item2.level > Provider.modeConfigData.Gameplay.Repair_Level_Max) || (!string.IsNullOrEmpty(item2.map) && !item2.map.Equals(Level.info.name, StringComparison.InvariantCultureIgnoreCase)) || !item2.areConditionsMet(Player.player) || Player.player.crafting.isBlueprintBlacklisted(item2) || (!Provider.modeConfigData.Gameplay.Allow_Freeform_Buildables && item2.IsOutputFreeformBuildable))
+            if ((item2.skill == EBlueprintSkill.REPAIR && item2.level > Provider.modeConfigData.Gameplay.Repair_Level_Max) || (!string.IsNullOrEmpty(item2.map) && !item2.map.Equals(Level.info.name, StringComparison.InvariantCultureIgnoreCase)) || !item2.areConditionsMet(Player.player) || Player.player.crafting.isBlueprintBlacklisted(item2) || (!Provider.modeConfigData.Gameplay.Allow_Freeform_Buildables && !Provider.modeConfigData.Gameplay.Allow_Freeform_Buildables_On_Vehicles && item2.IsOutputFreeformBuildable))
             {
                 continue;
             }
             ItemAsset sourceItem = item2.sourceItem;
             int num = 0;
-            bool flag3 = true;
+            bool flag3 = false;
             item2.hasSupplies = true;
             item2.hasSkills = item2.skill == EBlueprintSkill.NONE || (item2.skill == EBlueprintSkill.CRAFT && Player.player.skills.skills[2][1].level >= item2.level) || (item2.skill == EBlueprintSkill.COOK && flag && Player.player.skills.skills[2][3].level >= item2.level) || (item2.skill == EBlueprintSkill.REPAIR && Player.player.skills.skills[2][7].level >= item2.level);
             List<InventorySearch>[] array = new List<InventorySearch>[item2.supplies.Length];
@@ -154,16 +154,13 @@ public class PlayerDashboardCraftingUI
                     if (blueprintSupply.hasAmount == 0)
                     {
                         item2.hasSupplies = false;
-                        flag3 = false;
+                        flag3 = true;
                     }
                 }
                 else if (blueprintSupply.hasAmount < blueprintSupply.amount)
                 {
                     item2.hasSupplies = false;
-                    if (blueprintSupply.isCritical)
-                    {
-                        flag3 = false;
-                    }
+                    flag3 |= blueprintSupply.isCritical;
                 }
                 array[i] = list3;
             }
@@ -172,10 +169,7 @@ public class PlayerDashboardCraftingUI
                 InventorySearch inventorySearch = Player.player.inventory.has(item2.tool);
                 item2.tools = ((inventorySearch != null) ? ((ushort)1) : ((ushort)0));
                 item2.hasTool = inventorySearch != null;
-                if (inventorySearch == null && item2.toolCritical)
-                {
-                    flag3 = false;
-                }
+                flag3 |= inventorySearch == null && item2.toolCritical;
             }
             else
             {
@@ -252,7 +246,7 @@ public class PlayerDashboardCraftingUI
             {
                 item2.hasItem = true;
             }
-            if (!flag3 && (!flag2 || !item2.canBeVisibleWhenSearchedWithoutRequiredItems))
+            if (flag3 && (!flag2 || !item2.canBeVisibleWhenSearchedWithoutRequiredItems))
             {
                 continue;
             }
@@ -279,7 +273,7 @@ public class PlayerDashboardCraftingUI
             {
                 visibleBlueprints.Insert(0, item2);
             }
-            else if (flag2 || ((item2.type == EBlueprintType.AMMO || item2.type == EBlueprintType.REPAIR || num != 0) && item2.hasItem))
+            else if ((flag2 && item2.canBeVisibleWhenSearchedWithoutRequiredItems) || ((item2.type == EBlueprintType.AMMO || item2.type == EBlueprintType.REPAIR || num != 0) && item2.hasItem))
             {
                 visibleBlueprints.Add(item2);
             }

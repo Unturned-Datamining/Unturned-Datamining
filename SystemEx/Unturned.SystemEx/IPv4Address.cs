@@ -4,6 +4,8 @@ namespace Unturned.SystemEx;
 
 public struct IPv4Address : IEquatable<IPv4Address>, IComparable<IPv4Address>
 {
+    public static readonly IPv4Address Zero = new IPv4Address(0u);
+
     public uint value;
 
     public bool IsLoopback => value >> 24 == 127;
@@ -33,6 +35,8 @@ public struct IPv4Address : IEquatable<IPv4Address>, IComparable<IPv4Address>
             return false;
         }
     }
+
+    public bool IsZero => value == 0;
 
     public IPv4Address(uint value)
     {

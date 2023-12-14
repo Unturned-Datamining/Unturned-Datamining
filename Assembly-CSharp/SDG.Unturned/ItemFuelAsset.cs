@@ -34,7 +34,8 @@ public class ItemFuelAsset : ItemAsset
     {
         base.BuildDescription(builder, itemInstance);
         ushort num = BitConverter.ToUInt16(itemInstance.state, 0);
-        builder.Append(PlayerDashboardInventoryUI.localization.format("Fuel", ((int)((float)(int)num / (float)(int)fuel * 100f)).ToString()), 2000);
+        float num2 = (float)(int)num / (float)(int)fuel;
+        builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_FuelAmountWithCapacity", num, fuel, num2.ToString("P")), 2000);
     }
 
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)

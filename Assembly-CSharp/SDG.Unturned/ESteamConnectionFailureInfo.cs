@@ -109,5 +109,29 @@ public enum ESteamConnectionFailureInfo
     /// This can happen if server's Steam ID has changed from what the client thinks it is.
     /// For example, joining a stale entry in the server list. (public issue #4101)
     /// </summary>
-    AUTH_NETWORK_IDENTITY_FAILURE
+    AUTH_NETWORK_IDENTITY_FAILURE,
+    /// <summary>
+    /// Level name advertised on server list does not match during connect.
+    /// </summary>
+    SERVER_MAP_ADVERTISEMENT_MISMATCH,
+    /// <summary>
+    /// VAC status advertised on server list does not match during connect.
+    /// </summary>
+    SERVER_VAC_ADVERTISEMENT_MISMATCH,
+    /// <summary>
+    /// BattlEye status advertised on server list does not match during connect.
+    /// </summary>
+    SERVER_BATTLEYE_ADVERTISEMENT_MISMATCH,
+    /// <summary>
+    /// Max players advertised on server list does not match during connect.
+    /// </summary>
+    SERVER_MAXPLAYERS_ADVERTISEMENT_MISMATCH,
+    /// <summary>
+    /// Camera mode advertised on server list does not match during connect.
+    /// </summary>
+    SERVER_CAMERAMODE_ADVERTISEMENT_MISMATCH,
+    /// <summary>
+    /// Combat mode advertised on server list does not match during connect.
+    /// </summary>
+    SERVER_PVP_ADVERTISEMENT_MISMATCH
 }

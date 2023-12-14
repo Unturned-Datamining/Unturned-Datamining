@@ -8,6 +8,8 @@ namespace SDG.Unturned;
 
 public class MenuPlayConnectUI
 {
+    public static Bundle icons;
+
     public static Local localization;
 
     private static SleekFullscreenBox container;
@@ -31,7 +33,7 @@ public class MenuPlayConnectUI
 
     private static SleekButtonIcon backButton;
 
-    private static ISleekField ipField;
+    private static ISleekField hostField;
 
     private static ISleekUInt16Field portField;
 
@@ -40,6 +42,10 @@ public class MenuPlayConnectUI
     private static SleekButtonIcon connectButton;
 
     private static ISleekBox addressInfoBox;
+
+    private static ISleekBox serverCodeInfoBox;
+
+    private static ISleekImage serverCodeIcon;
 
     private static bool isLaunched;
 
@@ -71,15 +77,25 @@ public class MenuPlayConnectUI
 
     private static void onClickedConnectButton(ISleekElement button)
     {
-        if (portField.Value == 0)
-        {
-            return;
-        }
-        string text = ipField.Text.ToLower();
+        string text = hostField.Text.ToLower();
         text = text.Trim();
         if (string.IsNullOrEmpty(text))
         {
             UnturnedLog.info("Input IP was empty");
+            return;
+        }
+        if (text.Length >= 6 && ulong.TryParse(text, out var result))
+        {
+            CSteamID steamId = new CSteamID(result);
+            if (steamId.BGameServerAccount())
+            {
+                MenuSettings.save();
+                Provider.connect(new ServerConnectParameters(steamId, passwordField.Text), null, null);
+                return;
+            }
+        }
+        if (portField.Value == 0)
+        {
             return;
         }
         string text2;
@@ -110,35 +126,27 @@ public class MenuPlayConnectUI
             UnturnedLog.info("Unable to parse IP \"" + text2 + "\"");
             return;
         }
-        if (address.IsWideAreaNetwork)
-        {
-            EInternetMultiplayerAvailability internetMultiplayerAvailability = Provider.GetInternetMultiplayerAvailability();
-            if (internetMultiplayerAvailability != 0)
-            {
-                MenuUI.AlertInternetMultiplayerAvailability(internetMultiplayerAvailability);
-                return;
-            }
-        }
         SteamConnectionInfo info = new SteamConnectionInfo(address.value, portField.Value, passwordField.Text);
         MenuSettings.save();
         connect(info, shouldAutoJoin: false);
     }
 
-    private static void onTypedIPField(ISleekField field, string text)
+    private static void onTypedHostField(ISleekField field, string text)
     {
-        PlaySettings.connectIP = text;
+        PlaySettings.connectHost = text;
         addressInfoBox.IsVisible = false;
+        RefreshServerCodeInfo();
     }
 
     private static void TryParseIpPort()
     {
-        string text = ipField.Text;
+        string text = hostField.Text;
         int num = text.LastIndexOf(':');
         if (num >= 0 && ushort.TryParse(text.Substring(num + 1), out var result))
         {
-            PlaySettings.connectIP = text.Substring(0, num);
+            PlaySettings.connectHost = text.Substring(0, num);
             PlaySettings.connectPort = result;
-            ipField.Text = PlaySettings.connectIP;
+            hostField.Text = PlaySettings.connectHost;
             portField.Value = PlaySettings.connectPort;
         }
     }
@@ -147,6 +155,7 @@ public class MenuPlayConnectUI
     {
         TryParseIpPort();
         RefreshAddressInfo();
+        RefreshServerCodeInfo();
     }
 
     private static void onTypedPortField(ISleekUInt16Field field, ushort state)
@@ -191,9 +200,9 @@ public class MenuPlayConnectUI
     private static void RefreshAddressInfo()
     {
         addressInfoBox.IsVisible = false;
-        string text = ipField.Text.ToLower();
+        string text = hostField.Text.ToLower();
         text = text.Trim();
-        if (string.IsNullOrEmpty(text))
+        if (string.IsNullOrEmpty(text) || (text.Length >= 6 && ulong.TryParse(text, out var _)))
         {
             return;
         }
@@ -232,6 +241,41 @@ public class MenuPlayConnectUI
         }
     }
 
+    private static void RefreshServerCodeInfo()
+    {
+        serverCodeInfoBox.IsVisible = false;
+        portField.IsVisible = true;
+        string text = hostField.Text.ToLower();
+        text = text.Trim();
+        if (!string.IsNullOrEmpty(text) && text.Length >= 6 && ulong.TryParse(text, out var result))
+        {
+            CSteamID cSteamID = new CSteamID(result);
+            if (cSteamID.BGameServerAccount())
+            {
+                serverCodeInfoBox.Text = localization.format("ServerCode_Valid_Label");
+                serverCodeInfoBox.TooltipText = localization.format("ServerCode_Valid_Tooltip");
+                serverCodeIcon.Texture = icons.load<Texture2D>("ValidServerCode");
+                serverCodeIcon.TintColor = ESleekTint.FOREGROUND;
+            }
+            else if (cSteamID.BIndividualAccount())
+            {
+                serverCodeInfoBox.Text = localization.format("ServerCode_Invalid_Label");
+                serverCodeInfoBox.TooltipText = localization.format("ServerCode_Friend_Tooltip");
+                serverCodeIcon.Texture = icons.load<Texture2D>("InvalidServerCode");
+                serverCodeIcon.TintColor = ESleekTint.BAD;
+            }
+            else
+            {
+                serverCodeInfoBox.Text = localization.format("ServerCode_Invalid_Label");
+                serverCodeInfoBox.TooltipText = localization.format("ServerCode_Invalid_Tooltip");
+                serverCodeIcon.Texture = icons.load<Texture2D>("InvalidServerCode");
+                serverCodeIcon.TintColor = ESleekTint.BAD;
+            }
+            serverCodeInfoBox.IsVisible = true;
+            portField.IsVisible = false;
+        }
+    }
+
     private static void onClickedBackButton(ISleekElement button)
     {
         MenuPlayUI.open();
@@ -246,8 +290,12 @@ public class MenuPlayConnectUI
 
     public MenuPlayConnectUI()
     {
+        if (icons != null)
+        {
+            icons.unload();
+        }
         localization = Localization.read("/Menu/Play/MenuPlayConnect.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Play/MenuPlayConnect/MenuPlayConnect.unity3d");
+        icons = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Play/MenuPlayConnect/MenuPlayConnect.unity3d");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;
@@ -258,19 +306,20 @@ public class MenuPlayConnectUI
         container.SizeScale_Y = 1f;
         MenuUI.container.AddChild(container);
         active = false;
-        ipField = Glazier.Get().CreateStringField();
-        ipField.PositionOffset_X = -100f;
-        ipField.PositionOffset_Y = -75f;
-        ipField.PositionScale_X = 0.5f;
-        ipField.PositionScale_Y = 0.5f;
-        ipField.SizeOffset_X = 200f;
-        ipField.SizeOffset_Y = 30f;
-        ipField.MaxLength = 64;
-        ipField.AddLabel(localization.format("IP_Field_Label"), ESleekSide.RIGHT);
-        ipField.Text = PlaySettings.connectIP;
-        ipField.OnTextChanged += onTypedIPField;
-        ipField.OnTextSubmitted += OnIpFieldCommitted;
-        container.AddChild(ipField);
+        hostField = Glazier.Get().CreateStringField();
+        hostField.PositionOffset_X = -100f;
+        hostField.PositionOffset_Y = -75f;
+        hostField.PositionScale_X = 0.5f;
+        hostField.PositionScale_Y = 0.5f;
+        hostField.SizeOffset_X = 200f;
+        hostField.SizeOffset_Y = 30f;
+        hostField.MaxLength = 64;
+        hostField.AddLabel(localization.format("Host_Field_Label"), ESleekSide.RIGHT);
+        hostField.TooltipText = localization.format("Host_Field_Tooltip");
+        hostField.Text = PlaySettings.connectHost;
+        hostField.OnTextChanged += onTypedHostField;
+        hostField.OnTextSubmitted += OnIpFieldCommitted;
+        container.AddChild(hostField);
         addressInfoBox = Glazier.Get().CreateBox();
         addressInfoBox.PositionOffset_X = -210f;
         addressInfoBox.PositionOffset_Y = -75f;
@@ -280,7 +329,21 @@ public class MenuPlayConnectUI
         addressInfoBox.SizeOffset_Y = 30f;
         addressInfoBox.IsVisible = false;
         container.AddChild(addressInfoBox);
-        RefreshAddressInfo();
+        serverCodeInfoBox = Glazier.Get().CreateBox();
+        serverCodeInfoBox.PositionOffset_X = -100f;
+        serverCodeInfoBox.PositionOffset_Y = -35f;
+        serverCodeInfoBox.PositionScale_X = 0.5f;
+        serverCodeInfoBox.PositionScale_Y = 0.5f;
+        serverCodeInfoBox.SizeOffset_X = 200f;
+        serverCodeInfoBox.SizeOffset_Y = 30f;
+        serverCodeInfoBox.IsVisible = false;
+        container.AddChild(serverCodeInfoBox);
+        serverCodeIcon = Glazier.Get().CreateImage();
+        serverCodeIcon.PositionOffset_X = 5f;
+        serverCodeIcon.PositionOffset_Y = 5f;
+        serverCodeIcon.SizeOffset_X = 20f;
+        serverCodeIcon.SizeOffset_Y = 20f;
+        serverCodeInfoBox.AddChild(serverCodeIcon);
         portField = Glazier.Get().CreateUInt16Field();
         portField.PositionOffset_X = -100f;
         portField.PositionOffset_Y = -35f;
@@ -289,6 +352,7 @@ public class MenuPlayConnectUI
         portField.SizeOffset_X = 200f;
         portField.SizeOffset_Y = 30f;
         portField.AddLabel(localization.format("Port_Field_Label"), ESleekSide.RIGHT);
+        portField.TooltipText = localization.format("Port_Field_Tooltip");
         portField.Value = PlaySettings.connectPort;
         portField.OnValueChanged += onTypedPortField;
         container.AddChild(portField);
@@ -305,7 +369,7 @@ public class MenuPlayConnectUI
         passwordField.Text = PlaySettings.connectPassword;
         passwordField.OnTextChanged += onTypedPasswordField;
         container.AddChild(passwordField);
-        connectButton = new SleekButtonIcon(bundle.load<Texture2D>("Connect"));
+        connectButton = new SleekButtonIcon(icons.load<Texture2D>("Connect"));
         connectButton.PositionOffset_X = -100f;
         connectButton.PositionOffset_Y = 45f;
         connectButton.PositionScale_X = 0.5f;
@@ -317,6 +381,8 @@ public class MenuPlayConnectUI
         connectButton.iconColor = ESleekTint.FOREGROUND;
         connectButton.onClickedButton += onClickedConnectButton;
         container.AddChild(connectButton);
+        RefreshAddressInfo();
+        RefreshServerCodeInfo();
         Provider.provider.matchmakingService.onAttemptUpdated += onAttemptUpdated;
         Provider.provider.matchmakingService.onTimedOut += onTimedOut;
         if (!isLaunched)
@@ -343,7 +409,6 @@ public class MenuPlayConnectUI
             bool shouldAutoJoin = !serverRelayWaitOnMenu;
             connect(steamConnectionInfo2, shouldAutoJoin);
         }
-        bundle.unload();
         backButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));
         backButton.PositionOffset_Y = -50f;
         backButton.PositionScale_Y = 1f;

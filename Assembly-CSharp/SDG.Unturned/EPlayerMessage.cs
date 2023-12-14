@@ -147,5 +147,9 @@ public enum EPlayerMessage
     /// <summary>
     /// Notice that freeform buildables are blocked by <see cref="F:SDG.Unturned.GameplayConfigData.Allow_Freeform_Buildables">Allow_Freeform_Buildables</see>.
     /// </summary>
-    FREEFORM_BUILDABLE_NOT_ALLOWED
+    FREEFORM_BUILDABLE_NOT_ALLOWED,
+    /// <summary>
+    /// Popup when structure is blocked by terrain.
+    /// </summary>
+    PLACEMENT_OBSTRUCTED_BY_GROUND
 }

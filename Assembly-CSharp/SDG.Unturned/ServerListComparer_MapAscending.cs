@@ -5,9 +5,9 @@ namespace SDG.Unturned;
 /// <summary>
 /// Sort servers by map name A to Z.
 /// </summary>
-public class ServerListComparer_MapAscending : IComparer<SteamServerInfo>
+public class ServerListComparer_MapAscending : IComparer<SteamServerAdvertisement>
 {
-    public virtual int Compare(SteamServerInfo lhs, SteamServerInfo rhs)
+    public virtual int Compare(SteamServerAdvertisement lhs, SteamServerAdvertisement rhs)
     {
         if (string.Equals(lhs.map, rhs.map))
         {

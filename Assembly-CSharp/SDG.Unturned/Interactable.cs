@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -6,7 +7,7 @@ public class Interactable : MonoBehaviour
 {
     private NetId _netId;
 
-    public bool isPlant
+    public bool IsChildOfVehicle
     {
         get
         {
@@ -17,6 +18,9 @@ public class Interactable : MonoBehaviour
             return false;
         }
     }
+
+    [Obsolete("Renamed to IsChildOfVehicle")]
+    public bool isPlant => IsChildOfVehicle;
 
     public virtual void updateState(Asset asset, byte[] state)
     {

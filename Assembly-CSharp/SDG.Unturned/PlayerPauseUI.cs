@@ -87,19 +87,28 @@ public class PlayerPauseUI
 
     public static void open()
     {
-        if (!active)
+        if (active)
         {
-            active = true;
-            lastLeave = Time.realtimeSinceStartup;
-            if (Provider.currentServerInfo != null && Level.info != null)
-            {
-                string localizedName = Level.info.getLocalizedName();
-                string text = ((!Provider.currentServerInfo.IsVACSecure) ? localization.format("VAC_Insecure") : localization.format("VAC_Secure"));
-                text = ((!Provider.currentServerInfo.IsBattlEyeSecure) ? (text + " + " + localization.format("BattlEye_Insecure")) : (text + " + " + localization.format("BattlEye_Secure")));
-                serverBox.Text = localization.format("Server_WithVersion", localizedName, Level.version, OptionsSettings.streamer ? localization.format("Streamer") : Provider.currentServerInfo.name, text);
-            }
-            container.AnimateIntoView();
+            return;
         }
+        active = true;
+        lastLeave = Time.realtimeSinceStartup;
+        if (Level.info != null)
+        {
+            string localizedName = Level.info.getLocalizedName();
+            string text;
+            if (!Provider.isServer)
+            {
+                text = ((!Provider.IsVacActiveOnCurrentServer) ? localization.format("VAC_Insecure") : localization.format("VAC_Secure"));
+                text = ((!Provider.IsBattlEyeActiveOnCurrentServer) ? (text + " + " + localization.format("BattlEye_Insecure")) : (text + " + " + localization.format("BattlEye_Secure")));
+            }
+            else
+            {
+                text = localization.format("Offline");
+            }
+            serverBox.Text = localization.format("Server_WithVersion", localizedName, Level.version, OptionsSettings.streamer ? localization.format("Streamer") : Provider.serverName, text);
+        }
+        container.AnimateIntoView();
     }
 
     public static void close()
@@ -440,38 +449,56 @@ public class PlayerPauseUI
         serverBox.SizeScale_X = 0.75f;
         serverBox.FontSize = ESleekFontSize.Medium;
         container.AddChild(serverBox);
-        favoriteButton = new SleekButtonIcon(null);
-        favoriteButton.PositionScale_X = 0.75f;
-        favoriteButton.PositionOffset_Y = -50f;
-        favoriteButton.PositionOffset_X = 5f;
-        favoriteButton.PositionScale_Y = 1f;
-        favoriteButton.SizeOffset_X = -5f;
-        favoriteButton.SizeOffset_Y = 50f;
-        favoriteButton.SizeScale_X = 0.25f;
-        favoriteButton.tooltip = localization.format("Favorite_Button_Tooltip");
-        favoriteButton.fontSize = ESleekFontSize.Medium;
-        favoriteButton.onClickedButton += onClickedFavoriteButton;
-        container.AddChild(favoriteButton);
-        quicksaveButton = Glazier.Get().CreateButton();
-        quicksaveButton.PositionScale_X = 0.75f;
-        quicksaveButton.PositionOffset_Y = -50f;
-        quicksaveButton.PositionOffset_X = 5f;
-        quicksaveButton.PositionScale_Y = 1f;
-        quicksaveButton.SizeOffset_X = -5f;
-        quicksaveButton.SizeOffset_Y = 50f;
-        quicksaveButton.SizeScale_X = 0.25f;
-        quicksaveButton.Text = localization.format("Quicksave_Button");
-        quicksaveButton.TooltipText = localization.format("Quicksave_Button_Tooltip");
-        quicksaveButton.FontSize = ESleekFontSize.Medium;
-        quicksaveButton.OnClicked += onClickedQuicksaveButton;
-        container.AddChild(quicksaveButton);
-        favoriteButton.IsVisible = !Provider.isServer;
-        quicksaveButton.IsVisible = Provider.isServer;
+        if (Provider.isServer)
+        {
+            quicksaveButton = Glazier.Get().CreateButton();
+            quicksaveButton.PositionScale_X = 0.75f;
+            quicksaveButton.PositionOffset_Y = -50f;
+            quicksaveButton.PositionOffset_X = 5f;
+            quicksaveButton.PositionScale_Y = 1f;
+            quicksaveButton.SizeOffset_X = -5f;
+            quicksaveButton.SizeOffset_Y = 50f;
+            quicksaveButton.SizeScale_X = 0.25f;
+            quicksaveButton.Text = localization.format("Quicksave_Button");
+            quicksaveButton.TooltipText = localization.format("Quicksave_Button_Tooltip");
+            quicksaveButton.FontSize = ESleekFontSize.Medium;
+            quicksaveButton.OnClicked += onClickedQuicksaveButton;
+            container.AddChild(quicksaveButton);
+            favoriteButton = null;
+        }
+        else
+        {
+            quicksaveButton = null;
+            favoriteButton = null;
+            if (Provider.CanFavoriteCurrentServer)
+            {
+                favoriteButton = new SleekButtonIcon(null);
+                favoriteButton.PositionScale_X = 0.75f;
+                favoriteButton.PositionOffset_Y = -50f;
+                favoriteButton.PositionOffset_X = 5f;
+                favoriteButton.PositionScale_Y = 1f;
+                favoriteButton.SizeOffset_X = -5f;
+                favoriteButton.SizeOffset_Y = 50f;
+                favoriteButton.SizeScale_X = 0.25f;
+                favoriteButton.tooltip = localization.format("Favorite_Button_Tooltip");
+                favoriteButton.fontSize = ESleekFontSize.Medium;
+                favoriteButton.onClickedButton += onClickedFavoriteButton;
+                container.AddChild(favoriteButton);
+            }
+            else
+            {
+                serverBox.SizeScale_X = 1f;
+                serverBox.SizeOffset_X = 0f;
+            }
+        }
         new MenuConfigurationOptionsUI();
         new MenuConfigurationDisplayUI();
         new MenuConfigurationGraphicsUI();
         new MenuConfigurationControlsUI();
-        updateFavorite();
+        if (favoriteButton != null)
+        {
+            updateFavorite();
+        }
         Player.onSpyReady = onSpyReady;
         ClientMessageHandler_Accepted.OnGameplayConfigReceived += OnGameplayConfigReceived;
         SyncSuicideButtonAvailable();

@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Sockets;
 using SDG.Framework.Utilities;
 using SDG.Unturned;
+using Unturned.SystemEx;
 
 namespace SDG.NetTransport.SystemSockets;
 
@@ -14,11 +15,17 @@ public class ClientTransport_SystemSockets : TransportBase_SystemSockets, IClien
 
     private SocketMessageLayer messageQueue;
 
+    private uint remoteAddress;
+
+    private ushort remotePort;
+
     public void Initialize(ClientTransportReady callback, ClientTransportFailure failureCallback)
     {
-        uint ip = SDG.Unturned.Provider.currentServerInfo.ip;
-        long address = ((ip & 0xFF) << 24) | (((ip >> 8) & 0xFF) << 16) | (((ip >> 16) & 0xFF) << 8) | ((ip >> 24) & 0xFF);
-        int connectionPort = SDG.Unturned.Provider.currentServerInfo.connectionPort;
+        uint value = SDG.Unturned.Provider.CurrentServerConnectParameters.address.value;
+        long address = ((value & 0xFF) << 24) | (((value >> 8) & 0xFF) << 16) | (((value >> 16) & 0xFF) << 8) | ((value >> 24) & 0xFF);
+        int connectionPort = SDG.Unturned.Provider.CurrentServerConnectParameters.connectionPort;
+        remoteAddress = value;
+        remotePort = SDG.Unturned.Provider.CurrentServerConnectParameters.connectionPort;
         IPEndPoint remoteEP = new IPEndPoint(address, connectionPort);
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         socket.Connect(remoteEP);
@@ -58,6 +65,24 @@ public class ClientTransport_SystemSockets : TransportBase_SystemSockets, IClien
         }
         size = 0L;
         return false;
+    }
+
+    public bool TryGetIPv4Address(out IPv4Address address)
+    {
+        address = new IPv4Address(remoteAddress);
+        return true;
+    }
+
+    public bool TryGetConnectionPort(out ushort connectionPort)
+    {
+        connectionPort = remotePort;
+        return true;
+    }
+
+    public bool TryGetQueryPort(out ushort queryPort)
+    {
+        queryPort = MathfEx.ClampToUShort(remotePort - 1);
+        return true;
     }
 
     private void OnUpdate()

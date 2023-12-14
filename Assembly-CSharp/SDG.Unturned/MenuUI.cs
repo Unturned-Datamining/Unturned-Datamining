@@ -145,24 +145,6 @@ public class MenuUI : MonoBehaviour
         isAlerting = true;
     }
 
-    internal static string FormatInternetMultiplayerAvailabilityStatus(EInternetMultiplayerAvailability status)
-    {
-        return status switch
-        {
-            EInternetMultiplayerAvailability.NoWebRequests => MenuDashboardUI.localization.format("InternetMultiplayerUnavailable_NoWebRequests"), 
-            EInternetMultiplayerAvailability.NoConnection => MenuDashboardUI.localization.format("InternetMultiplayerUnavailable_NoConnection"), 
-            _ => string.Empty, 
-        };
-    }
-
-    internal static void AlertInternetMultiplayerAvailability(EInternetMultiplayerAvailability status)
-    {
-        if ((uint)(status - 1) <= 1u)
-        {
-            alert(FormatInternetMultiplayerAvailabilityStatus(status));
-        }
-    }
-
     public static void alert(string origin, ulong instanceId, int itemDefId, ushort quantity)
     {
         SteamItemDetails_t item = default(SteamItemDetails_t);

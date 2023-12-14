@@ -27,7 +27,7 @@ public class MenuPlayServersUI : SleekFullscreenBox
 
     private SleekButtonIcon backButton;
 
-    private SleekList<SteamServerInfo> serverBox;
+    private SleekList<SteamServerAdvertisement> serverBox;
 
     private ISleekBox infoBox;
 
@@ -131,7 +131,7 @@ public class MenuPlayServersUI : SleekFullscreenBox
         }
     }
 
-    private void onClickedServer(SleekServer server, SteamServerInfo info)
+    private void onClickedServer(SleekServer server, SteamServerAdvertisement info)
     {
         if (!info.isPro || Provider.isPro)
         {
@@ -141,7 +141,7 @@ public class MenuPlayServersUI : SleekFullscreenBox
         }
     }
 
-    private void onMasterServerAdded(int insert, SteamServerInfo info)
+    private void onMasterServerAdded(int insert, SteamServerAdvertisement info)
     {
         serverBox.NotifyDataChanged();
     }
@@ -576,7 +576,7 @@ public class MenuPlayServersUI : SleekFullscreenBox
         AnimateOpenSubcontainers();
     }
 
-    private ISleekElement onCreateServerElement(SteamServerInfo server)
+    private ISleekElement onCreateServerElement(SteamServerAdvertisement server)
     {
         return new SleekServer(Provider.provider.matchmakingService.currentList, server)
         {
@@ -1506,7 +1506,7 @@ public class MenuPlayServersUI : SleekFullscreenBox
         presetsEditorButton.fontSize = ESleekFontSize.Medium;
         presetsEditorButton.iconColor = ESleekTint.FOREGROUND;
         sleekElement.AddChild(presetsEditorButton);
-        serverBox = new SleekList<SteamServerInfo>();
+        serverBox = new SleekList<SteamServerAdvertisement>();
         serverBox.PositionOffset_Y = 50f;
         serverBox.SizeOffset_Y = -110f;
         serverBox.SizeScale_X = 1f;

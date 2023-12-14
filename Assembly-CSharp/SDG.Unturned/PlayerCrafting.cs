@@ -190,7 +190,7 @@ public class PlayerCrafting : PlayerCaller
             return;
         }
         Blueprint blueprint = itemAsset.blueprints[index];
-        if (isBlueprintBlacklisted(blueprint) || (blueprint.skill == EBlueprintSkill.REPAIR && blueprint.level > Provider.modeConfigData.Gameplay.Repair_Level_Max) || (!string.IsNullOrEmpty(blueprint.map) && !blueprint.map.Equals(Level.info.name, StringComparison.InvariantCultureIgnoreCase)) || (!Provider.modeConfigData.Gameplay.Allow_Freeform_Buildables && blueprint.IsOutputFreeformBuildable) || (blueprint.tool != 0 && base.player.inventory.has(blueprint.tool) == null))
+        if (isBlueprintBlacklisted(blueprint) || (blueprint.skill == EBlueprintSkill.REPAIR && blueprint.level > Provider.modeConfigData.Gameplay.Repair_Level_Max) || (!string.IsNullOrEmpty(blueprint.map) && !blueprint.map.Equals(Level.info.name, StringComparison.InvariantCultureIgnoreCase)) || (!Provider.modeConfigData.Gameplay.Allow_Freeform_Buildables && !Provider.modeConfigData.Gameplay.Allow_Freeform_Buildables_On_Vehicles && blueprint.IsOutputFreeformBuildable) || (blueprint.tool != 0 && base.player.inventory.has(blueprint.tool) == null))
         {
             return;
         }

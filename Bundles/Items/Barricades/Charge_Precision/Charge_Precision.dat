@@ -13,14 +13,14 @@ Health 1
 Range 4
 Offset 0.05
 
-Player_Damage 200
-Zombie_Damage 200
-Animal_Damage 200
-Barricade_Damage 1000
-Structure_Damage 1000
-Vehicle_Damage 500
-Resource_Damage 2000
-Object_Damage 1000
+Player_Damage 250
+Zombie_Damage 250
+Animal_Damage 250
+Barricade_Damage 4000
+Structure_Damage 4000
+Vehicle_Damage 1000
+Resource_Damage 4000
+Object_Damage 2000
 
 Range2 3
 Explosion2 123

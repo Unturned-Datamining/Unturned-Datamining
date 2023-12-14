@@ -25,6 +25,20 @@ public class ItemTankAsset : ItemBarricadeAsset
         return array;
     }
 
+    public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
+    {
+        base.BuildDescription(builder, itemInstance);
+        switch (source)
+        {
+        case ETankSource.FUEL:
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_FuelCapacity", resource), 2000);
+            break;
+        case ETankSource.WATER:
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_WaterCapacity", resource), 2000);
+            break;
+        }
+    }
+
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
         base.PopulateAsset(bundle, data, localization);

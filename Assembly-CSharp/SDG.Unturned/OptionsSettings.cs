@@ -29,9 +29,11 @@ public class OptionsSettings
 
     private const byte SAVEDATA_VERSION_REMOVED_MATCHMAKING = 46;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 46;
+    private const byte SAVEDATA_VERSION_ADDED_VOICE_ALWAYS_RECORDING = 47;
 
-    public static readonly byte SAVEDATA_VERSION = 46;
+    private const byte SAVEDATA_VERSION_NEWEST = 47;
+
+    public static readonly byte SAVEDATA_VERSION = 47;
 
     public static readonly byte MIN_FOV = 60;
 
@@ -72,6 +74,8 @@ public class OptionsSettings
     public static bool hints;
 
     public static bool ambience;
+
+    private static bool _voiceAlwaysRecording;
 
     [Obsolete("Renamed to ShouldHitmarkersFollowWorldPosition")]
     public static bool hitmarker;
@@ -163,6 +167,27 @@ public class OptionsSettings
         }
     }
 
+    /// <summary>
+    /// If false, call Start and Stop recording before and after push-to-talk key is pressed. This was the
+    /// original default behavior, but causes a hitch for some players. As a workaround we can always keep
+    /// the microphone rolling and only send data when the push-to-talk key is held. (public issue #4248)
+    /// </summary>
+    public static bool VoiceAlwaysRecording
+    {
+        get
+        {
+            return _voiceAlwaysRecording;
+        }
+        set
+        {
+            if (_voiceAlwaysRecording != value)
+            {
+                _voiceAlwaysRecording = value;
+                OptionsSettings.OnVoiceAlwaysRecordingChanged?.Invoke();
+            }
+        }
+    }
+
     public static Color cursorColor
     {
         get
@@ -241,6 +266,8 @@ public class OptionsSettings
     }
 
     public static event System.Action OnUnitSystemChanged;
+
+    public static event System.Action OnVoiceAlwaysRecordingChanged;
 
     /// <summary>
     /// Invoked when custom UI colors are set.
@@ -354,6 +381,7 @@ public class OptionsSettings
         fontColor = new Color(0.9f, 0.9f, 0.9f);
         shadowColor = Color.black;
         badColor = Palette.COLOR_R;
+        _voiceAlwaysRecording = true;
     }
 
     public static void load()
@@ -641,6 +669,14 @@ public class OptionsSettings
         {
             hitmarkerStyle = (EHitmarkerStyle)block.readByte();
         }
+        if (b >= 47)
+        {
+            _voiceAlwaysRecording = block.readBoolean();
+        }
+        else
+        {
+            _voiceAlwaysRecording = true;
+        }
         if (!Provider.isPro)
         {
             backgroundColor = new Color(0.9f, 0.9f, 0.9f);
@@ -654,7 +690,7 @@ public class OptionsSettings
     public static void save()
     {
         Block block = new Block();
-        block.writeByte(46);
+        block.writeByte(47);
         block.writeBoolean(music);
         block.writeBoolean(splashscreen);
         block.writeBoolean(timer);
@@ -697,6 +733,7 @@ public class OptionsSettings
         block.writeByte(MathfEx.RoundAndClampToByte(hitmarkerColor.a * 255f));
         block.writeByte(MathfEx.RoundAndClampToByte(criticalHitmarkerColor.a * 255f));
         block.writeByte((byte)hitmarkerStyle);
+        block.writeBoolean(_voiceAlwaysRecording);
         ReadWrite.writeBlock("/Options.dat", useCloud: true, block);
     }
 }

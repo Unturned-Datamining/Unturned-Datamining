@@ -11,7 +11,7 @@ namespace SDG.Provider;
 
 public class TempSteamworksMatchmaking
 {
-    public delegate void MasterServerAdded(int insert, SteamServerInfo server);
+    public delegate void MasterServerAdded(int insert, SteamServerAdvertisement server);
 
     public delegate void MasterServerRemoved();
 
@@ -19,7 +19,7 @@ public class TempSteamworksMatchmaking
 
     public delegate void MasterServerRefreshed(EMatchMakingServerResponse response);
 
-    public delegate void MasterServerQueryRefreshed(SteamServerInfo server);
+    public delegate void MasterServerQueryRefreshed(SteamServerAdvertisement server);
 
     public delegate void AttemptUpdated(int attempt);
 
@@ -51,7 +51,7 @@ public class TempSteamworksMatchmaking
 
     private EPlugins currentPluginsFilter;
 
-    private List<SteamServerInfo> _serverList = new List<SteamServerInfo>();
+    private List<SteamServerAdvertisement> _serverList = new List<SteamServerAdvertisement>();
 
     private List<MatchMakingKeyValuePair_t> filters;
 
@@ -82,21 +82,21 @@ public class TempSteamworksMatchmaking
 
     private int serverListRefreshIndex = -1;
 
-    private IComparer<SteamServerInfo> _serverInfoComparer = new ServerListComparer_PingAscending();
+    private IComparer<SteamServerAdvertisement> _serverInfoComparer = new ServerListComparer_PingAscending();
 
     public ESteamServerList currentList => _currentList;
 
-    public List<SteamServerInfo> serverList => _serverList;
+    public List<SteamServerAdvertisement> serverList => _serverList;
 
     public bool isAttemptingServerQuery { get; private set; }
 
-    public IComparer<SteamServerInfo> serverInfoComparer => _serverInfoComparer;
+    public IComparer<SteamServerAdvertisement> serverInfoComparer => _serverInfoComparer;
 
     public event AttemptUpdated onAttemptUpdated;
 
     public event TimedOut onTimedOut;
 
-    public void sortMasterServer(IComparer<SteamServerInfo> newServerInfoComparer)
+    public void sortMasterServer(IComparer<SteamServerAdvertisement> newServerInfoComparer)
     {
         _serverInfoComparer = newServerInfoComparer;
         serverList.Sort(serverInfoComparer);
@@ -321,9 +321,21 @@ public class TempSteamworksMatchmaking
             }
             if (flag)
             {
-                filters.Add(new MatchMakingKeyValuePair_t("or", "2"));
-                filters.Add(new MatchMakingKeyValuePair_t("gametagsand", SDG.Unturned.Provider.GetMonetizationTagAbbreviation(EServerMonetizationTag.None)));
-                filters.Add(new MatchMakingKeyValuePair_t("gametagsand", SDG.Unturned.Provider.GetMonetizationTagAbbreviation(EServerMonetizationTag.NonGameplay)));
+                filters.Add(new MatchMakingKeyValuePair_t
+                {
+                    m_szKey = "or",
+                    m_szValue = "2"
+                });
+                filters.Add(new MatchMakingKeyValuePair_t
+                {
+                    m_szKey = "gametagsand",
+                    m_szValue = SDG.Unturned.Provider.GetMonetizationTagAbbreviation(EServerMonetizationTag.None)
+                });
+                filters.Add(new MatchMakingKeyValuePair_t
+                {
+                    m_szKey = "gametagsand",
+                    m_szValue = SDG.Unturned.Provider.GetMonetizationTagAbbreviation(EServerMonetizationTag.NonGameplay)
+                });
             }
         }
         if (inputFilters.gold == EServerListGoldFilter.RequiresGold)
@@ -382,39 +394,23 @@ public class TempSteamworksMatchmaking
         cleanupServerQuery();
         if (data.m_nAppID == SDG.Unturned.Provider.APP_ID.m_AppId)
         {
-            SteamServerInfo steamServerInfo = new SteamServerInfo(data, SteamServerInfo.EInfoSource.DirectConnect);
-            if (!steamServerInfo.isPro || SDG.Unturned.Provider.isPro)
+            SteamServerAdvertisement steamServerAdvertisement = new SteamServerAdvertisement(data, SteamServerAdvertisement.EInfoSource.DirectConnect);
+            if (!steamServerAdvertisement.isPro || SDG.Unturned.Provider.isPro)
             {
                 bool flag = false;
-                if (autoJoinServerQuery && (!steamServerInfo.isPassworded || !string.IsNullOrEmpty(connectionInfo.password)))
+                if (autoJoinServerQuery && (!steamServerAdvertisement.isPassworded || !string.IsNullOrEmpty(connectionInfo.password)))
                 {
-                    if (new IPv4Address(steamServerInfo.ip).IsWideAreaNetwork)
-                    {
-                        EInternetMultiplayerAvailability internetMultiplayerAvailability = SDG.Unturned.Provider.GetInternetMultiplayerAvailability();
-                        if (internetMultiplayerAvailability != 0)
-                        {
-                            UnturnedLog.info($"Cannot directly connect because Internet multiplayer is unavailable ({internetMultiplayerAvailability})");
-                            flag = false;
-                        }
-                        else
-                        {
-                            flag = true;
-                        }
-                    }
-                    else
-                    {
-                        flag = true;
-                    }
+                    flag = true;
                 }
                 if (flag)
                 {
-                    SDG.Unturned.Provider.connect(steamServerInfo, connectionInfo.password, null);
+                    SDG.Unturned.Provider.connect(new ServerConnectParameters(new IPv4Address(steamServerAdvertisement.ip), steamServerAdvertisement.queryPort, steamServerAdvertisement.connectionPort, connectionInfo.password), steamServerAdvertisement, null);
                 }
                 else
                 {
                     MenuUI.closeAll();
                     MenuUI.closeAlert();
-                    MenuPlayServerInfoUI.open(steamServerInfo, connectionInfo.password, MenuPlayServerInfoUI.EServerInfoOpenContext.CONNECT);
+                    MenuPlayServerInfoUI.open(steamServerAdvertisement, connectionInfo.password, MenuPlayServerInfoUI.EServerInfoOpenContext.CONNECT);
                 }
             }
             else
@@ -465,45 +461,45 @@ public class TempSteamworksMatchmaking
         {
             return;
         }
-        SteamServerInfo steamServerInfo = new SteamServerInfo(serverDetails, _currentList switch
+        SteamServerAdvertisement steamServerAdvertisement = new SteamServerAdvertisement(serverDetails, _currentList switch
         {
-            ESteamServerList.FRIENDS => SteamServerInfo.EInfoSource.FriendServerList, 
-            ESteamServerList.FAVORITES => SteamServerInfo.EInfoSource.FavoriteServerList, 
-            ESteamServerList.HISTORY => SteamServerInfo.EInfoSource.HistoryServerList, 
-            ESteamServerList.LAN => SteamServerInfo.EInfoSource.LanServerList, 
-            _ => SteamServerInfo.EInfoSource.InternetServerList, 
+            ESteamServerList.FRIENDS => SteamServerAdvertisement.EInfoSource.FriendServerList, 
+            ESteamServerList.FAVORITES => SteamServerAdvertisement.EInfoSource.FavoriteServerList, 
+            ESteamServerList.HISTORY => SteamServerAdvertisement.EInfoSource.HistoryServerList, 
+            ESteamServerList.LAN => SteamServerAdvertisement.EInfoSource.LanServerList, 
+            _ => SteamServerAdvertisement.EInfoSource.InternetServerList, 
         });
-        eHostBanFlags |= HostBansManager.Get().MatchExtendedDetails(steamServerInfo.descText, steamServerInfo.thumbnailURL);
+        eHostBanFlags |= HostBansManager.Get().MatchExtendedDetails(steamServerAdvertisement.descText, steamServerAdvertisement.thumbnailURL);
         if (eHostBanFlags.HasFlag(EHostBanFlags.HiddenFromAllServerLists) || eHostBanFlags.HasFlag(EHostBanFlags.Blocked) || (_currentList == ESteamServerList.INTERNET && eHostBanFlags.HasFlag(EHostBanFlags.HiddenFromInternetServerList)))
         {
             return;
         }
-        steamServerInfo.SetServerListHostBanFlags(eHostBanFlags);
+        steamServerAdvertisement.SetServerListHostBanFlags(eHostBanFlags);
         if (index == serverListRefreshIndex)
         {
-            onMasterServerQueryRefreshed?.Invoke(steamServerInfo);
+            onMasterServerQueryRefreshed?.Invoke(steamServerAdvertisement);
             return;
         }
         if (currentPluginsFilter == EPlugins.NO)
         {
-            if (steamServerInfo.pluginFramework != 0)
+            if (steamServerAdvertisement.pluginFramework != 0)
             {
                 return;
             }
         }
-        else if (currentPluginsFilter == EPlugins.YES && steamServerInfo.pluginFramework == SteamServerInfo.EPluginFramework.None)
+        else if (currentPluginsFilter == EPlugins.YES && steamServerAdvertisement.pluginFramework == SteamServerAdvertisement.EPluginFramework.None)
         {
             return;
         }
-        if (steamServerInfo.maxPlayers >= CommandMaxPlayers.MIN_NUMBER && (!string.IsNullOrEmpty(currentNameFilter) || Mathf.Max(steamServerInfo.players, steamServerInfo.maxPlayers) <= CommandMaxPlayers.MAX_NUMBER) && (string.IsNullOrEmpty(currentNameFilter) || steamServerInfo.name.IndexOf(currentNameFilter, StringComparison.OrdinalIgnoreCase) != -1))
+        if (steamServerAdvertisement.maxPlayers >= CommandMaxPlayers.MIN_NUMBER && (!string.IsNullOrEmpty(currentNameFilter) || Mathf.Max(steamServerAdvertisement.players, steamServerAdvertisement.maxPlayers) <= CommandMaxPlayers.MAX_NUMBER) && (string.IsNullOrEmpty(currentNameFilter) || steamServerAdvertisement.name.IndexOf(currentNameFilter, StringComparison.OrdinalIgnoreCase) != -1))
         {
-            int num = serverList.BinarySearch(steamServerInfo, serverInfoComparer);
+            int num = serverList.BinarySearch(steamServerAdvertisement, serverInfoComparer);
             if (num < 0)
             {
                 num = ~num;
             }
-            serverList.Insert(num, steamServerInfo);
-            onMasterServerAdded?.Invoke(num, steamServerInfo);
+            serverList.Insert(num, steamServerAdvertisement);
+            onMasterServerAdded?.Invoke(num, steamServerAdvertisement);
         }
     }
 

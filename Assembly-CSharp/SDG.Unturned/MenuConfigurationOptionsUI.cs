@@ -42,6 +42,8 @@ public class MenuConfigurationOptionsUI
 
     private static ISleekToggle chatVoiceOutToggle;
 
+    private static ISleekToggle chatVoiceAlwaysRecordingToggle;
+
     private static ISleekToggle hintsToggle;
 
     private static ISleekToggle ambienceToggle;
@@ -208,6 +210,12 @@ public class MenuConfigurationOptionsUI
     private static void onToggledChatVoiceOutToggle(ISleekToggle toggle, bool state)
     {
         OptionsSettings.chatVoiceOut = state;
+        chatVoiceAlwaysRecordingToggle.IsInteractable = state;
+    }
+
+    private static void onToggledChatVoiceAlwaysRecordingToggle(ISleekToggle toggle, bool state)
+    {
+        OptionsSettings.VoiceAlwaysRecording = state;
     }
 
     private static void onToggledHintsToggle(ISleekToggle toggle, bool state)
@@ -390,6 +398,8 @@ public class MenuConfigurationOptionsUI
         chatTextToggle.Value = OptionsSettings.chatText;
         chatVoiceInToggle.Value = OptionsSettings.chatVoiceIn;
         chatVoiceOutToggle.Value = OptionsSettings.chatVoiceOut;
+        chatVoiceAlwaysRecordingToggle.Value = OptionsSettings.VoiceAlwaysRecording;
+        chatVoiceAlwaysRecordingToggle.IsInteractable = OptionsSettings.chatVoiceOut;
         hintsToggle.Value = OptionsSettings.hints;
         ambienceToggle.Value = OptionsSettings.ambience;
         streamerToggle.Value = OptionsSettings.streamer;
@@ -516,6 +526,15 @@ public class MenuConfigurationOptionsUI
         chatVoiceOutToggle.AddLabel(localization.format("Chat_Voice_Out_Toggle_Label"), ESleekSide.RIGHT);
         chatVoiceOutToggle.OnValueChanged += onToggledChatVoiceOutToggle;
         optionsBox.AddChild(chatVoiceOutToggle);
+        num += 50f;
+        chatVoiceAlwaysRecordingToggle = Glazier.Get().CreateToggle();
+        chatVoiceAlwaysRecordingToggle.PositionOffset_Y = num;
+        chatVoiceAlwaysRecordingToggle.SizeOffset_X = 40f;
+        chatVoiceAlwaysRecordingToggle.SizeOffset_Y = 40f;
+        chatVoiceAlwaysRecordingToggle.AddLabel(localization.format("VoiceAlwaysRecording_Label"), ESleekSide.RIGHT);
+        chatVoiceAlwaysRecordingToggle.TooltipText = localization.format("VoiceAlwaysRecording_Tooltip");
+        chatVoiceAlwaysRecordingToggle.OnValueChanged += onToggledChatVoiceAlwaysRecordingToggle;
+        optionsBox.AddChild(chatVoiceAlwaysRecordingToggle);
         num += 50f;
         hintsToggle = Glazier.Get().CreateToggle();
         hintsToggle.PositionOffset_Y = num;

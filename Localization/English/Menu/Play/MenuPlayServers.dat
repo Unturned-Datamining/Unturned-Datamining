@@ -6,11 +6,11 @@ Server_Players {0} of {1}
 Presets_Label Presets
 Presets_Tooltip Quickly save and load your preferred filters using custom named presets.
 
-DefaultPreset_Internet_Label Default Internet
-DefaultPreset_LAN_Label Default LAN
-DefaultPreset_History_Label Default History
-DefaultPreset_Favorites_Label Default Favorites
-DefaultPreset_Friends_Label Default Friends
+DefaultPreset_Internet_Label Internet (Default Filters)
+DefaultPreset_LAN_Label All LAN
+DefaultPreset_History_Label All History
+DefaultPreset_Favorites_Label All Favorites
+DefaultPreset_Friends_Label All Friends
 
 PresetName_Empty Custom
 PresetName_Modified {0} (Modified)

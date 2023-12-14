@@ -23,7 +23,7 @@ public class InteractableClaim : Interactable
 
     private void registerClaim()
     {
-        if (base.isPlant)
+        if (base.IsChildOfVehicle)
         {
             if (plant == null)
             {

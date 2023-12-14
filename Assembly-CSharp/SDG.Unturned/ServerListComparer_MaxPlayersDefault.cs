@@ -5,9 +5,9 @@ namespace SDG.Unturned;
 /// <summary>
 /// Sort servers by max player count high to low.
 /// </summary>
-public class ServerListComparer_MaxPlayersDefault : IComparer<SteamServerInfo>
+public class ServerListComparer_MaxPlayersDefault : IComparer<SteamServerAdvertisement>
 {
-    public virtual int Compare(SteamServerInfo lhs, SteamServerInfo rhs)
+    public virtual int Compare(SteamServerAdvertisement lhs, SteamServerAdvertisement rhs)
     {
         if (lhs.maxPlayers == rhs.maxPlayers)
         {

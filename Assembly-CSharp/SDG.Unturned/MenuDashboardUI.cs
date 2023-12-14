@@ -1319,6 +1319,12 @@ public class MenuDashboardUI
                 ESteamConnectionFailureInfo.NAME_PRIVATE_INVALID => localization.format("Name_Private_Invalid"), 
                 ESteamConnectionFailureInfo.NAME_PRIVATE_NUMBER => localization.format("Name_Private_Number"), 
                 ESteamConnectionFailureInfo.HASH_RESOURCES => localization.format("Hash_Resources"), 
+                ESteamConnectionFailureInfo.SERVER_MAP_ADVERTISEMENT_MISMATCH => localization.format("Server_Map_Advertisement_Mismatch"), 
+                ESteamConnectionFailureInfo.SERVER_VAC_ADVERTISEMENT_MISMATCH => localization.format("Server_VAC_Advertisement_Mismatch"), 
+                ESteamConnectionFailureInfo.SERVER_BATTLEYE_ADVERTISEMENT_MISMATCH => localization.format("Server_BattlEye_Advertisement_Mismatch"), 
+                ESteamConnectionFailureInfo.SERVER_MAXPLAYERS_ADVERTISEMENT_MISMATCH => localization.format("Server_MaxPlayers_Advertisement_Mismatch"), 
+                ESteamConnectionFailureInfo.SERVER_CAMERAMODE_ADVERTISEMENT_MISMATCH => localization.format("Server_CameraMode_Advertisement_Mismatch"), 
+                ESteamConnectionFailureInfo.SERVER_PVP_ADVERTISEMENT_MISMATCH => localization.format("Server_PvP_Advertisement_Mismatch"), 
                 _ => localization.format("Failure_Unknown", eSteamConnectionFailureInfo, connectionFailureReason), 
             };
             if (string.IsNullOrEmpty(text))

@@ -122,6 +122,8 @@ public class VehicleAsset : Asset, ISkinableAsset
 
     public bool canTiresBeDamaged;
 
+    private static readonly Guid VANILLA_BATTERY_ITEM = new Guid("098b13be34a7411db7736b7f866ada69");
+
     public bool shouldVerifyHash => _shouldVerifyHash;
 
     internal override bool ShouldVerifyHash => _shouldVerifyHash;
@@ -241,6 +243,12 @@ public class VehicleAsset : Asset, ISkinableAsset
     public EBatteryMode batteryHeadlights { get; protected set; }
 
     public EBatteryMode batterySirens { get; protected set; }
+
+    /// <summary>
+    /// Battery item given to the player when a specific battery hasn't been manually
+    /// installed yet. Defaults to the vanilla car battery (098b13be34a7411db7736b7f866ada69).
+    /// </summary>
+    public Guid defaultBatteryGuid { get; protected set; }
 
     /// <summary>
     /// Fuel decrease per second.
@@ -650,6 +658,7 @@ public class VehicleAsset : Asset, ISkinableAsset
         batteryEmpty = data.ParseEnum("BatteryMode_Empty", EBatteryMode.None);
         batteryHeadlights = data.ParseEnum("BatteryMode_Headlights", EBatteryMode.Burn);
         batterySirens = data.ParseEnum("BatteryMode_Sirens", EBatteryMode.Burn);
+        defaultBatteryGuid = data.ParseGuid("Default_Battery", VANILLA_BATTERY_ITEM);
         float defaultValue = ((engine == EEngine.CAR) ? 2.05f : 4.2f);
         fuelBurnRate = data.ParseFloat("Fuel_Burn_Rate", defaultValue);
         _ignition = LoadRedirectableAsset<AudioClip>(bundle, "Ignition", data, "IgnitionAudioClip");

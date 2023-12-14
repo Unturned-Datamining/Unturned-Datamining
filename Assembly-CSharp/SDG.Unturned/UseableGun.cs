@@ -2205,7 +2205,7 @@ public class UseableGun : Useable
         {
             num *= thirdAttachments.magazineAsset.speed;
         }
-        base.player.playSound(equippedGunAsset.hammer, num, 0.05f);
+        base.player.playSound(equippedGunAsset.hammer, num, 0f);
         updateAnimationSpeeds(num);
         base.player.animator.play("Hammer", smooth: false);
         GetVehicleTurretEventHook()?.OnChamberingStarted?.TryInvoke(this);
@@ -2250,7 +2250,7 @@ public class UseableGun : Useable
         {
             num *= thirdAttachments.magazineAsset.speed;
         }
-        base.player.playSound(equippedGunAsset.reload, num, 0.05f);
+        base.player.playSound(equippedGunAsset.reload, num, 0f);
         updateAnimationSpeeds(num);
         base.player.animator.play("Reload", smooth: false);
         needsUnplace = true;
@@ -2307,7 +2307,7 @@ public class UseableGun : Useable
             isUnjamming = true;
             startedUnjammingChamber = Time.realtimeSinceStartup;
             float num = 1f;
-            base.player.playSound(equippedGunAsset.chamberJammedSound, num, 0.05f);
+            base.player.playSound(equippedGunAsset.chamberJammedSound, num, 0f);
             updateAnimationSpeeds(num);
             base.player.animator.play(equippedGunAsset.unjamChamberAnimName, smooth: false);
             ammo = correctedAmmo;
@@ -2375,7 +2375,7 @@ public class UseableGun : Useable
                 fireDelayCounter = equippedGunAsset.fireDelay;
                 if (fireDelayCounter > 0 && base.channel.IsLocalPlayer && equippedGunAsset.fireDelaySound != null)
                 {
-                    base.player.playSound(equippedGunAsset.fireDelaySound, 1f, 0.05f);
+                    base.player.playSound(equippedGunAsset.fireDelaySound, 1f, 0f);
                 }
             }
         }
@@ -4288,7 +4288,7 @@ public class UseableGun : Useable
             UpdateCrosshairEnabled();
             PlayerUI.instance.groupUI.IsVisible = false;
         }
-        base.player.playSound(equippedGunAsset.aim);
+        base.player.playSound(equippedGunAsset.aim, 1f, 0f);
         isMinigunSpinning = true;
         base.player.animator.play("Aim_Start", smooth: false);
         UseableGun.OnAimingChanged_Global.TryInvoke("OnAimingChanged_Global", this);

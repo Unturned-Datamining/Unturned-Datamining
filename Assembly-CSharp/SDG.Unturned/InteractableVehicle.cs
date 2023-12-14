@@ -759,7 +759,7 @@ public class InteractableVehicle : Interactable
         }
         if (batteryItemGuid == Guid.Empty)
         {
-            batteryItemGuid = new Guid("098b13be34a7411db7736b7f866ada69");
+            batteryItemGuid = asset.defaultBatteryGuid;
         }
         if (Assets.find(batteryItemGuid) is ItemAsset itemAsset)
         {

@@ -127,7 +127,7 @@ public class InteractableDoor : Interactable
 
     protected virtual void Start()
     {
-        if (placeholderCollider != null && (base.transform.parent == null || !base.transform.parent.CompareTag("Vehicle")))
+        if (placeholderCollider != null && !base.IsChildOfVehicle)
         {
             barrierTransform = UnityEngine.Object.Instantiate(placeholderCollider.gameObject).transform;
             barrierTransform.position = placeholderCollider.transform.position;
@@ -188,7 +188,7 @@ public class InteractableDoor : Interactable
 
     protected int overlapBox(BoxCollider boxCollider)
     {
-        int mask = ((base.transform.parent != null && base.transform.parent.CompareTag("Vehicle")) ? RayMasks.BLOCK_CHAR_HINGE_OVERLAP_ON_VEHICLE : RayMasks.BLOCK_CHAR_HINGE_OVERLAP);
+        int mask = (base.IsChildOfVehicle ? RayMasks.BLOCK_CHAR_HINGE_OVERLAP_ON_VEHICLE : RayMasks.BLOCK_CHAR_HINGE_OVERLAP);
         return CollisionUtil.OverlapBoxColliderNonAlloc(boxCollider, checkColliders, mask, QueryTriggerInteraction.Collide);
     }
 

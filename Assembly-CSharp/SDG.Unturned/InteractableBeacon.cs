@@ -1,3 +1,4 @@
+using System;
 using Steamworks;
 using UnityEngine;
 
@@ -19,7 +20,7 @@ public class InteractableBeacon : MonoBehaviour, IManualOnDestroy
 
     private bool isRegistered;
 
-    public bool isPlant
+    public bool IsChildOfVehicle
     {
         get
         {
@@ -36,6 +37,9 @@ public class InteractableBeacon : MonoBehaviour, IManualOnDestroy
     /// Clamped to 1 if ShouldScaleWithNumberOfParticipants is false.
     /// </summary>
     public int initialParticipants { get; private set; }
+
+    [Obsolete("Renamed to IsChildOfVehicle")]
+    public bool isPlant => IsChildOfVehicle;
 
     public void updateState(ItemBarricadeAsset asset)
     {
@@ -119,7 +123,7 @@ public class InteractableBeacon : MonoBehaviour, IManualOnDestroy
         {
             transform.gameObject.SetActive(value: true);
         }
-        if (Provider.isServer && !isRegistered && !isPlant && LevelNavigation.checkNavigation(base.transform.position))
+        if (Provider.isServer && !isRegistered && !IsChildOfVehicle && LevelNavigation.checkNavigation(base.transform.position))
         {
             LevelNavigation.tryGetNavigation(base.transform.position, out nav);
             if (asset.ShouldScaleWithNumberOfParticipants)

@@ -97,6 +97,12 @@ public class ServerConfigData
     public bool Validate_EconInfo_Hash;
 
     /// <summary>
+    /// If true, opt-in to SteamNetworkingSockets "FakeIP" system.
+    /// https://partner.steamgames.com/doc/api/ISteamNetworkingSockets#1
+    /// </summary>
+    public bool Experimental_Use_FakeIP;
+
+    /// <summary>
     /// Limit max queue timeout duration so that if server encounters an error or doesn't
     /// process the request the client can timeout locally.
     /// </summary>

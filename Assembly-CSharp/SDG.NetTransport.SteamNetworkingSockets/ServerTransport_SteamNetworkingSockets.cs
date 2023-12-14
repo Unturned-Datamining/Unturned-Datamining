@@ -4,18 +4,25 @@ using System.Runtime.InteropServices;
 using SDG.Framework.Utilities;
 using SDG.Unturned;
 using Steamworks;
+using Unturned.SystemEx;
 
 namespace SDG.NetTransport.SteamNetworkingSockets;
 
 public class ServerTransport_SteamNetworkingSockets : TransportBase_SteamNetworkingSockets, IServerTransport
 {
+    private Callback<SteamNetworkingFakeIPResult_t> steamNetworkingFakeIpResultCallback;
+
     private Callback<SteamNetConnectionStatusChangedCallback_t> steamNetConnectionStatusChanged;
 
     private Callback<SteamNetAuthenticationStatus_t> steamNetAuthenticationStatusChanged;
 
     private ServerTransportConnectionFailureCallback connectionFailureCallback;
 
-    private HSteamListenSocket listenSocket;
+    private HSteamListenSocket ipListenSocket;
+
+    private HSteamListenSocket fakeIpListenSocket;
+
+    private HSteamListenSocket p2pListenSocket;
 
     private HSteamNetPollGroup pollGroup;
 
@@ -39,6 +46,7 @@ public class ServerTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
         }
         TimeUtility.updated += OnUpdate;
         CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Combine(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
+        SteamNetworkingConfigValue_t[] array = BuildDefaultConfig().ToArray();
         SteamNetworkingIPAddr localAddress = default(SteamNetworkingIPAddr);
         if (string.IsNullOrEmpty(SDG.Unturned.Provider.bindAddress))
         {
@@ -53,10 +61,26 @@ public class ServerTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
             Log("Unable to parse \"{0}\" as listen bind address", SDG.Unturned.Provider.bindAddress);
             localAddress.Clear();
         }
-        SteamNetworkingConfigValue_t[] array = BuildDefaultConfig().ToArray();
         localAddress.m_port = SDG.Unturned.Provider.GetServerConnectionPort();
-        listenSocket = SteamGameServerNetworkingSockets.CreateListenSocketIP(ref localAddress, array.Length, array);
+        ipListenSocket = SteamGameServerNetworkingSockets.CreateListenSocketIP(ref localAddress, array.Length, array);
         Log("Server listen socket bound to {0}", AddressToString(localAddress));
+        if (SDG.Unturned.Provider.configData.Server.Experimental_Use_FakeIP)
+        {
+            fakeIpListenSocket = SteamGameServerNetworkingSockets.CreateListenSocketP2PFakeIP(0, array.Length, array);
+            Log("Server FakeIP listen socket: {0}", fakeIpListenSocket);
+            SteamGameServerNetworkingSockets.GetFakeIP(0, out var pInfo);
+            if (pInfo.m_eResult == EResult.k_EResultBusy)
+            {
+                steamNetworkingFakeIpResultCallback = Callback<SteamNetworkingFakeIPResult_t>.CreateGameServer(OnSteamNetworkingFakeIpResultCallback);
+                Log("Waiting for FakeIP callback...");
+            }
+            else
+            {
+                OnSteamNetworkingFakeIpResultCallback(pInfo);
+            }
+        }
+        p2pListenSocket = SteamGameServerNetworkingSockets.CreateListenSocketP2P(0, array.Length, array);
+        Log("Server P2P listen socket: {0}", p2pListenSocket);
         pollGroup = SteamGameServerNetworkingSockets.CreatePollGroup();
     }
 
@@ -66,9 +90,22 @@ public class ServerTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
         CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Remove(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
         steamNetConnectionStatusChanged.Dispose();
         steamNetAuthenticationStatusChanged.Dispose();
-        if (!SteamGameServerNetworkingSockets.CloseListenSocket(listenSocket))
+        steamNetworkingFakeIpResultCallback?.Dispose();
+        if (!SteamGameServerNetworkingSockets.CloseListenSocket(ipListenSocket))
         {
-            Log("Server failed to close listen socket {0}", listenSocket);
+            Log("Server failed to close IP listen socket {0}", ipListenSocket);
+        }
+        if (fakeIpListenSocket != HSteamListenSocket.Invalid)
+        {
+            bool flag = SteamGameServerNetworkingSockets.CloseListenSocket(fakeIpListenSocket);
+            if (!flag)
+            {
+                Log("Server failed to close \"Fake IP\" listen socket {0}", flag);
+            }
+        }
+        if (!SteamGameServerNetworkingSockets.CloseListenSocket(p2pListenSocket))
+        {
+            Log("Server failed to close P2P listen socket {0}", p2pListenSocket);
         }
         if (!SteamGameServerNetworkingSockets.DestroyPollGroup(pollGroup))
         {
@@ -146,6 +183,26 @@ public class ServerTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
     private void OnLogMemoryUsage(List<string> results)
     {
         results.Add($"Steam networking sockets transport connections: {transportConnections.Count}");
+    }
+
+    private void OnSteamNetworkingFakeIpResultCallback(SteamNetworkingFakeIPResult_t callback)
+    {
+        if (callback.m_eResult == EResult.k_EResultOK)
+        {
+            CommandWindow.Log("//////////////////////////////////////////////////////");
+            Local localization = SDG.Unturned.Provider.localization;
+            string arg = new IPv4Address(callback.m_unIP).ToString();
+            string arg2 = $"{arg}:{callback.m_unPorts[0]}";
+            CommandWindow.Log(localization.format("FakeIPHeader", arg2));
+            CommandWindow.Log(localization.format("FakeIPDetails"));
+            CommandWindow.Log(localization.format("FakeIPCopy", "CopyFakeIP"));
+            CommandWindow.Log("//////////////////////////////////////////////////////");
+        }
+        else
+        {
+            CommandWindow.LogError($"Fatal FakeIP result: {callback.m_eResult}");
+            SDG.Unturned.Provider.QuitGame($"fatal fake IP result ({callback.m_eResult})");
+        }
     }
 
     private void OnSteamNetConnectionStatusChanged(SteamNetConnectionStatusChangedCallback_t callback)

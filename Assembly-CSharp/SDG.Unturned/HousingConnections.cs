@@ -1228,6 +1228,13 @@ public class HousingConnections
                 return EHousingPlacementResult.MissingPillar;
             }
         }
+        Vector3 position = vector2 + new Vector3(0f, pivotOffset * 2f, 0f);
+        Vector3 position2 = vector3 + new Vector3(0f, pivotOffset * 2f, 0f);
+        Vector3 position3 = vector + new Vector3(0f, pivotOffset * 2f, 0f);
+        if (!UndergroundAllowlist.IsPositionBuildable(position) && !UndergroundAllowlist.IsPositionBuildable(position2) && !UndergroundAllowlist.IsPositionBuildable(position3))
+        {
+            return EHousingPlacementResult.ObstructedByGround;
+        }
         HousingVertex vertex = FindVertex(vector2 + new Vector3(0f, 4.25f, 0f));
         HousingVertex vertex2 = FindVertex(vector2 + new Vector3(0f, -4.25f, 0f));
         HousingVertex vertex3 = FindVertex(vector3 + new Vector3(0f, 4.25f, 0f));
@@ -1284,6 +1291,10 @@ public class HousingConnections
             vector = housingVertex.position;
         }
         pendingPlacementPosition = vector + new Vector3(0f, pivotOffset, 0f);
+        if (!UndergroundAllowlist.IsPositionBuildable(vector + new Vector3(0f, pivotOffset * 2f, 0f)))
+        {
+            return EHousingPlacementResult.ObstructedByGround;
+        }
         HousingVertex vertex = FindVertex(vector + new Vector3(0f, 4.25f, 0f));
         HousingVertex vertex2 = FindVertex(vector + new Vector3(0f, -4.25f, 0f));
         Vector3 center = vector + new Vector3(0f, 2.125f, 0f);

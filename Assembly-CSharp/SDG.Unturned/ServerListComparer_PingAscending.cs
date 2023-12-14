@@ -5,9 +5,9 @@ namespace SDG.Unturned;
 /// <summary>
 /// Sort servers by ping low to high.
 /// </summary>
-public class ServerListComparer_PingAscending : IComparer<SteamServerInfo>
+public class ServerListComparer_PingAscending : IComparer<SteamServerAdvertisement>
 {
-    public virtual int Compare(SteamServerInfo lhs, SteamServerInfo rhs)
+    public virtual int Compare(SteamServerAdvertisement lhs, SteamServerAdvertisement rhs)
     {
         if (lhs.sortingPing == rhs.sortingPing)
         {

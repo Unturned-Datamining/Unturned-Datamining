@@ -65,6 +65,16 @@ internal static class ServerMessageHandler_GetWorkshopFiles
         {
             writer.WriteEnum(Provider.authorityHoliday);
             writer.WriteList(Provider.serverRequiredWorkshopFiles, WriteServerRequiredWorkshopFile, MAX_FILES);
+            writer.WriteString(Provider.serverName);
+            writer.WriteString(Provider.map);
+            writer.WriteBit(Provider.isPvP);
+            writer.WriteBit(Provider.hasCheats);
+            writer.WriteBit(Provider.isVacActive);
+            writer.WriteBit(Provider.isBattlEyeActive);
+            writer.WriteBit(Provider.isGold);
+            writer.WriteEnum(Provider.mode);
+            writer.WriteEnum(Provider.cameraMode);
+            writer.WriteUInt8(Provider.maxPlayers);
         });
     }
 

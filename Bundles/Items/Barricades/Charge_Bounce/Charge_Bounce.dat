@@ -30,17 +30,20 @@ Vulnerable
 Unrepairable
 Proof_Explosion
 
-Blueprints 1
+Blueprints 2
 Blueprint_0_Type Tool
-Blueprint_0_Supplies 3
+Blueprint_0_Supplies 2
 Blueprint_0_Supply_0_ID 65
 Blueprint_0_Supply_0_Amount 1
 Blueprint_0_Supply_1_ID 73
 Blueprint_0_Supply_1_Amount 1
-Blueprint_0_Supply_2_ID 1100
-Blueprint_0_Supply_2_Amount 1
 Blueprint_0_Level 2
 Blueprint_0_Skill Craft
 Blueprint_0_Build 32
+Blueprint_1_Type Tool
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID "1838" // Bounce Grenade
+Blueprint_1_Supply_0_Amount 1
+Blueprint_1_Build 32
 
 Has_Clip_Prefab false

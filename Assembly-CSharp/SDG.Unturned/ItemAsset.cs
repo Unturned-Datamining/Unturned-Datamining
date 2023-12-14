@@ -193,6 +193,10 @@ public class ItemAsset : Asset, ISkinableAsset
     /// </summary>
     protected const int DescSort_Weapon_NonExplosive_OtherDamage = 33000;
 
+    protected const int DescSort_Beneficial = -1;
+
+    protected const int DescSort_Detrimental = 1;
+
     public bool shouldVerifyHash => _shouldVerifyHash;
 
     internal override bool ShouldVerifyHash => _shouldVerifyHash;
@@ -408,7 +412,7 @@ public class ItemAsset : Asset, ISkinableAsset
         }
         if (!builder.shouldRestrictToLegacyContent && equipableMovementSpeedMultiplier != 1f)
         {
-            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_EquipableMovementSpeedModifier", PlayerDashboardInventoryUI.FormatStatModifier(equipableMovementSpeedMultiplier, higherIsPositive: true, higherIsBeneficial: true)), 10000);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_EquipableMovementSpeedModifier", PlayerDashboardInventoryUI.FormatStatModifier(equipableMovementSpeedMultiplier, higherIsPositive: true, higherIsBeneficial: true)), 10000 + DescSort_HigherIsBeneficial(equipableMovementSpeedMultiplier));
         }
     }
 
@@ -868,5 +872,23 @@ public class ItemAsset : Asset, ISkinableAsset
             return new AudioReference("core.masterbundle", "Sounds/Inventory/LightGrab.asset");
         }
         return new AudioReference("core.masterbundle", "Sounds/Inventory/RoughGrab.asset");
+    }
+
+    protected int DescSort_HigherIsBeneficial(float value)
+    {
+        if (!(value > 1f))
+        {
+            return 1;
+        }
+        return -1;
+    }
+
+    protected int DescSort_LowerIsBeneficial(float value)
+    {
+        if (!(value < 1f))
+        {
+            return 1;
+        }
+        return -1;
     }
 }

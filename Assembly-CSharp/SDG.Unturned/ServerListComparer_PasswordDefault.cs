@@ -2,9 +2,9 @@ using System.Collections.Generic;
 
 namespace SDG.Unturned;
 
-public class ServerListComparer_PasswordDefault : IComparer<SteamServerInfo>
+public class ServerListComparer_PasswordDefault : IComparer<SteamServerAdvertisement>
 {
-    public virtual int Compare(SteamServerInfo lhs, SteamServerInfo rhs)
+    public virtual int Compare(SteamServerAdvertisement lhs, SteamServerAdvertisement rhs)
     {
         if (lhs.isPassworded == rhs.isPassworded)
         {

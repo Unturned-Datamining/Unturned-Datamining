@@ -201,6 +201,9 @@ internal static class UseableHousingUtils
             case EHousingPlacementResult.MissingGround:
                 PlayerUI.hint(null, EPlayerMessage.GROUND);
                 break;
+            case EHousingPlacementResult.ObstructedByGround:
+                PlayerUI.hint(null, EPlayerMessage.PLACEMENT_OBSTRUCTED_BY_GROUND);
+                break;
             }
         }
         return eHousingPlacementResult == EHousingPlacementResult.Success;

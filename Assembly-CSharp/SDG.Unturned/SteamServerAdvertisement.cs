@@ -5,7 +5,13 @@ using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
-public class SteamServerInfo
+/// <summary>
+/// Information about a game server retrieved through Steam's "A2S" query system.
+/// Available when joining using the Steam server list API (in-game server browser)
+/// or querying the Server's A2S port directly (connect by IP menu), but not when
+/// joining by Steam ID.
+/// </summary>
+public class SteamServerAdvertisement
 {
     public enum EPluginFramework
     {
@@ -160,7 +166,7 @@ public class SteamServerInfo
         }
     }
 
-    public SteamServerInfo(gameserveritem_t data, EInfoSource infoSource)
+    public SteamServerAdvertisement(gameserveritem_t data, EInfoSource infoSource)
     {
         _steamID = data.m_steamID;
         _ip = data.m_NetAdr.GetIP();
@@ -298,7 +304,7 @@ public class SteamServerInfo
         this.infoSource = infoSource;
     }
 
-    public SteamServerInfo(string newName, EGameMode newMode, bool newVACSecure, bool newBattlEyeEnabled, bool newPro)
+    public SteamServerAdvertisement(string newName, EGameMode newMode, bool newVACSecure, bool newBattlEyeEnabled, bool newPro)
     {
         _name = newName;
         ProfanityFilter.ApplyFilter(OptionsSettings.filter, ref _name);
@@ -306,6 +312,11 @@ public class SteamServerInfo
         IsVACSecure = newVACSecure;
         IsBattlEyeSecure = newBattlEyeEnabled;
         _isPro = newPro;
+    }
+
+    public SteamServerAdvertisement(CSteamID steamId)
+    {
+        _steamID = steamId;
     }
 
     public override string ToString()

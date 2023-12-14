@@ -141,7 +141,7 @@ public class MenuPlayServerInfoUI
 
     private static ISleekButton cancelButton;
 
-    private static SteamServerInfo serverInfo;
+    private static SteamServerAdvertisement serverInfo;
 
     private static string serverPassword;
 
@@ -217,7 +217,9 @@ public class MenuPlayServerInfoUI
         stringBuilder.AppendLine("Name: " + serverInfo.name);
         stringBuilder.AppendLine("Description: " + serverInfo.descText);
         stringBuilder.AppendLine("Thumbnail: " + serverInfo.thumbnailURL);
-        stringBuilder.AppendLine($"Address: {Parser.getIPFromUInt32(serverInfo.ip)}:{serverInfo.queryPort}");
+        stringBuilder.AppendLine("Address: " + Parser.getIPFromUInt32(serverInfo.ip));
+        stringBuilder.AppendLine($"Connection Port: {serverInfo.connectionPort}");
+        stringBuilder.AppendLine($"Query Port: {serverInfo.queryPort}");
         stringBuilder.AppendLine($"SteamId: {serverInfo.steamID} ({serverInfo.steamID.GetEAccountType()})");
         stringBuilder.AppendLine($"Ping: {serverInfo.ping}ms");
         if (expectedWorkshopItems == null)
@@ -244,7 +246,7 @@ public class MenuPlayServerInfoUI
         }
     }
 
-    public static void open(SteamServerInfo newServerInfo, string newServerPassword, EServerInfoOpenContext newOpenContext)
+    public static void open(SteamServerAdvertisement newServerInfo, string newServerPassword, EServerInfoOpenContext newOpenContext)
     {
         if (active)
         {
@@ -258,7 +260,7 @@ public class MenuPlayServerInfoUI
         linkUrls = null;
         IPv4Address pv4Address = new IPv4Address(serverInfo.ip);
         bool flag = !serverInfo.steamID.BPersistentGameServerAccount() && pv4Address.IsWideAreaNetwork;
-        flag &= serverInfo.infoSource != SteamServerInfo.EInfoSource.LanServerList;
+        flag &= serverInfo.infoSource != SteamServerAdvertisement.EInfoSource.LanServerList;
         flag &= !LiveConfig.Get().shouldAllowJoiningInternetServersWithoutGslt;
         if (flag)
         {
@@ -376,15 +378,7 @@ public class MenuPlayServerInfoUI
 
     private static void onClickedJoinButton(ISleekElement button)
     {
-        if (new IPv4Address(serverInfo.ip).IsWideAreaNetwork)
-        {
-            EInternetMultiplayerAvailability internetMultiplayerAvailability = Provider.GetInternetMultiplayerAvailability();
-            if (internetMultiplayerAvailability != 0)
-            {
-                MenuUI.AlertInternetMultiplayerAvailability(internetMultiplayerAvailability);
-                return;
-            }
-        }
+        IPv4Address address = new IPv4Address(serverInfo.ip);
         if (serverInfo.isPassworded && string.IsNullOrEmpty(serverPassword))
         {
             MenuServerPasswordUI.open(serverInfo, expectedWorkshopItems);
@@ -392,7 +386,7 @@ public class MenuPlayServerInfoUI
         }
         else
         {
-            Provider.connect(serverInfo, serverPassword, expectedWorkshopItems);
+            Provider.connect(new ServerConnectParameters(address, serverInfo.queryPort, serverInfo.connectionPort, serverPassword), serverInfo, expectedWorkshopItems);
         }
     }
 
@@ -423,7 +417,7 @@ public class MenuPlayServerInfoUI
         close();
     }
 
-    private static void onMasterServerQueryRefreshed(SteamServerInfo server)
+    private static void onMasterServerQueryRefreshed(SteamServerAdvertisement server)
     {
         serverInfo = server;
         updateServerInfo();
@@ -745,11 +739,11 @@ public class MenuPlayServerInfoUI
                 sleekLabel.Text = array[k];
                 rocketBox.AddChild(sleekLabel);
             }
-            if (serverInfo.pluginFramework == SteamServerInfo.EPluginFramework.Rocket)
+            if (serverInfo.pluginFramework == SteamServerAdvertisement.EPluginFramework.Rocket)
             {
                 rocketTitle.Text = localization.format("Plugins_Rocket");
             }
-            else if (serverInfo.pluginFramework == SteamServerInfo.EPluginFramework.OpenMod)
+            else if (serverInfo.pluginFramework == SteamServerAdvertisement.EPluginFramework.OpenMod)
             {
                 rocketTitle.Text = localization.format("Plugins_OpenMod");
             }

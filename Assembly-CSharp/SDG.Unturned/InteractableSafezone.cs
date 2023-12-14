@@ -85,7 +85,7 @@ public class InteractableSafezone : InteractablePower
 
     private void registerBubble()
     {
-        if (Provider.isServer && bubble == null && !base.isPlant)
+        if (Provider.isServer && bubble == null && !base.IsChildOfVehicle)
         {
             bubble = SafezoneManager.registerBubble(base.transform.position, 24f);
         }

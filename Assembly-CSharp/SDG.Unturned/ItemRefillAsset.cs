@@ -149,67 +149,67 @@ public class ItemRefillAsset : ItemAsset
             if (num > 0)
             {
                 string arg = PlayerDashboardInventoryUI.FormatStatColor(num.ToString(), isBeneficial: true);
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_HealthPositive", arg), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_HealthPositive", arg), 9999);
             }
             else if (num < 0)
             {
                 string arg2 = PlayerDashboardInventoryUI.FormatStatColor((-num).ToString(), isBeneficial: false);
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_HealthNegative", arg2), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_HealthNegative", arg2), 10001);
             }
             int num2 = Mathf.RoundToInt(GetRefillFood(eRefillWaterType));
             if (num2 > 0)
             {
                 string arg3 = PlayerDashboardInventoryUI.FormatStatColor(num2.ToString(), isBeneficial: true);
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_FoodPositive", arg3), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_FoodPositive", arg3), 9999);
             }
             else if (num2 < 0)
             {
                 string arg4 = PlayerDashboardInventoryUI.FormatStatColor((-num2).ToString(), isBeneficial: false);
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_FoodNegative", arg4), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_FoodNegative", arg4), 10001);
             }
             int num3 = Mathf.RoundToInt(GetRefillWater(eRefillWaterType));
             if (num3 > 0)
             {
                 string arg5 = PlayerDashboardInventoryUI.FormatStatColor(num3.ToString(), isBeneficial: true);
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_WaterPositive", arg5), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_WaterPositive", arg5), 9999);
             }
             else if (num3 < 0)
             {
                 string arg6 = PlayerDashboardInventoryUI.FormatStatColor((-num3).ToString(), isBeneficial: false);
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_WaterNegative", arg6), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_WaterNegative", arg6), 10001);
             }
             int num4 = Mathf.RoundToInt(GetRefillVirus(eRefillWaterType));
             if (num4 > 0)
             {
                 string arg7 = PlayerDashboardInventoryUI.FormatStatColor(num4.ToString(), isBeneficial: true);
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_VirusPositive", arg7), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_VirusPositive", arg7), 9999);
             }
             else if (num4 < 0)
             {
                 string arg8 = PlayerDashboardInventoryUI.FormatStatColor((-num4).ToString(), isBeneficial: false);
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_VirusNegative", arg8), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_VirusNegative", arg8), 10001);
             }
             int num5 = Mathf.RoundToInt(GetRefillStamina(eRefillWaterType));
             if (num5 > 0)
             {
                 string arg9 = PlayerDashboardInventoryUI.FormatStatColor(num5.ToString(), isBeneficial: true);
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_StaminaPositive", arg9), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_StaminaPositive", arg9), 9999);
             }
             else if (num5 < 0)
             {
                 string arg10 = PlayerDashboardInventoryUI.FormatStatColor((-num5).ToString(), isBeneficial: false);
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_StaminaNegative", arg10), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_StaminaNegative", arg10), 10001);
             }
             int num6 = Mathf.RoundToInt(GetRefillOxygen(eRefillWaterType));
             if (num6 > 0)
             {
                 string arg11 = PlayerDashboardInventoryUI.FormatStatColor(num6.ToString(), isBeneficial: true);
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_OxygenPositive", arg11), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_OxygenPositive", arg11), 9999);
             }
             else if (num6 < 0)
             {
                 string arg12 = PlayerDashboardInventoryUI.FormatStatColor((-num6).ToString(), isBeneficial: false);
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_OxygenNegative", arg12), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_OxygenNegative", arg12), 10001);
             }
         }
     }

@@ -152,6 +152,13 @@ Name_Private_Invalid Your friends-only private nickname contains invalid letters
 
 Name_Private_Number Your friends-only private nickname cannot be just a number.
 
+Server_Map_Advertisement_Mismatch Server advertised a different map than the one it requested to load.
+Server_VAC_Advertisement_Mismatch Server advertised a different VAC-protected status than what is currently active.
+Server_BattlEye_Advertisement_Mismatch Server advertised a different BattlEye-protected status than what is currently active.
+Server_MaxPlayers_Advertisement_Mismatch Server advertised a different max player count than what it is currently set to.
+Server_CameraMode_Advertisement_Mismatch Server advertised a different camera mode than what it is currently set to.
+Server_PvP_Advertisement_Mismatch Server advertised a different PvP or PvE combat mode than what it is currently set to.
+
 SteamNetworkingSockets_Unavailable_CannotTry Unable to initialize Steam network authentication.
 SteamNetworkingSockets_Unavailable_Failed Failed to initialize Steam network authentication.
 SteamNetworkingSockets_Unavailable_Previously Temporarily unable to initialize Steam network authentication.
@@ -178,9 +185,6 @@ SteamNetworkingSockets_EndReason_Misc_Timeout Lost connection to host or Steam n
 SteamNetworkingSockets_EndReason_Misc_SteamConnectivity Steam is experiencing connectivity issues.
 SteamNetworkingSockets_EndReason_Misc_Unknown Unknown miscellaneous connection error: {0}
 SteamNetworkingSockets_EndReason_Unknown Connected ended for unknown reason: {0}
-
-InternetMultiplayerUnavailable_NoWebRequests Internet multiplayer is unavailable when the -NoWebRequests launch option is enabled, sorry!
-InternetMultiplayerUnavailable_NoConnection Unable to launch Internet multiplayer because the server's moderation status is unreachable, sorry for the trouble! The connection may restore itself automatically.
 
 Pro_Title Permanent Gold Upgrade
 Pro_Button Gain access to extra character customization, premium servers, character slots and more by upgrading to a Gold account! Further details available on the store page.

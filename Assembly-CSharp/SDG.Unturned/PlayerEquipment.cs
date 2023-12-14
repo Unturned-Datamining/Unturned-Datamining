@@ -2628,7 +2628,25 @@ public class PlayerEquipment : PlayerCaller
 
     private string GetItemHotkeysFilePath()
     {
-        return "/Worlds/Hotkeys/Equip_" + Provider.currentServerInfo.ip + "_" + Provider.currentServerInfo.queryPort + "_" + Characters.selected + ".dat";
+        if (Provider.clientTransport != null)
+        {
+            if (Provider.CurrentServerConnectParameters.steamId.IsValid())
+            {
+                string[] obj = new string[7] { "/Worlds/Hotkeys/Equip_", null, null, null, null, null, null };
+                CSteamID steamId = Provider.CurrentServerConnectParameters.steamId;
+                obj[1] = steamId.ToString();
+                obj[2] = "_";
+                obj[3] = Provider.map;
+                obj[4] = "_";
+                obj[5] = Characters.selected.ToString();
+                obj[6] = ".dat";
+                return string.Concat(obj);
+            }
+            uint value = Provider.CurrentServerConnectParameters.address.value;
+            ushort connectionPort = Provider.CurrentServerConnectParameters.connectionPort;
+            return "/Worlds/Hotkeys/Equip_" + value + "_" + connectionPort + "_" + Provider.map + "_" + Characters.selected + ".dat";
+        }
+        return "/Worlds/Hotkeys/Equip_" + Provider.serverID + "_" + Provider.map + ".dat";
     }
 
     private void LogItemHotkeys(string message)

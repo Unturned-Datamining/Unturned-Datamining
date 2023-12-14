@@ -426,7 +426,7 @@ public class ItemGunAsset : ItemWeaponAsset
             }
             if (aimingRecoilMultiplier != 1f)
             {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_RecoilModifier_Aiming", PlayerDashboardInventoryUI.FormatStatModifier(aimingRecoilMultiplier, higherIsPositive: false, higherIsBeneficial: false)), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_RecoilModifier_Aiming", PlayerDashboardInventoryUI.FormatStatModifier(aimingRecoilMultiplier, higherIsPositive: false, higherIsBeneficial: false)), 10000 + DescSort_LowerIsBeneficial(aimingRecoilMultiplier));
             }
             if (damageFalloffRange != 1f && damageFalloffMultiplier != 1f)
             {

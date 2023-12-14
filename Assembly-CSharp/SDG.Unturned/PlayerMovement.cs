@@ -228,7 +228,7 @@ public class PlayerMovement : PlayerCaller
 
     public float totalGravityMultiplier => itemGravityMultiplier * pluginGravityMultiplier;
 
-    public float totalSpeedMultiplier => pluginSpeedMultiplier * base.player.clothing.speedMultiplier * (base.player.equipment.asset?.equipableMovementSpeedMultiplier ?? 1f) * (base.player.equipment.useable?.movementSpeedMultiplier ?? 1f);
+    public float totalSpeedMultiplier => pluginSpeedMultiplier * base.player.clothing.movementSpeedMultiplier * (base.player.equipment.asset?.equipableMovementSpeedMultiplier ?? 1f) * (base.player.equipment.useable?.movementSpeedMultiplier ?? 1f);
 
     [Obsolete]
     public LandscapeHoleVolume landscapeHoleVolume => null;

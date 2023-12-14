@@ -18,7 +18,7 @@ public class PlaySettings
 
     public static readonly byte SAVEDATA_VERSION = 13;
 
-    public static string connectIP;
+    public static string connectHost;
 
     public static ushort connectPort;
 
@@ -48,7 +48,7 @@ public class PlaySettings
                 byte b = block.readByte();
                 if (b > 1)
                 {
-                    connectIP = block.readString();
+                    connectHost = block.readString();
                     connectPort = block.readUInt16();
                     connectPassword = block.readString();
                     if (b > 3 && b < 13)
@@ -111,7 +111,7 @@ public class PlaySettings
                 }
             }
         }
-        connectIP = "127.0.0.1";
+        connectHost = "127.0.0.1";
         connectPort = 27015;
         connectPassword = "";
         serversPassword = string.Empty;
@@ -126,7 +126,7 @@ public class PlaySettings
     {
         Block block = new Block();
         block.writeByte(13);
-        block.writeString(connectIP);
+        block.writeString(connectHost);
         block.writeUInt16(connectPort);
         block.writeString(connectPassword);
         block.writeString(serversPassword);

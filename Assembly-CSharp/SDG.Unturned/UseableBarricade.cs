@@ -396,7 +396,7 @@ public class UseableBarricade : Useable
             }
             return false;
         }
-        if (equippedBarricadeAsset.build == EBuild.FREEFORM && !Provider.modeConfigData.Gameplay.Allow_Freeform_Buildables && !base.channel.owner.isAdmin)
+        if (equippedBarricadeAsset.build == EBuild.FREEFORM && !base.channel.owner.isAdmin && !((parent != null && parentVehicle != null) ? Provider.modeConfigData.Gameplay.Allow_Freeform_Buildables_On_Vehicles : Provider.modeConfigData.Gameplay.Allow_Freeform_Buildables))
         {
             if (base.channel.IsLocalPlayer)
             {

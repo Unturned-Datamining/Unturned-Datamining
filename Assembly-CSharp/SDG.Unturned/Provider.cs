@@ -68,6 +68,38 @@ public class Provider : MonoBehaviour
         /// </summary>
         public ENPCHoliday holiday;
 
+        /// <summary>
+        /// Advertised server name. e.g., "Nelson's Unturned Server"
+        /// </summary>
+        public string serverName;
+
+        /// <summary>
+        /// Name of map to load.
+        /// </summary>
+        public string levelName;
+
+        public bool isPvP;
+
+        public bool allowAdminCheatCodes;
+
+        public bool isVACSecure;
+
+        public bool isBattlEyeSecure;
+
+        public bool isGold;
+
+        /// <summary>
+        /// Legacy difficulty mode that should be removed eventually.
+        /// </summary>
+        public EGameMode gameMode;
+
+        /// <summary>
+        /// Perspective settings.
+        /// </summary>
+        public ECameraMode cameraMode;
+
+        public byte maxPlayers;
+
         public CSteamID server;
 
         /// <summary>
@@ -236,7 +268,9 @@ public class Provider : MonoBehaviour
 
     private static uint _packetsReceived;
 
-    private static SteamServerInfo _currentServerInfo;
+    private static SteamServerAdvertisement _currentServerAdvertisement;
+
+    private static ServerConnectParameters _currentServerConnectParameters;
 
     private static CSteamID _server;
 
@@ -357,6 +391,20 @@ public class Provider : MonoBehaviour
     private static float lastTimerMessage;
 
     internal static bool didServerShutdownTimerReachZero;
+
+    /// <summary>
+    /// Set on the server when initializing Steam API.
+    /// Used to notify pending clients whether VAC is active.
+    /// Set on clients after initial response is received.
+    /// </summary>
+    internal static bool isVacActive;
+
+    /// <summary>
+    /// Set on the server when initializing BattlEye API.
+    /// Used to notify pending clients whether BE is active.
+    /// Set on clients after initial response is received.
+    /// </summary>
+    internal static bool isBattlEyeActive;
 
     private static bool isServerConnectedToSteam;
 
@@ -623,7 +671,28 @@ public class Provider : MonoBehaviour
 
     public static uint packetsReceived => _packetsReceived;
 
-    public static SteamServerInfo currentServerInfo => _currentServerInfo;
+    /// <summary>
+    /// Only used on client.
+    /// Information about current game server retrieved through Steam's "A2S" query system.
+    /// Available when joining using the Steam server list API (in-game server browser)
+    /// or querying the Server's A2S port directly (connect by IP menu), but not when
+    /// joining by Steam ID.
+    /// </summary>
+    public static SteamServerAdvertisement CurrentServerAdvertisement => _currentServerAdvertisement;
+
+    public static ServerConnectParameters CurrentServerConnectParameters => _currentServerConnectParameters;
+
+    /// <summary>
+    /// On client, is current server protected by VAC?
+    /// Set after initial response is received.
+    /// </summary>
+    internal static bool IsVacActiveOnCurrentServer => isVacActive;
+
+    /// <summary>
+    /// On client, is current server protected by BattlEye?
+    /// Set after initial response is received.
+    /// </summary>
+    internal static bool IsBattlEyeActiveOnCurrentServer => isBattlEyeActive;
 
     public static CSteamID server => _server;
 
@@ -799,7 +868,38 @@ public class Provider : MonoBehaviour
 
     public static ModeConfigData modeConfigData => _modeConfigData;
 
-    public static bool isCurrentServerFavorited => GetServerIsFavorited(currentServerInfo.ip, currentServerInfo.queryPort);
+    /// <summary>
+    /// Steam's favorites list requires that we know the server's IPv4 address and port,
+    /// so we can't favorite when joining by Steam ID.
+    /// </summary>
+    public static bool CanFavoriteCurrentServer
+    {
+        get
+        {
+            if (isServer || clientTransport == null)
+            {
+                return false;
+            }
+            IPv4Address address;
+            ushort connectionPort;
+            ushort queryPort;
+            return clientTransport.TryGetIPv4Address(out address) & clientTransport.TryGetConnectionPort(out connectionPort) & clientTransport.TryGetQueryPort(out queryPort);
+        }
+    }
+
+    public static bool isCurrentServerFavorited
+    {
+        get
+        {
+            if (isServer || clientTransport == null)
+            {
+                return false;
+            }
+            clientTransport.TryGetIPv4Address(out var address);
+            clientTransport.TryGetQueryPort(out var queryPort);
+            return GetServerIsFavorited(address.value, queryPort);
+        }
+    }
 
     public static float timeLastPacketWasReceivedFromServer { get; internal set; }
 
@@ -1290,6 +1390,14 @@ public class Provider : MonoBehaviour
         authorityHoliday = response.holiday;
         currentServerWorkshopResponse = response;
         isWaitingForWorkshopResponse = false;
+        serverName = response.serverName;
+        map = response.levelName;
+        isPvP = response.isPvP;
+        mode = response.gameMode;
+        cameraMode = response.cameraMode;
+        maxPlayers = response.maxPlayers;
+        isVacActive = response.isVACSecure;
+        isBattlEyeActive = response.isBattlEyeSecure;
         List<PublishedFileId_t> list = new List<PublishedFileId_t>(response.requiredFiles.Count);
         foreach (ServerRequiredWorkshopFile requiredFile in response.requiredFiles)
         {
@@ -1299,12 +1407,53 @@ public class Provider : MonoBehaviour
             }
         }
         provider.workshopService.resetServerInvalidItems();
+        if (CurrentServerAdvertisement != null)
+        {
+            if (!string.IsNullOrEmpty(CurrentServerAdvertisement.map) && !string.Equals(CurrentServerAdvertisement.map, response.levelName, StringComparison.OrdinalIgnoreCase))
+            {
+                _connectionFailureInfo = ESteamConnectionFailureInfo.SERVER_MAP_ADVERTISEMENT_MISMATCH;
+                RequestDisconnect("server map advertisement mismatch (Advertisement: \"" + CurrentServerAdvertisement.map + "\" Response: \"" + response.levelName + "\")");
+                return;
+            }
+            if (CurrentServerAdvertisement.IsVACSecure != response.isVACSecure)
+            {
+                _connectionFailureInfo = ESteamConnectionFailureInfo.SERVER_VAC_ADVERTISEMENT_MISMATCH;
+                RequestDisconnect($"server VAC advertisement mismatch (Advertisement: {CurrentServerAdvertisement.IsVACSecure} Response: {response.isVACSecure})");
+                return;
+            }
+            if (CurrentServerAdvertisement.IsBattlEyeSecure != response.isBattlEyeSecure)
+            {
+                _connectionFailureInfo = ESteamConnectionFailureInfo.SERVER_BATTLEYE_ADVERTISEMENT_MISMATCH;
+                RequestDisconnect($"server BE advertisement mismatch (Advertisement: {CurrentServerAdvertisement.IsBattlEyeSecure} Response: {response.isBattlEyeSecure})");
+                return;
+            }
+            if (CurrentServerAdvertisement.maxPlayers != response.maxPlayers)
+            {
+                _connectionFailureInfo = ESteamConnectionFailureInfo.SERVER_MAXPLAYERS_ADVERTISEMENT_MISMATCH;
+                RequestDisconnect($"server max players advertisement mismatch (Advertisement: {CurrentServerAdvertisement.maxPlayers} Response: {response.maxPlayers})");
+                return;
+            }
+            if (CurrentServerAdvertisement.cameraMode != response.cameraMode)
+            {
+                _connectionFailureInfo = ESteamConnectionFailureInfo.SERVER_CAMERAMODE_ADVERTISEMENT_MISMATCH;
+                RequestDisconnect($"server camera mode advertisement mismatch (Advertisement: {CurrentServerAdvertisement.cameraMode} Response: {response.cameraMode})");
+                return;
+            }
+            if (CurrentServerAdvertisement.isPvP != response.isPvP)
+            {
+                _connectionFailureInfo = ESteamConnectionFailureInfo.SERVER_PVP_ADVERTISEMENT_MISMATCH;
+                RequestDisconnect($"server PvP advertisement mismatch (Advertisement: {CurrentServerAdvertisement.isPvP} Response: {response.isPvP})");
+                return;
+            }
+        }
         if (list.Count < 1)
         {
             UnturnedLog.info("Server specified no workshop items, launching");
             launch();
+            return;
         }
-        else if (currentServerInfo.isWorkshop && doServerItemsMatchAdvertisement(list))
+        SteamServerAdvertisement currentServerAdvertisement = CurrentServerAdvertisement;
+        if ((currentServerAdvertisement == null || currentServerAdvertisement.isWorkshop) && doServerItemsMatchAdvertisement(list))
         {
             canCurrentlyHandleClientTransportFailure = false;
             UnturnedLog.info("Server specified {0} workshop item(s), querying details", list.Count);
@@ -1768,6 +1917,14 @@ public class Provider : MonoBehaviour
                     return;
                 }
             }
+            if (Dedicator.IsDedicatedServer)
+            {
+                CommandWindow.Log("//////////////////////////////////////////////////////");
+                CommandWindow.Log(localization.format("ServerCode", SteamGameServer.GetSteamID()));
+                CommandWindow.Log(localization.format("ServerCodeDetails"));
+                CommandWindow.Log(localization.format("ServerCodeCopy", "CopyServerCode"));
+                CommandWindow.Log("//////////////////////////////////////////////////////");
+            }
             return;
         }
         if (hasPendingClientTransportFailure)
@@ -1806,7 +1963,7 @@ public class Provider : MonoBehaviour
             writer.WriteEnum(clientPlatform);
             writer.WriteUInt32(APP_VERSION_PACKED);
             writer.WriteBit(isPro);
-            writer.WriteUInt16(MathfEx.ClampToUShort(currentServerInfo.ping));
+            writer.WriteUInt16(MathfEx.ClampToUShort(CurrentServerAdvertisement?.ping ?? 1));
             writer.WriteString(Characters.active.nick);
             writer.WriteSteamID(Characters.active.group);
             writer.WriteUInt8(Characters.active.face);
@@ -1846,30 +2003,36 @@ public class Provider : MonoBehaviour
     /// Requests workshop details for download prior to loading level.
     /// Once workshop is ready launch() is called.
     /// </summary>
-    public static void connect(SteamServerInfo info, string password, List<PublishedFileId_t> expectedWorkshopItems)
+    public static void connect(ServerConnectParameters parameters, SteamServerAdvertisement advertisement, List<PublishedFileId_t> expectedWorkshopItems)
     {
         if (isConnected)
         {
             return;
         }
-        _currentServerInfo = info;
-        _isConnected = true;
-        map = info.map;
-        isPvP = info.isPvP;
+        _currentServerConnectParameters = parameters;
+        _currentServerAdvertisement = advertisement;
         isWhitelisted = false;
-        mode = info.mode;
-        cameraMode = info.cameraMode;
-        maxPlayers = (byte)info.maxPlayers;
+        isVacActive = false;
+        isBattlEyeActive = false;
+        _isConnected = true;
         _queuePosition = 0;
         resetChannels();
-        Lobbies.LinkLobby(info.ip, info.queryPort);
-        _server = info.steamID;
-        _serverPassword = password;
-        _serverPasswordHash = Hash.SHA1(password);
+        if (_currentServerAdvertisement != null)
+        {
+            Lobbies.LinkLobby(_currentServerAdvertisement.ip, _currentServerAdvertisement.queryPort);
+            _server = _currentServerAdvertisement.steamID;
+        }
+        else
+        {
+            Lobbies.LinkLobby(parameters.address.value, parameters.queryPort);
+            _server = parameters.steamId;
+        }
+        _serverPassword = parameters.password;
+        _serverPasswordHash = Hash.SHA1(parameters.password);
         _isClient = true;
         timeLastPacketWasReceivedFromServer = Time.realtimeSinceStartup;
         pings = new float[4];
-        lag((float)info.ping / 1000f);
+        lag((_currentServerAdvertisement != null) ? ((float)_currentServerAdvertisement.ping / 1000f) : 0f);
         isLoadingUGC = true;
         LoadingUI.updateScene();
         isWaitingForConnectResponse = false;
@@ -1919,19 +2082,7 @@ public class Provider : MonoBehaviour
         }
         Level.loading();
         ResetClientTransportFailure();
-        if (new IPv4Address(info.ip).IsWideAreaNetwork)
-        {
-            EInternetMultiplayerAvailability internetMultiplayerAvailability = GetInternetMultiplayerAvailability();
-            if (internetMultiplayerAvailability != 0)
-            {
-                clientTransport = new ClientTransport_Null();
-                _connectionFailureInfo = ESteamConnectionFailureInfo.CUSTOM;
-                _connectionFailureReason = MenuUI.FormatInternetMultiplayerAvailabilityStatus(internetMultiplayerAvailability);
-                RequestDisconnect($"Internet multiplayer unavailable ({internetMultiplayerAvailability})");
-                return;
-            }
-        }
-        clientTransport = NetTransportFactory.CreateClientTransport(currentServerInfo.networkTransport);
+        clientTransport = NetTransportFactory.CreateClientTransport(_currentServerAdvertisement?.networkTransport);
         UnturnedLog.info("Initializing {0}", clientTransport.GetType().Name);
         clientTransport.Initialize(onClientTransportReady, onClientTransportFailure);
     }
@@ -2112,6 +2263,8 @@ public class Provider : MonoBehaviour
         queueSize = 8;
         serverName = "Singleplayer #" + (Characters.selected + 1);
         serverPassword = "Singleplayer";
+        isVacActive = false;
+        isBattlEyeActive = false;
         ip = 0u;
         port = 25000;
         timeLastPacketWasReceivedFromServer = Time.realtimeSinceStartup;
@@ -2133,7 +2286,7 @@ public class Provider : MonoBehaviour
         SteamWhitelist.load();
         SteamBlacklist.load();
         SteamAdminlist.load();
-        _currentServerInfo = new SteamServerInfo(serverName, mode, newVACSecure: false, newBattlEyeEnabled: false, newPro: false);
+        _currentServerAdvertisement = null;
         _configData = ConfigData.CreateDefault(singleplayer: true);
         if (ServerSavedata.fileExists("/Config.json"))
         {
@@ -2151,8 +2304,11 @@ public class Provider : MonoBehaviour
         if (_modeConfigData == null)
         {
             _modeConfigData = new ModeConfigData(mode);
+            _modeConfigData.InitSingleplayerDefaults();
         }
         authorityHoliday = (_modeConfigData.Gameplay.Allow_Holidays ? HolidayUtil.BackendGetActiveHoliday() : ENPCHoliday.NONE);
+        _isServer = true;
+        _isClient = true;
         time = SteamUtils.GetServerRealTime();
         Level.load(Level.getLevel(map), hasAuthority: true);
         loadGameMode();
@@ -2161,8 +2317,6 @@ public class Provider : MonoBehaviour
         _client = _server;
         _clientHash = Hash.SHA1(client);
         timeLastPacketWasReceivedFromServer = Time.realtimeSinceStartup;
-        _isServer = true;
-        _isClient = true;
         broadcastServerHosted();
     }
 
@@ -3793,6 +3947,7 @@ public class Provider : MonoBehaviour
             writer.WriteBit(modeConfigData.Gameplay.Friendly_Fire);
             writer.WriteBit(modeConfigData.Gameplay.Bypass_Buildable_Mobility);
             writer.WriteBit(modeConfigData.Gameplay.Allow_Freeform_Buildables);
+            writer.WriteBit(modeConfigData.Gameplay.Allow_Freeform_Buildables_On_Vehicles);
             writer.WriteUInt16((ushort)modeConfigData.Gameplay.Timer_Exit);
             writer.WriteUInt16((ushort)modeConfigData.Gameplay.Timer_Respawn);
             writer.WriteUInt16((ushort)modeConfigData.Gameplay.Timer_Home);
@@ -4096,6 +4251,7 @@ public class Provider : MonoBehaviour
         {
             CommandWindow.LogWarning(localization.format("InsecureWarningText"));
         }
+        isVacActive = eSecurityMode == ESecurityMode.SECURE;
         try
         {
             if (Process.GetCurrentProcess().MainModule.FileName.EndsWith(".x86"))
@@ -4106,10 +4262,18 @@ public class Provider : MonoBehaviour
         catch
         {
         }
-        if (IsBattlEyeEnabled && eSecurityMode == ESecurityMode.SECURE && !initializeBattlEyeServer())
+        if (IsBattlEyeEnabled && eSecurityMode == ESecurityMode.SECURE)
         {
-            QuitGame("BattlEye server init failed");
-            return;
+            if (!initializeBattlEyeServer())
+            {
+                QuitGame("BattlEye server init failed");
+                return;
+            }
+            isBattlEyeActive = true;
+        }
+        else
+        {
+            isBattlEyeActive = false;
         }
         bool flag = !Dedicator.offlineOnly;
         if (flag)
@@ -4201,10 +4365,12 @@ public class Provider : MonoBehaviour
         if (newFavorited)
         {
             SteamMatchmaking.AddFavoriteGame(APP_ID, ip, connectionPort, queryPort, STEAM_FAVORITE_FLAG_FAVORITE, SteamUtils.GetServerRealTime());
+            UnturnedLog.info($"Added favorite server IP: {new IPv4Address(ip)} Connection Port: {connectionPort} Query Port: {queryPort}");
         }
         else
         {
             SteamMatchmaking.RemoveFavoriteGame(APP_ID, ip, connectionPort, queryPort, STEAM_FAVORITE_FLAG_FAVORITE);
+            UnturnedLog.info($"Removed favorite server IP: {new IPv4Address(ip)} Connection Port: {connectionPort} Query Port: {queryPort}");
         }
     }
 
@@ -4229,9 +4395,17 @@ public class Provider : MonoBehaviour
     /// </summary>
     public static void toggleCurrentServerFavorited()
     {
-        if (!isServer)
+        if (!isServer && clientTransport != null)
         {
-            SetServerIsFavorited(currentServerInfo.ip, currentServerInfo.connectionPort, currentServerInfo.queryPort, !isCurrentServerFavorited);
+            if (clientTransport.TryGetIPv4Address(out var address) & clientTransport.TryGetConnectionPort(out var connectionPort) & clientTransport.TryGetQueryPort(out var queryPort))
+            {
+                bool newFavorited = !GetServerIsFavorited(address.value, queryPort);
+                SetServerIsFavorited(address.value, connectionPort, queryPort, newFavorited);
+            }
+            else
+            {
+                UnturnedLog.info("Unable to toggle server favorite because connection details are unavailable");
+            }
         }
     }
 
@@ -4376,19 +4550,6 @@ public class Provider : MonoBehaviour
             debugLastTick = Time.realtimeSinceStartup;
             debugTicks = 0;
         }
-    }
-
-    internal static EInternetMultiplayerAvailability GetInternetMultiplayerAvailability()
-    {
-        if (!allowWebRequests)
-        {
-            return EInternetMultiplayerAvailability.NoWebRequests;
-        }
-        if (!HostBansManager.Get().HasReceivedAnyResponse)
-        {
-            return EInternetMultiplayerAvailability.NoConnection;
-        }
-        return EInternetMultiplayerAvailability.OK;
     }
 
     private IEnumerator downloadIcon(PendingIconRequest iconQueryParams)

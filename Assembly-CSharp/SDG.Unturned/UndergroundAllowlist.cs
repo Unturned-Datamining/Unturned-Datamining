@@ -47,4 +47,21 @@ public static class UndergroundAllowlist
         }
         return VolumeManager<UndergroundWhitelistVolume, UndergroundWhitelistVolumeManager>.Get().IsPositionInsideAnyVolume(position);
     }
+
+    /// <summary>
+    /// Used by housing validation to check item isn't placed underground.
+    /// </summary>
+    public static bool IsPositionBuildable(Vector3 position)
+    {
+        if (Level.info == null || !Level.info.configData.Use_Underground_Whitelist)
+        {
+            return true;
+        }
+        float height = LevelGround.getHeight(position);
+        if (position.y > height)
+        {
+            return true;
+        }
+        return VolumeManager<UndergroundWhitelistVolume, UndergroundWhitelistVolumeManager>.Get().IsPositionInsideAnyVolume(position);
+    }
 }

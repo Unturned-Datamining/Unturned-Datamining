@@ -105,7 +105,8 @@ public class InteractableMannequin : Interactable, IManualOnDestroy
         Vector3 position = base.transform.position;
         Vector3 point = position + new Vector3(0f, -0.6f, 0f);
         Vector3 point2 = position + new Vector3(0f, 0.6f, 0f);
-        return Physics.OverlapCapsuleNonAlloc(point, point2, 0.4f, InteractableDoor.checkColliders, RayMasks.BLOCK_CHAR_HINGE_OVERLAP, QueryTriggerInteraction.Ignore) > 0;
+        int layerMask = (base.IsChildOfVehicle ? RayMasks.BLOCK_CHAR_HINGE_OVERLAP_ON_VEHICLE : RayMasks.BLOCK_CHAR_HINGE_OVERLAP);
+        return Physics.OverlapCapsuleNonAlloc(point, point2, 0.4f, InteractableDoor.checkColliders, layerMask, QueryTriggerInteraction.Ignore) > 0;
     }
 
     public bool checkUpdate(CSteamID enemyPlayer, CSteamID enemyGroup)

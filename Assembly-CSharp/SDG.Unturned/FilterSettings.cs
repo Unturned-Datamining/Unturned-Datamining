@@ -147,15 +147,43 @@ public static class FilterSettings
 
     public static void MarkActiveFilterModified()
     {
-        if (activeFilters.presetId != -1)
+        if (activeFilters.presetId == -1)
         {
-            if (!string.IsNullOrEmpty(activeFilters.presetName))
-            {
-                activeFilters.presetName = MenuPlayUI.serverListUI.localization.format("PresetName_Modified", activeFilters.presetName);
-            }
-            activeFilters.presetId = -1;
-            FilterSettings.OnActiveFiltersModified?.Invoke();
+            return;
         }
+        if (activeFilters.presetId < -1)
+        {
+            if (activeFilters.presetId == defaultPresetInternet.presetId)
+            {
+                activeFilters.presetName = MenuPlayUI.serverListUI.localization.format("List_Internet_Label");
+            }
+            else if (activeFilters.presetId == defaultPresetLAN.presetId)
+            {
+                activeFilters.presetName = MenuPlayUI.serverListUI.localization.format("List_LAN_Label");
+            }
+            else if (activeFilters.presetId == defaultPresetHistory.presetId)
+            {
+                activeFilters.presetName = MenuPlayUI.serverListUI.localization.format("List_History_Label");
+            }
+            else if (activeFilters.presetId == defaultPresetFavorites.presetId)
+            {
+                activeFilters.presetName = MenuPlayUI.serverListUI.localization.format("List_Favorites_Label");
+            }
+            else if (activeFilters.presetId == defaultPresetFriends.presetId)
+            {
+                activeFilters.presetName = MenuPlayUI.serverListUI.localization.format("List_Friends_Label");
+            }
+            else
+            {
+                UnturnedLog.warn($"Marking active filter modified unknown default preset ID ({activeFilters.presetId})");
+            }
+        }
+        if (!string.IsNullOrEmpty(activeFilters.presetName))
+        {
+            activeFilters.presetName = MenuPlayUI.serverListUI.localization.format("PresetName_Modified", activeFilters.presetName);
+        }
+        activeFilters.presetId = -1;
+        FilterSettings.OnActiveFiltersModified?.Invoke();
     }
 
     public static void load()

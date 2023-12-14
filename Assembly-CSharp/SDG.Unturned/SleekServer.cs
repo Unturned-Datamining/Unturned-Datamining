@@ -6,7 +6,7 @@ namespace SDG.Unturned;
 
 public class SleekServer : SleekWrapper
 {
-    private SteamServerInfo info;
+    private SteamServerAdvertisement info;
 
     private SleekButtonIcon favoriteButton;
 
@@ -246,7 +246,7 @@ public class SleekServer : SleekWrapper
         }
     }
 
-    public SleekServer(ESteamServerList list, SteamServerInfo newInfo)
+    public SleekServer(ESteamServerList list, SteamServerAdvertisement newInfo)
     {
         info = newInfo;
         button = Glazier.Get().CreateButton();
@@ -557,19 +557,19 @@ public class SleekServer : SleekWrapper
         pluginsBox.AddChild(sleekImage11);
         switch (info.pluginFramework)
         {
-        case SteamServerInfo.EPluginFramework.None:
+        case SteamServerAdvertisement.EPluginFramework.None:
             sleekImage11.Texture = MenuPlayUI.serverListUI.icons.load<Texture2D>("Plugins_None");
             pluginsBox.TooltipText = MenuPlayUI.serverListUI.localization.format("Plugins_Column_None_Tooltip");
             break;
-        case SteamServerInfo.EPluginFramework.Rocket:
+        case SteamServerAdvertisement.EPluginFramework.Rocket:
             sleekImage11.Texture = MenuPlayUI.serverListUI.icons.load<Texture2D>("RocketMod");
             pluginsBox.TooltipText = MenuPlayUI.serverListUI.localization.format("Plugins_Column_Rocket_Tooltip");
             break;
-        case SteamServerInfo.EPluginFramework.OpenMod:
+        case SteamServerAdvertisement.EPluginFramework.OpenMod:
             sleekImage11.Texture = MenuPlayUI.serverListUI.icons.load<Texture2D>("OpenMod");
             pluginsBox.TooltipText = MenuPlayUI.serverListUI.localization.format("Plugins_Column_OpenMod_Tooltip");
             break;
-        case SteamServerInfo.EPluginFramework.Unknown:
+        case SteamServerAdvertisement.EPluginFramework.Unknown:
             sleekImage11.Texture = MenuPlayUI.serverListUI.icons.load<Texture2D>("Unknown");
             pluginsBox.TooltipText = MenuPlayUI.serverListUI.localization.format("Plugins_Column_Unknown_Tooltip");
             break;

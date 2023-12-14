@@ -64,6 +64,15 @@ public class SteamworksServerMultiplayerService : Service, IServerMultiplayerSer
         SteamGameServer.SetDedicatedServer(appInfo.isDedicated);
         SteamGameServer.SetProduct(appInfo.name);
         SteamGameServer.SetModDir(appInfo.name);
+        if (SDG.Unturned.Provider.configData.Server.Experimental_Use_FakeIP)
+        {
+            if (!SteamGameServerNetworkingSockets.BeginAsyncRequestFakeIP(1))
+            {
+                CommandWindow.LogError("Fatal: BeginAsyncRequestFakeIP returned false");
+                throw new NotSupportedException("BeginAsyncRequestFakeIP returned false");
+            }
+            CommandWindow.Log("Requesting \"FakeIP\" from Steam");
+        }
         if ((bool)clShouldLogin)
         {
             string text = CommandGSLT.loginToken?.Trim();

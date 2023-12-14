@@ -169,7 +169,7 @@ public class InteractableGenerator : Interactable, IManualOnDestroy
         {
             engine.gameObject.SetActive(isPowered && fuel > 0);
         }
-        bool flag = isPowered && fuel > 0 && !base.isPlant;
+        bool flag = isPowered && fuel > 0 && !base.IsChildOfVehicle;
         if (isWorldCandidate != flag)
         {
             isWorldCandidate = flag;
@@ -187,7 +187,7 @@ public class InteractableGenerator : Interactable, IManualOnDestroy
             return;
         }
         ushort plant = ushort.MaxValue;
-        if (base.isPlant)
+        if (base.IsChildOfVehicle)
         {
             BarricadeManager.tryGetPlant(base.transform.parent, out var _, out var _, out plant, out var _);
         }

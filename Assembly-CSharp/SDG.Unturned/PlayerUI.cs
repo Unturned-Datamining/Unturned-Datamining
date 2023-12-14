@@ -544,6 +544,9 @@ public class PlayerUI : MonoBehaviour
         case EPlayerMessage.PLACEMENT_OBSTRUCTED_BY:
             messageLabel.Text = PlayerLifeUI.localization.format("PlacementObstructedBy", text);
             break;
+        case EPlayerMessage.PLACEMENT_OBSTRUCTED_BY_GROUND:
+            messageLabel.Text = PlayerLifeUI.localization.format("PlacementObstructedByGround");
+            break;
         case EPlayerMessage.FREEFORM_BUILDABLE_NOT_ALLOWED:
             messageLabel.Text = PlayerLifeUI.localization.format("FreeformBuildableNotAllowed");
             break;

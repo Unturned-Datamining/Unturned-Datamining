@@ -16,6 +16,8 @@ Filter_Toggle_Tooltip Note: hate speech is censored regardless of whether profan
 Chat_Text_Toggle_Label Show Inbound Text Chat
 Chat_Voice_In_Toggle_Label Enable Inbound Voice Chat
 Chat_Voice_Out_Toggle_Label Enable Outbound Voice Chat
+VoiceAlwaysRecording_Label Keep Microphone Ready
+VoiceAlwaysRecording_Tooltip Avoid hitches related to starting and stopping recording by muting rather than stopping.
 Hints_Toggle_Label Show Hints
 Ambience_Toggle_Label Play Day/Night Ambience
 Streamer_Toggle_Label Streamer Mode

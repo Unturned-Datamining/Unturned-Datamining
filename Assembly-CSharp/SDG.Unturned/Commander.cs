@@ -140,6 +140,9 @@ public class Commander
         register(new CommandChatrate(Localization.read("/Server/ServerCommandChatrate.dat")));
         register(new CommandLog(Localization.read("/Server/ServerCommandLog.dat")));
         register(new CommandLogMemoryUsage(Localization.read("/Server/ServerCommandGive.dat")));
+        register(new CommandLogTransportConnections(Localization.read("/Server/ServerCommandGive.dat")));
+        register(new CommandCopyServerCode(Localization.read("/Server/ServerCommandGive.dat")));
+        register(new CommandCopyFakeIP(Localization.read("/Server/ServerCommandGive.dat")));
         register(new CommandDebug(Localization.read("/Server/ServerCommandDebug.dat")));
         register(new CommandResetConfig(Localization.read("/Server/ServerCommandResetConfig.dat")));
         register(new CommandBind(Localization.read("/Server/ServerCommandBind.dat")));

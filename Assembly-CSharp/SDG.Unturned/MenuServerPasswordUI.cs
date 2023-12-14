@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Steamworks;
 using UnityEngine;
+using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
@@ -12,7 +13,7 @@ public class MenuServerPasswordUI
 
     public static bool isActive;
 
-    private static SteamServerInfo serverInfo;
+    private static SteamServerAdvertisement serverInfo;
 
     private static List<PublishedFileId_t> expectedWorkshopItems;
 
@@ -26,7 +27,7 @@ public class MenuServerPasswordUI
 
     private static ISleekButton connectButton;
 
-    public static void open(SteamServerInfo newServerInfo, List<PublishedFileId_t> newExpectedWorkshopItems)
+    public static void open(SteamServerAdvertisement newServerInfo, List<PublishedFileId_t> newExpectedWorkshopItems)
     {
         if (!isActive)
         {
@@ -123,7 +124,7 @@ public class MenuServerPasswordUI
     {
         if (!string.IsNullOrEmpty(passwordField.Text))
         {
-            Provider.connect(serverInfo, passwordField.Text, expectedWorkshopItems);
+            Provider.connect(new ServerConnectParameters(new IPv4Address(serverInfo.ip), serverInfo.queryPort, serverInfo.connectionPort, passwordField.Text), serverInfo, expectedWorkshopItems);
         }
     }
 

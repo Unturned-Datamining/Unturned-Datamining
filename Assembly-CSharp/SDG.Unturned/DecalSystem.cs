@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using SDG.Framework.Utilities;
+using UnityEngine;
 
 namespace SDG.Unturned;
 
@@ -65,6 +67,35 @@ public static class DecalSystem
         else
         {
             _isVisible = true;
+        }
+        TimeUtility.updated += OnUpdateGizmos;
+    }
+
+    private static void OnUpdateGizmos()
+    {
+        if (!_isVisible || !Level.isEditor)
+        {
+            return;
+        }
+        Camera instance = MainCamera.instance;
+        if (instance == null)
+        {
+            return;
+        }
+        RuntimeGizmos runtimeGizmos = RuntimeGizmos.Get();
+        float num = 128f + GraphicsSettings.normalizedDrawDistance * 128f;
+        foreach (Decal item in decalsDiffuse)
+        {
+            if (!(item.material == null))
+            {
+                float num2 = num * item.lodBias;
+                float num3 = num2 * num2;
+                if (!((item.transform.position - instance.transform.position).sqrMagnitude > num3))
+                {
+                    Color color = (item.isSelected ? Color.yellow : Color.red);
+                    runtimeGizmos.Box(item.transform.localToWorldMatrix, Vector3.one, color);
+                }
+            }
         }
     }
 }

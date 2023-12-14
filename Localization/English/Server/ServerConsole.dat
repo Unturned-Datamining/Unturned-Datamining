@@ -1,4 +1,11 @@
 InsecureWarningText WARNING: VALVE ANTI-CHEAT IS DISABLED
+ServerCode Server Code: {0}
+ServerCodeDetails Your friends can enter this code in the Connect Directly menu to join without port forwarding.
+ServerCodeCopy Tip: Use the "{0}" command to copy the code to your clipboard. Alternatively, in most terminals you can highlight it and press Ctrl+Insert to copy.
+
+FakeIPHeader Steam assigned "FakeIP" address: {0}
+FakeIPDetails Your friends can enter this address in the Connect Directly menu to join without port forwarding.
+FakeIPCopy Tip: Use the "{0}" command to copy the address to your clipboard. Alternatively, in most terminals you can highlight it and press Ctrl+Insert to copy.
 
 PlayerConnectedText Connecting: PlayerID: {0} Name: {1} Character: {2}
 PlayerDisconnectedText Disconnecting: PlayerID: {0} Name: {1} Character: {2}

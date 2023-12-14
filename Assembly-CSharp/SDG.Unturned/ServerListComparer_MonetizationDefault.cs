@@ -2,11 +2,11 @@ using System.Collections.Generic;
 
 namespace SDG.Unturned;
 
-public class ServerListComparer_MonetizationDefault : IComparer<SteamServerInfo>
+public class ServerListComparer_MonetizationDefault : IComparer<SteamServerAdvertisement>
 {
     private int[] orderMap;
 
-    public virtual int Compare(SteamServerInfo lhs, SteamServerInfo rhs)
+    public virtual int Compare(SteamServerAdvertisement lhs, SteamServerAdvertisement rhs)
     {
         if (lhs.monetization == rhs.monetization)
         {

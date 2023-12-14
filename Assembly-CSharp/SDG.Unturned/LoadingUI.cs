@@ -487,14 +487,14 @@ public class LoadingUI : MonoBehaviour
                 string text;
                 if (!Provider.isServer)
                 {
-                    text = ((!Provider.currentServerInfo.IsVACSecure) ? localization.format("VAC_Insecure") : localization.format("VAC_Secure"));
-                    text = ((!Provider.currentServerInfo.IsBattlEyeSecure) ? (text + " + " + localization.format("BattlEye_Insecure")) : (text + " + " + localization.format("BattlEye_Secure")));
+                    text = ((!Provider.IsVacActiveOnCurrentServer) ? localization.format("VAC_Insecure") : localization.format("VAC_Secure"));
+                    text = ((!Provider.IsBattlEyeActiveOnCurrentServer) ? (text + " + " + localization.format("BattlEye_Insecure")) : (text + " + " + localization.format("BattlEye_Secure")));
                 }
                 else
                 {
                     text = localization.format("Offline");
                 }
-                loadingProgressBar.DescriptionText = localization.format("Loading_Level_Play", localizedName, Level.version, OptionsSettings.streamer ? localization.format("Streamer") : Provider.currentServerInfo.name, text);
+                loadingProgressBar.DescriptionText = localization.format("Loading_Level_Play", localizedName, Level.version, OptionsSettings.streamer ? localization.format("Streamer") : Provider.serverName, text);
             }
             else
             {

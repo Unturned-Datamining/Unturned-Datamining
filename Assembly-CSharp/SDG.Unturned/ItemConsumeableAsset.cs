@@ -154,69 +154,69 @@ public class ItemConsumeableAsset : ItemWeaponAsset
             if (_health > 0)
             {
                 string arg = PlayerDashboardInventoryUI.FormatStatColor(_health.ToString(), isBeneficial: true);
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_HealthPositive", arg), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_HealthPositive", arg), 9999);
             }
             if (_food > 0)
             {
                 string arg2 = PlayerDashboardInventoryUI.FormatStatColor(_food.ToString(), isBeneficial: true);
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_FoodPositive", arg2), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_FoodPositive", arg2), 9999);
             }
             if (_water > 0)
             {
                 string arg3 = PlayerDashboardInventoryUI.FormatStatColor(water.ToString(), isBeneficial: true);
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_WaterPositive", arg3), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_WaterPositive", arg3), 9999);
             }
             if (_virus > 0)
             {
                 string arg4 = PlayerDashboardInventoryUI.FormatStatColor(virus.ToString(), isBeneficial: false);
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_VirusNegative", arg4), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_VirusNegative", arg4), 10001);
             }
             if (_disinfectant > 0)
             {
                 string arg5 = PlayerDashboardInventoryUI.FormatStatColor(_disinfectant.ToString(), isBeneficial: true);
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_VirusPositive", arg5), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_VirusPositive", arg5), 9999);
             }
             if (_energy > 0)
             {
                 string arg6 = PlayerDashboardInventoryUI.FormatStatColor(_energy.ToString(), isBeneficial: true);
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_StaminaPositive", arg6), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_StaminaPositive", arg6), 9999);
             }
             if (oxygen > 0)
             {
                 string arg7 = PlayerDashboardInventoryUI.FormatStatColor(oxygen.ToString(), isBeneficial: true);
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_StaminaPositive", arg7), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_StaminaPositive", arg7), 9999);
             }
             else if (oxygen < 0)
             {
                 string arg8 = PlayerDashboardInventoryUI.FormatStatColor((-oxygen).ToString(), isBeneficial: false);
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_OxygenNegative", arg8), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_OxygenNegative", arg8), 10001);
             }
             int num = Mathf.RoundToInt((float)_warmth / 12.5f);
             if (num > 0)
             {
                 string arg9 = PlayerDashboardInventoryUI.FormatStatColor($"{num} s", isBeneficial: true);
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_WarmthPositive", arg9), 10000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_WarmthPositive", arg9), 9999);
             }
             if (itemInstance.quality < 50 && _food + _water > 0)
             {
-                builder.Append(PlayerDashboardInventoryUI.FormatStatColor(PlayerDashboardInventoryUI.localization.format("ItemDescription_ConsumeableMoldy"), isBeneficial: false), 10000);
+                builder.Append(PlayerDashboardInventoryUI.FormatStatColor(PlayerDashboardInventoryUI.localization.format("ItemDescription_ConsumeableMoldy"), isBeneficial: false), 10001);
             }
             switch (bleedingModifier)
             {
             case Bleeding.Heal:
-                builder.Append(PlayerDashboardInventoryUI.FormatStatColor(PlayerDashboardInventoryUI.localization.format("ItemDescription_ConsumeableBleeding_Heal"), isBeneficial: true), 10000);
+                builder.Append(PlayerDashboardInventoryUI.FormatStatColor(PlayerDashboardInventoryUI.localization.format("ItemDescription_ConsumeableBleeding_Heal"), isBeneficial: true), 9999);
                 break;
             case Bleeding.Cut:
-                builder.Append(PlayerDashboardInventoryUI.FormatStatColor(PlayerDashboardInventoryUI.localization.format("ItemDescription_ConsumeableBleeding_Cut"), isBeneficial: false), 10000);
+                builder.Append(PlayerDashboardInventoryUI.FormatStatColor(PlayerDashboardInventoryUI.localization.format("ItemDescription_ConsumeableBleeding_Cut"), isBeneficial: false), 10001);
                 break;
             }
             switch (bonesModifier)
             {
             case Bones.Heal:
-                builder.Append(PlayerDashboardInventoryUI.FormatStatColor(PlayerDashboardInventoryUI.localization.format("ItemDescription_ConsumeableBones_Heal"), isBeneficial: true), 10000);
+                builder.Append(PlayerDashboardInventoryUI.FormatStatColor(PlayerDashboardInventoryUI.localization.format("ItemDescription_ConsumeableBones_Heal"), isBeneficial: true), 9999);
                 break;
             case Bones.Break:
-                builder.Append(PlayerDashboardInventoryUI.FormatStatColor(PlayerDashboardInventoryUI.localization.format("ItemDescription_ConsumeableBones_Break"), isBeneficial: false), 10000);
+                builder.Append(PlayerDashboardInventoryUI.FormatStatColor(PlayerDashboardInventoryUI.localization.format("ItemDescription_ConsumeableBones_Break"), isBeneficial: false), 10001);
                 break;
             }
             if (IsExplosive)

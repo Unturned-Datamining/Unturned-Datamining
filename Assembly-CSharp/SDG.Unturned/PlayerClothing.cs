@@ -107,7 +107,11 @@ public class PlayerClothing : PlayerCaller
 
     private bool wasLoadCalled;
 
-    internal float speedMultiplier = 1f;
+    internal float movementSpeedMultiplier = 1f;
+
+    internal float fallingDamageMultiplier = 1f;
+
+    internal bool preventsFallingBrokenBones;
 
     public HumanClothes firstClothes { get; private set; }
 
@@ -370,7 +374,7 @@ public class PlayerClothing : PlayerCaller
                 characterClothes.apply();
                 Characters.active.shirt = shirt;
             }
-            UpdateSpeedMultiplier();
+            UpdateStatModifiers();
             onShirtUpdated?.Invoke(shirt, quality, state);
             PlayerClothing.OnShirtChanged_Global?.Invoke(this);
             if (base.channel.IsLocalPlayer && !Provider.isServer)
@@ -469,7 +473,7 @@ public class PlayerClothing : PlayerCaller
                 characterClothes.apply();
                 Characters.active.pants = pants;
             }
-            UpdateSpeedMultiplier();
+            UpdateStatModifiers();
             onPantsUpdated?.Invoke(pants, quality, state);
             PlayerClothing.OnPantsChanged_Global?.Invoke(this);
             if (base.channel.IsLocalPlayer && !Provider.isServer)
@@ -568,7 +572,7 @@ public class PlayerClothing : PlayerCaller
                 characterClothes.apply();
                 Characters.active.hat = hat;
             }
-            UpdateSpeedMultiplier();
+            UpdateStatModifiers();
             onHatUpdated?.Invoke(hat, quality, state);
             PlayerClothing.OnHatChanged_Global?.Invoke(this);
             if (base.channel.IsLocalPlayer && !Provider.isServer)
@@ -666,7 +670,7 @@ public class PlayerClothing : PlayerCaller
                 characterClothes.apply();
                 Characters.active.backpack = backpack;
             }
-            UpdateSpeedMultiplier();
+            UpdateStatModifiers();
             onBackpackUpdated?.Invoke(backpack, quality, state);
             PlayerClothing.OnBackpackChanged_Global?.Invoke(this);
             if (base.channel.IsLocalPlayer && !Provider.isServer)
@@ -862,7 +866,7 @@ public class PlayerClothing : PlayerCaller
                 characterClothes.apply();
                 Characters.active.vest = vest;
             }
-            UpdateSpeedMultiplier();
+            UpdateStatModifiers();
             onVestUpdated?.Invoke(vest, quality, state);
             PlayerClothing.OnVestChanged_Global?.Invoke(this);
             if (base.channel.IsLocalPlayer && !Provider.isServer)
@@ -961,7 +965,7 @@ public class PlayerClothing : PlayerCaller
                 characterClothes.apply();
                 Characters.active.mask = mask;
             }
-            UpdateSpeedMultiplier();
+            UpdateStatModifiers();
             onMaskUpdated?.Invoke(mask, quality, state);
             PlayerClothing.OnMaskChanged_Global?.Invoke(this);
             if (base.channel.IsLocalPlayer && !Provider.isServer)
@@ -1053,7 +1057,7 @@ public class PlayerClothing : PlayerCaller
                 Characters.active.glasses = glasses;
             }
             onGlassesUpdated?.Invoke(glasses, quality, state);
-            UpdateSpeedMultiplier();
+            UpdateStatModifiers();
             PlayerClothing.OnGlassesChanged_Global?.Invoke(this);
             if (base.channel.IsLocalPlayer && !Provider.isServer)
             {
@@ -1229,7 +1233,7 @@ public class PlayerClothing : PlayerCaller
         isSkinned = value23;
         base.player.equipment.applySkinVisual();
         base.player.equipment.applyMythicVisual();
-        UpdateSpeedMultiplier();
+        UpdateStatModifiers();
         onShirtUpdated?.Invoke(shirt, value2, value3);
         PlayerClothing.OnShirtChanged_Global?.Invoke(this);
         onPantsUpdated?.Invoke(pants, value5, value6);
@@ -1643,7 +1647,7 @@ public class PlayerClothing : PlayerCaller
                     }
                 }
                 thirdClothes.apply();
-                UpdateSpeedMultiplier();
+                UpdateStatModifiers();
                 return;
             }
         }
@@ -1669,7 +1673,7 @@ public class PlayerClothing : PlayerCaller
         maskState = new byte[0];
         glassesState = new byte[0];
         thirdClothes.apply();
-        UpdateSpeedMultiplier();
+        UpdateStatModifiers();
     }
 
     public void save()
@@ -1716,18 +1720,34 @@ public class PlayerClothing : PlayerCaller
         PlayerSavedata.writeBlock(base.channel.owner.playerID, "/Player/Clothing.dat", block);
     }
 
-    private void UpdateSpeedMultiplier()
+    private void UpdateStatModifiers()
     {
-        speedMultiplier = 1f;
+        movementSpeedMultiplier = 1f;
+        fallingDamageMultiplier = 1f;
+        preventsFallingBrokenBones = false;
         if (thirdClothes != null)
         {
-            speedMultiplier *= thirdClothes.shirtAsset?.movementSpeedMultiplier ?? 1f;
-            speedMultiplier *= thirdClothes.pantsAsset?.movementSpeedMultiplier ?? 1f;
-            speedMultiplier *= thirdClothes.hatAsset?.movementSpeedMultiplier ?? 1f;
-            speedMultiplier *= thirdClothes.backpackAsset?.movementSpeedMultiplier ?? 1f;
-            speedMultiplier *= thirdClothes.vestAsset?.movementSpeedMultiplier ?? 1f;
-            speedMultiplier *= thirdClothes.maskAsset?.movementSpeedMultiplier ?? 1f;
-            speedMultiplier *= thirdClothes.glassesAsset?.movementSpeedMultiplier ?? 1f;
+            movementSpeedMultiplier *= thirdClothes.shirtAsset?.movementSpeedMultiplier ?? 1f;
+            movementSpeedMultiplier *= thirdClothes.pantsAsset?.movementSpeedMultiplier ?? 1f;
+            movementSpeedMultiplier *= thirdClothes.hatAsset?.movementSpeedMultiplier ?? 1f;
+            movementSpeedMultiplier *= thirdClothes.backpackAsset?.movementSpeedMultiplier ?? 1f;
+            movementSpeedMultiplier *= thirdClothes.vestAsset?.movementSpeedMultiplier ?? 1f;
+            movementSpeedMultiplier *= thirdClothes.maskAsset?.movementSpeedMultiplier ?? 1f;
+            movementSpeedMultiplier *= thirdClothes.glassesAsset?.movementSpeedMultiplier ?? 1f;
+            fallingDamageMultiplier *= thirdClothes.shirtAsset?.fallingDamageMultiplier ?? 1f;
+            fallingDamageMultiplier *= thirdClothes.pantsAsset?.fallingDamageMultiplier ?? 1f;
+            fallingDamageMultiplier *= thirdClothes.hatAsset?.fallingDamageMultiplier ?? 1f;
+            fallingDamageMultiplier *= thirdClothes.backpackAsset?.fallingDamageMultiplier ?? 1f;
+            fallingDamageMultiplier *= thirdClothes.vestAsset?.fallingDamageMultiplier ?? 1f;
+            fallingDamageMultiplier *= thirdClothes.maskAsset?.fallingDamageMultiplier ?? 1f;
+            fallingDamageMultiplier *= thirdClothes.glassesAsset?.fallingDamageMultiplier ?? 1f;
+            preventsFallingBrokenBones |= thirdClothes.shirtAsset?.preventsFallingBrokenBones ?? false;
+            preventsFallingBrokenBones |= thirdClothes.pantsAsset?.preventsFallingBrokenBones ?? false;
+            preventsFallingBrokenBones |= thirdClothes.hatAsset?.preventsFallingBrokenBones ?? false;
+            preventsFallingBrokenBones |= thirdClothes.backpackAsset?.preventsFallingBrokenBones ?? false;
+            preventsFallingBrokenBones |= thirdClothes.vestAsset?.preventsFallingBrokenBones ?? false;
+            preventsFallingBrokenBones |= thirdClothes.maskAsset?.preventsFallingBrokenBones ?? false;
+            preventsFallingBrokenBones |= thirdClothes.glassesAsset?.preventsFallingBrokenBones ?? false;
         }
     }
 }
