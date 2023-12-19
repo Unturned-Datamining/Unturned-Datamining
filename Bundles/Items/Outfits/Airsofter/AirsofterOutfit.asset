@@ -1,0 +1,25 @@
+"Metadata"
+{
+	"GUID" "77ac860d317b4009bb6e5729cfabae24"
+	"Type" "SDG.Unturned.OutfitAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"Items"
+	[
+		// Bandana Mask
+		70cf2ec92b6d40a49c33249c330aa5d0
+
+		// Helmet
+		55c6feb4c715417587d9124e639f539e
+
+		// Pants
+		38b661a7b882474984a5427196c16f83
+
+		// Shirt
+		93702174230a47c9be22491cbcbea175
+
+		// Vest
+		abc113698aff4c3da4b6d5c369177c93
+	]
+}
