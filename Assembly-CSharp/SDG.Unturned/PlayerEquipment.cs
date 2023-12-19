@@ -2183,7 +2183,7 @@ public class PlayerEquipment : PlayerCaller
         }
     }
 
-    private void updateVision()
+    internal void updateVision()
     {
         if (hasVision && base.player.clothing.glassesState != null && base.player.clothing.glassesState.Length != 0 && base.player.clothing.glassesState[0] != 0)
         {
@@ -2194,6 +2194,7 @@ public class PlayerEquipment : PlayerCaller
                 {
                     LevelLighting.vision = ELightingVision.NONE;
                     LevelLighting.updateLighting();
+                    LevelLighting.updateLocal();
                     PlayerLifeUI.updateGrayscale();
                 }
             }
@@ -2211,6 +2212,7 @@ public class PlayerEquipment : PlayerCaller
                     LevelLighting.nightvisionColor = base.player.clothing.glassesAsset.nightvisionColor;
                     LevelLighting.nightvisionFogIntensity = base.player.clothing.glassesAsset.nightvisionFogIntensity;
                     LevelLighting.updateLighting();
+                    LevelLighting.updateLocal();
                     PlayerLifeUI.updateGrayscale();
                 }
             }
@@ -2223,6 +2225,7 @@ public class PlayerEquipment : PlayerCaller
             {
                 LevelLighting.vision = ELightingVision.NONE;
                 LevelLighting.updateLighting();
+                LevelLighting.updateLocal();
                 PlayerLifeUI.updateGrayscale();
             }
             base.player.updateGlassesLights(on: false);

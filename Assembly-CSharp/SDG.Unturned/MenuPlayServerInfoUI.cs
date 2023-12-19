@@ -411,7 +411,7 @@ public class MenuPlayServerInfoUI
             MenuPlayConnectUI.open();
             break;
         case EServerInfoOpenContext.SERVERS:
-            MenuPlayUI.serverListUI.open();
+            MenuPlayUI.serverListUI.open(shouldRefresh: false);
             break;
         }
         close();

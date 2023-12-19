@@ -358,7 +358,7 @@ public class MenuUI : MonoBehaviour
                     MenuPlayConnectUI.open();
                     break;
                 case MenuPlayServerInfoUI.EServerInfoOpenContext.SERVERS:
-                    MenuPlayUI.serverListUI.open();
+                    MenuPlayUI.serverListUI.open(shouldRefresh: false);
                     break;
                 default:
                     UnturnedLog.info("Unknown server info open context: {0}", MenuPlayServerInfoUI.openContext);
@@ -368,7 +368,7 @@ public class MenuUI : MonoBehaviour
             else if (MenuPlayServersUI.serverListFiltersUI.active)
             {
                 MenuPlayServersUI.serverListFiltersUI.close();
-                MenuPlayUI.serverListUI.open();
+                MenuPlayUI.serverListUI.open(shouldRefresh: true);
             }
             else if (MenuPlayConnectUI.active || MenuPlayUI.serverListUI.active || MenuPlaySingleplayerUI.active || MenuPlayLobbiesUI.active)
             {

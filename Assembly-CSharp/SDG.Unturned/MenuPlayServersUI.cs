@@ -101,7 +101,7 @@ public class MenuPlayServersUI : SleekFullscreenBox
 
     public static MenuPlayServerListFiltersUI serverListFiltersUI;
 
-    public void open()
+    public void open(bool shouldRefresh)
     {
         if (!active)
         {
@@ -113,7 +113,7 @@ public class MenuPlayServersUI : SleekFullscreenBox
                 FilterSettings.activeFilters.presetName = localization.format("DefaultPreset_Internet_Label");
                 FilterSettings.InvokeActiveFiltersReplaced();
             }
-            else
+            else if (shouldRefresh)
             {
                 CancelAndRefresh();
             }
@@ -455,10 +455,20 @@ public class MenuPlayServersUI : SleekFullscreenBox
         FilterSettings.MarkActiveFilterModified();
     }
 
+    private void OnNameSubmitted(ISleekField field)
+    {
+        CancelAndRefresh();
+    }
+
     private void onTypedMapField(ISleekField field, string text)
     {
         FilterSettings.activeFilters.mapName = text;
         FilterSettings.MarkActiveFilterModified();
+    }
+
+    private void OnMapSubmitted(ISleekField field)
+    {
+        CancelAndRefresh();
     }
 
     private void onSwappedMonetizationState(SleekButtonState button, int index)
@@ -668,6 +678,7 @@ public class MenuPlayServersUI : SleekFullscreenBox
         nameField.PlaceholderText = localization.format("Name_Filter_Hint");
         nameField.TooltipText = localization.format("Name_Filter_Label");
         nameField.OnTextChanged += onTypedNameField;
+        nameField.OnTextSubmitted += OnNameSubmitted;
         filtersEditorContainer.AddChild(nameField);
         num++;
         mapField = Glazier.Get().CreateStringField();
@@ -678,6 +689,7 @@ public class MenuPlayServersUI : SleekFullscreenBox
         mapField.PlaceholderText = localization.format("Map_Filter_Hint");
         mapField.TooltipText = localization.format("Map_Filter_Label");
         mapField.OnTextChanged += onTypedMapField;
+        mapField.OnTextSubmitted += OnMapSubmitted;
         mapField.MaxLength = 64;
         filtersEditorContainer.AddChild(mapField);
         num++;
@@ -1021,6 +1033,10 @@ public class MenuPlayServersUI : SleekFullscreenBox
     public override void OnDestroy()
     {
         base.OnDestroy();
+        if (isRefreshing)
+        {
+            Provider.provider.matchmakingService.cancelRequest();
+        }
         TempSteamworksMatchmaking matchmakingService = Provider.provider.matchmakingService;
         matchmakingService.onMasterServerAdded = (TempSteamworksMatchmaking.MasterServerAdded)Delegate.Remove(matchmakingService.onMasterServerAdded, new TempSteamworksMatchmaking.MasterServerAdded(onMasterServerAdded));
         TempSteamworksMatchmaking matchmakingService2 = Provider.provider.matchmakingService;

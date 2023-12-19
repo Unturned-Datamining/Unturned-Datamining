@@ -241,7 +241,7 @@ public class MenuPlayServerListFiltersUI : SleekFullscreenBox
 
     private void onClickedBackButton(ISleekElement button)
     {
-        MenuPlayUI.serverListUI.open();
+        MenuPlayUI.serverListUI.open(shouldRefresh: true);
         close();
     }
 

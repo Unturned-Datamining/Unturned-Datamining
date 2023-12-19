@@ -751,7 +751,7 @@ public class Assets : MonoBehaviour
     {
         string path = file.path;
         DatDictionary assetData = file.assetData;
-        byte[] hash = file.hash;
+        byte[] array = file.hash;
         if (!string.IsNullOrEmpty(file.assetError))
         {
             reportError("Error parsing \"" + path + "\": \"" + file.assetError + "\"");
@@ -858,14 +858,16 @@ public class Assets : MonoBehaviour
                 value2 = value2.Replace('\\', '/');
             }
             bundle = new MasterBundle(masterBundleConfig, value2, text);
+            string text3 = value2.ToLower() + "/" + text.ToLower();
+            array = Hash.combine(array, Hash.SHA1(text3));
             a = masterBundleConfig.version;
         }
         else if (datDictionary.ContainsKey("Bundle_Override_Path"))
         {
             string string3 = datDictionary.GetString("Bundle_Override_Path");
             int num = string3.LastIndexOf('/');
-            string text3 = ((num != -1) ? string3.Substring(num + 1) : string3);
-            string3 = string3 + "/" + text3 + ".unity3d";
+            string text4 = ((num != -1) ? string3.Substring(num + 1) : string3);
+            string3 = string3 + "/" + text4 + ".unity3d";
             bundle = new Bundle(string3, usePath: false, text);
         }
         else
@@ -912,7 +914,7 @@ public class Assets : MonoBehaviour
         {
             asset.id = id;
             asset.GUID = value;
-            asset.hash = hash;
+            asset.hash = array;
             asset.requiredShaderUpgrade = bundle.convertShadersToStandard || bundle.consolidateShaders;
             asset.absoluteOriginFilePath = path;
             asset.origin = file.origin;

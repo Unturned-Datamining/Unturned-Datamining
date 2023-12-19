@@ -18,7 +18,7 @@ public class CommandCopyServerCode : Command
     {
         localization = newLocalization;
         _command = "CopyServerCode";
-        _info = string.Empty;
-        _help = string.Empty;
+        _info = "CopyServerCode";
+        _help = "Copies the Server Code to the system clipboard. Your friends can join the server by Server Code without port forwarding.";
     }
 }

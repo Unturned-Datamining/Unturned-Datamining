@@ -56,7 +56,7 @@ public class MenuPlayUI
 
     private static void onClickedServersButton(ISleekElement button)
     {
-        serverListUI.open();
+        serverListUI.open(shouldRefresh: true);
         close();
     }
 

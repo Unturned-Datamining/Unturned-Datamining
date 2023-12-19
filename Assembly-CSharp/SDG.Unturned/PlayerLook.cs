@@ -427,7 +427,7 @@ public class PlayerLook : PlayerCaller
     {
         if (scopeVision != 0 && !(scopeCamera.targetTexture != null))
         {
-            enableVision();
+            ApplyScopeVisionToLighting();
             isOverlayActive = true;
         }
     }
@@ -464,7 +464,7 @@ public class PlayerLook : PlayerCaller
         UnturnedPostProcess.instance.notifyPerspectiveChanged();
     }
 
-    private void enableVision()
+    private void ApplyScopeVisionToLighting()
     {
         tempVision = LevelLighting.vision;
         tempNightvisionColor = LevelLighting.nightvisionColor;
@@ -479,18 +479,18 @@ public class PlayerLook : PlayerCaller
 
     public void disableOverlay()
     {
-        if (perspective != 0)
-        {
-            tempVision = ELightingVision.NONE;
-        }
         if (isOverlayActive)
         {
-            disableVision();
             isOverlayActive = false;
+            base.player.equipment.updateVision();
         }
     }
 
-    private void disableVision()
+    /// <summary>
+    /// This is only used after capturing dual-render scope, not when exiting scope overlay.
+    /// Otherwise the lighting vision may have changed between entering and exiting the scope.
+    /// </summary>
+    private void RestoreSavedLightingVision()
     {
         LevelLighting.vision = tempVision;
         LevelLighting.nightvisionColor = tempNightvisionColor;
@@ -1295,9 +1295,9 @@ public class PlayerLook : PlayerCaller
             base.player.animator.viewmodelParentTransform.rotation = instance.transform.rotation;
             if (isScopeActive && scopeCamera.targetTexture != null && scopeVision != 0)
             {
-                enableVision();
+                ApplyScopeVisionToLighting();
                 scopeCamera.Render();
-                disableVision();
+                RestoreSavedLightingVision();
             }
             if (base.player.movement.getVehicle() != null && base.player.movement.getVehicle().passengers[base.player.movement.getSeat()].turret != null)
             {

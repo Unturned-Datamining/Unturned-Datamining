@@ -38,7 +38,7 @@ public class CommandCopyFakeIP : Command
     {
         localization = newLocalization;
         _command = "CopyFakeIP";
-        _info = string.Empty;
-        _help = string.Empty;
+        _info = "CopyFakeIP";
+        _help = "Copies the Fake IP to the system clipboard. Your friends can join the server by Fake IP without port forwarding.";
     }
 }
