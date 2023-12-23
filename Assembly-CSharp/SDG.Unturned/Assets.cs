@@ -858,7 +858,7 @@ public class Assets : MonoBehaviour
                 value2 = value2.Replace('\\', '/');
             }
             bundle = new MasterBundle(masterBundleConfig, value2, text);
-            string text3 = value2.ToLower() + "/" + text.ToLower();
+            string text3 = value2.ToLowerInvariant() + "/" + text.ToLowerInvariant();
             array = Hash.combine(array, Hash.SHA1(text3));
             a = masterBundleConfig.version;
         }

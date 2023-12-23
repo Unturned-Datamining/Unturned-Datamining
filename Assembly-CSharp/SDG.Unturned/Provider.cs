@@ -406,6 +406,8 @@ public class Provider : MonoBehaviour
     /// </summary>
     internal static bool isBattlEyeActive;
 
+    private static bool hasSetIsBattlEyeActive;
+
     private static bool isServerConnectedToSteam;
 
     internal static BuiltinAutoShutdown autoShutdownManager = null;
@@ -1415,12 +1417,6 @@ public class Provider : MonoBehaviour
                 RequestDisconnect("server map advertisement mismatch (Advertisement: \"" + CurrentServerAdvertisement.map + "\" Response: \"" + response.levelName + "\")");
                 return;
             }
-            if (CurrentServerAdvertisement.IsVACSecure != response.isVACSecure)
-            {
-                _connectionFailureInfo = ESteamConnectionFailureInfo.SERVER_VAC_ADVERTISEMENT_MISMATCH;
-                RequestDisconnect($"server VAC advertisement mismatch (Advertisement: {CurrentServerAdvertisement.IsVACSecure} Response: {response.isVACSecure})");
-                return;
-            }
             if (CurrentServerAdvertisement.IsBattlEyeSecure != response.isBattlEyeSecure)
             {
                 _connectionFailureInfo = ESteamConnectionFailureInfo.SERVER_BATTLEYE_ADVERTISEMENT_MISMATCH;
@@ -2377,7 +2373,7 @@ public class Provider : MonoBehaviour
         }
         if (isServer)
         {
-            if (IsBattlEyeEnabled && battlEyeServerHandle != IntPtr.Zero)
+            if (isBattlEyeActive && battlEyeServerHandle != IntPtr.Zero)
             {
                 if (battlEyeServerRunData != null && battlEyeServerRunData.pfnExit != null)
                 {
@@ -2681,7 +2677,11 @@ public class Provider : MonoBehaviour
             SteamGameServer.SetKeyValue("GameVersion", APP_VERSION);
             int num = 128;
             string text6 = (isPvP ? "PVP" : "PVE") + "," + (hasCheats ? "CHy" : "CHn") + "," + getModeTagAbbreviation(mode) + "," + getCameraModeTagAbbreviation(cameraMode) + "," + ((getServerWorkshopFileIDs().Count > 0) ? "WSy" : "WSn") + "," + (isGold ? "GLD" : "F2P");
-            text6 = text6 + "," + (IsBattlEyeEnabled ? "BEy" : "BEn");
+            text6 = text6 + "," + (isBattlEyeActive ? "BEy" : "BEn");
+            if (!hasSetIsBattlEyeActive)
+            {
+                CommandWindow.LogError("Order of things is messed up! isBattlEyeActive should have been set before advertising game server.");
+            }
             string monetizationTagAbbreviation = GetMonetizationTagAbbreviation(configData.Browser.Monetization);
             if (!string.IsNullOrEmpty(monetizationTagAbbreviation))
             {
@@ -4275,6 +4275,7 @@ public class Provider : MonoBehaviour
         {
             isBattlEyeActive = false;
         }
+        hasSetIsBattlEyeActive = true;
         bool flag = !Dedicator.offlineOnly;
         if (flag)
         {

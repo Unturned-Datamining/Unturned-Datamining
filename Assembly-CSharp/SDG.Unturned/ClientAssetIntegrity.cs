@@ -115,13 +115,15 @@ internal static class ClientAssetIntegrity
             while (num6 >= num2)
             {
                 KeyValuePair<Guid, Asset> keyValuePair2 = pendingValidation[num6];
-                writer.WriteGuid(keyValuePair2.Key);
+                Guid key = keyValuePair2.Key;
+                writer.WriteGuid(key);
                 if ((num3 & (uint)(1 << num4)) != 0)
                 {
                     Asset value2 = keyValuePair2.Value;
                     if (value2.originMasterBundle != null && value2.originMasterBundle.doesHashFileExist && value2.originMasterBundle.hash != null && value2.originMasterBundle.hash.Length == 20)
                     {
-                        writer.WriteBytes(Hash.combine(value2.hash, value2.originMasterBundle.hash));
+                        byte[] bytes = Hash.combine(value2.hash, value2.originMasterBundle.hash);
+                        writer.WriteBytes(bytes);
                     }
                     else
                     {
