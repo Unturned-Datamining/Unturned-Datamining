@@ -1,14 +1,11 @@
 MainMenuAlert
 {
-	Id 44
-	Header LIVE: EVENTures Global's last Unturned event of the year!
-	Body From the organizers: "EVENTures Global 200 player arena event has started! Go check out their live broadcast on Twitch, and cheer on your favorite team!"
-	Color #FF55FF
-	Link https://www.twitch.tv/weslieg
-	IconURL https://cdn.smartlydressedgames.com/Images/EVENTSlogo.png
-	UseTimeWindow true
-	StartTime 2023-12-09 00:30:00
-	EndTime 2023-12-10 02:30:00
+	Id 45
+	Header Sign-ups open for LiamDoesGame’s 20 Person Group Tournament!
+	Body From the organizers: "Compete with 20-person teams over the course of 3 days as you prepare, fight, and—eventually—raid opposing teams in an effort to destroy their team flag and eliminate them from the event."
+	Color #41FFDA
+	Link https://discord.com/invite/ldg
+	IconURL https://cdn.smartlydressedgames.com/Images/LDGbanner.jpg
 }
 MainMenuWorkshop
 {
