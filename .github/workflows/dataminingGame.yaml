@@ -72,6 +72,7 @@ jobs:
         git config --global user.email "diffoz@users.noreply.github.com"
         git config --global user.name "DiFFoZ"
 
-        git add .
+        git add -A
+        git status
         git commit -m "${{ steps.generate_commit_message.outputs.message }}"
         git push
