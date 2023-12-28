@@ -31,9 +31,15 @@ public class OptionsSettings
 
     private const byte SAVEDATA_VERSION_ADDED_VOICE_ALWAYS_RECORDING = 47;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 47;
+    /// <summary>
+    /// Nelson 2023-12-28: this option was causing players to crash in the 3.23.14.0 update. Hopefully
+    /// it's resolved for the patch, but to be safe it will default to false.
+    /// </summary>
+    private const byte SAVEDATA_VERSION_RESET_VOICE_ALWAYS_RECORDING = 48;
 
-    public static readonly byte SAVEDATA_VERSION = 47;
+    private const byte SAVEDATA_VERSION_NEWEST = 48;
+
+    public static readonly byte SAVEDATA_VERSION = 48;
 
     public static readonly byte MIN_FOV = 60;
 
@@ -381,7 +387,7 @@ public class OptionsSettings
         fontColor = new Color(0.9f, 0.9f, 0.9f);
         shadowColor = Color.black;
         badColor = Palette.COLOR_R;
-        _voiceAlwaysRecording = true;
+        _voiceAlwaysRecording = false;
     }
 
     public static void load()
@@ -672,10 +678,14 @@ public class OptionsSettings
         if (b >= 47)
         {
             _voiceAlwaysRecording = block.readBoolean();
+            if (b < 48)
+            {
+                _voiceAlwaysRecording = false;
+            }
         }
         else
         {
-            _voiceAlwaysRecording = true;
+            _voiceAlwaysRecording = false;
         }
         if (!Provider.isPro)
         {
@@ -690,7 +700,7 @@ public class OptionsSettings
     public static void save()
     {
         Block block = new Block();
-        block.writeByte(47);
+        block.writeByte(48);
         block.writeBoolean(music);
         block.writeBoolean(splashscreen);
         block.writeBoolean(timer);

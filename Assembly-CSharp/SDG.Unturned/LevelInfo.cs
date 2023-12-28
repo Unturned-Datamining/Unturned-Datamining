@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace SDG.Unturned;
@@ -11,10 +12,6 @@ public class LevelInfo
     private ELevelType _type;
 
     private bool _isEditable;
-
-    private LevelAsset cachedAsset;
-
-    private bool didResolveAsset;
 
     private Local cachedLocalization;
 
@@ -110,34 +107,6 @@ public class LevelInfo
     public bool isEditable => _isEditable;
 
     public LevelInfoConfigData configData { get; private set; }
-
-    /// <summary>
-    /// Cache level's asset, if any.
-    /// </summary>
-    public LevelAsset resolveAsset()
-    {
-        if (cachedAsset == null && !didResolveAsset)
-        {
-            didResolveAsset = true;
-            if (configData != null && configData.Asset.isValid)
-            {
-                cachedAsset = Assets.find(configData.Asset);
-                if (cachedAsset == null)
-                {
-                    UnturnedLog.warn("Unable to find level asset {0} for {1}", configData.Asset, name);
-                }
-            }
-            if (cachedAsset == null)
-            {
-                cachedAsset = Assets.find(LevelAsset.defaultLevel);
-                if (cachedAsset == null)
-                {
-                    UnturnedLog.warn("Unable to find default level asset for {0}", name);
-                }
-            }
-        }
-        return cachedAsset;
-    }
 
     public Local getLocalization()
     {
@@ -245,5 +214,20 @@ public class LevelInfo
         isFromWorkshop = publishedFileId != 0;
         this.publishedFileId = publishedFileId;
         this.hash = hash;
+    }
+
+    [Obsolete("Please use Level.getAsset instead. LevelInfo persists between loads now. (public issue #4273)")]
+    public LevelAsset resolveAsset()
+    {
+        LevelAsset levelAsset = null;
+        if (configData != null && configData.Asset.isValid)
+        {
+            levelAsset = Assets.find(configData.Asset);
+        }
+        if (levelAsset == null)
+        {
+            levelAsset = Assets.find(LevelAsset.defaultLevel);
+        }
+        return levelAsset;
     }
 }

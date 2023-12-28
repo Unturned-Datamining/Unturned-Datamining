@@ -16,7 +16,7 @@ public class PlayerVoice : PlayerCaller
     /// Speaker writes compressed audio to this buffer.
     /// Listener copies network buffer here for decompression.
     /// </summary>
-    private static readonly byte[] COMPRESSED_VOICE_BUFFER = new byte[8000];
+    private static byte[] compressedVoiceBuffer = new byte[8000];
 
     /// <summary>
     /// Listener writes decompressed PCM data to this buffer.
@@ -93,8 +93,6 @@ public class PlayerVoice : PlayerCaller
     /// Timer counting down to end playback.
     /// </summary>
     private float availablePlaybackTime;
-
-    private bool wasRecording;
 
     /// <summary>
     /// Accumulated realtime since we last polled data from voice subsystem.
@@ -275,9 +273,8 @@ public class PlayerVoice : PlayerCaller
                 return;
             }
             _inputWantsToRecord = value;
-            if (inputWantsToRecord && !wasRecording)
+            if (_inputWantsToRecord)
             {
-                wasRecording = true;
                 pollRecordingTimer = 0f;
             }
             SynchronizeSteamIsRecording();
@@ -478,9 +475,9 @@ public class PlayerVoice : PlayerCaller
             NetPakReader reader = context.reader;
             reader.ReadUInt16(out var value);
             reader.ReadBit(out var value2);
-            if (reader.ReadBytes(COMPRESSED_VOICE_BUFFER, value))
+            if (reader.ReadBytes(compressedVoiceBuffer, value))
             {
-                AppendVoiceData(COMPRESSED_VOICE_BUFFER, value, value2);
+                AppendVoiceData(compressedVoiceBuffer, value, value2);
             }
         }
     }
@@ -546,20 +543,15 @@ public class PlayerVoice : PlayerCaller
     /// </summary>
     private void updateRecording()
     {
-        if (!wasRecording)
-        {
-            return;
-        }
         pollRecordingTimer += Time.unscaledDeltaTime;
         if (pollRecordingTimer < RECORDING_POLL_INTERVAL)
         {
             return;
         }
-        wasRecording = inputWantsToRecord;
         pollRecordingTimer = 0f;
         uint pcbCompressed;
         EVoiceResult availableVoice = SteamUser.GetAvailableVoice(out pcbCompressed);
-        if (availableVoice != 0 && availableVoice != EVoiceResult.k_EVoiceResultNoData)
+        if (availableVoice != 0 && availableVoice != EVoiceResult.k_EVoiceResultNoData && availableVoice != EVoiceResult.k_EVoiceResultNotRecording)
         {
             UnturnedLog.error("GetAvailableVoice result: " + availableVoice);
         }
@@ -567,19 +559,24 @@ public class PlayerVoice : PlayerCaller
         {
             return;
         }
+        if (pcbCompressed > compressedVoiceBuffer.Length)
+        {
+            UnturnedLog.info($"Resizing compressed voice buffer ({compressedVoiceBuffer.Length}) to fit available size ({pcbCompressed})");
+            compressedVoiceBuffer = new byte[pcbCompressed];
+        }
         uint compressedSize;
-        EVoiceResult voice = SteamUser.GetVoice(bWantCompressed: true, COMPRESSED_VOICE_BUFFER, pcbCompressed, out compressedSize);
+        EVoiceResult voice = SteamUser.GetVoice(bWantCompressed: true, compressedVoiceBuffer, pcbCompressed, out compressedSize);
         if (voice != 0 && voice != EVoiceResult.k_EVoiceResultNoData)
         {
             UnturnedLog.error("GetVoice result: " + voice);
         }
-        if (voice != 0 || compressedSize < 1)
+        if (voice != 0 || compressedSize < 1 || !_inputWantsToRecord)
         {
             return;
         }
         if (Provider.isServer)
         {
-            AppendVoiceData(COMPRESSED_VOICE_BUFFER, compressedSize, hasUseableWalkieTalkie);
+            AppendVoiceData(compressedVoiceBuffer, compressedSize, hasUseableWalkieTalkie);
             return;
         }
         SendVoiceChatRelay.Invoke(GetNetId(), ENetReliability.Unreliable, delegate(NetPakWriter writer)
@@ -587,7 +584,7 @@ public class PlayerVoice : PlayerCaller
             ushort num = (ushort)compressedSize;
             writer.WriteUInt16(num);
             writer.WriteBit(hasUseableWalkieTalkie);
-            writer.WriteBytes(COMPRESSED_VOICE_BUFFER, num);
+            writer.WriteBytes(compressedVoiceBuffer, num);
         });
     }
 

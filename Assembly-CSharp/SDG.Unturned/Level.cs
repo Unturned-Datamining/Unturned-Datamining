@@ -78,6 +78,10 @@ public class Level : MonoBehaviour
 
     private static LevelInfo _info;
 
+    private static LevelAsset cachedLevelAsset;
+
+    private static bool didResolveLevelAsset;
+
     private static GameObject satelliteCaptureGameObject;
 
     private static Transform satelliteCaptureTransform;
@@ -451,16 +455,38 @@ public class Level : MonoBehaviour
         onLevelsRefreshed?.Invoke();
     }
 
+    private static void ResetCachedLevelAsset()
+    {
+        cachedLevelAsset = null;
+        didResolveLevelAsset = false;
+    }
+
     /// <summary>
     /// Get level's cached asset, if any.
     /// </summary>
     public static LevelAsset getAsset()
     {
-        if (info == null)
+        if (!didResolveLevelAsset)
         {
-            return null;
+            didResolveLevelAsset = true;
+            if (info != null && info.configData != null && info.configData.Asset.isValid)
+            {
+                cachedLevelAsset = Assets.find(info.configData.Asset);
+                if (cachedLevelAsset == null)
+                {
+                    UnturnedLog.warn("Unable to find level asset {0} for {1}", info.configData.Asset, info.name);
+                }
+            }
+            if (cachedLevelAsset == null)
+            {
+                cachedLevelAsset = Assets.find(LevelAsset.defaultLevel);
+                if (cachedLevelAsset == null)
+                {
+                    UnturnedLog.error("Unable to find default level asset");
+                }
+            }
         }
-        return info.resolveAsset();
+        return cachedLevelAsset;
     }
 
     private static void updateCachedHolidayRedirects()
@@ -553,6 +579,7 @@ public class Level : MonoBehaviour
         _isEditor = true;
         isExiting = false;
         _info = newInfo;
+        ResetCachedLevelAsset();
         LoadingUI.updateScene();
         SceneManager.LoadScene("Game");
         PlayLevelLoadingScreenMusic();
@@ -568,6 +595,7 @@ public class Level : MonoBehaviour
         _isEditor = false;
         isExiting = false;
         _info = newInfo;
+        ResetCachedLevelAsset();
         LoadingUI.updateScene();
         SceneManager.LoadScene("Game");
         PlayLevelLoadingScreenMusic();
@@ -654,6 +682,7 @@ public class Level : MonoBehaviour
         _isEditor = false;
         isExiting = true;
         _info = null;
+        ResetCachedLevelAsset();
         LoadingUI.updateScene();
         if (!Dedicator.IsDedicatedServer)
         {

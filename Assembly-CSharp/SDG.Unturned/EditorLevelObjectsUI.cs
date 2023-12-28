@@ -433,6 +433,7 @@ public class EditorLevelObjectsUI : SleekFullscreenBox
         materialPaletteOverrideField.AddLabel(local.format("MaterialPaletteOverride_Label"), ESleekSide.RIGHT);
         materialPaletteOverrideField.TooltipText = local.format("MaterialPaletteOverride_Tooltip");
         materialPaletteOverrideField.OnTextChanged += OnTypedMaterialPaletteOverride;
+        materialPaletteOverrideField.IsVisible = false;
         AddChild(materialPaletteOverrideField);
         materialIndexOverrideField = Glazier.Get().CreateInt32Field();
         materialIndexOverrideField.PositionOffset_Y = -270f;
@@ -442,6 +443,7 @@ public class EditorLevelObjectsUI : SleekFullscreenBox
         materialIndexOverrideField.AddLabel(local.format("MaterialIndexOverride_Label"), ESleekSide.RIGHT);
         materialIndexOverrideField.TooltipText = local.format("MaterialIndexOverride_Tooltip");
         materialIndexOverrideField.OnValueChanged += OnTypedMaterialIndexOverride;
+        materialIndexOverrideField.IsVisible = false;
         AddChild(materialIndexOverrideField);
         snapTransformField = Glazier.Get().CreateFloat32Field();
         snapTransformField.PositionOffset_Y = -230f;
