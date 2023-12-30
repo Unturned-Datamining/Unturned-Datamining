@@ -1,11 +1,6 @@
 MainMenuAlert
 {
-	Id 45
-	Header Sign-ups open for LiamDoesGame’s 20 Person Group Tournament!
-	Body From the organizers: "Compete with 20-person teams over the course of 3 days as you prepare, fight, and—eventually—raid opposing teams in an effort to destroy their team flag and eliminate them from the event."
-	Color #41FFDA
-	Link https://discord.com/invite/ldg
-	IconURL https://cdn.smartlydressedgames.com/Images/LDGbanner.jpg
+	Id 46
 }
 MainMenuWorkshop
 {
