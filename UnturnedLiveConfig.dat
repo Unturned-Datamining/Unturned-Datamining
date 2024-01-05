@@ -1,6 +1,14 @@
 MainMenuAlert
 {
-	Id 46
+	Id 47
+	Header LIVE: LiamDoesGame's 20 Man Group Tournament: Watch as teams fight each other
+	Body From the organizers: "It's the second day of the 3-day competition hosted by LiamDoesGame! Check out the livestream on YouTube as these 20-person teams prepare, fight, and raid to defend their team's flag!"
+	Color #41FFDA
+	Link https://www.youtube.com/@LiamDoesGame/
+	IconURL https://cdn.smartlydressedgames.com/Images/LDGbanner.jpg
+	UseTimeWindow true
+	StartTime 2024-01-06 09:00:00
+	EndTime 2024-01-06 21:00:00
 }
 MainMenuWorkshop
 {
