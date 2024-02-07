@@ -16,7 +16,7 @@
 		"Name" ""
 		"Path" ""
 	}
-	"Physics_Material" "CONCRETE_STATIC"
+	"Physics_Material" "GRAVEL_STATIC"
 	"Foliage"
 	{
 		"GUID" "f03f4210890847f49cc7e981924e60ae"

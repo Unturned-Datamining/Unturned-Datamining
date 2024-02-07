@@ -1,3 +1,4 @@
+using System;
 using Pathfinding;
 using UnityEngine;
 
@@ -123,7 +124,7 @@ public class InteractableObjectBinaryState : InteractableObject
         navmeshCut.center = box.center;
         navmeshCut.rectangleSize = new Vector2(box.size.x, box.size.z);
         navmeshCut.height = box.size.y;
-        Object.Destroy(box);
+        UnityEngine.Object.Destroy(box);
         return navmeshCut;
     }
 
@@ -244,17 +245,17 @@ public class InteractableObjectBinaryState : InteractableObject
         this.onStateInitialized?.Invoke(this);
     }
 
-    public void setUsedFromClientOrServer(bool newUsed)
+    public void SetUsedFromClientOrServer(bool newUsed, InteractableObjectBinaryStateEventHook.EListenServerHostMode listenServerHostMode)
     {
         if (newUsed != isUsed)
         {
-            if (Dedicator.IsDedicatedServer)
+            if (!Dedicator.IsDedicatedServer && (!Provider.isServer || ((listenServerHostMode == InteractableObjectBinaryStateEventHook.EListenServerHostMode.RequestAsClient || listenServerHostMode != InteractableObjectBinaryStateEventHook.EListenServerHostMode.OverrideState) ? true : false)))
             {
-                ObjectManager.forceObjectBinaryState(base.transform, newUsed);
+                ObjectManager.toggleObjectBinaryState(base.transform, newUsed);
             }
             else
             {
-                ObjectManager.toggleObjectBinaryState(base.transform, newUsed);
+                ObjectManager.forceObjectBinaryState(base.transform, newUsed);
             }
         }
     }
@@ -394,7 +395,13 @@ public class InteractableObjectBinaryState : InteractableObject
     {
         if (material != null)
         {
-            Object.DestroyImmediate(material);
+            UnityEngine.Object.DestroyImmediate(material);
         }
+    }
+
+    [Obsolete("Matches behavior from before addition of EListenServerHostMode.")]
+    public void setUsedFromClientOrServer(bool newUsed)
+    {
+        SetUsedFromClientOrServer(newUsed, InteractableObjectBinaryStateEventHook.EListenServerHostMode.RequestAsClient);
     }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-public class InteractableObjectDropper : InteractableObject
+public class InteractableObjectDropper : InteractableObjectTriggerableBase
 {
     private float lastUsed = -9999f;
 

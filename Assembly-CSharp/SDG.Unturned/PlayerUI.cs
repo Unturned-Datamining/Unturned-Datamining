@@ -1274,6 +1274,7 @@ public class PlayerUI : MonoBehaviour
             return;
         }
         Camera camera = MainCamera.instance;
+        bool areSpecStatsVisible = Player.player.look.areSpecStatsVisible;
         for (int i = 0; i < groupUI.groups.Count; i++)
         {
             ISleekLabel sleekLabel = groupUI.groups[i];
@@ -1283,7 +1284,7 @@ public class PlayerUI : MonoBehaviour
                 continue;
             }
             bool flag;
-            if (Player.player.look.areSpecStatsVisible)
+            if (areSpecStatsVisible)
             {
                 flag = true;
             }
@@ -1316,6 +1317,18 @@ public class PlayerUI : MonoBehaviour
             Vector2 vector2 = groupUI.ViewportToNormalizedPosition(vector);
             sleekLabel.PositionScale_X = vector2.x;
             sleekLabel.PositionScale_Y = vector2.y;
+            float alpha;
+            if (areSpecStatsVisible)
+            {
+                alpha = 1f;
+            }
+            else
+            {
+                float magnitude = new Vector2(vector2.x - 0.5f, vector2.y - 0.5f).magnitude;
+                float t = Mathf.InverseLerp(0.05f, 0.1f, magnitude);
+                alpha = Mathf.Lerp(0.1f, 0.75f, t);
+            }
+            sleekLabel.TextColor = new SleekColor(ESleekTint.FONT, alpha);
             if (!sleekLabel.IsVisible)
             {
                 if (steamPlayer.isMemberOfSameGroupAs(Player.player) && !string.IsNullOrEmpty(steamPlayer.playerID.nickName))

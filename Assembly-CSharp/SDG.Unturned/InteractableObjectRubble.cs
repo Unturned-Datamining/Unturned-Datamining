@@ -236,7 +236,8 @@ public class InteractableObjectRubble : MonoBehaviour
         Transform transform = base.transform.Find("Sections");
         if (transform != null)
         {
-            rubbleInfos = new RubbleInfo[transform.childCount];
+            int num = Mathf.Min(transform.childCount, 8);
+            rubbleInfos = new RubbleInfo[num];
             for (int i = 0; i < rubbleInfos.Length; i++)
             {
                 Transform section = transform.Find("Section_" + i);

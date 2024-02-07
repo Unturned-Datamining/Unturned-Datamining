@@ -975,6 +975,15 @@ public class Provider : MonoBehaviour
         bool enableScreenshotSupersampling = OptionsSettings.enableScreenshotSupersampling;
         int max = (enableScreenshotSupersampling ? 4 : 16);
         int sizeMultiplier = Mathf.Clamp(OptionsSettings.screenshotSizeMultiplier, 1, max);
+        int finalWidth = Screen.width * sizeMultiplier;
+        int finalHeight = Screen.height * sizeMultiplier;
+        int maxTextureSize = SystemInfo.maxTextureSize;
+        if (finalWidth > maxTextureSize || finalHeight > maxTextureSize)
+        {
+            UnturnedLog.warn($"Unable to capture {finalWidth}x{finalHeight} screenshot because it exceeds max supported texture size ({maxTextureSize})");
+            isCapturingScreenshot = false;
+            yield break;
+        }
         if (sizeMultiplier > 1 || enableScreenshotSupersampling)
         {
             UnturnedPostProcess.instance.DisableAntiAliasingForScreenshot = true;
@@ -988,8 +997,6 @@ public class Provider : MonoBehaviour
             text += "_NoUI";
         }
         string filePath = Path.Combine(path, text + ".png");
-        int finalWidth = Screen.width * sizeMultiplier;
-        int finalHeight = Screen.height * sizeMultiplier;
         UnturnedLog.info($"Capturing {finalWidth}x{finalHeight} screenshot (Size Multiplier: {sizeMultiplier} Use Supersampling: {enableScreenshotSupersampling} HUD Visible: {flag})");
         if (enableScreenshotSupersampling)
         {
@@ -2624,7 +2631,6 @@ public class Provider : MonoBehaviour
         Level.load(level, hasAuthority: true);
         loadGameMode();
         applyLevelModeConfigOverrides();
-        dswUpdateMonitor = DedicatedWorkshopUpdateMonitorFactory.createForLevel(level);
         SteamGameServer.SetMaxPlayerCount(maxPlayers);
         SteamGameServer.SetServerName(serverName);
         SteamGameServer.SetPasswordProtected(serverPassword != "");
@@ -2761,6 +2767,7 @@ public class Provider : MonoBehaviour
             AdvertiseConfig();
             SteamPluginAdvertising.Get().NotifyGameServerReady();
         }
+        dswUpdateMonitor = DedicatedWorkshopUpdateMonitorFactory.createForLevel(level);
         _server = SteamGameServer.GetSteamID();
         _client = _server;
         _clientHash = Hash.SHA1(client);
@@ -3100,19 +3107,23 @@ public class Provider : MonoBehaviour
         clientsWithBadConnecion.Clear();
         float realtimeSinceStartup = Time.realtimeSinceStartup;
         float num = 0f;
+        int num2 = 0;
+        int num3 = 0;
+        int num4 = 0;
         foreach (SteamPlayer client in clients)
         {
-            float num2 = realtimeSinceStartup - client.timeLastPacketWasReceivedFromClient;
-            num += num2;
-            if (num2 > configData.Server.Timeout_Game_Seconds)
+            float num5 = realtimeSinceStartup - client.timeLastPacketWasReceivedFromClient;
+            if (num5 > configData.Server.Timeout_Game_Seconds)
             {
                 if (CommandWindow.shouldLogJoinLeave)
                 {
                     SteamPlayerID playerID = client.playerID;
                     CommandWindow.Log(localization.format("Dismiss_Timeout", playerID.steamID, playerID.playerName, playerID.characterName));
                 }
-                UnturnedLog.info($"Kicking {client.transportConnection} after {num2}s without message");
+                UnturnedLog.info($"Kicking {client.transportConnection} after {num5} s without message");
                 clientsWithBadConnecion.Add(client);
+                num += num5;
+                num2++;
             }
             else
             {
@@ -3120,23 +3131,28 @@ public class Provider : MonoBehaviour
                 {
                     continue;
                 }
-                int num3 = Mathf.FloorToInt(client.ping * 1000f);
-                if (num3 > configData.Server.Max_Ping_Milliseconds)
+                int num6 = Mathf.FloorToInt(client.ping * 1000f);
+                if (num6 > configData.Server.Max_Ping_Milliseconds)
                 {
                     if (CommandWindow.shouldLogJoinLeave)
                     {
                         SteamPlayerID playerID2 = client.playerID;
-                        CommandWindow.Log(localization.format("Dismiss_Ping", num3, configData.Server.Max_Ping_Milliseconds, playerID2.steamID, playerID2.playerName, playerID2.characterName));
+                        CommandWindow.Log(localization.format("Dismiss_Ping", num6, configData.Server.Max_Ping_Milliseconds, playerID2.steamID, playerID2.playerName, playerID2.characterName));
                     }
-                    UnturnedLog.info($"Kicking {client.transportConnection} because their ping ({num3}ms) exceeds limit ({configData.Server.Max_Ping_Milliseconds}ms)");
+                    UnturnedLog.info($"Kicking {client.transportConnection} because their ping ({num6} ms) exceeds limit ({configData.Server.Max_Ping_Milliseconds} ms)");
                     clientsWithBadConnecion.Add(client);
+                    num3 += num6;
+                    num4++;
                 }
             }
         }
         if (clientsWithBadConnecion.Count > 1)
         {
-            float num4 = num / (float)clientsWithBadConnecion.Count;
-            UnturnedLog.info($"Kicking {clientsWithBadConnecion.Count} clients with bad connection this frame. Maybe something blocked the main thread on the server? Average time since last message: {num4}s");
+            UnturnedLog.info($"Kicking {clientsWithBadConnecion.Count} clients with bad connection this frame. Maybe something blocked the main thread on the server? ({clientsWithBadConnecion.Count} clients kicked of {clients.Count} total clients)");
+            float num7 = ((num2 > 0) ? (num / (float)clientsWithBadConnecion.Count) : 0f);
+            UnturnedLog.info($"Kicking {num2} for exceeding timeout limit ({configData.Server.Timeout_Game_Seconds} s) with average of {num7} s without message");
+            int num8 = ((num4 > 0) ? (num3 / num4) : 0);
+            UnturnedLog.info($"Kicking {num4} for exceeding ping limit ({configData.Server.Max_Ping_Milliseconds} ms) with average of {num8} ms ping");
         }
         foreach (SteamPlayer item in clientsWithBadConnecion)
         {

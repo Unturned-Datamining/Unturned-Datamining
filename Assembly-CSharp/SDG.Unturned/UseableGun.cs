@@ -1193,11 +1193,11 @@ public class UseableGun : Useable
                 parameters2.instigator = base.player;
                 parameters2.zombieStunOverride = equippedGunAsset.zombieStunOverride;
                 parameters2.ragdollEffect = useableRagdollEffect;
-                DamageTool.damageZombie(parameters2, out kill, out xp);
                 if (base.player.movement.nav != byte.MaxValue)
                 {
-                    input.zombie.alert(base.transform.position, isStartling: true);
+                    parameters2.AlertPosition = base.transform.position;
                 }
+                DamageTool.damageZombie(parameters2, out kill, out xp);
             }
         }
         else if (input.type == ERaycastInfoType.ANIMAL && input.animal != null)
@@ -1207,8 +1207,8 @@ public class UseableGun : Useable
             parameters3.times = num;
             parameters3.instigator = base.player;
             parameters3.ragdollEffect = useableRagdollEffect;
+            parameters3.AlertPosition = base.transform.position;
             DamageTool.damageAnimal(parameters3, out kill, out xp);
-            input.animal.alertDamagedFromPoint(base.transform.position);
         }
         if (input.type != ERaycastInfoType.PLAYER && input.type != ERaycastInfoType.ZOMBIE && input.type != ERaycastInfoType.ANIMAL && !base.player.life.isAggressor)
         {
@@ -1582,11 +1582,11 @@ public class UseableGun : Useable
                         parameters2.respectArmor = !flag2;
                         parameters2.instigator = base.player;
                         parameters2.ragdollEffect = useableRagdollEffect;
-                        DamageTool.damageZombie(parameters2, out kill, out xp);
                         if (base.player.movement.nav != byte.MaxValue)
                         {
-                            input.zombie.alert(base.transform.position, isStartling: true);
+                            parameters2.AlertPosition = base.transform.position;
                         }
+                        DamageTool.damageZombie(parameters2, out kill, out xp);
                     }
                 }
                 else if (input.type == ERaycastInfoType.ANIMAL)
@@ -1599,8 +1599,8 @@ public class UseableGun : Useable
                         parameters3.times = bulletDamageMultiplier;
                         parameters3.instigator = base.player;
                         parameters3.ragdollEffect = useableRagdollEffect;
+                        parameters3.AlertPosition = base.transform.position;
                         DamageTool.damageAnimal(parameters3, out kill, out xp);
-                        input.animal.alertDamagedFromPoint(base.transform.position);
                     }
                 }
                 else if (input.type == ERaycastInfoType.VEHICLE)

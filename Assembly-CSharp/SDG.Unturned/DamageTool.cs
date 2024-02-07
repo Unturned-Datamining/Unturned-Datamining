@@ -517,11 +517,13 @@ public class DamageTool
         {
             kill = EPlayerKill.NONE;
             xp = 0u;
+            return;
         }
-        else
+        ushort num2 = (ushort)Mathf.Min(65535, num);
+        parameters.zombie.askDamage(num2, parameters.direction * (int)num2, out kill, out xp, trackKill: true, dropLoot: true, parameters.zombieStunOverride, parameters.ragdollEffect);
+        if (parameters.AlertPosition.HasValue)
         {
-            ushort num2 = (ushort)Mathf.Min(65535, num);
-            parameters.zombie.askDamage(num2, parameters.direction * (int)num2, out kill, out xp, trackKill: true, dropLoot: true, parameters.zombieStunOverride, parameters.ragdollEffect);
+            parameters.zombie.alert(parameters.AlertPosition.Value, isStartling: true);
         }
     }
 
@@ -582,11 +584,13 @@ public class DamageTool
         {
             kill = EPlayerKill.NONE;
             xp = 0u;
+            return;
         }
-        else
+        ushort num2 = (ushort)Mathf.Min(65535, num);
+        parameters.animal.askDamage(num2, parameters.direction * (int)num2, out kill, out xp, trackKill: true, dropLoot: true, parameters.ragdollEffect);
+        if (parameters.AlertPosition.HasValue)
         {
-            ushort num2 = (ushort)Mathf.Min(65535, num);
-            parameters.animal.askDamage(num2, parameters.direction * (int)num2, out kill, out xp, trackKill: true, dropLoot: true, parameters.ragdollEffect);
+            parameters.animal.alertDamagedFromPoint(parameters.AlertPosition.Value);
         }
     }
 

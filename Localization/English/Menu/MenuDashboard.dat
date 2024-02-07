@@ -186,6 +186,11 @@ SteamNetworkingSockets_EndReason_Misc_SteamConnectivity Steam is experiencing co
 SteamNetworkingSockets_EndReason_Misc_Unknown Unknown miscellaneous connection error: {0}
 SteamNetworkingSockets_EndReason_Unknown Connected ended for unknown reason: {0}
 
+UGC_NeedsToAcceptWorkshopLegalAgreement Failed to create or update item because you need to accept the newest Steam Workshop legal agreement.
+UGC_UnknownResult Failed to create or update item. Steam error code: {0}
+UGC_IOError Failed to create or update item because of an unknown I/O issue.
+UGC_Success Successfully submitted to Steam!
+
 Pro_Title Permanent Gold Upgrade
 Pro_Button Gain access to extra character customization, premium servers, character slots and more by upgrading to a Gold account! Further details available on the store page.
 Pro_Button_Tooltip Click here to view the store page.

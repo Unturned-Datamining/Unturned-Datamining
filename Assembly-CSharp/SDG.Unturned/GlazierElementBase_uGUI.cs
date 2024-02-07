@@ -117,6 +117,7 @@ internal abstract class GlazierElementBase_uGUI : GlazierElementBase
                     transform.DestroyComponentIfExists<VerticalLayoutGroup>();
                 }
                 ApplyChildPerpendicularAlignment();
+                ApplyChildLayoutPadding();
             }
         }
     }
@@ -168,6 +169,15 @@ internal abstract class GlazierElementBase_uGUI : GlazierElementBase
                     transform.DestroyComponentIfExists<LayoutElement>();
                 }
             }
+        }
+    }
+
+    public override float ChildAutoLayoutPadding
+    {
+        set
+        {
+            _childAutoLayoutPadding = value;
+            ApplyChildLayoutPadding();
         }
     }
 
@@ -421,6 +431,21 @@ internal abstract class GlazierElementBase_uGUI : GlazierElementBase
                 component.childAlignment = TextAnchor.LowerLeft;
                 break;
             }
+        }
+    }
+
+    private void ApplyChildLayoutPadding()
+    {
+        int num = Mathf.RoundToInt(_childAutoLayoutPadding);
+        RectOffset padding = new RectOffset(num, num, num, num);
+        switch (_useChildAutoLayout)
+        {
+        case ESleekChildLayout.Horizontal:
+            transform.GetComponent<HorizontalLayoutGroup>().padding = padding;
+            break;
+        case ESleekChildLayout.Vertical:
+            transform.GetComponent<VerticalLayoutGroup>().padding = padding;
+            break;
         }
     }
 }

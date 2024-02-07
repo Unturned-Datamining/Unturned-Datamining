@@ -12,9 +12,18 @@ public class UseableMelee : Useable
 
     private float startedSwing;
 
-    private uint weakTime;
+    private float weakAttackAnimLengthSeconds;
 
-    private uint strongTime;
+    private float strongAttackAnimLengthSeconds;
+
+    private uint weakAttackAnimLengthFrames;
+
+    private uint strongAttackAnimLengthFrames;
+
+    /// <summary>
+    /// For non-repeat weapons the "Use" audio clip is played once time reaches this point.
+    /// </summary>
+    private double playUseSoundTime;
 
     private bool isUsing;
 
@@ -52,11 +61,11 @@ public class UseableMelee : Useable
         {
             if (swingMode == ESwingMode.WEAK)
             {
-                return base.player.input.simulation - startedUse > weakTime;
+                return base.player.input.simulation - startedUse > weakAttackAnimLengthFrames;
             }
             if (swingMode == ESwingMode.STRONG)
             {
-                return base.player.input.simulation - startedUse > strongTime;
+                return base.player.input.simulation - startedUse > strongAttackAnimLengthFrames;
             }
             return false;
         }
@@ -68,11 +77,11 @@ public class UseableMelee : Useable
         {
             if (swingMode == ESwingMode.WEAK)
             {
-                return (float)(base.player.input.simulation - startedUse) > (float)weakTime * equippedMeleeAsset.weak;
+                return (float)(base.player.input.simulation - startedUse) > (float)weakAttackAnimLengthFrames * equippedMeleeAsset.weak;
             }
             if (swingMode == ESwingMode.STRONG)
             {
-                return (float)(base.player.input.simulation - startedUse) > (float)strongTime * equippedMeleeAsset.strong;
+                return (float)(base.player.input.simulation - startedUse) > (float)strongAttackAnimLengthFrames * equippedMeleeAsset.strong;
             }
             return false;
         }
@@ -99,10 +108,12 @@ public class UseableMelee : Useable
         if (swingMode == ESwingMode.WEAK)
         {
             base.player.animator.play("Weak", smooth: false);
+            playUseSoundTime = Time.timeAsDouble + (double)(weakAttackAnimLengthSeconds * equippedMeleeAsset.weak);
         }
         else if (swingMode == ESwingMode.STRONG)
         {
             base.player.animator.play("Strong", smooth: false);
+            playUseSoundTime = Time.timeAsDouble + (double)(strongAttackAnimLengthSeconds * equippedMeleeAsset.strong);
         }
     }
 
@@ -443,11 +454,11 @@ public class UseableMelee : Useable
                 parameters2.instigator = base.player;
                 parameters2.zombieStunOverride = eZombieStunOverride;
                 parameters2.ragdollEffect = useableRagdollEffect;
-                DamageTool.damageZombie(parameters2, out kill, out xp);
                 if (base.player.movement.nav != byte.MaxValue)
                 {
-                    input.zombie.alert(base.transform.position, isStartling: true);
+                    parameters2.AlertPosition = base.transform.position;
                 }
+                DamageTool.damageZombie(parameters2, out kill, out xp);
             }
         }
         else if (input.type == ERaycastInfoType.ANIMAL)
@@ -459,8 +470,8 @@ public class UseableMelee : Useable
                 parameters3.times = num2;
                 parameters3.instigator = base.player;
                 parameters3.ragdollEffect = useableRagdollEffect;
+                parameters3.AlertPosition = base.transform.position;
                 DamageTool.damageAnimal(parameters3, out kill, out xp);
-                input.animal.alertDamagedFromPoint(base.transform.position);
             }
         }
         else if (input.type == ERaycastInfoType.VEHICLE)
@@ -739,14 +750,16 @@ public class UseableMelee : Useable
             {
                 thirdEmitter = base.player.equipment.thirdModel.Find("Hit").GetComponent<ParticleSystem>();
             }
-            weakTime = (uint)(base.player.animator.GetAnimationLength("Start_Swing") / PlayerInput.RATE);
-            strongTime = (uint)(base.player.animator.GetAnimationLength("Stop_Swing") / PlayerInput.RATE);
+            weakAttackAnimLengthSeconds = base.player.animator.GetAnimationLength("Start_Swing");
+            strongAttackAnimLengthSeconds = base.player.animator.GetAnimationLength("Stop_Swing");
         }
         else
         {
-            weakTime = (uint)(base.player.animator.GetAnimationLength("Weak") / PlayerInput.RATE);
-            strongTime = (uint)(base.player.animator.GetAnimationLength("Strong") / PlayerInput.RATE);
+            weakAttackAnimLengthSeconds = base.player.animator.GetAnimationLength("Weak");
+            strongAttackAnimLengthSeconds = base.player.animator.GetAnimationLength("Strong");
         }
+        weakAttackAnimLengthFrames = (uint)(weakAttackAnimLengthSeconds / PlayerInput.RATE);
+        strongAttackAnimLengthFrames = (uint)(strongAttackAnimLengthSeconds / PlayerInput.RATE);
     }
 
     public override void dequip()
@@ -803,7 +816,7 @@ public class UseableMelee : Useable
                     }
                 }
             }
-            else if (isDamageable)
+            else if (Time.timeAsDouble >= playUseSoundTime)
             {
                 if (swingMode == ESwingMode.WEAK)
                 {

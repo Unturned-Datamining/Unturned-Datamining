@@ -59,11 +59,20 @@ public struct MasterBundleReference<T> : IFormattedFileReadable, IFormattedFileW
             {
                 return false;
             }
-            if (Assets.currentMasterBundle != null)
+            int num = datValue.value.IndexOf(':');
+            if (num < 0)
             {
-                name = Assets.currentMasterBundle.assetBundleName;
+                if (Assets.currentMasterBundle != null)
+                {
+                    name = Assets.currentMasterBundle.assetBundleName;
+                }
+                path = datValue.value;
             }
-            path = datValue.value;
+            else
+            {
+                name = datValue.value.Substring(0, num);
+                path = datValue.value.Substring(num + 1);
+            }
             return true;
         }
         if (node is DatDictionary datDictionary)

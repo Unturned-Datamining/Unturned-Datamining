@@ -207,6 +207,18 @@ public class SleekWrapper : ISleekElement
         }
     }
 
+    public float ChildAutoLayoutPadding
+    {
+        get
+        {
+            return implementation.ChildAutoLayoutPadding;
+        }
+        set
+        {
+            implementation.ChildAutoLayoutPadding = value;
+        }
+    }
+
     public void InternalDestroy()
     {
         implementation.InternalDestroy();

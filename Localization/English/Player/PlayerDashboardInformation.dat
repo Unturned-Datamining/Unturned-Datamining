@@ -7,6 +7,13 @@ Zoom_Out_Button_Tooltip Scale Down
 Center_Button Center
 Center_Button_Tooltip Focus Player
 
+ShowMarkersToggle_Label Show Markers
+ShowMarkersToggle_Tooltip Toggle visibility of markers placed on the map.
+ShowPlayerNamesToggle_Label Show Player Names
+ShowPlayerNamesToggle_Tooltip Toggle visibility of other players' names.
+ShowPlayerAvatarsToggle_Label Show Player Avatars
+ShowPlayerAvatarsToggle_Tooltip Toggle visibility of other players' avatars.
+
 Chart Chart
 Satellite Satellite
 

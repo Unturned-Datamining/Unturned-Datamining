@@ -658,7 +658,7 @@ public class LevelObjects : MonoBehaviour
                             {
                                 UnturnedLog.warn($"Missing asset for default buildable object ID {num9} in region ({b12}, {b13})");
                             }
-                            else if (levelBuildableObject.asset.type != EItemType.BARRICADE && levelBuildableObject.asset.type != EItemType.STRUCTURE)
+                            else if (!(levelBuildableObject.asset is ItemBarricadeAsset) && !(levelBuildableObject.asset is ItemStructureAsset))
                             {
                                 UnturnedLog.warn($"Default buildable object ID {num9} in region ({b12}, {b13}) loaded as {levelBuildableObject.asset.name} (this is probably an ID conflict)");
                             }

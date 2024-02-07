@@ -224,6 +224,8 @@ public class InteractableVehicle : Interactable
 
     internal List<Collider> _vehicleColliders;
 
+    private static List<Collider> _trainCarColliders = new List<Collider>(16);
+
     /// <summary>
     /// Transform used for exit physics queries.
     /// </summary>
@@ -2781,23 +2783,6 @@ public class InteractableVehicle : Interactable
         }
     }
 
-    private void linkTrain()
-    {
-        Vector3 vector = trainCars[0].root.position + trainCars[0].root.forward * (0f - asset.trainCarLength) / 2f;
-        for (int i = 1; i < trainCars.Length; i++)
-        {
-            Vector3 vector2 = trainCars[i].root.position + trainCars[i].root.forward * asset.trainCarLength / 2f;
-            Vector3 vector3 = vector - vector2;
-            float sqrMagnitude = vector3.sqrMagnitude;
-            if (sqrMagnitude > 1f)
-            {
-                float num = Mathf.Clamp01((sqrMagnitude - 1f) / 8f);
-                trainCars[i].root.position += vector3 * num;
-            }
-            vector = trainCars[i].root.position + trainCars[i].root.forward * (0f - asset.trainCarLength) / 2f;
-        }
-    }
-
     private TrainCar getTrainCar(Transform root)
     {
         Transform trackFront = root.Find("Objects")?.Find("Track_Front");
@@ -4066,6 +4051,16 @@ public class InteractableVehicle : Interactable
         _vehicleColliders = new List<Collider>();
         base.gameObject.GetComponentsInChildren(includeInactive: true, _vehicleColliders);
         initCenterCollider();
+        if (trainCars != null)
+        {
+            TrainCar[] array = trainCars;
+            foreach (TrainCar obj in array)
+            {
+                _trainCarColliders.Clear();
+                obj.root.GetComponentsInChildren(includeInactive: true, _trainCarColliders);
+                _vehicleColliders.AddRange(_trainCarColliders);
+            }
+        }
     }
 
     /// <summary>

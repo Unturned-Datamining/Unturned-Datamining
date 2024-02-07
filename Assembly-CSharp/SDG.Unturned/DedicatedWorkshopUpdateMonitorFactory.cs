@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using SDG.Provider;
 using Steamworks;
 
@@ -29,16 +30,41 @@ public static class DedicatedWorkshopUpdateMonitorFactory
     }
 
     /// <summary>
-    /// Create vanilla update monitor that watches for changes to workshop level file.
+    /// Create vanilla update monitor that watches for changes to workshop level file and any other mods.
     /// </summary>
     public static IDedicatedWorkshopUpdateMonitor createDefaultForLevel(LevelInfo level)
     {
-        if (!createMonitoredItemForLevel(level, out var monitoredItem))
+        List<DedicatedWorkshopUpdateMonitor.MonitoredItem> list = new List<DedicatedWorkshopUpdateMonitor.MonitoredItem>();
+        if (createMonitoredItemForLevel(level, out var monitoredItem))
         {
+            CommandWindow.LogFormat("Monitoring workshop map \"{0}\" ({1}) for changes", level.name, level.publishedFileId);
+            list.Add(monitoredItem);
+        }
+        else if (level.isFromWorkshop)
+        {
+            UnturnedLog.info($"Unable to monitor workshop map \"{level.name}\" ({level.publishedFileId}) for changes");
+        }
+        foreach (ulong serverWorkshopFileID in Provider.getServerWorkshopFileIDs())
+        {
+            if (serverWorkshopFileID != level.publishedFileId)
+            {
+                if (createMonitoredItem(new PublishedFileId_t(serverWorkshopFileID), out var monitoredItem2))
+                {
+                    CommandWindow.LogFormat("Monitoring workshop file {0} for changes", serverWorkshopFileID);
+                    list.Add(monitoredItem2);
+                }
+                else
+                {
+                    UnturnedLog.info($"Unable to monitor workshop file {serverWorkshopFileID} for changes");
+                }
+            }
+        }
+        if (list.Count < 1)
+        {
+            UnturnedLog.info("No workshop items to monitor for updates");
             return null;
         }
-        CommandWindow.LogFormat("Monitoring workshop map '{0}' ({1}) for changes", level.name, level.publishedFileId);
-        return new DedicatedWorkshopUpdateMonitor(new DedicatedWorkshopUpdateMonitor.MonitoredItem[1] { monitoredItem });
+        return new DedicatedWorkshopUpdateMonitor(list.ToArray());
     }
 
     /// <summary>

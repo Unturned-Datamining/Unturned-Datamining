@@ -70,9 +70,6 @@ Rich_Presence_Lobby In Lobby
 Say Server
 Console Console
 
-UGC_Fail Failed to submit.
-UGC_Success Successfully submitted!
-
 Map_Missing Failed to find map {0}, defaulting to {1}!
 
 Overlay Steam overlay needs to be enabled.

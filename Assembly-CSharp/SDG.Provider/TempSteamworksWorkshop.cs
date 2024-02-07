@@ -283,53 +283,45 @@ public class TempSteamworksWorkshop
 
     private void onCreateItemResult(CreateItemResult_t callback, bool io)
     {
-        if (callback.m_bUserNeedsToAcceptWorkshopLegalAgreement || callback.m_eResult != EResult.k_EResultOK || io)
+        if (callback.m_bUserNeedsToAcceptWorkshopLegalAgreement)
         {
-            if (callback.m_bUserNeedsToAcceptWorkshopLegalAgreement)
-            {
-                Assets.reportError("Failed to create item because you need to accept the workshop legal agreement.");
-            }
-            if (callback.m_eResult != EResult.k_EResultOK)
-            {
-                Assets.reportError("Failed to create item because: " + callback.m_eResult);
-            }
-            if (io)
-            {
-                Assets.reportError("Failed to create item because of an IO issue.");
-            }
-            MenuUI.alert(SDG.Unturned.Provider.localization.format("UGC_Fail"));
+            MenuUI.alert(MenuDashboardUI.localization.format("UGC_NeedsToAcceptWorkshopLegalAgreement"));
+            return;
         }
-        else
+        if (callback.m_eResult != EResult.k_EResultOK)
         {
-            publishedFileID = callback.m_nPublishedFileId;
-            updateUGC();
+            MenuUI.alert(MenuDashboardUI.localization.format("UGC_UnknownResult", callback.m_eResult));
+            return;
         }
+        if (io)
+        {
+            MenuUI.alert(MenuDashboardUI.localization.format("UGC_IOError"));
+            return;
+        }
+        publishedFileID = callback.m_nPublishedFileId;
+        updateUGC();
     }
 
     private void onSubmitItemUpdateResult(SubmitItemUpdateResult_t callback, bool io)
     {
-        if (callback.m_bUserNeedsToAcceptWorkshopLegalAgreement || callback.m_eResult != EResult.k_EResultOK || io)
+        if (callback.m_bUserNeedsToAcceptWorkshopLegalAgreement)
         {
-            if (callback.m_bUserNeedsToAcceptWorkshopLegalAgreement)
-            {
-                Assets.reportError("Failed to submit update because you need to accept the workshop legal agreement.");
-            }
-            if (callback.m_eResult != EResult.k_EResultOK)
-            {
-                Assets.reportError("Failed to submit update because: " + callback.m_eResult);
-            }
-            if (io)
-            {
-                Assets.reportError("Failed to submit update because of an IO issue.");
-            }
-            MenuUI.alert(SDG.Unturned.Provider.localization.format("UGC_Fail"));
+            MenuUI.alert(MenuDashboardUI.localization.format("UGC_NeedsToAcceptWorkshopLegalAgreement"));
+            return;
         }
-        else
+        if (callback.m_eResult != EResult.k_EResultOK)
         {
-            MenuUI.alert(SDG.Unturned.Provider.localization.format("UGC_Success"));
-            SDG.Unturned.Provider.provider.workshopService.open(publishedFileID);
-            refreshPublished();
+            MenuUI.alert(MenuDashboardUI.localization.format("UGC_UnknownResult", callback.m_eResult));
+            return;
         }
+        if (io)
+        {
+            MenuUI.alert(MenuDashboardUI.localization.format("UGC_IOError"));
+            return;
+        }
+        MenuUI.alert(MenuDashboardUI.localization.format("UGC_Success"));
+        SDG.Unturned.Provider.provider.workshopService.open(publishedFileID);
+        refreshPublished();
     }
 
     private void onQueryCompleted(SteamUGCQueryCompleted_t callback, bool io)

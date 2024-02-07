@@ -7,4 +7,8 @@ SingleplayerButtonTooltip Offline without other players.
 LobbiesButtonText Lobby
 LobbiesButtonTooltip Form a party with your friends to join the same server as a group.
 TutorialButtonText Tutorial
-TutorialButtonTooltip Tutorial
+TutorialButtonTooltip Learn the gameplay basics.
+Tutorial_Confirm_Label Play
+Tutorial_Confirm_Tooltip Proceed with opening the tutorial.
+Tutorial_Deny_Label Cancel
+Tutorial_Deny_Tooltip Cancel opening the tutorial.  

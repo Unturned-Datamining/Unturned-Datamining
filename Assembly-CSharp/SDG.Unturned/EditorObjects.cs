@@ -49,6 +49,8 @@ public class EditorObjects : MonoBehaviour
 
     private static bool hasCopyScale;
 
+    private static bool hasCopiedRotation;
+
     private static TransformHandles handles;
 
     private static EDragMode _dragMode;
@@ -423,6 +425,7 @@ public class EditorObjects : MonoBehaviour
             {
                 copyPosition = handles.GetPivotPosition();
                 copyRotation = handles.GetPivotRotation();
+                hasCopiedRotation = dragCoordinate == EDragCoordinate.LOCAL;
                 if (selection.Count == 1)
                 {
                     copyScale = selection[0].transform.localScale;
@@ -440,7 +443,10 @@ public class EditorObjects : MonoBehaviour
                 if (selection.Count == 1)
                 {
                     selection[0].transform.position = copyPosition;
-                    selection[0].transform.rotation = copyRotation;
+                    if (hasCopiedRotation)
+                    {
+                        selection[0].transform.rotation = copyRotation;
+                    }
                     if (hasCopyScale)
                     {
                         selection[0].transform.localScale = copyScale;
@@ -449,7 +455,7 @@ public class EditorObjects : MonoBehaviour
                 }
                 else
                 {
-                    handles.ExternallyTransformPivot(copyPosition, copyRotation, modifyRotation: true);
+                    handles.ExternallyTransformPivot(copyPosition, copyRotation, hasCopiedRotation);
                 }
                 applySelection();
             }

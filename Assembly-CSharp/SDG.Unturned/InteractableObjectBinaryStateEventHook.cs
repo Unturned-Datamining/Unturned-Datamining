@@ -13,6 +13,19 @@ namespace SDG.Unturned;
 [AddComponentMenu("Unturned/IOBS Event Hook")]
 public class InteractableObjectBinaryStateEventHook : MonoBehaviour
 {
+    public enum EListenServerHostMode
+    {
+        /// <summary>
+        /// When a state change is requested in singleplayer it should be treated as if running as a client on a server.
+        /// This is the default to match behavior from before this option was added.
+        /// </summary>
+        RequestAsClient,
+        /// <summary>
+        /// When a state change is requested in singleplayer it should be treated as if running as a dedicated server.
+        /// </summary>
+        OverrideState
+    }
+
     /// <summary>
     /// Invoked when interactable object enters the Used / On / Enabled state.
     /// </summary>
@@ -30,6 +43,15 @@ public class InteractableObjectBinaryStateEventHook : MonoBehaviour
     /// </summary>
     public bool InvokeWhenInitialized = true;
 
+    /// <summary>
+    /// Controls how state change requests are performed when running as both client and server ("listen server").
+    /// On the dedicated server, requesting a state change overrides the current state without processing NPC
+    /// conditions, whereas when a client requests a state change NPC conditions apply. This option fixes the
+    /// inconsistency in singleplayer of whether to treat as server or client. (public issue #4298)
+    /// At the time of writing (2024-01-29) listen server only applies to singleplayer.
+    /// </summary>
+    public EListenServerHostMode ListenServerHostMode;
+
     private InteractableObjectBinaryState interactable;
 
     /// <summary>
@@ -42,7 +64,7 @@ public class InteractableObjectBinaryStateEventHook : MonoBehaviour
     {
         if (interactable != null)
         {
-            interactable.setUsedFromClientOrServer(newUsed: true);
+            interactable.SetUsedFromClientOrServer(newUsed: true, ListenServerHostMode);
         }
     }
 
@@ -56,7 +78,7 @@ public class InteractableObjectBinaryStateEventHook : MonoBehaviour
     {
         if (interactable != null)
         {
-            interactable.setUsedFromClientOrServer(newUsed: false);
+            interactable.SetUsedFromClientOrServer(newUsed: false, ListenServerHostMode);
         }
     }
 
@@ -70,7 +92,7 @@ public class InteractableObjectBinaryStateEventHook : MonoBehaviour
     {
         if (interactable != null)
         {
-            interactable.setUsedFromClientOrServer(!interactable.isUsed);
+            interactable.SetUsedFromClientOrServer(interactable.isUsed, ListenServerHostMode);
         }
     }
 

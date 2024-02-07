@@ -44,6 +44,11 @@ public struct DamageZombieParameters
         }
     }
 
+    /// <summary>
+    /// If not null and damage is applied, <see cref="M:SDG.Unturned.Zombie.alert(SDG.Unturned.Player)" /> is called with this position (startle: true).
+    /// </summary>
+    public Vector3? AlertPosition { get; set; }
+
     public DamageZombieParameters(Zombie zombie, Vector3 direction, float damage)
     {
         this.zombie = zombie;
@@ -56,6 +61,7 @@ public struct DamageZombieParameters
         times = 1f;
         zombieStunOverride = EZombieStunOverride.None;
         ragdollEffect = ERagdollEffect.NONE;
+        AlertPosition = null;
         instigator = null;
     }
 

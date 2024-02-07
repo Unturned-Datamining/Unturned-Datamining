@@ -119,6 +119,12 @@ public class PlayerDashboardInformationUI
 
     private static ISleekImage arenaAreaCurrentDownOverlay;
 
+    private static ISleekToggle showMarkersToggle;
+
+    private static ISleekToggle showPlayerNamesToggle;
+
+    private static ISleekToggle showPlayerAvatarsToggle;
+
     private static SleekButtonIcon zoomInButton;
 
     private static SleekButtonIcon zoomOutButton;
@@ -197,9 +203,9 @@ public class PlayerDashboardInformationUI
         bool flag = !noLabel.IsVisible;
         mapLocationsContainer.IsVisible = flag;
         bool flag2 = flag && Provider.modeConfigData.Gameplay.Group_Map;
-        mapMarkersContainer.IsVisible = flag2;
+        mapMarkersContainer.IsVisible = flag2 && showMarkersToggle.Value;
         mapArenaContainer.IsVisible = flag2 && LevelManager.levelType == ELevelType.ARENA;
-        mapRemotePlayersContainer.IsVisible = flag2;
+        mapRemotePlayersContainer.IsVisible = flag2 && (showPlayerNamesToggle.Value || showPlayerAvatarsToggle.Value);
         localPlayerImage.IsVisible = flag2;
     }
 
@@ -323,37 +329,41 @@ public class PlayerDashboardInformationUI
                 continue;
             }
             bool flag = client.player.quests.isMemberOfSameGroupAs(Player.player);
-            if (areSpecStatsVisible || flag)
+            if (!(areSpecStatsVisible || flag))
             {
-                ISleekImage sleekImage;
-                if (num < remotePlayerImages.Count)
-                {
-                    sleekImage = remotePlayerImages[num];
-                    sleekImage.IsVisible = true;
-                }
-                else
-                {
-                    sleekImage = Glazier.Get().CreateImage();
-                    sleekImage.PositionOffset_X = -10f;
-                    sleekImage.PositionOffset_Y = -10f;
-                    sleekImage.SizeOffset_X = 20f;
-                    sleekImage.SizeOffset_Y = 20f;
-                    sleekImage.AddLabel(string.Empty, ESleekSide.RIGHT);
-                    mapRemotePlayersContainer.AddChild(sleekImage);
-                    remotePlayerImages.Add(sleekImage);
-                }
-                num++;
-                Vector2 vector = ProjectWorldPositionToMap(client.player.transform.position);
-                sleekImage.PositionScale_X = vector.x;
-                sleekImage.PositionScale_Y = vector.y;
-                if (OptionsSettings.streamer)
-                {
-                    sleekImage.Texture = null;
-                }
-                else
-                {
-                    sleekImage.Texture = Provider.provider.communityService.getIcon(client.playerID.steamID, shouldCache: true);
-                }
+                continue;
+            }
+            ISleekImage sleekImage;
+            if (num < remotePlayerImages.Count)
+            {
+                sleekImage = remotePlayerImages[num];
+                sleekImage.IsVisible = true;
+            }
+            else
+            {
+                sleekImage = Glazier.Get().CreateImage();
+                sleekImage.PositionOffset_X = -10f;
+                sleekImage.PositionOffset_Y = -10f;
+                sleekImage.SizeOffset_X = 20f;
+                sleekImage.SizeOffset_Y = 20f;
+                sleekImage.AddLabel(string.Empty, ESleekSide.RIGHT);
+                mapRemotePlayersContainer.AddChild(sleekImage);
+                remotePlayerImages.Add(sleekImage);
+            }
+            num++;
+            Vector2 vector = ProjectWorldPositionToMap(client.player.transform.position);
+            sleekImage.PositionScale_X = vector.x;
+            sleekImage.PositionScale_Y = vector.y;
+            if (OptionsSettings.streamer || !showPlayerAvatarsToggle.Value)
+            {
+                sleekImage.Texture = null;
+            }
+            else
+            {
+                sleekImage.Texture = Provider.provider.communityService.getIcon(client.playerID.steamID, shouldCache: true);
+            }
+            if (showPlayerNamesToggle.Value)
+            {
                 if (flag && !string.IsNullOrEmpty(client.playerID.nickName))
                 {
                     sleekImage.UpdateLabel(client.playerID.nickName);
@@ -362,6 +372,10 @@ public class PlayerDashboardInformationUI
                 {
                     sleekImage.UpdateLabel(client.playerID.characterName);
                 }
+            }
+            else
+            {
+                sleekImage.UpdateLabel(string.Empty);
             }
         }
         for (int num2 = remotePlayerImages.Count - 1; num2 >= num; num2--)
@@ -860,6 +874,12 @@ public class PlayerDashboardInformationUI
         quests.sendSetMarker(newIsMarkerPlaced, newMarkerPosition);
     }
 
+    private static void OnShowMarkersToggled(ISleekToggle toggle, bool value)
+    {
+        synchronizeMapVisibility(mapButtonState.state);
+        updateDynamicMap();
+    }
+
     private static void onClickedZoomInButton(ISleekElement button)
     {
         if (zoomMultiplier < maxZoomMultiplier)
@@ -1061,7 +1081,7 @@ public class PlayerDashboardInformationUI
         mapInspect.SizeScale_Y = 1f;
         backdropBox.AddChild(mapInspect);
         ISleekConstraintFrame sleekConstraintFrame = Glazier.Get().CreateConstraintFrame();
-        sleekConstraintFrame.SizeOffset_Y = -40f;
+        sleekConstraintFrame.SizeOffset_Y = -80f;
         sleekConstraintFrame.SizeScale_X = 1f;
         sleekConstraintFrame.SizeScale_Y = 1f;
         sleekConstraintFrame.Constraint = ESleekConstraint.FitInParent;
@@ -1145,7 +1165,7 @@ public class PlayerDashboardInformationUI
         arenaAreaCurrentDownOverlay.SizeScale_X = 1f;
         mapArenaContainer.AddChild(arenaAreaCurrentDownOverlay);
         noLabel = Glazier.Get().CreateLabel();
-        noLabel.SizeOffset_Y = -40f;
+        noLabel.SizeOffset_Y = -80f;
         noLabel.SizeScale_X = 1f;
         noLabel.SizeScale_Y = 1f;
         noLabel.TextColor = Color.black;
@@ -1154,6 +1174,32 @@ public class PlayerDashboardInformationUI
         mapInspect.AddChild(noLabel);
         noLabel.IsVisible = false;
         updateZoom();
+        showMarkersToggle = Glazier.Get().CreateToggle();
+        showMarkersToggle.PositionOffset_Y = -70f;
+        showMarkersToggle.PositionScale_Y = 1f;
+        showMarkersToggle.AddLabel(localization.format("ShowMarkersToggle_Label"), ESleekSide.RIGHT);
+        showMarkersToggle.TooltipText = localization.format("ShowMarkersToggle_Tooltip");
+        showMarkersToggle.Value = true;
+        showMarkersToggle.OnValueChanged += OnShowMarkersToggled;
+        mapInspect.AddChild(showMarkersToggle);
+        showPlayerNamesToggle = Glazier.Get().CreateToggle();
+        showPlayerNamesToggle.PositionOffset_Y = -70f;
+        showPlayerNamesToggle.PositionScale_X = 0.25f;
+        showPlayerNamesToggle.PositionScale_Y = 1f;
+        showPlayerNamesToggle.AddLabel(localization.format("ShowPlayerNamesToggle_Label"), ESleekSide.RIGHT);
+        showPlayerNamesToggle.TooltipText = localization.format("ShowPlayerNamesToggle_Tooltip");
+        showPlayerNamesToggle.Value = true;
+        showPlayerNamesToggle.OnValueChanged += OnShowMarkersToggled;
+        mapInspect.AddChild(showPlayerNamesToggle);
+        showPlayerAvatarsToggle = Glazier.Get().CreateToggle();
+        showPlayerAvatarsToggle.PositionOffset_Y = -70f;
+        showPlayerAvatarsToggle.PositionScale_X = 0.5f;
+        showPlayerAvatarsToggle.PositionScale_Y = 1f;
+        showPlayerAvatarsToggle.AddLabel(localization.format("ShowPlayerAvatarsToggle_Label"), ESleekSide.RIGHT);
+        showPlayerAvatarsToggle.TooltipText = localization.format("ShowPlayerAvatarsToggle_Tooltip");
+        showPlayerAvatarsToggle.Value = true;
+        showPlayerAvatarsToggle.OnValueChanged += OnShowMarkersToggled;
+        mapInspect.AddChild(showPlayerAvatarsToggle);
         zoomInButton = new SleekButtonIcon(icons.load<Texture2D>("Zoom_In"));
         zoomInButton.PositionOffset_Y = -30f;
         zoomInButton.PositionScale_Y = 1f;

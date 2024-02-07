@@ -41,6 +41,8 @@ public class PlayerWorkzone : PlayerCaller
 
     private Quaternion copyRotation;
 
+    private bool hasCopiedRotation;
+
     private TransformHandles handles;
 
     private EDragMode _dragMode;
@@ -310,6 +312,7 @@ public class PlayerWorkzone : PlayerCaller
             {
                 copyPosition = handles.GetPivotPosition();
                 copyRotation = handles.GetPivotRotation();
+                hasCopiedRotation = dragCoordinate == EDragCoordinate.LOCAL;
             }
             if (InputEx.GetKeyDown(KeyCode.N) && selection.Count > 0 && copyPosition != Vector3.zero && InputEx.GetKey(KeyCode.LeftControl))
             {
@@ -317,12 +320,15 @@ public class PlayerWorkzone : PlayerCaller
                 if (selection.Count == 1)
                 {
                     selection[0].transform.position = copyPosition;
-                    selection[0].transform.rotation = copyRotation;
+                    if (hasCopiedRotation)
+                    {
+                        selection[0].transform.rotation = copyRotation;
+                    }
                     calculateHandleOffsets();
                 }
                 else
                 {
-                    handles.ExternallyTransformPivot(copyPosition, copyRotation, modifyRotation: true);
+                    handles.ExternallyTransformPivot(copyPosition, copyRotation, hasCopiedRotation);
                 }
                 applySelection();
             }

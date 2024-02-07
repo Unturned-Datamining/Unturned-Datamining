@@ -1694,16 +1694,21 @@ public class PlayerEquipment : PlayerCaller
         }
     }
 
+    internal void PlayPunchAudioClip()
+    {
+        AudioClip audioClip = punchClipRef.loadAsset();
+        if (audioClip == null)
+        {
+            UnturnedLog.warn("Missing built-in punching audio");
+        }
+        base.player.playSound(audioClip);
+    }
+
     private void punch(EPlayerPunch mode)
     {
         if (base.channel.IsLocalPlayer)
         {
-            AudioClip audioClip = punchClipRef.loadAsset();
-            if (audioClip == null)
-            {
-                UnturnedLog.warn("Missing built-in punching audio");
-            }
-            base.player.playSound(audioClip);
+            PlayPunchAudioClip();
             RaycastInfo raycastInfo = DamageTool.raycast(new Ray(base.player.look.aim.position, base.player.look.aim.forward), 1.75f, RayMasks.DAMAGE_CLIENT, base.player);
             if (raycastInfo.player != null && DAMAGE_PLAYER_MULTIPLIER.damage > 1f && DamageTool.isPlayerAllowedToDamagePlayer(base.player, raycastInfo.player))
             {
@@ -1832,11 +1837,11 @@ public class PlayerEquipment : PlayerCaller
                 parameters2.allowBackstab = true;
                 parameters2.respectArmor = true;
                 parameters2.instigator = base.player;
-                DamageTool.damageZombie(parameters2, out kill, out xp);
                 if (base.player.movement.nav != byte.MaxValue)
                 {
-                    input.zombie.alert(base.transform.position, isStartling: true);
+                    parameters2.AlertPosition = base.transform.position;
                 }
+                DamageTool.damageZombie(parameters2, out kill, out xp);
             }
         }
         else if (input.type == ERaycastInfoType.ANIMAL)
@@ -1848,8 +1853,8 @@ public class PlayerEquipment : PlayerCaller
                 DamageAnimalParameters parameters3 = DamageAnimalParameters.make(input.animal, input.direction, dAMAGE_ANIMAL_MULTIPLIER, input.limb);
                 parameters3.times = num;
                 parameters3.instigator = base.player;
+                parameters3.AlertPosition = base.transform.position;
                 DamageTool.damageAnimal(parameters3, out kill, out xp);
-                input.animal.alertDamagedFromPoint(base.transform.position);
             }
         }
         else if (input.type == ERaycastInfoType.VEHICLE)

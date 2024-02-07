@@ -272,13 +272,25 @@ public class ObjectAsset : Asset
             }
             AssetValidation.searchGameObjectForErrors(this, asset);
         }
-        if (interactability == EObjectInteractability.BINARY_STATE && (bool)Assets.shouldValidateAssets)
+        if (!Assets.shouldValidateAssets)
+        {
+            return;
+        }
+        if (interactability == EObjectInteractability.BINARY_STATE)
         {
             Animation animation = asset.transform.Find("Root")?.GetComponent<Animation>();
             if (animation != null)
             {
                 validateAnimation(animation, "Open");
                 validateAnimation(animation, "Close");
+            }
+        }
+        if (interactability == EObjectInteractability.RUBBLE || rubble != 0)
+        {
+            Transform transform3 = asset.transform.Find("Sections");
+            if (transform3 != null && transform3.childCount > 8)
+            {
+                Assets.reportError(this, $"destructible has {transform3.childCount} sections, but the maximum supported is 8");
             }
         }
     }
@@ -616,48 +628,6 @@ public class ObjectAsset : Asset
         }
         else
         {
-            if (Dedicator.IsDedicatedServer && data.ParseBool("Has_Clip_Prefab", defaultValue: true))
-            {
-                bundle.loadDeferred("Clip", out legacyServerModel, (LoadedAssetDeferredCallback<GameObject>)OnServerModelLoaded);
-            }
-            bundle.loadDeferred("Object", out clientModel, (LoadedAssetDeferredCallback<GameObject>)OnClientModelLoaded);
-            if (!Dedicator.IsDedicatedServer)
-            {
-                bundle.loadDeferred("Skybox", out skyboxGameObject, (LoadedAssetDeferredCallback<GameObject>)null);
-            }
-            bundle.loadDeferred("Nav", out navGameObject, (LoadedAssetDeferredCallback<GameObject>)onNavGameObjectLoaded);
-            bundle.loadDeferred("Slots", out slotsGameObject, (LoadedAssetDeferredCallback<GameObject>)onSlotsGameObjectLoaded);
-            bundle.loadDeferred("Triggers", out triggersGameObject, (LoadedAssetDeferredCallback<GameObject>)null);
-            isSnowshoe = data.ContainsKey("Snowshoe");
-            if (data.ContainsKey("Chart"))
-            {
-                chart = (EObjectChart)Enum.Parse(typeof(EObjectChart), data.GetString("Chart"), ignoreCase: true);
-            }
-            else
-            {
-                chart = EObjectChart.NONE;
-            }
-            isFuel = data.ContainsKey("Fuel");
-            isRefill = data.ContainsKey("Refill");
-            isSoft = data.ContainsKey("Soft");
-            causesFallDamage = data.ParseBool("Causes_Fall_Damage", defaultValue: true);
-            isCollisionImportant = data.ContainsKey("Collision_Important") || type == EObjectType.LARGE;
-            shouldExcludeFromCullingVolumes = data.ParseBool("Exclude_From_Culling_Volumes");
-            if (isFuel || isRefill)
-            {
-                Assets.reportError(this, "is using the legacy fuel/water system");
-            }
-            if (data.ContainsKey("LOD"))
-            {
-                lod = (EObjectLOD)Enum.Parse(typeof(EObjectLOD), data.GetString("LOD"), ignoreCase: true);
-                lodBias = data.ParseFloat("LOD_Bias");
-                if (lodBias < 0.01f)
-                {
-                    lodBias = 1f;
-                }
-                cullingVolumeLocalPositionOffset = data.LegacyParseVector3("LOD_Center");
-                cullingVolumeSizeOffset = data.LegacyParseVector3("LOD_Size");
-            }
             if (data.ContainsKey("Interactability"))
             {
                 interactability = (EObjectInteractability)Enum.Parse(typeof(EObjectInteractability), data.GetString("Interactability"), ignoreCase: true);
@@ -779,6 +749,48 @@ public class ObjectAsset : Asset
                 {
                     rubbleEditor = EObjectRubbleEditor.ALIVE;
                 }
+            }
+            if (Dedicator.IsDedicatedServer && data.ParseBool("Has_Clip_Prefab", defaultValue: true))
+            {
+                bundle.loadDeferred("Clip", out legacyServerModel, (LoadedAssetDeferredCallback<GameObject>)OnServerModelLoaded);
+            }
+            bundle.loadDeferred("Object", out clientModel, (LoadedAssetDeferredCallback<GameObject>)OnClientModelLoaded);
+            if (!Dedicator.IsDedicatedServer)
+            {
+                bundle.loadDeferred("Skybox", out skyboxGameObject, (LoadedAssetDeferredCallback<GameObject>)null);
+            }
+            bundle.loadDeferred("Nav", out navGameObject, (LoadedAssetDeferredCallback<GameObject>)onNavGameObjectLoaded);
+            bundle.loadDeferred("Slots", out slotsGameObject, (LoadedAssetDeferredCallback<GameObject>)onSlotsGameObjectLoaded);
+            bundle.loadDeferred("Triggers", out triggersGameObject, (LoadedAssetDeferredCallback<GameObject>)null);
+            isSnowshoe = data.ContainsKey("Snowshoe");
+            if (data.ContainsKey("Chart"))
+            {
+                chart = (EObjectChart)Enum.Parse(typeof(EObjectChart), data.GetString("Chart"), ignoreCase: true);
+            }
+            else
+            {
+                chart = EObjectChart.NONE;
+            }
+            isFuel = data.ContainsKey("Fuel");
+            isRefill = data.ContainsKey("Refill");
+            isSoft = data.ContainsKey("Soft");
+            causesFallDamage = data.ParseBool("Causes_Fall_Damage", defaultValue: true);
+            isCollisionImportant = data.ContainsKey("Collision_Important") || type == EObjectType.LARGE;
+            shouldExcludeFromCullingVolumes = data.ParseBool("Exclude_From_Culling_Volumes");
+            if (isFuel || isRefill)
+            {
+                Assets.reportError(this, "is using the legacy fuel/water system");
+            }
+            if (data.ContainsKey("LOD"))
+            {
+                lod = (EObjectLOD)Enum.Parse(typeof(EObjectLOD), data.GetString("LOD"), ignoreCase: true);
+                lodBias = data.ParseFloat("LOD_Bias");
+                if (lodBias < 0.01f)
+                {
+                    lodBias = 1f;
+                }
+                cullingVolumeLocalPositionOffset = data.LegacyParseVector3("LOD_Center");
+                cullingVolumeSizeOffset = data.LegacyParseVector3("LOD_Size");
             }
             if (data.ContainsKey("Foliage"))
             {

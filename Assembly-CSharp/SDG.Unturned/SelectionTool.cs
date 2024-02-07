@@ -39,6 +39,8 @@ public class SelectionTool : IDevkitTool
 
     protected Vector3 referenceScale;
 
+    protected bool hasReferenceRotation;
+
     protected bool hasReferenceScale;
 
     private TransformHandles handles;
@@ -415,19 +417,19 @@ public class SelectionTool : IDevkitTool
             {
                 handles.SetPreferredMode(TransformHandles.EMode.Rotation);
             }
-            bool num = mode == ESelectionMode.SCALE || wantsBoundsEditor;
+            bool flag2 = mode != ESelectionMode.SCALE && !wantsBoundsEditor && !DevkitSelectionToolOptions.instance.localSpace;
             handlePosition = Vector3.zero;
             handleRotation = Quaternion.identity;
-            bool flag2 = !num && !DevkitSelectionToolOptions.instance.localSpace;
+            bool flag3 = flag2;
             foreach (DevkitSelection item4 in DevkitSelectionManager.selection)
             {
                 if (!(item4.gameObject == null))
                 {
                     handlePosition += item4.transform.position;
-                    if (!flag2)
+                    if (!flag3)
                     {
                         handleRotation = item4.transform.rotation;
-                        flag2 = true;
+                        flag3 = true;
                     }
                 }
             }
@@ -476,6 +478,7 @@ public class SelectionTool : IDevkitTool
             {
                 referencePosition = handlePosition;
                 referenceRotation = handleRotation;
+                hasReferenceRotation = !flag2;
                 referenceScale = Vector3.one;
                 hasReferenceScale = false;
                 if (DevkitSelectionManager.selection.Count == 1)
@@ -492,7 +495,7 @@ public class SelectionTool : IDevkitTool
             }
             if (InputEx.GetKeyDown(KeyCode.N))
             {
-                moveHandle(referencePosition, referenceRotation, referenceScale, doRotation: true, hasReferenceScale);
+                moveHandle(referencePosition, referenceRotation, referenceScale, hasReferenceRotation, hasReferenceScale);
             }
         }
         if (InputEx.GetKeyDown(ControlsSettings.focus))

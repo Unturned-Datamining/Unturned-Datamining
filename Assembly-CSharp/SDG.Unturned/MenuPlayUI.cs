@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -16,7 +17,7 @@ public class MenuPlayUI
 
     private static SleekButtonIcon lobbiesButton;
 
-    private static SleekButtonIcon tutorialButton;
+    private static SleekButtonIconConfirm tutorialButton;
 
     private static SleekButtonIcon backButton;
 
@@ -44,6 +45,7 @@ public class MenuPlayUI
         if (active)
         {
             active = false;
+            tutorialButton.reset();
             container.AnimateOutOfView(0f, -1f);
         }
     }
@@ -122,19 +124,18 @@ public class MenuPlayUI
         sleekElement.PositionScale_Y = 0.5f;
         sleekElement.SizeOffset_X = 200f;
         container.AddChild(sleekElement);
-        tutorialButton = new SleekButtonIcon(bundle.load<Texture2D>("Tutorial"));
+        tutorialButton = new SleekButtonIconConfirm(bundle.load<Texture2D>("Tutorial"), local.format("Tutorial_Confirm_Label"), local.format("Tutorial_Confirm_Tooltip"), local.format("Tutorial_Deny_Label"), local.format("Tutorial_Deny_Tooltip"), 40);
         tutorialButton.PositionOffset_Y = num;
         tutorialButton.SizeOffset_X = 200f;
         tutorialButton.SizeOffset_Y = 50f;
         tutorialButton.text = local.format("TutorialButtonText");
         tutorialButton.tooltip = local.format("TutorialButtonTooltip");
-        tutorialButton.onClickedButton += onClickedTutorialButton;
+        SleekButtonIconConfirm sleekButtonIconConfirm = tutorialButton;
+        sleekButtonIconConfirm.onConfirmed = (Confirm)Delegate.Combine(sleekButtonIconConfirm.onConfirmed, new Confirm(onClickedTutorialButton));
         tutorialButton.fontSize = ESleekFontSize.Medium;
         tutorialButton.iconColor = ESleekTint.FOREGROUND;
         sleekElement.AddChild(tutorialButton);
         num += tutorialButton.SizeOffset_Y;
-        num += 10f;
-        num += 50f;
         num += 10f;
         singleplayerButton = new SleekButtonIcon(bundle.load<Texture2D>("Singleplayer"));
         singleplayerButton.PositionOffset_Y = num;

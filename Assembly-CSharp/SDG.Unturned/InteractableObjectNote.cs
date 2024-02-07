@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-public class InteractableObjectNote : InteractableObject
+public class InteractableObjectNote : InteractableObjectTriggerableBase
 {
     public override void use()
     {

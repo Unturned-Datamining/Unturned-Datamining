@@ -157,7 +157,9 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
         }
         if (build == EBuild.FARM)
         {
-            return new byte[4];
+            byte[] array = new byte[4];
+            BitConverter.TryWriteBytes(array, Provider.time);
+            return array;
         }
         if (build == EBuild.TORCH || build == EBuild.CAMPFIRE || build == EBuild.OVEN || build == EBuild.SPOT || build == EBuild.SAFEZONE || build == EBuild.OXYGENATOR || build == EBuild.BARREL_RAIN || build == EBuild.CAGE)
         {

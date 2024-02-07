@@ -44,6 +44,8 @@ public interface ISleekElement
 
     bool IgnoreLayout { get; set; }
 
+    float ChildAutoLayoutPadding { get; set; }
+
     void InternalDestroy();
 
     void AnimatePositionOffset(float newPositionOffset_X, float newPositionOffset_Y, ESleekLerp lerp, float time);

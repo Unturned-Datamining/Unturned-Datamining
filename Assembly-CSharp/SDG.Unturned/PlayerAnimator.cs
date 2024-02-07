@@ -694,7 +694,7 @@ public class PlayerAnimator : PlayerCaller
             _gesture = EPlayerGesture.NONE;
             if (!Dedicator.IsDedicatedServer)
             {
-                base.player.playSound((AudioClip)Resources.Load("Sounds/General/Punch"));
+                base.player.equipment.PlayPunchAudioClip();
             }
         }
         else if (newGesture == EPlayerGesture.PUNCH_RIGHT)
@@ -703,7 +703,7 @@ public class PlayerAnimator : PlayerCaller
             _gesture = EPlayerGesture.NONE;
             if (!Dedicator.IsDedicatedServer)
             {
-                base.player.playSound((AudioClip)Resources.Load("Sounds/General/Punch"));
+                base.player.equipment.PlayPunchAudioClip();
             }
         }
         else if (newGesture == EPlayerGesture.SURRENDER_START && gesture == EPlayerGesture.NONE)

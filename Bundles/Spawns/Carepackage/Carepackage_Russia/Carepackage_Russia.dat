@@ -75,8 +75,8 @@ Tables
 		Weight 100
 	}
 	{
-		// Raw Explosives (Supply Item)
-		Guid 8ce5c560166545499432d6e01ce399cc
+		// Demolition Charge (Charge Item)
+		Guid 2e15a98da9e34774b961d636c0e88cc9
 		Weight 100
 	}
 	{

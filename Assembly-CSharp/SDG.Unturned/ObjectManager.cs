@@ -216,6 +216,7 @@ public class ObjectManager : SteamCaller
                 interactable.objectAsset.ApplyInteractabilityConditions(player);
                 interactable.objectAsset.GrantInteractabilityRewards(player);
                 ObjectManager.OnQuestObjectUsed.TryInvoke("OnQuestObjectUsed", player, interactable);
+                ((InteractableObjectTriggerableBase)interactable).InvokeUsedEventForModHooks();
             }
         }
     }
@@ -251,6 +252,7 @@ public class ObjectManager : SteamCaller
                 interactableObjectDropper.objectAsset.ApplyInteractabilityConditions(player);
                 interactableObjectDropper.objectAsset.GrantInteractabilityRewards(player);
                 interactableObjectDropper.drop();
+                interactableObjectDropper.InvokeUsedEventForModHooks();
             }
         }
     }

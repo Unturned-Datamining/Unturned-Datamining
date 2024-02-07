@@ -103,6 +103,8 @@ public abstract class GlazierElementBase : ISleekElement
 
     protected bool _ignoreLayout;
 
+    protected float _childAutoLayoutPadding;
+
     public virtual bool IsVisible
     {
         get
@@ -308,6 +310,18 @@ public abstract class GlazierElementBase : ISleekElement
         set
         {
             _ignoreLayout = value;
+        }
+    }
+
+    public virtual float ChildAutoLayoutPadding
+    {
+        get
+        {
+            return _childAutoLayoutPadding;
+        }
+        set
+        {
+            _childAutoLayoutPadding = value;
         }
     }
 

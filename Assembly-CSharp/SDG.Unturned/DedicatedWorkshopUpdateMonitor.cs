@@ -5,7 +5,7 @@ using Steamworks;
 namespace SDG.Unturned;
 
 /// <summary>
-/// If using a map from the workshop, this class monitors it for changes so the server can be restarted.
+/// If using a map or mods from the workshop, this class monitors them for changes so the server can be restarted.
 /// </summary>
 public class DedicatedWorkshopUpdateMonitor : IDedicatedWorkshopUpdateMonitor
 {

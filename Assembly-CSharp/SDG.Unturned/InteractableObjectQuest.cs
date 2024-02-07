@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-public class InteractableObjectQuest : InteractableObject
+public class InteractableObjectQuest : InteractableObjectTriggerableBase
 {
     private float lastEffect;
 

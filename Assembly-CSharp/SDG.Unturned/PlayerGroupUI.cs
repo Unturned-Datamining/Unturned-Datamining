@@ -20,6 +20,7 @@ internal class PlayerGroupUI : SleekWrapper
         sleekLabel.SizeOffset_X = 200f;
         sleekLabel.SizeOffset_Y = 30f;
         sleekLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
+        sleekLabel.TextColor = new SleekColor(ESleekTint.FONT, 0.5f);
         AddChild(sleekLabel);
         sleekLabel.IsVisible = false;
         groups.Add(sleekLabel);

@@ -69,7 +69,14 @@ public static class ConvenientSavedata
         if (instance != null && instance.isDirty)
         {
             instance.isDirty = false;
-            ReadWrite.serializeJSON(RELATIVE_PATH, useCloud: false, usePath: true, instance);
+            try
+            {
+                ReadWrite.serializeJSON(RELATIVE_PATH, useCloud: false, usePath: true, instance);
+            }
+            catch (Exception e)
+            {
+                UnturnedLog.exception(e, "Caught exception serializing convenient data:");
+            }
             UnturnedLog.info("Saved convenient data (dirty)");
         }
     }

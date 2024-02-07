@@ -372,6 +372,7 @@ public class MenuDashboardUI
             sleekBox.SizeScale_X = 1f;
             sleekBox.UseManualLayout = false;
             sleekBox.UseChildAutoLayout = ESleekChildLayout.Vertical;
+            sleekBox.ChildAutoLayoutPadding = 5f;
             ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
             sleekLabel.Text = newsItem.Title;
             sleekLabel.UseManualLayout = false;
@@ -499,6 +500,7 @@ public class MenuDashboardUI
         sleekBox.SizeScale_X = 1f;
         sleekBox.UseManualLayout = false;
         sleekBox.UseChildAutoLayout = ESleekChildLayout.Vertical;
+        sleekBox.ChildAutoLayoutPadding = 5f;
         mainScrollView.AddChild(sleekBox);
         if (hasNewAnnouncement && newAnnouncement != null)
         {
@@ -1026,10 +1028,12 @@ public class MenuDashboardUI
             alertLinkLabel.Text = liveConfigData.mainMenuAlert.link;
             alertLinkLabel.TextColor = color * 0.5f;
             alertLinkLabel.IsVisible = true;
+            dismissAlertLabel.IsVisible = false;
         }
         else
         {
             alertLinkLabel.IsVisible = false;
+            dismissAlertLabel.IsVisible = true;
         }
     }
 
