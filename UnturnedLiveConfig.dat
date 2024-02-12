@@ -1,12 +1,6 @@
 MainMenuAlert
 {
-	Id 48
-	Header Unturned 2024 Survey
-	Body If you have a few minutes, I’d appreciate your input on this survey! The goal is to collect feedback on what the Unturned community is most interested in seeing in 2024.
-	Color #f0f0f0
-	Link https://forms.gle/Fv4guTqb5ApacQbM9
-	IconURL https://cdn.smartlydressedgames.com/Images/survey.png
-	TintIcon true
+	Id 49
 }
 MainMenuWorkshop
 {
