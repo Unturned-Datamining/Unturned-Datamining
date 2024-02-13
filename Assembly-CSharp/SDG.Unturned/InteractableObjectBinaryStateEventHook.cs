@@ -92,7 +92,7 @@ public class InteractableObjectBinaryStateEventHook : MonoBehaviour
     {
         if (interactable != null)
         {
-            interactable.SetUsedFromClientOrServer(interactable.isUsed, ListenServerHostMode);
+            interactable.SetUsedFromClientOrServer(!interactable.isUsed, ListenServerHostMode);
         }
     }
 
