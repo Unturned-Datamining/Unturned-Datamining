@@ -7,7 +7,11 @@ MainMenuWorkshop
 	AllowNews true
 	Featured
 	{
-		Id 11
+		Id 12
+		FileIds
+		[
+			3167509031
+		]
 	}
 	Popular
 	{
