@@ -51,12 +51,14 @@
 | (?i)(Galaxy Project)                                                                  | MonetizationWarning, HiddenFromInternetServerList             |
 | (?i)(A9 ARENA)                                                                        | HiddenFromInternetServerList, IncorrectMonetizationTagWarning |
 | (?i)(\[EU\] Eclipse)                                                                  | QueryPingWarning                                              |
+| (?i)(RedLine)                                                                         | HiddenFromInternetServerList                                  |
 
 ## Description filters
 | Regex                                       | BanFlags                                           |
 | ------------------------------------------- | -------------------------------------------------- |
 | &lt;color=#FFE818&gt;ROLEPLAY&lt;/color&gt; | HiddenFromAllServerLists, Blocked, WorkshopWarning |
 | (?i)(&lt;style)&#124;(&lt;align)            | HiddenFromInternetServerList                       |
+| (?i)(&lt;scale=)                            | HiddenFromInternetServerList                       |
 
 ## Thumbnail filters
 | Regex                                                    | IconPreview                                                                                                       | BanFlags                                           |
