@@ -32,6 +32,7 @@
 | ^(-SOD-)                                                                              | HiddenFromAllServerLists                                      |
 | (?i)(Auschwitz&#124;Nazi&#124;Nazista&#124;Anti-Negro&#124;Anti-Jew&#124;Anti-Judeus) | HiddenFromAllServerLists, Blocked                             |
 | (?i)(nigger)                                                                          | HiddenFromAllServerLists, Blocked                             |
+| (?i)(RedLine)                                                                         | HiddenFromInternetServerList                                  |
 | (?i)(UnityPlay)                                                                       | HiddenFromAllServerLists, Blocked                             |
 | (?i)(UNIT)Y*У*(PL)                                                                    | HiddenFromAllServerLists, Blocked                             |
 | (?i)(ЮНИТИПЛЕЙ)                                                                       | HiddenFromAllServerLists, Blocked                             |
@@ -51,7 +52,6 @@
 | (?i)(Galaxy Project)                                                                  | MonetizationWarning, HiddenFromInternetServerList             |
 | (?i)(A9 ARENA)                                                                        | HiddenFromInternetServerList, IncorrectMonetizationTagWarning |
 | (?i)(\[EU\] Eclipse)                                                                  | QueryPingWarning                                              |
-| (?i)(RedLine)                                                                         | HiddenFromInternetServerList                                  |
 
 ## Description filters
 | Regex                                       | BanFlags                                           |
@@ -59,6 +59,7 @@
 | &lt;color=#FFE818&gt;ROLEPLAY&lt;/color&gt; | HiddenFromAllServerLists, Blocked, WorkshopWarning |
 | (?i)(&lt;style)&#124;(&lt;align)            | HiddenFromInternetServerList                       |
 | (?i)(&lt;scale=)                            | HiddenFromInternetServerList                       |
+| (?i)(&lt;pos=)                              | HiddenFromInternetServerList                       |
 
 ## Thumbnail filters
 | Regex                                                    | IconPreview                                                                                                       | BanFlags                                           |
