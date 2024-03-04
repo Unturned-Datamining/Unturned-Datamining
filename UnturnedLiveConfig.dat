@@ -1,14 +1,6 @@
 MainMenuAlert
 {
 	Id 50
-	Header LIVE: LVRCup Season 11 – Finale Race!
-	Body From the organizers: "Unturned's greatest racing series is entering the final stretch, with a close competition from your favorite creators! Come watch the final race as its broadcasted live by Lucky Gamer LVR."
-	Color #C60A1D
-	Link https://www.youtube.com/@LuckyGamerLVR/live
-	IconURL https://cdn.smartlydressedgames.com/Images/lvrcup_season11_logo.png
-	UseTimeWindow true
-	StartTime 2024-03-03 18:40:00
-	EndTime 2024-03-03 21:45:00
 }
 MainMenuWorkshop
 {
@@ -16,10 +8,6 @@ MainMenuWorkshop
 	Featured
 	{
 		Id 12
-		FileIds
-		[
-			3167509031
-		]
 	}
 	Popular
 	{
