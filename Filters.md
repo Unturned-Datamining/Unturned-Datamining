@@ -24,6 +24,8 @@
 | 109.248.4.107              | HiddenFromAllServerLists, Blocked, WorkshopWarning |
 | 92.38.222.24               | HiddenFromAllServerLists, Blocked, WorkshopWarning |
 | 5.42.211.19                | HiddenFromAllServerLists, Blocked, WorkshopWarning |
+| 23.27.211.227              | QueryPingWarning                                   |
+| 169.254.8.87               | MonetizationWarning, HiddenFromInternetServerList  |
 
 ## Name filters
 | Regex                                                                                 | BanFlags                                                      |
@@ -32,7 +34,6 @@
 | ^(-SOD-)                                                                              | HiddenFromAllServerLists                                      |
 | (?i)(Auschwitz&#124;Nazi&#124;Nazista&#124;Anti-Negro&#124;Anti-Jew&#124;Anti-Judeus) | HiddenFromAllServerLists, Blocked                             |
 | (?i)(nigger)                                                                          | HiddenFromAllServerLists, Blocked                             |
-| (?i)(RedLine)                                                                         | HiddenFromInternetServerList                                  |
 | (?i)(UnityPlay)                                                                       | HiddenFromAllServerLists, Blocked                             |
 | (?i)(UNIT)Y*У*(PL)                                                                    | HiddenFromAllServerLists, Blocked                             |
 | (?i)(ЮНИТИПЛЕЙ)                                                                       | HiddenFromAllServerLists, Blocked                             |
@@ -52,6 +53,7 @@
 | (?i)(Galaxy Project)                                                                  | MonetizationWarning, HiddenFromInternetServerList             |
 | (?i)(A9 ARENA)                                                                        | HiddenFromInternetServerList, IncorrectMonetizationTagWarning |
 | (?i)(\[EU\] Eclipse)                                                                  | QueryPingWarning                                              |
+| (?i)(RPSC)                                                                            | MonetizationWarning, HiddenFromInternetServerList             |
 
 ## Description filters
 | Regex                                       | BanFlags                                           |
@@ -87,3 +89,6 @@
 | 85568392928794437 | WorkshopWarning                                        |
 | 85568392929557585 | MonetizationWarning, HiddenFromInternetServerList      |
 | 85568392929711611 | MonetizationWarning, HiddenFromInternetServerList      |
+| 85568392930607571 | QueryPingWarning                                       |
+| 85568392929308873 | QueryPingWarning                                       |
+| 85568392929600049 | MonetizationWarning, HiddenFromInternetServerList      |
