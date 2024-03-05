@@ -25,7 +25,6 @@
 | 92.38.222.24               | HiddenFromAllServerLists, Blocked, WorkshopWarning |
 | 5.42.211.19                | HiddenFromAllServerLists, Blocked, WorkshopWarning |
 | 23.27.211.227              | QueryPingWarning                                   |
-| 169.254.8.87               | MonetizationWarning, HiddenFromInternetServerList  |
 
 ## Name filters
 | Regex                                                                                 | BanFlags                                                      |
@@ -53,7 +52,6 @@
 | (?i)(Galaxy Project)                                                                  | MonetizationWarning, HiddenFromInternetServerList             |
 | (?i)(A9 ARENA)                                                                        | HiddenFromInternetServerList, IncorrectMonetizationTagWarning |
 | (?i)(\[EU\] Eclipse)                                                                  | QueryPingWarning                                              |
-| (?i)(RPSC)                                                                            | MonetizationWarning, HiddenFromInternetServerList             |
 
 ## Description filters
 | Regex                                       | BanFlags                                           |
@@ -91,4 +89,3 @@
 | 85568392929711611 | MonetizationWarning, HiddenFromInternetServerList      |
 | 85568392930607571 | QueryPingWarning                                       |
 | 85568392929308873 | QueryPingWarning                                       |
-| 85568392929600049 | MonetizationWarning, HiddenFromInternetServerList      |
