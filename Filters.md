@@ -24,6 +24,7 @@
 | 109.248.4.107              | HiddenFromAllServerLists, Blocked, WorkshopWarning |
 | 92.38.222.24               | HiddenFromAllServerLists, Blocked, WorkshopWarning |
 | 5.42.211.19                | HiddenFromAllServerLists, Blocked, WorkshopWarning |
+| 81.21.11.133               | HiddenFromInternetServerList                       |
 
 ## Name filters
 | Regex                                                                                 | BanFlags                                                      |
@@ -44,6 +45,7 @@
 | (?i)(no\s*-*\s*lag)                                                                   | HiddenFromInternetServerList                                  |
 | (?i)(DarkStar)                                                                        | Blocked, WorkshopWarning, HiddenFromInternetServerList        |
 | (?i)(Eagles Roleplay)&#124;(EaglesRP)                                                 | MonetizationWarning, HiddenFromInternetServerList             |
+| (?i)(Broky)                                                                           | HiddenFromInternetServerList                                  |
 | (?i)(Sunnyvale)                                                                       | MonetizationWarning, HiddenFromInternetServerList             |
 | (?i)(horizon)                                                                         | QueryPingWarning                                              |
 | (?i)(BlackBear)                                                                       | QueryPingWarning                                              |
@@ -69,6 +71,7 @@
 | (https://i.ibb.co/M28DTbq/Untitled-logo-1-free-file.jpg) | ![https://i.ibb.co/M28DTbq/Untitled-logo-1-free-file.jpg](https://i.ibb.co/M28DTbq/Untitled-logo-1-free-file.jpg) | HiddenFromAllServerLists, Blocked                  |
 | (?i)(https://icdn.su/f/kJN/VxF/Ku3.jpg)                  | ![https://icdn.su/f/kJN/VxF/Ku3.jpg](https://icdn.su/f/kJN/VxF/Ku3.jpg)                                           | HiddenFromAllServerLists, Blocked, WorkshopWarning |
 | (Ekran-Al-nt-s.png)                                      |                                                                                                                   | MonetizationWarning, HiddenFromInternetServerList  |
+| (https://i.hizliresim.com/81oa19f.png)                   | ![https://i.hizliresim.com/81oa19f.png](https://i.hizliresim.com/81oa19f.png)                                     | HiddenFromInternetServerList                       |
 
 ## SteamId filters
 | SteamId           | BanFlags                                               |
@@ -81,6 +84,7 @@
 | 85568392928968627 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 | 85568392924735843 | MonetizationWarning, HiddenFromInternetServerList      |
 | 85568392929250709 | MonetizationWarning, HiddenFromInternetServerList      |
+| 85568392930297737 | HiddenFromInternetServerList                           |
 | 85568392928833031 | MonetizationWarning, HiddenFromInternetServerList      |
 | 85568392925961914 | QueryPingWarning                                       |
 | 85568392928794437 | WorkshopWarning                                        |
