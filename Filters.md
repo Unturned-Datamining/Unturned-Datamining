@@ -53,6 +53,7 @@
 | (?i)(Galaxy Project)                                                                  | MonetizationWarning, HiddenFromInternetServerList             |
 | (?i)(A9 ARENA)                                                                        | HiddenFromInternetServerList, IncorrectMonetizationTagWarning |
 | (?i)(\[EU\] Eclipse)                                                                  | QueryPingWarning                                              |
+| (?i)(Empire)                                                                          | Blocked                                                       |
 
 ## Description filters
 | Regex                                       | BanFlags                                           |
@@ -90,3 +91,4 @@
 | 85568392928794437 | WorkshopWarning                                        |
 | 85568392929557585 | MonetizationWarning, HiddenFromInternetServerList      |
 | 85568392929711611 | MonetizationWarning, HiddenFromInternetServerList      |
+| 85568392930733591 | Blocked                                                |
