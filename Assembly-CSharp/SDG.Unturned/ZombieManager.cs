@@ -1057,26 +1057,7 @@ public class ZombieManager : SteamCaller
             {
                 BeaconManager.checkBeacon(respawnZombiesBound).spawnRemaining();
             }
-            byte shirt = byte.MaxValue;
-            if (zombieTable.slots[0].table.Count > 0 && UnityEngine.Random.value < zombieTable.slots[0].chance)
-            {
-                shirt = (byte)UnityEngine.Random.Range(0, zombieTable.slots[0].table.Count);
-            }
-            byte pants = byte.MaxValue;
-            if (zombieTable.slots[1].table.Count > 0 && UnityEngine.Random.value < zombieTable.slots[1].chance)
-            {
-                pants = (byte)UnityEngine.Random.Range(0, zombieTable.slots[1].table.Count);
-            }
-            byte hat = byte.MaxValue;
-            if (zombieTable.slots[2].table.Count > 0 && UnityEngine.Random.value < zombieTable.slots[2].chance)
-            {
-                hat = (byte)UnityEngine.Random.Range(0, zombieTable.slots[2].table.Count);
-            }
-            byte gear = byte.MaxValue;
-            if (zombieTable.slots[3].table.Count > 0 && UnityEngine.Random.value < zombieTable.slots[3].chance)
-            {
-                gear = (byte)UnityEngine.Random.Range(0, zombieTable.slots[3].table.Count);
-            }
+            zombieTable.GetSpawnClothingParameters(out var shirt, out var pants, out var hat, out var gear);
             Vector3 point = zombieSpawnpoint.point;
             point += new Vector3(0f, 0.5f, 0f);
             zombie.sendRevive(b, (byte)eZombieSpeciality, shirt, pants, hat, gear, point, UnityEngine.Random.Range(0f, 360f));

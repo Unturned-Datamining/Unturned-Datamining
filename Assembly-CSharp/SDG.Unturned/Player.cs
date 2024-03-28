@@ -102,7 +102,7 @@ public class Player : MonoBehaviour
 
     private static readonly ClientInstanceMethod<string, float> SendHintMessage = ClientInstanceMethod<string, float>.Get(typeof(Player), "ReceiveHintMessage");
 
-    private static readonly ClientInstanceMethod<uint, ushort, string, bool> SendRelayToServer = ClientInstanceMethod<uint, ushort, string, bool>.Get(typeof(Player), "ReceiveRelayToServer");
+    private static readonly ClientInstanceMethod<uint, ushort, CSteamID, string, bool> SendRelayToServer = ClientInstanceMethod<uint, ushort, CSteamID, string, bool>.Get(typeof(Player), "ReceiveRelayToServer");
 
     private static readonly ClientInstanceMethod<uint> SendSetPluginWidgetFlags = ClientInstanceMethod<uint>.Get(typeof(Player), "ReceiveSetPluginWidgetFlags");
 
@@ -490,24 +490,25 @@ public class Player : MonoBehaviour
     [Obsolete]
     public void askRelayToServer(CSteamID steamID, uint ip, ushort port, string password, bool shouldShowMenu)
     {
-        ReceiveRelayToServer(ip, port, password, shouldShowMenu);
+        ReceiveRelayToServer(ip, port, CSteamID.Nil, password, shouldShowMenu);
     }
 
-    [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askRelayToServer")]
-    public void ReceiveRelayToServer(uint ip, ushort port, string password, bool shouldShowMenu)
+    [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
+    public void ReceiveRelayToServer(uint ip, ushort port, CSteamID serverCode, string password, bool shouldShowMenu)
     {
         if (!MenuPlayConnectUI.hasPendingServerRelay)
         {
             if (Provider.isServer)
             {
-                throw new NotSupportedException($"IP: {Parser.getIPFromUInt32(ip)} Port: {port}");
+                throw new NotSupportedException($"IP: {Parser.getIPFromUInt32(ip)} Port: {port} Server Code: {serverCode}");
             }
             MenuPlayConnectUI.hasPendingServerRelay = true;
             MenuPlayConnectUI.serverRelayIP = ip;
             MenuPlayConnectUI.serverRelayPort = port;
+            MenuPlayConnectUI.serverRelayServerCode = serverCode;
             MenuPlayConnectUI.serverRelayPassword = password;
             MenuPlayConnectUI.serverRelayWaitOnMenu = shouldShowMenu;
-            Provider.RequestDisconnect($"Relaying to IP: {Parser.getIPFromUInt32(ip)} Port: {port}");
+            Provider.RequestDisconnect($"Relaying to IP: {Parser.getIPFromUInt32(ip)} Port: {port} Code: {serverCode}");
         }
     }
 
@@ -518,7 +519,12 @@ public class Player : MonoBehaviour
     /// </summary>
     public void sendRelayToServer(uint ip, ushort port, string password, bool shouldShowMenu = true)
     {
-        SendRelayToServer.Invoke(GetNetId(), ENetReliability.Reliable, channel.GetOwnerTransportConnection(), ip, port, password, shouldShowMenu);
+        SendRelayToServer.Invoke(GetNetId(), ENetReliability.Reliable, channel.GetOwnerTransportConnection(), ip, port, CSteamID.Nil, password, shouldShowMenu);
+    }
+
+    public void sendRelayToServer(CSteamID serverCode, string password, bool shouldShowMenu = true)
+    {
+        SendRelayToServer.Invoke(GetNetId(), ENetReliability.Reliable, channel.GetOwnerTransportConnection(), 0u, 0, serverCode, password, shouldShowMenu);
     }
 
     public void sendRelayToServer(uint ip, ushort port, string password)

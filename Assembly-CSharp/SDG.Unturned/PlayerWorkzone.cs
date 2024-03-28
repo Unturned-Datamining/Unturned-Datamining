@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -64,6 +65,10 @@ public class PlayerWorkzone : PlayerCaller
             _isBuilding = value;
             if (!_isBuilding)
             {
+                if (isUsingHandle)
+                {
+                    CancelHandleUse();
+                }
                 clearSelection();
             }
             base.player.ClientSetAdminUsageFlagActive(EPlayerAdminUsageFlags.Workzone, _isBuilding);
@@ -80,7 +85,7 @@ public class PlayerWorkzone : PlayerCaller
         {
             _dragMode = value;
             wantsBoundsEditor = false;
-            calculateHandleOffsets();
+            UpdateHandlesPreferredPivot();
         }
     }
 
@@ -93,39 +98,26 @@ public class PlayerWorkzone : PlayerCaller
         set
         {
             _dragCoordinate = value;
-            calculateHandleOffsets();
+            UpdateHandlesPreferredPivot();
         }
     }
 
-    public void applySelection()
+    public void SubmitTransformsToServer()
     {
-        for (int i = 0; i < selection.Count; i++)
+        foreach (WorkzoneSelection item in selection)
         {
-            if (!(selection[i].transform == null))
+            if (!(item.transform == null))
             {
-                Vector3 position = selection[i].transform.position;
-                selection[i].transform.position = selection[i].fromPosition;
-                Vector3 eulerAngles = selection[i].transform.rotation.eulerAngles;
-                if (selection[i].transform.CompareTag("Barricade"))
+                Vector3 position = item.transform.position;
+                Vector3 eulerAngles = item.transform.rotation.eulerAngles;
+                if (item.transform.CompareTag("Barricade"))
                 {
-                    BarricadeManager.transformBarricade(selection[i].transform, position, eulerAngles.x, eulerAngles.y, eulerAngles.z);
+                    BarricadeManager.transformBarricade(item.transform, position, eulerAngles.x, eulerAngles.y, eulerAngles.z);
                 }
-                else if (selection[i].transform.CompareTag("Structure"))
+                else if (item.transform.CompareTag("Structure"))
                 {
-                    StructureManager.transformStructure(selection[i].transform, position, eulerAngles.x, eulerAngles.y, eulerAngles.z);
+                    StructureManager.transformStructure(item.transform, position, eulerAngles.x, eulerAngles.y, eulerAngles.z);
                 }
-                selection[i].transform.position = position;
-            }
-        }
-    }
-
-    public void pointSelection()
-    {
-        for (int i = 0; i < selection.Count; i++)
-        {
-            if (!(selection[i].transform == null))
-            {
-                selection[i].fromPosition = selection[i].transform.position;
             }
         }
     }
@@ -134,7 +126,7 @@ public class PlayerWorkzone : PlayerCaller
     {
         HighlighterTool.highlight(select, Color.yellow);
         selection.Add(new WorkzoneSelection(select));
-        calculateHandleOffsets();
+        UpdateHandlesPreferredPivot();
     }
 
     public void removeSelection(Transform select)
@@ -148,7 +140,7 @@ public class PlayerWorkzone : PlayerCaller
                 break;
             }
         }
-        calculateHandleOffsets();
+        UpdateHandlesPreferredPivot();
     }
 
     private void clearSelection()
@@ -161,7 +153,7 @@ public class PlayerWorkzone : PlayerCaller
             }
         }
         selection.Clear();
-        calculateHandleOffsets();
+        UpdateHandlesPreferredPivot();
     }
 
     public bool containsSelection(Transform select)
@@ -176,7 +168,18 @@ public class PlayerWorkzone : PlayerCaller
         return false;
     }
 
-    private void calculateHandleOffsets()
+    private void CancelHandleUse()
+    {
+        isUsingHandle = false;
+        handles.MouseUp();
+        SubmitTransformsToServer();
+    }
+
+    /// <summary>
+    /// Set handles pivot point according to selection transform.
+    /// Doesn't apply if handle is currently being dragged.
+    /// </summary>
+    private void UpdateHandlesPreferredPivot()
     {
         if (selection.Count == 0)
         {
@@ -232,7 +235,10 @@ public class PlayerWorkzone : PlayerCaller
         if (!isBuilding)
         {
             hasDragStart = false;
-            isUsingHandle = false;
+            if (isUsingHandle)
+            {
+                CancelHandleUse();
+            }
             if (isDragging)
             {
                 stopDragging();
@@ -270,7 +276,10 @@ public class PlayerWorkzone : PlayerCaller
         {
             if (InputEx.GetKey(ControlsSettings.secondary))
             {
-                isUsingHandle = false;
+                if (isUsingHandle)
+                {
+                    CancelHandleUse();
+                }
                 hasDragStart = false;
                 if (isDragging)
                 {
@@ -283,7 +292,7 @@ public class PlayerWorkzone : PlayerCaller
             {
                 if (!InputEx.GetKey(ControlsSettings.primary))
                 {
-                    applySelection();
+                    SubmitTransformsToServer();
                     isUsingHandle = false;
                     handles.MouseUp();
                 }
@@ -316,7 +325,6 @@ public class PlayerWorkzone : PlayerCaller
             }
             if (InputEx.GetKeyDown(KeyCode.N) && selection.Count > 0 && copyPosition != Vector3.zero && InputEx.GetKey(KeyCode.LeftControl))
             {
-                pointSelection();
                 if (selection.Count == 1)
                 {
                     selection[0].transform.position = copyPosition;
@@ -324,13 +332,13 @@ public class PlayerWorkzone : PlayerCaller
                     {
                         selection[0].transform.rotation = copyRotation;
                     }
-                    calculateHandleOffsets();
+                    UpdateHandlesPreferredPivot();
                 }
                 else
                 {
                     handles.ExternallyTransformPivot(copyPosition, copyRotation, hasCopiedRotation);
                 }
-                applySelection();
+                SubmitTransformsToServer();
             }
             if (!isUsingHandle)
             {
@@ -338,7 +346,6 @@ public class PlayerWorkzone : PlayerCaller
                 {
                     if (flag)
                     {
-                        pointSelection();
                         isUsingHandle = true;
                         handles.MouseDown(ray);
                     }
@@ -492,7 +499,6 @@ public class PlayerWorkzone : PlayerCaller
                 }
                 if (selection.Count > 0 && InputEx.GetKeyDown(ControlsSettings.tool_2) && worldHit.transform != null)
                 {
-                    pointSelection();
                     Vector3 point = worldHit.point;
                     if (InputEx.GetKey(ControlsSettings.snap))
                     {
@@ -500,7 +506,7 @@ public class PlayerWorkzone : PlayerCaller
                     }
                     Quaternion pivotRotation = handles.GetPivotRotation();
                     handles.ExternallyTransformPivot(point, pivotRotation, modifyRotation: false);
-                    applySelection();
+                    SubmitTransformsToServer();
                 }
             }
         }
@@ -561,6 +567,17 @@ public class PlayerWorkzone : PlayerCaller
                 }
             }
         }
-        calculateHandleOffsets();
+        UpdateHandlesPreferredPivot();
+    }
+
+    [Obsolete("No longer necessary")]
+    public void pointSelection()
+    {
+    }
+
+    [Obsolete("Renamed to SubmitTransformsToServer")]
+    public void applySelection()
+    {
+        SubmitTransformsToServer();
     }
 }

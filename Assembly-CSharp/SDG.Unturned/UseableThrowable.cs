@@ -156,7 +156,7 @@ public class UseableThrowable : Useable
 
     protected bool startAttack(ESwingMode newSwingMode)
     {
-        if (base.player.equipment.isBusy)
+        if (base.player.equipment.isBusy || base.player.quests.IsCutsceneModeActive())
         {
             return false;
         }

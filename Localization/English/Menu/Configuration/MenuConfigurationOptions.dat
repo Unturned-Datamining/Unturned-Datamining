@@ -24,6 +24,8 @@ Streamer_Toggle_Label Streamer Mode
 Featured_Workshop_Toggle_Label Featured Workshop
 Show_Hotbar_Toggle_Label Show Hotbar
 Pause_When_Unfocused_Label Pause While Alt-Tabbing
+Nametag_Fade_Out_Label Fade Out Name Tags
+Nametag_Fade_Out_Tooltip Makes group member name labels more transparent near the center of your crosshair.
 ScreenshotSizeMultiplier_Label Screenshot Resolution Multiplier
 ScreenshotSizeMultiplier_Tooltip Higher values take significantly longer to render.
 ScreenshotSupersampling_Label Enable Screenshot Supersampling

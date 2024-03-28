@@ -30,6 +30,8 @@
 - [MarkedDirtyHandler.cs](MarkedDirtyHandler.cs)
 - [NavClipVolume.cs](NavClipVolume.cs)
 - [NavClipVolumeManager.cs](NavClipVolumeManager.cs)
+- [NPCRewardVolume.cs](NPCRewardVolume.cs)
+- [NPCRewardVolumeManager.cs](NPCRewardVolumeManager.cs)
 - [PlayerClipVolume.cs](PlayerClipVolume.cs)
 - [PlayerClipVolumeManager.cs](PlayerClipVolumeManager.cs)
 - [PlayerClipVolumeUtility.cs](PlayerClipVolumeUtility.cs)

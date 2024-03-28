@@ -18,6 +18,8 @@ internal abstract class GlazierBase : MonoBehaviour
 
     private CommandLineFlag shouldShowTimeOverlay;
 
+    private static CommandLineFloat clScrollViewSensitivityMultiplier = new CommandLineFloat("-ScrollViewSensitivity");
+
     public bool ShouldGameProcessInput
     {
         get
@@ -60,6 +62,18 @@ internal abstract class GlazierBase : MonoBehaviour
     protected Color debugStringColor { get; private set; }
 
     protected string debugString => debugBuilder.ToString();
+
+    public static float ScrollViewSensitivityMultiplier
+    {
+        get
+        {
+            if (!clScrollViewSensitivityMultiplier.hasValue)
+            {
+                return 1f;
+            }
+            return clScrollViewSensitivityMultiplier.value;
+        }
+    }
 
     protected void UpdateDebugStats()
     {

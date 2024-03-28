@@ -251,6 +251,12 @@ public class PlayerAnimator : PlayerCaller
 
     private static readonly AssetReference<EffectAsset> Metal_1_Ref = new AssetReference<EffectAsset>("805bb3b0752749d1b5cf9959d17e104e");
 
+    private bool hasCalledUpdateLocalPlayerModelVisibility;
+
+    private bool wasLocalPlayerFirstPersonModelVisible;
+
+    private bool wasLocalPlayerThirdPersonModelVisible;
+
     private bool wasLoadCalled;
 
     public Transform firstSkeleton => _firstSkeleton;
@@ -605,17 +611,7 @@ public class PlayerAnimator : PlayerCaller
         }
         if (base.channel.IsLocalPlayer)
         {
-            firstRenderer_0.enabled = !isDead && base.player.look.perspective == EPlayerPerspective.FIRST;
-            firstSkeleton.gameObject.SetActive(!isDead && base.player.look.perspective == EPlayerPerspective.FIRST);
-            if (thirdRenderer_0 != null)
-            {
-                thirdRenderer_0.enabled = !isDead && base.player.look.perspective == EPlayerPerspective.THIRD;
-            }
-            if (thirdRenderer_1 != null)
-            {
-                thirdRenderer_1.enabled = !isDead && base.player.look.perspective == EPlayerPerspective.THIRD;
-            }
-            thirdSkeleton.gameObject.SetActive(!isDead && base.player.look.perspective == EPlayerPerspective.THIRD);
+            UpdateLocalPlayerModelVisibility(isDead, base.player.look.perspective, base.player.quests.IsCutsceneModeActive());
             return;
         }
         if (!Dedicator.IsDedicatedServer && !isHiddenWaitingForClothing)
@@ -1061,13 +1057,48 @@ public class PlayerAnimator : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Nelson 2024-03-20: Adding this method because (at the time of writing) first and third-person renderers
+    /// and skeletons are activated/enabled in InitializePlayer, onPerspectiveUpdated, and onLifeUpdated, and I
+    /// want them to be consistent with the addition of the new NPC Cutscene Mode option.
+    /// </summary>
+    private void UpdateLocalPlayerModelVisibility(bool isDead, EPlayerPerspective perspective, bool isCutsceneModeActive)
+    {
+        bool flag = !isDead && perspective == EPlayerPerspective.FIRST && !isCutsceneModeActive;
+        bool flag2 = !isDead && perspective == EPlayerPerspective.THIRD;
+        if (!hasCalledUpdateLocalPlayerModelVisibility || wasLocalPlayerFirstPersonModelVisible != flag)
+        {
+            wasLocalPlayerFirstPersonModelVisible = flag;
+            if (firstRenderer_0 != null)
+            {
+                firstRenderer_0.enabled = flag;
+            }
+            firstSkeleton.gameObject.SetActive(flag);
+        }
+        if (!hasCalledUpdateLocalPlayerModelVisibility || wasLocalPlayerThirdPersonModelVisible != flag2)
+        {
+            wasLocalPlayerThirdPersonModelVisible = flag2;
+            if (thirdRenderer_0 != null)
+            {
+                thirdRenderer_0.enabled = flag2;
+            }
+            if (thirdRenderer_1 != null)
+            {
+                thirdRenderer_1.enabled = flag2;
+            }
+            thirdSkeleton.gameObject.SetActive(flag2);
+        }
+        hasCalledUpdateLocalPlayerModelVisibility = true;
+    }
+
+    internal void NotifyLocalPlayerCutsceneModeActiveChanged(bool isCutsceneModeActive)
+    {
+        UpdateLocalPlayerModelVisibility(base.player.life.isDead, base.player.look.perspective, isCutsceneModeActive);
+    }
+
     private void onPerspectiveUpdated(EPlayerPerspective newPerspective)
     {
-        firstRenderer_0.enabled = newPerspective == EPlayerPerspective.FIRST;
-        firstSkeleton.gameObject.SetActive(newPerspective == EPlayerPerspective.FIRST);
-        thirdRenderer_0.enabled = newPerspective == EPlayerPerspective.THIRD;
-        thirdRenderer_1.enabled = newPerspective == EPlayerPerspective.THIRD;
-        thirdSkeleton.gameObject.SetActive(newPerspective == EPlayerPerspective.THIRD);
+        UpdateLocalPlayerModelVisibility(base.player.life.isDead, newPerspective, base.player.quests.IsCutsceneModeActive());
     }
 
     private void Update()
@@ -1386,14 +1417,11 @@ public class PlayerAnimator : PlayerCaller
             }
             if (Provider.cameraMode == ECameraMode.THIRD)
             {
-                thirdRenderer_0.enabled = true;
-                thirdRenderer_1.enabled = true;
-                thirdSkeleton.gameObject.SetActive(value: true);
+                UpdateLocalPlayerModelVisibility(isDead: false, EPlayerPerspective.THIRD, base.player.quests.IsCutsceneModeActive());
             }
             else
             {
-                firstRenderer_0.enabled = true;
-                firstSkeleton.gameObject.SetActive(value: true);
+                UpdateLocalPlayerModelVisibility(isDead: false, EPlayerPerspective.FIRST, base.player.quests.IsCutsceneModeActive());
             }
             viewmodelCameraTransform = firstSkeleton.Find("Spine").Find("Skull").Find("ViewmodelCamera");
             viewmodelCamera = viewmodelCameraTransform.GetComponent<Camera>();

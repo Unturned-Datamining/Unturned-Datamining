@@ -101,7 +101,7 @@ public class EditorSpawnsZombiesUI
             sleekButton.PositionOffset_Y = j * 40;
             sleekButton.SizeOffset_X = 200f;
             sleekButton.SizeOffset_Y = 30f;
-            sleekButton.Text = j + " " + LevelZombies.tables[j].name;
+            sleekButton.Text = $"{j} {LevelZombies.tables[j].name} ({LevelZombies.tables[j].tableUniqueId})";
             sleekButton.OnClicked += onClickedTableButton;
             tableScrollBox.AddChild(sleekButton);
             tableButtons[j] = sleekButton;
@@ -347,7 +347,7 @@ public class EditorSpawnsZombiesUI
         {
             selectedBox.Text = state;
             LevelZombies.tables[EditorSpawns.selectedZombie].name = state;
-            tableButtons[EditorSpawns.selectedZombie].Text = EditorSpawns.selectedZombie + " " + state;
+            tableButtons[EditorSpawns.selectedZombie].Text = EditorSpawns.selectedZombie + " " + state + $" ({LevelZombies.tables[EditorSpawns.selectedZombie].tableUniqueId})";
         }
     }
 

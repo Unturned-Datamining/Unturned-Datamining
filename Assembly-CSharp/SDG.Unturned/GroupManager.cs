@@ -59,6 +59,7 @@ public class GroupManager : SteamCaller
 
     public static void deleteGroup(CSteamID groupID)
     {
+        CancelAllQueuedExitsForGroup(groupID);
         knownGroups.Remove(groupID);
         foreach (SteamPlayer client in Provider.clients)
         {
@@ -188,6 +189,7 @@ public class GroupManager : SteamCaller
                 alertGroupmatesTimer(player, timer_Leave_Group);
                 QueuedGroupExit queuedGroupExit = new QueuedGroupExit();
                 queuedGroupExit.playerID = player.channel.owner.playerID.steamID;
+                queuedGroupExit.groupId = player.quests.groupID;
                 queuedGroupExit.remainingSeconds = timer_Leave_Group;
                 queuedExits.Add(queuedGroupExit);
             }
@@ -210,6 +212,17 @@ public class GroupManager : SteamCaller
             {
                 queuedExits.RemoveAtFast(num);
                 break;
+            }
+        }
+    }
+
+    public static void CancelAllQueuedExitsForGroup(CSteamID groupId)
+    {
+        for (int num = queuedExits.Count - 1; num >= 0; num--)
+        {
+            if (queuedExits[num].groupId == groupId)
+            {
+                queuedExits.RemoveAtFast(num);
             }
         }
     }
@@ -249,7 +262,7 @@ public class GroupManager : SteamCaller
             {
                 queuedExits.RemoveAtFast(num);
                 Player player = PlayerTool.getPlayer(queuedGroupExit.playerID);
-                if (!(player == null))
+                if (!(player == null) && !(player.quests.groupID != queuedGroupExit.groupId))
                 {
                     alertGroupmatesLeft(player);
                     player.quests.leaveGroup();

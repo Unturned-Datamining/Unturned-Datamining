@@ -288,7 +288,7 @@ public static class UseableGun_NetMethods
             reader.ReadUInt8(out var value5);
             byte[] array = new byte[value5];
             reader.ReadBytes(array);
-            useableGun.ReceiveAttachMagazine(value2, value3, value4, array);
+            useableGun.ReceiveAttachMagazine(in context, value2, value3, value4, array);
         }
     }
 

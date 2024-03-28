@@ -37,9 +37,11 @@ public class OptionsSettings
     /// </summary>
     private const byte SAVEDATA_VERSION_RESET_VOICE_ALWAYS_RECORDING = 48;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 48;
+    private const byte SAVEDATA_VERSION_ADDED_NAMETAG_FADEOUT_OPT = 49;
 
-    public static readonly byte SAVEDATA_VERSION = 48;
+    private const byte SAVEDATA_VERSION_NEWEST = 49;
+
+    public static readonly byte SAVEDATA_VERSION = 49;
 
     public static readonly byte MIN_FOV = 60;
 
@@ -82,6 +84,12 @@ public class OptionsSettings
     public static bool ambience;
 
     private static bool _voiceAlwaysRecording;
+
+    /// <summary>
+    /// If true, group member name labels fade out when near the center of the screen.
+    /// Defaults to true.
+    /// </summary>
+    public static bool shouldNametagFadeOut;
 
     [Obsolete("Renamed to ShouldHitmarkersFollowWorldPosition")]
     public static bool hitmarker;
@@ -388,6 +396,7 @@ public class OptionsSettings
         shadowColor = Color.black;
         badColor = Palette.COLOR_R;
         _voiceAlwaysRecording = false;
+        shouldNametagFadeOut = true;
     }
 
     public static void load()
@@ -687,6 +696,14 @@ public class OptionsSettings
         {
             _voiceAlwaysRecording = false;
         }
+        if (b >= 49)
+        {
+            shouldNametagFadeOut = block.readBoolean();
+        }
+        else
+        {
+            shouldNametagFadeOut = true;
+        }
         if (!Provider.isPro)
         {
             backgroundColor = new Color(0.9f, 0.9f, 0.9f);
@@ -700,7 +717,7 @@ public class OptionsSettings
     public static void save()
     {
         Block block = new Block();
-        block.writeByte(48);
+        block.writeByte(49);
         block.writeBoolean(music);
         block.writeBoolean(splashscreen);
         block.writeBoolean(timer);
@@ -744,6 +761,7 @@ public class OptionsSettings
         block.writeByte(MathfEx.RoundAndClampToByte(criticalHitmarkerColor.a * 255f));
         block.writeByte((byte)hitmarkerStyle);
         block.writeBoolean(_voiceAlwaysRecording);
+        block.writeBoolean(shouldNametagFadeOut);
         ReadWrite.writeBlock("/Options.dat", useCloud: true, block);
     }
 }

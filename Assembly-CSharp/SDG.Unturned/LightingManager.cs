@@ -165,7 +165,10 @@ public class LightingManager : SteamCaller
         }
         set
         {
-            value %= cycle;
+            if (cycle != 0)
+            {
+                value %= cycle;
+            }
             _offset = Provider.time - value;
             _time = value;
             manager.updateLighting();

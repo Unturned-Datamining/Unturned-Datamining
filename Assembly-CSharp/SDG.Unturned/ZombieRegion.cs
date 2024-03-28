@@ -195,6 +195,8 @@ public class ZombieRegion
                             num2++;
                         }
                     }
+                    int num3 = LevelZombies.FindTableIndexByUniqueId(nPCZombieKillsCondition.LevelTableUniqueId);
+                    ZombieTable zombieTable = ((num3 >= 0) ? LevelZombies.tables[num3] : null);
                     int l;
                     for (l = num2; l < num; l++)
                     {
@@ -222,9 +224,9 @@ public class ZombieRegion
                         }
                         if (zombie == null)
                         {
-                            for (int num3 = 0; num3 < zombies.Count; num3++)
+                            for (int num4 = 0; num4 < zombies.Count; num4++)
                             {
-                                Zombie zombie4 = zombies[num3];
+                                Zombie zombie4 = zombies[num4];
                                 if (zombie4 != null && !zombie4.isDead && zombie4.speciality != nPCZombieKillsCondition.zombie)
                                 {
                                     zombie = zombie4;
@@ -239,7 +241,7 @@ public class ZombieRegion
                         Vector3 position = zombie.transform.position;
                         if (zombie.isDead)
                         {
-                            for (int num4 = 0; num4 < 10; num4++)
+                            for (int num5 = 0; num5 < 10; num5++)
                             {
                                 ZombieSpawnpoint zombieSpawnpoint = LevelZombies.zombies[nav][UnityEngine.Random.Range(0, LevelZombies.zombies[nav].Count)];
                                 if (SafezoneManager.checkPointValid(zombieSpawnpoint.point))
@@ -250,7 +252,17 @@ public class ZombieRegion
                                 position.y += 0.1f;
                             }
                         }
-                        zombie.sendRevive(zombie.type, (byte)nPCZombieKillsCondition.zombie, zombie.shirt, zombie.pants, zombie.hat, zombie.gear, position, UnityEngine.Random.Range(0f, 360f));
+                        byte type = zombie.type;
+                        byte shirt = zombie.shirt;
+                        byte pants = zombie.pants;
+                        byte hat = zombie.hat;
+                        byte gear = zombie.gear;
+                        if (zombieTable != null)
+                        {
+                            type = (byte)num3;
+                            zombieTable.GetSpawnClothingParameters(out shirt, out pants, out hat, out gear);
+                        }
+                        zombie.sendRevive(type, (byte)nPCZombieKillsCondition.zombie, shirt, pants, hat, gear, position, UnityEngine.Random.Range(0f, 360f));
                         if (usesBossInterval)
                         {
                             bossZombie = zombie;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Steamworks;
 using UnityEngine;
@@ -142,7 +143,7 @@ public class InteractableSentry : InteractableStorage
                 gunshotAudioSource.clip = clip;
                 gunshotAudioSource.volume = num;
                 gunshotAudioSource.maxDistance = num2;
-                gunshotAudioSource.pitch = Random.Range(0.975f, 1.025f);
+                gunshotAudioSource.pitch = UnityEngine.Random.Range(0.975f, 1.025f);
                 gunshotAudioSource.PlayOneShot(gunshotAudioSource.clip);
             }
             if (((ItemGunAsset)displayAsset).action == EAction.Trigger && shellEmitter != null)
@@ -168,7 +169,7 @@ public class InteractableSentry : InteractableStorage
                 }
                 else
                 {
-                    trace(aimTransform.position + aimTransform.forward * Random.Range(32f, Mathf.Min(64f, ((ItemGunAsset)displayAsset).range)), aimTransform.forward);
+                    trace(aimTransform.position + aimTransform.forward * UnityEngine.Random.Range(32f, Mathf.Min(64f, ((ItemGunAsset)displayAsset).range)), aimTransform.forward);
                 }
             }
         }
@@ -344,9 +345,25 @@ public class InteractableSentry : InteractableStorage
             }
         }
         int num = ((ItemGunAsset)displayAsset).firerate;
+        if (attachments.sightAsset != null)
+        {
+            num -= attachments.sightAsset.FirerateOffset;
+        }
         if (attachments.tacticalAsset != null)
         {
-            num -= attachments.tacticalAsset.firerate;
+            num -= attachments.tacticalAsset.FirerateOffset;
+        }
+        if (attachments.gripAsset != null)
+        {
+            num -= attachments.gripAsset.FirerateOffset;
+        }
+        if (attachments.barrelAsset != null)
+        {
+            num -= attachments.barrelAsset.FirerateOffset;
+        }
+        if (attachments.magazineAsset != null)
+        {
+            num -= attachments.magazineAsset.FirerateOffset;
         }
         num = Mathf.Max(num, 1);
         fireTime = num;
@@ -604,212 +621,198 @@ public class InteractableSentry : InteractableStorage
                     BarricadeManager.sendAlertSentry(base.transform, num6, num7);
                 }
             }
-            if (isFiring && hasWeapon && displayItem.state[10] > 0 && !isOpen && Time.timeAsDouble - lastFire > (double)fireTime)
+            if (isFiring && hasWeapon && !isOpen)
             {
-                lastFire += fireTime;
-                if (Time.timeAsDouble - lastFire > (double)fireTime)
+                bool flag2 = sentryAsset.infiniteAmmo || ((ItemGunAsset)displayAsset).infiniteAmmo;
+                bool flag3 = flag2 || displayItem.state[10] >= ((ItemGunAsset)displayAsset).ammoPerShot;
+                if (flag3 && Time.timeAsDouble - lastFire > (double)fireTime)
                 {
-                    lastFire = Time.timeAsDouble;
-                }
-                float num8 = (float)(int)displayItem.quality / 100f;
-                if (attachments.magazineAsset == null)
-                {
-                    return;
-                }
-                if (!sentryAsset.infiniteAmmo && !((ItemGunAsset)displayAsset).infiniteAmmo)
-                {
-                    displayItem.state[10]--;
-                }
-                if (attachments.barrelAsset == null || !attachments.barrelAsset.isSilenced || displayItem.state[16] == 0)
-                {
-                    AlertTool.alert(base.transform.position, 48f);
-                }
-                if (!sentryAsset.infiniteQuality && Provider.modeConfigData.Items.Has_Durability && displayItem.quality > 0 && Random.value < ((ItemWeaponAsset)displayAsset).durability)
-                {
-                    if (displayItem.quality > ((ItemWeaponAsset)displayAsset).wear)
+                    lastFire += fireTime;
+                    if (Time.timeAsDouble - lastFire > (double)fireTime)
                     {
-                        displayItem.quality -= ((ItemWeaponAsset)displayAsset).wear;
+                        lastFire = Time.timeAsDouble;
                     }
-                    else
+                    float quality = (float)(int)displayItem.quality / 100f;
+                    if (attachments.magazineAsset == null)
                     {
-                        displayItem.quality = 0;
+                        return;
                     }
-                }
-                float baseSpreadAngleRadians = ((ItemGunAsset)displayAsset).baseSpreadAngleRadians;
-                baseSpreadAngleRadians *= ((ItemGunAsset)displayAsset).spreadAim;
-                baseSpreadAngleRadians *= ((num8 < 0.5f) ? (1f + (1f - num8 * 2f)) : 1f);
-                if (attachments.tacticalAsset != null && interact)
-                {
-                    baseSpreadAngleRadians *= attachments.tacticalAsset.spread;
-                }
-                if (attachments.gripAsset != null)
-                {
-                    baseSpreadAngleRadians *= attachments.gripAsset.spread;
-                }
-                if (attachments.barrelAsset != null)
-                {
-                    baseSpreadAngleRadians *= attachments.barrelAsset.spread;
-                }
-                if (attachments.magazineAsset != null)
-                {
-                    baseSpreadAngleRadians *= attachments.magazineAsset.spread;
-                }
-                if (((ItemGunAsset)displayAsset).projectile == null)
-                {
-                    BarricadeManager.sendShootSentry(base.transform);
-                    byte pellets = attachments.magazineAsset.pellets;
-                    for (byte b = 0; b < pellets; b++)
+                    if (!flag2)
                     {
-                        EPlayerKill kill = EPlayerKill.NONE;
-                        uint xp = 0u;
-                        float num9 = 1f;
-                        num9 *= ((num8 < 0.5f) ? (0.5f + num8) : 1f);
-                        Transform transform2 = null;
-                        float num10 = 0f;
-                        if (targetPlayer != null)
+                        displayItem.state[10] -= ((ItemGunAsset)displayAsset).ammoPerShot;
+                    }
+                    if (attachments.barrelAsset == null || !attachments.barrelAsset.isSilenced || displayItem.state[16] == 0)
+                    {
+                        AlertTool.alert(base.transform.position, 48f);
+                    }
+                    if (!sentryAsset.infiniteQuality && Provider.modeConfigData.Items.Has_Durability && displayItem.quality > 0 && UnityEngine.Random.value < ((ItemWeaponAsset)displayAsset).durability)
+                    {
+                        if (displayItem.quality > ((ItemWeaponAsset)displayAsset).wear)
                         {
-                            transform2 = targetPlayer.transform;
-                        }
-                        else if (targetZombie != null)
-                        {
-                            transform2 = targetZombie.transform;
-                        }
-                        else if (targetAnimal != null)
-                        {
-                            transform2 = targetAnimal.transform;
-                        }
-                        if (transform2 != null)
-                        {
-                            num10 = (transform2.position - base.transform.position).magnitude;
-                        }
-                        float num11 = num10 / ((ItemWeaponAsset)displayAsset).range;
-                        num11 = 1f - num11;
-                        num11 *= 1f - ((ItemGunAsset)displayAsset).spreadHip;
-                        num11 *= 0.75f;
-                        if (transform2 == null || Random.value > num11)
-                        {
-                            Vector3 randomForwardVectorInCone = RandomEx.GetRandomForwardVectorInCone(baseSpreadAngleRadians);
-                            Vector3 direction = aimTransform.TransformDirection(randomForwardVectorInCone);
-                            RaycastInfo raycastInfo = DamageTool.raycast(new Ray(aimTransform.position, direction), ((ItemWeaponAsset)displayAsset).range, RayMasks.DAMAGE_SERVER);
-                            if (!(raycastInfo.transform == null))
-                            {
-                                DamageTool.ServerSpawnBulletImpact(raycastInfo.point, raycastInfo.normal, raycastInfo.materialName, raycastInfo.collider?.transform, null, Provider.GatherClientConnectionsWithinSphere(raycastInfo.point, EffectManager.SMALL));
-                                if (raycastInfo.vehicle != null)
-                                {
-                                    DamageTool.damage(raycastInfo.vehicle, damageTires: false, Vector3.zero, isRepairing: false, ((ItemGunAsset)displayAsset).vehicleDamage, num9, canRepair: true, out kill, default(CSteamID), EDamageOrigin.Sentry);
-                                }
-                                else if (raycastInfo.transform != null)
-                                {
-                                    if (raycastInfo.transform.CompareTag("Barricade"))
-                                    {
-                                        BarricadeDrop barricadeDrop = BarricadeDrop.FindByRootFast(raycastInfo.transform);
-                                        if (barricadeDrop != null)
-                                        {
-                                            ItemBarricadeAsset asset = barricadeDrop.asset;
-                                            if (asset != null && asset.canBeDamaged && (asset.isVulnerable || ((ItemWeaponAsset)displayAsset).isInvulnerable))
-                                            {
-                                                DamageTool.damage(raycastInfo.transform, isRepairing: false, ((ItemGunAsset)displayAsset).barricadeDamage, num9, out kill, default(CSteamID), EDamageOrigin.Sentry);
-                                            }
-                                        }
-                                    }
-                                    else if (raycastInfo.transform.CompareTag("Structure"))
-                                    {
-                                        StructureDrop structureDrop = StructureDrop.FindByRootFast(raycastInfo.transform);
-                                        if (structureDrop != null)
-                                        {
-                                            ItemStructureAsset asset2 = structureDrop.asset;
-                                            if (asset2 != null && asset2.canBeDamaged && (asset2.isVulnerable || ((ItemWeaponAsset)displayAsset).isInvulnerable))
-                                            {
-                                                DamageTool.damage(raycastInfo.transform, isRepairing: false, raycastInfo.direction * Mathf.Ceil((float)(int)attachments.magazineAsset.pellets / 2f), ((ItemGunAsset)displayAsset).structureDamage, num9, out kill, default(CSteamID), EDamageOrigin.Sentry);
-                                            }
-                                        }
-                                    }
-                                    else if (raycastInfo.transform.CompareTag("Resource"))
-                                    {
-                                        if (ResourceManager.tryGetRegion(raycastInfo.transform, out var x, out var y, out var index))
-                                        {
-                                            ResourceSpawnpoint resourceSpawnpoint = ResourceManager.getResourceSpawnpoint(x, y, index);
-                                            if (resourceSpawnpoint != null && !resourceSpawnpoint.isDead && ((ItemWeaponAsset)displayAsset).hasBladeID(resourceSpawnpoint.asset.bladeID))
-                                            {
-                                                DamageTool.damage(raycastInfo.transform, raycastInfo.direction * Mathf.Ceil((float)(int)attachments.magazineAsset.pellets / 2f), ((ItemGunAsset)displayAsset).resourceDamage, num9, 1f, out kill, out xp, default(CSteamID), EDamageOrigin.Sentry);
-                                            }
-                                        }
-                                    }
-                                    else if (raycastInfo.section < byte.MaxValue)
-                                    {
-                                        InteractableObjectRubble componentInParent = raycastInfo.transform.GetComponentInParent<InteractableObjectRubble>();
-                                        if (componentInParent != null && componentInParent.IsSectionIndexValid(raycastInfo.section) && !componentInParent.isSectionDead(raycastInfo.section) && ((ItemWeaponAsset)displayAsset).hasBladeID(componentInParent.asset.rubbleBladeID) && (componentInParent.asset.rubbleIsVulnerable || ((ItemWeaponAsset)displayAsset).isInvulnerable))
-                                        {
-                                            DamageTool.damage(componentInParent.transform, raycastInfo.direction, raycastInfo.section, ((ItemGunAsset)displayAsset).objectDamage, num9, out kill, out xp, default(CSteamID), EDamageOrigin.Sentry);
-                                        }
-                                    }
-                                }
-                            }
+                            displayItem.quality -= ((ItemWeaponAsset)displayAsset).wear;
                         }
                         else
                         {
-                            Vector3 position3 = Vector3.zero;
+                            displayItem.quality = 0;
+                        }
+                    }
+                    if (((ItemGunAsset)displayAsset).projectile == null)
+                    {
+                        float num8 = CalculateSpreadAngleRadians(quality);
+                        BarricadeManager.sendShootSentry(base.transform);
+                        float bulletDamageMultiplier = GetBulletDamageMultiplier(quality);
+                        byte pellets = attachments.magazineAsset.pellets;
+                        for (byte b = 0; b < pellets; b++)
+                        {
+                            EPlayerKill kill = EPlayerKill.NONE;
+                            uint xp = 0u;
+                            Transform transform2 = null;
+                            float num9 = 0f;
                             if (targetPlayer != null)
                             {
-                                position3 = targetPlayer.look.aim.position;
+                                transform2 = targetPlayer.transform;
                             }
                             else if (targetZombie != null)
                             {
-                                position3 = targetZombie.transform.position;
-                                switch (targetZombie.speciality)
+                                transform2 = targetZombie.transform;
+                            }
+                            else if (targetAnimal != null)
+                            {
+                                transform2 = targetAnimal.transform;
+                            }
+                            if (transform2 != null)
+                            {
+                                num9 = (transform2.position - base.transform.position).magnitude;
+                            }
+                            float num10 = Mathf.Clamp01(num9 / ((ItemWeaponAsset)displayAsset).range);
+                            float num11 = 1f - num10;
+                            num11 *= CalculateChanceToHitSpreadMultiplier(num8);
+                            num11 *= 0.75f;
+                            if (transform2 == null || UnityEngine.Random.value > num11)
+                            {
+                                Vector3 randomForwardVectorInCone = RandomEx.GetRandomForwardVectorInCone(num8);
+                                Vector3 direction = aimTransform.TransformDirection(randomForwardVectorInCone);
+                                RaycastInfo raycastInfo = DamageTool.raycast(new Ray(aimTransform.position, direction), ((ItemWeaponAsset)displayAsset).range, RayMasks.DAMAGE_SERVER);
+                                if (!(raycastInfo.transform == null))
                                 {
-                                case EZombieSpeciality.CRAWLER:
-                                    position3 += new Vector3(0f, 0.25f, 0f);
-                                    break;
-                                case EZombieSpeciality.MEGA:
-                                    position3 += new Vector3(0f, 2.625f, 0f);
-                                    break;
-                                case EZombieSpeciality.NORMAL:
-                                    position3 += new Vector3(0f, 1.75f, 0f);
-                                    break;
-                                case EZombieSpeciality.SPRINTER:
-                                    position3 += new Vector3(0f, 1f, 0f);
-                                    break;
+                                    DamageTool.ServerSpawnBulletImpact(raycastInfo.point, raycastInfo.normal, raycastInfo.materialName, raycastInfo.collider?.transform, null, Provider.GatherClientConnectionsWithinSphere(raycastInfo.point, EffectManager.SMALL));
+                                    if (raycastInfo.vehicle != null)
+                                    {
+                                        DamageTool.damage(raycastInfo.vehicle, damageTires: false, Vector3.zero, isRepairing: false, ((ItemGunAsset)displayAsset).vehicleDamage, bulletDamageMultiplier, canRepair: true, out kill, default(CSteamID), EDamageOrigin.Sentry);
+                                    }
+                                    else if (raycastInfo.transform != null)
+                                    {
+                                        if (raycastInfo.transform.CompareTag("Barricade"))
+                                        {
+                                            BarricadeDrop barricadeDrop = BarricadeDrop.FindByRootFast(raycastInfo.transform);
+                                            if (barricadeDrop != null)
+                                            {
+                                                ItemBarricadeAsset asset = barricadeDrop.asset;
+                                                if (asset != null && asset.canBeDamaged && (asset.isVulnerable || ((ItemWeaponAsset)displayAsset).isInvulnerable))
+                                                {
+                                                    DamageTool.damage(raycastInfo.transform, isRepairing: false, ((ItemGunAsset)displayAsset).barricadeDamage, bulletDamageMultiplier, out kill, default(CSteamID), EDamageOrigin.Sentry);
+                                                }
+                                            }
+                                        }
+                                        else if (raycastInfo.transform.CompareTag("Structure"))
+                                        {
+                                            StructureDrop structureDrop = StructureDrop.FindByRootFast(raycastInfo.transform);
+                                            if (structureDrop != null)
+                                            {
+                                                ItemStructureAsset asset2 = structureDrop.asset;
+                                                if (asset2 != null && asset2.canBeDamaged && (asset2.isVulnerable || ((ItemWeaponAsset)displayAsset).isInvulnerable))
+                                                {
+                                                    DamageTool.damage(raycastInfo.transform, isRepairing: false, raycastInfo.direction * Mathf.Ceil((float)(int)attachments.magazineAsset.pellets / 2f), ((ItemGunAsset)displayAsset).structureDamage, bulletDamageMultiplier, out kill, default(CSteamID), EDamageOrigin.Sentry);
+                                                }
+                                            }
+                                        }
+                                        else if (raycastInfo.transform.CompareTag("Resource"))
+                                        {
+                                            if (ResourceManager.tryGetRegion(raycastInfo.transform, out var x, out var y, out var index))
+                                            {
+                                                ResourceSpawnpoint resourceSpawnpoint = ResourceManager.getResourceSpawnpoint(x, y, index);
+                                                if (resourceSpawnpoint != null && !resourceSpawnpoint.isDead && ((ItemWeaponAsset)displayAsset).hasBladeID(resourceSpawnpoint.asset.bladeID))
+                                                {
+                                                    DamageTool.damage(raycastInfo.transform, raycastInfo.direction * Mathf.Ceil((float)(int)attachments.magazineAsset.pellets / 2f), ((ItemGunAsset)displayAsset).resourceDamage, bulletDamageMultiplier, 1f, out kill, out xp, default(CSteamID), EDamageOrigin.Sentry);
+                                                }
+                                            }
+                                        }
+                                        else if (raycastInfo.section < byte.MaxValue)
+                                        {
+                                            InteractableObjectRubble componentInParent = raycastInfo.transform.GetComponentInParent<InteractableObjectRubble>();
+                                            if (componentInParent != null && componentInParent.IsSectionIndexValid(raycastInfo.section) && !componentInParent.isSectionDead(raycastInfo.section) && ((ItemWeaponAsset)displayAsset).hasBladeID(componentInParent.asset.rubbleBladeID) && (componentInParent.asset.rubbleIsVulnerable || ((ItemWeaponAsset)displayAsset).isInvulnerable))
+                                            {
+                                                DamageTool.damage(componentInParent.transform, raycastInfo.direction, raycastInfo.section, ((ItemGunAsset)displayAsset).objectDamage, bulletDamageMultiplier, out kill, out xp, default(CSteamID), EDamageOrigin.Sentry);
+                                            }
+                                        }
+                                    }
                                 }
                             }
-                            else if (targetAnimal != null)
+                            else
                             {
-                                position3 = targetAnimal.transform.position + Vector3.up;
-                            }
-                            DamageTool.ServerSpawnBulletImpact(position3, -aimTransform.forward, "Flesh_Dynamic", null, null, Provider.GatherClientConnectionsWithinSphere(position3, EffectManager.SMALL));
-                            Vector3 direction2 = aimTransform.forward * Mathf.Ceil((float)(int)attachments.magazineAsset.pellets / 2f);
-                            if (targetPlayer != null)
-                            {
-                                DamageTool.damage(targetPlayer, EDeathCause.SENTRY, ELimb.SPINE, base.owner, direction2, ((ItemGunAsset)displayAsset).playerDamageMultiplier, num9, armor: true, out kill, trackKill: true);
-                            }
-                            else if (targetZombie != null)
-                            {
-                                IDamageMultiplier zombieOrPlayerDamageMultiplier = ((ItemGunAsset)displayAsset).zombieOrPlayerDamageMultiplier;
-                                DamageZombieParameters parameters = DamageZombieParameters.make(targetZombie, direction2, zombieOrPlayerDamageMultiplier, ELimb.SPINE);
-                                parameters.times = num9;
-                                parameters.allowBackstab = false;
-                                parameters.respectArmor = true;
-                                parameters.instigator = this;
-                                DamageTool.damageZombie(parameters, out kill, out xp);
-                            }
-                            else if (targetAnimal != null)
-                            {
-                                IDamageMultiplier animalOrPlayerDamageMultiplier = ((ItemGunAsset)displayAsset).animalOrPlayerDamageMultiplier;
-                                DamageAnimalParameters parameters2 = DamageAnimalParameters.make(targetAnimal, direction2, animalOrPlayerDamageMultiplier, ELimb.SPINE);
-                                parameters2.times = num9;
-                                parameters2.instigator = this;
-                                DamageTool.damageAnimal(parameters2, out kill, out xp);
+                                Vector3 position3 = Vector3.zero;
+                                if (targetPlayer != null)
+                                {
+                                    position3 = targetPlayer.look.aim.position;
+                                }
+                                else if (targetZombie != null)
+                                {
+                                    position3 = targetZombie.transform.position;
+                                    switch (targetZombie.speciality)
+                                    {
+                                    case EZombieSpeciality.CRAWLER:
+                                        position3 += new Vector3(0f, 0.25f, 0f);
+                                        break;
+                                    case EZombieSpeciality.MEGA:
+                                        position3 += new Vector3(0f, 2.625f, 0f);
+                                        break;
+                                    case EZombieSpeciality.NORMAL:
+                                        position3 += new Vector3(0f, 1.75f, 0f);
+                                        break;
+                                    case EZombieSpeciality.SPRINTER:
+                                        position3 += new Vector3(0f, 1f, 0f);
+                                        break;
+                                    }
+                                }
+                                else if (targetAnimal != null)
+                                {
+                                    position3 = targetAnimal.transform.position + Vector3.up;
+                                }
+                                DamageTool.ServerSpawnBulletImpact(position3, -aimTransform.forward, "Flesh_Dynamic", null, null, Provider.GatherClientConnectionsWithinSphere(position3, EffectManager.SMALL));
+                                Vector3 direction2 = aimTransform.forward * Mathf.Ceil((float)(int)attachments.magazineAsset.pellets / 2f);
+                                if (targetPlayer != null)
+                                {
+                                    DamageTool.damage(targetPlayer, EDeathCause.SENTRY, ELimb.SPINE, base.owner, direction2, ((ItemGunAsset)displayAsset).playerDamageMultiplier, bulletDamageMultiplier, armor: true, out kill, trackKill: true);
+                                }
+                                else if (targetZombie != null)
+                                {
+                                    IDamageMultiplier zombieOrPlayerDamageMultiplier = ((ItemGunAsset)displayAsset).zombieOrPlayerDamageMultiplier;
+                                    DamageZombieParameters parameters = DamageZombieParameters.make(targetZombie, direction2, zombieOrPlayerDamageMultiplier, ELimb.SPINE);
+                                    parameters.times = bulletDamageMultiplier;
+                                    parameters.allowBackstab = false;
+                                    parameters.respectArmor = true;
+                                    parameters.instigator = this;
+                                    DamageTool.damageZombie(parameters, out kill, out xp);
+                                }
+                                else if (targetAnimal != null)
+                                {
+                                    IDamageMultiplier animalOrPlayerDamageMultiplier = ((ItemGunAsset)displayAsset).animalOrPlayerDamageMultiplier;
+                                    DamageAnimalParameters parameters2 = DamageAnimalParameters.make(targetAnimal, direction2, animalOrPlayerDamageMultiplier, ELimb.SPINE);
+                                    parameters2.times = bulletDamageMultiplier;
+                                    parameters2.instigator = this;
+                                    DamageTool.damageAnimal(parameters2, out kill, out xp);
+                                }
                             }
                         }
                     }
+                    rebuildState();
                 }
-                rebuildState();
             }
         }
-        bool flag2 = Time.timeAsDouble - lastAlert < 1.0;
-        if (flag2 != isAlert)
+        bool flag4 = Time.timeAsDouble - lastAlert < 1.0;
+        if (flag4 != isAlert)
         {
-            isAlert = flag2;
+            isAlert = flag4;
             if (!Dedicator.IsDedicatedServer)
             {
                 if (isAlert)
@@ -909,12 +912,12 @@ public class InteractableSentry : InteractableStorage
         destroyEffects();
         if (onMaterial != null)
         {
-            Object.DestroyImmediate(onMaterial);
+            UnityEngine.Object.DestroyImmediate(onMaterial);
             onMaterial = null;
         }
         if (offMaterial != null)
         {
-            Object.DestroyImmediate(offMaterial);
+            UnityEngine.Object.DestroyImmediate(offMaterial);
             offMaterial = null;
         }
     }
@@ -929,5 +932,72 @@ public class InteractableSentry : InteractableStorage
     public void ReceiveAlert(byte yaw, byte pitch)
     {
         alert(MeasurementTool.byteToAngle(yaw), MeasurementTool.byteToAngle(pitch));
+    }
+
+    /// <summary>
+    /// Calculate damage multiplier for individual bullet.
+    /// </summary>
+    private float GetBulletDamageMultiplier(float quality)
+    {
+        float num = ((quality < 0.5f) ? (0.5f + quality) : 1f);
+        if (attachments.magazineAsset != null)
+        {
+            num *= attachments.magazineAsset.ballisticDamageMultiplier;
+        }
+        if (attachments.sightAsset != null)
+        {
+            num *= attachments.sightAsset.ballisticDamageMultiplier;
+        }
+        if (attachments.tacticalAsset != null)
+        {
+            num *= attachments.tacticalAsset.ballisticDamageMultiplier;
+        }
+        if (attachments.barrelAsset != null)
+        {
+            num *= attachments.barrelAsset.ballisticDamageMultiplier;
+        }
+        if (attachments.gripAsset != null)
+        {
+            num *= attachments.gripAsset.ballisticDamageMultiplier;
+        }
+        return num;
+    }
+
+    private float CalculateSpreadAngleRadians(float quality)
+    {
+        float baseSpreadAngleRadians = ((ItemGunAsset)displayAsset).baseSpreadAngleRadians;
+        baseSpreadAngleRadians *= ((ItemGunAsset)displayAsset).spreadAim;
+        baseSpreadAngleRadians *= ((quality < 0.5f) ? (1f + (1f - quality * 2f)) : 1f);
+        if (attachments.tacticalAsset != null && interact)
+        {
+            baseSpreadAngleRadians *= attachments.tacticalAsset.spread;
+        }
+        if (attachments.gripAsset != null)
+        {
+            baseSpreadAngleRadians *= attachments.gripAsset.spread;
+        }
+        if (attachments.barrelAsset != null)
+        {
+            baseSpreadAngleRadians *= attachments.barrelAsset.spread;
+        }
+        if (attachments.magazineAsset != null)
+        {
+            baseSpreadAngleRadians *= attachments.magazineAsset.spread;
+        }
+        return baseSpreadAngleRadians;
+    }
+
+    /// <summary>
+    /// Each shot has a percentage chance to hit the target. Higher values are more likely to hit. e.g., it
+    /// decreases from 1.0 at point blank to 0.0 at the weapon's maximum range. This chance is affected by the
+    /// gun's spread.
+    /// </summary>
+    private float CalculateChanceToHitSpreadMultiplier(float spreadAngleRadians)
+    {
+        if (spreadAngleRadians > MathF.PI / 2f)
+        {
+            return 0f;
+        }
+        return Mathf.Cos(spreadAngleRadians);
     }
 }

@@ -367,7 +367,10 @@ public class MenuWorkshopSpawnsUI
         using DatWriter datWriter = new DatWriter(stringWriter);
         datWriter.WriteKeyValue("GUID", asset.GUID);
         datWriter.WriteKeyValue("Type", "Spawn");
-        datWriter.WriteKeyValue("ID", asset.id);
+        if (asset.id != 0)
+        {
+            datWriter.WriteKeyValue("ID", asset.id);
+        }
         bool flag = false;
         if (asset.roots != null)
         {

@@ -19,9 +19,11 @@ public class PlayerQuests : PlayerCaller
 
     private const byte SAVEDATA_VERSION_ADDED_QUEST_LIST_GUIDS = 10;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 10;
+    private const byte SAVEDATA_VERSION_ADDED_NPC_CUTSCENE_MODE = 11;
 
-    public static readonly byte SAVEDATA_VERSION = 10;
+    private const byte SAVEDATA_VERSION_NEWEST = 11;
+
+    public static readonly byte SAVEDATA_VERSION = 11;
 
     public static readonly uint DEFAULT_RADIO_FREQUENCY = 460327u;
 
@@ -81,6 +83,10 @@ public class PlayerQuests : PlayerCaller
     /// Saved and loaded between sessions.
     /// </summary>
     public string npcSpawnId;
+
+    private bool npcCutsceneMode;
+
+    private static readonly ClientInstanceMethod<bool> SendCutsceneMode = ClientInstanceMethod<bool>.Get(typeof(PlayerQuests), "ReceiveCutsceneMode");
 
     private static readonly ClientInstanceMethod<bool, Vector3, string> SendMarkerState = ClientInstanceMethod<bool, Vector3, string>.Get(typeof(PlayerQuests), "ReceiveMarkerState");
 
@@ -419,6 +425,28 @@ public class PlayerQuests : PlayerCaller
         return _trackedQuest;
     }
 
+    /// <summary>
+    /// If true, hide viewmodel and prevent using equipped item. For example, to prevent shooting gun on top of a
+    /// first-person scene. This could be expanded in the future with other flags and options.
+    /// </summary>
+    public bool IsCutsceneModeActive()
+    {
+        return npcCutsceneMode;
+    }
+
+    public void ServerSetCutsceneModeActive(bool active)
+    {
+        if (npcCutsceneMode != active)
+        {
+            npcCutsceneMode = active;
+            if (base.channel.IsLocalPlayer)
+            {
+                base.player.animator.NotifyLocalPlayerCutsceneModeActiveChanged(npcCutsceneMode);
+            }
+            SendCutsceneMode.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), active);
+        }
+    }
+
     public bool isMemberOfGroup(CSteamID groupID)
     {
         if (isMemberOfAGroup)
@@ -437,6 +465,16 @@ public class PlayerQuests : PlayerCaller
     public void tellSetMarker(CSteamID steamID, bool newIsMarkerPlaced, Vector3 newMarkerPosition, string newMarkerTextOverride)
     {
         ReceiveMarkerState(newIsMarkerPlaced, newMarkerPosition, newMarkerTextOverride);
+    }
+
+    [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
+    public void ReceiveCutsceneMode(bool newCutsceneMode)
+    {
+        npcCutsceneMode = newCutsceneMode;
+        if (base.channel.IsLocalPlayer)
+        {
+            base.player.animator.NotifyLocalPlayerCutsceneModeActiveChanged(npcCutsceneMode);
+        }
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellSetMarker")]
@@ -1753,6 +1791,8 @@ public class PlayerQuests : PlayerCaller
         }
         reader.ReadGuid(out var value6);
         _trackedQuest = Assets.find<QuestAsset>(value6);
+        reader.ReadBit(out npcCutsceneMode);
+        base.player.animator.NotifyLocalPlayerCutsceneModeActiveChanged(npcCutsceneMode);
         onFlagsUpdated?.Invoke();
         TriggerTrackedQuestUpdated();
     }
@@ -1787,6 +1827,7 @@ public class PlayerQuests : PlayerCaller
             writer.WriteGuid(quests?.asset?.GUID ?? Guid.Empty);
         }
         writer.WriteGuid(_trackedQuest?.GUID ?? Guid.Empty);
+        writer.WriteBit(npcCutsceneMode);
     }
 
     internal void SendInitialPlayerState(SteamPlayer client)
@@ -1976,6 +2017,7 @@ public class PlayerQuests : PlayerCaller
         if (isDead)
         {
             StopDelayedQuestRewards();
+            ServerSetCutsceneModeActive(active: false);
         }
     }
 
@@ -2138,8 +2180,20 @@ public class PlayerQuests : PlayerCaller
                 {
                     npcSpawnId = river.readString();
                 }
+                if (b >= 11)
+                {
+                    npcCutsceneMode = river.readBoolean();
+                }
+                else
+                {
+                    npcCutsceneMode = false;
+                }
             }
             river.closeRiver();
+        }
+        if (base.channel.IsLocalPlayer)
+        {
+            base.player.animator.NotifyLocalPlayerCutsceneModeActiveChanged(npcCutsceneMode);
         }
         if (Provider.modeConfigData.Gameplay.Allow_Dynamic_Groups)
         {
@@ -2229,7 +2283,7 @@ public class PlayerQuests : PlayerCaller
             return;
         }
         River river = PlayerSavedata.openRiver(base.channel.owner.playerID, "/Player/Quests.dat", isReading: false);
-        river.writeByte(10);
+        river.writeByte(11);
         river.writeBoolean(isMarkerPlaced);
         river.writeSingleVector3(markerPosition);
         river.writeUInt32(radioFrequency);
@@ -2250,6 +2304,7 @@ public class PlayerQuests : PlayerCaller
         }
         river.writeGUID(_trackedQuest?.GUID ?? Guid.Empty);
         river.writeString(string.IsNullOrEmpty(npcSpawnId) ? string.Empty : npcSpawnId);
+        river.writeBoolean(npcCutsceneMode);
         river.closeRiver();
     }
 }

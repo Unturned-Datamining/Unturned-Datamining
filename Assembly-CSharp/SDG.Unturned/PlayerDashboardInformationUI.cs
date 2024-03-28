@@ -356,12 +356,20 @@ public class PlayerDashboardInformationUI
             sleekImage.PositionScale_Y = vector.y;
             if (OptionsSettings.streamer || !showPlayerAvatarsToggle.Value)
             {
-                sleekImage.Texture = null;
+                sleekImage.Texture = icons.load<Texture2D>("RemotePlayer");
+                sleekImage.TintColor = client.markerColor;
+                sleekImage.SizeOffset_X = 4f;
+                sleekImage.SizeOffset_Y = 4f;
             }
             else
             {
                 sleekImage.Texture = Provider.provider.communityService.getIcon(client.playerID.steamID, shouldCache: true);
+                sleekImage.TintColor = Color.white;
+                sleekImage.SizeOffset_X = 20f;
+                sleekImage.SizeOffset_Y = 20f;
             }
+            sleekImage.PositionOffset_X = sleekImage.SizeOffset_X / -2f;
+            sleekImage.PositionOffset_Y = sleekImage.SizeOffset_Y / -2f;
             if (showPlayerNamesToggle.Value)
             {
                 if (flag && !string.IsNullOrEmpty(client.playerID.nickName))

@@ -147,7 +147,7 @@ internal class GlazierScrollView_UIToolkit : GlazierElementBase_UIToolkit, ISlee
         set
         {
             _handleScrollWheel = value;
-            control.mouseWheelScrollSize = (_handleScrollWheel ? 600f : 0f);
+            control.mouseWheelScrollSize = (_handleScrollWheel ? (600f * GlazierBase.ScrollViewSensitivityMultiplier) : 0f);
         }
     }
 
@@ -273,7 +273,7 @@ internal class GlazierScrollView_UIToolkit : GlazierElementBase_UIToolkit, ISlee
         control.AddToClassList("unturned-scroll-view");
         control.horizontalScroller.valueChanged += OnHorizontalValueChanged;
         control.verticalScroller.valueChanged += OnVerticalValueChanged;
-        control.mouseWheelScrollSize = 600f;
+        control.mouseWheelScrollSize = 600f * GlazierBase.ScrollViewSensitivityMultiplier;
         contentViewport = control.contentViewport;
         contentContainer = control.contentContainer;
         control.pickingMode = PickingMode.Ignore;

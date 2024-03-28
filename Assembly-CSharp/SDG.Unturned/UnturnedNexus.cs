@@ -72,6 +72,7 @@ public class UnturnedNexus : IModuleNexus
         Assets.assetTypes.addType("Dialogue", typeof(DialogueAsset));
         Assets.assetTypes.addType("Quest", typeof(QuestAsset));
         Assets.assetTypes.addType("Vendor", typeof(VendorAsset));
+        Assets.assetTypes.addType("RewardsList", typeof(NPCRewardsAsset));
         Assets.useableTypes.addType("Barricade", typeof(UseableBarricade));
         Assets.useableTypes.addType("Battery_Vehicle", typeof(UseableVehicleBattery));
         Assets.useableTypes.addType("Carjack", typeof(UseableCarjack));

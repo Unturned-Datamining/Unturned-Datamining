@@ -136,13 +136,10 @@ public class StructureManager : SteamCaller
         angle_x = Mathf.RoundToInt(angle_x / 2f) * 2;
         angle_y = Mathf.RoundToInt(angle_y / 2f) * 2;
         angle_z = Mathf.RoundToInt(angle_z / 2f) * 2;
-        if (tryGetRegion(transform, out var _, out var _, out var region))
+        StructureDrop structureDrop = StructureDrop.FindByRootFast(transform);
+        if (structureDrop != null)
         {
-            StructureDrop structureDrop = region.FindStructureByRootTransform(transform);
-            if (structureDrop != null)
-            {
-                StructureDrop.SendTransformRequest.Invoke(structureDrop.GetNetId(), ENetReliability.Reliable, point, MeasurementTool.angleToByte(angle_x), MeasurementTool.angleToByte(angle_y), MeasurementTool.angleToByte(angle_z));
-            }
+            StructureDrop.SendTransformRequest.Invoke(structureDrop.GetNetId(), ENetReliability.Reliable, point, MeasurementTool.angleToByte(angle_x), MeasurementTool.angleToByte(angle_y), MeasurementTool.angleToByte(angle_z));
         }
     }
 

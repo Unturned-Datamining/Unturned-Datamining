@@ -8,6 +8,32 @@ namespace SDG.Unturned;
 [NetInvokableGeneratedClass(typeof(PlayerQuests))]
 public static class PlayerQuests_NetMethods
 {
+    [NetInvokableGeneratedMethod("ReceiveCutsceneMode", ENetInvokableGeneratedMethodPurpose.Read)]
+    public static void ReceiveCutsceneMode_Read(in ClientInvocationContext context)
+    {
+        NetPakReader reader = context.reader;
+        if (!reader.ReadNetId(out var value))
+        {
+            return;
+        }
+        object obj = NetIdRegistry.Get(value);
+        if (obj != null)
+        {
+            PlayerQuests playerQuests = obj as PlayerQuests;
+            if (!(playerQuests == null))
+            {
+                reader.ReadBit(out var value2);
+                playerQuests.ReceiveCutsceneMode(value2);
+            }
+        }
+    }
+
+    [NetInvokableGeneratedMethod("ReceiveCutsceneMode", ENetInvokableGeneratedMethodPurpose.Write)]
+    public static void ReceiveCutsceneMode_Write(NetPakWriter writer, bool newCutsceneMode)
+    {
+        writer.WriteBit(newCutsceneMode);
+    }
+
     [NetInvokableGeneratedMethod("ReceiveMarkerState", ENetInvokableGeneratedMethodPurpose.Read)]
     public static void ReceiveMarkerState_Read(in ClientInvocationContext context)
     {

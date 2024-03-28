@@ -106,6 +106,14 @@ public static class RichTextUtil
         {
             return false;
         }
+        if (text.IndexOf("<scale", StringComparison.OrdinalIgnoreCase) != -1)
+        {
+            return false;
+        }
+        if (text.IndexOf("<pos", StringComparison.OrdinalIgnoreCase) != -1)
+        {
+            return false;
+        }
         return true;
     }
 }

@@ -6,7 +6,13 @@ namespace SDG.Unturned;
 
 public class LevelZombies
 {
-    public static readonly byte SAVEDATA_TABLE_VERSION = 9;
+    public const byte SAVEDATA_TABLE_VERSION_OLDER = 9;
+
+    public const byte SAVEDATA_TABLE_VERSION_ADDED_UNIQUE_ID = 10;
+
+    private const byte SAVEDATA_TABLE_VERSION_NEWEST = 10;
+
+    public static readonly byte SAVEDATA_TABLE_VERSION = 10;
 
     public static readonly byte SAVEDATA_SPAWN_VERSION = 1;
 
@@ -17,6 +23,8 @@ public class LevelZombies
     private static List<ZombieSpawnpoint>[] _zombies;
 
     private static List<ZombieSpawnpoint>[,] _spawns;
+
+    private static int nextTableUniqueId;
 
     [Obsolete("Was the parent of all zombies in the past, but now empty for TransformHierarchy performance.")]
     public static Transform models
@@ -39,6 +47,13 @@ public class LevelZombies
     public static List<ZombieSpawnpoint>[] zombies => _zombies;
 
     public static List<ZombieSpawnpoint>[,] spawns => _spawns;
+
+    internal static int GenerateTableUniqueId()
+    {
+        int result = nextTableUniqueId;
+        nextTableUniqueId++;
+        return result;
+    }
 
     public static void setEnabled(bool isEnabled)
     {
@@ -131,9 +146,27 @@ public class LevelZombies
         }
     }
 
+    /// <returns>-1 if table was not found.</returns>
+    public static int FindTableIndexByUniqueId(int uniqueId)
+    {
+        if (tables != null && uniqueId > 0)
+        {
+            for (int i = 0; i < tables.Count; i++)
+            {
+                ZombieTable zombieTable = tables[i];
+                if (zombieTable != null && zombieTable.tableUniqueId == uniqueId)
+                {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
     public static void load()
     {
         tables = new List<ZombieTable>();
+        nextTableUniqueId = 1;
         if (ReadWrite.fileExists(Level.info.path + "/Spawns/Zombies.dat", useCloud: false, usePath: false))
         {
             Block block = ReadWrite.readBlock(Level.info.path + "/Spawns/Zombies.dat", useCloud: false, usePath: false, 0);
@@ -142,11 +175,16 @@ public class LevelZombies
             {
                 block.readSteamID();
             }
+            if (b >= 10)
+            {
+                nextTableUniqueId = block.readInt32();
+            }
             if (b > 2)
             {
                 byte b2 = block.readByte();
                 for (byte b3 = 0; b3 < b2; b3++)
                 {
+                    int newTableUniqueId = ((b < 10) ? GenerateTableUniqueId() : block.readInt32());
                     Color newColor = block.readColor();
                     string newName = block.readString();
                     bool flag = block.readBoolean();
@@ -182,7 +220,7 @@ public class LevelZombies
                         }
                         array[b5] = new ZombieSlot(newChance, list);
                     }
-                    tables.Add(new ZombieTable(array, newColor, newName, flag, newHealth, newDamage, newLootIndex, newLootID, newXP, newRegen, newDifficultyGUID));
+                    tables.Add(new ZombieTable(array, newColor, newName, flag, newHealth, newDamage, newLootIndex, newLootID, newXP, newRegen, newDifficultyGUID, newTableUniqueId));
                 }
             }
             else
@@ -190,6 +228,7 @@ public class LevelZombies
                 byte b8 = block.readByte();
                 for (byte b9 = 0; b9 < b8; b9++)
                 {
+                    int newTableUniqueId2 = GenerateTableUniqueId();
                     Color newColor2 = block.readColor();
                     string newName2 = block.readString();
                     byte newLootIndex2 = block.readByte();
@@ -210,7 +249,7 @@ public class LevelZombies
                         }
                         array2[b11] = new ZombieSlot(newChance2, list2);
                     }
-                    tables.Add(new ZombieTable(array2, newColor2, newName2, newMega: false, 100, 15, newLootIndex2, 0, 5u, 10f, string.Empty));
+                    tables.Add(new ZombieTable(array2, newColor2, newName2, newMega: false, 100, 15, newLootIndex2, 0, 5u, 10f, string.Empty, newTableUniqueId2));
                 }
             }
         }
@@ -336,10 +375,12 @@ public class LevelZombies
     {
         Block block = new Block();
         block.writeByte(SAVEDATA_TABLE_VERSION);
+        block.writeInt32(nextTableUniqueId);
         block.writeByte((byte)tables.Count);
         for (byte b = 0; b < tables.Count; b++)
         {
             ZombieTable zombieTable = tables[b];
+            block.writeInt32(zombieTable.tableUniqueId);
             block.writeColor(zombieTable.color);
             block.writeString(zombieTable.name);
             block.writeBoolean(zombieTable.isMega);

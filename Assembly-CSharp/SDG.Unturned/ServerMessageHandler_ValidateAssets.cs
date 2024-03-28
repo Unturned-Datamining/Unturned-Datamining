@@ -74,7 +74,7 @@ internal static class ServerMessageHandler_ValidateAssets
             Asset asset = Assets.find(value3);
             if (asset == null)
             {
-                if (!Assets.shouldLoadAnyAssets)
+                if ((bool)Assets.shouldLoadAnyAssets)
                 {
                     UnturnedLog.info($"Kicking {transportConnection} for invalid file integrity request guid: {value3:N}");
                     Assets.SendKickForInvalidGuid.Invoke(ENetReliability.Reliable, transportConnection, value3);

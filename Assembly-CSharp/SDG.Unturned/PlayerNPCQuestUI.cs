@@ -41,7 +41,7 @@ public class PlayerNPCQuestUI
 
     private static ISleekLabel descriptionLabel;
 
-    private static ISleekScrollView detailsBox;
+    private static ISleekScrollView conditionsAndRewardsScrollView;
 
     private static ISleekLabel conditionsLabel;
 
@@ -68,6 +68,12 @@ public class PlayerNPCQuestUI
     private static ISleekButton abandonButton;
 
     private static ISleekButton returnButton;
+
+    private const int LOWER_BUTTONS_HEIGHT = 50;
+
+    private const int LOWER_BUTTONS_VERTICAL_OFFSET = 10;
+
+    private const int QUEST_BOX_INNER_SPACING = 5;
 
     private static List<bool> areConditionsMet = new List<bool>(8);
 
@@ -134,14 +140,13 @@ public class PlayerNPCQuestUI
         }
         nameLabel.Text = quest.questName;
         descriptionLabel.Text = quest.questDescription;
-        int num = Screen.height - 80;
-        float num2 = 0f;
+        float num = 0f;
         if (quest.conditions != null && quest.conditions.Length != 0)
         {
             conditionsLabel.IsVisible = true;
             conditionsContainer.IsVisible = true;
             conditionsContainer.RemoveAllChildren();
-            float num3 = 0f;
+            float num2 = 0f;
             areConditionsMet.Clear();
             INPCCondition[] conditions = quest.conditions;
             foreach (INPCCondition iNPCCondition in conditions)
@@ -162,15 +167,15 @@ public class PlayerNPCQuestUI
                     ISleekElement sleekElement = iNPCCondition2.createUI(Player.player, icon);
                     if (sleekElement != null)
                     {
-                        sleekElement.PositionOffset_Y = num3;
+                        sleekElement.PositionOffset_Y = num2;
                         conditionsContainer.AddChild(sleekElement);
-                        num3 += sleekElement.SizeOffset_Y;
+                        num2 += sleekElement.SizeOffset_Y;
                     }
                 }
             }
-            conditionsContainer.SizeOffset_Y = num3;
-            num2 += 30f;
-            num2 += num3;
+            conditionsContainer.SizeOffset_Y = num2;
+            num += conditionsLabel.SizeOffset_Y;
+            num += conditionsContainer.SizeOffset_Y;
         }
         else
         {
@@ -182,44 +187,48 @@ public class PlayerNPCQuestUI
             rewardsLabel.IsVisible = true;
             rewardsContainer.IsVisible = true;
             rewardsContainer.RemoveAllChildren();
-            float num4 = 0f;
+            float num3 = 0f;
             for (int k = 0; k < quest.rewards.Length; k++)
             {
                 ISleekElement sleekElement2 = quest.rewards[k].createUI(Player.player);
                 if (sleekElement2 != null)
                 {
-                    sleekElement2.PositionOffset_Y = num4;
+                    sleekElement2.PositionOffset_Y = num3;
                     rewardsContainer.AddChild(sleekElement2);
-                    num4 += sleekElement2.SizeOffset_Y;
+                    num3 += sleekElement2.SizeOffset_Y;
                 }
             }
-            rewardsLabel.PositionOffset_Y = num2;
-            rewardsContainer.PositionOffset_Y = num2 + 30f;
-            rewardsContainer.SizeOffset_Y = num4;
-            num2 += 30f;
-            num2 += num4;
+            rewardsLabel.PositionOffset_Y = num;
+            num += rewardsLabel.SizeOffset_Y;
+            rewardsContainer.PositionOffset_Y = num;
+            rewardsContainer.SizeOffset_Y = num3;
+            num += rewardsContainer.SizeOffset_Y;
         }
         else
         {
             rewardsLabel.IsVisible = false;
             rewardsContainer.IsVisible = false;
         }
-        detailsBox.ContentSizeOffset = new Vector2(0f, num2);
-        if (num2 + 105f > (float)num)
+        conditionsAndRewardsScrollView.ContentSizeOffset = new Vector2(0f, num);
+        float num4 = (float)Screen.height / GraphicsSettings.userInterfaceScale;
+        num4 -= 10f;
+        num4 -= 10f;
+        num4 -= 50f;
+        num4 -= 10f;
+        float num5 = conditionsAndRewardsScrollView.PositionOffset_Y + num + 5f;
+        if (num5 >= num4)
         {
             questBox.PositionOffset_Y = 0f;
             questBox.PositionScale_Y = 0f;
-            questBox.SizeOffset_Y = num;
-            detailsBox.PositionOffset_Y = -num + 100;
-            detailsBox.SizeOffset_Y = num - 105;
+            questBox.SizeOffset_Y = -60f;
+            questBox.SizeScale_Y = 1f;
         }
         else
         {
-            questBox.PositionOffset_Y = (0f - num2) / 2f - 80f;
+            questBox.PositionOffset_Y = num5 * -0.5f - 30f;
             questBox.PositionScale_Y = 0.5f;
-            questBox.SizeOffset_Y = num2 + 100f;
-            detailsBox.PositionOffset_Y = -5f - num2;
-            detailsBox.SizeOffset_Y = num2;
+            questBox.SizeOffset_Y = num5;
+            questBox.SizeScale_Y = 0f;
         }
     }
 
@@ -307,44 +316,45 @@ public class PlayerNPCQuestUI
         questBox.AddChild(nameLabel);
         descriptionLabel = Glazier.Get().CreateLabel();
         descriptionLabel.PositionOffset_X = 5f;
-        descriptionLabel.PositionOffset_Y = 30f;
+        descriptionLabel.PositionOffset_Y = nameLabel.SizeOffset_Y;
         descriptionLabel.SizeOffset_X = -10f;
-        descriptionLabel.SizeOffset_Y = -35f;
+        descriptionLabel.SizeOffset_Y = 70f;
         descriptionLabel.SizeScale_X = 1f;
-        descriptionLabel.SizeScale_Y = 1f;
         descriptionLabel.TextAlignment = TextAnchor.UpperLeft;
         descriptionLabel.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
         descriptionLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
         descriptionLabel.AllowRichText = true;
         questBox.AddChild(descriptionLabel);
-        detailsBox = Glazier.Get().CreateScrollView();
-        detailsBox.PositionOffset_X = 5f;
-        detailsBox.PositionScale_Y = 1f;
-        detailsBox.SizeOffset_X = -10f;
-        detailsBox.SizeScale_X = 1f;
-        detailsBox.ScaleContentToWidth = true;
-        questBox.AddChild(detailsBox);
+        conditionsAndRewardsScrollView = Glazier.Get().CreateScrollView();
+        conditionsAndRewardsScrollView.PositionOffset_X = 5f;
+        conditionsAndRewardsScrollView.PositionOffset_Y = descriptionLabel.PositionOffset_Y + descriptionLabel.SizeOffset_Y + 5f;
+        conditionsAndRewardsScrollView.SizeOffset_X = -10f;
+        conditionsAndRewardsScrollView.SizeOffset_Y = 0f - conditionsAndRewardsScrollView.PositionOffset_Y - 5f;
+        conditionsAndRewardsScrollView.SizeScale_X = 1f;
+        conditionsAndRewardsScrollView.SizeScale_Y = 1f;
+        conditionsAndRewardsScrollView.ScaleContentToWidth = true;
+        questBox.AddChild(conditionsAndRewardsScrollView);
         conditionsLabel = Glazier.Get().CreateLabel();
         conditionsLabel.SizeOffset_Y = 30f;
         conditionsLabel.SizeScale_X = 1f;
         conditionsLabel.TextAlignment = TextAnchor.MiddleLeft;
         conditionsLabel.Text = localization.format("Conditions");
         conditionsLabel.FontSize = ESleekFontSize.Medium;
-        detailsBox.AddChild(conditionsLabel);
+        conditionsAndRewardsScrollView.AddChild(conditionsLabel);
         conditionsContainer = Glazier.Get().CreateFrame();
         conditionsContainer.PositionOffset_Y = 30f;
         conditionsContainer.SizeScale_X = 1f;
-        detailsBox.AddChild(conditionsContainer);
+        conditionsAndRewardsScrollView.AddChild(conditionsContainer);
         rewardsLabel = Glazier.Get().CreateLabel();
         rewardsLabel.SizeOffset_Y = 30f;
         rewardsLabel.SizeScale_X = 1f;
         rewardsLabel.TextAlignment = TextAnchor.MiddleLeft;
         rewardsLabel.Text = localization.format("Rewards");
         rewardsLabel.FontSize = ESleekFontSize.Medium;
-        detailsBox.AddChild(rewardsLabel);
+        conditionsAndRewardsScrollView.AddChild(rewardsLabel);
         rewardsContainer = Glazier.Get().CreateFrame();
         rewardsContainer.SizeScale_X = 1f;
-        detailsBox.AddChild(rewardsContainer);
+        conditionsAndRewardsScrollView.AddChild(rewardsContainer);
         beginContainer = Glazier.Get().CreateFrame();
         beginContainer.PositionOffset_Y = 10f;
         beginContainer.PositionScale_Y = 1f;

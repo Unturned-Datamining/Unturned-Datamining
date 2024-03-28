@@ -1,4 +1,4 @@
-"Available_Instance_ID" "17630"
+"Available_Instance_ID" "17635"
 "Items"
 [
 	{
@@ -262624,6 +262624,7 @@
 				"Z" "1"
 			}
 			"LocationName" "Cologne"
+			"IsVisibleOnMap" "true"
 		}
 	}
 	{
@@ -262651,6 +262652,7 @@
 				"Z" "1"
 			}
 			"LocationName" "Hamburg"
+			"IsVisibleOnMap" "true"
 		}
 	}
 	{
@@ -262678,6 +262680,7 @@
 				"Z" "1"
 			}
 			"LocationName" "Munich"
+			"IsVisibleOnMap" "true"
 		}
 	}
 	{
@@ -262705,6 +262708,7 @@
 				"Z" "1"
 			}
 			"LocationName" "Berlin"
+			"IsVisibleOnMap" "true"
 		}
 	}
 	{
@@ -264298,6 +264302,7 @@
 				"Z" "1"
 			}
 			"LocationName" "Camp Dusseldorf"
+			"IsVisibleOnMap" "true"
 		}
 	}
 	{
@@ -264325,6 +264330,7 @@
 				"Z" "1"
 			}
 			"LocationName" "Fernweh Prison"
+			"IsVisibleOnMap" "true"
 		}
 	}
 	{
@@ -264352,6 +264358,7 @@
 				"Z" "1"
 			}
 			"LocationName" "Ostsee Compound"
+			"IsVisibleOnMap" "true"
 		}
 	}
 	{
@@ -264379,6 +264386,7 @@
 				"Z" "1"
 			}
 			"LocationName" "Moritz's Farm"
+			"IsVisibleOnMap" "true"
 		}
 	}
 	{
@@ -264406,6 +264414,7 @@
 				"Z" "1"
 			}
 			"LocationName" "Oskar's Farm"
+			"IsVisibleOnMap" "true"
 		}
 	}
 	{
@@ -264433,6 +264442,7 @@
 				"Z" "1"
 			}
 			"LocationName" "Frankfurt Airfield"
+			"IsVisibleOnMap" "true"
 		}
 	}
 	{
@@ -264460,6 +264470,7 @@
 				"Z" "1"
 			}
 			"LocationName" "Svalbard Seedbank"
+			"IsVisibleOnMap" "true"
 		}
 	}
 	{
@@ -264487,6 +264498,7 @@
 				"Z" "1"
 			}
 			"LocationName" "Camp Stuttgart"
+			"IsVisibleOnMap" "true"
 		}
 	}
 	{
@@ -264514,6 +264526,7 @@
 				"Z" "1"
 			}
 			"LocationName" "Mawby's Farm"
+			"IsVisibleOnMap" "true"
 		}
 	}
 	{
@@ -264541,6 +264554,7 @@
 				"Z" "1"
 			}
 			"LocationName" "Rappbode Dam"
+			"IsVisibleOnMap" "true"
 		}
 	}
 	{
@@ -264568,6 +264582,7 @@
 				"Z" "1"
 			}
 			"LocationName" "Schwarzwald Military Base"
+			"IsVisibleOnMap" "true"
 		}
 	}
 	{
@@ -264595,6 +264610,7 @@
 				"Z" "1"
 			}
 			"LocationName" "Aerospace Defense Complex"
+			"IsVisibleOnMap" "true"
 		}
 	}
 	{
@@ -264622,6 +264638,7 @@
 				"Z" "1"
 			}
 			"LocationName" "Limestone Quarry"
+			"IsVisibleOnMap" "true"
 		}
 	}
 	{
@@ -264649,6 +264666,7 @@
 				"Z" "1"
 			}
 			"LocationName" "Neuschwanstein Castle"
+			"IsVisibleOnMap" "true"
 		}
 	}
 	{
@@ -264676,6 +264694,7 @@
 				"Z" "1"
 			}
 			"LocationName" "Zugspitze Peak"
+			"IsVisibleOnMap" "true"
 		}
 	}
 	{
@@ -264703,6 +264722,7 @@
 				"Z" "1"
 			}
 			"LocationName" "Teleporter"
+			"IsVisibleOnMap" "true"
 		}
 	}
 	{
@@ -264761,6 +264781,166 @@
 			"Shape" "Box"
 			"Cull_Distance" "80"
 			"Include_Large_Objects" "true"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "17630"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "2272.648"
+				"Y" "0.7052917"
+				"Z" "-17.55829"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "451.5237"
+				"Y" "2045.025"
+				"Z" "4198.703"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "17631"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-2273.455"
+				"Y" "0.7052917"
+				"Z" "-17.55829"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "451.5237"
+				"Y" "2045.025"
+				"Z" "4198.703"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "17632"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-6.296107"
+				"Y" "0.7052917"
+				"Z" "2274.323"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0.7071068"
+				"Z" "0"
+				"W" "-0.7071068"
+			}
+			"Scale"
+			{
+				"X" "451.5239"
+				"Y" "2045.025"
+				"Z" "4947.356"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "17633"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-6.296107"
+				"Y" "0.7052917"
+				"Z" "-2277.357"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0.7071068"
+				"Z" "0"
+				"W" "-0.7071068"
+			}
+			"Scale"
+			{
+				"X" "451.5239"
+				"Y" "2045.025"
+				"Z" "4947.356"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "17634"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-3008.444"
+				"Y" "486.6909"
+				"Z" "3007.407"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "102.8622"
+				"Y" "18.96075"
+				"Z" "113.3349"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
 		}
 	}
 ]

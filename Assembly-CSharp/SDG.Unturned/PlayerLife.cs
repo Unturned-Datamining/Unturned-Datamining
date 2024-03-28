@@ -982,6 +982,7 @@ public class PlayerLife : PlayerCaller
                 _virus -= amount;
             }
             onVirusUpdated?.Invoke(virus);
+            OnTellVirus_Global?.Invoke(this);
         }
     }
 

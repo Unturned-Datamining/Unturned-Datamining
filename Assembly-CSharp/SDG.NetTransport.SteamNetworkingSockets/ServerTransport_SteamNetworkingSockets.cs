@@ -18,11 +18,11 @@ public class ServerTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
 
     private ServerTransportConnectionFailureCallback connectionFailureCallback;
 
-    private HSteamListenSocket ipListenSocket;
+    private HSteamListenSocket ipListenSocket = HSteamListenSocket.Invalid;
 
-    private HSteamListenSocket fakeIpListenSocket;
+    private HSteamListenSocket fakeIpListenSocket = HSteamListenSocket.Invalid;
 
-    private HSteamListenSocket p2pListenSocket;
+    private HSteamListenSocket p2pListenSocket = HSteamListenSocket.Invalid;
 
     private HSteamNetPollGroup pollGroup;
 
@@ -31,6 +31,17 @@ public class ServerTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
     private IntPtr[] messageAddresses = new IntPtr[1];
 
     private bool didSetupDebugOutput;
+
+    /// <summary>
+    /// Defaults to true. If false, skip Steam Networking Sockets creation of regular IP socket.
+    /// </summary>
+    private static CommandLineFlag clUseIpSocket = new CommandLineFlag(defaultValue: true, "-SNS_DisableIPSocket");
+
+    /// <summary>
+    /// Defaults to true. If false, skip Steam Networking Sockets creation of non-FakeIP P2P socket.
+    /// (this is the socket used by "server codes")
+    /// </summary>
+    private static CommandLineFlag clUseP2pSocket = new CommandLineFlag(defaultValue: true, "-SNS_DisableP2PSocket");
 
     public void Initialize(ServerTransportConnectionFailureCallback connectionFailureCallback)
     {
@@ -62,8 +73,15 @@ public class ServerTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
             localAddress.Clear();
         }
         localAddress.m_port = SDG.Unturned.Provider.GetServerConnectionPort();
-        ipListenSocket = SteamGameServerNetworkingSockets.CreateListenSocketIP(ref localAddress, array.Length, array);
-        Log("Server listen socket bound to {0}", AddressToString(localAddress));
+        if ((bool)clUseIpSocket)
+        {
+            ipListenSocket = SteamGameServerNetworkingSockets.CreateListenSocketIP(ref localAddress, array.Length, array);
+            Log("Server listen socket bound to {0}", AddressToString(localAddress));
+        }
+        else
+        {
+            Log("Server skipping creation of IP listen socket");
+        }
         if (SDG.Unturned.Provider.configData.Server.Use_FakeIP)
         {
             fakeIpListenSocket = SteamGameServerNetworkingSockets.CreateListenSocketP2PFakeIP(0, array.Length, array);
@@ -79,8 +97,19 @@ public class ServerTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
                 OnSteamNetworkingFakeIpResultCallback(pInfo);
             }
         }
-        p2pListenSocket = SteamGameServerNetworkingSockets.CreateListenSocketP2P(0, array.Length, array);
-        Log("Server P2P listen socket: {0}", p2pListenSocket);
+        if ((bool)clUseP2pSocket)
+        {
+            p2pListenSocket = SteamGameServerNetworkingSockets.CreateListenSocketP2P(0, array.Length, array);
+            Log("Server P2P listen socket: {0}", p2pListenSocket);
+        }
+        else
+        {
+            Log("Server skipping creation of P2P listen socket");
+        }
+        if (ipListenSocket == HSteamListenSocket.Invalid && fakeIpListenSocket == HSteamListenSocket.Invalid && p2pListenSocket == HSteamListenSocket.Invalid)
+        {
+            Log("SNS did not create any sockets! This will probably not work properly!");
+        }
         pollGroup = SteamGameServerNetworkingSockets.CreatePollGroup();
     }
 
@@ -91,7 +120,7 @@ public class ServerTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
         steamNetConnectionStatusChanged.Dispose();
         steamNetAuthenticationStatusChanged.Dispose();
         steamNetworkingFakeIpResultCallback?.Dispose();
-        if (!SteamGameServerNetworkingSockets.CloseListenSocket(ipListenSocket))
+        if (ipListenSocket != HSteamListenSocket.Invalid && !SteamGameServerNetworkingSockets.CloseListenSocket(ipListenSocket))
         {
             Log("Server failed to close IP listen socket {0}", ipListenSocket);
         }
@@ -103,7 +132,7 @@ public class ServerTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
                 Log("Server failed to close \"Fake IP\" listen socket {0}", flag);
             }
         }
-        if (!SteamGameServerNetworkingSockets.CloseListenSocket(p2pListenSocket))
+        if (p2pListenSocket != HSteamListenSocket.Invalid && !SteamGameServerNetworkingSockets.CloseListenSocket(p2pListenSocket))
         {
             Log("Server failed to close P2P listen socket {0}", p2pListenSocket);
         }

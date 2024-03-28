@@ -232,13 +232,10 @@ public class BarricadeManager : SteamCaller
         angle_x = Mathf.RoundToInt(angle_x / 2f) * 2;
         angle_y = Mathf.RoundToInt(angle_y / 2f) * 2;
         angle_z = Mathf.RoundToInt(angle_z / 2f) * 2;
-        if (tryGetRegion(transform, out var _, out var _, out var _, out var region))
+        BarricadeDrop barricadeDrop = BarricadeDrop.FindByRootFast(transform);
+        if (barricadeDrop != null)
         {
-            BarricadeDrop barricadeDrop = region.FindBarricadeByRootTransform(transform);
-            if (barricadeDrop != null)
-            {
-                BarricadeDrop.SendTransformRequest.Invoke(barricadeDrop.GetNetId(), ENetReliability.Reliable, point, MeasurementTool.angleToByte(angle_x), MeasurementTool.angleToByte(angle_y), MeasurementTool.angleToByte(angle_z));
-            }
+            BarricadeDrop.SendTransformRequest.Invoke(barricadeDrop.GetNetId(), ENetReliability.Reliable, point, MeasurementTool.angleToByte(angle_x), MeasurementTool.angleToByte(angle_y), MeasurementTool.angleToByte(angle_z));
         }
     }
 

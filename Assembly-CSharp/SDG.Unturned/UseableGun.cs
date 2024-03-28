@@ -762,10 +762,6 @@ public class UseableGun : Useable
     private void fire()
     {
         float num = (float)(int)base.player.equipment.quality / 100f;
-        if (thirdAttachments.magazineAsset == null)
-        {
-            return;
-        }
         if (!equippedGunAsset.infiniteAmmo)
         {
             if (ammo < equippedGunAsset.ammoPerShot)
@@ -842,14 +838,14 @@ public class UseableGun : Useable
                     rotation *= quaternion;
                 }
                 float halfAngleRadians = CalculateSpreadAngleRadians(num, GetSimulationAimAlpha());
-                byte pellets = thirdAttachments.magazineAsset.pellets;
-                for (byte b = 0; b < pellets; b++)
+                byte b = (byte)((thirdAttachments.magazineAsset == null) ? 1 : thirdAttachments.magazineAsset.pellets);
+                for (byte b2 = 0; b2 < b; b2++)
                 {
                     BulletInfo bulletInfo = new BulletInfo();
                     bulletInfo.origin = base.player.look.aim.position;
                     bulletInfo.position = bulletInfo.origin;
                     bulletInfo.velocity = (bulletInfo.dir = rotation * RandomEx.GetRandomForwardVectorInCone(halfAngleRadians)) * equippedGunAsset.muzzleVelocity;
-                    bulletInfo.pellet = b;
+                    bulletInfo.pellet = b2;
                     bulletInfo.quality = num;
                     bulletInfo.barrelAsset = thirdAttachments.barrelAsset;
                     bulletInfo.magazineAsset = thirdAttachments.magazineAsset;
@@ -1001,20 +997,20 @@ public class UseableGun : Useable
             equippedGunAsset.GrantShootQuestRewards(base.player);
             if (equippedGunAsset.projectile == null)
             {
-                byte pellets2 = thirdAttachments.magazineAsset.pellets;
-                for (byte b2 = 0; b2 < pellets2; b2++)
+                byte b3 = (byte)((thirdAttachments.magazineAsset == null) ? 1 : thirdAttachments.magazineAsset.pellets);
+                for (byte b4 = 0; b4 < b3; b4++)
                 {
                     BulletInfo bulletInfo2;
                     if (base.channel.IsLocalPlayer)
                     {
-                        bulletInfo2 = bullets[bullets.Count - pellets2 + b2];
+                        bulletInfo2 = bullets[bullets.Count - b3 + b4];
                     }
                     else
                     {
                         bulletInfo2 = new BulletInfo();
                         bulletInfo2.origin = base.player.look.aim.position;
                         bulletInfo2.position = bulletInfo2.origin;
-                        bulletInfo2.pellet = b2;
+                        bulletInfo2.pellet = b4;
                         bulletInfo2.quality = num;
                         bulletInfo2.barrelAsset = thirdAttachments.barrelAsset;
                         bulletInfo2.magazineAsset = thirdAttachments.magazineAsset;
@@ -1036,9 +1032,10 @@ public class UseableGun : Useable
                     {
                         if (base.player.equipment.state[17] > 0)
                         {
-                            if (base.player.equipment.state[17] > thirdAttachments.magazineAsset.stuck)
+                            byte b5 = (byte)((thirdAttachments.magazineAsset == null) ? 1 : thirdAttachments.magazineAsset.stuck);
+                            if (base.player.equipment.state[17] > b5)
                             {
-                                base.player.equipment.state[17] -= thirdAttachments.magazineAsset.stuck;
+                                base.player.equipment.state[17] -= b5;
                             }
                             else
                             {
@@ -1314,7 +1311,7 @@ public class UseableGun : Useable
             for (int i = 0; i < bullets.Count; i++)
             {
                 BulletInfo bulletInfo = bullets[i];
-                byte pellets = bulletInfo.magazineAsset.pellets;
+                byte b = (byte)((bulletInfo.magazineAsset == null) ? 1 : bulletInfo.magazineAsset.pellets);
                 if (!base.channel.IsLocalPlayer)
                 {
                     continue;
@@ -1330,7 +1327,7 @@ public class UseableGun : Useable
                     {
                         ePlayerHit = ((raycastInfo.limb != ELimb.SKULL) ? EPlayerHit.ENTITIY : EPlayerHit.CRITICAL);
                     }
-                    PlayerUI.hitmark(raycastInfo.point, pellets > 1, (raycastInfo.limb != ELimb.SKULL) ? EPlayerHit.ENTITIY : EPlayerHit.CRITICAL);
+                    PlayerUI.hitmark(raycastInfo.point, b > 1, (raycastInfo.limb != ELimb.SKULL) ? EPlayerHit.ENTITIY : EPlayerHit.CRITICAL);
                 }
                 else if (raycastInfo.zombie != null && equippedGunAsset.zombieDamageMultiplier.damage > 1f)
                 {
@@ -1343,7 +1340,7 @@ public class UseableGun : Useable
                     {
                         ePlayerHit = ePlayerHit2;
                     }
-                    PlayerUI.hitmark(raycastInfo.point, pellets > 1, ePlayerHit2);
+                    PlayerUI.hitmark(raycastInfo.point, b > 1, ePlayerHit2);
                 }
                 else if (raycastInfo.animal != null && equippedGunAsset.animalDamageMultiplier.damage > 1f)
                 {
@@ -1351,7 +1348,7 @@ public class UseableGun : Useable
                     {
                         ePlayerHit = ((raycastInfo.limb != ELimb.SKULL) ? EPlayerHit.ENTITIY : EPlayerHit.CRITICAL);
                     }
-                    PlayerUI.hitmark(raycastInfo.point, pellets > 1, (raycastInfo.limb != ELimb.SKULL) ? EPlayerHit.ENTITIY : EPlayerHit.CRITICAL);
+                    PlayerUI.hitmark(raycastInfo.point, b > 1, (raycastInfo.limb != ELimb.SKULL) ? EPlayerHit.ENTITIY : EPlayerHit.CRITICAL);
                 }
                 else if (raycastInfo.transform != null && raycastInfo.transform.CompareTag("Barricade") && equippedGunAsset.barricadeDamage > 1f)
                 {
@@ -1365,7 +1362,7 @@ public class UseableGun : Useable
                             {
                                 ePlayerHit = EPlayerHit.BUILD;
                             }
-                            PlayerUI.hitmark(raycastInfo.point, pellets > 1, EPlayerHit.BUILD);
+                            PlayerUI.hitmark(raycastInfo.point, b > 1, EPlayerHit.BUILD);
                         }
                     }
                 }
@@ -1381,7 +1378,7 @@ public class UseableGun : Useable
                             {
                                 ePlayerHit = EPlayerHit.BUILD;
                             }
-                            PlayerUI.hitmark(raycastInfo.point, pellets > 1, EPlayerHit.BUILD);
+                            PlayerUI.hitmark(raycastInfo.point, b > 1, EPlayerHit.BUILD);
                         }
                     }
                 }
@@ -1393,7 +1390,7 @@ public class UseableGun : Useable
                         {
                             ePlayerHit = EPlayerHit.BUILD;
                         }
-                        PlayerUI.hitmark(raycastInfo.point, pellets > 1, EPlayerHit.BUILD);
+                        PlayerUI.hitmark(raycastInfo.point, b > 1, EPlayerHit.BUILD);
                     }
                 }
                 else if (raycastInfo.transform != null && raycastInfo.transform.CompareTag("Resource") && equippedGunAsset.resourceDamage > 1f)
@@ -1407,7 +1404,7 @@ public class UseableGun : Useable
                             {
                                 ePlayerHit = EPlayerHit.BUILD;
                             }
-                            PlayerUI.hitmark(raycastInfo.point, pellets > 1, EPlayerHit.BUILD);
+                            PlayerUI.hitmark(raycastInfo.point, b > 1, EPlayerHit.BUILD);
                         }
                     }
                 }
@@ -1424,7 +1421,7 @@ public class UseableGun : Useable
                             {
                                 ePlayerHit = EPlayerHit.BUILD;
                             }
-                            PlayerUI.hitmark(raycastInfo.point, pellets > 1, EPlayerHit.BUILD);
+                            PlayerUI.hitmark(raycastInfo.point, b > 1, EPlayerHit.BUILD);
                         }
                     }
                 }
@@ -1441,7 +1438,7 @@ public class UseableGun : Useable
                         {
                             trace(bulletInfo.position + direction * UnityEngine.Random.Range(32f, equippedGunAsset.ballisticTravel), direction);
                         }
-                        if (pellets < 2)
+                        if (b < 2)
                         {
                             PlayFlybyAudio(ray.origin, ray.direction, equippedGunAsset.ballisticTravel);
                         }
@@ -1457,7 +1454,7 @@ public class UseableGun : Useable
                     {
                         trace(ray.origin + ray.direction * UnityEngine.Random.Range(32f, Mathf.Min(64f, equippedGunAsset.range)), ray.direction);
                     }
-                    if (pellets < 2)
+                    if (b < 2)
                     {
                         PlayFlybyAudio(ray.origin, ray.direction, equippedGunAsset.range);
                     }
@@ -1494,7 +1491,7 @@ public class UseableGun : Useable
             while (bullets.Count > 0)
             {
                 BulletInfo bullet = bullets[0];
-                byte pellets2 = bullet.magazineAsset.pellets;
+                byte b2 = (byte)((bullet.magazineAsset == null) ? 1 : bullet.magazineAsset.pellets);
                 if (!base.player.input.hasInputs())
                 {
                     break;
@@ -1545,8 +1542,8 @@ public class UseableGun : Useable
                 float bulletDamageMultiplier = getBulletDamageMultiplier(ref bullet);
                 float value = Vector3.Distance(bullet.origin, input.point);
                 float a = equippedGunAsset.range * equippedGunAsset.damageFalloffRange;
-                float b = equippedGunAsset.range * equippedGunAsset.damageFalloffMaxRange;
-                float t = Mathf.InverseLerp(a, b, value);
+                float b3 = equippedGunAsset.range * equippedGunAsset.damageFalloffMaxRange;
+                float t = Mathf.InverseLerp(a, b3, value);
                 bulletDamageMultiplier *= Mathf.Lerp(1f, equippedGunAsset.damageFalloffMultiplier, t);
                 ERagdollEffect useableRagdollEffect = base.player.equipment.getUseableRagdollEffect();
                 if (input.type == ERaycastInfoType.PLAYER)
@@ -1555,7 +1552,7 @@ public class UseableGun : Useable
                     {
                         bool flag = input.limb == ELimb.SKULL && equippedGunAsset.instakillHeadshots && Provider.modeConfigData.Players.Allow_Instakill_Headshots;
                         IDamageMultiplier playerDamageMultiplier = equippedGunAsset.playerDamageMultiplier;
-                        DamagePlayerParameters parameters = DamagePlayerParameters.make(input.player, EDeathCause.GUN, input.direction * Mathf.Ceil((float)(int)pellets2 / 2f), playerDamageMultiplier, input.limb);
+                        DamagePlayerParameters parameters = DamagePlayerParameters.make(input.player, EDeathCause.GUN, input.direction * Mathf.Ceil((float)(int)b2 / 2f), playerDamageMultiplier, input.limb);
                         parameters.killer = base.channel.owner.playerID.steamID;
                         parameters.times = bulletDamageMultiplier;
                         parameters.respectArmor = !flag;
@@ -1574,7 +1571,7 @@ public class UseableGun : Useable
                     if (input.zombie != null)
                     {
                         bool flag2 = input.limb == ELimb.SKULL && equippedGunAsset.instakillHeadshots && Provider.modeConfigData.Zombies.Weapons_Use_Player_Damage && Provider.modeConfigData.Players.Allow_Instakill_Headshots;
-                        Vector3 direction2 = input.direction * Mathf.Ceil((float)(int)pellets2 / 2f);
+                        Vector3 direction2 = input.direction * Mathf.Ceil((float)(int)b2 / 2f);
                         IDamageMultiplier zombieOrPlayerDamageMultiplier = equippedGunAsset.zombieOrPlayerDamageMultiplier;
                         DamageZombieParameters parameters2 = DamageZombieParameters.make(input.zombie, direction2, zombieOrPlayerDamageMultiplier, input.limb);
                         parameters2.times = bulletDamageMultiplier * input.zombie.getBulletResistance();
@@ -1593,7 +1590,7 @@ public class UseableGun : Useable
                 {
                     if (input.animal != null)
                     {
-                        Vector3 direction3 = input.direction * Mathf.Ceil((float)(int)pellets2 / 2f);
+                        Vector3 direction3 = input.direction * Mathf.Ceil((float)(int)b2 / 2f);
                         IDamageMultiplier animalOrPlayerDamageMultiplier = equippedGunAsset.animalOrPlayerDamageMultiplier;
                         DamageAnimalParameters parameters3 = DamageAnimalParameters.make(input.animal, direction3, animalOrPlayerDamageMultiplier, input.limb);
                         parameters3.times = bulletDamageMultiplier;
@@ -1638,7 +1635,7 @@ public class UseableGun : Useable
                             if (asset4 != null && asset4.canBeDamaged && (asset4.isVulnerable || ((ItemWeaponAsset)base.player.equipment.asset).isInvulnerable))
                             {
                                 float num4 = (equippedGunAsset.isInvulnerable ? Provider.modeConfigData.Structures.Gun_Highcal_Damage_Multiplier : Provider.modeConfigData.Structures.Gun_Lowcal_Damage_Multiplier);
-                                DamageTool.damage(input.transform, isRepairing: false, input.direction * Mathf.Ceil((float)(int)pellets2 / 2f), equippedGunAsset.structureDamage, bulletDamageMultiplier * num4, out kill, base.channel.owner.playerID.steamID, EDamageOrigin.Useable_Gun);
+                                DamageTool.damage(input.transform, isRepairing: false, input.direction * Mathf.Ceil((float)(int)b2 / 2f), equippedGunAsset.structureDamage, bulletDamageMultiplier * num4, out kill, base.channel.owner.playerID.steamID, EDamageOrigin.Useable_Gun);
                             }
                         }
                     }
@@ -1650,7 +1647,7 @@ public class UseableGun : Useable
                         ResourceSpawnpoint resourceSpawnpoint2 = ResourceManager.getResourceSpawnpoint(x2, y2, index2);
                         if (resourceSpawnpoint2 != null && !resourceSpawnpoint2.isDead && equippedGunAsset.hasBladeID(resourceSpawnpoint2.asset.bladeID))
                         {
-                            DamageTool.damage(input.transform, input.direction * Mathf.Ceil((float)(int)pellets2 / 2f), equippedGunAsset.resourceDamage, bulletDamageMultiplier, 1f, out kill, out xp, base.channel.owner.playerID.steamID, EDamageOrigin.Useable_Gun);
+                            DamageTool.damage(input.transform, input.direction * Mathf.Ceil((float)(int)b2 / 2f), equippedGunAsset.resourceDamage, bulletDamageMultiplier, 1f, out kill, out xp, base.channel.owner.playerID.steamID, EDamageOrigin.Useable_Gun);
                         }
                     }
                 }
@@ -2106,11 +2103,10 @@ public class UseableGun : Useable
     [Obsolete]
     public void askAttachMagazine(CSteamID steamID, byte page, byte x, byte y, byte[] hash)
     {
-        ReceiveAttachMagazine(page, x, y, hash);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 2, legacyName = "askAttachMagazine")]
-    public void ReceiveAttachMagazine(byte page, byte x, byte y, byte[] hash)
+    public void ReceiveAttachMagazine(in ServerInvocationContext context, byte page, byte x, byte y, byte[] hash)
     {
         if (base.player.equipment.isBusy || isFired || isReloading || isHammering || isUnjamming || needsRechamber || base.player.equipment.asset == null || !equippedGunAsset.allowMagazineChange)
         {
@@ -2346,7 +2342,7 @@ public class UseableGun : Useable
 
     public override bool startPrimary()
     {
-        if ((!isShooting && !isReloading && !isHammering && !isUnjamming && !isAttaching && !needsRechamber && firemode != 0 && !base.player.equipment.isBusy) & (!isSprinting || equippedGunAsset.canAimDuringSprint))
+        if ((!isShooting && !isReloading && !isHammering && !isUnjamming && !isAttaching && !needsRechamber && firemode != 0 && !base.player.equipment.isBusy && !base.player.quests.IsCutsceneModeActive()) & (!isSprinting || equippedGunAsset.canAimDuringSprint))
         {
             if (equippedGunAsset.action == EAction.String)
             {
@@ -3362,7 +3358,29 @@ public class UseableGun : Useable
                 bursts += equippedGunAsset.bursts;
             }
         }
-        if (clock - lastFire <= equippedGunAsset.firerate - ((thirdAttachments.tacticalAsset != null) ? thirdAttachments.tacticalAsset.firerate : 0))
+        int num = equippedGunAsset.firerate;
+        if (thirdAttachments.sightAsset != null)
+        {
+            num -= thirdAttachments.sightAsset.FirerateOffset;
+        }
+        if (thirdAttachments.tacticalAsset != null)
+        {
+            num -= thirdAttachments.tacticalAsset.FirerateOffset;
+        }
+        if (thirdAttachments.gripAsset != null)
+        {
+            num -= thirdAttachments.gripAsset.FirerateOffset;
+        }
+        if (thirdAttachments.barrelAsset != null)
+        {
+            num -= thirdAttachments.barrelAsset.FirerateOffset;
+        }
+        if (thirdAttachments.magazineAsset != null)
+        {
+            num -= thirdAttachments.magazineAsset.FirerateOffset;
+        }
+        num = Mathf.Max(num, 0);
+        if (clock - lastFire <= num)
         {
             return;
         }
@@ -3687,15 +3705,24 @@ public class UseableGun : Useable
             }
             else if (thirdAttachments.tacticalAsset.isRangefinder)
             {
-                if (base.channel.IsLocalPlayer && firstAttachments.lightHook != null)
+                if (base.channel.IsLocalPlayer)
                 {
-                    firstAttachments.lightHook.gameObject.SetActive(inRange && interact);
-                    firstAttachments.light2Hook.gameObject.SetActive(!inRange && interact);
-                }
-                if (base.channel.IsLocalPlayer && thirdAttachments.lightHook != null)
-                {
-                    thirdAttachments.lightHook.gameObject.SetActive(inRange && interact);
-                    thirdAttachments.light2Hook.gameObject.SetActive(!inRange && interact);
+                    if (firstAttachments.lightHook != null)
+                    {
+                        firstAttachments.lightHook.gameObject.SetActive(inRange && interact);
+                    }
+                    if (firstAttachments.light2Hook != null)
+                    {
+                        firstAttachments.light2Hook.gameObject.SetActive(!inRange && interact);
+                    }
+                    if (thirdAttachments.lightHook != null)
+                    {
+                        thirdAttachments.lightHook.gameObject.SetActive(inRange && interact);
+                    }
+                    if (thirdAttachments.light2Hook != null)
+                    {
+                        thirdAttachments.light2Hook.gameObject.SetActive(!inRange && interact);
+                    }
                 }
                 if (firstFakeLight_0 != null)
                 {
@@ -4526,10 +4553,22 @@ public class UseableGun : Useable
             if (flag != inRange)
             {
                 inRange = flag;
-                firstAttachments.lightHook.gameObject.SetActive(inRange && interact);
-                firstAttachments.light2Hook.gameObject.SetActive(!inRange && interact);
-                thirdAttachments.lightHook.gameObject.SetActive(inRange && interact);
-                thirdAttachments.light2Hook.gameObject.SetActive(!inRange && interact);
+                if (firstAttachments.lightHook != null)
+                {
+                    firstAttachments.lightHook.gameObject.SetActive(inRange && interact);
+                }
+                if (firstAttachments.light2Hook != null)
+                {
+                    firstAttachments.light2Hook.gameObject.SetActive(!inRange && interact);
+                }
+                if (thirdAttachments.lightHook != null)
+                {
+                    thirdAttachments.lightHook.gameObject.SetActive(inRange && interact);
+                }
+                if (thirdAttachments.light2Hook != null)
+                {
+                    thirdAttachments.light2Hook.gameObject.SetActive(!inRange && interact);
+                }
             }
         }
         if (firstFakeLight != null && thirdMuzzleEmitter != null)

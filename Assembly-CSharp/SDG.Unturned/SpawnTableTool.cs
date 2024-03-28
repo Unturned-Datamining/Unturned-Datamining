@@ -9,7 +9,8 @@ public class SpawnTableTool
 {
     /// <summary>
     /// Returning an Asset rather than the older IDs allows GUIDs to be used.
-    /// legacyTargetAssetType is required for compatibility with spawn tables using legacy 16-bit IDs.
+    /// legacyTargetAssetType is required for compatibility with spawn tables using legacy 16-bit IDs. If set to
+    /// None and the spawn asset uses legacy IDs a warning is logged explaining GUIDs are necessary.
     /// </summary>
     /// <returns></returns>
     public static Asset Resolve(SpawnAsset spawnAsset, EAssetType legacyTargetAssetType, Func<string> errorContextCallback)
@@ -42,13 +43,18 @@ public class SpawnTableTool
             }
             if (spawnTable.legacyAssetId != 0)
             {
-                Asset asset = Assets.find(legacyTargetAssetType, spawnTable.legacyAssetId);
-                if (asset == null)
+                if (legacyTargetAssetType != 0)
                 {
-                    UnturnedLog.warn(string.Format("Spawn table \"{0}\" from {1} resolved by {2} unable to find asset matching legacy ID {3}", spawnAsset.name, spawnAsset.GetOriginName(), errorContextCallback?.Invoke() ?? "Unknown", spawnTable.legacyAssetId));
-                    return null;
+                    Asset asset = Assets.find(legacyTargetAssetType, spawnTable.legacyAssetId);
+                    if (asset == null)
+                    {
+                        UnturnedLog.warn(string.Format("Spawn table \"{0}\" from {1} resolved by {2} unable to find asset matching legacy ID {3}", spawnAsset.name, spawnAsset.GetOriginName(), errorContextCallback?.Invoke() ?? "Unknown", spawnTable.legacyAssetId));
+                        return null;
+                    }
+                    return asset;
                 }
-                return asset;
+                UnturnedLog.warn(string.Format("Spawn table \"{0}\" from {1} resolved by {2} unable to use legacy ID {3} because context does not support legacy IDs", spawnAsset.name, spawnAsset.GetOriginName(), errorContextCallback?.Invoke() ?? "Unknown", spawnTable.legacyAssetId));
+                return null;
             }
             if (!spawnTable.targetGuid.IsEmpty())
             {
@@ -69,6 +75,14 @@ public class SpawnTableTool
         }
         UnturnedLog.warn("Spawn table \"" + spawnAsset.name + "\" from " + spawnAsset.GetOriginName() + " resolved by " + (errorContextCallback?.Invoke() ?? "Unknown") + " may have encountered a recursive loop and has given up");
         return null;
+    }
+
+    /// <summary>
+    /// Doesn't support spawn assets with legacy 16-bit IDs.
+    /// </summary>
+    public static Asset Resolve(SpawnAsset spawnAsset, Func<string> errorContextCallback)
+    {
+        return Resolve(spawnAsset, EAssetType.NONE, errorContextCallback);
     }
 
     public static Asset Resolve(Guid spawnAssetGuid, EAssetType legacyTargetAssetType, Func<string> errorContextCallback)

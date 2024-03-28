@@ -652,7 +652,12 @@ public class GraphicsSettings
     {
         get
         {
-            return graphicsSettingsData.RenderMode2;
+            ERenderMode renderMode = graphicsSettingsData.RenderMode2;
+            if ((uint)renderMode <= 1u)
+            {
+                return graphicsSettingsData.RenderMode2;
+            }
+            return ERenderMode.FORWARD;
         }
         set
         {

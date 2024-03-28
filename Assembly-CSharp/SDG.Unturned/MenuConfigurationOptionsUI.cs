@@ -56,6 +56,8 @@ public class MenuConfigurationOptionsUI
 
     private static ISleekToggle pauseWhenUnfocusedToggle;
 
+    private static ISleekToggle nametagFadeOutToggle;
+
     private static ISleekInt32Field screenshotSizeMultiplierField;
 
     private static ISleekToggle screenshotSupersamplingToggle;
@@ -249,6 +251,11 @@ public class MenuConfigurationOptionsUI
         OptionsSettings.pauseWhenUnfocused = state;
     }
 
+    private static void onToggledNametagFadeOutToggle(ISleekToggle toggle, bool state)
+    {
+        OptionsSettings.shouldNametagFadeOut = state;
+    }
+
     private static void OnScreenshotSizeMultiplierChanged(ISleekInt32Field field, int value)
     {
         OptionsSettings.screenshotSizeMultiplier = value;
@@ -406,6 +413,7 @@ public class MenuConfigurationOptionsUI
         featuredWorkshopToggle.Value = OptionsSettings.featuredWorkshop;
         showHotbarToggle.Value = OptionsSettings.showHotbar;
         pauseWhenUnfocusedToggle.Value = OptionsSettings.pauseWhenUnfocused;
+        nametagFadeOutToggle.Value = OptionsSettings.shouldNametagFadeOut;
         screenshotSizeMultiplierField.Value = OptionsSettings.screenshotSizeMultiplier;
         screenshotSupersamplingToggle.Value = OptionsSettings.enableScreenshotSupersampling;
         screenshotsWhileLoadingToggle.Value = OptionsSettings.enableScreenshotsOnLoadingScreen;
@@ -583,6 +591,15 @@ public class MenuConfigurationOptionsUI
         pauseWhenUnfocusedToggle.AddLabel(localization.format("Pause_When_Unfocused_Label"), ESleekSide.RIGHT);
         pauseWhenUnfocusedToggle.OnValueChanged += onToggledPauseWhenUnfocusedToggle;
         optionsBox.AddChild(pauseWhenUnfocusedToggle);
+        num += 50f;
+        nametagFadeOutToggle = Glazier.Get().CreateToggle();
+        nametagFadeOutToggle.PositionOffset_Y = num;
+        nametagFadeOutToggle.SizeOffset_X = 40f;
+        nametagFadeOutToggle.SizeOffset_Y = 40f;
+        nametagFadeOutToggle.AddLabel(localization.format("Nametag_Fade_Out_Label"), ESleekSide.RIGHT);
+        nametagFadeOutToggle.TooltipText = localization.format("Nametag_Fade_Out_Tooltip");
+        nametagFadeOutToggle.OnValueChanged += onToggledNametagFadeOutToggle;
+        optionsBox.AddChild(nametagFadeOutToggle);
         num += 50f;
         fovSlider = Glazier.Get().CreateSlider();
         fovSlider.PositionOffset_Y = num;

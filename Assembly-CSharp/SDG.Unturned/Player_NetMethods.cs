@@ -1,4 +1,5 @@
 using SDG.NetPak;
+using Steamworks;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -145,18 +146,20 @@ public static class Player_NetMethods
             {
                 reader.ReadUInt32(out var value2);
                 reader.ReadUInt16(out var value3);
-                reader.ReadString(out var value4);
-                reader.ReadBit(out var value5);
-                player.ReceiveRelayToServer(value2, value3, value4, value5);
+                reader.ReadSteamID(out CSteamID value4);
+                reader.ReadString(out var value5);
+                reader.ReadBit(out var value6);
+                player.ReceiveRelayToServer(value2, value3, value4, value5, value6);
             }
         }
     }
 
     [NetInvokableGeneratedMethod("ReceiveRelayToServer", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveRelayToServer_Write(NetPakWriter writer, uint ip, ushort port, string password, bool shouldShowMenu)
+    public static void ReceiveRelayToServer_Write(NetPakWriter writer, uint ip, ushort port, CSteamID serverCode, string password, bool shouldShowMenu)
     {
         writer.WriteUInt32(ip);
         writer.WriteUInt16(port);
+        writer.WriteSteamID(serverCode);
         writer.WriteString(password);
         writer.WriteBit(shouldShowMenu);
     }

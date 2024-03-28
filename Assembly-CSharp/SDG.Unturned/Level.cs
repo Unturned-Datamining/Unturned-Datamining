@@ -182,6 +182,8 @@ public class Level : MonoBehaviour
 
     private static CullingVolumeManager cullingVolumeManager;
 
+    private static NPCRewardVolumeManager rewardVolumeManager;
+
     private static AirdropDevkitNodeSystem airdropNodeSystem;
 
     private static LocationDevkitNodeSystem locationNodeSystem;
@@ -1591,6 +1593,7 @@ public class Level : MonoBehaviour
         cartographyVolumeManager = new CartographyVolumeManager();
         oxygenVolumeManager = new OxygenVolumeManager();
         cullingVolumeManager = new CullingVolumeManager();
+        rewardVolumeManager = new NPCRewardVolumeManager();
         LevelBatching.instance = new LevelBatching();
         airdropNodeSystem = new AirdropDevkitNodeSystem();
         locationNodeSystem = new LocationDevkitNodeSystem();

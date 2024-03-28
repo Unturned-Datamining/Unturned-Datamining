@@ -10,3 +10,6 @@ Interactability_Reset 60
 Interactability_Remote
 
 Has_Clip_Prefab false
+
+// Exclude otherwise decal gets merged and stays in place.
+Exclude_From_Level_Batching true

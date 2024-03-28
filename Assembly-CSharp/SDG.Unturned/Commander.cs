@@ -127,6 +127,7 @@ public class Commander
         register(new CommandUnlockNpcAchievement(Localization.read("/Server/ServerCommandGive.dat")));
         register(new CommandScheduledShutdownInfo(Localization.read("/Server/ServerCommandGive.dat")));
         register(new CommandSetNpcSpawnId(Localization.read("/Server/ServerCommandGive.dat")));
+        register(new CommandToggleNpcCutsceneMode(Localization.read("/Server/ServerCommandGive.dat")));
         register(new CommandNpcEvent(Localization.read("/Server/ServerCommandGive.dat")));
         register(new CommandLoadout(Localization.read("/Server/ServerCommandLoadout.dat")));
         register(new CommandExperience(Localization.read("/Server/ServerCommandExperience.dat")));

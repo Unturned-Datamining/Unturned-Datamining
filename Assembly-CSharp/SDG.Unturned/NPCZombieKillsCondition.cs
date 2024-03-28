@@ -27,6 +27,13 @@ public class NPCZombieKillsCondition : INPCCondition
     public int spawnQuantity { get; protected set; }
 
     /// <summary>
+    /// If greater than zero, find this zombie type configured in the level editor. For example, if the level editor
+    /// lists "0 Fire (4)", then 4 is the unique ID, and if assigned to this condition a zombie from the "Fire"
+    /// table will spawn.
+    /// </summary>
+    public int LevelTableUniqueId { get; private set; }
+
+    /// <summary>
     /// Navmesh index player must be within. If set to byte.MaxValue then anywhere on the map is eligible.
     /// </summary>
     public byte nav { get; protected set; }
@@ -81,7 +88,7 @@ public class NPCZombieKillsCondition : INPCCondition
         associatedFlags.Add(id);
     }
 
-    public NPCZombieKillsCondition(ushort newID, short newValue, EZombieSpeciality newZombie, bool newSpawn, int newSpawnQuantity, byte newNav, float newRadius, float newMinRadius, string newText, bool newShouldReset)
+    public NPCZombieKillsCondition(ushort newID, short newValue, EZombieSpeciality newZombie, bool newSpawn, int newSpawnQuantity, byte newNav, float newRadius, float newMinRadius, int newLevelTableUniqueId, string newText, bool newShouldReset)
         : base(newText, newShouldReset)
     {
         id = newID;
@@ -92,6 +99,7 @@ public class NPCZombieKillsCondition : INPCCondition
         nav = newNav;
         sqrRadius = MathfEx.Square(newRadius);
         sqrMinRadius = MathfEx.Square(newMinRadius);
+        LevelTableUniqueId = newLevelTableUniqueId;
         usesBossInterval = spawnQuantity < 2;
     }
 }

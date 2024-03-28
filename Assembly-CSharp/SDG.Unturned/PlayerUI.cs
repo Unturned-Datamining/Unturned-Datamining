@@ -1322,6 +1322,10 @@ public class PlayerUI : MonoBehaviour
             {
                 alpha = 1f;
             }
+            else if (!OptionsSettings.shouldNametagFadeOut)
+            {
+                alpha = 0.75f;
+            }
             else
             {
                 float magnitude = new Vector2(vector2.x - 0.5f, vector2.y - 0.5f).magnitude;

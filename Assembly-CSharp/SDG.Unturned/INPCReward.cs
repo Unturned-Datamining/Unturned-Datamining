@@ -18,6 +18,10 @@ public class INPCReward
 
     public virtual string formatReward(Player player)
     {
+        if (!string.IsNullOrEmpty(text))
+        {
+            return text;
+        }
         return null;
     }
 

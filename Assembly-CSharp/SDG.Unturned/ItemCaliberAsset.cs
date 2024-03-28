@@ -1,3 +1,5 @@
+using System;
+
 namespace SDG.Unturned;
 
 public class ItemCaliberAsset : ItemAsset
@@ -24,7 +26,7 @@ public class ItemCaliberAsset : ItemAsset
 
     private float _shake;
 
-    private byte _firerate;
+    private int _firerateOffset;
 
     protected bool _isPaintable;
 
@@ -47,7 +49,11 @@ public class ItemCaliberAsset : ItemAsset
 
     public float shake => _shake;
 
-    public byte firerate => _firerate;
+    /// <summary>
+    /// For backwards compatibility this is *subtracted* from the gun's firerate, so a positive number decreases
+    /// the time between shots and a negative number increases the time between shots.
+    /// </summary>
+    public int FirerateOffset => _firerateOffset;
 
     public bool isPaintable => _isPaintable;
 
@@ -68,6 +74,9 @@ public class ItemCaliberAsset : ItemAsset
     /// around the guid naming, simplified by overriding name.
     /// </summary>
     public string instantiatedAttachmentName { get; protected set; }
+
+    [Obsolete("Changed type to int")]
+    public byte firerate => MathfEx.ClampToByte(_firerateOffset);
 
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
     {
@@ -124,7 +133,7 @@ public class ItemCaliberAsset : ItemAsset
         _spread = data.ParseFloat("Spread", 1f);
         _sway = data.ParseFloat("Sway", 1f);
         _shake = data.ParseFloat("Shake", 1f);
-        _firerate = data.ParseUInt8("Firerate", 0);
+        _firerateOffset = data.ParseInt32("Firerate");
         float defaultValue = data.ParseFloat("Damage", 1f);
         ballisticDamageMultiplier = data.ParseFloat("Ballistic_Damage_Multiplier", defaultValue);
         aimingMovementSpeedMultiplier = data.ParseFloat("Aiming_Movement_Speed_Multiplier", 1f);

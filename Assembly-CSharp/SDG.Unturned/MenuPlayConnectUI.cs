@@ -27,6 +27,8 @@ public class MenuPlayConnectUI
 
     public static ushort serverRelayPort;
 
+    public static CSteamID serverRelayServerCode;
+
     public static string serverRelayPassword;
 
     public static bool serverRelayWaitOnMenu;
@@ -404,10 +406,23 @@ public class MenuPlayConnectUI
         else if (hasPendingServerRelay)
         {
             hasPendingServerRelay = false;
-            SteamConnectionInfo steamConnectionInfo2 = new SteamConnectionInfo(serverRelayIP, serverRelayPort, serverRelayPassword);
-            UnturnedLog.info("Relay connect IP: {0} Port: {1} Password: '{2}'", Parser.getIPFromUInt32(steamConnectionInfo2.ip), steamConnectionInfo2.port, steamConnectionInfo2.password);
+            UnturnedLog.info("Relay connect IP: {0} Port: {1} Code: {2} Password: \"{3}\"", Parser.getIPFromUInt32(serverRelayIP), serverRelayPort, serverRelayServerCode, serverRelayPassword);
             bool shouldAutoJoin = !serverRelayWaitOnMenu;
-            connect(steamConnectionInfo2, shouldAutoJoin);
+            if (serverRelayServerCode != CSteamID.Nil)
+            {
+                if (serverRelayServerCode.BGameServerAccount())
+                {
+                    Provider.connect(new ServerConnectParameters(serverRelayServerCode, serverRelayPassword), null, null);
+                }
+                else
+                {
+                    UnturnedLog.warn($"Unable to join non-gameserver code ({serverRelayServerCode.GetEAccountType()})");
+                }
+            }
+            else
+            {
+                connect(new SteamConnectionInfo(serverRelayIP, serverRelayPort, serverRelayPassword), shouldAutoJoin);
+            }
         }
         backButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));
         backButton.PositionOffset_Y = -50f;

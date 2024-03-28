@@ -263,7 +263,7 @@ internal class GlazierScrollView_uGUI : GlazierElementBase_uGUI, ISleekScrollVie
         scrollRectComponent.movementType = ScrollRect.MovementType.Clamped;
         scrollRectComponent.inertia = false;
         scrollRectComponent.onValueChanged.AddListener(OnUnityValueChanged);
-        scrollRectComponent.scrollSensitivity = 40f;
+        scrollRectComponent.scrollSensitivity = 40f * GlazierBase.ScrollViewSensitivityMultiplier;
         GameObject obj = new GameObject("Viewport", typeof(RectTransform));
         RectTransform rectTransform = obj.GetRectTransform();
         rectTransform.SetParent(base.transform, worldPositionStays: false);

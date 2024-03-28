@@ -634,7 +634,7 @@ public class UseableMelee : Useable
 
     public override bool startPrimary()
     {
-        if (base.player.equipment.isBusy)
+        if (base.player.equipment.isBusy || base.player.quests.IsCutsceneModeActive())
         {
             return false;
         }
@@ -670,7 +670,7 @@ public class UseableMelee : Useable
 
     public override void stopPrimary()
     {
-        if (!base.player.equipment.isBusy && equippedMeleeAsset.isRepeated && isSwinging)
+        if (!base.player.equipment.isBusy && !base.player.quests.IsCutsceneModeActive() && equippedMeleeAsset.isRepeated && isSwinging)
         {
             stopSwing();
             if (Provider.isServer)

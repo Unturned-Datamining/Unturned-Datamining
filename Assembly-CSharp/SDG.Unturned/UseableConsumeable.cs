@@ -121,7 +121,7 @@ public class UseableConsumeable : Useable
 
     public override bool startPrimary()
     {
-        if (base.player.equipment.isBusy)
+        if (base.player.equipment.isBusy || base.player.quests.IsCutsceneModeActive())
         {
             return false;
         }
@@ -139,7 +139,7 @@ public class UseableConsumeable : Useable
 
     public override bool startSecondary()
     {
-        if (base.player.equipment.isBusy)
+        if (base.player.equipment.isBusy || base.player.quests.IsCutsceneModeActive())
         {
             return false;
         }
