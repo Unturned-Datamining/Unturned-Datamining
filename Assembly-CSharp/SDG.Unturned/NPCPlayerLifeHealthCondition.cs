@@ -15,7 +15,7 @@ public class NPCPlayerLifeHealthCondition : NPCLogicCondition
         {
             return null;
         }
-        return string.Format(text, player.life.health, health);
+        return Local.FormatText(text, player.life.health, health);
     }
 
     public NPCPlayerLifeHealthCondition(int newHealth, ENPCLogicType newLogicType, string newText)

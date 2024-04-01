@@ -25,7 +25,7 @@ public class NPCCurrencyReward : INPCReward
                 text = PlayerNPCQuestUI.localization.read("Reward_Currency");
             }
         }
-        return string.Format(text, value);
+        return Local.FormatText(text, value);
     }
 
     public NPCCurrencyReward(AssetReference<ItemCurrencyAsset> newCurrency, uint newValue, string newText)

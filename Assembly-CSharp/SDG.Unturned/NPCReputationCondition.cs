@@ -25,7 +25,7 @@ public class NPCReputationCondition : NPCLogicCondition
         {
             text2 = "+" + text2;
         }
-        return string.Format(base.text, text, text2);
+        return Local.FormatText(base.text, text, text2);
     }
 
     public NPCReputationCondition(int newReputation, ENPCLogicType newLogicType, string newText)

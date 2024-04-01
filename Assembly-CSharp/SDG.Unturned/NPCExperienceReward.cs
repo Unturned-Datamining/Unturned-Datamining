@@ -16,7 +16,7 @@ public class NPCExperienceReward : INPCReward
             text = PlayerNPCQuestUI.localization.read("Reward_Experience");
         }
         string arg = "+" + value;
-        return string.Format(text, arg);
+        return Local.FormatText(text, arg);
     }
 
     public NPCExperienceReward(uint newValue, string newText)

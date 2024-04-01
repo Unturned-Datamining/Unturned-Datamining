@@ -13,6 +13,7 @@ Beard
 
 Vision Civilian
 Nightvision_Allowed_In_ThirdPerson true
+Priority_Over_Cosmetic false
 
 Blueprints 2
 Blueprint_0_Type Apparel

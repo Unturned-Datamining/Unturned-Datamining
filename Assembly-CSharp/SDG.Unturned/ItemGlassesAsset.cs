@@ -81,8 +81,8 @@ public class ItemGlassesAsset : ItemGearAsset
     {
         if (vision == ELightingVision.NONE)
         {
-            return !isBlindfold;
+            return isBlindfold;
         }
-        return false;
+        return true;
     }
 }

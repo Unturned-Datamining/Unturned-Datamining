@@ -76,7 +76,7 @@ public class NPCItemReward : INPCReward
             text = PlayerNPCQuestUI.localization.read("Reward_Item");
         }
         ItemAsset itemAsset = GetItemAsset();
-        return string.Format(arg1: (itemAsset == null) ? "?" : ("<color=" + Palette.hex(ItemTool.getRarityColorUI(itemAsset.rarity)) + ">" + itemAsset.itemName + "</color>"), format: text, arg0: amount);
+        return Local.FormatText(arg1: (itemAsset == null) ? "?" : ("<color=" + Palette.hex(ItemTool.getRarityColorUI(itemAsset.rarity)) + ">" + itemAsset.itemName + "</color>"), text: text, arg0: amount);
     }
 
     public override ISleekElement createUI(Player player)

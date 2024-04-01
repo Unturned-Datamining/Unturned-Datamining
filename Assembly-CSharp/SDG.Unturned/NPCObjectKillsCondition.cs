@@ -40,7 +40,7 @@ public class NPCObjectKillsCondition : INPCCondition
         {
             num = 0;
         }
-        return string.Format(text, num, value);
+        return Local.FormatText(text, num, value);
     }
 
     public override bool isAssociatedWithFlag(ushort flagID)

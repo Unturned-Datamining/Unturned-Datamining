@@ -407,7 +407,7 @@ internal abstract class GlazierElementBase_uGUI : GlazierElementBase
     public override void InternalDestroy()
     {
         RemoveAllChildren();
-        if ((ShouldHaveLayoutElementComponent || _useChildAutoLayout != 0 || !ReleaseIntoPool()) && gameObject != null)
+        if (gameObject != null && (ShouldHaveLayoutElementComponent || _useChildAutoLayout != 0 || !ReleaseIntoPool()) && gameObject != null)
         {
             UnityEngine.Object.Destroy(gameObject);
             gameObject = null;

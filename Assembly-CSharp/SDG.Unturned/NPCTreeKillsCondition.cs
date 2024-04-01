@@ -39,7 +39,7 @@ public class NPCTreeKillsCondition : INPCCondition
         {
             text = PlayerNPCQuestUI.localization.format("Condition_TreeKills");
         }
-        return string.Format(text, num, value, arg);
+        return Local.FormatText(text, num, value, arg);
     }
 
     public override bool isAssociatedWithFlag(ushort flagID)

@@ -41,6 +41,19 @@ public class Local
         return key;
     }
 
+    internal static string FormatText(string text, object arg0)
+    {
+        try
+        {
+            return string.Format(text, arg0);
+        }
+        catch
+        {
+            UnturnedLog.error($"Caught localization string formatting exception (text: \"{text}\" arg0: \"{arg0}\")");
+            return text;
+        }
+    }
+
     public string format(string key, object arg0, object arg1)
     {
         if (TryReadString(key, out var text))
@@ -58,6 +71,19 @@ public class Local
         return key;
     }
 
+    internal static string FormatText(string text, object arg0, object arg1)
+    {
+        try
+        {
+            return string.Format(text, arg0, arg1);
+        }
+        catch
+        {
+            UnturnedLog.error($"Caught localization string formatting exception (text: \"{text}\" arg0: \"{arg0}\" arg1: \"{arg1}\")");
+            return text;
+        }
+    }
+
     public string format(string key, object arg0, object arg1, object arg2)
     {
         if (TryReadString(key, out var text))
@@ -73,6 +99,19 @@ public class Local
             }
         }
         return key;
+    }
+
+    public static string FormatText(string text, object arg0, object arg1, object arg2)
+    {
+        try
+        {
+            return string.Format(text, arg0, arg1, arg2);
+        }
+        catch
+        {
+            UnturnedLog.error($"Caught localization string formatting exception (text: \"{text}\" arg0: \"{arg0}\" arg1: \"{arg1}\" arg2: \"{arg2}\")");
+            return text;
+        }
     }
 
     public string format(string key, params object[] args)

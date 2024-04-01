@@ -15,7 +15,7 @@ public class NPCPlayerLifeFoodReward : INPCReward
         {
             text = PlayerNPCQuestUI.localization.read("Reward_Food");
         }
-        return string.Format(text, value);
+        return Local.FormatText(text, value);
     }
 
     public NPCPlayerLifeFoodReward(int newValue, string newText)

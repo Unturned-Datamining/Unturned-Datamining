@@ -87,9 +87,9 @@ public class NPCItemCondition : NPCLogicCondition
             {
                 num += item.jar.item.amount;
             }
-            return string.Format(text, num, amount, arg);
+            return Local.FormatText(text, num, amount, arg);
         }
-        return string.Format(text, 0, amount, "?");
+        return Local.FormatText(text, 0, amount, "?");
     }
 
     public override ISleekElement createUI(Player player, Texture2D icon)

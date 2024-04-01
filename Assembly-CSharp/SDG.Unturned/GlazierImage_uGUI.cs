@@ -162,6 +162,10 @@ internal class GlazierImage_uGUI : GlazierElementBase_uGUI, ISleekImage, ISleekE
     {
         if (buttonComponent == null)
         {
+            if (rawImageComponent == null)
+            {
+                return false;
+            }
             rawImageComponent.enabled = false;
             ImagePoolData imagePoolData = new ImagePoolData();
             PopulateBasePoolData(imagePoolData);

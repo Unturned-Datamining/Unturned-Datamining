@@ -20,7 +20,7 @@ public class NPCReputationReward : INPCReward
         {
             text = "+" + text;
         }
-        return string.Format(base.text, text);
+        return Local.FormatText(base.text, text);
     }
 
     public NPCReputationReward(int newValue, string newText)

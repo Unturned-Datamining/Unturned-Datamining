@@ -28,7 +28,7 @@ public class NPCRandomItemReward : INPCReward
         {
             text = PlayerNPCQuestUI.localization.read("Reward_Item_Random");
         }
-        return string.Format(text, amount);
+        return Local.FormatText(text, amount);
     }
 
     public NPCRandomItemReward(ushort newID, byte newAmount, bool newShouldAutoEquip, EItemOrigin origin, string newText)

@@ -15,7 +15,7 @@ public class NPCPlayerLifeVirusCondition : NPCLogicCondition
         {
             return null;
         }
-        return string.Format(text, player.life.virus, virus);
+        return Local.FormatText(text, player.life.virus, virus);
     }
 
     public NPCPlayerLifeVirusCondition(int newVirus, ENPCLogicType newLogicType, string newText)

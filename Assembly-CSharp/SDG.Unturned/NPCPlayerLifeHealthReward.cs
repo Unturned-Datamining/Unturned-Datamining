@@ -15,7 +15,7 @@ public class NPCPlayerLifeHealthReward : INPCReward
         {
             text = PlayerNPCQuestUI.localization.read("Reward_Health");
         }
-        return string.Format(text, value);
+        return Local.FormatText(text, value);
     }
 
     public NPCPlayerLifeHealthReward(int newValue, string newText)

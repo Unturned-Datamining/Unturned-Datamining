@@ -238,6 +238,10 @@ public class PlayerEquipment : PlayerCaller
     {
         get
         {
+            if (isTurret)
+            {
+                return 100;
+            }
             return _quality;
         }
         set

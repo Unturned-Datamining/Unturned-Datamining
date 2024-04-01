@@ -44,7 +44,7 @@ public class NPCCurrencyCondition : NPCLogicCondition
             }
         }
         uint inventoryValue = itemCurrencyAsset.getInventoryValue(player);
-        return string.Format(text, inventoryValue, value);
+        return Local.FormatText(text, inventoryValue, value);
     }
 
     public NPCCurrencyCondition(AssetReference<ItemCurrencyAsset> newCurrency, uint newValue, ENPCLogicType newLogicType, string newText, bool newShouldReset)

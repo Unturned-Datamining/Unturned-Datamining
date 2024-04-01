@@ -171,6 +171,10 @@ internal class GlazierBox_uGUI : GlazierElementBase_uGUI, ISleekBox, ISleekLabel
 
     protected override bool ReleaseIntoPool()
     {
+        if (imageComponent == null || textComponent == null)
+        {
+            return false;
+        }
         if (tooltipComponent != null)
         {
             Object.Destroy(tooltipComponent);

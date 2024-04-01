@@ -106,7 +106,7 @@ public class ChatManager : SteamCaller
 
     /// <summary>
     /// Previous messages sent to server from this client.
-    /// Used to repeat chat commands.
+    /// Newest at the front, oldest at the back. Used to repeat chat commands.
     /// </summary>
     private static string[] recentlySentMessages = new string[10];
 
@@ -478,8 +478,11 @@ public class ChatManager : SteamCaller
 
     public static string getRecentlySentMessage(int index)
     {
-        index %= recentlySentMessages.Length;
-        return recentlySentMessages[index];
+        if (index >= 0 && index < recentlySentMessages.Length)
+        {
+            return recentlySentMessages[index];
+        }
+        return string.Empty;
     }
 
     /// <summary>

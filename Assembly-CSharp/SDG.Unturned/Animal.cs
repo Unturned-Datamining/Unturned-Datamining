@@ -378,27 +378,34 @@ public class Animal : MonoBehaviour
                 return;
             }
         }
-        else if ((base.transform.position - pack.getAverageAnimalPoint()).sqrMagnitude > 256f)
+        else if (pack != null)
         {
-            point = pack.getAverageAnimalPoint() + new Vector3(UnityEngine.Random.Range(-8f, 8f), 0f, UnityEngine.Random.Range(-8f, 8f));
-        }
-        else
-        {
-            Vector3 wanderDirection = pack.getWanderDirection();
-            point = base.transform.position + wanderDirection * UnityEngine.Random.Range(6f, 8f) + new Vector3(UnityEngine.Random.Range(-4f, 4f), 0f, UnityEngine.Random.Range(-4f, 4f));
-            if (!checkTargetValid(point))
+            if ((base.transform.position - pack.getAverageAnimalPoint()).sqrMagnitude > 256f)
             {
-                point = base.transform.position - wanderDirection * UnityEngine.Random.Range(6f, 8f) + new Vector3(UnityEngine.Random.Range(-4f, 4f), 0f, UnityEngine.Random.Range(-4f, 4f));
-                if (!checkTargetValid(point))
-                {
-                    return;
-                }
-                pack.wanderAngle += UnityEngine.Random.Range(160f, 200f);
+                point = pack.getAverageAnimalPoint() + new Vector3(UnityEngine.Random.Range(-8f, 8f), 0f, UnityEngine.Random.Range(-8f, 8f));
             }
             else
             {
-                pack.wanderAngle += UnityEngine.Random.Range(-20f, 20f);
+                Vector3 wanderDirection = pack.getWanderDirection();
+                point = base.transform.position + wanderDirection * UnityEngine.Random.Range(6f, 8f) + new Vector3(UnityEngine.Random.Range(-4f, 4f), 0f, UnityEngine.Random.Range(-4f, 4f));
+                if (!checkTargetValid(point))
+                {
+                    point = base.transform.position - wanderDirection * UnityEngine.Random.Range(6f, 8f) + new Vector3(UnityEngine.Random.Range(-4f, 4f), 0f, UnityEngine.Random.Range(-4f, 4f));
+                    if (!checkTargetValid(point))
+                    {
+                        return;
+                    }
+                    pack.wanderAngle += UnityEngine.Random.Range(160f, 200f);
+                }
+                else
+                {
+                    pack.wanderAngle += UnityEngine.Random.Range(-20f, 20f);
+                }
             }
+        }
+        else
+        {
+            point = base.transform.position + new Vector3(UnityEngine.Random.Range(-8f, 8f), 0f, UnityEngine.Random.Range(-8f, 8f));
         }
         target = point;
         isWandering = true;
@@ -412,7 +419,7 @@ public class Animal : MonoBehaviour
 
     public void alertPlayer(Player potentialTargetPlayer, bool sendToPack)
     {
-        if (sendToPack)
+        if (sendToPack && pack != null)
         {
             for (int i = 0; i < pack.animals.Count; i++)
             {
@@ -485,7 +492,7 @@ public class Animal : MonoBehaviour
 
     public void alertDirection(Vector3 newDirection, bool sendToPack)
     {
-        if (sendToPack)
+        if (sendToPack && pack != null)
         {
             for (int i = 0; i < pack.animals.Count; i++)
             {
@@ -512,7 +519,7 @@ public class Animal : MonoBehaviour
 
     public void alertGoToPoint(Vector3 point, bool sendToPack)
     {
-        if (sendToPack)
+        if (sendToPack && pack != null)
         {
             for (int i = 0; i < pack.animals.Count; i++)
             {

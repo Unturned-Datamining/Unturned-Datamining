@@ -124,6 +124,10 @@ internal class GlazierLabel_uGUI : GlazierElementBase_uGUI, ISleekLabel, ISleekE
 
     protected override bool ReleaseIntoPool()
     {
+        if (textComponent == null)
+        {
+            return false;
+        }
         textComponent.enabled = false;
         LabelPoolData labelPoolData = new LabelPoolData();
         PopulateBasePoolData(labelPoolData);

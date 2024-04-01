@@ -34,7 +34,7 @@ public class NPCVehicleReward : INPCReward
         {
             text = PlayerNPCQuestUI.localization.read("Reward_Vehicle");
         }
-        return string.Format(arg0: (!(Assets.find(EAssetType.VEHICLE, id) is VehicleAsset vehicleAsset)) ? "?" : ("<color=" + Palette.hex(ItemTool.getRarityColorUI(vehicleAsset.rarity)) + ">" + vehicleAsset.vehicleName + "</color>"), format: text);
+        return Local.FormatText(arg0: (!(Assets.find(EAssetType.VEHICLE, id) is VehicleAsset vehicleAsset)) ? "?" : ("<color=" + Palette.hex(ItemTool.getRarityColorUI(vehicleAsset.rarity)) + ">" + vehicleAsset.vehicleName + "</color>"), text: text);
     }
 
     public override ISleekElement createUI(Player player)

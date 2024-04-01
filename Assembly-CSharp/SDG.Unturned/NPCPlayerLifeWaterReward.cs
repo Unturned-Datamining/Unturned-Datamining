@@ -15,7 +15,7 @@ public class NPCPlayerLifeWaterReward : INPCReward
         {
             text = PlayerNPCQuestUI.localization.read("Reward_Water");
         }
-        return string.Format(text, value);
+        return Local.FormatText(text, value);
     }
 
     public NPCPlayerLifeWaterReward(int newValue, string newText)

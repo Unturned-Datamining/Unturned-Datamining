@@ -213,6 +213,11 @@ public class ItemClothingAsset : ItemAsset
         return new AudioReference("core.masterbundle", "Sounds/Inventory/MediumClothEquipment.asset");
     }
 
+    /// <summary>
+    /// The player can be wearing both a "real" in-game item and a cosmetic item in the same clothing slot.
+    /// This is called on the real item if <see cref="F:SDG.Unturned.ItemClothingAsset.priorityOverCosmeticOverride" /> has not been set.
+    /// If true, the real item is shown rather than the cosmetic item. If false, the cosmetic item can be seen.
+    /// </summary>
     protected virtual bool GetDefaultTakesPriorityOverCosmetic()
     {
         return false;

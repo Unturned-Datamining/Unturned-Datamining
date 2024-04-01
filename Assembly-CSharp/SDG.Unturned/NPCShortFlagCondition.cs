@@ -31,7 +31,7 @@ public class NPCShortFlagCondition : NPCFlagCondition
         {
             num = (short)(base.allowUnset ? value : 0);
         }
-        return string.Format(text, num, value);
+        return Local.FormatText(text, num, value);
     }
 
     public NPCShortFlagCondition(ushort newID, short newValue, bool newAllowUnset, ENPCLogicType newLogicType, string newText, bool newShouldReset)

@@ -204,6 +204,10 @@ internal class GlazierButton_uGUI : GlazierElementBase_uGUI, ISleekButton, ISlee
 
     protected override bool ReleaseIntoPool()
     {
+        if (imageComponent == null || buttonComponent == null || textComponent == null)
+        {
+            return false;
+        }
         if (tooltipComponent != null)
         {
             Object.Destroy(tooltipComponent);

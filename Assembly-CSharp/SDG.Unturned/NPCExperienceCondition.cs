@@ -23,7 +23,7 @@ public class NPCExperienceCondition : NPCLogicCondition
         {
             text = PlayerNPCQuestUI.localization.read("Condition_Experience");
         }
-        return string.Format(text, player.skills.experience, experience);
+        return Local.FormatText(text, player.skills.experience, experience);
     }
 
     public NPCExperienceCondition(uint newExperience, ENPCLogicType newLogicType, string newText, bool newShouldReset)

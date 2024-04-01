@@ -27,7 +27,7 @@ public class NPCBoolFlagCondition : NPCFlagCondition
         {
             return null;
         }
-        return string.Format(text, isConditionMet(player) ? 1 : 0);
+        return Local.FormatText(text, isConditionMet(player) ? 1 : 0);
     }
 
     public NPCBoolFlagCondition(ushort newID, bool newValue, bool newAllowUnset, ENPCLogicType newLogicType, string newText, bool newShouldReset)

@@ -29,6 +29,10 @@ internal class GlazierProxy_uGUI : GlazierElementBase_uGUI
 
     protected override bool ReleaseIntoPool()
     {
+        if (base.transform == null || base.gameObject == null)
+        {
+            return false;
+        }
         PoolData poolData = new PoolData();
         PopulateBasePoolData(poolData);
         base.glazier.ReleaseEmptyToPool(poolData);

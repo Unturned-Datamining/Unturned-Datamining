@@ -15,7 +15,7 @@ public class NPCPlayerLifeFoodCondition : NPCLogicCondition
         {
             return null;
         }
-        return string.Format(text, player.life.food, food);
+        return Local.FormatText(text, player.life.food, food);
     }
 
     public NPCPlayerLifeFoodCondition(int newFood, ENPCLogicType newLogicType, string newText)

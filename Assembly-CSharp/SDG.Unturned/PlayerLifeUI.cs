@@ -194,7 +194,10 @@ public class PlayerLifeUI
 
     private static SleekBoxIcon arrestBox;
 
-    private static int repeatChatIndex = 0;
+    /// <summary>
+    /// Reset to -1 when not chatting. If player presses up/down we get index 0 (most recent).
+    /// </summary>
+    private static int repeatChatIndex = -1;
 
     private static int cachedHotbarSearch;
 
@@ -281,7 +284,7 @@ public class PlayerLifeUI
             return;
         }
         chatting = false;
-        repeatChatIndex = 0;
+        repeatChatIndex = -1;
         if (chatField != null)
         {
             chatField.Text = string.Empty;
@@ -324,11 +327,12 @@ public class PlayerLifeUI
     {
         if (chatField != null)
         {
-            string recentlySentMessage = ChatManager.getRecentlySentMessage(repeatChatIndex);
+            int index = Mathf.Max(repeatChatIndex + delta, 0);
+            string recentlySentMessage = ChatManager.getRecentlySentMessage(index);
             if (!string.IsNullOrEmpty(recentlySentMessage))
             {
                 chatField.Text = recentlySentMessage;
-                repeatChatIndex += delta;
+                repeatChatIndex = index;
             }
         }
     }

@@ -15,7 +15,7 @@ public class NPCPlayerLifeWaterCondition : NPCLogicCondition
         {
             return null;
         }
-        return string.Format(text, player.life.water, water);
+        return Local.FormatText(text, player.life.water, water);
     }
 
     public NPCPlayerLifeWaterCondition(int newWater, ENPCLogicType newLogicType, string newText)

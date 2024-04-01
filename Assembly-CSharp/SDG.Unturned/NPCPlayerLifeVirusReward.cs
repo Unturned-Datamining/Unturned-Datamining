@@ -15,7 +15,7 @@ public class NPCPlayerLifeVirusReward : INPCReward
         {
             text = PlayerNPCQuestUI.localization.read("Reward_Virus");
         }
-        return string.Format(text, value);
+        return Local.FormatText(text, value);
     }
 
     public NPCPlayerLifeVirusReward(int newValue, string newText)
