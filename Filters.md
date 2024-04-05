@@ -37,6 +37,7 @@
 | (?i)(ЮНИТИПЛЕЙ)                                                                       | HiddenFromAllServerLists, Blocked                             |
 | (?i)(FUNNYPLAY)                                                                       | HiddenFromAllServerLists, Blocked                             |
 | (?i)(YAKINDA)&#124;(discord.gg/gporp)&#124;(GPO LIFE)                                 | HiddenFromInternetServerList                                  |
+| (?i)(Hypnotic RP)                                                                     | WorkshopWarning                                               |
 | (?i)(Cronix)                                                                          | HiddenFromAllServerLists, Blocked, WorkshopWarning            |
 | (?i)(Fenix Server)                                                                    | HiddenFromAllServerLists, Blocked, WorkshopWarning            |
 | (?i)(Fenix Project)                                                                   | HiddenFromAllServerLists, Blocked, WorkshopWarning            |
@@ -68,6 +69,7 @@
 | (https://r.resimlink.com/GXZ0gP2.jpg)                    | ![https://r.resimlink.com/GXZ0gP2.jpg](https://r.resimlink.com/GXZ0gP2.jpg)                                       | HiddenFromInternetServerList                       |
 | (?i)(https://i.ibb.co/5k2nSYh/R6f-Al-Ufeyw8.jpg)         | ![https://i.ibb.co/5k2nSYh/R6f-Al-Ufeyw8.jpg](https://i.ibb.co/5k2nSYh/R6f-Al-Ufeyw8.jpg)                         | HiddenFromAllServerLists, Blocked                  |
 | (https://i.ibb.co/M28DTbq/Untitled-logo-1-free-file.jpg) | ![https://i.ibb.co/M28DTbq/Untitled-logo-1-free-file.jpg](https://i.ibb.co/M28DTbq/Untitled-logo-1-free-file.jpg) | HiddenFromAllServerLists, Blocked                  |
+| (?i)(https://i.imgur.com/bvTjEQt.png)                    | ![https://i.imgur.com/bvTjEQt.png](https://i.imgur.com/bvTjEQt.png)                                               | WorkshopWarning                                    |
 | (?i)(https://icdn.su/f/kJN/VxF/Ku3.jpg)                  | ![https://icdn.su/f/kJN/VxF/Ku3.jpg](https://icdn.su/f/kJN/VxF/Ku3.jpg)                                           | HiddenFromAllServerLists, Blocked, WorkshopWarning |
 | (Ekran-Al-nt-s.png)                                      |                                                                                                                   | MonetizationWarning, HiddenFromInternetServerList  |
 
@@ -75,6 +77,7 @@
 | SteamId           | BanFlags                                               |
 | ----------------- | ------------------------------------------------------ |
 | 85568392927283679 | HiddenFromInternetServerList                           |
+| 85568392928757688 | WorkshopWarning                                        |
 | 85568392925162145 | HiddenFromAllServerLists, Blocked, WorkshopWarning     |
 | 85568392925812850 | HiddenFromAllServerLists, Blocked, WorkshopWarning     |
 | 85568392929406588 | HiddenFromAllServerLists, Blocked, WorkshopWarning     |
