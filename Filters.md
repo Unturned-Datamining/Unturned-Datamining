@@ -37,6 +37,7 @@
 | (?i)(ЮНИТИПЛЕЙ)                                                                       | HiddenFromAllServerLists, Blocked                             |
 | (?i)(FUNNYPLAY)                                                                       | HiddenFromAllServerLists, Blocked                             |
 | (?i)(YAKINDA)&#124;(discord.gg/gporp)&#124;(GPO LIFE)                                 | HiddenFromInternetServerList                                  |
+| (?i)(blackserv)                                                                       | MonetizationWarning                                           |
 | (?i)(Hypnotic RP)                                                                     | WorkshopWarning                                               |
 | (?i)(Cronix)                                                                          | HiddenFromAllServerLists, Blocked, WorkshopWarning            |
 | (?i)(Fenix Server)                                                                    | HiddenFromAllServerLists, Blocked, WorkshopWarning            |
@@ -53,6 +54,7 @@
 | (?i)(A9 ARENA)                                                                        | HiddenFromInternetServerList, IncorrectMonetizationTagWarning |
 | (?i)(\[EU\] Eclipse)                                                                  | QueryPingWarning                                              |
 | (?i)(Empire)                                                                          | Blocked                                                       |
+| (?i)([BR]Unturned Brasil A6 Polaris Modded)                                           | MonetizationWarning                                           |
 
 ## Description filters
 | Regex                                       | BanFlags                                           |
@@ -69,9 +71,11 @@
 | (https://r.resimlink.com/GXZ0gP2.jpg)                    | ![https://r.resimlink.com/GXZ0gP2.jpg](https://r.resimlink.com/GXZ0gP2.jpg)                                       | HiddenFromInternetServerList                       |
 | (?i)(https://i.ibb.co/5k2nSYh/R6f-Al-Ufeyw8.jpg)         | ![https://i.ibb.co/5k2nSYh/R6f-Al-Ufeyw8.jpg](https://i.ibb.co/5k2nSYh/R6f-Al-Ufeyw8.jpg)                         | HiddenFromAllServerLists, Blocked                  |
 | (https://i.ibb.co/M28DTbq/Untitled-logo-1-free-file.jpg) | ![https://i.ibb.co/M28DTbq/Untitled-logo-1-free-file.jpg](https://i.ibb.co/M28DTbq/Untitled-logo-1-free-file.jpg) | HiddenFromAllServerLists, Blocked                  |
+| (https://i.ibb.co/pfs2ZMq/FKL.jpg)                       | ![https://i.ibb.co/pfs2ZMq/FKL.jpg](https://i.ibb.co/pfs2ZMq/FKL.jpg)                                             | MonetizationWarning                                |
 | (?i)(https://i.imgur.com/bvTjEQt.png)                    | ![https://i.imgur.com/bvTjEQt.png](https://i.imgur.com/bvTjEQt.png)                                               | WorkshopWarning                                    |
 | (?i)(https://icdn.su/f/kJN/VxF/Ku3.jpg)                  | ![https://icdn.su/f/kJN/VxF/Ku3.jpg](https://icdn.su/f/kJN/VxF/Ku3.jpg)                                           | HiddenFromAllServerLists, Blocked, WorkshopWarning |
 | (Ekran-Al-nt-s.png)                                      |                                                                                                                   | MonetizationWarning, HiddenFromInternetServerList  |
+| (https://i.imgur.com/98otThB.png)                        | ![https://i.imgur.com/98otThB.png](https://i.imgur.com/98otThB.png)                                               | MonetizationWarning                                |
 
 ## SteamId filters
 | SteamId           | BanFlags                                               |
@@ -91,3 +95,4 @@
 | 85568392929557585 | MonetizationWarning, HiddenFromInternetServerList      |
 | 85568392929711611 | MonetizationWarning, HiddenFromInternetServerList      |
 | 85568392930733591 | Blocked                                                |
+| 85568392931266351 | MonetizationWarning                                    |
