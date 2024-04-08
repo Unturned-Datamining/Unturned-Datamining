@@ -45,6 +45,7 @@
 | (?i)(NortxNetwork)                                                                    | HiddenFromAllServerLists, Blocked, WorkshopWarning            |
 | (?i)(no\s*-*\s*lag)                                                                   | HiddenFromInternetServerList                                  |
 | (?i)(DarkStar)                                                                        | Blocked, WorkshopWarning, HiddenFromInternetServerList        |
+| (?i)(Rime)                                                                            | WorkshopWarning                                               |
 | (?i)(Eagles Roleplay)&#124;(EaglesRP)                                                 | MonetizationWarning, HiddenFromInternetServerList             |
 | (?i)(Sunnyvale)                                                                       | MonetizationWarning, HiddenFromInternetServerList             |
 | (?i)(horizon)                                                                         | QueryPingWarning                                              |
@@ -53,8 +54,6 @@
 | (?i)(Galaxy Project)                                                                  | MonetizationWarning, HiddenFromInternetServerList             |
 | (?i)(A9 ARENA)                                                                        | HiddenFromInternetServerList, IncorrectMonetizationTagWarning |
 | (?i)(\[EU\] Eclipse)                                                                  | QueryPingWarning                                              |
-| (?i)(Empire)                                                                          | Blocked                                                       |
-| (?i)([BR]Unturned Brasil A6 Polaris Modded)                                           | MonetizationWarning                                           |
 
 ## Description filters
 | Regex                                       | BanFlags                                           |
@@ -75,7 +74,6 @@
 | (?i)(https://i.imgur.com/bvTjEQt.png)                    | ![https://i.imgur.com/bvTjEQt.png](https://i.imgur.com/bvTjEQt.png)                                               | WorkshopWarning                                    |
 | (?i)(https://icdn.su/f/kJN/VxF/Ku3.jpg)                  | ![https://icdn.su/f/kJN/VxF/Ku3.jpg](https://icdn.su/f/kJN/VxF/Ku3.jpg)                                           | HiddenFromAllServerLists, Blocked, WorkshopWarning |
 | (Ekran-Al-nt-s.png)                                      |                                                                                                                   | MonetizationWarning, HiddenFromInternetServerList  |
-| (https://i.imgur.com/98otThB.png)                        | ![https://i.imgur.com/98otThB.png](https://i.imgur.com/98otThB.png)                                               | MonetizationWarning                                |
 
 ## SteamId filters
 | SteamId           | BanFlags                                               |
@@ -95,4 +93,3 @@
 | 85568392929557585 | MonetizationWarning, HiddenFromInternetServerList      |
 | 85568392929711611 | MonetizationWarning, HiddenFromInternetServerList      |
 | 85568392930733591 | Blocked                                                |
-| 85568392931266351 | MonetizationWarning                                    |
