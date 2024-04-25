@@ -1,14 +1,11 @@
 MainMenuAlert
 {
-	Id 51
-	Header EVENTures Global – Creator Clash Livestream!
-	Body From the creators: "EVENTures Global is hosting a Creator Clash Event! Some of the biggest creators in Unturned are competing right now! Check out the Live broadcast to cheer on your favorite team."
-	Color #d90166
-	Link https://www.twitch.tv/weslieg
-	IconURL https://cdn.smartlydressedgames.com/Images/eventures_logo_2024_b_80px.png
-	UseTimeWindow true
-	StartTime 2024-04-13 15:00:00
-	EndTime 2024-04-14 21:00:00
+	Id 53
+	Header Find the official Unturned Wiki on wiki.gg!
+	Body The official wiki for Unturned has moved. You can now find the Unturned Wiki at unturned.wiki.gg – it's the official game wiki written and maintained by the community!
+	Color #FF1985
+	Link https://unturned.wiki.gg/
+	IconURL https://cdn.smartlydressedgames.com/Images/wiki_gg.png
 }
 MainMenuWorkshop
 {
