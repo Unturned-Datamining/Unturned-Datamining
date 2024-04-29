@@ -71,6 +71,7 @@
 | (?i)(https://icdn.su/f/kJN/VxF/Ku3.jpg)                  | ![https://icdn.su/f/kJN/VxF/Ku3.jpg](https://icdn.su/f/kJN/VxF/Ku3.jpg)                                           | HiddenFromAllServerLists, Blocked, WorkshopWarning |
 | (Ekran-Al-nt-s.png)                                      |                                                                                                                   | MonetizationWarning, HiddenFromInternetServerList  |
 | (https://i.imgur.com/c8yoKsk.png)                        | ![https://i.imgur.com/c8yoKsk.png](https://i.imgur.com/c8yoKsk.png)                                               | MonetizationWarning                                |
+| (https://gspics.org/images/2018/06/10/AkbKx.png)         | ![https://gspics.org/images/2018/06/10/AkbKx.png](https://gspics.org/images/2018/06/10/AkbKx.png)                 | MonetizationWarning                                |
 
 ## SteamId filters
 | SteamId           | BanFlags                                               |
@@ -90,3 +91,4 @@
 | 85568392929711611 | MonetizationWarning, HiddenFromInternetServerList      |
 | 85568392930733591 | Blocked                                                |
 | 85568392931324392 | MonetizationWarning                                    |
+| 85568392924910977 | MonetizationWarning                                    |
