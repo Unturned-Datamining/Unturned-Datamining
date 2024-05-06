@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using SDG.NetPak;
 using SDG.NetTransport;
 using SDG.Provider;
 using Steamworks;
@@ -10,6 +11,8 @@ namespace SDG.Unturned;
 
 public class SteamPlayer : SteamConnectedClientBase
 {
+    public static Action<SteamPlayer, string, byte[]> OnSteamAuthTicketForWebApiReceived;
+
     private NetId _netId;
 
     private SteamPlayerID _playerID;
@@ -110,7 +113,15 @@ public class SteamPlayer : SteamConnectedClientBase
 
     internal EClientPlatform clientPlatform;
 
+    private static readonly ClientStaticMethod<string> SendGetSteamAuthTicketForWebApiRequest = ClientStaticMethod<string>.Get(ReceiveGetSteamAuthTicketForWebApiRequest);
+
+    internal static readonly ServerStaticMethod SendGetSteamAuthTicketForWebApiResponse = ServerStaticMethod.Get(ReceiveGetSteamAuthTicketForWebApiResponse);
+
     internal HashSet<Guid> validatedGuids = new HashSet<Guid>();
+
+    private HashSet<string> requestedSteamAuthTicketIdentities = new HashSet<string>();
+
+    private HashSet<string> receivedSteamAuthTicketIdentities = new HashSet<string>();
 
     public SteamPlayerID playerID => _playerID;
 
@@ -486,6 +497,73 @@ public class SteamPlayer : SteamConnectedClientBase
             return playerID.nickName;
         }
         return playerID.characterName;
+    }
+
+    /// <summary>
+    /// Can be used by plugins to verify player is on a particular server.
+    ///
+    /// OnSteamAuthTicketForWebApiReceived will be invoked when the response is received.
+    /// Note that the client doesn't send anything if the request to Steam fails, so plugins may wish to kick
+    /// players if a certain amount of time passes. (e.g., if a cheat is canceling the request)
+    /// </summary>
+    public void RequestSteamAuthTicketForWebApi(string identity)
+    {
+        if (string.IsNullOrWhiteSpace(identity))
+        {
+            throw new ArgumentException("cannot be null or empty", "identity");
+        }
+        if (requestedSteamAuthTicketIdentities.Add(identity))
+        {
+            UnturnedLog.info($"Sending request to {base.transportConnection} for Steam auth ticket for web API identity \"{identity}\"");
+            SendGetSteamAuthTicketForWebApiRequest.Invoke(ENetReliability.Reliable, base.transportConnection, identity);
+        }
+    }
+
+    [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
+    public static void ReceiveGetSteamAuthTicketForWebApiRequest(string identity)
+    {
+        UnturnedLog.info("Received request to get Steam auth ticket for web API identity \"" + identity + "\"");
+        Provider.RequestSteamAuthTicketForWebApi(identity);
+    }
+
+    [SteamCall(ESteamCallValidation.SERVERSIDE)]
+    public static void ReceiveGetSteamAuthTicketForWebApiResponse(in ServerInvocationContext context)
+    {
+        NetPakReader reader = context.reader;
+        SteamPlayer callingPlayer = context.GetCallingPlayer();
+        if (!reader.ReadString(out var value, 5))
+        {
+            context.Kick("Unable to read Steam auth ticket web API identity");
+            return;
+        }
+        if (!callingPlayer.requestedSteamAuthTicketIdentities.Contains(value))
+        {
+            context.Kick("Server did not request Steam auth ticket for provided web API identity");
+            return;
+        }
+        if (!callingPlayer.receivedSteamAuthTicketIdentities.Add(value))
+        {
+            context.Kick("Client sent duplicate Steam auth ticket for web API response");
+            return;
+        }
+        if (!reader.ReadUInt16(out var value2))
+        {
+            context.Kick("Unable to read Steam web API auth ticket length");
+            return;
+        }
+        if (value2 > 2560)
+        {
+            context.Kick("Steam web API auth ticket longer than maximum");
+            return;
+        }
+        byte[] array = new byte[value2];
+        if (!reader.ReadBytes(array))
+        {
+            context.Kick("Unable to read Steam web API auth ticket contents");
+            return;
+        }
+        UnturnedLog.info($"Received response from {callingPlayer.transportConnection} for Steam auth ticket for web API identity \"{value}\" length: {value2}");
+        OnSteamAuthTicketForWebApiReceived?.TryInvoke("OnSteamAuthTicketForWebApiReceived", callingPlayer, value, array);
     }
 
     public SteamPlayer(ITransportConnection transportConnection, NetId netId, SteamPlayerID newPlayerID, Transform newModel, bool newPro, bool newAdmin, int newChannel, byte newFace, byte newHair, byte newBeard, Color newSkin, Color newColor, Color newMarkerColor, bool newHand, int newShirtItem, int newPantsItem, int newHatItem, int newBackpackItem, int newVestItem, int newMaskItem, int newGlassesItem, int[] newSkinItems, string[] newSkinTags, string[] newSkinDynamicProps, EPlayerSkillset newSkillset, string newLanguage, CSteamID newLobbyID, EClientPlatform clientPlatform)

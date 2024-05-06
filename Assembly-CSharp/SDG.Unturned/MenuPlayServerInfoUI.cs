@@ -15,7 +15,8 @@ public class MenuPlayServerInfoUI
     public enum EServerInfoOpenContext
     {
         CONNECT,
-        SERVERS
+        SERVERS,
+        BOOKMARKS
     }
 
     private class ServerInfoViewWorkshopButton : SleekWrapper
@@ -137,6 +138,8 @@ public class MenuPlayServerInfoUI
 
     private static ISleekButton favoriteButton;
 
+    private static SleekButtonIcon bookmarkButton;
+
     private static ISleekButton refreshButton;
 
     private static ISleekButton cancelButton;
@@ -146,6 +149,16 @@ public class MenuPlayServerInfoUI
     private static string serverPassword;
 
     private static bool serverFavorited;
+
+    /// <summary>
+    /// Null if not bookmarked.
+    /// </summary>
+    private static ServerBookmarkDetails bookmarkDetails;
+
+    /// <summary>
+    /// DNS entry to use if adding a bookmark for this server.
+    /// </summary>
+    private static string serverBookmarkHost;
 
     private static List<PublishedFileId_t> expectedWorkshopItems;
 
@@ -259,6 +272,7 @@ public class MenuPlayServerInfoUI
         expectedWorkshopItems = null;
         linkUrls = null;
         IPv4Address pv4Address = new IPv4Address(serverInfo.ip);
+        serverBookmarkHost = null;
         bool flag = !serverInfo.steamID.BPersistentGameServerAccount() && pv4Address.IsWideAreaNetwork;
         flag &= serverInfo.infoSource != SteamServerAdvertisement.EInfoSource.LanServerList;
         flag &= !LiveConfig.Get().shouldAllowJoiningInternetServersWithoutGslt;
@@ -358,12 +372,15 @@ public class MenuPlayServerInfoUI
         reset();
         serverFavorited = Provider.GetServerIsFavorited(serverInfo.ip, serverInfo.queryPort);
         updateFavorite();
+        bookmarkDetails = ServerBookmarksManager.FindBookmarkDetails(serverInfo);
+        UpdateBookmarkButton();
         updatePlayers();
         Provider.provider.matchmakingService.refreshPlayers(serverInfo.ip, serverInfo.queryPort);
         Provider.provider.matchmakingService.refreshPlayers(serverInfo.ip, serverInfo.queryPort);
         updateRules();
         Provider.provider.matchmakingService.refreshRules(serverInfo.ip, serverInfo.queryPort);
         updateServerInfo();
+        UpdateVisibleButtons();
         container.AnimateIntoView();
     }
 
@@ -397,6 +414,27 @@ public class MenuPlayServerInfoUI
         updateFavorite();
     }
 
+    private static void OnClickedBookmarkButton(ISleekElement button)
+    {
+        if (bookmarkDetails != null)
+        {
+            bookmarkDetails.isBookmarked = !bookmarkDetails.isBookmarked;
+            if (bookmarkDetails.isBookmarked)
+            {
+                ServerBookmarksManager.AddBookmark(bookmarkDetails);
+            }
+            else
+            {
+                ServerBookmarksManager.RemoveBookmark(serverInfo.steamID);
+            }
+        }
+        else
+        {
+            bookmarkDetails = ServerBookmarksManager.AddBookmark(serverInfo, serverBookmarkHost);
+        }
+        UpdateBookmarkButton();
+    }
+
     private static void onClickedRefreshButton(ISleekElement button)
     {
         updatePlayers();
@@ -412,6 +450,9 @@ public class MenuPlayServerInfoUI
             break;
         case EServerInfoOpenContext.SERVERS:
             MenuPlayUI.serverListUI.open(shouldRefresh: false);
+            break;
+        case EServerInfoOpenContext.BOOKMARKS:
+            MenuPlayUI.serverBookmarksUI.open();
             break;
         }
         close();
@@ -543,6 +584,7 @@ public class MenuPlayServerInfoUI
 
     private static void updateFavorite()
     {
+        favoriteButton.IsVisible = !serverInfo.IsAddressUsingSteamFakeIP();
         if (serverFavorited)
         {
             favoriteButton.Text = localization.format("Favorite_Off_Button");
@@ -550,6 +592,21 @@ public class MenuPlayServerInfoUI
         else
         {
             favoriteButton.Text = localization.format("Favorite_On_Button");
+        }
+    }
+
+    private static void UpdateBookmarkButton()
+    {
+        bookmarkButton.IsVisible = serverInfo.steamID.BPersistentGameServerAccount() && !string.IsNullOrEmpty(serverBookmarkHost);
+        if (bookmarkDetails != null && bookmarkDetails.isBookmarked)
+        {
+            bookmarkButton.text = localization.format("Bookmark_Off_Button");
+            bookmarkButton.icon = MenuPlayUI.serverListUI.icons.load<Texture2D>("Bookmark_Remove");
+        }
+        else
+        {
+            bookmarkButton.text = localization.format("Bookmark_On_Button");
+            bookmarkButton.icon = MenuPlayUI.serverListUI.icons.load<Texture2D>("Bookmark_Add");
         }
     }
 
@@ -639,14 +696,25 @@ public class MenuPlayServerInfoUI
             ProfanityFilter.ApplyFilter(OptionsSettings.filter, ref value2);
             titleDescriptionLabel.Text = value2;
         }
-        if (rulesMap.TryGetValue("Browser_Desc_Full_Count", out var value3) && int.TryParse(value3, NumberStyles.Any, CultureInfo.InvariantCulture, out var result) && result > 0)
+        if (rulesMap.TryGetValue("BookmarkHost", out var value3))
+        {
+            serverBookmarkHost = value3;
+            if (bookmarkDetails != null && !string.IsNullOrEmpty(serverBookmarkHost))
+            {
+                bookmarkDetails.host = serverBookmarkHost;
+                ServerBookmarksManager.MarkDirty();
+            }
+            UpdateBookmarkButton();
+            UpdateVisibleButtons();
+        }
+        if (rulesMap.TryGetValue("Browser_Desc_Full_Count", out var value4) && int.TryParse(value4, NumberStyles.Any, CultureInfo.InvariantCulture, out var result) && result > 0)
         {
             string text = string.Empty;
             for (int i = 0; i < result; i++)
             {
-                if (rulesMap.TryGetValue("Browser_Desc_Full_Line_" + i, out var value4))
+                if (rulesMap.TryGetValue("Browser_Desc_Full_Line_" + i, out var value5))
                 {
-                    text += value4;
+                    text += value5;
                 }
             }
             if (ConvertEx.TryDecodeBase64AsUtf8String(text, out var output))
@@ -664,39 +732,39 @@ public class MenuPlayServerInfoUI
             }
         }
         linkUrls = new List<string>();
-        if (rulesMap.TryGetValue("Custom_Links_Count", out var value5) && int.TryParse(value5, NumberStyles.Any, CultureInfo.InvariantCulture, out var result2) && result2 > 0)
+        if (rulesMap.TryGetValue("Custom_Links_Count", out var value6) && int.TryParse(value6, NumberStyles.Any, CultureInfo.InvariantCulture, out var result2) && result2 > 0)
         {
             int num = 0;
             for (int j = 0; j < result2; j++)
             {
-                if (!rulesMap.TryGetValue("Custom_Link_Message_" + j, out var value6))
+                if (!rulesMap.TryGetValue("Custom_Link_Message_" + j, out var value7))
                 {
                     UnturnedLog.warn("Skipping link index {0} because message is missing", j);
                     continue;
                 }
-                if (string.IsNullOrEmpty(value6))
+                if (string.IsNullOrEmpty(value7))
                 {
                     UnturnedLog.warn("Skipping link index {0} because message is empty", j);
                     continue;
                 }
-                if (!rulesMap.TryGetValue("Custom_Link_Url_" + j, out var value7))
+                if (!rulesMap.TryGetValue("Custom_Link_Url_" + j, out var value8))
                 {
                     UnturnedLog.warn("Skipping link index {0} because url is missing", j);
                     continue;
                 }
-                if (string.IsNullOrEmpty(value7))
+                if (string.IsNullOrEmpty(value8))
                 {
                     UnturnedLog.warn("Skipping link index {0} because url is empty", j);
                     continue;
                 }
-                if (!ConvertEx.TryDecodeBase64AsUtf8String(value6, out var output2))
+                if (!ConvertEx.TryDecodeBase64AsUtf8String(value7, out var output2))
                 {
-                    UnturnedLog.warn("Skipping link index {0} because unable to decode message Base64: \"{1}\"", j, value6);
+                    UnturnedLog.warn("Skipping link index {0} because unable to decode message Base64: \"{1}\"", j, value7);
                     continue;
                 }
-                if (!ConvertEx.TryDecodeBase64AsUtf8String(value7, out var output3))
+                if (!ConvertEx.TryDecodeBase64AsUtf8String(value8, out var output3))
                 {
-                    UnturnedLog.warn("Skipping link index {0} because unable to decode url Base64: \"{1}\"", j, value7);
+                    UnturnedLog.warn("Skipping link index {0} because unable to decode url Base64: \"{1}\"", j, value8);
                     continue;
                 }
                 if (!WebUtils.ParseThirdPartyUrl(output3, out var result3))
@@ -724,9 +792,9 @@ public class MenuPlayServerInfoUI
                 linksFrame.IsVisible = true;
             }
         }
-        if (rulesMap.TryGetValue("rocketplugins", out var value8) && !string.IsNullOrEmpty(value8))
+        if (rulesMap.TryGetValue("rocketplugins", out var value9) && !string.IsNullOrEmpty(value9))
         {
-            string[] array = value8.Split(',');
+            string[] array = value9.Split(',');
             rocketBox.SizeOffset_Y = array.Length * 20 + 10;
             for (int k = 0; k < array.Length; k++)
             {
@@ -755,14 +823,14 @@ public class MenuPlayServerInfoUI
             rocketBox.IsVisible = true;
         }
         expectedWorkshopItems = new List<PublishedFileId_t>(0);
-        if (rulesMap.TryGetValue("Mod_Count", out var value9) && int.TryParse(value9, NumberStyles.Any, CultureInfo.InvariantCulture, out var result4) && result4 > 0)
+        if (rulesMap.TryGetValue("Mod_Count", out var value10) && int.TryParse(value10, NumberStyles.Any, CultureInfo.InvariantCulture, out var result4) && result4 > 0)
         {
             string text2 = string.Empty;
             for (int l = 0; l < result4; l++)
             {
-                if (rulesMap.TryGetValue("Mod_" + l, out var value10))
+                if (rulesMap.TryGetValue("Mod_" + l, out var value11))
                 {
-                    text2 += value10;
+                    text2 += value11;
                 }
             }
             string[] array2 = text2.Split(',');
@@ -779,22 +847,22 @@ public class MenuPlayServerInfoUI
             SteamAPICall_t hAPICall = SteamUGC.SendQueryUGCRequest(detailsHandle);
             ugcQueryCompleted.Set(hAPICall);
         }
-        if (rulesMap.TryGetValue("Cfg_Count", out var value11) && int.TryParse(value11, NumberStyles.Any, CultureInfo.InvariantCulture, out var result6) && result6 > 0)
+        if (rulesMap.TryGetValue("Cfg_Count", out var value12) && int.TryParse(value12, NumberStyles.Any, CultureInfo.InvariantCulture, out var result6) && result6 > 0)
         {
             int num2 = 0;
             for (int n = 0; n < result6; n++)
             {
-                if (!rulesMap.TryGetValue("Cfg_" + n.ToString(CultureInfo.InvariantCulture), out var value12))
+                if (!rulesMap.TryGetValue("Cfg_" + n.ToString(CultureInfo.InvariantCulture), out var value13))
                 {
                     continue;
                 }
-                int num3 = value12.IndexOf('.');
-                int num4 = value12.IndexOf('=', num3 + 1);
+                int num3 = value13.IndexOf('.');
+                int num4 = value13.IndexOf('=', num3 + 1);
                 if (num3 >= 0 && num4 >= 0)
                 {
-                    string fieldName = value12.Substring(0, num3);
-                    string fieldName2 = value12.Substring(num3 + 1, num4 - num3 - 1);
-                    string text3 = value12.Substring(num4 + 1);
+                    string fieldName = value13.Substring(0, num3);
+                    string fieldName2 = value13.Substring(num3 + 1, num4 - num3 - 1);
+                    string text3 = value13.Substring(num4 + 1);
                     string text4 = null;
                     float result7;
                     int result8;
@@ -824,7 +892,7 @@ public class MenuPlayServerInfoUI
                         sleekLabel2.SizeScale_X = 1f;
                         sleekLabel2.TextAlignment = TextAnchor.MiddleLeft;
                         sleekLabel2.TextColor = Color.red;
-                        sleekLabel2.Text = value12;
+                        sleekLabel2.Text = value13;
                         configBox.AddChild(sleekLabel2);
                     }
                     else
@@ -860,18 +928,18 @@ public class MenuPlayServerInfoUI
                 configBox.IsVisible = true;
             }
         }
-        if (rulesMap.TryGetValue("GameVersion", out var value13) && Parser.TryGetUInt32FromIP(value13, out var value14) && Provider.APP_VERSION_PACKED != value14)
+        if (rulesMap.TryGetValue("GameVersion", out var value14) && Parser.TryGetUInt32FromIP(value14, out var value15) && Provider.APP_VERSION_PACKED != value15)
         {
             joinButton.IsVisible = false;
             joinDisabledBox.IsVisible = true;
-            if (value14 > Provider.APP_VERSION_PACKED)
+            if (value15 > Provider.APP_VERSION_PACKED)
             {
-                joinDisabledBox.Text = localization.format("ServerNewerVersion_Label", value13);
+                joinDisabledBox.Text = localization.format("ServerNewerVersion_Label", value14);
                 joinDisabledBox.TooltipText = localization.format("ServerNewerVersion_Tooltip");
             }
             else
             {
-                joinDisabledBox.Text = localization.format("ServerOlderVersion_Label", value13);
+                joinDisabledBox.Text = localization.format("ServerOlderVersion_Label", value14);
                 joinDisabledBox.TooltipText = localization.format("ServerOlderVersion_Tooltip");
             }
         }
@@ -937,6 +1005,43 @@ public class MenuPlayServerInfoUI
             num += rocketBox.SizeOffset_Y + 10f;
         }
         detailsScrollBox.ContentSizeOffset = new Vector2(0f, num - 10f);
+    }
+
+    /// <summary>
+    /// Adjusts width and spacing of buttons along the bottom of the screen.
+    /// Favorite and bookmark buttons can be hidden depending whether the necessary server details are set.
+    /// </summary>
+    private static void UpdateVisibleButtons()
+    {
+        int num = 3;
+        if (favoriteButton.IsVisible)
+        {
+            num++;
+        }
+        if (bookmarkButton.IsVisible)
+        {
+            num++;
+        }
+        float num2 = 1f / (float)num;
+        joinButton.SizeScale_X = num2;
+        joinDisabledBox.SizeScale_X = num2;
+        float num3 = num2;
+        if (favoriteButton.IsVisible)
+        {
+            favoriteButton.PositionScale_X = num3;
+            favoriteButton.SizeScale_X = num2;
+            num3 += num2;
+        }
+        if (bookmarkButton.IsVisible)
+        {
+            bookmarkButton.PositionScale_X = num3;
+            bookmarkButton.SizeScale_X = num2;
+            num3 += num2;
+        }
+        refreshButton.PositionScale_X = num3;
+        refreshButton.SizeScale_X = num2;
+        cancelButton.PositionScale_X = 1f - num2;
+        cancelButton.SizeScale_X = num2;
     }
 
     private static void OnClickedLinkButton(ISleekElement button)
@@ -1212,7 +1317,7 @@ public class MenuPlayServerInfoUI
         mapContainer.AddChild(serverDescriptionBox);
         joinButton = Glazier.Get().CreateButton();
         joinButton.SizeOffset_X = -5f;
-        joinButton.SizeScale_X = 0.25f;
+        joinButton.SizeScale_X = 0.2f;
         joinButton.SizeScale_Y = 1f;
         joinButton.Text = localization.format("Join_Button");
         joinButton.TooltipText = localization.format("Join_Button_Tooltip");
@@ -1221,26 +1326,36 @@ public class MenuPlayServerInfoUI
         buttonsContainer.AddChild(joinButton);
         joinDisabledBox = Glazier.Get().CreateBox();
         joinDisabledBox.SizeOffset_X = -5f;
-        joinDisabledBox.SizeScale_X = 0.25f;
+        joinDisabledBox.SizeScale_X = 0.2f;
         joinDisabledBox.SizeScale_Y = 1f;
         joinDisabledBox.TextColor = ESleekTint.BAD;
         buttonsContainer.AddChild(joinDisabledBox);
         joinDisabledBox.IsVisible = false;
         favoriteButton = Glazier.Get().CreateButton();
         favoriteButton.PositionOffset_X = 5f;
-        favoriteButton.PositionScale_X = 0.25f;
+        favoriteButton.PositionScale_X = 0.2f;
         favoriteButton.SizeOffset_X = -10f;
-        favoriteButton.SizeScale_X = 0.25f;
+        favoriteButton.SizeScale_X = 0.2f;
         favoriteButton.SizeScale_Y = 1f;
         favoriteButton.TooltipText = localization.format("Favorite_Button_Tooltip");
         favoriteButton.OnClicked += onClickedFavoriteButton;
         favoriteButton.FontSize = ESleekFontSize.Medium;
         buttonsContainer.AddChild(favoriteButton);
+        bookmarkButton = new SleekButtonIcon(null, 40);
+        bookmarkButton.PositionOffset_X = 5f;
+        bookmarkButton.PositionScale_X = 0.4f;
+        bookmarkButton.SizeOffset_X = -10f;
+        bookmarkButton.SizeScale_X = 0.2f;
+        bookmarkButton.SizeScale_Y = 1f;
+        bookmarkButton.tooltip = localization.format("Bookmark_Button_Tooltip");
+        bookmarkButton.onClickedButton += OnClickedBookmarkButton;
+        bookmarkButton.fontSize = ESleekFontSize.Medium;
+        buttonsContainer.AddChild(bookmarkButton);
         refreshButton = Glazier.Get().CreateButton();
         refreshButton.PositionOffset_X = 5f;
-        refreshButton.PositionScale_X = 0.5f;
+        refreshButton.PositionScale_X = 0.6f;
         refreshButton.SizeOffset_X = -10f;
-        refreshButton.SizeScale_X = 0.25f;
+        refreshButton.SizeScale_X = 0.2f;
         refreshButton.SizeScale_Y = 1f;
         refreshButton.Text = localization.format("Refresh_Button");
         refreshButton.TooltipText = localization.format("Refresh_Button_Tooltip");
@@ -1249,9 +1364,9 @@ public class MenuPlayServerInfoUI
         buttonsContainer.AddChild(refreshButton);
         cancelButton = Glazier.Get().CreateButton();
         cancelButton.PositionOffset_X = 5f;
-        cancelButton.PositionScale_X = 0.75f;
+        cancelButton.PositionScale_X = 0.8f;
         cancelButton.SizeOffset_X = -5f;
-        cancelButton.SizeScale_X = 0.25f;
+        cancelButton.SizeScale_X = 0.2f;
         cancelButton.SizeScale_Y = 1f;
         cancelButton.Text = localization.format("Cancel_Button");
         cancelButton.TooltipText = localization.format("Cancel_Button_Tooltip");

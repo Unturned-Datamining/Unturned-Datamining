@@ -255,6 +255,7 @@ public class MenuUI : MonoBehaviour
         MenuPlayConnectUI.close();
         MenuPlayServersUI.serverListFiltersUI.close();
         MenuPlayUI.serverListUI.close();
+        MenuPlayUI.serverBookmarksUI.close();
         MenuPlayServerInfoUI.close();
         MenuServerPasswordUI.close();
         MenuPlayConfigUI.close();
@@ -360,6 +361,9 @@ public class MenuUI : MonoBehaviour
                 case MenuPlayServerInfoUI.EServerInfoOpenContext.SERVERS:
                     MenuPlayUI.serverListUI.open(shouldRefresh: false);
                     break;
+                case MenuPlayServerInfoUI.EServerInfoOpenContext.BOOKMARKS:
+                    MenuPlayUI.serverBookmarksUI.open();
+                    break;
                 default:
                     UnturnedLog.info("Unknown server info open context: {0}", MenuPlayServerInfoUI.openContext);
                     break;
@@ -370,12 +374,13 @@ public class MenuUI : MonoBehaviour
                 MenuPlayServersUI.serverListFiltersUI.close();
                 MenuPlayUI.serverListUI.open(shouldRefresh: true);
             }
-            else if (MenuPlayConnectUI.active || MenuPlayUI.serverListUI.active || MenuPlaySingleplayerUI.active || MenuPlayLobbiesUI.active)
+            else if (MenuPlayConnectUI.active || MenuPlayUI.serverListUI.active || MenuPlaySingleplayerUI.active || MenuPlayLobbiesUI.active || MenuPlayUI.serverBookmarksUI.active)
             {
                 MenuPlayConnectUI.close();
                 MenuPlayUI.serverListUI.close();
                 MenuPlaySingleplayerUI.close();
                 MenuPlayLobbiesUI.close();
+                MenuPlayUI.serverBookmarksUI.close();
                 MenuPlayUI.open();
             }
             else if (ItemStoreCartMenu.instance.IsOpen)
@@ -517,7 +522,7 @@ public class MenuUI : MonoBehaviour
         MenuSurvivorsClothingBoxUI.update();
         tickInput();
         window.showCursor = true;
-        if (MenuPlayUI.active || MenuPlayConnectUI.active || MenuPlayUI.serverListUI.active || MenuPlayServersUI.serverListFiltersUI.active || MenuPlayServerInfoUI.active || MenuServerPasswordUI.isActive || MenuPlaySingleplayerUI.active || MenuPlayLobbiesUI.active || MenuPlayConfigUI.active)
+        if (MenuPlayUI.active || MenuPlayConnectUI.active || MenuPlayUI.serverListUI.active || MenuPlayServersUI.serverListFiltersUI.active || MenuPlayServerInfoUI.active || MenuServerPasswordUI.isActive || MenuPlaySingleplayerUI.active || MenuPlayLobbiesUI.active || MenuPlayConfigUI.active || MenuPlayUI.serverBookmarksUI.active)
         {
             target = play;
         }

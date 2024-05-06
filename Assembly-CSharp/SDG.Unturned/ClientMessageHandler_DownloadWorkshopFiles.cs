@@ -38,6 +38,12 @@ internal static class ClientMessageHandler_DownloadWorkshopFiles
         UnturnedLog.info($"Server camera mode: {value10}");
         reader.ReadUInt8(out var value11);
         UnturnedLog.info($"Server max players: {value11}");
+        reader.ReadString(out var value12);
+        UnturnedLog.info("Server bookmark host: \"" + value12 + "\"");
+        reader.ReadString(out var value13);
+        UnturnedLog.info("Server thumbnail URL: \"" + value13 + "\"");
+        reader.ReadString(out var value14);
+        UnturnedLog.info("Server description: \"" + value14 + "\"");
         IPv4Address address;
         uint num = (Provider.clientTransport.TryGetIPv4Address(out address) ? address.value : 0u);
         if (num == 0)
@@ -70,6 +76,9 @@ internal static class ClientMessageHandler_DownloadWorkshopFiles
         cachedWorkshopResponse.gameMode = value9;
         cachedWorkshopResponse.cameraMode = value10;
         cachedWorkshopResponse.maxPlayers = value11;
+        cachedWorkshopResponse.bookmarkHost = value12;
+        cachedWorkshopResponse.thumbnailUrl = value13;
+        cachedWorkshopResponse.serverDescription = value14;
         cachedWorkshopResponse.ip = num;
         cachedWorkshopResponse.requiredFiles = requiredFiles;
         cachedWorkshopResponse.realTime = Time.realtimeSinceStartup;

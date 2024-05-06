@@ -75,6 +75,13 @@ public class MenuDashboardUI
 
     private static UGCQueryHandle_t featuredWorkshopHandle = UGCQueryHandle_t.Invalid;
 
+    /// <summary>
+    /// Nelson 2024-04-23: A concerned player raised the issue that mature content could potentially be returned in
+    /// popular item results. Steam excludes certain mature content by default, but just in case, we check for these
+    /// words and hide if contained in title.
+    /// </summary>
+    private static string[] featuredWorkshopTitleBannedWords = new string[5] { "drug", "alcohol", "cigarette", "heroin", "cocaine" };
+
     private static CallResult<SteamUGCQueryCompleted_t> steamUGCQueryCompletedPopular;
 
     private static CallResult<SteamUGCQueryCompleted_t> steamUGCQueryCompletedFeatured;
@@ -496,6 +503,25 @@ public class MenuDashboardUI
             UnturnedLog.warn("Ignoring featured workshop file because visibility is private");
             return;
         }
+        if (string.IsNullOrWhiteSpace(pDetails.m_rgchTitle))
+        {
+            UnturnedLog.warn($"Ignoring featured workshop file {pDetails.m_nPublishedFileId} because title is empty");
+            return;
+        }
+        if (ProfanityFilter.NaiveContainsHardcodedBannedWord(pDetails.m_rgchTitle))
+        {
+            UnturnedLog.warn($"Ignoring featured workshop file {pDetails.m_nPublishedFileId} because title contains banned string. May need moderator attention!");
+            return;
+        }
+        string[] array = featuredWorkshopTitleBannedWords;
+        foreach (string text in array)
+        {
+            if (pDetails.m_rgchTitle.Contains(text, StringComparison.InvariantCultureIgnoreCase))
+            {
+                UnturnedLog.warn($"Ignoring featured workshop file {pDetails.m_nPublishedFileId} because title contains inappropriate string \"{text}\"");
+                return;
+            }
+        }
         ISleekBox sleekBox = Glazier.Get().CreateBox();
         sleekBox.SizeScale_X = 1f;
         sleekBox.UseManualLayout = false;
@@ -518,14 +544,14 @@ public class MenuDashboardUI
             EFeaturedWorkshopType.Curated => "Curated_Workshop_Title", 
             _ => "Highlighted_Workshop_Title", 
         }));
-        string text = localization.format(key, pDetails.m_rgchTitle);
+        string text2 = localization.format(key, pDetails.m_rgchTitle);
         ISleekElement sleekElement = Glazier.Get().CreateFrame();
         sleekElement.UseManualLayout = false;
         sleekElement.UseChildAutoLayout = ESleekChildLayout.Horizontal;
         sleekBox.AddChild(sleekElement);
         ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
         sleekLabel.UseManualLayout = false;
-        sleekLabel.Text = text;
+        sleekLabel.Text = text2;
         sleekLabel.FontSize = ESleekFontSize.Large;
         sleekLabel.TextAlignment = TextAnchor.UpperLeft;
         sleekElement.AddChild(sleekLabel);
@@ -617,8 +643,8 @@ public class MenuDashboardUI
         if (flag && associatedStockpileItems != null && associatedStockpileItems.Length != 0)
         {
             List<int> list = new List<int>(associatedStockpileItems.Length);
-            int[] array = associatedStockpileItems;
-            foreach (int num in array)
+            int[] array2 = associatedStockpileItems;
+            foreach (int num in array2)
             {
                 if (num > 0 && !Provider.provider.economyService.isItemHiddenByCountryRestrictions(num))
                 {
@@ -635,10 +661,10 @@ public class MenuDashboardUI
                 }
                 else
                 {
-                    string text2 = localization.format("Featured_Workshop_Stockpile_Link", inventoryName);
+                    string text3 = localization.format("Featured_Workshop_Stockpile_Link", inventoryName);
                     SleekStockpileLinkButton sleekStockpileLinkButton = new SleekStockpileLinkButton();
                     sleekStockpileLinkButton.UseManualLayout = false;
-                    sleekStockpileLinkButton.internalButton.Text = text2;
+                    sleekStockpileLinkButton.internalButton.Text = text3;
                     sleekStockpileLinkButton.itemdefid = num2;
                     sleekStockpileLinkButton.UseChildAutoLayout = ESleekChildLayout.Vertical;
                     sleekStockpileLinkButton.ExpandChildren = true;

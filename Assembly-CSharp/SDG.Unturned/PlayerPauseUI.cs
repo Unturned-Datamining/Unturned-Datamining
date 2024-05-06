@@ -44,6 +44,8 @@ public class PlayerPauseUI
 
     private static SleekButtonIcon favoriteButton;
 
+    private static SleekButtonIcon bookmarkButton;
+
     private static ISleekButton quicksaveButton;
 
     private static CSteamID spySteamID;
@@ -208,6 +210,12 @@ public class PlayerPauseUI
         updateFavorite();
     }
 
+    private static void OnClickedBookmarkButton(ISleekElement button)
+    {
+        Provider.ToggleCurrentServerBookmarked();
+        UpdateBookmarkButton();
+    }
+
     private static void onClickedQuicksaveButton(ISleekElement button)
     {
         SaveManager.save();
@@ -224,6 +232,20 @@ public class PlayerPauseUI
         {
             favoriteButton.text = localization.format("Favorite_On_Button_Text");
             favoriteButton.icon = icons.load<Texture2D>("Favorite_On");
+        }
+    }
+
+    private static void UpdateBookmarkButton()
+    {
+        if (Provider.IsCurrentServerBookmarked)
+        {
+            bookmarkButton.text = MenuPlayServerInfoUI.localization.format("Bookmark_Off_Button");
+            bookmarkButton.icon = MenuPlayUI.serverListUI.icons.load<Texture2D>("Bookmark_Remove");
+        }
+        else
+        {
+            bookmarkButton.text = MenuPlayServerInfoUI.localization.format("Bookmark_On_Button");
+            bookmarkButton.icon = MenuPlayUI.serverListUI.icons.load<Texture2D>("Bookmark_Add");
         }
     }
 
@@ -465,25 +487,60 @@ public class PlayerPauseUI
             quicksaveButton.OnClicked += onClickedQuicksaveButton;
             container.AddChild(quicksaveButton);
             favoriteButton = null;
+            bookmarkButton = null;
         }
         else
         {
             quicksaveButton = null;
             favoriteButton = null;
+            bookmarkButton = null;
             if (Provider.CanFavoriteCurrentServer)
             {
                 favoriteButton = new SleekButtonIcon(null);
-                favoriteButton.PositionScale_X = 0.75f;
                 favoriteButton.PositionOffset_Y = -50f;
-                favoriteButton.PositionOffset_X = 5f;
                 favoriteButton.PositionScale_Y = 1f;
-                favoriteButton.SizeOffset_X = -5f;
                 favoriteButton.SizeOffset_Y = 50f;
-                favoriteButton.SizeScale_X = 0.25f;
                 favoriteButton.tooltip = localization.format("Favorite_Button_Tooltip");
                 favoriteButton.fontSize = ESleekFontSize.Medium;
                 favoriteButton.onClickedButton += onClickedFavoriteButton;
                 container.AddChild(favoriteButton);
+            }
+            if (Provider.CanBookmarkCurrentServer)
+            {
+                bookmarkButton = new SleekButtonIcon(null, 40);
+                bookmarkButton.PositionOffset_Y = -50f;
+                bookmarkButton.PositionScale_Y = 1f;
+                bookmarkButton.SizeOffset_Y = 50f;
+                bookmarkButton.tooltip = MenuPlayServerInfoUI.localization.format("Bookmark_Button_Tooltip");
+                bookmarkButton.fontSize = ESleekFontSize.Medium;
+                bookmarkButton.onClickedButton += OnClickedBookmarkButton;
+                container.AddChild(bookmarkButton);
+            }
+            if (favoriteButton != null && bookmarkButton != null)
+            {
+                favoriteButton.PositionScale_X = 0.5f;
+                favoriteButton.PositionOffset_X = 5f;
+                favoriteButton.SizeOffset_X = -10f;
+                favoriteButton.SizeScale_X = 0.25f;
+                bookmarkButton.PositionScale_X = 0.75f;
+                bookmarkButton.PositionOffset_X = 5f;
+                bookmarkButton.SizeOffset_X = -5f;
+                bookmarkButton.SizeScale_X = 0.25f;
+                serverBox.SizeScale_X = 0.5f;
+            }
+            else if (favoriteButton != null)
+            {
+                favoriteButton.PositionScale_X = 0.75f;
+                favoriteButton.PositionOffset_X = 5f;
+                favoriteButton.SizeOffset_X = -5f;
+                favoriteButton.SizeScale_X = 0.25f;
+            }
+            else if (bookmarkButton != null)
+            {
+                bookmarkButton.PositionScale_X = 0.75f;
+                bookmarkButton.PositionOffset_X = 5f;
+                bookmarkButton.SizeOffset_X = -5f;
+                bookmarkButton.SizeScale_X = 0.25f;
             }
             else
             {
@@ -498,6 +555,10 @@ public class PlayerPauseUI
         if (favoriteButton != null)
         {
             updateFavorite();
+        }
+        if (bookmarkButton != null)
+        {
+            UpdateBookmarkButton();
         }
         Player.onSpyReady = onSpyReady;
         ClientMessageHandler_Accepted.OnGameplayConfigReceived += OnGameplayConfigReceived;

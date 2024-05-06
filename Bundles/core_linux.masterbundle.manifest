@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 4186337636
+CRC: 2259965398
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 189a054764490362dbe34a5ab4db374e
+    Hash: b3c084de9838b001ae331c2e8199a302
   TypeTreeHash:
     serializedVersion: 2
     Hash: 1f28f4469c2fec7e83a39c3a46800428
@@ -2909,6 +2909,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Magazines/MP40_32/Magazine.prefab
 - Assets/CoreMasterBundle/Items/Kuwait2/Kuwait_Achievement_Nazar_Pin/Item.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Grass_Walk/footstep_grass_walk_08.wav
+- Assets/CoreMasterBundle/Items/Melee/Pike/Item.prefab
 - Assets/CoreMasterBundle/Trees/Pine_0/Skybox_Old.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Mechanic_1/Nav.prefab
 - Assets/CoreMasterBundle/Skins/Timberwolf/Vintage/Skin_Secondary_20.mat
@@ -9837,6 +9838,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Card/Bloodsport/Skin_Primary.mat
 - Assets/CoreMasterBundle/Skins/Eaglefire/Cryptic/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Items/Sights/8x_Scope/Metallic_Base.png
+- Assets/CoreMasterBundle/Items/Melee/Pike/Animations.prefab
 - Assets/CoreMasterBundle/Skins/Eaglefire/Cryptic/Skin_Secondary_6.mat
 - Assets/CoreMasterBundle/Sounds/Inventory/Keys/foley_keys_belt_metal_jingle_06.wav
 - Assets/CoreMasterBundle/Skins/Schofield/Pool_Shark/Skin_Primary.mat

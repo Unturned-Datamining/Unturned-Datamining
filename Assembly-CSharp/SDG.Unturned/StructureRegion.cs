@@ -21,14 +21,7 @@ public class StructureRegion
 
     public StructureDrop FindStructureByRootTransform(Transform transform)
     {
-        foreach (StructureDrop drop in _drops)
-        {
-            if (drop.model == transform)
-            {
-                return drop;
-            }
-        }
-        return null;
+        return transform?.GetComponent<StructureRefComponent>()?.tempNotSureIfStructureShouldBeAComponentYet;
     }
 
     [Obsolete("Dead code, please contact if you need this and we will make a plan")]

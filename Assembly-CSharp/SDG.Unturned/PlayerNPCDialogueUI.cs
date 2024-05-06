@@ -259,13 +259,13 @@ public class PlayerNPCDialogueUI
 
     private static bool FindNextRichTextMarkupSpan(string text, int index, out int begin, out int end)
     {
-        begin = 0;
-        end = 0;
+        begin = -1;
+        end = -1;
         while (index < text.Length)
         {
             if (text[index] == '<')
             {
-                if (begin == 0)
+                if (begin == -1)
                 {
                     begin = index;
                 }
@@ -273,7 +273,7 @@ public class PlayerNPCDialogueUI
             else if (text[index] == '>' && (index == text.Length - 1 || text[index + 1] != '<'))
             {
                 end = index;
-                return true;
+                return begin >= 0;
             }
             index++;
         }

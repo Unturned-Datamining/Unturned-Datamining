@@ -716,61 +716,61 @@ public class EffectManager : SteamCaller
     }
 
     [Obsolete]
-    public static void sendUIEffectVisibility(short key, CSteamID steamID, bool reliable, string childName, bool visible)
+    public static void sendUIEffectVisibility(short key, CSteamID steamID, bool reliable, string childNameOrPath, bool visible)
     {
         ITransportConnection transportConnection = Provider.findTransportConnection(steamID);
         if (transportConnection != null)
         {
-            sendUIEffectVisibility(key, transportConnection, reliable, childName, visible);
+            sendUIEffectVisibility(key, transportConnection, reliable, childNameOrPath, visible);
         }
     }
 
-    public static void sendUIEffectVisibility(short key, ITransportConnection transportConnection, bool reliable, string childName, bool visible)
+    public static void sendUIEffectVisibility(short key, ITransportConnection transportConnection, bool reliable, string childNameOrPath, bool visible)
     {
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
-        SendUIEffectVisibility.Invoke(reliability, transportConnection, key, childName, visible);
+        SendUIEffectVisibility.Invoke(reliability, transportConnection, key, childNameOrPath, visible);
     }
 
     [Obsolete]
-    public static void sendUIEffectText(short key, CSteamID steamID, bool reliable, string childName, string text)
+    public static void sendUIEffectText(short key, CSteamID steamID, bool reliable, string childNameOrPath, string text)
     {
         ITransportConnection transportConnection = Provider.findTransportConnection(steamID);
         if (transportConnection != null)
         {
-            sendUIEffectText(key, transportConnection, reliable, childName, text);
+            sendUIEffectText(key, transportConnection, reliable, childNameOrPath, text);
         }
     }
 
-    public static void sendUIEffectText(short key, ITransportConnection transportConnection, bool reliable, string childName, string text)
+    public static void sendUIEffectText(short key, ITransportConnection transportConnection, bool reliable, string childNameOrPath, string text)
     {
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
-        SendUIEffectText.Invoke(reliability, transportConnection, key, childName, text);
+        SendUIEffectText.Invoke(reliability, transportConnection, key, childNameOrPath, text);
     }
 
-    public static void sendUIEffectImageURL(short key, CSteamID steamID, bool reliable, string childName, string url)
+    public static void sendUIEffectImageURL(short key, CSteamID steamID, bool reliable, string childNameOrPath, string url)
     {
         ITransportConnection transportConnection = Provider.findTransportConnection(steamID);
         if (transportConnection != null)
         {
-            sendUIEffectImageURL(key, transportConnection, reliable, childName, url);
+            sendUIEffectImageURL(key, transportConnection, reliable, childNameOrPath, url);
         }
     }
 
-    public static void sendUIEffectImageURL(short key, CSteamID steamID, bool reliable, string childName, string url, bool shouldCache = true, bool forceRefresh = false)
+    public static void sendUIEffectImageURL(short key, CSteamID steamID, bool reliable, string childNameOrPath, string url, bool shouldCache = true, bool forceRefresh = false)
     {
         ITransportConnection transportConnection = Provider.findTransportConnection(steamID);
         if (transportConnection != null)
         {
-            sendUIEffectImageURL(key, transportConnection, reliable, childName, url, shouldCache, forceRefresh);
+            sendUIEffectImageURL(key, transportConnection, reliable, childNameOrPath, url, shouldCache, forceRefresh);
         }
     }
 
     /// <param name="shouldCache">If true, client will download the image once and re-use it for subsequent calls.</param>
     /// <param name="forceRefresh">If true, client will destroy any cached copy of the image and re-acquire it.</param>
-    public static void sendUIEffectImageURL(short key, ITransportConnection transportConnection, bool reliable, string childName, string url, bool shouldCache = true, bool forceRefresh = false)
+    public static void sendUIEffectImageURL(short key, ITransportConnection transportConnection, bool reliable, string childNameOrPath, string url, bool shouldCache = true, bool forceRefresh = false)
     {
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
-        SendUIEffectImageURL.Invoke(reliability, transportConnection, key, childName, url, shouldCache, forceRefresh);
+        SendUIEffectImageURL.Invoke(reliability, transportConnection, key, childNameOrPath, url, shouldCache, forceRefresh);
     }
 
     [Obsolete]
@@ -948,28 +948,32 @@ public class EffectManager : SteamCaller
     }
 
     [Obsolete]
-    public void tellUIEffectVisibility(CSteamID steamID, short key, string childName, bool visible)
+    public void tellUIEffectVisibility(CSteamID steamID, short key, string childNameOrPath, bool visible)
     {
-        ReceiveUIEffectVisibility(key, childName, visible);
+        ReceiveUIEffectVisibility(key, childNameOrPath, visible);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellUIEffectVisibility")]
-    public static void ReceiveUIEffectVisibility(short key, string childName, bool visible)
+    public static void ReceiveUIEffectVisibility(short key, string childNameOrPath, bool visible)
     {
         if (!indexedUIEffects.TryGetValue(key, out var value))
         {
-            UnturnedLog.info("tellUIEffectVisibility: key {0} not found (childName {1})", key, childName);
+            UnturnedLog.info("tellUIEffectVisibility: key {0} not found (childNameOrPath {1})", key, childNameOrPath);
             return;
         }
         if (value == null)
         {
-            UnturnedLog.info("tellUIEffectVisibility: key {0} was destroyed (childName {1})", key, childName);
+            UnturnedLog.info("tellUIEffectVisibility: key {0} was destroyed (childNameOrPath {1})", key, childNameOrPath);
             return;
         }
-        Transform transform = value.transform.FindChildRecursive(childName);
+        Transform transform = value.transform.Find(childNameOrPath);
         if (transform == null)
         {
-            UnturnedLog.info("tellUIEffectVisibility: childName '{0}' not found (key {1})", childName, key);
+            transform = value.transform.FindChildRecursive(childNameOrPath);
+        }
+        if (transform == null)
+        {
+            UnturnedLog.info("tellUIEffectVisibility: childNameOrPath \"{0}\" not found (key {1})", childNameOrPath, key);
         }
         else
         {
@@ -978,28 +982,32 @@ public class EffectManager : SteamCaller
     }
 
     [Obsolete]
-    public void tellUIEffectText(CSteamID steamID, short key, string childName, string text)
+    public void tellUIEffectText(CSteamID steamID, short key, string childNameOrPath, string text)
     {
-        ReceiveUIEffectText(key, childName, text);
+        ReceiveUIEffectText(key, childNameOrPath, text);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellUIEffectText")]
-    public static void ReceiveUIEffectText(short key, string childName, string text)
+    public static void ReceiveUIEffectText(short key, string childNameOrPath, string text)
     {
         if (!indexedUIEffects.TryGetValue(key, out var value))
         {
-            UnturnedLog.info("tellUIEffectText: key {0} not found (childName {1} text {2})", key, childName, text);
+            UnturnedLog.info("tellUIEffectText: key {0} not found (childNameOrPath {1} text {2})", key, childNameOrPath, text);
             return;
         }
         if (value == null)
         {
-            UnturnedLog.info("tellUIEffectText: key {0} was destroyed (childName {1} text {2})", key, childName, text);
+            UnturnedLog.info("tellUIEffectText: key {0} was destroyed (childNameOrPath {1} text {2})", key, childNameOrPath, text);
             return;
         }
-        Transform transform = value.transform.FindChildRecursive(childName);
+        Transform transform = value.transform.Find(childNameOrPath);
         if (transform == null)
         {
-            UnturnedLog.info("tellUIEffectText: childName '{0}' not found (key {1} text {2})", childName, key, text);
+            transform = value.transform.FindChildRecursive(childNameOrPath);
+        }
+        if (transform == null)
+        {
+            UnturnedLog.info("tellUIEffectText: childNameOrPath \"{0}\" not found (key {1} text {2})", childNameOrPath, key, text);
             return;
         }
         Text component = transform.GetComponent<Text>();
@@ -1028,38 +1036,42 @@ public class EffectManager : SteamCaller
             component4.SetTextWithoutNotify(text);
             return;
         }
-        UnturnedLog.info("tellUIEffectText: '{0}' does not have a text or input field component (key {1} text {2})", childName, key, text);
+        UnturnedLog.info("tellUIEffectText: \"{0}\" does not have a text or input field component (key {1} text {2})", childNameOrPath, key, text);
     }
 
     [Obsolete]
-    public void tellUIEffectImageURL(CSteamID steamID, short key, string childName, string url, bool shouldCache, bool forceRefresh)
+    public void tellUIEffectImageURL(CSteamID steamID, short key, string childNameOrPath, string url, bool shouldCache, bool forceRefresh)
     {
-        ReceiveUIEffectImageURL(key, childName, url, shouldCache, forceRefresh);
+        ReceiveUIEffectImageURL(key, childNameOrPath, url, shouldCache, forceRefresh);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellUIEffectImageURL")]
-    public static void ReceiveUIEffectImageURL(short key, string childName, string url, bool shouldCache, bool forceRefresh)
+    public static void ReceiveUIEffectImageURL(short key, string childNameOrPath, string url, bool shouldCache, bool forceRefresh)
     {
         if (!indexedUIEffects.TryGetValue(key, out var value))
         {
-            UnturnedLog.info("tellUIEffectImageURL: key {0} not found (childName {1} url {2})", key, childName, url);
+            UnturnedLog.info("tellUIEffectImageURL: key {0} not found (childNameOrPath {1} url {2})", key, childNameOrPath, url);
             return;
         }
         if (value == null)
         {
-            UnturnedLog.info("tellUIEffectImageURL: key {0} was destroyed (childName {1} url {2})", key, childName, url);
+            UnturnedLog.info("tellUIEffectImageURL: key {0} was destroyed (childNameOrPath {1} url {2})", key, childNameOrPath, url);
             return;
         }
-        Transform transform = value.transform.FindChildRecursive(childName);
+        Transform transform = value.transform.Find(childNameOrPath);
         if (transform == null)
         {
-            UnturnedLog.info("tellUIEffectImageURL: childName '{0}' not found (key {1} text {2})", childName, key, url);
+            transform = value.transform.FindChildRecursive(childNameOrPath);
+        }
+        if (transform == null)
+        {
+            UnturnedLog.info("tellUIEffectImageURL: childNameOrPath \"{0}\" not found (key {1} text {2})", childNameOrPath, key, url);
             return;
         }
         Image component = transform.GetComponent<Image>();
         if (component == null)
         {
-            UnturnedLog.info("tellUIEffectImageURL: '{0}' does not have an image component (key {1} url {2})", childName, key, url);
+            UnturnedLog.info("tellUIEffectImageURL: \"{0}\" does not have an image component (key {1} url {2})", childNameOrPath, key, url);
         }
         else
         {

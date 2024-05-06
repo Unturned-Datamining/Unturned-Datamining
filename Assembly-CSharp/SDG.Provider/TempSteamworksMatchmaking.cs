@@ -78,6 +78,8 @@ public class TempSteamworksMatchmaking
     /// </summary>
     public bool autoJoinServerQuery;
 
+    public MenuPlayServerInfoUI.EServerInfoOpenContext serverQueryContext;
+
     private HServerListRequest serverListRequest = HServerListRequest.Invalid;
 
     private int serverListRefreshIndex = -1;
@@ -148,6 +150,7 @@ public class TempSteamworksMatchmaking
             serverQueryAttempts = 0;
             isAttemptingServerQuery = true;
             autoJoinServerQuery = false;
+            serverQueryContext = MenuPlayServerInfoUI.EServerInfoOpenContext.CONNECT;
             attemptServerQuery();
         }
     }
@@ -410,7 +413,7 @@ public class TempSteamworksMatchmaking
                 {
                     MenuUI.closeAll();
                     MenuUI.closeAlert();
-                    MenuPlayServerInfoUI.open(steamServerAdvertisement, connectionInfo.password, MenuPlayServerInfoUI.EServerInfoOpenContext.CONNECT);
+                    MenuPlayServerInfoUI.open(steamServerAdvertisement, connectionInfo.password, serverQueryContext);
                 }
             }
             else

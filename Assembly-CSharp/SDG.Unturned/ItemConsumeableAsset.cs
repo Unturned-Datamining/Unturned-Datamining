@@ -184,7 +184,7 @@ public class ItemConsumeableAsset : ItemWeaponAsset
             if (oxygen > 0)
             {
                 string arg7 = PlayerDashboardInventoryUI.FormatStatColor(oxygen.ToString(), isBeneficial: true);
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_StaminaPositive", arg7), 9999);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_OxygenPositive", arg7), 9999);
             }
             else if (oxygen < 0)
             {

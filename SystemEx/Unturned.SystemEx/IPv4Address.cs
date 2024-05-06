@@ -100,6 +100,28 @@ public struct IPv4Address : IEquatable<IPv4Address>, IComparable<IPv4Address>
             return false;
         }
         int num = startIndex + length;
+        while (startIndex < num)
+        {
+            char c = input[startIndex];
+            if (!char.IsWhiteSpace(c) && c != '\u200b' && c != '\u200c' && c != '\u200d' && c != '\u2060' && c != '\ufeff')
+            {
+                break;
+            }
+            startIndex++;
+        }
+        while (num - 1 > startIndex)
+        {
+            char c2 = input[num - 1];
+            if (!char.IsWhiteSpace(c2) && c2 != '\u200b' && c2 != '\u200c' && c2 != '\u200d' && c2 != '\u2060' && c2 != '\ufeff')
+            {
+                break;
+            }
+            num--;
+        }
+        if (num - startIndex + 1 < 7)
+        {
+            return false;
+        }
         int num2 = input.IndexOf('.', startIndex);
         if (num2 < startIndex + 1 || num2 + 6 > num)
         {

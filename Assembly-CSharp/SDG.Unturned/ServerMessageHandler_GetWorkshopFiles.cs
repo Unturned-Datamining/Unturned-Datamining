@@ -75,6 +75,9 @@ internal static class ServerMessageHandler_GetWorkshopFiles
             writer.WriteEnum(Provider.mode);
             writer.WriteEnum(Provider.cameraMode);
             writer.WriteUInt8(Provider.maxPlayers);
+            writer.WriteString(Provider.configData.Browser.BookmarkHost);
+            writer.WriteString(Provider.configData.Browser.Thumbnail);
+            writer.WriteString(Provider.configData.Browser.Desc_Server_List);
         });
     }
 

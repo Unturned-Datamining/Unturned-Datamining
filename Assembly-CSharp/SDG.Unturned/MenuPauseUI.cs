@@ -135,7 +135,7 @@ public class MenuPauseUI
         }
         else
         {
-            Provider.provider.browserService.open("https://wiki.smartlydressedgames.com");
+            Provider.provider.browserService.open("https://unturned.wiki.gg");
         }
     }
 

@@ -40,14 +40,7 @@ public class BarricadeRegion
 
     public BarricadeDrop FindBarricadeByRootTransform(Transform transform)
     {
-        foreach (BarricadeDrop drop in _drops)
-        {
-            if (drop.model == transform)
-            {
-                return drop;
-            }
-        }
-        return null;
+        return transform?.GetComponent<BarricadeRefComponent>()?.tempNotSureIfBarricadeShouldBeAComponentYet;
     }
 
     /// <summary>

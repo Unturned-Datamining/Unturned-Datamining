@@ -584,6 +584,10 @@ public class Block
 
     public void writeString(string value)
     {
+        if (value == null)
+        {
+            value = string.Empty;
+        }
         byte[] bytes = Encoding.UTF8.GetBytes(value);
         byte b = (byte)bytes.Length;
         buffer[step] = b;

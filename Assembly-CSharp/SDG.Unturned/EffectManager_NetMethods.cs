@@ -323,10 +323,10 @@ public static class EffectManager_NetMethods
     }
 
     [NetInvokableGeneratedMethod("ReceiveUIEffectVisibility", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveUIEffectVisibility_Write(NetPakWriter writer, short key, string childName, bool visible)
+    public static void ReceiveUIEffectVisibility_Write(NetPakWriter writer, short key, string childNameOrPath, bool visible)
     {
         writer.WriteInt16(key);
-        writer.WriteString(childName);
+        writer.WriteString(childNameOrPath);
         writer.WriteBit(visible);
     }
 
@@ -341,10 +341,10 @@ public static class EffectManager_NetMethods
     }
 
     [NetInvokableGeneratedMethod("ReceiveUIEffectText", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveUIEffectText_Write(NetPakWriter writer, short key, string childName, string text)
+    public static void ReceiveUIEffectText_Write(NetPakWriter writer, short key, string childNameOrPath, string text)
     {
         writer.WriteInt16(key);
-        writer.WriteString(childName);
+        writer.WriteString(childNameOrPath);
         writer.WriteString(text);
     }
 
@@ -361,10 +361,10 @@ public static class EffectManager_NetMethods
     }
 
     [NetInvokableGeneratedMethod("ReceiveUIEffectImageURL", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveUIEffectImageURL_Write(NetPakWriter writer, short key, string childName, string url, bool shouldCache, bool forceRefresh)
+    public static void ReceiveUIEffectImageURL_Write(NetPakWriter writer, short key, string childNameOrPath, string url, bool shouldCache, bool forceRefresh)
     {
         writer.WriteInt16(key);
-        writer.WriteString(childName);
+        writer.WriteString(childNameOrPath);
         writer.WriteString(url);
         writer.WriteBit(shouldCache);
         writer.WriteBit(forceRefresh);

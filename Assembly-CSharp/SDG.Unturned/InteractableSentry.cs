@@ -746,39 +746,44 @@ public class InteractableSentry : InteractableStorage
                                             }
                                         }
                                     }
+                                    if (attachments.magazineAsset != null && attachments.magazineAsset.isExplosive)
+                                    {
+                                        Vector3 position3 = raycastInfo.point + raycastInfo.normal * 0.25f;
+                                        UseableGun.DetonateExplosiveMagazine(attachments.magazineAsset, position3, null, ERagdollEffect.NONE);
+                                    }
                                 }
                             }
                             else
                             {
-                                Vector3 position3 = Vector3.zero;
+                                Vector3 vector9 = Vector3.zero;
                                 if (targetPlayer != null)
                                 {
-                                    position3 = targetPlayer.look.aim.position;
+                                    vector9 = targetPlayer.look.aim.position;
                                 }
                                 else if (targetZombie != null)
                                 {
-                                    position3 = targetZombie.transform.position;
+                                    vector9 = targetZombie.transform.position;
                                     switch (targetZombie.speciality)
                                     {
                                     case EZombieSpeciality.CRAWLER:
-                                        position3 += new Vector3(0f, 0.25f, 0f);
+                                        vector9 += new Vector3(0f, 0.25f, 0f);
                                         break;
                                     case EZombieSpeciality.MEGA:
-                                        position3 += new Vector3(0f, 2.625f, 0f);
+                                        vector9 += new Vector3(0f, 2.625f, 0f);
                                         break;
                                     case EZombieSpeciality.NORMAL:
-                                        position3 += new Vector3(0f, 1.75f, 0f);
+                                        vector9 += new Vector3(0f, 1.75f, 0f);
                                         break;
                                     case EZombieSpeciality.SPRINTER:
-                                        position3 += new Vector3(0f, 1f, 0f);
+                                        vector9 += new Vector3(0f, 1f, 0f);
                                         break;
                                     }
                                 }
                                 else if (targetAnimal != null)
                                 {
-                                    position3 = targetAnimal.transform.position + Vector3.up;
+                                    vector9 = targetAnimal.transform.position + Vector3.up;
                                 }
-                                DamageTool.ServerSpawnBulletImpact(position3, -aimTransform.forward, "Flesh_Dynamic", null, null, Provider.GatherClientConnectionsWithinSphere(position3, EffectManager.SMALL));
+                                DamageTool.ServerSpawnBulletImpact(vector9, -aimTransform.forward, "Flesh_Dynamic", null, null, Provider.GatherClientConnectionsWithinSphere(vector9, EffectManager.SMALL));
                                 Vector3 direction2 = aimTransform.forward * Mathf.Ceil((float)(int)attachments.magazineAsset.pellets / 2f);
                                 if (targetPlayer != null)
                                 {
@@ -801,6 +806,11 @@ public class InteractableSentry : InteractableStorage
                                     parameters2.times = bulletDamageMultiplier;
                                     parameters2.instigator = this;
                                     DamageTool.damageAnimal(parameters2, out kill, out xp);
+                                }
+                                if (attachments.magazineAsset != null && attachments.magazineAsset.isExplosive)
+                                {
+                                    Vector3 position4 = vector9 + aimTransform.forward * -0.25f;
+                                    UseableGun.DetonateExplosiveMagazine(attachments.magazineAsset, position4, null, ERagdollEffect.NONE);
                                 }
                             }
                         }

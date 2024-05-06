@@ -52,10 +52,11 @@ public class MenuPlayConnectUI
     private static bool isLaunched;
 
     /// <param name="shouldAutoJoin">If true the server is immediately joined, otherwise show server details beforehand.</param>
-    public static void connect(SteamConnectionInfo info, bool shouldAutoJoin)
+    public static void connect(SteamConnectionInfo info, bool shouldAutoJoin, MenuPlayServerInfoUI.EServerInfoOpenContext openContext)
     {
         Provider.provider.matchmakingService.connect(info);
         Provider.provider.matchmakingService.autoJoinServerQuery = shouldAutoJoin;
+        Provider.provider.matchmakingService.serverQueryContext = openContext;
     }
 
     public static void open()
@@ -77,60 +78,84 @@ public class MenuPlayConnectUI
         }
     }
 
-    private static void onClickedConnectButton(ISleekElement button)
+    internal static bool TryParseHostString(string input, out IPv4Address address, out CSteamID steamId)
     {
-        string text = hostField.Text.ToLower();
-        text = text.Trim();
-        if (string.IsNullOrEmpty(text))
+        address = default(IPv4Address);
+        steamId = default(CSteamID);
+        if (string.IsNullOrEmpty(input))
         {
-            UnturnedLog.info("Input IP was empty");
-            return;
+            UnturnedLog.info("Unable to parse empty host string");
+            return false;
         }
-        if (text.Length >= 6 && ulong.TryParse(text, out var result))
+        input = input.ToLower().Trim();
+        if (string.IsNullOrEmpty(input))
         {
-            CSteamID steamId = new CSteamID(result);
+            UnturnedLog.info("Unable to parse host string empty after trimming");
+            return false;
+        }
+        if (input.Length >= 6 && ulong.TryParse(input, out var result))
+        {
+            steamId = new CSteamID(result);
             if (steamId.BGameServerAccount())
             {
-                MenuSettings.save();
-                Provider.connect(new ServerConnectParameters(steamId, passwordField.Text), null, null);
-                return;
+                return true;
             }
+            steamId = CSteamID.Nil;
         }
-        if (portField.Value == 0)
+        if (string.Equals(input, "localhost"))
         {
-            return;
+            address = new IPv4Address("127.0.0.1");
+            return true;
         }
-        string text2;
-        if (text == "localhost")
+        if (IPv4Address.TryParse(input, out address))
         {
-            text2 = "127.0.0.1";
+            return true;
+        }
+        string text;
+        try
+        {
+            IPAddress[] hostAddresses = Dns.GetHostAddresses(input);
+            text = ((hostAddresses.Length == 0 || hostAddresses[0] == null) ? null : hostAddresses[0].ToString());
+        }
+        catch (Exception e)
+        {
+            text = input;
+            UnturnedLog.exception(e, "Caught exception while resolving host string \"" + input + "\":");
+        }
+        if (string.IsNullOrEmpty(text))
+        {
+            UnturnedLog.info("Resolved address was empty");
+            return false;
+        }
+        if (!IPv4Address.TryParse(text, out address))
+        {
+            UnturnedLog.info("Unable to parse resolved address \"" + text + "\"");
+            return false;
+        }
+        return true;
+    }
+
+    private static void onClickedConnectButton(ISleekElement button)
+    {
+        if (!TryParseHostString(hostField.Text, out var address, out var steamId))
+        {
+            UnturnedLog.info("Cannot connect because unable to parse host string");
+        }
+        else if (steamId.BGameServerAccount())
+        {
+            MenuSettings.save();
+            Provider.connect(new ServerConnectParameters(steamId, passwordField.Text), null, null);
+        }
+        else if (portField.Value == 0)
+        {
+            UnturnedLog.info("Cannot connect because port field is empty");
         }
         else
         {
-            try
-            {
-                IPAddress[] hostAddresses = Dns.GetHostAddresses(text);
-                text2 = ((hostAddresses.Length == 0 || hostAddresses[0] == null) ? null : hostAddresses[0].ToString());
-            }
-            catch (Exception e)
-            {
-                text2 = text;
-                UnturnedLog.exception(e, "Caught exception while resolving \"" + text + "\" for connect:");
-            }
+            SteamConnectionInfo info = new SteamConnectionInfo(address.value, portField.Value, passwordField.Text);
+            MenuSettings.save();
+            connect(info, shouldAutoJoin: false, MenuPlayServerInfoUI.EServerInfoOpenContext.CONNECT);
         }
-        if (string.IsNullOrEmpty(text2))
-        {
-            UnturnedLog.info("Parsed IP was empty");
-            return;
-        }
-        if (!IPv4Address.TryParse(text2, out IPv4Address address))
-        {
-            UnturnedLog.info("Unable to parse IP \"" + text2 + "\"");
-            return;
-        }
-        SteamConnectionInfo info = new SteamConnectionInfo(address.value, portField.Value, passwordField.Text);
-        MenuSettings.save();
-        connect(info, shouldAutoJoin: false);
     }
 
     private static void onTypedHostField(ISleekField field, string text)
@@ -140,7 +165,7 @@ public class MenuPlayConnectUI
         RefreshServerCodeInfo();
     }
 
-    private static void TryParseIpPort()
+    private static void SplitHostIntoAddressAndPort()
     {
         string text = hostField.Text;
         int num = text.LastIndexOf(':');
@@ -155,7 +180,7 @@ public class MenuPlayConnectUI
 
     private static void OnIpFieldCommitted(ISleekField field)
     {
-        TryParseIpPort();
+        SplitHostIntoAddressAndPort();
         RefreshAddressInfo();
         RefreshServerCodeInfo();
     }
@@ -395,7 +420,7 @@ public class MenuPlayConnectUI
             {
                 SteamConnectionInfo steamConnectionInfo = new SteamConnectionInfo(ip, queryPort, pass);
                 UnturnedLog.info("Command-line connect IP: {0} Port: {1} Password: '{2}'", Parser.getIPFromUInt32(steamConnectionInfo.ip), steamConnectionInfo.port, steamConnectionInfo.password);
-                connect(steamConnectionInfo, shouldAutoJoin: false);
+                connect(steamConnectionInfo, shouldAutoJoin: false, MenuPlayServerInfoUI.EServerInfoOpenContext.CONNECT);
             }
             else if (CommandLine.tryGetLobby(Environment.CommandLine, out lobby))
             {
@@ -421,7 +446,7 @@ public class MenuPlayConnectUI
             }
             else
             {
-                connect(new SteamConnectionInfo(serverRelayIP, serverRelayPort, serverRelayPassword), shouldAutoJoin);
+                connect(new SteamConnectionInfo(serverRelayIP, serverRelayPort, serverRelayPassword), shouldAutoJoin, MenuPlayServerInfoUI.EServerInfoOpenContext.CONNECT);
             }
         }
         backButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));

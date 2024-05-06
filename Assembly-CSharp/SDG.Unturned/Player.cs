@@ -407,21 +407,24 @@ public class Player : MonoBehaviour
         RenderTexture.active = null;
         RenderTexture.ReleaseTemporary(temporary);
         byte[] data = screenshotFinal.EncodeToJPG(33);
-        if (data.Length >= 30000)
+        if (data.Length < 40000)
         {
-            yield break;
+            if (Provider.isServer)
+            {
+                HandleScreenshotData(data);
+                yield break;
+            }
+            SendScreenshotRelay.Invoke(GetNetId(), ENetReliability.Reliable, delegate(NetPakWriter writer)
+            {
+                ushort num = (ushort)data.Length;
+                writer.WriteUInt16(num);
+                writer.WriteBytes(data, num);
+            });
         }
-        if (Provider.isServer)
+        else
         {
-            HandleScreenshotData(data);
-            yield break;
+            UnturnedLog.warn($"Unable to send screenshot to server because size ({data.Length} bytes) exceeds limit");
         }
-        SendScreenshotRelay.Invoke(GetNetId(), ENetReliability.Reliable, delegate(NetPakWriter writer)
-        {
-            ushort num = (ushort)data.Length;
-            writer.WriteUInt16(num);
-            writer.WriteBytes(data, num);
-        });
     }
 
     [Obsolete]

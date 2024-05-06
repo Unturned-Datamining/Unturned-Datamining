@@ -121,6 +121,14 @@ public class SteamServerAdvertisement
     public string descText { get; protected set; }
 
     /// <summary>
+    /// Probably just checks whether IP is link-local, but may as well use Steam's utility function.
+    /// </summary>
+    public bool IsAddressUsingSteamFakeIP()
+    {
+        return SteamNetworkingUtils.IsFakeIPv4(ip);
+    }
+
+    /// <summary>
     /// Parses value between two keys <stuff>thing</stuff> would parse thing
     /// </summary>
     protected string parseTagValue(string tags, string startKey, string endKey)

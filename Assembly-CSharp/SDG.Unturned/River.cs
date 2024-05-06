@@ -170,6 +170,10 @@ public class River
             block.writeString(value);
             return;
         }
+        if (value == null)
+        {
+            value = string.Empty;
+        }
         byte[] bytes = Encoding.UTF8.GetBytes(value);
         byte b = MathfEx.ClampToByte(bytes.Length);
         stream.WriteByte(b);

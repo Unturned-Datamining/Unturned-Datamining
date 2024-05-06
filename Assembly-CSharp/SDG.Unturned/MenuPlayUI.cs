@@ -13,6 +13,8 @@ public class MenuPlayUI
 
     private static SleekButtonIcon serversButton;
 
+    private static SleekButtonIcon serverBookmarksButton;
+
     private static SleekButtonIcon singleplayerButton;
 
     private static SleekButtonIcon lobbiesButton;
@@ -24,6 +26,8 @@ public class MenuPlayUI
     private MenuPlayConnectUI connectUI;
 
     public static MenuPlayServersUI serverListUI;
+
+    public static MenuPlayServerBookmarksUI serverBookmarksUI;
 
     private MenuPlayServerInfoUI serverInfoUI;
 
@@ -59,6 +63,12 @@ public class MenuPlayUI
     private static void onClickedServersButton(ISleekElement button)
     {
         serverListUI.open(shouldRefresh: true);
+        close();
+    }
+
+    private static void OnClickedServerBookmarksButton(ISleekElement button)
+    {
+        serverBookmarksUI.open();
         close();
     }
 
@@ -173,6 +183,18 @@ public class MenuPlayUI
         sleekElement.AddChild(connectButton);
         num += connectButton.SizeOffset_Y;
         num += 10f;
+        serverBookmarksButton = new SleekButtonIcon(bundle.load<Texture2D>("Bookmarks"), 40);
+        serverBookmarksButton.PositionOffset_Y = num;
+        serverBookmarksButton.SizeOffset_X = 200f;
+        serverBookmarksButton.SizeOffset_Y = 50f;
+        serverBookmarksButton.text = local.format("ServerBookmarksButtonText");
+        serverBookmarksButton.tooltip = local.format("ServerBookmarksButtonTooltip");
+        serverBookmarksButton.iconColor = ESleekTint.FOREGROUND;
+        serverBookmarksButton.onClickedButton += OnClickedServerBookmarksButton;
+        serverBookmarksButton.fontSize = ESleekFontSize.Medium;
+        sleekElement.AddChild(serverBookmarksButton);
+        num += serverBookmarksButton.SizeOffset_Y;
+        num += 10f;
         lobbiesButton = new SleekButtonIcon(bundle.load<Texture2D>("Lobbies"));
         lobbiesButton.PositionOffset_Y = num;
         lobbiesButton.SizeOffset_X = 200f;
@@ -207,6 +229,15 @@ public class MenuPlayUI
         serverListUI.SizeScale_X = 1f;
         serverListUI.SizeScale_Y = 1f;
         MenuUI.container.AddChild(serverListUI);
+        serverBookmarksUI = new MenuPlayServerBookmarksUI();
+        serverBookmarksUI.PositionOffset_X = 10f;
+        serverBookmarksUI.PositionOffset_Y = 10f;
+        serverBookmarksUI.PositionScale_Y = 1f;
+        serverBookmarksUI.SizeOffset_X = -20f;
+        serverBookmarksUI.SizeOffset_Y = -20f;
+        serverBookmarksUI.SizeScale_X = 1f;
+        serverBookmarksUI.SizeScale_Y = 1f;
+        MenuUI.container.AddChild(serverBookmarksUI);
         serverInfoUI = new MenuPlayServerInfoUI();
         singleplayerUI = new MenuPlaySingleplayerUI();
         lobbiesUI = new MenuPlayLobbiesUI();

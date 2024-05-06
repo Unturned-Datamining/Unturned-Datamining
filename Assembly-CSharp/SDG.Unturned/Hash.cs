@@ -25,6 +25,10 @@ public class Hash
 
     public static byte[] SHA1(string text)
     {
+        if (text == null)
+        {
+            text = string.Empty;
+        }
         return SHA1(Encoding.UTF8.GetBytes(text));
     }
 

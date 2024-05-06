@@ -1724,32 +1724,7 @@ public class UseableGun : Useable
                 Vector3 vector3 = input.point + input.normal * 0.25f;
                 if (bullet.magazineAsset != null && bullet.magazineAsset.isExplosive)
                 {
-                    EffectAsset effectAsset = bullet.magazineAsset.FindExplosionEffect();
-                    if (effectAsset != null)
-                    {
-                        TriggerEffectParameters parameters4 = new TriggerEffectParameters(effectAsset);
-                        parameters4.position = vector3;
-                        parameters4.relevantDistance = EffectManager.MEDIUM;
-                        parameters4.wasInstigatedByPlayer = true;
-                        EffectManager.triggerEffect(parameters4);
-                    }
-                    ExplosionParameters parameters5 = new ExplosionParameters(vector3, bullet.magazineAsset.range, EDeathCause.SPLASH, base.channel.owner.playerID.steamID);
-                    parameters5.playerDamage = bullet.magazineAsset.playerDamage;
-                    parameters5.zombieDamage = bullet.magazineAsset.zombieDamage;
-                    parameters5.animalDamage = bullet.magazineAsset.animalDamage;
-                    parameters5.barricadeDamage = bullet.magazineAsset.barricadeDamage;
-                    parameters5.structureDamage = bullet.magazineAsset.structureDamage;
-                    parameters5.vehicleDamage = bullet.magazineAsset.vehicleDamage;
-                    parameters5.resourceDamage = bullet.magazineAsset.resourceDamage;
-                    parameters5.objectDamage = bullet.magazineAsset.objectDamage;
-                    parameters5.damageOrigin = EDamageOrigin.Bullet_Explosion;
-                    parameters5.ragdollEffect = useableRagdollEffect;
-                    parameters5.launchSpeed = bullet.magazineAsset.explosionLaunchSpeed;
-                    DamageTool.explode(parameters5, out var kills);
-                    foreach (EPlayerKill item in kills)
-                    {
-                        base.player.sendStat(item);
-                    }
+                    DetonateExplosiveMagazine(bullet.magazineAsset, vector3, base.player, useableRagdollEffect);
                 }
                 if (bullet.dropID != 0)
                 {
@@ -3193,6 +3168,7 @@ public class UseableGun : Useable
         if (needsRechamber && Time.realtimeSinceStartup - lastShot > 0.25f && !isAiming)
         {
             needsRechamber = false;
+            base.player.equipment.isBusy = false;
             lastRechamber = Time.realtimeSinceStartup;
             needsEject = true;
             hammer();
@@ -3274,7 +3250,10 @@ public class UseableGun : Useable
         if (isFired && Time.realtimeSinceStartup - lastShot > 0.15f)
         {
             isFired = false;
-            base.player.equipment.isBusy = false;
+            if (!needsRechamber)
+            {
+                base.player.equipment.isBusy = false;
+            }
         }
         if (!canSteady && !inputSteady && base.player.life.oxygen > 10)
         {
@@ -3798,6 +3777,10 @@ public class UseableGun : Useable
         {
             value *= equippedGunAsset.recoilProne;
         }
+        else if (base.player.stance.stance == EPlayerStance.SWIM)
+        {
+            value *= equippedGunAsset.recoilSwimming;
+        }
     }
 
     internal float CalculateBulletGravity()
@@ -3849,6 +3832,10 @@ public class UseableGun : Useable
         else if (base.player.stance.stance == EPlayerStance.PRONE)
         {
             baseSpreadAngleRadians *= equippedGunAsset.spreadProne;
+        }
+        else if (base.player.stance.stance == EPlayerStance.SWIM)
+        {
+            baseSpreadAngleRadians *= equippedGunAsset.spreadSwimming;
         }
         if (base.player.look.perspective == EPlayerPerspective.THIRD)
         {
@@ -4965,6 +4952,44 @@ public class UseableGun : Useable
         {
             UnityEngine.Object.Destroy(laserMaterial);
             laserMaterial = null;
+        }
+    }
+
+    /// <summary>
+    /// Code common for regular gun and sentry gun.
+    /// </summary>
+    internal static void DetonateExplosiveMagazine(ItemMagazineAsset magazineAsset, Vector3 position, Player instigatingPlayer, ERagdollEffect ragdollEffect)
+    {
+        EffectAsset effectAsset = magazineAsset.FindExplosionEffect();
+        if (effectAsset != null)
+        {
+            TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
+            parameters.position = position;
+            parameters.relevantDistance = EffectManager.MEDIUM;
+            parameters.wasInstigatedByPlayer = true;
+            EffectManager.triggerEffect(parameters);
+        }
+        CSteamID killer = ((instigatingPlayer != null) ? instigatingPlayer.channel.owner.playerID.steamID : CSteamID.Nil);
+        ExplosionParameters parameters2 = new ExplosionParameters(position, magazineAsset.range, EDeathCause.SPLASH, killer);
+        parameters2.playerDamage = magazineAsset.playerDamage;
+        parameters2.zombieDamage = magazineAsset.zombieDamage;
+        parameters2.animalDamage = magazineAsset.animalDamage;
+        parameters2.barricadeDamage = magazineAsset.barricadeDamage;
+        parameters2.structureDamage = magazineAsset.structureDamage;
+        parameters2.vehicleDamage = magazineAsset.vehicleDamage;
+        parameters2.resourceDamage = magazineAsset.resourceDamage;
+        parameters2.objectDamage = magazineAsset.objectDamage;
+        parameters2.damageOrigin = EDamageOrigin.Bullet_Explosion;
+        parameters2.ragdollEffect = ragdollEffect;
+        parameters2.launchSpeed = magazineAsset.explosionLaunchSpeed;
+        DamageTool.explode(parameters2, out var kills);
+        if (!(instigatingPlayer != null))
+        {
+            return;
+        }
+        foreach (EPlayerKill item in kills)
+        {
+            instigatingPlayer.sendStat(item);
         }
     }
 }

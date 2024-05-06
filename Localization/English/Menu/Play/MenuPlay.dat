@@ -2,6 +2,8 @@ ConnectButtonText Connect Directly
 ConnectButtonTooltip Connect by server code or to a known address and port.
 ServersButtonText Multiplayer
 ServersButtonTooltip Browse servers to play over a network connection.
+ServerBookmarksButtonText Bookmarks
+ServerBookmarksButtonTooltip Browse bookmarked multiplayer servers.
 SingleplayerButtonText Singleplayer
 SingleplayerButtonTooltip Offline without other players.
 LobbiesButtonText Lobby
@@ -11,4 +13,4 @@ TutorialButtonTooltip Learn the gameplay basics.
 Tutorial_Confirm_Label Play
 Tutorial_Confirm_Tooltip Proceed with opening the tutorial.
 Tutorial_Deny_Label Cancel
-Tutorial_Deny_Tooltip Cancel opening the tutorial.  
+Tutorial_Deny_Tooltip Cancel opening the tutorial.

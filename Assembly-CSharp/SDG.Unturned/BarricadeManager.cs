@@ -434,6 +434,10 @@ public class BarricadeManager : SteamCaller
 
     internal static void ServerSetSignTextInternal(InteractableSign sign, BarricadeRegion region, byte x, byte y, ushort plant, string trimmedText)
     {
+        if (trimmedText == null)
+        {
+            trimmedText = string.Empty;
+        }
         InteractableSign.SendChangeText.InvokeAndLoopback(sign.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y, plant), trimmedText);
         BarricadeDrop barricadeDrop = region.FindBarricadeByRootFast(sign.transform);
         byte[] state = barricadeDrop.serversideData.barricade.state;
@@ -1925,8 +1929,10 @@ public class BarricadeManager : SteamCaller
                             byte[] array;
                             if (interactableStorage.isDisplay)
                             {
-                                byte[] bytes = Encoding.UTF8.GetBytes(interactableStorage.displayTags);
-                                byte[] bytes2 = Encoding.UTF8.GetBytes(interactableStorage.displayDynamicProps);
+                                string s = ((interactableStorage.displayTags != null) ? interactableStorage.displayTags : string.Empty);
+                                byte[] bytes = Encoding.UTF8.GetBytes(s);
+                                string s2 = ((interactableStorage.displayDynamicProps != null) ? interactableStorage.displayDynamicProps : string.Empty);
+                                byte[] bytes2 = Encoding.UTF8.GetBytes(s2);
                                 array = new byte[20 + ((interactableStorage.displayItem != null) ? interactableStorage.displayItem.state.Length : 0) + 4 + 1 + bytes.Length + 1 + bytes2.Length + 1];
                                 if (interactableStorage.displayItem != null)
                                 {

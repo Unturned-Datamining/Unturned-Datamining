@@ -36,6 +36,13 @@ public sealed class ServerStaticMethod : ServerMethodHandle
         SendAndLoopbackIfLocal(reliability, writerWithStaticHeader);
     }
 
+    public void Invoke(ENetReliability reliability, Action<NetPakWriter> callback)
+    {
+        NetPakWriter writerWithStaticHeader = GetWriterWithStaticHeader();
+        callback(writerWithStaticHeader);
+        SendAndLoopbackIfLocal(reliability, writerWithStaticHeader);
+    }
+
     private ServerStaticMethod(ServerMethodInfo serverMethodInfo)
         : base(serverMethodInfo)
     {

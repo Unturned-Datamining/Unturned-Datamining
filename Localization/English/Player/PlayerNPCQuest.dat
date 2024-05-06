@@ -23,6 +23,7 @@ Reward_Health {0} Health
 Reward_Food {0} Food
 Reward_Water {0} Water
 Reward_Virus {0} Immunity
+Reward_Stamina {0} Stamina
 
 Accept Accept
 Accept_Tooltip Take Quest

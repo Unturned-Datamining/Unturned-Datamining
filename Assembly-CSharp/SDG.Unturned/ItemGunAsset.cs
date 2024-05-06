@@ -103,6 +103,11 @@ public class ItemGunAsset : ItemWeaponAsset
     /// </summary>
     public float spreadProne;
 
+    /// <summary>
+    /// Spread multiplier while swimming.
+    /// </summary>
+    public float spreadSwimming;
+
     public float recoilMin_x;
 
     public float recoilMin_y;
@@ -130,6 +135,11 @@ public class ItemGunAsset : ItemWeaponAsset
     /// Recoil magnitude while prone.
     /// </summary>
     public float recoilProne;
+
+    /// <summary>
+    /// Recoil magnitude while swimming.
+    /// </summary>
+    public float recoilSwimming;
 
     public float recover_x;
 
@@ -647,6 +657,7 @@ public class ItemGunAsset : ItemWeaponAsset
         spreadSprint = data.ParseFloat("Spread_Sprint", 1.25f);
         spreadCrouch = data.ParseFloat("Spread_Crouch", 0.85f);
         spreadProne = data.ParseFloat("Spread_Prone", 0.7f);
+        spreadSwimming = data.ParseFloat("Spread_Swimming", 1.1f);
         recoilMin_x = data.ParseFloat("Recoil_Min_X");
         recoilMin_y = data.ParseFloat("Recoil_Min_Y");
         recoilMax_x = data.ParseFloat("Recoil_Max_X");
@@ -657,6 +668,7 @@ public class ItemGunAsset : ItemWeaponAsset
         recoilSprint = data.ParseFloat("Recoil_Sprint", 1.25f);
         recoilCrouch = data.ParseFloat("Recoil_Crouch", 0.85f);
         recoilProne = data.ParseFloat("Recoil_Prone", 0.7f);
+        recoilSwimming = data.ParseFloat("Recoil_Swimming", 1.1f);
         shakeMin_x = data.ParseFloat("Shake_Min_X");
         shakeMin_y = data.ParseFloat("Shake_Min_Y");
         shakeMin_z = data.ParseFloat("Shake_Min_Z");

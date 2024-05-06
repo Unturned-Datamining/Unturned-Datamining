@@ -8,7 +8,8 @@ internal static class WebUtils
     /// The game uses Process.Start to open web links when the Steam overlay is unavailable, which could be exploited
     /// to e.g. download and execute files. To prevent this we only allow valid http or https urls.
     /// </summary>
-    internal static bool ParseThirdPartyUrl(string uriString, out string result)
+    /// <param name="autoPrefix">If true, prefix with https:// if neither http:// or https:// is specified.</param>
+    internal static bool ParseThirdPartyUrl(string uriString, out string result, bool autoPrefix = true)
     {
         if (string.IsNullOrEmpty(uriString))
         {
@@ -16,7 +17,7 @@ internal static class WebUtils
             return false;
         }
         uriString = uriString.Trim();
-        if (!uriString.StartsWith("http://", StringComparison.OrdinalIgnoreCase) && !uriString.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+        if (autoPrefix && !uriString.StartsWith("http://", StringComparison.OrdinalIgnoreCase) && !uriString.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
         {
             uriString = "https://" + uriString;
         }

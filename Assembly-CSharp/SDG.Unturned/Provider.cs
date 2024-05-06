@@ -100,6 +100,12 @@ public class Provider : MonoBehaviour
 
         public byte maxPlayers;
 
+        public string bookmarkHost;
+
+        public string thumbnailUrl;
+
+        public string serverDescription;
+
         public CSteamID server;
 
         /// <summary>
@@ -555,11 +561,15 @@ public class Provider : MonoBehaviour
 
     private static Callback<PersonaStateChange_t> personaStateChange;
 
+    private static Callback<GetTicketForWebApiResponse_t> getTicketForWebApiResponseCallback;
+
     private static Callback<GameServerChangeRequested_t> gameServerChangeRequested;
 
     private static Callback<GameRichPresenceJoinRequested_t> gameRichPresenceJoinRequested;
 
     private static HAuthTicket ticketHandle = HAuthTicket.Invalid;
+
+    private static Dictionary<HAuthTicket, string> pluginTicketHandles = new Dictionary<HAuthTicket, string>();
 
     private static float lastPingRequestTime;
 
@@ -885,7 +895,23 @@ public class Provider : MonoBehaviour
             IPv4Address address;
             ushort connectionPort;
             ushort queryPort;
-            return clientTransport.TryGetIPv4Address(out address) & clientTransport.TryGetConnectionPort(out connectionPort) & clientTransport.TryGetQueryPort(out queryPort);
+            return clientTransport.TryGetIPv4Address(out address) & clientTransport.TryGetConnectionPort(out connectionPort) & clientTransport.TryGetQueryPort(out queryPort) & !SteamNetworkingUtils.IsFakeIPv4(address.value);
+        }
+    }
+
+    public static bool CanBookmarkCurrentServer
+    {
+        get
+        {
+            if (isServer || currentServerWorkshopResponse == null)
+            {
+                return false;
+            }
+            if (currentServerWorkshopResponse.server.BPersistentGameServerAccount())
+            {
+                return !string.IsNullOrEmpty(currentServerWorkshopResponse.bookmarkHost);
+            }
+            return false;
         }
     }
 
@@ -900,6 +926,18 @@ public class Provider : MonoBehaviour
             clientTransport.TryGetIPv4Address(out var address);
             clientTransport.TryGetQueryPort(out var queryPort);
             return GetServerIsFavorited(address.value, queryPort);
+        }
+    }
+
+    public static bool IsCurrentServerBookmarked
+    {
+        get
+        {
+            if (isServer || currentServerWorkshopResponse == null)
+            {
+                return false;
+            }
+            return ServerBookmarksManager.FindBookmarkDetails(currentServerWorkshopResponse.server) != null;
         }
     }
 
@@ -2430,7 +2468,7 @@ public class Provider : MonoBehaviour
             clientTransport.TearDown();
             SteamFriends.SetRichPresence("connect", "");
             Lobbies.leaveLobby();
-            closeTicket();
+            CancelAllSteamAuthTickets();
             SteamUser.AdvertiseGame(CSteamID.Nil, 0u, 0);
             _server = default(CSteamID);
             _isServer = false;
@@ -2717,6 +2755,7 @@ public class Provider : MonoBehaviour
             SteamGameServer.SetGameDescription(configData.Browser.Desc_Server_List);
             SteamGameServer.SetKeyValue("Browser_Icon", configData.Browser.Icon);
             SteamGameServer.SetKeyValue("Browser_Desc_Hint", configData.Browser.Desc_Hint);
+            SteamGameServer.SetKeyValue("BookmarkHost", configData.Browser.BookmarkHost);
             AdvertiseFullDescription(configData.Browser.Desc_Full);
             if (getServerWorkshopFileIDs().Count > 0)
             {
@@ -4426,6 +4465,29 @@ public class Provider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Toggle whether we've bookmarked the server we're currently playing on.
+    /// </summary>
+    public static void ToggleCurrentServerBookmarked()
+    {
+        if (isServer || currentServerWorkshopResponse == null)
+        {
+            return;
+        }
+        if (IsCurrentServerBookmarked)
+        {
+            ServerBookmarksManager.RemoveBookmark(currentServerWorkshopResponse.server);
+            return;
+        }
+        clientTransport.TryGetIPv4Address(out var address);
+        clientTransport.TryGetQueryPort(out var queryPort);
+        if (SteamNetworkingUtils.IsFakeIPv4(address.value))
+        {
+            queryPort = 0;
+        }
+        ServerBookmarksManager.AddBookmark(currentServerWorkshopResponse.server, currentServerWorkshopResponse.bookmarkHost, queryPort, currentServerWorkshopResponse.serverName, currentServerWorkshopResponse.serverDescription, currentServerWorkshopResponse.thumbnailUrl);
+    }
+
     private static void broadcastEnemyConnected(SteamPlayer player)
     {
         try
@@ -4460,6 +4522,30 @@ public class Provider : MonoBehaviour
         }
     }
 
+    private static void OnGetTicketForWebApiResponse(GetTicketForWebApiResponse_t callback)
+    {
+        if (!pluginTicketHandles.TryGetValue(callback.m_hAuthTicket, out var identity))
+        {
+            UnturnedLog.info($"Received Steam auth ticket for web API for handle {callback.m_hAuthTicket}, but no linked identity (Result: {callback.m_eResult})");
+            SteamUser.CancelAuthTicket(callback.m_hAuthTicket);
+            return;
+        }
+        if (callback.m_eResult != EResult.k_EResultOK)
+        {
+            UnturnedLog.warn($"Error getting Steam auth ticket for web API identity \"{identity}\": {callback.m_eResult}");
+            pluginTicketHandles.Remove(callback.m_hAuthTicket);
+            SteamUser.CancelAuthTicket(callback.m_hAuthTicket);
+            return;
+        }
+        UnturnedLog.info($"Received Steam web API ticket response for identity \"{identity}\" (length: {callback.m_cubTicket})");
+        SteamPlayer.SendGetSteamAuthTicketForWebApiResponse.Invoke(ENetReliability.Reliable, delegate(NetPakWriter writer)
+        {
+            writer.WriteString(identity, 5);
+            writer.WriteUInt16((ushort)callback.m_cubTicket);
+            writer.WriteBytes(callback.m_rgubTicket, callback.m_cubTicket);
+        });
+    }
+
     private static void onGameServerChangeRequested(GameServerChangeRequested_t callback)
     {
         if (!isConnected)
@@ -4467,7 +4553,7 @@ public class Provider : MonoBehaviour
             UnturnedLog.info("onGameServerChangeRequested {0} {1}", callback.m_rgchServer, callback.m_rgchPassword);
             SteamConnectionInfo steamConnectionInfo = new SteamConnectionInfo(callback.m_rgchServer, callback.m_rgchPassword);
             UnturnedLog.info("External connect IP: {0} Port: {1} Password: '{2}'", Parser.getIPFromUInt32(steamConnectionInfo.ip), steamConnectionInfo.port, steamConnectionInfo.password);
-            MenuPlayConnectUI.connect(steamConnectionInfo, shouldAutoJoin: false);
+            MenuPlayConnectUI.connect(steamConnectionInfo, shouldAutoJoin: false, MenuPlayServerInfoUI.EServerInfoOpenContext.CONNECT);
         }
     }
 
@@ -4480,7 +4566,7 @@ public class Provider : MonoBehaviour
             {
                 SteamConnectionInfo steamConnectionInfo = new SteamConnectionInfo(newIP, queryPort, pass);
                 UnturnedLog.info("Rich presence connect IP: {0} Port: {1} Password: '{2}'", Parser.getIPFromUInt32(steamConnectionInfo.ip), steamConnectionInfo.port, steamConnectionInfo.password);
-                MenuPlayConnectUI.connect(steamConnectionInfo, shouldAutoJoin: false);
+                MenuPlayConnectUI.connect(steamConnectionInfo, shouldAutoJoin: false, MenuPlayServerInfoUI.EServerInfoOpenContext.CONNECT);
             }
         }
     }
@@ -4522,14 +4608,42 @@ public class Provider : MonoBehaviour
         return array2;
     }
 
-    private static void closeTicket()
+    internal static void RequestSteamAuthTicketForWebApi(string identity)
     {
-        if (!(ticketHandle == HAuthTicket.Invalid))
+        foreach (KeyValuePair<HAuthTicket, string> pluginTicketHandle in pluginTicketHandles)
+        {
+            if (string.Equals(pluginTicketHandle.Value, identity))
+            {
+                UnturnedLog.error("Ignoring duplicate Steam web API ticket request for identity \"" + identity + "\"");
+                return;
+            }
+        }
+        HAuthTicket authTicketForWebApi = SteamUser.GetAuthTicketForWebApi(identity);
+        if (authTicketForWebApi != HAuthTicket.Invalid)
+        {
+            pluginTicketHandles.Add(authTicketForWebApi, identity);
+            UnturnedLog.info($"Added handle {authTicketForWebApi} for Steam web API ticket request for identity \"{identity}\"");
+        }
+        else
+        {
+            UnturnedLog.error("GetAuthTicketForWebApi for identity \"" + identity + "\" returned invalid handle");
+        }
+    }
+
+    private static void CancelAllSteamAuthTickets()
+    {
+        if (ticketHandle != HAuthTicket.Invalid)
         {
             SteamUser.CancelAuthTicket(ticketHandle);
             ticketHandle = HAuthTicket.Invalid;
-            UnturnedLog.info("Cancelled auth ticket");
+            UnturnedLog.info("Cancelled main Steam auth ticket");
         }
+        foreach (KeyValuePair<HAuthTicket, string> pluginTicketHandle in pluginTicketHandles)
+        {
+            SteamUser.CancelAuthTicket(pluginTicketHandle.Key);
+            UnturnedLog.info("Cancelled Steam web API auth ticket for identity \"" + pluginTicketHandle.Value + "\"");
+        }
+        pluginTicketHandles.Clear();
     }
 
     private IEnumerator QuitAfterDelay(float seconds)
@@ -5028,6 +5142,7 @@ public class Provider : MonoBehaviour
         SteamScreenshots.HookScreenshots(bHook: true);
         time = SteamUtils.GetServerRealTime();
         personaStateChange = Callback<PersonaStateChange_t>.Create(onPersonaStateChange);
+        getTicketForWebApiResponseCallback = Callback<GetTicketForWebApiResponse_t>.Create(OnGetTicketForWebApiResponse);
         gameServerChangeRequested = Callback<GameServerChangeRequested_t>.Create(onGameServerChangeRequested);
         gameRichPresenceJoinRequested = Callback<GameRichPresenceJoinRequested_t>.Create(onGameRichPresenceJoinRequested);
         _user = SteamUser.GetSteamID();
@@ -5179,6 +5294,7 @@ public class Provider : MonoBehaviour
         {
             ConvenientSavedata.save();
             LocalPlayerBlocklist.SaveIfDirty();
+            ServerBookmarksManager.SaveIfDirty();
         }
         if (isInitialized)
         {

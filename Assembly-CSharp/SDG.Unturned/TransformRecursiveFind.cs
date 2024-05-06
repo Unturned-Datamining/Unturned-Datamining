@@ -6,7 +6,8 @@ public static class TransformRecursiveFind
 {
     public static Transform FindChildRecursive(this Transform parent, string name)
     {
-        for (int i = 0; i < parent.childCount; i++)
+        int childCount = parent.childCount;
+        for (int i = 0; i < childCount; i++)
         {
             Transform child = parent.GetChild(i);
             if (child.name == name)

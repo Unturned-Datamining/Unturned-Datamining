@@ -11,6 +11,9 @@ Cancel_Button_Tooltip Back
 Favorite_On_Button Favorite
 Favorite_Off_Button Unfavorite
 Favorite_Button_Tooltip Favorite/Unfavorite
+Bookmark_On_Button Add Bookmark
+Bookmark_Off_Button Remove Bookmark
+Bookmark_Button_Tooltip Toggle bookmark for quickly joining from Bookmarks menu.
 
 Players Players: {0}/{1}
 Details Details
