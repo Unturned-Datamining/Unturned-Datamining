@@ -28,7 +28,7 @@ internal static class ServerMessageHandler_InvokeMethod
             }
             return;
         }
-        ServerMethodInfo serverMethodInfo = NetReflection.serverMethods[value];
+        ServerMethodInfo serverMethodInfo = NetReflection.serverMethods[(int)value];
         ServerInvocationContext context = new ServerInvocationContext(ServerInvocationContext.EOrigin.Remote, steamPlayer, reader, serverMethodInfo);
         if (serverMethodInfo.rateLimitIndex >= 0)
         {

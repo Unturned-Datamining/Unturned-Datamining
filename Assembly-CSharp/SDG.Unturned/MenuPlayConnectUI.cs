@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using Steamworks;
 using UnityEngine;
+using UnityEngine.Networking;
 using Unturned.SystemEx;
 
 namespace SDG.Unturned;
@@ -78,31 +79,69 @@ public class MenuPlayConnectUI
         }
     }
 
-    internal static bool TryParseHostString(string input, out IPv4Address address, out CSteamID steamId)
+    internal static bool TryParseHostString(string input, out IPv4Address address, out CSteamID steamId, out ushort queryPortOverride)
     {
         address = default(IPv4Address);
         steamId = default(CSteamID);
+        queryPortOverride = 0;
         if (string.IsNullOrEmpty(input))
         {
             UnturnedLog.info("Unable to parse empty host string");
             return false;
         }
-        input = input.ToLower().Trim();
+        input = input.Trim();
         if (string.IsNullOrEmpty(input))
         {
             UnturnedLog.info("Unable to parse host string empty after trimming");
             return false;
         }
-        if (input.Length >= 6 && ulong.TryParse(input, out var result))
+        if (WebUtils.ParseThirdPartyUrl(input, out var result, autoPrefix: false))
         {
-            steamId = new CSteamID(result);
+            if (!Provider.allowWebRequests)
+            {
+                UnturnedLog.warn("Unable to request host details because web requests are disabled");
+                return false;
+            }
+            UnturnedLog.info("Requesting host details from " + result + "...");
+            using UnityWebRequest unityWebRequest = UnityWebRequest.Get(result);
+            unityWebRequest.timeout = 2;
+            unityWebRequest.SendWebRequest();
+            while (!unityWebRequest.isDone)
+            {
+            }
+            if (unityWebRequest.result != UnityWebRequest.Result.Success)
+            {
+                UnturnedLog.warn("Network error requesting host details: \"" + unityWebRequest.error + "\"");
+                return false;
+            }
+            string text = unityWebRequest.downloadHandler.text.Trim();
+            if (string.IsNullOrEmpty(text))
+            {
+                UnturnedLog.info("Unable to parse empty host details response");
+                return false;
+            }
+            int num = text.IndexOf(':');
+            if (num < 0)
+            {
+                input = text;
+            }
+            else
+            {
+                input = text.Substring(0, num);
+                ushort.TryParse(text.Substring(num + 1), out queryPortOverride);
+            }
+            UnturnedLog.info($"Received host details ({input}:{queryPortOverride}) from {result}");
+        }
+        if (input.Length >= 6 && ulong.TryParse(input, out var result2))
+        {
+            steamId = new CSteamID(result2);
             if (steamId.BGameServerAccount())
             {
                 return true;
             }
             steamId = CSteamID.Nil;
         }
-        if (string.Equals(input, "localhost"))
+        if (string.Equals(input, "localhost", StringComparison.OrdinalIgnoreCase))
         {
             address = new IPv4Address("127.0.0.1");
             return true;
@@ -111,25 +150,25 @@ public class MenuPlayConnectUI
         {
             return true;
         }
-        string text;
+        string text2;
         try
         {
             IPAddress[] hostAddresses = Dns.GetHostAddresses(input);
-            text = ((hostAddresses.Length == 0 || hostAddresses[0] == null) ? null : hostAddresses[0].ToString());
+            text2 = ((hostAddresses.Length == 0 || hostAddresses[0] == null) ? null : hostAddresses[0].ToString());
         }
         catch (Exception e)
         {
-            text = input;
+            text2 = input;
             UnturnedLog.exception(e, "Caught exception while resolving host string \"" + input + "\":");
         }
-        if (string.IsNullOrEmpty(text))
+        if (string.IsNullOrEmpty(text2))
         {
             UnturnedLog.info("Resolved address was empty");
             return false;
         }
-        if (!IPv4Address.TryParse(text, out address))
+        if (!IPv4Address.TryParse(text2, out address))
         {
-            UnturnedLog.info("Unable to parse resolved address \"" + text + "\"");
+            UnturnedLog.info("Unable to parse resolved address \"" + text2 + "\"");
             return false;
         }
         return true;
@@ -137,7 +176,7 @@ public class MenuPlayConnectUI
 
     private static void onClickedConnectButton(ISleekElement button)
     {
-        if (!TryParseHostString(hostField.Text, out var address, out var steamId))
+        if (!TryParseHostString(hostField.Text, out var address, out var steamId, out var queryPortOverride))
         {
             UnturnedLog.info("Cannot connect because unable to parse host string");
         }
@@ -146,7 +185,7 @@ public class MenuPlayConnectUI
             MenuSettings.save();
             Provider.connect(new ServerConnectParameters(steamId, passwordField.Text), null, null);
         }
-        else if (portField.Value == 0)
+        else if (((queryPortOverride > 0) ? queryPortOverride : portField.Value) == 0)
         {
             UnturnedLog.info("Cannot connect because port field is empty");
         }

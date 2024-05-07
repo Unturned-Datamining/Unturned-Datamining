@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using Steamworks;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace SDG.Unturned;
 
@@ -55,46 +55,19 @@ public class MenuPlayServerBookmarksUI : SleekFullscreenBox
 
     private void OnClickedBookmark(ServerBookmarkDetails bookmarkDetails)
     {
-        string text = bookmarkDetails.host;
-        ushort result = bookmarkDetails.queryPort;
-        if (WebUtils.ParseThirdPartyUrl(bookmarkDetails.host, out var result2, autoPrefix: false))
+        string host = bookmarkDetails.host;
+        if (!MenuPlayConnectUI.TryParseHostString(host, out var address, out var steamId, out var queryPortOverride))
         {
-            if (!Provider.allowWebRequests)
-            {
-                UnturnedLog.warn("Unable to use bookmark because web requests are disabled");
-                return;
-            }
-            UnturnedLog.info("Requesting bookmark details from " + result2 + "...");
-            using UnityWebRequest unityWebRequest = UnityWebRequest.Get(result2);
-            unityWebRequest.timeout = 2;
-            unityWebRequest.SendWebRequest();
-            while (!unityWebRequest.isDone)
-            {
-            }
-            if (unityWebRequest.result != UnityWebRequest.Result.Success)
-            {
-                UnturnedLog.warn("Network error using bookmark: \"" + unityWebRequest.error + "\"");
-                return;
-            }
-            string text2 = unityWebRequest.downloadHandler.text;
-            int num = text2.IndexOf(':');
-            if (num < 0)
-            {
-                text = text2;
-            }
-            else
-            {
-                text = text2.Substring(0, num);
-                ushort.TryParse(text2.Substring(num + 1), out result);
-            }
-            UnturnedLog.info($"Received bookmark details ({text}:{result}) from {result2}");
-        }
-        if (!MenuPlayConnectUI.TryParseHostString(text, out var address, out var _))
-        {
-            UnturnedLog.info("Unable to join bookmark because failed to parse host \"" + text + "\"");
+            UnturnedLog.info("Unable to join bookmark because failed to resolve host \"" + host + "\"");
             return;
         }
-        SteamConnectionInfo info = new SteamConnectionInfo(address.value, result, string.Empty);
+        if (steamId != default(CSteamID))
+        {
+            UnturnedLog.info("Unable to join bookmark because it returned a server code (prefer to use A2S system for now)");
+            return;
+        }
+        ushort newPort = ((queryPortOverride > 0) ? queryPortOverride : bookmarkDetails.queryPort);
+        SteamConnectionInfo info = new SteamConnectionInfo(address.value, newPort, string.Empty);
         close();
         MenuPlayConnectUI.open();
         MenuPlayConnectUI.connect(info, shouldAutoJoin: false, MenuPlayServerInfoUI.EServerInfoOpenContext.BOOKMARKS);

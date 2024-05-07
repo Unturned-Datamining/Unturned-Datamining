@@ -233,6 +233,7 @@ internal class ServerBookmarksManager
                 river.writeString(bookmarkDetail.description);
                 river.writeString(bookmarkDetail.thumbnailUrl);
             }
+            river.closeRiver();
         }
         catch (Exception e)
         {

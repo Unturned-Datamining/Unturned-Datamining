@@ -17,7 +17,7 @@ internal static class ClientMessageHandler_InvokeMethod
             UnturnedLog.warn("out of bounds method index ({0}/{1})", value, NetReflection.clientMethodsLength);
             return;
         }
-        ClientMethodInfo clientMethodInfo = NetReflection.clientMethods[value];
+        ClientMethodInfo clientMethodInfo = NetReflection.clientMethods[(int)value];
         ClientInvocationContext context = new ClientInvocationContext(ClientInvocationContext.EOrigin.Remote, reader, clientMethodInfo);
         try
         {

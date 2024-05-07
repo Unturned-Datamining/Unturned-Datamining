@@ -15,22 +15,22 @@ public static class NetReflection
         public NetInvokableGeneratedMethodAttribute attribute;
     }
 
-    public static readonly ClientMethodInfo[] clientMethods;
+    internal static List<ClientMethodInfo> clientMethods;
 
-    public static readonly uint clientMethodsLength;
+    internal static uint clientMethodsLength;
 
-    public static readonly int clientMethodsBitCount;
+    internal static int clientMethodsBitCount;
 
-    public static readonly ServerMethodInfo[] serverMethods;
+    internal static List<ServerMethodInfo> serverMethods;
 
-    public static readonly uint serverMethodsLength;
+    internal static uint serverMethodsLength;
 
-    public static readonly int serverMethodsBitCount;
+    internal static int serverMethodsBitCount;
 
     /// <summary>
     /// Number of server methods with rate limits.
     /// </summary>
-    public static readonly int rateLimitedMethodsCount;
+    internal static int rateLimitedMethodsCount;
 
     private static List<string> pendingMessages;
 
@@ -41,14 +41,14 @@ public static class NetReflection
     /// </summary>
     public static void Dump()
     {
-        Log($"{clientMethods.Length} client methods ({clientMethodsBitCount} bits):");
-        for (int i = 0; i < clientMethods.Length; i++)
+        Log($"{clientMethods.Count} client methods ({clientMethodsBitCount} bits):");
+        for (int i = 0; i < clientMethods.Count; i++)
         {
             ClientMethodInfo arg = clientMethods[i];
             Log($"{i} {arg}");
         }
-        Log($"{serverMethods.Length} server methods ({serverMethodsBitCount} bits):");
-        for (int j = 0; j < serverMethods.Length; j++)
+        Log($"{serverMethods.Count} server methods ({serverMethodsBitCount} bits):");
+        for (int j = 0; j < serverMethods.Count; j++)
         {
             ServerMethodInfo arg2 = serverMethods[j];
             Log($"{j} {arg2}");
@@ -71,12 +71,11 @@ public static class NetReflection
 
     internal static ClientMethodInfo GetClientMethodInfo(Type declaringType, string methodName)
     {
-        ClientMethodInfo[] array = clientMethods;
-        foreach (ClientMethodInfo clientMethodInfo in array)
+        foreach (ClientMethodInfo clientMethod in clientMethods)
         {
-            if (clientMethodInfo.declaringType == declaringType && clientMethodInfo.name.Equals(methodName, StringComparison.Ordinal))
+            if (clientMethod.declaringType == declaringType && clientMethod.name.Equals(methodName, StringComparison.Ordinal))
             {
-                return clientMethodInfo;
+                return clientMethod;
             }
         }
         Log("Unable to find client method info for " + declaringType.Name + "." + methodName);
@@ -85,12 +84,11 @@ public static class NetReflection
 
     internal static ServerMethodInfo GetServerMethodInfo(Type declaringType, string methodName)
     {
-        ServerMethodInfo[] array = serverMethods;
-        foreach (ServerMethodInfo serverMethodInfo in array)
+        foreach (ServerMethodInfo serverMethod in serverMethods)
         {
-            if (serverMethodInfo.declaringType == declaringType && serverMethodInfo.name.Equals(methodName, StringComparison.Ordinal))
+            if (serverMethod.declaringType == declaringType && serverMethod.name.Equals(methodName, StringComparison.Ordinal))
             {
-                return serverMethodInfo;
+                return serverMethod;
             }
         }
         Log("Unable to find server method info for " + declaringType.Name + "." + methodName);
@@ -189,15 +187,14 @@ public static class NetReflection
         pendingMessages.Add(message);
     }
 
-    static NetReflection()
+    /// <summary>
+    /// Not *really* supported but *might* probably work. Adding for public discussion #4176.
+    /// </summary>
+    public static void RegisterFromAssembly(Assembly assembly)
     {
-        List<ClientMethodInfo> list = new List<ClientMethodInfo>();
-        List<ServerMethodInfo> list2 = new List<ServerMethodInfo>();
-        List<GeneratedMethod> list3 = new List<GeneratedMethod>();
-        List<GeneratedMethod> list4 = new List<GeneratedMethod>();
-        int num = 0;
-        Stopwatch stopwatch = Stopwatch.StartNew();
-        Type[] types = Assembly.GetExecutingAssembly().GetTypes();
+        List<GeneratedMethod> list = new List<GeneratedMethod>();
+        List<GeneratedMethod> list2 = new List<GeneratedMethod>();
+        Type[] types = assembly.GetTypes();
         foreach (Type type in types)
         {
             if (!type.IsClass || !type.IsAbstract)
@@ -209,26 +206,24 @@ public static class NetReflection
             {
                 continue;
             }
-            list3.Clear();
-            list4.Clear();
+            list.Clear();
+            list2.Clear();
             MethodInfo[] methods = type.GetMethods(BindingFlags.Static | BindingFlags.Public);
             foreach (MethodInfo methodInfo in methods)
             {
                 NetInvokableGeneratedMethodAttribute customAttribute2 = methodInfo.GetCustomAttribute<NetInvokableGeneratedMethodAttribute>();
                 if (customAttribute2 != null)
                 {
-                    GeneratedMethod item = new GeneratedMethod
-                    {
-                        info = methodInfo,
-                        attribute = customAttribute2
-                    };
+                    GeneratedMethod item = default(GeneratedMethod);
+                    item.info = methodInfo;
+                    item.attribute = customAttribute2;
                     switch (customAttribute2.purpose)
                     {
                     case ENetInvokableGeneratedMethodPurpose.Read:
-                        list3.Add(item);
+                        list.Add(item);
                         break;
                     case ENetInvokableGeneratedMethodPurpose.Write:
-                        list4.Add(item);
+                        list2.Add(item);
                         break;
                     default:
                         Log($"Generated method {type.Name}.{methodInfo.Name} unknown purpose {customAttribute2.purpose}");
@@ -247,13 +242,11 @@ public static class NetReflection
                 ParameterInfo[] parameters = methodInfo2.GetParameters();
                 if (customAttribute3.validation == ESteamCallValidation.ONLY_FROM_SERVER)
                 {
-                    ClientMethodInfo clientMethodInfo = new ClientMethodInfo
-                    {
-                        declaringType = methodInfo2.DeclaringType,
-                        debugName = $"{methodInfo2.DeclaringType}.{methodInfo2.Name}",
-                        name = methodInfo2.Name,
-                        customAttribute = customAttribute3
-                    };
+                    ClientMethodInfo clientMethodInfo = new ClientMethodInfo();
+                    clientMethodInfo.declaringType = methodInfo2.DeclaringType;
+                    clientMethodInfo.debugName = $"{methodInfo2.DeclaringType}.{methodInfo2.Name}";
+                    clientMethodInfo.name = methodInfo2.Name;
+                    clientMethodInfo.customAttribute = customAttribute3;
                     bool flag = parameters.Length == 1 && parameters[0].ParameterType.GetElementType() == typeof(ClientInvocationContext);
                     if (methodInfo2.IsStatic && flag)
                     {
@@ -261,10 +254,10 @@ public static class NetReflection
                     }
                     else
                     {
-                        clientMethodInfo.readMethod = FindClientReceiveMethod(type, list3, methodInfo2.Name);
+                        clientMethodInfo.readMethod = FindClientReceiveMethod(type, list, methodInfo2.Name);
                         if (!flag)
                         {
-                            if (FindAndRemoveGeneratedMethod(list4, methodInfo2.Name, out var foundMethod))
+                            if (FindAndRemoveGeneratedMethod(list2, methodInfo2.Name, out var foundMethod))
                             {
                                 clientMethodInfo.writeMethodInfo = foundMethod.info;
                             }
@@ -274,7 +267,8 @@ public static class NetReflection
                             }
                         }
                     }
-                    list.Add(clientMethodInfo);
+                    clientMethodInfo.methodIndex = (uint)clientMethods.Count;
+                    clientMethods.Add(clientMethodInfo);
                 }
                 else
                 {
@@ -282,13 +276,11 @@ public static class NetReflection
                     {
                         continue;
                     }
-                    ServerMethodInfo serverMethodInfo = new ServerMethodInfo
-                    {
-                        declaringType = methodInfo2.DeclaringType,
-                        name = methodInfo2.Name,
-                        debugName = $"{methodInfo2.DeclaringType}.{methodInfo2.Name}",
-                        customAttribute = customAttribute3
-                    };
+                    ServerMethodInfo serverMethodInfo = new ServerMethodInfo();
+                    serverMethodInfo.declaringType = methodInfo2.DeclaringType;
+                    serverMethodInfo.name = methodInfo2.Name;
+                    serverMethodInfo.debugName = $"{methodInfo2.DeclaringType}.{methodInfo2.Name}";
+                    serverMethodInfo.customAttribute = customAttribute3;
                     bool flag2 = parameters.Length == 1 && parameters[0].ParameterType.GetElementType() == typeof(ServerInvocationContext);
                     if (methodInfo2.IsStatic && flag2)
                     {
@@ -296,10 +288,10 @@ public static class NetReflection
                     }
                     else
                     {
-                        serverMethodInfo.readMethod = FindServerReceiveMethod(type, list3, methodInfo2.Name);
+                        serverMethodInfo.readMethod = FindServerReceiveMethod(type, list, methodInfo2.Name);
                         if (!flag2)
                         {
-                            if (FindAndRemoveGeneratedMethod(list4, methodInfo2.Name, out var foundMethod2))
+                            if (FindAndRemoveGeneratedMethod(list2, methodInfo2.Name, out var foundMethod2))
                             {
                                 serverMethodInfo.writeMethodInfo = foundMethod2.info;
                             }
@@ -311,43 +303,42 @@ public static class NetReflection
                     }
                     if (customAttribute3.ratelimitHz > 0)
                     {
-                        serverMethodInfo.rateLimitIndex = num;
-                        customAttribute3.rateLimitIndex = num;
+                        serverMethodInfo.rateLimitIndex = rateLimitedMethodsCount;
+                        customAttribute3.rateLimitIndex = rateLimitedMethodsCount;
                         customAttribute3.ratelimitSeconds = 1f / (float)customAttribute3.ratelimitHz;
-                        num++;
+                        rateLimitedMethodsCount++;
                     }
                     else
                     {
                         serverMethodInfo.rateLimitIndex = -1;
                     }
-                    list2.Add(serverMethodInfo);
+                    serverMethodInfo.methodIndex = (uint)serverMethods.Count;
+                    serverMethods.Add(serverMethodInfo);
                 }
             }
-            foreach (GeneratedMethod item2 in list3)
+            foreach (GeneratedMethod item2 in list)
             {
                 Log("Generated read method " + type.Name + "." + item2.info.Name + " not used");
             }
-            foreach (GeneratedMethod item3 in list4)
+            foreach (GeneratedMethod item3 in list2)
             {
                 Log("Generated write method " + type.Name + "." + item3.info.Name + " not used");
             }
         }
+        clientMethodsLength = (uint)clientMethods.Count;
+        clientMethodsBitCount = NetPakConst.CountBits(clientMethodsLength);
+        serverMethodsLength = (uint)serverMethods.Count;
+        serverMethodsBitCount = NetPakConst.CountBits(serverMethodsLength);
+    }
+
+    static NetReflection()
+    {
+        clientMethods = new List<ClientMethodInfo>();
+        serverMethods = new List<ServerMethodInfo>();
+        rateLimitedMethodsCount = 0;
+        Stopwatch stopwatch = Stopwatch.StartNew();
+        RegisterFromAssembly(Assembly.GetExecutingAssembly());
         stopwatch.Stop();
         Log($"Reflect net invokables: {stopwatch.ElapsedMilliseconds}ms");
-        clientMethods = list.ToArray();
-        clientMethodsLength = (uint)clientMethods.Length;
-        clientMethodsBitCount = NetPakConst.CountBits(clientMethodsLength);
-        for (uint num2 = 0u; num2 < clientMethodsLength; num2++)
-        {
-            clientMethods[num2].methodIndex = num2;
-        }
-        serverMethods = list2.ToArray();
-        serverMethodsLength = (uint)serverMethods.Length;
-        serverMethodsBitCount = NetPakConst.CountBits(serverMethodsLength);
-        for (uint num3 = 0u; num3 < serverMethodsLength; num3++)
-        {
-            serverMethods[num3].methodIndex = num3;
-        }
-        rateLimitedMethodsCount = num;
     }
 }

@@ -222,6 +222,23 @@ public class InteractableDoor : Interactable
         }
     }
 
+    protected virtual void OnDisable()
+    {
+        if (animCoroutine != null)
+        {
+            StopCoroutine(animCoroutine);
+            animCoroutine = null;
+        }
+        if (doorColliders == null)
+        {
+            return;
+        }
+        foreach (Collider doorCollider in doorColliders)
+        {
+            doorCollider.enabled = true;
+        }
+    }
+
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, deferMode = ENetInvocationDeferMode.Queue)]
     public void ReceiveOpen(bool newOpen)
     {
