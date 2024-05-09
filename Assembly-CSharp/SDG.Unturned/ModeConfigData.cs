@@ -38,6 +38,7 @@ public class ModeConfigData
 
     public void InitSingleplayerDefaults()
     {
+        Players.InitSingleplayerDefaults();
         Gameplay.InitSingleplayerDefaults();
     }
 }

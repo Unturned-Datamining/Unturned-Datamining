@@ -640,29 +640,33 @@ public class PlayerSkills : PlayerCaller
         if (Level.info == null || Level.info.type == ELevelType.SURVIVAL)
         {
             float num = (base.player.life.wasPvPDeath ? Provider.modeConfigData.Players.Lose_Skills_PvP : Provider.modeConfigData.Players.Lose_Skills_PvE);
-            for (byte b = 0; b < skills.Length; b++)
+            if (num < 0.999f)
             {
-                Skill[] array = skills[b];
-                for (byte b2 = 0; b2 < array.Length; b2++)
+                for (byte b = 0; b < skills.Length; b++)
                 {
-                    bool flag = true;
-                    for (byte b3 = 0; b3 < SKILLSETS[(byte)base.channel.owner.skillset].Length; b3++)
+                    Skill[] array = skills[b];
+                    for (byte b2 = 0; b2 < array.Length; b2++)
                     {
-                        SpecialitySkillPair specialitySkillPair = SKILLSETS[(byte)base.channel.owner.skillset][b3];
-                        if (b == specialitySkillPair.speciality && b2 == specialitySkillPair.skill)
+                        bool flag = true;
+                        for (byte b3 = 0; b3 < SKILLSETS[(byte)base.channel.owner.skillset].Length; b3++)
                         {
-                            flag = false;
-                            break;
+                            SpecialitySkillPair specialitySkillPair = SKILLSETS[(byte)base.channel.owner.skillset][b3];
+                            if (b == specialitySkillPair.speciality && b2 == specialitySkillPair.skill)
+                            {
+                                flag = false;
+                                break;
+                            }
+                        }
+                        if (flag)
+                        {
+                            array[b2].level = (byte)((float)(int)array[b2].level * num);
                         }
                     }
-                    if (flag)
-                    {
-                        array[b2].level = (byte)((float)(int)array[b2].level * num);
-                    }
                 }
+                SendMultipleSkillLevels.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), WriteSkillLevels);
             }
-            SendMultipleSkillLevels.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), WriteSkillLevels);
-            _experience = (uint)((float)experience * num);
+            float num2 = (base.player.life.wasPvPDeath ? Provider.modeConfigData.Players.Lose_Experience_PvP : Provider.modeConfigData.Players.Lose_Experience_PvE);
+            _experience = (uint)((float)experience * num2);
         }
         else
         {

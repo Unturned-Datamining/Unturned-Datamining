@@ -44,9 +44,25 @@ public class PlayersConfigData
 
     public float Ray_Aggressor_Distance;
 
+    /// <summary>
+    /// [0, 1] percentage of skill levels to retain after death.
+    /// </summary>
     public float Lose_Skills_PvP;
 
+    /// <summary>
+    /// [0, 1] percentage of skill levels to retain after death.
+    /// </summary>
     public float Lose_Skills_PvE;
+
+    /// <summary>
+    /// [0, 1] percentage of experience points to retain after death.
+    /// </summary>
+    public float Lose_Experience_PvP;
+
+    /// <summary>
+    /// [0, 1] percentage of experience points to retain after death.
+    /// </summary>
+    public float Lose_Experience_PvE;
 
     public float Lose_Items_PvP;
 
@@ -150,8 +166,10 @@ public class PlayersConfigData
         }
         Ray_Aggressor_Distance = 8f;
         Armor_Multiplier = 1f;
-        Lose_Skills_PvP = 0.75f;
-        Lose_Skills_PvE = 0.75f;
+        Lose_Skills_PvP = 1f;
+        Lose_Skills_PvE = 1f;
+        Lose_Experience_PvP = 0.5f;
+        Lose_Experience_PvE = 0.5f;
         Lose_Items_PvP = 1f;
         Lose_Items_PvE = 1f;
         Lose_Clothes_PvP = true;
@@ -182,6 +200,11 @@ public class PlayersConfigData
         Spawn_With_Max_Skills = false;
         Spawn_With_Stamina_Skills = false;
         Allow_Instakill_Headshots = mode == EGameMode.HARD;
+        Allow_Per_Character_Saves = false;
+    }
+
+    public void InitSingleplayerDefaults()
+    {
         Allow_Per_Character_Saves = true;
     }
 }

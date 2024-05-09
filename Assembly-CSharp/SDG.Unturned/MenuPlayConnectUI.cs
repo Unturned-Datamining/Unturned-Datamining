@@ -179,22 +179,23 @@ public class MenuPlayConnectUI
         if (!TryParseHostString(hostField.Text, out var address, out var steamId, out var queryPortOverride))
         {
             UnturnedLog.info("Cannot connect because unable to parse host string");
+            return;
         }
-        else if (steamId.BGameServerAccount())
+        if (steamId.BGameServerAccount())
         {
             MenuSettings.save();
             Provider.connect(new ServerConnectParameters(steamId, passwordField.Text), null, null);
+            return;
         }
-        else if (((queryPortOverride > 0) ? queryPortOverride : portField.Value) == 0)
+        ushort num = ((queryPortOverride > 0) ? queryPortOverride : portField.Value);
+        if (num == 0)
         {
             UnturnedLog.info("Cannot connect because port field is empty");
+            return;
         }
-        else
-        {
-            SteamConnectionInfo info = new SteamConnectionInfo(address.value, portField.Value, passwordField.Text);
-            MenuSettings.save();
-            connect(info, shouldAutoJoin: false, MenuPlayServerInfoUI.EServerInfoOpenContext.CONNECT);
-        }
+        SteamConnectionInfo info = new SteamConnectionInfo(address.value, num, passwordField.Text);
+        MenuSettings.save();
+        connect(info, shouldAutoJoin: false, MenuPlayServerInfoUI.EServerInfoOpenContext.CONNECT);
     }
 
     private static void onTypedHostField(ISleekField field, string text)
