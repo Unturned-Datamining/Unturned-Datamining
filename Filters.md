@@ -70,7 +70,7 @@
 | (https://i.ibb.co/M28DTbq/Untitled-logo-1-free-file.jpg) | ![https://i.ibb.co/M28DTbq/Untitled-logo-1-free-file.jpg](https://i.ibb.co/M28DTbq/Untitled-logo-1-free-file.jpg) | HiddenFromAllServerLists, Blocked                  |
 | (?i)(https://icdn.su/f/kJN/VxF/Ku3.jpg)                  | ![https://icdn.su/f/kJN/VxF/Ku3.jpg](https://icdn.su/f/kJN/VxF/Ku3.jpg)                                           | HiddenFromAllServerLists, Blocked, WorkshopWarning |
 | (Ekran-Al-nt-s.png)                                      |                                                                                                                   | MonetizationWarning, HiddenFromInternetServerList  |
-| (https://gspics.org/images/2018/06/10/AkbKx.png)         | ![https://gspics.org/images/2018/06/10/AkbKx.png](https://gspics.org/images/2018/06/10/AkbKx.png)                 | MonetizationWarning                                |
+| (https://gspics.org/images/2018/06/10/AkbKx.png)         | ![https://gspics.org/images/2018/06/10/AkbKx.png](https://gspics.org/images/2018/06/10/AkbKx.png)                 | HiddenFromAllServerLists, MonetizationWarning      |
 | (https://shorturl.at/foLX3)                              | ![https://shorturl.at/foLX3](https://shorturl.at/foLX3)                                                           | MonetizationWarning                                |
 
 ## SteamId filters
@@ -90,6 +90,6 @@
 | 85568392929557585 | MonetizationWarning, HiddenFromInternetServerList      |
 | 85568392929711611 | MonetizationWarning, HiddenFromInternetServerList      |
 | 85568392930733591 | Blocked                                                |
-| 85568392924910977 | MonetizationWarning                                    |
+| 85568392924910977 | HiddenFromAllServerLists, MonetizationWarning          |
 | 85568392930703594 | MonetizationWarning                                    |
 | 85568392930706524 | MonetizationWarning                                    |
