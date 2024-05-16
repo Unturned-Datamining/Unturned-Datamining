@@ -1,11 +1,11 @@
 MainMenuAlert
 {
-	Id 53
-	Header Find the official Unturned Wiki on wiki.gg!
-	Body The official wiki for Unturned has moved. You can now find the Unturned Wiki at unturned.wiki.gg – it's the official game wiki written and maintained by the community!
-	Color #FF1985
-	Link https://unturned.wiki.gg/
-	IconURL https://cdn.smartlydressedgames.com/Images/wiki_gg.png
+	Id 54
+	Header Escalation Curated Map Trailer (Coming Soon)
+	Body Click here to check out the trailer for the next upcoming curated map: Escalation!
+	Color #ff7f00
+	Link https://www.youtube.com/watch?v=Q19R0ndWqCE
+	IconURL https://cdn.smartlydressedgames.com/Images/escalation.png
 }
 MainMenuWorkshop
 {
