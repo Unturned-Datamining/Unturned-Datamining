@@ -12,11 +12,13 @@ public class LiveConfigData
 
     public bool shouldServersWithoutMonetizationTagBeVisibleInInternetServerList;
 
-    public bool areBuakCraftableItemsAvailable;
+    public bool arePbsCraftableItemsAvailable;
 
     public int playtimeGeneratorItemDefId;
 
     public int queryPingWarningOffsetMs = 200;
+
+    public long craftingPromotionId = -1L;
 
     public void Parse(DatDictionary data)
     {
@@ -34,8 +36,9 @@ public class LiveConfigData
         }
         shouldAllowJoiningInternetServersWithoutGslt = data.ParseBool("ShouldAllowJoiningInternetServersWithoutGslt");
         shouldServersWithoutMonetizationTagBeVisibleInInternetServerList = data.ParseBool("ShouldServersWithoutMonetizationTagBeVisibleInInternetServerList");
-        areBuakCraftableItemsAvailable = data.ParseBool("AreBuakCraftableItemsAvailable");
+        arePbsCraftableItemsAvailable = data.ParseBool("ArePbsCraftableItemsAvailable");
         playtimeGeneratorItemDefId = data.ParseInt32("PlaytimeGeneratorItemDefId");
         queryPingWarningOffsetMs = data.ParseInt32("QueryPingWarningOffsetMs", 200);
+        craftingPromotionId = data.ParseInt64("CraftingPromotionId", -1L);
     }
 }

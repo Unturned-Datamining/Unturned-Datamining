@@ -5,6 +5,29 @@ namespace SDG.Unturned;
 /// </summary>
 public static class ItemStoreSavedata
 {
+    public static bool WasNewCraftingPageSeen()
+    {
+        LiveConfigData liveConfigData = LiveConfig.Get();
+        if (liveConfigData.craftingPromotionId <= 0)
+        {
+            return true;
+        }
+        if (ConvenientSavedata.get().read("CraftingSeenPromotionId", out long value) && value >= liveConfigData.craftingPromotionId)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Track that player has seen the new crafting blueprints.
+    /// </summary>
+    public static void MarkNewCraftingPageSeen()
+    {
+        LiveConfigData liveConfigData = LiveConfig.Get();
+        ConvenientSavedata.get().write("CraftingSeenPromotionId", liveConfigData.craftingPromotionId);
+    }
+
     public static bool WasNewListingsPageSeen()
     {
         ItemStoreLiveConfig itemStore = LiveConfig.Get().itemStore;

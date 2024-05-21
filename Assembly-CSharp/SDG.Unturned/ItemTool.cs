@@ -601,7 +601,7 @@ public class ItemTool : MonoBehaviour
         Vector3 extents = bounds.extents;
         if (extents.ContainsInfinity() || extents.ContainsNaN() || extents.IsNearlyZero())
         {
-            Assets.reportError(assetContext, "has invalid icon world extent ({0})", extents);
+            Assets.reportError(assetContext, "has invalid icon world extent {0}", extents);
             return 1f;
         }
         Bounds bounds2 = new Bounds(cameraTransform.InverseTransformVector(extents), Vector3.zero);
@@ -615,7 +615,7 @@ public class ItemTool : MonoBehaviour
         Vector3 extents2 = bounds2.extents;
         if (extents2.ContainsInfinity() || extents2.ContainsNaN() || extents2.IsNearlyZero())
         {
-            Assets.reportError(assetContext, "has invalid icon local extent ({0})", extents);
+            Assets.reportError(assetContext, "has invalid icon local extent {0} Maybe camera scale {1} is wrong?", extents2, cameraTransform.localScale);
             return 1f;
         }
         float num = Mathf.Abs(extents2.x);

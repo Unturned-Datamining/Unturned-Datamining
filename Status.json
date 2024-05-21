@@ -26,13 +26,17 @@
 			"Buak_ADayInTheSun",
 			"Buak_Memory",
 			"Buak_TacoWaffle",
-			"Buak_Anomaly"
+			"Buak_Anomaly",
+			"PBS_BombsAway",
+			"PBS_ForcefulAcquisition",
+			"PBS_DeadSilent",
+			"PBS_PoorInvestment"
 		]
 	},
 	"Game":
 	{
 		"Major_Version": 24,
-		"Minor_Version": 2,
+		"Minor_Version": 3,
 		"Patch_Version": 0,
 		"GrantPackageIDs":
 		[
@@ -53,9 +57,9 @@
 	},
 	"Menu":
 	{
-		"PromoStart": "2023-07-05T12:00:00Z",
-		"PromoEnd": "2023-07-21T12:00:00Z",
-		"PromoLevel": "BuakMenu"
+		"PromoStart": "2024-05-20T12:00:00Z",
+		"PromoEnd": "2024-06-06T12:00:00Z",
+		"PromoLevel": "PBS_Menu"
 	},
 	"News":
 	{

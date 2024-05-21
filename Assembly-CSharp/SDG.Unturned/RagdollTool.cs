@@ -19,6 +19,16 @@ public class RagdollTool
 
     private static Material zeroKelvinMaterial;
 
+    private static Material jadedMaterial;
+
+    private static Material soulCrystalGreenMaterial;
+
+    private static Material soulCrystalMagentaMaterial;
+
+    private static Material soulCrystalRedMaterial;
+
+    private static Material soulCrystalYellowMaterial;
+
     private static Material getRagdollEffectMaterial(ERagdollEffect effect)
     {
         switch (effect)
@@ -47,6 +57,36 @@ public class RagdollTool
                 zeroKelvinMaterial = Resources.Load<Material>("Characters/RagdollMaterials/Zero_Kelvin");
             }
             return zeroKelvinMaterial;
+        case ERagdollEffect.JADED:
+            if (jadedMaterial == null)
+            {
+                jadedMaterial = Resources.Load<Material>("Characters/RagdollMaterials/Jaded");
+            }
+            return jadedMaterial;
+        case ERagdollEffect.SOUL_CRYSTAL_GREEN:
+            if (soulCrystalGreenMaterial == null)
+            {
+                soulCrystalGreenMaterial = Resources.Load<Material>("Characters/RagdollMaterials/SoulCrystal_Green");
+            }
+            return soulCrystalGreenMaterial;
+        case ERagdollEffect.SOUL_CRYSTAL_MAGENTA:
+            if (soulCrystalMagentaMaterial == null)
+            {
+                soulCrystalMagentaMaterial = Resources.Load<Material>("Characters/RagdollMaterials/SoulCrystal_Magenta");
+            }
+            return soulCrystalMagentaMaterial;
+        case ERagdollEffect.SOUL_CRYSTAL_RED:
+            if (soulCrystalRedMaterial == null)
+            {
+                soulCrystalRedMaterial = Resources.Load<Material>("Characters/RagdollMaterials/SoulCrystal_Red");
+            }
+            return soulCrystalRedMaterial;
+        case ERagdollEffect.SOUL_CRYSTAL_YELLOW:
+            if (soulCrystalYellowMaterial == null)
+            {
+                soulCrystalYellowMaterial = Resources.Load<Material>("Characters/RagdollMaterials/SoulCrystal_Yellow");
+            }
+            return soulCrystalYellowMaterial;
         default:
             return null;
         }

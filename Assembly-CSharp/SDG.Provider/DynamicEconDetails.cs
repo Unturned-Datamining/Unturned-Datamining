@@ -1,3 +1,4 @@
+using System;
 using SDG.Unturned;
 using UnityEngine;
 
@@ -27,10 +28,44 @@ public struct DynamicEconDetails
 
     public bool getRagdollEffect(out ERagdollEffect effect)
     {
-        if (tags.Contains("ragdoll_effect:zero_kelvin"))
+        int num = tags.IndexOf("ragdoll_effect:");
+        if (num >= 0)
         {
-            effect = ERagdollEffect.ZERO_KELVIN;
-            return true;
+            num += "ragdoll_effect:".Length;
+            if (num < tags.Length - 1)
+            {
+                ReadOnlySpan<char> span = tags.AsSpan(num, tags.Length - num);
+                if (span.StartsWith("zero_kelvin"))
+                {
+                    effect = ERagdollEffect.ZERO_KELVIN;
+                    return true;
+                }
+                if (span.StartsWith("jaded"))
+                {
+                    effect = ERagdollEffect.JADED;
+                    return true;
+                }
+                if (span.StartsWith("soulcrystal_green"))
+                {
+                    effect = ERagdollEffect.SOUL_CRYSTAL_GREEN;
+                    return true;
+                }
+                if (span.StartsWith("soulcrystal_magenta"))
+                {
+                    effect = ERagdollEffect.SOUL_CRYSTAL_MAGENTA;
+                    return true;
+                }
+                if (span.StartsWith("soulcrystal_red"))
+                {
+                    effect = ERagdollEffect.SOUL_CRYSTAL_RED;
+                    return true;
+                }
+                if (span.StartsWith("soulcrystal_yellow"))
+                {
+                    effect = ERagdollEffect.SOUL_CRYSTAL_YELLOW;
+                    return true;
+                }
+            }
         }
         effect = ERagdollEffect.NONE;
         return false;

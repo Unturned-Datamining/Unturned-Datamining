@@ -1,0 +1,36 @@
+GUID 251626f6d5e84bca90c2c3444d782651
+Type Box
+
+Size_X 1
+Size_Y 1
+
+Generate 21066
+
+Probability_Model Equalized
+Contains_Bonus_Items True
+
+Drops 22
+Drop_0 -1
+Drop_1 "97901" // PBS_Holster_Bottoms
+Drop_2 "97301" // PBS_Cowboy_Hat
+Drop_3 "97501" // PBS_Frag_Goggles
+Drop_4 "97601" // PBS_Hard_Hat
+Drop_5 "97701" // PBS_Headphones_Mask
+Drop_6 "98001" // PBS_HPA_Pack
+Drop_7 "98101" // PBS_Long_Ears
+Drop_8 "98201" // PBS_Medic_Vest
+Drop_9 "98301" // PBS_Ponytail_Hair
+Drop_10 "98401" // PBS_Rice_Hat
+Drop_11 "98501" // PBS_Shield_Helmet
+Drop_12 "98601" // PBS_SSamurai_Bottom
+Drop_13 "98701" // PBS_SSamurai_Top
+Drop_14 "98801" // PBS_Three_Hole_Mask
+Drop_15 "98901" // PBS_Turtleneck
+Drop_16 "99001" // PBS_Wheat_Beard
+Drop_17 "97201" // PBS_Container_Pack (Epic)
+Drop_18 "97401" // PBS_Exo_Spine (Epic)
+Drop_19 "99201" // Zubeknakov_Spiritual (Epic)
+Drop_20 "99101" // PBS_SSamurai_Sword (Legendary)
+Drop_21 "97801" // PBS_Heavy_Vest (Legendary)
+
+Pro

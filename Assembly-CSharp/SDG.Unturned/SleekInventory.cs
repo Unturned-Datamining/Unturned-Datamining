@@ -145,15 +145,44 @@ public class SleekInventory : SleekWrapper
                 statTrackerLabel.TextColor = Provider.provider.economyService.getStatTrackerColor(type);
                 statTrackerLabel.Text = kills.ToString("D7");
             }
-            if (!Provider.provider.economyService.getInventoryRagdollEffect(instance, out var _))
+            if (!Provider.provider.economyService.getInventoryRagdollEffect(instance, out var effect))
             {
                 ragdollEffectLabel.IsVisible = false;
             }
             else
             {
                 ragdollEffectLabel.IsVisible = true;
-                ragdollEffectLabel.TextColor = new Color(0f, 1f, 1f);
-                ragdollEffectLabel.Text = "0 Kelvin";
+                switch (effect)
+                {
+                case ERagdollEffect.ZERO_KELVIN:
+                    ragdollEffectLabel.TextColor = new Color(0f, 1f, 1f);
+                    ragdollEffectLabel.Text = "0 Kelvin";
+                    break;
+                case ERagdollEffect.JADED:
+                    ragdollEffectLabel.TextColor = new Color32(76, 166, 90, byte.MaxValue);
+                    ragdollEffectLabel.Text = "Jaded";
+                    break;
+                case ERagdollEffect.SOUL_CRYSTAL_GREEN:
+                    ragdollEffectLabel.TextColor = Palette.MYTHICAL;
+                    ragdollEffectLabel.Text = "Green Soul Crystal";
+                    break;
+                case ERagdollEffect.SOUL_CRYSTAL_MAGENTA:
+                    ragdollEffectLabel.TextColor = Palette.MYTHICAL;
+                    ragdollEffectLabel.Text = "Magenta Soul Crystal";
+                    break;
+                case ERagdollEffect.SOUL_CRYSTAL_RED:
+                    ragdollEffectLabel.TextColor = Palette.MYTHICAL;
+                    ragdollEffectLabel.Text = "Red Soul Crystal";
+                    break;
+                case ERagdollEffect.SOUL_CRYSTAL_YELLOW:
+                    ragdollEffectLabel.TextColor = Palette.MYTHICAL;
+                    ragdollEffectLabel.Text = "Yellow Soul Crystal";
+                    break;
+                default:
+                    ragdollEffectLabel.TextColor = Color.red;
+                    ragdollEffectLabel.Text = effect.ToString();
+                    break;
+                }
             }
             ushort num = Provider.provider.economyService.getInventoryMythicID(item);
             if (num == 0)

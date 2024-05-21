@@ -60,10 +60,12 @@ public class IconUtils
             itemDefIconInfo.extraPath = ReadWrite.PATH + "/Extras/Econ/" + text + "_" + num + "_" + skinAsset.name + "_" + skinAsset.id;
             if (vehicleAsset != null)
             {
+                VehicleTool.getIcon(vehicleAsset.id, skinAsset.id, vehicleAsset, skinAsset, 200, 200, readableOnCPU: true, itemDefIconInfo.onSmallItemIconReady);
                 VehicleTool.getIcon(vehicleAsset.id, skinAsset.id, vehicleAsset, skinAsset, 400, 400, readableOnCPU: true, itemDefIconInfo.onLargeItemIconReady);
             }
             else
             {
+                ItemTool.getIcon(itemAsset.id, skinAsset.id, 100, itemAsset.getState(), itemAsset, skinAsset, string.Empty, string.Empty, 200, 200, scale: true, readableOnCPU: true, itemDefIconInfo.onSmallItemIconReady);
                 ItemTool.getIcon(itemAsset.id, skinAsset.id, 100, itemAsset.getState(), itemAsset, skinAsset, string.Empty, string.Empty, 400, 400, scale: true, readableOnCPU: true, itemDefIconInfo.onLargeItemIconReady);
             }
         }
@@ -75,6 +77,7 @@ public class IconUtils
                 return null;
             }
             itemDefIconInfo.extraPath = ReadWrite.PATH + "/Extras/Econ/" + itemAsset.name + "_" + itemAsset.id;
+            ItemTool.getIcon(itemAsset.id, 0, 100, itemAsset.getState(), itemAsset, null, string.Empty, string.Empty, 200, 200, scale: true, readableOnCPU: true, itemDefIconInfo.onSmallItemIconReady);
             ItemTool.getIcon(itemAsset.id, 0, 100, itemAsset.getState(), itemAsset, null, string.Empty, string.Empty, 400, 400, scale: true, readableOnCPU: true, itemDefIconInfo.onLargeItemIconReady);
         }
         icons.Add(itemDefIconInfo);

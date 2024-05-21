@@ -34,6 +34,8 @@ public class MenuSurvivorsClothingUI
 
     private static SleekButtonIcon craftingButton;
 
+    private static ISleekLabel craftingNewLabel;
+
     private static List<SteamItemDetails_t> filteredItems;
 
     private static ISleekConstraintFrame inventory;
@@ -610,6 +612,12 @@ public class MenuSurvivorsClothingUI
 
     private static void onClickedCraftingButton(ISleekElement button)
     {
+        if (craftingNewLabel != null)
+        {
+            itemstoreButton.RemoveChild(craftingNewLabel);
+            craftingNewLabel = null;
+            ItemStoreSavedata.MarkNewCraftingPageSeen();
+        }
         setCrafting(!crafting.IsVisible);
     }
 
@@ -906,6 +914,7 @@ public class MenuSurvivorsClothingUI
             new EconCraftOption("Craft_Stat_Tracker_Total_Kills", 19001, 30),
             new EconCraftOption("Craft_Stat_Tracker_Player_Kills", 19002, 30),
             new EconCraftOption("Craft_Ragdoll_Effect_Zero_Kelvin", 19003, 50),
+            new EconCraftOption("Craft_Ragdoll_Effect_Jaded", 19013, 50),
             new EconCraftOption("Craft_Mythical_Skin", 19043, 1000),
             new EconCraftOption("Craft_Stat_Tracker_Removal_Tool", 19004, 15),
             new EconCraftOption("Craft_Ragdoll_Effect_Removal_Tool", 19005, 15)
@@ -915,9 +924,9 @@ public class MenuSurvivorsClothingUI
             econCraftOptions.Add(new EconCraftOption("Craft_ProgressPridePin", 1333, 5));
             econCraftOptions.Add(new EconCraftOption("Craft_ProgressPrideJersey", 1334, 5));
         }
-        if (LiveConfig.Get().areBuakCraftableItemsAvailable)
+        if (LiveConfig.Get().arePbsCraftableItemsAvailable)
         {
-            econCraftOptions.Add(new EconCraftOption("Craft_Buak", 1377, 10));
+            econCraftOptions.Add(new EconCraftOption("Craft_PBS", 1873, 10));
         }
         craftingButtons = new ISleekButton[econCraftOptions.Count];
         for (int j = 0; j < craftingButtons.Length; j++)
@@ -981,6 +990,17 @@ public class MenuSurvivorsClothingUI
         craftingButton.fontSize = ESleekFontSize.Medium;
         craftingButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(craftingButton);
+        if (!ItemStoreSavedata.WasNewCraftingPageSeen())
+        {
+            craftingNewLabel = Glazier.Get().CreateLabel();
+            craftingNewLabel.SizeScale_X = 1f;
+            craftingNewLabel.SizeScale_Y = 1f;
+            craftingNewLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+            craftingNewLabel.TextAlignment = TextAnchor.UpperRight;
+            craftingNewLabel.TextColor = Color.green;
+            craftingNewLabel.Text = Provider.localization.format("New");
+            craftingButton.AddChild(craftingNewLabel);
+        }
         TempSteamworksEconomy economyService = Provider.provider.economyService;
         economyService.onInventoryExchanged = (TempSteamworksEconomy.InventoryExchanged)Delegate.Combine(economyService.onInventoryExchanged, new TempSteamworksEconomy.InventoryExchanged(onInventoryExchanged));
         TempSteamworksEconomy economyService2 = Provider.provider.economyService;

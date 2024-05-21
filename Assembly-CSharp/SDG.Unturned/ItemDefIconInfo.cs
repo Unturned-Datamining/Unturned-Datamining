@@ -10,9 +10,20 @@ public class ItemDefIconInfo
     public string extraPath;
 
     /// <summary>
+    /// Has the small icon been captured yet?
+    /// </summary>
+    private bool hasSmall;
+
+    /// <summary>
     /// Has the large icon been captured yet?
     /// </summary>
     private bool hasLarge;
+
+    public void onSmallItemIconReady(Texture2D texture)
+    {
+        hasSmall = true;
+        complete();
+    }
 
     public void onLargeItemIconReady(Texture2D texture)
     {
@@ -25,7 +36,7 @@ public class ItemDefIconInfo
 
     private void complete()
     {
-        if (hasLarge)
+        if (hasSmall && hasLarge)
         {
             IconUtils.icons.Remove(this);
         }

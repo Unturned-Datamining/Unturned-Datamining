@@ -156,6 +156,11 @@ public class MenuSurvivorsClothingItemUI
                 newFilterMode = EEconFilterMode.RAGDOLL_EFFECT_REMOVAL;
                 break;
             case 1524:
+            case 1868:
+            case 1869:
+            case 1870:
+            case 1871:
+            case 1872:
                 newFilterMode = EEconFilterMode.RAGDOLL_EFFECT;
                 break;
             default:
