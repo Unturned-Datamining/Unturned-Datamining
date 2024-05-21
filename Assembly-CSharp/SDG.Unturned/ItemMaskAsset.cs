@@ -22,7 +22,6 @@ public class ItemMaskAsset : ItemGearAsset
             {
                 AssetValidation.ValidateLayersEqual(this, _mask, 10);
                 AssetValidation.ValidateClothComponents(this, _mask);
-                AssetValidation.searchGameObjectForErrors(this, _mask);
             }
         }
         if (!isPro)

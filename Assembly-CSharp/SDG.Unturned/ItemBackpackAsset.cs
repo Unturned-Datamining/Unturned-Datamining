@@ -18,7 +18,6 @@ public class ItemBackpackAsset : ItemBagAsset
             {
                 AssetValidation.ValidateLayersEqual(this, _backpack, 10);
                 AssetValidation.ValidateClothComponents(this, _backpack);
-                AssetValidation.searchGameObjectForErrors(this, _backpack);
             }
         }
     }

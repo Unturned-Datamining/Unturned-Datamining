@@ -23,6 +23,8 @@ public static class AssetValidation
 
     private static List<Cloth> clothComponents = new List<Cloth>();
 
+    private static List<LODGroup> lodGroupComponents = new List<LODGroup>();
+
     public static void ValidateLayersEqual(Asset owningAsset, GameObject gameObject, int expectedLayer)
     {
         int layer = gameObject.layer;
@@ -121,6 +123,13 @@ public static class AssetValidation
                 Assets.reportError(owningAsset, "{0} clip '{1}' for AudioSource '{2}' has {3} samples (ideal maximum of {4}) and could be compressed.", gameObject.name, clip.name, audioSource.name, clip.samples, 2000000);
             }
         }
+        lodGroupComponents.Clear();
+        gameObject.GetComponentsInChildren(includeInactive: true, lodGroupComponents);
+        foreach (LODGroup lodGroupComponent in lodGroupComponents)
+        {
+            InternalValidateLodGroupComponent(owningAsset, lodGroupComponent);
+        }
+        InternalValidateRendererMultiLodRegistration(owningAsset);
     }
 
     private static void internalValidateMesh(Asset owningAsset, GameObject gameObject, Component component, Mesh sharedMesh, int maximumVertexCount)
@@ -179,6 +188,81 @@ public static class AssetValidation
             if (texture2D != null && !owningAsset.ignoreNPOT && (!Mathf.IsPowerOfTwo(texture2D.width) || !Mathf.IsPowerOfTwo(texture2D.height)))
             {
                 Assets.reportError(owningAsset, "{0} texture '{1}' referenced by material '{2}' used by Renderer '{3}' has NPOT dimensions ({4} x {5})", gameObject.name, texture.name, sharedMaterial.name, component.name, texture2D.width, texture2D.height);
+            }
+        }
+    }
+
+    private static void InternalValidateLodGroupComponent(Asset owningAsset, LODGroup component)
+    {
+        LOD[] lODs = component.GetLODs();
+        for (int i = 0; i < lODs.Length; i++)
+        {
+            LOD lOD = lODs[i];
+            if (lOD.renderers.Length < 1)
+            {
+                Assets.reportError(owningAsset, "LOD group on \"{0}\" LOD level {1} is empty", component.GetSceneHierarchyPath(), i);
+                continue;
+            }
+            int num = 0;
+            for (int j = 0; j < lOD.renderers.Length; j++)
+            {
+                if (lOD.renderers[j] == null)
+                {
+                    num++;
+                }
+            }
+            if (num > 0)
+            {
+                Assets.reportError(owningAsset, "LOD group on \"{0}\" LOD level {1} missing {2} renderer(s)", component.GetSceneHierarchyPath(), i, num);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Unity warns about renderers registered with more than one LOD group, so we do our own validation as part of
+    /// asset loading to make it easier to find these.
+    /// </summary>
+    private static void InternalValidateRendererMultiLodRegistration(Asset owningAsset)
+    {
+        foreach (Renderer allRenderer in allRenderers)
+        {
+            LODGroup lODGroup = null;
+            int num = 0;
+            foreach (LODGroup lodGroupComponent in lodGroupComponents)
+            {
+                LOD[] lODs = lodGroupComponent.GetLODs();
+                int num2 = 0;
+                while (num2 < lODs.Length)
+                {
+                    Renderer[] renderers = lODs[num2].renderers;
+                    int num3 = 0;
+                    while (true)
+                    {
+                        if (num3 < renderers.Length)
+                        {
+                            if (renderers[num3] == allRenderer)
+                            {
+                                if (lODGroup == null)
+                                {
+                                    lODGroup = lodGroupComponent;
+                                    num = num2;
+                                }
+                                else if (lodGroupComponent != lODGroup)
+                                {
+                                    Assets.reportError(owningAsset, "renderer on \"{0}\" is registered with more than one LOD group, found in \"{1}\" LOD level {2} and \"{3}\" LOD level {4}", allRenderer.GetSceneHierarchyPath(), lODGroup.GetSceneHierarchyPath(), num, lodGroupComponent.GetSceneHierarchyPath(), num2);
+                                    goto end_IL_00e5;
+                                }
+                            }
+                            num3++;
+                            continue;
+                        }
+                        num2++;
+                        break;
+                    }
+                }
+                continue;
+                end_IL_00e5:
+                break;
             }
         }
     }

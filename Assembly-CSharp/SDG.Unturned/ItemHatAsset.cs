@@ -18,7 +18,6 @@ public class ItemHatAsset : ItemGearAsset
             {
                 AssetValidation.ValidateLayersEqual(this, _hat, 10);
                 AssetValidation.ValidateClothComponents(this, _hat);
-                AssetValidation.searchGameObjectForErrors(this, _hat);
             }
         }
     }

@@ -46,7 +46,6 @@ public class ItemGlassesAsset : ItemGearAsset
             {
                 AssetValidation.ValidateLayersEqual(this, _glasses, 10);
                 AssetValidation.ValidateClothComponents(this, _glasses);
-                AssetValidation.searchGameObjectForErrors(this, _glasses);
             }
         }
         if (data.ContainsKey("Vision"))

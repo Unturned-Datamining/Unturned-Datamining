@@ -18,7 +18,6 @@ public class ItemVestAsset : ItemBagAsset
             {
                 AssetValidation.ValidateLayersEqual(this, _vest, 10);
                 AssetValidation.ValidateClothComponents(this, _vest);
-                AssetValidation.searchGameObjectForErrors(this, _vest);
             }
         }
     }
