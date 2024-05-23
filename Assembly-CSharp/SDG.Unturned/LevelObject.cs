@@ -201,7 +201,7 @@ public class LevelObject
 
     private Material GetMaterialOverride()
     {
-        Material result = null;
+        Material material = null;
         AssetReference<MaterialPaletteAsset> materialPalette = customMaterialOverride;
         if (!materialPalette.isValid)
         {
@@ -212,22 +212,31 @@ public class LevelObject
             MaterialPaletteAsset materialPaletteAsset = Assets.find(materialPalette);
             if (materialPaletteAsset != null && materialPaletteAsset.materials != null && materialPaletteAsset.materials.Count > 0)
             {
-                int index;
+                int num;
                 if (materialIndexOverride == -1)
                 {
                     UnityEngine.Random.State obj = UnityEngine.Random.state;
                     UnityEngine.Random.InitState((int)instanceID);
-                    index = UnityEngine.Random.Range(0, materialPaletteAsset.materials.Count);
+                    num = UnityEngine.Random.Range(0, materialPaletteAsset.materials.Count);
                     UnityEngine.Random.state = obj;
                 }
                 else
                 {
-                    index = Mathf.Clamp(materialIndexOverride, 0, materialPaletteAsset.materials.Count - 1);
+                    num = Mathf.Clamp(materialIndexOverride, 0, materialPaletteAsset.materials.Count - 1);
                 }
-                result = Assets.load(materialPaletteAsset.materials[index]);
+                material = Assets.load(materialPaletteAsset.materials[num]);
+                if (material == null)
+                {
+                    UnturnedLog.warn($"Object \"{asset?.FriendlyName}\" with palette \"{materialPaletteAsset.FriendlyName}\" has invalid material at index {num}");
+                }
+            }
+            else
+            {
+                string arg = ((_transform != null) ? _transform.position.ToString() : "(no transform)");
+                UnturnedLog.warn($"Object \"{asset?.FriendlyName}\" at {arg} has invalid material palette {materialPalette}");
             }
         }
-        return result;
+        return material;
     }
 
     private void updateConditions()

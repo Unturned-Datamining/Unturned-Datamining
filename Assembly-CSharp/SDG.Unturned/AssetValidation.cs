@@ -19,8 +19,6 @@ public static class AssetValidation
 
     private static List<SkinnedMeshRenderer> skinnedMeshRenderers = new List<SkinnedMeshRenderer>();
 
-    private static List<AudioSource> audioSources = new List<AudioSource>();
-
     private static List<Cloth> clothComponents = new List<Cloth>();
 
     private static List<LODGroup> lodGroupComponents = new List<LODGroup>();
@@ -73,13 +71,13 @@ public static class AssetValidation
         gameObject.GetComponentsInChildren(staticMeshComponents);
         foreach (MeshFilter staticMeshComponent in staticMeshComponents)
         {
-            internalValidateMesh(owningAsset, gameObject, staticMeshComponent, staticMeshComponent.sharedMesh, 20000);
+            internalValidateMesh(owningAsset, gameObject, staticMeshComponent, staticMeshComponent.sharedMesh, 50000);
         }
         meshColliderComponents.Clear();
         gameObject.GetComponentsInChildren(meshColliderComponents);
         foreach (MeshCollider meshColliderComponent in meshColliderComponents)
         {
-            internalValidateMesh(owningAsset, gameObject, meshColliderComponent, meshColliderComponent.sharedMesh, 10000);
+            internalValidateMesh(owningAsset, gameObject, meshColliderComponent, meshColliderComponent.sharedMesh, 25000);
         }
         allRenderers.Clear();
         gameObject.GetComponentsInChildren(allRenderers);
@@ -110,18 +108,8 @@ public static class AssetValidation
         gameObject.GetComponentsInChildren(skinnedMeshRenderers);
         foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
         {
-            internalValidateMesh(owningAsset, gameObject, skinnedMeshRenderer, skinnedMeshRenderer.sharedMesh, 20000);
+            internalValidateMesh(owningAsset, gameObject, skinnedMeshRenderer, skinnedMeshRenderer.sharedMesh, 50000);
             internalValidateRendererMaterials(owningAsset, gameObject, skinnedMeshRenderer);
-        }
-        audioSources.Clear();
-        gameObject.GetComponentsInChildren(audioSources);
-        foreach (AudioSource audioSource in audioSources)
-        {
-            AudioClip clip = audioSource.clip;
-            if (clip != null && clip.samples > 2000000)
-            {
-                Assets.reportError(owningAsset, "{0} clip '{1}' for AudioSource '{2}' has {3} samples (ideal maximum of {4}) and could be compressed.", gameObject.name, clip.name, audioSource.name, clip.samples, 2000000);
-            }
         }
         lodGroupComponents.Clear();
         gameObject.GetComponentsInChildren(includeInactive: true, lodGroupComponents);
@@ -143,7 +131,7 @@ public static class AssetValidation
         }
         else if (sharedMesh.vertexCount > maximumVertexCount)
         {
-            Assets.reportError(owningAsset, "{0} mesh for {1} '{2}' has {3} vertices (ideal maximum of {4}) and could be optimized.", gameObject.name, component.GetType().Name, component.name, sharedMesh.vertexCount, maximumVertexCount);
+            Assets.reportError(owningAsset, "{0} mesh for {1} '{2}' has {3} vertices (ideal maximum of {4}) and might have room for optimization.", gameObject.name, component.GetType().Name, component.name, sharedMesh.vertexCount, maximumVertexCount);
         }
     }
 

@@ -144,9 +144,9 @@ public class ItemShirtAsset : ItemBagAsset
                 {
                     Assets.reportError(this, "texture 'Shirt' can save memory by disabling read/write");
                 }
-                if (shirt.format != TextureFormat.RGBA32 && (shirt.width <= 128 || shirt.height <= 128))
+                if (shirt.format != TextureFormat.RGBA32 && shirt.format != TextureFormat.RGB24 && (shirt.width <= 128 || shirt.height <= 128))
                 {
-                    Assets.reportError(this, $"texture Shirt looks weird because it is relatively low resolution but has compression enabled ({shirt.format})");
+                    Assets.reportError(this, $"texture Shirt might look weird because it is relatively low resolution but has compression enabled ({shirt.format})");
                 }
             }
             _emission = bundle.load<Texture2D>("Emission");
@@ -164,7 +164,7 @@ public class ItemShirtAsset : ItemBagAsset
                     }
                     else if (emission.format != TextureFormat.RGB24)
                     {
-                        Assets.reportError(this, $"texture Emission looks weird because it is relatively low resolution but has compression enabled ({emission.format})");
+                        Assets.reportError(this, $"texture Emission might look weird because it is relatively low resolution but has compression enabled ({emission.format})");
                     }
                 }
             }
@@ -177,7 +177,7 @@ public class ItemShirtAsset : ItemBagAsset
                 }
                 if (metallic.format != TextureFormat.RGBA32 && (metallic.width <= 128 || metallic.height <= 128))
                 {
-                    Assets.reportError(this, $"texture Metallic looks weird because it is relatively low resolution but has compression enabled ({metallic.format})");
+                    Assets.reportError(this, $"texture Metallic might look weird because it is relatively low resolution but has compression enabled ({metallic.format})");
                 }
             }
         }

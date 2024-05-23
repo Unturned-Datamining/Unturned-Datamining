@@ -30,9 +30,9 @@ public class ItemPantsAsset : ItemBagAsset
             {
                 Assets.reportError(this, "texture 'Pants' can save memory by disabling read/write");
             }
-            if (pants.format != TextureFormat.RGBA32 && (pants.width <= 128 || pants.height <= 128))
+            if (pants.format != TextureFormat.RGBA32 && pants.format != TextureFormat.RGB24 && (pants.width <= 128 || pants.height <= 128))
             {
-                Assets.reportError(this, $"texture Pants looks weird because it is relatively low resolution but has compression enabled ({pants.format})");
+                Assets.reportError(this, $"texture Pants might look weird because it is relatively low resolution but has compression enabled ({pants.format})");
             }
         }
         _emission = bundle.load<Texture2D>("Emission");
@@ -50,7 +50,7 @@ public class ItemPantsAsset : ItemBagAsset
                 }
                 else if (emission.format != TextureFormat.RGB24)
                 {
-                    Assets.reportError(this, $"texture Emission looks weird because it is relatively low resolution but has compression enabled ({emission.format})");
+                    Assets.reportError(this, $"texture Emission might look weird because it is relatively low resolution but has compression enabled ({emission.format})");
                 }
             }
         }
@@ -63,7 +63,7 @@ public class ItemPantsAsset : ItemBagAsset
             }
             if (metallic.format != TextureFormat.RGBA32 && (metallic.width <= 128 || metallic.height <= 128))
             {
-                Assets.reportError(this, $"texture Metallic looks weird because it is relatively low resolution but has compression enabled ({metallic.format})");
+                Assets.reportError(this, $"texture Metallic might look weird because it is relatively low resolution but has compression enabled ({metallic.format})");
             }
         }
     }
