@@ -320,7 +320,7 @@ public class Assets : MonoBehaviour
         return assetOrigin2;
     }
 
-    private static AssetOrigin FindOrAddLevelOrigin(LevelInfo level)
+    internal static AssetOrigin FindOrAddLevelOrigin(LevelInfo level)
     {
         if (level.publishedFileId != 0L)
         {

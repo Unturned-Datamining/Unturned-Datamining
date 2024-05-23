@@ -37,7 +37,7 @@
 	{
 		"Major_Version": 24,
 		"Minor_Version": 3,
-		"Patch_Version": 101,
+		"Patch_Version": 0,
 		"GrantPackageIDs":
 		[
 			487
@@ -46,14 +46,14 @@
 	},
 	"Holidays":
 	{
-		"HalloweenStart": "2023-10-20T00:12:01Z",
-		"HalloweenEnd": "2023-11-01T23:59:59Z",
-		"ChristmasStart": "2023-12-07T00:00:01Z",
-		"ChristmasEnd": "2024-01-02T18:05:00Z",
-		"AprilFools_Start": "2023-04-01T00:00:00Z",
-		"AprilFools_End": "2023-04-02T00:00:00Z",
-		"ValentinesStart": "2023-02-13T12:00:01Z",
-		"ValentinesEnd": "2023-02-15T12:00:01Z"
+		"HalloweenStart": "2024-10-20T00:12:01Z",
+		"HalloweenEnd": "2024-11-01T23:59:59Z",
+		"ChristmasStart": "2024-12-07T00:00:01Z",
+		"ChristmasEnd": "2025-01-02T18:05:00Z",
+		"AprilFools_Start": "2025-04-01T00:00:00Z",
+		"AprilFools_End": "2025-04-02T00:00:00Z",
+		"ValentinesStart": "2025-02-13T12:00:01Z",
+		"ValentinesEnd": "2025-02-15T12:00:01Z"
 	},
 	"Menu":
 	{
@@ -70,13 +70,18 @@
 		"Auto_Subscribe":
 		[
 			{
-				"Workshop_File_Id": 3000549606,
-				"Start": "2023-07-07T00:12:00Z",
-				"End": "2024-07-07T00:12:00Z"
+				"Workshop_File_Id": 3251926587,
+				"Start": "2024-05-22T00:12:00Z",
+				"End": "2025-05-23T00:12:00Z"
 			}
 		],
 		"Curated_Map_Links":
 		[
+			{
+				"Name": "Escalation",
+				"Workshop_File_Id": 3251926587,
+				"Visible_In_Singleplayer_Recommendations_List": true
+			},
 			{
 				"Name": "Buak",
 				"Workshop_File_Id": 3000549606,

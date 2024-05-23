@@ -212,6 +212,8 @@ public class ItemGunAsset : ItemWeaponAsset
 
     protected NPCRewardsList shootQuestRewards;
 
+    private static CommandLineFlag shouldLogSpreadConversion = new CommandLineFlag(defaultValue: false, "-LogGunSpreadConversion");
+
     public AudioClip shoot => _shoot;
 
     public AudioClip reload => _reload;
@@ -649,7 +651,7 @@ public class ItemGunAsset : ItemWeaponAsset
         {
             spreadHip = data.ParseFloat("Spread_Hip");
             baseSpreadAngleRadians = Mathf.Atan(spreadHip);
-            if ((bool)Assets.shouldValidateAssets)
+            if ((bool)shouldLogSpreadConversion)
             {
                 UnturnedLog.info($"Converted \"{FriendlyName}\" Spread_Hip {spreadHip} to {baseSpreadAngleRadians * 57.29578f} degrees");
             }

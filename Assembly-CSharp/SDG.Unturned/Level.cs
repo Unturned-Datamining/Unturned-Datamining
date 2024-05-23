@@ -636,7 +636,7 @@ public class Level : MonoBehaviour
             {
                 text = "Kuwait_Visited";
             }
-            else if (string.Equals(info.name, "pbs", StringComparison.InvariantCultureIgnoreCase))
+            else if (string.Equals(info.name, "Escalation", StringComparison.InvariantCultureIgnoreCase))
             {
                 text = "PBS_Visited";
             }
