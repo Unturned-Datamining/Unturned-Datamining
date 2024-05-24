@@ -1,6 +1,11 @@
 MainMenuAlert
 {
-	Id 56
+	Id 55
+	Header Sign up for LDG's Tournament on the new Escalation map!
+	Body From the organizers: "Join a trio tournament hosted by LiamDoesGame, on the all-new 'Escalation' curated map! The last team standing wins."
+	Color #00ffff
+	Link https://discord.gg/ldg
+	IconURL https://cdn.smartlydressedgames.com/Images/LDGbanner.jpg
 }
 MainMenuWorkshop
 {
