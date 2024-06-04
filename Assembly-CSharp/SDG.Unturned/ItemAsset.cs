@@ -689,6 +689,7 @@ public class ItemAsset : Asset, ISkinableAsset
         }
         byte b = data.ParseUInt8("Blueprints", 0);
         byte b2 = data.ParseUInt8("Actions", 0);
+        bool flag = data.ParseBool("Add_Default_Actions", b2 == 0);
         _blueprints = new List<Blueprint>(b);
         _actions = new List<Action>(b2);
         for (byte b3 = 0; b3 < b; b3++)
@@ -809,26 +810,33 @@ public class ItemAsset : Asset, ISkinableAsset
             }
             actions.Add(new Action(num2, newType2, array4, newText, newTooltip, string2));
         }
-        if (b2 == 0)
+        if (flag)
         {
-            bool flag = false;
+            bool flag2 = false;
+            bool flag3 = false;
+            bool flag4 = false;
             for (byte b15 = 0; b15 < blueprints.Count; b15++)
             {
                 Blueprint blueprint2 = blueprints[b15];
                 if (blueprint2.type == EBlueprintType.REPAIR)
                 {
-                    Action action = new Action(id, EActionType.BLUEPRINT, new ActionBlueprint[1]
+                    if (!flag3)
                     {
-                        new ActionBlueprint(b15, newLink: true)
-                    }, null, null, "Repair");
-                    actions.Insert(0, action);
+                        flag3 = true;
+                        Action action = new Action(id, EActionType.BLUEPRINT, new ActionBlueprint[1]
+                        {
+                            new ActionBlueprint(b15, newLink: true)
+                        }, null, null, "Repair");
+                        actions.Insert(0, action);
+                    }
                 }
                 else if (blueprint2.type == EBlueprintType.AMMO)
                 {
-                    flag = true;
+                    flag2 = true;
                 }
-                else if (blueprint2.supplies.Length == 1 && blueprint2.supplies[0].id == id)
+                else if (blueprint2.supplies.Length == 1 && blueprint2.supplies[0].id == id && !flag4)
                 {
+                    flag4 = true;
                     Action action2 = new Action(id, EActionType.BLUEPRINT, new ActionBlueprint[1]
                     {
                         new ActionBlueprint(b15, type == EItemType.GUN || type == EItemType.MELEE)
@@ -836,7 +844,7 @@ public class ItemAsset : Asset, ISkinableAsset
                     actions.Add(action2);
                 }
             }
-            if (flag)
+            if (flag2)
             {
                 List<ActionBlueprint> list = new List<ActionBlueprint>();
                 for (byte b16 = 0; b16 < blueprints.Count; b16++)

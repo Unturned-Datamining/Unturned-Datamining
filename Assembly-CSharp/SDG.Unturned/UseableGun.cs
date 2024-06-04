@@ -2434,7 +2434,7 @@ public class UseableGun : Useable
                 EffectAsset effectAsset = equippedGunAsset.FindShellEffectAsset();
                 if (effectAsset != null)
                 {
-                    Transform transform2 = EffectManager.InstantiateFromPool(effectAsset.effect).transform;
+                    Transform transform2 = EffectManager.InstantiateFromPool(effectAsset).transform;
                     transform2.name = "Emitter";
                     transform2.parent = firstAttachments.ejectHook;
                     transform2.localPosition = Vector3.zero;
@@ -2449,7 +2449,7 @@ public class UseableGun : Useable
                 EffectAsset effectAsset2 = equippedGunAsset.FindMuzzleEffectAsset();
                 if (effectAsset2 != null)
                 {
-                    Transform transform3 = EffectManager.InstantiateFromPool(effectAsset2.effect).transform;
+                    Transform transform3 = EffectManager.InstantiateFromPool(effectAsset2).transform;
                     transform3.name = "Emitter";
                     transform3.parent = firstAttachments.barrelHook;
                     transform3.localPosition = Vector3.zero;
@@ -2511,7 +2511,7 @@ public class UseableGun : Useable
             EffectAsset effectAsset3 = equippedGunAsset.FindShellEffectAsset();
             if (effectAsset3 != null)
             {
-                Transform transform5 = EffectManager.InstantiateFromPool(effectAsset3.effect).transform;
+                Transform transform5 = EffectManager.InstantiateFromPool(effectAsset3).transform;
                 transform5.name = "Emitter";
                 transform5.localPosition = Vector3.zero;
                 thirdShellEmitter = transform5.GetComponent<ParticleSystem>();
@@ -2543,7 +2543,7 @@ public class UseableGun : Useable
             EffectAsset effectAsset4 = equippedGunAsset.FindMuzzleEffectAsset();
             if (effectAsset4 != null)
             {
-                Transform transform6 = EffectManager.InstantiateFromPool(effectAsset4.effect).transform;
+                Transform transform6 = EffectManager.InstantiateFromPool(effectAsset4).transform;
                 transform6.name = "Emitter";
                 transform6.parent = (equippedGunAsset.isTurret ? null : thirdAttachments.barrelHook);
                 transform6.localPosition = Vector3.zero;
@@ -3649,7 +3649,7 @@ public class UseableGun : Useable
                 currentTracerEffectAsset = effectAsset;
                 if (effectAsset != null)
                 {
-                    Transform transform5 = EffectManager.InstantiateFromPool(effectAsset.effect).transform;
+                    Transform transform5 = EffectManager.InstantiateFromPool(effectAsset).transform;
                     transform5.name = "Tracer";
                     transform5.localPosition = Vector3.zero;
                     transform5.localRotation = Quaternion.identity;

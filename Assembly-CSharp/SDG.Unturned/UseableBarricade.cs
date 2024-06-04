@@ -388,7 +388,12 @@ public class UseableBarricade : Useable
                 return false;
             }
         }
-        if (!equippedBarricadeAsset.allowPlacementOnVehicle && !Provider.modeConfigData.Gameplay.Bypass_Buildable_Mobility && parent != null && parentVehicle != null && parentVehicle.asset != null && !parentVehicle.asset.supportsMobileBuildables)
+        if (!Provider.modeConfigData.Gameplay.Bypass_Buildable_Mobility && parent != null && parentVehicle != null && parentVehicle.asset != null && parentVehicle.asset.BuildablePlacementRule switch
+        {
+            EVehicleBuildablePlacementRule.AlwaysAllow => 1, 
+            EVehicleBuildablePlacementRule.Block => 0, 
+            _ => equippedBarricadeAsset.allowPlacementOnVehicle ? 1 : 0, 
+        } == 0)
         {
             if (base.channel.IsLocalPlayer)
             {

@@ -1,0 +1,17 @@
+Type RewardsList
+GUID 9b519d2df5af46f08830562aeb2f43d7
+
+// If completing the Russia easter egg in multiplayer, the player who opened the door got flag 202 set to 1, but a
+// friend who followed them in wouldn't, causing confusion. As a workaround we now also set the flag when they
+// walk inside the volume placed inside the room as well.
+
+Conditions 1
+Condition_0_Type Flag_Bool
+Condition_0_ID 201
+Condition_0_Value True
+Condition_0_Logic Equal
+
+Rewards 1
+Reward_0_Type Flag_Bool
+Reward_0_ID 202
+Reward_0_Value True

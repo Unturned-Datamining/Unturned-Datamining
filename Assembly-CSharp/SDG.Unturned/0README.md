@@ -537,6 +537,7 @@
 - [EUseableTireMode.cs](EUseableTireMode.cs)
 - [EUseableType.cs](EUseableType.cs)
 - [EVACProtectionFilter.cs](EVACProtectionFilter.cs)
+- [EVehicleBuildablePlacementRule.cs](EVehicleBuildablePlacementRule.cs)
 - [EventsConfigData.cs](EventsConfigData.cs)
 - [EVisualToggleType_NetEnum.cs](EVisualToggleType_NetEnum.cs)
 - [EVisualToggleType.cs](EVisualToggleType.cs)

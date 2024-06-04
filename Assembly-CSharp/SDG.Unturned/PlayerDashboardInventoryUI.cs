@@ -1210,9 +1210,7 @@ public class PlayerDashboardInventoryUI
         {
             Vector2 normalizedCursorPosition = characterImage.GetNormalizedCursorPosition();
             Vector3 pos = new Vector3(normalizedCursorPosition.x, 1f - normalizedCursorPosition.y, 0f);
-            Ray ray = Player.player.look.characterCamera.ViewportPointToRay(pos);
-            Physics.Raycast(ray, out var hitInfo, 8f, RayMasks.CLOTHING_INTERACT);
-            RuntimeGizmos.Get().Raycast(ray, 8f, hitInfo, Color.green, Color.red, 10f);
+            Physics.Raycast(Player.player.look.characterCamera.ViewportPointToRay(pos), out var hitInfo, 8f, RayMasks.CLOTHING_INTERACT);
             if (hitInfo.collider != null)
             {
                 Transform transform = hitInfo.collider.transform;
@@ -2093,9 +2091,13 @@ public class PlayerDashboardInventoryUI
             if (!(interactableItem == null) && interactableItem.item != null)
             {
                 Renderer componentInChildren = interactableItem.transform.GetComponentInChildren<Renderer>();
-                if (!(componentInChildren == null) && !Physics.Linecast(eyesPositionWithoutLeaning, componentInChildren.bounds.center, RayMasks.BLOCK_PICKUP, QueryTriggerInteraction.Ignore))
+                if (!(componentInChildren == null))
                 {
-                    createElementForNearbyDrop(interactableItem);
+                    Vector3 center = componentInChildren.bounds.center;
+                    if (!Physics.Linecast(eyesPositionWithoutLeaning, center, out var _, RayMasks.BLOCK_PICKUP, QueryTriggerInteraction.Ignore))
+                    {
+                        createElementForNearbyDrop(interactableItem);
+                    }
                 }
             }
         }

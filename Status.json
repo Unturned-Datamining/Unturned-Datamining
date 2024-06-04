@@ -37,7 +37,7 @@
 	{
 		"Major_Version": 24,
 		"Minor_Version": 3,
-		"Patch_Version": 0,
+		"Patch_Version": 1,
 		"GrantPackageIDs":
 		[
 			487
@@ -58,7 +58,7 @@
 	"Menu":
 	{
 		"PromoStart": "2024-05-20T12:00:00Z",
-		"PromoEnd": "2024-06-06T12:00:00Z",
+		"PromoEnd": "2024-06-03T12:00:00Z",
 		"PromoLevel": "PBS_Menu"
 	},
 	"News":

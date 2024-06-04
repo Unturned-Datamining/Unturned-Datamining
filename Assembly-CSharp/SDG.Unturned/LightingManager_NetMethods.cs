@@ -75,6 +75,19 @@ public static class LightingManager_NetMethods
         writer.WriteUInt8(newWind);
     }
 
+    [NetInvokableGeneratedMethod("ReceiveDateCounter", ENetInvokableGeneratedMethodPurpose.Read)]
+    public static void ReceiveDateCounter_Read(in ClientInvocationContext context)
+    {
+        context.reader.ReadInt64(out var value);
+        LightingManager.ReceiveDateCounter(value);
+    }
+
+    [NetInvokableGeneratedMethod("ReceiveDateCounter", ENetInvokableGeneratedMethodPurpose.Write)]
+    public static void ReceiveDateCounter_Write(NetPakWriter writer, long newValue)
+    {
+        writer.WriteInt64(newValue);
+    }
+
     [NetInvokableGeneratedMethod("ReceiveLightingActiveWeather", ENetInvokableGeneratedMethodPurpose.Read)]
     public static void ReceiveLightingActiveWeather_Read(in ClientInvocationContext context)
     {

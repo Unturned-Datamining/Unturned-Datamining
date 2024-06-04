@@ -1675,7 +1675,7 @@ public class Assets : MonoBehaviour
         Asset asset = find(guid);
         if (asset != null)
         {
-            Provider._connectionFailureReason = $"Server missing asset: \"{asset.FriendlyName}\" File: \"{asset.name}\" Id: {guid:N}";
+            Provider._connectionFailureReason = string.Concat($"Server missing asset: \"{asset.FriendlyName}\" File: \"{asset.name}\" Id: {guid:N}" + "File path: \"" + asset.absoluteOriginFilePath + "\"", "Client asset is from ", asset.GetOriginName(), ".");
         }
         else
         {

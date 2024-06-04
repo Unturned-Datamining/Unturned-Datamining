@@ -141,11 +141,11 @@ public class MenuPlaySingleplayerUI
             if (levelInfo.configData.Creators.Length != 0)
             {
                 text += localization.format("Creators");
-                num2 += 15;
+                num2 += 20;
                 for (int j = 0; j < levelInfo.configData.Creators.Length; j++)
                 {
                     text = text + "\n" + levelInfo.configData.Creators[j];
-                    num2 += 15;
+                    num2 += 20;
                 }
             }
             if (levelInfo.configData.Collaborators.Length != 0)
@@ -156,11 +156,11 @@ public class MenuPlaySingleplayerUI
                     num2 += 30;
                 }
                 text += localization.format("Collaborators");
-                num2 += 15;
+                num2 += 20;
                 for (int k = 0; k < levelInfo.configData.Collaborators.Length; k++)
                 {
                     text = text + "\n" + levelInfo.configData.Collaborators[k];
-                    num2 += 15;
+                    num2 += 20;
                 }
             }
             if (levelInfo.configData.Thanks.Length != 0)
@@ -171,11 +171,11 @@ public class MenuPlaySingleplayerUI
                     num2 += 30;
                 }
                 text += localization.format("Thanks");
-                num2 += 15;
+                num2 += 20;
                 for (int l = 0; l < levelInfo.configData.Thanks.Length; l++)
                 {
                     text = text + "\n" + levelInfo.configData.Thanks[l];
-                    num2 += 15;
+                    num2 += 20;
                 }
             }
             num2 = Mathf.Max(num2, 40);

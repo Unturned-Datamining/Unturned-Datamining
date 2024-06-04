@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using SDG.Framework.Utilities;
 using UnityEngine;
 
@@ -52,6 +53,26 @@ public class PoolReference : MonoBehaviour
         else
         {
             pool.Destroy(this);
+        }
+    }
+
+    /// <summary>
+    /// Listen for OnDestroy callback because mods may be destroying themselves in unexpected ways (e.g., Grenade
+    /// component) and still need to be cleaned up.
+    /// </summary>
+    private void OnDestroy()
+    {
+        if (!Level.isExiting)
+        {
+            if (base.transform.parent != null)
+            {
+                EffectManager.UnregisterAttachment(base.gameObject);
+            }
+            if (pool != null && !inPool)
+            {
+                pool.active.RemoveFast(this);
+                pool = null;
+            }
         }
     }
 }

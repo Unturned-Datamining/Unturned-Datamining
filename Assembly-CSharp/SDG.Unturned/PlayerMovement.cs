@@ -1425,7 +1425,7 @@ public class PlayerMovement : PlayerCaller
         if (firstOverlappingVolume2 != null)
         {
             effectNode = firstOverlappingVolume2;
-            if (!inSnow && Level.info.configData.Use_Snow_Volumes)
+            if (!inSnow && Level.info != null && Level.info.configData.Use_Snow_Volumes)
             {
                 inSnow = (firstOverlappingVolume2.weatherMask & 2) != 0;
             }

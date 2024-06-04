@@ -40,6 +40,8 @@ public class LandscapeTile : IFormattedFileReadable, IFormattedFileWritable, IFo
     /// </summary>
     public TerrainData dataWithoutHoles;
 
+    private static AssetReference<LandscapeMaterialAsset> DEFAULT_MATERIAL = new AssetReference<LandscapeMaterialAsset>("498ca625072d443a876b2a4f11896018");
+
     public GameObject gameObject { get; protected set; }
 
     public LandscapeCoord coord
@@ -563,7 +565,8 @@ public class LandscapeTile : IFormattedFileReadable, IFormattedFileWritable, IFo
             }
         }
         materials = new InspectableList<AssetReference<LandscapeMaterialAsset>>(Landscape.SPLATMAP_LAYERS);
-        for (int num = 0; num < Landscape.SPLATMAP_LAYERS; num++)
+        materials.Add(DEFAULT_MATERIAL);
+        for (int num = 1; num < Landscape.SPLATMAP_LAYERS; num++)
         {
             materials.Add(AssetReference<LandscapeMaterialAsset>.invalid);
         }

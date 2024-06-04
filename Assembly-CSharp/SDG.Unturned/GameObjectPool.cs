@@ -18,23 +18,22 @@ public class GameObjectPool
 
     public PoolReference Instantiate(Vector3 position, Quaternion rotation)
     {
-        if (pool.Count > 0)
+        while (pool.Count > 0)
         {
             GameObject gameObject = pool.Pop();
-            if (gameObject == null)
+            if (!(gameObject == null))
             {
-                return Instantiate(position, rotation);
+                gameObject.transform.parent = null;
+                gameObject.transform.position = position;
+                gameObject.transform.rotation = rotation;
+                gameObject.transform.localScale = Vector3.one;
+                gameObject.SetActive(value: true);
+                PoolReference component = gameObject.GetComponent<PoolReference>();
+                component.inPool = false;
+                component.excludeFromDestroyAll = false;
+                active.Add(component);
+                return component;
             }
-            gameObject.transform.parent = null;
-            gameObject.transform.position = position;
-            gameObject.transform.rotation = rotation;
-            gameObject.transform.localScale = Vector3.one;
-            gameObject.SetActive(value: true);
-            PoolReference component = gameObject.GetComponent<PoolReference>();
-            component.inPool = false;
-            component.excludeFromDestroyAll = false;
-            active.Add(component);
-            return component;
         }
         PoolReference poolReference = Object.Instantiate(prefab, position, rotation).AddComponent<PoolReference>();
         poolReference.pool = this;

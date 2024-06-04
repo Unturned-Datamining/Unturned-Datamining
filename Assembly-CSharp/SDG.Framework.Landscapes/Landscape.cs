@@ -983,12 +983,15 @@ public class Landscape : DevkitHierarchyItemBase
                 UnturnedLog.info("Auto convert heightmap {0}", coord);
                 tile.convertLegacyHeightmap();
                 yield return null;
-                UnturnedLog.info("Auto convert splatmap {0}", coord);
-                tile.convertLegacySplatmap();
-                yield return null;
-                for (int i = 0; i < SPLATMAP_LAYERS; i++)
+                if (LevelGround.doesLegacyDataIncludeSplatmapWeights)
                 {
-                    tile.materials[i] = LevelGround.legacyMaterialGuids[i];
+                    UnturnedLog.info("Auto convert splatmap {0}", coord);
+                    tile.convertLegacySplatmap();
+                    yield return null;
+                    for (int i = 0; i < SPLATMAP_LAYERS; i++)
+                    {
+                        tile.materials[i] = LevelGround.legacyMaterialGuids[i];
+                    }
                 }
                 tile.updatePrototypes();
                 yield return null;

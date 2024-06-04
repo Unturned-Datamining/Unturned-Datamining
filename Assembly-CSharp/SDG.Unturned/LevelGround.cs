@@ -56,6 +56,11 @@ public class LevelGround : MonoBehaviour
     public static bool hasLegacyDataForConversion;
 
     /// <summary>
+    /// If true, splatmap conversion should use weights as-is.
+    /// </summary>
+    public static bool doesLegacyDataIncludeSplatmapWeights;
+
+    /// <summary>
     /// Material guids converted by legacy asset bundle hash or texture names.
     /// </summary>
     public static AssetReference<LandscapeMaterialAsset>[] legacyMaterialGuids;
@@ -705,6 +710,7 @@ public class LevelGround : MonoBehaviour
     public static void load(ushort size)
     {
         hasLegacyDataForConversion = false;
+        doesLegacyDataIncludeSplatmapWeights = false;
         if (!Level.info.configData.Use_Legacy_Ground)
         {
             loadTrees();
@@ -819,6 +825,7 @@ public class LevelGround : MonoBehaviour
                 }
                 UnityEngine.Object.DestroyImmediate(texture2D2);
                 flag = true;
+                doesLegacyDataIncludeSplatmapWeights = true;
             }
             if (flag || !ReadWrite.fileExists(Level.info.path + "/Terrain/Alphamap_" + m + ".png", useCloud: false, usePath: false))
             {
@@ -840,6 +847,7 @@ public class LevelGround : MonoBehaviour
                     alphamapHQ[num2, num3, m * 4 + 3] = pixel2.a;
                 }
             }
+            doesLegacyDataIncludeSplatmapWeights = true;
             UnityEngine.Object.DestroyImmediate(texture2D3);
         }
         data.baseMapResolution = size / 8;

@@ -135,6 +135,8 @@ public class LightingManager : SteamCaller
 
     private static readonly ClientStaticMethod<byte> SendLightingWind = ClientStaticMethod<byte>.Get(ReceiveLightingWind);
 
+    private static readonly ClientStaticMethod<long> SendDateCounter = ClientStaticMethod<long>.Get(ReceiveDateCounter);
+
     private static readonly ClientStaticMethod<Guid, float, NetId> SendLightingActiveWeather = ClientStaticMethod<Guid, float, NetId>.Get(ReceiveLightingActiveWeather);
 
     public static float day => (float)time / (float)cycle;
@@ -445,6 +447,14 @@ public class LightingManager : SteamCaller
         LevelLighting.wind = MeasurementTool.byteToAngle(newWind);
     }
 
+    [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
+    public static void ReceiveDateCounter(long newValue)
+    {
+        dateCounter = newValue;
+        UnturnedLog.info($"Received date counter update: {dateCounter}");
+        onTimeOfDayChanged?.Invoke();
+    }
+
     [Obsolete]
     public void tellLightingRain(CSteamID steamID, byte newRain)
     {
@@ -504,8 +514,12 @@ public class LightingManager : SteamCaller
         {
             isCycled = false;
             isFullMoon = false;
-            dateCounter++;
-            UnturnedLog.info($"Incremented date counter: {dateCounter}");
+            if (Provider.isServer)
+            {
+                dateCounter++;
+                UnturnedLog.info($"Incremented date counter: {dateCounter}");
+                SendDateCounter.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), dateCounter);
+            }
             broadcastDayNightUpdated(isDaytime: true);
         }
         if (!Dedicator.IsDedicatedServer)

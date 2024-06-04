@@ -731,6 +731,7 @@ public class InteractableVehicle : Interactable
         return true;
     }
 
+    [Obsolete("This override uses the vanilla battery item rather than the equipped battery item.")]
     public void replaceBattery(Player player, byte quality)
     {
         replaceBattery(player, quality, new Guid("098b13be34a7411db7736b7f866ada69"));

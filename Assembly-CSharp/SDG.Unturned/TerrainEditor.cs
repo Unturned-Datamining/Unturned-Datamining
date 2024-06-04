@@ -569,6 +569,7 @@ public class TerrainEditor : IDevkitTool
                                 {
                                     landscapeTile.readHeightmaps();
                                     landscapeTile.readSplatmaps();
+                                    landscapeTile.updatePrototypes();
                                     Landscape.linkNeighbors();
                                     Landscape.reconcileNeighbors(landscapeTile);
                                     Landscape.applyLOD();

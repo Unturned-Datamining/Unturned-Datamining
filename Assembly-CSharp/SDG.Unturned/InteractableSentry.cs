@@ -283,7 +283,7 @@ public class InteractableSentry : InteractableStorage
             EffectAsset effectAsset = ((ItemGunAsset)displayAsset).FindShellEffectAsset();
             if (effectAsset != null)
             {
-                Transform transform = EffectManager.InstantiateFromPool(effectAsset.effect).transform;
+                Transform transform = EffectManager.InstantiateFromPool(effectAsset).transform;
                 transform.name = "Emitter";
                 transform.parent = attachments.ejectHook;
                 transform.localPosition = Vector3.zero;
@@ -296,7 +296,7 @@ public class InteractableSentry : InteractableStorage
             EffectAsset effectAsset2 = ((ItemGunAsset)displayAsset).FindMuzzleEffectAsset();
             if (effectAsset2 != null)
             {
-                Transform transform2 = EffectManager.InstantiateFromPool(effectAsset2.effect).transform;
+                Transform transform2 = EffectManager.InstantiateFromPool(effectAsset2).transform;
                 transform2.name = "Emitter";
                 transform2.parent = attachments.barrelHook;
                 transform2.localPosition = Vector3.zero;
@@ -326,7 +326,7 @@ public class InteractableSentry : InteractableStorage
             EffectAsset effectAsset3 = attachments.magazineAsset.FindTracerEffectAsset();
             if (effectAsset3 != null)
             {
-                Transform transform3 = EffectManager.InstantiateFromPool(effectAsset3.effect).transform;
+                Transform transform3 = EffectManager.InstantiateFromPool(effectAsset3).transform;
                 transform3.name = "Tracer";
                 transform3.localPosition = Vector3.zero;
                 transform3.localRotation = Quaternion.identity;

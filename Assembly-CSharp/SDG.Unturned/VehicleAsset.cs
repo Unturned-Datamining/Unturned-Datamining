@@ -337,7 +337,10 @@ public class VehicleAsset : Asset, ISkinableAsset
     /// <summary>
     /// Can mobile barricades e.g. bed or sentry guns be placed on this vehicle?
     /// </summary>
-    public bool supportsMobileBuildables { get; protected set; }
+    [Obsolete("Replaced by BuildablePlacementRule")]
+    public bool supportsMobileBuildables => BuildablePlacementRule == EVehicleBuildablePlacementRule.AlwaysAllow;
+
+    public EVehicleBuildablePlacementRule BuildablePlacementRule { get; protected set; }
 
     /// <summary>
     /// Should capsule colliders be added to seat transforms?
@@ -815,7 +818,18 @@ public class VehicleAsset : Asset, ISkinableAsset
         useStaminaBoost = data.ContainsKey("Stamina_Boost");
         isStaminaPowered = data.ContainsKey("Stamina_Powered");
         isBatteryPowered = data.ContainsKey("Battery_Powered");
-        supportsMobileBuildables = data.ContainsKey("Supports_Mobile_Buildables");
+        if (data.TryParseEnum<EVehicleBuildablePlacementRule>("Buildable_Placement_Rule", out var value))
+        {
+            BuildablePlacementRule = value;
+        }
+        else if (data.ContainsKey("Supports_Mobile_Buildables"))
+        {
+            BuildablePlacementRule = EVehicleBuildablePlacementRule.AlwaysAllow;
+        }
+        else
+        {
+            BuildablePlacementRule = EVehicleBuildablePlacementRule.None;
+        }
         shouldSpawnSeatCapsules = data.ParseBool("Should_Spawn_Seat_Capsules");
         canBeLocked = data.ParseBool("Can_Be_Locked", defaultValue: true);
         canStealBattery = data.ParseBool("Can_Steal_Battery", defaultValue: true);

@@ -129,7 +129,7 @@ public class UseableVehicleBattery : Useable
             isReplacing = false;
             if (vehicle != null && vehicle.isBatteryReplaceable)
             {
-                vehicle.replaceBattery(base.player, base.player.equipment.quality);
+                vehicle.replaceBattery(base.player, base.player.equipment.quality, base.player.equipment.asset.GUID);
                 wasSuccessfullyUsed = true;
                 vehicle = null;
             }

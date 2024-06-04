@@ -140,9 +140,15 @@ public class EffectManager : SteamCaller
         return InstantiateFromPool(element);
     }
 
+    [Obsolete("Replaced with overload that takes an EffectAsset.")]
     public static GameObject InstantiateFromPool(GameObject element)
     {
-        PoolReference poolReference = pool.Instantiate(element);
+        return UnityEngine.Object.Instantiate(element);
+    }
+
+    public static GameObject InstantiateFromPool(EffectAsset asset)
+    {
+        PoolReference poolReference = pool.Instantiate(asset.effect);
         poolReference.excludeFromDestroyAll = true;
         GameObject obj = poolReference.gameObject;
         ParticleSystem component = obj.GetComponent<ParticleSystem>();

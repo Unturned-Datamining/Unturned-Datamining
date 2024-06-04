@@ -3980,11 +3980,11 @@ public class Provider : MonoBehaviour
                 WriteConnectedMessage(writer, aboutClient, newClient);
             });
         }
-        SteamGameServer.GetPublicIP().TryGetIPv4Address(out var ipForClient);
+        GetAddressAndPortForClientAdvertisement(out var ipForClient, out var queryPortForClient);
         NetMessages.SendMessageToClient(EClientMessage.Accepted, ENetReliability.Reliable, transportConnection, delegate(NetPakWriter writer)
         {
             writer.WriteUInt32(ipForClient);
-            writer.WriteUInt16(port);
+            writer.WriteUInt16(queryPortForClient);
             writer.WriteUInt8((byte)modeConfigData.Gameplay.Repair_Level_Max);
             writer.WriteBit(modeConfigData.Gameplay.Hitmarkers);
             writer.WriteBit(modeConfigData.Gameplay.Crosshair);
@@ -4059,6 +4059,29 @@ public class Provider : MonoBehaviour
         if (num == 0)
         {
             verifyNextPlayerInQueue();
+        }
+    }
+
+    private static void GetAddressAndPortForClientAdvertisement(out uint ip, out ushort queryPort)
+    {
+        if (configData.Server.Use_FakeIP)
+        {
+            SteamGameServerNetworkingSockets.GetFakeIP(0, out var pInfo);
+            if (pInfo.m_eResult == EResult.k_EResultOK && pInfo.m_unPorts != null && pInfo.m_unPorts.Length != 0)
+            {
+                ip = pInfo.m_unIP;
+                queryPort = pInfo.m_unPorts[0];
+            }
+            else
+            {
+                ip = 0u;
+                queryPort = 0;
+            }
+        }
+        else
+        {
+            SteamGameServer.GetPublicIP().TryGetIPv4Address(out ip);
+            queryPort = port;
         }
     }
 

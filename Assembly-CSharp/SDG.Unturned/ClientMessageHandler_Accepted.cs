@@ -54,8 +54,18 @@ internal static class ClientMessageHandler_Accepted
                     Provider.RequestDisconnect("BattlEye get init error");
                     return;
                 }
-                uint ulAddress = ((value & 0xFF) << 24) | ((value & 0xFF00) << 8) | ((value & 0xFF0000) >> 8) | ((value & 0xFF000000u) >> 24);
-                ushort usPort = (ushort)((uint)((value2 & 0xFF) << 8) | ((uint)(value2 & 0xFF00) >> 8));
+                uint ulAddress;
+                ushort usPort;
+                if (SteamNetworkingUtils.IsFakeIPv4(value))
+                {
+                    ulAddress = 0u;
+                    usPort = 0;
+                }
+                else
+                {
+                    ulAddress = ((value & 0xFF) << 24) | ((value & 0xFF00) << 8) | ((value & 0xFF0000) >> 8) | ((value & 0xFF000000u) >> 24);
+                    usPort = (ushort)((uint)((value2 & 0xFF) << 8) | ((uint)(value2 & 0xFF00) >> 8));
+                }
                 Provider.battlEyeClientInitData = new BEClient.BECL_GAME_DATA();
                 Provider.battlEyeClientInitData.pstrGameVersion = Provider.APP_NAME + " " + Provider.APP_VERSION;
                 Provider.battlEyeClientInitData.ulAddress = ulAddress;
