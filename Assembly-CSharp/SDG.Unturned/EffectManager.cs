@@ -1466,7 +1466,7 @@ public class EffectManager : SteamCaller
                 effect(effectAsset, point, new Vector3(UnityEngine.Random.Range(-0.1f, 0.1f), 1f, UnityEngine.Random.Range(-0.1f, 0.1f)));
             }
         }
-        if (asset.cameraShakeRadius > 0.001f && asset.cameraShakeMagnitudeDegrees > 0.1f && Player.player != null)
+        if (!Dedicator.IsDedicatedServer && asset.cameraShakeRadius > 0.001f && asset.cameraShakeMagnitudeDegrees > 0.1f && Player.player != null)
         {
             Player.player.look.FlinchFromExplosion(point, asset.cameraShakeRadius, asset.cameraShakeMagnitudeDegrees);
         }

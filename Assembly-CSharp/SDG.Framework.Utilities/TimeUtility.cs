@@ -32,7 +32,10 @@ public class TimeUtility : MonoBehaviour
     /// </summary>
     public static void StaticStopCoroutine(Coroutine routine)
     {
-        singleton.StopCoroutine(routine);
+        if (singleton != null)
+        {
+            singleton.StopCoroutine(routine);
+        }
     }
 
     protected virtual void triggerUpdated()

@@ -62,6 +62,7 @@ public class PoolReference : MonoBehaviour
     /// </summary>
     private void OnDestroy()
     {
+        CancelDestroyTimer();
         if (!Level.isExiting)
         {
             if (base.transform.parent != null)
