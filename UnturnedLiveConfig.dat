@@ -13,18 +13,8 @@ MainMenuWorkshop
 	Featured
 	{
 		Id 13
-		FileIds
-		[
-			3251926587
-		]
 		Status New
 		Type Curated
-		OverrideDescription [h1]ESCALATION[/h1]\n\nFeaturing a myriad of new gameplay mechanics, systems, unique items, and more, Escalation raises the bar for Unturned.\n\n[h1]GUNPLAY[/h1]\n\nEscalation's arsenal is designed to feel great, due to the animations, attention to detail and sound design. A great deal of focus went into weapon balance to make sure that each gunfight feels fair.\n\n[h1]HAZARDOUS ENVIRONMENTS[/h1]\n\nYou may come across certain objects that can be shot or blown up - these objects when set off can cause considerable harm to any unfortunate souls caught within their wake.\n\n[h1]STRIKE CALLS[/h1]\n\nStrike Calls are powerful single use offensive weapons, they can be utilized with the assistance of an LTLM to cause considerable damage upon a targeted location.\n\n[h1]BASE BUILDING[/h1]\n\nBase building is designed to be easy to understand but also has a great depth of both functionality and detailing, with complex structures available to those who choose to make them. A variety of decorations allow for any survivor to decorate their base however they like.\n\n[h1]PERFORMANCE[/h1]\n\nThe map's performance is comparable to most vanilla maps - thus, if you can play Unturned, you'll have no issue playing this map! Laptops in general may have some slower performance compared to desktops, so make sure you keep them plugged in for the best quality. That being said, the map runs wonderfully smooth on just about any mid-level systems, and even some budget systems.\n\n[h1]WANT TO SUPPORT US?[/h1]\n\nCheck out our bundles on the stockpile!\n\n[url=https://store.steampowered.com/itemstore/304930/detail/21065/]Escalation Mystery Box[/url]\n[url=https://store.steampowered.com/itemstore/304930/detail/1875/]Escalation Map Bundle[/url]\n[url=https://store.steampowered.com/itemstore/304930/detail/1876/]Mythical Purple Hole Aura (LIMITED TIME)[/url]\n\n[h1]ID LIST[/h1]\n\n[url=https://steamcommunity.com/sharedfiles/filedetails/?id=3238839041]Want to spawn things in? You can check out the ID list here: ID List[/url]\n\n[h1]CREDITS/SPECIAL THANKS[/h1]\n\n[b]Main Developers[/b]\nDug\nWitness Protection\nNSTM\nRenaxon\n\n[b]Special Thanks[/b]\nAnimatic\nDanaby2\nClue\nDer Ente\nSirady Unleashed\nGreat Hero J\n\n[b]Testing Crew[/b]\nAinsley\nKel Cat\nLiamDoesGame\nMikoMig35\nTridentGames\nSusu\nbannanabusboat\nellixxr\nMaestro\nHermannov\nHonkler\nJakey\nNickO2\nNylex\nP9nda\nqaswasred\nSaltyWaffles\nSexington\nSomebodyOnEarth\nTimo987\nVilespring\nWalnut\nWiciuWitek\nYounus\nToquester\n\n\n[b]Extra[/b]\nhttps://freesound.org/people/davidou/sounds/88445/\nhttps://freesound.org/people/nicStage/sounds/127735/\nhttps://freesound.org/people/nicStage/sounds/127731/\n\nShout out to freaky squad for the grubby spread idea!
-		AssociatedStockpileItems
-		[
-			21065
-			1875
-		]
 	}
 	Popular
 	{
@@ -35,19 +25,24 @@ MainMenuWorkshop
 ItemStore
 {
 	PromotionId 5
-	NewItems
+	FeaturedItems
 	[
-		1876
 		21065
+		21053
+		21061
+		21057
+		1205
 		1875
-	]
-	ExcludeItemsFromHighlight
-	[
-		1876
+		1351
+		1287
+		1427
+		1845
+		1420
+		1857
+		1851
+		1432
 	]
 }
 ShouldAllowJoiningInternetServersWithoutGslt false
 ShouldServersWithoutMonetizationTagBeVisibleInInternetServerList true
-ArePbsCraftableItemsAvailable true
 QueryPingWarningOffsetMs 50
-CraftingPromotionId 3
