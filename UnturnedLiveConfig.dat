@@ -1,11 +1,10 @@
 MainMenuAlert
 {
-	Id 57
-	Header Community Blog #030
-	Body Happy Pride Month! Learn about the Composite Structures mod, check out some cool artwork, and take a sneak peak at what’s next for Escalation.
-	Color #f0f0f0
-	Link https://blog.smartlydressedgames.com/2024/06/04/community-blog-030/
-	IconName SDGLogo
+	Id 56
+	Header Celebrate Pride Month with us!
+	Body If you'd like to show your support for the LGBTQ+ community you can craft a free <color=#4b64fa>Progress Pride Flag</color> jersey or pin from the cosmetics/skins inventory > crafting menu. Together let's spread love, acceptance, and equality.
+	Color #ffffff
+	IconName ProgressPrideFlag
 }
 MainMenuWorkshop
 {
