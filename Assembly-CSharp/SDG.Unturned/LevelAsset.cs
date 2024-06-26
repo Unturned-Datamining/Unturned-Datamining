@@ -39,6 +39,70 @@ public class LevelAsset : Asset
         public float costMultiplier;
     }
 
+    internal class TerrainColorRule : IDatParseable
+    {
+        public enum EComparisonResult
+        {
+            TooSimilar,
+            OutsideHueThreshold,
+            OutsideSaturationThreshold,
+            OutsideValueThreshold
+        }
+
+        public float ruleHue;
+
+        public float ruleSaturation;
+
+        public float ruleValue;
+
+        public float hueThreshold;
+
+        public float saturationThreshold;
+
+        public float valueThreshold;
+
+        public EComparisonResult CompareColors(float inputHue, float inputSaturation, float inputValue)
+        {
+            float num;
+            float num2;
+            if (inputHue < ruleHue)
+            {
+                num = ruleHue - inputHue;
+                num2 = inputHue + 1f - ruleHue;
+            }
+            else
+            {
+                num = inputHue - ruleHue;
+                num2 = ruleHue + 1f - inputHue;
+            }
+            if (num > hueThreshold && num2 > hueThreshold)
+            {
+                return EComparisonResult.OutsideHueThreshold;
+            }
+            if (Mathf.Abs(inputSaturation - ruleSaturation) > saturationThreshold)
+            {
+                return EComparisonResult.OutsideSaturationThreshold;
+            }
+            if (Mathf.Abs(inputValue - ruleValue) > valueThreshold)
+            {
+                return EComparisonResult.OutsideValueThreshold;
+            }
+            return EComparisonResult.TooSimilar;
+        }
+
+        public bool TryParse(IDatNode node)
+        {
+            if (node is DatDictionary datDictionary)
+            {
+                Color32 value;
+                bool num = datDictionary.TryParseColor32RGB("Color", out value);
+                Color.RGBToHSV(value, out ruleHue, out ruleSaturation, out ruleValue);
+                return num & datDictionary.TryParseFloat("HueThreshold", out hueThreshold) & datDictionary.TryParseFloat("SaturationThreshold", out saturationThreshold) & datDictionary.TryParseFloat("ValueThreshold", out valueThreshold);
+            }
+            return false;
+        }
+    }
+
     public static AssetReference<LevelAsset> defaultLevel = new AssetReference<LevelAsset>(new Guid("12dc9fdbe9974022afd21158ad54b76a"));
 
     public TypeReference<GameMode> defaultGameMode;
@@ -105,6 +169,11 @@ public class LevelAsset : Asset
     /// If false, clouds are removed from the skybox.
     /// </summary>
     public bool hasClouds = true;
+
+    /// <summary>
+    /// Players are kicked from multiplayer if their skin color is within threshold of any of these rules.
+    /// </summary>
+    internal List<TerrainColorRule> terrainColorRules;
 
     public bool isBlueprintBlacklisted(Blueprint blueprint)
     {
@@ -270,6 +339,47 @@ public class LevelAsset : Asset
         else
         {
             hasClouds = true;
+        }
+        if (!data.TryGetList("TerrainColors", out var node6))
+        {
+            return;
+        }
+        List<TerrainColorRule> list2 = new List<TerrainColorRule>(node6.Count);
+        foreach (IDatNode item2 in node6)
+        {
+            TerrainColorRule terrainColorRule = new TerrainColorRule();
+            if (terrainColorRule.TryParse(item2))
+            {
+                bool flag = false;
+                Color[] sKINS = Customization.SKINS;
+                foreach (Color color in sKINS)
+                {
+                    Color.RGBToHSV(color, out var H, out var S, out var V);
+                    if (terrainColorRule.CompareColors(H, S, V) == TerrainColorRule.EComparisonResult.TooSimilar)
+                    {
+                        flag = true;
+                        string text = Palette.hex(color);
+                        Assets.reportError("skipping TerrainColor entry because it blocks default skin color " + text);
+                        break;
+                    }
+                }
+                if (!flag)
+                {
+                    list2.Add(terrainColorRule);
+                }
+            }
+            else
+            {
+                Assets.reportError(this, "unable to parse entry in TerrainColors: " + item2.DebugDumpToString());
+            }
+        }
+        if (list2.Count > 0)
+        {
+            terrainColorRules = list2;
+        }
+        else
+        {
+            Assets.reportError(this, "TerrainColors list is empty");
         }
     }
 

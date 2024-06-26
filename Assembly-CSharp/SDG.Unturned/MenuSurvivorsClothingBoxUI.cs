@@ -454,7 +454,7 @@ public class MenuSurvivorsClothingBoxUI
             }
             if (vehicle_guid != default(Guid))
             {
-                if (Assets.find<VehicleAsset>(vehicle_guid) == null)
+                if (VehicleTool.FindVehicleByGuidAndHandleRedirects(vehicle_guid) == null)
                 {
                     return false;
                 }

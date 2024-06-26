@@ -9,20 +9,58 @@ public class DrivingPlayerInputPacket : PlayerInputPacket
 
     public Quaternion rotation;
 
-    public byte speed;
+    public float speed;
 
-    public byte physicsSpeed;
+    public float forwardVelocity;
 
-    public byte turn;
+    public float steeringInput;
+
+    public float velocityInput;
+
+    internal InteractableVehicle vehicle;
 
     public override void read(SteamChannel channel, NetPakReader reader)
     {
         base.read(channel, reader);
         reader.ReadClampedVector3(out position, 13, 8);
         reader.ReadQuaternion(out rotation, 11);
-        reader.ReadUInt8(out speed);
-        reader.ReadUInt8(out physicsSpeed);
-        reader.ReadUInt8(out turn);
+        reader.ReadUnsignedClampedFloat(8, 2, out speed);
+        reader.ReadClampedFloat(9, 2, out forwardVelocity);
+        reader.ReadSignedNormalizedFloat(2, out steeringInput);
+        reader.ReadClampedFloat(9, 2, out velocityInput);
+        if (!(vehicle != null) || vehicle.asset == null)
+        {
+            return;
+        }
+        if (vehicle.asset.replicatedWheelIndices != null)
+        {
+            int[] replicatedWheelIndices = vehicle.asset.replicatedWheelIndices;
+            foreach (int num in replicatedWheelIndices)
+            {
+                Wheel wheelAtIndex = vehicle.GetWheelAtIndex(num);
+                if (wheelAtIndex == null)
+                {
+                    UnturnedLog.error($"Missing wheel for replicated index: {num}");
+                    reader.ReadUnsignedNormalizedFloat(4, out var _);
+                    reader.ReadPhysicsMaterialNetId(out var _);
+                    continue;
+                }
+                if (reader.ReadUnsignedNormalizedFloat(4, out var value3))
+                {
+                    wheelAtIndex.replicatedSuspensionState = value3;
+                }
+                reader.ReadPhysicsMaterialNetId(out wheelAtIndex.replicatedGroundMaterial);
+            }
+        }
+        if (vehicle.asset.UsesEngineRpmAndGears)
+        {
+            reader.ReadBits(3, out var value4);
+            int value5 = (int)(value4 - 1);
+            value5 = Mathf.Clamp(value5, -1, vehicle.asset.forwardGearRatios.Length);
+            vehicle.gearNumber = value5;
+            reader.ReadUnsignedNormalizedFloat(7, out var value6);
+            vehicle.replicatedEngineRpm = Mathf.Lerp(vehicle.asset.engineIdleRpm, vehicle.asset.engineMaxRpm, value6);
+        }
     }
 
     public override void write(NetPakWriter writer)
@@ -30,8 +68,44 @@ public class DrivingPlayerInputPacket : PlayerInputPacket
         base.write(writer);
         writer.WriteClampedVector3(position, 13, 8);
         writer.WriteQuaternion(rotation, 11);
-        writer.WriteUInt8(speed);
-        writer.WriteUInt8(physicsSpeed);
-        writer.WriteUInt8(turn);
+        writer.WriteUnsignedClampedFloat(speed, 8, 2);
+        writer.WriteClampedFloat(forwardVelocity, 9, 2);
+        writer.WriteSignedNormalizedFloat(steeringInput, 2);
+        writer.WriteClampedFloat(velocityInput, 9, 2);
+        if (!(vehicle != null) || vehicle.asset == null)
+        {
+            return;
+        }
+        if (vehicle.asset.replicatedWheelIndices != null)
+        {
+            int[] replicatedWheelIndices = vehicle.asset.replicatedWheelIndices;
+            foreach (int num in replicatedWheelIndices)
+            {
+                Wheel wheelAtIndex = vehicle.GetWheelAtIndex(num);
+                if (wheelAtIndex == null)
+                {
+                    UnturnedLog.error($"Missing wheel for replicated index: {num}");
+                    writer.WriteUnsignedNormalizedFloat(0f, 4);
+                    writer.WritePhysicsMaterialNetId(PhysicsMaterialNetId.NULL);
+                }
+                else
+                {
+                    writer.WriteUnsignedNormalizedFloat(wheelAtIndex.replicatedSuspensionState, 4);
+                    writer.WritePhysicsMaterialNetId(wheelAtIndex.replicatedGroundMaterial);
+                }
+            }
+        }
+        if (vehicle.asset.UsesEngineRpmAndGears)
+        {
+            uint value = (uint)(vehicle.gearNumber + 1);
+            writer.WriteBits(value, 3);
+            float value2 = Mathf.InverseLerp(vehicle.asset.engineIdleRpm, vehicle.asset.engineMaxRpm, vehicle.replicatedEngineRpm);
+            writer.WriteUnsignedNormalizedFloat(value2, 7);
+        }
+    }
+
+    public DrivingPlayerInputPacket(InteractableVehicle vehicle)
+    {
+        this.vehicle = vehicle;
     }
 }

@@ -29,6 +29,6 @@ public class ItemToolAsset : ItemAsset
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
         base.PopulateAsset(bundle, data, localization);
-        _use = bundle.load<AudioClip>("Use");
+        _use = LoadRedirectableAsset<AudioClip>(bundle, "Use", data, "UseAudioClip");
     }
 }

@@ -11,11 +11,7 @@ internal struct StructureInstantiationParameters : IComparable<StructureInstanti
 
     public Vector3 position;
 
-    public byte angle_x;
-
-    public byte angle_y;
-
-    public byte angle_z;
+    public Quaternion rotation;
 
     public byte hp;
 

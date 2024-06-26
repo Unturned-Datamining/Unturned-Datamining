@@ -856,7 +856,7 @@ public class PlayerAnimator : PlayerCaller
             else if (base.player.movement.getVehicle() != null && base.player.movement.getVehicle().asset.hasBicycle)
             {
                 charAnim.state("Idle_Bicycle");
-                charAnim.setAnimationSpeed("Idle_Bicycle", base.player.movement.getVehicle().speed * base.player.movement.getVehicle().asset.bicycleAnimSpeed);
+                charAnim.setAnimationSpeed("Idle_Bicycle", base.player.movement.getVehicle().ReplicatedForwardVelocity * base.player.movement.getVehicle().asset.bicycleAnimSpeed);
             }
             else if (base.player.movement.getVehicle() != null && base.player.movement.getVehicle().asset.isReclined)
             {
@@ -1248,7 +1248,7 @@ public class PlayerAnimator : PlayerCaller
             if (base.player.stance.stance == EPlayerStance.DRIVING)
             {
                 viewmodelCameraLocalPosition.x = Mathf.Lerp(viewmodelCameraLocalPosition.x, 0f - turretViewmodelCameraLocalPositionOffset.y - 0.65f - Mathf.Abs(base.player.look.yaw) / 90f * 0.25f, 8f * Time.deltaTime);
-                viewmodelCameraLocalPosition.y = Mathf.Lerp(viewmodelCameraLocalPosition.y, turretViewmodelCameraLocalPositionOffset.x + (float)((!base.channel.owner.IsLeftHanded) ? 1 : (-1)) * base.player.movement.getVehicle().steer * -0.01f, 8f * Time.deltaTime);
+                viewmodelCameraLocalPosition.y = Mathf.Lerp(viewmodelCameraLocalPosition.y, turretViewmodelCameraLocalPositionOffset.x + (float)((!base.channel.owner.IsLeftHanded) ? 1 : (-1)) * base.player.movement.getVehicle().AnimatedSteeringAngle * -0.01f, 8f * Time.deltaTime);
                 viewmodelCameraLocalPosition.z = Mathf.Lerp(viewmodelCameraLocalPosition.z, turretViewmodelCameraLocalPositionOffset.z - 0.25f, 8f * Time.deltaTime);
             }
             else
@@ -1323,7 +1323,7 @@ public class PlayerAnimator : PlayerCaller
         viewmodelTargetExplosionLocalRotation.Update(Time.deltaTime);
         if (base.player.stance.stance == EPlayerStance.DRIVING)
         {
-            viewmodelCameraTransform.localRotation = Quaternion.Lerp(viewmodelCameraTransform.localRotation, Quaternion.Euler(base.player.look.yaw * 60f / MainCamera.instance.fieldOfView * (float)(base.channel.owner.IsLeftHanded ? 1 : (-1)), (base.player.look.pitch - 90f) * 60f / MainCamera.instance.fieldOfView, 90f + base.player.movement.getVehicle().steer * (float)((!base.channel.owner.IsLeftHanded) ? 1 : (-1))), 8f * Time.deltaTime);
+            viewmodelCameraTransform.localRotation = Quaternion.Lerp(viewmodelCameraTransform.localRotation, Quaternion.Euler(base.player.look.yaw * 60f / MainCamera.instance.fieldOfView * (float)(base.channel.owner.IsLeftHanded ? 1 : (-1)), (base.player.look.pitch - 90f) * 60f / MainCamera.instance.fieldOfView, 90f + base.player.movement.getVehicle().AnimatedSteeringAngle * (float)((!base.channel.owner.IsLeftHanded) ? 1 : (-1))), 8f * Time.deltaTime);
         }
         else if (base.player.stance.stance == EPlayerStance.CLIMB)
         {

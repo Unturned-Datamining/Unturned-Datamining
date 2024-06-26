@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -77,35 +78,18 @@ public class VehicleTable
         tiers[tierIndex].removeVehicle(vehicleIndex);
     }
 
-    public ushort getVehicle()
+    /// <summary>
+    /// Resolve spawn table asset if set, otherwise find asset by legacy in-editor ID configuration.
+    /// Returned asset is not necessarily a vehicle asset yet: It can also be a VehicleRedirectorAsset which the
+    /// vehicle spawner requires to properly set paint color.
+    /// </summary>
+    public Asset GetRandomAsset()
     {
         if (tableID != 0)
         {
-            return SpawnTableTool.ResolveLegacyId(tableID, EAssetType.VEHICLE, OnGetSpawnTableErrorContext);
+            return SpawnTableTool.Resolve(tableID, EAssetType.VEHICLE, OnGetSpawnTableErrorContext);
         }
-        float value = Random.value;
-        if (tiers.Count == 0)
-        {
-            return 0;
-        }
-        for (int i = 0; i < tiers.Count; i++)
-        {
-            if (value < tiers[i].chance)
-            {
-                VehicleTier vehicleTier = tiers[i];
-                if (vehicleTier.table.Count > 0)
-                {
-                    return vehicleTier.table[Random.Range(0, vehicleTier.table.Count)].vehicle;
-                }
-                return 0;
-            }
-        }
-        VehicleTier vehicleTier2 = tiers[Random.Range(0, tiers.Count)];
-        if (vehicleTier2.table.Count > 0)
-        {
-            return vehicleTier2.table[Random.Range(0, vehicleTier2.table.Count)].vehicle;
-        }
-        return 0;
+        return Assets.find(EAssetType.VEHICLE, GetRandomLegacyVehicleId());
     }
 
     public void buildTable()
@@ -220,6 +204,36 @@ public class VehicleTable
         tableID = newTableID;
     }
 
+    /// <summary>
+    /// Used when spawn table asset is not assigned. Pick a random legacy ID using in-editor list of spawns.
+    /// </summary>
+    private ushort GetRandomLegacyVehicleId()
+    {
+        float value = UnityEngine.Random.value;
+        if (tiers.Count == 0)
+        {
+            return 0;
+        }
+        for (int i = 0; i < tiers.Count; i++)
+        {
+            if (value < tiers[i].chance)
+            {
+                VehicleTier vehicleTier = tiers[i];
+                if (vehicleTier.table.Count > 0)
+                {
+                    return vehicleTier.table[UnityEngine.Random.Range(0, vehicleTier.table.Count)].vehicle;
+                }
+                return 0;
+            }
+        }
+        VehicleTier vehicleTier2 = tiers[UnityEngine.Random.Range(0, tiers.Count)];
+        if (vehicleTier2.table.Count > 0)
+        {
+            return vehicleTier2.table[UnityEngine.Random.Range(0, vehicleTier2.table.Count)].vehicle;
+        }
+        return 0;
+    }
+
     private string OnGetSpawnTableErrorContext()
     {
         return "\"" + Level.info.name + "\" vehicle table \"" + name + "\"";
@@ -228,5 +242,15 @@ public class VehicleTable
     internal string OnGetSpawnTableValidationErrorContext()
     {
         return "\"" + Level.info.name + "\" vehicle table \"" + name + "\" validation";
+    }
+
+    [Obsolete("GetRandomAsset should be used instead because it properly supports guids in spawn assets.")]
+    public ushort getVehicle()
+    {
+        if (tableID != 0)
+        {
+            return SpawnTableTool.ResolveLegacyId(tableID, EAssetType.VEHICLE, OnGetSpawnTableErrorContext);
+        }
+        return GetRandomLegacyVehicleId();
     }
 }

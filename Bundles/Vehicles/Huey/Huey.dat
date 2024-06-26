@@ -1,0 +1,51 @@
+GUID 5f150e4d56194f5cb478317651b476b5
+Type Vehicle
+Rarity Epic
+
+Speed_Min -2
+Speed_Max 16
+
+Steer_Min 16
+Steer_Max 8
+
+Fuel 2000
+
+Health_Min 800
+Health_Max 900
+Health 1000
+
+Exit 3
+
+Cam_Follow_Distance 7.5
+
+LockMouse
+Engine Helicopter
+
+Trunk_Storage_X 6
+Trunk_Storage_Y 5
+
+Explosion 20
+Invulnerable
+
+IgnitionAudioClip Sounds/HelicopterIgnition.mp3
+Has_Clip_Prefab false
+
+PaintableSections
+[
+    {
+        Path Model_0
+        MaterialIndex 0
+    }
+    {
+        Path Model_1
+        MaterialIndex 0
+    }
+]
+
+DefaultPaintColors
+[
+	"#475e83" // Coalition
+	"#a69884" // Desert
+	"#437c44" // Forest
+	"#495631" // Russia
+]

@@ -145,6 +145,14 @@ public class PlayerLife : PlayerCaller
 
     private uint lastRadiate;
 
+    private uint lastOutsideDeadzoneFrame;
+
+    private float pendingDeadzoneDamage;
+
+    private float pendingDeadzoneRadiation;
+
+    private float pendingDeadzoneMaskFilterQualityLoss;
+
     private bool wasWarm;
 
     private bool wasCovered;
@@ -1485,6 +1493,10 @@ public class PlayerLife : PlayerCaller
         lastTire = base.player.input.simulation;
         lastRest = base.player.input.simulation;
         lastRadiate = base.player.input.simulation;
+        lastOutsideDeadzoneFrame = base.player.input.simulation;
+        pendingDeadzoneDamage = 0f;
+        pendingDeadzoneRadiation = 0f;
+        pendingDeadzoneMaskFilterQualityLoss = 0f;
         recentKiller = CSteamID.Nil;
         lastTimeAggressive = -100f;
         lastTimeTookDamage = -100f;
@@ -1702,30 +1714,68 @@ public class PlayerLife : PlayerCaller
             }
             if (flag)
             {
-                if (simulation - lastRadiate > 30)
+                if (simulation - lastOutsideDeadzoneFrame > 2)
                 {
-                    lastRadiate = simulation;
-                    base.player.clothing.maskQuality--;
-                    base.player.clothing.updateMaskQuality();
+                    pendingDeadzoneDamage += base.player.movement.ActiveDeadzone.ProtectedDamagePerSecond * PlayerInput.RATE;
+                    float maskFilterDamagePerSecond = base.player.movement.ActiveDeadzone.MaskFilterDamagePerSecond;
+                    maskFilterDamagePerSecond *= base.player.clothing.maskAsset.FilterDegradationRateMultiplier;
+                    pendingDeadzoneMaskFilterQualityLoss += maskFilterDamagePerSecond * PlayerInput.RATE;
+                    int num = Mathf.FloorToInt(pendingDeadzoneMaskFilterQualityLoss);
+                    if (num > 0)
+                    {
+                        pendingDeadzoneMaskFilterQualityLoss -= num;
+                        lastRadiate = simulation;
+                        base.player.clothing.maskQuality--;
+                        base.player.clothing.updateMaskQuality();
+                    }
                 }
             }
-            else if (virus > 0)
+            else
             {
-                if (simulation - lastRadiate > 1)
+                if (simulation - lastOutsideDeadzoneFrame > 2)
+                {
+                    pendingDeadzoneDamage += base.player.movement.ActiveDeadzone.UnprotectedDamagePerSecond * PlayerInput.RATE;
+                }
+                if (virus > 0)
+                {
+                    if (simulation - lastRadiate > 1)
+                    {
+                        lastRadiate = simulation;
+                    }
+                    if (simulation - lastOutsideDeadzoneFrame > 2)
+                    {
+                        pendingDeadzoneRadiation += base.player.movement.ActiveDeadzone.UnprotectedRadiationPerSecond * PlayerInput.RATE;
+                    }
+                    int num2 = Mathf.FloorToInt(pendingDeadzoneRadiation);
+                    if (num2 > 0)
+                    {
+                        pendingDeadzoneRadiation -= num2;
+                        askRadiate(MathfEx.ClampToByte(num2));
+                    }
+                }
+                else if (Provider.isServer && simulation - lastRadiate > 10)
                 {
                     lastRadiate = simulation;
-                    askRadiate(1);
+                    askDamage(10, Vector3.up, EDeathCause.INFECTION, ELimb.SPINE, Provider.server, out var _);
                 }
             }
-            else if (Provider.isServer && simulation - lastRadiate > 10)
+            if (!isDead && Provider.isServer)
             {
-                lastRadiate = simulation;
-                askDamage(10, Vector3.up, EDeathCause.INFECTION, ELimb.SPINE, Provider.server, out var _);
+                int num3 = Mathf.FloorToInt(pendingDeadzoneDamage);
+                if (num3 > 0)
+                {
+                    pendingDeadzoneDamage -= num3;
+                    askDamage(MathfEx.ClampToByte(num3), Vector3.up, EDeathCause.INFECTION, ELimb.SPINE, Provider.server, out var _);
+                }
             }
         }
         else
         {
             lastRadiate = simulation;
+            lastOutsideDeadzoneFrame = simulation;
+            pendingDeadzoneDamage = 0f;
+            pendingDeadzoneRadiation = 0f;
+            pendingDeadzoneMaskFilterQualityLoss = 0f;
         }
         if (warmth != 0)
         {

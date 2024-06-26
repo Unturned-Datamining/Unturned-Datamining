@@ -13,6 +13,9 @@ public abstract class VendorElement
 
     public byte index { get; protected set; }
 
+    public Guid TargetAssetGuid { get; protected set; }
+
+    [Obsolete]
     public ushort id { get; protected set; }
 
     public uint cost { get; protected set; }
@@ -60,11 +63,11 @@ public abstract class VendorElement
         rewardsList.Grant(player);
     }
 
-    public VendorElement(VendorAsset newOuterAsset, byte newIndex, ushort newID, uint newCost, INPCCondition[] newConditions, NPCRewardsList newRewardsList)
+    public VendorElement(VendorAsset newOuterAsset, byte newIndex, Guid newGuid, ushort newLegacyId, uint newCost, INPCCondition[] newConditions, NPCRewardsList newRewardsList)
     {
         outerAsset = newOuterAsset;
         index = newIndex;
-        id = newID;
+        id = newLegacyId;
         cost = newCost;
         conditions = newConditions;
         rewardsList = newRewardsList;

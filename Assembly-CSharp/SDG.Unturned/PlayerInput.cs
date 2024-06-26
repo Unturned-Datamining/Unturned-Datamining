@@ -496,7 +496,7 @@ public class PlayerInput : PlayerCaller
             return;
         }
         reader.ReadBit(out var value);
-        PlayerInputPacket playerInputPacket = ((!value) ? ((PlayerInputPacket)new WalkingPlayerInputPacket()) : ((PlayerInputPacket)new DrivingPlayerInputPacket()));
+        PlayerInputPacket playerInputPacket = ((!value) ? ((PlayerInputPacket)new WalkingPlayerInputPacket()) : ((PlayerInputPacket)new DrivingPlayerInputPacket(base.player.movement.getVehicle())));
         playerInputPacket.read(base.channel, reader);
         if (serverLastReceivedSimulationFrameNumber != uint.MaxValue && playerInputPacket.clientSimulationFrameNumber <= serverLastReceivedSimulationFrameNumber)
         {
@@ -577,7 +577,7 @@ public class PlayerInput : PlayerCaller
                 {
                     if (base.player.stance.stance == EPlayerStance.DRIVING)
                     {
-                        clientPendingInput = new DrivingPlayerInputPacket();
+                        clientPendingInput = new DrivingPlayerInputPacket(base.player.movement.getVehicle());
                     }
                     else
                     {
@@ -632,6 +632,7 @@ public class PlayerInput : PlayerCaller
                     InteractableVehicle vehicle = base.player.movement.getVehicle();
                     if (vehicle != null)
                     {
+                        drivingPlayerInputPacket.vehicle = vehicle;
                         Transform transform = vehicle.transform;
                         if (vehicle.asset.engine == EEngine.TRAIN)
                         {
@@ -642,9 +643,10 @@ public class PlayerInput : PlayerCaller
                             drivingPlayerInputPacket.position = transform.position;
                         }
                         drivingPlayerInputPacket.rotation = transform.rotation;
-                        drivingPlayerInputPacket.speed = (byte)(Mathf.Clamp(vehicle.speed, -100f, 100f) + 128f);
-                        drivingPlayerInputPacket.physicsSpeed = (byte)(Mathf.Clamp(vehicle.physicsSpeed, -100f, 100f) + 128f);
-                        drivingPlayerInputPacket.turn = (byte)(vehicle.turn + 1);
+                        drivingPlayerInputPacket.speed = vehicle.ReplicatedSpeed;
+                        drivingPlayerInputPacket.forwardVelocity = vehicle.ReplicatedForwardVelocity;
+                        drivingPlayerInputPacket.steeringInput = vehicle.ReplicatedSteeringInput;
+                        drivingPlayerInputPacket.velocityInput = vehicle.ReplicatedVelocityInput;
                     }
                 }
                 if (true & Provider.isConnected)
@@ -701,7 +703,7 @@ public class PlayerInput : PlayerCaller
                             base.player.life.simulate(simulation);
                             base.player.look.simulate(0f, 0f, RATE);
                             base.player.stance.simulate(simulation, inputCrouch: false, inputProne: false, inputSprint: false);
-                            base.player.movement.simulate(simulation, drivingPlayerInputPacket2.recov, keys[0], keys[5], drivingPlayerInputPacket2.position, drivingPlayerInputPacket2.rotation, drivingPlayerInputPacket2.speed - 128, drivingPlayerInputPacket2.physicsSpeed - 128, drivingPlayerInputPacket2.turn - 1, RATE);
+                            base.player.movement.simulate(simulation, drivingPlayerInputPacket2.recov, keys[0], keys[5], drivingPlayerInputPacket2.position, drivingPlayerInputPacket2.rotation, drivingPlayerInputPacket2.speed, drivingPlayerInputPacket2.forwardVelocity, drivingPlayerInputPacket2.steeringInput, drivingPlayerInputPacket2.velocityInput, RATE);
                             base.player.equipment.simulate(simulation, pendingPrimaryAttackInput, pendingSecondaryAttackInput, keys[9]);
                             base.player.animator.simulate(simulation, inputLeanLeft: false, inputLeanRight: false);
                         }

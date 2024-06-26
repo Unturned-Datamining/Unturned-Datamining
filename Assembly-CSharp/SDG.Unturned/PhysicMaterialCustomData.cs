@@ -18,6 +18,8 @@ internal static class PhysicMaterialCustomData
 
         public AssetReference<EffectAsset> bulletImpactEffect;
 
+        public AssetReference<EffectAsset> tireMotionEffect;
+
         public EPhysicsMaterialCharacterFrictionMode characterFrictionMode;
 
         public bool? isArable;
@@ -63,6 +65,20 @@ internal static class PhysicMaterialCustomData
             if (item.bulletImpactEffect.isValid)
             {
                 result = item.bulletImpactEffect;
+                return result;
+            }
+        }
+        return result;
+    }
+
+    public static AssetReference<EffectAsset> GetTireMotionEffect(string materialName)
+    {
+        AssetReference<EffectAsset> result = default(AssetReference<EffectAsset>);
+        foreach (CombinedPhysicMaterialInfo item in EnumerateInfo(materialName))
+        {
+            if (item.tireMotionEffect.isValid)
+            {
+                result = item.tireMotionEffect;
                 return result;
             }
         }
@@ -156,6 +172,16 @@ internal static class PhysicMaterialCustomData
         needsRebuild = true;
     }
 
+    public static Dictionary<Guid, PhysicsMaterialAsset> GetAssets()
+    {
+        return baseAssets;
+    }
+
+    public static Dictionary<Guid, PhysicsMaterialExtensionAsset> GetExtensionAssets()
+    {
+        return extensionAssets;
+    }
+
     private static List<CombinedPhysicMaterialInfo> EnumerateInfo(string materialName)
     {
         enumerableInfos.Clear();
@@ -227,6 +253,7 @@ internal static class PhysicMaterialCustomData
             }
             dictionary[value.GUID] = value2;
             value2.bulletImpactEffect = value.bulletImpactEffect;
+            value2.tireMotionEffect = value.tireMotionEffect;
             value2.characterFrictionMode = value.characterFrictionMode;
             value2.isArable = value.isArable;
             value2.hasOil = value.hasOil;

@@ -74,7 +74,10 @@ public class SteamPlayer : SteamConnectedClientBase
 
     public Dictionary<ushort, int> itemSkins;
 
+    [Obsolete("This will be removed in a future version!")]
     public Dictionary<ushort, int> vehicleSkins;
+
+    private Dictionary<Guid, int> vehicleGuidToSkinItemDefId;
 
     public HashSet<ushort> modifiedItems;
 
@@ -222,6 +225,7 @@ public class SteamPlayer : SteamConnectedClientBase
         return itemSkins.TryGetValue(itemID, out itemdefid);
     }
 
+    [Obsolete("This will be removed in a future version!")]
     public bool getVehicleSkinItemDefID(ushort vehicleID, out int itemdefid)
     {
         itemdefid = 0;
@@ -230,6 +234,25 @@ public class SteamPlayer : SteamConnectedClientBase
             return false;
         }
         return vehicleSkins.TryGetValue(vehicleID, out itemdefid);
+    }
+
+    /// <summary>
+    /// Get Steam item definition ID equipped for given vehicle.
+    /// </summary>
+    /// <returns>True if a skin was available.</returns>
+    public bool GetVehicleSkinItemDefId(InteractableVehicle vehicle, out int itemdefid)
+    {
+        itemdefid = 0;
+        if (vehicle == null || vehicleGuidToSkinItemDefId == null)
+        {
+            return false;
+        }
+        VehicleAsset vehicleAsset = vehicle.asset.FindSharedSkinVehicleAsset();
+        if (vehicleAsset == null)
+        {
+            return false;
+        }
+        return vehicleGuidToSkinItemDefId.TryGetValue(vehicleAsset.GUID, out itemdefid);
     }
 
     public bool getTagsAndDynamicPropsForItem(int item, out string tags, out string dynamic_props)
@@ -610,6 +633,7 @@ public class SteamPlayer : SteamConnectedClientBase
         skinDynamicProps = newSkinDynamicProps;
         itemSkins = new Dictionary<ushort, int>();
         vehicleSkins = new Dictionary<ushort, int>();
+        vehicleGuidToSkinItemDefId = new Dictionary<Guid, int>();
         modifiedItems = new HashSet<ushort>();
         for (int i = 0; i < skinItems.Length; i++)
         {
@@ -627,12 +651,20 @@ public class SteamPlayer : SteamConnectedClientBase
                     itemSkins.Add(itemAsset.id, num);
                 }
             }
-            else if (vehicle_guid != default(Guid))
+            else
             {
-                VehicleAsset vehicleAsset = Assets.find<VehicleAsset>(vehicle_guid);
-                if (vehicleAsset != null && !vehicleSkins.ContainsKey(vehicleAsset.id))
+                if (!(vehicle_guid != default(Guid)))
                 {
-                    vehicleSkins.Add(vehicleAsset.id, num);
+                    continue;
+                }
+                VehicleAsset vehicleAsset = VehicleTool.FindVehicleByGuidAndHandleRedirects(vehicle_guid);
+                if (vehicleAsset != null)
+                {
+                    if (!vehicleSkins.ContainsKey(vehicleAsset.id))
+                    {
+                        vehicleSkins.Add(vehicleAsset.id, num);
+                    }
+                    vehicleGuidToSkinItemDefId[vehicleAsset.GUID] = num;
                 }
             }
         }

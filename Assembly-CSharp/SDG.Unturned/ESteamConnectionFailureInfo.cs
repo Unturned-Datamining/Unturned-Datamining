@@ -133,5 +133,9 @@ public enum ESteamConnectionFailureInfo
     /// <summary>
     /// Combat mode advertised on server list does not match during connect.
     /// </summary>
-    SERVER_PVP_ADVERTISEMENT_MISMATCH
+    SERVER_PVP_ADVERTISEMENT_MISMATCH,
+    /// <summary>
+    /// Player's skin color is too similar to one of <see cref="F:SDG.Unturned.LevelAsset.terrainColorRules" />.
+    /// </summary>
+    SKIN_COLOR_WITHIN_THRESHOLD_OF_TERRAIN_COLOR
 }

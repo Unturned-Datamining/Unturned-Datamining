@@ -109,6 +109,11 @@ public class EditorUI : MonoBehaviour
                 MenuConfigurationGraphicsUI.close();
                 EditorPauseUI.open();
             }
+            else if (EditorPauseUI.audioMenu.active)
+            {
+                EditorPauseUI.audioMenu.close();
+                EditorPauseUI.open();
+            }
             else if (MenuConfigurationControlsUI.active)
             {
                 MenuConfigurationControlsUI.close();

@@ -40,3 +40,24 @@ Bumper_Multiplier 0.25
 Should_Spawn_Seat_Capsules true
 
 Has_Clip_Prefab false
+
+PaintableSections
+[
+    {
+        Path Model_0
+        MaterialIndex 0
+    }
+    {
+        Path Model_1
+        MaterialIndex 0
+    }
+    {
+        Path Objects/Front
+        MaterialIndex 0
+    }
+]
+
+DefaultPaintColors
+[
+    #b7b7b7
+]

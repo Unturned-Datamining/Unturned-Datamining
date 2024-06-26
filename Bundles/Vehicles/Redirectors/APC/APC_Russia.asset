@@ -1,0 +1,7 @@
+GUID dbd9dc902520493383ff3662ecc0007f
+Type SDG.Unturned.VehicleRedirectorAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+ID 148
+
+TargetVehicle 6f56dc58382349b79793f9ba8839774e
+LoadPaintColor "#495631" // Russia
+SpawnPaintColor "#495631" // Russia

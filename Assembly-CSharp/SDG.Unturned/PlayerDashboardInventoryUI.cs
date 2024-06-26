@@ -1447,7 +1447,7 @@ public class PlayerDashboardInventoryUI
             {
                 vehicleHookButton.IsVisible = false;
             }
-            if (vehicle.usesBattery && vehicle.hasBattery && vehicle.asset.canStealBattery)
+            if (vehicle.usesBattery && vehicle.ContainsBatteryItem && vehicle.asset.canStealBattery)
             {
                 vehicleStealBatteryButton.Text = localization.format("Vehicle_Steal_Battery");
                 vehicleStealBatteryButton.TooltipText = localization.format("Vehicle_Steal_Battery_Tooltip");
@@ -1459,13 +1459,13 @@ public class PlayerDashboardInventoryUI
             {
                 vehicleStealBatteryButton.IsVisible = false;
             }
-            int value = 0;
+            int itemdefid = 0;
             ushort num3 = 0;
             ushort num4 = 0;
-            if (Player.player.channel.owner.skinItems != null && Player.player.channel.owner.vehicleSkins != null && Player.player.channel.owner.vehicleSkins.TryGetValue(vehicle.asset.sharedSkinLookupID, out value))
+            if (Player.player.channel.owner.skinItems != null && Player.player.channel.owner.GetVehicleSkinItemDefId(vehicle, out itemdefid))
             {
-                num3 = Provider.provider.economyService.getInventorySkinID(value);
-                num4 = Provider.provider.economyService.getInventoryMythicID(value);
+                num3 = Provider.provider.economyService.getInventorySkinID(itemdefid);
+                num4 = Provider.provider.economyService.getInventoryMythicID(itemdefid);
             }
             bool flag;
             bool flag2;

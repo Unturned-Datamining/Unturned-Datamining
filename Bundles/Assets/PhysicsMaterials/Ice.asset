@@ -20,6 +20,7 @@
 		"MeleeImpact" "Effects/Physics/MeleeImpact/Ice/MeleeImpact_Ice.asset"
 	}
 	"WipDoNotUseTemp_BulletImpactEffect" "2fd1193c7b2e4e08aba6a9e3b5207432" // Snow_NoAudio
+	"TireMotionEffect" "3050f44b94b649a7b4cdc8123a90cd7a" // TireMotion_Snow
 	"Character_Friction_Mode" "Custom"
 	"Character_Acceleration_Multiplier" "1"
 	"Character_Deceleration_Multiplier" "0.5"

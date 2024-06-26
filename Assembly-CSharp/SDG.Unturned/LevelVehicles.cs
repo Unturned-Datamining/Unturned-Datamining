@@ -108,14 +108,13 @@ public class LevelVehicles
         _spawns = list;
     }
 
-    public static ushort getVehicle(VehicleSpawnpoint spawn)
+    /// <summary>
+    /// Returned asset is not necessarily a vehicle asset yet: It can also be a VehicleRedirectorAsset which the
+    /// vehicle spawner requires to properly set paint color.
+    /// </summary>
+    public static Asset GetRandomAssetForSpawnpoint(VehicleSpawnpoint spawnpoint)
     {
-        return getVehicle(spawn.type);
-    }
-
-    public static ushort getVehicle(byte type)
-    {
-        return tables[type].getVehicle();
+        return tables[spawnpoint.type].GetRandomAsset();
     }
 
     public static void load()
@@ -213,5 +212,17 @@ public class LevelVehicles
             river.writeByte(MeasurementTool.angleToByte(vehicleSpawnpoint.angle));
         }
         river.closeRiver();
+    }
+
+    [Obsolete("GetRandomAssetForSpawnpoint should be used instead because it properly supports guids in spawn assets.")]
+    public static ushort getVehicle(VehicleSpawnpoint spawn)
+    {
+        return getVehicle(spawn.type);
+    }
+
+    [Obsolete("GetRandomAssetForSpawnpoint should be used instead because it properly supports guids in spawn assets.")]
+    public static ushort getVehicle(byte type)
+    {
+        return tables[type].getVehicle();
     }
 }

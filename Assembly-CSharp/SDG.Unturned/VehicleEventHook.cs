@@ -53,4 +53,9 @@ public class VehicleEventHook : MonoBehaviour
     /// Invoked when horn is played.
     /// </summary>
     public UnityEvent OnHornUsed;
+
+    /// <summary>
+    /// Invoked after explosion plays.
+    /// </summary>
+    public UnityEvent OnExploded;
 }

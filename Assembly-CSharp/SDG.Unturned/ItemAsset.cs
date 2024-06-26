@@ -201,7 +201,17 @@ public class ItemAsset : Asset, ISkinableAsset
 
     internal override bool ShouldVerifyHash => _shouldVerifyHash;
 
-    public override string FriendlyName => _itemName;
+    public override string FriendlyName
+    {
+        get
+        {
+            if (!string.IsNullOrEmpty(_itemName))
+            {
+                return _itemName;
+            }
+            return name;
+        }
+    }
 
     public string itemName => _itemName;
 
@@ -283,20 +293,16 @@ public class ItemAsset : Asset, ISkinableAsset
     }
 
     /// <summary>
+    /// Which parent to use when attaching an equipped/useable item to the player.
+    /// </summary>
+    public EEquipableModelParent EquipableModelParent { get; protected set; }
+
+    /// <summary>
     /// If true, equipable prefab is a child of the left hand rather than the right.
     /// Defaults to false.
     /// </summary>
-    public bool ShouldAttachEquippedModelToLeftHand
-    {
-        get
-        {
-            return isBackward;
-        }
-        protected set
-        {
-            isBackward = value;
-        }
-    }
+    [Obsolete("Replaced by EquipableModelParent property's LeftHook option.")]
+    public bool ShouldAttachEquippedModelToLeftHand => EquipableModelParent == EEquipableModelParent.LeftHook;
 
     public GameObject item => _item;
 
@@ -341,6 +347,13 @@ public class ItemAsset : Asset, ISkinableAsset
     /// If this item is compatible with skins for another item, lookup that item's ID instead.
     /// </summary>
     public ushort sharedSkinLookupID { get; protected set; }
+
+    /// <summary>
+    /// Defaults to true. If false, skin material and mesh are not applied when <see cref="P:SDG.Unturned.ItemAsset.sharedSkinLookupID" /> is
+    /// set. For example, a custom axe can transfer the kill counter and ragdoll effect from a vanilla item's skin
+    /// without also transferring the material and mesh.
+    /// </summary>
+    public bool SharedSkinShouldApplyVisuals { get; protected set; }
 
     /// <summary>
     /// Should friendly-mode sentry guns target a player who has this item equipped?
@@ -528,7 +541,11 @@ public class ItemAsset : Asset, ISkinableAsset
         {
             throw new NotSupportedException("ID < 2000");
         }
-        _itemName = localization.format("Name");
+        _itemName = localization.read("Name");
+        if (string.IsNullOrEmpty(_itemName))
+        {
+            _itemName = string.Empty;
+        }
         _itemDescription = localization.format("Description");
         _itemDescription = ItemTool.filterRarityRichText(itemDescription);
         RichTextUtil.replaceNewlineMarkup(ref _itemDescription);
@@ -597,6 +614,7 @@ public class ItemAsset : Asset, ISkinableAsset
         isEligibleForAutomaticIconMeasurements = data.ParseBool("Use_Auto_Icon_Measurements", defaultValue: true);
         econIconCameraOrthographicSize = data.ParseFloat("Size2_Z", -1f);
         sharedSkinLookupID = data.ParseUInt16("Shared_Skin_Lookup_ID", id);
+        SharedSkinShouldApplyVisuals = data.ParseBool("Shared_Skin_Apply_Visuals", defaultValue: true);
         amount = data.ParseUInt8("Amount", 0);
         if (amount < 1)
         {
@@ -628,7 +646,18 @@ public class ItemAsset : Asset, ISkinableAsset
         {
             qualityMax = 90;
         }
-        ShouldAttachEquippedModelToLeftHand = data.ContainsKey("Backward");
+        if (data.TryParseEnum<EEquipableModelParent>("EquipableModelParent", out var value))
+        {
+            EquipableModelParent = value;
+        }
+        else if (data.ContainsKey("Backward"))
+        {
+            EquipableModelParent = EEquipableModelParent.LeftHook;
+        }
+        else
+        {
+            EquipableModelParent = EEquipableModelParent.RightHook;
+        }
         shouldLeftHandedCharactersMirrorEquippedItem = data.ParseBool("Left_Handed_Characters_Mirror_Equipable", defaultValue: true);
         isEligibleForAutoStatDescriptions = data.ParseBool("Use_Auto_Stat_Descriptions", defaultValue: true);
         shouldProcedurallyAnimateInertia = data.ParseBool("Procedurally_Animate_Inertia", defaultValue: true);

@@ -22,5 +22,6 @@
 		"MeleeImpact" "Effects/Physics/LegacyImpact/LegacyImpact_Rock.asset"
 	}
 	"WipDoNotUseTemp_BulletImpactEffect" "6609639542ab477399023170ae5c60e1" // Gravel_WithDecal_NoAudio
+	"TireMotionEffect" "54f1db71f259453ab60320c8985488e7" // Gravel
 	"HasOil" "true"
 }

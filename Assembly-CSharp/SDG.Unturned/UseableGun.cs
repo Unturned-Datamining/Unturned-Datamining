@@ -348,6 +348,38 @@ public class UseableGun : Useable
         }
     }
 
+    private bool CanDamageInvulnerableEntities
+    {
+        get
+        {
+            if (((ItemWeaponAsset)base.player.equipment.asset).isInvulnerable)
+            {
+                return true;
+            }
+            if ((thirdAttachments?.barrelAsset?.CanDamageInvulernableEntities).GetValueOrDefault())
+            {
+                return true;
+            }
+            if ((thirdAttachments?.tacticalAsset?.CanDamageInvulernableEntities).GetValueOrDefault())
+            {
+                return true;
+            }
+            if ((thirdAttachments?.gripAsset?.CanDamageInvulernableEntities).GetValueOrDefault())
+            {
+                return true;
+            }
+            if ((thirdAttachments?.sightAsset?.CanDamageInvulernableEntities).GetValueOrDefault())
+            {
+                return true;
+            }
+            if ((thirdAttachments?.magazineAsset?.CanDamageInvulernableEntities).GetValueOrDefault())
+            {
+                return true;
+            }
+            return false;
+        }
+    }
+
     public static event ChangeAttachmentRequestHandler onChangeSightRequested;
 
     public static event ChangeAttachmentRequestHandler onChangeTacticalRequested;
@@ -799,7 +831,7 @@ public class UseableGun : Useable
             {
                 AlertTool.alert(base.transform.position, equippedGunAsset.alertRadius);
             }
-            if (Provider.modeConfigData.Items.Has_Durability && base.player.equipment.quality > 0 && UnityEngine.Random.value < ((ItemWeaponAsset)base.player.equipment.asset).durability)
+            if (Provider.modeConfigData.Items.Weapons_Have_Durability && base.player.equipment.quality > 0 && UnityEngine.Random.value < ((ItemWeaponAsset)base.player.equipment.asset).durability)
             {
                 if (base.player.equipment.quality > ((ItemWeaponAsset)base.player.equipment.asset).wear)
                 {
@@ -844,7 +876,8 @@ public class UseableGun : Useable
                     BulletInfo bulletInfo = new BulletInfo();
                     bulletInfo.origin = base.player.look.aim.position;
                     bulletInfo.position = bulletInfo.origin;
-                    bulletInfo.velocity = (bulletInfo.dir = rotation * RandomEx.GetRandomForwardVectorInCone(halfAngleRadians)) * equippedGunAsset.muzzleVelocity;
+                    Vector3 vector = rotation * RandomEx.GetRandomForwardVectorInCone(halfAngleRadians);
+                    bulletInfo.velocity = vector * equippedGunAsset.muzzleVelocity;
                     bulletInfo.pellet = b2;
                     bulletInfo.quality = num;
                     bulletInfo.barrelAsset = thirdAttachments.barrelAsset;
@@ -1009,6 +1042,7 @@ public class UseableGun : Useable
                     {
                         bulletInfo2 = new BulletInfo();
                         bulletInfo2.origin = base.player.look.aim.position;
+                        bulletInfo2.ApproximatePlayerAimDirection = base.player.look.aim.forward;
                         bulletInfo2.position = bulletInfo2.origin;
                         bulletInfo2.pellet = b4;
                         bulletInfo2.quality = num;
@@ -1285,7 +1319,7 @@ public class UseableGun : Useable
         {
             num *= thirdAttachments.sightAsset.ballisticDamageMultiplier;
         }
-        if (thirdAttachments.tacticalAsset != null)
+        if (thirdAttachments.tacticalAsset != null && shouldEnableTacticalStats)
         {
             num *= thirdAttachments.tacticalAsset.ballisticDamageMultiplier;
         }
@@ -1356,7 +1390,7 @@ public class UseableGun : Useable
                     if (barricadeDrop != null)
                     {
                         ItemBarricadeAsset asset = barricadeDrop.asset;
-                        if (asset != null && asset.canBeDamaged && (asset.isVulnerable || ((ItemWeaponAsset)base.player.equipment.asset).isInvulnerable))
+                        if (asset != null && asset.canBeDamaged && (asset.isVulnerable || CanDamageInvulnerableEntities))
                         {
                             if (ePlayerHit == EPlayerHit.NONE)
                             {
@@ -1372,7 +1406,7 @@ public class UseableGun : Useable
                     if (structureDrop != null)
                     {
                         ItemStructureAsset asset2 = structureDrop.asset;
-                        if (asset2 != null && asset2.canBeDamaged && (asset2.isVulnerable || ((ItemWeaponAsset)base.player.equipment.asset).isInvulnerable))
+                        if (asset2 != null && asset2.canBeDamaged && (asset2.isVulnerable || CanDamageInvulnerableEntities))
                         {
                             if (ePlayerHit == EPlayerHit.NONE)
                             {
@@ -1384,7 +1418,7 @@ public class UseableGun : Useable
                 }
                 else if (raycastInfo.vehicle != null && !raycastInfo.vehicle.isDead && equippedGunAsset.vehicleDamage > 1f)
                 {
-                    if (raycastInfo.vehicle.asset != null && raycastInfo.vehicle.canBeDamaged && (raycastInfo.vehicle.asset.isVulnerable || ((ItemWeaponAsset)base.player.equipment.asset).isInvulnerable))
+                    if (raycastInfo.vehicle.asset != null && raycastInfo.vehicle.canBeDamaged && (raycastInfo.vehicle.asset.isVulnerable || CanDamageInvulnerableEntities))
                     {
                         if (ePlayerHit == EPlayerHit.NONE)
                         {
@@ -1415,7 +1449,7 @@ public class UseableGun : Useable
                     {
                         raycastInfo.transform = componentInParent.transform;
                         raycastInfo.section = componentInParent.getSection(raycastInfo.collider.transform);
-                        if (componentInParent.IsSectionIndexValid(raycastInfo.section) && !componentInParent.isSectionDead(raycastInfo.section) && equippedGunAsset.hasBladeID(componentInParent.asset.rubbleBladeID) && (componentInParent.asset.rubbleIsVulnerable || ((ItemWeaponAsset)base.player.equipment.asset).isInvulnerable))
+                        if (componentInParent.IsSectionIndexValid(raycastInfo.section) && !componentInParent.isSectionDead(raycastInfo.section) && equippedGunAsset.hasBladeID(componentInParent.asset.rubbleBladeID) && (componentInParent.asset.rubbleIsVulnerable || CanDamageInvulnerableEntities))
                         {
                             if (ePlayerHit == EPlayerHit.NONE)
                             {
@@ -1602,9 +1636,9 @@ public class UseableGun : Useable
                 }
                 else if (input.type == ERaycastInfoType.VEHICLE)
                 {
-                    if (input.vehicle != null && input.vehicle.asset != null && input.vehicle.canBeDamaged && (input.vehicle.asset.isVulnerable || ((ItemWeaponAsset)base.player.equipment.asset).isInvulnerable))
+                    if (input.vehicle != null && input.vehicle.asset != null && input.vehicle.canBeDamaged && (input.vehicle.asset.isVulnerable || CanDamageInvulnerableEntities))
                     {
-                        float num2 = (equippedGunAsset.isInvulnerable ? Provider.modeConfigData.Vehicles.Gun_Highcal_Damage_Multiplier : Provider.modeConfigData.Vehicles.Gun_Lowcal_Damage_Multiplier);
+                        float num2 = (CanDamageInvulnerableEntities ? Provider.modeConfigData.Vehicles.Gun_Highcal_Damage_Multiplier : Provider.modeConfigData.Vehicles.Gun_Lowcal_Damage_Multiplier);
                         DamageTool.damage(input.vehicle, damageTires: true, input.point, isRepairing: false, equippedGunAsset.vehicleDamage, bulletDamageMultiplier * num2, canRepair: true, out kill, base.channel.owner.playerID.steamID, EDamageOrigin.Useable_Gun);
                     }
                 }
@@ -1616,9 +1650,9 @@ public class UseableGun : Useable
                         if (barricadeDrop2 != null)
                         {
                             ItemBarricadeAsset asset3 = barricadeDrop2.asset;
-                            if (asset3 != null && asset3.canBeDamaged && (asset3.isVulnerable || ((ItemWeaponAsset)base.player.equipment.asset).isInvulnerable))
+                            if (asset3 != null && asset3.canBeDamaged && (asset3.isVulnerable || CanDamageInvulnerableEntities))
                             {
-                                float num3 = (equippedGunAsset.isInvulnerable ? Provider.modeConfigData.Barricades.Gun_Highcal_Damage_Multiplier : Provider.modeConfigData.Barricades.Gun_Lowcal_Damage_Multiplier);
+                                float num3 = (CanDamageInvulnerableEntities ? Provider.modeConfigData.Barricades.Gun_Highcal_Damage_Multiplier : Provider.modeConfigData.Barricades.Gun_Lowcal_Damage_Multiplier);
                                 DamageTool.damage(input.transform, isRepairing: false, equippedGunAsset.barricadeDamage, bulletDamageMultiplier * num3, out kill, base.channel.owner.playerID.steamID, EDamageOrigin.Useable_Gun);
                             }
                         }
@@ -1632,9 +1666,9 @@ public class UseableGun : Useable
                         if (structureDrop2 != null)
                         {
                             ItemStructureAsset asset4 = structureDrop2.asset;
-                            if (asset4 != null && asset4.canBeDamaged && (asset4.isVulnerable || ((ItemWeaponAsset)base.player.equipment.asset).isInvulnerable))
+                            if (asset4 != null && asset4.canBeDamaged && (asset4.isVulnerable || CanDamageInvulnerableEntities))
                             {
-                                float num4 = (equippedGunAsset.isInvulnerable ? Provider.modeConfigData.Structures.Gun_Highcal_Damage_Multiplier : Provider.modeConfigData.Structures.Gun_Lowcal_Damage_Multiplier);
+                                float num4 = (CanDamageInvulnerableEntities ? Provider.modeConfigData.Structures.Gun_Highcal_Damage_Multiplier : Provider.modeConfigData.Structures.Gun_Lowcal_Damage_Multiplier);
                                 DamageTool.damage(input.transform, isRepairing: false, input.direction * Mathf.Ceil((float)(int)b2 / 2f), equippedGunAsset.structureDamage, bulletDamageMultiplier * num4, out kill, base.channel.owner.playerID.steamID, EDamageOrigin.Useable_Gun);
                             }
                         }
@@ -1654,7 +1688,7 @@ public class UseableGun : Useable
                 else if (input.type == ERaycastInfoType.OBJECT && input.transform != null && input.section < byte.MaxValue)
                 {
                     InteractableObjectRubble componentInParent2 = input.transform.GetComponentInParent<InteractableObjectRubble>();
-                    if (componentInParent2 != null && componentInParent2.IsSectionIndexValid(input.section) && !componentInParent2.isSectionDead(input.section) && equippedGunAsset.hasBladeID(componentInParent2.asset.rubbleBladeID) && (componentInParent2.asset.rubbleIsVulnerable || ((ItemWeaponAsset)base.player.equipment.asset).isInvulnerable))
+                    if (componentInParent2 != null && componentInParent2.IsSectionIndexValid(input.section) && !componentInParent2.isSectionDead(input.section) && equippedGunAsset.hasBladeID(componentInParent2.asset.rubbleBladeID) && (componentInParent2.asset.rubbleIsVulnerable || CanDamageInvulnerableEntities))
                     {
                         DamageTool.damage(componentInParent2.transform, input.direction, input.section, equippedGunAsset.objectDamage, bulletDamageMultiplier, out kill, out xp, base.channel.owner.playerID.steamID, EDamageOrigin.Useable_Gun);
                     }
@@ -2412,6 +2446,7 @@ public class UseableGun : Useable
             gunshotAudioSource.SetCustomCurve(AudioSourceCurveType.CustomRolloff, (Resources.Load("Guns/Rolloff") as GameObject).GetComponent<AudioSource>().GetCustomCurve(AudioSourceCurveType.CustomRolloff));
             gunshotAudioSource.volume = 1f;
             gunshotAudioSource.playOnAwake = false;
+            gunshotAudioSource.outputAudioMixerGroup = UnturnedAudioMixer.GetDefaultGroup();
         }
         if (base.channel.IsLocalPlayer)
         {
@@ -2504,6 +2539,7 @@ public class UseableGun : Useable
             whir.volume = 0f;
             whir.playOnAwake = false;
             whir.loop = true;
+            whir.outputAudioMixerGroup = UnturnedAudioMixer.GetDefaultGroup();
             whir.Play();
         }
         if (thirdAttachments.ejectHook != null && equippedGunAsset.action != EAction.String && equippedGunAsset.action != EAction.Rocket)
@@ -3342,7 +3378,7 @@ public class UseableGun : Useable
         {
             num -= thirdAttachments.sightAsset.FirerateOffset;
         }
-        if (thirdAttachments.tacticalAsset != null)
+        if (thirdAttachments.tacticalAsset != null && shouldEnableTacticalStats)
         {
             num -= thirdAttachments.tacticalAsset.FirerateOffset;
         }
@@ -3781,6 +3817,10 @@ public class UseableGun : Useable
         {
             value *= equippedGunAsset.recoilSwimming;
         }
+        if (!base.player.movement.isGrounded)
+        {
+            value *= equippedGunAsset.recoilMidair;
+        }
     }
 
     internal float CalculateBulletGravity()
@@ -3843,7 +3883,7 @@ public class UseableGun : Useable
         }
         if (!base.player.movement.isGrounded)
         {
-            baseSpreadAngleRadians *= 1.5f;
+            baseSpreadAngleRadians *= equippedGunAsset.spreadMidair;
         }
         return baseSpreadAngleRadians;
     }

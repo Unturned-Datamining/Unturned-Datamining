@@ -453,7 +453,7 @@ public class Characters : MonoBehaviour
         UnityEngine.Object.Destroy(item.GetComponent<Collider>());
         if (num2 != 0)
         {
-            ItemTool.applyEffect(item, num2, EEffectType.THIRD);
+            ItemTool.ApplyMythicalEffect(item, num2, EEffectType.THIRD);
         }
         slots[slot] = item;
     }

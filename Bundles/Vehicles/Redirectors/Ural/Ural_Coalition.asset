@@ -1,0 +1,7 @@
+GUID 2e9b5bffbec84a08a35ab8c1e0f403cb
+Type SDG.Unturned.VehicleRedirectorAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+ID 147
+
+TargetVehicle c00faf98ea6b449f833f768f76f54805
+LoadPaintColor "#475e83" // Coalition
+SpawnPaintColor "#475e83" // Coalition

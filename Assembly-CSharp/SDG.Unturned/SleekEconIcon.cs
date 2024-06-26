@@ -33,7 +33,7 @@ public class SleekEconIcon : SleekWrapper
         {
             Provider.provider.economyService.getInventoryTargetID(itemdefid, out var item_guid, out var vehicle_guid);
             ItemAsset itemAsset = Assets.find<ItemAsset>(item_guid);
-            VehicleAsset vehicleAsset = Assets.find<VehicleAsset>(vehicle_guid);
+            VehicleAsset vehicleAsset = VehicleTool.FindVehicleByGuidAndHandleRedirects(vehicle_guid);
             if (vehicleAsset != null)
             {
                 VehicleTool.getIcon(vehicleAsset.id, skinAsset.id, vehicleAsset, skinAsset, 400, 400, readableOnCPU: false, OnIconReady);

@@ -151,5 +151,9 @@ public enum EPlayerMessage
     /// <summary>
     /// Popup when structure is blocked by terrain.
     /// </summary>
-    PLACEMENT_OBSTRUCTED_BY_GROUND
+    PLACEMENT_OBSTRUCTED_BY_GROUND,
+    /// <summary>
+    /// Vehicle doesn't support spray paints.
+    /// </summary>
+    NOT_PAINTABLE
 }

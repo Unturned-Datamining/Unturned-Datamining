@@ -1448,10 +1448,10 @@ public class UseableBarricade : Useable
             base.player.sendStat(EPlayerStat.FOUND_BUILDABLES);
             if (itemBarricadeAsset.build == EBuild.VEHICLE)
             {
-                VehicleAsset vehicleAsset = itemBarricadeAsset.FindVehicleAsset();
-                if (vehicleAsset != null)
+                Asset asset = itemBarricadeAsset.FindVehicleAsset();
+                if (asset != null)
                 {
-                    flag = VehicleManager.spawnLockedVehicleForPlayerV2(vehicleAsset.id, point, Quaternion.Euler(angle_x + rotate_x, angle_y + rotate_y, angle_z + rotate_z), base.player) != null;
+                    flag = VehicleManager.spawnLockedVehicleForPlayerV2(asset, point, Quaternion.Euler(angle_x + rotate_x, angle_y + rotate_y, angle_z + rotate_z), base.player) != null;
                 }
             }
             else

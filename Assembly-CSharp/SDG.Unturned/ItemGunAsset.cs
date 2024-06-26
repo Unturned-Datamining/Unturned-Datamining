@@ -108,6 +108,11 @@ public class ItemGunAsset : ItemWeaponAsset
     /// </summary>
     public float spreadSwimming;
 
+    /// <summary>
+    /// Spread multiplier while not grounded.
+    /// </summary>
+    public float spreadMidair;
+
     public float recoilMin_x;
 
     public float recoilMin_y;
@@ -140,6 +145,11 @@ public class ItemGunAsset : ItemWeaponAsset
     /// Recoil magnitude while swimming.
     /// </summary>
     public float recoilSwimming;
+
+    /// <summary>
+    /// Recoil magnitude while not grounded.
+    /// </summary>
+    public float recoilMidair;
 
     public float recover_x;
 
@@ -381,79 +391,99 @@ public class ItemGunAsset : ItemWeaponAsset
         ushort num = BitConverter.ToUInt16(itemInstance.state, 8);
         if (Assets.find(EAssetType.ITEM, num) is ItemMagazineAsset itemMagazineAsset)
         {
-            builder.Append(PlayerDashboardInventoryUI.localization.format("Ammo", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemMagazineAsset.rarity)) + ">" + itemMagazineAsset.itemName + "</color>", itemInstance.state[10], itemMagazineAsset.amount), 2000);
+            if (!string.IsNullOrEmpty(itemMagazineAsset.itemName))
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("Ammo", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemMagazineAsset.rarity)) + ">" + itemMagazineAsset.itemName + "</color>", itemInstance.state[10], itemMagazineAsset.amount), 2000);
+            }
+            else
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("Ammo", "<color=" + Palette.hex(ItemTool.getRarityColorUI(rarity)) + ">" + base.itemName + "</color>", itemInstance.state[10], itemMagazineAsset.amount), 2000);
+            }
         }
         else
         {
             builder.Append(PlayerDashboardInventoryUI.localization.format("Ammo", PlayerDashboardInventoryUI.localization.format("None"), 0, 0), 2000);
         }
-        if (!builder.shouldRestrictToLegacyContent)
+        if (builder.shouldRestrictToLegacyContent)
         {
-            ushort num2 = BitConverter.ToUInt16(itemInstance.state, 0);
-            ushort num3 = BitConverter.ToUInt16(itemInstance.state, 2);
-            ushort num4 = BitConverter.ToUInt16(itemInstance.state, 4);
-            ushort num5 = BitConverter.ToUInt16(itemInstance.state, 6);
-            ItemSightAsset itemSightAsset = Assets.find(EAssetType.ITEM, num2) as ItemSightAsset;
-            ItemTacticalAsset itemTacticalAsset = Assets.find(EAssetType.ITEM, num3) as ItemTacticalAsset;
-            ItemGripAsset itemGripAsset = Assets.find(EAssetType.ITEM, num4) as ItemGripAsset;
-            ItemBarrelAsset itemBarrelAsset = Assets.find(EAssetType.ITEM, num5) as ItemBarrelAsset;
-            if (itemSightAsset != null && (hasSight || num2 != sightID))
+            return;
+        }
+        ushort num2 = BitConverter.ToUInt16(itemInstance.state, 0);
+        ushort num3 = BitConverter.ToUInt16(itemInstance.state, 2);
+        ushort num4 = BitConverter.ToUInt16(itemInstance.state, 4);
+        ushort num5 = BitConverter.ToUInt16(itemInstance.state, 6);
+        ItemSightAsset itemSightAsset = Assets.find(EAssetType.ITEM, num2) as ItemSightAsset;
+        ItemTacticalAsset itemTacticalAsset = Assets.find(EAssetType.ITEM, num3) as ItemTacticalAsset;
+        ItemGripAsset itemGripAsset = Assets.find(EAssetType.ITEM, num4) as ItemGripAsset;
+        ItemBarrelAsset itemBarrelAsset = Assets.find(EAssetType.ITEM, num5) as ItemBarrelAsset;
+        if (itemSightAsset != null && (hasSight || num2 != sightID))
+        {
+            if (!string.IsNullOrEmpty(itemSightAsset.itemName))
             {
                 builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_SightAttachment", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemSightAsset.rarity)) + ">" + itemSightAsset.itemName + "</color>"), 2000);
             }
-            else if (hasSight)
-            {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_SightAttachment", PlayerDashboardInventoryUI.localization.format("None")), 2000);
-            }
-            if (itemTacticalAsset != null && (hasTactical || num3 != tacticalID))
+        }
+        else if (hasSight)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_SightAttachment", PlayerDashboardInventoryUI.localization.format("None")), 2000);
+        }
+        if (itemTacticalAsset != null && (hasTactical || num3 != tacticalID))
+        {
+            if (!string.IsNullOrEmpty(itemTacticalAsset.itemName))
             {
                 builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_TacticalAttachment", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemTacticalAsset.rarity)) + ">" + itemTacticalAsset.itemName + "</color>"), 2000);
             }
-            else if (hasTactical)
-            {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_TacticalAttachment", PlayerDashboardInventoryUI.localization.format("None")), 2000);
-            }
-            if (itemGripAsset != null && (hasGrip || num4 != gripID))
+        }
+        else if (hasTactical)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_TacticalAttachment", PlayerDashboardInventoryUI.localization.format("None")), 2000);
+        }
+        if (itemGripAsset != null && (hasGrip || num4 != gripID))
+        {
+            if (!string.IsNullOrEmpty(itemGripAsset.itemName))
             {
                 builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_GripAttachment", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemGripAsset.rarity)) + ">" + itemGripAsset.itemName + "</color>"), 2000);
             }
-            else if (hasGrip)
-            {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_GripAttachment", PlayerDashboardInventoryUI.localization.format("None")), 2000);
-            }
-            if (itemBarrelAsset != null && (hasBarrel || num5 != barrelID))
+        }
+        else if (hasGrip)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_GripAttachment", PlayerDashboardInventoryUI.localization.format("None")), 2000);
+        }
+        if (itemBarrelAsset != null && (hasBarrel || num5 != barrelID))
+        {
+            if (!string.IsNullOrEmpty(itemBarrelAsset.itemName))
             {
                 builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_BarrelAttachment", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemBarrelAsset.rarity)) + ">" + itemBarrelAsset.itemName + "</color>"), 2000);
             }
-            else if (hasBarrel)
-            {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_BarrelAttachment", PlayerDashboardInventoryUI.localization.format("None")), 2000);
-            }
-            float f = 50f / (float)Mathf.Max(1, firerate + 1) * 60f;
-            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Firerate", Mathf.RoundToInt(f)), 10000);
-            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Spread", $"{57.29578f * baseSpreadAngleRadians:N1}"), 10000);
-            if (spreadAim != 1f)
-            {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Spread_Aim", $"{57.29578f * baseSpreadAngleRadians * spreadAim:N1}"), 10000);
-            }
-            if (aimingRecoilMultiplier != 1f)
-            {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_RecoilModifier_Aiming", PlayerDashboardInventoryUI.FormatStatModifier(aimingRecoilMultiplier, higherIsPositive: false, higherIsBeneficial: false)), 10000 + DescSort_LowerIsBeneficial(aimingRecoilMultiplier));
-            }
-            if (damageFalloffRange != 1f && damageFalloffMultiplier != 1f)
-            {
-                string arg = MeasurementTool.FormatLengthString(range * damageFalloffRange);
-                string arg2 = MeasurementTool.FormatLengthString(range * damageFalloffMaxRange);
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_DamageFalloff", arg, arg2, $"{damageFalloffMultiplier:P}"), 10000);
-            }
-            if (_projectile != null)
-            {
-                BuildExplosiveDescription(builder, itemInstance);
-            }
-            else
-            {
-                BuildNonExplosiveDescription(builder, itemInstance);
-            }
+        }
+        else if (hasBarrel)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_BarrelAttachment", PlayerDashboardInventoryUI.localization.format("None")), 2000);
+        }
+        float f = 50f / (float)Mathf.Max(1, firerate + 1) * 60f;
+        builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Firerate", Mathf.RoundToInt(f)), 10000);
+        builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Spread", $"{57.29578f * baseSpreadAngleRadians:N1}"), 10000);
+        if (spreadAim != 1f)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Spread_Aim", $"{57.29578f * baseSpreadAngleRadians * spreadAim:N1}"), 10000);
+        }
+        if (aimingRecoilMultiplier != 1f)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_RecoilModifier_Aiming", PlayerDashboardInventoryUI.FormatStatModifier(aimingRecoilMultiplier, higherIsPositive: false, higherIsBeneficial: false)), 10000 + DescSort_LowerIsBeneficial(aimingRecoilMultiplier));
+        }
+        if (damageFalloffRange != 1f && damageFalloffMultiplier != 1f)
+        {
+            string arg = MeasurementTool.FormatLengthString(range * damageFalloffRange);
+            string arg2 = MeasurementTool.FormatLengthString(range * damageFalloffMaxRange);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_DamageFalloff", arg, arg2, $"{damageFalloffMultiplier:P}"), 10000);
+        }
+        if (_projectile != null)
+        {
+            BuildExplosiveDescription(builder, itemInstance);
+        }
+        else
+        {
+            BuildNonExplosiveDescription(builder, itemInstance);
         }
     }
 
@@ -660,6 +690,7 @@ public class ItemGunAsset : ItemWeaponAsset
         spreadCrouch = data.ParseFloat("Spread_Crouch", 0.85f);
         spreadProne = data.ParseFloat("Spread_Prone", 0.7f);
         spreadSwimming = data.ParseFloat("Spread_Swimming", 1.1f);
+        spreadMidair = data.ParseFloat("Spread_Midair", 1.5f);
         recoilMin_x = data.ParseFloat("Recoil_Min_X");
         recoilMin_y = data.ParseFloat("Recoil_Min_Y");
         recoilMax_x = data.ParseFloat("Recoil_Max_X");
@@ -671,6 +702,7 @@ public class ItemGunAsset : ItemWeaponAsset
         recoilCrouch = data.ParseFloat("Recoil_Crouch", 0.85f);
         recoilProne = data.ParseFloat("Recoil_Prone", 0.7f);
         recoilSwimming = data.ParseFloat("Recoil_Swimming", 1.1f);
+        recoilMidair = data.ParseFloat("Recoil_Midair", 1f);
         shakeMin_x = data.ParseFloat("Shake_Min_X");
         shakeMin_y = data.ParseFloat("Shake_Min_Y");
         shakeMin_z = data.ParseFloat("Shake_Min_Z");

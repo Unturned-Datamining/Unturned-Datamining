@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using UnityEngine;
 using Unturned.SystemEx;
 
@@ -13,6 +16,8 @@ public class VehicleAsset : Asset, ISkinableAsset
     protected float _size2_z;
 
     protected string _sharedSkinName;
+
+    private Guid _sharedSkinLookupGuid;
 
     protected ushort _sharedSkinLookupID;
 
@@ -39,9 +44,9 @@ public class VehicleAsset : Asset, ISkinableAsset
 
     protected float _pitchDrive;
 
-    protected float _speedMin;
+    internal EVehicleEngineSoundType engineSoundType;
 
-    protected float _speedMax;
+    internal RpmEngineSoundConfiguration engineSoundConfiguration;
 
     protected float _steerMin;
 
@@ -76,8 +81,6 @@ public class VehicleAsset : Asset, ISkinableAsset
     protected bool _hasZip;
 
     protected bool _hasBicycle;
-
-    protected bool _hasCrawler;
 
     protected bool _hasLockMouse;
 
@@ -122,7 +125,77 @@ public class VehicleAsset : Asset, ISkinableAsset
 
     public bool canTiresBeDamaged;
 
+    internal VehicleWheelConfiguration[] wheelConfiguration;
+
+    /// <summary>
+    /// Indices of wheels using replicated collider pose (if any).
+    /// Null if not configured or no wheels using this feature.
+    /// Allows client and server to replicate only the suspension value without other context.
+    /// </summary>
+    internal int[] replicatedWheelIndices;
+
+    /// <summary>
+    /// Indices of wheels with motor torque applied (if any).
+    /// Used for engine RPM calculation.
+    /// </summary>
+    internal int[] poweredWheelIndices;
+
+    internal float reverseGearRatio;
+
+    internal float[] forwardGearRatios;
+
+    /// <summary>
+    /// When engine RPM dips below this value shift to the next lower gear if available.
+    /// </summary>
+    internal float gearShiftDownThresholdRpm;
+
+    /// <summary>
+    /// When engine RPM exceeds this value shift to the next higher gear if available.
+    /// </summary>
+    internal float gearShiftUpThresholdRpm;
+
+    /// <summary>
+    /// How long after changing gears before throttle is engaged again.
+    /// </summary>
+    internal float gearShiftDuration;
+
+    /// <summary>
+    /// How long between changing gears to allow another automatic gear change.
+    /// </summary>
+    internal float gearShiftInterval;
+
+    /// <summary>
+    /// Minimum engine RPM.
+    /// </summary>
+    internal float engineIdleRpm;
+
+    /// <summary>
+    /// Maximum engine RPM.
+    /// </summary>
+    internal float engineMaxRpm;
+
+    /// <summary>
+    /// How quickly RPM can increase in RPM/s.
+    /// e.g., 1000 will take 2 seconds to go from 2000 to 4000 RPM.
+    /// </summary>
+    internal float engineRpmIncreaseRate;
+
+    /// <summary>
+    /// How quickly RPM can decrease in RPM/s.
+    /// e.g., 1000 will take 2 seconds to go from 4000 to 2000 RPM.
+    /// </summary>
+    internal float engineRpmDecreaseRate;
+
+    /// <summary>
+    /// Maximum torque (multiplied by output of torque curve).
+    /// </summary>
+    internal float engineMaxTorque;
+
     private static readonly Guid VANILLA_BATTERY_ITEM = new Guid("098b13be34a7411db7736b7f866ada69");
+
+    protected bool _hasCrawler;
+
+    private static CommandLineFlag clLogWheelConfiguration = new CommandLineFlag(defaultValue: false, "-LogVehicleWheelConfigurations");
 
     public bool shouldVerifyHash => _shouldVerifyHash;
 
@@ -136,6 +209,15 @@ public class VehicleAsset : Asset, ISkinableAsset
 
     public string sharedSkinName => _sharedSkinName;
 
+    /// <summary>
+    /// Please refer to: <seealso cref="M:SDG.Unturned.VehicleAsset.FindSharedSkinVehicleAsset" />
+    /// </summary>
+    public Guid SharedSkinLookupGuid => _sharedSkinLookupGuid;
+
+    /// <summary>
+    /// Please refer to: <seealso cref="M:SDG.Unturned.VehicleAsset.FindSharedSkinVehicleAsset" />
+    /// </summary>
+    [Obsolete]
     public ushort sharedSkinLookupID => _sharedSkinLookupID;
 
     public EEngine engine => _engine;
@@ -152,13 +234,40 @@ public class VehicleAsset : Asset, ISkinableAsset
 
     public float pitchDrive => _pitchDrive;
 
-    public float speedMin => _speedMin;
+    /// <summary>
+    /// Maximum (negative) velocity to aim for while accelerating backward.
+    /// </summary>
+    public float TargetReverseVelocity { get; private set; }
 
-    public float speedMax => _speedMax;
+    /// <summary>
+    /// Maximum speed to aim for while accelerating backward.
+    /// </summary>
+    public float TargetReverseSpeed => Mathf.Abs(TargetReverseVelocity);
 
+    /// <summary>
+    /// Maximum velocity to aim for while accelerating forward.
+    /// </summary>
+    public float TargetForwardVelocity { get; private set; }
+
+    /// <summary>
+    /// Maximum speed to aim for while accelerating forward.
+    /// </summary>
+    public float TargetForwardSpeed => Mathf.Abs(TargetForwardVelocity);
+
+    /// <summary>
+    /// Steering angle range at zero speed.
+    /// </summary>
     public float steerMin => _steerMin;
 
+    /// <summary>
+    /// Steering angle range at target maximum speed (for the current forward/backward direction).
+    /// </summary>
     public float steerMax => _steerMax;
+
+    /// <summary>
+    /// Steering angle rotation change in degrees per second.
+    /// </summary>
+    public float SteeringAngleTurnSpeed { get; private set; }
 
     public float brake => _brake;
 
@@ -256,8 +365,6 @@ public class VehicleAsset : Asset, ISkinableAsset
     public float fuelBurnRate { get; protected set; }
 
     public bool isReclined { get; protected set; }
-
-    public bool hasCrawler => _hasCrawler;
 
     public bool hasLockMouse => _hasLockMouse;
 
@@ -383,12 +490,17 @@ public class VehicleAsset : Asset, ISkinableAsset
     /// </summary>
     public ushort tireID { get; protected set; }
 
-    /// <summary>
-    /// Number of tire visuals to rotate with steering wheel.
-    /// </summary>
-    public int numSteeringTires { get; protected set; }
-
-    public int[] steeringTireIndices { get; protected set; }
+    internal bool UsesEngineRpmAndGears
+    {
+        get
+        {
+            if (forwardGearRatios != null)
+            {
+                return forwardGearRatios.Length != 0;
+            }
+            return false;
+        }
+    }
 
     /// <summary>
     /// Was a center of mass specified in the .dat?
@@ -400,6 +512,14 @@ public class VehicleAsset : Asset, ISkinableAsset
     /// </summary>
     public Vector3 centerOfMass { get; protected set; }
 
+    public float carjackForceMultiplier { get; protected set; }
+
+    /// <summary>
+    /// Multiplier for otherwise not-yet-configurable plane/heli/boat forces.
+    /// Nelson 2024-03-06: Required for increasing mass of vehicles without significantly messing with behavior.
+    /// </summary>
+    public float engineForceMultiplier { get; protected set; }
+
     /// <summary>
     /// If set, override the wheel collider mass with this value.
     /// </summary>
@@ -407,7 +527,66 @@ public class VehicleAsset : Asset, ISkinableAsset
 
     public AssetReference<VehiclePhysicsProfileAsset> physicsProfileRef { get; protected set; }
 
+    /// <summary>
+    /// Null if vehicle doesn't support paint color.
+    /// </summary>
+    public PaintableVehicleSection[] PaintableVehicleSections { get; protected set; }
+
+    /// <summary>
+    /// Null if vehicle doesn't support paint color.
+    /// </summary>
+    public List<Color32> DefaultPaintColors { get; protected set; }
+
+    public bool SupportsPaintColor
+    {
+        get
+        {
+            if (PaintableVehicleSections != null)
+            {
+                return PaintableVehicleSections.Length != 0;
+            }
+            return false;
+        }
+    }
+
     public override EAssetType assetCategory => EAssetType.VEHICLE;
+
+    /// <summary>
+    /// Number of tire visuals to rotate with steering wheel.
+    /// </summary>
+    [Obsolete("Replaced by VehicleWheelConfiguration. Only used for backwards compatibility.")]
+    public int numSteeringTires { get; protected set; }
+
+    [Obsolete("Replaced by VehicleWheelConfiguration. Only used for backwards compatibility.")]
+    public int[] steeringTireIndices { get; protected set; }
+
+    [Obsolete("Replaced by VehicleWheelConfiguration. Only used for backwards compatibility.")]
+    public bool hasCrawler => _hasCrawler;
+
+    [Obsolete("Renamed to TargetReverseVelocity.")]
+    public float speedMin => TargetReverseVelocity;
+
+    [Obsolete("Renamed to TargetForwardVelocity.")]
+    public float speedMax => TargetForwardVelocity;
+
+    /// <summary>
+    /// Supports redirects by VehicleRedirectorAsset.
+    ///
+    /// "Shared Skins" were implemented when there were several asset variants of each vehicle. For example,
+    /// Off_Roader_Orange, Off_Roader_Purple, Off_Roader_Green, etc. Each vehicle had their "shared skin" set to
+    /// the same ID, and the skin asset had its target ID set to the shared ID. This isn't as necessary after
+    /// merging vanilla vehicle variants, but some mods may rely on it, and it needed GUID support now that the
+    /// target vehicle might not have a legacy ID.
+    /// </summary>
+    public VehicleAsset FindSharedSkinVehicleAsset()
+    {
+        Asset asset = Assets.FindBaseVehicleAssetByGuidOrLegacyId(_sharedSkinLookupGuid, _sharedSkinLookupID);
+        if (asset is VehicleRedirectorAsset { TargetVehicle: var targetVehicle })
+        {
+            asset = targetVehicle.Find();
+        }
+        return asset as VehicleAsset;
+    }
 
     public GameObject GetOrLoadModel()
     {
@@ -486,6 +665,10 @@ public class VehicleAsset : Asset, ISkinableAsset
             }
         }
         asset.SetTagIfUntaggedRecursively("Vehicle");
+        if (wheelConfiguration == null)
+        {
+            BuildAutomaticWheelConfiguration(asset);
+        }
     }
 
     /// <summary>
@@ -576,6 +759,230 @@ public class VehicleAsset : Asset, ISkinableAsset
         }
     }
 
+    public void DebugDumpWheelConfigurationToStringBuilder(StringBuilder output)
+    {
+        output.Append(vehicleName);
+        if (wheelConfiguration == null || wheelConfiguration.Length < 1)
+        {
+            output.AppendLine(" wheel configuration(s): N/A");
+            return;
+        }
+        output.AppendLine(" wheel configuration(s):");
+        for (int i = 0; i < wheelConfiguration.Length; i++)
+        {
+            output.Append(i);
+            output.AppendLine(":");
+            VehicleWheelConfiguration vehicleWheelConfiguration = wheelConfiguration[i];
+            output.Append("Wheel collider path: \"");
+            output.Append(vehicleWheelConfiguration.wheelColliderPath);
+            output.AppendLine("\"");
+            output.Append("Is collider steered: ");
+            output.Append(vehicleWheelConfiguration.isColliderSteered);
+            output.AppendLine();
+            output.Append("Is collider powered: ");
+            output.Append(vehicleWheelConfiguration.isColliderPowered);
+            output.AppendLine();
+            output.Append("Model path: \"");
+            output.Append(vehicleWheelConfiguration.modelPath);
+            output.AppendLine("\"");
+            output.Append("Is model steered: ");
+            output.Append(vehicleWheelConfiguration.isModelSteered);
+            output.AppendLine();
+        }
+    }
+
+    public string DebugDumpWheelConfigurationToString()
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        DebugDumpWheelConfigurationToStringBuilder(stringBuilder);
+        return stringBuilder.ToString();
+    }
+
+    private void LogWheelConfigurationDatConversion()
+    {
+        string message;
+        using (StringWriter stringWriter = new StringWriter())
+        {
+            using DatWriter datWriter = new DatWriter(stringWriter);
+            datWriter.WriteListStart("WheelConfigurations");
+            VehicleWheelConfiguration[] array = wheelConfiguration;
+            foreach (VehicleWheelConfiguration vehicleWheelConfiguration in array)
+            {
+                datWriter.WriteDictionaryStart();
+                datWriter.WriteKeyValue("WheelColliderPath", vehicleWheelConfiguration.wheelColliderPath);
+                datWriter.WriteKeyValue("IsColliderSteered", vehicleWheelConfiguration.isColliderSteered);
+                datWriter.WriteKeyValue("IsColliderPowered", vehicleWheelConfiguration.isColliderPowered);
+                datWriter.WriteKeyValue("ModelPath", vehicleWheelConfiguration.modelPath);
+                datWriter.WriteKeyValue("IsModelSteered", vehicleWheelConfiguration.isModelSteered);
+                datWriter.WriteDictionaryEnd();
+            }
+            datWriter.WriteListEnd();
+            message = stringWriter.ToString();
+        }
+        UnturnedLog.info("Converted \"" + FriendlyName + "\" wheel configuration:");
+        UnturnedLog.info(message);
+    }
+
+    /// <summary>
+    /// Nelson 2024-02-28: Prior to the VehicleWheelConfiguration class, most of the wheel configuration was
+    /// inferred during InteractableVehicle initialization from the children of the "Tires" and "Wheels" transforms.
+    /// Confusingly, "Tires" only contains WheelColliders and "Wheels" only contains the visual models. Rather than
+    /// keeping the old behavior in InteractableVehicle alongside the newer more configurable one, we match the old
+    /// behavior here to generate an equivalent configuration.
+    ///
+    /// Note that <see cref="P:SDG.Unturned.VehicleAsset.steeringTireIndices" /> must be initialized before this is called (by loading model).
+    /// </summary>
+    private void BuildAutomaticWheelConfiguration(GameObject vehicleGameObject)
+    {
+        Transform transform = vehicleGameObject.transform;
+        List<VehicleWheelConfiguration> list = new List<VehicleWheelConfiguration>();
+        Transform transform2 = transform.Find("Tires");
+        if (transform2 != null)
+        {
+            for (int i = 0; i < transform2.childCount; i++)
+            {
+                string text = "Tire_" + i;
+                Transform transform3 = transform2.Find(text);
+                if (transform3 == null)
+                {
+                    Assets.reportError(this, "missing \"{0}\" Transform", text);
+                    continue;
+                }
+                if (transform3.GetComponent<WheelCollider>() == null)
+                {
+                    Assets.reportError(this, "missing \"{0}\" WheelCollider", text);
+                    continue;
+                }
+                VehicleWheelConfiguration vehicleWheelConfiguration = new VehicleWheelConfiguration();
+                vehicleWheelConfiguration.wasAutomaticallyGenerated = true;
+                vehicleWheelConfiguration.wheelColliderPath = "Tires/" + text;
+                vehicleWheelConfiguration.isColliderSteered = i < 2;
+                vehicleWheelConfiguration.isColliderPowered = i >= transform2.childCount - 2;
+                list.Add(vehicleWheelConfiguration);
+            }
+        }
+        Transform transform4 = transform.Find("Wheels");
+        if (transform4 != null)
+        {
+            foreach (VehicleWheelConfiguration item in list)
+            {
+                Transform transform5 = transform.Find(item.wheelColliderPath);
+                if (transform5 == null)
+                {
+                    continue;
+                }
+                int num = -1;
+                float num2 = 16f;
+                for (int j = 0; j < transform4.childCount; j++)
+                {
+                    Transform child = transform4.GetChild(j);
+                    float sqrMagnitude = (transform5.position - child.position).sqrMagnitude;
+                    if (sqrMagnitude < num2)
+                    {
+                        num = j;
+                        num2 = sqrMagnitude;
+                    }
+                }
+                if (num == -1)
+                {
+                    continue;
+                }
+                Transform transform6 = transform4.GetChild(num);
+                if (transform6.childCount < 1)
+                {
+                    Transform transform7 = transform.FindChildRecursive("Wheel_" + num);
+                    if (transform7 != null)
+                    {
+                        transform6 = transform7;
+                    }
+                }
+                string text2 = transform6.name;
+                Transform parent = transform6.parent;
+                while (parent != transform)
+                {
+                    text2 = parent.name + "/" + text2;
+                    parent = parent.parent;
+                }
+                item.modelPath = text2;
+            }
+            foreach (Transform item2 in transform4)
+            {
+                if (item2.childCount < 1)
+                {
+                    continue;
+                }
+                bool flag = false;
+                foreach (VehicleWheelConfiguration item3 in list)
+                {
+                    if (!string.IsNullOrEmpty(item3.modelPath))
+                    {
+                        Transform transform9 = transform.Find(item3.modelPath);
+                        if (!(transform9 == null) && transform9 == item2)
+                        {
+                            flag = true;
+                            break;
+                        }
+                    }
+                }
+                if (!flag)
+                {
+                    VehicleWheelConfiguration vehicleWheelConfiguration2 = new VehicleWheelConfiguration();
+                    vehicleWheelConfiguration2.wasAutomaticallyGenerated = true;
+                    vehicleWheelConfiguration2.modelPath = "Wheels/" + item2.name;
+                    list.Add(vehicleWheelConfiguration2);
+                }
+            }
+            if (steeringTireIndices != null)
+            {
+                int[] array = steeringTireIndices;
+                for (int k = 0; k < array.Length; k++)
+                {
+                    int num3 = array[k];
+                    string n = "Wheel_" + num3;
+                    Transform transform10 = transform4.Find(n);
+                    if (transform10 == null)
+                    {
+                        transform10 = transform.FindChildRecursive(n);
+                        if (transform10 == null && num3 < transform4.childCount)
+                        {
+                            transform10 = transform4.GetChild(num3);
+                        }
+                    }
+                    if (transform10 == null)
+                    {
+                        continue;
+                    }
+                    VehicleWheelConfiguration vehicleWheelConfiguration3 = null;
+                    foreach (VehicleWheelConfiguration item4 in list)
+                    {
+                        if (!string.IsNullOrEmpty(item4.modelPath))
+                        {
+                            Transform transform11 = transform.Find(item4.modelPath);
+                            if (!(transform11 == null) && transform11 == transform10)
+                            {
+                                vehicleWheelConfiguration3 = item4;
+                                break;
+                            }
+                        }
+                    }
+                    if (vehicleWheelConfiguration3 != null)
+                    {
+                        vehicleWheelConfiguration3.isModelSteered = true;
+                    }
+                    else
+                    {
+                        Assets.reportError(this, "unable to match physical tire with steering tire model {0}", num3);
+                    }
+                }
+            }
+        }
+        wheelConfiguration = list.ToArray();
+        if ((bool)clLogWheelConfiguration)
+        {
+            LogWheelConfigurationDatConversion();
+        }
+    }
+
     public bool IsExplosionEffectRefNull()
     {
         if (_explosion == 0)
@@ -602,6 +1009,18 @@ public class VehicleAsset : Asset, ISkinableAsset
         _pitchDrive = data.ParseFloat("Pitch_Drive", -1f);
         _engine = data.ParseEnum("Engine", EEngine.CAR);
         physicsProfileRef = data.readAssetReference<VehiclePhysicsProfileAsset>("Physics_Profile");
+        int defaultValue = ((engine != 0) ? 1 : 2);
+        _hasCrawler = data.ContainsKey("Crawler");
+        if (hasCrawler)
+        {
+            defaultValue = 0;
+        }
+        numSteeringTires = data.ParseInt32("Num_Steering_Tires", defaultValue);
+        steeringTireIndices = new int[numSteeringTires];
+        for (int i = 0; i < numSteeringTires; i++)
+        {
+            steeringTireIndices[i] = data.ParseInt32("Steering_Tire_" + i, i);
+        }
         if (Dedicator.IsDedicatedServer && data.ParseBool("Has_Clip_Prefab", defaultValue: true))
         {
             bundle.loadDeferred("Clip", out legacyServerModel, (LoadedAssetDeferredCallback<GameObject>)OnServerModelLoaded);
@@ -611,10 +1030,11 @@ public class VehicleAsset : Asset, ISkinableAsset
         _sharedSkinName = data.GetString("Shared_Skin_Name");
         if (data.ContainsKey("Shared_Skin_Lookup_ID"))
         {
-            _sharedSkinLookupID = data.ParseUInt16("Shared_Skin_Lookup_ID", 0);
+            _sharedSkinLookupID = data.ParseGuidOrLegacyId("Shared_Skin_Lookup_ID", out _sharedSkinLookupGuid);
         }
         else
         {
+            _sharedSkinLookupGuid = GUID;
             _sharedSkinLookupID = id;
         }
         if (data.ContainsKey("Rarity"))
@@ -628,7 +1048,6 @@ public class VehicleAsset : Asset, ISkinableAsset
         _hasZip = data.ContainsKey("Zip");
         _hasBicycle = data.ContainsKey("Bicycle");
         isReclined = data.ContainsKey("Reclined");
-        _hasCrawler = data.ContainsKey("Crawler");
         _hasLockMouse = data.ContainsKey("LockMouse");
         _hasTraction = data.ContainsKey("Traction");
         _hasSleds = data.ContainsKey("Sleds");
@@ -662,19 +1081,20 @@ public class VehicleAsset : Asset, ISkinableAsset
         batteryHeadlights = data.ParseEnum("BatteryMode_Headlights", EBatteryMode.Burn);
         batterySirens = data.ParseEnum("BatteryMode_Sirens", EBatteryMode.Burn);
         defaultBatteryGuid = data.ParseGuid("Default_Battery", VANILLA_BATTERY_ITEM);
-        float defaultValue = ((engine == EEngine.CAR) ? 2.05f : 4.2f);
-        fuelBurnRate = data.ParseFloat("Fuel_Burn_Rate", defaultValue);
+        float defaultValue2 = ((engine == EEngine.CAR) ? 2.05f : 4.2f);
+        fuelBurnRate = data.ParseFloat("Fuel_Burn_Rate", defaultValue2);
         _ignition = LoadRedirectableAsset<AudioClip>(bundle, "Ignition", data, "IgnitionAudioClip");
         _horn = LoadRedirectableAsset<AudioClip>(bundle, "Horn", data, "HornAudioClip");
         hasHorn = data.ParseBool("Has_Horn", _horn != null);
-        _speedMin = data.ParseFloat("Speed_Min");
-        _speedMax = data.ParseFloat("Speed_Max");
+        TargetReverseVelocity = data.ParseFloat("Speed_Min");
+        TargetForwardVelocity = data.ParseFloat("Speed_Max");
         if (engine != EEngine.TRAIN)
         {
-            _speedMax *= 1.25f;
+            TargetForwardVelocity *= 1.25f;
         }
         _steerMin = data.ParseFloat("Steer_Min");
         _steerMax = data.ParseFloat("Steer_Max") * 0.75f;
+        SteeringAngleTurnSpeed = data.ParseFloat("Steering_Angle_Turn_Speed", _steerMax * 5f);
         _brake = data.ParseFloat("Brake");
         _lift = data.ParseFloat("Lift");
         _fuelMin = data.ParseUInt16("Fuel_Min", 0);
@@ -684,24 +1104,33 @@ public class VehicleAsset : Asset, ISkinableAsset
         _healthMax = data.ParseUInt16("Health_Max", 0);
         _health = data.ParseUInt16("Health", 0);
         _explosion = data.ParseGuidOrLegacyId("Explosion", out _explosionEffectGuid);
-        bool defaultValue2 = !IsExplosionEffectRefNull();
-        ShouldExplosionCauseDamage = data.ParseBool("ShouldExplosionCauseDamage", defaultValue2);
-        ShouldExplosionBurnMaterials = data.ParseBool("ShouldExplosionBurnMaterials", defaultValue2);
-        if (data.ContainsKey("Explosion_Min_Force_Y"))
+        bool defaultValue3 = !IsExplosionEffectRefNull();
+        ShouldExplosionCauseDamage = data.ParseBool("ShouldExplosionCauseDamage", defaultValue3);
+        ShouldExplosionBurnMaterials = data.ParseBool("ShouldExplosionBurnMaterials", defaultValue3);
+        float num = data.ParseFloat("Explosion_Force_Multiplier", 1f);
+        if (data.TryParseVector3("Explosion_Min_Force", out var value))
         {
-            minExplosionForce = data.LegacyParseVector3("Explosion_Min_Force");
+            minExplosionForce = value * num;
+        }
+        else if (data.ContainsKey("Explosion_Min_Force_Y"))
+        {
+            minExplosionForce = data.LegacyParseVector3("Explosion_Min_Force") * num;
         }
         else
         {
-            minExplosionForce = new Vector3(0f, 1024f, 0f);
+            minExplosionForce = new Vector3(0f, 1024f * num, 0f);
         }
-        if (data.ContainsKey("Explosion_Max_Force_Y"))
+        if (data.TryParseVector3("Explosion_Max_Force", out var value2))
         {
-            maxExplosionForce = data.LegacyParseVector3("Explosion_Max_Force");
+            maxExplosionForce = value2 * num;
+        }
+        else if (data.ContainsKey("Explosion_Max_Force_Y"))
+        {
+            maxExplosionForce = data.LegacyParseVector3("Explosion_Max_Force") * num;
         }
         else
         {
-            maxExplosionForce = new Vector3(0f, 1024f, 0f);
+            maxExplosionForce = new Vector3(0f, 1024f * num, 0f);
         }
         if (data.ContainsKey("Exit"))
         {
@@ -739,36 +1168,36 @@ public class VehicleAsset : Asset, ISkinableAsset
         }
         if (engine == EEngine.HELICOPTER || engine == EEngine.BLIMP)
         {
-            _sqrDelta = MathfEx.Square(speedMax * 0.125f);
+            _sqrDelta = MathfEx.Square(TargetForwardVelocity * 0.125f);
         }
         else
         {
-            _sqrDelta = MathfEx.Square(speedMax * 0.1f);
+            _sqrDelta = MathfEx.Square(TargetForwardVelocity * 0.1f);
         }
         if (data.ContainsKey("Valid_Speed_Horizontal"))
         {
             float x = data.ParseFloat("Valid_Speed_Horizontal") * PlayerInput.RATE;
             _sqrDelta = MathfEx.Square(x);
         }
-        float defaultValue3;
         float defaultValue4;
+        float defaultValue5;
         switch (engine)
         {
         case EEngine.CAR:
-            defaultValue3 = 12.5f;
-            defaultValue4 = 25f;
+            defaultValue4 = 12.5f;
+            defaultValue5 = 25f;
             break;
         case EEngine.BOAT:
-            defaultValue3 = 3.25f;
-            defaultValue4 = 25f;
+            defaultValue4 = 3.25f;
+            defaultValue5 = 25f;
             break;
         default:
-            defaultValue3 = 100f;
             defaultValue4 = 100f;
+            defaultValue5 = 100f;
             break;
         }
-        validSpeedUp = data.ParseFloat("Valid_Speed_Up", defaultValue3);
-        validSpeedDown = data.ParseFloat("Valid_Speed_Down", defaultValue4);
+        validSpeedUp = data.ParseFloat("Valid_Speed_Up", defaultValue4);
+        validSpeedDown = data.ParseFloat("Valid_Speed_Down", defaultValue5);
         _turrets = new TurretInfo[data.ParseUInt8("Turrets", 0)];
         for (byte b = 0; b < turrets.Length; b++)
         {
@@ -818,9 +1247,9 @@ public class VehicleAsset : Asset, ISkinableAsset
         useStaminaBoost = data.ContainsKey("Stamina_Boost");
         isStaminaPowered = data.ContainsKey("Stamina_Powered");
         isBatteryPowered = data.ContainsKey("Battery_Powered");
-        if (data.TryParseEnum<EVehicleBuildablePlacementRule>("Buildable_Placement_Rule", out var value))
+        if (data.TryParseEnum<EVehicleBuildablePlacementRule>("Buildable_Placement_Rule", out var value3))
         {
-            BuildablePlacementRule = value;
+            BuildablePlacementRule = value3;
         }
         else if (data.ContainsKey("Supports_Mobile_Buildables"))
         {
@@ -839,22 +1268,13 @@ public class VehicleAsset : Asset, ISkinableAsset
         dropsMin = data.ParseUInt8("Drops_Min", 3);
         dropsMax = data.ParseUInt8("Drops_Max", 7);
         tireID = data.ParseUInt16("Tire_ID", 1451);
-        int defaultValue5 = ((engine != 0) ? 1 : 2);
-        if (hasCrawler)
-        {
-            defaultValue5 = 0;
-        }
-        numSteeringTires = data.ParseInt32("Num_Steering_Tires", defaultValue5);
-        steeringTireIndices = new int[numSteeringTires];
-        for (int i = 0; i < numSteeringTires; i++)
-        {
-            steeringTireIndices[i] = data.ParseInt32("Steering_Tire_" + i, i);
-        }
         hasCenterOfMassOverride = data.ParseBool("Override_Center_Of_Mass");
         if (hasCenterOfMassOverride)
         {
             centerOfMass = data.LegacyParseVector3("Center_Of_Mass");
         }
+        carjackForceMultiplier = data.ParseFloat("Carjack_Force_Multiplier", 1f);
+        engineForceMultiplier = data.ParseFloat("Engine_Force_Multiplier", 1f);
         if (data.ContainsKey("Wheel_Collider_Mass_Override"))
         {
             wheelColliderMassOverride = data.ParseFloat("Wheel_Collider_Mass_Override", 1f);
@@ -874,5 +1294,96 @@ public class VehicleAsset : Asset, ISkinableAsset
             _emissionBase = bundle.load<Texture2D>("Emission_Base");
         }
         CanDecay = engine != EEngine.TRAIN && (isVulnerable | isVulnerableToExplosions | isVulnerableToEnvironment | isVulnerableToBumper);
+        PaintableVehicleSections = data.ParseArrayOfStructs<PaintableVehicleSection>("PaintableSections");
+        if (data.TryGetList("DefaultPaintColors", out var node))
+        {
+            DefaultPaintColors = new List<Color32>(node.Count);
+            foreach (IDatNode item in node)
+            {
+                if (item is DatValue node2 && node2.TryParseColor32RGB(out var value4))
+                {
+                    DefaultPaintColors.Add(value4);
+                }
+            }
+        }
+        if (data.TryGetList("WheelConfigurations", out var node3))
+        {
+            List<VehicleWheelConfiguration> list = new List<VehicleWheelConfiguration>();
+            List<int> list2 = new List<int>();
+            List<int> list3 = new List<int>();
+            foreach (IDatNode item2 in node3)
+            {
+                VehicleWheelConfiguration vehicleWheelConfiguration = new VehicleWheelConfiguration();
+                if (vehicleWheelConfiguration.TryParse(item2))
+                {
+                    if (vehicleWheelConfiguration.modelUseColliderPose)
+                    {
+                        int count = list.Count;
+                        list2.Add(count);
+                    }
+                    if (vehicleWheelConfiguration.isColliderPowered)
+                    {
+                        int count2 = list.Count;
+                        list3.Add(count2);
+                    }
+                    list.Add(vehicleWheelConfiguration);
+                }
+                else
+                {
+                    Assets.reportError("Unable to parse entry in WheelConfigurations list: " + item2.DebugDumpToString());
+                }
+            }
+            wheelConfiguration = list.ToArray();
+            if (list2.Count > 0)
+            {
+                replicatedWheelIndices = list2.ToArray();
+            }
+            if (list3.Count > 0)
+            {
+                poweredWheelIndices = list3.ToArray();
+            }
+        }
+        reverseGearRatio = data.ParseFloat("ReverseGearRatio", 1f);
+        if (data.TryGetList("ForwardGearRatios", out var node4))
+        {
+            List<float> list4 = new List<float>();
+            foreach (IDatNode item3 in node4)
+            {
+                if (item3 is DatValue datValue && datValue.TryParseFloat(out var value5))
+                {
+                    list4.Add(value5);
+                }
+            }
+            if (list4.Count > 0)
+            {
+                forwardGearRatios = list4.ToArray();
+            }
+        }
+        gearShiftDownThresholdRpm = data.ParseFloat("GearShift_DownThresholdRPM", 1500f);
+        gearShiftUpThresholdRpm = data.ParseFloat("GearShift_UpThresholdRPM", 5500f);
+        gearShiftDuration = data.ParseFloat("GearShift_Duration", 0.5f);
+        gearShiftInterval = data.ParseFloat("GearShift_Interval", 1f);
+        engineIdleRpm = data.ParseFloat("EngineIdleRPM", 1000f);
+        engineMaxRpm = data.ParseFloat("EngineMaxRPM", 7000f);
+        engineRpmIncreaseRate = data.ParseFloat("EngineRPM_IncreaseRate", 10000f);
+        engineRpmDecreaseRate = data.ParseFloat("EngineRPM_DecreaseRate", 10000f);
+        engineMaxTorque = data.ParseFloat("EngineMaxTorque", 1f);
+        engineSoundType = data.ParseEnum("EngineSound_Type", EVehicleEngineSoundType.Legacy);
+        if (engineSoundType == EVehicleEngineSoundType.EngineRPMSimple)
+        {
+            engineSoundConfiguration = new RpmEngineSoundConfiguration();
+            if (data.TryGetDictionary("EngineSound", out var node5))
+            {
+                engineSoundConfiguration.TryParse(node5);
+            }
+        }
+        if (UsesEngineRpmAndGears && (bool)Assets.shouldValidateAssets)
+        {
+            GameObject orLoadModel = GetOrLoadModel();
+            if (orLoadModel != null && orLoadModel.GetComponent<EngineCurvesComponent>() == null)
+            {
+                Assets.reportError(this, "needs EngineCurvesComponent on vehicle prefab for engine RPM and gearbox to work properly");
+            }
+        }
     }
 }

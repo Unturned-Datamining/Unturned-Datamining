@@ -13,9 +13,9 @@ public class StructureDrop
 
     internal static readonly ClientInstanceMethod<byte> SendHealth = ClientInstanceMethod<byte>.Get(typeof(StructureDrop), "ReceiveHealth");
 
-    internal static readonly ClientInstanceMethod<byte, byte, Vector3, byte, byte, byte> SendTransform = ClientInstanceMethod<byte, byte, Vector3, byte, byte, byte>.Get(typeof(StructureDrop), "ReceiveTransform");
+    internal static readonly ClientInstanceMethod<byte, byte, Vector3, Quaternion> SendTransform = ClientInstanceMethod<byte, byte, Vector3, Quaternion>.Get(typeof(StructureDrop), "ReceiveTransform");
 
-    internal static readonly ServerInstanceMethod<Vector3, byte, byte, byte> SendTransformRequest = ServerInstanceMethod<Vector3, byte, byte, byte>.Get(typeof(StructureDrop), "ReceiveTransformRequest");
+    internal static readonly ServerInstanceMethod<Vector3, Quaternion> SendTransformRequest = ServerInstanceMethod<Vector3, Quaternion>.Get(typeof(StructureDrop), "ReceiveTransformRequest");
 
     private static List<Interactable2SalvageStructure> workingSalvageArray = new List<Interactable2SalvageStructure>();
 
@@ -84,7 +84,7 @@ public class StructureDrop
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, deferMode = ENetInvocationDeferMode.Queue)]
-    public void ReceiveTransform(in ClientInvocationContext context, byte old_x, byte old_y, Vector3 point, byte angle_x, byte angle_y, byte angle_z)
+    public void ReceiveTransform(in ClientInvocationContext context, byte old_x, byte old_y, Vector3 point, Quaternion rotation)
     {
         if (!StructureManager.tryGetRegion(old_x, old_y, out var region) || (!Provider.isServer && !region.isNetworked))
         {
@@ -104,7 +104,7 @@ public class StructureDrop
             RemoveFoliageCut();
         }
         model.position = point;
-        model.rotation = Quaternion.Euler(angle_x * 2, angle_y * 2, angle_z * 2);
+        model.rotation = rotation;
         try
         {
             StructureManager.housingConnections.LinkConnections(this);
@@ -139,9 +139,7 @@ public class StructureDrop
         if (Provider.isServer)
         {
             serversideData.point = point;
-            serversideData.angle_x = angle_x;
-            serversideData.angle_y = angle_y;
-            serversideData.angle_z = angle_z;
+            serversideData.rotation = rotation;
         }
     }
 
@@ -150,22 +148,38 @@ public class StructureDrop
     /// and only admins will actually be allowed to apply the transform.
     /// </summary>
     [SteamCall(ESteamCallValidation.SERVERSIDE)]
-    public void ReceiveTransformRequest(in ServerInvocationContext context, Vector3 point, byte angle_x, byte angle_y, byte angle_z)
+    public void ReceiveTransformRequest(in ServerInvocationContext context, Vector3 point, Quaternion rotation)
     {
         Player player = context.GetPlayer();
-        if (!(player == null) && !player.life.isDead && player.look.canUseWorkzone && StructureManager.tryGetRegion(_model, out var x, out var y, out var _))
+        if (player == null || player.life.isDead || !player.look.canUseWorkzone || !StructureManager.tryGetRegion(_model, out var x, out var y, out var _))
         {
+            return;
+        }
+        if (StructureManager.onTransformRequested != null)
+        {
+            Vector3 eulerAngles = rotation.eulerAngles;
+            byte b = MeasurementTool.angleToByte(eulerAngles.x);
+            byte b2 = MeasurementTool.angleToByte(eulerAngles.y);
+            byte b3 = MeasurementTool.angleToByte(eulerAngles.z);
+            byte angle_x = b;
+            byte angle_y = b2;
+            byte angle_z = b3;
             bool shouldAllow = true;
-            StructureManager.onTransformRequested?.Invoke(player.channel.owner.playerID.steamID, x, y, instanceID, ref point, ref angle_x, ref angle_y, ref angle_z, ref shouldAllow);
+            StructureManager.onTransformRequested(player.channel.owner.playerID.steamID, x, y, instanceID, ref point, ref angle_x, ref angle_y, ref angle_z, ref shouldAllow);
+            if (angle_x != b || angle_y != b2 || angle_z != b3)
+            {
+                float x2 = MeasurementTool.byteToAngle(angle_x);
+                float y2 = MeasurementTool.byteToAngle(angle_y);
+                float z = MeasurementTool.byteToAngle(angle_z);
+                rotation = Quaternion.Euler(x2, y2, z);
+            }
             if (!shouldAllow)
             {
                 point = serversideData.point;
-                angle_x = serversideData.angle_x;
-                angle_y = serversideData.angle_y;
-                angle_z = serversideData.angle_z;
+                rotation = serversideData.rotation;
             }
-            StructureManager.InternalSetStructureTransform(x, y, this, point, angle_x, angle_y, angle_z);
         }
+        StructureManager.InternalSetStructureTransform(x, y, this, point, rotation);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, deferMode = ENetInvocationDeferMode.Queue)]

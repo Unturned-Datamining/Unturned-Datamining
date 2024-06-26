@@ -15,6 +15,11 @@ public abstract class Asset
     internal AssetOrigin origin;
 
     /// <summary>
+    /// If true, an asset with the same ID or GUID has been added to the current asset mapping, replacing this one.
+    /// </summary>
+    internal bool hasBeenReplaced;
+
+    /// <summary>
     /// Null or empty if created at runtime, otherwise set by <see cref="T:SDG.Unturned.Assets" /> when loading.
     /// </summary>
     public string absoluteOriginFilePath;

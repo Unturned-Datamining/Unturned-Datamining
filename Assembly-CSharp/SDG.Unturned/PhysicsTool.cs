@@ -173,4 +173,9 @@ public class PhysicsTool
     {
         return GetMaterialName(hit.point, hit.transform, hit.collider);
     }
+
+    public static string GetMaterialName(WheelHit hit)
+    {
+        return GetMaterialName(hit.point, hit.collider?.transform, hit.collider);
+    }
 }

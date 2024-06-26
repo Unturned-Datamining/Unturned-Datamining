@@ -1349,6 +1349,7 @@ public class MenuDashboardUI
                 ESteamConnectionFailureInfo.NAME_PRIVATE_INVALID => localization.format("Name_Private_Invalid"), 
                 ESteamConnectionFailureInfo.NAME_PRIVATE_NUMBER => localization.format("Name_Private_Number"), 
                 ESteamConnectionFailureInfo.HASH_RESOURCES => localization.format("Hash_Resources"), 
+                ESteamConnectionFailureInfo.SKIN_COLOR_WITHIN_THRESHOLD_OF_TERRAIN_COLOR => localization.format("SkinColorWithinThresholdOfTerrainColor"), 
                 ESteamConnectionFailureInfo.SERVER_MAP_ADVERTISEMENT_MISMATCH => localization.format("Server_Map_Advertisement_Mismatch"), 
                 ESteamConnectionFailureInfo.SERVER_VAC_ADVERTISEMENT_MISMATCH => localization.format("Server_VAC_Advertisement_Mismatch"), 
                 ESteamConnectionFailureInfo.SERVER_BATTLEYE_ADVERTISEMENT_MISMATCH => localization.format("Server_BattlEye_Advertisement_Mismatch"), 

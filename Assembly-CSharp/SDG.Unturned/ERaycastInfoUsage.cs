@@ -21,5 +21,6 @@ public enum ERaycastInfoUsage
     Carjack,
     Grower,
     ArrestStart,
-    ArrestEnd
+    ArrestEnd,
+    Paint
 }

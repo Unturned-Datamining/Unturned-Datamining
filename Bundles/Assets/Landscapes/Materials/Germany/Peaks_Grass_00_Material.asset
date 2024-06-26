@@ -16,7 +16,7 @@
 		"Name" ""
 		"Path" ""
 	}
-	"Physics_Material" "FOLIAGE_STATIC"
+	"Physics_Material" "Peaks_Grass_Dry"
 	"Foliage"
 	{
 		"GUID" "5975d4e032b345718e4ad75b2093df00"

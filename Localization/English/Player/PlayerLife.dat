@@ -109,6 +109,11 @@ HousingPlannerTutorial Select Item [{0}]
 PlacementObstructedBy Blocked by: {0}
 PlacementObstructedByGround Cannot Build Underground
 FreeformBuildableNotAllowed Freeform Buildables Not Allowed
+NotPaintable Not Paintable
+
+VehicleGear_Reverse R
+VehicleGear_Neutral N
+VehicleEngineStatus Gear: {0} RPM: {1}
 
 Chat_Global [World] {0}: {1}
 Chat_Local [Area] {0}: {1}

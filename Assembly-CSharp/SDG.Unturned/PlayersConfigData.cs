@@ -97,6 +97,11 @@ public class PlayersConfigData
     /// </summary>
     public bool Allow_Per_Character_Saves;
 
+    /// <summary>
+    /// If true, players will be kicked if their skin color is too similar to one of the level's terrain colors.
+    /// </summary>
+    public bool Enable_Terrain_Color_Kick = true;
+
     public PlayersConfigData(EGameMode mode)
     {
         Health_Default = 100u;

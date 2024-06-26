@@ -1,0 +1,14 @@
+"Metadata"
+{
+	"GUID" "9e728063b8314eeb8d26dab630113f42"
+	"Type" "SDG.Unturned.PhysicsMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"UnityNames"
+	[
+		"Russia_Leaves"
+	]
+	"Fallback" "1c3a3c6664f14aa486d73528a5d9f92c" // Foliage
+	"TireMotionEffect" "654dd1c8b431499186873e185fe2eeda" // TireMotion_Foliage_Russia_02
+}

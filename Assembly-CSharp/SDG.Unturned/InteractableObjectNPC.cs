@@ -157,11 +157,10 @@ public class InteractableObjectNPC : InteractableObject
         Transform parent3 = transform2.Find("Spine").Find("Primary_Small_Gun");
         Transform parent4 = transform2.Find("Right_Hip").Find("Right_Leg").Find("Secondary_Melee");
         Transform parent5 = transform2.Find("Right_Hip").Find("Right_Leg").Find("Secondary_Gun");
-        Transform parent6 = transform2.Find("Spine").Find("Left_Shoulder").Find("Left_Arm")
-            .Find("Left_Hand")
+        Transform transform3 = transform2.Find("Spine");
+        Transform transform4 = transform3.Find("Left_Shoulder").Find("Left_Arm").Find("Left_Hand")
             .Find("Left_Hook");
-        Transform parent7 = transform2.Find("Spine").Find("Right_Shoulder").Find("Right_Arm")
-            .Find("Right_Hand")
+        Transform transform5 = transform3.Find("Right_Shoulder").Find("Right_Arm").Find("Right_Hand")
             .Find("Right_Hook");
         clothes = transform.GetComponent<HumanClothes>();
         clothes.canWearPro = true;
@@ -231,88 +230,88 @@ public class InteractableObjectNPC : InteractableObject
         ItemAsset itemAsset2 = Assets.FindItemByGuidOrLegacyId<ItemAsset>(npcAsset.primaryWeaponGuid, npcAsset.primary);
         if (itemAsset2 != null)
         {
+            GameObject prefabOverride = ((npcAsset.equipped == ESlotType.PRIMARY && itemAsset2.equipablePrefab != null) ? itemAsset2.equipablePrefab : itemAsset2.item);
             Material tempMaterial;
-            Transform item = ItemTool.getItem(itemAsset2.id, 0, 100, itemAsset2.getState(), viewmodel: false, itemAsset2, shouldDestroyColliders: true, null, out tempMaterial, null);
+            Transform transform6 = ItemTool.InstantiateItem(100, itemAsset2.getState(), viewmodel: false, itemAsset2, null, shouldDestroyColliders: true, null, out tempMaterial, null, prefabOverride);
             if (npcAsset.equipped == ESlotType.PRIMARY)
             {
-                if (itemAsset2.ShouldAttachEquippedModelToLeftHand)
+                Transform parent6 = itemAsset2.EquipableModelParent switch
                 {
-                    item.transform.parent = parent6;
-                }
-                else
-                {
-                    item.transform.parent = parent7;
-                }
+                    EEquipableModelParent.LeftHook => transform4, 
+                    EEquipableModelParent.Spine => transform3, 
+                    _ => transform5, 
+                };
+                transform6.transform.parent = parent6;
                 itemAsset = itemAsset2;
             }
             else if (itemAsset2.type == EItemType.MELEE)
             {
-                item.transform.parent = parent;
+                transform6.transform.parent = parent;
             }
             else if (itemAsset2.slot == ESlotType.PRIMARY)
             {
-                item.transform.parent = parent2;
+                transform6.transform.parent = parent2;
             }
             else
             {
-                item.transform.parent = parent3;
+                transform6.transform.parent = parent3;
             }
-            item.localPosition = Vector3.zero;
-            item.localRotation = Quaternion.Euler(0f, 0f, 90f);
-            item.localScale = Vector3.one;
-            item.DestroyRigidbody();
-            Layerer.enemy(item);
+            transform6.localPosition = Vector3.zero;
+            transform6.localRotation = Quaternion.Euler(0f, 0f, 90f);
+            transform6.localScale = Vector3.one;
+            transform6.DestroyRigidbody();
+            Layerer.enemy(transform6);
         }
         ItemAsset itemAsset3 = Assets.FindItemByGuidOrLegacyId<ItemAsset>(npcAsset.secondaryWeaponGuid, npcAsset.secondary);
         if (itemAsset3 != null)
         {
+            GameObject prefabOverride2 = ((npcAsset.equipped == ESlotType.SECONDARY && itemAsset3.equipablePrefab != null) ? itemAsset3.equipablePrefab : itemAsset3.item);
             Material tempMaterial2;
-            Transform item2 = ItemTool.getItem(itemAsset3.id, 0, 100, itemAsset3.getState(), viewmodel: false, itemAsset3, shouldDestroyColliders: true, null, out tempMaterial2, null);
+            Transform transform7 = ItemTool.InstantiateItem(100, itemAsset3.getState(), viewmodel: false, itemAsset3, null, shouldDestroyColliders: true, null, out tempMaterial2, null, prefabOverride2);
             if (npcAsset.equipped == ESlotType.SECONDARY)
             {
-                if (itemAsset3.ShouldAttachEquippedModelToLeftHand)
+                Transform parent7 = itemAsset3.EquipableModelParent switch
                 {
-                    item2.transform.parent = parent6;
-                }
-                else
-                {
-                    item2.transform.parent = parent7;
-                }
+                    EEquipableModelParent.LeftHook => transform4, 
+                    EEquipableModelParent.Spine => transform3, 
+                    _ => transform5, 
+                };
+                transform7.transform.parent = parent7;
                 itemAsset = itemAsset3;
             }
             else if (itemAsset3.type == EItemType.MELEE)
             {
-                item2.transform.parent = parent4;
+                transform7.transform.parent = parent4;
             }
             else
             {
-                item2.transform.parent = parent5;
+                transform7.transform.parent = parent5;
             }
-            item2.localPosition = Vector3.zero;
-            item2.localRotation = Quaternion.Euler(0f, 0f, 90f);
-            item2.localScale = Vector3.one;
-            item2.DestroyRigidbody();
-            Layerer.enemy(item2);
+            transform7.localPosition = Vector3.zero;
+            transform7.localRotation = Quaternion.Euler(0f, 0f, 90f);
+            transform7.localScale = Vector3.one;
+            transform7.DestroyRigidbody();
+            Layerer.enemy(transform7);
         }
         ItemAsset itemAsset4 = Assets.FindItemByGuidOrLegacyId<ItemAsset>(npcAsset.tertiaryWeaponGuid, npcAsset.tertiary);
         if (itemAsset4 != null && npcAsset.equipped == ESlotType.TERTIARY)
         {
+            GameObject prefabOverride3 = ((itemAsset4.equipablePrefab != null) ? itemAsset4.equipablePrefab : itemAsset4.item);
             Material tempMaterial3;
-            Transform item3 = ItemTool.getItem(itemAsset4.id, 0, 100, itemAsset4.getState(), viewmodel: false, itemAsset4, shouldDestroyColliders: true, null, out tempMaterial3, null);
-            if (itemAsset4.ShouldAttachEquippedModelToLeftHand)
+            Transform transform8 = ItemTool.InstantiateItem(100, itemAsset4.getState(), viewmodel: false, itemAsset4, null, shouldDestroyColliders: true, null, out tempMaterial3, null, prefabOverride3);
+            Transform parent8 = itemAsset4.EquipableModelParent switch
             {
-                item3.transform.parent = parent6;
-            }
-            else
-            {
-                item3.transform.parent = parent7;
-            }
+                EEquipableModelParent.LeftHook => transform4, 
+                EEquipableModelParent.Spine => transform3, 
+                _ => transform5, 
+            };
+            transform8.transform.parent = parent8;
             itemAsset = itemAsset4;
-            item3.localPosition = Vector3.zero;
-            item3.localRotation = Quaternion.Euler(0f, 0f, 90f);
-            item3.localScale = Vector3.one;
-            item3.DestroyRigidbody();
-            Layerer.enemy(item3);
+            transform8.localPosition = Vector3.zero;
+            transform8.localRotation = Quaternion.Euler(0f, 0f, 90f);
+            transform8.localScale = Vector3.one;
+            transform8.DestroyRigidbody();
+            Layerer.enemy(transform8);
         }
         if (itemAsset != null && itemAsset.animations != null)
         {

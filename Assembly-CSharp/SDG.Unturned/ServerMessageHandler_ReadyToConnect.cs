@@ -334,6 +334,11 @@ internal static class ServerMessageHandler_ReadyToConnect
             Provider.reject(transportConnection, ESteamRejection.PING, Provider.configData.Server.Max_Ping_Milliseconds.ToString());
             return;
         }
+        if (Provider.modeConfigData.Players.Enable_Terrain_Color_Kick && IsSkinColorWithinThresholdOfTerrainColor(value13))
+        {
+            Provider.reject(transportConnection, ESteamRejection.SKIN_COLOR_WITHIN_THRESHOLD_OF_TERRAIN_COLOR);
+            return;
+        }
         SteamPending steamPending = new SteamPending(transportConnection, steamPlayerID, value6, value10, value11, value12, value13, value14, value15, value16, value17, value18, value19, value20, value21, value22, value23, pendingPackageSkins.ToArray(), value24, value26, value27, value4);
         byte queuePosition;
         bool flag6;
@@ -384,6 +389,24 @@ internal static class ServerMessageHandler_ReadyToConnect
         if (name.StartsWith("SDG", StringComparison.InvariantCultureIgnoreCase) && name.EndsWith("Nelson", StringComparison.InvariantCultureIgnoreCase))
         {
             return true;
+        }
+        return false;
+    }
+
+    private static bool IsSkinColorWithinThresholdOfTerrainColor(Color32 skinColor)
+    {
+        LevelAsset asset = Level.getAsset();
+        if (asset == null || asset.terrainColorRules == null || asset.terrainColorRules.Count < 1)
+        {
+            return false;
+        }
+        Color.RGBToHSV(skinColor, out var H, out var S, out var V);
+        foreach (LevelAsset.TerrainColorRule terrainColorRule in asset.terrainColorRules)
+        {
+            if (terrainColorRule != null && terrainColorRule.CompareColors(H, S, V) == LevelAsset.TerrainColorRule.EComparisonResult.TooSimilar)
+            {
+                return true;
+            }
         }
         return false;
     }

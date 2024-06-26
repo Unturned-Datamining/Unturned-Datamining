@@ -21,11 +21,11 @@ public class HumanClothes : MonoBehaviour
 
     private Transform[] upperBones;
 
-    private Transform[] upperSystems;
+    private MythicalEffectController[] upperSystems;
 
     private Transform[] lowerBones;
 
-    private Transform[] lowerSystems;
+    private MythicalEffectController[] lowerSystems;
 
     public bool isMine;
 
@@ -1048,10 +1048,10 @@ public class HumanClothes : MonoBehaviour
                 {
                     for (int i = 0; i < upperSystems.Length; i++)
                     {
-                        Transform transform = upperSystems[i];
-                        if (transform != null)
+                        MythicalEffectController mythicalEffectController = upperSystems[i];
+                        if (mythicalEffectController != null)
                         {
-                            UnityEngine.Object.Destroy(transform.gameObject);
+                            UnityEngine.Object.Destroy(mythicalEffectController);
                         }
                     }
                     isUpper = false;
@@ -1061,7 +1061,7 @@ public class HumanClothes : MonoBehaviour
                     ushort inventoryMythicID = Provider.provider.economyService.getInventoryMythicID(visualShirt);
                     if (inventoryMythicID != 0)
                     {
-                        ItemTool.applyEffect(upperBones, upperSystems, inventoryMythicID, EEffectType.AREA);
+                        ItemTool.ApplyMythicalEffectToMultipleTransforms(upperBones, upperSystems, inventoryMythicID, EEffectType.AREA);
                         isUpper = true;
                     }
                 }
@@ -1077,10 +1077,10 @@ public class HumanClothes : MonoBehaviour
                 {
                     for (int j = 0; j < lowerSystems.Length; j++)
                     {
-                        Transform transform2 = lowerSystems[j];
-                        if (transform2 != null)
+                        MythicalEffectController mythicalEffectController2 = lowerSystems[j];
+                        if (mythicalEffectController2 != null)
                         {
-                            UnityEngine.Object.Destroy(transform2.gameObject);
+                            UnityEngine.Object.Destroy(mythicalEffectController2.gameObject);
                         }
                     }
                     isLower = false;
@@ -1090,7 +1090,7 @@ public class HumanClothes : MonoBehaviour
                     ushort inventoryMythicID2 = Provider.provider.economyService.getInventoryMythicID(visualPants);
                     if (inventoryMythicID2 != 0)
                     {
-                        ItemTool.applyEffect(lowerBones, lowerSystems, inventoryMythicID2, EEffectType.AREA);
+                        ItemTool.ApplyMythicalEffectToMultipleTransforms(lowerBones, lowerSystems, inventoryMythicID2, EEffectType.AREA);
                         isLower = true;
                     }
                 }
@@ -1130,7 +1130,7 @@ public class HumanClothes : MonoBehaviour
                         if (inventoryMythicID3 != 0)
                         {
                             centerHeadEffect(skull, hatModel);
-                            ItemTool.applyEffect(hatModel, inventoryMythicID3, EEffectType.HOOK);
+                            ItemTool.ApplyMythicalEffect(hatModel, inventoryMythicID3, EEffectType.HOOK);
                         }
                     }
                     ApplyHairOverride(itemHatAsset, hatModel);
@@ -1166,7 +1166,7 @@ public class HumanClothes : MonoBehaviour
                         ushort inventoryMythicID4 = Provider.provider.economyService.getInventoryMythicID(visualBackpack);
                         if (inventoryMythicID4 != 0)
                         {
-                            ItemTool.applyEffect(backpackModel, inventoryMythicID4, EEffectType.HOOK);
+                            ItemTool.ApplyMythicalEffect(backpackModel, inventoryMythicID4, EEffectType.HOOK);
                         }
                     }
                     backpackModel.gameObject.SetActive(hasBackpack);
@@ -1202,7 +1202,7 @@ public class HumanClothes : MonoBehaviour
                         ushort inventoryMythicID5 = Provider.provider.economyService.getInventoryMythicID(visualVest);
                         if (inventoryMythicID5 != 0)
                         {
-                            ItemTool.applyEffect(vestModel, inventoryMythicID5, EEffectType.HOOK);
+                            ItemTool.ApplyMythicalEffect(vestModel, inventoryMythicID5, EEffectType.HOOK);
                         }
                     }
                     ApplySkinOverride(itemVestAsset, vestModel);
@@ -1240,7 +1240,7 @@ public class HumanClothes : MonoBehaviour
                     if (num != 0)
                     {
                         centerHeadEffect(skull, maskModel);
-                        ItemTool.applyEffect(maskModel, num, EEffectType.HOOK);
+                        ItemTool.ApplyMythicalEffect(maskModel, num, EEffectType.HOOK);
                     }
                     ApplyHairOverride(itemMaskAsset, maskModel);
                     ApplySkinOverride(itemMaskAsset, maskModel);
@@ -1276,7 +1276,7 @@ public class HumanClothes : MonoBehaviour
                         if (inventoryMythicID6 != 0)
                         {
                             centerHeadEffect(skull, glassesModel);
-                            ItemTool.applyEffect(glassesModel, inventoryMythicID6, EEffectType.HOOK);
+                            ItemTool.ApplyMythicalEffect(glassesModel, inventoryMythicID6, EEffectType.HOOK);
                         }
                     }
                     ApplyHairOverride(itemGlassesAsset, glassesModel);
@@ -1446,7 +1446,7 @@ public class HumanClothes : MonoBehaviour
             spine.Find("Right_Shoulder/Right_Arm"),
             spine.Find("Right_Shoulder/Right_Arm/Right_Hand")
         };
-        upperSystems = new Transform[upperBones.Length];
+        upperSystems = new MythicalEffectController[upperBones.Length];
         lowerBones = new Transform[4]
         {
             spine.parent.Find("Left_Hip/Left_Leg"),
@@ -1454,7 +1454,7 @@ public class HumanClothes : MonoBehaviour
             spine.parent.Find("Right_Hip/Right_Leg"),
             spine.parent.Find("Right_Hip/Right_Leg/Right_Foot")
         };
-        lowerSystems = new Transform[lowerBones.Length];
+        lowerSystems = new MythicalEffectController[lowerBones.Length];
         Transform obj = base.transform.Find("Model_0");
         Transform transform = base.transform.Find("Model_1");
         characterMeshRenderers = new SkinnedMeshRenderer[(transform == null) ? 1 : 2];

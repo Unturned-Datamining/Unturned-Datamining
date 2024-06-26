@@ -97,10 +97,10 @@ public class MenuCreditsUI
         AddRow("John '00' Fleming", "Title Music", ref verticalOffset);
         AddRow("staswalle", "Loading Screen Music", ref verticalOffset);
         AddHeader(localization.format("Header_CommunityTeam"), ref verticalOffset);
-        string[] obj = new string[15]
+        string[] obj = new string[16]
         {
             "Deathismad", "James", "Retuuyo", "Fran-war", "SongPhoenix", "Lu", "Morkva", "Reaver", "Shadow", "Yarrrr",
-            "DeusExMachina", "Pablo824", "Genestic12", "Armaros", "Great Hero J"
+            "DeusExMachina", "Pablo824", "Genestic12", "Armaros", "Great Hero J", "SomeCatIDK"
         };
         Array.Sort(obj);
         AddRowColumns(obj, ref verticalOffset);

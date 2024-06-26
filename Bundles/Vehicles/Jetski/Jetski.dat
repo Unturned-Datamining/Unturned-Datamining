@@ -1,0 +1,49 @@
+GUID 66261510c9b04cbab68fd28789122632
+Type Vehicle
+
+Speed_Min -4
+Speed_Max 14
+
+Steer_Min 8
+Steer_Max 4
+
+Fuel_Min 200
+Fuel_Max 400
+Fuel 1000
+
+Health_Min 250
+Health_Max 350
+Health 450
+
+Zip
+Engine Boat
+
+Trunk_Storage_X 3
+Trunk_Storage_Y 2
+
+Explosion 20
+
+Should_Spawn_Seat_Capsules true
+
+IgnitionAudioClip Sounds/CarIgnition.mp3
+Has_Clip_Prefab false
+
+PaintableSections
+[
+    {
+        Path Model_0
+        MaterialIndex 0
+    }
+]
+
+DefaultPaintColors
+[
+    "#353535" // Original Black
+    "#37658c" // Original Blue
+    "#2e642e" // Original Green
+    "#bd6e27" // Original Orange
+    "#6a466d" // Original Purple
+    "#9a2525" // Original Red
+    "#d4d4d4" // Original White
+    "#cdaa1e" // Original Yellow
+]

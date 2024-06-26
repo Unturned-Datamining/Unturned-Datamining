@@ -20,15 +20,7 @@ public class MenuConfigurationOptionsUI
 
     private static ISleekLabel fovLabel;
 
-    private static ISleekSlider volumeSlider;
-
-    private static ISleekSlider voiceSlider;
-
-    private static ISleekSlider loadingScreenMusicVolumeSlider;
-
     private static ISleekToggle debugToggle;
-
-    private static ISleekToggle musicToggle;
 
     private static ISleekToggle timerToggle;
 
@@ -45,8 +37,6 @@ public class MenuConfigurationOptionsUI
     private static ISleekToggle chatVoiceAlwaysRecordingToggle;
 
     private static ISleekToggle hintsToggle;
-
-    private static ISleekToggle ambienceToggle;
 
     private static ISleekToggle streamerToggle;
 
@@ -153,34 +143,9 @@ public class MenuConfigurationOptionsUI
         fovLabel.Text = FormatFieldOfViewTooltip();
     }
 
-    private static void onDraggedVolumeSlider(ISleekSlider slider, float state)
-    {
-        OptionsSettings.volume = state;
-        OptionsSettings.apply();
-        volumeSlider.UpdateLabel(localization.format("Volume_Slider_Label", (int)(OptionsSettings.volume * 100f)));
-    }
-
-    private static void onDraggedVoiceSlider(ISleekSlider slider, float state)
-    {
-        OptionsSettings.voiceVolume = state;
-        voiceSlider.UpdateLabel(localization.format("Voice_Slider_Label", (int)(OptionsSettings.voiceVolume * 100f)));
-    }
-
-    private static void onDraggedLoadingScreenMusicVolumeSlider(ISleekSlider slider, float state)
-    {
-        OptionsSettings.loadingScreenMusicVolume = state;
-        loadingScreenMusicVolumeSlider.UpdateLabel(localization.format("Loading_Screen_Music_Volume_Slider_Label", (int)(OptionsSettings.loadingScreenMusicVolume * 100f)));
-    }
-
     private static void onToggledDebugToggle(ISleekToggle toggle, bool state)
     {
         OptionsSettings.debug = state;
-    }
-
-    private static void onToggledMusicToggle(ISleekToggle toggle, bool state)
-    {
-        OptionsSettings.music = state;
-        OptionsSettings.apply();
     }
 
     private static void onToggledTimerToggle(ISleekToggle toggle, bool state)
@@ -223,12 +188,6 @@ public class MenuConfigurationOptionsUI
     private static void onToggledHintsToggle(ISleekToggle toggle, bool state)
     {
         OptionsSettings.hints = state;
-    }
-
-    private static void onToggledAmbienceToggle(ISleekToggle toggle, bool state)
-    {
-        OptionsSettings.ambience = state;
-        OptionsSettings.apply();
     }
 
     private static void onToggledStreamerToggle(ISleekToggle toggle, bool state)
@@ -391,14 +350,7 @@ public class MenuConfigurationOptionsUI
     {
         fovSlider.Value = OptionsSettings.fov;
         fovLabel.Text = FormatFieldOfViewTooltip();
-        volumeSlider.Value = OptionsSettings.volume;
-        volumeSlider.UpdateLabel(localization.format("Volume_Slider_Label", (int)(OptionsSettings.volume * 100f)));
-        voiceSlider.Value = OptionsSettings.voiceVolume;
-        voiceSlider.UpdateLabel(localization.format("Voice_Slider_Label", (int)(OptionsSettings.voiceVolume * 100f)));
-        loadingScreenMusicVolumeSlider.Value = OptionsSettings.loadingScreenMusicVolume;
-        loadingScreenMusicVolumeSlider.UpdateLabel(localization.format("Loading_Screen_Music_Volume_Slider_Label", (int)(OptionsSettings.loadingScreenMusicVolume * 100f)));
         debugToggle.Value = OptionsSettings.debug;
-        musicToggle.Value = OptionsSettings.music;
         timerToggle.Value = OptionsSettings.timer;
         goreToggle.Value = OptionsSettings.gore;
         filterToggle.Value = OptionsSettings.filter;
@@ -408,7 +360,6 @@ public class MenuConfigurationOptionsUI
         chatVoiceAlwaysRecordingToggle.Value = OptionsSettings.VoiceAlwaysRecording;
         chatVoiceAlwaysRecordingToggle.IsInteractable = OptionsSettings.chatVoiceOut;
         hintsToggle.Value = OptionsSettings.hints;
-        ambienceToggle.Value = OptionsSettings.ambience;
         streamerToggle.Value = OptionsSettings.streamer;
         featuredWorkshopToggle.Value = OptionsSettings.featuredWorkshop;
         showHotbarToggle.Value = OptionsSettings.showHotbar;
@@ -478,14 +429,6 @@ public class MenuConfigurationOptionsUI
         debugToggle.OnValueChanged += onToggledDebugToggle;
         optionsBox.AddChild(debugToggle);
         num += 50f;
-        musicToggle = Glazier.Get().CreateToggle();
-        musicToggle.PositionOffset_Y = num;
-        musicToggle.SizeOffset_X = 40f;
-        musicToggle.SizeOffset_Y = 40f;
-        musicToggle.AddLabel(localization.format("Music_Toggle_Label"), ESleekSide.RIGHT);
-        musicToggle.OnValueChanged += onToggledMusicToggle;
-        optionsBox.AddChild(musicToggle);
-        num += 50f;
         timerToggle = Glazier.Get().CreateToggle();
         timerToggle.PositionOffset_Y = num;
         timerToggle.SizeOffset_X = 40f;
@@ -552,14 +495,6 @@ public class MenuConfigurationOptionsUI
         hintsToggle.OnValueChanged += onToggledHintsToggle;
         optionsBox.AddChild(hintsToggle);
         num += 50f;
-        ambienceToggle = Glazier.Get().CreateToggle();
-        ambienceToggle.PositionOffset_Y = num;
-        ambienceToggle.SizeOffset_X = 40f;
-        ambienceToggle.SizeOffset_Y = 40f;
-        ambienceToggle.AddLabel(localization.format("Ambience_Toggle_Label"), ESleekSide.RIGHT);
-        ambienceToggle.OnValueChanged += onToggledAmbienceToggle;
-        optionsBox.AddChild(ambienceToggle);
-        num += 50f;
         streamerToggle = Glazier.Get().CreateToggle();
         streamerToggle.PositionOffset_Y = num;
         streamerToggle.SizeOffset_X = 40f;
@@ -619,33 +554,6 @@ public class MenuConfigurationOptionsUI
         fovLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
         fovLabel.Text = FormatFieldOfViewTooltip();
         fovSlider.AddChild(fovLabel);
-        num += 30f;
-        volumeSlider = Glazier.Get().CreateSlider();
-        volumeSlider.PositionOffset_Y = num;
-        volumeSlider.SizeOffset_X = 200f;
-        volumeSlider.SizeOffset_Y = 20f;
-        volumeSlider.Orientation = ESleekOrientation.HORIZONTAL;
-        volumeSlider.AddLabel(localization.format("Volume_Slider_Label", (int)(OptionsSettings.volume * 100f)), ESleekSide.RIGHT);
-        volumeSlider.OnValueChanged += onDraggedVolumeSlider;
-        optionsBox.AddChild(volumeSlider);
-        num += 30f;
-        voiceSlider = Glazier.Get().CreateSlider();
-        voiceSlider.PositionOffset_Y = num;
-        voiceSlider.SizeOffset_X = 200f;
-        voiceSlider.SizeOffset_Y = 20f;
-        voiceSlider.Orientation = ESleekOrientation.HORIZONTAL;
-        voiceSlider.AddLabel(localization.format("Voice_Slider_Label", (int)(OptionsSettings.voiceVolume * 100f)), ESleekSide.RIGHT);
-        voiceSlider.OnValueChanged += onDraggedVoiceSlider;
-        optionsBox.AddChild(voiceSlider);
-        num += 30f;
-        loadingScreenMusicVolumeSlider = Glazier.Get().CreateSlider();
-        loadingScreenMusicVolumeSlider.PositionOffset_Y = num;
-        loadingScreenMusicVolumeSlider.SizeOffset_X = 200f;
-        loadingScreenMusicVolumeSlider.SizeOffset_Y = 20f;
-        loadingScreenMusicVolumeSlider.Orientation = ESleekOrientation.HORIZONTAL;
-        loadingScreenMusicVolumeSlider.AddLabel(localization.format("Loading_Screen_Music_Volume_Slider_Label", (int)(OptionsSettings.loadingScreenMusicVolume * 100f)), ESleekSide.RIGHT);
-        loadingScreenMusicVolumeSlider.OnValueChanged += onDraggedLoadingScreenMusicVolumeSlider;
-        optionsBox.AddChild(loadingScreenMusicVolumeSlider);
         num += 30f;
         screenshotSizeMultiplierField = Glazier.Get().CreateInt32Field();
         screenshotSizeMultiplierField.PositionOffset_Y = num;

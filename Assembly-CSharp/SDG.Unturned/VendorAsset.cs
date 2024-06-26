@@ -49,13 +49,13 @@ public class VendorAsset : Asset
         buying = new VendorBuying[data.ParseUInt8("Buying", 0)];
         for (byte b = 0; b < buying.Length; b++)
         {
-            ushort newID = data.ParseUInt16("Buying_" + b + "_ID", 0);
+            data.ParseGuidOrLegacyId("Buying_" + b + "_ID", out var guid, out var legacyId);
             uint newCost = data.ParseUInt32("Buying_" + b + "_Cost");
             INPCCondition[] array = new INPCCondition[data.ParseUInt8("Buying_" + b + "_Conditions", 0)];
             NPCTool.readConditions(data, localization, "Buying_" + b + "_Condition_", array, this);
             NPCRewardsList newRewardsList = default(NPCRewardsList);
             newRewardsList.Parse(data, localization, this, "Buying_" + b + "_Rewards", "Buying_" + b + "_Reward_");
-            buying[b] = new VendorBuying(this, b, newID, newCost, array, newRewardsList);
+            buying[b] = new VendorBuying(this, b, guid, legacyId, newCost, array, newRewardsList);
         }
         selling = new VendorSellingBase[data.ParseUInt8("Selling", 0)];
         for (byte b2 = 0; b2 < selling.Length; b2++)
@@ -65,7 +65,7 @@ public class VendorAsset : Asset
             {
                 text = data.GetString("Selling_" + b2 + "_Type");
             }
-            ushort newID2 = data.ParseUInt16("Selling_" + b2 + "_ID", 0);
+            data.ParseGuidOrLegacyId("Selling_" + b2 + "_ID", out var guid2, out var legacyId2);
             uint newCost2 = data.ParseUInt32("Selling_" + b2 + "_Cost");
             INPCCondition[] array2 = new INPCCondition[data.ParseUInt8("Selling_" + b2 + "_Conditions", 0)];
             NPCTool.readConditions(data, localization, "Selling_" + b2 + "_Condition_", array2, this);
@@ -73,7 +73,7 @@ public class VendorAsset : Asset
             newRewardsList2.Parse(data, localization, this, "Selling_" + b2 + "_Rewards", "Selling_" + b2 + "_Reward_");
             if (text == null || text.Equals("Item", StringComparison.InvariantCultureIgnoreCase))
             {
-                selling[b2] = new VendorSellingItem(this, b2, newID2, newCost2, array2, newRewardsList2);
+                selling[b2] = new VendorSellingItem(this, b2, guid2, legacyId2, newCost2, array2, newRewardsList2);
             }
             else
             {
@@ -87,7 +87,7 @@ public class VendorAsset : Asset
                 {
                     Assets.reportError(this, "missing \"" + text2 + "\" for vehicle");
                 }
-                selling[b2] = new VendorSellingVehicle(this, b2, newID2, newCost2, @string, array2, newRewardsList2);
+                selling[b2] = new VendorSellingVehicle(this, b2, guid2, legacyId2, newCost2, @string, array2, newRewardsList2);
             }
         }
         enableSorting = !data.ContainsKey("Disable_Sorting");

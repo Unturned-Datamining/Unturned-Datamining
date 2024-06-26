@@ -26,6 +26,10 @@ public class MenuConfigurationDisplayUI
 
     private static ISleekUInt32Field targetFrameRateField;
 
+    private static ISleekToggle unfocusedTargetFrameRateToggle;
+
+    private static ISleekUInt32Field unfocusedTargetFrameRateField;
+
     public static void open()
     {
         if (!active)
@@ -47,9 +51,10 @@ public class MenuConfigurationDisplayUI
 
     private static void onClickedResolutionButton(ISleekElement button)
     {
-        int num = Mathf.FloorToInt((button.PositionOffset_Y - 230f) / 40f);
-        GraphicsSettings.resolution = new GraphicsSettingsResolution(ScreenEx.GetRecommendedResolutions()[num]);
-        GraphicsSettings.apply("changed resolution");
+        int num = Mathf.FloorToInt((button.PositionOffset_Y - 300f) / 40f);
+        Resolution resolution = ScreenEx.GetRecommendedResolutions()[num];
+        GraphicsSettings.resolution = new GraphicsSettingsResolution(resolution);
+        GraphicsSettings.apply($"changed resolution to {resolution.width} x {resolution.height} [{resolution.refreshRate} Hz]");
     }
 
     private static void onSwappedFullscreenState(SleekButtonState button, int index)
@@ -79,13 +84,33 @@ public class MenuConfigurationDisplayUI
     {
         GraphicsSettings.UseTargetFrameRate = state;
         GraphicsSettings.apply("changed use target frame rate");
-        targetFrameRateField.IsVisible = state;
+        SynchronizeTargetFrameRateVisibility();
     }
 
     private static void OnTypedTargetFrameRate(ISleekUInt32Field field, uint state)
     {
         GraphicsSettings.TargetFrameRate = (int)state;
         GraphicsSettings.apply("changed target frame rate");
+    }
+
+    private static void OnToggledUnfocusedTargetFrameRate(ISleekToggle toggle, bool state)
+    {
+        GraphicsSettings.UseUnfocusedTargetFrameRate = state;
+        GraphicsSettings.apply("changed use unfocused target frame rate");
+        SynchronizeTargetFrameRateVisibility();
+    }
+
+    private static void OnTypedUnfocusedTargetFrameRate(ISleekUInt32Field field, uint state)
+    {
+        GraphicsSettings.UnfocusedTargetFrameRate = (int)state;
+        GraphicsSettings.apply("changed unfocused target frame rate");
+    }
+
+    private static void SynchronizeTargetFrameRateVisibility()
+    {
+        targetFrameRateField.IsVisible = GraphicsSettings.UseTargetFrameRate;
+        unfocusedTargetFrameRateToggle.IsVisible = targetFrameRateField.IsVisible;
+        unfocusedTargetFrameRateField.IsVisible = GraphicsSettings.UseUnfocusedTargetFrameRate && unfocusedTargetFrameRateToggle.IsVisible;
     }
 
     private static void onClickedBackButton(ISleekElement button)
@@ -138,14 +163,14 @@ public class MenuConfigurationDisplayUI
         resolutionsBox.SizeOffset_Y = -200f;
         resolutionsBox.SizeScale_Y = 1f;
         resolutionsBox.ScaleContentToWidth = true;
-        resolutionsBox.ContentSizeOffset = new Vector2(0f, 230 + recommendedResolutions.Length * 40 - 10);
+        resolutionsBox.ContentSizeOffset = new Vector2(0f, 300 + recommendedResolutions.Length * 40 - 10);
         container.AddChild(resolutionsBox);
         buttons = new ISleekButton[recommendedResolutions.Length];
         for (byte b = 0; b < buttons.Length; b++)
         {
             Resolution resolution = recommendedResolutions[b];
             ISleekButton sleekButton = Glazier.Get().CreateButton();
-            sleekButton.PositionOffset_Y = 230 + b * 40;
+            sleekButton.PositionOffset_Y = 300 + b * 40;
             sleekButton.SizeOffset_Y = 30f;
             sleekButton.SizeScale_X = 1f;
             sleekButton.OnClicked += onClickedResolutionButton;
@@ -203,8 +228,24 @@ public class MenuConfigurationDisplayUI
         targetFrameRateField.AddLabel(localization.format("TargetFrameRate_Field_Label"), ESleekSide.RIGHT);
         targetFrameRateField.Value = (uint)GraphicsSettings.TargetFrameRate;
         targetFrameRateField.OnValueChanged += OnTypedTargetFrameRate;
-        targetFrameRateField.IsVisible = GraphicsSettings.UseTargetFrameRate;
         resolutionsBox.AddChild(targetFrameRateField);
+        unfocusedTargetFrameRateToggle = Glazier.Get().CreateToggle();
+        unfocusedTargetFrameRateToggle.PositionOffset_Y = 220f;
+        unfocusedTargetFrameRateToggle.SizeOffset_X = 40f;
+        unfocusedTargetFrameRateToggle.SizeOffset_Y = 40f;
+        unfocusedTargetFrameRateToggle.AddLabel(localization.format("UseUnfocusedTargetFrameRate_Toggle_Label"), ESleekSide.RIGHT);
+        unfocusedTargetFrameRateToggle.Value = GraphicsSettings.UseUnfocusedTargetFrameRate;
+        unfocusedTargetFrameRateToggle.OnValueChanged += OnToggledUnfocusedTargetFrameRate;
+        resolutionsBox.AddChild(unfocusedTargetFrameRateToggle);
+        unfocusedTargetFrameRateField = Glazier.Get().CreateUInt32Field();
+        unfocusedTargetFrameRateField.PositionOffset_Y = 260f;
+        unfocusedTargetFrameRateField.SizeOffset_X = 200f;
+        unfocusedTargetFrameRateField.SizeOffset_Y = 30f;
+        unfocusedTargetFrameRateField.AddLabel(localization.format("UnfocusedTargetFrameRate_Field_Label"), ESleekSide.RIGHT);
+        unfocusedTargetFrameRateField.Value = (uint)GraphicsSettings.UnfocusedTargetFrameRate;
+        unfocusedTargetFrameRateField.OnValueChanged += OnTypedUnfocusedTargetFrameRate;
+        resolutionsBox.AddChild(unfocusedTargetFrameRateField);
+        SynchronizeTargetFrameRateVisibility();
         backButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));
         backButton.PositionOffset_Y = -50f;
         backButton.PositionScale_Y = 1f;

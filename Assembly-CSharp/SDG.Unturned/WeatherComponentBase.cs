@@ -141,6 +141,7 @@ public class WeatherComponentBase : MonoBehaviour
                 ambientAudioSource.spatialBlend = 0f;
                 ambientAudioSource.clip = audioClip;
                 ambientAudioSource.Play();
+                ambientAudioSource.outputAudioMixerGroup = UnturnedAudioMixer.GetDefaultGroup();
             }
         }
     }

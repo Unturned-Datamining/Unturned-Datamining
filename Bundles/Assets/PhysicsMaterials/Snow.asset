@@ -20,5 +20,6 @@
 		"MeleeImpact" "Effects/Physics/MeleeImpact/Snow/MeleeImpact_Snow.asset"
 	}
 	"WipDoNotUseTemp_BulletImpactEffect" "2fd1193c7b2e4e08aba6a9e3b5207432" // Snow_NoAudio
+	"TireMotionEffect" "3050f44b94b649a7b4cdc8123a90cd7a" // TireMotion_Snow
 	"HasOil" "true"
 }

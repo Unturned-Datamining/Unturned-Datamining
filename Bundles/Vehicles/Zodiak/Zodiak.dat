@@ -28,3 +28,16 @@ Explosion 20
 
 IgnitionAudioClip Sounds/CarIgnition.mp3
 Has_Clip_Prefab false
+
+PaintableSections
+[
+    {
+        Path Model_0
+        MaterialIndex 0
+    }
+]
+
+DefaultPaintColors
+[
+    #272727
+]

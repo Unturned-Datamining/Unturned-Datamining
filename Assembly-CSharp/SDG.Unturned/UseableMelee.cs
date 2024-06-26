@@ -406,7 +406,7 @@ public class UseableMelee : Useable
         num2 *= ((swingMode == ESwingMode.STRONG) ? equippedMeleeAsset.strength : 1f);
         num2 *= ((num < 0.5f) ? (0.5f + num) : 1f);
         ERagdollEffect useableRagdollEffect = base.player.equipment.getUseableRagdollEffect();
-        if (input.type != 0 && input.type != ERaycastInfoType.SKIP && Provider.modeConfigData.Items.Has_Durability && base.player.equipment.quality > 0 && UnityEngine.Random.value < ((ItemWeaponAsset)base.player.equipment.asset).durability)
+        if (input.type != 0 && input.type != ERaycastInfoType.SKIP && Provider.modeConfigData.Items.Weapons_Have_Durability && base.player.equipment.quality > 0 && UnityEngine.Random.value < ((ItemWeaponAsset)base.player.equipment.asset).durability)
         {
             if (base.player.equipment.quality > ((ItemWeaponAsset)base.player.equipment.asset).wear)
             {

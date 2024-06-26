@@ -503,7 +503,6 @@ public class PlayerVoice : PlayerCaller
         if (num2 != 0f)
         {
             float num6 = Mathf.Min(1f / num2, 8f);
-            num6 *= OptionsSettings.voiceVolume;
             for (uint num7 = 0u; num7 < nBytesWritten; num7 += 2)
             {
                 audioData[num] *= num6;

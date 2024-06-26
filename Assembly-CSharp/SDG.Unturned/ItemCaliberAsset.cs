@@ -64,6 +64,11 @@ public class ItemCaliberAsset : ItemAsset
 
     public bool ShouldOnlyAffectAimWhileProne => _isBipod;
 
+    /// <summary>
+    /// If true, gun can damage entities with Invulnerable tag. Defaults to false.
+    /// </summary>
+    public bool CanDamageInvulernableEntities { get; protected set; }
+
     public bool shouldDestroyAttachmentColliders { get; protected set; }
 
     /// <summary>
@@ -115,6 +120,10 @@ public class ItemCaliberAsset : ItemAsset
             {
                 builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_BulletDamageModifier", PlayerDashboardInventoryUI.FormatStatModifier(ballisticDamageMultiplier, higherIsPositive: true, higherIsBeneficial: true)), 10000 + DescSort_HigherIsBeneficial(ballisticDamageMultiplier));
             }
+            if (CanDamageInvulernableEntities)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_InvulnerableModifier"), 10000);
+            }
         }
     }
 
@@ -139,6 +148,7 @@ public class ItemCaliberAsset : ItemAsset
         aimingMovementSpeedMultiplier = data.ParseFloat("Aiming_Movement_Speed_Multiplier", 1f);
         _isPaintable = data.ContainsKey("Paintable");
         _isBipod = data.ContainsKey("Bipod");
+        CanDamageInvulernableEntities = data.ParseBool("Invulnerable");
         shouldDestroyAttachmentColliders = data.ParseBool("Destroy_Attachment_Colliders", defaultValue: true);
         instantiatedAttachmentName = data.GetString("Instantiated_Attachment_Name_Override", GUID.ToString("N"));
     }

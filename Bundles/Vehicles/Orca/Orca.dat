@@ -1,7 +1,6 @@
-GUID 5375fb69f7c94c1aa282688b83b04237
+GUID d5efeb331b40409c9ef6df1f24174dc9
 Type Vehicle
 Rarity Epic
-ID 134
 
 Speed_Min -2
 Speed_Max 16
@@ -31,3 +30,23 @@ Tires_Invulnerable
 
 IgnitionAudioClip Sounds/HelicopterIgnition.mp3
 Has_Clip_Prefab false
+
+PaintableSections
+[
+    {
+        Path Model_0
+        MaterialIndex 0
+    }
+    {
+        Path Model_1
+        MaterialIndex 0
+    }
+]
+
+DefaultPaintColors
+[
+	"#475e83" // Coalition
+	"#a69884" // Desert
+	"#437c44" // Forest
+	"#495631" // Russia
+]

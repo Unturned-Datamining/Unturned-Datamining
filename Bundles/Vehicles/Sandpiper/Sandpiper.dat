@@ -30,3 +30,20 @@ Explosion 20
 Tires_Invulnerable
 
 Has_Clip_Prefab false
+
+PaintableSections
+[
+    {
+        Path Model_0
+        MaterialIndex 0
+    }
+    {
+        Path Model_1
+        MaterialIndex 0
+    }
+]
+
+DefaultPaintColors
+[
+    #5786ae
+]

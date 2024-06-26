@@ -340,6 +340,9 @@ public class Assets : MonoBehaviour
         return assetOrigin;
     }
 
+    /// <summary>
+    /// This method supports <see cref="T:SDG.Unturned.RedirectorAsset" />.
+    /// </summary>
     public static Asset find(EAssetType type, ushort id)
     {
         if (type == EAssetType.NONE || id == 0)
@@ -347,11 +350,24 @@ public class Assets : MonoBehaviour
             return null;
         }
         currentAssetMapping.legacyAssetsTable[type].TryGetValue(id, out var value);
+        int num = 0;
+        while (value is RedirectorAsset redirectorAsset)
+        {
+            currentAssetMapping.assetDictionary.TryGetValue(redirectorAsset.TargetGuid, out value);
+            num++;
+            if (num > 32)
+            {
+                value = null;
+                UnturnedLog.warn($"Infinite asset director loop encountered when resolving Type: {type} Legacy ID: {id}");
+                break;
+            }
+        }
         return value;
     }
 
     /// <summary>
     /// Find an asset by GUID reference.
+    /// This method supports <see cref="T:SDG.Unturned.RedirectorAsset" />.
     /// </summary>
     /// <returns>Asset with matching GUID if it exists, null otherwise.</returns>
     public static T find<T>(AssetReference<T> reference) where T : Asset
@@ -365,6 +381,7 @@ public class Assets : MonoBehaviour
 
     /// <summary>
     /// Find an asset by GUID reference.
+    /// This method supports <see cref="T:SDG.Unturned.RedirectorAsset" />.
     /// Maybe considered a hack? Ignores the current per-server asset mapping.
     /// </summary>
     /// <returns>Asset with matching GUID if it exists, null otherwise.</returns>
@@ -375,6 +392,18 @@ public class Assets : MonoBehaviour
             return null;
         }
         defaultAssetMapping.assetDictionary.TryGetValue(reference.GUID, out var value);
+        int num = 0;
+        while (value is RedirectorAsset redirectorAsset)
+        {
+            currentAssetMapping.assetDictionary.TryGetValue(redirectorAsset.TargetGuid, out value);
+            num++;
+            if (num > 32)
+            {
+                value = null;
+                UnturnedLog.warn($"Infinite asset director loop encountered when resolving: {reference}");
+                break;
+            }
+        }
         return value as T;
     }
 
@@ -403,16 +432,30 @@ public class Assets : MonoBehaviour
 
     /// <summary>
     /// Find an asset by GUID reference.
+    /// This method supports <see cref="T:SDG.Unturned.RedirectorAsset" />.
     /// </summary>
     /// <returns>Asset with matching GUID if it exists, null otherwise.</returns>
     public static Asset find(Guid GUID)
     {
         currentAssetMapping.assetDictionary.TryGetValue(GUID, out var value);
+        int num = 0;
+        while (value is RedirectorAsset redirectorAsset)
+        {
+            currentAssetMapping.assetDictionary.TryGetValue(redirectorAsset.TargetGuid, out value);
+            num++;
+            if (num > 32)
+            {
+                value = null;
+                UnturnedLog.warn($"Infinite asset director loop encountered when resolving: {GUID}");
+                break;
+            }
+        }
         return value;
     }
 
     /// <summary>
     /// Find an asset by GUID reference.
+    /// This method supports <see cref="T:SDG.Unturned.RedirectorAsset" />.
     /// </summary>
     /// <returns>Asset with matching GUID if it exists, null otherwise.</returns>
     public static T find<T>(Guid guid) where T : Asset
@@ -420,6 +463,9 @@ public class Assets : MonoBehaviour
         return find(guid) as T;
     }
 
+    /// <summary>
+    /// This method supports <see cref="T:SDG.Unturned.RedirectorAsset" />.
+    /// </summary>
     public static EffectAsset FindEffectAssetByGuidOrLegacyId(Guid guid, ushort legacyId)
     {
         if (guid.IsEmpty())
@@ -429,6 +475,9 @@ public class Assets : MonoBehaviour
         return find<EffectAsset>(guid);
     }
 
+    /// <summary>
+    /// This method supports <see cref="T:SDG.Unturned.RedirectorAsset" />.
+    /// </summary>
     public static T FindNpcAssetByGuidOrLegacyId<T>(Guid guid, ushort legacyId) where T : Asset
     {
         if (guid.IsEmpty())
@@ -438,6 +487,10 @@ public class Assets : MonoBehaviour
         return find<T>(guid);
     }
 
+    /// <summary>
+    /// This method supports <see cref="T:SDG.Unturned.RedirectorAsset" />.
+    /// Note: this method doesn't handle redirects by VehicleRedirectorAsset.
+    /// </summary>
     public static VehicleAsset FindVehicleAssetByGuidOrLegacyId(Guid guid, ushort legacyId)
     {
         if (guid.IsEmpty())
@@ -447,6 +500,22 @@ public class Assets : MonoBehaviour
         return find<VehicleAsset>(guid);
     }
 
+    /// <summary>
+    /// This method supports <see cref="T:SDG.Unturned.RedirectorAsset" />.
+    /// Note: this method doesn't handle redirects by VehicleRedirectorAsset.
+    /// </summary>
+    public static Asset FindBaseVehicleAssetByGuidOrLegacyId(Guid guid, ushort legacyId)
+    {
+        if (guid.IsEmpty())
+        {
+            return find(EAssetType.VEHICLE, legacyId);
+        }
+        return find(guid);
+    }
+
+    /// <summary>
+    /// This method supports <see cref="T:SDG.Unturned.RedirectorAsset" />.
+    /// </summary>
     internal static T FindItemByGuidOrLegacyId<T>(Guid guid, ushort legacyId) where T : ItemAsset
     {
         if (guid.IsEmpty())
@@ -541,50 +610,96 @@ public class Assets : MonoBehaviour
         {
             hasUnlinkedSpawns = true;
         }
-        if (assetCategory == EAssetType.OBJECT)
+        bool flag = false;
+        switch (assetCategory)
         {
+        case EAssetType.OBJECT:
             if (overrideExistingID)
             {
-                assetMapping.legacyAssetsTable[assetCategory].Remove(asset.id);
+                if (assetMapping.legacyAssetsTable[assetCategory].TryGetValue(asset.id, out var value3))
+                {
+                    assetMapping.legacyAssetsTable[assetCategory].Remove(asset.id);
+                    value3.hasBeenReplaced = true;
+                    flag = true;
+                }
                 assetMapping.legacyAssetsTable[assetCategory].Add(asset.id, asset);
             }
             else if (!assetMapping.legacyAssetsTable[assetCategory].ContainsKey(asset.id))
             {
                 assetMapping.legacyAssetsTable[assetCategory].Add(asset.id, asset);
             }
-        }
-        else if (assetCategory != 0 && (assetCategory != EAssetType.ITEM || !(asset is ItemAsset { isPro: not false, id: 0 })))
-        {
-            if (overrideExistingID)
+            break;
+        default:
+            if (asset.id != 0)
             {
-                assetMapping.legacyAssetsTable[assetCategory].Remove(asset.id);
+                if (overrideExistingID)
+                {
+                    if (assetMapping.legacyAssetsTable[assetCategory].TryGetValue(asset.id, out var value))
+                    {
+                        assetMapping.legacyAssetsTable[assetCategory].Remove(asset.id);
+                        value.hasBeenReplaced = true;
+                        flag = true;
+                    }
+                }
+                else if (assetMapping.legacyAssetsTable[assetCategory].ContainsKey(asset.id))
+                {
+                    assetMapping.legacyAssetsTable[assetCategory].TryGetValue(asset.id, out var value2);
+                    reportError(asset, "short ID is already taken by " + value2.getTypeNameAndIdDisplayString() + "!");
+                    return;
+                }
+                assetMapping.legacyAssetsTable[assetCategory].Add(asset.id, asset);
             }
-            else if (assetMapping.legacyAssetsTable[assetCategory].ContainsKey(asset.id))
+            else
             {
-                assetMapping.legacyAssetsTable[assetCategory].TryGetValue(asset.id, out var value);
-                reportError(asset, "short ID is already taken by " + value.getTypeNameAndIdDisplayString() + "!");
-                return;
+                bool flag2;
+                switch (assetCategory)
+                {
+                case EAssetType.ITEM:
+                    flag2 = !(asset is ItemAsset itemAsset) || !itemAsset.isPro;
+                    break;
+                case EAssetType.EFFECT:
+                case EAssetType.VEHICLE:
+                case EAssetType.SPAWN:
+                case EAssetType.NPC:
+                    flag2 = false;
+                    break;
+                default:
+                    flag2 = true;
+                    break;
+                }
+                if (flag2)
+                {
+                    reportError(asset, "needs a non-zero ID");
+                }
             }
-            assetMapping.legacyAssetsTable[assetCategory].Add(asset.id, asset);
+            break;
+        case EAssetType.NONE:
+            break;
         }
         if (asset.GUID != Guid.Empty)
         {
             if (overrideExistingID)
             {
-                if (assetMapping.assetDictionary.TryGetValue(asset.GUID, out var value2))
+                if (assetMapping.assetDictionary.TryGetValue(asset.GUID, out var value4))
                 {
-                    assetMapping.assetDictionary.Remove(value2.GUID);
-                    assetMapping.assetList.Remove(value2);
+                    assetMapping.assetDictionary.Remove(value4.GUID);
+                    assetMapping.assetList.Remove(value4);
+                    value4.hasBeenReplaced = true;
+                    flag = true;
                 }
             }
             else if (assetMapping.assetDictionary.ContainsKey(asset.GUID))
             {
-                assetMapping.assetDictionary.TryGetValue(asset.GUID, out var value3);
-                reportError(asset, "long GUID " + asset.GUID.ToString("N") + " is already taken by " + value3.getTypeNameAndIdDisplayString() + "!");
+                assetMapping.assetDictionary.TryGetValue(asset.GUID, out var value5);
+                reportError(asset, "long GUID " + asset.GUID.ToString("N") + " is already taken by " + value5.getTypeNameAndIdDisplayString() + "!");
                 return;
             }
             assetMapping.assetDictionary.Add(asset.GUID, asset);
             assetMapping.assetList.Add(asset);
+        }
+        if (flag && assetCategory == EAssetType.VEHICLE && Level.isLoaded && Provider.isServer && VehicleManager.vehicles != null && VehicleManager.vehicles.Count > 0)
+        {
+            VehicleManager.shouldRespawnReloadedVehicles = true;
         }
         if (asset.origin != null && asset.origin.workshopFileId != 0L && (bool)shouldLogWorkshopAssets)
         {

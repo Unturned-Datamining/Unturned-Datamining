@@ -16,6 +16,8 @@ public static class UnturnedMasterVolume
 
     private static float internalPreferredVolume;
 
+    private static float internalUnfocusedVolumeMultiplier;
+
     /// <summary>
     /// Is audio muted because this is a dedicated server?
     ///
@@ -65,8 +67,30 @@ public static class UnturnedMasterVolume
         }
         set
         {
-            internalPreferredVolume = value;
-            synchronizeAudioListener();
+            if (internalPreferredVolume != value)
+            {
+                internalPreferredVolume = value;
+                synchronizeAudioListener();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Player's unfocused volume multiplier from the options menu.
+    /// </summary>
+    public static float UnfocusedVolume
+    {
+        get
+        {
+            return internalUnfocusedVolumeMultiplier;
+        }
+        set
+        {
+            if (internalUnfocusedVolumeMultiplier != value)
+            {
+                internalUnfocusedVolumeMultiplier = value;
+                synchronizeAudioListener();
+            }
         }
     }
 
@@ -79,19 +103,30 @@ public static class UnturnedMasterVolume
         synchronizeAudioListener();
     }
 
+    private static void OnApplicationFocusChanged(bool hasFocus)
+    {
+        synchronizeAudioListener();
+    }
+
     /// <summary>
     /// Synchronize AudioListener.volume with Unturned's parameters.
     /// </summary>
     private static void synchronizeAudioListener()
     {
+        float num;
         if (internalMutedByDedicatedServer || internalMutedByLoadingScreen || mutedByCamera)
         {
-            AudioListener.volume = 0f;
+            num = 0f;
         }
         else
         {
-            AudioListener.volume = internalPreferredVolume;
+            num = internalPreferredVolume;
+            if (!Application.isFocused)
+            {
+                num *= internalUnfocusedVolumeMultiplier;
+            }
         }
+        AudioListener.volume = num;
     }
 
     static UnturnedMasterVolume()
@@ -99,8 +134,10 @@ public static class UnturnedMasterVolume
         internalMutedByDedicatedServer = true;
         internalMutedByLoadingScreen = true;
         mutedByCamera = true;
-        internalPreferredVolume = 0f;
+        internalPreferredVolume = 1f;
+        internalUnfocusedVolumeMultiplier = 0.5f;
         synchronizeAudioListener();
         MainCamera.availabilityChanged += handleMainCameraAvailabilityChanged;
+        Application.focusChanged += OnApplicationFocusChanged;
     }
 }

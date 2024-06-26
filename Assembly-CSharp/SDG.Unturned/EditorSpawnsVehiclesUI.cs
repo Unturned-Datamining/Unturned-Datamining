@@ -160,7 +160,7 @@ public class EditorSpawnsVehiclesUI
                     sleekButton2.PositionOffset_Y = 170 + tierButtons.Length * 70 + 80 + l * 40;
                     sleekButton2.SizeOffset_X = 200f;
                     sleekButton2.SizeOffset_Y = 30f;
-                    VehicleAsset vehicleAsset = Assets.find(EAssetType.VEHICLE, vehicleTable.tiers[selectedTier].table[l].vehicle) as VehicleAsset;
+                    VehicleAsset vehicleAsset = VehicleTool.FindVehicleByLegacyIdAndHandleRedirects(vehicleTable.tiers[selectedTier].table[l].vehicle);
                     string text = "?";
                     if (vehicleAsset != null)
                     {
@@ -355,7 +355,7 @@ public class EditorSpawnsVehiclesUI
     {
         if (EditorSpawns.selectedVehicle < LevelVehicles.tables.Count && selectedTier < LevelVehicles.tables[EditorSpawns.selectedVehicle].tiers.Count)
         {
-            if (Assets.find(EAssetType.VEHICLE, vehicleIDField.Value) is VehicleAsset)
+            if (VehicleTool.FindVehicleByLegacyIdAndHandleRedirects(vehicleIDField.Value) != null)
             {
                 LevelVehicles.tables[EditorSpawns.selectedVehicle].addVehicle(selectedTier, vehicleIDField.Value);
                 updateSelection();

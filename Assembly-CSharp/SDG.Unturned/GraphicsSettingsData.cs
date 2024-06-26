@@ -12,6 +12,10 @@ public class GraphicsSettingsData
 
     public int TargetFrameRate;
 
+    public bool UseUnfocusedTargetFrameRate;
+
+    public int UnfocusedTargetFrameRate;
+
     public bool IsAmbientOcclusionEnabled;
 
     public bool IsGrassDisplacementEnabled;
@@ -100,6 +104,8 @@ public class GraphicsSettingsData
         UserInterfaceScale = 1f;
         UseTargetFrameRate = false;
         TargetFrameRate = 1000;
+        UseUnfocusedTargetFrameRate = false;
+        UnfocusedTargetFrameRate = 1000;
         IsAmbientOcclusionEnabled = false;
         IsBloomEnabled = false;
         IsChromaticAberrationEnabled = false;

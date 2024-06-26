@@ -22,7 +22,7 @@ public class NPCRewardVolume : LevelVolume<NPCRewardVolume, NPCRewardVolumeManag
             ISleekField sleekField = Glazier.Get().CreateStringField();
             sleekField.SizeOffset_X = 200f;
             sleekField.SizeOffset_Y = 30f;
-            sleekField.Text = volume._assetGuid.ToString("N");
+            sleekField.Text = volume.parsedAssetGuid.ToString("N");
             sleekField.AddLabel("Asset GUID", ESleekSide.RIGHT);
             sleekField.OnTextChanged += OnIdChanged;
             AddChild(sleekField);
@@ -37,16 +37,17 @@ public class NPCRewardVolume : LevelVolume<NPCRewardVolume, NPCRewardVolumeManag
 
         private void OnIdChanged(ISleekField field, string idString)
         {
-            if (!Guid.TryParse(idString, out volume._assetGuid))
+            if (!Guid.TryParse(idString, out volume.parsedAssetGuid))
             {
-                volume._assetGuid = Guid.Empty;
+                volume.parsedAssetGuid = Guid.Empty;
             }
+            volume._assetGuid = volume.parsedAssetGuid.ToString("N");
             SyncAssetName();
         }
 
         private void SyncAssetName()
         {
-            if (Assets.find(volume._assetGuid) is NPCRewardsAsset nPCRewardsAsset)
+            if (Assets.find(volume.parsedAssetGuid) is NPCRewardsAsset nPCRewardsAsset)
             {
                 assetNameBox.Text = nPCRewardsAsset.FriendlyName;
             }
@@ -57,8 +58,14 @@ public class NPCRewardVolume : LevelVolume<NPCRewardVolume, NPCRewardVolumeManag
         }
     }
 
+    /// <summary>
+    /// Nelson 2024-06-10: Changed this from guid to string because Unity serialization doesn't support guids
+    /// and neither does the inspector. (e.g., couldn't duplicate reward volume without re-assigning guid)
+    /// </summary>
     [SerializeField]
-    internal Guid _assetGuid;
+    internal string _assetGuid;
+
+    private Guid parsedAssetGuid;
 
     public override ISleekElement CreateMenu()
     {
@@ -70,19 +77,21 @@ public class NPCRewardVolume : LevelVolume<NPCRewardVolume, NPCRewardVolumeManag
     protected override void readHierarchyItem(IFormattedFileReader reader)
     {
         base.readHierarchyItem(reader);
-        _assetGuid = reader.readValue<Guid>("AssetGuid");
+        parsedAssetGuid = reader.readValue<Guid>("AssetGuid");
+        _assetGuid = parsedAssetGuid.ToString("N");
     }
 
     protected override void writeHierarchyItem(IFormattedFileWriter writer)
     {
         base.writeHierarchyItem(writer);
-        writer.writeValue("AssetGuid", _assetGuid);
+        writer.writeValue("AssetGuid", parsedAssetGuid);
     }
 
     protected override void Awake()
     {
         forceShouldAddCollider = true;
         base.Awake();
+        Guid.TryParse(_assetGuid, out parsedAssetGuid);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -92,11 +101,11 @@ public class NPCRewardVolume : LevelVolume<NPCRewardVolume, NPCRewardVolumeManag
             return;
         }
         Player player = DamageTool.getPlayer(other.transform);
-        if (!(player != null) || _assetGuid.IsEmpty())
+        if (!(player != null) || parsedAssetGuid.IsEmpty())
         {
             return;
         }
-        if (Assets.find(_assetGuid) is NPCRewardsAsset nPCRewardsAsset)
+        if (Assets.find(parsedAssetGuid) is NPCRewardsAsset nPCRewardsAsset)
         {
             if (nPCRewardsAsset.AreConditionsMet(player))
             {
@@ -106,7 +115,7 @@ public class NPCRewardVolume : LevelVolume<NPCRewardVolume, NPCRewardVolumeManag
         }
         else
         {
-            UnturnedLog.warn($"NPC reward volume unable to find asset ({_assetGuid:N})");
+            UnturnedLog.warn($"NPC reward volume unable to find asset ({parsedAssetGuid:N})");
         }
     }
 }

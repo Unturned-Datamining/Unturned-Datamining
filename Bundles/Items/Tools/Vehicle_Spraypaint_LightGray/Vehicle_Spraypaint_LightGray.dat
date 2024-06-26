@@ -1,0 +1,19 @@
+GUID d757506fede942dba4fdc64ef2d1e530
+Type Vehicle_Paint_Tool
+Rarity Uncommon
+Useable Vehicle_Paint
+ID 1852
+
+Size_X 1
+Size_Y 2
+
+UseAudioClip Sounds/Vehicle_Spraypaint.wav
+
+PaintColor #969696
+
+Blueprints 1
+Blueprint_0_Type Tool
+Blueprint_0_Supply_0_ID 1852
+Blueprint_0_Product 67
+Blueprint_0_Products 2
+Blueprint_0_Build 27

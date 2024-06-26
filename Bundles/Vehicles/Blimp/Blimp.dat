@@ -35,3 +35,16 @@ Center_Of_Mass_Y -50
 Cam_Follow_Distance 30
 
 Has_Clip_Prefab false
+
+PaintableSections
+[
+    {
+        Path Model_0
+        MaterialIndex 0
+    }
+]
+
+DefaultPaintColors
+[
+    #dcdcdc
+]

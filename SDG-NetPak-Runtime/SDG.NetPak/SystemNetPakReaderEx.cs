@@ -23,6 +23,21 @@ public static class SystemNetPakReaderEx
 
     /// <summary>
     /// Values outside the range are clamped into range.
+    /// For example intBitCount of 7 allows range [0, 128).
+    /// </summary>
+    public static bool ReadUnsignedClampedFloat(this NetPakReader reader, int intBitCount, int fracBitCount, out float value)
+    {
+        uint value2;
+        uint value3;
+        bool result = reader.ReadBits(intBitCount, out value2) & reader.ReadBits(fracBitCount, out value3);
+        uint num = (uint)(1 << fracBitCount);
+        float num2 = (float)value3 / (float)num;
+        value = (float)value2 + num2;
+        return result;
+    }
+
+    /// <summary>
+    /// Values outside the range are clamped into range.
     /// For example intBitCount of 7 allows range [-64, +64).
     /// </summary>
     public static bool ReadClampedFloat(this NetPakReader reader, int intBitCount, int fracBitCount, out float value)

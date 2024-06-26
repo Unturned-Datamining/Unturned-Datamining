@@ -42,6 +42,8 @@ Hash_Assembly This server is using modified code.
 # https://support.smartlydressedgames.com/hc/en-us/articles/20343153432468
 Hash_Resources Built-in resources mismatch. Verifying game files should repair this.
 
+SkinColorWithinThresholdOfTerrainColor Your character's skin color is too similar to one of the level's terrain colors. Please change your character's skin color or switch to a different character.
+
 Version This server is running version {0} of the game, whereas you are running version {1}.
 Pro_Server You require Gold to join this server.
 Pro_Character Please select a valid character.

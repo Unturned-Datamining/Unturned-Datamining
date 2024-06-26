@@ -48,10 +48,8 @@ public static class StructureDrop_NetMethods
             reader.ReadUInt8(out var value);
             reader.ReadUInt8(out var value2);
             reader.ReadClampedVector3(out var value3, 13, 11);
-            reader.ReadUInt8(out var value4);
-            reader.ReadUInt8(out var value5);
-            reader.ReadUInt8(out var value6);
-            structureDrop.ReceiveTransform(in context, value, value2, value3, value4, value5, value6);
+            reader.ReadQuaternion(out var value4);
+            structureDrop.ReceiveTransform(in context, value, value2, value3, value4);
         }
     }
 
@@ -71,23 +69,19 @@ public static class StructureDrop_NetMethods
                 reader.ReadUInt8(out var value2);
                 reader.ReadUInt8(out var value3);
                 reader.ReadClampedVector3(out var value4, 13, 11);
-                reader.ReadUInt8(out var value5);
-                reader.ReadUInt8(out var value6);
-                reader.ReadUInt8(out var value7);
-                structureDrop.ReceiveTransform(in context, value2, value3, value4, value5, value6, value7);
+                reader.ReadQuaternion(out var value5);
+                structureDrop.ReceiveTransform(in context, value2, value3, value4, value5);
             }
         }
     }
 
     [NetInvokableGeneratedMethod("ReceiveTransform", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveTransform_Write(NetPakWriter writer, byte old_x, byte old_y, Vector3 point, byte angle_x, byte angle_y, byte angle_z)
+    public static void ReceiveTransform_Write(NetPakWriter writer, byte old_x, byte old_y, Vector3 point, Quaternion rotation)
     {
         writer.WriteUInt8(old_x);
         writer.WriteUInt8(old_y);
         writer.WriteClampedVector3(point, 13, 11);
-        writer.WriteUInt8(angle_x);
-        writer.WriteUInt8(angle_y);
-        writer.WriteUInt8(angle_z);
+        writer.WriteQuaternion(rotation);
     }
 
     [NetInvokableGeneratedMethod("ReceiveTransformRequest", ENetInvokableGeneratedMethodPurpose.Read)]
@@ -100,21 +94,17 @@ public static class StructureDrop_NetMethods
             if (obj != null && obj is StructureDrop structureDrop)
             {
                 reader.ReadClampedVector3(out var value2, 13, 11);
-                reader.ReadUInt8(out var value3);
-                reader.ReadUInt8(out var value4);
-                reader.ReadUInt8(out var value5);
-                structureDrop.ReceiveTransformRequest(in context, value2, value3, value4, value5);
+                reader.ReadQuaternion(out var value3);
+                structureDrop.ReceiveTransformRequest(in context, value2, value3);
             }
         }
     }
 
     [NetInvokableGeneratedMethod("ReceiveTransformRequest", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveTransformRequest_Write(NetPakWriter writer, Vector3 point, byte angle_x, byte angle_y, byte angle_z)
+    public static void ReceiveTransformRequest_Write(NetPakWriter writer, Vector3 point, Quaternion rotation)
     {
         writer.WriteClampedVector3(point, 13, 11);
-        writer.WriteUInt8(angle_x);
-        writer.WriteUInt8(angle_y);
-        writer.WriteUInt8(angle_z);
+        writer.WriteQuaternion(rotation);
     }
 
     private static void ReceiveOwnerAndGroup_DeferredRead(object voidNetObj, in ClientInvocationContext context)

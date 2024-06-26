@@ -853,7 +853,7 @@ public class PlayerUI : MonoBehaviour
 
     public static void message(EPlayerMessage message, string text, float duration = 2f)
     {
-        if (messageBox2 == null || PlayerLifeUI.localization == null || (!OptionsSettings.hints && message != EPlayerMessage.EXPERIENCE && message != EPlayerMessage.MOON_ON && message != EPlayerMessage.MOON_OFF && message != EPlayerMessage.SAFEZONE_ON && message != EPlayerMessage.SAFEZONE_OFF && message != EPlayerMessage.WAVE_ON && message != EPlayerMessage.MOON_OFF && message != EPlayerMessage.DEADZONE_ON && message != EPlayerMessage.DEADZONE_OFF && message != EPlayerMessage.REPUTATION && message != EPlayerMessage.NPC_CUSTOM))
+        if (messageBox2 == null || PlayerLifeUI.localization == null || (!OptionsSettings.hints && message != EPlayerMessage.EXPERIENCE && message != EPlayerMessage.MOON_ON && message != EPlayerMessage.MOON_OFF && message != EPlayerMessage.SAFEZONE_ON && message != EPlayerMessage.SAFEZONE_OFF && message != EPlayerMessage.WAVE_ON && message != EPlayerMessage.MOON_OFF && message != EPlayerMessage.DEADZONE_ON && message != EPlayerMessage.DEADZONE_OFF && message != EPlayerMessage.REPUTATION && message != EPlayerMessage.NPC_CUSTOM && message != EPlayerMessage.NOT_PAINTABLE))
         {
             return;
         }
@@ -976,6 +976,9 @@ public class PlayerUI : MonoBehaviour
             case EPlayerMessage.VEHICLE_UNLOCKED:
                 messageLabel2.Text = PlayerLifeUI.localization.format("Vehicle_Unlocked", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.locker));
                 break;
+            case EPlayerMessage.NOT_PAINTABLE:
+                messageLabel2.Text = PlayerLifeUI.localization.format("NotPaintable");
+                break;
             case EPlayerMessage.NPC_CUSTOM:
                 messageBox2.PositionOffset_X = -300f;
                 messageBox2.SizeOffset_X = 600f;
@@ -1040,6 +1043,7 @@ public class PlayerUI : MonoBehaviour
         MenuConfigurationDisplayUI.close();
         MenuConfigurationGraphicsUI.close();
         MenuConfigurationControlsUI.close();
+        PlayerPauseUI.audioMenu.close();
         PlayerPauseUI.close();
         PlayerDashboardUI.close();
         PlayerBarricadeSignUI.close();
@@ -1179,6 +1183,12 @@ public class PlayerUI : MonoBehaviour
         if (MenuConfigurationControlsUI.active)
         {
             MenuConfigurationControlsUI.close();
+            PlayerPauseUI.open();
+            return;
+        }
+        if (PlayerPauseUI.audioMenu.active)
+        {
+            PlayerPauseUI.audioMenu.close();
             PlayerPauseUI.open();
             return;
         }
@@ -1460,7 +1470,7 @@ public class PlayerUI : MonoBehaviour
     /// </summary>
     private void updatePauseTimeScale()
     {
-        if (Provider.isServer && (MenuConfigurationOptionsUI.active || MenuConfigurationDisplayUI.active || MenuConfigurationGraphicsUI.active || MenuConfigurationControlsUI.active || PlayerPauseUI.active))
+        if (Provider.isServer && (MenuConfigurationOptionsUI.active || MenuConfigurationDisplayUI.active || MenuConfigurationGraphicsUI.active || MenuConfigurationControlsUI.active || PlayerPauseUI.audioMenu.active || PlayerPauseUI.active))
         {
             Time.timeScale = 0f;
             AudioListener.pause = true;
@@ -1839,7 +1849,7 @@ public class PlayerUI : MonoBehaviour
                 PlayerDashboardInformationUI.updateDynamicMap();
             }
             tickInput();
-            bool flag = Player.player.inPluginModal || PlayerPauseUI.active || MenuConfigurationOptionsUI.active || MenuConfigurationDisplayUI.active || MenuConfigurationGraphicsUI.active || MenuConfigurationControlsUI.active || PlayerDashboardUI.active || PlayerDeathUI.active || PlayerLifeUI.chatting || PlayerLifeUI.gesturing || PlayerBarricadeSignUI.active || boomboxUI.active || PlayerBarricadeLibraryUI.active || mannequinUI.active || browserRequestUI.isActive || PlayerNPCDialogueUI.active || PlayerNPCQuestUI.active || PlayerNPCVendorUI.active || (PlayerWorkzoneUI.active && !InputEx.GetKey(ControlsSettings.secondary)) || isLocked;
+            bool flag = Player.player.inPluginModal || PlayerPauseUI.active || MenuConfigurationOptionsUI.active || MenuConfigurationDisplayUI.active || MenuConfigurationGraphicsUI.active || MenuConfigurationControlsUI.active || PlayerPauseUI.audioMenu.active || PlayerDashboardUI.active || PlayerDeathUI.active || PlayerLifeUI.chatting || PlayerLifeUI.gesturing || PlayerBarricadeSignUI.active || boomboxUI.active || PlayerBarricadeLibraryUI.active || mannequinUI.active || browserRequestUI.isActive || PlayerNPCDialogueUI.active || PlayerNPCQuestUI.active || PlayerNPCVendorUI.active || (PlayerWorkzoneUI.active && !InputEx.GetKey(ControlsSettings.secondary)) || isLocked;
             usingCustomModal = !flag & inputWantsCustomModal;
             flag |= inputWantsCustomModal;
             window.showCursor = flag;

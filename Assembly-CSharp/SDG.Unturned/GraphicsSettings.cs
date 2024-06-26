@@ -60,6 +60,8 @@ public class GraphicsSettings
 
     private static int lastAppliedTargetFrameRate = -1;
 
+    private static bool hasBoundApplicationFocusChangedEvent;
+
     public static bool uncapLandmarks
     {
         get
@@ -189,6 +191,30 @@ public class GraphicsSettings
         set
         {
             graphicsSettingsData.TargetFrameRate = value;
+        }
+    }
+
+    public static bool UseUnfocusedTargetFrameRate
+    {
+        get
+        {
+            return graphicsSettingsData.UseUnfocusedTargetFrameRate;
+        }
+        set
+        {
+            graphicsSettingsData.UseUnfocusedTargetFrameRate = value;
+        }
+    }
+
+    public static int UnfocusedTargetFrameRate
+    {
+        get
+        {
+            return graphicsSettingsData.UnfocusedTargetFrameRate;
+        }
+        set
+        {
+            graphicsSettingsData.UnfocusedTargetFrameRate = value;
         }
     }
 
@@ -760,7 +786,20 @@ public class GraphicsSettings
     internal static void ApplyVSyncAndTargetFrameRate()
     {
         QualitySettings.vSyncCount = (buffer ? 1 : 0);
-        int num = (clTargetFrameRate.hasValue ? ((clTargetFrameRate.value > 0) ? Mathf.Max(clTargetFrameRate.value, 15) : (-1)) : ((!UseTargetFrameRate) ? (-1) : Mathf.Max(TargetFrameRate, 15)));
+        int num;
+        if (clTargetFrameRate.hasValue)
+        {
+            num = ((clTargetFrameRate.value > 0) ? Mathf.Max(clTargetFrameRate.value, 15) : (-1));
+        }
+        else if (UseTargetFrameRate)
+        {
+            int a = ((!UseUnfocusedTargetFrameRate || Application.isFocused) ? TargetFrameRate : Mathf.Min(TargetFrameRate, UnfocusedTargetFrameRate));
+            num = Mathf.Max(a, 15);
+        }
+        else
+        {
+            num = -1;
+        }
         if (num != lastAppliedTargetFrameRate || !hasAppliedTargetFrameRate)
         {
             hasAppliedTargetFrameRate = true;
@@ -768,6 +807,16 @@ public class GraphicsSettings
             Application.targetFrameRate = num;
             UnturnedLog.info($"Set target frame rate to {num} fps");
         }
+        if (!hasBoundApplicationFocusChangedEvent)
+        {
+            hasBoundApplicationFocusChangedEvent = true;
+            Application.focusChanged += OnApplicationFocusChanged;
+        }
+    }
+
+    private static void OnApplicationFocusChanged(bool hasFocus)
+    {
+        ApplyVSyncAndTargetFrameRate();
     }
 
     public static void apply(string reason)

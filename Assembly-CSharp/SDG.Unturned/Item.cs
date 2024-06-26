@@ -73,18 +73,20 @@ public class Item
             state = new byte[0];
             return;
         }
-        if (origin == EItemOrigin.WORLD && !Provider.modeConfigData.Items.Has_Durability)
-        {
-            origin = EItemOrigin.CRAFT;
-        }
         if (origin != 0)
         {
             amount = MathfEx.Max(itemAsset.amount, 1);
-            quality = 100;
         }
         else
         {
             amount = MathfEx.Max(itemAsset.count, 1);
+        }
+        if (origin != 0 || ShouldItemTypeSpawnAtFullQuality(itemAsset.type))
+        {
+            quality = 100;
+        }
+        else
+        {
             quality = MathfEx.Clamp(itemAsset.quality, 0, 100);
         }
         state = itemAsset.getState(origin);
@@ -103,10 +105,6 @@ public class Item
         {
             state = new byte[0];
             return;
-        }
-        if (origin == EItemOrigin.WORLD && !Provider.modeConfigData.Items.Has_Durability)
-        {
-            origin = EItemOrigin.CRAFT;
         }
         if (origin != 0)
         {
@@ -145,5 +143,32 @@ public class Item
     public override string ToString()
     {
         return id + " " + amount + " " + quality + " " + state.Length;
+    }
+
+    /// <summary>
+    /// If true, item has 100% quality. If false, item has a random quality.
+    /// </summary>
+    private static bool ShouldItemTypeSpawnAtFullQuality(EItemType type)
+    {
+        switch (type)
+        {
+        case EItemType.HAT:
+        case EItemType.PANTS:
+        case EItemType.SHIRT:
+        case EItemType.MASK:
+        case EItemType.BACKPACK:
+        case EItemType.VEST:
+        case EItemType.GLASSES:
+            return Provider.modeConfigData.Items.Clothing_Spawns_At_Full_Quality;
+        case EItemType.FOOD:
+            return Provider.modeConfigData.Items.Food_Spawns_At_Full_Quality;
+        case EItemType.WATER:
+            return Provider.modeConfigData.Items.Water_Spawns_At_Full_Quality;
+        case EItemType.GUN:
+        case EItemType.MELEE:
+            return Provider.modeConfigData.Items.Weapons_Spawn_At_Full_Quality;
+        default:
+            return Provider.modeConfigData.Items.Default_Spawns_At_Full_Quality;
+        }
     }
 }

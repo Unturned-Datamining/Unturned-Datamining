@@ -1,0 +1,19 @@
+GUID 13d5a8623f0243e7a59a295752ee451e
+Type Vehicle_Paint_Tool
+Rarity Uncommon
+Useable Vehicle_Paint
+ID 1844
+
+Size_X 1
+Size_Y 2
+
+UseAudioClip Sounds/Vehicle_Spraypaint.wav
+
+PaintColor #CF20AC
+
+Blueprints 1
+Blueprint_0_Type Tool
+Blueprint_0_Supply_0_ID 1844
+Blueprint_0_Product 67
+Blueprint_0_Products 2
+Blueprint_0_Build 27

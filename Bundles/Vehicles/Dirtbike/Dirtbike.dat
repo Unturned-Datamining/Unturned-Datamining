@@ -1,0 +1,60 @@
+GUID b6dc4ac9a9984ebb9894fa05a6fe68ed
+Type Vehicle
+
+Speed_Min -5
+Speed_Max 13.5
+
+Steer_Min 16
+Steer_Max 32
+
+Brake 24
+
+Fuel_Min 200
+Fuel_Max 400
+Fuel 1000
+
+Health_Min 200
+Health_Max 300
+Health 400
+
+Exit 1.5
+
+Zip
+Traction
+Crawler
+Tires_Invulnerable
+
+Trunk_Storage_X 3
+Trunk_Storage_Y 2
+
+Explosion 20
+
+Should_Spawn_Seat_Capsules true
+
+IgnitionAudioClip Sounds/CarIgnition.mp3
+HornAudioClip Sounds/CarHorn_01.mp3
+Has_Clip_Prefab false
+
+PaintableSections
+[
+    {
+        Path Model_0
+        MaterialIndex 0
+    }
+    {
+        Path Model_1
+        MaterialIndex 0
+    }
+]
+
+DefaultPaintColors
+[
+    "#353535" // Original Black
+    "#37658c" // Original Blue
+    "#2e642e" // Original Green
+    "#bd6e27" // Original Orange
+    "#6a466d" // Original Purple
+    "#9a2525" // Original Red
+    "#d4d4d4" // Original White
+    "#cdaa1e" // Original Yellow
+]

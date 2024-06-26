@@ -43,6 +43,27 @@ public class DeadzoneNode : Node, IDeadzoneNode
         }
     }
 
+    /// <summary>
+    /// Nelson 2024-06-10: Added this property after nodes were converted to volumes. i.e., only old levels from
+    /// before this property were added still have nodes, so it's expected that they won't deal damage over time.
+    /// </summary>
+    public float UnprotectedDamagePerSecond => 0f;
+
+    /// <summary>
+    /// Same description as <see cref="P:SDG.Unturned.DeadzoneNode.UnprotectedDamagePerSecond" />.
+    /// </summary>
+    public float ProtectedDamagePerSecond => 0f;
+
+    /// <summary>
+    /// Same description as <see cref="P:SDG.Unturned.DeadzoneNode.UnprotectedDamagePerSecond" />.
+    /// </summary>
+    public float UnprotectedRadiationPerSecond => 6.25f;
+
+    /// <summary>
+    /// Same description as <see cref="P:SDG.Unturned.DeadzoneNode.UnprotectedDamagePerSecond" />.
+    /// </summary>
+    public float MaskFilterDamagePerSecond => 0.4f;
+
     public static float CalculateRadiusFromNormalizedRadius(float normalizedRadius)
     {
         return Mathf.Lerp(MIN_SIZE, MAX_SIZE, normalizedRadius) * 0.5f;

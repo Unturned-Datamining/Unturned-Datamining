@@ -753,7 +753,7 @@ public class PlayerLook : PlayerCaller
         if (!wasVehicle)
         {
             _orbitPitch = 22.5f;
-            _orbitYaw = 0f;
+            _orbitYaw = newVehicle?.transform.rotation.eulerAngles.y ?? 0f;
         }
         if (Provider.cameraMode == ECameraMode.VEHICLE && perspective == EPlayerPerspective.THIRD && !isDriver)
         {
@@ -1148,7 +1148,7 @@ public class PlayerLook : PlayerCaller
             {
                 if ((base.player.stance.stance == EPlayerStance.DRIVING || base.player.stance.stance == EPlayerStance.SITTING) && perspective == EPlayerPerspective.THIRD)
                 {
-                    instance.transform.localRotation = Quaternion.Euler(orbitPitch, orbitYaw, 0f);
+                    instance.transform.rotation = Quaternion.Euler(orbitPitch, orbitYaw, 0f);
                 }
                 else if (base.player.stance.stance == EPlayerStance.DRIVING)
                 {
@@ -1176,14 +1176,17 @@ public class PlayerLook : PlayerCaller
                 {
                     if (isFocusing)
                     {
+                        Vector3 vector = base.player.first.position + Vector3.up;
+                        Vector3 vector2 = lockPosition + orbitPosition;
+                        Quaternion quaternion = Quaternion.LookRotation((vector - vector2).normalized);
                         if (isSmoothing)
                         {
-                            smoothRotation = Quaternion.Lerp(smoothRotation, Quaternion.LookRotation(base.player.first.position + Vector3.up - (lockPosition + orbitPosition)), 4f * Time.deltaTime);
+                            smoothRotation = Quaternion.Lerp(smoothRotation, quaternion, 4f * Time.deltaTime);
                             instance.transform.rotation = smoothRotation;
                         }
                         else
                         {
-                            instance.transform.rotation = Quaternion.LookRotation(base.player.first.position + Vector3.up - (lockPosition + orbitPosition));
+                            instance.transform.rotation = quaternion;
                         }
                     }
                     else if (isSmoothing)
@@ -1233,7 +1236,7 @@ public class PlayerLook : PlayerCaller
                     {
                         origin2 = transform.position;
                     }
-                    float length2 = base.player.movement.getVehicle().asset.camFollowDistance + Mathf.Abs(base.player.movement.getVehicle().spedometer) * 0.1f;
+                    float length2 = base.player.movement.getVehicle().asset.camFollowDistance + Mathf.Abs(base.player.movement.getVehicle().AnimatedForwardVelocity) * 0.1f;
                     Vector3 direction2 = -instance.transform.forward;
                     instance.transform.position = sphereCastCamera(origin2, direction2, length2, RayMasks.BLOCK_VEHICLECAM);
                 }
@@ -1280,13 +1283,13 @@ public class PlayerLook : PlayerCaller
                 }
                 characterHeight = Mathf.Lerp(characterHeight, heightCamera, 4f * Time.deltaTime);
             }
-            if (base.player.movement.getVehicle() != null && base.player.movement.getVehicle().asset.engine == EEngine.PLANE && base.player.movement.getVehicle().spedometer > 16f)
+            if (base.player.movement.getVehicle() != null && base.player.movement.getVehicle().asset.engine == EEngine.PLANE && base.player.movement.getVehicle().AnimatedForwardVelocity > 16f)
             {
-                LevelLighting.updateLocal(instance.transform.position, Mathf.Lerp(0f, 1f, (base.player.movement.getVehicle().spedometer - 16f) / 8f), base.player.movement.effectNode);
+                LevelLighting.updateLocal(instance.transform.position, Mathf.Lerp(0f, 1f, (base.player.movement.getVehicle().AnimatedForwardVelocity - 16f) / 8f), base.player.movement.effectNode);
             }
-            else if (base.player.movement.getVehicle() != null && (base.player.movement.getVehicle().asset.engine == EEngine.HELICOPTER || base.player.movement.getVehicle().asset.engine == EEngine.BLIMP) && base.player.movement.getVehicle().spedometer > 4f)
+            else if (base.player.movement.getVehicle() != null && (base.player.movement.getVehicle().asset.engine == EEngine.HELICOPTER || base.player.movement.getVehicle().asset.engine == EEngine.BLIMP) && base.player.movement.getVehicle().AnimatedForwardVelocity > 4f)
             {
-                LevelLighting.updateLocal(instance.transform.position, Mathf.Lerp(0f, 1f, (base.player.movement.getVehicle().spedometer - 8f) / 8f), base.player.movement.effectNode);
+                LevelLighting.updateLocal(instance.transform.position, Mathf.Lerp(0f, 1f, (base.player.movement.getVehicle().AnimatedForwardVelocity - 8f) / 8f), base.player.movement.effectNode);
             }
             else
             {

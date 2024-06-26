@@ -1,0 +1,7 @@
+GUID ea56de7a4d264ad08da4411748a72644
+Type SDG.Unturned.VehicleRedirectorAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+ID 51
+
+TargetVehicle c00faf98ea6b449f833f768f76f54805
+LoadPaintColor "#437c44" // Forest
+SpawnPaintColor "#437c44" // Forest

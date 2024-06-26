@@ -148,6 +148,8 @@ public class PlayerLifeUI
 
     private static ISleekLabel vehicleLockedLabel;
 
+    private static ISleekLabel vehicleEngineLabel;
+
     private static bool vehicleVisibleByDefault;
 
     private static ISleekBox gasmaskBox;
@@ -977,6 +979,12 @@ public class PlayerLifeUI
                 batteryChargeProgress.PositionOffset_Y = num + 5;
                 num += 30;
             }
+            vehicleEngineLabel.IsVisible = newVehicle.asset.UsesEngineRpmAndGears;
+            if (vehicleEngineLabel.IsVisible)
+            {
+                vehicleEngineLabel.PositionOffset_Y = num - 5;
+                num += 30;
+            }
             vehicleBox.SizeOffset_Y = num - 5;
             vehicleBox.PositionOffset_Y = 0f - vehicleBox.SizeOffset_Y;
             if (newVehicle.passengers[Player.player.movement.getSeat()].turret != null)
@@ -1019,6 +1027,11 @@ public class PlayerLifeUI
             else
             {
                 vehicleLockedLabel.IsVisible = false;
+            }
+            if (vehicleEngineLabel.IsVisible)
+            {
+                string arg = ((vehicle.gearNumber < 0) ? localization.format("VehicleGear_Reverse") : ((vehicle.gearNumber != 0) ? vehicle.gearNumber.ToString() : localization.format("VehicleGear_Neutral")));
+                vehicleEngineLabel.Text = localization.format("VehicleEngineStatus", arg, Mathf.RoundToInt(vehicle.animatedEngineRpm));
             }
         }
         vehicleVisibleByDefault = isDriveable;
@@ -2002,6 +2015,10 @@ public class PlayerLifeUI
         vehicleLockedLabel.SizeOffset_Y = 30f;
         vehicleLockedLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
         vehicleBox.AddChild(vehicleLockedLabel);
+        vehicleEngineLabel = Glazier.Get().CreateLabel();
+        vehicleEngineLabel.SizeScale_X = 1f;
+        vehicleEngineLabel.SizeOffset_Y = 30f;
+        vehicleBox.AddChild(vehicleEngineLabel);
         gasmaskBox = Glazier.Get().CreateBox();
         gasmaskBox.PositionOffset_X = -200f;
         gasmaskBox.PositionOffset_Y = -60f;

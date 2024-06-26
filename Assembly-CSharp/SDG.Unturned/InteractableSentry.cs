@@ -277,6 +277,7 @@ public class InteractableSentry : InteractableStorage
             gunshotAudioSource.minDistance = 8f;
             gunshotAudioSource.maxDistance = 256f;
             gunshotAudioSource.playOnAwake = false;
+            gunshotAudioSource.outputAudioMixerGroup = UnturnedAudioMixer.GetDefaultGroup();
         }
         if (attachments.ejectHook != null && ((ItemGunAsset)displayAsset).action != EAction.String && ((ItemGunAsset)displayAsset).action != EAction.Rocket)
         {
@@ -645,7 +646,7 @@ public class InteractableSentry : InteractableStorage
                     {
                         AlertTool.alert(base.transform.position, 48f);
                     }
-                    if (!sentryAsset.infiniteQuality && Provider.modeConfigData.Items.Has_Durability && displayItem.quality > 0 && UnityEngine.Random.value < ((ItemWeaponAsset)displayAsset).durability)
+                    if (!sentryAsset.infiniteQuality && Provider.modeConfigData.Items.Weapons_Have_Durability && displayItem.quality > 0 && UnityEngine.Random.value < ((ItemWeaponAsset)displayAsset).durability)
                     {
                         if (displayItem.quality > ((ItemWeaponAsset)displayAsset).wear)
                         {

@@ -276,6 +276,7 @@ public class MenuUI : MonoBehaviour
         MenuConfigurationDisplayUI.close();
         MenuConfigurationGraphicsUI.close();
         MenuConfigurationControlsUI.close();
+        MenuConfigurationUI.audioMenu.close();
         MenuWorkshopUI.close();
         MenuWorkshopEditorUI.close();
         MenuWorkshopSubmitUI.close();
@@ -427,12 +428,13 @@ public class MenuUI : MonoBehaviour
                 MenuSurvivorsClothingUI.close();
                 MenuSurvivorsUI.open();
             }
-            else if (MenuConfigurationOptionsUI.active || MenuConfigurationControlsUI.active || MenuConfigurationGraphicsUI.active || MenuConfigurationDisplayUI.active)
+            else if (MenuConfigurationOptionsUI.active || MenuConfigurationControlsUI.active || MenuConfigurationGraphicsUI.active || MenuConfigurationDisplayUI.active || MenuConfigurationUI.audioMenu.active)
             {
                 MenuConfigurationOptionsUI.close();
                 MenuConfigurationControlsUI.close();
                 MenuConfigurationGraphicsUI.close();
                 MenuConfigurationDisplayUI.close();
+                MenuConfigurationUI.audioMenu.close();
                 MenuConfigurationUI.open();
             }
             else if (MenuWorkshopSubmitUI.active || MenuWorkshopEditorUI.active || MenuWorkshopErrorUI.active || MenuWorkshopLocalizationUI.active || MenuWorkshopSpawnsUI.active || MenuWorkshopSubscriptionsUI.active)
@@ -530,7 +532,7 @@ public class MenuUI : MonoBehaviour
         {
             target = survivors;
         }
-        else if (MenuConfigurationUI.active || MenuConfigurationOptionsUI.active || MenuConfigurationControlsUI.active || MenuConfigurationGraphicsUI.active || MenuConfigurationDisplayUI.active)
+        else if (MenuConfigurationUI.active || MenuConfigurationOptionsUI.active || MenuConfigurationControlsUI.active || MenuConfigurationGraphicsUI.active || MenuConfigurationDisplayUI.active || MenuConfigurationUI.audioMenu.active)
         {
             target = configuration;
         }

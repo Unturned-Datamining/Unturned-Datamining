@@ -25,4 +25,25 @@
 		}
 	]
 	"Should_Animate_Background_Image" "true"
+	TerrainColors
+	[
+		{
+			Color #556633
+			HueThreshold 0.06
+			SaturationThreshold 0.2
+			ValueThreshold 0.1
+		}
+		{
+			Color #aa7227
+			HueThreshold 0.06
+			SaturationThreshold 0.2
+			ValueThreshold 0.1
+		}
+		{
+			Color #656547
+			HueThreshold 0.06
+			SaturationThreshold 0.2
+			ValueThreshold 0.1
+		}
+	]
 }

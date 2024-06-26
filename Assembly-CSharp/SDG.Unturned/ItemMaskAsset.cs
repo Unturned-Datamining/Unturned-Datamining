@@ -12,9 +12,17 @@ public class ItemMaskAsset : ItemGearAsset
 
     public bool isEarpiece => _isEarpiece;
 
+    /// <summary>
+    /// Multiplier for how quickly deadzones deplete a gasmask's filter quality.
+    /// e.g., 2 is faster (2x) and 0.5 is slower.
+    /// </summary>
+    public float FilterDegradationRateMultiplier { get; protected set; } = 1f;
+
+
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
         base.PopulateAsset(bundle, data, localization);
+        FilterDegradationRateMultiplier = data.ParseFloat("FilterDegradationRateMultiplier", 1f);
         if (!Dedicator.IsDedicatedServer)
         {
             _mask = loadRequiredAsset<GameObject>(bundle, "Mask");

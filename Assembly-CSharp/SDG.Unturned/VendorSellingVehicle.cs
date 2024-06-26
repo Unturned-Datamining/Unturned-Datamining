@@ -1,3 +1,4 @@
+using System;
 using SDG.Framework.Devkit;
 using UnityEngine;
 
@@ -8,56 +9,59 @@ namespace SDG.Unturned;
 /// </summary>
 public class VendorSellingVehicle : VendorSellingBase
 {
-    public override string displayName
-    {
-        get
-        {
-            if (!(Assets.find(EAssetType.VEHICLE, base.id) is VehicleAsset vehicleAsset))
-            {
-                return null;
-            }
-            return vehicleAsset.vehicleName;
-        }
-    }
+    public override string displayName => FindVehicleAssetAndHandleRedirects()?.vehicleName;
 
-    public override EItemRarity rarity
-    {
-        get
-        {
-            if (!(Assets.find(EAssetType.VEHICLE, base.id) is VehicleAsset vehicleAsset))
-            {
-                return EItemRarity.COMMON;
-            }
-            return vehicleAsset.rarity;
-        }
-    }
+    public override EItemRarity rarity => FindVehicleAssetAndHandleRedirects()?.rarity ?? EItemRarity.COMMON;
 
     public override bool hasIcon => false;
 
     public string spawnpoint { get; protected set; }
 
+    /// <summary>
+    /// Returned asset is not necessarily a vehicle asset yet: It can also be a VehicleRedirectorAsset which the
+    /// vehicle spawner requires to properly set paint color.
+    /// </summary>
+    public Asset FindAsset()
+    {
+        return Assets.FindBaseVehicleAssetByGuidOrLegacyId(base.TargetAssetGuid, base.id);
+    }
+
+    public VehicleAsset FindVehicleAssetAndHandleRedirects()
+    {
+        Asset asset = FindAsset();
+        if (asset is VehicleRedirectorAsset { TargetVehicle: var targetVehicle })
+        {
+            asset = targetVehicle.Find();
+        }
+        return asset as VehicleAsset;
+    }
+
     public override void buy(Player player)
     {
         base.buy(player);
-        Spawnpoint spawnpoint = SpawnpointSystemV2.Get().FindSpawnpoint(this.spawnpoint);
-        Vector3 point;
-        Quaternion rotation;
-        if (spawnpoint != null)
+        Asset asset = FindAsset();
+        if (asset != null)
         {
-            point = spawnpoint.transform.position;
-            rotation = spawnpoint.transform.rotation;
+            Spawnpoint spawnpoint = SpawnpointSystemV2.Get().FindSpawnpoint(this.spawnpoint);
+            Vector3 point;
+            Quaternion rotation;
+            if (spawnpoint != null)
+            {
+                point = spawnpoint.transform.position;
+                rotation = spawnpoint.transform.rotation;
+            }
+            else
+            {
+                UnturnedLog.error("Failed to find vendor selling spawnpoint: " + this.spawnpoint);
+                point = VehicleTool.GetPositionForVehicle(player);
+                rotation = player.transform.rotation;
+            }
+            VehicleManager.spawnLockedVehicleForPlayerV2(asset, point, rotation, player);
         }
-        else
-        {
-            UnturnedLog.error("Failed to find vendor selling spawnpoint: " + this.spawnpoint);
-            point = VehicleTool.GetPositionForVehicle(player);
-            rotation = player.transform.rotation;
-        }
-        VehicleManager.spawnLockedVehicleForPlayerV2(base.id, point, rotation, player);
     }
 
-    public VendorSellingVehicle(VendorAsset newOuterAsset, byte newIndex, ushort newID, uint newCost, string newSpawnpoint, INPCCondition[] newConditions, NPCRewardsList newRewardsList)
-        : base(newOuterAsset, newIndex, newID, newCost, newConditions, newRewardsList)
+    public VendorSellingVehicle(VendorAsset newOuterAsset, byte newIndex, Guid newTargetAssetGuid, ushort newTargetAssetLegacyId, uint newCost, string newSpawnpoint, INPCCondition[] newConditions, NPCRewardsList newRewardsList)
+        : base(newOuterAsset, newIndex, newTargetAssetGuid, newTargetAssetLegacyId, newCost, newConditions, newRewardsList)
     {
         spawnpoint = newSpawnpoint;
     }

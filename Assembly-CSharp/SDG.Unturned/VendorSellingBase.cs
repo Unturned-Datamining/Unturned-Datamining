@@ -1,3 +1,5 @@
+using System;
+
 namespace SDG.Unturned;
 
 public abstract class VendorSellingBase : VendorElement
@@ -42,8 +44,8 @@ public abstract class VendorSellingBase : VendorElement
         total = 0;
     }
 
-    public VendorSellingBase(VendorAsset newOuterAsset, byte newIndex, ushort newID, uint newCost, INPCCondition[] newConditions, NPCRewardsList newRewardsList)
-        : base(newOuterAsset, newIndex, newID, newCost, newConditions, newRewardsList)
+    public VendorSellingBase(VendorAsset newOuterAsset, byte newIndex, Guid newTargetAssetGuid, ushort newLegacyAssetId, uint newCost, INPCCondition[] newConditions, NPCRewardsList newRewardsList)
+        : base(newOuterAsset, newIndex, newTargetAssetGuid, newLegacyAssetId, newCost, newConditions, newRewardsList)
     {
     }
 }

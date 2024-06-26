@@ -510,7 +510,7 @@ public class PlayerMovement : PlayerCaller
             if (flag && onVehicleUpdated != null)
             {
                 vehicle.getDisplayFuel(out var currentFuel, out var maxFuel);
-                onVehicleUpdated(!vehicle.isUnderwater && !vehicle.isDead, currentFuel, maxFuel, vehicle.spedometer, vehicle.asset.speedMin, vehicle.asset.speedMax, vehicle.health, vehicle.asset.health, vehicle.batteryCharge);
+                onVehicleUpdated(!vehicle.isUnderwater && !vehicle.isDead, currentFuel, maxFuel, vehicle.AnimatedForwardVelocity, vehicle.asset.TargetReverseVelocity, vehicle.asset.TargetForwardVelocity, vehicle.health, vehicle.asset.health, vehicle.batteryCharge);
             }
             if (vehicle != null)
             {
@@ -845,7 +845,7 @@ public class PlayerMovement : PlayerCaller
     /// <summary>
     /// Dedicated server simulate driving input.
     /// </summary>
-    public void simulate(uint simulation, int recov, bool inputBrake, bool inputStamina, Vector3 point, Quaternion rotation, float speed, float physicsSpeed, int turn, float delta)
+    public void simulate(uint simulation, int recov, bool inputBrake, bool inputStamina, Vector3 point, Quaternion rotation, float newSpeed, float newForwardVelocity, float newSteeringInput, float newVelocityInput, float delta)
     {
         updateRegionAndBound();
         if (base.channel.IsLocalPlayer)
@@ -862,7 +862,7 @@ public class PlayerMovement : PlayerCaller
         }
         else if (base.player.stance.stance == EPlayerStance.DRIVING && vehicle != null)
         {
-            vehicle.simulate(simulation, recov, inputStamina, point, rotation, speed, physicsSpeed, turn, delta);
+            vehicle.simulate(simulation, recov, inputStamina, point, rotation, newSpeed, newForwardVelocity, newSteeringInput, newVelocityInput, delta);
         }
     }
 
@@ -914,7 +914,7 @@ public class PlayerMovement : PlayerCaller
                 if (onVehicleUpdated != null)
                 {
                     vehicle.getDisplayFuel(out var currentFuel, out var maxFuel);
-                    onVehicleUpdated(!vehicle.isUnderwater && !vehicle.isDead, currentFuel, maxFuel, vehicle.speed, vehicle.asset.speedMin, vehicle.asset.speedMax, vehicle.health, vehicle.asset.health, vehicle.batteryCharge);
+                    onVehicleUpdated(!vehicle.isUnderwater && !vehicle.isDead, currentFuel, maxFuel, vehicle.ReplicatedForwardVelocity, vehicle.asset.TargetReverseVelocity, vehicle.asset.TargetForwardVelocity, vehicle.health, vehicle.asset.health, vehicle.batteryCharge);
                 }
             }
             return;
@@ -1286,10 +1286,31 @@ public class PlayerMovement : PlayerCaller
             if (base.player.look.isOrbiting && (!base.player.workzone.isBuilding || InputEx.GetKey(ControlsSettings.secondary)))
             {
                 base.player.look.orbitSpeed = Mathf.Clamp(base.player.look.orbitSpeed + Input.GetAxis("mouse_z") * 0.2f * base.player.look.orbitSpeed, 0.5f, 2048f);
-                base.player.look.orbitPosition += MainCamera.instance.transform.right * input_x * Time.deltaTime * base.player.look.orbitSpeed;
+                Vector3 vector = MainCamera.instance.transform.right * input_x * Time.deltaTime * base.player.look.orbitSpeed;
+                if (base.player.look.isFocusing)
+                {
+                    Vector3 vector2 = base.player.first.position + Vector3.up;
+                    Vector3 vector3 = base.player.look.lockPosition + base.player.look.orbitPosition;
+                    float horizontalMagnitude = (vector2 - vector3).GetHorizontalMagnitude();
+                    Vector3 vector4 = base.player.look.orbitPosition + vector;
+                    Vector3 vector5 = base.player.look.lockPosition + vector4;
+                    float num2 = (vector2 - vector5).GetHorizontalMagnitude();
+                    if (num2 < 0.001f)
+                    {
+                        num2 = 1f;
+                    }
+                    float num3 = horizontalMagnitude / num2;
+                    vector4.x *= num3;
+                    vector4.z *= num3;
+                    base.player.look.orbitPosition = vector4;
+                }
+                else
+                {
+                    base.player.look.orbitPosition += vector;
+                }
                 base.player.look.orbitPosition += MainCamera.instance.transform.forward * input_y * Time.deltaTime * base.player.look.orbitSpeed;
-                float num2 = (InputEx.GetKey(ControlsSettings.ascend) ? 1f : ((!InputEx.GetKey(ControlsSettings.descend)) ? 0f : (-1f)));
-                base.player.look.orbitPosition += Vector3.up * num2 * Time.deltaTime * base.player.look.orbitSpeed;
+                float num4 = (InputEx.GetKey(ControlsSettings.ascend) ? 1f : ((!InputEx.GetKey(ControlsSettings.descend)) ? 0f : (-1f)));
+                base.player.look.orbitPosition += Vector3.up * num4 * Time.deltaTime * base.player.look.orbitSpeed;
             }
             if (base.player.stance.stance == EPlayerStance.DRIVING || base.player.stance.stance == EPlayerStance.SITTING)
             {

@@ -29,3 +29,20 @@ Explosion 20
 
 IgnitionAudioClip Sounds/HelicopterIgnition.mp3
 Has_Clip_Prefab false
+
+PaintableSections
+[
+    {
+        Path Model_0
+        MaterialIndex 0
+    }
+    {
+        Path Model_1
+        MaterialIndex 0
+    }
+]
+
+DefaultPaintColors
+[
+	#355a30
+]

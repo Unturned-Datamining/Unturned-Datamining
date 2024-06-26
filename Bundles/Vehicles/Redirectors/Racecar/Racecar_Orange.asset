@@ -1,0 +1,6 @@
+GUID cbca15dffe734a1095ad2438ad19a899
+Type SDG.Unturned.VehicleRedirectorAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+ID 80
+
+TargetVehicle 0e119557092d479e9f9b3b696cc3e78e
+LoadPaintColor "#bd6e27" // Original Orange

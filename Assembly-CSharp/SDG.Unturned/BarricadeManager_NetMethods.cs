@@ -46,17 +46,15 @@ public static class BarricadeManager_NetMethods
         byte[] array = new byte[value3];
         reader.ReadBytes(array);
         reader.ReadClampedVector3(out var value4, 13, 11);
-        reader.ReadUInt8(out var value5);
-        reader.ReadUInt8(out var value6);
-        reader.ReadUInt8(out var value7);
-        reader.ReadUInt64(out var value8);
-        reader.ReadUInt64(out var value9);
-        reader.ReadNetId(out var value10);
-        BarricadeManager.ReceiveSingleBarricade(in context, value, value2, array, value4, value5, value6, value7, value8, value9, value10);
+        reader.ReadQuaternion(out var value5);
+        reader.ReadUInt64(out var value6);
+        reader.ReadUInt64(out var value7);
+        reader.ReadNetId(out var value8);
+        BarricadeManager.ReceiveSingleBarricade(in context, value, value2, array, value4, value5, value6, value7, value8);
     }
 
     [NetInvokableGeneratedMethod("ReceiveSingleBarricade", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveSingleBarricade_Write(NetPakWriter writer, NetId parentNetId, Guid assetId, byte[] state, Vector3 point, byte angle_x, byte angle_y, byte angle_z, ulong owner, ulong group, NetId netId)
+    public static void ReceiveSingleBarricade_Write(NetPakWriter writer, NetId parentNetId, Guid assetId, byte[] state, Vector3 point, Quaternion rotation, ulong owner, ulong group, NetId netId)
     {
         writer.WriteNetId(parentNetId);
         writer.WriteGuid(assetId);
@@ -64,9 +62,7 @@ public static class BarricadeManager_NetMethods
         writer.WriteUInt8(b);
         writer.WriteBytes(state, b);
         writer.WriteClampedVector3(point, 13, 11);
-        writer.WriteUInt8(angle_x);
-        writer.WriteUInt8(angle_y);
-        writer.WriteUInt8(angle_z);
+        writer.WriteQuaternion(rotation);
         writer.WriteUInt64(owner);
         writer.WriteUInt64(group);
         writer.WriteNetId(netId);

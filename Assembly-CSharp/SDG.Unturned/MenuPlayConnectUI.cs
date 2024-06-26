@@ -95,7 +95,8 @@ public class MenuPlayConnectUI
             UnturnedLog.info("Unable to parse host string empty after trimming");
             return false;
         }
-        if (WebUtils.ParseThirdPartyUrl(input, out var result, autoPrefix: false))
+        bool autoPrefix = input.Contains('/');
+        if (WebUtils.ParseThirdPartyUrl(input, out var result, autoPrefix))
         {
             if (!Provider.allowWebRequests)
             {
@@ -374,11 +375,11 @@ public class MenuPlayConnectUI
         MenuUI.container.AddChild(container);
         active = false;
         hostField = Glazier.Get().CreateStringField();
-        hostField.PositionOffset_X = -100f;
+        hostField.PositionOffset_X = -300f;
         hostField.PositionOffset_Y = -75f;
         hostField.PositionScale_X = 0.5f;
         hostField.PositionScale_Y = 0.5f;
-        hostField.SizeOffset_X = 200f;
+        hostField.SizeOffset_X = 600f;
         hostField.SizeOffset_Y = 30f;
         hostField.MaxLength = 64;
         hostField.AddLabel(localization.format("Host_Field_Label"), ESleekSide.RIGHT);
@@ -388,7 +389,7 @@ public class MenuPlayConnectUI
         hostField.OnTextSubmitted += OnIpFieldCommitted;
         container.AddChild(hostField);
         addressInfoBox = Glazier.Get().CreateBox();
-        addressInfoBox.PositionOffset_X = -210f;
+        addressInfoBox.PositionOffset_X = -410f;
         addressInfoBox.PositionOffset_Y = -75f;
         addressInfoBox.PositionScale_X = 0.5f;
         addressInfoBox.PositionScale_Y = 0.5f;
@@ -397,11 +398,11 @@ public class MenuPlayConnectUI
         addressInfoBox.IsVisible = false;
         container.AddChild(addressInfoBox);
         serverCodeInfoBox = Glazier.Get().CreateBox();
-        serverCodeInfoBox.PositionOffset_X = -100f;
+        serverCodeInfoBox.PositionOffset_X = -300f;
         serverCodeInfoBox.PositionOffset_Y = -35f;
         serverCodeInfoBox.PositionScale_X = 0.5f;
         serverCodeInfoBox.PositionScale_Y = 0.5f;
-        serverCodeInfoBox.SizeOffset_X = 200f;
+        serverCodeInfoBox.SizeOffset_X = 600f;
         serverCodeInfoBox.SizeOffset_Y = 30f;
         serverCodeInfoBox.IsVisible = false;
         container.AddChild(serverCodeInfoBox);
@@ -412,11 +413,11 @@ public class MenuPlayConnectUI
         serverCodeIcon.SizeOffset_Y = 20f;
         serverCodeInfoBox.AddChild(serverCodeIcon);
         portField = Glazier.Get().CreateUInt16Field();
-        portField.PositionOffset_X = -100f;
+        portField.PositionOffset_X = -300f;
         portField.PositionOffset_Y = -35f;
         portField.PositionScale_X = 0.5f;
         portField.PositionScale_Y = 0.5f;
-        portField.SizeOffset_X = 200f;
+        portField.SizeOffset_X = 600f;
         portField.SizeOffset_Y = 30f;
         portField.AddLabel(localization.format("Port_Field_Label"), ESleekSide.RIGHT);
         portField.TooltipText = localization.format("Port_Field_Tooltip");
@@ -424,11 +425,11 @@ public class MenuPlayConnectUI
         portField.OnValueChanged += onTypedPortField;
         container.AddChild(portField);
         passwordField = Glazier.Get().CreateStringField();
-        passwordField.PositionOffset_X = -100f;
+        passwordField.PositionOffset_X = -300f;
         passwordField.PositionOffset_Y = 5f;
         passwordField.PositionScale_X = 0.5f;
         passwordField.PositionScale_Y = 0.5f;
-        passwordField.SizeOffset_X = 200f;
+        passwordField.SizeOffset_X = 600f;
         passwordField.SizeOffset_Y = 30f;
         passwordField.AddLabel(localization.format("Password_Field_Label"), ESleekSide.RIGHT);
         passwordField.IsPasswordField = true;
@@ -437,11 +438,11 @@ public class MenuPlayConnectUI
         passwordField.OnTextChanged += onTypedPasswordField;
         container.AddChild(passwordField);
         connectButton = new SleekButtonIcon(icons.load<Texture2D>("Connect"));
-        connectButton.PositionOffset_X = -100f;
+        connectButton.PositionOffset_X = -300f;
         connectButton.PositionOffset_Y = 45f;
         connectButton.PositionScale_X = 0.5f;
         connectButton.PositionScale_Y = 0.5f;
-        connectButton.SizeOffset_X = 200f;
+        connectButton.SizeOffset_X = 600f;
         connectButton.SizeOffset_Y = 30f;
         connectButton.text = localization.format("Connect_Button");
         connectButton.tooltip = localization.format("Connect_Button_Tooltip");

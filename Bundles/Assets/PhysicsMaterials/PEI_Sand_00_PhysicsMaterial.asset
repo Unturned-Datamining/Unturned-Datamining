@@ -1,0 +1,14 @@
+"Metadata"
+{
+	"GUID" "aa4d5fb66aba40c08a2f54b5b543b2c9"
+	"Type" "SDG.Unturned.PhysicsMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"UnityNames"
+	[
+		"PEI_Sand_00"
+	]
+	"Fallback" "50bac8b8bf8648fc88fd012ccd176f17" // Sand
+	"TireMotionEffect" "b134d38c1df448f7b2446ccab2ce181b" // TireMotion_Sand_00
+}

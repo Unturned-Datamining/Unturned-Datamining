@@ -39,9 +39,13 @@ public class OptionsSettings
 
     private const byte SAVEDATA_VERSION_ADDED_NAMETAG_FADEOUT_OPT = 49;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 49;
+    private const byte SAVEDATA_VERSION_ADDED_GAME_VOLUME = 50;
 
-    public static readonly byte SAVEDATA_VERSION = 49;
+    private const byte SAVEDATA_VERSION_ADDED_UNFOCUSED_VOLUME = 51;
+
+    private const byte SAVEDATA_VERSION_NEWEST = 51;
+
+    public static readonly byte SAVEDATA_VERSION = 51;
 
     public static readonly byte MIN_FOV = 60;
 
@@ -51,9 +55,21 @@ public class OptionsSettings
 
     private static float _cachedVerticalFOV;
 
+    public const float DEFAULT_MASTER_VOLUME = 1f;
+
     public static float volume;
 
-    public static float voiceVolume;
+    public const float DEFAULT_UNFOCUSED_VOLUME = 0.5f;
+
+    private const float DEFAULT_GAME_VOLUME = 0.7f;
+
+    private static float _gameVolume;
+
+    private const float DEFAULT_VOICE_VOLUME = 0.7f;
+
+    private static float _voiceVolume;
+
+    private const float DEFAULT_LOADING_SCREEN_MUSIC_VOLUME = 0.5f;
 
     public static float loadingScreenMusicVolume;
 
@@ -139,6 +155,44 @@ public class OptionsSettings
     }
 
     public static float DesiredVerticalFieldOfView => _cachedVerticalFOV;
+
+    public static float UnfocusedVolume
+    {
+        get
+        {
+            return UnturnedMasterVolume.UnfocusedVolume;
+        }
+        set
+        {
+            UnturnedMasterVolume.UnfocusedVolume = value;
+        }
+    }
+
+    public static float gameVolume
+    {
+        get
+        {
+            return _gameVolume;
+        }
+        set
+        {
+            _gameVolume = value;
+            UnturnedAudioMixer.SetDefaultVolume(value);
+        }
+    }
+
+    public static float voiceVolume
+    {
+        get
+        {
+            return _voiceVolume;
+        }
+        set
+        {
+            _voiceVolume = value;
+            UnturnedAudioMixer.SetVoiceVolume(value);
+        }
+    }
 
     public static bool metric
     {
@@ -354,15 +408,22 @@ public class OptionsSettings
         }
     }
 
-    public static void restoreDefaults()
+    public static void RestoreAudioDefaults()
     {
         music = true;
+        ambience = true;
+        volume = 1f;
+        UnfocusedVolume = 0.5f;
+        gameVolume = 0.7f;
+        loadingScreenMusicVolume = 0.5f;
+        voiceVolume = 0.7f;
+    }
+
+    public static void restoreDefaults()
+    {
         splashscreen = true;
         timer = false;
         fov = 0.75f;
-        volume = 1f;
-        voiceVolume = 1f;
-        loadingScreenMusicVolume = 0.5f;
         debug = false;
         gore = true;
         filter = true;
@@ -372,7 +433,6 @@ public class OptionsSettings
         metric = true;
         talk = false;
         hints = true;
-        ambience = true;
         proUI = true;
         ShouldHitmarkersFollowWorldPosition = false;
         streamer = false;
@@ -402,6 +462,7 @@ public class OptionsSettings
     public static void load()
     {
         restoreDefaults();
+        RestoreAudioDefaults();
         if (!ReadWrite.fileExists("/Options.dat", useCloud: true))
         {
             return;
@@ -468,7 +529,7 @@ public class OptionsSettings
         }
         else
         {
-            voiceVolume = 1f;
+            voiceVolume = 0.7f;
         }
         if (b >= 37)
         {
@@ -704,6 +765,22 @@ public class OptionsSettings
         {
             shouldNametagFadeOut = true;
         }
+        if (b >= 50)
+        {
+            gameVolume = block.readSingle();
+        }
+        else
+        {
+            gameVolume = 0.7f;
+        }
+        if (b >= 51)
+        {
+            UnfocusedVolume = block.readSingle();
+        }
+        else
+        {
+            UnfocusedVolume = 0.5f;
+        }
         if (!Provider.isPro)
         {
             backgroundColor = new Color(0.9f, 0.9f, 0.9f);
@@ -717,7 +794,7 @@ public class OptionsSettings
     public static void save()
     {
         Block block = new Block();
-        block.writeByte(49);
+        block.writeByte(51);
         block.writeBoolean(music);
         block.writeBoolean(splashscreen);
         block.writeBoolean(timer);
@@ -762,6 +839,8 @@ public class OptionsSettings
         block.writeByte((byte)hitmarkerStyle);
         block.writeBoolean(_voiceAlwaysRecording);
         block.writeBoolean(shouldNametagFadeOut);
+        block.writeSingle(gameVolume);
+        block.writeSingle(UnfocusedVolume);
         ReadWrite.writeBlock("/Options.dat", useCloud: true, block);
     }
 }

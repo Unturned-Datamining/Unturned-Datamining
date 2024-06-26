@@ -36,7 +36,7 @@ public class IconUtils
     public static ItemDefIconInfo getItemDefIcon(ushort itemID, ushort vehicleID, ushort skinID)
     {
         ItemAsset itemAsset = Assets.find(EAssetType.ITEM, itemID) as ItemAsset;
-        VehicleAsset vehicleAsset = Assets.find(EAssetType.VEHICLE, vehicleID) as VehicleAsset;
+        VehicleAsset vehicleAsset = VehicleTool.FindVehicleByLegacyIdAndHandleRedirects(vehicleID);
         if (itemAsset == null && vehicleAsset == null)
         {
             UnturnedLog.warn("Could not find a matching item ({0}) or vehicle ({1}) asset!", itemID, vehicleID);

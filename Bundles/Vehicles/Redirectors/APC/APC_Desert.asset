@@ -1,0 +1,7 @@
+GUID a2f98d9b28ec40df9268d7d6c822cc14
+Type SDG.Unturned.VehicleRedirectorAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+ID 57
+
+TargetVehicle 6f56dc58382349b79793f9ba8839774e
+LoadPaintColor "#a69884" // Desert
+SpawnPaintColor "#a69884" // Desert

@@ -49,3 +49,20 @@ Turret_0_Pitch_Max 180
 Turret_0_Ignore_Aim_Camera
 
 Has_Clip_Prefab false
+
+PaintableSections
+[
+    {
+        Path Model_0
+        MaterialIndex 0
+    }
+    {
+        Path Model_1
+        MaterialIndex 0
+    }
+]
+
+DefaultPaintColors
+[
+    #bcbcbc
+]

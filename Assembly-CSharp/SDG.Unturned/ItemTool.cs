@@ -110,9 +110,59 @@ public class ItemTool : MonoBehaviour
         return Color.Lerp(Palette.COLOR_Y, Palette.COLOR_G, (quality - 0.5f) * 2f);
     }
 
-    private static GameObject InstantiateMythicEffect(ushort mythicID, EEffectType type, Vector3 position, Quaternion rotation)
+    public static void ApplyMythicalEffectToMultipleTransforms(Transform[] bones, MythicalEffectController[] systems, ushort mythicID, EEffectType type)
     {
+        if (bones == null || systems == null)
+        {
+            return;
+        }
+        if (mythicID == 0)
+        {
+            for (int i = 0; i < bones.Length; i++)
+            {
+                systems[i] = null;
+            }
+        }
+        else if (!(Assets.find(EAssetType.MYTHIC, mythicID) is MythicAsset mythicAsset))
+        {
+            for (int j = 0; j < bones.Length; j++)
+            {
+                systems[j] = null;
+            }
+        }
+        else
+        {
+            for (int k = 0; k < bones.Length; k++)
+            {
+                systems[k] = ApplyMythicalEffect(bones[k], mythicAsset, type);
+            }
+        }
+    }
+
+    public static MythicalEffectController ApplyMythicalEffect(Transform parent, ushort mythicID, EEffectType type)
+    {
+        if (mythicID == 0)
+        {
+            return null;
+        }
+        if (parent == null)
+        {
+            return null;
+        }
         if (!(Assets.find(EAssetType.MYTHIC, mythicID) is MythicAsset mythicAsset))
+        {
+            return null;
+        }
+        return ApplyMythicalEffect(parent, mythicAsset, type);
+    }
+
+    private static MythicalEffectController ApplyMythicalEffect(Transform parent, MythicAsset mythicAsset, EEffectType type)
+    {
+        if (mythicAsset == null)
+        {
+            return null;
+        }
+        if (parent == null)
         {
             return null;
         }
@@ -138,44 +188,10 @@ public class ItemTool : MonoBehaviour
         {
             return null;
         }
-        GameObject obj = UnityEngine.Object.Instantiate(gameObject, position, rotation);
-        obj.name = "System";
-        return obj;
-    }
-
-    public static void applyEffect(Transform[] bones, Transform[] systems, ushort mythicID, EEffectType type)
-    {
-        if (mythicID != 0 && bones != null && systems != null)
-        {
-            for (int i = 0; i < bones.Length; i++)
-            {
-                systems[i] = applyEffect(bones[i], mythicID, type);
-            }
-        }
-    }
-
-    public static Transform applyEffect(Transform model, ushort mythicID, EEffectType type)
-    {
-        if (mythicID == 0)
-        {
-            return null;
-        }
-        if (model == null)
-        {
-            return null;
-        }
-        Transform transform = model.Find("Effect");
-        Transform transform2 = ((transform != null) ? transform : model);
-        GameObject gameObject = InstantiateMythicEffect(mythicID, type, transform2.position, transform2.rotation);
-        if (gameObject != null)
-        {
-            MythicLockee mythicLockee = gameObject.AddComponent<MythicLockee>();
-            MythicLocker mythicLocker = transform2.gameObject.AddComponent<MythicLocker>();
-            mythicLocker.system = mythicLockee;
-            mythicLockee.locker = mythicLocker;
-            gameObject.SetActive(mythicLocker.gameObject.activeInHierarchy);
-        }
-        return gameObject?.transform;
+        Transform transform = parent.Find("Effect");
+        MythicalEffectController mythicalEffectController = ((transform != null) ? transform : parent).gameObject.AddComponent<MythicalEffectController>();
+        mythicalEffectController.systemPrefab = gameObject;
+        return mythicalEffectController;
     }
 
     public static bool tryForceGiveItem(Player player, ushort id, byte amount)
@@ -214,12 +230,18 @@ public class ItemTool : MonoBehaviour
         return getItem(id, skin, quality, state, viewmodel, itemAsset, statTrackerCallback);
     }
 
+    /// <summary>
+    /// No longer used in vanilla. Kept in case plugins are using it.
+    /// </summary>
     public static Transform getItem(ushort id, ushort skin, byte quality, byte[] state, bool viewmodel, ItemAsset itemAsset, List<Mesh> outTempMeshes, out Material tempMaterial, GetStatTrackerValueHandler statTrackerCallback)
     {
         SkinAsset skinAsset = Assets.find(EAssetType.SKIN, skin) as SkinAsset;
         return InstantiateItem(quality, state, viewmodel, itemAsset, skinAsset, shouldDestroyColliders: false, outTempMeshes, out tempMaterial, statTrackerCallback);
     }
 
+    /// <summary>
+    /// No longer used in vanilla. Kept in case plugins are using it.
+    /// </summary>
     public static Transform getItem(ushort id, ushort skin, byte quality, byte[] state, bool viewmodel, ItemAsset itemAsset, bool shouldDestroyColliders, List<Mesh> outTempMeshes, out Material tempMaterial, GetStatTrackerValueHandler statTrackerCallback)
     {
         SkinAsset skinAsset = Assets.find(EAssetType.SKIN, skin) as SkinAsset;
@@ -436,11 +458,19 @@ public class ItemTool : MonoBehaviour
         SkinAsset skinAsset = null;
         string tags = string.Empty;
         string dynamic_props = string.Empty;
-        if (Player.player != null && Player.player.channel.owner.getItemSkinItemDefID(itemAsset?.sharedSkinLookupID ?? id, out var itemdefid) && itemdefid != 0)
+        if (Player.player != null)
         {
-            num = Provider.provider.economyService.getInventorySkinID(itemdefid);
-            skinAsset = Assets.find(EAssetType.SKIN, num) as SkinAsset;
-            Player.player.channel.owner.getTagsAndDynamicPropsForItem(itemdefid, out tags, out dynamic_props);
+            bool flag = itemAsset != null && itemAsset.sharedSkinLookupID != itemAsset.id;
+            ushort itemID = (flag ? itemAsset.sharedSkinLookupID : id);
+            if (Player.player.channel.owner.getItemSkinItemDefID(itemID, out var itemdefid) && itemdefid != 0)
+            {
+                if (!flag || itemAsset.SharedSkinShouldApplyVisuals)
+                {
+                    num = Provider.provider.economyService.getInventorySkinID(itemdefid);
+                    skinAsset = Assets.find(EAssetType.SKIN, num) as SkinAsset;
+                }
+                Player.player.channel.owner.getTagsAndDynamicPropsForItem(itemdefid, out tags, out dynamic_props);
+            }
         }
         getIcon(id, num, quality, state, itemAsset, skinAsset, tags, dynamic_props, x, y, scale: false, readableOnCPU: false, callback);
     }

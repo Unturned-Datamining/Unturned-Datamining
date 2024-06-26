@@ -49,10 +49,8 @@ public static class BarricadeDrop_NetMethods
             reader.ReadUInt8(out var value2);
             reader.ReadUInt16(out var value3);
             reader.ReadClampedVector3(out var value4, 13, 11);
-            reader.ReadUInt8(out var value5);
-            reader.ReadUInt8(out var value6);
-            reader.ReadUInt8(out var value7);
-            barricadeDrop.ReceiveTransform(in context, value, value2, value3, value4, value5, value6, value7);
+            reader.ReadQuaternion(out var value5);
+            barricadeDrop.ReceiveTransform(in context, value, value2, value3, value4, value5);
         }
     }
 
@@ -73,24 +71,20 @@ public static class BarricadeDrop_NetMethods
                 reader.ReadUInt8(out var value3);
                 reader.ReadUInt16(out var value4);
                 reader.ReadClampedVector3(out var value5, 13, 11);
-                reader.ReadUInt8(out var value6);
-                reader.ReadUInt8(out var value7);
-                reader.ReadUInt8(out var value8);
-                barricadeDrop.ReceiveTransform(in context, value2, value3, value4, value5, value6, value7, value8);
+                reader.ReadQuaternion(out var value6);
+                barricadeDrop.ReceiveTransform(in context, value2, value3, value4, value5, value6);
             }
         }
     }
 
     [NetInvokableGeneratedMethod("ReceiveTransform", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveTransform_Write(NetPakWriter writer, byte old_x, byte old_y, ushort oldPlant, Vector3 point, byte angle_x, byte angle_y, byte angle_z)
+    public static void ReceiveTransform_Write(NetPakWriter writer, byte old_x, byte old_y, ushort oldPlant, Vector3 point, Quaternion rotation)
     {
         writer.WriteUInt8(old_x);
         writer.WriteUInt8(old_y);
         writer.WriteUInt16(oldPlant);
         writer.WriteClampedVector3(point, 13, 11);
-        writer.WriteUInt8(angle_x);
-        writer.WriteUInt8(angle_y);
-        writer.WriteUInt8(angle_z);
+        writer.WriteQuaternion(rotation);
     }
 
     [NetInvokableGeneratedMethod("ReceiveTransformRequest", ENetInvokableGeneratedMethodPurpose.Read)]
@@ -103,21 +97,17 @@ public static class BarricadeDrop_NetMethods
             if (obj != null && obj is BarricadeDrop barricadeDrop)
             {
                 reader.ReadClampedVector3(out var value2, 13, 11);
-                reader.ReadUInt8(out var value3);
-                reader.ReadUInt8(out var value4);
-                reader.ReadUInt8(out var value5);
-                barricadeDrop.ReceiveTransformRequest(in context, value2, value3, value4, value5);
+                reader.ReadQuaternion(out var value3);
+                barricadeDrop.ReceiveTransformRequest(in context, value2, value3);
             }
         }
     }
 
     [NetInvokableGeneratedMethod("ReceiveTransformRequest", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveTransformRequest_Write(NetPakWriter writer, Vector3 point, byte angle_x, byte angle_y, byte angle_z)
+    public static void ReceiveTransformRequest_Write(NetPakWriter writer, Vector3 point, Quaternion rotation)
     {
         writer.WriteClampedVector3(point, 13, 11);
-        writer.WriteUInt8(angle_x);
-        writer.WriteUInt8(angle_y);
-        writer.WriteUInt8(angle_z);
+        writer.WriteQuaternion(rotation);
     }
 
     private static void ReceiveOwnerAndGroup_DeferredRead(object voidNetObj, in ClientInvocationContext context)

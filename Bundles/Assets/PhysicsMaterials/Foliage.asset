@@ -22,6 +22,7 @@
 		"MeleeImpact" "Effects/Physics/MeleeImpact/Grass/MeleeImpact_Grass.asset"
 	}
 	"WipDoNotUseTemp_BulletImpactEffect" "104b07a643734f599848911f3e3fe3b8" // Foliage_NoAudio
+	"TireMotionEffect" "c1097b8d25734e9c93d63ad8d7849ad1" // Foliage
 	"IsArable" "true"
 	"HasOil" "true"
 }

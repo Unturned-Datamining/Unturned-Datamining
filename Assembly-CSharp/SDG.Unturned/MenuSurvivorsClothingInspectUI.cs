@@ -73,7 +73,7 @@ public class MenuSurvivorsClothingInspectUI
             num = Provider.provider.economyService.getInventoryParticleEffect(instance);
         }
         ItemAsset itemAsset = Assets.find<ItemAsset>(item_guid);
-        VehicleAsset vehicleAsset = Assets.find<VehicleAsset>(vehicle_guid);
+        VehicleAsset vehicleAsset = VehicleTool.FindVehicleByGuidAndHandleRedirects(vehicle_guid);
         if (itemAsset == null && vehicleAsset == null)
         {
             return;
@@ -90,7 +90,7 @@ public class MenuSurvivorsClothingInspectUI
                 model = ItemTool.getItem(itemAsset.id, inventorySkinID, 100, itemAsset.getState(), viewmodel: false, itemAsset, skinAsset, getInspectedItemStatTrackerValue);
                 if (num != 0)
                 {
-                    ItemTool.applyEffect(model, num, EEffectType.THIRD);
+                    ItemTool.ApplyMythicalEffect(model, num, EEffectType.THIRD);
                 }
             }
         }
@@ -99,7 +99,7 @@ public class MenuSurvivorsClothingInspectUI
             model = ItemTool.getItem(itemAsset.id, 0, 100, itemAsset.getState(), viewmodel: false, itemAsset, getInspectedItemStatTrackerValue);
             if (num != 0)
             {
-                ItemTool.applyEffect(model, num, EEffectType.HOOK);
+                ItemTool.ApplyMythicalEffect(model, num, EEffectType.HOOK);
             }
         }
         model.parent = inspect;

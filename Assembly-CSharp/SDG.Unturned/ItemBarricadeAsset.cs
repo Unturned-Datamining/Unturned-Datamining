@@ -134,8 +134,16 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
 
     public bool useWaterHeightTransparentSort { get; protected set; }
 
+    /// <summary>
+    /// Vehicle to place.
+    /// Supports redirects by VehicleRedirectorAsset. If redirector's SpawnPaintColor is set, that color is used.
+    /// </summary>
     public Guid VehicleGuid => _vehicleGuid;
 
+    /// <summary>
+    /// Legacy ID of vehicle to place.
+    /// Supports redirects by VehicleRedirectorAsset. If redirector's SpawnPaintColor is set, that color is used.
+    /// </summary>
     public ushort VehicleId
     {
         [Obsolete]
@@ -194,9 +202,13 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
         return !safezone.noBuildables;
     }
 
-    internal VehicleAsset FindVehicleAsset()
+    /// <summary>
+    /// Returned asset is not necessarily a vehicle asset yet: It can also be a VehicleRedirectorAsset which the
+    /// vehicle spawner requires to properly set paint color.
+    /// </summary>
+    internal Asset FindVehicleAsset()
     {
-        return Assets.FindVehicleAssetByGuidOrLegacyId(_vehicleGuid, _vehicleId);
+        return Assets.FindBaseVehicleAssetByGuidOrLegacyId(_vehicleGuid, _vehicleId);
     }
 
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)

@@ -1,0 +1,142 @@
+GUID 424d1cd228a4493890f3d7f101612447
+Type Spawn
+ID 0
+
+Tables
+[
+	{
+		// Midnight Black Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid 9b6ec9ec85204244bd8ae0712f82a7ca
+		Weight 100
+	}
+	{
+		// Dark Brown Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid 7f4fc5dd7025440c953307a04e1daeff
+		Weight 100
+	}
+	{
+		// Classic Yellow Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid d31787d811344bcfaf85dbba6b0c89b2
+		Weight 100
+	}
+	{
+		// Classic White Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid 01c5bab4a83446abb8ad8208a0e50958
+		Weight 100
+	}
+	{
+		// Classic Red Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid 9cc4056334254feb9f982229ae1cba71
+		Weight 100
+	}
+	{
+		// Classic Purple Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid 470c9f60ce014de1b0e03b7966b94f17
+		Weight 100
+	}
+	{
+		// Classic Orange Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid 8c41d07dea564c6a81ee1c57182fe370
+		Weight 100
+	}
+	{
+		// Classic Green Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid 3dd69ee5eb64419d9f6e116be2ec9354
+		Weight 100
+	}
+	{
+		// Classic Blue Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid 74e00a7d5995424a88c145bbb570c380
+		Weight 100
+	}
+	{
+		// Classic Black Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid ecc8570a56df4254b0a6905592eae236
+		Weight 100
+	}
+	{
+		// Navy Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid 6ac0018afea44eaeb9586791feef3229
+		Weight 100
+	}
+	{
+		// Crimson Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid 333d08314d8a4b239dbb6829883d7c86
+		Weight 100
+	}
+	{
+		// Medium Brown Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid 1431dfdc156644ecaf5160cf752a20d4
+		Weight 100
+	}
+	{
+		// Dark Green Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid 4e6793e7436240c89cc96e60b5e369f4
+		Weight 100
+	}
+	{
+		// Medium Gray Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid 99e6c0108a934982853bcb63503c1693
+		Weight 100
+	}
+	{
+		// Dark Gray Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid bf37e3c3fc574d87afb98b79373f468b
+		Weight 100
+	}
+	{
+		// Medium Purple Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid 311baba55f2a4819ae5d1ef19bc5281b
+		Weight 100
+	}
+	{
+		// Electric Yellow Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid 82a1542dd4ed42bbbc4742d65dec016b
+		Weight 100
+	}
+	{
+		// Cyan Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid 94dc33c17a294f41b6fee12d06dd628c
+		Weight 100
+	}
+	{
+		// Lime Green Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid 1446e7311dfb48a685577b52c1f0a811
+		Weight 100
+	}
+	{
+		// Hotrod Red Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid fd4234ad26ba4db89467438d96d977ce
+		Weight 100
+	}
+	{
+		// Magenta Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid 13d5a8623f0243e7a59a295752ee451e
+		Weight 100
+	}
+	{
+		// Azure Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid 085ba69c58664f328f1659983b89bdaf
+		Weight 100
+	}
+	{
+		// Turqoise Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid 5c832f2a148448bc86cd0f69c442b448
+		Weight 100
+	}
+	{
+		// Brilliant White Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid 5818eb8e9fce434aaa5c2a4f38e5d68d
+		Weight 100
+	}
+	{
+		// Light Gray Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid d757506fede942dba4fdc64ef2d1e530
+		Weight 100
+	}
+	{
+		// Lavender Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid ecd2d679f8ad4e1d8ed7845e06081816
+		Weight 100
+	}
+]

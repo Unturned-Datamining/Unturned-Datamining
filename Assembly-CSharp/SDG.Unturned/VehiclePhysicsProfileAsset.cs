@@ -154,12 +154,16 @@ public class VehiclePhysicsProfileAsset : Asset
             if (sidewaysFriction.HasValue)
             {
                 wheel.stiffnessSideways = sidewaysFriction.Value.stiffness;
-                sidewaysFriction.Value.applyTo(ref wheel.sidewaysFriction);
+                WheelFrictionCurve frictionCurve = wheel.wheel.sidewaysFriction;
+                sidewaysFriction.Value.applyTo(ref frictionCurve);
+                wheel.wheel.sidewaysFriction = frictionCurve;
             }
             if (forwardFriction.HasValue)
             {
                 wheel.stiffnessForward = forwardFriction.Value.stiffness;
-                forwardFriction.Value.applyTo(ref wheel.forwardFriction);
+                WheelFrictionCurve frictionCurve2 = wheel.wheel.forwardFriction;
+                forwardFriction.Value.applyTo(ref frictionCurve2);
+                wheel.wheel.forwardFriction = frictionCurve2;
             }
             if (flag)
             {

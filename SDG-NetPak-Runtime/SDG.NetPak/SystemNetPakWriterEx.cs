@@ -21,6 +21,29 @@ public static class SystemNetPakWriterEx
 
     /// <summary>
     /// Values outside the range are clamped into range.
+    /// For example intBitCount of 7 allows range [0, 128).
+    /// </summary>
+    public static bool WriteUnsignedClampedFloat(this NetPakWriter writer, float value, int intBitCount, int fracBitCount)
+    {
+        int num = 1 << intBitCount;
+        if (value < 0f)
+        {
+            return writer.WriteBits(0u, intBitCount) & writer.WriteBits(0u, fracBitCount);
+        }
+        if (value >= (float)num)
+        {
+            return writer.WriteBits(uint.MaxValue, intBitCount) & writer.WriteBits(uint.MaxValue, fracBitCount);
+        }
+        int num2 = Mathf.FloorToInt(value);
+        bool num3 = writer.WriteBits((uint)num2, intBitCount);
+        float num4 = value - (float)num2;
+        uint num5 = (uint)(1 << fracBitCount);
+        uint value2 = (uint)(num4 * (float)num5);
+        return num3 & writer.WriteBits(value2, fracBitCount);
+    }
+
+    /// <summary>
+    /// Values outside the range are clamped into range.
     /// For example intBitCount of 7 allows range [-64, +64).
     /// </summary>
     public static bool WriteClampedFloat(this NetPakWriter writer, float value, int intBitCount, int fracBitCount)

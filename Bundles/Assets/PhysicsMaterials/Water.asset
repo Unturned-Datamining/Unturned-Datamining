@@ -21,4 +21,5 @@
 		"MeleeImpact" "Effects/Physics/LegacyImpact/LegacyImpact_Water.asset"
 	}
 	"WipDoNotUseTemp_BulletImpactEffect" "04516eaffa03406e8ad870dfd56b8d3c" // Water_NoAudio
+	"TireMotionEffect" "ee836c12c8e648aaaf55f0839c9dc3a9" // TireMotion_Water
 }

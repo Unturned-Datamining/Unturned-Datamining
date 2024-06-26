@@ -1,0 +1,107 @@
+GUID c3617378ce484cdea50d6b3b6ee105aa
+Type Vehicle
+
+Speed_Min -6
+Speed_Max 16.5
+
+Steer_Min 14
+Steer_Max 28
+
+Brake 32
+
+Fuel_Min 200
+Fuel_Max 400
+Fuel 1500
+
+Health_Min 350
+Health_Max 450
+Health 600
+
+Trunk_Storage_X 5
+Trunk_Storage_Y 3
+
+Explosion 20
+
+Size2_Z 3
+Shared_Skin_Name VW_Golf
+Shared_Skin_Lookup_ID 149
+
+IgnitionAudioClip Sounds/CarIgnition.mp3
+HornAudioClip Sounds/CarHorn_02.mp3
+Has_Clip_Prefab false
+
+Carjack_Force_Multiplier 2
+Explosion_Force_Multiplier 2
+
+PaintableSections
+[
+    {
+        Path Model_0
+        MaterialIndex 0
+    }
+]
+
+DefaultPaintColors
+[
+    "#353535" // Original Black
+    "#37658c" // Original Blue
+    "#2e642e" // Original Green
+    "#bd6e27" // Original Orange
+    "#6a466d" // Original Purple
+    "#9a2525" // Original Red
+    "#d4d4d4" // Original White
+    "#cdaa1e" // Original Yellow
+]
+
+WheelConfigurations
+[
+	{
+		WheelColliderPath Tires/Tire_0
+		IsColliderSteered true
+		IsColliderPowered true
+		ModelPath Wheels/Wheel_0
+		ModelUseColliderPose true
+	}
+	{
+		WheelColliderPath Tires/Tire_1
+		IsColliderSteered true
+		IsColliderPowered true
+		ModelPath Wheels/Wheel_1
+		ModelUseColliderPose true
+	}
+	{
+		WheelColliderPath Tires/Tire_2
+		IsColliderSteered false
+		IsColliderPowered false
+		ModelPath Wheels/Wheel_2
+		ModelUseColliderPose true
+	}
+	{
+		WheelColliderPath Tires/Tire_3
+		IsColliderSteered false
+		IsColliderPowered false
+		ModelPath Wheels/Wheel_3
+		ModelUseColliderPose true
+	}
+]
+
+ReverseGearRatio 5
+ForwardGearRatios
+[
+	14
+	8.75
+]
+GearShift_Duration 0.2
+GearShift_Interval 0.5
+EngineIdleRPM 1000
+EngineMaxRPM 6000
+EngineMaxTorque 5.5
+
+EngineSound_Type EngineRPMSimple
+EngineSound
+{
+	IdlePitch 1.0
+	IdleVolume 0.75
+	MaxPitch 2
+	MaxVolume 1.0
+}

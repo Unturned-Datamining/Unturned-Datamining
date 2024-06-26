@@ -109,14 +109,14 @@ public class PlayerWorkzone : PlayerCaller
             if (!(item.transform == null))
             {
                 Vector3 position = item.transform.position;
-                Vector3 eulerAngles = item.transform.rotation.eulerAngles;
+                Quaternion rotation = item.transform.rotation;
                 if (item.transform.CompareTag("Barricade"))
                 {
-                    BarricadeManager.transformBarricade(item.transform, position, eulerAngles.x, eulerAngles.y, eulerAngles.z);
+                    BarricadeManager.transformBarricade(item.transform, position, rotation);
                 }
                 else if (item.transform.CompareTag("Structure"))
                 {
-                    StructureManager.transformStructure(item.transform, position, eulerAngles.x, eulerAngles.y, eulerAngles.z);
+                    StructureManager.transformStructure(item.transform, position, rotation);
                 }
             }
         }

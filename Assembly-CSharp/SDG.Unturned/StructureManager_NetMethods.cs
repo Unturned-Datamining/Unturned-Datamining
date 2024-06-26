@@ -49,25 +49,21 @@ public static class StructureManager_NetMethods
         reader.ReadUInt8(out var value2);
         reader.ReadGuid(out var value3);
         reader.ReadClampedVector3(out var value4, 13, 11);
-        reader.ReadUInt8(out var value5);
-        reader.ReadUInt8(out var value6);
-        reader.ReadUInt8(out var value7);
-        reader.ReadUInt64(out var value8);
-        reader.ReadUInt64(out var value9);
-        reader.ReadNetId(out var value10);
-        StructureManager.ReceiveSingleStructure(value, value2, value3, value4, value5, value6, value7, value8, value9, value10);
+        reader.ReadQuaternion(out var value5);
+        reader.ReadUInt64(out var value6);
+        reader.ReadUInt64(out var value7);
+        reader.ReadNetId(out var value8);
+        StructureManager.ReceiveSingleStructure(value, value2, value3, value4, value5, value6, value7, value8);
     }
 
     [NetInvokableGeneratedMethod("ReceiveSingleStructure", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveSingleStructure_Write(NetPakWriter writer, byte x, byte y, Guid id, Vector3 point, byte angle_x, byte angle_y, byte angle_z, ulong owner, ulong group, NetId netId)
+    public static void ReceiveSingleStructure_Write(NetPakWriter writer, byte x, byte y, Guid id, Vector3 point, Quaternion rotation, ulong owner, ulong group, NetId netId)
     {
         writer.WriteUInt8(x);
         writer.WriteUInt8(y);
         writer.WriteGuid(id);
         writer.WriteClampedVector3(point, 13, 11);
-        writer.WriteUInt8(angle_x);
-        writer.WriteUInt8(angle_y);
-        writer.WriteUInt8(angle_z);
+        writer.WriteQuaternion(rotation);
         writer.WriteUInt64(owner);
         writer.WriteUInt64(group);
         writer.WriteNetId(netId);

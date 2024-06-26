@@ -1,0 +1,6 @@
+GUID d354a9b7cc9941e681a79bd0468f1457
+Type SDG.Unturned.VehicleRedirectorAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+ID 19
+
+TargetVehicle e7105217d65f4c5e8d00b0989538f57f
+LoadPaintColor "#2e642e" // Original Green

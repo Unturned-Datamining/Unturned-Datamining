@@ -1827,6 +1827,7 @@ public class Provider : MonoBehaviour
         NetIdRegistry.Clear();
         NetInvocationDeferralRegistry.Clear();
         ClientAssetIntegrity.Clear();
+        PhysicsMaterialNetTable.Clear();
         ItemManager.ClearNetworkStuff();
         BarricadeManager.ClearNetworkStuff();
         StructureManager.ClearNetworkStuff();
@@ -2350,6 +2351,7 @@ public class Provider : MonoBehaviour
         authorityHoliday = (_modeConfigData.Gameplay.Allow_Holidays ? HolidayUtil.BackendGetActiveHoliday() : ENPCHoliday.NONE);
         _isServer = true;
         _isClient = true;
+        PhysicsMaterialNetTable.ServerPopulateTable();
         time = SteamUtils.GetServerRealTime();
         Level.load(Level.getLevel(map), hasAuthority: true);
         loadGameMode();
@@ -2666,6 +2668,7 @@ public class Provider : MonoBehaviour
             }
         }
         Assets.ApplyServerAssetMapping(level, list);
+        PhysicsMaterialNetTable.ServerPopulateTable();
         Level.load(level, hasAuthority: true);
         loadGameMode();
         applyLevelModeConfigOverrides();
@@ -3916,6 +3919,7 @@ public class Provider : MonoBehaviour
     /// </summary>
     private static void SendInitialGlobalState(SteamPlayer client)
     {
+        PhysicsMaterialNetTable.Send(client.transportConnection);
         LightingManager.SendInitialGlobalState(client);
         VehicleManager.SendInitialGlobalState(client);
         AnimalManager.SendInitialGlobalState(client.transportConnection);

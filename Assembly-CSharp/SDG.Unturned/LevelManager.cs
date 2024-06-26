@@ -330,12 +330,12 @@ public class LevelManager : SteamCaller
         for (int j = 0; j < spawns.Count; j++)
         {
             VehicleSpawnpoint vehicleSpawnpoint = spawns[j];
-            ushort vehicle = LevelVehicles.getVehicle(vehicleSpawnpoint);
-            if (vehicle != 0)
+            Asset randomAssetForSpawnpoint = LevelVehicles.GetRandomAssetForSpawnpoint(vehicleSpawnpoint);
+            if (randomAssetForSpawnpoint != null)
             {
                 Vector3 point = vehicleSpawnpoint.point;
                 point.y += 1f;
-                VehicleManager.spawnVehicleV2(vehicle, point, Quaternion.Euler(0f, vehicleSpawnpoint.angle, 0f));
+                VehicleManager.spawnVehicleV2(randomAssetForSpawnpoint, point, Quaternion.Euler(0f, vehicleSpawnpoint.angle, 0f));
             }
         }
         foreach (AnimalSpawnpoint spawn in LevelAnimals.spawns)

@@ -16,7 +16,11 @@ public class MenuConfigurationUI
 
     private static SleekButtonIcon controlsButton;
 
+    private static SleekButtonIcon audioButton;
+
     private static SleekButtonIcon backButton;
+
+    internal static MenuConfigurationAudioUI audioMenu;
 
     public static void open()
     {
@@ -60,6 +64,12 @@ public class MenuConfigurationUI
         close();
     }
 
+    private static void onClickedAudioButton(ISleekElement button)
+    {
+        audioMenu.open();
+        close();
+    }
+
     private static void onClickedBackButton(ISleekElement button)
     {
         MenuDashboardUI.open();
@@ -81,9 +91,10 @@ public class MenuConfigurationUI
         container.SizeScale_Y = 1f;
         MenuUI.container.AddChild(container);
         active = false;
+        int num = -185;
         optionsButton = new SleekButtonIcon(bundle.load<Texture2D>("Options"));
         optionsButton.PositionOffset_X = -100f;
-        optionsButton.PositionOffset_Y = -145f;
+        optionsButton.PositionOffset_Y = num;
         optionsButton.PositionScale_X = 0.5f;
         optionsButton.PositionScale_Y = 0.5f;
         optionsButton.SizeOffset_X = 200f;
@@ -94,9 +105,10 @@ public class MenuConfigurationUI
         optionsButton.fontSize = ESleekFontSize.Medium;
         optionsButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(optionsButton);
+        num += 60;
         displayButton = new SleekButtonIcon(bundle.load<Texture2D>("Display"));
         displayButton.PositionOffset_X = -100f;
-        displayButton.PositionOffset_Y = -85f;
+        displayButton.PositionOffset_Y = num;
         displayButton.PositionScale_X = 0.5f;
         displayButton.PositionScale_Y = 0.5f;
         displayButton.SizeOffset_X = 200f;
@@ -107,9 +119,10 @@ public class MenuConfigurationUI
         displayButton.fontSize = ESleekFontSize.Medium;
         displayButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(displayButton);
+        num += 60;
         graphicsButton = new SleekButtonIcon(bundle.load<Texture2D>("Graphics"));
         graphicsButton.PositionOffset_X = -100f;
-        graphicsButton.PositionOffset_Y = -25f;
+        graphicsButton.PositionOffset_Y = num;
         graphicsButton.PositionScale_X = 0.5f;
         graphicsButton.PositionScale_Y = 0.5f;
         graphicsButton.SizeOffset_X = 200f;
@@ -120,9 +133,10 @@ public class MenuConfigurationUI
         graphicsButton.fontSize = ESleekFontSize.Medium;
         graphicsButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(graphicsButton);
+        num += 60;
         controlsButton = new SleekButtonIcon(bundle.load<Texture2D>("Controls"));
         controlsButton.PositionOffset_X = -100f;
-        controlsButton.PositionOffset_Y = 35f;
+        controlsButton.PositionOffset_Y = num;
         controlsButton.PositionScale_X = 0.5f;
         controlsButton.PositionScale_Y = 0.5f;
         controlsButton.SizeOffset_X = 200f;
@@ -133,9 +147,24 @@ public class MenuConfigurationUI
         controlsButton.fontSize = ESleekFontSize.Medium;
         controlsButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(controlsButton);
+        num += 60;
+        audioButton = new SleekButtonIcon(bundle.load<Texture2D>("Audio"));
+        audioButton.PositionOffset_X = -100f;
+        audioButton.PositionOffset_Y = num;
+        audioButton.PositionScale_X = 0.5f;
+        audioButton.PositionScale_Y = 0.5f;
+        audioButton.SizeOffset_X = 200f;
+        audioButton.SizeOffset_Y = 50f;
+        audioButton.text = local.format("Audio_Button_Text");
+        audioButton.tooltip = local.format("Audio_Button_Tooltip");
+        audioButton.onClickedButton += onClickedAudioButton;
+        audioButton.fontSize = ESleekFontSize.Medium;
+        audioButton.iconColor = ESleekTint.FOREGROUND;
+        container.AddChild(audioButton);
+        num += 60;
         backButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));
         backButton.PositionOffset_X = -100f;
-        backButton.PositionOffset_Y = 95f;
+        backButton.PositionOffset_Y = num;
         backButton.PositionScale_X = 0.5f;
         backButton.PositionScale_Y = 0.5f;
         backButton.SizeOffset_X = 200f;
@@ -151,5 +180,14 @@ public class MenuConfigurationUI
         new MenuConfigurationDisplayUI();
         new MenuConfigurationGraphicsUI();
         new MenuConfigurationControlsUI();
+        audioMenu = new MenuConfigurationAudioUI();
+        audioMenu.PositionOffset_X = 10f;
+        audioMenu.PositionOffset_Y = 10f;
+        audioMenu.PositionScale_Y = 1f;
+        audioMenu.SizeOffset_X = -20f;
+        audioMenu.SizeOffset_Y = -20f;
+        audioMenu.SizeScale_X = 1f;
+        audioMenu.SizeScale_Y = 1f;
+        MenuUI.container.AddChild(audioMenu);
     }
 }

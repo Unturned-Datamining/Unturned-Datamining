@@ -80,7 +80,7 @@ public class PlayerInputPacket
                 reader.ReadEnum(out inputInfo.usage);
                 reader.ReadClampedVector3(out inputInfo.point);
                 reader.ReadNormalVector3(out inputInfo.normal);
-                reader.ReadString(out inputInfo.materialName, 6);
+                reader.ReadPhysicsMaterialName(out inputInfo.materialName);
                 inputInfo.material = PhysicsTool.GetLegacyMaterialByName(inputInfo.materialName);
                 break;
             case ERaycastInfoType.SKIP:
@@ -184,7 +184,7 @@ public class PlayerInputPacket
                 reader.ReadEnum(out inputInfo.usage);
                 reader.ReadClampedVector3(out inputInfo.point);
                 reader.ReadNormalVector3(out inputInfo.normal);
-                reader.ReadString(out inputInfo.materialName, 6);
+                reader.ReadPhysicsMaterialName(out inputInfo.materialName);
                 inputInfo.material = PhysicsTool.GetLegacyMaterialByName(inputInfo.materialName);
                 reader.ReadUInt32(out var value8);
                 reader.ReadTransform(out inputInfo.colliderTransform);
@@ -205,7 +205,7 @@ public class PlayerInputPacket
                 reader.ReadEnum(out inputInfo.usage);
                 reader.ReadClampedVector3(out inputInfo.point);
                 reader.ReadNormalVector3(out inputInfo.normal);
-                reader.ReadString(out inputInfo.materialName, 6);
+                reader.ReadPhysicsMaterialName(out inputInfo.materialName);
                 inputInfo.material = PhysicsTool.GetLegacyMaterialByName(inputInfo.materialName);
                 reader.ReadNetId(out var value13);
                 reader.ReadTransform(out inputInfo.colliderTransform);
@@ -234,7 +234,7 @@ public class PlayerInputPacket
                 reader.ReadClampedVector3(out inputInfo.point);
                 reader.ReadNormalVector3(out inputInfo.direction);
                 reader.ReadNormalVector3(out inputInfo.normal);
-                reader.ReadString(out inputInfo.materialName, 6);
+                reader.ReadPhysicsMaterialName(out inputInfo.materialName);
                 inputInfo.material = PhysicsTool.GetLegacyMaterialByName(inputInfo.materialName);
                 reader.ReadNetId(out var value15);
                 reader.ReadTransform(out inputInfo.colliderTransform);
@@ -263,7 +263,7 @@ public class PlayerInputPacket
                 reader.ReadClampedVector3(out inputInfo.point);
                 reader.ReadNormalVector3(out inputInfo.direction);
                 reader.ReadNormalVector3(out inputInfo.normal);
-                reader.ReadString(out inputInfo.materialName, 6);
+                reader.ReadPhysicsMaterialName(out inputInfo.materialName);
                 inputInfo.material = PhysicsTool.GetLegacyMaterialByName(inputInfo.materialName);
                 reader.ReadUInt8(out var value10);
                 reader.ReadUInt8(out var value11);
@@ -286,7 +286,7 @@ public class PlayerInputPacket
                 reader.ReadClampedVector3(out inputInfo.point);
                 reader.ReadNormalVector3(out inputInfo.direction);
                 reader.ReadNormalVector3(out inputInfo.normal);
-                reader.ReadString(out inputInfo.materialName, 6);
+                reader.ReadPhysicsMaterialName(out inputInfo.materialName);
                 inputInfo.material = PhysicsTool.GetLegacyMaterialByName(inputInfo.materialName);
                 reader.ReadUInt8(out inputInfo.section);
                 reader.ReadUInt8(out var value4);
@@ -371,7 +371,7 @@ public class PlayerInputPacket
                 writer.WriteEnum(usage);
                 writer.WriteClampedVector3(info.point);
                 writer.WriteNormalVector3(info.normal);
-                writer.WriteString(info.materialName, 6);
+                writer.WritePhysicsMaterialName(info.materialName);
                 writer.WriteUInt32(info.vehicle.instanceID);
                 writer.WriteTransform(info.collider?.transform);
             }
@@ -387,14 +387,14 @@ public class PlayerInputPacket
                     {
                         writer.WriteClampedVector3(info.point);
                         writer.WriteNormalVector3(info.normal);
-                        writer.WriteString(info.materialName, 6);
+                        writer.WritePhysicsMaterialName(info.materialName);
                         writer.WriteNetId(barricadeDrop.GetNetId());
                     }
                     else
                     {
                         writer.WriteClampedVector3(Vector3.zero);
                         writer.WriteNormalVector3(Vector3.up);
-                        writer.WriteString(null, 6);
+                        writer.WritePhysicsMaterialName(null);
                         writer.WriteNetId(NetId.INVALID);
                     }
                     writer.WriteTransform(info.collider?.transform);
@@ -410,7 +410,7 @@ public class PlayerInputPacket
                         writer.WriteClampedVector3(info.point);
                         writer.WriteNormalVector3(info.direction);
                         writer.WriteNormalVector3(info.normal);
-                        writer.WriteString(info.materialName, 6);
+                        writer.WritePhysicsMaterialName(info.materialName);
                         writer.WriteNetId(structureDrop.GetNetId());
                     }
                     else
@@ -418,7 +418,7 @@ public class PlayerInputPacket
                         writer.WriteClampedVector3(Vector3.zero);
                         writer.WriteNormalVector3(Vector3.up);
                         writer.WriteNormalVector3(Vector3.up);
-                        writer.WriteString(null, 6);
+                        writer.WritePhysicsMaterialName(null);
                         writer.WriteNetId(NetId.INVALID);
                     }
                     writer.WriteTransform(info.collider?.transform);
@@ -433,7 +433,7 @@ public class PlayerInputPacket
                         writer.WriteClampedVector3(info.point);
                         writer.WriteNormalVector3(info.direction);
                         writer.WriteNormalVector3(info.normal);
-                        writer.WriteString(info.materialName, 6);
+                        writer.WritePhysicsMaterialName(info.materialName);
                         writer.WriteUInt8(x);
                         writer.WriteUInt8(y);
                         writer.WriteUInt16(index);
@@ -443,7 +443,7 @@ public class PlayerInputPacket
                         writer.WriteClampedVector3(Vector3.zero);
                         writer.WriteNormalVector3(Vector3.up);
                         writer.WriteNormalVector3(Vector3.up);
-                        writer.WriteString(null, 6);
+                        writer.WritePhysicsMaterialName(null);
                         writer.WriteUInt8(0);
                         writer.WriteUInt8(0);
                         writer.WriteUInt16(ushort.MaxValue);
@@ -465,7 +465,7 @@ public class PlayerInputPacket
                         writer.WriteClampedVector3(info.point);
                         writer.WriteNormalVector3(info.direction);
                         writer.WriteNormalVector3(info.normal);
-                        writer.WriteString(info.materialName, 6);
+                        writer.WritePhysicsMaterialName(info.materialName);
                         writer.WriteUInt8(info.section);
                         writer.WriteUInt8(x2);
                         writer.WriteUInt8(y2);
@@ -476,7 +476,7 @@ public class PlayerInputPacket
                         writer.WriteClampedVector3(Vector3.zero);
                         writer.WriteNormalVector3(Vector3.up);
                         writer.WriteNormalVector3(Vector3.up);
-                        writer.WriteString(null, 6);
+                        writer.WritePhysicsMaterialName(null);
                         writer.WriteUInt8(byte.MaxValue);
                         writer.WriteUInt8(0);
                         writer.WriteUInt8(0);
@@ -490,7 +490,7 @@ public class PlayerInputPacket
                     writer.WriteEnum(usage);
                     writer.WriteClampedVector3(info.point);
                     writer.WriteNormalVector3(info.normal);
-                    writer.WriteString(info.materialName, 6);
+                    writer.WritePhysicsMaterialName(info.materialName);
                 }
                 else
                 {

@@ -6,6 +6,8 @@ namespace SDG.Unturned;
 
 public class Bundle
 {
+    private static List<AudioSource> audioSources = new List<AudioSource>();
+
     private static List<Renderer> renderers = new List<Renderer>();
 
     public bool convertShadersToStandard;
@@ -58,6 +60,18 @@ public class Bundle
 
     protected virtual void processLoadedGameObject(GameObject gameObject)
     {
+        if (!Dedicator.IsDedicatedServer)
+        {
+            audioSources.Clear();
+            gameObject.GetComponentsInChildren(includeInactive: true, audioSources);
+            foreach (AudioSource audioSource in audioSources)
+            {
+                if (audioSource.outputAudioMixerGroup == null)
+                {
+                    audioSource.outputAudioMixerGroup = UnturnedAudioMixer.GetDefaultGroup();
+                }
+            }
+        }
         if ((!convertShadersToStandard && !consolidateShaders) || Dedicator.IsDedicatedServer)
         {
             return;

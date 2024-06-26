@@ -58,8 +58,6 @@ public class Zombie : MonoBehaviour
 
     private AudioSource fireAudio;
 
-    private AudioSource rootAudioSource;
-
     private Material skinMaterial;
 
     private Transform attachmentModel_0;
@@ -1247,7 +1245,7 @@ public class Zombie : MonoBehaviour
     public float getBulletResistance()
     {
         EZombieSpeciality eZombieSpeciality = speciality;
-        if (eZombieSpeciality == EZombieSpeciality.SPIRIT || eZombieSpeciality == EZombieSpeciality.BOSS_ELVER_STOMPER)
+        if ((uint)(eZombieSpeciality - 14) <= 1u || eZombieSpeciality == EZombieSpeciality.BOSS_ELVER_STOMPER)
         {
             return 0.1f;
         }
@@ -1354,7 +1352,6 @@ public class Zombie : MonoBehaviour
         {
             if (!Dedicator.IsDedicatedServer)
             {
-                rootAudioSource.maxDistance = 64f;
                 animator.transform.localScale = Vector3.one * UnityEngine.Random.Range(1.45f, 1.55f);
             }
             SetCapsuleRadiusAndHeight(0.75f, 2f);
@@ -1366,7 +1363,6 @@ public class Zombie : MonoBehaviour
         }
         if (!Dedicator.IsDedicatedServer)
         {
-            rootAudioSource.maxDistance = 32f;
             animator.transform.localScale = Vector3.one * UnityEngine.Random.Range(0.95f, 1.05f);
         }
         SetCapsuleRadiusAndHeight(0.4f, 2f);
@@ -1974,7 +1970,7 @@ public class Zombie : MonoBehaviour
                                     if (player.clothing.hatAsset != null)
                                     {
                                         ItemClothingAsset hatAsset = player.clothing.hatAsset;
-                                        if (Provider.modeConfigData.Items.Has_Durability && player.clothing.hatQuality > 0)
+                                        if (Provider.modeConfigData.Items.Clothing_Has_Durability && player.clothing.hatQuality > 0)
                                         {
                                             player.clothing.hatQuality--;
                                             player.clothing.sendUpdateHatQuality();
@@ -1985,7 +1981,7 @@ public class Zombie : MonoBehaviour
                                     else if (player.clothing.vestAsset != null)
                                     {
                                         ItemClothingAsset vestAsset = player.clothing.vestAsset;
-                                        if (Provider.modeConfigData.Items.Has_Durability && player.clothing.vestQuality > 0)
+                                        if (Provider.modeConfigData.Items.Clothing_Has_Durability && player.clothing.vestQuality > 0)
                                         {
                                             player.clothing.vestQuality--;
                                             player.clothing.sendUpdateVestQuality();
@@ -1996,7 +1992,7 @@ public class Zombie : MonoBehaviour
                                     else if (player.clothing.shirtAsset != null)
                                     {
                                         ItemClothingAsset shirtAsset = player.clothing.shirtAsset;
-                                        if (Provider.modeConfigData.Items.Has_Durability && player.clothing.shirtQuality > 0)
+                                        if (Provider.modeConfigData.Items.Clothing_Has_Durability && player.clothing.shirtQuality > 0)
                                         {
                                             player.clothing.shirtQuality--;
                                             player.clothing.sendUpdateShirtQuality();
@@ -2010,7 +2006,7 @@ public class Zombie : MonoBehaviour
                                     if (player.clothing.vestAsset != null)
                                     {
                                         ItemClothingAsset vestAsset2 = player.clothing.vestAsset;
-                                        if (Provider.modeConfigData.Items.Has_Durability && player.clothing.vestQuality > 0)
+                                        if (Provider.modeConfigData.Items.Clothing_Has_Durability && player.clothing.vestQuality > 0)
                                         {
                                             player.clothing.vestQuality--;
                                             player.clothing.sendUpdateVestQuality();
@@ -2021,7 +2017,7 @@ public class Zombie : MonoBehaviour
                                     else if (player.clothing.shirtAsset != null)
                                     {
                                         ItemClothingAsset shirtAsset2 = player.clothing.shirtAsset;
-                                        if (Provider.modeConfigData.Items.Has_Durability && player.clothing.shirtQuality > 0)
+                                        if (Provider.modeConfigData.Items.Clothing_Has_Durability && player.clothing.shirtQuality > 0)
                                         {
                                             player.clothing.shirtQuality--;
                                             player.clothing.sendUpdateShirtQuality();
@@ -2035,7 +2031,7 @@ public class Zombie : MonoBehaviour
                                     if (player.clothing.pantsAsset != null)
                                     {
                                         ItemClothingAsset pantsAsset = player.clothing.pantsAsset;
-                                        if (Provider.modeConfigData.Items.Has_Durability && player.clothing.pantsQuality > 0)
+                                        if (Provider.modeConfigData.Items.Clothing_Has_Durability && player.clothing.pantsQuality > 0)
                                         {
                                             player.clothing.pantsQuality--;
                                             player.clothing.sendUpdatePantsQuality();
@@ -2049,7 +2045,7 @@ public class Zombie : MonoBehaviour
                                     if (player.clothing.vestAsset != null)
                                     {
                                         ItemClothingAsset vestAsset3 = player.clothing.vestAsset;
-                                        if (Provider.modeConfigData.Items.Has_Durability && player.clothing.vestQuality > 0)
+                                        if (Provider.modeConfigData.Items.Clothing_Has_Durability && player.clothing.vestQuality > 0)
                                         {
                                             player.clothing.vestQuality--;
                                             player.clothing.sendUpdateVestQuality();
@@ -2060,7 +2056,7 @@ public class Zombie : MonoBehaviour
                                     else if (player.clothing.shirtAsset != null)
                                     {
                                         ItemClothingAsset shirtAsset3 = player.clothing.shirtAsset;
-                                        if (Provider.modeConfigData.Items.Has_Durability && player.clothing.shirtQuality > 0)
+                                        if (Provider.modeConfigData.Items.Clothing_Has_Durability && player.clothing.shirtQuality > 0)
                                         {
                                             player.clothing.shirtQuality--;
                                             player.clothing.sendUpdateShirtQuality();
@@ -2071,7 +2067,7 @@ public class Zombie : MonoBehaviour
                                     else if (player.clothing.pantsAsset != null)
                                     {
                                         ItemClothingAsset pantsAsset2 = player.clothing.pantsAsset;
-                                        if (Provider.modeConfigData.Items.Has_Durability && player.clothing.pantsQuality > 0)
+                                        if (Provider.modeConfigData.Items.Clothing_Has_Durability && player.clothing.pantsQuality > 0)
                                         {
                                             player.clothing.pantsQuality--;
                                             player.clothing.sendUpdatePantsQuality();
@@ -2229,8 +2225,7 @@ public class Zombie : MonoBehaviour
                     Vector3 vector3 = player.transform.position - base.transform.position;
                     float magnitude3 = vector3.magnitude;
                     vector3 += Vector3.up * magnitude3 * 0.25f;
-                    Vector3 direction2 = vector3 / magnitude3;
-                    ZombieManager.sendZombieAcid(this, base.transform.position + Vector3.up * base.transform.localScale.y * 1.75f, direction2);
+                    ZombieManager.sendZombieAcid(this, base.transform.position + Vector3.up * base.transform.localScale.y * 1.75f, vector3.normalized);
                 }
                 else
                 {
@@ -2244,8 +2239,8 @@ public class Zombie : MonoBehaviour
             if (Provider.isServer && player != null)
             {
                 Vector3 vector4 = player.look.aim.position;
-                Vector3 direction3 = vector4 - (base.transform.position + new Vector3(0f, 2f, 0f));
-                if (Physics.Raycast(new Ray(base.transform.position + new Vector3(0f, 2f, 0f), direction3), out var hitInfo, direction3.magnitude - 0.025f, RayMasks.BLOCK_SENTRY))
+                Vector3 direction2 = vector4 - (base.transform.position + new Vector3(0f, 2f, 0f));
+                if (Physics.Raycast(new Ray(base.transform.position + new Vector3(0f, 2f, 0f), direction2), out var hitInfo, direction2.magnitude - 0.025f, RayMasks.BLOCK_SENTRY))
                 {
                     vector4 = hitInfo.point + hitInfo.normal;
                 }
@@ -2548,7 +2543,6 @@ public class Zombie : MonoBehaviour
             .GetComponent<ParticleSystem>();
         fireAudio = skeleton.Find("Spine").Find("Skull").Find("Fire")
             .GetComponent<AudioSource>();
-        rootAudioSource = GetComponent<AudioSource>();
         boulderTime = animator["Boulder_0"].clip.length;
         spitTime = animator["Acid_0"].clip.length;
         attackTime = animator["Attack_0"].clip.length;

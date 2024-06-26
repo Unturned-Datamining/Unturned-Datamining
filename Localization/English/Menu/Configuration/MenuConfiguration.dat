@@ -6,3 +6,5 @@ Display_Button_Text Display
 Display_Button_Tooltip Display
 Controls_Button_Text Controls
 Controls_Button_Tooltip Controls
+Audio_Button_Text Audio
+Audio_Button_Tooltip Sound

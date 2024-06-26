@@ -1,0 +1,14 @@
+"Metadata"
+{
+	"GUID" "ebcd99302c9b415ea8bf31b014084903"
+	"Type" "SDG.Unturned.PhysicsMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+}
+"Asset"
+{
+	"UnityNames"
+	[
+		"Peaks_Grass_Wet"
+	]
+	"Fallback" "1c3a3c6664f14aa486d73528a5d9f92c" // Foliage
+	"TireMotionEffect" "1e555a287f434594a95dcb72e0532efc" // TireMotion_Foliage_Peaks_02
+}

@@ -111,7 +111,7 @@ public class SleekInventory : SleekWrapper
                 else
                 {
                     _itemAsset = Assets.find<ItemAsset>(item_guid);
-                    _vehicleAsset = Assets.find<VehicleAsset>(vehicle_guid);
+                    _vehicleAsset = VehicleTool.FindVehicleByGuidAndHandleRedirects(vehicle_guid);
                     icon.SetItemDefId(item);
                     icon.IsVisible = true;
                     nameLabel.Text = Provider.provider.economyService.getInventoryName(item);

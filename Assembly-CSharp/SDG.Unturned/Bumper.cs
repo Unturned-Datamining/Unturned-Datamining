@@ -59,7 +59,7 @@ public class Bumper : MonoBehaviour
         {
             return;
         }
-        float num = Mathf.Clamp(vehicle.speed * vehicle.asset.bumperMultiplier, -10f, 10f);
+        float num = Mathf.Clamp(vehicle.ReplicatedSpeed * vehicle.asset.bumperMultiplier, -10f, 10f);
         if (reverse)
         {
             num = 0f - num;
@@ -176,7 +176,7 @@ public class Bumper : MonoBehaviour
                 DamageTool.ServerSpawnLegacyImpact(position, -base.transform.forward, materialName, null, Provider.GatherClientConnectionsWithinSphere(position, EffectManager.SMALL));
             }
         }
-        if (!vehicle.isDead && vehicle.asset.isVulnerableToBumper && !other.transform.CompareTag("Border") && ((vehicle.asset.engine == EEngine.PLANE && vehicle.speed > 20f) || (vehicle.asset.engine == EEngine.HELICOPTER && vehicle.speed > 10f)))
+        if (!vehicle.isDead && vehicle.asset.isVulnerableToBumper && !other.transform.CompareTag("Border") && ((vehicle.asset.engine == EEngine.PLANE && vehicle.ReplicatedSpeed > 20f) || (vehicle.asset.engine == EEngine.HELICOPTER && vehicle.ReplicatedSpeed > 10f)))
         {
             takeCrashDamage(20000f, canRepair: false);
         }

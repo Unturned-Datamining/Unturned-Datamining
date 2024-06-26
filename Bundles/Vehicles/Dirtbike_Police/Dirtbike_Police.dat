@@ -35,3 +35,20 @@ Should_Spawn_Seat_Capsules true
 IgnitionAudioClip Sounds/CarIgnition.mp3
 HornAudioClip Sounds/CarHorn_01.mp3
 Has_Clip_Prefab false
+
+PaintableSections
+[
+    {
+        Path Model_0
+        MaterialIndex 0
+    }
+    {
+        Path Objects/Front
+        MaterialIndex 0
+    }
+]
+
+DefaultPaintColors
+[
+    #d4d4d4
+]

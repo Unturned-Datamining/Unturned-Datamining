@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Steamworks;
 
 namespace SDG.Unturned;
@@ -53,22 +54,28 @@ public class CommandGive : Command
         if (Guid.TryParse(text, out var result2))
         {
             Asset asset = Assets.find(result2);
-            if (asset is ItemAsset)
-            {
-                giveItem(player, asset.id, (byte)result);
-            }
-            else if (asset is ItemCurrencyAsset itemCurrencyAsset)
-            {
-                itemCurrencyAsset.grantValue(player.player, result);
-            }
+            GiveAsset(player, asset, result);
         }
-        else if (!ushort.TryParse(text, out result3))
+        else if (ushort.TryParse(text, out result3))
         {
-            CommandWindow.LogError(localization.format("InvalidItemIDErrorText", text));
+            giveItem(player, result3, (byte)result);
         }
         else
         {
-            giveItem(player, result3, (byte)result);
+            Asset asset2 = FindByString(text);
+            GiveAsset(player, asset2, result);
+        }
+    }
+
+    private void GiveAsset(SteamPlayer player, Asset asset, uint amount)
+    {
+        if (asset is ItemAsset)
+        {
+            giveItem(player, asset.id, (byte)amount);
+        }
+        else if (asset is ItemCurrencyAsset itemCurrencyAsset)
+        {
+            itemCurrencyAsset.grantValue(player.player, amount);
         }
     }
 
@@ -82,6 +89,46 @@ public class CommandGive : Command
         {
             CommandWindow.Log(localization.format("GiveText", player.playerID.playerName, itemID, amount));
         }
+    }
+
+    private Asset FindByString(string input)
+    {
+        input = input.Trim();
+        if (string.IsNullOrEmpty(input))
+        {
+            return null;
+        }
+        List<ItemAsset> list = new List<ItemAsset>();
+        Assets.find(list);
+        foreach (ItemAsset item in list)
+        {
+            if (string.Equals(input, item.name, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return item;
+            }
+        }
+        foreach (ItemAsset item2 in list)
+        {
+            if (string.Equals(input, item2.itemName, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return item2;
+            }
+        }
+        foreach (ItemAsset item3 in list)
+        {
+            if (item3.name.Contains(input, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return item3;
+            }
+        }
+        foreach (ItemAsset item4 in list)
+        {
+            if (item4.itemName.Contains(input, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return item4;
+            }
+        }
+        return null;
     }
 
     public CommandGive(Local newLocalization)

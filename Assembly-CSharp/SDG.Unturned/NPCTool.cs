@@ -511,12 +511,12 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Short flag reward " + prefix + i + " missing _Value");
                 }
-                string key13 = prefix + i + "_Modification";
-                if (!data.ContainsKey(key13))
+                string key14 = prefix + i + "_Modification";
+                if (!data.ContainsKey(key14))
                 {
                     Assets.reportError(assetContext, "Short flag reward " + prefix + i + " missing _Modification");
                 }
-                iNPCReward = new NPCShortFlagReward(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseInt16(prefix + i + "_Value", 0), data.ParseEnum(key13, ENPCModificationType.NONE), desc);
+                iNPCReward = new NPCShortFlagReward(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseInt16(prefix + i + "_Value", 0), data.ParseEnum(key14, ENPCModificationType.NONE), desc);
                 break;
             }
             case ENPCRewardType.FLAG_SHORT_RANDOM:
@@ -598,7 +598,9 @@ public class NPCTool
                 break;
             }
             case ENPCRewardType.VEHICLE:
-                if (!data.ContainsKey(prefix + i + "_ID"))
+            {
+                string key11 = prefix + i + "_ID";
+                if (!data.ContainsKey(key11))
                 {
                     Assets.reportError(assetContext, "Vehicle reward " + prefix + i + " missing _ID");
                 }
@@ -606,8 +608,10 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Vehicle reward " + prefix + i + " missing _Spawnpoint");
                 }
-                iNPCReward = new NPCVehicleReward(data.ParseUInt16(prefix + i + "_ID", 0), data.GetString(prefix + i + "_Spawnpoint"), desc);
+                data.ParseGuidOrLegacyId(key11, out var guid3, out var legacyId3);
+                iNPCReward = new NPCVehicleReward(guid3, legacyId3, data.GetString(prefix + i + "_Spawnpoint"), desc);
                 break;
+            }
             case ENPCRewardType.TELEPORT:
                 if (!data.ContainsKey(prefix + i + "_Spawnpoint"))
                 {
@@ -669,22 +673,22 @@ public class NPCTool
                 break;
             case ENPCRewardType.PLAYER_LIFE_HEALTH:
             {
-                string key12 = prefix + i + "_Value";
-                if (!data.ContainsKey(key12))
+                string key13 = prefix + i + "_Value";
+                if (!data.ContainsKey(key13))
                 {
                     Assets.reportError(assetContext, "Player life health reward " + prefix + i + " missing _Value");
                 }
-                iNPCReward = new NPCPlayerLifeHealthReward(data.ParseInt32(key12), desc);
+                iNPCReward = new NPCPlayerLifeHealthReward(data.ParseInt32(key13), desc);
                 break;
             }
             case ENPCRewardType.PLAYER_LIFE_FOOD:
             {
-                string key11 = prefix + i + "_Value";
-                if (!data.ContainsKey(key11))
+                string key12 = prefix + i + "_Value";
+                if (!data.ContainsKey(key12))
                 {
                     Assets.reportError(assetContext, "Player life food reward " + prefix + i + " missing _Value");
                 }
-                iNPCReward = new NPCPlayerLifeFoodReward(data.ParseInt32(key11), desc);
+                iNPCReward = new NPCPlayerLifeFoodReward(data.ParseInt32(key12), desc);
                 break;
             }
             case ENPCRewardType.PLAYER_LIFE_WATER:

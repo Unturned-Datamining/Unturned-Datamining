@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,32 @@ namespace SDG.Unturned;
 public class VehicleTool : MonoBehaviour
 {
     private static Queue<VehicleIconInfo> icons;
+
+    /// <summary>
+    /// Handles VehicleRedirectorAsset (if any) and returns actual vehicle asset (if any).
+    /// </summary>
+    public static VehicleAsset FindVehicleByLegacyIdAndHandleRedirects(ushort legacyId)
+    {
+        Asset asset = Assets.find(EAssetType.VEHICLE, legacyId);
+        if (asset is VehicleRedirectorAsset { TargetVehicle: var targetVehicle })
+        {
+            asset = targetVehicle.Find();
+        }
+        return asset as VehicleAsset;
+    }
+
+    /// <summary>
+    /// Handles VehicleRedirectorAsset (if any) and returns actual vehicle asset (if any).
+    /// </summary>
+    public static VehicleAsset FindVehicleByGuidAndHandleRedirects(Guid guid)
+    {
+        Asset asset = Assets.find(guid);
+        if (asset is VehicleRedirectorAsset { TargetVehicle: var targetVehicle })
+        {
+            asset = targetVehicle.Find();
+        }
+        return asset as VehicleAsset;
+    }
 
     public static Transform getVehicle(ushort id, ushort skin, ushort mythic, VehicleAsset vehicleAsset, SkinAsset skinAsset)
     {
@@ -16,7 +43,7 @@ public class VehicleTool : MonoBehaviour
             {
                 UnturnedLog.error("ID and asset ID are not in sync!");
             }
-            Transform transform = Object.Instantiate(gameObject).transform;
+            Transform transform = UnityEngine.Object.Instantiate(gameObject).transform;
             transform.name = id.ToString();
             if (skinAsset != null)
             {
@@ -74,9 +101,26 @@ public class VehicleTool : MonoBehaviour
         return vector;
     }
 
+    /// <summary>
+    /// Supports redirects by VehicleRedirectorAsset. If redirector's SpawnPaintColor is set, that color is used.
+    /// </summary>
+    public static InteractableVehicle SpawnVehicleForPlayer(Player player, Asset asset)
+    {
+        if (player == null || asset == null)
+        {
+            return null;
+        }
+        Vector3 positionForVehicle = GetPositionForVehicle(player);
+        return VehicleManager.spawnVehicleV2(asset, positionForVehicle, player.transform.rotation);
+    }
+
+    /// <summary>
+    /// Supports redirects by VehicleRedirectorAsset. If redirector's SpawnPaintColor is set, that color is used.
+    /// </summary>
+    /// <returns>true if matching vehicle asset was found. (Not necessarily whether vehicle was spawned.)</returns>
     public static bool giveVehicle(Player player, ushort id)
     {
-        if (Assets.find(EAssetType.VEHICLE, id) is VehicleAsset)
+        if (FindVehicleByLegacyIdAndHandleRedirects(id) != null)
         {
             Vector3 positionForVehicle = GetPositionForVehicle(player);
             VehicleManager.spawnVehicleV2(id, positionForVehicle, player.transform.rotation);
@@ -99,7 +143,7 @@ public class VehicleTool : MonoBehaviour
             Transform transform = vehicle.Find("Icon2");
             if (transform == null)
             {
-                Object.Destroy(vehicle.gameObject);
+                UnityEngine.Object.Destroy(vehicle.gameObject);
                 Assets.reportError(vehicleIconInfo.vehicleAsset, "missing 'Icon2' Transform");
             }
             else

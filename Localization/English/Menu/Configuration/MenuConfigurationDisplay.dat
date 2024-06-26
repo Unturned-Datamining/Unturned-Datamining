@@ -2,6 +2,8 @@ Buffer_Toggle_Label VSync
 User_Interface_Scale_Field_Label UI Scale
 UseTargetFrameRate_Toggle_Label Limit Framerate
 TargetFrameRate_Field_Label Max Framerate
+UseUnfocusedTargetFrameRate_Toggle_Label Limit Framerate While Alt-Tabbing
+UnfocusedTargetFrameRate_Field_Label Max Framerate While Alt-Tabbing
 
 Fullscreen_Mode_Label Fullscreen Mode
 Fullscreen_Mode_Tooltip How game shares the display

@@ -46,7 +46,7 @@ public class PlayerEquipment : PlayerCaller
 
     private Material[] tempThirdMaterials;
 
-    private MythicLockee[] thirdMythics;
+    private MythicalEffectController[] thirdMythics;
 
     private Transform[] characterSlots;
 
@@ -56,7 +56,7 @@ public class PlayerEquipment : PlayerCaller
 
     private Material[] tempCharacterMaterials;
 
-    private MythicLockee[] characterMythics;
+    private MythicalEffectController[] characterMythics;
 
     private Transform _firstModel;
 
@@ -66,7 +66,7 @@ public class PlayerEquipment : PlayerCaller
 
     private Material tempFirstMaterial;
 
-    private MythicLockee firstMythic;
+    private MythicalEffectController firstMythic;
 
     private Transform _thirdModel;
 
@@ -76,7 +76,7 @@ public class PlayerEquipment : PlayerCaller
 
     private Material tempThirdMaterial;
 
-    private MythicLockee thirdMythic;
+    private MythicalEffectController thirdMythic;
 
     private Transform _characterModel;
 
@@ -86,7 +86,7 @@ public class PlayerEquipment : PlayerCaller
 
     private Material tempCharacterMaterial;
 
-    private MythicLockee characterMythic;
+    private MythicalEffectController characterMythic;
 
     private ItemAsset _asset;
 
@@ -112,13 +112,19 @@ public class PlayerEquipment : PlayerCaller
 
     private Transform _characterSecondaryGunSlot;
 
+    private Transform _firstSpine;
+
     private Transform _firstLeftHook;
 
     private Transform _firstRightHook;
 
+    private Transform _thirdSpine;
+
     private Transform _thirdLeftHook;
 
     private Transform _thirdRightHook;
+
+    private Transform _characterSpine;
 
     private Transform _characterLeftHook;
 
@@ -780,9 +786,14 @@ public class PlayerEquipment : PlayerCaller
         int value = 0;
         ushort num = 0;
         ushort num2 = 0;
-        if (base.channel.owner.skinItems != null && base.channel.owner.itemSkins != null && base.channel.owner.itemSkins.TryGetValue(itemAsset.sharedSkinLookupID, out value))
+        bool flag = itemAsset != null && itemAsset.sharedSkinLookupID != itemAsset.id;
+        ushort key = (flag ? itemAsset.sharedSkinLookupID : itemAsset.id);
+        if (base.channel.owner.skinItems != null && base.channel.owner.itemSkins != null && base.channel.owner.itemSkins.TryGetValue(key, out value))
         {
-            num = Provider.provider.economyService.getInventorySkinID(value);
+            if (!flag || itemAsset.SharedSkinShouldApplyVisuals)
+            {
+                num = Provider.provider.economyService.getInventorySkinID(value);
+            }
             num2 = Provider.provider.economyService.getInventoryMythicID(value);
             if (num2 == 0)
             {
@@ -841,11 +852,11 @@ public class PlayerEquipment : PlayerCaller
         Layerer.enemy(transform);
         if (num2 != 0)
         {
-            Transform transform2 = ItemTool.applyEffect(transform, num2, EEffectType.THIRD);
-            if (transform2 != null)
-            {
-                thirdMythics[slot] = transform2.GetComponent<MythicLockee>();
-            }
+            thirdMythics[slot] = ItemTool.ApplyMythicalEffect(transform, num2, EEffectType.THIRD);
+        }
+        else
+        {
+            thirdMythics[slot] = null;
         }
         thirdSlots[slot] = transform;
         thirdSkinneds[slot] = true;
@@ -896,11 +907,11 @@ public class PlayerEquipment : PlayerCaller
         Layerer.enemy(transform);
         if (num2 != 0)
         {
-            Transform transform3 = ItemTool.applyEffect(transform, num2, EEffectType.THIRD);
-            if (transform3 != null)
-            {
-                characterMythics[slot] = transform3.GetComponent<MythicLockee>();
-            }
+            characterMythics[slot] = ItemTool.ApplyMythicalEffect(transform, num2, EEffectType.THIRD);
+        }
+        else
+        {
+            characterMythics[slot] = null;
         }
         characterSlots[slot] = transform;
         characterSkinneds[slot] = true;
@@ -1049,9 +1060,14 @@ public class PlayerEquipment : PlayerCaller
         int value = 0;
         ushort id = 0;
         ushort num = 0;
-        if (base.channel.owner.skinItems != null && base.channel.owner.itemSkins != null && base.channel.owner.itemSkins.TryGetValue(itemAsset.sharedSkinLookupID, out value))
+        bool flag = itemAsset != null && itemAsset.sharedSkinLookupID != itemAsset.id;
+        ushort key = (flag ? itemAsset.sharedSkinLookupID : itemAsset.id);
+        if (base.channel.owner.skinItems != null && base.channel.owner.itemSkins != null && base.channel.owner.itemSkins.TryGetValue(key, out value))
         {
-            id = Provider.provider.economyService.getInventorySkinID(value);
+            if (!flag || itemAsset.SharedSkinShouldApplyVisuals)
+            {
+                id = Provider.provider.economyService.getInventorySkinID(value);
+            }
             num = Provider.provider.economyService.getInventoryMythicID(value);
             if (num == 0)
             {
@@ -1067,14 +1083,13 @@ public class PlayerEquipment : PlayerCaller
         _characterModel = ItemTool.getItem(100, state, viewmodel: false, itemAsset, skinAsset, tempCharacterMesh, out tempCharacterMaterial, getUseableStatTrackerValue, prefabOverride);
         fixStatTrackerHookScale(_characterModel);
         syncStatTrackTrackerVisibility(_characterModel);
-        if (itemAsset.ShouldAttachEquippedModelToLeftHand)
+        Transform parent = itemAsset.EquipableModelParent switch
         {
-            characterModel.transform.parent = _characterLeftHook;
-        }
-        else
-        {
-            characterModel.transform.parent = _characterRightHook;
-        }
+            EEquipableModelParent.LeftHook => characterLeftHook, 
+            EEquipableModelParent.Spine => _characterSpine, 
+            _ => characterRightHook, 
+        };
+        characterModel.transform.parent = parent;
         characterModel.localPosition = Vector3.zero;
         characterModel.localRotation = Quaternion.Euler(0f, 0f, 90f);
         characterModel.localScale = Vector3.one;
@@ -1083,11 +1098,11 @@ public class PlayerEquipment : PlayerCaller
         characterModel.GetComponent<Rigidbody>().isKinematic = true;
         if (num != 0)
         {
-            Transform transform = ItemTool.applyEffect(characterModel, num, EEffectType.THIRD);
-            if (transform != null)
-            {
-                characterMythic = transform.GetComponent<MythicLockee>();
-            }
+            characterMythic = ItemTool.ApplyMythicalEffect(characterModel, num, EEffectType.THIRD);
+        }
+        else
+        {
+            characterMythic = null;
         }
         characterSkinned = true;
         applySkinVisual();
@@ -1198,9 +1213,14 @@ public class PlayerEquipment : PlayerCaller
         int value = 0;
         ushort id = 0;
         ushort num = 0;
-        if (base.channel.owner.skinItems != null && base.channel.owner.itemSkins != null && base.channel.owner.itemSkins.TryGetValue(asset.sharedSkinLookupID, out value))
+        bool flag = asset != null && asset.sharedSkinLookupID != asset.id;
+        ushort key = (flag ? asset.sharedSkinLookupID : asset.id);
+        if (base.channel.owner.skinItems != null && base.channel.owner.itemSkins != null && base.channel.owner.itemSkins.TryGetValue(key, out value))
         {
-            id = Provider.provider.economyService.getInventorySkinID(value);
+            if (!flag || asset.SharedSkinShouldApplyVisuals)
+            {
+                id = Provider.provider.economyService.getInventorySkinID(value);
+            }
             num = Provider.provider.economyService.getInventoryMythicID(value);
             if (num == 0)
             {
@@ -1220,14 +1240,13 @@ public class PlayerEquipment : PlayerCaller
             _firstModel = ItemTool.InstantiateItem(quality, state, viewmodel: true, asset, skinAsset, shouldDestroyColliders: true, tempFirstMesh, out tempFirstMaterial, getUseableStatTrackerValue, prefabOverride);
             fixStatTrackerHookScale(_firstModel);
             syncStatTrackTrackerVisibility(_firstModel);
-            if (asset.ShouldAttachEquippedModelToLeftHand)
+            Transform parent = asset.EquipableModelParent switch
             {
-                firstModel.transform.parent = firstLeftHook;
-            }
-            else
-            {
-                firstModel.transform.parent = firstRightHook;
-            }
+                EEquipableModelParent.LeftHook => firstLeftHook, 
+                EEquipableModelParent.Spine => _firstSpine, 
+                _ => firstRightHook, 
+            };
+            firstModel.transform.parent = parent;
             firstModel.localPosition = Vector3.zero;
             firstModel.localRotation = Quaternion.Euler(0f, 0f, 90f);
             ApplyEquipableLocalScale(_asset, firstModel);
@@ -1236,11 +1255,11 @@ public class PlayerEquipment : PlayerCaller
             firstModel.DestroyRigidbody();
             if (num != 0)
             {
-                Transform transform = ItemTool.applyEffect(firstModel, num, EEffectType.FIRST);
-                if (transform != null)
-                {
-                    firstMythic = transform.GetComponent<MythicLockee>();
-                }
+                firstMythic = ItemTool.ApplyMythicalEffect(firstModel, num, EEffectType.FIRST);
+            }
+            else
+            {
+                firstMythic = null;
             }
             firstSkinned = true;
             applySkinVisual();
@@ -1251,14 +1270,13 @@ public class PlayerEquipment : PlayerCaller
             _characterModel = ItemTool.getItem(quality, state, viewmodel: false, asset, skinAsset, tempCharacterMesh, out tempCharacterMaterial, getUseableStatTrackerValue, prefabOverride);
             fixStatTrackerHookScale(_characterModel);
             syncStatTrackTrackerVisibility(_characterModel);
-            if (asset.ShouldAttachEquippedModelToLeftHand)
+            Transform parent2 = asset.EquipableModelParent switch
             {
-                characterModel.transform.parent = characterLeftHook;
-            }
-            else
-            {
-                characterModel.transform.parent = characterRightHook;
-            }
+                EEquipableModelParent.LeftHook => characterLeftHook, 
+                EEquipableModelParent.Spine => _characterSpine, 
+                _ => characterRightHook, 
+            };
+            characterModel.transform.parent = parent2;
             characterModel.localPosition = Vector3.zero;
             characterModel.localRotation = Quaternion.Euler(0f, 0f, 90f);
             ApplyEquipableLocalScale(_asset, characterModel);
@@ -1267,11 +1285,11 @@ public class PlayerEquipment : PlayerCaller
             orAddComponent.isKinematic = true;
             if (num != 0)
             {
-                Transform transform2 = ItemTool.applyEffect(characterModel, num, EEffectType.THIRD);
-                if (transform2 != null)
-                {
-                    characterMythic = transform2.GetComponent<MythicLockee>();
-                }
+                characterMythic = ItemTool.ApplyMythicalEffect(characterModel, num, EEffectType.THIRD);
+            }
+            else
+            {
+                characterMythic = null;
             }
             characterSkinned = true;
             applySkinVisual();
@@ -1283,14 +1301,13 @@ public class PlayerEquipment : PlayerCaller
         _thirdModel = ItemTool.InstantiateItem(quality, state, viewmodel: false, asset, skinAsset, shouldDestroyColliders: true, tempThirdMesh, out tempThirdMaterial, getUseableStatTrackerValue, prefabOverride);
         fixStatTrackerHookScale(_thirdModel);
         syncStatTrackTrackerVisibility(_thirdModel);
-        if (asset.ShouldAttachEquippedModelToLeftHand)
+        Transform parent3 = asset.EquipableModelParent switch
         {
-            thirdModel.transform.parent = thirdLeftHook;
-        }
-        else
-        {
-            thirdModel.transform.parent = thirdRightHook;
-        }
+            EEquipableModelParent.LeftHook => thirdLeftHook, 
+            EEquipableModelParent.Spine => _thirdSpine, 
+            _ => thirdRightHook, 
+        };
+        thirdModel.transform.parent = parent3;
         thirdModel.localPosition = Vector3.zero;
         thirdModel.localRotation = Quaternion.Euler(0f, 0f, 90f);
         ApplyEquipableLocalScale(_asset, thirdModel);
@@ -1302,11 +1319,11 @@ public class PlayerEquipment : PlayerCaller
         Layerer.enemy(thirdModel);
         if (num != 0)
         {
-            Transform transform3 = ItemTool.applyEffect(thirdModel, num, EEffectType.THIRD);
-            if (transform3 != null)
-            {
-                thirdMythic = transform3.GetComponent<MythicLockee>();
-            }
+            thirdMythic = ItemTool.ApplyMythicalEffect(thirdModel, num, EEffectType.THIRD);
+        }
+        else
+        {
+            thirdMythic = null;
         }
         thirdSkinned = true;
         applySkinVisual();
@@ -2496,7 +2513,7 @@ public class PlayerEquipment : PlayerCaller
             tempThirdMeshes[i] = new List<Mesh>(4);
         }
         tempThirdMaterials = new Material[PlayerInventory.SLOTS];
-        thirdMythics = new MythicLockee[PlayerInventory.SLOTS];
+        thirdMythics = new MythicalEffectController[PlayerInventory.SLOTS];
         tempThirdMesh = new List<Mesh>(4);
         if (base.channel.IsLocalPlayer && base.player.character != null)
         {
@@ -2510,7 +2527,7 @@ public class PlayerEquipment : PlayerCaller
                 tempCharacterMeshes[j] = new List<Mesh>(4);
             }
             tempCharacterMaterials = new Material[PlayerInventory.SLOTS];
-            characterMythics = new MythicLockee[PlayerInventory.SLOTS];
+            characterMythics = new MythicalEffectController[PlayerInventory.SLOTS];
         }
         arePrimaryAndSecondaryInputsReversedByHallucination = false;
         _equippedPage = byte.MaxValue;
@@ -2538,31 +2555,26 @@ public class PlayerEquipment : PlayerCaller
         }
         if (base.player.first != null)
         {
-            _firstLeftHook = base.player.animator.firstSkeleton.Find("Spine").Find("Left_Shoulder").Find("Left_Arm")
-                .Find("Left_Hand")
+            _firstSpine = base.player.animator.firstSkeleton.Find("Spine");
+            _firstLeftHook = _firstSpine.Find("Left_Shoulder").Find("Left_Arm").Find("Left_Hand")
                 .Find("Left_Hook");
-            _firstRightHook = base.player.animator.firstSkeleton.Find("Spine").Find("Right_Shoulder").Find("Right_Arm")
-                .Find("Right_Hand")
+            _firstRightHook = _firstSpine.Find("Right_Shoulder").Find("Right_Arm").Find("Right_Hand")
                 .Find("Right_Hook");
         }
         if (base.player.third != null)
         {
-            _thirdLeftHook = base.player.animator.thirdSkeleton.Find("Spine").Find("Left_Shoulder").Find("Left_Arm")
-                .Find("Left_Hand")
+            _thirdSpine = base.player.animator.thirdSkeleton.Find("Spine");
+            _thirdLeftHook = _thirdSpine.Find("Left_Shoulder").Find("Left_Arm").Find("Left_Hand")
                 .Find("Left_Hook");
-            _thirdRightHook = base.player.animator.thirdSkeleton.Find("Spine").Find("Right_Shoulder").Find("Right_Arm")
-                .Find("Right_Hand")
+            _thirdRightHook = _thirdSpine.Find("Right_Shoulder").Find("Right_Arm").Find("Right_Hand")
                 .Find("Right_Hook");
         }
         if (base.channel.IsLocalPlayer && base.player.character != null)
         {
-            _characterLeftHook = base.player.character.transform.Find("Skeleton").Find("Spine").Find("Left_Shoulder")
-                .Find("Left_Arm")
-                .Find("Left_Hand")
+            _characterSpine = base.player.character.Find("Skeleton/Spine");
+            _characterLeftHook = _characterSpine.Find("Left_Shoulder").Find("Left_Arm").Find("Left_Hand")
                 .Find("Left_Hook");
-            _characterRightHook = base.player.character.transform.Find("Skeleton").Find("Spine").Find("Right_Shoulder")
-                .Find("Right_Arm")
-                .Find("Right_Hand")
+            _characterRightHook = _characterSpine.Find("Right_Shoulder").Find("Right_Arm").Find("Right_Hand")
                 .Find("Right_Hook");
         }
         if (base.channel.IsLocalPlayer || Provider.isServer)

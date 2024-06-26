@@ -16,7 +16,7 @@
 		"Name" ""
 		"Path" ""
 	}
-	"Physics_Material" "SAND_STATIC"
+	"Physics_Material" "PEI_Sand_00"
 	"Foliage"
 	{
 		"GUID" "f5dd551c560e4f7f9bf870214f500ccf"

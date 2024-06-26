@@ -19,9 +19,11 @@ public class BarricadeManager : SteamCaller
     /// </summary>
     public const byte SAVEDATA_VERSION_INCLUDE_BUILD_ENUM = 18;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 18;
+    public const byte SAVEDATA_VERSION_REPLACE_EULER_ANGLES_WITH_QUATERNION = 19;
 
-    public static readonly byte SAVEDATA_VERSION = 18;
+    private const byte SAVEDATA_VERSION_NEWEST = 19;
+
+    public static readonly byte SAVEDATA_VERSION = 19;
 
     public static readonly byte BARRICADE_REGIONS = 2;
 
@@ -70,7 +72,7 @@ public class BarricadeManager : SteamCaller
 
     private static readonly ClientStaticMethod<byte, byte> SendClearRegionBarricades = ClientStaticMethod<byte, byte>.Get(ReceiveClearRegionBarricades);
 
-    private static readonly ClientStaticMethod<NetId, Guid, byte[], Vector3, byte, byte, byte, ulong, ulong, NetId> SendSingleBarricade = ClientStaticMethod<NetId, Guid, byte[], Vector3, byte, byte, byte, ulong, ulong, NetId>.Get(ReceiveSingleBarricade);
+    private static readonly ClientStaticMethod<NetId, Guid, byte[], Vector3, Quaternion, ulong, ulong, NetId> SendSingleBarricade = ClientStaticMethod<NetId, Guid, byte[], Vector3, Quaternion, ulong, ulong, NetId>.Get(ReceiveSingleBarricade);
 
     private static readonly ClientStaticMethod SendMultipleBarricades = ClientStaticMethod.Get(ReceiveMultipleBarricades);
 
@@ -227,15 +229,12 @@ public class BarricadeManager : SteamCaller
         }
     }
 
-    public static void transformBarricade(Transform transform, Vector3 point, float angle_x, float angle_y, float angle_z)
+    public static void transformBarricade(Transform transform, Vector3 point, Quaternion rotation)
     {
-        angle_x = Mathf.RoundToInt(angle_x / 2f) * 2;
-        angle_y = Mathf.RoundToInt(angle_y / 2f) * 2;
-        angle_z = Mathf.RoundToInt(angle_z / 2f) * 2;
         BarricadeDrop barricadeDrop = BarricadeDrop.FindByRootFast(transform);
         if (barricadeDrop != null)
         {
-            BarricadeDrop.SendTransformRequest.Invoke(barricadeDrop.GetNetId(), ENetReliability.Reliable, point, MeasurementTool.angleToByte(angle_x), MeasurementTool.angleToByte(angle_y), MeasurementTool.angleToByte(angle_z));
+            BarricadeDrop.SendTransformRequest.Invoke(barricadeDrop.GetNetId(), ENetReliability.Reliable, point, rotation);
         }
     }
 
@@ -256,20 +255,13 @@ public class BarricadeManager : SteamCaller
         {
             return false;
         }
-        Vector3 eulerAngles = rotation.eulerAngles;
-        eulerAngles.x = Mathf.RoundToInt(eulerAngles.x / 2f) * 2;
-        eulerAngles.y = Mathf.RoundToInt(eulerAngles.y / 2f) * 2;
-        eulerAngles.z = Mathf.RoundToInt(eulerAngles.z / 2f) * 2;
-        byte angle_x = MeasurementTool.angleToByte(eulerAngles.x);
-        byte angle_y = MeasurementTool.angleToByte(eulerAngles.y);
-        byte angle_z = MeasurementTool.angleToByte(eulerAngles.z);
-        InternalSetBarricadeTransform(x, y, plant, barricadeDrop, position, angle_x, angle_y, angle_z);
+        InternalSetBarricadeTransform(x, y, plant, barricadeDrop, position, rotation);
         return true;
     }
 
-    internal static void InternalSetBarricadeTransform(byte x, byte y, ushort plant, BarricadeDrop barricade, Vector3 point, byte angle_x, byte angle_y, byte angle_z)
+    internal static void InternalSetBarricadeTransform(byte x, byte y, ushort plant, BarricadeDrop barricade, Vector3 point, Quaternion rotation)
     {
-        BarricadeDrop.SendTransform.InvokeAndLoopback(barricade.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y, plant), x, y, plant, point, angle_x, angle_y, angle_z);
+        BarricadeDrop.SendTransform.InvokeAndLoopback(barricade.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y, plant), x, y, plant, point, rotation);
     }
 
     [Obsolete]
@@ -980,8 +972,7 @@ public class BarricadeManager : SteamCaller
     {
         foreach (BarricadeDrop drop in region.drops)
         {
-            BarricadeData serversideData = drop.serversideData;
-            if (serversideData.barricade.state.Length == 0)
+            if (drop.serversideData.barricade.state.Length == 0)
             {
                 continue;
             }
@@ -991,7 +982,7 @@ public class BarricadeManager : SteamCaller
                 continue;
             }
             point = interactableBed.transform.position;
-            angle = MeasurementTool.angleToByte(serversideData.angle_y * 2 + 90);
+            angle = MeasurementTool.angleToByte(interactableBed.transform.rotation.eulerAngles.y + 90f);
             int num = Physics.OverlapCapsuleNonAlloc(point + new Vector3(0f, PlayerStance.RADIUS, 0f), point + new Vector3(0f, 2.5f - PlayerStance.RADIUS, 0f), PlayerStance.RADIUS, checkColliders, RayMasks.BLOCK_STANCE, QueryTriggerInteraction.Ignore);
             for (int i = 0; i < num; i++)
             {
@@ -1298,14 +1289,10 @@ public class BarricadeManager : SteamCaller
     /// </summary>
     private static Transform dropBarricadeIntoRegionInternal(BarricadeRegion region, Barricade barricade, Vector3 point, Quaternion rotation, ulong owner, ulong group)
     {
-        Vector3 eulerAngles = rotation.eulerAngles;
-        float angle = Mathf.RoundToInt(eulerAngles.x / 2f) * 2;
-        float angle2 = Mathf.RoundToInt(eulerAngles.y / 2f) * 2;
-        float angle3 = Mathf.RoundToInt(eulerAngles.z / 2f) * 2;
         uint newInstanceID = ++instanceCount;
-        BarricadeData barricadeData = new BarricadeData(barricade, point, MeasurementTool.angleToByte(angle), MeasurementTool.angleToByte(angle2), MeasurementTool.angleToByte(angle3), owner, group, Provider.time, newInstanceID);
+        BarricadeData barricadeData = new BarricadeData(barricade, point, rotation, owner, group, Provider.time, newInstanceID);
         NetId netId = NetIdRegistry.ClaimBlock(3u);
-        Transform obj = manager.spawnBarricade(region, barricade.asset.GUID, barricade.state, barricadeData.point, barricadeData.angle_x, barricadeData.angle_y, barricadeData.angle_z, 100, barricadeData.owner, barricadeData.group, netId);
+        Transform obj = manager.spawnBarricade(region, barricade.asset.GUID, barricade.state, barricadeData.point, rotation, 100, barricadeData.owner, barricadeData.group, netId);
         if (obj != null)
         {
             region.drops.GetTail().serversideData = barricadeData;
@@ -1329,7 +1316,7 @@ public class BarricadeManager : SteamCaller
         {
             BarricadeDrop tail = vehicleBarricadeRegion.drops.GetTail();
             BarricadeData serversideData = tail.serversideData;
-            SendSingleBarricade.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), vehicleBarricadeRegion._netId, barricade.asset.GUID, barricade.state, serversideData.point, serversideData.angle_x, serversideData.angle_y, serversideData.angle_z, serversideData.owner, serversideData.group, tail.GetNetId());
+            SendSingleBarricade.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), vehicleBarricadeRegion._netId, barricade.asset.GUID, barricade.state, serversideData.point, serversideData.rotation, serversideData.owner, serversideData.group, tail.GetNetId());
             BarricadeSpawnedHandler barricadeSpawnedHandler = onBarricadeSpawned;
             if (barricadeSpawnedHandler == null)
             {
@@ -1358,7 +1345,7 @@ public class BarricadeManager : SteamCaller
         {
             BarricadeDrop tail = region.drops.GetTail();
             BarricadeData serversideData = tail.serversideData;
-            SendSingleBarricade.Invoke(ENetReliability.Reliable, Regions.GatherRemoteClientConnections(x, y, BARRICADE_REGIONS), NetId.INVALID, barricade.asset.GUID, barricade.state, serversideData.point, serversideData.angle_x, serversideData.angle_y, serversideData.angle_z, serversideData.owner, serversideData.group, tail.GetNetId());
+            SendSingleBarricade.Invoke(ENetReliability.Reliable, Regions.GatherRemoteClientConnections(x, y, BARRICADE_REGIONS), NetId.INVALID, barricade.asset.GUID, barricade.state, serversideData.point, serversideData.rotation, serversideData.owner, serversideData.group, tail.GetNetId());
             BarricadeSpawnedHandler barricadeSpawnedHandler = onBarricadeSpawned;
             if (barricadeSpawnedHandler == null)
             {
@@ -1447,7 +1434,7 @@ public class BarricadeManager : SteamCaller
         return Quaternion.Euler(0f, angle_y, 0f) * Quaternion.Euler((float)((asset.build != EBuild.DOOR && asset.build != EBuild.GATE && asset.build != EBuild.SHUTTER && asset.build != EBuild.HATCH) ? (-90) : 0) + angle_x, 0f, 0f) * Quaternion.Euler(0f, angle_z, 0f);
     }
 
-    private Transform spawnBarricade(BarricadeRegion region, Guid assetGuid, byte[] state, Vector3 point, byte angle_x, byte angle_y, byte angle_z, byte hp, ulong owner, ulong group, NetId netId)
+    private Transform spawnBarricade(BarricadeRegion region, Guid assetGuid, byte[] state, Vector3 point, Quaternion rotation, byte hp, ulong owner, ulong group, NetId netId)
     {
         ItemBarricadeAsset itemBarricadeAsset = Assets.find(assetGuid) as ItemBarricadeAsset;
         if (!Provider.isServer)
@@ -1461,7 +1448,6 @@ public class BarricadeManager : SteamCaller
         Transform transform = null;
         try
         {
-            Quaternion quaternion = Quaternion.Euler(angle_x * 2, angle_y * 2, angle_z * 2);
             if (itemBarricadeAsset.eligibleForPooling)
             {
                 int instanceID = itemBarricadeAsset.barricade.GetInstanceID();
@@ -1474,7 +1460,7 @@ public class BarricadeManager : SteamCaller
                         transform = gameObject.transform;
                         transform.parent = region.parent;
                         transform.localPosition = point;
-                        transform.localRotation = quaternion;
+                        transform.localRotation = rotation;
                         transform.localScale = Vector3.one;
                         gameObject.SetActive(value: true);
                         break;
@@ -1486,7 +1472,7 @@ public class BarricadeManager : SteamCaller
                 GameObject gameObject2;
                 if (region.parent == null)
                 {
-                    gameObject2 = UnityEngine.Object.Instantiate(itemBarricadeAsset.barricade, point, quaternion);
+                    gameObject2 = UnityEngine.Object.Instantiate(itemBarricadeAsset.barricade, point, rotation);
                     transform = gameObject2.transform;
                 }
                 else
@@ -1494,7 +1480,7 @@ public class BarricadeManager : SteamCaller
                     gameObject2 = UnityEngine.Object.Instantiate(itemBarricadeAsset.barricade, region.parent);
                     transform = gameObject2.transform;
                     transform.localPosition = point;
-                    transform.localRotation = quaternion;
+                    transform.localRotation = rotation;
                 }
                 transform.localScale = Vector3.one;
                 transform.name = itemBarricadeAsset.id.ToString();
@@ -1767,7 +1753,7 @@ public class BarricadeManager : SteamCaller
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
-    public static void ReceiveSingleBarricade(in ClientInvocationContext context, NetId parentNetId, Guid assetId, byte[] state, Vector3 point, byte angle_x, byte angle_y, byte angle_z, ulong owner, ulong group, NetId netId)
+    public static void ReceiveSingleBarricade(in ClientInvocationContext context, NetId parentNetId, Guid assetId, byte[] state, Vector3 point, Quaternion rotation, ulong owner, ulong group, NetId netId)
     {
         BarricadeRegion region;
         if (parentNetId.IsNull())
@@ -1797,9 +1783,7 @@ public class BarricadeManager : SteamCaller
             item.assetId = assetId;
             item.state = state;
             item.position = point;
-            item.angle_x = angle_x;
-            item.angle_y = angle_y;
-            item.angle_z = angle_z;
+            item.rotation = rotation;
             item.hp = 100;
             item.owner = owner;
             item.group = group;
@@ -1871,9 +1855,7 @@ public class BarricadeManager : SteamCaller
                 reader.ReadBytes(array);
                 item.state = array;
                 reader.ReadClampedVector3(out item.position, 13, 11);
-                reader.ReadUInt8(out item.angle_x);
-                reader.ReadUInt8(out item.angle_y);
-                reader.ReadUInt8(out item.angle_z);
+                reader.ReadQuaternion(out item.rotation);
                 reader.ReadUInt8(out item.hp);
                 reader.ReadUInt64(out item.owner);
                 reader.ReadUInt64(out item.group);
@@ -1963,9 +1945,7 @@ public class BarricadeManager : SteamCaller
                             writer.WriteBytes(serversideData.barricade.state);
                         }
                         writer.WriteClampedVector3(serversideData.point, 13, 11);
-                        writer.WriteUInt8(serversideData.angle_x);
-                        writer.WriteUInt8(serversideData.angle_y);
-                        writer.WriteUInt8(serversideData.angle_z);
+                        writer.WriteQuaternion(serversideData.rotation);
                         writer.WriteUInt8((byte)Mathf.RoundToInt((float)(int)serversideData.barricade.health / (float)(int)serversideData.barricade.asset.health * 100f));
                         writer.WriteUInt64(serversideData.owner);
                         writer.WriteUInt64(serversideData.group);
@@ -2541,14 +2521,10 @@ public class BarricadeManager : SteamCaller
                             LevelBuildableObject levelBuildableObject = list[j];
                             if (levelBuildableObject != null && levelBuildableObject.asset is ItemBarricadeAsset itemBarricadeAsset)
                             {
-                                Vector3 eulerAngles = levelBuildableObject.rotation.eulerAngles;
-                                byte newAngle_X = MeasurementTool.angleToByte(Mathf.RoundToInt(eulerAngles.x / 2f) * 2);
-                                byte newAngle_Y = MeasurementTool.angleToByte(Mathf.RoundToInt(eulerAngles.y / 2f) * 2);
-                                byte newAngle_Z = MeasurementTool.angleToByte(Mathf.RoundToInt(eulerAngles.z / 2f) * 2);
                                 Barricade barricade = new Barricade(itemBarricadeAsset);
-                                BarricadeData barricadeData = new BarricadeData(barricade, levelBuildableObject.point, newAngle_X, newAngle_Y, newAngle_Z, 0uL, 0uL, uint.MaxValue, ++instanceCount);
+                                BarricadeData barricadeData = new BarricadeData(barricade, levelBuildableObject.point, levelBuildableObject.rotation, 0uL, 0uL, uint.MaxValue, ++instanceCount);
                                 NetId netId = NetIdRegistry.ClaimBlock(3u);
-                                if (manager.spawnBarricade(barricadeRegion2, barricade.asset.GUID, barricade.state, barricadeData.point, barricadeData.angle_x, barricadeData.angle_y, barricadeData.angle_z, (byte)Mathf.RoundToInt((float)(int)barricade.health / (float)(int)itemBarricadeAsset.health * 100f), 0uL, 0uL, netId) != null)
+                                if (manager.spawnBarricade(barricadeRegion2, barricade.asset.GUID, barricade.state, barricadeData.point, barricadeData.rotation, (byte)Mathf.RoundToInt((float)(int)barricade.health / (float)(int)itemBarricadeAsset.health * 100f), 0uL, 0uL, netId) != null)
                                 {
                                     barricadeRegion2.drops.GetTail().serversideData = barricadeData;
                                     barricadeRegion2.barricades.Add(barricadeData);
@@ -2571,7 +2547,7 @@ public class BarricadeManager : SteamCaller
     public static void save()
     {
         River river = LevelSavedata.openRiver("/Barricades.dat", isReading: false);
-        river.writeByte(18);
+        river.writeByte(19);
         river.writeUInt32(Provider.time);
         river.writeUInt32(instanceCount);
         for (byte b = 0; b < Regions.WORLD_SIZE; b++)
@@ -2630,16 +2606,25 @@ public class BarricadeManager : SteamCaller
             ushort num3 = river.readUInt16();
             byte[] array = river.readBytes();
             Vector3 vector = river.readSingleVector3();
-            byte b = 0;
-            if (version > 2)
+            Quaternion quaternion;
+            if (version < 19)
             {
-                b = river.readByte();
+                byte b = 0;
+                if (version > 2)
+                {
+                    b = river.readByte();
+                }
+                byte b2 = river.readByte();
+                byte b3 = 0;
+                if (version > 3)
+                {
+                    b3 = river.readByte();
+                }
+                quaternion = ((version >= 10 || itemBarricadeAsset == null) ? Quaternion.Euler((float)(int)b * 2f, (float)(int)b2 * 2f, (float)(int)b3 * 2f) : getRotation(itemBarricadeAsset, b * 2, b2 * 2, b3 * 2));
             }
-            byte b2 = river.readByte();
-            byte b3 = 0;
-            if (version > 3)
+            else
             {
-                b3 = river.readByte();
+                quaternion = river.readSingleQuaternion();
             }
             ulong num4 = 0uL;
             ulong num5 = 0uL;
@@ -2678,17 +2663,10 @@ public class BarricadeManager : SteamCaller
                     {
                         array = itemBarricadeAsset.getState(EItemOrigin.ADMIN);
                     }
-                    if (version < 10)
-                    {
-                        Vector3 eulerAngles = getRotation(itemBarricadeAsset, b * 2, b2 * 2, b3 * 2).eulerAngles;
-                        b = MeasurementTool.angleToByte(Mathf.RoundToInt(eulerAngles.x / 2f) * 2);
-                        b2 = MeasurementTool.angleToByte(Mathf.RoundToInt(eulerAngles.y / 2f) * 2);
-                        b3 = MeasurementTool.angleToByte(Mathf.RoundToInt(eulerAngles.z / 2f) * 2);
-                    }
                     NetId netId = NetIdRegistry.ClaimBlock(3u);
-                    if (manager.spawnBarricade(region, itemBarricadeAsset.GUID, array, vector, b, b2, b3, (byte)Mathf.RoundToInt((float)(int)num3 / (float)(int)itemBarricadeAsset.health * 100f), num4, num5, netId) != null)
+                    if (manager.spawnBarricade(region, itemBarricadeAsset.GUID, array, vector, quaternion, (byte)Mathf.RoundToInt((float)(int)num3 / (float)(int)itemBarricadeAsset.health * 100f), num4, num5, netId) != null)
                     {
-                        BarricadeData item = (region.drops.GetTail().serversideData = new BarricadeData(new Barricade(itemBarricadeAsset, num3, array), vector, b, b2, b3, num4, num5, newObjActiveDate, newInstanceID));
+                        BarricadeData item = (region.drops.GetTail().serversideData = new BarricadeData(new Barricade(itemBarricadeAsset, num3, array), vector, quaternion, num4, num5, newObjActiveDate, newInstanceID));
                         region.barricades.Add(item);
                     }
                 }
@@ -2719,9 +2697,7 @@ public class BarricadeManager : SteamCaller
                 river.writeUInt16(serversideData2.barricade.health);
                 river.writeBytes(serversideData2.barricade.state);
                 river.writeSingleVector3(serversideData2.point);
-                river.writeByte(serversideData2.angle_x);
-                river.writeByte(serversideData2.angle_y);
-                river.writeByte(serversideData2.angle_z);
+                river.writeSingleQuaternion(serversideData2.rotation);
                 river.writeUInt64(serversideData2.owner);
                 river.writeUInt64(serversideData2.group);
                 river.writeUInt32(serversideData2.objActiveDate);
@@ -2827,7 +2803,7 @@ public class BarricadeManager : SteamCaller
             do
             {
                 BarricadeInstantiationParameters barricadeInstantiationParameters = pendingInstantiations[num];
-                if (spawnBarricade(barricadeInstantiationParameters.region, barricadeInstantiationParameters.assetId, barricadeInstantiationParameters.state, barricadeInstantiationParameters.position, barricadeInstantiationParameters.angle_x, barricadeInstantiationParameters.angle_y, barricadeInstantiationParameters.angle_z, barricadeInstantiationParameters.hp, barricadeInstantiationParameters.owner, barricadeInstantiationParameters.group, barricadeInstantiationParameters.netId) != null)
+                if (spawnBarricade(barricadeInstantiationParameters.region, barricadeInstantiationParameters.assetId, barricadeInstantiationParameters.state, barricadeInstantiationParameters.position, barricadeInstantiationParameters.rotation, barricadeInstantiationParameters.hp, barricadeInstantiationParameters.owner, barricadeInstantiationParameters.group, barricadeInstantiationParameters.netId) != null)
                 {
                     NetInvocationDeferralRegistry.Invoke(barricadeInstantiationParameters.netId, 3u);
                 }

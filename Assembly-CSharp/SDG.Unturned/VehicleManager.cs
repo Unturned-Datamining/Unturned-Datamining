@@ -23,9 +23,11 @@ public class VehicleManager : SteamCaller
 
     public const byte SAVEDATA_VERSION_BATTERY_GUID = 15;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 15;
+    public const byte SAVEDATA_VERSION_ADDED_PAINT_COLOR = 16;
 
-    public static readonly byte SAVEDATA_VERSION = 15;
+    private const byte SAVEDATA_VERSION_NEWEST = 16;
+
+    public static readonly byte SAVEDATA_VERSION = 16;
 
     public static VehicleLockpickedSignature onVehicleLockpicked;
 
@@ -42,6 +44,11 @@ public class VehicleManager : SteamCaller
     private static VehicleManager manager;
 
     private static List<InteractableVehicle> _vehicles;
+
+    /// <summary>
+    /// If true, a vehicle asset has been replaced.
+    /// </summary>
+    internal static bool shouldRespawnReloadedVehicles;
 
     private static uint highestInstanceID;
 
@@ -130,6 +137,26 @@ public class VehicleManager : SteamCaller
     internal const int POSITION_FRAC_BIT_COUNT = 8;
 
     internal const int ROTATION_BIT_COUNT = 11;
+
+    /// <summary>
+    /// Speed is unsigned, so 8 bits allows a range of [0, 256).
+    /// </summary>
+    internal const int SPEED_INT_BIT_COUNT = 8;
+
+    internal const int SPEED_FRAC_BIT_COUNT = 2;
+
+    /// <summary>
+    /// Velocity is signed, so 9 bits allows a range of [-256, 256).
+    /// </summary>
+    internal const int FORWARD_VELOCITY_INT_BIT_COUNT = 9;
+
+    internal const int FORWARD_VELOCITY_FRAC_BIT_COUNT = 2;
+
+    internal const int STEERING_BIT_COUNT = 2;
+
+    internal const int GEAR_BIT_COUNT = 3;
+
+    internal const int ENGINE_RPM_BIT_COUNT = 7;
 
     /// <summary>
     /// Exposed for Rocket transition to modules backwards compatibility.
@@ -277,39 +304,54 @@ public class VehicleManager : SteamCaller
         }
     }
 
-    [Obsolete("spawnVehicleV2 returns the spawned instance")]
-    public static void spawnVehicle(ushort id, Vector3 point, Quaternion angle)
-    {
-        spawnVehicleV2(id, point, angle);
-    }
-
-    [Obsolete("spawnLockedVehicleForPlayerV2 returns the spawned instance")]
-    public static void spawnLockedVehicleForPlayer(ushort id, Vector3 point, Quaternion angle, Player player)
-    {
-        spawnLockedVehicleForPlayerV2(id, point, angle, player);
-    }
-
+    /// <summary>
+    /// Supports redirects by VehicleRedirectorAsset. If redirector's SpawnPaintColor is set, that color is used.
+    /// </summary>
     public static InteractableVehicle spawnVehicleV2(ushort id, Vector3 point, Quaternion angle)
     {
-        return spawnVehicleInternal(id, point, angle, CSteamID.Nil);
+        return spawnVehicleInternal(Assets.find(EAssetType.VEHICLE, id), point, angle, CSteamID.Nil);
     }
 
+    /// <summary>
+    /// Supports redirects by VehicleRedirectorAsset. If redirector's SpawnPaintColor is set, that color is used.
+    /// </summary>
     public static InteractableVehicle spawnLockedVehicleForPlayerV2(ushort id, Vector3 point, Quaternion angle, Player player)
     {
         if (player == null)
         {
             throw new ArgumentNullException("player");
         }
-        return spawnVehicleInternal(id, point, angle, player.channel.owner.playerID.steamID);
+        return spawnVehicleInternal(Assets.find(EAssetType.VEHICLE, id), point, angle, player.channel.owner.playerID.steamID);
+    }
+
+    /// <summary>
+    /// Supports redirects by VehicleRedirectorAsset. If redirector's SpawnPaintColor is set, that color is used.
+    /// </summary>
+    public static InteractableVehicle spawnVehicleV2(Asset asset, Vector3 point, Quaternion angle)
+    {
+        return spawnVehicleInternal(asset, point, angle, CSteamID.Nil);
+    }
+
+    /// <summary>
+    /// Supports redirects by VehicleRedirectorAsset. If redirector's SpawnPaintColor is set, that color is used.
+    /// </summary>
+    public static InteractableVehicle spawnLockedVehicleForPlayerV2(Asset asset, Vector3 point, Quaternion angle, Player player)
+    {
+        if (player == null)
+        {
+            throw new ArgumentNullException("player");
+        }
+        return spawnVehicleInternal(asset, point, angle, player.channel.owner.playerID.steamID);
     }
 
     /// <summary>
     /// Added so that garage plugins do not need to invoke RPC manually.
     /// </summary>
-    public static InteractableVehicle SpawnVehicleV3(VehicleAsset asset, ushort skinID, ushort mythicID, float roadPosition, Vector3 point, Quaternion angle, bool sirens, bool blimp, bool headlights, bool taillights, ushort fuel, ushort health, ushort batteryCharge, CSteamID owner, CSteamID group, bool locked, byte[][] turrets, byte tireAliveMask)
+    /// <param name="batteryCharge">zero spawns without a battery, ushort.MaxValue indicates the battery should be randomly spawned according to asset configuration, other values force a battery to spawn.</param>
+    public static InteractableVehicle SpawnVehicleV3(VehicleAsset asset, ushort skinID, ushort mythicID, float roadPosition, Vector3 point, Quaternion angle, bool sirens, bool blimp, bool headlights, bool taillights, ushort fuel, ushort health, ushort batteryCharge, CSteamID owner, CSteamID group, bool locked, byte[][] turrets, byte tireAliveMask, Color32 paintColor)
     {
         NetId netId = NetIdRegistry.ClaimBlock(21u);
-        InteractableVehicle spawnedVehicle = manager.addVehicle(asset.GUID, skinID, mythicID, roadPosition, point, angle, sirens, blimp, headlights, taillights, fuel, isExploded: false, health, batteryCharge, owner, group, locked, null, turrets, allocateInstanceID(), tireAliveMask, netId);
+        InteractableVehicle spawnedVehicle = manager.addVehicle(asset.GUID, skinID, mythicID, roadPosition, point, angle, sirens, blimp, headlights, taillights, fuel, isExploded: false, health, batteryCharge, owner, group, locked, null, turrets, allocateInstanceID(), tireAliveMask, netId, paintColor);
         if (spawnedVehicle == null)
         {
             return null;
@@ -322,17 +364,46 @@ public class VehicleManager : SteamCaller
     }
 
     /// <summary>
+    /// For backwards compatibility. This older method spawns a vehicle with a random paint color. (set paintColor
+    /// to zero for a random paint color)
+    /// </summary>
+    /// <param name="batteryCharge">zero spawns without a battery, ushort.MaxValue indicates the battery should be randomly spawned according to asset configuration, other values force a battery to spawn.</param>
+    public static InteractableVehicle SpawnVehicleV3(VehicleAsset asset, ushort skinID, ushort mythicID, float roadPosition, Vector3 point, Quaternion angle, bool sirens, bool blimp, bool headlights, bool taillights, ushort fuel, ushort health, ushort batteryCharge, CSteamID owner, CSteamID group, bool locked, byte[][] turrets, byte tireAliveMask)
+    {
+        return SpawnVehicleV3(asset, skinID, mythicID, roadPosition, point, angle, sirens, blimp, headlights, taillights, fuel, health, batteryCharge, owner, group, locked, turrets, tireAliveMask, new Color32(0, 0, 0, 0));
+    }
+
+    /// <summary>
     /// Used by external spawn vehicle methods.
+    /// Supports redirects by VehicleRedirectorAsset. If redirector's SpawnPaintColor is set, that color is used.
     /// </summary>
     /// <param name="owner">Owner to lock vehicle for by default. Used to lock vehicles to the player who purchased them.</param>
-    private static InteractableVehicle spawnVehicleInternal(ushort id, Vector3 point, Quaternion angle, CSteamID owner)
+    private static InteractableVehicle spawnVehicleInternal(Asset asset, Vector3 point, Quaternion angle, CSteamID owner)
     {
-        if (!(Assets.find(EAssetType.VEHICLE, id) is VehicleAsset vehicleAsset))
+        if (asset == null)
+        {
+            return null;
+        }
+        Color32 paintColor = new Color32(0, 0, 0, 0);
+        VehicleAsset vehicleAsset;
+        if (asset is VehicleRedirectorAsset { TargetVehicle: var targetVehicle } vehicleRedirectorAsset)
+        {
+            vehicleAsset = targetVehicle.Find();
+            if (vehicleRedirectorAsset.SpawnPaintColor.HasValue)
+            {
+                paintColor = vehicleRedirectorAsset.SpawnPaintColor.Value;
+            }
+        }
+        else
+        {
+            vehicleAsset = asset as VehicleAsset;
+        }
+        if (vehicleAsset == null)
         {
             return null;
         }
         bool locked = owner != CSteamID.Nil;
-        return SpawnVehicleV3(vehicleAsset, 0, 0, 0f, point, angle, sirens: false, blimp: false, headlights: false, taillights: false, vehicleAsset.fuel, vehicleAsset.health, 10000, owner, CSteamID.Nil, locked, null, byte.MaxValue);
+        return SpawnVehicleV3(vehicleAsset, 0, 0, 0f, point, angle, sirens: false, blimp: false, headlights: false, taillights: false, vehicleAsset.fuel, vehicleAsset.health, 10000, owner, CSteamID.Nil, locked, null, byte.MaxValue, paintColor);
     }
 
     public static void enterVehicle(InteractableVehicle vehicle)
@@ -437,11 +508,6 @@ public class VehicleManager : SteamCaller
         }
     }
 
-    [Obsolete]
-    public void sendVehicle(InteractableVehicle vehicle)
-    {
-    }
-
     internal static void sendVehicle(InteractableVehicle vehicle, NetPakWriter writer)
     {
         Vector3 value = ((vehicle.asset.engine != EEngine.TRAIN) ? vehicle.transform.position : InteractableVehicle.PackRoadPosition(vehicle.roadPosition));
@@ -477,12 +543,29 @@ public class VehicleManager : SteamCaller
         writer.WriteUInt32(vehicle.instanceID);
         writer.WriteUInt8(vehicle.tireAliveMask);
         writer.WriteNetId(vehicle.GetNetId());
-    }
-
-    [Obsolete]
-    public void tellVehicleLock(CSteamID steamID, uint instanceID, CSteamID owner, CSteamID group, bool locked)
-    {
-        ReceiveVehicleLockState(instanceID, owner, group, locked);
+        writer.WriteColor32RGBA(vehicle.PaintColor);
+        if (vehicle.asset.replicatedWheelIndices != null)
+        {
+            writer.WriteUInt8((byte)vehicle.asset.replicatedWheelIndices.Length);
+            int[] replicatedWheelIndices = vehicle.asset.replicatedWheelIndices;
+            foreach (int num in replicatedWheelIndices)
+            {
+                Wheel wheelAtIndex = vehicle.GetWheelAtIndex(num);
+                if (wheelAtIndex == null)
+                {
+                    UnturnedLog.error($"\"{vehicle.asset.FriendlyName}\" missing wheel for replicated index: {num}");
+                    writer.WriteUnsignedNormalizedFloat(0f, 4);
+                }
+                else
+                {
+                    writer.WriteUnsignedNormalizedFloat(wheelAtIndex.replicatedSuspensionState, 4);
+                }
+            }
+        }
+        else
+        {
+            writer.WriteUInt8(0);
+        }
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellVehicleLock")]
@@ -498,12 +581,6 @@ public class VehicleManager : SteamCaller
         }
     }
 
-    [Obsolete]
-    public void tellVehicleSkin(CSteamID steamID, uint instanceID, ushort skinID, ushort mythicID)
-    {
-        ReceiveVehicleSkin(instanceID, skinID, mythicID);
-    }
-
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellVehicleSkin")]
     public static void ReceiveVehicleSkin(uint instanceID, ushort skinID, ushort mythicID)
     {
@@ -515,12 +592,6 @@ public class VehicleManager : SteamCaller
                 break;
             }
         }
-    }
-
-    [Obsolete]
-    public void tellVehicleSirens(CSteamID steamID, uint instanceID, bool on)
-    {
-        ReceiveVehicleSirens(instanceID, on);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellVehicleSirens")]
@@ -536,12 +607,6 @@ public class VehicleManager : SteamCaller
         }
     }
 
-    [Obsolete]
-    public void tellVehicleBlimp(CSteamID steamID, uint instanceID, bool on)
-    {
-        ReceiveVehicleBlimp(instanceID, on);
-    }
-
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellVehicleBlimp")]
     public static void ReceiveVehicleBlimp(uint instanceID, bool on)
     {
@@ -553,12 +618,6 @@ public class VehicleManager : SteamCaller
                 break;
             }
         }
-    }
-
-    [Obsolete]
-    public void tellVehicleHeadlights(CSteamID steamID, uint instanceID, bool on)
-    {
-        ReceiveVehicleHeadlights(instanceID, on);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellVehicleHeadlights")]
@@ -574,12 +633,6 @@ public class VehicleManager : SteamCaller
         }
     }
 
-    [Obsolete]
-    public void tellVehicleHorn(CSteamID steamID, uint instanceID)
-    {
-        ReceiveVehicleHorn(instanceID);
-    }
-
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellVehicleHorn")]
     public static void ReceiveVehicleHorn(uint instanceID)
     {
@@ -591,12 +644,6 @@ public class VehicleManager : SteamCaller
                 break;
             }
         }
-    }
-
-    [Obsolete]
-    public void tellVehicleFuel(CSteamID steamID, uint instanceID, ushort newFuel)
-    {
-        ReceiveVehicleFuel(instanceID, newFuel);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellVehicleFuel")]
@@ -612,12 +659,6 @@ public class VehicleManager : SteamCaller
         }
     }
 
-    [Obsolete]
-    public void tellVehicleBatteryCharge(CSteamID steamID, uint instanceID, ushort newBatteryCharge)
-    {
-        ReceiveVehicleBatteryCharge(instanceID, newBatteryCharge);
-    }
-
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellVehicleBatteryCharge")]
     public static void ReceiveVehicleBatteryCharge(uint instanceID, ushort newBatteryCharge)
     {
@@ -631,12 +672,6 @@ public class VehicleManager : SteamCaller
         }
     }
 
-    [Obsolete]
-    public void tellVehicleTireAliveMask(CSteamID steamID, uint instanceID, byte newTireAliveMask)
-    {
-        ReceiveVehicleTireAliveMask(instanceID, newTireAliveMask);
-    }
-
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellVehicleTireAliveMask")]
     public static void ReceiveVehicleTireAliveMask(uint instanceID, byte newTireAliveMask)
     {
@@ -648,12 +683,6 @@ public class VehicleManager : SteamCaller
                 break;
             }
         }
-    }
-
-    [Obsolete]
-    public void tellVehicleExploded(CSteamID steamID, uint instanceID)
-    {
-        ReceiveVehicleExploded(instanceID);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellVehicleExploded")]
@@ -675,12 +704,6 @@ public class VehicleManager : SteamCaller
         interactableVehicle.tellExploded();
     }
 
-    [Obsolete]
-    public void tellVehicleHealth(CSteamID steamID, uint instanceID, ushort newHealth)
-    {
-        ReceiveVehicleHealth(instanceID, newHealth);
-    }
-
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellVehicleHealth")]
     public static void ReceiveVehicleHealth(uint instanceID, ushort newHealth)
     {
@@ -694,12 +717,6 @@ public class VehicleManager : SteamCaller
         }
     }
 
-    [Obsolete]
-    public void tellVehicleRecov(CSteamID steamID, uint instanceID, Vector3 newPosition, int newRecov)
-    {
-        ReceiveVehicleRecov(instanceID, newPosition, newRecov);
-    }
-
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellVehicleRecov")]
     public static void ReceiveVehicleRecov(uint instanceID, Vector3 newPosition, int newRecov)
     {
@@ -711,11 +728,6 @@ public class VehicleManager : SteamCaller
                 break;
             }
         }
-    }
-
-    [Obsolete]
-    public void tellVehicleStates(CSteamID steamID)
-    {
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
@@ -738,21 +750,65 @@ public class VehicleManager : SteamCaller
             reader.ReadUInt32(out var value3);
             reader.ReadClampedVector3(out var value4, 13, 8);
             reader.ReadQuaternion(out var value5, 11);
-            reader.ReadUInt8(out var value6);
-            reader.ReadUInt8(out var value7);
-            reader.ReadUInt8(out var value8);
+            reader.ReadUnsignedClampedFloat(8, 2, out var value6);
+            reader.ReadClampedFloat(9, 2, out var value7);
+            reader.ReadSignedNormalizedFloat(2, out var value8);
+            reader.ReadClampedFloat(9, 2, out var value9);
+            reader.ReadBit(out var value10);
             InteractableVehicle interactableVehicle = findVehicleByNetInstanceID(value3);
             if (!(interactableVehicle == null))
             {
-                interactableVehicle.tellState(value4, value5, value6, value7, value8);
+                interactableVehicle.tellState(value4, value5, value6, value7, value8, value9);
+                if (interactableVehicle.asset.replicatedWheelIndices != null)
+                {
+                    int[] replicatedWheelIndices = interactableVehicle.asset.replicatedWheelIndices;
+                    foreach (int num2 in replicatedWheelIndices)
+                    {
+                        Wheel wheelAtIndex = interactableVehicle.GetWheelAtIndex(num2);
+                        if (wheelAtIndex == null)
+                        {
+                            UnturnedLog.error($"\"{interactableVehicle.asset.FriendlyName}\" missing wheel for replicated index: {num2}");
+                        }
+                        if (value10)
+                        {
+                            if (wheelAtIndex == null)
+                            {
+                                reader.ReadUnsignedNormalizedFloat(4, out var _);
+                                reader.ReadPhysicsMaterialNetId(out var _);
+                                continue;
+                            }
+                            if (reader.ReadUnsignedNormalizedFloat(4, out var value13))
+                            {
+                                wheelAtIndex.replicatedSuspensionState = value13;
+                            }
+                            reader.ReadPhysicsMaterialNetId(out wheelAtIndex.replicatedGroundMaterial);
+                        }
+                        else if (wheelAtIndex != null)
+                        {
+                            wheelAtIndex.replicatedSuspensionState = 1f;
+                            wheelAtIndex.replicatedGroundMaterial = PhysicsMaterialNetId.NULL;
+                        }
+                    }
+                }
+                if (interactableVehicle.asset.UsesEngineRpmAndGears)
+                {
+                    if (value10)
+                    {
+                        reader.ReadBits(3, out var value14);
+                        int value15 = (int)(value14 - 1);
+                        value15 = Mathf.Clamp(value15, -1, interactableVehicle.asset.forwardGearRatios.Length);
+                        interactableVehicle.gearNumber = value15;
+                        reader.ReadUnsignedNormalizedFloat(7, out var value16);
+                        interactableVehicle.replicatedEngineRpm = Mathf.Lerp(interactableVehicle.asset.engineIdleRpm, interactableVehicle.asset.engineMaxRpm, value16);
+                    }
+                    else
+                    {
+                        interactableVehicle.gearNumber = 1;
+                        interactableVehicle.replicatedEngineRpm = interactableVehicle.asset.engineIdleRpm;
+                    }
+                }
             }
         }
-    }
-
-    [Obsolete]
-    public void tellVehicleDestroy(CSteamID steamID, uint instanceID)
-    {
-        ReceiveDestroySingleVehicle(instanceID);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellVehicleDestroy")]
@@ -786,12 +842,6 @@ public class VehicleManager : SteamCaller
         EffectManager.ClearAttachments(interactableVehicle.transform);
         UnityEngine.Object.Destroy(interactableVehicle.gameObject);
         respawnVehicleIndex--;
-    }
-
-    [Obsolete]
-    public void tellVehicleDestroyAll(CSteamID steamID)
-    {
-        ReceiveDestroyAllVehicles();
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellVehicleDestroyAll")]
@@ -839,11 +889,6 @@ public class VehicleManager : SteamCaller
         }
     }
 
-    [Obsolete]
-    public void tellVehicle(CSteamID steamID)
-    {
-    }
-
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
     public static void ReceiveSingleVehicle(in ClientInvocationContext context)
     {
@@ -874,12 +919,18 @@ public class VehicleManager : SteamCaller
         reader.ReadUInt32(out var value18);
         reader.ReadUInt8(out var value19);
         reader.ReadNetId(out var value20);
-        manager.addVehicle(value, value2, value3, roadPosition, value4, value5, value6, value7, value8, value9, value10, value11, value12, value13, value14, value15, value16, array, null, value18, value19, value20);
-    }
-
-    [Obsolete]
-    public void tellVehicles(CSteamID steamID)
-    {
+        reader.ReadColor32RGBA(out Color32 value21);
+        InteractableVehicle interactableVehicle = manager.addVehicle(value, value2, value3, roadPosition, value4, value5, value6, value7, value8, value9, value10, value11, value12, value13, value14, value15, value16, array, null, value18, value19, value20, value21);
+        reader.ReadUInt8(out var value22);
+        for (int j = 0; j < value22; j++)
+        {
+            reader.ReadUnsignedNormalizedFloat(4, out var value23);
+            if (interactableVehicle != null && interactableVehicle.asset != null && interactableVehicle.asset.replicatedWheelIndices != null && j < interactableVehicle.asset.replicatedWheelIndices.Length)
+            {
+                int index = interactableVehicle.asset.replicatedWheelIndices[j];
+                interactableVehicle.GetWheelAtIndex(index)?.TeleportSuspensionState(value23);
+            }
+        }
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
@@ -918,11 +969,6 @@ public class VehicleManager : SteamCaller
         });
     }
 
-    [Obsolete]
-    public void askVehicles(CSteamID steamID)
-    {
-    }
-
     internal static void SendInitialGlobalState(SteamPlayer client)
     {
         int count = vehicles.Count;
@@ -947,12 +993,6 @@ public class VehicleManager : SteamCaller
         BarricadeManager.SendVehicleRegions(client);
     }
 
-    [Obsolete]
-    public void tellEnterVehicle(CSteamID steamID, uint instanceID, byte seat, CSteamID player)
-    {
-        ReceiveEnterVehicle(instanceID, seat, player);
-    }
-
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellEnterVehicle")]
     public static void ReceiveEnterVehicle(uint instanceID, byte seat, CSteamID player)
     {
@@ -966,12 +1006,6 @@ public class VehicleManager : SteamCaller
         }
     }
 
-    [Obsolete]
-    public void tellExitVehicle(CSteamID steamID, uint instanceID, byte seat, Vector3 point, byte angle, bool forceUpdate)
-    {
-        ReceiveExitVehicle(instanceID, seat, point, angle, forceUpdate);
-    }
-
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellExitVehicle")]
     public static void ReceiveExitVehicle(uint instanceID, byte seat, Vector3 point, byte angle, bool forceUpdate)
     {
@@ -980,12 +1014,6 @@ public class VehicleManager : SteamCaller
         {
             interactableVehicle.removePlayer(seat, point, angle, forceUpdate);
         }
-    }
-
-    [Obsolete]
-    public void tellSwapVehicle(CSteamID steamID, uint instanceID, byte fromSeat, byte toSeat)
-    {
-        ReceiveSwapVehicleSeats(instanceID, fromSeat, toSeat);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellSwapVehicle")]
@@ -1025,6 +1053,7 @@ public class VehicleManager : SteamCaller
             {
                 force *= vehiclePhysicsProfileAsset.carjackForceMultiplier.Value;
             }
+            force *= vehicle.asset.carjackForceMultiplier;
         }
         bool allow = true;
         onVehicleCarjacked?.Invoke(vehicle, instigatingPlayer, ref allow, ref force, ref torque);
@@ -1065,13 +1094,6 @@ public class VehicleManager : SteamCaller
         SendVehicleLockState.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), vehicle.instanceID, ownerID, groupID, isLocked);
     }
 
-    [Obsolete]
-    public void askVehicleLock(CSteamID steamID)
-    {
-        ServerInvocationContext context = ServerInvocationContext.FromSteamIDForBackwardsCompatibility(steamID);
-        ReceiveVehicleLockRequest(in context);
-    }
-
     [SteamCall(ESteamCallValidation.SERVERSIDE, ratelimitHz = 4, legacyName = "askVehicleLock")]
     public static void ReceiveVehicleLockRequest(in ServerInvocationContext context)
     {
@@ -1100,13 +1122,6 @@ public class VehicleManager : SteamCaller
         }
     }
 
-    [Obsolete]
-    public void askVehicleSkin(CSteamID steamID)
-    {
-        ServerInvocationContext context = ServerInvocationContext.FromSteamIDForBackwardsCompatibility(steamID);
-        ReceiveVehicleSkinRequest(in context);
-    }
-
     [SteamCall(ESteamCallValidation.SERVERSIDE, ratelimitHz = 2, legacyName = "askVehicleSkin")]
     public static void ReceiveVehicleSkinRequest(in ServerInvocationContext context)
     {
@@ -1120,13 +1135,13 @@ public class VehicleManager : SteamCaller
         {
             return;
         }
-        int value = 0;
+        int itemdefid = 0;
         ushort num = 0;
         ushort num2 = 0;
-        if (player.channel.owner.skinItems != null && player.channel.owner.vehicleSkins != null && player.channel.owner.vehicleSkins.TryGetValue(vehicle.asset.sharedSkinLookupID, out value))
+        if (player.channel.owner.skinItems != null && player.channel.owner.GetVehicleSkinItemDefId(vehicle, out itemdefid))
         {
-            num = Provider.provider.economyService.getInventorySkinID(value);
-            num2 = Provider.provider.economyService.getInventoryMythicID(value);
+            num = Provider.provider.economyService.getInventorySkinID(itemdefid);
+            num2 = Provider.provider.economyService.getInventoryMythicID(itemdefid);
         }
         if (num != 0)
         {
@@ -1143,13 +1158,6 @@ public class VehicleManager : SteamCaller
         SendVehicleSkin.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), vehicle.instanceID, num, num2);
     }
 
-    [Obsolete]
-    public void askVehicleHeadlights(CSteamID steamID, bool wantsHeadlightsOn)
-    {
-        ServerInvocationContext context = ServerInvocationContext.FromSteamIDForBackwardsCompatibility(steamID);
-        ReceiveToggleVehicleHeadlights(in context, wantsHeadlightsOn);
-    }
-
     [SteamCall(ESteamCallValidation.SERVERSIDE, ratelimitHz = 10, legacyName = "askVehicleHeadlights")]
     public static void ReceiveToggleVehicleHeadlights(in ServerInvocationContext context, bool wantsHeadlightsOn)
     {
@@ -1163,13 +1171,6 @@ public class VehicleManager : SteamCaller
                 EffectManager.TriggerFiremodeEffect(vehicle.transform.position);
             }
         }
-    }
-
-    [Obsolete]
-    public void askVehicleBonus(CSteamID steamID, byte bonusType)
-    {
-        ServerInvocationContext context = ServerInvocationContext.FromSteamIDForBackwardsCompatibility(steamID);
-        ReceiveUseVehicleBonus(in context, bonusType);
     }
 
     [SteamCall(ESteamCallValidation.SERVERSIDE, ratelimitHz = 5, legacyName = "askVehicleBonus")]
@@ -1203,13 +1204,6 @@ public class VehicleManager : SteamCaller
         }
     }
 
-    [Obsolete]
-    public void askVehicleStealBattery(CSteamID steamID)
-    {
-        ServerInvocationContext context = ServerInvocationContext.FromSteamIDForBackwardsCompatibility(steamID);
-        ReceiveStealVehicleBattery(in context);
-    }
-
     [SteamCall(ESteamCallValidation.SERVERSIDE, ratelimitHz = 2, legacyName = "askVehicleStealBattery")]
     public static void ReceiveStealVehicleBattery(in ServerInvocationContext context)
     {
@@ -1217,18 +1211,11 @@ public class VehicleManager : SteamCaller
         if (!(player == null))
         {
             InteractableVehicle vehicle = player.movement.getVehicle();
-            if (!(vehicle == null) && vehicle.checkDriver(player.channel.owner.playerID.steamID) && vehicle.usesBattery && vehicle.hasBattery && vehicle.asset.canStealBattery)
+            if (!(vehicle == null) && vehicle.checkDriver(player.channel.owner.playerID.steamID) && vehicle.usesBattery && vehicle.ContainsBatteryItem && vehicle.asset.canStealBattery)
             {
                 vehicle.stealBattery(player);
             }
         }
-    }
-
-    [Obsolete]
-    public void askVehicleHorn(CSteamID steamID)
-    {
-        ServerInvocationContext context = ServerInvocationContext.FromSteamIDForBackwardsCompatibility(steamID);
-        ReceiveVehicleHornRequest(in context);
     }
 
     [SteamCall(ESteamCallValidation.SERVERSIDE, ratelimitHz = 10, legacyName = "askVehicleHorn")]
@@ -1243,13 +1230,6 @@ public class VehicleManager : SteamCaller
                 SendVehicleHorn.InvokeAndLoopback(ENetReliability.Unreliable, Provider.GatherRemoteClientConnections(), vehicle.instanceID);
             }
         }
-    }
-
-    [Obsolete]
-    public void askEnterVehicle(CSteamID steamID, uint instanceID, byte[] hash, byte engine)
-    {
-        ServerInvocationContext context = ServerInvocationContext.FromSteamIDForBackwardsCompatibility(steamID);
-        ReceiveEnterVehicleRequest(in context, instanceID, hash, new byte[0], engine);
     }
 
     [SteamCall(ESteamCallValidation.SERVERSIDE, ratelimitHz = 2, legacyName = "askEnterVehicle")]
@@ -1360,13 +1340,6 @@ public class VehicleManager : SteamCaller
         return true;
     }
 
-    [Obsolete]
-    public void askExitVehicle(CSteamID steamID, Vector3 velocity)
-    {
-        ServerInvocationContext context = ServerInvocationContext.FromSteamIDForBackwardsCompatibility(steamID);
-        ReceiveExitVehicleRequest(in context, velocity);
-    }
-
     [SteamCall(ESteamCallValidation.SERVERSIDE, ratelimitHz = 2, legacyName = "askExitVehicle")]
     public static void ReceiveExitVehicleRequest(in ServerInvocationContext context, Vector3 velocity)
     {
@@ -1447,13 +1420,6 @@ public class VehicleManager : SteamCaller
         return false;
     }
 
-    [Obsolete]
-    public void askSwapVehicle(CSteamID steamID, byte toSeat)
-    {
-        ServerInvocationContext context = ServerInvocationContext.FromSteamIDForBackwardsCompatibility(steamID);
-        ReceiveSwapVehicleRequest(in context, toSeat);
-    }
-
     [SteamCall(ESteamCallValidation.SERVERSIDE, ratelimitHz = 2, legacyName = "askSwapVehicle")]
     public static void ReceiveSwapVehicleRequest(in ServerInvocationContext context, byte toSeat)
     {
@@ -1523,7 +1489,7 @@ public class VehicleManager : SteamCaller
         }
     }
 
-    private InteractableVehicle addVehicle(Guid assetGuid, ushort skinID, ushort mythicID, float roadPosition, Vector3 point, Quaternion angle, bool sirens, bool blimp, bool headlights, bool taillights, ushort fuel, bool isExploded, ushort health, ushort batteryCharge, CSteamID owner, CSteamID group, bool locked, CSteamID[] passengers, byte[][] turrets, uint instanceID, byte tireAliveMask, NetId netId)
+    private InteractableVehicle addVehicle(Guid assetGuid, ushort skinID, ushort mythicID, float roadPosition, Vector3 point, Quaternion angle, bool sirens, bool blimp, bool headlights, bool taillights, ushort fuel, bool isExploded, ushort health, ushort batteryCharge, CSteamID owner, CSteamID group, bool locked, CSteamID[] passengers, byte[][] turrets, uint instanceID, byte tireAliveMask, NetId netId, Color32 paintColor)
     {
         VehicleAsset vehicleAsset = Assets.find(assetGuid) as VehicleAsset;
         if (!Provider.isServer)
@@ -1565,6 +1531,7 @@ public class VehicleManager : SteamCaller
             interactableVehicle.isExploded = isExploded;
             interactableVehicle.health = health;
             interactableVehicle.batteryCharge = batteryCharge;
+            interactableVehicle.PaintColor = paintColor;
             interactableVehicle.init(vehicleAsset);
             interactableVehicle.gatherVehicleColliders();
             interactableVehicle.tellSirens(sirens);
@@ -1667,6 +1634,7 @@ public class VehicleManager : SteamCaller
 
     /// <summary>
     /// Add a new vehicle at given spawnpoint.
+    /// Supports redirects by VehicleRedirectorAsset. If redirector's SpawnPaintColor is set, that color is used.
     /// </summary>
     private InteractableVehicle addVehicleAtSpawn(VehicleSpawnpoint spawn)
     {
@@ -1674,23 +1642,38 @@ public class VehicleManager : SteamCaller
         {
             return null;
         }
-        ushort vehicle = LevelVehicles.getVehicle(spawn);
-        if (vehicle == 0)
+        Asset randomAssetForSpawnpoint = LevelVehicles.GetRandomAssetForSpawnpoint(spawn);
+        if (randomAssetForSpawnpoint == null)
         {
             return null;
         }
-        if (!(Assets.find(EAssetType.VEHICLE, vehicle) is VehicleAsset vehicleAsset))
+        Color32 paintColor = new Color32(0, 0, 0, 0);
+        VehicleAsset vehicleAsset;
+        if (randomAssetForSpawnpoint is VehicleRedirectorAsset { TargetVehicle: var targetVehicle } vehicleRedirectorAsset)
+        {
+            vehicleAsset = targetVehicle.Find();
+            if (vehicleRedirectorAsset.SpawnPaintColor.HasValue)
+            {
+                paintColor = vehicleRedirectorAsset.SpawnPaintColor.Value;
+            }
+        }
+        else
+        {
+            vehicleAsset = randomAssetForSpawnpoint as VehicleAsset;
+        }
+        if (vehicleAsset == null)
         {
             return null;
         }
         Vector3 point = spawn.point;
         point.y += 0.5f;
         NetId netId = NetIdRegistry.ClaimBlock(21u);
-        return addVehicle(vehicleAsset.GUID, 0, 0, 0f, point, Quaternion.Euler(0f, spawn.angle, 0f), sirens: false, blimp: false, headlights: false, taillights: false, ushort.MaxValue, isExploded: false, ushort.MaxValue, ushort.MaxValue, CSteamID.Nil, CSteamID.Nil, locked: false, null, null, allocateInstanceID(), getVehicleRandomTireAliveMask(vehicleAsset), netId);
+        return addVehicle(vehicleAsset.GUID, 0, 0, 0f, point, Quaternion.Euler(0f, spawn.angle, 0f), sirens: false, blimp: false, headlights: false, taillights: false, ushort.MaxValue, isExploded: false, ushort.MaxValue, ushort.MaxValue, CSteamID.Nil, CSteamID.Nil, locked: false, null, null, allocateInstanceID(), getVehicleRandomTireAliveMask(vehicleAsset), netId, paintColor);
     }
 
     /// <summary>
     /// Add a new vehicle at given spawnpoint and replicate to clients.
+    /// Supports redirects by VehicleRedirectorAsset. If redirector's SpawnPaintColor is set, that color is used.
     /// </summary>
     private void addVehicleAtSpawnAndReplicate(VehicleSpawnpoint spawn)
     {
@@ -1749,6 +1732,37 @@ public class VehicleManager : SteamCaller
         }
     }
 
+    private void RespawnReloadedVehicles()
+    {
+        List<InteractableVehicle> list = null;
+        foreach (InteractableVehicle vehicle in _vehicles)
+        {
+            if (vehicle.asset.engine != EEngine.TRAIN && vehicle.asset.hasBeenReplaced)
+            {
+                if (list == null)
+                {
+                    list = new List<InteractableVehicle>();
+                }
+                list.Add(vehicle);
+            }
+        }
+        if (list == null)
+        {
+            return;
+        }
+        foreach (InteractableVehicle item in list)
+        {
+            VehicleAsset vehicleAsset = Assets.find<VehicleAsset>(item.asset.GUID);
+            if (vehicleAsset == null)
+            {
+                UnturnedLog.error("Missing replacement asset for reloaded vehicle");
+                continue;
+            }
+            askVehicleDestroy(item);
+            SpawnVehicleV3(vehicleAsset, item.skinID, item.mythicID, item.roadPosition, item.transform.position, item.transform.rotation, item.sirensOn, item.isBlimpFloating, item.headlightsOn, item.taillightsOn, item.fuel, item.health, item.batteryCharge, item.lockedOwner, item.lockedGroup, item.isLocked, null, item.tireAliveMask, item.PaintColor);
+        }
+    }
+
     private void onLevelLoaded(int level)
     {
         if (level <= Level.BUILD_INDEX_SETUP)
@@ -1757,6 +1771,7 @@ public class VehicleManager : SteamCaller
         }
         seq = 0u;
         _vehicles = new List<InteractableVehicle>();
+        shouldRespawnReloadedVehicles = false;
         highestInstanceID = 0u;
         respawnVehicleIndex = 0;
         BarricadeManager.clearPlants();
@@ -1817,7 +1832,7 @@ public class VehicleManager : SteamCaller
                 if (Assets.find(EAssetType.VEHICLE, train.VehicleID) is VehicleAsset vehicleAsset)
                 {
                     NetId netId = NetIdRegistry.ClaimBlock(21u);
-                    addVehicle(vehicleAsset.GUID, 0, 0, roadPosition, Vector3.zero, Quaternion.identity, sirens: false, blimp: false, headlights: false, taillights: false, ushort.MaxValue, isExploded: false, ushort.MaxValue, ushort.MaxValue, CSteamID.Nil, CSteamID.Nil, locked: false, null, null, allocateInstanceID(), getVehicleRandomTireAliveMask(vehicleAsset), netId);
+                    addVehicle(vehicleAsset.GUID, 0, 0, roadPosition, Vector3.zero, Quaternion.identity, sirens: false, blimp: false, headlights: false, taillights: false, ushort.MaxValue, isExploded: false, ushort.MaxValue, ushort.MaxValue, CSteamID.Nil, CSteamID.Nil, locked: false, null, null, allocateInstanceID(), getVehicleRandomTireAliveMask(vehicleAsset), netId, new Color32(0, 0, 0, 0));
                 }
                 else if ((bool)Assets.shouldLoadAnyAssets)
                 {
@@ -1878,8 +1893,8 @@ public class VehicleManager : SteamCaller
         seq++;
         for (int i = 0; i < Provider.clients.Count; i++)
         {
-            SteamPlayer steamPlayer = Provider.clients[i];
-            if (steamPlayer == null || steamPlayer.player == null)
+            SteamPlayer client = Provider.clients[i];
+            if (client == null || client.player == null)
             {
                 continue;
             }
@@ -1888,7 +1903,7 @@ public class VehicleManager : SteamCaller
             for (int j = 0; j < vehicles.Count; j++)
             {
                 InteractableVehicle interactableVehicle = vehicles[j];
-                if (!(interactableVehicle == null) && interactableVehicle.updates != null && interactableVehicle.updates.Count != 0 && !interactableVehicle.checkDriver(steamPlayer.playerID.steamID))
+                if (!(interactableVehicle == null) && interactableVehicle.updates != null && interactableVehicle.updates.Count != 0 && !interactableVehicle.checkDriver(client.playerID.steamID))
                 {
                     vehiclesToSend.Add(interactableVehicle);
                     updateCount += (ushort)interactableVehicle.updates.Count;
@@ -1898,21 +1913,53 @@ public class VehicleManager : SteamCaller
             {
                 continue;
             }
-            SendVehicleStates.Invoke(ENetReliability.Unreliable, steamPlayer.transportConnection, delegate(NetPakWriter writer)
+            SendVehicleStates.Invoke(ENetReliability.Unreliable, client.transportConnection, delegate(NetPakWriter writer)
             {
+                Vector3 position = client.player.transform.position;
                 writer.WriteUInt32(seq);
                 writer.WriteUInt16(updateCount);
                 foreach (InteractableVehicle item in vehiclesToSend)
                 {
+                    bool flag = (item.transform.position - position).sqrMagnitude < 90000f;
                     for (int l = 0; l < item.updates.Count; l++)
                     {
                         VehicleStateUpdate vehicleStateUpdate = item.updates[l];
                         writer.WriteUInt32(item.instanceID);
                         writer.WriteClampedVector3(vehicleStateUpdate.pos, 13, 8);
                         writer.WriteQuaternion(vehicleStateUpdate.rot, 11);
-                        writer.WriteUInt8((byte)(Mathf.Clamp(item.speed, -100f, 100f) + 128f));
-                        writer.WriteUInt8((byte)(Mathf.Clamp(item.physicsSpeed, -100f, 100f) + 128f));
-                        writer.WriteUInt8((byte)(item.turn + 1));
+                        writer.WriteUnsignedClampedFloat(item.ReplicatedSpeed, 8, 2);
+                        writer.WriteClampedFloat(item.ReplicatedForwardVelocity, 9, 2);
+                        writer.WriteSignedNormalizedFloat(item.ReplicatedSteeringInput, 2);
+                        writer.WriteClampedFloat(item.ReplicatedVelocityInput, 9, 2);
+                        writer.WriteBit(flag);
+                        if (flag)
+                        {
+                            if (item.asset.replicatedWheelIndices != null)
+                            {
+                                int[] replicatedWheelIndices = item.asset.replicatedWheelIndices;
+                                foreach (int num in replicatedWheelIndices)
+                                {
+                                    Wheel wheelAtIndex = item.GetWheelAtIndex(num);
+                                    if (wheelAtIndex == null)
+                                    {
+                                        UnturnedLog.error($"\"{item.asset.FriendlyName}\" missing wheel for replicated index: {num}");
+                                        writer.WriteUnsignedNormalizedFloat(0f, 4);
+                                    }
+                                    else
+                                    {
+                                        writer.WriteUnsignedNormalizedFloat(wheelAtIndex.replicatedSuspensionState, 4);
+                                        writer.WritePhysicsMaterialNetId(wheelAtIndex.replicatedGroundMaterial);
+                                    }
+                                }
+                            }
+                            if (item.asset.UsesEngineRpmAndGears)
+                            {
+                                uint value = (uint)(item.gearNumber + 1);
+                                writer.WriteBits(value, 3);
+                                float value2 = Mathf.InverseLerp(item.asset.engineIdleRpm, item.asset.engineMaxRpm, item.replicatedEngineRpm);
+                                writer.WriteUnsignedNormalizedFloat(value2, 7);
+                            }
+                        }
                     }
                 }
                 if (writer.errors != 0 && Time.realtimeSinceStartup - lastSendOverflowWarning > 1f)
@@ -1952,6 +1999,11 @@ public class VehicleManager : SteamCaller
         {
             UpdateDecay();
         }
+        if (shouldRespawnReloadedVehicles)
+        {
+            shouldRespawnReloadedVehicles = false;
+            RespawnReloadedVehicles();
+        }
     }
 
     private void Start()
@@ -1980,15 +2032,31 @@ public class VehicleManager : SteamCaller
                 ushort num2 = river.readUInt16();
                 for (ushort num3 = 0; num3 < num2; num3++)
                 {
-                    VehicleAsset vehicleAsset;
+                    Asset asset;
                     if (b < 14)
                     {
                         ushort id = river.readUInt16();
-                        vehicleAsset = Assets.find(EAssetType.VEHICLE, id) as VehicleAsset;
+                        asset = Assets.find(EAssetType.VEHICLE, id);
                     }
                     else
                     {
-                        vehicleAsset = Assets.find(river.readGUID()) as VehicleAsset;
+                        asset = Assets.find(river.readGUID());
+                    }
+                    Color32 paintColor = new Color32(0, 0, 0, 0);
+                    bool flag = false;
+                    VehicleAsset vehicleAsset;
+                    if (asset is VehicleRedirectorAsset { TargetVehicle: var targetVehicle } vehicleRedirectorAsset)
+                    {
+                        vehicleAsset = targetVehicle.Find();
+                        if (vehicleRedirectorAsset.LoadPaintColor.HasValue)
+                        {
+                            paintColor = vehicleRedirectorAsset.LoadPaintColor.Value;
+                            flag = true;
+                        }
+                    }
+                    else
+                    {
+                        vehicleAsset = asset as VehicleAsset;
                     }
                     uint num4;
                     if (b < 12)
@@ -2040,9 +2108,9 @@ public class VehicleManager : SteamCaller
                         }
                     }
                     point.y += 0.02f;
-                    bool flag = b >= 11 && river.readBoolean();
+                    bool flag2 = b >= 11 && river.readBoolean();
                     ItemJar[] array2 = null;
-                    if (flag)
+                    if (flag2)
                     {
                         array2 = new ItemJar[river.readByte()];
                         for (byte b3 = 0; b3 < array2.Length; b3++)
@@ -2062,14 +2130,26 @@ public class VehicleManager : SteamCaller
                         }
                     }
                     float decayTimer = ((b < 13) ? 0f : river.readSingle());
+                    if (b >= 16)
+                    {
+                        Color32 color = new Color32(0, 0, 0, 0);
+                        color.r = river.readByte();
+                        color.g = river.readByte();
+                        color.b = river.readByte();
+                        color.a = river.readByte();
+                        if (!flag)
+                        {
+                            paintColor = color;
+                        }
+                    }
                     if (vehicleAsset != null)
                     {
                         NetId netId = NetIdRegistry.ClaimBlock(21u);
-                        InteractableVehicle interactableVehicle = manager.addVehicle(vehicleAsset.GUID, skinID, mythicID, roadPosition, point, angle, sirens: false, blimp: false, headlights: false, taillights: false, fuel, isExploded: false, health, batteryCharge, owner, group, locked, null, array, num4, tireAliveMask, netId);
+                        InteractableVehicle interactableVehicle = manager.addVehicle(vehicleAsset.GUID, skinID, mythicID, roadPosition, point, angle, sirens: false, blimp: false, headlights: false, taillights: false, fuel, isExploded: false, health, batteryCharge, owner, group, locked, null, array, num4, tireAliveMask, netId, paintColor);
                         if (interactableVehicle != null)
                         {
                             interactableVehicle.batteryItemGuid = batteryItemGuid;
-                            if (flag && array2 != null && array2.Length != 0 && interactableVehicle.trunkItems != null && interactableVehicle.trunkItems.height > 0)
+                            if (flag2 && array2 != null && array2.Length != 0 && interactableVehicle.trunkItems != null && interactableVehicle.trunkItems.height > 0)
                             {
                                 for (byte b4 = 0; b4 < array2.Length; b4++)
                                 {
@@ -2104,10 +2184,25 @@ public class VehicleManager : SteamCaller
                         health2 = river.readUInt16();
                     }
                     point2.y += 0.02f;
-                    if (Assets.find(EAssetType.VEHICLE, id2) is VehicleAsset vehicleAsset2)
+                    Asset asset2 = Assets.find(EAssetType.VEHICLE, id2);
+                    Color32 paintColor2 = new Color32(0, 0, 0, 0);
+                    VehicleAsset vehicleAsset2;
+                    if (asset2 is VehicleRedirectorAsset { TargetVehicle: var targetVehicle2 } vehicleRedirectorAsset2)
+                    {
+                        vehicleAsset2 = targetVehicle2.Find();
+                        if (vehicleRedirectorAsset2.LoadPaintColor.HasValue)
+                        {
+                            paintColor2 = vehicleRedirectorAsset2.LoadPaintColor.Value;
+                        }
+                    }
+                    else
+                    {
+                        vehicleAsset2 = asset2 as VehicleAsset;
+                    }
+                    if (vehicleAsset2 != null)
                     {
                         NetId netId2 = NetIdRegistry.ClaimBlock(21u);
-                        manager.addVehicle(vehicleAsset2.GUID, 0, 0, 0f, point2, angle2, sirens: false, blimp: false, headlights: false, taillights: false, fuel2, isExploded: false, health2, batteryCharge2, CSteamID.Nil, CSteamID.Nil, locked: false, null, null, allocateInstanceID(), tireAliveMask2, netId2);
+                        manager.addVehicle(vehicleAsset2.GUID, 0, 0, 0f, point2, angle2, sirens: false, blimp: false, headlights: false, taillights: false, fuel2, isExploded: false, health2, batteryCharge2, CSteamID.Nil, CSteamID.Nil, locked: false, null, null, allocateInstanceID(), tireAliveMask2, netId2, paintColor2);
                     }
                 }
             }
@@ -2123,7 +2218,7 @@ public class VehicleManager : SteamCaller
     public static void save()
     {
         River river = LevelSavedata.openRiver("/Vehicles.dat", isReading: false);
-        river.writeByte(15);
+        river.writeByte(16);
         ushort num = 0;
         for (ushort num2 = 0; num2 < vehicles.Count; num2++)
         {
@@ -2206,6 +2301,10 @@ public class VehicleManager : SteamCaller
                     river.writeBoolean(value: false);
                 }
                 river.writeSingle(interactableVehicle2.decayTimer);
+                river.writeByte(interactableVehicle2.PaintColor.r);
+                river.writeByte(interactableVehicle2.PaintColor.g);
+                river.writeByte(interactableVehicle2.PaintColor.b);
+                river.writeByte(interactableVehicle2.PaintColor.a);
             }
         }
         river.closeRiver();
@@ -2240,5 +2339,207 @@ public class VehicleManager : SteamCaller
                 damage(interactableVehicle, num2, 1f, canRepair: true, CSteamID.Nil, EDamageOrigin.VehicleDecay);
             }
         }
+    }
+
+    [Obsolete]
+    public void tellVehicleLock(CSteamID steamID, uint instanceID, CSteamID owner, CSteamID group, bool locked)
+    {
+        ReceiveVehicleLockState(instanceID, owner, group, locked);
+    }
+
+    [Obsolete]
+    public void tellVehicleSkin(CSteamID steamID, uint instanceID, ushort skinID, ushort mythicID)
+    {
+        ReceiveVehicleSkin(instanceID, skinID, mythicID);
+    }
+
+    [Obsolete]
+    public void tellVehicleSirens(CSteamID steamID, uint instanceID, bool on)
+    {
+        ReceiveVehicleSirens(instanceID, on);
+    }
+
+    [Obsolete]
+    public void tellVehicleBlimp(CSteamID steamID, uint instanceID, bool on)
+    {
+        ReceiveVehicleBlimp(instanceID, on);
+    }
+
+    [Obsolete]
+    public void tellVehicleHeadlights(CSteamID steamID, uint instanceID, bool on)
+    {
+        ReceiveVehicleHeadlights(instanceID, on);
+    }
+
+    [Obsolete]
+    public void tellVehicleHorn(CSteamID steamID, uint instanceID)
+    {
+        ReceiveVehicleHorn(instanceID);
+    }
+
+    [Obsolete]
+    public void tellVehicleFuel(CSteamID steamID, uint instanceID, ushort newFuel)
+    {
+        ReceiveVehicleFuel(instanceID, newFuel);
+    }
+
+    [Obsolete]
+    public void tellVehicleBatteryCharge(CSteamID steamID, uint instanceID, ushort newBatteryCharge)
+    {
+        ReceiveVehicleBatteryCharge(instanceID, newBatteryCharge);
+    }
+
+    [Obsolete]
+    public void tellVehicleTireAliveMask(CSteamID steamID, uint instanceID, byte newTireAliveMask)
+    {
+        ReceiveVehicleTireAliveMask(instanceID, newTireAliveMask);
+    }
+
+    [Obsolete]
+    public void tellVehicleExploded(CSteamID steamID, uint instanceID)
+    {
+        ReceiveVehicleExploded(instanceID);
+    }
+
+    [Obsolete]
+    public void tellVehicleHealth(CSteamID steamID, uint instanceID, ushort newHealth)
+    {
+        ReceiveVehicleHealth(instanceID, newHealth);
+    }
+
+    [Obsolete]
+    public void tellVehicleRecov(CSteamID steamID, uint instanceID, Vector3 newPosition, int newRecov)
+    {
+        ReceiveVehicleRecov(instanceID, newPosition, newRecov);
+    }
+
+    [Obsolete]
+    public void tellVehicleStates(CSteamID steamID)
+    {
+    }
+
+    [Obsolete]
+    public void tellVehicleDestroy(CSteamID steamID, uint instanceID)
+    {
+        ReceiveDestroySingleVehicle(instanceID);
+    }
+
+    [Obsolete]
+    public void tellVehicleDestroyAll(CSteamID steamID)
+    {
+        ReceiveDestroyAllVehicles();
+    }
+
+    [Obsolete]
+    public void tellVehicle(CSteamID steamID)
+    {
+    }
+
+    [Obsolete]
+    public void tellVehicles(CSteamID steamID)
+    {
+    }
+
+    [Obsolete]
+    public void askVehicles(CSteamID steamID)
+    {
+    }
+
+    [Obsolete]
+    public void tellEnterVehicle(CSteamID steamID, uint instanceID, byte seat, CSteamID player)
+    {
+        ReceiveEnterVehicle(instanceID, seat, player);
+    }
+
+    [Obsolete]
+    public void tellExitVehicle(CSteamID steamID, uint instanceID, byte seat, Vector3 point, byte angle, bool forceUpdate)
+    {
+        ReceiveExitVehicle(instanceID, seat, point, angle, forceUpdate);
+    }
+
+    [Obsolete]
+    public void tellSwapVehicle(CSteamID steamID, uint instanceID, byte fromSeat, byte toSeat)
+    {
+        ReceiveSwapVehicleSeats(instanceID, fromSeat, toSeat);
+    }
+
+    [Obsolete]
+    public void askVehicleLock(CSteamID steamID)
+    {
+        ServerInvocationContext context = ServerInvocationContext.FromSteamIDForBackwardsCompatibility(steamID);
+        ReceiveVehicleLockRequest(in context);
+    }
+
+    [Obsolete]
+    public void askVehicleSkin(CSteamID steamID)
+    {
+        ServerInvocationContext context = ServerInvocationContext.FromSteamIDForBackwardsCompatibility(steamID);
+        ReceiveVehicleSkinRequest(in context);
+    }
+
+    [Obsolete]
+    public void askVehicleHeadlights(CSteamID steamID, bool wantsHeadlightsOn)
+    {
+        ServerInvocationContext context = ServerInvocationContext.FromSteamIDForBackwardsCompatibility(steamID);
+        ReceiveToggleVehicleHeadlights(in context, wantsHeadlightsOn);
+    }
+
+    [Obsolete]
+    public void askVehicleBonus(CSteamID steamID, byte bonusType)
+    {
+        ServerInvocationContext context = ServerInvocationContext.FromSteamIDForBackwardsCompatibility(steamID);
+        ReceiveUseVehicleBonus(in context, bonusType);
+    }
+
+    [Obsolete]
+    public void askVehicleStealBattery(CSteamID steamID)
+    {
+        ServerInvocationContext context = ServerInvocationContext.FromSteamIDForBackwardsCompatibility(steamID);
+        ReceiveStealVehicleBattery(in context);
+    }
+
+    [Obsolete]
+    public void askVehicleHorn(CSteamID steamID)
+    {
+        ServerInvocationContext context = ServerInvocationContext.FromSteamIDForBackwardsCompatibility(steamID);
+        ReceiveVehicleHornRequest(in context);
+    }
+
+    [Obsolete]
+    public void askEnterVehicle(CSteamID steamID, uint instanceID, byte[] hash, byte engine)
+    {
+        ServerInvocationContext context = ServerInvocationContext.FromSteamIDForBackwardsCompatibility(steamID);
+        ReceiveEnterVehicleRequest(in context, instanceID, hash, new byte[0], engine);
+    }
+
+    [Obsolete]
+    public void askExitVehicle(CSteamID steamID, Vector3 velocity)
+    {
+        ServerInvocationContext context = ServerInvocationContext.FromSteamIDForBackwardsCompatibility(steamID);
+        ReceiveExitVehicleRequest(in context, velocity);
+    }
+
+    [Obsolete]
+    public void askSwapVehicle(CSteamID steamID, byte toSeat)
+    {
+        ServerInvocationContext context = ServerInvocationContext.FromSteamIDForBackwardsCompatibility(steamID);
+        ReceiveSwapVehicleRequest(in context, toSeat);
+    }
+
+    [Obsolete]
+    public void sendVehicle(InteractableVehicle vehicle)
+    {
+    }
+
+    [Obsolete("spawnVehicleV2 returns the spawned instance")]
+    public static void spawnVehicle(ushort id, Vector3 point, Quaternion angle)
+    {
+        spawnVehicleV2(id, point, angle);
+    }
+
+    [Obsolete("spawnLockedVehicleForPlayerV2 returns the spawned instance")]
+    public static void spawnLockedVehicleForPlayer(ushort id, Vector3 point, Quaternion angle, Player player)
+    {
+        spawnLockedVehicleForPlayerV2(id, point, angle, player);
     }
 }

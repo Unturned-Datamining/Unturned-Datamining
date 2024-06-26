@@ -53,6 +53,7 @@ Type_44 Tool
 Type_45 Tool
 Type_46 Compass
 Type_47 Oil Pump
+Type_48 Paint
 
 Hotkey_Set Hotkey: {0}
 Hotkey_Unset Hotkey: [3-9]
@@ -97,6 +98,7 @@ ItemDescription_AimingSpreadModifier Aiming Accuracy: {0}
 ItemDescription_ZoomFactor Zoom: {0}x
 ItemDescription_ThirdPersonZoomFactor Zoom (3rd-Person): {0}x
 ItemDescription_BulletGravityModifier Bullet Gravity: {0}
+ItemDescription_InvulnerableModifier Upgrades gun to Heavy Weapon: Can damage Tough entities.
 ItemDescription_Consumeable_Explosive Explodes when consumed.
 ItemDescription_Consumeable_HealthPositive Restores Health: {0}
 ItemDescription_Consumeable_HealthNegative Damages Health: {0}

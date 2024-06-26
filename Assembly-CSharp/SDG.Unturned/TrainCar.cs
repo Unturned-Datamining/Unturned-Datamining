@@ -23,4 +23,9 @@ public class TrainCar
     public Transform trackFront;
 
     public Transform trackBack;
+
+    /// <summary>
+    /// Rigidbody component on the root game object.
+    /// </summary>
+    public Rigidbody rootRigidbody;
 }

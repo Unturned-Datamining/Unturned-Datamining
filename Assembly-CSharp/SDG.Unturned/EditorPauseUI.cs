@@ -35,6 +35,10 @@ public class EditorPauseUI
 
     private static SleekButtonIcon controlsButton;
 
+    private static SleekButtonIcon audioButton;
+
+    internal static MenuConfigurationAudioUI audioMenu;
+
     public static void open()
     {
         if (!active)
@@ -110,6 +114,12 @@ public class EditorPauseUI
     {
         close();
         MenuConfigurationControlsUI.open();
+    }
+
+    private static void onClickedAudioButton(ISleekElement button)
+    {
+        close();
+        audioMenu.open();
     }
 
     private static void onClickedExitButton(SleekButtonIconConfirm button)
@@ -261,6 +271,19 @@ public class EditorPauseUI
         controlsButton.onClickedButton += onClickedControlsButton;
         controlsButton.fontSize = ESleekFontSize.Medium;
         container.AddChild(controlsButton);
+        audioButton = new SleekButtonIcon(bundle2.load<Texture2D>("Audio"));
+        audioButton.PositionOffset_X = 110f;
+        audioButton.PositionOffset_Y = 125f;
+        audioButton.PositionScale_X = 0.5f;
+        audioButton.PositionScale_Y = 0.5f;
+        audioButton.SizeOffset_X = 200f;
+        audioButton.SizeOffset_Y = 50f;
+        audioButton.text = local2.format("Audio_Button_Text");
+        audioButton.tooltip = local2.format("Audio_Button_Tooltip");
+        audioButton.iconColor = ESleekTint.FOREGROUND;
+        audioButton.onClickedButton += onClickedAudioButton;
+        audioButton.fontSize = ESleekFontSize.Medium;
+        container.AddChild(audioButton);
         bundle2.unload();
         exitButton = new SleekButtonIconConfirm(bundle.load<Texture2D>("Exit"), local.format("Exit_Button"), local.format("Exit_Button_Tooltip"), "Cancel", string.Empty);
         exitButton.PositionOffset_X = -100f;
@@ -292,6 +315,15 @@ public class EditorPauseUI
         new MenuConfigurationDisplayUI();
         new MenuConfigurationGraphicsUI();
         new MenuConfigurationControlsUI();
+        audioMenu = new MenuConfigurationAudioUI();
+        audioMenu.PositionOffset_X = 10f;
+        audioMenu.PositionOffset_Y = 10f;
+        audioMenu.PositionScale_Y = 1f;
+        audioMenu.SizeOffset_X = -20f;
+        audioMenu.SizeOffset_Y = -20f;
+        audioMenu.SizeScale_X = 1f;
+        audioMenu.SizeScale_Y = 1f;
+        EditorUI.window.AddChild(audioMenu);
         bundle.unload();
     }
 }

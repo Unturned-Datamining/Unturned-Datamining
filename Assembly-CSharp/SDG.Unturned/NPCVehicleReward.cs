@@ -1,3 +1,4 @@
+using System;
 using SDG.Framework.Devkit;
 using UnityEngine;
 
@@ -5,9 +6,31 @@ namespace SDG.Unturned;
 
 public class NPCVehicleReward : INPCReward
 {
+    public Guid VehicleGuid { get; protected set; }
+
+    [Obsolete]
     public ushort id { get; protected set; }
 
     public string spawnpoint { get; protected set; }
+
+    /// <summary>
+    /// Returned asset is not necessarily a vehicle asset yet: It can also be a VehicleRedirectorAsset which the
+    /// vehicle spawner requires to properly set paint color.
+    /// </summary>
+    public Asset FindAsset()
+    {
+        return Assets.FindBaseVehicleAssetByGuidOrLegacyId(VehicleGuid, id);
+    }
+
+    public VehicleAsset FindVehicleAssetAndHandleRedirects()
+    {
+        Asset asset = FindAsset();
+        if (asset is VehicleRedirectorAsset { TargetVehicle: var targetVehicle })
+        {
+            asset = targetVehicle.Find();
+        }
+        return asset as VehicleAsset;
+    }
 
     public override void GrantReward(Player player)
     {
@@ -25,7 +48,7 @@ public class NPCVehicleReward : INPCReward
             point = VehicleTool.GetPositionForVehicle(player);
             rotation = player.transform.rotation;
         }
-        VehicleManager.spawnLockedVehicleForPlayerV2(id, point, rotation, player);
+        VehicleManager.spawnLockedVehicleForPlayerV2(FindAsset(), point, rotation, player);
     }
 
     public override string formatReward(Player player)
@@ -34,7 +57,8 @@ public class NPCVehicleReward : INPCReward
         {
             text = PlayerNPCQuestUI.localization.read("Reward_Vehicle");
         }
-        return Local.FormatText(arg0: (!(Assets.find(EAssetType.VEHICLE, id) is VehicleAsset vehicleAsset)) ? "?" : ("<color=" + Palette.hex(ItemTool.getRarityColorUI(vehicleAsset.rarity)) + ">" + vehicleAsset.vehicleName + "</color>"), text: text);
+        VehicleAsset vehicleAsset = FindVehicleAssetAndHandleRedirects();
+        return Local.FormatText(arg0: (vehicleAsset == null) ? "?" : ("<color=" + Palette.hex(ItemTool.getRarityColorUI(vehicleAsset.rarity)) + ">" + vehicleAsset.vehicleName + "</color>"), text: text);
     }
 
     public override ISleekElement createUI(Player player)
@@ -44,7 +68,7 @@ public class NPCVehicleReward : INPCReward
         {
             return null;
         }
-        if (!(Assets.find(EAssetType.VEHICLE, id) is VehicleAsset))
+        if (FindVehicleAssetAndHandleRedirects() == null)
         {
             return null;
         }
@@ -65,9 +89,10 @@ public class NPCVehicleReward : INPCReward
         return sleekBox;
     }
 
-    public NPCVehicleReward(ushort newID, string newSpawnpoint, string newText)
+    public NPCVehicleReward(Guid newVehicleGuid, ushort newID, string newSpawnpoint, string newText)
         : base(newText)
     {
+        VehicleGuid = newVehicleGuid;
         id = newID;
         spawnpoint = newSpawnpoint;
     }

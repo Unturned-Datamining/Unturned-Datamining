@@ -24,6 +24,8 @@ public class PlayerPauseUI
 
     private static SleekButtonIcon controlsButton;
 
+    private static SleekButtonIcon audioButton;
+
     public static SleekButtonIconConfirm exitButton;
 
     public static SleekButtonIconConfirm quitButton;
@@ -51,6 +53,8 @@ public class PlayerPauseUI
     private static CSteamID spySteamID;
 
     public static float lastLeave;
+
+    internal static MenuConfigurationAudioUI audioMenu;
 
     /// <summary>
     /// Exit button only needs to wait for timer in certain conditions.
@@ -167,6 +171,12 @@ public class PlayerPauseUI
         MenuConfigurationControlsUI.open();
     }
 
+    private static void onClickedAudioButton(ISleekElement button)
+    {
+        close();
+        audioMenu.open();
+    }
+
     private static void onClickedSpyRefreshButton(ISleekElement button)
     {
         CSteamID cSteamID = spySteamID;
@@ -263,6 +273,7 @@ public class PlayerPauseUI
         displayButton.PositionOffset_X = -435f;
         graphicsButton.PositionOffset_X = -435f;
         controlsButton.PositionOffset_X = -435f;
+        audioButton.PositionOffset_X = -435f;
         exitButton.PositionOffset_X = -435f;
         quitButton.PositionOffset_X = -435f;
         suicideButton.PositionOffset_X = -435f;
@@ -306,9 +317,10 @@ public class PlayerPauseUI
         container.SizeScale_Y = 1f;
         PlayerUI.container.AddChild(container);
         active = false;
+        int num = -265;
         returnButton = new SleekButtonIcon(icons.load<Texture2D>("Return"));
         returnButton.PositionOffset_X = -100f;
-        returnButton.PositionOffset_Y = -205f;
+        returnButton.PositionOffset_Y = num;
         returnButton.PositionScale_X = 0.5f;
         returnButton.PositionScale_Y = 0.5f;
         returnButton.SizeOffset_X = 200f;
@@ -319,9 +331,10 @@ public class PlayerPauseUI
         returnButton.onClickedButton += onClickedReturnButton;
         returnButton.fontSize = ESleekFontSize.Medium;
         container.AddChild(returnButton);
+        num += 60;
         optionsButton = new SleekButtonIcon(icons.load<Texture2D>("Options"));
         optionsButton.PositionOffset_X = -100f;
-        optionsButton.PositionOffset_Y = -145f;
+        optionsButton.PositionOffset_Y = num;
         optionsButton.PositionScale_X = 0.5f;
         optionsButton.PositionScale_Y = 0.5f;
         optionsButton.SizeOffset_X = 200f;
@@ -332,9 +345,10 @@ public class PlayerPauseUI
         optionsButton.iconColor = ESleekTint.FOREGROUND;
         optionsButton.fontSize = ESleekFontSize.Medium;
         container.AddChild(optionsButton);
+        num += 60;
         displayButton = new SleekButtonIcon(icons.load<Texture2D>("Display"));
         displayButton.PositionOffset_X = -100f;
-        displayButton.PositionOffset_Y = -85f;
+        displayButton.PositionOffset_Y = num;
         displayButton.PositionScale_X = 0.5f;
         displayButton.PositionScale_Y = 0.5f;
         displayButton.SizeOffset_X = 200f;
@@ -345,9 +359,10 @@ public class PlayerPauseUI
         displayButton.onClickedButton += onClickedDisplayButton;
         displayButton.fontSize = ESleekFontSize.Medium;
         container.AddChild(displayButton);
+        num += 60;
         graphicsButton = new SleekButtonIcon(icons.load<Texture2D>("Graphics"));
         graphicsButton.PositionOffset_X = -100f;
-        graphicsButton.PositionOffset_Y = -25f;
+        graphicsButton.PositionOffset_Y = num;
         graphicsButton.PositionScale_X = 0.5f;
         graphicsButton.PositionScale_Y = 0.5f;
         graphicsButton.SizeOffset_X = 200f;
@@ -358,9 +373,10 @@ public class PlayerPauseUI
         graphicsButton.onClickedButton += onClickedGraphicsButton;
         graphicsButton.fontSize = ESleekFontSize.Medium;
         container.AddChild(graphicsButton);
+        num += 60;
         controlsButton = new SleekButtonIcon(icons.load<Texture2D>("Controls"));
         controlsButton.PositionOffset_X = -100f;
-        controlsButton.PositionOffset_Y = 35f;
+        controlsButton.PositionOffset_Y = num;
         controlsButton.PositionScale_X = 0.5f;
         controlsButton.PositionScale_Y = 0.5f;
         controlsButton.SizeOffset_X = 200f;
@@ -371,37 +387,24 @@ public class PlayerPauseUI
         controlsButton.onClickedButton += onClickedControlsButton;
         controlsButton.fontSize = ESleekFontSize.Medium;
         container.AddChild(controlsButton);
-        exitButton = new SleekButtonIconConfirm(icons.load<Texture2D>("Exit"), localization.format("Exit_Button_Text"), localization.format("Exit_Button_Tooltip"), localization.format("Return_Button_Text"), string.Empty);
-        exitButton.PositionOffset_X = -100f;
-        exitButton.PositionOffset_Y = 155f;
-        exitButton.PositionScale_X = 0.5f;
-        exitButton.PositionScale_Y = 0.5f;
-        exitButton.SizeOffset_X = 200f;
-        exitButton.SizeOffset_Y = 50f;
-        exitButton.text = localization.format("Exit_Button_Text");
-        exitButton.tooltip = localization.format("Exit_Button_Tooltip");
-        exitButton.iconColor = ESleekTint.FOREGROUND;
-        SleekButtonIconConfirm sleekButtonIconConfirm = exitButton;
-        sleekButtonIconConfirm.onConfirmed = (Confirm)Delegate.Combine(sleekButtonIconConfirm.onConfirmed, new Confirm(onClickedExitButton));
-        exitButton.fontSize = ESleekFontSize.Medium;
-        container.AddChild(exitButton);
-        quitButton = new SleekButtonIconConfirm(MenuPauseUI.icons.load<Texture2D>("Quit"), localization.format("Quit_Button"), localization.format("Quit_Button_Tooltip"), localization.format("Return_Button_Text"), string.Empty);
-        quitButton.PositionOffset_X = -100f;
-        quitButton.PositionOffset_Y = 215f;
-        quitButton.PositionScale_X = 0.5f;
-        quitButton.PositionScale_Y = 0.5f;
-        quitButton.SizeOffset_X = 200f;
-        quitButton.SizeOffset_Y = 50f;
-        quitButton.text = localization.format("Quit_Button");
-        quitButton.tooltip = localization.format("Quit_Button_Tooltip");
-        quitButton.iconColor = ESleekTint.FOREGROUND;
-        SleekButtonIconConfirm sleekButtonIconConfirm2 = quitButton;
-        sleekButtonIconConfirm2.onConfirmed = (Confirm)Delegate.Combine(sleekButtonIconConfirm2.onConfirmed, new Confirm(onClickedQuitButton));
-        quitButton.fontSize = ESleekFontSize.Medium;
-        container.AddChild(quitButton);
+        num += 60;
+        audioButton = new SleekButtonIcon(icons.load<Texture2D>("Audio"));
+        audioButton.PositionOffset_X = -100f;
+        audioButton.PositionOffset_Y = num;
+        audioButton.PositionScale_X = 0.5f;
+        audioButton.PositionScale_Y = 0.5f;
+        audioButton.SizeOffset_X = 200f;
+        audioButton.SizeOffset_Y = 50f;
+        audioButton.text = localization.format("Audio_Button_Text");
+        audioButton.tooltip = localization.format("Audio_Button_Tooltip");
+        audioButton.iconColor = ESleekTint.FOREGROUND;
+        audioButton.onClickedButton += onClickedAudioButton;
+        audioButton.fontSize = ESleekFontSize.Medium;
+        container.AddChild(audioButton);
+        num += 60;
         suicideButton = new SleekButtonIconConfirm(icons.load<Texture2D>("Suicide"), localization.format("Suicide_Button_Confirm"), localization.format("Suicide_Button_Confirm_Tooltip"), localization.format("Suicide_Button_Deny"), localization.format("Suicide_Button_Deny_Tooltip"));
         suicideButton.PositionOffset_X = -100f;
-        suicideButton.PositionOffset_Y = 95f;
+        suicideButton.PositionOffset_Y = num;
         suicideButton.PositionScale_X = 0.5f;
         suicideButton.PositionScale_Y = 0.5f;
         suicideButton.SizeOffset_X = 200f;
@@ -414,7 +417,7 @@ public class PlayerPauseUI
         container.AddChild(suicideButton);
         suicideDisabledLabel = Glazier.Get().CreateLabel();
         suicideDisabledLabel.PositionOffset_X = -100f;
-        suicideDisabledLabel.PositionOffset_Y = 95f;
+        suicideDisabledLabel.PositionOffset_Y = num;
         suicideDisabledLabel.PositionScale_X = 0.5f;
         suicideDisabledLabel.PositionScale_Y = 0.5f;
         suicideDisabledLabel.SizeOffset_X = 200f;
@@ -425,6 +428,36 @@ public class PlayerPauseUI
         suicideDisabledLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
         suicideDisabledLabel.IsVisible = false;
         container.AddChild(suicideDisabledLabel);
+        num += 60;
+        exitButton = new SleekButtonIconConfirm(icons.load<Texture2D>("Exit"), localization.format("Exit_Button_Text"), localization.format("Exit_Button_Tooltip"), localization.format("Return_Button_Text"), string.Empty);
+        exitButton.PositionOffset_X = -100f;
+        exitButton.PositionOffset_Y = num;
+        exitButton.PositionScale_X = 0.5f;
+        exitButton.PositionScale_Y = 0.5f;
+        exitButton.SizeOffset_X = 200f;
+        exitButton.SizeOffset_Y = 50f;
+        exitButton.text = localization.format("Exit_Button_Text");
+        exitButton.tooltip = localization.format("Exit_Button_Tooltip");
+        exitButton.iconColor = ESleekTint.FOREGROUND;
+        SleekButtonIconConfirm sleekButtonIconConfirm = exitButton;
+        sleekButtonIconConfirm.onConfirmed = (Confirm)Delegate.Combine(sleekButtonIconConfirm.onConfirmed, new Confirm(onClickedExitButton));
+        exitButton.fontSize = ESleekFontSize.Medium;
+        container.AddChild(exitButton);
+        num += 60;
+        quitButton = new SleekButtonIconConfirm(MenuPauseUI.icons.load<Texture2D>("Quit"), localization.format("Quit_Button"), localization.format("Quit_Button_Tooltip"), localization.format("Return_Button_Text"), string.Empty);
+        quitButton.PositionOffset_X = -100f;
+        quitButton.PositionOffset_Y = num;
+        quitButton.PositionScale_X = 0.5f;
+        quitButton.PositionScale_Y = 0.5f;
+        quitButton.SizeOffset_X = 200f;
+        quitButton.SizeOffset_Y = 50f;
+        quitButton.text = localization.format("Quit_Button");
+        quitButton.tooltip = localization.format("Quit_Button_Tooltip");
+        quitButton.iconColor = ESleekTint.FOREGROUND;
+        SleekButtonIconConfirm sleekButtonIconConfirm2 = quitButton;
+        sleekButtonIconConfirm2.onConfirmed = (Confirm)Delegate.Combine(sleekButtonIconConfirm2.onConfirmed, new Confirm(onClickedQuitButton));
+        quitButton.fontSize = ESleekFontSize.Medium;
+        container.AddChild(quitButton);
         spyBox = Glazier.Get().CreateBox();
         spyBox.PositionOffset_Y = -310f;
         spyBox.PositionScale_X = 0.5f;
@@ -552,6 +585,15 @@ public class PlayerPauseUI
         new MenuConfigurationDisplayUI();
         new MenuConfigurationGraphicsUI();
         new MenuConfigurationControlsUI();
+        audioMenu = new MenuConfigurationAudioUI();
+        audioMenu.PositionOffset_X = 10f;
+        audioMenu.PositionOffset_Y = 10f;
+        audioMenu.PositionScale_Y = 1f;
+        audioMenu.SizeOffset_X = -20f;
+        audioMenu.SizeOffset_Y = -20f;
+        audioMenu.SizeScale_X = 1f;
+        audioMenu.SizeScale_Y = 1f;
+        PlayerUI.container.AddChild(audioMenu);
         if (favoriteButton != null)
         {
             updateFavorite();

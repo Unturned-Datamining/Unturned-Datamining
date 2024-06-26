@@ -154,10 +154,19 @@ public class InteractableStorage : Interactable, IManualOnDestroy
             {
                 return;
             }
-            ushort itemID = displayItem.GetAsset()?.sharedSkinLookupID ?? displayItem.id;
+            ItemAsset asset = displayItem.GetAsset();
+            bool flag = asset != null && asset.sharedSkinLookupID != asset.id;
+            ushort itemID = (flag ? asset.sharedSkinLookupID : displayItem.id);
             if (opener.channel.owner.getItemSkinItemDefID(itemID, out var itemdefid))
             {
-                displaySkin = Provider.provider.economyService.getInventorySkinID(itemdefid);
+                if (!flag || asset.SharedSkinShouldApplyVisuals)
+                {
+                    displaySkin = Provider.provider.economyService.getInventorySkinID(itemdefid);
+                }
+                else
+                {
+                    displaySkin = 0;
+                }
                 displayMythic = Provider.provider.economyService.getInventoryMythicID(itemdefid);
                 if (displayMythic == 0)
                 {
@@ -239,7 +248,7 @@ public class InteractableStorage : Interactable, IManualOnDestroy
             displayModel = ItemTool.getItem(displayItem.id, displaySkin, displayItem.quality, displayItem.state, viewmodel: false, displayAsset, shouldDestroyColliders: true, getDisplayStatTrackerValue);
             if (displayMythic != 0)
             {
-                ItemTool.applyEffect(displayModel, displayMythic, EEffectType.THIRD);
+                ItemTool.ApplyMythicalEffect(displayModel, displayMythic, EEffectType.THIRD);
             }
         }
         else
@@ -247,7 +256,7 @@ public class InteractableStorage : Interactable, IManualOnDestroy
             displayModel = ItemTool.getItem(displayItem.id, 0, displayItem.quality, displayItem.state, viewmodel: false, displayAsset, shouldDestroyColliders: true, getDisplayStatTrackerValue);
             if (displayMythic != 0)
             {
-                ItemTool.applyEffect(displayModel, displayMythic, EEffectType.HOOK);
+                ItemTool.ApplyMythicalEffect(displayModel, displayMythic, EEffectType.HOOK);
             }
         }
         if (displayModel == null)

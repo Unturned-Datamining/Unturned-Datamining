@@ -101,5 +101,9 @@ public enum ESteamRejection
     /// This can happen if server's Steam ID has changed from what the client thinks it is.
     /// For example, joining a stale entry in the server list. (public issue #4101)
     /// </summary>
-    AUTH_NETWORK_IDENTITY_FAILURE
+    AUTH_NETWORK_IDENTITY_FAILURE,
+    /// <summary>
+    /// Player's skin color is too similar to one of <see cref="F:SDG.Unturned.LevelAsset.terrainColorRules" />.
+    /// </summary>
+    SKIN_COLOR_WITHIN_THRESHOLD_OF_TERRAIN_COLOR
 }

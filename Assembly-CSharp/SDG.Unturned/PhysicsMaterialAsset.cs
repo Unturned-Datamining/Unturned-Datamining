@@ -15,6 +15,8 @@ public class PhysicsMaterialAsset : PhysicsMaterialAssetBase
 
     public AssetReference<EffectAsset> bulletImpactEffect;
 
+    public AssetReference<EffectAsset> tireMotionEffect;
+
     public EPhysicsMaterialCharacterFrictionMode characterFrictionMode;
 
     /// <summary>
@@ -59,6 +61,7 @@ public class PhysicsMaterialAsset : PhysicsMaterialAssetBase
         }
         fallbackRef = data.ParseStruct<AssetReference<PhysicsMaterialAsset>>("Fallback");
         bulletImpactEffect = data.ParseStruct<AssetReference<EffectAsset>>("WipDoNotUseTemp_BulletImpactEffect");
+        tireMotionEffect = data.ParseStruct<AssetReference<EffectAsset>>("TireMotionEffect");
         if (data.ContainsKey("Character_Friction_Mode"))
         {
             characterFrictionMode = data.ParseEnum("Character_Friction_Mode", EPhysicsMaterialCharacterFrictionMode.ImmediatelyResponsive);

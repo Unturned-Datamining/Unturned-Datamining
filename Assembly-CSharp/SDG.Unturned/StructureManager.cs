@@ -11,7 +11,13 @@ namespace SDG.Unturned;
 
 public class StructureManager : SteamCaller
 {
-    public static readonly byte SAVEDATA_VERSION = 8;
+    public const byte SAVEDATA_VERSION_INITIAL = 8;
+
+    public const byte SAVEDATA_VERSION_REPLACE_EULER_ANGLES_WITH_QUATERNION = 9;
+
+    private const byte SAVEDATA_VERSION_NEWEST = 9;
+
+    public static readonly byte SAVEDATA_VERSION = 9;
 
     public static readonly byte STRUCTURE_REGIONS = 2;
 
@@ -54,7 +60,7 @@ public class StructureManager : SteamCaller
 
     private static readonly ClientStaticMethod<byte, byte> SendClearRegionStructures = ClientStaticMethod<byte, byte>.Get(ReceiveClearRegionStructures);
 
-    private static readonly ClientStaticMethod<byte, byte, Guid, Vector3, byte, byte, byte, ulong, ulong, NetId> SendSingleStructure = ClientStaticMethod<byte, byte, Guid, Vector3, byte, byte, byte, ulong, ulong, NetId>.Get(ReceiveSingleStructure);
+    private static readonly ClientStaticMethod<byte, byte, Guid, Vector3, Quaternion, ulong, ulong, NetId> SendSingleStructure = ClientStaticMethod<byte, byte, Guid, Vector3, Quaternion, ulong, ulong, NetId>.Get(ReceiveSingleStructure);
 
     private static ClientStaticMethod SendMultipleStructures = ClientStaticMethod.Get(ReceiveMultipleStructures);
 
@@ -131,15 +137,12 @@ public class StructureManager : SteamCaller
         }
     }
 
-    public static void transformStructure(Transform transform, Vector3 point, float angle_x, float angle_y, float angle_z)
+    public static void transformStructure(Transform transform, Vector3 point, Quaternion rotation)
     {
-        angle_x = Mathf.RoundToInt(angle_x / 2f) * 2;
-        angle_y = Mathf.RoundToInt(angle_y / 2f) * 2;
-        angle_z = Mathf.RoundToInt(angle_z / 2f) * 2;
         StructureDrop structureDrop = StructureDrop.FindByRootFast(transform);
         if (structureDrop != null)
         {
-            StructureDrop.SendTransformRequest.Invoke(structureDrop.GetNetId(), ENetReliability.Reliable, point, MeasurementTool.angleToByte(angle_x), MeasurementTool.angleToByte(angle_y), MeasurementTool.angleToByte(angle_z));
+            StructureDrop.SendTransformRequest.Invoke(structureDrop.GetNetId(), ENetReliability.Reliable, point, rotation);
         }
     }
 
@@ -160,20 +163,13 @@ public class StructureManager : SteamCaller
         {
             return false;
         }
-        Vector3 eulerAngles = rotation.eulerAngles;
-        eulerAngles.x = Mathf.RoundToInt(eulerAngles.x / 2f) * 2;
-        eulerAngles.y = Mathf.RoundToInt(eulerAngles.y / 2f) * 2;
-        eulerAngles.z = Mathf.RoundToInt(eulerAngles.z / 2f) * 2;
-        byte angle_x = MeasurementTool.angleToByte(eulerAngles.x);
-        byte angle_y = MeasurementTool.angleToByte(eulerAngles.y);
-        byte angle_z = MeasurementTool.angleToByte(eulerAngles.z);
-        InternalSetStructureTransform(x, y, structureDrop, position, angle_x, angle_y, angle_z);
+        InternalSetStructureTransform(x, y, structureDrop, position, rotation);
         return true;
     }
 
-    internal static void InternalSetStructureTransform(byte x, byte y, StructureDrop drop, Vector3 point, byte angle_x, byte angle_y, byte angle_z)
+    internal static void InternalSetStructureTransform(byte x, byte y, StructureDrop drop, Vector3 point, Quaternion rotation)
     {
-        StructureDrop.SendTransform.InvokeAndLoopback(drop.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y), x, y, point, angle_x, angle_y, angle_z);
+        StructureDrop.SendTransform.InvokeAndLoopback(drop.GetNetId(), ENetReliability.Reliable, GatherRemoteClientConnections(x, y), x, y, point, rotation);
     }
 
     [Obsolete]
@@ -411,10 +407,6 @@ public class StructureManager : SteamCaller
     /// </summary>
     public static bool dropReplicatedStructure(Structure structure, Vector3 point, Quaternion rotation, ulong owner, ulong group)
     {
-        Vector3 eulerAngles = rotation.eulerAngles;
-        float angle = Mathf.RoundToInt(eulerAngles.x / 2f) * 2;
-        float angle2 = Mathf.RoundToInt(eulerAngles.y / 2f) * 2;
-        float angle3 = Mathf.RoundToInt(eulerAngles.z / 2f) * 2;
         if (!Regions.tryGetCoordinate(point, out var x, out var y))
         {
             return false;
@@ -423,14 +415,14 @@ public class StructureManager : SteamCaller
         {
             return false;
         }
-        StructureData structureData = new StructureData(structure, point, MeasurementTool.angleToByte(angle), MeasurementTool.angleToByte(angle2), MeasurementTool.angleToByte(angle3), owner, group, Provider.time, ++instanceCount);
+        StructureData structureData = new StructureData(structure, point, rotation, owner, group, Provider.time, ++instanceCount);
         NetId netId = NetIdRegistry.ClaimBlock(2u);
-        if (manager.spawnStructure(region, structure.asset.GUID, structureData.point, structureData.angle_x, structureData.angle_y, structureData.angle_z, 100, structureData.owner, structureData.group, netId) != null)
+        if (manager.spawnStructure(region, structure.asset.GUID, structureData.point, structureData.rotation, 100, structureData.owner, structureData.group, netId) != null)
         {
             StructureDrop tail = region.drops.GetTail();
             tail.serversideData = structureData;
             region.structures.Add(structureData);
-            SendSingleStructure.Invoke(ENetReliability.Reliable, GatherRemoteClientConnections(x, y), x, y, structure.asset.GUID, structureData.point, structureData.angle_x, structureData.angle_y, structureData.angle_z, structureData.owner, structureData.group, netId);
+            SendSingleStructure.Invoke(ENetReliability.Reliable, GatherRemoteClientConnections(x, y), x, y, structure.asset.GUID, structureData.point, structureData.rotation, structureData.owner, structureData.group, netId);
             onStructureSpawned?.Invoke(region, tail);
         }
         return true;
@@ -559,7 +551,7 @@ public class StructureManager : SteamCaller
         }
     }
 
-    private Transform spawnStructure(StructureRegion region, Guid assetId, Vector3 point, byte angle_x, byte angle_y, byte angle_z, byte hp, ulong owner, ulong group, NetId netId)
+    private Transform spawnStructure(StructureRegion region, Guid assetId, Vector3 point, Quaternion rotation, byte hp, ulong owner, ulong group, NetId netId)
     {
         ItemStructureAsset itemStructureAsset = Assets.find(assetId) as ItemStructureAsset;
         if (!Provider.isServer)
@@ -573,7 +565,6 @@ public class StructureManager : SteamCaller
         Transform transform = null;
         try
         {
-            Quaternion rotation = Quaternion.Euler(angle_x * 2, angle_y * 2, angle_z * 2);
             if (itemStructureAsset.eligibleForPooling)
             {
                 int instanceID = itemStructureAsset.structure.GetInstanceID();
@@ -651,7 +642,7 @@ public class StructureManager : SteamCaller
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellStructure")]
-    public static void ReceiveSingleStructure(byte x, byte y, Guid id, Vector3 point, byte angle_x, byte angle_y, byte angle_z, ulong owner, ulong group, NetId netId)
+    public static void ReceiveSingleStructure(byte x, byte y, Guid id, Vector3 point, Quaternion rotation, ulong owner, ulong group, NetId netId)
     {
         if (tryGetRegion(x, y, out var region) && (Provider.isServer || region.isNetworked))
         {
@@ -664,9 +655,7 @@ public class StructureManager : SteamCaller
             item.region = region;
             item.assetId = id;
             item.position = point;
-            item.angle_x = angle_x;
-            item.angle_y = angle_y;
-            item.angle_z = angle_z;
+            item.rotation = rotation;
             item.hp = 100;
             item.owner = owner;
             item.group = group;
@@ -718,9 +707,7 @@ public class StructureManager : SteamCaller
                 item.sortOrder = value5;
                 reader.ReadGuid(out item.assetId);
                 reader.ReadClampedVector3(out item.position, 13, 11);
-                reader.ReadUInt8(out item.angle_x);
-                reader.ReadUInt8(out item.angle_y);
-                reader.ReadUInt8(out item.angle_z);
+                reader.ReadQuaternion(out item.rotation);
                 reader.ReadUInt8(out item.hp);
                 reader.ReadUInt64(out item.owner);
                 reader.ReadUInt64(out item.group);
@@ -773,9 +760,7 @@ public class StructureManager : SteamCaller
                         StructureData serversideData = region.drops[index].serversideData;
                         writer.WriteGuid(serversideData.structure.asset.GUID);
                         writer.WriteClampedVector3(serversideData.point, 13, 11);
-                        writer.WriteUInt8(serversideData.angle_x);
-                        writer.WriteUInt8(serversideData.angle_y);
-                        writer.WriteUInt8(serversideData.angle_z);
+                        writer.WriteQuaternion(serversideData.rotation);
                         writer.WriteUInt8((byte)Mathf.RoundToInt((float)(int)serversideData.structure.health / (float)(int)serversideData.structure.asset.health * 100f));
                         writer.WriteUInt64(serversideData.owner);
                         writer.WriteUInt64(serversideData.group);
@@ -999,14 +984,10 @@ public class StructureManager : SteamCaller
                             LevelBuildableObject levelBuildableObject = list[i];
                             if (levelBuildableObject != null && levelBuildableObject.asset is ItemStructureAsset itemStructureAsset)
                             {
-                                Vector3 eulerAngles = levelBuildableObject.rotation.eulerAngles;
-                                byte newAngle_X = MeasurementTool.angleToByte(Mathf.RoundToInt(eulerAngles.x / 2f) * 2);
-                                byte newAngle_Y = MeasurementTool.angleToByte(Mathf.RoundToInt(eulerAngles.y / 2f) * 2);
-                                byte newAngle_Z = MeasurementTool.angleToByte(Mathf.RoundToInt(eulerAngles.z / 2f) * 2);
                                 Structure structure = new Structure(itemStructureAsset, itemStructureAsset.health);
-                                StructureData structureData = new StructureData(structure, levelBuildableObject.point, newAngle_X, newAngle_Y, newAngle_Z, 0uL, 0uL, uint.MaxValue, ++instanceCount);
+                                StructureData structureData = new StructureData(structure, levelBuildableObject.point, levelBuildableObject.rotation, 0uL, 0uL, uint.MaxValue, ++instanceCount);
                                 NetId netId = NetIdRegistry.ClaimBlock(2u);
-                                if (manager.spawnStructure(structureRegion, itemStructureAsset.GUID, structureData.point, structureData.angle_x, structureData.angle_y, structureData.angle_z, (byte)Mathf.RoundToInt((float)(int)structure.health / (float)(int)itemStructureAsset.health * 100f), 0uL, 0uL, netId) != null)
+                                if (manager.spawnStructure(structureRegion, itemStructureAsset.GUID, structureData.point, structureData.rotation, (byte)Mathf.RoundToInt((float)(int)structure.health / (float)(int)itemStructureAsset.health * 100f), 0uL, 0uL, netId) != null)
                                 {
                                     structureRegion.drops.GetTail().serversideData = structureData;
                                     structureRegion.structures.Add(structureData);
@@ -1029,7 +1010,7 @@ public class StructureManager : SteamCaller
     public static void save()
     {
         River river = LevelSavedata.openRiver("/Structures.dat", isReading: false);
-        river.writeByte(SAVEDATA_VERSION);
+        river.writeByte(9);
         river.writeUInt32(Provider.time);
         river.writeUInt32(instanceCount);
         for (byte b = 0; b < Regions.WORLD_SIZE; b++)
@@ -1061,16 +1042,25 @@ public class StructureManager : SteamCaller
             uint newInstanceID = ((version >= 7) ? river.readUInt32() : (++instanceCount));
             ushort num3 = river.readUInt16();
             Vector3 vector = river.readSingleVector3();
-            byte b = 0;
-            if (version > 4)
+            Quaternion quaternion;
+            if (version < 9)
             {
-                b = river.readByte();
+                byte b = 0;
+                if (version > 4)
+                {
+                    b = river.readByte();
+                }
+                byte b2 = river.readByte();
+                byte b3 = 0;
+                if (version > 4)
+                {
+                    b3 = river.readByte();
+                }
+                quaternion = ((version >= 5) ? Quaternion.Euler((float)(int)b * 2f, (float)(int)b2 * 2f, (float)(int)b3 * 2f) : Quaternion.Euler(-90f, b2 * 2, 0f));
             }
-            byte b2 = river.readByte();
-            byte b3 = 0;
-            if (version > 4)
+            else
             {
-                b3 = river.readByte();
+                quaternion = river.readSingleQuaternion();
             }
             ulong num4 = 0uL;
             ulong num5 = 0uL;
@@ -1094,17 +1084,10 @@ public class StructureManager : SteamCaller
             }
             if (itemStructureAsset != null)
             {
-                if (version < 5)
-                {
-                    Vector3 eulerAngles = Quaternion.Euler(-90f, b2 * 2, 0f).eulerAngles;
-                    b = MeasurementTool.angleToByte(Mathf.RoundToInt(eulerAngles.x / 2f) * 2);
-                    b2 = MeasurementTool.angleToByte(Mathf.RoundToInt(eulerAngles.y / 2f) * 2);
-                    b3 = MeasurementTool.angleToByte(Mathf.RoundToInt(eulerAngles.z / 2f) * 2);
-                }
                 NetId netId = NetIdRegistry.ClaimBlock(2u);
-                if (manager.spawnStructure(region, itemStructureAsset.GUID, vector, b, b2, b3, (byte)Mathf.RoundToInt((float)(int)num3 / (float)(int)itemStructureAsset.health * 100f), num4, num5, netId) != null)
+                if (manager.spawnStructure(region, itemStructureAsset.GUID, vector, quaternion, (byte)Mathf.RoundToInt((float)(int)num3 / (float)(int)itemStructureAsset.health * 100f), num4, num5, netId) != null)
                 {
-                    StructureData item = (region.drops.GetTail().serversideData = new StructureData(new Structure(itemStructureAsset, num3), vector, b, b2, b3, num4, num5, newObjActiveDate, newInstanceID));
+                    StructureData item = (region.drops.GetTail().serversideData = new StructureData(new Structure(itemStructureAsset, num3), vector, quaternion, num4, num5, newObjActiveDate, newInstanceID));
                     region.structures.Add(item);
                 }
             }
@@ -1133,9 +1116,7 @@ public class StructureManager : SteamCaller
                 river.writeUInt32(serversideData2.instanceID);
                 river.writeUInt16(serversideData2.structure.health);
                 river.writeSingleVector3(serversideData2.point);
-                river.writeByte(serversideData2.angle_x);
-                river.writeByte(serversideData2.angle_y);
-                river.writeByte(serversideData2.angle_z);
+                river.writeSingleQuaternion(serversideData2.rotation);
                 river.writeUInt64(serversideData2.owner);
                 river.writeUInt64(serversideData2.group);
                 river.writeUInt32(serversideData2.objActiveDate);
@@ -1233,7 +1214,7 @@ public class StructureManager : SteamCaller
             do
             {
                 StructureInstantiationParameters structureInstantiationParameters = pendingInstantiations[num];
-                if (spawnStructure(structureInstantiationParameters.region, structureInstantiationParameters.assetId, structureInstantiationParameters.position, structureInstantiationParameters.angle_x, structureInstantiationParameters.angle_y, structureInstantiationParameters.angle_z, structureInstantiationParameters.hp, structureInstantiationParameters.owner, structureInstantiationParameters.group, structureInstantiationParameters.netId) != null)
+                if (spawnStructure(structureInstantiationParameters.region, structureInstantiationParameters.assetId, structureInstantiationParameters.position, structureInstantiationParameters.rotation, structureInstantiationParameters.hp, structureInstantiationParameters.owner, structureInstantiationParameters.group, structureInstantiationParameters.netId) != null)
                 {
                     NetInvocationDeferralRegistry.Invoke(structureInstantiationParameters.netId, 2u);
                 }

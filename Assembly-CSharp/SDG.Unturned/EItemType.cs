@@ -49,5 +49,6 @@ public enum EItemType
     VEHICLE_REPAIR_TOOL,
     TIRE,
     COMPASS,
-    OIL_PUMP
+    OIL_PUMP,
+    VEHICLE_PAINT_TOOL
 }

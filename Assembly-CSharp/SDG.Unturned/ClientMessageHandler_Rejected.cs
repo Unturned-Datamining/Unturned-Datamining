@@ -169,6 +169,9 @@ internal static class ClientMessageHandler_Rejected
         case ESteamRejection.WRONG_HASH_RESOURCES:
             Provider._connectionFailureInfo = ESteamConnectionFailureInfo.HASH_RESOURCES;
             break;
+        case ESteamRejection.SKIN_COLOR_WITHIN_THRESHOLD_OF_TERRAIN_COLOR:
+            Provider._connectionFailureInfo = ESteamConnectionFailureInfo.SKIN_COLOR_WITHIN_THRESHOLD_OF_TERRAIN_COLOR;
+            break;
         default:
             Provider._connectionFailureInfo = ESteamConnectionFailureInfo.REJECT_UNKNOWN;
             Provider._connectionFailureReason = value.ToString();

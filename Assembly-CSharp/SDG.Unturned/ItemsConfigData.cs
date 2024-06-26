@@ -1,3 +1,5 @@
+using System.Runtime.Serialization;
+
 namespace SDG.Unturned;
 
 public class ItemsConfigData
@@ -26,7 +28,50 @@ public class ItemsConfigData
 
     public float Crate_Bullets_Multiplier;
 
+    /// <summary>
+    /// Original option for disabling item quality. Defaults to true. If false, items spawn at 100% quality and
+    /// their quality doesn't decrease. For backwards compatibility, the newer per-item-type durability options
+    /// turn off if this is off.
+    /// </summary>
     public bool Has_Durability;
+
+    /// <summary>
+    /// Food-specific replacement for <see cref="F:SDG.Unturned.ItemsConfigData.Has_Durability" />. Defaults to false. If true, food spawns at 100% quality.
+    /// </summary>
+    public bool Food_Spawns_At_Full_Quality;
+
+    /// <summary>
+    /// Water-specific replacement for <see cref="F:SDG.Unturned.ItemsConfigData.Has_Durability" />. Defaults to false. If true, water spawns at 100% quality.
+    /// </summary>
+    public bool Water_Spawns_At_Full_Quality;
+
+    /// <summary>
+    /// Clothing-specific replacement for <see cref="F:SDG.Unturned.ItemsConfigData.Has_Durability" />. Defaults to false. If true, clothing spawns at 100% quality.
+    /// </summary>
+    public bool Clothing_Spawns_At_Full_Quality;
+
+    /// <summary>
+    /// Weapon-specific replacement for <see cref="F:SDG.Unturned.ItemsConfigData.Has_Durability" />. Defaults to false. If true, weapons spawns at 100% quality.
+    /// </summary>
+    public bool Weapons_Spawn_At_Full_Quality;
+
+    /// <summary>
+    /// Fallback used when spawning an item that doesn't fit into one of the other quality/durability settings.
+    /// Defaults to false. If true, items spawn at 100% quality.
+    /// </summary>
+    public bool Default_Spawns_At_Full_Quality;
+
+    /// <summary>
+    /// Clothing-specific replacement for <see cref="F:SDG.Unturned.ItemsConfigData.Has_Durability" />. Defaults to true. If false, clothing quality
+    /// doesn't decrease when damaged.
+    /// </summary>
+    public bool Clothing_Has_Durability;
+
+    /// <summary>
+    /// Melee and gun replacement for <see cref="F:SDG.Unturned.ItemsConfigData.Has_Durability" />. Defaults to true. If false, weapons quality
+    /// doesn't decrease when used.
+    /// </summary>
+    public bool Weapons_Have_Durability;
 
     public ItemsConfigData(EGameMode mode)
     {
@@ -86,10 +131,39 @@ public class ItemsConfigData
         if (mode == EGameMode.EASY)
         {
             Has_Durability = false;
+            Food_Spawns_At_Full_Quality = true;
+            Water_Spawns_At_Full_Quality = true;
+            Clothing_Spawns_At_Full_Quality = true;
+            Weapons_Spawn_At_Full_Quality = true;
+            Default_Spawns_At_Full_Quality = true;
+            Clothing_Has_Durability = false;
+            Weapons_Have_Durability = false;
         }
         else
         {
             Has_Durability = true;
+            Food_Spawns_At_Full_Quality = false;
+            Water_Spawns_At_Full_Quality = false;
+            Clothing_Spawns_At_Full_Quality = false;
+            Weapons_Spawn_At_Full_Quality = false;
+            Default_Spawns_At_Full_Quality = false;
+            Clothing_Has_Durability = true;
+            Weapons_Have_Durability = true;
+        }
+    }
+
+    [OnDeserialized]
+    public void OnDeserialized(StreamingContext context)
+    {
+        if (!Has_Durability)
+        {
+            Food_Spawns_At_Full_Quality = true;
+            Water_Spawns_At_Full_Quality = true;
+            Clothing_Spawns_At_Full_Quality = true;
+            Weapons_Spawn_At_Full_Quality = true;
+            Default_Spawns_At_Full_Quality = true;
+            Clothing_Has_Durability = false;
+            Weapons_Have_Durability = false;
         }
     }
 }

@@ -590,7 +590,7 @@ public class SpawnTableTool
                 else if (spawnTable.legacyAssetId != 0)
                 {
                     ItemAsset obj = Assets.find(EAssetType.ITEM, spawnTable.legacyAssetId) as ItemAsset;
-                    VehicleAsset vehicleAsset = Assets.find(EAssetType.VEHICLE, spawnTable.legacyAssetId) as VehicleAsset;
+                    VehicleAsset vehicleAsset = VehicleTool.FindVehicleByLegacyIdAndHandleRedirects(spawnTable.legacyAssetId);
                     AnimalAsset animalAsset = Assets.find(EAssetType.ANIMAL, spawnTable.legacyAssetId) as AnimalAsset;
                     string text2 = obj?.FriendlyName ?? $"Unknown ID {spawnTable.legacyAssetId}";
                     string text3 = vehicleAsset?.FriendlyName ?? $"Unknown ID {spawnTable.legacyAssetId}";

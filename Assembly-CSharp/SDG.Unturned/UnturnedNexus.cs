@@ -57,6 +57,7 @@ public class UnturnedNexus : IModuleNexus
         Assets.assetTypes.addType("Sentry", typeof(ItemSentryAsset));
         Assets.assetTypes.addType("Tire", typeof(ItemTireAsset));
         Assets.assetTypes.addType("Oil_Pump", typeof(ItemOilPumpAsset));
+        Assets.assetTypes.addType("Vehicle_Paint_Tool", typeof(ItemVehiclePaintToolAsset));
         Assets.assetTypes.addType("Effect", typeof(EffectAsset));
         Assets.assetTypes.addType("Large", typeof(ObjectAsset));
         Assets.assetTypes.addType("Medium", typeof(ObjectAsset));
@@ -73,6 +74,7 @@ public class UnturnedNexus : IModuleNexus
         Assets.assetTypes.addType("Quest", typeof(QuestAsset));
         Assets.assetTypes.addType("Vendor", typeof(VendorAsset));
         Assets.assetTypes.addType("RewardsList", typeof(NPCRewardsAsset));
+        Assets.assetTypes.addType("Redirector", typeof(RedirectorAsset));
         Assets.useableTypes.addType("Barricade", typeof(UseableBarricade));
         Assets.useableTypes.addType("Battery_Vehicle", typeof(UseableVehicleBattery));
         Assets.useableTypes.addType("Carjack", typeof(UseableCarjack));
@@ -96,6 +98,7 @@ public class UnturnedNexus : IModuleNexus
         Assets.useableTypes.addType("Carlockpick", typeof(UseableCarlockpick));
         Assets.useableTypes.addType("Walkie_Talkie", typeof(UseableWalkieTalkie));
         Assets.useableTypes.addType("Housing_Planner", typeof(UseableHousingPlanner));
+        Assets.useableTypes.addType("Vehicle_Paint", typeof(UseableVehiclePaint));
     }
 
     public void shutdown()

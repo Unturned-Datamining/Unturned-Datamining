@@ -8,13 +8,8 @@ public static class ERaycastInfoUsage_NetEnum
     {
         uint value2;
         bool result = reader.ReadBits(4, out value2);
-        if (value2 <= 14)
-        {
-            value = (ERaycastInfoUsage)value2;
-            return result;
-        }
-        value = ERaycastInfoUsage.Punch;
-        return false;
+        value = (ERaycastInfoUsage)value2;
+        return result;
     }
 
     public static bool WriteEnum(this NetPakWriter writer, ERaycastInfoUsage value)

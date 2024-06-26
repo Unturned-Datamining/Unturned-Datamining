@@ -1,10 +1,6 @@
 FOV_Slider_LabelV2_Name Field of View
 FOV_Slider_LabelV2_Value Horizontal [{0}°] Vertical [{1}°]
-Volume_Slider_Label Master Volume [{0}%]
-Voice_Slider_Label Voice Chat Volume [{0}%]
-Loading_Screen_Music_Volume_Slider_Label Loading Screen Music Volume [{0}%]
 Debug_Toggle_Label Show FPS/Ping
-Music_Toggle_Label Play Menu/Death Music
 Splashscreen_Toggle_Label Splashscreen
 Timer_Toggle_Label Arena Timer Warning
 Physics_Toggle_Label Item Physics
@@ -19,7 +15,6 @@ Chat_Voice_Out_Toggle_Label Enable Outbound Voice Chat
 VoiceAlwaysRecording_Label Keep Microphone Ready
 VoiceAlwaysRecording_Tooltip Avoid hitches related to starting and stopping recording by muting rather than stopping.
 Hints_Toggle_Label Show Hints
-Ambience_Toggle_Label Play Day/Night Ambience
 Streamer_Toggle_Label Streamer Mode
 Featured_Workshop_Toggle_Label Featured Workshop
 Show_Hotbar_Toggle_Label Show Hotbar

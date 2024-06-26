@@ -162,11 +162,7 @@ public class PlayerStance : PlayerCaller
             {
                 return DETECT_FORWARD;
             }
-            if (base.player.movement.getVehicle().speed > 0f)
-            {
-                return DETECT_FORWARD * base.player.movement.getVehicle().speed / base.player.movement.getVehicle().asset.speedMax;
-            }
-            return DETECT_BACKWARD * base.player.movement.getVehicle().speed / base.player.movement.getVehicle().asset.speedMin;
+            return DETECT_FORWARD * base.player.movement.getVehicle().GetReplicatedForwardSpeedPercentageOfTargetSpeed();
         }
         if (stance == EPlayerStance.SITTING)
         {

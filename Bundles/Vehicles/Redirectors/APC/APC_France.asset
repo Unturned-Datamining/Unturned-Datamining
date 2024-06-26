@@ -1,0 +1,7 @@
+GUID 4b0f7567f172492ab4b270449d3957c8
+Type SDG.Unturned.VehicleRedirectorAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+ID 172
+
+TargetVehicle 6f56dc58382349b79793f9ba8839774e
+LoadPaintColor "#848fa1" // France
+SpawnPaintColor "#848fa1" // France
