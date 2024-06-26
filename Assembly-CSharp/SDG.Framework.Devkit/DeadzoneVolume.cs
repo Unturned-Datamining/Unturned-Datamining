@@ -38,7 +38,7 @@ public class DeadzoneVolume : LevelVolume<DeadzoneVolume, DeadzoneVolumeManager>
             sleekFloat32Field2.PositionOffset_Y = num;
             sleekFloat32Field2.SizeOffset_X = 200f;
             sleekFloat32Field2.SizeOffset_Y = 30f;
-            sleekFloat32Field2.Value = volume.UnprotectedDamagePerSecond;
+            sleekFloat32Field2.Value = volume.ProtectedDamagePerSecond;
             sleekFloat32Field2.AddLabel("Damage per Second (Protected)", ESleekSide.RIGHT);
             sleekFloat32Field2.OnValueChanged += OnProtectedDamageChanged;
             AddChild(sleekFloat32Field2);

@@ -543,6 +543,7 @@
 - [EVACProtectionFilter.cs](EVACProtectionFilter.cs)
 - [EVehicleBuildablePlacementRule.cs](EVehicleBuildablePlacementRule.cs)
 - [EVehicleEngineSoundType.cs](EVehicleEngineSoundType.cs)
+- [EVehicleThirdPersonCameraMode.cs](EVehicleThirdPersonCameraMode.cs)
 - [EventsConfigData.cs](EventsConfigData.cs)
 - [EVisualToggleType_NetEnum.cs](EVisualToggleType_NetEnum.cs)
 - [EVisualToggleType.cs](EVisualToggleType.cs)

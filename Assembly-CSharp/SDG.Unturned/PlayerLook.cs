@@ -753,7 +753,14 @@ public class PlayerLook : PlayerCaller
         if (!wasVehicle)
         {
             _orbitPitch = 22.5f;
-            _orbitYaw = newVehicle?.transform.rotation.eulerAngles.y ?? 0f;
+            if (OptionsSettings.vehicleThirdPersonCameraMode == EVehicleThirdPersonCameraMode.RotationDetached)
+            {
+                _orbitYaw = newVehicle?.transform.rotation.eulerAngles.y ?? 0f;
+            }
+            else
+            {
+                _orbitYaw = 0f;
+            }
         }
         if (Provider.cameraMode == ECameraMode.VEHICLE && perspective == EPlayerPerspective.THIRD && !isDriver)
         {
@@ -1148,7 +1155,14 @@ public class PlayerLook : PlayerCaller
             {
                 if ((base.player.stance.stance == EPlayerStance.DRIVING || base.player.stance.stance == EPlayerStance.SITTING) && perspective == EPlayerPerspective.THIRD)
                 {
-                    instance.transform.rotation = Quaternion.Euler(orbitPitch, orbitYaw, 0f);
+                    if (OptionsSettings.vehicleThirdPersonCameraMode == EVehicleThirdPersonCameraMode.RotationDetached)
+                    {
+                        instance.transform.rotation = Quaternion.Euler(orbitPitch, orbitYaw, 0f);
+                    }
+                    else
+                    {
+                        instance.transform.localRotation = Quaternion.Euler(orbitPitch, orbitYaw, 0f);
+                    }
                 }
                 else if (base.player.stance.stance == EPlayerStance.DRIVING)
                 {

@@ -1335,7 +1335,7 @@ public class PlayerEquipment : PlayerCaller
         {
             for (int j = 0; j < asset.animations.Length; j++)
             {
-                base.player.animator.addAnimation(asset.animations[j]);
+                base.player.animator.AddEquippedItemAnimation(asset.animations[j], _firstModel, _thirdModel, _characterModel);
             }
         }
         _useable = base.gameObject.AddComponent(asset.useableType) as Useable;

@@ -40,7 +40,8 @@ internal abstract class DefaultEngineSoundControllerBase : MonoBehaviour
     protected virtual void Start()
     {
         vehicle.onPassengersUpdated += OnPassengersUpdated;
-        wasDriven = !vehicle.isDriven;
+        vehicle.OnIsDrownedChanged += OnIsDrownedChanged;
+        wasDriven = vehicle.isDriven;
         if (vehicle.trainCars != null)
         {
             for (int i = 1; i < vehicle.trainCars.Length; i++)
@@ -56,27 +57,61 @@ internal abstract class DefaultEngineSoundControllerBase : MonoBehaviour
                 }
             }
         }
-        OnPassengersUpdated();
+        ResetPitchToDefault();
+        SynchronizeEnabled();
     }
 
     private void OnDestroy()
     {
         vehicle.onPassengersUpdated -= OnPassengersUpdated;
+        vehicle.OnIsDrownedChanged -= OnIsDrownedChanged;
     }
 
     private void OnPassengersUpdated()
     {
         bool isDriven = vehicle.isDriven;
-        if (wasDriven == isDriven)
+        if (wasDriven != isDriven)
+        {
+            wasDriven = isDriven;
+            if (isDriven)
+            {
+                ResetPitchToDefault();
+            }
+            SynchronizeEnabled();
+        }
+    }
+
+    private void OnIsDrownedChanged()
+    {
+        SynchronizeEnabled();
+    }
+
+    private void ResetPitchToDefault()
+    {
+        if (engineAudioSource != null)
+        {
+            engineAudioSource.pitch = DefaultPitch;
+        }
+        if (engineAdditiveAudioSources == null)
         {
             return;
         }
-        wasDriven = isDriven;
-        if (isDriven)
+        foreach (AudioSource engineAdditiveAudioSource in engineAdditiveAudioSources)
+        {
+            if (engineAdditiveAudioSource != null)
+            {
+                engineAdditiveAudioSource.pitch = DefaultPitch;
+            }
+        }
+    }
+
+    private void SynchronizeEnabled()
+    {
+        if (vehicle.isDriven && !vehicle.isDrowned)
         {
             if (engineAudioSource != null)
             {
-                engineAudioSource.pitch = DefaultPitch;
+                engineAudioSource.enabled = true;
             }
             if (engineAdditiveAudioSources != null)
             {
@@ -84,48 +119,29 @@ internal abstract class DefaultEngineSoundControllerBase : MonoBehaviour
                 {
                     if (engineAdditiveAudioSource != null)
                     {
-                        engineAdditiveAudioSource.pitch = DefaultPitch;
+                        engineAdditiveAudioSource.enabled = true;
                     }
                 }
             }
-        }
-        if (isDriven && !vehicle.isDrowned)
-        {
-            if (engineAudioSource != null)
-            {
-                engineAudioSource.enabled = true;
-            }
-            if (engineAdditiveAudioSources == null)
-            {
-                return;
-            }
-            {
-                foreach (AudioSource engineAdditiveAudioSource2 in engineAdditiveAudioSources)
-                {
-                    if (engineAdditiveAudioSource2 != null)
-                    {
-                        engineAdditiveAudioSource2.enabled = true;
-                    }
-                }
-                return;
-            }
+            base.enabled = true;
+            return;
         }
         if (engineAudioSource != null)
         {
             engineAudioSource.volume = 0f;
             engineAudioSource.enabled = false;
         }
-        if (engineAdditiveAudioSources == null)
+        if (engineAdditiveAudioSources != null)
         {
-            return;
-        }
-        foreach (AudioSource engineAdditiveAudioSource3 in engineAdditiveAudioSources)
-        {
-            if (engineAdditiveAudioSource3 != null)
+            foreach (AudioSource engineAdditiveAudioSource2 in engineAdditiveAudioSources)
             {
-                engineAdditiveAudioSource3.volume = 0f;
-                engineAdditiveAudioSource3.enabled = false;
+                if (engineAdditiveAudioSource2 != null)
+                {
+                    engineAdditiveAudioSource2.volume = 0f;
+                    engineAdditiveAudioSource2.enabled = false;
+                }
             }
         }
+        base.enabled = false;
     }
 }

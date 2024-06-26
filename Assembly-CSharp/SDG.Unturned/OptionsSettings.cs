@@ -43,9 +43,11 @@ public class OptionsSettings
 
     private const byte SAVEDATA_VERSION_ADDED_UNFOCUSED_VOLUME = 51;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 51;
+    private const byte SAVEDATA_VERSION_ADDED_VEHICLE_THIRD_PERSON_CAMERA_MODE = 52;
 
-    public static readonly byte SAVEDATA_VERSION = 51;
+    private const byte SAVEDATA_VERSION_NEWEST = 52;
+
+    public static readonly byte SAVEDATA_VERSION = 52;
 
     public static readonly byte MIN_FOV = 60;
 
@@ -134,6 +136,11 @@ public class OptionsSettings
     /// Controls whether hitmarkers are animated outward (newer) or just a static image ("classic"). 
     /// </summary>
     public static EHitmarkerStyle hitmarkerStyle;
+
+    /// <summary>
+    /// Determines how camera follows vehicle in third-person view.
+    /// </summary>
+    public static EVehicleThirdPersonCameraMode vehicleThirdPersonCameraMode;
 
     public static Color crosshairColor;
 
@@ -446,6 +453,7 @@ public class OptionsSettings
         staticCrosshairSize = 0.1f;
         crosshairShape = ECrosshairShape.Line;
         hitmarkerStyle = EHitmarkerStyle.Animated;
+        vehicleThirdPersonCameraMode = EVehicleThirdPersonCameraMode.RotationDetached;
         crosshairColor = new Color(1f, 1f, 1f, 0.5f);
         hitmarkerColor = new Color(1f, 1f, 1f, 0.5f);
         criticalHitmarkerColor = new Color(1f, 0f, 0f, 0.5f);
@@ -781,6 +789,14 @@ public class OptionsSettings
         {
             UnfocusedVolume = 0.5f;
         }
+        if (b >= 52)
+        {
+            vehicleThirdPersonCameraMode = (EVehicleThirdPersonCameraMode)block.readByte();
+        }
+        else
+        {
+            vehicleThirdPersonCameraMode = EVehicleThirdPersonCameraMode.RotationDetached;
+        }
         if (!Provider.isPro)
         {
             backgroundColor = new Color(0.9f, 0.9f, 0.9f);
@@ -794,7 +810,7 @@ public class OptionsSettings
     public static void save()
     {
         Block block = new Block();
-        block.writeByte(51);
+        block.writeByte(52);
         block.writeBoolean(music);
         block.writeBoolean(splashscreen);
         block.writeBoolean(timer);
@@ -841,6 +857,7 @@ public class OptionsSettings
         block.writeBoolean(shouldNametagFadeOut);
         block.writeSingle(gameVolume);
         block.writeSingle(UnfocusedVolume);
+        block.writeByte((byte)vehicleThirdPersonCameraMode);
         ReadWrite.writeBlock("/Options.dat", useCloud: true, block);
     }
 }

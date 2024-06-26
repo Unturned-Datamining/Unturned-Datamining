@@ -388,21 +388,21 @@ public class PlayerAnimator : PlayerCaller
 
     public static event Action<PlayerAnimator> OnLeanChanged_Global;
 
-    public void addAnimation(AnimationClip clip)
+    public void AddEquippedItemAnimation(AnimationClip clip, Transform firstPersonModel, Transform thirdPersonModel, Transform characterModel)
     {
         if (!(clip == null))
         {
             if (firstAnimator != null)
             {
-                firstAnimator.addAnimation(clip);
+                firstAnimator.AddEquippedItemAnimation(clip, firstPersonModel);
             }
             if (thirdAnimator != null)
             {
-                thirdAnimator.addAnimation(clip);
+                thirdAnimator.AddEquippedItemAnimation(clip, thirdPersonModel);
             }
             if (characterAnimator != null)
             {
-                characterAnimator.addAnimation(clip);
+                characterAnimator.AddEquippedItemAnimation(clip, characterModel);
             }
         }
     }

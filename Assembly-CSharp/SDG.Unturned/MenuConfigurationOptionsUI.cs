@@ -70,6 +70,8 @@ public class MenuConfigurationOptionsUI
 
     private static SleekButtonState hitmarkerStyleButton;
 
+    private static SleekButtonState vehicleThirdPersonCameraModeButton;
+
     private static ISleekBox crosshairBox;
 
     private static SleekColorPicker crosshairColorPicker;
@@ -274,6 +276,11 @@ public class MenuConfigurationOptionsUI
         OptionsSettings.hitmarkerStyle = (EHitmarkerStyle)index;
     }
 
+    private static void onSwappedVehicleThirdPersonCameraModeState(SleekButtonState button, int index)
+    {
+        OptionsSettings.vehicleThirdPersonCameraMode = (EVehicleThirdPersonCameraMode)index;
+    }
+
     private static void onCrosshairColorPicked(SleekColorPicker picker, Color color)
     {
         OptionsSettings.crosshairColor = color;
@@ -376,6 +383,7 @@ public class MenuConfigurationOptionsUI
         uiButton.state = (OptionsSettings.proUI ? 1 : 0);
         hitmarkerButton.state = (OptionsSettings.ShouldHitmarkersFollowWorldPosition ? 1 : 0);
         hitmarkerStyleButton.state = (int)OptionsSettings.hitmarkerStyle;
+        vehicleThirdPersonCameraModeButton.state = (int)OptionsSettings.vehicleThirdPersonCameraMode;
         crosshairColorPicker.state = OptionsSettings.crosshairColor;
         hitmarkerColorPicker.state = OptionsSettings.hitmarkerColor;
         criticalHitmarkerColorPicker.state = OptionsSettings.criticalHitmarkerColor;
@@ -654,6 +662,14 @@ public class MenuConfigurationOptionsUI
         hitmarkerStyleButton.AddLabel(localization.format("HitmarkerStyle_Label"), ESleekSide.RIGHT);
         hitmarkerStyleButton.onSwappedState = onSwappedHitmarkerStyleState;
         optionsBox.AddChild(hitmarkerStyleButton);
+        num += 40f;
+        vehicleThirdPersonCameraModeButton = new SleekButtonState(new GUIContent(localization.format("VehicleThirdPersonCameraMode_RotationDetached")), new GUIContent(localization.format("VehicleThirdPersonCameraMode_RotationAttached")));
+        vehicleThirdPersonCameraModeButton.PositionOffset_Y = num;
+        vehicleThirdPersonCameraModeButton.SizeOffset_X = 200f;
+        vehicleThirdPersonCameraModeButton.SizeOffset_Y = 30f;
+        vehicleThirdPersonCameraModeButton.AddLabel(localization.format("VehicleThirdPersonCameraMode_Label"), ESleekSide.RIGHT);
+        vehicleThirdPersonCameraModeButton.onSwappedState = onSwappedVehicleThirdPersonCameraModeState;
+        optionsBox.AddChild(vehicleThirdPersonCameraModeButton);
         num += 40f;
         crosshairBox = Glazier.Get().CreateBox();
         crosshairBox.PositionOffset_Y = num;

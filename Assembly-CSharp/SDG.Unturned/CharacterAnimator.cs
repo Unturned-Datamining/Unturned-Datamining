@@ -58,12 +58,21 @@ public class CharacterAnimator : MonoBehaviour
         }
     }
 
-    public void addAnimation(AnimationClip clip)
+    public void AddEquippedItemAnimation(AnimationClip clip, Transform itemModelTransform)
     {
-        if (!(clip == null))
+        if (clip == null)
         {
-            anim.AddClip(clip, clip.name);
-            mixAnimation(clip.name, mixLeftShoulder: true, mixRightShoulder: true);
+            return;
+        }
+        anim.AddClip(clip, clip.name);
+        mixAnimation(clip.name, mixLeftShoulder: true, mixRightShoulder: true);
+        if (itemModelTransform != null)
+        {
+            AnimationState animationState = anim[clip.name];
+            if (animationState != null)
+            {
+                animationState.AddMixingTransform(itemModelTransform, recursive: true);
+            }
         }
     }
 

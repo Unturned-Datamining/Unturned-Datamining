@@ -58,6 +58,10 @@ HitmarkerStyle_Animated Animated
 HitmarkerStyle_Classic Classic
 HitmarkerStyle_Label Hitmarker Style
 
+VehicleThirdPersonCameraMode_RotationDetached Rotation Detached
+VehicleThirdPersonCameraMode_RotationAttached Rotation Attached
+VehicleThirdPersonCameraMode_Label Vehicle Third-Person Camera Style
+
 Crosshair_Box Crosshair Color
 Hitmarker_Box Hitmarker Color
 Critical_Hitmarker_Box Critical Hitmarker Color

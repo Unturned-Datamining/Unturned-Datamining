@@ -810,6 +810,8 @@ public class InteractableVehicle : Interactable
 
     public static event Action<InteractableVehicle, int, Player> OnPassengerRemoved_Global;
 
+    public event System.Action OnIsDrownedChanged;
+
     /// <summary>
     /// Unfortunately old netcode sends train position as a Vector3 using the X channel, but new code only supports
     /// [-4096, 4096) so we pack the train position into all three channels. Eventually this should be cleaned up.
@@ -3205,6 +3207,7 @@ public class InteractableVehicle : Interactable
             {
                 _lastUnderwater = Time.realtimeSinceStartup;
                 _isDrowned = true;
+                this.OnIsDrownedChanged?.Invoke();
                 tellSirens(on: false);
                 tellBlimp(on: false);
                 tellHeadlights(on: false);
@@ -3218,6 +3221,7 @@ public class InteractableVehicle : Interactable
         else if (_isDrowned)
         {
             _isDrowned = false;
+            this.OnIsDrownedChanged?.Invoke();
             updateFires();
         }
         synchronizeTaillights();
