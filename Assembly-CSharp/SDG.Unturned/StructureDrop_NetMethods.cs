@@ -48,7 +48,7 @@ public static class StructureDrop_NetMethods
             reader.ReadUInt8(out var value);
             reader.ReadUInt8(out var value2);
             reader.ReadClampedVector3(out var value3, 13, 11);
-            reader.ReadQuaternion(out var value4);
+            reader.ReadSpecialYawOrQuaternion(out var value4, 23);
             structureDrop.ReceiveTransform(in context, value, value2, value3, value4);
         }
     }
@@ -69,7 +69,7 @@ public static class StructureDrop_NetMethods
                 reader.ReadUInt8(out var value2);
                 reader.ReadUInt8(out var value3);
                 reader.ReadClampedVector3(out var value4, 13, 11);
-                reader.ReadQuaternion(out var value5);
+                reader.ReadSpecialYawOrQuaternion(out var value5, 23);
                 structureDrop.ReceiveTransform(in context, value2, value3, value4, value5);
             }
         }
@@ -81,7 +81,7 @@ public static class StructureDrop_NetMethods
         writer.WriteUInt8(old_x);
         writer.WriteUInt8(old_y);
         writer.WriteClampedVector3(point, 13, 11);
-        writer.WriteQuaternion(rotation);
+        writer.WriteSpecialYawOrQuaternion(rotation, 23);
     }
 
     [NetInvokableGeneratedMethod("ReceiveTransformRequest", ENetInvokableGeneratedMethodPurpose.Read)]
@@ -94,7 +94,7 @@ public static class StructureDrop_NetMethods
             if (obj != null && obj is StructureDrop structureDrop)
             {
                 reader.ReadClampedVector3(out var value2, 13, 11);
-                reader.ReadQuaternion(out var value3);
+                reader.ReadSpecialYawOrQuaternion(out var value3, 23);
                 structureDrop.ReceiveTransformRequest(in context, value2, value3);
             }
         }
@@ -104,7 +104,7 @@ public static class StructureDrop_NetMethods
     public static void ReceiveTransformRequest_Write(NetPakWriter writer, Vector3 point, Quaternion rotation)
     {
         writer.WriteClampedVector3(point, 13, 11);
-        writer.WriteQuaternion(rotation);
+        writer.WriteSpecialYawOrQuaternion(rotation, 23);
     }
 
     private static void ReceiveOwnerAndGroup_DeferredRead(object voidNetObj, in ClientInvocationContext context)

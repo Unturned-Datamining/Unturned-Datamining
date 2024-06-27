@@ -344,7 +344,7 @@ public class HousingConnections
             if (housingEdge.forwardFloors.IsEmpty() && housingEdge.backwardFloors.IsEmpty())
             {
                 housingEdge.direction = direction;
-                housingEdge.rotation = floor.model.rotation.eulerAngles.y + rotation;
+                housingEdge.rotation = GetModelYaw(floor.model) + rotation;
                 housingEdge.backwardFloors.Add(floor);
             }
             else if (Vector3.Dot(direction, housingEdge.direction) > 0f)
@@ -361,7 +361,7 @@ public class HousingConnections
             housingEdge = new HousingEdge();
             housingEdge.position = edgePosition;
             housingEdge.direction = direction;
-            housingEdge.rotation = floor.model.rotation.eulerAngles.y + rotation;
+            housingEdge.rotation = GetModelYaw(floor.model) + rotation;
             housingEdge.forwardFloors = new List<StructureDrop>(1);
             housingEdge.backwardFloors = new List<StructureDrop>(1) { floor };
             housingEdge.walls = new List<StructureDrop>(1);
@@ -380,7 +380,7 @@ public class HousingConnections
         {
             if (housingVertex.floors.Count < 1)
             {
-                housingVertex.rotation = floor.model.rotation.eulerAngles.y;
+                housingVertex.rotation = GetModelYaw(floor.model);
             }
             housingVertex.floors.Add(floor);
         }
@@ -388,7 +388,7 @@ public class HousingConnections
         {
             housingVertex = new HousingVertex();
             housingVertex.position = vertexPosition;
-            housingVertex.rotation = floor.model.rotation.eulerAngles.y;
+            housingVertex.rotation = GetModelYaw(floor.model);
             housingVertex.floors.Add(floor);
             verticesGrid.Add(vertexPosition, housingVertex);
         }
@@ -525,7 +525,7 @@ public class HousingConnections
             {
                 housingVertex = new HousingVertex();
                 housingVertex.position = position2;
-                housingVertex.rotation = wall.model.rotation.eulerAngles.y;
+                housingVertex.rotation = GetModelYaw(wall.model);
                 verticesGrid.Add(position2, housingVertex);
             }
             HousingVertex housingVertex2 = FindVertex(position3);
@@ -533,13 +533,13 @@ public class HousingConnections
             {
                 housingVertex2 = new HousingVertex();
                 housingVertex2.position = position3;
-                housingVertex2.rotation = wall.model.rotation.eulerAngles.y;
+                housingVertex2.rotation = GetModelYaw(wall.model);
                 verticesGrid.Add(position3, housingVertex2);
             }
             housingEdge3 = new HousingEdge();
             housingEdge3.position = vector;
             housingEdge3.direction = wall.model.TransformDirection(0f, 1f, 0f);
-            housingEdge3.rotation = wall.model.rotation.eulerAngles.y;
+            housingEdge3.rotation = GetModelYaw(wall.model);
             housingEdge3.walls = new List<StructureDrop>(1);
             housingEdge3.forwardFloors = new List<StructureDrop>(1);
             housingEdge3.backwardFloors = new List<StructureDrop>(1);
@@ -559,7 +559,7 @@ public class HousingConnections
             {
                 housingVertex3 = new HousingVertex();
                 housingVertex3.position = position4;
-                housingVertex3.rotation = wall.model.rotation.eulerAngles.y;
+                housingVertex3.rotation = GetModelYaw(wall.model);
                 verticesGrid.Add(position4, housingVertex3);
             }
             HousingVertex housingVertex4 = FindVertex(position5);
@@ -567,13 +567,13 @@ public class HousingConnections
             {
                 housingVertex4 = new HousingVertex();
                 housingVertex4.position = position5;
-                housingVertex4.rotation = wall.model.rotation.eulerAngles.y;
+                housingVertex4.rotation = GetModelYaw(wall.model);
                 verticesGrid.Add(position5, housingVertex4);
             }
             housingEdge4 = new HousingEdge();
             housingEdge4.position = position;
             housingEdge4.direction = wall.model.TransformDirection(0f, 1f, 0f);
-            housingEdge4.rotation = wall.model.rotation.eulerAngles.y;
+            housingEdge4.rotation = GetModelYaw(wall.model);
             housingEdge4.walls = new List<StructureDrop>(1);
             housingEdge4.forwardFloors = new List<StructureDrop>(1);
             housingEdge4.backwardFloors = new List<StructureDrop>(1);
@@ -640,7 +640,7 @@ public class HousingConnections
         {
             housingVertex = new HousingVertex();
             housingVertex.position = lowerVertexPosition;
-            housingVertex.rotation = pillar.model.rotation.eulerAngles.y;
+            housingVertex.rotation = GetModelYaw(pillar.model);
             verticesGrid.Add(lowerVertexPosition, housingVertex);
         }
         HousingVertex housingVertex2 = FindVertex(position);
@@ -648,7 +648,7 @@ public class HousingConnections
         {
             housingVertex2 = new HousingVertex();
             housingVertex2.position = position;
-            housingVertex2.rotation = pillar.model.rotation.eulerAngles.y;
+            housingVertex2.rotation = GetModelYaw(pillar.model);
             verticesGrid.Add(position, housingVertex2);
         }
         housingVertex.upperVertex = housingVertex2;
@@ -1320,5 +1320,21 @@ public class HousingConnections
 
     internal void DrawGizmos()
     {
+    }
+
+    /// <summary>
+    /// Nelson 2024-06-26: With structure rotation replicated as a quaternion we need to be smarter about extracting
+    /// yaw from model transform. Quaternion.eulerAngles.y isn't necessarily the yaw anymore.
+    /// </summary>
+    private static float GetModelYaw(Transform modelTransform)
+    {
+        Vector3 vector = modelTransform.TransformDirection(Vector3.up);
+        if (vector.y * vector.y > 0.999f)
+        {
+            return 0f;
+        }
+        Vector2 normalized = new Vector2(0f - vector.z, 0f - vector.x).normalized;
+        float num = Mathf.Atan2(normalized.y, normalized.x);
+        return 57.29578f * num;
     }
 }

@@ -1080,7 +1080,7 @@ public class HumanClothes : MonoBehaviour
                         MythicalEffectController mythicalEffectController2 = lowerSystems[j];
                         if (mythicalEffectController2 != null)
                         {
-                            UnityEngine.Object.Destroy(mythicalEffectController2.gameObject);
+                            UnityEngine.Object.Destroy(mythicalEffectController2);
                         }
                     }
                     isLower = false;

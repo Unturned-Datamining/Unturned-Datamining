@@ -148,4 +148,23 @@ public static class UnityNetPakReaderEx
         value = value2;
         return result;
     }
+
+    /// <summary>
+    /// Note: "Special" here refers to the -90 rotation on the X axis. :)
+    /// Read only yaw if quaternion was flat, full quaternion otherwise.
+    /// </summary>
+    public static bool ReadSpecialYawOrQuaternion(this NetPakReader reader, out Quaternion value, int yawBitCount = 9, int quaternionBitsPerComponent = 9)
+    {
+        bool flag = reader.ReadBit(out var value2);
+        if (value2)
+        {
+            flag &= reader.ReadRadians(out var value3, yawBitCount);
+            value = Quaternion.Euler(-90f, value3 * 57.29578f, 0f);
+        }
+        else
+        {
+            flag &= reader.ReadQuaternion(out value, quaternionBitsPerComponent);
+        }
+        return flag;
+    }
 }

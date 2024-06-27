@@ -166,4 +166,24 @@ public static class UnityNetPakWriterEx
     {
         return writer.WriteUInt8(value.r) & writer.WriteUInt8(value.g) & writer.WriteUInt8(value.b) & writer.WriteUInt8(value.a);
     }
+
+    /// <summary>
+    /// Note: "Special" here refers to the -90 rotation on the X axis. :)
+    /// If quaternion is only a rotation around the Y axis (yaw) which is common for barricades and structures,
+    /// write only yaw. Otherwise, write full quaternion.
+    /// </summary>
+    public static bool WriteSpecialYawOrQuaternion(this NetPakWriter writer, Quaternion value, int yawBitCount = 9, int quaternionBitsPerComponent = 9)
+    {
+        bool flag;
+        if ((value * Vector3.forward).y > 0.9999f)
+        {
+            flag = writer.WriteBit(value: true);
+            Vector3 vector = value * Vector3.up;
+            Vector2 normalized = new Vector2(0f - vector.z, 0f - vector.x).normalized;
+            float value2 = Mathf.Atan2(normalized.y, normalized.x);
+            return flag & writer.WriteRadians(value2, yawBitCount);
+        }
+        flag = writer.WriteBit(value: false);
+        return flag & writer.WriteQuaternion(value, quaternionBitsPerComponent);
+    }
 }

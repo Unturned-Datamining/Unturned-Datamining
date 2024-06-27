@@ -136,10 +136,10 @@ public class MenuConfigurationAudioUI : SleekFullscreenBox
         new Color32(180, 180, 180, byte.MaxValue);
         active = false;
         audioBox = Glazier.Get().CreateScrollView();
-        audioBox.PositionOffset_X = -250f;
+        audioBox.PositionOffset_X = -200f;
         audioBox.PositionOffset_Y = 100f;
         audioBox.PositionScale_X = 0.5f;
-        audioBox.SizeOffset_X = 530f;
+        audioBox.SizeOffset_X = 430f;
         audioBox.SizeOffset_Y = -200f;
         audioBox.SizeScale_Y = 1f;
         audioBox.ScaleContentToWidth = true;

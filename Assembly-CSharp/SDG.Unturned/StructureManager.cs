@@ -81,6 +81,12 @@ public class StructureManager : SteamCaller
     internal const int POSITION_FRAC_BIT_COUNT = 11;
 
     /// <summary>
+    /// Sending yaw only costs 1 bit (flag) plus yaw bits, so compared to the old 24-bit rotation we may as well
+    /// make it high-precision. Quaternion mode uses 1+27 bits!
+    /// </summary>
+    internal const int YAW_BIT_COUNT = 23;
+
+    /// <summary>
     /// +0 = StructureDrop
     /// +1 = root transform
     /// </summary>
@@ -707,7 +713,7 @@ public class StructureManager : SteamCaller
                 item.sortOrder = value5;
                 reader.ReadGuid(out item.assetId);
                 reader.ReadClampedVector3(out item.position, 13, 11);
-                reader.ReadQuaternion(out item.rotation);
+                reader.ReadSpecialYawOrQuaternion(out item.rotation, 23);
                 reader.ReadUInt8(out item.hp);
                 reader.ReadUInt64(out item.owner);
                 reader.ReadUInt64(out item.group);
@@ -760,7 +766,7 @@ public class StructureManager : SteamCaller
                         StructureData serversideData = region.drops[index].serversideData;
                         writer.WriteGuid(serversideData.structure.asset.GUID);
                         writer.WriteClampedVector3(serversideData.point, 13, 11);
-                        writer.WriteQuaternion(serversideData.rotation);
+                        writer.WriteSpecialYawOrQuaternion(serversideData.rotation, 23);
                         writer.WriteUInt8((byte)Mathf.RoundToInt((float)(int)serversideData.structure.health / (float)(int)serversideData.structure.asset.health * 100f));
                         writer.WriteUInt64(serversideData.owner);
                         writer.WriteUInt64(serversideData.group);

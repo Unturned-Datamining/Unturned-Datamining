@@ -1051,6 +1051,7 @@
 - [NetPakBlockImplementation.cs](NetPakBlockImplementation.cs)
 - [NetPakColor32Attribute.cs](NetPakColor32Attribute.cs)
 - [NetPakNormalAttribute.cs](NetPakNormalAttribute.cs)
+- [NetPakSpecialQuaternionAttribute.cs](NetPakSpecialQuaternionAttribute.cs)
 - [NetPakVector3Attribute.cs](NetPakVector3Attribute.cs)
 - [NetReflection.cs](NetReflection.cs)
 - [NetTransportFactory.cs](NetTransportFactory.cs)

@@ -39,6 +39,10 @@ PaintableSections
         Path Model_0
         MaterialIndex 0
     }
+    {
+        Path Model_1
+        MaterialIndex 0
+    }
 ]
 
 DefaultPaintColors
