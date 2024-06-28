@@ -967,7 +967,7 @@ public class InteractableVehicle : Interactable
         for (int i = 0; i < _wheels.Length; i++)
         {
             WheelCollider wheel = _wheels[i].wheel;
-            if ((wheel.transform.position - position).sqrMagnitude < wheel.radius * wheel.radius)
+            if (!(wheel == null) && (wheel.transform.position - position).sqrMagnitude < wheel.radius * wheel.radius)
             {
                 return i;
             }
@@ -3256,7 +3256,7 @@ public class InteractableVehicle : Interactable
                     foreach (int index in replicatedWheelIndices)
                     {
                         Wheel wheelAtIndex2 = GetWheelAtIndex(index);
-                        if (wheelAtIndex2 != null && (bool)wheelAtIndex2.wheel)
+                        if (wheelAtIndex2 != null && !(wheelAtIndex2.wheel == null))
                         {
                             num7 += Mathf.Abs(wheelAtIndex2.wheel.rpm);
                             num6++;
