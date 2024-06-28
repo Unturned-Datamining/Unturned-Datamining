@@ -364,6 +364,10 @@ public class ItemTool : MonoBehaviour
             StatTracker statTracker = transform2.gameObject.AddComponent<StatTracker>();
             statTracker.statTrackerCallback = statTrackerCallback;
             statTracker.updateStatTracker(viewmodel);
+            if (statTracker.statTrackerHook != null && skinAsset != null && skinAsset.hasStatTrackerTransformOverride)
+            {
+                statTracker.statTrackerHook.SetLocalPositionAndRotation(skinAsset.statTrackerPosition, skinAsset.statTrackerRotation);
+            }
         }
         return transform2;
     }

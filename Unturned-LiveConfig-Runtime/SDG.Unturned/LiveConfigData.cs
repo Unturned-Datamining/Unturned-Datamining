@@ -12,7 +12,7 @@ public class LiveConfigData
 
     public bool shouldServersWithoutMonetizationTagBeVisibleInInternetServerList;
 
-    public bool arePbsCraftableItemsAvailable;
+    public bool isAnniversaryTophatAvailable;
 
     public int playtimeGeneratorItemDefId;
 
@@ -36,7 +36,7 @@ public class LiveConfigData
         }
         shouldAllowJoiningInternetServersWithoutGslt = data.ParseBool("ShouldAllowJoiningInternetServersWithoutGslt");
         shouldServersWithoutMonetizationTagBeVisibleInInternetServerList = data.ParseBool("ShouldServersWithoutMonetizationTagBeVisibleInInternetServerList");
-        arePbsCraftableItemsAvailable = data.ParseBool("ArePbsCraftableItemsAvailable");
+        isAnniversaryTophatAvailable = data.ParseBool("IsAnniversaryTophatAvailable");
         playtimeGeneratorItemDefId = data.ParseInt32("PlaytimeGeneratorItemDefId");
         queryPingWarningOffsetMs = data.ParseInt32("QueryPingWarningOffsetMs", 200);
         craftingPromotionId = data.ParseInt64("CraftingPromotionId", -1L);

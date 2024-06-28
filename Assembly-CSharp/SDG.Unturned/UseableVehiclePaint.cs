@@ -69,7 +69,7 @@ public class UseableVehiclePaint : Useable
             {
                 return false;
             }
-            if (!raycastInfo.vehicle.asset.SupportsPaintColor)
+            if (!raycastInfo.vehicle.asset.IsPaintable)
             {
                 PlayerUI.message(EPlayerMessage.NOT_PAINTABLE, string.Empty);
                 return false;
@@ -103,7 +103,7 @@ public class UseableVehiclePaint : Useable
             {
                 return false;
             }
-            if (input.vehicle == null || !input.vehicle.asset.SupportsPaintColor)
+            if (input.vehicle == null || !input.vehicle.asset.IsPaintable)
             {
                 return false;
             }
@@ -153,7 +153,7 @@ public class UseableVehiclePaint : Useable
         if (isReplacing && isReplaceable)
         {
             isReplacing = false;
-            if (vehicle != null && vehicle.asset.SupportsPaintColor && vehicle.checkEnter(base.player))
+            if (vehicle != null && vehicle.asset.IsPaintable && vehicle.checkEnter(base.player))
             {
                 Color32 desiredColor = new Color32(0, 0, 0, byte.MaxValue);
                 if (base.player.equipment.asset is ItemVehiclePaintToolAsset itemVehiclePaintToolAsset)

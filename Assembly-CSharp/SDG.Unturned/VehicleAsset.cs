@@ -549,6 +549,15 @@ public class VehicleAsset : Asset, ISkinableAsset
         }
     }
 
+    /// <summary>
+    /// If true, Vehicle Paint items can be used on this vehicle.
+    /// Always false if <see cref="P:SDG.Unturned.VehicleAsset.SupportsPaintColor" /> is false.
+    ///
+    /// Certain vehicles may support paint colors without also being paintable by players. For example, the creator
+    /// of a vehicle may want to use color variants without also allowing players to make it bright pink.
+    /// </summary>
+    public bool IsPaintable { get; protected set; }
+
     public override EAssetType assetCategory => EAssetType.VEHICLE;
 
     /// <summary>
@@ -1295,6 +1304,14 @@ public class VehicleAsset : Asset, ISkinableAsset
         }
         CanDecay = engine != EEngine.TRAIN && (isVulnerable | isVulnerableToExplosions | isVulnerableToEnvironment | isVulnerableToBumper);
         PaintableVehicleSections = data.ParseArrayOfStructs<PaintableVehicleSection>("PaintableSections");
+        if (SupportsPaintColor)
+        {
+            IsPaintable = data.ParseBool("IsPaintable", defaultValue: true);
+        }
+        else
+        {
+            IsPaintable = false;
+        }
         if (data.TryGetList("DefaultPaintColors", out var node))
         {
             DefaultPaintColors = new List<Color32>(node.Count);

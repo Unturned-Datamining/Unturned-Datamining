@@ -1,0 +1,39 @@
+GUID e982355051044c60a0ed8b2a0c05f856
+Type Box
+
+Size_X 1
+Size_Y 1
+
+Generate 21070
+
+Probability_Model Equalized
+Contains_Bonus_Items false
+
+Drops 25
+Drop_0 -1
+Drop_1 "99300" // Classic Katana
+Drop_2 "99400" // Classic Camp Axe
+Drop_3 "99500" // Classic Fire Axe
+Drop_4 "99600" // Classic Baseball Bat
+Drop_5 "99700" // Classic Branch Hockey Stick
+Drop_6 "99800" // Classic Golf Club
+Drop_7 "99900" // Classic Canned Beans
+Drop_8 "100000" // Classic Poncho
+Drop_9 "100100" // Classic Magick Cloak
+Drop_10 "100200" // Classic Knapsack
+Drop_11 "100300" // Classic Schoolbag
+Drop_12 "100400" // Classic Travelpack
+Drop_13 "100500" // Classic Coyotepack
+Drop_14 "100600" // Classic Rucksack
+Drop_15 "100700" // Classic Alicepack
+Drop_16 "100800" // Classic Smiley Hat
+Drop_17 "100900" // Classic Fire Helmet
+Drop_18 "101000" // Classic Stetson
+Drop_19 "101100" // Classic Plaid Shirt
+Drop_20 "101200" // Classic Blue Sweatervest
+Drop_21 "101300" // Classic Dixie Hat
+Drop_22 "101400" // Classic Ushanka
+Drop_23 "101500" // Classic Lumberjack Pants
+Drop_24 "101600" // Classic Pink T-Shirt
+
+Pro

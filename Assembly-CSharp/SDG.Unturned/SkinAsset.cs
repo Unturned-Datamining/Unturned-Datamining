@@ -28,6 +28,12 @@ public class SkinAsset : Asset
 
     public List<Mesh> overrideMeshes;
 
+    public bool hasStatTrackerTransformOverride;
+
+    public Vector3 statTrackerPosition;
+
+    public Quaternion statTrackerRotation;
+
     public bool isPattern => _isPattern;
 
     public bool hasSight => _hasSight;
@@ -155,6 +161,13 @@ public class SkinAsset : Asset
                 else
                 {
                     Assets.reportError("missing MeshFilter on " + gameObject.name);
+                }
+                Transform transform = gameObject.transform.Find("Stat_Tracker");
+                if (transform != null)
+                {
+                    hasStatTrackerTransformOverride = true;
+                    statTrackerPosition = transform.localPosition;
+                    statTrackerRotation = transform.localRotation;
                 }
             }
             else

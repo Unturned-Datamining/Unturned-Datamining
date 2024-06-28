@@ -924,9 +924,9 @@ public class MenuSurvivorsClothingUI
             econCraftOptions.Add(new EconCraftOption("Craft_ProgressPridePin", 1333, 5));
             econCraftOptions.Add(new EconCraftOption("Craft_ProgressPrideJersey", 1334, 5));
         }
-        if (LiveConfig.Get().arePbsCraftableItemsAvailable)
+        if (LiveConfig.Get().isAnniversaryTophatAvailable)
         {
-            econCraftOptions.Add(new EconCraftOption("Craft_PBS", 1873, 10));
+            econCraftOptions.Add(new EconCraftOption("Craft_AnniversaryTophat", 21069, 10));
         }
         craftingButtons = new ISleekButton[econCraftOptions.Count];
         for (int j = 0; j < craftingButtons.Length; j++)
