@@ -16,6 +16,8 @@ public class CharacterAnimator : MonoBehaviour
 
     protected Transform rightShoulder;
 
+    protected Transform spineHook;
+
     protected string clip;
 
     public void sample()
@@ -71,6 +73,7 @@ public class CharacterAnimator : MonoBehaviour
             AnimationState animationState = anim[clip.name];
             if (animationState != null)
             {
+                animationState.AddMixingTransform(spineHook, recursive: true);
                 animationState.AddMixingTransform(itemModelTransform, recursive: true);
             }
         }
@@ -179,6 +182,7 @@ public class CharacterAnimator : MonoBehaviour
         skull = spine.Find("Skull");
         leftShoulder = spine.Find("Left_Shoulder");
         rightShoulder = spine.Find("Right_Shoulder");
+        spineHook = spine.Find("Spine_Hook");
     }
 
     private void Awake()

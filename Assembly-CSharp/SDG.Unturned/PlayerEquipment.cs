@@ -114,17 +114,23 @@ public class PlayerEquipment : PlayerCaller
 
     private Transform _firstSpine;
 
+    private Transform _firstSpineHook;
+
     private Transform _firstLeftHook;
 
     private Transform _firstRightHook;
 
     private Transform _thirdSpine;
 
+    private Transform _thirdSpineHook;
+
     private Transform _thirdLeftHook;
 
     private Transform _thirdRightHook;
 
     private Transform _characterSpine;
+
+    private Transform _characterSpineHook;
 
     private Transform _characterLeftHook;
 
@@ -1087,6 +1093,7 @@ public class PlayerEquipment : PlayerCaller
         {
             EEquipableModelParent.LeftHook => characterLeftHook, 
             EEquipableModelParent.Spine => _characterSpine, 
+            EEquipableModelParent.SpineHook => _characterSpineHook, 
             _ => characterRightHook, 
         };
         characterModel.transform.parent = parent;
@@ -1244,6 +1251,7 @@ public class PlayerEquipment : PlayerCaller
             {
                 EEquipableModelParent.LeftHook => firstLeftHook, 
                 EEquipableModelParent.Spine => _firstSpine, 
+                EEquipableModelParent.SpineHook => _firstSpineHook, 
                 _ => firstRightHook, 
             };
             firstModel.transform.parent = parent;
@@ -1274,6 +1282,7 @@ public class PlayerEquipment : PlayerCaller
             {
                 EEquipableModelParent.LeftHook => characterLeftHook, 
                 EEquipableModelParent.Spine => _characterSpine, 
+                EEquipableModelParent.SpineHook => _characterSpineHook, 
                 _ => characterRightHook, 
             };
             characterModel.transform.parent = parent2;
@@ -1305,6 +1314,7 @@ public class PlayerEquipment : PlayerCaller
         {
             EEquipableModelParent.LeftHook => thirdLeftHook, 
             EEquipableModelParent.Spine => _thirdSpine, 
+            EEquipableModelParent.SpineHook => _thirdSpineHook, 
             _ => thirdRightHook, 
         };
         thirdModel.transform.parent = parent3;
@@ -2556,6 +2566,7 @@ public class PlayerEquipment : PlayerCaller
         if (base.player.first != null)
         {
             _firstSpine = base.player.animator.firstSkeleton.Find("Spine");
+            _firstSpineHook = _firstSpine.Find("Spine_Hook");
             _firstLeftHook = _firstSpine.Find("Left_Shoulder").Find("Left_Arm").Find("Left_Hand")
                 .Find("Left_Hook");
             _firstRightHook = _firstSpine.Find("Right_Shoulder").Find("Right_Arm").Find("Right_Hand")
@@ -2564,6 +2575,7 @@ public class PlayerEquipment : PlayerCaller
         if (base.player.third != null)
         {
             _thirdSpine = base.player.animator.thirdSkeleton.Find("Spine");
+            _thirdSpineHook = _thirdSpine.Find("Spine_Hook");
             _thirdLeftHook = _thirdSpine.Find("Left_Shoulder").Find("Left_Arm").Find("Left_Hand")
                 .Find("Left_Hook");
             _thirdRightHook = _thirdSpine.Find("Right_Shoulder").Find("Right_Arm").Find("Right_Hand")
@@ -2572,6 +2584,7 @@ public class PlayerEquipment : PlayerCaller
         if (base.channel.IsLocalPlayer && base.player.character != null)
         {
             _characterSpine = base.player.character.Find("Skeleton/Spine");
+            _characterSpineHook = _characterSpine.Find("Spine_Hook");
             _characterLeftHook = _characterSpine.Find("Left_Shoulder").Find("Left_Arm").Find("Left_Hand")
                 .Find("Left_Hook");
             _characterRightHook = _characterSpine.Find("Right_Shoulder").Find("Right_Arm").Find("Right_Hand")

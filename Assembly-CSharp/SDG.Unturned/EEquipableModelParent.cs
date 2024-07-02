@@ -7,5 +7,6 @@ public enum EEquipableModelParent
 {
     RightHook,
     LeftHook,
-    Spine
+    Spine,
+    SpineHook
 }
