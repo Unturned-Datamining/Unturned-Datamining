@@ -102,6 +102,8 @@ public class InteractableVehicle : Interactable
 
     private bool isExhaustGameObjectActive;
 
+    private bool isExhaustRateOverTimeZero;
+
     private ParticleSystem[] exhaustParticleSystems;
 
     private Transform steeringWheelModelTransform;
@@ -1766,13 +1768,9 @@ public class InteractableVehicle : Interactable
                     }
                 }
             }
-            if (exhaustParticleSystems != null)
+            if (exhaustParticleSystems != null && !isExhaustRateOverTimeZero)
             {
-                for (int j = 0; j < exhaustParticleSystems.Length; j++)
-                {
-                    ParticleSystem.EmissionModule emission = exhaustParticleSystems[j].emission;
-                    emission.rateOverTime = 0f;
-                }
+                SetExhaustParticleSystemsRateOverTimeToZero();
             }
             if (asset.ShouldExplosionBurnMaterials)
             {
@@ -1782,10 +1780,10 @@ public class InteractableVehicle : Interactable
                 }
                 if (turrets != null)
                 {
-                    for (int k = 0; k < turrets.Length; k++)
+                    for (int j = 0; j < turrets.Length; j++)
                     {
-                        HighlighterTool.color(turrets[k].turretYaw, new Color(0.25f, 0.25f, 0.25f));
-                        HighlighterTool.color(turrets[k].turretPitch, new Color(0.25f, 0.25f, 0.25f));
+                        HighlighterTool.color(turrets[j].turretYaw, new Color(0.25f, 0.25f, 0.25f));
+                        HighlighterTool.color(turrets[j].turretPitch, new Color(0.25f, 0.25f, 0.25f));
                     }
                 }
             }
@@ -3122,9 +3120,14 @@ public class InteractableVehicle : Interactable
                             ParticleSystem.EmissionModule emission = particleSystem.emission;
                             emission.rateOverTime = (float)particleSystem.main.maxParticles * num3;
                         }
+                        isExhaustRateOverTimeZero = false;
                     }
                     else if (isExhaustGameObjectActive)
                     {
+                        if (!isExhaustRateOverTimeZero)
+                        {
+                            SetExhaustParticleSystemsRateOverTimeToZero();
+                        }
                         bool flag = false;
                         ParticleSystem[] array2 = exhaustParticleSystems;
                         for (int j = 0; j < array2.Length; j++)
@@ -3931,7 +3934,10 @@ public class InteractableVehicle : Interactable
                 {
                     Transform child2 = transform17.GetChild(m);
                     exhaustParticleSystems[m] = child2.GetComponent<ParticleSystem>();
+                    ParticleSystem.EmissionModule emission = exhaustParticleSystems[m].emission;
+                    emission.rateOverTime = 0f;
                 }
+                isExhaustRateOverTimeZero = true;
             }
             frontModelTransform = base.transform.Find("Objects/Front");
             if (frontModelTransform != null)
@@ -4088,7 +4094,7 @@ public class InteractableVehicle : Interactable
             Wheel[] wheels = _wheels;
             for (int i = 0; i < wheels.Length; i++)
             {
-                wheels[i].PreDestroy();
+                wheels[i].OnVehicleDestroyed();
             }
         }
         if (skinMaterialToDestroy != null)
@@ -4416,6 +4422,17 @@ public class InteractableVehicle : Interactable
         {
             renderer.sharedMaterial = skinMaterial;
         }
+    }
+
+    private void SetExhaustParticleSystemsRateOverTimeToZero()
+    {
+        ParticleSystem[] array = exhaustParticleSystems;
+        for (int i = 0; i < array.Length; i++)
+        {
+            ParticleSystem.EmissionModule emission = array[i].emission;
+            emission.rateOverTime = 0f;
+        }
+        isExhaustRateOverTimeZero = true;
     }
 
     [Obsolete]

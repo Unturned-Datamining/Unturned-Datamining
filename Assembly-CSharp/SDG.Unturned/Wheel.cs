@@ -257,20 +257,23 @@ public class Wheel
         }
     }
 
-    internal void PreDestroy()
+    internal void OnVehicleDestroyed()
     {
-        if (motionEffectInstances == null)
+        if (motionEffectInstances != null)
         {
-            return;
+            foreach (TireMotionEffectInstance motionEffectInstance in motionEffectInstances)
+            {
+                motionEffectInstance.DestroyEffect();
+                motionEffectInstancesPool.Add(motionEffectInstance);
+            }
+            motionEffectInstances.Clear();
+            motionEffectInstances = null;
+            currentGroundEffect = null;
         }
-        foreach (TireMotionEffectInstance motionEffectInstance in motionEffectInstances)
+        if (model != null && model.transform.parent == null)
         {
-            motionEffectInstance.DestroyEffect();
-            motionEffectInstancesPool.Add(motionEffectInstance);
+            UnityEngine.Object.Destroy(model.gameObject);
         }
-        motionEffectInstances.Clear();
-        motionEffectInstances = null;
-        currentGroundEffect = null;
     }
 
     /// <summary>
