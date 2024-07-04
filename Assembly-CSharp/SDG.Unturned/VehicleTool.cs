@@ -22,6 +22,42 @@ public class VehicleTool : MonoBehaviour
     }
 
     /// <summary>
+    /// Handles VehicleRedirectorAsset returning load paint color override (if any) and returns actual vehicle asset (if any).
+    /// </summary>
+    public static VehicleAsset FindVehicleByLegacyIdAndHandleRedirectsWithLoadColor(ushort legacyId, out Color32 paintColor)
+    {
+        paintColor = new Color32(0, 0, 0, 0);
+        Asset asset = Assets.find(EAssetType.VEHICLE, legacyId);
+        if (asset is VehicleRedirectorAsset { LoadPaintColor: var loadPaintColor } vehicleRedirectorAsset)
+        {
+            if (loadPaintColor.HasValue)
+            {
+                paintColor = vehicleRedirectorAsset.LoadPaintColor.Value;
+            }
+            asset = vehicleRedirectorAsset.TargetVehicle.Find();
+        }
+        return asset as VehicleAsset;
+    }
+
+    /// <summary>
+    /// Handles VehicleRedirectorAsset returning spawn paint color override (if any) and returns actual vehicle asset (if any).
+    /// </summary>
+    public static VehicleAsset FindVehicleByLegacyIdAndHandleRedirectsWithSpawnColor(ushort legacyId, out Color32 paintColor)
+    {
+        paintColor = new Color32(0, 0, 0, 0);
+        Asset asset = Assets.find(EAssetType.VEHICLE, legacyId);
+        if (asset is VehicleRedirectorAsset { SpawnPaintColor: var spawnPaintColor } vehicleRedirectorAsset)
+        {
+            if (spawnPaintColor.HasValue)
+            {
+                paintColor = vehicleRedirectorAsset.SpawnPaintColor.Value;
+            }
+            asset = vehicleRedirectorAsset.TargetVehicle.Find();
+        }
+        return asset as VehicleAsset;
+    }
+
+    /// <summary>
     /// Handles VehicleRedirectorAsset (if any) and returns actual vehicle asset (if any).
     /// </summary>
     public static VehicleAsset FindVehicleByGuidAndHandleRedirects(Guid guid)
@@ -30,6 +66,88 @@ public class VehicleTool : MonoBehaviour
         if (asset is VehicleRedirectorAsset { TargetVehicle: var targetVehicle })
         {
             asset = targetVehicle.Find();
+        }
+        return asset as VehicleAsset;
+    }
+
+    /// <summary>
+    /// Handles VehicleRedirectorAsset returning load paint color override (if any) and returns actual vehicle asset (if any).
+    /// </summary>
+    public static VehicleAsset FindVehicleByGuidAndHandleRedirectsWithLoadColor(Guid guid, out Color32 paintColor)
+    {
+        paintColor = new Color32(0, 0, 0, 0);
+        Asset asset = Assets.find(guid);
+        if (asset is VehicleRedirectorAsset { LoadPaintColor: var loadPaintColor } vehicleRedirectorAsset)
+        {
+            if (loadPaintColor.HasValue)
+            {
+                paintColor = vehicleRedirectorAsset.LoadPaintColor.Value;
+            }
+            asset = vehicleRedirectorAsset.TargetVehicle.Find();
+        }
+        return asset as VehicleAsset;
+    }
+
+    /// <summary>
+    /// Handles VehicleRedirectorAsset returning spawn paint color override (if any) and returns actual vehicle asset (if any).
+    /// </summary>
+    public static VehicleAsset FindVehicleByGuidAndHandleRedirectsWithSpawnColor(Guid guid, out Color32 paintColor)
+    {
+        paintColor = new Color32(0, 0, 0, 0);
+        Asset asset = Assets.find(guid);
+        if (asset is VehicleRedirectorAsset { SpawnPaintColor: var spawnPaintColor } vehicleRedirectorAsset)
+        {
+            if (spawnPaintColor.HasValue)
+            {
+                paintColor = vehicleRedirectorAsset.SpawnPaintColor.Value;
+            }
+            asset = vehicleRedirectorAsset.TargetVehicle.Find();
+        }
+        return asset as VehicleAsset;
+    }
+
+    /// <summary>
+    /// Handles VehicleRedirectorAsset (if any) and returns actual vehicle asset (if any).
+    /// </summary>
+    public static VehicleAsset HandleRedirects(Asset asset)
+    {
+        if (asset is VehicleRedirectorAsset { TargetVehicle: var targetVehicle })
+        {
+            asset = targetVehicle.Find();
+        }
+        return asset as VehicleAsset;
+    }
+
+    /// <summary>
+    /// Handles VehicleRedirectorAsset returning load paint color override (if any) and returns actual vehicle asset (if any).
+    /// </summary>
+    public static VehicleAsset HandleRedirectsWithLoadColor(Asset asset, out Color32 paintColor)
+    {
+        paintColor = new Color32(0, 0, 0, 0);
+        if (asset is VehicleRedirectorAsset { LoadPaintColor: var loadPaintColor } vehicleRedirectorAsset)
+        {
+            if (loadPaintColor.HasValue)
+            {
+                paintColor = vehicleRedirectorAsset.LoadPaintColor.Value;
+            }
+            asset = vehicleRedirectorAsset.TargetVehicle.Find();
+        }
+        return asset as VehicleAsset;
+    }
+
+    /// <summary>
+    /// Handles VehicleRedirectorAsset returning spawn paint color override (if any) and returns actual vehicle asset (if any).
+    /// </summary>
+    public static VehicleAsset HandleRedirectsWithSpawnColor(Asset asset, out Color32 paintColor)
+    {
+        paintColor = new Color32(0, 0, 0, 0);
+        if (asset is VehicleRedirectorAsset { SpawnPaintColor: var spawnPaintColor } vehicleRedirectorAsset)
+        {
+            if (spawnPaintColor.HasValue)
+            {
+                paintColor = vehicleRedirectorAsset.SpawnPaintColor.Value;
+            }
+            asset = vehicleRedirectorAsset.TargetVehicle.Find();
         }
         return asset as VehicleAsset;
     }

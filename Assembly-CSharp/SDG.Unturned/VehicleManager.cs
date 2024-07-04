@@ -309,7 +309,16 @@ public class VehicleManager : SteamCaller
     /// </summary>
     public static InteractableVehicle spawnVehicleV2(ushort id, Vector3 point, Quaternion angle)
     {
-        return spawnVehicleInternal(Assets.find(EAssetType.VEHICLE, id), point, angle, CSteamID.Nil);
+        return spawnVehicleInternal(Assets.find(EAssetType.VEHICLE, id), point, angle, CSteamID.Nil, null);
+    }
+
+    /// <summary>
+    /// Supports redirects by VehicleRedirectorAsset. If paintColor is set that takes priority, otherwise if
+    /// redirector's SpawnPaintColor is set, that color is used,
+    /// </summary>
+    public static InteractableVehicle spawnVehicleV2(ushort id, Vector3 point, Quaternion angle, Color32? paintColor)
+    {
+        return spawnVehicleInternal(Assets.find(EAssetType.VEHICLE, id), point, angle, CSteamID.Nil, paintColor);
     }
 
     /// <summary>
@@ -321,7 +330,20 @@ public class VehicleManager : SteamCaller
         {
             throw new ArgumentNullException("player");
         }
-        return spawnVehicleInternal(Assets.find(EAssetType.VEHICLE, id), point, angle, player.channel.owner.playerID.steamID);
+        return spawnVehicleInternal(Assets.find(EAssetType.VEHICLE, id), point, angle, player.channel.owner.playerID.steamID, null);
+    }
+
+    /// <summary>
+    /// Supports redirects by VehicleRedirectorAsset. If paintColor is set that takes priority, otherwise if
+    /// redirector's SpawnPaintColor is set, that color is used,
+    /// </summary>
+    public static InteractableVehicle spawnLockedVehicleForPlayerV2(ushort id, Vector3 point, Quaternion angle, Player player, Color32? paintColor)
+    {
+        if (player == null)
+        {
+            throw new ArgumentNullException("player");
+        }
+        return spawnVehicleInternal(Assets.find(EAssetType.VEHICLE, id), point, angle, player.channel.owner.playerID.steamID, paintColor);
     }
 
     /// <summary>
@@ -329,7 +351,16 @@ public class VehicleManager : SteamCaller
     /// </summary>
     public static InteractableVehicle spawnVehicleV2(Asset asset, Vector3 point, Quaternion angle)
     {
-        return spawnVehicleInternal(asset, point, angle, CSteamID.Nil);
+        return spawnVehicleInternal(asset, point, angle, CSteamID.Nil, null);
+    }
+
+    /// <summary>
+    /// Supports redirects by VehicleRedirectorAsset. If paintColor is set that takes priority, otherwise if
+    /// redirector's SpawnPaintColor is set, that color is used,
+    /// </summary>
+    public static InteractableVehicle spawnVehicleV2(Asset asset, Vector3 point, Quaternion angle, Color32? paintColor)
+    {
+        return spawnVehicleInternal(asset, point, angle, CSteamID.Nil, paintColor);
     }
 
     /// <summary>
@@ -341,7 +372,20 @@ public class VehicleManager : SteamCaller
         {
             throw new ArgumentNullException("player");
         }
-        return spawnVehicleInternal(asset, point, angle, player.channel.owner.playerID.steamID);
+        return spawnVehicleInternal(asset, point, angle, player.channel.owner.playerID.steamID, null);
+    }
+
+    /// <summary>
+    /// Supports redirects by VehicleRedirectorAsset. If paintColor is set that takes priority, otherwise if
+    /// redirector's SpawnPaintColor is set, that color is used,
+    /// </summary>
+    public static InteractableVehicle spawnLockedVehicleForPlayerV2(Asset asset, Vector3 point, Quaternion angle, Player player, Color32? paintColor)
+    {
+        if (player == null)
+        {
+            throw new ArgumentNullException("player");
+        }
+        return spawnVehicleInternal(asset, point, angle, player.channel.owner.playerID.steamID, paintColor);
     }
 
     /// <summary>
@@ -375,21 +419,26 @@ public class VehicleManager : SteamCaller
 
     /// <summary>
     /// Used by external spawn vehicle methods.
-    /// Supports redirects by VehicleRedirectorAsset. If redirector's SpawnPaintColor is set, that color is used.
+    /// Supports redirects by VehicleRedirectorAsset. If redirector's SpawnPaintColor is set, that color is used,
+    /// unless preferredColor.a is byte.MaxValue.
     /// </summary>
     /// <param name="owner">Owner to lock vehicle for by default. Used to lock vehicles to the player who purchased them.</param>
-    private static InteractableVehicle spawnVehicleInternal(Asset asset, Vector3 point, Quaternion angle, CSteamID owner)
+    private static InteractableVehicle spawnVehicleInternal(Asset asset, Vector3 point, Quaternion angle, CSteamID owner, Color32? preferredColor)
     {
         if (asset == null)
         {
             return null;
         }
         Color32 paintColor = new Color32(0, 0, 0, 0);
+        if (preferredColor.HasValue)
+        {
+            paintColor = preferredColor.Value;
+        }
         VehicleAsset vehicleAsset;
         if (asset is VehicleRedirectorAsset { TargetVehicle: var targetVehicle } vehicleRedirectorAsset)
         {
             vehicleAsset = targetVehicle.Find();
-            if (vehicleRedirectorAsset.SpawnPaintColor.HasValue)
+            if (!preferredColor.HasValue && vehicleRedirectorAsset.SpawnPaintColor.HasValue)
             {
                 paintColor = vehicleRedirectorAsset.SpawnPaintColor.Value;
             }
@@ -2144,6 +2193,10 @@ public class VehicleManager : SteamCaller
                     }
                     if (vehicleAsset != null)
                     {
+                        if (!vehicleAsset.canTiresBeDamaged)
+                        {
+                            tireAliveMask = byte.MaxValue;
+                        }
                         NetId netId = NetIdRegistry.ClaimBlock(21u);
                         InteractableVehicle interactableVehicle = manager.addVehicle(vehicleAsset.GUID, skinID, mythicID, roadPosition, point, angle, sirens: false, blimp: false, headlights: false, taillights: false, fuel, isExploded: false, health, batteryCharge, owner, group, locked, null, array, num4, tireAliveMask, netId, paintColor);
                         if (interactableVehicle != null)

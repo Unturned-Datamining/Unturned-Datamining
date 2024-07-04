@@ -321,7 +321,7 @@ public class DamageTool
             ItemClothingAsset pantsAsset = player.clothing.pantsAsset;
             if (pantsAsset != null)
             {
-                if (Provider.modeConfigData.Items.Clothing_Has_Durability && player.clothing.pantsQuality > 0)
+                if (Provider.modeConfigData.Items.ShouldClothingTakeDamage && player.clothing.pantsQuality > 0)
                 {
                     player.clothing.pantsQuality--;
                     player.clothing.sendUpdatePantsQuality();
@@ -338,7 +338,7 @@ public class DamageTool
             ItemClothingAsset shirtAsset2 = player.clothing.shirtAsset;
             if (shirtAsset2 != null)
             {
-                if (Provider.modeConfigData.Items.Clothing_Has_Durability && player.clothing.shirtQuality > 0)
+                if (Provider.modeConfigData.Items.ShouldClothingTakeDamage && player.clothing.shirtQuality > 0)
                 {
                     player.clothing.shirtQuality--;
                     player.clothing.sendUpdateShirtQuality();
@@ -353,7 +353,7 @@ public class DamageTool
             if (player.clothing.vestAsset != null)
             {
                 ItemClothingAsset vestAsset = player.clothing.vestAsset;
-                if (Provider.modeConfigData.Items.Clothing_Has_Durability && player.clothing.vestQuality > 0)
+                if (Provider.modeConfigData.Items.ShouldClothingTakeDamage && player.clothing.vestQuality > 0)
                 {
                     player.clothing.vestQuality--;
                     player.clothing.sendUpdateVestQuality();
@@ -363,7 +363,7 @@ public class DamageTool
             if (player.clothing.shirtAsset != null)
             {
                 ItemClothingAsset shirtAsset = player.clothing.shirtAsset;
-                if (Provider.modeConfigData.Items.Clothing_Has_Durability && player.clothing.shirtQuality > 0)
+                if (Provider.modeConfigData.Items.ShouldClothingTakeDamage && player.clothing.shirtQuality > 0)
                 {
                     player.clothing.shirtQuality--;
                     player.clothing.sendUpdateShirtQuality();
@@ -377,7 +377,7 @@ public class DamageTool
             ItemClothingAsset hatAsset = player.clothing.hatAsset;
             if (hatAsset != null)
             {
-                if (Provider.modeConfigData.Items.Clothing_Has_Durability && player.clothing.hatQuality > 0)
+                if (Provider.modeConfigData.Items.ShouldClothingTakeDamage && player.clothing.hatQuality > 0)
                 {
                     player.clothing.hatQuality--;
                     player.clothing.sendUpdateHatQuality();

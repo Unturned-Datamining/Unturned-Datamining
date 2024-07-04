@@ -1,4 +1,4 @@
-InvalidParameterErrorText Failed to find parameters in format [SteamID | Player]/[VehicleID].
+InvalidParameterErrorText Failed to find parameters in format [SteamID | Player]/[VehicleID | Name].
 InvalidNumberErrorText Failed to convert {0} into a number.
 InvalidVehicleIDErrorText Failed to convert {0} into a VehicleID.
 
@@ -8,7 +8,7 @@ NotRunningErrorText Failed to give player vehicle while not running.
 CheatsErrorText Failed to give vehicle with cheats disabled.
 
 VehicleCommandText Vehicle
-VehicleInfoText Vehicle [SteamID | Player]/[VehicleID]
+VehicleInfoText Vehicle [SteamID | Player]/[VehicleID | Name]
 VehicleHelpText This gives a player a vehicle.
 
 VehicleText Successfully gave {0} {1}!

@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace SDG.Unturned;
 
@@ -87,7 +88,12 @@ public class VendorAsset : Asset
                 {
                     Assets.reportError(this, "missing \"" + text2 + "\" for vehicle");
                 }
-                selling[b2] = new VendorSellingVehicle(this, b2, guid2, legacyId2, newCost2, @string, array2, newRewardsList2);
+                Color32? newPaintColor = null;
+                if (data.TryParseColor32RGB("Selling_" + b2 + "_PaintColor", out var value))
+                {
+                    newPaintColor = value;
+                }
+                selling[b2] = new VendorSellingVehicle(this, b2, guid2, legacyId2, newCost2, @string, newPaintColor, array2, newRewardsList2);
             }
         }
         enableSorting = !data.ContainsKey("Disable_Sorting");

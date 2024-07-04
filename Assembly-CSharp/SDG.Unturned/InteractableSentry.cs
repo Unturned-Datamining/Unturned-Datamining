@@ -646,7 +646,7 @@ public class InteractableSentry : InteractableStorage
                     {
                         AlertTool.alert(base.transform.position, 48f);
                     }
-                    if (!sentryAsset.infiniteQuality && Provider.modeConfigData.Items.Weapons_Have_Durability && displayItem.quality > 0 && UnityEngine.Random.value < ((ItemWeaponAsset)displayAsset).durability)
+                    if (!sentryAsset.infiniteQuality && Provider.modeConfigData.Items.ShouldWeaponTakeDamage && displayItem.quality > 0 && UnityEngine.Random.value < ((ItemWeaponAsset)displayAsset).durability)
                     {
                         if (displayItem.quality > ((ItemWeaponAsset)displayAsset).wear)
                         {

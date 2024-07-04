@@ -831,7 +831,7 @@ public class UseableGun : Useable
             {
                 AlertTool.alert(base.transform.position, equippedGunAsset.alertRadius);
             }
-            if (Provider.modeConfigData.Items.Weapons_Have_Durability && base.player.equipment.quality > 0 && UnityEngine.Random.value < ((ItemWeaponAsset)base.player.equipment.asset).durability)
+            if (Provider.modeConfigData.Items.ShouldWeaponTakeDamage && base.player.equipment.quality > 0 && UnityEngine.Random.value < ((ItemWeaponAsset)base.player.equipment.asset).durability)
             {
                 if (base.player.equipment.quality > ((ItemWeaponAsset)base.player.equipment.asset).wear)
                 {

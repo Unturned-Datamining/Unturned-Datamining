@@ -18,6 +18,11 @@ public class VendorSellingVehicle : VendorSellingBase
     public string spawnpoint { get; protected set; }
 
     /// <summary>
+    /// If set, takes priority over VehicleRedirectorAsset's paint color and over VehicleAsset's default paint color.
+    /// </summary>
+    public Color32? paintColor { get; protected set; }
+
+    /// <summary>
     /// Returned asset is not necessarily a vehicle asset yet: It can also be a VehicleRedirectorAsset which the
     /// vehicle spawner requires to properly set paint color.
     /// </summary>
@@ -56,13 +61,14 @@ public class VendorSellingVehicle : VendorSellingBase
                 point = VehicleTool.GetPositionForVehicle(player);
                 rotation = player.transform.rotation;
             }
-            VehicleManager.spawnLockedVehicleForPlayerV2(asset, point, rotation, player);
+            VehicleManager.spawnLockedVehicleForPlayerV2(asset, point, rotation, player, paintColor);
         }
     }
 
-    public VendorSellingVehicle(VendorAsset newOuterAsset, byte newIndex, Guid newTargetAssetGuid, ushort newTargetAssetLegacyId, uint newCost, string newSpawnpoint, INPCCondition[] newConditions, NPCRewardsList newRewardsList)
+    public VendorSellingVehicle(VendorAsset newOuterAsset, byte newIndex, Guid newTargetAssetGuid, ushort newTargetAssetLegacyId, uint newCost, string newSpawnpoint, Color32? newPaintColor, INPCCondition[] newConditions, NPCRewardsList newRewardsList)
         : base(newOuterAsset, newIndex, newTargetAssetGuid, newTargetAssetLegacyId, newCost, newConditions, newRewardsList)
     {
         spawnpoint = newSpawnpoint;
+        paintColor = newPaintColor;
     }
 }

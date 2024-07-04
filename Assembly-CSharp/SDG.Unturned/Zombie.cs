@@ -1970,7 +1970,7 @@ public class Zombie : MonoBehaviour
                                     if (player.clothing.hatAsset != null)
                                     {
                                         ItemClothingAsset hatAsset = player.clothing.hatAsset;
-                                        if (Provider.modeConfigData.Items.Clothing_Has_Durability && player.clothing.hatQuality > 0)
+                                        if (Provider.modeConfigData.Items.ShouldClothingTakeDamage && player.clothing.hatQuality > 0)
                                         {
                                             player.clothing.hatQuality--;
                                             player.clothing.sendUpdateHatQuality();
@@ -1981,7 +1981,7 @@ public class Zombie : MonoBehaviour
                                     else if (player.clothing.vestAsset != null)
                                     {
                                         ItemClothingAsset vestAsset = player.clothing.vestAsset;
-                                        if (Provider.modeConfigData.Items.Clothing_Has_Durability && player.clothing.vestQuality > 0)
+                                        if (Provider.modeConfigData.Items.ShouldClothingTakeDamage && player.clothing.vestQuality > 0)
                                         {
                                             player.clothing.vestQuality--;
                                             player.clothing.sendUpdateVestQuality();
@@ -1992,7 +1992,7 @@ public class Zombie : MonoBehaviour
                                     else if (player.clothing.shirtAsset != null)
                                     {
                                         ItemClothingAsset shirtAsset = player.clothing.shirtAsset;
-                                        if (Provider.modeConfigData.Items.Clothing_Has_Durability && player.clothing.shirtQuality > 0)
+                                        if (Provider.modeConfigData.Items.ShouldClothingTakeDamage && player.clothing.shirtQuality > 0)
                                         {
                                             player.clothing.shirtQuality--;
                                             player.clothing.sendUpdateShirtQuality();
@@ -2006,7 +2006,7 @@ public class Zombie : MonoBehaviour
                                     if (player.clothing.vestAsset != null)
                                     {
                                         ItemClothingAsset vestAsset2 = player.clothing.vestAsset;
-                                        if (Provider.modeConfigData.Items.Clothing_Has_Durability && player.clothing.vestQuality > 0)
+                                        if (Provider.modeConfigData.Items.ShouldClothingTakeDamage && player.clothing.vestQuality > 0)
                                         {
                                             player.clothing.vestQuality--;
                                             player.clothing.sendUpdateVestQuality();
@@ -2017,7 +2017,7 @@ public class Zombie : MonoBehaviour
                                     else if (player.clothing.shirtAsset != null)
                                     {
                                         ItemClothingAsset shirtAsset2 = player.clothing.shirtAsset;
-                                        if (Provider.modeConfigData.Items.Clothing_Has_Durability && player.clothing.shirtQuality > 0)
+                                        if (Provider.modeConfigData.Items.ShouldClothingTakeDamage && player.clothing.shirtQuality > 0)
                                         {
                                             player.clothing.shirtQuality--;
                                             player.clothing.sendUpdateShirtQuality();
@@ -2031,7 +2031,7 @@ public class Zombie : MonoBehaviour
                                     if (player.clothing.pantsAsset != null)
                                     {
                                         ItemClothingAsset pantsAsset = player.clothing.pantsAsset;
-                                        if (Provider.modeConfigData.Items.Clothing_Has_Durability && player.clothing.pantsQuality > 0)
+                                        if (Provider.modeConfigData.Items.ShouldClothingTakeDamage && player.clothing.pantsQuality > 0)
                                         {
                                             player.clothing.pantsQuality--;
                                             player.clothing.sendUpdatePantsQuality();
@@ -2045,7 +2045,7 @@ public class Zombie : MonoBehaviour
                                     if (player.clothing.vestAsset != null)
                                     {
                                         ItemClothingAsset vestAsset3 = player.clothing.vestAsset;
-                                        if (Provider.modeConfigData.Items.Clothing_Has_Durability && player.clothing.vestQuality > 0)
+                                        if (Provider.modeConfigData.Items.ShouldClothingTakeDamage && player.clothing.vestQuality > 0)
                                         {
                                             player.clothing.vestQuality--;
                                             player.clothing.sendUpdateVestQuality();
@@ -2056,7 +2056,7 @@ public class Zombie : MonoBehaviour
                                     else if (player.clothing.shirtAsset != null)
                                     {
                                         ItemClothingAsset shirtAsset3 = player.clothing.shirtAsset;
-                                        if (Provider.modeConfigData.Items.Clothing_Has_Durability && player.clothing.shirtQuality > 0)
+                                        if (Provider.modeConfigData.Items.ShouldClothingTakeDamage && player.clothing.shirtQuality > 0)
                                         {
                                             player.clothing.shirtQuality--;
                                             player.clothing.sendUpdateShirtQuality();
@@ -2067,7 +2067,7 @@ public class Zombie : MonoBehaviour
                                     else if (player.clothing.pantsAsset != null)
                                     {
                                         ItemClothingAsset pantsAsset2 = player.clothing.pantsAsset;
-                                        if (Provider.modeConfigData.Items.Clothing_Has_Durability && player.clothing.pantsQuality > 0)
+                                        if (Provider.modeConfigData.Items.ShouldClothingTakeDamage && player.clothing.pantsQuality > 0)
                                         {
                                             player.clothing.pantsQuality--;
                                             player.clothing.sendUpdatePantsQuality();

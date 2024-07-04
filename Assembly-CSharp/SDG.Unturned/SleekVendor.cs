@@ -55,35 +55,57 @@ public class SleekVendor : SleekWrapper
         AddChild(button);
         float num = 0f;
         base.SizeOffset_Y = 60f;
-        if (element.hasIcon && Assets.find(EAssetType.ITEM, element.id) is ItemAsset itemAsset)
+        if (element.hasIcon)
         {
-            SleekItemIcon sleekItemIcon = new SleekItemIcon
+            if (Assets.find(EAssetType.ITEM, element.id) is ItemAsset itemAsset)
             {
-                PositionOffset_X = 5f,
-                PositionOffset_Y = 5f
-            };
-            if (itemAsset.size_y == 1)
-            {
-                sleekItemIcon.SizeOffset_X = itemAsset.size_x * 100;
-                sleekItemIcon.SizeOffset_Y = itemAsset.size_y * 100;
+                SleekItemIcon sleekItemIcon = new SleekItemIcon
+                {
+                    PositionOffset_X = 5f,
+                    PositionOffset_Y = 5f
+                };
+                if (itemAsset.size_y == 1)
+                {
+                    sleekItemIcon.SizeOffset_X = itemAsset.size_x * 100;
+                    sleekItemIcon.SizeOffset_Y = itemAsset.size_y * 100;
+                }
+                else
+                {
+                    sleekItemIcon.SizeOffset_X = itemAsset.size_x * 50;
+                    sleekItemIcon.SizeOffset_Y = itemAsset.size_y * 50;
+                }
+                num = sleekItemIcon.PositionOffset_X + sleekItemIcon.SizeOffset_X;
+                AddChild(sleekItemIcon);
+                sleekItemIcon.Refresh(element.id, 100, itemAsset.getState(isFull: false), itemAsset, Mathf.RoundToInt(sleekItemIcon.SizeOffset_X), Mathf.RoundToInt(sleekItemIcon.SizeOffset_Y));
+                base.SizeOffset_Y = sleekItemIcon.SizeOffset_Y + 10f;
             }
-            else
+        }
+        else if (element is VendorSellingVehicle { paintColor: var color } vendorSellingVehicle)
+        {
+            if (!color.HasValue && vendorSellingVehicle.FindAsset() is VehicleRedirectorAsset vehicleRedirectorAsset)
             {
-                sleekItemIcon.SizeOffset_X = itemAsset.size_x * 50;
-                sleekItemIcon.SizeOffset_Y = itemAsset.size_y * 50;
+                color = vehicleRedirectorAsset.SpawnPaintColor;
             }
-            num = sleekItemIcon.SizeOffset_X;
-            AddChild(sleekItemIcon);
-            sleekItemIcon.Refresh(element.id, 100, itemAsset.getState(isFull: false), itemAsset, Mathf.RoundToInt(sleekItemIcon.SizeOffset_X), Mathf.RoundToInt(sleekItemIcon.SizeOffset_Y));
-            base.SizeOffset_Y = sleekItemIcon.SizeOffset_Y + 10f;
+            if (color.HasValue)
+            {
+                ISleekImage sleekImage = Glazier.Get().CreateImage();
+                sleekImage.PositionOffset_X = 10f;
+                sleekImage.PositionOffset_Y = 10f;
+                sleekImage.SizeOffset_X = 20f;
+                sleekImage.SizeOffset_Y = 40f;
+                sleekImage.Texture = (Texture2D)GlazierResources.PixelTexture;
+                sleekImage.TintColor = color.Value;
+                AddChild(sleekImage);
+                num = sleekImage.PositionOffset_X + sleekImage.SizeOffset_X;
+            }
         }
         string displayName = element.displayName;
         if (!string.IsNullOrEmpty(displayName))
         {
             ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-            sleekLabel.PositionOffset_X = num + 10f;
+            sleekLabel.PositionOffset_X = num + 5f;
             sleekLabel.PositionOffset_Y = 5f;
-            sleekLabel.SizeOffset_X = 0f - num - 15f;
+            sleekLabel.SizeOffset_X = 0f - num - 10f;
             sleekLabel.SizeOffset_Y = 30f;
             sleekLabel.SizeScale_X = 1f;
             sleekLabel.Text = displayName;
@@ -97,9 +119,9 @@ public class SleekVendor : SleekWrapper
         if (!string.IsNullOrEmpty(displayDesc))
         {
             ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
-            sleekLabel2.PositionOffset_X = num + 10f;
+            sleekLabel2.PositionOffset_X = num + 5f;
             sleekLabel2.PositionOffset_Y = 25f;
-            sleekLabel2.SizeOffset_X = 0f - num - 15f;
+            sleekLabel2.SizeOffset_X = 0f - num - 10f;
             sleekLabel2.SizeOffset_Y = -30f;
             sleekLabel2.SizeScale_X = 1f;
             sleekLabel2.SizeScale_Y = 1f;
@@ -111,10 +133,10 @@ public class SleekVendor : SleekWrapper
             AddChild(sleekLabel2);
         }
         ISleekLabel sleekLabel3 = Glazier.Get().CreateLabel();
-        sleekLabel3.PositionOffset_X = num + 10f;
+        sleekLabel3.PositionOffset_X = num + 5f;
         sleekLabel3.PositionOffset_Y = -35f;
         sleekLabel3.PositionScale_Y = 1f;
-        sleekLabel3.SizeOffset_X = 0f - num - 15f;
+        sleekLabel3.SizeOffset_X = 0f - num - 10f;
         sleekLabel3.SizeOffset_Y = 30f;
         sleekLabel3.SizeScale_X = 1f;
         sleekLabel3.TextAlignment = TextAnchor.LowerRight;
@@ -128,10 +150,10 @@ public class SleekVendor : SleekWrapper
             sleekLabel3.Text = PlayerNPCVendorUI.localization.format("Cost", formatCost(element.cost));
         }
         amountLabel = Glazier.Get().CreateLabel();
-        amountLabel.PositionOffset_X = num + 10f;
+        amountLabel.PositionOffset_X = num + 5f;
         amountLabel.PositionOffset_Y = -35f;
         amountLabel.PositionScale_Y = 1f;
-        amountLabel.SizeOffset_X = 0f - num - 15f;
+        amountLabel.SizeOffset_X = 0f - num - 10f;
         amountLabel.SizeOffset_Y = 30f;
         amountLabel.SizeScale_X = 1f;
         amountLabel.TextAlignment = TextAnchor.LowerLeft;

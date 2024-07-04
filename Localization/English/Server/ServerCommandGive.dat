@@ -1,4 +1,4 @@
-InvalidParameterErrorText Failed to find parameters in format [SteamID | Player]/[ItemID]/[Amount].
+InvalidParameterErrorText Failed to find parameters in format [SteamID | Player]/[ItemID | Name]/[Amount].
 InvalidNumberErrorText Failed to convert {0} into a number.
 InvalidItemIDErrorText Failed to convert {0} into an ItemID.
 
@@ -8,7 +8,7 @@ NotRunningErrorText Failed to give player item while not running.
 CheatsErrorText Failed to give item with cheats disabled.
 
 GiveCommandText Give
-GiveInfoText Give [SteamID | Player]/[ItemID]/[Amount]
+GiveInfoText Give [SteamID | Player]/[ItemID | Name]/[Amount]
 GiveHelpText This gives a player an item.
 
 GiveText Successfully gave {0} {1} x{2}!

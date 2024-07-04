@@ -150,6 +150,10 @@ public class Item
     /// </summary>
     private static bool ShouldItemTypeSpawnAtFullQuality(EItemType type)
     {
+        if (!Provider.modeConfigData.Items.Has_Durability)
+        {
+            return true;
+        }
         switch (type)
         {
         case EItemType.HAT:

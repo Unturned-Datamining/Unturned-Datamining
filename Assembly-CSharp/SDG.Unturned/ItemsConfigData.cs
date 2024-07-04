@@ -1,5 +1,3 @@
-using System.Runtime.Serialization;
-
 namespace SDG.Unturned;
 
 public class ItemsConfigData
@@ -31,7 +29,7 @@ public class ItemsConfigData
     /// <summary>
     /// Original option for disabling item quality. Defaults to true. If false, items spawn at 100% quality and
     /// their quality doesn't decrease. For backwards compatibility, the newer per-item-type durability options
-    /// turn off if this is off.
+    /// are ignored if this is off.
     /// </summary>
     public bool Has_Durability;
 
@@ -72,6 +70,30 @@ public class ItemsConfigData
     /// doesn't decrease when used.
     /// </summary>
     public bool Weapons_Have_Durability;
+
+    internal bool ShouldClothingTakeDamage
+    {
+        get
+        {
+            if (!Has_Durability)
+            {
+                return false;
+            }
+            return Clothing_Has_Durability;
+        }
+    }
+
+    internal bool ShouldWeaponTakeDamage
+    {
+        get
+        {
+            if (!Has_Durability)
+            {
+                return false;
+            }
+            return Weapons_Have_Durability;
+        }
+    }
 
     public ItemsConfigData(EGameMode mode)
     {
@@ -149,21 +171,6 @@ public class ItemsConfigData
             Default_Spawns_At_Full_Quality = false;
             Clothing_Has_Durability = true;
             Weapons_Have_Durability = true;
-        }
-    }
-
-    [OnDeserialized]
-    public void OnDeserialized(StreamingContext context)
-    {
-        if (!Has_Durability)
-        {
-            Food_Spawns_At_Full_Quality = true;
-            Water_Spawns_At_Full_Quality = true;
-            Clothing_Spawns_At_Full_Quality = true;
-            Weapons_Spawn_At_Full_Quality = true;
-            Default_Spawns_At_Full_Quality = true;
-            Clothing_Has_Durability = false;
-            Weapons_Have_Durability = false;
         }
     }
 }
