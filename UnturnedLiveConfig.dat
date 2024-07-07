@@ -1,15 +1,22 @@
 MainMenuAlert
 {
-	Id 0
+	Id 58
+	Header SDGNelson Plush
+	Body We've collaborated with Makeship to make the SDGNelson/SDG-logo-character into a limited-edition collectible plush toy! Click here for more details.
+	Color #5349ed
+	Link https://www.makeship.com/products/sdgnelson
+	IconName SDGPlushie
 }
 MainMenuWorkshop
 {
 	AllowNews true
 	Featured
 	{
-		Id 13
-		Status New
-		Type Curated
+		Id 14
+		FileIds
+		[
+			2809108505
+		]
 	}
 	Popular
 	{
@@ -40,4 +47,6 @@ ItemStore
 }
 ShouldAllowJoiningInternetServersWithoutGslt false
 ShouldServersWithoutMonetizationTagBeVisibleInInternetServerList true
+IsAnniversaryTophatAvailable true
 QueryPingWarningOffsetMs 50
+CraftingPromotionId 6
