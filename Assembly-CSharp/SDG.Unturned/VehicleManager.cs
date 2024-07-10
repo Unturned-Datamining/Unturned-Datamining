@@ -846,14 +846,14 @@ public class VehicleManager : SteamCaller
                         reader.ReadBits(3, out var value14);
                         int value15 = (int)(value14 - 1);
                         value15 = Mathf.Clamp(value15, -1, interactableVehicle.asset.forwardGearRatios.Length);
-                        interactableVehicle.gearNumber = value15;
+                        interactableVehicle.GearNumber = value15;
                         reader.ReadUnsignedNormalizedFloat(7, out var value16);
-                        interactableVehicle.replicatedEngineRpm = Mathf.Lerp(interactableVehicle.asset.engineIdleRpm, interactableVehicle.asset.engineMaxRpm, value16);
+                        interactableVehicle.ReplicatedEngineRpm = Mathf.Lerp(interactableVehicle.asset.EngineIdleRpm, interactableVehicle.asset.EngineMaxRpm, value16);
                     }
                     else
                     {
-                        interactableVehicle.gearNumber = 1;
-                        interactableVehicle.replicatedEngineRpm = interactableVehicle.asset.engineIdleRpm;
+                        interactableVehicle.GearNumber = 1;
+                        interactableVehicle.ReplicatedEngineRpm = interactableVehicle.asset.EngineIdleRpm;
                     }
                 }
             }
@@ -1947,18 +1947,16 @@ public class VehicleManager : SteamCaller
             {
                 continue;
             }
-            ushort updateCount = 0;
             vehiclesToSend.Clear();
             for (int j = 0; j < vehicles.Count; j++)
             {
                 InteractableVehicle interactableVehicle = vehicles[j];
-                if (!(interactableVehicle == null) && interactableVehicle.updates != null && interactableVehicle.updates.Count != 0 && !interactableVehicle.checkDriver(client.playerID.steamID))
+                if (!(interactableVehicle == null) && ((interactableVehicle.updates != null && interactableVehicle.updates.Count > 0) || interactableVehicle.needsReplicationUpdate) && !interactableVehicle.checkDriver(client.playerID.steamID))
                 {
                     vehiclesToSend.Add(interactableVehicle);
-                    updateCount += (ushort)interactableVehicle.updates.Count;
                 }
             }
-            if (updateCount == 0)
+            if (vehiclesToSend.IsEmpty())
             {
                 continue;
             }
@@ -1966,48 +1964,46 @@ public class VehicleManager : SteamCaller
             {
                 Vector3 position = client.player.transform.position;
                 writer.WriteUInt32(seq);
-                writer.WriteUInt16(updateCount);
+                writer.WriteUInt16((ushort)vehiclesToSend.Count);
                 foreach (InteractableVehicle item in vehiclesToSend)
                 {
-                    bool flag = (item.transform.position - position).sqrMagnitude < 90000f;
-                    for (int l = 0; l < item.updates.Count; l++)
+                    Vector3 position2 = item.transform.position;
+                    bool flag = (position2 - position).sqrMagnitude < 90000f;
+                    Vector3 value = ((item.asset.engine != EEngine.TRAIN) ? position2 : InteractableVehicle.PackRoadPosition(item.roadPosition));
+                    writer.WriteUInt32(item.instanceID);
+                    writer.WriteClampedVector3(value, 13, 8);
+                    writer.WriteQuaternion(item.transform.rotation, 11);
+                    writer.WriteUnsignedClampedFloat(item.ReplicatedSpeed, 8, 2);
+                    writer.WriteClampedFloat(item.ReplicatedForwardVelocity, 9, 2);
+                    writer.WriteSignedNormalizedFloat(item.ReplicatedSteeringInput, 2);
+                    writer.WriteClampedFloat(item.ReplicatedVelocityInput, 9, 2);
+                    writer.WriteBit(flag);
+                    if (flag)
                     {
-                        VehicleStateUpdate vehicleStateUpdate = item.updates[l];
-                        writer.WriteUInt32(item.instanceID);
-                        writer.WriteClampedVector3(vehicleStateUpdate.pos, 13, 8);
-                        writer.WriteQuaternion(vehicleStateUpdate.rot, 11);
-                        writer.WriteUnsignedClampedFloat(item.ReplicatedSpeed, 8, 2);
-                        writer.WriteClampedFloat(item.ReplicatedForwardVelocity, 9, 2);
-                        writer.WriteSignedNormalizedFloat(item.ReplicatedSteeringInput, 2);
-                        writer.WriteClampedFloat(item.ReplicatedVelocityInput, 9, 2);
-                        writer.WriteBit(flag);
-                        if (flag)
+                        if (item.asset.replicatedWheelIndices != null)
                         {
-                            if (item.asset.replicatedWheelIndices != null)
+                            int[] replicatedWheelIndices = item.asset.replicatedWheelIndices;
+                            foreach (int num in replicatedWheelIndices)
                             {
-                                int[] replicatedWheelIndices = item.asset.replicatedWheelIndices;
-                                foreach (int num in replicatedWheelIndices)
+                                Wheel wheelAtIndex = item.GetWheelAtIndex(num);
+                                if (wheelAtIndex == null)
                                 {
-                                    Wheel wheelAtIndex = item.GetWheelAtIndex(num);
-                                    if (wheelAtIndex == null)
-                                    {
-                                        UnturnedLog.error($"\"{item.asset.FriendlyName}\" missing wheel for replicated index: {num}");
-                                        writer.WriteUnsignedNormalizedFloat(0f, 4);
-                                    }
-                                    else
-                                    {
-                                        writer.WriteUnsignedNormalizedFloat(wheelAtIndex.replicatedSuspensionState, 4);
-                                        writer.WritePhysicsMaterialNetId(wheelAtIndex.replicatedGroundMaterial);
-                                    }
+                                    UnturnedLog.error($"\"{item.asset.FriendlyName}\" missing wheel for replicated index: {num}");
+                                    writer.WriteUnsignedNormalizedFloat(0f, 4);
+                                }
+                                else
+                                {
+                                    writer.WriteUnsignedNormalizedFloat(wheelAtIndex.replicatedSuspensionState, 4);
+                                    writer.WritePhysicsMaterialNetId(wheelAtIndex.replicatedGroundMaterial);
                                 }
                             }
-                            if (item.asset.UsesEngineRpmAndGears)
-                            {
-                                uint value = (uint)(item.gearNumber + 1);
-                                writer.WriteBits(value, 3);
-                                float value2 = Mathf.InverseLerp(item.asset.engineIdleRpm, item.asset.engineMaxRpm, item.replicatedEngineRpm);
-                                writer.WriteUnsignedNormalizedFloat(value2, 7);
-                            }
+                        }
+                        if (item.asset.UsesEngineRpmAndGears)
+                        {
+                            uint value2 = (uint)(item.GearNumber + 1);
+                            writer.WriteBits(value2, 3);
+                            float value3 = Mathf.InverseLerp(item.asset.EngineIdleRpm, item.asset.EngineMaxRpm, item.ReplicatedEngineRpm);
+                            writer.WriteUnsignedNormalizedFloat(value3, 7);
                         }
                     }
                 }
@@ -2021,9 +2017,13 @@ public class VehicleManager : SteamCaller
         for (int k = 0; k < vehicles.Count; k++)
         {
             InteractableVehicle interactableVehicle2 = vehicles[k];
-            if (!(interactableVehicle2 == null) && interactableVehicle2.updates != null && interactableVehicle2.updates.Count != 0)
+            if (!(interactableVehicle2 == null))
             {
-                interactableVehicle2.updates.Clear();
+                if (interactableVehicle2.updates != null)
+                {
+                    interactableVehicle2.updates.Clear();
+                }
+                interactableVehicle2.needsReplicationUpdate = false;
             }
         }
     }

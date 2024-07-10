@@ -1030,8 +1030,8 @@ public class PlayerLifeUI
             }
             if (vehicleEngineLabel.IsVisible)
             {
-                string arg = ((vehicle.gearNumber < 0) ? localization.format("VehicleGear_Reverse") : ((vehicle.gearNumber != 0) ? vehicle.gearNumber.ToString() : localization.format("VehicleGear_Neutral")));
-                vehicleEngineLabel.Text = localization.format("VehicleEngineStatus", arg, Mathf.RoundToInt(vehicle.animatedEngineRpm));
+                string arg = ((vehicle.GearNumber < 0) ? localization.format("VehicleGear_Reverse") : ((vehicle.GearNumber != 0) ? vehicle.GearNumber.ToString() : localization.format("VehicleGear_Neutral")));
+                vehicleEngineLabel.Text = localization.format("VehicleEngineStatus", arg, Mathf.RoundToInt(vehicle.AnimatedEngineRpm));
             }
         }
         vehicleVisibleByDefault = isDriveable;

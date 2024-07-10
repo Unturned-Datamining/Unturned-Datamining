@@ -38,3 +38,5 @@ Interactability_Reward_4_Amount 1
 
 Chart Ignore
 Has_Clip_Prefab false
+
+Exclude_From_Satellite_Capture true

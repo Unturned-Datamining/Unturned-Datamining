@@ -1,7 +1,9 @@
+using System;
 using UnityEngine;
 
 namespace SDG.Unturned;
 
+[Obsolete("Replaced by MarkForReplicationUpdate. Will be removed in a future release.")]
 public struct VehicleStateUpdate
 {
     public Vector3 pos;

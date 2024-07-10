@@ -198,6 +198,12 @@ public class ObjectAsset : Asset
     public override string FriendlyName => objectName;
 
     /// <summary>
+    /// If true, object will be hidden when rendering GPS/satellite view.
+    /// Defaults to true if <see cref="P:SDG.Unturned.ObjectAsset.holidayRestriction" /> is set.
+    /// </summary>
+    public bool ShouldExcludeFromSatelliteCapture { get; private set; }
+
+    /// <summary>
     /// Only activated during this holiday.
     /// </summary>
     public ENPCHoliday holidayRestriction { get; protected set; }
@@ -834,6 +840,8 @@ public class ObjectAsset : Asset
         isGore = data.ParseBool("Is_Gore");
         shouldExcludeFromLevelBatching = data.ParseBool("Exclude_From_Level_Batching");
         shouldExcludeFromLevelBatching |= type == EObjectType.NPC || type == EObjectType.DECAL;
+        bool defaultValue = holidayRestriction != ENPCHoliday.NONE;
+        ShouldExcludeFromSatelliteCapture = data.ParseBool("Exclude_From_Satellite_Capture", defaultValue);
         conditions = new INPCCondition[data.ParseUInt8("Conditions", 0)];
         NPCTool.readConditions(data, localization, "Condition_", conditions, this);
     }

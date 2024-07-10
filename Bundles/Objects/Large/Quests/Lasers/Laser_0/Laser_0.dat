@@ -10,3 +10,5 @@ Condition_0_Logic Equal
 
 Chart Ignore
 Has_Clip_Prefab false
+
+Exclude_From_Satellite_Capture true

@@ -982,7 +982,8 @@ public class BarricadeManager : SteamCaller
                 continue;
             }
             point = interactableBed.transform.position;
-            angle = MeasurementTool.angleToByte(interactableBed.transform.rotation.eulerAngles.y + 90f);
+            float modelYaw = HousingConnections.GetModelYaw(interactableBed.transform);
+            angle = MeasurementTool.angleToByte(modelYaw + 90f);
             int num = Physics.OverlapCapsuleNonAlloc(point + new Vector3(0f, PlayerStance.RADIUS, 0f), point + new Vector3(0f, 2.5f - PlayerStance.RADIUS, 0f), PlayerStance.RADIUS, checkColliders, RayMasks.BLOCK_STANCE, QueryTriggerInteraction.Ignore);
             for (int i = 0; i < num; i++)
             {

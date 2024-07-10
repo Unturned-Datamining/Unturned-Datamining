@@ -18,7 +18,7 @@ internal class RpmEngineSoundController : DefaultEngineSoundControllerBase
     {
         VehicleAsset asset = vehicle.asset;
         float num = ((Provider.preferenceData != null) ? Provider.preferenceData.Audio.Vehicle_Engine_Volume_Multiplier : 1f);
-        float t = Mathf.InverseLerp(asset.engineIdleRpm, asset.engineMaxRpm, vehicle.animatedEngineRpm);
+        float t = Mathf.InverseLerp(asset.EngineIdleRpm, asset.EngineMaxRpm, vehicle.AnimatedEngineRpm);
         float pitch = Mathf.Lerp(soundConfiguration.idlePitch, soundConfiguration.maxPitch, t);
         float num2 = Mathf.Lerp(soundConfiguration.idleVolume, soundConfiguration.maxVolume, t);
         if (engineAudioSource != null)

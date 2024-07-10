@@ -23,7 +23,7 @@ public class MythicalEffectController : MonoBehaviour
         set
         {
             _isMythicalEffectEnabled = value;
-            MaybeInstantiateSystem();
+            MaybeInstantiateOrDestroySystem();
         }
     }
 
@@ -47,7 +47,7 @@ public class MythicalEffectController : MonoBehaviour
 
     private void OnEnable()
     {
-        MaybeInstantiateSystem();
+        MaybeInstantiateOrDestroySystem();
     }
 
     private void OnDisable()
@@ -70,16 +70,24 @@ public class MythicalEffectController : MonoBehaviour
 
     private void Start()
     {
-        MaybeInstantiateSystem();
+        MaybeInstantiateOrDestroySystem();
     }
 
-    private void MaybeInstantiateSystem()
+    private void MaybeInstantiateOrDestroySystem()
     {
-        if (systemTransform == null && systemPrefab != null && _isMythicalEffectEnabled && base.gameObject.activeInHierarchy)
+        if (_isMythicalEffectEnabled && base.gameObject.activeInHierarchy)
         {
-            base.transform.GetPositionAndRotation(out var position, out var rotation);
-            systemTransform = Object.Instantiate(systemPrefab, position, rotation).transform;
-            systemTransform.name = "System";
+            if (systemTransform == null && systemPrefab != null)
+            {
+                base.transform.GetPositionAndRotation(out var position, out var rotation);
+                systemTransform = Object.Instantiate(systemPrefab, position, rotation).transform;
+                systemTransform.name = "System";
+            }
+        }
+        else if (systemTransform != null)
+        {
+            Object.Destroy(systemTransform.gameObject);
+            systemTransform = null;
         }
     }
 }

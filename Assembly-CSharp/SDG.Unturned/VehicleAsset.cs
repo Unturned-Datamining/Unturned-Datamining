@@ -144,53 +144,6 @@ public class VehicleAsset : Asset, ISkinableAsset
 
     internal float[] forwardGearRatios;
 
-    /// <summary>
-    /// When engine RPM dips below this value shift to the next lower gear if available.
-    /// </summary>
-    internal float gearShiftDownThresholdRpm;
-
-    /// <summary>
-    /// When engine RPM exceeds this value shift to the next higher gear if available.
-    /// </summary>
-    internal float gearShiftUpThresholdRpm;
-
-    /// <summary>
-    /// How long after changing gears before throttle is engaged again.
-    /// </summary>
-    internal float gearShiftDuration;
-
-    /// <summary>
-    /// How long between changing gears to allow another automatic gear change.
-    /// </summary>
-    internal float gearShiftInterval;
-
-    /// <summary>
-    /// Minimum engine RPM.
-    /// </summary>
-    internal float engineIdleRpm;
-
-    /// <summary>
-    /// Maximum engine RPM.
-    /// </summary>
-    internal float engineMaxRpm;
-
-    /// <summary>
-    /// How quickly RPM can increase in RPM/s.
-    /// e.g., 1000 will take 2 seconds to go from 2000 to 4000 RPM.
-    /// </summary>
-    internal float engineRpmIncreaseRate;
-
-    /// <summary>
-    /// How quickly RPM can decrease in RPM/s.
-    /// e.g., 1000 will take 2 seconds to go from 4000 to 2000 RPM.
-    /// </summary>
-    internal float engineRpmDecreaseRate;
-
-    /// <summary>
-    /// Maximum torque (multiplied by output of torque curve).
-    /// </summary>
-    internal float engineMaxTorque;
-
     private static readonly Guid VANILLA_BATTERY_ITEM = new Guid("098b13be34a7411db7736b7f866ada69");
 
     protected bool _hasCrawler;
@@ -503,6 +456,53 @@ public class VehicleAsset : Asset, ISkinableAsset
     }
 
     /// <summary>
+    /// When engine RPM dips below this value shift to the next lower gear if available.
+    /// </summary>
+    public float GearShiftDownThresholdRpm { get; private set; }
+
+    /// <summary>
+    /// When engine RPM exceeds this value shift to the next higher gear if available.
+    /// </summary>
+    public float GearShiftUpThresholdRpm { get; private set; }
+
+    /// <summary>
+    /// How long after changing gears before throttle is engaged again.
+    /// </summary>
+    public float GearShiftDuration { get; private set; }
+
+    /// <summary>
+    /// How long between changing gears to allow another automatic gear change.
+    /// </summary>
+    public float GearShiftInterval { get; private set; }
+
+    /// <summary>
+    /// Minimum engine RPM.
+    /// </summary>
+    public float EngineIdleRpm { get; private set; }
+
+    /// <summary>
+    /// Maximum engine RPM.
+    /// </summary>
+    public float EngineMaxRpm { get; private set; }
+
+    /// <summary>
+    /// How quickly RPM can increase in RPM/s.
+    /// e.g., 1000 will take 2 seconds to go from 2000 to 4000 RPM.
+    /// </summary>
+    public float EngineRpmIncreaseRate { get; private set; }
+
+    /// <summary>
+    /// How quickly RPM can decrease in RPM/s.
+    /// e.g., 1000 will take 2 seconds to go from 4000 to 2000 RPM.
+    /// </summary>
+    public float EngineRpmDecreaseRate { get; private set; }
+
+    /// <summary>
+    /// Maximum torque (multiplied by output of torque curve).
+    /// </summary>
+    public float EngineMaxTorque { get; private set; }
+
+    /// <summary>
     /// Was a center of mass specified in the .dat?
     /// </summary>
     public bool hasCenterOfMassOverride { get; protected set; }
@@ -557,6 +557,29 @@ public class VehicleAsset : Asset, ISkinableAsset
     /// of a vehicle may want to use color variants without also allowing players to make it bright pink.
     /// </summary>
     public bool IsPaintable { get; protected set; }
+
+    /// <summary>
+    /// Get number of reverse gear ratios.
+    /// Exposed for plugin use.
+    /// </summary>
+    public int ReverseGearsCount => 1;
+
+    /// <summary>
+    /// Get number of forward gear ratios.
+    /// Exposed for plugin use.
+    /// </summary>
+    public int ForwardGearsCount
+    {
+        get
+        {
+            float[] array = forwardGearRatios;
+            if (array == null)
+            {
+                return 0;
+            }
+            return array.Length;
+        }
+    }
 
     public override EAssetType assetCategory => EAssetType.VEHICLE;
 
@@ -1006,13 +1029,27 @@ public class VehicleAsset : Asset, ISkinableAsset
         return Assets.FindEffectAssetByGuidOrLegacyId(_explosionEffectGuid, _explosion);
     }
 
+    /// <summary>
+    /// Returns reverseGearRatio for negative gears, actual value for valid gear number, otherwise zero.
+    /// Exposed for plugin use.
+    /// </summary>
+    public float GetEngineGearRatio(int gearNumber)
+    {
+        if (gearNumber < 0)
+        {
+            return reverseGearRatio;
+        }
+        int num = gearNumber - 1;
+        if (forwardGearRatios != null && num >= 0 && num < forwardGearRatios.Length)
+        {
+            return forwardGearRatios[num];
+        }
+        return 0f;
+    }
+
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
         base.PopulateAsset(bundle, data, localization);
-        if (id < 200 && !base.OriginAllowsVanillaLegacyId && !data.ContainsKey("Bypass_ID_Limit"))
-        {
-            throw new NotSupportedException("ID < 200");
-        }
         _vehicleName = localization.format("Name");
         _pitchIdle = data.ParseFloat("Pitch_Idle", -1f);
         _pitchDrive = data.ParseFloat("Pitch_Drive", -1f);
@@ -1376,15 +1413,15 @@ public class VehicleAsset : Asset, ISkinableAsset
                 forwardGearRatios = list4.ToArray();
             }
         }
-        gearShiftDownThresholdRpm = data.ParseFloat("GearShift_DownThresholdRPM", 1500f);
-        gearShiftUpThresholdRpm = data.ParseFloat("GearShift_UpThresholdRPM", 5500f);
-        gearShiftDuration = data.ParseFloat("GearShift_Duration", 0.5f);
-        gearShiftInterval = data.ParseFloat("GearShift_Interval", 1f);
-        engineIdleRpm = data.ParseFloat("EngineIdleRPM", 1000f);
-        engineMaxRpm = data.ParseFloat("EngineMaxRPM", 7000f);
-        engineRpmIncreaseRate = data.ParseFloat("EngineRPM_IncreaseRate", 10000f);
-        engineRpmDecreaseRate = data.ParseFloat("EngineRPM_DecreaseRate", 10000f);
-        engineMaxTorque = data.ParseFloat("EngineMaxTorque", 1f);
+        GearShiftDownThresholdRpm = data.ParseFloat("GearShift_DownThresholdRPM", 1500f);
+        GearShiftUpThresholdRpm = data.ParseFloat("GearShift_UpThresholdRPM", 5500f);
+        GearShiftDuration = data.ParseFloat("GearShift_Duration", 0.5f);
+        GearShiftInterval = data.ParseFloat("GearShift_Interval", 1f);
+        EngineIdleRpm = data.ParseFloat("EngineIdleRPM", 1000f);
+        EngineMaxRpm = data.ParseFloat("EngineMaxRPM", 7000f);
+        EngineRpmIncreaseRate = data.ParseFloat("EngineRPM_IncreaseRate", 10000f);
+        EngineRpmDecreaseRate = data.ParseFloat("EngineRPM_DecreaseRate", 10000f);
+        EngineMaxTorque = data.ParseFloat("EngineMaxTorque", 1f);
         engineSoundType = data.ParseEnum("EngineSound_Type", EVehicleEngineSoundType.Legacy);
         if (engineSoundType == EVehicleEngineSoundType.EngineRPMSimple)
         {

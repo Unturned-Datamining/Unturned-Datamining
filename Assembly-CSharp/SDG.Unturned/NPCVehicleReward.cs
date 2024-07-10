@@ -14,6 +14,11 @@ public class NPCVehicleReward : INPCReward
     public string spawnpoint { get; protected set; }
 
     /// <summary>
+    /// If set, takes priority over VehicleRedirectorAsset's paint color and over VehicleAsset's default paint color.
+    /// </summary>
+    public Color32? paintColor { get; protected set; }
+
+    /// <summary>
     /// Returned asset is not necessarily a vehicle asset yet: It can also be a VehicleRedirectorAsset which the
     /// vehicle spawner requires to properly set paint color.
     /// </summary>
@@ -48,7 +53,7 @@ public class NPCVehicleReward : INPCReward
             point = VehicleTool.GetPositionForVehicle(player);
             rotation = player.transform.rotation;
         }
-        VehicleManager.spawnLockedVehicleForPlayerV2(FindAsset(), point, rotation, player);
+        VehicleManager.spawnLockedVehicleForPlayerV2(FindAsset(), point, rotation, player, paintColor);
     }
 
     public override string formatReward(Player player)
@@ -89,11 +94,12 @@ public class NPCVehicleReward : INPCReward
         return sleekBox;
     }
 
-    public NPCVehicleReward(Guid newVehicleGuid, ushort newID, string newSpawnpoint, string newText)
+    public NPCVehicleReward(Guid newVehicleGuid, ushort newID, string newSpawnpoint, Color32? newPaintColor, string newText)
         : base(newText)
     {
         VehicleGuid = newVehicleGuid;
         id = newID;
         spawnpoint = newSpawnpoint;
+        paintColor = newPaintColor;
     }
 }

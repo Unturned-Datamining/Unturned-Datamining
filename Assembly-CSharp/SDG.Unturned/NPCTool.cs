@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace SDG.Unturned;
 
@@ -511,12 +512,12 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Short flag reward " + prefix + i + " missing _Value");
                 }
-                string key14 = prefix + i + "_Modification";
-                if (!data.ContainsKey(key14))
+                string key12 = prefix + i + "_Modification";
+                if (!data.ContainsKey(key12))
                 {
                     Assets.reportError(assetContext, "Short flag reward " + prefix + i + " missing _Modification");
                 }
-                iNPCReward = new NPCShortFlagReward(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseInt16(prefix + i + "_Value", 0), data.ParseEnum(key14, ENPCModificationType.NONE), desc);
+                iNPCReward = new NPCShortFlagReward(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseInt16(prefix + i + "_Value", 0), data.ParseEnum(key12, ENPCModificationType.NONE), desc);
                 break;
             }
             case ENPCRewardType.FLAG_SHORT_RANDOM:
@@ -533,12 +534,12 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Random short flag reward " + prefix + i + " missing _Max_Value");
                 }
-                string key7 = prefix + i + "_Modification";
-                if (!data.ContainsKey(key7))
+                string key14 = prefix + i + "_Modification";
+                if (!data.ContainsKey(key14))
                 {
                     Assets.reportError(assetContext, "Random short flag reward " + prefix + i + " missing _Modification");
                 }
-                iNPCReward = new NPCRandomShortFlagReward(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseInt16(prefix + i + "_Min_Value", 0), data.ParseInt16(prefix + i + "_Max_Value", 0), data.ParseEnum(key7, ENPCModificationType.NONE), desc);
+                iNPCReward = new NPCRandomShortFlagReward(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseInt16(prefix + i + "_Min_Value", 0), data.ParseInt16(prefix + i + "_Max_Value", 0), data.ParseEnum(key14, ENPCModificationType.NONE), desc);
                 break;
             }
             case ENPCRewardType.QUEST:
@@ -547,14 +548,14 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Quest reward " + prefix + i + " missing _ID");
                 }
-                data.ParseGuidOrLegacyId(prefix + i + "_ID", out var guid2, out var legacyId2);
-                iNPCReward = new NPCQuestReward(guid2, legacyId2, desc);
+                data.ParseGuidOrLegacyId(prefix + i + "_ID", out var guid, out var legacyId);
+                iNPCReward = new NPCQuestReward(guid, legacyId, desc);
                 break;
             }
             case ENPCRewardType.ITEM:
             {
-                string key3 = prefix + i + "_ID";
-                if (!data.ContainsKey(key3))
+                string key9 = prefix + i + "_ID";
+                if (!data.ContainsKey(key9))
                 {
                     Assets.reportError(assetContext, "Item reward " + prefix + i + " missing _ID");
                 }
@@ -562,10 +563,10 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Item reward " + prefix + i + " missing _Amount");
                 }
-                data.ParseGuidOrLegacyId(key3, out var guid, out var legacyId);
-                bool newShouldAutoEquip = data.ParseBool(prefix + i + "_Auto_Equip");
-                EItemOrigin origin = data.ParseEnum(prefix + i + "_Origin", EItemOrigin.CRAFT);
-                iNPCReward = new NPCItemReward(guid, legacyId, data.ParseUInt8(prefix + i + "_Amount", 0), newShouldAutoEquip, data.ParseInt32(prefix + i + "_Sight", -1), data.ParseInt32(prefix + i + "_Tactical", -1), data.ParseInt32(prefix + i + "_Grip", -1), data.ParseInt32(prefix + i + "_Barrel", -1), data.ParseInt32(prefix + i + "_Magazine", -1), data.ParseInt32(prefix + i + "_Ammo", -1), origin, desc);
+                data.ParseGuidOrLegacyId(key9, out var guid2, out var legacyId2);
+                bool newShouldAutoEquip2 = data.ParseBool(prefix + i + "_Auto_Equip");
+                EItemOrigin origin2 = data.ParseEnum(prefix + i + "_Origin", EItemOrigin.CRAFT);
+                iNPCReward = new NPCItemReward(guid2, legacyId2, data.ParseUInt8(prefix + i + "_Amount", 0), newShouldAutoEquip2, data.ParseInt32(prefix + i + "_Sight", -1), data.ParseInt32(prefix + i + "_Tactical", -1), data.ParseInt32(prefix + i + "_Grip", -1), data.ParseInt32(prefix + i + "_Barrel", -1), data.ParseInt32(prefix + i + "_Magazine", -1), data.ParseInt32(prefix + i + "_Ammo", -1), origin2, desc);
                 break;
             }
             case ENPCRewardType.ITEM_RANDOM:
@@ -578,9 +579,9 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Random item reward " + prefix + i + " missing _Amount");
                 }
-                bool newShouldAutoEquip2 = data.ParseBool(prefix + i + "_Auto_Equip");
-                EItemOrigin origin2 = data.ParseEnum(prefix + i + "_Origin", EItemOrigin.CRAFT);
-                iNPCReward = new NPCRandomItemReward(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseUInt8(prefix + i + "_Amount", 0), newShouldAutoEquip2, origin2, desc);
+                bool newShouldAutoEquip = data.ParseBool(prefix + i + "_Auto_Equip");
+                EItemOrigin origin = data.ParseEnum(prefix + i + "_Origin", EItemOrigin.CRAFT);
+                iNPCReward = new NPCRandomItemReward(data.ParseUInt16(prefix + i + "_ID", 0), data.ParseUInt8(prefix + i + "_Amount", 0), newShouldAutoEquip, origin, desc);
                 break;
             }
             case ENPCRewardType.ACHIEVEMENT:
@@ -599,8 +600,8 @@ public class NPCTool
             }
             case ENPCRewardType.VEHICLE:
             {
-                string key11 = prefix + i + "_ID";
-                if (!data.ContainsKey(key11))
+                string key10 = prefix + i + "_ID";
+                if (!data.ContainsKey(key10))
                 {
                     Assets.reportError(assetContext, "Vehicle reward " + prefix + i + " missing _ID");
                 }
@@ -608,8 +609,13 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Vehicle reward " + prefix + i + " missing _Spawnpoint");
                 }
-                data.ParseGuidOrLegacyId(key11, out var guid3, out var legacyId3);
-                iNPCReward = new NPCVehicleReward(guid3, legacyId3, data.GetString(prefix + i + "_Spawnpoint"), desc);
+                data.ParseGuidOrLegacyId(key10, out var guid3, out var legacyId3);
+                Color32? newPaintColor = null;
+                if (data.TryParseColor32RGB(prefix + i + "_PaintColor", out var value))
+                {
+                    newPaintColor = value;
+                }
+                iNPCReward = new NPCVehicleReward(guid3, legacyId3, data.GetString(prefix + i + "_Spawnpoint"), newPaintColor, desc);
                 break;
             }
             case ENPCRewardType.TELEPORT:
@@ -636,28 +642,28 @@ public class NPCTool
                 {
                     Assets.reportError(assetContext, "Math reward " + prefix + i + " missing _B_ID or _B_Value");
                 }
-                string key9 = prefix + i + "_Operation";
-                if (!data.ContainsKey(key9))
+                string key7 = prefix + i + "_Operation";
+                if (!data.ContainsKey(key7))
                 {
                     Assets.reportError(assetContext, "Math reward " + prefix + i + " missing _Operation");
                 }
-                iNPCReward = new NPCFlagMathReward(data.ParseUInt16(prefix + i + "_A_ID", 0), data.ParseUInt16(prefix + i + "_B_ID", 0), data.ParseInt16(prefix + i + "_B_Value", 0), data.ParseEnum(key9, ENPCOperationType.NONE), desc);
+                iNPCReward = new NPCFlagMathReward(data.ParseUInt16(prefix + i + "_A_ID", 0), data.ParseUInt16(prefix + i + "_B_ID", 0), data.ParseInt16(prefix + i + "_B_Value", 0), data.ParseEnum(key7, ENPCOperationType.NONE), desc);
                 break;
             }
             case ENPCRewardType.CURRENCY:
             {
-                string key4 = prefix + i + "_GUID";
-                if (!data.ContainsKey(key4))
+                string key3 = prefix + i + "_GUID";
+                if (!data.ContainsKey(key3))
                 {
                     Assets.reportError(assetContext, "Currency reward " + prefix + i + " missing _GUID");
                 }
-                string key5 = prefix + i + "_Value";
-                if (!data.ContainsKey(key5))
+                string key4 = prefix + i + "_Value";
+                if (!data.ContainsKey(key4))
                 {
                     Assets.reportError(assetContext, "Currency reward " + prefix + i + " missing _Value");
                 }
-                AssetReference<ItemCurrencyAsset> newCurrency = data.readAssetReference<ItemCurrencyAsset>(key4);
-                uint newValue = data.ParseUInt32(key5);
+                AssetReference<ItemCurrencyAsset> newCurrency = data.readAssetReference<ItemCurrencyAsset>(key3);
+                uint newValue = data.ParseUInt32(key4);
                 iNPCReward = new NPCCurrencyReward(newCurrency, newValue, desc);
                 break;
             }
@@ -683,42 +689,42 @@ public class NPCTool
             }
             case ENPCRewardType.PLAYER_LIFE_FOOD:
             {
-                string key12 = prefix + i + "_Value";
-                if (!data.ContainsKey(key12))
+                string key11 = prefix + i + "_Value";
+                if (!data.ContainsKey(key11))
                 {
                     Assets.reportError(assetContext, "Player life food reward " + prefix + i + " missing _Value");
                 }
-                iNPCReward = new NPCPlayerLifeFoodReward(data.ParseInt32(key12), desc);
+                iNPCReward = new NPCPlayerLifeFoodReward(data.ParseInt32(key11), desc);
                 break;
             }
             case ENPCRewardType.PLAYER_LIFE_WATER:
             {
-                string key10 = prefix + i + "_Value";
-                if (!data.ContainsKey(key10))
+                string key8 = prefix + i + "_Value";
+                if (!data.ContainsKey(key8))
                 {
                     Assets.reportError(assetContext, "Player life water reward " + prefix + i + " missing _Value");
                 }
-                iNPCReward = new NPCPlayerLifeWaterReward(data.ParseInt32(key10), desc);
+                iNPCReward = new NPCPlayerLifeWaterReward(data.ParseInt32(key8), desc);
                 break;
             }
             case ENPCRewardType.PLAYER_LIFE_VIRUS:
             {
-                string key8 = prefix + i + "_Value";
-                if (!data.ContainsKey(key8))
+                string key6 = prefix + i + "_Value";
+                if (!data.ContainsKey(key6))
                 {
                     Assets.reportError(assetContext, "Player life virus reward " + prefix + i + " missing _Value");
                 }
-                iNPCReward = new NPCPlayerLifeVirusReward(data.ParseInt32(key8), desc);
+                iNPCReward = new NPCPlayerLifeVirusReward(data.ParseInt32(key6), desc);
                 break;
             }
             case ENPCRewardType.REWARDS_LIST_ASSET:
             {
-                string key6 = prefix + i + "_GUID";
-                if (!data.ContainsKey(key6))
+                string key5 = prefix + i + "_GUID";
+                if (!data.ContainsKey(key5))
                 {
                     Assets.reportError(assetContext, "Rewards list asset reward " + prefix + i + " missing _GUID");
                 }
-                iNPCReward = new NPCRewardsListAssetReward(data.readAssetReference<Asset>(key6), desc);
+                iNPCReward = new NPCRewardsListAssetReward(data.readAssetReference<Asset>(key5), desc);
                 break;
             }
             case ENPCRewardType.CUTSCENE_MODE:

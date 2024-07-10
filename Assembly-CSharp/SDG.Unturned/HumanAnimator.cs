@@ -32,6 +32,7 @@ public class HumanAnimator : CharacterAnimator
         {
             leftShoulder.parent = skull;
             rightShoulder.parent = skull;
+            spineHook.parent = skull;
         }
         spine.Rotate(0f, _pitch * 0.5f, _lean * LEAN);
         skull.Rotate(0f, _pitch * 0.5f, 0f);
@@ -41,6 +42,7 @@ public class HumanAnimator : CharacterAnimator
             skull.Rotate(0f, 0f - spine.localRotation.eulerAngles.x + _pitch * 0.5f, 0f);
             leftShoulder.parent = spine;
             rightShoulder.parent = spine;
+            spineHook.parent = spine;
             skull.Rotate(0f, spine.localRotation.eulerAngles.x - _pitch * 0.5f, 0f);
         }
     }

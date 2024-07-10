@@ -133,7 +133,13 @@ public class InteractableVehicle : Interactable
 
     private Transform smoke_1;
 
+    [Obsolete("Replaced by MarkForReplicationUpdate. Will be removed in a future release.")]
     public List<VehicleStateUpdate> updates;
+
+    /// <summary>
+    /// If true, server should replicate latest state to clients.
+    /// </summary>
+    internal bool needsReplicationUpdate;
 
     private Material[] sirenMaterials;
 
@@ -245,23 +251,6 @@ public class InteractableVehicle : Interactable
     /// by something going wrong and the vehicle exploding a billion times leaving items everywhere.
     /// </summary>
     private bool hasDroppedScrapItemsAlready;
-
-    /// <summary>
-    /// -1 is reverse.
-    /// 0 is neutral.
-    /// +1 is index 0 in gear ratios list.
-    /// </summary>
-    internal int gearNumber = 1;
-
-    /// <summary>
-    /// Engine RPM replicated by current simulation owner.
-    /// </summary>
-    internal float replicatedEngineRpm;
-
-    /// <summary>
-    /// Animated toward replicatedEngineRpm.
-    /// </summary>
-    internal float animatedEngineRpm;
 
     private EngineCurvesComponent engineCurvesComponent;
 
@@ -752,6 +741,23 @@ public class InteractableVehicle : Interactable
         }
     }
 
+    /// <summary>
+    /// -1 is reverse.
+    /// 0 is neutral.
+    /// +1 is index 0 in gear ratios list.
+    /// </summary>
+    public int GearNumber { get; internal set; }
+
+    /// <summary>
+    /// Engine RPM replicated by current simulation owner.
+    /// </summary>
+    public float ReplicatedEngineRpm { get; internal set; }
+
+    /// <summary>
+    /// Animated toward ReplicatedEngineRpm.
+    /// </summary>
+    public float AnimatedEngineRpm { get; private set; }
+
     public IEnumerable<Collider> vehicleColliders => _vehicleColliders;
 
     [Obsolete("Replaced by ReplicatedSteeringInput")]
@@ -865,6 +871,17 @@ public class InteractableVehicle : Interactable
             return _wheels[index];
         }
         return null;
+    }
+
+    /// <summary>
+    /// Primarily for backwards compatibility with plugins. Previously, multiple "updates" could be queued per
+    /// vehicle and sent to clients. This list was public, unfortunately, so plugins may rely on submitting vehicle
+    /// updates. After making it obsolete each vehicle can only be flagged as needing a replication update, and
+    /// this is reset after each server replication update.
+    /// </summary>
+    public void MarkForReplicationUpdate()
+    {
+        needsReplicationUpdate = true;
     }
 
     public void ResetDecayTimer()
@@ -2580,28 +2597,26 @@ public class InteractableVehicle : Interactable
             UndergroundAllowlist.AdjustPosition(ref point, 10f, 2f);
         }
         simulateBurnFuel();
+        bool num2 = !MathfEx.IsNearlyEqual(ReplicatedSteeringInput, newSteeringInput, 0.5f);
         ReplicatedSpeed = newSpeed;
         ReplicatedForwardVelocity = newForwardVelocity;
         ReplicatedSteeringInput = newSteeringInput;
         ReplicatedVelocityInput = newVelocityInput;
         real = point;
-        Vector3 pos;
         if (asset.engine == EEngine.TRAIN)
         {
             roadPosition = clampRoadPosition(UnpackRoadPosition(point));
             teleportTrain();
-            pos = PackRoadPosition(roadPosition);
         }
         else
         {
             rootRigidbody.MovePosition(point);
             rootRigidbody.MoveRotation(angle);
-            pos = point;
         }
-        if (updates != null && (Mathf.Abs(lastUpdatedPos.x - real.x) > Provider.UPDATE_DISTANCE || Mathf.Abs(lastUpdatedPos.y - real.y) > Provider.UPDATE_DISTANCE || Mathf.Abs(lastUpdatedPos.z - real.z) > Provider.UPDATE_DISTANCE))
+        if (num2 || Mathf.Abs(lastUpdatedPos.x - real.x) > Provider.UPDATE_DISTANCE || Mathf.Abs(lastUpdatedPos.y - real.y) > Provider.UPDATE_DISTANCE || Mathf.Abs(lastUpdatedPos.z - real.z) > Provider.UPDATE_DISTANCE)
         {
             lastUpdatedPos = real;
-            updates.Add(new VehicleStateUpdate(pos, angle));
+            MarkForReplicationUpdate();
         }
     }
 
@@ -2649,15 +2664,15 @@ public class InteractableVehicle : Interactable
     /// </summary>
     private int GetShiftUpGearNumber(float averagePoweredWheelRpm)
     {
-        for (int i = gearNumber; i < asset.forwardGearRatios.Length; i++)
+        for (int i = GearNumber; i < asset.forwardGearRatios.Length; i++)
         {
             float num = averagePoweredWheelRpm * asset.forwardGearRatios[i];
-            if (num > asset.gearShiftDownThresholdRpm && num < asset.gearShiftUpThresholdRpm)
+            if (num > asset.GearShiftDownThresholdRpm && num < asset.GearShiftUpThresholdRpm)
             {
                 return i + 1;
             }
         }
-        return gearNumber + 1;
+        return GearNumber + 1;
     }
 
     /// <summary>
@@ -2666,23 +2681,23 @@ public class InteractableVehicle : Interactable
     /// </summary>
     private int GetShiftDownGearNumber(float averagePoweredWheelRpm)
     {
-        for (int num = gearNumber - 2; num >= 0; num--)
+        for (int num = GearNumber - 2; num >= 0; num--)
         {
             float num2 = averagePoweredWheelRpm * asset.forwardGearRatios[num];
-            if (num2 > asset.gearShiftDownThresholdRpm && num2 < asset.gearShiftUpThresholdRpm)
+            if (num2 > asset.GearShiftDownThresholdRpm && num2 < asset.GearShiftUpThresholdRpm)
             {
                 return num + 1;
             }
         }
-        return gearNumber - 1;
+        return GearNumber - 1;
     }
 
     private void ChangeGears(int newGearNumber)
     {
-        if (gearNumber != newGearNumber)
+        if (GearNumber != newGearNumber)
         {
             timeSinceLastGearChange = 0f;
-            gearNumber = newGearNumber;
+            GearNumber = newGearNumber;
         }
     }
 
@@ -3044,11 +3059,10 @@ public class InteractableVehicle : Interactable
                         }
                     }
                 }
-                if (updates != null && updates.Count == 0 && (Mathf.Abs(lastUpdatedPos.x - base.transform.position.x) > Provider.UPDATE_DISTANCE || Mathf.Abs(lastUpdatedPos.y - base.transform.position.y) > Provider.UPDATE_DISTANCE || Mathf.Abs(lastUpdatedPos.z - base.transform.position.z) > Provider.UPDATE_DISTANCE))
+                if (!needsReplicationUpdate && (Mathf.Abs(lastUpdatedPos.x - base.transform.position.x) > Provider.UPDATE_DISTANCE || Mathf.Abs(lastUpdatedPos.y - base.transform.position.y) > Provider.UPDATE_DISTANCE || Mathf.Abs(lastUpdatedPos.z - base.transform.position.z) > Provider.UPDATE_DISTANCE))
                 {
                     lastUpdatedPos = base.transform.position;
-                    Vector3 pos = ((asset.engine != EEngine.TRAIN) ? base.transform.position : PackRoadPosition(roadPosition));
-                    updates.Add(new VehicleStateUpdate(pos, base.transform.rotation));
+                    MarkForReplicationUpdate();
                 }
             }
         }
@@ -3061,7 +3075,7 @@ public class InteractableVehicle : Interactable
             float t = 1f - Mathf.Pow(2f, -13f * Time.deltaTime);
             AnimatedForwardVelocity = Mathf.Lerp(AnimatedForwardVelocity, ReplicatedForwardVelocity, t);
             AnimatedVelocityInput = Mathf.Lerp(AnimatedVelocityInput, ReplicatedVelocityInput, t);
-            animatedEngineRpm = Mathf.Lerp(animatedEngineRpm, replicatedEngineRpm, t);
+            AnimatedEngineRpm = Mathf.Lerp(AnimatedEngineRpm, ReplicatedEngineRpm, t);
             if (!isExploded)
             {
                 if (isDriven)
@@ -3185,8 +3199,9 @@ public class InteractableVehicle : Interactable
             base.transform.GetPositionAndRotation(out var position, out var rotation);
             float t2 = 1f - Mathf.Pow(2f, -13f * Time.deltaTime);
             Vector3 position2 = Vector3.Lerp(position, interpTargetPosition, t2);
-            Quaternion rotation2 = Quaternion.Slerp(rotation, interpTargetRotation, t2);
-            base.transform.SetPositionAndRotation(position2, rotation2);
+            Quaternion rot = Quaternion.Slerp(rotation, interpTargetRotation, t2);
+            rootRigidbody.MovePosition(position2);
+            rootRigidbody.MoveRotation(rot);
         }
         if (Provider.isServer && isPhysical && asset.engine != EEngine.TRAIN && !isDriven)
         {
@@ -3274,57 +3289,57 @@ public class InteractableVehicle : Interactable
                 if (asset.UsesEngineRpmAndGears)
                 {
                     timeSinceLastGearChange += deltaTime;
-                    if (timeSinceLastGearChange > asset.gearShiftInterval)
+                    if (timeSinceLastGearChange > asset.GearShiftInterval)
                     {
                         if (latestGasInput < -0.01f)
                         {
                             ChangeGears(-1);
                         }
-                        else if (gearNumber < 1)
+                        else if (GearNumber < 1)
                         {
                             ChangeGears(1);
                         }
-                        else if (replicatedEngineRpm > asset.gearShiftUpThresholdRpm && gearNumber < asset.forwardGearRatios.Length)
+                        else if (ReplicatedEngineRpm > asset.GearShiftUpThresholdRpm && GearNumber < asset.forwardGearRatios.Length)
                         {
                             ChangeGears(GetShiftUpGearNumber(num5));
                         }
-                        else if (replicatedEngineRpm < asset.gearShiftDownThresholdRpm && gearNumber > 1)
+                        else if (ReplicatedEngineRpm < asset.GearShiftDownThresholdRpm && GearNumber > 1)
                         {
                             ChangeGears(GetShiftDownGearNumber(num5));
                         }
                     }
-                    if (gearNumber == -1)
+                    if (GearNumber == -1)
                     {
                         num8 *= asset.reverseGearRatio;
                     }
-                    else if (gearNumber >= 1 && gearNumber <= asset.forwardGearRatios.Length)
+                    else if (GearNumber >= 1 && GearNumber <= asset.forwardGearRatios.Length)
                     {
-                        num8 *= asset.forwardGearRatios[gearNumber - 1];
+                        num8 *= asset.forwardGearRatios[GearNumber - 1];
                     }
-                    num8 = Mathf.Max(num8, asset.engineIdleRpm);
+                    num8 = Mathf.Max(num8, asset.EngineIdleRpm);
                 }
-                if (num8 > replicatedEngineRpm)
+                if (num8 > ReplicatedEngineRpm)
                 {
-                    replicatedEngineRpm = Mathf.MoveTowards(replicatedEngineRpm, num8, asset.engineRpmIncreaseRate * deltaTime);
+                    ReplicatedEngineRpm = Mathf.MoveTowards(ReplicatedEngineRpm, num8, asset.EngineRpmIncreaseRate * deltaTime);
                 }
-                else if (num8 < replicatedEngineRpm)
+                else if (num8 < ReplicatedEngineRpm)
                 {
-                    replicatedEngineRpm = Mathf.MoveTowards(replicatedEngineRpm, num8, asset.engineRpmDecreaseRate * deltaTime);
+                    ReplicatedEngineRpm = Mathf.MoveTowards(ReplicatedEngineRpm, num8, asset.EngineRpmDecreaseRate * deltaTime);
                 }
-                replicatedEngineRpm = Mathf.Clamp(replicatedEngineRpm, asset.engineIdleRpm, asset.engineMaxRpm);
-                float num9 = Mathf.InverseLerp(asset.engineIdleRpm, asset.engineMaxRpm, replicatedEngineRpm);
-                float num10 = ((engineCurvesComponent != null) ? engineCurvesComponent.engineRpmToTorqueCurve.Evaluate(num9) : Mathf.Lerp(0.5f, 1f, num9)) * asset.engineMaxTorque * Mathf.Abs(latestGasInput);
-                if (timeSinceLastGearChange < asset.gearShiftDuration)
+                ReplicatedEngineRpm = Mathf.Clamp(ReplicatedEngineRpm, asset.EngineIdleRpm, asset.EngineMaxRpm);
+                float num9 = Mathf.InverseLerp(asset.EngineIdleRpm, asset.EngineMaxRpm, ReplicatedEngineRpm);
+                float num10 = ((engineCurvesComponent != null) ? engineCurvesComponent.engineRpmToTorqueCurve.Evaluate(num9) : Mathf.Lerp(0.5f, 1f, num9)) * asset.EngineMaxTorque * Mathf.Abs(latestGasInput);
+                if (timeSinceLastGearChange < asset.GearShiftDuration)
                 {
                     num10 = 0f;
                 }
-                if (gearNumber == -1)
+                if (GearNumber == -1)
                 {
                     num10 *= asset.reverseGearRatio;
                 }
-                else if (asset.UsesEngineRpmAndGears && gearNumber >= 1 && gearNumber <= asset.forwardGearRatios.Length)
+                else if (asset.UsesEngineRpmAndGears && GearNumber >= 1 && GearNumber <= asset.forwardGearRatios.Length)
                 {
-                    num10 *= asset.forwardGearRatios[gearNumber - 1];
+                    num10 *= asset.forwardGearRatios[GearNumber - 1];
                 }
                 if (asset.poweredWheelIndices != null && asset.poweredWheelIndices.Length != 0)
                 {
@@ -3615,6 +3630,7 @@ public class InteractableVehicle : Interactable
             smoke_0 = base.transform.Find("Smoke_0");
             smoke_1 = base.transform.Find("Smoke_1");
         }
+        ApplyDepthMaskMaterial();
     }
 
     internal void init(VehicleAsset asset)
@@ -3877,15 +3893,6 @@ public class InteractableVehicle : Interactable
         }
         hook = base.transform.Find("Hook");
         hooked = new List<HookInfo>();
-        Transform transform14 = base.transform.Find("DepthMask");
-        if (transform14 != null)
-        {
-            Renderer component6 = transform14.GetComponent<Renderer>();
-            if (component6 != null)
-            {
-                component6.sharedMaterial = Resources.Load<Material>("Materials/DepthMask");
-            }
-        }
         if (!Dedicator.IsDedicatedServer)
         {
             steeringWheelModelTransform = base.transform.Find("Objects/Steer");
@@ -3895,12 +3902,12 @@ public class InteractableVehicle : Interactable
             }
             pedalLeft = base.transform.Find("Objects").Find("Pedal_Left");
             pedalRight = base.transform.Find("Objects").Find("Pedal_Right");
-            Transform transform15 = base.transform.Find("Rotors");
-            if (transform15 != null)
+            Transform transform14 = base.transform.Find("Rotors");
+            if (transform14 != null)
             {
-                propellerModels = new PropellerModel[transform15.childCount];
+                propellerModels = new PropellerModel[transform14.childCount];
                 int num2 = 0;
-                foreach (Transform item3 in transform15)
+                foreach (Transform item3 in transform14)
                 {
                     PropellerModel propellerModel = new PropellerModel();
                     propellerModel.transform = item3;
@@ -3924,15 +3931,15 @@ public class InteractableVehicle : Interactable
                     num2++;
                 }
             }
-            Transform transform17 = base.transform.Find("Exhaust");
-            if (transform17 != null)
+            Transform transform16 = base.transform.Find("Exhaust");
+            if (transform16 != null)
             {
-                exhaustGameObject = transform17.gameObject;
+                exhaustGameObject = transform16.gameObject;
                 isExhaustGameObjectActive = exhaustGameObject.activeSelf;
-                exhaustParticleSystems = new ParticleSystem[transform17.childCount];
-                for (int m = 0; m < transform17.childCount; m++)
+                exhaustParticleSystems = new ParticleSystem[transform16.childCount];
+                for (int m = 0; m < transform16.childCount; m++)
                 {
-                    Transform child2 = transform17.GetChild(m);
+                    Transform child2 = transform16.GetChild(m);
                     exhaustParticleSystems[m] = child2.GetComponent<ParticleSystem>();
                     ParticleSystem.EmissionModule emission = exhaustParticleSystems[m].emission;
                     emission.rateOverTime = 0f;
@@ -3961,10 +3968,10 @@ public class InteractableVehicle : Interactable
             trainCars[0] = getTrainCar(base.transform);
             for (int n = 1; n <= childCount; n++)
             {
-                Transform transform18 = transform7.Find("Train_Car_" + n);
-                transform18.parent = null;
-                transform18.GetOrAddComponent<VehicleRef>().vehicle = this;
-                TrainCar trainCar = getTrainCar(transform18);
+                Transform transform17 = transform7.Find("Train_Car_" + n);
+                transform17.parent = null;
+                transform17.GetOrAddComponent<VehicleRef>().vehicle = this;
+                TrainCar trainCar = getTrainCar(transform17);
                 trainCar.trackPositionOffset = (float)n * (0f - asset.trainCarLength);
                 trainCars[n] = trainCar;
             }
@@ -4350,6 +4357,22 @@ public class InteractableVehicle : Interactable
         else
         {
             _wheels = new Wheel[0];
+        }
+    }
+
+    /// <summary>
+    /// Set material on DepthMask child renderer responsible for hiding water when interior of vehicle is submerged.
+    /// </summary>
+    private void ApplyDepthMaskMaterial()
+    {
+        Transform transform = base.transform.Find("DepthMask");
+        if (transform != null)
+        {
+            Renderer component = transform.GetComponent<Renderer>();
+            if (component != null)
+            {
+                component.sharedMaterial = Resources.Load<Material>("Materials/DepthMask");
+            }
         }
     }
 

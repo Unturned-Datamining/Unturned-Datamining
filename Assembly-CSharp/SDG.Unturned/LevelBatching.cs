@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -188,6 +189,11 @@ internal class LevelBatching
     private CommandLineFlag wantsToPreviewTextureAtlas = new CommandLineFlag(defaultValue: false, "-PreviewLevelBatchingTextureAtlas");
 
     /// <summary>
+    /// If true, replace each unique material with a colored one before static batching.
+    /// </summary>
+    private CommandLineFlag wantsToPreviewUniqueMaterials = new CommandLineFlag(defaultValue: false, "-PreviewLevelBatchingUniqueMaterials");
+
+    /// <summary>
     /// If true, log why texture/material can't be included in atlas.
     /// </summary>
     private CommandLineFlag shouldLogTextureAtlasExclusions = new CommandLineFlag(defaultValue: false, "-LogLevelBatchingTextureAtlasExclusions");
@@ -337,6 +343,12 @@ internal class LevelBatching
         StaticBatchingInitialState[] array2 = new StaticBatchingInitialState[array.Length];
         List<AudioSource> list = new List<AudioSource>(array.Length);
         List<AudioSource> list2 = new List<AudioSource>(16);
+        bool flag = Provider.isServer && (bool)wantsToPreviewUniqueMaterials;
+        Dictionary<Material, List<MeshRenderer>> dictionary = null;
+        if (flag)
+        {
+            dictionary = new Dictionary<Material, List<MeshRenderer>>();
+        }
         for (int i = 0; i < array.Length; i++)
         {
             MeshRenderer meshRenderer = staticBatchingMeshRenderers[i];
@@ -366,15 +378,54 @@ internal class LevelBatching
                     list.Add(item);
                 }
             }
+            if (flag && meshRenderer.sharedMaterial != null)
+            {
+                if (!dictionary.TryGetValue(meshRenderer.sharedMaterial, out var value))
+                {
+                    value = new List<MeshRenderer>();
+                    dictionary[meshRenderer.sharedMaterial] = value;
+                }
+                value.Add(meshRenderer);
+            }
+        }
+        if (flag)
+        {
+            List<List<MeshRenderer>> list3 = dictionary.Values.ToList();
+            for (int num = list3.Count - 1; num >= 0; num--)
+            {
+                if (list3[num].Count < 2)
+                {
+                    list3.RemoveAtFast(num);
+                }
+            }
+            list3.Sort((List<MeshRenderer> lhs, List<MeshRenderer> rhs) => rhs.Count - lhs.Count);
+            int count = list3.Count;
+            float num2 = 1f / (float)count;
+            float num3 = UnityEngine.Random.value;
+            for (int j = 0; j < count; j++)
+            {
+                float num4 = (float)j / (float)count;
+                float s = 1f;
+                float v = 1f - num4 * 0.75f;
+                Color value2 = Color.HSVToRGB(num3, s, v);
+                num3 = (num3 + num2) % 1f;
+                Material material = UnityEngine.Object.Instantiate(standardDecalableOpaque.materialTemplate);
+                objectsToDestroy.Add(material);
+                material.SetColor(propertyID_Color, value2);
+                foreach (MeshRenderer item2 in list3[j])
+                {
+                    item2.sharedMaterial = material;
+                }
+            }
         }
         GameObject staticBatchRoot = new GameObject("Static Batching Root (LevelBatching)");
         StaticBatchingUtility.Combine(array, staticBatchRoot);
-        for (int j = 0; j < array.Length; j++)
+        for (int k = 0; k < array.Length; k++)
         {
-            MeshRenderer meshRenderer2 = staticBatchingMeshRenderers[j];
+            MeshRenderer meshRenderer2 = staticBatchingMeshRenderers[k];
             Transform transform2 = meshRenderer2.transform;
             GameObject gameObject2 = meshRenderer2.gameObject;
-            StaticBatchingInitialState staticBatchingInitialState2 = array2[j];
+            StaticBatchingInitialState staticBatchingInitialState2 = array2[k];
             meshRenderer2.enabled = staticBatchingInitialState2.wasEnabled;
             if (!staticBatchingInitialState2.wasActive)
             {
@@ -385,9 +436,9 @@ internal class LevelBatching
                 transform2.parent = staticBatchingInitialState2.parent;
             }
         }
-        foreach (AudioSource item2 in list)
+        foreach (AudioSource item3 in list)
         {
-            item2.enabled = true;
+            item3.enabled = true;
         }
         stopwatch.Stop();
         UnturnedLog.info($"Level static batching took: {stopwatch.ElapsedMilliseconds}ms");

@@ -57,9 +57,9 @@ public class DrivingPlayerInputPacket : PlayerInputPacket
             reader.ReadBits(3, out var value4);
             int value5 = (int)(value4 - 1);
             value5 = Mathf.Clamp(value5, -1, vehicle.asset.forwardGearRatios.Length);
-            vehicle.gearNumber = value5;
+            vehicle.GearNumber = value5;
             reader.ReadUnsignedNormalizedFloat(7, out var value6);
-            vehicle.replicatedEngineRpm = Mathf.Lerp(vehicle.asset.engineIdleRpm, vehicle.asset.engineMaxRpm, value6);
+            vehicle.ReplicatedEngineRpm = Mathf.Lerp(vehicle.asset.EngineIdleRpm, vehicle.asset.EngineMaxRpm, value6);
         }
     }
 
@@ -97,9 +97,9 @@ public class DrivingPlayerInputPacket : PlayerInputPacket
         }
         if (vehicle.asset.UsesEngineRpmAndGears)
         {
-            uint value = (uint)(vehicle.gearNumber + 1);
+            uint value = (uint)(vehicle.GearNumber + 1);
             writer.WriteBits(value, 3);
-            float value2 = Mathf.InverseLerp(vehicle.asset.engineIdleRpm, vehicle.asset.engineMaxRpm, vehicle.replicatedEngineRpm);
+            float value2 = Mathf.InverseLerp(vehicle.asset.EngineIdleRpm, vehicle.asset.EngineMaxRpm, vehicle.ReplicatedEngineRpm);
             writer.WriteUnsignedNormalizedFloat(value2, 7);
         }
     }

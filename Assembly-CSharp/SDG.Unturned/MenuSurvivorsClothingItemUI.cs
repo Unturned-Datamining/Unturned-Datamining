@@ -318,6 +318,7 @@ public class MenuSurvivorsClothingItemUI
         deleteButton.PositionOffset_X = 5f;
         deleteButton.PositionScale_X = 0.5f;
         deleteButton.PositionScale_Y = 1f;
+        deleteButton.SizeOffset_X = -5f;
         deleteButton.SizeOffset_Y = 50f;
         deleteButton.SizeScale_X = 0.5f;
         deleteButton.Text = localization.format("Delete_Text");
@@ -329,6 +330,7 @@ public class MenuSurvivorsClothingItemUI
         scrapButton.PositionOffset_X = 5f;
         scrapButton.PositionScale_X = 0.75f;
         scrapButton.PositionScale_Y = 1f;
+        scrapButton.SizeOffset_X = -5f;
         scrapButton.SizeOffset_Y = 50f;
         scrapButton.SizeScale_X = 0.25f;
         scrapButton.OnClicked += onClickedScrapButton;

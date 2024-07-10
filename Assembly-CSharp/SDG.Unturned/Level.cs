@@ -1074,8 +1074,7 @@ public class Level : MonoBehaviour
             {
                 foreach (LevelObject item in LevelObjects.objects[b, b2])
                 {
-                    ObjectAsset asset = item.asset;
-                    bool isActiveOverrideForSatelliteCapture = asset != null && asset.holidayRestriction == ENPCHoliday.NONE;
+                    bool isActiveOverrideForSatelliteCapture = !(item.asset?.ShouldExcludeFromSatelliteCapture ?? true);
                     item.SetIsActiveOverrideForSatelliteCapture(isActiveOverrideForSatelliteCapture);
                 }
                 List<ResourceSpawnpoint> list = LevelGround.trees[b, b2];
@@ -1086,8 +1085,8 @@ public class Level : MonoBehaviour
                     ResourceSpawnpoint resourceSpawnpoint = list[i];
                     preCaptureObjectState.wasTreeEnabled[b, b2][i] = resourceSpawnpoint.isEnabled;
                     preCaptureObjectState.wasTreeSkyboxEnabled[b, b2][i] = resourceSpawnpoint.isSkyboxEnabled;
-                    ResourceAsset asset2 = resourceSpawnpoint.asset;
-                    if (asset2 != null && asset2.holidayRestriction == ENPCHoliday.NONE)
+                    ResourceAsset asset = resourceSpawnpoint.asset;
+                    if (asset != null && asset.holidayRestriction == ENPCHoliday.NONE)
                     {
                         resourceSpawnpoint.enable();
                     }

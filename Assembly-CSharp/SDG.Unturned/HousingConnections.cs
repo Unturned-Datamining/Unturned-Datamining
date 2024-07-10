@@ -1326,7 +1326,7 @@ public class HousingConnections
     /// Nelson 2024-06-26: With structure rotation replicated as a quaternion we need to be smarter about extracting
     /// yaw from model transform. Quaternion.eulerAngles.y isn't necessarily the yaw anymore.
     /// </summary>
-    private static float GetModelYaw(Transform modelTransform)
+    internal static float GetModelYaw(Transform modelTransform)
     {
         Vector3 vector = modelTransform.TransformDirection(Vector3.up);
         if (vector.y * vector.y > 0.999f)

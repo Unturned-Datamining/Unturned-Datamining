@@ -239,7 +239,7 @@ public class InteractableSentry : InteractableStorage
         }
         isAlert = false;
         lastAlert = 0.0;
-        targetYaw = base.transform.localRotation.eulerAngles.y;
+        targetYaw = HousingConnections.GetModelYaw(base.transform);
         yaw = targetYaw;
         targetPitch = 0f;
         pitch = targetPitch;
@@ -837,7 +837,7 @@ public class InteractableSentry : InteractableStorage
             }
             if (!isAlert)
             {
-                targetYaw = base.transform.localRotation.eulerAngles.y;
+                targetYaw = HousingConnections.GetModelYaw(base.transform);
             }
         }
         if (!(power != null))
