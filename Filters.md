@@ -1,10 +1,11 @@
 # Host bans
 
 ## IPv4 filters
-| Address        | BanFlags                     |
-| -------------- | ---------------------------- |
-| 194.147.90.86  | HiddenFromInternetServerList |
-| 37.230.210.234 | HiddenFromInternetServerList |
+| Address         | BanFlags                     |
+| --------------- | ---------------------------- |
+| 194.147.90.86   | HiddenFromInternetServerList |
+| 37.230.210.234  | HiddenFromInternetServerList |
+| 195.140.147.193 | HiddenFromInternetServerList |
 
 ## Name filters
 | Regex                                                                                 | BanFlags                          |
