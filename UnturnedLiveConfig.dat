@@ -12,10 +12,18 @@ MainMenuWorkshop
 	AllowNews true
 	Featured
 	{
-		Id 14
+		Id 15
 		FileIds
 		[
-			2809108505
+			3000549606
+		]
+		Status Updated
+		Type Curated
+		AssociatedStockpileItems
+		[
+			21061
+			1351
+			1352
 		]
 	}
 	Popular
