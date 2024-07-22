@@ -1,8 +1,8 @@
 MainMenuAlert
 {
-	Id 58
-	Header SDGNelson Plush
-	Body We've collaborated with Makeship to make the SDGNelson/SDG-logo-character into a limited-edition collectible plush toy! Click here for more details.
+	Id 59
+	Header Last chance for the SDGNelson Plushie!
+	Body There's only one week left to pick up the SDGNelson Plushie from Makeship. We've almost reached the order funding threshold - thank you to everyone who has supported the campaign so far! With your own genetic* clone of Unturned's developer (Nelson), you'll have unprecedented access to request features, report bugs, and ask your burning questions about the lore**.
 	Color #5349ed
 	Link https://www.makeship.com/products/sdgnelson
 	IconName SDGPlushie
@@ -57,6 +57,4 @@ ItemStore
 }
 ShouldAllowJoiningInternetServersWithoutGslt false
 ShouldServersWithoutMonetizationTagBeVisibleInInternetServerList true
-IsAnniversaryTophatAvailable true
 QueryPingWarningOffsetMs 50
-CraftingPromotionId 6
