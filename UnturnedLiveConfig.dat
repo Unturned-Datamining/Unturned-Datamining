@@ -13,20 +13,6 @@ MainMenuWorkshop
 	Featured
 	{
 		Id 16
-		FileIds
-		[
-			2136497468
-		]
-		Status Updated
-		Type Curated
-		OverrideDescription [h1][Elver][/h1]\n\nElver provides a unique experience through its fictional setting and completely reworked gameplay. Players must scavenge the whole map (keep an eye out for hidden ranger crates!) for resources that are used to slowly unlock endgame gear from the deadzone, safezone and horde beacons. Bunkers and the vast forests around Elver leave plenty of space for building bases.\n\nElver features 1000+ objects, 30+ vehicles and 700+ items, which contain important stats in their description. Items range from new guns with extended customizability, rare crafting materials and new base defense tools such as the Cyan Crystal or Devastator. Vehicles can only be locked if they are Epic or Legendary.
-		AssociatedStockpileItems
-		[
-			21049
-			1106
-			21045
-			1103
-		]
 	}
 	Popular
 	{
