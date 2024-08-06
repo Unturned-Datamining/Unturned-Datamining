@@ -140,10 +140,10 @@ public class SleekCuratedLevelLink : SleekWrapper
         backdrop.AddChild(nameLabel);
         viewOnWorkshopButton = Glazier.Get().CreateButton();
         viewOnWorkshopButton.PositionOffset_X = 15f;
-        viewOnWorkshopButton.PositionOffset_Y = -35f;
+        viewOnWorkshopButton.PositionOffset_Y = -45f;
         viewOnWorkshopButton.PositionScale_Y = 1f;
         viewOnWorkshopButton.SizeOffset_X = 150f;
-        viewOnWorkshopButton.SizeOffset_Y = 20f;
+        viewOnWorkshopButton.SizeOffset_Y = 30f;
         viewOnWorkshopButton.FontSize = ESleekFontSize.Small;
         viewOnWorkshopButton.Text = MenuPlaySingleplayerUI.localization.format("Retired_View_Label");
         viewOnWorkshopButton.TooltipText = MenuPlaySingleplayerUI.localization.format("Retired_View_Tooltip");
@@ -151,11 +151,11 @@ public class SleekCuratedLevelLink : SleekWrapper
         backdrop.AddChild(viewOnWorkshopButton);
         manageButton = Glazier.Get().CreateButton();
         manageButton.PositionOffset_X = -165f;
-        manageButton.PositionOffset_Y = -35f;
+        manageButton.PositionOffset_Y = -45f;
         manageButton.PositionScale_X = 1f;
         manageButton.PositionScale_Y = 1f;
         manageButton.SizeOffset_X = 150f;
-        manageButton.SizeOffset_Y = 20f;
+        manageButton.SizeOffset_Y = 30f;
         manageButton.FontSize = ESleekFontSize.Small;
         manageButton.TooltipText = MenuPlaySingleplayerUI.localization.format("Retired_Manage_Tooltip");
         updateManageLabel();

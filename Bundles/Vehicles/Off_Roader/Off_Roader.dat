@@ -48,17 +48,15 @@ PaintableSections
     }
 ]
 
-DefaultPaintColors
-[
-    "#353535" // Original Black
-    "#37658c" // Original Blue
-    "#2e642e" // Original Green
-    "#bd6e27" // Original Orange
-    "#6a466d" // Original Purple
-    "#9a2525" // Original Red
-    "#d4d4d4" // Original White
-    "#cdaa1e" // Original Yellow
-]
+DefaultPaintColor_Mode RandomHueOrGrayscale
+DefaultPaintColor_Configuration
+{
+    MinSaturation 0.15
+    MaxSaturation 0.7
+    MinValue 0.15
+    MaxValue 0.9
+    GrayscaleChance 0.1
+}
 
 WheelConfigurations
 [

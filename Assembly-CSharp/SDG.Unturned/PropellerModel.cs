@@ -20,8 +20,4 @@ public class PropellerModel
     /// transform's localRotation when the vehicle was instantiated.
     /// </summary>
     public Quaternion baseLocationRotation;
-
-    public object bladeTransparencySortHandle;
-
-    public object motionBlurTransparencySortHandle;
 }

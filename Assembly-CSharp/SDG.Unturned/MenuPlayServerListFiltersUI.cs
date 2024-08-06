@@ -30,7 +30,7 @@ public class MenuPlayServerListFiltersUI : SleekFullscreenBox
 
     private ISleekField nameField;
 
-    private ISleekField mapField;
+    private SleekButtonIcon mapButton;
 
     private SleekButtonState monetizationButtonState;
 
@@ -58,6 +58,8 @@ public class MenuPlayServerListFiltersUI : SleekFullscreenBox
 
     private SleekButtonState listSourceButtonState;
 
+    private ISleekInt32Field maxPingField;
+
     public void open()
     {
         if (!active)
@@ -80,8 +82,9 @@ public class MenuPlayServerListFiltersUI : SleekFullscreenBox
 
     public void OpenForMap(string map)
     {
-        mapField.Text = map;
-        FilterSettings.activeFilters.mapName = map;
+        LevelInfo level = Level.getLevel(map);
+        FilterSettings.activeFilters.ClearMaps();
+        FilterSettings.activeFilters.ToggleMap(level);
         FilterSettings.MarkActiveFilterModified();
         open();
     }
@@ -92,7 +95,15 @@ public class MenuPlayServerListFiltersUI : SleekFullscreenBox
     private void SynchronizeFilterButtons()
     {
         nameField.Text = FilterSettings.activeFilters.serverName;
-        mapField.Text = FilterSettings.activeFilters.mapName;
+        string mapDisplayText = FilterSettings.activeFilters.GetMapDisplayText();
+        if (string.IsNullOrEmpty(mapDisplayText))
+        {
+            mapButton.text = localization.format("MapFilter_Button_EmptyLabel");
+        }
+        else
+        {
+            mapButton.text = mapDisplayText;
+        }
         passwordButtonState.state = (int)FilterSettings.activeFilters.password;
         workshopButtonState.state = (int)FilterSettings.activeFilters.workshop;
         pluginsButtonState.state = (int)FilterSettings.activeFilters.plugins;
@@ -106,6 +117,7 @@ public class MenuPlayServerListFiltersUI : SleekFullscreenBox
         cameraButtonState.state = (int)FilterSettings.activeFilters.camera;
         monetizationButtonState.state = (int)(FilterSettings.activeFilters.monetization - 1);
         listSourceButtonState.state = (int)FilterSettings.activeFilters.listSource;
+        maxPingField.Value = FilterSettings.activeFilters.maxPing;
     }
 
     private void SynchronizeDeletePresetButtonVisible()
@@ -127,10 +139,10 @@ public class MenuPlayServerListFiltersUI : SleekFullscreenBox
         FilterSettings.MarkActiveFilterModified();
     }
 
-    private void onTypedMapField(ISleekField field, string text)
+    private void OnClickedMapButton(ISleekElement button)
     {
-        FilterSettings.activeFilters.mapName = text;
-        FilterSettings.MarkActiveFilterModified();
+        MenuPlayServersUI.mapFiltersUI.open(EMenuPlayMapFiltersUIOpenContext.Filters);
+        close();
     }
 
     private void onSwappedMonetizationState(SleekButtonState button, int index)
@@ -184,6 +196,12 @@ public class MenuPlayServerListFiltersUI : SleekFullscreenBox
     private void onSwappedBattlEyeProtectionState(SleekButtonState button, int index)
     {
         FilterSettings.activeFilters.battlEyeProtection = (EBattlEyeProtectionFilter)index;
+        FilterSettings.MarkActiveFilterModified();
+    }
+
+    private void OnMaxPingChanged(ISleekInt32Field field, int value)
+    {
+        FilterSettings.activeFilters.maxPing = value;
         FilterSettings.MarkActiveFilterModified();
     }
 
@@ -422,18 +440,18 @@ public class MenuPlayServerListFiltersUI : SleekFullscreenBox
         nameField.PlaceholderText = localization.format("Name_Filter_Hint");
         nameField.OnTextChanged += onTypedNameField;
         nameField.AddLabel(localization.format("Name_Filter_Label"), ESleekSide.RIGHT);
+        nameField.TooltipText = localization.format("Name_Filter_Tooltip");
         filtersScrollView.AddChild(nameField);
         num2 += nameField.SizeOffset_Y + 10f;
-        mapField = Glazier.Get().CreateStringField();
-        mapField.PositionOffset_Y = num2;
-        mapField.SizeOffset_X = 200f;
-        mapField.SizeOffset_Y = 30f;
-        mapField.PlaceholderText = localization.format("Map_Filter_Hint");
-        mapField.AddLabel(localization.format("Map_Filter_Label"), ESleekSide.RIGHT);
-        mapField.OnTextChanged += onTypedMapField;
-        mapField.MaxLength = 64;
-        filtersScrollView.AddChild(mapField);
-        num2 += mapField.SizeOffset_Y + 10f;
+        mapButton = new SleekButtonIcon(icons.load<Texture2D>("Map"), 20);
+        mapButton.PositionOffset_Y = num2;
+        mapButton.SizeOffset_X = 200f;
+        mapButton.SizeOffset_Y = 30f;
+        mapButton.AddLabel(localization.format("Map_Filter_Label"), ESleekSide.RIGHT);
+        mapButton.onClickedButton += OnClickedMapButton;
+        mapButton.iconColor = ESleekTint.FOREGROUND;
+        filtersScrollView.AddChild(mapButton);
+        num2 += mapButton.SizeOffset_Y + 10f;
         passwordButtonState = new SleekButtonState(20, new GUIContent(localization.format("No_Password_Button"), icons.load<Texture2D>("NotPasswordProtected"), localization.format("Password_Filter_No_Tooltip")), new GUIContent(localization.format("Yes_Password_Button"), icons.load<Texture2D>("PasswordProtected"), localization.format("Password_Filter_Yes_Tooltip")), new GUIContent(localization.format("Any_Password_Button"), icons.load<Texture2D>("AnyFilter"), localization.format("Password_Filter_Any_Tooltip")));
         passwordButtonState.PositionOffset_Y = num2;
         passwordButtonState.SizeOffset_X = 200f;
@@ -556,6 +574,15 @@ public class MenuPlayServerListFiltersUI : SleekFullscreenBox
         battlEyeProtectionButtonState.AddLabel(localization.format("BattlEye_Filter_Label"), ESleekSide.RIGHT);
         filtersScrollView.AddChild(battlEyeProtectionButtonState);
         num2 += battlEyeProtectionButtonState.SizeOffset_Y + 10f;
+        maxPingField = Glazier.Get().CreateInt32Field();
+        maxPingField.PositionOffset_Y = num2;
+        maxPingField.SizeOffset_X = 200f;
+        maxPingField.SizeOffset_Y = 30f;
+        maxPingField.OnValueChanged += OnMaxPingChanged;
+        maxPingField.AddLabel(localization.format("MaxPing_Filter_Label"), ESleekSide.RIGHT);
+        maxPingField.TooltipText = localization.format("MaxPing_Filter_Tooltip");
+        filtersScrollView.AddChild(maxPingField);
+        num2 += maxPingField.SizeOffset_Y + 10f;
         num2 += 10f;
         num2 += 10f;
         presetNameField = Glazier.Get().CreateStringField();

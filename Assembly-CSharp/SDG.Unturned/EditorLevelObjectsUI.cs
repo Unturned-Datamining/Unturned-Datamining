@@ -38,6 +38,8 @@ public class EditorLevelObjectsUI : SleekFullscreenBox
 
     private static ISleekImage dragBox;
 
+    private static ISleekToggle isOwnedCullingVolumeAllowedToggle;
+
     private static ISleekField materialPaletteOverrideField;
 
     private static ISleekInt32Field materialIndexOverrideField;
@@ -83,22 +85,33 @@ public class EditorLevelObjectsUI : SleekFullscreenBox
     {
         base.OnUpdate();
         GameObject mostRecentSelectedGameObject = EditorObjects.GetMostRecentSelectedGameObject();
-        if (!(focusedGameObject == mostRecentSelectedGameObject))
+        if (focusedGameObject == mostRecentSelectedGameObject)
         {
-            focusedGameObject = mostRecentSelectedGameObject;
-            focusedLevelObject = LevelObjects.FindLevelObject(focusedGameObject);
-            if (focusedLevelObject != null)
+            return;
+        }
+        focusedGameObject = mostRecentSelectedGameObject;
+        focusedLevelObject = LevelObjects.FindLevelObject(focusedGameObject);
+        if (focusedLevelObject != null)
+        {
+            if (focusedLevelObject.asset != null && focusedLevelObject.asset.lod != 0)
             {
-                materialPaletteOverrideField.IsVisible = true;
-                materialIndexOverrideField.IsVisible = true;
-                materialPaletteOverrideField.Text = focusedLevelObject.customMaterialOverride.ToString();
-                materialIndexOverrideField.Value = focusedLevelObject.materialIndexOverride;
+                isOwnedCullingVolumeAllowedToggle.IsVisible = true;
+                isOwnedCullingVolumeAllowedToggle.Value = focusedLevelObject.isOwnedCullingVolumeAllowed;
             }
             else
             {
-                materialPaletteOverrideField.IsVisible = false;
-                materialIndexOverrideField.IsVisible = false;
+                isOwnedCullingVolumeAllowedToggle.IsVisible = false;
             }
+            materialPaletteOverrideField.IsVisible = true;
+            materialIndexOverrideField.IsVisible = true;
+            materialPaletteOverrideField.Text = focusedLevelObject.customMaterialOverride.ToString();
+            materialIndexOverrideField.Value = focusedLevelObject.materialIndexOverride;
+        }
+        else
+        {
+            isOwnedCullingVolumeAllowedToggle.IsVisible = false;
+            materialPaletteOverrideField.IsVisible = false;
+            materialIndexOverrideField.IsVisible = false;
         }
     }
 
@@ -248,6 +261,19 @@ public class EditorLevelObjectsUI : SleekFullscreenBox
     private static void onToggledNPCsToggle(ISleekToggle toggle, bool state)
     {
         updateSelection(searchField.Text, largeToggle.Value, mediumToggle.Value, smallToggle.Value, barricadesToggle.Value, structuresToggle.Value, state);
+    }
+
+    private static void OnIsOwnedCullingVolumeAllowedChanged(ISleekToggle toggle, bool value)
+    {
+        foreach (GameObject item in EditorObjects.EnumerateSelectedGameObjects())
+        {
+            LevelObject levelObject = LevelObjects.FindLevelObject(item);
+            if (levelObject != null)
+            {
+                levelObject.isOwnedCullingVolumeAllowed = value;
+                levelObject.ReapplyOwnedCullingVolumeAllowed();
+            }
+        }
     }
 
     private static void OnTypedMaterialPaletteOverride(ISleekField field, string value)
@@ -425,6 +451,14 @@ public class EditorLevelObjectsUI : SleekFullscreenBox
         dragBox.TintColor = new Color(1f, 1f, 0f, 0.2f);
         EditorUI.window.AddChild(dragBox);
         dragBox.IsVisible = false;
+        isOwnedCullingVolumeAllowedToggle = Glazier.Get().CreateToggle();
+        isOwnedCullingVolumeAllowedToggle.PositionOffset_Y = -350f;
+        isOwnedCullingVolumeAllowedToggle.PositionScale_Y = 1f;
+        isOwnedCullingVolumeAllowedToggle.AddLabel(local.format("IsOwnedCullingVolumeAllowed_Label"), ESleekSide.RIGHT);
+        isOwnedCullingVolumeAllowedToggle.TooltipText = local.format("IsOwnedCullingVolumeAllowed_Tooltip");
+        isOwnedCullingVolumeAllowedToggle.OnValueChanged += OnIsOwnedCullingVolumeAllowedChanged;
+        isOwnedCullingVolumeAllowedToggle.IsVisible = false;
+        AddChild(isOwnedCullingVolumeAllowedToggle);
         materialPaletteOverrideField = Glazier.Get().CreateStringField();
         materialPaletteOverrideField.PositionOffset_Y = -310f;
         materialPaletteOverrideField.PositionScale_Y = 1f;

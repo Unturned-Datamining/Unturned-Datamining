@@ -137,6 +137,8 @@ public class MenuConfigurationControlsUI
 
     private static SleekButtonState leaningButton;
 
+    private static SleekButtonState voiceModeButton;
+
     public static byte binding = byte.MaxValue;
 
     public static void open()
@@ -234,6 +236,11 @@ public class MenuConfigurationControlsUI
     private static void onSwappedLeaningState(SleekButtonState button, int index)
     {
         ControlsSettings.leaning = (EControlMode)index;
+    }
+
+    private static void OnSwappedVoiceMode(SleekButtonState button, int index)
+    {
+        ControlsSettings.voiceMode = (EControlMode)index;
     }
 
     private static void OnSwappedSensitivityScalingMode(SleekButtonState button, int index)
@@ -368,6 +375,7 @@ public class MenuConfigurationControlsUI
         aimingButton.state = (int)ControlsSettings.aiming;
         sensitivityField.Value = ControlsSettings.mouseAimSensitivity;
         projectionRatioCoefficientField.Value = ControlsSettings.projectionRatioCoefficient;
+        voiceModeButton.state = (int)ControlsSettings.voiceMode;
         invertToggle.Value = ControlsSettings.invert;
         invertFlightToggle.Value = ControlsSettings.invert;
         sensitivityScalingModeButton.state = (int)ControlsSettings.sensitivityScalingMode;
@@ -489,6 +497,14 @@ public class MenuConfigurationControlsUI
         leaningButton.AddLabel(localization.format("Leaning_Label"), ESleekSide.RIGHT);
         leaningButton.onSwappedState = onSwappedLeaningState;
         controlsBox.AddChild(leaningButton);
+        num += 40;
+        voiceModeButton = new SleekButtonState(new GUIContent(localization.format("Hold")), new GUIContent(localization.format("Toggle")));
+        voiceModeButton.PositionOffset_Y = num;
+        voiceModeButton.SizeOffset_X = 200f;
+        voiceModeButton.SizeOffset_Y = 30f;
+        voiceModeButton.AddLabel(localization.format("Voice_Mode_Label"), ESleekSide.RIGHT);
+        voiceModeButton.onSwappedState = OnSwappedVoiceMode;
+        controlsBox.AddChild(voiceModeButton);
         num += 40;
         buttons = new ISleekButton[ControlsSettings.bindings.Length];
         for (byte b = 0; b < layouts.Length; b++)

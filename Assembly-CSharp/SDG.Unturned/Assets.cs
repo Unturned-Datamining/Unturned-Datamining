@@ -26,6 +26,12 @@ public class Assets : MonoBehaviour
 
         public List<Asset> assetList;
 
+        /// <summary>
+        /// Incremented when assets are added or removed.
+        /// Used by boombox UI to only refresh songs list if assets have changed.
+        /// </summary>
+        public int modificationCounter;
+
         public AssetMapping()
         {
             legacyAssetsTable = new Dictionary<EAssetType, Dictionary<ushort, Asset>>();
@@ -41,6 +47,7 @@ public class Assets : MonoBehaviour
             legacyAssetsTable.Add(EAssetType.NPC, new Dictionary<ushort, Asset>());
             assetDictionary = new Dictionary<Guid, Asset>();
             assetList = new List<Asset>();
+            modificationCounter = 0;
         }
     }
 
@@ -533,6 +540,13 @@ public class Assets : MonoBehaviour
         FindAssetsInListByType(currentAssetMapping.assetList, results);
     }
 
+    internal static bool HasDefaultAssetMappingChanged(ref int counter)
+    {
+        bool result = defaultAssetMapping.modificationCounter != counter;
+        counter = defaultAssetMapping.modificationCounter;
+        return result;
+    }
+
     /// <summary>
     /// Maybe considered a hack? Ignores the current per-server asset mapping.
     /// Append assets that extend from result type.
@@ -697,6 +711,7 @@ public class Assets : MonoBehaviour
             assetMapping.assetDictionary.Add(asset.GUID, asset);
             assetMapping.assetList.Add(asset);
         }
+        assetMapping.modificationCounter++;
         if (flag && assetCategory == EAssetType.VEHICLE && Level.isLoaded && Provider.isServer && VehicleManager.vehicles != null && VehicleManager.vehicles.Count > 0)
         {
             VehicleManager.shouldRespawnReloadedVehicles = true;

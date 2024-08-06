@@ -50,6 +50,6 @@ public class DevkitHierarchyWorldObject : DevkitHierarchyWorldItem
     protected void Start()
     {
         NetId devkitObjectNetId = LevelNetIdRegistry.GetDevkitObjectNetId(instanceID);
-        LevelObjects.registerDevkitObject(new LevelObject(base.inspectablePosition, base.inspectableRotation, base.inspectableScale, 0, GUID, placementOrigin, instanceID, customMaterialOverride, materialIndexOverride, devkitObjectNetId), out var _, out var _);
+        LevelObjects.registerDevkitObject(new LevelObject(base.inspectablePosition, base.inspectableRotation, base.inspectableScale, 0, GUID, placementOrigin, instanceID, customMaterialOverride, materialIndexOverride, devkitObjectNetId, isOwnedCullingVolumeAllowed: true), out var _, out var _);
     }
 }

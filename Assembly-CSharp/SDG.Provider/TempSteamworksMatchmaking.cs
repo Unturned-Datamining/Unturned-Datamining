@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using SDG.HostBans;
 using SDG.Unturned;
 using Steamworks;
@@ -48,6 +49,12 @@ public class TempSteamworksMatchmaking
     private ESteamServerList _currentList;
 
     private string currentNameFilter;
+
+    private Regex currentNameRegex;
+
+    private bool isCurrentNameFilterSet;
+
+    private int currentMaxPingFilter;
 
     private EPlugins currentPluginsFilter;
 
@@ -186,19 +193,26 @@ public class TempSteamworksMatchmaking
         _currentList = inputFilters.listSource;
         currentPluginsFilter = inputFilters.plugins;
         currentNameFilter = inputFilters.serverName;
+        isCurrentNameFilterSet = !string.IsNullOrEmpty(currentNameFilter);
+        currentNameRegex = null;
+        string text = "regex:";
+        if (isCurrentNameFilterSet && currentNameFilter.StartsWith(text))
+        {
+            string text2 = currentNameFilter.Substring(text.Length);
+            try
+            {
+                currentNameRegex = new Regex(text2);
+            }
+            catch (Exception e)
+            {
+                UnturnedLog.exception(e, "Caught exception parsing server name regex \"" + text2 + "\":");
+                isCurrentNameFilterSet = false;
+            }
+        }
+        currentMaxPingFilter = inputFilters.maxPing;
         _serverList.Clear();
         onMasterServerRemoved?.Invoke();
         cleanupServerListRequest();
-        if (inputFilters.listSource == ESteamServerList.HISTORY)
-        {
-            serverListRequest = SteamMatchmakingServers.RequestHistoryServerList(SDG.Unturned.Provider.APP_ID, new MatchMakingKeyValuePair_t[0], 0u, serverListResponse);
-            return;
-        }
-        if (inputFilters.listSource == ESteamServerList.FAVORITES)
-        {
-            serverListRequest = SteamMatchmakingServers.RequestFavoritesServerList(SDG.Unturned.Provider.APP_ID, new MatchMakingKeyValuePair_t[0], 0u, serverListResponse);
-            return;
-        }
         if (inputFilters.listSource == ESteamServerList.LAN)
         {
             serverListRequest = SteamMatchmakingServers.RequestLANServerList(SDG.Unturned.Provider.APP_ID, serverListResponse);
@@ -209,110 +223,124 @@ public class TempSteamworksMatchmaking
         item.m_szKey = "gamedir";
         item.m_szValue = "unturned";
         filters.Add(item);
-        LevelInfo levelInfo = Level.findLevelForServerFilter(inputFilters.mapName);
-        if (!string.IsNullOrEmpty(inputFilters.mapName) && inputFilters.mapName.Length > 1)
+        if (inputFilters.mapNames != null && inputFilters.mapNames.Count > 0)
         {
-            if (levelInfo == null)
+            List<LevelInfo> list = new List<LevelInfo>();
+            inputFilters.GetLevels(list);
+            if (list.Count > 0)
             {
-                UnturnedLog.info("No local map matched with '{0}', filtering as-is", inputFilters.mapName);
+                if (list.Count > 1)
+                {
+                    int num = list.Count * 3;
+                    filters.Add(new MatchMakingKeyValuePair_t
+                    {
+                        m_szKey = "or",
+                        m_szValue = num.ToString()
+                    });
+                }
+                foreach (LevelInfo item10 in list)
+                {
+                    filters.Add(new MatchMakingKeyValuePair_t
+                    {
+                        m_szKey = "and",
+                        m_szValue = "2"
+                    });
+                    MatchMakingKeyValuePair_t item2 = default(MatchMakingKeyValuePair_t);
+                    item2.m_szKey = "map";
+                    item2.m_szValue = item10.name.ToLower();
+                    filters.Add(item2);
+                    MatchMakingKeyValuePair_t item3 = default(MatchMakingKeyValuePair_t);
+                    item3.m_szKey = "gamedataand";
+                    item3.m_szValue = "MAP_VERSION_" + VersionUtils.binaryToHexadecimal(item10.configData.PackedVersion);
+                    filters.Add(item3);
+                }
             }
-            else
-            {
-                UnturnedLog.info("Matched local map '{0}' with '{1}', adjusting filter", levelInfo.name, inputFilters.mapName);
-                inputFilters.mapName = levelInfo.name;
-            }
-            MatchMakingKeyValuePair_t item2 = default(MatchMakingKeyValuePair_t);
-            item2.m_szKey = "map";
-            item2.m_szValue = inputFilters.mapName.ToLower();
-            filters.Add(item2);
         }
         if (inputFilters.attendance == EAttendance.Empty)
         {
-            MatchMakingKeyValuePair_t item3 = default(MatchMakingKeyValuePair_t);
-            item3.m_szKey = "noplayers";
-            item3.m_szValue = "1";
-            filters.Add(item3);
-        }
-        else if (inputFilters.attendance == EAttendance.HasPlayers)
-        {
             MatchMakingKeyValuePair_t item4 = default(MatchMakingKeyValuePair_t);
-            item4.m_szKey = "hasplayers";
+            item4.m_szKey = "noplayers";
             item4.m_szValue = "1";
             filters.Add(item4);
         }
-        if (inputFilters.notFull)
+        else if (inputFilters.attendance == EAttendance.HasPlayers)
         {
             MatchMakingKeyValuePair_t item5 = default(MatchMakingKeyValuePair_t);
-            item5.m_szKey = "notfull";
+            item5.m_szKey = "hasplayers";
             item5.m_szValue = "1";
             filters.Add(item5);
         }
-        MatchMakingKeyValuePair_t item6 = default(MatchMakingKeyValuePair_t);
-        item6.m_szKey = "gamedataand";
+        if (inputFilters.notFull)
+        {
+            MatchMakingKeyValuePair_t item6 = default(MatchMakingKeyValuePair_t);
+            item6.m_szKey = "notfull";
+            item6.m_szValue = "1";
+            filters.Add(item6);
+        }
+        MatchMakingKeyValuePair_t item7 = default(MatchMakingKeyValuePair_t);
+        item7.m_szKey = "gamedataand";
         if (inputFilters.password == EPassword.YES)
         {
-            item6.m_szValue = "PASS";
+            item7.m_szValue = "PASS";
         }
         else if (inputFilters.password == EPassword.NO)
         {
-            item6.m_szValue = "SSAP";
+            item7.m_szValue = "SSAP";
         }
         if (inputFilters.vacProtection == EVACProtectionFilter.Secure)
         {
-            item6.m_szValue += ",";
-            item6.m_szValue += "VAC_ON";
-            MatchMakingKeyValuePair_t item7 = default(MatchMakingKeyValuePair_t);
-            item7.m_szKey = "secure";
-            item7.m_szValue = "1";
-            filters.Add(item7);
+            item7.m_szValue += ",";
+            item7.m_szValue += "VAC_ON";
+            MatchMakingKeyValuePair_t item8 = default(MatchMakingKeyValuePair_t);
+            item8.m_szKey = "secure";
+            item8.m_szValue = "1";
+            filters.Add(item8);
         }
         else if (inputFilters.vacProtection == EVACProtectionFilter.Insecure)
         {
-            item6.m_szValue += ",";
-            item6.m_szValue += "VAC_OFF";
+            item7.m_szValue += ",";
+            item7.m_szValue += "VAC_OFF";
         }
-        item6.m_szValue += ",GAME_VERSION_";
-        item6.m_szValue += VersionUtils.binaryToHexadecimal(SDG.Unturned.Provider.APP_VERSION_PACKED);
-        if (levelInfo != null && levelInfo.configData != null && levelInfo.configData.PackedVersion != 0)
+        item7.m_szValue += ",GAME_VERSION_";
+        item7.m_szValue += VersionUtils.binaryToHexadecimal(SDG.Unturned.Provider.APP_VERSION_PACKED);
+        if (!string.IsNullOrEmpty(item7.m_szValue))
         {
-            item6.m_szValue += ",MAP_VERSION_";
-            item6.m_szValue += VersionUtils.binaryToHexadecimal(levelInfo.configData.PackedVersion);
+            filters.Add(item7);
         }
-        filters.Add(item6);
-        MatchMakingKeyValuePair_t item8 = default(MatchMakingKeyValuePair_t);
-        item8.m_szKey = "gametagsand";
+        MatchMakingKeyValuePair_t item9 = default(MatchMakingKeyValuePair_t);
+        item9.m_szKey = "gametagsand";
         if (inputFilters.workshop == EWorkshop.YES)
         {
-            item8.m_szValue = "WSy";
+            item9.m_szValue = "WSy";
         }
         else if (inputFilters.workshop == EWorkshop.NO)
         {
-            item8.m_szValue = "WSn";
+            item9.m_szValue = "WSn";
         }
         if (inputFilters.combat == ECombat.PVP)
         {
-            item8.m_szValue += ",PVP";
+            item9.m_szValue += ",PVP";
         }
         else if (inputFilters.combat == ECombat.PVE)
         {
-            item8.m_szValue += ",PVE";
+            item9.m_szValue += ",PVE";
         }
         if (inputFilters.cheats == ECheats.YES)
         {
-            item8.m_szValue += ",CHy";
+            item9.m_szValue += ",CHy";
         }
         else if (inputFilters.cheats == ECheats.NO)
         {
-            item8.m_szValue += ",CHn";
+            item9.m_szValue += ",CHn";
         }
         if (inputFilters.camera != ECameraMode.ANY)
         {
-            ref string szValue = ref item8.m_szValue;
+            ref string szValue = ref item9.m_szValue;
             szValue = szValue + "," + SDG.Unturned.Provider.getCameraModeTagAbbreviation(inputFilters.camera);
         }
         if (inputFilters.monetization == EServerMonetizationTag.None)
         {
-            ref string szValue2 = ref item8.m_szValue;
+            ref string szValue2 = ref item9.m_szValue;
             szValue2 = szValue2 + "," + SDG.Unturned.Provider.GetMonetizationTagAbbreviation(inputFilters.monetization);
         }
         else
@@ -320,7 +348,7 @@ public class TempSteamworksMatchmaking
             bool flag = inputFilters.monetization == EServerMonetizationTag.NonGameplay;
             if (!LiveConfig.Get().shouldServersWithoutMonetizationTagBeVisibleInInternetServerList)
             {
-                flag |= string.IsNullOrWhiteSpace(currentNameFilter);
+                flag |= isCurrentNameFilterSet;
             }
             if (flag)
             {
@@ -343,21 +371,24 @@ public class TempSteamworksMatchmaking
         }
         if (inputFilters.gold == EServerListGoldFilter.RequiresGold)
         {
-            item8.m_szValue += ",GLD";
+            item9.m_szValue += ",GLD";
         }
         else if (inputFilters.gold == EServerListGoldFilter.DoesNotRequireGold)
         {
-            item8.m_szValue += ",F2P";
+            item9.m_szValue += ",F2P";
         }
         if (inputFilters.battlEyeProtection == EBattlEyeProtectionFilter.Secure)
         {
-            item8.m_szValue += ",BEy";
+            item9.m_szValue += ",BEy";
         }
         else if (inputFilters.battlEyeProtection == EBattlEyeProtectionFilter.Insecure)
         {
-            item8.m_szValue += ",BEn";
+            item9.m_szValue += ",BEn";
         }
-        filters.Add(item8);
+        if (!string.IsNullOrEmpty(item9.m_szValue))
+        {
+            filters.Add(item9);
+        }
         StringBuilder stringBuilder = new StringBuilder(128);
         stringBuilder.Append("Refreshing server list with filters:");
         foreach (MatchMakingKeyValuePair_t filter in filters)
@@ -368,7 +399,15 @@ public class TempSteamworksMatchmaking
             stringBuilder.Append(filter.m_szValue);
         }
         UnturnedLog.info(stringBuilder.ToString());
-        if (inputFilters.listSource == ESteamServerList.INTERNET)
+        if (inputFilters.listSource == ESteamServerList.HISTORY)
+        {
+            serverListRequest = SteamMatchmakingServers.RequestHistoryServerList(SDG.Unturned.Provider.APP_ID, filters.ToArray(), (uint)filters.Count, serverListResponse);
+        }
+        else if (inputFilters.listSource == ESteamServerList.FAVORITES)
+        {
+            serverListRequest = SteamMatchmakingServers.RequestFavoritesServerList(SDG.Unturned.Provider.APP_ID, filters.ToArray(), (uint)filters.Count, serverListResponse);
+        }
+        else if (inputFilters.listSource == ESteamServerList.INTERNET)
         {
             serverListRequest = SteamMatchmakingServers.RequestInternetServerList(SDG.Unturned.Provider.APP_ID, filters.ToArray(), (uint)filters.Count, serverListResponse);
         }
@@ -494,7 +533,29 @@ public class TempSteamworksMatchmaking
         {
             return;
         }
-        if (steamServerAdvertisement.maxPlayers >= CommandMaxPlayers.MIN_NUMBER && (!string.IsNullOrEmpty(currentNameFilter) || Mathf.Max(steamServerAdvertisement.players, steamServerAdvertisement.maxPlayers) <= CommandMaxPlayers.MAX_NUMBER) && (string.IsNullOrEmpty(currentNameFilter) || steamServerAdvertisement.name.IndexOf(currentNameFilter, StringComparison.OrdinalIgnoreCase) != -1))
+        if (steamServerAdvertisement.maxPlayers < CommandMaxPlayers.MIN_NUMBER)
+        {
+            return;
+        }
+        if (isCurrentNameFilterSet)
+        {
+            if (currentNameRegex != null)
+            {
+                if (!currentNameRegex.IsMatch(steamServerAdvertisement.name))
+                {
+                    return;
+                }
+            }
+            else if (steamServerAdvertisement.name.IndexOf(currentNameFilter, StringComparison.OrdinalIgnoreCase) == -1)
+            {
+                return;
+            }
+        }
+        else if (Mathf.Max(steamServerAdvertisement.players, steamServerAdvertisement.maxPlayers) > CommandMaxPlayers.MAX_NUMBER)
+        {
+            return;
+        }
+        if (currentMaxPingFilter <= 0 || steamServerAdvertisement.ping <= currentMaxPingFilter)
         {
             int num = serverList.BinarySearch(steamServerAdvertisement, serverInfoComparer);
             if (num < 0)

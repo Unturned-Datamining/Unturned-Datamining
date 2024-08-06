@@ -109,6 +109,8 @@ public class PlayerSkills : PlayerCaller
 
     private bool wasLoadCalled;
 
+    private static List<Tuple<int, int>> availableSkillsToLoseLevels = new List<Tuple<int, int>>();
+
     public Skill[][] skills => _skills;
 
     public EPlayerBoost boost => _boost;
@@ -639,42 +641,43 @@ public class PlayerSkills : PlayerCaller
         }
         if (Level.info == null || Level.info.type == ELevelType.SURVIVAL)
         {
+            bool modifiedAnySkillLevels = false;
             float num = (base.player.life.wasPvPDeath ? Provider.modeConfigData.Players.Lose_Skills_PvP : Provider.modeConfigData.Players.Lose_Skills_PvE);
             if (num < 0.999f)
             {
-                for (byte b = 0; b < skills.Length; b++)
+                for (int i = 0; i < skills.Length; i++)
                 {
-                    Skill[] array = skills[b];
-                    for (byte b2 = 0; b2 < array.Length; b2++)
+                    Skill[] array = skills[i];
+                    for (int j = 0; j < array.Length; j++)
                     {
-                        bool flag = true;
-                        for (byte b3 = 0; b3 < SKILLSETS[(byte)base.channel.owner.skillset].Length; b3++)
+                        if (CanDecreaseLevelOfSkill(i, j))
                         {
-                            SpecialitySkillPair specialitySkillPair = SKILLSETS[(byte)base.channel.owner.skillset][b3];
-                            if (b == specialitySkillPair.speciality && b2 == specialitySkillPair.skill)
-                            {
-                                flag = false;
-                                break;
-                            }
-                        }
-                        if (flag)
-                        {
-                            array[b2].level = (byte)((float)(int)array[b2].level * num);
+                            byte b = (byte)((float)(int)array[j].level * num);
+                            modifiedAnySkillLevels |= array[j].level != b;
+                            array[j].level = b;
                         }
                     }
                 }
+            }
+            uint num2 = (base.player.life.wasPvPDeath ? Provider.modeConfigData.Players.Lose_Skill_Levels_PvP : Provider.modeConfigData.Players.Lose_Skill_Levels_PvE);
+            if (num2 != 0)
+            {
+                LoseNumberOfSkills(num2, ref modifiedAnySkillLevels);
+            }
+            if (modifiedAnySkillLevels)
+            {
                 SendMultipleSkillLevels.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), WriteSkillLevels);
             }
-            float num2 = (base.player.life.wasPvPDeath ? Provider.modeConfigData.Players.Lose_Experience_PvP : Provider.modeConfigData.Players.Lose_Experience_PvE);
-            _experience = (uint)((float)experience * num2);
+            float num3 = (base.player.life.wasPvPDeath ? Provider.modeConfigData.Players.Lose_Experience_PvP : Provider.modeConfigData.Players.Lose_Experience_PvE);
+            _experience = (uint)((float)experience * num3);
         }
         else
         {
-            for (byte b4 = 0; b4 < skills.Length; b4++)
+            for (byte b2 = 0; b2 < skills.Length; b2++)
             {
-                for (byte b5 = 0; b5 < skills[b4].Length; b5++)
+                for (byte b3 = 0; b3 < skills[b2].Length; b3++)
                 {
-                    skills[b4][b5].level = 0;
+                    skills[b2][b3].level = 0;
                 }
             }
             applyDefaultSkills();
@@ -866,5 +869,44 @@ public class PlayerSkills : PlayerCaller
             }
         }
         PlayerSkills.onApplyingDefaultSkills?.Invoke(base.player, skills);
+    }
+
+    private bool CanDecreaseLevelOfSkill(int specialityIndex, int skillIndex)
+    {
+        int skillset = (int)base.channel.owner.skillset;
+        for (int i = 0; i < SKILLSETS[skillset].Length; i++)
+        {
+            SpecialitySkillPair specialitySkillPair = SKILLSETS[skillset][i];
+            if (specialityIndex == specialitySkillPair.speciality && skillIndex == specialitySkillPair.skill)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void LoseNumberOfSkills(uint numberOfSkillsToLose, ref bool modifiedAnySkillLevels)
+    {
+        availableSkillsToLoseLevels.Clear();
+        for (int i = 0; i < skills.Length; i++)
+        {
+            Skill[] array = skills[i];
+            for (int j = 0; j < array.Length; j++)
+            {
+                if (CanDecreaseLevelOfSkill(i, j) && array[j].level > 0)
+                {
+                    availableSkillsToLoseLevels.Add(new Tuple<int, int>(i, j));
+                }
+            }
+        }
+        while (numberOfSkillsToLose != 0 && availableSkillsToLoseLevels.Count > 0)
+        {
+            int randomIndex = availableSkillsToLoseLevels.GetRandomIndex();
+            Tuple<int, int> tuple = availableSkillsToLoseLevels[randomIndex];
+            availableSkillsToLoseLevels.RemoveAtFast(randomIndex);
+            skills[tuple.Item1][tuple.Item2].level--;
+            modifiedAnySkillLevels = true;
+            numberOfSkillsToLose--;
+        }
     }
 }

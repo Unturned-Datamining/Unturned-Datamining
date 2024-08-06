@@ -2777,11 +2777,29 @@ public class BarricadeManager : SteamCaller
 
     internal void DestroyOrReleaseBarricade(ItemBarricadeAsset asset, GameObject instance)
     {
-        EffectManager.ClearAttachments(instance.transform);
+        Transform transform = instance.transform;
+        EffectManager.ClearAttachments(transform);
         if (asset.eligibleForPooling)
         {
+            if (transform.parent != null)
+            {
+                barricadeColliders.Clear();
+                instance.GetComponentsInChildren(barricadeColliders);
+                foreach (Collider barricadeCollider in barricadeColliders)
+                {
+                    if (barricadeCollider.gameObject.layer == 14)
+                    {
+                        barricadeCollider.gameObject.layer = 27;
+                    }
+                }
+                InteractableVehicle component = transform.parent.GetComponent<InteractableVehicle>();
+                if (component != null)
+                {
+                    component.ignoreCollisionWith(barricadeColliders, shouldIgnore: false);
+                }
+            }
             instance.SetActive(value: false);
-            instance.transform.parent = null;
+            transform.parent = null;
             int instanceID = asset.barricade.GetInstanceID();
             pool.GetOrAddNew(instanceID).Push(instance);
         }

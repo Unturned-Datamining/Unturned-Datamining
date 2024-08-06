@@ -56,42 +56,42 @@ WheelConfigurations
 	{
 		WheelColliderPath Tires/Tire_0
 		IsColliderSteered true
-		IsColliderPowered true
+		IsColliderPowered false
 		ModelPath Wheels/Wheel_0
 		ModelUseColliderPose true
 	}
 	{
 		WheelColliderPath Tires/Tire_1
 		IsColliderSteered true
-		IsColliderPowered true
+		IsColliderPowered false
 		ModelPath Wheels/Wheel_1
 		ModelUseColliderPose true
 	}
 	{
 		WheelColliderPath Tires/Tire_2
 		IsColliderSteered false
-		IsColliderPowered false
+		IsColliderPowered true
 		ModelPath Wheels/Wheel_2
 		ModelUseColliderPose true
 	}
 	{
 		WheelColliderPath Tires/Tire_3
 		IsColliderSteered false
-		IsColliderPowered false
+		IsColliderPowered true
 		ModelPath Wheels/Wheel_3
 		ModelUseColliderPose true
 	}
 	{
 		WheelColliderPath Tires/Tire_4
 		IsColliderSteered false
-		IsColliderPowered false
+		IsColliderPowered true
 		ModelPath Wheels/Wheel_4
 		ModelUseColliderPose true
 	}
 	{
 		WheelColliderPath Tires/Tire_5
 		IsColliderSteered false
-		IsColliderPowered false
+		IsColliderPowered true
 		ModelPath Wheels/Wheel_5
 		ModelUseColliderPose true
 	}

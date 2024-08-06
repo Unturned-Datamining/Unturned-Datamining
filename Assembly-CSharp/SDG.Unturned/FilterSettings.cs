@@ -68,6 +68,88 @@ public static class FilterSettings
         }
     }
 
+    public class ServerBrowserFilterVisibility
+    {
+        public bool name = true;
+
+        public bool map = true;
+
+        public bool password;
+
+        public bool workshop;
+
+        public bool plugins;
+
+        public bool attendance;
+
+        public bool notFull;
+
+        public bool vacProtection;
+
+        public bool battlEyeProtection;
+
+        public bool combat = true;
+
+        public bool cheats;
+
+        public bool camera = true;
+
+        public bool monetization;
+
+        public bool gold;
+
+        public bool listSource = true;
+
+        public bool maxPing;
+
+        public void Read(byte version, Block block)
+        {
+            name = block.readBoolean();
+            map = block.readBoolean();
+            password = block.readBoolean();
+            workshop = block.readBoolean();
+            plugins = block.readBoolean();
+            attendance = block.readBoolean();
+            notFull = block.readBoolean();
+            vacProtection = block.readBoolean();
+            battlEyeProtection = block.readBoolean();
+            combat = block.readBoolean();
+            cheats = block.readBoolean();
+            camera = block.readBoolean();
+            monetization = block.readBoolean();
+            gold = block.readBoolean();
+            listSource = block.readBoolean();
+            if (version >= 22)
+            {
+                maxPing = block.readBoolean();
+            }
+            else
+            {
+                maxPing = false;
+            }
+        }
+
+        public void Write(Block block)
+        {
+            block.writeBoolean(name);
+            block.writeBoolean(map);
+            block.writeBoolean(password);
+            block.writeBoolean(workshop);
+            block.writeBoolean(plugins);
+            block.writeBoolean(attendance);
+            block.writeBoolean(notFull);
+            block.writeBoolean(vacProtection);
+            block.writeBoolean(battlEyeProtection);
+            block.writeBoolean(combat);
+            block.writeBoolean(cheats);
+            block.writeBoolean(camera);
+            block.writeBoolean(monetization);
+            block.writeBoolean(gold);
+            block.writeBoolean(listSource);
+            block.writeBoolean(maxPing);
+        }
+    }
+
     /// <summary>
     /// Version before named version constants were introduced. (2023-11-13)
     /// </summary>
@@ -83,9 +165,17 @@ public static class FilterSettings
 
     public const byte SAVEDATA_VERSION_SAVE_SUBMENUS_OPEN = 19;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 19;
+    public const byte SAVEDATA_VERSION_MULTIPLE_MAPS = 20;
+
+    public const byte SAVEDATA_VERSION_FILTER_VISIBILITY = 21;
+
+    public const byte SAVEDATA_VERSION_MAX_PING = 22;
+
+    private const byte SAVEDATA_VERSION_NEWEST = 22;
 
     public static readonly byte SAVEDATA_VERSION;
+
+    public const int DEFAULT_MAX_PING = 200;
 
     public static ServerListFilters activeFilters;
 
@@ -94,6 +184,8 @@ public static class FilterSettings
     public static bool isPresetsListOpen;
 
     public static bool isQuickFiltersEditorOpen;
+
+    public static bool isQuickFiltersVisibilityEditorOpen;
 
     public static List<ServerListFilters> customPresets;
 
@@ -110,6 +202,8 @@ public static class FilterSettings
     public static ServerListFilters defaultPresetFriends;
 
     public static ServerBrowserColumns columns;
+
+    public static ServerBrowserFilterVisibility filterVisibility;
 
     public static event System.Action OnActiveFiltersModified;
 
@@ -196,7 +290,26 @@ public static class FilterSettings
                 byte b = block.readByte();
                 if (b > 2)
                 {
-                    activeFilters.mapName = block.readString();
+                    if (b >= 20)
+                    {
+                        int num = block.readInt32();
+                        for (int i = 0; i < num; i++)
+                        {
+                            string text = block.readString();
+                            if (!string.IsNullOrEmpty(text))
+                            {
+                                activeFilters.mapNames.Add(text);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        string text2 = block.readString();
+                        if (!string.IsNullOrEmpty(text2))
+                        {
+                            activeFilters.mapNames.Add(text2);
+                        }
+                    }
                     if (b > 5)
                     {
                         activeFilters.password = (EPassword)block.readByte();
@@ -296,14 +409,22 @@ public static class FilterSettings
                         activeFilters.presetName = string.Empty;
                         activeFilters.presetId = -1;
                     }
+                    if (b >= 22)
+                    {
+                        activeFilters.maxPing = block.readInt32();
+                    }
+                    else
+                    {
+                        activeFilters.maxPing = 200;
+                    }
                     if (b >= 17)
                     {
                         nextCustomPresetId = block.readInt32();
-                        int num = block.readInt32();
-                        for (int i = 0; i < num; i++)
+                        int num2 = block.readInt32();
+                        for (int j = 0; j < num2; j++)
                         {
                             ServerListFilters serverListFilters = new ServerListFilters();
-                            serverListFilters.Read(block);
+                            serverListFilters.Read(b, block);
                             customPresets.Add(serverListFilters);
                         }
                     }
@@ -327,6 +448,15 @@ public static class FilterSettings
                         isPresetsListOpen = true;
                         isQuickFiltersEditorOpen = false;
                     }
+                    if (b >= 21)
+                    {
+                        isQuickFiltersVisibilityEditorOpen = block.readBoolean();
+                        filterVisibility.Read(b, block);
+                    }
+                    else
+                    {
+                        isQuickFiltersVisibilityEditorOpen = false;
+                    }
                     return;
                 }
             }
@@ -337,7 +467,7 @@ public static class FilterSettings
     public static void save()
     {
         Block block = new Block();
-        block.writeByte(19);
+        block.writeByte(22);
         activeFilters.Write(block);
         block.writeInt32(nextCustomPresetId);
         block.writeInt32(customPresets.Count);
@@ -349,12 +479,14 @@ public static class FilterSettings
         block.writeBoolean(isColumnsEditorOpen);
         block.writeBoolean(isPresetsListOpen);
         block.writeBoolean(isQuickFiltersEditorOpen);
+        block.writeBoolean(isQuickFiltersVisibilityEditorOpen);
+        filterVisibility.Write(block);
         ReadWrite.writeBlock("/Filters.dat", useCloud: true, block);
     }
 
     static FilterSettings()
     {
-        SAVEDATA_VERSION = 19;
+        SAVEDATA_VERSION = 22;
         activeFilters = new ServerListFilters();
         customPresets = new List<ServerListFilters>();
         nextCustomPresetId = 1;
@@ -364,6 +496,7 @@ public static class FilterSettings
         defaultPresetFavorites = new ServerListFilters();
         defaultPresetFriends = new ServerListFilters();
         columns = new ServerBrowserColumns();
+        filterVisibility = new ServerBrowserFilterVisibility();
         defaultPresetInternet.presetId = -2;
         defaultPresetLAN.presetId = -3;
         defaultPresetLAN.listSource = ESteamServerList.LAN;

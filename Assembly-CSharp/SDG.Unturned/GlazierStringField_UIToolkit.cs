@@ -170,6 +170,18 @@ internal class GlazierStringField_UIToolkit : GlazierElementBase_UIToolkit, ISle
         }
     }
 
+    public bool IsClickable
+    {
+        get
+        {
+            return control.enabledSelf;
+        }
+        set
+        {
+            control.SetEnabled(value);
+        }
+    }
+
     public int MaxLength
     {
         get

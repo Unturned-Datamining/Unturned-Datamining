@@ -52,6 +52,11 @@ public class VehicleAsset : Asset, ISkinableAsset
 
     protected float _steerMax;
 
+    /// <summary>
+    /// Torque on Z axis applied according to steering input for bikes and motorcycles.
+    /// </summary>
+    internal float steeringLeaningForceMultiplier;
+
     protected float _brake;
 
     protected float _lift;
@@ -125,6 +130,22 @@ public class VehicleAsset : Asset, ISkinableAsset
 
     public bool canTiresBeDamaged;
 
+    /// <summary>
+    /// If greater than zero, torque is applied on the local Z axis multiplied by this factor.
+    /// Note that <see cref="F:SDG.Unturned.VehicleAsset.rollAngularVelocityDamping" /> is critical for damping this force.
+    /// </summary>
+    internal float wheelBalancingForceMultiplier = -1f;
+
+    /// <summary>
+    /// Exponent on the [0, 1] factor representing how aligned the vehicle is with the ground up vector.
+    /// </summary>
+    internal float wheelBalancingUprightExponent;
+
+    /// <summary>
+    /// If greater than zero, an acceleration is applied to angular velocity on Z axis toward zero.
+    /// </summary>
+    internal float rollAngularVelocityDamping = -1f;
+
     internal VehicleWheelConfiguration[] wheelConfiguration;
 
     /// <summary>
@@ -143,6 +164,18 @@ public class VehicleAsset : Asset, ISkinableAsset
     internal float reverseGearRatio;
 
     internal float[] forwardGearRatios;
+
+    /// <summary>
+    /// List of transforms to register with DynamicWaterTransparentSort.
+    /// </summary>
+    internal string[] extraTransparentSections;
+
+    internal EVehicleDefaultPaintColorMode defaultPaintColorMode;
+
+    /// <summary>
+    /// Null if <see cref="F:SDG.Unturned.VehicleAsset.defaultPaintColorMode" /> isn't <see cref="F:SDG.Unturned.EVehicleDefaultPaintColorMode.RandomHueOrGrayscale" />.
+    /// </summary>
+    internal VehicleRandomPaintColorConfiguration randomPaintColorConfiguration;
 
     private static readonly Guid VANILLA_BATTERY_ITEM = new Guid("098b13be34a7411db7736b7f866ada69");
 
@@ -454,6 +487,11 @@ public class VehicleAsset : Asset, ISkinableAsset
             return false;
         }
     }
+
+    /// <summary>
+    /// If this and UsesEngineRpmAndGears are true, HUD will show RPM and gear number.
+    /// </summary>
+    public bool AllowsEngineRpmAndGearsInHud { get; protected set; }
 
     /// <summary>
     /// When engine RPM dips below this value shift to the next lower gear if available.
@@ -1030,6 +1068,33 @@ public class VehicleAsset : Asset, ISkinableAsset
     }
 
     /// <summary>
+    /// Pick a random paint color according to <see cref="F:SDG.Unturned.VehicleAsset.defaultPaintColorMode" />. Null if unsupported or not configured.
+    /// </summary>
+    public Color32? GetRandomDefaultPaintColor()
+    {
+        if (defaultPaintColorMode == EVehicleDefaultPaintColorMode.List)
+        {
+            if (DefaultPaintColors != null && DefaultPaintColors.Count > 0)
+            {
+                return DefaultPaintColors.RandomOrDefault();
+            }
+        }
+        else if (defaultPaintColorMode == EVehicleDefaultPaintColorMode.RandomHueOrGrayscale && randomPaintColorConfiguration != null)
+        {
+            if (UnityEngine.Random.value < randomPaintColorConfiguration.grayscaleChance)
+            {
+                float num = UnityEngine.Random.Range(randomPaintColorConfiguration.minValue, randomPaintColorConfiguration.maxValue);
+                return new Color(num, num, num, 1f);
+            }
+            float value = UnityEngine.Random.value;
+            float s = UnityEngine.Random.Range(randomPaintColorConfiguration.minSaturation, randomPaintColorConfiguration.maxSaturation);
+            float v = UnityEngine.Random.Range(randomPaintColorConfiguration.minValue, randomPaintColorConfiguration.maxValue);
+            return Color.HSVToRGB(value, s, v);
+        }
+        return null;
+    }
+
+    /// <summary>
     /// Returns reverseGearRatio for negative gears, actual value for valid gear number, otherwise zero.
     /// Exposed for plugin use.
     /// </summary>
@@ -1141,6 +1206,7 @@ public class VehicleAsset : Asset, ISkinableAsset
         _steerMin = data.ParseFloat("Steer_Min");
         _steerMax = data.ParseFloat("Steer_Max") * 0.75f;
         SteeringAngleTurnSpeed = data.ParseFloat("Steering_Angle_Turn_Speed", _steerMax * 5f);
+        steeringLeaningForceMultiplier = data.ParseFloat("Steering_LeaningForceMultiplier", -1f);
         _brake = data.ParseFloat("Brake");
         _lift = data.ParseFloat("Lift");
         _fuelMin = data.ParseUInt16("Fuel_Min", 0);
@@ -1349,68 +1415,109 @@ public class VehicleAsset : Asset, ISkinableAsset
         {
             IsPaintable = false;
         }
-        if (data.TryGetList("DefaultPaintColors", out var node))
+        if (data.TryGetList("AdditionalTransparentSections", out var node))
         {
-            DefaultPaintColors = new List<Color32>(node.Count);
+            List<string> list = new List<string>(node.Count);
             foreach (IDatNode item in node)
             {
-                if (item is DatValue node2 && node2.TryParseColor32RGB(out var value4))
+                if (item is DatValue datValue)
+                {
+                    list.Add(datValue.value);
+                }
+                else
+                {
+                    Assets.reportError(this, "unable to parse additional transparent section " + item.DebugDumpToString());
+                }
+            }
+            if (!list.IsEmpty())
+            {
+                extraTransparentSections = list.ToArray();
+            }
+        }
+        DatList node2;
+        bool flag = data.TryGetList("DefaultPaintColors", out node2);
+        defaultPaintColorMode = data.ParseEnum("DefaultPaintColor_Mode", flag ? EVehicleDefaultPaintColorMode.List : EVehicleDefaultPaintColorMode.None);
+        if (defaultPaintColorMode == EVehicleDefaultPaintColorMode.List)
+        {
+            DefaultPaintColors = new List<Color32>(node2.Count);
+            foreach (IDatNode item2 in node2)
+            {
+                if (item2 is DatValue node3 && node3.TryParseColor32RGB(out var value4))
                 {
                     DefaultPaintColors.Add(value4);
                 }
             }
         }
-        if (data.TryGetList("WheelConfigurations", out var node3))
+        else if (defaultPaintColorMode == EVehicleDefaultPaintColorMode.RandomHueOrGrayscale)
         {
-            List<VehicleWheelConfiguration> list = new List<VehicleWheelConfiguration>();
-            List<int> list2 = new List<int>();
+            randomPaintColorConfiguration = new VehicleRandomPaintColorConfiguration();
+            if (data.TryGetDictionary("DefaultPaintColor_Configuration", out var node4))
+            {
+                if (!randomPaintColorConfiguration.TryParse(node4))
+                {
+                    Assets.reportError(this, "unable to parse DefaultPaintColor_Configuration");
+                }
+            }
+            else
+            {
+                Assets.reportError(this, "missing DefaultPaintColor_Configuration");
+            }
+        }
+        wheelBalancingForceMultiplier = data.ParseFloat("WheelBalancing_ForceMultiplier", -1f);
+        wheelBalancingUprightExponent = data.ParseFloat("WheelBalancing_UprightExponent", 1.5f);
+        rollAngularVelocityDamping = data.ParseFloat("RollAngularVelocityDamping", -1f);
+        if (data.TryGetList("WheelConfigurations", out var node5))
+        {
+            List<VehicleWheelConfiguration> list2 = new List<VehicleWheelConfiguration>();
             List<int> list3 = new List<int>();
-            foreach (IDatNode item2 in node3)
+            List<int> list4 = new List<int>();
+            foreach (IDatNode item3 in node5)
             {
                 VehicleWheelConfiguration vehicleWheelConfiguration = new VehicleWheelConfiguration();
-                if (vehicleWheelConfiguration.TryParse(item2))
+                if (vehicleWheelConfiguration.TryParse(item3))
                 {
                     if (vehicleWheelConfiguration.modelUseColliderPose)
                     {
-                        int count = list.Count;
-                        list2.Add(count);
+                        int count = list2.Count;
+                        list3.Add(count);
                     }
                     if (vehicleWheelConfiguration.isColliderPowered)
                     {
-                        int count2 = list.Count;
-                        list3.Add(count2);
+                        int count2 = list2.Count;
+                        list4.Add(count2);
                     }
-                    list.Add(vehicleWheelConfiguration);
+                    list2.Add(vehicleWheelConfiguration);
                 }
                 else
                 {
-                    Assets.reportError("Unable to parse entry in WheelConfigurations list: " + item2.DebugDumpToString());
+                    Assets.reportError("Unable to parse entry in WheelConfigurations list: " + item3.DebugDumpToString());
                 }
             }
-            wheelConfiguration = list.ToArray();
-            if (list2.Count > 0)
-            {
-                replicatedWheelIndices = list2.ToArray();
-            }
+            wheelConfiguration = list2.ToArray();
             if (list3.Count > 0)
             {
-                poweredWheelIndices = list3.ToArray();
-            }
-        }
-        reverseGearRatio = data.ParseFloat("ReverseGearRatio", 1f);
-        if (data.TryGetList("ForwardGearRatios", out var node4))
-        {
-            List<float> list4 = new List<float>();
-            foreach (IDatNode item3 in node4)
-            {
-                if (item3 is DatValue datValue && datValue.TryParseFloat(out var value5))
-                {
-                    list4.Add(value5);
-                }
+                replicatedWheelIndices = list3.ToArray();
             }
             if (list4.Count > 0)
             {
-                forwardGearRatios = list4.ToArray();
+                poweredWheelIndices = list4.ToArray();
+            }
+        }
+        reverseGearRatio = data.ParseFloat("ReverseGearRatio", 1f);
+        if (data.TryGetList("ForwardGearRatios", out var node6))
+        {
+            List<float> list5 = new List<float>();
+            foreach (IDatNode item4 in node6)
+            {
+                if (item4 is DatValue datValue2 && datValue2.TryParseFloat(out var value5))
+                {
+                    list5.Add(value5);
+                }
+            }
+            if (list5.Count > 0)
+            {
+                forwardGearRatios = list5.ToArray();
+                AllowsEngineRpmAndGearsInHud = data.ParseBool("GearShift_VisibleInHUD", defaultValue: true);
             }
         }
         GearShiftDownThresholdRpm = data.ParseFloat("GearShift_DownThresholdRPM", 1500f);
@@ -1426,9 +1533,9 @@ public class VehicleAsset : Asset, ISkinableAsset
         if (engineSoundType == EVehicleEngineSoundType.EngineRPMSimple)
         {
             engineSoundConfiguration = new RpmEngineSoundConfiguration();
-            if (data.TryGetDictionary("EngineSound", out var node5))
+            if (data.TryGetDictionary("EngineSound", out var node7))
             {
-                engineSoundConfiguration.TryParse(node5);
+                engineSoundConfiguration.TryParse(node7);
             }
         }
         if (UsesEngineRpmAndGears && (bool)Assets.shouldValidateAssets)

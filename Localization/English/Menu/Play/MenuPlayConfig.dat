@@ -111,6 +111,8 @@ Bleed_Regen_Ticks Bleeding Regeneration Ticks
 
 Lose_Skills_PvP Lose Skills On Combat Death
 Lose_Skills_PvE Lose Skills On Environment Death
+Lose_Skills_PvP Lost Skill Lvls On Combat Death
+Lose_Skills_PvE Lost Skill Lvls On Environment Death
 Lose_Experience_PvP Lose Experience On Combat Death
 Lose_Experience_PvE Lose Experience On Environment Death
 Lose_Items_PvP Lose Items On Combat Death

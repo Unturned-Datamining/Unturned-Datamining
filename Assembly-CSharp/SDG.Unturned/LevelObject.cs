@@ -35,6 +35,12 @@ public class LevelObject
 
     internal int materialIndexOverride = -1;
 
+    /// <summary>
+    /// If true, <see cref="F:SDG.Unturned.LevelObject.ownedCullingVolume" /> can be instantiated. Defaults to true.
+    /// Enables mappers to remove culling volumes embedded in objects if they're causing issues.
+    /// </summary>
+    internal bool isOwnedCullingVolumeAllowed;
+
     public byte[] state;
 
     private ObjectAsset _asset;
@@ -196,6 +202,24 @@ public class LevelObject
         foreach (Renderer renderer2 in renderers)
         {
             renderer2.sharedMaterial = materialOverride;
+        }
+    }
+
+    internal void ReapplyOwnedCullingVolumeAllowed()
+    {
+        if (asset.lod != 0 && isOwnedCullingVolumeAllowed)
+        {
+            if (ownedCullingVolume == null)
+            {
+                GameObject gameObject = new GameObject();
+                ownedCullingVolume = gameObject.AddComponent<CullingVolume>();
+                ownedCullingVolume.SetupForLevelObject(this);
+            }
+        }
+        else if (ownedCullingVolume != null)
+        {
+            UnityEngine.Object.Destroy(ownedCullingVolume.gameObject);
+            ownedCullingVolume = null;
         }
     }
 
@@ -414,11 +438,11 @@ public class LevelObject
 
     [Obsolete]
     internal LevelObject(Vector3 newPoint, Quaternion newRotation, Vector3 newScale, ushort newID, Guid newGUID, ELevelObjectPlacementOrigin newPlacementOrigin, uint newInstanceID, AssetReference<MaterialPaletteAsset> customMaterialOverride, int materialIndexOverride, DevkitHierarchyWorldObject devkitOwner, NetId netId)
-        : this(newPoint, newRotation, newScale, newID, newGUID, newPlacementOrigin, newInstanceID, customMaterialOverride, materialIndexOverride, netId)
+        : this(newPoint, newRotation, newScale, newID, newGUID, newPlacementOrigin, newInstanceID, customMaterialOverride, materialIndexOverride, netId, isOwnedCullingVolumeAllowed: true)
     {
     }
 
-    internal LevelObject(Vector3 newPoint, Quaternion newRotation, Vector3 newScale, ushort newID, Guid newGUID, ELevelObjectPlacementOrigin newPlacementOrigin, uint newInstanceID, AssetReference<MaterialPaletteAsset> customMaterialOverride, int materialIndexOverride, NetId netId)
+    internal LevelObject(Vector3 newPoint, Quaternion newRotation, Vector3 newScale, ushort newID, Guid newGUID, ELevelObjectPlacementOrigin newPlacementOrigin, uint newInstanceID, AssetReference<MaterialPaletteAsset> customMaterialOverride, int materialIndexOverride, NetId netId, bool isOwnedCullingVolumeAllowed)
     {
         _id = newID;
         _GUID = newGUID;
@@ -426,6 +450,7 @@ public class LevelObject
         placementOrigin = newPlacementOrigin;
         this.customMaterialOverride = customMaterialOverride;
         this.materialIndexOverride = materialIndexOverride;
+        this.isOwnedCullingVolumeAllowed = isOwnedCullingVolumeAllowed;
         LoadAsset();
         if (asset == null)
         {
@@ -723,11 +748,9 @@ public class LevelObject
             foliageSurfaceComponent.foliage = asset.foliage;
             foliageSurfaceComponent.surfaceCollider = this.transform.gameObject.GetComponent<Collider>();
         }
-        if (asset.lod != 0)
+        if (asset.lod != EObjectLOD.NONE && isOwnedCullingVolumeAllowed)
         {
-            GameObject gameObject8 = new GameObject();
-            ownedCullingVolume = gameObject8.AddComponent<CullingVolume>();
-            ownedCullingVolume.SetupForLevelObject(this);
+            ReapplyOwnedCullingVolumeAllowed();
         }
     }
 

@@ -11,6 +11,8 @@ public class RagdollTool
 
     private static List<CharacterJoint> tempJoints = new List<CharacterJoint>();
 
+    private static List<Material> tempMaterials = new List<Material>();
+
     private static Material bronzeMaterial;
 
     private static Material silverMaterial;
@@ -111,7 +113,20 @@ public class RagdollTool
         root.GetComponentsInChildren(tempRenderers);
         foreach (Renderer tempRenderer in tempRenderers)
         {
-            tempRenderer.sharedMaterial = ragdollEffectMaterial;
+            tempMaterials.Clear();
+            tempRenderer.GetSharedMaterials(tempMaterials);
+            if (tempMaterials.Count > 1)
+            {
+                for (int i = 0; i < tempMaterials.Count; i++)
+                {
+                    tempMaterials[i] = ragdollEffectMaterial;
+                }
+                tempRenderer.sharedMaterials = tempMaterials.ToArray();
+            }
+            else
+            {
+                tempRenderer.sharedMaterial = ragdollEffectMaterial;
+            }
         }
         Rigidbody componentInChildren = root.GetComponentInChildren<Rigidbody>();
         tempJoints.Clear();

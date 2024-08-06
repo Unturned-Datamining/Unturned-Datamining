@@ -281,6 +281,11 @@ public class InteractableVehicle : Interactable
     /// </summary>
     private HashSet<Material> materialsToDestroy = new HashSet<Material>();
 
+    /// <summary>
+    /// Handles to unregister from DynamicWaterTransparentSort.
+    /// </summary>
+    private List<object> waterSortHandles = new List<object>();
+
     private static int PAINT_COLOR_ID = Shader.PropertyToID("_PaintColor");
 
     /// <summary>
@@ -609,7 +614,7 @@ public class InteractableVehicle : Interactable
             }
             if (asset != null)
             {
-                if (asset.engine == EEngine.BOAT && fuel == 0)
+                if (asset.engine == EEngine.BOAT && fuel == 0 && !asset.isBatteryPowered)
                 {
                     return true;
                 }
@@ -2050,6 +2055,7 @@ public class InteractableVehicle : Interactable
         {
             inputTargetVelocity = 0f;
             inputEngineVelocity = 0f;
+            ReplicatedSteeringInput = 0f;
             if (!Dedicator.IsDedicatedServer && windZone != null)
             {
                 windZone.windMain = 0f;
@@ -2157,6 +2163,7 @@ public class InteractableVehicle : Interactable
         {
             inputTargetVelocity = 0f;
             inputEngineVelocity = 0f;
+            ReplicatedSteeringInput = 0f;
             if (!Dedicator.IsDedicatedServer && windZone != null)
             {
                 windZone.windMain = 0f;
@@ -2748,17 +2755,26 @@ public class InteractableVehicle : Interactable
             num2 = 1f;
         }
         bool flag2 = false;
+        if (asset.steeringLeaningForceMultiplier > 0f)
+        {
+            rootRigidbody.AddRelativeTorque(0f, 0f, (float)input_x * (0f - asset.steeringLeaningForceMultiplier) * (float)PlayerInput.SAMPLES);
+        }
         if (_wheels != null)
         {
             Wheel[] wheels = _wheels;
-            foreach (Wheel obj in wheels)
+            foreach (Wheel wheel in wheels)
             {
-                obj.ClientSimulate(input_x, num, inputBrake, delta);
-                if (obj.isGrounded)
-                {
-                    flag2 = true;
-                }
+                wheel.ClientSimulate(input_x, num, inputBrake, delta);
+                flag2 |= wheel.isGrounded;
             }
+            if (flag2 && asset.wheelBalancingForceMultiplier > 0f)
+            {
+                ApplyWheelBalancingForce(Time.fixedDeltaTime * (float)PlayerInput.SAMPLES);
+            }
+        }
+        if (asset.rollAngularVelocityDamping > 0f)
+        {
+            ApplyAngularVelocityDamping(Time.fixedDeltaTime * (float)PlayerInput.SAMPLES);
         }
         switch (asset.engine)
         {
@@ -3041,35 +3057,16 @@ public class InteractableVehicle : Interactable
         }
         if (Dedicator.IsDedicatedServer)
         {
-            if (isPhysical)
+            if (isPhysical && !needsReplicationUpdate && (Mathf.Abs(lastUpdatedPos.x - base.transform.position.x) > Provider.UPDATE_DISTANCE || Mathf.Abs(lastUpdatedPos.y - base.transform.position.y) > Provider.UPDATE_DISTANCE || Mathf.Abs(lastUpdatedPos.z - base.transform.position.z) > Provider.UPDATE_DISTANCE))
             {
-                if (asset.replicatedWheelIndices != null)
-                {
-                    int[] replicatedWheelIndices = asset.replicatedWheelIndices;
-                    foreach (int num in replicatedWheelIndices)
-                    {
-                        Wheel wheelAtIndex = GetWheelAtIndex(num);
-                        if (wheelAtIndex == null)
-                        {
-                            UnturnedLog.error($"\"{asset.FriendlyName}\" missing wheel for replicated index: {num}");
-                        }
-                        else
-                        {
-                            wheelAtIndex.UpdateServerSuspensionAndPhysicsMaterial();
-                        }
-                    }
-                }
-                if (!needsReplicationUpdate && (Mathf.Abs(lastUpdatedPos.x - base.transform.position.x) > Provider.UPDATE_DISTANCE || Mathf.Abs(lastUpdatedPos.y - base.transform.position.y) > Provider.UPDATE_DISTANCE || Mathf.Abs(lastUpdatedPos.z - base.transform.position.z) > Provider.UPDATE_DISTANCE))
-                {
-                    lastUpdatedPos = base.transform.position;
-                    MarkForReplicationUpdate();
-                }
+                lastUpdatedPos = base.transform.position;
+                MarkForReplicationUpdate();
             }
         }
         else
         {
-            float num2 = Mathf.Lerp(asset.steerMax, asset.steerMin, GetReplicatedForwardSpeedPercentageOfTargetSpeed());
-            float target = ReplicatedSteeringInput * num2;
+            float num = Mathf.Lerp(asset.steerMax, asset.steerMin, GetReplicatedForwardSpeedPercentageOfTargetSpeed());
+            float target = ReplicatedSteeringInput * num;
             float maxDelta = asset.SteeringAngleTurnSpeed * deltaTime;
             AnimatedSteeringAngle = Mathf.MoveTowards(AnimatedSteeringAngle, target, maxDelta);
             float t = 1f - Mathf.Pow(2f, -13f * Time.deltaTime);
@@ -3118,10 +3115,10 @@ public class InteractableVehicle : Interactable
                         propellerModel.motionBlurMaterial.color = color;
                     }
                 }
-                float num3 = (MathfEx.IsNearlyZero(AnimatedForwardVelocity, 0.04f) ? 0f : Mathf.Max(0f, Mathf.InverseLerp(0f, asset.TargetForwardVelocity, AnimatedForwardVelocity)));
+                float num2 = (MathfEx.IsNearlyZero(AnimatedForwardVelocity, 0.04f) ? 0f : Mathf.Max(0f, Mathf.InverseLerp(0f, asset.TargetForwardVelocity, AnimatedForwardVelocity)));
                 if (exhaustParticleSystems != null)
                 {
-                    if (num3 > 0f)
+                    if (num2 > 0f)
                     {
                         if (!isExhaustGameObjectActive)
                         {
@@ -3132,7 +3129,7 @@ public class InteractableVehicle : Interactable
                         foreach (ParticleSystem particleSystem in array2)
                         {
                             ParticleSystem.EmissionModule emission = particleSystem.emission;
-                            emission.rateOverTime = (float)particleSystem.main.maxParticles * num3;
+                            emission.rateOverTime = (float)particleSystem.main.maxParticles * num2;
                         }
                         isExhaustRateOverTimeZero = false;
                     }
@@ -3183,14 +3180,14 @@ public class InteractableVehicle : Interactable
             }
             if (windZone != null && isDriven && !isUnderwater)
             {
-                float num4 = ((asset.engine != 0 && asset.engine != EEngine.BOAT) ? Mathf.Abs(AnimatedVelocityInput) : Mathf.Abs(AnimatedForwardVelocity));
+                float num3 = ((asset.engine != 0 && asset.engine != EEngine.BOAT) ? Mathf.Abs(AnimatedVelocityInput) : Mathf.Abs(AnimatedForwardVelocity));
                 if (asset.engine == EEngine.HELICOPTER)
                 {
-                    windZone.windMain = Mathf.Lerp(windZone.windMain, isEnginePowered ? (num4 * 0.1f) : 0f, 0.125f * deltaTime);
+                    windZone.windMain = Mathf.Lerp(windZone.windMain, isEnginePowered ? (num3 * 0.1f) : 0f, 0.125f * deltaTime);
                 }
                 else if (asset.engine == EEngine.BLIMP)
                 {
-                    windZone.windMain = Mathf.Lerp(windZone.windMain, isEnginePowered ? (num4 * 0.5f) : 0f, 0.125f * deltaTime);
+                    windZone.windMain = Mathf.Lerp(windZone.windMain, isEnginePowered ? (num3 * 0.5f) : 0f, 0.125f * deltaTime);
                 }
             }
         }
@@ -3265,85 +3262,85 @@ public class InteractableVehicle : Interactable
             }
             if (_wheels != null)
             {
-                float num5 = 0f;
-                int num6 = 0;
+                float num4 = 0f;
+                int num5 = 0;
                 if (asset.poweredWheelIndices != null)
                 {
-                    float num7 = 0f;
-                    int[] replicatedWheelIndices = asset.poweredWheelIndices;
-                    foreach (int index in replicatedWheelIndices)
+                    float num6 = 0f;
+                    int[] poweredWheelIndices = asset.poweredWheelIndices;
+                    foreach (int index in poweredWheelIndices)
                     {
-                        Wheel wheelAtIndex2 = GetWheelAtIndex(index);
-                        if (wheelAtIndex2 != null && !(wheelAtIndex2.wheel == null))
+                        Wheel wheelAtIndex = GetWheelAtIndex(index);
+                        if (wheelAtIndex != null && !(wheelAtIndex.wheel == null))
                         {
-                            num7 += Mathf.Abs(wheelAtIndex2.wheel.rpm);
-                            num6++;
+                            num6 += Mathf.Abs(wheelAtIndex.wheel.rpm);
+                            num5++;
                         }
                     }
-                    if (num6 > 0)
+                    if (num5 > 0)
                     {
-                        num5 = num7 / (float)num6;
+                        num4 = num6 / (float)num5;
                     }
                 }
-                float num8 = num5;
+                float num7 = num4;
                 if (asset.UsesEngineRpmAndGears)
                 {
                     timeSinceLastGearChange += deltaTime;
                     if (timeSinceLastGearChange > asset.GearShiftInterval)
                     {
-                        if (latestGasInput < -0.01f)
+                        if (latestGasInput < -0.01f && ReplicatedForwardVelocity < 0.05f)
                         {
                             ChangeGears(-1);
                         }
-                        else if (GearNumber < 1)
+                        else if (GearNumber < 1 && ReplicatedForwardVelocity > -0.05f)
                         {
                             ChangeGears(1);
                         }
-                        else if (ReplicatedEngineRpm > asset.GearShiftUpThresholdRpm && GearNumber < asset.forwardGearRatios.Length)
+                        else if (ReplicatedEngineRpm > asset.GearShiftUpThresholdRpm && GearNumber > 0 && GearNumber < asset.forwardGearRatios.Length)
                         {
-                            ChangeGears(GetShiftUpGearNumber(num5));
+                            ChangeGears(GetShiftUpGearNumber(num4));
                         }
                         else if (ReplicatedEngineRpm < asset.GearShiftDownThresholdRpm && GearNumber > 1)
                         {
-                            ChangeGears(GetShiftDownGearNumber(num5));
+                            ChangeGears(GetShiftDownGearNumber(num4));
                         }
                     }
                     if (GearNumber == -1)
                     {
-                        num8 *= asset.reverseGearRatio;
+                        num7 *= asset.reverseGearRatio;
                     }
                     else if (GearNumber >= 1 && GearNumber <= asset.forwardGearRatios.Length)
                     {
-                        num8 *= asset.forwardGearRatios[GearNumber - 1];
+                        num7 *= asset.forwardGearRatios[GearNumber - 1];
                     }
-                    num8 = Mathf.Max(num8, asset.EngineIdleRpm);
+                    num7 = Mathf.Max(num7, asset.EngineIdleRpm);
                 }
-                if (num8 > ReplicatedEngineRpm)
+                if (num7 > ReplicatedEngineRpm)
                 {
-                    ReplicatedEngineRpm = Mathf.MoveTowards(ReplicatedEngineRpm, num8, asset.EngineRpmIncreaseRate * deltaTime);
+                    ReplicatedEngineRpm = Mathf.MoveTowards(ReplicatedEngineRpm, num7, asset.EngineRpmIncreaseRate * deltaTime);
                 }
-                else if (num8 < ReplicatedEngineRpm)
+                else if (num7 < ReplicatedEngineRpm)
                 {
-                    ReplicatedEngineRpm = Mathf.MoveTowards(ReplicatedEngineRpm, num8, asset.EngineRpmDecreaseRate * deltaTime);
+                    ReplicatedEngineRpm = Mathf.MoveTowards(ReplicatedEngineRpm, num7, asset.EngineRpmDecreaseRate * deltaTime);
                 }
                 ReplicatedEngineRpm = Mathf.Clamp(ReplicatedEngineRpm, asset.EngineIdleRpm, asset.EngineMaxRpm);
-                float num9 = Mathf.InverseLerp(asset.EngineIdleRpm, asset.EngineMaxRpm, ReplicatedEngineRpm);
-                float num10 = ((engineCurvesComponent != null) ? engineCurvesComponent.engineRpmToTorqueCurve.Evaluate(num9) : Mathf.Lerp(0.5f, 1f, num9)) * asset.EngineMaxTorque * Mathf.Abs(latestGasInput);
+                float num8 = Mathf.InverseLerp(asset.EngineIdleRpm, asset.EngineMaxRpm, ReplicatedEngineRpm);
+                float num9 = ((engineCurvesComponent != null) ? engineCurvesComponent.engineRpmToTorqueCurve.Evaluate(num8) : Mathf.Lerp(0.5f, 1f, num8)) * asset.EngineMaxTorque * Mathf.Abs(latestGasInput);
                 if (timeSinceLastGearChange < asset.GearShiftDuration)
                 {
-                    num10 = 0f;
+                    num9 = 0f;
                 }
                 if (GearNumber == -1)
                 {
-                    num10 *= asset.reverseGearRatio;
+                    num9 *= asset.reverseGearRatio;
                 }
                 else if (asset.UsesEngineRpmAndGears && GearNumber >= 1 && GearNumber <= asset.forwardGearRatios.Length)
                 {
-                    num10 *= asset.forwardGearRatios[GearNumber - 1];
+                    num9 *= asset.forwardGearRatios[GearNumber - 1];
                 }
                 if (asset.poweredWheelIndices != null && asset.poweredWheelIndices.Length != 0)
                 {
-                    num10 /= (float)asset.poweredWheelIndices.Length;
+                    num9 /= (float)asset.poweredWheelIndices.Length;
                 }
                 Wheel[] wheels = _wheels;
                 foreach (Wheel wheel2 in wheels)
@@ -3352,7 +3349,7 @@ public class InteractableVehicle : Interactable
                     {
                         break;
                     }
-                    wheel2.UpdateLocallyDriven(deltaTime, num10);
+                    wheel2.UpdateLocallyDriven(deltaTime, num9);
                 }
             }
             if (asset.engine == EEngine.TRAIN && road != null)
@@ -3364,18 +3361,18 @@ public class InteractableVehicle : Interactable
                     road.getTrackData(clampRoadPosition(roadPosition + trainCar.trackPositionOffset - asset.trainWheelOffset), out var position4, out var normal2, out var direction2);
                     moveTrain(position3, normal, direction, position4, normal2, direction2, trainCar);
                 }
-                float num11 = inputEngineVelocity * deltaTime;
+                float num10 = inputEngineVelocity * deltaTime;
                 Transform transform3 = ((!(inputEngineVelocity > 0f)) ? overlapBack : overlapFront);
                 BoxCollider boxCollider = transform3?.GetComponent<BoxCollider>();
                 bool flag3;
                 if (boxCollider != null)
                 {
                     flag3 = false;
-                    Vector3 vector = transform3.position + transform3.forward * num11 / 2f;
+                    Vector3 vector = transform3.position + transform3.forward * num10 / 2f;
                     Vector3 size = boxCollider.size;
-                    size.z = num11;
-                    int num12 = Physics.OverlapBoxNonAlloc(vector, size / 2f, tempCollidersArray, transform3.rotation, RayMasks.BLOCK_TRAIN, QueryTriggerInteraction.Ignore);
-                    for (int k = 0; k < num12; k++)
+                    size.z = num10;
+                    int num11 = Physics.OverlapBoxNonAlloc(vector, size / 2f, tempCollidersArray, transform3.rotation, RayMasks.BLOCK_TRAIN, QueryTriggerInteraction.Ignore);
+                    for (int k = 0; k < num11; k++)
                     {
                         bool flag4 = false;
                         for (int l = 0; l < trainCars.Length; l++)
@@ -3422,7 +3419,7 @@ public class InteractableVehicle : Interactable
                 }
                 else
                 {
-                    roadPosition += num11;
+                    roadPosition += num10;
                     roadPosition = clampRoadPosition(roadPosition);
                 }
             }
@@ -3477,7 +3474,6 @@ public class InteractableVehicle : Interactable
             lastTick = Time.realtimeSinceStartup;
             ReplicatedSpeed = 0f;
             ReplicatedForwardVelocity = 0f;
-            ReplicatedSteeringInput = 0f;
             ReplicatedVelocityInput = 0f;
         }
         if (sirensOn && !Dedicator.IsDedicatedServer && Time.realtimeSinceStartup - lastWeeoo > 0.33f)
@@ -3557,33 +3553,77 @@ public class InteractableVehicle : Interactable
                 }
             }
             flag5 &= ContainsBatteryItem;
-            float num13 = 0f;
+            float num12 = 0f;
             if (flag5)
             {
-                num13 = asset.batteryChargeRate;
+                num12 = asset.batteryChargeRate;
             }
             else if (flag6)
             {
-                num13 = asset.batteryBurnRate;
+                num12 = asset.batteryBurnRate;
             }
-            batteryBuffer += deltaTime * num13;
-            ushort num14 = (ushort)Mathf.FloorToInt(batteryBuffer);
-            if (num14 > 0)
+            batteryBuffer += deltaTime * num12;
+            ushort num13 = (ushort)Mathf.FloorToInt(batteryBuffer);
+            if (num13 > 0)
             {
-                batteryBuffer -= (int)num14;
+                batteryBuffer -= (int)num13;
                 if (flag5)
                 {
-                    askChargeBattery(num14);
+                    askChargeBattery(num13);
                 }
                 else if (flag6)
                 {
-                    askBurnBattery(num14);
+                    askBurnBattery(num13);
                 }
             }
         }
         if (Provider.isServer)
         {
             UpdateSafezoneStatus(deltaTime);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (!isPhysical || isDriven || !Provider.isServer)
+        {
+            return;
+        }
+        bool flag = false;
+        if (Dedicator.IsDedicatedServer)
+        {
+            if (asset.replicatedWheelIndices != null)
+            {
+                int[] replicatedWheelIndices = asset.replicatedWheelIndices;
+                foreach (int num in replicatedWheelIndices)
+                {
+                    Wheel wheelAtIndex = GetWheelAtIndex(num);
+                    if (wheelAtIndex == null)
+                    {
+                        UnturnedLog.error($"\"{asset.FriendlyName}\" missing wheel for replicated index: {num}");
+                        continue;
+                    }
+                    wheelAtIndex.UpdateServerSuspensionAndPhysicsMaterial();
+                    flag |= wheelAtIndex.isGrounded;
+                }
+            }
+        }
+        else if (_wheels != null)
+        {
+            Wheel[] wheels = _wheels;
+            foreach (Wheel wheel in wheels)
+            {
+                wheel.UpdateGrounded();
+                flag |= wheel.isGrounded;
+            }
+        }
+        if (_wheels != null && flag && asset.wheelBalancingForceMultiplier > 0f)
+        {
+            ApplyWheelBalancingForce(Time.fixedDeltaTime);
+        }
+        if (asset.rollAngularVelocityDamping > 0f)
+        {
+            ApplyAngularVelocityDamping(Time.fixedDeltaTime);
         }
     }
 
@@ -3675,9 +3715,15 @@ public class InteractableVehicle : Interactable
                     batteryCharge = 10000;
                 }
             }
-            if (PaintColor.a != byte.MaxValue && asset.DefaultPaintColors != null && asset.DefaultPaintColors.Count > 0)
+            if (PaintColor.a != byte.MaxValue)
             {
-                PaintColor = asset.DefaultPaintColors.RandomOrDefault();
+                Color32? randomDefaultPaintColor = asset.GetRandomDefaultPaintColor();
+                if (randomDefaultPaintColor.HasValue)
+                {
+                    Color32 value = randomDefaultPaintColor.Value;
+                    value.a = byte.MaxValue;
+                    PaintColor = value;
+                }
             }
         }
         if (!Dedicator.IsDedicatedServer)
@@ -3925,8 +3971,10 @@ public class InteractableVehicle : Interactable
                             StandardShaderUtils.setModeToTransparent(propellerModel.motionBlurMaterial);
                         }
                     }
-                    propellerModel.bladeTransparencySortHandle = DynamicWaterTransparentSort.Get().Register(item3, propellerModel.bladeMaterial);
-                    propellerModel.motionBlurTransparencySortHandle = DynamicWaterTransparentSort.Get().Register(item3, propellerModel.motionBlurMaterial);
+                    materialsToDestroy.Add(propellerModel.bladeMaterial);
+                    materialsToDestroy.Add(propellerModel.motionBlurMaterial);
+                    waterSortHandles.Add(DynamicWaterTransparentSort.Get().Register(item3, propellerModel.bladeMaterial));
+                    waterSortHandles.Add(DynamicWaterTransparentSort.Get().Register(item3, propellerModel.motionBlurMaterial));
                     propellerModels[num2] = propellerModel;
                     num2++;
                 }
@@ -3954,6 +4002,7 @@ public class InteractableVehicle : Interactable
             tellFuel(fuel);
             tellHealth(health);
             tellBatteryCharge(batteryCharge);
+            InitializeAdditionalTransparentSections();
             InitializePaintableSections();
             updateSkin();
         }
@@ -4120,6 +4169,15 @@ public class InteractableVehicle : Interactable
             }
             materialsToDestroy.Clear();
         }
+        if (waterSortHandles != null)
+        {
+            DynamicWaterTransparentSort dynamicWaterTransparentSort = DynamicWaterTransparentSort.Get();
+            foreach (object waterSortHandle in waterSortHandles)
+            {
+                dynamicWaterTransparentSort.Unregister(waterSortHandle);
+            }
+            waterSortHandles.Clear();
+        }
         if (isExploded && !Dedicator.IsDedicatedServer)
         {
             HighlighterTool.destroyMaterials(base.transform);
@@ -4150,34 +4208,15 @@ public class InteractableVehicle : Interactable
                 }
             }
         }
-        if (sirenMaterials != null)
-        {
-            for (int l = 0; l < sirenMaterials.Length; l++)
-            {
-                if (sirenMaterials[l] != null)
-                {
-                    UnityEngine.Object.DestroyImmediate(sirenMaterials[l]);
-                }
-            }
-        }
-        if (propellerModels == null)
+        if (sirenMaterials == null)
         {
             return;
         }
-        PropellerModel[] array = propellerModels;
-        foreach (PropellerModel propellerModel in array)
+        for (int l = 0; l < sirenMaterials.Length; l++)
         {
-            if (propellerModel.bladeMaterial != null)
+            if (sirenMaterials[l] != null)
             {
-                DynamicWaterTransparentSort.Get().Unregister(propellerModel.bladeTransparencySortHandle);
-                UnityEngine.Object.DestroyImmediate(propellerModel.bladeMaterial);
-                propellerModel.bladeMaterial = null;
-            }
-            if (propellerModel.motionBlurMaterial != null)
-            {
-                DynamicWaterTransparentSort.Get().Unregister(propellerModel.motionBlurTransparencySortHandle);
-                UnityEngine.Object.DestroyImmediate(propellerModel.motionBlurMaterial);
-                propellerModel.motionBlurMaterial = null;
+                UnityEngine.Object.DestroyImmediate(sirenMaterials[l]);
             }
         }
     }
@@ -4376,6 +4415,40 @@ public class InteractableVehicle : Interactable
         }
     }
 
+    private void InitializeAdditionalTransparentSections()
+    {
+        if (asset.extraTransparentSections == null || asset.extraTransparentSections.Length < 1)
+        {
+            return;
+        }
+        DynamicWaterTransparentSort dynamicWaterTransparentSort = DynamicWaterTransparentSort.Get();
+        string[] extraTransparentSections = asset.extraTransparentSections;
+        foreach (string text in extraTransparentSections)
+        {
+            Transform transform = base.transform.Find(text);
+            if (transform == null)
+            {
+                Assets.reportError(asset, "missing additional transparent section transform \"" + text + "\"");
+                continue;
+            }
+            Renderer component = transform.GetComponent<Renderer>();
+            if (component == null)
+            {
+                Assets.reportError(asset, "additional transparent section \"" + text + "\" missing Renderer component");
+                continue;
+            }
+            Material material = component.material;
+            if (material == null)
+            {
+                Assets.reportError(asset, "additional transparent section \"" + text + "\" missing material");
+                continue;
+            }
+            materialsToDestroy.Add(material);
+            object item = dynamicWaterTransparentSort.Register(transform, material);
+            waterSortHandles.Add(item);
+        }
+    }
+
     private void InitializePaintableSections()
     {
         if (!asset.SupportsPaintColor)
@@ -4456,6 +4529,42 @@ public class InteractableVehicle : Interactable
             emission.rateOverTime = 0f;
         }
         isExhaustRateOverTimeZero = true;
+    }
+
+    private void ApplyAngularVelocityDamping(float deltaTime)
+    {
+        float num = base.transform.InverseTransformDirection(rootRigidbody.angularVelocity).z * (0f - asset.rollAngularVelocityDamping) * deltaTime * 50f;
+        if (!MathfEx.IsNearlyZero(num, 0.001f))
+        {
+            rootRigidbody.AddRelativeTorque(0f, 0f, num, ForceMode.Acceleration);
+        }
+    }
+
+    private void ApplyWheelBalancingForce(float deltaTime)
+    {
+        Vector3 zero = Vector3.zero;
+        int num = 0;
+        Wheel[] wheels = _wheels;
+        foreach (Wheel wheel in wheels)
+        {
+            if (wheel.isGrounded)
+            {
+                zero += wheel.mostRecentGroundHit.normal;
+                num++;
+            }
+        }
+        Vector3 direction = zero / num;
+        Vector3 vector = base.transform.InverseTransformDirection(direction);
+        vector.z = 0f;
+        vector = vector.normalized;
+        float f = Mathf.Clamp01(1f - Vector3.Dot(Vector3.up, vector));
+        f = Mathf.Pow(f, asset.wheelBalancingUprightExponent);
+        float num2 = ((vector.x > 0f) ? (-1f) : 1f);
+        f *= num2;
+        if (!MathfEx.IsNearlyZero(f * asset.wheelBalancingForceMultiplier * deltaTime * 50f, 0.001f))
+        {
+            rootRigidbody.AddRelativeTorque(0f, 0f, f * asset.wheelBalancingForceMultiplier * deltaTime * 50f);
+        }
     }
 
     [Obsolete]

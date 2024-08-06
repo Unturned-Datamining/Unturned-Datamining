@@ -11,6 +11,10 @@ internal static class UnturnedAudioMixer
 
     private static AudioMixerGroup defaultGroup;
 
+    private static AudioMixerGroup musicGroup;
+
+    private static AudioMixerGroup atmosphereGroup;
+
     public static AudioMixerGroup GetDefaultGroup()
     {
         if (!hasBeenInitialized)
@@ -18,6 +22,24 @@ internal static class UnturnedAudioMixer
             Initialize();
         }
         return defaultGroup;
+    }
+
+    public static AudioMixerGroup GetMusicGroup()
+    {
+        if (!hasBeenInitialized)
+        {
+            Initialize();
+        }
+        return musicGroup;
+    }
+
+    public static AudioMixerGroup GetAtmosphereGroup()
+    {
+        if (!hasBeenInitialized)
+        {
+            Initialize();
+        }
+        return atmosphereGroup;
     }
 
     public static void SetDefaultVolume(float linearVolume)
@@ -38,6 +60,33 @@ internal static class UnturnedAudioMixer
         mainMix.SetFloat("VoiceVolume", LinearToDb(linearVolume));
     }
 
+    public static void SetMusicMasterVolume(float linearVolume)
+    {
+        if (!hasBeenInitialized)
+        {
+            Initialize();
+        }
+        mainMix.SetFloat("MusicVolume", LinearToDb(linearVolume));
+    }
+
+    public static void SetMainMenuMusicVolume(float linearVolume)
+    {
+        if (!hasBeenInitialized)
+        {
+            Initialize();
+        }
+        mainMix.SetFloat("MainMenuMusicVolume", LinearToDb(linearVolume));
+    }
+
+    public static void SetAtmosphereVolume(float linearVolume)
+    {
+        if (!hasBeenInitialized)
+        {
+            Initialize();
+        }
+        mainMix.SetFloat("AtmosphereVolume", LinearToDb(linearVolume));
+    }
+
     private static float LinearToDb(float linearVolume)
     {
         if (linearVolume < 0.0001f)
@@ -52,5 +101,7 @@ internal static class UnturnedAudioMixer
         hasBeenInitialized = true;
         mainMix = Resources.Load<AudioMixer>("Sounds/MainMix");
         defaultGroup = mainMix.FindMatchingGroups("Default")[0];
+        musicGroup = mainMix.FindMatchingGroups("Music")[0];
+        atmosphereGroup = mainMix.FindMatchingGroups("Atmosphere")[0];
     }
 }

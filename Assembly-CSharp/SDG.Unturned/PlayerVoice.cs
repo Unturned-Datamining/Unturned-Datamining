@@ -134,6 +134,11 @@ public class PlayerVoice : PlayerCaller
     private bool _isSteamRecording;
 
     /// <summary>
+    /// If true, voice toggle is in ON mode.
+    /// </summary>
+    private bool inputToggleState;
+
+    /// <summary>
     /// Internal value managed by inputWantsToRecord.
     /// </summary>
     private bool _inputWantsToRecord;
@@ -532,9 +537,23 @@ public class PlayerVoice : PlayerCaller
     private void updateInput()
     {
         bool chatVoiceOut = OptionsSettings.chatVoiceOut;
-        bool key = InputEx.GetKey(ControlsSettings.voice);
         bool flag = base.player.life.IsAlive || allowTalkingWhileDead;
-        inputWantsToRecord = chatVoiceOut && key && flag && customAllowTalking;
+        bool flag2 = chatVoiceOut && flag && customAllowTalking;
+        if (ControlsSettings.voiceMode == EControlMode.HOLD)
+        {
+            bool key = InputEx.GetKey(ControlsSettings.voice);
+            inputWantsToRecord = flag2 && key;
+            inputToggleState = false;
+        }
+        else if (ControlsSettings.voiceMode == EControlMode.TOGGLE)
+        {
+            if (InputEx.GetKeyDown(ControlsSettings.voice))
+            {
+                inputToggleState = !inputToggleState;
+            }
+            inputToggleState &= flag2;
+            inputWantsToRecord = inputToggleState;
+        }
     }
 
     /// <summary>

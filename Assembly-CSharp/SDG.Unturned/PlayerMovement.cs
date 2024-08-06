@@ -162,6 +162,13 @@ public class PlayerMovement : PlayerCaller
     public bool canAddSimulationResultsToUpdates;
 
     /// <summary>
+    /// Used instead of actual position to avoid revealing admins in "vanish" mode.
+    /// </summary>
+    internal PlayerStateUpdate mostRecentlyAddedUpdate;
+
+    internal bool hasMostRecentlyAddedUpdate;
+
+    /// <summary>
     /// Flag for plugins to allow maintenance access underneath the map.
     /// </summary>
     public bool bypassUndergroundWhitelist;
@@ -648,7 +655,8 @@ public class PlayerMovement : PlayerCaller
         materialIsWater = false;
         int bLOCK_COLLISION = RayMasks.BLOCK_COLLISION;
         float num = PlayerStance.RADIUS - 0.001f;
-        Physics.SphereCast(new Ray(position + new Vector3(0f, num, 0f), Vector3.down), num, out ground, 0.125f, bLOCK_COLLISION, QueryTriggerInteraction.Ignore);
+        float maxDistance = (controller?.skinWidth ?? 0f) + 0.025f;
+        Physics.SphereCast(new Ray(position + new Vector3(0f, num, 0f), Vector3.down), num, out ground, maxDistance, bLOCK_COLLISION, QueryTriggerInteraction.Ignore);
         _isGrounded = ground.transform != null;
         if ((base.channel.IsLocalPlayer || Provider.isServer) && controller.enabled && controller.isGrounded)
         {
@@ -896,7 +904,9 @@ public class PlayerMovement : PlayerCaller
                 base.player.look.lastRot = base.player.look.rot;
                 if (canAddSimulationResultsToUpdates)
                 {
-                    updates.Add(new PlayerStateUpdate(base.transform.position, base.player.look.angle, base.player.look.rot));
+                    mostRecentlyAddedUpdate = new PlayerStateUpdate(base.transform.position, base.player.look.angle, base.player.look.rot);
+                    hasMostRecentlyAddedUpdate = true;
+                    updates.Add(mostRecentlyAddedUpdate);
                 }
             }
             return;
@@ -1083,6 +1093,20 @@ public class PlayerMovement : PlayerCaller
                         }
                     }
                 }
+                else if (velocity.y < 0.01f)
+                {
+                    int bLOCK_COLLISION = RayMasks.BLOCK_COLLISION;
+                    float num5 = PlayerStance.RADIUS - 0.001f;
+                    float maxDistance = controller.stepOffset + controller.skinWidth;
+                    if (Physics.SphereCast(new Ray(base.transform.position + new Vector3(0f, num5, 0f), Vector3.down), num5, out var hitInfo, maxDistance, bLOCK_COLLISION, QueryTriggerInteraction.Ignore))
+                    {
+                        float num6 = hitInfo.distance - controller.skinWidth;
+                        if (num6 > Mathf.Epsilon)
+                        {
+                            base.transform.position += new Vector3(0f, 0f - num6, 0f);
+                        }
+                    }
+                }
                 if (flag2)
                 {
                     velocity = (base.transform.position - position) / deltaTime;
@@ -1092,27 +1116,27 @@ public class PlayerMovement : PlayerCaller
         if (Level.info != null && Level.info.configData.Use_Legacy_Clip_Borders)
         {
             Vector3 position2 = base.transform.position;
-            float num5 = (float)(int)Level.size / 2f - (float)(int)Level.border;
-            float num6 = num5 + 8f;
+            float num7 = (float)(int)Level.size / 2f - (float)(int)Level.border;
+            float num8 = num7 + 8f;
             bool flag4 = false;
-            if (position2.x > 0f - num6 && position2.x < 0f - num5)
+            if (position2.x > 0f - num8 && position2.x < 0f - num7)
             {
-                position2.x = 0f - num5 + 1f;
+                position2.x = 0f - num7 + 1f;
                 flag4 = true;
             }
-            else if (position2.x < num6 && position2.x > num5)
+            else if (position2.x < num8 && position2.x > num7)
             {
-                position2.x = num5 - 1f;
+                position2.x = num7 - 1f;
                 flag4 = true;
             }
-            if (position2.z > 0f - num6 && position2.z < 0f - num5)
+            if (position2.z > 0f - num8 && position2.z < 0f - num7)
             {
-                position2.z = 0f - num5 + 1f;
+                position2.z = 0f - num7 + 1f;
                 flag4 = true;
             }
-            else if (position2.z < num6 && position2.z > num5)
+            else if (position2.z < num8 && position2.z > num7)
             {
-                position2.z = num5 - 1f;
+                position2.z = num7 - 1f;
                 flag4 = true;
             }
             if (flag4)
@@ -1142,11 +1166,9 @@ public class PlayerMovement : PlayerCaller
             lastUpdatePos = position3;
             if (canAddSimulationResultsToUpdates)
             {
-                updates.Add(new PlayerStateUpdate(position3, base.player.look.angle, base.player.look.rot));
-            }
-            else
-            {
-                updates.Add(new PlayerStateUpdate(Vector3.zero, 0, 0));
+                mostRecentlyAddedUpdate = new PlayerStateUpdate(position3, base.player.look.angle, base.player.look.rot);
+                hasMostRecentlyAddedUpdate = true;
+                updates.Add(mostRecentlyAddedUpdate);
             }
         }
     }
@@ -1244,7 +1266,7 @@ public class PlayerMovement : PlayerCaller
             }
             input_x *= warp_x;
             input_y *= warp_y;
-            if (base.player.look.isOrbiting)
+            if (base.player.look.IsControllingFreecam)
             {
                 _jump = false;
                 _horizontal = 1;
@@ -1283,9 +1305,19 @@ public class PlayerMovement : PlayerCaller
         }
         if (base.channel.IsLocalPlayer)
         {
-            if (base.player.look.isOrbiting && (!base.player.workzone.isBuilding || InputEx.GetKey(ControlsSettings.secondary)))
+            if (base.player.look.IsControllingFreecam && (!base.player.workzone.isBuilding || InputEx.GetKey(ControlsSettings.secondary)))
             {
-                base.player.look.orbitSpeed = Mathf.Clamp(base.player.look.orbitSpeed + Input.GetAxis("mouse_z") * 0.2f * base.player.look.orbitSpeed, 0.5f, 2048f);
+                if (InputEx.GetKey(ControlsSettings.other))
+                {
+                    if (base.player.look.freecamVerticalFieldOfView > 0f)
+                    {
+                        base.player.look.freecamVerticalFieldOfView = Mathf.Clamp(base.player.look.freecamVerticalFieldOfView + Input.GetAxis("mouse_z") * 5f, 1f, 179f);
+                    }
+                }
+                else
+                {
+                    base.player.look.orbitSpeed = Mathf.Clamp(base.player.look.orbitSpeed + Input.GetAxis("mouse_z") * 0.2f * base.player.look.orbitSpeed, 0.5f, 2048f);
+                }
                 Vector3 vector = MainCamera.instance.transform.right * input_x * Time.deltaTime * base.player.look.orbitSpeed;
                 if (base.player.look.isFocusing)
                 {

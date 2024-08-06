@@ -23,6 +23,9 @@ internal abstract class GlazierNumericField_IMGUI : GlazierElementBase_IMGUI, IS
     public SleekColor BackgroundColor { get; set; } = GlazierConst.DefaultFieldBackgroundColor;
 
 
+    public bool IsClickable { get; set; } = true;
+
+
     public GlazierNumericField_IMGUI()
     {
         controlName = GlazierUtils_IMGUI.CreateUniqueControlName();
@@ -30,8 +33,11 @@ internal abstract class GlazierNumericField_IMGUI : GlazierElementBase_IMGUI, IS
 
     public override void OnGUI()
     {
+        bool enabled = GUI.enabled;
+        GUI.enabled = IsClickable;
         GUI.SetNextControlName(controlName);
         string input = GlazierUtils_IMGUI.drawField(drawRect, fontStyle, fontAlignment, fontSizeInt, BackgroundColor, TextColor, text, 64, multiline: false, ETextContrastContext.Default);
+        GUI.enabled = enabled;
         if (GUI.changed && ParseNumericInput(input))
         {
             text = input;

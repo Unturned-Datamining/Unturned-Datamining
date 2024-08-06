@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 namespace SDG.Unturned;
 
@@ -28,6 +29,8 @@ public struct OneShotAudioParameters
 
     public float maxDistance;
 
+    public AudioMixerGroup outputAudioMixerGroup;
+
     public OneShotAudioParameters(Vector3 position, AudioClip clip, Transform parent)
     {
         this.position = position;
@@ -39,6 +42,7 @@ public struct OneShotAudioParameters
         rolloffMode = AudioRolloffMode.Linear;
         minDistance = 1f;
         maxDistance = 32f;
+        outputAudioMixerGroup = null;
     }
 
     public OneShotAudioParameters(Vector3 position, AudioClip clip)

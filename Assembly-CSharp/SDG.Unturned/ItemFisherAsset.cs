@@ -12,6 +12,12 @@ public class ItemFisherAsset : ItemAsset
 
     private ushort _rewardID;
 
+    public int rewardExperienceMin;
+
+    public int rewardExperienceMax;
+
+    internal NPCRewardsList rewardsList;
+
     public AudioClip cast => _cast;
 
     public AudioClip reel => _reel;
@@ -27,5 +33,8 @@ public class ItemFisherAsset : ItemAsset
         _reel = bundle.load<AudioClip>("Reel");
         _tug = bundle.load<AudioClip>("Tug");
         _rewardID = data.ParseUInt16("Reward_ID", 0);
+        rewardExperienceMin = data.ParseInt32("Reward_Experience_Min", 3);
+        rewardExperienceMax = data.ParseInt32("Reward_Experience_Max", 3);
+        rewardsList.Parse(data, localization, this, "Quest_Rewards", "Quest_Reward_");
     }
 }

@@ -72,6 +72,8 @@ public class MenuConfigurationOptionsUI
 
     private static SleekButtonState vehicleThirdPersonCameraModeButton;
 
+    private static SleekButtonState aircraftThirdPersonCameraModeButton;
+
     private static ISleekBox crosshairBox;
 
     private static SleekColorPicker crosshairColorPicker;
@@ -281,6 +283,11 @@ public class MenuConfigurationOptionsUI
         OptionsSettings.vehicleThirdPersonCameraMode = (EVehicleThirdPersonCameraMode)index;
     }
 
+    private static void onSwappedAircraftThirdPersonCameraModeState(SleekButtonState button, int index)
+    {
+        OptionsSettings.vehicleAircraftThirdPersonCameraMode = (EVehicleThirdPersonCameraMode)index;
+    }
+
     private static void onCrosshairColorPicked(SleekColorPicker picker, Color color)
     {
         OptionsSettings.crosshairColor = color;
@@ -384,6 +391,7 @@ public class MenuConfigurationOptionsUI
         hitmarkerButton.state = (OptionsSettings.ShouldHitmarkersFollowWorldPosition ? 1 : 0);
         hitmarkerStyleButton.state = (int)OptionsSettings.hitmarkerStyle;
         vehicleThirdPersonCameraModeButton.state = (int)OptionsSettings.vehicleThirdPersonCameraMode;
+        aircraftThirdPersonCameraModeButton.state = (int)OptionsSettings.vehicleAircraftThirdPersonCameraMode;
         crosshairColorPicker.state = OptionsSettings.crosshairColor;
         hitmarkerColorPicker.state = OptionsSettings.hitmarkerColor;
         criticalHitmarkerColorPicker.state = OptionsSettings.criticalHitmarkerColor;
@@ -670,6 +678,14 @@ public class MenuConfigurationOptionsUI
         vehicleThirdPersonCameraModeButton.AddLabel(localization.format("VehicleThirdPersonCameraMode_Label"), ESleekSide.RIGHT);
         vehicleThirdPersonCameraModeButton.onSwappedState = onSwappedVehicleThirdPersonCameraModeState;
         optionsBox.AddChild(vehicleThirdPersonCameraModeButton);
+        num += 40f;
+        aircraftThirdPersonCameraModeButton = new SleekButtonState(new GUIContent(localization.format("VehicleThirdPersonCameraMode_RotationDetached")), new GUIContent(localization.format("VehicleThirdPersonCameraMode_RotationAttached")));
+        aircraftThirdPersonCameraModeButton.PositionOffset_Y = num;
+        aircraftThirdPersonCameraModeButton.SizeOffset_X = 200f;
+        aircraftThirdPersonCameraModeButton.SizeOffset_Y = 30f;
+        aircraftThirdPersonCameraModeButton.AddLabel(localization.format("AircraftThirdPersonCameraMode_Label"), ESleekSide.RIGHT);
+        aircraftThirdPersonCameraModeButton.onSwappedState = onSwappedAircraftThirdPersonCameraModeState;
+        optionsBox.AddChild(aircraftThirdPersonCameraModeButton);
         num += 40f;
         crosshairBox = Glazier.Get().CreateBox();
         crosshairBox.PositionOffset_Y = num;

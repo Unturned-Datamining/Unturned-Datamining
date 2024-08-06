@@ -8,7 +8,9 @@ public class ControlsSettings
 
     private const byte SAVEDATA_VERSION_ADDED_SCALING_COEFFICIENT = 20;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 20;
+    private const byte SAVEDATA_VERSION_ADDED_VOICE_TOGGLE = 21;
+
+    private const byte SAVEDATA_VERSION_NEWEST = 21;
 
     public static readonly byte SAVEDATA_VERSION;
 
@@ -189,6 +191,8 @@ public class ControlsSettings
     public static EControlMode sprinting;
 
     public static EControlMode leaning;
+
+    public static EControlMode voiceMode;
 
     public static ESensitivityScalingMode sensitivityScalingMode;
 
@@ -483,6 +487,7 @@ public class ControlsSettings
         proning = EControlMode.TOGGLE;
         sprinting = EControlMode.HOLD;
         leaning = EControlMode.HOLD;
+        voiceMode = EControlMode.HOLD;
         sensitivityScalingMode = ESensitivityScalingMode.ProjectionRatio;
         projectionRatioCoefficient = 1f;
         mouseAimSensitivity = 0.2f;
@@ -586,12 +591,20 @@ public class ControlsSettings
         {
             projectionRatioCoefficient = block.readSingle();
         }
+        if (b >= 21)
+        {
+            voiceMode = (EControlMode)block.readByte();
+        }
+        else
+        {
+            voiceMode = EControlMode.HOLD;
+        }
     }
 
     public static void save()
     {
         Block block = new Block();
-        block.writeByte(20);
+        block.writeByte(21);
         block.writeSingle(mouseAimSensitivity);
         block.writeBoolean(invert);
         block.writeBoolean(invertFlight);
@@ -608,12 +621,13 @@ public class ControlsSettings
         }
         block.writeByte((byte)sensitivityScalingMode);
         block.writeSingle(projectionRatioCoefficient);
+        block.writeByte((byte)voiceMode);
         ReadWrite.writeBlock("/Controls.dat", useCloud: true, block);
     }
 
     static ControlsSettings()
     {
-        SAVEDATA_VERSION = 20;
+        SAVEDATA_VERSION = 21;
         LEFT = 0;
         RIGHT = 1;
         UP = 2;

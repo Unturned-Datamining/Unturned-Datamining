@@ -63,6 +63,9 @@ internal class GlazierStringField_IMGUI : GlazierElementBase_IMGUI, ISleekField,
     public int MaxLength { get; set; } = 100;
 
 
+    public bool IsClickable { get; set; } = true;
+
+
     public event Entered OnTextSubmitted;
 
     public event Typed OnTextChanged;
@@ -84,6 +87,8 @@ internal class GlazierStringField_IMGUI : GlazierElementBase_IMGUI, ISleekField,
 
     public override void OnGUI()
     {
+        bool enabled = GUI.enabled;
+        GUI.enabled = IsClickable;
         GUI.SetNextControlName(controlName);
         if (IsPasswordField)
         {
@@ -93,6 +98,7 @@ internal class GlazierStringField_IMGUI : GlazierElementBase_IMGUI, ISleekField,
         {
             Text = GlazierUtils_IMGUI.DrawTextInputField(drawRect, FontStyle, TextAlignment, fontSizeInt, BackgroundColor, TextColor, Text, MaxLength, PlaceholderText, IsMultiline, TextContrastContext);
         }
+        GUI.enabled = enabled;
         if (GUI.changed)
         {
             this.OnTextChanged?.Invoke(this, Text);

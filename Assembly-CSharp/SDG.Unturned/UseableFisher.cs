@@ -213,13 +213,19 @@ public class UseableFisher : Useable
                 if (isCatch)
                 {
                     isCatch = false;
-                    ushort num = SpawnTableTool.ResolveLegacyId(((ItemFisherAsset)base.player.equipment.asset).rewardID, EAssetType.ITEM, OnGetRewardErrorContext);
+                    ItemFisherAsset itemFisherAsset = (ItemFisherAsset)base.player.equipment.asset;
+                    ushort num = SpawnTableTool.ResolveLegacyId(itemFisherAsset.rewardID, EAssetType.ITEM, OnGetRewardErrorContext);
                     if (num != 0)
                     {
                         base.player.inventory.forceAddItem(new Item(num, EItemOrigin.NATURE), auto: false);
                     }
                     base.player.sendStat(EPlayerStat.FOUND_FISHES);
-                    base.player.skills.askPay(3u);
+                    int num2 = UnityEngine.Random.Range(itemFisherAsset.rewardExperienceMin, itemFisherAsset.rewardExperienceMax + 1);
+                    if (num2 > 0)
+                    {
+                        base.player.skills.askPay((uint)num2);
+                    }
+                    itemFisherAsset.rewardsList.Grant(base.player);
                 }
                 SendPlayReel.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner());
                 AlertTool.alert(base.transform.position, 8f);

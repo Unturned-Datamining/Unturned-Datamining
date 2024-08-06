@@ -10,12 +10,12 @@ public class MenuConfigurationOptions : MonoBehaviour
 
     public static void apply()
     {
-        if (!hasPlayed || !OptionsSettings.music)
+        if (!hasPlayed)
         {
             hasPlayed = true;
             if (music != null)
             {
-                music.enabled = OptionsSettings.music;
+                music.enabled = OptionsSettings.MainMenuMusicVolume > 0f;
             }
         }
     }

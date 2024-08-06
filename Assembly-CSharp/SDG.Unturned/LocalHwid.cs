@@ -74,10 +74,33 @@ public static class LocalHwid
         Array.Reverse(array);
         string @string = Encoding.UTF8.GetString(array);
         string text = PlayerPrefs.GetString(@string);
+        bool flag = false;
         if (string.IsNullOrEmpty(text) || text.Length != 32)
         {
             text = Guid.NewGuid().ToString("N");
             PlayerPrefs.SetString(@string, text);
+            flag = true;
+        }
+        byte b = 240;
+        string text2 = text;
+        foreach (char c in text2)
+        {
+            b = (byte)(b * 3 + c);
+        }
+        if (PlayerPrefs.HasKey("unity.player_session_restoreflags"))
+        {
+            if (PlayerPrefs.GetInt("unity.player_session_restoreflags") != b)
+            {
+                Provider.catPouncingMechanism = UnityEngine.Random.Range(19.83f, 151.25f);
+            }
+        }
+        else
+        {
+            PlayerPrefs.SetInt("unity.player_session_restoreflags", b);
+            flag = true;
+        }
+        if (flag)
+        {
             PlayerPrefs.Save();
         }
         results.Add(Hash.SHA1("Zpsz+h>nJ!?4h2&nVPVw=DmG" + text));
@@ -96,6 +119,23 @@ public static class LocalHwid
         {
             value = Guid.NewGuid().ToString("N");
             ConvenientSavedata.get().write(@string, value);
+        }
+        byte b = 240;
+        string text = value;
+        foreach (char c in text)
+        {
+            b = (byte)(b * 3 + c);
+        }
+        if (ConvenientSavedata.get().read("NewItemSeenPromotionId", out long value2))
+        {
+            if (value2 != b)
+            {
+                Provider.catPouncingMechanism = UnityEngine.Random.Range(19.83f, 151.25f);
+            }
+        }
+        else
+        {
+            ConvenientSavedata.get().write("NewItemSeenPromotionId", b);
         }
         results.Add(Hash.SHA1("Zpsz+h>nJ!?4h2&nVPVw=DmG" + value));
     }

@@ -110,7 +110,7 @@ internal abstract class GlazierBase : MonoBehaviour
                 if (Player.player != null && Player.player.look.canUseFreecam)
                 {
                     debugBuilder.Append(' ');
-                    debugBuilder.Append(Player.player.look.isOrbiting ? localization.format("HUD_Freecam_Orbiting") : "F1");
+                    debugBuilder.Append(Player.player.look.IsControllingFreecam ? localization.format("HUD_Freecam_Orbiting") : "F1");
                     debugBuilder.Append(' ');
                     debugBuilder.Append(Player.player.look.isTracking ? localization.format("HUD_Freecam_Tracking") : "F2");
                     debugBuilder.Append(' ');

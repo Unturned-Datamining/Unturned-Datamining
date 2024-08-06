@@ -85,7 +85,7 @@ public class PlayerLook : PlayerCaller
 
     private float pitchInputMultiplier;
 
-    private float _pitch;
+    private float _pitch = 90f;
 
     private float _yaw;
 
@@ -99,11 +99,20 @@ public class PlayerLook : PlayerCaller
 
     public float orbitSpeed = 16f;
 
+    /// <summary>
+    /// Reset to actual fov when first used.
+    /// </summary>
+    public float freecamVerticalFieldOfView = -1f;
+
     public Vector3 lockPosition;
 
     public Vector3 orbitPosition;
 
-    public bool isOrbiting;
+    /// <summary>
+    /// If true, freecam controls take input priority.
+    /// Previously named isOrbiting.
+    /// </summary>
+    public bool IsControllingFreecam;
 
     public bool isTracking;
 
@@ -254,6 +263,9 @@ public class PlayerLook : PlayerCaller
 
     public Transform aim => _aim;
 
+    /// <summary>
+    /// Unintuitively (to say the least), a pitch of 0 is up, 90 is forward, and 180 is down.
+    /// </summary>
     public float pitch => _pitch;
 
     public float yaw => _yaw;
@@ -271,11 +283,11 @@ public class PlayerLook : PlayerCaller
     /// </summary>
     public bool areSpecStatsVisible { get; protected set; }
 
-    public bool isCam
+    public bool IsLocallyUsingFreecam
     {
         get
         {
-            if (!isOrbiting && !isTracking && !isLocking)
+            if (!IsControllingFreecam && !isTracking && !isLocking)
             {
                 return isFocusing;
             }
@@ -320,6 +332,9 @@ public class PlayerLook : PlayerCaller
             return base.channel.owner.isAdmin;
         }
     }
+
+    [Obsolete]
+    public bool isCam => IsLocallyUsingFreecam;
 
     internal void TeleportYaw(float newYaw)
     {
@@ -445,7 +460,7 @@ public class PlayerLook : PlayerCaller
         {
             MainCamera.instance.transform.parent = base.player.first;
             MainCamera.instance.transform.localPosition = Vector3.up * eyes;
-            isOrbiting = false;
+            IsControllingFreecam = false;
             isTracking = false;
             isLocking = false;
             isFocusing = false;
@@ -748,12 +763,31 @@ public class PlayerLook : PlayerCaller
         }
     }
 
+    private EVehicleThirdPersonCameraMode GetVehicleThirdPersonCameraMode(InteractableVehicle vehicle)
+    {
+        if (vehicle != null && vehicle.asset != null)
+        {
+            EEngine engine = vehicle.asset.engine;
+            if ((uint)(engine - 1) <= 2u)
+            {
+                return OptionsSettings.vehicleAircraftThirdPersonCameraMode;
+            }
+        }
+        return OptionsSettings.vehicleThirdPersonCameraMode;
+    }
+
+    private EVehicleThirdPersonCameraMode GetCurrentVehicleThirdPersonCameraMode()
+    {
+        InteractableVehicle vehicle = base.player.movement.getVehicle();
+        return GetVehicleThirdPersonCameraMode(vehicle);
+    }
+
     private void onSeated(bool isDriver, bool inVehicle, bool wasVehicle, InteractableVehicle oldVehicle, InteractableVehicle newVehicle)
     {
         if (!wasVehicle)
         {
             _orbitPitch = 22.5f;
-            if (OptionsSettings.vehicleThirdPersonCameraMode == EVehicleThirdPersonCameraMode.RotationDetached)
+            if (GetVehicleThirdPersonCameraMode(newVehicle) == EVehicleThirdPersonCameraMode.RotationDetached)
             {
                 _orbitYaw = newVehicle?.transform.rotation.eulerAngles.y ?? 0f;
             }
@@ -782,9 +816,9 @@ public class PlayerLook : PlayerCaller
     public void ReceiveFreecamAllowed(bool isAllowed)
     {
         allowFreecamWithoutAdmin = isAllowed;
-        if (!canUseFreecam && isCam)
+        if (!canUseFreecam && IsLocallyUsingFreecam)
         {
-            isOrbiting = false;
+            IsControllingFreecam = false;
             isTracking = false;
             isLocking = false;
             isFocusing = false;
@@ -889,12 +923,12 @@ public class PlayerLook : PlayerCaller
                 {
                     if (InputEx.GetKeyDown(KeyCode.F1))
                     {
-                        isOrbiting = !isOrbiting;
-                        if (isOrbiting && !isTracking && !isLocking && !isFocusing)
+                        IsControllingFreecam = !IsControllingFreecam;
+                        if (IsControllingFreecam && !isTracking && !isLocking && !isFocusing)
                         {
                             isTracking = true;
                         }
-                        base.player.ClientSetAdminUsageFlagActive(EPlayerAdminUsageFlags.Freecam, isCam);
+                        base.player.ClientSetAdminUsageFlagActive(EPlayerAdminUsageFlags.Freecam, IsLocallyUsingFreecam);
                     }
                     if (InputEx.GetKeyDown(KeyCode.F2))
                     {
@@ -904,7 +938,7 @@ public class PlayerLook : PlayerCaller
                             isLocking = false;
                             isFocusing = false;
                         }
-                        base.player.ClientSetAdminUsageFlagActive(EPlayerAdminUsageFlags.Freecam, isCam);
+                        base.player.ClientSetAdminUsageFlagActive(EPlayerAdminUsageFlags.Freecam, IsLocallyUsingFreecam);
                     }
                     if (InputEx.GetKeyDown(KeyCode.F3))
                     {
@@ -915,7 +949,7 @@ public class PlayerLook : PlayerCaller
                             isFocusing = false;
                             lockPosition = base.player.first.position;
                         }
-                        base.player.ClientSetAdminUsageFlagActive(EPlayerAdminUsageFlags.Freecam, isCam);
+                        base.player.ClientSetAdminUsageFlagActive(EPlayerAdminUsageFlags.Freecam, IsLocallyUsingFreecam);
                     }
                     if (InputEx.GetKeyDown(KeyCode.F4))
                     {
@@ -926,7 +960,7 @@ public class PlayerLook : PlayerCaller
                             isLocking = false;
                             lockPosition = base.player.first.position;
                         }
-                        base.player.ClientSetAdminUsageFlagActive(EPlayerAdminUsageFlags.Freecam, isCam);
+                        base.player.ClientSetAdminUsageFlagActive(EPlayerAdminUsageFlags.Freecam, IsLocallyUsingFreecam);
                     }
                     if (InputEx.GetKeyDown(KeyCode.F5))
                     {
@@ -975,7 +1009,7 @@ public class PlayerLook : PlayerCaller
                     EPlayerPerspective activePerspective = ((perspective == EPlayerPerspective.FIRST) ? EPlayerPerspective.THIRD : EPlayerPerspective.FIRST);
                     setActivePerspective(activePerspective);
                 }
-                if (isCam)
+                if (IsLocallyUsingFreecam)
                 {
                     if (perspective != EPlayerPerspective.THIRD)
                     {
@@ -988,9 +1022,20 @@ public class PlayerLook : PlayerCaller
                 }
             }
             float zoomBaseFieldOfView = OptionsSettings.GetZoomBaseFieldOfView();
-            if (isCam)
+            if (IsLocallyUsingFreecam)
             {
-                instance.fieldOfView = OptionsSettings.DesiredVerticalFieldOfView;
+                if (freecamVerticalFieldOfView < 0.1f)
+                {
+                    freecamVerticalFieldOfView = OptionsSettings.DesiredVerticalFieldOfView;
+                }
+                if (isSmoothing)
+                {
+                    instance.fieldOfView = Mathf.Lerp(instance.fieldOfView, freecamVerticalFieldOfView, 4f * Time.deltaTime);
+                }
+                else
+                {
+                    instance.fieldOfView = freecamVerticalFieldOfView;
+                }
             }
             else
             {
@@ -1004,18 +1049,40 @@ public class PlayerLook : PlayerCaller
             _look_y = 0f;
             if (PlayerUI.window.isCursorLocked && !isIgnoringInput)
             {
-                if (isOrbiting)
+                if (IsControllingFreecam)
                 {
                     if (!base.player.workzone.isBuilding || InputEx.GetKey(ControlsSettings.secondary))
                     {
-                        _orbitYaw += ControlsSettings.mouseAimSensitivity * Input.GetAxis("mouse_x") * yawInputMultiplier;
+                        float num2 = 1f;
+                        switch (ControlsSettings.sensitivityScalingMode)
+                        {
+                        case ESensitivityScalingMode.ProjectionRatio:
+                        {
+                            float f = MathF.PI / 180f * instance.fieldOfView * 0.5f;
+                            float f2 = MathF.PI / 180f * OptionsSettings.DesiredVerticalFieldOfView * 0.5f;
+                            float projectionRatioCoefficient = ControlsSettings.projectionRatioCoefficient;
+                            num2 = Mathf.Atan(projectionRatioCoefficient * Mathf.Tan(f)) / Mathf.Atan(projectionRatioCoefficient * Mathf.Tan(f2));
+                            break;
+                        }
+                        case ESensitivityScalingMode.ZoomFactor:
+                        case ESensitivityScalingMode.Legacy:
+                        {
+                            float num3 = OptionsSettings.DesiredVerticalFieldOfView / instance.fieldOfView;
+                            if (num3 > 0f)
+                            {
+                                num2 = 1f / num3;
+                            }
+                            break;
+                        }
+                        }
+                        _orbitYaw += ControlsSettings.mouseAimSensitivity * num2 * Input.GetAxis("mouse_x") * yawInputMultiplier;
                         if (ControlsSettings.invert)
                         {
-                            _orbitPitch += ControlsSettings.mouseAimSensitivity * Input.GetAxis("mouse_y") * pitchInputMultiplier;
+                            _orbitPitch += ControlsSettings.mouseAimSensitivity * num2 * Input.GetAxis("mouse_y") * pitchInputMultiplier;
                         }
                         else
                         {
-                            _orbitPitch -= ControlsSettings.mouseAimSensitivity * Input.GetAxis("mouse_y") * pitchInputMultiplier;
+                            _orbitPitch -= ControlsSettings.mouseAimSensitivity * num2 * Input.GetAxis("mouse_y") * pitchInputMultiplier;
                         }
                     }
                 }
@@ -1046,16 +1113,16 @@ public class PlayerLook : PlayerCaller
                     {
                         _look_y *= -1f;
                     }
-                    float num2 = 1f;
+                    float num4 = 1f;
                     switch (ControlsSettings.sensitivityScalingMode)
                     {
                     case ESensitivityScalingMode.ProjectionRatio:
                     {
-                        float num3 = ((shouldUseZoomFactorForSensitivity && isScopeActive && perspective == EPlayerPerspective.FIRST && scopeCameraZoomFactor > 0f) ? scopeCamera.fieldOfView : instance.fieldOfView);
-                        float f = MathF.PI / 180f * num3 * 0.5f;
-                        float f2 = MathF.PI / 180f * OptionsSettings.DesiredVerticalFieldOfView * 0.5f;
-                        float projectionRatioCoefficient = ControlsSettings.projectionRatioCoefficient;
-                        num2 = Mathf.Atan(projectionRatioCoefficient * Mathf.Tan(f)) / Mathf.Atan(projectionRatioCoefficient * Mathf.Tan(f2));
+                        float num5 = ((shouldUseZoomFactorForSensitivity && isScopeActive && perspective == EPlayerPerspective.FIRST && scopeCameraZoomFactor > 0f) ? scopeCamera.fieldOfView : instance.fieldOfView);
+                        float f3 = MathF.PI / 180f * num5 * 0.5f;
+                        float f4 = MathF.PI / 180f * OptionsSettings.DesiredVerticalFieldOfView * 0.5f;
+                        float projectionRatioCoefficient2 = ControlsSettings.projectionRatioCoefficient;
+                        num4 = Mathf.Atan(projectionRatioCoefficient2 * Mathf.Tan(f3)) / Mathf.Atan(projectionRatioCoefficient2 * Mathf.Tan(f4));
                         break;
                     }
                     case ESensitivityScalingMode.ZoomFactor:
@@ -1064,11 +1131,11 @@ public class PlayerLook : PlayerCaller
                         {
                             if (isScopeActive && perspective == EPlayerPerspective.FIRST && scopeCameraZoomFactor > 0f)
                             {
-                                num2 = 1f / scopeCameraZoomFactor;
+                                num4 = 1f / scopeCameraZoomFactor;
                             }
                             else if (mainCameraZoomFactor > 0f)
                             {
-                                num2 = 1f / mainCameraZoomFactor;
+                                num4 = 1f / mainCameraZoomFactor;
                             }
                         }
                         break;
@@ -1080,7 +1147,7 @@ public class PlayerLook : PlayerCaller
                     }
                     else if (base.player.movement.getVehicle() == null || !base.player.movement.getVehicle().asset.hasLockMouse || !base.player.movement.getVehicle().isDriver)
                     {
-                        _yaw += ControlsSettings.mouseAimSensitivity * num2 * Input.GetAxis("mouse_x") * yawInputMultiplier;
+                        _yaw += ControlsSettings.mouseAimSensitivity * num4 * Input.GetAxis("mouse_x") * yawInputMultiplier;
                     }
                     if (base.player.movement.getVehicle() != null && perspective == EPlayerPerspective.THIRD)
                     {
@@ -1097,11 +1164,11 @@ public class PlayerLook : PlayerCaller
                     {
                         if (ControlsSettings.invert)
                         {
-                            _pitch += ControlsSettings.mouseAimSensitivity * num2 * Input.GetAxis("mouse_y") * pitchInputMultiplier;
+                            _pitch += ControlsSettings.mouseAimSensitivity * num4 * Input.GetAxis("mouse_y") * pitchInputMultiplier;
                         }
                         else
                         {
-                            _pitch -= ControlsSettings.mouseAimSensitivity * num2 * Input.GetAxis("mouse_y") * pitchInputMultiplier;
+                            _pitch -= ControlsSettings.mouseAimSensitivity * num4 * Input.GetAxis("mouse_y") * pitchInputMultiplier;
                         }
                     }
                 }
@@ -1112,7 +1179,7 @@ public class PlayerLook : PlayerCaller
             }
             if (float.IsInfinity(pitch) || float.IsNaN(pitch))
             {
-                _pitch = 0f;
+                _pitch = 90f;
             }
             if (float.IsInfinity(orbitYaw) || float.IsNaN(orbitYaw))
             {
@@ -1122,14 +1189,14 @@ public class PlayerLook : PlayerCaller
             {
                 _orbitPitch = 0f;
             }
-            float num4 = Mathf.Lerp(recoil_x, 0f, 4f * Time.deltaTime);
-            float num5 = num4 - recoil_x;
-            recoil_x = num4;
-            float num6 = Mathf.Lerp(recoil_y, 0f, 4f * Time.deltaTime);
-            float num7 = num6 - recoil_y;
-            recoil_y = num6;
-            _yaw += num5;
-            _pitch -= num7;
+            float num6 = Mathf.Lerp(recoil_x, 0f, 4f * Time.deltaTime);
+            float num7 = num6 - recoil_x;
+            recoil_x = num6;
+            float num8 = Mathf.Lerp(recoil_y, 0f, 4f * Time.deltaTime);
+            float num9 = num8 - recoil_y;
+            recoil_y = num8;
+            _yaw += num7;
+            _pitch -= num9;
             flinchLocalRotation = Quaternion.Lerp(flinchLocalRotation, Quaternion.identity, 4f * Time.deltaTime);
             smoothedExplosionLocalRotation = Quaternion.Lerp(smoothedExplosionLocalRotation, targetExplosionLocalRotation.currentRotation, explosionSmoothingSpeed * Time.deltaTime);
             targetExplosionLocalRotation.Update(Time.deltaTime);
@@ -1155,7 +1222,7 @@ public class PlayerLook : PlayerCaller
             {
                 if ((base.player.stance.stance == EPlayerStance.DRIVING || base.player.stance.stance == EPlayerStance.SITTING) && perspective == EPlayerPerspective.THIRD)
                 {
-                    if (OptionsSettings.vehicleThirdPersonCameraMode == EVehicleThirdPersonCameraMode.RotationDetached)
+                    if (GetCurrentVehicleThirdPersonCameraMode() == EVehicleThirdPersonCameraMode.RotationDetached)
                     {
                         instance.transform.rotation = Quaternion.Euler(orbitPitch, orbitYaw, 0f);
                     }
@@ -1186,7 +1253,7 @@ public class PlayerLook : PlayerCaller
                     }
                     base.transform.localRotation = Quaternion.Euler(0f, yaw, 0f);
                 }
-                if (isCam)
+                if (IsLocallyUsingFreecam)
                 {
                     if (isFocusing)
                     {
@@ -1223,13 +1290,13 @@ public class PlayerLook : PlayerCaller
             }
             else
             {
-                if (isCam)
+                if (IsLocallyUsingFreecam)
                 {
                     if (isLocking || isFocusing)
                     {
                         instance.transform.position = lockPosition + orbitPosition;
                     }
-                    else if (isOrbiting || isTracking)
+                    else if (IsControllingFreecam || isTracking)
                     {
                         if (isSmoothing)
                         {
@@ -1256,26 +1323,26 @@ public class PlayerLook : PlayerCaller
                 }
                 else if (base.player.stance.stance == EPlayerStance.DRIVING)
                 {
-                    float num8 = base.player.movement.getVehicle().asset.camDriverOffset + base.player.movement.getVehicle().asset.camPassengerOffset;
+                    float num10 = base.player.movement.getVehicle().asset.camDriverOffset + base.player.movement.getVehicle().asset.camPassengerOffset;
                     if (yaw > 0f)
                     {
-                        instance.transform.localPosition = Vector3.Lerp(instance.transform.localPosition, Vector3.up * (heightLook + num8) - Vector3.left * yaw / 360f, 4f * Time.deltaTime);
+                        instance.transform.localPosition = Vector3.Lerp(instance.transform.localPosition, Vector3.up * (heightLook + num10) - Vector3.left * yaw / 360f, 4f * Time.deltaTime);
                     }
                     else
                     {
-                        instance.transform.localPosition = Vector3.Lerp(instance.transform.localPosition, Vector3.up * (heightLook + num8) - Vector3.left * yaw / 240f, 4f * Time.deltaTime);
+                        instance.transform.localPosition = Vector3.Lerp(instance.transform.localPosition, Vector3.up * (heightLook + num10) - Vector3.left * yaw / 240f, 4f * Time.deltaTime);
                     }
                 }
                 else if (perspective == EPlayerPerspective.FIRST)
                 {
-                    float num9;
+                    float num11;
                     if (base.player.stance.stance == EPlayerStance.SITTING && base.player.movement.getVehicle() != null)
                     {
-                        num9 = base.player.movement.getVehicle().asset.camPassengerOffset;
+                        num11 = base.player.movement.getVehicle().asset.camPassengerOffset;
                     }
                     else
                     {
-                        num9 = 0f;
+                        num11 = 0f;
                         Vector3 origin3 = base.player.first.position + new Vector3(0f, HEIGHT_LOOK_PRONE - 0.25f, 0f);
                         Vector3 up = Vector3.up;
                         float maxDistance = PlayerMovement.HEIGHT_STAND - HEIGHT_LOOK_PRONE - 0.25f;
@@ -1285,7 +1352,7 @@ public class PlayerLook : PlayerCaller
                             eyes = Mathf.Min(eyes, b);
                         }
                     }
-                    instance.transform.localPosition = new Vector3(0f, eyes + num9, 0f);
+                    instance.transform.localPosition = new Vector3(0f, eyes + num11, 0f);
                 }
                 else
                 {

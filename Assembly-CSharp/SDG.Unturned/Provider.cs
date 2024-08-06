@@ -367,6 +367,8 @@ public class Provider : MonoBehaviour
     /// </summary>
     private static float sentConnectRequestTime;
 
+    internal static float catPouncingMechanism = -33f;
+
     /// <summary>
     /// Nelson 2023-08-09: adding because in some cases, namely workshop download and level loading,
     /// we can't properly handle client transport failures because these loading systems don't
@@ -2081,6 +2083,7 @@ public class Provider : MonoBehaviour
         isWaitingForWorkshopResponse = true;
         waitingForExpectedWorkshopItems = expectedWorkshopItems;
         isWaitingForAuthenticationResponse = false;
+        catPouncingMechanism = -22f;
         List<SteamItemInstanceID_t> list = new List<SteamItemInstanceID_t>();
         if (Characters.active.packageShirt != 0L)
         {
@@ -3335,8 +3338,9 @@ public class Provider : MonoBehaviour
             {
                 timeLastPacketWasReceivedFromServer = Time.realtimeSinceStartup;
             }
+            return;
         }
-        else if (Level.isLoading)
+        if (Level.isLoading)
         {
             float num2 = Time.realtimeSinceStartup - timeLastPacketWasReceivedFromServer;
             if (isWaitingForConnectResponse && num2 > 10f)
@@ -3356,25 +3360,32 @@ public class Provider : MonoBehaviour
                 }
             }
             timeLastPacketWasReceivedFromServer = Time.realtimeSinceStartup;
+            return;
         }
-        else
+        float num4 = Time.realtimeSinceStartup - timeLastPacketWasReceivedFromServer;
+        if (num4 > (float)CLIENT_TIMEOUT)
         {
-            float num4 = Time.realtimeSinceStartup - timeLastPacketWasReceivedFromServer;
-            if (num4 > (float)CLIENT_TIMEOUT)
+            _connectionFailureInfo = ESteamConnectionFailureInfo.TIMED_OUT;
+            RequestDisconnect($"it has been {num4}s without a message from the server");
+            return;
+        }
+        if (battlEyeHasRequiredRestart)
+        {
+            battlEyeHasRequiredRestart = false;
+            RequestDisconnect("BattlEye required restart");
+            return;
+        }
+        if (catPouncingMechanism > -0.5f)
+        {
+            catPouncingMechanism -= Time.deltaTime;
+            if (catPouncingMechanism < 0.01f)
             {
-                _connectionFailureInfo = ESteamConnectionFailureInfo.TIMED_OUT;
-                RequestDisconnect($"it has been {num4}s without a message from the server");
-            }
-            else if (battlEyeHasRequiredRestart)
-            {
-                battlEyeHasRequiredRestart = false;
-                RequestDisconnect("BattlEye required restart");
-            }
-            else
-            {
-                ClientAssetIntegrity.SendRequests();
+                catPouncingMechanism = -66f;
+                RequestDisconnect(UnityEngine.Random.Range(1, 256).ToString());
+                return;
             }
         }
+        ClientAssetIntegrity.SendRequests();
     }
 
     private static void broadcastServerDisconnected(CSteamID steamID)
@@ -3862,16 +3873,27 @@ public class Provider : MonoBehaviour
         writer.WriteUInt8(aboutPlayer.playerID.characterID);
         writer.WriteString(aboutPlayer.playerID.playerName);
         writer.WriteString(aboutPlayer.playerID.characterName);
-        writer.WriteClampedVector3(aboutPlayer.model.transform.position);
-        byte value = (byte)(aboutPlayer.model.transform.rotation.eulerAngles.y / 2f);
-        writer.WriteUInt8(value);
+        Vector3 value;
+        byte value2;
+        if (aboutPlayer.player.movement.canAddSimulationResultsToUpdates || !aboutPlayer.player.movement.hasMostRecentlyAddedUpdate)
+        {
+            value = aboutPlayer.model.transform.position;
+            value2 = MeasurementTool.angleToByte(aboutPlayer.model.transform.rotation.eulerAngles.y);
+        }
+        else
+        {
+            value = aboutPlayer.player.movement.mostRecentlyAddedUpdate.pos;
+            value2 = aboutPlayer.player.movement.mostRecentlyAddedUpdate.rot;
+        }
+        writer.WriteClampedVector3(value);
+        writer.WriteUInt8(value2);
         writer.WriteBit(aboutPlayer.isPro);
-        bool value2 = aboutPlayer.isAdmin;
+        bool value3 = aboutPlayer.isAdmin;
         if (forPlayer != aboutPlayer && hideAdmins)
         {
-            value2 = false;
+            value3 = false;
         }
-        writer.WriteBit(value2);
+        writer.WriteBit(value3);
         writer.WriteUInt8((byte)aboutPlayer.channel);
         writer.WriteSteamID(aboutPlayer.playerID.group);
         writer.WriteString(aboutPlayer.playerID.nickName);
@@ -3892,23 +3914,23 @@ public class Provider : MonoBehaviour
         int[] skinItems = aboutPlayer.skinItems;
         writer.WriteUInt8((byte)skinItems.Length);
         int[] array = skinItems;
-        foreach (int value3 in array)
+        foreach (int value4 in array)
         {
-            writer.WriteInt32(value3);
+            writer.WriteInt32(value4);
         }
         string[] skinTags = aboutPlayer.skinTags;
         writer.WriteUInt8((byte)skinTags.Length);
         string[] array2 = skinTags;
-        foreach (string value4 in array2)
+        foreach (string value5 in array2)
         {
-            writer.WriteString(value4);
+            writer.WriteString(value5);
         }
         string[] skinDynamicProps = aboutPlayer.skinDynamicProps;
         writer.WriteUInt8((byte)skinDynamicProps.Length);
         array2 = skinDynamicProps;
-        foreach (string value5 in array2)
+        foreach (string value6 in array2)
         {
-            writer.WriteString(value5);
+            writer.WriteString(value6);
         }
         writer.WriteEnum(aboutPlayer.skillset);
         writer.WriteString(aboutPlayer.language);

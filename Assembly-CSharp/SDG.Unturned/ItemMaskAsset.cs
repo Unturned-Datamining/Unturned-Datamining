@@ -19,6 +19,22 @@ public class ItemMaskAsset : ItemGearAsset
     public float FilterDegradationRateMultiplier { get; protected set; } = 1f;
 
 
+    public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
+    {
+        base.BuildDescription(builder, itemInstance);
+        if (!builder.shouldRestrictToLegacyContent)
+        {
+            if (FilterDegradationRateMultiplier != 1f)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_FilterDegradationRateMultiplier", PlayerDashboardInventoryUI.FormatStatModifier(FilterDegradationRateMultiplier, higherIsPositive: true, higherIsBeneficial: false)), 10000 + DescSort_LowerIsBeneficial(FilterDegradationRateMultiplier));
+            }
+            if (isEarpiece)
+            {
+                builder.Append(PlayerDashboardInventoryUI.FormatStatColor(PlayerDashboardInventoryUI.localization.format("ItemDescription_Clothing_Earpiece"), isBeneficial: true), 9999);
+            }
+        }
+    }
+
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
         base.PopulateAsset(bundle, data, localization);

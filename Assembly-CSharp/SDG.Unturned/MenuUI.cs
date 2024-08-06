@@ -254,6 +254,7 @@ public class MenuUI : MonoBehaviour
         MenuPlayLobbiesUI.close();
         MenuPlayConnectUI.close();
         MenuPlayServersUI.serverListFiltersUI.close();
+        MenuPlayServersUI.mapFiltersUI.close();
         MenuPlayUI.serverListUI.close();
         MenuPlayUI.serverBookmarksUI.close();
         MenuPlayServerInfoUI.close();
@@ -369,6 +370,11 @@ public class MenuUI : MonoBehaviour
                     UnturnedLog.info("Unknown server info open context: {0}", MenuPlayServerInfoUI.openContext);
                     break;
                 }
+            }
+            else if (MenuPlayServersUI.mapFiltersUI.active)
+            {
+                MenuPlayServersUI.mapFiltersUI.close();
+                MenuPlayServersUI.mapFiltersUI.OpenPreviousMenu();
             }
             else if (MenuPlayServersUI.serverListFiltersUI.active)
             {
@@ -524,7 +530,7 @@ public class MenuUI : MonoBehaviour
         MenuSurvivorsClothingBoxUI.update();
         tickInput();
         window.showCursor = true;
-        if (MenuPlayUI.active || MenuPlayConnectUI.active || MenuPlayUI.serverListUI.active || MenuPlayServersUI.serverListFiltersUI.active || MenuPlayServerInfoUI.active || MenuServerPasswordUI.isActive || MenuPlaySingleplayerUI.active || MenuPlayLobbiesUI.active || MenuPlayConfigUI.active || MenuPlayUI.serverBookmarksUI.active)
+        if (MenuPlayUI.active || MenuPlayConnectUI.active || MenuPlayUI.serverListUI.active || MenuPlayServersUI.serverListFiltersUI.active || MenuPlayServersUI.mapFiltersUI.active || MenuPlayServerInfoUI.active || MenuServerPasswordUI.isActive || MenuPlaySingleplayerUI.active || MenuPlayLobbiesUI.active || MenuPlayConfigUI.active || MenuPlayUI.serverBookmarksUI.active)
         {
             target = play;
         }

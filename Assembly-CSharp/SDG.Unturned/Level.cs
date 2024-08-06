@@ -860,6 +860,26 @@ public class Level : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// New map filter uses lowercase map name and doesn't need startswith.
+    /// </summary>
+    public static LevelInfo FindLevelForServerFilterExact(string filter)
+    {
+        if (string.IsNullOrWhiteSpace(filter) || filter.Length < 2)
+        {
+            return null;
+        }
+        ScanKnownLevels();
+        foreach (LevelInfo knownLevel in knownLevels)
+        {
+            if (knownLevel.configData != null && knownLevel.configData.PackedVersion != 0 && knownLevel.name.Equals(filter, StringComparison.OrdinalIgnoreCase))
+            {
+                return knownLevel;
+            }
+        }
+        return null;
+    }
+
     private static LevelInfo FindKnownLevelByPath(string path)
     {
         foreach (LevelInfo knownLevel in knownLevels)
@@ -1778,7 +1798,7 @@ public class Level : MonoBehaviour
             musicAudioSource.bypassReverbZones = true;
             musicAudioSource.spatialize = false;
         }
-        musicAudioSource.volume = OptionsSettings.volume * OptionsSettings.loadingScreenMusicVolume;
+        musicAudioSource.volume = OptionsSettings.volume * OptionsSettings.MusicMasterVolume * OptionsSettings.loadingScreenMusicVolume;
         if (musicAudioSource.volume > 0f)
         {
             return musicAudioSource;

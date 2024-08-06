@@ -6,6 +6,7 @@ Crouching_Label Crouching
 Proning_Label Proning
 Sprinting_Label Sprinting
 Leaning_Label Leaning
+Voice_Mode_Label Voice Chat Mode
 
 SensitivityScalingMode_Label Sensitivity Scaling Mode
 SensitivityScalingMode_ProjectionRatio Focal Length

@@ -41,6 +41,9 @@ Should_Spawn_Seat_Capsules true
 
 Has_Clip_Prefab false
 
+Carjack_Force_Multiplier 2
+Explosion_Force_Multiplier 2
+
 PaintableSections
 [
     {
@@ -49,6 +52,10 @@ PaintableSections
     }
     {
         Path Model_1
+        MaterialIndex 0
+    }
+    {
+        Path Model_2
         MaterialIndex 0
     }
     {
@@ -61,3 +68,38 @@ DefaultPaintColors
 [
     #b7b7b7
 ]
+
+WheelConfigurations
+[
+	{
+		WheelColliderPath Tires/Tire_0
+		IsColliderSteered true
+		IsColliderPowered false
+		ModelPath Wheels/Wheel_0
+		ModelUseColliderPose true
+	}
+	{
+		WheelColliderPath Tires/Tire_1
+		IsColliderSteered false
+		IsColliderPowered true
+		ModelPath Wheels/Wheel_1
+		ModelUseColliderPose true
+	}
+]
+
+WheelBalancing_ForceMultiplier 30
+WheelBalancing_UprightExponent 0.7
+Steering_LeaningForceMultiplier 4
+RollAngularVelocityDamping 2
+
+ReverseGearRatio 8
+ForwardGearRatios
+[
+    10
+]
+GearShift_Duration 0.2
+GearShift_Interval 0.5
+GearShift_VisibleInHUD false
+EngineIdleRPM 1000
+EngineMaxRPM 3300
+EngineMaxTorque 4

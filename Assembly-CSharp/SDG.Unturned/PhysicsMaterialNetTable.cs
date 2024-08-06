@@ -13,13 +13,14 @@ public static class PhysicsMaterialNetTable
 {
     private static readonly ClientStaticMethod SendMappings = ClientStaticMethod.Get(ReceiveMappings);
 
+    /// <summary>
+    /// Number of bits needed to replicate PhysicsMaterialNetId.
+    /// </summary>
+    internal static int idBitCount;
+
     private static Dictionary<string, uint> nameToId = new Dictionary<string, uint>();
 
-    /// <summary>
-    /// Index of ID minus one corresponds to name. This approach allows server to send names in ascending order, so
-    /// client can infer the ID without sending it.
-    /// </summary>
-    private static List<string> idMinusOneToName = new List<string>();
+    private static Dictionary<uint, string> idToName = new Dictionary<uint, string>();
 
     /// <summary>
     /// Get an ID that can be used to reference a physics material name over the network. If given material name
@@ -45,13 +46,9 @@ public static class PhysicsMaterialNetTable
     /// </summary>
     public static string GetMaterialName(PhysicsMaterialNetId netId)
     {
-        if (netId.id != 0)
+        if (netId.id != 0 && idToName.TryGetValue(netId.id, out var value))
         {
-            int num = (int)(netId.id - 1);
-            if (num >= 0 && num < idMinusOneToName.Count)
-            {
-                return idMinusOneToName[num];
-            }
+            return value;
         }
         return null;
     }
@@ -62,7 +59,7 @@ public static class PhysicsMaterialNetTable
     internal static void Clear()
     {
         nameToId.Clear();
-        idMinusOneToName.Clear();
+        idToName.Clear();
     }
 
     /// <summary>
@@ -70,34 +67,49 @@ public static class PhysicsMaterialNetTable
     /// </summary>
     internal static void ServerPopulateTable()
     {
+        uint num = 1u;
         foreach (KeyValuePair<Guid, PhysicsMaterialAsset> asset in PhysicMaterialCustomData.GetAssets())
         {
-            string[] physicMaterialNames = asset.Value.physicMaterialNames;
+            PhysicsMaterialAsset value = asset.Value;
+            if (value.physicMaterialNames == null || value.physicMaterialNames.Length < 1)
+            {
+                continue;
+            }
+            uint num2 = num;
+            num++;
+            bool flag = false;
+            string[] physicMaterialNames = value.physicMaterialNames;
             foreach (string text in physicMaterialNames)
             {
-                if (!nameToId.ContainsKey(text))
+                if (nameToId.ContainsKey(text))
                 {
-                    uint value = (uint)(idMinusOneToName.Count + 1);
-                    nameToId[text] = value;
-                    idMinusOneToName.Add(text);
-                    if (idMinusOneToName.Count == 63)
-                    {
-                        UnturnedLog.warn($"Reached maximum number of physics material table entries! ({63})");
-                        return;
-                    }
+                    UnturnedLog.warn("Multiple physics material assets contain Unity name \"" + text + "\"");
+                    continue;
+                }
+                nameToId[text] = num2;
+                if (!flag)
+                {
+                    idToName[num2] = text;
+                    flag = true;
                 }
             }
         }
+        idBitCount = NetPakConst.CountBits(num);
+        UnturnedLog.info($"Server registered {nameToId.Count} Unity physics material names with {num - 1} unique IDs ({idBitCount} bits)");
     }
 
     internal static void Send(ITransportConnection transportConnection)
     {
         SendMappings.Invoke(ENetReliability.Reliable, transportConnection, delegate(NetPakWriter writer)
         {
-            writer.WriteUInt8((byte)idMinusOneToName.Count);
-            foreach (string item in idMinusOneToName)
+            writer.WriteUInt8((byte)nameToId.Count);
+            writer.WriteUInt8((byte)idBitCount);
+            foreach (KeyValuePair<string, uint> item in nameToId)
             {
-                writer.WriteString(item, 6);
+                string key = item.Key;
+                uint value = item.Value;
+                writer.WriteString(key, 6);
+                writer.WriteBits(value, idBitCount);
             }
         });
     }
@@ -107,12 +119,15 @@ public static class PhysicsMaterialNetTable
     {
         NetPakReader reader = context.reader;
         reader.ReadUInt8(out var value);
+        reader.ReadUInt8(out var value2);
+        idBitCount = value2;
         for (int i = 0; i < value; i++)
         {
-            reader.ReadString(out var value2, 6);
-            uint value3 = (uint)(idMinusOneToName.Count + 1);
-            nameToId[value2] = value3;
-            idMinusOneToName.Add(value2);
+            reader.ReadString(out var value3, 6);
+            reader.ReadBits(idBitCount, out var value4);
+            nameToId[value3] = value4;
+            idToName[value4] = value3;
         }
+        UnturnedLog.info($"Client received {nameToId.Count} Unity physics material names ({idBitCount} bits)");
     }
 }

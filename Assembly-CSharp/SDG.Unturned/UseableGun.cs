@@ -652,7 +652,7 @@ public class UseableGun : Useable
 
     private void PlayFlybyAudio(Vector3 origin, Vector3 direction, float range)
     {
-        if (MainCamera.instance == null || (base.channel.IsLocalPlayer && !base.player.look.isCam))
+        if (MainCamera.instance == null || (base.channel.IsLocalPlayer && !base.player.look.IsLocallyUsingFreecam))
         {
             return;
         }
@@ -846,7 +846,7 @@ public class UseableGun : Useable
         }
         if (base.channel.IsLocalPlayer)
         {
-            if (!base.player.look.isCam && base.player.look.perspective == EPlayerPerspective.THIRD)
+            if (!base.player.look.IsLocallyUsingFreecam && base.player.look.perspective == EPlayerPerspective.THIRD)
             {
                 Physics.Raycast(new Ray(MainCamera.instance.transform.position, MainCamera.instance.transform.forward), out var hitInfo, 512f, RayMasks.DAMAGE_CLIENT);
                 if (hitInfo.transform != null)
@@ -2759,7 +2759,7 @@ public class UseableGun : Useable
             UpdateInfoBoxVisibility();
             updateInfo();
         }
-        base.player.animator.play("Equip", smooth: true);
+        base.player.animator.play("Equip", smooth: false);
         if (base.player.channel.IsLocalPlayer)
         {
             PlayerUI.disableDot();
@@ -4513,7 +4513,7 @@ public class UseableGun : Useable
             {
                 Quaternion quaternion = Quaternion.Euler(base.player.animator.recoilViewmodelCameraRotation.currentPosition);
                 Vector3 vector = base.player.look.aim.rotation * quaternion * Vector3.forward;
-                if (!base.player.look.isCam && Physics.Raycast(new Ray(base.player.look.aim.position, vector), out contact, 2048f, RayMasks.BLOCK_LASER))
+                if (!base.player.look.IsLocallyUsingFreecam && Physics.Raycast(new Ray(base.player.look.aim.position, vector), out contact, 2048f, RayMasks.BLOCK_LASER))
                 {
                     laserTransform.position = contact.point + vector * -0.05f;
                     laserGameObject.SetActive(value: true);
@@ -4525,7 +4525,7 @@ public class UseableGun : Useable
             }
             else if (base.player.look.perspective == EPlayerPerspective.THIRD)
             {
-                if (!base.player.look.isCam && Physics.Raycast(new Ray(MainCamera.instance.transform.position, MainCamera.instance.transform.forward), out var hitInfo, 512f, RayMasks.DAMAGE_CLIENT))
+                if (!base.player.look.IsLocallyUsingFreecam && Physics.Raycast(new Ray(MainCamera.instance.transform.position, MainCamera.instance.transform.forward), out var hitInfo, 512f, RayMasks.DAMAGE_CLIENT))
                 {
                     if (Physics.Raycast(new Ray(base.player.look.aim.position, (hitInfo.point - base.player.look.aim.position).normalized), out contact, 2048f, RayMasks.BLOCK_LASER))
                     {

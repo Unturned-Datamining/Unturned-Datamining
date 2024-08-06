@@ -18,9 +18,11 @@ public class LevelObjects : MonoBehaviour
 
     private const byte SAVEDATA_VERSION_ADDED_MATERIAL_OVERRIDES = 11;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 11;
+    private const byte SAVEDATA_VERSION_ADDED_PER_OBJECT_CULLING_OVERRIDES = 12;
 
-    public static readonly byte SAVEDATA_VERSION = 11;
+    private const byte SAVEDATA_VERSION_NEWEST = 12;
+
+    public static readonly byte SAVEDATA_VERSION = 12;
 
     public static readonly byte OBJECT_REGIONS = 3;
 
@@ -299,7 +301,7 @@ public class LevelObjects : MonoBehaviour
     {
         if (Regions.tryGetCoordinate(position, out var x, out var y))
         {
-            LevelObject levelObject = new LevelObject(position, rotation, scale, id, GUID, placementOrigin, generateUniqueInstanceID(), AssetReference<MaterialPaletteAsset>.invalid, -1, NetId.INVALID);
+            LevelObject levelObject = new LevelObject(position, rotation, scale, id, GUID, placementOrigin, generateUniqueInstanceID(), AssetReference<MaterialPaletteAsset>.invalid, -1, NetId.INVALID, isOwnedCullingVolumeAllowed: true);
             levelObject.SetIsActiveInRegion(isActive: true);
             objects[x, y].Add(levelObject);
             _total++;
@@ -570,10 +572,11 @@ public class LevelObjects : MonoBehaviour
                                 customMaterialOverride = default(AssetReference<MaterialPaletteAsset>);
                                 materialIndexOverride = -1;
                             }
+                            bool isOwnedCullingVolumeAllowed = b5 < 12 || river.readBoolean();
                             if (guid != Guid.Empty || num3 != 0)
                             {
                                 NetId regularObjectNetId = LevelNetIdRegistry.GetRegularObjectNetId(b6, b7, num2);
-                                LevelObject levelObject = new LevelObject(vector, roundedIfNearlyAxisAligned, newScale, num3, guid, newPlacementOrigin, newInstanceID, customMaterialOverride, materialIndexOverride, regularObjectNetId);
+                                LevelObject levelObject = new LevelObject(vector, roundedIfNearlyAxisAligned, newScale, num3, guid, newPlacementOrigin, newInstanceID, customMaterialOverride, materialIndexOverride, regularObjectNetId, isOwnedCullingVolumeAllowed);
                                 if (levelObject.asset == null && (bool)Assets.shouldLoadAnyAssets)
                                 {
                                     UnturnedLog.error("Object with no asset in region {0}, {1}: {2} {3}", b6, b7, num3, guid);
@@ -697,7 +700,7 @@ public class LevelObjects : MonoBehaviour
     public static void save()
     {
         River river = new River(Level.info.path + "/Level/Objects.dat", usePath: false);
-        river.writeByte(11);
+        river.writeByte(12);
         river.writeUInt32(availableInstanceID);
         for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
@@ -729,6 +732,7 @@ public class LevelObjects : MonoBehaviour
                         river.writeUInt32(levelObject.instanceID);
                         river.writeGUID(levelObject.customMaterialOverride.GUID);
                         river.writeInt32(levelObject.materialIndexOverride);
+                        river.writeBoolean(levelObject.isOwnedCullingVolumeAllowed);
                     }
                     else
                     {

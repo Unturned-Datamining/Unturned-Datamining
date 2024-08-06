@@ -7,6 +7,8 @@ namespace SDG.Unturned;
 
 internal class SteamItemStore : ItemStore
 {
+    public const string NEW_ITEM_PROMOTION_KEY = "NewItemSeenPromotionId";
+
     private CallResult<SteamInventoryRequestPricesResult_t> requestPricesCallResult;
 
     private CallResult<SteamInventoryStartPurchaseResult_t> startPurchaseCallResult;

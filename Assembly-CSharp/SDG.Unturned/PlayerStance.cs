@@ -586,7 +586,7 @@ public class PlayerStance : PlayerCaller
     {
         if (base.channel.IsLocalPlayer && !PlayerUI.window.showCursor)
         {
-            if (!base.player.look.isOrbiting)
+            if (!base.player.look.IsControllingFreecam)
             {
                 if (InputEx.GetKey(ControlsSettings.stance))
                 {

@@ -5,6 +5,7 @@ using SDG.Provider;
 using Steamworks;
 using UnityEngine;
 using Unturned.SystemEx;
+using Unturned.UnityEx;
 
 namespace SDG.Unturned;
 
@@ -91,6 +92,12 @@ public class PlayerEquipment : PlayerCaller
     private ItemAsset _asset;
 
     private Useable _useable;
+
+    private UseableEventHook firstEventComponent;
+
+    private UseableEventHook thirdEventComponent;
+
+    private UseableEventHook characterEventComponent;
 
     private Transform _thirdPrimaryMeleeSlot;
 
@@ -593,6 +600,10 @@ public class PlayerEquipment : PlayerCaller
         {
             inspectAudioHandle = base.player.PlayAudioReference(asset.inspectAudio);
         }
+        foreach (UseableEventHook item in EnumerateEventComponents())
+        {
+            item.OnInspectStarted?.TryInvoke(this);
+        }
     }
 
     internal void InvokeOnInspectingUseable()
@@ -1089,6 +1100,7 @@ public class PlayerEquipment : PlayerCaller
         _characterModel = ItemTool.getItem(100, state, viewmodel: false, itemAsset, skinAsset, tempCharacterMesh, out tempCharacterMaterial, getUseableStatTrackerValue, prefabOverride);
         fixStatTrackerHookScale(_characterModel);
         syncStatTrackTrackerVisibility(_characterModel);
+        characterEventComponent = _characterModel.GetComponent<UseableEventHook>();
         Transform parent = itemAsset.EquipableModelParent switch
         {
             EEquipableModelParent.LeftHook => characterLeftHook, 
@@ -1166,6 +1178,9 @@ public class PlayerEquipment : PlayerCaller
             _useable = null;
             base.channel.markDirty();
         }
+        firstEventComponent = null;
+        thirdEventComponent = null;
+        characterEventComponent = null;
         skinRagdollEffect = ERagdollEffect.NONE;
         if (firstModel != null)
         {
@@ -1247,6 +1262,7 @@ public class PlayerEquipment : PlayerCaller
             _firstModel = ItemTool.InstantiateItem(quality, state, viewmodel: true, asset, skinAsset, shouldDestroyColliders: true, tempFirstMesh, out tempFirstMaterial, getUseableStatTrackerValue, prefabOverride);
             fixStatTrackerHookScale(_firstModel);
             syncStatTrackTrackerVisibility(_firstModel);
+            firstEventComponent = firstModel.GetComponent<UseableEventHook>();
             Transform parent = asset.EquipableModelParent switch
             {
                 EEquipableModelParent.LeftHook => firstLeftHook, 
@@ -1310,6 +1326,7 @@ public class PlayerEquipment : PlayerCaller
         _thirdModel = ItemTool.InstantiateItem(quality, state, viewmodel: false, asset, skinAsset, shouldDestroyColliders: true, tempThirdMesh, out tempThirdMaterial, getUseableStatTrackerValue, prefabOverride);
         fixStatTrackerHookScale(_thirdModel);
         syncStatTrackTrackerVisibility(_thirdModel);
+        thirdEventComponent = _thirdModel.GetComponent<UseableEventHook>();
         Transform parent3 = asset.EquipableModelParent switch
         {
             EEquipableModelParent.LeftHook => thirdLeftHook, 
@@ -2640,6 +2657,22 @@ public class PlayerEquipment : PlayerCaller
         localWasPrimaryReleasedBetweenSimulationFrames = false;
         localWasSecondaryPressedBetweenSimulationFrames = false;
         localWasSecondaryReleasedBetweenSimulationFrames = false;
+    }
+
+    private IEnumerable<UseableEventHook> EnumerateEventComponents()
+    {
+        if ((bool)firstEventComponent)
+        {
+            yield return firstEventComponent;
+        }
+        if ((bool)thirdEventComponent)
+        {
+            yield return thirdEventComponent;
+        }
+        if ((bool)characterEventComponent)
+        {
+            yield return characterEventComponent;
+        }
     }
 
     private void OnDestroy()

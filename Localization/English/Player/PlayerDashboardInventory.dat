@@ -78,12 +78,14 @@ ItemDescription_TacticalAttachment Tactical: {0}
 ItemDescription_GripAttachment Grip: {0}
 ItemDescription_BarrelAttachment Barrel: {0}
 ItemDescription_Clothing_Armor Armor: {0}
+ItemDescription_Clothing_Earpiece Listens to radio chatter.
 ItemDescription_Clothing_ExplosionArmor Explosion Armor: {0}
 ItemDescription_Clothing_FireProof Protects against fire.
 ItemDescription_Clothing_RadiationProof Protects against radiation.
 ItemDescription_Clothing_FallingBoneBreakingProof Protects against breaking bones from long falls.
 ItemDescription_ClothingMovementSpeedModifier Wearing Movement Speed: {0}
 ItemDescription_FallingDamageModifier Falling Damage: {0}
+ItemDescription_FilterDegradationRateMultiplier Filter Degradation: {0}
 ItemDescription_EquipableMovementSpeedModifier Equipped Movement Speed: {0}
 ItemDescription_PelletCount Pellets: {0}
 ItemDescription_BulletDamageModifier Bullet Damage: {0}

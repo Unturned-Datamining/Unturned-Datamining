@@ -1413,6 +1413,10 @@ public class DamageTool
     public static bool isPlayerAllowedToDamagePlayer(Player instigator, Player victim)
     {
         bool isAllowed = Provider.isPvP && (Provider.modeConfigData.Gameplay.Friendly_Fire || !instigator.quests.isMemberOfSameGroupAs(victim));
+        if (!instigator.movement.canAddSimulationResultsToUpdates)
+        {
+            isAllowed = false;
+        }
         if (DamageTool.onPlayerAllowedToDamagePlayer != null)
         {
             try

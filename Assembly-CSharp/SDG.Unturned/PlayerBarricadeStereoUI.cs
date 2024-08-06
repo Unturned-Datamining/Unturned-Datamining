@@ -12,7 +12,7 @@ public class PlayerBarricadeStereoUI : SleekFullscreenBox
 
     public bool active;
 
-    private InteractableStereo stereo;
+    internal InteractableStereo stereo;
 
     /// <summary>
     /// Hack to prevent hitting volume rate limit because (at least as of 2022-05-24) we do not have an event for finished dragging.
@@ -21,13 +21,15 @@ public class PlayerBarricadeStereoUI : SleekFullscreenBox
 
     private bool hasPendingVolumeUpdate;
 
+    private int assetListChangeCounter;
+
     private ISleekButton stopButton;
 
     private ISleekButton closeButton;
 
     private ISleekSlider volumeSlider;
 
-    private ISleekScrollView songsBox;
+    private SleekList<StereoSongAsset> songsBox;
 
     public void open(InteractableStereo newStereo)
     {
@@ -65,41 +67,11 @@ public class PlayerBarricadeStereoUI : SleekFullscreenBox
 
     private void refreshSongs()
     {
-        songs.Clear();
-        Assets.FindAssetsByType_UseDefaultAssetMapping(songs);
-        songsBox.RemoveAllChildren();
-        songsBox.ContentSizeOffset = new Vector2(0f, songs.Count * 30);
-        for (int i = 0; i < songs.Count; i++)
+        if (Assets.HasDefaultAssetMappingChanged(ref assetListChangeCounter))
         {
-            StereoSongAsset stereoSongAsset = songs[i];
-            ISleekButton sleekButton = Glazier.Get().CreateButton();
-            sleekButton.PositionOffset_Y = i * 30;
-            sleekButton.SizeOffset_Y = 30f;
-            sleekButton.SizeScale_X = 1f;
-            sleekButton.OnClicked += onClickedPlayButton;
-            sleekButton.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
-            sleekButton.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
-            sleekButton.AllowRichText = true;
-            songsBox.AddChild(sleekButton);
-            if (!string.IsNullOrEmpty(stereoSongAsset.titleText))
-            {
-                sleekButton.Text = stereoSongAsset.titleText;
-            }
-            else
-            {
-                sleekButton.Text = "Sorry, I broke some song names. :( -Nelson";
-            }
-            if (!string.IsNullOrEmpty(stereoSongAsset.linkURL))
-            {
-                sleekButton.SizeOffset_X -= 30f;
-                SleekButtonIcon sleekButtonIcon = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("External_Link"));
-                sleekButtonIcon.PositionScale_X = 1f;
-                sleekButtonIcon.SizeOffset_X = 30f;
-                sleekButtonIcon.SizeOffset_Y = 30f;
-                sleekButtonIcon.tooltip = stereoSongAsset.linkURL;
-                sleekButtonIcon.onClickedButton += onClickedLinkButton;
-                sleekButton.AddChild(sleekButtonIcon);
-            }
+            songs.Clear();
+            Assets.FindAssetsByType_UseDefaultAssetMapping(songs);
+            songsBox.NotifyDataChanged();
         }
     }
 
@@ -118,34 +90,6 @@ public class PlayerBarricadeStereoUI : SleekFullscreenBox
             stereo.volume = state;
             hasPendingVolumeUpdate = true;
             updateVolumeSliderLabel();
-        }
-    }
-
-    private void onClickedPlayButton(ISleekElement button)
-    {
-        int num = songsBox.FindIndexOfChild(button);
-        if (num < songs.Count)
-        {
-            StereoSongAsset stereoSongAsset = songs[num];
-            if (stereo != null)
-            {
-                stereo.ClientSetTrack(stereoSongAsset.GUID);
-            }
-        }
-    }
-
-    private void onClickedLinkButton(ISleekElement button)
-    {
-        int num = songsBox.FindIndexOfChild(button.Parent);
-        if (num < songs.Count)
-        {
-            StereoSongAsset stereoSongAsset = songs[num];
-            if (WebUtils.ParseThirdPartyUrl(stereoSongAsset.linkURL, out var _))
-            {
-                Provider.openURL(stereoSongAsset.linkURL);
-                return;
-            }
-            UnturnedLog.warn("Ignoring potentially unsafe song link url {0}", stereoSongAsset.linkURL);
         }
     }
 
@@ -176,6 +120,11 @@ public class PlayerBarricadeStereoUI : SleekFullscreenBox
                 hasPendingVolumeUpdate = false;
             }
         }
+    }
+
+    private ISleekElement OnCreateSongElement(StereoSongAsset songAsset)
+    {
+        return new SleekBoomboxSong(songAsset, this);
     }
 
     public PlayerBarricadeStereoUI()
@@ -223,13 +172,15 @@ public class PlayerBarricadeStereoUI : SleekFullscreenBox
         volumeSlider.OnValueChanged += onDraggedVolumeSlider;
         volumeSlider.AddLabel("", ESleekSide.RIGHT);
         AddChild(volumeSlider);
-        songsBox = Glazier.Get().CreateScrollView();
+        songsBox = new SleekList<StereoSongAsset>();
         songsBox.PositionOffset_X = -200f;
         songsBox.PositionScale_X = 0.5f;
         songsBox.PositionScale_Y = 0.1f;
         songsBox.SizeOffset_X = 400f;
         songsBox.SizeScale_Y = 0.8f;
-        songsBox.ScaleContentToWidth = true;
+        songsBox.itemHeight = 30;
+        songsBox.onCreateElement = OnCreateSongElement;
+        songsBox.SetData(songs);
         AddChild(songsBox);
     }
 }

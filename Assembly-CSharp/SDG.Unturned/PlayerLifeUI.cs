@@ -979,7 +979,7 @@ public class PlayerLifeUI
                 batteryChargeProgress.PositionOffset_Y = num + 5;
                 num += 30;
             }
-            vehicleEngineLabel.IsVisible = newVehicle.asset.UsesEngineRpmAndGears;
+            vehicleEngineLabel.IsVisible = newVehicle.asset.UsesEngineRpmAndGears && newVehicle.asset.AllowsEngineRpmAndGearsInHud;
             if (vehicleEngineLabel.IsVisible)
             {
                 vehicleEngineLabel.PositionOffset_Y = num - 5;

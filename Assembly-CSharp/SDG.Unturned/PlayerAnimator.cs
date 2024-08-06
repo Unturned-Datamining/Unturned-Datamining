@@ -1108,7 +1108,7 @@ public class PlayerAnimator : PlayerCaller
         {
             if (!PlayerUI.window.showCursor)
             {
-                if (!base.player.look.isOrbiting)
+                if (!base.player.look.IsControllingFreecam)
                 {
                     if (ControlsSettings.leaning == EControlMode.TOGGLE)
                     {

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace SDG.Unturned;
 
 public class ServerListFilters
@@ -14,7 +16,7 @@ public class ServerListFilters
 
     public string serverName = string.Empty;
 
-    public string mapName = string.Empty;
+    public HashSet<string> mapNames = new HashSet<string>();
 
     public EPassword password;
 
@@ -45,12 +47,61 @@ public class ServerListFilters
 
     public ESteamServerList listSource;
 
+    /// <summary>
+    /// If &gt;0, servers with ping higher than this will not be shown.
+    /// </summary>
+    public int maxPing = 200;
+
+    public void GetLevels(List<LevelInfo> levels)
+    {
+        foreach (string mapName in mapNames)
+        {
+            LevelInfo levelInfo = Level.FindLevelForServerFilterExact(mapName);
+            if (levelInfo != null)
+            {
+                levels.Add(levelInfo);
+            }
+        }
+    }
+
+    public string GetMapDisplayText()
+    {
+        string text = string.Empty;
+        foreach (string mapName in mapNames)
+        {
+            if (text.Length > 0)
+            {
+                text += ", ";
+            }
+            LevelInfo levelInfo = Level.FindLevelForServerFilterExact(mapName);
+            text = ((levelInfo == null) ? (text + mapName) : (text + levelInfo.getLocalizedName()));
+        }
+        return text;
+    }
+
+    public void ToggleMap(LevelInfo levelInfo)
+    {
+        if (levelInfo != null)
+        {
+            string item = levelInfo.name.ToLower();
+            if (!mapNames.Remove(item))
+            {
+                mapNames.Add(item);
+            }
+        }
+    }
+
+    public void ClearMaps()
+    {
+        mapNames.Clear();
+    }
+
     public void CopyFrom(ServerListFilters source)
     {
         presetName = source.presetName;
         presetId = source.presetId;
         serverName = source.serverName;
-        mapName = source.mapName;
+        mapNames = new HashSet<string>(source.mapNames);
         password = source.password;
         workshop = source.workshop;
         plugins = source.plugins;
@@ -64,11 +115,31 @@ public class ServerListFilters
         monetization = source.monetization;
         gold = source.gold;
         listSource = source.listSource;
+        maxPing = source.maxPing;
     }
 
-    public void Read(Block block)
+    public void Read(byte version, Block block)
     {
-        mapName = block.readString();
+        if (version >= 20)
+        {
+            int num = block.readInt32();
+            for (int i = 0; i < num; i++)
+            {
+                string text = block.readString();
+                if (!string.IsNullOrEmpty(text))
+                {
+                    mapNames.Add(text);
+                }
+            }
+        }
+        else
+        {
+            string text2 = block.readString();
+            if (!string.IsNullOrEmpty(text2))
+            {
+                mapNames.Add(text2);
+            }
+        }
         password = (EPassword)block.readByte();
         workshop = (EWorkshop)block.readByte();
         plugins = (EPlugins)block.readByte();
@@ -85,11 +156,23 @@ public class ServerListFilters
         listSource = (ESteamServerList)block.readByte();
         presetName = block.readString();
         presetId = block.readInt32();
+        if (version >= 22)
+        {
+            maxPing = block.readInt32();
+        }
+        else
+        {
+            maxPing = 200;
+        }
     }
 
     public void Write(Block block)
     {
-        block.writeString(mapName);
+        block.writeInt32(mapNames.Count);
+        foreach (string mapName in mapNames)
+        {
+            block.writeString(mapName);
+        }
         block.writeByte((byte)password);
         block.writeByte((byte)workshop);
         block.writeByte((byte)plugins);
@@ -106,5 +189,6 @@ public class ServerListFilters
         block.writeByte((byte)listSource);
         block.writeString(presetName);
         block.writeInt32(presetId);
+        block.writeInt32(maxPing);
     }
 }

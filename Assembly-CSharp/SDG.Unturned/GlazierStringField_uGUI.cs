@@ -196,7 +196,20 @@ internal class GlazierStringField_uGUI : GlazierElementBase_uGUI, ISleekField, I
         set
         {
             _backgroundColor = value;
-            imageComponent.color = _backgroundColor;
+            SynchronizeBackgroundColor();
+        }
+    }
+
+    public bool IsClickable
+    {
+        get
+        {
+            return fieldComponent.interactable;
+        }
+        set
+        {
+            fieldComponent.interactable = value;
+            SynchronizeBackgroundColor();
         }
     }
 
@@ -291,9 +304,19 @@ internal class GlazierStringField_uGUI : GlazierElementBase_uGUI, ISleekField, I
         IsMultiline = false;
     }
 
+    private void SynchronizeBackgroundColor()
+    {
+        Color color = _backgroundColor;
+        if (!IsClickable)
+        {
+            color.a *= 0.25f;
+        }
+        imageComponent.color = color;
+    }
+
     public override void SynchronizeColors()
     {
-        imageComponent.color = _backgroundColor;
+        SynchronizeBackgroundColor();
         placeholderComponent.color = _textColor.Get() * 0.5f;
         textComponent.color = _textColor;
         if (tooltipComponent != null)

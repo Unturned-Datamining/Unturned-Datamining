@@ -42,6 +42,18 @@ internal class VehicleWheelConfiguration : IDatParseable
     /// </summary>
     public bool modelUseColliderPose;
 
+    /// <summary>
+    /// If greater than zero, visual-only wheels (without a collider) like the extra wheels of the Snowmobile use
+    /// this radius to calculate their rolling speed.
+    /// </summary>
+    public float modelRadius;
+
+    /// <summary>
+    /// If set, visual-only wheels without a collider (like the back wheels of the snowmobile) can copy RPM from
+    /// a wheel that does have a collider. Requires modelRadius to also be set.
+    /// </summary>
+    public int copyColliderRpmIndex;
+
     public bool TryParse(IDatNode node)
     {
         if (node is DatDictionary datDictionary)
@@ -52,6 +64,8 @@ internal class VehicleWheelConfiguration : IDatParseable
             modelPath = datDictionary.GetString("ModelPath");
             isModelSteered = datDictionary.ParseBool("IsModelSteered");
             modelUseColliderPose = datDictionary.ParseBool("ModelUseColliderPose");
+            modelRadius = datDictionary.ParseFloat("ModelRadius", -1f);
+            copyColliderRpmIndex = datDictionary.ParseInt32("CopyColliderRpmIndex", -1);
             return true;
         }
         return false;

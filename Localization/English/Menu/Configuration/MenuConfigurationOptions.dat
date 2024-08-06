@@ -61,6 +61,7 @@ HitmarkerStyle_Label Hitmarker Style
 VehicleThirdPersonCameraMode_RotationDetached Rotation Detached
 VehicleThirdPersonCameraMode_RotationAttached Rotation Attached
 VehicleThirdPersonCameraMode_Label Vehicle Third-Person Camera Style
+AircraftThirdPersonCameraMode_Label Aircraft Third-Person Camera Style
 
 Crosshair_Box Crosshair Color
 Hitmarker_Box Hitmarker Color

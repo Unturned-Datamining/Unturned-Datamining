@@ -4,18 +4,14 @@ namespace SDG.Unturned;
 
 public static class PhysicsMaterialNetIdPakEx
 {
-    internal const int BIT_COUNT = 6;
-
-    internal const int MAX_PHYSICS_MATERIALS = 63;
-
     public static bool ReadPhysicsMaterialNetId(this NetPakReader reader, out PhysicsMaterialNetId value)
     {
-        return reader.ReadBits(6, out value.id);
+        return reader.ReadBits(PhysicsMaterialNetTable.idBitCount, out value.id);
     }
 
     public static bool WritePhysicsMaterialNetId(this NetPakWriter writer, PhysicsMaterialNetId value)
     {
-        return writer.WriteBits(value.id, 6);
+        return writer.WriteBits(value.id, PhysicsMaterialNetTable.idBitCount);
     }
 
     public static bool ReadPhysicsMaterialName(this NetPakReader reader, out string materialName)

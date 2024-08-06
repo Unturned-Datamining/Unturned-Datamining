@@ -6,6 +6,12 @@ public class QuestAsset : Asset
 {
     protected NPCRewardsList rewardsList;
 
+    /// <summary>
+    /// Rewards to grant when quest is removed without completing.
+    /// Not granted when player finishes quest.
+    /// </summary>
+    protected NPCRewardsList abandonmentRewardsList;
+
     public string questName { get; protected set; }
 
     public string questDescription { get; protected set; }
@@ -47,6 +53,11 @@ public class QuestAsset : Asset
         rewardsList.Grant(player);
     }
 
+    public void GrantAbandonmentRewards(Player player)
+    {
+        abandonmentRewardsList.Grant(player);
+    }
+
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
         base.PopulateAsset(bundle, data, localization);
@@ -63,6 +74,7 @@ public class QuestAsset : Asset
         conditions = new INPCCondition[data.ParseUInt8("Conditions", 0)];
         NPCTool.readConditions(data, localization, "Condition_", conditions, this);
         rewardsList.Parse(data, localization, this, "Rewards", "Reward_");
+        abandonmentRewardsList.Parse(data, localization, this, "AbandonmentRewards", "AbandonmentReward_");
     }
 
     [Obsolete("Removed shouldSend parameter")]

@@ -190,7 +190,7 @@ public class PlayerInteract : PlayerCaller
                 {
                     num &= -33554433;
                 }
-                if (base.player.look.isCam)
+                if (base.player.look.IsLocallyUsingFreecam)
                 {
                     Physics.Raycast(new Ray(base.player.look.aim.position, base.player.look.aim.forward), out hit, 4f, num);
                 }

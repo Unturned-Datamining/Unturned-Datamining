@@ -55,6 +55,16 @@ public class PlayersConfigData
     public float Lose_Skills_PvE;
 
     /// <summary>
+    /// Number of skill levels to remove after death.
+    /// </summary>
+    public uint Lose_Skill_Levels_PvP;
+
+    /// <summary>
+    /// Number of skill levels to remove after death.
+    /// </summary>
+    public uint Lose_Skill_Levels_PvE;
+
+    /// <summary>
     /// [0, 1] percentage of experience points to retain after death.
     /// </summary>
     public float Lose_Experience_PvP;
@@ -173,6 +183,8 @@ public class PlayersConfigData
         Armor_Multiplier = 1f;
         Lose_Skills_PvP = 1f;
         Lose_Skills_PvE = 1f;
+        Lose_Skill_Levels_PvP = 1u;
+        Lose_Skill_Levels_PvE = 1u;
         Lose_Experience_PvP = 0.5f;
         Lose_Experience_PvE = 0.5f;
         Lose_Items_PvP = 1f;
@@ -186,6 +198,8 @@ public class PlayersConfigData
         {
             Can_Break_Legs = false;
             Can_Start_Bleeding = false;
+            Lose_Skill_Levels_PvP = 0u;
+            Lose_Skill_Levels_PvE = 0u;
         }
         else
         {
@@ -196,6 +210,8 @@ public class PlayersConfigData
         {
             Can_Fix_Legs = false;
             Can_Stop_Bleeding = false;
+            Lose_Skill_Levels_PvP = 2u;
+            Lose_Skill_Levels_PvE = 2u;
         }
         else
         {

@@ -53,12 +53,16 @@ internal class AudioSourcePool : MonoBehaviour
             GameObject gameObject = new GameObject("PooledAudioSource");
             pooledAudioSource.component = gameObject.AddComponent<AudioSource>();
             pooledAudioSource.component.playOnAwake = false;
-            pooledAudioSource.component.outputAudioMixerGroup = UnturnedAudioMixer.GetDefaultGroup();
         }
         Transform obj = pooledAudioSource.component.transform;
         obj.parent = parameters.parent;
         obj.localScale = Vector3.one;
         obj.position = parameters.position;
+        pooledAudioSource.component.outputAudioMixerGroup = parameters.outputAudioMixerGroup;
+        if (pooledAudioSource.component.outputAudioMixerGroup == null)
+        {
+            pooledAudioSource.component.outputAudioMixerGroup = UnturnedAudioMixer.GetDefaultGroup();
+        }
         pooledAudioSource.component.clip = parameters.clip;
         pooledAudioSource.component.volume = parameters.volume;
         pooledAudioSource.component.pitch = parameters.pitch;

@@ -45,9 +45,17 @@ public class OptionsSettings
 
     private const byte SAVEDATA_VERSION_ADDED_VEHICLE_THIRD_PERSON_CAMERA_MODE = 52;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 52;
+    private const byte SAVEDATA_VERSION_REPLACTED_MUSIC_TOGGLE_WITH_VOLUMES = 53;
 
-    public static readonly byte SAVEDATA_VERSION = 52;
+    private const byte SAVEDATA_VERSION_ADDED_MUSIC_MASTER_VOLUME = 54;
+
+    private const byte SAVEDATA_VERSION_ADDED_ATMOSPHERE_VOLUME = 55;
+
+    private const byte SAVEDATA_VERSION_SEPARATED_AIRCRAFT_THIRD_PERSON_CAMERA_MODE = 56;
+
+    private const byte SAVEDATA_VERSION_NEWEST = 56;
+
+    public static readonly byte SAVEDATA_VERSION = 56;
 
     public static readonly byte MIN_FOV = 60;
 
@@ -63,6 +71,10 @@ public class OptionsSettings
 
     public const float DEFAULT_UNFOCUSED_VOLUME = 0.5f;
 
+    public const float DEFAULT_MUSIC_MASTER_VOLUME = 0.7f;
+
+    private static float _musicMasterVolume;
+
     private const float DEFAULT_GAME_VOLUME = 0.7f;
 
     private static float _gameVolume;
@@ -75,9 +87,23 @@ public class OptionsSettings
 
     public static float loadingScreenMusicVolume;
 
-    public static bool debug;
+    public const float DEFAULT_DEATH_MUSIC_VOLUME = 0.7f;
 
-    public static bool music;
+    public static float deathMusicVolume;
+
+    public const float DEFAULT_MAIN_MENU_MUSIC_VOLUME = 0.7f;
+
+    private static float _mainMenuMusicVolume;
+
+    public const float DEFAULT_ATMOSPHERE_VOLUME = 0.7f;
+
+    private static float _atmosphereVolume;
+
+    public const float DEFAULT_AMBIENT_MUSIC_VOLUME = 0.7f;
+
+    public static float ambientMusicVolume;
+
+    public static bool debug;
 
     public static bool splashscreen;
 
@@ -142,6 +168,11 @@ public class OptionsSettings
     /// </summary>
     public static EVehicleThirdPersonCameraMode vehicleThirdPersonCameraMode;
 
+    /// <summary>
+    /// Determines how camera follows aircraft vehicle in third-person view.
+    /// </summary>
+    public static EVehicleThirdPersonCameraMode vehicleAircraftThirdPersonCameraMode;
+
     public static Color crosshairColor;
 
     public static Color hitmarkerColor;
@@ -175,6 +206,19 @@ public class OptionsSettings
         }
     }
 
+    public static float MusicMasterVolume
+    {
+        get
+        {
+            return _musicMasterVolume;
+        }
+        set
+        {
+            _musicMasterVolume = value;
+            UnturnedAudioMixer.SetMusicMasterVolume(value);
+        }
+    }
+
     public static float gameVolume
     {
         get
@@ -198,6 +242,32 @@ public class OptionsSettings
         {
             _voiceVolume = value;
             UnturnedAudioMixer.SetVoiceVolume(value);
+        }
+    }
+
+    public static float MainMenuMusicVolume
+    {
+        get
+        {
+            return _mainMenuMusicVolume;
+        }
+        set
+        {
+            _mainMenuMusicVolume = value;
+            UnturnedAudioMixer.SetMainMenuMusicVolume(value);
+        }
+    }
+
+    public static float AtmosphereVolume
+    {
+        get
+        {
+            return _atmosphereVolume;
+        }
+        set
+        {
+            _atmosphereVolume = value;
+            UnturnedAudioMixer.SetAtmosphereVolume(value);
         }
     }
 
@@ -389,41 +459,20 @@ public class OptionsSettings
             MenuConfigurationOptions.apply();
         }
         UnturnedMasterVolume.preferredVolume = volume;
-        if (LevelLighting.dayAudio != null)
-        {
-            if (!LevelLighting.dayAudio.enabled && ambience)
-            {
-                LevelLighting.dayAudio.enabled = true;
-                LevelLighting.dayAudio.Play();
-            }
-            else
-            {
-                LevelLighting.dayAudio.enabled = ambience;
-            }
-        }
-        if (LevelLighting.nightAudio != null)
-        {
-            if (!LevelLighting.nightAudio.enabled && ambience)
-            {
-                LevelLighting.nightAudio.enabled = true;
-                LevelLighting.nightAudio.Play();
-            }
-            else
-            {
-                LevelLighting.nightAudio.enabled = ambience;
-            }
-        }
     }
 
     public static void RestoreAudioDefaults()
     {
-        music = true;
-        ambience = true;
         volume = 1f;
         UnfocusedVolume = 0.5f;
         gameVolume = 0.7f;
+        MusicMasterVolume = 0.7f;
         loadingScreenMusicVolume = 0.5f;
+        deathMusicVolume = 0.7f;
+        MainMenuMusicVolume = 0.7f;
+        ambientMusicVolume = 0.7f;
         voiceVolume = 0.7f;
+        AtmosphereVolume = 0.7f;
     }
 
     public static void restoreDefaults()
@@ -454,6 +503,7 @@ public class OptionsSettings
         crosshairShape = ECrosshairShape.Line;
         hitmarkerStyle = EHitmarkerStyle.Animated;
         vehicleThirdPersonCameraMode = EVehicleThirdPersonCameraMode.RotationDetached;
+        vehicleAircraftThirdPersonCameraMode = EVehicleThirdPersonCameraMode.RotationAttached;
         crosshairColor = new Color(1f, 1f, 1f, 0.5f);
         hitmarkerColor = new Color(1f, 1f, 1f, 0.5f);
         criticalHitmarkerColor = new Color(1f, 0f, 0f, 0.5f);
@@ -485,7 +535,7 @@ public class OptionsSettings
         {
             return;
         }
-        music = block.readBoolean();
+        bool flag = block.readBoolean();
         if (b < 31)
         {
             splashscreen = true;
@@ -581,14 +631,7 @@ public class OptionsSettings
         {
             hints = true;
         }
-        if (b > 13)
-        {
-            ambience = block.readBoolean();
-        }
-        else
-        {
-            ambience = true;
-        }
+        bool flag2 = b <= 13 || block.readBoolean();
         if (b > 12)
         {
             proUI = block.readBoolean();
@@ -797,6 +840,48 @@ public class OptionsSettings
         {
             vehicleThirdPersonCameraMode = EVehicleThirdPersonCameraMode.RotationDetached;
         }
+        if (b >= 53)
+        {
+            deathMusicVolume = block.readSingle();
+            MainMenuMusicVolume = block.readSingle();
+            ambientMusicVolume = block.readSingle();
+        }
+        else if (flag)
+        {
+            deathMusicVolume = 0.7f;
+            MainMenuMusicVolume = 0.7f;
+            ambientMusicVolume = 0.7f;
+        }
+        else
+        {
+            deathMusicVolume = 0f;
+            MainMenuMusicVolume = 0f;
+            ambientMusicVolume = 0f;
+        }
+        if (b >= 54)
+        {
+            MusicMasterVolume = block.readSingle();
+        }
+        else
+        {
+            MusicMasterVolume = 0.7f;
+        }
+        if (b >= 55)
+        {
+            AtmosphereVolume = block.readSingle();
+        }
+        else
+        {
+            AtmosphereVolume = (flag2 ? 0.7f : 0f);
+        }
+        if (b >= 56)
+        {
+            vehicleAircraftThirdPersonCameraMode = (EVehicleThirdPersonCameraMode)block.readByte();
+        }
+        else
+        {
+            vehicleAircraftThirdPersonCameraMode = EVehicleThirdPersonCameraMode.RotationAttached;
+        }
         if (!Provider.isPro)
         {
             backgroundColor = new Color(0.9f, 0.9f, 0.9f);
@@ -810,8 +895,8 @@ public class OptionsSettings
     public static void save()
     {
         Block block = new Block();
-        block.writeByte(52);
-        block.writeBoolean(music);
+        block.writeByte(56);
+        block.writeBoolean(value: false);
         block.writeBoolean(splashscreen);
         block.writeBoolean(timer);
         block.writeSingle(fov);
@@ -827,7 +912,7 @@ public class OptionsSettings
         block.writeBoolean(metric);
         block.writeBoolean(talk);
         block.writeBoolean(hints);
-        block.writeBoolean(ambience);
+        block.writeBoolean(value: false);
         block.writeBoolean(proUI);
         block.writeBoolean(ShouldHitmarkersFollowWorldPosition);
         block.writeBoolean(streamer);
@@ -858,6 +943,12 @@ public class OptionsSettings
         block.writeSingle(gameVolume);
         block.writeSingle(UnfocusedVolume);
         block.writeByte((byte)vehicleThirdPersonCameraMode);
+        block.writeSingle(deathMusicVolume);
+        block.writeSingle(MainMenuMusicVolume);
+        block.writeSingle(ambientMusicVolume);
+        block.writeSingle(MusicMasterVolume);
+        block.writeSingle(AtmosphereVolume);
+        block.writeByte((byte)vehicleAircraftThirdPersonCameraMode);
         ReadWrite.writeBlock("/Options.dat", useCloud: true, block);
     }
 }

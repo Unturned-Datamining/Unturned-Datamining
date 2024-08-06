@@ -1,9 +1,11 @@
 Volume_Slider_Label Master Volume [{0}]
 Game_Volume_Slider_Label Game Volume [{0}]
 Unfocused_Volume_Slider_Label Volume While Alt-Tabbing [{0}]
+Music_Master_Volume_Slider_Label Music Master Volume [{0}]
 Loading_Screen_Music_Volume_Slider_Label Loading Screen Music Volume [{0}]
+Death_Music_Volume_Slider_Label Death Music Volume [{0}]
+Main_Menu_Music_Volume_Slider_Label Main Menu Music Volume [{0}]
+Ambient_Music_Volume_Slider_Label Ambient/In-Game Music Volume [{0}]
 Voice_Slider_Label Voice Chat Volume [{0}]
-Music_Toggle_Label Play Menu/Death Music
-Music_Toggle_Tooltip Also affects "ambiance volumes" with music.
-Ambience_Toggle_Label Play Day/Night Ambience
-Ambience_Toggle_Tooltip Background wind, crickets, rustling, etc.
+Atmosphere_Volume_Slider_Label Atmosphere Volume [{0}]
+Music_Header Music

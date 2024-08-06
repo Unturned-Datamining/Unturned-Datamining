@@ -1584,8 +1584,16 @@ public class LevelLighting
                         AudioSource component = effectAsset.effect.GetComponent<AudioSource>();
                         if (component != null)
                         {
-                            if (!effectAsset.isMusic || OptionsSettings.music)
+                            if (!effectAsset.isMusic || OptionsSettings.ambientMusicVolume > 0f)
                             {
+                                if (effectAsset.isMusic)
+                                {
+                                    effectAudio.outputAudioMixerGroup = UnturnedAudioMixer.GetMusicGroup();
+                                }
+                                else
+                                {
+                                    effectAudio.outputAudioMixerGroup = UnturnedAudioMixer.GetAtmosphereGroup();
+                                }
                                 effectAudio.clip = component.clip;
                                 effectAudio.Play();
                                 localPlayingEffect = true;
@@ -1764,7 +1772,8 @@ public class LevelLighting
             targetAudioVolume = UnityEngine.Random.Range(AUDIO_MIN, AUDIO_MAX);
         }
         currentAudioVolume = Mathf.Lerp(currentAudioVolume, targetAudioVolume, 0.1f * Time.deltaTime);
-        effectAudio.volume = Mathf.Lerp(effectAudio.volume, localPlayingEffect ? 1 : 0, Level.isEditor ? 1f : (0.5f * Time.deltaTime));
+        float b = ((!localPlayingEffect) ? 0f : ((currentEffectAsset == null || !currentEffectAsset.isMusic) ? 1f : OptionsSettings.ambientMusicVolume));
+        effectAudio.volume = Mathf.Lerp(effectAudio.volume, b, Level.isEditor ? 1f : (0.5f * Time.deltaTime));
         float num5 = 1f - effectAudio.volume;
         float num6 = 0f;
         float num7 = 0.15f;
@@ -1772,12 +1781,12 @@ public class LevelLighting
         {
             if (customWeatherInstance2.component.ambientAudioSource != null)
             {
-                float b = num5 * customWeatherInstance2.component.EffectBlendAlpha;
-                customWeatherInstance2.component.ambientAudioSource.volume = Mathf.Lerp(customWeatherInstance2.component.ambientAudioSource.volume, b, 0.5f * Time.deltaTime);
+                float b2 = num5 * customWeatherInstance2.component.EffectBlendAlpha;
+                customWeatherInstance2.component.ambientAudioSource.volume = Mathf.Lerp(customWeatherInstance2.component.ambientAudioSource.volume, b2, 0.5f * Time.deltaTime);
                 num6 = Mathf.Max(num6, customWeatherInstance2.component.ambientAudioSource.volume);
             }
-            float b2 = customWeatherInstance2.component.windMain * customWeatherInstance2.component.EffectBlendAlpha;
-            num7 = Mathf.Max(num7, b2);
+            float b3 = customWeatherInstance2.component.windMain * customWeatherInstance2.component.EffectBlendAlpha;
+            num7 = Mathf.Max(num7, b3);
             customWeatherInstance2.component.UpdateWeather();
         }
         float num8 = 1f - num6;

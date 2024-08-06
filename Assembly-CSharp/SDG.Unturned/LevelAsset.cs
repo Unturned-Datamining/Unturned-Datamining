@@ -105,6 +105,8 @@ public class LevelAsset : Asset
 
     public static AssetReference<LevelAsset> defaultLevel = new AssetReference<LevelAsset>(new Guid("12dc9fdbe9974022afd21158ad54b76a"));
 
+    internal static MasterBundleReference<AudioClip> DefaultDeathMusicRef = new MasterBundleReference<AudioClip>("core.masterbundle", "Music/Death.mp3");
+
     public TypeReference<GameMode> defaultGameMode;
 
     public List<TypeReference<GameMode>> supportedGameModes;
@@ -174,6 +176,11 @@ public class LevelAsset : Asset
     /// Players are kicked from multiplayer if their skin color is within threshold of any of these rules.
     /// </summary>
     internal List<TerrainColorRule> terrainColorRules;
+
+    /// <summary>
+    /// Audio clip to play in 2D when a player dies.
+    /// </summary>
+    public MasterBundleReference<AudioClip> DeathMusicRef { get; private set; }
 
     public bool isBlueprintBlacklisted(Blueprint blueprint)
     {
@@ -277,6 +284,14 @@ public class LevelAsset : Asset
                     this.loadingScreenMusic[j] = loadingScreenMusic;
                 }
             }
+        }
+        if (data.TryParseStruct<MasterBundleReference<AudioClip>>("Death_Music", out var value))
+        {
+            DeathMusicRef = value;
+        }
+        else
+        {
+            DeathMusicRef = DefaultDeathMusicRef;
         }
         shouldAnimateBackgroundImage = data.ParseBool("Should_Animate_Background_Image");
         if (data.ContainsKey("Global_Weather_Mask"))

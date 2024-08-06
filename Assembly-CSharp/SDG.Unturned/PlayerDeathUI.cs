@@ -22,21 +22,39 @@ public class PlayerDeathUI
     /// </summary>
     private static bool containerOnScreen;
 
+    private static OneShotAudioHandle deathMusicHandle;
+
     public static void open(bool fromDeath)
     {
-        if (!active)
+        if (active)
         {
-            active = true;
-            synchronizeDeathCause();
-            if (fromDeath && PlayerLife.deathCause != EDeathCause.SUICIDE && OptionsSettings.music && Provider.isServer)
+            return;
+        }
+        active = true;
+        synchronizeDeathCause();
+        if (fromDeath && PlayerLife.deathCause != EDeathCause.SUICIDE && OptionsSettings.deathMusicVolume > 0f && Provider.isServer)
+        {
+            MasterBundleReference<AudioClip> masterBundleReference = Level.getAsset()?.DeathMusicRef ?? LevelAsset.DefaultDeathMusicRef;
+            if (masterBundleReference.isValid)
             {
-                MainCamera.instance.GetComponent<AudioSource>().Play();
+                AudioClip audioClip = masterBundleReference.loadAsset();
+                if (audioClip != null)
+                {
+                    OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(audioClip);
+                    oneShotAudioParameters.outputAudioMixerGroup = UnturnedAudioMixer.GetMusicGroup();
+                    oneShotAudioParameters.volume = OptionsSettings.deathMusicVolume;
+                    deathMusicHandle = oneShotAudioParameters.Play();
+                }
+                else
+                {
+                    UnturnedLog.warn($"Unable to find death music \"{masterBundleReference}\"");
+                }
             }
-            if (Player.player.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowDeathMenu) && !containerOnScreen)
-            {
-                containerOnScreen = true;
-                container.AnimateIntoView();
-            }
+        }
+        if (Player.player.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowDeathMenu) && !containerOnScreen)
+        {
+            containerOnScreen = true;
+            container.AnimateIntoView();
         }
     }
 
@@ -45,7 +63,7 @@ public class PlayerDeathUI
         if (active)
         {
             active = false;
-            MainCamera.instance.GetComponent<AudioSource>().Stop();
+            deathMusicHandle.Stop();
             if (containerOnScreen)
             {
                 containerOnScreen = false;

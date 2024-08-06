@@ -1522,6 +1522,10 @@ public class PlayerQuests : PlayerCaller
             {
                 SendRemoveQuest.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), questAsset.GUID, wasCompleted);
             }
+            if (!wasCompleted)
+            {
+                questAsset.GrantAbandonmentRewards(base.player);
+            }
         }
     }
 

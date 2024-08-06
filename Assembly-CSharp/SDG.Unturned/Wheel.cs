@@ -27,6 +27,8 @@ public class Wheel
 
     private bool _isGrounded;
 
+    internal WheelHit mostRecentGroundHit;
+
     private bool _isAlive;
 
     public float stiffnessTractionMultiplier = 0.25f;
@@ -231,6 +233,23 @@ public class Wheel
         }
     }
 
+    internal void UpdateGrounded()
+    {
+        if (!(wheel == null))
+        {
+            _isGrounded = wheel.GetGroundHit(out mostRecentGroundHit);
+            if (_isGrounded)
+            {
+                string materialName = PhysicsTool.GetMaterialName(mostRecentGroundHit);
+                replicatedGroundMaterial = PhysicsMaterialNetTable.GetNetId(materialName);
+            }
+            else
+            {
+                replicatedGroundMaterial = PhysicsMaterialNetId.NULL;
+            }
+        }
+    }
+
     /// <summary>
     /// Called during FixedUpdate if vehicle is driven by the local player.
     /// </summary>
@@ -244,16 +263,7 @@ public class Wheel
             }
             latestLocalAccelerationInput = input_y;
             latestLocalBrakingInput = inputBrake;
-            _isGrounded = wheel.GetGroundHit(out var hit);
-            if (_isGrounded)
-            {
-                string materialName = PhysicsTool.GetMaterialName(hit);
-                replicatedGroundMaterial = PhysicsMaterialNetTable.GetNetId(materialName);
-            }
-            else
-            {
-                replicatedGroundMaterial = PhysicsMaterialNetId.NULL;
-            }
+            UpdateGrounded();
         }
     }
 
@@ -395,13 +405,14 @@ public class Wheel
     {
         if (_wheel != null)
         {
+            _isGrounded = _wheel.GetGroundHit(out mostRecentGroundHit);
             float distanceAlongSuspension;
-            if (_wheel.GetGroundHit(out var hit))
+            if (_isGrounded)
             {
                 Vector3 vector = _wheel.transform.TransformPoint(_wheel.center);
-                Vector3 rhs = -_wheel.transform.up;
-                distanceAlongSuspension = Vector3.Dot(hit.point - vector, rhs) - _wheel.radius;
-                string materialName = PhysicsTool.GetMaterialName(hit);
+                Vector3 rhs = -vehicle.transform.up;
+                distanceAlongSuspension = Vector3.Dot(mostRecentGroundHit.point - vector, rhs) - _wheel.radius;
+                string materialName = PhysicsTool.GetMaterialName(mostRecentGroundHit);
                 replicatedGroundMaterial = PhysicsMaterialNetTable.GetNetId(materialName);
             }
             else
@@ -431,7 +442,8 @@ public class Wheel
         if (config.modelUseColliderPose && _wheel != null)
         {
             Vector3 vector = _wheel.transform.TransformPoint(_wheel.center);
-            Vector3 vector2 = -_wheel.transform.up;
+            Vector3 vector2 = -vehicle.transform.up;
+            Vector3 onNormal = -_wheel.transform.up;
             if (_isPhysical)
             {
                 float num;
@@ -449,7 +461,8 @@ public class Wheel
                     replicatedGroundMaterial = PhysicsMaterialNetId.NULL;
                     UpdateMotionEffect(Vector3.zero, isVisualGrounded: false);
                 }
-                Vector3 position = vector + vector2 * num;
+                Vector3 vector3 = Vector3.Project(vector2 * num, onNormal);
+                Vector3 position = vector + vector3;
                 float num2 = _wheel.rpm / 60f * 360f * deltaTime;
                 rollAngleDegrees += num2;
                 rollAngleDegrees = (rollAngleDegrees % 360f + 360f) % 360f;
@@ -465,6 +478,7 @@ public class Wheel
             float t = 1f - Mathf.Pow(2f, -13f * Time.deltaTime);
             animatedSuspensionState = Mathf.Lerp(animatedSuspensionState, replicatedSuspensionState, t);
             float num3 = animatedSuspensionState * _wheel.suspensionDistance;
+            Vector3.Project(vector2 * num3, onNormal);
             Vector3 position2 = vector + vector2 * num3;
             if (_wheel.radius > float.Epsilon)
             {
@@ -490,18 +504,40 @@ public class Wheel
             {
                 UpdateMotionEffect(Vector3.zero, isVisualGrounded: false);
             }
+            return;
+        }
+        if (config.modelRadius > float.Epsilon)
+        {
+            if (_isPhysical && config.copyColliderRpmIndex >= 0)
+            {
+                Wheel wheelAtIndex = vehicle.GetWheelAtIndex(config.copyColliderRpmIndex);
+                if (wheelAtIndex != null && wheelAtIndex.wheel != null && wheelAtIndex.wheel.radius > float.Epsilon)
+                {
+                    float num7 = wheelAtIndex.wheel.radius * wheelAtIndex.wheel.rpm / config.modelRadius / 60f * 360f * deltaTime;
+                    rollAngleDegrees += num7;
+                    rollAngleDegrees = (rollAngleDegrees % 360f + 360f) % 360f;
+                }
+            }
+            else
+            {
+                float num8 = vehicle.AnimatedForwardVelocity * deltaTime;
+                float num9 = MathF.PI * 2f * config.modelRadius;
+                float num10 = num8 / num9 * 360f;
+                rollAngleDegrees += num10;
+                rollAngleDegrees = (rollAngleDegrees % 360f + 360f) % 360f;
+            }
         }
         else
         {
             rollAngleDegrees += vehicle.AnimatedForwardVelocity * 45f * deltaTime;
             rollAngleDegrees = (rollAngleDegrees % 360f + 360f) % 360f;
-            model.localRotation = rest;
-            if (config.isModelSteered)
-            {
-                model.Rotate(0f, vehicle.AnimatedSteeringAngle, 0f, Space.Self);
-            }
-            model.Rotate(rollAngleDegrees, 0f, 0f, Space.Self);
         }
+        model.localRotation = rest;
+        if (config.isModelSteered)
+        {
+            model.Rotate(0f, vehicle.AnimatedSteeringAngle, 0f, Space.Self);
+        }
+        model.Rotate(rollAngleDegrees, 0f, 0f, Space.Self);
     }
 
     /// <summary>
@@ -541,7 +577,7 @@ public class Wheel
             {
                 if (vehicle.asset.UsesEngineRpmAndGears)
                 {
-                    num3 = availableTorque;
+                    num3 = availableTorque * latestLocalAccelerationInput;
                 }
                 else
                 {
@@ -565,7 +601,7 @@ public class Wheel
             {
                 if (vehicle.asset.UsesEngineRpmAndGears)
                 {
-                    num3 = 0f - availableTorque;
+                    num3 = availableTorque * latestLocalAccelerationInput;
                 }
                 else
                 {

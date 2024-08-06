@@ -12,6 +12,8 @@ public interface ISleekField : ISleekElement, ISleekLabel, ISleekWithTooltip
 
     SleekColor BackgroundColor { get; set; }
 
+    bool IsClickable { get; set; }
+
     event Entered OnTextSubmitted;
 
     event Typed OnTextChanged;
