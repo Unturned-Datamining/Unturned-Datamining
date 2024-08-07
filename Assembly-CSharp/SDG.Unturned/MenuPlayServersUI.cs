@@ -103,6 +103,10 @@ public class MenuPlayServersUI : SleekFullscreenBox
 
     private SleekButtonIcon filtersVisibilityButton;
 
+    private ISleekButton openFiltersVisibilityButton;
+
+    private ISleekButton closeFiltersVisibilityButton;
+
     private ISleekToggle listSourceToggle;
 
     private ISleekToggle nameToggle;
@@ -424,6 +428,20 @@ public class MenuPlayServersUI : SleekFullscreenBox
     private void OnClickedFiltersVisibilityButton(ISleekElement button)
     {
         FilterSettings.isQuickFiltersVisibilityEditorOpen = !FilterSettings.isQuickFiltersVisibilityEditorOpen && FilterSettings.isQuickFiltersEditorOpen;
+        SynchronizeVisibleFilters();
+        AnimateOpenSubcontainers();
+    }
+
+    private void OnClickedOpenFiltersVisibilityButton(ISleekElement button)
+    {
+        FilterSettings.isQuickFiltersVisibilityEditorOpen = FilterSettings.isQuickFiltersEditorOpen;
+        SynchronizeVisibleFilters();
+        AnimateOpenSubcontainers();
+    }
+
+    private void OnClickedCloseFiltersVisibilityButton(ISleekElement button)
+    {
+        FilterSettings.isQuickFiltersVisibilityEditorOpen = false;
         SynchronizeVisibleFilters();
         AnimateOpenSubcontainers();
     }
@@ -965,14 +983,41 @@ public class MenuPlayServersUI : SleekFullscreenBox
         maxPingField.TooltipText = localization.format("MaxPing_Filter_Tooltip");
         maxPingField.OnValueChanged += OnMaxPingChanged;
         filtersEditorContainer.AddChild(maxPingField);
-        filtersVisibilityButton = new SleekButtonIcon(icons.load<Texture2D>("FilterVisibility"), 20);
-        filtersVisibilityButton.PositionScale_X = 0.4f;
-        filtersVisibilityButton.SizeScale_X = 0.2f;
-        filtersVisibilityButton.SizeOffset_Y = 30f;
-        filtersVisibilityButton.onClickedButton += OnClickedFiltersVisibilityButton;
-        filtersVisibilityButton.iconColor = ESleekTint.FOREGROUND;
-        filtersVisibilityButton.tooltip = localization.format("QuickFiltersVisibilityButton_Tooltip");
-        filtersEditorContainer.AddChild(filtersVisibilityButton);
+        openFiltersVisibilityButton = Glazier.Get().CreateButton();
+        openFiltersVisibilityButton.PositionScale_X = 0.5f;
+        openFiltersVisibilityButton.PositionOffset_X = -50f;
+        openFiltersVisibilityButton.PositionOffset_Y = -18f;
+        openFiltersVisibilityButton.SizeOffset_X = 100f;
+        openFiltersVisibilityButton.SizeOffset_Y = 16f;
+        openFiltersVisibilityButton.OnClicked += OnClickedOpenFiltersVisibilityButton;
+        openFiltersVisibilityButton.TooltipText = localization.format("QuickFiltersVisibilityButton_Open_Label");
+        filtersEditorContainer.AddChild(openFiltersVisibilityButton);
+        Texture2D texture = icons.load<Texture2D>("FilterVisibility_Open");
+        Texture2D texture2 = icons.load<Texture2D>("FilterVisibility_Close");
+        ISleekImage sleekImage = Glazier.Get().CreateImage(texture);
+        sleekImage.PositionOffset_X = -8f;
+        sleekImage.PositionScale_X = 0.5f;
+        sleekImage.SizeOffset_X = 16f;
+        sleekImage.SizeOffset_Y = 16f;
+        sleekImage.TintColor = ESleekTint.FOREGROUND;
+        openFiltersVisibilityButton.AddChild(sleekImage);
+        closeFiltersVisibilityButton = Glazier.Get().CreateButton();
+        closeFiltersVisibilityButton.PositionScale_X = 0.5f;
+        closeFiltersVisibilityButton.PositionScale_Y = 1f;
+        closeFiltersVisibilityButton.PositionOffset_X = -50f;
+        closeFiltersVisibilityButton.PositionOffset_Y = -18f;
+        closeFiltersVisibilityButton.SizeOffset_X = 100f;
+        closeFiltersVisibilityButton.SizeOffset_Y = 16f;
+        closeFiltersVisibilityButton.OnClicked += OnClickedCloseFiltersVisibilityButton;
+        closeFiltersVisibilityButton.TooltipText = localization.format("QuickFiltersVisibilityButton_Close_Label");
+        filtersEditorContainer.AddChild(closeFiltersVisibilityButton);
+        ISleekImage sleekImage2 = Glazier.Get().CreateImage(texture2);
+        sleekImage2.PositionScale_X = 0.5f;
+        sleekImage2.PositionOffset_X = -8f;
+        sleekImage2.SizeOffset_X = 16f;
+        sleekImage2.SizeOffset_Y = 16f;
+        sleekImage2.TintColor = ESleekTint.FOREGROUND;
+        closeFiltersVisibilityButton.AddChild(sleekImage2);
     }
 
     private void CreateFilterVisibilityToggles()
@@ -1459,16 +1504,9 @@ public class MenuPlayServersUI : SleekFullscreenBox
             num++;
         }
         float num4 = (float)MathfEx.GetPageCount(num, 5) * num2;
-        filtersVisibilityButton.PositionOffset_Y = num4 + 10f;
-        if (isQuickFiltersVisibilityEditorOpen)
-        {
-            filtersVisibilityButton.text = localization.format("QuickFiltersVisibilityButton_Close_Label");
-        }
-        else
-        {
-            filtersVisibilityButton.text = localization.format("QuickFiltersVisibilityButton_Open_Label");
-        }
-        filtersEditorContainer.SizeOffset_Y = num4 + 60f;
+        filtersEditorContainer.SizeOffset_Y = num4 + 20f;
+        openFiltersVisibilityButton.IsVisible = !isQuickFiltersVisibilityEditorOpen;
+        closeFiltersVisibilityButton.IsVisible = isQuickFiltersVisibilityEditorOpen;
     }
 
     private void onClickedResetFilters(ISleekElement button)
@@ -1664,6 +1702,10 @@ public class MenuPlayServersUI : SleekFullscreenBox
         columnTogglesContainer.AddChild(sleekToggle13);
         num++;
         columnTogglesContainer.SizeOffset_Y = (float)((num - 1) / 5 + 1) * 40f;
+        mainListContainer = Glazier.Get().CreateFrame();
+        mainListContainer.SizeScale_X = 1f;
+        mainListContainer.SizeScale_Y = 1f;
+        AddChild(mainListContainer);
         filtersEditorContainer = Glazier.Get().CreateFrame();
         filtersEditorContainer.PositionOffset_X = 20f;
         filtersEditorContainer.PositionOffset_Y = -190f;
@@ -1741,10 +1783,6 @@ public class MenuPlayServersUI : SleekFullscreenBox
             SizeScale_X = 0.2f
         };
         defaultPresetsContainer.AddChild(child5);
-        mainListContainer = Glazier.Get().CreateFrame();
-        mainListContainer.SizeScale_X = 1f;
-        mainListContainer.SizeScale_Y = 1f;
-        AddChild(mainListContainer);
         SleekButtonIcon sleekButtonIcon = new SleekButtonIcon(icons.load<Texture2D>("Columns"));
         sleekButtonIcon.SizeOffset_X = 40f;
         sleekButtonIcon.SizeOffset_Y = 40f;

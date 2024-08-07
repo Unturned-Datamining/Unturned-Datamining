@@ -37,7 +37,7 @@ MapFilter_Header_Label Server Map Filter
 MapFilter_Header_Tooltip Currently selected maps.
 MapFilter_ResetButton_Label Reset Selection
 MapFilter_ResetButton_Tooltip Change filter back to all maps.
-Map_Filter_Label Map Name Filter
+Map_Filter_Label Map Filter
 Map_Filter_Toggle_Tooltip Toggle map filter visibility.
 
 Refresh_Label Refresh

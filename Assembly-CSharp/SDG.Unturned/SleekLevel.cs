@@ -1,26 +1,27 @@
-using SDG.Provider;
-using Steamworks;
 using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Button in a list of levels.
+/// </summary>
 public class SleekLevel : SleekWrapper
 {
     public ClickedLevel onClickedLevel;
 
     private bool hasCreatedStatusLabel;
 
-    private LevelInfo level;
+    protected ISleekButton button;
 
-    private ISleekButton button;
+    protected ISleekImage icon;
 
-    private ISleekImage icon;
+    protected ISleekLabel nameLabel;
 
-    private ISleekLabel nameLabel;
+    protected ISleekLabel infoLabel;
 
-    private ISleekLabel infoLabel;
+    public LevelInfo level { get; private set; }
 
-    private void onClickedButton(ISleekElement button)
+    protected void onClickedButton(ISleekElement button)
     {
         onClickedLevel?.Invoke(this, (byte)(base.PositionOffset_Y / 110f));
     }
@@ -53,7 +54,7 @@ public class SleekLevel : SleekWrapper
         LiveConfig.OnRefreshed -= OnLiveConfigRefreshed;
     }
 
-    public SleekLevel(LevelInfo level, bool isEditor)
+    public SleekLevel(LevelInfo level)
     {
         this.level = level;
         base.SizeOffset_X = 400f;
@@ -63,10 +64,7 @@ public class SleekLevel : SleekWrapper
         button.SizeOffset_Y = 0f;
         button.SizeScale_X = 1f;
         button.SizeScale_Y = 1f;
-        if (level.isEditable || !isEditor)
-        {
-            button.OnClicked += onClickedButton;
-        }
+        button.OnClicked += onClickedButton;
         AddChild(button);
         icon = Glazier.Get().CreateImage();
         icon.PositionOffset_X = 10f;
@@ -141,38 +139,6 @@ public class SleekLevel : SleekWrapper
         infoLabel.Text = MenuPlaySingleplayerUI.localization.format("Info_WithVersion", arg, arg2, level.configData.Version);
         infoLabel.TextColor = new SleekColor(ESleekTint.FONT, 0.75f);
         button.AddChild(infoLabel);
-        if (!level.isEditable && isEditor)
-        {
-            Bundle bundle = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Workshop/MenuWorkshopEditor/MenuWorkshopEditor.unity3d");
-            ISleekImage sleekImage = Glazier.Get().CreateImage();
-            sleekImage.PositionOffset_X = 20f;
-            sleekImage.PositionOffset_Y = -20f;
-            sleekImage.PositionScale_Y = 0.5f;
-            sleekImage.SizeOffset_X = 40f;
-            sleekImage.SizeOffset_Y = 40f;
-            sleekImage.Texture = bundle.load<Texture2D>("Lock");
-            sleekImage.TintColor = ESleekTint.FOREGROUND;
-            button.AddChild(sleekImage);
-            bundle.unload();
-        }
-        if (isEditor)
-        {
-            if (level.isFromWorkshop)
-            {
-                if (TempSteamworksWorkshop.getCachedDetails(new PublishedFileId_t(level.publishedFileId), out var cachedDetails))
-                {
-                    button.TooltipText = cachedDetails.GetTitle();
-                }
-                else
-                {
-                    button.TooltipText = level.publishedFileId.ToString();
-                }
-            }
-            else
-            {
-                button.TooltipText = level.path;
-            }
-        }
         hasCreatedStatusLabel = false;
         LiveConfig.OnRefreshed -= OnLiveConfigRefreshed;
         OnLiveConfigRefreshed();

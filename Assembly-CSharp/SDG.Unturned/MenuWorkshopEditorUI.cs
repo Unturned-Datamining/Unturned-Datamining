@@ -187,7 +187,7 @@ public class MenuWorkshopEditorUI
         {
             if (levels[i] != null)
             {
-                SleekLevel sleekLevel = new SleekLevel(levels[i], isEditor: true);
+                SleekLevel sleekLevel = new SleekEditorLevel(levels[i]);
                 sleekLevel.PositionOffset_Y = i * 110;
                 sleekLevel.onClickedLevel = onClickedLevel;
                 levelScrollBox.AddChild(sleekLevel);

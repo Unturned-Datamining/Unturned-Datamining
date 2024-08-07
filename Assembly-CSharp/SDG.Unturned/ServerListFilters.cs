@@ -79,16 +79,20 @@ public class ServerListFilters
         return text;
     }
 
-    public void ToggleMap(LevelInfo levelInfo)
+    /// <returns>True if level was added to the list of maps.</returns>
+    public bool ToggleMap(LevelInfo levelInfo)
     {
-        if (levelInfo != null)
+        if (levelInfo == null)
         {
-            string item = levelInfo.name.ToLower();
-            if (!mapNames.Remove(item))
-            {
-                mapNames.Add(item);
-            }
+            return false;
         }
+        string item = levelInfo.name.ToLower();
+        if (!mapNames.Remove(item))
+        {
+            mapNames.Add(item);
+            return true;
+        }
+        return false;
     }
 
     public void ClearMaps()

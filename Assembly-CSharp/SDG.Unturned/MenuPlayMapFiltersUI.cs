@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -15,7 +16,9 @@ public class MenuPlayMapFiltersUI : SleekFullscreenBox
 
     private LevelInfo[] levels;
 
-    private SleekLevel[] levelButtons;
+    private SleekFilterLevel[] levelButtons;
+
+    private int previousLayoutWidth = -1;
 
     private ISleekBox headerBox;
 
@@ -35,11 +38,13 @@ public class MenuPlayMapFiltersUI : SleekFullscreenBox
         {
             active = true;
             this.openContext = openContext;
-            if (levels == null || levels.Length < 1)
+            int widthForLayout = ScreenEx.GetWidthForLayout();
+            if (levels == null || levels.Length < 1 || widthForLayout != previousLayoutWidth)
             {
                 PopulateLevelButtons();
             }
             UpdateFiltersLabel();
+            SynchronizeCheckBoxes();
             AnimateIntoView();
         }
     }
@@ -93,6 +98,7 @@ public class MenuPlayMapFiltersUI : SleekFullscreenBox
         FilterSettings.activeFilters.ClearMaps();
         FilterSettings.MarkActiveFilterModified();
         UpdateFiltersLabel();
+        SynchronizeCheckBoxes();
     }
 
     private void OnClickedBackButton(ISleekElement button)
@@ -103,31 +109,59 @@ public class MenuPlayMapFiltersUI : SleekFullscreenBox
 
     private void OnClickedLevel(SleekLevel levelButton, byte index)
     {
-        LevelInfo levelInfo = levels[index];
-        FilterSettings.activeFilters.ToggleMap(levelInfo);
+        bool isIncludedInFilter = FilterSettings.activeFilters.ToggleMap(levelButton.level);
+        ((SleekFilterLevel)levelButton).IsIncludedInFilter = isIncludedInFilter;
         FilterSettings.MarkActiveFilterModified();
         UpdateFiltersLabel();
     }
 
     private void PopulateLevelButtons()
     {
+        int num = (previousLayoutWidth = ScreenEx.GetWidthForLayout());
         levelScrollBox.RemoveAllChildren();
         levels = Level.getLevels(ESingleplayerMapCategory.ALL);
-        int num = 0;
-        levelButtons = new SleekLevel[levels.Length];
+        int num2 = Mathf.Max(1, (num - 200) / 410);
+        int num3 = 0;
+        int num4 = 0;
+        levelButtons = new SleekFilterLevel[levels.Length];
         for (int i = 0; i < levels.Length; i++)
         {
             if (levels[i] != null)
             {
-                SleekLevel sleekLevel = new SleekLevel(levels[i], isEditor: false);
-                sleekLevel.PositionOffset_Y = num;
-                sleekLevel.onClickedLevel = (ClickedLevel)Delegate.Combine(sleekLevel.onClickedLevel, new ClickedLevel(OnClickedLevel));
-                levelScrollBox.AddChild(sleekLevel);
-                num += 110;
-                levelButtons[i] = sleekLevel;
+                SleekFilterLevel sleekFilterLevel = new SleekFilterLevel(levels[i]);
+                sleekFilterLevel.PositionOffset_X = num3 % num2 * 410;
+                sleekFilterLevel.PositionOffset_Y = num3 / num2 * 110;
+                sleekFilterLevel.onClickedLevel = (ClickedLevel)Delegate.Combine(sleekFilterLevel.onClickedLevel, new ClickedLevel(OnClickedLevel));
+                levelScrollBox.AddChild(sleekFilterLevel);
+                num4 += 110;
+                levelButtons[i] = sleekFilterLevel;
+                num3++;
             }
         }
-        levelScrollBox.ContentSizeOffset = new Vector2(0f, num - 10);
+        float num5 = MathfEx.GetPageCount(num3, num2) * 110;
+        levelScrollBox.ContentSizeOffset = new Vector2(0f, num5 - 10f);
+        int num6 = num2 * 410 - 10;
+        headerBox.PositionOffset_X = -num6 / 2;
+        headerBox.SizeOffset_X = num6;
+        resetButton.PositionOffset_X = -num6 / 2;
+        resetButton.SizeOffset_X = num6;
+        levelScrollBox.PositionOffset_X = -num6 / 2;
+        levelScrollBox.SizeOffset_X = num6 + 30;
+    }
+
+    private void SynchronizeCheckBoxes()
+    {
+        if (levelButtons != null)
+        {
+            List<LevelInfo> list = new List<LevelInfo>();
+            FilterSettings.activeFilters.GetLevels(list);
+            SleekFilterLevel[] array = levelButtons;
+            foreach (SleekFilterLevel sleekFilterLevel in array)
+            {
+                bool isIncludedInFilter = list.Contains(sleekFilterLevel.level);
+                sleekFilterLevel.IsIncludedInFilter = isIncludedInFilter;
+            }
+        }
     }
 
     private void OnLevelsRefreshed()
@@ -141,10 +175,8 @@ public class MenuPlayMapFiltersUI : SleekFullscreenBox
         icons = serverListUI.icons;
         active = false;
         headerBox = Glazier.Get().CreateBox();
-        headerBox.PositionOffset_X = -200f;
         headerBox.PositionOffset_Y = 100f;
         headerBox.PositionScale_X = 0.5f;
-        headerBox.SizeOffset_X = 400f;
         headerBox.SizeOffset_Y = 100f;
         headerBox.TooltipText = localization.format("MapFilter_Header_Tooltip");
         AddChild(headerBox);
@@ -160,10 +192,8 @@ public class MenuPlayMapFiltersUI : SleekFullscreenBox
         filtersLabel.SizeOffset_Y = 50f;
         headerBox.AddChild(filtersLabel);
         resetButton = Glazier.Get().CreateButton();
-        resetButton.PositionOffset_X = -200f;
         resetButton.PositionOffset_Y = 210f;
         resetButton.PositionScale_X = 0.5f;
-        resetButton.SizeOffset_X = 400f;
         resetButton.SizeOffset_Y = 50f;
         resetButton.Text = localization.format("MapFilter_ResetButton_Label");
         resetButton.TooltipText = localization.format("MapFilter_ResetButton_Tooltip");
@@ -171,10 +201,8 @@ public class MenuPlayMapFiltersUI : SleekFullscreenBox
         resetButton.OnClicked += OnClickedResetButton;
         AddChild(resetButton);
         levelScrollBox = Glazier.Get().CreateScrollView();
-        levelScrollBox.PositionOffset_X = -200f;
         levelScrollBox.PositionOffset_Y = 270f;
         levelScrollBox.PositionScale_X = 0.5f;
-        levelScrollBox.SizeOffset_X = 430f;
         levelScrollBox.SizeOffset_Y = -370f;
         levelScrollBox.SizeScale_Y = 1f;
         levelScrollBox.ScaleContentToWidth = true;

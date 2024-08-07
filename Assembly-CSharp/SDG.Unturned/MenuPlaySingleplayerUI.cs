@@ -355,7 +355,7 @@ public class MenuPlaySingleplayerUI
         {
             if (levels[i] != null)
             {
-                SleekLevel sleekLevel = new SleekLevel(levels[i], isEditor: false);
+                SleekLevel sleekLevel = new SleekLevel(levels[i]);
                 sleekLevel.PositionOffset_Y = num;
                 sleekLevel.onClickedLevel = onClickedLevel;
                 levelScrollBox.AddChild(sleekLevel);

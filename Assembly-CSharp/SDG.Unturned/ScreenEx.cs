@@ -14,6 +14,11 @@ public static class ScreenEx
 
     private static CommandLineFlag clNoUnityResolutions = new CommandLineFlag(defaultValue: false, "-NoUnityResolutions");
 
+    public static int GetWidthForLayout()
+    {
+        return Mathf.RoundToInt((float)Screen.width / GraphicsSettings.userInterfaceScale);
+    }
+
     public static float GetCurrentAspectRatio()
     {
         Resolution currentResolution = Screen.currentResolution;

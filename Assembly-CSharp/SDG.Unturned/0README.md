@@ -1423,6 +1423,8 @@
 - [SleekDefaultServerListPresetButton.cs](SleekDefaultServerListPresetButton.cs)
 - [SleekDismissWorkshopArticleButton.cs](SleekDismissWorkshopArticleButton.cs)
 - [SleekEconIcon.cs](SleekEconIcon.cs)
+- [SleekEditorLevel.cs](SleekEditorLevel.cs)
+- [SleekFilterLevel.cs](SleekFilterLevel.cs)
 - [SleekFullscreenBox.cs](SleekFullscreenBox.cs)
 - [SleekHitmarker.cs](SleekHitmarker.cs)
 - [SleekInventory.cs](SleekInventory.cs)
