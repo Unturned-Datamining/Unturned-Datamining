@@ -536,7 +536,7 @@ public class UseableBarricade : Useable
                 if (transform.CompareTag("Logic") && transform.name == "Slot")
                 {
                     point = hit.point - hit.normal * equippedBarricadeAsset.offset;
-                    angle_y = transform.rotation.eulerAngles.y;
+                    angle_y = Quaternion.LookRotation(transform.forward).eulerAngles.y;
                     if (Mathf.Abs(Vector3.Dot(transform.right, Vector3.up)) > 0.5f)
                     {
                         if (Vector3.Dot(MainCamera.instance.transform.forward, transform.forward) < 0f)
@@ -764,7 +764,7 @@ public class UseableBarricade : Useable
                 if (transform2.name == "Door")
                 {
                     point = transform2.position;
-                    angle_y = transform2.rotation.eulerAngles.y;
+                    angle_y = Quaternion.LookRotation(transform2.forward).eulerAngles.y;
                     if (Vector3.Dot(MainCamera.instance.transform.forward, transform2.forward) < 0f)
                     {
                         angle_y += 180f;
@@ -809,25 +809,25 @@ public class UseableBarricade : Useable
                 if (hit.transform.CompareTag("Logic") && hit.transform.name == "Hatch")
                 {
                     point = hit.transform.position;
-                    angle_y = hit.transform.rotation.eulerAngles.y;
-                    float num = Vector3.Dot(MainCamera.instance.transform.forward, hit.transform.forward);
-                    float num2 = Vector3.Dot(MainCamera.instance.transform.forward, hit.transform.right);
-                    float num3 = Vector3.Dot(MainCamera.instance.transform.forward, -hit.transform.forward);
-                    float num4 = Vector3.Dot(MainCamera.instance.transform.forward, -hit.transform.right);
-                    float num5 = num;
-                    if (num2 < num5)
+                    float num = (angle_y = Quaternion.LookRotation(hit.transform.forward).eulerAngles.y);
+                    float num2 = Vector3.Dot(MainCamera.instance.transform.forward, hit.transform.forward);
+                    float num3 = Vector3.Dot(MainCamera.instance.transform.forward, hit.transform.right);
+                    float num4 = Vector3.Dot(MainCamera.instance.transform.forward, -hit.transform.forward);
+                    float num5 = Vector3.Dot(MainCamera.instance.transform.forward, -hit.transform.right);
+                    float num6 = num2;
+                    if (num3 < num6)
                     {
-                        num5 = num2;
-                        angle_y = hit.transform.rotation.eulerAngles.y + 90f;
+                        num6 = num3;
+                        angle_y = num + 90f;
                     }
-                    if (num3 < num5)
+                    if (num4 < num6)
                     {
-                        num5 = num3;
-                        angle_y = hit.transform.rotation.eulerAngles.y + 180f;
+                        num6 = num4;
+                        angle_y = num + 180f;
                     }
-                    if (num4 < num5)
+                    if (num5 < num6)
                     {
-                        angle_y = hit.transform.rotation.eulerAngles.y + 270f;
+                        angle_y = num + 270f;
                     }
                     angle_y += 180f;
                     if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Level.checkSafeIncludingClipVolumes(point))
@@ -870,7 +870,7 @@ public class UseableBarricade : Useable
                 if (hit.transform.CompareTag("Logic") && hit.transform.name == "Gate")
                 {
                     point = hit.transform.position;
-                    angle_y = hit.transform.rotation.eulerAngles.y;
+                    angle_y = Quaternion.LookRotation(hit.transform.forward).eulerAngles.y;
                     if (Mathf.Abs(Vector3.Dot(hit.transform.up, Vector3.up)) > 0.5f)
                     {
                         if (Vector3.Dot(MainCamera.instance.transform.forward, hit.transform.forward) < 0f)
@@ -930,7 +930,7 @@ public class UseableBarricade : Useable
                 if (hit.transform.CompareTag("Logic") && hit.transform.name == "Climb")
                 {
                     point = hit.transform.position;
-                    angle_y = hit.transform.rotation.eulerAngles.y;
+                    angle_y = Quaternion.LookRotation(hit.transform.forward).eulerAngles.y;
                     if (Physics.OverlapSphereNonAlloc(point + hit.transform.up * 0.5f, 0.1f, checkColliders, RayMasks.BLOCK_BARRICADE) > 0)
                     {
                         if (base.channel.IsLocalPlayer)

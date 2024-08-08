@@ -863,7 +863,7 @@ public class MenuPlayServersUI : SleekFullscreenBox
         presetsScrollView.ContentSizeOffset = new Vector2(0f, num2);
         presetsScrollView.SizeOffset_Y = Mathf.Min(num2, 100f);
         presetsContainer.SizeOffset_Y = presetsScrollView.SizeOffset_Y + 20f;
-        presetsContainer.PositionOffset_Y = 0f - presetsContainer.SizeOffset_Y - 50f;
+        presetsContainer.PositionOffset_Y = 0f - presetsContainer.SizeOffset_Y - 70f;
         AnimateOpenSubcontainers();
     }
 
@@ -986,7 +986,7 @@ public class MenuPlayServersUI : SleekFullscreenBox
         openFiltersVisibilityButton = Glazier.Get().CreateButton();
         openFiltersVisibilityButton.PositionScale_X = 0.5f;
         openFiltersVisibilityButton.PositionOffset_X = -50f;
-        openFiltersVisibilityButton.PositionOffset_Y = -18f;
+        openFiltersVisibilityButton.PositionOffset_Y = 2f;
         openFiltersVisibilityButton.SizeOffset_X = 100f;
         openFiltersVisibilityButton.SizeOffset_Y = 16f;
         openFiltersVisibilityButton.OnClicked += OnClickedOpenFiltersVisibilityButton;
@@ -1003,9 +1003,8 @@ public class MenuPlayServersUI : SleekFullscreenBox
         openFiltersVisibilityButton.AddChild(sleekImage);
         closeFiltersVisibilityButton = Glazier.Get().CreateButton();
         closeFiltersVisibilityButton.PositionScale_X = 0.5f;
-        closeFiltersVisibilityButton.PositionScale_Y = 1f;
         closeFiltersVisibilityButton.PositionOffset_X = -50f;
-        closeFiltersVisibilityButton.PositionOffset_Y = -18f;
+        closeFiltersVisibilityButton.PositionOffset_Y = 2f;
         closeFiltersVisibilityButton.SizeOffset_X = 100f;
         closeFiltersVisibilityButton.SizeOffset_Y = 16f;
         closeFiltersVisibilityButton.OnClicked += OnClickedCloseFiltersVisibilityButton;
@@ -1145,12 +1144,12 @@ public class MenuPlayServersUI : SleekFullscreenBox
         float num = (FilterSettings.isPresetsListOpen ? presetsContainer.SizeOffset_Y : 0f);
         if (FilterSettings.isQuickFiltersEditorOpen)
         {
-            filtersEditorContainer.AnimatePositionOffset(0f, -50f - filtersEditorContainer.SizeOffset_Y - num, ESleekLerp.EXPONENTIAL, 20f);
+            filtersEditorContainer.AnimatePositionOffset(0f, -70f - filtersEditorContainer.SizeOffset_Y - num, ESleekLerp.EXPONENTIAL, 20f);
             filtersEditorContainer.AnimatePositionScale(0f, filtersEditorContainer.PositionScale_Y, ESleekLerp.EXPONENTIAL, 20f);
         }
         else
         {
-            filtersEditorContainer.AnimatePositionOffset(20f, -50f - filtersEditorContainer.SizeOffset_Y - num, ESleekLerp.EXPONENTIAL, 20f);
+            filtersEditorContainer.AnimatePositionOffset(20f, -70f - filtersEditorContainer.SizeOffset_Y - num, ESleekLerp.EXPONENTIAL, 20f);
             filtersEditorContainer.AnimatePositionScale(1f, filtersEditorContainer.PositionScale_Y, ESleekLerp.EXPONENTIAL, 20f);
         }
         float num2 = (FilterSettings.isColumnsEditorOpen ? (columnTogglesContainer.SizeOffset_Y + 10f) : 0f);
@@ -1327,15 +1326,16 @@ public class MenuPlayServersUI : SleekFullscreenBox
         bool isQuickFiltersVisibilityEditorOpen = FilterSettings.isQuickFiltersVisibilityEditorOpen;
         float num2 = (isQuickFiltersVisibilityEditorOpen ? 70f : 30f);
         float num3 = (isQuickFiltersVisibilityEditorOpen ? 40f : 0f);
+        float num4 = 20f;
         listSourceToggle.IsVisible = isQuickFiltersVisibilityEditorOpen;
         listSourceButtonState.IsVisible = isQuickFiltersVisibilityEditorOpen || FilterSettings.filterVisibility.listSource;
         listSourceButtonState.isInteractable = FilterSettings.filterVisibility.listSource;
         if (listSourceButtonState.IsVisible)
         {
             listSourceToggle.PositionScale_X = (float)(num % 5) * 0.2f;
-            listSourceToggle.PositionOffset_Y = (float)(num / 5) * num2;
+            listSourceToggle.PositionOffset_Y = num4 + (float)(num / 5) * num2;
             listSourceButtonState.PositionScale_X = (float)(num % 5) * 0.2f;
-            listSourceButtonState.PositionOffset_Y = (float)(num / 5) * num2 + num3;
+            listSourceButtonState.PositionOffset_Y = num4 + (float)(num / 5) * num2 + num3;
             num++;
         }
         nameToggle.IsVisible = isQuickFiltersVisibilityEditorOpen;
@@ -1344,9 +1344,9 @@ public class MenuPlayServersUI : SleekFullscreenBox
         if (nameField.IsVisible)
         {
             nameToggle.PositionScale_X = (float)(num % 5) * 0.2f;
-            nameToggle.PositionOffset_Y = (float)(num / 5) * num2;
+            nameToggle.PositionOffset_Y = num4 + (float)(num / 5) * num2;
             nameField.PositionScale_X = (float)(num % 5) * 0.2f;
-            nameField.PositionOffset_Y = (float)(num / 5) * num2 + num3;
+            nameField.PositionOffset_Y = num4 + (float)(num / 5) * num2 + num3;
             num++;
         }
         mapToggle.IsVisible = isQuickFiltersVisibilityEditorOpen;
@@ -1355,9 +1355,9 @@ public class MenuPlayServersUI : SleekFullscreenBox
         if (mapButton.IsVisible)
         {
             mapToggle.PositionScale_X = (float)(num % 5) * 0.2f;
-            mapToggle.PositionOffset_Y = (float)(num / 5) * num2;
+            mapToggle.PositionOffset_Y = num4 + (float)(num / 5) * num2;
             mapButton.PositionScale_X = (float)(num % 5) * 0.2f;
-            mapButton.PositionOffset_Y = (float)(num / 5) * num2 + num3;
+            mapButton.PositionOffset_Y = num4 + (float)(num / 5) * num2 + num3;
             num++;
         }
         passwordToggle.IsVisible = isQuickFiltersVisibilityEditorOpen;
@@ -1366,9 +1366,9 @@ public class MenuPlayServersUI : SleekFullscreenBox
         if (passwordButtonState.IsVisible)
         {
             passwordToggle.PositionScale_X = (float)(num % 5) * 0.2f;
-            passwordToggle.PositionOffset_Y = (float)(num / 5) * num2;
+            passwordToggle.PositionOffset_Y = num4 + (float)(num / 5) * num2;
             passwordButtonState.PositionScale_X = (float)(num % 5) * 0.2f;
-            passwordButtonState.PositionOffset_Y = (float)(num / 5) * num2 + num3;
+            passwordButtonState.PositionOffset_Y = num4 + (float)(num / 5) * num2 + num3;
             num++;
         }
         attendanceToggle.IsVisible = isQuickFiltersVisibilityEditorOpen;
@@ -1377,9 +1377,9 @@ public class MenuPlayServersUI : SleekFullscreenBox
         if (attendanceButtonState.IsVisible)
         {
             attendanceToggle.PositionScale_X = (float)(num % 5) * 0.2f;
-            attendanceToggle.PositionOffset_Y = (float)(num / 5) * num2;
+            attendanceToggle.PositionOffset_Y = num4 + (float)(num / 5) * num2;
             attendanceButtonState.PositionScale_X = (float)(num % 5) * 0.2f;
-            attendanceButtonState.PositionOffset_Y = (float)(num / 5) * num2 + num3;
+            attendanceButtonState.PositionOffset_Y = num4 + (float)(num / 5) * num2 + num3;
             num++;
         }
         notFullToggle.IsVisible = isQuickFiltersVisibilityEditorOpen;
@@ -1388,9 +1388,9 @@ public class MenuPlayServersUI : SleekFullscreenBox
         if (notFullButtonState.IsVisible)
         {
             notFullToggle.PositionScale_X = (float)(num % 5) * 0.2f;
-            notFullToggle.PositionOffset_Y = (float)(num / 5) * num2;
+            notFullToggle.PositionOffset_Y = num4 + (float)(num / 5) * num2;
             notFullButtonState.PositionScale_X = (float)(num % 5) * 0.2f;
-            notFullButtonState.PositionOffset_Y = (float)(num / 5) * num2 + num3;
+            notFullButtonState.PositionOffset_Y = num4 + (float)(num / 5) * num2 + num3;
             num++;
         }
         combatToggle.IsVisible = isQuickFiltersVisibilityEditorOpen;
@@ -1399,9 +1399,9 @@ public class MenuPlayServersUI : SleekFullscreenBox
         if (combatButtonState.IsVisible)
         {
             combatToggle.PositionScale_X = (float)(num % 5) * 0.2f;
-            combatToggle.PositionOffset_Y = (float)(num / 5) * num2;
+            combatToggle.PositionOffset_Y = num4 + (float)(num / 5) * num2;
             combatButtonState.PositionScale_X = (float)(num % 5) * 0.2f;
-            combatButtonState.PositionOffset_Y = (float)(num / 5) * num2 + num3;
+            combatButtonState.PositionOffset_Y = num4 + (float)(num / 5) * num2 + num3;
             num++;
         }
         cameraToggle.IsVisible = isQuickFiltersVisibilityEditorOpen;
@@ -1410,9 +1410,9 @@ public class MenuPlayServersUI : SleekFullscreenBox
         if (cameraButtonState.IsVisible)
         {
             cameraToggle.PositionScale_X = (float)(num % 5) * 0.2f;
-            cameraToggle.PositionOffset_Y = (float)(num / 5) * num2;
+            cameraToggle.PositionOffset_Y = num4 + (float)(num / 5) * num2;
             cameraButtonState.PositionScale_X = (float)(num % 5) * 0.2f;
-            cameraButtonState.PositionOffset_Y = (float)(num / 5) * num2 + num3;
+            cameraButtonState.PositionOffset_Y = num4 + (float)(num / 5) * num2 + num3;
             num++;
         }
         goldToggle.IsVisible = isQuickFiltersVisibilityEditorOpen;
@@ -1421,9 +1421,9 @@ public class MenuPlayServersUI : SleekFullscreenBox
         if (goldFilterButtonState.IsVisible)
         {
             goldToggle.PositionScale_X = (float)(num % 5) * 0.2f;
-            goldToggle.PositionOffset_Y = (float)(num / 5) * num2;
+            goldToggle.PositionOffset_Y = num4 + (float)(num / 5) * num2;
             goldFilterButtonState.PositionScale_X = (float)(num % 5) * 0.2f;
-            goldFilterButtonState.PositionOffset_Y = (float)(num / 5) * num2 + num3;
+            goldFilterButtonState.PositionOffset_Y = num4 + (float)(num / 5) * num2 + num3;
             num++;
         }
         monetizationToggle.IsVisible = isQuickFiltersVisibilityEditorOpen;
@@ -1432,9 +1432,9 @@ public class MenuPlayServersUI : SleekFullscreenBox
         if (monetizationButtonState.IsVisible)
         {
             monetizationToggle.PositionScale_X = (float)(num % 5) * 0.2f;
-            monetizationToggle.PositionOffset_Y = (float)(num / 5) * num2;
+            monetizationToggle.PositionOffset_Y = num4 + (float)(num / 5) * num2;
             monetizationButtonState.PositionScale_X = (float)(num % 5) * 0.2f;
-            monetizationButtonState.PositionOffset_Y = (float)(num / 5) * num2 + num3;
+            monetizationButtonState.PositionOffset_Y = num4 + (float)(num / 5) * num2 + num3;
             num++;
         }
         workshopToggle.IsVisible = isQuickFiltersVisibilityEditorOpen;
@@ -1443,9 +1443,9 @@ public class MenuPlayServersUI : SleekFullscreenBox
         if (workshopButtonState.IsVisible)
         {
             workshopToggle.PositionScale_X = (float)(num % 5) * 0.2f;
-            workshopToggle.PositionOffset_Y = (float)(num / 5) * num2;
+            workshopToggle.PositionOffset_Y = num4 + (float)(num / 5) * num2;
             workshopButtonState.PositionScale_X = (float)(num % 5) * 0.2f;
-            workshopButtonState.PositionOffset_Y = (float)(num / 5) * num2 + num3;
+            workshopButtonState.PositionOffset_Y = num4 + (float)(num / 5) * num2 + num3;
             num++;
         }
         pluginsToggle.IsVisible = isQuickFiltersVisibilityEditorOpen;
@@ -1454,9 +1454,9 @@ public class MenuPlayServersUI : SleekFullscreenBox
         if (pluginsButtonState.IsVisible)
         {
             pluginsToggle.PositionScale_X = (float)(num % 5) * 0.2f;
-            pluginsToggle.PositionOffset_Y = (float)(num / 5) * num2;
+            pluginsToggle.PositionOffset_Y = num4 + (float)(num / 5) * num2;
             pluginsButtonState.PositionScale_X = (float)(num % 5) * 0.2f;
-            pluginsButtonState.PositionOffset_Y = (float)(num / 5) * num2 + num3;
+            pluginsButtonState.PositionOffset_Y = num4 + (float)(num / 5) * num2 + num3;
             num++;
         }
         cheatsToggle.IsVisible = isQuickFiltersVisibilityEditorOpen;
@@ -1465,9 +1465,9 @@ public class MenuPlayServersUI : SleekFullscreenBox
         if (cheatsButtonState.IsVisible)
         {
             cheatsToggle.PositionScale_X = (float)(num % 5) * 0.2f;
-            cheatsToggle.PositionOffset_Y = (float)(num / 5) * num2;
+            cheatsToggle.PositionOffset_Y = num4 + (float)(num / 5) * num2;
             cheatsButtonState.PositionScale_X = (float)(num % 5) * 0.2f;
-            cheatsButtonState.PositionOffset_Y = (float)(num / 5) * num2 + num3;
+            cheatsButtonState.PositionOffset_Y = num4 + (float)(num / 5) * num2 + num3;
             num++;
         }
         vacToggle.IsVisible = isQuickFiltersVisibilityEditorOpen;
@@ -1476,9 +1476,9 @@ public class MenuPlayServersUI : SleekFullscreenBox
         if (VACProtectionButtonState.IsVisible)
         {
             vacToggle.PositionScale_X = (float)(num % 5) * 0.2f;
-            vacToggle.PositionOffset_Y = (float)(num / 5) * num2;
+            vacToggle.PositionOffset_Y = num4 + (float)(num / 5) * num2;
             VACProtectionButtonState.PositionScale_X = (float)(num % 5) * 0.2f;
-            VACProtectionButtonState.PositionOffset_Y = (float)(num / 5) * num2 + num3;
+            VACProtectionButtonState.PositionOffset_Y = num4 + (float)(num / 5) * num2 + num3;
             num++;
         }
         battlEyeToggle.IsVisible = isQuickFiltersVisibilityEditorOpen;
@@ -1487,9 +1487,9 @@ public class MenuPlayServersUI : SleekFullscreenBox
         if (battlEyeProtectionButtonState.IsVisible)
         {
             battlEyeToggle.PositionScale_X = (float)(num % 5) * 0.2f;
-            battlEyeToggle.PositionOffset_Y = (float)(num / 5) * num2;
+            battlEyeToggle.PositionOffset_Y = num4 + (float)(num / 5) * num2;
             battlEyeProtectionButtonState.PositionScale_X = (float)(num % 5) * 0.2f;
-            battlEyeProtectionButtonState.PositionOffset_Y = (float)(num / 5) * num2 + num3;
+            battlEyeProtectionButtonState.PositionOffset_Y = num4 + (float)(num / 5) * num2 + num3;
             num++;
         }
         maxPingToggle.IsVisible = isQuickFiltersVisibilityEditorOpen;
@@ -1498,13 +1498,13 @@ public class MenuPlayServersUI : SleekFullscreenBox
         if (maxPingField.IsVisible)
         {
             maxPingToggle.PositionScale_X = (float)(num % 5) * 0.2f;
-            maxPingToggle.PositionOffset_Y = (float)(num / 5) * num2;
+            maxPingToggle.PositionOffset_Y = num4 + (float)(num / 5) * num2;
             maxPingField.PositionScale_X = (float)(num % 5) * 0.2f;
-            maxPingField.PositionOffset_Y = (float)(num / 5) * num2 + num3;
+            maxPingField.PositionOffset_Y = num4 + (float)(num / 5) * num2 + num3;
             num++;
         }
-        float num4 = (float)MathfEx.GetPageCount(num, 5) * num2;
-        filtersEditorContainer.SizeOffset_Y = num4 + 20f;
+        float num5 = (float)MathfEx.GetPageCount(num, 5) * num2;
+        filtersEditorContainer.SizeOffset_Y = num5 + 20f;
         openFiltersVisibilityButton.IsVisible = !isQuickFiltersVisibilityEditorOpen;
         closeFiltersVisibilityButton.IsVisible = isQuickFiltersVisibilityEditorOpen;
     }
@@ -1714,13 +1714,23 @@ public class MenuPlayServersUI : SleekFullscreenBox
         filtersEditorContainer.SizeScale_X = 1f;
         AddChild(filtersEditorContainer);
         ISleekImage sleekImage = Glazier.Get().CreateImage();
-        sleekImage.PositionOffset_Y = -11f;
-        sleekImage.PositionScale_Y = 1f;
-        sleekImage.SizeScale_X = 1f;
+        sleekImage.PositionOffset_Y = 9f;
+        sleekImage.SizeScale_X = 0.5f;
+        sleekImage.SizeOffset_X = -60f;
         sleekImage.SizeOffset_Y = 2f;
         sleekImage.Texture = (Texture2D)GlazierResources.PixelTexture;
         sleekImage.TintColor = new SleekColor(ESleekTint.FOREGROUND, 0.5f);
         filtersEditorContainer.AddChild(sleekImage);
+        ISleekImage sleekImage2 = Glazier.Get().CreateImage();
+        sleekImage2.PositionScale_X = 0.5f;
+        sleekImage2.PositionOffset_Y = 9f;
+        sleekImage2.PositionOffset_X = 60f;
+        sleekImage2.SizeScale_X = 0.5f;
+        sleekImage2.SizeOffset_X = -60f;
+        sleekImage2.SizeOffset_Y = 2f;
+        sleekImage2.Texture = (Texture2D)GlazierResources.PixelTexture;
+        sleekImage2.TintColor = new SleekColor(ESleekTint.FOREGROUND, 0.5f);
+        filtersEditorContainer.AddChild(sleekImage2);
         CreateQuickFilterButtons();
         CreateFilterVisibilityToggles();
         SynchronizeVisibleFilters();
@@ -1730,15 +1740,15 @@ public class MenuPlayServersUI : SleekFullscreenBox
         presetsContainer.PositionScale_Y = 1f;
         presetsContainer.SizeScale_X = 1f;
         AddChild(presetsContainer);
-        ISleekImage sleekImage2 = Glazier.Get().CreateImage();
-        sleekImage2.PositionOffset_Y = -11f;
-        sleekImage2.PositionScale_Y = 1f;
-        sleekImage2.SizeScale_X = 1f;
-        sleekImage2.SizeOffset_Y = 2f;
-        sleekImage2.Texture = (Texture2D)GlazierResources.PixelTexture;
-        sleekImage2.TintColor = new SleekColor(ESleekTint.FOREGROUND, 0.5f);
-        presetsContainer.AddChild(sleekImage2);
+        ISleekImage sleekImage3 = Glazier.Get().CreateImage();
+        sleekImage3.PositionOffset_Y = 9f;
+        sleekImage3.SizeScale_X = 1f;
+        sleekImage3.SizeOffset_Y = 2f;
+        sleekImage3.Texture = (Texture2D)GlazierResources.PixelTexture;
+        sleekImage3.TintColor = new SleekColor(ESleekTint.FOREGROUND, 0.5f);
+        presetsContainer.AddChild(sleekImage3);
         presetsScrollView = Glazier.Get().CreateScrollView();
+        presetsScrollView.PositionOffset_Y = 20f;
         presetsScrollView.SizeScale_X = 1f;
         presetsScrollView.ScaleContentToWidth = true;
         presetsContainer.AddChild(presetsScrollView);
@@ -1926,14 +1936,6 @@ public class MenuPlayServersUI : SleekFullscreenBox
         infoBox.SizeOffset_Y = 50f;
         mainListContainer.AddChild(infoBox);
         infoBox.IsVisible = false;
-        ISleekImage sleekImage3 = Glazier.Get().CreateImage();
-        sleekImage3.PositionOffset_Y = -61f;
-        sleekImage3.PositionScale_Y = 1f;
-        sleekImage3.SizeScale_X = 1f;
-        sleekImage3.SizeOffset_Y = 2f;
-        sleekImage3.Texture = (Texture2D)GlazierResources.PixelTexture;
-        sleekImage3.TintColor = new SleekColor(ESleekTint.FOREGROUND, 0.5f);
-        mainListContainer.AddChild(sleekImage3);
         ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
         sleekLabel.SizeScale_X = 1f;
         sleekLabel.SizeOffset_Y = 30f;
@@ -1996,6 +1998,14 @@ public class MenuPlayServersUI : SleekFullscreenBox
         sleekElement.SizeScale_X = 1f;
         sleekElement.SizeOffset_Y = 50f;
         AddChild(sleekElement);
+        ISleekImage sleekImage4 = Glazier.Get().CreateImage();
+        sleekImage4.PositionOffset_Y = -61f;
+        sleekImage4.PositionScale_Y = 1f;
+        sleekImage4.SizeScale_X = 1f;
+        sleekImage4.SizeOffset_Y = 2f;
+        sleekImage4.Texture = (Texture2D)GlazierResources.PixelTexture;
+        sleekImage4.TintColor = new SleekColor(ESleekTint.FOREGROUND, 0.5f);
+        AddChild(sleekImage4);
         SleekButtonIcon sleekButtonIcon2 = new SleekButtonIcon(icons.load<Texture2D>("Hosting"));
         sleekButtonIcon2.PositionOffset_X = 5f;
         sleekButtonIcon2.SizeOffset_X = -10f;

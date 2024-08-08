@@ -745,6 +745,7 @@ public class LevelObjects : MonoBehaviour
                         river.writeUInt32(0u);
                         river.writeGUID(Guid.Empty);
                         river.writeInt32(-1);
+                        river.writeBoolean(value: true);
                         UnturnedLog.error("Found invalid object at " + b + ", " + b2 + " with model: " + levelObject.transform?.ToString() + " and ID: " + levelObject.id);
                     }
                 }

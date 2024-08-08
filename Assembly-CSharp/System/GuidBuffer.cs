@@ -23,7 +23,7 @@ internal struct GuidBuffer
     {
         if (offset + 16 > source.Length)
         {
-            throw new ArgumentException("Destination buffer is too small!");
+            throw new ArgumentException("Source buffer is too small!");
         }
         fixed (byte* ptr = source)
         {
