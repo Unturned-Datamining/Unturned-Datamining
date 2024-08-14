@@ -36,6 +36,114 @@ ItemStore
 		1432
 	]
 }
+LinkFiltering
+{
+	Rules
+	[
+		{
+			Action Allow
+			Hosts
+			[
+				smartlydressedgames.com
+				www.smartlydressedgames.com
+				forum.smartlydressedgames.com
+				blog.smartlydressedgames.com
+				support.smartlydressedgames.com
+				unturned.wiki.gg
+				unturned.wiki
+				docs.smartlydressedgames.com
+			]
+		}
+		{
+			Action Allow
+			Hosts
+			[
+				x.com
+				www.x.com
+				twitter.com
+				www.twitter.com
+			]
+			Paths
+			[
+				(?i)^\\/SDGNelson
+				(?i)^\\/MoltonMontro
+				(?i)^\\/UnturnedOnSteam
+			]
+		}
+		{
+			Action Allow
+			Hosts
+			[
+				facebook.com
+				www.facebook.com
+			]
+			Path (?i)^\\/UnturnedOnSteam
+		}
+		{
+			Action Allow
+			Hosts
+			[
+				youtube.com
+				www.youtube.com
+			]
+			Path (?i)^\\/@SmartlyDressedGames
+		}
+		{
+			Action Allow
+			Hosts
+			[
+				discord.gg
+				www.discord.gg
+			]
+			Path (?i)^\\/unturned
+		}
+		{
+			Action Deny
+			Hosts
+			[
+				discord.gg
+				www.discord.gg
+			]
+		}
+		{
+			Action Allow
+			Hosts
+			[
+				store.steampowered.com
+				steamcommunity.com
+				www.steamcommunity.com
+			]
+		}
+		{
+			Action Allow
+			Hosts
+			[
+				reddit.com
+				www.reddit.com
+			]
+			Path (?i)^\\/r\\/unturned
+		}
+		{
+			Action Allow
+			Hosts
+			[
+				github.com
+				www.github.com
+			]
+			Path (?i)^\\/SmartlyDressedGames
+		}
+		{
+			Action Allow
+			Hosts
+			[
+				bsky.app
+				www.bsky.app
+			]
+			Path (?i)^\\/profile\\/nelson.smartlydressed.games
+		}
+	]
+	DefaultAction UseSteamLinkFilter
+}
 ShouldAllowJoiningInternetServersWithoutGslt false
 ShouldServersWithoutMonetizationTagBeVisibleInInternetServerList true
 QueryPingWarningOffsetMs 50
