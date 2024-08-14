@@ -186,7 +186,7 @@ public class MenuDashboardUI
         }
     }
 
-    private static void InsertSteamBbCode(ISleekElement parent, string contents)
+    private static void InsertSteamBbCode(ISleekElement parent, string contents, bool useLinkFiltering)
     {
         if (string.IsNullOrEmpty(contents))
         {
@@ -281,15 +281,23 @@ public class MenuDashboardUI
                 }
                 if (item.isLink)
                 {
-                    SleekWebLinkButton sleekWebLinkButton = new SleekWebLinkButton();
-                    sleekWebLinkButton.Text = item.content;
-                    sleekWebLinkButton.Url = item.url;
-                    sleekWebLinkButton.UseManualLayout = false;
-                    sleekWebLinkButton.UseChildAutoLayout = ESleekChildLayout.Vertical;
-                    sleekWebLinkButton.UseHeightLayoutOverride = true;
-                    sleekWebLinkButton.ExpandChildren = true;
-                    sleekWebLinkButton.SizeOffset_Y = 30f;
-                    parent.AddChild(sleekWebLinkButton);
+                    if (!useLinkFiltering || WebUtils.CanParseThirdPartyUrl(item.url))
+                    {
+                        SleekWebLinkButton sleekWebLinkButton = new SleekWebLinkButton();
+                        sleekWebLinkButton.Text = item.content;
+                        sleekWebLinkButton.Url = item.url;
+                        sleekWebLinkButton.UseManualLayout = false;
+                        sleekWebLinkButton.UseChildAutoLayout = ESleekChildLayout.Vertical;
+                        sleekWebLinkButton.UseHeightLayoutOverride = true;
+                        sleekWebLinkButton.ExpandChildren = true;
+                        sleekWebLinkButton.SizeOffset_Y = 30f;
+                        sleekWebLinkButton.useLinkFiltering = useLinkFiltering;
+                        parent.AddChild(sleekWebLinkButton);
+                    }
+                    else
+                    {
+                        UnturnedLog.warn("Ignoring potentially unsafe link in BBcode: {0}", item.url);
+                    }
                     continue;
                 }
                 item.content = item.content.TrimStart('\r', '\n');
@@ -396,7 +404,7 @@ public class MenuDashboardUI
             sleekBox.AddChild(sleekLabel2);
             try
             {
-                InsertSteamBbCode(sleekBox, newsItem.Contents);
+                InsertSteamBbCode(sleekBox, newsItem.Contents, useLinkFiltering: false);
             }
             catch (Exception e)
             {
@@ -613,7 +621,7 @@ public class MenuDashboardUI
             {
                 contents = featured.overrideDescription;
             }
-            InsertSteamBbCode(sleekElement2, contents);
+            InsertSteamBbCode(sleekElement2, contents, useLinkFiltering: true);
         }
         catch (Exception e)
         {

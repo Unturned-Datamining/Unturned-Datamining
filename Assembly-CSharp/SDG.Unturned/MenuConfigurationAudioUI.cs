@@ -225,11 +225,10 @@ public class MenuConfigurationAudioUI : SleekFullscreenBox
         ISleekBox sleekBox = Glazier.Get().CreateBox();
         sleekBox.PositionOffset_Y = num;
         sleekBox.SizeOffset_X = 400f;
-        sleekBox.SizeOffset_Y = 50f;
-        sleekBox.FontSize = ESleekFontSize.Medium;
+        sleekBox.SizeOffset_Y = 30f;
         sleekBox.Text = localization.format("Music_Header");
         audioBox.AddChild(sleekBox);
-        num += 60;
+        num += 40;
         musicMasterVolumeSlider = Glazier.Get().CreateSlider();
         musicMasterVolumeSlider.PositionOffset_Y = num;
         musicMasterVolumeSlider.SizeOffset_X = 200f;

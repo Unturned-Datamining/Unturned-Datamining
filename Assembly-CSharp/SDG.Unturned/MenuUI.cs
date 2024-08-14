@@ -257,6 +257,7 @@ public class MenuUI : MonoBehaviour
         MenuPlayServersUI.mapFiltersUI.close();
         MenuPlayUI.serverListUI.close();
         MenuPlayUI.serverBookmarksUI.close();
+        MenuPlayUI.onlineSafetyUI.close();
         MenuPlayServerInfoUI.close();
         MenuServerPasswordUI.close();
         MenuPlayConfigUI.close();
@@ -381,13 +382,14 @@ public class MenuUI : MonoBehaviour
                 MenuPlayServersUI.serverListFiltersUI.close();
                 MenuPlayUI.serverListUI.open(shouldRefresh: true);
             }
-            else if (MenuPlayConnectUI.active || MenuPlayUI.serverListUI.active || MenuPlaySingleplayerUI.active || MenuPlayLobbiesUI.active || MenuPlayUI.serverBookmarksUI.active)
+            else if (MenuPlayConnectUI.active || MenuPlayUI.serverListUI.active || MenuPlaySingleplayerUI.active || MenuPlayLobbiesUI.active || MenuPlayUI.serverBookmarksUI.active || MenuPlayUI.onlineSafetyUI.active)
             {
                 MenuPlayConnectUI.close();
                 MenuPlayUI.serverListUI.close();
                 MenuPlaySingleplayerUI.close();
                 MenuPlayLobbiesUI.close();
                 MenuPlayUI.serverBookmarksUI.close();
+                MenuPlayUI.onlineSafetyUI.close();
                 MenuPlayUI.open();
             }
             else if (ItemStoreCartMenu.instance.IsOpen)
@@ -530,7 +532,7 @@ public class MenuUI : MonoBehaviour
         MenuSurvivorsClothingBoxUI.update();
         tickInput();
         window.showCursor = true;
-        if (MenuPlayUI.active || MenuPlayConnectUI.active || MenuPlayUI.serverListUI.active || MenuPlayServersUI.serverListFiltersUI.active || MenuPlayServersUI.mapFiltersUI.active || MenuPlayServerInfoUI.active || MenuServerPasswordUI.isActive || MenuPlaySingleplayerUI.active || MenuPlayLobbiesUI.active || MenuPlayConfigUI.active || MenuPlayUI.serverBookmarksUI.active)
+        if (MenuPlayUI.active || MenuPlayConnectUI.active || MenuPlayUI.serverListUI.active || MenuPlayServersUI.serverListFiltersUI.active || MenuPlayServersUI.mapFiltersUI.active || MenuPlayServerInfoUI.active || MenuServerPasswordUI.isActive || MenuPlaySingleplayerUI.active || MenuPlayLobbiesUI.active || MenuPlayConfigUI.active || MenuPlayUI.serverBookmarksUI.active || MenuPlayUI.onlineSafetyUI.active)
         {
             target = play;
         }

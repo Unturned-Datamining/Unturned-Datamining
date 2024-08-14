@@ -87,7 +87,7 @@ WheelBalancing_UprightExponent 0.7
 Steering_LeaningForceMultiplier 4
 RollAngularVelocityDamping 2
 
-ReverseGearRatio 8
+ReverseGearRatio 7
 ForwardGearRatios
 [
 	15

@@ -28,7 +28,7 @@ public class SleekBoomboxSong : SleekWrapper
         {
             sleekButton.Text = "Sorry, I broke some song names. :( -Nelson";
         }
-        if (!string.IsNullOrEmpty(songAsset.linkURL))
+        if (!string.IsNullOrEmpty(songAsset.linkURL) && WebUtils.CanParseThirdPartyUrl(songAsset.linkURL))
         {
             sleekButton.SizeOffset_X -= 30f;
             SleekButtonIcon sleekButtonIcon = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("External_Link"));

@@ -96,7 +96,7 @@ public class MenuPlayConnectUI
             return false;
         }
         bool autoPrefix = input.Contains('/');
-        if (WebUtils.ParseThirdPartyUrl(input, out var result, autoPrefix))
+        if (WebUtils.ParseThirdPartyUrl(input, out var result, autoPrefix, useLinkFiltering: false))
         {
             if (!Provider.allowWebRequests)
             {

@@ -797,10 +797,8 @@ public class LevelManager : SteamCaller
                 {
                     masterBundleReference = new MasterBundleReference<GameObject>("core.masterbundle", "Level/Carepackage.prefab");
                 }
-                Transform obj = UnityEngine.Object.Instantiate(masterBundleReference.loadAsset()).transform;
+                Transform obj = UnityEngine.Object.Instantiate(masterBundleReference.loadAsset(), airdropInfo.dropPosition, Quaternion.identity).transform;
                 obj.name = "Carepackage";
-                obj.position = airdropInfo.dropPosition;
-                obj.rotation = Quaternion.identity;
                 Carepackage orAddComponent = obj.GetOrAddComponent<Carepackage>();
                 orAddComponent.id = airdropInfo.id;
                 if (airdropAsset != null)
@@ -881,10 +879,9 @@ public class LevelManager : SteamCaller
             {
                 masterBundleReference = new MasterBundleReference<GameObject>("core.masterbundle", "Level/Dropship.prefab");
             }
-            Transform transform = UnityEngine.Object.Instantiate(masterBundleReference.loadAsset()).transform;
+            Quaternion rotation = Quaternion.LookRotation(direction) * Quaternion.Euler(-90f, 180f, 0f);
+            Transform transform = UnityEngine.Object.Instantiate(masterBundleReference.loadAsset(), state, rotation).transform;
             transform.name = "Dropship";
-            transform.position = state;
-            transform.rotation = Quaternion.LookRotation(direction) * Quaternion.Euler(-90f, 180f, 0f);
             airdropInfo.model = transform;
         }
         airdrops.Add(airdropInfo);

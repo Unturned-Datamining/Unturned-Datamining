@@ -115,6 +115,7 @@ public class MenuConfigurationOptionsUI
         if (!active)
         {
             active = true;
+            updateAll();
             container.AnimateIntoView();
         }
     }
@@ -176,12 +177,14 @@ public class MenuConfigurationOptionsUI
     private static void onToggledChatVoiceInToggle(ISleekToggle toggle, bool state)
     {
         OptionsSettings.chatVoiceIn = state;
+        chatVoiceOutToggle.IsInteractable = state;
+        chatVoiceAlwaysRecordingToggle.IsInteractable = OptionsSettings.chatVoiceIn && OptionsSettings.chatVoiceOut;
     }
 
     private static void onToggledChatVoiceOutToggle(ISleekToggle toggle, bool state)
     {
         OptionsSettings.chatVoiceOut = state;
-        chatVoiceAlwaysRecordingToggle.IsInteractable = state;
+        chatVoiceAlwaysRecordingToggle.IsInteractable = OptionsSettings.chatVoiceIn && state;
     }
 
     private static void onToggledChatVoiceAlwaysRecordingToggle(ISleekToggle toggle, bool state)
@@ -371,8 +374,9 @@ public class MenuConfigurationOptionsUI
         chatTextToggle.Value = OptionsSettings.chatText;
         chatVoiceInToggle.Value = OptionsSettings.chatVoiceIn;
         chatVoiceOutToggle.Value = OptionsSettings.chatVoiceOut;
+        chatVoiceOutToggle.IsInteractable = OptionsSettings.chatVoiceIn;
         chatVoiceAlwaysRecordingToggle.Value = OptionsSettings.VoiceAlwaysRecording;
-        chatVoiceAlwaysRecordingToggle.IsInteractable = OptionsSettings.chatVoiceOut;
+        chatVoiceAlwaysRecordingToggle.IsInteractable = OptionsSettings.chatVoiceIn && OptionsSettings.chatVoiceOut;
         hintsToggle.Value = OptionsSettings.hints;
         streamerToggle.Value = OptionsSettings.streamer;
         featuredWorkshopToggle.Value = OptionsSettings.featuredWorkshop;
@@ -907,6 +911,5 @@ public class MenuConfigurationOptionsUI
         defaultButton.OnClicked += onClickedDefaultButton;
         defaultButton.FontSize = ESleekFontSize.Medium;
         container.AddChild(defaultButton);
-        updateAll();
     }
 }

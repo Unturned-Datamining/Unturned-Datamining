@@ -1,8 +1,11 @@
 # SDG.Unturned
 ## Content
 - [EFeaturedWorkshopType.cs](EFeaturedWorkshopType.cs)
+- [ELinkFilteringAction.cs](ELinkFilteringAction.cs)
 - [EMapStatus.cs](EMapStatus.cs)
 - [ItemStoreLiveConfig.cs](ItemStoreLiveConfig.cs)
+- [LinkFilteringLiveConfig.cs](LinkFilteringLiveConfig.cs)
+- [LinkFilteringRule.cs](LinkFilteringRule.cs)
 - [LiveConfigData.cs](LiveConfigData.cs)
 - [LiveConfigManager.cs](LiveConfigManager.cs)
 - [MainMenuAlert.cs](MainMenuAlert.cs)

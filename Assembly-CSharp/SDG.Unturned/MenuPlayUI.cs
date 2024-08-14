@@ -29,6 +29,8 @@ public class MenuPlayUI
 
     public static MenuPlayServerBookmarksUI serverBookmarksUI;
 
+    public static MenuPlayOnlineSafetyUI onlineSafetyUI;
+
     private MenuPlayServerInfoUI serverInfoUI;
 
     private MenuPlaySingleplayerUI singleplayerUI;
@@ -56,19 +58,19 @@ public class MenuPlayUI
 
     private static void onClickedConnectButton(ISleekElement button)
     {
-        MenuPlayConnectUI.open();
+        onlineSafetyUI.OpenIfNecessary(EOnlineSafetyDestination.Connect);
         close();
     }
 
     private static void onClickedServersButton(ISleekElement button)
     {
-        serverListUI.open(shouldRefresh: true);
+        onlineSafetyUI.OpenIfNecessary(EOnlineSafetyDestination.ServerList);
         close();
     }
 
     private static void OnClickedServerBookmarksButton(ISleekElement button)
     {
-        serverBookmarksUI.open();
+        onlineSafetyUI.OpenIfNecessary(EOnlineSafetyDestination.Bookmarks);
         close();
     }
 
@@ -80,7 +82,7 @@ public class MenuPlayUI
 
     private static void onClickedLobbiesButton(ISleekElement button)
     {
-        MenuPlayLobbiesUI.open();
+        onlineSafetyUI.OpenIfNecessary(EOnlineSafetyDestination.Lobby);
         close();
     }
 
@@ -238,6 +240,15 @@ public class MenuPlayUI
         serverBookmarksUI.SizeScale_X = 1f;
         serverBookmarksUI.SizeScale_Y = 1f;
         MenuUI.container.AddChild(serverBookmarksUI);
+        onlineSafetyUI = new MenuPlayOnlineSafetyUI();
+        onlineSafetyUI.PositionOffset_X = 10f;
+        onlineSafetyUI.PositionOffset_Y = 10f;
+        onlineSafetyUI.PositionScale_Y = 1f;
+        onlineSafetyUI.SizeOffset_X = -20f;
+        onlineSafetyUI.SizeOffset_Y = -20f;
+        onlineSafetyUI.SizeScale_X = 1f;
+        onlineSafetyUI.SizeScale_Y = 1f;
+        MenuUI.container.AddChild(onlineSafetyUI);
         serverInfoUI = new MenuPlayServerInfoUI();
         singleplayerUI = new MenuPlaySingleplayerUI();
         lobbiesUI = new MenuPlayLobbiesUI();

@@ -53,9 +53,11 @@ public class OptionsSettings
 
     private const byte SAVEDATA_VERSION_SEPARATED_AIRCRAFT_THIRD_PERSON_CAMERA_MODE = 56;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 56;
+    private const byte SAVEDATA_VERSION_ADDED_ONLINE_SAFETY_MENU = 57;
 
-    public static readonly byte SAVEDATA_VERSION = 56;
+    private const byte SAVEDATA_VERSION_NEWEST = 57;
+
+    public static readonly byte SAVEDATA_VERSION = 57;
 
     public static readonly byte MIN_FOV = 60;
 
@@ -178,6 +180,21 @@ public class OptionsSettings
     public static Color hitmarkerColor;
 
     public static Color criticalHitmarkerColor;
+
+    /// <summary>
+    /// Number of times the player has clicked "Proceed" in the online safety menu.
+    /// </summary>
+    public static int onlineSafetyMenuProceedCount;
+
+    /// <summary>
+    /// If true, "don't show again" is checked in the online safety menu.
+    /// </summary>
+    public static bool wantsToHideOnlineSafetyMenu;
+
+    /// <summary>
+    /// Prevents menu from being shown twice without a restart.
+    /// </summary>
+    internal static bool didShowOnlineSafetyMenuThisSession;
 
     public static float fov
     {
@@ -410,6 +427,18 @@ public class OptionsSettings
         }
     }
 
+    internal static bool ShouldShowOnlineSafetyMenu
+    {
+        get
+        {
+            if (!wantsToHideOnlineSafetyMenu || onlineSafetyMenuProceedCount < 1)
+            {
+                return !didShowOnlineSafetyMenuThisSession;
+            }
+            return false;
+        }
+    }
+
     public static event System.Action OnUnitSystemChanged;
 
     public static event System.Action OnVoiceAlwaysRecordingChanged;
@@ -484,8 +513,8 @@ public class OptionsSettings
         gore = true;
         filter = true;
         chatText = true;
-        chatVoiceIn = true;
-        chatVoiceOut = true;
+        chatVoiceIn = false;
+        chatVoiceOut = false;
         metric = true;
         talk = false;
         hints = true;
@@ -600,7 +629,7 @@ public class OptionsSettings
         debug = block.readBoolean();
         gore = block.readBoolean();
         filter = block.readBoolean();
-        if (b < 32)
+        if (b < 57)
         {
             filter = true;
         }
@@ -611,9 +640,17 @@ public class OptionsSettings
         }
         else
         {
-            chatVoiceIn = true;
+            chatVoiceIn = false;
+        }
+        if (b < 57)
+        {
+            chatVoiceIn = false;
         }
         chatVoiceOut = block.readBoolean();
+        if (b < 57)
+        {
+            chatVoiceOut = false;
+        }
         metric = block.readBoolean();
         if (b > 24)
         {
@@ -882,6 +919,11 @@ public class OptionsSettings
         {
             vehicleAircraftThirdPersonCameraMode = EVehicleThirdPersonCameraMode.RotationAttached;
         }
+        if (b >= 57)
+        {
+            onlineSafetyMenuProceedCount = block.readInt32();
+            wantsToHideOnlineSafetyMenu = block.readBoolean();
+        }
         if (!Provider.isPro)
         {
             backgroundColor = new Color(0.9f, 0.9f, 0.9f);
@@ -895,7 +937,7 @@ public class OptionsSettings
     public static void save()
     {
         Block block = new Block();
-        block.writeByte(56);
+        block.writeByte(57);
         block.writeBoolean(value: false);
         block.writeBoolean(splashscreen);
         block.writeBoolean(timer);
@@ -949,6 +991,8 @@ public class OptionsSettings
         block.writeSingle(MusicMasterVolume);
         block.writeSingle(AtmosphereVolume);
         block.writeByte((byte)vehicleAircraftThirdPersonCameraMode);
+        block.writeInt32(onlineSafetyMenuProceedCount);
+        block.writeBoolean(wantsToHideOnlineSafetyMenu);
         ReadWrite.writeBlock("/Options.dat", useCloud: true, block);
     }
 }

@@ -71,6 +71,7 @@ public class MenuPlaySingleplayerUI
         if (!active)
         {
             active = true;
+            browseServersButton.IsVisible = !OptionsSettings.ShouldShowOnlineSafetyMenu;
             container.AnimateIntoView();
         }
     }
@@ -217,7 +218,13 @@ public class MenuPlaySingleplayerUI
         {
             itemButton.IsVisible = false;
         }
-        if (string.IsNullOrEmpty(levelInfo.feedbackUrl))
+        string text2 = levelInfo.feedbackUrl;
+        if (!string.IsNullOrEmpty(text2) && !WebUtils.CanParseThirdPartyUrl(text2))
+        {
+            UnturnedLog.warn("Ignoring potentially unsafe level feedback url {0}", text2);
+            text2 = null;
+        }
+        if (string.IsNullOrEmpty(text2))
         {
             feedbackButton.IsVisible = false;
         }

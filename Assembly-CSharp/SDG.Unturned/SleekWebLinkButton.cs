@@ -6,6 +6,8 @@ public class SleekWebLinkButton : SleekWrapper
 {
     private string _url;
 
+    public bool useLinkFiltering = true;
+
     private ISleekButton internalButton;
 
     public string Text
@@ -69,7 +71,7 @@ public class SleekWebLinkButton : SleekWrapper
                 return;
             }
         }
-        if (WebUtils.ParseThirdPartyUrl(_url, out var result2))
+        if (WebUtils.ParseThirdPartyUrl(_url, out var result2, autoPrefix: true, useLinkFiltering))
         {
             Provider.openURL(result2);
             return;

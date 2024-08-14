@@ -92,7 +92,7 @@ WheelBalancing_ForceMultiplier 30
 WheelBalancing_UprightExponent 0.7
 RollAngularVelocityDamping 2
 
-ReverseGearRatio 4
+ReverseGearRatio 3
 ForwardGearRatios
 [
 	6

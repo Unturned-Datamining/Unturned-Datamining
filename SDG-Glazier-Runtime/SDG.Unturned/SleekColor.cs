@@ -71,7 +71,11 @@ public struct SleekColor
             return fontColor;
         }
         case ESleekTint.RICH_TEXT_DEFAULT:
-            return new Color32(180, 180, 180, byte.MaxValue);
+        {
+            Color result = new Color32(180, 180, 180, byte.MaxValue);
+            result.a = customColor.a;
+            return result;
+        }
         case ESleekTint.BACKGROUND_IF_LIGHT:
         {
             if (SleekCustomization.darkTheme)

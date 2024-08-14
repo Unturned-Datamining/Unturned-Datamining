@@ -8,6 +8,8 @@ public class LiveConfigData
 
     public ItemStoreLiveConfig itemStore = new ItemStoreLiveConfig();
 
+    public LinkFilteringLiveConfig linkFiltering = new LinkFilteringLiveConfig();
+
     public bool shouldAllowJoiningInternetServersWithoutGslt;
 
     public bool shouldServersWithoutMonetizationTagBeVisibleInInternetServerList;
@@ -33,6 +35,10 @@ public class LiveConfigData
         if (data.TryGetDictionary("ItemStore", out var node3))
         {
             itemStore.Parse(node3);
+        }
+        if (data.TryGetDictionary("LinkFiltering", out var node4))
+        {
+            linkFiltering.Parse(node4);
         }
         shouldAllowJoiningInternetServersWithoutGslt = data.ParseBool("ShouldAllowJoiningInternetServersWithoutGslt");
         shouldServersWithoutMonetizationTagBeVisibleInInternetServerList = data.ParseBool("ShouldServersWithoutMonetizationTagBeVisibleInInternetServerList");

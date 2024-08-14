@@ -36,12 +36,14 @@ public class SleekEconIcon : SleekWrapper
             VehicleAsset vehicleAsset = VehicleTool.FindVehicleByGuidAndHandleRedirects(vehicle_guid);
             if (vehicleAsset != null)
             {
+                internalImage.IsVisible = false;
                 VehicleTool.getIcon(vehicleAsset.id, skinAsset.id, vehicleAsset, skinAsset, 400, 400, readableOnCPU: false, OnIconReady);
                 isExpectingIconReadyCallback = true;
                 return;
             }
             if (itemAsset != null)
             {
+                internalImage.IsVisible = false;
                 ItemTool.getIcon(itemAsset.id, skinAsset.id, 100, itemAsset.getState(), itemAsset, skinAsset, string.Empty, string.Empty, 400, 400, scale: true, readableOnCPU: false, OnIconReady);
                 isExpectingIconReadyCallback = true;
                 return;
@@ -78,6 +80,7 @@ public class SleekEconIcon : SleekWrapper
         if (internalImage != null && isExpectingIconReadyCallback)
         {
             internalImage.Texture = texture;
+            internalImage.IsVisible = texture != null;
         }
     }
 }

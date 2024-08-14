@@ -1,0 +1,23 @@
+Header Online Safety
+Warning Please be careful online! Never share personal information - such as your password, address, phone number, age, or full name - with other people. Multiplayer servers are hosted by other players, so your experience may vary significantly.
+
+ProfanityFilter_Header Profanity filter: {0}
+ProfanityFilter_Description Censors text using your Steam Chat Filtering preferences.
+
+InboundVoiceChat_Header Inbound voice chat: {0}
+InboundVoiceChat_Description When enabled, you can hear other players talking over voice chat.
+
+OutboundVoiceChat_Header Outbound voice chat: {0}
+OutboundVoiceChat_Description When enabled, you can talk to other players using your microphone by pressing [{0}].
+
+StreamerMode_Header Streamer mode: {0}
+StreamerMode_Description When enabled, anonymizes other players and prevents joining through your profile.
+
+ContinueButton_Label Proceed
+ContinueButton_Tooltip Continue into multiplayer menus.
+
+DontShowAgain_Label Don't show this again
+DontShowAgain_Tooltip If checked, this menu won't be shown the next time you open multiplayer.
+
+Feature_On ON
+Feature_Off OFF

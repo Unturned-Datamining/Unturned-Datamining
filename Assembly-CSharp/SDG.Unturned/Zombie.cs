@@ -520,7 +520,7 @@ public class Zombie : MonoBehaviour
         {
             ragdoll = newRagdoll;
             Transform transform = RagdollTool.ragdollZombie(base.transform.position, base.transform.rotation, skeleton, ragdoll, type, shirt, pants, hat, gear, hatID, gearID, isMega, ragdollEffect);
-            if (transform != null && speciality.IsDLVolatile())
+            if (transform != null && speciality.IsDLVolatile() && ragdollEffect == ERagdollEffect.NONE)
             {
                 SkinnedMeshRenderer component = transform.Find("Model_1").GetComponent<SkinnedMeshRenderer>();
                 if (component != null)
