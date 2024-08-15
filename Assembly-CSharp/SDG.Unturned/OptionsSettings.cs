@@ -194,7 +194,7 @@ public class OptionsSettings
     /// <summary>
     /// Prevents menu from being shown twice without a restart.
     /// </summary>
-    internal static bool didShowOnlineSafetyMenuThisSession;
+    internal static bool didProceedThroughOnlineSafetyMenuThisSession;
 
     public static float fov
     {
@@ -433,7 +433,7 @@ public class OptionsSettings
         {
             if (!wantsToHideOnlineSafetyMenu || onlineSafetyMenuProceedCount < 1)
             {
-                return !didShowOnlineSafetyMenuThisSession;
+                return !didProceedThroughOnlineSafetyMenuThisSession;
             }
             return false;
         }

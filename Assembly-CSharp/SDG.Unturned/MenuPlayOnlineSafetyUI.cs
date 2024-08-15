@@ -49,7 +49,6 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
         {
             active = true;
             this.destination = destination;
-            OptionsSettings.didShowOnlineSafetyMenuThisSession = true;
             SynchronizeValues();
             AnimateIntoView();
         }
@@ -93,6 +92,7 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
     private void OnContinueClicked(ISleekElement button)
     {
         OptionsSettings.onlineSafetyMenuProceedCount++;
+        OptionsSettings.didProceedThroughOnlineSafetyMenuThisSession = true;
         ProceedToDestination();
         close();
     }
@@ -174,11 +174,11 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
         AddChild(sleekLabel);
         num += 40f;
         ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
-        sleekLabel2.PositionOffset_X = -300f;
+        sleekLabel2.PositionOffset_X = -380f;
         sleekLabel2.PositionOffset_Y = num;
         sleekLabel2.PositionScale_X = 0.5f;
-        sleekLabel2.SizeOffset_X = 600f;
-        sleekLabel2.SizeOffset_Y = 50f;
+        sleekLabel2.SizeOffset_X = 760f;
+        sleekLabel2.SizeOffset_Y = 70f;
         sleekLabel2.Text = localization.format("Warning");
         sleekLabel2.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
         AddChild(sleekLabel2);
