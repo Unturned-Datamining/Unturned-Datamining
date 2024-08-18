@@ -22,14 +22,16 @@
 | ----- | -------- |
 
 ## Thumbnail filters
-| Regex                                             | IconPreview                                                                                         | BanFlags                     |
-| ------------------------------------------------- | --------------------------------------------------------------------------------------------------- | ---------------------------- |
-| (https://r.resimlink.com/GXZ0gP2.jpg)             | ![https://r.resimlink.com/GXZ0gP2.jpg](https://r.resimlink.com/GXZ0gP2.jpg)                         | HiddenFromInternetServerList |
-| (https://gspics.org/images/2022/10/12/0WIOTm.png) | ![https://gspics.org/images/2022/10/12/0WIOTm.png](https://gspics.org/images/2022/10/12/0WIOTm.png) | HiddenFromInternetServerList |
+| Regex                                             | IconPreview                                                                                         | BanFlags                                          |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| (https://r.resimlink.com/GXZ0gP2.jpg)             | ![https://r.resimlink.com/GXZ0gP2.jpg](https://r.resimlink.com/GXZ0gP2.jpg)                         | HiddenFromInternetServerList                      |
+| (https://gspics.org/images/2022/10/12/0WIOTm.png) | ![https://gspics.org/images/2022/10/12/0WIOTm.png](https://gspics.org/images/2022/10/12/0WIOTm.png) | HiddenFromInternetServerList                      |
+| (https://imgur.com/hpVX7iB.jpg)                   | ![https://imgur.com/hpVX7iB.jpg](https://imgur.com/hpVX7iB.jpg)                                     | MonetizationWarning, HiddenFromInternetServerList |
 
 ## SteamId filters
-| SteamId           | BanFlags                     |
-| ----------------- | ---------------------------- |
-| 85568392927283679 | HiddenFromInternetServerList |
-| 85568392927159806 | HiddenFromInternetServerList |
-| 85568392931810335 | HiddenFromInternetServerList |
+| SteamId           | BanFlags                                          |
+| ----------------- | ------------------------------------------------- |
+| 85568392927283679 | HiddenFromInternetServerList                      |
+| 85568392927159806 | HiddenFromInternetServerList                      |
+| 85568392931810335 | HiddenFromInternetServerList                      |
+| 85568392930570983 | MonetizationWarning, HiddenFromInternetServerList |
