@@ -41,6 +41,15 @@ LinkFiltering
 	Rules
 	[
 		{
+			Action Deny
+			Hosts
+			[
+				steamcommunity.com
+				www.steamcommunity.com
+			]
+			Path (?i)^\\/linkfilter
+		}
+		{
 			Action Allow
 			Hosts
 			[
@@ -95,14 +104,10 @@ LinkFiltering
 				discord.gg
 				www.discord.gg
 			]
-			Path (?i)^\\/unturned
-		}
-		{
-			Action Deny
-			Hosts
+			Paths
 			[
-				discord.gg
-				www.discord.gg
+				(?i)^\\/unturned
+				(?i)^\\/invite\\/unturned
 			]
 		}
 		{
