@@ -536,17 +536,21 @@ public class UseableBarricade : Useable
                 if (transform.CompareTag("Logic") && transform.name == "Slot")
                 {
                     point = hit.point - hit.normal * equippedBarricadeAsset.offset;
-                    angle_y = Quaternion.LookRotation(transform.forward).eulerAngles.y;
                     if (Mathf.Abs(Vector3.Dot(transform.right, Vector3.up)) > 0.5f)
                     {
+                        angle_y = Quaternion.LookRotation(transform.forward).eulerAngles.y;
                         if (Vector3.Dot(MainCamera.instance.transform.forward, transform.forward) < 0f)
                         {
                             angle_y += 180f;
                         }
                     }
-                    else if (Vector3.Dot(MainCamera.instance.transform.forward, transform.up) > 0f)
+                    else
                     {
-                        angle_y += 180f;
+                        angle_y = Quaternion.LookRotation(transform.up).eulerAngles.y;
+                        if (Vector3.Dot(MainCamera.instance.transform.forward, transform.up) > 0f)
+                        {
+                            angle_y += 180f;
+                        }
                     }
                     if ((equippedBarricadeAsset.build == EBuild.SHUTTER || equippedBarricadeAsset.build == EBuild.GLASS) && (transform.parent.CompareTag("Barricade") || transform.parent.CompareTag("Structure")))
                     {
@@ -870,17 +874,21 @@ public class UseableBarricade : Useable
                 if (hit.transform.CompareTag("Logic") && hit.transform.name == "Gate")
                 {
                     point = hit.transform.position;
-                    angle_y = Quaternion.LookRotation(hit.transform.forward).eulerAngles.y;
                     if (Mathf.Abs(Vector3.Dot(hit.transform.up, Vector3.up)) > 0.5f)
                     {
+                        angle_y = Quaternion.LookRotation(hit.transform.forward).eulerAngles.y;
                         if (Vector3.Dot(MainCamera.instance.transform.forward, hit.transform.forward) < 0f)
                         {
                             angle_y += 180f;
                         }
                     }
-                    else if (Vector3.Dot(MainCamera.instance.transform.forward, hit.transform.up) > 0f)
+                    else
                     {
-                        angle_y += 180f;
+                        angle_y = Quaternion.LookRotation(hit.transform.up).eulerAngles.y;
+                        if (Vector3.Dot(MainCamera.instance.transform.forward, hit.transform.up) > 0f)
+                        {
+                            angle_y += 180f;
+                        }
                     }
                     if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Level.checkSafeIncludingClipVolumes(point))
                     {

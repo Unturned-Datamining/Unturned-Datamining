@@ -780,7 +780,7 @@ public class MenuPlayServerInfoUI
                 sleekButton.SizeOffset_Y = 30f;
                 sleekButton.AllowRichText = true;
                 sleekButton.Text = output2;
-                sleekButton.TooltipText = result3;
+                sleekButton.TooltipText = output3;
                 sleekButton.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
                 sleekButton.OnClicked += OnClickedLinkButton;
                 linksFrame.AddChild(sleekButton);

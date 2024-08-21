@@ -1,4 +1,4 @@
-"Available_Instance_ID" "44"
+"Available_Instance_ID" "47"
 "Items"
 [
 	{
@@ -115365,6 +115365,10 @@
 			}
 			"Shape" "Sphere"
 			"Deadzone_Type" "DefaultRadiation"
+			"UnprotectedDamagePerSecond" "0"
+			"ProtectedDamagePerSecond" "0"
+			"UnprotectedRadiationPerSecond" "6.25"
+			"MaskFilterDamagePerSecond" "0.4"
 		}
 	}
 	{
@@ -116358,6 +116362,102 @@
 				"Z" "1"
 			}
 			"SpawnTable_ID" "543"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "44"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-499.958"
+				"Y" "12.76097"
+				"Z" "161.269"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "23.21618"
+				"Y" "37.45859"
+				"Z" "105.8999"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "false"
+			"Kill_Animals" "false"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "SUICIDE"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "45"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-452.4745"
+				"Y" "13.43662"
+				"Z" "125.2158"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "72.18298"
+				"Y" "36.1073"
+				"Z" "33.79359"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "false"
+			"Kill_Animals" "false"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "SUICIDE"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "46"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-452.4745"
+				"Y" "13.55032"
+				"Z" "197.3457"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "72.18298"
+				"Y" "35.87989"
+				"Z" "33.79359"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "false"
+			"Kill_Animals" "false"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "SUICIDE"
 		}
 	}
 ]

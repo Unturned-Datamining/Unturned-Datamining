@@ -154,7 +154,15 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
         sleekBox.SizeScale_Y = 1f;
         sleekBox.BackgroundColor = new SleekColor(ESleekTint.BACKGROUND, 0.5f);
         AddChild(sleekBox);
-        float num = 74f;
+        ISleekScrollView sleekScrollView = Glazier.Get().CreateScrollView();
+        sleekScrollView.PositionOffset_X = -380f;
+        sleekScrollView.PositionScale_X = 0.5f;
+        sleekScrollView.PositionScale_Y = 0.1f;
+        sleekScrollView.SizeOffset_X = 790f;
+        sleekScrollView.SizeScale_Y = 0.8f;
+        sleekScrollView.ScaleContentToWidth = true;
+        AddChild(sleekScrollView);
+        float num = 0f;
         ISleekImage sleekImage = Glazier.Get().CreateImage(bundle.load<Texture2D>("OnlineSafetyAlert"));
         sleekImage.PositionScale_X = 0.5f;
         sleekImage.PositionOffset_X = -64f;
@@ -162,7 +170,7 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
         sleekImage.SizeOffset_X = 128f;
         sleekImage.SizeOffset_Y = 128f;
         sleekImage.TintColor = ESleekTint.FOREGROUND;
-        AddChild(sleekImage);
+        sleekScrollView.AddChild(sleekImage);
         num += 128f;
         ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
         sleekLabel.PositionOffset_Y = num;
@@ -171,17 +179,15 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
         sleekLabel.Text = localization.format("Header");
         sleekLabel.FontSize = ESleekFontSize.Large;
         sleekLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
-        AddChild(sleekLabel);
+        sleekScrollView.AddChild(sleekLabel);
         num += 40f;
         ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
-        sleekLabel2.PositionOffset_X = -380f;
         sleekLabel2.PositionOffset_Y = num;
-        sleekLabel2.PositionScale_X = 0.5f;
-        sleekLabel2.SizeOffset_X = 760f;
+        sleekLabel2.SizeScale_X = 1f;
         sleekLabel2.SizeOffset_Y = 70f;
         sleekLabel2.Text = localization.format("Warning");
         sleekLabel2.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
-        AddChild(sleekLabel2);
+        sleekScrollView.AddChild(sleekLabel2);
         num += sleekLabel2.SizeOffset_Y + 10f;
         profanityFilterToggle = Glazier.Get().CreateToggle();
         profanityFilterToggle.PositionOffset_X = -240f;
@@ -190,7 +196,7 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
         profanityFilterToggle.SizeOffset_X = 40f;
         profanityFilterToggle.SizeOffset_Y = 40f;
         profanityFilterToggle.OnValueChanged += OnProfanityFilterToggled;
-        AddChild(profanityFilterToggle);
+        sleekScrollView.AddChild(profanityFilterToggle);
         profanityFilter_Header = Glazier.Get().CreateLabel();
         profanityFilter_Header.PositionOffset_X = -190f;
         profanityFilter_Header.PositionOffset_Y = num - 10f;
@@ -199,7 +205,7 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
         profanityFilter_Header.SizeOffset_Y = 30f;
         profanityFilter_Header.TextAlignment = TextAnchor.LowerLeft;
         profanityFilter_Header.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
-        AddChild(profanityFilter_Header);
+        sleekScrollView.AddChild(profanityFilter_Header);
         ISleekLabel sleekLabel3 = Glazier.Get().CreateLabel();
         sleekLabel3.PositionOffset_X = -190f;
         sleekLabel3.PositionOffset_Y = num + 20f;
@@ -210,7 +216,7 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
         sleekLabel3.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
         sleekLabel3.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
         sleekLabel3.Text = localization.format("ProfanityFilter_Description");
-        AddChild(sleekLabel3);
+        sleekScrollView.AddChild(sleekLabel3);
         num += 60f;
         inboundVoiceChatToggle = Glazier.Get().CreateToggle();
         inboundVoiceChatToggle.PositionOffset_X = -240f;
@@ -219,7 +225,7 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
         inboundVoiceChatToggle.SizeOffset_X = 40f;
         inboundVoiceChatToggle.SizeOffset_Y = 40f;
         inboundVoiceChatToggle.OnValueChanged += OnInboundVoiceChatToggled;
-        AddChild(inboundVoiceChatToggle);
+        sleekScrollView.AddChild(inboundVoiceChatToggle);
         inboundVoiceChat_Header = Glazier.Get().CreateLabel();
         inboundVoiceChat_Header.PositionOffset_X = -190f;
         inboundVoiceChat_Header.PositionOffset_Y = num - 10f;
@@ -228,7 +234,7 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
         inboundVoiceChat_Header.SizeOffset_Y = 30f;
         inboundVoiceChat_Header.TextAlignment = TextAnchor.LowerLeft;
         inboundVoiceChat_Header.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
-        AddChild(inboundVoiceChat_Header);
+        sleekScrollView.AddChild(inboundVoiceChat_Header);
         ISleekLabel sleekLabel4 = Glazier.Get().CreateLabel();
         sleekLabel4.PositionOffset_X = -190f;
         sleekLabel4.PositionOffset_Y = num + 20f;
@@ -239,7 +245,7 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
         sleekLabel4.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
         sleekLabel4.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
         sleekLabel4.Text = localization.format("InboundVoiceChat_Description");
-        AddChild(sleekLabel4);
+        sleekScrollView.AddChild(sleekLabel4);
         num += 60f;
         outboundVoiceChatToggle = Glazier.Get().CreateToggle();
         outboundVoiceChatToggle.PositionOffset_X = -240f;
@@ -248,7 +254,7 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
         outboundVoiceChatToggle.SizeOffset_X = 40f;
         outboundVoiceChatToggle.SizeOffset_Y = 40f;
         outboundVoiceChatToggle.OnValueChanged += OnOutboundVoiceChatToggled;
-        AddChild(outboundVoiceChatToggle);
+        sleekScrollView.AddChild(outboundVoiceChatToggle);
         outboundVoiceChat_Header = Glazier.Get().CreateLabel();
         outboundVoiceChat_Header.PositionOffset_X = -190f;
         outboundVoiceChat_Header.PositionOffset_Y = num - 10f;
@@ -257,7 +263,7 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
         outboundVoiceChat_Header.SizeOffset_Y = 30f;
         outboundVoiceChat_Header.TextAlignment = TextAnchor.LowerLeft;
         outboundVoiceChat_Header.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
-        AddChild(outboundVoiceChat_Header);
+        sleekScrollView.AddChild(outboundVoiceChat_Header);
         outboundVoiceChat_Description = Glazier.Get().CreateLabel();
         outboundVoiceChat_Description.PositionOffset_X = -190f;
         outboundVoiceChat_Description.PositionOffset_Y = num + 20f;
@@ -267,7 +273,7 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
         outboundVoiceChat_Description.TextAlignment = TextAnchor.UpperLeft;
         outboundVoiceChat_Description.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
         outboundVoiceChat_Description.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
-        AddChild(outboundVoiceChat_Description);
+        sleekScrollView.AddChild(outboundVoiceChat_Description);
         num += 60f;
         streamerModeToggle = Glazier.Get().CreateToggle();
         streamerModeToggle.PositionOffset_X = -240f;
@@ -276,7 +282,7 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
         streamerModeToggle.SizeOffset_X = 40f;
         streamerModeToggle.SizeOffset_Y = 40f;
         streamerModeToggle.OnValueChanged += OnStreamerModeToggled;
-        AddChild(streamerModeToggle);
+        sleekScrollView.AddChild(streamerModeToggle);
         streamerMode_Header = Glazier.Get().CreateLabel();
         streamerMode_Header.PositionOffset_X = -190f;
         streamerMode_Header.PositionOffset_Y = num - 10f;
@@ -285,7 +291,7 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
         streamerMode_Header.SizeOffset_Y = 30f;
         streamerMode_Header.TextAlignment = TextAnchor.LowerLeft;
         streamerMode_Header.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
-        AddChild(streamerMode_Header);
+        sleekScrollView.AddChild(streamerMode_Header);
         ISleekLabel sleekLabel5 = Glazier.Get().CreateLabel();
         sleekLabel5.PositionOffset_X = -190f;
         sleekLabel5.PositionOffset_Y = num + 20f;
@@ -296,8 +302,17 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
         sleekLabel5.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
         sleekLabel5.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
         sleekLabel5.Text = localization.format("StreamerMode_Description");
-        AddChild(sleekLabel5);
+        sleekScrollView.AddChild(sleekLabel5);
         num += 60f;
+        ISleekLabel sleekLabel6 = Glazier.Get().CreateLabel();
+        sleekLabel6.PositionOffset_Y = num;
+        sleekLabel6.SizeScale_X = 1f;
+        sleekLabel6.SizeOffset_Y = 30f;
+        sleekLabel6.Text = localization.format("OptionsNote");
+        sleekLabel6.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
+        sleekLabel6.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+        sleekScrollView.AddChild(sleekLabel6);
+        num += sleekLabel6.SizeOffset_Y + 10f;
         SleekButtonIcon sleekButtonIcon = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));
         sleekButtonIcon.PositionOffset_X = -205f;
         sleekButtonIcon.PositionOffset_Y = num;
@@ -309,7 +324,7 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
         sleekButtonIcon.onClickedButton += OnBackClicked;
         sleekButtonIcon.fontSize = ESleekFontSize.Medium;
         sleekButtonIcon.iconColor = ESleekTint.FOREGROUND;
-        AddChild(sleekButtonIcon);
+        sleekScrollView.AddChild(sleekButtonIcon);
         SleekButtonIcon sleekButtonIcon2 = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Play"));
         sleekButtonIcon2.PositionOffset_X = 5f;
         sleekButtonIcon2.PositionOffset_Y = num;
@@ -321,7 +336,7 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
         sleekButtonIcon2.onClickedButton += OnContinueClicked;
         sleekButtonIcon2.fontSize = ESleekFontSize.Medium;
         sleekButtonIcon2.iconColor = ESleekTint.FOREGROUND;
-        AddChild(sleekButtonIcon2);
+        sleekScrollView.AddChild(sleekButtonIcon2);
         num += 60f;
         dontShowAgainToggle = Glazier.Get().CreateToggle();
         dontShowAgainToggle.PositionOffset_X = 5f;
@@ -332,7 +347,9 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
         dontShowAgainToggle.AddLabel(localization.format("DontShowAgain_Label"), ESleekSide.RIGHT);
         dontShowAgainToggle.TooltipText = localization.format("DontShowAgain_Tooltip");
         dontShowAgainToggle.OnValueChanged += OnDontShowAgainToggled;
-        AddChild(dontShowAgainToggle);
+        sleekScrollView.AddChild(dontShowAgainToggle);
+        num += 50f;
+        sleekScrollView.ContentSizeOffset = new Vector2(0f, num - 10f);
         bundle.unload();
     }
 }

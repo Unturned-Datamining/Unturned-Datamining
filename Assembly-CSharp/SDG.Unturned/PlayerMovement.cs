@@ -49,8 +49,9 @@ public class PlayerMovement : PlayerCaller
     /// Jump speed = sqrt(2 * jump height * gravity)
     /// Jump height = (jump speed ^ 2) / (2 * gravity)
     /// With 7 speed and 9.81 * 3 gravity = apex height of 1.66496772
+    /// Nelson 2024-08-19: Increased slightly to boost jump height by ~10cm after floor snapping update.
     /// </summary>
-    private static readonly float JUMP = 7f;
+    private static readonly float JUMP = 7.2f;
 
     private static readonly float SWIM = 3f;
 
@@ -1103,7 +1104,16 @@ public class PlayerMovement : PlayerCaller
                         float num6 = hitInfo.distance - controller.skinWidth;
                         if (num6 > Mathf.Epsilon)
                         {
-                            base.transform.position += new Vector3(0f, 0f - num6, 0f);
+                            Vector3 normal = hitInfo.normal;
+                            float num7 = 59f;
+                            if (Level.info != null && Level.info.configData != null && Level.info.configData.Max_Walkable_Slope > -0.5f)
+                            {
+                                num7 = Level.info.configData.Max_Walkable_Slope;
+                            }
+                            if (Vector3.Angle(Vector3.up, normal) < num7)
+                            {
+                                base.transform.position += new Vector3(0f, 0f - num6, 0f);
+                            }
                         }
                     }
                 }
@@ -1116,27 +1126,27 @@ public class PlayerMovement : PlayerCaller
         if (Level.info != null && Level.info.configData.Use_Legacy_Clip_Borders)
         {
             Vector3 position2 = base.transform.position;
-            float num7 = (float)(int)Level.size / 2f - (float)(int)Level.border;
-            float num8 = num7 + 8f;
+            float num8 = (float)(int)Level.size / 2f - (float)(int)Level.border;
+            float num9 = num8 + 8f;
             bool flag4 = false;
-            if (position2.x > 0f - num8 && position2.x < 0f - num7)
+            if (position2.x > 0f - num9 && position2.x < 0f - num8)
             {
-                position2.x = 0f - num7 + 1f;
+                position2.x = 0f - num8 + 1f;
                 flag4 = true;
             }
-            else if (position2.x < num8 && position2.x > num7)
+            else if (position2.x < num9 && position2.x > num8)
             {
-                position2.x = num7 - 1f;
+                position2.x = num8 - 1f;
                 flag4 = true;
             }
-            if (position2.z > 0f - num8 && position2.z < 0f - num7)
+            if (position2.z > 0f - num9 && position2.z < 0f - num8)
             {
-                position2.z = 0f - num7 + 1f;
+                position2.z = 0f - num8 + 1f;
                 flag4 = true;
             }
-            else if (position2.z < num8 && position2.z > num7)
+            else if (position2.z < num9 && position2.z > num8)
             {
-                position2.z = num7 - 1f;
+                position2.z = num8 - 1f;
                 flag4 = true;
             }
             if (flag4)
@@ -1352,10 +1362,6 @@ public class PlayerMovement : PlayerCaller
             else
             {
                 base.player.first.position = Vector3.Lerp(lastUpdatePos, base.transform.position, (Time.realtimeSinceStartup - base.player.input.tick) / PlayerInput.RATE);
-                if (base.player.stance.stance == EPlayerStance.PRONE)
-                {
-                    base.player.first.position += Vector3.down * 0.1f;
-                }
                 base.player.third.position = base.player.first.position;
             }
             base.player.look.aim.parent.transform.position = base.player.first.position;

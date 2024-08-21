@@ -91,7 +91,7 @@ public class TempSteamworksMatchmaking
 
     private int serverListRefreshIndex = -1;
 
-    private IComparer<SteamServerAdvertisement> _serverInfoComparer = new ServerListComparer_PingAscending();
+    private IComparer<SteamServerAdvertisement> _serverInfoComparer = new ServerListComparer_UtilityScore();
 
     public ESteamServerList currentList => _currentList;
 
@@ -557,6 +557,7 @@ public class TempSteamworksMatchmaking
         }
         if (currentMaxPingFilter <= 0 || steamServerAdvertisement.ping <= currentMaxPingFilter)
         {
+            steamServerAdvertisement.CalculateUtilityScore();
             int num = serverList.BinarySearch(steamServerAdvertisement, serverInfoComparer);
             if (num < 0)
             {

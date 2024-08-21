@@ -18,6 +18,8 @@ public class SleekServer : SleekWrapper
 
     private ISleekBox maxPlayersBox;
 
+    private ISleekBox fullnessBox;
+
     private ISleekBox pingBox;
 
     private ISleekBox anticheatBox;
@@ -153,6 +155,17 @@ public class SleekServer : SleekWrapper
         else
         {
             passwordBox.IsVisible = false;
+        }
+        if (FilterSettings.columns.fullnessPercentage)
+        {
+            num -= fullnessBox.SizeOffset_X;
+            fullnessBox.PositionOffset_X = num;
+            fullnessBox.IsVisible = true;
+            num -= 0f;
+        }
+        else
+        {
+            fullnessBox.IsVisible = false;
         }
         if (FilterSettings.columns.maxPlayers)
         {
@@ -315,6 +328,12 @@ public class SleekServer : SleekWrapper
         maxPlayersBox.SizeOffset_X = 80f;
         maxPlayersBox.SizeScale_Y = 1f;
         maxPlayersBox.Text = info.maxPlayers.ToString();
+        fullnessBox = Glazier.Get().CreateBox();
+        fullnessBox.PositionScale_X = 1f;
+        fullnessBox.SizeOffset_X = 80f;
+        fullnessBox.SizeScale_Y = 1f;
+        fullnessBox.Text = info.NormalizedPlayerCount.ToString("P0");
+        fullnessBox.TooltipText = MenuPlayUI.serverListUI.localization.format("Server_Players", info.players, info.maxPlayers);
         pingBox = Glazier.Get().CreateBox();
         pingBox.PositionScale_X = 1f;
         pingBox.SizeOffset_X = 80f;
@@ -579,6 +598,7 @@ public class SleekServer : SleekWrapper
         AddChild(mapBox);
         AddChild(playersBox);
         AddChild(maxPlayersBox);
+        AddChild(fullnessBox);
         AddChild(pingBox);
         AddChild(anticheatBox);
         AddChild(perspectiveBox);

@@ -110,6 +110,8 @@ public class MenuConfigurationOptionsUI
 
     private static SleekColorPicker badColorPicker;
 
+    private static ISleekToggle dontShowOnlineSafetyMenuAgainToggle;
+
     public static void open()
     {
         if (!active)
@@ -340,6 +342,11 @@ public class MenuConfigurationOptionsUI
         OptionsSettings.badColor = color;
     }
 
+    private static void OnDontShowOnlineSafetyMenuAgainToggled(ISleekToggle toggle, bool value)
+    {
+        OptionsSettings.wantsToHideOnlineSafetyMenu = value;
+    }
+
     private static void onClickedBackButton(ISleekElement button)
     {
         if (Player.player != null)
@@ -405,6 +412,7 @@ public class MenuConfigurationOptionsUI
         fontColorPicker.state = OptionsSettings.fontColor;
         shadowColorPicker.state = OptionsSettings.shadowColor;
         badColorPicker.state = OptionsSettings.badColor;
+        dontShowOnlineSafetyMenuAgainToggle.Value = OptionsSettings.wantsToHideOnlineSafetyMenu;
     }
 
     public MenuConfigurationOptionsUI()
@@ -887,7 +895,16 @@ public class MenuConfigurationOptionsUI
         }
         optionsBox.AddChild(badColorPicker);
         num += badColorPicker.SizeOffset_Y;
-        optionsBox.ContentSizeOffset = new Vector2(0f, num);
+        dontShowOnlineSafetyMenuAgainToggle = Glazier.Get().CreateToggle();
+        dontShowOnlineSafetyMenuAgainToggle.PositionOffset_Y = num;
+        dontShowOnlineSafetyMenuAgainToggle.SizeOffset_X = 40f;
+        dontShowOnlineSafetyMenuAgainToggle.SizeOffset_Y = 40f;
+        dontShowOnlineSafetyMenuAgainToggle.AddLabel(localization.format("DontShowOnlineSafetyMenuAgain_Label"), ESleekSide.RIGHT);
+        dontShowOnlineSafetyMenuAgainToggle.TooltipText = localization.format("DontShowOnlineSafetyMenuAgain_Tooltip");
+        dontShowOnlineSafetyMenuAgainToggle.OnValueChanged += OnDontShowOnlineSafetyMenuAgainToggled;
+        optionsBox.AddChild(dontShowOnlineSafetyMenuAgainToggle);
+        num += 50f;
+        optionsBox.ContentSizeOffset = new Vector2(0f, num - 10f);
         backButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));
         backButton.PositionOffset_Y = -50f;
         backButton.PositionScale_Y = 1f;

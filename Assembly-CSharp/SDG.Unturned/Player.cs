@@ -456,13 +456,13 @@ public class Player : MonoBehaviour
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askBrowserRequest")]
     public void ReceiveBrowserRequest(string msg, string url)
     {
-        if (!WebUtils.ParseThirdPartyUrl(url, out var result))
+        if (!WebUtils.CanParseThirdPartyUrl(url))
         {
             UnturnedLog.warn("Ignoring potentially unsafe browser request \"{0}\" \"{1}\"", msg, url);
         }
         else if (PlayerUI.instance != null)
         {
-            PlayerUI.instance.browserRequestUI.open(msg, result);
+            PlayerUI.instance.browserRequestUI.open(msg, url);
             PlayerLifeUI.close();
         }
     }

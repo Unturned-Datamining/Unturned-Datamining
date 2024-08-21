@@ -250,6 +250,11 @@ MaxPlayers_Column_Tooltip Sort by max players.
 MaxPlayers_Column_Toggle_Label Max Players
 MaxPlayers_Column_Toggle_Tooltip Toggle max players column visibility.
 
+Fullness_Column_Label % Full
+Fullness_Column_Tooltip Sort by current players divided by max players.
+Fullness_Column_Toggle_Label Percent Full
+Fullness_Column_Toggle_Tooltip Toggle % full column visibility.
+
 Gold_Column_Tooltip Sort by whether the Permanent Gold Upgrade DLC is required.
 Gold_Column_Toggle_Label Gold
 Gold_Column_Toggle_Tooltip Toggle gold column visibility.

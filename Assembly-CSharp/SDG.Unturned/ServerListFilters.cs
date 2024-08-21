@@ -50,7 +50,7 @@ public class ServerListFilters
     /// <summary>
     /// If &gt;0, servers with ping higher than this will not be shown.
     /// </summary>
-    public int maxPing = 200;
+    public int maxPing = 300;
 
     public void GetLevels(List<LevelInfo> levels)
     {
@@ -163,10 +163,14 @@ public class ServerListFilters
         if (version >= 22)
         {
             maxPing = block.readInt32();
+            if (version < 24 && maxPing == 200)
+            {
+                maxPing = 300;
+            }
         }
         else
         {
-            maxPing = 200;
+            maxPing = 300;
         }
     }
 

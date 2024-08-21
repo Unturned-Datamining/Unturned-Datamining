@@ -49,6 +49,8 @@ public class MenuPlayServersUI : SleekFullscreenBox
 
     private ISleekButton maxPlayersColumnButton;
 
+    private ISleekButton fullnessColumnButton;
+
     private ISleekButton pingColumnButton;
 
     private ISleekButton anticheatColumnButton;
@@ -299,6 +301,18 @@ public class MenuPlayServersUI : SleekFullscreenBox
         }
     }
 
+    private void OnFullnessColumnClicked(ISleekElement button)
+    {
+        if (Provider.provider.matchmakingService.serverInfoComparer.GetType() == typeof(ServerListComparer_FullnessDefault))
+        {
+            Provider.provider.matchmakingService.sortMasterServer(new ServerListComparer_FullnessInverted());
+        }
+        else
+        {
+            Provider.provider.matchmakingService.sortMasterServer(new ServerListComparer_FullnessDefault());
+        }
+    }
+
     private void OnPingColumnClicked(ISleekElement button)
     {
         if (Provider.provider.matchmakingService.serverInfoComparer.GetType() == typeof(ServerListComparer_PingAscending))
@@ -521,6 +535,12 @@ public class MenuPlayServersUI : SleekFullscreenBox
     private void OnPluginsColumnToggled(ISleekToggle toggle, bool value)
     {
         FilterSettings.columns.plugins = value;
+        SynchronizeVisibleColumns();
+    }
+
+    private void OnFullnessColumnToggled(ISleekToggle toggle, bool value)
+    {
+        FilterSettings.columns.fullnessPercentage = value;
         SynchronizeVisibleColumns();
     }
 
@@ -1260,6 +1280,17 @@ public class MenuPlayServersUI : SleekFullscreenBox
         {
             passwordColumnButton.IsVisible = false;
         }
+        if (FilterSettings.columns.fullnessPercentage)
+        {
+            num -= fullnessColumnButton.SizeOffset_X;
+            fullnessColumnButton.PositionOffset_X = num;
+            fullnessColumnButton.IsVisible = true;
+            num -= 0f;
+        }
+        else
+        {
+            fullnessColumnButton.IsVisible = false;
+        }
         if (FilterSettings.columns.maxPlayers)
         {
             num -= maxPlayersColumnButton.SizeOffset_X;
@@ -1701,6 +1732,15 @@ public class MenuPlayServersUI : SleekFullscreenBox
         sleekToggle13.OnValueChanged += OnAnticheatColumnToggled;
         columnTogglesContainer.AddChild(sleekToggle13);
         num++;
+        ISleekToggle sleekToggle14 = Glazier.Get().CreateToggle();
+        sleekToggle14.PositionScale_X = (float)(num % 5) * 0.2f;
+        sleekToggle14.PositionOffset_Y = (float)(num / 5) * 40f;
+        sleekToggle14.Value = FilterSettings.columns.fullnessPercentage;
+        sleekToggle14.AddLabel(localization.format("Fullness_Column_Toggle_Label"), ESleekSide.RIGHT);
+        sleekToggle14.TooltipText = localization.format("Fullness_Column_Toggle_Tooltip");
+        sleekToggle14.OnValueChanged += OnFullnessColumnToggled;
+        columnTogglesContainer.AddChild(sleekToggle14);
+        num++;
         columnTogglesContainer.SizeOffset_Y = (float)((num - 1) / 5 + 1) * 40f;
         mainListContainer = Glazier.Get().CreateFrame();
         mainListContainer.SizeScale_X = 1f;
@@ -1837,6 +1877,15 @@ public class MenuPlayServersUI : SleekFullscreenBox
         maxPlayersColumnButton.TooltipText = localization.format("MaxPlayers_Column_Tooltip");
         maxPlayersColumnButton.OnClicked += OnMaxPlayersColumnClicked;
         mainListContainer.AddChild(maxPlayersColumnButton);
+        fullnessColumnButton = Glazier.Get().CreateButton();
+        fullnessColumnButton.PositionOffset_X = -150f;
+        fullnessColumnButton.PositionScale_X = 1f;
+        fullnessColumnButton.SizeOffset_X = 80f;
+        fullnessColumnButton.SizeOffset_Y = 40f;
+        fullnessColumnButton.Text = localization.format("Fullness_Column_Label");
+        fullnessColumnButton.TooltipText = localization.format("Fullness_Column_Tooltip");
+        fullnessColumnButton.OnClicked += OnFullnessColumnClicked;
+        mainListContainer.AddChild(fullnessColumnButton);
         pingColumnButton = Glazier.Get().CreateButton();
         pingColumnButton.PositionOffset_X = -80f;
         pingColumnButton.PositionScale_X = 1f;

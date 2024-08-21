@@ -544,6 +544,7 @@ public class OptionsSettings
         badColor = Palette.COLOR_R;
         _voiceAlwaysRecording = false;
         shouldNametagFadeOut = true;
+        wantsToHideOnlineSafetyMenu = false;
     }
 
     public static void load()

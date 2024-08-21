@@ -33,7 +33,12 @@ public static class FilterSettings
 
         public bool plugins;
 
-        public void Read(Block block)
+        /// <summary>
+        /// % Full
+        /// </summary>
+        public bool fullnessPercentage;
+
+        public void Read(byte version, Block block)
         {
             map = block.readBoolean();
             players = block.readBoolean();
@@ -48,6 +53,14 @@ public static class FilterSettings
             cheats = block.readBoolean();
             monetization = block.readBoolean();
             plugins = block.readBoolean();
+            if (version >= 23)
+            {
+                fullnessPercentage = block.readBoolean();
+            }
+            else
+            {
+                fullnessPercentage = false;
+            }
         }
 
         public void Write(Block block)
@@ -65,6 +78,7 @@ public static class FilterSettings
             block.writeBoolean(cheats);
             block.writeBoolean(monetization);
             block.writeBoolean(plugins);
+            block.writeBoolean(fullnessPercentage);
         }
     }
 
@@ -171,11 +185,15 @@ public static class FilterSettings
 
     public const byte SAVEDATA_VERSION_MAX_PING = 22;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 22;
+    public const byte SAVEDATA_VERSION_ADDED_FULLNESS_COLUMN = 23;
+
+    public const byte SAVEDATA_VERSION_INCREASED_DEFAULT_MAX_PING = 24;
+
+    private const byte SAVEDATA_VERSION_NEWEST = 24;
 
     public static readonly byte SAVEDATA_VERSION;
 
-    public const int DEFAULT_MAX_PING = 200;
+    public const int DEFAULT_MAX_PING = 300;
 
     public static ServerListFilters activeFilters;
 
@@ -412,10 +430,14 @@ public static class FilterSettings
                     if (b >= 22)
                     {
                         activeFilters.maxPing = block.readInt32();
+                        if (b < 24 && activeFilters.maxPing == 200)
+                        {
+                            activeFilters.maxPing = 300;
+                        }
                     }
                     else
                     {
-                        activeFilters.maxPing = 200;
+                        activeFilters.maxPing = 300;
                     }
                     if (b >= 17)
                     {
@@ -434,7 +456,7 @@ public static class FilterSettings
                     }
                     if (b >= 18)
                     {
-                        columns.Read(block);
+                        columns.Read(b, block);
                     }
                     if (b >= 19)
                     {
@@ -467,7 +489,7 @@ public static class FilterSettings
     public static void save()
     {
         Block block = new Block();
-        block.writeByte(22);
+        block.writeByte(24);
         activeFilters.Write(block);
         block.writeInt32(nextCustomPresetId);
         block.writeInt32(customPresets.Count);
@@ -486,7 +508,7 @@ public static class FilterSettings
 
     static FilterSettings()
     {
-        SAVEDATA_VERSION = 22;
+        SAVEDATA_VERSION = 24;
         activeFilters = new ServerListFilters();
         customPresets = new List<ServerListFilters>();
         nextCustomPresetId = 1;
@@ -506,6 +528,7 @@ public static class FilterSettings
         defaultPresetLAN.cheats = ECheats.ANY;
         defaultPresetLAN.attendance = EAttendance.Any;
         defaultPresetLAN.notFull = false;
+        defaultPresetLAN.maxPing = 0;
         defaultPresetHistory.presetId = -4;
         defaultPresetHistory.listSource = ESteamServerList.HISTORY;
         defaultPresetHistory.password = EPassword.ANY;
@@ -514,6 +537,7 @@ public static class FilterSettings
         defaultPresetHistory.cheats = ECheats.ANY;
         defaultPresetHistory.attendance = EAttendance.Any;
         defaultPresetHistory.notFull = false;
+        defaultPresetHistory.maxPing = 0;
         defaultPresetFavorites.presetId = -5;
         defaultPresetFavorites.listSource = ESteamServerList.FAVORITES;
         defaultPresetFavorites.password = EPassword.ANY;
@@ -522,6 +546,7 @@ public static class FilterSettings
         defaultPresetFavorites.cheats = ECheats.ANY;
         defaultPresetFavorites.attendance = EAttendance.Any;
         defaultPresetFavorites.notFull = false;
+        defaultPresetFavorites.maxPing = 0;
         defaultPresetFriends.presetId = -6;
         defaultPresetFriends.listSource = ESteamServerList.FRIENDS;
         defaultPresetFriends.password = EPassword.ANY;
@@ -530,5 +555,6 @@ public static class FilterSettings
         defaultPresetFriends.cheats = ECheats.ANY;
         defaultPresetFriends.attendance = EAttendance.Any;
         defaultPresetFriends.notFull = false;
+        defaultPresetFriends.maxPing = 0;
     }
 }

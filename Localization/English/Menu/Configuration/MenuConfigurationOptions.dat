@@ -72,3 +72,6 @@ Foreground_Box Interface Foreground Color
 Font_Box Font Color
 Shadow_Box Shadow Color
 Bad_Color_Box Negative Color
+
+DontShowOnlineSafetyMenuAgain_Label Don't show Online Safety menu again
+DontShowOnlineSafetyMenuAgain_Tooltip If checked, the Online Safety menu won't be shown the next time you open multiplayer. (Unless you haven't opened it before.)

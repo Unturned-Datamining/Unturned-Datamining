@@ -68,7 +68,15 @@ public class SteamServerAdvertisement
 
     private bool _isPro;
 
+    internal float utilityScore;
+
     internal EInfoSource infoSource;
+
+    private static AnimationCurve pingCurve = new AnimationCurve(new Keyframe(50f, 1f), new Keyframe(100f, 0.6f), new Keyframe(300f, 0.3f), new Keyframe(900f, 0.1f));
+
+    private static AnimationCurve fullnessCurve = new AnimationCurve(new Keyframe(0f, 0.1f), new Keyframe(0.5f, 0.8f), new Keyframe(0.75f, 1f), new Keyframe(1f, 0.8f));
+
+    private static AnimationCurve playerCountCurve = new AnimationCurve(new Keyframe(2f, 0.1f), new Keyframe(18f, 0.8f), new Keyframe(64f, 1f));
 
     internal EHostBanFlags hostBanFlags;
 
@@ -121,11 +129,63 @@ public class SteamServerAdvertisement
     public string descText { get; protected set; }
 
     /// <summary>
+    /// Active player count divided by max player count.
+    /// </summary>
+    internal float NormalizedPlayerCount
+    {
+        get
+        {
+            if (_maxPlayers <= 0)
+            {
+                return 0f;
+            }
+            return Mathf.Clamp01((float)_players / (float)_maxPlayers);
+        }
+    }
+
+    /// <summary>
+    /// Nelson 2024-08-20: This score is intended to prioritize low ping without making it the be-all end-all. The
+    /// old default of sorting by ping could put near-empty servers at the top of the list, and encouraged using
+    /// anycast caching to make the server appear as low-ping as possible.
+    /// </summary>
+    private float PingUtilityScore => pingCurve.Evaluate(sortingPing);
+
+    /// <summary>
+    /// Nelson 2024-08-20: This score is intended to prioritize servers around 75% capacity. My thought process is
+    /// that near-empty and near-full servers are already easy to find, but typically if you want to play online you
+    /// want a server with space for you and your friends. Unfortunately, servers with plenty of players but an even
+    /// higher max players make a 50% score plenty good.
+    /// </summary>
+    private float FullnessUtilityScore
+    {
+        get
+        {
+            int num = Mathf.Clamp(_maxPlayers, 1, 100);
+            float time = Mathf.Clamp01((float)_players / (float)num);
+            return fullnessCurve.Evaluate(time);
+        }
+    }
+
+    /// <summary>
+    /// Nelson 2024-08-20: This score is intended to balance out the downside of the fullness score decreasing for
+    /// servers with very high max player counts, and over-scoring servers with low max players.
+    /// </summary>
+    private float PlayerCountUtilityScore => playerCountCurve.Evaluate(_players);
+
+    /// <summary>
     /// Probably just checks whether IP is link-local, but may as well use Steam's utility function.
     /// </summary>
     public bool IsAddressUsingSteamFakeIP()
     {
         return SteamNetworkingUtils.IsFakeIPv4(ip);
+    }
+
+    /// <summary>
+    /// Called before inserting to server list.
+    /// </summary>
+    internal void CalculateUtilityScore()
+    {
+        utilityScore = PingUtilityScore * FullnessUtilityScore * PlayerCountUtilityScore;
     }
 
     /// <summary>

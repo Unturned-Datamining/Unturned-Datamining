@@ -10,6 +10,10 @@ internal class PlayerBrowserRequestUI : SleekFullscreenBox
 
     private ISleekButton noButton;
 
+    /// <summary>
+    /// Nelson 2024-08-19: This link has been checked with WebUtils.CanParseThirdPartyUrl, but is not the
+    /// potentially altered link to go through Steam's link filter. This way the UI shows the original link.
+    /// </summary>
     private string url;
 
     public bool isActive { get; private set; }
@@ -39,7 +43,14 @@ internal class PlayerBrowserRequestUI : SleekFullscreenBox
     {
         if (!string.IsNullOrEmpty(url) && Provider.provider.browserService.canOpenBrowser)
         {
-            Provider.provider.browserService.open(url);
+            if (WebUtils.ParseThirdPartyUrl(url, out var result))
+            {
+                Provider.provider.browserService.open(result);
+            }
+            else
+            {
+                UnturnedLog.error("Ignoring potentially unsafe browser request URL \"" + url + "\" (Error: Prompt shouldn't have been displayed if this is the case?)");
+            }
         }
         PlayerLifeUI.open();
         close();

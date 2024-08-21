@@ -53,4 +53,10 @@ internal class GlazierToggle_IMGUI : GlazierElementBase_IMGUI, ISleekToggle, ISl
         Value = flag;
         ChildrenOnGUI();
     }
+
+    public GlazierToggle_IMGUI()
+    {
+        base.SizeOffset_X = 40f;
+        base.SizeOffset_Y = 40f;
+    }
 }
