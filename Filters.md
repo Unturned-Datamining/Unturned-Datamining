@@ -6,6 +6,7 @@
 | 194.147.90.86   | HiddenFromInternetServerList |
 | 37.230.210.234  | HiddenFromInternetServerList |
 | 195.140.147.193 | HiddenFromInternetServerList |
+| 85.215.57.110   | HiddenFromInternetServerList |
 
 ## Name filters
 | Regex                                                                                 | BanFlags                          |
@@ -16,6 +17,7 @@
 | (?i)(no\s*-*\s*lag)                                                                   | HiddenFromInternetServerList      |
 | (?i)(DWS)                                                                             | HiddenFromInternetServerList      |
 | (?i)(Debalcevo)                                                                       | HiddenFromInternetServerList      |
+| (?i)(Takistan 1942)                                                                   | HiddenFromInternetServerList      |
 
 ## Description filters
 | Regex | BanFlags |
@@ -33,3 +35,4 @@
 | 85568392927283679 | HiddenFromInternetServerList |
 | 85568392927159806 | HiddenFromInternetServerList |
 | 85568392931810335 | HiddenFromInternetServerList |
+| 85568392931954075 | HiddenFromInternetServerList |
