@@ -15,7 +15,6 @@
 | (?i)(Auschwitz&#124;Nazi&#124;Nazista&#124;Anti-Negro&#124;Anti-Jew&#124;Anti-Judeus) | HiddenFromAllServerLists, Blocked |
 | (?i)(nigger)                                                                          | HiddenFromAllServerLists, Blocked |
 | (?i)(no\s*-*\s*lag)                                                                   | HiddenFromInternetServerList      |
-| (?i)(P9nda)                                                                           | QueryPingWarning                  |
 | (?i)(DWS)                                                                             | HiddenFromInternetServerList      |
 | (?i)(Debalcevo)                                                                       | HiddenFromInternetServerList      |
 | (?i)(Takistan 1942)                                                                   | HiddenFromInternetServerList      |
