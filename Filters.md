@@ -18,6 +18,7 @@
 | (?i)(DWS)                                                                             | HiddenFromInternetServerList      |
 | (?i)(Debalcevo)                                                                       | HiddenFromInternetServerList      |
 | (?i)(Takistan 1942)                                                                   | HiddenFromInternetServerList      |
+| (?i)(BEBRO)                                                                           | HiddenFromInternetServerList      |
 
 ## Description filters
 | Regex | BanFlags |
@@ -36,3 +37,5 @@
 | 85568392927159806 | HiddenFromInternetServerList |
 | 85568392931810335 | HiddenFromInternetServerList |
 | 85568392931954075 | HiddenFromInternetServerList |
+| 85568392932390889 | HiddenFromInternetServerList |
+| 85568392932384567 | HiddenFromInternetServerList |
