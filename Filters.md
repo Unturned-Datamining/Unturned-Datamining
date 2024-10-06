@@ -7,6 +7,7 @@
 | 37.230.210.234  | HiddenFromInternetServerList |
 | 195.140.147.193 | HiddenFromInternetServerList |
 | 85.215.57.110   | HiddenFromInternetServerList |
+| 46.174.51.182   | HiddenFromInternetServerList |
 
 ## Name filters
 | Regex                                                                                 | BanFlags                          |
@@ -30,6 +31,7 @@
 | ------------------------------------------------- | --------------------------------------------------------------------------------------------------- | ---------------------------- |
 | (https://r.resimlink.com/GXZ0gP2.jpg)             | ![https://r.resimlink.com/GXZ0gP2.jpg](https://r.resimlink.com/GXZ0gP2.jpg)                         | HiddenFromInternetServerList |
 | (https://gspics.org/images/2022/10/12/0WIOTm.png) | ![https://gspics.org/images/2022/10/12/0WIOTm.png](https://gspics.org/images/2022/10/12/0WIOTm.png) | HiddenFromInternetServerList |
+| (?i)(https://imgur.com/Bzo2gJY.png)               | ![https://imgur.com/Bzo2gJY.png](https://imgur.com/Bzo2gJY.png)                                     | HiddenFromInternetServerList |
 
 ## SteamId filters
 | SteamId           | BanFlags                     |
@@ -41,3 +43,4 @@
 | 85568392932390889 | HiddenFromInternetServerList |
 | 85568392932384567 | HiddenFromInternetServerList |
 | 85568392932486552 | HiddenFromInternetServerList |
+| 85568392932492857 | HiddenFromInternetServerList |
