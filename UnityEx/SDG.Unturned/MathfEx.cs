@@ -180,6 +180,11 @@ public static class MathfEx
         return (byte)Mathf.Clamp(value, 0, 255);
     }
 
+    public static short ClampToShort(int value)
+    {
+        return (short)Mathf.Clamp(value, -32768, 32767);
+    }
+
     public static ushort ClampToUShort(int value)
     {
         return (ushort)Mathf.Clamp(value, 0, 65535);

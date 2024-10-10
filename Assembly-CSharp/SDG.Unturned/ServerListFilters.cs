@@ -24,12 +24,18 @@ public class ServerListFilters
 
     public EPlugins plugins = EPlugins.ANY;
 
-    public EAttendance attendance = EAttendance.HasPlayers;
+    /// <summary>
+    /// Nelson 2024-09-20: Changing default to any (from has players) because the default server list sort will now
+    /// push empty servers to the bottom.
+    /// </summary>
+    public EAttendance attendance = EAttendance.Any;
 
     /// <summary>
     /// If true, only servers with available player slots are shown.
+    /// Nelson 2024-09-20: Changing default to false because the default server list sort will now push them down
+    /// from the top a little bit.
     /// </summary>
-    public bool notFull = true;
+    public bool notFull;
 
     public EVACProtectionFilter vacProtection;
 

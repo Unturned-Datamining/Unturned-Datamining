@@ -67,26 +67,31 @@ public class DeadzoneVolume : LevelVolume<DeadzoneVolume, DeadzoneVolumeManager>
         private void OnSwappedState(SleekButtonState button, int state)
         {
             volume.DeadzoneType = (EDeadzoneType)state;
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnUnprotectedDamageChanged(ISleekFloat32Field field, float value)
         {
             volume.UnprotectedDamagePerSecond = value;
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnProtectedDamageChanged(ISleekFloat32Field field, float value)
         {
             volume.ProtectedDamagePerSecond = value;
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnUnprotectedRadiationChanged(ISleekFloat32Field field, float value)
         {
             volume.UnprotectedRadiationPerSecond = value;
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnMaskFilterDamageChanged(ISleekFloat32Field field, float value)
         {
             volume.MaskFilterDamagePerSecond = value;
+            LevelHierarchy.MarkDirty();
         }
     }
 

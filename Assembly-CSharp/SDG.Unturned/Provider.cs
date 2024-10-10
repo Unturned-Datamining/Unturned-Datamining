@@ -966,7 +966,6 @@ public class Provider : MonoBehaviour
 
     /// <summary>
     /// Number of seconds since January 1st, 1970 GMT as reported by backend servers.
-    /// Used by holiday events to keep timing somewhat synced between players.
     /// </summary>
     public static uint backendRealtimeSeconds
     {
@@ -1695,7 +1694,7 @@ public class Provider : MonoBehaviour
 
     internal static NetId ClaimNetIdBlockForNewPlayer()
     {
-        return NetIdRegistry.ClaimBlock(16u);
+        return NetIdRegistry.ClaimBlock(17u);
     }
 
     internal static SteamPlayer addPlayer(ITransportConnection transportConnection, NetId netId, SteamPlayerID playerID, Vector3 point, byte angle, bool isPro, bool isAdmin, int channel, byte face, byte hair, byte beard, Color skin, Color color, Color markerColor, bool hand, int shirtItem, int pantsItem, int hatItem, int backpackItem, int vestItem, int maskItem, int glassesItem, int[] skinItems, string[] skinTags, string[] skinDynamicProps, EPlayerSkillset skillset, string language, CSteamID lobbyID, EClientPlatform clientPlatform)
@@ -1757,6 +1756,7 @@ public class Provider : MonoBehaviour
         steamPlayer.player.ReleaseNetIdBlock();
         if (steamPlayer.model != null)
         {
+            EffectManager.ClearAttachments(steamPlayer.model);
             UnityEngine.Object.Destroy(steamPlayer.model.gameObject);
         }
         NetIdRegistry.Release(steamPlayer.GetNetId());
@@ -2351,7 +2351,7 @@ public class Provider : MonoBehaviour
             _modeConfigData = new ModeConfigData(mode);
             _modeConfigData.InitSingleplayerDefaults();
         }
-        authorityHoliday = (_modeConfigData.Gameplay.Allow_Holidays ? HolidayUtil.BackendGetActiveHoliday() : ENPCHoliday.NONE);
+        authorityHoliday = (_modeConfigData.Gameplay.Allow_Holidays ? HolidayUtil.GetScheduledHoliday() : ENPCHoliday.NONE);
         _isServer = true;
         _isClient = true;
         PhysicsMaterialNetTable.ServerPopulateTable();
@@ -2482,7 +2482,7 @@ public class Provider : MonoBehaviour
         onClientDisconnected?.Invoke();
         if (!isApplicationQuitting)
         {
-            authorityHoliday = HolidayUtil.BackendGetActiveHoliday();
+            authorityHoliday = HolidayUtil.GetScheduledHoliday();
             Level.exit();
         }
         Assets.ClearServerAssetMapping();
@@ -4029,6 +4029,8 @@ public class Provider : MonoBehaviour
             writer.WriteBit(modeConfigData.Gameplay.Bypass_Buildable_Mobility);
             writer.WriteBit(modeConfigData.Gameplay.Allow_Freeform_Buildables);
             writer.WriteBit(modeConfigData.Gameplay.Allow_Freeform_Buildables_On_Vehicles);
+            writer.WriteBit(modeConfigData.Gameplay.Enable_Damage_Flinch);
+            writer.WriteBit(modeConfigData.Gameplay.Enable_Explosion_Camera_Shake);
             writer.WriteUInt16((ushort)modeConfigData.Gameplay.Timer_Exit);
             writer.WriteUInt16((ushort)modeConfigData.Gameplay.Timer_Respawn);
             writer.WriteUInt16((ushort)modeConfigData.Gameplay.Timer_Home);
@@ -4398,7 +4400,7 @@ public class Provider : MonoBehaviour
         UnturnedLog.info("Initializing {0}", serverTransport.GetType().Name);
         serverTransport.Initialize(OnServerTransportConnectionFailure);
         backendRealtimeSeconds = SteamGameServerUtils.GetServerRealTime();
-        authorityHoliday = (_modeConfigData.Gameplay.Allow_Holidays ? HolidayUtil.BackendGetActiveHoliday() : ENPCHoliday.NONE);
+        authorityHoliday = (_modeConfigData.Gameplay.Allow_Holidays ? HolidayUtil.GetScheduledHoliday() : ENPCHoliday.NONE);
         if (flag)
         {
             CommandWindow.Log("Waiting for Steam servers...");
@@ -5033,7 +5035,7 @@ public class Provider : MonoBehaviour
         {
             _statusData = new StatusData();
         }
-        HolidayUtil.scheduleHolidays(statusData.Holidays);
+        HolidayUtil.scheduleHolidays();
         APP_VERSION = statusData.Game.FormatApplicationVersion();
         APP_VERSION_PACKED = Parser.getUInt32FromIP(APP_VERSION);
         if (isInitialized)
@@ -5184,7 +5186,7 @@ public class Provider : MonoBehaviour
             return;
         }
         backendRealtimeSeconds = SteamUtils.GetServerRealTime();
-        authorityHoliday = HolidayUtil.BackendGetActiveHoliday();
+        authorityHoliday = HolidayUtil.GetScheduledHoliday();
         apiWarningMessageHook = onAPIWarningMessage;
         SteamUtils.SetWarningMessageHook(apiWarningMessageHook);
         screenshotRequestedCallback = Callback<ScreenshotRequested_t>.Create(OnSteamScreenshotRequested);

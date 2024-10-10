@@ -23,7 +23,7 @@ Explosion 34
 Explosive
 Sticky
 
-Blueprints 1
+Blueprints 2
 Blueprint_0_Type Tool
 Blueprint_0_Supplies 4
 Blueprint_0_Supply_0_ID 70
@@ -37,3 +37,12 @@ Blueprint_0_Supply_3_Amount 1
 Blueprint_0_Level 2
 Blueprint_0_Skill Craft
 Blueprint_0_Build 32
+Blueprint_1_Type Tool
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID this
+Blueprint_1_Supply_0_Amount 1
+Blueprint_1_Product "73" // Explosives
+Blueprint_1_Products 1
+Blueprint_1_Level 2
+Blueprint_1_Skill Craft
+Blueprint_1_Build 27

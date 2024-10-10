@@ -1805,18 +1805,6 @@ public class LevelLighting
         {
             lastSkyboxReflectionUpdate = Time.time;
             skyboxNeedsReflectionUpdate = false;
-            if (vision != ELightingVision.CIVILIAN && vision != ELightingVision.MILITARY && !localBlendingLight)
-            {
-                if (Provider.preferenceData != null && Provider.preferenceData.Graphics.Use_Skybox_Ambience)
-                {
-                    RenderSettings.ambientMode = AmbientMode.Skybox;
-                    DynamicGI.UpdateEnvironment();
-                }
-                else
-                {
-                    RenderSettings.ambientMode = AmbientMode.Trilight;
-                }
-            }
             isReflectionBuilding = true;
             isReflectionBuildingVision = true;
         }

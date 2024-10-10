@@ -70,22 +70,46 @@ public class SaveManager : SteamCaller
 
     private static void onServerShutdown()
     {
-        if (Provider.isServer && Level.isLoaded)
+        if (!Provider.isServer || !Level.isLoaded)
         {
-            UnturnedLog.info("Saving during server shutdown");
-            save();
+            return;
         }
+        foreach (SteamPlayer client in Provider.clients)
+        {
+            if (client != null && client.player != null)
+            {
+                try
+                {
+                    client.player.quests.InterruptDelayedQuestRewards(EDelayedQuestRewardsInterruption.Shutdown);
+                }
+                catch (Exception e)
+                {
+                    UnturnedLog.exception(e, "Caught exception interrupting delayed quest rewards during shutdown:");
+                }
+            }
+        }
+        UnturnedLog.info("Saving during server shutdown");
+        save();
     }
 
     private static void onServerDisconnected(CSteamID steamID)
     {
-        if (Provider.isServer && Level.isLoaded)
+        if (!Provider.isServer || !Level.isLoaded)
         {
-            Player player = PlayerTool.getPlayer(steamID);
-            if (player != null)
+            return;
+        }
+        Player player = PlayerTool.getPlayer(steamID);
+        if (player != null)
+        {
+            try
             {
-                player.save();
+                player.quests.InterruptDelayedQuestRewards(EDelayedQuestRewardsInterruption.Disconnection);
             }
+            catch (Exception e)
+            {
+                UnturnedLog.exception(e, "Caught exception interrupting delayed quest rewards during disconnect:");
+            }
+            player.save();
         }
     }
 

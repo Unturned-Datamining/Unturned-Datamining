@@ -26,7 +26,7 @@ public class PlayerLifeUI
 
     public static bool gesturing;
 
-    public static InteractableObjectNPC npc;
+    public static IDialogueTarget npc;
 
     public static bool isVoteMessaged;
 
@@ -227,7 +227,7 @@ public class PlayerLifeUI
             active = true;
             if (npc != null)
             {
-                npc.OnStoppedTalkingWithLocalPlayer();
+                npc.SetIsTalkingWithLocalPlayer(isTalkingWithLocalPlayer: false);
                 npc = null;
             }
             container.AnimateIntoView();

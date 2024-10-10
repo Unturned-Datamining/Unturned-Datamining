@@ -13,8 +13,6 @@ Reward_XP 6
 Reset 750
 
 Auto_Skybox
-SpeedTree
-SpeedTree_Default_LOD_Weights
 
 Holiday_Restriction CHRISTMAS
 Bundle_Override_Path /Trees/Ornament_0

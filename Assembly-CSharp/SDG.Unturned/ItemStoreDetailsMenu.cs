@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -12,6 +13,10 @@ internal class ItemStoreDetailsMenu : SleekFullscreenBox
     private ItemStore.Listing listing;
 
     private int quantityInCart;
+
+    private ISleekElement actionsFrame;
+
+    private ISleekElement lowerBox;
 
     private ISleekLabel nameLabel;
 
@@ -31,6 +36,10 @@ internal class ItemStoreDetailsMenu : SleekFullscreenBox
 
     private ISleekButton decrementQuantityButton;
 
+    private ISleekButton inspectButton;
+
+    private ISleekButton inspectContainedItemsButton;
+
     /// <summary>
     /// Only visible when cart is not empty.
     /// </summary>
@@ -44,6 +53,32 @@ internal class ItemStoreDetailsMenu : SleekFullscreenBox
         AnimateIntoView();
         this.listing = listing;
         quantityInCart = ItemStore.Get().GetQuantityInCart(listing.itemdefid);
+        bool flag = Provider.provider.economyService.getInventorySkinID(listing.itemdefid) > 0;
+        if (!flag)
+        {
+            Asset asset = Assets.find(Provider.provider.economyService.getInventoryItemGuid(listing.itemdefid));
+            if (asset != null)
+            {
+                flag = asset is VehicleAsset || asset is ItemClothingAsset;
+            }
+        }
+        inspectButton.IsVisible = flag;
+        List<int> bundleContents = Provider.provider.economyService.GetBundleContents(listing.itemdefid);
+        inspectContainedItemsButton.IsVisible = bundleContents != null;
+        float num = 55f;
+        if (inspectButton.IsVisible)
+        {
+            inspectButton.PositionOffset_Y = num;
+            num += inspectButton.SizeOffset_Y + 5f;
+        }
+        if (inspectContainedItemsButton.IsVisible)
+        {
+            inspectContainedItemsButton.PositionOffset_Y = num;
+            num += inspectContainedItemsButton.SizeOffset_Y + 5f;
+        }
+        actionsFrame.SizeOffset_Y = num - 5f;
+        lowerBox.PositionOffset_Y = actionsFrame.SizeOffset_Y - 20f;
+        lowerBox.SizeOffset_Y = 0f - lowerBox.PositionOffset_Y;
         iconImage.SetItemDefId(listing.itemdefid);
         Color inventoryColor = Provider.provider.economyService.getInventoryColor(listing.itemdefid);
         nameLabel.TextColor = inventoryColor;
@@ -52,6 +87,12 @@ internal class ItemStoreDetailsMenu : SleekFullscreenBox
         string inventoryDescription = Provider.provider.economyService.getInventoryDescription(listing.itemdefid);
         descriptionLabel.Text = RichTextUtil.wrapWithColor(inventoryType, inventoryColor) + "\n\n" + inventoryDescription;
         RefreshQuantity();
+    }
+
+    public void OpenCurrentListing()
+    {
+        IsOpen = true;
+        AnimateIntoView();
     }
 
     public void Close()
@@ -106,40 +147,40 @@ internal class ItemStoreDetailsMenu : SleekFullscreenBox
         nameLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
         nameLabel.FontSize = ESleekFontSize.Large;
         sleekBox.AddChild(nameLabel);
-        ISleekElement sleekElement2 = Glazier.Get().CreateFrame();
-        sleekElement2.PositionOffset_Y = -25f;
-        sleekElement2.PositionScale_Y = 0.4f;
-        sleekElement2.SizeOffset_Y = 50f;
-        sleekElement2.SizeScale_X = 1f;
-        sleekElement.AddChild(sleekElement2);
+        actionsFrame = Glazier.Get().CreateFrame();
+        actionsFrame.PositionOffset_Y = -25f;
+        actionsFrame.PositionScale_Y = 0.4f;
+        actionsFrame.SizeOffset_Y = 100f;
+        actionsFrame.SizeScale_X = 1f;
+        sleekElement.AddChild(actionsFrame);
         priceBox = new SleekItemStorePriceBox();
         priceBox.PositionScale_X = 0.75f;
         priceBox.SizeScale_X = 0.25f;
-        priceBox.SizeScale_Y = 1f;
-        sleekElement2.AddChild(priceBox);
+        priceBox.SizeOffset_Y = 50f;
+        actionsFrame.AddChild(priceBox);
         addToCartButton = Glazier.Get().CreateButton();
         addToCartButton.SizeScale_X = 0.75f;
-        addToCartButton.SizeScale_Y = 1f;
+        addToCartButton.SizeOffset_Y = 50f;
         addToCartButton.FontSize = ESleekFontSize.Medium;
         addToCartButton.Text = localization.format("AddToCart_Label");
         addToCartButton.TooltipText = localization.format("AddToCart_Tooltip");
         addToCartButton.OnClicked += OnClickedAddToCart;
-        sleekElement2.AddChild(addToCartButton);
+        actionsFrame.AddChild(addToCartButton);
         removeFromCartButton = Glazier.Get().CreateButton();
         removeFromCartButton.SizeScale_X = 0.5f;
-        removeFromCartButton.SizeScale_Y = 1f;
+        removeFromCartButton.SizeOffset_Y = 50f;
         removeFromCartButton.FontSize = ESleekFontSize.Medium;
         removeFromCartButton.Text = localization.format("RemoveFromCart_Label");
         removeFromCartButton.TooltipText = localization.format("RemoveFromCart_Tooltip");
         removeFromCartButton.OnClicked += OnClickedRemoveFromCart;
-        sleekElement2.AddChild(removeFromCartButton);
+        actionsFrame.AddChild(removeFromCartButton);
         quantityField = Glazier.Get().CreateInt32Field();
         quantityField.PositionScale_X = 0.5f;
         quantityField.SizeScale_X = 0.25f;
         quantityField.SizeOffset_X = -25f;
-        quantityField.SizeScale_Y = 1f;
+        quantityField.SizeOffset_Y = 50f;
         quantityField.OnValueChanged += OnTypedQuantity;
-        sleekElement2.AddChild(quantityField);
+        actionsFrame.AddChild(quantityField);
         incrementQuantityButton = Glazier.Get().CreateButton();
         incrementQuantityButton.PositionScale_X = 0.75f;
         incrementQuantityButton.PositionOffset_X = -25f;
@@ -148,7 +189,7 @@ internal class ItemStoreDetailsMenu : SleekFullscreenBox
         incrementQuantityButton.FontSize = ESleekFontSize.Medium;
         incrementQuantityButton.Text = "+";
         incrementQuantityButton.OnClicked += OnClickedIncrementQuantity;
-        sleekElement2.AddChild(incrementQuantityButton);
+        actionsFrame.AddChild(incrementQuantityButton);
         decrementQuantityButton = Glazier.Get().CreateButton();
         decrementQuantityButton.PositionScale_X = 0.75f;
         decrementQuantityButton.PositionOffset_X = -25f;
@@ -158,14 +199,32 @@ internal class ItemStoreDetailsMenu : SleekFullscreenBox
         decrementQuantityButton.FontSize = ESleekFontSize.Medium;
         decrementQuantityButton.Text = "-";
         decrementQuantityButton.OnClicked += OnClickedDecrementQuantity;
-        sleekElement2.AddChild(decrementQuantityButton);
-        ISleekBox sleekBox2 = Glazier.Get().CreateBox();
-        sleekBox2.PositionScale_Y = 0.4f;
-        sleekBox2.PositionOffset_Y = 30f;
-        sleekBox2.SizeOffset_Y = -30f;
-        sleekBox2.SizeScale_X = 1f;
-        sleekBox2.SizeScale_Y = 0.6f;
-        sleekElement.AddChild(sleekBox2);
+        actionsFrame.AddChild(decrementQuantityButton);
+        inspectButton = Glazier.Get().CreateButton();
+        inspectButton.PositionOffset_Y = 55f;
+        inspectButton.SizeScale_X = 1f;
+        inspectButton.SizeOffset_Y = 50f;
+        inspectButton.Text = MenuSurvivorsClothingItemUI.localization.format("Inspect_Text");
+        inspectButton.TooltipText = MenuSurvivorsClothingItemUI.localization.format("Inspect_Tooltip");
+        inspectButton.FontSize = ESleekFontSize.Medium;
+        inspectButton.OnClicked += OnClickedInspect;
+        actionsFrame.AddChild(inspectButton);
+        inspectContainedItemsButton = Glazier.Get().CreateButton();
+        inspectContainedItemsButton.PositionOffset_Y = 55f;
+        inspectContainedItemsButton.SizeScale_X = 1f;
+        inspectContainedItemsButton.SizeOffset_Y = 50f;
+        inspectContainedItemsButton.Text = localization.format("InspectListedItems_Text");
+        inspectContainedItemsButton.TooltipText = localization.format("InspectListedItems_Tooltip");
+        inspectContainedItemsButton.FontSize = ESleekFontSize.Medium;
+        inspectContainedItemsButton.OnClicked += OnClickedInspectContainedItems;
+        actionsFrame.AddChild(inspectContainedItemsButton);
+        lowerBox = Glazier.Get().CreateBox();
+        lowerBox.PositionScale_Y = 0.4f;
+        lowerBox.PositionOffset_Y = 30f;
+        lowerBox.SizeOffset_Y = -30f;
+        lowerBox.SizeScale_X = 1f;
+        lowerBox.SizeScale_Y = 0.6f;
+        sleekElement.AddChild(lowerBox);
         descriptionLabel = Glazier.Get().CreateLabel();
         descriptionLabel.PositionOffset_X = 5f;
         descriptionLabel.PositionOffset_Y = 5f;
@@ -177,7 +236,7 @@ internal class ItemStoreDetailsMenu : SleekFullscreenBox
         descriptionLabel.AllowRichText = true;
         descriptionLabel.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
         descriptionLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
-        sleekBox2.AddChild(descriptionLabel);
+        lowerBox.AddChild(descriptionLabel);
         viewCartButton = Glazier.Get().CreateButton();
         viewCartButton.PositionOffset_Y = -110f;
         viewCartButton.PositionScale_Y = 1f;
@@ -252,6 +311,19 @@ internal class ItemStoreDetailsMenu : SleekFullscreenBox
     private void OnClickedDecrementQuantity(ISleekElement button)
     {
         SetQuantityInCart(quantityInCart - 1);
+    }
+
+    private void OnClickedInspect(ISleekElement button)
+    {
+        MenuSurvivorsClothingInspectUI.viewItem(listing.itemdefid, 0uL);
+        MenuSurvivorsClothingInspectUI.open(EMenuSurvivorsClothingInspectUIOpenContext.ItemStoreDetailsMenu);
+        Close();
+    }
+
+    private void OnClickedInspectContainedItems(ISleekElement button)
+    {
+        ItemStoreBundleContentsMenu.instance.Open(listing);
+        Close();
     }
 
     private void OnClickedViewCartButton(ISleekElement button)

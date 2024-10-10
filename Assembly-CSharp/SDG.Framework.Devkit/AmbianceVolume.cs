@@ -93,50 +93,59 @@ public class AmbianceVolume : LevelVolume<AmbianceVolume, AmbianceVolumeManager>
             if (ushort.TryParse(effectIdString, out volume._id))
             {
                 volume._effectGuid = Guid.Empty;
-                return;
             }
-            if (Guid.TryParse(effectIdString, out volume._effectGuid))
+            else if (Guid.TryParse(effectIdString, out volume._effectGuid))
             {
                 volume._id = 0;
-                return;
             }
-            volume._effectGuid = Guid.Empty;
-            volume._id = 0;
+            else
+            {
+                volume._effectGuid = Guid.Empty;
+                volume._id = 0;
+            }
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnNoWaterToggled(ISleekToggle toggle, bool noWater)
         {
             volume.noWater = noWater;
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnNoLightingToggled(ISleekToggle toggle, bool noLighting)
         {
             volume.noLighting = noLighting;
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnWeatherMaskChanged(ISleekUInt32Field field, uint mask)
         {
             volume.weatherMask = mask;
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnOverrideFogToggled(ISleekToggle toggle, bool overrideFog)
         {
             volume.overrideFog = overrideFog;
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnFogColorPicked(SleekColorPicker picker, Color color)
         {
             volume.fogColor = color;
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnFogIntensityChanged(ISleekFloat32Field field, float value)
         {
             volume.fogIntensity = value;
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnOverrideAtmosphericFogToggled(ISleekToggle toggle, bool overrideAtmosphericFog)
         {
             volume.overrideAtmosphericFog = overrideAtmosphericFog;
+            LevelHierarchy.MarkDirty();
         }
     }
 

@@ -13,6 +13,5 @@ Reward_XP 6
 Reset 750
 
 Auto_Skybox
-SpeedTree
-SpeedTree_Default_LOD_Weights
+
 Has_Clip_Prefab false

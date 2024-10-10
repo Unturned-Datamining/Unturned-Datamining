@@ -150,6 +150,10 @@ public class ItemTable
     {
         float num = chance - tiers[tierIndex].chance;
         tiers[tierIndex].chance = chance;
+        if (tiers.Count < 2)
+        {
+            return;
+        }
         float num2 = Mathf.Abs(num);
         while (num2 > 0.001f)
         {

@@ -221,40 +221,24 @@ public class PlayerInteract : PlayerCaller
                     }
                     if (interactable != null)
                     {
-                        target = interactable.transform.FindChildRecursive("Target");
+                        target = FindTargetTransform(focus, interactable.transform);
                         if (interactable.checkInteractable())
                         {
                             if (PlayerUI.window.isEnabled)
                             {
+                                Color color;
                                 if (interactable.checkUseable())
                                 {
-                                    if (!interactable.checkHighlight(out var color))
+                                    if (!interactable.checkHighlight(out color))
                                     {
                                         color = Color.green;
-                                    }
-                                    InteractableDoorHinge componentInParent = focus.GetComponentInParent<InteractableDoorHinge>();
-                                    if (componentInParent != null)
-                                    {
-                                        setHighlight(componentInParent.door.transform, color);
-                                    }
-                                    else
-                                    {
-                                        setHighlight(interactable.transform, color);
                                     }
                                 }
                                 else
                                 {
-                                    Color color = Color.red;
-                                    InteractableDoorHinge componentInParent2 = focus.GetComponentInParent<InteractableDoorHinge>();
-                                    if (componentInParent2 != null)
-                                    {
-                                        setHighlight(componentInParent2.door.transform, color);
-                                    }
-                                    else
-                                    {
-                                        setHighlight(interactable.transform, color);
-                                    }
+                                    color = Color.red;
                                 }
+                                setHighlight(interactable.transform, color);
                             }
                         }
                         else
@@ -488,5 +472,34 @@ public class PlayerInteract : PlayerCaller
     {
         highlightedTransform = newHighlightedTransform;
         HighlighterTool.highlight(newHighlightedTransform, color);
+    }
+
+    /// <summary>
+    /// Search up hierarchy for most specific Target transform.
+    /// </summary>
+    private Transform FindTargetTransform(Transform hitTransform, Transform interactableTransform)
+    {
+        Transform transform = hitTransform.FindChildRecursive("Target");
+        if (transform != null)
+        {
+            return transform;
+        }
+        if (hitTransform == interactableTransform)
+        {
+            return null;
+        }
+        Transform excludedChild = hitTransform;
+        Transform parent = hitTransform.parent;
+        while (parent != interactableTransform)
+        {
+            transform = parent.FindChildRecursiveWithExclusion("Target", excludedChild);
+            if (transform != null)
+            {
+                return transform;
+            }
+            excludedChild = parent;
+            parent = parent.parent;
+        }
+        return interactableTransform.FindChildRecursiveWithExclusion("Target", excludedChild);
     }
 }

@@ -125,6 +125,38 @@ public class InteractableDoor : Interactable
         }
     }
 
+    public override bool checkUseable()
+    {
+        return checkToggle(Provider.client, Player.player.quests.groupID);
+    }
+
+    public override void use()
+    {
+        ClientToggle();
+    }
+
+    public override bool checkHint(out EPlayerMessage message, out string text, out Color color)
+    {
+        if (checkUseable())
+        {
+            if (isOpen)
+            {
+                message = EPlayerMessage.DOOR_CLOSE;
+            }
+            else
+            {
+                message = EPlayerMessage.DOOR_OPEN;
+            }
+        }
+        else
+        {
+            message = EPlayerMessage.LOCKED;
+        }
+        text = "";
+        color = Color.white;
+        return true;
+    }
+
     protected virtual void Start()
     {
         if (placeholderCollider != null && !base.IsChildOfVehicle)

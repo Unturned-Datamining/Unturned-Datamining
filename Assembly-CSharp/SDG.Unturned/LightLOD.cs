@@ -16,8 +16,6 @@ public class LightLOD : MonoBehaviour
 
     private float intensityStart;
 
-    private float intensityEnd;
-
     private float transitionStart;
 
     private float transitionEnd;
@@ -49,13 +47,13 @@ public class LightLOD : MonoBehaviour
         {
             if (targetLight.enabled)
             {
-                targetLight.intensity = intensityEnd;
+                targetLight.intensity = 0f;
                 targetLight.enabled = false;
             }
             return;
         }
         float t = (vector.magnitude - transitionStart) / transitionMagnitude;
-        targetLight.intensity = Mathf.Lerp(intensityStart, intensityEnd, t);
+        targetLight.intensity = Mathf.Lerp(intensityStart, 0f, t);
         if (!targetLight.enabled)
         {
             targetLight.enabled = true;
@@ -75,7 +73,6 @@ public class LightLOD : MonoBehaviour
             return;
         }
         intensityStart = targetLight.intensity;
-        intensityEnd = 0f;
         if (targetLight.type == LightType.Point)
         {
             transitionStart = targetLight.range * 13f;

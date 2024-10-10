@@ -93,6 +93,12 @@ public class BarricadeManager : SteamCaller
     internal const int POSITION_FRAC_BIT_COUNT = 11;
 
     /// <summary>
+    /// Sending yaw only costs 1 bit (flag) plus yaw bits, so compared to the old 24-bit rotation we may as well
+    /// make it high-precision. Quaternion mode uses 1+27 bits!
+    /// </summary>
+    internal const int YAW_BIT_COUNT = 23;
+
+    /// <summary>
     /// +0 = BarricadeDrop
     /// +1 = root transform
     /// +2 = Interactable (if exists)
@@ -1529,23 +1535,7 @@ public class BarricadeManager : SteamCaller
             }
             if (itemBarricadeAsset.build == EBuild.DOOR || itemBarricadeAsset.build == EBuild.GATE || itemBarricadeAsset.build == EBuild.SHUTTER || itemBarricadeAsset.build == EBuild.HATCH)
             {
-                InteractableDoor orAddComponent = transform.GetOrAddComponent<InteractableDoor>();
-                orAddComponent.updateState(itemBarricadeAsset, state);
-                Transform transform6 = transform.Find("Skeleton").Find("Hinge");
-                if (transform6 != null)
-                {
-                    transform6.gameObject.GetOrAddComponent<InteractableDoorHinge>().door = orAddComponent;
-                }
-                Transform transform7 = transform.Find("Skeleton").Find("Left_Hinge");
-                if (transform7 != null)
-                {
-                    transform7.gameObject.GetOrAddComponent<InteractableDoorHinge>().door = orAddComponent;
-                }
-                Transform transform8 = transform.Find("Skeleton").Find("Right_Hinge");
-                if (transform8 != null)
-                {
-                    transform8.gameObject.GetOrAddComponent<InteractableDoorHinge>().door = orAddComponent;
-                }
+                transform.GetOrAddComponent<InteractableDoor>().updateState(itemBarricadeAsset, state);
             }
             else if (itemBarricadeAsset.build == EBuild.BED)
             {
@@ -1573,10 +1563,10 @@ public class BarricadeManager : SteamCaller
             }
             else if (itemBarricadeAsset.build == EBuild.CHARGE)
             {
-                InteractableCharge orAddComponent2 = transform.GetOrAddComponent<InteractableCharge>();
-                orAddComponent2.updateState(itemBarricadeAsset, state);
-                orAddComponent2.owner = owner;
-                orAddComponent2.group = group;
+                InteractableCharge orAddComponent = transform.GetOrAddComponent<InteractableCharge>();
+                orAddComponent.updateState(itemBarricadeAsset, state);
+                orAddComponent.owner = owner;
+                orAddComponent.group = group;
             }
             else if (itemBarricadeAsset.build == EBuild.GENERATOR)
             {
@@ -1600,10 +1590,10 @@ public class BarricadeManager : SteamCaller
             }
             else if (itemBarricadeAsset.build == EBuild.CLAIM)
             {
-                InteractableClaim orAddComponent3 = transform.GetOrAddComponent<InteractableClaim>();
-                orAddComponent3.owner = owner;
-                orAddComponent3.group = group;
-                orAddComponent3.updateState(itemBarricadeAsset);
+                InteractableClaim orAddComponent2 = transform.GetOrAddComponent<InteractableClaim>();
+                orAddComponent2.owner = owner;
+                orAddComponent2.group = group;
+                orAddComponent2.updateState(itemBarricadeAsset);
             }
             else if (itemBarricadeAsset.build == EBuild.BEACON)
             {
@@ -1623,9 +1613,9 @@ public class BarricadeManager : SteamCaller
             }
             else if (itemBarricadeAsset.build == EBuild.SENTRY || itemBarricadeAsset.build == EBuild.SENTRY_FREEFORM)
             {
-                InteractableSentry orAddComponent4 = transform.GetOrAddComponent<InteractableSentry>();
-                InteractablePower interactablePower = (orAddComponent4.power = transform.GetOrAddComponent<InteractablePower>());
-                orAddComponent4.updateState(itemBarricadeAsset, state);
+                InteractableSentry orAddComponent3 = transform.GetOrAddComponent<InteractableSentry>();
+                InteractablePower interactablePower = (orAddComponent3.power = transform.GetOrAddComponent<InteractablePower>());
+                orAddComponent3.updateState(itemBarricadeAsset, state);
                 interactablePower.RefreshIsConnectedToPower();
             }
             else if (itemBarricadeAsset.build == EBuild.LIBRARY)
@@ -1646,53 +1636,53 @@ public class BarricadeManager : SteamCaller
             }
             if (!itemBarricadeAsset.isUnpickupable)
             {
-                Interactable2HP orAddComponent5 = transform.GetOrAddComponent<Interactable2HP>();
-                orAddComponent5.hp = hp;
+                Interactable2HP orAddComponent4 = transform.GetOrAddComponent<Interactable2HP>();
+                orAddComponent4.hp = hp;
                 if (itemBarricadeAsset.build == EBuild.DOOR || itemBarricadeAsset.build == EBuild.GATE || itemBarricadeAsset.build == EBuild.SHUTTER || itemBarricadeAsset.build == EBuild.HATCH)
                 {
-                    Transform transform9 = transform.Find("Skeleton").Find("Hinge");
-                    if (transform9 != null)
+                    Transform transform6 = transform.Find("Skeleton").Find("Hinge");
+                    if (transform6 != null)
                     {
-                        Interactable2SalvageBarricade orAddComponent6 = transform9.GetOrAddComponent<Interactable2SalvageBarricade>();
+                        Interactable2SalvageBarricade orAddComponent5 = transform6.GetOrAddComponent<Interactable2SalvageBarricade>();
+                        orAddComponent5.root = transform;
+                        orAddComponent5.hp = orAddComponent4;
+                        orAddComponent5.owner = owner;
+                        orAddComponent5.group = group;
+                        orAddComponent5.salvageDurationMultiplier = itemBarricadeAsset.salvageDurationMultiplier;
+                        orAddComponent5.shouldBypassPickupOwnership = itemBarricadeAsset.shouldBypassPickupOwnership;
+                    }
+                    Transform transform7 = transform.Find("Skeleton").Find("Left_Hinge");
+                    if (transform7 != null)
+                    {
+                        Interactable2SalvageBarricade orAddComponent6 = transform7.GetOrAddComponent<Interactable2SalvageBarricade>();
                         orAddComponent6.root = transform;
-                        orAddComponent6.hp = orAddComponent5;
+                        orAddComponent6.hp = orAddComponent4;
                         orAddComponent6.owner = owner;
                         orAddComponent6.group = group;
                         orAddComponent6.salvageDurationMultiplier = itemBarricadeAsset.salvageDurationMultiplier;
                         orAddComponent6.shouldBypassPickupOwnership = itemBarricadeAsset.shouldBypassPickupOwnership;
                     }
-                    Transform transform10 = transform.Find("Skeleton").Find("Left_Hinge");
-                    if (transform10 != null)
+                    Transform transform8 = transform.Find("Skeleton").Find("Right_Hinge");
+                    if (transform8 != null)
                     {
-                        Interactable2SalvageBarricade orAddComponent7 = transform10.GetOrAddComponent<Interactable2SalvageBarricade>();
+                        Interactable2SalvageBarricade orAddComponent7 = transform8.GetOrAddComponent<Interactable2SalvageBarricade>();
                         orAddComponent7.root = transform;
-                        orAddComponent7.hp = orAddComponent5;
+                        orAddComponent7.hp = orAddComponent4;
                         orAddComponent7.owner = owner;
                         orAddComponent7.group = group;
                         orAddComponent7.salvageDurationMultiplier = itemBarricadeAsset.salvageDurationMultiplier;
                         orAddComponent7.shouldBypassPickupOwnership = itemBarricadeAsset.shouldBypassPickupOwnership;
                     }
-                    Transform transform11 = transform.Find("Skeleton").Find("Right_Hinge");
-                    if (transform11 != null)
-                    {
-                        Interactable2SalvageBarricade orAddComponent8 = transform11.GetOrAddComponent<Interactable2SalvageBarricade>();
-                        orAddComponent8.root = transform;
-                        orAddComponent8.hp = orAddComponent5;
-                        orAddComponent8.owner = owner;
-                        orAddComponent8.group = group;
-                        orAddComponent8.salvageDurationMultiplier = itemBarricadeAsset.salvageDurationMultiplier;
-                        orAddComponent8.shouldBypassPickupOwnership = itemBarricadeAsset.shouldBypassPickupOwnership;
-                    }
                 }
                 else
                 {
-                    Interactable2SalvageBarricade orAddComponent9 = transform.GetOrAddComponent<Interactable2SalvageBarricade>();
-                    orAddComponent9.root = transform;
-                    orAddComponent9.hp = orAddComponent5;
-                    orAddComponent9.owner = owner;
-                    orAddComponent9.group = group;
-                    orAddComponent9.salvageDurationMultiplier = itemBarricadeAsset.salvageDurationMultiplier;
-                    orAddComponent9.shouldBypassPickupOwnership = itemBarricadeAsset.shouldBypassPickupOwnership;
+                    Interactable2SalvageBarricade orAddComponent8 = transform.GetOrAddComponent<Interactable2SalvageBarricade>();
+                    orAddComponent8.root = transform;
+                    orAddComponent8.hp = orAddComponent4;
+                    orAddComponent8.owner = owner;
+                    orAddComponent8.group = group;
+                    orAddComponent8.salvageDurationMultiplier = itemBarricadeAsset.salvageDurationMultiplier;
+                    orAddComponent8.shouldBypassPickupOwnership = itemBarricadeAsset.shouldBypassPickupOwnership;
                 }
             }
             if (region.parent != null)
@@ -1721,8 +1711,6 @@ public class BarricadeManager : SteamCaller
                         barricadeCollider.gameObject.layer = 14;
                     }
                 }
-                transform.gameObject.SetActive(value: false);
-                transform.gameObject.SetActive(value: true);
                 InteractableVehicle component = region.parent.GetComponent<InteractableVehicle>();
                 if (component != null)
                 {
@@ -1856,7 +1844,7 @@ public class BarricadeManager : SteamCaller
                 reader.ReadBytes(array);
                 item.state = array;
                 reader.ReadClampedVector3(out item.position, 13, 11);
-                reader.ReadQuaternion(out item.rotation);
+                reader.ReadSpecialYawOrQuaternion(out item.rotation, 23);
                 reader.ReadUInt8(out item.hp);
                 reader.ReadUInt64(out item.owner);
                 reader.ReadUInt64(out item.group);
@@ -1946,7 +1934,7 @@ public class BarricadeManager : SteamCaller
                             writer.WriteBytes(serversideData.barricade.state);
                         }
                         writer.WriteClampedVector3(serversideData.point, 13, 11);
-                        writer.WriteQuaternion(serversideData.rotation);
+                        writer.WriteSpecialYawOrQuaternion(serversideData.rotation, 23);
                         writer.WriteUInt8((byte)Mathf.RoundToInt((float)(int)serversideData.barricade.health / (float)(int)serversideData.barricade.asset.health * 100f));
                         writer.WriteUInt64(serversideData.owner);
                         writer.WriteUInt64(serversideData.group);
@@ -2501,6 +2489,7 @@ public class BarricadeManager : SteamCaller
             {
                 flag = true;
             }
+            river.closeRiver();
         }
         else
         {

@@ -10,5 +10,9 @@ public enum EObjectInteractability
     FUEL,
     RUBBLE,
     NPC,
-    QUEST
+    QUEST,
+    /// <summary>
+    /// Non-NPC object the player can talk with.
+    /// </summary>
+    DIALOGUE
 }

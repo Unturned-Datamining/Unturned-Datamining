@@ -139,7 +139,8 @@ internal class GlazierScrollView_uGUI : GlazierElementBase_uGUI, ISleekScrollVie
         {
             Rect absoluteRect = scrollRectComponent.viewport.GetAbsoluteRect();
             Rect absoluteRect2 = contentTransform.GetAbsoluteRect();
-            contentTransform.anchoredPosition = new Vector2(value.x * (0f - absoluteRect2.width) + absoluteRect.width * 0.5f, value.y * absoluteRect2.height - absoluteRect.height * 0.5f);
+            float userInterfaceScale = GraphicsSettings.userInterfaceScale;
+            contentTransform.anchoredPosition = new Vector2(value.x * (0f - absoluteRect2.width) + absoluteRect.width * 0.5f, value.y * absoluteRect2.height - absoluteRect.height * 0.5f) / userInterfaceScale;
         }
     }
 

@@ -27,6 +27,7 @@ public class TeleporterExitVolume : LevelVolume<TeleporterExitVolume, Teleporter
         private void OnIdChanged(ISleekField field, string id)
         {
             volume.id = id;
+            LevelHierarchy.MarkDirty();
         }
     }
 

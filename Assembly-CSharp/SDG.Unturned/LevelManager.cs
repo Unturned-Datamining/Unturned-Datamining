@@ -83,7 +83,7 @@ public class LevelManager : SteamCaller
 
     private static float lastAirdrop;
 
-    private static readonly ClientStaticMethod<Vector3, Vector3, float, float, float> SendAirdropState = ClientStaticMethod<Vector3, Vector3, float, float, float>.Get(ReceiveAirdropState);
+    private static readonly ClientStaticMethod<ushort, Vector3, Vector3, float, float, float> SendAirdropState = ClientStaticMethod<ushort, Vector3, Vector3, float, float, float>.Get(ReceiveAirdropState);
 
     /// <summary>
     /// Exposed for Rocket transition to modules backwards compatibility.
@@ -753,11 +753,10 @@ public class LevelManager : SteamCaller
             point.y = 0f;
             Vector3 normalized = (point - zero).normalized;
             zero += normalized * -2048f;
-            float num = (point - zero).magnitude / speed;
+            float arg = (point - zero).magnitude / speed;
             zero.y = y;
             float airdrop_Force = Provider.modeConfigData.Events.Airdrop_Force;
-            manager.airdropSpawn(id, zero, normalized, speed, airdrop_Force, num);
-            SendAirdropState.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), zero, normalized, speed, airdrop_Force, num);
+            SendAirdropState.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), id, zero, normalized, speed, airdrop_Force, arg);
         }
     }
 
@@ -890,13 +889,13 @@ public class LevelManager : SteamCaller
     [Obsolete]
     public void tellAirdropState(CSteamID steamID, Vector3 state, Vector3 direction, float speed, float force, float delay)
     {
-        ReceiveAirdropState(state, direction, speed, force, delay);
+        ReceiveAirdropState(0, state, direction, speed, force, delay);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellAirdropState")]
-    public static void ReceiveAirdropState(Vector3 state, Vector3 direction, float speed, float force, float delay)
+    public static void ReceiveAirdropState(ushort id, Vector3 state, Vector3 direction, float speed, float force, float delay)
     {
-        manager.airdropSpawn(0, state, direction, speed, force, delay);
+        manager.airdropSpawn(id, state, direction, speed, force, delay);
     }
 
     [Obsolete]
@@ -922,7 +921,7 @@ public class LevelManager : SteamCaller
         for (int i = 0; i < airdrops.Count; i++)
         {
             AirdropInfo airdropInfo = airdrops[i];
-            SendAirdropState.Invoke(ENetReliability.Reliable, client.transportConnection, airdropInfo.state, airdropInfo.direction, airdropInfo.speed, airdropInfo.force, airdropInfo.delay);
+            SendAirdropState.Invoke(ENetReliability.Reliable, client.transportConnection, airdropInfo.id, airdropInfo.state, airdropInfo.direction, airdropInfo.speed, airdropInfo.force, airdropInfo.delay);
         }
     }
 

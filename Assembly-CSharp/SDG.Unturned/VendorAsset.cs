@@ -74,7 +74,13 @@ public class VendorAsset : Asset
             newRewardsList2.Parse(data, localization, this, "Selling_" + b2 + "_Rewards", "Selling_" + b2 + "_Reward_");
             if (text == null || text.Equals("Item", StringComparison.InvariantCultureIgnoreCase))
             {
-                selling[b2] = new VendorSellingItem(this, b2, guid2, legacyId2, newCost2, array2, newRewardsList2);
+                int newSight = data.ParseInt32("Selling_" + b2 + "_Sight", -1);
+                int newTactical = data.ParseInt32("Selling_" + b2 + "_Tactical", -1);
+                int newGrip = data.ParseInt32("Selling_" + b2 + "_Grip", -1);
+                int newBarrel = data.ParseInt32("Selling_" + b2 + "_Barrel", -1);
+                int newMagazine = data.ParseInt32("Selling_" + b2 + "_Magazine", -1);
+                int newAmmo = data.ParseInt32("Selling_" + b2 + "_Ammo", -1);
+                selling[b2] = new VendorSellingItem(this, b2, guid2, legacyId2, newCost2, array2, newRewardsList2, newSight, newTactical, newGrip, newBarrel, newMagazine, newAmmo);
             }
             else
             {

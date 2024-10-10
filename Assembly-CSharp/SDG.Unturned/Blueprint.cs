@@ -26,6 +26,11 @@ public class Blueprint
 
     private bool _transferState;
 
+    /// <summary>
+    /// If true, and transferState is enabled, delete attached items.
+    /// </summary>
+    public bool withoutAttachments;
+
     public bool hasSupplies;
 
     public bool hasTool;
@@ -149,11 +154,11 @@ public class Blueprint
     }
 
     public Blueprint(ItemAsset newSourceItem, byte newID, EBlueprintType newType, BlueprintSupply[] newSupplies, BlueprintOutput[] newOutputs, ushort newTool, bool newToolCritical, ushort newBuild, byte newLevel, EBlueprintSkill newSkill, bool newTransferState, string newMap, INPCCondition[] newQuestConditions, NPCRewardsList newQuestRewardsList)
-        : this(newSourceItem, newID, newType, newSupplies, newOutputs, newTool, newToolCritical, newBuild, default(Guid), newLevel, newSkill, newTransferState, newMap, newQuestConditions, newQuestRewardsList)
+        : this(newSourceItem, newID, newType, newSupplies, newOutputs, newTool, newToolCritical, newBuild, default(Guid), newLevel, newSkill, newTransferState, newWithoutAttachments: false, newMap, newQuestConditions, newQuestRewardsList)
     {
     }
 
-    public Blueprint(ItemAsset newSourceItem, byte newID, EBlueprintType newType, BlueprintSupply[] newSupplies, BlueprintOutput[] newOutputs, ushort newTool, bool newToolCritical, ushort newBuild, Guid newBuildEffectGuid, byte newLevel, EBlueprintSkill newSkill, bool newTransferState, string newMap, INPCCondition[] newQuestConditions, NPCRewardsList newQuestRewardsList)
+    public Blueprint(ItemAsset newSourceItem, byte newID, EBlueprintType newType, BlueprintSupply[] newSupplies, BlueprintOutput[] newOutputs, ushort newTool, bool newToolCritical, ushort newBuild, Guid newBuildEffectGuid, byte newLevel, EBlueprintSkill newSkill, bool newTransferState, bool newWithoutAttachments, string newMap, INPCCondition[] newQuestConditions, NPCRewardsList newQuestRewardsList)
     {
         sourceItem = newSourceItem;
         _id = newID;
@@ -167,6 +172,7 @@ public class Blueprint
         _level = newLevel;
         _skill = newSkill;
         _transferState = newTransferState;
+        withoutAttachments = newWithoutAttachments;
         map = newMap;
         questConditions = newQuestConditions;
         questRewardsList = newQuestRewardsList;

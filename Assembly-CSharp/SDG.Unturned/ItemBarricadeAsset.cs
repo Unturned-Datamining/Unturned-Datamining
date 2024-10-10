@@ -325,7 +325,18 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
         eligibleForPooling = data.ParseBool("Eligible_For_Pooling", defaultValue);
         _isLocked = data.ContainsKey("Locked");
         _isVulnerable = data.ContainsKey("Vulnerable");
-        _bypassClaim = data.ContainsKey("Bypass_Claim");
+        if (data.TryParseBool("Bypass_Claim", out var value))
+        {
+            _bypassClaim = value;
+        }
+        else if (data.ContainsKey("Bypass_Claim"))
+        {
+            _bypassClaim = true;
+        }
+        else
+        {
+            _bypassClaim = build == EBuild.CHARGE;
+        }
         bool defaultValue2 = build != EBuild.BED && build != EBuild.SENTRY && build != EBuild.SENTRY_FREEFORM;
         allowPlacementOnVehicle = data.ParseBool("Allow_Placement_On_Vehicle", defaultValue2);
         _isRepairable = !data.ContainsKey("Unrepairable");

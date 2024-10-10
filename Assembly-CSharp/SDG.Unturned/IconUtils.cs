@@ -107,13 +107,14 @@ public class IconUtils
 
     public static void CaptureAllSkinIcons()
     {
-        foreach (UnturnedEconInfo item in TempSteamworksEconomy.econInfo)
+        foreach (KeyValuePair<int, UnturnedEconInfo> item in TempSteamworksEconomy.econInfo)
         {
-            if (item.item_skin != 0)
+            UnturnedEconInfo value = item.Value;
+            if (value.item_skin != 0)
             {
-                ItemAsset itemAsset = Assets.find(item.item_guid) as ItemAsset;
-                VehicleAsset vehicleAsset = Assets.find(item.vehicle_guid) as VehicleAsset;
-                getItemDefIcon(itemAsset, vehicleAsset, (ushort)item.item_skin);
+                ItemAsset itemAsset = Assets.find(value.target_game_asset_guid) as ItemAsset;
+                VehicleAsset vehicleAsset = Assets.find(value.target_game_asset_guid) as VehicleAsset;
+                getItemDefIcon(itemAsset, vehicleAsset, (ushort)value.item_skin);
             }
         }
     }

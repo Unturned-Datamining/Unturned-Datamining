@@ -1,0 +1,34 @@
+GUID 6d6dd20805fc435da70096ec3ae69a70
+Type Box
+
+Size_X 1
+Size_Y 1
+
+Generate 21072
+
+Probability_Model Equalized
+Contains_Bonus_Items false
+
+Drops 20
+Drop_0 -1
+Drop_1 "101700" // HW2_Candy_Corn_Bag_Generator
+Drop_2 "101800" // HW2_Cheese_Generator
+Drop_3 "101900" // HW2_Coffin_Bag_Generator
+Drop_4 "102000" // HW2_College_Jacket_Generator
+Drop_5 "102100" // HW2_Devil_Horns_Generator
+Drop_6 "102200" // HW2_Eye_Generator
+Drop_7 "102300" // HW2_Freckles_Generator
+Drop_8 "102400" // HW2_Halo_Black_Generator
+Drop_9 "102500" // HW2_Halo_White_Generator
+Drop_10 "102600" // HW2_Jack_O_Bandana_Generator
+Drop_11 "102700" // HW2_Paper_Bag_Generator
+Drop_12 "102800" // HW2_Pillow_Generator
+Drop_13 "102900" // HW2_Scars_Generator
+Drop_14 "103000" // HW2_Shark_Head_Generator
+Drop_15 "103100" // HW2_Skull_Shirt_Generator
+Drop_16 "103200" // HW2_Spike_Collar_Generator
+Drop_17 "103300" // HW2_Tinfoil_Hat_Generator
+Drop_18 "103400" // Masterkey_Web_Generator
+Drop_19 "103500" // Zubeknakov_Web_Generator
+
+Pro

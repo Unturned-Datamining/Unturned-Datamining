@@ -33,7 +33,7 @@ public class ItemLook : MonoBehaviour
         Vector3 center = bounds.center;
         float num = bounds.extents.magnitude * 2.25f;
         _yaw = Mathf.Lerp(_yaw, yaw, 4f * Time.deltaTime);
-        inspectCamera.transform.rotation = Quaternion.Euler(20f, _yaw, 0f);
+        inspectCamera.transform.rotation = Quaternion.Euler(20f, 0f - _yaw, 0f);
         inspectCamera.transform.position = center - inspectCamera.transform.forward * num;
     }
 }

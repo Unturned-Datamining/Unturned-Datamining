@@ -13,6 +13,8 @@ Fog_Toggle_Label Height Fog
 Nice_Foliage_Toggle_Label Windy Foliage
 Grass_Displacement_Toggle_Label Grass Displacement
 Grass_Displacement_Tooltip Basic vertex displacement around player feet.
+Wind_Toggle_Label Wind Effects
+Wind_Tooltip Vertex animation for objects affected by wind.
 Foliage_Focus_Toggle_Label Scope Focus Foliage
 Foliage_Focus_Tooltip While zoomed-in stream foliage around the focal point.
 Ragdolls_Toggle_Label Ragdolls
@@ -60,10 +62,6 @@ Outline_Button_Label Outline Quality
 Outline_Button_Tooltip Highlight resolution and blur
 Terrain_Button_Label Terrain Quality
 Terrain_Button_Tooltip Landscape geometry resolution
-Wind_Button_Label Wind Quality
-Wind_Button_Tooltip Detail of Wind Animation
-Tree_Mode_Button_Label Tree Quality [Restart Required]
-Tree_Mode_Button_Tooltip Which tree models to use, requires restart
 Render_Mode_Button_Label Render Mode
 Render_Mode_Button_Tooltip Forward might run better on older graphics cards, Deferred allows decals and screen space reflections
 Landmark_Button_Label Landmarks
@@ -76,9 +74,6 @@ Planar_Reflection_Low {0}: Landscape Only
 Planar_Reflection_Medium {0}: Sky, Trees, Structures, Large Objects
 Planar_Reflection_High {0}: Vehicles, Barricades, Medium Objects
 Planar_Reflection_Ultra {0}: Players, AI, Effects
-
-Wind_Low {0}: Basic Wind
-Wind_Medium {0}+: SpeedTree Layered Wind
 
 Landmark_Low {0}: Large Objects Only
 Landmark_Medium {0}: Trees
@@ -96,10 +91,6 @@ AF_Disabled Disabled
 AF_Per_Texture Per Texture
 AF_Forced_On Forced On
 
-TM_Legacy Basic Models
-TM_SpeedTree_Fade_None SpeedTrees
-TM_SpeedTree_Fade_SpeedTree Ultra SpeedTrees
-
 Forward Forward [Legacy]
 Deferred Deferred [Recommended]
 
@@ -112,4 +103,3 @@ Ultra Ultra
 Perf_Foliage_Instancing_Not_Supported Your GPU does not support foliage instancing. This will significantly affect performance.
 Perf_Water_Reflections Ultra enables planar reflections. These require drawing the scene again upside-down, halving performance.
 Perf_Dual_Render_Scope Dual-render scopes require drawing the scene again zoomed-in, halving performance.
-Perf_SpeedTrees SpeedTrees will significantly affect performance. Basic models are recommended for most hardware.

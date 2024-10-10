@@ -15,8 +15,6 @@ Reward_Max 8
 Reset 750
 
 Auto_Skybox
-SpeedTree
-SpeedTree_Default_LOD_Weights
 
 Christmas_Redirect 99848480a28f41ebb3d752a47fd5b023
 Has_Clip_Prefab false

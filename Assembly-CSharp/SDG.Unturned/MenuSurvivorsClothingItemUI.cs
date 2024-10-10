@@ -4,7 +4,7 @@ namespace SDG.Unturned;
 
 public class MenuSurvivorsClothingItemUI
 {
-    private static Local localization;
+    internal static Local localization;
 
     private static SleekFullscreenBox container;
 
@@ -188,7 +188,7 @@ public class MenuSurvivorsClothingItemUI
     private static void onClickedInspectButton(ISleekElement button)
     {
         MenuSurvivorsClothingInspectUI.viewItem(item, instance);
-        MenuSurvivorsClothingInspectUI.open();
+        MenuSurvivorsClothingInspectUI.open(EMenuSurvivorsClothingInspectUIOpenContext.OwnedItem);
         close();
     }
 

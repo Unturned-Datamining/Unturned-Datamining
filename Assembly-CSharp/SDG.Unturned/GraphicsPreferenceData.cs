@@ -2,8 +2,6 @@ namespace SDG.Unturned;
 
 public class GraphicsPreferenceData
 {
-    public bool Use_Skybox_Ambience;
-
     public bool Use_Lens_Dirt;
 
     public float Chromatic_Aberration_Intensity;
@@ -30,7 +28,6 @@ public class GraphicsPreferenceData
 
     public GraphicsPreferenceData()
     {
-        Use_Skybox_Ambience = false;
         Use_Lens_Dirt = true;
         Chromatic_Aberration_Intensity = 0.2f;
         LOD_Bias = 0f;

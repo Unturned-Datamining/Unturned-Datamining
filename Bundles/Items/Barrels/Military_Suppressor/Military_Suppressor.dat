@@ -18,7 +18,7 @@ Caliber_6 25
 Caliber_7 39
 Caliber_8 41
 
-Silenced 
+Silenced
 Volume 0.3
 Durability 3
 
@@ -29,7 +29,7 @@ Ballistic_Drop 1.1
 
 Paintable
 
-Blueprints 1
+Blueprints 2
 Blueprint_0_Type Repair
 Blueprint_0_Supplies 1
 Blueprint_0_Supply_0_ID 67
@@ -38,3 +38,9 @@ Blueprint_0_Tool 76
 Blueprint_0_Level 2
 Blueprint_0_Skill Repair
 Blueprint_0_Build 27
+Blueprint_1_Type Tool
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID this
+Blueprint_1_Product "67" // Metal Scrap
+Blueprint_1_Products 2
+Blueprint_1_Build 27

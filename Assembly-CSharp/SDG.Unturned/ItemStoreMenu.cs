@@ -32,11 +32,28 @@ internal class ItemStoreMenu : SleekFullscreenBox
 
     private ItemStoreDetailsMenu detailsMenu;
 
+    private ItemStoreBundleContentsMenu bundleContentsMenu;
+
     private SleekItemStoreListing[] listingButtons;
 
     private ISleekElement categoryButtonsFrame;
 
     private ISleekField searchField;
+
+    /// <summary>
+    /// Toggle button to open/close advanced filters panel.
+    /// </summary>
+    private static SleekButtonIcon optionsButton;
+
+    /// <summary>
+    /// On/off checkbox for including already-owned items in filter.
+    /// </summary>
+    private static ISleekToggle showOwnedToggle;
+
+    /// <summary>
+    /// Container for advanced options.
+    /// </summary>
+    private static ISleekElement optionsPanel;
 
     /// <summary>
     /// Displays the current page number.
@@ -146,15 +163,16 @@ internal class ItemStoreMenu : SleekFullscreenBox
         categoryButtonsFrame.SizeOffset_Y = 30f;
         sleekConstraintFrame.AddChild(categoryButtonsFrame);
         searchField = Glazier.Get().CreateStringField();
+        searchField.PositionOffset_X = 40f;
         searchField.PositionOffset_Y = -35f;
-        searchField.SizeOffset_X = -110f;
+        searchField.SizeOffset_X = -150f;
         searchField.SizeOffset_Y = 30f;
         searchField.SizeScale_X = 1f;
         searchField.PlaceholderText = MenuSurvivorsClothingUI.localization.format("Search_Field_Hint");
         searchField.OnTextSubmitted += OnEnteredSearchField;
         sleekConstraintFrame.AddChild(searchField);
         ISleekButton sleekButton = Glazier.Get().CreateButton();
-        sleekButton.PositionOffset_X = -105f;
+        sleekButton.PositionOffset_X = -100f;
         sleekButton.PositionOffset_Y = -35f;
         sleekButton.PositionScale_X = 1f;
         sleekButton.SizeOffset_X = 100f;
@@ -163,6 +181,27 @@ internal class ItemStoreMenu : SleekFullscreenBox
         sleekButton.TooltipText = MenuSurvivorsClothingUI.localization.format("Search_Tooltip");
         sleekButton.OnClicked += OnClickedSearchButton;
         sleekConstraintFrame.AddChild(sleekButton);
+        optionsButton = new SleekButtonIcon(MenuSurvivorsClothingUI.icons.load<Texture2D>("Left"));
+        optionsButton.PositionOffset_Y = -35f;
+        optionsButton.SizeOffset_X = 30f;
+        optionsButton.SizeOffset_Y = 30f;
+        optionsButton.tooltip = MenuSurvivorsClothingUI.localization.format("Advanced_Options_Tooltip");
+        optionsButton.iconColor = ESleekTint.FOREGROUND;
+        optionsButton.onClickedButton += OnClickedOptionsButton;
+        sleekConstraintFrame.AddChild(optionsButton);
+        optionsPanel = Glazier.Get().CreateFrame();
+        optionsPanel.PositionOffset_X = -205f;
+        optionsPanel.PositionOffset_Y = -35f;
+        optionsPanel.SizeOffset_X = 200f;
+        optionsPanel.SizeOffset_Y = 400f;
+        optionsPanel.IsVisible = false;
+        sleekConstraintFrame.AddChild(optionsPanel);
+        showOwnedToggle = Glazier.Get().CreateToggle();
+        showOwnedToggle.SizeOffset_X = 40f;
+        showOwnedToggle.SizeOffset_Y = 40f;
+        showOwnedToggle.AddLabel(localization.format("FilterShowOwned_Label"), ESleekSide.RIGHT);
+        showOwnedToggle.OnValueChanged += OnShowOwnedToggled;
+        optionsPanel.AddChild(showOwnedToggle);
         pageBox = Glazier.Get().CreateBox();
         pageBox.PositionOffset_X = -50f;
         pageBox.PositionOffset_Y = 5f;
@@ -227,6 +266,8 @@ internal class ItemStoreMenu : SleekFullscreenBox
         MenuUI.container.AddChild(cartMenu);
         detailsMenu = new ItemStoreDetailsMenu();
         MenuUI.container.AddChild(detailsMenu);
+        bundleContentsMenu = new ItemStoreBundleContentsMenu();
+        MenuUI.container.AddChild(bundleContentsMenu);
         ItemStore.Get().OnPricesReceived += OnPricesReceived;
         ItemStore.Get().OnPurchaseResult += OnPurchaseResult;
         ItemStore.Get().RequestPrices();
@@ -293,7 +334,7 @@ internal class ItemStoreMenu : SleekFullscreenBox
         }
         for (int num = filteredListings.Count - 1; num >= 0; num--)
         {
-            if (!Provider.provider.economyService.getInventoryType(filteredListings[num].itemdefid).EndsWith("Bundle"))
+            if (!Provider.provider.economyService.IsItemBundle(filteredListings[num].itemdefid))
             {
                 filteredListings.RemoveAtFast(num);
             }
@@ -330,6 +371,44 @@ internal class ItemStoreMenu : SleekFullscreenBox
         }
     }
 
+    private void ApplyOwnedFilter()
+    {
+        if (!string.IsNullOrEmpty(searchField.Text) || showOwnedToggle.Value)
+        {
+            return;
+        }
+        HashSet<int> hashSet = Provider.provider.economyService.GatherOwnedItemDefIds();
+        for (int num = filteredListings.Count - 1; num >= 0; num--)
+        {
+            int itemdefid = filteredListings[num].itemdefid;
+            if (Provider.provider.economyService.IsItemBundle(itemdefid))
+            {
+                List<int> bundleContents = Provider.provider.economyService.GetBundleContents(itemdefid);
+                if (bundleContents != null && bundleContents.Count > 0)
+                {
+                    bool flag = false;
+                    foreach (int item in bundleContents)
+                    {
+                        if (hashSet.Contains(item))
+                        {
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if (flag)
+                    {
+                        filteredListings.RemoveAtFast(num);
+                        continue;
+                    }
+                }
+            }
+            if (hashSet.Contains(itemdefid))
+            {
+                filteredListings.RemoveAtFast(num);
+            }
+        }
+    }
+
     private void SortListings()
     {
         filteredListings.Sort(delegate(ItemStore.Listing lhs, ItemStore.Listing rhs)
@@ -345,6 +424,7 @@ internal class ItemStoreMenu : SleekFullscreenBox
         filteredListings.Clear();
         BuildCategoryListings();
         ApplySearchTextFilter();
+        ApplyOwnedFilter();
         SortListings();
         pageCount = MathfEx.GetPageCount(filteredListings.Count, listingButtons.Length);
         if (pageIndex >= pageCount)
@@ -447,6 +527,18 @@ internal class ItemStoreMenu : SleekFullscreenBox
             sleekButton5.OnClicked += OnClickedFilterSpecials;
             categoryButtonsFrame.AddChild(sleekButton5);
         }
+        if (hasDiscountedListings)
+        {
+            categoryFilter = ECategoryFilter.Specials;
+        }
+        else if (hasNewListings)
+        {
+            categoryFilter = ECategoryFilter.New;
+        }
+        else if (hasFeaturedListings)
+        {
+            categoryFilter = ECategoryFilter.Featured;
+        }
     }
 
     private void OnClickedLeftPageButton(ISleekElement button)
@@ -511,6 +603,17 @@ internal class ItemStoreMenu : SleekFullscreenBox
     }
 
     private void OnClickedSearchButton(ISleekElement button)
+    {
+        FilterListings();
+    }
+
+    private void OnClickedOptionsButton(ISleekElement button)
+    {
+        optionsPanel.IsVisible = !optionsPanel.IsVisible;
+        optionsButton.icon = MenuSurvivorsClothingUI.icons.load<Texture2D>(optionsPanel.IsVisible ? "Right" : "Left");
+    }
+
+    private void OnShowOwnedToggled(ISleekToggle toggle, bool state)
     {
         FilterListings();
     }

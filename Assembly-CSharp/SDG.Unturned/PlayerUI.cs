@@ -1798,20 +1798,20 @@ public class PlayerUI : MonoBehaviour
     private void UpdateOverlayColor()
     {
         float num;
-        Color black;
+        Color a;
         if (isBlindfolded)
         {
-            black = Color.black;
+            a = Color.black;
             num = 1f;
         }
         else
         {
-            black = stunColor;
+            a = Color.Lerp(Color.black, stunColor, OptionsSettings.flashbangBrightness);
             num = stunAlpha;
         }
-        black = Color.Lerp(black, Palette.COLOR_R, painAlpha + (1f - num));
-        black.a = Mathf.Max(num, painAlpha);
-        colorOverlayImage.TintColor = black;
+        a = Color.Lerp(a, Palette.COLOR_R, painAlpha + (1f - num));
+        a.a = Mathf.Max(num, painAlpha);
+        colorOverlayImage.TintColor = a;
         if (isWindowEnabledByColorOverlay && stunAlpha < 0.001f && painAlpha < 0.001f)
         {
             isWindowEnabledByColorOverlay = false;

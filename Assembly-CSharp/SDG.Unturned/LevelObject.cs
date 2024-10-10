@@ -706,6 +706,10 @@ public class LevelObject
             {
                 _interactableObj = this.transform.gameObject.AddComponent<InteractableObjectQuest>();
             }
+            else if (asset.interactability == EObjectInteractability.DIALOGUE)
+            {
+                _interactableObj = this.transform.gameObject.AddComponent<InteractableObjectDialogue>();
+            }
             if (interactable != null)
             {
                 interactable.updateState(asset, state);

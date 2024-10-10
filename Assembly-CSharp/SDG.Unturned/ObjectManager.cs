@@ -174,13 +174,13 @@ public class ObjectManager : SteamCaller
             return;
         }
         player.quests.ClearActiveNpc();
-        InteractableObjectNPC npcFromObjectNetId = InteractableObjectNPC.GetNpcFromObjectNetId(netId);
-        if (!(npcFromObjectNetId == null) && !((npcFromObjectNetId.transform.position - player.transform.position).sqrMagnitude > 400f) && npcFromObjectNetId.objectAsset.areConditionsMet(player))
+        IDialogueTarget dialogueTargetFromNetId = InteractableObjectNPC.GetDialogueTargetFromNetId(netId);
+        if (dialogueTargetFromNetId != null && !((dialogueTargetFromNetId.GetDialogueTargetWorldPosition() - player.transform.position).sqrMagnitude > 400f) && dialogueTargetFromNetId.ShouldServerApproveDialogueRequest(player))
         {
-            DialogueAsset dialogueAsset = npcFromObjectNetId.npcAsset.FindDialogueAsset();
+            DialogueAsset dialogueAsset = dialogueTargetFromNetId.FindStartingDialogueAsset();
             if (dialogueAsset != null)
             {
-                player.quests.ApproveTalkWithNpcRequest(npcFromObjectNetId, dialogueAsset);
+                player.quests.ApproveTalkWithNpcRequest(dialogueTargetFromNetId, dialogueAsset);
             }
         }
     }

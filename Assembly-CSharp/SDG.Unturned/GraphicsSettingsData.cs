@@ -38,6 +38,8 @@ public class GraphicsSettingsData
 
     public bool IsItemIconAntiAliasingEnabled;
 
+    public bool IsWindEnabled;
+
     /// <summary>
     /// Far clip plane multiplier in-game.
     /// </summary>
@@ -92,10 +94,6 @@ public class GraphicsSettingsData
 
     public EGraphicQuality TerrainQuality { get; set; }
 
-    public EGraphicQuality WindQuality { get; set; }
-
-    public ETreeGraphicMode TreeMode { get; set; }
-
     public GraphicsSettingsData()
     {
         Resolution = new GraphicsSettingsResolution();
@@ -112,6 +110,7 @@ public class GraphicsSettingsData
         IsFilmGrainEnabled = false;
         IsNiceBlendEnabled = true;
         IsGrassDisplacementEnabled = false;
+        IsWindEnabled = true;
         IsFoliageFocusEnabled = false;
         IsRagdollsEnabled = true;
         IsDebrisEnabled = true;
@@ -137,8 +136,6 @@ public class GraphicsSettingsData
         ScopeQuality2 = EGraphicQuality.OFF;
         OutlineQuality = EGraphicQuality.LOW;
         TerrainQuality = EGraphicQuality.MEDIUM;
-        WindQuality = EGraphicQuality.OFF;
-        TreeMode = ETreeGraphicMode.LEGACY;
         RenderMode2 = ERenderMode.FORWARD;
         LandmarkQuality = EGraphicQuality.OFF;
     }

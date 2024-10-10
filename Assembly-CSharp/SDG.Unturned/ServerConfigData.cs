@@ -18,6 +18,12 @@ public class ServerConfigData
     public float Max_Packets_Per_Second;
 
     /// <summary>
+    /// If ready-to-connect messages are received more than twice from the same client in less than this many
+    /// seconds they will be kicked.
+    /// </summary>
+    public float Join_Rate_Limit_Window_Seconds;
+
+    /// <summary>
     /// If a rate-limited method is called this many times within cooldown window the client will be kicked.
     /// For example a value of 1 means the client will be kicked the first time they call the method off-cooldown. (not recommended)
     /// </summary>
@@ -122,6 +128,7 @@ public class ServerConfigData
         Timeout_Queue_Seconds = 15f;
         Timeout_Game_Seconds = 30f;
         Max_Packets_Per_Second = 50f;
+        Join_Rate_Limit_Window_Seconds = 40f;
         Rate_Limit_Kick_Threshold = 10;
         Fake_Lag_Threshold_Seconds = 3f;
         Fake_Lag_Damage_Penalty_Multiplier = 0.1f;

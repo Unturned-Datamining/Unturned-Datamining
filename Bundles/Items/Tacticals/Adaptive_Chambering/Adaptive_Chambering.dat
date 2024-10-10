@@ -8,3 +8,13 @@ Size_Y 1
 Size_Z 0.125
 
 Firerate 1
+Recoil_X 1.2
+Recoil_Y 1.3
+
+Blueprints 1
+Blueprint_0_Type Tool
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID this
+Blueprint_0_Product "67" // Metal Scrap
+Blueprint_0_Products 2
+Blueprint_0_Build 27

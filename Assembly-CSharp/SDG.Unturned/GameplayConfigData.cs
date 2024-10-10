@@ -66,6 +66,18 @@ public class GameplayConfigData
     /// </summary>
     public bool Allow_Freeform_Buildables_On_Vehicles;
 
+    /// <summary>
+    /// If true, aim flinches away from center when damaged.
+    /// Defaults to true.
+    /// </summary>
+    public bool Enable_Damage_Flinch;
+
+    /// <summary>
+    /// If true, camera will shake near explosions. Can also be toned down client-side in Options menu.
+    /// Defaults to true.
+    /// </summary>
+    public bool Enable_Explosion_Camera_Shake;
+
     internal const uint MAX_TIMER_EXIT = 60u;
 
     public uint Timer_Exit;
@@ -146,6 +158,8 @@ public class GameplayConfigData
         Max_Group_Members = 0u;
         Allow_Freeform_Buildables = true;
         Allow_Freeform_Buildables_On_Vehicles = true;
+        Enable_Damage_Flinch = true;
+        Enable_Explosion_Camera_Shake = true;
     }
 
     public void InitSingleplayerDefaults()

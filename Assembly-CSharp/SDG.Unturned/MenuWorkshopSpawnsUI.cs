@@ -575,7 +575,7 @@ public class MenuWorkshopSpawnsUI
         Asset asset = (ushort.TryParse(addTableIDField.Text, out result) ? Assets.find(type, result) : ((!Guid.TryParse(addTableIDField.Text, out result2)) ? null : Assets.find(result2)));
         if (asset == null)
         {
-            UnturnedLog.info("Spawns editor unable to find child asset matching \"" + addRootIDField.Text + "\"");
+            UnturnedLog.info("Spawns editor unable to find child asset matching \"" + addTableIDField.Text + "\"");
             return;
         }
         foreach (SpawnTable table in MenuWorkshopSpawnsUI.asset.tables)

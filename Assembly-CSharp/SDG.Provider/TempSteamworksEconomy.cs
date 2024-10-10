@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using Newtonsoft.Json;
 using SDG.Framework.IO.Deserialization;
 using SDG.SteamworksProvider;
 using SDG.Unturned;
@@ -22,6 +21,11 @@ public class TempSteamworksEconomy
     public delegate void InventoryExchanged(List<SteamItemDetails_t> grantedItems);
 
     public delegate void InventoryExchangeFailed();
+
+    /// <summary>
+    /// For purchasable box and bundle itemdefs this maps their itemdefid to the list of itemdefids in their desc.
+    /// </summary>
+    private static Dictionary<int, List<int>> bundleContents;
 
     public InventoryRefreshed onInventoryRefreshed;
 
@@ -70,7 +74,7 @@ public class TempSteamworksEconomy
 
     public bool canOpenInventory => true;
 
-    public static List<UnturnedEconInfo> econInfo { get; private set; }
+    internal static Dictionary<int, UnturnedEconInfo> econInfo { get; private set; }
 
     public static byte[] econInfoHash { get; private set; }
 
@@ -229,17 +233,26 @@ public class TempSteamworksEconomy
         return 0;
     }
 
+    private UnturnedEconInfo FindEconInfo(int itemdefid)
+    {
+        if (econInfo.TryGetValue(itemdefid, out var value))
+        {
+            return value;
+        }
+        return null;
+    }
+
     /// <summary>
     /// Does itemdefid exist in the EconInfo.json file?
     /// </summary>
     public bool IsItemKnown(int item)
     {
-        return econInfo.Find((UnturnedEconInfo x) => x.itemdefid == item) != null;
+        return FindEconInfo(item) != null;
     }
 
     public string getInventoryName(int item)
     {
-        UnturnedEconInfo unturnedEconInfo = econInfo.Find((UnturnedEconInfo x) => x.itemdefid == item);
+        UnturnedEconInfo unturnedEconInfo = FindEconInfo(item);
         if (unturnedEconInfo == null)
         {
             return "";
@@ -249,17 +262,27 @@ public class TempSteamworksEconomy
 
     public string getInventoryType(int item)
     {
-        UnturnedEconInfo unturnedEconInfo = econInfo.Find((UnturnedEconInfo x) => x.itemdefid == item);
+        UnturnedEconInfo unturnedEconInfo = FindEconInfo(item);
         if (unturnedEconInfo == null)
         {
             return "";
         }
-        return unturnedEconInfo.type;
+        return unturnedEconInfo.display_type;
+    }
+
+    public bool IsItemBundle(int itemdefid)
+    {
+        UnturnedEconInfo unturnedEconInfo = FindEconInfo(itemdefid);
+        if (unturnedEconInfo != null)
+        {
+            return unturnedEconInfo.econ_type == 13;
+        }
+        return false;
     }
 
     public string getInventoryDescription(int item)
     {
-        UnturnedEconInfo unturnedEconInfo = econInfo.Find((UnturnedEconInfo x) => x.itemdefid == item);
+        UnturnedEconInfo unturnedEconInfo = FindEconInfo(item);
         if (unturnedEconInfo == null)
         {
             return "";
@@ -269,12 +292,12 @@ public class TempSteamworksEconomy
 
     public bool getInventoryMarketable(int item)
     {
-        return econInfo.Find((UnturnedEconInfo x) => x.itemdefid == item)?.marketable ?? false;
+        return FindEconInfo(item)?.marketable ?? false;
     }
 
     public int getInventoryScraps(int item)
     {
-        return econInfo.Find((UnturnedEconInfo x) => x.itemdefid == item)?.scraps ?? 0;
+        return FindEconInfo(item)?.scraps ?? 0;
     }
 
     /// <summary>
@@ -296,7 +319,7 @@ public class TempSteamworksEconomy
 
     public Color getInventoryColor(int item)
     {
-        UnturnedEconInfo unturnedEconInfo = econInfo.Find((UnturnedEconInfo x) => x.itemdefid == item);
+        UnturnedEconInfo unturnedEconInfo = FindEconInfo(item);
         if (unturnedEconInfo == null)
         {
             return Color.white;
@@ -313,7 +336,7 @@ public class TempSteamworksEconomy
 
     public UnturnedEconInfo.EQuality getInventoryQuality(int item)
     {
-        return econInfo.Find((UnturnedEconInfo x) => x.itemdefid == item)?.quality ?? UnturnedEconInfo.EQuality.None;
+        return FindEconInfo(item)?.quality ?? UnturnedEconInfo.EQuality.None;
     }
 
     public UnturnedEconInfo.ERarity getInventoryRarity(int item)
@@ -369,7 +392,7 @@ public class TempSteamworksEconomy
 
     public ushort getInventoryMythicID(int item)
     {
-        UnturnedEconInfo unturnedEconInfo = econInfo.Find((UnturnedEconInfo x) => x.itemdefid == item);
+        UnturnedEconInfo unturnedEconInfo = FindEconInfo(item);
         if (unturnedEconInfo == null)
         {
             return 0;
@@ -379,7 +402,7 @@ public class TempSteamworksEconomy
 
     public void getInventoryTargetID(int item, out Guid item_guid, out Guid vehicle_guid)
     {
-        UnturnedEconInfo unturnedEconInfo = econInfo.Find((UnturnedEconInfo x) => x.itemdefid == item);
+        UnturnedEconInfo unturnedEconInfo = FindEconInfo(item);
         if (unturnedEconInfo == null)
         {
             item_guid = default(Guid);
@@ -387,8 +410,8 @@ public class TempSteamworksEconomy
         }
         else
         {
-            item_guid = unturnedEconInfo.item_guid;
-            vehicle_guid = unturnedEconInfo.vehicle_guid;
+            item_guid = unturnedEconInfo.target_game_asset_guid;
+            vehicle_guid = unturnedEconInfo.target_game_asset_guid;
         }
     }
 
@@ -400,7 +423,7 @@ public class TempSteamworksEconomy
 
     public ushort getInventorySkinID(int item)
     {
-        UnturnedEconInfo unturnedEconInfo = econInfo.Find((UnturnedEconInfo x) => x.itemdefid == item);
+        UnturnedEconInfo unturnedEconInfo = FindEconInfo(item);
         if (unturnedEconInfo == null)
         {
             return 0;
@@ -410,14 +433,14 @@ public class TempSteamworksEconomy
 
     public Texture2D LoadItemIcon(int itemdefid)
     {
-        UnturnedEconInfo unturnedEconInfo = econInfo.Find((UnturnedEconInfo x) => x.itemdefid == itemdefid);
+        UnturnedEconInfo unturnedEconInfo = FindEconInfo(itemdefid);
         if (unturnedEconInfo == null)
         {
             return null;
         }
-        if (unturnedEconInfo.item_guid != default(Guid))
+        if (unturnedEconInfo.target_game_asset_guid != default(Guid))
         {
-            ItemAsset itemAsset = Assets.find<ItemAsset>(unturnedEconInfo.item_guid);
+            ItemAsset itemAsset = Assets.find<ItemAsset>(unturnedEconInfo.target_game_asset_guid);
             if (itemAsset == null)
             {
                 return null;
@@ -436,11 +459,29 @@ public class TempSteamworksEconomy
             }
             return Resources.Load<Texture2D>("Economy" + itemAsset.proPath + "/Icon_Large");
         }
-        if (unturnedEconInfo.vehicle_guid != default(Guid))
-        {
-            return null;
-        }
         return Resources.Load<Texture2D>("Economy/Item/" + itemdefid + "/Icon_Large");
+    }
+
+    /// <summary>
+    /// Get list of itemdefids mentioned in purchasable box or bundle item description.
+    /// </summary>
+    internal List<int> GetBundleContents(int itemdefid)
+    {
+        if (bundleContents.TryGetValue(itemdefid, out var value))
+        {
+            return value;
+        }
+        return null;
+    }
+
+    internal HashSet<int> GatherOwnedItemDefIds()
+    {
+        HashSet<int> hashSet = new HashSet<int>(inventoryDetails.Count);
+        foreach (SteamItemDetails_t inventoryDetail in inventoryDetails)
+        {
+            hashSet.Add(inventoryDetail.m_iDefinition.m_SteamItemDef);
+        }
+        return hashSet;
     }
 
     public void consumeItem(ulong instance, uint quantity)
@@ -914,14 +955,14 @@ public class TempSteamworksEconomy
         }
         JSONDeserializer jSONDeserializer = new JSONDeserializer();
         new List<UnturnedEconInfo>();
-        foreach (UnturnedEconInfo translatedItem in ((IDeserializer)jSONDeserializer).deserialize<List<UnturnedEconInfo>>(text))
+        foreach (UnturnedEconInfo item in ((IDeserializer)jSONDeserializer).deserialize<List<UnturnedEconInfo>>(text))
         {
-            UnturnedEconInfo unturnedEconInfo = econInfo.Find((UnturnedEconInfo x) => x.itemdefid == translatedItem.itemdefid);
+            UnturnedEconInfo unturnedEconInfo = FindEconInfo(item.itemdefid);
             if (unturnedEconInfo != null)
             {
-                unturnedEconInfo.name = translatedItem.name;
-                unturnedEconInfo.type = translatedItem.type;
-                unturnedEconInfo.description = translatedItem.description;
+                unturnedEconInfo.name = item.name;
+                unturnedEconInfo.display_type = item.display_type;
+                unturnedEconInfo.description = item.description;
             }
         }
     }
@@ -987,13 +1028,61 @@ public class TempSteamworksEconomy
     public TempSteamworksEconomy(SteamworksAppInfo newAppInfo)
     {
         appInfo = newAppInfo;
-        using (FileStream underlyingStream = new FileStream((UnityPaths.ProjectDirectory == null) ? PathEx.Join(UnturnedPaths.RootDirectory, "EconInfo.json") : PathEx.Join(UnityPaths.ProjectDirectory, "Builds", "Shared_Release", "EconInfo.json"), FileMode.Open, FileAccess.Read, FileShare.Read))
+        string path = ((UnityPaths.ProjectDirectory == null) ? PathEx.Join(UnturnedPaths.RootDirectory, "EconInfo.bin") : PathEx.Join(UnityPaths.ProjectDirectory, "Builds", "Shared_Release", "EconInfo.bin"));
+        econInfo = new Dictionary<int, UnturnedEconInfo>();
+        bundleContents = new Dictionary<int, List<int>>();
+        try
         {
-            using SHA1Stream sHA1Stream = new SHA1Stream(underlyingStream);
-            using StreamReader reader = new StreamReader(sHA1Stream);
-            using JsonTextReader reader2 = new JsonTextReader(reader);
-            econInfo = new JsonSerializer().Deserialize<List<UnturnedEconInfo>>(reader2);
+            using FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            using SHA1Stream sHA1Stream = new SHA1Stream(fileStream);
+            using (BinaryReader binaryReader = new BinaryReader(fileStream))
+            {
+                binaryReader.ReadInt32();
+                int num = binaryReader.ReadInt32();
+                for (int i = 0; i < num; i++)
+                {
+                    UnturnedEconInfo unturnedEconInfo = new UnturnedEconInfo
+                    {
+                        name = binaryReader.ReadString(),
+                        display_type = binaryReader.ReadString(),
+                        description = binaryReader.ReadString(),
+                        name_color = binaryReader.ReadString(),
+                        itemdefid = binaryReader.ReadInt32(),
+                        marketable = binaryReader.ReadBoolean(),
+                        scraps = binaryReader.ReadInt32(),
+                        target_game_asset_guid = new Guid(binaryReader.ReadBytes(16)),
+                        item_skin = binaryReader.ReadInt32(),
+                        item_effect = binaryReader.ReadInt32(),
+                        quality = (UnturnedEconInfo.EQuality)binaryReader.ReadInt32(),
+                        econ_type = binaryReader.ReadInt32()
+                    };
+                    if (!econInfo.TryAdd(unturnedEconInfo.itemdefid, unturnedEconInfo))
+                    {
+                        UnturnedLog.error($"Duplicate itemdefid {unturnedEconInfo.itemdefid} name: \"{unturnedEconInfo.name}\"");
+                    }
+                }
+                int num2 = binaryReader.ReadInt32();
+                for (int j = 0; j < num2; j++)
+                {
+                    int num3 = binaryReader.ReadInt32();
+                    int num4 = binaryReader.ReadInt32();
+                    List<int> list = new List<int>(num4);
+                    for (int k = 0; k < num4; k++)
+                    {
+                        int item = binaryReader.ReadInt32();
+                        list.Add(item);
+                    }
+                    if (!bundleContents.TryAdd(num3, list))
+                    {
+                        UnturnedLog.error($"Duplicate bundle contents itemdefid {num3}");
+                    }
+                }
+            }
             econInfoHash = sHA1Stream.Hash;
+        }
+        catch (Exception e)
+        {
+            UnturnedLog.exception(e, "Caught exception loading EconInfo.bin:");
         }
         if (appInfo.isDedicated)
         {

@@ -5,7 +5,7 @@ ID 87
 Messages 1
 Message_0_Pages 1
 
-Responses 4
+Responses 7
 
 Response_0_Dialogue 88
 Response_0_Conditions 1
@@ -41,3 +41,47 @@ Response_2_Condition_0_Logic Equal
 Response_2_Condition_0_ID 240
 Response_2_Condition_0_Status Ready
 Response_2_Condition_0_Reset
+
+// More jets?
+// Pilot_More_Jets_Request
+Response_3_Dialogue cdc36e0305184e35b99dff3425d4f40a
+Response_3_Conditions 2
+Response_3_Condition_0_Type Quest
+Response_3_Condition_0_Logic Equal
+Response_3_Condition_0_ID 240
+Response_3_Condition_0_Status Completed
+Response_3_Condition_1_Type Flag_Short
+Response_3_Condition_1_Logic Equal
+Response_3_Condition_1_ID 348
+Response_3_Condition_1_Value 0
+Response_3_Condition_1_Allow_Unset
+Response_3_Rewards 1
+Response_3_Reward_0_Type Flag_Short
+Response_3_Reward_0_Logic Equal
+Response_3_Reward_0_ID 348
+Response_3_Reward_0_Value 1
+Response_3_Reward_0_Modification Assign
+
+// I've got aircraft authorization
+// Pilot_More_Jets_Authorization
+Response_4_Dialogue 6f0db8760dd7497f90782c13a89c9dda
+Response_4_Conditions 1
+Response_4_Condition_0_Type Flag_Short
+Response_4_Condition_0_Logic Equal
+Response_4_Condition_0_ID 348
+Response_4_Condition_0_Value 2
+Response_4_Rewards 1
+Response_4_Reward_0_Type Flag_Short
+Response_4_Reward_0_Logic Equal
+Response_4_Reward_0_ID 348
+Response_4_Reward_0_Value 3
+Response_4_Reward_0_Modification Assign
+
+// I need an aircraft
+// Aircraft_Hangar
+Response_5_Vendor d98e2980ad3d47518c08b9e1df98f7ef
+Response_5_Conditions 1
+Response_5_Condition_0_Type Flag_Short
+Response_5_Condition_0_Logic Equal
+Response_5_Condition_0_ID 348
+Response_5_Condition_0_Value 3

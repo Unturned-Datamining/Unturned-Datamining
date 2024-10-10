@@ -10,9 +10,16 @@ Size_Z 0.35
 
 Clean_Water 35
 
-Blueprints 1
+Blueprints 2
 Blueprint_0_Type Repair
 Blueprint_0_Supply_0_ID 392
 Blueprint_0_Supply_0_Amount 1
 Blueprint_0_Build 27
+Blueprint_1_Type Tool
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID this
+Blueprint_1_Product "67" // Metal Scrap
+Blueprint_1_Products 2
+Blueprint_1_Build 27
+
 ConsumeAudioClip Sounds/DrinkSwallow.mp3

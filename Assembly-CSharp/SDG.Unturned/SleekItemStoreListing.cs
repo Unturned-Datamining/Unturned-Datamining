@@ -4,6 +4,8 @@ namespace SDG.Unturned;
 
 internal class SleekItemStoreListing : SleekWrapper
 {
+    public bool canShowAsInCart = true;
+
     private ItemStore.Listing listing;
 
     private bool hasNewLabel;
@@ -72,7 +74,7 @@ internal class SleekItemStoreListing : SleekWrapper
 
     public void RefreshInCart()
     {
-        cartImage.IsVisible = button.IsClickable && ItemStore.Get().GetQuantityInCart(listing.itemdefid) > 0;
+        cartImage.IsVisible = canShowAsInCart && button.IsClickable && ItemStore.Get().GetQuantityInCart(listing.itemdefid) > 0;
     }
 
     public void SetListing(ItemStore.Listing listing)
@@ -127,7 +129,6 @@ internal class SleekItemStoreListing : SleekWrapper
             ItemStoreSavedata.MarkNewListingSeen(listing.itemdefid);
             stampLabel.IsVisible = false;
         }
-        ItemStoreDetailsMenu.instance.Open(listing);
-        ItemStoreMenu.instance.Close();
+        ItemStore.Get().ViewItem(listing.itemdefid);
     }
 }

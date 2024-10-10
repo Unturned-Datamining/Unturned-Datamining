@@ -71,6 +71,11 @@ internal abstract class ItemStore
     /// </summary>
     protected int[] exludedListingIndices;
 
+    /// <summary>
+    /// Subset of listings.
+    /// </summary>
+    protected int[] unownedDiscountedBundleListingIndices;
+
     protected List<CartEntry> itemsInCart = new List<CartEntry>();
 
     public bool IsCartEmpty => itemsInCart.IsEmpty();
@@ -223,6 +228,11 @@ internal abstract class ItemStore
     public int[] GetDiscountedListingIndices()
     {
         return discountedListingIndices;
+    }
+
+    public int[] GetUnownedDiscountedBundleListingIndices()
+    {
+        return unownedDiscountedBundleListingIndices;
     }
 
     public int[] GetExcludedListingIndices()

@@ -17,9 +17,15 @@ public class MenuSurvivorsClothingInspectUI
 
     private static ISleekSlider slider;
 
+    private static ISleekToggle previewOnCharacterToggle;
+
+    private static ISleekToggle previewSoloToggle;
+
     private static int item;
 
     private static ulong instance;
+
+    private static EMenuSurvivorsClothingInspectUIOpenContext openContext;
 
     private static Transform inspect;
 
@@ -29,15 +35,16 @@ public class MenuSurvivorsClothingInspectUI
 
     private static Camera camera;
 
-    public static void open()
+    public static void open(EMenuSurvivorsClothingInspectUIOpenContext openContext)
     {
         if (!active)
         {
             active = true;
+            MenuSurvivorsClothingInspectUI.openContext = openContext;
             camera.gameObject.SetActive(value: true);
-            look._yaw = 0f;
-            look.yaw = 0f;
-            slider.Value = 0f;
+            look._yaw = Characters.characterYaw;
+            look.yaw = Characters.characterYaw;
+            slider.Value = Characters.characterYaw / 360f;
             container.AnimateIntoView();
         }
     }
@@ -47,8 +54,27 @@ public class MenuSurvivorsClothingInspectUI
         if (active)
         {
             active = false;
+            Characters.previewItemDefId = 0;
+            Characters.previewItemSolo = false;
+            Characters.RefreshPreviewCharacterModel();
             camera.gameObject.SetActive(value: false);
             container.AnimateOutOfView(0f, 1f);
+        }
+    }
+
+    public static void OpenPreviousMenu()
+    {
+        switch (openContext)
+        {
+        case EMenuSurvivorsClothingInspectUIOpenContext.OwnedItem:
+            MenuSurvivorsClothingItemUI.open();
+            break;
+        case EMenuSurvivorsClothingInspectUIOpenContext.ItemStoreDetailsMenu:
+            ItemStoreDetailsMenu.instance.OpenCurrentListing();
+            break;
+        case EMenuSurvivorsClothingInspectUIOpenContext.ItemStoreBundleContents:
+            ItemStoreBundleContentsMenu.instance.OpenCurrentListing();
+            break;
         }
     }
 
@@ -68,12 +94,26 @@ public class MenuSurvivorsClothingInspectUI
         Provider.provider.economyService.getInventoryTargetID(item, out var item_guid, out var vehicle_guid);
         ushort inventorySkinID = Provider.provider.economyService.getInventorySkinID(item);
         ushort num = Provider.provider.economyService.getInventoryMythicID(item);
-        if (num == 0)
+        if (num == 0 && instance != 0L)
         {
             num = Provider.provider.economyService.getInventoryParticleEffect(instance);
         }
         ItemAsset itemAsset = Assets.find<ItemAsset>(item_guid);
         VehicleAsset vehicleAsset = VehicleTool.FindVehicleByGuidAndHandleRedirects(vehicle_guid);
+        if (itemAsset is ItemClothingAsset)
+        {
+            previewOnCharacterToggle.IsVisible = true;
+            previewSoloToggle.IsVisible = true;
+            ApplyPreview();
+        }
+        else
+        {
+            previewOnCharacterToggle.IsVisible = false;
+            previewSoloToggle.IsVisible = false;
+            Characters.previewItemDefId = 0;
+            Characters.previewItemSolo = false;
+            Characters.RefreshPreviewCharacterModel();
+        }
         if (itemAsset == null && vehicleAsset == null)
         {
             return;
@@ -119,14 +159,33 @@ public class MenuSurvivorsClothingInspectUI
         look.target = model.gameObject;
     }
 
+    private static void ApplyPreview()
+    {
+        Characters.previewItemDefId = (previewOnCharacterToggle.Value ? item : 0);
+        Characters.previewItemSolo = previewOnCharacterToggle.Value && previewSoloToggle.Value;
+        Characters.RefreshPreviewCharacterModel();
+    }
+
+    private static void OnPreviewOnCharacterToggled(ISleekToggle toggle, bool value)
+    {
+        previewSoloToggle.IsInteractable = value;
+        ApplyPreview();
+    }
+
+    private static void OnPreviewSoloToggled(ISleekToggle toggle, bool value)
+    {
+        ApplyPreview();
+    }
+
     private static void onDraggedSlider(ISleekSlider slider, float state)
     {
         look.yaw = state * 360f;
+        Characters.characterYaw = look.yaw;
     }
 
     private static void onClickedBackButton(ISleekElement button)
     {
-        MenuSurvivorsClothingItemUI.open();
+        OpenPreviousMenu();
         close();
     }
 
@@ -159,6 +218,19 @@ public class MenuSurvivorsClothingInspectUI
         image.SizeScale_X = 1f;
         image.SizeScale_Y = 1f;
         sleekBox.AddChild(image);
+        previewOnCharacterToggle = Glazier.Get().CreateToggle();
+        previewOnCharacterToggle.PositionOffset_X = 10f;
+        previewOnCharacterToggle.PositionOffset_Y = 10f;
+        previewOnCharacterToggle.AddLabel(MenuSurvivorsClothingUI.localization.format("PreviewOnCharacterLabel"), ESleekSide.RIGHT);
+        previewOnCharacterToggle.OnValueChanged += OnPreviewOnCharacterToggled;
+        inventory.AddChild(previewOnCharacterToggle);
+        previewSoloToggle = Glazier.Get().CreateToggle();
+        previewSoloToggle.PositionOffset_X = 10f;
+        previewSoloToggle.PositionOffset_Y = 60f;
+        previewSoloToggle.AddLabel(MenuSurvivorsClothingUI.localization.format("PreviewSoloLabel"), ESleekSide.RIGHT);
+        previewSoloToggle.OnValueChanged += OnPreviewSoloToggled;
+        previewSoloToggle.IsInteractable = false;
+        inventory.AddChild(previewSoloToggle);
         slider = Glazier.Get().CreateSlider();
         slider.PositionOffset_Y = 10f;
         slider.PositionScale_Y = 1f;

@@ -22,6 +22,10 @@ public class ItemMeleeAsset : ItemWeaponAsset
 
     public AudioReference impactAudio;
 
+    internal NPCRewardsList weakAttackQuestRewards;
+
+    internal NPCRewardsList strongAttackQuestRewards;
+
     public AudioClip use => _use;
 
     public float strength => _strength;
@@ -103,5 +107,7 @@ public class ItemMeleeAsset : ItemWeaponAsset
             alertRadius = 8f;
         }
         impactAudio = data.ReadAudioReference("ImpactAudioDef", bundle);
+        weakAttackQuestRewards.Parse(data, localization, this, "Weak_Attack_Quest_Rewards", "Weak_Attack_Quest_Reward_");
+        strongAttackQuestRewards.Parse(data, localization, this, "Strong_Attack_Quest_Rewards", "Strong_Attack_Quest_Reward_");
     }
 }

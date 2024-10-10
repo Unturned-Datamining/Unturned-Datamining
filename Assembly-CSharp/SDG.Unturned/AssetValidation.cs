@@ -168,7 +168,7 @@ public static class AssetValidation
         foreach (int texturePropertyNameID in texturePropertyNameIDs)
         {
             Texture texture = sharedMaterial.GetTexture(texturePropertyNameID);
-            if (texture != null && !owningAsset.ignoreTextureReadable && texture.isReadable)
+            if (texture != null && !owningAsset.ignoreTextureReadable && !(texture is RenderTexture) && texture.isReadable)
             {
                 Assets.reportError(owningAsset, "{0} texture '{1}' referenced by material '{2}' used by Renderer '{3}' can save memory by disabling read/write.", gameObject.name, texture.name, sharedMaterial.name, component.name);
             }

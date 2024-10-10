@@ -1,4 +1,5 @@
 using System;
+using SDG.Framework.Devkit;
 using SDG.Framework.IO.FormattedFiles;
 using SDG.Unturned;
 using UnityEngine;
@@ -58,21 +59,25 @@ public class FoliageVolume : LevelVolume<FoliageVolume, FoliageVolumeManager>
         private void OnSwappedMode(SleekButtonState button, int state)
         {
             volume.mode = ((state != 0) ? EFoliageVolumeMode.SUBTRACTIVE : EFoliageVolumeMode.ADDITIVE);
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnInstancedMeshesToggled(ISleekToggle toggle, bool state)
         {
             volume.instancedMeshes = state;
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnResourcesToggled(ISleekToggle toggle, bool state)
         {
             volume.resources = state;
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnObjectsToggled(ISleekToggle toggle, bool state)
         {
             volume.objects = state;
+            LevelHierarchy.MarkDirty();
         }
     }
 

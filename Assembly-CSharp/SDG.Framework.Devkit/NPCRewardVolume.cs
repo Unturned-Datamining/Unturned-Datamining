@@ -43,6 +43,7 @@ public class NPCRewardVolume : LevelVolume<NPCRewardVolume, NPCRewardVolumeManag
             }
             volume._assetGuid = volume.parsedAssetGuid.ToString("N");
             SyncAssetName();
+            LevelHierarchy.MarkDirty();
         }
 
         private void SyncAssetName()

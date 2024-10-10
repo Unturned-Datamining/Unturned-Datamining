@@ -871,7 +871,7 @@ public class InteractableVehicle : Interactable
 
     internal Wheel GetWheelAtIndex(int index)
     {
-        if (_wheels != null && index >= 0 && index <= _wheels.Length)
+        if (_wheels != null && index >= 0 && index < _wheels.Length)
         {
             return _wheels[index];
         }

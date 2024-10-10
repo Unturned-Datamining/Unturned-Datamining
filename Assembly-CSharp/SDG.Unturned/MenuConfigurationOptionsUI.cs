@@ -74,6 +74,14 @@ public class MenuConfigurationOptionsUI
 
     private static SleekButtonState aircraftThirdPersonCameraModeButton;
 
+    private static ISleekSlider flashbangBrightnessSlider;
+
+    private static ISleekSlider cameraShakeIntensitySlider;
+
+    private static SleekButtonState damageFlinchModeButton;
+
+    private static ISleekSlider damageFlinchIntensitySlider;
+
     private static ISleekBox crosshairBox;
 
     private static SleekColorPicker crosshairColorPicker;
@@ -141,6 +149,21 @@ public class MenuConfigurationOptionsUI
             return localization.format("FOV_Slider_LabelV2_Name") + "\n" + localization.format("FOV_Slider_LabelV2_Value", Mathf.RoundToInt(f), Mathf.RoundToInt(desiredVerticalFieldOfView));
         }
         return localization.format("FOV_Slider_Label", Mathf.RoundToInt(desiredVerticalFieldOfView));
+    }
+
+    private static string FormatFlashbangBrightnessLabel()
+    {
+        return localization.format("FlashbangBrightness_Label", OptionsSettings.flashbangBrightness.ToString("P0"));
+    }
+
+    private static string FormatCameraShakeIntensityLabel()
+    {
+        return localization.format("CameraShakeIntensity_Label", OptionsSettings.cameraShakeIntensity.ToString("P0"));
+    }
+
+    private static string FormatDamageFlinchIntensityLabel()
+    {
+        return localization.format("DamageFlinchIntensity_Label", OptionsSettings.damageFlinchIntensity.ToString("P0"));
     }
 
     private static void onDraggedFOVSlider(ISleekSlider slider, float state)
@@ -293,6 +316,29 @@ public class MenuConfigurationOptionsUI
         OptionsSettings.vehicleAircraftThirdPersonCameraMode = (EVehicleThirdPersonCameraMode)index;
     }
 
+    private static void OnFlashbangBrightnessChanged(ISleekSlider slider, float state)
+    {
+        OptionsSettings.flashbangBrightness = state;
+        flashbangBrightnessSlider.UpdateLabel(FormatFlashbangBrightnessLabel());
+    }
+
+    private static void OnCameraShakeIntensityChanged(ISleekSlider slider, float state)
+    {
+        OptionsSettings.cameraShakeIntensity = state;
+        cameraShakeIntensitySlider.UpdateLabel(FormatCameraShakeIntensityLabel());
+    }
+
+    private static void onSwappedDamageFlinchModeState(SleekButtonState button, int index)
+    {
+        OptionsSettings.damageFlinchMode = (EDamageFlinchMode)index;
+    }
+
+    private static void OnDamageFlinchIntensityChanged(ISleekSlider slider, float state)
+    {
+        OptionsSettings.damageFlinchIntensity = state;
+        damageFlinchIntensitySlider.UpdateLabel(FormatDamageFlinchIntensityLabel());
+    }
+
     private static void onCrosshairColorPicked(SleekColorPicker picker, Color color)
     {
         OptionsSettings.crosshairColor = color;
@@ -403,6 +449,13 @@ public class MenuConfigurationOptionsUI
         hitmarkerStyleButton.state = (int)OptionsSettings.hitmarkerStyle;
         vehicleThirdPersonCameraModeButton.state = (int)OptionsSettings.vehicleThirdPersonCameraMode;
         aircraftThirdPersonCameraModeButton.state = (int)OptionsSettings.vehicleAircraftThirdPersonCameraMode;
+        flashbangBrightnessSlider.Value = OptionsSettings.flashbangBrightness;
+        flashbangBrightnessSlider.UpdateLabel(FormatFlashbangBrightnessLabel());
+        cameraShakeIntensitySlider.Value = OptionsSettings.cameraShakeIntensity;
+        cameraShakeIntensitySlider.UpdateLabel(FormatCameraShakeIntensityLabel());
+        damageFlinchModeButton.state = (int)OptionsSettings.damageFlinchMode;
+        damageFlinchIntensitySlider.Value = OptionsSettings.damageFlinchIntensity;
+        damageFlinchIntensitySlider.UpdateLabel(FormatDamageFlinchIntensityLabel());
         crosshairColorPicker.state = OptionsSettings.crosshairColor;
         hitmarkerColorPicker.state = OptionsSettings.hitmarkerColor;
         criticalHitmarkerColorPicker.state = OptionsSettings.criticalHitmarkerColor;
@@ -699,6 +752,41 @@ public class MenuConfigurationOptionsUI
         aircraftThirdPersonCameraModeButton.onSwappedState = onSwappedAircraftThirdPersonCameraModeState;
         optionsBox.AddChild(aircraftThirdPersonCameraModeButton);
         num += 40f;
+        flashbangBrightnessSlider = Glazier.Get().CreateSlider();
+        flashbangBrightnessSlider.PositionOffset_Y = num;
+        flashbangBrightnessSlider.SizeOffset_X = 200f;
+        flashbangBrightnessSlider.SizeOffset_Y = 20f;
+        flashbangBrightnessSlider.Orientation = ESleekOrientation.HORIZONTAL;
+        flashbangBrightnessSlider.AddLabel(FormatFlashbangBrightnessLabel(), ESleekSide.RIGHT);
+        flashbangBrightnessSlider.OnValueChanged += OnFlashbangBrightnessChanged;
+        optionsBox.AddChild(flashbangBrightnessSlider);
+        num += 30f;
+        cameraShakeIntensitySlider = Glazier.Get().CreateSlider();
+        cameraShakeIntensitySlider.PositionOffset_Y = num;
+        cameraShakeIntensitySlider.SizeOffset_X = 200f;
+        cameraShakeIntensitySlider.SizeOffset_Y = 20f;
+        cameraShakeIntensitySlider.Orientation = ESleekOrientation.HORIZONTAL;
+        cameraShakeIntensitySlider.AddLabel(FormatCameraShakeIntensityLabel(), ESleekSide.RIGHT);
+        cameraShakeIntensitySlider.OnValueChanged += OnCameraShakeIntensityChanged;
+        optionsBox.AddChild(cameraShakeIntensitySlider);
+        num += 30f;
+        damageFlinchModeButton = new SleekButtonState(new GUIContent(localization.format("DamageFlinchMode_RollOnly")), new GUIContent(localization.format("DamageFlinchMode_Directional")));
+        damageFlinchModeButton.PositionOffset_Y = num;
+        damageFlinchModeButton.SizeOffset_X = 200f;
+        damageFlinchModeButton.SizeOffset_Y = 30f;
+        damageFlinchModeButton.AddLabel(localization.format("DamageFlinchMode_Label"), ESleekSide.RIGHT);
+        damageFlinchModeButton.onSwappedState = onSwappedDamageFlinchModeState;
+        optionsBox.AddChild(damageFlinchModeButton);
+        num += 40f;
+        damageFlinchIntensitySlider = Glazier.Get().CreateSlider();
+        damageFlinchIntensitySlider.PositionOffset_Y = num;
+        damageFlinchIntensitySlider.SizeOffset_X = 200f;
+        damageFlinchIntensitySlider.SizeOffset_Y = 20f;
+        damageFlinchIntensitySlider.Orientation = ESleekOrientation.HORIZONTAL;
+        damageFlinchIntensitySlider.AddLabel(FormatDamageFlinchIntensityLabel(), ESleekSide.RIGHT);
+        damageFlinchIntensitySlider.OnValueChanged += OnDamageFlinchIntensityChanged;
+        optionsBox.AddChild(damageFlinchIntensitySlider);
+        num += 30f;
         crosshairBox = Glazier.Get().CreateBox();
         crosshairBox.PositionOffset_Y = num;
         crosshairBox.SizeOffset_X = 240f;

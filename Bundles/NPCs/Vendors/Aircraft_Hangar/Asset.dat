@@ -1,0 +1,45 @@
+GUID d98e2980ad3d47518c08b9e1df98f7ef
+Type Vendor
+
+Selling 6
+
+// Fighter Jet
+Selling_0_Type Vehicle
+Selling_0_ID 500a4bf5048648a6b1bad8c78874fe13
+Selling_0_Spawnpoint Liberator_Jet
+Selling_0_Cost 13000
+
+// Annushka
+Selling_1_Type Vehicle
+Selling_1_ID d8811bc349b14d808b713b6e87dcdd70
+Selling_1_Spawnpoint Liberator_Jet
+Selling_1_Cost 10000
+Selling_1_PaintColor #475e83
+
+// Transport Heli
+Selling_2_Type Vehicle
+Selling_2_ID 5f150e4d56194f5cb478317651b476b5
+Selling_2_Spawnpoint Liberator_Jet
+Selling_2_Cost 10000
+Selling_2_PaintColor #475e83
+
+// Attack Heli
+Selling_3_Type Vehicle
+Selling_3_ID 0999953ab4b846f0990b7a4ae3a51d9e
+Selling_3_Spawnpoint Liberator_Jet
+Selling_3_Cost 13000
+Selling_3_PaintColor #475e83
+
+// Hummingbird
+Selling_4_Type Vehicle
+Selling_4_ID e2850722c85c4871afbb94c670f56c20
+Selling_4_Spawnpoint Liberator_Jet
+Selling_4_Cost 10000
+Selling_4_PaintColor #475e83
+
+// Orca
+Selling_5_Type Vehicle
+Selling_5_ID d5efeb331b40409c9ef6df1f24174dc9
+Selling_5_Spawnpoint Liberator_Jet
+Selling_5_Cost 10000
+Selling_5_PaintColor #475e83

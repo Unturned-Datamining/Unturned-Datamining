@@ -386,7 +386,20 @@ public class UseableMelee : Useable
             }
             base.player.input.sendRaycast(raycastInfo, ERaycastInfoUsage.Melee);
         }
-        if (!Provider.isServer || !base.player.input.hasInputs())
+        if (!Provider.isServer)
+        {
+            return;
+        }
+        switch (swingMode)
+        {
+        case ESwingMode.WEAK:
+            equippedMeleeAsset.weakAttackQuestRewards.Grant(base.player);
+            break;
+        case ESwingMode.STRONG:
+            equippedMeleeAsset.strongAttackQuestRewards.Grant(base.player);
+            break;
+        }
+        if (!base.player.input.hasInputs())
         {
             return;
         }

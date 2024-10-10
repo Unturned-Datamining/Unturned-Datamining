@@ -144,7 +144,7 @@ public abstract class Asset
         for (int i = 0; i < typeNameWithoutSuffix.Length; i++)
         {
             char c = typeNameWithoutSuffix[i];
-            if (i > 0 && char.IsUpper(c))
+            if (i > 0 && char.IsUpper(c) && !char.IsUpper(typeNameWithoutSuffix[i - 1]))
             {
                 stringBuilder.Append(' ');
             }

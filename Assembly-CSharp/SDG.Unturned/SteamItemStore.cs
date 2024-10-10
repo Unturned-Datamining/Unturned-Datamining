@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using SDG.Provider;
 using Steamworks;
 
 namespace SDG.Unturned;
@@ -8,6 +9,10 @@ namespace SDG.Unturned;
 internal class SteamItemStore : ItemStore
 {
     public const string NEW_ITEM_PROMOTION_KEY = "NewItemSeenPromotionId";
+
+    private bool isWaitingForSteamInventory;
+
+    private bool isWaitingForLiveConfig;
 
     private CallResult<SteamInventoryRequestPricesResult_t> requestPricesCallResult;
 
@@ -225,14 +230,18 @@ internal class SteamItemStore : ItemStore
         int num2 = (base.HasDiscountedListings ? GetDiscountedListingIndices().Length : 0);
         int num3 = GetListings().Length;
         UnturnedLog.info($"Received Steam item store prices - Discounted: {num2} All: {num3}");
-        if (LiveConfig.WasPopulated)
+        if (!Provider.provider.economyService.isInventoryAvailable)
         {
-            OnLiveConfigRefreshed();
+            isWaitingForSteamInventory = true;
+            TempSteamworksEconomy economyService = Provider.provider.economyService;
+            economyService.onInventoryRefreshed = (TempSteamworksEconomy.InventoryRefreshed)Delegate.Combine(economyService.onInventoryRefreshed, new TempSteamworksEconomy.InventoryRefreshed(OnInventoryRefreshed));
         }
-        else
+        if (!LiveConfig.WasPopulated)
         {
+            isWaitingForLiveConfig = true;
             LiveConfig.OnRefreshed += OnLiveConfigRefreshed;
         }
+        MaybeFinalizePricesReceived();
     }
 
     private void OnStartPurchaseResultReady(SteamInventoryStartPurchaseResult_t result, bool ioFailure)
@@ -264,16 +273,79 @@ internal class SteamItemStore : ItemStore
         }
     }
 
+    private void OnInventoryRefreshed()
+    {
+        TempSteamworksEconomy economyService = Provider.provider.economyService;
+        economyService.onInventoryRefreshed = (TempSteamworksEconomy.InventoryRefreshed)Delegate.Remove(economyService.onInventoryRefreshed, new TempSteamworksEconomy.InventoryRefreshed(OnInventoryRefreshed));
+        isWaitingForSteamInventory = false;
+        MaybeFinalizePricesReceived();
+    }
+
     private void OnLiveConfigRefreshed()
     {
         LiveConfig.OnRefreshed -= OnLiveConfigRefreshed;
+        isWaitingForLiveConfig = false;
+        MaybeFinalizePricesReceived();
+    }
+
+    private void RefreshOwnedItems()
+    {
+        HashSet<int> hashSet = Provider.provider.economyService.GatherOwnedItemDefIds();
+        List<int> list = new List<int>();
+        if (discountedListingIndices != null && discountedListingIndices.Length != 0)
+        {
+            int[] array = discountedListingIndices;
+            foreach (int num in array)
+            {
+                Listing listing = listings[num];
+                if (!Provider.provider.economyService.IsItemBundle(listing.itemdefid))
+                {
+                    continue;
+                }
+                List<int> bundleContents = Provider.provider.economyService.GetBundleContents(listing.itemdefid);
+                if (bundleContents == null || bundleContents.Count < 1)
+                {
+                    continue;
+                }
+                bool flag = false;
+                foreach (int item in bundleContents)
+                {
+                    if (hashSet.Contains(item))
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag)
+                {
+                    list.Add(num);
+                }
+            }
+        }
+        unownedDiscountedBundleListingIndices = list.ToArray();
+    }
+
+    private void MaybeFinalizePricesReceived()
+    {
+        if (isWaitingForSteamInventory || isWaitingForLiveConfig)
+        {
+            return;
+        }
         RefreshNewItems();
         RefreshFeaturedItems();
         RefreshExcludedItems();
+        RefreshOwnedItems();
         int num = (base.HasNewListings ? GetNewListingIndices().Length : 0);
         int num2 = (base.HasFeaturedListings ? GetFeaturedListingIndices().Length : 0);
         UnturnedLog.info($"Received Steam item store live config - New: {num} Featured: {num2}");
-        OnPricesReceived?.Invoke();
+        try
+        {
+            OnPricesReceived?.Invoke();
+        }
+        catch (Exception e)
+        {
+            UnturnedLog.exception(e, "Caught exception during OnPricesReceived event:");
+        }
     }
 
     public SteamItemStore()

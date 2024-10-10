@@ -57,7 +57,8 @@ public class SleekVendor : SleekWrapper
         base.SizeOffset_Y = 60f;
         if (element.hasIcon)
         {
-            if (Assets.find(EAssetType.ITEM, element.id) is ItemAsset itemAsset)
+            ItemAsset itemAsset = Assets.FindItemByGuidOrLegacyId<ItemAsset>(element.TargetAssetGuid, element.id);
+            if (itemAsset != null)
             {
                 SleekItemIcon sleekItemIcon = new SleekItemIcon
                 {
@@ -76,7 +77,16 @@ public class SleekVendor : SleekWrapper
                 }
                 num = sleekItemIcon.PositionOffset_X + sleekItemIcon.SizeOffset_X;
                 AddChild(sleekItemIcon);
-                sleekItemIcon.Refresh(element.id, 100, itemAsset.getState(isFull: false), itemAsset, Mathf.RoundToInt(sleekItemIcon.SizeOffset_X), Mathf.RoundToInt(sleekItemIcon.SizeOffset_Y));
+                byte[] array = null;
+                if (itemAsset is ItemGunAsset gunAsset && element is VendorSellingItem vendorSellingItem)
+                {
+                    array = vendorSellingItem.GetGunStateOverride(gunAsset);
+                }
+                if (array == null)
+                {
+                    array = itemAsset.getState(isFull: false);
+                }
+                sleekItemIcon.Refresh(itemAsset.id, 100, array, itemAsset, Mathf.RoundToInt(sleekItemIcon.SizeOffset_X), Mathf.RoundToInt(sleekItemIcon.SizeOffset_Y));
                 base.SizeOffset_Y = sleekItemIcon.SizeOffset_Y + 10f;
             }
         }

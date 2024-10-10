@@ -96,6 +96,8 @@ public class ObjectAsset : Asset
     [Obsolete]
     public ushort interactabilityEffect;
 
+    internal AssetReference<DialogueAsset> interactabilityDialogueRef;
+
     public INPCCondition[] interactabilityConditions;
 
     protected NPCRewardsList interactabilityRewards;
@@ -360,6 +362,15 @@ public class ObjectAsset : Asset
     public EffectAsset FindInteractabilityEffectAsset()
     {
         return Assets.FindEffectAssetByGuidOrLegacyId(interactabilityEffectGuid, interactabilityEffect);
+    }
+
+    /// <summary>
+    /// Property is not exposed at the moment because interactability properties should really be moved into some
+    /// sort of sub-asset.
+    /// </summary>
+    public DialogueAsset FindInteractabilityDialogueAsset()
+    {
+        return interactabilityDialogueRef.Find();
     }
 
     public EffectAsset FindRubbleEffectAsset()
@@ -704,6 +715,10 @@ public class ObjectAsset : Asset
                 }
                 interactabilityRewardID = data.ParseUInt16("Interactability_Reward_ID", 0);
                 interactabilityEffect = data.ParseGuidOrLegacyId("Interactability_Effect", out interactabilityEffectGuid);
+                if (interactability == EObjectInteractability.DIALOGUE)
+                {
+                    interactabilityDialogueRef = data.readAssetReference<DialogueAsset>("Interactability_Dialogue");
+                }
                 interactabilityConditions = new INPCCondition[data.ParseUInt8("Interactability_Conditions", 0)];
                 NPCTool.readConditions(data, localization, "Interactability_Condition_", interactabilityConditions, this);
                 interactabilityRewards.Parse(data, localization, this, "Interactability_Rewards", "Interactability_Reward_");

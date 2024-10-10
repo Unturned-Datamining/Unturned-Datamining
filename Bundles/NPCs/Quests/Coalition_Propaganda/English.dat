@@ -2,7 +2,7 @@ Name Getting the Word Out
 Description For survivors without radios <color=legendary>Commander Laurence</color> plans to put up posters with directions to the Liberator. He suggests placing them in each town/city's police station.
 
 Condition_0 Jhavesk PD {0}/1
-Condition_1 Yekativurg PD {0}/1
+Condition_1 Yekaterinburg PD {0}/1
 Condition_2 St. Petersburg PD {0}/1
 Condition_3 Moscow West PD {0}/1
 Condition_4 Moscow South PD {0}/1

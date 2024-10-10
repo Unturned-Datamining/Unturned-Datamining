@@ -36,7 +36,7 @@ Buying_7_ID 125
 Buying_7_Amount 20
 Buying_7_Cost 30
 
-Selling 3
+Selling 6
 // Military knife
 Selling_0_ID 121
 Selling_0_Amount 1
@@ -49,3 +49,30 @@ Selling_1_Cost 40
 Selling_2_ID 1008
 Selling_2_Amount 1
 Selling_2_Cost 600
+
+// Scoped Ace
+Selling_3_ID 107
+Selling_3_Sight 21
+Selling_3_Cost 1500
+Selling_3_Conditions 1
+// Armory Ace Progress
+Selling_3_Condition_0_Type Flag_Short
+Selling_3_Condition_0_Logic Equal
+Selling_3_Condition_0_ID 346
+Selling_3_Condition_0_Value 2
+
+// Suppressed Bluntforce
+Selling_4_ID 112
+Selling_4_Barrel 1444
+Selling_4_Cost 1500
+Selling_4_Conditions 1
+// Armory Bluntforce Progress
+Selling_4_Condition_0_Type Flag_Short
+Selling_4_Condition_0_Logic Equal
+Selling_4_Condition_0_ID 347
+Selling_4_Condition_0_Value 2
+
+// Coalition Spraypaint
+Selling_5_ID eae61af155e1460481ed4dd575dfcd9d
+Selling_5_Amount 1
+Selling_5_Cost 200

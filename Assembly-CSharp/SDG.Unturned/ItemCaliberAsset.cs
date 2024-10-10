@@ -80,6 +80,8 @@ public class ItemCaliberAsset : ItemAsset
     /// </summary>
     public string instantiatedAttachmentName { get; protected set; }
 
+    protected override bool doesItemTypeHaveSkins => true;
+
     [Obsolete("Changed type to int")]
     public byte firerate => MathfEx.ClampToByte(_firerateOffset);
 

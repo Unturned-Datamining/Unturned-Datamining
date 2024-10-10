@@ -16,10 +16,17 @@ Offset 0.5
 
 Explosion 19
 
-Blueprints 1
+Blueprints 2
 Blueprint_0_Type Barricade
 Blueprint_0_Supply_0_ID 66
 Blueprint_0_Supply_0_Amount 5
 Blueprint_0_Build 27
+Blueprint_1_Type Barricade
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID this
+Blueprint_1_Product "66" // Cloth
+Blueprint_1_Products 3
+Blueprint_1_Build 27
+
 PlacementAudioClip Sounds/WoodenPlacement.mp3
 Has_Clip_Prefab false

@@ -15,7 +15,7 @@ Offset 0.15
 
 Explosion 36
 
-Blueprints 1
+Blueprints 2
 Blueprint_0_Type Utilities
 Blueprint_0_Supplies 2
 Blueprint_0_Supply_0_ID 65
@@ -26,5 +26,16 @@ Blueprint_0_Tool 76
 Blueprint_0_Level 3
 Blueprint_0_Skill Craft
 Blueprint_0_Build 27
+Blueprint_1_Type Utilities
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID this
+Blueprint_1_Supply_0_Amount 1
+Blueprint_1_Outputs 2
+Blueprint_1_Output_0_ID "65" // Wire
+Blueprint_1_Output_0_Amount 2
+Blueprint_1_Output_1_ID "285" // Metal_Bar
+Blueprint_1_Output_1_Amount 2
+Blueprint_1_Build 27
+
 PlacementAudioClip Sounds/MetalPlacement.mp3
 Has_Clip_Prefab false

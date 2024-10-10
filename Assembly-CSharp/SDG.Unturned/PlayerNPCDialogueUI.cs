@@ -121,9 +121,9 @@ public class PlayerNPCDialogueUI
             return;
         }
         active = true;
-        if (PlayerLifeUI.npc != null && PlayerLifeUI.npc.npcAsset != null)
+        if (PlayerLifeUI.npc != null)
         {
-            characterLabel.Text = PlayerLifeUI.npc.npcAsset.GetNameShownToPlayer(Player.player);
+            characterLabel.Text = PlayerLifeUI.npc.GetDialogueTargetNameShownToPlayer(Player.player);
         }
         else
         {
@@ -179,7 +179,7 @@ public class PlayerNPCDialogueUI
         {
             DialogueResponse dialogueResponse = responses[i];
             string text = dialogueResponse.text;
-            text = text.Replace("<name_npc>", (PlayerLifeUI.npc != null) ? PlayerLifeUI.npc.npcAsset.GetNameShownToPlayer(Player.player) : "null");
+            text = text.Replace("<name_npc>", (PlayerLifeUI.npc != null) ? PlayerLifeUI.npc.GetDialogueTargetNameShownToPlayer(Player.player) : "null");
             text = text.Replace("<name_char>", Player.player.channel.owner.playerID.characterName);
             QuestAsset questAsset = dialogueResponse.FindQuestAsset();
             Texture2D newIcon = null;
@@ -228,7 +228,7 @@ public class PlayerNPCDialogueUI
         if (message != null && message.pages != null && dialoguePageIndex < message.pages.Length)
         {
             pageFormattedText = message.pages[dialoguePageIndex].text;
-            pageFormattedText = pageFormattedText.Replace("<name_npc>", (PlayerLifeUI.npc != null) ? PlayerLifeUI.npc.npcAsset.GetNameShownToPlayer(Player.player) : "null");
+            pageFormattedText = pageFormattedText.Replace("<name_npc>", (PlayerLifeUI.npc != null) ? PlayerLifeUI.npc.GetDialogueTargetNameShownToPlayer(Player.player) : "null");
             pageFormattedText = pageFormattedText.Replace("<name_char>", Player.player.channel.owner.playerID.characterName);
         }
         else

@@ -177,6 +177,7 @@ public class MenuPlayConnectUI
 
     private static void onClickedConnectButton(ISleekElement button)
     {
+        SplitHostIntoAddressAndPort();
         if (!TryParseHostString(hostField.Text, out var address, out var steamId, out var queryPortOverride))
         {
             UnturnedLog.info("Cannot connect because unable to parse host string");

@@ -46,7 +46,7 @@ public static class BarricadeManager_NetMethods
         byte[] array = new byte[value3];
         reader.ReadBytes(array);
         reader.ReadClampedVector3(out var value4, 13, 11);
-        reader.ReadQuaternion(out var value5);
+        reader.ReadSpecialYawOrQuaternion(out var value5, 23);
         reader.ReadUInt64(out var value6);
         reader.ReadUInt64(out var value7);
         reader.ReadNetId(out var value8);
@@ -62,7 +62,7 @@ public static class BarricadeManager_NetMethods
         writer.WriteUInt8(b);
         writer.WriteBytes(state, b);
         writer.WriteClampedVector3(point, 13, 11);
-        writer.WriteQuaternion(rotation);
+        writer.WriteSpecialYawOrQuaternion(rotation, 23);
         writer.WriteUInt64(owner);
         writer.WriteUInt64(group);
         writer.WriteNetId(netId);

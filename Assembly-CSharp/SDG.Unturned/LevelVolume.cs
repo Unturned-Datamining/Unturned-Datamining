@@ -70,11 +70,13 @@ public class LevelVolume<TVolume, TManager> : VolumeBase, IDevkitInteractableBeg
             {
                 volume.Shape = state;
             }
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnFalloffTyped(ISleekFloat32Field field, float state)
         {
             volume.falloffDistance = state;
+            LevelHierarchy.MarkDirty();
         }
     }
 

@@ -6,3 +6,19 @@ ID 257
 Size_X 1
 Size_Y 1
 Size_Z 0.45
+
+Blueprints 2
+Blueprint_0_Type Tool
+Blueprint_0_Supply_0_ID "1274" // Orange Flare Sconce
+Blueprint_0_Supply_0_Amount 1
+Blueprint_0_Products 2
+Blueprint_0_Build 27
+Blueprint_1_Type Tool
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID this
+Blueprint_1_Supply_0_Amount 3
+Blueprint_1_Product "75" // Chemicals
+Blueprint_1_Products 1
+Blueprint_1_Level 2
+Blueprint_1_Skill Craft
+Blueprint_1_Build 27

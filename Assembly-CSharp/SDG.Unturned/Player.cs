@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDialogueTarget
 {
     public delegate void PlayerStatIncremented(Player player, EPlayerStat stat);
 
@@ -1203,6 +1203,7 @@ public class Player : MonoBehaviour
     {
         _netId = ++baseId;
         NetIdRegistry.Assign(_netId, this);
+        NetIdRegistry.AssignTransform(++baseId, base.transform);
         _animator.AssignNetId(++baseId);
         _clothing.AssignNetId(++baseId);
         _crafting.AssignNetId(++baseId);
@@ -1279,6 +1280,7 @@ public class Player : MonoBehaviour
 
     internal void ReleaseNetIdBlock()
     {
+        NetIdRegistry.ReleaseTransform(_netId + 1u, base.transform);
         NetIdRegistry.Release(_netId);
         _netId.Clear();
         _animator.ReleaseNetId();
@@ -1375,5 +1377,47 @@ public class Player : MonoBehaviour
     public NetId GetNetId()
     {
         return _netId;
+    }
+
+    public Vector3 GetDialogueTargetWorldPosition()
+    {
+        return base.transform.position;
+    }
+
+    public NetId GetDialogueTargetNetId()
+    {
+        return _netId + 1u;
+    }
+
+    public bool ShouldServerApproveDialogueRequest(Player withPlayer)
+    {
+        return false;
+    }
+
+    public DialogueAsset FindStartingDialogueAsset()
+    {
+        return null;
+    }
+
+    public string GetDialogueTargetDebugName()
+    {
+        return channel?.owner?.playerID?.ToString() ?? "invalid player";
+    }
+
+    public string GetDialogueTargetNameShownToPlayer(Player player)
+    {
+        if (Dedicator.IsDedicatedServer)
+        {
+            return GetDialogueTargetDebugName();
+        }
+        return channel?.owner?.GetLocalDisplayName() ?? "invalid player";
+    }
+
+    public void SetFaceOverride(byte? faceOverride)
+    {
+    }
+
+    public void SetIsTalkingWithLocalPlayer(bool isTalkingWithLocalPlayer)
+    {
     }
 }

@@ -769,6 +769,10 @@ public class NPCTool
             if (iNPCReward != null)
             {
                 iNPCReward.grantDelaySeconds = data.ParseFloat(prefix + i + "_GrantDelaySeconds", -1f);
+                if (iNPCReward.grantDelaySeconds > 0f)
+                {
+                    iNPCReward.grantDelayApplyWhenInterrupted = data.ParseBool(prefix + i + "_GrantDelayApplyWhenInterrupted");
+                }
             }
             rewards[i] = iNPCReward;
         }

@@ -6,8 +6,6 @@ public class StatusData
 
     public GameStatusData Game;
 
-    public HolidayStatusData Holidays;
-
     public MenuStatusData Menu;
 
     public NewsStatusData News;
@@ -18,7 +16,6 @@ public class StatusData
     {
         Achievements = new AchievementStatusData();
         Game = new GameStatusData();
-        Holidays = new HolidayStatusData();
         Menu = new MenuStatusData();
         News = new NewsStatusData();
         Maps = new MapsStatusData();

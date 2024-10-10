@@ -71,7 +71,7 @@ public static class UseableBarricade_NetMethods
             reader.ReadFloat(out var value3);
             reader.ReadFloat(out var value4);
             reader.ReadFloat(out var value5);
-            useableBarricade.ReceiveBarricadeNone(value2, value3, value4, value5);
+            useableBarricade.ReceiveBarricadeNone(in context, value2, value3, value4, value5);
         }
     }
 

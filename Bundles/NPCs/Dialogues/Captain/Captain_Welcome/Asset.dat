@@ -30,7 +30,7 @@ Message_1_Condition_0_Logic Greater_Than_Or_Equal_To
 // Coalition_Rank
 Message_1_Condition_1_Type Flag_Short
 Message_1_Condition_1_ID 29
-Message_1_Condition_1_Value 0 
+Message_1_Condition_1_Value 0
 Message_1_Condition_1_Logic Equal
 Message_1_Condition_1_Allow_Unset
 
@@ -48,7 +48,7 @@ Message_2_Condition_0_Logic Greater_Than_Or_Equal_To
 // Coalition_Rank
 Message_2_Condition_1_Type Flag_Short
 Message_2_Condition_1_ID 29
-Message_2_Condition_1_Value 1 
+Message_2_Condition_1_Value 1
 Message_2_Condition_1_Logic Equal
 
 // Major rank
@@ -65,13 +65,13 @@ Message_3_Condition_0_Logic Greater_Than_Or_Equal_To
 // Coalition_Rank
 Message_3_Condition_1_Type Flag_Short
 Message_3_Condition_1_ID 29
-Message_3_Condition_1_Value 2 
+Message_3_Condition_1_Value 2
 Message_3_Condition_1_Logic Equal
 
 // Anything to report?
 Message_4_Pages 1
 
-Responses 12
+Responses 13
 
 // Hello I'm X
 // Captain_Introduce
@@ -163,7 +163,7 @@ Response_5_Dialogue 4
 Response_5_Conditions 1
 Response_5_Condition_0_Type Flag_Short
 Response_5_Condition_0_ID 29
-Response_5_Condition_0_Value 0 
+Response_5_Condition_0_Value 0
 Response_5_Condition_0_Logic Equal
 Response_5_Condition_0_Allow_Unset
 
@@ -223,3 +223,17 @@ Response_10_Condition_0_Logic Equal
 Response_10_Condition_0_ID 230
 Response_10_Condition_0_Status Ready
 Response_10_Condition_0_Reset
+
+// I'd like to sign out an aircraft
+// Captain_Aircraft_Requisition
+Response_11_Dialogue ab9b1166931741e083347c3aeeeddf24
+Response_11_Conditions 1
+Response_11_Condition_0_Type Flag_Short
+Response_11_Condition_0_Logic Equal
+Response_11_Condition_0_ID 348
+Response_11_Condition_0_Value 1
+Response_11_Rewards 1
+Response_11_Reward_0_Type Flag_Short
+Response_11_Reward_0_ID 348
+Response_11_Reward_0_Value 2
+Response_11_Reward_0_Modification Assign

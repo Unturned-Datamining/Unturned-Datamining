@@ -196,6 +196,11 @@ public class MenuWorkshopUI
         IconUtils.CaptureAllOutfitPreviews();
     }
 
+    private static void OnExportAssetIdListClicked(ISleekElement button)
+    {
+        AssetIdListExporter.Export();
+    }
+
     public static void toggleIconTools()
     {
         iconToolsContainer.IsVisible = !iconToolsContainer.IsVisible;
@@ -432,6 +437,14 @@ public class MenuWorkshopUI
         captureAllOutfitPreviewsButton.Text = "All Outfit Previews";
         captureAllOutfitPreviewsButton.OnClicked += OnCaptureAllOutfitPreviewsClicked;
         iconToolsContainer.AddChild(captureAllOutfitPreviewsButton);
+        num += 25;
+        ISleekButton sleekButton = Glazier.Get().CreateButton();
+        sleekButton.PositionOffset_Y = num;
+        sleekButton.SizeOffset_X = 150f;
+        sleekButton.SizeOffset_Y = 25f;
+        sleekButton.Text = "Export Asset IDs";
+        sleekButton.OnClicked += OnExportAssetIdListClicked;
+        iconToolsContainer.AddChild(sleekButton);
         submitUI = new MenuWorkshopSubmitUI();
         editorUI = new MenuWorkshopEditorUI();
         errorUI = new MenuWorkshopErrorUI();

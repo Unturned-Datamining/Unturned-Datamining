@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using SDG.Framework.Devkit;
 using SDG.Framework.IO.FormattedFiles;
 using UnityEngine;
 
@@ -39,11 +40,13 @@ public class CullingVolume : LevelVolume<CullingVolume, CullingVolumeManager>
         {
             volume.cullDistance = Mathf.Clamp(value, 1f, ObjectManager.OBJECT_REGIONS * Regions.REGION_SIZE);
             distanceField.Value = volume.cullDistance;
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnIncludeLargeObjectsToggled(ISleekToggle toggle, bool value)
         {
             volume.includeLargeObjects = value;
+            LevelHierarchy.MarkDirty();
         }
     }
 

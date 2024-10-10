@@ -31,9 +31,24 @@ public class ServerSavedata
         return directory + "/" + Provider.serverID + path;
     }
 
+    /// <summary>
+    /// If the file already exists when writing we will move it to this path. (public issue #4636)
+    /// </summary>
+    public static string GetBackupFilePath(string filePath)
+    {
+        int num = filePath.LastIndexOf('.');
+        if (num < 0)
+        {
+            return filePath + "-backup";
+        }
+        return filePath.Insert(num, "-backup");
+    }
+
     public static void serializeJSON<T>(string path, T instance)
     {
-        ReadWrite.serializeJSON(directory + "/" + Provider.serverID + path, useCloud: false, instance);
+        string text = directory + "/" + Provider.serverID + path;
+        ReadWrite.MoveIfExists(text, GetBackupFilePath(text));
+        ReadWrite.serializeJSON(text, useCloud: false, instance);
     }
 
     public static T deserializeJSON<T>(string path)
@@ -48,7 +63,9 @@ public class ServerSavedata
 
     public static void writeData(string path, Data data)
     {
-        ReadWrite.writeData(directory + "/" + Provider.serverID + path, useCloud: false, data);
+        string text = directory + "/" + Provider.serverID + path;
+        ReadWrite.MoveIfExists(text, GetBackupFilePath(text));
+        ReadWrite.writeData(text, useCloud: false, data);
     }
 
     public static Data readData(string path)
@@ -58,7 +75,9 @@ public class ServerSavedata
 
     public static void writeBlock(string path, Block block)
     {
-        ReadWrite.writeBlock(directory + "/" + Provider.serverID + path, useCloud: false, block);
+        string text = directory + "/" + Provider.serverID + path;
+        ReadWrite.MoveIfExists(text, GetBackupFilePath(text));
+        ReadWrite.writeBlock(text, useCloud: false, block);
     }
 
     public static Block readBlock(string path, byte prefix)
@@ -68,7 +87,12 @@ public class ServerSavedata
 
     public static River openRiver(string path, bool isReading)
     {
-        return new River(directory + "/" + Provider.serverID + path, usePath: true, useCloud: false, isReading);
+        string text = directory + "/" + Provider.serverID + path;
+        if (!isReading)
+        {
+            ReadWrite.MoveIfExists(text, GetBackupFilePath(text));
+        }
+        return new River(text, usePath: true, useCloud: false, isReading);
     }
 
     public static void deleteFile(string path)

@@ -10,4 +10,16 @@ Size_Z 0.375
 Food 5
 Water 5
 Vision 10
+
+Blueprints 1
+Blueprint_0_Type Tool
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID this
+Blueprint_0_Supply_0_Amount 5
+Blueprint_0_Product "75" // Chemicals
+Blueprint_0_Products 1
+Blueprint_0_Level 2
+Blueprint_0_Skill Craft
+Blueprint_0_Build 27
+
 ConsumeAudioClip Sounds/DrinkSwallow.mp3

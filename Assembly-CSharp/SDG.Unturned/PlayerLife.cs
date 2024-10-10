@@ -625,6 +625,14 @@ public class PlayerLife : PlayerCaller
         }
         if (health == 0)
         {
+            try
+            {
+                base.player.quests.InterruptDelayedQuestRewards(EDelayedQuestRewardsInterruption.Death);
+            }
+            catch (Exception e)
+            {
+                UnturnedLog.exception(e, "Caught exception interrupting delayed quest rewards on death:");
+            }
             if (recentKiller != CSteamID.Nil && recentKiller != base.channel.owner.playerID.steamID && Time.realtimeSinceStartup - lastTimeTookDamage < COMBAT_COOLDOWN)
             {
                 Player player2 = PlayerTool.getPlayer(recentKiller);
@@ -649,10 +657,10 @@ public class PlayerLife : PlayerCaller
                 SendDeath.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), newCause, newLimb, newKiller);
                 SendDead.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), ragdoll, ragdollEffect);
             }
-            catch (Exception e)
+            catch (Exception e2)
             {
                 UnturnedLog.warn("Exception during tellDeath or tellDead:");
-                UnturnedLog.exception(e);
+                UnturnedLog.exception(e2);
             }
             if (spawnpoint == null || (newCause != EDeathCause.SUICIDE && newCause != EDeathCause.BREATH) || Time.realtimeSinceStartup - lastSuicide > 60f)
             {
@@ -1301,7 +1309,7 @@ public class PlayerLife : PlayerCaller
         else
         {
             byte amount2 = MathfEx.RoundAndClampToByte(0f - delta);
-            askDamage(amount2, Vector3.up, EDeathCause.SUICIDE, ELimb.SPINE, CSteamID.Nil, out var _);
+            askDamage(amount2, Vector3.up, EDeathCause.SUICIDE, ELimb.SPINE, CSteamID.Nil, out var _, trackKill: false, ERagdollEffect.NONE, canCauseBleeding: false);
         }
     }
 

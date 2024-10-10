@@ -1,22 +1,57 @@
 GUID 366a222abd3e404895dc1d1c9b248a44
 Type Spawn
 ID 481
-Tables 9
-Table_0_Spawn_ID 482
-Table_0_Weight 56
-Table_1_Spawn_ID 483
-Table_1_Weight 47
-Table_2_Spawn_ID 484
-Table_2_Weight 47
-Table_3_Spawn_ID 485
-Table_3_Weight 47
-Table_4_Spawn_ID 486
-Table_4_Weight 47
-Table_5_Spawn_ID 487
-Table_5_Weight 47
-Table_6_Spawn_ID 488
-Table_6_Weight 47
-Table_7_Spawn_ID 489
-Table_7_Weight 21
-Table_8_Spawn_ID 490
-Table_8_Weight 10
+
+Tables
+[
+	{
+		// Special_Arctic_Magazines (Spawn)
+		LegacySpawnId 482
+		Weight 56
+	}
+	{
+		// Special_Arctic_Sights (Spawn)
+		LegacySpawnId 483
+		Weight 47
+	}
+	{
+		// Special_Arctic_Tacticals (Spawn)
+		LegacySpawnId 484
+		Weight 47
+	}
+	{
+		// Special_Arctic_Barrels (Spawn)
+		LegacySpawnId 485
+		Weight 47
+	}
+	{
+		// Special_Arctic_Grips (Spawn)
+		LegacySpawnId 486
+		Weight 47
+	}
+	{
+		// Special_Arctic_Grenades (Spawn)
+		LegacySpawnId 487
+		Weight 47
+	}
+	{
+		// Special_Arctic_Gear (Spawn)
+		LegacySpawnId 488
+		Weight 47
+	}
+	{
+		// Special_Arctic_Guns (Spawn)
+		LegacySpawnId 489
+		Weight 21
+	}
+	{
+		// Special_Arctic_Tools (Spawn)
+		LegacySpawnId 490
+		Weight 10
+	}
+	{
+		// Scorpion-7 Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid 6d8472d1b94e48eeba8149483e7936f1
+		Weight 4
+	}
+]

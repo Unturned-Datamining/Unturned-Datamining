@@ -67,16 +67,19 @@ public class EffectVolume : LevelVolume<EffectVolume, EffectVolumeManager>
                 volume._id = 0;
                 volume.SyncEffect();
             }
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnEmissionChanged(ISleekFloat32Field field, float value)
         {
             volume.emissionMultiplier = value;
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnAudioRangeChanged(ISleekFloat32Field field, float value)
         {
             volume.audioRangeMultiplier = value;
+            LevelHierarchy.MarkDirty();
         }
     }
 

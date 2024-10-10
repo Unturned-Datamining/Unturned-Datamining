@@ -20,27 +20,17 @@ public static class HolidayUtil
         return Provider.authorityHoliday;
     }
 
-    internal static bool BackendIsHolidayActive(ENPCHoliday holiday)
-    {
-        return holiday == BackendGetActiveHoliday();
-    }
-
-    internal static ENPCHoliday BackendGetActiveHoliday()
+    internal static ENPCHoliday GetScheduledHoliday()
     {
         if (holidayOverride != 0)
         {
             return holidayOverride;
         }
-        if (!Provider.isBackendRealtimeAvailable)
-        {
-            UnturnedLog.warn("getActiveHoliday called before backend realtime was available");
-            return ENPCHoliday.NONE;
-        }
-        DateTime backendRealtimeDate = Provider.backendRealtimeDate;
+        DateTime utcNow = DateTime.UtcNow;
         for (int i = 1; i < 6; i++)
         {
             DateTimeRange dateTimeRange = scheduledHolidays[i];
-            if (dateTimeRange != null && dateTimeRange.isWithinRange(backendRealtimeDate))
+            if (dateTimeRange != null && dateTimeRange.isWithinRange(utcNow))
             {
                 return (ENPCHoliday)i;
             }
@@ -50,20 +40,22 @@ public static class HolidayUtil
 
     private static void scheduleHoliday(ENPCHoliday holiday, DateTime start, DateTime end)
     {
-        scheduledHolidays[(int)holiday] = new DateTimeRange(start, end);
+        DateTime dateTime = start.ToUniversalTime();
+        DateTime dateTime2 = end.ToUniversalTime();
+        UnturnedLog.info($"Scheduled {holiday} from {start} to {end} local time ({dateTime} to {dateTime2} UTC)");
+        scheduledHolidays[(int)holiday] = new DateTimeRange(dateTime, dateTime2);
     }
 
-    public static void scheduleHolidays(HolidayStatusData data)
+    public static void scheduleHolidays()
     {
-        DateTime utcNow = DateTime.UtcNow;
-        scheduleHoliday(ENPCHoliday.CHRISTMAS, data.ChristmasStart, data.ChristmasEnd);
-        scheduleHoliday(ENPCHoliday.HALLOWEEN, data.HalloweenStart, data.HalloweenEnd);
-        scheduleHoliday(ENPCHoliday.VALENTINES, data.ValentinesStart, data.ValentinesEnd);
-        scheduleHoliday(ENPCHoliday.PRIDE_MONTH, new DateTime(utcNow.Year, 6, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(utcNow.Year, 6, 30, 0, 0, 0, DateTimeKind.Utc));
-        if (data.AprilFools_Start.Ticks > 0 && data.AprilFools_End.Ticks > 0)
-        {
-            scheduleHoliday(ENPCHoliday.APRIL_FOOLS, data.AprilFools_Start, data.AprilFools_End);
-        }
+        DateTime now = DateTime.Now;
+        int year = now.Year;
+        int num = ((now.Month > 6) ? year : (year - 1));
+        scheduleHoliday(ENPCHoliday.CHRISTMAS, new DateTime(num, 12, 7, 0, 0, 0, DateTimeKind.Local), new DateTime(num + 1, 1, 2, 12, 0, 0, DateTimeKind.Local));
+        scheduleHoliday(ENPCHoliday.HALLOWEEN, new DateTime(year, 10, 20, 0, 0, 0, DateTimeKind.Local), new DateTime(year, 11, 1, 12, 0, 0, DateTimeKind.Local));
+        scheduleHoliday(ENPCHoliday.VALENTINES, new DateTime(year, 2, 14, 0, 0, 0, DateTimeKind.Local), new DateTime(year, 2, 14, 23, 59, 59, DateTimeKind.Local));
+        scheduleHoliday(ENPCHoliday.APRIL_FOOLS, new DateTime(year, 4, 1, 0, 0, 0, DateTimeKind.Local), new DateTime(year, 4, 1, 23, 59, 59, DateTimeKind.Local));
+        scheduleHoliday(ENPCHoliday.PRIDE_MONTH, new DateTime(year, 6, 1, 0, 0, 0, DateTimeKind.Local), new DateTime(year, 6, 30, 23, 59, 59, DateTimeKind.Local));
     }
 
     static HolidayUtil()

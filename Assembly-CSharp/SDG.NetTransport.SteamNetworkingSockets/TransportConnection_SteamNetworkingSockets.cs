@@ -47,6 +47,17 @@ internal class TransportConnection_SteamNetworkingSockets : ITransportConnection
         return false;
     }
 
+    public bool TryGetSteamId(out ulong steamId)
+    {
+        if (SteamGameServerNetworkingSockets.GetConnectionInfo(steamConnectionHandle, out var pInfo))
+        {
+            steamId = pInfo.m_identityRemote.GetSteamID64();
+            return steamId != 0;
+        }
+        steamId = 0uL;
+        return false;
+    }
+
     public IPAddress GetAddress()
     {
         if (SteamGameServerNetworkingSockets.GetConnectionInfo(steamConnectionHandle, out var pInfo))

@@ -155,7 +155,7 @@ public class ResourceSpawnpoint
                 health = asset.health;
                 if (stump != null && areConditionsMet)
                 {
-                    stump.gameObject.SetActive(isEnabled && asset.isSpeedTree);
+                    stump.gameObject.SetActive(isEnabled);
                 }
                 if (stumpCollider != null && areConditionsMet)
                 {
@@ -206,7 +206,7 @@ public class ResourceSpawnpoint
                     ragdoll *= (float)((Player.player != null && Player.player.skills.boost == EPlayerBoost.FLIGHT) ? 4 : 2);
                     if (model != null && asset.modelGameObject != null)
                     {
-                        Vector3 position = ((!asset.isSpeedTree) ? (model.position + Vector3.up) : model.position);
+                        Vector3 position = model.position + Vector3.up;
                         GameObject original = ((!(asset.debrisGameObject == null)) ? asset.debrisGameObject : asset.modelGameObject);
                         Transform transform = UnityEngine.Object.Instantiate(original, position, model.rotation).transform;
                         transform.name = asset.name + "_Debris";
@@ -272,7 +272,7 @@ public class ResourceSpawnpoint
         }
         if (stump != null && areConditionsMet)
         {
-            stump.gameObject.SetActive(!isAlive || (asset != null && asset.isSpeedTree));
+            stump.gameObject.SetActive(!isAlive);
         }
         if (stumpCollider != null && areConditionsMet)
         {
@@ -486,11 +486,6 @@ public class ResourceSpawnpoint
             stump.name = asset.name + "_Stump";
             stump.localScale = scale;
             stump.gameObject.SetActive(value: false);
-            if (asset.isSpeedTree)
-            {
-                stumpCollider = stump.GetComponent<Collider>();
-                stumpCollider.enabled = false;
-            }
         }
         if (asset.holidayRestriction != 0 && !Level.isEditor)
         {

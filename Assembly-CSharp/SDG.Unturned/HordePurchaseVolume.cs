@@ -1,3 +1,4 @@
+using SDG.Framework.Devkit;
 using SDG.Framework.IO.FormattedFiles;
 
 namespace SDG.Unturned;
@@ -33,11 +34,13 @@ public class HordePurchaseVolume : LevelVolume<HordePurchaseVolume, HordePurchas
         private void OnIdChanged(ISleekUInt16Field field, ushort state)
         {
             volume.id = state;
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnCostChanged(ISleekUInt32Field field, uint state)
         {
             volume.cost = state;
+            LevelHierarchy.MarkDirty();
         }
     }
 

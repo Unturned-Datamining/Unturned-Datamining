@@ -54,7 +54,7 @@ Message_2_Condition_0_Logic Greater_Than_Or_Equal_To
 // Coalition_Inventions
 Message_2_Condition_1_Type Flag_Bool
 Message_2_Condition_1_ID 228
-Message_2_Condition_1_Value False 
+Message_2_Condition_1_Value False
 Message_2_Condition_1_Logic Equal
 Message_2_Condition_1_Allow_Unset
 
@@ -79,7 +79,7 @@ Message_3_Condition_1_Allow_Unset
 // mumble
 Message_4_Pages 1
 
-Responses 13
+Responses 15
 
 // Bluntforce accept
 // Scientist_Bluntforce
@@ -228,3 +228,33 @@ Response_11_Condition_0_Value True
 Response_11_Condition_0_Logic Equal
 Response_11_Condition_1_Type Holiday
 Response_11_Condition_1_Value Christmas
+
+// Armory wants Scoped Ace
+Response_12_Dialogue d44e4c2ba4dc4f419c6762f4435a77ba
+Response_12_Conditions 1
+// Armory Ace Progress
+Response_12_Condition_0_Type Flag_Short
+Response_12_Condition_0_ID 346
+Response_12_Condition_0_Value 1
+Response_12_Condition_0_Logic Equal
+Response_12_Rewards 1
+// Armory Ace Progress
+Response_12_Reward_0_Type Flag_Short
+Response_12_Reward_0_ID 346
+Response_12_Reward_0_Value 2
+Response_12_Reward_0_Modification Assign
+
+// Armory wants Suppressed Bluntforce
+Response_13_Dialogue 4494c5e6b54b45e5a3748834d0a0847d
+Response_13_Conditions 1
+// Armory Bluntforce Progress
+Response_13_Condition_0_Type Flag_Short
+Response_13_Condition_0_ID 347
+Response_13_Condition_0_Value 1
+Response_13_Condition_0_Logic Equal
+Response_13_Rewards 1
+// Armory Bluntforce Progress
+Response_13_Reward_0_Type Flag_Short
+Response_13_Reward_0_ID 347
+Response_13_Reward_0_Value 2
+Response_13_Reward_0_Modification Assign

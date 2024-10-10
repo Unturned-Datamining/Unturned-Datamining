@@ -16,6 +16,12 @@ public class SleekWebImage : SleekWrapper
     /// </summary>
     public float maxImageDimensionsWidth = -1f;
 
+    /// <summary>
+    /// If useImageDimensions is on and image height exceeds this value, scale down
+    /// respecting aspect ratio.
+    /// </summary>
+    public float maxImageDimensionsHeight = -1f;
+
     private ISleekImage internalImage;
 
     public SleekColor color
@@ -57,17 +63,22 @@ public class SleekWebImage : SleekWrapper
     {
         if (useImageDimensions && icon != null)
         {
-            if (maxImageDimensionsWidth > 0.5f && (float)icon.width > maxImageDimensionsWidth && icon.height > 0)
+            float num = icon.width;
+            float num2 = icon.height;
+            if (maxImageDimensionsHeight > 0.5f && num2 > maxImageDimensionsHeight)
             {
-                float num = (float)icon.width / (float)icon.height;
-                base.SizeOffset_X = maxImageDimensionsWidth;
-                base.SizeOffset_Y = maxImageDimensionsWidth / num;
+                float num3 = (float)icon.width / (float)icon.height;
+                num = maxImageDimensionsHeight * num3;
+                num2 = maxImageDimensionsHeight;
             }
-            else
+            if (maxImageDimensionsWidth > 0.5f && num > maxImageDimensionsWidth && icon.height > 0)
             {
-                base.SizeOffset_X = icon.width;
-                base.SizeOffset_Y = icon.height;
+                float num4 = (float)icon.width / (float)icon.height;
+                num = maxImageDimensionsWidth;
+                num2 = maxImageDimensionsWidth / num4;
             }
+            base.SizeOffset_X = num;
+            base.SizeOffset_Y = num2;
         }
         if (internalImage != null)
         {

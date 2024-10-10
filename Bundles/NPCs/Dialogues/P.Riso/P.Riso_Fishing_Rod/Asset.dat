@@ -1,0 +1,9 @@
+GUID 5415296940d1481c8c211fb420592210
+Type Dialogue
+
+Messages 1
+Message_0_Pages 2
+Message_0_Rewards 1
+Message_0_Reward_0_Type Flag_Bool
+Message_0_Reward_0_ID 345
+Message_0_Reward_0_Value True

@@ -1,4 +1,5 @@
 using System;
+using SDG.Framework.Devkit;
 using SDG.Framework.IO.FormattedFiles;
 using SDG.Unturned;
 using UnityEngine;
@@ -52,21 +53,25 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
         private void OnIsSurfaceVisibleToggled(ISleekToggle toggle, bool state)
         {
             volume.isSurfaceVisible = state;
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnIsReflectionVisibleToggled(ISleekToggle toggle, bool state)
         {
             volume.isReflectionVisible = state;
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnIsSeaLevelToggled(ISleekToggle toggle, bool state)
         {
             volume.isSeaLevel = state;
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnSwappedWaterType(SleekButtonState button, int state)
         {
             volume.waterType = (ERefillWaterType)(state + 1);
+            LevelHierarchy.MarkDirty();
         }
     }
 

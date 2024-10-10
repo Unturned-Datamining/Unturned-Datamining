@@ -8,6 +8,12 @@ TotalPrice_Label Estimated total:
 StartPurchase_Label Proceed to Checkout
 StartPurchase_Tooltip Start the purchase in Steam overlay.
 
+InspectListedItems_Text Inspect Listed Items
+InspectListedItems_Tooltip Preview how each item mentioned in the description looks.
+
+ListedItemsHeader_Box Each {0} contains one of these {1} items:
+ListedItemsHeader_Bundle The {0} contains all {1} of these items:
+
 PurchaseResult_UnableToInitialize Unable to start purchase.
 PurchaseResult_Denied Purchase denied.
 PurchaseResult_Authorized Purchase authorized!
@@ -22,3 +28,8 @@ FilterNewButton_Label New
 FilterNewButton_Tooltip View newly released items.
 FilterFeaturedButton_Label Featured
 FilterFeaturedButton_Tooltip View popular items.
+
+FilterShowOwned_Label Include Owned
+
+DefaultSaleTitle Stockpile Sale
+SaleWindowFormat {0} through {1}

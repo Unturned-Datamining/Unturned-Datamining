@@ -2,20 +2,51 @@ GUID a50581098b2944e5918379ac055a0767
 Type Spawn
 ID 682
 
-Tables 8
-Table_0_Spawn_ID 790
-Table_0_Weight 175
-Table_1_Spawn_ID 123
-Table_1_Weight 86
-Table_2_Spawn_ID 649
-Table_2_Weight 75
-Table_3_Spawn_ID 792
-Table_3_Weight 50
-Table_4_Spawn_ID 789
-Table_4_Weight 25
-Table_5_Spawn_ID 791
-Table_5_Weight 25
-Table_6_Spawn_ID 648
-Table_6_Weight 10
-Table_7_Spawn_ID 651
-Table_7_Weight 10
+Tables
+[
+	{
+		// Coalition_Low_Peaks_Clothes (Spawn)
+		LegacySpawnId 790
+		Weight 175
+	}
+	{
+		// Smoke (Spawn)
+		LegacySpawnId 123
+		Weight 86
+	}
+	{
+		// Military_Low_Melee (Spawn)
+		LegacySpawnId 649
+		Weight 75
+	}
+	{
+		// Coalition_Low_Peaks_Magazines (Spawn)
+		LegacySpawnId 792
+		Weight 50
+	}
+	{
+		// Coalition_Low_Peaks_Ammo (Spawn)
+		LegacySpawnId 789
+		Weight 25
+	}
+	{
+		// Coalition_Low_Peaks_Guns (Spawn)
+		LegacySpawnId 791
+		Weight 25
+	}
+	{
+		// Military_Low_Tools (Spawn)
+		LegacySpawnId 648
+		Weight 10
+	}
+	{
+		// Military_Low_Barricades (Spawn)
+		LegacySpawnId 651
+		Weight 10
+	}
+	{
+		// Coalition Military Vehicle Spraypaint (Vehicle Paint Tool Item)
+		Guid eae61af155e1460481ed4dd575dfcd9d
+		Weight 5
+	}
+]

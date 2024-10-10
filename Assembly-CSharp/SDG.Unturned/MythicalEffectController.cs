@@ -82,6 +82,7 @@ public class MythicalEffectController : MonoBehaviour
                 base.transform.GetPositionAndRotation(out var position, out var rotation);
                 systemTransform = Object.Instantiate(systemPrefab, position, rotation).transform;
                 systemTransform.name = "System";
+                systemTransform.localScale = base.transform.localScale;
             }
         }
         else if (systemTransform != null)

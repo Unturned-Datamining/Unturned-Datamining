@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace SDG.Unturned;
 
 public class NPCFlagMathReward : INPCReward
@@ -38,6 +40,26 @@ public class NPCFlagMathReward : INPCReward
             break;
         case ENPCOperationType.MODULO:
             value %= value2;
+            break;
+        case ENPCOperationType.RANDOM_INCLUSIVE:
+            if (value != value2)
+            {
+                int num = value;
+                int num2 = value2;
+                if (num > num2)
+                {
+                    int num3 = num2;
+                    num2 = num;
+                    num = num3;
+                }
+                value = MathfEx.ClampToShort(Random.Range(num, num2 + 1));
+            }
+            break;
+        case ENPCOperationType.RANDOM_EXCLUSIVE:
+            if (value != value2)
+            {
+                value = MathfEx.ClampToShort(Random.Range(value, value2));
+            }
             break;
         }
         player.quests.sendSetFlag(flag_A_ID, value);

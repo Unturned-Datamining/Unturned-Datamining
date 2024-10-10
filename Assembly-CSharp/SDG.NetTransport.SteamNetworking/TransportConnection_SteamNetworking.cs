@@ -36,6 +36,12 @@ internal struct TransportConnection_SteamNetworking : ITransportConnection, IEqu
         return false;
     }
 
+    public bool TryGetSteamId(out ulong steamId)
+    {
+        steamId = this.steamId.m_SteamID;
+        return steamId != 0;
+    }
+
     public IPAddress GetAddress()
     {
         if (SteamGameServerNetworking.GetP2PSessionState(steamId, out var pConnectionState) && pConnectionState.m_bUsingRelay == 0)

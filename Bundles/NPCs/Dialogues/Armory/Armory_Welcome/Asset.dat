@@ -5,7 +5,7 @@ ID 143
 Messages 1
 Message_0_Pages 1
 
-Responses 3
+Responses 5
 
 // I'd like to trade
 // Armory_Vendor_Completed
@@ -25,3 +25,45 @@ Response_1_Rewards 1
 Response_1_Reward_0_Type Flag_Bool
 Response_1_Reward_0_ID 146
 Response_1_Reward_0_Value True
+
+// 8x Scope on Ace
+Response_2_Dialogue bf7a621cf6ff4a61a51648edc9b984b0
+Response_2_Conditions 2
+// Has_Invention_Ace
+Response_2_Condition_0_Type Flag_Bool
+Response_2_Condition_0_Logic Equal
+Response_2_Condition_0_ID 228
+Response_2_Condition_0_Value True
+// Armory Ace Progress
+Response_2_Condition_1_Type Flag_Short
+Response_2_Condition_1_Logic Equal
+Response_2_Condition_1_ID 346
+Response_2_Condition_1_Value 0
+Response_2_Condition_1_Allow_Unset
+Response_2_Rewards 1
+// Armory Ace Progress
+Response_2_Reward_0_Type Flag_Short
+Response_2_Reward_0_ID 346
+Response_2_Reward_0_Value 1
+Response_2_Reward_0_Modification Assign
+
+// Suppressor on Bluntforce
+Response_3_Dialogue e0214d958038413a9b46eb673210da93
+Response_3_Conditions 2
+// Has_Invention_Bluntforce
+Response_3_Condition_0_Type Flag_Bool
+Response_3_Condition_0_Logic Equal
+Response_3_Condition_0_ID 226
+Response_3_Condition_0_Value True
+// Armory Bluntforce Progress
+Response_3_Condition_1_Type Flag_Short
+Response_3_Condition_1_Logic Equal
+Response_3_Condition_1_ID 347
+Response_3_Condition_1_Value 0
+Response_3_Condition_1_Allow_Unset
+Response_3_Rewards 1
+// Armory Bluntforce Progress
+Response_3_Reward_0_Type Flag_Short
+Response_3_Reward_0_ID 347
+Response_3_Reward_0_Value 1
+Response_3_Reward_0_Modification Assign

@@ -27,6 +27,7 @@ public class TeleporterEntranceVolume : LevelVolume<TeleporterEntranceVolume, Te
         private void OnIdChanged(ISleekField field, string id)
         {
             volume.pairId = id;
+            LevelHierarchy.MarkDirty();
         }
     }
 

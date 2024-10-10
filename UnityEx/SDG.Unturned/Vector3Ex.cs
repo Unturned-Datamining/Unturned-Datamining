@@ -141,4 +141,60 @@ public static class Vector3Ex
         }
         return vector;
     }
+
+    public static bool TryParseVector3(string s, out Vector3 result)
+    {
+        if (string.IsNullOrEmpty(s))
+        {
+            result = default(Vector3);
+            return false;
+        }
+        int num = s.IndexOf('(');
+        int num3;
+        int num4;
+        if (num >= 0)
+        {
+            int num2 = s.IndexOf(')', num + 2);
+            if (num2 < 0)
+            {
+                result = default(Vector3);
+                return false;
+            }
+            num3 = num + 1;
+            num4 = num2 - 1;
+        }
+        else
+        {
+            num3 = 0;
+            num4 = s.Length - 1;
+        }
+        int num5 = s.IndexOf(',', num3);
+        if (num5 < 0 || num5 + 2 > num4)
+        {
+            result = default(Vector3);
+            return false;
+        }
+        int num6 = s.IndexOf(',', num5 + 2);
+        if (num6 < 0 || num6 + 1 > num4)
+        {
+            result = default(Vector3);
+            return false;
+        }
+        if (!float.TryParse(s.Substring(num3, num5 - num3), out result.x))
+        {
+            result = default(Vector3);
+            return false;
+        }
+        if (!float.TryParse(s.Substring(num5 + 1, num6 - num5 - 1), out result.y))
+        {
+            result = default(Vector3);
+            return false;
+        }
+        if (!float.TryParse(s.Substring(num6 + 1, num4 - num6), out result.z))
+        {
+            result = default(Vector3);
+            return false;
+        }
+        return true;
+    }
 }

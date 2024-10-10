@@ -12,3 +12,11 @@ Zoom 20
 ThirdPerson_Zoom 2
 
 Paintable
+
+Blueprints 1
+Blueprint_0_Type Tool
+Blueprint_0_Supplies 1
+Blueprint_0_Supply_0_ID this
+Blueprint_0_Product "67" // Metal Scrap
+Blueprint_0_Products 1
+Blueprint_0_Build 27

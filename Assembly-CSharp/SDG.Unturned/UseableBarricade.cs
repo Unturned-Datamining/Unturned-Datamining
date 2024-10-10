@@ -224,16 +224,16 @@ public class UseableBarricade : Useable
         rotate_y = 0f;
         rotate_z = 0f;
         isValid = checkClaims();
+        _ = isValid;
     }
 
     [Obsolete]
     public void askBarricadeNone(CSteamID steamID, Vector3 newPoint, float newAngle_X, float newAngle_Y, float newAngle_Z)
     {
-        ReceiveBarricadeNone(newPoint, newAngle_X, newAngle_Y, newAngle_Z);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 10, legacyName = "askBarricadeNone")]
-    public void ReceiveBarricadeNone(Vector3 newPoint, float newAngle_X, float newAngle_Y, float newAngle_Z)
+    public void ReceiveBarricadeNone(in ServerInvocationContext context, Vector3 newPoint, float newAngle_X, float newAngle_Y, float newAngle_Z)
     {
         if (wasAsked)
         {
@@ -346,7 +346,7 @@ public class UseableBarricade : Useable
                 }
             }
         }
-        if (equippedBarricadeAsset.build != EBuild.CHARGE && !equippedBarricadeAsset.bypassClaim)
+        if (!equippedBarricadeAsset.bypassClaim)
         {
             if (parent != null && !ClaimManager.canBuildOnVehicle(parent, base.channel.owner.playerID.steamID, base.player.quests.groupID))
             {
@@ -768,10 +768,21 @@ public class UseableBarricade : Useable
                 if (transform2.name == "Door")
                 {
                     point = transform2.position;
-                    angle_y = Quaternion.LookRotation(transform2.forward).eulerAngles.y;
-                    if (Vector3.Dot(MainCamera.instance.transform.forward, transform2.forward) < 0f)
+                    if (Mathf.Abs(Vector3.Dot(transform2.up, Vector3.up)) > 0.5f)
                     {
-                        angle_y += 180f;
+                        angle_y = Quaternion.LookRotation(transform2.forward).eulerAngles.y;
+                        if (Vector3.Dot(MainCamera.instance.transform.forward, transform2.forward) < 0f)
+                        {
+                            angle_y += 180f;
+                        }
+                    }
+                    else
+                    {
+                        angle_y = Quaternion.LookRotation(transform2.up).eulerAngles.y;
+                        if (Vector3.Dot(MainCamera.instance.transform.forward, transform2.up) > 0f)
+                        {
+                            angle_y += 180f;
+                        }
                     }
                     if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Level.checkSafeIncludingClipVolumes(point))
                     {
@@ -1317,21 +1328,20 @@ public class UseableBarricade : Useable
             {
                 UnityEngine.Object.Destroy(help.Find("Placeholder").gameObject);
             }
-            List<InteractableDoorHinge> list = new List<InteractableDoorHinge>();
-            help.GetComponentsInChildren(list);
-            for (int i = 0; i < list.Count; i++)
+            Transform transform = help.Find("Skeleton/Hinge");
+            if (transform != null)
             {
-                InteractableDoorHinge interactableDoorHinge = list[i];
-                if (interactableDoorHinge.transform.Find("Clip") != null)
-                {
-                    UnityEngine.Object.Destroy(interactableDoorHinge.transform.Find("Clip").gameObject);
-                }
-                if (interactableDoorHinge.transform.Find("Nav") != null)
-                {
-                    UnityEngine.Object.Destroy(interactableDoorHinge.transform.Find("Nav").gameObject);
-                }
-                UnityEngine.Object.Destroy(interactableDoorHinge.transform.GetComponent<Collider>());
-                UnityEngine.Object.Destroy(interactableDoorHinge);
+                CleanUpDoorHinge(transform);
+            }
+            Transform transform2 = help.Find("Skeleton/Left_Hinge");
+            if (transform2 != null)
+            {
+                CleanUpDoorHinge(transform2);
+            }
+            Transform transform3 = help.Find("Skeleton/Right_Hinge");
+            if (transform3 != null)
+            {
+                CleanUpDoorHinge(transform3);
             }
         }
         else
@@ -1353,7 +1363,7 @@ public class UseableBarricade : Useable
                 UnityEngine.Object.Destroy(help.Find("Block").gameObject);
             }
         }
-        for (int j = 0; j < 2; j++)
+        for (int i = 0; i < 2; i++)
         {
             if (!(help.Find("Climb") != null))
             {
@@ -1362,9 +1372,9 @@ public class UseableBarricade : Useable
             UnityEngine.Object.Destroy(help.Find("Climb").gameObject);
         }
         help.GetComponentsInChildren(includeInactive: true, colliders);
-        for (int k = 0; k < colliders.Count; k++)
+        for (int j = 0; j < colliders.Count; j++)
         {
-            UnityEngine.Object.Destroy(colliders[k]);
+            UnityEngine.Object.Destroy(colliders[j]);
         }
     }
 
@@ -1429,7 +1439,12 @@ public class UseableBarricade : Useable
             return;
         }
         int mask = ((!(parentVehicle != null)) ? RayMasks.BLOCK_CHAR_BUILDABLE_OVERLAP_NOT_ON_VEHICLE : RayMasks.BLOCK_CHAR_BUILDABLE_OVERLAP);
-        if (boundsUse && Physics.OverlapBoxNonAlloc(getPointInWorldSpace() + boundsRotation * boundsCenter, boundsOverlap, checkColliders, boundsRotation, mask, QueryTriggerInteraction.Collide) > 0)
+        int num = 0;
+        if (boundsUse)
+        {
+            num = Physics.OverlapBoxNonAlloc(getPointInWorldSpace() + boundsRotation * boundsCenter, boundsOverlap, checkColliders, boundsRotation, mask, QueryTriggerInteraction.Collide);
+        }
+        if (num > 0)
         {
             base.player.equipment.dequip();
             return;
@@ -1701,5 +1716,33 @@ public class UseableBarricade : Useable
     protected void OnDestroy()
     {
         BuildRequestManager.finishPendingBuild(ref pendingBuildHandle);
+    }
+
+    private void CleanUpDoorHinge(Transform hingeTransform)
+    {
+        Transform transform = hingeTransform.Find("Clip");
+        if (transform != null)
+        {
+            UnityEngine.Object.Destroy(transform.gameObject);
+        }
+        Transform transform2 = hingeTransform.Find("Nav");
+        if (transform2 != null)
+        {
+            UnityEngine.Object.Destroy(transform2.gameObject);
+        }
+        Collider component = hingeTransform.GetComponent<Collider>();
+        if (component != null)
+        {
+            UnityEngine.Object.Destroy(component);
+        }
+    }
+
+    private string CheckCollidersToString()
+    {
+        if (!(checkColliders[0] != null))
+        {
+            return "null";
+        }
+        return checkColliders[0].GetSceneHierarchyPath();
     }
 }

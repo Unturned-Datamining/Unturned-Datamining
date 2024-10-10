@@ -381,9 +381,19 @@ public class PlayerCrafting : PlayerCaller
                         if (blueprint.transferState)
                         {
                             Item item = new Item(blueprintOutput.id, array[0][0].jar.item.amount, array[0][0].jar.item.quality, array[0][0].jar.item.state);
-                            if (itemAsset.type == EItemType.GUN && itemAsset2 != null && itemAsset2.type == EItemType.GUN && item.state.Length >= 12 && itemAsset2 is ItemGunAsset itemGunAsset)
+                            if (itemAsset.type == EItemType.GUN && itemAsset2 != null && itemAsset2.type == EItemType.GUN && item.state.Length >= 12)
                             {
-                                item.state[11] = (byte)itemGunAsset.firemode;
+                                if (blueprint.withoutAttachments)
+                                {
+                                    for (int num6 = 0; num6 < item.state.Length; num6++)
+                                    {
+                                        item.state[num6] = 0;
+                                    }
+                                }
+                                if (itemAsset2 is ItemGunAsset itemGunAsset)
+                                {
+                                    item.state[11] = (byte)itemGunAsset.firemode;
+                                }
                             }
                             base.player.inventory.forceAddItem(item, auto: true);
                         }

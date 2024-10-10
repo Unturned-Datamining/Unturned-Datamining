@@ -55,9 +55,15 @@ public class OptionsSettings
 
     private const byte SAVEDATA_VERSION_ADDED_ONLINE_SAFETY_MENU = 57;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 57;
+    private const byte SAVEDATA_VERSION_ADDED_FLASHBANG_BRIGHTNESS = 58;
 
-    public static readonly byte SAVEDATA_VERSION = 57;
+    private const byte SAVEDATA_VERSION_ADDED_CAMERA_SHAKE_INTENSITY = 59;
+
+    private const byte SAVEDATA_VERSION_ADDED_DAMAGE_FLINCH_OPTIONS = 60;
+
+    private const byte SAVEDATA_VERSION_NEWEST = 60;
+
+    public static readonly byte SAVEDATA_VERSION = 60;
 
     public static readonly byte MIN_FOV = 60;
 
@@ -174,6 +180,26 @@ public class OptionsSettings
     /// Determines how camera follows aircraft vehicle in third-person view.
     /// </summary>
     public static EVehicleThirdPersonCameraMode vehicleAircraftThirdPersonCameraMode;
+
+    /// <summary>
+    /// [0, 1] Blend factor between black and flashbang's desired color.
+    /// </summary>
+    public static float flashbangBrightness;
+
+    /// <summary>
+    /// [0, 1] Multiplier for shake from <see cref="F:SDG.Unturned.EffectAsset.cameraShakeMagnitudeDegrees" />.
+    /// </summary>
+    public static float cameraShakeIntensity;
+
+    /// <summary>
+    /// Controls whether camera is constrained to roll-only or all axes.
+    /// </summary>
+    public static EDamageFlinchMode damageFlinchMode;
+
+    /// <summary>
+    /// Multiplier for flinch away from damage source in <see cref="M:SDG.Unturned.PlayerLook.FlinchFromDamage(System.Byte,UnityEngine.Vector3)" />.
+    /// </summary>
+    public static float damageFlinchIntensity;
 
     public static Color crosshairColor;
 
@@ -533,6 +559,10 @@ public class OptionsSettings
         hitmarkerStyle = EHitmarkerStyle.Animated;
         vehicleThirdPersonCameraMode = EVehicleThirdPersonCameraMode.RotationDetached;
         vehicleAircraftThirdPersonCameraMode = EVehicleThirdPersonCameraMode.RotationAttached;
+        flashbangBrightness = 1f;
+        cameraShakeIntensity = 1f;
+        damageFlinchMode = EDamageFlinchMode.RollOnly;
+        damageFlinchIntensity = 1f;
         crosshairColor = new Color(1f, 1f, 1f, 0.5f);
         hitmarkerColor = new Color(1f, 1f, 1f, 0.5f);
         criticalHitmarkerColor = new Color(1f, 0f, 0f, 0.5f);
@@ -925,6 +955,32 @@ public class OptionsSettings
             onlineSafetyMenuProceedCount = block.readInt32();
             wantsToHideOnlineSafetyMenu = block.readBoolean();
         }
+        if (b >= 58)
+        {
+            flashbangBrightness = block.readSingle();
+        }
+        else
+        {
+            flashbangBrightness = 1f;
+        }
+        if (b >= 59)
+        {
+            cameraShakeIntensity = block.readSingle();
+        }
+        else
+        {
+            cameraShakeIntensity = 1f;
+        }
+        if (b >= 60)
+        {
+            damageFlinchMode = (EDamageFlinchMode)block.readByte();
+            damageFlinchIntensity = block.readSingle();
+        }
+        else
+        {
+            damageFlinchMode = EDamageFlinchMode.RollOnly;
+            damageFlinchIntensity = 1f;
+        }
         if (!Provider.isPro)
         {
             backgroundColor = new Color(0.9f, 0.9f, 0.9f);
@@ -938,7 +994,7 @@ public class OptionsSettings
     public static void save()
     {
         Block block = new Block();
-        block.writeByte(57);
+        block.writeByte(60);
         block.writeBoolean(value: false);
         block.writeBoolean(splashscreen);
         block.writeBoolean(timer);
@@ -994,6 +1050,10 @@ public class OptionsSettings
         block.writeByte((byte)vehicleAircraftThirdPersonCameraMode);
         block.writeInt32(onlineSafetyMenuProceedCount);
         block.writeBoolean(wantsToHideOnlineSafetyMenu);
+        block.writeSingle(flashbangBrightness);
+        block.writeSingle(cameraShakeIntensity);
+        block.writeByte((byte)damageFlinchMode);
+        block.writeSingle(damageFlinchIntensity);
         ReadWrite.writeBlock("/Options.dat", useCloud: true, block);
     }
 }

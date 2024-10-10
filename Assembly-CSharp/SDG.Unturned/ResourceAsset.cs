@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace SDG.Unturned;
 
@@ -64,16 +63,6 @@ public class ResourceAsset : Asset
     public byte bladeID;
 
     public float reset;
-
-    /// <summary>
-    /// Whether this asset is a SpeedTree model, can be false if an option to use the old models is enabled.
-    /// </summary>
-    public bool isSpeedTree;
-
-    /// <summary>
-    /// Whether to reset SpeedTree LOD weights to default.
-    /// </summary>
-    public bool defaultLODWeights;
 
     /// <summary>
     /// Tree to use during the Christmas event instead.
@@ -156,15 +145,6 @@ public class ResourceAsset : Asset
         {
             throw new NotSupportedException("ID < 50");
         }
-        if (Dedicator.IsDedicatedServer || GraphicsSettings.treeMode == ETreeGraphicMode.LEGACY)
-        {
-            isSpeedTree = false;
-        }
-        else
-        {
-            isSpeedTree = data.ContainsKey("SpeedTree");
-        }
-        defaultLODWeights = data.ContainsKey("SpeedTree_Default_LOD_Weights");
         _resourceName = localization.format("Name");
         if (Dedicator.IsDedicatedServer)
         {
@@ -208,130 +188,41 @@ public class ResourceAsset : Asset
         }
         else
         {
-            _modelGameObject = null;
-            _stumpGameObject = null;
-            _skyboxGameObject = null;
-            _debrisGameObject = null;
-            if (GraphicsSettings.treeMode == ETreeGraphicMode.LEGACY)
-            {
-                _modelGameObject = bundle.load<GameObject>("Resource_Old");
-            }
+            _modelGameObject = bundle.load<GameObject>("Resource_Old");
             if (_modelGameObject == null)
             {
                 _modelGameObject = bundle.load<GameObject>("Resource");
             }
-            if (defaultLODWeights)
+            if (_modelGameObject == null)
             {
-                Transform transform = modelGameObject.transform.Find("Billboard");
-                if (transform != null)
-                {
-                    BillboardRenderer component = transform.GetComponent<BillboardRenderer>();
-                    if (component != null)
-                    {
-                        component.shadowCastingMode = ShadowCastingMode.Off;
-                    }
-                }
+                Assets.reportError(this, "missing \"Resource\" GameObject");
             }
-            if (GraphicsSettings.treeMode == ETreeGraphicMode.LEGACY)
-            {
-                _stumpGameObject = bundle.load<GameObject>("Stump_Old");
-            }
+            _stumpGameObject = bundle.load<GameObject>("Stump_Old");
             if (_stumpGameObject == null)
             {
                 _stumpGameObject = bundle.load<GameObject>("Stump");
             }
-            if (GraphicsSettings.treeMode == ETreeGraphicMode.LEGACY)
+            if (_stumpGameObject == null)
             {
-                _skyboxGameObject = bundle.load<GameObject>("Skybox_Old");
+                Assets.reportError(this, "missing \"Stump\" GameObject");
             }
+            _skyboxGameObject = bundle.load<GameObject>("Skybox_Old");
             if (_skyboxGameObject == null)
             {
                 _skyboxGameObject = bundle.load<GameObject>("Skybox");
             }
-            if (defaultLODWeights)
+            _debrisGameObject = bundle.load<GameObject>("Debris_Old");
+            if (_debrisGameObject == null)
             {
-                Transform transform2 = skyboxGameObject.transform.Find("Model_0");
-                if (transform2 != null)
-                {
-                    BillboardRenderer component2 = transform2.GetComponent<BillboardRenderer>();
-                    if (component2 != null)
-                    {
-                        component2.shadowCastingMode = ShadowCastingMode.Off;
-                    }
-                }
+                _debrisGameObject = bundle.load<GameObject>("Debris");
             }
-            if (GraphicsSettings.treeMode == ETreeGraphicMode.LEGACY)
+            if (data.ContainsKey("Auto_Skybox") && (bool)skyboxGameObject)
             {
-                _debrisGameObject = bundle.load<GameObject>("Debris_Old");
-            }
-            if (isSpeedTree)
-            {
-                if (_debrisGameObject == null)
-                {
-                    _debrisGameObject = bundle.load<GameObject>("Debris");
-                }
-                if (modelGameObject != null)
-                {
-                    LODGroup component3 = modelGameObject.GetComponent<LODGroup>();
-                    if (component3 != null)
-                    {
-                        if (GraphicsSettings.treeMode == ETreeGraphicMode.SPEEDTREE_FADE_SPEEDTREE)
-                        {
-                            component3.fadeMode = LODFadeMode.SpeedTree;
-                            if (defaultLODWeights && GraphicsSettings.treeMode != 0)
-                            {
-                                applyDefaultLODs(component3, fade: true);
-                            }
-                        }
-                        else
-                        {
-                            component3.fadeMode = LODFadeMode.None;
-                            if (defaultLODWeights && GraphicsSettings.treeMode != 0)
-                            {
-                                applyDefaultLODs(component3, fade: false);
-                            }
-                        }
-                    }
-                }
-                if (stumpGameObject != null)
-                {
-                    LODGroup component4 = stumpGameObject.GetComponent<LODGroup>();
-                    if (component4 != null)
-                    {
-                        component4.fadeMode = LODFadeMode.None;
-                    }
-                }
-                if (debrisGameObject != null)
-                {
-                    LODGroup component5 = debrisGameObject.GetComponent<LODGroup>();
-                    if (component5 != null)
-                    {
-                        if (GraphicsSettings.treeMode == ETreeGraphicMode.SPEEDTREE_FADE_SPEEDTREE)
-                        {
-                            component5.fadeMode = LODFadeMode.SpeedTree;
-                            if (defaultLODWeights && GraphicsSettings.treeMode != 0)
-                            {
-                                applyDefaultLODs(component5, fade: true);
-                            }
-                        }
-                        else
-                        {
-                            component5.fadeMode = LODFadeMode.None;
-                            if (defaultLODWeights && GraphicsSettings.treeMode != 0)
-                            {
-                                applyDefaultLODs(component5, fade: false);
-                            }
-                        }
-                    }
-                }
-            }
-            if (data.ContainsKey("Auto_Skybox") && !isSpeedTree && (bool)skyboxGameObject)
-            {
-                Transform transform3 = modelGameObject.transform.Find("Model_0");
-                if ((bool)transform3)
+                Transform transform = modelGameObject.transform.Find("Model_0");
+                if ((bool)transform)
                 {
                     meshes.Clear();
-                    transform3.GetComponentsInChildren(includeInactive: true, meshes);
+                    transform.GetComponentsInChildren(includeInactive: true, meshes);
                     if (meshes.Count > 0)
                     {
                         Bounds bounds = default(Bounds);
@@ -354,20 +245,20 @@ public class ResourceAsset : Asset
                         float num2 = Mathf.Max(bounds.size.x, bounds.size.y);
                         float z = bounds.size.z;
                         skyboxGameObject.transform.localScale = new Vector3(z, z, z);
-                        Transform transform4 = UnityEngine.Object.Instantiate(modelGameObject).transform;
-                        Transform transform5 = new GameObject().transform;
-                        transform5.parent = transform4;
-                        transform5.localPosition = new Vector3(0f, z / 2f, (0f - num2) / 2f);
-                        transform5.localRotation = Quaternion.identity;
-                        Transform transform6 = new GameObject().transform;
-                        transform6.parent = transform4;
-                        transform6.localPosition = new Vector3((0f - num2) / 2f, z / 2f, 0f);
-                        transform6.localRotation = Quaternion.Euler(0f, 90f, 0f);
+                        Transform transform2 = UnityEngine.Object.Instantiate(modelGameObject).transform;
+                        Transform transform3 = new GameObject().transform;
+                        transform3.parent = transform2;
+                        transform3.localPosition = new Vector3(0f, z / 2f, (0f - num2) / 2f);
+                        transform3.localRotation = Quaternion.identity;
+                        Transform transform4 = new GameObject().transform;
+                        transform4.parent = transform2;
+                        transform4.localPosition = new Vector3((0f - num2) / 2f, z / 2f, 0f);
+                        transform4.localRotation = Quaternion.Euler(0f, 90f, 0f);
                         if (!shader)
                         {
                             shader = Shader.Find("Custom/Card");
                         }
-                        Texture2D card = ItemTool.getCard(transform4, transform5, transform6, 64, 64, z / 2f, num2);
+                        Texture2D card = ItemTool.getCard(transform2, transform3, transform4, 64, 64, z / 2f, num2);
                         skyboxMaterial = new Material(shader);
                         skyboxMaterial.mainTexture = card;
                     }
@@ -417,10 +308,10 @@ public class ResourceAsset : Asset
         isForage = data.ContainsKey("Forage");
         if (isForage && _modelGameObject != null)
         {
-            Transform transform7 = _modelGameObject.transform.Find("Forage");
-            if (transform7 != null)
+            Transform transform5 = _modelGameObject.transform.Find("Forage");
+            if (transform5 != null)
             {
-                transform7.gameObject.layer = 14;
+                transform5.gameObject.layer = 14;
             }
             else
             {
@@ -450,7 +341,6 @@ public class ResourceAsset : Asset
         halloweenRedirect = data.readAssetReference<ResourceAsset>("Halloween_Redirect");
         chart = data.ParseEnum("Chart", EObjectChart.NONE);
         shouldExcludeFromLevelBatching = data.ParseBool("Exclude_From_Level_Batching");
-        shouldExcludeFromLevelBatching |= isSpeedTree;
     }
 
     internal string OnGetRewardSpawnTableErrorContext()

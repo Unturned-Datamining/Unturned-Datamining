@@ -71,23 +71,7 @@ public class BarricadeTool : MonoBehaviour
             }
             if (asset.build == EBuild.DOOR || asset.build == EBuild.GATE || asset.build == EBuild.SHUTTER || asset.build == EBuild.HATCH)
             {
-                InteractableDoor interactableDoor = transform.gameObject.AddComponent<InteractableDoor>();
-                interactableDoor.updateState(asset, state);
-                Transform transform6 = transform.Find("Skeleton").Find("Hinge");
-                if (transform6 != null)
-                {
-                    transform6.gameObject.AddComponent<InteractableDoorHinge>().door = interactableDoor;
-                }
-                Transform transform7 = transform.Find("Skeleton").Find("Left_Hinge");
-                if (transform7 != null)
-                {
-                    transform7.gameObject.AddComponent<InteractableDoorHinge>().door = interactableDoor;
-                }
-                Transform transform8 = transform.Find("Skeleton").Find("Right_Hinge");
-                if (transform8 != null)
-                {
-                    transform8.gameObject.AddComponent<InteractableDoorHinge>().door = interactableDoor;
-                }
+                transform.gameObject.AddComponent<InteractableDoor>().updateState(asset, state);
             }
             else if (asset.build == EBuild.BED)
             {
@@ -192,30 +176,30 @@ public class BarricadeTool : MonoBehaviour
                 interactable2HP.hp = hp;
                 if (asset.build == EBuild.DOOR || asset.build == EBuild.GATE || asset.build == EBuild.SHUTTER || asset.build == EBuild.HATCH)
                 {
-                    Transform transform9 = transform.Find("Skeleton").Find("Hinge");
-                    if (transform9 != null)
+                    Transform transform6 = transform.Find("Skeleton").Find("Hinge");
+                    if (transform6 != null)
                     {
-                        Interactable2SalvageBarricade interactable2SalvageBarricade = transform9.gameObject.AddComponent<Interactable2SalvageBarricade>();
+                        Interactable2SalvageBarricade interactable2SalvageBarricade = transform6.gameObject.AddComponent<Interactable2SalvageBarricade>();
                         interactable2SalvageBarricade.root = transform;
                         interactable2SalvageBarricade.hp = interactable2HP;
                         interactable2SalvageBarricade.owner = owner;
                         interactable2SalvageBarricade.group = group;
                         interactable2SalvageBarricade.salvageDurationMultiplier = asset.salvageDurationMultiplier;
                     }
-                    Transform transform10 = transform.Find("Skeleton").Find("Left_Hinge");
-                    if (transform10 != null)
+                    Transform transform7 = transform.Find("Skeleton").Find("Left_Hinge");
+                    if (transform7 != null)
                     {
-                        Interactable2SalvageBarricade interactable2SalvageBarricade2 = transform10.gameObject.AddComponent<Interactable2SalvageBarricade>();
+                        Interactable2SalvageBarricade interactable2SalvageBarricade2 = transform7.gameObject.AddComponent<Interactable2SalvageBarricade>();
                         interactable2SalvageBarricade2.root = transform;
                         interactable2SalvageBarricade2.hp = interactable2HP;
                         interactable2SalvageBarricade2.owner = owner;
                         interactable2SalvageBarricade2.group = group;
                         interactable2SalvageBarricade2.salvageDurationMultiplier = asset.salvageDurationMultiplier;
                     }
-                    Transform transform11 = transform.Find("Skeleton").Find("Right_Hinge");
-                    if (transform11 != null)
+                    Transform transform8 = transform.Find("Skeleton").Find("Right_Hinge");
+                    if (transform8 != null)
                     {
-                        Interactable2SalvageBarricade interactable2SalvageBarricade3 = transform11.gameObject.AddComponent<Interactable2SalvageBarricade>();
+                        Interactable2SalvageBarricade interactable2SalvageBarricade3 = transform8.gameObject.AddComponent<Interactable2SalvageBarricade>();
                         interactable2SalvageBarricade3.root = transform;
                         interactable2SalvageBarricade3.hp = interactable2HP;
                         interactable2SalvageBarricade3.owner = owner;

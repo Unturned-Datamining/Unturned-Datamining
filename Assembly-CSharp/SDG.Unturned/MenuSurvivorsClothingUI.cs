@@ -147,7 +147,8 @@ public class MenuSurvivorsClothingUI
         if (!active)
         {
             active = true;
-            Characters.apply(showItems: false, showCosmetics: true);
+            Characters.RefreshPreviewCharacterModel();
+            characterSlider.Value = Characters.characterYaw / 360f;
             container.AnimateIntoView();
         }
     }
@@ -157,10 +158,7 @@ public class MenuSurvivorsClothingUI
         if (active)
         {
             active = false;
-            if (!MenuSurvivorsClothingBoxUI.active && !MenuSurvivorsClothingInspectUI.active && !MenuSurvivorsClothingDeleteUI.active && !MenuSurvivorsClothingItemUI.active)
-            {
-                Characters.apply(showItems: true, showCosmetics: true);
-            }
+            Characters.RefreshPreviewCharacterModel();
             container.AnimateOutOfView(0f, 1f);
         }
     }
@@ -924,9 +922,9 @@ public class MenuSurvivorsClothingUI
             econCraftOptions.Add(new EconCraftOption("Craft_ProgressPridePin", 1333, 5));
             econCraftOptions.Add(new EconCraftOption("Craft_ProgressPrideJersey", 1334, 5));
         }
-        if (LiveConfig.Get().isAnniversaryTophatAvailable)
+        if (LiveConfig.Get().isCandyBagAvailable && LiveConfig.Get().candyBagRequiredCraftingMaterials > 0)
         {
-            econCraftOptions.Add(new EconCraftOption("Craft_AnniversaryTophat", 21069, 10));
+            econCraftOptions.Add(new EconCraftOption("Craft_CandyBag", 21071, (ushort)LiveConfig.Get().candyBagRequiredCraftingMaterials));
         }
         craftingButtons = new ISleekButton[econCraftOptions.Count];
         for (int j = 0; j < craftingButtons.Length; j++)

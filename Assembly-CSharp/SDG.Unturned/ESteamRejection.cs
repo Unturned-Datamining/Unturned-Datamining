@@ -105,5 +105,14 @@ public enum ESteamRejection
     /// <summary>
     /// Player's skin color is too similar to one of <see cref="F:SDG.Unturned.LevelAsset.terrainColorRules" />.
     /// </summary>
-    SKIN_COLOR_WITHIN_THRESHOLD_OF_TERRAIN_COLOR
+    SKIN_COLOR_WITHIN_THRESHOLD_OF_TERRAIN_COLOR,
+    /// <summary>
+    /// Steam ID reported by net transport doesn't match client's reported Steam ID.
+    /// This was exploited to fill the server queue with fake players.
+    /// </summary>
+    STEAM_ID_MISMATCH,
+    /// <summary>
+    /// Received too many connection requests from player in a short window.
+    /// </summary>
+    CONNECT_RATE_LIMITING
 }

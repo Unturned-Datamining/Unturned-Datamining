@@ -77,17 +77,19 @@ public static class LevelManager_NetMethods
     public static void ReceiveAirdropState_Read(in ClientInvocationContext context)
     {
         NetPakReader reader = context.reader;
-        reader.ReadClampedVector3(out var value);
-        reader.ReadNormalVector3(out var value2);
-        reader.ReadFloat(out var value3);
+        reader.ReadUInt16(out var value);
+        reader.ReadClampedVector3(out var value2);
+        reader.ReadNormalVector3(out var value3);
         reader.ReadFloat(out var value4);
         reader.ReadFloat(out var value5);
-        LevelManager.ReceiveAirdropState(value, value2, value3, value4, value5);
+        reader.ReadFloat(out var value6);
+        LevelManager.ReceiveAirdropState(value, value2, value3, value4, value5, value6);
     }
 
     [NetInvokableGeneratedMethod("ReceiveAirdropState", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveAirdropState_Write(NetPakWriter writer, Vector3 state, Vector3 direction, float speed, float force, float delay)
+    public static void ReceiveAirdropState_Write(NetPakWriter writer, ushort id, Vector3 state, Vector3 direction, float speed, float force, float delay)
     {
+        writer.WriteUInt16(id);
         writer.WriteClampedVector3(state);
         writer.WriteNormalVector3(direction);
         writer.WriteFloat(speed);

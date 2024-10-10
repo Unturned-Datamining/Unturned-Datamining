@@ -28,6 +28,8 @@ public class MenuConfigurationGraphicsUI
 
     private static ISleekToggle grassDisplacementToggle;
 
+    private static ISleekToggle windToggle;
+
     private static ISleekToggle foliageFocusToggle;
 
     private static ISleekToggle ragdollsToggle;
@@ -86,12 +88,6 @@ public class MenuConfigurationGraphicsUI
 
     private static SleekButtonState terrainButton;
 
-    private static SleekButtonState windButton;
-
-    private static SleekButtonState treeModeButton;
-
-    private static SleekBoxIcon treePerf;
-
     private static SleekButtonState renderButton;
 
     public static void open()
@@ -147,6 +143,12 @@ public class MenuConfigurationGraphicsUI
     {
         GraphicsSettings.grassDisplacement = state;
         GraphicsSettings.apply("changed grass displacement");
+    }
+
+    private static void onToggledWindToggle(ISleekToggle toggle, bool state)
+    {
+        GraphicsSettings.IsWindEnabled = state;
+        GraphicsSettings.apply("changed wind");
     }
 
     private static void onToggledFoliageFocusToggle(ISleekToggle toggle, bool state)
@@ -307,18 +309,6 @@ public class MenuConfigurationGraphicsUI
         GraphicsSettings.apply("changed terrain quality");
     }
 
-    private static void onSwappedWindState(SleekButtonState button, int index)
-    {
-        GraphicsSettings.windQuality = (EGraphicQuality)index;
-        GraphicsSettings.apply("changed wind quality");
-    }
-
-    private static void onSwappedTreeModeState(SleekButtonState button, int index)
-    {
-        GraphicsSettings.treeMode = (ETreeGraphicMode)index;
-        updatePerfWarnings();
-    }
-
     private static void onSwappedRenderState(SleekButtonState button, int index)
     {
         GraphicsSettings.renderMode = (ERenderMode)index;
@@ -356,6 +346,7 @@ public class MenuConfigurationGraphicsUI
         chromaticAberrationToggle.Value = GraphicsSettings.chromaticAberration;
         filmGrainToggle.Value = GraphicsSettings.filmGrain;
         grassDisplacementToggle.Value = GraphicsSettings.grassDisplacement;
+        windToggle.Value = GraphicsSettings.IsWindEnabled;
         foliageFocusToggle.Value = GraphicsSettings.foliageFocus;
         landmarkButton.state = (int)GraphicsSettings.landmarkQuality;
         ragdollsToggle.Value = GraphicsSettings.ragdolls;
@@ -384,8 +375,6 @@ public class MenuConfigurationGraphicsUI
         scopeButton.state = (int)GraphicsSettings.scopeQuality;
         outlineButton.state = (int)(GraphicsSettings.outlineQuality - 1);
         terrainButton.state = (int)(GraphicsSettings.terrainQuality - 1);
-        windButton.state = (int)GraphicsSettings.windQuality;
-        treeModeButton.state = (int)GraphicsSettings.treeMode;
         renderButton.state = (int)GraphicsSettings.renderMode;
         updatePerfWarnings();
     }
@@ -399,7 +388,6 @@ public class MenuConfigurationGraphicsUI
         waterPerf.IsVisible = GraphicsSettings.waterQuality == EGraphicQuality.ULTRA;
         planarReflectionButton.isInteractable = GraphicsSettings.waterQuality == EGraphicQuality.ULTRA;
         scopePerf.IsVisible = GraphicsSettings.scopeQuality != EGraphicQuality.OFF;
-        treePerf.IsVisible = GraphicsSettings.treeMode != ETreeGraphicMode.LEGACY;
         reflectionButton.isInteractable = GraphicsSettings.renderMode == ERenderMode.DEFERRED;
         blastToggle.IsInteractable = GraphicsSettings.renderMode == ERenderMode.DEFERRED;
     }
@@ -554,6 +542,16 @@ public class MenuConfigurationGraphicsUI
         grassDisplacementToggle.TooltipText = localization.format("Grass_Displacement_Tooltip");
         grassDisplacementToggle.OnValueChanged += onToggledGrassDisplacementToggle;
         graphicsBox.AddChild(grassDisplacementToggle);
+        num += 50;
+        windToggle = Glazier.Get().CreateToggle();
+        windToggle.PositionOffset_X = 205f;
+        windToggle.PositionOffset_Y = num;
+        windToggle.SizeOffset_X = 40f;
+        windToggle.SizeOffset_Y = 40f;
+        windToggle.AddLabel(localization.format("Wind_Toggle_Label"), ESleekSide.RIGHT);
+        windToggle.TooltipText = localization.format("Wind_Tooltip");
+        windToggle.OnValueChanged += onToggledWindToggle;
+        graphicsBox.AddChild(windToggle);
         num += 50;
         foliageFocusToggle = Glazier.Get().CreateToggle();
         foliageFocusToggle.PositionOffset_X = 205f;
@@ -779,34 +777,6 @@ public class MenuConfigurationGraphicsUI
         terrainButton.tooltip = localization.format("Terrain_Button_Tooltip");
         terrainButton.onSwappedState = onSwappedTerrainState;
         graphicsBox.AddChild(terrainButton);
-        num += 40;
-        windButton = new SleekButtonState(new GUIContent(localization.format("Off")), new GUIContent(localization.format("Low")), new GUIContent(localization.format("Medium")), new GUIContent(localization.format("High")), new GUIContent(localization.format("Ultra")));
-        windButton.PositionOffset_X = 205f;
-        windButton.PositionOffset_Y = num;
-        windButton.SizeOffset_X = 200f;
-        windButton.SizeOffset_Y = 30f;
-        windButton.AddLabel(localization.format("Wind_Button_Label"), ESleekSide.RIGHT);
-        windButton.tooltip = RichTextUtil.wrapWithColor(localization.format("Wind_Button_Tooltip"), color) + RichTextUtil.wrapWithColor("\n" + localization.format("Wind_Low", localization.format("Low")) + "\n" + localization.format("Wind_Medium", localization.format("Medium")), color2);
-        windButton.onSwappedState = onSwappedWindState;
-        graphicsBox.AddChild(windButton);
-        num += 40;
-        treeModeButton = new SleekButtonState(new GUIContent(localization.format("TM_Legacy")), new GUIContent(localization.format("TM_SpeedTree_Fade_None")), new GUIContent(localization.format("TM_SpeedTree_Fade_SpeedTree")));
-        treeModeButton.PositionOffset_X = 205f;
-        treeModeButton.PositionOffset_Y = num;
-        treeModeButton.SizeOffset_X = 200f;
-        treeModeButton.SizeOffset_Y = 30f;
-        treeModeButton.AddLabel(localization.format("Tree_Mode_Button_Label"), ESleekSide.RIGHT);
-        treeModeButton.tooltip = localization.format("Tree_Mode_Button_Tooltip");
-        treeModeButton.onSwappedState = onSwappedTreeModeState;
-        graphicsBox.AddChild(treeModeButton);
-        treePerf = new SleekBoxIcon(bundle.load<Texture2D>("Perf"));
-        treePerf.PositionOffset_X = 175f;
-        treePerf.PositionOffset_Y = num;
-        treePerf.SizeOffset_X = 30f;
-        treePerf.SizeOffset_Y = 30f;
-        treePerf.iconColor = ESleekTint.FOREGROUND;
-        treePerf.tooltip = RichTextUtil.wrapWithColor(localization.format("Perf_SpeedTrees"), new Color(1f, 0.5f, 0f));
-        graphicsBox.AddChild(treePerf);
         num += 40;
         renderButton = new SleekButtonState(new GUIContent(localization.format("Deferred")), new GUIContent(localization.format("Forward")));
         renderButton.PositionOffset_X = 205f;

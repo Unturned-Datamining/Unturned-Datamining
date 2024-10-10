@@ -34,7 +34,8 @@ public class BulletInfo
     /// opposed to every simulation frame on the server.) Rather than kicking for one particularly large deviation
     /// we would recommend tracking stats for each shot's actual deviation vs max theoretical deviation. Remember
     /// to account for bullet drop and that aim spread is relative to this direction. (For example, a shotgun may
-    /// fire ~8 pellets in a cone around this direction.) 
+    /// fire ~8 pellets in a cone around this direction.) Note also that in third-person the bullet can turn up to
+    /// 90 degrees from the aim direction if the camera is up against a wall.
     /// </summary>
     public Vector3 ApproximatePlayerAimDirection { get; internal set; }
 

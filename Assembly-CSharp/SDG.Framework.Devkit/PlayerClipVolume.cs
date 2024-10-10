@@ -27,6 +27,7 @@ public class PlayerClipVolume : LevelVolume<PlayerClipVolume, PlayerClipVolumeMa
         private void OnBlockPlayerToggled(ISleekToggle toggle, bool state)
         {
             volume.blockPlayer = state;
+            LevelHierarchy.MarkDirty();
         }
     }
 

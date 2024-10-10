@@ -19,7 +19,7 @@ public class MenuPauseUI
 
     private static SleekButtonIcon supportButton;
 
-    private static SleekButtonIcon twitterButton;
+    private static SleekButtonIcon bskyButton;
 
     private static SleekButtonIcon steamButton;
 
@@ -73,7 +73,7 @@ public class MenuPauseUI
         }
     }
 
-    private static void onClickedTwitterButton(ISleekElement button)
+    private static void onClickedBskyButton(ISleekElement button)
     {
         if (!Provider.provider.browserService.canOpenBrowser)
         {
@@ -81,7 +81,7 @@ public class MenuPauseUI
         }
         else
         {
-            Provider.provider.browserService.open("https://twitter.com/SDGNelson");
+            Provider.provider.browserService.open("https://bsky.app/profile/nelson.smartlydressed.games");
         }
     }
 
@@ -198,18 +198,18 @@ public class MenuPauseUI
         supportButton.fontSize = ESleekFontSize.Medium;
         supportButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(supportButton);
-        twitterButton = new SleekButtonIcon(icons.load<Texture2D>("Twitter"));
-        twitterButton.PositionOffset_X = -100f;
-        twitterButton.PositionOffset_Y = -85f;
-        twitterButton.PositionScale_X = 0.5f;
-        twitterButton.PositionScale_Y = 0.5f;
-        twitterButton.SizeOffset_X = 200f;
-        twitterButton.SizeOffset_Y = 50f;
-        twitterButton.text = localization.format("Twitter_Button");
-        twitterButton.tooltip = localization.format("Twitter_Button_Tooltip");
-        twitterButton.onClickedButton += onClickedTwitterButton;
-        twitterButton.fontSize = ESleekFontSize.Medium;
-        container.AddChild(twitterButton);
+        bskyButton = new SleekButtonIcon(icons.load<Texture2D>("Bsky"), 40);
+        bskyButton.PositionOffset_X = -100f;
+        bskyButton.PositionOffset_Y = -85f;
+        bskyButton.PositionScale_X = 0.5f;
+        bskyButton.PositionScale_Y = 0.5f;
+        bskyButton.SizeOffset_X = 200f;
+        bskyButton.SizeOffset_Y = 50f;
+        bskyButton.text = localization.format("Bsky_Button");
+        bskyButton.tooltip = localization.format("Bsky_Button_Tooltip");
+        bskyButton.onClickedButton += onClickedBskyButton;
+        bskyButton.fontSize = ESleekFontSize.Medium;
+        container.AddChild(bskyButton);
         steamButton = new SleekButtonIcon(icons.load<Texture2D>("Steam"));
         steamButton.PositionOffset_X = -100f;
         steamButton.PositionOffset_Y = -25f;

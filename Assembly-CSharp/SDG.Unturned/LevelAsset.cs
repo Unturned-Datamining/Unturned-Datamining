@@ -360,10 +360,11 @@ public class LevelAsset : Asset
             return;
         }
         List<TerrainColorRule> list2 = new List<TerrainColorRule>(node6.Count);
-        foreach (IDatNode item2 in node6)
+        for (int l = 0; l < node6.Count; l++)
         {
+            IDatNode datNode = node6[l];
             TerrainColorRule terrainColorRule = new TerrainColorRule();
-            if (terrainColorRule.TryParse(item2))
+            if (terrainColorRule.TryParse(datNode))
             {
                 bool flag = false;
                 Color[] sKINS = Customization.SKINS;
@@ -373,8 +374,8 @@ public class LevelAsset : Asset
                     if (terrainColorRule.CompareColors(H, S, V) == TerrainColorRule.EComparisonResult.TooSimilar)
                     {
                         flag = true;
-                        string text = Palette.hex(color);
-                        Assets.reportError("skipping TerrainColor entry because it blocks default skin color " + text);
+                        string arg = Palette.hex(color);
+                        Assets.reportError(this, $"skipping TerrainColor entry {l} because it blocks default skin color {arg}");
                         break;
                     }
                 }
@@ -385,7 +386,7 @@ public class LevelAsset : Asset
             }
             else
             {
-                Assets.reportError(this, "unable to parse entry in TerrainColors: " + item2.DebugDumpToString());
+                Assets.reportError(this, "unable to parse entry in TerrainColors: " + datNode.DebugDumpToString());
             }
         }
         if (list2.Count > 0)

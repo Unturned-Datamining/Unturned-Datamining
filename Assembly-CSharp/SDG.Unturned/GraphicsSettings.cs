@@ -463,6 +463,18 @@ public class GraphicsSettings
         }
     }
 
+    public static bool IsWindEnabled
+    {
+        get
+        {
+            return graphicsSettingsData.IsWindEnabled;
+        }
+        set
+        {
+            graphicsSettingsData.IsWindEnabled = value;
+        }
+    }
+
     /// <summary>
     /// Multiplier for far clip plane distance.
     /// Clamped within [0, 1] range to prevent editing config files for an advantage.
@@ -647,30 +659,6 @@ public class GraphicsSettings
         set
         {
             graphicsSettingsData.TerrainQuality = value;
-        }
-    }
-
-    public static EGraphicQuality windQuality
-    {
-        get
-        {
-            return graphicsSettingsData.WindQuality;
-        }
-        set
-        {
-            graphicsSettingsData.WindQuality = value;
-        }
-    }
-
-    public static ETreeGraphicMode treeMode
-    {
-        get
-        {
-            return graphicsSettingsData.TreeMode;
-        }
-        set
-        {
-            graphicsSettingsData.TreeMode = value;
         }
     }
 
@@ -1118,7 +1106,7 @@ public class GraphicsSettings
             }
         }
         LevelLighting.isSkyboxReflectionEnabled = skyboxReflection;
-        if (windQuality > EGraphicQuality.OFF)
+        if (IsWindEnabled)
         {
             Shader.EnableKeyword("NICE_FOLIAGE_ON");
             Shader.EnableKeyword("GRASS_WIND_ON");
@@ -1127,32 +1115,6 @@ public class GraphicsSettings
         {
             Shader.DisableKeyword("NICE_FOLIAGE_ON");
             Shader.DisableKeyword("GRASS_WIND_ON");
-        }
-        if (windQuality > EGraphicQuality.LOW)
-        {
-            Shader.EnableKeyword("ENABLE_WIND");
-        }
-        else
-        {
-            Shader.DisableKeyword("ENABLE_WIND");
-        }
-        switch (windQuality)
-        {
-        case EGraphicQuality.OFF:
-            Shader.SetGlobalInt("_MaxWindQuality", 0);
-            break;
-        case EGraphicQuality.LOW:
-            Shader.SetGlobalInt("_MaxWindQuality", 1);
-            break;
-        case EGraphicQuality.MEDIUM:
-            Shader.SetGlobalInt("_MaxWindQuality", 2);
-            break;
-        case EGraphicQuality.HIGH:
-            Shader.SetGlobalInt("_MaxWindQuality", 3);
-            break;
-        case EGraphicQuality.ULTRA:
-            Shader.SetGlobalInt("_MaxWindQuality", 4);
-            break;
         }
         if (grassDisplacement)
         {

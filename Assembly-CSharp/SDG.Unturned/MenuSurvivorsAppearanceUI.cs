@@ -48,7 +48,7 @@ public class MenuSurvivorsAppearanceUI
         if (!active)
         {
             active = true;
-            Characters.apply(showItems: false, showCosmetics: false);
+            Characters.RefreshPreviewCharacterModel();
             container.AnimateIntoView();
         }
     }
@@ -58,7 +58,7 @@ public class MenuSurvivorsAppearanceUI
         if (active)
         {
             active = false;
-            Characters.apply(showItems: true, showCosmetics: true);
+            Characters.RefreshPreviewCharacterModel();
             container.AnimateOutOfView(0f, 1f);
         }
     }

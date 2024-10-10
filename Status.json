@@ -36,24 +36,13 @@
 	"Game":
 	{
 		"Major_Version": 24,
-		"Minor_Version": 5,
-		"Patch_Version": 1,
+		"Minor_Version": 6,
+		"Patch_Version": 101,
 		"GrantPackageIDs":
 		[
 			487
 		],
 		"GrantPackageURL": "https://api.smartlydressedgames.com/u4/shipping/package-grant?steamid={0}"
-	},
-	"Holidays":
-	{
-		"HalloweenStart": "2024-10-20T00:12:01Z",
-		"HalloweenEnd": "2024-11-01T23:59:59Z",
-		"ChristmasStart": "2024-12-07T00:00:01Z",
-		"ChristmasEnd": "2025-01-02T18:05:00Z",
-		"AprilFools_Start": "2025-04-01T00:00:00Z",
-		"AprilFools_End": "2025-04-02T00:00:00Z",
-		"ValentinesStart": "2025-02-13T12:00:01Z",
-		"ValentinesEnd": "2025-02-15T12:00:01Z"
 	},
 	"Menu":
 	{

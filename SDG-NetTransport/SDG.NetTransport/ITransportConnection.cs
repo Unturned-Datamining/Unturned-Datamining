@@ -9,6 +9,8 @@ public interface ITransportConnection : IEquatable<ITransportConnection>
 
     bool TryGetPort(out ushort port);
 
+    bool TryGetSteamId(out ulong steamId);
+
     IPAddress GetAddress();
 
     string GetAddressString(bool withPort);

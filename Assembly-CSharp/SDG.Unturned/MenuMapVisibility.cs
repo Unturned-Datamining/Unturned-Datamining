@@ -51,43 +51,25 @@ public class MenuMapVisibility : MonoBehaviour
         }
         if (flag)
         {
-            if (Provider.isBackendRealtimeAvailable)
+            switch (HolidayUtil.getActiveHoliday())
             {
-                handleHolidayScenes();
+            case ENPCHoliday.CHRISTMAS:
+                UnturnedLog.info("Loading additive Christmas scene");
+                SceneManager.LoadSceneAsync("ChristmasMenu", LoadSceneMode.Additive);
+                break;
+            case ENPCHoliday.HALLOWEEN:
+                UnturnedLog.info("Loading additive Halloween scene");
+                SceneManager.LoadSceneAsync("HalloweenMenu", LoadSceneMode.Additive);
+                break;
+            case ENPCHoliday.PRIDE_MONTH:
+                UnturnedLog.info("Loading additive Pride Month scene");
+                SceneManager.LoadSceneAsync("PrideMonthMenu", LoadSceneMode.Additive);
+                break;
+            default:
+                UnturnedLog.info("Loading additive default menu");
+                SceneManager.LoadSceneAsync("DefaultMenu", LoadSceneMode.Additive);
+                break;
             }
-            else
-            {
-                Provider.onBackendRealtimeAvailable = (Provider.BackendRealtimeAvailableHandler)Delegate.Combine(Provider.onBackendRealtimeAvailable, new Provider.BackendRealtimeAvailableHandler(onBackendRealtimeAvailable));
-            }
-        }
-    }
-
-    protected void onBackendRealtimeAvailable()
-    {
-        Provider.onBackendRealtimeAvailable = (Provider.BackendRealtimeAvailableHandler)Delegate.Remove(Provider.onBackendRealtimeAvailable, new Provider.BackendRealtimeAvailableHandler(onBackendRealtimeAvailable));
-        handleHolidayScenes();
-    }
-
-    protected void handleHolidayScenes()
-    {
-        switch (HolidayUtil.getActiveHoliday())
-        {
-        case ENPCHoliday.CHRISTMAS:
-            UnturnedLog.info("Loading additive Christmas scene");
-            SceneManager.LoadSceneAsync("ChristmasMenu", LoadSceneMode.Additive);
-            break;
-        case ENPCHoliday.HALLOWEEN:
-            UnturnedLog.info("Loading additive Halloween scene");
-            SceneManager.LoadSceneAsync("HalloweenMenu", LoadSceneMode.Additive);
-            break;
-        case ENPCHoliday.PRIDE_MONTH:
-            UnturnedLog.info("Loading additive Pride Month scene");
-            SceneManager.LoadSceneAsync("PrideMonthMenu", LoadSceneMode.Additive);
-            break;
-        default:
-            UnturnedLog.info("Loading additive default menu");
-            SceneManager.LoadSceneAsync("DefaultMenu", LoadSceneMode.Additive);
-            break;
         }
     }
 }

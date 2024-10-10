@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace SDG.Unturned;
@@ -11,6 +12,12 @@ public class ItemStoreLiveConfig
     public int[] featuredItems;
 
     public int[] excludeItemsFromHighlight;
+
+    public string saleTitle;
+
+    public DateTime saleStart;
+
+    public DateTime saleEnd;
 
     public void Parse(DatDictionary data)
     {
@@ -63,5 +70,8 @@ public class ItemStoreLiveConfig
         {
             excludeItemsFromHighlight = new int[0];
         }
+        saleTitle = data.GetString("SaleTitle");
+        saleStart = data.ParseDateTimeUtc("SaleStart");
+        saleEnd = data.ParseDateTimeUtc("SaleEnd");
     }
 }

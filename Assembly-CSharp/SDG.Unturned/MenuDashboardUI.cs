@@ -61,15 +61,19 @@ public class MenuDashboardUI
 
     private static float mainHeaderOffset;
 
+    private static bool hasCreatedItemStoreButton;
+
     private static NewsResponse newsResponse;
 
     /// <summary>
     /// Has a new announcement been posted by the developer?
     /// If so, it is given priority over the featured workshop item.
     /// </summary>
-    private static bool hasNewAnnouncement;
-
     private static ISleekElement newAnnouncement;
+
+    private static ISleekBox workshopBox;
+
+    private static ISleekElement itemStoreSaleNews;
 
     private static UGCQueryHandle_t popularWorkshopHandle = UGCQueryHandle_t.Invalid;
 
@@ -192,182 +196,124 @@ public class MenuDashboardUI
         {
             return;
         }
-        SteamBBCodeUtils.removeYouTubePreviews(ref contents);
-        SteamBBCodeUtils.removeCodeFormatting(ref contents);
-        int num = 0;
-        for (int i = 0; i < 1000; i++)
+        BbCodeTokenizer bbCodeTokenizer = new BbCodeTokenizer();
+        List<BbCodeToken> tokens = bbCodeTokenizer.Tokenize(contents);
+        if (bbCodeTokenizer.HasError)
         {
-            int num2 = contents.IndexOf("[h1]", num + 1);
-            int num3 = contents.IndexOf("[b]", num + 1);
-            int num4 = ((num2 == -1 && num3 == -1) ? (-1) : ((num2 == -1) ? num3 : ((num3 == -1) ? num2 : ((num2 >= num3) ? num3 : num2))));
-            string text = ((num4 != -1) ? contents.Substring(num, num4 - num) : contents.Substring(num));
-            List<SubcontentInfo> list = new List<SubcontentInfo>();
-            int num5 = 0;
-            for (int j = 0; j < 1000; j++)
+            UnturnedLog.warn("Error tokenizing Steam BBcode: \"" + bbCodeTokenizer.ErrorMessage + "\" Input: \"" + contents + "\"");
+            ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
+            sleekLabel.Text = contents;
+            sleekLabel.UseManualLayout = false;
+            sleekLabel.TextAlignment = TextAnchor.UpperLeft;
+            parent.AddChild(sleekLabel);
+            return;
+        }
+        BbCodeWidgetConverter bbCodeWidgetConverter = new BbCodeWidgetConverter();
+        List<BbCodeWidget> list = bbCodeWidgetConverter.Convert(tokens);
+        if (bbCodeWidgetConverter.HasError)
+        {
+            UnturnedLog.warn("Error converting Steam BBcode to widgets: \"" + bbCodeWidgetConverter.ErrorMessage + "\" Input: \"" + contents + "\"");
+            ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
+            sleekLabel2.Text = contents;
+            sleekLabel2.UseManualLayout = false;
+            sleekLabel2.TextAlignment = TextAnchor.UpperLeft;
+            parent.AddChild(sleekLabel2);
+            return;
+        }
+        foreach (BbCodeWidget item in list)
+        {
+            switch (item.widgetType)
             {
-                int num6 = text.IndexOf("[img]", num5);
-                int num7 = text.IndexOf("[url=", num5);
-                if (num6 == -1 && num7 == -1)
+            case EBbCodeWidgetType.RichTextLabel:
+            {
+                ISleekLabel sleekLabel3 = Glazier.Get().CreateLabel();
+                sleekLabel3.Text = item.widgetData;
+                sleekLabel3.UseManualLayout = false;
+                sleekLabel3.AllowRichText = true;
+                sleekLabel3.TextAlignment = TextAnchor.UpperLeft;
+                parent.AddChild(sleekLabel3);
+                break;
+            }
+            case EBbCodeWidgetType.Image:
+            {
+                SleekWebImage sleekWebImage = new SleekWebImage();
+                sleekWebImage.UseManualLayout = false;
+                sleekWebImage.UseWidthLayoutOverride = true;
+                sleekWebImage.UseHeightLayoutOverride = true;
+                sleekWebImage.useImageDimensions = true;
+                string url = item.widgetData.Replace("{STEAM_CLAN_IMAGE}", "https://clan.cloudflare.steamstatic.com/images/");
+                sleekWebImage.Refresh(url, shouldCache: false);
+                parent.AddChild(sleekWebImage);
+                break;
+            }
+            case EBbCodeWidgetType.YouTubeButton:
+            {
+                SleekYouTubeVideoButton sleekYouTubeVideoButton = new SleekYouTubeVideoButton();
+                sleekYouTubeVideoButton.UseManualLayout = false;
+                sleekYouTubeVideoButton.UseWidthLayoutOverride = true;
+                sleekYouTubeVideoButton.UseHeightLayoutOverride = true;
+                sleekYouTubeVideoButton.SizeOffset_X = 1300f;
+                sleekYouTubeVideoButton.SizeOffset_Y = 740f;
+                sleekYouTubeVideoButton.Refresh(item.widgetData);
+                parent.AddChild(sleekYouTubeVideoButton);
+                break;
+            }
+            case EBbCodeWidgetType.LinkButton:
+            {
+                int num = item.widgetData.IndexOf(',');
+                string text;
+                string text2;
+                if (num < 0)
                 {
-                    SubcontentInfo subcontentInfo = new SubcontentInfo();
-                    subcontentInfo.content = text.Substring(num5);
-                    list.Add(subcontentInfo);
-                    break;
-                }
-                int num8;
-                bool flag;
-                if (num6 == -1)
-                {
-                    num8 = num7;
-                    flag = false;
-                }
-                else if (num7 == -1)
-                {
-                    num8 = num6;
-                    flag = true;
-                }
-                else if (num6 < num7)
-                {
-                    num8 = num6;
-                    flag = true;
+                    text = item.widgetData;
+                    text2 = text;
                 }
                 else
                 {
-                    num8 = num7;
-                    flag = false;
+                    text = item.widgetData.Substring(0, num);
+                    text2 = item.widgetData.Substring(num + 1);
                 }
-                SubcontentInfo subcontentInfo2 = new SubcontentInfo();
-                subcontentInfo2.content = text.Substring(num5, num8 - num5);
-                list.Add(subcontentInfo2);
-                int num10;
-                if (flag)
+                if (!useLinkFiltering || WebUtils.CanParseThirdPartyUrl(text))
                 {
-                    int num9 = text.IndexOf("[/img]", num6);
-                    string url = text.Substring(num6 + 5, num9 - num6 - 5);
-                    SubcontentInfo subcontentInfo3 = new SubcontentInfo();
-                    subcontentInfo3.url = url;
-                    subcontentInfo3.isImage = true;
-                    list.Add(subcontentInfo3);
-                    num10 = num9;
+                    SleekWebLinkButton sleekWebLinkButton = new SleekWebLinkButton();
+                    sleekWebLinkButton.Text = text2;
+                    sleekWebLinkButton.Url = text;
+                    sleekWebLinkButton.UseManualLayout = false;
+                    sleekWebLinkButton.UseChildAutoLayout = ESleekChildLayout.Vertical;
+                    sleekWebLinkButton.UseHeightLayoutOverride = true;
+                    sleekWebLinkButton.ExpandChildren = true;
+                    sleekWebLinkButton.SizeOffset_Y = 30f;
+                    sleekWebLinkButton.useLinkFiltering = useLinkFiltering;
+                    parent.AddChild(sleekWebLinkButton);
                 }
                 else
                 {
-                    int num11 = text.IndexOf("[/url]", num7);
-                    int num12 = text.IndexOf("]", num7);
-                    string url2 = text.Substring(num7 + 5, num12 - num7 - 5);
-                    string content = text.Substring(num12 + 1, num11 - num12 - 1);
-                    SubcontentInfo subcontentInfo4 = new SubcontentInfo();
-                    subcontentInfo4.content = content;
-                    subcontentInfo4.url = url2;
-                    subcontentInfo4.isLink = true;
-                    list.Add(subcontentInfo4);
-                    num10 = num11;
+                    UnturnedLog.warn("Ignoring potentially unsafe link in BBcode: {0}", text);
                 }
-                num5 = num10 + 6;
+                break;
             }
-            foreach (SubcontentInfo item in list)
-            {
-                if (item.isImage)
-                {
-                    SleekWebImage sleekWebImage = new SleekWebImage();
-                    sleekWebImage.UseManualLayout = false;
-                    sleekWebImage.UseWidthLayoutOverride = true;
-                    sleekWebImage.UseHeightLayoutOverride = true;
-                    sleekWebImage.useImageDimensions = true;
-                    item.url = item.url.Replace("{STEAM_CLAN_IMAGE}", "https://clan.cloudflare.steamstatic.com/images/");
-                    sleekWebImage.Refresh(item.url, shouldCache: false);
-                    parent.AddChild(sleekWebImage);
-                    continue;
-                }
-                if (item.isLink)
-                {
-                    if (!useLinkFiltering || WebUtils.CanParseThirdPartyUrl(item.url))
-                    {
-                        SleekWebLinkButton sleekWebLinkButton = new SleekWebLinkButton();
-                        sleekWebLinkButton.Text = item.content;
-                        sleekWebLinkButton.Url = item.url;
-                        sleekWebLinkButton.UseManualLayout = false;
-                        sleekWebLinkButton.UseChildAutoLayout = ESleekChildLayout.Vertical;
-                        sleekWebLinkButton.UseHeightLayoutOverride = true;
-                        sleekWebLinkButton.ExpandChildren = true;
-                        sleekWebLinkButton.SizeOffset_Y = 30f;
-                        sleekWebLinkButton.useLinkFiltering = useLinkFiltering;
-                        parent.AddChild(sleekWebLinkButton);
-                    }
-                    else
-                    {
-                        UnturnedLog.warn("Ignoring potentially unsafe link in BBcode: {0}", item.url);
-                    }
-                    continue;
-                }
-                item.content = item.content.TrimStart('\r', '\n');
-                item.content = item.content.Replace("[b]", "<b>");
-                item.content = item.content.Replace("[/b]", "</b>");
-                item.content = item.content.Replace("[i]", "<i>");
-                item.content = item.content.Replace("[/i]", "</i>");
-                item.content = item.content.Replace("[list]", "");
-                item.content = item.content.Replace("[/list]", "");
-                item.content = item.content.Replace("[*]", "- ");
-                item.content = item.content.Replace("[h1]", "<size=14>");
-                item.content = item.content.Replace("[/h1]", "</size>");
-                item.content = item.content.TrimEnd('\r', '\n');
-                if (string.IsNullOrEmpty(item.content))
-                {
-                    continue;
-                }
-                string[] array = item.content.Split('\r', '\n');
-                string text2 = string.Empty;
-                string[] array2 = array;
-                for (int k = 0; k < array2.Length; k++)
-                {
-                    string text3 = array2[k].Trim();
-                    if (string.IsNullOrEmpty(text3))
-                    {
-                        continue;
-                    }
-                    if (text3.StartsWith("- "))
-                    {
-                        if (!string.IsNullOrEmpty(text2))
-                        {
-                            text2 += "\n";
-                        }
-                        text2 += text3;
-                        continue;
-                    }
-                    if (!string.IsNullOrEmpty(text2))
-                    {
-                        ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-                        sleekLabel.Text = text2;
-                        sleekLabel.UseManualLayout = false;
-                        sleekLabel.AllowRichText = true;
-                        sleekLabel.TextAlignment = TextAnchor.UpperLeft;
-                        parent.AddChild(sleekLabel);
-                    }
-                    text2 = text3;
-                    ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
-                    sleekLabel2.Text = text2;
-                    sleekLabel2.UseManualLayout = false;
-                    sleekLabel2.AllowRichText = true;
-                    sleekLabel2.TextAlignment = TextAnchor.UpperLeft;
-                    parent.AddChild(sleekLabel2);
-                    text2 = string.Empty;
-                }
-                if (!string.IsNullOrEmpty(text2))
-                {
-                    ISleekLabel sleekLabel3 = Glazier.Get().CreateLabel();
-                    sleekLabel3.Text = text2;
-                    sleekLabel3.UseManualLayout = false;
-                    sleekLabel3.AllowRichText = true;
-                    sleekLabel3.TextAlignment = TextAnchor.UpperLeft;
-                    parent.AddChild(sleekLabel3);
-                }
             }
-            if (num4 != -1)
-            {
-                num = num4;
-                continue;
-            }
-            break;
+        }
+    }
+
+    private static void ReviseNewsOrder()
+    {
+        bool flag = newAnnouncement != null;
+        if (itemStoreSaleNews != null && !flag)
+        {
+            itemStoreSaleNews.SetAsFirstSibling();
+        }
+        if (workshopBox != null)
+        {
+            workshopBox.SetAsFirstSibling();
+        }
+        if (itemStoreSaleNews != null && flag)
+        {
+            itemStoreSaleNews.SetAsFirstSibling();
+        }
+        if (newAnnouncement != null)
+        {
+            newAnnouncement.SetAsFirstSibling();
         }
     }
 
@@ -379,63 +325,51 @@ public class MenuDashboardUI
         for (int i = 0; i < newsResponse.AppNews.NewsItems.Length; i++)
         {
             NewsItem newsItem = newsResponse.AppNews.NewsItems[i];
-            if (newsItem == null)
+            if (newsItem != null)
             {
-                continue;
-            }
-            ISleekBox sleekBox = Glazier.Get().CreateBox();
-            sleekBox.SizeScale_X = 1f;
-            sleekBox.UseManualLayout = false;
-            sleekBox.UseChildAutoLayout = ESleekChildLayout.Vertical;
-            sleekBox.ChildAutoLayoutPadding = 5f;
-            ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-            sleekLabel.Text = newsItem.Title;
-            sleekLabel.UseManualLayout = false;
-            sleekLabel.TextAlignment = TextAnchor.UpperLeft;
-            sleekLabel.FontSize = ESleekFontSize.Large;
-            sleekBox.AddChild(sleekLabel);
-            DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(newsItem.Date).ToLocalTime();
-            ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
-            sleekLabel2.Text = localization.format("News_Author", dateTime, newsItem.Author);
-            sleekLabel2.UseManualLayout = false;
-            sleekLabel2.TextAlignment = TextAnchor.UpperLeft;
-            sleekLabel2.FontSize = ESleekFontSize.Tiny;
-            sleekLabel2.TextColor = new SleekColor(ESleekTint.FONT, 0.5f);
-            sleekBox.AddChild(sleekLabel2);
-            try
-            {
-                InsertSteamBbCode(sleekBox, newsItem.Contents, useLinkFiltering: false);
-            }
-            catch (Exception e)
-            {
-                UnturnedLog.warn("Announcement description mis-formatted! Nelson messed up.");
-                UnturnedLog.exception(e);
-            }
-            SleekWebLinkButton sleekWebLinkButton = new SleekWebLinkButton();
-            sleekWebLinkButton.Text = localization.format("News_Comments_Link");
-            sleekWebLinkButton.Url = newsItem.URL;
-            sleekWebLinkButton.UseManualLayout = false;
-            sleekWebLinkButton.UseChildAutoLayout = ESleekChildLayout.Vertical;
-            sleekWebLinkButton.UseHeightLayoutOverride = true;
-            sleekWebLinkButton.ExpandChildren = true;
-            sleekWebLinkButton.SizeOffset_Y = 30f;
-            sleekBox.AddChild(sleekWebLinkButton);
-            mainScrollView.AddChild(sleekBox);
-            if (i == 0)
-            {
-                if (ConvenientSavedata.get().read("Newest_Announcement", out long value))
+                ISleekBox sleekBox = Glazier.Get().CreateBox();
+                sleekBox.SizeScale_X = 1f;
+                sleekBox.UseManualLayout = false;
+                sleekBox.UseChildAutoLayout = ESleekChildLayout.Vertical;
+                sleekBox.ChildAutoLayoutPadding = 5f;
+                ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
+                sleekLabel.Text = newsItem.Title;
+                sleekLabel.UseManualLayout = false;
+                sleekLabel.TextAlignment = TextAnchor.UpperLeft;
+                sleekLabel.FontSize = ESleekFontSize.Large;
+                sleekBox.AddChild(sleekLabel);
+                DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(newsItem.Date).ToLocalTime();
+                ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
+                sleekLabel2.Text = localization.format("News_Author", dateTime, newsItem.Author);
+                sleekLabel2.UseManualLayout = false;
+                sleekLabel2.TextAlignment = TextAnchor.UpperLeft;
+                sleekLabel2.FontSize = ESleekFontSize.Tiny;
+                sleekLabel2.TextColor = new SleekColor(ESleekTint.FONT, 0.5f);
+                sleekBox.AddChild(sleekLabel2);
+                try
                 {
-                    hasNewAnnouncement = value != newsItem.Date;
+                    InsertSteamBbCode(sleekBox, newsItem.Contents, useLinkFiltering: false);
                 }
-                else
+                catch (Exception e)
                 {
-                    hasNewAnnouncement = true;
+                    UnturnedLog.warn("Announcement description mis-formatted! Nelson messed up.");
+                    UnturnedLog.exception(e);
                 }
-                if (hasNewAnnouncement)
+                SleekWebLinkButton sleekWebLinkButton = new SleekWebLinkButton();
+                sleekWebLinkButton.Text = localization.format("News_Comments_Link");
+                sleekWebLinkButton.Url = newsItem.URL;
+                sleekWebLinkButton.UseManualLayout = false;
+                sleekWebLinkButton.UseChildAutoLayout = ESleekChildLayout.Vertical;
+                sleekWebLinkButton.UseHeightLayoutOverride = true;
+                sleekWebLinkButton.ExpandChildren = true;
+                sleekWebLinkButton.SizeOffset_Y = 30f;
+                sleekBox.AddChild(sleekWebLinkButton);
+                mainScrollView.AddChild(sleekBox);
+                if (i == 0 && (!ConvenientSavedata.get().read("Newest_Announcement", out long value) || value != newsItem.Date))
                 {
                     ConvenientSavedata.get().write("Newest_Announcement", newsItem.Date);
-                    sleekBox.SetAsFirstSibling();
                     newAnnouncement = sleekBox;
+                    ReviseNewsOrder();
                 }
             }
         }
@@ -530,21 +464,13 @@ public class MenuDashboardUI
                 return;
             }
         }
-        ISleekBox sleekBox = Glazier.Get().CreateBox();
-        sleekBox.SizeScale_X = 1f;
-        sleekBox.UseManualLayout = false;
-        sleekBox.UseChildAutoLayout = ESleekChildLayout.Vertical;
-        sleekBox.ChildAutoLayoutPadding = 5f;
-        mainScrollView.AddChild(sleekBox);
-        if (hasNewAnnouncement && newAnnouncement != null)
-        {
-            sleekBox.SetAsFirstSibling();
-            newAnnouncement.SetAsFirstSibling();
-        }
-        else
-        {
-            sleekBox.SetAsFirstSibling();
-        }
+        workshopBox = Glazier.Get().CreateBox();
+        workshopBox.SizeScale_X = 1f;
+        workshopBox.UseManualLayout = false;
+        workshopBox.UseChildAutoLayout = ESleekChildLayout.Vertical;
+        workshopBox.ChildAutoLayoutPadding = 5f;
+        mainScrollView.AddChild(workshopBox);
+        ReviseNewsOrder();
         MainMenuWorkshopFeaturedLiveConfig featured = LiveConfig.Get().mainMenuWorkshop.featured;
         bool flag = featured.IsFeatured(pDetails.m_nPublishedFileId.m_PublishedFileId);
         string key = ((!flag) ? "Featured_Workshop_Title" : (featured.type switch
@@ -556,7 +482,7 @@ public class MenuDashboardUI
         ISleekElement sleekElement = Glazier.Get().CreateFrame();
         sleekElement.UseManualLayout = false;
         sleekElement.UseChildAutoLayout = ESleekChildLayout.Horizontal;
-        sleekBox.AddChild(sleekElement);
+        workshopBox.AddChild(sleekElement);
         ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
         sleekLabel.UseManualLayout = false;
         sleekLabel.Text = text2;
@@ -582,9 +508,9 @@ public class MenuDashboardUI
         sleekDismissWorkshopArticleButton.SizeOffset_Y = 30f;
         sleekDismissWorkshopArticleButton.internalButton.Text = localization.format("Featured_Workshop_Dismiss");
         sleekDismissWorkshopArticleButton.articleId = pDetails.m_nPublishedFileId.m_PublishedFileId;
-        sleekDismissWorkshopArticleButton.targetContent = sleekBox;
+        sleekDismissWorkshopArticleButton.targetContent = workshopBox;
         sleekDismissWorkshopArticleButton.IgnoreLayout = true;
-        sleekBox.AddChild(sleekDismissWorkshopArticleButton);
+        workshopBox.AddChild(sleekDismissWorkshopArticleButton);
         if (SteamUGC.GetQueryUGCPreviewURL(featuredWorkshopHandle, 0u, out var pchURL, 1024u))
         {
             SleekWebImage sleekWebImage = new SleekWebImage();
@@ -593,7 +519,8 @@ public class MenuDashboardUI
             sleekWebImage.UseWidthLayoutOverride = true;
             sleekWebImage.UseHeightLayoutOverride = true;
             sleekWebImage.maxImageDimensionsWidth = 960f;
-            sleekBox.AddChild(sleekWebImage);
+            sleekWebImage.maxImageDimensionsHeight = 540f;
+            workshopBox.AddChild(sleekWebImage);
             sleekWebImage.Refresh(pchURL, shouldCache: false);
         }
         SleekReadMoreButton sleekReadMoreButton = new SleekReadMoreButton();
@@ -607,8 +534,8 @@ public class MenuDashboardUI
         sleekElement2.IsVisible = false;
         sleekElement2.UseChildAutoLayout = ESleekChildLayout.Vertical;
         sleekReadMoreButton.targetContent = sleekElement2;
-        sleekBox.AddChild(sleekReadMoreButton);
-        sleekBox.AddChild(sleekElement2);
+        workshopBox.AddChild(sleekReadMoreButton);
+        workshopBox.AddChild(sleekElement2);
         if (flag && featured.autoExpandDescription)
         {
             sleekElement2.IsVisible = true;
@@ -638,7 +565,7 @@ public class MenuDashboardUI
         sleekElement3.ExpandChildren = true;
         sleekElement3.SizeOffset_Y = 30f;
         sleekElement3.UseHeightLayoutOverride = true;
-        sleekBox.AddChild(sleekElement3);
+        workshopBox.AddChild(sleekElement3);
         SleekWebLinkButton sleekWebLinkButton = new SleekWebLinkButton();
         sleekWebLinkButton.UseManualLayout = false;
         sleekWebLinkButton.Text = localization.format("Featured_Workshop_Link");
@@ -879,9 +806,99 @@ public class MenuDashboardUI
         steamUGCQueryCompletedPopular.Set(hAPICall);
     }
 
+    private static bool CreateItemStoreSaleNews(ItemStore itemStore)
+    {
+        int[] unownedDiscountedBundleListingIndices = ItemStore.Get().GetUnownedDiscountedBundleListingIndices();
+        if (unownedDiscountedBundleListingIndices == null || unownedDiscountedBundleListingIndices.Length < 3)
+        {
+            return false;
+        }
+        List<int> list = new List<int>(unownedDiscountedBundleListingIndices);
+        int[] excludedListingIndices = itemStore.GetExcludedListingIndices();
+        if (excludedListingIndices != null)
+        {
+            int[] array = excludedListingIndices;
+            foreach (int item in array)
+            {
+                list.Remove(item);
+            }
+        }
+        if (list.Count < 3)
+        {
+            return false;
+        }
+        int widthForLayout = ScreenEx.GetWidthForLayout();
+        int num = Mathf.Max(3, (widthForLayout - 450) / 200);
+        List<int> list2 = new List<int>(num);
+        while (list2.Count < num && list.Count > 0)
+        {
+            int randomIndex = list.GetRandomIndex();
+            list2.Add(list[randomIndex]);
+            list.RemoveAtFast(randomIndex);
+        }
+        itemStoreSaleNews = Glazier.Get().CreateBox();
+        itemStoreSaleNews.SizeScale_X = 1f;
+        itemStoreSaleNews.UseManualLayout = false;
+        itemStoreSaleNews.UseChildAutoLayout = ESleekChildLayout.Vertical;
+        itemStoreSaleNews.ChildAutoLayoutPadding = 5f;
+        mainScrollView.AddChild(itemStoreSaleNews);
+        ReviseNewsOrder();
+        ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
+        sleekLabel.UseManualLayout = false;
+        sleekLabel.TextAlignment = TextAnchor.MiddleCenter;
+        sleekLabel.FontSize = ESleekFontSize.Large;
+        itemStoreSaleNews.AddChild(sleekLabel);
+        if (!string.IsNullOrEmpty(LiveConfig.Get().itemStore.saleTitle))
+        {
+            sleekLabel.Text = LiveConfig.Get().itemStore.saleTitle;
+            DateTime dateTime = LiveConfig.Get().itemStore.saleStart.ToLocalTime();
+            DateTime dateTime2 = LiveConfig.Get().itemStore.saleEnd.ToLocalTime();
+            ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
+            sleekLabel2.UseManualLayout = false;
+            sleekLabel2.TextAlignment = TextAnchor.MiddleLeft;
+            sleekLabel2.FontSize = ESleekFontSize.Medium;
+            sleekLabel2.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
+            sleekLabel2.TextColor = new SleekColor(ESleekTint.FONT, 0.5f);
+            sleekLabel2.Text = ItemStoreMenu.instance.localization.format("SaleWindowFormat", dateTime, dateTime2);
+            itemStoreSaleNews.AddChild(sleekLabel2);
+        }
+        else
+        {
+            sleekLabel.Text = ItemStoreMenu.instance.localization.format("DefaultSaleTitle");
+        }
+        ISleekElement sleekElement = Glazier.Get().CreateFrame();
+        sleekElement.UseManualLayout = false;
+        sleekElement.UseChildAutoLayout = ESleekChildLayout.Horizontal;
+        sleekElement.ChildAutoLayoutPadding = 5f;
+        itemStoreSaleNews.AddChild(sleekElement);
+        foreach (int item2 in list2)
+        {
+            ItemStore.Listing listing = itemStore.GetListings()[item2];
+            SleekItemStoreListing sleekItemStoreListing = new SleekItemStoreListing();
+            sleekItemStoreListing.UseManualLayout = false;
+            sleekItemStoreListing.UseWidthLayoutOverride = true;
+            sleekItemStoreListing.UseHeightLayoutOverride = true;
+            sleekItemStoreListing.SizeOffset_X = 200f;
+            sleekItemStoreListing.SizeOffset_Y = 200f;
+            sleekItemStoreListing.canShowAsInCart = false;
+            sleekItemStoreListing.SetListing(listing);
+            sleekElement.AddChild(sleekItemStoreListing);
+        }
+        return true;
+    }
+
     private static void OnPricesReceived()
     {
+        if (hasCreatedItemStoreButton)
+        {
+            return;
+        }
+        hasCreatedItemStoreButton = true;
         ItemStore itemStore = ItemStore.Get();
+        if (CreateItemStoreSaleNews(itemStore))
+        {
+            return;
+        }
         int[] array;
         SleekItemStoreMainMenuButton.ELabelType eLabelType;
         if (itemStore.HasNewListings)
@@ -1127,9 +1144,11 @@ public class MenuDashboardUI
         MenuUI.copyNotificationButton.icon = icons.load<Texture2D>("Clipboard");
         MenuUI.copyNotificationButton.text = localization.format("Copy_Notification_Label");
         MenuUI.copyNotificationButton.tooltip = localization.format("Copy_Notification_Tooltip");
+        newAnnouncement = null;
+        workshopBox = null;
+        itemStoreSaleNews = null;
         if (SteamUser.BLoggedOn())
         {
-            hasNewAnnouncement = false;
             MenuUI.instance.StartCoroutine(MenuUI.instance.CheckForUpdates(OnUpdateDetected));
             if (steamUGCQueryCompletedPopular == null)
             {
@@ -1261,6 +1280,7 @@ public class MenuDashboardUI
         }
         mainHeaderOffset = 170f;
         alertBox = null;
+        hasCreatedItemStoreButton = false;
         if (SteamApps.GetCurrentBetaName(out var pchName, 64) && string.Equals(pchName, "preview", StringComparison.InvariantCultureIgnoreCase))
         {
             CreatePreviewBranchChangelogButton();
@@ -1358,6 +1378,8 @@ public class MenuDashboardUI
                 ESteamConnectionFailureInfo.NAME_PRIVATE_NUMBER => localization.format("Name_Private_Number"), 
                 ESteamConnectionFailureInfo.HASH_RESOURCES => localization.format("Hash_Resources"), 
                 ESteamConnectionFailureInfo.SKIN_COLOR_WITHIN_THRESHOLD_OF_TERRAIN_COLOR => localization.format("SkinColorWithinThresholdOfTerrainColor"), 
+                ESteamConnectionFailureInfo.STEAM_ID_MISMATCH => localization.format("Steam_ID_Mismatch"), 
+                ESteamConnectionFailureInfo.CONNECT_RATE_LIMITING => localization.format("Connect_Rate_Limiting"), 
                 ESteamConnectionFailureInfo.SERVER_MAP_ADVERTISEMENT_MISMATCH => localization.format("Server_Map_Advertisement_Mismatch"), 
                 ESteamConnectionFailureInfo.SERVER_VAC_ADVERTISEMENT_MISMATCH => localization.format("Server_VAC_Advertisement_Mismatch"), 
                 ESteamConnectionFailureInfo.SERVER_BATTLEYE_ADVERTISEMENT_MISMATCH => localization.format("Server_BattlEye_Advertisement_Mismatch"), 

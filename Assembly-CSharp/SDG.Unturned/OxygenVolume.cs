@@ -1,3 +1,4 @@
+using SDG.Framework.Devkit;
 using SDG.Framework.IO.FormattedFiles;
 using UnityEngine;
 
@@ -26,6 +27,7 @@ public class OxygenVolume : LevelVolume<OxygenVolume, OxygenVolumeManager>
         private void OnHasOxygenToggled(ISleekToggle toggle, bool state)
         {
             volume.isBreathable = state;
+            LevelHierarchy.MarkDirty();
         }
     }
 

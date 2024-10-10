@@ -49,7 +49,7 @@ public static class BarricadeDrop_NetMethods
             reader.ReadUInt8(out var value2);
             reader.ReadUInt16(out var value3);
             reader.ReadClampedVector3(out var value4, 13, 11);
-            reader.ReadQuaternion(out var value5);
+            reader.ReadSpecialYawOrQuaternion(out var value5, 23);
             barricadeDrop.ReceiveTransform(in context, value, value2, value3, value4, value5);
         }
     }
@@ -71,7 +71,7 @@ public static class BarricadeDrop_NetMethods
                 reader.ReadUInt8(out var value3);
                 reader.ReadUInt16(out var value4);
                 reader.ReadClampedVector3(out var value5, 13, 11);
-                reader.ReadQuaternion(out var value6);
+                reader.ReadSpecialYawOrQuaternion(out var value6, 23);
                 barricadeDrop.ReceiveTransform(in context, value2, value3, value4, value5, value6);
             }
         }
@@ -84,7 +84,7 @@ public static class BarricadeDrop_NetMethods
         writer.WriteUInt8(old_y);
         writer.WriteUInt16(oldPlant);
         writer.WriteClampedVector3(point, 13, 11);
-        writer.WriteQuaternion(rotation);
+        writer.WriteSpecialYawOrQuaternion(rotation, 23);
     }
 
     [NetInvokableGeneratedMethod("ReceiveTransformRequest", ENetInvokableGeneratedMethodPurpose.Read)]
@@ -97,7 +97,7 @@ public static class BarricadeDrop_NetMethods
             if (obj != null && obj is BarricadeDrop barricadeDrop)
             {
                 reader.ReadClampedVector3(out var value2, 13, 11);
-                reader.ReadQuaternion(out var value3);
+                reader.ReadSpecialYawOrQuaternion(out var value3, 23);
                 barricadeDrop.ReceiveTransformRequest(in context, value2, value3);
             }
         }
@@ -107,7 +107,7 @@ public static class BarricadeDrop_NetMethods
     public static void ReceiveTransformRequest_Write(NetPakWriter writer, Vector3 point, Quaternion rotation)
     {
         writer.WriteClampedVector3(point, 13, 11);
-        writer.WriteQuaternion(rotation);
+        writer.WriteSpecialYawOrQuaternion(rotation, 23);
     }
 
     private static void ReceiveOwnerAndGroup_DeferredRead(object voidNetObj, in ClientInvocationContext context)

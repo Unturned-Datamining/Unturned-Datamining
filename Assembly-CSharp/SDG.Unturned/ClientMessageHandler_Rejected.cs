@@ -172,6 +172,12 @@ internal static class ClientMessageHandler_Rejected
         case ESteamRejection.SKIN_COLOR_WITHIN_THRESHOLD_OF_TERRAIN_COLOR:
             Provider._connectionFailureInfo = ESteamConnectionFailureInfo.SKIN_COLOR_WITHIN_THRESHOLD_OF_TERRAIN_COLOR;
             break;
+        case ESteamRejection.STEAM_ID_MISMATCH:
+            Provider._connectionFailureInfo = ESteamConnectionFailureInfo.STEAM_ID_MISMATCH;
+            break;
+        case ESteamRejection.CONNECT_RATE_LIMITING:
+            Provider._connectionFailureInfo = ESteamConnectionFailureInfo.CONNECT_RATE_LIMITING;
+            break;
         default:
             Provider._connectionFailureInfo = ESteamConnectionFailureInfo.REJECT_UNKNOWN;
             Provider._connectionFailureReason = value.ToString();

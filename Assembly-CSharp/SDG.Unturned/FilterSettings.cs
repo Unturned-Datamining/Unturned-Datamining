@@ -526,8 +526,6 @@ public static class FilterSettings
         defaultPresetLAN.vacProtection = EVACProtectionFilter.Any;
         defaultPresetLAN.battlEyeProtection = EBattlEyeProtectionFilter.Any;
         defaultPresetLAN.cheats = ECheats.ANY;
-        defaultPresetLAN.attendance = EAttendance.Any;
-        defaultPresetLAN.notFull = false;
         defaultPresetLAN.maxPing = 0;
         defaultPresetHistory.presetId = -4;
         defaultPresetHistory.listSource = ESteamServerList.HISTORY;
@@ -535,8 +533,6 @@ public static class FilterSettings
         defaultPresetHistory.vacProtection = EVACProtectionFilter.Any;
         defaultPresetHistory.battlEyeProtection = EBattlEyeProtectionFilter.Any;
         defaultPresetHistory.cheats = ECheats.ANY;
-        defaultPresetHistory.attendance = EAttendance.Any;
-        defaultPresetHistory.notFull = false;
         defaultPresetHistory.maxPing = 0;
         defaultPresetFavorites.presetId = -5;
         defaultPresetFavorites.listSource = ESteamServerList.FAVORITES;
@@ -544,8 +540,6 @@ public static class FilterSettings
         defaultPresetFavorites.vacProtection = EVACProtectionFilter.Any;
         defaultPresetFavorites.battlEyeProtection = EBattlEyeProtectionFilter.Any;
         defaultPresetFavorites.cheats = ECheats.ANY;
-        defaultPresetFavorites.attendance = EAttendance.Any;
-        defaultPresetFavorites.notFull = false;
         defaultPresetFavorites.maxPing = 0;
         defaultPresetFriends.presetId = -6;
         defaultPresetFriends.listSource = ESteamServerList.FRIENDS;
@@ -553,8 +547,6 @@ public static class FilterSettings
         defaultPresetFriends.vacProtection = EVACProtectionFilter.Any;
         defaultPresetFriends.battlEyeProtection = EBattlEyeProtectionFilter.Any;
         defaultPresetFriends.cheats = ECheats.ANY;
-        defaultPresetFriends.attendance = EAttendance.Any;
-        defaultPresetFriends.notFull = false;
         defaultPresetFriends.maxPing = 0;
     }
 }

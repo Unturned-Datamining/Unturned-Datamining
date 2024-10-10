@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -492,6 +493,30 @@ public class ReadWrite
         path_0 = PATH + path_0;
         path_1 = PATH + path_1;
         File.Move(path_0, path_1);
+    }
+
+    /// <summary>
+    /// NOTE: From and to are both relative to PATH.
+    /// </summary>
+    public static void MoveIfExists(string sourceFileName, string destFileName)
+    {
+        try
+        {
+            sourceFileName = PATH + sourceFileName;
+            destFileName = PATH + destFileName;
+            if (File.Exists(destFileName))
+            {
+                File.Delete(destFileName);
+            }
+            if (File.Exists(sourceFileName))
+            {
+                File.Move(sourceFileName, destFileName);
+            }
+        }
+        catch (Exception e)
+        {
+            UnturnedLog.exception(e, "Caught exception moving \"" + sourceFileName + "\" to \"" + destFileName + "\":");
+        }
     }
 
     public static string fileName(string path)

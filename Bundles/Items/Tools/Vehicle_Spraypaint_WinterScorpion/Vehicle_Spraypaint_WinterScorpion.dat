@@ -1,0 +1,19 @@
+GUID 6d8472d1b94e48eeba8149483e7936f1
+Type Vehicle_Paint_Tool
+Rarity Rare
+Useable Vehicle_Paint
+ID 1877
+
+Size_X 1
+Size_Y 2
+
+UseAudioClip Sounds/Vehicle_Spraypaint.wav
+
+PaintColor #e58834
+
+Blueprints 1
+Blueprint_0_Type Tool
+Blueprint_0_Supply_0_ID 1877
+Blueprint_0_Product 67
+Blueprint_0_Products 2
+Blueprint_0_Build 27

@@ -31,7 +31,10 @@ public class PlayerQuests : PlayerCaller
 
     private static PlayerQuestComparator questComparator = new PlayerQuestComparator();
 
+    [Obsolete("Replaced by DialogueTarget. Will be removed in a future version!")]
     public InteractableObjectNPC checkNPC;
+
+    private IDialogueTarget _dialogueTarget;
 
     private DialogueAsset serverCurrentDialogueAsset;
 
@@ -164,6 +167,19 @@ public class PlayerQuests : PlayerCaller
     private bool wasLoadCalled;
 
     private float lastVehiclePurchaseRealtime = -10f;
+
+    public IDialogueTarget DialogueTarget
+    {
+        get
+        {
+            return _dialogueTarget;
+        }
+        private set
+        {
+            _dialogueTarget = value;
+            checkNPC = value as InteractableObjectNPC;
+        }
+    }
 
     public List<PlayerQuestFlag> flagsList { get; private set; }
 
@@ -1292,7 +1308,7 @@ public class PlayerQuests : PlayerCaller
     /// </summary>
     public void CompleteQuest(QuestAsset questAsset, bool ignoreNPC = false)
     {
-        if (questAsset != null && (ignoreNPC || (!(checkNPC == null) && !((checkNPC.transform.position - base.transform.position).sqrMagnitude > 400f))) && GetQuestStatus(questAsset) == ENPCQuestStatus.READY)
+        if (questAsset != null && (ignoreNPC || (DialogueTarget != null && !((DialogueTarget.GetDialogueTargetWorldPosition() - base.transform.position).sqrMagnitude > 400f))) && GetQuestStatus(questAsset) == ENPCQuestStatus.READY)
         {
             ServerRemoveQuest(questAsset, wasCompleted: true);
             sendSetFlag(questAsset.id, 1);
@@ -1319,7 +1335,7 @@ public class PlayerQuests : PlayerCaller
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 10, legacyName = "askSellToVendor")]
     public void ReceiveSellToVendor(in ServerInvocationContext context, Guid assetGuid, byte index, bool asManyAsPossible)
     {
-        if (checkNPC == null || (checkNPC.transform.position - base.transform.position).sqrMagnitude > 400f || serverCurrentVendorAsset == null)
+        if (DialogueTarget == null || (DialogueTarget.GetDialogueTargetWorldPosition() - base.transform.position).sqrMagnitude > 400f || serverCurrentVendorAsset == null)
         {
             return;
         }
@@ -1367,7 +1383,7 @@ public class PlayerQuests : PlayerCaller
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 10, legacyName = "askBuyFromVendor")]
     public void ReceiveBuyFromVendor(in ServerInvocationContext context, Guid assetGuid, byte index, bool asManyAsPossible)
     {
-        if (checkNPC == null || (checkNPC.transform.position - base.transform.position).sqrMagnitude > 400f || serverCurrentVendorAsset == null)
+        if (DialogueTarget == null || (DialogueTarget.GetDialogueTargetWorldPosition() - base.transform.position).sqrMagnitude > 400f || serverCurrentVendorAsset == null)
         {
             return;
         }
@@ -1636,7 +1652,7 @@ public class PlayerQuests : PlayerCaller
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 20)]
     public void ReceiveChooseDialogueResponseRequest(in ServerInvocationContext context, Guid assetGuid, byte index)
     {
-        if (checkNPC == null || (checkNPC.transform.position - base.transform.position).sqrMagnitude > 400f || serverCurrentDialogueAsset == null || serverCurrentDialogueMessage == null)
+        if (DialogueTarget == null || (DialogueTarget.GetDialogueTargetWorldPosition() - base.transform.position).sqrMagnitude > 400f || serverCurrentDialogueAsset == null || serverCurrentDialogueMessage == null)
         {
             return;
         }
@@ -1718,7 +1734,7 @@ public class PlayerQuests : PlayerCaller
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 20)]
     public void ReceiveChooseDefaultNextDialogueRequest(in ServerInvocationContext context, Guid assetGuid, byte index)
     {
-        if (checkNPC == null || (checkNPC.transform.position - base.transform.position).sqrMagnitude > 400f || serverDefaultNextDialogueAsset == null || serverCurrentDialogueAsset == null || serverCurrentDialogueMessage == null)
+        if (DialogueTarget == null || (DialogueTarget.GetDialogueTargetWorldPosition() - base.transform.position).sqrMagnitude > 400f || serverDefaultNextDialogueAsset == null || serverCurrentDialogueAsset == null || serverCurrentDialogueMessage == null)
         {
             return;
         }
@@ -1906,17 +1922,17 @@ public class PlayerQuests : PlayerCaller
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
     public void ReceiveTalkWithNpcResponse(in ClientInvocationContext context, NetId targetNpcNetId, Guid dialogueAssetGuid, byte messageIndex, bool hasNextDialogue)
     {
-        InteractableObjectNPC npcFromObjectNetId = InteractableObjectNPC.GetNpcFromObjectNetId(targetNpcNetId);
-        if (!(npcFromObjectNetId == null))
+        IDialogueTarget dialogueTargetFromNetId = InteractableObjectNPC.GetDialogueTargetFromNetId(targetNpcNetId);
+        if (dialogueTargetFromNetId != null)
         {
             DialogueAsset dialogueAsset = Assets.find<DialogueAsset>(dialogueAssetGuid);
             ClientAssetIntegrity.QueueRequest(dialogueAssetGuid, dialogueAsset, "talk with NPC response");
             if (dialogueAsset != null && messageIndex < dialogueAsset.messages.Length)
             {
-                checkNPC = npcFromObjectNetId;
+                DialogueTarget = dialogueTargetFromNetId;
                 PlayerLifeUI.close();
-                PlayerLifeUI.npc = npcFromObjectNetId;
-                npcFromObjectNetId.isLookingAtPlayer = true;
+                PlayerLifeUI.npc = dialogueTargetFromNetId;
+                DialogueTarget.SetIsTalkingWithLocalPlayer(isTalkingWithLocalPlayer: true);
                 PlayerNPCDialogueUI.open(dialogueAsset, dialogueAsset.messages[messageIndex], hasNextDialogue);
             }
         }
@@ -1925,27 +1941,27 @@ public class PlayerQuests : PlayerCaller
     /// <summary>
     /// Called in singleplayer and on the server after client requests NPC dialogue.
     /// </summary>
-    internal void ApproveTalkWithNpcRequest(InteractableObjectNPC targetNpc, DialogueAsset rootDialogueAsset)
+    internal void ApproveTalkWithNpcRequest(IDialogueTarget newDialogueTarget, DialogueAsset rootDialogueAsset)
     {
         DialogueMessage availableMessage = rootDialogueAsset.GetAvailableMessage(base.player);
         if (availableMessage == null)
         {
-            UnturnedLog.warn("Unable to approve talk with NPC (" + targetNpc.npcAsset.FriendlyName + ") request because there is no valid message");
+            UnturnedLog.warn("Unable to approve talk with NPC (" + newDialogueTarget.GetDialogueTargetDebugName() + ") request because there is no valid message");
             return;
         }
-        checkNPC = targetNpc;
+        DialogueTarget = newDialogueTarget;
         serverCurrentDialogueAsset = rootDialogueAsset;
         serverCurrentDialogueMessage = availableMessage;
         serverCurrentVendorAsset = null;
         serverDefaultNextDialogueAsset = availableMessage.FindPrevDialogueAsset();
-        SendTalkWithNpcResponse.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), targetNpc.GetNpcNetId(), rootDialogueAsset.GUID, serverCurrentDialogueMessage.index, serverDefaultNextDialogueAsset != null);
+        SendTalkWithNpcResponse.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), DialogueTarget.GetDialogueTargetNetId(), rootDialogueAsset.GUID, serverCurrentDialogueMessage.index, serverDefaultNextDialogueAsset != null);
         serverCurrentDialogueMessage.ApplyConditions(base.player);
         serverCurrentDialogueMessage.GrantRewards(base.player);
     }
 
     internal void ClearActiveNpc()
     {
-        checkNPC = null;
+        DialogueTarget = null;
         serverCurrentDialogueAsset = null;
         serverCurrentDialogueMessage = null;
         serverCurrentVendorAsset = null;
@@ -2008,11 +2024,11 @@ public class PlayerQuests : PlayerCaller
         return delayedRewardsComponent;
     }
 
-    internal void StopDelayedQuestRewards()
+    internal void InterruptDelayedQuestRewards(EDelayedQuestRewardsInterruption interruption)
     {
         if (delayedRewardsComponent != null)
         {
-            delayedRewardsComponent.StopAllCoroutines();
+            delayedRewardsComponent.Interrupt(interruption);
         }
     }
 
@@ -2020,7 +2036,6 @@ public class PlayerQuests : PlayerCaller
     {
         if (isDead)
         {
-            StopDelayedQuestRewards();
             ServerSetCutsceneModeActive(active: false);
         }
     }

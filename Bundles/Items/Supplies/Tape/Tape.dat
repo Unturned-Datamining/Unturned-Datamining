@@ -6,7 +6,7 @@ Size_X 1
 Size_Y 1
 Size_Z 0.25
 
-Blueprints 2
+Blueprints 3
 Blueprint_0_Type Gear
 Blueprint_0_Supplies 2
 Blueprint_0_Supply_0_ID 66
@@ -21,3 +21,11 @@ Blueprint_1_Supply_0_Amount 4
 Blueprint_1_Supply_1_ID 70
 Blueprint_1_Supply_1_Amount 1
 Blueprint_1_Build 27
+Blueprint_2_Type Gear
+Blueprint_2_Supplies 1
+Blueprint_2_Supply_0_ID this
+Blueprint_2_Supply_0_Amount 1
+Blueprint_2_Outputs 1
+Blueprint_2_Output_0_ID "66" // Cloth
+Blueprint_2_Output_0_Amount 3
+Blueprint_2_Build 27

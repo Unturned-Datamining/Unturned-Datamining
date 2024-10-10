@@ -62,6 +62,13 @@ VehicleThirdPersonCameraMode_RotationDetached Rotation Detached
 VehicleThirdPersonCameraMode_RotationAttached Rotation Attached
 VehicleThirdPersonCameraMode_Label Vehicle Third-Person Camera Style
 AircraftThirdPersonCameraMode_Label Aircraft Third-Person Camera Style
+FlashbangBrightness_Label Flashbang Intensity [{0}]
+CameraShakeIntensity_Label Explosion Camera Shake Intensity [{0}]
+
+DamageFlinchMode_RollOnly Roll-Only
+DamageFlinchMode_Directional Directional
+DamageFlinchMode_Label Flinch Mode
+DamageFlinchIntensity_Label Flinch Intensity [{0}]
 
 Crosshair_Box Crosshair Color
 Hitmarker_Box Hitmarker Color

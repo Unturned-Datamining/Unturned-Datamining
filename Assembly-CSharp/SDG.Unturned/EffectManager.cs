@@ -1184,6 +1184,7 @@ public class EffectManager : SteamCaller
             indexedUIEffects.Add(key, transform.gameObject);
         }
         instance.uiEffectInstances.Add(new UIEffectInstance(effectAsset, gameObject));
+        ApplyUIScaleToUIEffect(gameObject);
         hookButtonsInUIEffect(transform);
         hookInputFieldsInUIEffect(transform);
         gatherFormattingForUIEffect(transform);
@@ -1204,6 +1205,15 @@ public class EffectManager : SteamCaller
         foreach (TextMeshProUGUI tmpText in tmpTexts)
         {
             TextMeshProUtils.FixupFont(tmpText);
+        }
+    }
+
+    private static void ApplyUIScaleToUIEffect(GameObject effectGameObject)
+    {
+        CanvasScaler componentInChildren = effectGameObject.GetComponentInChildren<CanvasScaler>();
+        if (componentInChildren != null && componentInChildren.GetComponent<UnturnedCanvasScaler>() == null)
+        {
+            componentInChildren.gameObject.AddComponent<UnturnedCanvasScaler>().scaler = componentInChildren;
         }
     }
 

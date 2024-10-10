@@ -10,6 +10,11 @@ public class INPCReward
     /// </summary>
     public float grantDelaySeconds = -1f;
 
+    /// <summary>
+    /// If true and player has this reward pending when they die or disconnect it will be granted.
+    /// </summary>
+    public bool grantDelayApplyWhenInterrupted;
+
     protected string text;
 
     public virtual void GrantReward(Player player)

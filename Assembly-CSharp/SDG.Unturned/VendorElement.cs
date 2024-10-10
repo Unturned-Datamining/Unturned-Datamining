@@ -67,6 +67,7 @@ public abstract class VendorElement
     {
         outerAsset = newOuterAsset;
         index = newIndex;
+        TargetAssetGuid = newGuid;
         id = newLegacyId;
         cost = newCost;
         conditions = newConditions;

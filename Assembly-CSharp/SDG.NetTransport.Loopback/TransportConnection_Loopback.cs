@@ -33,6 +33,12 @@ public struct TransportConnection_Loopback : ITransportConnection, IEquatable<IT
         return false;
     }
 
+    public bool TryGetSteamId(out ulong steamId)
+    {
+        steamId = 0uL;
+        return false;
+    }
+
     public IPAddress GetAddress()
     {
         return null;

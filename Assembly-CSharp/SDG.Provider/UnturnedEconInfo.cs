@@ -39,7 +39,7 @@ public class UnturnedEconInfo
 
     public string name;
 
-    public string type;
+    public string display_type;
 
     public string description;
 
@@ -51,28 +51,31 @@ public class UnturnedEconInfo
 
     public int scraps;
 
-    public Guid item_guid;
+    public Guid target_game_asset_guid;
 
     public int item_skin;
 
     public int item_effect;
 
-    public Guid vehicle_guid;
-
     public EQuality quality;
+
+    /// <summary>
+    /// EItemType
+    /// </summary>
+    public int econ_type;
 
     public UnturnedEconInfo()
     {
         name = "";
-        type = "";
+        display_type = "";
         description = "";
         name_color = "";
         itemdefid = 0;
         scraps = 0;
-        item_guid = Guid.Empty;
+        target_game_asset_guid = Guid.Empty;
         item_skin = 0;
         item_effect = 0;
-        vehicle_guid = Guid.Empty;
         quality = EQuality.None;
+        econ_type = -1;
     }
 }

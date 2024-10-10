@@ -19,7 +19,7 @@ Message_0_Condition_0_Allow_Unset
 // Greeting
 Message_1_Pages 1
 
-Responses 4
+Responses 5
 
 // Is that a prison outfit?
 // P.Riso_Outfit
@@ -40,3 +40,19 @@ Response_1_Vendor 17
 // Why are you down here?
 // P.Riso_Hiding
 Response_2_Dialogue 19
+
+// Upgraded Fishing Rods?
+// P.Riso_Fishing_Rod
+Response_3_Dialogue 5415296940d1481c8c211fb420592210
+Response_3_Conditions 2
+// Must've started the Upgrade Fishing Rod Quest
+Response_3_Condition_0_Type Quest
+Response_3_Condition_0_Logic Not_Equal
+Response_3_Condition_0_ID 37
+Response_3_Condition_0_Status None
+// Upgraded Fishing Rod Available
+Response_3_Condition_1_Type Flag_Bool
+Response_3_Condition_1_Logic Equal
+Response_3_Condition_1_ID 345
+Response_3_Condition_1_Value False
+Response_3_Condition_1_Allow_Unset

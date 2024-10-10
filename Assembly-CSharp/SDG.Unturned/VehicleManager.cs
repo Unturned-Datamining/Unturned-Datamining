@@ -309,7 +309,7 @@ public class VehicleManager : SteamCaller
     /// </summary>
     public static InteractableVehicle spawnVehicleV2(ushort id, Vector3 point, Quaternion angle)
     {
-        return spawnVehicleInternal(Assets.find(EAssetType.VEHICLE, id), point, angle, CSteamID.Nil, null);
+        return spawnVehicleInternal(Assets.find(EAssetType.VEHICLE, id), point, angle, CSteamID.Nil, CSteamID.Nil, null);
     }
 
     /// <summary>
@@ -318,7 +318,7 @@ public class VehicleManager : SteamCaller
     /// </summary>
     public static InteractableVehicle spawnVehicleV2(ushort id, Vector3 point, Quaternion angle, Color32? paintColor)
     {
-        return spawnVehicleInternal(Assets.find(EAssetType.VEHICLE, id), point, angle, CSteamID.Nil, paintColor);
+        return spawnVehicleInternal(Assets.find(EAssetType.VEHICLE, id), point, angle, CSteamID.Nil, CSteamID.Nil, paintColor);
     }
 
     /// <summary>
@@ -330,7 +330,7 @@ public class VehicleManager : SteamCaller
         {
             throw new ArgumentNullException("player");
         }
-        return spawnVehicleInternal(Assets.find(EAssetType.VEHICLE, id), point, angle, player.channel.owner.playerID.steamID, null);
+        return spawnVehicleInternal(Assets.find(EAssetType.VEHICLE, id), point, angle, player.channel.owner.playerID.steamID, player.quests.groupID, null);
     }
 
     /// <summary>
@@ -343,7 +343,7 @@ public class VehicleManager : SteamCaller
         {
             throw new ArgumentNullException("player");
         }
-        return spawnVehicleInternal(Assets.find(EAssetType.VEHICLE, id), point, angle, player.channel.owner.playerID.steamID, paintColor);
+        return spawnVehicleInternal(Assets.find(EAssetType.VEHICLE, id), point, angle, player.channel.owner.playerID.steamID, player.quests.groupID, paintColor);
     }
 
     /// <summary>
@@ -351,7 +351,7 @@ public class VehicleManager : SteamCaller
     /// </summary>
     public static InteractableVehicle spawnVehicleV2(Asset asset, Vector3 point, Quaternion angle)
     {
-        return spawnVehicleInternal(asset, point, angle, CSteamID.Nil, null);
+        return spawnVehicleInternal(asset, point, angle, CSteamID.Nil, CSteamID.Nil, null);
     }
 
     /// <summary>
@@ -360,7 +360,7 @@ public class VehicleManager : SteamCaller
     /// </summary>
     public static InteractableVehicle spawnVehicleV2(Asset asset, Vector3 point, Quaternion angle, Color32? paintColor)
     {
-        return spawnVehicleInternal(asset, point, angle, CSteamID.Nil, paintColor);
+        return spawnVehicleInternal(asset, point, angle, CSteamID.Nil, CSteamID.Nil, paintColor);
     }
 
     /// <summary>
@@ -372,7 +372,7 @@ public class VehicleManager : SteamCaller
         {
             throw new ArgumentNullException("player");
         }
-        return spawnVehicleInternal(asset, point, angle, player.channel.owner.playerID.steamID, null);
+        return spawnVehicleInternal(asset, point, angle, player.channel.owner.playerID.steamID, player.quests.groupID, null);
     }
 
     /// <summary>
@@ -385,7 +385,7 @@ public class VehicleManager : SteamCaller
         {
             throw new ArgumentNullException("player");
         }
-        return spawnVehicleInternal(asset, point, angle, player.channel.owner.playerID.steamID, paintColor);
+        return spawnVehicleInternal(asset, point, angle, player.channel.owner.playerID.steamID, player.quests.groupID, paintColor);
     }
 
     /// <summary>
@@ -423,7 +423,7 @@ public class VehicleManager : SteamCaller
     /// unless preferredColor.a is byte.MaxValue.
     /// </summary>
     /// <param name="owner">Owner to lock vehicle for by default. Used to lock vehicles to the player who purchased them.</param>
-    private static InteractableVehicle spawnVehicleInternal(Asset asset, Vector3 point, Quaternion angle, CSteamID owner, Color32? preferredColor)
+    private static InteractableVehicle spawnVehicleInternal(Asset asset, Vector3 point, Quaternion angle, CSteamID owner, CSteamID groupId, Color32? preferredColor)
     {
         if (asset == null)
         {
@@ -451,8 +451,12 @@ public class VehicleManager : SteamCaller
         {
             return null;
         }
-        bool locked = owner != CSteamID.Nil;
-        return SpawnVehicleV3(vehicleAsset, 0, 0, 0f, point, angle, sirens: false, blimp: false, headlights: false, taillights: false, vehicleAsset.fuel, vehicleAsset.health, 10000, owner, CSteamID.Nil, locked, null, byte.MaxValue, paintColor);
+        bool flag = owner != CSteamID.Nil;
+        if (!flag)
+        {
+            groupId = CSteamID.Nil;
+        }
+        return SpawnVehicleV3(vehicleAsset, 0, 0, 0f, point, angle, sirens: false, blimp: false, headlights: false, taillights: false, vehicleAsset.fuel, vehicleAsset.health, 10000, owner, groupId, flag, null, byte.MaxValue, paintColor);
     }
 
     public static void enterVehicle(InteractableVehicle vehicle)

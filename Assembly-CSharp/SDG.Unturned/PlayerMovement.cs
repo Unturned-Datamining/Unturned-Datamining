@@ -49,9 +49,8 @@ public class PlayerMovement : PlayerCaller
     /// Jump speed = sqrt(2 * jump height * gravity)
     /// Jump height = (jump speed ^ 2) / (2 * gravity)
     /// With 7 speed and 9.81 * 3 gravity = apex height of 1.66496772
-    /// Nelson 2024-08-19: Increased slightly to boost jump height by ~10cm after floor snapping update.
     /// </summary>
-    private static readonly float JUMP = 7.2f;
+    private static readonly float JUMP = 7f;
 
     private static readonly float SWIM = 3f;
 
@@ -93,8 +92,6 @@ public class PlayerMovement : PlayerCaller
     public RaycastHit ground;
 
     internal EPlayerHeight height;
-
-    private bool wasSizeAppliedYet;
 
     private bool _isMoving;
 
@@ -427,13 +424,11 @@ public class PlayerMovement : PlayerCaller
         };
         if ((base.channel.IsLocalPlayer || Provider.isServer) && controller != null)
         {
+            bool flag = controller.enabled;
+            controller.enabled = false;
             controller.height = num;
-            controller.center = new Vector3(0f, num / 2f, 0f);
-            if (wasSizeAppliedYet)
-            {
-                base.transform.localPosition += new Vector3(0f, 0.02f, 0f);
-            }
-            wasSizeAppliedYet = true;
+            controller.center = new Vector3(0f, num * 0.5f, 0f);
+            controller.enabled = flag;
         }
     }
 

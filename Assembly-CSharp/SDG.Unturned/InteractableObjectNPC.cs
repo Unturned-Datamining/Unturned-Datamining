@@ -1,10 +1,11 @@
+using System;
 using SDG.NetTransport;
 using UnityEngine;
 using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
-public class InteractableObjectNPC : InteractableObject
+public class InteractableObjectNPC : InteractableObject, IDialogueTarget
 {
     protected ObjectNPCAsset _npcAsset;
 
@@ -44,17 +45,41 @@ public class InteractableObjectNPC : InteractableObject
 
     public ObjectNPCAsset npcAsset => _npcAsset;
 
-    public NetId GetNpcNetId()
+    public Vector3 GetDialogueTargetWorldPosition()
+    {
+        return base.transform.position;
+    }
+
+    public NetId GetDialogueTargetNetId()
     {
         return NetIdRegistry.GetTransformNetId(base.transform);
     }
 
-    public static InteractableObjectNPC GetNpcFromObjectNetId(NetId netId)
+    public bool ShouldServerApproveDialogueRequest(Player withPlayer)
     {
-        return NetIdRegistry.GetTransform(netId, null)?.GetComponent<InteractableObjectNPC>();
+        return base.objectAsset.areConditionsMet(withPlayer);
     }
 
-    internal void SetFaceOverride(byte? faceOverride)
+    public DialogueAsset FindStartingDialogueAsset()
+    {
+        return npcAsset.FindDialogueAsset();
+    }
+
+    public string GetDialogueTargetDebugName()
+    {
+        return npcAsset.FriendlyName;
+    }
+
+    public string GetDialogueTargetNameShownToPlayer(Player player)
+    {
+        if (npcAsset != null)
+        {
+            return npcAsset.GetNameShownToPlayer(player);
+        }
+        return "null";
+    }
+
+    public void SetFaceOverride(byte? faceOverride)
     {
         byte b = (faceOverride.HasValue ? faceOverride.Value : _npcAsset.face);
         if (clothes.face != b)
@@ -64,10 +89,24 @@ public class InteractableObjectNPC : InteractableObject
         }
     }
 
-    internal void OnStoppedTalkingWithLocalPlayer()
+    public void SetIsTalkingWithLocalPlayer(bool isTalkingWithLocalPlayer)
     {
-        isLookingAtPlayer = false;
-        SetFaceOverride(null);
+        isLookingAtPlayer = isTalkingWithLocalPlayer;
+        if (!isTalkingWithLocalPlayer)
+        {
+            SetFaceOverride(null);
+        }
+    }
+
+    [Obsolete("Replaced by GetDialogueTargetFromObjectNetId. Will be removed in a future version!")]
+    public static InteractableObjectNPC GetNpcFromObjectNetId(NetId netId)
+    {
+        return GetDialogueTargetFromNetId(netId) as InteractableObjectNPC;
+    }
+
+    public static IDialogueTarget GetDialogueTargetFromNetId(NetId netId)
+    {
+        return NetIdRegistry.GetTransform(netId, null)?.GetComponent<IDialogueTarget>();
     }
 
     private void updateStance()
@@ -75,7 +114,7 @@ public class InteractableObjectNPC : InteractableObject
         stanceActive = null;
         if (npcAsset.pose == ENPCPose.SIT)
         {
-            if (Random.value < 0.5f)
+            if (UnityEngine.Random.value < 0.5f)
             {
                 stanceIdle = "Idle_Sit";
             }
@@ -108,7 +147,7 @@ public class InteractableObjectNPC : InteractableObject
         {
             stanceIdle = "Idle_Stand";
         }
-        else if (Random.value < 0.5f)
+        else if (UnityEngine.Random.value < 0.5f)
         {
             stanceIdle = "Idle_Stand";
         }
@@ -121,7 +160,7 @@ public class InteractableObjectNPC : InteractableObject
     private void updateIdle()
     {
         lastIdle = Time.time;
-        idleDelay = Random.Range(5f, 30f);
+        idleDelay = UnityEngine.Random.Range(5f, 30f);
     }
 
     private void updateAnimation()
@@ -370,7 +409,7 @@ public class InteractableObjectNPC : InteractableObject
         }
         else
         {
-            ObjectManager.SendTalkWithNpcRequest.Invoke(ENetReliability.Reliable, GetNpcNetId());
+            ObjectManager.SendTalkWithNpcRequest.Invoke(ENetReliability.Reliable, GetDialogueTargetNetId());
         }
     }
 
@@ -440,19 +479,19 @@ public class InteractableObjectNPC : InteractableObject
             return;
         }
         updateIdle();
-        if (itemHasInspectAnimation && (!itemHasSafetyAnimation || npcAsset.pose != ENPCPose.PASSIVE) && Random.value < 0.1f)
+        if (itemHasInspectAnimation && (!itemHasSafetyAnimation || npcAsset.pose != ENPCPose.PASSIVE) && UnityEngine.Random.value < 0.1f)
         {
             anim.Play("Inspect");
         }
-        else if (!itemHasEquipAnimation && Random.value < 0.5f)
+        else if (!itemHasEquipAnimation && UnityEngine.Random.value < 0.5f)
         {
-            if (Random.value < 0.25f)
+            if (UnityEngine.Random.value < 0.25f)
             {
                 updateStance();
             }
             else if (npcAsset.pose == ENPCPose.STAND)
             {
-                stanceActive = "Idle_Hands_" + Random.Range(0, 5);
+                stanceActive = "Idle_Hands_" + UnityEngine.Random.Range(0, 5);
             }
         }
         else
@@ -461,9 +500,9 @@ public class InteractableObjectNPC : InteractableObject
             {
                 return;
             }
-            if (Random.value < 0.1f)
+            if (UnityEngine.Random.value < 0.1f)
             {
-                if (Random.value < 0.5f)
+                if (UnityEngine.Random.value < 0.5f)
                 {
                     anim.Play("Idle_Kick_Left");
                 }
@@ -474,7 +513,7 @@ public class InteractableObjectNPC : InteractableObject
             }
             else if (npcAsset.pose != ENPCPose.UNDER_ARREST && npcAsset.pose != ENPCPose.SURRENDER)
             {
-                stanceActive = "Idle_Paranoid_" + Random.Range(0, 6);
+                stanceActive = "Idle_Paranoid_" + UnityEngine.Random.Range(0, 6);
             }
         }
     }

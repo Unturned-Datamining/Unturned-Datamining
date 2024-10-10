@@ -1,3 +1,4 @@
+using SDG.Framework.Devkit;
 using SDG.Framework.IO.FormattedFiles;
 
 namespace SDG.Unturned;
@@ -33,11 +34,13 @@ public class SafezoneVolume : LevelVolume<SafezoneVolume, SafezoneVolumeManager>
         private void OnWeaponsToggled(ISleekToggle toggle, bool state)
         {
             volume.noWeapons = state;
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnBuildablesToggled(ISleekToggle toggle, bool state)
         {
             volume.noBuildables = state;
+            LevelHierarchy.MarkDirty();
         }
     }
 

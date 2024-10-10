@@ -40,6 +40,16 @@ public class Characters : MonoBehaviour
 
     private static List<ulong> _packageSkins;
 
+    /// <summary>
+    /// If set, this item is prioritized over equipped cosmetics. Used by item inspect menu.
+    /// Admittedly, this is very hacked-together. Hopefully rewriting this file someday?
+    /// </summary>
+    internal static int previewItemDefId;
+
+    internal static bool previewItemSolo;
+
+    private static bool wasRefreshCharacterRequested;
+
     private static float characterOffset;
 
     private static float _characterYaw;
@@ -56,7 +66,7 @@ public class Characters : MonoBehaviour
         {
             _selected = value;
             onCharacterUpdated?.Invoke(selected, active);
-            apply();
+            RefreshPreviewCharacterModel();
         }
     }
 
@@ -77,37 +87,37 @@ public class Characters : MonoBehaviour
         active.skillset = skillset;
         onCharacterUpdated?.Invoke(selected, active);
         active.applyHero();
-        apply();
+        RefreshPreviewCharacterModel();
     }
 
     public static void growFace(byte face)
     {
         active.face = face;
-        apply(showItems: false, showCosmetics: false);
+        RefreshPreviewCharacterModel();
     }
 
     public static void growHair(byte hair)
     {
         active.hair = hair;
-        apply(showItems: false, showCosmetics: false);
+        RefreshPreviewCharacterModel();
     }
 
     public static void growBeard(byte beard)
     {
         active.beard = beard;
-        apply(showItems: false, showCosmetics: false);
+        RefreshPreviewCharacterModel();
     }
 
     public static void paintSkin(Color color)
     {
         active.skin = color;
-        apply(showItems: false, showCosmetics: false);
+        RefreshPreviewCharacterModel();
     }
 
     public static void paintColor(Color color)
     {
         active.color = color;
-        apply(showItems: false, showCosmetics: false);
+        RefreshPreviewCharacterModel();
     }
 
     public static void renick(string nick)
@@ -143,7 +153,7 @@ public class Characters : MonoBehaviour
     public static void hand(bool state)
     {
         active.hand = state;
-        apply(showItems: false, showCosmetics: false);
+        RefreshPreviewCharacterModel();
         onCharacterUpdated?.Invoke(selected, active);
     }
 
@@ -303,7 +313,7 @@ public class Characters : MonoBehaviour
                 }
             }
         }
-        apply(showItems: false, showCosmetics: true);
+        RefreshPreviewCharacterModel();
         onCharacterUpdated?.Invoke(selected, active);
     }
 
@@ -385,26 +395,36 @@ public class Characters : MonoBehaviour
         }
         ushort skin = 0;
         ushort num2 = 0;
+        bool num3 = itemAsset.sharedSkinLookupID != num;
+        Guid gUID = itemAsset.GUID;
+        if (num3)
+        {
+            Asset asset = Assets.find(EAssetType.ITEM, itemAsset.sharedSkinLookupID);
+            if (asset != null)
+            {
+                gUID = asset.GUID;
+            }
+        }
         for (int i = 0; i < packageSkins.Count; i++)
         {
-            ulong num3 = packageSkins[i];
-            if (num3 == 0L)
+            ulong num4 = packageSkins[i];
+            if (num4 == 0L)
             {
                 continue;
             }
-            int inventoryItem = Provider.provider.economyService.getInventoryItem(num3);
+            int inventoryItem = Provider.provider.economyService.getInventoryItem(num4);
             if (inventoryItem == 0)
             {
                 continue;
             }
             Guid inventoryItemGuid = Provider.provider.economyService.getInventoryItemGuid(inventoryItem);
-            if (!(inventoryItemGuid == default(Guid)) && itemAsset.GUID == inventoryItemGuid)
+            if (!(inventoryItemGuid == default(Guid)) && gUID == inventoryItemGuid)
             {
                 skin = Provider.provider.economyService.getInventorySkinID(inventoryItem);
                 num2 = Provider.provider.economyService.getInventoryMythicID(inventoryItem);
                 if (num2 == 0)
                 {
-                    num2 = Provider.provider.economyService.getInventoryParticleEffect(num3);
+                    num2 = Provider.provider.economyService.getInventoryParticleEffect(num4);
                 }
                 break;
             }
@@ -458,37 +478,50 @@ public class Characters : MonoBehaviour
         slots[slot] = item;
     }
 
-    public static void apply()
-    {
-        apply(showItems: true, showCosmetics: true);
-    }
-
-    public static void apply(bool showItems, bool showCosmetics)
+    public static void RefreshPreviewCharacterModel()
     {
         if (active == null)
         {
             UnturnedLog.error("Failed to find an active character.");
-            return;
         }
-        if (clothes == null)
+        else if (clothes == null)
         {
             UnturnedLog.error("Failed to find character clothes.");
-            return;
         }
-        try
+        else
         {
-            applyInternal(showItems, showCosmetics);
-        }
-        catch (Exception e)
-        {
-            UnturnedLog.exception(e);
+            wasRefreshCharacterRequested = true;
         }
     }
 
-    private static void applyInternal(bool showItems, bool showCosmetics)
+    private static void applyInternal()
     {
+        bool num = MenuSurvivorsAppearanceUI.active;
+        bool flag = MenuSurvivorsClothingUI.active || MenuSurvivorsClothingBoxUI.active || MenuSurvivorsClothingDeleteUI.active || MenuSurvivorsClothingInspectUI.active || MenuSurvivorsClothingItemUI.active;
+        ItemStoreMenu instance = ItemStoreMenu.instance;
+        if (instance != null && instance.IsOpen)
+        {
+            flag = true;
+        }
+        ItemStoreCartMenu instance2 = ItemStoreCartMenu.instance;
+        if (instance2 != null && instance2.IsOpen)
+        {
+            flag = true;
+        }
+        ItemStoreDetailsMenu instance3 = ItemStoreDetailsMenu.instance;
+        if (instance3 != null && instance3.IsOpen)
+        {
+            flag = true;
+        }
+        ItemStoreBundleContentsMenu instance4 = ItemStoreBundleContentsMenu.instance;
+        if (instance4 != null && instance4.IsOpen)
+        {
+            flag = true;
+        }
+        bool flag2 = !num && !flag && !previewItemSolo;
+        bool num2 = !num && !previewItemSolo;
         character.localScale = new Vector3((!active.hand) ? 1 : (-1), 1f, 1f);
-        if (showItems)
+        if (flag2)
         {
             clothes.shirt = active.shirt;
             clothes.pants = active.pants;
@@ -508,7 +541,7 @@ public class Characters : MonoBehaviour
             clothes.mask = 0;
             clothes.glasses = 0;
         }
-        if (showCosmetics)
+        if (num2)
         {
             if (active.packageShirt != 0L)
             {
@@ -577,6 +610,37 @@ public class Characters : MonoBehaviour
             clothes.visualMask = 0;
             clothes.visualGlasses = 0;
         }
+        if (previewItemDefId > 0)
+        {
+            ItemAsset itemAsset = Assets.find<ItemAsset>(Provider.provider.economyService.getInventoryItemGuid(previewItemDefId));
+            if (itemAsset != null)
+            {
+                switch (itemAsset.type)
+                {
+                case EItemType.HAT:
+                    clothes.visualHat = previewItemDefId;
+                    break;
+                case EItemType.PANTS:
+                    clothes.visualPants = previewItemDefId;
+                    break;
+                case EItemType.SHIRT:
+                    clothes.visualShirt = previewItemDefId;
+                    break;
+                case EItemType.MASK:
+                    clothes.visualMask = previewItemDefId;
+                    break;
+                case EItemType.BACKPACK:
+                    clothes.visualBackpack = previewItemDefId;
+                    break;
+                case EItemType.VEST:
+                    clothes.visualVest = previewItemDefId;
+                    break;
+                case EItemType.GLASSES:
+                    clothes.visualGlasses = previewItemDefId;
+                    break;
+                }
+            }
+        }
         clothes.face = active.face;
         clothes.hair = active.hair;
         clothes.beard = active.beard;
@@ -586,7 +650,7 @@ public class Characters : MonoBehaviour
         clothes.apply();
         for (byte b = 0; b < slots.Length; b++)
         {
-            apply(b, showItems);
+            apply(b, flag2);
         }
     }
 
@@ -640,7 +704,7 @@ public class Characters : MonoBehaviour
             if (!initialApply)
             {
                 initialApply = true;
-                apply();
+                RefreshPreviewCharacterModel();
             }
         }
         if (!hasDropped)
@@ -656,10 +720,24 @@ public class Characters : MonoBehaviour
 
     private void Update()
     {
-        if (!Dedicator.IsDedicatedServer && !(character == null))
+        if (Dedicator.IsDedicatedServer || character == null)
         {
-            _characterYaw = Mathf.Lerp(_characterYaw, characterOffset + characterYaw, 4f * Time.deltaTime);
-            character.transform.rotation = Quaternion.Euler(90f, _characterYaw, 0f);
+            return;
+        }
+        _characterYaw = Mathf.Lerp(_characterYaw, characterOffset + characterYaw, 4f * Time.deltaTime);
+        character.transform.rotation = Quaternion.Euler(90f, _characterYaw, 0f);
+        if (!wasRefreshCharacterRequested)
+        {
+            return;
+        }
+        wasRefreshCharacterRequested = false;
+        try
+        {
+            applyInternal();
+        }
+        catch (Exception e)
+        {
+            UnturnedLog.exception(e);
         }
     }
 
@@ -679,6 +757,8 @@ public class Characters : MonoBehaviour
         characterOffset = character.transform.eulerAngles.y;
         _characterYaw = characterOffset;
         characterYaw = 0f;
+        previewItemDefId = 0;
+        previewItemSolo = false;
         hasDropped = false;
         if (!hasLoaded)
         {
@@ -835,7 +915,7 @@ public class Characters : MonoBehaviour
                 onCharacterUpdated?.Invoke(b9, list[b9]);
             }
         }
-        apply();
+        RefreshPreviewCharacterModel();
         hasLoaded = true;
         UnturnedLog.info("Loaded characters");
     }

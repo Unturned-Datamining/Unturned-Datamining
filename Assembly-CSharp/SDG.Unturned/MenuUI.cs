@@ -262,6 +262,7 @@ public class MenuUI : MonoBehaviour
         MenuServerPasswordUI.close();
         MenuPlayConfigUI.close();
         MenuSurvivorsUI.close();
+        ItemStoreBundleContentsMenu.instance.Close();
         ItemStoreDetailsMenu.instance.Close();
         ItemStoreCartMenu.instance.Close();
         ItemStoreMenu.instance.Close();
@@ -397,6 +398,11 @@ public class MenuUI : MonoBehaviour
                 ItemStoreCartMenu.instance.Close();
                 ItemStoreMenu.instance.Open();
             }
+            else if (ItemStoreBundleContentsMenu.instance.IsOpen)
+            {
+                ItemStoreBundleContentsMenu.instance.Close();
+                ItemStoreDetailsMenu.instance.OpenCurrentListing();
+            }
             else if (ItemStoreDetailsMenu.instance.IsOpen)
             {
                 ItemStoreDetailsMenu.instance.Close();
@@ -422,9 +428,13 @@ public class MenuUI : MonoBehaviour
                 MenuSurvivorsClothingBoxUI.close();
                 MenuSurvivorsClothingItemUI.open();
             }
-            else if (MenuSurvivorsClothingInspectUI.active || MenuSurvivorsClothingDeleteUI.active)
+            else if (MenuSurvivorsClothingInspectUI.active)
             {
                 MenuSurvivorsClothingInspectUI.close();
+                MenuSurvivorsClothingInspectUI.OpenPreviousMenu();
+            }
+            else if (MenuSurvivorsClothingDeleteUI.active)
+            {
                 MenuSurvivorsClothingDeleteUI.close();
                 MenuSurvivorsClothingItemUI.open();
             }
@@ -536,7 +546,7 @@ public class MenuUI : MonoBehaviour
         {
             target = play;
         }
-        else if (MenuSurvivorsUI.active || MenuSurvivorsCharacterUI.active || MenuSurvivorsAppearanceUI.active || MenuSurvivorsGroupUI.active || MenuSurvivorsClothingUI.active || MenuSurvivorsClothingItemUI.active || MenuSurvivorsClothingInspectUI.active || MenuSurvivorsClothingDeleteUI.active || MenuSurvivorsClothingBoxUI.active || ItemStoreMenu.instance.IsOpen || ItemStoreCartMenu.instance.IsOpen || ItemStoreDetailsMenu.instance.IsOpen)
+        else if (MenuSurvivorsUI.active || MenuSurvivorsCharacterUI.active || MenuSurvivorsAppearanceUI.active || MenuSurvivorsGroupUI.active || MenuSurvivorsClothingUI.active || MenuSurvivorsClothingItemUI.active || MenuSurvivorsClothingInspectUI.active || MenuSurvivorsClothingDeleteUI.active || MenuSurvivorsClothingBoxUI.active || ItemStoreMenu.instance.IsOpen || ItemStoreCartMenu.instance.IsOpen || ItemStoreDetailsMenu.instance.IsOpen || ItemStoreBundleContentsMenu.instance.IsOpen)
         {
             target = survivors;
         }

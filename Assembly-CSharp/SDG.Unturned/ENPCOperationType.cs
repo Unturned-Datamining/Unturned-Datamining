@@ -8,5 +8,7 @@ public enum ENPCOperationType
     SUBTRACTION,
     MULTIPLICATION,
     DIVISION,
-    MODULO
+    MODULO,
+    RANDOM_INCLUSIVE,
+    RANDOM_EXCLUSIVE
 }

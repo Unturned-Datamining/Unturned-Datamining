@@ -736,14 +736,25 @@ public class ItemAsset : Asset, ISkinableAsset
             BlueprintSupply[] array = new BlueprintSupply[b4];
             for (byte b5 = 0; b5 < array.Length; b5++)
             {
-                ushort newID = data.ParseUInt16("Blueprint_" + b3 + "_Supply_" + b5 + "_ID", 0);
+                string text = "Blueprint_" + b3 + "_Supply_" + b5 + "_ID";
+                if (!data.TryParseUInt16(text, out var value2))
+                {
+                    if (string.Equals(data.GetString(text), "this", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        value2 = id;
+                    }
+                    else
+                    {
+                        Assets.reportError(this, "Unable to parse " + text + ": \"" + data.GetString(text) + "\"");
+                    }
+                }
                 bool newCritical = data.ContainsKey("Blueprint_" + b3 + "_Supply_" + b5 + "_Critical");
                 byte b6 = data.ParseUInt8("Blueprint_" + b3 + "_Supply_" + b5 + "_Amount", 0);
                 if (b6 < 1)
                 {
                     b6 = 1;
                 }
-                array[b5] = new BlueprintSupply(newID, newCritical, b6);
+                array[b5] = new BlueprintSupply(value2, newCritical, b6);
             }
             byte b7 = data.ParseUInt8("Blueprint_" + b3 + "_Outputs", 0);
             BlueprintOutput[] array2;
@@ -752,14 +763,14 @@ public class ItemAsset : Asset, ISkinableAsset
                 array2 = new BlueprintOutput[b7];
                 for (byte b8 = 0; b8 < array2.Length; b8++)
                 {
-                    ushort newID2 = data.ParseUInt16("Blueprint_" + b3 + "_Output_" + b8 + "_ID", 0);
+                    ushort newID = data.ParseUInt16("Blueprint_" + b3 + "_Output_" + b8 + "_ID", 0);
                     byte b9 = data.ParseUInt8("Blueprint_" + b3 + "_Output_" + b8 + "_Amount", 0);
                     if (b9 < 1)
                     {
                         b9 = 1;
                     }
                     EItemOrigin newOrigin = data.ParseEnum("Blueprint_" + b3 + "_Output_" + b8 + "_Origin", EItemOrigin.CRAFT);
-                    array2[b8] = new BlueprintOutput(newID2, b9, newOrigin);
+                    array2[b8] = new BlueprintOutput(newID, b9, newOrigin);
                 }
             }
             else
@@ -789,12 +800,13 @@ public class ItemAsset : Asset, ISkinableAsset
                 newSkill = (EBlueprintSkill)Enum.Parse(typeof(EBlueprintSkill), data.GetString("Blueprint_" + b3 + "_Skill"), ignoreCase: true);
             }
             bool newTransferState = data.ContainsKey("Blueprint_" + b3 + "_State_Transfer");
+            bool newWithoutAttachments = data.ParseBool("Blueprint_" + b3 + "_State_Transfer_Delete_Attachments");
             string @string = data.GetString("Blueprint_" + b3 + "_Map");
             INPCCondition[] array3 = new INPCCondition[data.ParseUInt8("Blueprint_" + b3 + "_Conditions", 0)];
             NPCTool.readConditions(data, localization, "Blueprint_" + b3 + "_Condition_", array3, this);
             NPCRewardsList newQuestRewardsList = default(NPCRewardsList);
             newQuestRewardsList.Parse(data, localization, this, "Blueprint_" + b3 + "_Rewards", "Blueprint_" + b3 + "_Reward_");
-            Blueprint blueprint = new Blueprint(this, b3, newType, array, array2, newTool, newToolCritical, newBuild, guid, b11, newSkill, newTransferState, @string, array3, newQuestRewardsList);
+            Blueprint blueprint = new Blueprint(this, b3, newType, array, array2, newTool, newToolCritical, newBuild, guid, b11, newSkill, newTransferState, newWithoutAttachments, @string, array3, newQuestRewardsList);
             blueprint.canBeVisibleWhenSearchedWithoutRequiredItems = data.ParseBool($"Blueprint_{b3}_Searchable", defaultValue: true);
             blueprints.Add(blueprint);
         }
@@ -813,9 +825,9 @@ public class ItemAsset : Asset, ISkinableAsset
             ActionBlueprint[] array4 = new ActionBlueprint[b13];
             for (byte b14 = 0; b14 < array4.Length; b14++)
             {
-                byte newID3 = data.ParseUInt8("Action_" + b12 + "_Blueprint_" + b14 + "_Index", 0);
+                byte newID2 = data.ParseUInt8("Action_" + b12 + "_Blueprint_" + b14 + "_Index", 0);
                 bool newLink = data.ContainsKey("Action_" + b12 + "_Blueprint_" + b14 + "_Link");
-                array4[b14] = new ActionBlueprint(newID3, newLink);
+                array4[b14] = new ActionBlueprint(newID2, newLink);
             }
             string string2 = data.GetString("Action_" + b12 + "_Key");
             string newText;

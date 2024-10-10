@@ -61,26 +61,31 @@ public class KillVolume : LevelVolume<KillVolume, KillVolumeManager>
         private void OnKillPlayersToggled(ISleekToggle toggle, bool state)
         {
             volume.killPlayers = state;
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnKillZombiesToggled(ISleekToggle toggle, bool state)
         {
             volume.killZombies = state;
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnKillAnimalsToggled(ISleekToggle toggle, bool state)
         {
             volume.killAnimals = state;
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnKillVehiclesToggled(ISleekToggle toggle, bool state)
         {
             volume.killVehicles = state;
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnSwappedDeathCause(SleekButtonStateEnum<EDeathCause> button, EDeathCause deathCause)
         {
             volume.deathCause = deathCause;
+            LevelHierarchy.MarkDirty();
         }
     }
 

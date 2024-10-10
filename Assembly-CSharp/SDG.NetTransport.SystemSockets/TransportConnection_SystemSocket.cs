@@ -44,6 +44,12 @@ internal class TransportConnection_SystemSocket : ITransportConnection, IEquatab
         return false;
     }
 
+    public bool TryGetSteamId(out ulong steamId)
+    {
+        steamId = 0uL;
+        return false;
+    }
+
     public IPAddress GetAddress()
     {
         if (clientSocket.RemoteEndPoint is IPEndPoint iPEndPoint)
