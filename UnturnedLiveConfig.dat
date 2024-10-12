@@ -1,6 +1,11 @@
 MainMenuAlert
 {
-	Id 60
+	Id 61
+	Header Join the Trio Elver Tournament Today!
+	Body From the organizers: "Join a Trio Elver Tournament hosted by LiamDoesGame, where you can build, raid, and fight your way to winning one of the most anticipated tournaments in Unturned!"
+	Color #00ffff
+	Link https://discord.gg/ldg
+	IconURL https://cdn.smartlydressedgames.com/Images/LDGbanner.jpg
 }
 MainMenuWorkshop
 {
