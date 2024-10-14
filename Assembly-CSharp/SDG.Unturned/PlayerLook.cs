@@ -1034,7 +1034,7 @@ public class PlayerLook : PlayerCaller
                     }
                     if (InputEx.GetKeyDown(KeyCode.C) && InputEx.GetKey(KeyCode.LeftControl))
                     {
-                        GUIUtility.systemCopyBuffer = $"{instance.transform.position}:{orbitPitch}, {orbitYaw}";
+                        ChatManager.CopyCameraTransform();
                     }
                     if (InputEx.GetKeyDown(KeyCode.V) && InputEx.GetKey(KeyCode.LeftControl))
                     {

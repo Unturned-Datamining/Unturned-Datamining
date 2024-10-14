@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemLook : MonoBehaviour
@@ -10,30 +11,38 @@ public class ItemLook : MonoBehaviour
 
     public GameObject target;
 
+    private List<Renderer> renderers = new List<Renderer>();
+
     private void Update()
     {
         if (target == null)
         {
             return;
         }
+        renderers.Clear();
+        target.GetComponentsInChildren(includeInactive: false, renderers);
         Bounds bounds = default(Bounds);
         bool flag = false;
-        Collider[] componentsInChildren = target.GetComponentsInChildren<Collider>();
-        for (int i = 0; i < componentsInChildren.Length; i++)
+        foreach (Renderer renderer in renderers)
         {
-            Bounds bounds2 = componentsInChildren[i].bounds;
-            if (flag)
+            if (renderer is MeshRenderer || renderer is SkinnedMeshRenderer)
             {
-                bounds.Encapsulate(bounds2);
-                continue;
+                if (flag)
+                {
+                    bounds.Encapsulate(renderer.bounds);
+                    continue;
+                }
+                flag = true;
+                bounds = renderer.bounds;
             }
-            bounds = bounds2;
-            flag = true;
         }
-        Vector3 center = bounds.center;
-        float num = bounds.extents.magnitude * 2.25f;
-        _yaw = Mathf.Lerp(_yaw, yaw, 4f * Time.deltaTime);
-        inspectCamera.transform.rotation = Quaternion.Euler(20f, 0f - _yaw, 0f);
-        inspectCamera.transform.position = center - inspectCamera.transform.forward * num;
+        if (flag)
+        {
+            Vector3 center = bounds.center;
+            float num = bounds.extents.magnitude * 2.25f;
+            _yaw = Mathf.Lerp(_yaw, yaw, 4f * Time.deltaTime);
+            inspectCamera.transform.rotation = Quaternion.Euler(20f, 0f - _yaw, 0f);
+            inspectCamera.transform.position = center - inspectCamera.transform.forward * num;
+        }
     }
 }

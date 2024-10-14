@@ -495,7 +495,14 @@ public class ChatManager : SteamCaller
             recentlySentMessages[num] = recentlySentMessages[num - 1];
         }
         recentlySentMessages[0] = text;
-        SendChatRequest.Invoke(ENetReliability.Reliable, (byte)mode, text);
+        if (string.Equals(text, "/copycameratransform", StringComparison.InvariantCultureIgnoreCase))
+        {
+            CopyCameraTransform();
+        }
+        else
+        {
+            SendChatRequest.Invoke(ENetReliability.Reliable, (byte)mode, text);
+        }
     }
 
     /// <summary>
@@ -661,6 +668,24 @@ public class ChatManager : SteamCaller
                 sendVote(vote: false);
             }
         }
+    }
+
+    /// <summary>
+    /// Nelson 2024-10-14: We might want to elaborate on this with "client-side chat commands" in the future, but
+    /// for the meantime I've hacked in this one command.
+    /// </summary>
+    internal static void CopyCameraTransform()
+    {
+        Camera camera = MainCamera.instance;
+        if (camera == null)
+        {
+            UnturnedLog.warn("Unable to copy camera transform because there is no active main camera");
+            return;
+        }
+        Vector3 eulerAngles = camera.transform.rotation.eulerAngles;
+        float x = eulerAngles.x;
+        float y = eulerAngles.y;
+        GUIUtility.systemCopyBuffer = $"{camera.transform.position}:{x}, {y}";
     }
 
     private void Start()
