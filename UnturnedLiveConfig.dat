@@ -13,6 +13,20 @@ MainMenuWorkshop
 	Featured
 	{
 		Id 16
+		FileIds
+		[
+			3251926587
+		]
+		Status Updated
+		Type Curated
+		OverrideDescription [h1]ESCALATION[/h1]\n\n[b]Featuring a myriad of new gameplay mechanics, systems, unique items, and more, Escalation raises the bar for Unturned.[/b]\n\n[h1]GUNPLAY[/h1]\n\nEscalation's arsenal is designed to feel great, due to the animations, attention to detail and sound design. A great deal of focus went into weapon balance to make sure that each gunfight feels fair.\n\n[h1]HAZARDOUS ENVIRONMENTS[/h1]\n\nYou may come across certain objects that can be shot or blown up - these objects when set off can cause considerable harm to any unfortunate souls caught within their wake.\n\n[h1]STRIKE CALLS[/h1]\n\nStrike Calls are powerful single use offensive weapons, they can be utilized with the assistance of an LTLM to cause considerable damage upon a targeted location.\n\n[h1]BASE BUILDING[/h1]\n\nBase building is designed to be easy to understand but also has a great depth of both functionality and detailing, with complex structures available to those who choose to make them. A variety of decorations allow for any survivor to decorate their base however they like.\n\n[h1]PERFORMANCE[/h1]\nThe map's performance is comparable to most vanilla maps - thus, if you can play Unturned, you'll have no issue playing this map! Laptops in general may have some slower performance compared to desktops, so make sure you keep them plugged in for the best quality. That being said, the map runs wonderfully smooth on just about any mid-level systems, and even some budget systems.
+		LinkText Update Notes
+		LinkURL https://steamcommunity.com/workshop/filedetails/discussion/3251926587/4701286545157522278/
+		AssociatedStockpileItems
+		[
+			21065
+			1875
+		]
 	}
 	Popular
 	{
