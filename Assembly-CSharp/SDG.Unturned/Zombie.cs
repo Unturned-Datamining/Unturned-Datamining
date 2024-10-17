@@ -98,9 +98,15 @@ public class Zombie : MonoBehaviour
 
     private Player player;
 
-    private Transform barricade;
+    /// <summary>
+    /// If zombie is stuck this was a nearby barricade potentially blocking our path.
+    /// </summary>
+    private Transform targetBarricade;
 
-    private Transform structure;
+    /// <summary>
+    /// If zombie is stuck this was a nearby structure potentially blocking our path.
+    /// </summary>
+    private Transform targetStructure;
 
     /// <summary>
     /// If zombie is stuck this was a nearby vehicle potentially blocking our path.
@@ -460,7 +466,7 @@ public class Zombie : MonoBehaviour
 
     private float GetHorizontalAttackRangeSquared()
     {
-        if (barricade != null)
+        if (targetBarricade != null)
         {
             return ATTACK_BARRICADE * (float)((!isMega) ? 1 : 2);
         }
@@ -1132,8 +1138,8 @@ public class Zombie : MonoBehaviour
             player.agro--;
         }
         player = null;
-        barricade = null;
-        structure = null;
+        targetBarricade = null;
+        targetStructure = null;
         targetObstructionVehicle = null;
         targetPassengerVehicle = null;
         seeker.canSearch = false;
@@ -1502,8 +1508,8 @@ public class Zombie : MonoBehaviour
             player.agro--;
         }
         player = null;
-        barricade = null;
-        structure = null;
+        targetBarricade = null;
+        targetStructure = null;
         targetObstructionVehicle = null;
         targetPassengerVehicle = null;
         seeker.canSearch = false;
@@ -1578,7 +1584,7 @@ public class Zombie : MonoBehaviour
             StructureManager.getStructuresInRadius(base.transform.position, 16f, regionsInRadius, structuresInRadius);
             if (structuresInRadius.Count > 0)
             {
-                structure = structuresInRadius[0];
+                targetStructure = structuresInRadius[0];
                 return;
             }
         }
@@ -1598,7 +1604,7 @@ public class Zombie : MonoBehaviour
             BarricadeManager.getBarricadesInRadius(base.transform.position, 16f, regionsInRadius, barricadesInRadius);
             if (barricadesInRadius.Count > 0)
             {
-                barricade = barricadesInRadius[0];
+                targetBarricade = barricadesInRadius[0];
             }
         }
     }
@@ -1666,7 +1672,7 @@ public class Zombie : MonoBehaviour
         if (isStuck)
         {
             float num2 = Time.time - lastStuck;
-            if (num2 > 1f && barricade == null && structure == null && targetObstructionVehicle == null && targetPassengerVehicle == null)
+            if (num2 > 1f && targetBarricade == null && targetStructure == null && targetObstructionVehicle == null && targetPassengerVehicle == null)
             {
                 findTargetWhileStuck();
             }
@@ -1677,23 +1683,31 @@ public class Zombie : MonoBehaviour
                 return;
             }
         }
+        if (targetBarricade != null && (!targetBarricade.gameObject.activeInHierarchy || (targetBarricade.transform.position - base.transform.position).sqrMagnitude > 64f))
+        {
+            targetBarricade = null;
+        }
+        if (targetStructure != null && (!targetStructure.gameObject.activeInHierarchy || (targetStructure.transform.position - base.transform.position).sqrMagnitude > 64f))
+        {
+            targetStructure = null;
+        }
         float num3;
         float num4;
-        if (barricade != null)
+        if (targetBarricade != null)
         {
-            num3 = MathfEx.HorizontalDistanceSquared(barricade.position, base.transform.position);
-            num4 = Mathf.Abs(barricade.position.y - base.transform.position.y);
-            target.position = barricade.position;
+            num3 = MathfEx.HorizontalDistanceSquared(targetBarricade.position, base.transform.position);
+            num4 = Mathf.Abs(targetBarricade.position.y - base.transform.position.y);
+            target.position = targetBarricade.position;
             seeker.canTurn = false;
-            seeker.targetDirection = barricade.position - base.transform.position;
+            seeker.targetDirection = targetBarricade.position - base.transform.position;
         }
-        else if (structure != null)
+        else if (targetStructure != null)
         {
             num3 = 0f;
             num4 = 0f;
             target.position = base.transform.position;
             seeker.canTurn = false;
-            seeker.targetDirection = structure.position - base.transform.position;
+            seeker.targetDirection = targetStructure.position - base.transform.position;
         }
         else if (targetObstructionVehicle != null)
         {
@@ -1833,7 +1847,7 @@ public class Zombie : MonoBehaviour
             leave(quick: false);
             return;
         }
-        if (player != null || barricade != null || structure != null || targetObstructionVehicle != null || targetPassengerVehicle != null)
+        if (player != null || targetBarricade != null || targetStructure != null || targetObstructionVehicle != null || targetPassengerVehicle != null)
         {
             if (player != null && Time.time - lastStartle > specialStartleDelay && Time.time - lastAttack > specialAttackDelay && Time.time - lastSpecial > specialUseDelay)
             {
@@ -1918,7 +1932,7 @@ public class Zombie : MonoBehaviour
                     }
                 }
             }
-            if ((structure != null || num3 < GetHorizontalAttackRangeSquared()) && num4 < GetVerticalAttackRange())
+            if ((targetStructure != null || num3 < GetHorizontalAttackRangeSquared()) && num4 < GetVerticalAttackRange())
             {
                 if (speciality == EZombieSpeciality.SPRINTER || Time.time - lastTarget > (Dedicator.IsDedicatedServer ? 0.5f : 0.1f))
                 {
@@ -1937,19 +1951,19 @@ public class Zombie : MonoBehaviour
                             {
                                 b = (byte)((float)(int)b * 0.75f);
                             }
-                            if (structure != null)
+                            if (targetStructure != null)
                             {
-                                StructureManager.damage(structure, (target.position - base.transform.position).normalized * (int)b, (int)b, 1f, armor: true, default(CSteamID), EDamageOrigin.Zombie_Swipe);
-                                if (structure == null || !structure.CompareTag("Structure"))
+                                StructureManager.damage(targetStructure, (target.position - base.transform.position).normalized * (int)b, (int)b, 1f, armor: true, default(CSteamID), EDamageOrigin.Zombie_Swipe);
+                                if (targetStructure == null || !targetStructure.CompareTag("Structure"))
                                 {
-                                    structure = null;
+                                    targetStructure = null;
                                     isStuck = false;
                                     lastStuck = Time.time;
                                 }
                             }
-                            else if (barricade != null)
+                            else if (targetBarricade != null)
                             {
-                                BarricadeManager.damage(barricade, (int)b, 1f, armor: true, default(CSteamID), EDamageOrigin.Zombie_Swipe);
+                                BarricadeManager.damage(targetBarricade, (int)b, 1f, armor: true, default(CSteamID), EDamageOrigin.Zombie_Swipe);
                             }
                             else if (targetObstructionVehicle != null)
                             {
