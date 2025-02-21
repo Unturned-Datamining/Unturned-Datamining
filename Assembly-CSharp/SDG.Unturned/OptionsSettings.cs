@@ -61,9 +61,11 @@ public class OptionsSettings
 
     private const byte SAVEDATA_VERSION_ADDED_DAMAGE_FLINCH_OPTIONS = 60;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 60;
+    private const byte SAVEDATA_VERSION_ADDED_SHOW_OUTBOUND_VOICE_CHAT_OFF_HINT = 61;
 
-    public static readonly byte SAVEDATA_VERSION = 60;
+    private const byte SAVEDATA_VERSION_NEWEST = 61;
+
+    public static readonly byte SAVEDATA_VERSION = 61;
 
     public static readonly byte MIN_FOV = 60;
 
@@ -128,6 +130,8 @@ public class OptionsSettings
     public static bool chatVoiceOut;
 
     private static bool _metric;
+
+    private static bool _showOutboundVoiceChatOffHint;
 
     public static bool talk;
 
@@ -314,6 +318,22 @@ public class OptionsSettings
         }
     }
 
+    public static bool EnableOutboundVoiceChat
+    {
+        get
+        {
+            return chatVoiceOut;
+        }
+        set
+        {
+            if (chatVoiceOut != value)
+            {
+                chatVoiceOut = value;
+                OptionsSettings.OnEnableOutboundVoiceChatChanged?.Invoke();
+            }
+        }
+    }
+
     public static bool metric
     {
         get
@@ -326,6 +346,22 @@ public class OptionsSettings
             {
                 _metric = value;
                 OptionsSettings.OnUnitSystemChanged?.Invoke();
+            }
+        }
+    }
+
+    public static bool ShowOutboundVoiceChatOffHint
+    {
+        get
+        {
+            return _showOutboundVoiceChatOffHint;
+        }
+        set
+        {
+            if (_showOutboundVoiceChatOffHint != value)
+            {
+                _showOutboundVoiceChatOffHint = value;
+                OptionsSettings.OnShowOutboundVoiceChatOffHintChanged?.Invoke();
             }
         }
     }
@@ -465,7 +501,11 @@ public class OptionsSettings
         }
     }
 
+    public static event System.Action OnEnableOutboundVoiceChatChanged;
+
     public static event System.Action OnUnitSystemChanged;
+
+    public static event System.Action OnShowOutboundVoiceChatOffHintChanged;
 
     public static event System.Action OnVoiceAlwaysRecordingChanged;
 
@@ -540,7 +580,8 @@ public class OptionsSettings
         filter = true;
         chatText = true;
         chatVoiceIn = false;
-        chatVoiceOut = false;
+        EnableOutboundVoiceChat = false;
+        ShowOutboundVoiceChatOffHint = true;
         metric = true;
         talk = false;
         hints = true;
@@ -677,10 +718,10 @@ public class OptionsSettings
         {
             chatVoiceIn = false;
         }
-        chatVoiceOut = block.readBoolean();
+        EnableOutboundVoiceChat = block.readBoolean();
         if (b < 57)
         {
-            chatVoiceOut = false;
+            EnableOutboundVoiceChat = false;
         }
         metric = block.readBoolean();
         if (b > 24)
@@ -981,6 +1022,14 @@ public class OptionsSettings
             damageFlinchMode = EDamageFlinchMode.RollOnly;
             damageFlinchIntensity = 1f;
         }
+        if (b >= 61)
+        {
+            ShowOutboundVoiceChatOffHint = block.readBoolean();
+        }
+        else
+        {
+            ShowOutboundVoiceChatOffHint = true;
+        }
         if (!Provider.isPro)
         {
             backgroundColor = new Color(0.9f, 0.9f, 0.9f);
@@ -994,7 +1043,7 @@ public class OptionsSettings
     public static void save()
     {
         Block block = new Block();
-        block.writeByte(60);
+        block.writeByte(61);
         block.writeBoolean(value: false);
         block.writeBoolean(splashscreen);
         block.writeBoolean(timer);
@@ -1007,7 +1056,7 @@ public class OptionsSettings
         block.writeBoolean(filter);
         block.writeBoolean(chatText);
         block.writeBoolean(chatVoiceIn);
-        block.writeBoolean(chatVoiceOut);
+        block.writeBoolean(EnableOutboundVoiceChat);
         block.writeBoolean(metric);
         block.writeBoolean(talk);
         block.writeBoolean(hints);
@@ -1054,6 +1103,7 @@ public class OptionsSettings
         block.writeSingle(cameraShakeIntensity);
         block.writeByte((byte)damageFlinchMode);
         block.writeSingle(damageFlinchIntensity);
+        block.writeBoolean(ShowOutboundVoiceChatOffHint);
         ReadWrite.writeBlock("/Options.dat", useCloud: true, block);
     }
 }

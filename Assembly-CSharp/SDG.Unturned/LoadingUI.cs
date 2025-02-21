@@ -9,7 +9,7 @@ namespace SDG.Unturned;
 
 public class LoadingUI : MonoBehaviour
 {
-    private static readonly byte TIP_COUNT = 31;
+    private static readonly byte TIP_COUNT = 32;
 
     private static bool _isInitialized;
 
@@ -41,6 +41,12 @@ public class LoadingUI : MonoBehaviour
     private static ISleekButton cancelButton;
 
     private static ISleekLabel creditsLabel;
+
+    /// <summary>
+    /// Shown when game connection ping is significantly higher than server browser ping. At the time of writing
+    /// (2025-01-17) this is likely because the server is using an "anycast proxy" in front of Steam A2S cache.
+    /// </summary>
+    private static ISleekBox pingWarning;
 
     /// <summary>
     /// Set to Time.frameCount + 1 while loading.
@@ -451,6 +457,7 @@ public class LoadingUI : MonoBehaviour
             ELoadingTip.ORIENTATION => local.format("Orientation", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.rotate)), 
             ELoadingTip.RED => local.format("Red"), 
             ELoadingTip.STEADY => local.format("Steady", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.sprint)), 
+            ELoadingTip.SKIP_ACTION_CRAFTING_MENU => local.format("SkipActionCraftingMenu", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.SkipActionCraftingMenu)), 
             _ => "#" + tip, 
         }));
         if (Level.info != null)
@@ -590,6 +597,24 @@ public class LoadingUI : MonoBehaviour
         if (flag2)
         {
             Glazier.Get().Root = window;
+            if (Provider.isClient && Provider.CurrentServerAdvertisement != null)
+            {
+                int clientPingMs = Provider.ClientPingMs;
+                int pingMs = Provider.CurrentServerAdvertisement.PingMs;
+                if (clientPingMs > pingMs + LiveConfig.Get().pingMismatchWarningThresholdMs)
+                {
+                    pingWarning.Text = localization.format("PingMismatchWarning", clientPingMs, pingMs);
+                    pingWarning.IsVisible = true;
+                }
+                else
+                {
+                    pingWarning.IsVisible = false;
+                }
+            }
+            else
+            {
+                pingWarning.IsVisible = false;
+            }
         }
         else if (PlayerUI.instance != null)
         {
@@ -706,6 +731,18 @@ public class LoadingUI : MonoBehaviour
         creditsLabel.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
         creditsLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
         window.AddChild(creditsLabel);
+        pingWarning = Glazier.Get().CreateBox();
+        pingWarning.PositionOffset_X = 50f;
+        pingWarning.PositionOffset_Y = 50f;
+        pingWarning.SizeOffset_X = -100f;
+        pingWarning.SizeScale_X = 1f;
+        pingWarning.SizeOffset_Y = 50f;
+        pingWarning.IsVisible = false;
+        pingWarning.FontSize = ESleekFontSize.Medium;
+        pingWarning.Text = localization.format("PingMismatchWarning");
+        pingWarning.TextAlignment = TextAnchor.MiddleCenter;
+        pingWarning.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
+        window.AddChild(pingWarning);
         cancelButton = Glazier.Get().CreateButton();
         cancelButton.PositionOffset_X = -110f;
         cancelButton.PositionOffset_Y = -50f;

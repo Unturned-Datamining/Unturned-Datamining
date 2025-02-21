@@ -21,6 +21,8 @@ public class MenuPlayServerCurationUI : SleekFullscreenBox
 
     private ISleekLabel tutorialBox;
 
+    private SleekButtonState defaultBehaviorButton;
+
     private SleekButtonState denyModeButton;
 
     private SleekServerCurationRuleTester rulesTester;
@@ -68,8 +70,27 @@ public class MenuPlayServerCurationUI : SleekFullscreenBox
             return;
         }
         urlField.Text = string.Empty;
-        ServerListCuration.Get().AddUrl(result);
-        SynchronizeSortedItems();
+        int num = text.IndexOf("steamcommunity.com/sharedfiles/filedetails/?id=");
+        if (num != -1)
+        {
+            int num2 = num + "steamcommunity.com/sharedfiles/filedetails/?id=".Length;
+            int num3 = text.IndexOf('&', num2 + 1);
+            string text2 = ((num3 <= 0) ? text.Substring(num2) : text.Substring(num2, num3 - num2));
+            if (!ulong.TryParse(text2, out var result2))
+            {
+                UnturnedLog.error("Unable to parse ID parameter \"" + text2 + "\" from workshop file URL \"" + text + "\"");
+            }
+            else
+            {
+                UnturnedLog.info($"Adding server curation workshop file ID {result2}");
+                Provider.provider.workshopService.setSubscribed(result2, subscribe: true);
+            }
+        }
+        else
+        {
+            ServerListCuration.Get().AddUrl(result, 0);
+            SynchronizeSortedItems();
+        }
     }
 
     private void OnAddUrlButtonClicked(ISleekElement button)
@@ -110,6 +131,11 @@ public class MenuPlayServerCurationUI : SleekFullscreenBox
     {
         MenuPlayUI.serverListUI.open(shouldRefresh: true);
         close();
+    }
+
+    private void OnChangedDefaultBehavior(SleekButtonState button, int value)
+    {
+        ServerListCuration.Get().DefaultBehavior = (EServerListCurationDefaultBehavior)value;
     }
 
     private void OnChangedDenyMode(SleekButtonState button, int value)
@@ -201,17 +227,29 @@ public class MenuPlayServerCurationUI : SleekFullscreenBox
         tutorialBox.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
         AddChild(tutorialBox);
         tutorialBox.IsVisible = false;
+        defaultBehaviorButton = new SleekButtonState(new GUIContent(localization.format("DefaultBehavior_Show_Label", "DefaultBehavior_Show_Tooltip")), new GUIContent(localization.format("DefaultBehavior_Hide_Label", "DefaultBehavior_Hide_Tooltip")), new GUIContent(localization.format("DefaultBehavior_MoveToBottom_Label", "DefaultBehavior_MoveToBottom_Label")));
+        defaultBehaviorButton.PositionOffset_X = -650f;
+        defaultBehaviorButton.PositionOffset_Y = -50f;
+        defaultBehaviorButton.PositionScale_X = 1f;
+        defaultBehaviorButton.PositionScale_Y = 1f;
+        defaultBehaviorButton.SizeOffset_X = 200f;
+        defaultBehaviorButton.SizeOffset_Y = 25f;
+        defaultBehaviorButton.AddLabel(localization.format("DefaultBehavior_Label"), ESleekSide.RIGHT);
+        defaultBehaviorButton.state = (int)ServerListCuration.Get().DefaultBehavior;
+        SleekButtonState sleekButtonState = defaultBehaviorButton;
+        sleekButtonState.onSwappedState = (SwappedState)Delegate.Combine(sleekButtonState.onSwappedState, new SwappedState(OnChangedDefaultBehavior));
+        AddChild(defaultBehaviorButton);
         denyModeButton = new SleekButtonState(new GUIContent(localization.format("DenyMode_Hide_Label", "DenyMode_Hide_Tooltip")), new GUIContent(localization.format("DenyMode_MoveToBottom_Label", "DenyMode_MoveToBottom_Label")));
         denyModeButton.PositionOffset_X = -650f;
-        denyModeButton.PositionOffset_Y = -40f;
+        denyModeButton.PositionOffset_Y = -25f;
         denyModeButton.PositionScale_X = 1f;
         denyModeButton.PositionScale_Y = 1f;
         denyModeButton.SizeOffset_X = 200f;
-        denyModeButton.SizeOffset_Y = 30f;
+        denyModeButton.SizeOffset_Y = 25f;
         denyModeButton.AddLabel(localization.format("DenyMode_Label"), ESleekSide.RIGHT);
         denyModeButton.state = (int)ServerListCuration.Get().DenyMode;
-        SleekButtonState sleekButtonState = denyModeButton;
-        sleekButtonState.onSwappedState = (SwappedState)Delegate.Combine(sleekButtonState.onSwappedState, new SwappedState(OnChangedDenyMode));
+        SleekButtonState sleekButtonState2 = denyModeButton;
+        sleekButtonState2.onSwappedState = (SwappedState)Delegate.Combine(sleekButtonState2.onSwappedState, new SwappedState(OnChangedDenyMode));
         AddChild(denyModeButton);
         rulesTester = new SleekServerCurationRuleTester(localization);
         rulesTester.PositionOffset_Y = -140f;

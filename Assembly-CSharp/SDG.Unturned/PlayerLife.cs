@@ -1926,6 +1926,7 @@ public class PlayerLife : PlayerCaller
                 TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
                 parameters.relevantDistance = EffectManager.SMALL;
                 parameters.position = base.transform.position;
+                parameters.reliable = true;
                 EffectManager.triggerEffect(parameters);
             }
         }

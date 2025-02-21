@@ -648,6 +648,16 @@ public class Provider : MonoBehaviour
     /// </summary>
     private static CommandLineFlag shouldCheckForGoldUpgrade = new CommandLineFlag(defaultValue: true, "-NoGoldUpgrade");
 
+    /// <summary>
+    /// If specified, all Steam achievements and stats progress is lost.
+    /// </summary>
+    private static CommandLineFlag clResetSteamStatsAndAchievements = new CommandLineFlag(defaultValue: false, "-ResetSteamStatsAndAchievements");
+
+    /// <summary>
+    /// If specified, all Steam achievements are unlocked during startup.
+    /// </summary>
+    private static CommandLineFlag clUnlockSteamAchievements = new CommandLineFlag(defaultValue: false, "-UnlockSteamAchievements");
+
     public static string APP_VERSION { get; protected set; }
 
     /// <summary>
@@ -909,11 +919,7 @@ public class Provider : MonoBehaviour
             {
                 return false;
             }
-            if (currentServerWorkshopResponse.server.BPersistentGameServerAccount())
-            {
-                return !string.IsNullOrEmpty(currentServerWorkshopResponse.bookmarkHost);
-            }
-            return false;
+            return currentServerWorkshopResponse.server.BPersistentGameServerAccount();
         }
     }
 
@@ -946,6 +952,21 @@ public class Provider : MonoBehaviour
     public static float timeLastPacketWasReceivedFromServer { get; internal set; }
 
     public static float ping => _ping;
+
+    /// <summary>
+    /// Ping from client to server, measured in milliseconds.
+    /// </summary>
+    public static int ClientPingMs
+    {
+        get
+        {
+            if (clientTransport != null && clientTransport.TryGetPing(out var pingMs))
+            {
+                return pingMs;
+            }
+            return Mathf.Max(0, Mathf.FloorToInt(_ping * 1000f));
+        }
+    }
 
     public static IProvider provider { get; protected set; }
 
@@ -1450,6 +1471,12 @@ public class Provider : MonoBehaviour
         maxPlayers = response.maxPlayers;
         isVacActive = response.isVACSecure;
         isBattlEyeActive = response.isBattlEyeSecure;
+        ServerBookmarkDetails serverBookmarkDetails = ServerBookmarksManager.FindBookmarkDetails(response.server);
+        if (serverBookmarkDetails != null)
+        {
+            serverBookmarkDetails.UpdateFromWorkshopResponse(response);
+            ServerBookmarksManager.MarkDirty();
+        }
         List<PublishedFileId_t> list = new List<PublishedFileId_t>(response.requiredFiles.Count);
         foreach (ServerRequiredWorkshopFile requiredFile in response.requiredFiles)
         {
@@ -2037,7 +2064,7 @@ public class Provider : MonoBehaviour
             writer.WriteEnum(clientPlatform);
             writer.WriteUInt32(APP_VERSION_PACKED);
             writer.WriteBit(isPro);
-            writer.WriteUInt16(MathfEx.ClampToUShort(CurrentServerAdvertisement?.ping ?? 1));
+            writer.WriteUInt16(MathfEx.ClampToUShort(CurrentServerAdvertisement?.PingMs ?? 1));
             writer.WriteString(Characters.active.nick);
             writer.WriteSteamID(Characters.active.group);
             writer.WriteUInt8(Characters.active.face);
@@ -2106,7 +2133,7 @@ public class Provider : MonoBehaviour
         _isClient = true;
         timeLastPacketWasReceivedFromServer = Time.realtimeSinceStartup;
         pings = new float[4];
-        lag((_currentServerAdvertisement != null) ? ((float)_currentServerAdvertisement.ping / 1000f) : 0f);
+        lag((_currentServerAdvertisement != null) ? ((float)_currentServerAdvertisement.PingMs / 1000f) : 0f);
         isLoadingUGC = true;
         LoadingUI.updateScene();
         isWaitingForConnectResponse = false;
@@ -2757,6 +2784,10 @@ public class Provider : MonoBehaviour
             SteamGameServer.SetKeyValue("GameVersion", APP_VERSION);
             int num = 128;
             string text6 = (isPvP ? "PVP" : "PVE") + "," + (hasCheats ? "CHy" : "CHn") + "," + getModeTagAbbreviation(mode) + "," + getCameraModeTagAbbreviation(cameraMode) + "," + ((getServerWorkshopFileIDs().Count > 0) ? "WSy" : "WSn") + "," + (isGold ? "GLD" : "F2P");
+            if (configData.Browser.Is_Using_Anycast_Proxy)
+            {
+                text6 += ",ACP";
+            }
             text6 = text6 + "," + (isBattlEyeActive ? "BEy" : "BEn");
             if (!hasSetIsBattlEyeActive)
             {
@@ -3411,7 +3442,8 @@ public class Provider : MonoBehaviour
             if (catPouncingMechanism < 0.01f)
             {
                 catPouncingMechanism = -66f;
-                RequestDisconnect(UnityEngine.Random.Range(1, 256).ToString());
+                _connectionFailureInfo = ESteamConnectionFailureInfo.HWID_MODIFIED;
+                RequestDisconnect("HWID Modified");
                 return;
             }
         }
@@ -5081,7 +5113,7 @@ public class Provider : MonoBehaviour
         {
             _statusData = new StatusData();
         }
-        HolidayUtil.scheduleHolidays();
+        HolidayUtil.scheduleHolidays(statusData.Holidays);
         APP_VERSION = statusData.Game.FormatApplicationVersion();
         APP_VERSION_PACKED = Parser.getUInt32FromIP(APP_VERSION);
         if (isInitialized)
@@ -5246,6 +5278,35 @@ public class Provider : MonoBehaviour
         _client = user;
         _clientHash = Hash.SHA1(client);
         _clientName = SteamFriends.GetPersonaName();
+        if ((bool)clResetSteamStatsAndAchievements)
+        {
+            if (SteamUserStats.ResetAllStats(bAchievementsToo: true))
+            {
+                UnturnedLog.info("All Steam stats and achievements have been reset");
+            }
+            else
+            {
+                UnturnedLog.error("Request to reset all Steam stats and achievements failed");
+            }
+        }
+        else if ((bool)clUnlockSteamAchievements)
+        {
+            uint numAchievements = SteamUserStats.GetNumAchievements();
+            UnturnedLog.info($"Unlocking {numAchievements} Steam achievements:");
+            for (uint num = 0u; num < numAchievements; num++)
+            {
+                string achievementName = SteamUserStats.GetAchievementName(num);
+                if (SteamUserStats.SetAchievement(achievementName))
+                {
+                    UnturnedLog.info($"{num + 1} of {numAchievements}: \"{achievementName}\" Unlocked");
+                }
+                else
+                {
+                    UnturnedLog.error($"{num + 1} of {numAchievements}: \"{achievementName}\" Failed to unlock");
+                }
+            }
+            SteamUserStats.StoreStats();
+        }
         provider.statisticsService.userStatisticsService.requestStatistics();
         provider.statisticsService.globalStatisticsService.requestStatistics();
         provider.workshopService.refreshUGC();
@@ -5265,7 +5326,7 @@ public class Provider : MonoBehaviour
         LiveConfig.Refresh();
         if ((bool)allowWebRequests)
         {
-            ServerListCuration.Get().StartupLoadWebUrls();
+            ServerListCuration.Get().StartupLoadWebUrlsAndLiveConfig();
         }
         ProfanityFilter.InitSteam();
         if (CommandLine.tryGetLanguage(out var local2, out _path))
@@ -5307,12 +5368,12 @@ public class Provider : MonoBehaviour
             {
                 foreach (SteamContent item2 in provider.workshopService.ugc)
                 {
-                    bool num = ReadWrite.folderExists(item2.path + "/Editor", usePath: false);
+                    bool num2 = ReadWrite.folderExists(item2.path + "/Editor", usePath: false);
                     bool flag2 = ReadWrite.folderExists(item2.path + "/Menu", usePath: false);
                     bool flag3 = ReadWrite.folderExists(item2.path + "/Player", usePath: false);
                     bool flag4 = ReadWrite.folderExists(item2.path + "/Server", usePath: false);
                     bool flag5 = ReadWrite.folderExists(item2.path + "/Shared", usePath: false);
-                    if (num && flag2 && flag3 && flag4 && flag5)
+                    if (num2 && flag2 && flag3 && flag4 && flag5)
                     {
                         _path = null;
                         localizationRoot = item2.path;

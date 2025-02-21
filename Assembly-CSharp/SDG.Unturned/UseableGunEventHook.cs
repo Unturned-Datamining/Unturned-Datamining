@@ -33,4 +33,14 @@ public class UseableGunEventHook : MonoBehaviour
     /// Invoked when gun ends aiming.
     /// </summary>
     public UnityEvent OnAimingStopped;
+
+    /// <summary>
+    /// Invoked when Magazine game object is activated.
+    /// </summary>
+    public UnityEvent OnMagazineVisible;
+
+    /// <summary>
+    /// Invoked when Magazine game object is activated.
+    /// </summary>
+    public UnityEvent OnMagazineHidden;
 }

@@ -470,7 +470,7 @@ public class PlayerDashboardInventoryUI
                 flag = true;
             }
         }
-        flag &= !InputEx.GetKey(ControlsSettings.other);
+        flag &= !InputEx.GetKey(ControlsSettings.SkipActionCraftingMenu);
         PlayerDashboardCraftingUI.filteredBlueprintsOverride = array;
         if (!flag)
         {
@@ -512,7 +512,7 @@ public class PlayerDashboardInventoryUI
         }
         foreach (Blueprint blueprint2 in array)
         {
-            Player.player.crafting.sendCraft(blueprint2.sourceItem.id, blueprint2.id, force: false);
+            Player.player.crafting.sendCraft(blueprint2.sourceItem.id, blueprint2.id, InputEx.GetKey(ControlsSettings.other));
         }
         PlayerDashboardCraftingUI.filteredBlueprintsOverride = null;
         closeSelection();
@@ -797,16 +797,28 @@ public class PlayerDashboardInventoryUI
                 sleekButton.PositionOffset_Y = num5;
                 sleekButton.SizeScale_X = 1f;
                 sleekButton.SizeOffset_Y = 30f;
+                string text;
                 if (!string.IsNullOrEmpty(action.key))
                 {
                     sleekButton.Text = localization.format(action.key + "_Button");
-                    sleekButton.TooltipText = localization.format(action.key + "_Button_Tooltip");
+                    text = localization.format(action.key + "_Button_Tooltip");
                 }
                 else
                 {
                     sleekButton.Text = action.text;
-                    sleekButton.TooltipText = action.tooltip;
+                    text = action.tooltip;
                 }
+                if (action.type == EActionType.BLUEPRINT && !string.IsNullOrEmpty(text))
+                {
+                    text += "\n\n";
+                    if (action.IsAnyBlueprintLink)
+                    {
+                        text += localization.format("ActionBlueprint_SkipCraftingTooltip", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.SkipActionCraftingMenu));
+                        text += "\n";
+                    }
+                    text += localization.format("ActionBlueprint_CraftAllTooltip", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.other));
+                }
+                sleekButton.TooltipText = text;
                 sleekButton.OnClicked += onClickedAction;
                 selectionExtraActionsBox.AddChild(sleekButton);
                 num5 += 40;

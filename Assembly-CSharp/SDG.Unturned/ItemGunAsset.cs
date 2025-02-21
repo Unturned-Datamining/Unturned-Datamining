@@ -41,7 +41,9 @@ public class ItemGunAsset : ItemWeaponAsset
 
     private byte[] barrelState;
 
-    private ushort magazineID;
+    private ushort defaultMagazineLegacyId;
+
+    private Guid defaultMagazineGuid;
 
     private MagazineReplacement[] magazineReplacements;
 
@@ -293,6 +295,13 @@ public class ItemGunAsset : ItemWeaponAsset
     public bool canAimDuringSprint { get; protected set; }
 
     /// <summary>
+    /// If true, the gun cannot shoot unless the player is aiming.
+    /// Note: String action overrides this.
+    /// Defaults to true for miniguns.
+    /// </summary>
+    public bool MustAimToShoot { get; protected set; }
+
+    /// <summary>
     /// Seconds from pressing "aim" to fully aiming down sights.
     /// </summary>
     public float aimInDuration { get; protected set; }
@@ -493,7 +502,7 @@ public class ItemGunAsset : ItemWeaponAsset
 
     public override byte[] getState(EItemOrigin origin)
     {
-        byte[] magazineState = getMagazineState(getMagazineID());
+        byte[] magazineState = getMagazineState(GetDefaultMagazineLegacyId());
         byte[] obj = new byte[18]
         {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -541,8 +550,21 @@ public class ItemGunAsset : ItemWeaponAsset
         return obj;
     }
 
-    public ushort getMagazineID()
+    /// <summary>
+    /// Selects a default magazine, following magazine replacements and spawn table resolution.
+    /// </summary>
+    public ushort GetDefaultMagazineLegacyId()
     {
+        return SelectDefaultMagazine()?.id ?? 0;
+    }
+
+    /// <summary>
+    /// Selects a default magazine, following magazine replacements and spawn table resolution.
+    /// </summary>
+    public ItemMagazineAsset SelectDefaultMagazine()
+    {
+        bool flag = false;
+        Asset asset = null;
         if (Level.info != null && magazineReplacements != null)
         {
             MagazineReplacement[] array = magazineReplacements;
@@ -551,21 +573,31 @@ public class ItemGunAsset : ItemWeaponAsset
                 MagazineReplacement magazineReplacement = array[i];
                 if (magazineReplacement.map == Level.info.name)
                 {
-                    return magazineReplacement.id;
+                    asset = Assets.FindByGuidOrLegacyId(magazineReplacement.guid, EAssetType.ITEM, magazineReplacement.legacyId);
+                    flag = true;
+                    break;
                 }
             }
         }
-        return magazineID;
+        if (!flag)
+        {
+            asset = Assets.FindByGuidOrLegacyId(defaultMagazineGuid, EAssetType.ITEM, defaultMagazineLegacyId);
+        }
+        if (asset is SpawnAsset spawnAsset)
+        {
+            asset = SpawnTableTool.Resolve(spawnAsset, EAssetType.ITEM, OnGetDefaultMagazineSpawnTableErrorContext);
+        }
+        return asset as ItemMagazineAsset;
+    }
+
+    private string OnGetDefaultMagazineSpawnTableErrorContext()
+    {
+        return $"{GUID:N} default magazine";
     }
 
     private byte[] getMagazineState(ushort id)
     {
         return BitConverter.GetBytes(id);
-    }
-
-    internal ItemMagazineAsset GetDefaultMagazine()
-    {
-        return Assets.find(EAssetType.ITEM, getMagazineID()) as ItemMagazineAsset;
     }
 
     internal float CalculateRoundsPerSecond()
@@ -591,13 +623,13 @@ public class ItemGunAsset : ItemWeaponAsset
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
     {
         base.PopulateAsset(bundle, data, localization);
-        _shoot = bundle.load<AudioClip>("Shoot");
-        _reload = bundle.load<AudioClip>("Reload");
-        _hammer = bundle.load<AudioClip>("Hammer");
-        _aim = bundle.load<AudioClip>("Aim");
-        _minigun = bundle.load<AudioClip>("Minigun");
-        _chamberJammedSound = bundle.load<AudioClip>("ChamberJammed");
-        fireDelaySound = bundle.load<AudioClip>("FireDelay");
+        _shoot = LoadRedirectableAsset<AudioClip>(bundle, "Shoot", data, "ShootAudioClip");
+        _reload = LoadRedirectableAsset<AudioClip>(bundle, "Reload", data, "ReloadAudioClip");
+        _hammer = LoadRedirectableAsset<AudioClip>(bundle, "Hammer", data, "HammerAudioClip");
+        _aim = LoadRedirectableAsset<AudioClip>(bundle, "Aim", data, "AimAudioClip");
+        _minigun = LoadRedirectableAsset<AudioClip>(bundle, "Minigun", data, "MinigunAudioClip");
+        _chamberJammedSound = LoadRedirectableAsset<AudioClip>(bundle, "ChamberJammed", data, "ChamberJammedAudioClip");
+        fireDelaySound = LoadRedirectableAsset<AudioClip>(bundle, "FireDelay", data, "FireDelayAudioClip");
         _projectile = bundle.load<GameObject>("Projectile");
         ammoMin = data.ParseUInt8("Ammo_Min", 0);
         ammoMax = data.ParseUInt8("Ammo_Max", 0);
@@ -605,15 +637,17 @@ public class ItemGunAsset : ItemWeaponAsset
         tacticalID = data.ParseUInt16("Tactical", 0);
         gripID = data.ParseUInt16("Grip", 0);
         barrelID = data.ParseUInt16("Barrel", 0);
-        magazineID = data.ParseUInt16("Magazine", 0);
+        defaultMagazineLegacyId = data.ParseGuidOrLegacyId("Magazine", out defaultMagazineGuid);
         int num = data.ParseInt32("Magazine_Replacements");
         magazineReplacements = new MagazineReplacement[num];
         for (int i = 0; i < num; i++)
         {
-            ushort num2 = data.ParseUInt16("Magazine_Replacement_" + i + "_ID", 0);
+            Guid guid;
+            ushort legacyId = data.ParseGuidOrLegacyId("Magazine_Replacement_" + i + "_ID", out guid);
             string @string = data.GetString("Magazine_Replacement_" + i + "_Map");
             MagazineReplacement magazineReplacement = default(MagazineReplacement);
-            magazineReplacement.id = num2;
+            magazineReplacement.legacyId = legacyId;
+            magazineReplacement.guid = guid;
             magazineReplacement.map = @string;
             magazineReplacements[i] = magazineReplacement;
         }
@@ -623,19 +657,19 @@ public class ItemGunAsset : ItemWeaponAsset
         hasTactical = data.ContainsKey("Hook_Tactical");
         hasGrip = data.ContainsKey("Hook_Grip");
         hasBarrel = data.ContainsKey("Hook_Barrel");
-        int num3 = data.ParseInt32("Magazine_Calibers");
-        if (num3 > 0)
+        int num2 = data.ParseInt32("Magazine_Calibers");
+        if (num2 > 0)
         {
-            magazineCalibers = new ushort[num3];
-            for (int j = 0; j < num3; j++)
+            magazineCalibers = new ushort[num2];
+            for (int j = 0; j < num2; j++)
             {
                 magazineCalibers[j] = data.ParseUInt16("Magazine_Caliber_" + j, 0);
             }
-            int num4 = data.ParseInt32("Attachment_Calibers");
-            if (num4 > 0)
+            int num3 = data.ParseInt32("Attachment_Calibers");
+            if (num3 > 0)
             {
-                attachmentCalibers = new ushort[num4];
-                for (int k = 0; k < num4; k++)
+                attachmentCalibers = new ushort[num3];
+                for (int k = 0; k < num3; k++)
                 {
                     attachmentCalibers[k] = data.ParseUInt16("Attachment_Caliber_" + k, 0);
                 }
@@ -730,10 +764,10 @@ public class ItemGunAsset : ItemWeaponAsset
         bool flag2 = data.ContainsKey("Ballistic_Travel") && ballisticTravel > 0.1f;
         if (flag && flag2)
         {
-            float num5 = Mathf.Abs((float)(int)ballisticSteps * ballisticTravel - range);
-            if (num5 > 0.1f)
+            float num4 = Mathf.Abs((float)(int)ballisticSteps * ballisticTravel - range);
+            if (num4 > 0.1f)
             {
-                Assets.ReportError(this, "range and manual ballistic range are mismatched by " + num5 + "m. Recommended to only have one or the other specified!");
+                Assets.ReportError(this, "range and manual ballistic range are mismatched by " + num4 + "m. Recommended to only have one or the other specified!");
             }
         }
         else if (flag)
@@ -758,17 +792,17 @@ public class ItemGunAsset : ItemWeaponAsset
             }
             else
             {
-                float num6 = 0f;
+                float num5 = 0f;
                 Vector2 right = Vector2.right;
                 for (int l = 0; l < ballisticSteps; l++)
                 {
-                    num6 += right.y * ballisticTravel;
+                    num5 += right.y * ballisticTravel;
                     right.y -= value;
                     right.Normalize();
                 }
-                float num7 = (float)(int)ballisticSteps * 0.02f;
-                float num8 = 2f * num6 / (num7 * num7);
-                bulletGravityMultiplier = num8 / -9.81f;
+                float num6 = (float)(int)ballisticSteps * 0.02f;
+                float num7 = 2f * num5 / (num6 * num6);
+                bulletGravityMultiplier = num7 / -9.81f;
                 if ((bool)shouldLogBallisticDropConversion)
                 {
                     UnturnedLog.info($"Converted \"{FriendlyName}\" Ballistic_Drop {value} to Bullet_Gravity_Multiplier {bulletGravityMultiplier}");
@@ -832,6 +866,7 @@ public class ItemGunAsset : ItemWeaponAsset
         allowMagazineChange = data.ParseBool("Allow_Magazine_Change", defaultValue: true);
         canAimDuringSprint = data.ParseBool("Can_Aim_During_Sprint");
         aimingMovementSpeedMultiplier = data.ParseFloat("Aiming_Movement_Speed_Multiplier", canAimDuringSprint ? 1f : 0.75f);
+        MustAimToShoot = data.ParseBool("Must_Aim_To_Shoot", action == EAction.Minigun);
         canEverJam = data.ContainsKey("Can_Ever_Jam");
         if (canEverJam)
         {
@@ -850,102 +885,105 @@ public class ItemGunAsset : ItemWeaponAsset
     {
         base.BuildCargoData(builder);
         CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Gun");
-        orAddDeclaration.AppendGuid("GUID", GUID);
-        orAddDeclaration.AppendFloat("Aim_In_Duration", aimInDuration);
-        orAddDeclaration.AppendFloat("Aiming_Movement_Speed_Multiplier", aimingMovementSpeedMultiplier);
-        orAddDeclaration.AppendFloat("Alert_Radius", alertRadius);
-        orAddDeclaration.AppendBool("Can_Aim_During_Sprint", canAimDuringSprint);
-        orAddDeclaration.AppendFloat("Range_Rangefinder", rangeRangefinder);
-        orAddDeclaration.AppendInt("Attachment_Calibers", attachmentCalibers.Length);
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Aim_In_Duration", aimInDuration);
+        orAddDeclaration.Append("Aiming_Movement_Speed_Multiplier", aimingMovementSpeedMultiplier);
+        orAddDeclaration.Append("Alert_Radius", alertRadius);
+        orAddDeclaration.Append("Can_Aim_During_Sprint", canAimDuringSprint);
+        orAddDeclaration.Append("Must_Aim_To_Shoot", MustAimToShoot);
+        orAddDeclaration.Append("Range_Rangefinder", rangeRangefinder);
+        orAddDeclaration.Append("Attachment_Calibers", attachmentCalibers.Length);
         for (byte b = 0; b < attachmentCalibers.Length; b++)
         {
             CargoDeclaration cargoDeclaration = builder.AddDeclaration("Gun_AttachmentCaliber");
-            cargoDeclaration.AppendGuid("GUID", GUID);
-            cargoDeclaration.AppendUShort("Caliber", attachmentCalibers[b]);
+            cargoDeclaration.Append("GUID", GUID);
+            cargoDeclaration.Append("Caliber", attachmentCalibers[b]);
         }
-        orAddDeclaration.AppendInt("Magazine_Calibers", magazineCalibers.Length);
+        orAddDeclaration.Append("Magazine_Calibers", magazineCalibers.Length);
         for (byte b2 = 0; b2 < magazineCalibers.Length; b2++)
         {
             CargoDeclaration cargoDeclaration2 = builder.AddDeclaration("Gun_MagazineCaliber");
-            cargoDeclaration2.AppendGuid("GUID", GUID);
-            cargoDeclaration2.AppendUShort("Caliber", magazineCalibers[b2]);
+            cargoDeclaration2.Append("GUID", GUID);
+            cargoDeclaration2.Append("Caliber", magazineCalibers[b2]);
         }
-        orAddDeclaration.AppendToString("Requires_NonZero_Attachment_Caliber", requiresNonZeroAttachmentCaliber);
-        orAddDeclaration.AppendFloat("Damage_Falloff_Max_Range", damageFalloffMaxRange);
-        orAddDeclaration.AppendFloat("Damage_Falloff_Multiplier", damageFalloffMultiplier);
-        orAddDeclaration.AppendFloat("Damage_Falloff_Range", damageFalloffRange);
-        orAddDeclaration.AppendBool("Instakill_Headshots", instakillHeadshots);
-        orAddDeclaration.AppendToString("Action", action);
-        orAddDeclaration.AppendBool("Auto", hasAuto);
-        orAddDeclaration.AppendBool("hasBurst", hasBurst);
-        orAddDeclaration.AppendInt("Bursts", bursts);
-        orAddDeclaration.AppendInt("fireDelay", fireDelay);
-        orAddDeclaration.AppendByte("Firerate", firerate);
-        orAddDeclaration.AppendBool("Safety", hasSafety);
-        orAddDeclaration.AppendBool("Semi", hasSemi);
-        orAddDeclaration.AppendUShort("Barrel", barrelID);
-        orAddDeclaration.AppendUShort("Grip", gripID);
-        orAddDeclaration.AppendUShort("Sight", sightID);
-        orAddDeclaration.AppendUShort("Tactical", tacticalID);
-        orAddDeclaration.AppendBool("Hook_Barrel", hasBarrel);
-        orAddDeclaration.AppendBool("Hook_Grip", hasGrip);
-        orAddDeclaration.AppendBool("Hook_Sight", hasSight);
-        orAddDeclaration.AppendBool("Hook_Tactical", hasTactical);
-        orAddDeclaration.AppendBool("Can_Ever_Jam", canEverJam);
-        orAddDeclaration.AppendFloat("Jam_Quality_Threshold", jamQualityThreshold);
-        orAddDeclaration.AppendFloat("Jam_Max_Chance", jamMaxChance);
-        orAddDeclaration.AppendBool("Allow_Magazine_Change", allowMagazineChange);
-        orAddDeclaration.AppendByte("Ammo_Max", ammoMax);
-        orAddDeclaration.AppendByte("Ammo_Min", ammoMin);
-        orAddDeclaration.AppendByte("Ammo_Per_Shot", ammoPerShot);
-        orAddDeclaration.AppendFloat("Hammer_Time", hammerTime);
-        orAddDeclaration.AppendBool("Infinite_Ammo", infiniteAmmo);
-        orAddDeclaration.AppendUShort("Magazine", magazineID);
-        orAddDeclaration.AppendInt("Magazine_Replacements", magazineReplacements.Length);
+        orAddDeclaration.Append("Requires_NonZero_Attachment_Caliber", requiresNonZeroAttachmentCaliber);
+        orAddDeclaration.Append("Damage_Falloff_Max_Range", damageFalloffMaxRange);
+        orAddDeclaration.Append("Damage_Falloff_Multiplier", damageFalloffMultiplier);
+        orAddDeclaration.Append("Damage_Falloff_Range", damageFalloffRange);
+        orAddDeclaration.Append("Instakill_Headshots", instakillHeadshots);
+        orAddDeclaration.Append("Action", action);
+        orAddDeclaration.Append("Auto", hasAuto);
+        orAddDeclaration.Append("hasBurst", hasBurst);
+        orAddDeclaration.Append("Bursts", bursts);
+        orAddDeclaration.Append("fireDelay", fireDelay);
+        orAddDeclaration.Append("Firerate", firerate);
+        orAddDeclaration.Append("Safety", hasSafety);
+        orAddDeclaration.Append("Semi", hasSemi);
+        orAddDeclaration.Append("Barrel", barrelID);
+        orAddDeclaration.Append("Grip", gripID);
+        orAddDeclaration.Append("Sight", sightID);
+        orAddDeclaration.Append("Tactical", tacticalID);
+        orAddDeclaration.Append("Hook_Barrel", hasBarrel);
+        orAddDeclaration.Append("Hook_Grip", hasGrip);
+        orAddDeclaration.Append("Hook_Sight", hasSight);
+        orAddDeclaration.Append("Hook_Tactical", hasTactical);
+        orAddDeclaration.Append("Can_Ever_Jam", canEverJam);
+        orAddDeclaration.Append("Jam_Quality_Threshold", jamQualityThreshold);
+        orAddDeclaration.Append("Jam_Max_Chance", jamMaxChance);
+        orAddDeclaration.Append("Allow_Magazine_Change", allowMagazineChange);
+        orAddDeclaration.Append("Ammo_Max", ammoMax);
+        orAddDeclaration.Append("Ammo_Min", ammoMin);
+        orAddDeclaration.Append("Ammo_Per_Shot", ammoPerShot);
+        orAddDeclaration.Append("Hammer_Time", hammerTime);
+        orAddDeclaration.Append("Infinite_Ammo", infiniteAmmo);
+        orAddDeclaration.Append("Magazine", defaultMagazineLegacyId);
+        orAddDeclaration.Append("MagazineGUID", defaultMagazineGuid);
+        orAddDeclaration.Append("Magazine_Replacements", magazineReplacements.Length);
         for (int i = 0; i < magazineReplacements.Length; i++)
         {
             CargoDeclaration cargoDeclaration3 = builder.AddDeclaration("Gun_MagazineReplacement");
-            cargoDeclaration3.AppendGuid("GUID", GUID);
-            cargoDeclaration3.AppendInt("magazineReplacementIndex", i);
-            cargoDeclaration3.AppendUShort("ID", magazineReplacements[i].id);
-            cargoDeclaration3.AppendString("Map", magazineReplacements[i].map);
+            cargoDeclaration3.Append("GUID", GUID);
+            cargoDeclaration3.Append("magazineReplacementIndex", i);
+            cargoDeclaration3.Append("ID", magazineReplacements[i].legacyId);
+            cargoDeclaration3.Append("MagazineGUID", magazineReplacements[i].guid);
+            cargoDeclaration3.Append("Map", magazineReplacements[i].map);
         }
-        orAddDeclaration.AppendFloat("Reload_Time", reloadTime);
-        orAddDeclaration.AppendFloat("Replace", replace);
-        orAddDeclaration.AppendBool("Should_Delete_Empty_Magazines", shouldDeleteEmptyMagazines);
-        orAddDeclaration.AppendFloat("Unplace", unplace);
-        orAddDeclaration.AppendByte("Ballistic_Steps", ballisticSteps);
-        orAddDeclaration.AppendFloat("Ballistic_Travel", ballisticTravel);
-        orAddDeclaration.AppendFloat("Bullet_Gravity_Multiplier", bulletGravityMultiplier);
-        orAddDeclaration.AppendFloat("Ballistic_Force", ballisticForce);
-        orAddDeclaration.AppendFloat("Projectile_Explosion_Launch_Speed", projectileExplosionLaunchSpeed);
-        orAddDeclaration.AppendFloat("Projectile_Lifespan", projectileLifespan);
-        orAddDeclaration.AppendBool("Projectile_Penetrate_Buildables", projectilePenetrateBuildables);
-        orAddDeclaration.AppendFloat("Aiming_Recoil_Multiplier", aimingRecoilMultiplier);
-        orAddDeclaration.AppendFloat("Recoil_Crouch", recoilCrouch);
-        orAddDeclaration.AppendFloat("Recoil_Max_X", recoilMax_x);
-        orAddDeclaration.AppendFloat("Recoil_Max_Y", recoilMax_y);
-        orAddDeclaration.AppendFloat("Recoil_Min_X", recoilMin_x);
-        orAddDeclaration.AppendFloat("Recoil_Min_Y", recoilMin_y);
-        orAddDeclaration.AppendFloat("Recoil_Midair", recoilMidair);
-        orAddDeclaration.AppendFloat("Recoil_Prone", recoilProne);
-        orAddDeclaration.AppendFloat("Recoil_Sprint", recoilSprint);
-        orAddDeclaration.AppendFloat("Recoil_Swimming", recoilSwimming);
-        orAddDeclaration.AppendFloat("Recover_X", recover_x);
-        orAddDeclaration.AppendFloat("Recover_Y", recover_y);
-        orAddDeclaration.AppendFloat("Shake_Max_X", shakeMax_x);
-        orAddDeclaration.AppendFloat("Shake_Min_X", shakeMin_x);
-        orAddDeclaration.AppendFloat("Shake_Max_Y", shakeMax_y);
-        orAddDeclaration.AppendFloat("Shake_Min_Y", shakeMin_y);
-        orAddDeclaration.AppendFloat("Shake_Max_Z", shakeMax_z);
-        orAddDeclaration.AppendFloat("Shake_Min_Z", shakeMin_z);
-        orAddDeclaration.AppendFloat("spreadAim", baseSpreadAngleRadians * spreadAim);
-        orAddDeclaration.AppendFloat("baseSpreadAngleRadians", baseSpreadAngleRadians);
-        orAddDeclaration.AppendFloat("Spread_Crouch", spreadCrouch);
-        orAddDeclaration.AppendFloat("Spread_Midair", spreadMidair);
-        orAddDeclaration.AppendFloat("Spread_Prone", spreadProne);
-        orAddDeclaration.AppendFloat("Spread_Sprint", spreadSprint);
-        orAddDeclaration.AppendFloat("Spread_Swimming", spreadSwimming);
+        orAddDeclaration.Append("Reload_Time", reloadTime);
+        orAddDeclaration.Append("Replace", replace);
+        orAddDeclaration.Append("Should_Delete_Empty_Magazines", shouldDeleteEmptyMagazines);
+        orAddDeclaration.Append("Unplace", unplace);
+        orAddDeclaration.Append("Ballistic_Steps", ballisticSteps);
+        orAddDeclaration.Append("Ballistic_Travel", ballisticTravel);
+        orAddDeclaration.Append("Bullet_Gravity_Multiplier", bulletGravityMultiplier);
+        orAddDeclaration.Append("Ballistic_Force", ballisticForce);
+        orAddDeclaration.Append("Projectile_Explosion_Launch_Speed", projectileExplosionLaunchSpeed);
+        orAddDeclaration.Append("Projectile_Lifespan", projectileLifespan);
+        orAddDeclaration.Append("Projectile_Penetrate_Buildables", projectilePenetrateBuildables);
+        orAddDeclaration.Append("Aiming_Recoil_Multiplier", aimingRecoilMultiplier);
+        orAddDeclaration.Append("Recoil_Crouch", recoilCrouch);
+        orAddDeclaration.Append("Recoil_Max_X", recoilMax_x);
+        orAddDeclaration.Append("Recoil_Max_Y", recoilMax_y);
+        orAddDeclaration.Append("Recoil_Min_X", recoilMin_x);
+        orAddDeclaration.Append("Recoil_Min_Y", recoilMin_y);
+        orAddDeclaration.Append("Recoil_Midair", recoilMidair);
+        orAddDeclaration.Append("Recoil_Prone", recoilProne);
+        orAddDeclaration.Append("Recoil_Sprint", recoilSprint);
+        orAddDeclaration.Append("Recoil_Swimming", recoilSwimming);
+        orAddDeclaration.Append("Recover_X", recover_x);
+        orAddDeclaration.Append("Recover_Y", recover_y);
+        orAddDeclaration.Append("Shake_Max_X", shakeMax_x);
+        orAddDeclaration.Append("Shake_Min_X", shakeMin_x);
+        orAddDeclaration.Append("Shake_Max_Y", shakeMax_y);
+        orAddDeclaration.Append("Shake_Min_Y", shakeMin_y);
+        orAddDeclaration.Append("Shake_Max_Z", shakeMax_z);
+        orAddDeclaration.Append("Shake_Min_Z", shakeMin_z);
+        orAddDeclaration.Append("spreadAim", baseSpreadAngleRadians * spreadAim);
+        orAddDeclaration.Append("baseSpreadAngleRadians", baseSpreadAngleRadians);
+        orAddDeclaration.Append("Spread_Crouch", spreadCrouch);
+        orAddDeclaration.Append("Spread_Midair", spreadMidair);
+        orAddDeclaration.Append("Spread_Prone", spreadProne);
+        orAddDeclaration.Append("Spread_Sprint", spreadSprint);
+        orAddDeclaration.Append("Spread_Swimming", spreadSwimming);
     }
 
     protected override AudioReference GetDefaultInventoryAudio()
@@ -959,5 +997,11 @@ public class ItemGunAsset : ItemWeaponAsset
             return new AudioReference("core.masterbundle", "Sounds/Inventory/SmallGunAttachment.asset");
         }
         return new AudioReference("core.masterbundle", "Sounds/Inventory/LargeGunAttachment.asset");
+    }
+
+    [Obsolete("Replaced by GetDefaultMagazineLegacyId")]
+    public ushort getMagazineID()
+    {
+        return GetDefaultMagazineLegacyId();
     }
 }

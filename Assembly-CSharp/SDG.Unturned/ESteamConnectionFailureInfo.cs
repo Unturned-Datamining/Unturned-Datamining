@@ -146,5 +146,6 @@ public enum ESteamConnectionFailureInfo
     /// <summary>
     /// Received too many connection requests from player in a short window.
     /// </summary>
-    CONNECT_RATE_LIMITING
+    CONNECT_RATE_LIMITING,
+    HWID_MODIFIED
 }

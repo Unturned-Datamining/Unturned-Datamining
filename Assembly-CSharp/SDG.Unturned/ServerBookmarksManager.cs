@@ -41,13 +41,10 @@ internal class ServerBookmarksManager
         {
             return null;
         }
-        ServerBookmarksManager serverBookmarksManager = Get();
-        foreach (ServerBookmarkDetails bookmarkDetail in serverBookmarksManager.bookmarkDetails)
+        foreach (ServerBookmarkDetails bookmarkDetail in Get().bookmarkDetails)
         {
             if (bookmarkDetail.steamId == advertisement.steamID)
             {
-                bookmarkDetail.UpdateFromAdvertisement(advertisement);
-                serverBookmarksManager.isDirty = true;
                 return bookmarkDetail;
             }
         }
@@ -82,11 +79,6 @@ internal class ServerBookmarksManager
             UnturnedLog.error("Bookmark option should not have been available because server has no ID");
             return null;
         }
-        if (string.IsNullOrEmpty(bookmarkHost))
-        {
-            UnturnedLog.error("Bookmark option should not have been available because server has no bookmark host");
-            return null;
-        }
         ServerBookmarksManager serverBookmarksManager = Get();
         ServerBookmarkDetails serverBookmarkDetails = new ServerBookmarkDetails();
         serverBookmarkDetails.steamId = advertisement.steamID;
@@ -103,11 +95,6 @@ internal class ServerBookmarksManager
         if (!steamId.BPersistentGameServerAccount())
         {
             UnturnedLog.error("Bookmark option should not have been available because server has no ID");
-            return null;
-        }
-        if (string.IsNullOrEmpty(bookmarkHost))
-        {
-            UnturnedLog.error("Bookmark option should not have been available because server has no bookmark host");
             return null;
         }
         ServerBookmarksManager serverBookmarksManager = Get();

@@ -102,6 +102,30 @@ public class PlayerTool
         }
     }
 
+    public static Player GetNearestPlayerInRadius(Vector3 center, float sqrRadius)
+    {
+        Player result = null;
+        float num = sqrRadius + 1f;
+        foreach (SteamPlayer client in Provider.clients)
+        {
+            if (client == null)
+            {
+                continue;
+            }
+            Player player = client.player;
+            if (!(player == null))
+            {
+                float sqrMagnitude = (player.transform.position - center).sqrMagnitude;
+                if (sqrMagnitude < num)
+                {
+                    result = player;
+                    num = sqrMagnitude;
+                }
+            }
+        }
+        return result;
+    }
+
     public static SteamPlayer[] getSteamPlayers()
     {
         return Provider.clients.ToArray();

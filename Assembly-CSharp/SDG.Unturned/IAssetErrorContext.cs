@@ -11,4 +11,6 @@ public interface IAssetErrorContext
     /// Format text to prefix any errors reported in this context. (e.g., this asset's name and ID)
     /// </summary>
     string AssetErrorPrefix { get; }
+
+    void ReportAssetError(string message);
 }

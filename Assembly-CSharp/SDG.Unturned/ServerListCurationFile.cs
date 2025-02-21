@@ -49,7 +49,7 @@ internal class ServerListCurationFile
                     string value = ((localization == null || !localization.has(key)) ? datDictionary.GetString("Text") : localization.format(key));
                     if (string.IsNullOrWhiteSpace(value))
                     {
-                        Assets.ReportError(errorContext, "label \"" + @string + "\" text is empty");
+                        errorContext.ReportAssetError("label \"" + @string + "\" text is empty");
                     }
                     else
                     {
@@ -67,12 +67,12 @@ internal class ServerListCurationFile
                 {
                     if (!datDictionary2.TryParseEnum<EServerListCurationRuleType>("Type", out var value2))
                     {
-                        Assets.ReportError(errorContext, $"unable to parse rule index {i} Type");
+                        errorContext.ReportAssetError($"unable to parse rule index {i} Type");
                         continue;
                     }
                     if (!datDictionary2.TryParseEnum<EServerListCurationAction>("Action", out var value3))
                     {
-                        Assets.ReportError(errorContext, $"unable to parse rule index {i} Action");
+                        errorContext.ReportAssetError($"unable to parse rule index {i} Action");
                         continue;
                     }
                     bool flag = false;
@@ -98,12 +98,12 @@ internal class ServerListCurationFile
                                     }
                                     catch
                                     {
-                                        Assets.ReportError(errorContext, $"unable to parse rule at index {i} Regexes list item at index {k} (\"{datValue2.value}\")");
+                                        errorContext.ReportAssetError($"unable to parse rule at index {i} Regexes list item at index {k} (\"{datValue2.value}\")");
                                     }
                                 }
                                 else
                                 {
-                                    Assets.ReportError(errorContext, $"unable to parse rule at index {i} Regexes list item at index {k}");
+                                    errorContext.ReportAssetError($"unable to parse rule at index {i} Regexes list item at index {k}");
                                 }
                             }
                             if (list2.Count > 0)
@@ -113,7 +113,7 @@ internal class ServerListCurationFile
                             }
                             else
                             {
-                                Assets.ReportError(errorContext, $"rule at index {i} Regexes list is empty");
+                                errorContext.ReportAssetError($"rule at index {i} Regexes list is empty");
                             }
                         }
                         else if (datDictionary2.TryGetString("Regex", out value6))
@@ -128,12 +128,12 @@ internal class ServerListCurationFile
                             }
                             catch
                             {
-                                Assets.ReportError(errorContext, $"unable to parse rule at index {i} Regex (\"{value6}\")");
+                                errorContext.ReportAssetError($"unable to parse rule at index {i} Regex (\"{value6}\")");
                             }
                         }
                         else
                         {
-                            Assets.ReportError(errorContext, $"rule at index {i} missing Regex or Regexes property");
+                            errorContext.ReportAssetError($"rule at index {i} missing Regex or Regexes property");
                         }
                         break;
                     }
@@ -153,12 +153,12 @@ internal class ServerListCurationFile
                                     }
                                     else
                                     {
-                                        Assets.ReportError(errorContext, $"unable to parse rule at index {i} Filters list item at index {l} (\"{datValue3.value}\")");
+                                        errorContext.ReportAssetError($"unable to parse rule at index {i} Filters list item at index {l} (\"{datValue3.value}\")");
                                     }
                                 }
                                 else
                                 {
-                                    Assets.ReportError(errorContext, $"unable to parse rule at index {i} Filters list item at index {l}");
+                                    errorContext.ReportAssetError($"unable to parse rule at index {i} Filters list item at index {l}");
                                 }
                             }
                             if (list3.Count > 0)
@@ -168,7 +168,7 @@ internal class ServerListCurationFile
                             }
                             else
                             {
-                                Assets.ReportError(errorContext, $"rule at index {i} Filters list is empty");
+                                errorContext.ReportAssetError($"rule at index {i} Filters list is empty");
                             }
                         }
                         else if (datDictionary2.TryGetString("Filter", out value7))
@@ -180,12 +180,12 @@ internal class ServerListCurationFile
                             }
                             else
                             {
-                                Assets.ReportError(errorContext, $"unable to parse rule at index {i} IPv4 Filter (\"{value7}\")");
+                                errorContext.ReportAssetError($"unable to parse rule at index {i} IPv4 Filter (\"{value7}\")");
                             }
                         }
                         else
                         {
-                            Assets.ReportError(errorContext, $"rule at index {i} missing Filter or Filters property");
+                            errorContext.ReportAssetError($"rule at index {i} missing Filter or Filters property");
                         }
                         break;
                     }
@@ -208,17 +208,17 @@ internal class ServerListCurationFile
                                         }
                                         else
                                         {
-                                            Assets.ReportError(errorContext, $"rule at index {i} Values list item at index {j} is not a persistent server ID ({value4})");
+                                            errorContext.ReportAssetError($"rule at index {i} Values list item at index {j} is not a persistent server ID ({value4})");
                                         }
                                     }
                                     else
                                     {
-                                        Assets.ReportError(errorContext, $"unable to parse rule at index {i} Values list item at index {j} (\"{datValue.value}\")");
+                                        errorContext.ReportAssetError($"unable to parse rule at index {i} Values list item at index {j} (\"{datValue.value}\")");
                                     }
                                 }
                                 else
                                 {
-                                    Assets.ReportError(errorContext, $"unable to parse rule at index {i} Values list item at index {j}");
+                                    errorContext.ReportAssetError($"unable to parse rule at index {i} Values list item at index {j}");
                                 }
                             }
                             if (list.Count > 0)
@@ -228,7 +228,7 @@ internal class ServerListCurationFile
                             }
                             else
                             {
-                                Assets.ReportError(errorContext, $"rule at index {i} Values list is empty");
+                                errorContext.ReportAssetError($"rule at index {i} Values list is empty");
                             }
                         }
                         else if (datDictionary2.TryParseUInt64("Value", out value5))
@@ -243,12 +243,12 @@ internal class ServerListCurationFile
                             }
                             else
                             {
-                                Assets.ReportError(errorContext, $"rule at index {i} Value is not a persistent server ID ({value5})");
+                                errorContext.ReportAssetError($"rule at index {i} Value is not a persistent server ID ({value5})");
                             }
                         }
                         else
                         {
-                            Assets.ReportError(errorContext, $"unable to parse rule at index {i} Value");
+                            errorContext.ReportAssetError($"unable to parse rule at index {i} Value");
                         }
                         break;
                     }
@@ -261,18 +261,18 @@ internal class ServerListCurationFile
                     bool flag2 = datDictionary2.TryGetString("Label", out value8);
                     if (value3 == EServerListCurationAction.Label && !flag2)
                     {
-                        Assets.ReportError(errorContext, $"rule at index {i} action is Label but no Label is specified");
+                        errorContext.ReportAssetError($"rule at index {i} action is Label but no Label is specified");
                         continue;
                     }
                     if (flag2 && string.IsNullOrEmpty(value8))
                     {
-                        Assets.ReportError(errorContext, $"rule at index {i} Label is empty");
+                        errorContext.ReportAssetError($"rule at index {i} Label is empty");
                         continue;
                     }
                     string value9 = null;
                     if (flag2 && (labels == null || !labels.TryGetValue(value8, out value9)))
                     {
-                        Assets.ReportError(errorContext, $"rule at index {i} Label \"{value8}\" is not configured in Labels list");
+                        errorContext.ReportAssetError($"rule at index {i} Label \"{value8}\" is not configured in Labels list");
                         continue;
                     }
                     if (!datDictionary2.TryGetString("Description", out var value10))
@@ -296,13 +296,13 @@ internal class ServerListCurationFile
                 }
                 else
                 {
-                    Assets.ReportError(errorContext, $"unable to parse rule at index {i}");
+                    errorContext.ReportAssetError($"unable to parse rule at index {i}");
                 }
             }
         }
         else
         {
-            Assets.ReportError(errorContext, "missing Rules list");
+            errorContext.ReportAssetError("missing Rules list");
         }
     }
 }

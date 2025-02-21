@@ -15,6 +15,9 @@ internal class ServerBookmarkDetails
     /// Servers not using Fake IP can specify just a DNS entry and a static query port.
     /// Servers using Fake IP are assigned random ports at startup, but can implement a web API endpoint to return
     /// the IP and port.
+    ///
+    /// Nelson 2025-01-20: Making this optional now. The downside is we can't perform a Steam A2S query without
+    /// IP/port, but the upside is players can more easily join their non-port-forwarded servers.
     /// </summary>
     public string host;
 
@@ -56,6 +59,14 @@ internal class ServerBookmarkDetails
         name = advertisement.name;
         description = advertisement.descText;
         thumbnailUrl = advertisement.thumbnailURL;
+    }
+
+    public void UpdateFromWorkshopResponse(Provider.CachedWorkshopResponse workshopResponse)
+    {
+        host = workshopResponse.bookmarkHost;
+        name = workshopResponse.serverName;
+        description = workshopResponse.serverDescription;
+        thumbnailUrl = workshopResponse.thumbnailUrl;
     }
 
     public override string ToString()

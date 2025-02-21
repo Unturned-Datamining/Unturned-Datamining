@@ -1,4 +1,3 @@
-using SDG.HostBans;
 using SDG.SteamworksProvider.Services.Store;
 using UnityEngine;
 
@@ -374,14 +373,21 @@ public class SleekServer : SleekWrapper
         pingBox.PositionScale_X = 1f;
         pingBox.SizeOffset_X = 80f;
         pingBox.SizeScale_Y = 1f;
-        pingBox.Text = $"{info.ping} ms";
-        if (info.hostBanFlags.HasFlag(EHostBanFlags.QueryPingWarning))
+        if (info.anycastProxyMode != 0)
         {
-            pingBox.TextColor = ESleekTint.BAD;
+            pingBox.Text = $"{info.PingMs} ms*";
+            if (info.anycastProxyMode == SteamServerAdvertisement.EAnycastProxyMode.FlaggedByModerator)
+            {
+                pingBox.TextColor = ESleekTint.BAD;
+            }
             if (MenuPlayServerInfoUI.localization != null)
             {
                 pingBox.TooltipText = MenuPlayServerInfoUI.localization.format("HostBan_QueryPingWarning");
             }
+        }
+        else
+        {
+            pingBox.Text = $"{info.PingMs} ms";
         }
         anticheatBox = Glazier.Get().CreateBox();
         anticheatBox.PositionScale_X = 1f;

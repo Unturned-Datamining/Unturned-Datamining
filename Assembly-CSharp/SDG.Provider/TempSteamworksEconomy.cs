@@ -285,6 +285,11 @@ public class TempSteamworksEconomy
         return false;
     }
 
+    public bool IsItemEligibleForPromotion(int itemdefid)
+    {
+        return FindEconInfo(itemdefid)?.isEligibleForPromotion ?? false;
+    }
+
     public string getInventoryDescription(int item)
     {
         UnturnedEconInfo unturnedEconInfo = FindEconInfo(item);
@@ -1043,7 +1048,7 @@ public class TempSteamworksEconomy
             using (BinaryReader binaryReader = new BinaryReader(fileStream))
             {
                 int num = binaryReader.ReadInt32();
-                if (num <= 2)
+                if (num <= 3)
                 {
                     int num2 = binaryReader.ReadInt32();
                     for (int i = 0; i < num2; i++)
@@ -1066,6 +1071,14 @@ public class TempSteamworksEconomy
                         if (num >= 2)
                         {
                             unturnedEconInfo.creationTimeUtc = DateTime.FromBinary(binaryReader.ReadInt64());
+                        }
+                        if (num >= 3)
+                        {
+                            unturnedEconInfo.isEligibleForPromotion = binaryReader.ReadBoolean();
+                        }
+                        else
+                        {
+                            unturnedEconInfo.isEligibleForPromotion = true;
                         }
                         if (!econInfo.TryAdd(unturnedEconInfo.itemdefid, unturnedEconInfo))
                         {

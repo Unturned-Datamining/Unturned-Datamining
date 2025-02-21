@@ -24,6 +24,18 @@ public class Local
         return key;
     }
 
+    /// <summary>
+    /// Unlike format, this returns null if key doesn't exist.
+    /// </summary>
+    public string FormatOrNull(string key)
+    {
+        if (TryReadString(key, out var text))
+        {
+            return text;
+        }
+        return null;
+    }
+
     public string format(string key, object arg0)
     {
         if (TryReadString(key, out var text))

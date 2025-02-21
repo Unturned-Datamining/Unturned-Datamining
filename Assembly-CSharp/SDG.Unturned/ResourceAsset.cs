@@ -83,6 +83,10 @@ public class ResourceAsset : Asset
     {
         ENPCHoliday.HALLOWEEN => _resourceName + " [HW]", 
         ENPCHoliday.CHRISTMAS => _resourceName + " [XMAS]", 
+        ENPCHoliday.APRIL_FOOLS => _resourceName + " [AF]", 
+        ENPCHoliday.VALENTINES => _resourceName + " [V]", 
+        ENPCHoliday.PRIDE_MONTH => _resourceName + " [PM]", 
+        ENPCHoliday.LUNAR_NEW_YEAR => _resourceName + " [LNY]", 
         _ => _resourceName, 
     };
 

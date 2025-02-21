@@ -17,4 +17,6 @@ public interface IClientTransport
     bool TryGetConnectionPort(out ushort connectionPort);
 
     bool TryGetQueryPort(out ushort queryPort);
+
+    bool TryGetPing(out int pingMs);
 }

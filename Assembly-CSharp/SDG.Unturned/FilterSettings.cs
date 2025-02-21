@@ -373,7 +373,7 @@ public static class FilterSettings
                     activeFilters.combat = (ECombat)block.readByte();
                     if (b < 8)
                     {
-                        activeFilters.cheats = ECheats.NO;
+                        activeFilters.cheats = ECheats.ANY;
                     }
                     else
                     {
@@ -525,28 +525,24 @@ public static class FilterSettings
         defaultPresetLAN.password = EPassword.ANY;
         defaultPresetLAN.vacProtection = EVACProtectionFilter.Any;
         defaultPresetLAN.battlEyeProtection = EBattlEyeProtectionFilter.Any;
-        defaultPresetLAN.cheats = ECheats.ANY;
         defaultPresetLAN.maxPing = 0;
         defaultPresetHistory.presetId = -4;
         defaultPresetHistory.listSource = ESteamServerList.HISTORY;
         defaultPresetHistory.password = EPassword.ANY;
         defaultPresetHistory.vacProtection = EVACProtectionFilter.Any;
         defaultPresetHistory.battlEyeProtection = EBattlEyeProtectionFilter.Any;
-        defaultPresetHistory.cheats = ECheats.ANY;
         defaultPresetHistory.maxPing = 0;
         defaultPresetFavorites.presetId = -5;
         defaultPresetFavorites.listSource = ESteamServerList.FAVORITES;
         defaultPresetFavorites.password = EPassword.ANY;
         defaultPresetFavorites.vacProtection = EVACProtectionFilter.Any;
         defaultPresetFavorites.battlEyeProtection = EBattlEyeProtectionFilter.Any;
-        defaultPresetFavorites.cheats = ECheats.ANY;
         defaultPresetFavorites.maxPing = 0;
         defaultPresetFriends.presetId = -6;
         defaultPresetFriends.listSource = ESteamServerList.FRIENDS;
         defaultPresetFriends.password = EPassword.ANY;
         defaultPresetFriends.vacProtection = EVACProtectionFilter.Any;
         defaultPresetFriends.battlEyeProtection = EBattlEyeProtectionFilter.Any;
-        defaultPresetFriends.cheats = ECheats.ANY;
         defaultPresetFriends.maxPing = 0;
     }
 }

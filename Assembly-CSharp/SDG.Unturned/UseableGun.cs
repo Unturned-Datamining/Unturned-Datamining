@@ -2361,7 +2361,7 @@ public class UseableGun : Useable
                     isShooting = true;
                 }
             }
-            else if (equippedGunAsset.action == EAction.Minigun)
+            else if (equippedGunAsset.MustAimToShoot)
             {
                 if (isAiming)
                 {
@@ -2411,7 +2411,7 @@ public class UseableGun : Useable
     {
         if (isAiming)
         {
-            if (equippedGunAsset.action == EAction.Minigun && isShooting)
+            if (equippedGunAsset.MustAimToShoot && isShooting)
             {
                 isShooting = false;
             }
@@ -3249,6 +3249,10 @@ public class UseableGun : Useable
             {
                 thirdAttachments.magazineModel.gameObject.SetActive(value: false);
             }
+            foreach (UseableGunEventHook item in EnumerateEventComponents())
+            {
+                item.OnMagazineHidden?.TryInvoke(this);
+            }
         }
         if (needsReplace && Time.realtimeSinceStartup - startedReload > reloadTime * equippedGunAsset.replace)
         {
@@ -3260,6 +3264,10 @@ public class UseableGun : Useable
             if (thirdAttachments.magazineModel != null)
             {
                 thirdAttachments.magazineModel.gameObject.SetActive(value: true);
+            }
+            foreach (UseableGunEventHook item2 in EnumerateEventComponents())
+            {
+                item2.OnMagazineVisible?.TryInvoke(this);
             }
         }
         if (isReloading && Time.realtimeSinceStartup - startedReload > reloadTime)
@@ -3463,13 +3471,20 @@ public class UseableGun : Useable
         ammo = newState[10];
         firemode = (EFiremode)newState[11];
         interact = newState[12] == 1;
-        bool wasMagazineModelVisible = thirdAttachments.magazineModel != null && thirdAttachments.magazineModel.gameObject.activeSelf;
+        bool flag = thirdAttachments.magazineModel != null && thirdAttachments.magazineModel.gameObject.activeSelf;
         if (base.channel.IsLocalPlayer)
         {
             firstAttachments.updateAttachments(newState, viewmodel: true);
         }
         thirdAttachments.updateAttachments(newState, viewmodel: false);
-        updateAttachments(wasMagazineModelVisible);
+        updateAttachments(flag);
+        if (!flag)
+        {
+            foreach (UseableGunEventHook item in EnumerateEventComponents())
+            {
+                item.OnMagazineHidden?.TryInvoke(this);
+            }
+        }
         if (base.channel.IsLocalPlayer)
         {
             if (firstAttachments.reticuleHook != null)
@@ -5048,6 +5063,7 @@ public class UseableGun : Useable
             parameters.position = position;
             parameters.relevantDistance = EffectManager.MEDIUM;
             parameters.wasInstigatedByPlayer = true;
+            parameters.reliable = true;
             EffectManager.triggerEffect(parameters);
         }
         CSteamID killer = ((instigatingPlayer != null) ? instigatingPlayer.channel.owner.playerID.steamID : CSteamID.Nil);

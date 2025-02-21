@@ -6,4 +6,5 @@ Rubble Destroy
 Rubble_Reset 300
 Rubble_Health 275
 Rubble_Effect 73
+Rubble_All_Sections_Destroyed_Alert_Radius 24
 Has_Clip_Prefab false

@@ -16,7 +16,7 @@ Caliber_0 41
 
 Tracer 48
 
-Blueprints 2
+Blueprints 3
 Blueprint_0_Type Ammo
 Blueprint_0_Supplies 1
 Blueprint_0_Supply_0_ID 43
@@ -25,3 +25,9 @@ Blueprint_1_Type Ammo
 Blueprint_1_Supplies 1
 Blueprint_1_Supply_0_ID 1483
 Blueprint_1_Build 30
+Blueprint_2_Type Tool
+Blueprint_2_Supplies 1
+Blueprint_2_Supply_0_ID this
+Blueprint_2_Product "67" // Metal Scrap
+Blueprint_2_Products 1
+Blueprint_2_Build 27

@@ -15,7 +15,7 @@ Tracer 48
 
 Stuck 25
 
-Blueprints 1
+Blueprints 2
 Blueprint_0_Type Tool
 Blueprint_0_Supplies 2
 Blueprint_0_Supply_0_ID 38
@@ -23,3 +23,9 @@ Blueprint_0_Supply_0_Amount 3
 Blueprint_0_Supply_1_ID 71
 Blueprint_0_Products 3
 Blueprint_0_Build 27
+Blueprint_1_Type Tool
+Blueprint_1_Supplies 1
+Blueprint_1_Supply_0_ID this
+Blueprint_1_Product "38" // Birch Stick
+Blueprint_1_Products 1
+Blueprint_1_Build 27

@@ -58,6 +58,8 @@ public class TempSteamworksMatchmaking
 
     private EPlugins currentPluginsFilter;
 
+    private EServerListCurationDefaultBehavior curationDefaultBehavior;
+
     private EServerListCurationDenyMode curationDenyMode;
 
     private List<SteamServerAdvertisement> _serverList = new List<SteamServerAdvertisement>();
@@ -201,7 +203,9 @@ public class TempSteamworksMatchmaking
         currentPluginsFilter = inputFilters.plugins;
         currentNameFilter = inputFilters.serverName;
         isCurrentNameFilterSet = !string.IsNullOrEmpty(currentNameFilter);
-        curationDenyMode = ServerListCuration.Get().DenyMode;
+        ServerListCuration serverListCuration = ServerListCuration.Get();
+        curationDefaultBehavior = serverListCuration.DefaultBehavior;
+        curationDenyMode = serverListCuration.DenyMode;
         currentNameRegex = null;
         string text = "regex:";
         if (isCurrentNameFilterSet && currentNameFilter.StartsWith(text))
@@ -418,7 +422,6 @@ public class TempSteamworksMatchmaking
         }
         else if (inputFilters.listSource == ESteamServerList.INTERNET)
         {
-            ServerListCuration serverListCuration = ServerListCuration.Get();
             serverListCuration.RefreshIfDirty();
             serverListCuration.MergeRulesIfDirty();
             serverListCuration.ResetBlockedServerCounts();
@@ -555,7 +558,19 @@ public class TempSteamworksMatchmaking
                     return;
                 }
                 steamServerAdvertisement.isDeniedByServerCurationRule = true;
+                steamServerAdvertisement.isDeprioritizedByServerCuration = true;
                 steamServerAdvertisement.deniedByRule = output.allowOrDenyRule;
+            }
+            if (!output.matchedAnyRules)
+            {
+                if (curationDefaultBehavior == EServerListCurationDefaultBehavior.MoveToBottom)
+                {
+                    steamServerAdvertisement.isDeprioritizedByServerCuration = true;
+                }
+                else if (curationDefaultBehavior == EServerListCurationDefaultBehavior.Hide)
+                {
+                    return;
+                }
             }
         }
         steamServerAdvertisement.serverCurationLabels = serverCurationLabels;
@@ -597,7 +612,7 @@ public class TempSteamworksMatchmaking
         {
             return;
         }
-        if (currentMaxPingFilter <= 0 || steamServerAdvertisement.ping <= currentMaxPingFilter)
+        if (currentMaxPingFilter <= 0 || steamServerAdvertisement.PingMs <= currentMaxPingFilter)
         {
             steamServerAdvertisement.CalculateUtilityScore();
             int num = serverList.BinarySearch(steamServerAdvertisement, serverInfoComparer);

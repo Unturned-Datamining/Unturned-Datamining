@@ -109,6 +109,13 @@ public class ServerConfigData
     public bool Use_FakeIP;
 
     /// <summary>
+    /// If greater than zero, vehicles with XZ position outside this threshold are saved in the center of the map.
+    /// By default, vehicles outside ±40 km are teleported into the map.
+    /// Intended to help with physics issues caused by vehicles far out in space. (public issue #4465)
+    /// </summary>
+    public float Reset_Vehicles_Outside_Horizontal_Distance = 40000f;
+
+    /// <summary>
     /// Limit max queue timeout duration so that if server encounters an error or doesn't
     /// process the request the client can timeout locally.
     /// </summary>

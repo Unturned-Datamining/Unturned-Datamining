@@ -222,7 +222,17 @@ public class MenuSurvivorsClothingUI
         }
         else if (Provider.preferenceData.Allow_Ctrl_Shift_Alt_Salvage && InputEx.GetKey(KeyCode.LeftControl) && InputEx.GetKey(KeyCode.LeftShift) && InputEx.GetKey(KeyCode.LeftAlt))
         {
-            MenuSurvivorsClothingDeleteUI.salvageItem(item, instance);
+            Provider.provider.economyService.getInventoryStatTrackerValue(instance, out var type, out var _);
+            Provider.provider.economyService.getInventoryRagdollEffect(instance, out var effect);
+            ushort num3 = Provider.provider.economyService.getInventoryMythicID(item);
+            if (num3 == 0)
+            {
+                num3 = Provider.provider.economyService.getInventoryParticleEffect(instance);
+            }
+            if (type == EStatTrackerType.NONE && effect == ERagdollEffect.NONE && num3 == 0)
+            {
+                MenuSurvivorsClothingDeleteUI.salvageItem(item, instance);
+            }
         }
         else if (InputEx.GetKey(ControlsSettings.other) && packageButtons[num2].itemAsset != null)
         {

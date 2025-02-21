@@ -30,25 +30,32 @@
 			"PBS_BombsAway",
 			"PBS_ForcefulAcquisition",
 			"PBS_DeadSilent",
-			"PBS_PoorInvestment"
+			"PBS_PoorInvestment",
+			"Rio_Bookworm",
+			"Rio_BrokenChains",
+			"Rio_ChaosTheorem",
+			"Rio_PermanentTourist",
+			"Rio_SproutUp"
 		]
 	},
 	"Game":
 	{
-		"Major_Version": 24,
-		"Minor_Version": 7,
-		"Patch_Version": 1,
+		"Major_Version": 25,
+		"Minor_Version": 1,
+		"Patch_Version": 101,
 		"GrantPackageIDs":
 		[
 			487
 		],
 		"GrantPackageURL": "https://api.smartlydressedgames.com/u4/shipping/package-grant?steamid={0}"
 	},
+	"Holidays":
+	{
+		"LunarNewYear_Days": 15
+	},
 	"Menu":
 	{
-		"PromoStart": "2024-05-20T12:00:00Z",
-		"PromoEnd": "2024-06-03T12:00:00Z",
-		"PromoLevel": "PBS_Menu"
+
 	},
 	"News":
 	{
@@ -58,18 +65,14 @@
 	{
 		"Auto_Subscribe":
 		[
-			{
-				"Workshop_File_Id": 3251926587,
-				"Start": "2024-05-22T00:12:00Z",
-				"End": "2025-05-23T00:12:00Z"
-			}
+
 		],
 		"Curated_Map_Links":
 		[
 			{
 				"Name": "Escalation",
 				"Workshop_File_Id": 3251926587,
-				"Visible_In_Singleplayer_Recommendations_List": true
+				"Visible_In_Singleplayer_Recommendations_List": false
 			},
 			{
 				"Name": "Buak",
@@ -79,12 +82,12 @@
 			{
 				"Name": "A6 Polaris",
 				"Workshop_File_Id": 2898548949,
-				"Visible_In_Singleplayer_Recommendations_List": true
+				"Visible_In_Singleplayer_Recommendations_List": false
 			},
 			{
 				"Name": "Arid",
 				"Workshop_File_Id": 2683620106,
-				"Visible_In_Singleplayer_Recommendations_List": true
+				"Visible_In_Singleplayer_Recommendations_List": false
 			},
 			{
 				"Name": "Kuwait",
@@ -94,7 +97,7 @@
 			{
 				"Name": "Elver",
 				"Workshop_File_Id": 2136497468,
-				"Visible_In_Singleplayer_Recommendations_List": true
+				"Visible_In_Singleplayer_Recommendations_List": false
 			},
 			{
 				"Name": "Easter Island",

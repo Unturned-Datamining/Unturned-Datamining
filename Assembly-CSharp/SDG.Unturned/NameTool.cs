@@ -1,5 +1,3 @@
-using System;
-
 namespace SDG.Unturned;
 
 public class NameTool
@@ -43,30 +41,15 @@ public class NameTool
     /// </summary>
     public static bool containsRichText(string name)
     {
-        if (name.IndexOf("<color", StringComparison.OrdinalIgnoreCase) != -1)
+        int num = name.IndexOf('<');
+        if (num < 0)
         {
-            return true;
+            return false;
         }
-        if (name.IndexOf("<b>", StringComparison.OrdinalIgnoreCase) != -1)
+        if (name.IndexOf('>', num + 1) < 0)
         {
-            return true;
+            return false;
         }
-        if (name.IndexOf("<i>", StringComparison.OrdinalIgnoreCase) != -1)
-        {
-            return true;
-        }
-        if (name.IndexOf("<size", StringComparison.OrdinalIgnoreCase) != -1)
-        {
-            return true;
-        }
-        if (name.IndexOf("<voffset", StringComparison.OrdinalIgnoreCase) != -1)
-        {
-            return true;
-        }
-        if (name.IndexOf("<sprite", StringComparison.OrdinalIgnoreCase) != -1)
-        {
-            return true;
-        }
-        return false;
+        return true;
     }
 }

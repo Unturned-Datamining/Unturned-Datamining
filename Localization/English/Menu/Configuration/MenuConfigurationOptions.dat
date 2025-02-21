@@ -14,6 +14,8 @@ Chat_Voice_In_Toggle_Label Enable Inbound Voice Chat
 Chat_Voice_Out_Toggle_Label Enable Outbound Voice Chat
 VoiceAlwaysRecording_Label Keep Microphone Ready
 VoiceAlwaysRecording_Tooltip Avoid hitches related to starting and stopping recording by muting rather than stopping.
+ShowOutboundVoiceChatOffHint_Label Show Outbound Voice Off Hint
+ShowOutboundVoiceChatOffHint_Tooltip Shows a muted icon in HUD when outbound voice chat is off.
 Hints_Toggle_Label Show Hints
 Streamer_Toggle_Label Streamer Mode
 Featured_Workshop_Toggle_Label Featured Workshop

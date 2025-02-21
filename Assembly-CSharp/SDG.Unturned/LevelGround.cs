@@ -676,7 +676,7 @@ public class LevelGround : MonoBehaviour
                                     ResourceSpawnpoint resourceSpawnpoint = new ResourceSpawnpoint(num3, guid, newPoint, newGenerated, treeNetId);
                                     if (resourceSpawnpoint.asset == null && (bool)Assets.shouldLoadAnyAssets)
                                     {
-                                        UnturnedLog.error("Tree with no asset in region {0}, {1}: {2}", b6, b7, num3);
+                                        UnturnedLog.error("Tree with no asset in region {0}, {1}: {2} {3}", b6, b7, num3, guid);
                                     }
                                     trees[b6, b7].Add(resourceSpawnpoint);
                                     levelBatching?.AddResourceSpawnpoint(resourceSpawnpoint);

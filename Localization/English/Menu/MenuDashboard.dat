@@ -164,6 +164,8 @@ Server_MaxPlayers_Advertisement_Mismatch Server advertised a different max playe
 Server_CameraMode_Advertisement_Mismatch Server advertised a different camera mode than what it is currently set to.
 Server_PvP_Advertisement_Mismatch Server advertised a different PvP or PvE combat mode than what it is currently set to.
 
+HWID_Modified Hardware ID (HWID) spoofer detected.
+
 SteamNetworkingSockets_Unavailable_CannotTry Unable to initialize Steam network authentication.
 SteamNetworkingSockets_Unavailable_Failed Failed to initialize Steam network authentication.
 SteamNetworkingSockets_Unavailable_Previously Temporarily unable to initialize Steam network authentication.

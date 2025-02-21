@@ -165,6 +165,7 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
                 TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
                 parameters.relevantDistance = EffectManager.SMALL;
                 parameters.position = base.transform.position + Vector3.up + Vector3.up;
+                parameters.reliable = true;
                 EffectManager.triggerEffect(parameters);
                 parameters.SetDirection(-vector2);
                 EffectManager.triggerEffect(parameters);
@@ -256,7 +257,7 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         }
     }
 
-    public void PlayStartleAnimation()
+    public void PlayStartleAnimation(byte animationIndex)
     {
         if (isDead)
         {
@@ -266,7 +267,7 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         isPlayingStartleAnimation = true;
         if (!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer)
         {
-            string text = ((asset.startleAnimVariantsCount != 1) ? ("Startle_" + UnityEngine.Random.Range(0, asset.startleAnimVariantsCount)) : "Startle");
+            string text = ((asset.startleAnimVariantsCount != 1) ? ("Startle_" + animationIndex) : "Startle");
             AnimationClip clip = animator.GetClip(text);
             if (clip != null)
             {
@@ -280,7 +281,7 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         }
     }
 
-    public void askAttack()
+    public void askAttack(byte animationIndex)
     {
         if (isDead)
         {
@@ -290,7 +291,7 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         isPlayingAttack = true;
         if (!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer)
         {
-            string text = ((asset.attackAnimVariantsCount != 1) ? ("Attack_" + UnityEngine.Random.Range(0, asset.attackAnimVariantsCount)) : "Attack");
+            string text = ((asset.attackAnimVariantsCount != 1) ? ("Attack_" + animationIndex) : "Attack");
             AnimationClip clip = animator.GetClip(text);
             if (clip != null)
             {
@@ -484,7 +485,8 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         {
             if (!isHunting)
             {
-                AnimalManager.sendAnimalStartle(this);
+                int value = UnityEngine.Random.Range(0, asset.startleAnimVariantsCount);
+                AnimalManager.sendAnimalStartle(this, MathfEx.ClampToByte(value));
             }
             if (currentTargetPlayer == null)
             {
@@ -557,7 +559,8 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         {
             if (!isFleeing)
             {
-                AnimalManager.sendAnimalStartle(this);
+                int value = UnityEngine.Random.Range(0, asset.startleAnimVariantsCount);
+                AnimalManager.sendAnimalStartle(this, MathfEx.ClampToByte(value));
             }
             _isFleeing = true;
             isWandering = false;
@@ -709,10 +712,11 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
     {
         Vector3 vector = target - base.transform.position;
         vector.y = 0f;
+        bool flag = isPlayingStartleAnimation && asset.ShouldPreventMoveDuringStartle;
         Vector3 forward = vector;
         float magnitude = vector.magnitude;
-        bool flag = magnitude > 0.75f;
-        if ((!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer) && flag && !isMoving)
+        bool flag2 = magnitude > 0.75f && !flag;
+        if ((!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer) && flag2 && !isMoving)
         {
             if (isPlayingEat)
             {
@@ -725,7 +729,7 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
                 isPlayingGlance = false;
             }
         }
-        isMoving = flag;
+        isMoving = flag2;
         isRunning = isMoving && (isFleeing || isHunting);
         float num = Mathf.Clamp01(magnitude / 0.6f);
         Vector3 forward2 = base.transform.forward;
@@ -737,7 +741,7 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         }
         vector = base.transform.forward * num2;
         vector.y = Physics.gravity.y * 2f;
-        if (!isMoving)
+        if (!isMoving && !flag)
         {
             vector.x = 0f;
             vector.z = 0f;
@@ -758,7 +762,10 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
             rotation = Quaternion.Euler(eulerAngles);
             base.transform.rotation = rotation;
         }
-        controller?.Move(vector * delta);
+        if (!flag && vector.sqrMagnitude > float.Epsilon)
+        {
+            controller?.Move(vector * delta);
+        }
     }
 
     private void Update()
@@ -829,7 +836,7 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
                 base.transform.rotation = Quaternion.Euler(0f, currentSnapshot.yaw, 0f);
             }
         }
-        if ((!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer) && !isMoving && !isPlayingEat && !isPlayingGlance && !isPlayingAttack && Time.timeAsDouble - lastAttack > (double)attackInterval + 0.5)
+        if ((!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer) && !isMoving && !isPlayingEat && !isPlayingGlance && !isPlayingAttack && !isPlayingStartleAnimation && Time.timeAsDouble - lastAttack > (double)attackInterval + 0.5)
         {
             if (Time.timeAsDouble - lastEat > (double)eatDelay)
             {
@@ -968,7 +975,8 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
                         else if (Time.timeAsDouble - lastAttack > (double)attackInterval)
                         {
                             isAttacking = true;
-                            AnimalManager.sendAnimalAttack(this);
+                            int value = UnityEngine.Random.Range(0, asset.attackAnimVariantsCount);
+                            AnimalManager.sendAnimalAttack(this, MathfEx.ClampToByte(value));
                         }
                     }
                 }
@@ -1051,7 +1059,7 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
     [Obsolete("Renamed to PlayStartleAnimation")]
     public void askStartle()
     {
-        PlayStartleAnimation();
+        PlayStartleAnimation(0);
     }
 
     void IExplosionDamageable.ApplyExplosionDamage(in ExplosionParameters explosionParameters, ref ExplosionDamageParameters damageParameters)

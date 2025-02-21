@@ -33,5 +33,6 @@ public enum ELoadingTip
     RARITY,
     ORIENTATION,
     RED,
-    STEADY
+    STEADY,
+    SKIP_ACTION_CRAFTING_MENU
 }

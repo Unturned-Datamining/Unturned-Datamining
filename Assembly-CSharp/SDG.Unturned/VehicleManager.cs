@@ -94,7 +94,7 @@ public class VehicleManager : SteamCaller
 
     private static readonly ClientStaticMethod SendMultipleVehicles = ClientStaticMethod.Get(ReceiveMultipleVehicles);
 
-    private static readonly ClientStaticMethod<uint, byte, CSteamID> SendEnterVehicle = ClientStaticMethod<uint, byte, CSteamID>.Get(ReceiveEnterVehicle);
+    internal static readonly ClientStaticMethod<uint, byte, CSteamID> SendEnterVehicle = ClientStaticMethod<uint, byte, CSteamID>.Get(ReceiveEnterVehicle);
 
     private static readonly ClientStaticMethod<uint, byte, Vector3, byte, bool> SendExitVehicle = ClientStaticMethod<uint, byte, Vector3, byte, bool>.Get(ReceiveExitVehicle);
 
@@ -882,24 +882,11 @@ public class VehicleManager : SteamCaller
                 break;
             }
         }
-        if (interactableVehicle == null)
+        if (!(interactableVehicle == null))
         {
-            return;
+            DestroyVehicleCommon(interactableVehicle);
+            respawnVehicleIndex--;
         }
-        BarricadeManager.uprootPlant(interactableVehicle.transform);
-        if (interactableVehicle.trainCars != null)
-        {
-            for (int j = 1; j < interactableVehicle.trainCars.Length; j++)
-            {
-                BarricadeManager.uprootPlant(interactableVehicle.trainCars[j].root);
-            }
-        }
-        VehicleManager.OnPreDestroyVehicle?.TryInvoke("OnPreDestroyVehicle", interactableVehicle);
-        NetIdRegistry.ReleaseTransform(interactableVehicle.GetNetId() + 1u, interactableVehicle.transform);
-        interactableVehicle.ReleaseNetId();
-        EffectManager.ClearAttachments(interactableVehicle.transform);
-        UnityEngine.Object.Destroy(interactableVehicle.gameObject);
-        respawnVehicleIndex--;
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellVehicleDestroyAll")]
@@ -908,23 +895,41 @@ public class VehicleManager : SteamCaller
         ThreadUtil.assertIsGameThread();
         for (int num = vehicles.Count - 1; num >= 0; num--)
         {
-            BarricadeManager.uprootPlant(vehicles[num].transform);
-            if (vehicles[num].trainCars != null)
-            {
-                for (int i = 1; i < vehicles[num].trainCars.Length; i++)
-                {
-                    BarricadeManager.uprootPlant(vehicles[num].trainCars[i].root);
-                }
-            }
-            VehicleManager.OnPreDestroyVehicle?.TryInvoke("OnPreDestroyVehicle", vehicles[num]);
-            NetIdRegistry.ReleaseTransform(vehicles[num].GetNetId() + 1u, vehicles[num].transform);
-            vehicles[num].ReleaseNetId();
-            EffectManager.ClearAttachments(vehicles[num].transform);
-            UnityEngine.Object.Destroy(vehicles[num].gameObject);
+            InteractableVehicle vehicle = vehicles[num];
             vehicles.RemoveAt(num);
+            DestroyVehicleCommon(vehicle);
         }
         respawnVehicleIndex = 0;
         vehicles.Clear();
+    }
+
+    private static void DestroyVehicleCommon(InteractableVehicle vehicle)
+    {
+        foreach (SteamPlayer client in Provider.clients)
+        {
+            if (client != null)
+            {
+                Player player = client.player;
+                if (!(player == null) && player.movement.getVehicle() == vehicle)
+                {
+                    player.movement.ApplyPendingVehicleChange();
+                }
+            }
+        }
+        BarricadeManager.uprootPlant(vehicle.transform);
+        if (vehicle.trainCars != null)
+        {
+            for (int i = 1; i < vehicle.trainCars.Length; i++)
+            {
+                BarricadeManager.uprootPlant(vehicle.trainCars[i].root);
+            }
+        }
+        vehicle.IsPendingDestroy = true;
+        VehicleManager.OnPreDestroyVehicle?.TryInvoke("OnPreDestroyVehicle", vehicle);
+        NetIdRegistry.ReleaseTransform(vehicle.GetNetId() + 1u, vehicle.transform);
+        vehicle.ReleaseNetId();
+        EffectManager.ClearAttachments(vehicle.transform);
+        UnityEngine.Object.Destroy(vehicle.gameObject);
     }
 
     public static void askVehicleDestroy(InteractableVehicle vehicle)
@@ -1334,7 +1339,7 @@ public class VehicleManager : SteamCaller
                 return;
             }
         }
-        if ((EEngine)engine != interactableVehicle.asset.engine || (interactableVehicle.transform.position - player.transform.position).sqrMagnitude > 100f || !interactableVehicle.checkEnter(player) || !interactableVehicle.tryAddPlayer(out var seat, player))
+        if ((EEngine)engine != interactableVehicle.asset.engine || interactableVehicle.IsPendingDestroy || (interactableVehicle.transform.position - player.transform.position).sqrMagnitude > 100f || !interactableVehicle.checkEnter(player) || !interactableVehicle.tryAddPlayer(out var seat, player))
         {
             return;
         }
@@ -1790,7 +1795,7 @@ public class VehicleManager : SteamCaller
 
     private void despawnAndRespawnVehicles()
     {
-        if (Level.info != null && Level.info.type != ELevelType.ARENA && vehicles != null && (vehicles.Count <= 0 || !respawnVehicles_Destroy()) && LevelVehicles.spawns != null && LevelVehicles.spawns.Count != 0 && GetNumberOfNaturalVehiclesToSpawn() > 0)
+        if (Level.info != null && Level.info.type != ELevelType.ARENA && vehicles != null && (vehicles.Count <= 0 || !respawnVehicles_Destroy()) && LevelVehicles.spawns != null && LevelVehicles.spawns.Count != 0 && ShouldRespawnANaturalVehicle())
         {
             VehicleSpawnpoint vehicleSpawnpoint = findRandomSpawn();
             if (vehicleSpawnpoint != null)
@@ -1800,23 +1805,49 @@ public class VehicleManager : SteamCaller
         }
     }
 
+    private int SumNaturalVehicleCount()
+    {
+        int num = 0;
+        foreach (InteractableVehicle vehicle in _vehicles)
+        {
+            num += (vehicle._wasNaturallySpawned ? 1 : 0);
+        }
+        return num;
+    }
+
+    /// <summary>
+    /// Called when deciding whether to respawn a new vehicle, after gameplay has begun.
+    /// </summary>
+    private bool ShouldRespawnANaturalVehicle()
+    {
+        if (_vehicles == null || Level.info == null || Provider.modeConfigData == null)
+        {
+            return false;
+        }
+        if (vehicles.Count < maxInstances)
+        {
+            return true;
+        }
+        if (SumNaturalVehicleCount() < Provider.modeConfigData.Vehicles.Min_Natural_Vehicles)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Called during level load to determine how many vehicles to create.
+    /// </summary>
     private int GetNumberOfNaturalVehiclesToSpawn()
     {
         if (_vehicles == null || Level.info == null || Provider.modeConfigData == null)
         {
             return 0;
         }
-        int num = (int)MathfEx.Min(maxInstances, Provider.modeConfigData.Vehicles.Min_Natural_Vehicles);
-        if (num < 1)
-        {
-            return 0;
-        }
-        int num2 = 0;
-        foreach (InteractableVehicle vehicle in _vehicles)
-        {
-            num2 += (vehicle._wasNaturallySpawned ? 1 : 0);
-        }
-        return Mathf.Max(0, num - num2);
+        int a = Mathf.Max(0, (int)maxInstances - vehicles.Count);
+        int min_Natural_Vehicles = (int)Provider.modeConfigData.Vehicles.Min_Natural_Vehicles;
+        int b = Mathf.Max(0, min_Natural_Vehicles - SumNaturalVehicleCount());
+        return Mathf.Max(a, b);
     }
 
     private void RespawnReloadedVehicles()
@@ -2336,14 +2367,21 @@ public class VehicleManager : SteamCaller
                 num++;
             }
         }
+        float reset_Vehicles_Outside_Horizontal_Distance = Provider.configData.Server.Reset_Vehicles_Outside_Horizontal_Distance;
+        bool flag = reset_Vehicles_Outside_Horizontal_Distance > 0f;
+        float num3 = reset_Vehicles_Outside_Horizontal_Distance * reset_Vehicles_Outside_Horizontal_Distance;
         river.writeUInt16(num);
-        for (ushort num3 = 0; num3 < vehicles.Count; num3++)
+        for (ushort num4 = 0; num4 < vehicles.Count; num4++)
         {
-            InteractableVehicle interactableVehicle2 = vehicles[num3];
+            InteractableVehicle interactableVehicle2 = vehicles[num4];
             if (!(interactableVehicle2 == null) && !(interactableVehicle2.transform == null) && !interactableVehicle2.isAutoClearable)
             {
                 Vector3 vector = interactableVehicle2.transform.position;
                 if (!vector.IsFinite())
+                {
+                    vector = new Vector3(0f, Level.HEIGHT - 50f, 0f);
+                }
+                else if (flag && vector.GetHorizontalSqrMagnitude() > num3)
                 {
                     vector = new Vector3(0f, Level.HEIGHT - 50f, 0f);
                 }

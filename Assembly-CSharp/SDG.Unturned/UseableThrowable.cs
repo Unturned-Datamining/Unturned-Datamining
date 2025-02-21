@@ -17,6 +17,8 @@ public class UseableThrowable : Useable
 
     private bool isSwinging;
 
+    private bool hasUsed;
+
     private ESwingMode swingMode;
 
     private static readonly ClientInstanceMethod<Vector3, Vector3> SendToss = ClientInstanceMethod<Vector3, Vector3>.Get(typeof(UseableThrowable), "ReceiveToss");
@@ -160,10 +162,15 @@ public class UseableThrowable : Useable
         {
             return false;
         }
+        if (hasUsed)
+        {
+            return false;
+        }
         base.player.equipment.isBusy = true;
         startedUse = Time.realtimeSinceStartup;
         isUsing = true;
         swingMode = newSwingMode;
+        hasUsed = true;
         swing();
         if (Provider.isServer)
         {

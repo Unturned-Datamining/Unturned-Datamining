@@ -46,6 +46,8 @@ public class ItemTrapAsset : ItemBarricadeAsset
 
     public bool damageTires;
 
+    public bool requiresPower;
+
     public float range2 => _range2;
 
     public ushort explosion2 => _explosion2;
@@ -82,6 +84,10 @@ public class ItemTrapAsset : ItemBarricadeAsset
         if (damageTires)
         {
             builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Trap_DamagesTires"), 10001);
+        }
+        if (requiresPower)
+        {
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Trap_RequiresPower"), 10001);
         }
         if (playerDamage > 0f)
         {
@@ -123,5 +129,6 @@ public class ItemTrapAsset : ItemBarricadeAsset
         _isBroken = data.ContainsKey("Broken");
         _isExplosive = data.ContainsKey("Explosive");
         damageTires = data.ContainsKey("Damage_Tires");
+        requiresPower = data.ParseBool("Requires_Power");
     }
 }

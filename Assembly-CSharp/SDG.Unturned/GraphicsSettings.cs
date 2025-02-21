@@ -775,7 +775,11 @@ public class GraphicsSettings
     {
         QualitySettings.vSyncCount = (buffer ? 1 : 0);
         int num;
-        if (clTargetFrameRate.hasValue)
+        if (buffer)
+        {
+            num = -1;
+        }
+        else if (clTargetFrameRate.hasValue)
         {
             num = ((clTargetFrameRate.value > 0) ? Mathf.Max(clTargetFrameRate.value, 15) : (-1));
         }

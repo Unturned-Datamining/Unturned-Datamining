@@ -494,10 +494,18 @@ public class PlayerStance : PlayerCaller
                 if (stance != 0)
                 {
                     Vector3 vector = new Vector3(ladder.collider.transform.position.x, ladder.point.y - 0.5f, ladder.collider.transform.position.z) + ladder.normal * 0.5f;
-                    if (!Physics.CapsuleCast(base.transform.position + new Vector3(0f, RADIUS, 0f), base.transform.position + new Vector3(0f, PlayerMovement.HEIGHT_STAND - RADIUS, 0f), RADIUS, (vector - base.transform.position).normalized, (vector - base.transform.position).magnitude, RayMasks.BLOCK_LADDER, QueryTriggerInteraction.Ignore) && !Physics.CheckCapsule(vector + new Vector3(0f, RADIUS, 0f), vector + new Vector3(0f, PlayerMovement.HEIGHT_STAND - RADIUS, 0f), RADIUS, RayMasks.BLOCK_LADDER, QueryTriggerInteraction.Ignore))
+                    Vector3 point = base.transform.position + new Vector3(0f, RADIUS, 0f);
+                    Vector3 point2 = base.transform.position + new Vector3(0f, PlayerMovement.HEIGHT_STAND - RADIUS, 0f);
+                    Vector3 vector2 = vector - base.transform.position;
+                    if (!Physics.CapsuleCast(direction: vector2.normalized, maxDistance: vector2.magnitude, point1: point, point2: point2, radius: RADIUS, layerMask: RayMasks.BLOCK_LADDER, queryTriggerInteraction: QueryTriggerInteraction.Ignore))
                     {
-                        base.transform.position = vector;
-                        checkStance(EPlayerStance.CLIMB);
+                        Vector3 start = vector + new Vector3(0f, RADIUS, 0f);
+                        Vector3 end = vector + new Vector3(0f, PlayerMovement.HEIGHT_STAND - RADIUS, 0f);
+                        if (!Physics.CheckCapsule(start, end, RADIUS, RayMasks.BLOCK_LADDER, QueryTriggerInteraction.Ignore))
+                        {
+                            base.transform.position = vector;
+                            checkStance(EPlayerStance.CLIMB);
+                        }
                     }
                 }
                 if (stance == EPlayerStance.CLIMB)

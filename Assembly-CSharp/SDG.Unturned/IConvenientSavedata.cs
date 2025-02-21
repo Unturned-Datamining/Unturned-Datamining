@@ -26,4 +26,7 @@ public interface IConvenientSavedata
 
     /// <returns>true if key existed and was removed.</returns>
     bool DeleteBool(string key);
+
+    /// <returns>true if key existed and was removed.</returns>
+    bool DeleteInteger(string key);
 }

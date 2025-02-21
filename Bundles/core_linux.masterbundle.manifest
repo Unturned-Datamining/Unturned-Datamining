@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 273024617
+CRC: 2151460315
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 8f09f0ba19af911d9c3b4cc44ef48f42
+    Hash: cab765006ae5217be7e45043fa1c9857
   TypeTreeHash:
     serializedVersion: 2
     Hash: c1eff6ba98b820f6808611483e5b152c
@@ -1836,6 +1836,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Bulldog/XRay/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Items/Pants/Khaki_Shorts/Item.prefab
 - Assets/CoreMasterBundle/Objects/Large/Business/Container_6/Nav.prefab
+- Assets/CoreMasterBundle/Objects/Large/Buildings/Apartment_3/Triggers.prefab
 - Assets/CoreMasterBundle/Skins/Ace/Fiesta/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Fishers/Rod_Fishing/Animations.prefab
 - Assets/CoreMasterBundle/Items/Outfits/WanderingWizard/WanderingWizard_Pants/Material.mat
@@ -5141,6 +5142,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Explosions/Bomb_6/Fire.mp3
 - Assets/CoreMasterBundle/Items/Food/Sandwich_Goldfish/Item.prefab
 - Assets/CoreMasterBundle/Items/Hats/Fedora/Hat.prefab
+- Assets/CoreMasterBundle/Mythics/Shutterbug/System_Hook.prefab
 - Assets/CoreMasterBundle/Items/Hats/Military_Helmet_Spec_Ops/Hat.prefab
 - Assets/CoreMasterBundle/Items/Halloween2024/HW2_Spike_Collar/Item.prefab
 - Assets/CoreMasterBundle/Items/Sights/Red_Dot_Sight/Sight.prefab
@@ -7166,6 +7168,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Heartbreaker/The_87th/Skin_Secondary_17.mat
 - Assets/CoreMasterBundle/Effects/Physics/MeleeImpact/Snow/snowball_hit_impact_10.wav
 - Assets/CoreMasterBundle/Objects/Medium/Business/Machinery_5/Object.prefab
+- Assets/CoreMasterBundle/Mythics/Shutterbug/System_Area.prefab
 - Assets/CoreMasterBundle/Sounds/Inventory/Keys/foley_keys_belt_metal_jingle_15.wav
 - Assets/CoreMasterBundle/Items/Tools/Vehicle_Spraypaint_Turquoise/Animations.prefab
 - Assets/CoreMasterBundle/Objects/Small/Quests/Shovel_00/Object.prefab
@@ -7375,6 +7378,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/MetalLow_Run/footstep_metal_low_run_06.wav
 - Assets/CoreMasterBundle/Skins/Honeybadger/Taut/Skin_Secondary_147.mat
 - Assets/CoreMasterBundle/Items/Shirts/Jersey_Australia/Item.prefab
+- Assets/CoreMasterBundle/Objects/Large/Buildings/Office_1/Triggers.prefab
 - Assets/CoreMasterBundle/Items/Structures/Hole_Metal/Structure.prefab
 - Assets/CoreMasterBundle/Items/Pants/Rio_Guard_Bottom/Item.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Blast_Mark_0/Texture.png
@@ -11768,6 +11772,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Explosions/Zombie_7/Splatter_3.prefab
 - Assets/CoreMasterBundle/Effects/General/Note/Note.mp3
 - Assets/CoreMasterBundle/Skins/Grizzly/Interplanetary/Skin_Attachment.mat
+- Assets/CoreMasterBundle/Items/Vests/InstantCamera/Vest.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Fences/Fence_Wood_0/Nav.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Present_3/Material.mat
 - Assets/CoreMasterBundle/Items/Sights/Red_Halo_Sight/Metallic_Base.png

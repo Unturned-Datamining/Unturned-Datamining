@@ -51,7 +51,7 @@ public class NPCItemReward : INPCReward
                     ushort num2 = ((tactical > -1) ? MathfEx.ClampToUShort(tactical) : itemGunAsset.tacticalID);
                     ushort num3 = ((grip > -1) ? MathfEx.ClampToUShort(grip) : itemGunAsset.gripID);
                     ushort num4 = ((barrel > -1) ? MathfEx.ClampToUShort(barrel) : itemGunAsset.barrelID);
-                    ushort num5 = ((magazine > -1) ? MathfEx.ClampToUShort(magazine) : itemGunAsset.getMagazineID());
+                    ushort num5 = ((magazine > -1) ? MathfEx.ClampToUShort(magazine) : itemGunAsset.GetDefaultMagazineLegacyId());
                     byte b2 = ((ammo > -1) ? MathfEx.ClampToByte(ammo) : itemGunAsset.ammoMax);
                     byte[] state = itemGunAsset.getState(num, num2, num3, num4, num5, b2);
                     item = new Item(itemAsset.id, 1, 100, state);

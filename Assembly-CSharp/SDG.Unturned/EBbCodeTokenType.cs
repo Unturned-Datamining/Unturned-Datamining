@@ -93,5 +93,13 @@ public enum EBbCodeTokenType
     /// <summary>
     /// '\n' or "\r\n"
     /// </summary>
-    LineBreak
+    LineBreak,
+    /// <summary>
+    /// [quote=value] (value is author)
+    /// </summary>
+    QuoteOpen,
+    /// <summary>
+    /// [/quote]
+    /// </summary>
+    QuoteClose
 }

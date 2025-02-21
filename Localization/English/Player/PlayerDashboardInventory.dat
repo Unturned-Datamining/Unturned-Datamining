@@ -180,6 +180,7 @@ ItemDescription_Farmable_AffectedByAgricultureSkill Yield is affected by your Ag
 ItemDescription_Farmable_AffectedByRain Growth can be expedited by rainy weather.
 ItemDescription_Trap_BreaksBones Trap breaks bones.
 ItemDescription_Trap_DamagesTires Trap pierces tires.
+ItemDescription_Trap_RequiresPower Trap requires electricity.
 ItemDescription_Trap_PlayerDamage Player Damage: {0}
 ItemDescription_Trap_ZombieDamage Zombie Damage: {0}
 ItemDescription_Trap_AnimalDamage Animal Damage: {0}
@@ -219,6 +220,9 @@ Salvage_Button Salvage
 Salvage_Button_Tooltip Salvage into component materials.
 Refill_Button Refill
 Refill_Button_Tooltip Refill with bullets.
+
+ActionBlueprint_SkipCraftingTooltip Skip Crafting Menu [{0}]
+ActionBlueprint_CraftAllTooltip Craft All [{0}]
 
 Attachments_Button Strip
 Attachments_Button_Tooltip Dismantle attachments.

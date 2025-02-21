@@ -36,6 +36,8 @@ public class MenuConfigurationOptionsUI
 
     private static ISleekToggle chatVoiceAlwaysRecordingToggle;
 
+    private static ISleekToggle showOutboundVoiceChatOffHintToggle;
+
     private static ISleekToggle hintsToggle;
 
     private static ISleekToggle streamerToggle;
@@ -203,18 +205,23 @@ public class MenuConfigurationOptionsUI
     {
         OptionsSettings.chatVoiceIn = state;
         chatVoiceOutToggle.IsInteractable = state;
-        chatVoiceAlwaysRecordingToggle.IsInteractable = OptionsSettings.chatVoiceIn && OptionsSettings.chatVoiceOut;
+        chatVoiceAlwaysRecordingToggle.IsInteractable = OptionsSettings.chatVoiceIn && OptionsSettings.EnableOutboundVoiceChat;
     }
 
     private static void onToggledChatVoiceOutToggle(ISleekToggle toggle, bool state)
     {
-        OptionsSettings.chatVoiceOut = state;
+        OptionsSettings.EnableOutboundVoiceChat = state;
         chatVoiceAlwaysRecordingToggle.IsInteractable = OptionsSettings.chatVoiceIn && state;
     }
 
     private static void onToggledChatVoiceAlwaysRecordingToggle(ISleekToggle toggle, bool state)
     {
         OptionsSettings.VoiceAlwaysRecording = state;
+    }
+
+    private static void OnToggledShowOutboundVoiceChatOffHint(ISleekToggle toggle, bool state)
+    {
+        OptionsSettings.ShowOutboundVoiceChatOffHint = state;
     }
 
     private static void onToggledHintsToggle(ISleekToggle toggle, bool state)
@@ -426,10 +433,11 @@ public class MenuConfigurationOptionsUI
         filterToggle.Value = OptionsSettings.filter;
         chatTextToggle.Value = OptionsSettings.chatText;
         chatVoiceInToggle.Value = OptionsSettings.chatVoiceIn;
-        chatVoiceOutToggle.Value = OptionsSettings.chatVoiceOut;
+        chatVoiceOutToggle.Value = OptionsSettings.EnableOutboundVoiceChat;
         chatVoiceOutToggle.IsInteractable = OptionsSettings.chatVoiceIn;
         chatVoiceAlwaysRecordingToggle.Value = OptionsSettings.VoiceAlwaysRecording;
-        chatVoiceAlwaysRecordingToggle.IsInteractable = OptionsSettings.chatVoiceIn && OptionsSettings.chatVoiceOut;
+        chatVoiceAlwaysRecordingToggle.IsInteractable = OptionsSettings.chatVoiceIn && OptionsSettings.EnableOutboundVoiceChat;
+        showOutboundVoiceChatOffHintToggle.Value = OptionsSettings.ShowOutboundVoiceChatOffHint;
         hintsToggle.Value = OptionsSettings.hints;
         streamerToggle.Value = OptionsSettings.streamer;
         featuredWorkshopToggle.Value = OptionsSettings.featuredWorkshop;
@@ -567,6 +575,15 @@ public class MenuConfigurationOptionsUI
         chatVoiceAlwaysRecordingToggle.TooltipText = localization.format("VoiceAlwaysRecording_Tooltip");
         chatVoiceAlwaysRecordingToggle.OnValueChanged += onToggledChatVoiceAlwaysRecordingToggle;
         optionsBox.AddChild(chatVoiceAlwaysRecordingToggle);
+        num += 50f;
+        showOutboundVoiceChatOffHintToggle = Glazier.Get().CreateToggle();
+        showOutboundVoiceChatOffHintToggle.PositionOffset_Y = num;
+        showOutboundVoiceChatOffHintToggle.SizeOffset_X = 40f;
+        showOutboundVoiceChatOffHintToggle.SizeOffset_Y = 40f;
+        showOutboundVoiceChatOffHintToggle.AddLabel(localization.format("ShowOutboundVoiceChatOffHint_Label"), ESleekSide.RIGHT);
+        showOutboundVoiceChatOffHintToggle.TooltipText = localization.format("ShowOutboundVoiceChatOffHint_Tooltip");
+        showOutboundVoiceChatOffHintToggle.OnValueChanged += OnToggledShowOutboundVoiceChatOffHint;
+        optionsBox.AddChild(showOutboundVoiceChatOffHintToggle);
         num += 50f;
         hintsToggle = Glazier.Get().CreateToggle();
         hintsToggle.PositionOffset_Y = num;

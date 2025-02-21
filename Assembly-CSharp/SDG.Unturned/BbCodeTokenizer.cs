@@ -232,6 +232,10 @@ public class BbCodeTokenizer
             {
                 outputTokens.Add(new BbCodeToken(EBbCodeTokenType.PreviewYouTubeClose));
             }
+            else if (string.Equals(text, "/quote"))
+            {
+                outputTokens.Add(new BbCodeToken(EBbCodeTokenType.QuoteClose));
+            }
             else
             {
                 flag2 = true;
@@ -280,6 +284,10 @@ public class BbCodeTokenizer
         else if (string.Equals(text, "previewyoutube"))
         {
             outputTokens.Add(new BbCodeToken(EBbCodeTokenType.PreviewYouTubeOpen, tokenValue));
+        }
+        else if (string.Equals(text, "quote"))
+        {
+            outputTokens.Add(new BbCodeToken(EBbCodeTokenType.QuoteOpen, tokenValue));
         }
         else
         {

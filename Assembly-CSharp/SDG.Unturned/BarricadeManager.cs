@@ -1197,6 +1197,7 @@ public class BarricadeManager : SteamCaller
                 TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
                 parameters.position = transform.position + Vector3.down * asset.offset;
                 parameters.relevantDistance = EffectManager.MEDIUM;
+                parameters.reliable = true;
                 EffectManager.triggerEffect(parameters);
             }
             asset.SpawnItemDropsOnDestroy(transform.position);
@@ -1559,7 +1560,11 @@ public class BarricadeManager : SteamCaller
             }
             else if (itemBarricadeAsset.build == EBuild.SPIKE || itemBarricadeAsset.build == EBuild.WIRE)
             {
-                transform.Find("Trap").GetOrAddComponent<InteractableTrap>().updateState(itemBarricadeAsset, state);
+                Transform transform6 = transform.Find("Trap");
+                if (transform6 != null)
+                {
+                    (transform6.gameObject.GetOrAddComponent<InteractableTrapTrigger>().parentTrap = transform.gameObject.GetOrAddComponent<InteractableTrap>()).updateState(itemBarricadeAsset, state);
+                }
             }
             else if (itemBarricadeAsset.build == EBuild.CHARGE)
             {
@@ -1640,10 +1645,10 @@ public class BarricadeManager : SteamCaller
                 orAddComponent4.hp = hp;
                 if (itemBarricadeAsset.build == EBuild.DOOR || itemBarricadeAsset.build == EBuild.GATE || itemBarricadeAsset.build == EBuild.SHUTTER || itemBarricadeAsset.build == EBuild.HATCH)
                 {
-                    Transform transform6 = transform.Find("Skeleton").Find("Hinge");
-                    if (transform6 != null)
+                    Transform transform7 = transform.Find("Skeleton").Find("Hinge");
+                    if (transform7 != null)
                     {
-                        Interactable2SalvageBarricade orAddComponent5 = transform6.GetOrAddComponent<Interactable2SalvageBarricade>();
+                        Interactable2SalvageBarricade orAddComponent5 = transform7.GetOrAddComponent<Interactable2SalvageBarricade>();
                         orAddComponent5.root = transform;
                         orAddComponent5.hp = orAddComponent4;
                         orAddComponent5.owner = owner;
@@ -1651,10 +1656,10 @@ public class BarricadeManager : SteamCaller
                         orAddComponent5.salvageDurationMultiplier = itemBarricadeAsset.salvageDurationMultiplier;
                         orAddComponent5.shouldBypassPickupOwnership = itemBarricadeAsset.shouldBypassPickupOwnership;
                     }
-                    Transform transform7 = transform.Find("Skeleton").Find("Left_Hinge");
-                    if (transform7 != null)
+                    Transform transform8 = transform.Find("Skeleton").Find("Left_Hinge");
+                    if (transform8 != null)
                     {
-                        Interactable2SalvageBarricade orAddComponent6 = transform7.GetOrAddComponent<Interactable2SalvageBarricade>();
+                        Interactable2SalvageBarricade orAddComponent6 = transform8.GetOrAddComponent<Interactable2SalvageBarricade>();
                         orAddComponent6.root = transform;
                         orAddComponent6.hp = orAddComponent4;
                         orAddComponent6.owner = owner;
@@ -1662,10 +1667,10 @@ public class BarricadeManager : SteamCaller
                         orAddComponent6.salvageDurationMultiplier = itemBarricadeAsset.salvageDurationMultiplier;
                         orAddComponent6.shouldBypassPickupOwnership = itemBarricadeAsset.shouldBypassPickupOwnership;
                     }
-                    Transform transform8 = transform.Find("Skeleton").Find("Right_Hinge");
-                    if (transform8 != null)
+                    Transform transform9 = transform.Find("Skeleton").Find("Right_Hinge");
+                    if (transform9 != null)
                     {
-                        Interactable2SalvageBarricade orAddComponent7 = transform8.GetOrAddComponent<Interactable2SalvageBarricade>();
+                        Interactable2SalvageBarricade orAddComponent7 = transform9.GetOrAddComponent<Interactable2SalvageBarricade>();
                         orAddComponent7.root = transform;
                         orAddComponent7.hp = orAddComponent4;
                         orAddComponent7.owner = owner;

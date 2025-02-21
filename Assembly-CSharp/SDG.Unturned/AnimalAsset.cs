@@ -130,6 +130,11 @@ public class AnimalAsset : Asset
     /// </summary>
     public bool shouldPlayAnimsOnDedicatedServer { get; private set; }
 
+    /// <summary>
+    /// If true, animal won't start moving until startle animation finishes.
+    /// </summary>
+    public bool ShouldPreventMoveDuringStartle { get; protected set; }
+
     protected void validateAnimations(GameObject root)
     {
         Animation animation = root.transform.Find("Character")?.GetComponent<Animation>();
@@ -258,6 +263,7 @@ public class AnimalAsset : Asset
         verticalAttackRange = data.ParseFloat("Vertical_Attack_Range", 2f);
         attackInterval = data.ParseFloat("Attack_Interval", 1f);
         shouldPlayAnimsOnDedicatedServer = data.ParseBool("Should_Play_Anims_On_Dedicated_Server");
+        ShouldPreventMoveDuringStartle = data.ParseBool("Should_Prevent_Move_During_Startle");
         _rewardXP = data.ParseUInt32("Reward_XP");
     }
 
@@ -265,33 +271,33 @@ public class AnimalAsset : Asset
     {
         base.BuildCargoData(builder);
         CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Locale_Animal");
-        orAddDeclaration.AppendGuid("GUID", GUID);
-        orAddDeclaration.AppendString("Name", FriendlyName);
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Name", FriendlyName);
         CargoDeclaration orAddDeclaration2 = builder.GetOrAddDeclaration("Animal");
-        orAddDeclaration2.AppendGuid("GUID", GUID);
-        orAddDeclaration2.AppendInt("Attack_Anim_Variants", attackAnimVariantsCount);
-        orAddDeclaration2.AppendFloat("Attack_Interval", attackInterval);
-        orAddDeclaration2.AppendToString("Behaviour", behaviour);
-        orAddDeclaration2.AppendByte("Damage", damage);
-        orAddDeclaration2.AppendInt("Eat_Anim_Variants", eatAnimVariantsCount);
-        orAddDeclaration2.AppendInt("Glance_Anim_Variants", glanceAnimVariantsCount);
-        orAddDeclaration2.AppendUShort("Health", health);
-        orAddDeclaration2.AppendFloat("Horizontal_Attack_Range", Mathf.Sqrt(horizontalAttackRangeSquared));
-        orAddDeclaration2.AppendFloat("Horizontal_Vehicle_Attack_Range", Mathf.Sqrt(horizontalVehicleAttackRangeSquared));
-        orAddDeclaration2.AppendUShort("Meat", meat);
-        orAddDeclaration2.AppendToString("Panics", panics.Length);
-        orAddDeclaration2.AppendUShort("Pelt", pelt);
-        orAddDeclaration2.AppendFloat("Regen", regen);
-        orAddDeclaration2.AppendUShort("Reward_ID", rewardID);
-        orAddDeclaration2.AppendByte("Reward_Max", rewardMax);
-        orAddDeclaration2.AppendByte("Reward_Min", rewardMin);
-        orAddDeclaration2.AppendUInt("Reward_XP", rewardXP);
-        orAddDeclaration2.AppendToString("Roars", roars.Length);
-        orAddDeclaration2.AppendBool("Should_Play_Anims_On_Dedicated_Server", shouldPlayAnimsOnDedicatedServer);
-        orAddDeclaration2.AppendFloat("Speed_Run", speedRun);
-        orAddDeclaration2.AppendFloat("Speed_Walk", speedWalk);
-        orAddDeclaration2.AppendInt("Startle_Anim_Variants", startleAnimVariantsCount);
-        orAddDeclaration2.AppendFloat("Vertical_Attack_Range", verticalAttackRange);
+        orAddDeclaration2.Append("GUID", GUID);
+        orAddDeclaration2.Append("Attack_Anim_Variants", attackAnimVariantsCount);
+        orAddDeclaration2.Append("Attack_Interval", attackInterval);
+        orAddDeclaration2.Append("Behaviour", behaviour);
+        orAddDeclaration2.Append("Damage", damage);
+        orAddDeclaration2.Append("Eat_Anim_Variants", eatAnimVariantsCount);
+        orAddDeclaration2.Append("Glance_Anim_Variants", glanceAnimVariantsCount);
+        orAddDeclaration2.Append("Health", health);
+        orAddDeclaration2.Append("Horizontal_Attack_Range", Mathf.Sqrt(horizontalAttackRangeSquared));
+        orAddDeclaration2.Append("Horizontal_Vehicle_Attack_Range", Mathf.Sqrt(horizontalVehicleAttackRangeSquared));
+        orAddDeclaration2.Append("Meat", meat);
+        orAddDeclaration2.Append("Panics", (object)panics.Length);
+        orAddDeclaration2.Append("Pelt", pelt);
+        orAddDeclaration2.Append("Regen", regen);
+        orAddDeclaration2.Append("Reward_ID", rewardID);
+        orAddDeclaration2.Append("Reward_Max", rewardMax);
+        orAddDeclaration2.Append("Reward_Min", rewardMin);
+        orAddDeclaration2.Append("Reward_XP", rewardXP);
+        orAddDeclaration2.Append("Roars", (object)roars.Length);
+        orAddDeclaration2.Append("Should_Play_Anims_On_Dedicated_Server", shouldPlayAnimsOnDedicatedServer);
+        orAddDeclaration2.Append("Speed_Run", speedRun);
+        orAddDeclaration2.Append("Speed_Walk", speedWalk);
+        orAddDeclaration2.Append("Startle_Anim_Variants", startleAnimVariantsCount);
+        orAddDeclaration2.Append("Vertical_Attack_Range", verticalAttackRange);
     }
 
     internal string OnGetRewardSpawnTableErrorContext()

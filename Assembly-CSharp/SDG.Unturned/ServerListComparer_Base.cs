@@ -6,9 +6,9 @@ public abstract class ServerListComparer_Base : IComparer<SteamServerAdvertiseme
 {
     public int Compare(SteamServerAdvertisement lhs, SteamServerAdvertisement rhs)
     {
-        if (lhs.isDeniedByServerCurationRule != rhs.isDeniedByServerCurationRule)
+        if (lhs.isDeprioritizedByServerCuration != rhs.isDeprioritizedByServerCuration)
         {
-            if (!rhs.isDeniedByServerCurationRule)
+            if (!rhs.isDeprioritizedByServerCuration)
             {
                 return 1;
             }

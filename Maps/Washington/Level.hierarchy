@@ -1,4 +1,4 @@
-"Available_Instance_ID" "66"
+"Available_Instance_ID" "76"
 "Items"
 [
 	{
@@ -117009,6 +117009,326 @@
 				"Z" "1"
 			}
 			"SpawnTable_ID" "541"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "66"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "867.737"
+				"Y" "25.02338"
+				"Z" "639.3314"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "33.5"
+				"Y" "16.5"
+				"Z" "35.05515"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "67"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "857.7109"
+				"Y" "34.16928"
+				"Z" "639.7471"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "6"
+				"Y" "7.954061"
+				"Z" "38.16875"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "68"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "876.1999"
+				"Y" "35.64974"
+				"Z" "647.9814"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "8.004992"
+				"Y" "4.767586"
+				"Z" "8.83823"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "69"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "881.6575"
+				"Y" "35.14771"
+				"Z" "633.9163"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "7.666761"
+				"Y" "5.72954"
+				"Z" "21.11063"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "70"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "866.3965"
+				"Y" "35.3274"
+				"Z" "625.9186"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "12.48271"
+				"Y" "5.420459"
+				"Z" "6.294874"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "71"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "875.2739"
+				"Y" "35.26472"
+				"Z" "626.1315"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "6.159175"
+				"Y" "5.48065"
+				"Z" "12.15306"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "72"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "880.3831"
+				"Y" "39.37744"
+				"Z" "637.141"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "5.129237"
+				"Y" "3.282963"
+				"Z" "2.882615"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "73"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "876.3468"
+				"Y" "33.88673"
+				"Z" "634.2068"
+			}
+			"Rotation"
+			{
+				"X" "0.2972667"
+				"Y" "0"
+				"Z" "0"
+				"W" "0.9547945"
+			}
+			"Scale"
+			{
+				"X" "7.553842"
+				"Y" "3.953799"
+				"Z" "8.432382"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "74"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-286.971"
+				"Y" "38.37732"
+				"Z" "-156.8113"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "15.97505"
+				"Y" "1"
+				"Z" "9.343817"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "75"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-244.032"
+				"Y" "38.37732"
+				"Z" "-566.5276"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "-0.1057454"
+				"Z" "0"
+				"W" "0.9943933"
+			}
+			"Scale"
+			{
+				"X" "15.97505"
+				"Y" "1"
+				"Z" "9.343817"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
 		}
 	}
 ]

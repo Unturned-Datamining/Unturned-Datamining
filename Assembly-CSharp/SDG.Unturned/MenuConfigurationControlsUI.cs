@@ -31,7 +31,7 @@ public class MenuConfigurationControlsUI
             ControlsSettings.PRIMARY,
             ControlsSettings.SECONDARY
         },
-        new byte[8]
+        new byte[9]
         {
             ControlsSettings.RELOAD,
             ControlsSettings.ATTACH,
@@ -40,7 +40,8 @@ public class MenuConfigurationControlsUI
             ControlsSettings.VISION,
             ControlsSettings.INSPECT,
             ControlsSettings.ROTATE,
-            ControlsSettings.DEQUIP
+            ControlsSettings.DEQUIP,
+            75
         },
         new byte[4]
         {

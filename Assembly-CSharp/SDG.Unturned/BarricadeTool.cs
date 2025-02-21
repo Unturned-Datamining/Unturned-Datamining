@@ -95,7 +95,11 @@ public class BarricadeTool : MonoBehaviour
             }
             else if (asset.build == EBuild.SPIKE || asset.build == EBuild.WIRE)
             {
-                transform.Find("Trap").gameObject.AddComponent<InteractableTrap>().updateState(asset, state);
+                Transform transform6 = transform.Find("Trap");
+                if (transform6 != null)
+                {
+                    (transform6.gameObject.AddComponent<InteractableTrapTrigger>().parentTrap = transform.gameObject.AddComponent<InteractableTrap>()).updateState(asset, state);
+                }
             }
             else if (asset.build == EBuild.CHARGE)
             {
@@ -176,30 +180,30 @@ public class BarricadeTool : MonoBehaviour
                 interactable2HP.hp = hp;
                 if (asset.build == EBuild.DOOR || asset.build == EBuild.GATE || asset.build == EBuild.SHUTTER || asset.build == EBuild.HATCH)
                 {
-                    Transform transform6 = transform.Find("Skeleton").Find("Hinge");
-                    if (transform6 != null)
+                    Transform transform7 = transform.Find("Skeleton").Find("Hinge");
+                    if (transform7 != null)
                     {
-                        Interactable2SalvageBarricade interactable2SalvageBarricade = transform6.gameObject.AddComponent<Interactable2SalvageBarricade>();
+                        Interactable2SalvageBarricade interactable2SalvageBarricade = transform7.gameObject.AddComponent<Interactable2SalvageBarricade>();
                         interactable2SalvageBarricade.root = transform;
                         interactable2SalvageBarricade.hp = interactable2HP;
                         interactable2SalvageBarricade.owner = owner;
                         interactable2SalvageBarricade.group = group;
                         interactable2SalvageBarricade.salvageDurationMultiplier = asset.salvageDurationMultiplier;
                     }
-                    Transform transform7 = transform.Find("Skeleton").Find("Left_Hinge");
-                    if (transform7 != null)
+                    Transform transform8 = transform.Find("Skeleton").Find("Left_Hinge");
+                    if (transform8 != null)
                     {
-                        Interactable2SalvageBarricade interactable2SalvageBarricade2 = transform7.gameObject.AddComponent<Interactable2SalvageBarricade>();
+                        Interactable2SalvageBarricade interactable2SalvageBarricade2 = transform8.gameObject.AddComponent<Interactable2SalvageBarricade>();
                         interactable2SalvageBarricade2.root = transform;
                         interactable2SalvageBarricade2.hp = interactable2HP;
                         interactable2SalvageBarricade2.owner = owner;
                         interactable2SalvageBarricade2.group = group;
                         interactable2SalvageBarricade2.salvageDurationMultiplier = asset.salvageDurationMultiplier;
                     }
-                    Transform transform8 = transform.Find("Skeleton").Find("Right_Hinge");
-                    if (transform8 != null)
+                    Transform transform9 = transform.Find("Skeleton").Find("Right_Hinge");
+                    if (transform9 != null)
                     {
-                        Interactable2SalvageBarricade interactable2SalvageBarricade3 = transform8.gameObject.AddComponent<Interactable2SalvageBarricade>();
+                        Interactable2SalvageBarricade interactable2SalvageBarricade3 = transform9.gameObject.AddComponent<Interactable2SalvageBarricade>();
                         interactable2SalvageBarricade3.root = transform;
                         interactable2SalvageBarricade3.hp = interactable2HP;
                         interactable2SalvageBarricade3.owner = owner;

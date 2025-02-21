@@ -174,6 +174,11 @@ public class ControlsSettings
     public const byte CUSTOM_MODAL = 74;
 
     /// <summary>
+    /// If held while clicking a blueprint action in the item context menu, the crafting menu is bypassed.
+    /// </summary>
+    public const byte SKIP_ACTION_CRAFTING_MENU = 75;
+
+    /// <summary>
     /// Multiplier for Input.GetAxis("mouse_x") and Input.GetAxis("mouse_y")
     /// </summary>
     public static float mouseAimSensitivity;
@@ -324,6 +329,11 @@ public class ControlsSettings
     /// When held the cursor is released.
     /// </summary>
     public static KeyCode CustomModal => bindings[74].key;
+
+    /// <summary>
+    /// If held while clicking a blueprint action in the item context menu, the crafting menu is bypassed.
+    /// </summary>
+    public static KeyCode SkipActionCraftingMenu => bindings[75].key;
 
     /// <summary>
     /// Replace instances of <plugin_num /> with their bound key text.
@@ -482,6 +492,7 @@ public class ControlsSettings
         bind(72, KeyCode.Alpha9);
         bind(73, KeyCode.Alpha0);
         bind(74, KeyCode.Keypad0);
+        bind(75, KeyCode.LeftShift);
         aiming = EControlMode.HOLD;
         crouching = EControlMode.TOGGLE;
         proning = EControlMode.TOGGLE;
@@ -693,7 +704,7 @@ public class ControlsSettings
         PLUGIN_3 = 62;
         PLUGIN_4 = 63;
         NUM_PLUGIN_KEYS = 5;
-        _bindings = new ControlBinding[75];
+        _bindings = new ControlBinding[76];
         for (int i = 0; i < bindings.Length; i++)
         {
             bindings[i] = new ControlBinding(KeyCode.F);

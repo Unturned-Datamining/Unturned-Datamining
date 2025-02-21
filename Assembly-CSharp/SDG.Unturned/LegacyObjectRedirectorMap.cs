@@ -20,21 +20,38 @@ internal class LegacyObjectRedirectorMap
         ObjectAsset value = null;
         if (!redirectedIds.TryGetValue(originalGUID, out value))
         {
-            if (Assets.find(originalGUID) is ObjectAsset objectAsset)
+            ObjectAsset objectAsset = Assets.find(originalGUID) as ObjectAsset;
+            if (!Dedicator.IsDedicatedServer)
+            {
+                ClientAssetIntegrity.QueueRequest(originalGUID, objectAsset, "Object Holiday Redirect (Original)");
+            }
+            if (objectAsset != null)
             {
                 AssetReference<ObjectAsset> holidayRedirect = objectAsset.getHolidayRedirect();
                 if (holidayRedirect.isValid)
                 {
                     value = holidayRedirect.Find();
-                    if (value == null && (bool)Assets.shouldLoadAnyAssets)
+                    if (!Dedicator.IsDedicatedServer)
                     {
-                        UnturnedLog.error("Missing holiday redirect for object {0}", objectAsset);
+                        ClientAssetIntegrity.QueueRequest(holidayRedirect.GUID, value, "Object Holiday Redirect");
+                    }
+                    if (value == null)
+                    {
+                        if ((bool)Assets.shouldLoadAnyAssets)
+                        {
+                            UnturnedLog.error("Missing holiday redirect for object {0}", objectAsset);
+                        }
+                        ClientAssetIntegrity.ServerAddKnownMissingAsset(holidayRedirect.GUID, "Object Holiday Redirect");
                     }
                 }
                 else
                 {
                     value = objectAsset;
                 }
+            }
+            else
+            {
+                ClientAssetIntegrity.ServerAddKnownMissingAsset(originalGUID, "Object Holiday Redirect (Original)");
             }
             redirectedIds.Add(originalGUID, value);
         }

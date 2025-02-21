@@ -85,6 +85,12 @@ public class ClientTransport_SystemSockets : TransportBase_SystemSockets, IClien
         return true;
     }
 
+    public bool TryGetPing(out int pingMs)
+    {
+        pingMs = 0;
+        return false;
+    }
+
     private void OnUpdate()
     {
         messageQueue.ReceiveMessages(socket);

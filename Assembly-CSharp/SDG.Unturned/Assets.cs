@@ -534,6 +534,20 @@ public class Assets : MonoBehaviour
     }
 
     /// <summary>
+    /// Useful if GUID can reference a different asset type than legacy ID. For example, gun magazine GUID can
+    /// reference a SpawnAsset while its legacy ID cannot.
+    /// This method supports <see cref="T:SDG.Unturned.RedirectorAsset" />.
+    /// </summary>
+    internal static Asset FindByGuidOrLegacyId(Guid guid, EAssetType legacyAssetType, ushort legacyId)
+    {
+        if (guid.IsEmpty())
+        {
+            return find(legacyAssetType, legacyId);
+        }
+        return find(guid);
+    }
+
+    /// <summary>
     /// Append assets that extend from result type.
     /// </summary>
     public static void find<T>(List<T> results) where T : Asset

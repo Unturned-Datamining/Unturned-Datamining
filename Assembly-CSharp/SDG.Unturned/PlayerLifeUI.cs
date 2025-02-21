@@ -60,6 +60,8 @@ public class PlayerLifeUI
 
     private static SleekBoxIcon voiceBox;
 
+    private static ISleekImage voiceOutboundOffIcon;
+
     private static ISleekLabel trackedQuestTitle;
 
     private static ISleekImage trackedQuestBar;
@@ -1396,6 +1398,11 @@ public class PlayerLifeUI
         closeGestures();
     }
 
+    private void SynchronizeOutboundVoiceChatVisible()
+    {
+        voiceOutboundOffIcon.IsVisible = !Provider.isServer && !OptionsSettings.EnableOutboundVoiceChat && OptionsSettings.ShowOutboundVoiceChatOffHint;
+    }
+
     private void OnUnitSystemChanged()
     {
         speedProgress.suffix = (OptionsSettings.metric ? " kph" : " mph");
@@ -1411,6 +1418,8 @@ public class PlayerLifeUI
         LevelManager.onArenaMessageUpdated = (ArenaMessageUpdated)Delegate.Remove(LevelManager.onArenaMessageUpdated, new ArenaMessageUpdated(onArenaMessageUpdated));
         LevelManager.onArenaPlayerUpdated = (ArenaPlayerUpdated)Delegate.Remove(LevelManager.onArenaPlayerUpdated, new ArenaPlayerUpdated(onArenaPlayerUpdated));
         LevelManager.onLevelNumberUpdated = (LevelNumberUpdated)Delegate.Remove(LevelManager.onLevelNumberUpdated, new LevelNumberUpdated(onLevelNumberUpdated));
+        OptionsSettings.OnShowOutboundVoiceChatOffHintChanged -= SynchronizeOutboundVoiceChatVisible;
+        OptionsSettings.OnEnableOutboundVoiceChatChanged -= SynchronizeOutboundVoiceChatVisible;
         OptionsSettings.OnUnitSystemChanged -= OnUnitSystemChanged;
         Player.player.life.OnIsAsphyxiatingChanged -= OnIsAsphyxiatingChanged;
     }
@@ -1534,12 +1543,19 @@ public class PlayerLifeUI
         voteNoLabel.SizeScale_X = 0.5f;
         voteBox.AddChild(voteNoLabel);
         voiceBox = new SleekBoxIcon(icons.load<Texture2D>("Voice"));
-        voiceBox.PositionOffset_Y = 210f;
-        voiceBox.SizeOffset_X = 50f;
-        voiceBox.SizeOffset_Y = 50f;
+        voiceBox.PositionOffset_Y = chatField.PositionOffset_Y + 40f;
+        voiceBox.SizeOffset_X = 40f;
+        voiceBox.SizeOffset_Y = 40f;
         voiceBox.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(voiceBox);
         voiceBox.IsVisible = false;
+        voiceOutboundOffIcon = Glazier.Get().CreateImage(icons.load<Texture2D>("VoiceOutboundOff"));
+        voiceOutboundOffIcon.PositionOffset_Y = chatField.PositionOffset_Y + 40f;
+        voiceOutboundOffIcon.SizeOffset_X = 40f;
+        voiceOutboundOffIcon.SizeOffset_Y = 40f;
+        voiceOutboundOffIcon.TintColor = new SleekColor(ESleekTint.FOREGROUND, 0.5f);
+        container.AddChild(voiceOutboundOffIcon);
+        SynchronizeOutboundVoiceChatVisible();
         trackedQuestTitle = Glazier.Get().CreateLabel();
         trackedQuestTitle.PositionOffset_X = -500f;
         trackedQuestTitle.PositionOffset_Y = 200f;
@@ -2104,6 +2120,8 @@ public class PlayerLifeUI
         updateIcons();
         updateLifeBoxVisibility();
         UpdateVehicleBoxVisibility();
+        OptionsSettings.OnEnableOutboundVoiceChatChanged += SynchronizeOutboundVoiceChatVisible;
+        OptionsSettings.OnShowOutboundVoiceChatOffHintChanged += SynchronizeOutboundVoiceChatVisible;
         OptionsSettings.OnUnitSystemChanged += OnUnitSystemChanged;
         Player.player.onLocalPluginWidgetFlagsChanged += OnLocalPluginWidgetFlagsChanged;
         PlayerLife life = Player.player.life;

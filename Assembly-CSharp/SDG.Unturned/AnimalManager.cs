@@ -40,9 +40,9 @@ public class AnimalManager : SteamCaller
 
     private static readonly ClientStaticMethod SendAnimalStates = ClientStaticMethod.Get(ReceiveAnimalStates);
 
-    private static readonly ClientStaticMethod<ushort> SendAnimalStartle = ClientStaticMethod<ushort>.Get(ReceiveAnimalStartle);
+    private static readonly ClientStaticMethod<ushort, byte> SendAnimalStartle = ClientStaticMethod<ushort, byte>.Get(ReceiveAnimalStartle);
 
-    private static readonly ClientStaticMethod<ushort> SendAnimalAttack = ClientStaticMethod<ushort>.Get(ReceiveAnimalAttack);
+    private static readonly ClientStaticMethod<ushort, byte> SendAnimalAttack = ClientStaticMethod<ushort, byte>.Get(ReceiveAnimalAttack);
 
     private static readonly ClientStaticMethod<ushort> SendAnimalPanic = ClientStaticMethod<ushort>.Get(ReceiveAnimalPanic);
 
@@ -191,30 +191,30 @@ public class AnimalManager : SteamCaller
     [Obsolete]
     public void askAnimalStartle(CSteamID steamID, ushort index)
     {
-        ReceiveAnimalStartle(index);
+        ReceiveAnimalStartle(index, 0);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askAnimalStartle")]
-    public static void ReceiveAnimalStartle(ushort index)
+    public static void ReceiveAnimalStartle(ushort index, byte animationIndex)
     {
         if (index < animals.Count)
         {
-            animals[index].PlayStartleAnimation();
+            animals[index].PlayStartleAnimation(animationIndex);
         }
     }
 
     [Obsolete]
     public void askAnimalAttack(CSteamID steamID, ushort index)
     {
-        ReceiveAnimalAttack(index);
+        ReceiveAnimalAttack(index, 0);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askAnimalAttack")]
-    public static void ReceiveAnimalAttack(ushort index)
+    public static void ReceiveAnimalAttack(ushort index, byte animationIndex)
     {
         if (index < animals.Count)
         {
-            animals[index].askAttack();
+            animals[index].askAttack(animationIndex);
         }
     }
 
@@ -309,14 +309,14 @@ public class AnimalManager : SteamCaller
         SendAnimalDead.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), animal.index, newRagdoll, newRagdollEffect);
     }
 
-    public static void sendAnimalStartle(Animal animal)
+    public static void sendAnimalStartle(Animal animal, byte animationIndex)
     {
-        SendAnimalStartle.InvokeAndLoopback(ENetReliability.Unreliable, Provider.GatherRemoteClientConnections(), animal.index);
+        SendAnimalStartle.InvokeAndLoopback(ENetReliability.Unreliable, Provider.GatherRemoteClientConnections(), animal.index, animationIndex);
     }
 
-    public static void sendAnimalAttack(Animal animal)
+    public static void sendAnimalAttack(Animal animal, byte animationIndex)
     {
-        SendAnimalAttack.InvokeAndLoopback(ENetReliability.Unreliable, Provider.GatherRemoteClientConnections(), animal.index);
+        SendAnimalAttack.InvokeAndLoopback(ENetReliability.Unreliable, Provider.GatherRemoteClientConnections(), animal.index, animationIndex);
     }
 
     public static void sendAnimalPanic(Animal animal)
@@ -371,21 +371,28 @@ public class AnimalManager : SteamCaller
     /// <param name="isDead">Whether the animal is dead or not.</param>
     private Animal addAnimal(ushort id, Vector3 point, float angle, bool isDead)
     {
+        Animal animal = null;
         if (Assets.find(EAssetType.ANIMAL, id) is AnimalAsset animalAsset)
         {
-            GameObject original = (Dedicator.IsDedicatedServer ? animalAsset.dedicated : ((!Provider.isServer) ? animalAsset.client : animalAsset.server));
-            Quaternion rotation = Quaternion.Euler(0f, angle, 0f);
-            GameObject obj = UnityEngine.Object.Instantiate(original, point, rotation);
-            obj.name = id.ToString();
-            Animal animal = obj.AddComponent<Animal>();
-            animal.index = (ushort)animals.Count;
-            animal.id = id;
-            animal.isDead = isDead;
-            animal.init();
-            animals.Add(animal);
-            return animal;
+            try
+            {
+                GameObject original = (Dedicator.IsDedicatedServer ? animalAsset.dedicated : ((!Provider.isServer) ? animalAsset.client : animalAsset.server));
+                Quaternion rotation = Quaternion.Euler(0f, angle, 0f);
+                GameObject obj = UnityEngine.Object.Instantiate(original, point, rotation);
+                obj.name = id.ToString();
+                animal = obj.AddComponent<Animal>();
+                animal.index = (ushort)animals.Count;
+                animal.id = id;
+                animal.isDead = isDead;
+                animal.init();
+                animals.Add(animal);
+            }
+            catch (Exception e)
+            {
+                UnturnedLog.exception(e, $"Caught an exception instantiating animal \"{animalAsset.FriendlyName}\" ({animalAsset.GUID:N})");
+            }
         }
-        return null;
+        return animal;
     }
 
     /// <summary>
@@ -771,5 +778,17 @@ public class AnimalManager : SteamCaller
         results.Add($"Animals: {animals.Count}");
         results.Add($"Animal packs: {packs.Count}");
         results.Add($"Ticking animals: {tickingAnimals.Count}");
+    }
+
+    [Obsolete]
+    public static void sendAnimalStartle(Animal animal)
+    {
+        sendAnimalStartle(animal, 0);
+    }
+
+    [Obsolete]
+    public static void sendAnimalAttack(Animal animal)
+    {
+        sendAnimalAttack(animal, 0);
     }
 }

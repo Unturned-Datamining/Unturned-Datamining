@@ -19,21 +19,38 @@ internal class TreeRedirectorMap
     {
         if (!redirectedIds.TryGetValue(originalId, out var value))
         {
-            if (Assets.find(originalId) is ResourceAsset resourceAsset)
+            ResourceAsset resourceAsset = Assets.find(originalId) as ResourceAsset;
+            if (!Dedicator.IsDedicatedServer)
+            {
+                ClientAssetIntegrity.QueueRequest(originalId, resourceAsset, "Tree Holiday Redirect (Original)");
+            }
+            if (resourceAsset != null)
             {
                 AssetReference<ResourceAsset> holidayRedirect = resourceAsset.getHolidayRedirect();
                 if (holidayRedirect.isValid)
                 {
                     value = holidayRedirect.Find();
-                    if (value == null && (bool)Assets.shouldLoadAnyAssets)
+                    if (!Dedicator.IsDedicatedServer)
                     {
-                        UnturnedLog.error("Missing holiday redirect for tree {0}", resourceAsset);
+                        ClientAssetIntegrity.QueueRequest(holidayRedirect.GUID, value, "Tree Holiday Redirect");
+                    }
+                    if (value == null)
+                    {
+                        if ((bool)Assets.shouldLoadAnyAssets)
+                        {
+                            UnturnedLog.error("Missing holiday redirect for tree {0}", resourceAsset);
+                        }
+                        ClientAssetIntegrity.ServerAddKnownMissingAsset(holidayRedirect.GUID, "Tree Holiday Redirect");
                     }
                 }
                 else
                 {
                     value = resourceAsset;
                 }
+            }
+            else
+            {
+                ClientAssetIntegrity.ServerAddKnownMissingAsset(originalId, "Tree Holiday Redirect (Original)");
             }
             redirectedIds.Add(originalId, value);
         }

@@ -355,7 +355,14 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
         _isSaveable = !data.ContainsKey("Unsaveable");
         allowCollisionWhileAnimating = data.ParseBool("Allow_Collision_While_Animating");
         useWaterHeightTransparentSort = data.ContainsKey("Use_Water_Height_Transparent_Sort");
-        CanParentVehicleBePickedUp = data.ParseBool("CanVehicleHookWhileAttached");
+        if (data.ContainsKey("CanVehicleHookWhileAttached"))
+        {
+            CanParentVehicleBePickedUp = data.ParseBool("CanVehicleHookWhileAttached");
+        }
+        else
+        {
+            CanParentVehicleBePickedUp = data.ParseBool("CanParentVehicleBePickedUp");
+        }
         if (data.ContainsKey("Armor_Tier"))
         {
             armorTier = (EArmorTier)Enum.Parse(typeof(EArmorTier), data.GetString("Armor_Tier"), ignoreCase: true);

@@ -40,6 +40,12 @@ public class BrowserConfigData
     /// </summary>
     public string BookmarkHost;
 
+    /// <summary>
+    /// If true, the server lobby warns that in-game ping may be higher than shown. BUT it's shown in the default
+    /// UI color rather than the "bad" color when flagged by moderation.
+    /// </summary>
+    public bool Is_Using_Anycast_Proxy;
+
     [JsonConverter(typeof(StringEnumConverter))]
     public EServerMonetizationTag Monetization;
 

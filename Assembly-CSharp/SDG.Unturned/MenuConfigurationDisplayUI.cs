@@ -72,6 +72,7 @@ public class MenuConfigurationDisplayUI
     {
         GraphicsSettings.buffer = state;
         GraphicsSettings.apply("changed vsync");
+        SynchronizeTargetFrameRateVisibility();
     }
 
     private static void onTypedUserInterfaceScale(ISleekFloat32Field field, float state)
@@ -108,7 +109,8 @@ public class MenuConfigurationDisplayUI
 
     private static void SynchronizeTargetFrameRateVisibility()
     {
-        targetFrameRateField.IsVisible = GraphicsSettings.UseTargetFrameRate;
+        targetFrameRateToggle.IsVisible = !GraphicsSettings.buffer;
+        targetFrameRateField.IsVisible = GraphicsSettings.UseTargetFrameRate && targetFrameRateToggle.IsVisible;
         unfocusedTargetFrameRateToggle.IsVisible = targetFrameRateField.IsVisible;
         unfocusedTargetFrameRateField.IsVisible = GraphicsSettings.UseUnfocusedTargetFrameRate && unfocusedTargetFrameRateToggle.IsVisible;
     }

@@ -1394,13 +1394,15 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
     protected void savePositionAndRotation()
     {
         bool flag = life.IsAlive;
+        Vector3 vector = base.transform.position;
+        byte value = MeasurementTool.angleToByte(base.transform.rotation.eulerAngles.y);
         if (flag)
         {
-            Vector3 vector = base.transform.position;
             InteractableVehicle vehicle = movement.getVehicle();
-            if (vehicle != null && vehicle.findPlayerSeat(this, out var seat) && vehicle.tryGetExit(seat, out var point, out var _))
+            if (vehicle != null && vehicle.findPlayerSeat(this, out var seat) && vehicle.tryGetExit(seat, out var point, out var angle))
             {
                 vector = point;
+                value = angle;
             }
             flag = vector.IsFinite();
         }
@@ -1408,8 +1410,8 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
         {
             Block block = new Block();
             block.writeByte(SAVEDATA_VERSION);
-            block.writeSingleVector3(base.transform.position);
-            block.writeByte((byte)(base.transform.rotation.eulerAngles.y / 2f));
+            block.writeSingleVector3(vector);
+            block.writeByte(value);
             PlayerSavedata.writeBlock(channel.owner.playerID, "/Player/Player.dat", block);
         }
         else if (PlayerSavedata.fileExists(channel.owner.playerID, "/Player/Player.dat"))
@@ -1502,6 +1504,7 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
                     TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
                     parameters.relevantDistance = EffectManager.SMALL;
                     parameters.position = base.transform.position + Vector3.up;
+                    parameters.reliable = true;
                     EffectManager.triggerEffect(parameters);
                     parameters.SetDirection(-vector2);
                     EffectManager.triggerEffect(parameters);

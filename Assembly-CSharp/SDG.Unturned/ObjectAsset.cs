@@ -199,6 +199,7 @@ public class ObjectAsset : Asset
         ENPCHoliday.APRIL_FOOLS => _objectName + " [AF]", 
         ENPCHoliday.VALENTINES => _objectName + " [V]", 
         ENPCHoliday.PRIDE_MONTH => _objectName + " [PM]", 
+        ENPCHoliday.LUNAR_NEW_YEAR => _objectName + " [LNY]", 
         _ => _objectName, 
     };
 
@@ -238,6 +239,16 @@ public class ObjectAsset : Asset
     /// Controls how rubble affects Nav game object.
     /// </summary>
     public EObjectRubbleNavMode RubbleNavMode { get; protected set; }
+
+    /// <summary>
+    /// If set (&gt;0), alerts nearby entities when an individual section is destroyed.
+    /// </summary>
+    public float RubbleSectionDestroyedAlertRadius { get; protected set; }
+
+    /// <summary>
+    /// If set (&gt;0), alerts nearby entities when all sections are destroyed.
+    /// </summary>
+    public float RubbleAllSectionsDestroyedAlertRadius { get; protected set; }
 
     /// <summary>
     /// Only activated during this holiday.
@@ -786,6 +797,8 @@ public class ObjectAsset : Asset
                 rubbleProofExplosion = data.ContainsKey("Interactability_Proof_Explosion");
                 RubbleCanZombiesDamage = data.ParseBool("Interactability_Can_Zombies_Damage");
                 RubbleZombieDamageMultiplier = data.ParseFloat("Interactability_Zombie_Damage_Multiplier", 1f);
+                RubbleSectionDestroyedAlertRadius = data.ParseFloat("Interactability_Section_Destroyed_Alert_Radius", -1f);
+                RubbleAllSectionsDestroyedAlertRadius = data.ParseFloat("Interactability_All_Sections_Destroyed_Alert_Radius", -1f);
                 RubbleNavMode = data.ParseEnum("Interactability_Nav_Mode", EObjectRubbleNavMode.Unaffected);
             }
             else if (data.ContainsKey("Rubble"))
@@ -805,6 +818,8 @@ public class ObjectAsset : Asset
                 rubbleProofExplosion = data.ContainsKey("Rubble_Proof_Explosion");
                 RubbleCanZombiesDamage = data.ParseBool("Rubble_Can_Zombies_Damage");
                 RubbleZombieDamageMultiplier = data.ParseFloat("Rubble_Zombie_Damage_Multiplier", 1f);
+                RubbleSectionDestroyedAlertRadius = data.ParseFloat("Rubble_Section_Destroyed_Alert_Radius", -1f);
+                RubbleAllSectionsDestroyedAlertRadius = data.ParseFloat("Rubble_All_Sections_Destroyed_Alert_Radius", -1f);
                 RubbleNavMode = data.ParseEnum("Rubble_Nav_Mode", EObjectRubbleNavMode.Unaffected);
                 if (data.ContainsKey("Rubble_Editor"))
                 {

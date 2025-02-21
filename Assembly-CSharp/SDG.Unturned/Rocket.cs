@@ -75,6 +75,7 @@ public class Rocket : MonoBehaviour
             parameters2.position = secondLastPos;
             parameters2.relevantDistance = EffectManager.LARGE;
             parameters2.wasInstigatedByPlayer = true;
+            parameters2.reliable = true;
             EffectManager.triggerEffect(parameters2);
             Player player = PlayerTool.getPlayer(killer);
             if (player != null)

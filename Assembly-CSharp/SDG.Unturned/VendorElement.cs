@@ -7,6 +7,11 @@ public abstract class VendorElement
     protected NPCRewardsList rewardsList;
 
     /// <summary>
+    /// If not null, replaces item/vehicle description.
+    /// </summary>
+    protected string descriptionOverride;
+
+    /// <summary>
     /// Vendor asset that owns this buy/sell record.
     /// </summary>
     public VendorAsset outerAsset { get; protected set; }
@@ -63,7 +68,7 @@ public abstract class VendorElement
         rewardsList.Grant(player);
     }
 
-    public VendorElement(VendorAsset newOuterAsset, byte newIndex, Guid newGuid, ushort newLegacyId, uint newCost, INPCCondition[] newConditions, NPCRewardsList newRewardsList)
+    public VendorElement(VendorAsset newOuterAsset, byte newIndex, Guid newGuid, ushort newLegacyId, uint newCost, INPCCondition[] newConditions, NPCRewardsList newRewardsList, string newDescriptionOverride)
     {
         outerAsset = newOuterAsset;
         index = newIndex;
@@ -72,6 +77,7 @@ public abstract class VendorElement
         cost = newCost;
         conditions = newConditions;
         rewardsList = newRewardsList;
+        descriptionOverride = newDescriptionOverride;
     }
 
     [Obsolete("Removed shouldSend parameter")]

@@ -14,7 +14,17 @@ public class VendorBuying : VendorElement
 
     public override string displayName => FindItemAsset()?.itemName;
 
-    public override string displayDesc => FindItemAsset()?.itemDescription;
+    public override string displayDesc
+    {
+        get
+        {
+            if (descriptionOverride != null)
+            {
+                return descriptionOverride;
+            }
+            return FindItemAsset()?.itemDescription;
+        }
+    }
 
     public override EItemRarity rarity => FindItemAsset()?.rarity ?? EItemRarity.COMMON;
 
@@ -103,8 +113,8 @@ public class VendorBuying : VendorElement
         amount = itemAsset.amount;
     }
 
-    public VendorBuying(VendorAsset newOuterAsset, byte newIndex, Guid newTargetAssetGuid, ushort newTargetAssetLegacyId, uint newCost, INPCCondition[] newConditions, NPCRewardsList newRewardsList)
-        : base(newOuterAsset, newIndex, newTargetAssetGuid, newTargetAssetLegacyId, newCost, newConditions, newRewardsList)
+    public VendorBuying(VendorAsset newOuterAsset, byte newIndex, Guid newTargetAssetGuid, ushort newTargetAssetLegacyId, uint newCost, INPCCondition[] newConditions, NPCRewardsList newRewardsList, string newDescriptionOverride)
+        : base(newOuterAsset, newIndex, newTargetAssetGuid, newTargetAssetLegacyId, newCost, newConditions, newRewardsList, newDescriptionOverride)
     {
     }
 }

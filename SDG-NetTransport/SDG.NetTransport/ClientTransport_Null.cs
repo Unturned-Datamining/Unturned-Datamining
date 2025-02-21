@@ -39,4 +39,10 @@ public class ClientTransport_Null : IClientTransport
         queryPort = 0;
         return false;
     }
+
+    public bool TryGetPing(out int pingMs)
+    {
+        pingMs = 0;
+        return false;
+    }
 }

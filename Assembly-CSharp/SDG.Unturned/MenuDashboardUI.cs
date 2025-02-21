@@ -109,7 +109,7 @@ public class MenuDashboardUI
 
     private MenuWorkshopUI workshopUI;
 
-    private const string STEAM_CLAN_IMAGE = "https://clan.cloudflare.steamstatic.com/images/";
+    private const string STEAM_CLAN_IMAGE = "https://clan.fastly.steamstatic.com/images/";
 
     public static void open()
     {
@@ -241,7 +241,7 @@ public class MenuDashboardUI
                 sleekWebImage.UseWidthLayoutOverride = true;
                 sleekWebImage.UseHeightLayoutOverride = true;
                 sleekWebImage.useImageDimensions = true;
-                string url = item.widgetData.Replace("{STEAM_CLAN_IMAGE}", "https://clan.cloudflare.steamstatic.com/images/");
+                string url = item.widgetData.Replace("{STEAM_CLAN_IMAGE}", "https://clan.fastly.steamstatic.com/images/");
                 sleekWebImage.Refresh(url, shouldCache: false);
                 parent.AddChild(sleekWebImage);
                 break;
@@ -825,7 +825,7 @@ public class MenuDashboardUI
         {
             return false;
         }
-        int[] unownedDiscountedBundleListingIndices = ItemStore.Get().GetUnownedDiscountedBundleListingIndices();
+        int[] unownedDiscountedBundleListingIndices = itemStore.GetUnownedDiscountedBundleListingIndices();
         if (unownedDiscountedBundleListingIndices == null || unownedDiscountedBundleListingIndices.Length < 3)
         {
             return false;
@@ -840,14 +840,23 @@ public class MenuDashboardUI
                 list.Remove(item);
             }
         }
+        for (int num = list.Count - 1; num >= 0; num--)
+        {
+            int num2 = list[num];
+            int itemdefid = itemStore.GetListings()[num2].itemdefid;
+            if (!Provider.provider.economyService.IsItemEligibleForPromotion(itemdefid))
+            {
+                list.RemoveAtFast(num);
+            }
+        }
         if (list.Count < 3)
         {
             return false;
         }
         int widthForLayout = ScreenEx.GetWidthForLayout();
-        int num = Mathf.Max(3, (widthForLayout - 450) / 200);
-        List<int> list2 = new List<int>(num);
-        while (list2.Count < num && list.Count > 0)
+        int num3 = Mathf.Max(3, (widthForLayout - 450) / 200);
+        List<int> list2 = new List<int>(num3);
+        while (list2.Count < num3 && list.Count > 0)
         {
             int randomIndex = list.GetRandomIndex();
             list2.Add(list[randomIndex]);
@@ -938,46 +947,65 @@ public class MenuDashboardUI
             array = null;
             eLabelType = SleekItemStoreMainMenuButton.ELabelType.None;
         }
-        ItemStore.Listing listing;
-        if (array == null)
+        List<int> list;
+        if (array != null)
         {
-            ItemStore.Listing[] listings = itemStore.GetListings();
-            listing = listings[UnityEngine.Random.Range(0, listings.Length)];
-            Guid inventoryItemGuid = Provider.provider.economyService.getInventoryItemGuid(listing.itemdefid);
-            if (inventoryItemGuid != default(Guid) && Assets.find<ItemKeyAsset>(inventoryItemGuid) != null)
-            {
-                return;
-            }
+            list = new List<int>(array);
         }
         else
         {
-            int[] excludedListingIndices = itemStore.GetExcludedListingIndices();
-            if (excludedListingIndices != null)
+            ItemStore.Listing[] listings = itemStore.GetListings();
+            int num = Mathf.Min(5, listings.Length);
+            list = new List<int>(num);
+            for (int i = 0; i < num; i++)
             {
-                List<int> list = new List<int>(array);
-                int[] array2 = excludedListingIndices;
-                foreach (int item in array2)
+                int randomIndex = listings.GetRandomIndex();
+                if (!list.Contains(randomIndex))
                 {
-                    list.Remove(item);
+                    list.Add(randomIndex);
                 }
-                if (list.Count < 1)
-                {
-                    return;
-                }
-                array = list.ToArray();
             }
-            int num = array.RandomOrDefault();
-            listing = itemStore.GetListings()[num];
+        }
+        int[] excludedListingIndices = itemStore.GetExcludedListingIndices();
+        if (excludedListingIndices != null)
+        {
+            int[] array2 = excludedListingIndices;
+            foreach (int item in array2)
+            {
+                list.Remove(item);
+            }
+        }
+        for (int num2 = list.Count - 1; num2 >= 0; num2--)
+        {
+            int num3 = list[num2];
+            int itemdefid = itemStore.GetListings()[num3].itemdefid;
+            if (!Provider.provider.economyService.IsItemEligibleForPromotion(itemdefid))
+            {
+                list.RemoveAtFast(num2);
+            }
+            else
+            {
+                Guid inventoryItemGuid = Provider.provider.economyService.getInventoryItemGuid(itemdefid);
+                if (inventoryItemGuid != default(Guid) && Assets.find<ItemKeyAsset>(inventoryItemGuid) != null)
+                {
+                    list.RemoveAtFast(num2);
+                }
+            }
+        }
+        if (list.Count >= 1)
+        {
+            int num4 = list.RandomOrDefault();
+            ItemStore.Listing listing = itemStore.GetListings()[num4];
             if (eLabelType == SleekItemStoreMainMenuButton.ELabelType.New && ItemStoreSavedata.WasNewListingSeen(listing.itemdefid))
             {
                 eLabelType = SleekItemStoreMainMenuButton.ELabelType.None;
             }
+            SleekItemStoreMainMenuButton sleekItemStoreMainMenuButton = new SleekItemStoreMainMenuButton(listing, eLabelType);
+            sleekItemStoreMainMenuButton.PositionOffset_Y = 410f;
+            sleekItemStoreMainMenuButton.SizeOffset_X = 200f;
+            sleekItemStoreMainMenuButton.SizeOffset_Y = 50f;
+            container.AddChild(sleekItemStoreMainMenuButton);
         }
-        SleekItemStoreMainMenuButton sleekItemStoreMainMenuButton = new SleekItemStoreMainMenuButton(listing, eLabelType);
-        sleekItemStoreMainMenuButton.PositionOffset_Y = 410f;
-        sleekItemStoreMainMenuButton.SizeOffset_X = 200f;
-        sleekItemStoreMainMenuButton.SizeOffset_Y = 50f;
-        container.AddChild(sleekItemStoreMainMenuButton);
     }
 
     private static void PopulateAlertFromLiveConfig()
@@ -1403,6 +1431,7 @@ public class MenuDashboardUI
                 ESteamConnectionFailureInfo.SERVER_MAXPLAYERS_ADVERTISEMENT_MISMATCH => localization.format("Server_MaxPlayers_Advertisement_Mismatch"), 
                 ESteamConnectionFailureInfo.SERVER_CAMERAMODE_ADVERTISEMENT_MISMATCH => localization.format("Server_CameraMode_Advertisement_Mismatch"), 
                 ESteamConnectionFailureInfo.SERVER_PVP_ADVERTISEMENT_MISMATCH => localization.format("Server_PvP_Advertisement_Mismatch"), 
+                ESteamConnectionFailureInfo.HWID_MODIFIED => localization.format("HWID_Modified"), 
                 _ => localization.format("Failure_Unknown", eSteamConnectionFailureInfo, connectionFailureReason), 
             };
             if (string.IsNullOrEmpty(text))

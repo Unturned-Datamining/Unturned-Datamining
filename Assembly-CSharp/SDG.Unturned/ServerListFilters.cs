@@ -43,7 +43,7 @@ public class ServerListFilters
 
     public ECombat combat = ECombat.ANY;
 
-    public ECheats cheats;
+    public ECheats cheats = ECheats.ANY;
 
     public ECameraMode camera = ECameraMode.ANY;
 

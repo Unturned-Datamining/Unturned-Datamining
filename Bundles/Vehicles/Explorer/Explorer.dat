@@ -6,6 +6,10 @@ ID 58
 Speed_Min -6
 Speed_Max 13
 
+// Steering wheel model uses these values even though the tracks do not.
+Steer_Min 24
+Steer_Max 48
+
 CrawlerTrackSteering_Torque 10
 CrawlerTrackSteering_SidewaysFrictionMultiplier 1.0
 CrawlerTrackSteering_MaxSpeedScale 0.3

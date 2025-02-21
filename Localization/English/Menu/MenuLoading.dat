@@ -23,6 +23,8 @@ Queue_Position Queue Position: #{0}
 Queue_Cancel Cancel
 Queue_Cancel_Tooltip Leave queue
 
+PingMismatchWarning Warning: the in-game ping ({0} ms) is higher than the server browser ping ({1} ms), likely due to a DDoS protection mechanism. High ping may cause laggier gameplay than expected.
+
 Creators Created by:
 Collaborators Created in collaboration with:
 Thanks Special thanks to:

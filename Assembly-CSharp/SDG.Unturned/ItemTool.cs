@@ -52,6 +52,10 @@ public class ItemTool : MonoBehaviour
 
     private static Dictionary<ItemAsset, Texture2D> iconCache = new Dictionary<ItemAsset, Texture2D>();
 
+    private static Dictionary<int, int> cachedAttachmentEventHookCount = new Dictionary<int, int>();
+
+    private static List<GunAttachmentEventHook> tempAttachmentEventHooks = new List<GunAttachmentEventHook>();
+
     public static string filterRarityRichText(string desc)
     {
         if (!string.IsNullOrEmpty(desc))
@@ -358,6 +362,11 @@ public class ItemTool : MonoBehaviour
             attachments.shouldDestroyColliders = shouldDestroyColliders;
             attachments.updateGun((ItemGunAsset)itemAsset, skinAsset);
             attachments.updateAttachments(state, viewmodel);
+            int attachmentEventHookCount = GetAttachmentEventHookCount(gameObject);
+            if (attachmentEventHookCount > 0)
+            {
+                attachments.InitializeGunAttachmentEventHooks(attachmentEventHookCount);
+            }
         }
         if (!Dedicator.IsDedicatedServer && statTrackerCallback != null && statTrackerCallback(out var _, out var _))
         {
@@ -743,5 +752,18 @@ public class ItemTool : MonoBehaviour
         cameraComponent = GetComponent<Camera>();
         lightComponent = GetComponent<Light>();
         icons = new Queue<ItemIconInfo>();
+    }
+
+    private static int GetAttachmentEventHookCount(GameObject prefab)
+    {
+        int instanceID = prefab.GetInstanceID();
+        if (!cachedAttachmentEventHookCount.TryGetValue(instanceID, out var value))
+        {
+            tempAttachmentEventHooks.Clear();
+            prefab.GetComponentsInChildren(includeInactive: true, tempAttachmentEventHooks);
+            value = tempAttachmentEventHooks.Count;
+            cachedAttachmentEventHookCount.Add(instanceID, value);
+        }
+        return value;
     }
 }

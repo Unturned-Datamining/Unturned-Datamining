@@ -236,7 +236,7 @@ public class MenuPlayServerInfoUI
         stringBuilder.AppendLine($"Connection Port: {serverInfo.connectionPort}");
         stringBuilder.AppendLine($"Query Port: {serverInfo.queryPort}");
         stringBuilder.AppendLine($"SteamId: {serverInfo.steamID} ({serverInfo.steamID.GetEAccountType()})");
-        stringBuilder.AppendLine($"Ping: {serverInfo.ping}ms");
+        stringBuilder.AppendLine($"Ping: {serverInfo.PingMs}ms");
         if (expectedWorkshopItems == null)
         {
             stringBuilder.AppendLine("Workshop files unknown");
@@ -375,6 +375,11 @@ public class MenuPlayServerInfoUI
         serverFavorited = Provider.GetServerIsFavorited(serverInfo.ip, serverInfo.queryPort);
         updateFavorite();
         bookmarkDetails = ServerBookmarksManager.FindBookmarkDetails(serverInfo);
+        if (bookmarkDetails != null)
+        {
+            bookmarkDetails.UpdateFromAdvertisement(serverInfo);
+            ServerBookmarksManager.MarkDirty();
+        }
         UpdateBookmarkButton();
         updatePlayers();
         Provider.provider.matchmakingService.refreshPlayers(serverInfo.ip, serverInfo.queryPort);
@@ -538,14 +543,21 @@ public class MenuPlayServerInfoUI
         {
             serverMonetizationLabel.IsVisible = false;
         }
-        serverPingLabel.Text = localization.format("QueryPing", serverInfo.ping);
+        serverPingLabel.Text = localization.format("QueryPing", serverInfo.PingMs);
         serverPingLabel.PositionOffset_Y = num;
         num += 20;
-        if (banFlags.HasFlag(EHostBanFlags.QueryPingWarning))
+        if (serverInfo.anycastProxyMode != 0)
         {
             serverPingLabel.Text += " - ";
             serverPingLabel.Text += localization.format("HostBan_QueryPingWarning");
-            serverPingLabel.TextColor = ESleekTint.BAD;
+            if (serverInfo.anycastProxyMode == SteamServerAdvertisement.EAnycastProxyMode.FlaggedByModerator)
+            {
+                serverPingLabel.TextColor = ESleekTint.BAD;
+            }
+            else
+            {
+                serverPingLabel.TextColor = ESleekTint.FONT;
+            }
         }
         else
         {
@@ -601,7 +613,7 @@ public class MenuPlayServerInfoUI
 
     private static void UpdateBookmarkButton()
     {
-        bookmarkButton.IsVisible = serverInfo.steamID.BPersistentGameServerAccount() && !string.IsNullOrEmpty(serverBookmarkHost);
+        bookmarkButton.IsVisible = serverInfo.steamID.BPersistentGameServerAccount();
         if (bookmarkDetails != null && bookmarkDetails.isBookmarked)
         {
             bookmarkButton.text = localization.format("Bookmark_Off_Button");
@@ -703,7 +715,7 @@ public class MenuPlayServerInfoUI
         if (rulesMap.TryGetValue("BookmarkHost", out var value3))
         {
             serverBookmarkHost = value3;
-            if (bookmarkDetails != null && !string.IsNullOrEmpty(serverBookmarkHost))
+            if (bookmarkDetails != null)
             {
                 bookmarkDetails.host = serverBookmarkHost;
                 ServerBookmarksManager.MarkDirty();

@@ -32,6 +32,7 @@ public class Acid : MonoBehaviour
                 TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
                 parameters.position = lastPos;
                 parameters.relevantDistance = EffectManager.LARGE;
+                parameters.reliable = true;
                 EffectManager.triggerEffect(parameters);
             }
         }

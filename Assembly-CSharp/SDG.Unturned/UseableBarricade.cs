@@ -1316,7 +1316,11 @@ public class UseableBarricade : Useable
         }
         if (equippedBarricadeAsset.build == EBuild.SPIKE || equippedBarricadeAsset.build == EBuild.WIRE)
         {
-            UnityEngine.Object.Destroy(help.Find("Trap").GetComponent<InteractableTrap>());
+            Transform transform = help.Find("Trap");
+            if (transform != null)
+            {
+                transform.DestroyComponentIfExists<InteractableTrap>();
+            }
         }
         if (equippedBarricadeAsset.build == EBuild.BEACON)
         {
@@ -1328,20 +1332,20 @@ public class UseableBarricade : Useable
             {
                 UnityEngine.Object.Destroy(help.Find("Placeholder").gameObject);
             }
-            Transform transform = help.Find("Skeleton/Hinge");
-            if (transform != null)
-            {
-                CleanUpDoorHinge(transform);
-            }
-            Transform transform2 = help.Find("Skeleton/Left_Hinge");
+            Transform transform2 = help.Find("Skeleton/Hinge");
             if (transform2 != null)
             {
                 CleanUpDoorHinge(transform2);
             }
-            Transform transform3 = help.Find("Skeleton/Right_Hinge");
+            Transform transform3 = help.Find("Skeleton/Left_Hinge");
             if (transform3 != null)
             {
                 CleanUpDoorHinge(transform3);
+            }
+            Transform transform4 = help.Find("Skeleton/Right_Hinge");
+            if (transform4 != null)
+            {
+                CleanUpDoorHinge(transform4);
             }
         }
         else

@@ -236,6 +236,19 @@ public class BbCodeWidgetConverter
             case EBbCodeTokenType.LineBreak:
                 richTextStringBuilder.Append('\n');
                 break;
+            case EBbCodeTokenType.QuoteOpen:
+                if (string.IsNullOrEmpty(currentToken.tokenValue))
+                {
+                    richTextStringBuilder.Append("<indent=2em>");
+                }
+                else
+                {
+                    richTextStringBuilder.Append("<indent=2em><b>" + currentToken.tokenValue + ":</b>\n");
+                }
+                break;
+            case EBbCodeTokenType.QuoteClose:
+                richTextStringBuilder.Append("</indent>");
+                break;
             }
             AdvanceToken();
         }

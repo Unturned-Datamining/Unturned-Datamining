@@ -10,6 +10,8 @@ internal class ServerListCuration
 {
     private int _denyMode = -1;
 
+    private int _defaultBehavior = -1;
+
     /// <summary>
     /// Used to detect asset refresh.
     /// </summary>
@@ -71,6 +73,33 @@ internal class ServerListCuration
             {
                 _denyMode = (int)value;
                 ConvenientSavedata.get().write("ServerListCurationDenyMode", _denyMode);
+            }
+        }
+    }
+
+    public EServerListCurationDefaultBehavior DefaultBehavior
+    {
+        get
+        {
+            if (_defaultBehavior < 0)
+            {
+                if (ConvenientSavedata.get().read("ServerListCurationDefaultBehavior", out long value))
+                {
+                    _defaultBehavior = Mathf.Clamp((int)value, 0, 2);
+                }
+                else
+                {
+                    _defaultBehavior = 0;
+                }
+            }
+            return (EServerListCurationDefaultBehavior)_defaultBehavior;
+        }
+        set
+        {
+            if (_defaultBehavior != (int)value)
+            {
+                _defaultBehavior = (int)value;
+                ConvenientSavedata.get().write("ServerListCurationDefaultBehavior", _defaultBehavior);
             }
         }
     }
@@ -180,12 +209,13 @@ internal class ServerListCuration
     /// <summary>
     /// Called earlier during startup to try and have web lists ready by the time server browser is opened.
     /// </summary>
-    public void StartupLoadWebUrls()
+    public void StartupLoadWebUrlsAndLiveConfig()
     {
         if (!hasLoadedWebUrls)
         {
             hasLoadedWebUrls = true;
             LoadWebUrls();
+            RequestLiveConfig();
             MarkDirty();
         }
     }
@@ -218,7 +248,7 @@ internal class ServerListCuration
         areMergedRulesDirty = true;
     }
 
-    public void AddUrl(string url)
+    public void AddUrl(string url, int recommendationId)
     {
         foreach (ServerListCurationWebLink webUrl in webUrls)
         {
@@ -228,12 +258,14 @@ internal class ServerListCuration
             }
         }
         MarkDirty();
-        ServerListCurationWebLink serverListCurationWebLink = default(ServerListCurationWebLink);
-        serverListCurationWebLink.id = GetIdForNewWebLink();
-        serverListCurationWebLink.url = url;
-        ServerListCurationWebLink serverListCurationWebLink2 = serverListCurationWebLink;
-        webUrls.Add(serverListCurationWebLink2);
-        ServerCurationItem_Web item = new ServerCurationItem_Web(this, serverListCurationWebLink2);
+        ServerListCurationWebLink serverListCurationWebLink = new ServerListCurationWebLink
+        {
+            id = GetIdForNewWebLink(),
+            url = url,
+            recommendationId = recommendationId
+        };
+        webUrls.Add(serverListCurationWebLink);
+        ServerCurationItem_Web item = new ServerCurationItem_Web(this, serverListCurationWebLink);
         items.Add(item);
         SaveWebUrls();
     }
@@ -243,7 +275,7 @@ internal class ServerListCuration
         bool flag = false;
         for (int num = webUrls.Count - 1; num >= 0; num--)
         {
-            if (webUrls[num].id == webItem.linkId)
+            if (webUrls[num] == webItem.webLink)
             {
                 webUrls.RemoveAtFast(num);
                 flag = true;
@@ -412,7 +444,7 @@ internal class ServerListCuration
     {
         foreach (ServerCurationItem item in items)
         {
-            if (item is ServerCurationItem_Web serverCurationItem_Web && serverCurationItem_Web.linkId == id)
+            if (item is ServerCurationItem_Web serverCurationItem_Web && serverCurationItem_Web.webLink.id == id)
             {
                 return serverCurationItem_Web;
             }
@@ -443,7 +475,7 @@ internal class ServerListCuration
             }
             else if (serverCurationItem is ServerCurationItem_Web serverCurationItem_Web)
             {
-                value = $"Web:{serverCurationItem_Web.linkId}";
+                value = $"Web:{serverCurationItem_Web.webLink.id}";
             }
             convenientSavedata.write(key, value);
         }
@@ -481,15 +513,61 @@ internal class ServerListCuration
             string key2 = $"ServerCurationWebUrl_{i}";
             if (convenientSavedata.read(key, out long value2) && convenientSavedata.read(key2, out string value3) && !string.IsNullOrWhiteSpace(value3))
             {
-                ServerListCurationWebLink serverListCurationWebLink = default(ServerListCurationWebLink);
-                serverListCurationWebLink.id = (int)value2;
-                serverListCurationWebLink.url = value3;
-                ServerListCurationWebLink serverListCurationWebLink2 = serverListCurationWebLink;
-                webUrls.Add(serverListCurationWebLink2);
-                ServerCurationItem_Web item = new ServerCurationItem_Web(this, serverListCurationWebLink2);
+                string key3 = $"ServerCurationWebMode_{i}";
+                convenientSavedata.read(key3, out long value4);
+                ServerListCurationWebLink serverListCurationWebLink = new ServerListCurationWebLink
+                {
+                    id = (int)value2,
+                    url = value3,
+                    recommendationId = (int)value4
+                };
+                webUrls.Add(serverListCurationWebLink);
+                ServerCurationItem_Web item = new ServerCurationItem_Web(this, serverListCurationWebLink);
                 items.Add(item);
             }
         }
+    }
+
+    private void RequestLiveConfig()
+    {
+        if (LiveConfig.WasPopulated)
+        {
+            ApplyLiveConfig();
+        }
+        else
+        {
+            LiveConfig.OnRefreshed += OnLiveConfigRefreshed;
+        }
+    }
+
+    private void OnLiveConfigRefreshed()
+    {
+        LiveConfig.OnRefreshed -= OnLiveConfigRefreshed;
+        ApplyLiveConfig();
+    }
+
+    private void ApplyLiveConfig()
+    {
+        ServerCurationLiveConfig serverCuration = LiveConfig.Get().serverCuration;
+        if (serverCuration.items != null)
+        {
+            for (int num = webUrls.Count - 1; num >= 0; num--)
+            {
+                ServerListCurationWebLink serverListCurationWebLink = webUrls[num];
+                if (serverListCurationWebLink.recommendationId >= 1 && !serverCuration.IsRecommended(serverListCurationWebLink.recommendationId))
+                {
+                    UnturnedLog.info($"Removing live config server curator recommendation \"{serverListCurationWebLink.url}\" ({serverListCurationWebLink.recommendationId})");
+                    FindWebItemByLinkId(serverListCurationWebLink.id)?.Delete();
+                }
+            }
+            ServerCurationLiveConfigItem[] array = serverCuration.items;
+            for (int i = 0; i < array.Length; i++)
+            {
+                ServerCurationLiveConfigItem serverCurationLiveConfigItem = array[i];
+                AddUrl(serverCurationLiveConfigItem.url, serverCurationLiveConfigItem.id);
+            }
+        }
+        MarkDirty();
     }
 
     private void SaveWebUrls()
@@ -503,6 +581,15 @@ internal class ServerListCuration
             convenientSavedata.write(key, serverListCurationWebLink.id);
             string key2 = $"ServerCurationWebUrl_{i}";
             convenientSavedata.write(key2, serverListCurationWebLink.url);
+            string key3 = $"ServerCurationWebMode_{i}";
+            if (serverListCurationWebLink.recommendationId > 0)
+            {
+                convenientSavedata.write(key3, serverListCurationWebLink.recommendationId);
+            }
+            else
+            {
+                convenientSavedata.DeleteInteger(key3);
+            }
         }
     }
 

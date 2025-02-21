@@ -69,6 +69,8 @@ public class UnturnedEconInfo
     /// </summary>
     public DateTime creationTimeUtc;
 
+    public bool isEligibleForPromotion = true;
+
     public UnturnedEconInfo()
     {
         name = "";

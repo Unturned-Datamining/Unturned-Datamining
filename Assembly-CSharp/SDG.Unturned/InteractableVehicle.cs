@@ -655,6 +655,12 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         }
     }
 
+    /// <summary>
+    /// If true, the vehicle will be destroyed at the end of the frame. Set before OnPreDestroyVehicle.
+    /// Used to reject requests to enter the vehicle on the same frame it's being destroyed.
+    /// </summary>
+    public bool IsPendingDestroy { get; internal set; }
+
     public float lastDead => _lastDead;
 
     public float lastUnderwater => _lastUnderwater;
@@ -1307,6 +1313,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
             TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
             parameters.position = base.transform.position;
             parameters.relevantDistance = EffectManager.LARGE;
+            parameters.reliable = true;
             EffectManager.triggerEffect(parameters);
         }
     }
@@ -1352,7 +1359,11 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
     /// </summary>
     public bool IsFriendlyToSentry(InteractableSentry sentry)
     {
-        if (checkEnter(sentry.owner, sentry.group))
+        if (Provider.isServer && !Dedicator.IsDedicatedServer)
+        {
+            return true;
+        }
+        if (isLocked && (lockedOwner == sentry.owner || (lockedGroup != CSteamID.Nil && lockedGroup == sentry.group)))
         {
             return true;
         }
@@ -2909,10 +2920,12 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
             rootRigidbody.isKinematic = isKinematic;
             return;
         }
+        bool isTorqueBlocked = false;
         if ((usesFuel && fuel == 0) || isUnderwater || isDead || !isEnginePowered)
         {
             num = 0f;
             num2 = 1f;
+            isTorqueBlocked = true;
         }
         bool flag2 = false;
         float num3 = asset.steeringLeaningForceMultiplier;
@@ -2930,7 +2943,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
             Wheel[] wheels = _wheels;
             foreach (Wheel wheel in wheels)
             {
-                wheel.ClientSimulate(input_x, num, inputBrake, delta);
+                wheel.ClientSimulate(input_x, num, inputBrake, delta, isTorqueBlocked);
                 flag2 |= wheel.isGrounded;
             }
             if (flag2 && asset.wheelBalancingForceMultiplier > 0f)

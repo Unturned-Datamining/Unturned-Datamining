@@ -536,7 +536,7 @@ public class PlayerVoice : PlayerCaller
     /// </summary>
     private void updateInput()
     {
-        bool num = OptionsSettings.chatVoiceIn && OptionsSettings.chatVoiceOut;
+        bool num = OptionsSettings.chatVoiceIn && OptionsSettings.EnableOutboundVoiceChat;
         bool flag = base.player.life.IsAlive || allowTalkingWhileDead;
         bool flag2 = num && flag && customAllowTalking;
         if (ControlsSettings.voiceMode == EControlMode.HOLD)
@@ -724,7 +724,7 @@ public class PlayerVoice : PlayerCaller
 
     private void SynchronizeSteamIsRecording()
     {
-        bool flag = OptionsSettings.chatVoiceIn && OptionsSettings.chatVoiceOut;
+        bool flag = OptionsSettings.chatVoiceIn && OptionsSettings.EnableOutboundVoiceChat;
         SteamIsRecording = flag && !isBeingDestroyed && (inputWantsToRecord || OptionsSettings.VoiceAlwaysRecording);
     }
 }

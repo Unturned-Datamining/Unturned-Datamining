@@ -490,6 +490,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
                     TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
                     parameters.relevantDistance = EffectManager.SMALL;
                     parameters.position = base.transform.position + Vector3.up;
+                    parameters.reliable = true;
                     EffectManager.triggerEffect(parameters);
                     parameters.SetDirection(-vector2);
                     EffectManager.triggerEffect(parameters);
@@ -692,6 +693,22 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         }
     }
 
+    private void StopThrowingBoulder()
+    {
+        if (isThrowingBoulder)
+        {
+            isThrowingBoulder = false;
+            if (boulderItem != null)
+            {
+                UnityEngine.Object.Destroy(boulderItem.gameObject);
+            }
+            if (Provider.isServer)
+            {
+                seeker.canMove = true;
+            }
+        }
+    }
+
     public void askBoulder(Vector3 origin, Vector3 direction)
     {
         if (!isDead)
@@ -719,6 +736,18 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
             if (!Dedicator.IsDedicatedServer)
             {
                 animator.Play("Acid_0");
+            }
+        }
+    }
+
+    private void StopSpittingAcid()
+    {
+        if (isSpittingAcid)
+        {
+            isSpittingAcid = false;
+            if (Provider.isServer)
+            {
+                seeker.canMove = true;
             }
         }
     }
@@ -757,6 +786,18 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
             if (sparkSystem != null)
             {
                 sparkSystem.Play();
+            }
+        }
+    }
+
+    private void StopChargingSpark()
+    {
+        if (isChargingSpark)
+        {
+            isChargingSpark = false;
+            if (Provider.isServer)
+            {
+                seeker.canMove = true;
             }
         }
     }
@@ -806,6 +847,18 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         }
     }
 
+    private void StopStompingWind()
+    {
+        if (isStompingWind)
+        {
+            isStompingWind = false;
+            if (Provider.isServer)
+            {
+                seeker.canMove = true;
+            }
+        }
+    }
+
     public void askBreath()
     {
         if (isDead)
@@ -829,6 +882,23 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
             {
                 fireAudio.pitch = UnityEngine.Random.Range(0.95f, 1.05f);
                 fireAudio.Play();
+            }
+        }
+    }
+
+    private void StopBreathingFire()
+    {
+        if (isBreathingFire)
+        {
+            isBreathingFire = false;
+            if (fireSystem != null)
+            {
+                ParticleSystem.EmissionModule emission = fireSystem.emission;
+                emission.enabled = false;
+            }
+            if (Provider.isServer)
+            {
+                seeker.canMove = true;
             }
         }
     }
@@ -922,6 +992,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
                 TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
                 parameters.position = burner.position;
                 parameters.relevantDistance = EffectManager.MEDIUM;
+                parameters.reliable = true;
                 EffectManager.triggerEffect(parameters);
             }
             DamageTool.explode(base.transform.position + new Vector3(0f, 0.25f, 0f), 4f, EDeathCause.BURNER, CSteamID.Nil, 40f, 0f, 40f, 0f, 0f, 0f, 0f, 0f, out var _, EExplosionDamageType.ZOMBIE_FIRE, 4f, playImpactEffect: true, penetrateBuildables: false, EDamageOrigin.Flamable_Zombie_Explosion);
@@ -1230,6 +1301,12 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
     private void stun()
     {
         isStunned = true;
+        isAttacking = false;
+        StopBreathingFire();
+        StopThrowingBoulder();
+        StopSpittingAcid();
+        StopStompingWind();
+        StopChargingSpark();
         isMoving = false;
         seeker.canMove = false;
         if (speciality == EZombieSpeciality.CRAWLER)
@@ -2350,14 +2427,9 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         }
         if (isThrowingBoulder && Time.time - lastSpecial > throwTime)
         {
-            isThrowingBoulder = false;
-            if (boulderItem != null)
-            {
-                UnityEngine.Object.Destroy(boulderItem.gameObject);
-            }
+            StopThrowingBoulder();
             if (Provider.isServer)
             {
-                seeker.canMove = true;
                 if (player != null)
                 {
                     Vector3 vector = player.transform.position - base.transform.position;
@@ -2380,10 +2452,9 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         }
         if (isSpittingAcid && Time.time - lastSpecial > acidTime)
         {
-            isSpittingAcid = false;
+            StopSpittingAcid();
             if (Provider.isServer)
             {
-                seeker.canMove = true;
                 if (player != null)
                 {
                     Vector3 vector3 = player.transform.position - base.transform.position;
@@ -2399,7 +2470,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         }
         if (isChargingSpark && Time.time - lastSpecial > sparkTime)
         {
-            isChargingSpark = false;
+            StopChargingSpark();
             if (Provider.isServer && player != null)
             {
                 Vector3 vector4 = player.look.aim.position;
@@ -2417,10 +2488,9 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         }
         if (isStompingWind && Time.time - lastSpecial > windTime)
         {
-            isStompingWind = false;
+            StopStompingWind();
             if (Provider.isServer)
             {
-                seeker.canMove = true;
                 float barricadeDamage2 = (Provider.modeConfigData.Zombies.Can_Target_Barricades ? 500f : 0f);
                 float structureDamage2 = (Provider.modeConfigData.Zombies.Can_Target_Structures ? 500f : 0f);
                 float vehicleDamage2 = (Provider.modeConfigData.Zombies.Can_Target_Vehicles ? 500f : 0f);
@@ -2455,16 +2525,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
             }
             if (Time.time - lastSpecial > fireTime)
             {
-                isBreathingFire = false;
-                if (fireSystem != null)
-                {
-                    ParticleSystem.EmissionModule emission = fireSystem.emission;
-                    emission.enabled = false;
-                }
-                if (Provider.isServer)
-                {
-                    seeker.canMove = true;
-                }
+                StopBreathingFire();
             }
         }
         if (isPlayingBoulder)
@@ -2486,10 +2547,6 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
             if (Time.time - lastSpecial > chargeTime)
             {
                 isPlayingCharge = false;
-                if (Provider.isServer)
-                {
-                    seeker.canMove = true;
-                }
             }
         }
         else if (isPlayingWind)

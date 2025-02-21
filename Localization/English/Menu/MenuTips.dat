@@ -31,3 +31,4 @@ Orientation You can rotate items in your inventory by pressing [{0}].
 Red Your critical hitmarker color setting also affects the color of glowing sights.
 Steady You can steady your scope by holding [{0}] while aiming. Remember to account for bullet drop and travel time!
 Streamer You can customize the names used in streamer mode by modifying StreamerNames.json, maybe with viewer/subscriber names!
+SkipActionCraftingMenu You can skip the crafting menu when performing an action in an item's context menu by holding [{0}] while clicking it.

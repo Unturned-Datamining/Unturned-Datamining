@@ -5,9 +5,7 @@ namespace SDG.Unturned;
 
 internal class ServerCurationItem_Web : ServerCurationItem, IAssetErrorContext
 {
-    public int linkId;
-
-    public string url;
+    public ServerListCurationWebLink webLink;
 
     public bool isWaitingForResponse;
 
@@ -15,19 +13,19 @@ internal class ServerCurationItem_Web : ServerCurationItem, IAssetErrorContext
 
     private Coroutine coroutine;
 
-    public override string DisplayName => file?.Name ?? url;
+    public override string DisplayName => file?.Name ?? webLink.url;
 
-    public override string DisplayOrigin => url;
+    public override string DisplayOrigin => webLink.url;
 
     public override Texture2D Icon => null;
 
     public override string IconUrl => file?.IconUrl;
 
-    public override bool IsDeletable => true;
+    public override bool IsDeletable => webLink.recommendationId < 1;
 
     public override int LatestBlockedServerCount => file?.latestBlockedServerCount ?? 0;
 
-    public string AssetErrorPrefix => "Server List Curator at \"" + url + "\"";
+    public string AssetErrorPrefix => "Server List Curator at \"" + webLink.url + "\"";
 
     public override void Reload()
     {
@@ -46,7 +44,7 @@ internal class ServerCurationItem_Web : ServerCurationItem, IAssetErrorContext
             curation.webRequestHandler.StopCoroutine(coroutine);
         }
         IConvenientSavedata convenientSavedata = ConvenientSavedata.get();
-        string key = $"ServerCurationWebLink_{linkId}_Active";
+        string key = $"ServerCurationWebLink_{webLink.id}_Active";
         convenientSavedata.DeleteBool(key);
         curation.RemoveUrl(this);
     }
@@ -75,8 +73,13 @@ internal class ServerCurationItem_Web : ServerCurationItem, IAssetErrorContext
 
     protected override void SaveActive()
     {
-        string key = $"ServerCurationWebLink_{linkId}_Active";
+        string key = $"ServerCurationWebLink_{webLink.id}_Active";
         ConvenientSavedata.get().write(key, _isActive);
+    }
+
+    public void ReportAssetError(string message)
+    {
+        base.ErrorMessage = message;
     }
 
     internal void NotifyRequestComplete(ServerListCurationFile file)
@@ -95,9 +98,8 @@ internal class ServerCurationItem_Web : ServerCurationItem, IAssetErrorContext
     public ServerCurationItem_Web(ServerListCuration curation, ServerListCurationWebLink link)
         : base(curation)
     {
-        linkId = link.id;
-        url = link.url;
-        string key = $"ServerCurationWebLink_{linkId}_Active";
+        webLink = link;
+        string key = $"ServerCurationWebLink_{webLink.id}_Active";
         if (!ConvenientSavedata.get().read(key, out _isActive))
         {
             _isActive = true;

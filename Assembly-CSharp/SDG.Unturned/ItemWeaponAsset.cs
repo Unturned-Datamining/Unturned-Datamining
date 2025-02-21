@@ -338,43 +338,43 @@ public class ItemWeaponAsset : ItemAsset
     {
         base.BuildCargoData(builder);
         CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Weapon");
-        orAddDeclaration.AppendGuid("GUID", GUID);
-        orAddDeclaration.AppendFloat("Durability", durability);
-        orAddDeclaration.AppendFloat("Range", range);
-        orAddDeclaration.AppendByte("Wear", wear);
-        orAddDeclaration.AppendFloat("Player_Damage", playerDamageMultiplier.damage);
-        orAddDeclaration.AppendFloat("Player_Leg_Multiplier", playerDamageMultiplier.leg);
-        orAddDeclaration.AppendFloat("Player_Arm_Multiplier", playerDamageMultiplier.arm);
-        orAddDeclaration.AppendFloat("Player_Spine_Multiplier", playerDamageMultiplier.spine);
-        orAddDeclaration.AppendFloat("Player_Skull_Multiplier", playerDamageMultiplier.skull);
-        orAddDeclaration.AppendToString("Player_Damage_Bleeding", playerDamageBleeding);
-        orAddDeclaration.AppendToString("Player_Damage_Bones", playerDamageBones);
-        orAddDeclaration.AppendFloat("Player_Damage_Food", playerDamageFood);
-        orAddDeclaration.AppendFloat("Player_Damage_Water", playerDamageWater);
-        orAddDeclaration.AppendFloat("Player_Damage_Virus", playerDamageVirus);
-        orAddDeclaration.AppendFloat("Player_Damage_Hallucination", playerDamageHallucination);
-        orAddDeclaration.AppendFloat("Zombie_Damage", zombieDamageMultiplier.damage);
-        orAddDeclaration.AppendFloat("Zombie_Leg_Multiplier", zombieDamageMultiplier.leg);
-        orAddDeclaration.AppendFloat("Zombie_Arm_Multiplier", zombieDamageMultiplier.arm);
-        orAddDeclaration.AppendFloat("Zombie_Spine_Multiplier", zombieDamageMultiplier.spine);
-        orAddDeclaration.AppendFloat("Zombie_Skull_Multiplier", zombieDamageMultiplier.skull);
-        orAddDeclaration.AppendToString("zombieStunOverride", zombieStunOverride);
-        orAddDeclaration.AppendFloat("Animal_Damage", animalDamageMultiplier.damage);
-        orAddDeclaration.AppendFloat("Animal_Leg_Multiplier", animalDamageMultiplier.leg);
-        orAddDeclaration.AppendFloat("Animal_Spine_Multiplier", animalDamageMultiplier.spine);
-        orAddDeclaration.AppendFloat("Animal_Skull_Multiplier", animalDamageMultiplier.skull);
-        orAddDeclaration.AppendInt("BladeIDs", bladeIDs.Length);
-        orAddDeclaration.AppendFloat("Barricade_Damage", barricadeDamage);
-        orAddDeclaration.AppendFloat("Structure_Damage", structureDamage);
-        orAddDeclaration.AppendFloat("Vehicle_Damage", vehicleDamage);
-        orAddDeclaration.AppendFloat("Resource_Damage", resourceDamage);
-        orAddDeclaration.AppendFloat("Object_Damage", objectDamage);
-        orAddDeclaration.AppendBool("Invulnerable", isInvulnerable);
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Durability", durability);
+        orAddDeclaration.Append("Range", range);
+        orAddDeclaration.Append("Wear", wear);
+        orAddDeclaration.Append("Player_Damage", playerDamageMultiplier.damage);
+        orAddDeclaration.Append("Player_Leg_Multiplier", playerDamageMultiplier.leg);
+        orAddDeclaration.Append("Player_Arm_Multiplier", playerDamageMultiplier.arm);
+        orAddDeclaration.Append("Player_Spine_Multiplier", playerDamageMultiplier.spine);
+        orAddDeclaration.Append("Player_Skull_Multiplier", playerDamageMultiplier.skull);
+        orAddDeclaration.Append("Player_Damage_Bleeding", playerDamageBleeding);
+        orAddDeclaration.Append("Player_Damage_Bones", playerDamageBones);
+        orAddDeclaration.Append("Player_Damage_Food", playerDamageFood);
+        orAddDeclaration.Append("Player_Damage_Water", playerDamageWater);
+        orAddDeclaration.Append("Player_Damage_Virus", playerDamageVirus);
+        orAddDeclaration.Append("Player_Damage_Hallucination", playerDamageHallucination);
+        orAddDeclaration.Append("Zombie_Damage", zombieDamageMultiplier.damage);
+        orAddDeclaration.Append("Zombie_Leg_Multiplier", zombieDamageMultiplier.leg);
+        orAddDeclaration.Append("Zombie_Arm_Multiplier", zombieDamageMultiplier.arm);
+        orAddDeclaration.Append("Zombie_Spine_Multiplier", zombieDamageMultiplier.spine);
+        orAddDeclaration.Append("Zombie_Skull_Multiplier", zombieDamageMultiplier.skull);
+        orAddDeclaration.Append("zombieStunOverride", zombieStunOverride);
+        orAddDeclaration.Append("Animal_Damage", animalDamageMultiplier.damage);
+        orAddDeclaration.Append("Animal_Leg_Multiplier", animalDamageMultiplier.leg);
+        orAddDeclaration.Append("Animal_Spine_Multiplier", animalDamageMultiplier.spine);
+        orAddDeclaration.Append("Animal_Skull_Multiplier", animalDamageMultiplier.skull);
+        orAddDeclaration.Append("BladeIDs", bladeIDs.Length);
+        orAddDeclaration.Append("Barricade_Damage", barricadeDamage);
+        orAddDeclaration.Append("Structure_Damage", structureDamage);
+        orAddDeclaration.Append("Vehicle_Damage", vehicleDamage);
+        orAddDeclaration.Append("Resource_Damage", resourceDamage);
+        orAddDeclaration.Append("Object_Damage", objectDamage);
+        orAddDeclaration.Append("Invulnerable", isInvulnerable);
         for (byte b = 0; b < bladeIDs.Length; b++)
         {
             CargoDeclaration cargoDeclaration = builder.AddDeclaration("Weapon_BladeID");
-            cargoDeclaration.AppendGuid("GUID", GUID);
-            cargoDeclaration.AppendToString("BladeID", bladeIDs[b]);
+            cargoDeclaration.Append("GUID", GUID);
+            cargoDeclaration.Append("BladeID", (object)bladeIDs[b]);
         }
     }
 }

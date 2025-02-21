@@ -123,6 +123,11 @@ public abstract class Asset : IAssetErrorContext
         hash = Hash.combineSHA1Hashes(hash, otherHash);
     }
 
+    public void ReportAssetError(string message)
+    {
+        Assets.ReportError(this, message);
+    }
+
     /// <summary>
     /// Most asset classes end in "Asset", so in debug strings if asset is clear from context we can remove the unnecessary suffix.
     /// </summary>
@@ -189,18 +194,18 @@ public abstract class Asset : IAssetErrorContext
     internal virtual void BuildCargoData(CargoBuilder builder)
     {
         CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Asset");
-        orAddDeclaration.AppendGuid("GUID", GUID);
+        orAddDeclaration.Append("GUID", GUID);
         if (id > 0)
         {
-            orAddDeclaration.AppendUShort("ID", id);
+            orAddDeclaration.Append("ID", id);
         }
-        orAddDeclaration.AppendString("Filename", name);
+        orAddDeclaration.Append("Filename", name);
         if (originMasterBundle != null)
         {
-            orAddDeclaration.AppendString("MasterBundle", originMasterBundle.assetBundleNameWithoutExtension);
+            orAddDeclaration.Append("MasterBundle", originMasterBundle.assetBundleNameWithoutExtension);
         }
-        orAddDeclaration.AppendString("Origin", GetOriginName());
-        orAddDeclaration.AppendString("Type", GetTypeFriendlyName());
+        orAddDeclaration.Append("Origin", GetOriginName());
+        orAddDeclaration.Append("Type", GetTypeFriendlyName());
     }
 
     /// <summary>

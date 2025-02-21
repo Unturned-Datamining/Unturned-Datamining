@@ -9,12 +9,12 @@ internal class ServerListCurationWebRequestHandler : MonoBehaviour
 {
     internal IEnumerator SendRequest(ServerCurationItem_Web webItem)
     {
-        using UnityWebRequest request = UnityWebRequest.Get(webItem.url);
+        using UnityWebRequest request = UnityWebRequest.Get(webItem.webLink.url);
         request.timeout = 10;
         yield return request.SendWebRequest();
         if (request.result != UnityWebRequest.Result.Success)
         {
-            UnturnedLog.error("Error getting server curation file from \"" + webItem.url + "\": \"" + request.error + "\"");
+            UnturnedLog.error("Error getting server curation file from \"" + webItem.webLink.url + "\": \"" + request.error + "\"");
             webItem.ErrorMessage = $"{request.result}: \"{request.error}\"";
             webItem.NotifyRequestComplete(null);
             yield break;
@@ -25,7 +25,7 @@ internal class ServerListCurationWebRequestHandler : MonoBehaviour
             DatDictionary data = datParser.Parse(request.downloadHandler.data);
             if (datParser.HasError)
             {
-                Debug.LogError("Error parsing server curation file from \"" + webItem.url + "\": \"" + datParser.ErrorMessage + "\"");
+                Debug.LogError("Error parsing server curation file from \"" + webItem.webLink.url + "\": \"" + datParser.ErrorMessage + "\"");
                 webItem.ErrorMessage = "Parsing error: \"" + datParser.ErrorMessage + "\"";
                 webItem.NotifyRequestComplete(null);
             }
@@ -39,7 +39,7 @@ internal class ServerListCurationWebRequestHandler : MonoBehaviour
         }
         catch (Exception ex)
         {
-            Debug.LogError("Caught exception getting server curation file from \"" + webItem.url + "\":");
+            Debug.LogError("Caught exception getting server curation file from \"" + webItem.webLink.url + "\":");
             Debug.LogException(ex);
             webItem.ErrorMessage = "Exception: \"" + ex.Message + "\"";
             webItem.NotifyRequestComplete(null);

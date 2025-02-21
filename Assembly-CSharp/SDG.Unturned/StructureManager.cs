@@ -241,6 +241,7 @@ public class StructureManager : SteamCaller
                 TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
                 parameters.position = transform.position + Vector3.down * HEIGHT;
                 parameters.relevantDistance = EffectManager.MEDIUM;
+                parameters.reliable = true;
                 EffectManager.triggerEffect(parameters);
             }
             asset.SpawnItemDropsOnDestroy(transform.position);

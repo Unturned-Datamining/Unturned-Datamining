@@ -26,7 +26,7 @@ Window Missing Window
 Bed_On Claim [{0}]
 Bed_Off Unclaim [{0}]
 Bed_Claimed Claimed
-Bounds Out Of Bounds
+Bounds No Building Here
 Experience +{0} Experience
 Storage Storage [{0}]
 Farm Harvest [{0}]
@@ -81,7 +81,7 @@ Tutorial_Power Generators can power electrical objects such as anti-zombie radia
 Tutorial_Fire Fires keep you warm in freezing environments and give you an easy place to Cook [{0}] food.
 Claim Area Claimed
 Underwater Too Wet
-Nav Too Far From Town
+Nav Too Far From Zombies
 Spawn Too Near To Spawn
 Mobile Not Mobile
 Oil Missing Fuel Reserve

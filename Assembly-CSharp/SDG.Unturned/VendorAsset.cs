@@ -50,21 +50,31 @@ public class VendorAsset : Asset
         buying = new VendorBuying[data.ParseUInt8("Buying", 0)];
         for (byte b = 0; b < buying.Length; b++)
         {
+            string text = localization.FormatOrNull($"Buying_{b}_Description");
+            if (!string.IsNullOrEmpty(text))
+            {
+                text = ItemTool.filterRarityRichText(text);
+            }
             data.ParseGuidOrLegacyId("Buying_" + b + "_ID", out var guid, out var legacyId);
             uint newCost = data.ParseUInt32("Buying_" + b + "_Cost");
             INPCCondition[] array = new INPCCondition[data.ParseUInt8("Buying_" + b + "_Conditions", 0)];
             NPCTool.readConditions(data, localization, "Buying_" + b + "_Condition_", array, this);
             NPCRewardsList newRewardsList = default(NPCRewardsList);
             newRewardsList.Parse(data, localization, this, "Buying_" + b + "_Rewards", "Buying_" + b + "_Reward_");
-            buying[b] = new VendorBuying(this, b, guid, legacyId, newCost, array, newRewardsList);
+            buying[b] = new VendorBuying(this, b, guid, legacyId, newCost, array, newRewardsList, text);
         }
         selling = new VendorSellingBase[data.ParseUInt8("Selling", 0)];
         for (byte b2 = 0; b2 < selling.Length; b2++)
         {
-            string text = null;
+            string text2 = null;
             if (data.ContainsKey("Selling_" + b2 + "_Type"))
             {
-                text = data.GetString("Selling_" + b2 + "_Type");
+                text2 = data.GetString("Selling_" + b2 + "_Type");
+            }
+            string text3 = localization.FormatOrNull($"Selling_{b2}_Description");
+            if (!string.IsNullOrEmpty(text3))
+            {
+                text3 = ItemTool.filterRarityRichText(text3);
             }
             data.ParseGuidOrLegacyId("Selling_" + b2 + "_ID", out var guid2, out var legacyId2);
             uint newCost2 = data.ParseUInt32("Selling_" + b2 + "_Cost");
@@ -72,7 +82,7 @@ public class VendorAsset : Asset
             NPCTool.readConditions(data, localization, "Selling_" + b2 + "_Condition_", array2, this);
             NPCRewardsList newRewardsList2 = default(NPCRewardsList);
             newRewardsList2.Parse(data, localization, this, "Selling_" + b2 + "_Rewards", "Selling_" + b2 + "_Reward_");
-            if (text == null || text.Equals("Item", StringComparison.InvariantCultureIgnoreCase))
+            if (text2 == null || text2.Equals("Item", StringComparison.InvariantCultureIgnoreCase))
             {
                 int newSight = data.ParseInt32("Selling_" + b2 + "_Sight", -1);
                 int newTactical = data.ParseInt32("Selling_" + b2 + "_Tactical", -1);
@@ -80,26 +90,26 @@ public class VendorAsset : Asset
                 int newBarrel = data.ParseInt32("Selling_" + b2 + "_Barrel", -1);
                 int newMagazine = data.ParseInt32("Selling_" + b2 + "_Magazine", -1);
                 int newAmmo = data.ParseInt32("Selling_" + b2 + "_Ammo", -1);
-                selling[b2] = new VendorSellingItem(this, b2, guid2, legacyId2, newCost2, array2, newRewardsList2, newSight, newTactical, newGrip, newBarrel, newMagazine, newAmmo);
+                selling[b2] = new VendorSellingItem(this, b2, guid2, legacyId2, newCost2, array2, newRewardsList2, text3, newSight, newTactical, newGrip, newBarrel, newMagazine, newAmmo);
             }
             else
             {
-                if (!text.Equals("Vehicle", StringComparison.InvariantCultureIgnoreCase))
+                if (!text2.Equals("Vehicle", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    throw new NotSupportedException("unknown selling type: '" + text + "'");
+                    throw new NotSupportedException("unknown selling type: '" + text2 + "'");
                 }
-                string text2 = "Selling_" + b2 + "_Spawnpoint";
-                string @string = data.GetString(text2);
+                string text4 = "Selling_" + b2 + "_Spawnpoint";
+                string @string = data.GetString(text4);
                 if (string.IsNullOrEmpty(@string))
                 {
-                    Assets.ReportError(this, "missing \"" + text2 + "\" for vehicle");
+                    Assets.ReportError(this, "missing \"" + text4 + "\" for vehicle");
                 }
                 Color32? newPaintColor = null;
                 if (data.TryParseColor32RGB("Selling_" + b2 + "_PaintColor", out var value))
                 {
                     newPaintColor = value;
                 }
-                selling[b2] = new VendorSellingVehicle(this, b2, guid2, legacyId2, newCost2, @string, newPaintColor, array2, newRewardsList2);
+                selling[b2] = new VendorSellingVehicle(this, b2, guid2, legacyId2, newCost2, @string, newPaintColor, array2, newRewardsList2, text3);
             }
         }
         enableSorting = !data.ContainsKey("Disable_Sorting");

@@ -106,13 +106,13 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
     private void OnInboundVoiceChatToggled(ISleekToggle toggle, bool state)
     {
         OptionsSettings.chatVoiceIn = state;
-        OptionsSettings.chatVoiceOut &= state;
+        OptionsSettings.EnableOutboundVoiceChat &= state;
         SynchronizeValues();
     }
 
     private void OnOutboundVoiceChatToggled(ISleekToggle toggle, bool state)
     {
-        OptionsSettings.chatVoiceOut = state;
+        OptionsSettings.EnableOutboundVoiceChat = state;
         SynchronizeValues();
     }
 
@@ -133,8 +133,8 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
         profanityFilter_Header.Text = localization.format("ProfanityFilter_Header", localization.format(OptionsSettings.filter ? "Feature_On" : "Feature_Off"));
         inboundVoiceChatToggle.Value = OptionsSettings.chatVoiceIn;
         inboundVoiceChat_Header.Text = localization.format("InboundVoiceChat_Header", localization.format(OptionsSettings.chatVoiceIn ? "Feature_On" : "Feature_Off"));
-        outboundVoiceChatToggle.Value = OptionsSettings.chatVoiceOut;
-        outboundVoiceChat_Header.Text = localization.format("OutboundVoiceChat_Header", localization.format(OptionsSettings.chatVoiceOut ? "Feature_On" : "Feature_Off"));
+        outboundVoiceChatToggle.Value = OptionsSettings.EnableOutboundVoiceChat;
+        outboundVoiceChat_Header.Text = localization.format("OutboundVoiceChat_Header", localization.format(OptionsSettings.EnableOutboundVoiceChat ? "Feature_On" : "Feature_Off"));
         outboundVoiceChat_Description.Text = localization.format("OutboundVoiceChat_Description", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.voice));
         outboundVoiceChatToggle.IsInteractable = OptionsSettings.chatVoiceIn;
         outboundVoiceChat_Header.TextColor = new SleekColor(ESleekTint.FONT, OptionsSettings.chatVoiceIn ? 1f : 0.5f);

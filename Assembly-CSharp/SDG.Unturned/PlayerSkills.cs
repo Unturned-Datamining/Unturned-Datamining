@@ -547,7 +547,7 @@ public class PlayerSkills : PlayerCaller
             ItemAsset itemAsset = Assets.find(EAssetType.ITEM, hordePurchaseVolume.id) as ItemAsset;
             if (itemAsset.type == EItemType.GUN && base.player.inventory.has(hordePurchaseVolume.id) != null)
             {
-                base.player.inventory.tryAddItem(new Item(((ItemGunAsset)itemAsset).getMagazineID(), EItemOrigin.ADMIN), auto: true);
+                base.player.inventory.tryAddItem(new Item(((ItemGunAsset)itemAsset).GetDefaultMagazineLegacyId(), EItemOrigin.ADMIN), auto: true);
             }
             else
             {

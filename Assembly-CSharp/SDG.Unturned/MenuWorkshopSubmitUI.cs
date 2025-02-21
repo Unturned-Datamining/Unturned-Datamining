@@ -55,7 +55,7 @@ public class MenuWorkshopSubmitUI
 
     private static ISleekScrollView publishedBox;
 
-    private static List<ISleekButton> publishedButtons;
+    private static List<PublishedFileUpdateButton> publishedButtons;
 
     private static string ExtraTag => (EWorkshopMenuSubmissionMode)typeState.state switch
     {
@@ -215,16 +215,32 @@ public class MenuWorkshopSubmitUI
         for (int i = 0; i < Provider.provider.workshopService.published.Count; i++)
         {
             SteamPublished steamPublished = Provider.provider.workshopService.published[i];
-            ISleekButton sleekButton = Glazier.Get().CreateButton();
-            sleekButton.PositionOffset_Y = i * 40;
-            sleekButton.SizeOffset_Y = 30f;
-            sleekButton.SizeScale_X = 1f;
-            sleekButton.Text = steamPublished.name;
-            sleekButton.OnClicked += onClickedPublished;
-            publishedBox.AddChild(sleekButton);
-            publishedButtons.Add(sleekButton);
-            publishedBox.ContentSizeOffset = new Vector2(0f, publishedButtons.Count * 40 - 10);
+            bool flag = false;
+            foreach (PublishedFileUpdateButton publishedButton in publishedButtons)
+            {
+                if (publishedButton.publishedFile == steamPublished)
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            if (!flag)
+            {
+                ISleekButton sleekButton = Glazier.Get().CreateButton();
+                sleekButton.PositionOffset_Y = i * 40;
+                sleekButton.SizeOffset_Y = 30f;
+                sleekButton.SizeScale_X = 1f;
+                sleekButton.Text = steamPublished.name;
+                sleekButton.OnClicked += onClickedPublished;
+                publishedBox.AddChild(sleekButton);
+                publishedButtons.Add(new PublishedFileUpdateButton
+                {
+                    publishedFile = steamPublished,
+                    button = sleekButton
+                });
+            }
         }
+        publishedBox.ContentSizeOffset = new Vector2(0f, publishedButtons.Count * 40 - 10);
     }
 
     private static void onPublishedRemoved()
@@ -389,7 +405,7 @@ public class MenuWorkshopSubmitUI
     {
         localization = Localization.read("/Menu/Workshop/MenuWorkshopSubmit.dat");
         Bundle bundle = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Workshop/MenuWorkshopSubmit/MenuWorkshopSubmit.unity3d");
-        publishedButtons = new List<ISleekButton>();
+        publishedButtons = new List<PublishedFileUpdateButton>();
         TempSteamworksWorkshop workshopService = Provider.provider.workshopService;
         workshopService.onPublishedAdded = (TempSteamworksWorkshop.PublishedAdded)Delegate.Combine(workshopService.onPublishedAdded, new TempSteamworksWorkshop.PublishedAdded(onPublishedAdded));
         TempSteamworksWorkshop workshopService2 = Provider.provider.workshopService;

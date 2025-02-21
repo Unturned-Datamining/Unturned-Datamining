@@ -194,6 +194,24 @@ public class ClientTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
         return false;
     }
 
+    public bool TryGetPing(out int pingMs)
+    {
+        if (!isConnected || didCloseConnection)
+        {
+            pingMs = 0;
+            return false;
+        }
+        SteamNetConnectionRealTimeStatus_t pStatus = default(SteamNetConnectionRealTimeStatus_t);
+        SteamNetConnectionRealTimeLaneStatus_t pLanes = default(SteamNetConnectionRealTimeLaneStatus_t);
+        if (Steamworks.SteamNetworkingSockets.GetConnectionRealTimeStatus(connection, ref pStatus, 0, ref pLanes) != EResult.k_EResultOK)
+        {
+            pingMs = 0;
+            return false;
+        }
+        pingMs = pStatus.m_nPing;
+        return true;
+    }
+
     private void OnUpdate()
     {
         LogDebugOutput();

@@ -45,27 +45,33 @@ public static class AnimalManager_NetMethods
     [NetInvokableGeneratedMethod("ReceiveAnimalStartle", ENetInvokableGeneratedMethodPurpose.Read)]
     public static void ReceiveAnimalStartle_Read(in ClientInvocationContext context)
     {
-        context.reader.ReadUInt16(out var value);
-        AnimalManager.ReceiveAnimalStartle(value);
+        NetPakReader reader = context.reader;
+        reader.ReadUInt16(out var value);
+        reader.ReadUInt8(out var value2);
+        AnimalManager.ReceiveAnimalStartle(value, value2);
     }
 
     [NetInvokableGeneratedMethod("ReceiveAnimalStartle", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveAnimalStartle_Write(NetPakWriter writer, ushort index)
+    public static void ReceiveAnimalStartle_Write(NetPakWriter writer, ushort index, byte animationIndex)
     {
         writer.WriteUInt16(index);
+        writer.WriteUInt8(animationIndex);
     }
 
     [NetInvokableGeneratedMethod("ReceiveAnimalAttack", ENetInvokableGeneratedMethodPurpose.Read)]
     public static void ReceiveAnimalAttack_Read(in ClientInvocationContext context)
     {
-        context.reader.ReadUInt16(out var value);
-        AnimalManager.ReceiveAnimalAttack(value);
+        NetPakReader reader = context.reader;
+        reader.ReadUInt16(out var value);
+        reader.ReadUInt8(out var value2);
+        AnimalManager.ReceiveAnimalAttack(value, value2);
     }
 
     [NetInvokableGeneratedMethod("ReceiveAnimalAttack", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveAnimalAttack_Write(NetPakWriter writer, ushort index)
+    public static void ReceiveAnimalAttack_Write(NetPakWriter writer, ushort index, byte animationIndex)
     {
         writer.WriteUInt16(index);
+        writer.WriteUInt8(animationIndex);
     }
 
     [NetInvokableGeneratedMethod("ReceiveAnimalPanic", ENetInvokableGeneratedMethodPurpose.Read)]

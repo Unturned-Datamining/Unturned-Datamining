@@ -10,6 +10,9 @@ Size_Y 2
 Size_Z 0.4
 
 Barrel 1338
+Magazine "4ad809bed5ba4422a6eade724d2f1427" // Paintball_Hopper
+Ammo_Min 15
+Ammo_Max 30
 
 Hook_Sight
 Hook_Tactical

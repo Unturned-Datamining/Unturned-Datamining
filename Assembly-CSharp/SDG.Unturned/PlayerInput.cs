@@ -44,8 +44,6 @@ public class PlayerInput : PlayerCaller
 
     private ushort[] flags;
 
-    private bool hasDoneOcclusionCheck;
-
     private Queue<InputInfo> inputs;
 
     private PlayerInputPacket clientPendingInput;
@@ -202,26 +200,22 @@ public class PlayerInput : PlayerCaller
             {
                 continue;
             }
-            if (doOcclusionCheck && !hasDoneOcclusionCheck)
+            if (doOcclusionCheck && inputInfo != null)
             {
-                hasDoneOcclusionCheck = true;
-                if (inputInfo != null)
+                Vector3 vector = inputInfo.point - base.player.look.aim.position;
+                float magnitude = vector.magnitude;
+                Vector3 vector2 = vector / magnitude;
+                if (magnitude > 0.025f)
                 {
-                    Vector3 vector = inputInfo.point - base.player.look.aim.position;
-                    float magnitude = vector.magnitude;
-                    Vector3 vector2 = vector / magnitude;
-                    if (magnitude > 0.025f)
+                    Physics.Raycast(new Ray(base.player.look.aim.position, vector2), out obstruction, magnitude - 0.025f, RayMasks.DAMAGE_SERVER);
+                    if (obstruction.transform != null && !IsObstructionHitValid())
                     {
-                        Physics.Raycast(new Ray(base.player.look.aim.position, vector2), out obstruction, magnitude - 0.025f, RayMasks.DAMAGE_SERVER);
-                        if (obstruction.transform != null && !IsObstructionHitValid())
-                        {
-                            return null;
-                        }
-                        Physics.Raycast(new Ray(base.player.look.aim.position + vector2 * (magnitude - 0.025f), -vector2), out obstruction, magnitude - 0.025f, RayMasks.DAMAGE_SERVER);
-                        if (obstruction.transform != null && !IsObstructionHitValid())
-                        {
-                            return null;
-                        }
+                        return null;
+                    }
+                    Physics.Raycast(new Ray(base.player.look.aim.position + vector2 * (magnitude - 0.025f), -vector2), out obstruction, magnitude - 0.025f, RayMasks.DAMAGE_SERVER);
+                    if (obstruction.transform != null && !IsObstructionHitValid())
+                    {
+                        return null;
                     }
                 }
             }
@@ -687,7 +681,6 @@ public class PlayerInput : PlayerCaller
                     {
                         return;
                     }
-                    hasDoneOcclusionCheck = false;
                     inputs = playerInputPacket.serversideInputs;
                     for (byte b2 = 0; b2 < keys.Length; b2++)
                     {
@@ -791,7 +784,6 @@ public class PlayerInput : PlayerCaller
         }
         if (base.channel.IsLocalPlayer && Provider.isServer)
         {
-            hasDoneOcclusionCheck = false;
             inputs = new Queue<InputInfo>();
         }
         if (base.channel.IsLocalPlayer)

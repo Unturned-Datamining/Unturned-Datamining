@@ -413,6 +413,12 @@ public class VehicleAsset : Asset, ISkinableAsset
     /// </summary>
     public float validSpeedDown { get; protected set; }
 
+    /// <summary>
+    /// If distance between client-submitted hit position and vehicle pivot point is too high the hit will be
+    /// marked invalid. This multiplies the distance threshold, useful for very fast vehicles.
+    /// </summary>
+    public float ValidHitDistanceMultiplier { get; protected set; }
+
     public float camFollowDistance => _camFollowDistance;
 
     /// <summary>
@@ -1373,6 +1379,7 @@ public class VehicleAsset : Asset, ISkinableAsset
         }
         validSpeedUp = data.ParseFloat("Valid_Speed_Up", defaultValue4);
         validSpeedDown = data.ParseFloat("Valid_Speed_Down", defaultValue5);
+        ValidHitDistanceMultiplier = data.ParseFloat("Valid_Hit_Distance_Multiplier", 1f);
         _turrets = new TurretInfo[data.ParseUInt8("Turrets", 0)];
         for (byte b = 0; b < turrets.Length; b++)
         {
@@ -1616,117 +1623,118 @@ public class VehicleAsset : Asset, ISkinableAsset
     {
         base.BuildCargoData(builder);
         CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Locale_Vehicle");
-        orAddDeclaration.AppendGuid("GUID", GUID);
-        orAddDeclaration.AppendString("Name", FriendlyName);
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Name", FriendlyName);
         CargoDeclaration orAddDeclaration2 = builder.GetOrAddDeclaration("Vehicle");
-        orAddDeclaration2.AppendGuid("GUID", GUID);
-        orAddDeclaration2.AppendFloat("Air_Steer_Max", airSteerMax);
-        orAddDeclaration2.AppendFloat("Air_Steer_Min", airSteerMin);
-        orAddDeclaration2.AppendFloat("Air_Turn_Responsiveness", airTurnResponsiveness);
-        orAddDeclaration2.AppendToString("BatteryMode_Driving", batteryDriving);
-        orAddDeclaration2.AppendToString("BatteryMode_Empty", batteryEmpty);
-        orAddDeclaration2.AppendToString("BatteryMode_Headlights", batteryHeadlights);
-        orAddDeclaration2.AppendToString("BatteryMode_Sirens", batterySirens);
-        orAddDeclaration2.AppendFloat("Battery_Burn_Rate", batteryBurnRate);
-        orAddDeclaration2.AppendFloat("Battery_Charge_Rate", batteryChargeRate);
-        orAddDeclaration2.AppendBool("Battery_Powered", isBatteryPowered);
-        orAddDeclaration2.AppendFloat("Battery_Spawn_Charge_Multiplier", batterySpawnChargeMultiplier);
-        orAddDeclaration2.AppendBool("Bicycle", hasBicycle);
-        orAddDeclaration2.AppendToString("Buildable_Placement_Rule", BuildablePlacementRule);
-        orAddDeclaration2.AppendBool("isVulnerableToBumper", isVulnerableToBumper);
-        orAddDeclaration2.AppendFloat("Bumper_Multiplier", bumperMultiplier);
-        orAddDeclaration2.AppendFloat("Brake", brake);
-        orAddDeclaration2.AppendBool("Can_Be_Locked", canBeLocked);
-        orAddDeclaration2.AppendBool("Can_Repair_While_Seated", canRepairWhileSeated);
-        orAddDeclaration2.AppendBool("Can_Steal_Battery", canStealBattery);
-        orAddDeclaration2.AppendBool("canSpawnWithBattery", canSpawnWithBattery);
-        orAddDeclaration2.AppendFloat("Carjack_Force_Multiplier", carjackForceMultiplier);
-        orAddDeclaration2.AppendFloat("Child_Explosion_Armor_Multiplier", childExplosionArmorMultiplier);
-        orAddDeclaration2.AppendBool("Crawler", _hasCrawler);
-        orAddDeclaration2.AppendToString("DefaultPaintColor_Mode", defaultPaintColorMode);
-        orAddDeclaration2.AppendGuid("Default_Battery", defaultBatteryGuid);
-        orAddDeclaration2.AppendByte("Drops_Max", dropsMax);
-        orAddDeclaration2.AppendByte("Drops_Min", dropsMin);
-        orAddDeclaration2.AppendUShort("Drops_Table_ID", dropsTableId);
-        orAddDeclaration2.AppendToString("Engine", engine);
-        orAddDeclaration2.AppendFloat("EngineIdleRPM", EngineIdleRpm);
-        orAddDeclaration2.AppendFloat("EngineMaxRPM", EngineMaxRpm);
-        orAddDeclaration2.AppendFloat("EngineMaxTorque", EngineMaxTorque);
-        orAddDeclaration2.AppendFloat("EngineRPM_DecreaseRate", EngineRpmDecreaseRate);
-        orAddDeclaration2.AppendFloat("EngineRPM_IncreaseRate", EngineRpmIncreaseRate);
-        orAddDeclaration2.AppendFloat("Engine_Force_Multiplier", engineForceMultiplier);
-        orAddDeclaration2.AppendBool("isVulnerableToEnvironment", isVulnerableToEnvironment);
-        orAddDeclaration2.AppendBool("isVulnerableToExplosions", isVulnerableToExplosions);
-        orAddDeclaration2.AppendUShort("Fuel", fuel);
-        orAddDeclaration2.AppendFloat("Fuel_Burn_Rate", fuelBurnRate);
-        orAddDeclaration2.AppendUShort("Fuel_Max", fuelMax);
-        orAddDeclaration2.AppendUShort("Fuel_Min", fuelMin);
-        orAddDeclaration2.AppendBool("Has_Horn", hasHorn);
-        orAddDeclaration2.AppendUShort("Health", health);
-        orAddDeclaration2.AppendUShort("Health_Max", healthMax);
-        orAddDeclaration2.AppendUShort("Health_Min", healthMin);
-        orAddDeclaration2.AppendToString("HornAudioClip", horn);
-        orAddDeclaration2.AppendBool("isVulnerable", isVulnerable);
-        orAddDeclaration2.AppendBool("IsPaintable", IsPaintable);
-        orAddDeclaration2.AppendFloat("Lift", lift);
-        orAddDeclaration2.AppendBool("LockMouse", hasLockMouse);
-        orAddDeclaration2.AppendFloat("Passenger_Explosion_Armor", passengerExplosionArmor);
-        orAddDeclaration2.AppendToString("Physics_Profile", physicsProfileRef);
-        orAddDeclaration2.AppendToString("Rarity", rarity);
-        orAddDeclaration2.AppendBool("ShouldExplosionCauseDamage", ShouldExplosionCauseDamage);
-        orAddDeclaration2.AppendBool("Should_Spawn_Seat_Capsules", shouldSpawnSeatCapsules);
-        orAddDeclaration2.AppendBool("Sleds", hasSleds);
-        orAddDeclaration2.AppendFloat("TargetForwardVelocity", TargetForwardVelocity);
-        orAddDeclaration2.AppendFloat("TargetReverseVelocity", TargetReverseVelocity);
-        orAddDeclaration2.AppendFloat("Stamina_Boost", staminaBoost);
-        orAddDeclaration2.AppendBool("Stamina_Powered", isStaminaPowered);
-        orAddDeclaration2.AppendFloat("steerMax", steerMax);
-        orAddDeclaration2.AppendFloat("steerMin", steerMin);
-        orAddDeclaration2.AppendFloat("Steering_Angle_Turn_Speed", SteeringAngleTurnSpeed);
-        orAddDeclaration2.AppendFloat("Steering_LeaningForceMultiplier", steeringLeaningForceMultiplier);
-        orAddDeclaration2.AppendUShort("Tire_ID", tireID);
-        orAddDeclaration2.AppendBool("canTiresBeDamaged", canTiresBeDamaged);
-        orAddDeclaration2.AppendBool("Traction", hasTraction);
-        orAddDeclaration2.AppendByte("Trunk_Storage_X", trunkStorage_X);
-        orAddDeclaration2.AppendByte("Trunk_Storage_Y", trunkStorage_Y);
-        orAddDeclaration2.AppendInt("Turrets", turrets.Length);
-        orAddDeclaration2.AppendFloat("Valid_Speed_Down", validSpeedDown);
-        orAddDeclaration2.AppendFloat("Valid_Speed_Up", validSpeedUp);
-        orAddDeclaration2.AppendBool("hasSirens", hasSirens);
-        orAddDeclaration2.AppendBool("hasHook", hasHook);
-        orAddDeclaration2.AppendBool("hasHeadlights", hasHeadlights);
-        orAddDeclaration2.AppendInt("numSeats", numSeats);
+        orAddDeclaration2.Append("GUID", GUID);
+        orAddDeclaration2.Append("Air_Steer_Max", airSteerMax);
+        orAddDeclaration2.Append("Air_Steer_Min", airSteerMin);
+        orAddDeclaration2.Append("Air_Turn_Responsiveness", airTurnResponsiveness);
+        orAddDeclaration2.Append("BatteryMode_Driving", batteryDriving);
+        orAddDeclaration2.Append("BatteryMode_Empty", batteryEmpty);
+        orAddDeclaration2.Append("BatteryMode_Headlights", batteryHeadlights);
+        orAddDeclaration2.Append("BatteryMode_Sirens", batterySirens);
+        orAddDeclaration2.Append("Battery_Burn_Rate", batteryBurnRate);
+        orAddDeclaration2.Append("Battery_Charge_Rate", batteryChargeRate);
+        orAddDeclaration2.Append("Battery_Powered", isBatteryPowered);
+        orAddDeclaration2.Append("Battery_Spawn_Charge_Multiplier", batterySpawnChargeMultiplier);
+        orAddDeclaration2.Append("Bicycle", hasBicycle);
+        orAddDeclaration2.Append("Buildable_Placement_Rule", BuildablePlacementRule);
+        orAddDeclaration2.Append("isVulnerableToBumper", isVulnerableToBumper);
+        orAddDeclaration2.Append("Bumper_Multiplier", bumperMultiplier);
+        orAddDeclaration2.Append("Brake", brake);
+        orAddDeclaration2.Append("Can_Be_Locked", canBeLocked);
+        orAddDeclaration2.Append("Can_Repair_While_Seated", canRepairWhileSeated);
+        orAddDeclaration2.Append("Can_Steal_Battery", canStealBattery);
+        orAddDeclaration2.Append("canSpawnWithBattery", canSpawnWithBattery);
+        orAddDeclaration2.Append("Carjack_Force_Multiplier", carjackForceMultiplier);
+        orAddDeclaration2.Append("Child_Explosion_Armor_Multiplier", childExplosionArmorMultiplier);
+        orAddDeclaration2.Append("Crawler", _hasCrawler);
+        orAddDeclaration2.Append("DefaultPaintColor_Mode", defaultPaintColorMode);
+        orAddDeclaration2.Append("Default_Battery", defaultBatteryGuid);
+        orAddDeclaration2.Append("Drops_Max", dropsMax);
+        orAddDeclaration2.Append("Drops_Min", dropsMin);
+        orAddDeclaration2.Append("Drops_Table_ID", dropsTableId);
+        orAddDeclaration2.Append("Engine", engine);
+        orAddDeclaration2.Append("EngineIdleRPM", EngineIdleRpm);
+        orAddDeclaration2.Append("EngineMaxRPM", EngineMaxRpm);
+        orAddDeclaration2.Append("EngineMaxTorque", EngineMaxTorque);
+        orAddDeclaration2.Append("EngineRPM_DecreaseRate", EngineRpmDecreaseRate);
+        orAddDeclaration2.Append("EngineRPM_IncreaseRate", EngineRpmIncreaseRate);
+        orAddDeclaration2.Append("Engine_Force_Multiplier", engineForceMultiplier);
+        orAddDeclaration2.Append("isVulnerableToEnvironment", isVulnerableToEnvironment);
+        orAddDeclaration2.Append("isVulnerableToExplosions", isVulnerableToExplosions);
+        orAddDeclaration2.Append("Fuel", fuel);
+        orAddDeclaration2.Append("Fuel_Burn_Rate", fuelBurnRate);
+        orAddDeclaration2.Append("Fuel_Max", fuelMax);
+        orAddDeclaration2.Append("Fuel_Min", fuelMin);
+        orAddDeclaration2.Append("Has_Horn", hasHorn);
+        orAddDeclaration2.Append("Health", health);
+        orAddDeclaration2.Append("Health_Max", healthMax);
+        orAddDeclaration2.Append("Health_Min", healthMin);
+        orAddDeclaration2.Append("HornAudioClip", (object)horn);
+        orAddDeclaration2.Append("isVulnerable", isVulnerable);
+        orAddDeclaration2.Append("IsPaintable", IsPaintable);
+        orAddDeclaration2.Append("Lift", lift);
+        orAddDeclaration2.Append("LockMouse", hasLockMouse);
+        orAddDeclaration2.Append("Passenger_Explosion_Armor", passengerExplosionArmor);
+        orAddDeclaration2.Append("Physics_Profile", physicsProfileRef);
+        orAddDeclaration2.Append("Rarity", rarity);
+        orAddDeclaration2.Append("ShouldExplosionCauseDamage", ShouldExplosionCauseDamage);
+        orAddDeclaration2.Append("Should_Spawn_Seat_Capsules", shouldSpawnSeatCapsules);
+        orAddDeclaration2.Append("Sleds", hasSleds);
+        orAddDeclaration2.Append("TargetForwardVelocity", TargetForwardVelocity);
+        orAddDeclaration2.Append("TargetReverseVelocity", TargetReverseVelocity);
+        orAddDeclaration2.Append("Stamina_Boost", staminaBoost);
+        orAddDeclaration2.Append("Stamina_Powered", isStaminaPowered);
+        orAddDeclaration2.Append("steerMax", steerMax);
+        orAddDeclaration2.Append("steerMin", steerMin);
+        orAddDeclaration2.Append("Steering_Angle_Turn_Speed", SteeringAngleTurnSpeed);
+        orAddDeclaration2.Append("Steering_LeaningForceMultiplier", steeringLeaningForceMultiplier);
+        orAddDeclaration2.Append("Tire_ID", tireID);
+        orAddDeclaration2.Append("canTiresBeDamaged", canTiresBeDamaged);
+        orAddDeclaration2.Append("Traction", hasTraction);
+        orAddDeclaration2.Append("Trunk_Storage_X", trunkStorage_X);
+        orAddDeclaration2.Append("Trunk_Storage_Y", trunkStorage_Y);
+        orAddDeclaration2.Append("Turrets", turrets.Length);
+        orAddDeclaration2.Append("Valid_Speed_Down", validSpeedDown);
+        orAddDeclaration2.Append("Valid_Speed_Up", validSpeedUp);
+        orAddDeclaration2.Append("Valid_Hit_Distance_Multiplier", ValidHitDistanceMultiplier);
+        orAddDeclaration2.Append("hasSirens", hasSirens);
+        orAddDeclaration2.Append("hasHook", hasHook);
+        orAddDeclaration2.Append("hasHeadlights", hasHeadlights);
+        orAddDeclaration2.Append("numSeats", numSeats);
         if (defaultPaintColorMode == EVehicleDefaultPaintColorMode.RandomHueOrGrayscale)
         {
             CargoDeclaration orAddDeclaration3 = builder.GetOrAddDeclaration("Vehicle_VehicleRandomPaintColorConfiguration");
-            orAddDeclaration3.AppendGuid("GUID", GUID);
-            orAddDeclaration3.AppendFloat("MinSaturation", randomPaintColorConfiguration.minSaturation);
-            orAddDeclaration3.AppendFloat("MaxSaturation", randomPaintColorConfiguration.maxSaturation);
-            orAddDeclaration3.AppendFloat("MinValue", randomPaintColorConfiguration.minValue);
-            orAddDeclaration3.AppendFloat("MaxValue", randomPaintColorConfiguration.maxValue);
-            orAddDeclaration3.AppendFloat("GrayscaleChance", randomPaintColorConfiguration.grayscaleChance);
+            orAddDeclaration3.Append("GUID", GUID);
+            orAddDeclaration3.Append("MinSaturation", randomPaintColorConfiguration.minSaturation);
+            orAddDeclaration3.Append("MaxSaturation", randomPaintColorConfiguration.maxSaturation);
+            orAddDeclaration3.Append("MinValue", randomPaintColorConfiguration.minValue);
+            orAddDeclaration3.Append("MaxValue", randomPaintColorConfiguration.maxValue);
+            orAddDeclaration3.Append("GrayscaleChance", randomPaintColorConfiguration.grayscaleChance);
         }
         if (defaultPaintColorMode == EVehicleDefaultPaintColorMode.List)
         {
             for (byte b = 0; b < DefaultPaintColors.Count; b++)
             {
                 CargoDeclaration cargoDeclaration = builder.AddDeclaration("Vehicle_DefaultPaintColors");
-                cargoDeclaration.AppendGuid("GUID", GUID);
-                cargoDeclaration.AppendColor32("Color", DefaultPaintColors[b]);
+                cargoDeclaration.Append("GUID", GUID);
+                cargoDeclaration.Append("Color", DefaultPaintColors[b]);
             }
         }
         for (byte b2 = 0; b2 < turrets.Length; b2++)
         {
             CargoDeclaration cargoDeclaration2 = builder.AddDeclaration("Vehicle_TurretInfo");
-            cargoDeclaration2.AppendGuid("GUID", GUID);
-            cargoDeclaration2.AppendByte("turretIndex", b2);
-            cargoDeclaration2.AppendBool("useAimCamera", turrets[b2].useAimCamera);
-            cargoDeclaration2.AppendUShort("Item_ID", turrets[b2].itemID);
-            cargoDeclaration2.AppendFloat("Pitch_Max", turrets[b2].pitchMax);
-            cargoDeclaration2.AppendFloat("Pitch_Min", turrets[b2].pitchMin);
-            cargoDeclaration2.AppendByte("Seat_Index", turrets[b2].seatIndex);
-            cargoDeclaration2.AppendFloat("Yaw_Max", turrets[b2].yawMax);
-            cargoDeclaration2.AppendFloat("Yaw_Min", turrets[b2].yawMin);
+            cargoDeclaration2.Append("GUID", GUID);
+            cargoDeclaration2.Append("turretIndex", b2);
+            cargoDeclaration2.Append("useAimCamera", turrets[b2].useAimCamera);
+            cargoDeclaration2.Append("Item_ID", turrets[b2].itemID);
+            cargoDeclaration2.Append("Pitch_Max", turrets[b2].pitchMax);
+            cargoDeclaration2.Append("Pitch_Min", turrets[b2].pitchMin);
+            cargoDeclaration2.Append("Seat_Index", turrets[b2].seatIndex);
+            cargoDeclaration2.Append("Yaw_Max", turrets[b2].yawMax);
+            cargoDeclaration2.Append("Yaw_Min", turrets[b2].yawMin);
         }
     }
 }

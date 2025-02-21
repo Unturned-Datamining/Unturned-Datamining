@@ -79,6 +79,7 @@ public class Commander
     public static void init()
     {
         commands = new List<Command>();
+        Local newLocalization = new Local();
         register(new CommandModules(Localization.read("/Server/ServerCommandModules.dat")));
         register(new CommandReload(Localization.read("/Server/ServerCommandReload.dat")));
         register(new CommandHelp(Localization.read("/Server/ServerCommandHelp.dat")));
@@ -124,11 +125,11 @@ public class Commander
         register(new CommandSlay(Localization.read("/Server/ServerCommandSlay.dat")));
         register(new CommandKill(Localization.read("/Server/ServerCommandKill.dat")));
         register(new CommandGive(Localization.read("/Server/ServerCommandGive.dat")));
-        register(new CommandUnlockNpcAchievement(Localization.read("/Server/ServerCommandGive.dat")));
-        register(new CommandScheduledShutdownInfo(Localization.read("/Server/ServerCommandGive.dat")));
-        register(new CommandSetNpcSpawnId(Localization.read("/Server/ServerCommandGive.dat")));
-        register(new CommandToggleNpcCutsceneMode(Localization.read("/Server/ServerCommandGive.dat")));
-        register(new CommandNpcEvent(Localization.read("/Server/ServerCommandGive.dat")));
+        register(new CommandUnlockNpcAchievement(newLocalization));
+        register(new CommandScheduledShutdownInfo(newLocalization));
+        register(new CommandSetNpcSpawnId(newLocalization));
+        register(new CommandToggleNpcCutsceneMode(newLocalization));
+        register(new CommandNpcEvent(newLocalization));
         register(new CommandLoadout(Localization.read("/Server/ServerCommandLoadout.dat")));
         register(new CommandExperience(Localization.read("/Server/ServerCommandExperience.dat")));
         register(new CommandReputation(Localization.read("/Server/ServerCommandReputation.dat")));
@@ -140,15 +141,18 @@ public class Commander
         register(new CommandTimeout(Localization.read("/Server/ServerCommandTimeout.dat")));
         register(new CommandChatrate(Localization.read("/Server/ServerCommandChatrate.dat")));
         register(new CommandLog(Localization.read("/Server/ServerCommandLog.dat")));
-        register(new CommandLogMemoryUsage(Localization.read("/Server/ServerCommandGive.dat")));
-        register(new CommandLogTransportConnections(Localization.read("/Server/ServerCommandGive.dat")));
-        register(new CommandCopyServerCode(Localization.read("/Server/ServerCommandGive.dat")));
-        register(new CommandCopyFakeIP(Localization.read("/Server/ServerCommandGive.dat")));
+        register(new CommandLogMemoryUsage(newLocalization));
+        register(new CommandLogTransportConnections(newLocalization));
+        register(new CommandCopyServerCode(newLocalization));
+        register(new CommandCopyFakeIP(newLocalization));
         register(new CommandDebug(Localization.read("/Server/ServerCommandDebug.dat")));
         register(new CommandResetConfig(Localization.read("/Server/ServerCommandResetConfig.dat")));
         register(new CommandBind(Localization.read("/Server/ServerCommandBind.dat")));
         register(new CommandSave(Localization.read("/Server/ServerCommandSave.dat")));
         register(new CommandShutdown(Localization.read("/Server/ServerCommandShutdown.dat")));
         register(new CommandGSLT(Localization.read("/Server/ServerCommandGSLT.dat")));
+        register(new CommandDestroyDrivenVehicle(newLocalization));
+        register(new CommandExitAndDestroyDrivenVehicle(newLocalization));
+        register(new CommandEnterAndDestroyNearestVehicle(newLocalization));
     }
 }

@@ -86,6 +86,7 @@ public class InteractableCharge : Interactable
             TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
             parameters.relevantDistance = EffectManager.LARGE;
             parameters.position = base.transform.position;
+            parameters.reliable = true;
             EffectManager.triggerEffect(parameters);
         }
         ExplosionParameters parameters2 = new ExplosionParameters(base.transform.position, range2, EDeathCause.CHARGE);

@@ -83,6 +83,12 @@ public class ClientTransport_SteamNetworking : TransportBase_SteamNetworking, IC
         return false;
     }
 
+    public bool TryGetPing(out int pingMs)
+    {
+        pingMs = 0;
+        return false;
+    }
+
     private void OnP2PSessionRequest(P2PSessionRequest_t callback)
     {
         if (callback.m_steamIDRemote == serverId)

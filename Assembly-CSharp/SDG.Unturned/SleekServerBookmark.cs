@@ -111,7 +111,11 @@ public class SleekServerBookmark : SleekWrapper
         hostLabel.SizeOffset_X = -50f;
         hostLabel.SizeOffset_Y = 40f;
         hostLabel.TextAlignment = TextAnchor.MiddleRight;
-        if (bookmarkDetails.queryPort > 0)
+        if (string.IsNullOrEmpty(bookmarkDetails.host))
+        {
+            hostLabel.Text = bookmarkDetails.steamId.ToString();
+        }
+        else if (bookmarkDetails.queryPort > 0)
         {
             hostLabel.Text = $"{bookmarkDetails.host}:{bookmarkDetails.queryPort}";
         }

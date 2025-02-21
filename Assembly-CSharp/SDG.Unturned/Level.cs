@@ -648,6 +648,10 @@ public class Level : MonoBehaviour
             {
                 text = "Russia";
             }
+            else if (string.Equals(info.name, "rioremastered", StringComparison.InvariantCultureIgnoreCase))
+            {
+                text = "RioRemastered_Visited";
+            }
             else if (string.Equals(info.name, "washington", StringComparison.InvariantCultureIgnoreCase))
             {
                 text = "Washington";

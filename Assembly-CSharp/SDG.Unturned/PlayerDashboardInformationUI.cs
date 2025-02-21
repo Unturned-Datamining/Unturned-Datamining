@@ -464,7 +464,7 @@ public class PlayerDashboardInformationUI
             }
             synchronizeMapVisibility(mapButtonState.state);
             updateDynamicMap();
-            questsButton.text = localization.format("Quests", Player.player.quests.countValidQuests());
+            RefreshQuestsButtonLabel();
             if (OptionsSettings.streamer)
             {
                 playersButton.text = localization.format("Streamer");
@@ -498,9 +498,13 @@ public class PlayerDashboardInformationUI
         }
     }
 
-    public static void openQuests()
+    private static void RefreshQuestsButtonLabel()
     {
-        tab = EInfoTab.QUESTS;
+        questsButton.text = localization.format("Quests", Player.player.quests.countValidQuests());
+    }
+
+    private static void RefreshQuests()
+    {
         questsBox.RemoveAllChildren();
         displayedQuests.Clear();
         float num = 0f;
@@ -538,6 +542,12 @@ public class PlayerDashboardInformationUI
             }
         }
         questsBox.ContentSizeOffset = new Vector2(0f, num - 10f);
+    }
+
+    public static void openQuests()
+    {
+        tab = EInfoTab.QUESTS;
+        RefreshQuests();
         updateTabs();
     }
 
@@ -778,6 +788,18 @@ public class PlayerDashboardInformationUI
     private static void handleGroupInfoReady(GroupInfo group)
     {
         refreshGroups();
+    }
+
+    private static void OnLocalPlayerQuestsChanged(ushort legacyId)
+    {
+        if (active)
+        {
+            RefreshQuestsButtonLabel();
+            if (tab == EInfoTab.QUESTS)
+            {
+                RefreshQuests();
+            }
+        }
     }
 
     public static void openGroups()
@@ -1047,6 +1069,7 @@ public class PlayerDashboardInformationUI
         {
             Player player = Player.player;
             player.onPlayerTeleported = (PlayerTeleported)Delegate.Remove(player.onPlayerTeleported, new PlayerTeleported(onPlayerTeleported));
+            Player.player.quests.OnLocalPlayerQuestsChanged -= OnLocalPlayerQuestsChanged;
         }
         PlayerQuests.groupUpdated = (GroupUpdatedHandler)Delegate.Remove(PlayerQuests.groupUpdated, new GroupUpdatedHandler(handleGroupUpdated));
         GroupManager.groupInfoReady -= handleGroupInfoReady;
@@ -1344,6 +1367,7 @@ public class PlayerDashboardInformationUI
         PlayerUI.isBlindfoldedChanged += handleIsBlindfoldedChanged;
         Player player = Player.player;
         player.onPlayerTeleported = (PlayerTeleported)Delegate.Combine(player.onPlayerTeleported, new PlayerTeleported(onPlayerTeleported));
+        Player.player.quests.OnLocalPlayerQuestsChanged += OnLocalPlayerQuestsChanged;
         PlayerQuests.groupUpdated = (GroupUpdatedHandler)Delegate.Combine(PlayerQuests.groupUpdated, new GroupUpdatedHandler(handleGroupUpdated));
         GroupManager.groupInfoReady += handleGroupInfoReady;
         ClientMessageHandler_Accepted.OnGameplayConfigReceived += OnGameplayConfigReceived;

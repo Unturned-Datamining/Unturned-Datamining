@@ -12,7 +12,17 @@ public class VendorSellingItem : VendorSellingBase
 
     public override string displayName => FindItemAsset()?.itemName;
 
-    public override string displayDesc => FindItemAsset()?.itemDescription;
+    public override string displayDesc
+    {
+        get
+        {
+            if (descriptionOverride != null)
+            {
+                return descriptionOverride;
+            }
+            return FindItemAsset()?.itemDescription;
+        }
+    }
 
     public override EItemRarity rarity => FindItemAsset()?.rarity ?? EItemRarity.COMMON;
 
@@ -76,15 +86,15 @@ public class VendorSellingItem : VendorSellingBase
             ushort num2 = ((tactical > -1) ? MathfEx.ClampToUShort(tactical) : gunAsset.tacticalID);
             ushort num3 = ((grip > -1) ? MathfEx.ClampToUShort(grip) : gunAsset.gripID);
             ushort num4 = ((barrel > -1) ? MathfEx.ClampToUShort(barrel) : gunAsset.barrelID);
-            ushort num5 = ((magazine > -1) ? MathfEx.ClampToUShort(magazine) : gunAsset.getMagazineID());
+            ushort num5 = ((magazine > -1) ? MathfEx.ClampToUShort(magazine) : gunAsset.GetDefaultMagazineLegacyId());
             byte b = ((ammo > -1) ? MathfEx.ClampToByte(ammo) : gunAsset.ammoMax);
             return gunAsset.getState(num, num2, num3, num4, num5, b);
         }
         return null;
     }
 
-    public VendorSellingItem(VendorAsset newOuterAsset, byte newIndex, Guid newTargetAssetGuid, ushort newTargetAssetLegacyId, uint newCost, INPCCondition[] newConditions, NPCRewardsList newRewardsList, int newSight, int newTactical, int newGrip, int newBarrel, int newMagazine, int newAmmo)
-        : base(newOuterAsset, newIndex, newTargetAssetGuid, newTargetAssetLegacyId, newCost, newConditions, newRewardsList)
+    public VendorSellingItem(VendorAsset newOuterAsset, byte newIndex, Guid newTargetAssetGuid, ushort newTargetAssetLegacyId, uint newCost, INPCCondition[] newConditions, NPCRewardsList newRewardsList, string newDescriptionOverride, int newSight, int newTactical, int newGrip, int newBarrel, int newMagazine, int newAmmo)
+        : base(newOuterAsset, newIndex, newTargetAssetGuid, newTargetAssetLegacyId, newCost, newConditions, newRewardsList, newDescriptionOverride)
     {
         sight = newSight;
         tactical = newTactical;

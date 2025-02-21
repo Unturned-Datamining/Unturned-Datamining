@@ -11,6 +11,8 @@ public class VendorSellingVehicle : VendorSellingBase
 {
     public override string displayName => FindVehicleAssetAndHandleRedirects()?.vehicleName;
 
+    public override string displayDesc => descriptionOverride;
+
     public override EItemRarity rarity => FindVehicleAssetAndHandleRedirects()?.rarity ?? EItemRarity.COMMON;
 
     public override bool hasIcon => false;
@@ -65,8 +67,8 @@ public class VendorSellingVehicle : VendorSellingBase
         }
     }
 
-    public VendorSellingVehicle(VendorAsset newOuterAsset, byte newIndex, Guid newTargetAssetGuid, ushort newTargetAssetLegacyId, uint newCost, string newSpawnpoint, Color32? newPaintColor, INPCCondition[] newConditions, NPCRewardsList newRewardsList)
-        : base(newOuterAsset, newIndex, newTargetAssetGuid, newTargetAssetLegacyId, newCost, newConditions, newRewardsList)
+    public VendorSellingVehicle(VendorAsset newOuterAsset, byte newIndex, Guid newTargetAssetGuid, ushort newTargetAssetLegacyId, uint newCost, string newSpawnpoint, Color32? newPaintColor, INPCCondition[] newConditions, NPCRewardsList newRewardsList, string newDescriptionOverride)
+        : base(newOuterAsset, newIndex, newTargetAssetGuid, newTargetAssetLegacyId, newCost, newConditions, newRewardsList, newDescriptionOverride)
     {
         spawnpoint = newSpawnpoint;
         paintColor = newPaintColor;

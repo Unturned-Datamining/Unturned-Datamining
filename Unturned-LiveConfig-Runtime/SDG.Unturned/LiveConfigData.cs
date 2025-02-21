@@ -12,6 +12,8 @@ public class LiveConfigData
 
     public LinkFilteringLiveConfig linkFiltering = new LinkFilteringLiveConfig();
 
+    public ServerCurationLiveConfig serverCuration = new ServerCurationLiveConfig();
+
     public bool shouldAllowJoiningInternetServersWithoutGslt;
 
     public bool shouldServersWithoutMonetizationTagBeVisibleInInternetServerList;
@@ -19,6 +21,8 @@ public class LiveConfigData
     public int playtimeGeneratorItemDefId;
 
     public int queryPingWarningOffsetMs = 200;
+
+    public int pingMismatchWarningThresholdMs = 50;
 
     public long craftingPromotionId = -1L;
 
@@ -44,10 +48,15 @@ public class LiveConfigData
         {
             linkFiltering.Parse(node5);
         }
+        if (data.TryGetDictionary("ServerCuration", out var node6))
+        {
+            serverCuration.Parse(node6);
+        }
         shouldAllowJoiningInternetServersWithoutGslt = data.ParseBool("ShouldAllowJoiningInternetServersWithoutGslt");
         shouldServersWithoutMonetizationTagBeVisibleInInternetServerList = data.ParseBool("ShouldServersWithoutMonetizationTagBeVisibleInInternetServerList");
         playtimeGeneratorItemDefId = data.ParseInt32("PlaytimeGeneratorItemDefId");
         queryPingWarningOffsetMs = data.ParseInt32("QueryPingWarningOffsetMs", 200);
+        pingMismatchWarningThresholdMs = data.ParseInt32("PingMismatchWarningThresholdMs", 50);
         craftingPromotionId = data.ParseInt64("CraftingPromotionId", -1L);
     }
 }

@@ -968,7 +968,12 @@ public class PlayerAnimator : PlayerCaller
     {
         if (base.player.stance.stance != 0 && base.player.stance.stance != EPlayerStance.SPRINT && base.player.stance.stance != EPlayerStance.DRIVING && base.player.stance.stance != EPlayerStance.SITTING)
         {
-            if (inputLeanLeft)
+            if (inputLeanLeft == inputLeanRight)
+            {
+                _lean = 0;
+                leanObstructed = false;
+            }
+            else if (inputLeanLeft)
             {
                 if (isLeanSpaceEmpty(-base.transform.right))
                 {
@@ -993,11 +998,6 @@ public class PlayerAnimator : PlayerCaller
                     _lean = 0;
                     leanObstructed = true;
                 }
-            }
-            else
-            {
-                _lean = 0;
-                leanObstructed = false;
             }
         }
         else
@@ -1028,11 +1028,12 @@ public class PlayerAnimator : PlayerCaller
                     TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
                     parameters.relevantDistance = EffectManager.MEDIUM;
                     parameters.position = base.transform.position;
+                    parameters.reliable = true;
                     EffectManager.triggerEffect(parameters);
                 }
             }
         }
-        SendLean.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner(), (byte)(lean + 1));
+        SendLean.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GatherRemoteClientConnectionsExcludingOwner(), (byte)(lean + 1));
         PlayerAnimator.OnLeanChanged_Global.TryInvoke("OnLeanChanged_Global", this);
     }
 

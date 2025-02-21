@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -100,6 +101,8 @@ public class Attachments : MonoBehaviour
     private Material instantiatedMagazineSkin;
 
     private Material reticuleMaterial;
+
+    private List<GunAttachmentEventHook> gunAttachmentEventHooks;
 
     public ItemGunAsset gunAsset => _gunAsset;
 
@@ -225,7 +228,7 @@ public class Attachments : MonoBehaviour
 
     public void updateAttachments(byte[] state, bool viewmodel)
     {
-        if (state == null || state.Length != 18)
+        if (state == null || state.Length < 18)
         {
             return;
         }
@@ -598,6 +601,14 @@ public class Attachments : MonoBehaviour
         }
         wasSkinned = true;
         applyVisual();
+        if (gunAttachmentEventHooks == null)
+        {
+            return;
+        }
+        foreach (GunAttachmentEventHook gunAttachmentEventHook in gunAttachmentEventHooks)
+        {
+            gunAttachmentEventHook.UpdateEventHook(this);
+        }
     }
 
     private void Awake()
@@ -680,5 +691,15 @@ public class Attachments : MonoBehaviour
     private void OnDestroy()
     {
         DestroySkinMaterials();
+    }
+
+    internal void InitializeGunAttachmentEventHooks(int count)
+    {
+        gunAttachmentEventHooks = new List<GunAttachmentEventHook>(count);
+        GetComponentsInChildren(includeInactive: true, gunAttachmentEventHooks);
+        foreach (GunAttachmentEventHook gunAttachmentEventHook in gunAttachmentEventHooks)
+        {
+            gunAttachmentEventHook.InitializeEventHook(this);
+        }
     }
 }

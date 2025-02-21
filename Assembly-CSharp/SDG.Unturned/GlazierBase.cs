@@ -104,7 +104,7 @@ internal abstract class GlazierBase : MonoBehaviour
             {
                 debugBuilder.AppendFormat(localization.format("HUD_FPS"), fps);
                 debugBuilder.Append(' ');
-                debugBuilder.AppendFormat(localization.format("HUD_Ping"), (int)(Provider.ping * 1000f));
+                debugBuilder.AppendFormat(localization.format("HUD_Ping"), Provider.ClientPingMs);
                 debugBuilder.Append(' ');
                 debugBuilder.Append(Provider.APP_VERSION);
                 if (Player.player != null && Player.player.look.canUseFreecam)

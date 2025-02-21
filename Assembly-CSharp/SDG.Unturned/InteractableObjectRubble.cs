@@ -318,6 +318,14 @@ public class InteractableObjectRubble : MonoBehaviour, IExplosionDamageable, IEq
         {
             owningLevelObject?.SetRubbleWantsNavActive(!flag);
         }
+        if (Provider.isServer && rubbleInfo.isDead)
+        {
+            float num2 = (flag ? asset.RubbleAllSectionsDestroyedAlertRadius : asset.RubbleSectionDestroyedAlertRadius);
+            if (num2 > 0f)
+            {
+                AlertTool.alert(rubbleInfo.section.position, num2);
+            }
+        }
     }
 
     public void updateState(Asset asset, byte[] state)

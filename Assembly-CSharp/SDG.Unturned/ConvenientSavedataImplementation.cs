@@ -78,4 +78,9 @@ internal class ConvenientSavedataImplementation : IConvenientSavedata
     {
         return Booleans.Remove(key);
     }
+
+    public bool DeleteInteger(string key)
+    {
+        return Integers.Remove(key);
+    }
 }

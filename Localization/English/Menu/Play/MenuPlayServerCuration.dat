@@ -8,6 +8,14 @@ URL_Tooltip Link to a curator's list hosted on the Internet.
 AddURLButton_Label Add Curator
 AddURLButton_Tooltip Add a server curation list at the given URL to the ranking.
 
+DefaultBehavior_Label Default Action
+DefaultBehavior_Show_Label Show
+DefaultBehavior_Show_Tooltip Servers not matching any rules are visible in the server browser. (default)
+DefaultBehavior_Hide_Label Hide
+DefaultBehavior_Hide_Tooltip Servers not matching any rules are hidden from the server browser.
+DefaultBehavior_MoveToBottom_Label Move to Bottom
+DefaultBehavior_MoveToBottom_Tooltip Servers not matching any rules are moved to the bottom of the server browser.
+
 DenyMode_Label Block Mode
 DenyMode_Hide_Label Hide
 DenyMode_Hide_Tooltip Servers matching a Deny rule are hidden from the server browser.

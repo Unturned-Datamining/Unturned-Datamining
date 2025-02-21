@@ -55,22 +55,19 @@ public class MenuPlayServerBookmarksUI : SleekFullscreenBox
 
     private void OnClickedBookmark(ServerBookmarkDetails bookmarkDetails)
     {
-        string host = bookmarkDetails.host;
-        if (!MenuPlayConnectUI.TryParseHostString(host, out var address, out var steamId, out var queryPortOverride))
+        MenuPlayConnectUI.TryParseHostString(bookmarkDetails.host, out var address, out var steamId, out var queryPortOverride);
+        if (!address.IsZero)
         {
-            UnturnedLog.info("Unable to join bookmark because failed to resolve host \"" + host + "\"");
-            return;
+            ushort newPort = ((queryPortOverride > 0) ? queryPortOverride : bookmarkDetails.queryPort);
+            SteamConnectionInfo info = new SteamConnectionInfo(address.value, newPort, string.Empty);
+            close();
+            MenuPlayConnectUI.open();
+            MenuPlayConnectUI.connect(info, shouldAutoJoin: false, MenuPlayServerInfoUI.EServerInfoOpenContext.BOOKMARKS);
         }
-        if (steamId != default(CSteamID))
+        else
         {
-            UnturnedLog.info("Unable to join bookmark because it returned a server code (prefer to use A2S system for now)");
-            return;
+            Provider.connect(new ServerConnectParameters((steamId != CSteamID.Nil && steamId.BPersistentGameServerAccount()) ? steamId : bookmarkDetails.steamId, string.Empty), null, null);
         }
-        ushort newPort = ((queryPortOverride > 0) ? queryPortOverride : bookmarkDetails.queryPort);
-        SteamConnectionInfo info = new SteamConnectionInfo(address.value, newPort, string.Empty);
-        close();
-        MenuPlayConnectUI.open();
-        MenuPlayConnectUI.connect(info, shouldAutoJoin: false, MenuPlayServerInfoUI.EServerInfoOpenContext.BOOKMARKS);
     }
 
     private ISleekElement OnCreateBookmarkElement(ServerBookmarkDetails bookmarkDetails)

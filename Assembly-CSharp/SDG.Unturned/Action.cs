@@ -26,6 +26,26 @@ public class Action
 
     public string key => _key;
 
+    public bool IsAnyBlueprintLink
+    {
+        get
+        {
+            if (_blueprints == null)
+            {
+                return false;
+            }
+            ActionBlueprint[] array = _blueprints;
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i].isLink)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
     public Action(ushort newSource, EActionType newType, ActionBlueprint[] newBlueprints, string newText, string newTooltip, string newKey)
     {
         _source = newSource;

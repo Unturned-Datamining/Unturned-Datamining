@@ -1,3 +1,4 @@
+using System;
 using SDG.HostBans;
 using Steamworks;
 using UnityEngine;
@@ -34,6 +35,22 @@ public class SteamServerAdvertisement
         LanServerList
     }
 
+    public enum EAnycastProxyMode
+    {
+        /// <summary>
+        /// Server is not using an anycast proxy.
+        /// </summary>
+        None,
+        /// <summary>
+        /// Server host indicated an anycast proxy is in use.
+        /// </summary>
+        TaggedByHost,
+        /// <summary>
+        /// Moderator flagged server as using an anycast proxy. (EHostBanFlags.QueryPingWarning)
+        /// </summary>
+        FlaggedByModerator
+    }
+
     private CSteamID _steamID;
 
     private uint _ip;
@@ -56,7 +73,7 @@ public class SteamServerAdvertisement
 
     private ECameraMode _cameraMode;
 
-    private int _ping;
+    private int _pingMs;
 
     internal int sortingPing;
 
@@ -72,6 +89,8 @@ public class SteamServerAdvertisement
 
     internal EInfoSource infoSource;
 
+    internal EAnycastProxyMode anycastProxyMode;
+
     private static AnimationCurve pingCurve = new AnimationCurve(new Keyframe(50f, 1f), new Keyframe(100f, 0.6f), new Keyframe(300f, 0.3f), new Keyframe(900f, 0.1f));
 
     private static AnimationCurve fullnessCurve = new AnimationCurve(new Keyframe(0f, 0.1f), new Keyframe(0.5f, 0.8f), new Keyframe(0.75f, 1f), new Keyframe(1f, 0.8f));
@@ -83,6 +102,8 @@ public class SteamServerAdvertisement
     internal string serverCurationLabels;
 
     internal bool isDeniedByServerCurationRule;
+
+    internal bool isDeprioritizedByServerCuration;
 
     /// <summary>
     /// If set, this server was denied by a server curation list.
@@ -109,7 +130,13 @@ public class SteamServerAdvertisement
 
     public EServerMonetizationTag monetization { get; private set; }
 
-    public int ping => _ping;
+    /// <summary>
+    /// Ping time measured in milliseconds.
+    /// </summary>
+    public int PingMs => _pingMs;
+
+    [Obsolete("Renamed to PingMs to clarify units.")]
+    public int ping => _pingMs;
 
     public int players => _players;
 
@@ -237,9 +264,10 @@ public class SteamServerAdvertisement
     internal void SetServerListHostBanFlags(EHostBanFlags hostBanFlags)
     {
         this.hostBanFlags = hostBanFlags;
-        if (hostBanFlags.HasFlag(EHostBanFlags.QueryPingWarning))
+        if (hostBanFlags.HasFlag(EHostBanFlags.QueryPingWarning) && anycastProxyMode == EAnycastProxyMode.None)
         {
             sortingPing += LiveConfig.Get().queryPingWarningOffsetMs;
+            anycastProxyMode = EAnycastProxyMode.FlaggedByModerator;
         }
     }
 
@@ -305,6 +333,10 @@ public class SteamServerAdvertisement
             }
             _isPro = hasTagKey(gameTags, "GLD", thumbnailIndex);
             IsBattlEyeSecure = hasTagKey(gameTags, "BEy", thumbnailIndex);
+            if (hasTagKey(gameTags, "ACP", thumbnailIndex))
+            {
+                anycastProxyMode = EAnycastProxyMode.TaggedByHost;
+            }
             networkTransport = parseTagValue(gameTags, "<net>", "</net>");
             if (string.IsNullOrEmpty(networkTransport))
             {
@@ -365,8 +397,12 @@ public class SteamServerAdvertisement
             thumbnailURL = null;
             descText = null;
         }
-        _ping = data.m_nPing;
-        sortingPing = _ping;
+        _pingMs = data.m_nPing;
+        sortingPing = _pingMs;
+        if (anycastProxyMode == EAnycastProxyMode.TaggedByHost)
+        {
+            sortingPing += LiveConfig.Get().queryPingWarningOffsetMs;
+        }
         _maxPlayers = data.m_nMaxPlayers;
         if (data.m_nPlayers < 0 || data.m_nBotPlayers < 0 || data.m_nPlayers > 255 || data.m_nBotPlayers > 255)
         {
@@ -398,6 +434,6 @@ public class SteamServerAdvertisement
 
     public override string ToString()
     {
-        return "Name: " + name + " Map: " + map + " PvP: " + isPvP + " Mode: " + mode.ToString() + " Ping: " + ping + " Players: " + players + "/" + maxPlayers + " Passworded: " + isPassworded;
+        return "Name: " + name + " Map: " + map + " PvP: " + isPvP + " Mode: " + mode.ToString() + " Ping: " + PingMs + " Players: " + players + "/" + maxPlayers + " Passworded: " + isPassworded;
     }
 }

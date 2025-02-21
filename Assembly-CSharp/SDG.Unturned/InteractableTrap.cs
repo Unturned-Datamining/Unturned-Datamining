@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-public class InteractableTrap : Interactable
+public class InteractableTrap : InteractablePower
 {
     private float range2;
 
@@ -42,9 +42,16 @@ public class InteractableTrap : Interactable
 
     private bool isExplosive;
 
+    private bool requiresPower;
+
     private float lastActive;
 
     private float lastTriggered;
+
+    /// <summary>
+    /// Active while powered.
+    /// </summary>
+    private GameObject poweredGameObject;
 
     public override void updateState(Asset asset, byte[] state)
     {
@@ -65,9 +72,16 @@ public class InteractableTrap : Interactable
         explosionLaunchSpeed = itemTrapAsset.explosionLaunchSpeed;
         isBroken = itemTrapAsset.isBroken;
         isExplosive = itemTrapAsset.isExplosive;
-        if (((ItemTrapAsset)asset).damageTires)
+        requiresPower = itemTrapAsset.requiresPower;
+        if (itemTrapAsset.damageTires)
         {
             base.transform.parent.GetOrAddComponent<InteractableTrapDamageTires>();
+        }
+        if (requiresPower)
+        {
+            poweredGameObject = base.transform.Find("Powered")?.gameObject;
+            RefreshIsConnectedToPowerWithoutNotify();
+            UpdatePowerEffects();
         }
     }
 
@@ -76,14 +90,27 @@ public class InteractableTrap : Interactable
         return false;
     }
 
+    protected override void updateWired()
+    {
+        UpdatePowerEffects();
+    }
+
     private void OnEnable()
     {
         lastActive = Time.realtimeSinceStartup;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void UpdatePowerEffects()
     {
-        if (other.isTrigger || Time.realtimeSinceStartup - lastActive < setupDelay || (base.transform.parent != null && other.transform == base.transform.parent) || Time.realtimeSinceStartup - lastTriggered < cooldown)
+        if (poweredGameObject != null)
+        {
+            poweredGameObject.SetActive(base.isWired);
+        }
+    }
+
+    internal void NotifyTrapEntered(Collider other)
+    {
+        if (other.isTrigger || Time.realtimeSinceStartup - lastActive < setupDelay || (requiresPower && !base.isWired) || (base.transform.parent != null && other.transform == base.transform.parent) || Time.realtimeSinceStartup - lastTriggered < cooldown)
         {
             return;
         }
@@ -115,6 +142,7 @@ public class InteractableTrap : Interactable
                     TriggerEffectParameters parameters2 = new TriggerEffectParameters(effectAsset);
                     parameters2.position = position;
                     parameters2.relevantDistance = EffectManager.LARGE;
+                    parameters2.reliable = true;
                     EffectManager.triggerEffect(parameters2);
                 }
             }

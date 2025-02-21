@@ -14,3 +14,5 @@
 - [MainMenuWorkshopFeaturedLiveConfig.cs](MainMenuWorkshopFeaturedLiveConfig.cs)
 - [MainMenuWorkshopLiveConfig.cs](MainMenuWorkshopLiveConfig.cs)
 - [MainMenuWorkshopPopularLiveConfig.cs](MainMenuWorkshopPopularLiveConfig.cs)
+- [ServerCurationLiveConfig.cs](ServerCurationLiveConfig.cs)
+- [ServerCurationLiveConfigItem.cs](ServerCurationLiveConfigItem.cs)

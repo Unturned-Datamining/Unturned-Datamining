@@ -387,6 +387,7 @@ public class UseableConsumeable : Useable
                 TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
                 parameters.relevantDistance = EffectManager.LARGE;
                 parameters.position = vector;
+                parameters.reliable = true;
                 EffectManager.triggerEffect(parameters);
             }
             DamageTool.explode(vector, asset.range, EDeathCause.CHARGE, base.channel.owner.playerID.steamID, asset.playerDamageMultiplier.damage, asset.zombieDamageMultiplier.damage, asset.animalDamageMultiplier.damage, asset.barricadeDamage, asset.structureDamage, asset.vehicleDamage, asset.resourceDamage, asset.objectDamage, out var _, EExplosionDamageType.CONVENTIONAL, 32f, playImpactEffect: true, penetrateBuildables: false, EDamageOrigin.Food_Explosion);

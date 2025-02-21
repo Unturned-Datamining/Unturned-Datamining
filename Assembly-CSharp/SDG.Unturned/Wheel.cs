@@ -171,6 +171,7 @@ public class Wheel
                 parameters.relevantDistance = EffectManager.SMALL;
                 parameters.position = wheel.transform.position;
                 parameters.SetDirection(wheel.transform.up);
+                parameters.reliable = true;
                 EffectManager.triggerEffect(parameters);
             }
         }
@@ -262,13 +263,17 @@ public class Wheel
     /// <summary>
     /// Called during FixedUpdate if vehicle is driven by the local player.
     /// </summary>
-    internal void ClientSimulate(float input_x, float input_y, bool inputBrake, float delta)
+    internal void ClientSimulate(float input_x, float input_y, bool inputBrake, float delta, bool isTorqueBlocked)
     {
         if (!(wheel == null))
         {
             latestLocalSteeringInput = input_x;
             latestLocalAccelerationInput = input_y;
             latestLocalBrakingInput = inputBrake;
+            if (config.steeringMode == EWheelSteeringMode.CrawlerTrack && isTorqueBlocked)
+            {
+                latestLocalSteeringInput = 0f;
+            }
             UpdateGrounded();
         }
     }
@@ -828,7 +833,7 @@ public class Wheel
     [Obsolete("Should not have been public.")]
     public void simulate(float input_x, float input_y, bool inputBrake, float delta)
     {
-        ClientSimulate(input_x, input_y, inputBrake, delta);
+        ClientSimulate(input_x, input_y, inputBrake, delta, isTorqueBlocked: false);
     }
 
     [Obsolete("Should not have been public.")]

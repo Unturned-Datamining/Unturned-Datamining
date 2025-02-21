@@ -139,6 +139,7 @@ public class ResourceManager : SteamCaller
                         TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
                         parameters.position = list[num].GetEffectSpawnPosition();
                         parameters.relevantDistance = EffectManager.MEDIUM;
+                        parameters.reliable = true;
                         EffectManager.triggerEffect(parameters);
                     }
                     if (!asset.isForage)
@@ -261,6 +262,7 @@ public class ResourceManager : SteamCaller
             TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
             parameters.position = list[index].GetEffectSpawnPosition();
             parameters.relevantDistance = EffectManager.MEDIUM;
+            parameters.reliable = true;
             EffectManager.triggerEffect(parameters);
         }
         ushort num = ((asset.rewardID == 0) ? asset.log : SpawnTableTool.ResolveLegacyId(asset.rewardID, EAssetType.ITEM, asset.OnGetRewardSpawnTableErrorContext));
