@@ -178,6 +178,16 @@ LinkFiltering
 	]
 	DefaultAction UseSteamLinkFilter
 }
+ServerCuration
+{
+	Items
+	[
+		{
+			Id 2
+			Url https://smartlydressedgames.com/unturned-server-curation/insensitive-war-rp-denylist.dat
+		}
+	]
+}
 ShouldAllowJoiningInternetServersWithoutGslt false
 ShouldServersWithoutMonetizationTagBeVisibleInInternetServerList true
 QueryPingWarningOffsetMs 50
