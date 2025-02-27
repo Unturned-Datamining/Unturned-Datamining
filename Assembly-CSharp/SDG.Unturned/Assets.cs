@@ -1003,7 +1003,7 @@ public class Assets : MonoBehaviour
         {
             if (!datDictionary.TryGetString("Bundle_Override_Path", out var value2))
             {
-                value2 = directoryName.Substring(masterBundleConfig.directoryPath.Length);
+                value2 = (datDictionary.ParseBool("Bundle_Path_Include_Filename") ? Path.ChangeExtension(path, null).Substring(masterBundleConfig.directoryPath.Length) : directoryName.Substring(masterBundleConfig.directoryPath.Length));
                 value2 = value2.Replace('\\', '/');
             }
             bundle = new MasterBundle(masterBundleConfig, value2, text);

@@ -180,7 +180,7 @@ public class PlayerVoice : PlayerCaller
 
     private bool allowTalkingWhileDead;
 
-    private bool customAllowTalking = true;
+    private bool _customAllowTalking = true;
 
     /// <summary>
     /// Is this player broadcasting their voice?
@@ -316,10 +316,28 @@ public class PlayerVoice : PlayerCaller
     /// </summary>
     private bool canEverPlayback => !base.channel.IsLocalPlayer;
 
+    private bool customAllowTalking
+    {
+        get
+        {
+            return _customAllowTalking;
+        }
+        set
+        {
+            if (_customAllowTalking != value)
+            {
+                _customAllowTalking = value;
+                this.OnCustomAllowTalkingChanged?.TryInvoke("OnCustomAllowTalkingChanged", this);
+            }
+        }
+    }
+
     /// <summary>
     /// Broadcasts after isTalking changes.
     /// </summary>
     public event Talked onTalkingChanged;
+
+    public event Action<PlayerVoice> OnCustomAllowTalkingChanged;
 
     /// <summary>
     /// Only used by plugins.

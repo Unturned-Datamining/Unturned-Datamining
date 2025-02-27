@@ -59,7 +59,7 @@ public static class HolidayUtil
         scheduleHoliday(ENPCHoliday.PRIDE_MONTH, new DateTime(year, 6, 1, 0, 0, 0, DateTimeKind.Local), new DateTime(year, 6, 30, 23, 59, 59, DateTimeKind.Local));
         if (data.LunarNewYear_StartOverride.Ticks > 0 && data.LunarNewYear_EndOverride.Ticks > 0)
         {
-            scheduleHoliday(ENPCHoliday.PRIDE_MONTH, data.LunarNewYear_StartOverride, data.LunarNewYear_EndOverride);
+            scheduleHoliday(ENPCHoliday.LUNAR_NEW_YEAR, data.LunarNewYear_StartOverride, data.LunarNewYear_EndOverride);
             return;
         }
         DateTime dateTime = new ChineseLunisolarCalendar().ToDateTime(year, 1, 1, 0, 0, 0, 0);

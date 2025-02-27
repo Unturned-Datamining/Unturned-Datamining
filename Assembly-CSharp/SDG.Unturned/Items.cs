@@ -11,6 +11,10 @@ public class Items
 
     public ItemAdded onItemAdded;
 
+    /// <summary>
+    /// Nelson 2025-02-24: Warning that this is invoked *before* the item is actually removed from the items list.
+    /// (public issue #4894)
+    /// </summary>
     public ItemRemoved onItemRemoved;
 
     public ItemDiscarded onItemDiscarded;

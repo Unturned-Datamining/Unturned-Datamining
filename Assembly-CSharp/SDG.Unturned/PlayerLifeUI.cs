@@ -1100,6 +1100,11 @@ public class PlayerLifeUI
         updateIcons();
     }
 
+    private void OnCustomAllowTalkingChanged(PlayerVoice voice)
+    {
+        SynchronizeOutboundVoiceChatVisible();
+    }
+
     private static void onTalked(bool isTalking)
     {
         voiceBox.IsVisible = isTalking;
@@ -1400,7 +1405,13 @@ public class PlayerLifeUI
 
     private void SynchronizeOutboundVoiceChatVisible()
     {
-        voiceOutboundOffIcon.IsVisible = !Provider.isServer && !OptionsSettings.EnableOutboundVoiceChat && OptionsSettings.ShowOutboundVoiceChatOffHint;
+        bool flag = false;
+        if (!Provider.isServer)
+        {
+            flag |= !OptionsSettings.EnableOutboundVoiceChat && OptionsSettings.ShowOutboundVoiceChatOffHint;
+            flag |= !Player.player.voice.GetCustomAllowTalking();
+        }
+        voiceOutboundOffIcon.IsVisible = flag;
     }
 
     private void OnUnitSystemChanged()
@@ -1544,12 +1555,13 @@ public class PlayerLifeUI
         voteBox.AddChild(voteNoLabel);
         voiceBox = new SleekBoxIcon(icons.load<Texture2D>("Voice"));
         voiceBox.PositionOffset_Y = chatField.PositionOffset_Y + 40f;
-        voiceBox.SizeOffset_X = 40f;
-        voiceBox.SizeOffset_Y = 40f;
+        voiceBox.SizeOffset_X = 50f;
+        voiceBox.SizeOffset_Y = 50f;
         voiceBox.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(voiceBox);
         voiceBox.IsVisible = false;
         voiceOutboundOffIcon = Glazier.Get().CreateImage(icons.load<Texture2D>("VoiceOutboundOff"));
+        voiceOutboundOffIcon.PositionOffset_X = 60f;
         voiceOutboundOffIcon.PositionOffset_Y = chatField.PositionOffset_Y + 40f;
         voiceOutboundOffIcon.SizeOffset_X = 40f;
         voiceOutboundOffIcon.SizeOffset_Y = 40f;
@@ -2150,6 +2162,7 @@ public class PlayerLifeUI
         animator.onGestureUpdated = (GestureUpdated)Delegate.Combine(animator.onGestureUpdated, new GestureUpdated(onGestureUpdated));
         PlayerEquipment equipment = Player.player.equipment;
         equipment.onHotkeysUpdated = (HotkeysUpdated)Delegate.Combine(equipment.onHotkeysUpdated, new HotkeysUpdated(onHotkeysUpdated));
+        Player.player.voice.OnCustomAllowTalkingChanged += OnCustomAllowTalkingChanged;
         Player.player.voice.onTalkingChanged += onTalked;
         Player.player.quests.TrackedQuestUpdated += OnTrackedQuestUpdated;
         PlayerSkills skills = Player.player.skills;

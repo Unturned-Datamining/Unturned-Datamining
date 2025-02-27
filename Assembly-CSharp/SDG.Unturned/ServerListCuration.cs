@@ -452,6 +452,18 @@ internal class ServerListCuration
         return null;
     }
 
+    private ServerCurationItem_Web FindWebItemByRecommendationId(int id)
+    {
+        foreach (ServerCurationItem item in items)
+        {
+            if (item is ServerCurationItem_Web serverCurationItem_Web && serverCurationItem_Web.webLink.recommendationId == id)
+            {
+                return serverCurationItem_Web;
+            }
+        }
+        return null;
+    }
+
     private void SaveOrdering()
     {
         int num = 0;
@@ -564,7 +576,10 @@ internal class ServerListCuration
             for (int i = 0; i < array.Length; i++)
             {
                 ServerCurationLiveConfigItem serverCurationLiveConfigItem = array[i];
-                AddUrl(serverCurationLiveConfigItem.url, serverCurationLiveConfigItem.id);
+                if (FindWebItemByRecommendationId(serverCurationLiveConfigItem.id) == null)
+                {
+                    AddUrl(serverCurationLiveConfigItem.url, serverCurationLiveConfigItem.id);
+                }
             }
         }
         MarkDirty();
