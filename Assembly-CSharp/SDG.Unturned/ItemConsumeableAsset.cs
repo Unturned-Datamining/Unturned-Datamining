@@ -269,6 +269,31 @@ public class ItemConsumeableAsset : ItemWeaponAsset
         IsExplosive = !IsExplosionEffectRefNull();
     }
 
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Consumeable");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Health", health);
+        orAddDeclaration.Append("Food", food);
+        orAddDeclaration.Append("Water", water);
+        orAddDeclaration.Append("Virus", virus);
+        orAddDeclaration.Append("Disinfectant", disinfectant);
+        orAddDeclaration.Append("Energy", energy);
+        orAddDeclaration.Append("Vision", vision);
+        orAddDeclaration.Append("Oxygen", oxygen);
+        orAddDeclaration.Append("Warmth", warmth);
+        orAddDeclaration.Append("Experience", experience);
+        orAddDeclaration.Append("Bleeding_Modifier", bleedingModifier);
+        orAddDeclaration.Append("Bones_Modifier", bonesModifier);
+        orAddDeclaration.Append("Aid", hasAid);
+        orAddDeclaration.Append("Should_Delete_After_Use", shouldDeleteAfterUse);
+        orAddDeclaration.Append("Item_Reward_Spawn_ID", itemRewards.tableID);
+        orAddDeclaration.Append("Min_Item_Rewards", itemRewards.min);
+        orAddDeclaration.Append("Max_Item_Rewards", itemRewards.max);
+        orAddDeclaration.Append("Explosion", explosion);
+    }
+
     [Obsolete("Removed shouldSend parameter")]
     public void grantQuestRewards(Player player, bool shouldSend)
     {

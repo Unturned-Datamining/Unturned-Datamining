@@ -41,8 +41,8 @@
 	"Game":
 	{
 		"Major_Version": 25,
-		"Minor_Version": 1,
-		"Patch_Version": 0,
+		"Minor_Version": 2,
+		"Patch_Version": 107,
 		"GrantPackageIDs":
 		[
 			487
@@ -55,7 +55,9 @@
 	},
 	"Menu":
 	{
-
+		"PromoStart": "2025-02-05T12:00:00Z",
+		"PromoEnd": "3025-02-05T12:00:00Z",
+		"PromoLevel": "RioMenu"
 	},
 	"News":
 	{

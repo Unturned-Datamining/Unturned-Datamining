@@ -176,8 +176,11 @@ public class ItemTool : MonoBehaviour
         case EEffectType.AREA:
             gameObject = mythicAsset.systemArea;
             break;
-        case EEffectType.HOOK:
+        case EEffectType.HEAD_COSMETIC:
             gameObject = mythicAsset.systemHook;
+            break;
+        case EEffectType.BODY_COSMETIC:
+            gameObject = (mythicAsset.ShouldBodyCosmeticsUseAreaPrefab ? mythicAsset.systemArea : mythicAsset.systemHook);
             break;
         case EEffectType.FIRST:
             gameObject = mythicAsset.systemFirst;
@@ -728,7 +731,20 @@ public class ItemTool : MonoBehaviour
                 return;
             }
         }
-        Texture2D texture2D = captureIcon(orthoSize: (itemIconInfo.scale && itemIconInfo.skinAsset != null) ? itemIconInfo.itemAsset.econIconCameraOrthographicSize : ((!itemIconInfo.itemAsset.isEligibleForAutomaticIconMeasurements) ? itemIconInfo.itemAsset.iconCameraOrthographicSize : CalculateOrthographicSize(itemIconInfo.itemAsset, transform.gameObject, transform2, itemIconInfo.x, itemIconInfo.y)), id: itemIconInfo.itemAsset.id, skin: itemIconInfo.skinAsset?.id ?? 0, model: transform, icon: transform2, width: itemIconInfo.x, height: itemIconInfo.y, readableOnCPU: itemIconInfo.readableOnCPU);
+        float orthoSize;
+        if (!itemIconInfo.scale || itemIconInfo.skinAsset == null)
+        {
+            orthoSize = ((!itemIconInfo.itemAsset.isEligibleForAutomaticIconMeasurements) ? itemIconInfo.itemAsset.iconCameraOrthographicSize : CalculateOrthographicSize(itemIconInfo.itemAsset, transform.gameObject, transform2, itemIconInfo.x, itemIconInfo.y));
+        }
+        else
+        {
+            orthoSize = itemIconInfo.itemAsset.econIconCameraOrthographicSize;
+            if (itemIconInfo.skinAsset.hasIconTransformOverride)
+            {
+                transform2.SetLocalPositionAndRotation(itemIconInfo.skinAsset.iconPosition, itemIconInfo.skinAsset.iconRotation);
+            }
+        }
+        Texture2D texture2D = captureIcon(itemIconInfo.itemAsset.id, itemIconInfo.skinAsset?.id ?? 0, transform, transform2, itemIconInfo.x, itemIconInfo.y, orthoSize, itemIconInfo.readableOnCPU);
         if (itemIconInfo.callback != null)
         {
             try

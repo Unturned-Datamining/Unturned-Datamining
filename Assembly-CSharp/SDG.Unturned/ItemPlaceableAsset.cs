@@ -92,6 +92,18 @@ public class ItemPlaceableAsset : ItemAsset
         itemDroppedOnDestroy = data.readAssetReference<SpawnAsset>("Item_Dropped_On_Destroy");
     }
 
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Placeable");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Can_Zombies_Target", CanZombiesTarget);
+        orAddDeclaration.Append("SalvageItem", salvageItemRef);
+        orAddDeclaration.Append("Min_Items_Dropped_On_Destroy", minItemsDroppedOnDestroy);
+        orAddDeclaration.Append("Max_Items_Dropped_On_Destroy", maxItemsDroppedOnDestroy);
+        orAddDeclaration.Append("Item_Dropped_On_Destroy", itemDroppedOnDestroy);
+    }
+
     private string OnGetItemDroppedOnDestroySpawnTableErrorContext()
     {
         return FriendlyName + " items dropped on destroy";

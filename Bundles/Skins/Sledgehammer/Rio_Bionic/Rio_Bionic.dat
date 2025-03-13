@@ -1,0 +1,7 @@
+GUID 657714cead8c49329667c241a0d32ca5
+Type Skin
+ID 327
+
+Override_Meshes 2
+
+SpecialAudioOverrideDef Skins/Sledgehammer/Rio_Bionic/HitAudio.asset

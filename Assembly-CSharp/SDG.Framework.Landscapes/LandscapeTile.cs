@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -32,6 +33,16 @@ public class LandscapeTile : IFormattedFileReadable, IFormattedFileWritable, IFo
     /// hole volume cuts is helpful when upgrading to remove hole volumes from a map.
     /// </summary>
     public bool hasAnyHolesData;
+
+    /// <summary>
+    /// If true, SetHeightsDelayLOD was called without calling SyncHeightmap yet.
+    /// </summary>
+    private bool isHeightsLodDataDirty;
+
+    /// <summary>
+    /// If true, SetHolesDelayLOD was called without calling SyncTexture yet.
+    /// </summary>
+    private bool isHolesLodDataDirty;
 
     private TerrainLayer[] terrainLayers;
 
@@ -86,14 +97,37 @@ public class LandscapeTile : IFormattedFileReadable, IFormattedFileWritable, IFo
         {
             dataWithoutHoles.SetHeightsDelayLOD(0, 0, heightmap);
         }
+        isHeightsLodDataDirty = true;
     }
 
-    public void SyncHeightmap()
+    public void SyncDelayedLOD()
     {
-        data.SyncHeightmap();
-        if (dataWithoutHoles != null)
+        if (isHeightsLodDataDirty)
         {
-            dataWithoutHoles.SyncHeightmap();
+            isHeightsLodDataDirty = false;
+            data.SyncHeightmap();
+            if (dataWithoutHoles != null)
+            {
+                dataWithoutHoles.SyncHeightmap();
+            }
+        }
+        if (isHolesLodDataDirty)
+        {
+            isHolesLodDataDirty = false;
+            data.SyncTexture(TerrainData.HolesTextureName);
+        }
+    }
+
+    public void SetHoles()
+    {
+        if (Landscape.ShouldUseSetHolesDelayLOD)
+        {
+            data.SetHolesDelayLOD(0, 0, holes);
+            isHolesLodDataDirty = true;
+        }
+        else
+        {
+            data.SetHoles(0, 0, holes);
         }
     }
 
@@ -219,7 +253,7 @@ public class LandscapeTile : IFormattedFileReadable, IFormattedFileWritable, IFo
             }
             Level.includeHash(text, sHA1Stream.Hash);
         }
-        data.SetHoles(0, 0, holes);
+        SetHoles();
         hasAnyHolesData = true;
     }
 
@@ -401,7 +435,7 @@ public class LandscapeTile : IFormattedFileReadable, IFormattedFileWritable, IFo
             }
         }
         Landscape.reconcileNeighbors(this);
-        SyncHeightmap();
+        SyncDelayedLOD();
     }
 
     public void resetSplatmap()
@@ -586,6 +620,11 @@ public class LandscapeTile : IFormattedFileReadable, IFormattedFileWritable, IFo
         data.baseMapResolution = Landscape.BASEMAP_RESOLUTION;
         data.size = new Vector3(Landscape.TILE_SIZE, Landscape.TILE_HEIGHT, Landscape.TILE_SIZE);
         data.SetHeightsDelayLOD(0, 0, heightmap);
+        if (Landscape.ShouldUseSetHolesDelayLOD)
+        {
+            data.enableHolesTextureCompression = false;
+        }
+        isHeightsLodDataDirty = true;
         if (!Dedicator.IsDedicatedServer)
         {
             data.SetAlphamaps(0, 0, splatmap);
@@ -624,5 +663,11 @@ public class LandscapeTile : IFormattedFileReadable, IFormattedFileWritable, IFo
         {
             dataWithoutHoles.name = data.name + " (without holes)";
         }
+    }
+
+    [Obsolete]
+    public void SyncHeightmap()
+    {
+        SyncDelayedLOD();
     }
 }

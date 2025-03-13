@@ -114,5 +114,9 @@ public enum ESteamRejection
     /// <summary>
     /// Received too many connection requests from player in a short window.
     /// </summary>
-    CONNECT_RATE_LIMITING
+    CONNECT_RATE_LIMITING,
+    /// <summary>
+    /// Received too many invalid messages from connection in a short window.
+    /// </summary>
+    BAD_PACKET_RATE_LIMITING
 }

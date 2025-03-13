@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using SDG.NetTransport;
 using Steamworks;
 using UnityEngine;
@@ -11,7 +12,9 @@ public class InteractableFarm : Interactable
 
     private uint _planted;
 
-    private bool isGrown;
+    private bool _isModelGrown;
+
+    private Coroutine growModelCoroutine;
 
     public uint harvestRewardExperience;
 
@@ -41,7 +44,7 @@ public class InteractableFarm : Interactable
         {
             if (planted != 0 && Provider.time > planted)
             {
-                return Provider.time - planted > growth;
+                return Provider.time - planted >= growth;
             }
             return false;
         }
@@ -52,6 +55,32 @@ public class InteractableFarm : Interactable
     public void updatePlanted(uint newPlanted)
     {
         _planted = newPlanted;
+        if (Dedicator.IsDedicatedServer)
+        {
+            return;
+        }
+        if (growModelCoroutine != null)
+        {
+            StopCoroutine(growModelCoroutine);
+            growModelCoroutine = null;
+        }
+        if (planted < 1)
+        {
+            SetModelGrown(newModelGrown: false);
+            UnturnedLog.info("Farm canceling timer because planted timestamp is zero");
+            return;
+        }
+        uint num = planted + growth;
+        if (Provider.time >= num)
+        {
+            SetModelGrown(newModelGrown: true);
+            UnturnedLog.info("Farm already finished growing");
+            return;
+        }
+        SetModelGrown(newModelGrown: false);
+        float num2 = num - Provider.time;
+        UnturnedLog.info($"Farm setting growth timer for {num2} s");
+        StartCoroutine(GrowAfterRealtime(num2));
     }
 
     public override void updateState(Asset asset, byte[] state)
@@ -60,17 +89,11 @@ public class InteractableFarm : Interactable
         harvestRewardExperience = farmAsset?.harvestRewardExperience ?? 0;
         if (state.Length >= 4)
         {
-            _planted = BitConverter.ToUInt32(state, 0);
+            updatePlanted(BitConverter.ToUInt32(state, 0));
         }
         else
         {
-            _planted = 0u;
-        }
-        if (isGrown)
-        {
-            isGrown = false;
-            base.transform.Find("Foliage_0")?.gameObject.SetActive(value: true);
-            base.transform.Find("Foliage_1")?.gameObject.SetActive(value: false);
+            updatePlanted(0u);
         }
     }
 
@@ -112,24 +135,6 @@ public class InteractableFarm : Interactable
             if (Provider.isServer)
             {
                 BarricadeManager.updateFarm(base.transform, planted, shouldSend: false);
-            }
-        }
-    }
-
-    private void Update()
-    {
-        if (!Dedicator.IsDedicatedServer && !isGrown && checkFarm())
-        {
-            isGrown = true;
-            Transform transform = base.transform.Find("Foliage_0");
-            if (transform != null)
-            {
-                transform.gameObject.SetActive(value: false);
-            }
-            Transform transform2 = base.transform.Find("Foliage_1");
-            if (transform2 != null)
-            {
-                transform2.gameObject.SetActive(value: true);
             }
         }
     }
@@ -191,6 +196,25 @@ public class InteractableFarm : Interactable
         BarricadeManager.damage(base.transform, 2f, 1f, armor: false, default(CSteamID), EDamageOrigin.Plant_Harvested);
         player.sendStat(EPlayerStat.FOUND_PLANTS);
         player.skills.askPay(harvestRewardExperience);
+    }
+
+    private void SetModelGrown(bool newModelGrown)
+    {
+        if (_isModelGrown != newModelGrown)
+        {
+            _isModelGrown = newModelGrown;
+            base.transform.Find("Foliage_0")?.gameObject.SetActive(!_isModelGrown);
+            base.transform.Find("Foliage_1")?.gameObject.SetActive(_isModelGrown);
+        }
+    }
+
+    /// <summary>
+    /// Uses unscaled time (realtime) because "planted" time is a timestamp.
+    /// </summary>
+    private IEnumerator GrowAfterRealtime(float time)
+    {
+        yield return new WaitForSecondsRealtime(time);
+        SetModelGrown(newModelGrown: true);
     }
 
     private string OnGetGrowSpawnTableErrorContext()

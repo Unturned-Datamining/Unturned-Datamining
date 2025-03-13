@@ -2750,7 +2750,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         real = point;
         if (asset.engine == EEngine.TRAIN)
         {
-            roadPosition = clampRoadPosition(UnpackRoadPosition(point));
+            roadPosition = ClampEngineRoadPosition(UnpackRoadPosition(point));
             teleportTrain();
         }
         else
@@ -3174,8 +3174,8 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         TrainCar[] array = trainCars;
         foreach (TrainCar trainCar in array)
         {
-            road.getTrackData(clampRoadPosition(roadPosition + trainCar.trackPositionOffset + asset.trainWheelOffset), out var position, out var normal, out var direction);
-            road.getTrackData(clampRoadPosition(roadPosition + trainCar.trackPositionOffset - asset.trainWheelOffset), out var position2, out var normal2, out var direction2);
+            road.getTrackData(ClampCarRoadPosition(roadPosition + trainCar.trackPositionOffset + asset.trainWheelOffset), out var position, out var normal, out var direction);
+            road.getTrackData(ClampCarRoadPosition(roadPosition + trainCar.trackPositionOffset - asset.trainWheelOffset), out var position2, out var normal2, out var direction2);
             moveTrain(position, normal, direction, position2, normal2, direction2, trainCar);
         }
     }
@@ -3193,7 +3193,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         };
     }
 
-    private float clampRoadPosition(float newRoadPosition)
+    private float ClampCarRoadPosition(float newRoadPosition)
     {
         if (road.isLoop)
         {
@@ -3207,7 +3207,24 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
             }
             return newRoadPosition;
         }
-        return Mathf.Clamp(newRoadPosition, 0.5f + asset.trainWheelOffset, road.trackSampledLength - (float)(trainCars.Length - 1) * asset.trainCarLength - asset.trainWheelOffset - 0.5f);
+        return Mathf.Clamp(newRoadPosition, 0.01f, road.trackSampledLength - 0.01f);
+    }
+
+    private float ClampEngineRoadPosition(float newRoadPosition)
+    {
+        if (road.isLoop)
+        {
+            if (newRoadPosition < 0f)
+            {
+                return road.trackSampledLength + newRoadPosition;
+            }
+            if (newRoadPosition > road.trackSampledLength)
+            {
+                return newRoadPosition - road.trackSampledLength;
+            }
+            return newRoadPosition;
+        }
+        return Mathf.Clamp(newRoadPosition, 0.5f + asset.trainWheelOffset + (float)(trainCars.Length - 1) * asset.trainCarLength, road.trackSampledLength - asset.trainWheelOffset - 0.5f);
     }
 
     /// <summary>
@@ -3545,8 +3562,8 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
                 TrainCar[] array3 = trainCars;
                 foreach (TrainCar trainCar in array3)
                 {
-                    road.getTrackData(clampRoadPosition(roadPosition + trainCar.trackPositionOffset + asset.trainWheelOffset), out var position3, out var normal, out var direction);
-                    road.getTrackData(clampRoadPosition(roadPosition + trainCar.trackPositionOffset - asset.trainWheelOffset), out var position4, out var normal2, out var direction2);
+                    road.getTrackData(ClampCarRoadPosition(roadPosition + trainCar.trackPositionOffset + asset.trainWheelOffset), out var position3, out var normal, out var direction);
+                    road.getTrackData(ClampCarRoadPosition(roadPosition + trainCar.trackPositionOffset - asset.trainWheelOffset), out var position4, out var normal2, out var direction2);
                     moveTrain(position3, normal, direction, position4, normal2, direction2, trainCar);
                 }
                 float num10 = inputEngineVelocity * deltaTime;
@@ -3608,7 +3625,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
                 else
                 {
                     roadPosition += num10;
-                    roadPosition = clampRoadPosition(roadPosition);
+                    roadPosition = ClampEngineRoadPosition(roadPosition);
                 }
             }
         }
@@ -3617,11 +3634,11 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
             TrainCar[] array3 = trainCars;
             foreach (TrainCar trainCar2 in array3)
             {
-                road.getTrackData(clampRoadPosition(roadPosition + trainCar2.trackPositionOffset + asset.trainWheelOffset), out var position5, out var normal3, out var direction3);
+                road.getTrackData(ClampCarRoadPosition(roadPosition + trainCar2.trackPositionOffset + asset.trainWheelOffset), out var position5, out var normal3, out var direction3);
                 trainCar2.currentFrontPosition = Vector3.Lerp(trainCar2.currentFrontPosition, position5, 8f * Time.deltaTime);
                 trainCar2.currentFrontNormal = Vector3.Lerp(trainCar2.currentFrontNormal, normal3, 8f * Time.deltaTime);
                 trainCar2.currentFrontDirection = Vector3.Lerp(trainCar2.currentFrontDirection, direction3, 8f * Time.deltaTime);
-                road.getTrackData(clampRoadPosition(roadPosition + trainCar2.trackPositionOffset - asset.trainWheelOffset), out var position6, out var normal4, out var direction4);
+                road.getTrackData(ClampCarRoadPosition(roadPosition + trainCar2.trackPositionOffset - asset.trainWheelOffset), out var position6, out var normal4, out var direction4);
                 trainCar2.currentBackPosition = Vector3.Lerp(trainCar2.currentBackPosition, position6, 8f * Time.deltaTime);
                 trainCar2.currentBackNormal = Vector3.Lerp(trainCar2.currentBackNormal, normal4, 8f * Time.deltaTime);
                 trainCar2.currentBackDirection = Vector3.Lerp(trainCar2.currentBackDirection, direction4, 8f * Time.deltaTime);
@@ -4238,7 +4255,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
                 }
             }
             road = LevelRoads.getRoad(roadIndex);
-            roadPosition = clampRoadPosition(roadPosition);
+            roadPosition = ClampEngineRoadPosition(roadPosition);
             teleportTrain();
         }
         if (asset.physicsProfileRef.isValid)

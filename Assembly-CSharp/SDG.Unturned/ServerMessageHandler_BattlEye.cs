@@ -28,14 +28,22 @@ internal static class ServerMessageHandler_BattlEye
                     Provider.refuseGarbageConnection(transportConnection, "sv empty BE payload");
                 }
             }
-            else if ((bool)NetMessages.shouldLogBadMessages)
+            else
             {
-                UnturnedLog.info($"Ignoring BattlEye message from {transportConnection} because there is no associated player");
+                if ((bool)NetMessages.shouldLogBadMessages)
+                {
+                    UnturnedLog.info($"Ignoring BattlEye message from {transportConnection} because there is no associated player");
+                }
+                Provider.IncrementBadPacketsFromConnection(transportConnection);
             }
         }
-        else if ((bool)NetMessages.shouldLogBadMessages)
+        else
         {
-            UnturnedLog.info($"Ignoring BattlEye message from {transportConnection} because BattlEye is not running");
+            if ((bool)NetMessages.shouldLogBadMessages)
+            {
+                UnturnedLog.info($"Ignoring BattlEye message from {transportConnection} because BattlEye is not running");
+            }
+            Provider.IncrementBadPacketsFromConnection(transportConnection);
         }
     }
 }

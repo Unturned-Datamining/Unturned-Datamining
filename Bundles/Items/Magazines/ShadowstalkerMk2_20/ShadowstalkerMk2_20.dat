@@ -36,6 +36,8 @@ Blueprint_0_Build 30
 Blueprint_1_Type Tool
 Blueprint_1_Supplies 1
 Blueprint_1_Supply_0_ID this
+Blueprint_1_Supply_0_AllowEmpty true
+Blueprint_1_Supply_0_Prioritization LowestAmount
 Blueprint_1_Product "285" // Metal Bar
 Blueprint_1_Products 5
 Blueprint_1_Build 27

@@ -547,7 +547,7 @@ public class PlayerInput : PlayerCaller
                 keys[7] = base.player.animator.leanRight;
                 keys[8] = false;
                 keys[9] = base.player.stance.localWantsToSteadyAim;
-                bool flag = MenuConfigurationControlsUI.binding == byte.MaxValue;
+                bool flag = !MenuConfigurationControlsUI.ShouldGameIgnoreInput;
                 for (int i = 0; i < ControlsSettings.NUM_PLUGIN_KEYS; i++)
                 {
                     int num = keys.Length - ControlsSettings.NUM_PLUGIN_KEYS + i;

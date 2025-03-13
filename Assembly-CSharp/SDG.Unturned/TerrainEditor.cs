@@ -830,7 +830,7 @@ public class TerrainEditor : IDevkitTool
             isSamplingRampPositions = false;
         }
         DevkitTransactionManager.endTransaction();
-        if (toolMode == EDevkitLandscapeToolMode.HEIGHTMAP)
+        if (toolMode == EDevkitLandscapeToolMode.HEIGHTMAP || (toolMode == EDevkitLandscapeToolMode.SPLATMAP && splatmapMode == EDevkitLandscapeToolSplatmapMode.CUT))
         {
             Landscape.applyLOD();
         }

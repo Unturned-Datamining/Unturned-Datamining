@@ -26,6 +26,7 @@ internal static class ServerMessageHandler_InvokeMethod
             {
                 UnturnedLog.info($"Ignoring InvokeMethod message from {transportConnection} because there is no associated player");
             }
+            Provider.IncrementBadPacketsFromConnection(transportConnection);
             return;
         }
         ServerMethodInfo serverMethodInfo = NetReflection.serverMethods[(int)value];

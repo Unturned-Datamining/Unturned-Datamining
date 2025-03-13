@@ -131,6 +131,11 @@ public class HumanClothes : MonoBehaviour
 
     private bool glassesDirty;
 
+    /// <summary>
+    /// If true, this character is for capturing clothing icons.
+    /// </summary>
+    internal bool isCosmeticPreview;
+
     internal static readonly int skinColorPropertyID = Shader.PropertyToID("_SkinColor");
 
     internal static readonly int flipShirtPropertyID = Shader.PropertyToID("_FlipShirt");
@@ -1113,7 +1118,8 @@ public class HumanClothes : MonoBehaviour
                 }
                 if (itemHatAsset != null && itemHatAsset.hat != null && itemHatAsset.shouldBeVisible(isRagdoll))
                 {
-                    hatModel = UnityEngine.Object.Instantiate(itemHatAsset.hat).transform;
+                    GameObject original = ((isCosmeticPreview && itemHatAsset.cosmeticPreviewModelOverride != null) ? itemHatAsset.cosmeticPreviewModelOverride : itemHatAsset.hat);
+                    hatModel = UnityEngine.Object.Instantiate(original).transform;
                     hatModel.name = "Hat";
                     hatModel.transform.parent = skull;
                     hatModel.transform.localPosition = Vector3.zero;
@@ -1130,7 +1136,7 @@ public class HumanClothes : MonoBehaviour
                         if (inventoryMythicID3 != 0)
                         {
                             centerHeadEffect(skull, hatModel);
-                            ItemTool.ApplyMythicalEffect(hatModel, inventoryMythicID3, EEffectType.HOOK);
+                            ItemTool.ApplyMythicalEffect(hatModel, inventoryMythicID3, EEffectType.HEAD_COSMETIC);
                         }
                     }
                     ApplyHairOverride(itemHatAsset, hatModel);
@@ -1150,7 +1156,8 @@ public class HumanClothes : MonoBehaviour
                 }
                 if (itemBackpackAsset != null && itemBackpackAsset.backpack != null && itemBackpackAsset.shouldBeVisible(isRagdoll))
                 {
-                    backpackModel = UnityEngine.Object.Instantiate(itemBackpackAsset.backpack).transform;
+                    GameObject original2 = ((isCosmeticPreview && itemBackpackAsset.cosmeticPreviewModelOverride != null) ? itemBackpackAsset.cosmeticPreviewModelOverride : itemBackpackAsset.backpack);
+                    backpackModel = UnityEngine.Object.Instantiate(original2).transform;
                     backpackModel.name = "Backpack";
                     backpackModel.transform.parent = spine;
                     backpackModel.transform.localPosition = Vector3.zero;
@@ -1166,7 +1173,7 @@ public class HumanClothes : MonoBehaviour
                         ushort inventoryMythicID4 = Provider.provider.economyService.getInventoryMythicID(visualBackpack);
                         if (inventoryMythicID4 != 0)
                         {
-                            ItemTool.ApplyMythicalEffect(backpackModel, inventoryMythicID4, EEffectType.HOOK);
+                            ItemTool.ApplyMythicalEffect(backpackModel, inventoryMythicID4, EEffectType.BODY_COSMETIC);
                         }
                     }
                     backpackModel.gameObject.SetActive(hasBackpack);
@@ -1186,7 +1193,8 @@ public class HumanClothes : MonoBehaviour
                 }
                 if (itemVestAsset != null && itemVestAsset.vest != null && itemVestAsset.shouldBeVisible(isRagdoll))
                 {
-                    vestModel = UnityEngine.Object.Instantiate(itemVestAsset.vest).transform;
+                    GameObject original3 = ((isCosmeticPreview && itemVestAsset.cosmeticPreviewModelOverride != null) ? itemVestAsset.cosmeticPreviewModelOverride : itemVestAsset.vest);
+                    vestModel = UnityEngine.Object.Instantiate(original3).transform;
                     vestModel.name = "Vest";
                     vestModel.transform.parent = spine;
                     vestModel.transform.localPosition = Vector3.zero;
@@ -1202,7 +1210,7 @@ public class HumanClothes : MonoBehaviour
                         ushort inventoryMythicID5 = Provider.provider.economyService.getInventoryMythicID(visualVest);
                         if (inventoryMythicID5 != 0)
                         {
-                            ItemTool.ApplyMythicalEffect(vestModel, inventoryMythicID5, EEffectType.HOOK);
+                            ItemTool.ApplyMythicalEffect(vestModel, inventoryMythicID5, EEffectType.BODY_COSMETIC);
                         }
                     }
                     ApplySkinOverride(itemVestAsset, vestModel);
@@ -1221,7 +1229,8 @@ public class HumanClothes : MonoBehaviour
                 }
                 if (itemMaskAsset != null && itemMaskAsset.mask != null && itemMaskAsset.shouldBeVisible(isRagdoll))
                 {
-                    maskModel = UnityEngine.Object.Instantiate(itemMaskAsset.mask).transform;
+                    GameObject original4 = ((isCosmeticPreview && itemMaskAsset.cosmeticPreviewModelOverride != null) ? itemMaskAsset.cosmeticPreviewModelOverride : itemMaskAsset.mask);
+                    maskModel = UnityEngine.Object.Instantiate(original4).transform;
                     maskModel.name = "Mask";
                     maskModel.transform.parent = skull;
                     maskModel.transform.localPosition = Vector3.zero;
@@ -1240,7 +1249,7 @@ public class HumanClothes : MonoBehaviour
                     if (num != 0)
                     {
                         centerHeadEffect(skull, maskModel);
-                        ItemTool.ApplyMythicalEffect(maskModel, num, EEffectType.HOOK);
+                        ItemTool.ApplyMythicalEffect(maskModel, num, EEffectType.HEAD_COSMETIC);
                     }
                     ApplyHairOverride(itemMaskAsset, maskModel);
                     ApplySkinOverride(itemMaskAsset, maskModel);
@@ -1259,7 +1268,8 @@ public class HumanClothes : MonoBehaviour
                 }
                 if (itemGlassesAsset != null && itemGlassesAsset.glasses != null && itemGlassesAsset.shouldBeVisible(isRagdoll))
                 {
-                    glassesModel = UnityEngine.Object.Instantiate(itemGlassesAsset.glasses).transform;
+                    GameObject original5 = ((isCosmeticPreview && itemGlassesAsset.cosmeticPreviewModelOverride != null) ? itemGlassesAsset.cosmeticPreviewModelOverride : itemGlassesAsset.glasses);
+                    glassesModel = UnityEngine.Object.Instantiate(original5).transform;
                     glassesModel.name = "Glasses";
                     glassesModel.transform.parent = skull;
                     glassesModel.transform.localPosition = Vector3.zero;
@@ -1276,7 +1286,7 @@ public class HumanClothes : MonoBehaviour
                         if (inventoryMythicID6 != 0)
                         {
                             centerHeadEffect(skull, glassesModel);
-                            ItemTool.ApplyMythicalEffect(glassesModel, inventoryMythicID6, EEffectType.HOOK);
+                            ItemTool.ApplyMythicalEffect(glassesModel, inventoryMythicID6, EEffectType.HEAD_COSMETIC);
                         }
                     }
                     ApplyHairOverride(itemGlassesAsset, glassesModel);

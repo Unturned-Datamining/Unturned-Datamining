@@ -36,6 +36,8 @@ Blueprint_3_Build 30
 Blueprint_4_Type Tool
 Blueprint_4_Supplies 1
 Blueprint_4_Supply_0_ID this
+Blueprint_4_Supply_0_AllowEmpty true
+Blueprint_4_Supply_0_Prioritization LowestAmount
 Blueprint_4_Product "67" // Metal Scrap
 Blueprint_4_Products 1
 Blueprint_4_Build 27

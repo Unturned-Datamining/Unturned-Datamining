@@ -80,6 +80,11 @@ public class Attachments : MonoBehaviour
 
     private bool wasSkinned;
 
+    /// <summary>
+    /// Nelson 2025-03-10: This aims to avoid messing with Magazine transform IsActive unless skin already did.
+    /// </summary>
+    private bool wasMagazineHookHiddenBySkin;
+
     private Material tempSightMaterial;
 
     private Material tempTacticalMaterial;
@@ -196,6 +201,10 @@ public class Attachments : MonoBehaviour
             if (tempMagazineMaterial != null)
             {
                 HighlighterTool.rematerialize(magazineModel, tempMagazineMaterial, out tempMagazineMaterial);
+            }
+            if (magazineHook != null)
+            {
+                ApplyMagazineHiddenBySkin();
             }
         }
     }
@@ -473,6 +482,10 @@ public class Attachments : MonoBehaviour
             _magazineAsset = null;
         }
         tempMagazineMaterial = null;
+        if (magazineHook != null)
+        {
+            ApplyMagazineHiddenBySkin();
+        }
         if (magazineAsset != null && magazineHook != null && magazineAsset.magazine != null)
         {
             _magazineModel = UnityEngine.Object.Instantiate(magazineAsset.magazine).transform;
@@ -686,6 +699,20 @@ public class Attachments : MonoBehaviour
             }
         }
         return hook;
+    }
+
+    private void ApplyMagazineHiddenBySkin()
+    {
+        if (skinAsset != null && skinAsset.ShouldHideMagazine && isSkinned)
+        {
+            magazineHook.gameObject.SetActive(value: false);
+            wasMagazineHookHiddenBySkin = true;
+        }
+        else if (wasMagazineHookHiddenBySkin)
+        {
+            magazineHook.gameObject.SetActive(value: true);
+            wasMagazineHookHiddenBySkin = false;
+        }
     }
 
     private void OnDestroy()

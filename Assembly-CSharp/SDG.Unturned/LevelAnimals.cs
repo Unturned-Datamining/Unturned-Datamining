@@ -159,7 +159,7 @@ public class LevelAnimals
             {
                 animalTable.buildTable();
             }
-            if (animalTable.tableID != 0 && SpawnTableTool.ResolveLegacyId(num, EAssetType.ANIMAL, animalTable.OnGetSpawnTableValidationErrorContext) == 0 && (bool)Assets.shouldLoadAnyAssets)
+            if (animalTable.tableID != 0 && SpawnTableTool.Resolve(num, EAssetType.ANIMAL, animalTable.OnGetSpawnTableValidationErrorContext) == null && (bool)Assets.shouldLoadAnyAssets)
             {
                 Assets.reportError(Level.info.name + " animal table \"" + text + "\" references invalid spawn table " + num + "!");
             }

@@ -45,4 +45,16 @@ public class ItemTacticalAsset : ItemCaliberAsset
         value.a = 1f;
         laserColor = value;
     }
+
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Tactical");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Laser", isLaser);
+        orAddDeclaration.Append("Light", isLight);
+        orAddDeclaration.Append("Rangefinder", isRangefinder);
+        orAddDeclaration.Append("Melee", isMelee);
+        orAddDeclaration.Append("Laser_Color", laserColor);
+    }
 }

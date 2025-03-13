@@ -17,7 +17,8 @@ public class LandscapeHoleTransaction : IDevkitTransaction
             bool[,] holes = tile.holes;
             tile.holes = holesCopy;
             holesCopy = holes;
-            tile.data.SetHoles(0, 0, tile.holes);
+            tile.SetHoles();
+            tile.SyncDelayedLOD();
         }
     }
 

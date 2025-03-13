@@ -46,4 +46,13 @@ public class ItemTankAsset : ItemBarricadeAsset
         _resource = data.ParseUInt16("Resource", 0);
         resourceState = BitConverter.GetBytes(resource);
     }
+
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Tank");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Source", source);
+        orAddDeclaration.Append("Resource", resource);
+    }
 }

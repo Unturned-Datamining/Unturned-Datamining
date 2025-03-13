@@ -290,7 +290,17 @@ public class Provider : MonoBehaviour
 
     internal static List<SteamPlayer> _clients = new List<SteamPlayer>();
 
+    internal static Dictionary<ITransportConnection, SteamPlayer> _transportConnectionToPlayerMap = new Dictionary<ITransportConnection, SteamPlayer>();
+
+    /// <summary>
+    /// Counts "bad" packets per-connection. Bad packets *may* be legitimate, for example a delayed burst of ping
+    /// requests. Beyond a certain point, however, it's likely a cheater is trying to waste server processing time.
+    /// </summary>
+    private static TransportConnectionRateLimiter badMessageRateLimiter = new TransportConnectionRateLimiter();
+
     public static List<SteamPending> pending = new List<SteamPending>();
+
+    internal static Dictionary<ITransportConnection, SteamPending> _transportConnectionToPendingPlayerMap = new Dictionary<ITransportConnection, SteamPending>();
 
     private static bool _isServer;
 
@@ -437,7 +447,7 @@ public class Provider : MonoBehaviour
 
     internal static List<CachedWorkshopResponse> cachedWorkshopResponses = new List<CachedWorkshopResponse>();
 
-    private static List<CSteamID> netIgnoredSteamIDs = new List<CSteamID>();
+    private static HashSet<CSteamID> netIgnoredSteamIDs = new HashSet<CSteamID>();
 
     /// <summary>
     /// Private to prevent plugins from changing the value.
@@ -1651,14 +1661,8 @@ public class Provider : MonoBehaviour
         {
             return null;
         }
-        foreach (SteamPending item in pending)
-        {
-            if (transportConnection.Equals(item.transportConnection))
-            {
-                return item;
-            }
-        }
-        return null;
+        _transportConnectionToPendingPlayerMap.TryGetValue(transportConnection, out var value);
+        return value;
     }
 
     internal static SteamPending findPendingPlayerBySteamId(CSteamID steamId)
@@ -1682,14 +1686,8 @@ public class Provider : MonoBehaviour
         {
             return null;
         }
-        foreach (SteamPlayer client in clients)
-        {
-            if (transportConnection.Equals(client.transportConnection))
-            {
-                return client;
-            }
-        }
-        return null;
+        _transportConnectionToPlayerMap.TryGetValue(transportConnection, out var value);
+        return value;
     }
 
     /// <summary>
@@ -1720,7 +1718,21 @@ public class Provider : MonoBehaviour
     /// </summary>
     public static CSteamID findTransportConnectionSteamId(ITransportConnection transportConnection)
     {
-        return findPlayer(transportConnection)?.playerID.steamID ?? findPendingPlayer(transportConnection)?.playerID.steamID ?? CSteamID.Nil;
+        SteamPlayer steamPlayer = findPlayer(transportConnection);
+        if (steamPlayer != null)
+        {
+            return steamPlayer.playerID.steamID;
+        }
+        SteamPending steamPending = findPendingPlayer(transportConnection);
+        if (steamPending != null)
+        {
+            return steamPending.playerID.steamID;
+        }
+        if (transportConnection.TryGetSteamId(out var steamId))
+        {
+            return new CSteamID(steamId);
+        }
+        return CSteamID.Nil;
     }
 
     internal static NetId ClaimNetIdBlockForNewPlayer()
@@ -1762,6 +1774,10 @@ public class Provider : MonoBehaviour
             UnturnedLog.error("Exception thrown when adding player:");
             UnturnedLog.exception(e2);
         }
+        if (transportConnection != null && steamPlayer != null)
+        {
+            _transportConnectionToPlayerMap.Add(transportConnection, steamPlayer);
+        }
         updateRichPresence();
         broadcastEnemyConnected(steamPlayer);
         return steamPlayer;
@@ -1798,6 +1814,10 @@ public class Provider : MonoBehaviour
             UnityEngine.Object.Destroy(clientToRemove.model.gameObject);
         }
         NetIdRegistry.Release(clientToRemove.GetNetId());
+        if (clientToRemove.transportConnection != null)
+        {
+            _transportConnectionToPlayerMap.Remove(clientToRemove.transportConnection);
+        }
         clients.Remove(clientToRemove);
         verifyNextPlayerInQueue();
         updateRichPresence();
@@ -1882,7 +1902,9 @@ public class Provider : MonoBehaviour
         _packetsSent = 0u;
         _packetsReceived = 0u;
         _clients.Clear();
+        _transportConnectionToPlayerMap.Clear();
         pending.Clear();
+        _transportConnectionToPendingPlayerMap.Clear();
         NetIdRegistry.Clear();
         NetInvocationDeferralRegistry.Clear();
         ClientAssetIntegrity.Clear();
@@ -3103,6 +3125,30 @@ public class Provider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Record that a bad packet was received from connection and maybe kick them if rate limit is exceeded.
+    /// </summary>
+    public static void IncrementBadPacketsFromConnection(ITransportConnection transportConnection)
+    {
+        if (transportConnection == null)
+        {
+            throw new ArgumentNullException("transportConnection");
+        }
+        if (badMessageRateLimiter.IsBlocked(transportConnection))
+        {
+            UnturnedLog.info($"Connection {transportConnection} hit bad packet limit (window: {badMessageRateLimiter.window} s, threshold: {badMessageRateLimiter.threshold})");
+            SteamPlayer steamPlayer = findPlayer(transportConnection);
+            if (steamPlayer != null)
+            {
+                kick(steamPlayer.playerID.steamID, "hit bad packet rate limit");
+            }
+            else
+            {
+                reject(transportConnection, ESteamRejection.BAD_PACKET_RATE_LIMITING);
+            }
+        }
+    }
+
     public static bool hasNetBufferChanged(byte[] original, byte[] copy, int offset, int size)
     {
         for (int num = offset + size - 1; num >= offset; num--)
@@ -3376,14 +3422,6 @@ public class Provider : MonoBehaviour
         {
             return;
         }
-        if (Time.realtimeSinceStartup - lastPingRequestTime > PING_REQUEST_INTERVAL && (Time.realtimeSinceStartup - timeLastPingRequestWasSentToServer > 1f || timeLastPingRequestWasSentToServer < 0f))
-        {
-            lastPingRequestTime = Time.realtimeSinceStartup;
-            timeLastPingRequestWasSentToServer = Time.realtimeSinceStartup;
-            NetMessages.SendMessageToServer(EServerMessage.PingRequest, ENetReliability.Unreliable, delegate
-            {
-            });
-        }
         if (isLoadingUGC)
         {
             if (isWaitingForWorkshopResponse)
@@ -3422,6 +3460,14 @@ public class Provider : MonoBehaviour
             }
             timeLastPacketWasReceivedFromServer = Time.realtimeSinceStartup;
             return;
+        }
+        if (Time.realtimeSinceStartup - lastPingRequestTime > PING_REQUEST_INTERVAL && (Time.realtimeSinceStartup - timeLastPingRequestWasSentToServer > 1f || timeLastPingRequestWasSentToServer < 0f))
+        {
+            lastPingRequestTime = Time.realtimeSinceStartup;
+            timeLastPingRequestWasSentToServer = Time.realtimeSinceStartup;
+            NetMessages.SendMessageToServer(EServerMessage.PingRequest, ENetReliability.Unreliable, delegate
+            {
+            });
         }
         float num4 = Time.realtimeSinceStartup - timeLastPacketWasReceivedFromServer;
         if (num4 > (float)CLIENT_TIMEOUT)
@@ -4035,6 +4081,10 @@ public class Provider : MonoBehaviour
                 flag = true;
                 num = i;
                 pending.RemoveAt(i);
+                if (transportConnection != null)
+                {
+                    _transportConnectionToPendingPlayerMap.Remove(transportConnection);
+                }
                 break;
             }
         }
@@ -4252,6 +4302,7 @@ public class Provider : MonoBehaviour
                     pending[i].inventoryResult = SteamInventoryResult_t.Invalid;
                 }
                 pending.RemoveAt(i);
+                _transportConnectionToPendingPlayerMap.Remove(transportConnection);
                 if (i == 0)
                 {
                     verifyNextPlayerInQueue();
@@ -5239,6 +5290,9 @@ public class Provider : MonoBehaviour
                     UnturnedLog.exception(e);
                 }
             }
+            ServerMessageHandler_ReadyToConnect.joinRateLimiter.window = configData.Server.Join_Rate_Limit_Window_Seconds;
+            badMessageRateLimiter.window = configData.Server.Bad_Packet_Rate_Limit_Window_Seconds;
+            badMessageRateLimiter.threshold = configData.Server.Bad_Packet_Rate_Limit_Threshold;
             ServerSavedata.serializeJSON("/Config.json", configData);
             _modeConfigData = _configData.getModeConfig(mode);
             if (_modeConfigData == null)

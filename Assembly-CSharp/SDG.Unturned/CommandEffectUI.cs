@@ -23,41 +23,52 @@ public class CommandEffectUI : Command
         }
         string[] array = parameter.Split('/');
         string text = ((array.Length != 0) ? array[0] : parameter);
-        if (!ushort.TryParse(text, out var result))
+        if (text.Equals("clearall", StringComparison.InvariantCultureIgnoreCase))
         {
-            if (text.Equals("clearall", StringComparison.InvariantCultureIgnoreCase))
-            {
-                UnturnedLog.info("Clearing all effects");
-                EffectManager.askEffectClearAll();
-            }
+            UnturnedLog.info("Clearing all effects");
+            EffectManager.askEffectClearAll();
+            return;
         }
-        else if (array.Length < 2)
+        EffectAsset effectAsset;
+        if (Guid.TryParse(text, out var result))
         {
-            EffectManager.sendUIEffect(result, 1, transportConnection, reliable: true);
+            effectAsset = Assets.find(result) as EffectAsset;
+        }
+        else
+        {
+            if (!ushort.TryParse(text, out var result2))
+            {
+                return;
+            }
+            effectAsset = Assets.find(EAssetType.EFFECT, result2) as EffectAsset;
+        }
+        if (array.Length < 2)
+        {
+            EffectManager.SendUIEffect(effectAsset, 1, transportConnection, reliable: true);
         }
         else if (array.Length == 2)
         {
             if (array[1].Equals("clearbyid", StringComparison.InvariantCulture))
             {
-                UnturnedLog.info("Clearing UI effects with ID {0}", result);
-                EffectManager.askEffectClearByID(result, transportConnection);
+                UnturnedLog.info("Clearing UI effects with GUID {0}", effectAsset.GUID);
+                EffectManager.ClearEffectByGuid(effectAsset.GUID, transportConnection);
             }
             else
             {
-                EffectManager.sendUIEffect(result, 1, transportConnection, reliable: true, array[1]);
+                EffectManager.SendUIEffect(effectAsset, 1, transportConnection, reliable: true, array[1]);
             }
         }
         else if (array.Length == 3)
         {
-            EffectManager.sendUIEffect(result, 1, transportConnection, reliable: true, array[1], array[2]);
+            EffectManager.SendUIEffect(effectAsset, 1, transportConnection, reliable: true, array[1], array[2]);
         }
         else if (array.Length == 4)
         {
-            EffectManager.sendUIEffect(result, 1, transportConnection, reliable: true, array[1], array[2], array[3]);
+            EffectManager.SendUIEffect(effectAsset, 1, transportConnection, reliable: true, array[1], array[2], array[3]);
         }
         else if (array.Length == 5)
         {
-            EffectManager.sendUIEffect(result, 1, transportConnection, reliable: true, array[1], array[2], array[3], array[4]);
+            EffectManager.SendUIEffect(effectAsset, 1, transportConnection, reliable: true, array[1], array[2], array[3], array[4]);
         }
     }
 

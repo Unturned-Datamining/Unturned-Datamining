@@ -82,6 +82,11 @@ public class EditorUI : MonoBehaviour
         }
     }
 
+    private void OnGUI()
+    {
+        MenuConfigurationControlsUI.bindOnGUI();
+    }
+
     private void Update()
     {
         if (window == null)

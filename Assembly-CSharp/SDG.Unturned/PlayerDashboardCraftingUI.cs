@@ -141,14 +141,14 @@ public class PlayerDashboardCraftingUI
             for (int i = 0; i < item2.supplies.Length; i++)
             {
                 BlueprintSupply blueprintSupply = item2.supplies[i];
-                List<InventorySearch> list3 = Player.player.inventory.search(blueprintSupply.id, findEmpty: false, findHealthy: true);
-                ushort num2 = 0;
+                List<InventorySearch> list3 = Player.player.inventory.search(blueprintSupply.id, blueprintSupply.ShouldTreatEmptyAsOne, findHealthy: true);
+                int num2 = 0;
                 foreach (InventorySearch item3 in list3)
                 {
-                    num2 += item3.jar.item.amount;
+                    num2 += (blueprintSupply.ShouldTreatEmptyAsOne ? Mathf.Max(1, item3.jar.item.amount) : item3.jar.item.amount);
                 }
                 num += num2;
-                blueprintSupply.hasAmount = num2;
+                blueprintSupply.hasAmount = (ushort)num2;
                 if (item2.type == EBlueprintType.AMMO)
                 {
                     if (blueprintSupply.hasAmount == 0)

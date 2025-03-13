@@ -255,6 +255,7 @@ public class CosmeticPreviewCapture : MonoBehaviour
         clothes = GetComponent<HumanClothes>();
         clothes.skin = new Color32(210, 210, 210, byte.MaxValue);
         clothes.color = new Color32(175, 175, 175, byte.MaxValue);
+        clothes.isCosmeticPreview = true;
         targetTexture4096 = RenderTexture.GetTemporary(4096, 4096, 16, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
         targetTexture4096.filterMode = FilterMode.Bilinear;
         targetTexture800 = RenderTexture.GetTemporary(800, 800, 16, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);

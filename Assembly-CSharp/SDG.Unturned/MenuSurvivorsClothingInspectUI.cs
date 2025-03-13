@@ -153,7 +153,8 @@ public class MenuSurvivorsClothingInspectUI
             }
             if (num != 0)
             {
-                ItemTool.ApplyMythicalEffect(model, num, EEffectType.HOOK);
+                EEffectType type = ((itemAsset.type == EItemType.BACKPACK || itemAsset.type == EItemType.VEST) ? EEffectType.BODY_COSMETIC : EEffectType.HEAD_COSMETIC);
+                ItemTool.ApplyMythicalEffect(model, num, type);
             }
         }
         model.parent = inspect;

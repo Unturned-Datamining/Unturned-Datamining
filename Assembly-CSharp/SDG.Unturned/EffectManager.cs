@@ -83,15 +83,15 @@ public class EffectManager : SteamCaller
 
     private static readonly ClientStaticMethod<Guid, Vector3, Quaternion> SendEffectPositionRotation = ClientStaticMethod<Guid, Vector3, Quaternion>.Get(ReceiveEffectPositionRotation);
 
-    private static readonly ClientStaticMethod<ushort, short> SendUIEffect = ClientStaticMethod<ushort, short>.Get(ReceiveUIEffect);
+    private static readonly ClientStaticMethod<Guid, short> SendUIEffect0Args = ClientStaticMethod<Guid, short>.Get(ReceiveUIEffect0Args);
 
-    private static readonly ClientStaticMethod<ushort, short, string> SendUIEffect1Arg = ClientStaticMethod<ushort, short, string>.Get(ReceiveUIEffect1Arg);
+    private static readonly ClientStaticMethod<Guid, short, string> SendUIEffect1Arg = ClientStaticMethod<Guid, short, string>.Get(ReceiveUIEffect1Arg);
 
-    private static readonly ClientStaticMethod<ushort, short, string, string> SendUIEffect2Args = ClientStaticMethod<ushort, short, string, string>.Get(ReceiveUIEffect2Args);
+    private static readonly ClientStaticMethod<Guid, short, string, string> SendUIEffect2Args = ClientStaticMethod<Guid, short, string, string>.Get(ReceiveUIEffect2Args);
 
-    private static readonly ClientStaticMethod<ushort, short, string, string, string> SendUIEffect3Args = ClientStaticMethod<ushort, short, string, string, string>.Get(ReceiveUIEffect3Args);
+    private static readonly ClientStaticMethod<Guid, short, string, string, string> SendUIEffect3Args = ClientStaticMethod<Guid, short, string, string, string>.Get(ReceiveUIEffect3Args);
 
-    private static readonly ClientStaticMethod<ushort, short, string, string, string, string> SendUIEffect4Args = ClientStaticMethod<ushort, short, string, string, string, string>.Get(ReceiveUIEffect4Args);
+    private static readonly ClientStaticMethod<Guid, short, string, string, string, string> SendUIEffect4Args = ClientStaticMethod<Guid, short, string, string, string, string>.Get(ReceiveUIEffect4Args);
 
     private static readonly ClientStaticMethod<short, string, bool> SendUIEffectVisibility = ClientStaticMethod<short, string, bool>.Get(ReceiveUIEffectVisibility);
 
@@ -611,124 +611,64 @@ public class EffectManager : SteamCaller
         }
     }
 
-    public static void sendUIEffect(ushort id, short key, bool reliable)
+    public static void SendUIEffect(EffectAsset asset, short key, bool reliable)
     {
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
-        SendUIEffect.Invoke(reliability, Provider.GatherClientConnections(), id, key);
+        SendUIEffect0Args.Invoke(reliability, Provider.GatherClientConnections(), asset?.GUID ?? Guid.Empty, key);
     }
 
-    public static void sendUIEffect(ushort id, short key, bool reliable, string arg0)
+    public static void SendUIEffect(EffectAsset asset, short key, bool reliable, string arg0)
     {
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
-        SendUIEffect1Arg.Invoke(reliability, Provider.GatherClientConnections(), id, key, arg0);
+        SendUIEffect1Arg.Invoke(reliability, Provider.GatherClientConnections(), asset?.GUID ?? Guid.Empty, key, arg0);
     }
 
-    public static void sendUIEffect(ushort id, short key, bool reliable, string arg0, string arg1)
+    public static void SendUIEffect(EffectAsset asset, short key, bool reliable, string arg0, string arg1)
     {
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
-        SendUIEffect2Args.Invoke(reliability, Provider.GatherClientConnections(), id, key, arg0, arg1);
+        SendUIEffect2Args.Invoke(reliability, Provider.GatherClientConnections(), asset?.GUID ?? Guid.Empty, key, arg0, arg1);
     }
 
-    public static void sendUIEffect(ushort id, short key, bool reliable, string arg0, string arg1, string arg2)
+    public static void SendUIEffect(EffectAsset asset, short key, bool reliable, string arg0, string arg1, string arg2)
     {
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
-        SendUIEffect3Args.Invoke(reliability, Provider.GatherClientConnections(), id, key, arg0, arg1, arg2);
+        SendUIEffect3Args.Invoke(reliability, Provider.GatherClientConnections(), asset?.GUID ?? Guid.Empty, key, arg0, arg1, arg2);
     }
 
-    public static void sendUIEffect(ushort id, short key, bool reliable, string arg0, string arg1, string arg2, string arg3)
+    public static void SendUIEffect(EffectAsset asset, short key, bool reliable, string arg0, string arg1, string arg2, string arg3)
     {
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
-        SendUIEffect4Args.Invoke(reliability, Provider.GatherClientConnections(), id, key, arg0, arg1, arg2, arg3);
+        SendUIEffect4Args.Invoke(reliability, Provider.GatherClientConnections(), asset?.GUID ?? Guid.Empty, key, arg0, arg1, arg2, arg3);
     }
 
-    [Obsolete]
-    public static void sendUIEffect(ushort id, short key, CSteamID steamID, bool reliable)
-    {
-        ITransportConnection transportConnection = Provider.findTransportConnection(steamID);
-        if (transportConnection != null)
-        {
-            sendUIEffect(id, key, transportConnection, reliable);
-        }
-    }
-
-    public static void sendUIEffect(ushort id, short key, ITransportConnection transportConnection, bool reliable)
+    public static void SendUIEffect(EffectAsset asset, short key, ITransportConnection transportConnection, bool reliable)
     {
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
-        SendUIEffect.Invoke(reliability, transportConnection, id, key);
+        SendUIEffect0Args.Invoke(reliability, transportConnection, asset?.GUID ?? Guid.Empty, key);
     }
 
-    [Obsolete]
-    public static void sendUIEffect(ushort id, short key, CSteamID steamID, bool reliable, string arg0)
-    {
-        ITransportConnection transportConnection = Provider.findTransportConnection(steamID);
-        if (transportConnection != null)
-        {
-            sendUIEffect(id, key, transportConnection, reliable, arg0);
-        }
-    }
-
-    public static void sendUIEffect(ushort id, short key, ITransportConnection transportConnection, bool reliable, string arg0)
+    public static void SendUIEffect(EffectAsset asset, short key, ITransportConnection transportConnection, bool reliable, string arg0)
     {
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
-        SendUIEffect1Arg.Invoke(reliability, transportConnection, id, key, arg0);
+        SendUIEffect1Arg.Invoke(reliability, transportConnection, asset?.GUID ?? Guid.Empty, key, arg0);
     }
 
-    [Obsolete]
-    public static void sendUIEffect(ushort id, short key, CSteamID steamID, bool reliable, string arg0, string arg1)
-    {
-        ITransportConnection transportConnection = Provider.findTransportConnection(steamID);
-        if (transportConnection != null)
-        {
-            sendUIEffect(id, key, transportConnection, reliable, arg0, arg1);
-        }
-    }
-
-    public static void sendUIEffect(ushort id, short key, ITransportConnection transportConnection, bool reliable, string arg0, string arg1)
+    public static void SendUIEffect(EffectAsset asset, short key, ITransportConnection transportConnection, bool reliable, string arg0, string arg1)
     {
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
-        SendUIEffect2Args.Invoke(reliability, transportConnection, id, key, arg0, arg1);
+        SendUIEffect2Args.Invoke(reliability, transportConnection, asset?.GUID ?? Guid.Empty, key, arg0, arg1);
     }
 
-    [Obsolete]
-    public static void sendUIEffect(ushort id, short key, CSteamID steamID, bool reliable, string arg0, string arg1, string arg2)
-    {
-        ITransportConnection transportConnection = Provider.findTransportConnection(steamID);
-        if (transportConnection != null)
-        {
-            sendUIEffect(id, key, transportConnection, reliable, arg0, arg1, arg2);
-        }
-    }
-
-    public static void sendUIEffect(ushort id, short key, ITransportConnection transportConnection, bool reliable, string arg0, string arg1, string arg2)
+    public static void SendUIEffect(EffectAsset asset, short key, ITransportConnection transportConnection, bool reliable, string arg0, string arg1, string arg2)
     {
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
-        SendUIEffect3Args.Invoke(reliability, transportConnection, id, key, arg0, arg1, arg2);
+        SendUIEffect3Args.Invoke(reliability, transportConnection, asset?.GUID ?? Guid.Empty, key, arg0, arg1, arg2);
     }
 
-    [Obsolete]
-    public static void sendUIEffect(ushort id, short key, CSteamID steamID, bool reliable, string arg0, string arg1, string arg2, string arg3)
-    {
-        ITransportConnection transportConnection = Provider.findTransportConnection(steamID);
-        if (transportConnection != null)
-        {
-            sendUIEffect(id, key, transportConnection, reliable, arg0, arg1, arg2, arg3);
-        }
-    }
-
-    public static void sendUIEffect(ushort id, short key, ITransportConnection transportConnection, bool reliable, string arg0, string arg1, string arg2, string arg3)
+    public static void SendUIEffect(EffectAsset asset, short key, ITransportConnection transportConnection, bool reliable, string arg0, string arg1, string arg2, string arg3)
     {
         ENetReliability reliability = ((!reliable) ? ENetReliability.Unreliable : ENetReliability.Reliable);
-        SendUIEffect4Args.Invoke(reliability, transportConnection, id, key, arg0, arg1, arg2, arg3);
-    }
-
-    [Obsolete]
-    public static void sendUIEffectVisibility(short key, CSteamID steamID, bool reliable, string childNameOrPath, bool visible)
-    {
-        ITransportConnection transportConnection = Provider.findTransportConnection(steamID);
-        if (transportConnection != null)
-        {
-            sendUIEffectVisibility(key, transportConnection, reliable, childNameOrPath, visible);
-        }
+        SendUIEffect4Args.Invoke(reliability, transportConnection, asset?.GUID ?? Guid.Empty, key, arg0, arg1, arg2, arg3);
     }
 
     public static void sendUIEffectVisibility(short key, ITransportConnection transportConnection, bool reliable, string childNameOrPath, bool visible)
@@ -896,61 +836,61 @@ public class EffectManager : SteamCaller
     [Obsolete]
     public void tellUIEffect(CSteamID steamID, ushort id, short key)
     {
-        ReceiveUIEffect(id, key);
+        ReceiveUIEffect0Args((Assets.find(EAssetType.EFFECT, id) as EffectAsset)?.GUID ?? Guid.Empty, key);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellUIEffect")]
-    public static void ReceiveUIEffect(ushort id, short key)
+    public static void ReceiveUIEffect0Args(Guid assetGuid, short key)
     {
-        createUIEffect(id, key);
+        createUIEffect(assetGuid, key);
     }
 
     [Obsolete]
     public void tellUIEffect1Arg(CSteamID steamID, ushort id, short key, string arg0)
     {
-        ReceiveUIEffect1Arg(id, key, arg0);
+        ReceiveUIEffect1Arg((Assets.find(EAssetType.EFFECT, id) as EffectAsset)?.GUID ?? Guid.Empty, key, arg0);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellUIEffect1Arg")]
-    public static void ReceiveUIEffect1Arg(ushort id, short key, string arg0)
+    public static void ReceiveUIEffect1Arg(Guid assetGuid, short key, string arg0)
     {
-        createAndFormatUIEffect(id, key, arg0);
+        createAndFormatUIEffect(assetGuid, key, arg0);
     }
 
     [Obsolete]
     public void tellUIEffect2Args(CSteamID steamID, ushort id, short key, string arg0, string arg1)
     {
-        ReceiveUIEffect2Args(id, key, arg0, arg1);
+        ReceiveUIEffect2Args((Assets.find(EAssetType.EFFECT, id) as EffectAsset)?.GUID ?? Guid.Empty, key, arg0, arg1);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellUIEffect2Args")]
-    public static void ReceiveUIEffect2Args(ushort id, short key, string arg0, string arg1)
+    public static void ReceiveUIEffect2Args(Guid assetGuid, short key, string arg0, string arg1)
     {
-        createAndFormatUIEffect(id, key, arg0, arg1);
+        createAndFormatUIEffect(assetGuid, key, arg0, arg1);
     }
 
     [Obsolete]
     public void tellUIEffect3Args(CSteamID steamID, ushort id, short key, string arg0, string arg1, string arg2)
     {
-        ReceiveUIEffect3Args(id, key, arg0, arg1, arg2);
+        ReceiveUIEffect3Args((Assets.find(EAssetType.EFFECT, id) as EffectAsset)?.GUID ?? Guid.Empty, key, arg0, arg1, arg2);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellUIEffect3Args")]
-    public static void ReceiveUIEffect3Args(ushort id, short key, string arg0, string arg1, string arg2)
+    public static void ReceiveUIEffect3Args(Guid assetGuid, short key, string arg0, string arg1, string arg2)
     {
-        createAndFormatUIEffect(id, key, arg0, arg1, arg2);
+        createAndFormatUIEffect(assetGuid, key, arg0, arg1, arg2);
     }
 
     [Obsolete]
     public void tellUIEffect4Args(CSteamID steamID, ushort id, short key, string arg0, string arg1, string arg2, string arg3)
     {
-        ReceiveUIEffect4Args(id, key, arg0, arg1, arg2, arg3);
+        ReceiveUIEffect4Args((Assets.find(EAssetType.EFFECT, id) as EffectAsset)?.GUID ?? Guid.Empty, key, arg0, arg1, arg2, arg3);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellUIEffect4Args")]
-    public static void ReceiveUIEffect4Args(ushort id, short key, string arg0, string arg1, string arg2, string arg3)
+    public static void ReceiveUIEffect4Args(Guid assetGuid, short key, string arg0, string arg1, string arg2, string arg3)
     {
-        createAndFormatUIEffect(id, key, arg0, arg1, arg2, arg3);
+        createAndFormatUIEffect(assetGuid, key, arg0, arg1, arg2, arg3);
     }
 
     [Obsolete]
@@ -1137,9 +1077,9 @@ public class EffectManager : SteamCaller
         SendEffectTextCommitted.Invoke(ENetReliability.Reliable, inputFieldName, text);
     }
 
-    public static Transform createAndFormatUIEffect(ushort id, short key, params object[] args)
+    public static Transform createAndFormatUIEffect(Guid assetGuid, short key, params object[] args)
     {
-        Transform transform = createUIEffect(id, key);
+        Transform transform = createUIEffect(assetGuid, key);
         if (transform != null)
         {
             formatTextIntoUIEffect(transform, args);
@@ -1162,16 +1102,25 @@ public class EffectManager : SteamCaller
         }
     }
 
-    public static Transform createUIEffect(ushort id, short key)
+    public static Transform createUIEffect(Guid assetGuid, short key)
     {
         destroyUIEffect(key);
-        if (!(Assets.find(EAssetType.EFFECT, id) is EffectAsset effectAsset) || effectAsset.effect == null)
+        EffectAsset effectAsset = Assets.find(assetGuid) as EffectAsset;
+        if (!Provider.isServer)
+        {
+            ClientAssetIntegrity.QueueRequest(assetGuid, effectAsset, "UI Effect");
+        }
+        if (effectAsset == null)
+        {
+            return null;
+        }
+        if (effectAsset.effect == null)
         {
             return null;
         }
         GameObject gameObject = UnityEngine.Object.Instantiate(effectAsset.effect);
         Transform transform = gameObject.transform;
-        transform.name = id.ToString();
+        transform.name = effectAsset.id.ToString();
         if (key == -1)
         {
             if (effectAsset.lifetime > float.Epsilon)
@@ -1611,6 +1560,10 @@ public class EffectManager : SteamCaller
             {
                 continue;
             }
+            if (!Provider.isServer)
+            {
+                ClientAssetIntegrity.QueueRequest(item.GUID, item, "Effect Preload");
+            }
             try
             {
                 pool.Instantiate(item.effect, item.id.ToString(), item.preload);
@@ -1724,5 +1677,146 @@ public class EffectManager : SteamCaller
             attachedEffects.Add(root, value);
         }
         value.Add(effect);
+    }
+
+    [Obsolete]
+    public static Transform createUIEffect(ushort id, short key)
+    {
+        if (Assets.find(EAssetType.EFFECT, id) is EffectAsset effectAsset)
+        {
+            return createUIEffect(effectAsset.GUID, key);
+        }
+        return null;
+    }
+
+    [Obsolete]
+    public static Transform createAndFormatUIEffect(ushort id, short key, params object[] args)
+    {
+        Transform transform = createUIEffect(id, key);
+        if (transform != null)
+        {
+            formatTextIntoUIEffect(transform, args);
+        }
+        return transform;
+    }
+
+    [Obsolete]
+    public static void sendUIEffect(ushort id, short key, CSteamID steamID, bool reliable)
+    {
+        ITransportConnection transportConnection = Provider.findTransportConnection(steamID);
+        if (transportConnection != null)
+        {
+            sendUIEffect(id, key, transportConnection, reliable);
+        }
+    }
+
+    [Obsolete]
+    public static void sendUIEffect(ushort id, short key, CSteamID steamID, bool reliable, string arg0)
+    {
+        ITransportConnection transportConnection = Provider.findTransportConnection(steamID);
+        if (transportConnection != null)
+        {
+            sendUIEffect(id, key, transportConnection, reliable, arg0);
+        }
+    }
+
+    [Obsolete]
+    public static void sendUIEffect(ushort id, short key, CSteamID steamID, bool reliable, string arg0, string arg1)
+    {
+        ITransportConnection transportConnection = Provider.findTransportConnection(steamID);
+        if (transportConnection != null)
+        {
+            sendUIEffect(id, key, transportConnection, reliable, arg0, arg1);
+        }
+    }
+
+    [Obsolete]
+    public static void sendUIEffect(ushort id, short key, CSteamID steamID, bool reliable, string arg0, string arg1, string arg2)
+    {
+        ITransportConnection transportConnection = Provider.findTransportConnection(steamID);
+        if (transportConnection != null)
+        {
+            sendUIEffect(id, key, transportConnection, reliable, arg0, arg1, arg2);
+        }
+    }
+
+    [Obsolete]
+    public static void sendUIEffect(ushort id, short key, CSteamID steamID, bool reliable, string arg0, string arg1, string arg2, string arg3)
+    {
+        ITransportConnection transportConnection = Provider.findTransportConnection(steamID);
+        if (transportConnection != null)
+        {
+            sendUIEffect(id, key, transportConnection, reliable, arg0, arg1, arg2, arg3);
+        }
+    }
+
+    [Obsolete]
+    public static void sendUIEffectVisibility(short key, CSteamID steamID, bool reliable, string childNameOrPath, bool visible)
+    {
+        ITransportConnection transportConnection = Provider.findTransportConnection(steamID);
+        if (transportConnection != null)
+        {
+            sendUIEffectVisibility(key, transportConnection, reliable, childNameOrPath, visible);
+        }
+    }
+
+    [Obsolete("Please use the method taking an EffectAsset instead. It fixes an exploit. (public issue #4918)")]
+    public static void sendUIEffect(ushort id, short key, bool reliable)
+    {
+        SendUIEffect(Assets.find(EAssetType.EFFECT, id) as EffectAsset, key, reliable);
+    }
+
+    [Obsolete("Please use the method taking an EffectAsset instead. It fixes an exploit. (public issue #4918)")]
+    public static void sendUIEffect(ushort id, short key, bool reliable, string arg0)
+    {
+        SendUIEffect(Assets.find(EAssetType.EFFECT, id) as EffectAsset, key, reliable, arg0);
+    }
+
+    [Obsolete("Please use the method taking an EffectAsset instead. It fixes an exploit. (public issue #4918)")]
+    public static void sendUIEffect(ushort id, short key, bool reliable, string arg0, string arg1)
+    {
+        SendUIEffect(Assets.find(EAssetType.EFFECT, id) as EffectAsset, key, reliable, arg0, arg1);
+    }
+
+    [Obsolete("Please use the method taking an EffectAsset instead. It fixes an exploit. (public issue #4918)")]
+    public static void sendUIEffect(ushort id, short key, bool reliable, string arg0, string arg1, string arg2)
+    {
+        SendUIEffect(Assets.find(EAssetType.EFFECT, id) as EffectAsset, key, reliable, arg0, arg1, arg2);
+    }
+
+    [Obsolete("Please use the method taking an EffectAsset instead. It fixes an exploit. (public issue #4918)")]
+    public static void sendUIEffect(ushort id, short key, bool reliable, string arg0, string arg1, string arg2, string arg3)
+    {
+        SendUIEffect(Assets.find(EAssetType.EFFECT, id) as EffectAsset, key, reliable, arg0, arg1, arg2, arg3);
+    }
+
+    [Obsolete("Please use the method taking an EffectAsset instead. It fixes an exploit. (public issue #4918)")]
+    public static void sendUIEffect(ushort id, short key, ITransportConnection transportConnection, bool reliable)
+    {
+        SendUIEffect(Assets.find(EAssetType.EFFECT, id) as EffectAsset, key, transportConnection, reliable);
+    }
+
+    [Obsolete("Please use the method taking an EffectAsset instead. It fixes an exploit. (public issue #4918)")]
+    public static void sendUIEffect(ushort id, short key, ITransportConnection transportConnection, bool reliable, string arg0)
+    {
+        SendUIEffect(Assets.find(EAssetType.EFFECT, id) as EffectAsset, key, transportConnection, reliable, arg0);
+    }
+
+    [Obsolete("Please use the method taking an EffectAsset instead. It fixes an exploit. (public issue #4918)")]
+    public static void sendUIEffect(ushort id, short key, ITransportConnection transportConnection, bool reliable, string arg0, string arg1)
+    {
+        SendUIEffect(Assets.find(EAssetType.EFFECT, id) as EffectAsset, key, transportConnection, reliable, arg0, arg1);
+    }
+
+    [Obsolete("Please use the method taking an EffectAsset instead. It fixes an exploit. (public issue #4918)")]
+    public static void sendUIEffect(ushort id, short key, ITransportConnection transportConnection, bool reliable, string arg0, string arg1, string arg2)
+    {
+        SendUIEffect(Assets.find(EAssetType.EFFECT, id) as EffectAsset, key, transportConnection, reliable, arg0, arg1, arg2);
+    }
+
+    [Obsolete("Please use the method taking an EffectAsset instead. It fixes an exploit. (public issue #4918)")]
+    public static void sendUIEffect(ushort id, short key, ITransportConnection transportConnection, bool reliable, string arg0, string arg1, string arg2, string arg3)
+    {
+        SendUIEffect(Assets.find(EAssetType.EFFECT, id) as EffectAsset, key, transportConnection, reliable, arg0, arg1, arg2, arg3);
     }
 }

@@ -23,6 +23,11 @@ public class MythicAsset : Asset
 
     public GameObject systemThird => _systemThird;
 
+    /// <summary>
+    /// If true, vest and backpack spawn System_Area instead of System_Hook.
+    /// </summary>
+    public bool ShouldBodyCosmeticsUseAreaPrefab { get; protected set; }
+
     public override EAssetType assetCategory => EAssetType.MYTHIC;
 
     public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
@@ -45,6 +50,7 @@ public class MythicAsset : Asset
         _systemHook = bundle.load<GameObject>("System_Hook");
         _systemFirst = bundle.load<GameObject>("System_First");
         _systemThird = bundle.load<GameObject>("System_Third");
+        ShouldBodyCosmeticsUseAreaPrefab = data.ParseBool("Body_Cosmetics_Use_System_Area");
         if ((bool)Assets.shouldValidateAssets)
         {
             if (systemArea != null)
@@ -63,6 +69,10 @@ public class MythicAsset : Asset
             {
                 AssetValidation.ValidateLayersEqualRecursive(this, systemThird, 13);
             }
+        }
+        if (systemArea == null && systemHook == null && systemFirst == null && systemThird == null)
+        {
+            Assets.ReportError(this, "missing all effect prefabs");
         }
     }
 }

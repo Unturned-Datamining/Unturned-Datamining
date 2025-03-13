@@ -34,6 +34,12 @@ public class SkinAsset : Asset
 
     public Quaternion statTrackerRotation;
 
+    public bool hasIconTransformOverride;
+
+    public Vector3 iconPosition;
+
+    public Quaternion iconRotation;
+
     /// <summary>
     /// Used by melee skins to override impact sound.
     /// </summary>
@@ -67,6 +73,15 @@ public class SkinAsset : Asset
     public override EAssetType assetCategory => EAssetType.SKIN;
 
     public ERagdollEffect ragdollEffect { get; protected set; }
+
+    /// <summary>
+    /// If true, sets the Magazine attachment hook inactive while this skin is applied. (guns only)
+    ///
+    /// Nelson 2025-03-10: Adding this to address mismatched Ace bullets with certain skins. (public issue #4923)
+    /// It should be fine for vanilla guns because there shouldn't be assumptions about Magazine enable/disable,
+    /// but modded guns may have different expectations (particularly with GunAttachmentEventHook).
+    /// </summary>
+    public bool ShouldHideMagazine { get; protected set; }
 
     /// <summary>
     /// Note: unfortunately it appears the stupid skin system always instantiated materials, but never destroys
@@ -125,6 +140,7 @@ public class SkinAsset : Asset
         _hasGrip = data.ContainsKey("Grip");
         _hasBarrel = data.ContainsKey("Barrel");
         _hasMagazine = data.ContainsKey("Magazine");
+        ShouldHideMagazine = data.ParseBool("Hide_Magazine");
         ragdollEffect = data.ParseEnum("Ragdoll_Effect", ERagdollEffect.NONE);
         specialAudioOverride = data.ReadAudioReference("SpecialAudioOverrideDef", bundle);
         if (Dedicator.IsDedicatedServer)
@@ -178,6 +194,13 @@ public class SkinAsset : Asset
                     hasStatTrackerTransformOverride = true;
                     statTrackerPosition = transform.localPosition;
                     statTrackerRotation = transform.localRotation;
+                }
+                Transform transform2 = gameObject.transform.Find("Icon");
+                if (transform2 != null)
+                {
+                    hasIconTransformOverride = true;
+                    iconPosition = transform2.localPosition;
+                    iconRotation = transform2.localRotation;
                 }
             }
             else

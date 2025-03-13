@@ -97,4 +97,19 @@ public class ItemFarmAsset : ItemBarricadeAsset
         shouldRainAffectGrowth = data.ParseBool("Rain_Affects_Growth", defaultValue: true);
         harvestRewardsList.Parse(data, localization, this, "Harvest_Rewards", "Harvest_Reward_");
     }
+
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Farm");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Growth", growth);
+        orAddDeclaration.Append("Grow", grow);
+        orAddDeclaration.Append("Grow_SpawnTable", growSpawnTableGuid);
+        orAddDeclaration.Append("Ignore_Soil_Restrictions", ignoreSoilRestrictions);
+        orAddDeclaration.Append("Allow_Fertilizer", canFertilize);
+        orAddDeclaration.Append("Harvest_Reward_Experience", harvestRewardExperience);
+        orAddDeclaration.Append("Affected_By_Agriculture_Skill", isAffectedByAgricultureSkill);
+        orAddDeclaration.Append("Rain_Affects_Growth", shouldRainAffectGrowth);
+    }
 }

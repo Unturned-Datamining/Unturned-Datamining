@@ -14,6 +14,7 @@ internal static class ServerMessageHandler_GracefullyDisconnect
             {
                 UnturnedLog.info($"Ignoring GracefullyDisconnect message from {transportConnection} because there is no associated player");
             }
+            Provider.IncrementBadPacketsFromConnection(transportConnection);
         }
         else
         {

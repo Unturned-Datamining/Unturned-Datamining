@@ -131,4 +131,28 @@ public class ItemTrapAsset : ItemBarricadeAsset
         damageTires = data.ContainsKey("Damage_Tires");
         requiresPower = data.ParseBool("Requires_Power");
     }
+
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Trap");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Range2", range2);
+        orAddDeclaration.Append("Player_Damage", playerDamage);
+        orAddDeclaration.Append("Zombie_Damage", zombieDamage);
+        orAddDeclaration.Append("Animal_Damage", animalDamage);
+        orAddDeclaration.Append("Barricade_Damage", barricadeDamage);
+        orAddDeclaration.Append("Structure_Damage", structureDamage);
+        orAddDeclaration.Append("Vehicle_Damage", vehicleDamage);
+        orAddDeclaration.Append("Resource_Damage", resourceDamage);
+        orAddDeclaration.Append("Object_Damage", objectDamage);
+        orAddDeclaration.Append("Trap_Setup_Delay", trapSetupDelay);
+        orAddDeclaration.Append("Trap_Cooldown", trapCooldown);
+        orAddDeclaration.Append("Explosion2", explosion2);
+        orAddDeclaration.Append("Explosion_Launch_Speed", explosionLaunchSpeed);
+        orAddDeclaration.Append("Broken", isBroken);
+        orAddDeclaration.Append("Explosive", isExplosive);
+        orAddDeclaration.Append("Damage_Tires", damageTires);
+        orAddDeclaration.Append("Requires_Power", requiresPower);
+    }
 }

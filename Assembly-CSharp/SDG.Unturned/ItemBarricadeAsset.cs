@@ -377,6 +377,37 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
         }
     }
 
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Barricade");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Build", build);
+        orAddDeclaration.Append("Health", health);
+        orAddDeclaration.Append("Range", range);
+        orAddDeclaration.Append("Radius", radius);
+        orAddDeclaration.Append("Offset", offset);
+        orAddDeclaration.Append("Explosion", explosion);
+        orAddDeclaration.Append("Can_Be_Damaged", canBeDamaged);
+        orAddDeclaration.Append("Eligible_For_Pooling", eligibleForPooling);
+        orAddDeclaration.Append("Locked", isLocked);
+        orAddDeclaration.Append("Vulnerable", isVulnerable);
+        orAddDeclaration.Append("Bypass_Claim", bypassClaim);
+        orAddDeclaration.Append("Allow_Placement_On_Vehicle", allowPlacementOnVehicle);
+        orAddDeclaration.Append("Unrepairable", !isRepairable);
+        orAddDeclaration.Append("Proof_Explosion", proofExplosion);
+        orAddDeclaration.Append("Unpickupable", isUnpickupable);
+        orAddDeclaration.Append("Bypass_Pickup_Ownership", shouldBypassPickupOwnership);
+        orAddDeclaration.Append("Allow_Placement_Inside_Clip_Volumes", AllowPlacementInsideClipVolumes);
+        orAddDeclaration.Append("Unsalvageable", !isSalvageable);
+        orAddDeclaration.Append("Salvage_Duration_Multiplier", salvageDurationMultiplier);
+        orAddDeclaration.Append("Unsaveable", !isSaveable);
+        orAddDeclaration.Append("Allow_Collision_While_Animating", allowCollisionWhileAnimating);
+        orAddDeclaration.Append("Use_Water_Height_Transparent_Sort", useWaterHeightTransparentSort);
+        orAddDeclaration.Append("CanParentVehicleBePickedUp", CanParentVehicleBePickedUp);
+        orAddDeclaration.Append("Armor_Tier", armorTier);
+    }
+
     protected override AudioReference GetDefaultInventoryAudio()
     {
         if (name.Contains("Seed", StringComparison.InvariantCultureIgnoreCase))

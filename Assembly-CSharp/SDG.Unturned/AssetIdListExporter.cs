@@ -46,6 +46,8 @@ public static class AssetIdListExporter
             string text = item.Key.ToString();
             string csvPath = Path.Combine(basePath, text + ".csv");
             ExportAssetsToCsv(item.Value, csvPath);
+            string csvPath2 = Path.Combine(basePath, text + " Legacy ID Availability.csv");
+            ExportLegacyIdAvailabilityToCsv(item.Key, item.Value, csvPath2);
         }
     }
 
@@ -109,6 +111,90 @@ public static class AssetIdListExporter
             streamWriter.Write(asset.id);
             streamWriter.Write(',');
             streamWriter.WriteLine(asset.assetCategory.ToString());
+        }
+    }
+
+    private static void ExportLegacyIdAvailabilityToCsv(EAssetType legacyType, IEnumerable<Asset> assets, string csvPath)
+    {
+        Dictionary<int, List<Asset>> dictionary = new Dictionary<int, List<Asset>>();
+        foreach (Asset asset in assets)
+        {
+            if (dictionary.TryGetValue(asset.id, out var value))
+            {
+                value.Add(asset);
+                continue;
+            }
+            value = new List<Asset> { asset };
+            dictionary.Add(asset.id, value);
+        }
+        using FileStream stream = new FileStream(csvPath, FileMode.Create, FileAccess.Write);
+        using StreamWriter streamWriter = new StreamWriter(stream);
+        streamWriter.WriteLine("Legacy ID,Used By,Reserved for Vanilla");
+        int num = 0;
+        switch (legacyType)
+        {
+        case EAssetType.ITEM:
+            num = 2000;
+            break;
+        case EAssetType.EFFECT:
+            num = 200;
+            break;
+        case EAssetType.RESOURCE:
+            num = 50;
+            break;
+        case EAssetType.ANIMAL:
+            num = 50;
+            break;
+        case EAssetType.MYTHIC:
+            num = 500;
+            break;
+        case EAssetType.SKIN:
+            num = 2000;
+            break;
+        case EAssetType.NPC:
+            num = 2000;
+            break;
+        }
+        for (int i = 1; i <= 65535; streamWriter.WriteLine(), i++)
+        {
+            streamWriter.Write(i);
+            streamWriter.Write(',');
+            if (dictionary.TryGetValue(i, out var value2))
+            {
+                string text = value2[0].FriendlyName;
+                for (int j = 1; j < value2.Count; j++)
+                {
+                    text += ", ";
+                    text += value2[j].FriendlyName;
+                }
+                WriteEscapedString(streamWriter, text);
+            }
+            else
+            {
+                streamWriter.Write("---");
+            }
+            streamWriter.Write(',');
+            if (i >= num)
+            {
+                continue;
+            }
+            if (legacyType == EAssetType.ITEM)
+            {
+                switch (i)
+                {
+                case 786:
+                case 1800:
+                case 1801:
+                case 1802:
+                case 1803:
+                case 1804:
+                case 1805:
+                case 1806:
+                    streamWriter.Write("Hawaii Overlap");
+                    continue;
+                }
+            }
+            streamWriter.Write("Reserved");
         }
     }
 

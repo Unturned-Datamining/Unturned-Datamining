@@ -81,4 +81,21 @@ public class ItemSentryAsset : ItemStorageAsset
         targetAcquiredEffect = data.readAssetReference("Target_Acquired_Effect", in defaultTargetAcquiredEffect);
         targetLostEffect = data.readAssetReference("Target_Lost_Effect", in defaultTargetLostEffect);
     }
+
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Sentry");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Mode", sentryMode);
+        orAddDeclaration.Append("Requires_Power", requiresPower);
+        orAddDeclaration.Append("Infinite_Ammo", infiniteAmmo);
+        orAddDeclaration.Append("Infinite_Quality", infiniteQuality);
+        orAddDeclaration.Append("AmmoConsumptionProbability", AmmoConsumptionProbability);
+        orAddDeclaration.Append("QualityConsumptionProbability", QualityConsumptionProbability);
+        orAddDeclaration.Append("Detection_Radius", detectionRadius);
+        orAddDeclaration.Append("Target_Loss_Radius", targetLossRadius);
+        orAddDeclaration.Append("Target_Acquired_Effect", targetAcquiredEffect);
+        orAddDeclaration.Append("Target_Lost_Effect", targetLostEffect);
+    }
 }

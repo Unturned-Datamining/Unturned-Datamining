@@ -21,4 +21,13 @@ public class ItemLibraryAsset : ItemBarricadeAsset
         _capacity = data.ParseUInt32("Capacity");
         _tax = data.ParseUInt8("Tax", 0);
     }
+
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Library");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Capacity", capacity);
+        orAddDeclaration.Append("Tax", tax);
+    }
 }

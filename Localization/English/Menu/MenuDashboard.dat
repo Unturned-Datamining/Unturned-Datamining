@@ -45,7 +45,8 @@ Hash_Resources Built-in resources mismatch. Verifying game files should repair t
 SkinColorWithinThresholdOfTerrainColor Your character's skin color is too similar to one of the level's terrain colors. Please change your character's skin color or switch to a different character.
 
 Steam_ID_Mismatch Your Steam account doesn't match the one used to connect to the server.
-Connect_Rate_Limiting Received too many join requests, sorry! Please try again in a few minutes.
+Connect_Rate_Limiting Received too many join requests from your connection, sorry! Please try again in a few minutes.
+Bad_Packet_Rate_Limiting Something went wrong with your connection, sorry! Please try again in a few minutes.
 
 Version This server is running version {0} of the game, whereas you are running version {1}.
 Pro_Server You require Gold to join this server.

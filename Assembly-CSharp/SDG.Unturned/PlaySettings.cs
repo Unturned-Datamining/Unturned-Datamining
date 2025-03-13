@@ -1,3 +1,5 @@
+using System;
+
 namespace SDG.Unturned;
 
 public class PlaySettings
@@ -14,9 +16,11 @@ public class PlaySettings
     /// </summary>
     public const byte SAVEDATA_VERSION_REMOVED_SERVER_NAME_FILTER = 13;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 13;
+    public const byte SAVEDATA_VERSION_PERSIST_LEVEL_WORKSHOP_FILE_ID = 14;
 
-    public static readonly byte SAVEDATA_VERSION = 13;
+    private const byte SAVEDATA_VERSION_NEWEST = 14;
+
+    public static readonly byte SAVEDATA_VERSION = 14;
 
     public static string connectHost;
 
@@ -30,9 +34,15 @@ public class PlaySettings
 
     public static bool singleplayerCheats;
 
+    [Obsolete]
     public static string singleplayerMap;
 
+    [Obsolete]
     public static string editorMap;
+
+    internal static SavedLevelSelection singleplayerLevelSelection;
+
+    internal static SavedLevelSelection editorLevelSelection;
 
     public static bool isVR;
 
@@ -73,7 +83,7 @@ public class PlaySettings
                     {
                         singleplayerCheats = block.readBoolean();
                     }
-                    if (b > 4)
+                    if (b > 4 && b < 14)
                     {
                         singleplayerMap = block.readString();
                         editorMap = block.readString();
@@ -107,6 +117,16 @@ public class PlaySettings
                     {
                         singleplayerCategory = (ESingleplayerMapCategory)block.readByte();
                     }
+                    if (b >= 14)
+                    {
+                        singleplayerLevelSelection.Read(block);
+                        editorLevelSelection.Read(block);
+                    }
+                    else
+                    {
+                        singleplayerLevelSelection.name = singleplayerMap;
+                        editorLevelSelection.name = editorMap;
+                    }
                     return;
                 }
             }
@@ -119,23 +139,25 @@ public class PlaySettings
         singleplayerCheats = false;
         singleplayerMap = "";
         editorMap = "";
+        singleplayerLevelSelection.name = string.Empty;
+        editorLevelSelection.name = string.Empty;
         singleplayerCategory = ESingleplayerMapCategory.OFFICIAL;
     }
 
     public static void save()
     {
         Block block = new Block();
-        block.writeByte(13);
+        block.writeByte(14);
         block.writeString(connectHost);
         block.writeUInt16(connectPort);
         block.writeString(connectPassword);
         block.writeString(serversPassword);
         block.writeByte((byte)singleplayerMode);
         block.writeBoolean(singleplayerCheats);
-        block.writeString(singleplayerMap);
-        block.writeString(editorMap);
         block.writeBoolean(isVR);
         block.writeByte((byte)singleplayerCategory);
+        singleplayerLevelSelection.Write(block);
+        editorLevelSelection.Write(block);
         ReadWrite.writeBlock("/Play.dat", useCloud: true, block);
     }
 }

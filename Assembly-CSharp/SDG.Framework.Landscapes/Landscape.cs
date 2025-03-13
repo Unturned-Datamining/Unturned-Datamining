@@ -80,6 +80,8 @@ public class Landscape : DevkitHierarchyItemBase
 
     private bool hasConverted;
 
+    internal static CommandLineFlag clNoSetHolesDelayLod = new CommandLineFlag(defaultValue: false, "-NoSetHolesDelayLOD");
+
     public static Landscape instance { get; protected set; }
 
     /// <summary>
@@ -125,6 +127,13 @@ public class Landscape : DevkitHierarchyItemBase
             }
         }
     }
+
+    /// <summary>
+    /// Nelson 2025-03-10: I want to experiment whether this fixes a strange terrain hole painting bug (public issue
+    /// #4851) without potentially introducing crashes for other players. (Per an earlier, undated comment we'd
+    /// run into a SetHolesDelayLOD-related crash in 2019 LTS.)
+    /// </summary>
+    internal static bool ShouldUseSetHolesDelayLOD => !clNoSetHolesDelayLod;
 
     public static event LandscapeLoadedHandler loaded;
 
@@ -566,7 +575,7 @@ public class Landscape : DevkitHierarchyItemBase
                         tile.hasAnyHolesData |= flag2 != flag;
                     }
                 }
-                tile.data.SetHoles(0, 0, tile.holes);
+                tile.SetHoles();
             }
         }
         LevelHierarchy.MarkDirty();
@@ -644,15 +653,7 @@ public class Landscape : DevkitHierarchyItemBase
     {
         foreach (KeyValuePair<LandscapeCoord, LandscapeTile> tile in tiles)
         {
-            tile.Value.SyncHeightmap();
-        }
-    }
-
-    public static void SyncHoles()
-    {
-        foreach (KeyValuePair<LandscapeCoord, LandscapeTile> tile in tiles)
-        {
-            tile.Value.data.SyncTexture(TerrainData.HolesTextureName);
+            tile.Value.SyncDelayedLOD();
         }
     }
 

@@ -50,4 +50,15 @@ public class ItemStorageAsset : ItemBarricadeAsset
         _isDisplay = data.ContainsKey("Display");
         shouldCloseWhenOutsideRange = data.ParseBool("Should_Close_When_Outside_Range");
     }
+
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Storage");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Storage_X", storage_x);
+        orAddDeclaration.Append("Storage_Y", storage_y);
+        orAddDeclaration.Append("Display", isDisplay);
+        orAddDeclaration.Append("Should_Close_When_Outside_Range", shouldCloseWhenOutsideRange);
+    }
 }

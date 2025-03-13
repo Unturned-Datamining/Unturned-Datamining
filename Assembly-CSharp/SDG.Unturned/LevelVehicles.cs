@@ -162,7 +162,7 @@ public class LevelVehicles
             {
                 vehicleTable.buildTable();
             }
-            if (vehicleTable.tableID != 0 && SpawnTableTool.ResolveLegacyId(num, EAssetType.VEHICLE, vehicleTable.OnGetSpawnTableValidationErrorContext) == 0 && (bool)Assets.shouldLoadAnyAssets)
+            if (vehicleTable.tableID != 0 && SpawnTableTool.Resolve(num, EAssetType.VEHICLE, vehicleTable.OnGetSpawnTableValidationErrorContext) == null && (bool)Assets.shouldLoadAnyAssets)
             {
                 Assets.reportError(Level.info.name + " vehicle table \"" + text + "\" references invalid spawn table " + num + "!");
             }

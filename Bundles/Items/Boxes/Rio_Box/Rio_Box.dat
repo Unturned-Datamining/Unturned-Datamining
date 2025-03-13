@@ -1,0 +1,35 @@
+GUID 3cd2709abb21497681ba43631e169543
+Type Box
+
+Size_X 1
+Size_Y 1
+
+Generate 21082
+
+Probability_Model Equalized
+Contains_Bonus_Items True
+
+Drops 21
+Drop_0 -1
+Drop_1 "107601" // RGB Meowphones
+Drop_2 "107701" // Froggy Hat
+Drop_3 "107801" // Hearty Glasses
+Drop_4 "107901" // Jaguar Mask
+Drop_5 "108001" // Keyhead
+Drop_6 "108101" // Pearl Necklace
+Drop_7 "108201" // Silly Pan Hat
+Drop_8 "108301" // J-Soda Bandolier
+Drop_9 "108401" // Sporty Jacket
+Drop_10 "108501" // Sporty Sneakers
+Drop_11 "108601" // Starry Glasses
+Drop_12 "108701" // Thug Jacket
+Drop_13 "108801" // Vaulted
+Drop_14 "108901" // Warhead Billy
+Drop_15 "109001" // Winged Headband
+Drop_16 "109101" // Pick-Anchor Pickaxe
+Drop_17 "109201" // Carnival Sledgehammer Sledgehammer
+Drop_18 "109301" // Stop Frying Pan
+Drop_19 "109401" // Spicy Baseball Bat
+Drop_20 "109501" // Beach Bucket Detonator
+
+Pro

@@ -220,6 +220,10 @@ Salvage_Button Salvage
 Salvage_Button_Tooltip Salvage into component materials.
 Refill_Button Refill
 Refill_Button_Tooltip Refill with bullets.
+Stack_Button Stack
+Stack_Button_Tooltip Consolidate items into a bundle.
+Unstack_Button Unstack
+Unstack_Button_Tooltip Separate bundle into individual items.
 
 ActionBlueprint_SkipCraftingTooltip Skip Crafting Menu [{0}]
 ActionBlueprint_CraftAllTooltip Craft All [{0}]

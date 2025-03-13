@@ -1425,6 +1425,7 @@ public class MenuDashboardUI
                 ESteamConnectionFailureInfo.SKIN_COLOR_WITHIN_THRESHOLD_OF_TERRAIN_COLOR => localization.format("SkinColorWithinThresholdOfTerrainColor"), 
                 ESteamConnectionFailureInfo.STEAM_ID_MISMATCH => localization.format("Steam_ID_Mismatch"), 
                 ESteamConnectionFailureInfo.CONNECT_RATE_LIMITING => localization.format("Connect_Rate_Limiting"), 
+                ESteamConnectionFailureInfo.BAD_PACKET_RATE_LIMITING => localization.format("Bad_Packet_Rate_Limiting"), 
                 ESteamConnectionFailureInfo.SERVER_MAP_ADVERTISEMENT_MISMATCH => localization.format("Server_Map_Advertisement_Mismatch"), 
                 ESteamConnectionFailureInfo.SERVER_VAC_ADVERTISEMENT_MISMATCH => localization.format("Server_VAC_Advertisement_Mismatch"), 
                 ESteamConnectionFailureInfo.SERVER_BATTLEYE_ADVERTISEMENT_MISMATCH => localization.format("Server_BattlEye_Advertisement_Mismatch"), 

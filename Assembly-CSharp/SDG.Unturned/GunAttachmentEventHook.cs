@@ -80,7 +80,7 @@ public class GunAttachmentEventHook : MonoBehaviour
 
     internal void InitializeEventHook(Attachments attachments)
     {
-        if (string.IsNullOrEmpty(AssetGuidFilter))
+        if (string.IsNullOrEmpty(AssetGuidFilter) || string.Equals(AssetGuidFilter, "0"))
         {
             hasGuidFilter = false;
         }

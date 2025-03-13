@@ -55,4 +55,13 @@ public class ItemMaskAsset : ItemGearAsset
             _isEarpiece = data.ContainsKey("Earpiece");
         }
     }
+
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Gear");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("FilterDegradationRateMultiplier", FilterDegradationRateMultiplier);
+        orAddDeclaration.Append("Earpiece", isEarpiece);
+    }
 }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -140,7 +141,40 @@ public class MenuConfigurationControlsUI
 
     private static SleekButtonState voiceModeButton;
 
+    [Obsolete]
     public static byte binding = byte.MaxValue;
+
+    private static bool wasBindingThisFrame;
+
+    private static int bindingFrameNumber;
+
+    private static byte ActiveKeyBindingIndex
+    {
+        get
+        {
+            return binding;
+        }
+        set
+        {
+            binding = value;
+            wasBindingThisFrame = true;
+            bindingFrameNumber = Time.frameCount;
+        }
+    }
+
+    public static bool IsRebindingKey => ActiveKeyBindingIndex != byte.MaxValue;
+
+    public static bool ShouldGameIgnoreInput
+    {
+        get
+        {
+            if (!IsRebindingKey)
+            {
+                return wasBindingThisFrame;
+            }
+            return true;
+        }
+    }
 
     public static void open()
     {
@@ -156,7 +190,7 @@ public class MenuConfigurationControlsUI
         if (active)
         {
             active = false;
-            binding = byte.MaxValue;
+            ActiveKeyBindingIndex = byte.MaxValue;
             MenuSettings.SaveControlsIfLoaded();
             container.AnimateOutOfView(0f, 1f);
         }
@@ -164,13 +198,13 @@ public class MenuConfigurationControlsUI
 
     public static void cancel()
     {
-        binding = byte.MaxValue;
+        ActiveKeyBindingIndex = byte.MaxValue;
     }
 
     public static void bind(KeyCode key)
     {
-        ControlsSettings.bind(binding, key);
-        updateButton(binding);
+        ControlsSettings.bind(ActiveKeyBindingIndex, key);
+        updateButton(ActiveKeyBindingIndex);
         cancel();
     }
 
@@ -251,72 +285,76 @@ public class MenuConfigurationControlsUI
 
     private static void onClickedKeyButton(ISleekElement button)
     {
-        binding = 0;
-        while (binding < buttons.Length && buttons[binding] != button)
+        byte b = 0;
+        while (b < buttons.Length && buttons[b] != button)
         {
-            binding++;
+            b++;
         }
-        (button as ISleekButton).Text = localization.format("Key_" + binding + "_Button", "?");
+        ActiveKeyBindingIndex = b;
+        (button as ISleekButton).Text = localization.format("Key_" + ActiveKeyBindingIndex + "_Button", "?");
     }
 
     public static void bindOnGUI()
     {
-        if (binding == byte.MaxValue)
+        if (IsRebindingKey)
         {
-            return;
+            if (Event.current.type == EventType.KeyDown)
+            {
+                if (Event.current.keyCode == KeyCode.Backspace)
+                {
+                    updateButton(ActiveKeyBindingIndex);
+                    cancel();
+                }
+                else if (Event.current.keyCode != KeyCode.Escape)
+                {
+                    bind(Event.current.keyCode);
+                }
+            }
+            else if (Event.current.type == EventType.MouseDown)
+            {
+                if (Event.current.button == 0)
+                {
+                    bind(KeyCode.Mouse0);
+                }
+                else if (Event.current.button == 1)
+                {
+                    bind(KeyCode.Mouse1);
+                }
+                else if (Event.current.button == 2)
+                {
+                    bind(KeyCode.Mouse2);
+                }
+                else if (Event.current.button == 3)
+                {
+                    bind(KeyCode.Mouse3);
+                }
+                else if (Event.current.button == 4)
+                {
+                    bind(KeyCode.Mouse4);
+                }
+                else if (Event.current.button == 5)
+                {
+                    bind(KeyCode.Mouse5);
+                }
+                else if (Event.current.button == 6)
+                {
+                    bind(KeyCode.Mouse6);
+                }
+            }
+            else if (Event.current.shift)
+            {
+                bind(KeyCode.LeftShift);
+            }
         }
-        if (Event.current.type == EventType.KeyDown)
+        else if (wasBindingThisFrame && Time.frameCount > bindingFrameNumber)
         {
-            if (Event.current.keyCode == KeyCode.Backspace)
-            {
-                updateButton(binding);
-                cancel();
-            }
-            else if (Event.current.keyCode != KeyCode.Escape && Event.current.keyCode != KeyCode.Insert)
-            {
-                bind(Event.current.keyCode);
-            }
-        }
-        else if (Event.current.type == EventType.MouseDown)
-        {
-            if (Event.current.button == 0)
-            {
-                bind(KeyCode.Mouse0);
-            }
-            else if (Event.current.button == 1)
-            {
-                bind(KeyCode.Mouse1);
-            }
-            else if (Event.current.button == 2)
-            {
-                bind(KeyCode.Mouse2);
-            }
-            else if (Event.current.button == 3)
-            {
-                bind(KeyCode.Mouse3);
-            }
-            else if (Event.current.button == 4)
-            {
-                bind(KeyCode.Mouse4);
-            }
-            else if (Event.current.button == 5)
-            {
-                bind(KeyCode.Mouse5);
-            }
-            else if (Event.current.button == 6)
-            {
-                bind(KeyCode.Mouse6);
-            }
-        }
-        else if (Event.current.shift)
-        {
-            bind(KeyCode.LeftShift);
+            wasBindingThisFrame = false;
         }
     }
 
     public static void bindUpdate()
     {
-        if (binding != byte.MaxValue)
+        if (IsRebindingKey)
         {
             if (InputEx.GetKeyDown(KeyCode.Mouse3))
             {
@@ -406,7 +444,7 @@ public class MenuConfigurationControlsUI
             MenuUI.container.AddChild(container);
         }
         active = false;
-        binding = byte.MaxValue;
+        ActiveKeyBindingIndex = byte.MaxValue;
         controlsBox = Glazier.Get().CreateScrollView();
         controlsBox.PositionOffset_X = -200f;
         controlsBox.PositionOffset_Y = 100f;

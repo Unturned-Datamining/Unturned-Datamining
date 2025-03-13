@@ -193,7 +193,7 @@ public class LevelItems
                 {
                     itemTable.buildTable();
                 }
-                if (itemTable.tableID != 0 && SpawnTableTool.ResolveLegacyId(num, EAssetType.ITEM, itemTable.OnGetSpawnTableValidationErrorContext) == 0 && (bool)Assets.shouldLoadAnyAssets)
+                if (itemTable.tableID != 0 && SpawnTableTool.Resolve(num, EAssetType.ITEM, itemTable.OnGetSpawnTableValidationErrorContext) == null && (bool)Assets.shouldLoadAnyAssets)
                 {
                     Assets.reportError(Level.info.name + " item table \"" + text + "\" references invalid spawn table " + num + "!");
                 }

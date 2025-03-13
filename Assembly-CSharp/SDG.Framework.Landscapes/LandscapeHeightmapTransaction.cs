@@ -18,7 +18,7 @@ public class LandscapeHeightmapTransaction : IDevkitTransaction
             tile.heightmap = heightmapCopy;
             heightmapCopy = heightmap;
             tile.SetHeightsDelayLOD();
-            tile.SyncHeightmap();
+            tile.SyncDelayedLOD();
         }
     }
 

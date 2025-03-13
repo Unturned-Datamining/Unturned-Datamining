@@ -213,27 +213,30 @@ public class PlayerCrafting : PlayerCaller
             for (int j = 0; j < blueprint.supplies.Length; j++)
             {
                 BlueprintSupply blueprintSupply = blueprint.supplies[j];
-                List<InventorySearch> list = base.player.inventory.search(blueprintSupply.id, findEmpty: false, findHealthy: true);
+                List<InventorySearch> list = base.player.inventory.search(blueprintSupply.id, blueprintSupply.ShouldTreatEmptyAsOne, findHealthy: true);
                 if (list.Count == 0)
                 {
                     return;
                 }
-                ushort num = 0;
+                int num = 0;
                 foreach (InventorySearch item2 in list)
                 {
-                    num += item2.jar.item.amount;
+                    num += (blueprintSupply.ShouldTreatEmptyAsOne ? Mathf.Max(1, item2.jar.item.amount) : item2.jar.item.amount);
                 }
                 if (num < blueprintSupply.amount && blueprint.type != EBlueprintType.AMMO)
                 {
                     return;
                 }
-                if (blueprint.type == EBlueprintType.AMMO)
+                switch (blueprintSupply.Prioritization)
                 {
+                default:
+                    return;
+                case ECraftingInputPrioritization.LowestAmount:
                     list.Sort(amountAscendingComparator);
-                }
-                else
-                {
+                    break;
+                case ECraftingInputPrioritization.LowestQuality:
                     list.Sort(qualityAscendingComparator);
+                    break;
                 }
                 array[j] = list;
             }

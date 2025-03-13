@@ -39,6 +39,8 @@ public class MenuWorkshopEditorUI
 
     private static ISleekBox descriptionBox;
 
+    private static LevelInfo selectedLevel;
+
     public static void open()
     {
         if (!active)
@@ -58,29 +60,20 @@ public class MenuWorkshopEditorUI
         }
     }
 
-    private static void updateSelection()
+    private static void SyncSelectedLevelDetails()
     {
-        if (string.IsNullOrEmpty(PlaySettings.editorMap))
+        if (previewImage.Texture != null && previewImage.ShouldDestroyTexture)
         {
-            UnturnedLog.warn("Editor map selection empty");
+            UnityEngine.Object.Destroy(previewImage.Texture);
+            previewImage.Texture = null;
+        }
+        if (selectedLevel == null)
+        {
+            descriptionBox.Text = string.Empty;
+            selectedBox.Text = string.Empty;
             return;
         }
-        LevelInfo levelInfo = null;
-        LevelInfo[] array = levels;
-        foreach (LevelInfo levelInfo2 in array)
-        {
-            if (string.Equals(levelInfo2.name, PlaySettings.editorMap, StringComparison.InvariantCultureIgnoreCase))
-            {
-                levelInfo = levelInfo2;
-                break;
-            }
-        }
-        if (levelInfo == null)
-        {
-            UnturnedLog.warn("Unable to find editor selected map '{0}'", PlaySettings.editorMap);
-            return;
-        }
-        Local localization = levelInfo.getLocalization();
+        Local localization = selectedLevel.getLocalization();
         if (localization != null)
         {
             string desc = localization.format("Description");
@@ -94,14 +87,9 @@ public class MenuWorkshopEditorUI
         }
         else
         {
-            selectedBox.Text = PlaySettings.editorMap;
+            selectedBox.Text = selectedLevel.name;
         }
-        if (previewImage.Texture != null && previewImage.ShouldDestroyTexture)
-        {
-            UnityEngine.Object.Destroy(previewImage.Texture);
-            previewImage.Texture = null;
-        }
-        string previewImageFilePath = levelInfo.GetPreviewImageFilePath();
+        string previewImageFilePath = selectedLevel.GetPreviewImageFilePath();
         if (!string.IsNullOrEmpty(previewImageFilePath))
         {
             previewImage.Texture = ReadWrite.readTextureFromFile(previewImageFilePath);
@@ -110,11 +98,8 @@ public class MenuWorkshopEditorUI
 
     private static void onClickedLevel(SleekLevel level, byte index)
     {
-        if (index < levels.Length && levels[index] != null && levels[index].isEditable)
-        {
-            PlaySettings.editorMap = levels[index].name;
-            updateSelection();
-        }
+        SetAndSaveLevelSelection(level.level);
+        SyncSelectedLevelDetails();
     }
 
     private static void onClickedAddButton(ISleekElement button)
@@ -128,48 +113,25 @@ public class MenuWorkshopEditorUI
 
     private static void onClickedRemoveButton(SleekButtonIconConfirm button)
     {
-        if (PlaySettings.editorMap == null || PlaySettings.editorMap.Length == 0)
+        if (selectedLevel != null && selectedLevel.isEditable)
         {
-            return;
-        }
-        for (int i = 0; i < levels.Length; i++)
-        {
-            if (levels[i] != null && levels[i].name == PlaySettings.editorMap && levels[i].isEditable)
-            {
-                Level.remove(levels[i].name);
-            }
+            Level.Remove(selectedLevel);
         }
     }
 
     private static void onClickedEditButton(ISleekElement button)
     {
-        if (PlaySettings.editorMap == null || PlaySettings.editorMap.Length == 0)
+        if (selectedLevel != null && selectedLevel.isEditable)
         {
-            return;
-        }
-        for (int i = 0; i < levels.Length; i++)
-        {
-            if (levels[i] != null && levels[i].name == PlaySettings.editorMap && levels[i].isEditable)
-            {
-                MenuSettings.save();
-                Level.edit(levels[i]);
-            }
+            Level.edit(selectedLevel);
         }
     }
 
     protected void OnClickedBrowseFilesButton(ISleekElement button)
     {
-        if (PlaySettings.editorMap == null || PlaySettings.editorMap.Length == 0)
+        if (selectedLevel != null && selectedLevel.isEditable)
         {
-            return;
-        }
-        for (int i = 0; i < levels.Length; i++)
-        {
-            if (levels[i] != null && levels[i].name == PlaySettings.editorMap && levels[i].isEditable)
-            {
-                ReadWrite.OpenFileBrowser(levels[i].path);
-                break;
-            }
+            ReadWrite.OpenFileBrowser(selectedLevel.path);
         }
     }
 
@@ -181,7 +143,6 @@ public class MenuWorkshopEditorUI
         }
         levelScrollBox.RemoveAllChildren();
         levels = Level.getLevels(ESingleplayerMapCategory.EDITABLE);
-        bool flag = false;
         levelButtons = new SleekLevel[levels.Length];
         for (int i = 0; i < levels.Length; i++)
         {
@@ -192,21 +153,14 @@ public class MenuWorkshopEditorUI
                 sleekLevel.onClickedLevel = onClickedLevel;
                 levelScrollBox.AddChild(sleekLevel);
                 levelButtons[i] = sleekLevel;
-                if (!flag && string.Equals(levels[i].name, PlaySettings.editorMap, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    flag = true;
-                }
             }
         }
-        if (levels.Length == 0)
+        selectedLevel = Level.FindLevel(PlaySettings.editorLevelSelection);
+        if (selectedLevel == null && levels.Length != 0)
         {
-            PlaySettings.editorMap = "";
+            SetAndSaveLevelSelection(levels[0]);
         }
-        else if (!flag || PlaySettings.editorMap == null || PlaySettings.editorMap.Length == 0)
-        {
-            PlaySettings.editorMap = levels[0].name;
-        }
-        updateSelection();
+        SyncSelectedLevelDetails();
         levelScrollBox.ContentSizeOffset = new Vector2(0f, levels.Length * 110 - 10);
     }
 
@@ -214,6 +168,20 @@ public class MenuWorkshopEditorUI
     {
         MenuWorkshopUI.open();
         close();
+    }
+
+    private static void SetAndSaveLevelSelection(LevelInfo newLevel)
+    {
+        selectedLevel = newLevel;
+        if (newLevel != null)
+        {
+            PlaySettings.editorLevelSelection = new SavedLevelSelection(newLevel);
+        }
+        else
+        {
+            PlaySettings.editorLevelSelection.Clear();
+        }
+        MenuSettings.save();
     }
 
     public void OnDestroy()
@@ -228,6 +196,7 @@ public class MenuWorkshopEditorUI
             icons.unload();
             icons = null;
         }
+        selectedLevel = null;
         Local local = Localization.read("/Menu/Workshop/MenuWorkshopEditor.dat");
         icons = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Workshop/MenuWorkshopEditor/MenuWorkshopEditor.unity3d");
         container = new SleekFullscreenBox();

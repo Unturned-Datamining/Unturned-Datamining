@@ -82,4 +82,22 @@ public class ItemChargeAsset : ItemBarricadeAsset
         }
         _explosion2 = data.ParseGuidOrLegacyId("Explosion2", out _detonationEffectGuid);
     }
+
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Charge");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Range2", range2);
+        orAddDeclaration.Append("Player_Damage", playerDamage);
+        orAddDeclaration.Append("Zombie_Damage", zombieDamage);
+        orAddDeclaration.Append("Animal_Damage", animalDamage);
+        orAddDeclaration.Append("Barricade_Damage", barricadeDamage);
+        orAddDeclaration.Append("Structure_Damage", structureDamage);
+        orAddDeclaration.Append("Vehicle_Damage", vehicleDamage);
+        orAddDeclaration.Append("Resource_Damage", resourceDamage);
+        orAddDeclaration.Append("Explosion_Launch_Speed", explosionLaunchSpeed);
+        orAddDeclaration.Append("Object_Damage", objectDamage);
+        orAddDeclaration.Append("Explosion2", explosion2);
+    }
 }

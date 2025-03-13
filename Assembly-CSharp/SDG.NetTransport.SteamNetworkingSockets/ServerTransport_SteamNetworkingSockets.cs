@@ -268,11 +268,22 @@ public class ServerTransport_SteamNetworkingSockets : TransportBase_SteamNetwork
         }
         else if (SDG.Unturned.Provider.hasRoomForNewConnection)
         {
-            bool num = SteamGameServerNetworkingSockets.SetConnectionPollGroup(callback.m_hConn, pollGroup);
-            EResult eResult = SteamGameServerNetworkingSockets.AcceptConnection(callback.m_hConn);
-            if (!num || eResult != EResult.k_EResultOK)
+            ulong steamID = callback.m_info.m_identityRemote.GetSteamID64();
+            if (steamID == 0L || SDG.Unturned.Provider.shouldNetIgnoreSteamId(new CSteamID(steamID)))
             {
-                SteamGameServerNetworkingSockets.CloseConnection(callback.m_hConn, 0, null, bEnableLinger: false);
+                if (!SteamGameServerNetworkingSockets.CloseConnection(callback.m_hConn, 1003, null, bEnableLinger: false))
+                {
+                    Log("Server failed to close connecting connection from {0} (blocked) (End Reason: {1})", IdentityToString(ref callback), 1003);
+                }
+            }
+            else
+            {
+                bool num = SteamGameServerNetworkingSockets.SetConnectionPollGroup(callback.m_hConn, pollGroup);
+                EResult eResult = SteamGameServerNetworkingSockets.AcceptConnection(callback.m_hConn);
+                if (!num || eResult != EResult.k_EResultOK)
+                {
+                    SteamGameServerNetworkingSockets.CloseConnection(callback.m_hConn, 0, null, bEnableLinger: false);
+                }
             }
         }
         else if (!SteamGameServerNetworkingSockets.CloseConnection(callback.m_hConn, 1001, null, bEnableLinger: false))

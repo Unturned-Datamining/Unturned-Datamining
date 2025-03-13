@@ -165,6 +165,34 @@ public class ItemCaliberAsset : ItemAsset
         instantiatedAttachmentName = data.GetString("Instantiated_Attachment_Name_Override", GUID.ToString("N"));
     }
 
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Caliber");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Recoil_X", recoil_x);
+        orAddDeclaration.Append("Recoil_Y", recoil_y);
+        orAddDeclaration.Append("Aiming_Recoil_Multiplier", aimingRecoilMultiplier);
+        orAddDeclaration.Append("Aim_Duration_Multiplier", aimDurationMultiplier);
+        orAddDeclaration.Append("Spread", spread);
+        orAddDeclaration.Append("Sway", sway);
+        orAddDeclaration.Append("Shake", shake);
+        orAddDeclaration.Append("Firerate", FirerateOffset);
+        orAddDeclaration.Append("Ballistic_Damage_Multiplier", ballisticDamageMultiplier);
+        orAddDeclaration.Append("Ballistic_Drop", BallisticGravityMultiplier);
+        orAddDeclaration.Append("Aiming_Movement_Speed_Multiplier", aimingMovementSpeedMultiplier);
+        orAddDeclaration.Append("Paintable", isPaintable);
+        orAddDeclaration.Append("Bipod", ShouldOnlyAffectAimWhileProne);
+        orAddDeclaration.Append("Invulnerable", CanDamageInvulernableEntities);
+        orAddDeclaration.Append("Calibers", calibers.Length);
+        for (byte b = 0; b < calibers.Length; b++)
+        {
+            CargoDeclaration cargoDeclaration = builder.AddDeclaration("Caliber_Caliber");
+            cargoDeclaration.Append("GUID", GUID);
+            cargoDeclaration.Append("Caliber", calibers[b]);
+        }
+    }
+
     protected override AudioReference GetDefaultInventoryAudio()
     {
         return new AudioReference("core.masterbundle", "Sounds/Inventory/SmallGunAttachment.asset");

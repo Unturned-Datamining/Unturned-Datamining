@@ -27,6 +27,8 @@ public class ItemClothingAsset : ItemAsset
     /// </summary>
     public AudioReference wearAudio;
 
+    internal GameObject cosmeticPreviewModelOverride;
+
     /// <summary>
     /// Overrides value of TakesPriorityOverCosmetic if <see cref="F:SDG.Unturned.ItemClothingAsset.hasPriorityOverCosmeticOverride" /> is true.
     /// </summary>
@@ -206,6 +208,27 @@ public class ItemClothingAsset : ItemAsset
         shouldDestroyClothingColliders = data.ParseBool("Destroy_Clothing_Colliders", defaultValue: true);
         hasPriorityOverCosmeticOverride = data.TryParseBool("Priority_Over_Cosmetic", out priorityOverCosmeticOverride);
         skinOverride = data.GetString("Skin_Override");
+        if (isPro && !Dedicator.IsDedicatedServer)
+        {
+            cosmeticPreviewModelOverride = bundle.load<GameObject>("CosmeticPreviewOverride");
+        }
+    }
+
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Clothing");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Armor", armor);
+        orAddDeclaration.Append("Armor_Explosion", explosionArmor);
+        orAddDeclaration.Append("Falling_Damage_Multiplier", fallingDamageMultiplier);
+        orAddDeclaration.Append("Proof_Water", proofWater);
+        orAddDeclaration.Append("Proof_Fire", proofFire);
+        orAddDeclaration.Append("Proof_Radiation", proofRadiation);
+        orAddDeclaration.Append("Prevents_Falling_Broken_Bones", preventsFallingBrokenBones);
+        orAddDeclaration.Append("Movement_Speed_Multiplier", movementSpeedMultiplier);
+        orAddDeclaration.Append("Mirror_Left_Handed_Model", shouldMirrorLeftHandedModel);
+        orAddDeclaration.Append("Priority_Over_Cosmetic", hasPriorityOverCosmeticOverride);
     }
 
     protected override AudioReference GetDefaultInventoryAudio()

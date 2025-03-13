@@ -746,7 +746,7 @@ public class ItemAsset : Asset, ISkinableAsset
             {
                 throw new NotSupportedException("Missing blueprint type");
             }
-            EBlueprintType newType = (EBlueprintType)Enum.Parse(typeof(EBlueprintType), data.GetString("Blueprint_" + b3 + "_Type"), ignoreCase: true);
+            EBlueprintType eBlueprintType = (EBlueprintType)Enum.Parse(typeof(EBlueprintType), data.GetString("Blueprint_" + b3 + "_Type"), ignoreCase: true);
             byte b4 = data.ParseUInt8("Blueprint_" + b3 + "_Supplies", 0);
             if (b4 < 1)
             {
@@ -768,12 +768,15 @@ public class ItemAsset : Asset, ISkinableAsset
                     }
                 }
                 bool newCritical = data.ContainsKey("Blueprint_" + b3 + "_Supply_" + b5 + "_Critical");
+                bool newTreatEmptyAsOne = data.ParseBool("Blueprint_" + b3 + "_Supply_" + b5 + "_AllowEmpty");
+                ECraftingInputPrioritization defaultValue3 = ((eBlueprintType != EBlueprintType.AMMO) ? ECraftingInputPrioritization.LowestQuality : ECraftingInputPrioritization.LowestAmount);
+                ECraftingInputPrioritization newPrioritization = data.ParseEnum("Blueprint_" + b3 + "_Supply_" + b5 + "_Prioritization", defaultValue3);
                 byte b6 = data.ParseUInt8("Blueprint_" + b3 + "_Supply_" + b5 + "_Amount", 0);
                 if (b6 < 1)
                 {
                     b6 = 1;
                 }
-                array[b5] = new BlueprintSupply(value2, newCritical, b6);
+                array[b5] = new BlueprintSupply(value2, newCritical, b6, newTreatEmptyAsOne, newPrioritization);
             }
             byte b7 = data.ParseUInt8("Blueprint_" + b3 + "_Outputs", 0);
             BlueprintOutput[] array2;
@@ -825,7 +828,7 @@ public class ItemAsset : Asset, ISkinableAsset
             NPCTool.readConditions(data, localization, "Blueprint_" + b3 + "_Condition_", array3, this);
             NPCRewardsList newQuestRewardsList = default(NPCRewardsList);
             newQuestRewardsList.Parse(data, localization, this, "Blueprint_" + b3 + "_Rewards", "Blueprint_" + b3 + "_Reward_");
-            Blueprint blueprint = new Blueprint(this, b3, newType, array, array2, newTool, newToolCritical, newBuild, guid, b11, newSkill, newTransferState, newWithoutAttachments, @string, array3, newQuestRewardsList);
+            Blueprint blueprint = new Blueprint(this, b3, eBlueprintType, array, array2, newTool, newToolCritical, newBuild, guid, b11, newSkill, newTransferState, newWithoutAttachments, @string, array3, newQuestRewardsList);
             blueprint.canBeVisibleWhenSearchedWithoutRequiredItems = data.ParseBool($"Blueprint_{b3}_Searchable", defaultValue: true);
             blueprints.Add(blueprint);
         }
@@ -835,7 +838,7 @@ public class ItemAsset : Asset, ISkinableAsset
             {
                 throw new NotSupportedException("Missing action type");
             }
-            EActionType newType2 = (EActionType)Enum.Parse(typeof(EActionType), data.GetString("Action_" + b12 + "_Type"), ignoreCase: true);
+            EActionType newType = (EActionType)Enum.Parse(typeof(EActionType), data.GetString("Action_" + b12 + "_Type"), ignoreCase: true);
             byte b13 = data.ParseUInt8("Action_" + b12 + "_Blueprints", 0);
             if (b13 < 1)
             {
@@ -868,7 +871,7 @@ public class ItemAsset : Asset, ISkinableAsset
             {
                 num2 = id;
             }
-            actions.Add(new Action(num2, newType2, array4, newText, newTooltip, string2));
+            actions.Add(new Action(num2, newType, array4, newText, newTooltip, string2));
         }
         if (flag)
         {

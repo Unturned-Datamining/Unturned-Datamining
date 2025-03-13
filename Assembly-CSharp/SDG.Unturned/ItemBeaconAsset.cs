@@ -24,4 +24,15 @@ public class ItemBeaconAsset : ItemBarricadeAsset
         _rewardID = data.ParseUInt16("Reward_ID", 0);
         ShouldScaleWithNumberOfParticipants = data.ParseBool("Enable_Participant_Scaling", defaultValue: true);
     }
+
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Beacon");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Wave", wave);
+        orAddDeclaration.Append("Rewards", rewards);
+        orAddDeclaration.Append("Reward_ID", rewardID);
+        orAddDeclaration.Append("Enable_Participant_Scaling", ShouldScaleWithNumberOfParticipants);
+    }
 }

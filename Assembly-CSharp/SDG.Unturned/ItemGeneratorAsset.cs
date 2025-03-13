@@ -49,4 +49,14 @@ public class ItemGeneratorAsset : ItemBarricadeAsset
         }
         _burn = data.ParseFloat("Burn");
     }
+
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Generator");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Capacity", capacity);
+        orAddDeclaration.Append("Wirerange", wirerange);
+        orAddDeclaration.Append("Burn", burn);
+    }
 }

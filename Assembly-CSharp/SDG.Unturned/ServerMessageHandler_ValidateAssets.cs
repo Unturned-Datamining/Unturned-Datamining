@@ -25,6 +25,7 @@ internal static class ServerMessageHandler_ValidateAssets
             {
                 UnturnedLog.info($"Ignoring ValidateAssets message from {transportConnection} because there is no associated player");
             }
+            Provider.IncrementBadPacketsFromConnection(transportConnection);
             return;
         }
         if (!reader.ReadBits(MAX_ASSETS.bitCount, out var value))

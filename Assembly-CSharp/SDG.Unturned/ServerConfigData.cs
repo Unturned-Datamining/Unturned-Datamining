@@ -24,6 +24,18 @@ public class ServerConfigData
     public float Join_Rate_Limit_Window_Seconds;
 
     /// <summary>
+    /// If bad packets (that *may* be legitimate) are received more than threshold times within this many seconds
+    /// of each other, reject the calling connection.
+    /// </summary>
+    public float Bad_Packet_Rate_Limit_Window_Seconds;
+
+    /// <summary>
+    /// If more than this many bad packets (that *may* be legitimate) are received within window seconds of each
+    /// other, reject the calling connection.
+    /// </summary>
+    public int Bad_Packet_Rate_Limit_Threshold;
+
+    /// <summary>
     /// If a rate-limited method is called this many times within cooldown window the client will be kicked.
     /// For example a value of 1 means the client will be kicked the first time they call the method off-cooldown. (not recommended)
     /// </summary>
@@ -136,6 +148,8 @@ public class ServerConfigData
         Timeout_Game_Seconds = 30f;
         Max_Packets_Per_Second = 50f;
         Join_Rate_Limit_Window_Seconds = 40f;
+        Bad_Packet_Rate_Limit_Window_Seconds = 2.5f;
+        Bad_Packet_Rate_Limit_Threshold = 10;
         Rate_Limit_Kick_Threshold = 10;
         Fake_Lag_Threshold_Seconds = 3f;
         Fake_Lag_Damage_Penalty_Multiplier = 0.1f;

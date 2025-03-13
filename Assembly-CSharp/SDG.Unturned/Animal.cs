@@ -209,7 +209,7 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
 
     public void askEat()
     {
-        if (isDead)
+        if (isDead || animator == null)
         {
             return;
         }
@@ -234,7 +234,7 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
 
     public void askGlance()
     {
-        if (isDead)
+        if (isDead || animator == null)
         {
             return;
         }
@@ -259,7 +259,7 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
 
     public void PlayStartleAnimation(byte animationIndex)
     {
-        if (isDead)
+        if (isDead || animator == null)
         {
             return;
         }
@@ -283,7 +283,7 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
 
     public void askAttack(byte animationIndex)
     {
-        if (isDead)
+        if (isDead || animator == null)
         {
             return;
         }
@@ -483,7 +483,7 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         }
         if (!isDead && !(currentTargetPlayer == potentialTargetPlayer))
         {
-            if (!isHunting)
+            if (!isHunting && asset.startleAnimVariantsCount > 0)
             {
                 int value = UnityEngine.Random.Range(0, asset.startleAnimVariantsCount);
                 AnimalManager.sendAnimalStartle(this, MathfEx.ClampToByte(value));
@@ -557,7 +557,7 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         }
         if (!isDead && !isStuck && !isHunting)
         {
-            if (!isFleeing)
+            if (!isFleeing && asset.startleAnimVariantsCount > 0)
             {
                 int value = UnityEngine.Random.Range(0, asset.startleAnimVariantsCount);
                 AnimalManager.sendAnimalStartle(this, MathfEx.ClampToByte(value));
@@ -651,7 +651,7 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         {
             isPlayingEat = false;
             isPlayingGlance = false;
-            animator.Stop();
+            animator?.Stop();
         }
     }
 
@@ -671,7 +671,10 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
             {
                 renderer_1.enabled = IsAlive;
             }
-            skeleton.gameObject.SetActive(IsAlive);
+            if (skeleton != null)
+            {
+                skeleton.gameObject.SetActive(IsAlive);
+            }
         }
         Collider component = GetComponent<Collider>();
         if (component != null)
@@ -720,12 +723,12 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         {
             if (isPlayingEat)
             {
-                animator.Stop();
+                animator?.Stop();
                 isPlayingEat = false;
             }
             if (isPlayingGlance)
             {
-                animator.Stop();
+                animator?.Stop();
                 isPlayingGlance = false;
             }
         }
@@ -812,12 +815,12 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
                 {
                     if (isPlayingEat)
                     {
-                        animator.Stop();
+                        animator?.Stop();
                         isPlayingEat = false;
                     }
                     if (isPlayingGlance)
                     {
-                        animator.Stop();
+                        animator?.Stop();
                         isPlayingGlance = false;
                     }
                 }
@@ -838,11 +841,11 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         }
         if ((!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer) && !isMoving && !isPlayingEat && !isPlayingGlance && !isPlayingAttack && !isPlayingStartleAnimation && Time.timeAsDouble - lastAttack > (double)attackInterval + 0.5)
         {
-            if (Time.timeAsDouble - lastEat > (double)eatDelay)
+            if (asset.eatAnimVariantsCount > 0 && Time.timeAsDouble - lastEat > (double)eatDelay)
             {
                 askEat();
             }
-            else if (Time.timeAsDouble - lastGlance > (double)glanceDelay)
+            else if (asset.glanceAnimVariantsCount > 0 && Time.timeAsDouble - lastGlance > (double)glanceDelay)
             {
                 askGlance();
             }
@@ -903,15 +906,15 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         {
             if (isRunning && hasRunAnimation)
             {
-                animator.Play("Run");
+                animator?.Play("Run");
             }
             else if (isMoving && hasWalkAnimation)
             {
-                animator.Play("Walk");
+                animator?.Play("Walk");
             }
             else if (hasIdleAnimation)
             {
-                animator.Play("Idle");
+                animator?.Play("Idle");
             }
         }
         if (Provider.isServer && health < asset.health && Time.timeAsDouble - lastRegen > (double)asset.regen)
@@ -972,7 +975,7 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
                                 }
                             }
                         }
-                        else if (Time.timeAsDouble - lastAttack > (double)attackInterval)
+                        else if (asset.attackAnimVariantsCount > 0 && Time.timeAsDouble - lastAttack > (double)attackInterval)
                         {
                             isAttacking = true;
                             int value = UnityEngine.Random.Range(0, asset.attackAnimVariantsCount);
@@ -1012,21 +1015,31 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         glanceTime = 0.5f;
         if (!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer)
         {
-            animator = base.transform.Find("Character").GetComponent<Animation>();
-            skeleton = animator.transform.Find("Skeleton");
-            if (animator.transform.Find("Model_0") != null)
+            Transform transform = base.transform.Find("Character");
+            if (transform != null)
             {
-                renderer_0 = animator.transform.Find("Model_0").GetComponent<Renderer>();
+                animator = transform.GetComponent<Animation>();
+                if (animator != null)
+                {
+                    hasIdleAnimation = animator.GetClip("Idle") != null;
+                    hasRunAnimation = animator.GetClip("Run") != null;
+                    hasWalkAnimation = animator.GetClip("Walk") != null;
+                }
+                else
+                {
+                    _asset.ReportAssetError("missing Animation component on child Character transform");
+                }
+                skeleton = transform.Find("Skeleton");
+                if (skeleton == null)
+                {
+                    _asset.ReportAssetError("missing Skeleton transform child of Character transform");
+                }
+                renderer_0 = transform.Find("Model_0")?.GetComponent<Renderer>();
+                renderer_1 = transform.Find("Model_1")?.GetComponent<Renderer>();
             }
-            if ((bool)animator.transform.Find("Model_1"))
+            else
             {
-                renderer_1 = animator.transform.Find("Model_1").GetComponent<Renderer>();
-            }
-            if (animator != null)
-            {
-                hasIdleAnimation = animator.GetClip("Idle") != null;
-                hasRunAnimation = animator.GetClip("Run") != null;
-                hasWalkAnimation = animator.GetClip("Walk") != null;
+                _asset.ReportAssetError("missing child Character transform with Animation component");
             }
         }
         if (Provider.isServer)

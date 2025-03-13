@@ -491,10 +491,6 @@ public class MenuUI : MonoBehaviour
 
     private void tickInput()
     {
-        if (MenuConfigurationControlsUI.binding != byte.MaxValue)
-        {
-            return;
-        }
         if (InputEx.GetKeyDown(KeyCode.F1))
         {
             MenuWorkshopUI.toggleIconTools();

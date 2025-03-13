@@ -75,7 +75,7 @@ public class InteractableTrap : InteractablePower
         requiresPower = itemTrapAsset.requiresPower;
         if (itemTrapAsset.damageTires)
         {
-            base.transform.parent.GetOrAddComponent<InteractableTrapDamageTires>();
+            base.transform.GetOrAddComponent<InteractableTrapDamageTires>();
         }
         if (requiresPower)
         {
@@ -110,7 +110,7 @@ public class InteractableTrap : InteractablePower
 
     internal void NotifyTrapEntered(Collider other)
     {
-        if (other.isTrigger || Time.realtimeSinceStartup - lastActive < setupDelay || (requiresPower && !base.isWired) || (base.transform.parent != null && other.transform == base.transform.parent) || Time.realtimeSinceStartup - lastTriggered < cooldown)
+        if (other.isTrigger || Time.realtimeSinceStartup - lastActive < setupDelay || (requiresPower && !base.isWired) || other.transform.IsChildOf(base.transform) || Time.realtimeSinceStartup - lastTriggered < cooldown)
         {
             return;
         }
@@ -124,7 +124,7 @@ public class InteractableTrap : InteractablePower
             if (!other.transform.CompareTag("Player") || (Provider.isPvP && (other.transform.parent == null || !other.transform.parent.CompareTag("Vehicle"))) || explosionLaunchSpeed > 0.01f)
             {
                 Vector3 position = base.transform.position;
-                ExplosionParameters parameters = new ExplosionParameters(position, range2, EDeathCause.LANDMINE, CSteamID.Nil);
+                ExplosionParameters parameters = new ExplosionParameters(position, range2, EDeathCause.LANDMINE, GetKillerId());
                 parameters.playerDamage = playerDamage;
                 parameters.zombieDamage = zombieDamage;
                 parameters.animalDamage = animalDamage;
@@ -156,13 +156,13 @@ public class InteractableTrap : InteractablePower
             Player player = DamageTool.getPlayer(other.transform);
             if (player != null)
             {
-                DamageTool.damage(player, EDeathCause.SHRED, ELimb.SPINE, CSteamID.Nil, Vector3.up, playerDamage, 1f, out var _, applyGlobalArmorMultiplier: true, trackKill: true);
+                DamageTool.damage(player, EDeathCause.SHRED, ELimb.SPINE, GetKillerId(), Vector3.up, playerDamage, 1f, out var _, applyGlobalArmorMultiplier: true, trackKill: true);
                 if (isBroken)
                 {
                     player.life.breakLegs();
                 }
                 DamageTool.ServerSpawnLegacyImpact(base.transform.position + Vector3.up, Vector3.down, "Flesh", null, Provider.GatherClientConnectionsWithinSphere(base.transform.position, EffectManager.SMALL));
-                BarricadeManager.damage(base.transform.parent, 5f, 1f, armor: false, (player.channel?.owner?.playerID.steamID).GetValueOrDefault(), EDamageOrigin.Trap_Wear_And_Tear);
+                BarricadeManager.damage(base.transform, 5f, 1f, armor: false, (player.channel?.owner?.playerID.steamID).GetValueOrDefault(), EDamageOrigin.Trap_Wear_And_Tear);
             }
         }
         else
@@ -178,7 +178,7 @@ public class InteractableTrap : InteractablePower
                 parameters3.instigator = this;
                 DamageTool.damageZombie(parameters3, out var _, out var _);
                 DamageTool.ServerSpawnLegacyImpact(base.transform.position + Vector3.up, Vector3.down, zombie.isRadioactive ? "Alien" : "Flesh", null, Provider.GatherClientConnectionsWithinSphere(base.transform.position, EffectManager.SMALL));
-                BarricadeManager.damage(base.transform.parent, zombie.isHyper ? 10f : 5f, 1f, armor: false, default(CSteamID), EDamageOrigin.Trap_Wear_And_Tear);
+                BarricadeManager.damage(base.transform, zombie.isHyper ? 10f : 5f, 1f, armor: false, default(CSteamID), EDamageOrigin.Trap_Wear_And_Tear);
                 return;
             }
             Animal animal = DamageTool.getAnimal(other.transform);
@@ -188,8 +188,26 @@ public class InteractableTrap : InteractablePower
                 parameters4.instigator = this;
                 DamageTool.damageAnimal(parameters4, out var _, out var _);
                 DamageTool.ServerSpawnLegacyImpact(base.transform.position + Vector3.up, Vector3.down, "Flesh", null, Provider.GatherClientConnectionsWithinSphere(base.transform.position, EffectManager.SMALL));
-                BarricadeManager.damage(base.transform.parent, 5f, 1f, armor: false, default(CSteamID), EDamageOrigin.Trap_Wear_And_Tear);
+                BarricadeManager.damage(base.transform, 5f, 1f, armor: false, default(CSteamID), EDamageOrigin.Trap_Wear_And_Tear);
             }
         }
+    }
+
+    private CSteamID GetKillerId()
+    {
+        Transform barricadeRootTransform = DamageTool.getBarricadeRootTransform(base.transform);
+        if (barricadeRootTransform != null)
+        {
+            BarricadeDrop barricadeDrop = BarricadeDrop.FindByRootFast(barricadeRootTransform);
+            if (barricadeDrop != null)
+            {
+                BarricadeData serversideData = barricadeDrop.GetServersideData();
+                if (serversideData != null)
+                {
+                    return new CSteamID(serversideData.owner);
+                }
+            }
+        }
+        return CSteamID.Nil;
     }
 }

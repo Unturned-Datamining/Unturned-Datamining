@@ -20,4 +20,12 @@ public class ItemArrestStartAsset : ItemAsset
         _use = bundle.load<AudioClip>("Use");
         _strength = data.ParseUInt16("Strength", 0);
     }
+
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("ArrestStart");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Strength", strength);
+    }
 }

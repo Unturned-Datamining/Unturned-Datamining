@@ -549,10 +549,20 @@ public class Level : MonoBehaviour
         }
     }
 
+    [Obsolete]
     public static void remove(string name)
     {
         ReadWrite.deleteFolder("/Maps/" + name);
         broadcastLevelsRefreshed();
+    }
+
+    public static void Remove(LevelInfo level)
+    {
+        if (!level.isFromWorkshop)
+        {
+            ReadWrite.deleteFolder(level.path, usePath: false);
+            broadcastLevelsRefreshed();
+        }
     }
 
     public static void save()
@@ -707,6 +717,22 @@ public class Level : MonoBehaviour
         foreach (LevelInfo knownLevel in knownLevels)
         {
             if (string.Equals(name, knownLevel.name, StringComparison.OrdinalIgnoreCase))
+            {
+                return knownLevel;
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Find level matching both name AND workshop file ID (can be zero).
+    /// </summary>
+    internal static LevelInfo FindLevel(SavedLevelSelection savedLevelSelection)
+    {
+        ScanKnownLevels();
+        foreach (LevelInfo knownLevel in knownLevels)
+        {
+            if (knownLevel.publishedFileId == savedLevelSelection.workshopFileId && string.Equals(savedLevelSelection.name, knownLevel.name, StringComparison.OrdinalIgnoreCase))
             {
                 return knownLevel;
             }

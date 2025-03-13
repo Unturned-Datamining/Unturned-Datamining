@@ -1330,7 +1330,7 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
 
     private void OnDestroy()
     {
-        if (!isExpectingDestroy && Dedicator.IsDedicatedServer)
+        if (!isExpectingDestroy && !Provider.isApplicationQuitting && Dedicator.IsDedicatedServer)
         {
             UnturnedLog.error("FATAL ERROR! Player game object destroyed outside of Provider.removePlayer!");
             if (channel != null)

@@ -212,4 +212,33 @@ public class ItemMagazineAsset : ItemCaliberAsset
         _deleteEmpty = data.ContainsKey("Delete_Empty");
         shouldFillAfterDetach = data.ParseBool("Should_Fill_After_Detach");
     }
+
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Magazine");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Pellets", pellets);
+        orAddDeclaration.Append("Stuck", stuck);
+        orAddDeclaration.Append("Projectile_Damage_Multiplier", projectileDamageMultiplier);
+        orAddDeclaration.Append("Projectile_Blast_Radius_Multiplier", projectileBlastRadiusMultiplier);
+        orAddDeclaration.Append("Projectile_Launch_Force_Multiplier", projectileLaunchForceMultiplier);
+        orAddDeclaration.Append("Range", range);
+        orAddDeclaration.Append("Player_Damage", playerDamage);
+        orAddDeclaration.Append("Zombie_Damage", zombieDamage);
+        orAddDeclaration.Append("Animal_Damage", animalDamage);
+        orAddDeclaration.Append("Barricade_Damage", barricadeDamage);
+        orAddDeclaration.Append("Structure_Damage", structureDamage);
+        orAddDeclaration.Append("Vehicle_Damage", vehicleDamage);
+        orAddDeclaration.Append("Resource_Damage", resourceDamage);
+        orAddDeclaration.Append("Explosion_Launch_Speed", explosionLaunchSpeed);
+        orAddDeclaration.Append("Explosion", explosion);
+        orAddDeclaration.Append("Object_Damage", objectDamage);
+        orAddDeclaration.Append("Tracer", tracer);
+        orAddDeclaration.Append("Impact", impact);
+        orAddDeclaration.Append("Speed", speed);
+        orAddDeclaration.Append("Explosive", isExplosive);
+        orAddDeclaration.Append("Delete_Empty", deleteEmpty);
+        orAddDeclaration.Append("Should_Fill_After_Detach", shouldFillAfterDetach);
+    }
 }

@@ -28,4 +28,13 @@ public class ItemBagAsset : ItemClothingAsset
             _height = data.ParseUInt8("Height", 0);
         }
     }
+
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Bag");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Width", width);
+        orAddDeclaration.Append("Height", height);
+    }
 }

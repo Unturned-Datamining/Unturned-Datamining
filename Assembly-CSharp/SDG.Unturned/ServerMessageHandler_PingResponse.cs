@@ -19,9 +19,13 @@ internal static class ServerMessageHandler_PingResponse
                 steamPlayer.timeLastPingRequestWasSentToClient = -1f;
             }
         }
-        else if ((bool)NetMessages.shouldLogBadMessages)
+        else
         {
-            UnturnedLog.info($"Ignoring PingResponse message from {transportConnection} because there is no associated player");
+            if ((bool)NetMessages.shouldLogBadMessages)
+            {
+                UnturnedLog.info($"Ignoring PingResponse message from {transportConnection} because there is no associated player");
+            }
+            Provider.IncrementBadPacketsFromConnection(transportConnection);
         }
     }
 }

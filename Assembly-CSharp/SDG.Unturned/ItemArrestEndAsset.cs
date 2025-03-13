@@ -27,4 +27,12 @@ public class ItemArrestEndAsset : ItemAsset
         _use = bundle.load<AudioClip>("Use");
         _recover = data.ParseUInt16("Recover", 0);
     }
+
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("ArrestEnd");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Recover", recover);
+    }
 }

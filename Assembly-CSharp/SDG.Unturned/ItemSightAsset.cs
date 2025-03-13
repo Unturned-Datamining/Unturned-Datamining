@@ -141,4 +141,18 @@ public class ItemSightAsset : ItemCaliberAsset
         _isHolographic = data.ContainsKey("Holographic");
         distanceMarkers = data.ParseListOfStructs<DistanceMarker>("DistanceMarkers");
     }
+
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Sight");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Vision", vision);
+        orAddDeclaration.Append("Nightvision_Color", nightvisionColor);
+        orAddDeclaration.Append("Nightvision_Fog_Intensity", nightvisionFogIntensity);
+        orAddDeclaration.Append("Zoom", zoom);
+        orAddDeclaration.Append("ThirdPerson_Zoom", thirdPersonZoomFactor);
+        orAddDeclaration.Append("Zoom_Using_Eyes", shouldZoomUsingEyes);
+        orAddDeclaration.Append("Holographic", isHolographic);
+    }
 }

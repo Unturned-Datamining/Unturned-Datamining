@@ -387,7 +387,7 @@ public class PlayerUI : MonoBehaviour
                 float num = 0f;
                 if (interactableFarm.planted != 0 && Provider.time > interactableFarm.planted)
                 {
-                    num = (float)Provider.time - (float)interactableFarm.planted;
+                    num = Provider.time - interactableFarm.planted;
                 }
                 messageProgress_0.state = num / (float)interactableFarm.growth;
                 messageIcon_0.Texture = PlayerLifeUI.icons.load<Texture2D>("Grow");
@@ -1556,10 +1556,6 @@ public class PlayerUI : MonoBehaviour
     private void tickInput()
     {
         inputWantsCustomModal = false;
-        if (MenuConfigurationControlsUI.binding != byte.MaxValue)
-        {
-            return;
-        }
         if ((InputEx.GetKeyDown(ControlsSettings.left) || InputEx.GetKeyDown(ControlsSettings.up) || InputEx.GetKeyDown(ControlsSettings.right) || InputEx.GetKeyDown(ControlsSettings.down)) && PlayerDashboardUI.active)
         {
             PlayerDashboardUI.close();

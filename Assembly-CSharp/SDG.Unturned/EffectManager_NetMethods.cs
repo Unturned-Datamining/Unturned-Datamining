@@ -212,19 +212,19 @@ public static class EffectManager_NetMethods
         writer.WriteQuaternion(rotation);
     }
 
-    [NetInvokableGeneratedMethod("ReceiveUIEffect", ENetInvokableGeneratedMethodPurpose.Read)]
-    public static void ReceiveUIEffect_Read(in ClientInvocationContext context)
+    [NetInvokableGeneratedMethod("ReceiveUIEffect0Args", ENetInvokableGeneratedMethodPurpose.Read)]
+    public static void ReceiveUIEffect0Args_Read(in ClientInvocationContext context)
     {
         NetPakReader reader = context.reader;
-        reader.ReadUInt16(out var value);
+        reader.ReadGuid(out var value);
         reader.ReadInt16(out var value2);
-        EffectManager.ReceiveUIEffect(value, value2);
+        EffectManager.ReceiveUIEffect0Args(value, value2);
     }
 
-    [NetInvokableGeneratedMethod("ReceiveUIEffect", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveUIEffect_Write(NetPakWriter writer, ushort id, short key)
+    [NetInvokableGeneratedMethod("ReceiveUIEffect0Args", ENetInvokableGeneratedMethodPurpose.Write)]
+    public static void ReceiveUIEffect0Args_Write(NetPakWriter writer, Guid assetGuid, short key)
     {
-        writer.WriteUInt16(id);
+        writer.WriteGuid(assetGuid);
         writer.WriteInt16(key);
     }
 
@@ -232,16 +232,16 @@ public static class EffectManager_NetMethods
     public static void ReceiveUIEffect1Arg_Read(in ClientInvocationContext context)
     {
         NetPakReader reader = context.reader;
-        reader.ReadUInt16(out var value);
+        reader.ReadGuid(out var value);
         reader.ReadInt16(out var value2);
         reader.ReadString(out var value3);
         EffectManager.ReceiveUIEffect1Arg(value, value2, value3);
     }
 
     [NetInvokableGeneratedMethod("ReceiveUIEffect1Arg", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveUIEffect1Arg_Write(NetPakWriter writer, ushort id, short key, string arg0)
+    public static void ReceiveUIEffect1Arg_Write(NetPakWriter writer, Guid assetGuid, short key, string arg0)
     {
-        writer.WriteUInt16(id);
+        writer.WriteGuid(assetGuid);
         writer.WriteInt16(key);
         writer.WriteString(arg0);
     }
@@ -250,7 +250,7 @@ public static class EffectManager_NetMethods
     public static void ReceiveUIEffect2Args_Read(in ClientInvocationContext context)
     {
         NetPakReader reader = context.reader;
-        reader.ReadUInt16(out var value);
+        reader.ReadGuid(out var value);
         reader.ReadInt16(out var value2);
         reader.ReadString(out var value3);
         reader.ReadString(out var value4);
@@ -258,9 +258,9 @@ public static class EffectManager_NetMethods
     }
 
     [NetInvokableGeneratedMethod("ReceiveUIEffect2Args", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveUIEffect2Args_Write(NetPakWriter writer, ushort id, short key, string arg0, string arg1)
+    public static void ReceiveUIEffect2Args_Write(NetPakWriter writer, Guid assetGuid, short key, string arg0, string arg1)
     {
-        writer.WriteUInt16(id);
+        writer.WriteGuid(assetGuid);
         writer.WriteInt16(key);
         writer.WriteString(arg0);
         writer.WriteString(arg1);
@@ -270,7 +270,7 @@ public static class EffectManager_NetMethods
     public static void ReceiveUIEffect3Args_Read(in ClientInvocationContext context)
     {
         NetPakReader reader = context.reader;
-        reader.ReadUInt16(out var value);
+        reader.ReadGuid(out var value);
         reader.ReadInt16(out var value2);
         reader.ReadString(out var value3);
         reader.ReadString(out var value4);
@@ -279,9 +279,9 @@ public static class EffectManager_NetMethods
     }
 
     [NetInvokableGeneratedMethod("ReceiveUIEffect3Args", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveUIEffect3Args_Write(NetPakWriter writer, ushort id, short key, string arg0, string arg1, string arg2)
+    public static void ReceiveUIEffect3Args_Write(NetPakWriter writer, Guid assetGuid, short key, string arg0, string arg1, string arg2)
     {
-        writer.WriteUInt16(id);
+        writer.WriteGuid(assetGuid);
         writer.WriteInt16(key);
         writer.WriteString(arg0);
         writer.WriteString(arg1);
@@ -292,7 +292,7 @@ public static class EffectManager_NetMethods
     public static void ReceiveUIEffect4Args_Read(in ClientInvocationContext context)
     {
         NetPakReader reader = context.reader;
-        reader.ReadUInt16(out var value);
+        reader.ReadGuid(out var value);
         reader.ReadInt16(out var value2);
         reader.ReadString(out var value3);
         reader.ReadString(out var value4);
@@ -302,9 +302,9 @@ public static class EffectManager_NetMethods
     }
 
     [NetInvokableGeneratedMethod("ReceiveUIEffect4Args", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveUIEffect4Args_Write(NetPakWriter writer, ushort id, short key, string arg0, string arg1, string arg2, string arg3)
+    public static void ReceiveUIEffect4Args_Write(NetPakWriter writer, Guid assetGuid, short key, string arg0, string arg1, string arg2, string arg3)
     {
-        writer.WriteUInt16(id);
+        writer.WriteGuid(assetGuid);
         writer.WriteInt16(key);
         writer.WriteString(arg0);
         writer.WriteString(arg1);

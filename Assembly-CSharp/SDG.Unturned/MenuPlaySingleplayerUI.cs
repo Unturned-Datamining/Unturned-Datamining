@@ -64,6 +64,8 @@ public class MenuPlaySingleplayerUI
     /// </summary>
     private static int featuredItemDefId;
 
+    private static LevelInfo selectedLevel;
+
     private bool hasCreatedFeaturedMapLabel;
 
     public static void open()
@@ -86,29 +88,24 @@ public class MenuPlaySingleplayerUI
         }
     }
 
-    private static void updateSelection()
+    private static void SyncSelectedLevelDetails()
     {
-        if (string.IsNullOrEmpty(PlaySettings.singleplayerMap))
+        if (previewImage.Texture != null && previewImage.ShouldDestroyTexture)
         {
-            UnturnedLog.warn("Singleplayer map selection empty");
+            UnityEngine.Object.Destroy(previewImage.Texture);
+            previewImage.Texture = null;
+        }
+        if (selectedLevel == null)
+        {
+            descriptionBox.Text = string.Empty;
+            selectedBox.Text = string.Empty;
+            creditsBox.IsVisible = false;
+            itemButton.IsVisible = false;
+            feedbackButton.IsVisible = false;
+            newsButton.IsVisible = false;
             return;
         }
-        LevelInfo levelInfo = null;
-        LevelInfo[] array = levels;
-        foreach (LevelInfo levelInfo2 in array)
-        {
-            if (string.Equals(levelInfo2.name, PlaySettings.singleplayerMap, StringComparison.InvariantCultureIgnoreCase))
-            {
-                levelInfo = levelInfo2;
-                break;
-            }
-        }
-        if (levelInfo == null)
-        {
-            UnturnedLog.warn("Unable to find singleplayer selected map '{0}'", PlaySettings.singleplayerMap);
-            return;
-        }
-        Local local = levelInfo.getLocalization();
+        Local local = selectedLevel.getLocalization();
         if (local != null)
         {
             string desc = local.format("Description");
@@ -122,34 +119,29 @@ public class MenuPlaySingleplayerUI
         }
         else
         {
-            selectedBox.Text = PlaySettings.singleplayerMap;
+            selectedBox.Text = selectedLevel.name;
         }
-        if (previewImage.Texture != null && previewImage.ShouldDestroyTexture)
-        {
-            UnityEngine.Object.Destroy(previewImage.Texture);
-            previewImage.Texture = null;
-        }
-        string previewImageFilePath = levelInfo.GetPreviewImageFilePath();
+        string previewImageFilePath = selectedLevel.GetPreviewImageFilePath();
         if (!string.IsNullOrEmpty(previewImageFilePath))
         {
             previewImage.Texture = ReadWrite.readTextureFromFile(previewImageFilePath);
         }
         float num = creditsBox.PositionOffset_Y;
-        if (levelInfo.configData.Creators.Length != 0 || levelInfo.configData.Collaborators.Length != 0 || levelInfo.configData.Thanks.Length != 0)
+        if (selectedLevel.configData.Creators.Length != 0 || selectedLevel.configData.Collaborators.Length != 0 || selectedLevel.configData.Thanks.Length != 0)
         {
             int num2 = 0;
             string text = string.Empty;
-            if (levelInfo.configData.Creators.Length != 0)
+            if (selectedLevel.configData.Creators.Length != 0)
             {
                 text += localization.format("Creators");
                 num2 += 20;
-                for (int j = 0; j < levelInfo.configData.Creators.Length; j++)
+                for (int i = 0; i < selectedLevel.configData.Creators.Length; i++)
                 {
-                    text = text + "\n" + levelInfo.configData.Creators[j];
+                    text = text + "\n" + selectedLevel.configData.Creators[i];
                     num2 += 20;
                 }
             }
-            if (levelInfo.configData.Collaborators.Length != 0)
+            if (selectedLevel.configData.Collaborators.Length != 0)
             {
                 if (text.Length > 0)
                 {
@@ -158,13 +150,13 @@ public class MenuPlaySingleplayerUI
                 }
                 text += localization.format("Collaborators");
                 num2 += 20;
-                for (int k = 0; k < levelInfo.configData.Collaborators.Length; k++)
+                for (int j = 0; j < selectedLevel.configData.Collaborators.Length; j++)
                 {
-                    text = text + "\n" + levelInfo.configData.Collaborators[k];
+                    text = text + "\n" + selectedLevel.configData.Collaborators[j];
                     num2 += 20;
                 }
             }
-            if (levelInfo.configData.Thanks.Length != 0)
+            if (selectedLevel.configData.Thanks.Length != 0)
             {
                 if (text.Length > 0)
                 {
@@ -173,9 +165,9 @@ public class MenuPlaySingleplayerUI
                 }
                 text += localization.format("Thanks");
                 num2 += 20;
-                for (int l = 0; l < levelInfo.configData.Thanks.Length; l++)
+                for (int k = 0; k < selectedLevel.configData.Thanks.Length; k++)
                 {
-                    text = text + "\n" + levelInfo.configData.Thanks[l];
+                    text = text + "\n" + selectedLevel.configData.Thanks[k];
                     num2 += 20;
                 }
             }
@@ -190,13 +182,13 @@ public class MenuPlaySingleplayerUI
             creditsBox.IsVisible = false;
         }
         List<int> list = new List<int>(4);
-        if (levelInfo.configData.Item > 0 && !Provider.provider.economyService.isItemHiddenByCountryRestrictions(levelInfo.configData.Item))
+        if (selectedLevel.configData.Item > 0 && !Provider.provider.economyService.isItemHiddenByCountryRestrictions(selectedLevel.configData.Item))
         {
-            list.Add(levelInfo.configData.Item);
+            list.Add(selectedLevel.configData.Item);
         }
-        if (levelInfo.configData.Associated_Stockpile_Items.Length != 0)
+        if (selectedLevel.configData.Associated_Stockpile_Items.Length != 0)
         {
-            int[] associated_Stockpile_Items = levelInfo.configData.Associated_Stockpile_Items;
+            int[] associated_Stockpile_Items = selectedLevel.configData.Associated_Stockpile_Items;
             foreach (int num3 in associated_Stockpile_Items)
             {
                 if (num3 > 0 && !Provider.provider.economyService.isItemHiddenByCountryRestrictions(num3))
@@ -218,7 +210,7 @@ public class MenuPlaySingleplayerUI
         {
             itemButton.IsVisible = false;
         }
-        string text2 = levelInfo.feedbackUrl;
+        string text2 = selectedLevel.feedbackUrl;
         if (!string.IsNullOrEmpty(text2) && !WebUtils.CanParseThirdPartyUrl(text2))
         {
             UnturnedLog.warn("Ignoring potentially unsafe level feedback url {0}", text2);
@@ -235,7 +227,7 @@ public class MenuPlaySingleplayerUI
             num += feedbackButton.SizeOffset_Y + 10f;
         }
         MainMenuWorkshopFeaturedLiveConfig featured = LiveConfig.Get().mainMenuWorkshop.featured;
-        if (featured.IsNowFeaturedTimeOrBypassed() && featured.IsFeatured(levelInfo.publishedFileId) && !string.IsNullOrEmpty(featured.linkURL))
+        if (featured.IsNowFeaturedTimeOrBypassed() && featured.IsFeatured(selectedLevel.publishedFileId) && !string.IsNullOrEmpty(featured.linkURL))
         {
             newsButton.Text = featured.linkText;
             newsButton.PositionOffset_Y = num;
@@ -250,19 +242,15 @@ public class MenuPlaySingleplayerUI
 
     private static void onClickedLevel(SleekLevel level, byte index)
     {
-        if (index < levels.Length && levels[index] != null)
-        {
-            PlaySettings.singleplayerMap = levels[index].name;
-            updateSelection();
-        }
+        SetAndSaveLevelSelection(level.level);
+        SyncSelectedLevelDetails();
     }
 
     private static void onClickedPlayButton(ISleekElement button)
     {
-        if (!string.IsNullOrEmpty(PlaySettings.singleplayerMap))
+        if (selectedLevel != null)
         {
-            Provider.map = PlaySettings.singleplayerMap;
-            MenuSettings.save();
+            Provider.map = selectedLevel.name;
             Provider.singleplayer(PlaySettings.singleplayerMode, PlaySettings.singleplayerCheats);
         }
     }
@@ -311,7 +299,7 @@ public class MenuPlaySingleplayerUI
 
     private static void onClickedConfigButton(ISleekElement button)
     {
-        if (PlaySettings.singleplayerMap != null && PlaySettings.singleplayerMap.Length != 0)
+        if (selectedLevel != null)
         {
             MenuPlayConfigUI.open();
             close();
@@ -320,24 +308,24 @@ public class MenuPlaySingleplayerUI
 
     private static void onClickedBrowseServersButton(ISleekElement button)
     {
-        if (!string.IsNullOrEmpty(PlaySettings.singleplayerMap))
+        if (selectedLevel != null)
         {
-            MenuPlayServersUI.serverListFiltersUI.OpenForMap(PlaySettings.singleplayerMap);
+            MenuPlayServersUI.serverListFiltersUI.OpenForMap(selectedLevel.name);
             close();
         }
     }
 
     private static void onClickedResetButton(SleekButtonIconConfirm button)
     {
-        if (PlaySettings.singleplayerMap != null && PlaySettings.singleplayerMap.Length != 0)
+        if (selectedLevel != null)
         {
-            if (ReadWrite.folderExists("/Worlds/Singleplayer_" + Characters.selected + "/Level/" + PlaySettings.singleplayerMap))
+            if (ReadWrite.folderExists("/Worlds/Singleplayer_" + Characters.selected + "/Level/" + selectedLevel.name))
             {
-                ReadWrite.deleteFolder("/Worlds/Singleplayer_" + Characters.selected + "/Level/" + PlaySettings.singleplayerMap);
+                ReadWrite.deleteFolder("/Worlds/Singleplayer_" + Characters.selected + "/Level/" + selectedLevel.name);
             }
-            if (ReadWrite.folderExists("/Worlds/Singleplayer_" + Characters.selected + "/Players/" + Provider.user.ToString() + "_" + Characters.selected + "/" + PlaySettings.singleplayerMap))
+            if (ReadWrite.folderExists("/Worlds/Singleplayer_" + Characters.selected + "/Players/" + Provider.user.ToString() + "_" + Characters.selected + "/" + selectedLevel.name))
             {
-                ReadWrite.deleteFolder("/Worlds/Singleplayer_" + Characters.selected + "/Players/" + Provider.user.ToString() + "_" + Characters.selected + "/" + PlaySettings.singleplayerMap);
+                ReadWrite.deleteFolder("/Worlds/Singleplayer_" + Characters.selected + "/Players/" + Provider.user.ToString() + "_" + Characters.selected + "/" + selectedLevel.name);
             }
         }
     }
@@ -355,7 +343,6 @@ public class MenuPlaySingleplayerUI
         }
         levelScrollBox.RemoveAllChildren();
         levels = Level.getLevels(PlaySettings.singleplayerCategory);
-        bool flag = false;
         int num = 0;
         levelButtons = new SleekLevel[levels.Length];
         for (int i = 0; i < levels.Length; i++)
@@ -368,21 +355,14 @@ public class MenuPlaySingleplayerUI
                 levelScrollBox.AddChild(sleekLevel);
                 num += 110;
                 levelButtons[i] = sleekLevel;
-                if (!flag && string.Equals(levels[i].name, PlaySettings.singleplayerMap, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    flag = true;
-                }
             }
         }
-        if (levels.Length == 0)
+        selectedLevel = Level.FindLevel(PlaySettings.singleplayerLevelSelection);
+        if (selectedLevel == null && levels.Length != 0)
         {
-            PlaySettings.singleplayerMap = "";
+            SetAndSaveLevelSelection(levels[0]);
         }
-        else if (!flag || PlaySettings.singleplayerMap == null || PlaySettings.singleplayerMap.Length == 0)
-        {
-            PlaySettings.singleplayerMap = levels[0].name;
-        }
-        updateSelection();
+        SyncSelectedLevelDetails();
         if (PlaySettings.singleplayerCategory == ESingleplayerMapCategory.CURATED)
         {
             foreach (CuratedMapLink curated_Map_Link in Provider.statusData.Maps.Curated_Map_Links)
@@ -418,7 +398,7 @@ public class MenuPlaySingleplayerUI
 
     private static void onClickedItemButton(ISleekElement button)
     {
-        if (PlaySettings.singleplayerMap != null && PlaySettings.singleplayerMap.Length != 0 && Level.getLevel(PlaySettings.singleplayerMap) != null && featuredItemDefId > 0)
+        if (featuredItemDefId > 0)
         {
             ItemStore.Get().ViewItem(featuredItemDefId);
         }
@@ -426,19 +406,14 @@ public class MenuPlaySingleplayerUI
 
     private static void onClickedFeedbackButton(ISleekElement button)
     {
-        if (PlaySettings.singleplayerMap == null || PlaySettings.singleplayerMap.Length == 0)
+        if (selectedLevel != null)
         {
-            return;
-        }
-        LevelInfo level = Level.getLevel(PlaySettings.singleplayerMap);
-        if (level != null)
-        {
-            if (WebUtils.ParseThirdPartyUrl(level.feedbackUrl, out var result))
+            if (WebUtils.ParseThirdPartyUrl(selectedLevel.feedbackUrl, out var result))
             {
                 Provider.provider.browserService.open(result);
                 return;
             }
-            UnturnedLog.warn("Ignoring potentially unsafe level feedback url {0}", level.feedbackUrl);
+            UnturnedLog.warn("Ignoring potentially unsafe level feedback url {0}", selectedLevel.feedbackUrl);
         }
     }
 
@@ -452,6 +427,20 @@ public class MenuPlaySingleplayerUI
     {
         MenuPlayUI.open();
         close();
+    }
+
+    private static void SetAndSaveLevelSelection(LevelInfo newLevel)
+    {
+        selectedLevel = newLevel;
+        if (newLevel != null)
+        {
+            PlaySettings.singleplayerLevelSelection = new SavedLevelSelection(newLevel);
+        }
+        else
+        {
+            PlaySettings.singleplayerLevelSelection.Clear();
+        }
+        MenuSettings.save();
     }
 
     private void OnLiveConfigRefreshed()
@@ -478,6 +467,7 @@ public class MenuPlaySingleplayerUI
     {
         localization = Localization.read("/Menu/Play/MenuPlaySingleplayer.dat");
         Bundle bundle = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Play/MenuPlaySingleplayer/MenuPlaySingleplayer.unity3d");
+        selectedLevel = null;
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;

@@ -233,6 +233,30 @@ public class ItemStructureAsset : ItemPlaceableAsset
         terrainTestHeight = data.ParseFloat("Terrain_Test_Height", 10f);
     }
 
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Structure");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Construct", construct);
+        orAddDeclaration.Append("Health", health);
+        orAddDeclaration.Append("Range", range);
+        orAddDeclaration.Append("Explosion", explosion);
+        orAddDeclaration.Append("Can_Be_Damaged", canBeDamaged);
+        orAddDeclaration.Append("Eligible_For_Pooling", eligibleForPooling);
+        orAddDeclaration.Append("Requires_Pillars", requiresPillars);
+        orAddDeclaration.Append("Vulnerable", isVulnerable);
+        orAddDeclaration.Append("Unrepairable", !isRepairable);
+        orAddDeclaration.Append("Proof_Explosion", proofExplosion);
+        orAddDeclaration.Append("Unpickupable", isUnpickupable);
+        orAddDeclaration.Append("Unsalvageable", !isSalvageable);
+        orAddDeclaration.Append("Salvage_Duration_Multiplier", salvageDurationMultiplier);
+        orAddDeclaration.Append("Unsaveable", !isSaveable);
+        orAddDeclaration.Append("Armor_Tier", armorTier);
+        orAddDeclaration.Append("Foliage_Cut_Radius", foliageCutRadius);
+        orAddDeclaration.Append("Terrain_Test_Height", terrainTestHeight);
+    }
+
     protected override AudioReference GetDefaultInventoryAudio()
     {
         if (name.Contains("Metal", StringComparison.InvariantCultureIgnoreCase))

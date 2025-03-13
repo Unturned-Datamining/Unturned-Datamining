@@ -14,4 +14,13 @@ public class ItemGearAsset : ItemClothingAsset
         base.beardVisible = data.ContainsKey("Beard");
         hairOverride = data.GetString("Hair_Override");
     }
+
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Gear");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Hair", base.hairVisible);
+        orAddDeclaration.Append("Beard", base.beardVisible);
+    }
 }

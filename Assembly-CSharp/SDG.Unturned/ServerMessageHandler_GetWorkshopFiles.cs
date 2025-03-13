@@ -44,6 +44,7 @@ internal static class ServerMessageHandler_GetWorkshopFiles
                     {
                         UnturnedLog.info($"Ignoring GetWorkshopFiles message from {transportConnection} because they requested recently");
                     }
+                    Provider.IncrementBadPacketsFromConnection(transportConnection);
                     return;
                 }
                 flag = true;

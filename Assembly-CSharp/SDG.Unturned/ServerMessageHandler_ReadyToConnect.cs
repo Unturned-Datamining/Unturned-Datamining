@@ -14,36 +14,9 @@ namespace SDG.Unturned;
 
 internal static class ServerMessageHandler_ReadyToConnect
 {
-    private struct AddressRateLimitingEntry
-    {
-        public uint address;
-
-        public int counter;
-
-        public double realtime;
-    }
-
-    private struct SteamIdRateLimitingEntry
-    {
-        public CSteamID steamId;
-
-        public int counter;
-
-        public double realtime;
-    }
-
-    private enum ERateLimitingResult
-    {
-        NOT_IN_LIST,
-        HIT_RATE_LIMIT,
-        WITHIN_RATE_LIMIT
-    }
-
     private static List<ulong> pendingPackageSkins = new List<ulong>();
 
-    private static List<AddressRateLimitingEntry> addressRateLimitingLog = new List<AddressRateLimitingEntry>();
-
-    private static List<SteamIdRateLimitingEntry> steamIdRateLimitingLog = new List<SteamIdRateLimitingEntry>();
+    internal static TransportConnectionRateLimiter joinRateLimiter = new TransportConnectionRateLimiter();
 
     [Conditional("LOG_CONNECT_ARGS")]
     private static void LogRead(string key, object value)
@@ -124,7 +97,7 @@ internal static class ServerMessageHandler_ReadyToConnect
             Provider.reject(transportConnection, ESteamRejection.STEAM_ID_MISMATCH);
             return;
         }
-        if (IsBlockedBySteamIdRateLimiting(value30))
+        if (joinRateLimiter.IsBlockedBySteamIdRateLimiting(value30))
         {
             Provider.reject(transportConnection, ESteamRejection.CONNECT_RATE_LIMITING);
             return;
@@ -248,7 +221,7 @@ internal static class ServerMessageHandler_ReadyToConnect
             Provider.notifyBannedInternal(transportConnection, banReason, banRemainingDuration);
             return;
         }
-        if (flag && !Provider.configData.Server.Use_FakeIP && IsBlockedByAddressRateLimiting(address))
+        if (flag && !Provider.configData.Server.Use_FakeIP && joinRateLimiter.IsBlockedByAddressRateLimiting(address))
         {
             Provider.reject(transportConnection, ESteamRejection.CONNECT_RATE_LIMITING);
             return;
@@ -408,6 +381,7 @@ internal static class ServerMessageHandler_ReadyToConnect
             Provider.pending.Add(steamPending);
             flag7 = queuePosition == 0;
         }
+        Provider._transportConnectionToPendingPlayerMap.Add(transportConnection, steamPending);
         UnturnedLog.info($"Added {steamPlayerID} to queue position {queuePosition} (shouldVerify: {flag7})");
         steamPending.lastNotifiedQueuePosition = queuePosition;
         NetMessages.SendMessageToClient(EClientMessage.QueuePositionChanged, ENetReliability.Reliable, transportConnection, delegate(NetPakWriter writer)
@@ -453,70 +427,6 @@ internal static class ServerMessageHandler_ReadyToConnect
                 return true;
             }
         }
-        return false;
-    }
-
-    private static bool IsBlockedByAddressRateLimiting(uint connectionAddress)
-    {
-        double realtimeSinceStartupAsDouble = Time.realtimeSinceStartupAsDouble;
-        float join_Rate_Limit_Window_Seconds = Provider.configData.Server.Join_Rate_Limit_Window_Seconds;
-        ERateLimitingResult eRateLimitingResult = ERateLimitingResult.NOT_IN_LIST;
-        for (int num = addressRateLimitingLog.Count - 1; num >= 0; num--)
-        {
-            AddressRateLimitingEntry value = addressRateLimitingLog[num];
-            if (realtimeSinceStartupAsDouble - value.realtime > (double)join_Rate_Limit_Window_Seconds)
-            {
-                addressRateLimitingLog.RemoveAt(num);
-            }
-            else if (eRateLimitingResult == ERateLimitingResult.NOT_IN_LIST && value.address == connectionAddress)
-            {
-                value.counter++;
-                value.realtime = realtimeSinceStartupAsDouble;
-                addressRateLimitingLog[num] = value;
-                eRateLimitingResult = ((value.counter > 2) ? ERateLimitingResult.HIT_RATE_LIMIT : ERateLimitingResult.WITHIN_RATE_LIMIT);
-            }
-        }
-        if (eRateLimitingResult != 0)
-        {
-            return eRateLimitingResult == ERateLimitingResult.HIT_RATE_LIMIT;
-        }
-        AddressRateLimitingEntry item = default(AddressRateLimitingEntry);
-        item.address = connectionAddress;
-        item.counter = 1;
-        item.realtime = realtimeSinceStartupAsDouble;
-        addressRateLimitingLog.Add(item);
-        return false;
-    }
-
-    private static bool IsBlockedBySteamIdRateLimiting(CSteamID connectionSteamId)
-    {
-        double realtimeSinceStartupAsDouble = Time.realtimeSinceStartupAsDouble;
-        float join_Rate_Limit_Window_Seconds = Provider.configData.Server.Join_Rate_Limit_Window_Seconds;
-        ERateLimitingResult eRateLimitingResult = ERateLimitingResult.NOT_IN_LIST;
-        for (int num = steamIdRateLimitingLog.Count - 1; num >= 0; num--)
-        {
-            SteamIdRateLimitingEntry value = steamIdRateLimitingLog[num];
-            if (realtimeSinceStartupAsDouble - value.realtime > (double)join_Rate_Limit_Window_Seconds)
-            {
-                steamIdRateLimitingLog.RemoveAt(num);
-            }
-            else if (eRateLimitingResult == ERateLimitingResult.NOT_IN_LIST && value.steamId == connectionSteamId)
-            {
-                value.counter++;
-                value.realtime = realtimeSinceStartupAsDouble;
-                steamIdRateLimitingLog[num] = value;
-                eRateLimitingResult = ((value.counter > 2) ? ERateLimitingResult.HIT_RATE_LIMIT : ERateLimitingResult.WITHIN_RATE_LIMIT);
-            }
-        }
-        if (eRateLimitingResult != 0)
-        {
-            return eRateLimitingResult == ERateLimitingResult.HIT_RATE_LIMIT;
-        }
-        SteamIdRateLimitingEntry item = default(SteamIdRateLimitingEntry);
-        item.steamId = connectionSteamId;
-        item.counter = 1;
-        item.realtime = realtimeSinceStartupAsDouble;
-        steamIdRateLimitingLog.Add(item);
         return false;
     }
 }

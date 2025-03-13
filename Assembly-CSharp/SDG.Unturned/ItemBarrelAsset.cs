@@ -51,4 +51,16 @@ public class ItemBarrelAsset : ItemCaliberAsset
         float defaultValue = (isSilenced ? 0.5f : 1f);
         gunshotRolloffDistanceMultiplier = data.ParseFloat("Gunshot_Rolloff_Distance_Multiplier", defaultValue);
     }
+
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Barrel");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Braked", isBraked);
+        orAddDeclaration.Append("Silenced", isSilenced);
+        orAddDeclaration.Append("Volume", volume);
+        orAddDeclaration.Append("Durability", durability);
+        orAddDeclaration.Append("Gunshot_Rolloff_Distance_Multiplier", gunshotRolloffDistanceMultiplier);
+    }
 }

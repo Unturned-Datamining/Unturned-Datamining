@@ -28,7 +28,7 @@ public static class InputEx
     /// </summary>
     public static bool GetKey(KeyCode key)
     {
-        if (Input.GetKey(key))
+        if (Input.GetKey(key) && !MenuConfigurationControlsUI.ShouldGameIgnoreInput)
         {
             return Glazier.Get().ShouldGameProcessKeyDown;
         }
@@ -40,7 +40,7 @@ public static class InputEx
     /// </summary>
     public static bool GetKeyDown(KeyCode key)
     {
-        if (Input.GetKeyDown(key))
+        if (Input.GetKeyDown(key) && !MenuConfigurationControlsUI.ShouldGameIgnoreInput)
         {
             return Glazier.Get().ShouldGameProcessKeyDown;
         }
@@ -52,7 +52,7 @@ public static class InputEx
     /// </summary>
     public static bool GetKeyUp(KeyCode key)
     {
-        if (Input.GetKeyUp(key))
+        if (Input.GetKeyUp(key) && !MenuConfigurationControlsUI.ShouldGameIgnoreInput)
         {
             return Glazier.Get().ShouldGameProcessKeyDown;
         }

@@ -8,23 +8,21 @@ internal static class ServerMessageHandler_PingRequest
 {
     internal static void ReadMessage(ITransportConnection transportConnection, NetPakReader reader)
     {
-        for (int i = 0; i < Provider.pending.Count; i++)
+        SteamPending steamPending = Provider.findPendingPlayer(transportConnection);
+        if (steamPending != null)
         {
-            if (!transportConnection.Equals(Provider.pending[i].transportConnection))
-            {
-                continue;
-            }
-            if (Provider.pending[i].averagePingRequestsReceivedPerSecond > Provider.PING_REQUEST_INTERVAL * 2f)
+            if (steamPending.averagePingRequestsReceivedPerSecond > Provider.PING_REQUEST_INTERVAL * 2f)
             {
                 if ((bool)NetMessages.shouldLogBadMessages)
                 {
                     UnturnedLog.info($"Ignoring PingRequest message from {transportConnection} because they exceeded rate limit");
                 }
+                Provider.IncrementBadPacketsFromConnection(transportConnection);
             }
             else
             {
-                Provider.pending[i].lastReceivedPingRequestRealtime = Time.realtimeSinceStartup;
-                Provider.pending[i].incrementNumPingRequestsReceived();
+                steamPending.lastReceivedPingRequestRealtime = Time.realtimeSinceStartup;
+                steamPending.incrementNumPingRequestsReceived();
                 NetMessages.SendMessageToClient(EClientMessage.PingResponse, ENetReliability.Unreliable, transportConnection, delegate
                 {
                 });
@@ -40,6 +38,7 @@ internal static class ServerMessageHandler_PingRequest
                 {
                     UnturnedLog.info($"Ignoring PingRequest message from {transportConnection} because they exceeded rate limit");
                 }
+                Provider.IncrementBadPacketsFromConnection(transportConnection);
             }
             else
             {
@@ -50,9 +49,13 @@ internal static class ServerMessageHandler_PingRequest
                 });
             }
         }
-        else if ((bool)NetMessages.shouldLogBadMessages)
+        else
         {
-            UnturnedLog.info($"Ignoring PingRequest message from {transportConnection} because there is no associated player");
+            if ((bool)NetMessages.shouldLogBadMessages)
+            {
+                UnturnedLog.info($"Ignoring PingRequest message from {transportConnection} because there is no associated player");
+            }
+            Provider.IncrementBadPacketsFromConnection(transportConnection);
         }
     }
 }

@@ -256,7 +256,11 @@ public class InteractableStorage : Interactable, IManualOnDestroy
             displayModel = ItemTool.getItem(displayItem.id, 0, displayItem.quality, displayItem.state, viewmodel: false, displayAsset, shouldDestroyColliders: true, getDisplayStatTrackerValue);
             if (displayMythic != 0)
             {
-                ItemTool.ApplyMythicalEffect(displayModel, displayMythic, EEffectType.HOOK);
+                if (displayAsset.type != EItemType.BACKPACK)
+                {
+                    _ = displayAsset.type;
+                }
+                ItemTool.ApplyMythicalEffect(displayModel, displayMythic, EEffectType.HEAD_COSMETIC);
             }
         }
         if (displayModel == null)

@@ -78,6 +78,18 @@ public class ItemGlassesAsset : ItemGearAsset
         isBlindfold = data.ContainsKey("Blindfold");
     }
 
+    internal override void BuildCargoData(CargoBuilder builder)
+    {
+        base.BuildCargoData(builder);
+        CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Glasses");
+        orAddDeclaration.Append("GUID", GUID);
+        orAddDeclaration.Append("Vision", vision);
+        orAddDeclaration.Append("Nightvision_Color", nightvisionColor);
+        orAddDeclaration.Append("Nightvision_Fog_Intensity", nightvisionFogIntensity);
+        orAddDeclaration.Append("Nightvision_Allowed_In_ThirdPerson", isNightvisionAllowedInThirdPerson);
+        orAddDeclaration.Append("Blindfold", isBlindfold);
+    }
+
     protected override bool GetDefaultTakesPriorityOverCosmetic()
     {
         if (vision == ELightingVision.NONE)
