@@ -603,6 +603,10 @@ public class PlayerAnimator : PlayerCaller
             {
                 stop("Gesture_Rest");
             }
+            else if (gesture == EPlayerGesture.T_POSE_START)
+            {
+                stop("T");
+            }
             captorID = CSteamID.Nil;
             captorItem = 0;
             captorStrength = 0;
@@ -722,6 +726,16 @@ public class PlayerAnimator : PlayerCaller
             stop("Gesture_Rest");
             _gesture = EPlayerGesture.NONE;
         }
+        else if (newGesture == EPlayerGesture.T_POSE_START && gesture == EPlayerGesture.NONE)
+        {
+            play("T", smooth: false);
+            _gesture = EPlayerGesture.T_POSE_START;
+        }
+        else if (newGesture == EPlayerGesture.T_POSE_STOP && gesture == EPlayerGesture.T_POSE_START)
+        {
+            stop("T");
+            _gesture = EPlayerGesture.NONE;
+        }
         else if (newGesture == EPlayerGesture.ARREST_START)
         {
             play("Gesture_Arrest", smooth: true);
@@ -771,7 +785,7 @@ public class PlayerAnimator : PlayerCaller
         {
             base.player.inventory.closeStorage();
         }
-        if (gesture != EPlayerGesture.ARREST_START && !base.player.equipment.HasValidUseable && base.player.stance.stance != EPlayerStance.PRONE && base.player.stance.stance != EPlayerStance.DRIVING && base.player.stance.stance != EPlayerStance.SITTING && (newGesture == EPlayerGesture.INVENTORY_START || newGesture == EPlayerGesture.INVENTORY_STOP || newGesture == EPlayerGesture.SURRENDER_START || newGesture == EPlayerGesture.SURRENDER_STOP || newGesture == EPlayerGesture.POINT || newGesture == EPlayerGesture.WAVE || newGesture == EPlayerGesture.SALUTE || newGesture == EPlayerGesture.FACEPALM || newGesture == EPlayerGesture.REST_START || newGesture == EPlayerGesture.REST_STOP))
+        if (gesture != EPlayerGesture.ARREST_START && !base.player.equipment.HasValidUseable && base.player.stance.stance != EPlayerStance.PRONE && base.player.stance.stance != EPlayerStance.DRIVING && base.player.stance.stance != EPlayerStance.SITTING && (newGesture == EPlayerGesture.INVENTORY_START || newGesture == EPlayerGesture.INVENTORY_STOP || newGesture == EPlayerGesture.SURRENDER_START || newGesture == EPlayerGesture.SURRENDER_STOP || newGesture == EPlayerGesture.POINT || newGesture == EPlayerGesture.WAVE || newGesture == EPlayerGesture.SALUTE || newGesture == EPlayerGesture.FACEPALM || newGesture == EPlayerGesture.REST_START || newGesture == EPlayerGesture.REST_STOP || newGesture == EPlayerGesture.T_POSE_START || newGesture == EPlayerGesture.T_POSE_STOP))
         {
             bool flag = newGesture != EPlayerGesture.INVENTORY_START && newGesture != EPlayerGesture.INVENTORY_STOP;
             sendGesture(newGesture, flag);
@@ -790,14 +804,24 @@ public class PlayerAnimator : PlayerCaller
         }
         if (Provider.isServer)
         {
-            if (gesture == EPlayerGesture.REST_START && base.player.stance.stance != EPlayerStance.CROUCH)
+            EPlayerStance? ePlayerStance = null;
+            switch (gesture)
             {
-                if (base.player.stance.stance != EPlayerStance.STAND && base.player.stance.stance != EPlayerStance.PRONE)
+            case EPlayerGesture.REST_START:
+                ePlayerStance = EPlayerStance.CROUCH;
+                break;
+            case EPlayerGesture.T_POSE_START:
+                ePlayerStance = EPlayerStance.STAND;
+                break;
+            }
+            if (ePlayerStance.HasValue && base.player.stance.stance != ePlayerStance.Value)
+            {
+                if (base.player.stance.stance != EPlayerStance.STAND && base.player.stance.stance != EPlayerStance.CROUCH && base.player.stance.stance != EPlayerStance.PRONE)
                 {
                     return;
                 }
-                base.player.stance.checkStance(EPlayerStance.CROUCH, all: true);
-                if (base.player.stance.stance != EPlayerStance.CROUCH)
+                base.player.stance.checkStance(ePlayerStance.Value, all: true);
+                if (base.player.stance.stance != ePlayerStance.Value)
                 {
                     return;
                 }
@@ -903,7 +927,7 @@ public class PlayerAnimator : PlayerCaller
     private void updateHuman(HumanAnimator humanAnim)
     {
         humanAnim.lean = (base.player.channel.owner.IsLeftHanded ? (-lean) : lean);
-        if (base.player.stance.stance == EPlayerStance.DRIVING || base.player.stance.stance == EPlayerStance.SITTING)
+        if (base.player.stance.stance == EPlayerStance.DRIVING || base.player.stance.stance == EPlayerStance.SITTING || gesture == EPlayerGesture.T_POSE_START)
         {
             humanAnim.pitch = 90f;
         }
@@ -1475,6 +1499,7 @@ public class PlayerAnimator : PlayerCaller
         mixAnimation("Gesture_Salute", mixLeftShoulder: false, mixRightShoulder: true);
         mixAnimation("Gesture_Rest");
         mixAnimation("Gesture_Facepalm", mixLeftShoulder: false, mixRightShoulder: true, mixSkull: true);
+        mixAnimation("T");
         PlayerLife life = base.player.life;
         life.onLifeUpdated = (LifeUpdated)Delegate.Combine(life.onLifeUpdated, new LifeUpdated(onLifeUpdated));
         if (Provider.isServer)

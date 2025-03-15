@@ -17,5 +17,7 @@ public enum EPlayerGesture
     ARREST_STOP,
     REST_START,
     REST_STOP,
-    FACEPALM
+    FACEPALM,
+    T_POSE_START,
+    T_POSE_STOP
 }

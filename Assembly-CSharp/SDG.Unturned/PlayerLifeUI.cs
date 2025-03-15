@@ -106,6 +106,8 @@ public class PlayerLifeUI
 
     private static ISleekButton facepalmButton;
 
+    private static ISleekButton tPoseButton;
+
     public static SleekScopeOverlay scopeOverlay;
 
     public static ISleekImage binocularsOverlay;
@@ -378,6 +380,7 @@ public class PlayerLifeUI
             saluteButton.IsVisible = isVisible;
             restButton.IsVisible = isVisible;
             facepalmButton.IsVisible = isVisible;
+            tPoseButton.IsVisible = isVisible;
         }
     }
 
@@ -400,6 +403,7 @@ public class PlayerLifeUI
             saluteButton.IsVisible = false;
             restButton.IsVisible = false;
             facepalmButton.IsVisible = false;
+            tPoseButton.IsVisible = false;
         }
     }
 
@@ -1403,6 +1407,19 @@ public class PlayerLifeUI
         closeGestures();
     }
 
+    private static void onClickedTPoseButton(ISleekElement button)
+    {
+        if (Player.player.animator.gesture == EPlayerGesture.T_POSE_START)
+        {
+            Player.player.animator.sendGesture(EPlayerGesture.T_POSE_STOP, all: true);
+        }
+        else
+        {
+            Player.player.animator.sendGesture(EPlayerGesture.T_POSE_START, all: true);
+        }
+        closeGestures();
+    }
+
     private void SynchronizeOutboundVoiceChatVisible()
     {
         bool flag = false;
@@ -1861,6 +1878,17 @@ public class PlayerLifeUI
         facepalmButton.OnClicked += onClickedFacepalmButton;
         container.AddChild(facepalmButton);
         facepalmButton.IsVisible = false;
+        tPoseButton = Glazier.Get().CreateButton();
+        tPoseButton.PositionOffset_X = 10f;
+        tPoseButton.PositionOffset_Y = 65f;
+        tPoseButton.PositionScale_X = 0.5f;
+        tPoseButton.PositionScale_Y = 0.5f;
+        tPoseButton.SizeOffset_X = 150f;
+        tPoseButton.SizeOffset_Y = 30f;
+        tPoseButton.Text = localization.format("Gesture_TPose");
+        tPoseButton.OnClicked += onClickedTPoseButton;
+        container.AddChild(tPoseButton);
+        tPoseButton.IsVisible = false;
         activeHitmarkers = new List<HitmarkerInfo>(16);
         hitmarkersPool = new List<SleekHitmarker>(16);
         for (int num3 = 0; num3 < 16; num3++)

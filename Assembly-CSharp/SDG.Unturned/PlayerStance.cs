@@ -395,6 +395,10 @@ public class PlayerStance : PlayerCaller
             {
                 base.player.animator.sendGesture(EPlayerGesture.REST_STOP, all: true);
             }
+            else if (base.player.animator.gesture == EPlayerGesture.T_POSE_START)
+            {
+                base.player.animator.sendGesture(EPlayerGesture.T_POSE_STOP, all: true);
+            }
         }
         internalSetStance(newStance);
         if (Provider.isServer)
@@ -451,19 +455,8 @@ public class PlayerStance : PlayerCaller
     public void ReceiveStance(EPlayerStance newStance)
     {
         internalSetStance(newStance);
-        if (stance == EPlayerStance.CROUCH)
-        {
-            if (ControlsSettings.crouching == EControlMode.TOGGLE)
-            {
-                _localWantsToCrouch = true;
-                _localWantsToProne = false;
-            }
-        }
-        else if (stance == EPlayerStance.PRONE && ControlsSettings.proning == EControlMode.TOGGLE)
-        {
-            _localWantsToCrouch = false;
-            _localWantsToProne = true;
-        }
+        _localWantsToCrouch = newStance == EPlayerStance.CROUCH;
+        _localWantsToProne = newStance == EPlayerStance.PRONE;
         PlayerStance.OnStanceChanged_Global?.Invoke(this);
     }
 
@@ -629,54 +622,72 @@ public class PlayerStance : PlayerCaller
                     }
                     isHolding = false;
                 }
-                if (base.player.animator.gesture == EPlayerGesture.REST_START)
+                if (base.player.animator.gesture == EPlayerGesture.REST_START || base.player.animator.gesture == EPlayerGesture.T_POSE_START)
                 {
+                    bool flag = false;
                     if (InputEx.GetKeyDown(ControlsSettings.crouch))
                     {
-                        base.player.animator.sendGesture(EPlayerGesture.REST_STOP, all: true);
+                        flag = true;
                         _localWantsToCrouch = true;
-                        if (_localWantsToProne)
+                        _localWantsToProne = false;
+                    }
+                    else if (InputEx.GetKeyDown(ControlsSettings.prone))
+                    {
+                        flag = true;
+                        _localWantsToCrouch = false;
+                        _localWantsToProne = true;
+                    }
+                    if (flag)
+                    {
+                        if (base.player.animator.gesture == EPlayerGesture.REST_START)
                         {
-                            _localWantsToProne = false;
+                            base.player.animator.sendGesture(EPlayerGesture.REST_STOP, all: true);
+                        }
+                        else
+                        {
+                            base.player.animator.sendGesture(EPlayerGesture.T_POSE_STOP, all: true);
                         }
                     }
                 }
-                else if (ControlsSettings.crouching == EControlMode.TOGGLE)
+                else
                 {
-                    if (InputEx.GetKeyDown(ControlsSettings.crouch))
+                    if (ControlsSettings.crouching == EControlMode.TOGGLE)
                     {
-                        _localWantsToCrouch = !crouch;
+                        if (InputEx.GetKeyDown(ControlsSettings.crouch))
+                        {
+                            _localWantsToCrouch = !crouch;
+                            if (_localWantsToCrouch)
+                            {
+                                _localWantsToProne = false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        _localWantsToCrouch = InputEx.GetKey(ControlsSettings.crouch);
                         if (_localWantsToCrouch)
                         {
                             _localWantsToProne = false;
                         }
                     }
-                }
-                else
-                {
-                    _localWantsToCrouch = InputEx.GetKey(ControlsSettings.crouch);
-                    if (_localWantsToCrouch)
+                    if (ControlsSettings.proning == EControlMode.TOGGLE)
                     {
-                        _localWantsToProne = false;
+                        if (InputEx.GetKeyDown(ControlsSettings.prone))
+                        {
+                            _localWantsToProne = !prone;
+                            if (_localWantsToProne)
+                            {
+                                _localWantsToCrouch = false;
+                            }
+                        }
                     }
-                }
-                if (ControlsSettings.proning == EControlMode.TOGGLE)
-                {
-                    if (InputEx.GetKeyDown(ControlsSettings.prone))
+                    else
                     {
-                        _localWantsToProne = !prone;
+                        _localWantsToProne = InputEx.GetKey(ControlsSettings.prone);
                         if (_localWantsToProne)
                         {
                             _localWantsToCrouch = false;
                         }
-                    }
-                }
-                else
-                {
-                    _localWantsToProne = InputEx.GetKey(ControlsSettings.prone);
-                    if (_localWantsToProne)
-                    {
-                        _localWantsToCrouch = false;
                     }
                 }
                 if (ControlsSettings.sprinting == EControlMode.TOGGLE)
