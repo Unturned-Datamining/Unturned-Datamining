@@ -1024,6 +1024,10 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
                     hasIdleAnimation = animator.GetClip("Idle") != null;
                     hasRunAnimation = animator.GetClip("Run") != null;
                     hasWalkAnimation = animator.GetClip("Walk") != null;
+                    if (Dedicator.IsDedicatedServer)
+                    {
+                        animator.cullingType = AnimationCullingType.AlwaysAnimate;
+                    }
                 }
                 else
                 {

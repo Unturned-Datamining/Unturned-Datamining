@@ -55,6 +55,10 @@ public class CosmeticPreviewCapture : MonoBehaviour
             List<OutfitAsset> outfitAssets = new List<OutfitAsset> { item };
             StartCoroutine(CaptureOutfitsCoroutine(outfitAssets));
         }
+        else
+        {
+            UnturnedLog.warn($"Unable to find outfit matching {guid:N} ({Assets.find(guid)?.name})");
+        }
     }
 
     public void CaptureAllOutfits()
@@ -112,10 +116,15 @@ public class CosmeticPreviewCapture : MonoBehaviour
         {
             ResetOutfit();
             AssetReference<ItemAsset>[] itemAssets = outfitAsset.itemAssets;
-            foreach (AssetReference<ItemAsset> assetReference in itemAssets)
+            for (int i = 0; i < itemAssets.Length; i++)
             {
+                AssetReference<ItemAsset> assetReference = itemAssets[i];
                 ItemAsset itemAsset = assetReference.Find();
-                if (itemAsset != null)
+                if (itemAsset == null)
+                {
+                    UnturnedLog.warn($"Missing item {assetReference} for outfit {outfitAsset}");
+                }
+                else
                 {
                     ApplyItemToOutfit(itemAsset);
                 }

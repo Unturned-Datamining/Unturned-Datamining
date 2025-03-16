@@ -1,0 +1,17 @@
+GUID b51acc861c0d4cfda4243f5fbd7c4fcc
+Type SDG.Unturned.OutfitAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+
+Items
+[
+	// Beret
+	20477760f2a34f8dbcc8f434b47d09a7
+
+	// Pants
+	d84ca8e97c8a48e5ab6b6bf0306be0ec
+
+	// Shirt
+	e4e9c1c53b5841728eb65e8da3686ed5
+
+	// Vest
+	e4247ff8c3b54d6ab03db784dda524ae
+]

@@ -651,40 +651,51 @@ public class ObjectAsset : Asset
         }
         else if (type == EObjectType.DECAL)
         {
+            hasLoadedModel = true;
             float num = data.ParseFloat("Decal_X", 1f);
             float num2 = data.ParseFloat("Decal_Y", 1f);
-            float num3 = 1f;
-            if (data.ContainsKey("Decal_LOD_Bias"))
+            if (Dedicator.IsDedicatedServer)
             {
-                num3 = data.ParseFloat("Decal_LOD_Bias");
+                loadedModel = new GameObject("Decal_Template");
+                loadedModel.transform.position = new Vector3(-10000f, -10000f, -10000f);
+                loadedModel.hideFlags = HideFlags.HideAndDontSave;
+                UnityEngine.Object.DontDestroyOnLoad(loadedModel);
+                loadedModel.AddComponent<BoxCollider>().size = new Vector3(num2, num, 1f);
             }
-            Texture2D texture2D = bundle.load<Texture2D>("Decal");
-            if (texture2D == null)
+            else
             {
-                Assets.ReportError(this, "missing 'Decal' Texture2D. It will show as pure white without one.");
+                float num3 = 1f;
+                if (data.ContainsKey("Decal_LOD_Bias"))
+                {
+                    num3 = data.ParseFloat("Decal_LOD_Bias");
+                }
+                Texture2D texture2D = bundle.load<Texture2D>("Decal");
+                if (texture2D == null)
+                {
+                    Assets.ReportError(this, "missing 'Decal' Texture2D. It will show as pure white without one.");
+                }
+                bool flag = data.ContainsKey("Decal_Alpha");
+                loadedModel = UnityEngine.Object.Instantiate(Resources.Load<GameObject>(flag ? "Materials/Decal_Template_Alpha" : "Materials/Decal_Template_Masked"));
+                loadedModel.transform.position = new Vector3(-10000f, -10000f, -10000f);
+                loadedModel.hideFlags = HideFlags.HideAndDontSave;
+                UnityEngine.Object.DontDestroyOnLoad(loadedModel);
+                loadedModel.GetComponent<BoxCollider>().size = new Vector3(num2, num, 1f);
+                Decal component = loadedModel.transform.Find("Decal").GetComponent<Decal>();
+                Material material = UnityEngine.Object.Instantiate(component.material);
+                material.name = "Decal_Deferred";
+                material.hideFlags = HideFlags.DontSave;
+                material.SetTexture("_MainTex", texture2D);
+                component.material = material;
+                component.lodBias = num3;
+                component.transform.localScale = new Vector3(num, num2, 1f);
+                MeshRenderer component2 = loadedModel.transform.Find("Mesh").GetComponent<MeshRenderer>();
+                Material material2 = UnityEngine.Object.Instantiate(component2.sharedMaterial);
+                material2.name = "Decal_Forward";
+                material2.hideFlags = HideFlags.DontSave;
+                material2.SetTexture("_MainTex", texture2D);
+                component2.sharedMaterial = material2;
+                component2.transform.localScale = new Vector3(num2, num, 1f);
             }
-            bool flag = data.ContainsKey("Decal_Alpha");
-            hasLoadedModel = true;
-            loadedModel = UnityEngine.Object.Instantiate(Resources.Load<GameObject>(flag ? "Materials/Decal_Template_Alpha" : "Materials/Decal_Template_Masked"));
-            loadedModel.transform.position = new Vector3(-10000f, -10000f, -10000f);
-            loadedModel.hideFlags = HideFlags.HideAndDontSave;
-            UnityEngine.Object.DontDestroyOnLoad(loadedModel);
-            loadedModel.GetComponent<BoxCollider>().size = new Vector3(num2, num, 1f);
-            Decal component = loadedModel.transform.Find("Decal").GetComponent<Decal>();
-            Material material = UnityEngine.Object.Instantiate(component.material);
-            material.name = "Decal_Deferred";
-            material.hideFlags = HideFlags.DontSave;
-            material.SetTexture("_MainTex", texture2D);
-            component.material = material;
-            component.lodBias = num3;
-            component.transform.localScale = new Vector3(num, num2, 1f);
-            MeshRenderer component2 = loadedModel.transform.Find("Mesh").GetComponent<MeshRenderer>();
-            Material material2 = UnityEngine.Object.Instantiate(component2.sharedMaterial);
-            material2.name = "Decal_Forward";
-            material2.hideFlags = HideFlags.DontSave;
-            material2.SetTexture("_MainTex", texture2D);
-            component2.sharedMaterial = material2;
-            component2.transform.localScale = new Vector3(num2, num, 1f);
             useScale = true;
             chart = EObjectChart.IGNORE;
         }

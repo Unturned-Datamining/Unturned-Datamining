@@ -67,20 +67,17 @@ public class InteractableFarm : Interactable
         if (planted < 1)
         {
             SetModelGrown(newModelGrown: false);
-            UnturnedLog.info("Farm canceling timer because planted timestamp is zero");
             return;
         }
         uint num = planted + growth;
         if (Provider.time >= num)
         {
             SetModelGrown(newModelGrown: true);
-            UnturnedLog.info("Farm already finished growing");
             return;
         }
         SetModelGrown(newModelGrown: false);
-        float num2 = num - Provider.time;
-        UnturnedLog.info($"Farm setting growth timer for {num2} s");
-        StartCoroutine(GrowAfterRealtime(num2));
+        float time = num - Provider.time;
+        StartCoroutine(GrowAfterRealtime(time));
     }
 
     public override void updateState(Asset asset, byte[] state)
