@@ -35,7 +35,7 @@ public class RuntimeGizmos : MonoBehaviour
             this.size = size;
             extents = size * 0.5f;
             this.color = color;
-            expireAfter = Time.time + lifespan;
+            expireAfter = Time.realtimeSinceStartup + lifespan;
         }
     }
 
@@ -54,7 +54,7 @@ public class RuntimeGizmos : MonoBehaviour
             this.begin = begin;
             this.end = end;
             this.color = color;
-            expireAfter = Time.time + lifespan;
+            expireAfter = Time.realtimeSinceStartup + lifespan;
         }
     }
 
@@ -75,7 +75,7 @@ public class RuntimeGizmos : MonoBehaviour
             this.begin = begin;
             this.end = end;
             this.color = color;
-            expireAfter = Time.time + lifespan;
+            expireAfter = Time.realtimeSinceStartup + lifespan;
             this.radius = radius;
         }
     }
@@ -102,7 +102,7 @@ public class RuntimeGizmos : MonoBehaviour
             this.matrix = matrix;
             this.localCenter = localCenter;
             this.color = color;
-            expireAfter = Time.time + lifespan;
+            expireAfter = Time.realtimeSinceStartup + lifespan;
             this.localRadius = localRadius;
             float max = matrix.lossyScale.GetAbs().GetMax();
             circleResolution = Mathf.Clamp(Mathf.RoundToInt(8f * localRadius * max), 8, 64);
@@ -131,7 +131,7 @@ public class RuntimeGizmos : MonoBehaviour
             this.axisU = axisU;
             this.axisV = axisV;
             this.color = color;
-            expireAfter = Time.time + lifespan;
+            expireAfter = Time.realtimeSinceStartup + lifespan;
             this.radius = radius;
             this.resolution = ((resolution > 0) ? resolution : Mathf.Clamp(Mathf.RoundToInt(8f * radius), 8, 64));
         }
@@ -152,7 +152,7 @@ public class RuntimeGizmos : MonoBehaviour
             this.position = position;
             this.content = content;
             this.color = color;
-            expireAfter = Time.time + lifespan;
+            expireAfter = Time.realtimeSinceStartup + lifespan;
         }
     }
 
@@ -390,7 +390,7 @@ public class RuntimeGizmos : MonoBehaviour
 
     public void Render()
     {
-        renderTime = Time.time;
+        renderTime = Time.realtimeSinceStartup;
         Camera camera = MainCamera.instance;
         if (camera != null)
         {
@@ -820,7 +820,7 @@ public class RuntimeGizmos : MonoBehaviour
         Color color = GUI.color;
         float num = camera.pixelWidth;
         float num2 = camera.pixelHeight;
-        float time = Time.time;
+        float realtimeSinceStartup = Time.realtimeSinceStartup;
         for (int num3 = labelsToRender.Count - 1; num3 >= 0; num3--)
         {
             LabelData labelData = labelsToRender[num3];
@@ -836,7 +836,7 @@ public class RuntimeGizmos : MonoBehaviour
                 GUI.color = labelData.color;
                 GUI.Label(position, labelData.content);
             }
-            if (time >= labelData.expireAfter)
+            if (realtimeSinceStartup >= labelData.expireAfter)
             {
                 labelsToRender.RemoveAtFast(num3);
             }
@@ -865,7 +865,7 @@ public class RuntimeGizmos : MonoBehaviour
         {
             return;
         }
-        renderTime = Time.time;
+        renderTime = Time.realtimeSinceStartup;
         Camera camera = MainCamera.instance;
         if (camera != null)
         {

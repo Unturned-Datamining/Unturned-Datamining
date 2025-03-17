@@ -507,7 +507,14 @@ public class Level : MonoBehaviour
         {
             UnturnedLog.info($"[{pendingHashes.Count}] Including \"{id}\" in level hash: {Hash.toString(pendingHash)}");
         }
-        pendingHashes.Add(pendingHash);
+        if (pendingHash == null)
+        {
+            UnturnedLog.error("\"" + id + "\" added null to level hash!");
+        }
+        else
+        {
+            pendingHashes.Add(pendingHash);
+        }
     }
 
     private static void combineHashes()
