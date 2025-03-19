@@ -135,6 +135,7 @@ public class LandscapeTile : IFormattedFileReadable, IFormattedFileWritable, IFo
     {
         reader = reader.readObject();
         coord = reader.readValue<LandscapeCoord>("Coord");
+        bool flag = Level.isEditor && EditorAssetRedirector.HasRedirects;
         int num = reader.readArrayLength("Materials");
         for (int i = 0; i < num; i++)
         {
@@ -151,6 +152,14 @@ public class LandscapeTile : IFormattedFileReadable, IFormattedFileWritable, IFo
                         {
                             value = holidayRedirect;
                         }
+                    }
+                }
+                else if (flag)
+                {
+                    LandscapeMaterialAsset landscapeMaterialAsset2 = EditorAssetRedirector.Redirect<LandscapeMaterialAsset>(value.GUID);
+                    if (landscapeMaterialAsset2 != null)
+                    {
+                        value = landscapeMaterialAsset2.getReferenceTo<LandscapeMaterialAsset>();
                     }
                 }
                 if (value.Find() == null)

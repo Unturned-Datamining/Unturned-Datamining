@@ -24,13 +24,27 @@ public static class EditorAssetRedirector
         }
     }
 
-    public static ObjectAsset RedirectObject(Guid oldGuid)
+    /// <summary>
+    /// If a redirector for oldGuid exists, returns target asset. Otherwise null.
+    /// </summary>
+    public static Asset Redirect(Guid oldGuid)
     {
         if (mappings.TryGetValue(oldGuid, out var value))
         {
-            return Assets.find(value) as ObjectAsset;
+            return Assets.find(value);
         }
         return null;
+    }
+
+    public static T Redirect<T>(Guid oldGuid) where T : Asset
+    {
+        return Redirect(oldGuid) as T;
+    }
+
+    [Obsolete("Replaced by Redirect<T>")]
+    public static ObjectAsset RedirectObject(Guid oldGuid)
+    {
+        return Redirect<ObjectAsset>(oldGuid);
     }
 
     static EditorAssetRedirector()

@@ -33,10 +33,6 @@ public class SteamworksAchievementsService : Service, IAchievementsService, ISer
         {
             UnturnedLog.info("Unlocked Steam achievement \"" + name + "\"");
         }
-        else
-        {
-            UnturnedLog.error("Failed to unlock Steam achievement \"" + name + "\"");
-        }
         SteamUserStats.StoreStats();
         return num;
     }

@@ -553,7 +553,7 @@ public class LevelObjects : MonoBehaviour
                             }
                             else if (flag)
                             {
-                                ObjectAsset objectAsset2 = EditorAssetRedirector.RedirectObject(guid);
+                                ObjectAsset objectAsset2 = EditorAssetRedirector.Redirect<ObjectAsset>(guid);
                                 if (objectAsset2 != null)
                                 {
                                     num3 = objectAsset2.id;

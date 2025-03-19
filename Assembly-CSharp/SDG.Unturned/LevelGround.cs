@@ -640,6 +640,7 @@ public class LevelGround : MonoBehaviour
             {
                 treeRedirectorMap = new TreeRedirectorMap();
             }
+            bool flag = Level.isEditor && EditorAssetRedirector.HasRedirects;
             LevelBatching levelBatching = (Level.shouldUseLevelBatching ? LevelBatching.Get() : null);
             for (byte b6 = 0; b6 < Regions.WORLD_SIZE; b6++)
             {
@@ -668,6 +669,15 @@ public class LevelGround : MonoBehaviour
                                     {
                                         num3 = resourceAsset.id;
                                         guid = resourceAsset.GUID;
+                                    }
+                                }
+                                else if (flag)
+                                {
+                                    ResourceAsset resourceAsset2 = EditorAssetRedirector.Redirect<ResourceAsset>(guid);
+                                    if (resourceAsset2 != null)
+                                    {
+                                        num3 = resourceAsset2.id;
+                                        guid = resourceAsset2.GUID;
                                     }
                                 }
                                 if (num3 != 0 || guid != Guid.Empty)

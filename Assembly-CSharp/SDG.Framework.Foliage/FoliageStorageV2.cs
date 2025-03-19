@@ -150,6 +150,7 @@ public class FoliageStorageV2 : IFoliageStorage
             }
             if (loadedFileVersion >= 2)
             {
+                bool flag = Level.isEditor && EditorAssetRedirector.HasRedirects;
                 int num2 = binaryReader.ReadInt32();
                 UnturnedLog.info("Found {0} foliage used assets in header", num2);
                 assetsHeader.Capacity = num2;
@@ -159,6 +160,14 @@ public class FoliageStorageV2 : IFoliageStorage
                     binaryReader.Read(GUID_BUFFER, 0, 16);
                     guidBuffer.Read(GUID_BUFFER, 0);
                     AssetReference<FoliageInstancedMeshInfoAsset> item = new AssetReference<FoliageInstancedMeshInfoAsset>(guidBuffer.GUID);
+                    if (flag)
+                    {
+                        FoliageInstancedMeshInfoAsset foliageInstancedMeshInfoAsset = EditorAssetRedirector.Redirect<FoliageInstancedMeshInfoAsset>(item.GUID);
+                        if (foliageInstancedMeshInfoAsset != null)
+                        {
+                            item = foliageInstancedMeshInfoAsset.getReferenceTo<FoliageInstancedMeshInfoAsset>();
+                        }
+                    }
                     assetsHeader.Add(item);
                     if (item.Find() == null)
                     {
