@@ -41,7 +41,7 @@
 	"Game":
 	{
 		"Major_Version": 25,
-		"Minor_Version": 2,
+		"Minor_Version": 3,
 		"Patch_Version": 0,
 		"GrantPackageIDs":
 		[
@@ -55,7 +55,9 @@
 	},
 	"Menu":
 	{
-
+		"PromoStart": "2025-03-17T12:00:00Z",
+		"PromoEnd": "2025-04-09T12:00:00Z",
+		"PromoLevel": "RioMenu"
 	},
 	"News":
 	{
@@ -65,10 +67,19 @@
 	{
 		"Auto_Subscribe":
 		[
-
+			{
+				"Workshop_File_Id": 3416057692,
+				"Start": "2025-03-19T16:00:00Z",
+				"End": "2026-03-19T16:00:00Z"
+			}
 		],
 		"Curated_Map_Links":
 		[
+			{
+				"Name": "Rio de Janeiro Remastered",
+				"Workshop_File_Id": 3416057692,
+				"Visible_In_Singleplayer_Recommendations_List": true
+			},
 			{
 				"Name": "Escalation",
 				"Workshop_File_Id": 3251926587,
@@ -115,9 +126,9 @@
 				"Visible_In_Singleplayer_Recommendations_List": true
 			},
 			{
-				"Name": "Rio de Janeiro",
+				"Name": "Rio de Janeiro (Classic)",
 				"Workshop_File_Id": 1821848824,
-				"Visible_In_Singleplayer_Recommendations_List": true
+				"Visible_In_Singleplayer_Recommendations_List": false
 			},
 			{
 				"Name": "Dango",

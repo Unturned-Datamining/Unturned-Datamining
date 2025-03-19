@@ -209,7 +209,7 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
 
     public void askEat()
     {
-        if (isDead || animator == null)
+        if (isDead)
         {
             return;
         }
@@ -219,10 +219,10 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         if (!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer)
         {
             string text = ((asset.eatAnimVariantsCount != 1) ? ("Eat_" + UnityEngine.Random.Range(0, asset.eatAnimVariantsCount)) : "Eat");
-            AnimationClip clip = animator.GetClip(text);
-            if (clip != null)
+            AnimationClip animationClip = animator?.GetClip(text);
+            if (animationClip != null)
             {
-                eatTime = clip.length;
+                eatTime = animationClip.length;
                 animator.Play(text);
             }
             else if ((bool)Assets.shouldValidateAssets)
@@ -234,7 +234,7 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
 
     public void askGlance()
     {
-        if (isDead || animator == null)
+        if (isDead)
         {
             return;
         }
@@ -244,10 +244,10 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         if (!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer)
         {
             string text = "Glance_" + UnityEngine.Random.Range(0, asset.glanceAnimVariantsCount);
-            AnimationClip clip = animator.GetClip(text);
-            if (clip != null)
+            AnimationClip animationClip = animator?.GetClip(text);
+            if (animationClip != null)
             {
-                glanceTime = clip.length;
+                glanceTime = animationClip.length;
                 animator.Play(text);
             }
             else if ((bool)Assets.shouldValidateAssets)
@@ -259,7 +259,7 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
 
     public void PlayStartleAnimation(byte animationIndex)
     {
-        if (isDead || animator == null)
+        if (isDead)
         {
             return;
         }
@@ -268,10 +268,10 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         if (!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer)
         {
             string text = ((asset.startleAnimVariantsCount != 1) ? ("Startle_" + animationIndex) : "Startle");
-            AnimationClip clip = animator.GetClip(text);
-            if (clip != null)
+            AnimationClip animationClip = animator?.GetClip(text);
+            if (animationClip != null)
             {
-                startleAnimationCompletionTime = Time.timeAsDouble + (double)clip.length;
+                startleAnimationCompletionTime = Time.timeAsDouble + (double)animationClip.length;
                 animator.Play(text);
             }
             else if ((bool)Assets.shouldValidateAssets)
@@ -283,7 +283,7 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
 
     public void askAttack(byte animationIndex)
     {
-        if (isDead || animator == null)
+        if (isDead)
         {
             return;
         }
@@ -292,10 +292,10 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         if (!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer)
         {
             string text = ((asset.attackAnimVariantsCount != 1) ? ("Attack_" + animationIndex) : "Attack");
-            AnimationClip clip = animator.GetClip(text);
-            if (clip != null)
+            AnimationClip animationClip = animator?.GetClip(text);
+            if (animationClip != null)
             {
-                attackDuration = clip.length;
+                attackDuration = animationClip.length;
                 attackInterval = Mathf.Max(attackDuration, asset.attackInterval);
                 animator.Play(text);
             }
@@ -306,8 +306,8 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
             if (asset != null && asset.roars != null && asset.roars.Length != 0 && Time.timeAsDouble - startedRoar > 1.0)
             {
                 startedRoar = Time.timeAsDouble;
-                AudioClip clip2 = asset.roars[UnityEngine.Random.Range(0, asset.roars.Length)];
-                OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform, clip2);
+                AudioClip clip = asset.roars[UnityEngine.Random.Range(0, asset.roars.Length)];
+                OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform, clip);
                 oneShotAudioParameters.volume = 0.5f;
                 oneShotAudioParameters.RandomizePitch(0.9f, 1.1f);
                 oneShotAudioParameters.SetLinearRolloff(1f, 32f);
