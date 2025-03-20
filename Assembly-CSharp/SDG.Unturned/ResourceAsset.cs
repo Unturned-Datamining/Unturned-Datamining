@@ -199,7 +199,7 @@ public class ResourceAsset : Asset
                 }
                 else
                 {
-                    ServerPrefabUtil.RemoveClientComponents(_modelGameObject);
+                    ServerPrefabUtil.RemoveClientComponents(_modelGameObject, this);
                 }
             }
             if (_stumpGameObject == null)
@@ -211,7 +211,7 @@ public class ResourceAsset : Asset
                 }
                 else
                 {
-                    ServerPrefabUtil.RemoveClientComponents(_stumpGameObject);
+                    ServerPrefabUtil.RemoveClientComponents(_stumpGameObject, this);
                 }
             }
         }

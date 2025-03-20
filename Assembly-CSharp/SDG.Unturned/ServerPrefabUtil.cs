@@ -16,10 +16,12 @@ internal static class ServerPrefabUtil
 
     private static HashSet<Type> typesToRemove;
 
+    private static CommandLineFlag shouldLogAutoPlayAnimsInServerPrefabs;
+
     /// <summary>
     /// Optimize client prefab for server usage.
     /// </summary>
-    public static void RemoveClientComponents(GameObject gameObject)
+    public static void RemoveClientComponents(GameObject gameObject, Asset context)
     {
         gameObject.GetComponentsInChildren(includeInactive: true, workingComponents);
         workingComponents.RemoveSwap(delegate(Component component)
@@ -35,6 +37,10 @@ internal static class ServerPrefabUtil
             if (component is Animation animation)
             {
                 animation.cullingType = AnimationCullingType.AlwaysAnimate;
+                if ((bool)shouldLogAutoPlayAnimsInServerPrefabs && animation.playAutomatically && animation.clip != null)
+                {
+                    UnturnedLog.info($"AutoPlay {animation.clip.wrapMode} Anim: {context.AssetErrorPrefix} {animation.GetSceneHierarchyPath()}");
+                }
             }
             return true;
         });
@@ -110,5 +116,6 @@ internal static class ServerPrefabUtil
             typeof(SpriteRenderer),
             typeof(TrailRenderer)
         };
+        shouldLogAutoPlayAnimsInServerPrefabs = new CommandLineFlag(defaultValue: false, "-LogAutoPlayAnimsInServerPrefabs");
     }
 }

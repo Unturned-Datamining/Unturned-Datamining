@@ -187,7 +187,7 @@ public class ItemStructureAsset : ItemPlaceableAsset
                 AssetValidation.searchGameObjectForErrors(this, structure);
                 if (Dedicator.IsDedicatedServer)
                 {
-                    ServerPrefabUtil.RemoveClientComponents(_structure);
+                    ServerPrefabUtil.RemoveClientComponents(_structure, this);
                     RemoveClientComponents(_structure);
                 }
                 else

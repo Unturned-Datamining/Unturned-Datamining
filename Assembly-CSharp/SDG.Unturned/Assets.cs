@@ -1312,6 +1312,13 @@ public class Assets : MonoBehaviour
                     return false;
                 }
             }
+            for (byte b7 = 0; b7 < myBlueprint.supplies.Length; b7++)
+            {
+                if (myBlueprint.supplies[b7].amount != yourBlueprint.supplies[b7].amount)
+                {
+                    return false;
+                }
+            }
             for (int k = 0; k < myBlueprint.questConditions.Length; k++)
             {
                 if (!myBlueprint.questConditions[k].Equals(yourBlueprint.questConditions[k]))

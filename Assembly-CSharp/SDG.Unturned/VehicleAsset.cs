@@ -882,7 +882,7 @@ public class VehicleAsset : Asset, ISkinableAsset
         onModelLoaded(asset);
         if (Dedicator.IsDedicatedServer)
         {
-            ServerPrefabUtil.RemoveClientComponents(asset);
+            ServerPrefabUtil.RemoveClientComponents(asset, this);
         }
     }
 

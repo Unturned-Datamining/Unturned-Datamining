@@ -292,7 +292,7 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
             }
             else if (Dedicator.IsDedicatedServer)
             {
-                ServerPrefabUtil.RemoveClientComponents(_barricade);
+                ServerPrefabUtil.RemoveClientComponents(_barricade, this);
             }
         }
         if (barricade != null)

@@ -376,7 +376,7 @@ public class ObjectAsset : Asset
         validateModel(asset);
         if (Dedicator.IsDedicatedServer)
         {
-            ServerPrefabUtil.RemoveClientComponents(asset);
+            ServerPrefabUtil.RemoveClientComponents(asset, this);
         }
     }
 
