@@ -82,7 +82,7 @@ ItemCrafting
 		}
 		{
 			ItemDefId 21077
-			Materials 30
+			Materials 40
 		}
 		{
 			ItemDefId 1447
