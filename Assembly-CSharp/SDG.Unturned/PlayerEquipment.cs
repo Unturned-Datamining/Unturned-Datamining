@@ -207,7 +207,7 @@ public class PlayerEquipment : PlayerCaller
 
     private static readonly ClientInstanceMethod<byte, Guid, byte, byte, byte> SendItemHotkeySuggestion = ClientInstanceMethod<byte, Guid, byte, byte, byte>.Get(typeof(PlayerEquipment), "ReceiveItemHotkeySuggeston");
 
-    private OneShotAudioHandle inspectAudioHandle;
+    internal OneShotAudioHandle inspectAudioHandle;
 
     private OneShotAudioHandle equipAudioHandle;
 
@@ -609,7 +609,6 @@ public class PlayerEquipment : PlayerCaller
         lastInspect = Time.realtimeSinceStartup;
         inspectTime = base.player.animator.GetAnimationLength("Inspect");
         base.player.animator.play("Inspect", smooth: false);
-        inspectAudioHandle.Stop();
         if (asset != null)
         {
             inspectAudioHandle = base.player.PlayAudioReference(asset.inspectAudio);
@@ -627,6 +626,7 @@ public class PlayerEquipment : PlayerCaller
 
     public void uninspect()
     {
+        inspectAudioHandle.Stop();
         base.player.animator.setAnimationSpeed("Inspect", float.MaxValue);
     }
 

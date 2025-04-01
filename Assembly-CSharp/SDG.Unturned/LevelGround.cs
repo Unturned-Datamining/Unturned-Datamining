@@ -73,11 +73,11 @@ public class LevelGround : MonoBehaviour
 
     private static int _total;
 
-    private static bool[,] _regions;
+    private static RegionIncrementalVisibilityTracker regionTracker;
 
-    private static int[,] loads;
+    private static RegionIncrementalVisibilityTracker skyboxRegionTracker;
 
-    private static bool isRegionalVisibilityDirty;
+    private static Dictionary<Vector2Int, RegionVisibilityData> regionTrackerData;
 
     private static Terrain _terrain;
 
@@ -187,7 +187,9 @@ public class LevelGround : MonoBehaviour
 
     public static int total => _total;
 
-    public static bool[,] regions => _regions;
+    public static float RegularTreeMaxDistance { get; set; }
+
+    public static float SkyboxTreeMaxDistance { get; set; }
 
     public static bool shouldInstantlyLoad { get; private set; }
 
@@ -351,7 +353,6 @@ public class LevelGround : MonoBehaviour
                 }
             }
         }
-        regions[x, y] = false;
     }
 
     protected static void handlePostBake()
@@ -364,8 +365,7 @@ public class LevelGround : MonoBehaviour
         if (Regions.tryGetCoordinate(point, out var x, out var y))
         {
             ResourceSpawnpoint resourceSpawnpoint = new ResourceSpawnpoint(0, guid, point, isGenerated, NetId.INVALID);
-            resourceSpawnpoint.enable();
-            resourceSpawnpoint.disableSkybox();
+            resourceSpawnpoint.SetIsActiveInRegion(isActive: true);
             trees[x, y].Add(resourceSpawnpoint);
             _total++;
         }
@@ -609,21 +609,14 @@ public class LevelGround : MonoBehaviour
     {
         _trees = new List<ResourceSpawnpoint>[Regions.WORLD_SIZE, Regions.WORLD_SIZE];
         _total = 0;
-        _regions = new bool[Regions.WORLD_SIZE, Regions.WORLD_SIZE];
-        loads = new int[Regions.WORLD_SIZE, Regions.WORLD_SIZE];
         shouldInstantlyLoad = true;
+        regionTracker = new RegionIncrementalVisibilityTracker();
+        skyboxRegionTracker = new RegionIncrementalVisibilityTracker();
         for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
             for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
-                loads[b, b2] = -1;
-            }
-        }
-        for (byte b3 = 0; b3 < Regions.WORLD_SIZE; b3++)
-        {
-            for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4++)
-            {
-                trees[b3, b4] = new List<ResourceSpawnpoint>();
+                trees[b, b2] = new List<ResourceSpawnpoint>();
             }
         }
         treesHash = new byte[20];
@@ -632,8 +625,8 @@ public class LevelGround : MonoBehaviour
             return;
         }
         River river = new River(Level.info.path + "/Terrain/Trees.dat", usePath: false);
-        byte b5 = river.readByte();
-        if (b5 > 3)
+        byte b3 = river.readByte();
+        if (b3 > 3)
         {
             TreeRedirectorMap treeRedirectorMap = null;
             if (Level.shouldUseHolidayRedirects)
@@ -642,17 +635,17 @@ public class LevelGround : MonoBehaviour
             }
             bool flag = Level.isEditor && EditorAssetRedirector.HasRedirects;
             LevelBatching levelBatching = (Level.shouldUseLevelBatching ? LevelBatching.Get() : null);
-            for (byte b6 = 0; b6 < Regions.WORLD_SIZE; b6++)
+            for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4++)
             {
-                for (byte b7 = 0; b7 < Regions.WORLD_SIZE; b7++)
+                for (byte b5 = 0; b5 < Regions.WORLD_SIZE; b5++)
                 {
                     ushort num = river.readUInt16();
                     for (ushort num2 = 0; num2 < num; num2++)
                     {
-                        if (b5 > 4)
+                        if (b3 > 4)
                         {
                             ushort num3 = river.readUInt16();
-                            Guid guid = ((b5 >= 6) ? river.readGUID() : Guid.Empty);
+                            Guid guid = ((b3 >= 6) ? river.readGUID() : Guid.Empty);
                             Vector3 newPoint = river.readSingleVector3();
                             bool newGenerated = river.readBoolean();
                             if (num3 != 0 || guid != Guid.Empty)
@@ -682,13 +675,13 @@ public class LevelGround : MonoBehaviour
                                 }
                                 if (num3 != 0 || guid != Guid.Empty)
                                 {
-                                    NetId treeNetId = LevelNetIdRegistry.GetTreeNetId(b6, b7, num2);
+                                    NetId treeNetId = LevelNetIdRegistry.GetTreeNetId(b4, b5, num2);
                                     ResourceSpawnpoint resourceSpawnpoint = new ResourceSpawnpoint(num3, guid, newPoint, newGenerated, treeNetId);
                                     if (resourceSpawnpoint.asset == null && (bool)Assets.shouldLoadAnyAssets)
                                     {
-                                        UnturnedLog.error("Tree with no asset in region {0}, {1}: {2} {3}", b6, b7, num3, guid);
+                                        UnturnedLog.error("Tree with no asset in region {0}, {1}: {2} {3}", b4, b5, num3, guid);
                                     }
-                                    trees[b6, b7].Add(resourceSpawnpoint);
+                                    trees[b4, b5].Add(resourceSpawnpoint);
                                     levelBatching?.AddResourceSpawnpoint(resourceSpawnpoint);
                                     _total++;
                                 }
@@ -696,17 +689,17 @@ public class LevelGround : MonoBehaviour
                         }
                         else
                         {
-                            byte b8 = river.readByte();
+                            byte b6 = river.readByte();
                             ushort num4 = 3;
                             Vector3 newPoint2 = river.readSingleVector3();
                             bool newGenerated2 = river.readBoolean();
-                            NetId treeNetId2 = LevelNetIdRegistry.GetTreeNetId(b6, b7, num2);
+                            NetId treeNetId2 = LevelNetIdRegistry.GetTreeNetId(b4, b5, num2);
                             ResourceSpawnpoint resourceSpawnpoint2 = new ResourceSpawnpoint(num4, newPoint2, newGenerated2, treeNetId2);
                             if (resourceSpawnpoint2.asset == null && (bool)Assets.shouldLoadAnyAssets)
                             {
-                                UnturnedLog.error("Tree with no asset in region {0}, {1}: {2} {3}", b6, b7, num4, b8);
+                                UnturnedLog.error("Tree with no asset in region {0}, {1}: {2} {3}", b4, b5, num4, b6);
                             }
-                            trees[b6, b7].Add(resourceSpawnpoint2);
+                            trees[b4, b5].Add(resourceSpawnpoint2);
                             _total++;
                         }
                     }
@@ -1058,66 +1051,16 @@ public class LevelGround : MonoBehaviour
 
     private static void onRegionUpdated(Player player, byte old_x, byte old_y, byte new_x, byte new_y, byte step, ref bool canIncrementIndex)
     {
-        if (step != 0)
+        if (step == 0)
         {
-            return;
-        }
-        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
-        {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
+            regionTracker.CameraCoord = new Vector2Int(new_x, new_y);
+            skyboxRegionTracker.CameraCoord = regionTracker.CameraCoord;
+            if (shouldInstantlyLoad)
             {
-                if (regions[b, b2] && !Regions.checkArea(b, b2, new_x, new_y, RESOURCE_REGIONS))
-                {
-                    regions[b, b2] = false;
-                    if (shouldInstantlyLoad)
-                    {
-                        List<ResourceSpawnpoint> list = trees[b, b2];
-                        for (int i = 0; i < list.Count; i++)
-                        {
-                            list[i].disable();
-                            if (GraphicsSettings.landmarkQuality >= EGraphicQuality.MEDIUM)
-                            {
-                                list[i].enableSkybox();
-                            }
-                        }
-                    }
-                    else
-                    {
-                        loads[b, b2] = 0;
-                        isRegionalVisibilityDirty = true;
-                    }
-                }
+                ImmediatelySyncRegionalVisibility();
             }
+            shouldInstantlyLoad = false;
         }
-        if (Regions.checkSafe(new_x, new_y))
-        {
-            for (int j = new_x - RESOURCE_REGIONS; j <= new_x + RESOURCE_REGIONS; j++)
-            {
-                for (int k = new_y - RESOURCE_REGIONS; k <= new_y + RESOURCE_REGIONS; k++)
-                {
-                    if (!Regions.checkSafe((byte)j, (byte)k) || regions[j, k])
-                    {
-                        continue;
-                    }
-                    regions[j, k] = true;
-                    if (shouldInstantlyLoad)
-                    {
-                        List<ResourceSpawnpoint> list2 = trees[j, k];
-                        for (int l = 0; l < list2.Count; l++)
-                        {
-                            list2[l].enable();
-                            list2[l].disableSkybox();
-                        }
-                    }
-                    else
-                    {
-                        loads[j, k] = 0;
-                        isRegionalVisibilityDirty = true;
-                    }
-                }
-            }
-        }
-        shouldInstantlyLoad = false;
     }
 
     private static void onPlayerCreated(Player player)
@@ -1136,61 +1079,98 @@ public class LevelGround : MonoBehaviour
         area.onRegionUpdated = (EditorRegionUpdated)Delegate.Combine(area.onRegionUpdated, new EditorRegionUpdated(onRegionUpdated));
     }
 
+    private static void ImmediatelySyncRegionalVisibility()
+    {
+        regionTrackerData.Clear();
+        regionTracker.MaxDistance = RegularTreeMaxDistance;
+        regionTracker.UpdateRegions(regionTrackerData);
+        foreach (KeyValuePair<Vector2Int, RegionVisibilityData> regionTrackerDatum in regionTrackerData)
+        {
+            Vector2Int key = regionTrackerDatum.Key;
+            if (!Regions.checkSafe(key.x, key.y))
+            {
+                continue;
+            }
+            RegionVisibilityData value = regionTrackerDatum.Value;
+            foreach (ResourceSpawnpoint item in trees[key.x, key.y])
+            {
+                item.SetIsActiveInRegion(value.isInsideMask);
+            }
+        }
+        regionTracker.FlushProgress();
+        regionTrackerData.Clear();
+        skyboxRegionTracker.MaxDistance = SkyboxTreeMaxDistance;
+        skyboxRegionTracker.UpdateRegions(regionTrackerData);
+        foreach (KeyValuePair<Vector2Int, RegionVisibilityData> regionTrackerDatum2 in regionTrackerData)
+        {
+            Vector2Int key2 = regionTrackerDatum2.Key;
+            if (!Regions.checkSafe(key2.x, key2.y))
+            {
+                continue;
+            }
+            RegionVisibilityData value2 = regionTrackerDatum2.Value;
+            foreach (ResourceSpawnpoint item2 in trees[key2.x, key2.y])
+            {
+                item2.SetIsSkyboxActiveInRegion(value2.isInsideMask);
+            }
+        }
+        skyboxRegionTracker.FlushProgress();
+    }
+
     /// <summary>
     /// Stagger regional visibility across multiple frames.
     /// </summary>
     private void tickRegionalVisibility()
     {
-        bool flag = true;
-        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
+        regionTrackerData.Clear();
+        regionTracker.MaxDistance = RegularTreeMaxDistance;
+        regionTracker.UpdateRegions(regionTrackerData);
+        foreach (KeyValuePair<Vector2Int, RegionVisibilityData> regionTrackerDatum in regionTrackerData)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
+            Vector2Int key = regionTrackerDatum.Key;
+            if (!Regions.checkSafe(key.x, key.y))
             {
-                if (loads[b, b2] != -1)
-                {
-                    if (loads[b, b2] >= trees[b, b2].Count)
-                    {
-                        loads[b, b2] = -1;
-                    }
-                    else
-                    {
-                        if (regions[b, b2])
-                        {
-                            if (!trees[b, b2][loads[b, b2]].isEnabled)
-                            {
-                                trees[b, b2][loads[b, b2]].enable();
-                            }
-                            if (trees[b, b2][loads[b, b2]].isSkyboxEnabled)
-                            {
-                                trees[b, b2][loads[b, b2]].disableSkybox();
-                            }
-                        }
-                        else
-                        {
-                            if (trees[b, b2][loads[b, b2]].isEnabled)
-                            {
-                                trees[b, b2][loads[b, b2]].disable();
-                            }
-                            if (!trees[b, b2][loads[b, b2]].isSkyboxEnabled && GraphicsSettings.landmarkQuality >= EGraphicQuality.MEDIUM)
-                            {
-                                trees[b, b2][loads[b, b2]].enableSkybox();
-                            }
-                        }
-                        loads[b, b2]++;
-                        flag = false;
-                    }
-                }
+                regionTracker.NotifyRegionFinishedUpdating(key);
+                continue;
+            }
+            RegionVisibilityData value = regionTrackerDatum.Value;
+            List<ResourceSpawnpoint> list = trees[key.x, key.y];
+            if (value.progressIndex < list.Count)
+            {
+                list[value.progressIndex].SetIsActiveInRegion(value.isInsideMask);
+            }
+            else
+            {
+                regionTracker.NotifyRegionFinishedUpdating(key);
             }
         }
-        if (flag)
+        regionTrackerData.Clear();
+        skyboxRegionTracker.MaxDistance = SkyboxTreeMaxDistance;
+        skyboxRegionTracker.UpdateRegions(regionTrackerData);
+        foreach (KeyValuePair<Vector2Int, RegionVisibilityData> regionTrackerDatum2 in regionTrackerData)
         {
-            isRegionalVisibilityDirty = false;
+            Vector2Int key2 = regionTrackerDatum2.Key;
+            if (!Regions.checkSafe(key2.x, key2.y))
+            {
+                skyboxRegionTracker.NotifyRegionFinishedUpdating(key2);
+                continue;
+            }
+            RegionVisibilityData value2 = regionTrackerDatum2.Value;
+            List<ResourceSpawnpoint> list2 = trees[key2.x, key2.y];
+            if (value2.progressIndex < list2.Count)
+            {
+                list2[value2.progressIndex].SetIsSkyboxActiveInRegion(value2.isInsideMask);
+            }
+            else
+            {
+                skyboxRegionTracker.NotifyRegionFinishedUpdating(key2);
+            }
         }
     }
 
     private void Update()
     {
-        if (Level.isLoaded && !Dedicator.IsDedicatedServer && loads != null && regions != null && trees != null && isRegionalVisibilityDirty)
+        if (Level.isLoaded && !Dedicator.IsDedicatedServer && trees != null)
         {
             tickRegionalVisibility();
         }
@@ -1250,7 +1230,7 @@ public class LevelGround : MonoBehaviour
         SAVEDATA_TREES_VERSION = 6;
         RESOURCE_REGIONS = 3;
         ALPHAMAPS = 2;
-        isRegionalVisibilityDirty = true;
+        regionTrackerData = new Dictionary<Vector2Int, RegionVisibilityData>();
         FoliageSystem.preBakeTile += handlePreBakeTile;
         FoliageSystem.postBake += handlePostBake;
     }

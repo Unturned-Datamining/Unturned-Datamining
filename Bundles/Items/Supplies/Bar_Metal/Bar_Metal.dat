@@ -20,4 +20,11 @@ Blueprint_1_Tool 76
 Blueprint_1_Products 3
 Blueprint_1_Build 27
 
+Actions 1
+Action_0_Type Blueprint
+Action_0_Source 1911
+Action_0_Blueprints 1
+Action_0_Blueprint_0_Index 0
+Action_0_Key Stack
+
 InventoryAudio Sounds/Inventory/SmallMetal.asset

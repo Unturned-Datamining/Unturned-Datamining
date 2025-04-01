@@ -82,7 +82,7 @@ public class FoliageInstancedMeshInfoAsset : FoliageInfoAsset
         FoliageSystem.addInstance(getReferenceTo<FoliageInstancedMeshInfoAsset>(), position, rotation, scale, clearWhenBaked);
     }
 
-    protected override bool isPositionValid(Vector3 position)
+    protected override bool isPositionValid(Vector3 position, bool doCollisionChecks)
     {
         if (!VolumeManager<FoliageVolume, FoliageVolumeManager>.Get().IsPositionBakeable(position, instancedMeshes: true, resources: false, objects: false))
         {

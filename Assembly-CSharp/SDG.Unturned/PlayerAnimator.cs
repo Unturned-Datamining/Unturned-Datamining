@@ -493,6 +493,10 @@ public class PlayerAnimator : PlayerCaller
         {
             flag |= characterAnimator.play(name, smooth);
         }
+        if (flag)
+        {
+            base.player.equipment.inspectAudioHandle.Stop();
+        }
         if (flag && gesture != 0)
         {
             _gesture = EPlayerGesture.NONE;

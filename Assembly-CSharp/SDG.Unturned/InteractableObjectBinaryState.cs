@@ -22,7 +22,7 @@ public class InteractableObjectBinaryState : InteractableObject
 
     private float cutHeight;
 
-    private Material material;
+    private Material emissiveMaterialInstance;
 
     private GameObject toggleGameObject;
 
@@ -202,32 +202,24 @@ public class InteractableObjectBinaryState : InteractableObject
         LightLODTool.applyLightLOD(transform);
         if (transform != null)
         {
-            material = HighlighterTool.getMaterialInstance(transform.parent);
             toggleGameObject = transform.gameObject;
+            if (_objectAsset.iobsEmissiveMaterialMode == EInteractableObjectBinaryStateEmissiveMaterialMode.Auto)
+            {
+                emissiveMaterialInstance = HighlighterTool.getMaterialInstance(transform.parent);
+            }
         }
     }
 
     private void updateToggleGameObject()
     {
-        if (!(toggleGameObject != null))
+        if (toggleGameObject != null)
         {
-            return;
-        }
-        if (base.objectAsset.interactabilityPower == EObjectInteractabilityPower.STAY)
-        {
-            if (material != null)
+            bool flag = ((base.objectAsset.interactabilityPower != EObjectInteractabilityPower.STAY) ? isUsed : (isUsed && base.isWired));
+            toggleGameObject.SetActive(flag);
+            if (emissiveMaterialInstance != null)
             {
-                material.SetColor("_EmissionColor", (isUsed && base.isWired) ? new Color(2f, 2f, 2f) : Color.black);
+                emissiveMaterialInstance.SetColor("_EmissionColor", flag ? new Color(2f, 2f, 2f) : Color.black);
             }
-            toggleGameObject.SetActive(isUsed && base.isWired);
-        }
-        else
-        {
-            if (material != null)
-            {
-                material.SetColor("_EmissionColor", isUsed ? new Color(2f, 2f, 2f) : Color.black);
-            }
-            toggleGameObject.SetActive(isUsed);
         }
     }
 
@@ -413,9 +405,9 @@ public class InteractableObjectBinaryState : InteractableObject
 
     private void OnDestroy()
     {
-        if (material != null)
+        if (emissiveMaterialInstance != null)
         {
-            UnityEngine.Object.DestroyImmediate(material);
+            UnityEngine.Object.Destroy(emissiveMaterialInstance);
         }
     }
 

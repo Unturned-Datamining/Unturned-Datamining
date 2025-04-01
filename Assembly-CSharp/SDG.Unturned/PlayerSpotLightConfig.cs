@@ -16,8 +16,6 @@ public struct PlayerSpotLightConfig
 
     public float angle;
 
-    public float intensity;
-
     public Color color;
 
     public void applyToLight(Light light)
@@ -26,9 +24,14 @@ public struct PlayerSpotLightConfig
         {
             light.range = range;
             light.spotAngle = angle;
-            light.intensity = intensity;
+            light.intensity = 1f;
             light.color = color;
         }
+    }
+
+    public override string ToString()
+    {
+        return $"(Enabled: {isEnabled} Range: {range}m Angle: {angle}° Color: {color})";
     }
 
     public PlayerSpotLightConfig(DatDictionary data)
@@ -36,7 +39,7 @@ public struct PlayerSpotLightConfig
         isEnabled = data.ParseBool("SpotLight_Enabled", defaultValue: true);
         range = data.ParseFloat("SpotLight_Range", 64f);
         angle = data.ParseFloat("SpotLight_Angle", 90f);
-        intensity = data.ParseFloat("SpotLight_Intensity", 1.3f);
-        color = data.LegacyParseColor("SpotLight_Color", new Color32(245, 223, 147, byte.MaxValue));
+        float num = data.ParseFloat("SpotLight_Intensity", 1.3f);
+        color = data.LegacyParseColor("SpotLight_Color", new Color32(245, 223, 147, byte.MaxValue)) * num;
     }
 }

@@ -354,21 +354,21 @@ public class MenuConfigurationControlsUI
 
     public static void bindUpdate()
     {
-        if (IsRebindingKey)
+        if (IsRebindingKey && Glazier.Get().ShouldGameProcessKeyDown)
         {
-            if (InputEx.GetKeyDown(KeyCode.Mouse3))
+            if (Input.GetKeyDown(KeyCode.Mouse3))
             {
                 bind(KeyCode.Mouse3);
             }
-            else if (InputEx.GetKeyDown(KeyCode.Mouse4))
+            else if (Input.GetKeyDown(KeyCode.Mouse4))
             {
                 bind(KeyCode.Mouse4);
             }
-            else if (InputEx.GetKeyDown(KeyCode.Mouse5))
+            else if (Input.GetKeyDown(KeyCode.Mouse5))
             {
                 bind(KeyCode.Mouse5);
             }
-            else if (InputEx.GetKeyDown(KeyCode.Mouse6))
+            else if (Input.GetKeyDown(KeyCode.Mouse6))
             {
                 bind(KeyCode.Mouse6);
             }

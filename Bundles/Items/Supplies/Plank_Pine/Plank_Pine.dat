@@ -17,3 +17,10 @@ Blueprint_1_Type Gear
 Blueprint_1_Supply_0_ID 42
 Blueprint_1_Supply_0_Amount 4
 Blueprint_1_Build 27
+
+Actions 1
+Action_0_Type Blueprint
+Action_0_Source 1905
+Action_0_Blueprints 1
+Action_0_Blueprint_0_Index 0
+Action_0_Key Stack

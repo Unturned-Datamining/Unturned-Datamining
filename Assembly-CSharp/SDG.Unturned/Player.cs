@@ -214,8 +214,7 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
             {
                 PlayerSpotLightConfig result = default(PlayerSpotLightConfig);
                 result.angle = Mathf.LerpAngle(itemLightConfig.angle, headlampLightConfig.angle, 0.5f);
-                result.color = Color.Lerp(itemLightConfig.color, headlampLightConfig.color, 0.5f);
-                result.intensity = Mathf.Lerp(itemLightConfig.intensity, headlampLightConfig.intensity, 0.5f);
+                result.color = Color32.Lerp(itemLightConfig.color, headlampLightConfig.color, 0.5f);
                 result.range = Mathf.Lerp(itemLightConfig.range, headlampLightConfig.range, 0.5f);
                 return result;
             }

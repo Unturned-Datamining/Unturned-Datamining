@@ -44,11 +44,13 @@ public class LevelObjects : MonoBehaviour
 
     private static bool[,] _regions;
 
+    private static RegionIncrementalVisibilityTracker regionTracker;
+
+    private static RegionIncrementalVisibilityTracker skyboxRegionTracker;
+
+    private static Dictionary<Vector2Int, RegionVisibilityData> regionTrackerData = new Dictionary<Vector2Int, RegionVisibilityData>();
+
     private static bool isHierarchyReady;
-
-    private static int[,] _loads;
-
-    private static bool isRegionalVisibilityDirty = true;
 
     public static RegionActivated onRegionActivated;
 
@@ -78,7 +80,9 @@ public class LevelObjects : MonoBehaviour
 
     public static bool[,] regions => _regions;
 
-    public static int[,] loads => _loads;
+    public static float RegularObjectMaxDistance { get; set; }
+
+    public static float SkyboxObjectMaxDistance { get; set; }
 
     /// <summary>
     /// Hash of Objects.dat
@@ -90,6 +94,11 @@ public class LevelObjects : MonoBehaviour
     private static uint generateUniqueInstanceID()
     {
         return availableInstanceID++;
+    }
+
+    public static bool IsRegionUpdating(Vector2Int coord)
+    {
+        return regionTracker.IsRegionUpdating(coord);
     }
 
     public static void undo()
@@ -467,29 +476,23 @@ public class LevelObjects : MonoBehaviour
         _buildables = new List<LevelBuildableObject>[Regions.WORLD_SIZE, Regions.WORLD_SIZE];
         _total = 0;
         _regions = new bool[Regions.WORLD_SIZE, Regions.WORLD_SIZE];
-        _loads = new int[Regions.WORLD_SIZE, Regions.WORLD_SIZE];
         shouldInstantlyLoad = true;
         isHierarchyReady = false;
+        regionTracker = new RegionIncrementalVisibilityTracker();
+        skyboxRegionTracker = new RegionIncrementalVisibilityTracker();
         for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
             for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
-                loads[b, b2] = -1;
-            }
-        }
-        for (byte b3 = 0; b3 < Regions.WORLD_SIZE; b3++)
-        {
-            for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4++)
-            {
-                objects[b3, b4] = new List<LevelObject>();
-                buildables[b3, b4] = new List<LevelBuildableObject>();
+                objects[b, b2] = new List<LevelObject>();
+                buildables[b, b2] = new List<LevelBuildableObject>();
             }
         }
         hash = new byte[20];
         if (ReadWrite.fileExists(Level.info.path + "/Level/Objects.dat", useCloud: false, usePath: false))
         {
             River river = new River(Level.info.path + "/Level/Objects.dat", usePath: false);
-            byte b5 = river.readByte();
+            byte b3 = river.readByte();
             LegacyObjectRedirectorMap legacyObjectRedirectorMap = null;
             if (Level.shouldUseHolidayRedirects)
             {
@@ -497,13 +500,13 @@ public class LevelObjects : MonoBehaviour
             }
             bool flag = Level.isEditor && EditorAssetRedirector.HasRedirects;
             LevelBatching levelBatching = (Level.shouldUseLevelBatching ? LevelBatching.Get() : null);
-            if (b5 > 0)
+            if (b3 > 0)
             {
-                if (b5 > 1 && b5 < 3)
+                if (b3 > 1 && b3 < 3)
                 {
                     river.readSteamID();
                 }
-                if (b5 > 8)
+                if (b3 > 8)
                 {
                     availableInstanceID = river.readUInt32();
                 }
@@ -511,32 +514,32 @@ public class LevelObjects : MonoBehaviour
                 {
                     availableInstanceID = 1u;
                 }
-                for (byte b6 = 0; b6 < Regions.WORLD_SIZE; b6++)
+                for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4++)
                 {
-                    for (byte b7 = 0; b7 < Regions.WORLD_SIZE; b7++)
+                    for (byte b5 = 0; b5 < Regions.WORLD_SIZE; b5++)
                     {
                         ushort num = river.readUInt16();
                         for (ushort num2 = 0; num2 < num; num2++)
                         {
                             Vector3 vector = river.readSingleVector3();
                             Quaternion roundedIfNearlyAxisAligned = river.readSingleQuaternion().GetRoundedIfNearlyAxisAligned();
-                            Vector3 newScale = ((b5 <= 3) ? Vector3.one : river.readSingleVector3().GetRoundedIfNearlyEqualToOne());
+                            Vector3 newScale = ((b3 <= 3) ? Vector3.one : river.readSingleVector3().GetRoundedIfNearlyEqualToOne());
                             ushort num3 = river.readUInt16();
-                            if (b5 > 5 && b5 < 10)
+                            if (b3 > 5 && b3 < 10)
                             {
                                 river.readString();
                             }
                             Guid guid = Guid.Empty;
-                            if (b5 > 7)
+                            if (b3 > 7)
                             {
                                 guid = river.readGUID();
                             }
                             ELevelObjectPlacementOrigin newPlacementOrigin = ELevelObjectPlacementOrigin.MANUAL;
-                            if (b5 > 6)
+                            if (b3 > 6)
                             {
                                 newPlacementOrigin = (ELevelObjectPlacementOrigin)river.readByte();
                             }
-                            uint newInstanceID = ((b5 <= 8) ? generateUniqueInstanceID() : river.readUInt32());
+                            uint newInstanceID = ((b3 <= 8) ? generateUniqueInstanceID() : river.readUInt32());
                             if (legacyObjectRedirectorMap != null)
                             {
                                 ObjectAsset objectAsset = legacyObjectRedirectorMap.redirect(guid);
@@ -562,7 +565,7 @@ public class LevelObjects : MonoBehaviour
                             }
                             AssetReference<MaterialPaletteAsset> customMaterialOverride;
                             int materialIndexOverride;
-                            if (b5 >= 11)
+                            if (b3 >= 11)
                             {
                                 customMaterialOverride = new AssetReference<MaterialPaletteAsset>(river.readGUID());
                                 materialIndexOverride = river.readInt32();
@@ -572,26 +575,26 @@ public class LevelObjects : MonoBehaviour
                                 customMaterialOverride = default(AssetReference<MaterialPaletteAsset>);
                                 materialIndexOverride = -1;
                             }
-                            bool isOwnedCullingVolumeAllowed = b5 < 12 || river.readBoolean();
+                            bool isOwnedCullingVolumeAllowed = b3 < 12 || river.readBoolean();
                             if (guid != Guid.Empty || num3 != 0)
                             {
-                                NetId regularObjectNetId = LevelNetIdRegistry.GetRegularObjectNetId(b6, b7, num2);
+                                NetId regularObjectNetId = LevelNetIdRegistry.GetRegularObjectNetId(b4, b5, num2);
                                 LevelObject levelObject = new LevelObject(vector, roundedIfNearlyAxisAligned, newScale, num3, guid, newPlacementOrigin, newInstanceID, customMaterialOverride, materialIndexOverride, regularObjectNetId, isOwnedCullingVolumeAllowed);
                                 if (levelObject.asset == null && (bool)Assets.shouldLoadAnyAssets)
                                 {
-                                    UnturnedLog.error("Object with no asset in region {0}, {1}: {2} {3}", b6, b7, num3, guid);
+                                    UnturnedLog.error("Object with no asset in region {0}, {1}: {2} {3}", b4, b5, num3, guid);
                                 }
-                                byte b8 = b6;
-                                byte b9 = b7;
+                                byte b6 = b4;
+                                byte b7 = b5;
                                 if (Level.isEditor)
                                 {
                                     if (Regions.tryGetCoordinate(vector, out var x, out var y))
                                     {
-                                        if (x != b6 || y != b7)
+                                        if (x != b4 || y != b5)
                                         {
-                                            UnturnedLog.error(num3 + " should be in " + x + ", " + y + " but was in " + b6 + ", " + b7 + "!");
-                                            b8 = x;
-                                            b9 = y;
+                                            UnturnedLog.error(num3 + " should be in " + x + ", " + y + " but was in " + b4 + ", " + b5 + "!");
+                                            b6 = x;
+                                            b7 = y;
                                         }
                                     }
                                     else
@@ -599,7 +602,7 @@ public class LevelObjects : MonoBehaviour
                                         UnturnedLog.warn("Object '{0}' ({1}) is outside the map bounds. Position: {2}", levelObject.asset?.name, num3, vector);
                                     }
                                 }
-                                objects[b8, b9].Add(levelObject);
+                                objects[b6, b7].Add(levelObject);
                                 levelBatching?.AddLevelObject(levelObject);
                                 _total++;
                             }
@@ -612,13 +615,13 @@ public class LevelObjects : MonoBehaviour
         }
         else
         {
-            for (byte b10 = 0; b10 < Regions.WORLD_SIZE; b10++)
+            for (byte b8 = 0; b8 < Regions.WORLD_SIZE; b8++)
             {
-                for (byte b11 = 0; b11 < Regions.WORLD_SIZE; b11++)
+                for (byte b9 = 0; b9 < Regions.WORLD_SIZE; b9++)
                 {
-                    if (ReadWrite.fileExists(Level.info.path + "/Objects/Objects_" + b10 + "_" + b11 + ".dat", useCloud: false, usePath: false))
+                    if (ReadWrite.fileExists(Level.info.path + "/Objects/Objects_" + b8 + "_" + b9 + ".dat", useCloud: false, usePath: false))
                     {
-                        River river2 = new River(Level.info.path + "/Objects/Objects_" + b10 + "_" + b11 + ".dat", usePath: false);
+                        River river2 = new River(Level.info.path + "/Objects/Objects_" + b8 + "_" + b9 + ".dat", usePath: false);
                         if (river2.readByte() > 0)
                         {
                             ushort num4 = river2.readUInt16();
@@ -644,9 +647,9 @@ public class LevelObjects : MonoBehaviour
         {
             River river3 = new River(Level.info.path + "/Level/Buildables.dat", usePath: false);
             river3.readByte();
-            for (byte b12 = 0; b12 < Regions.WORLD_SIZE; b12++)
+            for (byte b10 = 0; b10 < Regions.WORLD_SIZE; b10++)
             {
-                for (byte b13 = 0; b13 < Regions.WORLD_SIZE; b13++)
+                for (byte b11 = 0; b11 < Regions.WORLD_SIZE; b11++)
                 {
                     ushort num7 = river3.readUInt16();
                     for (ushort num8 = 0; num8 < num7; num8++)
@@ -659,21 +662,21 @@ public class LevelObjects : MonoBehaviour
                             LevelBuildableObject levelBuildableObject = new LevelBuildableObject(vector2, newRotation, num9);
                             if (levelBuildableObject.asset == null)
                             {
-                                UnturnedLog.warn($"Missing asset for default buildable object ID {num9} in region ({b12}, {b13})");
+                                UnturnedLog.warn($"Missing asset for default buildable object ID {num9} in region ({b10}, {b11})");
                             }
                             else if (!(levelBuildableObject.asset is ItemBarricadeAsset) && !(levelBuildableObject.asset is ItemStructureAsset))
                             {
-                                UnturnedLog.warn($"Default buildable object ID {num9} in region ({b12}, {b13}) loaded as {levelBuildableObject.asset.name} (this is probably an ID conflict)");
+                                UnturnedLog.warn($"Default buildable object ID {num9} in region ({b10}, {b11}) loaded as {levelBuildableObject.asset.name} (this is probably an ID conflict)");
                             }
                             if (Level.isEditor)
                             {
                                 if (Regions.tryGetCoordinate(vector2, out var x2, out var y2))
                                 {
-                                    if (x2 != b12 || y2 != b13)
+                                    if (x2 != b10 || y2 != b11)
                                     {
-                                        UnturnedLog.error(num9 + " should be in " + x2 + ", " + y2 + " but was in " + b12 + ", " + b13 + "!");
-                                        b12 = x2;
-                                        b13 = y2;
+                                        UnturnedLog.error(num9 + " should be in " + x2 + ", " + y2 + " but was in " + b10 + ", " + b11 + "!");
+                                        b10 = x2;
+                                        b11 = y2;
                                     }
                                 }
                                 else
@@ -681,7 +684,7 @@ public class LevelObjects : MonoBehaviour
                                     UnturnedLog.warn("Buildable {0} is outside the map bounds. Position: {1}", num9, vector2);
                                 }
                             }
-                            buildables[b12, b13].Add(levelBuildableObject);
+                            buildables[b10, b11].Add(levelBuildableObject);
                             _total++;
                         }
                     }
@@ -799,6 +802,16 @@ public class LevelObjects : MonoBehaviour
         {
             return;
         }
+        regionTracker.CameraCoord = new Vector2Int(new_x, new_y);
+        skyboxRegionTracker.CameraCoord = regionTracker.CameraCoord;
+        if (LevelRoads.regionTracker != null)
+        {
+            LevelRoads.regionTracker.CameraCoord = regionTracker.CameraCoord;
+        }
+        if (shouldInstantlyLoad)
+        {
+            ImmediatelySyncRegionalVisibility();
+        }
         for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
             for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
@@ -806,25 +819,12 @@ public class LevelObjects : MonoBehaviour
                 if (regions[b, b2] && !Regions.checkArea(b, b2, new_x, new_y, OBJECT_REGIONS))
                 {
                     regions[b, b2] = false;
-                    if (shouldInstantlyLoad)
-                    {
-                        List<LevelObject> list = objects[b, b2];
-                        for (int i = 0; i < list.Count; i++)
-                        {
-                            list[i].SetIsActiveInRegion(isActive: false);
-                        }
-                    }
-                    else
-                    {
-                        loads[b, b2] = 0;
-                        isRegionalVisibilityDirty = true;
-                    }
                     if (Level.isEditor)
                     {
-                        List<LevelBuildableObject> list2 = buildables[b, b2];
-                        for (int j = 0; j < list2.Count; j++)
+                        List<LevelBuildableObject> list = buildables[b, b2];
+                        for (int i = 0; i < list.Count; i++)
                         {
-                            list2[j].disable();
+                            list[i].disable();
                         }
                     }
                 }
@@ -832,34 +832,21 @@ public class LevelObjects : MonoBehaviour
         }
         if (Regions.checkSafe(new_x, new_y))
         {
-            for (int k = new_x - OBJECT_REGIONS; k <= new_x + OBJECT_REGIONS; k++)
+            for (int j = new_x - OBJECT_REGIONS; j <= new_x + OBJECT_REGIONS; j++)
             {
-                for (int l = new_y - OBJECT_REGIONS; l <= new_y + OBJECT_REGIONS; l++)
+                for (int k = new_y - OBJECT_REGIONS; k <= new_y + OBJECT_REGIONS; k++)
                 {
-                    if (!Regions.checkSafe((byte)k, (byte)l) || regions[k, l])
+                    if (!Regions.checkSafe((byte)j, (byte)k) || regions[j, k])
                     {
                         continue;
                     }
-                    regions[k, l] = true;
-                    if (shouldInstantlyLoad)
-                    {
-                        List<LevelObject> list3 = objects[k, l];
-                        for (int m = 0; m < list3.Count; m++)
-                        {
-                            list3[m].SetIsActiveInRegion(isActive: true);
-                        }
-                    }
-                    else
-                    {
-                        loads[k, l] = 0;
-                        isRegionalVisibilityDirty = true;
-                    }
+                    regions[j, k] = true;
                     if (Level.isEditor)
                     {
-                        List<LevelBuildableObject> list4 = buildables[k, l];
-                        for (int n = 0; n < list4.Count; n++)
+                        List<LevelBuildableObject> list2 = buildables[j, k];
+                        for (int l = 0; l < list2.Count; l++)
                         {
-                            list4[n].enable();
+                            list2[l].enable();
                         }
                     }
                 }
@@ -899,26 +886,45 @@ public class LevelObjects : MonoBehaviour
     /// </summary>
     internal static void ImmediatelySyncRegionalVisibility()
     {
-        if (!isRegionalVisibilityDirty)
+        regionTrackerData.Clear();
+        regionTracker.MaxDistance = RegularObjectMaxDistance;
+        regionTracker.UpdateRegions(regionTrackerData);
+        foreach (KeyValuePair<Vector2Int, RegionVisibilityData> regionTrackerDatum in regionTrackerData)
         {
-            return;
-        }
-        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
-        {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
+            Vector2Int key = regionTrackerDatum.Key;
+            if (!Regions.checkSafe(key.x, key.y))
             {
-                if (loads[b, b2] != -1)
-                {
-                    bool isActiveInRegion = regions[b, b2];
-                    foreach (LevelObject item in objects[b, b2])
-                    {
-                        item.SetIsActiveInRegion(isActiveInRegion);
-                    }
-                    loads[b, b2] = -1;
-                }
+                continue;
+            }
+            RegionVisibilityData value = regionTrackerDatum.Value;
+            foreach (LevelObject item in objects[key.x, key.y])
+            {
+                item.SetIsActiveInRegion(value.isInsideMask);
+            }
+            if (value.isInsideMask)
+            {
+                onRegionActivated?.Invoke((byte)key.x, (byte)key.y);
             }
         }
-        isRegionalVisibilityDirty = false;
+        regionTracker.FlushProgress();
+        regionTrackerData.Clear();
+        skyboxRegionTracker.MaxDistance = SkyboxObjectMaxDistance;
+        skyboxRegionTracker.UpdateRegions(regionTrackerData);
+        foreach (KeyValuePair<Vector2Int, RegionVisibilityData> regionTrackerDatum2 in regionTrackerData)
+        {
+            Vector2Int key2 = regionTrackerDatum2.Key;
+            if (!Regions.checkSafe(key2.x, key2.y))
+            {
+                continue;
+            }
+            RegionVisibilityData value2 = regionTrackerDatum2.Value;
+            foreach (LevelObject item2 in objects[key2.x, key2.y])
+            {
+                item2.SetIsSkyboxActiveInRegion(value2.isInsideMask);
+            }
+        }
+        skyboxRegionTracker.FlushProgress();
+        LevelRoads.ImmediatelySyncRegionalVisibility();
     }
 
     /// <summary>
@@ -926,40 +932,57 @@ public class LevelObjects : MonoBehaviour
     /// </summary>
     private void tickRegionalVisibility()
     {
-        bool flag = true;
-        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
+        regionTrackerData.Clear();
+        regionTracker.MaxDistance = RegularObjectMaxDistance;
+        regionTracker.UpdateRegions(regionTrackerData);
+        foreach (KeyValuePair<Vector2Int, RegionVisibilityData> regionTrackerDatum in regionTrackerData)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
+            Vector2Int key = regionTrackerDatum.Key;
+            if (!Regions.checkSafe(key.x, key.y))
             {
-                int num = loads[b, b2];
-                if (num != -1)
-                {
-                    if (num >= objects[b, b2].Count)
-                    {
-                        loads[b, b2] = -1;
-                        onRegionActivated?.Invoke(b, b2);
-                    }
-                    else
-                    {
-                        bool isActiveInRegion = regions[b, b2];
-                        objects[b, b2][num].SetIsActiveInRegion(isActiveInRegion);
-                        loads[b, b2]++;
-                        flag = false;
-                    }
-                }
+                regionTracker.NotifyRegionFinishedUpdating(key);
+                continue;
             }
+            RegionVisibilityData value = regionTrackerDatum.Value;
+            List<LevelObject> list = objects[key.x, key.y];
+            if (value.progressIndex < list.Count)
+            {
+                list[value.progressIndex].SetIsActiveInRegion(value.isInsideMask);
+                continue;
+            }
+            regionTracker.NotifyRegionFinishedUpdating(key);
+            onRegionActivated?.Invoke((byte)key.x, (byte)key.y);
         }
-        if (flag)
+        regionTrackerData.Clear();
+        skyboxRegionTracker.MaxDistance = SkyboxObjectMaxDistance;
+        skyboxRegionTracker.UpdateRegions(regionTrackerData);
+        foreach (KeyValuePair<Vector2Int, RegionVisibilityData> regionTrackerDatum2 in regionTrackerData)
         {
-            isRegionalVisibilityDirty = false;
+            Vector2Int key2 = regionTrackerDatum2.Key;
+            if (!Regions.checkSafe(key2.x, key2.y))
+            {
+                skyboxRegionTracker.NotifyRegionFinishedUpdating(key2);
+                continue;
+            }
+            RegionVisibilityData value2 = regionTrackerDatum2.Value;
+            List<LevelObject> list2 = objects[key2.x, key2.y];
+            if (value2.progressIndex < list2.Count)
+            {
+                list2[value2.progressIndex].SetIsSkyboxActiveInRegion(value2.isInsideMask);
+            }
+            else
+            {
+                skyboxRegionTracker.NotifyRegionFinishedUpdating(key2);
+            }
         }
     }
 
     private void Update()
     {
-        if (Level.isLoaded && !Dedicator.IsDedicatedServer && loads != null && regions != null && objects != null && isHierarchyReady && isRegionalVisibilityDirty)
+        if (Level.isLoaded && !Dedicator.IsDedicatedServer && regions != null && objects != null && isHierarchyReady)
         {
             tickRegionalVisibility();
+            LevelRoads.UpdateRegionalVisibility();
         }
     }
 

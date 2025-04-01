@@ -23,6 +23,8 @@ public class Road
 
     private List<TrackSample> trackSamples;
 
+    internal List<MeshRenderer> segmentRenderers;
+
     private List<RoadPath> _paths;
 
     /// <summary>
@@ -374,6 +376,7 @@ public class Road
 
     public void buildMesh()
     {
+        segmentRenderers.Clear();
         for (int i = 0; i < road.childCount; i++)
         {
             UnityEngine.Object.Destroy(road.GetChild(i).gameObject);
@@ -583,6 +586,7 @@ public class Road
                 MeshRenderer meshRenderer = transform.gameObject.AddComponent<MeshRenderer>();
                 meshRenderer.reflectionProbeUsage = ReflectionProbeUsage.Simple;
                 meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
+                segmentRenderers.Add(meshRenderer);
             }
             if (LevelRoads.materials[material].isConcrete)
             {
@@ -758,6 +762,7 @@ public class Road
         _joints = newJoints;
         samples = new List<RoadSample>();
         trackSamples = new List<TrackSample>();
+        segmentRenderers = new List<MeshRenderer>();
         if (Level.isEditor)
         {
             line = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load("Edit/Road"))).transform;

@@ -5,7 +5,7 @@ ID 37
 Interactability Binary_State
 Interactability_Hint Switch
 Interactability_Power Stay
-Interactability_Emission
+Interactability_Emissive_Material_Mode None
 
 Chart Ignore
 

@@ -921,6 +921,11 @@ public class GraphicsSettings
                 array[19] += num3;
             }
         }
+        LevelObjects.RegularObjectMaxDistance = Mathf.Min(a, 447f);
+        LevelGround.RegularTreeMaxDistance = LevelObjects.RegularObjectMaxDistance;
+        LevelObjects.SkyboxObjectMaxDistance = ((landmarkQuality > EGraphicQuality.OFF) ? (LevelObjects.RegularObjectMaxDistance + num3) : 0f);
+        LevelGround.SkyboxTreeMaxDistance = ((landmarkQuality >= EGraphicQuality.MEDIUM) ? (LevelGround.RegularTreeMaxDistance + num3) : 0f);
+        LevelRoads.RoadMaxDistance = ((landmarkQuality >= EGraphicQuality.ULTRA) ? (a + num3) : a);
         if (Level.isEditor)
         {
             num *= 2f;
@@ -929,38 +934,21 @@ public class GraphicsSettings
                 array[i] *= 2f;
             }
         }
-        if (!LevelObjects.shouldInstantlyLoad && !LevelGround.shouldInstantlyLoad)
+        if (!LevelObjects.shouldInstantlyLoad && !LevelGround.shouldInstantlyLoad && LevelObjects.objects != null && LevelGround.trees != null)
         {
             for (byte b = 0; b < Regions.WORLD_SIZE; b++)
             {
                 for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
                 {
-                    if (LevelObjects.regions != null && !LevelObjects.regions[b, b2])
+                    List<LevelObject> list = LevelObjects.objects[b, b2];
+                    for (int j = 0; j < list.Count; j++)
                     {
-                        List<LevelObject> list = LevelObjects.objects[b, b2];
-                        for (int j = 0; j < list.Count; j++)
-                        {
-                            list[j]?.UpdateSkyboxActive();
-                        }
+                        list[j]?.UpdateSkyboxActive();
                     }
-                    if (LevelGround.regions != null && !LevelGround.regions[b, b2])
+                    List<ResourceSpawnpoint> list2 = LevelGround.trees[b, b2];
+                    for (int k = 0; k < list2.Count; k++)
                     {
-                        List<ResourceSpawnpoint> list2 = LevelGround.trees[b, b2];
-                        for (int k = 0; k < list2.Count; k++)
-                        {
-                            ResourceSpawnpoint resourceSpawnpoint = list2[k];
-                            if (resourceSpawnpoint != null)
-                            {
-                                if (landmarkQuality >= EGraphicQuality.MEDIUM)
-                                {
-                                    resourceSpawnpoint.enableSkybox();
-                                }
-                                else
-                                {
-                                    resourceSpawnpoint.disableSkybox();
-                                }
-                            }
-                        }
+                        list2[k]?.UpdateSkyboxActive();
                     }
                 }
             }

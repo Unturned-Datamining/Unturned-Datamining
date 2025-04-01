@@ -12,6 +12,11 @@ public class PropellerModel
     public Material bladeMaterial;
 
     /// <summary>
+    /// Renderer on Model_1.
+    /// </summary>
+    public Renderer motionBlurRenderer;
+
+    /// <summary>
     /// Material on Model_1, the high-speed blurred outline.
     /// </summary>
     public Material motionBlurMaterial;

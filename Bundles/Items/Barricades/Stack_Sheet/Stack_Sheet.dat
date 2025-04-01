@@ -1,0 +1,41 @@
+GUID eb3dcd948171403e9d9c55f7e2d30a03
+Type Barricade
+Rarity Uncommon
+Useable Barricade
+Build Barricade
+ID 1910
+
+Size_X 3
+Size_Y 2
+Size_Z 0.18
+
+Health 300
+Range 4
+Radius 0.1
+Offset 0.1
+
+Explosion 36
+
+Blueprints 2
+Blueprint_0_Type Gear
+Blueprint_0_Supply_0_ID 68
+Blueprint_0_Supply_0_Amount 5
+Blueprint_0_Build 27
+Blueprint_1_Type Gear
+Blueprint_1_Supply_0_ID 1910
+Blueprint_1_Supply_0_Amount 1
+Blueprint_1_Product 68
+Blueprint_1_Products 5
+Blueprint_1_Build 27
+
+Actions 1
+Action_0_Type Blueprint
+Action_0_Source 1910
+Action_0_Blueprints 1
+Action_0_Blueprint_0_Index 1
+Action_0_Key Unstack
+
+InventoryAudio Sounds/Inventory/SmallMetal.asset
+PlacementAudioClip Sounds/MetalPlacement.mp3
+Has_Clip_Prefab false
+Use_Auto_Icon_Measurements false

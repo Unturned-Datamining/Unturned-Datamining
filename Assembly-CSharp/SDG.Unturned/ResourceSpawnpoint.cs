@@ -54,9 +54,12 @@ public class ResourceSpawnpoint
 
     public ResourceAsset asset => _asset;
 
-    public bool isEnabled { get; private set; }
+    /// <summary>
+    /// Tree activation is time-sliced, so this does not necessarily match whether the region is active.
+    /// </summary>
+    internal bool isActiveInRegion { get; private set; }
 
-    public bool isSkyboxEnabled { get; private set; }
+    internal bool isSkyboxActiveInRegion { get; private set; }
 
     public Transform model => _model;
 
@@ -70,6 +73,12 @@ public class ResourceSpawnpoint
     /// </summary>
     public bool canBeDamaged => areConditionsMet;
 
+    [Obsolete("Renamed to isActiveInRegion")]
+    public bool isEnabled => isActiveInRegion;
+
+    [Obsolete("Renamed to isSkyboxActiveInRegion")]
+    public bool isSkyboxEnabled => isSkyboxActiveInRegion;
+
     public bool checkCanReset(float multiplier)
     {
         if (isDead && asset != null && asset.reset > 1f)
@@ -77,6 +86,24 @@ public class ResourceSpawnpoint
             return Time.realtimeSinceStartup - lastDead > asset.reset * multiplier;
         }
         return false;
+    }
+
+    internal void SetIsActiveInRegion(bool isActive)
+    {
+        if (isActiveInRegion != isActive)
+        {
+            isActiveInRegion = isActive;
+            UpdateActive();
+        }
+    }
+
+    internal void SetIsSkyboxActiveInRegion(bool isActive)
+    {
+        if (isSkyboxActiveInRegion != isActive)
+        {
+            isSkyboxActiveInRegion = isActive;
+            UpdateSkyboxActive();
+        }
     }
 
     public void askDamage(ushort amount)
@@ -96,66 +123,21 @@ public class ResourceSpawnpoint
 
     public void wipe()
     {
-        if (!isAlive)
+        if (isAlive)
         {
-            return;
-        }
-        isAlive = false;
-        if (asset != null)
-        {
+            isAlive = false;
             health = 0;
-            if (asset.isForage)
-            {
-                model.Find("Forage")?.gameObject.SetActive(value: false);
-            }
-            else
-            {
-                if (model != null)
-                {
-                    model.gameObject.SetActive(value: false);
-                }
-                if (stump != null)
-                {
-                    stump.gameObject.SetActive(isEnabled);
-                }
-            }
-        }
-        if ((bool)skybox)
-        {
-            skybox.gameObject.SetActive(value: false);
+            UpdateActive();
         }
     }
 
     public void revive()
     {
-        if (isAlive)
+        if (!isAlive)
         {
-            return;
-        }
-        isAlive = true;
-        if (asset != null)
-        {
-            if (asset.isForage)
-            {
-                model.Find("Forage")?.gameObject.SetActive(value: true);
-                health = asset.health;
-            }
-            else
-            {
-                if (model != null && areConditionsMet)
-                {
-                    model.gameObject.SetActive(isEnabled);
-                }
-                health = asset.health;
-                if (stump != null && areConditionsMet)
-                {
-                    stump.gameObject.SetActive(isEnabled);
-                }
-            }
-        }
-        if ((bool)skybox && areConditionsMet)
-        {
-            skybox.gameObject.SetActive(isSkyboxEnabled);
+            isAlive = true;
+            health = asset?.health ?? 1;
+            UpdateActive();
         }
     }
 
@@ -174,123 +156,44 @@ public class ResourceSpawnpoint
             {
                 model.Find("Forage")?.gameObject.SetActive(value: false);
             }
-            else
+            else if (!Dedicator.IsDedicatedServer && asset.hasDebris && GraphicsSettings.debris)
             {
-                if (model != null)
+                ragdoll.y += 8f;
+                ragdoll.x += UnityEngine.Random.Range(-16f, 16f);
+                ragdoll.z += UnityEngine.Random.Range(-16f, 16f);
+                ragdoll *= (float)((Player.player != null && Player.player.skills.boost == EPlayerBoost.FLIGHT) ? 4 : 2);
+                if (model != null && asset.modelGameObject != null)
                 {
-                    model.gameObject.SetActive(value: false);
-                }
-                if (stump != null)
-                {
-                    stump.gameObject.SetActive(isEnabled);
-                }
-                if (!Dedicator.IsDedicatedServer && asset.hasDebris && GraphicsSettings.debris)
-                {
-                    ragdoll.y += 8f;
-                    ragdoll.x += UnityEngine.Random.Range(-16f, 16f);
-                    ragdoll.z += UnityEngine.Random.Range(-16f, 16f);
-                    ragdoll *= (float)((Player.player != null && Player.player.skills.boost == EPlayerBoost.FLIGHT) ? 4 : 2);
-                    if (model != null && asset.modelGameObject != null)
+                    Vector3 position = model.position + model.up * asset.DebrisVerticalOffset;
+                    GameObject original = ((!(asset.debrisGameObject == null)) ? asset.debrisGameObject : asset.modelGameObject);
+                    Transform transform = UnityEngine.Object.Instantiate(original, position, model.rotation).transform;
+                    transform.name = asset.name + "_Debris";
+                    transform.localScale = model.localScale;
+                    transform.tag = "Debris";
+                    transform.gameObject.layer = 12;
+                    transform.gameObject.AddComponent<Rigidbody>();
+                    transform.GetComponent<Rigidbody>().interpolation = RigidbodyInterpolation.Interpolate;
+                    transform.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Discrete;
+                    transform.GetComponent<Rigidbody>().AddForce(ragdoll);
+                    transform.GetComponent<Rigidbody>().drag = 1f;
+                    transform.GetComponent<Rigidbody>().angularDrag = 1f;
+                    UnityEngine.Object.Destroy(transform.gameObject, 8f);
+                    if (stump != null && stump.gameObject.activeSelf && asset.ShouldIgnoreCollisionBetweenStumpAndDebris)
                     {
-                        Vector3 position = model.position + model.up * asset.DebrisVerticalOffset;
-                        GameObject original = ((!(asset.debrisGameObject == null)) ? asset.debrisGameObject : asset.modelGameObject);
-                        Transform transform = UnityEngine.Object.Instantiate(original, position, model.rotation).transform;
-                        transform.name = asset.name + "_Debris";
-                        transform.localScale = model.localScale;
-                        transform.tag = "Debris";
-                        transform.gameObject.layer = 12;
-                        transform.gameObject.AddComponent<Rigidbody>();
-                        transform.GetComponent<Rigidbody>().interpolation = RigidbodyInterpolation.Interpolate;
-                        transform.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Discrete;
-                        transform.GetComponent<Rigidbody>().AddForce(ragdoll);
-                        transform.GetComponent<Rigidbody>().drag = 1f;
-                        transform.GetComponent<Rigidbody>().angularDrag = 1f;
-                        UnityEngine.Object.Destroy(transform.gameObject, 8f);
-                        if (stump != null && isEnabled && asset.ShouldIgnoreCollisionBetweenStumpAndDebris)
+                        Collider component = transform.GetComponent<Collider>();
+                        if (component != null)
                         {
-                            Collider component = transform.GetComponent<Collider>();
-                            if (component != null)
+                            stump.GetComponents(colliders);
+                            for (int i = 0; i < colliders.Count; i++)
                             {
-                                stump.GetComponents(colliders);
-                                for (int i = 0; i < colliders.Count; i++)
-                                {
-                                    Physics.IgnoreCollision(component, colliders[i]);
-                                }
+                                Physics.IgnoreCollision(component, colliders[i]);
                             }
                         }
                     }
                 }
             }
         }
-        if ((bool)skybox)
-        {
-            skybox.gameObject.SetActive(value: false);
-        }
-    }
-
-    public void forceFullEnable()
-    {
-        isEnabled = true;
-        if (model != null)
-        {
-            model.gameObject.SetActive(value: true);
-        }
-        if (stump != null)
-        {
-            stump.gameObject.SetActive(value: true);
-        }
-    }
-
-    public void enable()
-    {
-        isEnabled = true;
-        if (asset != null && asset.isForage)
-        {
-            if (model != null && areConditionsMet)
-            {
-                model.gameObject.SetActive(value: true);
-            }
-            return;
-        }
-        if (model != null && areConditionsMet)
-        {
-            model.gameObject.SetActive(isAlive);
-        }
-        if (stump != null && areConditionsMet)
-        {
-            stump.gameObject.SetActive(!isAlive);
-        }
-    }
-
-    public void enableSkybox()
-    {
-        isSkyboxEnabled = true;
-        if (skybox != null && areConditionsMet)
-        {
-            skybox.gameObject.SetActive(isAlive);
-        }
-    }
-
-    public void disable()
-    {
-        isEnabled = false;
-        if (model != null)
-        {
-            model.gameObject.SetActive(value: false);
-        }
-        if (stump != null)
-        {
-            stump.gameObject.SetActive(value: false);
-        }
-    }
-
-    public void disableSkybox()
-    {
-        isSkyboxEnabled = false;
-        if (skybox != null)
-        {
-            skybox.gameObject.SetActive(value: false);
-        }
+        UpdateActive();
     }
 
     public void destroy()
@@ -327,42 +230,53 @@ public class ResourceSpawnpoint
         return model.position;
     }
 
-    /// <summary>
-    /// Used if the asset has holiday restrictions.
-    /// </summary>
-    private void updateConditions()
+    internal void SetIsActiveOverrideForSatelliteCapture(bool isActive)
     {
-        if (asset == null)
+        if (model != null)
         {
-            return;
+            model.gameObject.SetActive(isActive);
         }
-        bool flag = HolidayUtil.isHolidayActive(asset.holidayRestriction);
-        if (areConditionsMet == flag)
+        if (stump != null)
         {
-            return;
+            stump.gameObject.SetActive(value: false);
         }
-        areConditionsMet = flag;
-        if (areConditionsMet)
+        if (skybox != null)
         {
-            if (isEnabled)
-            {
-                enable();
-            }
-            if (isSkyboxEnabled)
-            {
-                enableSkybox();
-            }
+            skybox.gameObject.SetActive(value: false);
         }
-        else
+    }
+
+    internal void UpdateActive()
+    {
+        bool flag = isAlive;
+        bool flag2 = !isAlive;
+        if (asset != null && asset.isForage)
         {
-            if (isEnabled)
-            {
-                disable();
-            }
-            if (isSkyboxEnabled)
-            {
-                disableSkybox();
-            }
+            flag = true;
+            flag2 = true;
+            model?.Find("Forage")?.gameObject.SetActive(isAlive);
+        }
+        bool flag3 = areConditionsMet && (Dedicator.IsDedicatedServer || isActiveInRegion);
+        if (model != null)
+        {
+            model.gameObject.SetActive(flag3 && flag);
+        }
+        if (stump != null)
+        {
+            stump.gameObject.SetActive(flag3 && flag2);
+        }
+        if (!Dedicator.IsDedicatedServer)
+        {
+            UpdateSkyboxActive();
+        }
+    }
+
+    internal void UpdateSkyboxActive()
+    {
+        if (skybox != null)
+        {
+            bool flag = GraphicsSettings.landmarkQuality >= EGraphicQuality.MEDIUM;
+            skybox.gameObject.SetActive(!isActiveInRegion && isSkyboxActiveInRegion && flag && areConditionsMet && isAlive);
         }
     }
 
@@ -394,89 +308,75 @@ public class ResourceSpawnpoint
                 ClientAssetIntegrity.ServerAddKnownMissingAsset(guid, "Tree");
             }
         }
-        if (asset == null)
+        if (asset != null)
         {
-            return;
-        }
-        health = asset.health;
-        isAlive = true;
-        areConditionsMet = true;
-        float num = Mathf.Sin((point.x + 4096f) * 32f + (point.z + 4096f) * 32f);
-        float t = (num + 1f) * 0.5f;
-        float x = Mathf.Lerp(asset.MinRandomAngleDeviation, asset.MaxRandomAngleDeviation, t);
-        _angle = Quaternion.Euler(x, num * 360f, 0f);
-        float num2 = Mathf.Lerp(asset.MinRandomUniformScale, asset.MaxRandomUniformScale, t);
-        _scale = new Vector3(num2, num2, num2);
-        GameObject gameObject = null;
-        if (asset.modelGameObject != null)
-        {
-            gameObject = asset.modelGameObject;
-        }
-        Vector3 position = point + Vector3.up * scale.y * asset.verticalOffset;
-        if (gameObject != null)
-        {
-            GameObject gameObject2 = UnityEngine.Object.Instantiate(gameObject, position, angle);
-            _model = gameObject2.transform;
-            gameObject2.GetOrAddComponent<TreeRefComponent>().owner = this;
-            model.name = asset.name;
-            model.localScale = scale;
-            if (Dedicator.IsDedicatedServer)
+            health = asset.health;
+            isAlive = true;
+            areConditionsMet = true;
+            float num = Mathf.Sin((point.x + 4096f) * 32f + (point.z + 4096f) * 32f);
+            float t = (num + 1f) * 0.5f;
+            float x = Mathf.Lerp(asset.MinRandomAngleDeviation, asset.MaxRandomAngleDeviation, t);
+            _angle = Quaternion.Euler(x, num * 360f, 0f);
+            float num2 = Mathf.Lerp(asset.MinRandomUniformScale, asset.MaxRandomUniformScale, t);
+            _scale = new Vector3(num2, num2, num2);
+            GameObject gameObject = null;
+            if (asset.modelGameObject != null)
             {
-                isEnabled = true;
+                gameObject = asset.modelGameObject;
             }
-            else
+            Vector3 position = point + Vector3.up * scale.y * asset.verticalOffset;
+            if (gameObject != null)
             {
-                model.gameObject.SetActive(value: false);
-                if (!Level.isEditor && asset.isForage)
+                GameObject gameObject2 = UnityEngine.Object.Instantiate(gameObject, position, angle);
+                _model = gameObject2.transform;
+                gameObject2.GetOrAddComponent<TreeRefComponent>().owner = this;
+                model.name = asset.name;
+                model.localScale = scale;
+                if (!Dedicator.IsDedicatedServer)
                 {
-                    Transform transform = model.Find("Forage");
-                    if (transform != null)
+                    if (!Level.isEditor && asset.isForage)
                     {
-                        transform.gameObject.AddComponent<InteractableForage>().asset = asset;
+                        Transform transform = model.Find("Forage");
+                        if (transform != null)
+                        {
+                            transform.gameObject.AddComponent<InteractableForage>().asset = asset;
+                        }
+                    }
+                    if (asset.skyboxGameObject != null)
+                    {
+                        Quaternion rotation = angle * Quaternion.Euler(-90f, 0f, 0f);
+                        GameObject gameObject3 = UnityEngine.Object.Instantiate(asset.skyboxGameObject, position, rotation);
+                        _skybox = gameObject3.transform;
+                        skybox.name = asset.name + "_Skybox";
+                        skybox.localScale = new Vector3(skybox.localScale.x * scale.x, skybox.localScale.z * scale.z, skybox.localScale.z * scale.z);
+                        if (asset.skyboxMaterial != null)
+                        {
+                            skybox.GetComponent<MeshRenderer>().sharedMaterial = asset.skyboxMaterial;
+                        }
                     }
                 }
-                if (asset.skyboxGameObject != null)
+                if (!netId.IsNull())
                 {
-                    Quaternion rotation = angle * Quaternion.Euler(-90f, 0f, 0f);
-                    GameObject gameObject3 = UnityEngine.Object.Instantiate(asset.skyboxGameObject, position, rotation);
-                    _skybox = gameObject3.transform;
-                    skybox.name = asset.name + "_Skybox";
-                    skybox.localScale = new Vector3(skybox.localScale.x * scale.x, skybox.localScale.z * scale.z, skybox.localScale.z * scale.z);
-                    if (asset.skyboxMaterial != null)
-                    {
-                        skybox.GetComponent<MeshRenderer>().sharedMaterial = asset.skyboxMaterial;
-                    }
-                    if (GraphicsSettings.landmarkQuality >= EGraphicQuality.MEDIUM)
-                    {
-                        enableSkybox();
-                    }
-                    else
-                    {
-                        disableSkybox();
-                    }
+                    NetIdRegistry.AssignTransform(netId, model.transform);
                 }
             }
-            if (!netId.IsNull())
+            GameObject gameObject4 = null;
+            if (asset.stumpGameObject != null)
             {
-                NetIdRegistry.AssignTransform(netId, model.transform);
+                gameObject4 = asset.stumpGameObject;
+            }
+            if (gameObject4 != null)
+            {
+                _stump = UnityEngine.Object.Instantiate(gameObject4, position, angle).transform;
+                stump.name = asset.name + "_Stump";
+                stump.localScale = scale;
+            }
+            if (asset.holidayRestriction != 0 && !Level.isEditor)
+            {
+                areConditionsMet = HolidayUtil.isHolidayActive(asset.holidayRestriction);
             }
         }
-        GameObject gameObject4 = null;
-        if (asset.stumpGameObject != null)
-        {
-            gameObject4 = asset.stumpGameObject;
-        }
-        if (gameObject4 != null)
-        {
-            _stump = UnityEngine.Object.Instantiate(gameObject4, position, angle).transform;
-            stump.name = asset.name + "_Stump";
-            stump.localScale = scale;
-            stump.gameObject.SetActive(value: false);
-        }
-        if (asset.holidayRestriction != 0 && !Level.isEditor)
-        {
-            updateConditions();
-        }
+        UpdateActive();
     }
 
     public ResourceSpawnpoint(byte newType, ushort newID, Vector3 newPoint, bool newGenerated, NetId netId)
@@ -492,5 +392,35 @@ public class ResourceSpawnpoint
     public ResourceSpawnpoint(ushort newID, Guid guid, Vector3 newPoint, bool newGenerated, NetId netId)
         : this(0, newID, guid, newPoint, newGenerated, netId)
     {
+    }
+
+    [Obsolete("Replaced by SetIsActiveInRegion(true)")]
+    public void enable()
+    {
+        SetIsActiveInRegion(isActive: true);
+    }
+
+    [Obsolete("Replaced by SetIsSkyboxActiveInRegion(true)")]
+    public void enableSkybox()
+    {
+        SetIsSkyboxActiveInRegion(isActive: true);
+    }
+
+    [Obsolete("Replaced by SetIsActiveInRegion(false)")]
+    public void disable()
+    {
+        SetIsActiveInRegion(isActive: false);
+    }
+
+    [Obsolete("Replaced by SetIsSkyboxActiveInRegion(false)")]
+    public void disableSkybox()
+    {
+        SetIsSkyboxActiveInRegion(isActive: false);
+    }
+
+    [Obsolete]
+    public void forceFullEnable()
+    {
+        SetIsActiveOverrideForSatelliteCapture(isActive: true);
     }
 }

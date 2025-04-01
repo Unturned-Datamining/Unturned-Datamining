@@ -103,6 +103,8 @@ public class ObjectAsset : Asset
     /// </summary>
     internal string interactabilityChildPathOverride;
 
+    internal EInteractableObjectBinaryStateEmissiveMaterialMode iobsEmissiveMaterialMode;
+
     public INPCCondition[] interactabilityConditions;
 
     protected NPCRewardsList interactabilityRewards;
@@ -778,6 +780,7 @@ public class ObjectAsset : Asset
                 if (interactability == EObjectInteractability.BINARY_STATE)
                 {
                     interactabilityChildPathOverride = data.GetString("Interactability_Animation_Component_Path");
+                    iobsEmissiveMaterialMode = data.ParseEnum("Interactability_Emissive_Material_Mode", EInteractableObjectBinaryStateEmissiveMaterialMode.Auto);
                 }
                 interactabilityConditions = new INPCCondition[data.ParseUInt8("Interactability_Conditions", 0)];
                 NPCTool.readConditions(data, localization, "Interactability_Condition_", interactabilityConditions, this);

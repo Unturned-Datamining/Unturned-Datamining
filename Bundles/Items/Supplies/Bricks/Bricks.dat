@@ -5,3 +5,10 @@ ID 74
 Size_X 1
 Size_Y 1
 Size_Z 0.55
+
+Actions 1
+Action_0_Type Blueprint
+Action_0_Source 1915
+Action_0_Blueprints 1
+Action_0_Blueprint_0_Index 0
+Action_0_Key Stack

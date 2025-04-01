@@ -48,7 +48,7 @@ public class FoliageObjectInfoAsset : FoliageInfoAsset
         }
     }
 
-    protected override bool isPositionValid(Vector3 position)
+    protected override bool isPositionValid(Vector3 position, bool doCollisionChecks)
     {
         if (!VolumeManager<FoliageVolume, FoliageVolumeManager>.Get().IsPositionBakeable(position, instancedMeshes: false, resources: false, objects: true))
         {

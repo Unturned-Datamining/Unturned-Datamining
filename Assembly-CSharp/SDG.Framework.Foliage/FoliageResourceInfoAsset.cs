@@ -50,19 +50,22 @@ public class FoliageResourceInfoAsset : FoliageInfoAsset
         }
     }
 
-    protected override bool isPositionValid(Vector3 position)
+    protected override bool isPositionValid(Vector3 position, bool doCollisionChecks)
     {
         if (!VolumeManager<FoliageVolume, FoliageVolumeManager>.Get().IsPositionBakeable(position, instancedMeshes: false, resources: true, objects: false))
         {
             return false;
         }
-        int num = Physics.OverlapSphereNonAlloc(position, obstructionRadius, OBSTRUCTION_COLLIDERS, RayMasks.BLOCK_RESOURCE);
-        for (int i = 0; i < num; i++)
+        if (doCollisionChecks)
         {
-            ObjectAsset asset = LevelObjects.getAsset(OBSTRUCTION_COLLIDERS[i].transform);
-            if (asset != null && !asset.isSnowshoe)
+            int num = Physics.OverlapSphereNonAlloc(position, obstructionRadius, OBSTRUCTION_COLLIDERS, RayMasks.BLOCK_RESOURCE);
+            for (int i = 0; i < num; i++)
             {
-                return false;
+                ObjectAsset asset = LevelObjects.getAsset(OBSTRUCTION_COLLIDERS[i].transform);
+                if (asset != null && !asset.isSnowshoe)
+                {
+                    return false;
+                }
             }
         }
         return true;

@@ -1,0 +1,40 @@
+GUID 9fe1fa3532434c93828a93b61aa91408
+Type Barricade
+Rarity Uncommon
+Useable Barricade
+Build Barricade
+ID 1903
+
+Size_X 3
+Size_Y 2
+Size_Z 0.2
+
+Health 250
+Range 4
+Radius 0.2
+Offset 0.3
+
+Explosion 19
+
+Blueprints 2
+Blueprint_0_Type Gear
+Blueprint_0_Supply_0_ID 61
+Blueprint_0_Supply_0_Amount 12
+Blueprint_0_Build 27
+Blueprint_1_Type Gear
+Blueprint_1_Supply_0_ID 1903
+Blueprint_1_Supply_0_Amount 1
+Blueprint_1_Product 61
+Blueprint_1_Products 12
+Blueprint_1_Build 27
+
+Actions 1
+Action_0_Type Blueprint
+Action_0_Source 1903
+Action_0_Blueprints 1
+Action_0_Blueprint_0_Index 1
+Action_0_Key Unstack
+
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false
+Use_Auto_Icon_Measurements false

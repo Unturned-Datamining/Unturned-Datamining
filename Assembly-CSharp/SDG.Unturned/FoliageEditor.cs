@@ -164,7 +164,7 @@ internal class FoliageEditor : IDevkitTool
                         continue;
                     }
                 }
-                foliageAsset.addFoliageToSurface(hitInfo.point, hitInfo.normal, clearWhenBaked: false, followRules: true);
+                foliageAsset.addFoliageToSurface(hitInfo.point, hitInfo.normal, clearWhenBaked: false, followRules: true, doCollisionChecks: false);
                 flag = true;
             }
         }
@@ -489,7 +489,7 @@ internal class FoliageEditor : IDevkitTool
             {
                 if (selectedInstanceAsset != null)
                 {
-                    selectedInstanceAsset.addFoliageToSurface(hitInfo.point, hitInfo.normal, clearWhenBaked: false, followRules: false);
+                    selectedInstanceAsset.addFoliageToSurface(hitInfo.point, hitInfo.normal, clearWhenBaked: false, followRules: false, doCollisionChecks: false);
                     LevelHierarchy.MarkDirty();
                 }
             }
@@ -498,7 +498,7 @@ internal class FoliageEditor : IDevkitTool
                 FoliageInfoAsset foliageInfoAsset = Assets.find(selectedCollectionAsset.elements[UnityEngine.Random.Range(0, selectedCollectionAsset.elements.Count)].asset);
                 if (foliageInfoAsset != null)
                 {
-                    foliageInfoAsset.addFoliageToSurface(hitInfo.point, hitInfo.normal, clearWhenBaked: false, followRules: false);
+                    foliageInfoAsset.addFoliageToSurface(hitInfo.point, hitInfo.normal, clearWhenBaked: false, followRules: false, doCollisionChecks: false);
                     LevelHierarchy.MarkDirty();
                 }
             }

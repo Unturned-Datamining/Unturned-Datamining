@@ -47,6 +47,15 @@ public class Regions
         y = Mathf.FloorToInt((point.z + 4096f) / (float)(int)REGION_SIZE);
     }
 
+    /// <summary>
+    /// Convert world-space position into a region coordinate that may be out-of-bounds.
+    /// </summary>
+    public static Vector2Int GetCoordinateVector2Int(Vector3 position)
+    {
+        getUnsafeCoordinates(position, out var x, out var y);
+        return new Vector2Int(x, y);
+    }
+
     public static bool tryGetCoordinate(Vector3 point, out byte x, out byte y)
     {
         x = byte.MaxValue;

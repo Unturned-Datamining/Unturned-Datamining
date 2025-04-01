@@ -17,7 +17,25 @@ public class LevelRoads
 
     private static List<Road> roads;
 
+    /// <summary>
+    /// Maps region coord to a list of sub-road renderers in that region.
+    /// Unlike older "region" features, coord can be outside of the old bounds.
+    /// Not used in the editor or the dedicated server.
+    ///
+    /// Nelson 2025-03-28: experimenting with this to see whether it reduces time spent culling far-away road
+    /// renderers on Rio de Janeiro Remastered. (Lots of roads on this map.)
+    /// </summary>
+    private static Dictionary<Vector2Int, List<MeshRenderer>> regionSegmentRenderers;
+
     private static bool isListeningForLandscape;
+
+    internal static RegionIncrementalVisibilityTracker regionTracker;
+
+    private static Dictionary<Vector2Int, RegionVisibilityData> regionTrackerData = new Dictionary<Vector2Int, RegionVisibilityData>();
+
+    private static CommandLineFlag shouldIncludeRoadsInLevelBatching = new CommandLineFlag(defaultValue: true, "-ExcludeRoadsFromBatching");
+
+    private static CommandLineFlag shouldDeactivateDistantRoads = new CommandLineFlag(defaultValue: true, "-NoManualRoadCulling");
 
     [Obsolete("Was the parent of all roads in the past, but now empty for TransformHierarchy performance.")]
     public static Transform models
@@ -38,6 +56,11 @@ public class LevelRoads
     }
 
     public static RoadMaterial[] materials => _materials;
+
+    /// <summary>
+    /// Max draw distance outside editor.
+    /// </summary>
+    public static float RoadMaxDistance { get; set; }
 
     public static void setEnabled(bool isEnabled)
     {
@@ -188,6 +211,8 @@ public class LevelRoads
             _materials = new RoadMaterial[0];
         }
         roads = new List<Road>();
+        regionSegmentRenderers = new Dictionary<Vector2Int, List<MeshRenderer>>();
+        regionTracker = new RegionIncrementalVisibilityTracker();
         if (ReadWrite.fileExists(Level.info.path + "/Environment/Roads.dat", useCloud: false, usePath: false))
         {
             River river = new River(Level.info.path + "/Environment/Roads.dat", usePath: false);
@@ -361,10 +386,38 @@ public class LevelRoads
 
     private static void buildMeshes()
     {
-        for (int i = 0; i < roads.Count; i++)
+        LevelBatching levelBatching = ((Level.shouldUseLevelBatching && (bool)shouldIncludeRoadsInLevelBatching) ? LevelBatching.Get() : null);
+        foreach (Road road in roads)
         {
-            roads[i].buildMesh();
+            road.buildMesh();
+            levelBatching?.AddRoad(road);
         }
+        if (!Dedicator.IsDedicatedServer && !Level.isEditor && (bool)shouldDeactivateDistantRoads)
+        {
+            PopulateRegionSegmentRenderers();
+        }
+    }
+
+    private static void PopulateRegionSegmentRenderers()
+    {
+        int num = 0;
+        regionSegmentRenderers.Clear();
+        foreach (Road road in roads)
+        {
+            foreach (MeshRenderer segmentRenderer in road.segmentRenderers)
+            {
+                segmentRenderer.forceRenderingOff = true;
+                Vector2Int coordinateVector2Int = Regions.GetCoordinateVector2Int(segmentRenderer.bounds.center);
+                if (!regionSegmentRenderers.TryGetValue(coordinateVector2Int, out var value))
+                {
+                    value = new List<MeshRenderer>();
+                    regionSegmentRenderers[coordinateVector2Int] = value;
+                }
+                value.Add(segmentRenderer);
+            }
+            num += road.segmentRenderers.Count;
+        }
+        UnturnedLog.info($"Level contains {num} road segment(s) divided into {regionSegmentRenderers.Count} region(s)");
     }
 
     private static void handleLandscapeLoaded()
@@ -376,6 +429,63 @@ public class LevelRoads
         else
         {
             buildMeshes();
+        }
+    }
+
+    /// <summary>
+    /// Called by navmesh baking to complete pending object changes that may affect which nav objects are enabled.
+    /// </summary>
+    internal static void ImmediatelySyncRegionalVisibility()
+    {
+        if (regionTracker == null || regionSegmentRenderers == null || regionSegmentRenderers.Count < 1)
+        {
+            return;
+        }
+        regionTrackerData.Clear();
+        regionTracker.MaxDistance = RoadMaxDistance;
+        regionTracker.UpdateRegions(regionTrackerData);
+        foreach (KeyValuePair<Vector2Int, RegionVisibilityData> regionTrackerDatum in regionTrackerData)
+        {
+            Vector2Int key = regionTrackerDatum.Key;
+            if (!regionSegmentRenderers.TryGetValue(key, out var value))
+            {
+                continue;
+            }
+            RegionVisibilityData value2 = regionTrackerDatum.Value;
+            foreach (MeshRenderer item in value)
+            {
+                item.forceRenderingOff = !value2.isInsideMask;
+            }
+        }
+        regionTracker.FlushProgress();
+    }
+
+    internal static void UpdateRegionalVisibility()
+    {
+        if (regionTracker == null || regionSegmentRenderers == null || regionSegmentRenderers.Count < 1)
+        {
+            return;
+        }
+        regionTrackerData.Clear();
+        regionTracker.MaxDistance = RoadMaxDistance;
+        regionTracker.UpdateRegions(regionTrackerData);
+        foreach (KeyValuePair<Vector2Int, RegionVisibilityData> regionTrackerDatum in regionTrackerData)
+        {
+            Vector2Int key = regionTrackerDatum.Key;
+            if (!regionSegmentRenderers.TryGetValue(key, out var value))
+            {
+                regionTracker.NotifyRegionFinishedUpdating(key);
+                continue;
+            }
+            RegionVisibilityData value2 = regionTrackerDatum.Value;
+            if (value2.progressIndex < value.Count)
+            {
+                value[value2.progressIndex].forceRenderingOff = !value2.isInsideMask;
+            }
+            else
+            {
+                regionTracker.NotifyRegionFinishedUpdating(key);
+            }
         }
     }
 }

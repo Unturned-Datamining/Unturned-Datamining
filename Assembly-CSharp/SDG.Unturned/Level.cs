@@ -19,13 +19,6 @@ public class Level : MonoBehaviour
 {
     public delegate void SatelliteCaptureDelegate();
 
-    private class PreCaptureObjectState
-    {
-        public bool[,][] wasTreeEnabled = new bool[Regions.WORLD_SIZE, Regions.WORLD_SIZE][];
-
-        public bool[,][] wasTreeSkyboxEnabled = new bool[Regions.WORLD_SIZE, Regions.WORLD_SIZE][];
-    }
-
     private const float STEPS = 19f;
 
     public static readonly int BUILD_INDEX_SETUP = 0;
@@ -1122,9 +1115,8 @@ public class Level : MonoBehaviour
         onSatellitePostCapture -= postCapture;
     }
 
-    private static PreCaptureObjectState GetObjectState()
+    private static void SetAllObjectsAndTreesActiveForSatelliteCapture()
     {
-        PreCaptureObjectState preCaptureObjectState = new PreCaptureObjectState();
         for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
             for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
@@ -1134,31 +1126,17 @@ public class Level : MonoBehaviour
                     bool isActiveOverrideForSatelliteCapture = !(item.asset?.ShouldExcludeFromSatelliteCapture ?? true);
                     item.SetIsActiveOverrideForSatelliteCapture(isActiveOverrideForSatelliteCapture);
                 }
-                List<ResourceSpawnpoint> list = LevelGround.trees[b, b2];
-                preCaptureObjectState.wasTreeEnabled[b, b2] = new bool[list.Count];
-                preCaptureObjectState.wasTreeSkyboxEnabled[b, b2] = new bool[list.Count];
-                for (int i = 0; i < list.Count; i++)
+                foreach (ResourceSpawnpoint item2 in LevelGround.trees[b, b2])
                 {
-                    ResourceSpawnpoint resourceSpawnpoint = list[i];
-                    preCaptureObjectState.wasTreeEnabled[b, b2][i] = resourceSpawnpoint.isEnabled;
-                    preCaptureObjectState.wasTreeSkyboxEnabled[b, b2][i] = resourceSpawnpoint.isSkyboxEnabled;
-                    ResourceAsset asset = resourceSpawnpoint.asset;
-                    if (asset != null && asset.holidayRestriction == ENPCHoliday.NONE)
-                    {
-                        resourceSpawnpoint.enable();
-                    }
-                    else
-                    {
-                        resourceSpawnpoint.disable();
-                    }
-                    resourceSpawnpoint.disableSkybox();
+                    ResourceAsset asset = item2.asset;
+                    bool isActiveOverrideForSatelliteCapture2 = asset != null && asset.holidayRestriction == ENPCHoliday.NONE;
+                    item2.SetIsActiveOverrideForSatelliteCapture(isActiveOverrideForSatelliteCapture2);
                 }
             }
         }
-        return preCaptureObjectState;
     }
 
-    private static void RestorePreCaptureState(PreCaptureObjectState state)
+    private static void RestorePreCaptureState()
     {
         for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
@@ -1168,22 +1146,10 @@ public class Level : MonoBehaviour
                 {
                     item.UpdateActiveAndRenderersEnabled();
                 }
-                List<ResourceSpawnpoint> list = LevelGround.trees[b, b2];
-                for (int i = 0; i < list.Count; i++)
+                foreach (ResourceSpawnpoint item2 in LevelGround.trees[b, b2])
                 {
-                    ResourceSpawnpoint resourceSpawnpoint = list[i];
-                    if (state.wasTreeEnabled[b, b2][i])
-                    {
-                        resourceSpawnpoint.enable();
-                    }
-                    else
-                    {
-                        resourceSpawnpoint.disable();
-                    }
-                    if (state.wasTreeSkyboxEnabled[b, b2][i])
-                    {
-                        resourceSpawnpoint.enableSkybox();
-                    }
+                    _ = item2.asset?.holidayRestriction;
+                    item2.UpdateActive();
                 }
             }
         }
@@ -1236,11 +1202,11 @@ public class Level : MonoBehaviour
         LevelLighting.setSeaFloat("_Shininess", 500f);
         LevelLighting.setSeaColor("_SpecularColor", Color.black);
         QualitySettings.lodBias = float.MaxValue;
-        PreCaptureObjectState objectState = GetObjectState();
+        SetAllObjectsAndTreesActiveForSatelliteCapture();
         Level.onSatellitePreCapture?.Invoke();
         satelliteCaptureCamera.Render();
         Level.onSatellitePostCapture?.Invoke();
-        RestorePreCaptureState(objectState);
+        RestorePreCaptureState();
         GraphicsSettings.renderMode = renderMode;
         GraphicsSettings.apply("finished capturing satellite");
         RenderSettings.fog = fog;
@@ -1351,7 +1317,7 @@ public class Level : MonoBehaviour
         Texture2D texture2D = new Texture2D(imageWidth, imageHeight);
         texture2D.name = "Chart";
         texture2D.hideFlags = HideFlags.HideAndDontSave;
-        PreCaptureObjectState objectState = GetObjectState();
+        SetAllObjectsAndTreesActiveForSatelliteCapture();
         GameObject terrainGO = new GameObject();
         terrainGO.layer = 20;
         for (int i = 0; i < imageWidth; i++)
@@ -1364,7 +1330,7 @@ public class Level : MonoBehaviour
             }
         }
         texture2D.Apply();
-        RestorePreCaptureState(objectState);
+        RestorePreCaptureState();
         byte[] bytes = texture2D.EncodeToPNG();
         ReadWrite.writeBytes(info.path + "/Chart.png", useCloud: false, usePath: false, bytes);
         UnityEngine.Object.DestroyImmediate(texture2D);

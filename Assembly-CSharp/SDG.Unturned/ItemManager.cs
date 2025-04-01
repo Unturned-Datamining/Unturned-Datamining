@@ -377,7 +377,7 @@ public class ItemManager : SteamCaller
             item.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Discrete;
             item.GetComponent<Rigidbody>().drag = 0.5f;
             item.GetComponent<Rigidbody>().angularDrag = 0.1f;
-            if (LevelObjects.loads[x, y] != -1)
+            if (LevelObjects.IsRegionUpdating(new Vector2Int(x, y)))
             {
                 item.GetComponent<Rigidbody>().useGravity = false;
                 item.GetComponent<Rigidbody>().isKinematic = true;

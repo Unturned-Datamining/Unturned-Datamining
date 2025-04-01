@@ -130,6 +130,8 @@ public class LevelObject
     /// </summary>
     internal bool isActiveInRegion { get; private set; }
 
+    internal bool isSkyboxActiveInRegion { get; private set; }
+
     /// <summary>
     /// Defaults to true because most objects are not inside a culling volume. 
     /// </summary>
@@ -145,6 +147,15 @@ public class LevelObject
         {
             isActiveInRegion = isActive;
             UpdateActiveAndRenderersEnabled();
+        }
+    }
+
+    internal void SetIsSkyboxActiveInRegion(bool isActive)
+    {
+        if (isSkyboxActiveInRegion != isActive)
+        {
+            isSkyboxActiveInRegion = isActive;
+            UpdateSkyboxActive();
         }
     }
 
@@ -832,10 +843,10 @@ public class LevelObject
     /// </summary>
     internal void UpdateSkyboxActive()
     {
-        isSkyboxEnabled = !isActiveInRegion;
+        isSkyboxEnabled = !isActiveInRegion && isSkyboxActiveInRegion;
         if (skybox != null)
         {
-            skybox.gameObject.SetActive(!isActiveInRegion && isLandmarkQualityMet && areConditionsMet);
+            skybox.gameObject.SetActive(!isActiveInRegion && isSkyboxActiveInRegion && isLandmarkQualityMet && areConditionsMet);
         }
     }
 

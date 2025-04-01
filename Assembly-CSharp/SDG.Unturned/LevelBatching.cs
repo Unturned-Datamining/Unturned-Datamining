@@ -189,6 +189,11 @@ internal class LevelBatching
     private CommandLineFlag wantsToPreviewTextureAtlas = new CommandLineFlag(defaultValue: false, "-PreviewLevelBatchingTextureAtlas");
 
     /// <summary>
+    /// If true, assign a red material to excluded meshes so they are obvious.
+    /// </summary>
+    private CommandLineFlag wantsToPreviewMeshExclusions = new CommandLineFlag(defaultValue: false, "-PreviewLevelBatchingMeshExclusions");
+
+    /// <summary>
     /// If true, replace each unique material with a colored one before static batching.
     /// </summary>
     private CommandLineFlag wantsToPreviewUniqueMaterials = new CommandLineFlag(defaultValue: false, "-PreviewLevelBatchingUniqueMaterials");
@@ -323,6 +328,14 @@ internal class LevelBatching
         }
     }
 
+    public void AddRoad(Road road)
+    {
+        if (road != null && road.segmentRenderers != null)
+        {
+            staticBatchingMeshRenderers.AddRange(road.segmentRenderers);
+        }
+    }
+
     public void ApplyTextureAtlas()
     {
         Stopwatch stopwatch = Stopwatch.StartNew();
@@ -446,39 +459,63 @@ internal class LevelBatching
 
     private void AddGameObject(GameObject gameObject)
     {
+        bool flag = Provider.isServer && (bool)wantsToPreviewMeshExclusions;
         renderers.Clear();
         gameObject.GetComponentsInChildren(includeInactive: true, renderers);
         foreach (Renderer renderer in renderers)
         {
             if (ignoreTransforms.Count > 0)
             {
-                bool flag = false;
+                bool flag2 = false;
                 foreach (Transform ignoreTransform in ignoreTransforms)
                 {
                     if (renderer.transform.IsChildOf(ignoreTransform))
                     {
-                        flag = true;
+                        flag2 = true;
                         break;
                     }
                 }
-                if (flag)
+                if (flag2)
                 {
                     continue;
                 }
             }
+            bool flag3 = false;
             if (renderer is MeshRenderer meshRenderer)
             {
                 MeshFilter component = renderer.GetComponent<MeshFilter>();
                 Mesh mesh = component?.sharedMesh;
-                if (mesh != null && CanBatchMesh(mesh, renderer))
+                if (mesh != null)
                 {
-                    AddMesh(component, meshRenderer);
-                    staticBatchingMeshRenderers.Add(meshRenderer);
+                    if (CanBatchMesh(mesh, renderer))
+                    {
+                        AddMesh(component, meshRenderer);
+                        staticBatchingMeshRenderers.Add(meshRenderer);
+                    }
+                    else
+                    {
+                        flag3 = true;
+                    }
                 }
             }
-            else if (renderer is SkinnedMeshRenderer { sharedMesh: var sharedMesh } skinnedMeshRenderer && sharedMesh != null && CanBatchMesh(sharedMesh, renderer))
+            else if (renderer is SkinnedMeshRenderer { sharedMesh: var sharedMesh } skinnedMeshRenderer && sharedMesh != null)
             {
-                AddSkinnedMesh(skinnedMeshRenderer);
+                if (CanBatchMesh(sharedMesh, renderer))
+                {
+                    AddSkinnedMesh(skinnedMeshRenderer);
+                }
+                else
+                {
+                    flag3 = true;
+                }
+            }
+            if (flag3 && flag)
+            {
+                Material material = UnityEngine.Object.Instantiate(standardDecalableOpaque.materialTemplate);
+                material.name = "Excluded mesh preview";
+                objectsToDestroy.Add(material);
+                material.SetColor(propertyID_Color, UnityEngine.Random.ColorHSV());
+                renderer.sharedMaterial = material;
             }
         }
     }

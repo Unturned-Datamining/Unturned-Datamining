@@ -12,11 +12,16 @@ Blueprint_0_Supply_0_ID 516
 Blueprint_0_Supply_0_Amount 2
 Blueprint_0_Build 27
 
-Actions 1
+Actions 2
 Action_0_Type Blueprint
 Action_0_Source 393
 Action_0_Blueprints 1
 Action_0_Blueprint_0_Index 0
 Action_0_Key Craft_Rag
+Action_1_Type Blueprint
+Action_1_Source 1913
+Action_1_Blueprints 1
+Action_1_Blueprint_0_Index 0
+Action_1_Key Stack
 
 InventoryAudio Sounds/Inventory/LightCloth.asset

@@ -48,13 +48,19 @@ public abstract class FoliageInfoAsset : Asset
         }
     }
 
+    public void addFoliageToSurface(Vector3 surfacePosition, Vector3 surfaceNormal, bool clearWhenBaked, bool followRules)
+    {
+        addFoliageToSurface(surfacePosition, surfaceNormal, clearWhenBaked, followRules, doCollisionChecks: true);
+    }
+
     /// <param name="followRules">Should angle limits and subtractive volumes be respected? Disabled when manually placing individually.</param>
-    public virtual void addFoliageToSurface(Vector3 surfacePosition, Vector3 surfaceNormal, bool clearWhenBaked, bool followRules)
+    /// <param name="doCollisionChecks">If true, trees do a sphere overlap to prevent placement inside objects.</param>
+    public virtual void addFoliageToSurface(Vector3 surfacePosition, Vector3 surfaceNormal, bool clearWhenBaked, bool followRules, bool doCollisionChecks)
     {
         if (!followRules || isAngleValid(surfaceNormal))
         {
             Vector3 position = surfacePosition + surfaceNormal * randomNormalPositionOffset;
-            if (!followRules || isPositionValid(position))
+            if (!followRules || isPositionValid(position, doCollisionChecks))
             {
                 Quaternion rotation = Quaternion.Lerp(MathUtility.IDENTITY_QUATERNION, Quaternion.FromToRotation(Vector3.up, surfaceNormal), normalRotationAlignment);
                 rotation *= Quaternion.Euler(normalRotationOffset);
@@ -99,7 +105,7 @@ public abstract class FoliageInfoAsset : Asset
         Vector3 testPosition = getTestPosition(bounds);
         if (surface.getFoliageSurfaceInfo(testPosition, out var surfacePosition, out var surfaceNormal))
         {
-            addFoliageToSurface(surfacePosition, surfaceNormal, clearWhenBaked: true, followRules: true);
+            addFoliageToSurface(surfacePosition, surfaceNormal, clearWhenBaked: true, followRules: true, doCollisionChecks: true);
         }
     }
 
@@ -113,7 +119,7 @@ public abstract class FoliageInfoAsset : Asset
         return false;
     }
 
-    protected abstract bool isPositionValid(Vector3 position);
+    protected abstract bool isPositionValid(Vector3 position, bool doCollisionChecks);
 
     protected virtual bool isSurfaceWeightValid(float surfaceWeight)
     {

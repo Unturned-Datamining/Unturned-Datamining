@@ -15,3 +15,10 @@ Blueprint_0_Supply_0_Amount 1
 Blueprint_0_Tool 141
 Blueprint_0_Products 4
 Blueprint_0_Build 27
+
+Actions 1
+Action_0_Type Blueprint
+Action_0_Source 1908
+Action_0_Blueprints 1
+Action_0_Blueprint_0_Index 0
+Action_0_Key Stack

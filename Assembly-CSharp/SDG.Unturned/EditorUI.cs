@@ -93,6 +93,7 @@ public class EditorUI : MonoBehaviour
         {
             return;
         }
+        MenuConfigurationControlsUI.bindUpdate();
         if (EditorLevelVisibilityUI.active)
         {
             EditorLevelVisibilityUI.update();
