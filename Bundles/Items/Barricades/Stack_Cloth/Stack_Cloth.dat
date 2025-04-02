@@ -6,7 +6,6 @@ ID 1913
 
 Size_X 2
 Size_Y 2
-Size_Z 0.27
 
 Health 200
 Range 4
@@ -14,6 +13,7 @@ Radius 0.2
 Offset 0.3
 
 Explosion 37
+Vulnerable
 
 Blueprints 2
 Blueprint_0_Type Gear
@@ -37,4 +37,3 @@ Action_0_Key Unstack
 PlacementAudioClip Sounds/WoodenPlacement.mp3
 InventoryAudio Sounds/Inventory/LightCloth.asset
 Has_Clip_Prefab false
-Use_Auto_Icon_Measurements false

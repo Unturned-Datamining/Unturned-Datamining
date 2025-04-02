@@ -186,7 +186,6 @@ public class MenuPlayServersUI : SleekFullscreenBox
         if (active)
         {
             active = false;
-            MenuSettings.save();
             AnimateOutOfView(0f, 1f);
         }
     }
@@ -195,7 +194,6 @@ public class MenuPlayServersUI : SleekFullscreenBox
     {
         if (!info.isPro || Provider.isPro)
         {
-            MenuSettings.save();
             MenuPlayServerInfoUI.open(info, string.Empty, MenuPlayServerInfoUI.EServerInfoOpenContext.SERVERS);
             close();
         }

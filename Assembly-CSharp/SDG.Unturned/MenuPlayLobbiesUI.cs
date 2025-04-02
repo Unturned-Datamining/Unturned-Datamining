@@ -90,7 +90,6 @@ public class MenuPlayLobbiesUI
         if (active)
         {
             active = false;
-            MenuSettings.save();
             container.AnimateOutOfView(0f, 1f);
         }
     }

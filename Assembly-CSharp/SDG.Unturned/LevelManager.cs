@@ -896,6 +896,11 @@ public class LevelManager : SteamCaller
         ReceiveAirdropState(0, state, direction, speed, force, delay);
     }
 
+    /// <summary>
+    /// Nelson 2025-04-01: default position intBitCount of 13 has range of [-4096, 4096), but on "insane" size maps
+    /// the aircraft starts 2 km outside that range. This causes the care package to spawn at the wrong position.
+    /// Bumping intBitCount to 14 enables a range of [-8192, 8192). (public issue #4972)
+    /// </summary>
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellAirdropState")]
     public static void ReceiveAirdropState(ushort id, Vector3 state, Vector3 direction, float speed, float force, float delay)
     {

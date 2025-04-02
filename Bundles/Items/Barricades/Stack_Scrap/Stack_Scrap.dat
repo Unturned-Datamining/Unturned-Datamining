@@ -6,7 +6,6 @@ ID 1909
 
 Size_X 2
 Size_Y 2
-Size_Z 0.28
 
 Health 300
 Range 4
@@ -14,6 +13,7 @@ Radius 0.3
 Offset 0.4
 
 Explosion 36
+Vulnerable
 
 Blueprints 2
 Blueprint_0_Type Gear
@@ -37,4 +37,3 @@ Action_0_Key Unstack
 InventoryAudio Sounds/Inventory/SmallMetal.asset
 PlacementAudioClip Sounds/MetalPlacement.mp3
 Has_Clip_Prefab false
-Use_Auto_Icon_Measurements false

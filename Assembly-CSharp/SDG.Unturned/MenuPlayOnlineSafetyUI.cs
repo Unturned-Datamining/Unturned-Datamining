@@ -58,7 +58,6 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
     {
         if (active)
         {
-            MenuSettings.SaveOptionsIfLoaded();
             active = false;
             AnimateOutOfView(0f, 1f);
         }

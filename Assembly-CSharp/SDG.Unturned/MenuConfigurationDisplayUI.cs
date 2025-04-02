@@ -44,7 +44,6 @@ public class MenuConfigurationDisplayUI
         if (active)
         {
             active = false;
-            MenuSettings.SaveGraphicsIfLoaded();
             container.AnimateOutOfView(0f, 1f);
         }
     }

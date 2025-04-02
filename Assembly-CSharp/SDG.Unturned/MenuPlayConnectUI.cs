@@ -74,7 +74,6 @@ public class MenuPlayConnectUI
         if (active)
         {
             active = false;
-            MenuSettings.save();
             container.AnimateOutOfView(0f, 1f);
         }
     }
@@ -185,7 +184,6 @@ public class MenuPlayConnectUI
         }
         if (steamId.BGameServerAccount())
         {
-            MenuSettings.save();
             Provider.connect(new ServerConnectParameters(steamId, passwordField.Text), null, null);
             return;
         }
@@ -193,11 +191,11 @@ public class MenuPlayConnectUI
         if (num == 0)
         {
             UnturnedLog.info("Cannot connect because port field is empty");
-            return;
         }
-        SteamConnectionInfo info = new SteamConnectionInfo(address.value, num, passwordField.Text);
-        MenuSettings.save();
-        connect(info, shouldAutoJoin: false, MenuPlayServerInfoUI.EServerInfoOpenContext.CONNECT);
+        else
+        {
+            connect(new SteamConnectionInfo(address.value, num, passwordField.Text), shouldAutoJoin: false, MenuPlayServerInfoUI.EServerInfoOpenContext.CONNECT);
+        }
     }
 
     private static void onTypedHostField(ISleekField field, string text)

@@ -181,7 +181,6 @@ public class MenuWorkshopEditorUI
         {
             PlaySettings.editorLevelSelection.Clear();
         }
-        MenuSettings.save();
     }
 
     public void OnDestroy()

@@ -83,7 +83,6 @@ public class MenuPlaySingleplayerUI
         if (active)
         {
             active = false;
-            MenuSettings.save();
             container.AnimateOutOfView(0f, 1f);
         }
     }
@@ -440,7 +439,6 @@ public class MenuPlaySingleplayerUI
         {
             PlaySettings.singleplayerLevelSelection.Clear();
         }
-        MenuSettings.save();
     }
 
     private void OnLiveConfigRefreshed()

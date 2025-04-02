@@ -136,7 +136,6 @@ public class MenuConfigurationOptionsUI
     {
         if (active)
         {
-            MenuSettings.SaveOptionsIfLoaded();
             active = false;
             container.AnimateOutOfView(0f, 1f);
         }

@@ -54,7 +54,6 @@ public class MenuPlayMapFiltersUI : SleekFullscreenBox
         if (active)
         {
             active = false;
-            MenuSettings.save();
             AnimateOutOfView(0f, 1f);
         }
     }

@@ -16,14 +16,17 @@ public class MenuSettings
 
     public static void save()
     {
-        if (hasLoaded)
+        if (!hasLoaded)
         {
-            FilterSettings.save();
-            PlaySettings.save();
-            GraphicsSettings.save();
-            ControlsSettings.save();
-            OptionsSettings.save();
+            UnturnedLog.info("Skipping saving menu settings because they were not loaded");
+            return;
         }
+        FilterSettings.save();
+        PlaySettings.save();
+        GraphicsSettings.save();
+        ControlsSettings.save();
+        OptionsSettings.save();
+        UnturnedLog.info("Saved menu settings");
     }
 
     public static void SaveGraphicsIfLoaded()

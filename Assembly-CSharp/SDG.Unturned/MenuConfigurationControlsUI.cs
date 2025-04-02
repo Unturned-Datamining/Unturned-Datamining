@@ -191,7 +191,6 @@ public class MenuConfigurationControlsUI
         {
             active = false;
             ActiveKeyBindingIndex = byte.MaxValue;
-            MenuSettings.SaveControlsIfLoaded();
             container.AnimateOutOfView(0f, 1f);
         }
     }

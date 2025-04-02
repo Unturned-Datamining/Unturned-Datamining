@@ -5509,6 +5509,7 @@ public class Provider : MonoBehaviour
         if (!Dedicator.IsDedicatedServer)
         {
             ConvenientSavedata.save();
+            MenuSettings.save();
             LocalPlayerBlocklist.SaveIfDirty();
             ServerBookmarksManager.SaveIfDirty();
         }

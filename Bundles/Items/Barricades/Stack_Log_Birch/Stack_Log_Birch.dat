@@ -6,7 +6,6 @@ ID 1901
 
 Size_X 3
 Size_Y 2
-Size_Z 0.29
 
 Health 250
 Range 4
@@ -14,6 +13,7 @@ Radius 0.3
 Offset 0.6
 
 Explosion 28
+Vulnerable
 
 Blueprints 2
 Blueprint_0_Type Gear
@@ -36,4 +36,3 @@ Action_0_Key Unstack
 
 PlacementAudioClip Sounds/WoodenPlacement.mp3
 Has_Clip_Prefab false
-Use_Auto_Icon_Measurements false

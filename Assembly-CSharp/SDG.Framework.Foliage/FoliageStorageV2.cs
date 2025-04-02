@@ -322,7 +322,7 @@ public class FoliageStorageV2 : IFoliageStorage
             UnturnedLog.error("Foliage blob count ({0}) does not match offset count ({1})", list.Count, tileBlobOffsets.Count);
             return;
         }
-        using FileStream output = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite);
+        using FileStream output = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
         BinaryWriter binaryWriter = new BinaryWriter(output);
         binaryWriter.Write(2);
         binaryWriter.Write(tileBlobOffsets.Count);

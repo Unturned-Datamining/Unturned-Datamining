@@ -75,7 +75,6 @@ public class MenuPlayServerListFiltersUI : SleekFullscreenBox
         if (active)
         {
             active = false;
-            MenuSettings.save();
             AnimateOutOfView(0f, 1f);
         }
     }
