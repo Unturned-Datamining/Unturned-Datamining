@@ -16,20 +16,7 @@ MainMenuWorkshop
 	AllowNews true
 	Featured
 	{
-		Id 19
-		FileIds
-		[
-			3416057692
-		]
-		Status New
-		Type Curated
-		OverrideDescription [h1]Welcome back to Rio de Janeiro![/h1]\n\n[b]A sunny urban region located on the southeastern coast of Brazil, south of Canada. Surrounded by the beautiful beaches and natural beauty of the Guanabara Bay, tourist attractions include iconic landmarks like the Sugarloaf Mountain and Christ the Redeemer, and the vibrant city of Rio de Janeiro.[/b]\n\nRio de Janeiro aims to feel like a classic curated map, while adding new features, stylizations and quality of life changes from newer maps, as well as adding new spins to the gameplay in order to make the map more challenging and unique.\n\n[img]https://i.imgur.com/WX0UYdi.png[/img]\n\n[h1]Explore newly added and redesigned locations![/h1]\n\nAll original locations have been redesigned from the ground up to be more appealing and unique, resembling real life aspects from Brazil, and even new locations have been included!\n\n[img]https://i.imgur.com/3IyeGLN.png[/img]\n\n[h1]Absorb knowledge with recipe books![/h1]\n\nYou may find some books while adventuring, keep them on your inventory to learn how to make new items, and eventually you'll even memorize their recipes!\n\n[img]https://i.imgur.com/avrXV70.png[/img]\n\n[h1]Try out new guns - or revisit the oldies![/h1]\n\nZombies and Animals giving you trouble? Not at all a problem! Not only do all the guns from the original map return, but there are also many new guns such as the Hellseher and Mapinguari, up to 37 total guns!\n\n[img]https://i.imgur.com/vCWuqhs.png[/img]\n\n[h1]Make some calls and join a safezone![/h1]\n\nThe Brocoió Island houses a group of survivors who settled in an abandoned government mansion. Why not try helping them out? You'll meet a variety of survivors, from a weird gardener, a foreign band, and a very talkative pilot. Occasionally, some new faces will show up every few days near the docks to trade with you or offer quests! ...Huh, was this purple phone booth always here?\n\n[img]https://i.imgur.com/FHKT4aP.png[/img]\n\n[h1]Drive away into the sunset... Or into the wilderness![/h1]\n\nYou'll have more than just a few cars to try out; Why not take a ride on a Wasp motorcycle, or take your friends with you on a Honeykomb? Whichever car you pick, feel free to stick to the roads or off-road into the vast jungles... Just be careful with all the Jaguars and Anteaters!
-		AssociatedStockpileItems
-		[
-			21081
-			1955
-			1960
-		]
+		Id 0
 	}
 	Popular
 	{
@@ -40,12 +27,6 @@ MainMenuWorkshop
 ItemStore
 {
 	PromotionId 6
-	NewItems
-	[
-		21081
-		1955
-		1960
-	]
 	FeaturedItems
 	[
 		21081
@@ -87,6 +68,10 @@ ItemCrafting
 		{
 			ItemDefId 1447
 			Materials 400
+		}
+		{
+			ItemDefId 1954
+			Materials 10
 		}
 	]
 }
