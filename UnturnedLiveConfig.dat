@@ -1,15 +1,14 @@
 MainMenuAlert
 {
-	Id 66
-	Header Feedback Survey
-	Body We are looking for your feedback! Help us improve the game by spending a few minutes to take our Feedback Survey. This survey covers a broad range of topics—from crafting mechanics to playtime drops—and your input is essential as we continue to develop Unturned and these ideas!
-	Color #f0f0f0
-	Link https://docs.google.com/forms/d/e/1FAIpQLSfK-aacRNs-LWVgfAiQmrUAVwqpOZgmGwl49b1qUFDOf6GRCw/viewform
-	IconURL https://cdn.smartlydressedgames.com/Images/survey.png
-	TintIcon true
+	Id 67
+	Header Sign Up To Play In Duo Rio Tournament Today
+	Body From LiamDoesGame, get ready to play in Rio Remastered where the team with the most kills will win trophy skins!
+	Color #00ffff
+	Link https://discord.gg/Ge9sbPH
+	IconURL https://cdn.smartlydressedgames.com/Images/LDGbanner.jpg
 	UseTimeWindow true
-	StartTime 2025-03-27 19:00:00
-	EndTime 2025-04-03 19:00:00
+	StartTime 2025-04-04 19:00:00
+	EndTime 2025-04-11 19:00:00
 }
 MainMenuWorkshop
 {
