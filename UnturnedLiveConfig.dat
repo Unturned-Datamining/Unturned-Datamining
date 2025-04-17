@@ -68,10 +68,6 @@ ItemCrafting
 			ItemDefId 1447
 			Materials 400
 		}
-		{
-			ItemDefId 1954
-			Materials 10
-		}
 	]
 }
 LinkFiltering
@@ -199,6 +195,5 @@ ServerCuration
 }
 ShouldAllowJoiningInternetServersWithoutGslt false
 ShouldServersWithoutMonetizationTagBeVisibleInInternetServerList true
-PlaytimeGeneratorItemDefId 10000
 QueryPingWarningOffsetMs 50
 PingMismatchWarningThresholdMs 50
