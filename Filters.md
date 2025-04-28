@@ -17,6 +17,7 @@
 | 79.174.93.100   | HiddenFromAllServerLists     |
 | 91.197.96.0/22  | HiddenFromAllServerLists     |
 | 89.111.168.0/21 | HiddenFromAllServerLists     |
+| 212.22.85.29    | HiddenFromAllServerLists     |
 | 46.174.51.182   | HiddenFromInternetServerList |
 
 ## Name filters
@@ -50,6 +51,7 @@
 | (https://gspics.org/images/2022/10/12/0WIOTm.png)       | ![https://gspics.org/images/2022/10/12/0WIOTm.png](https://gspics.org/images/2022/10/12/0WIOTm.png)     | HiddenFromInternetServerList |
 | (?i)(https://i.imgur.com/xNql2Ov.png)                   | ![https://i.imgur.com/xNql2Ov.png](https://i.imgur.com/xNql2Ov.png)                                     | HiddenFromAllServerLists     |
 | (?i)(https://i.imgur.com/7pqS8L7.png)                   | ![https://i.imgur.com/7pqS8L7.png](https://i.imgur.com/7pqS8L7.png)                                     | HiddenFromAllServerLists     |
+| (?i)(https://i.imgur.com/Zapo5if.png)                   | ![https://i.imgur.com/Zapo5if.png](https://i.imgur.com/Zapo5if.png)                                     | HiddenFromAllServerLists     |
 | (?i)(https://imgur.com/Bzo2gJY.png)                     | ![https://imgur.com/Bzo2gJY.png](https://imgur.com/Bzo2gJY.png)                                         | HiddenFromInternetServerList |
 | (?i)(https://pic.imge.cc/2024/07/22/669e09cfbf24f.jpeg) | ![https://pic.imge.cc/2024/07/22/669e09cfbf24f.jpeg](https://pic.imge.cc/2024/07/22/669e09cfbf24f.jpeg) | HiddenFromInternetServerList |
 
